@@ -85,7 +85,7 @@ Variables</h2></td></tr>
 <tr class="separator:a4bac85c22dbac34c01c82f7efab6b2ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac6966ce4df0ca9916e7be6dee40b10af"><td class="memTemplParams" colspan="2"><a id="ac6966ce4df0ca9916e7be6dee40b10af" name="ac6966ce4df0ca9916e7be6dee40b10af"></a>
 template&lt;class G &gt; </td></tr>
-<tr class="memitem:ac6966ce4df0ca9916e7be6dee40b10af"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::static_nodes</b> = (!dynamic_nodes&lt;G&gt;)</td></tr>
+<tr class="memitem:ac6966ce4df0ca9916e7be6dee40b10af"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::static_nodes</b> {!dynamic_nodes&lt;G&gt;}</td></tr>
 <tr class="separator:ac6966ce4df0ca9916e7be6dee40b10af"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -112,8 +112,10 @@ template&lt;class G &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= <span class="keyword">requires</span>(std::remove_const_t&lt;G&gt;&amp; g) { g.add_node(); } </div>
-<div class="line">                          || <span class="keyword">requires</span>(std::remove_const_t&lt;G&gt; &amp; g) { g.add_node(0); }</div>
+<b>Initial value:</b><div class="fragment"><div class="line">{</div>
+<div class="line">       <span class="keyword">requires</span>(std::remove_const_t&lt;G&gt;&amp; g) { g.erase_node(0); }</div>
+<div class="line">    || <span class="keyword">requires</span>(std::remove_const_t&lt;G&gt;&amp; g) { g.prune(0); }</div>
+<div class="line">  }</div>
 </div><!-- fragment -->
 </div>
 </div>

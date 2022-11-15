@@ -208,6 +208,11 @@ constexpr <a class="el" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity
 <tr class="memitem:a19e4a6b7e5580d03c709bc696471680b"><td class="memItemLeft" align="right" valign="top"><a id="a19e4a6b7e5580d03c709bc696471680b" name="a19e4a6b7e5580d03c709bc696471680b"></a>
 constexpr <a class="el" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity</a> &amp;in)</td></tr>
 <tr class="separator:a19e4a6b7e5580d03c709bc696471680b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a035885d81d947369a6e646b05de8e26e"><td class="memTemplParams" colspan="2"><a id="a035885d81d947369a6e646b05de8e26e" name="a035885d81d947369a6e646b05de8e26e"></a>
+template&lt;alloc... Allocs&gt; <br />
+requires ((sizeof...(Allocs) &gt; 0) &amp;&amp; (std::allocator_traits&lt;Allocs&gt;::propagate_on_container_copy_assignment::value &amp;&amp; ...))</td></tr>
+<tr class="memitem:a035885d81d947369a6e646b05de8e26e"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>reset</b> (const Allocs &amp;... allocs)</td></tr>
+<tr class="separator:a035885d81d947369a6e646b05de8e26e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa8f4ef75e2200bf396e8d405a8878b00"><td class="memItemLeft" align="right" valign="top"><a id="aa8f4ef75e2200bf396e8d405a8878b00" name="aa8f4ef75e2200bf396e8d405a8878b00"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>swap</b> (<a class="el" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity</a> &amp;rhs) noexcept(noexcept(std::swap(this-&gt;m_Edges, rhs.m_Edges)))</td></tr>
 <tr class="separator:aa8f4ef75e2200bf396e8d405a8878b00"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -253,9 +258,9 @@ constexpr edge_iterator&#160;</td><td class="memItemRight" valign="bottom"><b>en
 <tr class="memitem:a107c5176aef3436bbb5853212d2879e7"><td class="memItemLeft" align="right" valign="top"><a id="a107c5176aef3436bbb5853212d2879e7" name="a107c5176aef3436bbb5853212d2879e7"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>add_node</b> ()</td></tr>
 <tr class="separator:a107c5176aef3436bbb5853212d2879e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa4cdd9f0c3f97d2c2bb987814473c2d0"><td class="memItemLeft" align="right" valign="top"><a id="aa4cdd9f0c3f97d2c2bb987814473c2d0" name="aa4cdd9f0c3f97d2c2bb987814473c2d0"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>insert_node</b> (const size_type node)</td></tr>
-<tr class="separator:aa4cdd9f0c3f97d2c2bb987814473c2d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac5587cc58e1bdb87efe36b69568c1ba6"><td class="memItemLeft" align="right" valign="top"><a id="ac5587cc58e1bdb87efe36b69568c1ba6" name="ac5587cc58e1bdb87efe36b69568c1ba6"></a>
+size_type&#160;</td><td class="memItemRight" valign="bottom"><b>insert_node</b> (const size_type node)</td></tr>
+<tr class="separator:ac5587cc58e1bdb87efe36b69568c1ba6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab56efe6a11e4a2118d1c0218cfef0c75"><td class="memItemLeft" align="right" valign="top"><a id="ab56efe6a11e4a2118d1c0218cfef0c75" name="ab56efe6a11e4a2118d1c0218cfef0c75"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>erase_node</b> (const size_type node)</td></tr>
 <tr class="separator:ab56efe6a11e4a2118d1c0218cfef0c75"><td class="memSeparator" colspan="2">&#160;</td></tr>

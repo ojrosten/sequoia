@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.2"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: sequoia::testing::within_tolerance&lt; T &gt; Class Template Reference</title>
+<title>Sequoia: sequoia::testing::within_tolerance&lt; ToleranceType &gt; Class Template Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -70,7 +70,7 @@ $(function() {
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="../../de/d56/classsequoia_1_1testing_1_1within__tolerance-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">sequoia::testing::within_tolerance&lt; T &gt; Class Template Reference</div></div>
+  <div class="headertitle"><div class="title">sequoia::testing::within_tolerance&lt; ToleranceType &gt; Class Template Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
@@ -81,25 +81,27 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:af23ec98cb3fdd3ea2205a01e719c3336"><td class="memItemLeft" align="right" valign="top"><a id="af23ec98cb3fdd3ea2205a01e719c3336" name="af23ec98cb3fdd3ea2205a01e719c3336"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>value_type</b> = T</td></tr>
-<tr class="separator:af23ec98cb3fdd3ea2205a01e719c3336"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a90cc586150032001ffa20e945195c5c6"><td class="memItemLeft" align="right" valign="top"><a id="a90cc586150032001ffa20e945195c5c6" name="a90cc586150032001ffa20e945195c5c6"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>tolerance_type</b> = ToleranceType</td></tr>
+<tr class="separator:a90cc586150032001ffa20e945195c5c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a29ad5125d5d702994fb92f8358d39a53"><td class="memItemLeft" align="right" valign="top"><a id="a29ad5125d5d702994fb92f8358d39a53" name="a29ad5125d5d702994fb92f8358d39a53"></a>
-constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>within_tolerance</b> (T tol)</td></tr>
-<tr class="separator:a29ad5125d5d702994fb92f8358d39a53"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac03e7a5272840fa49580e119cfb12f67"><td class="memItemLeft" align="right" valign="top"><a id="ac03e7a5272840fa49580e119cfb12f67" name="ac03e7a5272840fa49580e119cfb12f67"></a>
-constexpr const T &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>tol</b> () const noexcept</td></tr>
-<tr class="separator:ac03e7a5272840fa49580e119cfb12f67"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4b8c29459772c8c45e89c4d130724938"><td class="memItemLeft" align="right" valign="top"><a id="a4b8c29459772c8c45e89c4d130724938" name="a4b8c29459772c8c45e89c4d130724938"></a>
-constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator()</b> (const T &amp;obtained, const T &amp;prediction) const noexcept</td></tr>
-<tr class="separator:a4b8c29459772c8c45e89c4d130724938"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca0458bc1fe2d65d82af66996992ccd5"><td class="memItemLeft" align="right" valign="top"><a id="aca0458bc1fe2d65d82af66996992ccd5" name="aca0458bc1fe2d65d82af66996992ccd5"></a>
+constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>within_tolerance</b> (ToleranceType tol)</td></tr>
+<tr class="separator:aca0458bc1fe2d65d82af66996992ccd5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a17f0623ce72fb320985c7406dd4b7cd9"><td class="memItemLeft" align="right" valign="top"><a id="a17f0623ce72fb320985c7406dd4b7cd9" name="a17f0623ce72fb320985c7406dd4b7cd9"></a>
+constexpr tolerance_type&#160;</td><td class="memItemRight" valign="bottom"><b>tol</b> () const noexcept</td></tr>
+<tr class="separator:a17f0623ce72fb320985c7406dd4b7cd9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac20f0886974476d420fba0df179095b2"><td class="memTemplParams" colspan="2"><a id="ac20f0886974476d420fba0df179095b2" name="ac20f0886974476d420fba0df179095b2"></a>
+template&lt;class T &gt; <br />
+requires has_abs&lt;T, ToleranceType&gt;</td></tr>
+<tr class="memitem:ac20f0886974476d420fba0df179095b2"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (const T &amp;obtained, const T &amp;prediction) const noexcept</td></tr>
+<tr class="separator:ac20f0886974476d420fba0df179095b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><div class="compoundTemplParams">template&lt;class T&gt;<br />
-class sequoia::testing::within_tolerance&lt; T &gt;</div><p >Function object for performing comparisons within an absolute tolerance. </p>
+<div class="textblock"><div class="compoundTemplParams">template&lt;std::totally_ordered ToleranceType&gt;<br />
+class sequoia::testing::within_tolerance&lt; ToleranceType &gt;</div><p >Function object for performing comparisons within an absolute tolerance. </p>
 <p ><a class="anchor" id="within_tolerance_primary"></a></p>
 </div><hr/>The documentation for this class was generated from the following file:<ul>
 <li>C:/Users/olive/OneDrive/sequoia/Source/sequoia/TestFramework/<a class="el" href="../../d1/d8b/BinaryRelationships_8hpp_source.html">BinaryRelationships.hpp</a></li>

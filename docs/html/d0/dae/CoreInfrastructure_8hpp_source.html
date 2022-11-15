@@ -152,12 +152,11 @@ $(function() {
 <div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>  };</div>
 <div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span> </div>
 <div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>  [[nodiscard]]</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>  SPECULATIVE_CONSTEVAL</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>  std::size_t <span class="keyword">operator</span> <span class="stringliteral">&quot;&quot;</span> _sz(<span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> <span class="keywordtype">long</span> <span class="keywordtype">int</span> n) <span class="keyword">noexcept</span></div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>  {</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span>std::size_t<span class="keyword">&gt;</span>(n);</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>  }</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>}</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>  <span class="keyword">consteval</span> std::size_t <span class="keyword">operator</span> <span class="stringliteral">&quot;&quot;</span> _sz(<span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> <span class="keywordtype">long</span> <span class="keywordtype">int</span> n) <span class="keyword">noexcept</span></div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>  {</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span>std::size_t<span class="keyword">&gt;</span>(n);</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>  }</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>}</div>
 <div class="ttc" id="aConcepts_8hpp_html"><div class="ttname"><a href="../../d3/d84/Concepts_8hpp.html">Concepts.hpp</a></div><div class="ttdoc">Concepts which are sufficiently general to appear in the sequoia namespace.</div></div>
 <div class="ttc" id="aPreprocessor_8hpp_html"><div class="ttname"><a href="../../de/d56/Preprocessor_8hpp.html">Preprocessor.hpp</a></div><div class="ttdoc">Tools for generating compiler-specific behaviour.</div></div>
 <div class="ttc" id="astructsequoia_1_1testing_1_1serializer_3_01T_01_4_html"><div class="ttname"><a href="../../df/d99/structsequoia_1_1testing_1_1serializer_3_01T_01_4.html">sequoia::testing::serializer&lt; T &gt;</a></div><div class="ttdef"><b>Definition:</b> CoreInfrastructure.hpp:33</div></div>

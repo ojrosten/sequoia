@@ -86,10 +86,11 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a3581fa892c00dd68c5415274838cd6cf"><td class="memItemLeft" align="right" valign="top"><a id="a3581fa892c00dd68c5415274838cd6cf" name="a3581fa892c00dd68c5415274838cd6cf"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>family_selector</b> (<a class="el" href="../../d4/dbe/classsequoia_1_1testing_1_1project__paths.html">project_paths</a> paths)</td></tr>
 <tr class="separator:a3581fa892c00dd68c5415274838cd6cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0f4f3e6e299efa61e6c366ce538fa8c9"><td class="memTemplParams" colspan="2"><a id="a0f4f3e6e299efa61e6c366ce538fa8c9" name="a0f4f3e6e299efa61e6c366ce538fa8c9"></a>
-template&lt;class Test , class... Tests&gt; </td></tr>
-<tr class="memitem:a0f4f3e6e299efa61e6c366ce538fa8c9"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>add_test_family</b> (std::string_view name, recovery_mode recoveryMode, Test test, Tests... tests)</td></tr>
-<tr class="separator:a0f4f3e6e299efa61e6c366ce538fa8c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a37187ccf3078a48a5333fa158262a14c"><td class="memTemplParams" colspan="2"><a id="a37187ccf3078a48a5333fa158262a14c" name="a37187ccf3078a48a5333fa158262a14c"></a>
+template&lt;concrete_test... Tests&gt; <br />
+requires (sizeof...(Tests) &gt; 0)</td></tr>
+<tr class="memitem:a37187ccf3078a48a5333fa158262a14c"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>add_test_family</b> (std::string_view name, recovery_mode recoveryMode, Tests... tests)</td></tr>
+<tr class="separator:a37187ccf3078a48a5333fa158262a14c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a652d93fcf3ea4b69a1effc1d2b30e7d1"><td class="memItemLeft" align="right" valign="top"><a id="a652d93fcf3ea4b69a1effc1d2b30e7d1" name="a652d93fcf3ea4b69a1effc1d2b30e7d1"></a>
 const <a class="el" href="../../d4/dbe/classsequoia_1_1testing_1_1project__paths.html">project_paths</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>proj_paths</b> () const noexcept</td></tr>
 <tr class="separator:a652d93fcf3ea4b69a1effc1d2b30e7d1"><td class="memSeparator" colspan="2">&#160;</td></tr>

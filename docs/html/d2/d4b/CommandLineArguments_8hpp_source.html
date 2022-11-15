@@ -189,70 +189,71 @@ $(function() {
 <div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>      <span class="keyword">using namespace </span>maths;</div>
 <div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>      <span class="keywordflow">for</span>(<span class="keyword">const</span> <span class="keyword">auto</span>&amp; operTree : operations)</div>
 <div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>      {</div>
-<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>        depth_first_search(operTree,</div>
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>                           <a class="code hl_class" href="../../d7/ddc/classsequoia_1_1maths_1_1traversal__conditions_3_01disconnected__discovery__mode_1_1off_01_4.html">ignore_disconnected_t</a>{},</div>
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>                           [&amp;operTree](<span class="keyword">const</span> <span class="keyword">auto</span> node) {</div>
-<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>                              <span class="keyword">const</span> operation&amp; oper{operTree.cbegin_node_weights()[node]};</div>
-<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>                              <span class="keywordflow">if</span>(oper.early) oper.early(oper.arguments);</div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>                           },</div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>                           [&amp;operTree](<span class="keyword">const</span> <span class="keyword">auto</span> node) {</div>
-<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>                              <span class="keyword">const</span> operation&amp; oper{operTree.cbegin_node_weights()[node]};</div>
-<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>                              <span class="keywordflow">if</span>(oper.late) oper.late(oper.arguments);</div>
-<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>                           });</div>
-<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>      }</div>
-<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>    }</div>
-<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span> </div>
-<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>    <span class="keywordflow">return</span> help;</div>
-<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>  }</div>
-<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span> </div>
-<div class="line"><a id="l00177" name="l00177"></a><span class="lineno"><a class="line" href="../../df/dd0/classsequoia_1_1parsing_1_1commandline_1_1argument__parser.html">  177</a></span>  <span class="keyword">class </span><a class="code hl_class" href="../../df/dd0/classsequoia_1_1parsing_1_1commandline_1_1argument__parser.html">argument_parser</a></div>
-<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>  {</div>
-<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>  <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span> </div>
-<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>    <a class="code hl_class" href="../../df/dd0/classsequoia_1_1parsing_1_1commandline_1_1argument__parser.html">argument_parser</a>(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span>** argv, <span class="keyword">const</span> options_forest&amp; options);</div>
-<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span> </div>
-<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>    <a class="code hl_struct" href="../../df/dd1/structsequoia_1_1parsing_1_1commandline_1_1outcome.html">outcome</a> get()<span class="keyword"> const</span></div>
-<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span><span class="keyword">    </span>{</div>
-<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>      <span class="keywordflow">return</span> {m_ZerothArg, m_Operations, m_Help};</div>
-<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>    }</div>
-<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>  <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>    <span class="keyword">enum class</span> top_level { yes, no };</div>
-<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span> </div>
-<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>    <span class="keyword">struct </span>operation_data</div>
-<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>    {</div>
-<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>      <a class="code hl_class" href="../../d1/d4b/classsequoia_1_1maths_1_1basic__tree__adaptor.html">operations_sub_tree</a> oper_tree{};</div>
-<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>      std::size_t    saturated_args{};</div>
-<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>    };</div>
-<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span> </div>
-<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>    operations_forest m_Operations{};</div>
-<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>    <span class="keywordtype">int</span> m_Index{1}, m_ArgCount{};</div>
-<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>    <span class="keywordtype">char</span>** m_Argv{};</div>
-<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>    std::string m_ZerothArg{}, m_Help{};</div>
-<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span> </div>
-<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>    <span class="keyword">template</span>&lt;std::input_or_output_iterator Iter, std::sentinel_for&lt;Iter&gt; Sentinel&gt;</div>
-<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>    <span class="keywordtype">void</span> parse(Iter beginOptions, Sentinel endOptions, <span class="keyword">const</span> operation_data&amp; previousOperationData, top_level topLevel);</div>
-<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span> </div>
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>    <span class="keyword">template</span>&lt;std::input_or_output_iterator Iter, std::sentinel_for&lt;Iter&gt; Sentinel&gt;</div>
-<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>    <span class="keywordtype">bool</span> process_concatenated_aliases(Iter beginOptions, Sentinel endOptions, std::string_view arg, operation_data currentOperationData, top_level topLevel);</div>
-<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span> </div>
-<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>    <span class="keyword">auto</span> process_option(<a class="code hl_class" href="../../d1/d4b/classsequoia_1_1maths_1_1basic__tree__adaptor.html">option_tree</a> currentOptionTree, operation_data currentOperationData, top_level topLevel)-&gt;operation_data;</div>
-<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span> </div>
-<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>    <span class="keyword">template</span>&lt;std::input_or_output_iterator Iter, std::sentinel_for&lt;Iter&gt; Sentinel&gt;</div>
-<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>    <span class="keyword">static</span> std::string generate_help(Iter beginOptions, Sentinel endOptions);</div>
-<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span> </div>
-<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>    <span class="keyword">static</span> <span class="keywordtype">bool</span> is_alias(<span class="keyword">const</span> <a class="code hl_struct" href="../../db/da8/structsequoia_1_1parsing_1_1commandline_1_1option.html">option</a>&amp; opt, std::string_view s);</div>
-<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>  };</div>
-<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>}</div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>       traverse(depth_first,</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>                operTree,</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>                <a class="code hl_class" href="../../d7/ddc/classsequoia_1_1maths_1_1traversal__conditions_3_01disconnected__discovery__mode_1_1off_01_4.html">ignore_disconnected_t</a>{},</div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>                [&amp;operTree](<span class="keyword">const</span> <span class="keyword">auto</span> node) {</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>                   <span class="keyword">const</span> operation&amp; oper{operTree.cbegin_node_weights()[node]};</div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>                   <span class="keywordflow">if</span>(oper.early) oper.early(oper.arguments);</div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>                },</div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>                [&amp;operTree](<span class="keyword">const</span> <span class="keyword">auto</span> node) {</div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>                   <span class="keyword">const</span> operation&amp; oper{operTree.cbegin_node_weights()[node]};</div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>                   <span class="keywordflow">if</span>(oper.late) oper.late(oper.arguments);</div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>                });</div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>      }</div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>    }</div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span> </div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>    <span class="keywordflow">return</span> help;</div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>  }</div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span> </div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno"><a class="line" href="../../df/dd0/classsequoia_1_1parsing_1_1commandline_1_1argument__parser.html">  178</a></span>  <span class="keyword">class </span><a class="code hl_class" href="../../df/dd0/classsequoia_1_1parsing_1_1commandline_1_1argument__parser.html">argument_parser</a></div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>  {</div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span> </div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>    <a class="code hl_class" href="../../df/dd0/classsequoia_1_1parsing_1_1commandline_1_1argument__parser.html">argument_parser</a>(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span>** argv, <span class="keyword">const</span> options_forest&amp; options);</div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span> </div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>    [[nodiscard]]</div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>    <a class="code hl_struct" href="../../df/dd1/structsequoia_1_1parsing_1_1commandline_1_1outcome.html">outcome</a> get()<span class="keyword"> const</span></div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span><span class="keyword">    </span>{</div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>      <span class="keywordflow">return</span> {m_ZerothArg, m_Operations, m_Help};</div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>    }</div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>  <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>    <span class="keyword">enum class</span> top_level { yes, no };</div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span> </div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>    <span class="keyword">struct </span>operation_data</div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>    {</div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>      <a class="code hl_class" href="../../d1/d4b/classsequoia_1_1maths_1_1basic__tree__adaptor.html">operations_sub_tree</a> oper_tree{};</div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>      std::size_t    saturated_args{};</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>    };</div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span> </div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>    operations_forest m_Operations{};</div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>    <span class="keywordtype">int</span> m_Index{1}, m_ArgCount{};</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>    <span class="keywordtype">char</span>** m_Argv{};</div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>    std::string m_ZerothArg{}, m_Help{};</div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span> </div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>    <span class="keyword">template</span>&lt;std::input_or_output_iterator Iter, std::sentinel_for&lt;Iter&gt; Sentinel&gt;</div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>    <span class="keywordtype">void</span> parse(Iter beginOptions, Sentinel endOptions, <span class="keyword">const</span> operation_data&amp; previousOperationData, top_level topLevel);</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span> </div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>    <span class="keyword">template</span>&lt;std::input_or_output_iterator Iter, std::sentinel_for&lt;Iter&gt; Sentinel&gt;</div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>    [[nodiscard]]</div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>    <span class="keywordtype">bool</span> process_concatenated_aliases(Iter beginOptions, Sentinel endOptions, std::string_view arg, operation_data currentOperationData, top_level topLevel);</div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span> </div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>    <span class="keyword">auto</span> process_option(<a class="code hl_class" href="../../d1/d4b/classsequoia_1_1maths_1_1basic__tree__adaptor.html">option_tree</a> currentOptionTree, operation_data currentOperationData, top_level topLevel)-&gt;operation_data;</div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span> </div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>    <span class="keyword">template</span>&lt;std::input_or_output_iterator Iter, std::sentinel_for&lt;Iter&gt; Sentinel&gt;</div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>    [[nodiscard]]</div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>    <span class="keyword">static</span> std::string generate_help(Iter beginOptions, Sentinel endOptions);</div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span> </div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>    <span class="keyword">static</span> <span class="keywordtype">bool</span> is_alias(<span class="keyword">const</span> <a class="code hl_struct" href="../../db/da8/structsequoia_1_1parsing_1_1commandline_1_1option.html">option</a>&amp; opt, std::string_view s);</div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>  };</div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>}</div>
 <div class="ttc" id="aConcepts_8hpp_html"><div class="ttname"><a href="../../d3/d84/Concepts_8hpp.html">Concepts.hpp</a></div><div class="ttdoc">Concepts which are sufficiently general to appear in the sequoia namespace.</div></div>
 <div class="ttc" id="aDynamicTree_8hpp_html"><div class="ttname"><a href="../../db/dec/DynamicTree_8hpp.html">DynamicTree.hpp</a></div><div class="ttdoc">Restriction of Dynamic Graphs to Trees.</div></div>
 <div class="ttc" id="aGraphTraversalFunctions_8hpp_html"><div class="ttname"><a href="../../d4/d59/GraphTraversalFunctions_8hpp.html">GraphTraversalFunctions.hpp</a></div><div class="ttdoc">Breadth first, depth first and priority searches.</div></div>
-<div class="ttc" id="aclasssequoia_1_1maths_1_1basic__tree__adaptor_html"><div class="ttname"><a href="../../d1/d4b/classsequoia_1_1maths_1_1basic__tree__adaptor.html">sequoia::maths::basic_tree_adaptor</a></div><div class="ttdef"><b>Definition:</b> DynamicTree.hpp:97</div></div>
-<div class="ttc" id="aclasssequoia_1_1maths_1_1traversal__conditions_3_01disconnected__discovery__mode_1_1off_01_4_html"><div class="ttname"><a href="../../d7/ddc/classsequoia_1_1maths_1_1traversal__conditions_3_01disconnected__discovery__mode_1_1off_01_4.html">sequoia::maths::traversal_conditions&lt; disconnected_discovery_mode::off &gt;</a></div><div class="ttdef"><b>Definition:</b> GraphTraversalDetails.hpp:96</div></div>
+<div class="ttc" id="aclasssequoia_1_1maths_1_1basic__tree__adaptor_html"><div class="ttname"><a href="../../d1/d4b/classsequoia_1_1maths_1_1basic__tree__adaptor.html">sequoia::maths::basic_tree_adaptor</a></div><div class="ttdef"><b>Definition:</b> DynamicTree.hpp:171</div></div>
+<div class="ttc" id="aclasssequoia_1_1maths_1_1traversal__conditions_3_01disconnected__discovery__mode_1_1off_01_4_html"><div class="ttname"><a href="../../d7/ddc/classsequoia_1_1maths_1_1traversal__conditions_3_01disconnected__discovery__mode_1_1off_01_4.html">sequoia::maths::traversal_conditions&lt; disconnected_discovery_mode::off &gt;</a></div><div class="ttdef"><b>Definition:</b> GraphTraversalDetails.hpp:112</div></div>
 <div class="ttc" id="aclasssequoia_1_1maths_1_1tree_html"><div class="ttname"><a href="../../d6/dce/classsequoia_1_1maths_1_1tree.html">sequoia::maths::tree</a></div><div class="ttdef"><b>Definition:</b> DynamicTree.hpp:42</div></div>
-<div class="ttc" id="aclasssequoia_1_1parsing_1_1commandline_1_1argument__parser_html"><div class="ttname"><a href="../../df/dd0/classsequoia_1_1parsing_1_1commandline_1_1argument__parser.html">sequoia::parsing::commandline::argument_parser</a></div><div class="ttdoc">Parses command line arguments, building outcome from an option forest.</div><div class="ttdef"><b>Definition:</b> CommandLineArguments.hpp:178</div></div>
+<div class="ttc" id="aclasssequoia_1_1parsing_1_1commandline_1_1argument__parser_html"><div class="ttname"><a href="../../df/dd0/classsequoia_1_1parsing_1_1commandline_1_1argument__parser.html">sequoia::parsing::commandline::argument_parser</a></div><div class="ttdoc">Parses command line arguments, building outcome from an option forest.</div><div class="ttdef"><b>Definition:</b> CommandLineArguments.hpp:179</div></div>
 <div class="ttc" id="aclasssequoia_1_1parsing_1_1commandline_1_1proper__string_html"><div class="ttname"><a href="../../d6/dbe/classsequoia_1_1parsing_1_1commandline_1_1proper__string.html">sequoia::parsing::commandline::proper_string</a></div><div class="ttdoc">Class which wraps a std::string and enforces the invariant that the std::string be non-empty.</div><div class="ttdef"><b>Definition:</b> CommandLineArguments.hpp:33</div></div>
 <div class="ttc" id="astructsequoia_1_1parsing_1_1commandline_1_1operation_html"><div class="ttname"><a href="../../d0/d7a/structsequoia_1_1parsing_1_1commandline_1_1operation.html">sequoia::parsing::commandline::operation</a></div><div class="ttdoc">Used to build a forest of operations which will be invoked at the end of the parsing process.</div><div class="ttdef"><b>Definition:</b> CommandLineArguments.hpp:103</div></div>
 <div class="ttc" id="astructsequoia_1_1parsing_1_1commandline_1_1option_html"><div class="ttname"><a href="../../db/da8/structsequoia_1_1parsing_1_1commandline_1_1option.html">sequoia::parsing::commandline::option</a></div><div class="ttdoc">Used to specify a forest of options, against which the runtime commandline arguments are parsed.</div><div class="ttdef"><b>Definition:</b> CommandLineArguments.hpp:83</div></div>

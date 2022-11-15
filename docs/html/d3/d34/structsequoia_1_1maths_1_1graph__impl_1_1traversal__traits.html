@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.2"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: sequoia::maths::graph_impl::traversal_traits&lt; G, Q &gt; Struct Template Reference</title>
+<title>Sequoia: sequoia::maths::graph_impl::traversal_traits&lt; G, F, QArgs &gt; Struct Template Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -66,9 +66,44 @@ $(function() {
 </div>
 </div><!-- top -->
 <div class="header">
-  <div class="headertitle"><div class="title">sequoia::maths::graph_impl::traversal_traits&lt; G, Q &gt; Struct Template Reference</div></div>
+  <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="../../d0/d27/structsequoia_1_1maths_1_1graph__impl_1_1traversal__traits-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">sequoia::maths::graph_impl::traversal_traits&lt; G, F, QArgs &gt; Struct Template Reference</div></div>
 </div><!--header-->
 <div class="contents">
+<div class="dynheader">
+Inheritance diagram for sequoia::maths::graph_impl::traversal_traits&lt; G, F, QArgs &gt;:</div>
+<div class="dyncontent">
+ <div class="center">
+  <img src="../../d3/d34/structsequoia_1_1maths_1_1graph__impl_1_1traversal__traits.png" usemap="#sequoia::maths::graph_5Fimpl::traversal_5Ftraits_3C_20G_2C_20F_2C_20QArgs_20_3E_map" alt=""/>
+  <map id="sequoia::maths::graph_5Fimpl::traversal_5Ftraits_3C_20G_2C_20F_2C_20QArgs_20_3E_map" name="sequoia::maths::graph_5Fimpl::traversal_5Ftraits_3C_20G_2C_20F_2C_20QArgs_20_3E_map">
+<area href="../../dd/dfa/structsequoia_1_1maths_1_1graph__impl_1_1traversal__traits__base.html" alt="sequoia::maths::graph_impl::traversal_traits_base&lt; G, F, QArgs... &gt;" shape="rect" coords="0,0,393,24"/>
+  </map>
+</div></div>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a471f267b5f9b6847b46c78faea83c2a7"><td class="memItemLeft" align="right" valign="top"><a id="a471f267b5f9b6847b46c78faea83c2a7" name="a471f267b5f9b6847b46c78faea83c2a7"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>queue_type</b> = typename <a class="el" href="../../dd/dfa/structsequoia_1_1maths_1_1graph__impl_1_1traversal__traits__base.html">traversal_traits_base</a>&lt; G, F, QArgs... &gt;::queue_type</td></tr>
+<tr class="separator:a471f267b5f9b6847b46c78faea83c2a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa83c6c624ab06010061e60ba915a8536"><td class="memItemLeft" align="right" valign="top"><a id="aa83c6c624ab06010061e60ba915a8536" name="aa83c6c624ab06010061e60ba915a8536"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_index_type</b> = typename G::edge_index_type</td></tr>
+<tr class="separator:aa83c6c624ab06010061e60ba915a8536"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:ab91db96209c6bac932833fa306a9976f"><td class="memItemLeft" align="right" valign="top"><a id="ab91db96209c6bac932833fa306a9976f" name="ab91db96209c6bac932833fa306a9976f"></a>
+constexpr static queue_type&#160;</td><td class="memItemRight" valign="bottom"><b>make</b> (QArgs... args)</td></tr>
+<tr class="separator:ab91db96209c6bac932833fa306a9976f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1dd3b2b32ca7cf01219e4edf72e92133"><td class="memItemLeft" align="right" valign="top"><a id="a1dd3b2b32ca7cf01219e4edf72e92133" name="a1dd3b2b32ca7cf01219e4edf72e92133"></a>
+constexpr static auto&#160;</td><td class="memItemRight" valign="bottom"><b>begin</b> (const G &amp;<a class="el" href="../../d8/d87/classsequoia_1_1maths_1_1graph.html">graph</a>, const edge_index_type nodeIndex)</td></tr>
+<tr class="separator:a1dd3b2b32ca7cf01219e4edf72e92133"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae83a06622c1bac6fafa4d0d8565af3cd"><td class="memItemLeft" align="right" valign="top"><a id="ae83a06622c1bac6fafa4d0d8565af3cd" name="ae83a06622c1bac6fafa4d0d8565af3cd"></a>
+constexpr static auto&#160;</td><td class="memItemRight" valign="bottom"><b>end</b> (const G &amp;<a class="el" href="../../d8/d87/classsequoia_1_1maths_1_1graph.html">graph</a>, const edge_index_type nodeIndex)</td></tr>
+<tr class="separator:ae83a06622c1bac6fafa4d0d8565af3cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li>C:/Users/olive/OneDrive/sequoia/Source/sequoia/Maths/Graph/<a class="el" href="../../d1/d4d/GraphTraversalDetails_8hpp_source.html">GraphTraversalDetails.hpp</a></li>
 </ul>

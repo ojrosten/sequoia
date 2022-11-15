@@ -69,7 +69,8 @@ $(function() {
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
-<a href="#enum-members">Enumerations</a>  </div>
+<a href="#enum-members">Enumerations</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle"><div class="title">GraphTraversalDetails.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
@@ -86,15 +87,19 @@ $(function() {
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/df7/structsequoia_1_1maths_1_1null__func__obj.html">sequoia::maths::null_func_obj</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/dd9/structsequoia_1_1maths_1_1traversal__constant.html">sequoia::maths::traversal_constant&lt; F &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/de4/classsequoia_1_1maths_1_1traversal__conditions__base.html">sequoia::maths::traversal_conditions_base</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d9a/classsequoia_1_1maths_1_1traversal__conditions.html">sequoia::maths::traversal_conditions&lt; FindDisconnected &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/ddc/classsequoia_1_1maths_1_1traversal__conditions_3_01disconnected__discovery__mode_1_1off_01_4.html">sequoia::maths::traversal_conditions&lt; disconnected_discovery_mode::off &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d46/structsequoia_1_1maths_1_1graph__impl_1_1iterator__getter.html">sequoia::maths::graph_impl::iterator_getter&lt; Forward &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d46/structsequoia_1_1maths_1_1graph__impl_1_1iterator__getter.html">sequoia::maths::graph_impl::iterator_getter&lt; F &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/dd6/structsequoia_1_1maths_1_1graph__impl_1_1iterator__getter_3_01false_01_4.html">sequoia::maths::graph_impl::iterator_getter&lt; false &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d50/structsequoia_1_1maths_1_1graph__impl_1_1iterator__getter_3_01traversal__flavour_1_1pseudo__depth__first_01_4.html">sequoia::maths::graph_impl::iterator_getter&lt; traversal_flavour::pseudo_depth_first &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d34/structsequoia_1_1maths_1_1graph__impl_1_1traversal__traits.html">sequoia::maths::graph_impl::traversal_traits&lt; G, F, QArgs &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/def/classsequoia_1_1maths_1_1graph__impl_1_1node__comparer.html">sequoia::maths::graph_impl::node_comparer&lt; G, Compare &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -104,11 +109,23 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d1a/classsequoia_1_1maths_1_1graph__impl_1_1loop__processor_3_01G_00_01graph__flavour_1_1undirected_01_4.html">sequoia::maths::graph_impl::loop_processor&lt; G, graph_flavour::undirected &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d54/classsequoia_1_1maths_1_1graph__impl_1_1traversal__helper.html">sequoia::maths::graph_impl::traversal_helper&lt; G, Q &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d54/classsequoia_1_1maths_1_1graph__impl_1_1traversal__helper.html">sequoia::maths::graph_impl::traversal_helper&lt; G &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
+<tr class="memitem:a9c7e59249db0f086c17cf9ee11e8348f"><td class="memItemLeft" align="right" valign="top"><a id="a9c7e59249db0f086c17cf9ee11e8348f" name="a9c7e59249db0f086c17cf9ee11e8348f"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::breadth_first_search_type</b> = traversal_constant&lt; traversal_flavour::breadth_first &gt;</td></tr>
+<tr class="separator:a9c7e59249db0f086c17cf9ee11e8348f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0520f6019b286bc394e49856b803e5ce"><td class="memItemLeft" align="right" valign="top"><a id="a0520f6019b286bc394e49856b803e5ce" name="a0520f6019b286bc394e49856b803e5ce"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::depth_first_search_type</b> = traversal_constant&lt; traversal_flavour::depth_first &gt;</td></tr>
+<tr class="separator:a0520f6019b286bc394e49856b803e5ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab7d72320ab00df2293242d4778313ee7"><td class="memItemLeft" align="right" valign="top"><a id="ab7d72320ab00df2293242d4778313ee7" name="ab7d72320ab00df2293242d4778313ee7"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::pseudo_depth_first_search_type</b> = traversal_constant&lt; traversal_flavour::pseudo_depth_first &gt;</td></tr>
+<tr class="separator:ab7d72320ab00df2293242d4778313ee7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af0de7f4e85a8345699198acdd16dc3a3"><td class="memItemLeft" align="right" valign="top"><a id="af0de7f4e85a8345699198acdd16dc3a3" name="af0de7f4e85a8345699198acdd16dc3a3"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::priority_first_search_type</b> = traversal_constant&lt; traversal_flavour::priority &gt;</td></tr>
+<tr class="separator:af0de7f4e85a8345699198acdd16dc3a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4f7e285ab5159afad7ae408d6a645762"><td class="memItemLeft" align="right" valign="top"><a id="a4f7e285ab5159afad7ae408d6a645762" name="a4f7e285ab5159afad7ae408d6a645762"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::find_disconnected_t</b> = traversal_conditions&lt; disconnected_discovery_mode::on &gt;</td></tr>
 <tr class="separator:a4f7e285ab5159afad7ae408d6a645762"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -122,10 +139,27 @@ Enumerations</h2></td></tr>
 , <b>off</b>
  }</td></tr>
 <tr class="separator:a0f9fcc7c16954f846507dbac7de71258"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab0a9b29bb7b81270448f5df1391feeb0"><td class="memItemLeft" align="right" valign="top"><a id="ab0a9b29bb7b81270448f5df1391feeb0" name="ab0a9b29bb7b81270448f5df1391feeb0"></a>enum class &#160;</td><td class="memItemRight" valign="bottom"><b>edge_processing_mode</b> { <b>immediate</b>
-, <b>deferred</b>
+<tr class="memitem:acca00978f64802d0b8c3697326cc189a"><td class="memItemLeft" align="right" valign="top"><a id="acca00978f64802d0b8c3697326cc189a" name="acca00978f64802d0b8c3697326cc189a"></a>enum class &#160;</td><td class="memItemRight" valign="bottom"><b>traversal_flavour</b> { <b>breadth_first</b>
+, <b>depth_first</b>
+, <b>pseudo_depth_first</b>
+, <b>priority</b>
  }</td></tr>
-<tr class="separator:ab0a9b29bb7b81270448f5df1391feeb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:acca00978f64802d0b8c3697326cc189a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:af9e393d98aededcac5d80ba8c0b47892"><td class="memItemLeft" align="right" valign="top"><a id="af9e393d98aededcac5d80ba8c0b47892" name="af9e393d98aededcac5d80ba8c0b47892"></a>
+constexpr breadth_first_search_type&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::breadth_first</b> {}</td></tr>
+<tr class="separator:af9e393d98aededcac5d80ba8c0b47892"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8c378d904ba7b1ab7cf47b78d5062da6"><td class="memItemLeft" align="right" valign="top"><a id="a8c378d904ba7b1ab7cf47b78d5062da6" name="a8c378d904ba7b1ab7cf47b78d5062da6"></a>
+constexpr depth_first_search_type&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::depth_first</b> {}</td></tr>
+<tr class="separator:a8c378d904ba7b1ab7cf47b78d5062da6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abff9424afd1f0d6b0897c228d43b8feb"><td class="memItemLeft" align="right" valign="top"><a id="abff9424afd1f0d6b0897c228d43b8feb" name="abff9424afd1f0d6b0897c228d43b8feb"></a>
+constexpr pseudo_depth_first_search_type&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::pseudo_depth_first</b> {}</td></tr>
+<tr class="separator:abff9424afd1f0d6b0897c228d43b8feb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5fade8e153a6c532cb197cd11066c21f"><td class="memItemLeft" align="right" valign="top"><a id="a5fade8e153a6c532cb197cd11066c21f" name="a5fade8e153a6c532cb197cd11066c21f"></a>
+constexpr priority_first_search_type&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::priority_first</b> {}</td></tr>
+<tr class="separator:a5fade8e153a6c532cb197cd11066c21f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Meta-programming urilities and underlying function for graph traversals. </p>
