@@ -41,10 +41,12 @@ namespace sequoia::testing
     object_generator() = default;
 
     template<std::invocable Fn>
+      requires std::convertible_to<std::invoke_result_t<Fn>, T>
     object_generator(Fn f) : fn{std::move(f)}
     {}
 
     object_generator(T t)
+      requires std::movable<T>
       : fn{[t{std::move(t)}]() { return t; }}
     {}
 
