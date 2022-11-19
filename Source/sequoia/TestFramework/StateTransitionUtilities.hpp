@@ -36,10 +36,9 @@ namespace sequoia::testing
   };
 
   template<class T>
-  struct object_generator
+  class object_generator
   {
-    object_generator() = default;
-
+  public:
     template<std::invocable Fn>
       requires std::convertible_to<std::invoke_result_t<Fn>, T>
     object_generator(Fn f) : fn{std::move(f)}
@@ -50,6 +49,9 @@ namespace sequoia::testing
       : fn{[t{std::move(t)}]() { return t; }}
     {}
 
+    [[nodiscard]]
+    decltype(auto) operator()() const { return fn(); }
+  private:
     std::function<T()> fn;
   };
 
@@ -66,11 +68,11 @@ namespace sequoia::testing
         [description,&g,checkFn](auto i) {
           const auto [parent,target,message] {make(description, i)};
 
-          const auto& parentObject{(g.cbegin_node_weights() + parent)->fn()};
+          const auto& parentObject{g.cbegin_node_weights()[parent]()};
           const auto& w{i->weight()};
           checkFn(message,
                   w.fn(parentObject),
-                  (g.cbegin_node_weights() + target)->fn());
+                  g.cbegin_node_weights()[target]());
         }
       };
 
@@ -84,11 +86,11 @@ namespace sequoia::testing
         [description,&g,checkFn](auto i) {
           const auto [parent,target,message] {make(description, i)};
 
-          const auto& parentObject{(g.cbegin_node_weights() + parent)->fn()};
+          const auto& parentObject{g.cbegin_node_weights()[parent]()};
           const auto& w{i->weight()};
           checkFn(message,
                   w.fn(parentObject),
-                  (g.cbegin_node_weights() + target)->fn(),
+                  g.cbegin_node_weights()[target](),
                   parentObject);
         }
       };
@@ -104,12 +106,12 @@ namespace sequoia::testing
         [description,&g,checkFn](auto i) {
           const auto [parent,target,message] {make(description, i)};
 
-          const auto parentIter{(g.cbegin_node_weights() + parent)};
+          const auto parentGenerator{g.cbegin_node_weights()[parent]};
           const auto& w{i->weight()};
           checkFn(message,
-                  w.fn(parentIter->fn()),
-                  (g.cbegin_node_weights() + target)->fn(),
-                  parentIter->fn(),
+                  w.fn(parentGenerator()),
+                  g.cbegin_node_weights()[target](),
+                  parentGenerator(),
                   w.ordering);
         }
       };
@@ -124,12 +126,12 @@ namespace sequoia::testing
         [description,&g,checkFn](auto i) {
           const auto [parent,target,message] {make(description, i)};
 
-          const auto parentIter{(g.cbegin_node_weights() + parent)};
+          const auto parentGenerator{g.cbegin_node_weights()[parent]};
           const auto& w{i->weight()};
           checkFn(message,
-                  [&]() { return w.fn(parentIter->fn()); },
-                  (g.cbegin_node_weights() + target)->fn,
-                  parentIter->fn);
+                  [&]() { return w.fn(parentGenerator()); },
+                  g.cbegin_node_weights()[target],
+                  parentGenerator);
         }
       };
 
@@ -144,12 +146,12 @@ namespace sequoia::testing
         [description,&g,checkFn](auto i) {
           const auto [parent,target,message] {make(description, i)};
 
-          const auto parentIter{(g.cbegin_node_weights() + parent)};
+          const auto parentGenerator{g.cbegin_node_weights()[parent]};
           const auto& w{i->weight()};
           checkFn(message,
-                  [&]() { return w.fn(parentIter->fn()); },
-                  (g.cbegin_node_weights() + target)->fn,
-                  parentIter->fn,
+                  [&]() { return w.fn(parentGenerator()); },
+                  g.cbegin_node_weights()[target],
+                  parentGenerator,
                   w.ordering);
         }
       };
