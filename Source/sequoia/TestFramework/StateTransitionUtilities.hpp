@@ -65,20 +65,31 @@ namespace sequoia::testing
   template<class T, invocable_r<T, const T&> TransitionFn = std::function<T(const T&)>>
   struct transition_checker
   {
+  public:
     using transition_graph = maths::graph<maths::directed_flavour::directed, transition_info<T, TransitionFn>, object_generator<T>>;
+  private:
+    using edge_iterator = typename transition_graph::const_edge_iterator;
+    using size_type = typename transition_graph::size_type;
+
+    template<class CheckFn, class... Args>
+    static void invoke_check_fn(const transition_graph& g, edge_iterator i, CheckFn fn, const std::string& message, object_generator<T> parentGenerator, size_type target, Args... args)
+    {
+      const auto& w{i->weight()};
+      fn(message,
+        w.fn(parentGenerator()),
+        g.cbegin_node_weights()[target](),
+        std::move(args)...);
+    }
+  public:  
     using edge = typename transition_graph::edge_type;
 
     template<std::invocable<std::string, T, T> CheckFn>
     static void check(std::string_view description, const transition_graph& g, CheckFn checkFn)
     {
       auto edgeFn{
-        [description,&g,checkFn](auto i) {
+        [description,&g,checkFn](edge_iterator i) {
           const auto [message, parentGenerator, target] {make(description, g, i)};
-
-          const auto& w{i->weight()};
-          checkFn(message,
-                  w.fn(parentGenerator()),
-                  g.cbegin_node_weights()[target]());
+          invoke_check_fn(g, i, checkFn, message, parentGenerator, target);
         }
       };
 
@@ -89,14 +100,9 @@ namespace sequoia::testing
     static void check(std::string_view description, const transition_graph& g, CheckFn checkFn)
     {
       auto edgeFn{
-        [description,&g,checkFn](auto i) {
+        [description,&g,checkFn](edge_iterator i) {
           const auto [message, parentGenerator, target] {make(description, g, i)};
-
-          const auto& w{i->weight()};
-          checkFn(message,
-                  w.fn(parentGenerator()),
-                  g.cbegin_node_weights()[target](),
-                  parentGenerator());
+          invoke_check_fn(g, i, checkFn, message, parentGenerator, target, parentGenerator());
         }
       };
 
@@ -108,15 +114,9 @@ namespace sequoia::testing
     static void check(std::string_view description, const transition_graph& g, CheckFn checkFn)
     {
       auto edgeFn{
-        [description,&g,checkFn](auto i) {
+        [description,&g,checkFn](edge_iterator i) {
           const auto [message, parentGenerator, target] {make(description, g, i)};
-
-          const auto& w{i->weight()};
-          checkFn(message,
-                  w.fn(parentGenerator()),
-                  g.cbegin_node_weights()[target](),
-                  parentGenerator(),
-                  w.ordering);
+          invoke_check_fn(g, i, checkFn, message, parentGenerator, target, parentGenerator(), i->weight().ordering);
         }
       };
 
@@ -127,7 +127,7 @@ namespace sequoia::testing
     static void check(std::string_view description, const transition_graph& g, CheckFn checkFn)
     {
       auto edgeFn{
-        [description,&g,checkFn](auto i) {
+        [description,&g,checkFn](edge_iterator i) {
           const auto [message, parentGenerator, target] {make(description, g, i)};
 
           const auto& w{i->weight()};
@@ -146,7 +146,7 @@ namespace sequoia::testing
     static void check(std::string_view description, const transition_graph& g, CheckFn checkFn)
     {
       auto edgeFn{
-        [description,&g,checkFn](auto i) {
+        [description,&g,checkFn](edge_iterator i) {
           const auto [message, parentGenerator, target] {make(description, g, i)};
 
           const auto& w{i->weight()};
@@ -163,9 +163,6 @@ namespace sequoia::testing
 
 
   private:
-    using edge_iterator = typename transition_graph::const_edge_iterator;
-    using size_type = typename transition_graph::size_type;
-
     template<std::invocable<edge_iterator> EdgeFn>
     static void check(const transition_graph& g, EdgeFn edgeFn)
     {
@@ -173,7 +170,7 @@ namespace sequoia::testing
       traverse(breadth_first, g, find_disconnected_t{0}, null_func_obj{}, null_func_obj{}, edgeFn);
     }
 
-    struct info
+    struct edge_fn_info
     {
       std::string message;
       object_generator<T> parentGenerator;
@@ -181,7 +178,7 @@ namespace sequoia::testing
     };
 
     [[nodiscard]]
-    static info make(std::string_view description, const transition_graph& g, edge_iterator i)
+    static edge_fn_info make(std::string_view description, const transition_graph& g, edge_iterator i)
     {
       const auto& w{i->weight()};
       const auto parent{i.partition_index()}, target{i->target_node()};
