@@ -49,6 +49,13 @@ namespace sequoia::testing
       : fn{[t{std::move(t)}]() -> const T& { return t; }}
     {}
 
+    template<class... Args>
+      requires (initializable_from<T, Args...> &&
+               ((sizeof...(Args) != 1) || (!std::is_same_v<T, std::remove_cvref_t<Args>> && ...)))
+    object_generator(Args&&... args)
+      : object_generator{T{std::forward<Args>(args)...}}
+    {}
+
     [[nodiscard]]
     decltype(auto) operator()() const { return fn(); }
   private:

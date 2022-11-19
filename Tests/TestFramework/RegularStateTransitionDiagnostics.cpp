@@ -178,7 +178,7 @@ namespace sequoia::testing
 
         { edge_t{0, "Subtracting (1.1, -0.7)", [](cmplx f) { return f - cmplx{1.0, -0.7}; } } }
       },
-      {cmplx{0.0, 0.0}, cmplx{1.1, -0.7}}
+      {{0.0, 0.0}, cmplx{1.1, -0.7}}
     };
 
     auto checker{
