@@ -46,7 +46,7 @@ namespace sequoia::testing
 
     object_generator(T t)
       requires std::movable<T>
-      : fn{[t{std::move(t)}]() { return t; }}
+      : fn{[t{std::move(t)}]() -> const T& { return t; }}
     {}
 
     [[nodiscard]]
