@@ -76,11 +76,23 @@ namespace sequoia::testing
     {
       const auto& w{i->weight()};
       fn(message,
-        w.fn(parentGenerator()),
-        g.cbegin_node_weights()[target](),
-        std::move(args)...);
+         w.fn(parentGenerator()),
+         g.cbegin_node_weights()[target](),
+         std::move(args)...);
     }
-  public:  
+
+    template<class CheckFn, class... Args>
+    static void invoke_check_fn(std::string_view description, const transition_graph& g, edge_iterator i, CheckFn fn, Args... args)
+    {
+      const auto [message, parentGenerator, target] {make(description, g, i)};
+      const auto& w{i->weight()};
+      fn(message,
+         [&]() { return w.fn(parentGenerator()); },
+         g.cbegin_node_weights()[target],
+         parentGenerator,
+         std::move(args)...);
+    }
+  public:
     using edge = typename transition_graph::edge_type;
 
     template<std::invocable<std::string, T, T> CheckFn>
@@ -127,15 +139,7 @@ namespace sequoia::testing
     static void check(std::string_view description, const transition_graph& g, CheckFn checkFn)
     {
       auto edgeFn{
-        [description,&g,checkFn](edge_iterator i) {
-          const auto [message, parentGenerator, target] {make(description, g, i)};
-
-          const auto& w{i->weight()};
-          checkFn(message,
-                  [&]() { return w.fn(parentGenerator()); },
-                  g.cbegin_node_weights()[target],
-                  parentGenerator);
-        }
+        [description,&g,checkFn](edge_iterator i) { invoke_check_fn(description, g, i, checkFn); }
       };
 
       check(g, edgeFn);
@@ -146,16 +150,7 @@ namespace sequoia::testing
     static void check(std::string_view description, const transition_graph& g, CheckFn checkFn)
     {
       auto edgeFn{
-        [description,&g,checkFn](edge_iterator i) {
-          const auto [message, parentGenerator, target] {make(description, g, i)};
-
-          const auto& w{i->weight()};
-          checkFn(message,
-                  [&]() { return w.fn(parentGenerator()); },
-                  g.cbegin_node_weights()[target],
-                  parentGenerator,
-                  w.ordering);
-        }
+        [description,&g,checkFn](edge_iterator i) { invoke_check_fn(description, g, i, checkFn, i->weight().ordering); }
       };
 
       check(g, edgeFn);
