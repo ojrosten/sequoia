@@ -73,12 +73,11 @@ namespace sequoia::testing
     {
       auto edgeFn{
         [description,&g,checkFn](auto i) {
-          const auto [parent,target,message] {make(description, i)};
+          const auto [message, parentGenerator, target] {make(description, g, i)};
 
-          const auto& parentObject{g.cbegin_node_weights()[parent]()};
           const auto& w{i->weight()};
           checkFn(message,
-                  w.fn(parentObject),
+                  w.fn(parentGenerator()),
                   g.cbegin_node_weights()[target]());
         }
       };
@@ -91,14 +90,13 @@ namespace sequoia::testing
     {
       auto edgeFn{
         [description,&g,checkFn](auto i) {
-          const auto [parent,target,message] {make(description, i)};
+          const auto [message, parentGenerator, target] {make(description, g, i)};
 
-          const auto& parentObject{g.cbegin_node_weights()[parent]()};
           const auto& w{i->weight()};
           checkFn(message,
-                  w.fn(parentObject),
+                  w.fn(parentGenerator()),
                   g.cbegin_node_weights()[target](),
-                  parentObject);
+                  parentGenerator());
         }
       };
 
@@ -111,9 +109,8 @@ namespace sequoia::testing
     {
       auto edgeFn{
         [description,&g,checkFn](auto i) {
-          const auto [parent,target,message] {make(description, i)};
+          const auto [message, parentGenerator, target] {make(description, g, i)};
 
-          const auto parentGenerator{g.cbegin_node_weights()[parent]};
           const auto& w{i->weight()};
           checkFn(message,
                   w.fn(parentGenerator()),
@@ -131,9 +128,8 @@ namespace sequoia::testing
     {
       auto edgeFn{
         [description,&g,checkFn](auto i) {
-          const auto [parent,target,message] {make(description, i)};
+          const auto [message, parentGenerator, target] {make(description, g, i)};
 
-          const auto parentGenerator{g.cbegin_node_weights()[parent]};
           const auto& w{i->weight()};
           checkFn(message,
                   [&]() { return w.fn(parentGenerator()); },
@@ -151,9 +147,8 @@ namespace sequoia::testing
     {
       auto edgeFn{
         [description,&g,checkFn](auto i) {
-          const auto [parent,target,message] {make(description, i)};
+          const auto [message, parentGenerator, target] {make(description, g, i)};
 
-          const auto parentGenerator{g.cbegin_node_weights()[parent]};
           const auto& w{i->weight()};
           checkFn(message,
                   [&]() { return w.fn(parentGenerator()); },
@@ -180,20 +175,21 @@ namespace sequoia::testing
 
     struct info
     {
-      size_type parent, target;
       std::string message;
+      object_generator<T> parentGenerator;
+      size_type target;
     };
 
     [[nodiscard]]
-    static info make(std::string_view description, edge_iterator i)
+    static info make(std::string_view description, const transition_graph& g, edge_iterator i)
     {
       const auto& w{i->weight()};
       const auto parent{i.partition_index()}, target{i->target_node()};
-      return {parent,
-              target,
-              append_lines(description,
+      return {append_lines(description,
                            std::string{"Transition from node "}.append(std::to_string(parent)).append(" to ").append(std::to_string(target)),
-                           w.description)};
+                           w.description),
+              g.cbegin_node_weights()[parent],
+              target};
     }
   };
 }
