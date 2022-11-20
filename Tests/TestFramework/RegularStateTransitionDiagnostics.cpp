@@ -15,6 +15,30 @@
 
 namespace sequoia::testing
 {
+  namespace
+  {
+    struct broken_constructor
+    {
+      broken_constructor(int) {}
+
+      friend auto operator<=>(const broken_constructor&, const broken_constructor&) = default;
+
+      int x{};
+    };
+  }
+
+  template<>
+  struct value_tester<broken_constructor>
+  {
+    using type = broken_constructor;
+
+    template<test_mode Mode>
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& obtained, int prediction)
+    {
+      check(equality, "Wrapped value", logger, obtained.x, prediction);
+    }
+  };
+
   [[nodiscard]]
   std::string_view regular_state_transition_false_negative_diagnostics::source_file() const noexcept
   {
@@ -144,6 +168,7 @@ namespace sequoia::testing
   {
     test_orderable();
     test_equality_comparable();
+    test_broken_constructor();
   }
 
   void regular_state_transition_false_positive_diagnostics::test_orderable()
@@ -188,5 +213,24 @@ namespace sequoia::testing
     };
 
     transition_checker<cmplx>::check(LINE("Mistake in transition functions"), g, checker);
+  }
+
+  void regular_state_transition_false_positive_diagnostics::test_broken_constructor()
+  {
+    using transition_checker_type  = transition_checker<broken_constructor>;
+    using broken_constructor_graph = transition_checker_type::transition_graph;
+    using edges_initializer        = broken_constructor_graph::edges_initializer;
+    using edge_t                   = transition_checker_type::edge;
+
+    auto initCheckFn{
+      [this](std::string_view message, const broken_constructor& bc, int i) {
+        check(equivalence, message, bc, i);
+      }
+    };
+
+    broken_constructor_graph g{
+      {{}},
+      {{LINE(""), initCheckFn, 42}}
+    };
   }
 }

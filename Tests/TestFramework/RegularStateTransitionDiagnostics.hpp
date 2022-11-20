@@ -41,5 +41,6 @@ namespace sequoia::testing
 
     void test_orderable();
     void test_equality_comparable();
+    void test_broken_constructor();
   };
 }

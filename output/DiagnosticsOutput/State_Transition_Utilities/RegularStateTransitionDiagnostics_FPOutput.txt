@@ -1,4 +1,4 @@
-	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 167
+	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 192
 	Mistake in transition functions
 
 	Transition from node 0 to 1
@@ -10,7 +10,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 167
+	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 192
 	Mistake in transition functions
 
 	Transition from node 1 to 0
@@ -22,7 +22,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 190
+	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 215
 	Mistake in transition functions
 
 	Transition from node 0 to 1
@@ -34,7 +34,7 @@
 
 	=======================================
 
-	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 190
+	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 215
 	Mistake in transition functions
 
 	Transition from node 1 to 0
@@ -43,6 +43,21 @@
 	operator== returned false
 	Obtained : (0.1,0)
 	Predicted: (0,0)
+
+	=======================================
+
+	Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 233
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<sequoia::testing::(anonymous namespace)::broken_constructor>]
+	Checking for equivalence with:
+	[int]
+
+	  Wrapped value
+	  [int]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 42
 
 	=======================================
 
