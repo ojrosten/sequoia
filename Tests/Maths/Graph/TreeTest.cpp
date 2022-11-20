@@ -41,13 +41,15 @@ namespace sequoia::testing
     using tree_type = tree<Directedness, TreeLinkDir, null_weight, int>;
     using initializer = tree_initializer<int>;
 
-    tree_type x{}, y{{1}}, z{{1, {{2}}}};
+    auto initCheckFn{
+      [this](std::string_view message, const tree_type& t, initializer i) {
+        check(equivalence, message, t, i);
+      }
+    };
 
-    check(equivalence, LINE(""), y, initializer{1});
-    check(equivalence, LINE(""), z, initializer{1, {{2}}});
-
-    using tree_state_graph = typename transition_checker<tree_type>::transition_graph;
-    using edge_t           = typename transition_checker<tree_type>::edge;
+    using transition_checker_type = transition_checker<tree_type>;
+    using tree_state_graph        = typename transition_checker_type::transition_graph;
+    using edge_t                  = typename transition_checker_type::edge;
 
     tree_state_graph g{
       {
@@ -83,28 +85,29 @@ namespace sequoia::testing
         } // end node 5 edges
       }, // end edges
       {
-        tree_type{},
         // empty
-        tree_type{{42}},
+        tree_type{},
+        //{LINE(""), initCheckFn, initializer{}},
         // 42
-        tree_type{{42, {{-7}}}},
+        {LINE(""), initCheckFn, initializer{42}},
         // -7
         //  \
         //   42
-        tree_type{{42, {{6}}}},
+        {LINE(""), initCheckFn, initializer{42, {{-7}}}},
         //  6
         //  \
         //   42
-        tree_type{{42, {{-7}, {6}}}},
+        {LINE(""), initCheckFn, initializer{42, {{6}}}},
         // -7  6
         //  \ /
         //   42
-        tree_type{{42, {{-7}, {6, {{3}}}}}}
+        {LINE(""), initCheckFn, initializer{42, {{-7}, {6}}}},
         //       3
         //      /
         // -7  6
         //  \ /
         //   42
+        {LINE(""), initCheckFn, initializer{42, {{-7}, {6, {{3}}}}}}
       } // end nodes
     };
 
@@ -115,7 +118,7 @@ namespace sequoia::testing
         }
     };
 
-    transition_checker<tree_type>::check(LINE(""), g, checker);
+    transition_checker_type::check(LINE(""), g, checker);
   }
 
   template<maths::directed_flavour Directedness, maths::tree_link_direction TreeLinkDir>

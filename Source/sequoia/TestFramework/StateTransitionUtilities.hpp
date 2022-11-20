@@ -41,12 +41,12 @@ namespace sequoia::testing
   public:
     template<std::invocable Fn>
       requires std::convertible_to<std::invoke_result_t<Fn>, T>
-    object_generator(Fn f) : fn{std::move(f)}
+    object_generator(Fn f) : m_Fn{std::move(f)}
     {}
 
     object_generator(T t)
       requires std::movable<T>
-      : fn{[t{std::move(t)}]() -> const T& { return t; }}
+      : m_Fn{[t{std::move(t)}]() -> const T& { return t; }}
     {}
 
     template<class... Args>
@@ -56,17 +56,27 @@ namespace sequoia::testing
       : object_generator{T{std::forward<Args>(args)...}}
     {}
 
+    template<class InitCheckFn, class... Args>
+      requires (initializable_from<T, Args...> && std::invocable<InitCheckFn, std::string, T, Args>)
+    object_generator(std::string_view message, InitCheckFn initCheckFn, const Args&... args)
+      : object_generator{T{args...}}
+    {
+      initCheckFn(message, m_Fn(), args...);
+    }
+
     [[nodiscard]]
-    decltype(auto) operator()() const { return fn(); }
+    decltype(auto) operator()() const { return m_Fn(); }
   private:
-    std::function<T()> fn;
+    std::function<T()> m_Fn;
   };
 
-  template<class T, invocable_r<T, const T&> TransitionFn = std::function<T(const T&)>>
+  template<class T>
   struct transition_checker
   {
   public:
-    using transition_graph = maths::graph<maths::directed_flavour::directed, transition_info<T, TransitionFn>, object_generator<T>>;
+    using transition_graph
+      = maths::graph<maths::directed_flavour::directed, transition_info<T, std::function<T(const T&)>>, object_generator<T>>;
+
   private:
     using edge_iterator = typename transition_graph::const_edge_iterator;
     using size_type = typename transition_graph::size_type;
