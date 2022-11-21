@@ -21,8 +21,6 @@ namespace sequoia::testing
     {
       broken_constructor(int) {}
 
-      friend auto operator<=>(const broken_constructor&, const broken_constructor&) = default;
-
       int x{};
     };
   }
@@ -219,8 +217,6 @@ namespace sequoia::testing
   {
     using transition_checker_type  = transition_checker<broken_constructor>;
     using broken_constructor_graph = transition_checker_type::transition_graph;
-    using edges_initializer        = broken_constructor_graph::edges_initializer;
-    using edge_t                   = transition_checker_type::edge;
 
     auto initCheckFn{
       [this](std::string_view message, const broken_constructor& bc, int i) {

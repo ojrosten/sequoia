@@ -57,7 +57,7 @@ namespace sequoia::testing
     {}
 
     template<class InitCheckFn, class... Args>
-      requires (initializable_from<T, Args...> && std::invocable<InitCheckFn, std::string, T, Args>)
+      requires (initializable_from<T, Args...> && std::invocable<InitCheckFn, std::string, T, Args...>)
     object_generator(std::string_view message, InitCheckFn initCheckFn, const Args&... args)
       : object_generator{T{args...}}
     {
@@ -97,7 +97,7 @@ namespace sequoia::testing
       const auto [message, parentGenerator, target] {make(description, g, i)};
       const auto& w{i->weight()};
       fn(message,
-         [&]() { return w.fn(parentGenerator()); },
+         [&w,pg{parentGenerator}]() { return w.fn(pg()); },
          g.cbegin_node_weights()[target],
          parentGenerator,
          std::move(args)...);
