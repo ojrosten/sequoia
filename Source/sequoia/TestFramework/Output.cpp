@@ -23,7 +23,7 @@
 namespace sequoia::testing
 {
   namespace
-  {
+  {    
     std::string& remove_enum_spec(std::string& name)
     {
       std::string::size_type pos{};
@@ -45,6 +45,30 @@ namespace sequoia::testing
       return name;
     }
 
+    std::string& remove_integral_suffix(std::string& name)
+    {
+      constexpr auto npos{std::string::npos};
+
+      std::string::size_type pos{};
+      while(pos < name.size())
+      {
+        const auto open{name.find_first_of("< ", pos)};
+        pos = open;
+        while((pos < name.size() - 1) && std::isdigit(name[++pos])) {}
+        
+        if((pos < name.size()) && (pos-1 > open) && std::isalpha(name[pos]))
+        {
+          if(const auto close{name.find_first_of(",>", pos)}; close != npos)
+          {
+            name.erase(pos, close - pos);
+            pos++;
+          }
+        }
+      }
+      
+      return name;
+    }
+
     std::string& tidy_name(std::string& name)
     {
       if constexpr(sizeof(std::size_t) == sizeof(uint64_t))
@@ -58,7 +82,7 @@ namespace sequoia::testing
 
       replace_all(name, " <", "true", ",>", "1");
       replace_all(name, " <", "false", ",>", "0");
-      replace_all(name, [](char c) { return std::isdigit(c) > 0; }, "ul", [](char) { return true; }, "");
+      remove_integral_suffix(name);
 
       remove_enum_spec(name);
       constexpr auto npos{std::string::npos};
@@ -261,6 +285,7 @@ namespace sequoia::testing
   {
     replace_all(name, ">>", ">> ");
     replace_all(name, "__cxx11::", "");
+    replace_all(name, "_V2::", "");
     return tidy_name(name);
   }
 
