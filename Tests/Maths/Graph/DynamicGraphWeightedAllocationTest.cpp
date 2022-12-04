@@ -36,7 +36,7 @@ namespace sequoia::testing
     }
 
     {
-      graph_test_helper<complex<int>, complex<double>, weighted_graph_allocation_test>  helper{*this};
+      graph_test_helper<complex<float>, complex<double>, weighted_graph_allocation_test>  helper{*this};
 
       using ntraits = node_traits<complex<double>>;
 

@@ -30,7 +30,7 @@ namespace sequoia::testing
     }
 
     {
-      graph_test_helper<complex<int>, complex<double>, weighted_graph_test> helper{*this};
+      graph_test_helper<complex<float>, complex<double>, weighted_graph_test> helper{*this};
       helper.run_tests();
     }
 
@@ -75,7 +75,7 @@ namespace sequoia::testing
     check_exception_thrown<std::out_of_range>(LINE("No nodes to erase"), [&graph](){ graph.erase_node(0); });
     check_exception_thrown<std::out_of_range>(LINE("No edges to erase"), [&graph](){ graph.erase_edge(graph.cbegin_edges(0)); });
     check_exception_thrown<std::out_of_range>(LINE("No nodes to set weight"), [&graph](){ graph.node_weight(graph.cend_node_weights(), 1.0); });
-    check_exception_thrown<std::out_of_range>(LINE("No edges to set weight"), [&graph](){ graph.set_edge_weight(graph.cbegin_edges(0), 1); });
+    check_exception_thrown<std::out_of_range>(LINE("No edges to set weight"), [&graph]() { graph.set_edge_weight(graph.cbegin_edges(0), EdgeWeight{1}); });
 
     check(equality, LINE(""), graph, graph_t{});
 
@@ -103,7 +103,7 @@ namespace sequoia::testing
 
     check(equality, LINE(""), graph, graph_t{edge_init_list_t{{}}, {{1.1,-4.3}}});
 
-    graph.join(0, 0, 1);
+    graph.join(0, 0, EdgeWeight{1});
     //   /\ 1
     //   \/
     //  (1.1-i4.3)
@@ -135,7 +135,7 @@ namespace sequoia::testing
 
     check_semantics(LINE("Regular semantics"), graph, graph_t{});
 
-    graph.set_edge_weight(graph.cbegin_edges(0), -2);
+    graph.set_edge_weight(graph.cbegin_edges(0), EdgeWeight{-2});
     //   /\ -2
     //   \/
     // (1.1-i4.3)
@@ -157,7 +157,7 @@ namespace sequoia::testing
       check(equality, LINE(""), graph, graph_t{edge_init_list_t{{edge_init_t{0,1,-2}, edge_init_t{0,0,-2}}}, {{1.1,-4.3}}});
     }
 
-    graph.set_edge_weight(graph.crbegin_edges(0), -4);
+    graph.set_edge_weight(graph.crbegin_edges(0), EdgeWeight{-4});
     //   /\ -4
     //   \/
     // (1.1-i4.3)
@@ -218,7 +218,7 @@ namespace sequoia::testing
 
     check(equality, LINE(""), graph, graph_t{edge_init_list_t{{}}, {{1.1,-4.3}}});
 
-    graph.join(0, 0, 1);
+    graph.join(0, 0, EdgeWeight{1});
     //   /\ 1
     //   \/
     // (1.1-i4.3)
@@ -240,7 +240,7 @@ namespace sequoia::testing
       check(equality, LINE(""), graph, graph_t{{{edge_init_t{0,1,1}, edge_init_t{0,0,1}}}, {{1.1,-4.3}}});
     }
 
-    graph.join(0, 0, -1);
+    graph.join(0, 0, EdgeWeight{-1});
     //   /\ 1
     //   \/
     // (1.1-i4.3)
@@ -272,7 +272,7 @@ namespace sequoia::testing
       check(equality, LINE(""), graph, graph_t{{{edge_init_t{0,1,1}, edge_init_t{0,0,1}, edge_init_t{0,3,-1}, edge_init_t{0,2,-1}}}, {{1.1,-4.3}}});
     }
 
-    mutual_info(GraphFlavour) ? graph.set_edge_weight(graph.cbegin_edges(0) + 2, -4) : graph.set_edge_weight(++graph.cbegin_edges(0), -4);
+    mutual_info(GraphFlavour) ? graph.set_edge_weight(graph.cbegin_edges(0) + 2, EdgeWeight{-4}) : graph.set_edge_weight(++graph.cbegin_edges(0), EdgeWeight{-4});
     //   /\ 1
     //   \/
     // (1.1-i4.3)
@@ -337,7 +337,7 @@ namespace sequoia::testing
       check(equality, LINE(""), graph, graph_t{{{edge_init_t{0,1,1}, edge_init_t{0,0,1}, edge_init_t{0,3,-4}, edge_init_t{0,2,-4}}, {}}, {{1.1,-4.3}, {}}});
     }
 
-    graph.join(0, 1, 6);
+    graph.join(0, 1, EdgeWeight{6});
     //   /\1
     //   \/  6
     // (1.1-i4.3)------(0)
@@ -454,7 +454,7 @@ namespace sequoia::testing
                             }, {{1.1,-4.3}, {}}});
     }
 
-    graph.set_edge_weight(--graph.cend_edges(0), 7);
+    graph.set_edge_weight(--graph.cend_edges(0), EdgeWeight{7});
     //   /\1
     //   \/  7
     // (1.1-i4.3)------(0)
@@ -494,7 +494,7 @@ namespace sequoia::testing
                             }, {{1.1,-4.3}, {}}});
     }
 
-    graph.set_edge_weight(--graph.cend_edges(0), 6);
+    graph.set_edge_weight(--graph.cend_edges(0), EdgeWeight{6});
     //   /\1
     //   \/  6
     // (1.1-i4.3)------(0)
@@ -534,7 +534,7 @@ namespace sequoia::testing
                             }, {{1.1,-4.3}, {}}});
     }
 
-    graph.join(1, 0, 7);
+    graph.join(1, 0, EdgeWeight{7});
     //     /\1
     //     \/     6
     // (1.1-i4.3)======(0)
@@ -576,7 +576,7 @@ namespace sequoia::testing
     }
 
 
-    graph.join(0, 1, 8);
+    graph.join(0, 1, EdgeWeight{8});
     //     /\1   /--\8
     //     \/   /6   \
     // (1.1-i4.3)====(0)
@@ -708,7 +708,7 @@ namespace sequoia::testing
                             }, {{1.1,-4.3}, {}}});
     }
 
-    graph.set_edge_weight(graph.cbegin_edges(0) + (mutual_info(GraphFlavour) ?  3 : 2), 10);
+    graph.set_edge_weight(graph.cbegin_edges(0) + (mutual_info(GraphFlavour) ?  3 : 2), EdgeWeight{10});
     //            8 (10, directed)
     //           /--\
     //          /10(7)\
@@ -912,7 +912,7 @@ namespace sequoia::testing
     check(equality, LINE(""), graph, graph_t{edge_init_list_t{{}}, {{}}});
 
 
-    graph.join(0, 0, 1);
+    graph.join(0, 0, EdgeWeight{1});
     //   /\ 1
     //   \/
     //   (0)

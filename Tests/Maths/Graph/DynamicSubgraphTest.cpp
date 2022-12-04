@@ -31,7 +31,7 @@ namespace sequoia::testing
     }
 
     {
-      graph_test_helper<complex<int>, complex<double>, test_subgraph>  helper{*this};
+      graph_test_helper<complex<float>, complex<double>, test_subgraph>  helper{*this};
       helper.run_tests();
     }
   }
@@ -103,7 +103,7 @@ namespace sequoia::testing
 
     check(equality, LINE(""), subgraph, {edge_init_list_t{{}}, {{1,0}}});
 
-    graph.join(0, 1, 4);
+    graph.join(0, 1, EdgeWeight{4});
 
     // Graph:
     // (1,1)  4  (1,0)
@@ -143,7 +143,7 @@ namespace sequoia::testing
     check(equality, LINE("Node retained"), subgraph, {edge_init_list_t{{}}, {{1,0}}});
 
 
-    graph.join(0, 0, 2);
+    graph.join(0, 0, EdgeWeight{2});
 
     // Graph:
     // (1,1)  4  (1,0)
@@ -209,8 +209,8 @@ namespace sequoia::testing
     check(equality, LINE(""), subgraph, {edge_init_list_t{{}}, {{1,0}}});
 
     graph.add_node(1.0, 1.0);
-    graph.join(0, 2, 0);
-    graph.join(1, 2, -3);
+    graph.join(0, 2, EdgeWeight{});
+    graph.join(1, 2, EdgeWeight{-3});
 
     // Graph:
     // (1,1)  4  (1,0)
