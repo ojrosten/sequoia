@@ -66,3 +66,11 @@ FUNCTION(sequoia_finalize_library target)
 
 	set_headers_for_ide(${target} ${CMAKE_CURRENT_LIST_DIR})
 ENDFUNCTION()
+
+FUNCTION(sequoia_finalize_executable target)
+    sequoia_finalize_library(${target})
+
+    if (MSVC)
+        set_property(DIRECTORY ${CMAKE_CURRENT_LIST_DIR} PROPERTY VS_STARTUP_PROJECT ${target})
+    endif()
+endfunction()
