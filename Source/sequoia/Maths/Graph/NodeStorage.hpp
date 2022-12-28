@@ -139,12 +139,12 @@ namespace sequoia::maths::graph_impl
     }
 
     template<class Fn>
-    constexpr void mutate_node_weight(const_iterator pos, Fn fn)
+    constexpr decltype(auto) mutate_node_weight(const_iterator pos, Fn&& fn)
     {
       if constexpr (throw_on_range_error) if(pos == cend_node_weights()) throw std::out_of_range("node_storage::node_weight - index out of range!\n");
 
       const auto index{distance(cbegin_node_weights(), pos)};
-      m_NodeWeights[index].mutate(fn);
+      return m_NodeWeights[index].mutate(std::forward<Fn>(fn));
     }
 
     template<alloc Allocator>
