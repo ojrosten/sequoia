@@ -45,8 +45,8 @@ namespace sequoia::testing
     {
       using beast = move_only_beast<int, shared_counting_allocator<int, true, PropagateMove, PropagateSwap>>;
       auto allocGetter{
-        [](const beast& beast){
-          return beast.x.get_allocator();
+        [](const beast& b){
+          return b.x.get_allocator();
         }
       };
 
@@ -75,8 +75,8 @@ namespace sequoia::testing
     {
       using beast = move_only_broken_move<int, shared_counting_allocator<int, true, PropagateMove, PropagateSwap>>;
       auto allocGetter{
-        [](const beast& beast){
-          return beast.x.get_allocator();
+        [](const beast& b){
+          return b.x.get_allocator();
         }
       };
 
@@ -87,8 +87,8 @@ namespace sequoia::testing
     {
       using beast = move_only_broken_move_assignment<int, shared_counting_allocator<int, true, PropagateMove, PropagateSwap>>;
       auto allocGetter{
-        [](const beast& beast){
-          return beast.x.get_allocator();
+        [](const beast& b){
+          return b.x.get_allocator();
         }
       };
 
@@ -101,8 +101,8 @@ namespace sequoia::testing
     {
       using beast = move_only_broken_swap<int, shared_counting_allocator<int, true, PropagateMove, PropagateSwap>>;
       auto allocGetter{
-        [](const beast& beast){
-          return beast.x.get_allocator();
+        [](const beast& b){
+          return b.x.get_allocator();
         }
       };
 
@@ -113,8 +113,8 @@ namespace sequoia::testing
     {
       using beast = move_only_inefficient_move<int, shared_counting_allocator<int, true, PropagateMove, PropagateSwap>>;
       auto allocGetter{
-        [](const beast& beast){
-          return beast.x.get_allocator();
+        [](const beast& b){
+          return b.x.get_allocator();
         }
       };
 
@@ -125,8 +125,8 @@ namespace sequoia::testing
     {
       using beast = move_only_inefficient_move_assignment<int, shared_counting_allocator<int, true, PropagateMove, PropagateSwap>>;
       auto allocGetter{
-        [](const beast& beast){
-          return beast.x.get_allocator();
+        [](const beast& b){
+          return b.x.get_allocator();
         }
       };
 
@@ -138,8 +138,8 @@ namespace sequoia::testing
       using beast = move_only_beast<int, shared_counting_allocator<int, true, PropagateMove, PropagateSwap>>;
 
       auto allocGetter{
-        [](const beast& beast){
-          return beast.x.get_allocator();
+        [](const beast& b){
+          return b.x.get_allocator();
         }
       };
 
@@ -157,8 +157,8 @@ namespace sequoia::testing
       using beast = specified_moved_from_beast<int, shared_counting_allocator<int, true, PropagateMove, PropagateSwap>>;
 
       auto allocGetter{
-        [](const beast& beast) {
-          return beast.x.get_allocator();
+        [](const beast& b) {
+          return b.x.get_allocator();
         }
       };
 
@@ -200,8 +200,8 @@ namespace sequoia::testing
     {
       using beast = move_only_beast<int, shared_counting_allocator<int, true, PropagateMove, PropagateSwap>>;
       auto allocGetter{
-        [](const beast& beast){
-          return beast.x.get_allocator();
+        [](const beast& b){
+          return b.x.get_allocator();
         }
       };
 
@@ -224,8 +224,8 @@ namespace sequoia::testing
     {
       using beast = specified_moved_from_beast<int, shared_counting_allocator<int, true, PropagateMove, PropagateSwap>>;
       auto allocGetter{
-        [](const beast& beast) {
-          return beast.x.get_allocator();
+        [](const beast& b) {
+          return b.x.get_allocator();
         }
       };
 
