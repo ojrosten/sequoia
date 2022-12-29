@@ -30,7 +30,7 @@ namespace sequoia::testing
     }
 
     {
-      graph_test_helper<complex<float>, complex<double>, weighted_graph_test> helper{*this};
+      graph_test_helper<complex<double>, complex<double>, weighted_graph_test> helper{*this};
       helper.run_tests();
     }
 
