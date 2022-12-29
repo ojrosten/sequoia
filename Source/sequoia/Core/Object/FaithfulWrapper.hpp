@@ -56,9 +56,9 @@ namespace sequoia::object
     }
 
     template<std::invocable<T&> Fn>
-    constexpr std::invoke_result_t<Fn, T&> mutate(Fn&& fn)
+    constexpr std::invoke_result_t<Fn, T&> mutate(Fn fn)
     {
-      return std::forward<Fn>(fn)(m_Type);
+      return fn(m_Type);
     }
 
     [[nodiscard]]

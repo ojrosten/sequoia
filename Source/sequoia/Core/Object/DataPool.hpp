@@ -142,17 +142,17 @@ namespace sequoia::object
       }
 
       template<std::invocable<T&> Fn>
-      std::invoke_result_t<Fn, T&> mutate(Fn&& fn)
+      std::invoke_result_t<Fn, T&> mutate(Fn fn)
       {
         auto nascent{m_Handle->get()};
         if constexpr (std::is_void_v<std::invoke_result_t<Fn, T&>>)
         {
-            std::forward<Fn>(fn)(nascent);
+            fn(nascent);
             set(std::move(nascent));
         }
         else
         {
-            auto&& retVal{std::forward<Fn>(fn)(nascent)};
+            auto&& retVal{fn(nascent)};
             set(std::move(nascent));
 
             return retVal;
