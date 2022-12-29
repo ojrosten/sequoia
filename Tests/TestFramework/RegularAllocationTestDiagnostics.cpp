@@ -515,8 +515,8 @@ namespace sequoia::testing
       };
 
       auto yAllocGetter{
-        [](const beast& beast){
-          return beast.y.get_allocator();
+        [](const beast& b){
+          return b.y.get_allocator();
         }
       };
 
