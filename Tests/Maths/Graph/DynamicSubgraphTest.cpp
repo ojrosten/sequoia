@@ -29,11 +29,6 @@ namespace sequoia::testing
       graph_test_helper<int, complex<double>, test_subgraph>  helper{*this};
       helper.run_tests();
     }
-
-    {
-      graph_test_helper<complex<double>, complex<double>, test_subgraph>  helper{*this};
-      helper.run_tests();
-    }
   }
 
   template
