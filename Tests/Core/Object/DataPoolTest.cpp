@@ -190,12 +190,13 @@ namespace sequoia::testing
     check(equality, LINE(""), elt2.get(), 5);
     check(equality, LINE(""), elt3.get(), 7);
 
-    elt2.mutate([](auto& e) { e = 3; });
+    int element{ elt2.mutate([](auto& e) -> int { return e = 3; }) };
     // 3(2), 4(0), 5(0), 6(0), 7(1)
     check(weak_equivalence, LINE(""), pool, prediction_t{{3, 2}, {4, 0}, {5, 0}, {6, 0}, {7, 1}});
     check(equality, LINE(""), elt.get(), 3);
     check(equality, LINE(""), elt2.get(), 3);
     check(equality, LINE(""), elt3.get(), 7);
+    check(equality, LINE(""), element, 3);
   }
 
   void data_pool_test::test_faithful_producer()

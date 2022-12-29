@@ -141,12 +141,22 @@ namespace sequoia::object
         m_Handle = m_Handle->set(std::forward<Args>(args)...);
       }
 
-      template<class Fn>
-      void mutate(Fn&& fn)
+      template<std::invocable<T&> Fn>
+      std::invoke_result_t<Fn, T&> mutate(Fn&& fn)
       {
         auto nascent{m_Handle->get()};
-        fn(nascent);
-        set(nascent);
+        if constexpr (std::is_void_v<std::invoke_result_t<Fn, T&>>)
+        {
+            std::forward<Fn>(fn)(nascent);
+            set(std::move(nascent));
+        }
+        else
+        {
+            auto&& retVal{std::forward<Fn>(fn)(nascent)};
+            set(std::move(nascent));
+
+            return retVal;
+        }
       }
 
       [[nodiscard]]
@@ -157,7 +167,7 @@ namespace sequoia::object
       }
 
       [[nodiscard]]
-      friend bool operator!=(const proxy& lhs, const proxy& rhs) noexcept = default;
+      friend bool operator!=(const proxy&, const proxy&) noexcept = default;
     private:
       std::shared_ptr<data_wrapper> m_Handle;
 

@@ -97,6 +97,9 @@ namespace sequoia::testing
 #else
     check_semantics(LINE(""), w, v, std::weak_ordering::greater);
 #endif
+
+    int& element{ v.mutate([](auto& u) -> int& { return u.emplace_back(4); }) };
+    check(equality, LINE(""), element, 4);
   }
 
   void faithful_wrapper_test::test_aggregate_type()
