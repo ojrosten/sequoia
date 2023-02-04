@@ -25,6 +25,7 @@
 
 namespace sequoia::object
 {
+  /*! \brief Policy to allow iteration over the names of factory products */
   template<std::input_or_output_iterator Iterator>
   class factory_dereference_policy
   {
@@ -39,9 +40,6 @@ namespace sequoia::object
 
     [[nodiscard]]
     friend constexpr bool operator==(const factory_dereference_policy&, const factory_dereference_policy&) noexcept = default;
-
-    [[nodiscard]]
-    friend constexpr bool operator!=(const factory_dereference_policy&, const factory_dereference_policy&) noexcept = default;
   protected:
     constexpr factory_dereference_policy(factory_dereference_policy&&) noexcept = default;
 
@@ -58,6 +56,17 @@ namespace sequoia::object
 
     [[nodiscard]]
     static pointer get_ptr(reference ref) noexcept { return &ref; }
+  };
+
+  template<class T>
+  struct nomenclator
+  {
+    static std::string make() = delete;
+  };
+
+  template<class T>
+  inline constexpr bool has_nomenclator{
+    requires { { nomenclator<T>::make() } -> std::convertible_to<std::string>; }
   };
 
   /*! \brief Generic factory with statically defined products.
@@ -92,6 +101,11 @@ namespace sequoia::object
     using const_storage_iterator = typename storage::const_iterator;
   public:
     using names_iterator = utilities::iterator<const_storage_iterator, factory_dereference_policy<const_storage_iterator>>;
+
+    factory()
+      requires (has_nomenclator<Products> && ...)
+      : factory{ {nomenclator<Products>::make()...}}
+    {}
 
     factory(const std::array<std::string_view, size()>& names)
       : m_Creators{make_array(names, std::make_index_sequence<size()>{})}
@@ -134,9 +148,6 @@ namespace sequoia::object
 
     [[nodiscard]]
     friend bool operator==(const factory&, const factory&) noexcept = default;
-
-    [[nodiscard]]
-    friend bool operator!=(const factory&, const factory&) noexcept = default;
 
     [[nodiscard]]
     names_iterator begin_names() const noexcept

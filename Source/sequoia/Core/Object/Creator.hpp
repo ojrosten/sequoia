@@ -87,8 +87,5 @@ namespace sequoia::object
 
     [[nodiscard]]
     friend constexpr bool operator==(const producer&, const producer&) noexcept = default;
-
-    [[nodiscard]]
-    friend constexpr bool operator!=(const producer&, const producer&) noexcept = default;
   };
 }

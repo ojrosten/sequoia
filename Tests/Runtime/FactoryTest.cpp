@@ -11,19 +11,11 @@
 
 #include <complex>
 
-namespace sequoia::testing
+namespace
 {
-  using namespace object;
-
-  [[nodiscard]]
-  std::string_view factory_test::source_file() const noexcept
-  {
-    return __FILE__;
-  }
-
   struct regular_type
   {
-    regular_type(int j) : i{j} {}
+    regular_type(int j) : i{ j } {}
 
     [[nodiscard]]
     friend auto operator<=>(const regular_type&, const regular_type&) = default;
@@ -40,12 +32,12 @@ namespace sequoia::testing
 
   struct move_only_type
   {
-    move_only_type(int j) : i{j} {}
+    move_only_type(int j) : i{ j } {}
 
-    move_only_type(const move_only_type&)     = delete;
+    move_only_type(const move_only_type&) = delete;
     move_only_type(move_only_type&&) noexcept = default;
 
-    move_only_type& operator=(const move_only_type&)     = delete;
+    move_only_type& operator=(const move_only_type&) = delete;
     move_only_type& operator=(move_only_type&&) noexcept = default;
 
     [[nodiscard]]
@@ -60,6 +52,56 @@ namespace sequoia::testing
 
     int i{};
   };
+
+  template<std::regular T>
+  struct foo
+  {
+    foo() = default;
+
+    template<class U>
+    foo(U u) : t(u) {}
+
+    [[nodiscard]]
+    friend auto operator<=>(const foo&, const foo&) = default;
+
+    template<class Stream>
+    friend Stream& operator<<(Stream& s, const foo& val)
+    {
+      s << val.t;
+      return s;
+    }
+
+    T t{};
+  };
+}
+
+namespace sequoia::object
+{
+  template<>
+  struct nomenclator<foo<int>>
+  {
+    [[nodiscard]]
+    static std::string make() { return "foo-int"; }
+  };
+
+  template<>
+  struct nomenclator<foo<double>>
+  {
+    [[nodiscard]]
+    static std::string make() { return "foo-double"; }
+  };
+}
+
+namespace sequoia::testing
+{
+  using namespace object;
+
+  [[nodiscard]]
+  std::string_view factory_test::source_file() const noexcept
+  {
+    return __FILE__;
+  }
+
 
   void factory_test::run_tests()
   {
@@ -109,6 +151,16 @@ namespace sequoia::testing
 
       check(equivalence, LINE(""), f, prediction_type{{{"x", regular_type{1}}, {"y", move_only_type{1}}}}, 1);
       check(equivalence, LINE(""), g, prediction_type{{{"make_x", regular_type{2}}, {"make_y", move_only_type{2}}}}, 2);
+
+      check_semantics(LINE(""), f, g);
+    }
+
+    {
+      using prediction_type = std::array<std::pair<std::string, std::variant<foo<int>, foo<double>>>, 2>;
+
+      factory<foo<int>, foo<double>> f{}, g{{"int", "double"}};
+      check(equivalence, LINE(""), f, prediction_type{ {{"foo-int", foo<int>{}}, {"foo-double", foo<double>{}}} });
+      check(equivalence, LINE(""), g, prediction_type{ {{"int", foo<int>{42}}, {"double", foo<double>{42}}} }, 42);
 
       check_semantics(LINE(""), f, g);
     }
