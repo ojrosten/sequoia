@@ -149,9 +149,8 @@ namespace sequoia
 
       template<class Fn>
       constexpr void mutate_edge_weight(const_edge_iterator citer, Fn fn)
+        requires (!std::is_empty_v<edge_weight_type>)
       {
-        static_assert(!std::is_empty_v<edge_weight_type>, "Cannot mutate an empty weight!");
-
         if constexpr (!EdgeTraits::shared_weight_v && !EdgeTraits::shared_edge_v && EdgeTraits::mutual_info_v)
         {
           mutate_partner_edge_weight(citer, fn);
@@ -165,6 +164,7 @@ namespace sequoia
 
       template<class Fn>
       constexpr void mutate_edge_weight(const_reverse_edge_iterator criter, Fn fn)
+        requires (!std::is_empty_v<edge_weight_type>)
       {
         const auto source{criter.partition_index()};
         mutate_edge_weight(m_Edges.cbegin_partition(source) + distance(criter, m_Edges.crend_partition(source)) - 1, fn);
@@ -172,9 +172,8 @@ namespace sequoia
 
       template<class Arg, class... Args>
       constexpr void set_edge_weight(const_edge_iterator citer, Arg&& arg, Args&&... args)
+        requires (!std::is_empty_v<edge_weight_type>)
       {
-        static_assert(!std::is_empty_v<edge_weight_type>, "Cannot set an empty weight!");
-
         if constexpr (!EdgeTraits::shared_weight_v && !EdgeTraits::shared_edge_v && EdgeTraits::mutual_info_v)
         {
           if constexpr(EdgeTraits::weight_setting_exception_guarantee_v)
@@ -208,6 +207,7 @@ namespace sequoia
 
       template<class Arg, class... Args>
       constexpr void set_edge_weight(const_reverse_edge_iterator criter, Arg&& arg, Args&&... args)
+        requires (!std::is_empty_v<edge_weight_type>)
       {
         const auto source{criter.partition_index()};
         set_edge_weight(m_Edges.cbegin_partition(source) + distance(criter, m_Edges.crend_partition(source)) - 1, std::forward<Arg>(arg), std::forward<Args>(args)...);
@@ -223,7 +223,7 @@ namespace sequoia
       }
 
       [[nodiscard]]
-      friend constexpr bool operator!=(const connectivity& lhs, const connectivity& rhs) noexcept = default;
+      friend constexpr bool operator!=(const connectivity&, const connectivity&) noexcept = default;
     protected:
       using edge_iterator = typename edge_storage_type::partition_iterator;
       using init_t = std::initializer_list<std::initializer_list<edge_init_type>>;
@@ -1549,7 +1549,7 @@ namespace sequoia
         return m_Edges.begin_partition(source) + dist;
       }
 
-      template<class Setter, class... Args>
+      template<class Setter>
       constexpr void manipulate_source_edge_weight(const_edge_iterator citer, Setter setter)
       {
         setter(to_edge_iterator(citer));
@@ -1558,13 +1558,13 @@ namespace sequoia
       template<class Fn>
       constexpr void mutate_source_edge_weight(const_edge_iterator citer, Fn fn)
       {
-        manipulate_source_edge_weight(citer, [fn](const auto& iter){ iter->mutate_weight(fn); });
+        manipulate_source_edge_weight(citer, [fn](auto iter){ iter->mutate_weight(fn); });
       }
 
       template<class... Args>
       constexpr void set_source_edge_weight(const_edge_iterator citer, Args&&... args)
       {
-        manipulate_source_edge_weight(citer, [&args...](const auto& iter){ iter->weight(std::forward<Args>(args)...); });
+        manipulate_source_edge_weight(citer, [&args...](auto iter){ iter->weight(std::forward<Args>(args)...); });
       }
 
       template<class Setter>
@@ -1624,13 +1624,13 @@ namespace sequoia
       template<class Fn>
       constexpr void mutate_partner_edge_weight(const_edge_iterator citer, Fn fn)
       {
-        manipulate_partner_edge_weight(citer, [fn](const auto& iter){ iter->mutate_weight(fn); });
+        manipulate_partner_edge_weight(citer, [fn](auto iter){ iter->mutate_weight(fn); });
       }
 
       template<class... Args>
       constexpr const_edge_iterator set_partner_edge_weight(const_edge_iterator citer, Args&&... args)
       {
-        return manipulate_partner_edge_weight(citer, [&args...](const auto& iter){ iter->weight(std::forward<Args>(args)...); });
+        return manipulate_partner_edge_weight(citer, [&args...](auto iter){ iter->weight(std::forward<Args>(args)...); });
       }
 
       template<class... Args>
