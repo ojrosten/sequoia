@@ -147,32 +147,29 @@ namespace sequoia
         return m_Edges.crend_partition(node);
       }
 
-      template<class Fn>
-      constexpr void mutate_edge_weight(const_edge_iterator citer, Fn fn)
+      template<std::invocable<edge_weight_type&> Fn>
         requires (!std::is_empty_v<edge_weight_type>)
+      constexpr std::invoke_result_t<Fn, edge_weight_type&> mutate_edge_weight(const_edge_iterator citer, Fn fn)
       {
         if constexpr (!EdgeTraits::shared_weight_v && !EdgeTraits::shared_edge_v && EdgeTraits::mutual_info_v)
         {
           mutate_partner_edge_weight(citer, fn);
-          mutate_source_edge_weight(citer, fn);
         }
-        else
-        {
-          mutate_source_edge_weight(citer, fn);
-        }
+
+        return mutate_source_edge_weight(citer, fn);
       }
 
-      template<class Fn>
-      constexpr void mutate_edge_weight(const_reverse_edge_iterator criter, Fn fn)
+      template<std::invocable<edge_weight_type&> Fn>
         requires (!std::is_empty_v<edge_weight_type>)
+      constexpr std::invoke_result_t<Fn, edge_weight_type&> mutate_edge_weight(const_reverse_edge_iterator criter, Fn fn)
       {
         const auto source{criter.partition_index()};
-        mutate_edge_weight(m_Edges.cbegin_partition(source) + distance(criter, m_Edges.crend_partition(source)) - 1, fn);
+        return mutate_edge_weight(m_Edges.cbegin_partition(source) + distance(criter, m_Edges.crend_partition(source)) - 1, fn);
       }
 
       template<class Arg, class... Args>
-      constexpr void set_edge_weight(const_edge_iterator citer, Arg&& arg, Args&&... args)
         requires (!std::is_empty_v<edge_weight_type>)
+      constexpr void set_edge_weight(const_edge_iterator citer, Arg&& arg, Args&&... args)
       {
         if constexpr (!EdgeTraits::shared_weight_v && !EdgeTraits::shared_edge_v && EdgeTraits::mutual_info_v)
         {
@@ -206,8 +203,8 @@ namespace sequoia
       }
 
       template<class Arg, class... Args>
-      constexpr void set_edge_weight(const_reverse_edge_iterator criter, Arg&& arg, Args&&... args)
         requires (!std::is_empty_v<edge_weight_type>)
+      constexpr void set_edge_weight(const_reverse_edge_iterator criter, Arg&& arg, Args&&... args)
       {
         const auto source{criter.partition_index()};
         set_edge_weight(m_Edges.cbegin_partition(source) + distance(criter, m_Edges.crend_partition(source)) - 1, std::forward<Arg>(arg), std::forward<Args>(args)...);
@@ -1549,22 +1546,16 @@ namespace sequoia
         return m_Edges.begin_partition(source) + dist;
       }
 
-      template<class Setter>
-      constexpr void manipulate_source_edge_weight(const_edge_iterator citer, Setter setter)
+      template<std::invocable<edge_weight_type&> Fn>
+      constexpr std::invoke_result_t<Fn, edge_weight_type&> mutate_source_edge_weight(const_edge_iterator citer, Fn fn)
       {
-        setter(to_edge_iterator(citer));
-      }
-
-      template<class Fn>
-      constexpr void mutate_source_edge_weight(const_edge_iterator citer, Fn fn)
-      {
-        manipulate_source_edge_weight(citer, [fn](auto iter){ iter->mutate_weight(fn); });
+        return to_edge_iterator(citer)->mutate_weight(fn);
       }
 
       template<class... Args>
       constexpr void set_source_edge_weight(const_edge_iterator citer, Args&&... args)
       {
-        manipulate_source_edge_weight(citer, [&args...](auto iter){ iter->weight(std::forward<Args>(args)...); });
+        to_edge_iterator(citer)->weight(std::forward<Args>(args)...);
       }
 
       template<class Setter>
@@ -1621,7 +1612,7 @@ namespace sequoia
         }
       }
 
-      template<class Fn>
+      template<std::invocable<edge_weight_type&> Fn>
       constexpr void mutate_partner_edge_weight(const_edge_iterator citer, Fn fn)
       {
         manipulate_partner_edge_weight(citer, [fn](auto iter){ iter->mutate_weight(fn); });
