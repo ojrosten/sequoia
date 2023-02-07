@@ -168,7 +168,7 @@ namespace sequoia
       }
 
       template<class Arg, class... Args>
-        requires (!std::is_empty_v<edge_weight_type>)
+        requires initializable_from<edge_weight_type, Args...>
       constexpr void set_edge_weight(const_edge_iterator citer, Arg&& arg, Args&&... args)
       {
         if constexpr (!EdgeTraits::shared_weight_v && !EdgeTraits::shared_edge_v && EdgeTraits::mutual_info_v)
@@ -203,7 +203,7 @@ namespace sequoia
       }
 
       template<class Arg, class... Args>
-        requires (!std::is_empty_v<edge_weight_type>)
+        requires initializable_from<edge_weight_type, Args...>
       constexpr void set_edge_weight(const_reverse_edge_iterator criter, Arg&& arg, Args&&... args)
       {
         const auto source{criter.partition_index()};
@@ -533,12 +533,11 @@ namespace sequoia
       }
 
       template<class... Args>
+        requires initializable_from<edge_weight_type, Args...>
+        // && copyable in some situations
       void join(const edge_index_type node1, const edge_index_type node2, Args&&... args)
       {
         reserve_for_join(node1, node2);
-
-        if constexpr (std::is_empty_v<edge_weight_type>)
-          static_assert(sizeof...(args) == 0, "Makes no sense to supply arguments for an empty weight!");
 
         if constexpr (throw_on_range_error) if(node1 >= order() || node2 >= order()) throw std::out_of_range("Graph::join - index out of range");
 
@@ -616,6 +615,7 @@ namespace sequoia
       }
 
       template<class... Args>
+        requires initializable_from<edge_weight_type, Args...>
       std::pair<const_edge_iterator, const_edge_iterator>
       insert_join(const_edge_iterator citer1, const_edge_iterator citer2, Args&&... args)
       {
@@ -650,6 +650,7 @@ namespace sequoia
       }
 
       template<class... Args>
+        requires initializable_from<edge_weight_type, Args...>
       std::pair<const_edge_iterator, const_edge_iterator>
       insert_join(const_edge_iterator citer1, const edge_index_type pos2, Args&&... args)
       {
@@ -874,8 +875,7 @@ namespace sequoia
 
     private:
       template<bool Direct>
-      struct edge_init_constant : std::bool_constant<Direct>
-      {};
+      struct edge_init_constant : std::bool_constant<Direct> {};
 
       using direct_edge_init_type   = edge_init_constant<true>;
       using indirect_edge_init_type = edge_init_constant<false>;
@@ -883,21 +883,11 @@ namespace sequoia
       [[nodiscard]]
       constexpr static auto direct_edge_init() noexcept
       {
-        if constexpr(std::is_same_v<edge_type, edge_init_type>)
-        {
-          return direct_edge_init_type{};
-        }
-        else
-        {
-          return indirect_edge_init_type{};
-        }
+        return edge_init_constant<std::is_same_v<edge_type, edge_init_type>>{};
       }
 
-      constexpr static bool direct_edge_init_v{std::is_same_v<decltype(direct_edge_init()), direct_edge_init_type>};
-
       template<bool Direct>
-      struct edge_copy_constant : std::bool_constant<Direct>
-      {};
+      struct edge_copy_constant : std::bool_constant<Direct> {};
 
       using direct_edge_copy_type   = edge_copy_constant<true>;
       using indirect_edge_copy_type = edge_copy_constant<false>;
@@ -905,7 +895,7 @@ namespace sequoia
       [[nodiscard]]
       constexpr static auto direct_edge_copy() noexcept
       {
-        return edge_copy_constant<direct_edge_init_v || (EdgeTraits::shared_edge_v && faithfulEdgeWeightProxy)>{};
+        return edge_copy_constant<direct_edge_init().value || (EdgeTraits::shared_edge_v && faithfulEdgeWeightProxy)>{};
       }
 
       template<bool HasAlloc>
@@ -1028,6 +1018,7 @@ namespace sequoia
 
       // helper methods
       template<class... Args>
+        requires initializable_from<edge_weight_type, Args...>
       [[nodiscard]]
       decltype(auto) make_edge_weight(Args&&... args)
       {
@@ -1253,7 +1244,7 @@ namespace sequoia
 
         for(edge_index_type i{}; i<orderedEdges.num_partitions(); ++i)
         {
-          if constexpr(!direct_edge_init_v) m_Edges.add_slot(allocs...);
+          if constexpr(!direct_edge_init()) m_Edges.add_slot(allocs...);
 
           auto lowerIter{orderedEdges.cbegin_partition(i)}, upperIter{orderedEdges.cbegin_partition(i)};
           while(lowerIter != orderedEdges.cend_partition(i))
@@ -1342,10 +1333,10 @@ namespace sequoia
       }
 
       template<class EdgeInitializer>
+        requires (!std::is_same_v<edge_type, edge_init_type>)
       [[nodiscard]]
       edge_type make_edge([[maybe_unused]] const edge_index_type source, const EdgeInitializer& edgeInit)
       {
-        static_assert(!std::is_same_v<edge_type, edge_init_type>, "Logic error!");
         if constexpr(edge_type::flavour == edge_flavour::partial)
         {
           static_assert(!std::is_empty_v<edge_weight_type>);
@@ -1625,11 +1616,9 @@ namespace sequoia
       }
 
       template<class... Args>
+        requires initializable_from<edge_weight_type, Args...>
       const_edge_iterator insert_single_join(const_edge_iterator citer1, const edge_index_type node2, const edge_index_type pos2, Args&&... args)
       {
-        if constexpr (std::is_empty_v<edge_weight_type>)
-          static_assert(sizeof...(args) == 0, "Makes no sense to supply arguments for an empty weight!");
-
         const auto node1{citer1.partition_index()};
         if constexpr(std::is_empty_v<edge_weight_type>)
         {
