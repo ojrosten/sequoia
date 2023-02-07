@@ -168,7 +168,7 @@ namespace sequoia
       }
 
       template<class Arg, class... Args>
-        requires initializable_from<edge_weight_type, Args...>
+        requires initializable_from<edge_weight_type, Arg, Args...>
       constexpr void set_edge_weight(const_edge_iterator citer, Arg&& arg, Args&&... args)
       {
         if constexpr (!EdgeTraits::shared_weight_v && !EdgeTraits::shared_edge_v && EdgeTraits::mutual_info_v)
@@ -203,7 +203,7 @@ namespace sequoia
       }
 
       template<class Arg, class... Args>
-        requires initializable_from<edge_weight_type, Args...>
+        requires initializable_from<edge_weight_type, Arg, Args...>
       constexpr void set_edge_weight(const_reverse_edge_iterator criter, Arg&& arg, Args&&... args)
       {
         const auto source{criter.partition_index()};
