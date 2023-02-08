@@ -106,10 +106,11 @@ namespace sequoia
       using weight_proxy_type = typename WeightHandler::value_type;
       using weight_type       = typename weight_proxy_type::value_type;
 
-      template<class Arg, class... Args>
-      constexpr void weight(Arg&& arg, Args&&... args)
+      template<class... Args>
+        requires (sizeof...(Args) > 0)
+      constexpr void weight(Args&&... args)
       {
-        WeightHandler::get(m_Weight).set(std::forward<Arg>(arg), std::forward<Args>(args)...);
+        WeightHandler::get(m_Weight).set(std::forward<Args>(args)...);
       }
 
       [[nodiscard]]
@@ -140,7 +141,7 @@ namespace sequoia
 
       template<class... Args>
         requires (!resolve_to_copy_v<weighting, Args...> && !is_base_of_head_v<weighting, Args...>)
-      constexpr explicit weighting(Args&&... args) : m_Weight{WeightHandler::producer_type::make(std::forward<Args>(args)...)}
+      constexpr explicit(sizeof...(Args) == 1) weighting(Args&&... args) : m_Weight{WeightHandler::producer_type::make(std::forward<Args>(args)...)}
       {}
 
       constexpr weighting(const weighting& in) : m_Weight{WeightHandler::producer_type::make(WeightHandler::get(in.m_Weight))}
@@ -179,9 +180,6 @@ namespace sequoia
 
       [[nodiscard]]
       friend constexpr bool operator==(const weighting&, const weighting&) noexcept = default;
-
-      [[nodiscard]]
-      friend constexpr bool operator!=(const weighting&, const weighting&) noexcept = default;
     protected:
       constexpr weighting() = default;
       ~weighting() = default;

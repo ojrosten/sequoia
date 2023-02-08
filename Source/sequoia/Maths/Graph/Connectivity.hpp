@@ -167,9 +167,9 @@ namespace sequoia
         return mutate_edge_weight(m_Edges.cbegin_partition(source) + distance(criter, m_Edges.crend_partition(source)) - 1, fn);
       }
 
-      template<class Arg, class... Args>
-        requires initializable_from<edge_weight_type, Arg, Args...>
-      constexpr void set_edge_weight(const_edge_iterator citer, Arg&& arg, Args&&... args)
+      template<class... Args>
+        requires initializable_from<edge_weight_type, Args...>
+      constexpr void set_edge_weight(const_edge_iterator citer, Args&&... args)
       {
         if constexpr (!EdgeTraits::shared_weight_v && !EdgeTraits::shared_edge_v && EdgeTraits::mutual_info_v)
         {
@@ -187,27 +187,26 @@ namespace sequoia
               }
             };
 
-            weight_sentinel sentinel{*this, citer, partnerSetter, sourceSetter,
-                                            std::forward<Arg>(arg), std::forward<Args>(args)...};
+            weight_sentinel sentinel{*this, citer, partnerSetter, sourceSetter, std::forward<Args>(args)...};
           }
           else
           {
-            auto partnerIter{set_partner_edge_weight(citer, std::forward<Arg>(arg), std::forward<Args>(args)...)};
+            auto partnerIter{set_partner_edge_weight(citer, std::forward<Args>(args)...)};
             set_source_edge_weight(citer, partnerIter->weight());
           }
         }
         else
         {
-          set_source_edge_weight(citer, std::forward<Arg>(arg), std::forward<Args>(args)...);
+          set_source_edge_weight(citer, std::forward<Args>(args)...);
         }
       }
 
-      template<class Arg, class... Args>
-        requires initializable_from<edge_weight_type, Arg, Args...>
-      constexpr void set_edge_weight(const_reverse_edge_iterator criter, Arg&& arg, Args&&... args)
+      template<class... Args>
+        requires initializable_from<edge_weight_type, Args...>
+      constexpr void set_edge_weight(const_reverse_edge_iterator criter, Args&&... args)
       {
         const auto source{criter.partition_index()};
-        set_edge_weight(m_Edges.cbegin_partition(source) + distance(criter, m_Edges.crend_partition(source)) - 1, std::forward<Arg>(arg), std::forward<Args>(args)...);
+        set_edge_weight(m_Edges.cbegin_partition(source) + distance(criter, m_Edges.crend_partition(source)) - 1, std::forward<Args>(args)...);
       }
 
       //===============================equality (not isomorphism) operators================================//
@@ -543,49 +542,11 @@ namespace sequoia
 
         if constexpr(std::is_empty_v<edge_weight_type>)
         {
-          if constexpr(edge_type::flavour == edge_flavour::partial)
-          {
-            m_Edges.push_back_to_partition(node1, node2);
-          }
-          else if constexpr(edge_type::flavour == edge_flavour::partial_embedded)
-          {
-            const edge_index_type dist(distance(cbegin_edges(node2), cend_edges(node2)));
-            const edge_index_type i{node1 == node2 ? dist + 1 : dist};
-            m_Edges.push_back_to_partition(node1, node2, i);
-          }
-          else if constexpr(edge_type::flavour == edge_flavour::full)
-          {
-            m_Edges.push_back_to_partition(node1, node1, node2);
-          }
-          else if constexpr(edge_type::flavour == edge_flavour::full_embedded)
-          {
-            const edge_index_type dist(distance(cbegin_edges(node2), cend_edges(node2)));
-            const edge_index_type i{node1 == node2 ? dist + 1 : dist};
-            m_Edges.push_back_to_partition(node1, node1, node2, i);
-          }
+          add_to_partition(node1, node2);
         }
         else
         {
-          if constexpr(edge_type::flavour == edge_flavour::partial)
-          {
-            m_Edges.push_back_to_partition(node1, node2, make_edge_weight(std::forward<Args>(args)...));
-          }
-          else if constexpr(edge_type::flavour == edge_flavour::partial_embedded)
-          {
-            const edge_index_type dist(distance(cbegin_edges(node2), cend_edges(node2)));
-            const edge_index_type i{node1 == node2 ? dist + 1 : dist};
-            m_Edges.push_back_to_partition(node1, node2, i, make_edge_weight(std::forward<Args>(args)...));
-          }
-          else if constexpr(edge_type::flavour == edge_flavour::full)
-          {
-            m_Edges.push_back_to_partition(node1, node1, node2, make_edge_weight(std::forward<Args>(args)...));
-          }
-          else if constexpr(edge_type::flavour == edge_flavour::full_embedded)
-          {
-            const edge_index_type dist(distance(cbegin_edges(node2), cend_edges(node2)));
-            const edge_index_type i{node1 == node2 ? dist + 1 : dist};
-            m_Edges.push_back_to_partition(node1, node1, node2, i, make_edge_weight(std::forward<Args>(args)...));
-          }
+          add_to_partition(node1, node2, make_edge_weight(std::forward<Args>(args)...));
         }
 
         if constexpr(!directed(directedness))
@@ -1610,6 +1571,7 @@ namespace sequoia
       }
 
       template<class... Args>
+        requires initializable_from<edge_weight_type, Args...>
       constexpr const_edge_iterator set_partner_edge_weight(const_edge_iterator citer, Args&&... args)
       {
         return manipulate_partner_edge_weight(citer, [&args...](auto iter){ iter->weight(std::forward<Args>(args)...); });
@@ -1673,6 +1635,31 @@ namespace sequoia
         }
 
         return citer1;
+      }
+
+      template<class... Args>
+      void add_to_partition(const edge_index_type node1, const edge_index_type node2, Args&&... args)
+      {
+        if constexpr (edge_type::flavour == edge_flavour::partial)
+        {
+          m_Edges.push_back_to_partition(node1, node2, std::forward<Args>(args)...);
+        }
+        else if constexpr (edge_type::flavour == edge_flavour::partial_embedded)
+        {
+          const edge_index_type dist(distance(cbegin_edges(node2), cend_edges(node2)));
+          const edge_index_type i{ node1 == node2 ? dist + 1 : dist };
+          m_Edges.push_back_to_partition(node1, node2, i, std::forward<Args>(args)...);
+        }
+        else if constexpr (edge_type::flavour == edge_flavour::full)
+        {
+          m_Edges.push_back_to_partition(node1, node1, node2, std::forward<Args>(args)...);
+        }
+        else if constexpr (edge_type::flavour == edge_flavour::full_embedded)
+        {
+          const edge_index_type dist(distance(cbegin_edges(node2), cend_edges(node2)));
+          const edge_index_type i{ node1 == node2 ? dist + 1 : dist };
+          m_Edges.push_back_to_partition(node1, node1, node2, i, std::forward<Args>(args)...);
+        }
       }
 
       template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel, class Fn>
