@@ -55,9 +55,6 @@ namespace sequoia::testing
     friend bool operator==(const orderable_regular_beast&, const orderable_regular_beast&) noexcept = default;
 
     [[nodiscard]]
-    friend bool operator!=(const orderable_regular_beast&, const orderable_regular_beast&) noexcept = default;
-
-    [[nodiscard]]
     friend bool operator<(const orderable_regular_beast& lhs, const orderable_regular_beast& rhs) noexcept
     {
       return lhs.x < rhs.x;
@@ -137,9 +134,6 @@ namespace sequoia::testing
     friend bool operator==(const regular_broken_less&, const regular_broken_less&) noexcept = default;
 
     [[nodiscard]]
-    friend bool operator!=(const regular_broken_less&, const regular_broken_less&) noexcept = default;
-
-    [[nodiscard]]
     friend bool operator<(const regular_broken_less& lhs, const regular_broken_less& rhs) noexcept
     {
       return lhs.x > rhs.x;
@@ -217,9 +211,6 @@ namespace sequoia::testing
 
     [[nodiscard]]
     friend bool operator==(const regular_broken_lesseq&, const regular_broken_lesseq&) noexcept = default;
-
-    [[nodiscard]]
-    friend bool operator!=(const regular_broken_lesseq&, const regular_broken_lesseq&) noexcept = default;
 
     [[nodiscard]]
     friend bool operator<(const regular_broken_lesseq& lhs, const regular_broken_lesseq& rhs) noexcept

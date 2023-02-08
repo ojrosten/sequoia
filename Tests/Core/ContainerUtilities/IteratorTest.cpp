@@ -34,9 +34,6 @@ namespace sequoia::testing
 
       [[nodiscard]]
       friend constexpr bool operator==(const scaling_dereference_policy&, const scaling_dereference_policy&) noexcept = default;
-
-      [[nodiscard]]
-      friend constexpr bool operator!=(const scaling_dereference_policy&, const scaling_dereference_policy&) noexcept = default;
     protected:
       constexpr scaling_dereference_policy(scaling_dereference_policy&&) noexcept = default;
 

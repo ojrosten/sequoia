@@ -62,8 +62,5 @@ namespace sequoia::maths
 
     [[nodiscard]]
     friend constexpr bool operator==(const static_linear_sequence&, const static_linear_sequence&) noexcept = default;
-
-    [[nodiscard]]
-    friend constexpr bool operator!=(const static_linear_sequence&, const static_linear_sequence&) noexcept = default;
   };
 }

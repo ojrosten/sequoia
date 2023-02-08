@@ -120,9 +120,6 @@ namespace sequoia::testing
     [[nodiscard]]
     friend constexpr bool operator==(const unsortable& lhs, const unsortable& rhs) noexcept = default;
 
-    [[nodiscard]]
-    friend constexpr bool operator!=(const unsortable& lhs, const unsortable& rhs) noexcept = default;
-
     template<class Stream> friend Stream& operator<<(Stream& s, const unsortable& u)
     {
       s << std::to_string(u.x);
@@ -135,8 +132,6 @@ namespace sequoia::testing
     int w{}, x{1}, y{2}, z{3};
 
     friend constexpr bool operator==(const big_unsortable& lhs, const big_unsortable& rhs) noexcept = default;
-
-    friend constexpr bool operator!=(const big_unsortable& lhs, const big_unsortable& rhs) noexcept = default;
 
     template<class Stream> friend Stream& operator<<(Stream& s, const big_unsortable& u)
     {

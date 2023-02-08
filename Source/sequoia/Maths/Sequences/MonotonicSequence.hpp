@@ -125,12 +125,7 @@ namespace sequoia::maths
     }
 
     [[nodiscard]]
-    friend bool operator==(const monotonic_sequence_base& lhs, const monotonic_sequence_base& rhs) noexcept
-      = default;
-
-    [[nodiscard]]
-    friend bool operator!=(const monotonic_sequence_base& lhs, const monotonic_sequence_base& rhs) noexcept
-      = default;
+    friend bool operator==(const monotonic_sequence_base& lhs, const monotonic_sequence_base& rhs) noexcept = default;
 
   protected:
     template<alloc Allocator>

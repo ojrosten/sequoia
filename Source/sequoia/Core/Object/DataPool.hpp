@@ -255,9 +255,6 @@ namespace sequoia::object
     }
 
     [[nodiscard]]
-    friend bool operator!=(const data_pool& lhs, const data_pool& rhs) = default;
-
-    [[nodiscard]]
     bool empty() const noexcept { return m_Data.empty(); }
 
     [[nodiscard]]

@@ -248,9 +248,6 @@ namespace sequoia
 
       [[nodiscard]]
       friend constexpr bool operator==(const graph_primitive&, const graph_primitive&) noexcept = default;
-
-      [[nodiscard]]
-      friend constexpr bool operator!=(const graph_primitive&, const graph_primitive&) noexcept = default;
     protected:
       // Constructors with allocators
 

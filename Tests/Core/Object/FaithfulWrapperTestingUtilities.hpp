@@ -35,8 +35,6 @@ namespace sequoia::testing
 
     friend constexpr bool operator==(const data& lhs, const data& rhs) noexcept = default;
 
-    friend constexpr bool operator!=(const data& lhs, const data& rhs) noexcept = default;
-
     template<class Stream> friend Stream& operator<<(Stream& stream, const data& p)
     {
       stream << p.a << p.b;

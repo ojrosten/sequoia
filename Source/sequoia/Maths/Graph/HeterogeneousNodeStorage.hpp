@@ -84,12 +84,8 @@ namespace sequoia::maths::graph_impl
     }
 
     [[nodiscard]]
-    friend constexpr bool operator==(const heterogeneous_node_storage& lhs, const heterogeneous_node_storage& rhs) noexcept
-      = default;
+    friend constexpr bool operator==(const heterogeneous_node_storage&, const heterogeneous_node_storage&) noexcept = default;
 
-    [[nodiscard]]
-    friend constexpr bool operator!=(const heterogeneous_node_storage& lhs, const heterogeneous_node_storage& rhs) noexcept
-      = default;
   protected:
     struct null_proxy_tag {};
 

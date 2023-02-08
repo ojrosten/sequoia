@@ -22,12 +22,7 @@ namespace sequoia::testing
     constexpr int get() const noexcept { return m_i; }
 
     [[nodiscard]]
-    constexpr friend bool operator==(const no_default_constructor& lhs, const no_default_constructor& rhs) noexcept
-      = default;
-
-    [[nodiscard]]
-    constexpr friend bool operator!=(const no_default_constructor& lhs, const no_default_constructor& rhs) noexcept
-     = default;
+    constexpr friend bool operator==(const no_default_constructor&, const no_default_constructor&) noexcept = default;
 
     template<class Stream>
     friend Stream& operator<<(Stream& stream, const no_default_constructor& ndc)

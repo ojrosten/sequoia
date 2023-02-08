@@ -39,10 +39,7 @@ namespace sequoia
     //friend auto operator<=>(const normal_path&, const normal_path&) = default;
 
     [[nodiscard]]
-    friend bool operator==(const normal_path&, const normal_path&) = default;
-
-    [[nodiscard]]
-    friend bool operator!=(const normal_path&, const normal_path&) = default;
+    friend bool operator==(const normal_path&, const normal_path&) noexcept = default;
   private:
     std::filesystem::path m_Path;
   };

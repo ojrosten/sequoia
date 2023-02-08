@@ -32,9 +32,6 @@ namespace sequoia::utilities
 
     [[nodiscard]]
     friend constexpr bool operator==(const null_data_policy&, const null_data_policy&) noexcept = default;
-
-    [[nodiscard]]
-    friend constexpr bool operator!=(const null_data_policy&, const null_data_policy&) noexcept = default;
   };
 
   template<std::input_or_output_iterator Iterator, class AuxiliaryDataPolicy=null_data_policy>
@@ -64,9 +61,6 @@ namespace sequoia::utilities
 
     [[nodiscard]]
     friend constexpr bool operator==(const identity_dereference_policy&, const identity_dereference_policy&) noexcept = default;
-
-    [[nodiscard]]
-    friend constexpr bool operator!=(const identity_dereference_policy&, const identity_dereference_policy&) noexcept = default;
   protected:
     constexpr identity_dereference_policy(identity_dereference_policy&&) noexcept = default;
 

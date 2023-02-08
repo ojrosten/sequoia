@@ -41,9 +41,6 @@ namespace sequoia::testing
 
     [[nodiscard]]
     friend bool operator==(const discoverable_paths&, const discoverable_paths&) noexcept = default;
-
-    [[nodiscard]]
-    friend bool operator!=(const discoverable_paths&, const discoverable_paths&) noexcept = default;
   private:
     std::filesystem::path m_Root, m_Executable;
 
@@ -84,9 +81,6 @@ namespace sequoia::testing
 
     [[nodiscard]]
     friend bool operator==(const main_paths&, const main_paths&) noexcept = default;
-
-    [[nodiscard]]
-    friend bool operator!=(const main_paths&, const main_paths&) noexcept = default;
   private:
     std::filesystem::path m_File{}, m_Dir{}, m_CommonIncludes{};
   };
@@ -120,9 +114,6 @@ namespace sequoia::testing
 
     [[nodiscard]]
     friend bool operator==(const source_paths&, const source_paths&) noexcept = default;
-
-    [[nodiscard]]
-    friend bool operator!=(const source_paths&, const source_paths&) noexcept = default;
   private:
     std::filesystem::path m_Repo, m_Project;
 
@@ -150,9 +141,6 @@ namespace sequoia::testing
 
     [[nodiscard]]
     friend bool operator==(const tests_paths&, const tests_paths&) noexcept = default;
-
-    [[nodiscard]]
-    friend bool operator!=(const tests_paths&, const tests_paths&) noexcept = default;
   private:
     std::filesystem::path m_Repo;
   };
@@ -174,9 +162,6 @@ namespace sequoia::testing
 
     [[nodiscard]]
     friend bool operator==(const test_materials_paths&, const test_materials_paths&) noexcept = default;
-
-    [[nodiscard]]
-    friend bool operator!=(const test_materials_paths&, const test_materials_paths&) noexcept = default;
   private:
     std::filesystem::path m_Repo;
   };
@@ -198,9 +183,6 @@ namespace sequoia::testing
 
     [[nodiscard]]
     friend bool operator==(const build_system_paths&, const build_system_paths&) noexcept = default;
-
-    [[nodiscard]]
-    friend bool operator!=(const build_system_paths&, const build_system_paths&) noexcept = default;
   private:
     std::filesystem::path m_Repo;
   };
@@ -228,9 +210,6 @@ namespace sequoia::testing
 
     [[nodiscard]]
     friend bool operator==(const build_paths&, const build_paths&) noexcept = default;
-
-    [[nodiscard]]
-    friend bool operator!=(const build_paths&, const build_paths&) noexcept = default;
   private:
     std::filesystem::path m_Dir, m_CMadeBuildDir{};
 
@@ -285,9 +264,6 @@ namespace sequoia::testing
 
     [[nodiscard]]
     friend bool operator==(const auxiliary_paths&, const auxiliary_paths&) noexcept = default;
-
-    [[nodiscard]]
-    friend bool operator!=(const auxiliary_paths&, const auxiliary_paths&) noexcept = default;
   private:
     std::filesystem::path
       m_Dir{},
@@ -325,9 +301,6 @@ namespace sequoia::testing
 
     [[nodiscard]]
     friend bool operator==(const recovery_paths&, const recovery_paths&) noexcept = default;
-
-    [[nodiscard]]
-    friend bool operator!=(const recovery_paths&, const recovery_paths&) noexcept = default;
   private:
     std::filesystem::path m_Dir{};
   };
@@ -364,9 +337,6 @@ namespace sequoia::testing
 
     [[nodiscard]]
     friend bool operator==(const prune_paths&, const prune_paths&) noexcept = default;
-
-    [[nodiscard]]
-    friend bool operator!=(const prune_paths&, const prune_paths&) noexcept = default;
   private:
     std::filesystem::path m_Dir{}, m_Stem{};
 
@@ -449,9 +419,6 @@ namespace sequoia::testing
 
     [[nodiscard]]
     friend bool operator==(const output_paths&, const output_paths&) noexcept = default;
-
-    [[nodiscard]]
-    friend bool operator!=(const output_paths&, const output_paths&) noexcept = default;
   private:
     std::filesystem::path
       m_Dir{},

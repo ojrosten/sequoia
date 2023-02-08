@@ -87,9 +87,6 @@ namespace sequoia::data_structures::partition_impl
     friend constexpr bool operator==(const partition_index_policy& lhs, const partition_index_policy& rhs) noexcept = default;
 
     [[nodiscard]]
-    friend constexpr bool operator!=(const partition_index_policy& lhs, const partition_index_policy& rhs) noexcept = default;
-
-    [[nodiscard]]
     constexpr IndexType partition_index() const noexcept { return m_Partition; }
   protected:
     constexpr partition_index_policy(partition_index_policy&&) noexcept = default;

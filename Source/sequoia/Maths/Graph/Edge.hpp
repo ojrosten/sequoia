@@ -223,8 +223,6 @@ namespace sequoia
 
       [[nodiscard]]
       friend constexpr bool operator==(const partial_edge_base& lhs, const partial_edge_base& rhs) noexcept = default;
-
-      friend constexpr bool operator!=(const partial_edge_base& lhs, const partial_edge_base& rhs) noexcept = default;
     protected:
       ~partial_edge_base() = default;
 
@@ -286,9 +284,6 @@ namespace sequoia
 
       [[nodiscard]]
       friend constexpr bool operator==(const decorated_edge_base& lhs, const decorated_edge_base& rhs) noexcept = default;
-
-      [[nodiscard]]
-      friend constexpr bool operator!=(const decorated_edge_base& lhs, const decorated_edge_base& rhs) noexcept = default;
     protected:
       ~decorated_edge_base() = default;
 

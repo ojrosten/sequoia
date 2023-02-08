@@ -446,9 +446,6 @@ namespace sequoia::maths::graph_impl
 
     [[nodiscard]]
     constexpr friend bool operator==(const node_storage&, const node_storage&) noexcept = default;
-
-    [[nodiscard]]
-    constexpr friend bool operator!=(const node_storage&, const node_storage&) noexcept = default;
   protected:
     constexpr node_storage(const node_storage&) noexcept = default;
     constexpr node_storage(node_storage&&)      noexcept = default;

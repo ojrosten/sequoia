@@ -83,9 +83,6 @@ namespace sequoia::testing
 
     [[nodiscard]]
     friend bool operator==(const individual_diagnostics_paths&, const individual_diagnostics_paths&) noexcept = default;
-
-    [[nodiscard]]
-    friend bool operator!=(const individual_diagnostics_paths&, const individual_diagnostics_paths&) noexcept = default;
   private:
     std::filesystem::path
       m_Diagnostics,

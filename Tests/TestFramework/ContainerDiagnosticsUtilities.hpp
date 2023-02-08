@@ -58,9 +58,6 @@ namespace sequoia::testing
     [[nodiscard]]
     friend bool operator==(const perfectly_normal_beast&, const perfectly_normal_beast&) noexcept = default;
 
-    [[nodiscard]]
-    friend bool operator!=(const perfectly_normal_beast&, const perfectly_normal_beast&) noexcept = default;
-
     template<class Stream>
       requires serializable<T>
     friend Stream& operator<<(Stream& s, const perfectly_normal_beast& b)
@@ -149,9 +146,6 @@ namespace sequoia::testing
 
     [[nodiscard]]
     friend bool operator==(const perfectly_stringy_beast&, const perfectly_stringy_beast&) noexcept = default;
-
-    [[nodiscard]]
-    friend bool operator!=(const perfectly_stringy_beast&, const perfectly_stringy_beast&) noexcept = default;
 
     template<class Stream>
     friend Stream& operator<<(Stream& s, const perfectly_stringy_beast& b)
@@ -734,9 +728,6 @@ namespace sequoia::testing
     [[nodiscard]]
     friend bool operator==(const broken_self_copy_assignment& lhs, const broken_self_copy_assignment& rhs) = default;
 
-    [[nodiscard]]
-    friend bool operator!=(const broken_self_copy_assignment& lhs, const broken_self_copy_assignment& rhs) = default;
-
     template<class Stream>
     friend Stream& operator<<(Stream& s, const broken_self_copy_assignment& b)
     {
@@ -827,9 +818,6 @@ namespace sequoia::testing
     [[nodiscard]]
     friend bool operator==(const broken_swap& lhs, const broken_swap& rhs) noexcept = default;
 
-    [[nodiscard]]
-    friend bool operator!=(const broken_swap& lhs, const broken_swap& rhs) noexcept = default;
-
     template<class Stream>
     friend Stream& operator<<(Stream& s, const broken_swap& b)
     {
@@ -881,9 +869,6 @@ namespace sequoia::testing
 
     [[nodiscard]]
     friend bool operator==(const broken_self_swap& lhs, const broken_self_swap& rhs) noexcept = default;
-
-    [[nodiscard]]
-    friend bool operator!=(const broken_self_swap& lhs, const broken_self_swap& rhs) noexcept = default;
 
     template<class Stream>
     friend Stream& operator<<(Stream& s, const broken_self_swap& b)
@@ -1095,9 +1080,6 @@ namespace sequoia::testing
 
     [[nodiscard]]
     friend bool operator==(const broken_serialization&, const broken_serialization&) noexcept = default;
-
-    [[nodiscard]]
-    friend bool operator!=(const broken_serialization&, const broken_serialization&) noexcept = default;
 
     template<class Stream>
     friend Stream& operator<<(Stream& s, const broken_serialization&)

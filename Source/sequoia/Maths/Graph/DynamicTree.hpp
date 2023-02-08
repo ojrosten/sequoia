@@ -218,9 +218,6 @@ namespace sequoia::maths
 
     [[nodiscard]]
     friend bool operator==(const basic_tree_adaptor& lhs, const basic_tree_adaptor& rhs) noexcept = default;
-
-    [[nodiscard]]
-    friend bool operator!=(const basic_tree_adaptor& lhs, const basic_tree_adaptor& rhs) noexcept = default;
   private:
     Tree* m_pTree{};
     size_type m_Node{Tree::npos};
@@ -268,9 +265,6 @@ namespace sequoia::maths
 
     [[nodiscard]]
     friend constexpr bool operator==(const forest_from_tree_dereference_policy&, const forest_from_tree_dereference_policy&) noexcept = default;
-
-    [[nodiscard]]
-    friend constexpr bool operator!=(const forest_from_tree_dereference_policy&, const forest_from_tree_dereference_policy&) noexcept = default;
   protected:
     constexpr forest_from_tree_dereference_policy(forest_from_tree_dereference_policy&&) = default;
 
@@ -313,9 +307,6 @@ namespace sequoia::maths
 
     [[nodiscard]]
     friend constexpr bool operator==(const forest_dereference_policy&, const forest_dereference_policy&) noexcept = default;
-
-    [[nodiscard]]
-    friend constexpr bool operator!=(const forest_dereference_policy&, const forest_dereference_policy&) noexcept = default;
   protected:
     constexpr forest_dereference_policy(forest_dereference_policy&&) = default;
 

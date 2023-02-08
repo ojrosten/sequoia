@@ -61,9 +61,6 @@ namespace sequoia
 
     [[nodiscard]]
     friend bool operator==(const indentation&, const indentation&) noexcept = default;
-
-    [[nodiscard]]
-    friend bool operator!=(const indentation&, const indentation&) noexcept = default;
   private:
     std::string m_Data;
   };

@@ -44,9 +44,6 @@ namespace sequoia::runtime
     friend bool operator==(const shell_command&, const shell_command&) noexcept = default;
 
     [[nodiscard]]
-    friend bool operator!=(const shell_command&, const shell_command&) noexcept = default;
-
-    [[nodiscard]]
     friend shell_command operator&&(const shell_command& lhs, const shell_command& rhs)
     {
       return rhs.empty() ? lhs :

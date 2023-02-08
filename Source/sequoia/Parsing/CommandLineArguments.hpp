@@ -55,9 +55,6 @@ namespace sequoia::parsing::commandline
 
     [[nodiscard]]
     friend bool operator==(const proper_string&, const proper_string&) noexcept = default;
-
-    [[nodiscard]]
-    friend bool operator!=(const proper_string&, const proper_string&) noexcept = default;
   private:
     std::string m_String;
   };

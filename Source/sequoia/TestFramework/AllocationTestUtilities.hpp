@@ -84,12 +84,7 @@ namespace sequoia::testing
     int deallocs() const noexcept { return *m_pDeallocs; }
 
     [[nodiscard]]
-    friend bool operator==(const shared_counting_allocator& lhs, const shared_counting_allocator& rhs) noexcept
-      = default;
-
-    [[nodiscard]]
-    friend bool operator!=(const shared_counting_allocator& lhs, const shared_counting_allocator& rhs) noexcept
-      = default;
+    friend bool operator==(const shared_counting_allocator&, const shared_counting_allocator&) noexcept = default;
   private:
     std::shared_ptr<int> m_pAllocs{}, m_pDeallocs{};
 

@@ -30,9 +30,6 @@ namespace sequoia::testing
 
     [[nodiscard]]
     friend bool operator==(const template_spec&, const template_spec&) noexcept = default;
-
-    [[nodiscard]]
-    friend bool operator!=(const template_spec&, const template_spec&) noexcept = default;
   };
 
   using template_data = std::vector<template_spec>;
@@ -105,9 +102,6 @@ namespace sequoia::testing
 
     [[nodiscard]]
     friend bool operator==(const nascent_test_base&, const nascent_test_base&) noexcept = default;
-
-    [[nodiscard]]
-    friend bool operator!=(const nascent_test_base&, const nascent_test_base&) noexcept = default;
 
     [[nodiscard]]
     static std::vector<std::string> framework_diagnostics_stubs();
@@ -200,10 +194,6 @@ namespace sequoia::testing
     friend bool operator==(const nascent_semantics_test&, const nascent_semantics_test&) noexcept = default;
 
     [[nodiscard]]
-    friend bool operator!=(const nascent_semantics_test&, const nascent_semantics_test&) noexcept = default;
-
-
-    [[nodiscard]]
     static std::vector<std::string> stubs();
   private:
     std::string m_QualifiedName{};
@@ -250,9 +240,6 @@ namespace sequoia::testing
 
     [[nodiscard]]
     friend bool operator==(const nascent_behavioural_test&, const nascent_behavioural_test&) noexcept = default;
-
-    [[nodiscard]]
-    friend bool operator!=(const nascent_behavioural_test&, const nascent_behavioural_test&) noexcept = default;
 
     [[nodiscard]]
     static std::vector<std::string> stubs();

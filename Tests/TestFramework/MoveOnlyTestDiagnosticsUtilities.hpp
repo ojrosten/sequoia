@@ -52,9 +52,6 @@ namespace sequoia::testing
     [[nodiscard]]
     friend bool operator==(const move_only_beast&, const move_only_beast&) noexcept = default;
 
-    [[nodiscard]]
-    friend bool operator!=(const move_only_beast&, const move_only_beast&) noexcept = default;
-
     template<class Stream>
     friend Stream& operator<<(Stream& s, const move_only_beast& b)
     {
@@ -90,9 +87,6 @@ namespace sequoia::testing
 
     [[nodiscard]]
     friend bool operator==(const resource_binder&, const resource_binder&) = default;
-
-    [[nodiscard]]
-    friend bool operator!=(const resource_binder&, const resource_binder&) = default;
 
     template<class Stream>
     friend Stream& operator<<(Stream& s, const resource_binder& b)
@@ -157,9 +151,6 @@ namespace sequoia::testing
 
     [[nodiscard]]
     friend bool operator==(const specified_moved_from_beast&, const specified_moved_from_beast&) noexcept = default;
-
-    [[nodiscard]]
-    friend bool operator!=(const specified_moved_from_beast&, const specified_moved_from_beast&) noexcept = default;
 
     template<class Stream>
     friend Stream& operator<<(Stream& s, const specified_moved_from_beast& b)
