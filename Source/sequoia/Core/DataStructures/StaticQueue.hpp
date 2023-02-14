@@ -138,12 +138,6 @@ namespace sequoia::data_structures
         return true;
       }
     }
-
-    [[nodiscard]]
-    friend constexpr bool operator!=(const static_queue& lhs, const static_queue& rhs) noexcept
-    {
-      return !(lhs == rhs);
-    }
   private:
     std::array<T, MaxDepth> m_Queue{};
 

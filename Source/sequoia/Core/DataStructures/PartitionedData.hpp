@@ -449,12 +449,6 @@ namespace sequoia
           return isomorphic(lhs, rhs);
         }
       }
-
-      [[nodiscard]]
-      friend bool operator!=(const bucketed_sequence& lhs, const bucketed_sequence& rhs) noexcept
-      {
-        return !(lhs == rhs);
-      }
     private:
       constexpr static auto npos{partition_iterator::npos};
       constexpr static bool directCopy{partition_impl::direct_copy_v<Handler, T>};
@@ -674,12 +668,6 @@ namespace sequoia
         {
           return isomorphic(lhs, rhs);
         }
-      }
-
-      [[nodiscard]]
-      friend constexpr bool operator!=(const partitioned_sequence_base& lhs, const partitioned_sequence_base& rhs) noexcept
-      {
-        return !(lhs == rhs);
       }
     protected:
       constexpr partitioned_sequence_base(partitioned_sequence_base&&) noexcept = default;
