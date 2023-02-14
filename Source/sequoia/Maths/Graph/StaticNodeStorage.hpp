@@ -61,9 +61,6 @@ namespace sequoia::maths::graph_impl
     constexpr friend bool operator==(const static_node_storage&, const static_node_storage&) noexcept = default;
 
     [[nodiscard]]
-    constexpr friend bool operator!=(const static_node_storage&, const static_node_storage&) noexcept = default;
-
-    [[nodiscard]]
     constexpr static std::size_t size() noexcept { return N; }
   protected:
     constexpr static_node_storage(const static_node_storage&)                = default;

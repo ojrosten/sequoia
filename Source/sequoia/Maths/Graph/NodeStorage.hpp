@@ -161,9 +161,6 @@ namespace sequoia::maths::graph_impl
     {
       return lhs.m_NodeWeights == rhs.m_NodeWeights;
     }
-
-    [[nodiscard]]
-    friend constexpr bool operator!=(const node_storage&, const node_storage&) noexcept = default;
   protected:
     template<alloc Allocator>
     constexpr explicit node_storage(const Allocator& allocator)

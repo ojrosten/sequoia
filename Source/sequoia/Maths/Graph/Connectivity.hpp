@@ -217,9 +217,6 @@ namespace sequoia
       {
         return lhs.m_Edges == rhs.m_Edges;
       }
-
-      [[nodiscard]]
-      friend constexpr bool operator!=(const connectivity&, const connectivity&) noexcept = default;
     protected:
       using edge_iterator = typename edge_storage_type::partition_iterator;
       using init_t = std::initializer_list<std::initializer_list<edge_init_type>>;
