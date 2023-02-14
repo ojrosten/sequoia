@@ -197,6 +197,12 @@ namespace sequoia
       }
 
       [[nodiscard]]
+      size_type size_of_partition(size_type i) const
+      {
+        return static_cast<size_type>(std::distance(begin_partition(i), end_partition(i)));
+      }
+
+      [[nodiscard]]
       size_type num_partitions() const noexcept { return m_Buckets.size(); }
 
       void swap_partitions(const size_type i, const size_type j)
@@ -519,10 +525,16 @@ namespace sequoia
       {}
 
       [[nodiscard]]
-      bool empty() const noexcept { return m_Storage.empty(); }
+      constexpr bool empty() const noexcept { return m_Storage.empty(); }
 
       [[nodiscard]]
       constexpr auto size() const noexcept { return m_Storage.size(); }
+
+      [[nodiscard]]
+      constexpr size_type size_of_partition(index_type i) const
+      {
+        return static_cast<size_type>(std::distance(begin_partition(i), end_partition(i)));
+      }
 
       [[nodiscard]]
       constexpr auto num_partitions() const noexcept { return m_Partitions.size(); }

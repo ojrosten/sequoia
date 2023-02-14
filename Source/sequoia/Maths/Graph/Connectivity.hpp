@@ -514,33 +514,11 @@ namespace sequoia
                       [](const auto index) { return index - 1; });
       }
 
-      void reserve_for_join([[maybe_unused]] const edge_index_type node1, [[maybe_unused]] const edge_index_type node2)
-      {
-        if constexpr (graph_impl::has_reservable_partitions<edge_storage_type>)
-        {
-          if(node1 == node2)
-          {
-            reserve_edges(node1, distance(cbegin_edges(node1), cend_edges(node1)) + 2);
-          }
-          else
-          {
-            reserve_edges(node1, distance(cbegin_edges(node1), cend_edges(node1)) + 1);
-            reserve_edges(node2, distance(cbegin_edges(node2), cend_edges(node2)) + 2);
-          }
-        }
-        else
-        {
-          reserve_edges(size() + 2);
-        }
-      }
-
       template<class... Args>
         requires initializable_from<edge_weight_type, Args...>
         // && copyable in some situations
       void join(const edge_index_type node1, const edge_index_type node2, Args&&... args)
       {
-        reserve_for_join(node1, node2);
-
         if constexpr (throw_on_range_error) if(node1 >= order() || node2 >= order())
           throw std::out_of_range("Graph::join - index out of range");
 
@@ -553,27 +531,31 @@ namespace sequoia
           add_to_partition(node1, node2, make_edge_weight(std::forward<Args>(args)...));
         }
 
-        if constexpr(!directed(directedness))
+        if constexpr (!directed(directedness))
         {
-          if constexpr(edge_type::flavour == edge_flavour::partial)
+          if constexpr (edge_type::flavour == edge_flavour::partial)
           {
+            join_sentinel sentinel{ *this, node1, m_Edges.size_of_partition(node1) - 1 };
             m_Edges.push_back_to_partition(node2, node1, *crbegin_edges(node1));
           }
-          else if constexpr(edge_type::flavour == edge_flavour::partial_embedded)
+          else if constexpr (edge_type::flavour == edge_flavour::partial_embedded)
           {
-            const edge_index_type compIndex(distance(cbegin_edges(node1), cend_edges(node1)) -1);
+            join_sentinel sentinel{ *this, node1, m_Edges.size_of_partition(node1) - 1 };
+            const edge_index_type compIndex(distance(cbegin_edges(node1), cend_edges(node1)) - 1);
             m_Edges.push_back_to_partition(node2, node1, compIndex, *crbegin_edges(node1));
           }
         }
         else
         {
-          if constexpr(edge_type::flavour == edge_flavour::full)
+          if constexpr (edge_type::flavour == edge_flavour::full)
           {
+            join_sentinel sentinel{ *this, node1, m_Edges.size_of_partition(node1) - 1 };
             m_Edges.push_back_to_partition(node2, --cend_edges(node1));
           }
-          else if constexpr(edge_type::flavour == edge_flavour::full_embedded)
+          else if constexpr (edge_type::flavour == edge_flavour::full_embedded)
           {
-            const edge_index_type compIndex(distance(cbegin_edges(node1), cend_edges(node1)) -1);
+            join_sentinel sentinel{ *this, node1, m_Edges.size_of_partition(node1) - 1 };
+            const edge_index_type compIndex(distance(cbegin_edges(node1), cend_edges(node1)) - 1);
             m_Edges.push_back_to_partition(node2, compIndex, *crbegin_edges(node1));
           }
         }
@@ -589,23 +571,25 @@ namespace sequoia
         if(node1 == node2) return insert_join(citer1, dist2, std::forward<Args>(args)...);
 
         const auto dist1{static_cast<edge_index_type>(distance(cbegin_edges(node1), citer1))};
-        reserve_for_join(node1, node2);
 
         citer1 = cbegin_edges(node1) + dist1;
         citer1 = insert_single_join(citer1, node2, dist2, std::forward<Args>(args)...);
         citer2 = cbegin_edges(node2) + dist2;
 
-        if constexpr(EdgeTraits::shared_edge_v)
+        if constexpr (EdgeTraits::shared_edge_v)
         {
+          join_sentinel sentinel{ *this, node1, dist1 };
           citer2 = m_Edges.insert_to_partition(citer2, citer1);
         }
-        else if constexpr(edge_type::flavour == edge_flavour::partial_embedded)
+        else if constexpr (edge_type::flavour == edge_flavour::partial_embedded)
         {
+          join_sentinel sentinel{ *this, node1, dist1 };
           citer2 = m_Edges.insert_to_partition(citer2, node1, dist1, *citer1);
           increment_comp_indices(++to_edge_iterator(citer2), end_edges(node2), 1);
         }
-        else if constexpr(edge_type::flavour == edge_flavour::full_embedded)
+        else if constexpr (edge_type::flavour == edge_flavour::full_embedded)
         {
+          join_sentinel sentinel{ *this, node1, dist1 };
           citer2 = m_Edges.insert_to_partition(citer2, *citer1);
           increment_comp_indices(++to_edge_iterator(citer2), end_edges(node2), 1);
         }
@@ -617,39 +601,42 @@ namespace sequoia
       template<class... Args>
         requires initializable_from<edge_weight_type, Args...>
       std::pair<const_edge_iterator, const_edge_iterator>
-      insert_join(const_edge_iterator citer1, const edge_index_type pos2, Args&&... args)
+        insert_join(const_edge_iterator citer1, const edge_index_type pos2, Args&&... args)
       {
-        const auto node{citer1.partition_index()};
-        const auto dist1{distance(cbegin_edges(node), citer1)};
-        reserve_for_join(node, node);
+        const auto node{ citer1.partition_index() };
+        const auto dist1{ distance(cbegin_edges(node), citer1) };
         citer1 = insert_single_join(cbegin_edges(node) + dist1, node, pos2, std::forward<Args>(args)...);
 
-        auto pos1{static_cast<edge_index_type>(distance(cbegin_edges(node), citer1))};
-        if(pos2 <= pos1) ++pos1;
+        auto pos1{ static_cast<edge_index_type>(distance(cbegin_edges(node), citer1)) };
+        if (pos2 <= pos1) ++pos1;
 
-        if constexpr(EdgeTraits::shared_edge_v)
+        if constexpr (EdgeTraits::shared_edge_v)
         {
-          auto citer2{m_Edges.insert_to_partition(cbegin_edges(node) + pos2, citer1)};
+          join_sentinel sentinel{ *this, node, dist1 };
+
+          auto citer2{ m_Edges.insert_to_partition(cbegin_edges(node) + pos2, citer1) };
           citer1 = cbegin_edges(node) + pos1;
-          return {citer1, citer2};
+          return { citer1, citer2 };
         }
-        else if constexpr(edge_type::flavour == edge_flavour::partial_embedded)
+        else if constexpr (edge_type::flavour == edge_flavour::partial_embedded)
         {
-          auto citer2{m_Edges.insert_to_partition(cbegin_edges(node) + pos2, node, pos1, *citer1)};
+          join_sentinel sentinel{ *this, node, dist1 };
 
-          if(pos2 > pos1)
+          auto citer2{ m_Edges.insert_to_partition(cbegin_edges(node) + pos2, node, pos1, *citer1) };
+
+          if (pos2 > pos1)
           {
             increment_comp_indices(++to_edge_iterator(citer2), end_edges(node), 1);
           }
           else
           {
-            auto iter1{begin_edges(node) + pos1};
+            auto iter1{ begin_edges(node) + pos1 };
             increment_comp_indices(++to_edge_iterator(citer2), iter1, 1);
-            increment_comp_indices(iter1+1, end_edges(node), 1);
+            increment_comp_indices(iter1 + 1, end_edges(node), 1);
           }
 
           citer1 = cbegin_edges(node) + pos1;
-          return {citer1, citer2};
+          return { citer1, citer2 };
         }
       }
 
@@ -876,6 +863,31 @@ namespace sequoia
       constexpr static bool embeddedEdge{
         (edge_type::flavour == edge_flavour::partial_embedded) || (edge_type::flavour == edge_flavour::full_embedded)
       };
+
+
+      class [[nodiscard]] join_sentinel
+      {
+      public:
+        join_sentinel(connectivity& c, const edge_index_type node1, const edge_index_type pos)
+          : m_Connectivity{ c }
+          , m_Node1{ node1 }
+          , m_Pos{pos}
+          , m_InitialSize{ c.size() }
+        {}
+
+        ~join_sentinel()
+        {
+          if (m_Connectivity.size() == m_InitialSize)
+          {
+            m_Connectivity.m_Edges.erase_from_partition(m_Node1, m_Pos);
+          }
+        }
+      private:
+        connectivity& m_Connectivity;
+        edge_index_type m_Node1{}, m_Pos{};
+        std::size_t m_InitialSize{};
+      };
+
 
       class [[nodiscard]] weight_sentinel
       {
