@@ -276,7 +276,7 @@ namespace sequoia
       }
 
       template<alloc... Allocs>
-        requires ((sizeof...(Allocs) > 0)
+        requires (   (sizeof...(Allocs) > 0)
                   && (std::allocator_traits<Allocs>::propagate_on_container_copy_assignment::value && ...))
       void reset(const Allocs&... allocs)
       {
@@ -309,27 +309,35 @@ namespace sequoia
           return;
         }
 
+        auto setSouceNodes{
+            [i,j](auto iter) {
+                if      (iter->source_node() == i) iter->source_node(j);
+                else if (iter->source_node() == j) iter->source_node(i);
+            }
+        };
+
+        auto setTargetNodes{
+            [i,j](auto iter) {
+                if      (iter->target_node() == i) iter->target_node(j);
+                else if (iter->target_node() == j) iter->target_node(i);
+            }
+        };
+
         if constexpr (EdgeTraits::shared_edge_v)
         {
           for(auto iter{begin_edges(i)}; iter != end_edges(i); ++iter)
           {
             if((iter->source_node() != j) && (iter->target_node() != j))
             {
-              if(iter->source_node() == i) iter->source_node(j);
-              else if(iter->source_node() == j) iter->source_node(i);
-
-              if(iter->target_node() == i) iter->target_node(j);
-              else if(iter->target_node() == j) iter->target_node(i);
+              setSouceNodes(iter);
+              setTargetNodes(iter);
             }
           }
 
           for(auto iter{begin_edges(j)}; iter != end_edges(j); ++iter)
           {
-            if(iter->source_node() == i) iter->source_node(j);
-            else if(iter->source_node() == j) iter->source_node(i);
-
-            if(iter->target_node() == i) iter->target_node(j);
-            else if(iter->target_node() == j) iter->target_node(i);
+            setSouceNodes(iter);
+            setTargetNodes(iter);
           }
         }
         else
@@ -341,12 +349,10 @@ namespace sequoia
             {
               if constexpr (EdgeTraits::mutual_info_v && directed(directedness))
               {
-                if(iter->source_node() == i) iter->source_node(j);
-                else if(iter->source_node() == j) iter->source_node(i);
+                setSouceNodes(iter);
               }
 
-              if(iter->target_node() == i) iter->target_node(j);
-              else if(iter->target_node() == j) iter->target_node(i);
+              setTargetNodes(iter);
             }
           }
         }
@@ -535,7 +541,8 @@ namespace sequoia
       {
         reserve_for_join(node1, node2);
 
-        if constexpr (throw_on_range_error) if(node1 >= order() || node2 >= order()) throw std::out_of_range("Graph::join - index out of range");
+        if constexpr (throw_on_range_error) if(node1 >= order() || node2 >= order())
+          throw std::out_of_range("Graph::join - index out of range");
 
         if constexpr(std::is_empty_v<edge_weight_type>)
         {
