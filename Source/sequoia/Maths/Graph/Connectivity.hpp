@@ -604,7 +604,7 @@ namespace sequoia
         insert_join(const_edge_iterator citer1, const edge_index_type pos2, Args&&... args)
       {
         const auto node{ citer1.partition_index() };
-        const auto dist1{ distance(cbegin_edges(node), citer1) };
+        const auto dist1{ static_cast<edge_index_type>(distance(cbegin_edges(node), citer1)) };
         citer1 = insert_single_join(cbegin_edges(node) + dist1, node, pos2, std::forward<Args>(args)...);
 
         auto pos1{ static_cast<edge_index_type>(distance(cbegin_edges(node), citer1)) };
