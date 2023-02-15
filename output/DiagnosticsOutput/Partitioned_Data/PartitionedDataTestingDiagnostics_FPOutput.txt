@@ -34,6 +34,13 @@
 	  Obtained : 1
 	  Predicted: 0
 
+	  Partition 0
+	  size_of_partition
+	  [unsigned long long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
 	  Partition 0: iterator
 
 	    Container size wrong
@@ -582,6 +589,13 @@
 	[std::initializer_list<std::initializer_list<int> >]
 
 	  Number of elements incorrect
+	  [unsigned long long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	  Partition 0
+	  size_of_partition
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 1
@@ -1140,6 +1154,13 @@
 	  Obtained : 1
 	  Predicted: 0
 
+	  Partition 0
+	  size_of_partition
+	  [unsigned long long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
 	  Partition 0: iterator
 
 	    Container size wrong
@@ -1688,6 +1709,13 @@
 	[std::initializer_list<std::initializer_list<int> >]
 
 	  Number of elements incorrect
+	  [unsigned long long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	  Partition 0
+	  size_of_partition
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 1
@@ -2241,6 +2269,13 @@
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
 	  Number of elements incorrect
+	  [unsigned long long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	  Partition 0
+	  size_of_partition
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 1
@@ -2954,6 +2989,13 @@
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
 	  Number of elements incorrect
+	  [unsigned long long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	  Partition 0
+	  size_of_partition
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 1
@@ -3667,6 +3709,13 @@
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
 	  Number of elements incorrect
+	  [unsigned long long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	  Partition 0
+	  size_of_partition
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 1
@@ -4380,6 +4429,13 @@
 	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
 	  Number of elements incorrect
+	  [unsigned long long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	  Partition 0
+	  size_of_partition
 	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 1
