@@ -174,17 +174,23 @@ namespace sequoia::testing
       check(equality, LINE(""), graph, graph_t{edge_init_list_t{{edge_init_t{0,1,-4}, edge_init_t{0,0,-4}}}, {{1.1,-4.3}}});
     }
 
-    graph.mutate_edge_weight(graph.cbegin_edges(0),
-        [](auto& val) {
-        if constexpr(faithful_range<edge_weight_t>)
-        {
-          val[0] *= 2;
-        }
-        else
-        {
-          val *= 2;
-        }
-      }
+    check(equality,
+          LINE(""),
+          graph.mutate_edge_weight(graph.cbegin_edges(0),
+              [](auto& val) -> int {
+                if constexpr(faithful_range<edge_weight_t>)
+                {
+                  val[0] *= 2;
+                }
+                else
+                {
+                  val *= 2;
+                }
+
+                return 42;
+            }
+          ),
+          42
     );
 
     //   /\ -8

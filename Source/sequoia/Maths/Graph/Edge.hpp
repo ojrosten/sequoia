@@ -119,10 +119,10 @@ namespace sequoia
       [[nodiscard]]
       constexpr const weight_proxy_type& weight_proxy() const noexcept { return WeightHandler::get(m_Weight); }
 
-      template<class Fn>
-      constexpr void mutate_weight(Fn fn)
+      template<std::invocable<weight_type&> Fn>
+      constexpr std::invoke_result_t<Fn, weight_type&> mutate_weight(Fn fn)
       {
-        WeightHandler::get(m_Weight).mutate(fn);
+        return WeightHandler::get(m_Weight).mutate(fn);
       }
 
       [[nodiscard]]
