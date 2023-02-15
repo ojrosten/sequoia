@@ -951,17 +951,23 @@ namespace sequoia::testing
       check(equality, LINE(""), graph, graph_t{edge_init_list_t{{}, {edge_init_t{1,1,1}, edge_init_t{1,0,1}}}, {{1, 1}, {}}});
     }
 
-    graph.mutate_node_weight(graph.cbegin_node_weights(), [](auto& val){
-        if constexpr(faithful_range<node_weight_t>)
-        {
-          val[0] *= 2;
-          val[1] *= 2;
-        }
-        else
-        {
-          val *= 2;
-        }
-      }
+    check(equality,
+          LINE(""),
+          graph.mutate_node_weight(graph.cbegin_node_weights(), [](auto& val) -> int {
+              if constexpr(faithful_range<node_weight_t>)
+              {
+                val[0] *= 2;
+                val[1] *= 2;
+              }
+              else
+              {
+                val *= 2;
+              }
+
+              return 42;
+            }
+          ),
+          42
     );
 
     if constexpr (GraphFlavour == graph_flavour::directed)
