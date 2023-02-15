@@ -75,7 +75,7 @@ Unable to join zeroth node to non-existant first node
 
 Expected Exception Type:
 [std::out_of_range]
-Node index out of range!
+Graph::join - index out of range
 
 	=======================================
 
@@ -165,7 +165,7 @@ Unable to join zeroth node to non-existant first node
 
 Expected Exception Type:
 [std::out_of_range]
-Node index out of range!
+Graph::join - index out of range
 
 	=======================================
 
@@ -255,7 +255,7 @@ Unable to join zeroth node to non-existant first node
 
 Expected Exception Type:
 [std::out_of_range]
-Node index out of range!
+Graph::join - index out of range
 
 	=======================================
 
@@ -345,7 +345,7 @@ Unable to join zeroth node to non-existant first node
 
 Expected Exception Type:
 [std::out_of_range]
-Node index out of range!
+Graph::join - index out of range
 
 	=======================================
 
@@ -435,7 +435,7 @@ Unable to join zeroth node to non-existant first node
 
 Expected Exception Type:
 [std::out_of_range]
-Node index out of range!
+Graph::join - index out of range
 
 	=======================================
 
