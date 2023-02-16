@@ -262,6 +262,7 @@ int main(int argc, char** argv)
       test_static_graph{"Static Graph Init"},
       test_heterogeneous_static_graph{"Heterogeneous Static Graphs"},
       unweighted_graph_test{"Unweighted Graph Tests"},
+      unweighted_graph_bootstrapped_test{ "Unweighted Graph Bootstrapped Tests" },
       weighted_graph_test{"Weighted Graph Tests"},
       unweighted_graph_allocation_test{"Unweighted Graph Allocation Tests"},
       weighted_graph_allocation_test{"Weighted Graph Allocation Tests"},

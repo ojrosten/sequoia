@@ -38,6 +38,7 @@
 #include "Maths/Graph/DynamicGraphTraversalsTest.hpp"
 #include "Maths/Graph/DynamicGraphUnweightedAllocationTest.hpp"
 #include "Maths/Graph/DynamicGraphUnweightedTest.hpp"
+#include "Maths/Graph/DynamicGraphUnweightedBootstrappedTest.hpp"
 #include "Maths/Graph/DynamicGraphUpdateTest.hpp"
 #include "Maths/Graph/DynamicGraphWeightedAllocationTest.hpp"
 #include "Maths/Graph/DynamicGraphWeightedTest.hpp"
