@@ -664,10 +664,9 @@ namespace sequoia
                 [this, partner]([[maybe_unused]] const auto source, [[maybe_unused]] const auto citer){
                   if constexpr (directed(directedness))
                   {
-                    const auto pEdge{&*citer};
-                    for(auto oiter = cbegin_edges(partner); oiter != cend_edges(partner); ++oiter)
+                    for(auto oiter{cbegin_edges(partner)}; oiter != cend_edges(partner); ++oiter)
                     {
-                      if(&*oiter == pEdge) return distance(cbegin_edges(partner), oiter);
+                      if(&*oiter == &*citer) return distance(cbegin_edges(partner), oiter);
                     }
                   }
                   else
@@ -689,7 +688,12 @@ namespace sequoia
                     }
                   }
 
-                  throw std::logic_error("Deletion of undirected edge: partner not found");
+                  throw std::logic_error{
+                    error_prefix("erase_edge")
+                     .append("partner in partition ").append(std::to_string(partner)).append(" not found for edge [")
+                     .append(std::to_string(source)).append(",").append(std::to_string(std::distance(cbegin_edges(source), citer)))
+                     .append("]")
+                  };
                 }(source, citer)};
 
               m_Edges.erase_from_partition(citer);
@@ -1763,15 +1767,21 @@ namespace sequoia
       }
 
       [[nodiscard]]
+      std::string error_prefix(std::string_view tag) const
+      {
+        return std::string{ "connectivity::" }.append(tag).append(": ");
+      }
+
+      [[nodiscard]]
       std::string node_range_error_msg(std::string_view tag, const edge_index_type node) const
       {
-        return std::string{"connectivity::"}.append(tag).append(": node index ").append(std::to_string(node)).append(" out of range - graph order is ").append(std::to_string(order()));
+        return error_prefix(tag).append("node index ").append(std::to_string(node)).append(" out of range - graph order is ").append(std::to_string(order()));
       }
 
       [[nodiscard]]
       std::string node_range_error_msg(std::string_view tag, const edge_index_type node1, const edge_index_type node2) const
       {
-        return std::string{ "connectivity::" }.append(tag).append(": at least one node index [")
+        return error_prefix(tag).append("at least one node index [")
           .append(std::to_string(node1)).append(", ").append(std::to_string(node2))
           .append("] out of range - graph order is ").append(std::to_string(order()));
       }
