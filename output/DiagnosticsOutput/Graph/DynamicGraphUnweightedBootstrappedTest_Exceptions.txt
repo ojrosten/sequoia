@@ -1,0 +1,9 @@
+Tests/Maths/Graph/DynamicGraphUnweightedBootstrappedTest.cpp, Line 40
+cbegin_edges throws for empty graph
+
+Expected Exception Type:
+[std::out_of_range]
+Node index out of range!
+
+	=======================================
+

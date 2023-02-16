@@ -9,6 +9,8 @@
 
 #include "DynamicGraphUnweightedBootstrappedTest.hpp"
 
+#include "sequoia/TestFramework/StateTransitionUtilities.hpp"
+
 namespace sequoia::testing
 {
   [[nodiscard]]
@@ -24,6 +26,32 @@ namespace sequoia::testing
 
   void unweighted_graph_bootstrapped_test::execute_operations()
   {
+    using namespace maths;
+    using graph_to_test = graph<directed_flavour::directed, null_weight, null_weight>;
 
+    using transition_graph = transition_checker<graph_to_test>::transition_graph;
+    using edge_t           = transition_checker<graph_to_test>::edge;
+
+    transition_graph trg{
+      {
+        { edge_t{0,
+                 "",
+                 [this](const graph_to_test& g) -> const graph_to_test& {
+                   check_exception_thrown<std::out_of_range>(LINE("cbegin_edges throws for empty graph"), [&g]() { return g.cbegin_edges(0); });
+                   return g;
+                 }
+          }
+        }
+      },
+      {graph_to_test{}}
+    };
+
+    auto checker{
+        [this](std::string_view description, const graph_to_test& obtained, const graph_to_test& prediction) {
+          check(equality, description, obtained, prediction);
+        }
+    };
+
+    transition_checker<graph_to_test>::check(LINE(""), trg, checker);
   }
 }
