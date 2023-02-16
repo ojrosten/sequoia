@@ -303,7 +303,7 @@ namespace sequoia
           if constexpr(throw_on_range_error)
           {
             if((i >= order()) || (j >= order()))
-              throw std::out_of_range{"Connectivity::swap_nodes: indices out of range"};
+              throw std::out_of_range{ node_range_error_msg("swap_nodes", i, j) };
           }
 
           return;
@@ -416,7 +416,7 @@ namespace sequoia
       [[nodiscard]]
       constexpr edge_iterator begin_edges(const edge_index_type node)
       {
-        if constexpr (throw_on_range_error) if(node >= order()) throw std::out_of_range("Node index out of range!");
+        if constexpr (throw_on_range_error) if (node >= order()) throw std::out_of_range{ node_range_error_msg("begin_edges", node) };
 
         return m_Edges.begin_partition(node);
       }
@@ -424,7 +424,7 @@ namespace sequoia
       [[nodiscard]]
       constexpr edge_iterator end_edges(const edge_index_type node)
       {
-        if constexpr (throw_on_range_error) if(node >= order()) throw std::out_of_range("Node index out of range!");
+        if constexpr (throw_on_range_error) if(node >= order()) throw std::out_of_range{ node_range_error_msg("end_edges", node) };
 
         return m_Edges.end_partition(node);
       }
@@ -446,7 +446,7 @@ namespace sequoia
 
       void erase_node(const size_type node)
       {
-        if constexpr (throw_on_range_error) if(node >= order()) throw std::out_of_range("Cannot erase node: index out of range");
+        if constexpr (throw_on_range_error) if(node >= order()) throw std::out_of_range{ node_range_error_msg("erase_node", node) };
 
         if constexpr (EdgeTraits::mutual_info_v)
         {
@@ -519,8 +519,8 @@ namespace sequoia
         // && copyable in some situations
       void join(const edge_index_type node1, const edge_index_type node2, Args&&... args)
       {
-        if constexpr (throw_on_range_error) if(node1 >= order() || node2 >= order())
-          throw std::out_of_range("Graph::join - index out of range");
+        if constexpr (throw_on_range_error) if (node1 >= order() || node2 >= order())
+          throw std::out_of_range{ node_range_error_msg("join", node1, node2) };
 
         if constexpr(std::is_empty_v<edge_weight_type>)
         {
@@ -1766,6 +1766,14 @@ namespace sequoia
       std::string node_range_error_msg(std::string_view tag, const edge_index_type node) const
       {
         return std::string{"connectivity::"}.append(tag).append(": node index ").append(std::to_string(node)).append(" out of range - graph order is ").append(std::to_string(order()));
+      }
+
+      [[nodiscard]]
+      std::string node_range_error_msg(std::string_view tag, const edge_index_type node1, const edge_index_type node2) const
+      {
+        return std::string{ "connectivity::" }.append(tag).append(": at least one node index [")
+          .append(std::to_string(node1)).append(", ").append(std::to_string(node2))
+          .append("] out of range - graph order is ").append(std::to_string(order()));
       }
     };
   }

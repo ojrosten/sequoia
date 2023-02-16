@@ -21,7 +21,7 @@ swapping nodes throws for empty graph
 
 Expected Exception Type:
 [std::out_of_range]
-Connectivity::swap_nodes: indices out of range
+connectivity::swap_nodes: at least one node index [0, 0] out of range - graph order is 0
 
 	=======================================
 
@@ -39,7 +39,187 @@ Index out of range for swapping nodes
 
 Expected Exception Type:
 [std::out_of_range]
-Connectivity::swap_nodes: indices out of range
+connectivity::swap_nodes: at least one node index [0, 1] out of range - graph order is 1
+
+	=======================================
+
+Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 49
+cbegin_edges throws for empty graph
+
+Expected Exception Type:
+[std::out_of_range]
+connectivity::cbegin_edges: node index 0 out of range - graph order is 0
+
+	=======================================
+
+Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 50
+cend_edges throws for empty graph
+
+Expected Exception Type:
+[std::out_of_range]
+connectivity::cend_edges: node index 0 out of range - graph order is 0
+
+	=======================================
+
+Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 52
+swapping nodes throws for empty graph
+
+Expected Exception Type:
+[std::out_of_range]
+connectivity::swap_nodes: at least one node index [0, 0] out of range - graph order is 0
+
+	=======================================
+
+Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 60
+Unable to join zeroth node to non-existant first node
+
+Expected Exception Type:
+[std::out_of_range]
+Graph::join - index out of range
+
+	=======================================
+
+Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 62
+Index out of range for swapping nodes
+
+Expected Exception Type:
+[std::out_of_range]
+connectivity::swap_nodes: at least one node index [0, 1] out of range - graph order is 1
+
+	=======================================
+
+Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 49
+cbegin_edges throws for empty graph
+
+Expected Exception Type:
+[std::out_of_range]
+connectivity::cbegin_edges: node index 0 out of range - graph order is 0
+
+	=======================================
+
+Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 50
+cend_edges throws for empty graph
+
+Expected Exception Type:
+[std::out_of_range]
+connectivity::cend_edges: node index 0 out of range - graph order is 0
+
+	=======================================
+
+Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 52
+swapping nodes throws for empty graph
+
+Expected Exception Type:
+[std::out_of_range]
+connectivity::swap_nodes: at least one node index [0, 0] out of range - graph order is 0
+
+	=======================================
+
+Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 60
+Unable to join zeroth node to non-existant first node
+
+Expected Exception Type:
+[std::out_of_range]
+Graph::join - index out of range
+
+	=======================================
+
+Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 62
+Index out of range for swapping nodes
+
+Expected Exception Type:
+[std::out_of_range]
+connectivity::swap_nodes: at least one node index [0, 1] out of range - graph order is 1
+
+	=======================================
+
+Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 49
+cbegin_edges throws for empty graph
+
+Expected Exception Type:
+[std::out_of_range]
+connectivity::cbegin_edges: node index 0 out of range - graph order is 0
+
+	=======================================
+
+Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 50
+cend_edges throws for empty graph
+
+Expected Exception Type:
+[std::out_of_range]
+connectivity::cend_edges: node index 0 out of range - graph order is 0
+
+	=======================================
+
+Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 52
+swapping nodes throws for empty graph
+
+Expected Exception Type:
+[std::out_of_range]
+connectivity::swap_nodes: at least one node index [0, 0] out of range - graph order is 0
+
+	=======================================
+
+Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 60
+Unable to join zeroth node to non-existant first node
+
+Expected Exception Type:
+[std::out_of_range]
+Graph::join - index out of range
+
+	=======================================
+
+Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 62
+Index out of range for swapping nodes
+
+Expected Exception Type:
+[std::out_of_range]
+connectivity::swap_nodes: at least one node index [0, 1] out of range - graph order is 1
+
+	=======================================
+
+Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 49
+cbegin_edges throws for empty graph
+
+Expected Exception Type:
+[std::out_of_range]
+connectivity::cbegin_edges: node index 0 out of range - graph order is 0
+
+	=======================================
+
+Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 50
+cend_edges throws for empty graph
+
+Expected Exception Type:
+[std::out_of_range]
+connectivity::cend_edges: node index 0 out of range - graph order is 0
+
+	=======================================
+
+Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 52
+swapping nodes throws for empty graph
+
+Expected Exception Type:
+[std::out_of_range]
+connectivity::swap_nodes: at least one node index [0, 0] out of range - graph order is 0
+
+	=======================================
+
+Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 60
+Unable to join zeroth node to non-existant first node
+
+Expected Exception Type:
+[std::out_of_range]
+Graph::join - index out of range
+
+	=======================================
+
+Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 62
+Index out of range for swapping nodes
+
+Expected Exception Type:
+[std::out_of_range]
+connectivity::swap_nodes: at least one node index [0, 1] out of range - graph order is 1
 
 	=======================================
 
@@ -111,7 +291,7 @@ swapping nodes throws for empty graph
 
 Expected Exception Type:
 [std::out_of_range]
-Connectivity::swap_nodes: indices out of range
+connectivity::swap_nodes: at least one node index [0, 0] out of range - graph order is 0
 
 	=======================================
 
@@ -129,7 +309,7 @@ Index out of range for swapping nodes
 
 Expected Exception Type:
 [std::out_of_range]
-Connectivity::swap_nodes: indices out of range
+connectivity::swap_nodes: at least one node index [0, 1] out of range - graph order is 1
 
 	=======================================
 
@@ -156,7 +336,7 @@ swapping nodes throws for empty graph
 
 Expected Exception Type:
 [std::out_of_range]
-Connectivity::swap_nodes: indices out of range
+connectivity::swap_nodes: at least one node index [0, 0] out of range - graph order is 0
 
 	=======================================
 
@@ -174,7 +354,7 @@ Index out of range for swapping nodes
 
 Expected Exception Type:
 [std::out_of_range]
-Connectivity::swap_nodes: indices out of range
+connectivity::swap_nodes: at least one node index [0, 1] out of range - graph order is 1
 
 	=======================================
 
@@ -201,7 +381,7 @@ swapping nodes throws for empty graph
 
 Expected Exception Type:
 [std::out_of_range]
-Connectivity::swap_nodes: indices out of range
+connectivity::swap_nodes: at least one node index [0, 0] out of range - graph order is 0
 
 	=======================================
 
@@ -219,7 +399,7 @@ Index out of range for swapping nodes
 
 Expected Exception Type:
 [std::out_of_range]
-Connectivity::swap_nodes: indices out of range
+connectivity::swap_nodes: at least one node index [0, 1] out of range - graph order is 1
 
 	=======================================
 
@@ -246,7 +426,7 @@ swapping nodes throws for empty graph
 
 Expected Exception Type:
 [std::out_of_range]
-Connectivity::swap_nodes: indices out of range
+connectivity::swap_nodes: at least one node index [0, 0] out of range - graph order is 0
 
 	=======================================
 
@@ -264,187 +444,7 @@ Index out of range for swapping nodes
 
 Expected Exception Type:
 [std::out_of_range]
-Connectivity::swap_nodes: indices out of range
-
-	=======================================
-
-Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 49
-cbegin_edges throws for empty graph
-
-Expected Exception Type:
-[std::out_of_range]
-connectivity::cbegin_edges: node index 0 out of range - graph order is 0
-
-	=======================================
-
-Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 50
-cend_edges throws for empty graph
-
-Expected Exception Type:
-[std::out_of_range]
-connectivity::cend_edges: node index 0 out of range - graph order is 0
-
-	=======================================
-
-Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 52
-swapping nodes throws for empty graph
-
-Expected Exception Type:
-[std::out_of_range]
-Connectivity::swap_nodes: indices out of range
-
-	=======================================
-
-Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 60
-Unable to join zeroth node to non-existant first node
-
-Expected Exception Type:
-[std::out_of_range]
-Graph::join - index out of range
-
-	=======================================
-
-Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 62
-Index out of range for swapping nodes
-
-Expected Exception Type:
-[std::out_of_range]
-Connectivity::swap_nodes: indices out of range
-
-	=======================================
-
-Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 49
-cbegin_edges throws for empty graph
-
-Expected Exception Type:
-[std::out_of_range]
-connectivity::cbegin_edges: node index 0 out of range - graph order is 0
-
-	=======================================
-
-Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 50
-cend_edges throws for empty graph
-
-Expected Exception Type:
-[std::out_of_range]
-connectivity::cend_edges: node index 0 out of range - graph order is 0
-
-	=======================================
-
-Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 52
-swapping nodes throws for empty graph
-
-Expected Exception Type:
-[std::out_of_range]
-Connectivity::swap_nodes: indices out of range
-
-	=======================================
-
-Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 60
-Unable to join zeroth node to non-existant first node
-
-Expected Exception Type:
-[std::out_of_range]
-Graph::join - index out of range
-
-	=======================================
-
-Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 62
-Index out of range for swapping nodes
-
-Expected Exception Type:
-[std::out_of_range]
-Connectivity::swap_nodes: indices out of range
-
-	=======================================
-
-Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 49
-cbegin_edges throws for empty graph
-
-Expected Exception Type:
-[std::out_of_range]
-connectivity::cbegin_edges: node index 0 out of range - graph order is 0
-
-	=======================================
-
-Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 50
-cend_edges throws for empty graph
-
-Expected Exception Type:
-[std::out_of_range]
-connectivity::cend_edges: node index 0 out of range - graph order is 0
-
-	=======================================
-
-Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 52
-swapping nodes throws for empty graph
-
-Expected Exception Type:
-[std::out_of_range]
-Connectivity::swap_nodes: indices out of range
-
-	=======================================
-
-Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 60
-Unable to join zeroth node to non-existant first node
-
-Expected Exception Type:
-[std::out_of_range]
-Graph::join - index out of range
-
-	=======================================
-
-Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 62
-Index out of range for swapping nodes
-
-Expected Exception Type:
-[std::out_of_range]
-Connectivity::swap_nodes: indices out of range
-
-	=======================================
-
-Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 49
-cbegin_edges throws for empty graph
-
-Expected Exception Type:
-[std::out_of_range]
-connectivity::cbegin_edges: node index 0 out of range - graph order is 0
-
-	=======================================
-
-Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 50
-cend_edges throws for empty graph
-
-Expected Exception Type:
-[std::out_of_range]
-connectivity::cend_edges: node index 0 out of range - graph order is 0
-
-	=======================================
-
-Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 52
-swapping nodes throws for empty graph
-
-Expected Exception Type:
-[std::out_of_range]
-Connectivity::swap_nodes: indices out of range
-
-	=======================================
-
-Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 60
-Unable to join zeroth node to non-existant first node
-
-Expected Exception Type:
-[std::out_of_range]
-Graph::join - index out of range
-
-	=======================================
-
-Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp, Line 62
-Index out of range for swapping nodes
-
-Expected Exception Type:
-[std::out_of_range]
-Connectivity::swap_nodes: indices out of range
+connectivity::swap_nodes: at least one node index [0, 1] out of range - graph order is 1
 
 	=======================================
 
