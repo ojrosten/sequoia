@@ -54,10 +54,19 @@ namespace sequoia::testing
                    check_exception_thrown<std::out_of_range>(LINE("swapping nodes throws for empty graph"), [g{g}]() mutable { g.swap_nodes(0,0); });
                    return g;
                  }
+          },
+          edge_t{1,
+                 "Add a node",
+                 [this](const graph_to_test& g) -> graph_to_test {
+                   auto gr{g};
+                   check(equality, LINE("Index of added node is 0"), gr.add_node(), 0_sz);
+                   return gr;
+                 }
           }
-        }
+        },
+        {}
       },
-      {graph_to_test{}}
+      {graph_to_test{}, graph_to_test{{}}}
     };
 
     auto checker{
