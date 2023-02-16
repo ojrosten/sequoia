@@ -118,7 +118,7 @@ namespace sequoia
       [[nodiscard]]
       constexpr const_edge_iterator cbegin_edges(const edge_index_type node) const
       {
-        if constexpr (throw_on_range_error) if(node >= order()) throw std::out_of_range("Node index out of range!");
+        if constexpr (throw_on_range_error) if (node >= order()) throw std::out_of_range{ node_range_error_msg("cbegin_edges", node)};
 
         return m_Edges.cbegin_partition(node);
       }
@@ -126,7 +126,7 @@ namespace sequoia
       [[nodiscard]]
       constexpr const_edge_iterator cend_edges(const edge_index_type node) const
       {
-        if constexpr (throw_on_range_error) if(node >= order()) throw std::out_of_range("Node index out of range!");
+        if constexpr (throw_on_range_error) if(node >= order()) throw std::out_of_range{ node_range_error_msg("cend_edges", node)};
 
         return m_Edges.cend_partition(node);
       }
@@ -134,7 +134,7 @@ namespace sequoia
       [[nodiscard]]
       constexpr const_reverse_edge_iterator crbegin_edges(const edge_index_type node) const
       {
-        if constexpr (throw_on_range_error) if(node >= order()) throw std::out_of_range("Node index out of range!");
+        if constexpr (throw_on_range_error) if(node >= order()) throw std::out_of_range{ node_range_error_msg("crbegin_edges", node) };
 
         return m_Edges.crbegin_partition(node);
       }
@@ -142,7 +142,7 @@ namespace sequoia
       [[nodiscard]]
       constexpr const_reverse_edge_iterator crend_edges(const edge_index_type node) const
       {
-        if constexpr (throw_on_range_error) if(node >= order()) throw std::out_of_range("Node index out of range!");
+        if constexpr (throw_on_range_error) if(node >= order()) throw std::out_of_range{ node_range_error_msg("crend_edges", node) };
 
         return m_Edges.crend_partition(node);
       }
@@ -1760,6 +1760,12 @@ namespace sequoia
             }
           }
         }
+      }
+
+      [[nodiscard]]
+      std::string node_range_error_msg(std::string_view tag, const edge_index_type node) const
+      {
+        return std::string{"connectivity::"}.append(tag).append(": node index ").append(std::to_string(node)).append(" out of range - graph order is ").append(std::to_string(order()));
       }
     };
   }

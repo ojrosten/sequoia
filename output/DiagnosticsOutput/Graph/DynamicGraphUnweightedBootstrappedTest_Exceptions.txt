@@ -3,7 +3,7 @@ cbegin_edges throws for empty graph
 
 Expected Exception Type:
 [std::out_of_range]
-Node index out of range!
+connectivity::cbegin_edges: node index 0 out of range - graph order is 0
 
 	=======================================
 
@@ -12,7 +12,7 @@ cend_edges throws for empty graph
 
 Expected Exception Type:
 [std::out_of_range]
-Node index out of range!
+connectivity::cend_edges: node index 0 out of range - graph order is 0
 
 	=======================================
 
