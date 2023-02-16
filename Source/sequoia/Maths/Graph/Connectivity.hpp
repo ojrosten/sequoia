@@ -1038,7 +1038,7 @@ namespace sequoia
             for(const auto& edge : nodeEdges)
             {
               const auto target{edge.target_node()};
-              if(target >= edges.size()) throw std::logic_error("Target index out of range");
+              if(target >= edges.size()) throw std::logic_error{ edge_range_error_msg("process_edges", "target", target, edges.size()) };
 
               if constexpr(!direct_edge_init())
               {
@@ -1068,7 +1068,7 @@ namespace sequoia
           {
             const auto& edge{*edgeIter};
             const auto target{edge.target_node()};
-            if(target >= edges.size()) throw std::logic_error("Target index out of range");
+            if(target >= edges.size()) throw std::logic_error{ edge_range_error_msg("process_complementary_edges", "complementary", target, edges.size()) };
 
             const auto compIndex{edge.complementary_index()};
 
@@ -1767,23 +1767,29 @@ namespace sequoia
       }
 
       [[nodiscard]]
-      std::string error_prefix(std::string_view tag) const
+      std::string error_prefix(std::string_view method) const
       {
-        return std::string{ "connectivity::" }.append(tag).append(": ");
+        return std::string{ "connectivity::" }.append(method).append(": ");
       }
 
       [[nodiscard]]
-      std::string node_range_error_msg(std::string_view tag, const edge_index_type node) const
+      std::string node_range_error_msg(std::string_view method, const edge_index_type node) const
       {
-        return error_prefix(tag).append("node index ").append(std::to_string(node)).append(" out of range - graph order is ").append(std::to_string(order()));
+        return error_prefix(method).append("node index ").append(std::to_string(node)).append(" out of range - graph order is ").append(std::to_string(order()));
       }
 
       [[nodiscard]]
-      std::string node_range_error_msg(std::string_view tag, const edge_index_type node1, const edge_index_type node2) const
+      std::string node_range_error_msg(std::string_view method, const edge_index_type node1, const edge_index_type node2) const
       {
-        return error_prefix(tag).append("at least one node index [")
+        return error_prefix(method).append("at least one node index [")
           .append(std::to_string(node1)).append(", ").append(std::to_string(node2))
           .append("] out of range - graph order is ").append(std::to_string(order()));
+      }
+
+      [[nodiscard]]
+      std::string edge_range_error_msg(std::string_view method, std::string_view indexName, const edge_index_type index, const std::size_t sz)
+      {
+        return error_prefix(method).append(indexName).append(" index ").append(std::to_string(index)).append(" out of range - graph size is ").append(std::to_string(sz));
       }
     };
   }
