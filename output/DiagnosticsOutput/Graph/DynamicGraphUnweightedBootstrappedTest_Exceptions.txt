@@ -7,3 +7,21 @@ Node index out of range!
 
 	=======================================
 
+Tests/Maths/Graph/DynamicGraphUnweightedBootstrappedTest.cpp, Line 47
+cend_edges throws for empty graph
+
+Expected Exception Type:
+[std::out_of_range]
+Node index out of range!
+
+	=======================================
+
+Tests/Maths/Graph/DynamicGraphUnweightedBootstrappedTest.cpp, Line 54
+swapping nodes throws for empty graph
+
+Expected Exception Type:
+[std::out_of_range]
+Connectivity::swap_nodes: indices out of range
+
+	=======================================
+

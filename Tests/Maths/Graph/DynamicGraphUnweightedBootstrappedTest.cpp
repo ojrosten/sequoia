@@ -40,6 +40,20 @@ namespace sequoia::testing
                    check_exception_thrown<std::out_of_range>(LINE("cbegin_edges throws for empty graph"), [&g]() { return g.cbegin_edges(0); });
                    return g;
                  }
+          },
+          edge_t{0,
+                 "",
+                 [this](const graph_to_test& g) -> const graph_to_test& {
+                   check_exception_thrown<std::out_of_range>(LINE("cend_edges throws for empty graph"), [&g]() { return g.cend_edges(0); });
+                   return g;
+                 }
+          },
+          edge_t{0,
+                 "",
+                 [this](const graph_to_test& g) -> const graph_to_test& {
+                   check_exception_thrown<std::out_of_range>(LINE("swapping nodes throws for empty graph"), [g{g}]() mutable { g.swap_nodes(0,0); });
+                   return g;
+                 }
           }
         }
       },
