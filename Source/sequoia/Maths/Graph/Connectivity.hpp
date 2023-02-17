@@ -50,6 +50,35 @@ namespace sequoia
 
   namespace maths
   {
+    namespace impl
+    {
+      [[nodiscard]]
+      inline std::string error_prefix(std::string_view method)
+      {
+        return std::string{ "connectivity::" }.append(method).append(": ");
+      }
+
+      constexpr void check_node_range(std::string_view method, const std::size_t order, const std::size_t node)
+      {
+        if(node >= order)
+          throw std::out_of_range{ error_prefix(method).append("node index ").append(std::to_string(node)).append(" out of range - graph order is ").append(std::to_string(order)) };
+      }
+
+      constexpr void check_node_range(std::string_view method, const std::size_t order, const std::size_t node1, const std::size_t node2)
+      {
+        if((node1 >= order) || (node2 >= order))
+          throw std::out_of_range{error_prefix(method).append("at least one node index [")
+                .append(std::to_string(node1)).append(", ").append(std::to_string(node2))
+                .append("] out of range - graph order is ").append(std::to_string(order)) };
+      }
+
+      constexpr void check_edge_range(std::string_view method, std::string_view indexName, const std::size_t size, const std::size_t index)
+      {
+        if(index >= size)
+          throw std::out_of_range{ error_prefix(method).append(indexName).append(" index ").append(std::to_string(index)).append(" out of range - graph size is ").append(std::to_string(size)) };
+      }
+    }
+
     struct partitions_allocator_tag{};
 
     /*! \brief Graph connectivity, used as a building block for concrete graphs.
@@ -118,7 +147,7 @@ namespace sequoia
       [[nodiscard]]
       constexpr const_edge_iterator cbegin_edges(const edge_index_type node) const
       {
-        if constexpr (throw_on_range_error) if (node >= order()) throw std::out_of_range{ node_range_error_msg("cbegin_edges", node)};
+        if constexpr (throw_on_range_error) impl::check_node_range("cbegin_edges", order(), node);
 
         return m_Edges.cbegin_partition(node);
       }
@@ -126,7 +155,7 @@ namespace sequoia
       [[nodiscard]]
       constexpr const_edge_iterator cend_edges(const edge_index_type node) const
       {
-        if constexpr (throw_on_range_error) if(node >= order()) throw std::out_of_range{ node_range_error_msg("cend_edges", node)};
+        if constexpr (throw_on_range_error) impl::check_node_range("cend_edges", order(), node);
 
         return m_Edges.cend_partition(node);
       }
@@ -134,7 +163,7 @@ namespace sequoia
       [[nodiscard]]
       constexpr const_reverse_edge_iterator crbegin_edges(const edge_index_type node) const
       {
-        if constexpr (throw_on_range_error) if(node >= order()) throw std::out_of_range{ node_range_error_msg("crbegin_edges", node) };
+        if constexpr (throw_on_range_error) impl::check_node_range("crbegin_edges", order(), node);
 
         return m_Edges.crbegin_partition(node);
       }
@@ -142,7 +171,7 @@ namespace sequoia
       [[nodiscard]]
       constexpr const_reverse_edge_iterator crend_edges(const edge_index_type node) const
       {
-        if constexpr (throw_on_range_error) if(node >= order()) throw std::out_of_range{ node_range_error_msg("crend_edges", node) };
+        if constexpr (throw_on_range_error) impl::check_node_range("crend_edges", order(), node);
 
         return m_Edges.crend_partition(node);
       }
@@ -301,10 +330,7 @@ namespace sequoia
         if(!size())
         {
           if constexpr(throw_on_range_error)
-          {
-            if((i >= order()) || (j >= order()))
-              throw std::out_of_range{ node_range_error_msg("swap_nodes", i, j) };
-          }
+            impl::check_node_range("swap_nodes", order(), i, j);
 
           return;
         }
@@ -416,7 +442,7 @@ namespace sequoia
       [[nodiscard]]
       constexpr edge_iterator begin_edges(const edge_index_type node)
       {
-        if constexpr (throw_on_range_error) if (node >= order()) throw std::out_of_range{ node_range_error_msg("begin_edges", node) };
+        if constexpr (throw_on_range_error) impl::check_node_range("begin_edges", order(), node);
 
         return m_Edges.begin_partition(node);
       }
@@ -424,7 +450,7 @@ namespace sequoia
       [[nodiscard]]
       constexpr edge_iterator end_edges(const edge_index_type node)
       {
-        if constexpr (throw_on_range_error) if(node >= order()) throw std::out_of_range{ node_range_error_msg("end_edges", node) };
+        if constexpr (throw_on_range_error) impl::check_node_range("end_edges", order(), node);
 
         return m_Edges.end_partition(node);
       }
@@ -446,7 +472,7 @@ namespace sequoia
 
       void erase_node(const size_type node)
       {
-        if constexpr (throw_on_range_error) if(node >= order()) throw std::out_of_range{ node_range_error_msg("erase_node", node) };
+        if constexpr (throw_on_range_error) impl::check_node_range("erase_node", order(), node);
 
         if constexpr (EdgeTraits::mutual_info_v)
         {
@@ -519,8 +545,7 @@ namespace sequoia
         // && copyable in some situations
       void join(const edge_index_type node1, const edge_index_type node2, Args&&... args)
       {
-        if constexpr (throw_on_range_error) if (node1 >= order() || node2 >= order())
-          throw std::out_of_range{ node_range_error_msg("join", node1, node2) };
+        if constexpr (throw_on_range_error) impl::check_node_range("join", order(), node1, node2);
 
         if constexpr(std::is_empty_v<edge_weight_type>)
         {
@@ -689,7 +714,7 @@ namespace sequoia
                   }
 
                   throw std::logic_error{
-                    error_prefix("erase_edge")
+                    impl::error_prefix("erase_edge")
                      .append("partner in partition ").append(std::to_string(partner)).append(" not found for edge [")
                      .append(std::to_string(source)).append(",").append(std::to_string(std::distance(cbegin_edges(source), citer)))
                      .append("]")
@@ -1038,7 +1063,7 @@ namespace sequoia
             for(const auto& edge : nodeEdges)
             {
               const auto target{edge.target_node()};
-              if(target >= edges.size()) throw std::logic_error{ edge_range_error_msg("process_edges", "target", target, edges.size()) };
+              impl::check_edge_range("process_edges", "target", edges.size(), target);
 
               if constexpr(!direct_edge_init())
               {
@@ -1068,8 +1093,7 @@ namespace sequoia
           {
             const auto& edge{*edgeIter};
             const auto target{edge.target_node()};
-            if(target >= edges.size()) throw std::logic_error{ edge_range_error_msg("process_complementary_edges", "complementary", target, edges.size()) };
-
+            impl::check_edge_range("process_complementary_edges", "complementary", edges.size(), target);
             const auto compIndex{edge.complementary_index()};
 
             bool doProcess{true};
@@ -1764,32 +1788,6 @@ namespace sequoia
             }
           }
         }
-      }
-
-      [[nodiscard]]
-      std::string error_prefix(std::string_view method) const
-      {
-        return std::string{ "connectivity::" }.append(method).append(": ");
-      }
-
-      [[nodiscard]]
-      std::string node_range_error_msg(std::string_view method, const edge_index_type node) const
-      {
-        return error_prefix(method).append("node index ").append(std::to_string(node)).append(" out of range - graph order is ").append(std::to_string(order()));
-      }
-
-      [[nodiscard]]
-      std::string node_range_error_msg(std::string_view method, const edge_index_type node1, const edge_index_type node2) const
-      {
-        return error_prefix(method).append("at least one node index [")
-          .append(std::to_string(node1)).append(", ").append(std::to_string(node2))
-          .append("] out of range - graph order is ").append(std::to_string(order()));
-      }
-
-      [[nodiscard]]
-      std::string edge_range_error_msg(std::string_view method, std::string_view indexName, const edge_index_type index, const std::size_t sz)
-      {
-        return error_prefix(method).append(indexName).append(" index ").append(std::to_string(index)).append(" out of range - graph size is ").append(std::to_string(sz));
       }
     };
   }
