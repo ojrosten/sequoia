@@ -17,6 +17,24 @@ connectivity::cend_edges: node index 0 out of range - graph order is 0
 	=======================================
 
 Tests/Maths/Graph/DynamicGraphUnweightedBootstrappedTest.cpp, Line 54
+crbegin_edges throws for empty graph
+
+Expected Exception Type:
+[std::out_of_range]
+connectivity::crbegin_edges: node index 0 out of range - graph order is 0
+
+	=======================================
+
+Tests/Maths/Graph/DynamicGraphUnweightedBootstrappedTest.cpp, Line 61
+crend_edges throws for empty graph
+
+Expected Exception Type:
+[std::out_of_range]
+connectivity::crend_edges: node index 0 out of range - graph order is 0
+
+	=======================================
+
+Tests/Maths/Graph/DynamicGraphUnweightedBootstrappedTest.cpp, Line 68
 swapping nodes throws for empty graph
 
 Expected Exception Type:
