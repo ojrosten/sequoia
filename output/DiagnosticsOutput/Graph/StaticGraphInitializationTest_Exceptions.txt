@@ -795,7 +795,7 @@ Mismatch between node and edge init
 
 Expected Exception Type:
 [std::logic_error]
-initializer_list too big for array
+Node weight initializer and edges top-level initializer must be of same size
 
 	=======================================
 
@@ -804,7 +804,7 @@ Mismatch between node and edge init
 
 Expected Exception Type:
 [std::logic_error]
-Initializer list of wrong size
+Node weight initializer and edges top-level initializer must be of same size
 
 	=======================================
 
@@ -957,7 +957,7 @@ Mismatch between node and edge init
 
 Expected Exception Type:
 [std::logic_error]
-initializer_list too big for array
+Node weight initializer and edges top-level initializer must be of same size
 
 	=======================================
 
@@ -966,7 +966,7 @@ Mismatch between node and edge init
 
 Expected Exception Type:
 [std::logic_error]
-Initializer list of wrong size
+Node weight initializer and edges top-level initializer must be of same size
 
 	=======================================
 
@@ -1182,7 +1182,7 @@ Mismatch between node and edge init
 
 Expected Exception Type:
 [std::logic_error]
-initializer_list too big for array
+Node weight initializer and edges top-level initializer must be of same size
 
 	=======================================
 
@@ -1191,7 +1191,7 @@ Mismatch between node and edge init
 
 Expected Exception Type:
 [std::logic_error]
-Initializer list of wrong size
+Node weight initializer and edges top-level initializer must be of same size
 
 	=======================================
 
@@ -1407,7 +1407,7 @@ Mismatch between node and edge init
 
 Expected Exception Type:
 [std::logic_error]
-initializer_list too big for array
+Node weight initializer and edges top-level initializer must be of same size
 
 	=======================================
 
@@ -1416,7 +1416,7 @@ Mismatch between node and edge init
 
 Expected Exception Type:
 [std::logic_error]
-Initializer list of wrong size
+Node weight initializer and edges top-level initializer must be of same size
 
 	=======================================
 
@@ -2694,7 +2694,7 @@ Mismatch between node and edge init
 
 Expected Exception Type:
 [std::logic_error]
-initializer_list too big for array
+Node weight initializer and edges top-level initializer must be of same size
 
 	=======================================
 
@@ -2703,7 +2703,7 @@ Mismatch between node and edge init
 
 Expected Exception Type:
 [std::logic_error]
-Initializer list of wrong size
+Node weight initializer and edges top-level initializer must be of same size
 
 	=======================================
 
@@ -2946,7 +2946,7 @@ Mismatch between node and edge init
 
 Expected Exception Type:
 [std::logic_error]
-initializer_list too big for array
+Node weight initializer and edges top-level initializer must be of same size
 
 	=======================================
 
@@ -2955,7 +2955,7 @@ Mismatch between node and edge init
 
 Expected Exception Type:
 [std::logic_error]
-Initializer list of wrong size
+Node weight initializer and edges top-level initializer must be of same size
 
 	=======================================
 
@@ -3234,7 +3234,7 @@ Mismatch between node and edge init
 
 Expected Exception Type:
 [std::logic_error]
-initializer_list too big for array
+Node weight initializer and edges top-level initializer must be of same size
 
 	=======================================
 
@@ -3243,7 +3243,7 @@ Mismatch between node and edge init
 
 Expected Exception Type:
 [std::logic_error]
-Initializer list of wrong size
+Node weight initializer and edges top-level initializer must be of same size
 
 	=======================================
 
@@ -3522,7 +3522,7 @@ Mismatch between node and edge init
 
 Expected Exception Type:
 [std::logic_error]
-initializer_list too big for array
+Node weight initializer and edges top-level initializer must be of same size
 
 	=======================================
 
@@ -3531,7 +3531,7 @@ Mismatch between node and edge init
 
 Expected Exception Type:
 [std::logic_error]
-Initializer list of wrong size
+Node weight initializer and edges top-level initializer must be of same size
 
 	=======================================
 
@@ -4098,7 +4098,7 @@ Mismatch between node and edge init
 
 Expected Exception Type:
 [std::logic_error]
-initializer_list too big for array
+Node weight initializer and edges top-level initializer must be of same size
 
 	=======================================
 
@@ -4107,7 +4107,7 @@ Mismatch between node and edge init
 
 Expected Exception Type:
 [std::logic_error]
-Initializer list of wrong size
+Node weight initializer and edges top-level initializer must be of same size
 
 	=======================================
 
@@ -4206,7 +4206,7 @@ Mismatch between node and edge init
 
 Expected Exception Type:
 [std::logic_error]
-initializer_list too big for array
+Node weight initializer and edges top-level initializer must be of same size
 
 	=======================================
 
@@ -4215,7 +4215,7 @@ Mismatch between node and edge init
 
 Expected Exception Type:
 [std::logic_error]
-Initializer list of wrong size
+Node weight initializer and edges top-level initializer must be of same size
 
 	=======================================
 
@@ -4314,7 +4314,7 @@ Mismatch between node and edge init
 
 Expected Exception Type:
 [std::logic_error]
-initializer_list too big for array
+Node weight initializer and edges top-level initializer must be of same size
 
 	=======================================
 
@@ -4323,7 +4323,7 @@ Mismatch between node and edge init
 
 Expected Exception Type:
 [std::logic_error]
-Initializer list of wrong size
+Node weight initializer and edges top-level initializer must be of same size
 
 	=======================================
 
@@ -4422,7 +4422,7 @@ Mismatch between node and edge init
 
 Expected Exception Type:
 [std::logic_error]
-initializer_list too big for array
+Node weight initializer and edges top-level initializer must be of same size
 
 	=======================================
 
@@ -4431,7 +4431,7 @@ Mismatch between node and edge init
 
 Expected Exception Type:
 [std::logic_error]
-Initializer list of wrong size
+Node weight initializer and edges top-level initializer must be of same size
 
 	=======================================
 
@@ -4683,7 +4683,7 @@ Mismatch between node and edge init
 
 Expected Exception Type:
 [std::logic_error]
-initializer_list too big for array
+Node weight initializer and edges top-level initializer must be of same size
 
 	=======================================
 
@@ -4692,7 +4692,7 @@ Mismatch between node and edge init
 
 Expected Exception Type:
 [std::logic_error]
-Initializer list of wrong size
+Node weight initializer and edges top-level initializer must be of same size
 
 	=======================================
 
@@ -4737,7 +4737,7 @@ Mismatch between node and edge init
 
 Expected Exception Type:
 [std::logic_error]
-initializer_list too big for array
+Node weight initializer and edges top-level initializer must be of same size
 
 	=======================================
 
@@ -4746,7 +4746,7 @@ Mismatch between node and edge init
 
 Expected Exception Type:
 [std::logic_error]
-Initializer list of wrong size
+Node weight initializer and edges top-level initializer must be of same size
 
 	=======================================
 
@@ -4791,7 +4791,7 @@ Mismatch between node and edge init
 
 Expected Exception Type:
 [std::logic_error]
-initializer_list too big for array
+Node weight initializer and edges top-level initializer must be of same size
 
 	=======================================
 
@@ -4800,7 +4800,7 @@ Mismatch between node and edge init
 
 Expected Exception Type:
 [std::logic_error]
-Initializer list of wrong size
+Node weight initializer and edges top-level initializer must be of same size
 
 	=======================================
 
@@ -4845,7 +4845,7 @@ Mismatch between node and edge init
 
 Expected Exception Type:
 [std::logic_error]
-initializer_list too big for array
+Node weight initializer and edges top-level initializer must be of same size
 
 	=======================================
 
@@ -4854,7 +4854,7 @@ Mismatch between node and edge init
 
 Expected Exception Type:
 [std::logic_error]
-Initializer list of wrong size
+Node weight initializer and edges top-level initializer must be of same size
 
 	=======================================
 
