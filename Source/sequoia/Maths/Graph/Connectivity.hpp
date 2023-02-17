@@ -1096,23 +1096,22 @@ namespace sequoia
             impl::check_edge_range("process_complementary_edges", "complementary", edges.size(), target);
             const auto compIndex{edge.complementary_index()};
 
-            bool doProcess{true};
-            if constexpr(directed(directedness))
-            {
-              doProcess = (edge.target_node() != currentNodeIndex) || (edge.source_node() == edge.target_node());
-            }
+            const bool doProcess{
+              [&]() {
+                if constexpr (!directed(directedness)) return true;
+                else return (edge.target_node() != currentNodeIndex) || (edge.source_node() == edge.target_node());
+              }()
+            };
 
             if(doProcess)
             {
-              auto targetEdgesIter = edges.begin() + target;
-              if(compIndex >= targetEdgesIter->size())
-                throw std::logic_error("Complementary index out of range");
+              auto targetEdgesIter{edges.begin() + target};
+              impl::check_edge_range("process_complementary_edges", "complementary", targetEdgesIter->size(), compIndex);
 
-              if(const auto dist{static_cast<edge_index_type>(std::distance(nodeEdges.begin(), edgeIter))};
-                 (target == currentNodeIndex) && (compIndex == dist))
+              if(const auto dist{static_cast<edge_index_type>(std::distance(nodeEdges.begin(), edgeIter))}; (target == currentNodeIndex) && (compIndex == dist))
                 throw std::logic_error("Complementary index is self-referential");
 
-              const auto& targetEdge = *(targetEdgesIter->begin() + compIndex);
+              const auto& targetEdge{*(targetEdgesIter->begin() + compIndex)};
               if constexpr(!directed(directedness))
               {
                 if(targetEdge.target_node() != currentNodeIndex)
@@ -1146,10 +1145,10 @@ namespace sequoia
 
               if((edge.target_node() == currentNodeIndex) && (edge.source_node() != edge.target_node()))
               {
-                auto sourceEdgesIter = edges.begin() + source;
+                auto sourceEdgesIter{edges.begin() + source};
                 if(compIndex >= sourceEdgesIter->size()) throw std::logic_error("Complementary index out of range");
 
-                const auto& sourceEdge = *(sourceEdgesIter->begin() + compIndex);
+                const auto& sourceEdge{*(sourceEdgesIter->begin() + compIndex)};
                 if(sourceEdge.target_node() != currentNodeIndex)
                   throw std::logic_error("Reciprocated target index does not match for directed graph");
               }

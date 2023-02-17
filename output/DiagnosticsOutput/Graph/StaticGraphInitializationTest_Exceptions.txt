@@ -1641,7 +1641,7 @@ First complementary index is out of range
 
 Expected Exception Type:
 [std::logic_error]
-Complementary index out of range
+connectivity::process_complementary_edges: complementary index 2 out of range - graph size is 2
 
 	=======================================
 
@@ -1695,7 +1695,7 @@ Complementary index out of range
 
 Expected Exception Type:
 [std::logic_error]
-Complementary index out of range
+connectivity::process_complementary_edges: complementary index 4 out of range - graph size is 4
 
 	=======================================
 
@@ -1749,7 +1749,7 @@ Complementary index out of range
 
 Expected Exception Type:
 [std::logic_error]
-Complementary index out of range
+connectivity::process_complementary_edges: complementary index 1 out of range - graph size is 1
 
 	=======================================
 
@@ -1758,7 +1758,7 @@ Complementary indices out of range
 
 Expected Exception Type:
 [std::logic_error]
-Complementary index out of range
+connectivity::process_complementary_edges: complementary index 1 out of range - graph size is 1
 
 	=======================================
 
@@ -1866,7 +1866,7 @@ First complementary index is out of range
 
 Expected Exception Type:
 [std::logic_error]
-Complementary index out of range
+connectivity::process_complementary_edges: complementary index 2 out of range - graph size is 2
 
 	=======================================
 
@@ -1929,7 +1929,7 @@ Complementary index out of range
 
 Expected Exception Type:
 [std::logic_error]
-Complementary index out of range
+connectivity::process_complementary_edges: complementary index 4 out of range - graph size is 4
 
 	=======================================
 
@@ -1992,7 +1992,7 @@ Complementary index out of range
 
 Expected Exception Type:
 [std::logic_error]
-Complementary index out of range
+connectivity::process_complementary_edges: complementary index 1 out of range - graph size is 1
 
 	=======================================
 
@@ -2001,7 +2001,7 @@ Complementary indices out of range
 
 Expected Exception Type:
 [std::logic_error]
-Complementary index out of range
+connectivity::process_complementary_edges: complementary index 1 out of range - graph size is 1
 
 	=======================================
 
@@ -2136,7 +2136,7 @@ First complementary index is out of range
 
 Expected Exception Type:
 [std::logic_error]
-Complementary index out of range
+connectivity::process_complementary_edges: complementary index 2 out of range - graph size is 2
 
 	=======================================
 
@@ -2199,7 +2199,7 @@ Complementary index out of range
 
 Expected Exception Type:
 [std::logic_error]
-Complementary index out of range
+connectivity::process_complementary_edges: complementary index 4 out of range - graph size is 4
 
 	=======================================
 
@@ -2262,7 +2262,7 @@ Complementary index out of range
 
 Expected Exception Type:
 [std::logic_error]
-Complementary index out of range
+connectivity::process_complementary_edges: complementary index 1 out of range - graph size is 1
 
 	=======================================
 
@@ -2271,7 +2271,7 @@ Complementary indices out of range
 
 Expected Exception Type:
 [std::logic_error]
-Complementary index out of range
+connectivity::process_complementary_edges: complementary index 1 out of range - graph size is 1
 
 	=======================================
 
@@ -2406,7 +2406,7 @@ First complementary index is out of range
 
 Expected Exception Type:
 [std::logic_error]
-Complementary index out of range
+connectivity::process_complementary_edges: complementary index 2 out of range - graph size is 2
 
 	=======================================
 
@@ -2469,7 +2469,7 @@ Complementary index out of range
 
 Expected Exception Type:
 [std::logic_error]
-Complementary index out of range
+connectivity::process_complementary_edges: complementary index 4 out of range - graph size is 4
 
 	=======================================
 
@@ -2532,7 +2532,7 @@ Complementary index out of range
 
 Expected Exception Type:
 [std::logic_error]
-Complementary index out of range
+connectivity::process_complementary_edges: complementary index 1 out of range - graph size is 1
 
 	=======================================
 
@@ -2541,7 +2541,7 @@ Complementary indices out of range
 
 Expected Exception Type:
 [std::logic_error]
-Complementary index out of range
+connectivity::process_complementary_edges: complementary index 1 out of range - graph size is 1
 
 	=======================================
 
@@ -2676,7 +2676,7 @@ First complementary index is out of range
 
 Expected Exception Type:
 [std::logic_error]
-Complementary index out of range
+connectivity::process_complementary_edges: complementary index 2 out of range - graph size is 2
 
 	=======================================
 
@@ -2748,7 +2748,7 @@ Complementary index out of range
 
 Expected Exception Type:
 [std::logic_error]
-Complementary index out of range
+connectivity::process_complementary_edges: complementary index 4 out of range - graph size is 4
 
 	=======================================
 
@@ -2802,7 +2802,7 @@ Complementary index out of range
 
 Expected Exception Type:
 [std::logic_error]
-Complementary index out of range
+connectivity::process_complementary_edges: complementary index 1 out of range - graph size is 1
 
 	=======================================
 
@@ -2811,7 +2811,7 @@ Complementary indices out of range
 
 Expected Exception Type:
 [std::logic_error]
-Complementary index out of range
+connectivity::process_complementary_edges: complementary index 1 out of range - graph size is 1
 
 	=======================================
 
@@ -2919,295 +2919,7 @@ First complementary index is out of range
 
 Expected Exception Type:
 [std::logic_error]
-Complementary index out of range
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 816
-First complementary index is out of range
-
-Expected Exception Type:
-[std::logic_error]
-Complementary index is self-referential
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 821
-Weight mismatch
-
-Expected Exception Type:
-[std::logic_error]
-Mismath between weights
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 860
-Mismatch between node and edge init
-
-Expected Exception Type:
-[std::logic_error]
-initializer_list too big for array
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 862
-Mismatch between node and edge init
-
-Expected Exception Type:
-[std::logic_error]
-Initializer list of wrong size
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 898
-Too few elements in initializer lists
-
-Expected Exception Type:
-[std::logic_error]
-Inconsistent number of elements supplied by initializer lists
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 899
-Partial index out of range
-
-Expected Exception Type:
-[std::logic_error]
-Reciprocated target index does not match for undirected graph
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 900
-Too Many elements in initializer list
-
-Expected Exception Type:
-[std::logic_error]
-Inconsistent number of elements supplied by initializer lists
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 901
-Self-referential complementary indices
-
-Expected Exception Type:
-[std::logic_error]
-Complementary index is self-referential
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 902
-Complementary index out of range
-
-Expected Exception Type:
-[std::logic_error]
-Complementary index out of range
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 907
-Weight mismatch
-
-Expected Exception Type:
-[std::logic_error]
-Mismath between weights
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 933
-Too few elements in both sub-initializer lists
-
-Expected Exception Type:
-[std::logic_error]
-Inconsistent number of elements supplied by initializer lists
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 934
-Too few elements in first sub-initializer list
-
-Expected Exception Type:
-[std::logic_error]
-Inconsistent number of elements supplied by initializer lists
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 935
-Too few elements in second sub-initializer list
-
-Expected Exception Type:
-[std::logic_error]
-Inconsistent number of elements supplied by initializer lists
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 937
-Too many elements in first sub-initializer list
-
-Expected Exception Type:
-[std::logic_error]
-Inconsistent number of elements supplied by initializer lists
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 938
-Too many elements in second sub-initializer list
-
-Expected Exception Type:
-[std::logic_error]
-Inconsistent number of elements supplied by initializer lists
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 940
-Complementary index out of range
-
-Expected Exception Type:
-[std::logic_error]
-Complementary index out of range
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 941
-Complementary indices out of range
-
-Expected Exception Type:
-[std::logic_error]
-Complementary index out of range
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 946
-Weight mismatch
-
-Expected Exception Type:
-[std::logic_error]
-Overall initializer list of wrong size
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 995
-Too few elements in sub-initializer list
-
-Expected Exception Type:
-[std::logic_error]
-Inconsistent number of elements supplied by initializer lists
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 996
-Mismatched partial indices
-
-Expected Exception Type:
-[std::logic_error]
-Reciprocated complementary index does not match
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 997
-Mismatched complementary indices
-
-Expected Exception Type:
-[std::logic_error]
-Reciprocated target index does not match for undirected graph
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1002
-Weight mismatch
-
-Expected Exception Type:
-[std::logic_error]
-Mismath between weights
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1030
-Mismatched complementary index
-
-Expected Exception Type:
-[std::logic_error]
-Reciprocated complementary index does not match
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1035
-Weight mismatch
-
-Expected Exception Type:
-[std::logic_error]
-Mismath between weights
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1060
-Mismatched complementary indices
-
-Expected Exception Type:
-[std::logic_error]
-Reciprocated target index does not match for undirected graph
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 809
-Too few elements in initializer list
-
-Expected Exception Type:
-[std::logic_error]
-Inconsistent number of elements supplied by initializer lists
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 810
-First partial index of loop out of range
-
-Expected Exception Type:
-[std::logic_error]
-connectivity::process_complementary_edges: complementary index 1 out of range - graph size is 1
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 811
-Second partial index of loop out of range
-
-Expected Exception Type:
-[std::logic_error]
-Reciprocated target index does not match for undirected graph
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 812
-Initializer list too long
-
-Expected Exception Type:
-[std::logic_error]
-initializer_list too big for array
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 813
-First complementary index is self-referential
-
-Expected Exception Type:
-[std::logic_error]
-Complementary index is self-referential
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 814
-Second complementary index is self-referential
-
-Expected Exception Type:
-[std::logic_error]
-Complementary index is self-referential
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 815
-First complementary index is out of range
-
-Expected Exception Type:
-[std::logic_error]
-Complementary index out of range
+connectivity::process_complementary_edges: complementary index 2 out of range - graph size is 2
 
 	=======================================
 
@@ -3288,7 +3000,7 @@ Complementary index out of range
 
 Expected Exception Type:
 [std::logic_error]
-Complementary index out of range
+connectivity::process_complementary_edges: complementary index 4 out of range - graph size is 4
 
 	=======================================
 
@@ -3351,7 +3063,7 @@ Complementary index out of range
 
 Expected Exception Type:
 [std::logic_error]
-Complementary index out of range
+connectivity::process_complementary_edges: complementary index 1 out of range - graph size is 1
 
 	=======================================
 
@@ -3360,7 +3072,7 @@ Complementary indices out of range
 
 Expected Exception Type:
 [std::logic_error]
-Complementary index out of range
+connectivity::process_complementary_edges: complementary index 1 out of range - graph size is 1
 
 	=======================================
 
@@ -3495,7 +3207,7 @@ First complementary index is out of range
 
 Expected Exception Type:
 [std::logic_error]
-Complementary index out of range
+connectivity::process_complementary_edges: complementary index 2 out of range - graph size is 2
 
 	=======================================
 
@@ -3576,7 +3288,7 @@ Complementary index out of range
 
 Expected Exception Type:
 [std::logic_error]
-Complementary index out of range
+connectivity::process_complementary_edges: complementary index 4 out of range - graph size is 4
 
 	=======================================
 
@@ -3639,7 +3351,7 @@ Complementary index out of range
 
 Expected Exception Type:
 [std::logic_error]
-Complementary index out of range
+connectivity::process_complementary_edges: complementary index 1 out of range - graph size is 1
 
 	=======================================
 
@@ -3648,7 +3360,295 @@ Complementary indices out of range
 
 Expected Exception Type:
 [std::logic_error]
+connectivity::process_complementary_edges: complementary index 1 out of range - graph size is 1
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 946
+Weight mismatch
+
+Expected Exception Type:
+[std::logic_error]
+Overall initializer list of wrong size
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 995
+Too few elements in sub-initializer list
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 996
+Mismatched partial indices
+
+Expected Exception Type:
+[std::logic_error]
+Reciprocated complementary index does not match
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 997
+Mismatched complementary indices
+
+Expected Exception Type:
+[std::logic_error]
+Reciprocated target index does not match for undirected graph
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1002
+Weight mismatch
+
+Expected Exception Type:
+[std::logic_error]
+Mismath between weights
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1030
+Mismatched complementary index
+
+Expected Exception Type:
+[std::logic_error]
+Reciprocated complementary index does not match
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1035
+Weight mismatch
+
+Expected Exception Type:
+[std::logic_error]
+Mismath between weights
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1060
+Mismatched complementary indices
+
+Expected Exception Type:
+[std::logic_error]
+Reciprocated target index does not match for undirected graph
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 809
+Too few elements in initializer list
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 810
+First partial index of loop out of range
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::process_complementary_edges: complementary index 1 out of range - graph size is 1
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 811
+Second partial index of loop out of range
+
+Expected Exception Type:
+[std::logic_error]
+Reciprocated target index does not match for undirected graph
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 812
+Initializer list too long
+
+Expected Exception Type:
+[std::logic_error]
+initializer_list too big for array
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 813
+First complementary index is self-referential
+
+Expected Exception Type:
+[std::logic_error]
+Complementary index is self-referential
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 814
+Second complementary index is self-referential
+
+Expected Exception Type:
+[std::logic_error]
+Complementary index is self-referential
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 815
+First complementary index is out of range
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::process_complementary_edges: complementary index 2 out of range - graph size is 2
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 816
+First complementary index is out of range
+
+Expected Exception Type:
+[std::logic_error]
+Complementary index is self-referential
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 821
+Weight mismatch
+
+Expected Exception Type:
+[std::logic_error]
+Mismath between weights
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 860
+Mismatch between node and edge init
+
+Expected Exception Type:
+[std::logic_error]
+initializer_list too big for array
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 862
+Mismatch between node and edge init
+
+Expected Exception Type:
+[std::logic_error]
+Initializer list of wrong size
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 898
+Too few elements in initializer lists
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 899
+Partial index out of range
+
+Expected Exception Type:
+[std::logic_error]
+Reciprocated target index does not match for undirected graph
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 900
+Too Many elements in initializer list
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 901
+Self-referential complementary indices
+
+Expected Exception Type:
+[std::logic_error]
+Complementary index is self-referential
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 902
 Complementary index out of range
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::process_complementary_edges: complementary index 4 out of range - graph size is 4
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 907
+Weight mismatch
+
+Expected Exception Type:
+[std::logic_error]
+Mismath between weights
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 933
+Too few elements in both sub-initializer lists
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 934
+Too few elements in first sub-initializer list
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 935
+Too few elements in second sub-initializer list
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 937
+Too many elements in first sub-initializer list
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 938
+Too many elements in second sub-initializer list
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 940
+Complementary index out of range
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::process_complementary_edges: complementary index 1 out of range - graph size is 1
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 941
+Complementary indices out of range
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::process_complementary_edges: complementary index 1 out of range - graph size is 1
 
 	=======================================
 
