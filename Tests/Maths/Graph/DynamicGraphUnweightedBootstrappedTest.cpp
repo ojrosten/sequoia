@@ -102,6 +102,15 @@ namespace sequoia::testing
               gr.join(0, 0);
               return gr;
             }
+          },
+          {
+            4,
+            "Add second node",
+            [this](const graph_to_test& g) -> graph_to_test {
+              auto gr{g};
+              check(equality, LINE("Index of added node is 0"), gr.add_node(), 1_sz);
+              return gr;
+            }
           }
         }, // end node 1 edges
         {
@@ -143,23 +152,47 @@ namespace sequoia::testing
               return gr;
             }
           }
-        } // end node 3 edges
+        }, // end node 3 edges
+        {
+          {
+            1,
+            "Erase the first node",
+            [](const graph_to_test& g) -> graph_to_test {
+              auto gr{g};
+              gr.erase_node(0);
+              return gr;
+            }
+          },
+          {
+            1,
+            "Erase the first node",
+            [](const graph_to_test& g) -> graph_to_test {
+              auto gr{g};
+              gr.erase_node(1);
+              return gr;
+            }
+          }
+        } // end node 4 edges
       },
       {
         graph_to_test{},
+        // [0] empty
 
         graph_to_test{{}},
-        //  x
+        // [1] x
 
         graph_to_test{{edge_t{0}}},
-        //  /\
-        //  \/
-        //   x
+        // [2] /\
+        //     \/
+        //     x
 
-        graph_to_test{{edge_t{0}, edge_t{0}}}
-        //  /\ /\
-        //  \/ \/
-        //    x
+        graph_to_test{{edge_t{0}, edge_t{0}}},
+        // [3] /\ /\
+        //     \/ \/
+        //       x
+
+        graph_to_test{{}, {}}
+        // [4] x    x
       }
     };
 
