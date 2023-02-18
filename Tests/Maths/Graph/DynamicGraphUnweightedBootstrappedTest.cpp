@@ -95,6 +95,15 @@ namespace sequoia::testing
             }
           },
           {
+            1,
+            "Attempt to erase edge past the end",
+            [](const graph_to_test& g) -> const graph_to_test {
+              auto gr{g};
+              gr.erase_edge(gr.cend_edges(0));
+              return gr;
+            }
+          },
+          {
             2,
             "Add loop",
             [](const graph_to_test & g) -> graph_to_test {
@@ -287,6 +296,15 @@ namespace sequoia::testing
           }
         }, // end node 6 edges
         {
+          {
+            7,
+            "Remove link",
+            [](const graph_to_test& g) -> graph_to_test {
+              auto gr{g};
+              gr.erase_edge(std::next(gr.cbegin_edges(0)));
+              return gr;
+            }
+          }
         } // end node 7 edges
       },
       {

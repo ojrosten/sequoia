@@ -47,7 +47,7 @@ namespace sequoia::utilities
 
     template<class... Args>
       requires (!resolve_to_copy_v<identity_dereference_policy, Args...>)
-    constexpr explicit identity_dereference_policy(Args&&... args)
+    constexpr explicit(sizeof...(Args) == 1) identity_dereference_policy(Args&&... args)
       : AuxiliaryDataPolicy{std::forward<Args>(args)...}
     {}
 
@@ -97,7 +97,7 @@ namespace sequoia::utilities
 
     template<class Arg, class... Args>
       requires (!resolve_to_copy_v<iterator, Arg, Args...>)
-    constexpr explicit iterator(Arg&& baseIterArg, Args&&... args)
+    constexpr explicit(sizeof...(Args) == 0) iterator(Arg&& baseIterArg, Args&&... args)
       : DereferencePolicy{std::forward<Args>(args)...}
       , m_BaseIterator{std::forward<Arg>(baseIterArg)}
     {}

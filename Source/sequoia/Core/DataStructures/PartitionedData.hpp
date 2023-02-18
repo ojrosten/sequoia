@@ -351,63 +351,65 @@ namespace sequoia
           next = m_Buckets[index].erase((iter + pos).base_iterator());
         }
 
-        return partition_iterator{next, index};
+        return {next, index};
       }
 
       partition_iterator erase_from_partition(const_partition_iterator iter)
       {
         const auto partition{iter.partition_index()};
+        if (iter == cend_partition(partition)) return { m_Buckets[partition].end(), partition };
+
         const auto next{m_Buckets[partition].erase(iter.base_iterator())};
-        return partition_iterator{next, partition};
+        return {next, partition};
       }
 
       partition_iterator begin_partition(const size_type i)
       {
         if constexpr(throw_on_range_error) if(m_Buckets.empty()) throw std::out_of_range("bucketed_sequence::begin_partition: no buckets!\n");
-        return (i < m_Buckets.size()) ? partition_iterator(m_Buckets[i].begin(), i) : partition_iterator(m_Buckets.back().end(), npos);
+        return (i < m_Buckets.size()) ? partition_iterator{m_Buckets[i].begin(), i} : partition_iterator{m_Buckets.back().end(), npos};
       }
 
       partition_iterator end_partition(const size_type i)
       {
         if constexpr(throw_on_range_error) if(m_Buckets.empty()) throw std::out_of_range("bucketed_sequence::end_partition: no buckets!\n");
-        return (i < m_Buckets.size()) ? partition_iterator(m_Buckets[i].end(), i) : partition_iterator(m_Buckets.back().end(), npos);
+        return (i < m_Buckets.size()) ? partition_iterator{m_Buckets[i].end(), i} : partition_iterator{m_Buckets.back().end(), npos};
       }
 
       const_partition_iterator begin_partition(const size_type i) const
       {
         if constexpr(throw_on_range_error) if(m_Buckets.empty()) throw std::out_of_range("bucketed_sequence::begin_partition: no buckets!\n");
-        return (i < m_Buckets.size()) ? const_partition_iterator(m_Buckets[i].cbegin(), i) : const_partition_iterator(m_Buckets.back().cend(), npos);
+        return (i < m_Buckets.size()) ? const_partition_iterator{m_Buckets[i].cbegin(), i} : const_partition_iterator{m_Buckets.back().cend(), npos};
       }
 
       const_partition_iterator end_partition(const size_type i) const
       {
         if constexpr(throw_on_range_error) if(m_Buckets.empty()) throw std::out_of_range("bucketed_sequence::end_partition: no buckets!\n");
-        return (i < m_Buckets.size()) ? const_partition_iterator(m_Buckets[i].cend(), i) : const_partition_iterator(m_Buckets.back().cend(), npos);
+        return (i < m_Buckets.size()) ? const_partition_iterator{m_Buckets[i].cend(), i} : const_partition_iterator{m_Buckets.back().cend(), npos};
       }
 
       reverse_partition_iterator rbegin_partition(const size_type i)
       {
         if(m_Buckets.empty()) throw std::out_of_range("bucketed_sequence::begin_partition: no buckets!\n");
-        return (i < m_Buckets.size()) ? reverse_partition_iterator(m_Buckets[i].rbegin(), i) : reverse_partition_iterator(m_Buckets.front().rend(), npos);
+        return (i < m_Buckets.size()) ? reverse_partition_iterator{m_Buckets[i].rbegin(), i} : reverse_partition_iterator{m_Buckets.front().rend(), npos};
       }
 
       reverse_partition_iterator rend_partition(const size_type i)
       {
         if constexpr(throw_on_range_error) if(m_Buckets.empty()) throw std::out_of_range("bucketed_sequence::end_partition: no buckets!\n");
-        return (i < m_Buckets.size()) ? reverse_partition_iterator(m_Buckets[i].rend(), i) : reverse_partition_iterator(m_Buckets.front().rend(), npos);
+        return (i < m_Buckets.size()) ? reverse_partition_iterator{m_Buckets[i].rend(), i} : reverse_partition_iterator{m_Buckets.front().rend(), npos};
       }
 
       const_reverse_partition_iterator rbegin_partition(const size_type i) const
       {
         if constexpr(throw_on_range_error) if(m_Buckets.empty()) throw std::out_of_range("bucketed_sequence::begin_partition: no buckets!\n");
-        return (i < m_Buckets.size()) ? const_reverse_partition_iterator(m_Buckets[i].crbegin(), i) : const_reverse_partition_iterator(m_Buckets.front().crend(), npos);
+        return (i < m_Buckets.size()) ? const_reverse_partition_iterator{m_Buckets[i].crbegin(), i} : const_reverse_partition_iterator{m_Buckets.front().crend(), npos};
 
       }
 
       const_reverse_partition_iterator rend_partition(const size_type i) const
       {
         if constexpr(throw_on_range_error) if(m_Buckets.empty()) throw std::out_of_range("bucketed_sequence::end_partition: no buckets!\n");
-        return (i < m_Buckets.size()) ? const_reverse_partition_iterator(m_Buckets[i].crend(), i) : const_reverse_partition_iterator(m_Buckets.front().crend(), npos);
+        return (i < m_Buckets.size()) ? const_reverse_partition_iterator{m_Buckets[i].crend(), i} : const_reverse_partition_iterator{m_Buckets.front().crend(), npos};
       }
 
       const_partition_iterator cbegin_partition(const size_type i) const
@@ -890,7 +892,7 @@ namespace sequoia
           decrement_partition_indices(index);
         }
 
-        return partition_iterator(next, index);
+        return {next, index};
       }
 
       partition_iterator erase_from_partition(const_partition_iterator iter)
@@ -899,7 +901,7 @@ namespace sequoia
         const auto index{iter.partition_index()};
         decrement_partition_indices(index);
 
-        return partition_iterator{next, iter.partition_index()};
+        return {next, iter.partition_index()};
       }
     private:
       template<bool Direct>
