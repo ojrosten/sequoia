@@ -249,7 +249,24 @@ namespace sequoia::testing
           }
         }, // end node 5 edges
         {
-        
+          {
+            1,
+            "Erase node 0",
+            [](const graph_to_test& g) -> graph_to_test {
+              auto gr{g};
+              gr.erase_node(0);
+              return gr;
+            }
+          },
+          {
+            2,
+            "Erase node 1",
+            [](const graph_to_test& g) -> graph_to_test {
+              auto gr{g};
+              gr.erase_node(1);
+              return gr;
+            }
+          }
         } // end node 6 edges
       },
       {
