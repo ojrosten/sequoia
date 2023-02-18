@@ -58,7 +58,7 @@ namespace sequoia
     public:
       using index_type = IndexType;
 
-      explicit constexpr edge_base(const index_type target) noexcept : m_Target{target} {}
+      constexpr explicit edge_base(const index_type target) noexcept : m_Target{target} {}
       constexpr edge_base(const edge_base&) noexcept = default;
       constexpr edge_base(edge_base&&)      noexcept = default;
 
@@ -207,7 +207,7 @@ namespace sequoia
 
       template<class... Args>
         requires (!resolve_to_copy_v<partial_edge_base, Args...>)
-      constexpr explicit partial_edge_base(const index_type target, Args&&... args)
+      constexpr explicit(sizeof...(Args) == 0) partial_edge_base(const index_type target, Args&&... args)
         : edge_base<IndexType>{target}
         , weighting<WeightHandler, IndexType>{std::forward<Args>(args)...}
       {}

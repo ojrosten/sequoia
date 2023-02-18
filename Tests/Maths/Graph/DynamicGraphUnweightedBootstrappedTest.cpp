@@ -28,68 +28,90 @@ namespace sequoia::testing
   {
     using namespace maths;
     using graph_to_test = graph<directed_flavour::directed, null_weight, null_weight>;
+    using edge_t = graph_to_test::edge_init_type;
 
     using transition_graph = transition_checker<graph_to_test>::transition_graph;
-    using edge_t           = transition_checker<graph_to_test>::edge;
 
     transition_graph trg{
       {
-        { edge_t{0,
-                 "",
-                 [this](const graph_to_test& g) -> const graph_to_test& {
-                   check_exception_thrown<std::out_of_range>(LINE("cbegin_edges throws for empty graph"), [&g]() { return g.cbegin_edges(0); });
-                   return g;
-                 }
+        { {
+            0,
+            "",
+            [this](const graph_to_test& g) -> const graph_to_test& {
+              check_exception_thrown<std::out_of_range>(LINE("cbegin_edges throws for empty graph"), [&g]() { return g.cbegin_edges(0); });
+              return g;
+            }
           },
-          edge_t{0,
-                 "",
-                 [this](const graph_to_test& g) -> const graph_to_test& {
-                   check_exception_thrown<std::out_of_range>(LINE("cend_edges throws for empty graph"), [&g]() { return g.cend_edges(0); });
-                   return g;
-                 }
+          {
+            0,
+            "",
+            [this](const graph_to_test& g) -> const graph_to_test& {
+              check_exception_thrown<std::out_of_range>(LINE("cend_edges throws for empty graph"), [&g]() { return g.cend_edges(0); });
+              return g;
+            }
           },
-                   edge_t{0,
-                 "",
-                 [this](const graph_to_test& g) -> const graph_to_test& {
-                   check_exception_thrown<std::out_of_range>(LINE("crbegin_edges throws for empty graph"), [&g]() { return g.crbegin_edges(0); });
-                   return g;
-                 }
+          {
+            0,
+            "",
+            [this](const graph_to_test& g) -> const graph_to_test& {
+              check_exception_thrown<std::out_of_range>(LINE("crbegin_edges throws for empty graph"), [&g]() { return g.crbegin_edges(0); });
+              return g;
+            }
           },
-          edge_t{0,
-                 "",
-                 [this](const graph_to_test& g) -> const graph_to_test& {
-                   check_exception_thrown<std::out_of_range>(LINE("crend_edges throws for empty graph"), [&g]() { return g.crend_edges(0); });
-                   return g;
-                 }
+          {
+            0,
+            "",
+            [this](const graph_to_test& g) -> const graph_to_test& {
+              check_exception_thrown<std::out_of_range>(LINE("crend_edges throws for empty graph"), [&g]() { return g.crend_edges(0); });
+              return g;
+            }
           },
-          edge_t{0,
-                 "",
-                 [this](const graph_to_test& g) -> const graph_to_test& {
-                   check_exception_thrown<std::out_of_range>(LINE("swapping nodes throws for empty graph"), [g{g}]() mutable { g.swap_nodes(0,0); });
-                   return g;
-                 }
+          {
+            0,
+            "",
+            [this](const graph_to_test& g) -> const graph_to_test& {
+              check_exception_thrown<std::out_of_range>(LINE("swapping nodes throws for empty graph"), [g{g}]() mutable { g.swap_nodes(0,0); });
+              return g;
+            }
           },
-          edge_t{1,
-                 "Add node to empty graph",
-                 [this](const graph_to_test& g) -> graph_to_test {
-                   auto gr{g};
-                   check(equality, LINE("Index of added node is 0"), gr.add_node(), 0_sz);
-                   return gr;
-                 }
+          {
+            1,
+            "Add node to empty graph",
+            [this](const graph_to_test& g) -> graph_to_test {
+              auto gr{g};
+              check(equality, LINE("Index of added node is 0"), gr.add_node(), 0_sz);
+              return gr;
+            }
           }
-        },
+        }, // end node 0 edges
         {
-          edge_t{0,
-                 "Erase node to give empty graph",
-                 [this](const graph_to_test& g) -> graph_to_test {
-                   auto gr{g};
-                   gr.erase_node(0);
-                   return gr;
-                 }
+          {
+            0,
+            "Erase node to give empty graph",
+            [](const graph_to_test& g) -> graph_to_test {
+              auto gr{g};
+              gr.erase_node(0);
+              return gr;
+            }
+          },
+          {
+            2,
+            "Add loop",
+            [](const graph_to_test & g)-> graph_to_test {
+              auto gr{g};
+              gr.join(0, 0);
+              return gr;
+            }
           }
-        }
+        }, // end node 1 edges
+        {} // end node 2 edges
       },
-      {graph_to_test{}, graph_to_test{{}}}
+      {
+        graph_to_test{},
+        graph_to_test{{}},
+        //     x
+        graph_to_test{{edge_t{0}}}
+      }
     };
 
     auto checker{
