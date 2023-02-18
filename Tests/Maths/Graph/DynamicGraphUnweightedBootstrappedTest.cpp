@@ -266,8 +266,28 @@ namespace sequoia::testing
               gr.erase_node(1);
               return gr;
             }
+          },
+          {
+            5,
+            "Remove loop",
+            [](const graph_to_test& g) -> graph_to_test {
+              auto gr{g};
+              gr.erase_edge(gr.cbegin_edges(0));
+              return gr;
+            }
+          },
+          {
+            7,
+            "Remove link",
+            [](const graph_to_test& g) -> graph_to_test {
+              auto gr{g};
+              gr.erase_edge(std::next(gr.cbegin_edges(0)));
+              return gr;
+            }
           }
-        } // end node 6 edges
+        }, // end node 6 edges
+        {
+        } // end node 7 edges
       },
       {
         graph_to_test{},
@@ -292,10 +312,15 @@ namespace sequoia::testing
         graph_to_test{{edge_t{1}}, {}},
         // [5] x ---> x
 
-        graph_to_test{{edge_t{0}, edge_t{1}}, {}}
+        graph_to_test{{edge_t{0}, edge_t{1}}, {}},
         // [6] /\
         //     \/
         //     x ---> x
+
+        graph_to_test{{edge_t{0}}, {}}
+        // [7] /\
+        //     \/
+        //     x      x
       }
     };
 
