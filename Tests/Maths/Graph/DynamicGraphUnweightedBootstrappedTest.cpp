@@ -156,7 +156,7 @@ namespace sequoia::testing
         {
           {
             1,
-            "Erase the first node",
+            "Erase node 0",
             [](const graph_to_test& g) -> graph_to_test {
               auto gr{g};
               gr.erase_node(0);
@@ -165,14 +165,43 @@ namespace sequoia::testing
           },
           {
             1,
-            "Erase the first node",
+            "Erase node 1",
             [](const graph_to_test& g) -> graph_to_test {
               auto gr{g};
               gr.erase_node(1);
               return gr;
             }
-          }
-        } // end node 4 edges
+          },
+          {
+            5,
+            "Join nodes 0,1",
+            [](const graph_to_test& g) -> graph_to_test {
+              auto gr{g};
+              gr.join(0, 1);
+              return gr;
+            }
+          },
+          {
+            1,
+            "Erase node 0",
+            [](const graph_to_test& g) -> graph_to_test {
+              auto gr{g};
+              gr.erase_node(0);
+              return gr;
+            }
+          },
+          {
+            1,
+            "Erase node 1",
+            [](const graph_to_test& g) -> graph_to_test {
+              auto gr{g};
+              gr.erase_node(1);
+              return gr;
+            }
+          },
+        }, // end node 4 edges
+        {
+        } // end node 5 edges
       },
       {
         graph_to_test{},
@@ -191,8 +220,11 @@ namespace sequoia::testing
         //     \/ \/
         //       x
 
-        graph_to_test{{}, {}}
+        graph_to_test{{}, {}},
         // [4] x    x
+
+        graph_to_test{{edge_t{1}}, {}}
+        // [5] x ---> x
       }
     };
 
