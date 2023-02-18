@@ -108,7 +108,7 @@ namespace sequoia::testing
             "Add second node",
             [this](const graph_to_test& g) -> graph_to_test {
               auto gr{g};
-              check(equality, LINE("Index of added node is 0"), gr.add_node(), 1_sz);
+              check(equality, LINE("Index of added node is 1"), gr.add_node(), 1_sz);
               return gr;
             }
           }
@@ -149,6 +149,24 @@ namespace sequoia::testing
             [](const graph_to_test& g) -> graph_to_test {
               auto gr{g};
               gr.erase_edge(std::next(gr.cbegin_edges(0)));
+              return gr;
+            }
+          },
+          {
+            3,
+            "Swap loops",
+            [](const graph_to_test& g) -> graph_to_test {
+              auto gr{g};
+              gr.swap_edges(0, 0, 1);
+              return gr;
+            }
+          },
+          {
+            3,
+            "Swap loops",
+            [](const graph_to_test& g) -> graph_to_test {
+              auto gr{g};
+              gr.swap_edges(0, 1, 0);
               return gr;
             }
           }
@@ -198,10 +216,41 @@ namespace sequoia::testing
               gr.erase_node(1);
               return gr;
             }
-          },
+          }
         }, // end node 4 edges
         {
-        } // end node 5 edges
+          {
+            1,
+            "Erase node 0",
+            [](const graph_to_test& g) -> graph_to_test {
+              auto gr{g};
+              gr.erase_node(0);
+              return gr;
+            }
+          },
+          {
+            1,
+            "Erase node 1",
+            [](const graph_to_test& g) -> graph_to_test {
+              auto gr{g};
+              gr.erase_node(1);
+              return gr;
+            }
+          },
+          {
+            6,
+            "Add loop to node 0 and then swap it with link",
+            [](const graph_to_test& g) -> graph_to_test {
+              auto gr{g};
+              gr.join(0, 0);
+              gr.swap_edges(0, 0, 1);
+              return gr;
+            }
+          }
+        }, // end node 5 edges
+        {
+        
+        } // end node 6 edges
       },
       {
         graph_to_test{},
@@ -223,8 +272,13 @@ namespace sequoia::testing
         graph_to_test{{}, {}},
         // [4] x    x
 
-        graph_to_test{{edge_t{1}}, {}}
+        graph_to_test{{edge_t{1}}, {}},
         // [5] x ---> x
+
+        graph_to_test{{edge_t{0}, edge_t{1}}, {}}
+        // [6] /\
+        //     \/
+        //     x ---> x
       }
     };
 
