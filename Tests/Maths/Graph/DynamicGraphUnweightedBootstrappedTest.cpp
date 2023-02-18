@@ -97,20 +97,69 @@ namespace sequoia::testing
           {
             2,
             "Add loop",
-            [](const graph_to_test & g)-> graph_to_test {
+            [](const graph_to_test & g) -> graph_to_test {
               auto gr{g};
               gr.join(0, 0);
               return gr;
             }
           }
         }, // end node 1 edges
-        {} // end node 2 edges
+        {
+          {
+            1,
+            "Remove loop",
+            [](const graph_to_test& g) -> graph_to_test {
+              auto gr{g};
+              gr.erase_edge(gr.cbegin_edges(0));
+              return gr;
+            }
+          },
+          {
+            3,
+            "Add a second loop",
+            [](const graph_to_test& g) -> graph_to_test {
+              auto gr{g};
+              gr.join(0, 0);
+              return gr;
+            }
+          }
+        }, // end node 2 edges
+        {
+          {
+            2,
+            "Remove first loop",
+            [](const graph_to_test& g) -> graph_to_test {
+              auto gr{g};
+              gr.erase_edge(gr.cbegin_edges(0));
+              return gr;
+            }
+          },
+          {
+            2,
+            "Remove second loop",
+            [](const graph_to_test& g) -> graph_to_test {
+              auto gr{g};
+              gr.erase_edge(std::next(gr.cbegin_edges(0)));
+              return gr;
+            }
+          }
+        } // end node 3 edges
       },
       {
         graph_to_test{},
+
         graph_to_test{{}},
-        //     x
-        graph_to_test{{edge_t{0}}}
+        //  x
+
+        graph_to_test{{edge_t{0}}},
+        //  /\
+        //  \/
+        //   x
+
+        graph_to_test{{edge_t{0}, edge_t{0}}}
+        //  /\ /\
+        //  \/ \/
+        //    x
       }
     };
 
