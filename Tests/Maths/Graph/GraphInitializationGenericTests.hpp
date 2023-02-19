@@ -1280,26 +1280,26 @@ namespace sequoia
           if constexpr(static_nodes<Graph>)
           {
             {
-              constexpr Graph g{{{edge{0}}}, {node_weight{}}};
+              constexpr Graph g{edges{{edge{0}}}, {node_weight{}}};
               check_1_1(g);
             }
 
             if constexpr(!std::is_empty_v<edge_weight>)
             {
-              constexpr Graph g{{{edge{0,10}}}, {node_weight{}}};
+              constexpr Graph g{edges{{edge{0,10}}}, {node_weight{}}};
               check_1_1w(g);
             }
           }
           else
           {
             {
-              const Graph g{{{edge{0}}}, {node_weight{}}};
+              const Graph g{edges{{edge{0}}}, {node_weight{}}};
               check_1_1(g);
             }
 
             if constexpr(!std::is_empty_v<edge_weight>)
             {
-              const Graph g{{{edge{0,10}}}, {node_weight{}}};
+              const Graph g{edges{{edge{0,10}}}, {node_weight{}}};
               check_1_1w(g);
             }
           }
