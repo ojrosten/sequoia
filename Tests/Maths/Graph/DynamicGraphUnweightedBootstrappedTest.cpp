@@ -13,6 +13,20 @@
 
 namespace sequoia::testing
 {
+  namespace
+  {
+    enum graph_description : std::size_t {
+      empty = 0,
+      node = 1,
+      node_loop = 2,
+      node_two_loops = 3,
+      two_nodes = 4,
+      node_link_node = 5,
+      node_loop_link_node = 6,
+      node_loop_node = 7
+    };
+  }
+
   [[nodiscard]]
   std::string_view unweighted_graph_bootstrapped_test::source_file() const noexcept
   {
@@ -35,7 +49,7 @@ namespace sequoia::testing
     transition_graph trg{
       {
         { {
-            0,
+            graph_description::empty,
             "",
             [this](const graph_to_test& g) -> const graph_to_test& {
               check_exception_thrown<std::out_of_range>(LINE("cbegin_edges throws for empty graph"), [&g]() { return g.cbegin_edges(0); });
@@ -43,7 +57,7 @@ namespace sequoia::testing
             }
           },
           {
-            0,
+            graph_description::empty,
             "",
             [this](const graph_to_test& g) -> const graph_to_test& {
               check_exception_thrown<std::out_of_range>(LINE("cend_edges throws for empty graph"), [&g]() { return g.cend_edges(0); });
@@ -51,7 +65,7 @@ namespace sequoia::testing
             }
           },
           {
-            0,
+            graph_description::empty,
             "",
             [this](const graph_to_test& g) -> const graph_to_test& {
               check_exception_thrown<std::out_of_range>(LINE("crbegin_edges throws for empty graph"), [&g]() { return g.crbegin_edges(0); });
@@ -59,7 +73,7 @@ namespace sequoia::testing
             }
           },
           {
-            0,
+            graph_description::empty,
             "",
             [this](const graph_to_test& g) -> const graph_to_test& {
               check_exception_thrown<std::out_of_range>(LINE("crend_edges throws for empty graph"), [&g]() { return g.crend_edges(0); });
@@ -67,7 +81,7 @@ namespace sequoia::testing
             }
           },
           {
-            0,
+            graph_description::empty,
             "",
             [this](const graph_to_test& g) -> const graph_to_test& {
               check_exception_thrown<std::out_of_range>(LINE("swapping nodes throws for empty graph"), [g{g}]() mutable { g.swap_nodes(0,0); });
@@ -75,7 +89,7 @@ namespace sequoia::testing
             }
           },
           {
-            1,
+            graph_description::node,
             "Add node to empty graph",
             [this](const graph_to_test& g) -> graph_to_test {
               auto gr{g};
@@ -86,7 +100,7 @@ namespace sequoia::testing
         }, // end node 0 edges
         {
           {
-            0,
+            graph_description::empty,
             "Erase node to give empty graph",
             [](const graph_to_test& g) -> graph_to_test {
               auto gr{g};
@@ -95,7 +109,7 @@ namespace sequoia::testing
             }
           },
           {
-            1,
+            graph_description::node,
             "Attempt to erase edge past the end",
             [](const graph_to_test& g) -> const graph_to_test {
               auto gr{g};
@@ -104,7 +118,7 @@ namespace sequoia::testing
             }
           },
           {
-            2,
+            graph_description::node_loop,
             "Add loop",
             [](const graph_to_test & g) -> graph_to_test {
               auto gr{g};
@@ -113,7 +127,7 @@ namespace sequoia::testing
             }
           },
           {
-            4,
+            graph_description::two_nodes,
             "Add second node",
             [this](const graph_to_test& g) -> graph_to_test {
               auto gr{g};
@@ -124,7 +138,7 @@ namespace sequoia::testing
         }, // end node 1 edges
         {
           {
-            1,
+            graph_description::node,
             "Remove loop",
             [](const graph_to_test& g) -> graph_to_test {
               auto gr{g};
@@ -133,7 +147,7 @@ namespace sequoia::testing
             }
           },
           {
-            3,
+            graph_description::node_two_loops,
             "Add a second loop",
             [](const graph_to_test& g) -> graph_to_test {
               auto gr{g};
@@ -144,7 +158,7 @@ namespace sequoia::testing
         }, // end node 2 edges
         {
           {
-            2,
+            graph_description::node_loop,
             "Remove first loop",
             [](const graph_to_test& g) -> graph_to_test {
               auto gr{g};
@@ -153,7 +167,7 @@ namespace sequoia::testing
             }
           },
           {
-            2,
+            graph_description::node_loop,
             "Remove second loop",
             [](const graph_to_test& g) -> graph_to_test {
               auto gr{g};
@@ -162,7 +176,7 @@ namespace sequoia::testing
             }
           },
           {
-            3,
+            graph_description::node_two_loops,
             "Swap loops",
             [](const graph_to_test& g) -> graph_to_test {
               auto gr{g};
@@ -171,7 +185,7 @@ namespace sequoia::testing
             }
           },
           {
-            3,
+            graph_description::node_two_loops,
             "Swap loops",
             [](const graph_to_test& g) -> graph_to_test {
               auto gr{g};
@@ -182,7 +196,7 @@ namespace sequoia::testing
         }, // end node 3 edges
         {
           {
-            1,
+            graph_description::node,
             "Erase node 0",
             [](const graph_to_test& g) -> graph_to_test {
               auto gr{g};
@@ -191,7 +205,7 @@ namespace sequoia::testing
             }
           },
           {
-            1,
+            graph_description::node,
             "Erase node 1",
             [](const graph_to_test& g) -> graph_to_test {
               auto gr{g};
@@ -200,7 +214,7 @@ namespace sequoia::testing
             }
           },
           {
-            5,
+            graph_description::node_link_node,
             "Join nodes 0,1",
             [](const graph_to_test& g) -> graph_to_test {
               auto gr{g};
@@ -209,7 +223,7 @@ namespace sequoia::testing
             }
           },
           {
-            1,
+            graph_description::node,
             "Erase node 0",
             [](const graph_to_test& g) -> graph_to_test {
               auto gr{g};
@@ -218,7 +232,7 @@ namespace sequoia::testing
             }
           },
           {
-            1,
+            graph_description::node,
             "Erase node 1",
             [](const graph_to_test& g) -> graph_to_test {
               auto gr{g};
@@ -229,7 +243,7 @@ namespace sequoia::testing
         }, // end node 4 edges
         {
           {
-            1,
+            graph_description::node,
             "Erase node 0",
             [](const graph_to_test& g) -> graph_to_test {
               auto gr{g};
@@ -238,7 +252,7 @@ namespace sequoia::testing
             }
           },
           {
-            1,
+            graph_description::node,
             "Erase node 1",
             [](const graph_to_test& g) -> graph_to_test {
               auto gr{g};
@@ -247,7 +261,7 @@ namespace sequoia::testing
             }
           },
           {
-            6,
+            graph_description::node_loop_link_node,
             "Add loop to node 0 and then swap it with link",
             [](const graph_to_test& g) -> graph_to_test {
               auto gr{g};
@@ -259,7 +273,7 @@ namespace sequoia::testing
         }, // end node 5 edges
         {
           {
-            1,
+            graph_description::node,
             "Erase node 0",
             [](const graph_to_test& g) -> graph_to_test {
               auto gr{g};
@@ -268,7 +282,7 @@ namespace sequoia::testing
             }
           },
           {
-            2,
+            graph_description::node_loop,
             "Erase node 1",
             [](const graph_to_test& g) -> graph_to_test {
               auto gr{g};
@@ -277,7 +291,7 @@ namespace sequoia::testing
             }
           },
           {
-            5,
+            graph_description::node_link_node,
             "Remove loop",
             [](const graph_to_test& g) -> graph_to_test {
               auto gr{g};
@@ -286,7 +300,7 @@ namespace sequoia::testing
             }
           },
           {
-            7,
+            graph_description::node_loop_node,
             "Remove link",
             [](const graph_to_test& g) -> graph_to_test {
               auto gr{g};
@@ -297,7 +311,7 @@ namespace sequoia::testing
         }, // end node 6 edges
         {
           {
-            7,
+            graph_description::node_loop_node,
             "Remove link",
             [](const graph_to_test& g) -> graph_to_test {
               auto gr{g};
