@@ -74,11 +74,12 @@ namespace sequoia
       void check_1_0()
       {
         using NodeWeight = typename Graph::node_weight_type;
+        using edges = typename Graph::edges_initializer;
         if constexpr(!std::is_empty_v<NodeWeight>)
         {
           // Remove restriction in C++20
           if constexpr(!static_nodes<Graph>)
-                        m_Checker.template check_exception_thrown<std::logic_error>(LINE("Mismatched nodes and edges"), [](){ return Graph{{{},{}}, {NodeWeight{}}}; });
+                        m_Checker.template check_exception_thrown<std::logic_error>(LINE("Mismatched nodes and edges"), [](){ return Graph{edges{{},{}}, {NodeWeight{}}}; });
 
           if constexpr(static_nodes<Graph>)
           {
@@ -91,7 +92,7 @@ namespace sequoia
           }
           else
           {
-            const Graph g{{{}}, {NodeWeight{}}};
+            const Graph g{edges{{}}, {NodeWeight{}}};
             check_1_0(g);
           }
         }
@@ -101,11 +102,12 @@ namespace sequoia
       void check_2_0()
       {
         using NodeWeight = typename Graph::node_weight_type;
+        using edges = typename Graph::edges_initializer;
         if constexpr(!std::is_empty_v<NodeWeight>)
         {
           // Remove restriction in C++20
           if constexpr(!static_nodes<Graph>)
-                        m_Checker.template check_exception_thrown<std::logic_error>(LINE("Mismatched nodes and edges"), [](){ return Graph{{{}}, {NodeWeight{}, NodeWeight{}}}; });
+                        m_Checker.template check_exception_thrown<std::logic_error>(LINE("Mismatched nodes and edges"), [](){ return Graph{edges{{}}, {NodeWeight{}, NodeWeight{}}}; });
 
           if constexpr(static_nodes<Graph>)
           {
@@ -118,7 +120,7 @@ namespace sequoia
           }
           else
           {
-            const Graph g{{{},{}}, {NodeWeight{}, NodeWeight{}}};
+            const Graph g{edges{{},{}}, {NodeWeight{}, NodeWeight{}}};
             check_2_0(g);
           }
         }
@@ -1268,9 +1270,10 @@ namespace sequoia
         }
 
         using node_weight = typename Graph::node_weight_type;
+        using edges = typename Graph::edges_initializer;
         if constexpr(!std::is_empty_v<node_weight>)
         {
-          m_Checker.template check_exception_thrown<std::logic_error>(LINE("Mismatch between node and edge init"), [](){ return Graph{{{edge{0}}, {}}, {node_weight{}}}; });
+          m_Checker.template check_exception_thrown<std::logic_error>(LINE("Mismatch between node and edge init"), [](){ return Graph{edges{{edge{0}}, {}}, {node_weight{}}}; });
 
           m_Checker.template check_exception_thrown<std::logic_error>(LINE("Mismatch between node and edge init"), [](){ return Graph{{{edge{0}}}, {node_weight{}, node_weight{}}}; });
 
