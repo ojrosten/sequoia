@@ -165,9 +165,6 @@ namespace sequoia::object
       {
         return lhs.get() == rhs.get();
       }
-
-      [[nodiscard]]
-      friend bool operator!=(const proxy&, const proxy&) noexcept = default;
     private:
       std::shared_ptr<data_wrapper> m_Handle;
 

@@ -101,8 +101,7 @@ namespace sequoia
   struct resolve_to_copy
     : std::bool_constant<
            (sizeof...(Args) == 1)
-        && (   std::is_same_v<std::remove_cvref_t<head_of_t<Args...>>, std::remove_cvref_t<T>>
-            || is_base_of_head_v<T, Args...>)
+        && (std::is_same_v<std::remove_cvref_t<Args>, std::remove_cvref_t<T>> && ...)
       >
   {};
 

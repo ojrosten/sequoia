@@ -72,12 +72,6 @@ namespace sequoia
       {
         return (lhs.target_node() == rhs.target_node());
       }
-
-      [[nodiscard]]
-      friend constexpr bool operator!=(const edge_base& lhs, const edge_base& rhs) noexcept
-      {
-        return !(lhs == rhs);
-      }
     protected:
       ~edge_base() = default;
 
@@ -130,33 +124,29 @@ namespace sequoia
       {
         return lhs.weight() == rhs.weight();
       }
-
-      [[nodiscard]]
-      friend constexpr bool operator!=(const weighting& lhs, const weighting& rhs) noexcept
-      {
-        return !(lhs == rhs);
-      }
     protected:
       ~weighting() = default;
 
       template<class... Args>
-        requires (!resolve_to_copy_v<weighting, Args...> && !is_base_of_head_v<weighting, Args...>)
-      constexpr explicit(sizeof...(Args) == 1) weighting(Args&&... args) : m_Weight{WeightHandler::producer_type::make(std::forward<Args>(args)...)}
+        requires (!resolve_to_copy_v<weighting, Args...>)
+      constexpr explicit(sizeof...(Args) == 1) weighting(Args&&... args)
+        : m_Weight{WeightHandler::producer_type::make(std::forward<Args>(args)...)}
       {}
 
-      constexpr weighting(const weighting& in) : m_Weight{WeightHandler::producer_type::make(WeightHandler::get(in.m_Weight))}
-      {
-      }
+      constexpr weighting(const weighting& other)
+        : m_Weight{WeightHandler::producer_type::make(WeightHandler::get(other.m_Weight))}
+      {}
 
-      constexpr weighting(const weighting& in, const IndexType) : m_Weight{in.m_Weight}
-      {
-      }
+      template<class Other>
+      requires std::is_base_of_v<weighting, std::remove_cvref_t<Other>>
+      constexpr weighting(Other&& other) : m_Weight{other.m_Weight}
+      {}
 
       constexpr weighting(weighting&&) noexcept = default;
 
-      constexpr weighting& operator=(const weighting& in)
+      constexpr weighting& operator=(const weighting& other)
       {
-        if(&in != this) m_Weight = WeightHandler::producer_type::make(WeightHandler::get(in.m_Weight));
+        if(&other != this) m_Weight = WeightHandler::producer_type::make(WeightHandler::get(other.m_Weight));
         return *this;
       }
 
@@ -212,21 +202,20 @@ namespace sequoia
         , weighting<WeightHandler, IndexType>{std::forward<Args>(args)...}
       {}
 
-      constexpr partial_edge_base(const index_type target, const partial_edge_base& in)
+      constexpr partial_edge_base(const index_type target, const partial_edge_base& other)
         : edge_base<IndexType>{target}
-        , weighting<WeightHandler, IndexType>{in, target}
-      {
-      }
+        , weighting<WeightHandler, IndexType>{other}
+      {}
 
-      constexpr partial_edge_base(const partial_edge_base& in)     = default;
-      constexpr partial_edge_base(partial_edge_base&& in) noexcept = default;
+      constexpr partial_edge_base(const partial_edge_base&)     = default;
+      constexpr partial_edge_base(partial_edge_base&&) noexcept = default;
 
       [[nodiscard]]
-      friend constexpr bool operator==(const partial_edge_base& lhs, const partial_edge_base& rhs) noexcept = default;
+      friend constexpr bool operator==(const partial_edge_base&, const partial_edge_base&) noexcept = default;
     protected:
       ~partial_edge_base() = default;
 
-      constexpr partial_edge_base& operator=(const partial_edge_base& in)  = default;
+      constexpr partial_edge_base& operator=(const partial_edge_base&)     = default;
       constexpr partial_edge_base& operator=(partial_edge_base&&) noexcept = default;
     };
 
@@ -266,24 +255,24 @@ namespace sequoia
       using index_type  = typename partial_edge_base<WeightHandler, IndexType>::index_type;
 
       template<class... Args>
-        requires (!resolve_to_copy_v<decorated_edge_base, Args...>)
+      requires (!resolve_to_copy_v<decorated_edge_base, Args...>) // FIX THIS
       constexpr decorated_edge_base(const index_type target, const index_type auxIndex, Args&&... args)
         : partial_edge_base<WeightHandler, IndexType>{target, std::forward<Args>(args)...}
         , m_AuxiliaryIndex{auxIndex}
       {}
 
-      constexpr decorated_edge_base(const index_type target, const index_type auxIndex, const decorated_edge_base& in)
-        : partial_edge_base<WeightHandler, IndexType>{target, in}
+      constexpr decorated_edge_base(const index_type target, const index_type auxIndex, const decorated_edge_base& other)
+        : partial_edge_base<WeightHandler, IndexType>{target, other}
         , m_AuxiliaryIndex{auxIndex}
       {}
 
-      constexpr decorated_edge_base(const decorated_edge_base& in)             = default;
-      constexpr decorated_edge_base(decorated_edge_base&& in)                  = default;
-      constexpr decorated_edge_base& operator=(const decorated_edge_base& in)  = default;
-      constexpr decorated_edge_base& operator=(decorated_edge_base&&)          = default;
+      constexpr decorated_edge_base(const decorated_edge_base&)            = default;
+      constexpr decorated_edge_base(decorated_edge_base&&)                 = default;
+      constexpr decorated_edge_base& operator=(const decorated_edge_base&) = default;
+      constexpr decorated_edge_base& operator=(decorated_edge_base&&)      = default;
 
       [[nodiscard]]
-      friend constexpr bool operator==(const decorated_edge_base& lhs, const decorated_edge_base& rhs) noexcept = default;
+      friend constexpr bool operator==(const decorated_edge_base&, const decorated_edge_base&) noexcept = default;
     protected:
       ~decorated_edge_base() = default;
 
@@ -340,30 +329,23 @@ namespace sequoia
       using index_type  = typename decorated_edge_base<WeightHandler, IndexType>::index_type;
 
       template<class... Args>
-        requires (!resolve_to_copy_v<edge, Args...>)
       constexpr edge(const index_type source, const index_type target, Args&&... args)
         : decorated_edge_base<WeightHandler, IndexType>{target, source, std::forward<Args>(args)...}
       {
         if(source == npos) throw std::runtime_error("Cannot initialize full edge using max value of index");
       }
 
-      template
-      <
-        bool Inverted,
-        class... Args
-      >
+      template<bool Inverted, class... Args>
       constexpr edge(const index_type node, const inversion_constant<Inverted> inverted, Args&&... args)
-        : decorated_edge_base<WeightHandler, IndexType>{
-            node, inverted.value ? npos : node, std::forward<Args>(args)...
-          }
+        : decorated_edge_base<WeightHandler, IndexType>{node, inverted.value ? npos : node, std::forward<Args>(args)...}
       {
         if(node == npos) throw std::runtime_error("Cannot initialize full edge using max value of index");
       }
 
-      constexpr edge(const edge& in)             = default;
-      constexpr edge(edge&& in)                  = default;
-      constexpr edge& operator=(const edge& in)  = default;
-      constexpr edge& operator=(edge&&)          = default;
+      constexpr edge(const edge&)            = default;
+      constexpr edge(edge&&)                 = default;
+      constexpr edge& operator=(const edge&) = default;
+      constexpr edge& operator=(edge&&)      = default;
 
       [[nodiscard]]
       constexpr index_type source_node() const noexcept
@@ -401,7 +383,6 @@ namespace sequoia
       using index_type  = typename decorated_edge_base<WeightHandler, IndexType>::index_type;
 
       template<class... Args>
-        requires (!resolve_to_copy_v<embedded_edge, Args...>)
       constexpr embedded_edge(const index_type source, const index_type target, const index_type auxIndex, Args&&... args)
         : decorated_edge_base<WeightHandler, IndexType>{target, auxIndex, std::forward<Args>(args)...}
         , m_HostIndex{source}
@@ -423,10 +404,10 @@ namespace sequoia
       {
       }
 
-      constexpr embedded_edge(const embedded_edge& in)             = default;
-      constexpr embedded_edge(embedded_edge&& in)                  = default;
-      constexpr embedded_edge& operator=(const embedded_edge& in)  = default;
-      constexpr embedded_edge& operator=(embedded_edge&&)          = default;
+      constexpr embedded_edge(const embedded_edge&)            = default;
+      constexpr embedded_edge(embedded_edge&&)                 = default;
+      constexpr embedded_edge& operator=(const embedded_edge&) = default;
+      constexpr embedded_edge& operator=(embedded_edge&&)      = default;
 
       [[nodiscard]]
       constexpr index_type complementary_index() const noexcept { return this->auxiliary_index(); }
@@ -445,18 +426,12 @@ namespace sequoia
       constexpr bool inverted() const noexcept { return m_HostIndex == npos; }
 
       [[nodiscard]]
-      friend constexpr bool operator==(const embedded_edge& lhs, const embedded_edge& rhs)
+      friend constexpr bool operator==(const embedded_edge& lhs, const embedded_edge& rhs) noexcept
       {
         return (lhs.source_node() == rhs.source_node())
           && (lhs.inverted() == rhs.inverted())
           && (static_cast<const decorated_edge_base<WeightHandler, IndexType>&>(lhs) ==
               static_cast<const decorated_edge_base<WeightHandler, IndexType>&>(rhs));
-      }
-
-      [[nodiscard]]
-      friend constexpr bool operator!=(const embedded_edge& lhs, const embedded_edge& rhs)
-      {
-        return !(lhs == rhs);
       }
     private:
       constexpr static auto npos = std::numeric_limits<IndexType>::max();
