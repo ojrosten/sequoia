@@ -52,10 +52,33 @@ namespace sequoia
   {
     namespace impl
     {
+      struct edge_indices
+      {
+        std::size_t node{}, edge{};
+      };
+
+      [[nodiscard]]
+      inline std::string to_string(const edge_indices& indices)
+      {
+        return std::string{"[node: "}.append(std::to_string(indices.node)).append(", edge: ").append(std::to_string(indices.edge)).append("]");
+      }
+
+      [[nodiscard]]
+      inline std::string prefix(std::string_view method)
+      {
+        return std::string{"connectivity::"}.append(method);
+      }
+
       [[nodiscard]]
       inline std::string error_prefix(std::string_view method)
       {
-        return std::string{ "connectivity::" }.append(method).append(": ");
+        return prefix(method).append(": ");
+      }
+
+      [[nodiscard]]
+      inline std::string error_prefix(std::string_view method, const edge_indices indices)
+      {
+        return prefix(method).append(" ").append(to_string(indices)).append(": ");
       }
 
       constexpr void check_node_index_range(std::string_view method, const std::size_t order, const std::size_t node)
@@ -72,29 +95,29 @@ namespace sequoia
                 .append("] out of range - graph order is ").append(std::to_string(order)) };
       }
 
-      constexpr void check_edge_index_range(std::string_view method, std::string_view indexName, const std::size_t size, const std::size_t index)
+      constexpr void check_edge_index_range(std::string_view method, const edge_indices edgeIndices, std::string_view indexName, const std::size_t size, const std::size_t index)
       {
         if(index >= size)
-          throw std::out_of_range{ error_prefix(method).append(indexName).append(" index ").append(std::to_string(index)).append(" out of range - graph size is ").append(std::to_string(size)) };
+          throw std::out_of_range{ error_prefix(method, edgeIndices).append(indexName).append(" index ").append(std::to_string(index)).append(" out of range - graph size is ").append(std::to_string(size)) };
       }
 
       [[nodiscard]]
-      inline std::string self_referential_error(std::size_t target, std::size_t compIndex)
+      inline std::string self_referential_error(const edge_indices edgeIndices, std::size_t target, std::size_t compIndex)
       {
-        return impl::error_prefix("process_complementary_edges").append("Indices [target: ").append(std::to_string(target)).append(", comp: ").append(std::to_string(compIndex)).append("] are self-referential");
+        return impl::error_prefix("process_complementary_edges", edgeIndices).append("Indices [target: ").append(std::to_string(target)).append(", comp: ").append(std::to_string(compIndex)).append("] are self-referential");
       }
 
       [[nodiscard]]
-      inline std::string reciprocated_error_message(std::string_view indexName, std::size_t reciprocatedIndex, std::size_t index)
+      inline std::string reciprocated_error_message(const edge_indices edgeIndices, std::string_view indexName, std::size_t reciprocatedIndex, std::size_t index)
       {
-        return error_prefix("process_complementary_edges").append("Reciprocated ").append(indexName)
+        return error_prefix("process_complementary_edges", edgeIndices).append("Reciprocated ").append(indexName)
                 .append(" index ").append(std::to_string(reciprocatedIndex)).append(" does not match ").append(std::to_string(index));
       }
 
-      constexpr void check_reciprocated_index(std::string_view indexName, std::size_t reciprocatedIndex, std::size_t index)
+      constexpr void check_reciprocated_index(const edge_indices edgeIndices, std::string_view indexName, std::size_t reciprocatedIndex, std::size_t index)
       {
         if(reciprocatedIndex != index)
-          throw std::logic_error{reciprocated_error_message(indexName, reciprocatedIndex, index)};
+          throw std::logic_error{reciprocated_error_message(edgeIndices, indexName, reciprocatedIndex, index)};
       }
 
       constexpr void check_embedded_edge(std::size_t nodeIndex, std::size_t source, std::size_t target)
@@ -1077,16 +1100,19 @@ namespace sequoia
           {
             if constexpr(!direct_edge_init()) m_Edges.add_slot();
 
+            const auto nodeIndex{static_cast<edge_index_type>(std::distance(edges.begin(), nodeEdgesIter))};
             const auto& nodeEdges{*nodeEdgesIter};
-            for(const auto& edge : nodeEdges)
+            for(auto edgeIter{nodeEdges.begin()}; edgeIter != nodeEdges.end(); ++edgeIter)
             {
+              const auto edgeIndex{static_cast<edge_index_type>(std::distance(nodeEdges.begin(), edgeIter))};
+              const auto& edge{*edgeIter};
+
               const auto target{edge.target_node()};
-              impl::check_edge_index_range("process_edges", "target", edges.size(), target);
+              impl::check_edge_index_range("process_edges", {nodeIndex, edgeIndex}, "target", edges.size(), target);
 
               if constexpr(!direct_edge_init())
               {
-                const auto source{std::distance(edges.begin(), nodeEdgesIter)};
-                m_Edges.push_back_to_partition(source, edge_type{edge.target_node(), make_edge_weight(edge.weight())});
+                m_Edges.push_back_to_partition(nodeIndex, edge_type{edge.target_node(), make_edge_weight(edge.weight())});
               }
             }
           }
@@ -1113,7 +1139,7 @@ namespace sequoia
             const auto& edge{*edgeIter};
             const auto target{edge.target_node()};
 
-            impl::check_edge_index_range("process_complementary_edges", "complementary", edges.size(), target);
+            impl::check_edge_index_range("process_complementary_edges", {nodeIndex, edgeIndex}, "complementary", edges.size(), target);
             const auto compIndex{edge.complementary_index()};
 
             const bool doValidate{
@@ -1126,32 +1152,32 @@ namespace sequoia
             if(doValidate)
             {
               auto targetEdgesIter{edges.begin() + target};
-              impl::check_edge_index_range("process_complementary_edges", "complementary", targetEdgesIter->size(), compIndex);
+              impl::check_edge_index_range("process_complementary_edges", {nodeIndex, edgeIndex}, "complementary", targetEdgesIter->size(), compIndex);
 
               if((target == nodeIndex) && (compIndex == edgeIndex))
               {
-                throw std::logic_error{impl::self_referential_error(target, compIndex)};
+                throw std::logic_error{impl::self_referential_error({nodeIndex, edgeIndex}, target, compIndex)};
               }
               else if(const auto& targetEdge{*(targetEdgesIter->begin() + compIndex)}; targetEdge.complementary_index() != edgeIndex)
               {
-                throw std::logic_error{impl::reciprocated_error_message("complementary", targetEdge.complementary_index(), edgeIndex)};
+                throw std::logic_error{impl::reciprocated_error_message({nodeIndex, edgeIndex}, "complementary", targetEdge.complementary_index(), edgeIndex)};
               }
               else
               {
                 if constexpr (!directed(directedness))
                 {
-                  impl::check_reciprocated_index("target", targetEdge.target_node(), nodeIndex);
+                  impl::check_reciprocated_index({nodeIndex, edgeIndex}, "target", targetEdge.target_node(), nodeIndex);
                 }
                 else
                 {
-                  impl::check_reciprocated_index("target", targetEdge.target_node(), target);
-                  impl::check_reciprocated_index("source", targetEdge.source_node(), edge.source_node());
+                  impl::check_reciprocated_index({nodeIndex, edgeIndex}, "target", targetEdge.target_node(), target);
+                  impl::check_reciprocated_index({nodeIndex, edgeIndex}, "source", targetEdge.source_node(), edge.source_node());
                 }
 
                 if constexpr (!std::is_empty_v<edge_weight_type>)
                 {
                   if (edge.weight() != targetEdge.weight())
-                    throw std::logic_error{ impl::error_prefix("process_complementary_edges").append("Mismatch between weights") };
+                    throw std::logic_error{ impl::error_prefix("process_complementary_edges", {nodeIndex, edgeIndex}).append("Mismatch between weights") };
                 }
               }
             }
@@ -1159,16 +1185,16 @@ namespace sequoia
             if constexpr(directed(directedness))
             {
               const auto source{edge.source_node()};
-              impl::check_edge_index_range("process_complementary_edges", "source", edges.size(), source);
+              impl::check_edge_index_range("process_complementary_edges", {nodeIndex, edgeIndex}, "source", edges.size(), source);
               impl::check_embedded_edge(nodeIndex, source, target);
 
               if((edge.target_node() == nodeIndex) && (edge.source_node() != edge.target_node()))
               {
                 auto sourceEdgesIter{edges.begin() + source};
-                impl::check_edge_index_range("process_complementary_edges", "source", sourceEdgesIter->size(), compIndex);
+                impl::check_edge_index_range("process_complementary_edges", {nodeIndex, edgeIndex}, "source", sourceEdgesIter->size(), compIndex);
 
                 const auto& sourceEdge{*(sourceEdgesIter->begin() + compIndex)};
-                impl::check_reciprocated_index("target", sourceEdge.target_node(), nodeIndex);
+                impl::check_reciprocated_index({nodeIndex, edgeIndex}, "target", sourceEdge.target_node(), nodeIndex);
               }
             }
 

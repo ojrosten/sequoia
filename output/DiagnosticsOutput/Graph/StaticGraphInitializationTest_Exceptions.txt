@@ -1596,7 +1596,7 @@ First partial index of loop out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: complementary index 1 out of range - graph size is 1
+connectivity::process_complementary_edges [node: 0, edge: 0]: complementary index 1 out of range - graph size is 1
 
 	=======================================
 
@@ -1605,7 +1605,7 @@ Second partial index of loop out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0
+connectivity::process_complementary_edges [node: 0, edge: 0]: Reciprocated target index 1 does not match 0
 
 	=======================================
 
@@ -1623,7 +1623,7 @@ First complementary index is self-referential
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
+connectivity::process_complementary_edges [node: 0, edge: 0]: Indices [target: 0, comp: 0] are self-referential
 
 	=======================================
 
@@ -1632,7 +1632,7 @@ Second complementary index is self-referential
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
+connectivity::process_complementary_edges [node: 0, edge: 0]: Indices [target: 0, comp: 0] are self-referential
 
 	=======================================
 
@@ -1641,7 +1641,7 @@ First complementary index is out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: complementary index 2 out of range - graph size is 2
+connectivity::process_complementary_edges [node: 0, edge: 0]: complementary index 2 out of range - graph size is 2
 
 	=======================================
 
@@ -1650,7 +1650,7 @@ First complementary index is out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
+connectivity::process_complementary_edges [node: 0, edge: 0]: Indices [target: 0, comp: 0] are self-referential
 
 	=======================================
 
@@ -1668,7 +1668,7 @@ Partial index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0
+connectivity::process_complementary_edges [node: 0, edge: 1]: Reciprocated target index 1 does not match 0
 
 	=======================================
 
@@ -1686,7 +1686,7 @@ Self-referential complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
+connectivity::process_complementary_edges [node: 0, edge: 0]: Indices [target: 0, comp: 0] are self-referential
 
 	=======================================
 
@@ -1695,7 +1695,7 @@ Complementary index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: complementary index 4 out of range - graph size is 4
+connectivity::process_complementary_edges [node: 0, edge: 0]: complementary index 4 out of range - graph size is 4
 
 	=======================================
 
@@ -1749,7 +1749,7 @@ Complementary index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: complementary index 1 out of range - graph size is 1
+connectivity::process_complementary_edges [node: 0, edge: 0]: complementary index 1 out of range - graph size is 1
 
 	=======================================
 
@@ -1758,7 +1758,7 @@ Complementary indices out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: complementary index 1 out of range - graph size is 1
+connectivity::process_complementary_edges [node: 0, edge: 0]: complementary index 1 out of range - graph size is 1
 
 	=======================================
 
@@ -1776,7 +1776,7 @@ Mismatched partial indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index 0 does not match 1
+connectivity::process_complementary_edges [node: 1, edge: 1]: Reciprocated complementary index 0 does not match 1
 
 	=======================================
 
@@ -1785,7 +1785,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 2 does not match 0
+connectivity::process_complementary_edges [node: 0, edge: 0]: Reciprocated target index 2 does not match 0
 
 	=======================================
 
@@ -1794,7 +1794,7 @@ Mismatched complementary index
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index 1 does not match 0
+connectivity::process_complementary_edges [node: 0, edge: 0]: Reciprocated complementary index 1 does not match 0
 
 	=======================================
 
@@ -1803,7 +1803,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0
+connectivity::process_complementary_edges [node: 0, edge: 0]: Reciprocated target index 1 does not match 0
 
 	=======================================
 
@@ -1821,7 +1821,7 @@ First partial index of loop out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: complementary index 1 out of range - graph size is 1
+connectivity::process_complementary_edges [node: 0, edge: 0]: complementary index 1 out of range - graph size is 1
 
 	=======================================
 
@@ -1830,7 +1830,7 @@ Second partial index of loop out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0
+connectivity::process_complementary_edges [node: 0, edge: 0]: Reciprocated target index 1 does not match 0
 
 	=======================================
 
@@ -1848,7 +1848,7 @@ First complementary index is self-referential
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
+connectivity::process_complementary_edges [node: 0, edge: 0]: Indices [target: 0, comp: 0] are self-referential
 
 	=======================================
 
@@ -1857,7 +1857,7 @@ Second complementary index is self-referential
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
+connectivity::process_complementary_edges [node: 0, edge: 0]: Indices [target: 0, comp: 0] are self-referential
 
 	=======================================
 
@@ -1866,7 +1866,7 @@ First complementary index is out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: complementary index 2 out of range - graph size is 2
+connectivity::process_complementary_edges [node: 0, edge: 0]: complementary index 2 out of range - graph size is 2
 
 	=======================================
 
@@ -1875,7 +1875,7 @@ First complementary index is out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
+connectivity::process_complementary_edges [node: 0, edge: 0]: Indices [target: 0, comp: 0] are self-referential
 
 	=======================================
 
@@ -1884,7 +1884,7 @@ Weight mismatch
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Mismatch between weights
+connectivity::process_complementary_edges [node: 0, edge: 0]: Mismatch between weights
 
 	=======================================
 
@@ -1902,7 +1902,7 @@ Partial index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0
+connectivity::process_complementary_edges [node: 0, edge: 1]: Reciprocated target index 1 does not match 0
 
 	=======================================
 
@@ -1920,7 +1920,7 @@ Self-referential complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
+connectivity::process_complementary_edges [node: 0, edge: 0]: Indices [target: 0, comp: 0] are self-referential
 
 	=======================================
 
@@ -1929,7 +1929,7 @@ Complementary index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: complementary index 4 out of range - graph size is 4
+connectivity::process_complementary_edges [node: 0, edge: 0]: complementary index 4 out of range - graph size is 4
 
 	=======================================
 
@@ -1938,7 +1938,7 @@ Weight mismatch
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Mismatch between weights
+connectivity::process_complementary_edges [node: 0, edge: 0]: Mismatch between weights
 
 	=======================================
 
@@ -1992,7 +1992,7 @@ Complementary index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: complementary index 1 out of range - graph size is 1
+connectivity::process_complementary_edges [node: 0, edge: 0]: complementary index 1 out of range - graph size is 1
 
 	=======================================
 
@@ -2001,7 +2001,7 @@ Complementary indices out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: complementary index 1 out of range - graph size is 1
+connectivity::process_complementary_edges [node: 0, edge: 0]: complementary index 1 out of range - graph size is 1
 
 	=======================================
 
@@ -2028,7 +2028,7 @@ Mismatched partial indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index 0 does not match 1
+connectivity::process_complementary_edges [node: 1, edge: 1]: Reciprocated complementary index 0 does not match 1
 
 	=======================================
 
@@ -2037,7 +2037,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 2 does not match 0
+connectivity::process_complementary_edges [node: 0, edge: 0]: Reciprocated target index 2 does not match 0
 
 	=======================================
 
@@ -2046,7 +2046,7 @@ Weight mismatch
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Mismatch between weights
+connectivity::process_complementary_edges [node: 0, edge: 0]: Mismatch between weights
 
 	=======================================
 
@@ -2055,7 +2055,7 @@ Mismatched complementary index
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index 1 does not match 0
+connectivity::process_complementary_edges [node: 0, edge: 0]: Reciprocated complementary index 1 does not match 0
 
 	=======================================
 
@@ -2064,7 +2064,7 @@ Weight mismatch
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Mismatch between weights
+connectivity::process_complementary_edges [node: 0, edge: 0]: Mismatch between weights
 
 	=======================================
 
@@ -2073,7 +2073,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0
+connectivity::process_complementary_edges [node: 0, edge: 0]: Reciprocated target index 1 does not match 0
 
 	=======================================
 
@@ -2091,7 +2091,7 @@ First partial index of loop out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: complementary index 1 out of range - graph size is 1
+connectivity::process_complementary_edges [node: 0, edge: 0]: complementary index 1 out of range - graph size is 1
 
 	=======================================
 
@@ -2100,7 +2100,7 @@ Second partial index of loop out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0
+connectivity::process_complementary_edges [node: 0, edge: 0]: Reciprocated target index 1 does not match 0
 
 	=======================================
 
@@ -2118,7 +2118,7 @@ First complementary index is self-referential
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
+connectivity::process_complementary_edges [node: 0, edge: 0]: Indices [target: 0, comp: 0] are self-referential
 
 	=======================================
 
@@ -2127,7 +2127,7 @@ Second complementary index is self-referential
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
+connectivity::process_complementary_edges [node: 0, edge: 0]: Indices [target: 0, comp: 0] are self-referential
 
 	=======================================
 
@@ -2136,7 +2136,7 @@ First complementary index is out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: complementary index 2 out of range - graph size is 2
+connectivity::process_complementary_edges [node: 0, edge: 0]: complementary index 2 out of range - graph size is 2
 
 	=======================================
 
@@ -2145,7 +2145,7 @@ First complementary index is out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
+connectivity::process_complementary_edges [node: 0, edge: 0]: Indices [target: 0, comp: 0] are self-referential
 
 	=======================================
 
@@ -2154,7 +2154,7 @@ Weight mismatch
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Mismatch between weights
+connectivity::process_complementary_edges [node: 0, edge: 0]: Mismatch between weights
 
 	=======================================
 
@@ -2172,7 +2172,7 @@ Partial index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0
+connectivity::process_complementary_edges [node: 0, edge: 1]: Reciprocated target index 1 does not match 0
 
 	=======================================
 
@@ -2190,7 +2190,7 @@ Self-referential complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
+connectivity::process_complementary_edges [node: 0, edge: 0]: Indices [target: 0, comp: 0] are self-referential
 
 	=======================================
 
@@ -2199,7 +2199,7 @@ Complementary index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: complementary index 4 out of range - graph size is 4
+connectivity::process_complementary_edges [node: 0, edge: 0]: complementary index 4 out of range - graph size is 4
 
 	=======================================
 
@@ -2208,7 +2208,7 @@ Weight mismatch
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Mismatch between weights
+connectivity::process_complementary_edges [node: 0, edge: 0]: Mismatch between weights
 
 	=======================================
 
@@ -2262,7 +2262,7 @@ Complementary index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: complementary index 1 out of range - graph size is 1
+connectivity::process_complementary_edges [node: 0, edge: 0]: complementary index 1 out of range - graph size is 1
 
 	=======================================
 
@@ -2271,7 +2271,7 @@ Complementary indices out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: complementary index 1 out of range - graph size is 1
+connectivity::process_complementary_edges [node: 0, edge: 0]: complementary index 1 out of range - graph size is 1
 
 	=======================================
 
@@ -2298,7 +2298,7 @@ Mismatched partial indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index 0 does not match 1
+connectivity::process_complementary_edges [node: 1, edge: 1]: Reciprocated complementary index 0 does not match 1
 
 	=======================================
 
@@ -2307,7 +2307,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 2 does not match 0
+connectivity::process_complementary_edges [node: 0, edge: 0]: Reciprocated target index 2 does not match 0
 
 	=======================================
 
@@ -2316,7 +2316,7 @@ Weight mismatch
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Mismatch between weights
+connectivity::process_complementary_edges [node: 0, edge: 0]: Mismatch between weights
 
 	=======================================
 
@@ -2325,7 +2325,7 @@ Mismatched complementary index
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index 1 does not match 0
+connectivity::process_complementary_edges [node: 0, edge: 0]: Reciprocated complementary index 1 does not match 0
 
 	=======================================
 
@@ -2334,7 +2334,7 @@ Weight mismatch
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Mismatch between weights
+connectivity::process_complementary_edges [node: 0, edge: 0]: Mismatch between weights
 
 	=======================================
 
@@ -2343,7 +2343,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0
+connectivity::process_complementary_edges [node: 0, edge: 0]: Reciprocated target index 1 does not match 0
 
 	=======================================
 
@@ -2361,7 +2361,7 @@ First partial index of loop out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: complementary index 1 out of range - graph size is 1
+connectivity::process_complementary_edges [node: 0, edge: 0]: complementary index 1 out of range - graph size is 1
 
 	=======================================
 
@@ -2370,7 +2370,7 @@ Second partial index of loop out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0
+connectivity::process_complementary_edges [node: 0, edge: 0]: Reciprocated target index 1 does not match 0
 
 	=======================================
 
@@ -2388,7 +2388,7 @@ First complementary index is self-referential
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
+connectivity::process_complementary_edges [node: 0, edge: 0]: Indices [target: 0, comp: 0] are self-referential
 
 	=======================================
 
@@ -2397,7 +2397,7 @@ Second complementary index is self-referential
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
+connectivity::process_complementary_edges [node: 0, edge: 0]: Indices [target: 0, comp: 0] are self-referential
 
 	=======================================
 
@@ -2406,7 +2406,7 @@ First complementary index is out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: complementary index 2 out of range - graph size is 2
+connectivity::process_complementary_edges [node: 0, edge: 0]: complementary index 2 out of range - graph size is 2
 
 	=======================================
 
@@ -2415,7 +2415,7 @@ First complementary index is out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
+connectivity::process_complementary_edges [node: 0, edge: 0]: Indices [target: 0, comp: 0] are self-referential
 
 	=======================================
 
@@ -2424,7 +2424,7 @@ Weight mismatch
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Mismatch between weights
+connectivity::process_complementary_edges [node: 0, edge: 0]: Mismatch between weights
 
 	=======================================
 
@@ -2442,7 +2442,7 @@ Partial index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0
+connectivity::process_complementary_edges [node: 0, edge: 1]: Reciprocated target index 1 does not match 0
 
 	=======================================
 
@@ -2460,7 +2460,7 @@ Self-referential complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
+connectivity::process_complementary_edges [node: 0, edge: 0]: Indices [target: 0, comp: 0] are self-referential
 
 	=======================================
 
@@ -2469,7 +2469,7 @@ Complementary index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: complementary index 4 out of range - graph size is 4
+connectivity::process_complementary_edges [node: 0, edge: 0]: complementary index 4 out of range - graph size is 4
 
 	=======================================
 
@@ -2478,7 +2478,7 @@ Weight mismatch
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Mismatch between weights
+connectivity::process_complementary_edges [node: 0, edge: 0]: Mismatch between weights
 
 	=======================================
 
@@ -2532,7 +2532,7 @@ Complementary index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: complementary index 1 out of range - graph size is 1
+connectivity::process_complementary_edges [node: 0, edge: 0]: complementary index 1 out of range - graph size is 1
 
 	=======================================
 
@@ -2541,7 +2541,7 @@ Complementary indices out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: complementary index 1 out of range - graph size is 1
+connectivity::process_complementary_edges [node: 0, edge: 0]: complementary index 1 out of range - graph size is 1
 
 	=======================================
 
@@ -2568,7 +2568,7 @@ Mismatched partial indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index 0 does not match 1
+connectivity::process_complementary_edges [node: 1, edge: 1]: Reciprocated complementary index 0 does not match 1
 
 	=======================================
 
@@ -2577,7 +2577,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 2 does not match 0
+connectivity::process_complementary_edges [node: 0, edge: 0]: Reciprocated target index 2 does not match 0
 
 	=======================================
 
@@ -2586,7 +2586,7 @@ Weight mismatch
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Mismatch between weights
+connectivity::process_complementary_edges [node: 0, edge: 0]: Mismatch between weights
 
 	=======================================
 
@@ -2595,7 +2595,7 @@ Mismatched complementary index
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index 1 does not match 0
+connectivity::process_complementary_edges [node: 0, edge: 0]: Reciprocated complementary index 1 does not match 0
 
 	=======================================
 
@@ -2604,7 +2604,7 @@ Weight mismatch
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Mismatch between weights
+connectivity::process_complementary_edges [node: 0, edge: 0]: Mismatch between weights
 
 	=======================================
 
@@ -2613,7 +2613,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0
+connectivity::process_complementary_edges [node: 0, edge: 0]: Reciprocated target index 1 does not match 0
 
 	=======================================
 
@@ -2631,7 +2631,7 @@ First partial index of loop out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: complementary index 1 out of range - graph size is 1
+connectivity::process_complementary_edges [node: 0, edge: 0]: complementary index 1 out of range - graph size is 1
 
 	=======================================
 
@@ -2640,7 +2640,7 @@ Second partial index of loop out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0
+connectivity::process_complementary_edges [node: 0, edge: 0]: Reciprocated target index 1 does not match 0
 
 	=======================================
 
@@ -2658,7 +2658,7 @@ First complementary index is self-referential
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
+connectivity::process_complementary_edges [node: 0, edge: 0]: Indices [target: 0, comp: 0] are self-referential
 
 	=======================================
 
@@ -2667,7 +2667,7 @@ Second complementary index is self-referential
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
+connectivity::process_complementary_edges [node: 0, edge: 0]: Indices [target: 0, comp: 0] are self-referential
 
 	=======================================
 
@@ -2676,7 +2676,7 @@ First complementary index is out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: complementary index 2 out of range - graph size is 2
+connectivity::process_complementary_edges [node: 0, edge: 0]: complementary index 2 out of range - graph size is 2
 
 	=======================================
 
@@ -2685,7 +2685,7 @@ First complementary index is out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
+connectivity::process_complementary_edges [node: 0, edge: 0]: Indices [target: 0, comp: 0] are self-referential
 
 	=======================================
 
@@ -2721,7 +2721,7 @@ Partial index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0
+connectivity::process_complementary_edges [node: 0, edge: 1]: Reciprocated target index 1 does not match 0
 
 	=======================================
 
@@ -2739,7 +2739,7 @@ Self-referential complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
+connectivity::process_complementary_edges [node: 0, edge: 0]: Indices [target: 0, comp: 0] are self-referential
 
 	=======================================
 
@@ -2748,7 +2748,7 @@ Complementary index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: complementary index 4 out of range - graph size is 4
+connectivity::process_complementary_edges [node: 0, edge: 0]: complementary index 4 out of range - graph size is 4
 
 	=======================================
 
@@ -2802,7 +2802,7 @@ Complementary index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: complementary index 1 out of range - graph size is 1
+connectivity::process_complementary_edges [node: 0, edge: 0]: complementary index 1 out of range - graph size is 1
 
 	=======================================
 
@@ -2811,7 +2811,7 @@ Complementary indices out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: complementary index 1 out of range - graph size is 1
+connectivity::process_complementary_edges [node: 0, edge: 0]: complementary index 1 out of range - graph size is 1
 
 	=======================================
 
@@ -2829,7 +2829,7 @@ Mismatched partial indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index 0 does not match 1
+connectivity::process_complementary_edges [node: 1, edge: 1]: Reciprocated complementary index 0 does not match 1
 
 	=======================================
 
@@ -2838,7 +2838,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 2 does not match 0
+connectivity::process_complementary_edges [node: 0, edge: 0]: Reciprocated target index 2 does not match 0
 
 	=======================================
 
@@ -2847,7 +2847,7 @@ Mismatched complementary index
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index 1 does not match 0
+connectivity::process_complementary_edges [node: 0, edge: 0]: Reciprocated complementary index 1 does not match 0
 
 	=======================================
 
@@ -2856,7 +2856,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0
+connectivity::process_complementary_edges [node: 0, edge: 0]: Reciprocated target index 1 does not match 0
 
 	=======================================
 
@@ -2874,7 +2874,7 @@ First partial index of loop out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: complementary index 1 out of range - graph size is 1
+connectivity::process_complementary_edges [node: 0, edge: 0]: complementary index 1 out of range - graph size is 1
 
 	=======================================
 
@@ -2883,7 +2883,7 @@ Second partial index of loop out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0
+connectivity::process_complementary_edges [node: 0, edge: 0]: Reciprocated target index 1 does not match 0
 
 	=======================================
 
@@ -2901,7 +2901,7 @@ First complementary index is self-referential
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
+connectivity::process_complementary_edges [node: 0, edge: 0]: Indices [target: 0, comp: 0] are self-referential
 
 	=======================================
 
@@ -2910,7 +2910,7 @@ Second complementary index is self-referential
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
+connectivity::process_complementary_edges [node: 0, edge: 0]: Indices [target: 0, comp: 0] are self-referential
 
 	=======================================
 
@@ -2919,7 +2919,7 @@ First complementary index is out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: complementary index 2 out of range - graph size is 2
+connectivity::process_complementary_edges [node: 0, edge: 0]: complementary index 2 out of range - graph size is 2
 
 	=======================================
 
@@ -2928,7 +2928,7 @@ First complementary index is out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
+connectivity::process_complementary_edges [node: 0, edge: 0]: Indices [target: 0, comp: 0] are self-referential
 
 	=======================================
 
@@ -2937,7 +2937,7 @@ Weight mismatch
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Mismatch between weights
+connectivity::process_complementary_edges [node: 0, edge: 0]: Mismatch between weights
 
 	=======================================
 
@@ -2973,7 +2973,7 @@ Partial index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0
+connectivity::process_complementary_edges [node: 0, edge: 1]: Reciprocated target index 1 does not match 0
 
 	=======================================
 
@@ -2991,7 +2991,7 @@ Self-referential complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
+connectivity::process_complementary_edges [node: 0, edge: 0]: Indices [target: 0, comp: 0] are self-referential
 
 	=======================================
 
@@ -3000,7 +3000,7 @@ Complementary index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: complementary index 4 out of range - graph size is 4
+connectivity::process_complementary_edges [node: 0, edge: 0]: complementary index 4 out of range - graph size is 4
 
 	=======================================
 
@@ -3009,7 +3009,7 @@ Weight mismatch
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Mismatch between weights
+connectivity::process_complementary_edges [node: 0, edge: 0]: Mismatch between weights
 
 	=======================================
 
@@ -3063,7 +3063,7 @@ Complementary index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: complementary index 1 out of range - graph size is 1
+connectivity::process_complementary_edges [node: 0, edge: 0]: complementary index 1 out of range - graph size is 1
 
 	=======================================
 
@@ -3072,7 +3072,7 @@ Complementary indices out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: complementary index 1 out of range - graph size is 1
+connectivity::process_complementary_edges [node: 0, edge: 0]: complementary index 1 out of range - graph size is 1
 
 	=======================================
 
@@ -3099,7 +3099,7 @@ Mismatched partial indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index 0 does not match 1
+connectivity::process_complementary_edges [node: 1, edge: 1]: Reciprocated complementary index 0 does not match 1
 
 	=======================================
 
@@ -3108,7 +3108,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 2 does not match 0
+connectivity::process_complementary_edges [node: 0, edge: 0]: Reciprocated target index 2 does not match 0
 
 	=======================================
 
@@ -3117,7 +3117,7 @@ Weight mismatch
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Mismatch between weights
+connectivity::process_complementary_edges [node: 0, edge: 0]: Mismatch between weights
 
 	=======================================
 
@@ -3126,7 +3126,7 @@ Mismatched complementary index
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index 1 does not match 0
+connectivity::process_complementary_edges [node: 0, edge: 0]: Reciprocated complementary index 1 does not match 0
 
 	=======================================
 
@@ -3135,7 +3135,7 @@ Weight mismatch
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Mismatch between weights
+connectivity::process_complementary_edges [node: 0, edge: 0]: Mismatch between weights
 
 	=======================================
 
@@ -3144,7 +3144,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0
+connectivity::process_complementary_edges [node: 0, edge: 0]: Reciprocated target index 1 does not match 0
 
 	=======================================
 
@@ -3162,7 +3162,7 @@ First partial index of loop out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: complementary index 1 out of range - graph size is 1
+connectivity::process_complementary_edges [node: 0, edge: 0]: complementary index 1 out of range - graph size is 1
 
 	=======================================
 
@@ -3171,7 +3171,7 @@ Second partial index of loop out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0
+connectivity::process_complementary_edges [node: 0, edge: 0]: Reciprocated target index 1 does not match 0
 
 	=======================================
 
@@ -3189,7 +3189,7 @@ First complementary index is self-referential
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
+connectivity::process_complementary_edges [node: 0, edge: 0]: Indices [target: 0, comp: 0] are self-referential
 
 	=======================================
 
@@ -3198,7 +3198,7 @@ Second complementary index is self-referential
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
+connectivity::process_complementary_edges [node: 0, edge: 0]: Indices [target: 0, comp: 0] are self-referential
 
 	=======================================
 
@@ -3207,7 +3207,7 @@ First complementary index is out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: complementary index 2 out of range - graph size is 2
+connectivity::process_complementary_edges [node: 0, edge: 0]: complementary index 2 out of range - graph size is 2
 
 	=======================================
 
@@ -3216,7 +3216,7 @@ First complementary index is out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
+connectivity::process_complementary_edges [node: 0, edge: 0]: Indices [target: 0, comp: 0] are self-referential
 
 	=======================================
 
@@ -3225,7 +3225,7 @@ Weight mismatch
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Mismatch between weights
+connectivity::process_complementary_edges [node: 0, edge: 0]: Mismatch between weights
 
 	=======================================
 
@@ -3261,7 +3261,7 @@ Partial index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0
+connectivity::process_complementary_edges [node: 0, edge: 1]: Reciprocated target index 1 does not match 0
 
 	=======================================
 
@@ -3279,7 +3279,7 @@ Self-referential complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
+connectivity::process_complementary_edges [node: 0, edge: 0]: Indices [target: 0, comp: 0] are self-referential
 
 	=======================================
 
@@ -3288,7 +3288,7 @@ Complementary index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: complementary index 4 out of range - graph size is 4
+connectivity::process_complementary_edges [node: 0, edge: 0]: complementary index 4 out of range - graph size is 4
 
 	=======================================
 
@@ -3297,7 +3297,7 @@ Weight mismatch
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Mismatch between weights
+connectivity::process_complementary_edges [node: 0, edge: 0]: Mismatch between weights
 
 	=======================================
 
@@ -3351,7 +3351,7 @@ Complementary index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: complementary index 1 out of range - graph size is 1
+connectivity::process_complementary_edges [node: 0, edge: 0]: complementary index 1 out of range - graph size is 1
 
 	=======================================
 
@@ -3360,7 +3360,7 @@ Complementary indices out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: complementary index 1 out of range - graph size is 1
+connectivity::process_complementary_edges [node: 0, edge: 0]: complementary index 1 out of range - graph size is 1
 
 	=======================================
 
@@ -3387,7 +3387,7 @@ Mismatched partial indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index 0 does not match 1
+connectivity::process_complementary_edges [node: 1, edge: 1]: Reciprocated complementary index 0 does not match 1
 
 	=======================================
 
@@ -3396,7 +3396,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 2 does not match 0
+connectivity::process_complementary_edges [node: 0, edge: 0]: Reciprocated target index 2 does not match 0
 
 	=======================================
 
@@ -3405,7 +3405,7 @@ Weight mismatch
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Mismatch between weights
+connectivity::process_complementary_edges [node: 0, edge: 0]: Mismatch between weights
 
 	=======================================
 
@@ -3414,7 +3414,7 @@ Mismatched complementary index
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index 1 does not match 0
+connectivity::process_complementary_edges [node: 0, edge: 0]: Reciprocated complementary index 1 does not match 0
 
 	=======================================
 
@@ -3423,7 +3423,7 @@ Weight mismatch
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Mismatch between weights
+connectivity::process_complementary_edges [node: 0, edge: 0]: Mismatch between weights
 
 	=======================================
 
@@ -3432,7 +3432,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0
+connectivity::process_complementary_edges [node: 0, edge: 0]: Reciprocated target index 1 does not match 0
 
 	=======================================
 
@@ -3450,7 +3450,7 @@ First partial index of loop out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: complementary index 1 out of range - graph size is 1
+connectivity::process_complementary_edges [node: 0, edge: 0]: complementary index 1 out of range - graph size is 1
 
 	=======================================
 
@@ -3459,7 +3459,7 @@ Second partial index of loop out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0
+connectivity::process_complementary_edges [node: 0, edge: 0]: Reciprocated target index 1 does not match 0
 
 	=======================================
 
@@ -3477,7 +3477,7 @@ First complementary index is self-referential
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
+connectivity::process_complementary_edges [node: 0, edge: 0]: Indices [target: 0, comp: 0] are self-referential
 
 	=======================================
 
@@ -3486,7 +3486,7 @@ Second complementary index is self-referential
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
+connectivity::process_complementary_edges [node: 0, edge: 0]: Indices [target: 0, comp: 0] are self-referential
 
 	=======================================
 
@@ -3495,7 +3495,7 @@ First complementary index is out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: complementary index 2 out of range - graph size is 2
+connectivity::process_complementary_edges [node: 0, edge: 0]: complementary index 2 out of range - graph size is 2
 
 	=======================================
 
@@ -3504,7 +3504,7 @@ First complementary index is out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
+connectivity::process_complementary_edges [node: 0, edge: 0]: Indices [target: 0, comp: 0] are self-referential
 
 	=======================================
 
@@ -3513,7 +3513,7 @@ Weight mismatch
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Mismatch between weights
+connectivity::process_complementary_edges [node: 0, edge: 0]: Mismatch between weights
 
 	=======================================
 
@@ -3549,7 +3549,7 @@ Partial index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0
+connectivity::process_complementary_edges [node: 0, edge: 1]: Reciprocated target index 1 does not match 0
 
 	=======================================
 
@@ -3567,7 +3567,7 @@ Self-referential complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
+connectivity::process_complementary_edges [node: 0, edge: 0]: Indices [target: 0, comp: 0] are self-referential
 
 	=======================================
 
@@ -3576,7 +3576,7 @@ Complementary index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: complementary index 4 out of range - graph size is 4
+connectivity::process_complementary_edges [node: 0, edge: 0]: complementary index 4 out of range - graph size is 4
 
 	=======================================
 
@@ -3585,7 +3585,7 @@ Weight mismatch
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Mismatch between weights
+connectivity::process_complementary_edges [node: 0, edge: 0]: Mismatch between weights
 
 	=======================================
 
@@ -3639,7 +3639,7 @@ Complementary index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: complementary index 1 out of range - graph size is 1
+connectivity::process_complementary_edges [node: 0, edge: 0]: complementary index 1 out of range - graph size is 1
 
 	=======================================
 
@@ -3648,7 +3648,7 @@ Complementary indices out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: complementary index 1 out of range - graph size is 1
+connectivity::process_complementary_edges [node: 0, edge: 0]: complementary index 1 out of range - graph size is 1
 
 	=======================================
 
@@ -3675,7 +3675,7 @@ Mismatched partial indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index 0 does not match 1
+connectivity::process_complementary_edges [node: 1, edge: 1]: Reciprocated complementary index 0 does not match 1
 
 	=======================================
 
@@ -3684,7 +3684,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 2 does not match 0
+connectivity::process_complementary_edges [node: 0, edge: 0]: Reciprocated target index 2 does not match 0
 
 	=======================================
 
@@ -3693,7 +3693,7 @@ Weight mismatch
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Mismatch between weights
+connectivity::process_complementary_edges [node: 0, edge: 0]: Mismatch between weights
 
 	=======================================
 
@@ -3702,7 +3702,7 @@ Mismatched complementary index
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index 1 does not match 0
+connectivity::process_complementary_edges [node: 0, edge: 0]: Reciprocated complementary index 1 does not match 0
 
 	=======================================
 
@@ -3711,7 +3711,7 @@ Weight mismatch
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Mismatch between weights
+connectivity::process_complementary_edges [node: 0, edge: 0]: Mismatch between weights
 
 	=======================================
 
@@ -3720,7 +3720,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0
+connectivity::process_complementary_edges [node: 0, edge: 0]: Reciprocated target index 1 does not match 0
 
 	=======================================
 
@@ -3729,7 +3729,7 @@ Partial index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: target index 1 out of range - graph size is 1
+connectivity::process_edges [node: 0, edge: 0]: target index 1 out of range - graph size is 1
 
 	=======================================
 
@@ -3756,7 +3756,7 @@ Partial index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: target index 1 out of range - graph size is 1
+connectivity::process_edges [node: 0, edge: 1]: target index 1 out of range - graph size is 1
 
 	=======================================
 
@@ -3783,7 +3783,7 @@ Partial index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: target index 2 out of range - graph size is 2
+connectivity::process_edges [node: 0, edge: 0]: target index 2 out of range - graph size is 2
 
 	=======================================
 
@@ -3819,7 +3819,7 @@ Partial index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: target index 1 out of range - graph size is 1
+connectivity::process_edges [node: 0, edge: 0]: target index 1 out of range - graph size is 1
 
 	=======================================
 
@@ -3846,7 +3846,7 @@ Partial index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: target index 1 out of range - graph size is 1
+connectivity::process_edges [node: 0, edge: 1]: target index 1 out of range - graph size is 1
 
 	=======================================
 
@@ -3873,7 +3873,7 @@ Partial index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: target index 2 out of range - graph size is 2
+connectivity::process_edges [node: 0, edge: 0]: target index 2 out of range - graph size is 2
 
 	=======================================
 
@@ -3909,7 +3909,7 @@ Partial index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: target index 1 out of range - graph size is 1
+connectivity::process_edges [node: 0, edge: 0]: target index 1 out of range - graph size is 1
 
 	=======================================
 
@@ -3936,7 +3936,7 @@ Partial index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: target index 1 out of range - graph size is 1
+connectivity::process_edges [node: 0, edge: 1]: target index 1 out of range - graph size is 1
 
 	=======================================
 
@@ -3963,7 +3963,7 @@ Partial index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: target index 2 out of range - graph size is 2
+connectivity::process_edges [node: 0, edge: 0]: target index 2 out of range - graph size is 2
 
 	=======================================
 
@@ -3999,7 +3999,7 @@ Partial index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: target index 1 out of range - graph size is 1
+connectivity::process_edges [node: 0, edge: 0]: target index 1 out of range - graph size is 1
 
 	=======================================
 
@@ -4026,7 +4026,7 @@ Partial index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: target index 1 out of range - graph size is 1
+connectivity::process_edges [node: 0, edge: 1]: target index 1 out of range - graph size is 1
 
 	=======================================
 
@@ -4053,7 +4053,7 @@ Partial index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: target index 2 out of range - graph size is 2
+connectivity::process_edges [node: 0, edge: 0]: target index 2 out of range - graph size is 2
 
 	=======================================
 
@@ -4089,7 +4089,7 @@ Partial index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: target index 1 out of range - graph size is 1
+connectivity::process_edges [node: 0, edge: 0]: target index 1 out of range - graph size is 1
 
 	=======================================
 
@@ -4134,7 +4134,7 @@ Partial index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: target index 1 out of range - graph size is 1
+connectivity::process_edges [node: 0, edge: 1]: target index 1 out of range - graph size is 1
 
 	=======================================
 
@@ -4161,7 +4161,7 @@ Partial index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: target index 2 out of range - graph size is 2
+connectivity::process_edges [node: 0, edge: 0]: target index 2 out of range - graph size is 2
 
 	=======================================
 
@@ -4197,7 +4197,7 @@ Partial index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: target index 1 out of range - graph size is 1
+connectivity::process_edges [node: 0, edge: 0]: target index 1 out of range - graph size is 1
 
 	=======================================
 
@@ -4242,7 +4242,7 @@ Partial index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: target index 1 out of range - graph size is 1
+connectivity::process_edges [node: 0, edge: 1]: target index 1 out of range - graph size is 1
 
 	=======================================
 
@@ -4269,7 +4269,7 @@ Partial index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: target index 2 out of range - graph size is 2
+connectivity::process_edges [node: 0, edge: 0]: target index 2 out of range - graph size is 2
 
 	=======================================
 
@@ -4305,7 +4305,7 @@ Partial index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: target index 1 out of range - graph size is 1
+connectivity::process_edges [node: 0, edge: 0]: target index 1 out of range - graph size is 1
 
 	=======================================
 
@@ -4350,7 +4350,7 @@ Partial index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: target index 1 out of range - graph size is 1
+connectivity::process_edges [node: 0, edge: 1]: target index 1 out of range - graph size is 1
 
 	=======================================
 
@@ -4377,7 +4377,7 @@ Partial index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: target index 2 out of range - graph size is 2
+connectivity::process_edges [node: 0, edge: 0]: target index 2 out of range - graph size is 2
 
 	=======================================
 
@@ -4413,7 +4413,7 @@ Partial index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: target index 1 out of range - graph size is 1
+connectivity::process_edges [node: 0, edge: 0]: target index 1 out of range - graph size is 1
 
 	=======================================
 
@@ -4458,7 +4458,7 @@ Partial index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: target index 1 out of range - graph size is 1
+connectivity::process_edges [node: 0, edge: 1]: target index 1 out of range - graph size is 1
 
 	=======================================
 
@@ -4485,7 +4485,7 @@ Partial index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: target index 2 out of range - graph size is 2
+connectivity::process_edges [node: 0, edge: 0]: target index 2 out of range - graph size is 2
 
 	=======================================
 
@@ -4521,7 +4521,7 @@ Partial index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: source index 1 out of range - graph size is 1
+connectivity::process_complementary_edges [node: 0, edge: 0]: source index 1 out of range - graph size is 1
 
 	=======================================
 
@@ -4530,7 +4530,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index 1 does not match 0
+connectivity::process_complementary_edges [node: 0, edge: 0]: Reciprocated complementary index 1 does not match 0
 
 	=======================================
 
@@ -4548,7 +4548,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index 1 does not match 0
+connectivity::process_complementary_edges [node: 1, edge: 0]: Reciprocated complementary index 1 does not match 0
 
 	=======================================
 
@@ -4557,7 +4557,7 @@ Partial index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: source index 1 out of range - graph size is 1
+connectivity::process_complementary_edges [node: 0, edge: 0]: source index 1 out of range - graph size is 1
 
 	=======================================
 
@@ -4566,7 +4566,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index 1 does not match 0
+connectivity::process_complementary_edges [node: 0, edge: 0]: Reciprocated complementary index 1 does not match 0
 
 	=======================================
 
@@ -4584,7 +4584,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index 1 does not match 0
+connectivity::process_complementary_edges [node: 1, edge: 0]: Reciprocated complementary index 1 does not match 0
 
 	=======================================
 
@@ -4593,7 +4593,7 @@ Partial index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: source index 1 out of range - graph size is 1
+connectivity::process_complementary_edges [node: 0, edge: 0]: source index 1 out of range - graph size is 1
 
 	=======================================
 
@@ -4602,7 +4602,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index 1 does not match 0
+connectivity::process_complementary_edges [node: 0, edge: 0]: Reciprocated complementary index 1 does not match 0
 
 	=======================================
 
@@ -4620,7 +4620,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index 1 does not match 0
+connectivity::process_complementary_edges [node: 1, edge: 0]: Reciprocated complementary index 1 does not match 0
 
 	=======================================
 
@@ -4629,7 +4629,7 @@ Partial index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: source index 1 out of range - graph size is 1
+connectivity::process_complementary_edges [node: 0, edge: 0]: source index 1 out of range - graph size is 1
 
 	=======================================
 
@@ -4638,7 +4638,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index 1 does not match 0
+connectivity::process_complementary_edges [node: 0, edge: 0]: Reciprocated complementary index 1 does not match 0
 
 	=======================================
 
@@ -4656,7 +4656,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index 1 does not match 0
+connectivity::process_complementary_edges [node: 1, edge: 0]: Reciprocated complementary index 1 does not match 0
 
 	=======================================
 
@@ -4665,7 +4665,7 @@ Partial index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: source index 1 out of range - graph size is 1
+connectivity::process_complementary_edges [node: 0, edge: 0]: source index 1 out of range - graph size is 1
 
 	=======================================
 
@@ -4674,7 +4674,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index 1 does not match 0
+connectivity::process_complementary_edges [node: 0, edge: 0]: Reciprocated complementary index 1 does not match 0
 
 	=======================================
 
@@ -4710,7 +4710,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index 1 does not match 0
+connectivity::process_complementary_edges [node: 1, edge: 0]: Reciprocated complementary index 1 does not match 0
 
 	=======================================
 
@@ -4719,7 +4719,7 @@ Partial index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: source index 1 out of range - graph size is 1
+connectivity::process_complementary_edges [node: 0, edge: 0]: source index 1 out of range - graph size is 1
 
 	=======================================
 
@@ -4728,7 +4728,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index 1 does not match 0
+connectivity::process_complementary_edges [node: 0, edge: 0]: Reciprocated complementary index 1 does not match 0
 
 	=======================================
 
@@ -4764,7 +4764,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index 1 does not match 0
+connectivity::process_complementary_edges [node: 1, edge: 0]: Reciprocated complementary index 1 does not match 0
 
 	=======================================
 
@@ -4773,7 +4773,7 @@ Partial index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: source index 1 out of range - graph size is 1
+connectivity::process_complementary_edges [node: 0, edge: 0]: source index 1 out of range - graph size is 1
 
 	=======================================
 
@@ -4782,7 +4782,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index 1 does not match 0
+connectivity::process_complementary_edges [node: 0, edge: 0]: Reciprocated complementary index 1 does not match 0
 
 	=======================================
 
@@ -4818,7 +4818,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index 1 does not match 0
+connectivity::process_complementary_edges [node: 1, edge: 0]: Reciprocated complementary index 1 does not match 0
 
 	=======================================
 
@@ -4827,7 +4827,7 @@ Partial index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: source index 1 out of range - graph size is 1
+connectivity::process_complementary_edges [node: 0, edge: 0]: source index 1 out of range - graph size is 1
 
 	=======================================
 
@@ -4836,7 +4836,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index 1 does not match 0
+connectivity::process_complementary_edges [node: 0, edge: 0]: Reciprocated complementary index 1 does not match 0
 
 	=======================================
 
@@ -4872,7 +4872,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index 1 does not match 0
+connectivity::process_complementary_edges [node: 1, edge: 0]: Reciprocated complementary index 1 does not match 0
 
 	=======================================
 
