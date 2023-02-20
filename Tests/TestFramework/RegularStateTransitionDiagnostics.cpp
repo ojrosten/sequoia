@@ -173,9 +173,11 @@ namespace sequoia::testing
   {
     using double_graph = transition_checker<double>::transition_graph;
     using edge_t       = transition_checker<double>::edge;
+    using edges        = typename double_graph::edges_initializer;
 
     double_graph g{
-      { { edge_t{1, "Adding 1.1", [](double f) { return f + 1.0; }, std::weak_ordering::greater } },
+      edges{
+        { edge_t{1, "Adding 1.1", [](double f) { return f + 1.0; }, std::weak_ordering::greater } },
         { edge_t{0, "Subtracting 1.1", [](double f) { return f - 1.0; }, std::weak_ordering::less} }
       },
       {0.0, 1.1}

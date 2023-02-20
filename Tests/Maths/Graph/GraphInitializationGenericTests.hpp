@@ -1275,7 +1275,7 @@ namespace sequoia
         {
           m_Checker.template check_exception_thrown<std::logic_error>(LINE("Mismatch between node and edge init"), [](){ return Graph{edges{{edge{0}}, {}}, {node_weight{}}}; });
 
-          m_Checker.template check_exception_thrown<std::logic_error>(LINE("Mismatch between node and edge init"), [](){ return Graph{{{edge{0}}}, {node_weight{}, node_weight{}}}; });
+          m_Checker.template check_exception_thrown<std::logic_error>(LINE("Mismatch between node and edge init"), [](){ return Graph{edges{{edge{0}}}, {node_weight{}, node_weight{}}}; });
 
           if constexpr(static_nodes<Graph>)
           {
