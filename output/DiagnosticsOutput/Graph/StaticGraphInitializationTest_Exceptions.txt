@@ -1605,7 +1605,7 @@ Second partial index of loop out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0 for undirected graph
+connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0
 
 	=======================================
 
@@ -1623,7 +1623,7 @@ First complementary index is self-referential
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
+connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
 
 	=======================================
 
@@ -1632,7 +1632,7 @@ Second complementary index is self-referential
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
+connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
 
 	=======================================
 
@@ -1650,7 +1650,7 @@ First complementary index is out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
+connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
 
 	=======================================
 
@@ -1668,7 +1668,7 @@ Partial index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0 for undirected graph
+connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0
 
 	=======================================
 
@@ -1686,7 +1686,7 @@ Self-referential complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
+connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
 
 	=======================================
 
@@ -1785,7 +1785,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 2 does not match 0 for undirected graph
+connectivity::process_complementary_edges: Reciprocated target index 2 does not match 0
 
 	=======================================
 
@@ -1803,7 +1803,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0 for undirected graph
+connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0
 
 	=======================================
 
@@ -1830,7 +1830,7 @@ Second partial index of loop out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0 for undirected graph
+connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0
 
 	=======================================
 
@@ -1848,7 +1848,7 @@ First complementary index is self-referential
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
+connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
 
 	=======================================
 
@@ -1857,7 +1857,7 @@ Second complementary index is self-referential
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
+connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
 
 	=======================================
 
@@ -1875,7 +1875,7 @@ First complementary index is out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
+connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
 
 	=======================================
 
@@ -1902,7 +1902,7 @@ Partial index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0 for undirected graph
+connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0
 
 	=======================================
 
@@ -1920,7 +1920,7 @@ Self-referential complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
+connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
 
 	=======================================
 
@@ -2037,7 +2037,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 2 does not match 0 for undirected graph
+connectivity::process_complementary_edges: Reciprocated target index 2 does not match 0
 
 	=======================================
 
@@ -2073,7 +2073,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0 for undirected graph
+connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0
 
 	=======================================
 
@@ -2100,7 +2100,7 @@ Second partial index of loop out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0 for undirected graph
+connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0
 
 	=======================================
 
@@ -2118,7 +2118,7 @@ First complementary index is self-referential
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
+connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
 
 	=======================================
 
@@ -2127,7 +2127,7 @@ Second complementary index is self-referential
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
+connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
 
 	=======================================
 
@@ -2145,7 +2145,7 @@ First complementary index is out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
+connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
 
 	=======================================
 
@@ -2172,7 +2172,7 @@ Partial index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0 for undirected graph
+connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0
 
 	=======================================
 
@@ -2190,7 +2190,7 @@ Self-referential complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
+connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
 
 	=======================================
 
@@ -2307,7 +2307,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 2 does not match 0 for undirected graph
+connectivity::process_complementary_edges: Reciprocated target index 2 does not match 0
 
 	=======================================
 
@@ -2343,7 +2343,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0 for undirected graph
+connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0
 
 	=======================================
 
@@ -2370,7 +2370,7 @@ Second partial index of loop out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0 for undirected graph
+connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0
 
 	=======================================
 
@@ -2388,7 +2388,7 @@ First complementary index is self-referential
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
+connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
 
 	=======================================
 
@@ -2397,7 +2397,7 @@ Second complementary index is self-referential
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
+connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
 
 	=======================================
 
@@ -2415,7 +2415,7 @@ First complementary index is out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
+connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
 
 	=======================================
 
@@ -2442,7 +2442,7 @@ Partial index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0 for undirected graph
+connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0
 
 	=======================================
 
@@ -2460,7 +2460,7 @@ Self-referential complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
+connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
 
 	=======================================
 
@@ -2577,7 +2577,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 2 does not match 0 for undirected graph
+connectivity::process_complementary_edges: Reciprocated target index 2 does not match 0
 
 	=======================================
 
@@ -2613,7 +2613,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0 for undirected graph
+connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0
 
 	=======================================
 
@@ -2640,7 +2640,7 @@ Second partial index of loop out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0 for undirected graph
+connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0
 
 	=======================================
 
@@ -2658,7 +2658,7 @@ First complementary index is self-referential
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
+connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
 
 	=======================================
 
@@ -2667,7 +2667,7 @@ Second complementary index is self-referential
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
+connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
 
 	=======================================
 
@@ -2685,7 +2685,7 @@ First complementary index is out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
+connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
 
 	=======================================
 
@@ -2721,7 +2721,7 @@ Partial index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0 for undirected graph
+connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0
 
 	=======================================
 
@@ -2739,7 +2739,7 @@ Self-referential complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
+connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
 
 	=======================================
 
@@ -2838,7 +2838,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 2 does not match 0 for undirected graph
+connectivity::process_complementary_edges: Reciprocated target index 2 does not match 0
 
 	=======================================
 
@@ -2856,7 +2856,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0 for undirected graph
+connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0
 
 	=======================================
 
@@ -2883,7 +2883,7 @@ Second partial index of loop out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0 for undirected graph
+connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0
 
 	=======================================
 
@@ -2901,7 +2901,7 @@ First complementary index is self-referential
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
+connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
 
 	=======================================
 
@@ -2910,7 +2910,7 @@ Second complementary index is self-referential
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
+connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
 
 	=======================================
 
@@ -2928,295 +2928,7 @@ First complementary index is out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 823
-Weight mismatch
-
-Expected Exception Type:
-[std::logic_error]
-connectivity::process_complementary_edges: Mismatch between weights
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 862
-Mismatch between node and edge init
-
-Expected Exception Type:
-[std::logic_error]
-Node weight initializer and edges top-level initializer must be of same size
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 864
-Mismatch between node and edge init
-
-Expected Exception Type:
-[std::logic_error]
-Node weight initializer and edges top-level initializer must be of same size
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 900
-Too few elements in initializer lists
-
-Expected Exception Type:
-[std::logic_error]
-Inconsistent number of elements supplied by initializer lists
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 901
-Partial index out of range
-
-Expected Exception Type:
-[std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0 for undirected graph
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 902
-Too Many elements in initializer list
-
-Expected Exception Type:
-[std::logic_error]
-Inconsistent number of elements supplied by initializer lists
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 903
-Self-referential complementary indices
-
-Expected Exception Type:
-[std::logic_error]
-connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 904
-Complementary index out of range
-
-Expected Exception Type:
-[std::logic_error]
-connectivity::process_complementary_edges: complementary index 4 out of range - graph size is 4
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 909
-Weight mismatch
-
-Expected Exception Type:
-[std::logic_error]
-connectivity::process_complementary_edges: Mismatch between weights
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 935
-Too few elements in both sub-initializer lists
-
-Expected Exception Type:
-[std::logic_error]
-Inconsistent number of elements supplied by initializer lists
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 936
-Too few elements in first sub-initializer list
-
-Expected Exception Type:
-[std::logic_error]
-Inconsistent number of elements supplied by initializer lists
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 937
-Too few elements in second sub-initializer list
-
-Expected Exception Type:
-[std::logic_error]
-Inconsistent number of elements supplied by initializer lists
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 939
-Too many elements in first sub-initializer list
-
-Expected Exception Type:
-[std::logic_error]
-Inconsistent number of elements supplied by initializer lists
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 940
-Too many elements in second sub-initializer list
-
-Expected Exception Type:
-[std::logic_error]
-Inconsistent number of elements supplied by initializer lists
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 942
-Complementary index out of range
-
-Expected Exception Type:
-[std::logic_error]
-connectivity::process_complementary_edges: complementary index 1 out of range - graph size is 1
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 943
-Complementary indices out of range
-
-Expected Exception Type:
-[std::logic_error]
-connectivity::process_complementary_edges: complementary index 1 out of range - graph size is 1
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 948
-Weight mismatch
-
-Expected Exception Type:
-[std::logic_error]
-Overall initializer list of wrong size
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 997
-Too few elements in sub-initializer list
-
-Expected Exception Type:
-[std::logic_error]
-Inconsistent number of elements supplied by initializer lists
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 998
-Mismatched partial indices
-
-Expected Exception Type:
-[std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index 0 does not match 1
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 999
-Mismatched complementary indices
-
-Expected Exception Type:
-[std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 2 does not match 0 for undirected graph
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1004
-Weight mismatch
-
-Expected Exception Type:
-[std::logic_error]
-connectivity::process_complementary_edges: Mismatch between weights
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1032
-Mismatched complementary index
-
-Expected Exception Type:
-[std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index 1 does not match 0
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1037
-Weight mismatch
-
-Expected Exception Type:
-[std::logic_error]
-connectivity::process_complementary_edges: Mismatch between weights
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1062
-Mismatched complementary indices
-
-Expected Exception Type:
-[std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0 for undirected graph
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 811
-Too few elements in initializer list
-
-Expected Exception Type:
-[std::logic_error]
-Inconsistent number of elements supplied by initializer lists
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 812
-First partial index of loop out of range
-
-Expected Exception Type:
-[std::logic_error]
-connectivity::process_complementary_edges: complementary index 1 out of range - graph size is 1
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 813
-Second partial index of loop out of range
-
-Expected Exception Type:
-[std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0 for undirected graph
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 814
-Initializer list too long
-
-Expected Exception Type:
-[std::logic_error]
-initializer_list too big for array
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 815
-First complementary index is self-referential
-
-Expected Exception Type:
-[std::logic_error]
-connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 816
-Second complementary index is self-referential
-
-Expected Exception Type:
-[std::logic_error]
-connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 817
-First complementary index is out of range
-
-Expected Exception Type:
-[std::logic_error]
-connectivity::process_complementary_edges: complementary index 2 out of range - graph size is 2
-
-	=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 818
-First complementary index is out of range
-
-Expected Exception Type:
-[std::logic_error]
-connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
+connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
 
 	=======================================
 
@@ -3261,7 +2973,7 @@ Partial index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0 for undirected graph
+connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0
 
 	=======================================
 
@@ -3279,7 +2991,7 @@ Self-referential complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
+connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
 
 	=======================================
 
@@ -3396,7 +3108,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 2 does not match 0 for undirected graph
+connectivity::process_complementary_edges: Reciprocated target index 2 does not match 0
 
 	=======================================
 
@@ -3432,7 +3144,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0 for undirected graph
+connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0
 
 	=======================================
 
@@ -3459,7 +3171,7 @@ Second partial index of loop out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0 for undirected graph
+connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0
 
 	=======================================
 
@@ -3477,7 +3189,7 @@ First complementary index is self-referential
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
+connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
 
 	=======================================
 
@@ -3486,7 +3198,7 @@ Second complementary index is self-referential
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
+connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
 
 	=======================================
 
@@ -3504,7 +3216,7 @@ First complementary index is out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
+connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
 
 	=======================================
 
@@ -3549,7 +3261,7 @@ Partial index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0 for undirected graph
+connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0
 
 	=======================================
 
@@ -3567,7 +3279,7 @@ Self-referential complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
+connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
 
 	=======================================
 
@@ -3684,7 +3396,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 2 does not match 0 for undirected graph
+connectivity::process_complementary_edges: Reciprocated target index 2 does not match 0
 
 	=======================================
 
@@ -3720,7 +3432,295 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0 for undirected graph
+connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 811
+Too few elements in initializer list
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 812
+First partial index of loop out of range
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::process_complementary_edges: complementary index 1 out of range - graph size is 1
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 813
+Second partial index of loop out of range
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 814
+Initializer list too long
+
+Expected Exception Type:
+[std::logic_error]
+initializer_list too big for array
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 815
+First complementary index is self-referential
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 816
+Second complementary index is self-referential
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 817
+First complementary index is out of range
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::process_complementary_edges: complementary index 2 out of range - graph size is 2
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 818
+First complementary index is out of range
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 823
+Weight mismatch
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::process_complementary_edges: Mismatch between weights
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 862
+Mismatch between node and edge init
+
+Expected Exception Type:
+[std::logic_error]
+Node weight initializer and edges top-level initializer must be of same size
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 864
+Mismatch between node and edge init
+
+Expected Exception Type:
+[std::logic_error]
+Node weight initializer and edges top-level initializer must be of same size
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 900
+Too few elements in initializer lists
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 901
+Partial index out of range
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 902
+Too Many elements in initializer list
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 903
+Self-referential complementary indices
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::process_complementary_edges: Indices [target: 0, comp: 0] are self-referential
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 904
+Complementary index out of range
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::process_complementary_edges: complementary index 4 out of range - graph size is 4
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 909
+Weight mismatch
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::process_complementary_edges: Mismatch between weights
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 935
+Too few elements in both sub-initializer lists
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 936
+Too few elements in first sub-initializer list
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 937
+Too few elements in second sub-initializer list
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 939
+Too many elements in first sub-initializer list
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 940
+Too many elements in second sub-initializer list
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 942
+Complementary index out of range
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::process_complementary_edges: complementary index 1 out of range - graph size is 1
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 943
+Complementary indices out of range
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::process_complementary_edges: complementary index 1 out of range - graph size is 1
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 948
+Weight mismatch
+
+Expected Exception Type:
+[std::logic_error]
+Overall initializer list of wrong size
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 997
+Too few elements in sub-initializer list
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 998
+Mismatched partial indices
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::process_complementary_edges: Reciprocated complementary index 0 does not match 1
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 999
+Mismatched complementary indices
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::process_complementary_edges: Reciprocated target index 2 does not match 0
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1004
+Weight mismatch
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::process_complementary_edges: Mismatch between weights
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1032
+Mismatched complementary index
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::process_complementary_edges: Reciprocated complementary index 1 does not match 0
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1037
+Weight mismatch
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::process_complementary_edges: Mismatch between weights
+
+	=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 1062
+Mismatched complementary indices
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0
 
 	=======================================
 

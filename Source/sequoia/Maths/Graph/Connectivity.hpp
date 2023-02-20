@@ -78,12 +78,29 @@ namespace sequoia
           throw std::out_of_range{ error_prefix(method).append(indexName).append(" index ").append(std::to_string(index)).append(" out of range - graph size is ").append(std::to_string(size)) };
       }
 
-      constexpr void check_reciprocated_index(std::string_view graphType, std::string_view indexName, std::size_t nodeIndex, std::size_t targetNodeIndex)
+      [[nodiscard]]
+      inline std::string self_referential_error(std::size_t target, std::size_t compIndex)
       {
-        if(nodeIndex != targetNodeIndex)
-          throw std::logic_error{ error_prefix("process_complementary_edges").append("Reciprocated ").append(indexName)
-                                  .append(" index ").append(std::to_string(targetNodeIndex)).append(" does not match ").append(std::to_string(nodeIndex))
-                                  .append(" for ").append(graphType).append(" graph")};
+        return impl::error_prefix("process_complementary_edges").append("Indices [target: ").append(std::to_string(target)).append(", comp: ").append(std::to_string(compIndex)).append("] are self-referential");
+      }
+
+      [[nodiscard]]
+      inline std::string reciprocated_error_message(std::string_view indexName, std::size_t reciprocatedIndex, std::size_t index)
+      {
+        return error_prefix("process_complementary_edges").append("Reciprocated ").append(indexName)
+                .append(" index ").append(std::to_string(reciprocatedIndex)).append(" does not match ").append(std::to_string(index));
+      }
+
+      constexpr void check_reciprocated_index(std::string_view indexName, std::size_t reciprocatedIndex, std::size_t index)
+      {
+        if(reciprocatedIndex != index)
+          throw std::logic_error{reciprocated_error_message(indexName, reciprocatedIndex, index)};
+      }
+
+      constexpr void check_embedded_edge(std::size_t currentNodeIndex, std::size_t source, std::size_t target)
+      {
+        if((source != currentNodeIndex) && (target != currentNodeIndex))
+          throw std::logic_error{error_prefix("process_complementary_edges").append("At least one of source and target must match current node")};
       }
     }
 
@@ -1111,22 +1128,22 @@ namespace sequoia
 
               if(const auto dist{static_cast<edge_index_type>(std::distance(nodeEdges.begin(), edgeIter))}; (target == currentNodeIndex) && (compIndex == dist))
               {
-                throw std::logic_error{ impl::error_prefix("process_complementary_edges").append("Complementary index for [").append(std::to_string(target)).append(", ").append(std::to_string(compIndex)).append("] is self-referential")};
+                throw std::logic_error{impl::self_referential_error(target, compIndex)};
               }
               else if(const auto& targetEdge{*(targetEdgesIter->begin() + compIndex)}; targetEdge.complementary_index() != dist)
               {
-                throw std::logic_error{impl::error_prefix("process_complementary_edges").append("Reciprocated complementary index ").append(std::to_string(targetEdge.complementary_index())).append(" does not match ").append(std::to_string(dist))};
+                throw std::logic_error{impl::reciprocated_error_message("complementary", targetEdge.complementary_index(), dist)};
               }
               else
               {
                 if constexpr (!directed(directedness))
                 {
-                  impl::check_reciprocated_index("undirected", "target", currentNodeIndex, targetEdge.target_node());
+                  impl::check_reciprocated_index("target", targetEdge.target_node(), currentNodeIndex);
                 }
                 else
                 {
-                  impl::check_reciprocated_index("embedded directed", "target", target, targetEdge.target_node());
-                  impl::check_reciprocated_index("embedded directed", "source", edge.source_node(), targetEdge.source_node());
+                  impl::check_reciprocated_index("target", targetEdge.target_node(), target);
+                  impl::check_reciprocated_index("source", targetEdge.source_node(), edge.source_node());
                 }
 
                 if constexpr (!std::is_empty_v<edge_weight_type>)
@@ -1141,9 +1158,7 @@ namespace sequoia
             {
               const auto source{edge.source_node()};
               impl::check_edge_index_range("process_complementary_edges", "source", edges.size(), source);
-
-              if((source != currentNodeIndex) && (target != currentNodeIndex))
-                throw std::logic_error{impl::error_prefix("process_complementary_edges").append("At least one of source and target must match current node")};
+              impl::check_embedded_edge(currentNodeIndex, source, target);
 
               if((edge.target_node() == currentNodeIndex) && (edge.source_node() != edge.target_node()))
               {
@@ -1151,7 +1166,7 @@ namespace sequoia
                 impl::check_edge_index_range("process_complementary_edges", "source", sourceEdgesIter->size(), compIndex);
 
                 const auto& sourceEdge{*(sourceEdgesIter->begin() + compIndex)};
-                impl::check_reciprocated_index("directed", "target", currentNodeIndex, sourceEdge.target_node());
+                impl::check_reciprocated_index("target", sourceEdge.target_node(), currentNodeIndex);
               }
             }
 
