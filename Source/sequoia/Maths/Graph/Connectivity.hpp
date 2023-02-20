@@ -97,9 +97,9 @@ namespace sequoia
           throw std::logic_error{reciprocated_error_message(indexName, reciprocatedIndex, index)};
       }
 
-      constexpr void check_embedded_edge(std::size_t currentNodeIndex, std::size_t source, std::size_t target)
+      constexpr void check_embedded_edge(std::size_t nodeIndex, std::size_t source, std::size_t target)
       {
-        if((source != currentNodeIndex) && (target != currentNodeIndex))
+        if((source != nodeIndex) && (target != nodeIndex))
           throw std::logic_error{error_prefix("process_complementary_edges").append("At least one of source and target must match current node")};
       }
     }
@@ -1105,19 +1105,21 @@ namespace sequoia
         {
           if constexpr(!direct_edge_init()) m_Edges.add_slot();
 
+          const auto nodeIndex{static_cast<edge_index_type>(std::distance(edges.begin(), nodeEdgesIter))};
           const auto& nodeEdges{*nodeEdgesIter};
-          const auto currentNodeIndex{static_cast<edge_index_type>(std::distance(edges.begin(), nodeEdgesIter))};
           for(auto edgeIter{nodeEdges.begin()}; edgeIter != nodeEdges.end(); ++edgeIter)
           {
+            const auto edgeIndex{static_cast<edge_index_type>(std::distance(nodeEdges.begin(), edgeIter))};
             const auto& edge{*edgeIter};
             const auto target{edge.target_node()};
+
             impl::check_edge_index_range("process_complementary_edges", "complementary", edges.size(), target);
             const auto compIndex{edge.complementary_index()};
 
             const bool doValidate{
               [&]() {
                 if constexpr (!directed(directedness)) return true;
-                else return (edge.target_node() != currentNodeIndex) || (edge.source_node() == edge.target_node());
+                else return (edge.target_node() != nodeIndex) || (edge.source_node() == edge.target_node());
               }()
             };
 
@@ -1126,19 +1128,19 @@ namespace sequoia
               auto targetEdgesIter{edges.begin() + target};
               impl::check_edge_index_range("process_complementary_edges", "complementary", targetEdgesIter->size(), compIndex);
 
-              if(const auto dist{static_cast<edge_index_type>(std::distance(nodeEdges.begin(), edgeIter))}; (target == currentNodeIndex) && (compIndex == dist))
+              if((target == nodeIndex) && (compIndex == edgeIndex))
               {
                 throw std::logic_error{impl::self_referential_error(target, compIndex)};
               }
-              else if(const auto& targetEdge{*(targetEdgesIter->begin() + compIndex)}; targetEdge.complementary_index() != dist)
+              else if(const auto& targetEdge{*(targetEdgesIter->begin() + compIndex)}; targetEdge.complementary_index() != edgeIndex)
               {
-                throw std::logic_error{impl::reciprocated_error_message("complementary", targetEdge.complementary_index(), dist)};
+                throw std::logic_error{impl::reciprocated_error_message("complementary", targetEdge.complementary_index(), edgeIndex)};
               }
               else
               {
                 if constexpr (!directed(directedness))
                 {
-                  impl::check_reciprocated_index("target", targetEdge.target_node(), currentNodeIndex);
+                  impl::check_reciprocated_index("target", targetEdge.target_node(), nodeIndex);
                 }
                 else
                 {
@@ -1158,15 +1160,15 @@ namespace sequoia
             {
               const auto source{edge.source_node()};
               impl::check_edge_index_range("process_complementary_edges", "source", edges.size(), source);
-              impl::check_embedded_edge(currentNodeIndex, source, target);
+              impl::check_embedded_edge(nodeIndex, source, target);
 
-              if((edge.target_node() == currentNodeIndex) && (edge.source_node() != edge.target_node()))
+              if((edge.target_node() == nodeIndex) && (edge.source_node() != edge.target_node()))
               {
                 auto sourceEdgesIter{edges.begin() + source};
                 impl::check_edge_index_range("process_complementary_edges", "source", sourceEdgesIter->size(), compIndex);
 
                 const auto& sourceEdge{*(sourceEdgesIter->begin() + compIndex)};
-                impl::check_reciprocated_index("target", sourceEdge.target_node(), currentNodeIndex);
+                impl::check_reciprocated_index("target", sourceEdge.target_node(), nodeIndex);
               }
             }
 
@@ -1174,20 +1176,19 @@ namespace sequoia
             {
               if constexpr(!EdgeTraits::shared_edge_v)
               {
-                m_Edges.push_back_to_partition(currentNodeIndex, make_edge(currentNodeIndex, edge));
+                m_Edges.push_back_to_partition(nodeIndex, make_edge(nodeIndex, edge));
               }
               else
               {
-                const auto pos{static_cast<edge_index_type>(std::distance(nodeEdges.begin(), edgeIter))};
                 const auto source{edge.source_node()};
-                const auto partner{target == currentNodeIndex ? source : target};
-                if((partner > currentNodeIndex) || ((partner == currentNodeIndex) && (compIndex > pos)))
+                const auto partner{target == nodeIndex ? source : target};
+                if((partner > nodeIndex) || ((partner == nodeIndex) && (compIndex > edgeIndex)))
                 {
-                  m_Edges.push_back_to_partition(currentNodeIndex, make_edge(source, edge));
+                  m_Edges.push_back_to_partition(nodeIndex, make_edge(source, edge));
                 }
                 else
                 {
-                  m_Edges.push_back_to_partition(currentNodeIndex, cbegin_edges(partner) + compIndex);
+                  m_Edges.push_back_to_partition(nodeIndex, cbegin_edges(partner) + compIndex);
                 }
               }
             }
