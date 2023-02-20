@@ -1605,7 +1605,7 @@ Second partial index of loop out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index does not match for undirected graph
+connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0 for undirected graph
 
 	=======================================
 
@@ -1623,7 +1623,7 @@ First complementary index is self-referential
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Complementary index is self-referential
+connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
 
 	=======================================
 
@@ -1632,7 +1632,7 @@ Second complementary index is self-referential
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Complementary index is self-referential
+connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
 
 	=======================================
 
@@ -1650,7 +1650,7 @@ First complementary index is out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Complementary index is self-referential
+connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
 
 	=======================================
 
@@ -1668,7 +1668,7 @@ Partial index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index does not match for undirected graph
+connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0 for undirected graph
 
 	=======================================
 
@@ -1686,7 +1686,7 @@ Self-referential complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Complementary index is self-referential
+connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
 
 	=======================================
 
@@ -1776,7 +1776,7 @@ Mismatched partial indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index does not match
+connectivity::process_complementary_edges: Reciprocated complementary index 0 does not match 1
 
 	=======================================
 
@@ -1785,7 +1785,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index does not match for undirected graph
+connectivity::process_complementary_edges: Reciprocated target index 2 does not match 0 for undirected graph
 
 	=======================================
 
@@ -1794,7 +1794,7 @@ Mismatched complementary index
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index does not match
+connectivity::process_complementary_edges: Reciprocated complementary index 1 does not match 0
 
 	=======================================
 
@@ -1803,7 +1803,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index does not match for undirected graph
+connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0 for undirected graph
 
 	=======================================
 
@@ -1830,7 +1830,7 @@ Second partial index of loop out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index does not match for undirected graph
+connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0 for undirected graph
 
 	=======================================
 
@@ -1848,7 +1848,7 @@ First complementary index is self-referential
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Complementary index is self-referential
+connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
 
 	=======================================
 
@@ -1857,7 +1857,7 @@ Second complementary index is self-referential
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Complementary index is self-referential
+connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
 
 	=======================================
 
@@ -1875,7 +1875,7 @@ First complementary index is out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Complementary index is self-referential
+connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
 
 	=======================================
 
@@ -1884,7 +1884,7 @@ Weight mismatch
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Mismath between weights
+connectivity::process_complementary_edges: Mismatch between weights
 
 	=======================================
 
@@ -1902,7 +1902,7 @@ Partial index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index does not match for undirected graph
+connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0 for undirected graph
 
 	=======================================
 
@@ -1920,7 +1920,7 @@ Self-referential complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Complementary index is self-referential
+connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
 
 	=======================================
 
@@ -1938,7 +1938,7 @@ Weight mismatch
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Mismath between weights
+connectivity::process_complementary_edges: Mismatch between weights
 
 	=======================================
 
@@ -2028,7 +2028,7 @@ Mismatched partial indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index does not match
+connectivity::process_complementary_edges: Reciprocated complementary index 0 does not match 1
 
 	=======================================
 
@@ -2037,7 +2037,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index does not match for undirected graph
+connectivity::process_complementary_edges: Reciprocated target index 2 does not match 0 for undirected graph
 
 	=======================================
 
@@ -2046,7 +2046,7 @@ Weight mismatch
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Mismath between weights
+connectivity::process_complementary_edges: Mismatch between weights
 
 	=======================================
 
@@ -2055,7 +2055,7 @@ Mismatched complementary index
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index does not match
+connectivity::process_complementary_edges: Reciprocated complementary index 1 does not match 0
 
 	=======================================
 
@@ -2064,7 +2064,7 @@ Weight mismatch
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Mismath between weights
+connectivity::process_complementary_edges: Mismatch between weights
 
 	=======================================
 
@@ -2073,7 +2073,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index does not match for undirected graph
+connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0 for undirected graph
 
 	=======================================
 
@@ -2100,7 +2100,7 @@ Second partial index of loop out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index does not match for undirected graph
+connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0 for undirected graph
 
 	=======================================
 
@@ -2118,7 +2118,7 @@ First complementary index is self-referential
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Complementary index is self-referential
+connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
 
 	=======================================
 
@@ -2127,7 +2127,7 @@ Second complementary index is self-referential
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Complementary index is self-referential
+connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
 
 	=======================================
 
@@ -2145,7 +2145,7 @@ First complementary index is out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Complementary index is self-referential
+connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
 
 	=======================================
 
@@ -2154,7 +2154,7 @@ Weight mismatch
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Mismath between weights
+connectivity::process_complementary_edges: Mismatch between weights
 
 	=======================================
 
@@ -2172,7 +2172,7 @@ Partial index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index does not match for undirected graph
+connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0 for undirected graph
 
 	=======================================
 
@@ -2190,7 +2190,7 @@ Self-referential complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Complementary index is self-referential
+connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
 
 	=======================================
 
@@ -2208,7 +2208,7 @@ Weight mismatch
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Mismath between weights
+connectivity::process_complementary_edges: Mismatch between weights
 
 	=======================================
 
@@ -2298,7 +2298,7 @@ Mismatched partial indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index does not match
+connectivity::process_complementary_edges: Reciprocated complementary index 0 does not match 1
 
 	=======================================
 
@@ -2307,7 +2307,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index does not match for undirected graph
+connectivity::process_complementary_edges: Reciprocated target index 2 does not match 0 for undirected graph
 
 	=======================================
 
@@ -2316,7 +2316,7 @@ Weight mismatch
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Mismath between weights
+connectivity::process_complementary_edges: Mismatch between weights
 
 	=======================================
 
@@ -2325,7 +2325,7 @@ Mismatched complementary index
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index does not match
+connectivity::process_complementary_edges: Reciprocated complementary index 1 does not match 0
 
 	=======================================
 
@@ -2334,7 +2334,7 @@ Weight mismatch
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Mismath between weights
+connectivity::process_complementary_edges: Mismatch between weights
 
 	=======================================
 
@@ -2343,7 +2343,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index does not match for undirected graph
+connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0 for undirected graph
 
 	=======================================
 
@@ -2370,7 +2370,7 @@ Second partial index of loop out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index does not match for undirected graph
+connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0 for undirected graph
 
 	=======================================
 
@@ -2388,7 +2388,7 @@ First complementary index is self-referential
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Complementary index is self-referential
+connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
 
 	=======================================
 
@@ -2397,7 +2397,7 @@ Second complementary index is self-referential
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Complementary index is self-referential
+connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
 
 	=======================================
 
@@ -2415,7 +2415,7 @@ First complementary index is out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Complementary index is self-referential
+connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
 
 	=======================================
 
@@ -2424,7 +2424,7 @@ Weight mismatch
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Mismath between weights
+connectivity::process_complementary_edges: Mismatch between weights
 
 	=======================================
 
@@ -2442,7 +2442,7 @@ Partial index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index does not match for undirected graph
+connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0 for undirected graph
 
 	=======================================
 
@@ -2460,7 +2460,7 @@ Self-referential complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Complementary index is self-referential
+connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
 
 	=======================================
 
@@ -2478,7 +2478,7 @@ Weight mismatch
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Mismath between weights
+connectivity::process_complementary_edges: Mismatch between weights
 
 	=======================================
 
@@ -2568,7 +2568,7 @@ Mismatched partial indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index does not match
+connectivity::process_complementary_edges: Reciprocated complementary index 0 does not match 1
 
 	=======================================
 
@@ -2577,7 +2577,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index does not match for undirected graph
+connectivity::process_complementary_edges: Reciprocated target index 2 does not match 0 for undirected graph
 
 	=======================================
 
@@ -2586,7 +2586,7 @@ Weight mismatch
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Mismath between weights
+connectivity::process_complementary_edges: Mismatch between weights
 
 	=======================================
 
@@ -2595,7 +2595,7 @@ Mismatched complementary index
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index does not match
+connectivity::process_complementary_edges: Reciprocated complementary index 1 does not match 0
 
 	=======================================
 
@@ -2604,7 +2604,7 @@ Weight mismatch
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Mismath between weights
+connectivity::process_complementary_edges: Mismatch between weights
 
 	=======================================
 
@@ -2613,7 +2613,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index does not match for undirected graph
+connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0 for undirected graph
 
 	=======================================
 
@@ -2640,7 +2640,7 @@ Second partial index of loop out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index does not match for undirected graph
+connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0 for undirected graph
 
 	=======================================
 
@@ -2658,7 +2658,7 @@ First complementary index is self-referential
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Complementary index is self-referential
+connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
 
 	=======================================
 
@@ -2667,7 +2667,7 @@ Second complementary index is self-referential
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Complementary index is self-referential
+connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
 
 	=======================================
 
@@ -2685,7 +2685,7 @@ First complementary index is out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Complementary index is self-referential
+connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
 
 	=======================================
 
@@ -2721,7 +2721,7 @@ Partial index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index does not match for undirected graph
+connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0 for undirected graph
 
 	=======================================
 
@@ -2739,7 +2739,7 @@ Self-referential complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Complementary index is self-referential
+connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
 
 	=======================================
 
@@ -2829,7 +2829,7 @@ Mismatched partial indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index does not match
+connectivity::process_complementary_edges: Reciprocated complementary index 0 does not match 1
 
 	=======================================
 
@@ -2838,7 +2838,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index does not match for undirected graph
+connectivity::process_complementary_edges: Reciprocated target index 2 does not match 0 for undirected graph
 
 	=======================================
 
@@ -2847,7 +2847,7 @@ Mismatched complementary index
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index does not match
+connectivity::process_complementary_edges: Reciprocated complementary index 1 does not match 0
 
 	=======================================
 
@@ -2856,7 +2856,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index does not match for undirected graph
+connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0 for undirected graph
 
 	=======================================
 
@@ -2883,7 +2883,7 @@ Second partial index of loop out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index does not match for undirected graph
+connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0 for undirected graph
 
 	=======================================
 
@@ -2901,7 +2901,7 @@ First complementary index is self-referential
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Complementary index is self-referential
+connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
 
 	=======================================
 
@@ -2910,7 +2910,7 @@ Second complementary index is self-referential
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Complementary index is self-referential
+connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
 
 	=======================================
 
@@ -2928,7 +2928,7 @@ First complementary index is out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Complementary index is self-referential
+connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
 
 	=======================================
 
@@ -2937,7 +2937,7 @@ Weight mismatch
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Mismath between weights
+connectivity::process_complementary_edges: Mismatch between weights
 
 	=======================================
 
@@ -2973,7 +2973,7 @@ Partial index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index does not match for undirected graph
+connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0 for undirected graph
 
 	=======================================
 
@@ -2991,7 +2991,7 @@ Self-referential complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Complementary index is self-referential
+connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
 
 	=======================================
 
@@ -3009,7 +3009,7 @@ Weight mismatch
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Mismath between weights
+connectivity::process_complementary_edges: Mismatch between weights
 
 	=======================================
 
@@ -3099,7 +3099,7 @@ Mismatched partial indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index does not match
+connectivity::process_complementary_edges: Reciprocated complementary index 0 does not match 1
 
 	=======================================
 
@@ -3108,7 +3108,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index does not match for undirected graph
+connectivity::process_complementary_edges: Reciprocated target index 2 does not match 0 for undirected graph
 
 	=======================================
 
@@ -3117,7 +3117,7 @@ Weight mismatch
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Mismath between weights
+connectivity::process_complementary_edges: Mismatch between weights
 
 	=======================================
 
@@ -3126,7 +3126,7 @@ Mismatched complementary index
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index does not match
+connectivity::process_complementary_edges: Reciprocated complementary index 1 does not match 0
 
 	=======================================
 
@@ -3135,7 +3135,7 @@ Weight mismatch
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Mismath between weights
+connectivity::process_complementary_edges: Mismatch between weights
 
 	=======================================
 
@@ -3144,7 +3144,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index does not match for undirected graph
+connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0 for undirected graph
 
 	=======================================
 
@@ -3171,7 +3171,7 @@ Second partial index of loop out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index does not match for undirected graph
+connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0 for undirected graph
 
 	=======================================
 
@@ -3189,7 +3189,7 @@ First complementary index is self-referential
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Complementary index is self-referential
+connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
 
 	=======================================
 
@@ -3198,7 +3198,7 @@ Second complementary index is self-referential
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Complementary index is self-referential
+connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
 
 	=======================================
 
@@ -3216,7 +3216,7 @@ First complementary index is out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Complementary index is self-referential
+connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
 
 	=======================================
 
@@ -3225,7 +3225,7 @@ Weight mismatch
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Mismath between weights
+connectivity::process_complementary_edges: Mismatch between weights
 
 	=======================================
 
@@ -3261,7 +3261,7 @@ Partial index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index does not match for undirected graph
+connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0 for undirected graph
 
 	=======================================
 
@@ -3279,7 +3279,7 @@ Self-referential complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Complementary index is self-referential
+connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
 
 	=======================================
 
@@ -3297,7 +3297,7 @@ Weight mismatch
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Mismath between weights
+connectivity::process_complementary_edges: Mismatch between weights
 
 	=======================================
 
@@ -3387,7 +3387,7 @@ Mismatched partial indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index does not match
+connectivity::process_complementary_edges: Reciprocated complementary index 0 does not match 1
 
 	=======================================
 
@@ -3396,7 +3396,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index does not match for undirected graph
+connectivity::process_complementary_edges: Reciprocated target index 2 does not match 0 for undirected graph
 
 	=======================================
 
@@ -3405,7 +3405,7 @@ Weight mismatch
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Mismath between weights
+connectivity::process_complementary_edges: Mismatch between weights
 
 	=======================================
 
@@ -3414,7 +3414,7 @@ Mismatched complementary index
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index does not match
+connectivity::process_complementary_edges: Reciprocated complementary index 1 does not match 0
 
 	=======================================
 
@@ -3423,7 +3423,7 @@ Weight mismatch
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Mismath between weights
+connectivity::process_complementary_edges: Mismatch between weights
 
 	=======================================
 
@@ -3432,7 +3432,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index does not match for undirected graph
+connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0 for undirected graph
 
 	=======================================
 
@@ -3459,7 +3459,7 @@ Second partial index of loop out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index does not match for undirected graph
+connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0 for undirected graph
 
 	=======================================
 
@@ -3477,7 +3477,7 @@ First complementary index is self-referential
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Complementary index is self-referential
+connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
 
 	=======================================
 
@@ -3486,7 +3486,7 @@ Second complementary index is self-referential
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Complementary index is self-referential
+connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
 
 	=======================================
 
@@ -3504,7 +3504,7 @@ First complementary index is out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Complementary index is self-referential
+connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
 
 	=======================================
 
@@ -3513,7 +3513,7 @@ Weight mismatch
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Mismath between weights
+connectivity::process_complementary_edges: Mismatch between weights
 
 	=======================================
 
@@ -3549,7 +3549,7 @@ Partial index out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index does not match for undirected graph
+connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0 for undirected graph
 
 	=======================================
 
@@ -3567,7 +3567,7 @@ Self-referential complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Complementary index is self-referential
+connectivity::process_complementary_edges: Complementary index for [0, 0] is self-referential
 
 	=======================================
 
@@ -3585,7 +3585,7 @@ Weight mismatch
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Mismath between weights
+connectivity::process_complementary_edges: Mismatch between weights
 
 	=======================================
 
@@ -3675,7 +3675,7 @@ Mismatched partial indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index does not match
+connectivity::process_complementary_edges: Reciprocated complementary index 0 does not match 1
 
 	=======================================
 
@@ -3684,7 +3684,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index does not match for undirected graph
+connectivity::process_complementary_edges: Reciprocated target index 2 does not match 0 for undirected graph
 
 	=======================================
 
@@ -3693,7 +3693,7 @@ Weight mismatch
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Mismath between weights
+connectivity::process_complementary_edges: Mismatch between weights
 
 	=======================================
 
@@ -3702,7 +3702,7 @@ Mismatched complementary index
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index does not match
+connectivity::process_complementary_edges: Reciprocated complementary index 1 does not match 0
 
 	=======================================
 
@@ -3711,7 +3711,7 @@ Weight mismatch
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Mismath between weights
+connectivity::process_complementary_edges: Mismatch between weights
 
 	=======================================
 
@@ -3720,7 +3720,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated target index does not match for undirected graph
+connectivity::process_complementary_edges: Reciprocated target index 1 does not match 0 for undirected graph
 
 	=======================================
 
@@ -4530,7 +4530,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index does not match
+connectivity::process_complementary_edges: Reciprocated complementary index 1 does not match 0
 
 	=======================================
 
@@ -4548,7 +4548,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index does not match
+connectivity::process_complementary_edges: Reciprocated complementary index 1 does not match 0
 
 	=======================================
 
@@ -4566,7 +4566,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index does not match
+connectivity::process_complementary_edges: Reciprocated complementary index 1 does not match 0
 
 	=======================================
 
@@ -4584,7 +4584,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index does not match
+connectivity::process_complementary_edges: Reciprocated complementary index 1 does not match 0
 
 	=======================================
 
@@ -4602,7 +4602,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index does not match
+connectivity::process_complementary_edges: Reciprocated complementary index 1 does not match 0
 
 	=======================================
 
@@ -4620,7 +4620,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index does not match
+connectivity::process_complementary_edges: Reciprocated complementary index 1 does not match 0
 
 	=======================================
 
@@ -4638,7 +4638,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index does not match
+connectivity::process_complementary_edges: Reciprocated complementary index 1 does not match 0
 
 	=======================================
 
@@ -4656,7 +4656,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index does not match
+connectivity::process_complementary_edges: Reciprocated complementary index 1 does not match 0
 
 	=======================================
 
@@ -4674,7 +4674,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index does not match
+connectivity::process_complementary_edges: Reciprocated complementary index 1 does not match 0
 
 	=======================================
 
@@ -4710,7 +4710,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index does not match
+connectivity::process_complementary_edges: Reciprocated complementary index 1 does not match 0
 
 	=======================================
 
@@ -4728,7 +4728,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index does not match
+connectivity::process_complementary_edges: Reciprocated complementary index 1 does not match 0
 
 	=======================================
 
@@ -4764,7 +4764,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index does not match
+connectivity::process_complementary_edges: Reciprocated complementary index 1 does not match 0
 
 	=======================================
 
@@ -4782,7 +4782,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index does not match
+connectivity::process_complementary_edges: Reciprocated complementary index 1 does not match 0
 
 	=======================================
 
@@ -4818,7 +4818,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index does not match
+connectivity::process_complementary_edges: Reciprocated complementary index 1 does not match 0
 
 	=======================================
 
@@ -4836,7 +4836,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index does not match
+connectivity::process_complementary_edges: Reciprocated complementary index 1 does not match 0
 
 	=======================================
 
@@ -4872,7 +4872,7 @@ Mismatched complementary indices
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_complementary_edges: Reciprocated complementary index does not match
+connectivity::process_complementary_edges: Reciprocated complementary index 1 does not match 0
 
 	=======================================
 

@@ -138,7 +138,7 @@ namespace sequoia
       {}
 
       template<class Other>
-      requires std::is_base_of_v<weighting, std::remove_cvref_t<Other>>
+        requires std::is_base_of_v<weighting, std::remove_cvref_t<Other>>
       constexpr weighting(Other&& other) : m_Weight{other.m_Weight}
       {}
 
@@ -255,7 +255,7 @@ namespace sequoia
       using index_type  = typename partial_edge_base<WeightHandler, IndexType>::index_type;
 
       template<class... Args>
-      requires (!resolve_to_copy_v<decorated_edge_base, Args...>) // FIX THIS
+        requires (!resolve_to_copy_v<decorated_edge_base, Args...>)
       constexpr decorated_edge_base(const index_type target, const index_type auxIndex, Args&&... args)
         : partial_edge_base<WeightHandler, IndexType>{target, std::forward<Args>(args)...}
         , m_AuxiliaryIndex{auxIndex}

@@ -83,18 +83,6 @@ namespace sequoia
 
   /*! @} */ // end of type_list Group
 
-  /*! \brief class template for determining if a type is the base class of the head of a parameter pack */
-  template<class T, class... Args>
-  struct is_base_of_head
-    : std::is_base_of<std::remove_cvref_t<T>, std::remove_cvref_t<head_of_t<Args...>>>
-  {};
-
-  template<class T, class... Args>
-  inline constexpr bool is_base_of_head_v{is_base_of_head<T, Args...>::value};
-
-  template<class T, class... Args>
-  using is_base_of_head_t = typename is_base_of_head<T, Args...>::type;
-
 
   /*! \brief class template for determining whether a constructor template should resolve to the copy constructor */
   template<class T, class... Args>

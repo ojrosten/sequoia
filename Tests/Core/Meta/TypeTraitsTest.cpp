@@ -33,7 +33,6 @@ namespace sequoia::testing
   void type_traits_test::run_tests()
   {
     test_type_list();
-    test_base_of_head();
     test_resolve_to_copy();
     test_is_const_pointer();
     test_is_const_reference();
@@ -115,69 +114,6 @@ namespace sequoia::testing
         }()
       );
     }
-  }
-
-  void type_traits_test::test_base_of_head()
-  {
-    check(LINE(""), []() {
-        static_assert(std::is_same_v<std::false_type, is_base_of_head_t<int, double>>);
-        return true;
-      }()
-    );
-
-    check(LINE(""), []() {
-        static_assert(!is_base_of_head_v<int, double>);
-        return true;
-      }()
-    );
-
-    check(LINE(""), []() {
-        static_assert(std::is_same_v<std::true_type, is_base_of_head_t<std::basic_iostream<char>, std::stringstream>>);
-        return true;
-      }()
-    );
-
-    check(LINE(""), []() {
-        static_assert(is_base_of_head_v<std::basic_iostream<char>, std::stringstream>);
-        return true;
-      }()
-    );
-
-    check(LINE(""), []() {
-        static_assert(std::is_same_v<std::true_type, is_base_of_head_t<std::basic_iostream<char>, std::stringstream, double>>);
-        return true;
-      }()
-    );
-
-    check(LINE(""), []() {
-        static_assert(is_base_of_head_v<std::basic_iostream<char>, std::stringstream, double>);
-        return true;
-      }()
-    );
-
-    check(LINE(""), []() {
-        static_assert(std::is_same_v<std::false_type, is_base_of_head_t<std::basic_iostream<char>, double, std::stringstream>>);
-        return true;
-      }()
-    );
-
-    check(LINE(""), []() {
-        static_assert(!is_base_of_head_v<std::basic_iostream<char>, double, std::stringstream>);
-        return true;
-      }()
-    );
-
-    check(LINE(""), []() {
-        static_assert(std::is_same_v<std::false_type, is_base_of_head_t<std::stringstream, std::basic_iostream<char>>>);
-        return true;
-      }()
-    );
-
-    check(LINE(""), []() {
-        static_assert(!is_base_of_head_v<std::stringstream, std::basic_iostream<char>>);
-        return true;
-      }()
-    );
   }
 
   void type_traits_test::test_resolve_to_copy()
