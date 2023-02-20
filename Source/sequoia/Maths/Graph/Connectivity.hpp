@@ -102,28 +102,41 @@ namespace sequoia
       }
 
       [[nodiscard]]
-      inline std::string self_referential_error(const edge_indices edgeIndices, std::size_t target, std::size_t compIndex)
+      inline std::string self_referential_error(const edge_indices edgeIndices, const std::size_t target, const std::size_t compIndex)
       {
         return impl::error_prefix("process_complementary_edges", edgeIndices).append("Indices [target: ").append(std::to_string(target)).append(", comp: ").append(std::to_string(compIndex)).append("] are self-referential");
       }
 
       [[nodiscard]]
-      inline std::string reciprocated_error_message(const edge_indices edgeIndices, std::string_view indexName, std::size_t reciprocatedIndex, std::size_t index)
+      inline std::string reciprocated_error_message(const edge_indices edgeIndices, const std::string_view indexName, const std::size_t reciprocatedIndex, const std::size_t index)
       {
         return error_prefix("process_complementary_edges", edgeIndices).append("Reciprocated ").append(indexName)
                 .append(" index ").append(std::to_string(reciprocatedIndex)).append(" does not match ").append(std::to_string(index));
       }
 
-      constexpr void check_reciprocated_index(const edge_indices edgeIndices, std::string_view indexName, std::size_t reciprocatedIndex, std::size_t index)
+      constexpr void check_reciprocated_index(const edge_indices edgeIndices, std::string_view indexName, const std::size_t reciprocatedIndex, const std::size_t index)
       {
         if(reciprocatedIndex != index)
           throw std::logic_error{reciprocated_error_message(edgeIndices, indexName, reciprocatedIndex, index)};
       }
 
-      constexpr void check_embedded_edge(std::size_t nodeIndex, std::size_t source, std::size_t target)
+      constexpr void check_embedded_edge(const std::size_t nodeIndex, const std::size_t source, const std::size_t target)
       {
         if((source != nodeIndex) && (target != nodeIndex))
           throw std::logic_error{error_prefix("process_complementary_edges").append("At least one of source and target must match current node")};
+      }
+
+      [[nodiscard]]
+      inline std::string erase_edge_error(const std::size_t partner, const edge_indices indices)
+      {
+        return error_prefix("erase_edge")
+          .append("partner in partition ").append(std::to_string(partner)).append(" not found for edge ").append(to_string(indices));
+      }
+
+      [[nodiscard]]
+      inline std::string odd_num_loops_error(std::string_view method)
+      {
+        return error_prefix(method).append("Odd number of loop edges");
       }
     }
 
@@ -754,12 +767,7 @@ namespace sequoia
                     }
                   }
 
-                  throw std::logic_error{
-                    impl::error_prefix("erase_edge")
-                     .append("partner in partition ").append(std::to_string(partner)).append(" not found for edge [")
-                     .append(std::to_string(source)).append(",").append(std::to_string(std::distance(cbegin_edges(source), citer)))
-                     .append("]")
-                  };
+                  throw std::logic_error{impl::erase_edge_error( partner, {source, static_cast<edge_index_type>(distance(cbegin_edges(source), citer))} )};
                 }(source, citer)};
 
               m_Edges.erase_from_partition(citer);
@@ -1309,7 +1317,7 @@ namespace sequoia
 
             if(target == i)
             {
-              if (count % 2) throw std::logic_error{ impl::error_prefix("process_edges").append("Odd number of loop edges") };
+              if (count % 2) throw std::logic_error{ impl::odd_num_loops_error("process_edges") };
               if constexpr(!direct_edge_init())
               {
                 for(; lowerIter != upperIter; ++lowerIter)
