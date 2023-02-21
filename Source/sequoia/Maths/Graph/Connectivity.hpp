@@ -38,108 +38,17 @@
 
 namespace sequoia
 {
-  namespace data_structures
+  /*namespace data_structures
   {
     template <class, class H, class> requires object::handler<H> class bucketed_sequence;
     template <class, class H>        requires object::handler<H> struct bucketed_sequence_traits;
     template <class, class H, class> requires object::handler<H> class partitioned_sequence;
     template <class, class H>        requires object::handler<H> struct partitioned_sequence_traits;
     template <class, std::size_t, std::size_t, std::integral> class static_partitioned_sequence;
-    class static_data_base;
-  }
+  }*/
 
   namespace maths
   {
-    namespace impl
-    {
-      struct edge_indices
-      {
-        std::size_t node{}, edge{};
-      };
-
-      [[nodiscard]]
-      inline std::string to_string(const edge_indices& indices)
-      {
-        return std::string{"[node: "}.append(std::to_string(indices.node)).append(", edge: ").append(std::to_string(indices.edge)).append("]");
-      }
-
-      [[nodiscard]]
-      inline std::string prefix(std::string_view method)
-      {
-        return std::string{"connectivity::"}.append(method);
-      }
-
-      [[nodiscard]]
-      inline std::string error_prefix(std::string_view method)
-      {
-        return prefix(method).append(": ");
-      }
-
-      [[nodiscard]]
-      inline std::string error_prefix(std::string_view method, const edge_indices indices)
-      {
-        return prefix(method).append(" ").append(to_string(indices)).append(": ");
-      }
-
-      constexpr void check_node_index_range(std::string_view method, const std::size_t order, const std::size_t node)
-      {
-        if(node >= order)
-          throw std::out_of_range{ error_prefix(method).append("node index ").append(std::to_string(node)).append(" out of range - graph order is ").append(std::to_string(order)) };
-      }
-
-      constexpr void check_node_index_range(std::string_view method, const std::size_t order, const std::size_t node1, const std::size_t node2)
-      {
-        if((node1 >= order) || (node2 >= order))
-          throw std::out_of_range{error_prefix(method).append("at least one node index [")
-                .append(std::to_string(node1)).append(", ").append(std::to_string(node2))
-                .append("] out of range - graph order is ").append(std::to_string(order)) };
-      }
-
-      constexpr void check_edge_index_range(std::string_view method, const edge_indices edgeIndices, std::string_view indexName, const std::size_t size, const std::size_t index)
-      {
-        if(index >= size)
-          throw std::out_of_range{ error_prefix(method, edgeIndices).append(indexName).append(" index ").append(std::to_string(index)).append(" out of range - graph size is ").append(std::to_string(size)) };
-      }
-
-      [[nodiscard]]
-      inline std::string self_referential_error(const edge_indices edgeIndices, const std::size_t target, const std::size_t compIndex)
-      {
-        return impl::error_prefix("process_complementary_edges", edgeIndices).append("Indices [target: ").append(std::to_string(target)).append(", comp: ").append(std::to_string(compIndex)).append("] are self-referential");
-      }
-
-      [[nodiscard]]
-      inline std::string reciprocated_error_message(const edge_indices edgeIndices, const std::string_view indexName, const std::size_t reciprocatedIndex, const std::size_t index)
-      {
-        return error_prefix("process_complementary_edges", edgeIndices).append("Reciprocated ").append(indexName)
-                .append(" index ").append(std::to_string(reciprocatedIndex)).append(" does not match ").append(std::to_string(index));
-      }
-
-      constexpr void check_reciprocated_index(const edge_indices edgeIndices, std::string_view indexName, const std::size_t reciprocatedIndex, const std::size_t index)
-      {
-        if(reciprocatedIndex != index)
-          throw std::logic_error{reciprocated_error_message(edgeIndices, indexName, reciprocatedIndex, index)};
-      }
-
-      constexpr void check_embedded_edge(const std::size_t nodeIndex, const std::size_t source, const std::size_t target)
-      {
-        if((source != nodeIndex) && (target != nodeIndex))
-          throw std::logic_error{error_prefix("process_complementary_edges").append("At least one of source and target must match current node")};
-      }
-
-      [[nodiscard]]
-      inline std::string erase_edge_error(const std::size_t partner, const edge_indices indices)
-      {
-        return error_prefix("erase_edge")
-          .append("partner in partition ").append(std::to_string(partner)).append(" not found for edge ").append(to_string(indices));
-      }
-
-      [[nodiscard]]
-      inline std::string odd_num_loops_error(std::string_view method)
-      {
-        return error_prefix(method).append("Odd number of loop edges");
-      }
-    }
-
     struct partitions_allocator_tag{};
 
     /*! \brief Graph connectivity, used as a building block for concrete graphs.
@@ -168,6 +77,7 @@ namespace sequoia
       using edge_weight_type            = typename edge_type::weight_type;
       using edge_index_type             = typename edge_type::index_type;
       using edge_init_type              = typename EdgeTraits::edge_init_type;
+      using edges_initializer           = typename EdgeTraits::edges_initializer;
       using size_type                   = typename edge_storage_type::size_type;
       using weight_maker_type           = WeightMaker;
       using const_edge_iterator         = typename edge_storage_type::const_partition_iterator;
@@ -201,7 +111,7 @@ namespace sequoia
       [[nodiscard]]
       constexpr const_edge_iterator cbegin_edges(const edge_index_type node) const
       {
-        if constexpr (throw_on_range_error) impl::check_node_index_range("cbegin_edges", order(), node);
+        if constexpr (throw_on_range_error) graph_errors::check_node_index_range("cbegin_edges", order(), node);
 
         return m_Edges.cbegin_partition(node);
       }
@@ -209,7 +119,7 @@ namespace sequoia
       [[nodiscard]]
       constexpr const_edge_iterator cend_edges(const edge_index_type node) const
       {
-        if constexpr (throw_on_range_error) impl::check_node_index_range("cend_edges", order(), node);
+        if constexpr (throw_on_range_error) graph_errors::check_node_index_range("cend_edges", order(), node);
 
         return m_Edges.cend_partition(node);
       }
@@ -217,7 +127,7 @@ namespace sequoia
       [[nodiscard]]
       constexpr const_reverse_edge_iterator crbegin_edges(const edge_index_type node) const
       {
-        if constexpr (throw_on_range_error) impl::check_node_index_range("crbegin_edges", order(), node);
+        if constexpr (throw_on_range_error) graph_errors::check_node_index_range("crbegin_edges", order(), node);
 
         return m_Edges.crbegin_partition(node);
       }
@@ -225,7 +135,7 @@ namespace sequoia
       [[nodiscard]]
       constexpr const_reverse_edge_iterator crend_edges(const edge_index_type node) const
       {
-        if constexpr (throw_on_range_error) impl::check_node_index_range("crend_edges", order(), node);
+        if constexpr (throw_on_range_error) graph_errors::check_node_index_range("crend_edges", order(), node);
 
         return m_Edges.crend_partition(node);
       }
@@ -302,7 +212,6 @@ namespace sequoia
       }
     protected:
       using edge_iterator = typename edge_storage_type::partition_iterator;
-      using init_t = std::initializer_list<std::initializer_list<edge_init_type>>;
 
       template<alloc... Allocators>
       constexpr connectivity(const Allocators&... as)
@@ -310,7 +219,7 @@ namespace sequoia
       {}
 
       template<alloc... Allocators>
-      constexpr connectivity(init_t edges, const Allocators&... as)
+      constexpr connectivity(edges_initializer edges, const Allocators&... as)
         : connectivity(direct_edge_init(), edges, as...)
       {}
 
@@ -384,7 +293,7 @@ namespace sequoia
         if(!size())
         {
           if constexpr(throw_on_range_error)
-            impl::check_node_index_range("swap_nodes", order(), i, j);
+            graph_errors::check_node_index_range("swap_nodes", order(), i, j);
 
           return;
         }
@@ -496,7 +405,7 @@ namespace sequoia
       [[nodiscard]]
       constexpr edge_iterator begin_edges(const edge_index_type node)
       {
-        if constexpr (throw_on_range_error) impl::check_node_index_range("begin_edges", order(), node);
+        if constexpr (throw_on_range_error) graph_errors::check_node_index_range("begin_edges", order(), node);
 
         return m_Edges.begin_partition(node);
       }
@@ -504,7 +413,7 @@ namespace sequoia
       [[nodiscard]]
       constexpr edge_iterator end_edges(const edge_index_type node)
       {
-        if constexpr (throw_on_range_error) impl::check_node_index_range("end_edges", order(), node);
+        if constexpr (throw_on_range_error) graph_errors::check_node_index_range("end_edges", order(), node);
 
         return m_Edges.end_partition(node);
       }
@@ -526,7 +435,7 @@ namespace sequoia
 
       void erase_node(const size_type node)
       {
-        if constexpr (throw_on_range_error) impl::check_node_index_range("erase_node", order(), node);
+        if constexpr (throw_on_range_error) graph_errors::check_node_index_range("erase_node", order(), node);
 
         if constexpr (EdgeTraits::mutual_info_v)
         {
@@ -599,7 +508,7 @@ namespace sequoia
         // && copyable in some situations
       void join(const edge_index_type node1, const edge_index_type node2, Args&&... args)
       {
-        if constexpr (throw_on_range_error) impl::check_node_index_range("join", order(), node1, node2);
+        if constexpr (throw_on_range_error) graph_errors::check_node_index_range("join", order(), node1, node2);
 
         if constexpr(std::is_empty_v<edge_weight_type>)
         {
@@ -767,7 +676,7 @@ namespace sequoia
                     }
                   }
 
-                  throw std::logic_error{impl::erase_edge_error( partner, {source, static_cast<edge_index_type>(distance(cbegin_edges(source), citer))} )};
+                  throw std::logic_error{graph_errors::erase_edge_error( partner, {source, static_cast<edge_index_type>(distance(cbegin_edges(source), citer))} )};
                 }(source, citer)};
 
               m_Edges.erase_from_partition(citer);
@@ -1005,13 +914,13 @@ namespace sequoia
 
       // constructor implementations
       template<alloc... Allocators>
-      constexpr connectivity(direct_edge_init_type, init_t edges, const Allocators&... as)
+      constexpr connectivity(direct_edge_init_type, edges_initializer edges, const Allocators&... as)
         : m_Edges{edges, as...}
       {
         process_edges(edges);
       }
 
-      constexpr connectivity(indirect_edge_init_type, init_t edges)
+      constexpr connectivity(indirect_edge_init_type, edges_initializer edges)
         : m_Edges{}
       {
          process_edges(edges);
@@ -1019,14 +928,14 @@ namespace sequoia
 
       template<alloc EdgeAllocator, alloc PartitionAllocator>
         requires initializable_from<edge_storage_type, EdgeAllocator, PartitionAllocator>
-      constexpr connectivity(indirect_edge_init_type, init_t edges, const EdgeAllocator& edgeAllocator, const PartitionAllocator& partitionAllocator)
+      constexpr connectivity(indirect_edge_init_type, edges_initializer edges, const EdgeAllocator& edgeAllocator, const PartitionAllocator& partitionAllocator)
         : m_Edges(edgeAllocator, partitionAllocator)
       {
          process_edges(edges);
       }
 
       template<alloc EdgeAllocator>
-      constexpr connectivity(indirect_edge_init_type, init_t edges, const EdgeAllocator& edgeAllocator)
+      constexpr connectivity(indirect_edge_init_type, edges_initializer edges, const EdgeAllocator& edgeAllocator)
         : m_Edges(edgeAllocator)
       {
          process_edges(edges);
@@ -1116,7 +1025,7 @@ namespace sequoia
               const auto& edge{*edgeIter};
 
               const auto target{edge.target_node()};
-              impl::check_edge_index_range("process_edges", {nodeIndex, edgeIndex}, "target", edges.size(), target);
+              graph_errors::check_edge_index_range("process_edges", {nodeIndex, edgeIndex}, "target", edges.size(), target);
 
               if constexpr(!direct_edge_init())
               {
@@ -1147,7 +1056,7 @@ namespace sequoia
             const auto& edge{*edgeIter};
             const auto target{edge.target_node()};
 
-            impl::check_edge_index_range("process_complementary_edges", {nodeIndex, edgeIndex}, "complementary", edges.size(), target);
+            graph_errors::check_edge_index_range("process_complementary_edges", {nodeIndex, edgeIndex}, "complementary", edges.size(), target);
             const auto compIndex{edge.complementary_index()};
 
             const bool doValidate{
@@ -1160,32 +1069,32 @@ namespace sequoia
             if(doValidate)
             {
               auto targetEdgesIter{edges.begin() + target};
-              impl::check_edge_index_range("process_complementary_edges", {nodeIndex, edgeIndex}, "complementary", targetEdgesIter->size(), compIndex);
+              graph_errors::check_edge_index_range("process_complementary_edges", {nodeIndex, edgeIndex}, "complementary", targetEdgesIter->size(), compIndex);
 
               if((target == nodeIndex) && (compIndex == edgeIndex))
               {
-                throw std::logic_error{impl::self_referential_error({nodeIndex, edgeIndex}, target, compIndex)};
+                throw std::logic_error{graph_errors::self_referential_error({nodeIndex, edgeIndex}, target, compIndex)};
               }
               else if(const auto& targetEdge{*(targetEdgesIter->begin() + compIndex)}; targetEdge.complementary_index() != edgeIndex)
               {
-                throw std::logic_error{impl::reciprocated_error_message({nodeIndex, edgeIndex}, "complementary", targetEdge.complementary_index(), edgeIndex)};
+                throw std::logic_error{graph_errors::reciprocated_error_message({nodeIndex, edgeIndex}, "complementary", targetEdge.complementary_index(), edgeIndex)};
               }
               else
               {
                 if constexpr (!directed(directedness))
                 {
-                  impl::check_reciprocated_index({nodeIndex, edgeIndex}, "target", targetEdge.target_node(), nodeIndex);
+                  graph_errors::check_reciprocated_index({nodeIndex, edgeIndex}, "target", targetEdge.target_node(), nodeIndex);
                 }
                 else
                 {
-                  impl::check_reciprocated_index({nodeIndex, edgeIndex}, "target", targetEdge.target_node(), target);
-                  impl::check_reciprocated_index({nodeIndex, edgeIndex}, "source", targetEdge.source_node(), edge.source_node());
+                  graph_errors::check_reciprocated_index({nodeIndex, edgeIndex}, "target", targetEdge.target_node(), target);
+                  graph_errors::check_reciprocated_index({nodeIndex, edgeIndex}, "source", targetEdge.source_node(), edge.source_node());
                 }
 
                 if constexpr (!std::is_empty_v<edge_weight_type>)
                 {
                   if (edge.weight() != targetEdge.weight())
-                    throw std::logic_error{ impl::error_prefix("process_complementary_edges", {nodeIndex, edgeIndex}).append("Mismatch between weights") };
+                    throw std::logic_error{ graph_errors::error_prefix("process_complementary_edges", {nodeIndex, edgeIndex}).append("Mismatch between weights") };
                 }
               }
             }
@@ -1193,16 +1102,16 @@ namespace sequoia
             if constexpr(directed(directedness))
             {
               const auto source{edge.source_node()};
-              impl::check_edge_index_range("process_complementary_edges", {nodeIndex, edgeIndex}, "source", edges.size(), source);
-              impl::check_embedded_edge(nodeIndex, source, target);
+              graph_errors::check_edge_index_range("process_complementary_edges", {nodeIndex, edgeIndex}, "source", edges.size(), source);
+              graph_errors::check_embedded_edge(nodeIndex, source, target);
 
               if((edge.target_node() == nodeIndex) && (edge.source_node() != edge.target_node()))
               {
                 auto sourceEdgesIter{edges.begin() + source};
-                impl::check_edge_index_range("process_complementary_edges", {nodeIndex, edgeIndex}, "source", sourceEdgesIter->size(), compIndex);
+                graph_errors::check_edge_index_range("process_complementary_edges", {nodeIndex, edgeIndex}, "source", sourceEdgesIter->size(), compIndex);
 
                 const auto& sourceEdge{*(sourceEdgesIter->begin() + compIndex)};
-                impl::check_reciprocated_index({nodeIndex, edgeIndex}, "target", sourceEdge.target_node(), nodeIndex);
+                graph_errors::check_reciprocated_index({nodeIndex, edgeIndex}, "target", sourceEdge.target_node(), nodeIndex);
               }
             }
 
@@ -1230,7 +1139,7 @@ namespace sequoia
         }
       }
 
-      constexpr void process_edges(indirect_edge_init_type, init_t edges)
+      constexpr void process_edges(indirect_edge_init_type, edges_initializer edges)
       {
         using namespace data_structures;
         using traits_t = partitioned_sequence_traits<edge_init_type, object::by_value<edge_init_type>>;
@@ -1238,7 +1147,7 @@ namespace sequoia
         process_edges(edgesForChecking);
       }
 
-      constexpr void process_edges(direct_edge_init_type, init_t)
+      constexpr void process_edges(direct_edge_init_type, edges_initializer)
       {
         process_edges(m_Edges);
       }
@@ -1256,8 +1165,8 @@ namespace sequoia
         return end;
       }
 
-      template<class Edges, alloc... Allocators>
-      constexpr void process_edges(Edges& orderedEdges, const Allocators&... allocs)
+      template<class Edges>
+      constexpr void process_edges(Edges& orderedEdges)
       {
         constexpr bool sortWeights{!std::is_empty_v<edge_weight_type> && std::totally_ordered<edge_weight_type>};
         constexpr bool clusterEdges{!std::is_empty_v<edge_weight_type> && !std::totally_ordered<edge_weight_type>};
@@ -1299,13 +1208,13 @@ namespace sequoia
 
         for(edge_index_type i{}; i<orderedEdges.num_partitions(); ++i)
         {
-          if constexpr(!direct_edge_init()) m_Edges.add_slot(allocs...);
+          if constexpr(!direct_edge_init()) m_Edges.add_slot();
 
           auto lowerIter{orderedEdges.cbegin_partition(i)}, upperIter{orderedEdges.cbegin_partition(i)};
           while(lowerIter != orderedEdges.cend_partition(i))
           {
             const auto target{lowerIter->target_node()};
-            impl::check_node_index_range("process_edges", orderedEdges.num_partitions(), target);
+            graph_errors::check_node_index_range("process_edges", orderedEdges.num_partitions(), target);
 
             upperIter = std::upper_bound(lowerIter, orderedEdges.cend_partition(i), *lowerIter, edgeComparer);
             if constexpr(clusterEdges)
@@ -1317,7 +1226,7 @@ namespace sequoia
 
             if(target == i)
             {
-              if (count % 2) throw std::logic_error{ impl::odd_num_loops_error("process_edges") };
+              if (count % 2) throw std::logic_error{ graph_errors::odd_num_loops_error("process_edges") };
               if constexpr(!direct_edge_init())
               {
                 for(; lowerIter != upperIter; ++lowerIter)
@@ -1349,7 +1258,7 @@ namespace sequoia
               };
 
               if(eqrange.first == eqrange.second)
-                throw std::logic_error{ impl::error_prefix("process_edges").append("Reciprocated partial edge does not exist") };
+                throw std::logic_error{ graph_errors::error_prefix("process_edges").append("Reciprocated partial edge does not exist") };
 
               if constexpr(clusterEdges)
               {
@@ -1359,7 +1268,7 @@ namespace sequoia
               }
 
               if(distance(eqrange.first, eqrange.second) != count)
-                throw std::logic_error{ impl::error_prefix("process_edges").append("Reciprocated target indices do not match") };
+                throw std::logic_error{ graph_errors::error_prefix("process_edges").append("Reciprocated target indices do not match") };
 
               if constexpr(!direct_edge_init())
               {
@@ -1656,7 +1565,7 @@ namespace sequoia
           }
           else
           {
-            throw std::logic_error{ impl::error_prefix("manipulate_partner_edge_weight").append("Partner weight not found") };
+            throw std::logic_error{ graph_errors::error_prefix("manipulate_partner_edge_weight").append("Partner weight not found") };
           }
         }
       }
