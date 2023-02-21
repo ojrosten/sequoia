@@ -38,14 +38,14 @@
 
 namespace sequoia
 {
-  /*namespace data_structures
+  namespace data_structures
   {
     template <class, class H, class> requires object::handler<H> class bucketed_sequence;
     template <class, class H>        requires object::handler<H> struct bucketed_sequence_traits;
     template <class, class H, class> requires object::handler<H> class partitioned_sequence;
     template <class, class H>        requires object::handler<H> struct partitioned_sequence_traits;
     template <class, std::size_t, std::size_t, std::integral> class static_partitioned_sequence;
-  }*/
+  }
 
   namespace maths
   {
@@ -912,13 +912,18 @@ namespace sequoia
       NO_UNIQUE_ADDRESS WeightMaker m_WeightMaker{};
       edge_storage_type m_Edges;
 
+      [[nodiscard]]
+      constexpr edge_storage_type validate_and_transform(edges_initializer edges)
+        requires std::is_same_v<edge_type, edge_init_type>
+      {
+        return EdgeTraits::template validate_and_transform<edge_storage_type>(edges);
+      }
+
       // constructor implementations
       template<alloc... Allocators>
       constexpr connectivity(direct_edge_init_type, edges_initializer edges, const Allocators&... as)
-        : m_Edges{edges, as...}
-      {
-        process_edges(edges);
-      }
+        : m_Edges{validate_and_transform(edges), as...}
+      {}
 
       constexpr connectivity(indirect_edge_init_type, edges_initializer edges)
         : m_Edges{}
@@ -1145,11 +1150,6 @@ namespace sequoia
         using traits_t = partitioned_sequence_traits<edge_init_type, object::by_value<edge_init_type>>;
         partitioned_sequence<edge_init_type, object::by_value<edge_init_type>, traits_t> edgesForChecking{edges};
         process_edges(edgesForChecking);
-      }
-
-      constexpr void process_edges(direct_edge_init_type, edges_initializer)
-      {
-        process_edges(m_Edges);
       }
 
       template<class FwdIter> constexpr static FwdIter find_cluster_end(FwdIter begin, FwdIter end)

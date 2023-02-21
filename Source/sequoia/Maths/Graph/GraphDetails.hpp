@@ -192,9 +192,26 @@ namespace sequoia
         using handler_type      = shared_to_handler_t<shared_weight_v, edge_weight_proxy>;
         using edge_type         = flavour_to_edge_t<GraphFlavour, handler_type, IndexType, shared_edge_v>;
         using edge_init_type    = edge_to_init_type_t<edge_type, is_embedded_v>;
-        using edge_weight_type = typename edge_type::weight_type;
+        using edge_weight_type  = typename edge_type::weight_type;
         using edges_initializer = std::initializer_list<std::initializer_list<edge_init_type>>;
 
+        template<class IntermediateEdges>
+        [[nodiscard]]
+        constexpr static IntermediateEdges validate_and_transform(edges_initializer edges)
+        {
+          return {validate(edges)};
+        }
+
+        template<class IntermediateEdges>
+        [[nodiscard]]
+        constexpr static IntermediateEdges validate_and_transform(edges_initializer edges)
+          requires (!is_embedded_v && !is_directed_v)
+        {
+          return validate(IntermediateEdges{edges});
+        }
+
+      private:
+        [[nodiscard]]
         constexpr static edges_initializer validate(edges_initializer edges)
           requires is_embedded_v
         {
@@ -272,6 +289,7 @@ namespace sequoia
           return edges;
         }
 
+        [[nodiscard]]
         constexpr static edges_initializer validate(edges_initializer edges)
           requires (!is_embedded_v && is_directed_v)
         {
@@ -292,28 +310,15 @@ namespace sequoia
           return edges;
         }
 
-        template<class FwdIter> constexpr static FwdIter find_cluster_end(FwdIter begin, FwdIter end)
-        {
-          if(distance(begin, end) > 1)
-          {
-            auto testIter{end - 1};
-            while(*testIter != *begin) --testIter;
-
-            end = testIter + 1;
-          }
-
-          return end;
-        }
-
-        constexpr static auto validate(edges_initializer edges)
+        template<class IntermediateEdges>
+        [[nodiscard]]
+        constexpr static IntermediateEdges validate(IntermediateEdges es)
           requires (!is_embedded_v && !is_directed_v)
         {
-          using namespace data_structures;
-          using traits_t = partitioned_sequence_traits<edge_init_type, object::by_value<edge_init_type>>;
-          partitioned_sequence<edge_init_type, object::by_value<edge_init_type>, traits_t> orderedEdges{edges};
-
           constexpr bool sortWeights{!std::is_empty_v<edge_weight_type> && std::totally_ordered<edge_weight_type>};
           constexpr bool clusterEdges{!std::is_empty_v<edge_weight_type> && !std::totally_ordered<edge_weight_type>};
+
+          IntermediateEdges edges{es};
 
           auto edgeComparer{
             [](const auto& e1, const auto& e2) {
@@ -328,16 +333,16 @@ namespace sequoia
             }
           };
 
-          for(std::size_t i{}; i < orderedEdges.num_partitions(); ++i)
+          for(std::size_t i{}; i < edges.num_partitions(); ++i)
           {
-            sequoia::sort(orderedEdges.begin_partition(i), orderedEdges.end_partition(i), edgeComparer);
+            sequoia::sort(edges.begin_partition(i), edges.end_partition(i), edgeComparer);
 
             if constexpr(clusterEdges)
             {
-              auto lowerIter{orderedEdges.begin_partition(i)}, upperIter{orderedEdges.begin_partition(i)};
-              while(lowerIter != orderedEdges.end_partition(i))
+              auto lowerIter{edges.begin_partition(i)}, upperIter{edges.begin_partition(i)};
+              while(lowerIter != edges.end_partition(i))
               {
-                while((upperIter != orderedEdges.end_partition(i)) && (lowerIter->target_node() == upperIter->target_node()))
+                while((upperIter != edges.end_partition(i)) && (lowerIter->target_node() == upperIter->target_node()))
                   ++upperIter;
 
                 sequoia::cluster(lowerIter, upperIter, [](const auto& e1, const auto& e2) {
@@ -349,15 +354,15 @@ namespace sequoia
             }
           }
 
-          for(std::size_t i{}; i < orderedEdges.num_partitions(); ++i)
+          for(std::size_t i{}; i < edges.num_partitions(); ++i)
           {
-            auto lowerIter{orderedEdges.cbegin_partition(i)}, upperIter{orderedEdges.cbegin_partition(i)};
-            while(lowerIter != orderedEdges.cend_partition(i))
+            auto lowerIter{edges.cbegin_partition(i)}, upperIter{edges.cbegin_partition(i)};
+            while(lowerIter != edges.cend_partition(i))
             {
               const auto target{lowerIter->target_node()};
-              graph_errors::check_node_index_range("process_edges", orderedEdges.num_partitions(), target);
+              graph_errors::check_node_index_range("process_edges", edges.num_partitions(), target);
 
-              upperIter = std::upper_bound(lowerIter, orderedEdges.cend_partition(i), *lowerIter, edgeComparer);
+              upperIter = std::upper_bound(lowerIter, edges.cend_partition(i), *lowerIter, edgeComparer);
               if constexpr(clusterEdges)
               {
                 upperIter = find_cluster_end(lowerIter, upperIter);
@@ -380,7 +385,7 @@ namespace sequoia
                 };
 
                 auto eqrange{
-                  std::equal_range(orderedEdges.cbegin_partition(target), orderedEdges.cend_partition(target), comparisonEdge, edgeComparer)
+                  std::equal_range(edges.cbegin_partition(target), edges.cend_partition(target), comparisonEdge, edgeComparer)
                 };
 
                 if(eqrange.first == eqrange.second)
@@ -401,7 +406,20 @@ namespace sequoia
             }
           }
 
-          return orderedEdges;
+          return edges;
+        }
+
+        template<class FwdIter> constexpr static FwdIter find_cluster_end(FwdIter begin, FwdIter end)
+        {
+          if(distance(begin, end) > 1)
+          {
+            auto testIter{end - 1};
+            while(*testIter != *begin) --testIter;
+
+            end = testIter + 1;
+          }
+
+          return end;
         }
       };
 
