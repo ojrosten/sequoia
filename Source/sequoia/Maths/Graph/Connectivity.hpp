@@ -961,19 +961,10 @@ namespace sequoia
         copy_edges(in);
       }
 
-      template<alloc EdgeAllocator, alloc PartitionAllocator>
-        requires std::constructible_from<edge_storage_type, EdgeAllocator, PartitionAllocator>
-      constexpr connectivity(indirect_edge_copy_type, const connectivity& in, const EdgeAllocator& edgeAllocator, const PartitionAllocator& partitionAllocator)
-        : m_Edges(std::allocator_traits<EdgeAllocator>::select_on_container_copy_construction(edgeAllocator),
-                  std::allocator_traits<PartitionAllocator>::select_on_container_copy_construction(partitionAllocator))
-      {
-         copy_edges(in);
-      }
-
-      template<alloc EdgeAllocator>
-        requires std::constructible_from<edge_storage_type, EdgeAllocator>
-      constexpr connectivity(indirect_edge_copy_type, const connectivity& in, const EdgeAllocator& edgeAllocator)
-        : m_Edges(std::allocator_traits<EdgeAllocator>::select_on_container_copy_construction(edgeAllocator))
+      template<alloc... Allocators>
+        requires std::constructible_from<edge_storage_type, Allocators...>
+      constexpr connectivity(indirect_edge_copy_type, const connectivity& in, const Allocators&... allocs)
+        : m_Edges(std::allocator_traits<Allocators>::select_on_container_copy_construction(allocs)...)
       {
          copy_edges(in);
       }
