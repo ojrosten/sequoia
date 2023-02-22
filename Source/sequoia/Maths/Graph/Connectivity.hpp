@@ -929,7 +929,7 @@ namespace sequoia
       // constructor implementations
       template<alloc... Allocators>
       constexpr connectivity(direct_edge_init_type, edges_initializer edges, const Allocators&... as)
-        : m_Edges{validate_and_transform(edges), as...}
+        : m_Edges{EdgeTraits::template make_edges<edge_storage_type>(edges, as...)}
       {}
 
       template<alloc... Allocators>

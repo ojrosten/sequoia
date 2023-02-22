@@ -198,20 +198,28 @@ namespace sequoia
 
         constexpr static bool direct_init_v{std::is_same_v<edge_type, edge_init_type>};
 
-        template<class IntermediateEdges>
+        template<class EdgeStorage, alloc... Allocators>
         [[nodiscard]]
-        constexpr static IntermediateEdges validate_and_transform(edges_initializer edges)
+        constexpr static EdgeStorage make_edges(edges_initializer edges, const Allocators&... as)
+          requires direct_init_v
+        {
+          return {validate_and_transform<EdgeStorage>(edges), as...};
+        }
+
+        template<class EdgeStorage>
+        [[nodiscard]]
+        constexpr static EdgeStorage validate_and_transform(edges_initializer edges)
           requires (direct_init_v && (is_embedded_v || is_directed_v))
         {
           return {validate(edges)};
         }
 
-        template<class IntermediateEdges>
+        template<class EdgeStorage>
         [[nodiscard]]
-        constexpr static IntermediateEdges validate_and_transform(edges_initializer edges)
+        constexpr static EdgeStorage validate_and_transform(edges_initializer edges)
           requires (direct_init_v && !is_embedded_v && !is_directed_v)
         {
-          return validate(IntermediateEdges{edges});
+          return {validate(EdgeStorage{edges})};
         }
 
         [[nodiscard]]
