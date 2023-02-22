@@ -232,6 +232,20 @@ namespace sequoia
           return validate(sequence_t{edges});
         }
 
+
+        template<class FwdIter> constexpr static FwdIter find_cluster_end(FwdIter begin, FwdIter end)
+        {
+          if(distance(begin, end) > 1)
+          {
+            auto testIter{end - 1};
+            while(*testIter != *begin) --testIter;
+
+            end = testIter + 1;
+          }
+
+          return end;
+        }
+
       private:
         [[nodiscard]]
         constexpr static edges_initializer validate(edges_initializer edges)
@@ -429,19 +443,6 @@ namespace sequoia
           }
 
           return edges;
-        }
-
-        template<class FwdIter> constexpr static FwdIter find_cluster_end(FwdIter begin, FwdIter end)
-        {
-          if(distance(begin, end) > 1)
-          {
-            auto testIter{end - 1};
-            while(*testIter != *begin) --testIter;
-
-            end = testIter + 1;
-          }
-
-          return end;
         }
       };
 

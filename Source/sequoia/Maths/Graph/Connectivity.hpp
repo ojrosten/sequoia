@@ -995,29 +995,24 @@ namespace sequoia
       }
 
       constexpr void process_edges(std::initializer_list<std::initializer_list<edge_init_type>> edges)
+        requires (!EdgeTraits::is_embedded_v)
       {
-        if constexpr (EdgeTraits::is_embedded_v)
+        for(auto nodeEdgesIter{edges.begin()}; nodeEdgesIter != edges.end(); ++nodeEdgesIter)
         {
-          process_complementary_edges(edges);
-        }
-        else if constexpr (directed(directedness))
-        {
-          for(auto nodeEdgesIter{edges.begin()}; nodeEdgesIter != edges.end(); ++nodeEdgesIter)
-          {
-            m_Edges.add_slot();
+          m_Edges.add_slot();
 
-            const auto nodeIndex{static_cast<edge_index_type>(std::distance(edges.begin(), nodeEdgesIter))};
-            const auto& nodeEdges{*nodeEdgesIter};
-            for(auto edgeIter{nodeEdges.begin()}; edgeIter != nodeEdges.end(); ++edgeIter)
-            {
-              const auto& edge{*edgeIter};
-              m_Edges.push_back_to_partition(nodeIndex, edge_type{edge.target_node(), make_edge_weight(edge.weight())});
-            }
+          const auto nodeIndex{static_cast<edge_index_type>(std::distance(edges.begin(), nodeEdgesIter))};
+          const auto& nodeEdges{*nodeEdgesIter};
+          for(auto edgeIter{nodeEdges.begin()}; edgeIter != nodeEdges.end(); ++edgeIter)
+          {
+            const auto& edge{*edgeIter};
+            m_Edges.push_back_to_partition(nodeIndex, edge_type{edge.target_node(), make_edge_weight(edge.weight())});
           }
         }
       }
 
-      constexpr void process_complementary_edges(std::initializer_list<std::initializer_list<edge_init_type>> edges)
+      constexpr void process_edges(std::initializer_list<std::initializer_list<edge_init_type>> edges)
+        requires EdgeTraits::is_embedded_v
       {
         m_Edges.reserve_partitions(edges.size());
 
@@ -1054,19 +1049,6 @@ namespace sequoia
         }
       }
 
-      template<class FwdIter> constexpr static FwdIter find_cluster_end(FwdIter begin, FwdIter end)
-      {
-        if(distance(begin, end) > 1)
-        {
-          auto testIter{end - 1};
-          while(*testIter != *begin) --testIter;
-
-          end = testIter + 1;
-        }
-
-        return end;
-      }
-
       template<class Edges>
       constexpr void process_edges(const Edges& orderedEdges)
       {
@@ -1094,7 +1076,7 @@ namespace sequoia
           while(lowerIter != orderedEdges.cend_partition(i))
           {
             upperIter = std::upper_bound(lowerIter, orderedEdges.cend_partition(i), *lowerIter, edgeComparer);
-            if constexpr(clusterEdges) upperIter = find_cluster_end(lowerIter, upperIter);
+            if constexpr(clusterEdges) upperIter = EdgeTraits::find_cluster_end(lowerIter, upperIter);
 
             if(const auto target{lowerIter->target_node()}; target == i)
             {
@@ -1114,22 +1096,20 @@ namespace sequoia
             else
             {
               const auto comparisonEdge{
-                [lowerIter,i](){
+                [lowerIter, i](){
                   auto compEdge{*lowerIter};
                   compEdge.target_node(i);
                   return compEdge;
                 }()
               };
 
-              auto eqrange{
-                std::equal_range(orderedEdges.cbegin_partition(target), orderedEdges.cend_partition(target), comparisonEdge, edgeComparer)
-              };
+              auto eqrange{std::equal_range(orderedEdges.cbegin_partition(target), orderedEdges.cend_partition(target), comparisonEdge, edgeComparer)};
 
               if constexpr(clusterEdges)
               {
                 while((eqrange.first != eqrange.second) && (eqrange.first->weight() != lowerIter->weight())) ++eqrange.first;
 
-                eqrange.second = find_cluster_end(eqrange.first, eqrange.second);
+                eqrange.second = EdgeTraits::find_cluster_end(eqrange.first, eqrange.second);
               }
 
 
@@ -1141,9 +1121,7 @@ namespace sequoia
                 }
                 else
                 {
-                  static_assert(!EdgeTraits::shared_edge_v);
-
-                  const auto compIndex{static_cast<size_t>(distance(orderedEdges.cbegin_partition(target), eqrange.second + distance(upperIter, lowerIter)))};
+                  const auto compIndex{static_cast<edge_index_type>(distance(orderedEdges.cbegin_partition(target), eqrange.second + distance(upperIter, lowerIter)))};
 
                   m_Edges.push_back_to_partition(i, edge_type{target, *(cbegin_edges(target) + compIndex)});
                 }

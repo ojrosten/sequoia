@@ -1105,7 +1105,7 @@ namespace sequoia
       }
 
       template<class PartitionIterator, std::input_or_output_iterator Iterator>
-      constexpr PartitionIterator get_end_iterator(const index_type i, Iterator iter) const noexcept
+      constexpr PartitionIterator get_end_iterator(const index_type i, Iterator iter) const
       {
         index_type index{PartitionIterator::reversed() ? index_type{} : npos};
         index_type offset{
