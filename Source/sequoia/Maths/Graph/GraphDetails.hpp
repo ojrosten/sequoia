@@ -12,9 +12,9 @@
 
  */
 
-#include"sequoia/Core/DataStructures/PartitionedData.hpp"
 #include "sequoia/Maths/Graph/Edge.hpp"
 #include "sequoia/Maths/Graph/GraphErrors.hpp"
+#include "sequoia/Core/DataStructures/PartitionedData.hpp"
 #include "sequoia/Core/Object/Creator.hpp"
 #include "sequoia/Core/Object/FaithfulWrapper.hpp"
 
@@ -194,10 +194,14 @@ namespace sequoia
         using edge_init_type    = edge_to_init_type_t<edge_type, is_embedded_v>;
         using edge_weight_type  = typename edge_type::weight_type;
         using edges_initializer = std::initializer_list<std::initializer_list<edge_init_type>>;
+        using edge_index_type   = IndexType;
+
+        constexpr static bool direct_init_v{std::is_same_v<edge_type, edge_init_type>};
 
         template<class IntermediateEdges>
         [[nodiscard]]
         constexpr static IntermediateEdges validate_and_transform(edges_initializer edges)
+          requires (direct_init_v && (is_embedded_v || is_directed_v))
         {
           return {validate(edges)};
         }
@@ -205,9 +209,27 @@ namespace sequoia
         template<class IntermediateEdges>
         [[nodiscard]]
         constexpr static IntermediateEdges validate_and_transform(edges_initializer edges)
-          requires (!is_embedded_v && !is_directed_v)
+          requires (direct_init_v && !is_embedded_v && !is_directed_v)
         {
           return validate(IntermediateEdges{edges});
+        }
+
+        [[nodiscard]]
+        constexpr static edges_initializer validate_and_transform(edges_initializer edges)
+          requires (!direct_init_v && (is_embedded_v || is_directed_v))
+        {
+          return validate(edges);
+        }
+
+        [[nodiscard]]
+        constexpr static auto validate_and_transform(edges_initializer edges)
+          requires (!direct_init_v && !is_embedded_v && !is_directed_v)
+        {
+          using namespace data_structures;
+          using traits_t   = partitioned_sequence_traits<edge_init_type, object::by_value<edge_init_type>>;
+          using sequence_t = partitioned_sequence<edge_init_type, object::by_value<edge_init_type>, traits_t>;
+
+          return validate(sequence_t{edges});
         }
 
       private:
@@ -333,7 +355,7 @@ namespace sequoia
             }
           };
 
-          for(std::size_t i{}; i < edges.num_partitions(); ++i)
+          for(edge_index_type i{}; i < edges.num_partitions(); ++i)
           {
             sequoia::sort(edges.begin_partition(i), edges.end_partition(i), edgeComparer);
 
@@ -354,7 +376,7 @@ namespace sequoia
             }
           }
 
-          for(std::size_t i{}; i < edges.num_partitions(); ++i)
+          for(edge_index_type i{}; i < edges.num_partitions(); ++i)
           {
             auto lowerIter{edges.cbegin_partition(i)}, upperIter{edges.cbegin_partition(i)};
             while(lowerIter != edges.cend_partition(i))
