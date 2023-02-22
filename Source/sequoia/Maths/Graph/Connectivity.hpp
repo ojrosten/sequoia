@@ -932,27 +932,13 @@ namespace sequoia
         : m_Edges{validate_and_transform(edges), as...}
       {}
 
-      constexpr connectivity(indirect_edge_init_type, edges_initializer edges)
-        : m_Edges{}
+      template<alloc... Allocators>
+        requires std::constructible_from<edge_storage_type, Allocators...>
+      constexpr connectivity(indirect_edge_init_type, edges_initializer edges, const Allocators&... as)
+        : m_Edges(as...)
       {
          process_edges(validate_and_transform(edges));
       }
-
-      template<alloc EdgeAllocator, alloc PartitionAllocator>
-        requires initializable_from<edge_storage_type, EdgeAllocator, PartitionAllocator>
-      constexpr connectivity(indirect_edge_init_type, edges_initializer edges, const EdgeAllocator& edgeAllocator, const PartitionAllocator& partitionAllocator)
-        : m_Edges(edgeAllocator, partitionAllocator)
-      {
-         process_edges(validate_and_transform(edges));
-      }
-
-      template<alloc EdgeAllocator>
-      constexpr connectivity(indirect_edge_init_type, edges_initializer edges, const EdgeAllocator& edgeAllocator)
-        : m_Edges(edgeAllocator)
-      {
-         process_edges(validate_and_transform(edges));
-      }
-
       template<alloc... Allocators>
       constexpr connectivity(direct_edge_copy_type, const connectivity& in, const Allocators&... as)
         : m_Edges{in.m_Edges, as...}
@@ -976,7 +962,7 @@ namespace sequoia
       }
 
       template<alloc EdgeAllocator, alloc PartitionAllocator>
-        requires initializable_from<edge_storage_type, EdgeAllocator, PartitionAllocator>
+        requires std::constructible_from<edge_storage_type, EdgeAllocator, PartitionAllocator>
       constexpr connectivity(indirect_edge_copy_type, const connectivity& in, const EdgeAllocator& edgeAllocator, const PartitionAllocator& partitionAllocator)
         : m_Edges(std::allocator_traits<EdgeAllocator>::select_on_container_copy_construction(edgeAllocator),
                   std::allocator_traits<PartitionAllocator>::select_on_container_copy_construction(partitionAllocator))
@@ -985,7 +971,7 @@ namespace sequoia
       }
 
       template<alloc EdgeAllocator>
-        requires initializable_from<edge_storage_type, EdgeAllocator>
+        requires std::constructible_from<edge_storage_type, EdgeAllocator>
       constexpr connectivity(indirect_edge_copy_type, const connectivity& in, const EdgeAllocator& edgeAllocator)
         : m_Edges(std::allocator_traits<EdgeAllocator>::select_on_container_copy_construction(edgeAllocator))
       {
