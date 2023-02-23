@@ -1240,10 +1240,21 @@ namespace sequoia
                 eqrange.second = find_cluster_end(eqrange.first, eqrange.second);
               }
 
-              if(auto dist{distance(eqrange.first, eqrange.second)}; !dist)
-                throw std::logic_error{graph_errors::error_prefix("process_edges").append("Reciprocated partial edge does not exist")};
-              else if(dist != count)
-                throw std::logic_error{graph_errors::error_prefix("process_edges").append("Reciprocated target indices do not match")};
+              if(auto reciprocalCount{distance(eqrange.first, eqrange.second)}; !reciprocalCount)
+              {
+                const auto edgeIndex{static_cast<std::size_t>(distance(edges.cbegin_partition(i), lowerIter))};
+                throw std::logic_error{graph_errors::error_prefix("process_edges", {i, edgeIndex}).append("Reciprocated partial edge does not exist")};
+              }
+              else if(count > reciprocalCount)
+              {
+                const auto edgeIndex{static_cast<std::size_t>(distance(edges.cbegin_partition(i), lowerIter) + reciprocalCount)};
+                throw std::logic_error{graph_errors::error_prefix("process_edges", {i, edgeIndex}).append("Reciprocated partial edge does not exist")};
+              }
+              else if(count < reciprocalCount)
+              {
+                const auto edgeIndex{static_cast<std::size_t>(distance(edges.cbegin_partition(target), eqrange.first) + count)};
+                throw std::logic_error{graph_errors::error_prefix("process_edges", {target, edgeIndex}).append("Reciprocated partial edge does not exist")};
+              }
             }
 
             lowerIter = upperIter;
