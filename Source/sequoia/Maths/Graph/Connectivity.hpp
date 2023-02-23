@@ -24,6 +24,7 @@
 
 #include "sequoia/Core/DataStructures/DataStructuresTypeTraits.hpp"
 #include "sequoia/Maths/Graph/GraphDetails.hpp"
+#include "sequoia/Maths/Graph/GraphErrors.hpp"
 #include "sequoia/Maths/Graph/GraphTraits.hpp"
 #include "sequoia/Algorithms/Algorithms.hpp"
 #include "sequoia/Core/Meta/TypeTraits.hpp"
@@ -40,11 +41,8 @@ namespace sequoia
 {
   namespace data_structures
   {
-    template <class, class H, class> requires object::handler<H> class bucketed_sequence;
-    template <class, class H>        requires object::handler<H> struct bucketed_sequence_traits;
     template <class, class H, class> requires object::handler<H> class partitioned_sequence;
     template <class, class H>        requires object::handler<H> struct partitioned_sequence_traits;
-    template <class, std::size_t, std::size_t, std::integral> class static_partitioned_sequence;
   }
 
   namespace maths
@@ -77,11 +75,11 @@ namespace sequoia
       using edge_weight_type            = typename edge_type::weight_type;
       using edge_index_type             = typename edge_type::index_type;
       using edge_init_type              = typename EdgeTraits::edge_init_type;
-      using edges_initializer           = typename EdgeTraits::edges_initializer;
       using size_type                   = typename edge_storage_type::size_type;
       using weight_maker_type           = WeightMaker;
       using const_edge_iterator         = typename edge_storage_type::const_partition_iterator;
       using const_reverse_edge_iterator = typename edge_storage_type::const_reverse_partition_iterator;
+      using edges_initializer           = std::initializer_list<std::initializer_list<edge_init_type>>;
 
       static_assert(std::is_unsigned_v<edge_index_type>);
 
@@ -92,7 +90,7 @@ namespace sequoia
       constexpr connectivity() = default;
 
       constexpr connectivity(std::initializer_list<std::initializer_list<edge_init_type>> edges)
-        : connectivity(direct_edge_init(), edges)
+        : m_Edges{make_edges(edges)}
       {}
 
       constexpr connectivity(const connectivity& in)
@@ -214,16 +212,19 @@ namespace sequoia
       using edge_iterator = typename edge_storage_type::partition_iterator;
 
       template<alloc... Allocators>
+        requires (sizeof...(Allocators) > 0)
       constexpr connectivity(const Allocators&... as)
         : m_Edges(as...)
       {}
 
       template<alloc... Allocators>
+        requires (sizeof...(Allocators) > 0)
       constexpr connectivity(edges_initializer edges, const Allocators&... as)
-        : connectivity(direct_edge_init(), edges, as...)
+        : m_Edges{make_edges(edges, as...)}
       {}
 
       template<alloc... Allocators>
+        requires (sizeof...(Allocators) > 0)
       constexpr connectivity(const connectivity& c, const Allocators&... as)
         : connectivity(direct_edge_copy(), c, as...)
       {}
@@ -813,17 +814,9 @@ namespace sequoia
       }
 
     private:
-      template<bool Direct>
-      struct edge_init_constant : std::bool_constant<Direct> {};
-
-      using direct_edge_init_type   = edge_init_constant<true>;
-      using indirect_edge_init_type = edge_init_constant<false>;
-
-      [[nodiscard]]
-      constexpr static auto direct_edge_init() noexcept
-      {
-        return edge_init_constant<std::is_same_v<edge_type, edge_init_type>>{};
-      }
+      constexpr static bool direct_init_v{std::is_same_v<edge_type, edge_init_type>};
+      constexpr static bool is_embedded_v{EdgeTraits::is_embedded_v};
+      constexpr static bool is_directed_v{EdgeTraits::is_directed_v};
 
       template<bool Direct>
       struct edge_copy_constant : std::bool_constant<Direct> {};
@@ -834,7 +827,7 @@ namespace sequoia
       [[nodiscard]]
       constexpr static auto direct_edge_copy() noexcept
       {
-        return edge_copy_constant<direct_edge_init().value || (EdgeTraits::shared_edge_v && faithfulEdgeWeightProxy)>{};
+        return edge_copy_constant<direct_init_v || (EdgeTraits::shared_edge_v && faithfulEdgeWeightProxy)>{};
       }
 
       template<bool HasAlloc>
@@ -912,33 +905,8 @@ namespace sequoia
       NO_UNIQUE_ADDRESS WeightMaker m_WeightMaker{};
       edge_storage_type m_Edges;
 
-      [[nodiscard]]
-      constexpr edge_storage_type validate_and_transform(edges_initializer edges)
-        requires std::is_same_v<edge_type, edge_init_type>
-      {
-        return EdgeTraits::template validate_and_transform<edge_storage_type>(edges);
-      }
+      // copy constructor implementations
 
-      [[nodiscard]]
-      constexpr auto validate_and_transform(edges_initializer edges)
-        requires (!std::is_same_v<edge_type, edge_init_type>)
-      {
-        return EdgeTraits::validate_and_transform(edges);
-      }
-
-      // constructor implementations
-      template<alloc... Allocators>
-      constexpr connectivity(direct_edge_init_type, edges_initializer edges, const Allocators&... as)
-        : m_Edges{EdgeTraits::template make_edges<edge_storage_type>(edges, as...)}
-      {}
-
-      template<alloc... Allocators>
-        requires std::constructible_from<edge_storage_type, Allocators...>
-      constexpr connectivity(indirect_edge_init_type, edges_initializer edges, const Allocators&... as)
-        : m_Edges(as...)
-      {
-         process_edges(validate_and_transform(edges));
-      }
       template<alloc... Allocators>
       constexpr connectivity(direct_edge_copy_type, const connectivity& in, const Allocators&... as)
         : m_Edges{in.m_Edges, as...}
@@ -994,145 +962,6 @@ namespace sequoia
         }
       }
 
-      constexpr void process_edges(std::initializer_list<std::initializer_list<edge_init_type>> edges)
-        requires (!EdgeTraits::is_embedded_v)
-      {
-        for(auto nodeEdgesIter{edges.begin()}; nodeEdgesIter != edges.end(); ++nodeEdgesIter)
-        {
-          m_Edges.add_slot();
-
-          const auto nodeIndex{static_cast<edge_index_type>(std::distance(edges.begin(), nodeEdgesIter))};
-          const auto& nodeEdges{*nodeEdgesIter};
-          for(auto edgeIter{nodeEdges.begin()}; edgeIter != nodeEdges.end(); ++edgeIter)
-          {
-            const auto& edge{*edgeIter};
-            m_Edges.push_back_to_partition(nodeIndex, edge_type{edge.target_node(), make_edge_weight(edge.weight())});
-          }
-        }
-      }
-
-      constexpr void process_edges(std::initializer_list<std::initializer_list<edge_init_type>> edges)
-        requires EdgeTraits::is_embedded_v
-      {
-        m_Edges.reserve_partitions(edges.size());
-
-        for(auto nodeEdgesIter{edges.begin()}; nodeEdgesIter != edges.end(); ++nodeEdgesIter)
-        {
-          m_Edges.add_slot();
-
-          const auto nodeIndex{static_cast<edge_index_type>(std::distance(edges.begin(), nodeEdgesIter))};
-          const auto& nodeEdges{*nodeEdgesIter};
-          for(auto edgeIter{nodeEdges.begin()}; edgeIter != nodeEdges.end(); ++edgeIter)
-          {
-            const auto& edge{*edgeIter};
-            if constexpr(!EdgeTraits::shared_edge_v)
-            {
-              m_Edges.push_back_to_partition(nodeIndex, make_edge(nodeIndex, edge));
-            }
-            else
-            {
-              const auto source{edge.source_node()};
-              const auto target{edge.target_node()};
-              const auto partner{target == nodeIndex ? source : target};
-              const auto compIndex{edge.complementary_index()};
-              const auto edgeIndex{static_cast<edge_index_type>(std::distance(nodeEdges.begin(), edgeIter))};
-              if((partner > nodeIndex) || ((partner == nodeIndex) && (compIndex > edgeIndex)))
-              {
-                m_Edges.push_back_to_partition(nodeIndex, make_edge(source, edge));
-              }
-              else
-              {
-                m_Edges.push_back_to_partition(nodeIndex, cbegin_edges(partner) + compIndex);
-              }
-            }
-          }
-        }
-      }
-
-      template<class Edges>
-      constexpr void process_edges(const Edges& orderedEdges)
-      {
-        constexpr bool clusterEdges{!std::is_empty_v<edge_weight_type> && !std::totally_ordered<edge_weight_type>};
-        constexpr bool sortWeights{!std::is_empty_v<edge_weight_type> && std::totally_ordered<edge_weight_type>};
-
-        auto edgeComparer{
-            [](const auto& e1, const auto& e2) {
-              if constexpr(!sortWeights)
-              {
-                return e1.target_node() < e2.target_node();
-              }
-              else
-              {
-                return (e1.target_node() == e2.target_node()) ? e1.weight() < e2.weight() : e1.target_node() < e2.target_node();
-              }
-            }
-        };
-
-        for(edge_index_type i{}; i<orderedEdges.num_partitions(); ++i)
-        {
-          m_Edges.add_slot();
-
-          auto lowerIter{orderedEdges.cbegin_partition(i)}, upperIter{orderedEdges.cbegin_partition(i)};
-          while(lowerIter != orderedEdges.cend_partition(i))
-          {
-            upperIter = std::upper_bound(lowerIter, orderedEdges.cend_partition(i), *lowerIter, edgeComparer);
-            if constexpr(clusterEdges) upperIter = EdgeTraits::find_cluster_end(lowerIter, upperIter);
-
-            if(const auto target{lowerIter->target_node()}; target == i)
-            {
-              for(; lowerIter != upperIter; ++lowerIter)
-              {
-                if(!(distance(lowerIter, upperIter) % 2) || !EdgeTraits::shared_weight_v)
-                {
-                  m_Edges.push_back_to_partition(i, make_edge(i, *lowerIter));
-                }
-                else
-                {
-                  const auto compIndex{static_cast<edge_index_type>(distance(orderedEdges.cbegin_partition(i), lowerIter-1))};
-                  m_Edges.push_back_to_partition(i, cbegin_edges(i) + compIndex);
-                }
-              }
-            }
-            else
-            {
-              const auto comparisonEdge{
-                [lowerIter, i](){
-                  auto compEdge{*lowerIter};
-                  compEdge.target_node(i);
-                  return compEdge;
-                }()
-              };
-
-              auto eqrange{std::equal_range(orderedEdges.cbegin_partition(target), orderedEdges.cend_partition(target), comparisonEdge, edgeComparer)};
-
-              if constexpr(clusterEdges)
-              {
-                while((eqrange.first != eqrange.second) && (eqrange.first->weight() != lowerIter->weight())) ++eqrange.first;
-
-                eqrange.second = EdgeTraits::find_cluster_end(eqrange.first, eqrange.second);
-              }
-
-
-              for(; lowerIter != upperIter; ++lowerIter)
-              {
-                if((i < target) || !EdgeTraits::shared_weight_v)
-                {
-                  m_Edges.push_back_to_partition(i, make_edge(i, *lowerIter));
-                }
-                else
-                {
-                  const auto compIndex{static_cast<edge_index_type>(distance(orderedEdges.cbegin_partition(target), eqrange.second + distance(upperIter, lowerIter)))};
-
-                  m_Edges.push_back_to_partition(i, edge_type{target, *(cbegin_edges(target) + compIndex)});
-                }
-              }
-            }
-
-            lowerIter = upperIter;
-          }
-        }
-      }
-
       template<class EdgeInitializer>
         requires (!std::is_same_v<edge_type, edge_init_type>)
       [[nodiscard]]
@@ -1183,6 +1012,411 @@ namespace sequoia
         {
           static_assert(dependent_false<edge_type>::value, "Edge flavour not dealt with");
         }
+      }
+
+      struct edge_comparer
+      {
+        constexpr static bool sort_weights{!std::is_empty_v<edge_weight_type> && std::totally_ordered<edge_weight_type>};
+
+        [[nodiscard]]
+        constexpr bool operator()(const auto& e1, const auto& e2) const noexcept
+        {
+          if constexpr(!sort_weights)
+          {
+            return e1.target_node() < e2.target_node();
+          }
+          else
+          {
+            return (e1.target_node() == e2.target_node()) ? e1.weight() < e2.weight() : e1.target_node() < e2.target_node();
+          }
+        }
+      };
+
+      template<alloc... Allocators>
+      [[nodiscard]]
+      constexpr edge_storage_type make_edges(edges_initializer edges, const Allocators&... as)
+      {
+        return process_edges(validate(preprocess(edges)), as...);
+      }
+
+      [[nodiscard]]
+      constexpr static edges_initializer preprocess(edges_initializer edges)
+        requires (is_embedded_v || is_directed_v)
+      {
+        return edges;
+      }
+
+      [[nodiscard]]
+      constexpr static edge_storage_type preprocess(edges_initializer edges)
+        requires (direct_init_v && !is_embedded_v && !is_directed_v)
+      {
+        return preprocess(edge_storage_type{edges});
+      }
+
+      [[nodiscard]]
+      constexpr static auto preprocess(edges_initializer edges)
+        requires (!direct_init_v && !is_embedded_v && !is_directed_v)
+      {
+        using namespace data_structures;
+        using traits_t = partitioned_sequence_traits<edge_init_type, object::by_value<edge_init_type>>;
+        using sequence_t = partitioned_sequence<edge_init_type, object::by_value<edge_init_type>, traits_t>;
+
+        return preprocess(sequence_t{edges});
+      }
+
+      template<class IntermediateEdges>
+      [[nodiscard]]
+      constexpr static IntermediateEdges preprocess(IntermediateEdges edges)
+        requires (!is_embedded_v && !is_directed_v)
+      {
+        constexpr bool clusterEdges{!std::is_empty_v<edge_weight_type> && !std::totally_ordered<edge_weight_type>};
+
+        for(edge_index_type i{}; i < edges.num_partitions(); ++i)
+        {
+          sequoia::sort(edges.begin_partition(i), edges.end_partition(i), edge_comparer{});
+
+          if constexpr(clusterEdges)
+          {
+            auto lowerIter{edges.begin_partition(i)}, upperIter{edges.begin_partition(i)};
+            while(lowerIter != edges.end_partition(i))
+            {
+              while((upperIter != edges.end_partition(i)) && (lowerIter->target_node() == upperIter->target_node()))
+                ++upperIter;
+
+              sequoia::cluster(lowerIter, upperIter, [](const auto& e1, const auto& e2) {
+                return e1.weight() == e2.weight();
+                });
+
+              lowerIter = upperIter;
+            }
+          }
+        }
+
+        return edges;
+      }
+
+      [[nodiscard]]
+      constexpr static edges_initializer validate(edges_initializer edges)
+        requires is_embedded_v
+      {
+        for(auto nodeEdgesIter{edges.begin()}; nodeEdgesIter != edges.end(); ++nodeEdgesIter)
+        {
+          const auto nodeIndex{static_cast<std::size_t>(std::distance(edges.begin(), nodeEdgesIter))};
+          const auto& nodeEdges{*nodeEdgesIter};
+          for(auto edgeIter{nodeEdges.begin()}; edgeIter != nodeEdges.end(); ++edgeIter)
+          {
+            const auto edgeIndex{static_cast<std::size_t>(std::distance(nodeEdges.begin(), edgeIter))};
+            const auto& edge{*edgeIter};
+            const auto target{edge.target_node()};
+
+            graph_errors::check_edge_index_range("process_complementary_edges", {nodeIndex, edgeIndex}, "complementary", edges.size(), target);
+            const auto compIndex{edge.complementary_index()};
+
+            const bool doValidate{
+              [&]() {
+                if constexpr(!is_directed_v) return true;
+                else return (edge.target_node() != nodeIndex) || (edge.source_node() == edge.target_node());
+              }()
+            };
+
+            if(doValidate)
+            {
+              auto targetEdgesIter{edges.begin() + target};
+              graph_errors::check_edge_index_range("process_complementary_edges", {nodeIndex, edgeIndex}, "complementary", targetEdgesIter->size(), compIndex);
+
+              if((target == nodeIndex) && (compIndex == edgeIndex))
+              {
+                throw std::logic_error{graph_errors::self_referential_error({nodeIndex, edgeIndex}, target, compIndex)};
+              }
+              else if(const auto& targetEdge{*(targetEdgesIter->begin() + compIndex)}; targetEdge.complementary_index() != edgeIndex)
+              {
+                throw std::logic_error{graph_errors::reciprocated_error_message({nodeIndex, edgeIndex}, "complementary", targetEdge.complementary_index(), edgeIndex)};
+              }
+              else
+              {
+                if constexpr(!is_directed_v)
+                {
+                  graph_errors::check_reciprocated_index({nodeIndex, edgeIndex}, "target", targetEdge.target_node(), nodeIndex);
+                }
+                else
+                {
+                  graph_errors::check_reciprocated_index({nodeIndex, edgeIndex}, "target", targetEdge.target_node(), target);
+                  graph_errors::check_reciprocated_index({nodeIndex, edgeIndex}, "source", targetEdge.source_node(), edge.source_node());
+                }
+
+                if constexpr(!std::is_empty_v<edge_weight_type>)
+                {
+                  if(edge.weight() != targetEdge.weight())
+                    throw std::logic_error{ graph_errors::error_prefix("process_complementary_edges", {nodeIndex, edgeIndex}).append("Mismatch between weights") };
+                }
+              }
+            }
+
+            if constexpr(is_directed_v)
+            {
+              const auto source{edge.source_node()};
+              graph_errors::check_edge_index_range("process_complementary_edges", {nodeIndex, edgeIndex}, "source", edges.size(), source);
+              graph_errors::check_embedded_edge(nodeIndex, source, target);
+
+              if((edge.target_node() == nodeIndex) && (edge.source_node() != edge.target_node()))
+              {
+                auto sourceEdgesIter{edges.begin() + source};
+                graph_errors::check_edge_index_range("process_complementary_edges", {nodeIndex, edgeIndex}, "source", sourceEdgesIter->size(), compIndex);
+
+                const auto& sourceEdge{*(sourceEdgesIter->begin() + compIndex)};
+                graph_errors::check_reciprocated_index({nodeIndex, edgeIndex}, "target", sourceEdge.target_node(), nodeIndex);
+              }
+            }
+          }
+        }
+
+        return edges;
+      }
+
+      [[nodiscard]]
+      constexpr static edges_initializer validate(edges_initializer edges)
+        requires (!is_embedded_v && is_directed_v)
+      {
+        for(auto nodeEdgesIter{edges.begin()}; nodeEdgesIter != edges.end(); ++nodeEdgesIter)
+        {
+          const auto nodeIndex{static_cast<std::size_t>(std::distance(edges.begin(), nodeEdgesIter))};
+          const auto& nodeEdges{*nodeEdgesIter};
+          for(auto edgeIter{nodeEdges.begin()}; edgeIter != nodeEdges.end(); ++edgeIter)
+          {
+            const auto edgeIndex{static_cast<std::size_t>(std::distance(nodeEdges.begin(), edgeIter))};
+            const auto& edge{*edgeIter};
+
+            const auto target{edge.target_node()};
+            graph_errors::check_edge_index_range("process_edges", {nodeIndex, edgeIndex}, "target", edges.size(), target);
+          }
+        }
+
+        return edges;
+      }
+
+      template<class IntermediateEdges>
+      [[nodiscard]]
+      constexpr static decltype(auto) validate(IntermediateEdges&& es)
+        requires (!is_embedded_v && !is_directed_v)
+      {
+        constexpr bool clusterEdges{!std::is_empty_v<edge_weight_type> && !std::totally_ordered<edge_weight_type>};
+
+        const auto& edges{es};
+        for(edge_index_type i{}; i < edges.num_partitions(); ++i)
+        {
+          auto lowerIter{edges.cbegin_partition(i)}, upperIter{edges.cbegin_partition(i)};
+          while(lowerIter != edges.cend_partition(i))
+          {
+            const auto target{lowerIter->target_node()};
+            graph_errors::check_node_index_range("process_edges", edges.num_partitions(), target);
+
+            upperIter = std::upper_bound(lowerIter, edges.cend_partition(i), *lowerIter, edge_comparer{});
+            if constexpr(clusterEdges) upperIter = find_cluster_end(lowerIter, upperIter);
+
+            const auto count{distance(lowerIter, upperIter)};
+
+            if(target == i)
+            {
+              if(count % 2) throw std::logic_error{graph_errors::odd_num_loops_error("process_edges")};
+            }
+            else
+            {
+              const auto comparisonEdge{
+                [lowerIter,i]() {
+                  auto compEdge{*lowerIter};
+                  compEdge.target_node(i);
+                  return compEdge;
+                }()
+              };
+
+              auto eqrange{
+                std::equal_range(edges.cbegin_partition(target), edges.cend_partition(target), comparisonEdge, edge_comparer{})
+              };
+
+              if(eqrange.first == eqrange.second)
+                throw std::logic_error{graph_errors::error_prefix("process_edges").append("Reciprocated partial edge does not exist")};
+
+              if constexpr(clusterEdges)
+              {
+                while((eqrange.first != eqrange.second) && (eqrange.first->weight() != lowerIter->weight())) ++eqrange.first;
+
+                eqrange.second = find_cluster_end(eqrange.first, eqrange.second);
+              }
+
+              if(distance(eqrange.first, eqrange.second) != count)
+                throw std::logic_error{graph_errors::error_prefix("process_edges").append("Reciprocated target indices do not match")};
+            }
+
+            lowerIter = upperIter;
+          }
+        }
+
+        return std::forward<IntermediateEdges>(es);
+      }
+
+
+      template<std::bidirectional_iterator Iter> constexpr static Iter find_cluster_end(Iter begin, Iter end)
+      {
+        if(distance(begin, end) > 1)
+        {
+          auto testIter{end - 1};
+          while(*testIter != *begin) --testIter;
+
+          end = testIter + 1;
+        }
+
+        return end;
+      }
+
+      template<class Edges, alloc... Allocators>
+      [[nodiscard]]
+      constexpr edge_storage_type process_edges(Edges&& orderedEdges, const Allocators&... as)
+        requires direct_init_v
+      {
+        return {std::forward<Edges>(orderedEdges), as...};
+      }
+
+      template<alloc... Allocators>
+      [[nodiscard]]
+      constexpr edge_storage_type process_edges(edges_initializer edges, const Allocators&... as)
+        requires (!direct_init_v && !is_embedded_v)
+      {
+        edge_storage_type storage(as...);
+
+        for(auto nodeEdgesIter{edges.begin()}; nodeEdgesIter != edges.end(); ++nodeEdgesIter)
+        {
+          storage.add_slot();
+
+          const auto nodeIndex{static_cast<edge_index_type>(std::distance(edges.begin(), nodeEdgesIter))};
+          const auto& nodeEdges{*nodeEdgesIter};
+          for(auto edgeIter{nodeEdges.begin()}; edgeIter != nodeEdges.end(); ++edgeIter)
+          {
+            const auto& edge{*edgeIter};
+            storage.push_back_to_partition(nodeIndex, edge_type{edge.target_node(), make_edge_weight(edge.weight())});
+          }
+        }
+
+        return storage;
+      }
+
+      template<alloc... Allocators>
+      [[nodiscard]]
+      constexpr edge_storage_type process_edges(edges_initializer edges, const Allocators&... as)
+        requires (!direct_init_v && is_embedded_v)
+      {
+        edge_storage_type storage(as...);
+
+        storage.reserve_partitions(edges.size());
+
+        for(auto nodeEdgesIter{edges.begin()}; nodeEdgesIter != edges.end(); ++nodeEdgesIter)
+        {
+          storage.add_slot();
+
+          const auto nodeIndex{static_cast<edge_index_type>(std::distance(edges.begin(), nodeEdgesIter))};
+          const auto& nodeEdges{*nodeEdgesIter};
+          for(auto edgeIter{nodeEdges.begin()}; edgeIter != nodeEdges.end(); ++edgeIter)
+          {
+            const auto& edge{*edgeIter};
+            if constexpr(!EdgeTraits::shared_edge_v)
+            {
+              storage.push_back_to_partition(nodeIndex, make_edge(nodeIndex, edge));
+            }
+            else
+            {
+              const auto source{edge.source_node()};
+              const auto target{edge.target_node()};
+              const auto partner{target == nodeIndex ? source : target};
+              const auto compIndex{edge.complementary_index()};
+              const auto edgeIndex{static_cast<edge_index_type>(std::distance(nodeEdges.begin(), edgeIter))};
+              if((partner > nodeIndex) || ((partner == nodeIndex) && (compIndex > edgeIndex)))
+              {
+                storage.push_back_to_partition(nodeIndex, make_edge(source, edge));
+              }
+              else
+              {
+                storage.push_back_to_partition(nodeIndex, cbegin_edges(partner) + compIndex);
+              }
+            }
+          }
+        }
+
+        return storage;
+      }
+
+      template<class Edges, alloc... Allocators>
+      [[nodiscard]]
+      constexpr edge_storage_type process_edges(const Edges& orderedEdges, const Allocators&... as)
+        requires (!direct_init_v)
+      {
+        constexpr bool clusterEdges{!std::is_empty_v<edge_weight_type> && !std::totally_ordered<edge_weight_type>};
+
+        edge_storage_type storage(as...);
+
+        for(edge_index_type i{}; i < orderedEdges.num_partitions(); ++i)
+        {
+          storage.add_slot();
+
+          auto lowerIter{orderedEdges.cbegin_partition(i)}, upperIter{orderedEdges.cbegin_partition(i)};
+          while(lowerIter != orderedEdges.cend_partition(i))
+          {
+            upperIter = std::upper_bound(lowerIter, orderedEdges.cend_partition(i), *lowerIter, edge_comparer{});
+            if constexpr(clusterEdges) upperIter = find_cluster_end(lowerIter, upperIter);
+
+            if(const auto target{lowerIter->target_node()}; target == i)
+            {
+              for(; lowerIter != upperIter; ++lowerIter)
+              {
+                if(!(distance(lowerIter, upperIter) % 2) || !EdgeTraits::shared_weight_v)
+                {
+                  storage.push_back_to_partition(i, make_edge(i, *lowerIter));
+                }
+                else
+                {
+                  const auto compIndex{static_cast<edge_index_type>(distance(orderedEdges.cbegin_partition(i), lowerIter - 1))};
+                  storage.push_back_to_partition(i, cbegin_edges(i) + compIndex);
+                }
+              }
+            }
+            else
+            {
+              const auto comparisonEdge{
+                [lowerIter, i]() {
+                  auto compEdge{*lowerIter};
+                  compEdge.target_node(i);
+                  return compEdge;
+                }()
+              };
+
+              auto eqrange{std::equal_range(orderedEdges.cbegin_partition(target), orderedEdges.cend_partition(target), comparisonEdge, edge_comparer{})};
+
+              if constexpr(clusterEdges)
+              {
+                while((eqrange.first != eqrange.second) && (eqrange.first->weight() != lowerIter->weight())) ++eqrange.first;
+
+                eqrange.second = find_cluster_end(eqrange.first, eqrange.second);
+              }
+
+
+              for(; lowerIter != upperIter; ++lowerIter)
+              {
+                if((i < target) || !EdgeTraits::shared_weight_v)
+                {
+                  storage.push_back_to_partition(i, make_edge(i, *lowerIter));
+                }
+                else
+                {
+                  const auto compIndex{static_cast<edge_index_type>(distance(orderedEdges.cbegin_partition(target), eqrange.second + distance(upperIter, lowerIter)))};
+
+                  storage.push_back_to_partition(i, edge_type{target, *(cbegin_edges(target) + compIndex)});
+                }
+              }
+            }
+
+            lowerIter = upperIter;
+          }
+        }
+
+        return storage;
       }
 
       void copy_edges(const connectivity& in)
