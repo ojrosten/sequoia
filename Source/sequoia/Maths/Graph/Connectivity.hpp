@@ -1282,6 +1282,7 @@ namespace sequoia
         requires (!direct_init_v && !is_embedded_v)
       {
         edge_storage_type storage(as...);
+        storage.reserve_partitions(edges.size());
 
         for(auto nodeEdgesIter{edges.begin()}; nodeEdgesIter != edges.end(); ++nodeEdgesIter)
         {
@@ -1305,7 +1306,6 @@ namespace sequoia
         requires (!direct_init_v && is_embedded_v)
       {
         edge_storage_type storage(as...);
-
         storage.reserve_partitions(edges.size());
 
         for(auto nodeEdgesIter{edges.begin()}; nodeEdgesIter != edges.end(); ++nodeEdgesIter)
@@ -1351,6 +1351,7 @@ namespace sequoia
         constexpr bool clusterEdges{!std::is_empty_v<edge_weight_type> && !std::totally_ordered<edge_weight_type>};
 
         edge_storage_type storage(as...);
+        storage.reserve_partitions(orderedEdges.num_partitions());
 
         for(edge_index_type i{}; i < orderedEdges.num_partitions(); ++i)
         {
