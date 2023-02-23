@@ -1233,9 +1233,6 @@ namespace sequoia
                 std::equal_range(edges.cbegin_partition(target), edges.cend_partition(target), comparisonEdge, edge_comparer{})
               };
 
-              if(eqrange.first == eqrange.second)
-                throw std::logic_error{graph_errors::error_prefix("process_edges").append("Reciprocated partial edge does not exist")};
-
               if constexpr(clusterEdges)
               {
                 while((eqrange.first != eqrange.second) && (eqrange.first->weight() != lowerIter->weight())) ++eqrange.first;
@@ -1243,7 +1240,9 @@ namespace sequoia
                 eqrange.second = find_cluster_end(eqrange.first, eqrange.second);
               }
 
-              if(distance(eqrange.first, eqrange.second) != count)
+              if(auto dist{distance(eqrange.first, eqrange.second)}; !dist)
+                throw std::logic_error{graph_errors::error_prefix("process_edges").append("Reciprocated partial edge does not exist")};
+              else if(dist != count)
                 throw std::logic_error{graph_errors::error_prefix("process_edges").append("Reciprocated target indices do not match")};
             }
 

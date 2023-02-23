@@ -2955,7 +2955,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -2973,7 +2973,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -2982,7 +2982,7 @@ Mismatched weight
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -2991,7 +2991,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -3000,7 +3000,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -3126,7 +3126,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -3144,7 +3144,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -3153,7 +3153,7 @@ Mismatched weight
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -3162,7 +3162,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -3171,7 +3171,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -3297,7 +3297,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -3315,7 +3315,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -3324,7 +3324,7 @@ Mismatched weight
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -3333,7 +3333,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -3342,7 +3342,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -3468,7 +3468,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -3486,7 +3486,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -3495,7 +3495,7 @@ Mismatched weight
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -3504,7 +3504,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -3513,7 +3513,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -5007,7 +5007,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -5025,7 +5025,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -5034,7 +5034,7 @@ Mismatched weight
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -5043,7 +5043,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -5052,7 +5052,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -5178,7 +5178,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -5196,7 +5196,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -5205,7 +5205,7 @@ Mismatched weight
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -5214,7 +5214,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -5223,7 +5223,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -5349,7 +5349,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -5367,7 +5367,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -5376,7 +5376,7 @@ Mismatched weight
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -5385,7 +5385,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -5394,7 +5394,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -5520,7 +5520,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -5538,7 +5538,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -5547,7 +5547,7 @@ Mismatched weight
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -5556,7 +5556,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -5565,7 +5565,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -14943,7 +14943,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -14961,7 +14961,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -14970,7 +14970,7 @@ Mismatched weight
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -14979,7 +14979,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -14988,7 +14988,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -15150,7 +15150,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -15168,7 +15168,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -15177,7 +15177,7 @@ Mismatched weight
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -15186,7 +15186,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -15195,7 +15195,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -15357,7 +15357,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -15375,7 +15375,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -15384,7 +15384,7 @@ Mismatched weight
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -15393,7 +15393,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -15402,7 +15402,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -15564,7 +15564,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -15582,7 +15582,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -15591,7 +15591,7 @@ Mismatched weight
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -15600,7 +15600,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -15609,7 +15609,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -15771,7 +15771,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -15789,7 +15789,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -15798,7 +15798,7 @@ Mismatched weight
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -15807,7 +15807,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -15816,7 +15816,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -15978,7 +15978,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -15996,7 +15996,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -16005,7 +16005,7 @@ Mismatched weight
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -16014,7 +16014,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -16023,7 +16023,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -16185,7 +16185,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -16203,7 +16203,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -16212,7 +16212,7 @@ Mismatched weight
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -16221,7 +16221,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -16230,7 +16230,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -16392,7 +16392,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -16410,7 +16410,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -16419,7 +16419,7 @@ Mismatched weight
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -16428,7 +16428,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -16437,7 +16437,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -20487,7 +20487,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -20505,7 +20505,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -20514,7 +20514,7 @@ Mismatched weight
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -20523,7 +20523,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -20532,7 +20532,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -20694,7 +20694,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -20712,7 +20712,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -20721,7 +20721,7 @@ Mismatched weight
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -20730,7 +20730,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -20739,7 +20739,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -20901,7 +20901,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -20919,7 +20919,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -20928,7 +20928,7 @@ Mismatched weight
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -20937,7 +20937,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -20946,7 +20946,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -21108,7 +21108,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -21126,7 +21126,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -21135,7 +21135,7 @@ Mismatched weight
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -21144,7 +21144,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -21153,7 +21153,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -21315,7 +21315,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -21333,7 +21333,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -21342,7 +21342,7 @@ Mismatched weight
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -21351,7 +21351,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -21360,7 +21360,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -21522,7 +21522,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -21540,7 +21540,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -21549,7 +21549,7 @@ Mismatched weight
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -21558,7 +21558,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -21567,7 +21567,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -21729,7 +21729,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -21747,7 +21747,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -21756,7 +21756,7 @@ Mismatched weight
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -21765,7 +21765,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -21774,7 +21774,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -21936,7 +21936,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -21954,7 +21954,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -21963,7 +21963,7 @@ Mismatched weight
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -21972,7 +21972,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
@@ -21981,7 +21981,7 @@ Mismatched weights
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::process_edges: Reciprocated target indices do not match
+connectivity::process_edges: Reciprocated partial edge does not exist
 
 	=======================================
 
