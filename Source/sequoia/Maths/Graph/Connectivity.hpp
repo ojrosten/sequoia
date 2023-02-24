@@ -1372,7 +1372,6 @@ namespace sequoia
                std::invocable<edge_index_type, partition_iterator_range<Edges>> PerLoopFn,
                std::invocable<edge_index_type, edge_index_type, partition_iterator_range<Edges>, partition_iterator_range<Edges>> PerLinkFn
       >
-      [[nodiscard]]
       constexpr static void visit_edges(const Edges& orderedEdges, PerNodeFn perNode, PerLoopFn perLoop, PerLinkFn perLink)
         requires (!is_embedded_v && !is_directed_v)
       {
