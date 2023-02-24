@@ -1208,8 +1208,8 @@ namespace sequoia
         visit_edges(
           edges,
           []() {},
-          [](edge_index_type, range_t hostRange) {
-            if(std::distance(hostRange.first, hostRange.second) % 2) throw std::logic_error{graph_errors::odd_num_loops_error("process_edges")};
+          [](edge_index_type i, range_t hostRange) {
+            if(std::distance(hostRange.first, hostRange.second) % 2) throw std::logic_error{graph_errors::odd_num_loops_error("process_edges", i)};
           },
           [&](edge_index_type i, edge_index_type target, range_t hostRange, range_t targetRange) {
             if(auto reciprocalCount{std::distance(targetRange.first, targetRange.second)}; !reciprocalCount)

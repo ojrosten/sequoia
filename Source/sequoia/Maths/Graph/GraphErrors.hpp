@@ -99,8 +99,8 @@ namespace sequoia::maths::graph_errors
   }
 
   [[nodiscard]]
-  inline std::string odd_num_loops_error(std::string_view method)
+  inline std::string odd_num_loops_error(std::string_view method, std::size_t nodeIndex)
   {
-    return error_prefix(method).append("Odd number of loop edges");
+    return error_prefix(method).append("Odd number of loop edges for node ").append(std::to_string(nodeIndex));
   }
 }
