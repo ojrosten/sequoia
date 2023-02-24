@@ -218,6 +218,7 @@ namespace sequoia
         if constexpr(static_nodes<Graph>) m_Checker.template check_exception_thrown<std::logic_error>(LINE("Too few elements in initializer list"), [](){ return Graph{{edge{0}}}; });
         m_Checker.template check_exception_thrown<std::logic_error>(LINE("First partial index of loop out of range"), [](){ return Graph{{edge{1}, edge{0}}}; });
         m_Checker.template check_exception_thrown<std::logic_error>(LINE("Second partial index of loop out of range"), [](){ return Graph{{edge{0}, edge{1}}}; });
+        m_Checker.template check_exception_thrown<std::logic_error>(LINE("Both partial indices out of range"), []() { return Graph{{edge{1}, edge{1}}}; });
         if constexpr(static_nodes<Graph>) m_Checker.template check_exception_thrown<std::logic_error>(LINE("Initializer list too long"), [](){ return Graph{{}, {}}; });
 
         using edge_weight = typename edge::weight_type;
