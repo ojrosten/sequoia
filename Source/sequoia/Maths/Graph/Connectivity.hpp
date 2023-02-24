@@ -1040,7 +1040,7 @@ namespace sequoia
       }
 
       [[nodiscard]]
-      constexpr static edges_initializer preprocess(edges_initializer edges)
+      constexpr static const edges_initializer& preprocess(const edges_initializer& edges)
         requires (is_embedded_v || is_directed_v)
       {
         return edges;
@@ -1096,7 +1096,7 @@ namespace sequoia
       }
 
       [[nodiscard]]
-      constexpr static edges_initializer validate(edges_initializer edges)
+      constexpr static const edges_initializer& validate(const edges_initializer& edges)
         requires is_embedded_v
       {
         for(auto nodeEdgesIter{edges.begin()}; nodeEdgesIter != edges.end(); ++nodeEdgesIter)
@@ -1174,7 +1174,7 @@ namespace sequoia
       }
 
       [[nodiscard]]
-      constexpr static edges_initializer validate(edges_initializer edges)
+      constexpr static const edges_initializer& validate(const edges_initializer& edges)
         requires (!is_embedded_v && is_directed_v)
       {
         for(auto nodeEdgesIter{edges.begin()}; nodeEdgesIter != edges.end(); ++nodeEdgesIter)
