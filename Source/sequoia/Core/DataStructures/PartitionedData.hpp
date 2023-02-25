@@ -937,18 +937,14 @@ namespace sequoia
       template<alloc Allocator>
       constexpr partitioned_sequence_base(partition_impl::indirect_copy_type, const partitioned_sequence_base& in, const Allocator& allocator)
         : m_Partitions{in.m_Partitions}
-        , m_Storage(std::allocator_traits<Allocator>::select_on_container_copy_construction(allocator))
-      {
-        init(in.m_Storage);
-      }
+        , m_Storage{copy(in.m_Storage, allocator)}
+      {}
 
       template<alloc Allocator, alloc PartitionsAllocator>
       constexpr partitioned_sequence_base(partition_impl::indirect_copy_type, const partitioned_sequence_base& in, const Allocator& allocator, const PartitionsAllocator& partitionsAllocator)
-        : m_Partitions{in.m_Partitions, std::allocator_traits<PartitionsAllocator>::select_on_container_copy_construction(partitionsAllocator)}
-        , m_Storage(std::allocator_traits<Allocator>::select_on_container_copy_construction(allocator))
-      {
-        init(in.m_Storage);
-      }
+        : m_Partitions{in.m_Partitions, partitionsAllocator}
+        , m_Storage(copy(in.m_Storage, allocator))
+      {}
 
       constexpr partitioned_sequence_base(partition_impl::direct_copy_type, const partitioned_sequence_base& in)
         : m_Partitions{in.m_Partitions}
@@ -958,13 +954,13 @@ namespace sequoia
       template<alloc Allocator>
       constexpr partitioned_sequence_base(partition_impl::direct_copy_type, const partitioned_sequence_base& in, const Allocator& allocator)
         : m_Partitions{in.m_Partitions}
-        , m_Storage{in.m_Storage, std::allocator_traits<Allocator>::select_on_container_copy_construction(allocator)}
+        , m_Storage{in.m_Storage, allocator}
       {}
 
       template<alloc Allocator, alloc PartitionsAllocator>
       constexpr partitioned_sequence_base(partition_impl::direct_copy_type, const partitioned_sequence_base& in, const Allocator& allocator, const PartitionsAllocator& partitionsAllocator)
-        : m_Partitions{in.m_Partitions, std::allocator_traits<PartitionsAllocator>::select_on_container_copy_construction(partitionsAllocator)}
-        , m_Storage{in.m_Storage, std::allocator_traits<Allocator>::select_on_container_copy_construction(allocator)}
+        : m_Partitions{in.m_Partitions, partitionsAllocator}
+        , m_Storage{in.m_Storage, allocator}
       {}
 
       void init(std::initializer_list<std::initializer_list<T>> list)
@@ -982,14 +978,20 @@ namespace sequoia
         }
       }
 
-      void init(const container_type& c)
+      template<alloc Allocator>
+      [[nodiscard]]
+      static container_type copy(const container_type& other, const Allocator& a)
       {
-        m_Storage.reserve(c.size());
+        container_type container(std::allocator_traits<Allocator>::select_on_container_copy_construction(a));
+
+        container.reserve(other.size());
         partition_impl::data_duplicator<Handler> duplicator;
-        for(const auto& elt : c)
+        for(const auto& elt : other)
         {
-          m_Storage.push_back(duplicator.duplicate(elt));
+          container.push_back(duplicator.duplicate(elt));
         }
+
+        return container;
       }
 
       constexpr auto make_element(size_type i, std::initializer_list<std::initializer_list<T>> list, index_type& partition)
