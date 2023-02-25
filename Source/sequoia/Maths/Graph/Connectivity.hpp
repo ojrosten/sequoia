@@ -93,8 +93,8 @@ namespace sequoia
         : m_Edges{make_edges(edges)}
       {}
 
-      constexpr connectivity(const connectivity& in)
-        : connectivity(direct_edge_copy(), in)
+      constexpr connectivity(const connectivity& other)
+        : m_Edges{copy_edges(other)}
       {}
 
       [[nodiscard]]
@@ -226,7 +226,7 @@ namespace sequoia
       template<alloc... Allocators>
         requires (sizeof...(Allocators) > 0)
       constexpr connectivity(const connectivity& c, const Allocators&... as)
-        : connectivity(direct_edge_copy(), c, as...)
+        : m_Edges{copy_edges(c, as...)}
       {}
 
       constexpr connectivity(connectivity&&) noexcept = default;
@@ -814,28 +814,6 @@ namespace sequoia
       }
 
     private:
-      constexpr static bool direct_init_v{std::is_same_v<edge_type, edge_init_type>};
-      constexpr static bool is_embedded_v{EdgeTraits::is_embedded_v};
-      constexpr static bool is_directed_v{EdgeTraits::is_directed_v};
-
-      template<bool Direct>
-      struct edge_copy_constant : std::bool_constant<Direct> {};
-
-      using direct_edge_copy_type   = edge_copy_constant<true>;
-      using indirect_edge_copy_type = edge_copy_constant<false>;
-
-      [[nodiscard]]
-      constexpr static auto direct_edge_copy() noexcept
-      {
-        return edge_copy_constant<direct_init_v || (EdgeTraits::shared_edge_v && faithfulEdgeWeightProxy)>{};
-      }
-
-      template<bool HasAlloc>
-      struct has_partitions_alloc_constant : std::bool_constant<HasAlloc> {};
-
-      using has_partitions_alloc_type = has_partitions_alloc_constant<true>;
-      using no_partitions_alloc_type  = has_partitions_alloc_constant<false>;
-
       constexpr static bool faithfulEdgeWeightProxy{
         std::is_same_v<typename edge_type::weight_proxy_type, object::faithful_wrapper<edge_weight_type>>
       };
@@ -844,6 +822,10 @@ namespace sequoia
         (edge_type::flavour == edge_flavour::partial_embedded) || (edge_type::flavour == edge_flavour::full_embedded)
       };
 
+      constexpr static bool direct_init_v{std::is_same_v<edge_type, edge_init_type>};
+      constexpr static bool direct_copy_v{direct_init_v || (EdgeTraits::shared_edge_v && faithfulEdgeWeightProxy)};
+      constexpr static bool is_embedded_v{EdgeTraits::is_embedded_v};
+      constexpr static bool is_directed_v{EdgeTraits::is_directed_v};
 
       class [[nodiscard]] join_sentinel
       {
@@ -904,38 +886,6 @@ namespace sequoia
       // private data
       NO_UNIQUE_ADDRESS WeightMaker m_WeightMaker{};
       edge_storage_type m_Edges;
-
-      // copy constructor implementations
-
-      template<alloc... Allocators>
-      constexpr connectivity(direct_edge_copy_type, const connectivity& in, const Allocators&... as)
-        : m_Edges{in.m_Edges, as...}
-      {}
-
-      constexpr connectivity(indirect_edge_copy_type, const connectivity& in)
-        : connectivity(has_partitions_alloc_constant<has_partitions_allocator<edge_storage_type>>{}, in)
-      {}
-
-      constexpr connectivity(has_partitions_alloc_type, const connectivity& in)
-        : m_Edges(std::allocator_traits<decltype(m_Edges.get_allocator())>::select_on_container_copy_construction(in.m_Edges.get_allocator()),
-                  std::allocator_traits<decltype(m_Edges.get_partitions_allocator())>::select_on_container_copy_construction(in.m_Edges.get_partitions_allocator()))
-      {
-        copy_edges(in);
-      }
-
-      constexpr connectivity(no_partitions_alloc_type, const connectivity& in)
-        : m_Edges(std::allocator_traits<decltype(m_Edges.get_allocator())>::select_on_container_copy_construction(in.m_Edges.get_allocator()))
-      {
-        copy_edges(in);
-      }
-
-      template<alloc... Allocators>
-        requires std::constructible_from<edge_storage_type, Allocators...>
-      constexpr connectivity(indirect_edge_copy_type, const connectivity& in, const Allocators&... allocs)
-        : m_Edges(std::allocator_traits<Allocators>::select_on_container_copy_construction(allocs)...)
-      {
-         copy_edges(in);
-      }
 
       // helper methods
       template<class... Args>
@@ -1418,20 +1368,47 @@ namespace sequoia
         }
       }
 
-      void copy_edges(const connectivity& in)
+      template<alloc... Allocators>
+      [[nodiscard]]
+      edge_storage_type copy_edges(const connectivity& in, const Allocators&... as)
+        requires direct_copy_v
       {
+        return edge_storage_type{in.m_Edges, as...};
+      }
+
+      [[nodiscard]]
+      edge_storage_type copy_edges(const connectivity& in)
+        requires (!direct_copy_v)
+      {
+        if constexpr(has_partitions_allocator<edge_storage_type>)
+        {
+          return copy_edges(in, in.m_Edges.get_allocator(), in.m_Edges.get_partitions_allocator());
+        }
+        else
+        {
+          return copy_edges(in, in.m_Edges.get_allocator());
+        }
+      }
+
+      template<alloc... Allocators>
+      [[nodiscard]]
+      edge_storage_type copy_edges(const connectivity& in, const Allocators&... as)
+        requires (!direct_copy_v && (sizeof...(Allocators) > 0))
+      {
+        edge_storage_type storage(std::allocator_traits<Allocators>::select_on_container_copy_construction(as)...);
+
         if constexpr((edge_type::flavour == edge_flavour::partial) || (edge_type::flavour == edge_flavour::full))
         {
           using edge_weight_proxy = typename edge_type::weight_proxy_type;
           std::map<const edge_weight_proxy*, std::pair<edge_index_type, edge_index_type>> weightMap;
           auto processor{
-            [this, &weightMap](const size_type node, const_edge_iterator first, const_edge_iterator i) {
+            [this, &storage, &weightMap](const size_type node, const_edge_iterator first, const_edge_iterator i) {
               auto weightPtr{&i->weight_proxy()};
               if(auto found{weightMap.find(weightPtr)}; found == weightMap.end())
               {
-                auto appender{[this, node, first, i, &weightMap](auto&& e){
-                    m_Edges.push_back_to_partition(node, std::move(e));
-                    const std::pair<edge_index_type, edge_index_type> indices{node, static_cast<edge_index_type>(distance(first, i))};
+                auto appender{[node, first, i, &storage, &weightMap](auto&& e){
+                    storage.push_back_to_partition(node, std::move(e));
+                    const std::pair<edge_index_type, edge_index_type> indices{node, static_cast<edge_index_type>(std::distance(first, i))};
                     weightMap.emplace(&i->weight_proxy(), indices);
                   }
                 };
@@ -1461,17 +1438,17 @@ namespace sequoia
                 const auto& indices{found->second};
                 if constexpr(edge_type::flavour == edge_flavour::partial)
                 {
-                  m_Edges.push_back_to_partition(node, i->target_node(), *(cbegin_edges(indices.first)+indices.second));
+                  storage.push_back_to_partition(node, i->target_node(), *(cbegin_edges(indices.first)+indices.second));
                 }
                 else if constexpr(edge_type::flavour == edge_flavour::full)
                 {
-                  m_Edges.push_back_to_partition(node, cbegin_edges(indices.first)+indices.second);
+                  storage.push_back_to_partition(node, cbegin_edges(indices.first)+indices.second);
                 }
               }
             }
           };
 
-          copy_edges(in, processor);
+          copy_edges(in, storage, processor);
         }
         else if constexpr(edge_type::flavour == edge_flavour::full_embedded)
         {
@@ -1486,7 +1463,7 @@ namespace sequoia
           };
 
           auto processor{
-            [this, nodeIndexGetter](const size_type node, const_edge_iterator first, const_edge_iterator i) {
+            [this, &storage, nodeIndexGetter](const size_type node, const_edge_iterator first, const_edge_iterator i) {
               const auto dist{static_cast<edge_index_type>(distance(first, i))};
               const bool encountered{((i->source_node() < node) || (i->target_node() < node))
                   || ((i->source_node() == node) && (i->target_node() == node) && (i->complementary_index() < dist))};
@@ -1497,28 +1474,28 @@ namespace sequoia
                 {
                   using inv_t = inversion_constant<true>;
                   edge_type e{i->source_node(), inv_t{}, i->complementary_index(), make_edge_weight(i->weight())};
-                  m_Edges.push_back_to_partition(node, std::move(e));
+                  storage.push_back_to_partition(node, std::move(e));
                 }
                 else
                 {
                   edge_type e{i->source_node(), i->target_node(), i->complementary_index(), make_edge_weight(i->weight())};
-                  m_Edges.push_back_to_partition(node, std::move(e));
+                  storage.push_back_to_partition(node, std::move(e));
                 }
               }
               else
               {
                 const auto compI{i->complementary_index()};
-                m_Edges.push_back_to_partition(node, compI, *(cbegin_edges(nodeIndexGetter(node, *i)) + compI));
+                storage.push_back_to_partition(node, compI, *(cbegin_edges(nodeIndexGetter(node, *i)) + compI));
               }
             }
           };
 
-          copy_edges(in, processor);
+          copy_edges(in, storage, processor);
         }
         else if constexpr(edge_type::flavour == edge_flavour::partial_embedded)
         {
           auto processor{
-            [this](const size_type node, const_edge_iterator first, const_edge_iterator i) {
+            [this, &storage](const size_type node, const_edge_iterator first, const_edge_iterator i) {
               const auto dist{static_cast<edge_index_type>(distance(first, i))};
               const bool encountered{(i->target_node() < node)
                   || ((i->target_node() == node) && (i->complementary_index() < dist))};
@@ -1526,39 +1503,40 @@ namespace sequoia
               if(!encountered)
               {
                 edge_type e{i->target_node(), i->complementary_index(), make_edge_weight(i->weight())};
-                m_Edges.push_back_to_partition(node, std::move(e));
+                storage.push_back_to_partition(node, std::move(e));
               }
               else
               {
                 const auto compI{i->complementary_index()};
-                m_Edges.push_back_to_partition(node, i->target_node(), compI, *(cbegin_edges(i->target_node()) + compI));
+                storage.push_back_to_partition(node, i->target_node(), compI, *(cbegin_edges(i->target_node()) + compI));
               }
             }
           };
 
-          copy_edges(in, processor);
+          copy_edges(in, storage, processor);
         }
-        else
+        /*else
         {
           static_assert(dependent_false<edge_type>::value, "Edge flavour not dealt with");
-        }
+        }*/
+
+        return storage;
       }
 
-      template<class Processor>
-      void copy_edges(const connectivity& in, Processor processor)
+      template<std::invocable<size_type, const_edge_iterator, const_edge_iterator> Processor>
+      void copy_edges(const connectivity& in, edge_storage_type& storage, Processor processor)
       {
         reserve_nodes(in.m_Edges.num_partitions());
         if constexpr(!graph_impl::has_reservable_partitions<edge_storage_type>)
         {
-          reserve_edges(in.m_Edges.size());
+          storage.reserve(in.m_Edges.size());
         }
         for(size_type i{}; i<in.order(); ++i)
         {
-          m_Edges.add_slot();
+          storage.add_slot();
           if constexpr(graph_impl::has_reservable_partitions<edge_storage_type>)
           {
-            using std::distance;
-            reserve_edges(i, distance(in.cbegin_edges(i), in.cend_edges(i)));
+            storage.reserve_partition(i, std::distance(in.cbegin_edges(i), in.cend_edges(i)));
           }
           for(auto inIter{in.cbegin_edges(i)}; inIter != in.cend_edges(i); ++inIter)
           {
