@@ -867,9 +867,7 @@ namespace sequoia
           m_PartiallyComplete = false;
         }
 
-        // Hopefully can be restored in C++20; requires p0784:
-        // constexpr
-        ~weight_sentinel()
+        constexpr ~weight_sentinel()
         {
           if(m_PartiallyComplete)
           {
@@ -1394,8 +1392,8 @@ namespace sequoia
       [[nodiscard]]
       edge_storage_type copy_edges(const connectivity& in, const Allocators&... as)
         requires (!direct_copy_v && (sizeof...(Allocators) > 0))
-      {
-        edge_storage_type storage(std::allocator_traits<Allocators>::select_on_container_copy_construction(as)...);
+      {        
+        edge_storage_type storage({std::allocator_traits<Allocators>::select_on_container_copy_construction(as)}...);
 
         if constexpr((edge_type::flavour == edge_flavour::partial) || (edge_type::flavour == edge_flavour::full))
         {
