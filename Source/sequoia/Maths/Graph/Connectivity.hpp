@@ -164,27 +164,19 @@ namespace sequoia
       {
         if constexpr (!EdgeTraits::shared_weight_v && !EdgeTraits::shared_edge_v && EdgeTraits::mutual_info_v)
         {
-          if constexpr(EdgeTraits::weight_setting_exception_guarantee_v)
-          {
-            auto partnerSetter{
-              [this](const_edge_iterator citer, auto&&... args){
-                return this->set_partner_edge_weight(citer, std::forward<decltype(args)>(args)...);
-              }
-            };
+          auto partnerSetter{
+            [this](const_edge_iterator citer, auto&&... args){
+              return this->set_partner_edge_weight(citer, std::forward<decltype(args)>(args)...);
+            }
+          };
 
-            auto sourceSetter{
-              [this](const_edge_iterator citer, const_edge_iterator partnerIter){
-                this->set_source_edge_weight(citer, partnerIter->weight());
-              }
-            };
+          auto sourceSetter{
+            [this](const_edge_iterator citer, const_edge_iterator partnerIter){
+              this->set_source_edge_weight(citer, partnerIter->weight());
+            }
+          };
 
-            weight_sentinel sentinel{*this, citer, partnerSetter, sourceSetter, std::forward<Args>(args)...};
-          }
-          else
-          {
-            auto partnerIter{set_partner_edge_weight(citer, std::forward<Args>(args)...)};
-            set_source_edge_weight(citer, partnerIter->weight());
-          }
+          weight_sentinel sentinel{*this, citer, partnerSetter, sourceSetter, std::forward<Args>(args)...};
         }
         else
         {
