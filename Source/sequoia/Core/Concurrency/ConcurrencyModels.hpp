@@ -53,7 +53,7 @@ namespace sequoia::concurrency
     void finish()
     {
       {
-        std::unique_lock<std::mutex> lock{m_Mutex};
+        std::scoped_lock<std::mutex> lock{m_Mutex};
         m_Finished = true;
       }
 
@@ -63,19 +63,25 @@ namespace sequoia::concurrency
     void push(task_t&& task)
     {
       {
-        std::unique_lock<std::mutex> lock{m_Mutex};
+        std::scoped_lock<std::mutex> lock{m_Mutex};
         m_Q.push(std::move(task));
       }
+
       m_CV.notify_one();
     }
 
     [[nodiscard]]
     bool push(task_t&& task, std::try_to_lock_t t)
     {
-      std::unique_lock<std::mutex> lock{m_Mutex, t};
-      if(!lock) return false;
+      if(std::unique_lock<std::mutex> lock{m_Mutex, t}; lock)
+      {
+        m_Q.push(std::move(task));
+      }
+      else
+      {
+        return false;
+      }
 
-      m_Q.push(std::move(task));
       m_CV.notify_one();
 
       return true;
@@ -84,10 +90,12 @@ namespace sequoia::concurrency
     [[nodiscard]]
     task_t pop(std::try_to_lock_t t)
     {
-      std::unique_lock<std::mutex> lock{m_Mutex, t};
-      if(!lock || m_Q.empty()) return Task{};
+      if(std::unique_lock<std::mutex> lock{m_Mutex, t}; lock)
+      {
+        return get();
+      }
 
-      return get();
+      return Task{};
     }
 
     [[nodiscard]]
@@ -104,16 +112,17 @@ namespace sequoia::concurrency
     std::condition_variable m_CV;
     bool m_Finished{};
 
+    [[nodiscard]]
     Task get()
     {
-      Task task{};
       if(!m_Q.empty())
-        {
-          task = std::move(m_Q.front());
-          m_Q.pop();
-        }
+      {
+        Task task{std::move(m_Q.front())};
+        m_Q.pop();
+        return task;
+      }
 
-      return task;
+      return {};
     }
   };
 
