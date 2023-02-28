@@ -31,6 +31,7 @@
 #include "Core/Object/FaithfulWrapperTest.hpp"
 #include "Core/Object/FaithfulWrapperTestingDiagnostics.hpp"
 #include "Experimental/ExperimentalTest.hpp"
+#include "Experimental/TypeListFreeTest.hpp"
 #include "Maths/Graph/DynamicGraphEmbeddedTest.hpp"
 #include "Maths/Graph/DynamicGraphFixedTopologyTest.hpp"
 #include "Maths/Graph/DynamicGraphInitializationTest.hpp"

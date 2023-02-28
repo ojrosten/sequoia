@@ -281,7 +281,8 @@ int main(int argc, char** argv)
 
     runner.add_test_family(
       "Experimental",
-      experimental_test{"Unit Test"}
+      experimental_test{"Unit Test"},
+      type_list_free_test{"Free Test"}
     );
 
     runner.add_test_family(

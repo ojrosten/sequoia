@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////
-//                Copyright Oliver J. Rosten 2019.                //
+//                Copyright Oliver J. Rosten 2023.                //
 // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
 //    (See accompanying file LICENSE.md or copy at                //
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
@@ -13,7 +13,7 @@
 
 namespace sequoia::testing
 {
-  class type_traits_test final : public free_test
+  class type_list_free_test final : public free_test
   {
   public:
     using free_test::free_test;
@@ -23,16 +23,7 @@ namespace sequoia::testing
   private:
     void run_tests() final;
 
-    void test_resolve_to_copy();
-
-    void test_is_const_pointer();
-
-    void test_is_const_reference();
-
-    void test_is_tuple();
-
-    void test_is_initializable();
-
-    void test_has_allocator_type();
+    void test_type_list();
+    void test_flatten();
   };
 }

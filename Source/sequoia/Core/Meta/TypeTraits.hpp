@@ -31,59 +31,6 @@ namespace sequoia
       @{
    */
 
-  /*! \brief Primary template for mapping a parameter pack to a type */
-  template<class... Ts>
-  struct type_list;
-
-  template<class T, class... Ts>
-  struct type_list<T, Ts...>
-  {
-    using head = T;
-    using tail = type_list<Ts...>;
-  };
-
-  template<>
-  struct type_list<>
-  {
-    using head = void;
-    using tail = type_list<>;
-  };
-
-  /*! \brief Primary template for finding the head of either a variadic list of a type_list */
-  template<class... Ts>
-  struct head_of
-  {
-    using type = typename type_list<Ts...>::head;
-  };
-
-  template<class... Ts>
-  struct head_of<type_list<Ts...>>
-  {
-    using type = typename type_list<Ts...>::head;
-  };
-
-  template<class... Ts>
-  using head_of_t = typename head_of<Ts...>::type;
-
-  /*! \brief Primary template for finding the tail of either a variadic list of a type_list */
-  template<class... Ts>
-  struct tail_of
-  {
-    using type = typename type_list<Ts...>::tail;
-  };
-
-  template<class... Ts>
-  struct tail_of<type_list<Ts...>>
-  {
-    using type = typename type_list<Ts...>::tail;
-  };
-
-  template<class... Ts>
-  using tail_of_t = typename tail_of<Ts...>::type;
-
-  /*! @} */ // end of type_list Group
-
-
   /*! \brief class template for determining whether a constructor template should resolve to the copy constructor */
   template<class T, class... Args>
   struct resolve_to_copy
