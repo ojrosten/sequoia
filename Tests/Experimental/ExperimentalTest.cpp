@@ -119,13 +119,12 @@ namespace sequoia::testing
   class suite
   {
   public:
-    std::string m_Name;
-    std::tuple<Ts...> m_Vals;
+    std::string name;
+    std::tuple<Ts...> values;
 
-    template<class... Args>
-    suite(std::string name, Args&&... args)
-      : m_Name{std::move(name)}
-      , m_Vals{std::forward<Args>(args)...} {}
+    suite(std::string name, Ts&&... ts)
+      : name{std::move(name)}
+      , values{std::forward<Ts>(ts)...} {}
   };
 
 
@@ -135,16 +134,15 @@ namespace sequoia::testing
     return __FILE__;
   }
 
-  template<class>
-  class extractor;
 
-  template<class... Ts>
-  class extractor<suite<Ts...>>
+  template<class Suite>
+    requires is_suite_v<Suite>
+  class extractor
   {
   public:
-    using container_type = std::vector<to_variant_t<suite<Ts...>>>;
+    using container_type = std::vector<to_variant_t<Suite>>;
 
-    explicit extractor(suite<Ts...> s) : m_Suite{std::move(s)} {}
+    explicit extractor(Suite s) : m_Suite{std::move(s)} {}
 
     [[nodiscard]]
     container_type get()
@@ -156,14 +154,14 @@ namespace sequoia::testing
       return c;
     }
   private:
-    suite<Ts...> m_Suite;
+    Suite m_Suite;
 
     template<class... Us>
       requires ((!is_suite_v<Us>) && ...)
     static void get(suite<Us...>& s, container_type& c)
     {
       [&] <std::size_t... Is> (std::index_sequence<Is...>) {
-        (c.emplace_back(std::move(std::get<Is>(s.m_Vals))), ...);
+        (c.emplace_back(std::move(std::get<Is>(s.values))), ...);
       }(std::make_index_sequence<sizeof...(Us)>{});
     }
 
@@ -171,7 +169,7 @@ namespace sequoia::testing
     static void get(suite<Us...>& s, container_type& c)
     {
       [&] <std::size_t... Is> (std::index_sequence<Is...>) {
-        (get(std::get<Is>(s.m_Vals), c), ...);
+        (get(std::get<Is>(s.values), c), ...);
       }(std::make_index_sequence<sizeof...(Us)>{});
     }
   };
@@ -180,7 +178,18 @@ namespace sequoia::testing
   {
     static_assert(std::is_same_v<to_variant_t<suite<suite<foo>, suite<bar, baz>>>, std::variant<foo, bar, baz>>);
 
-    extractor<suite<suite<foo>, suite<bar, baz>>> e{{"root", suite<foo>{"suite_0", "foo"}, suite<bar, baz>{"suite_1", "bar", "baz"}}};
+    extractor e{
+                suite{"root",
+                      suite{"suite_0", foo{"foo"}},
+                      suite{"suite_1", bar{"bar"}, baz{"baz"}}/*,
+                      suite{"suite_2",
+                            suite{"suite_2_0", foo{"foo2"}},
+                            suite{"suite_2_1",
+                                  suite{"suite_2_1_0", bar{"bar2"}}
+                            }
+                      }*/
+                }
+              };
 
     auto v{e.get()};
 
