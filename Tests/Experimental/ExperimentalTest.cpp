@@ -18,8 +18,10 @@ namespace sequoia::testing
   inline constexpr bool is_suite_v{is_suite<T>::value};
 
   template<class... Ts>
-    requires ((is_suite_v<Ts> && ...) || ((!is_suite_v<Ts>) && ...))
+  //  requires ((is_suite_v<Ts> && ...) || ((!is_suite_v<Ts>) && ...))
   class suite;
+
+
 
 
   template<class... Ts>
@@ -98,24 +100,26 @@ namespace sequoia::testing
     using type = typename to_variant<extract_leaves_t<suite<Ts...>>>::type;
   };
   
-
+  template<int I>
   struct foo
   {
     explicit foo(std::string) {}
   };
 
+  template<int I>
   struct bar
   {
     explicit bar(std::string) {}
   };
 
+  template<int I>
   struct baz
   {
     explicit baz(std::string) {}
   };
 
   template<class... Ts>
-    requires ((is_suite_v<Ts> && ...) || ((!is_suite_v<Ts>) && ...))
+  //  requires ((is_suite_v<Ts> && ...) || ((!is_suite_v<Ts>) && ...))
   class suite
   {
   public:
@@ -176,18 +180,18 @@ namespace sequoia::testing
 
   void experimental_test::run_tests()
   {
-    static_assert(std::is_same_v<to_variant_t<suite<suite<foo>, suite<bar, baz>>>, std::variant<foo, bar, baz>>);
+    static_assert(std::is_same_v<to_variant_t<suite<suite<foo<0>>, suite<bar<0>, baz<0>>>>, std::variant<foo<0>, bar<0>, baz<0>>>);
 
     extractor e{
                 suite{"root",
-                      suite{"suite_0", foo{"foo"}},
-                      suite{"suite_1", bar{"bar"}, baz{"baz"}}/*,
+                      suite{"suite_0", foo<0>{"foo"}},
+                      suite{"suite_1", bar<0>{"bar"}, baz<0>{"baz"}},
                       suite{"suite_2",
-                            suite{"suite_2_0", foo{"foo2"}},
+                            suite{"suite_2_0", foo<1>{"foo1"}},
                             suite{"suite_2_1",
-                                  suite{"suite_2_1_0", bar{"bar2"}}
+                                  suite{"suite_2_1_0", bar<1>{"bar2"}}
                             }
-                      }*/
+                      }
                 }
               };
 
