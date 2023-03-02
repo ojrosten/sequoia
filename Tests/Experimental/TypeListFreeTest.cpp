@@ -219,17 +219,17 @@ namespace sequoia::testing
     //         double
     static_assert(
       std::is_same_v<
-      flatten_t<type_list<double,
-      type_list<char,
-      type_list<float,
-      type_list<long, bool>>,
-      type_list<int,
-      type_list<unsigned>>
-      >
-      >
-      >
-      ,
-      type_list<double, char, float, long, bool, int, unsigned>
+        flatten_t<type_list<double,
+                            type_list<char,
+                                      type_list<float,
+                                                type_list<long, bool>>,
+                                      type_list<int,
+                                                type_list<unsigned>>
+                            >
+                  >
+        >
+        ,
+        type_list<double, char, float, long, bool, int, unsigned>
       >
       );
 
@@ -241,13 +241,13 @@ namespace sequoia::testing
 
     entity<
       type_list<
-      composite,
-      type_list<
-      composite,
-      type_list<int, double>,
-      composite,
-      type_list<float>
-      >
+        composite,
+        type_list<
+          composite,
+          type_list<int, double>,
+          composite,
+          type_list<float>
+        >
       >
     > e{};
   }
