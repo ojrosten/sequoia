@@ -168,36 +168,14 @@ namespace sequoia::testing
     return __FILE__;
   }
 
-
-  template<class Suite>
-    requires is_suite_v<Suite>
-  class extractor
+  namespace impl
   {
-  public:
-    using suite_type     = Suite;
-    using container_type = std::vector<to_variant_t<Suite>>;
-
-    explicit extractor(Suite s) : m_Suite{std::move(s)} {}
-
-    template<class Filter>
-    [[nodiscard]]
-    container_type get(Filter&& filter)
-    {
-      container_type c{};
-
-      get(std::forward<Filter>(filter), m_Suite, c);
-
-      return c;
-    }
-  private:
-    Suite m_Suite;
-
-    template<class Filter, class... Us>
+    template<class Filter, class... Us, class Container>
       requires ((!is_suite_v<Us>) && ...)
-    static void get(Filter&& filter, suite<Us...>& s, container_type& c)
+    static void get(Filter&& filter, suite<Us...>& s, Container& c)
     {
       auto emplacer{
-        [&filter, &c] <class V> (V&& val) {
+        [&filter, &c] <class V> (V && val) {
           if(filter(val)) c.emplace_back(std::forward<V>(val));
         }
       };
@@ -207,14 +185,40 @@ namespace sequoia::testing
       }(std::make_index_sequence<sizeof...(Us)>{});
     }
 
-    template<class Filter, class... Us>
-    static void get(Filter&& filter, suite<Us...>& s, container_type& c)
+    template<class Filter, class... Us, class Container>
+    static void get(Filter&& filter, suite<Us...>& s, Container& c)
     {
       [&] <std::size_t... Is> (std::index_sequence<Is...>) {
         (get(std::forward<Filter>(filter), std::get<Is>(s.values), c), ...);
       }(std::make_index_sequence<sizeof...(Us)>{});
     }
-  };
+  }
+
+  template<class Suite, class Filter, class Container=std::vector<to_variant_t<Suite>>>
+    requires is_suite_v<Suite>
+  [[nodiscard]]
+  Container extract(Suite s, Filter&& filter)
+  {
+    Container c{};
+
+    impl::get(std::forward<Filter>(filter), s, c);
+
+    return c;
+  }
+
+  auto make_test_suite()
+  {
+    return suite{"root",
+                  suite{"suite_0", foo<0>{"foo"}},
+                  suite{"suite_1", bar<0>{"bar"}, baz<0>{"baz"}},
+                  suite{"suite_2",
+                        suite{"suite_2_0", foo<1>{"foo1"}},
+                        suite{"suite_2_1",
+                              suite{"suite_2_1_0", bar<1>{"bar1"}}
+                        }
+                  }
+           };
+  }
 
   void experimental_test::run_tests()
   {
@@ -232,60 +236,21 @@ namespace sequoia::testing
     static_assert(std::is_same_v<to_variant_t<suite<suite<foo<0>>, suite<bar<0>, baz<0>>>>, std::variant<foo<0>, bar<0>, baz<0>>>);
 
     {
-      extractor e{
-            suite{"root",
-                  suite{"suite_0", foo<0>{"foo"}},
-                  suite{"suite_1", bar<0>{"bar"}, baz<0>{"baz"}},
-                  suite{"suite_2",
-                        suite{"suite_2_0", foo<1>{"foo1"}},
-                        suite{"suite_2_1",
-                              suite{"suite_2_1_0", bar<1>{"bar1"}}
-                        }
-                  }
-            }
-      };
-
       using variant_t = std::variant<foo<0>, bar<0>, baz<0>, foo<1>, bar<1>>;
       variant_t init[]{foo<0>{"foo"}, bar<0>{"bar"}, baz<0>{"baz"}, foo<1>{"foo1"}, bar<1>{"bar1"}};
-      check(equality, LINE(""), e.get([](auto&&) { return true; }), std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
+      check(equality, LINE(""), extract(make_test_suite(), [](auto&&) { return true; }), std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
     }
 
     {
-      extractor e{
-            suite{"root",
-                  suite{"suite_0", foo<0>{"foo"}},
-                  suite{"suite_1", bar<0>{"bar"}, baz<0>{"baz"}},
-                  suite{"suite_2",
-                        suite{"suite_2_0", foo<1>{"foo1"}},
-                        suite{"suite_2_1",
-                              suite{"suite_2_1_0", bar<1>{"bar1"}}
-                        }
-                  }
-            }
-      };
-
       using variant_t = std::variant<foo<0>, bar<0>, baz<0>, foo<1>, bar<1>>;
       variant_t init[]{foo<0>{"foo"}, baz<0>{"baz"}, foo<1>{"foo1"}, bar<1>{"bar1"}};
-      check(equality, LINE(""), e.get([](const auto& val) { return val.name != "bar"; }), std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
+      check(equality, LINE(""), extract(make_test_suite(), [](const auto& val) { return val.name != "bar"; }), std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
     }
 
     {
-      extractor e{
-            suite{"root",
-                  suite{"suite_0", foo<0>{"foo"}},
-                  suite{"suite_1", bar<0>{"bar"}, baz<0>{"baz"}},
-                  suite{"suite_2",
-                        suite{"suite_2_0", foo<1>{"foo1"}},
-                        suite{"suite_2_1",
-                              suite{"suite_2_1_0", bar<1>{"bar1"}}
-                        }
-                  }
-            }
-      };
-
       using variant_t = std::variant<foo<0>, bar<0>, baz<0>, foo<1>, bar<1>>;
       variant_t init[]{foo<0>{"foo"}};
-      check(equality, LINE(""), e.get([]<class T>(const T&) { return std::is_same_v<foo<0>, T>; }), std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
+      check(equality, LINE(""), extract(make_test_suite(), []<class T>(const T&) { return std::is_same_v<foo<0>, T>; }), std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
     }
   }
 }
