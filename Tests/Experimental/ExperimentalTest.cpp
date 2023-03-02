@@ -24,24 +24,18 @@ namespace sequoia::testing
 
 
 
-
   template<class... Ts>
   struct extract_leaves;
-
-  /*template<class... Ts>
-  struct extract_leaves
-  {
-    using type = suite<typename extract_leaves<Ts>::type...>;
-  };*/
 
   template<class... Ts>
   using extract_leaves_t = typename extract_leaves<Ts...>::type;
 
-  template<class T>
-  struct extract_leaves<T>
+  template<class... Ts>
+  struct extract_leaves<type_list<Ts...>>
   {
-    using type = T;
+    using type = type_list<Ts...>;
   };
+
 
   template<class... Ts>
     requires ((!is_suite_v<Ts>) && ...)
@@ -74,37 +68,11 @@ namespace sequoia::testing
     using type = type_list<Ts..., extract_leaves_t<suite<Us...>>>;
   };
 
-
-
-  /*template<class T, class U>
-  struct extract_leaves<T, U>
+  template<class T, class U, class... Vs>
+  struct extract_leaves<T, U, Vs...>
   {
-    using type = suite<extract_leaves_t<T>, extract_leaves_t<U>>;
+    using type = extract_leaves_t<extract_leaves_t<T, U>, Vs...>;
   };
-
-  template<class T, class U, class... Ts>
-  struct extract_leaves<T, U, Ts...>
-  {
-    using type = extract_leaves_t<extract_leaves_t<T, U>, Ts...>;
-  };
-
-  template<class... Ts, class... Us>
-  struct extract_leaves<suite<Ts...>, suite<Us...>>
-  {
-    using type = suite<Ts..., Us...>;
-  };
-
-  template<class T, class...Ts>
-  struct extract_leaves<T, suite<Ts...>>
-  {
-    using type = extract_leaves_t<suite<extract_leaves_t<T>, extract_leaves_t<Ts>...>>;
-  };
-
-  template<class T, class...Ts>
-  struct extract_leaves<suite<Ts...>, T>
-  {
-    using type = suite<extract_leaves_t<Ts>..., extract_leaves_t<T>>;
-  };*/
 
   template<class... Ts>
   struct is_suite<suite<Ts...>> : std::true_type {};
@@ -116,8 +84,7 @@ namespace sequoia::testing
   using to_variant_t = typename to_variant<T>::type;
 
   template<class... Ts>
-    requires ((!is_suite_v<Ts>) && ...)
-  struct to_variant<suite<Ts...>>
+  struct to_variant<type_list<Ts...>>
   {
     using type = std::variant<Ts...>;
   };
@@ -210,12 +177,16 @@ namespace sequoia::testing
   {
     static_assert(std::is_same_v<extract_leaves_t<suite<foo<0>>>, type_list<foo<0>>>);
     static_assert(std::is_same_v<extract_leaves_t<suite<foo<0>, bar<0>>>, type_list<foo<0>, bar<0>>>);
+    static_assert(std::is_same_v<extract_leaves_t<suite<foo<0>, bar<0>, baz<0>>>, type_list<foo<0>, bar<0>, baz<0>>>);
 
     static_assert(std::is_same_v<extract_leaves_t<suite<suite<foo<0>>>>, type_list<foo<0>>>);
     static_assert(std::is_same_v<extract_leaves_t<suite<suite<foo<0>, bar<0>>>>, type_list<foo<0>, bar<0>>>);
     static_assert(std::is_same_v<extract_leaves_t<suite<suite<foo<0>>, suite<bar<0>>>>, type_list<foo<0>, bar<0>>>);
+    static_assert(std::is_same_v<extract_leaves_t<suite<suite<foo<0>>, suite<bar<0>>, suite<baz<0>>>>, type_list<foo<0>, bar<0>, baz<0>>>);
 
-    /*static_assert(std::is_same_v<to_variant_t<suite<suite<foo<0>>, suite<bar<0>, baz<0>>>>, std::variant<foo<0>, bar<0>, baz<0>>>);
+    static_assert(std::is_same_v<extract_leaves_t<suite<suite<foo<0>>, suite<suite<bar<0>>>>>, type_list<foo<0>, bar<0>>>);
+    
+    static_assert(std::is_same_v<to_variant_t<suite<suite<foo<0>>, suite<bar<0>, baz<0>>>>, std::variant<foo<0>, bar<0>, baz<0>>>);
 
     extractor e{
                 suite{"root",
@@ -230,7 +201,7 @@ namespace sequoia::testing
                 }
               };
 
-    auto v{e.get()};*/
+    auto v{e.get()};
 
   }
 }
