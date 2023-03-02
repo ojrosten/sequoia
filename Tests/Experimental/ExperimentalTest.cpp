@@ -8,90 +8,11 @@
 /*! \file */
 
 #include "ExperimentalTest.hpp"
+#include "sequoia/Core/Object/Suite.hpp"
 
 namespace sequoia::testing
 {
-  template<class T>
-  struct is_suite : std::false_type {};
-
-  template<class T>
-  inline constexpr bool is_suite_v{is_suite<T>::value};
-
-  template<class... Ts>
-    requires ((is_suite_v<Ts> && ...) || ((!is_suite_v<Ts>) && ...))
-  class suite;
-
-  template<class... Ts>
-  struct is_suite<suite<Ts...>> : std::true_type {};
-
-
-  template<class... Ts>
-  struct extract_leaves;
-
-  template<class... Ts>
-  using extract_leaves_t = typename extract_leaves<Ts...>::type;
-
-  template<class... Ts>
-  struct extract_leaves<std::tuple<Ts...>>
-  {
-    using type = std::tuple<Ts...>;
-  };
-
-
-  template<class... Ts>
-    requires ((!is_suite_v<Ts>) && ...)
-  struct extract_leaves<suite<Ts...>>
-  {
-    using type = std::tuple<Ts...>;
-  };
-
-  template<class... Ts>
-  struct extract_leaves<suite<Ts...>>
-  {
-    using type = extract_leaves_t<extract_leaves_t<Ts>...>;
-  };
-
-  template<class... Ts, class... Us>
-  struct extract_leaves<std::tuple<Ts...>, std::tuple<Us...>>
-  {
-    using type = std::tuple<Ts..., Us...>;
-  };
-
-  template<class... Ts, class... Us>
-  struct extract_leaves<suite<Ts...>, std::tuple<Us...>>
-  {
-    using type = std::tuple<extract_leaves_t<suite<Ts...>>, Us...>;
-  };
-
-  template<class... Ts, class... Us>
-  struct extract_leaves<std::tuple<Ts...>, suite<Us...>>
-  {
-    using type = std::tuple<Ts..., extract_leaves_t<suite<Us...>>>;
-  };
-
-  template<class T, class U, class... Vs>
-  struct extract_leaves<T, U, Vs...>
-  {
-    using type = extract_leaves_t<extract_leaves_t<T, U>, Vs...>;
-  };
-
-  template<class T>
-  struct to_variant;
-
-  template<class T>
-  using to_variant_t = typename to_variant<T>::type;
-
-  template<class... Ts>
-  struct to_variant<std::tuple<Ts...>>
-  {
-    using type = std::variant<Ts...>;
-  };
-
-  template<class... Ts>
-  struct to_variant<suite<Ts...>>
-  {
-    using type = typename to_variant<extract_leaves_t<suite<Ts...>>>::type;
-  };
+  using namespace object;
 
   template<int I>
   struct foo
@@ -146,62 +67,10 @@ namespace sequoia::testing
     }
   };
 
-  template<class... Ts>
-    requires ((is_suite_v<Ts> && ...) || ((!is_suite_v<Ts>) && ...))
-  class suite
-  {
-  public:
-    std::string name;
-    std::tuple<Ts...> values;
-
-    suite(std::string name, Ts&&... ts)
-      : name{std::move(name)}
-      , values{std::forward<Ts>(ts)...} {}
-  };
-
-
   [[nodiscard]]
   std::string_view experimental_test::source_file() const noexcept
   {
     return __FILE__;
-  }
-
-  namespace impl
-  {
-    template<class Filter, class... Us, class Container>
-      requires ((!is_suite_v<Us>) && ...)
-    static void get(Filter&& filter, suite<Us...>& s, Container& c)
-    {
-      auto emplacer{
-        [&filter, &c] <class V> (V&& val) {
-          if(filter(val)) c.emplace_back(std::forward<V>(val));
-        }
-      };
-
-      [emplacer, &s] <std::size_t... Is> (std::index_sequence<Is...>) {
-        (emplacer(std::move(std::get<Is>(s.values))), ...);
-      }(std::make_index_sequence<sizeof...(Us)>{});
-    }
-
-    template<class Filter, class... Us, class Container>
-    static void get(Filter&& filter, suite<Us...>& s, Container& c)
-    {
-      [&] <std::size_t... Is> (std::index_sequence<Is...>) {
-        (get(std::forward<Filter>(filter), std::get<Is>(s.values), c), ...);
-      }(std::make_index_sequence<sizeof...(Us)>{});
-    }
-  }
-
-  template<class Suite, class Filter, class Container=std::vector<to_variant_t<Suite>>>
-    requires is_suite_v<Suite>
-  [[nodiscard]]
-  Container extract(Suite s, Filter&& filter)
-  {
-    Container c{};
-
-    impl::get(std::forward<Filter>(filter), s, c);
-
-    return c;
   }
 
   auto make_test_suite()
