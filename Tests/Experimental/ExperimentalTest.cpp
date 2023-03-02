@@ -249,14 +249,8 @@ namespace sequoia::testing
     static_assert(std::is_same_v<to_variant_t<suite_t>, variant_t>);
 
     auto v{e.get([](auto&&) { return true; })};
+    variant_t init[]{foo<0>{"foo"}, bar<0>{"bar"}, baz<0>{"baz"}, foo<1>{"foo1"}, bar<1>{"bar1"}};
 
-    std::vector<variant_t> prediction{};
-    prediction.emplace_back(foo<0>{"foo"});
-    prediction.emplace_back(bar<0>{"bar"});
-    prediction.emplace_back(baz<0>{"baz"});
-    prediction.emplace_back(foo<1>{"foo1"});
-    prediction.emplace_back(bar<1>{"bar1"});
-
-    check(equality, LINE(""), v, prediction);
+    check(equality, LINE(""), v, std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
   }
 }
