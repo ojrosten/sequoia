@@ -130,13 +130,13 @@ namespace sequoia::testing
   {
     std::string name;
 
-    /*baz(std::string s) : name{std::move(s)} {}
+    baz(std::string s) : name{std::move(s)} {}
 
     baz(const baz&)     = delete;
     baz(baz&&) noexcept = default;
 
     baz& operator=(const baz&)     = delete;
-    baz& operator=(baz&&) noexcept = default;*/
+    baz& operator=(baz&&) noexcept = default;
 
     [[nodiscard]]
     friend bool operator==(const baz&, const baz&) noexcept = default;
@@ -250,6 +250,13 @@ namespace sequoia::testing
 
     auto v{e.get([](auto&&) { return true; })};
 
-    check(equality, LINE(""), v, std::vector<variant_t>{foo<0>{"foo"}, bar<0>{"bar"}, baz<0>{"baz"}, foo<1>{"foo1"}, bar<1>{"bar1"}});
+    std::vector<variant_t> prediction{};
+    prediction.emplace_back(foo<0>{"foo"});
+    prediction.emplace_back(bar<0>{"bar"});
+    prediction.emplace_back(baz<0>{"baz"});
+    prediction.emplace_back(foo<1>{"foo1"});
+    prediction.emplace_back(bar<1>{"bar1"});
+
+    check(equality, LINE(""), v, prediction);
   }
 }
