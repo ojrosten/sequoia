@@ -94,29 +94,58 @@ namespace sequoia::testing
   {
     using type = typename to_variant<extract_leaves_t<suite<Ts...>>>::type;
   };
-  
+
   template<int I>
   struct foo
   {
-    explicit foo(std::string) {}
+    std::string name;
+
+    [[nodiscard]]
+    friend bool operator==(const foo&, const foo&) noexcept = default;
+
+    template<class Stream>
+    friend Stream& operator<<(Stream& s, const foo& f)
+    {
+      return (s << f.name);
+    }
   };
 
   template<int I>
   struct bar
   {
-    explicit bar(std::string) {}
+    std::string name;
 
-    bar(const bar&)     = delete;
-    bar(bar&&) noexcept = default;
+    [[nodiscard]]
+    friend bool operator==(const bar&, const bar&) noexcept = default;
 
-    bar& operator=(const bar&)     = delete;
-    bar& operator=(bar&&) noexcept = default;
+    template<class Stream>
+    friend Stream& operator<<(Stream& s, const bar& b)
+    {
+      return (s << b.name);
+    }
   };
 
   template<int I>
   struct baz
   {
-    explicit baz(std::string) {}
+    std::string name;
+
+    /*baz(std::string s) : name{std::move(s)} {}
+
+    baz(const baz&)     = delete;
+    baz(baz&&) noexcept = default;
+
+    baz& operator=(const baz&)     = delete;
+    baz& operator=(baz&&) noexcept = default;*/
+
+    [[nodiscard]]
+    friend bool operator==(const baz&, const baz&) noexcept = default;
+
+    template<class Stream>
+    friend Stream& operator<<(Stream& s, const baz& b)
+    {
+      return (s << b.name);
+    }
   };
 
   template<class... Ts>
@@ -145,6 +174,7 @@ namespace sequoia::testing
   class extractor
   {
   public:
+    using suite_type     = Suite;
     using container_type = std::vector<to_variant_t<Suite>>;
 
     explicit extractor(Suite s) : m_Suite{std::move(s)} {}
@@ -214,7 +244,12 @@ namespace sequoia::testing
                 }
               };
 
+    using suite_t = decltype(e)::suite_type;
+    using variant_t = std::variant<foo<0>, bar<0>, baz<0>, foo<1>, bar<1>>;
+    static_assert(std::is_same_v<to_variant_t<suite_t>, variant_t>);
+
     auto v{e.get([](auto&&) { return true; })};
 
+    check(equality, LINE(""), v, std::vector<variant_t>{foo<0>{"foo"}, bar<0>{"bar"}, baz<0>{"baz"}, foo<1>{"foo1"}, bar<1>{"bar1"}});
   }
 }
