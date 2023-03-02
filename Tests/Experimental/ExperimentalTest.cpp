@@ -8,7 +8,6 @@
 /*! \file */
 
 #include "ExperimentalTest.hpp"
-#include "TypeList.hpp"
 
 namespace sequoia::testing
 {
@@ -22,6 +21,8 @@ namespace sequoia::testing
     requires ((is_suite_v<Ts> && ...) || ((!is_suite_v<Ts>) && ...))
   class suite;
 
+  template<class... Ts>
+  struct is_suite<suite<Ts...>> : std::true_type {};
 
 
   template<class... Ts>
@@ -31,9 +32,9 @@ namespace sequoia::testing
   using extract_leaves_t = typename extract_leaves<Ts...>::type;
 
   template<class... Ts>
-  struct extract_leaves<type_list<Ts...>>
+  struct extract_leaves<std::tuple<Ts...>>
   {
-    using type = type_list<Ts...>;
+    using type = std::tuple<Ts...>;
   };
 
 
@@ -41,7 +42,7 @@ namespace sequoia::testing
     requires ((!is_suite_v<Ts>) && ...)
   struct extract_leaves<suite<Ts...>>
   {
-    using type = type_list<Ts...>;
+    using type = std::tuple<Ts...>;
   };
 
   template<class... Ts>
@@ -51,21 +52,21 @@ namespace sequoia::testing
   };
 
   template<class... Ts, class... Us>
-  struct extract_leaves<type_list<Ts...>, type_list<Us...>>
+  struct extract_leaves<std::tuple<Ts...>, std::tuple<Us...>>
   {
-    using type = type_list<Ts..., Us...>;
+    using type = std::tuple<Ts..., Us...>;
   };
 
   template<class... Ts, class... Us>
-  struct extract_leaves<suite<Ts...>, type_list<Us...>>
+  struct extract_leaves<suite<Ts...>, std::tuple<Us...>>
   {
-    using type = type_list<extract_leaves_t<suite<Ts...>>, Us...>;
+    using type = std::tuple<extract_leaves_t<suite<Ts...>>, Us...>;
   };
 
   template<class... Ts, class... Us>
-  struct extract_leaves<type_list<Ts...>, suite<Us...>>
+  struct extract_leaves<std::tuple<Ts...>, suite<Us...>>
   {
-    using type = type_list<Ts..., extract_leaves_t<suite<Us...>>>;
+    using type = std::tuple<Ts..., extract_leaves_t<suite<Us...>>>;
   };
 
   template<class T, class U, class... Vs>
@@ -74,9 +75,6 @@ namespace sequoia::testing
     using type = extract_leaves_t<extract_leaves_t<T, U>, Vs...>;
   };
 
-  template<class... Ts>
-  struct is_suite<suite<Ts...>> : std::true_type {};
-
   template<class T>
   struct to_variant;
 
@@ -84,7 +82,7 @@ namespace sequoia::testing
   using to_variant_t = typename to_variant<T>::type;
 
   template<class... Ts>
-  struct to_variant<type_list<Ts...>>
+  struct to_variant<std::tuple<Ts...>>
   {
     using type = std::variant<Ts...>;
   };
@@ -175,7 +173,7 @@ namespace sequoia::testing
     static void get(Filter&& filter, suite<Us...>& s, Container& c)
     {
       auto emplacer{
-        [&filter, &c] <class V> (V && val) {
+        [&filter, &c] <class V> (V&& val) {
           if(filter(val)) c.emplace_back(std::forward<V>(val));
         }
       };
@@ -222,16 +220,16 @@ namespace sequoia::testing
 
   void experimental_test::run_tests()
   {
-    static_assert(std::is_same_v<extract_leaves_t<suite<foo<0>>>, type_list<foo<0>>>);
-    static_assert(std::is_same_v<extract_leaves_t<suite<foo<0>, bar<0>>>, type_list<foo<0>, bar<0>>>);
-    static_assert(std::is_same_v<extract_leaves_t<suite<foo<0>, bar<0>, baz<0>>>, type_list<foo<0>, bar<0>, baz<0>>>);
+    static_assert(std::is_same_v<extract_leaves_t<suite<foo<0>>>, std::tuple<foo<0>>>);
+    static_assert(std::is_same_v<extract_leaves_t<suite<foo<0>, bar<0>>>, std::tuple<foo<0>, bar<0>>>);
+    static_assert(std::is_same_v<extract_leaves_t<suite<foo<0>, bar<0>, baz<0>>>, std::tuple<foo<0>, bar<0>, baz<0>>>);
 
-    static_assert(std::is_same_v<extract_leaves_t<suite<suite<foo<0>>>>, type_list<foo<0>>>);
-    static_assert(std::is_same_v<extract_leaves_t<suite<suite<foo<0>, bar<0>>>>, type_list<foo<0>, bar<0>>>);
-    static_assert(std::is_same_v<extract_leaves_t<suite<suite<foo<0>>, suite<bar<0>>>>, type_list<foo<0>, bar<0>>>);
-    static_assert(std::is_same_v<extract_leaves_t<suite<suite<foo<0>>, suite<bar<0>>, suite<baz<0>>>>, type_list<foo<0>, bar<0>, baz<0>>>);
+    static_assert(std::is_same_v<extract_leaves_t<suite<suite<foo<0>>>>, std::tuple<foo<0>>>);
+    static_assert(std::is_same_v<extract_leaves_t<suite<suite<foo<0>, bar<0>>>>, std::tuple<foo<0>, bar<0>>>);
+    static_assert(std::is_same_v<extract_leaves_t<suite<suite<foo<0>>, suite<bar<0>>>>, std::tuple<foo<0>, bar<0>>>);
+    static_assert(std::is_same_v<extract_leaves_t<suite<suite<foo<0>>, suite<bar<0>>, suite<baz<0>>>>, std::tuple<foo<0>, bar<0>, baz<0>>>);
 
-    static_assert(std::is_same_v<extract_leaves_t<suite<suite<foo<0>>, suite<suite<bar<0>>>>>, type_list<foo<0>, bar<0>>>);
+    static_assert(std::is_same_v<extract_leaves_t<suite<suite<foo<0>>, suite<suite<bar<0>>>>>, std::tuple<foo<0>, bar<0>>>);
     
     static_assert(std::is_same_v<to_variant_t<suite<suite<foo<0>>, suite<bar<0>, baz<0>>>>, std::variant<foo<0>, bar<0>, baz<0>>>);
 
