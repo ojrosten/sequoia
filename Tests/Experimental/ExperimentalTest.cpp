@@ -105,6 +105,12 @@ namespace sequoia::testing
   struct bar
   {
     explicit bar(std::string) {}
+
+    bar(const bar&)     = delete;
+    bar(bar&&) noexcept = default;
+
+    bar& operator=(const bar&)     = delete;
+    bar& operator=(bar&&) noexcept = default;
   };
 
   template<int I>
@@ -143,32 +149,39 @@ namespace sequoia::testing
 
     explicit extractor(Suite s) : m_Suite{std::move(s)} {}
 
+    template<class Filter>
     [[nodiscard]]
-    container_type get()
+    container_type get(Filter&& filter)
     {
       container_type c{};
 
-      get(m_Suite, c);
+      get(std::forward<Filter>(filter), m_Suite, c);
 
       return c;
     }
   private:
     Suite m_Suite;
 
-    template<class... Us>
+    template<class Filter, class... Us>
       requires ((!is_suite_v<Us>) && ...)
-    static void get(suite<Us...>& s, container_type& c)
+    static void get(Filter&& filter, suite<Us...>& s, container_type& c)
     {
-      [&] <std::size_t... Is> (std::index_sequence<Is...>) {
-        (c.emplace_back(std::move(std::get<Is>(s.values))), ...);
+      auto emplacer{
+        [&filter, &c] <class V> (V&& val) {
+          if(filter(val)) c.emplace_back(std::forward<V>(val));
+        }
+      };
+
+      [emplacer, &s] <std::size_t... Is> (std::index_sequence<Is...>) {
+        (emplacer(std::move(std::get<Is>(s.values))), ...);
       }(std::make_index_sequence<sizeof...(Us)>{});
     }
 
-    template<class... Us>
-    static void get(suite<Us...>& s, container_type& c)
+    template<class Filter, class... Us>
+    static void get(Filter&& filter, suite<Us...>& s, container_type& c)
     {
       [&] <std::size_t... Is> (std::index_sequence<Is...>) {
-        (get(std::get<Is>(s.values), c), ...);
+        (get(std::forward<Filter>(filter), std::get<Is>(s.values), c), ...);
       }(std::make_index_sequence<sizeof...(Us)>{});
     }
   };
@@ -195,13 +208,13 @@ namespace sequoia::testing
                       suite{"suite_2",
                             suite{"suite_2_0", foo<1>{"foo1"}},
                             suite{"suite_2_1",
-                                  suite{"suite_2_1_0", bar<1>{"bar2"}}
+                                  suite{"suite_2_1_0", bar<1>{"bar1"}}
                             }
                       }
                 }
               };
 
-    auto v{e.get()};
+    auto v{e.get([](auto&&) { return true; })};
 
   }
 }
