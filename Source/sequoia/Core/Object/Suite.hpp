@@ -135,9 +135,12 @@ namespace sequoia::object
     template<class Filter, class... Us, class Container>
     static void get(Filter&& filter, suite<Us...>& s, Container& c)
     {
-      [&] <std::size_t... Is> (std::index_sequence<Is...>) {
-        (get(std::forward<Filter>(filter), std::get<Is>(s.values), c), ...);
-      }(std::make_index_sequence<sizeof...(Us)>{});
+      if(filter(s))
+      {
+        [&] <std::size_t... Is> (std::index_sequence<Is...>) {
+          (get(std::forward<Filter>(filter), std::get<Is>(s.values), c), ...);
+        }(std::make_index_sequence<sizeof...(Us)>{});
+      }
     }
   }
 

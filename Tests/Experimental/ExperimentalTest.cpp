@@ -111,13 +111,23 @@ namespace sequoia::testing
     {
       using variant_t = std::variant<foo<0>, bar<0>, baz<0>, foo<1>, bar<1>>;
       variant_t init[]{foo<0>{"foo"}, baz<0>{"baz"}, foo<1>{"foo1"}, bar<1>{"bar1"}};
-      check(equality, LINE(""), extract(make_test_suite(), [](const auto& val) { return val.name != "bar"; }), std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
+
+      variant_visitor filter{
+        [] <class T> requires is_suite_v<T>(T&&) { return true; },
+        [](const auto& val) { return val.name != "bar"; }
+      };
+      check(equality, LINE(""), extract(make_test_suite(), filter), std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
     }
 
     {
       using variant_t = std::variant<foo<0>, bar<0>, baz<0>, foo<1>, bar<1>>;
       variant_t init[]{foo<0>{"foo"}};
-      check(equality, LINE(""), extract(make_test_suite(), []<class T>(const T&) { return std::is_same_v<foo<0>, T>; }), std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
+
+      variant_visitor filter{
+        [] <class T> requires is_suite_v<T>(const T&) { return true; },
+        [] <class T> (const T&) { return std::is_same_v<foo<0>, T>; }
+      };
+      check(equality, LINE(""), extract(make_test_suite(), filter), std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
     }
   }
 }
