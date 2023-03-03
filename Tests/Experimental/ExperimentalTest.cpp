@@ -112,7 +112,7 @@ namespace sequoia::testing
       using variant_t = std::variant<foo<0>, bar<0>, baz<0>, foo<1>, bar<1>>;
       variant_t init[]{foo<0>{"foo"}, baz<0>{"baz"}, foo<1>{"foo1"}, bar<1>{"bar1"}};
 
-      variant_visitor filter{
+      overloaded filter{
         [] <class T> requires is_suite_v<T>(T&&) { return true; },
         [](const auto& val) { return val.name != "bar"; }
       };
@@ -123,7 +123,7 @@ namespace sequoia::testing
       using variant_t = std::variant<foo<0>, bar<0>, baz<0>, foo<1>, bar<1>>;
       variant_t init[]{foo<0>{"foo"}};
 
-      variant_visitor filter{
+      overloaded filter{
         [] <class T> requires is_suite_v<T>(const T&) { return true; },
         [] <class T> (const T&) { return std::is_same_v<foo<0>, T>; }
       };

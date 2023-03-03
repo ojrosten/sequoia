@@ -113,8 +113,8 @@ namespace sequoia
     using arg = T;
   };
 
-  template<class... Ts> struct variant_visitor : Ts... { using Ts::operator()...; };
-  template<class... Ts> variant_visitor(Ts...) -> variant_visitor<Ts...>;
+  template<class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
+  template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
 
   template<alloc A>
   struct alloc_count

@@ -127,7 +127,7 @@ namespace sequoia::object
       if(found == m_Creators.end())
         throw std::runtime_error{std::string{"Factory unable to make product of name '"}.append(name).append("'")};
 
-      return std::visit(variant_visitor{[&](const auto& v) { return vessel{v.make(std::forward<Args>(args)...)}; }}, found->second);
+      return std::visit(overloaded{[&](const auto& v) { return vessel{v.make(std::forward<Args>(args)...)}; }}, found->second);
     }
 
     template<class Product, class... Args>
@@ -143,7 +143,7 @@ namespace sequoia::object
                              [](const element& e){ return std::holds_alternative<product_creator<Product>>(e.second); });
       }
 
-      return std::visit(variant_visitor{[&](const auto& v) { return vessel{v.make(std::forward<Args>(args)...)}; }}, found->second);
+      return std::visit(overloaded{[&](const auto& v) { return vessel{v.make(std::forward<Args>(args)...)}; }}, found->second);
     }
 
     [[nodiscard]]

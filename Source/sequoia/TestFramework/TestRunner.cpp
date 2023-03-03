@@ -54,7 +54,7 @@ namespace sequoia::testing
       auto nascent{factory.make(genus, runner.proj_paths(), runner.copyright(), runner.code_indent(), runner.stream())};
 
       std::visit(
-        variant_visitor{
+        overloaded{
           [&args,&species = species](nascent_semantics_test& nascent) {
             nascent.test_type(species);
             nascent.qualified_name(args[0]);
@@ -146,7 +146,7 @@ namespace sequoia::testing
         if(nascentTests.empty())
           throw std::logic_error{"Unable to find nascent test"};
 
-        std::visit(variant_visitor{[&args](auto& nascent){ nascent.family(args[0]);}}, nascentTests.back());
+        std::visit(overloaded{[&args](auto& nascent){ nascent.family(args[0]);}}, nascentTests.back());
       }
     };
 
@@ -155,7 +155,7 @@ namespace sequoia::testing
         if(nascentTests.empty())
           throw std::logic_error{"Unable to find nascent test"};
 
-        std::visit(variant_visitor{[](auto& nascent) { nascent.flavour(nascent_test_flavour::framework_diagnostics); }}, nascentTests.back());
+        std::visit(overloaded{[](auto& nascent) { nascent.flavour(nascent_test_flavour::framework_diagnostics); }}, nascentTests.back());
       }
     };
 
@@ -165,7 +165,7 @@ namespace sequoia::testing
           throw std::logic_error{"Unable to find nascent test"};
 
         auto visitor{
-          variant_visitor{
+          overloaded{
             [&args](nascent_semantics_test& nascent){ nascent.add_equivalent_type(args[0]); },
             [](auto&){}
           }
@@ -180,7 +180,7 @@ namespace sequoia::testing
         if(nascentTests.empty())
           throw std::logic_error{"Unable to find nascent test"};
 
-        std::visit(variant_visitor{[&args](auto& nascent){ nascent.header(args[0]); }}, nascentTests.back());
+        std::visit(overloaded{[&args](auto& nascent){ nascent.header(args[0]); }}, nascentTests.back());
       }
     };
 
@@ -189,7 +189,7 @@ namespace sequoia::testing
         if(nascentTests.empty())
           throw std::logic_error{"Unable to find nascent test"};
 
-        std::visit(variant_visitor{[&args](auto& nascent){ nascent.forename(args[0]); }}, nascentTests.back());
+        std::visit(overloaded{[&args](auto& nascent){ nascent.forename(args[0]); }}, nascentTests.back());
       }
     };
 
@@ -201,7 +201,7 @@ namespace sequoia::testing
         using src_opt = nascent_test_base::gen_source_option;
 
         auto visitor{
-          variant_visitor{
+          overloaded{
             [&args](nascent_behavioural_test& nascent) {
               nascent.generate_source_files(src_opt::yes);
               if(args[0] != "::") nascent.set_namespace(args[0]);
@@ -222,7 +222,7 @@ namespace sequoia::testing
         using src_opt = nascent_test_base::gen_source_option;
 
         auto visitor{
-          variant_visitor{
+          overloaded{
             [&args](nascent_semantics_test& nascent) {
               nascent.generate_source_files(src_opt::yes);
               nascent.source_dir(args[0]);
@@ -272,7 +272,7 @@ namespace sequoia::testing
                           if(!nascentTests.empty())
                           {
                             m_RunnerMode |= runner_mode::create;
-                            variant_visitor visitor{ [](auto& nascent) { nascent.finalize(); } };
+                            overloaded visitor{ [](auto& nascent) { nascent.finalize(); } };
                             std::visit(visitor, nascentTests.back());
                           }
                         }},
