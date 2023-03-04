@@ -113,7 +113,7 @@ namespace sequoia::object
     requires (std::is_same_v<std::remove_cvref_t<std::invoke_result_t<Transform, T>>, std::remove_cvref_t<std::invoke_result_t<Transform, Ts>>> && ...)
   struct to_variant_or_unqiue_type<std::tuple<T, Ts...>, Transform>
   {
-    using type = std::invoke_result_t<Transform, T>;
+    using type = std::remove_cvref_t<std::invoke_result_t<Transform, T>>;
   };
 
   template<class... Ts, class Transform>
@@ -126,7 +126,7 @@ namespace sequoia::object
   {
     template<class... Ts, class Filter, class Transform, class Container, class... PreviousSuites>
       requires (is_suite_v<PreviousSuites> && ...) && ((!is_suite_v<Ts>) && ...)
-    static void get(suite<Ts...>& s, Filter&& filter, Transform t, Container& c, const PreviousSuites&... previous)
+    static Container&& get(suite<Ts...>& s, Filter&& filter, Transform t, Container&& c, const PreviousSuites&... previous)
     {
       auto emplacer{
         [&] <class V> (V&& val) {
@@ -137,6 +137,8 @@ namespace sequoia::object
       [emplacer, &s] <std::size_t... Is> (std::index_sequence<Is...>) {
         (emplacer(std::move(std::get<Is>(s.values))), ...);
       }(std::make_index_sequence<sizeof...(Ts)>{});
+
+      return std::forward<Container>(c);
     }
 
     template<class... Ts, class Filter, class Transform, class Container, class... PreviousSuites>
