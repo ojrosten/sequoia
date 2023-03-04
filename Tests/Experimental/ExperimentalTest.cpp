@@ -98,6 +98,13 @@ namespace sequoia::testing
                     }
       };
     }
+
+    template<class T>
+    [[nodiscard]]
+    foo<-1> make_common(const T& t)
+    {
+      return foo<-1>{t.name};
+    }
   }
 
   [[nodiscard]]
@@ -119,7 +126,7 @@ namespace sequoia::testing
 
     static_assert(std::is_same_v<extract_leaves_t<suite<suite<foo<0>>, suite<suite<bar<0>>>>>, std::tuple<foo<0>, bar<0>>>);
     
-    static_assert(std::is_same_v<to_variant_t<suite<suite<foo<0>>, suite<bar<0>, baz<0>>>, std::identity>, std::variant<foo<0>, bar<0>, baz<0>>>);
+    static_assert(std::is_same_v<to_variant_or_unique_type_t<suite<suite<foo<0>>, suite<bar<0>, baz<0>>>, std::identity>, std::variant<foo<0>, bar<0>, baz<0>>>);
 
     {
       using variant_t = std::variant<foo<0>, bar<0>, baz<0>, foo<1>, bar<1>>;
@@ -227,7 +234,7 @@ namespace sequoia::testing
     {
       using variant_t = std::variant<foo<1>, bar<1>, baz<1>, foo<2>, bar<2>>;
       variant_t init[]{foo<1>{"foo->1"}, bar<1>{"bar->1"}, baz<1>{"baz->1"}, foo<2>{"foo1->2"}, bar<2>{"bar1->2"}};
-      check(equality, LINE(""), extract(make_test_suite(), [](auto&&...) { return true; }, [](const auto& s) { return s.next(); }), std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
+      check(equality, LINE(""), extract(make_test_suite(), [](auto&&...) { return true; }, [](const auto& val) { return val.next(); }), std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
     }
 
     {
@@ -237,7 +244,7 @@ namespace sequoia::testing
       auto filter{
         [] <class... Suites> requires (is_suite_v<Suites> && ...) (const auto & val, const Suites&...) { return val.name == "baz"; },
       };
-      check(equality, LINE(""), extract(make_test_suite(), filter, [](const auto& s) { return s.next(); }), std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
+      check(equality, LINE(""), extract(make_test_suite(), filter, [](const auto& val) { return val.next(); }), std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
     }
 
     {
@@ -248,7 +255,11 @@ namespace sequoia::testing
         [] <class... Suites> requires (is_suite_v<Suites> && ...) (const auto&, const Suites&... s) { return ((s.name == "suite_2") || ...); },
       };
 
-      check(equality, LINE(""), extract(make_test_suite(), filter, [](const auto& s) { return s.next(); }), std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
+      check(equality, LINE(""), extract(make_test_suite(), filter, [](const auto& val) { return val.next(); }), std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
+    }
+
+    {
+      check(equality, LINE(""), extract(make_test_suite(), [](auto&&...) {return true; }, [](const auto& val) -> foo<-1>{ return make_common(val); }), std::vector<foo<-1>>{{"foo"}, {"bar"}, {"baz"}, {"foo1"}, {"bar1"}});
     }
   }
 }

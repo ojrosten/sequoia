@@ -98,21 +98,28 @@ namespace sequoia::object
   };
 
   template<class T, class Transform>
-  struct to_variant;
+  struct to_variant_or_unqiue_type;
 
   template<class T, class Transform>
-  using to_variant_t = typename to_variant<T, Transform>::type;
+  using to_variant_or_unique_type_t = typename to_variant_or_unqiue_type<T, Transform>::type;
 
   template<class... Ts, class Transform>
-  struct to_variant<std::tuple<Ts...>, Transform>
+  struct to_variant_or_unqiue_type<std::tuple<Ts...>, Transform>
   {
     using type = std::variant<std::remove_cvref_t<std::invoke_result_t<Transform, Ts>>...>;
   };
 
-  template<class... Ts, class Transform>
-  struct to_variant<suite<Ts...>, Transform>
+  template<class T, class... Ts, class Transform>
+    requires (std::is_same_v<std::remove_cvref_t<std::invoke_result_t<Transform, T>>, std::remove_cvref_t<std::invoke_result_t<Transform, Ts>>> && ...)
+  struct to_variant_or_unqiue_type<std::tuple<T, Ts...>, Transform>
   {
-    using type = typename to_variant<extract_leaves_t<suite<Ts...>>, Transform>::type;
+    using type = std::invoke_result_t<Transform, T>;
+  };
+
+  template<class... Ts, class Transform>
+  struct to_variant_or_unqiue_type<suite<Ts...>, Transform>
+  {
+    using type = typename to_variant_or_unqiue_type<extract_leaves_t<suite<Ts...>>, Transform>::type;
   };
 
   namespace impl
@@ -146,8 +153,8 @@ namespace sequoia::object
 
   template<class Suite,
            class Filter,
-           class Transform=std::identity,
-           class Container = std::vector<to_variant_t<Suite, Transform>>>
+           class Transform = std::identity,
+           class Container = std::vector<to_variant_or_unique_type_t<Suite, Transform>>>
     requires is_suite_v<Suite>
   [[nodiscard]]
   Container extract(Suite s, Filter&& filter, Transform t = {})
