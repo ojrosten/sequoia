@@ -121,18 +121,15 @@ namespace sequoia::object
       requires (is_suite_v<PreviousSuites> && ...) && ((!is_suite_v<Ts>) && ...)
     static void get(Filter&& filter, suite<Ts...>& s, Container& c, const PreviousSuites&... previous)
     {
-      if(filter(previous..., s))
-      {
-        auto emplacer{
-          [&filter, &c] <class V> (V && val) {
-            if(filter(val)) c.emplace_back(std::forward<V>(val));
-          }
-        };
+      auto emplacer{
+        [&] <class V> (V && val) {
+          if(filter(val, previous..., s)) c.emplace_back(std::forward<V>(val));
+        }
+      };
 
-        [emplacer, &s] <std::size_t... Is> (std::index_sequence<Is...>) {
-          (emplacer(std::move(std::get<Is>(s.values))), ...);
-        }(std::make_index_sequence<sizeof...(Ts)>{});
-      }
+      [emplacer, &s] <std::size_t... Is> (std::index_sequence<Is...>) {
+        (emplacer(std::move(std::get<Is>(s.values))), ...);
+      }(std::make_index_sequence<sizeof...(Ts)>{});
     }
 
     template<class Filter, class... Ts, class Container, class... PreviousSuites>

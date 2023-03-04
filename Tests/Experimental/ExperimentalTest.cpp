@@ -112,9 +112,8 @@ namespace sequoia::testing
       using variant_t = std::variant<foo<0>, bar<0>, baz<0>, foo<1>, bar<1>>;
       variant_t init[]{foo<0>{"foo"}, baz<0>{"baz"}, foo<1>{"foo1"}, bar<1>{"bar1"}};
 
-      overloaded filter{
-        [] <class... Suites> requires (is_suite_v<Suites> && ...) (const Suites&...) { return true; },
-        [](const auto& val) { return val.name != "bar"; }
+      auto filter{
+        [] <class... Suites> requires (is_suite_v<Suites> && ...) (const auto& val, const Suites&...) { return val.name != "bar"; },
       };
       check(equality, LINE(""), extract(make_test_suite(), filter), std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
     }
@@ -123,9 +122,8 @@ namespace sequoia::testing
       using variant_t = std::variant<foo<0>, bar<0>, baz<0>, foo<1>, bar<1>>;
       variant_t init[]{foo<0>{"foo"}};
 
-      overloaded filter{
-        [] <class... Suites> requires (is_suite_v<Suites> && ...) (const Suites&...) { return true; },
-        [] <class T> (const T&) { return std::is_same_v<foo<0>, T>; }
+      auto filter{
+        [] <class T, class... Suites> requires (is_suite_v<Suites> && ...) (const T&, const Suites&...) { return std::is_same_v<foo<0>, T>; }
       };
       check(equality, LINE(""), extract(make_test_suite(), filter), std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
     }
@@ -134,9 +132,8 @@ namespace sequoia::testing
       using variant_t = std::variant<foo<0>, bar<0>, baz<0>, foo<1>, bar<1>>;
       variant_t init[]{foo<0>{"foo"}, bar<0>{"bar"}, baz<0>{"baz"}, foo<1>{"foo1"}, bar<1>{"bar1"}};
 
-      overloaded filter{
-        [] <class... Suites> requires (is_suite_v<Suites> && ...) (const Suites&... s) { return ((s.name == "root") || ...); },
-        [] <class T> (const T&) { return true; }
+      auto filter{
+        [] <class... Suites> requires (is_suite_v<Suites> && ...) (const auto&, const Suites&... s) { return ((s.name == "root") || ...); }
       };
 
       check(equality, LINE(""), extract(make_test_suite(), filter), std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
@@ -146,9 +143,8 @@ namespace sequoia::testing
       using variant_t = std::variant<foo<0>, bar<0>, baz<0>, foo<1>, bar<1>>;
       variant_t init[]{foo<0>{"foo"}};
 
-      overloaded filter{
-        [] <class... Suites> requires (is_suite_v<Suites> && ...) (const Suites&... s) { return ((s.name == "suite_0") || ...); },
-        [] <class T> (const T&) { return true; }
+      auto filter{
+        [] <class... Suites> requires (is_suite_v<Suites> && ...) (const auto&, const Suites&... s) { return ((s.name == "suite_0") || ...); }
       };
 
       check(equality, LINE(""), extract(make_test_suite(), filter), std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
@@ -158,9 +154,8 @@ namespace sequoia::testing
       using variant_t = std::variant<foo<0>, bar<0>, baz<0>, foo<1>, bar<1>>;
       variant_t init[]{bar<0>{"bar"}, baz<0>{"baz"}};
 
-      overloaded filter{
-        [] <class... Suites> requires (is_suite_v<Suites> && ...) (const Suites&... s) { return ((s.name == "suite_1") || ...); },
-        [] <class T> (const T&) { return true; }
+      auto filter{
+        [] <class... Suites> requires (is_suite_v<Suites> && ...) (const auto&, const Suites&... s) { return ((s.name == "suite_1") || ...); }
       };
 
       check(equality, LINE(""), extract(make_test_suite(), filter), std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
@@ -170,9 +165,8 @@ namespace sequoia::testing
       using variant_t = std::variant<foo<0>, bar<0>, baz<0>, foo<1>, bar<1>>;
       variant_t init[]{foo<1>{"foo1"}, bar<1>{"bar1"}};
 
-      overloaded filter{
-        [] <class... Suites> requires (is_suite_v<Suites> && ...) (const Suites&... s) { return ((s.name == "suite_2") || ...); },
-        [] <class T> (const T&) { return true; }
+      auto filter{
+        [] <class... Suites> requires (is_suite_v<Suites> && ...) (const auto&, const Suites&... s) { return ((s.name == "suite_2") || ...); },
       };
 
       check(equality, LINE(""), extract(make_test_suite(), filter), std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
@@ -182,9 +176,8 @@ namespace sequoia::testing
       using variant_t = std::variant<foo<0>, bar<0>, baz<0>, foo<1>, bar<1>>;
       variant_t init[]{foo<1>{"foo1"}};
 
-      overloaded filter{
-        [] <class... Suites> requires (is_suite_v<Suites> && ...) (const Suites&... s) { return ((s.name == "suite_2_0") || ...); },
-        [] <class T> (const T&) { return true; }
+      auto filter{
+        [] <class... Suites> requires (is_suite_v<Suites> && ...) (const auto&, const Suites&... s) { return ((s.name == "suite_2_0") || ...); }
       };
 
       check(equality, LINE(""), extract(make_test_suite(), filter), std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
@@ -194,9 +187,8 @@ namespace sequoia::testing
       using variant_t = std::variant<foo<0>, bar<0>, baz<0>, foo<1>, bar<1>>;
       variant_t init[]{bar<1>{"bar1"}};
 
-      overloaded filter{
-        [] <class... Suites> requires (is_suite_v<Suites> && ...) (const Suites&... s) { return ((s.name == "suite_2_1") || ...); },
-        [] <class T> (const T&) { return true; }
+      auto filter{
+        [] <class... Suites> requires (is_suite_v<Suites> && ...) (const auto&, const Suites&... s) { return ((s.name == "suite_2_1") || ...); }
       };
 
       check(equality, LINE(""), extract(make_test_suite(), filter), std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
@@ -206,9 +198,8 @@ namespace sequoia::testing
       using variant_t = std::variant<foo<0>, bar<0>, baz<0>, foo<1>, bar<1>>;
       variant_t init[]{bar<1>{"bar1"}};
 
-      overloaded filter{
-        [] <class... Suites> requires (is_suite_v<Suites> && ...) (const Suites&... s) { return ((s.name == "suite_2_1_0") || ...); },
-        [] <class T> (const T&) { return true; }
+      auto filter{
+        [] <class... Suites> requires (is_suite_v<Suites> && ...) (const auto&, const Suites&... s) { return ((s.name == "suite_2_1_0") || ...); }
       };
 
       check(equality, LINE(""), extract(make_test_suite(), filter), std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
