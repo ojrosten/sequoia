@@ -97,33 +97,33 @@ namespace sequoia::object
     using type = extract_leaves_t<extract_leaves_t<T, U>, Vs...>;
   };
 
-  template<class T>
+  template<class T, class Transform>
   struct to_variant;
 
-  template<class T>
-  using to_variant_t = typename to_variant<T>::type;
+  template<class T, class Transform>
+  using to_variant_t = typename to_variant<T, Transform>::type;
 
-  template<class... Ts>
-  struct to_variant<std::tuple<Ts...>>
+  template<class... Ts, class Transform>
+  struct to_variant<std::tuple<Ts...>, Transform>
   {
-    using type = std::variant<Ts...>;
+    using type = std::variant<std::remove_cvref_t<std::invoke_result_t<Transform, Ts>>...>;
   };
 
-  template<class... Ts>
-  struct to_variant<suite<Ts...>>
+  template<class... Ts, class Transform>
+  struct to_variant<suite<Ts...>, Transform>
   {
-    using type = typename to_variant<extract_leaves_t<suite<Ts...>>>::type;
+    using type = typename to_variant<extract_leaves_t<suite<Ts...>>, Transform>::type;
   };
 
   namespace impl
   {
-    template<class Filter, class... Ts, class Container, class... PreviousSuites>
+    template<class... Ts, class Filter, class Transform, class Container, class... PreviousSuites>
       requires (is_suite_v<PreviousSuites> && ...) && ((!is_suite_v<Ts>) && ...)
-    static void get(Filter&& filter, suite<Ts...>& s, Container& c, const PreviousSuites&... previous)
+    static void get(suite<Ts...>& s, Filter&& filter, Transform t, Container& c, const PreviousSuites&... previous)
     {
       auto emplacer{
-        [&] <class V> (V && val) {
-          if(filter(val, previous..., s)) c.emplace_back(std::forward<V>(val));
+        [&] <class V> (V&& val) {
+          if(filter(val, previous..., s)) c.emplace_back(t(std::forward<V>(val)));
         }
       };
 
@@ -132,24 +132,27 @@ namespace sequoia::object
       }(std::make_index_sequence<sizeof...(Ts)>{});
     }
 
-    template<class Filter, class... Ts, class Container, class... PreviousSuites>
+    template<class... Ts, class Filter, class Transform, class Container, class... PreviousSuites>
       requires (is_suite_v<PreviousSuites> && ...) && ((is_suite_v<Ts>) && ...)
-    static void get(Filter&& filter, suite<Ts...>& s, Container& c, const PreviousSuites&... previous)
+    static void get(suite<Ts...>& s, Filter&& filter, Transform t, Container& c, const PreviousSuites&... previous)
     {
       [&] <std::size_t... Is> (std::index_sequence<Is...>) {
-        (get(std::forward<Filter>(filter), std::get<Is>(s.values), c, previous..., s), ...);
+        (get(std::get<Is>(s.values), std::forward<Filter>(filter), t, c, previous..., s), ...);
       }(std::make_index_sequence<sizeof...(Ts)>{});
     }
   }
 
-  template<class Suite, class Filter, class Container = std::vector<to_variant_t<Suite>>>
+  template<class Suite,
+           class Filter,
+           class Transform=std::identity,
+           class Container = std::vector<to_variant_t<Suite, Transform>>>
     requires is_suite_v<Suite>
   [[nodiscard]]
-  Container extract(Suite s, Filter&& filter)
+  Container extract(Suite s, Filter&& filter, Transform t = {})
   {
     Container c{};
 
-    impl::get(std::forward<Filter>(filter), s, c);
+    impl::get(s, std::forward<Filter>(filter), std::move(t), c);
 
     return c;
   }
