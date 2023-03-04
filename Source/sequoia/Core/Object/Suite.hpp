@@ -134,11 +134,13 @@ namespace sequoia::object
 
     template<class... Ts, class Filter, class Transform, class Container, class... PreviousSuites>
       requires (is_suite_v<PreviousSuites> && ...) && ((is_suite_v<Ts>) && ...)
-    static void get(suite<Ts...>& s, Filter&& filter, Transform t, Container& c, const PreviousSuites&... previous)
+    static Container&& get(suite<Ts...>& s, Filter&& filter, Transform t, Container&& c, const PreviousSuites&... previous)
     {
       [&] <std::size_t... Is> (std::index_sequence<Is...>) {
         (get(std::get<Is>(s.values), std::forward<Filter>(filter), t, c, previous..., s), ...);
       }(std::make_index_sequence<sizeof...(Ts)>{});
+
+      return std::forward<Container>(c);
     }
   }
 
@@ -150,10 +152,6 @@ namespace sequoia::object
   [[nodiscard]]
   Container extract(Suite s, Filter&& filter, Transform t = {})
   {
-    Container c{};
-
-    impl::get(s, std::forward<Filter>(filter), std::move(t), c);
-
-    return c;
+    return impl::get(s, std::forward<Filter>(filter), std::move(t), Container{});
   }
 }
