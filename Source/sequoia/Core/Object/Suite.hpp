@@ -117,30 +117,31 @@ namespace sequoia::object
 
   namespace impl
   {
-    template<class Filter, class... Us, class Container>
-      requires ((!is_suite_v<Us>) && ...)
-    static void get(Filter&& filter, suite<Us...>& s, Container& c)
+    template<class Filter, class... Ts, class Container, class... PreviousSuites>
+      requires (is_suite_v<PreviousSuites> && ...) && ((!is_suite_v<Ts>) && ...)
+    static void get(Filter&& filter, suite<Ts...>& s, Container& c, const PreviousSuites&... previous)
     {
-      auto emplacer{
-        [&filter, &c] <class V> (V && val) {
-          if(filter(val)) c.emplace_back(std::forward<V>(val));
-        }
-      };
+      if(filter(previous..., s))
+      {
+        auto emplacer{
+          [&filter, &c] <class V> (V && val) {
+            if(filter(val)) c.emplace_back(std::forward<V>(val));
+          }
+        };
 
-      [emplacer, &s] <std::size_t... Is> (std::index_sequence<Is...>) {
-        (emplacer(std::move(std::get<Is>(s.values))), ...);
-      }(std::make_index_sequence<sizeof...(Us)>{});
+        [emplacer, &s] <std::size_t... Is> (std::index_sequence<Is...>) {
+          (emplacer(std::move(std::get<Is>(s.values))), ...);
+        }(std::make_index_sequence<sizeof...(Ts)>{});
+      }
     }
 
-    template<class Filter, class... Us, class Container>
-    static void get(Filter&& filter, suite<Us...>& s, Container& c)
+    template<class Filter, class... Ts, class Container, class... PreviousSuites>
+      requires (is_suite_v<PreviousSuites> && ...) && ((is_suite_v<Ts>) && ...)
+    static void get(Filter&& filter, suite<Ts...>& s, Container& c, const PreviousSuites&... previous)
     {
-      if(filter(s))
-      {
-        [&] <std::size_t... Is> (std::index_sequence<Is...>) {
-          (get(std::forward<Filter>(filter), std::get<Is>(s.values), c), ...);
-        }(std::make_index_sequence<sizeof...(Us)>{});
-      }
+      [&] <std::size_t... Is> (std::index_sequence<Is...>) {
+        (get(std::forward<Filter>(filter), std::get<Is>(s.values), c, previous..., s), ...);
+      }(std::make_index_sequence<sizeof...(Ts)>{});
     }
   }
 
