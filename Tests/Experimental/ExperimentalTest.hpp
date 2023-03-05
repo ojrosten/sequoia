@@ -22,5 +22,9 @@ namespace sequoia::testing
     std::string_view source_file() const noexcept final;
   private:
     void run_tests() final;
+
+    void test_flat_suite();
+    void test_nested_suite();
+    void test_name_filter();
   };
 }

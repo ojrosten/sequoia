@@ -115,6 +115,25 @@ namespace sequoia::testing
 
   void experimental_test::run_tests()
   {
+    test_flat_suite();
+    test_nested_suite();
+    test_name_filter();
+  }
+
+  void experimental_test::test_flat_suite()
+  {
+    {
+      using variant_t = std::variant<int, double>;
+      check(equality, LINE(""), extract(suite{"root", int{42}, double{3.14}}, [](auto&&...) { return true; }), std::vector<variant_t>{ {int{42}}, {double{3.14}}});
+    }
+
+    {
+      check(equality, LINE(""), extract(suite{"root", int{42}}, [](auto&&...) { return true; }), std::vector<int>{ 42 });
+    }
+  }
+
+  void experimental_test::test_nested_suite()
+  {
     static_assert(std::is_same_v<extract_leaves_t<suite<foo<0>>>, std::tuple<foo<0>>>);
     static_assert(std::is_same_v<extract_leaves_t<suite<foo<0>, bar<0>>>, std::tuple<foo<0>, bar<0>>>);
     static_assert(std::is_same_v<extract_leaves_t<suite<foo<0>, bar<0>, baz<0>>>, std::tuple<foo<0>, bar<0>, baz<0>>>);
@@ -261,14 +280,15 @@ namespace sequoia::testing
     {
       check(equality, LINE(""), extract(make_test_suite(), [](auto&&...) {return true; }, [](const auto& val) -> foo<-1>{ return make_common(val); }), std::vector<foo<-1>>{{"foo"}, {"bar"}, {"baz"}, {"foo1"}, {"bar1"}});
     }
+  }
 
+  void experimental_test::test_name_filter()
+  {
     {
-      using variant_t = std::variant<int, double>;
-      check(equality, LINE(""), extract(suite{"root", int{42}, double{3.14}}, [](auto&&...) { return true; }), std::vector<variant_t>{ {int{42}}, {double{3.14}}});
-    }
+      using variant_t = std::variant<foo<0>, bar<0>, baz<0>, foo<1>, bar<1>>;
+      variant_t init[]{foo<1>{"foo1"}, bar<1>{"bar1"}};
 
-    {
-      check(equality, LINE(""), extract(suite{"root", int{42}}, [](auto&&...) { return true; }), std::vector<int>{ 42 });
+      check(equality, LINE(""), extract(make_test_suite(), filter_by_names{{{"suite_2"}}, {}}), std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
     }
   }
 }

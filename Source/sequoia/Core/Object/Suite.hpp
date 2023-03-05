@@ -11,6 +11,8 @@
 
 #pragma once
 
+#include <map>
+#include <ranges>
 #include <string>
 #include <tuple>
 #include <variant>
@@ -163,4 +165,56 @@ namespace sequoia::object
   {
     return impl::get(s, std::forward<Filter>(filter), std::move(t), Container{});
   }
+
+  class filter_by_names
+  {
+  public:
+    filter_by_names(const std::vector<std::string>& selectedSuites, const std::vector<std::string>& selectedItems)
+      : m_SelectedSuites{make(selectedSuites)}
+      , m_SelectedItems{make(selectedItems)}
+    {}
+
+    template<class T, class... Suites>
+      requires (is_suite_v<Suites> && ...)
+    [[nodiscard]]
+    bool operator()(const T& val, const Suites&... suites)
+    {
+      auto findSuite{
+        [&] <class... Us> (const suite<Us...>& s) {
+          if(m_SelectedSuites.empty()) return m_SelectedItems.empty();
+        
+          auto found{m_SelectedSuites.find(s.name)};
+          if(found != m_SelectedSuites.end())
+            found->second = true;
+        
+          return found != m_SelectedSuites.end();
+        }
+      };
+
+      auto findItem{
+        [&](const auto& item) {
+          if(m_SelectedItems.empty()) return m_SelectedSuites.empty();
+
+          auto found{m_SelectedItems.find(item.name)}; // Generalize this
+          if(found != m_SelectedItems.end())
+            found->second = true;
+
+          return found != m_SelectedItems.end();
+        }
+      };
+
+      return (findSuite(suites) || ...) || findItem(val);
+    }
+  private:
+    using map_t = std::map<std::string, bool>;
+    map_t m_SelectedSuites{}, m_SelectedItems{};
+
+    [[nodiscard]]
+    static map_t make(const std::vector<std::string>& selected)
+    {
+      map_t selection{};
+      std::ranges::transform(selected, std::inserter(selection, selection.end()), [](const std::string& s) -> std::pair<std::string, bool> { return {s, false}; });
+      return selection;
+    }
+  };
 }
