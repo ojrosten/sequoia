@@ -11,6 +11,8 @@
 
 #pragma once
 
+#include "sequoia/Core/Object/Nomenclator.hpp"
+
 #include <map>
 #include <ranges>
 #include <string>
@@ -179,31 +181,19 @@ namespace sequoia::object
     [[nodiscard]]
     bool operator()(const T& val, const Suites&... suites)
     {
-      auto findSuite{
-        [&] <class... Us> (const suite<Us...>& s) {
-          if(m_SelectedSuites.empty()) return m_SelectedItems.empty();
-        
-          auto found{m_SelectedSuites.find(s.name)};
-          if(found != m_SelectedSuites.end())
-            found->second = true;
-        
-          return found != m_SelectedSuites.end();
+      auto finder{
+        [] <class U>(map_t& selected, const map_t& other, const U& u) {
+          if(selected.empty()) return other.empty();
+
+          auto found{selected.find(nomenclator<U>::name(u))};
+          const bool isFound{found != selected.end()};
+          if(isFound) found->second = true;
+
+          return isFound;
         }
       };
 
-      auto findItem{
-        [&](const auto& item) {
-          if(m_SelectedItems.empty()) return m_SelectedSuites.empty();
-
-          auto found{m_SelectedItems.find(item.name)}; // Generalize this
-          if(found != m_SelectedItems.end())
-            found->second = true;
-
-          return found != m_SelectedItems.end();
-        }
-      };
-
-      return (findSuite(suites) || ...) || findItem(val);
+      return (finder(m_SelectedSuites, m_SelectedItems, suites) || ...) || finder(m_SelectedItems, m_SelectedSuites, val);
     }
   private:
     using map_t = std::map<std::string, bool>;
@@ -213,7 +203,8 @@ namespace sequoia::object
     static map_t make(const std::vector<std::string>& selected)
     {
       map_t selection{};
-      std::ranges::transform(selected, std::inserter(selection, selection.end()), [](const std::string& s) -> std::pair<std::string, bool> { return {s, false}; });
+//      std::ranges::transform(selected, std::inserter(selection, selection.end()), [](const std::string& s) -> std::pair<std::string, bool> { return {s, false}; });
+      std::transform(selected.begin(), selected.end(), std::inserter(selection, selection.end()), [](const std::string& s) -> std::pair<std::string, bool> { return {s, false}; });
       return selection;
     }
   };
