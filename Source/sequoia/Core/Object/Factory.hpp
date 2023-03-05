@@ -13,6 +13,7 @@
 
 #include "sequoia/Core/Meta/Concepts.hpp"
 #include "sequoia/Core/Object/Creator.hpp"
+#include "sequoia/Core/Object/Nomenclator.hpp"
 #include "sequoia/Core/ContainerUtilities/Iterator.hpp"
 #include "sequoia/Core/Meta/Utilities.hpp"
 
@@ -58,17 +59,6 @@ namespace sequoia::object
     static pointer get_ptr(reference ref) noexcept { return &ref; }
   };
 
-  template<class T>
-  struct nomenclator
-  {
-    static std::string make() = delete;
-  };
-
-  template<class T>
-  inline constexpr bool has_nomenclator{
-    requires { { nomenclator<T>::make() } -> std::convertible_to<std::string>; }
-  };
-
   /*! \brief Generic factory with statically defined products.
 
       The constructor requires a list of unique key which are internally mapped to the
@@ -103,8 +93,8 @@ namespace sequoia::object
     using names_iterator = utilities::iterator<const_storage_iterator, factory_dereference_policy<const_storage_iterator>>;
 
     factory()
-      requires (has_nomenclator<Products> && ...)
-      : factory{ {nomenclator<Products>::make()...}}
+      requires (has_extrinsic_nomenclator<Products> && ...)
+      : factory{ {nomenclator<Products>::name()...}}
     {}
 
     factory(const std::array<std::string_view, size()>& names)
