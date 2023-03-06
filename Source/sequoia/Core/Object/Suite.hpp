@@ -171,6 +171,9 @@ namespace sequoia::object
   class filter_by_names
   {
   public:
+    using map_type       = std::map<std::string, bool>;
+    using const_iterator = typename map_type::const_iterator;
+
     filter_by_names(const std::vector<std::string>& selectedSuites, const std::vector<std::string>& selectedItems)
       : m_SelectedSuites{make(selectedSuites)}
       , m_SelectedItems{make(selectedItems)}
@@ -182,7 +185,7 @@ namespace sequoia::object
     bool operator()(const T& val, const Suites&... suites)
     {
       auto finder{
-        [] <class U>(map_t& selected, const map_t& other, const U& u) {
+        [] <class U>(map_type& selected, const map_type& other, const U& u) {
           if(selected.empty()) return other.empty();
 
           auto found{selected.find(nomenclator<U>::name(u))};
@@ -195,14 +198,28 @@ namespace sequoia::object
 
       return (finder(m_SelectedSuites, m_SelectedItems, suites) || ...) || finder(m_SelectedItems, m_SelectedSuites, val);
     }
-  private:
-    using map_t = std::map<std::string, bool>;
-    map_t m_SelectedSuites{}, m_SelectedItems{};
 
     [[nodiscard]]
-    static map_t make(const std::vector<std::string>& selected)
+    const_iterator begin_selected_suites() const noexcept { return m_SelectedSuites.begin(); }
+
+    [[nodiscard]]
+    const_iterator end_selected_suites() const noexcept { return m_SelectedSuites.end(); }
+
+    [[nodiscard]]
+    const_iterator begin_selected_items() const noexcept { return m_SelectedItems.begin(); }
+
+    [[nodiscard]]
+    const_iterator end_selected_items() const noexcept { return m_SelectedItems.end(); }
+
+    [[nodiscard]]
+    friend bool operator==(const filter_by_names&, const filter_by_names&) noexcept = default;
+  private:
+    map_type m_SelectedSuites{}, m_SelectedItems{};
+
+    [[nodiscard]]
+    static map_type make(const std::vector<std::string>& selected)
     {
-      map_t selection{};
+      map_type selection{};
 //      std::ranges::transform(selected, std::inserter(selection, selection.end()), [](const std::string& s) -> std::pair<std::string, bool> { return {s, false}; });
       std::transform(selected.begin(), selected.end(), std::inserter(selection, selection.end()), [](const std::string& s) -> std::pair<std::string, bool> { return {s, false}; });
       return selection;
