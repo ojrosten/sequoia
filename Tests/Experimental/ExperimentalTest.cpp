@@ -290,5 +290,33 @@ namespace sequoia::testing
 
       check(equality, LINE(""), extract(make_test_suite(), filter_by_names{{{"suite_2"}}, {}}), std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
     }
+
+    {
+      using variant_t = std::variant<foo<0>, bar<0>, baz<0>, foo<1>, bar<1>>;
+      variant_t init[]{bar<1>{"bar1"}};
+
+      check(equality, LINE(""), extract(make_test_suite(), filter_by_names{{{}}, {{"bar1"}}}), std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
+    }
+
+    {
+      using variant_t = std::variant<foo<0>, bar<0>, baz<0>, foo<1>, bar<1>>;
+      variant_t init[]{baz<0>{"baz"}, bar<1>{"bar1"}};
+
+      check(equality, LINE(""), extract(make_test_suite(), filter_by_names{{{}}, {{"bar1"}, {"baz"}}}), std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
+    }
+
+    {
+      using variant_t = std::variant<foo<0>, bar<0>, baz<0>, foo<1>, bar<1>>;
+      variant_t init[]{foo<1>{"foo1"}, bar<1>{"bar1"}};
+
+      check(equality, LINE(""), extract(make_test_suite(), filter_by_names{{{"suite_2"}}, {"bar1"}}), std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
+    }
+
+    {
+      using variant_t = std::variant<foo<0>, bar<0>, baz<0>, foo<1>, bar<1>>;
+      variant_t init[]{foo<0>{"foo"}, foo<1>{"foo1"}, bar<1>{"bar1"}};
+
+      check(equality, LINE(""), extract(make_test_suite(), filter_by_names{{{"suite_2"}, {"suite_0"}}, {}}), std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
+    }
   }
 }
