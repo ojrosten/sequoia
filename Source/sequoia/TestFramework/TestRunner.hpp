@@ -11,6 +11,7 @@
     \brief Utilities for running tests from the command line.
 */
 
+#include "sequoia/Core/Object/Suite.hpp"
 #include "sequoia/TestFramework/TestFamilySelector.hpp"
 
 #include "sequoia/Core/Logic/Bitmask.hpp"
@@ -33,12 +34,75 @@ namespace sequoia
 
 namespace sequoia::testing
 {
+  class test_vessel
+  {
+  public:
+    template<concrete_test Test>
+    test_vessel(Test&& t)
+      : m_pTest{std::make_unique<essence<Test>>(std::forward<Test>(t))}
+    {}
+
+    test_vessel(const test_vessel&)     = delete;
+    test_vessel(test_vessel&&) noexcept = default;
+
+    test_vessel& operator=(const test_vessel&)     = delete;
+    test_vessel& operator=(test_vessel&&) noexcept = default;
+
+    [[nodiscard]]
+    const std::string& name() const noexcept
+    {
+      return m_pTest->name();
+    }
+
+    [[nodiscard]]
+    family_results execute(update_mode updateMode,
+                           concurrency_mode concurrenyMode,
+                           std::optional<std::size_t> index)
+    {
+      return m_pTest->execute(updateMode, concurrenyMode, index);
+    }
+  private:
+    struct soul
+    {
+      virtual ~soul() = default;
+      virtual const std::string& name() const noexcept = 0;
+      virtual family_results execute(update_mode updateMode,
+                                     concurrency_mode concurrenyMode,
+                                     std::optional<std::size_t> index) = 0;
+    };
+
+    template<concrete_test Test>
+    struct essence final : soul
+    {
+      essence(Test&& t) : m_Test{std::forward<Test>(t)}
+      {}
+
+      [[nodiscard]]
+      const std::string& name() const noexcept final
+      {
+        return m_Test.name();
+      }
+
+      [[nodiscard]]
+      family_results execute(update_mode updateMode,
+                             concurrency_mode concurrenyMode,
+                             std::optional<std::size_t> index) final
+      {
+        return m_Test.execute(updateMode, concurrenyMode, index);
+      }
+
+      Test m_Test;
+    };
+
+    std::unique_ptr<soul> m_pTest{};
+  };
+
   [[nodiscard]]
   std::string report_time(const family_summary& s);
 
   /*! \brief Consumes command-line arguments and holds all test families
 
-      If no arguments are specified, all tests are run, in serial, with the diagnostic
+      If no arguments are specified, all tests are run with the diagnostic
       files generated; run with --help for information on the various options
 
    */
@@ -72,6 +136,13 @@ namespace sequoia::testing
       m_Selector.add_test_family(name, m_RecoveryMode, std::move(tests)...);
     }
 
+    template<class Suite>
+      requires object::is_suite_v<Suite>
+    void add_suite(Suite s)
+    {
+
+    }
+
     void execute([[maybe_unused]] timer_resolution r={});
 
     std::ostream& stream() noexcept { return *m_Stream; }
@@ -90,6 +161,8 @@ namespace sequoia::testing
     family_selector  m_Selector;
     indentation      m_CodeIndent{"  "};
     std::ostream*    m_Stream;
+
+    std::vector<test_vessel> m_Tests{};
 
     runner_mode      m_RunnerMode{runner_mode::none};
     output_mode      m_OutputMode{output_mode::standard};

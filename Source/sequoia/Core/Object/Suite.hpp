@@ -13,6 +13,7 @@
 
 #include "sequoia/Core/Object/Nomenclator.hpp"
 
+#include <algorithm>
 #include <map>
 #include <ranges>
 #include <string>

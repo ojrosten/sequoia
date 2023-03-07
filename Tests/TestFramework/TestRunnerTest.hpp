@@ -29,6 +29,8 @@ namespace sequoia::testing
 
     void test_critical_errors();
 
+    void test_suites();
+
     void test_basic_output();
 
     void test_prune_basic_output();

@@ -252,6 +252,7 @@ namespace sequoia::testing
   {
     test_exceptions();
     test_critical_errors();
+    test_suites();
     test_basic_output();
     test_prune_basic_output();
     test_instability_analysis();
@@ -473,6 +474,11 @@ namespace sequoia::testing
     check(equivalence, LINE("Recovery and Dump"),
                       working_materials() /= "RecoveryAndDumpOutput",
                       predictive_materials() /= "RecoveryAndDumpOutput");
+  }
+
+  void test_runner_test::test_suites()
+  {
+
   }
 
   void test_runner_test::test_basic_output()
