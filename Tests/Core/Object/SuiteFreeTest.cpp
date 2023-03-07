@@ -288,8 +288,14 @@ namespace sequoia::testing
     {
       using variant_t = std::variant<foo<0>, bar<0>, baz<0>, foo<1>, bar<1>>;
       variant_t init[]{foo<1>{"foo1"}, bar<1>{"bar1"}};
+      auto filter{filter_by_names{{{"suite_2"}}, {}}};
 
-      check(equality, LINE(""), extract(make_test_suite(), filter_by_names{{{"suite_2"}}, {}}), std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
+      check(equality, LINE(""), extract(make_test_suite(), filter), std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
+
+      using map_t = std::map<std::string, bool>;
+      map_t selectedItems{}, selectedSuites{{{"suite_2"}, true}};
+      check(equality, LINE(""), filter.begin_selected_items(), filter.end_selected_items(), selectedItems.begin(), selectedItems.end());
+      check(equality, LINE(""), filter.begin_selected_suites(), filter.end_selected_suites(), selectedSuites.begin(), selectedSuites.end());
     }
 
     {
