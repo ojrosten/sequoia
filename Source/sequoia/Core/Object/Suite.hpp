@@ -196,7 +196,10 @@ namespace sequoia::object
         }
       };
 
-      return (finder(m_SelectedSuites, m_SelectedItems, suites) || ...) || finder(m_SelectedItems, m_SelectedSuites, val);
+      // Don't use logical short-circuit, otherwise the maps may not accurately update
+      std::array<bool, sizeof...(Suites) + 1> isFound{finder(m_SelectedItems, m_SelectedSuites, val), finder(m_SelectedSuites, m_SelectedItems, suites) ...};
+
+      return std::any_of(isFound.begin(), isFound.end(), [](bool b) { return b; });
     }
 
     [[nodiscard]]

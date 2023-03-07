@@ -8,7 +8,7 @@
 /*! \file */
 
 #include "SuiteFreeTest.hpp"
-#include "sequoia/Core/Object/Suite.hpp"
+#include "SuiteTestingUtilities.hpp"
 
 namespace sequoia::testing
 {
@@ -288,21 +288,51 @@ namespace sequoia::testing
     {
       using variant_t = std::variant<foo<0>, bar<0>, baz<0>, foo<1>, bar<1>>;
       variant_t init[]{foo<1>{"foo1"}, bar<1>{"bar1"}};
-      auto filter{filter_by_names{{{"suite_2"}}, {}}};
 
-      check(equality, LINE(""), extract(make_test_suite(), filter), std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
+      {
+        auto filter{filter_by_names{{{"suite_2"}}, {}}};
 
-      using map_t = std::map<std::string, bool>;
-      map_t selectedItems{}, selectedSuites{{{"suite_2"}, true}};
-      check(equality, LINE(""), filter.begin_selected_items(), filter.end_selected_items(), selectedItems.begin(), selectedItems.end());
-      check(equality, LINE(""), filter.begin_selected_suites(), filter.end_selected_suites(), selectedSuites.begin(), selectedSuites.end());
+        check(equality, LINE(""), extract(make_test_suite(), filter), std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
+
+        using map_t = filter_by_names::map_type;
+        check(equivalence, LINE(""), filter, map_t{{{"suite_2"}, true}}, map_t{});
+      }
+    }
+
+    {
+      using variant_t = std::variant<foo<0>, bar<0>, baz<0>, foo<1>, bar<1>>;
+      variant_t init[]{foo<1>{"foo1"}, bar<1>{"bar1"}};
+
+      {
+        auto filter{filter_by_names{{{"suite_2"}, "plurgh"}, {}}};
+
+        check(equality, LINE(""), extract(make_test_suite(), filter), std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
+
+        using map_t = filter_by_names::map_type;
+        check(equivalence, LINE(""), filter, map_t{{"plurgh", false}, {{"suite_2"}, true}}, map_t{});
+      }
     }
 
     {
       using variant_t = std::variant<foo<0>, bar<0>, baz<0>, foo<1>, bar<1>>;
       variant_t init[]{bar<1>{"bar1"}};
+      auto filter{filter_by_names{{}, {{"bar1"}}}};
 
-      check(equality, LINE(""), extract(make_test_suite(), filter_by_names{{{}}, {{"bar1"}}}), std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
+      check(equality, LINE(""), extract(make_test_suite(), filter), std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
+
+      using map_t = filter_by_names::map_type;
+      check(equivalence, LINE(""), filter, map_t{}, map_t{{"bar1", true}});
+    }
+
+    {
+      using variant_t = std::variant<foo<0>, bar<0>, baz<0>, foo<1>, bar<1>>;
+      variant_t init[]{bar<1>{"bar1"}};
+      auto filter{filter_by_names{{}, {{"bar1"}, {"far"}}}};
+
+      check(equality, LINE(""), extract(make_test_suite(), filter), std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
+
+      using map_t = filter_by_names::map_type;
+      check(equivalence, LINE(""), filter, map_t{}, map_t{{"bar1", true}, {"far", false}});
     }
 
     {
@@ -315,8 +345,34 @@ namespace sequoia::testing
     {
       using variant_t = std::variant<foo<0>, bar<0>, baz<0>, foo<1>, bar<1>>;
       variant_t init[]{foo<1>{"foo1"}, bar<1>{"bar1"}};
+      auto filter{filter_by_names{{{"suite_2"}}, {{"bar1"}}}};
 
-      check(equality, LINE(""), extract(make_test_suite(), filter_by_names{{{"suite_2"}}, {"bar1"}}), std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
+      check(equality, LINE(""), extract(make_test_suite(), filter), std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
+
+      using map_t = filter_by_names::map_type;
+      check(equivalence, LINE(""), filter, map_t{{{"suite_2"}, true}}, map_t{{{"bar1"}, true}});
+    }
+
+    {
+      using variant_t = std::variant<foo<0>, bar<0>, baz<0>, foo<1>, bar<1>>;
+      variant_t init[]{foo<1>{"foo1"}, bar<1>{"bar1"}};
+      auto filter{filter_by_names{{{"suite_2"}, {"suite_2_0"}}, {{"bar1"}}}};
+
+      check(equality, LINE(""), extract(make_test_suite(), filter), std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
+
+      using map_t = filter_by_names::map_type;
+      check(equivalence, LINE(""), filter, map_t{{{"suite_2"}, true}, {{"suite_2_0"}, true}}, map_t{{{"bar1"}, true}});
+    }
+
+    {
+      using variant_t = std::variant<foo<0>, bar<0>, baz<0>, foo<1>, bar<1>>;
+      variant_t init[]{foo<1>{"foo1"}, bar<1>{"bar1"}};
+      auto filter{filter_by_names{{{"suite_2"}, {"aardvark"}}, {{"bar1"}, {"aardvark"}}}};
+
+      check(equality, LINE(""), extract(make_test_suite(), filter), std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
+
+      using map_t = filter_by_names::map_type;
+      check(equivalence, LINE(""), filter, map_t{{{"aardvark"}, false}, {{"suite_2"}, true}}, map_t{{{"aardvark"}, false}, {{"bar1"}, true}});
     }
 
     {

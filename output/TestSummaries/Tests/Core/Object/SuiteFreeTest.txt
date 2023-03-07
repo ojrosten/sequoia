@@ -1,2 +1,2 @@
 Suite Free Test
-Standard Top Level Checks:                23;  Failures:  0  [Deep checks: 182]
+Standard Top Level Checks:                32;  Failures:  0  [Deep checks: 265]
