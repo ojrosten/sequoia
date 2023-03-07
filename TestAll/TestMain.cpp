@@ -301,6 +301,11 @@ int main(int argc, char** argv)
       bitmask_free_test{"Bitmask Free Test"}
     );
 
+    runner.add_test_family(
+      "Suite",
+      suite_free_test{"Suite Free Test"}
+    );
+
     runner.execute(timer_resolution{1ms});
   }
   catch(const std::exception& e)

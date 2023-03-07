@@ -37,8 +37,9 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Core/Object/DataPoolTest.cpp
                ${TestDir}/Core/Object/FaithfulWrapperTest.cpp
                ${TestDir}/Core/Object/FaithfulWrapperTestingDiagnostics.cpp
-               ${TestDir}/Experimental/TypeListFreeTest.cpp
+               ${TestDir}/Core/Object/SuiteFreeTest.cpp
                ${TestDir}/Experimental/ExperimentalTest.cpp
+               ${TestDir}/Experimental/TypeListFreeTest.cpp
                ${TestDir}/Maths/Graph/DynamicGraphEmbeddedTest.cpp
                ${TestDir}/Maths/Graph/DynamicGraphFixedTopologyTest.cpp
                ${TestDir}/Maths/Graph/DynamicGraphInitializationTest.cpp
