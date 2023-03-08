@@ -600,14 +600,6 @@ namespace sequoia::testing
         stream() << family.name() << ":\n";
         update(process_family(family.execute(m_UpdateMode, m_ConcurrencyMode, id)));
       }
-
-      const auto detail{summary_detail::failure_messages | summary_detail::timings};
-      for(auto& test : m_Tests)
-      {
-        stream() << summarize(test.execute(id), detail, tab, tab);
-      }
-
-
     }
     else
     {
@@ -631,6 +623,13 @@ namespace sequoia::testing
         update(process_family(res.second.get()));
       }
     }
+
+    const auto detail{summary_detail::failure_messages | summary_detail::timings};
+    for(auto& test : m_Tests)
+    {
+      stream() << summarize(test.execute(id), detail, tab, tab);
+    }
+
     stream() << "\n-----------Grand Totals-----------\n";
     stream() << summarize(summary, t.time_elapsed(), summary_detail::absent_checks | summary_detail::timings, indentation{"\t"}, no_indent);
 
