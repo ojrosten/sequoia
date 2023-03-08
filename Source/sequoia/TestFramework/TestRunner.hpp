@@ -55,20 +55,16 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    family_results execute(update_mode updateMode,
-                           concurrency_mode concurrenyMode,
-                           std::optional<std::size_t> index)
+    log_summary execute(std::optional<std::size_t> index)
     {
-      return m_pTest->execute(updateMode, concurrenyMode, index);
+      return m_pTest->execute(index);
     }
   private:
     struct soul
     {
       virtual ~soul() = default;
       virtual const std::string& name() const noexcept = 0;
-      virtual family_results execute(update_mode updateMode,
-                                     concurrency_mode concurrenyMode,
-                                     std::optional<std::size_t> index) = 0;
+      virtual log_summary execute(std::optional<std::size_t> index) = 0;
     };
 
     template<concrete_test Test>
@@ -84,11 +80,9 @@ namespace sequoia::testing
       }
 
       [[nodiscard]]
-      family_results execute(update_mode updateMode,
-                             concurrency_mode concurrenyMode,
-                             std::optional<std::size_t> index) final
+      log_summary execute(std::optional<std::size_t> index) final
       {
-        return m_Test.execute(updateMode, concurrenyMode, index);
+        return m_Test.execute(index);
       }
 
       Test m_Test;
@@ -136,11 +130,14 @@ namespace sequoia::testing
       m_Selector.add_test_family(name, m_RecoveryMode, std::move(tests)...);
     }
 
-    template<class Suite>
-      requires object::is_suite_v<Suite>
-    void add_suite(Suite s)
+    template<concrete_test... Tests>
+    void add_test_suite(std::string name, Tests&&... tests)
     {
+      using namespace object;
 
+      // fix filter
+      auto vessels{extract(suite{std::move(name), std::forward<Tests>(tests)...}, filter_by_names{{}, {}}, [](auto&& test) { return test_vessel{std::move(test)}; })};
+      m_Tests.insert(m_Tests.end(), std::make_move_iterator(vessels.begin()), std::make_move_iterator(vessels.end()));
     }
 
     void execute([[maybe_unused]] timer_resolution r={});
