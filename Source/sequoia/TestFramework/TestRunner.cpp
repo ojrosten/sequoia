@@ -600,6 +600,14 @@ namespace sequoia::testing
         stream() << family.name() << ":\n";
         update(process_family(family.execute(m_UpdateMode, m_ConcurrencyMode, id)));
       }
+
+      const auto detail{summary_detail::failure_messages | summary_detail::timings};
+      for(auto& test : m_Tests)
+      {
+        stream() << summarize(test.execute(id), detail, tab, tab);
+      }
+
+
     }
     else
     {
@@ -632,6 +640,9 @@ namespace sequoia::testing
   [[nodiscard]]
   bool test_runner::nothing_to_do()
   {
+    // Temporary hack!
+    if(!m_Tests.empty()) return false;
+
     if(!m_Selector.families_presented())
     {
       stream() << "Nothing to do: try creating some tests!\nRun with --help to see options\n";
