@@ -54,52 +54,52 @@ namespace sequoia::object
 
 
   template<class... Ts>
-  struct extract_leaves;
+  struct leaf_extractor;
 
   template<class... Ts>
-  using extract_leaves_t = typename extract_leaves<Ts...>::type;
+  using leaf_extractor_t = typename leaf_extractor<Ts...>::type;
 
   template<class... Ts>
-  struct extract_leaves<std::tuple<Ts...>>
+  struct leaf_extractor<std::tuple<Ts...>>
   {
     using type = std::tuple<Ts...>;
   };
 
   template<class... Ts>
     requires ((!is_suite_v<Ts>) && ...)
-  struct extract_leaves<suite<Ts...>>
+  struct leaf_extractor<suite<Ts...>>
   {
     using type = std::tuple<Ts...>;
   };
 
   template<class... Ts>
-  struct extract_leaves<suite<Ts...>>
+  struct leaf_extractor<suite<Ts...>>
   {
-    using type = extract_leaves_t<extract_leaves_t<Ts>...>;
+    using type = leaf_extractor_t<leaf_extractor_t<Ts>...>;
   };
 
   template<class... Ts, class... Us>
-  struct extract_leaves<std::tuple<Ts...>, std::tuple<Us...>>
+  struct leaf_extractor<std::tuple<Ts...>, std::tuple<Us...>>
   {
     using type = std::tuple<Ts..., Us...>;
   };
 
   template<class... Ts, class... Us>
-  struct extract_leaves<suite<Ts...>, std::tuple<Us...>>
+  struct leaf_extractor<suite<Ts...>, std::tuple<Us...>>
   {
-    using type = std::tuple<extract_leaves_t<suite<Ts...>>, Us...>;
+    using type = std::tuple<leaf_extractor_t<suite<Ts...>>, Us...>;
   };
 
   template<class... Ts, class... Us>
-  struct extract_leaves<std::tuple<Ts...>, suite<Us...>>
+  struct leaf_extractor<std::tuple<Ts...>, suite<Us...>>
   {
-    using type = std::tuple<Ts..., extract_leaves_t<suite<Us...>>>;
+    using type = std::tuple<Ts..., leaf_extractor_t<suite<Us...>>>;
   };
 
   template<class T, class U, class... Vs>
-  struct extract_leaves<T, U, Vs...>
+  struct leaf_extractor<T, U, Vs...>
   {
-    using type = extract_leaves_t<extract_leaves_t<T, U>, Vs...>;
+    using type = leaf_extractor_t<leaf_extractor_t<T, U>, Vs...>;
   };
 
   template<class T, class Transform>
@@ -124,7 +124,7 @@ namespace sequoia::object
   template<class... Ts, class Transform>
   struct to_variant_or_unqiue_type<suite<Ts...>, Transform>
   {
-    using type = typename to_variant_or_unqiue_type<extract_leaves_t<suite<Ts...>>, Transform>::type;
+    using type = typename to_variant_or_unqiue_type<leaf_extractor_t<suite<Ts...>>, Transform>::type;
   };
 
   namespace impl
@@ -164,7 +164,7 @@ namespace sequoia::object
            class Container = std::vector<to_variant_or_unique_type_t<Suite, Transform>>>
     requires is_suite_v<Suite>
   [[nodiscard]]
-  Container extract(Suite s, Filter&& filter, Transform t = {})
+  Container extract_leaves(Suite s, Filter&& filter, Transform t = {})
   {
     return impl::get(s, std::forward<Filter>(filter), std::move(t), Container{});
   }
