@@ -29,7 +29,7 @@ namespace sequoia::testing
       const auto node{tree.add_node(parentNode, nomenclator<suite<Ts...>>::name(s))};
 
       [node, fn, &s] <std::size_t... Is> (std::index_sequence<Is...>) {
-        (fn(node, std::move(std::get<Is>(s.values))), ...);
+        (fn(node, std::get<Is>(s.values)), ...);
       }(std::make_index_sequence<sizeof...(Ts)>{});
 
       if(!std::distance(tree.cbegin_edges(node), tree.cend_edges(node)))
@@ -44,9 +44,9 @@ namespace sequoia::testing
     Tree&& to_tree(suite<Ts...>& s, Filter&& filter, Transform transform, Tree&& tree, const SizeType parentNode, const PreviousSuites&... previous)
     {
       auto emplacer{
-        [&] <class V> (SizeType node, V&& val) {
+        [&] (SizeType node, auto&& val) {
           if(filter(val, previous..., s))
-            tree.add_node(node, transform(std::forward<V>(val)));
+            tree.add_node(node, transform(std::move(val)));
         }
       };
 
@@ -58,8 +58,8 @@ namespace sequoia::testing
     Tree&& to_tree(suite<Ts...>& s, Filter&& filter, Transform transform, Tree&& tree, const SizeType parentNode, const PreviousSuites&... previous)
     {
       auto recurser{
-        [&] (SizeType node, auto&& val) {
-          to_tree(val, std::forward<Filter>(filter), transform, tree, node, previous..., s);
+        [&] <class V> (SizeType node, V&& val) {
+          to_tree(std::forward<V>(val), std::forward<Filter>(filter), transform, tree, node, previous..., s);
         }
       };
 
