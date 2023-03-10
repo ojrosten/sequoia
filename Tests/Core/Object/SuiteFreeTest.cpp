@@ -9,6 +9,9 @@
 
 #include "SuiteFreeTest.hpp"
 #include "SuiteTestingUtilities.hpp"
+#include "Maths/Graph/TreeTestingUtilities.hpp"
+
+#include "sequoia/Maths/Graph/DynamicTree.hpp"
 
 namespace sequoia::testing
 {
@@ -17,6 +20,52 @@ namespace sequoia::testing
 
   namespace
   {
+    template<class... Ts, class Filter, class Transform, class Tree, class SizeType = typename Tree::size_type, class... PreviousSuites>
+      requires (is_suite_v<PreviousSuites> && ...) && ((!is_suite_v<Ts>) && ...)
+    static Tree&& to_tree(suite<Ts...>& s, Filter&& filter, Transform transform, Tree&& tree, const SizeType parentNode, const PreviousSuites&... previous)
+    {
+      auto emplacer{
+        [&] <class V> (V && val) {
+          if(filter(val, previous..., s)) tree.add_node(parentNode, transform(std::forward<V>(val)));
+        }
+      };
+
+      [emplacer, &s] <std::size_t... Is> (std::index_sequence<Is...>) {
+        (emplacer(std::move(std::get<Is>(s.values))), ...);
+      }(std::make_index_sequence<sizeof...(Ts)>{});
+
+      return std::forward<Tree>(tree);
+    }
+
+    template<class... Ts, class Filter, class Transform, class Tree, class SizeType = typename Tree::size_type, class... PreviousSuites>
+      requires (is_suite_v<PreviousSuites> && ...) && ((is_suite_v<Ts>) && ...)
+    static Tree&& to_tree(suite<Ts...>& s, Filter&& filter, Transform transform, Tree&& tree, const SizeType parentNode, const PreviousSuites&... previous)
+    {
+      const auto node{tree.add_node(parentNode, nomenclator<suite<Ts...>>::name(s))};
+
+      [&] <std::size_t... Is> (std::index_sequence<Is...>) {
+        (to_tree(std::get<Is>(s.values), std::forward<Filter>(filter), transform, tree, node, previous..., s), ...);
+      }(std::make_index_sequence<sizeof...(Ts)>{});
+
+      if(!std::distance(tree.cbegin_edges(node), tree.cend_edges(node)))
+        tree.prune(node);
+
+      return std::forward<Tree>(tree);
+    }
+
+    template<class Suite,
+             class Filter,
+             class Transform = std::identity,
+             class Tree = maths::tree<maths::directed_flavour::directed, maths::tree_link_direction::forward, maths::null_weight, to_variant_or_unique_type_t<Suite, Transform>>>
+      requires is_suite_v<Suite>
+    [[nodiscard]]
+    Tree to_tree(Suite s, Filter&& filter, Transform transform = {})
+    {
+      auto t{to_tree(s, std::forward<Filter>(filter), std::move(transform), Tree{{nomenclator<Suite>::name(s)}}, 0)};
+      if(!t.size()) t.prune(0); // TO DO: clear
+      return t;
+    }
+
     template<int I, template<int> class T>
     [[nodiscard]]
     std::string make_next_name(const T<I>& t)
@@ -119,6 +168,7 @@ namespace sequoia::testing
     test_flat_suite();
     test_nested_suite();
     test_name_filter();
+    test_to_tree();
   }
 
   void suite_free_test::test_flat_suite()
@@ -380,6 +430,16 @@ namespace sequoia::testing
       variant_t init[]{foo<0>{"foo"}, foo<1>{"foo1"}, bar<1>{"bar1"}};
 
       check(equality, LINE(""), extract_leaves(make_test_suite(), filter_by_names{{{"suite_2"}, {"suite_0"}}, {}}), std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
+    }
+  }
+
+  void suite_free_test::test_to_tree()
+  {
+    using namespace maths;
+
+    {
+      using tree_type = tree<directed_flavour::directed, tree_link_direction::forward, null_weight, std::string>;
+      check(equality, LINE(""), to_tree(make_test_suite(), [](auto&&...) { return false; }, [](const auto& s) { return s.name; }), tree_type{});
     }
   }
 }
