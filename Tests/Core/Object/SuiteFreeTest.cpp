@@ -439,6 +439,16 @@ namespace sequoia::testing
 
     {
       using tree_type = tree<directed_flavour::directed, tree_link_direction::forward, null_weight, std::string>;
+      check(equality, LINE(""), to_tree(suite{"Numbers", int{42}}, [](auto&&...) { return false; }, [](const auto& val) { return std::to_string(val); }), tree_type{});
+    }
+
+    {
+      using tree_type = tree<directed_flavour::directed, tree_link_direction::forward, null_weight, std::string>;
+      check(equality, LINE(""), to_tree(suite{"Numbers", int{42}}, [](auto&&...) { return true; }, [](const auto& val) { return std::to_string(val); }), tree_type{{"Numbers", {{"42"}}}});
+    }
+
+    {
+      using tree_type = tree<directed_flavour::directed, tree_link_direction::forward, null_weight, std::string>;
       check(equality, LINE(""), to_tree(make_test_suite(), [](auto&&...) { return false; }, [](const auto& s) { return s.name; }), tree_type{});
     }
   }
