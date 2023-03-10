@@ -58,7 +58,7 @@ namespace sequoia::testing
     Tree&& to_tree(suite<Ts...>& s, Filter&& filter, Transform transform, Tree&& tree, const SizeType parentNode, const PreviousSuites&... previous)
     {
       auto recurser{
-        [&](SizeType node, auto&& val) {
+        [&] (SizeType node, auto&& val) {
           to_tree(val, std::forward<Filter>(filter), transform, tree, node, previous..., s);
         }
       };

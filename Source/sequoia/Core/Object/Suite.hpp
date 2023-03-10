@@ -129,31 +129,37 @@ namespace sequoia::object
 
   namespace impl
   {
+    template<class... Ts, class Fn>
+    void extract_leaves(suite<Ts...>& s, Fn fn)
+    {
+      [&] <std::size_t... Is> (std::index_sequence<Is...>) {
+        (fn(std::get<Is>(s.values)), ...);
+      }(std::make_index_sequence<sizeof...(Ts)>{});
+    }
+
     template<class... Ts, class Filter, class Transform, class Container, class... PreviousSuites>
       requires (is_suite_v<PreviousSuites> && ...) && ((!is_suite_v<Ts>) && ...)
-    Container&& get(suite<Ts...>& s, Filter&& filter, Transform t, Container&& c, const PreviousSuites&... previous)
+    Container&& extract_leaves(suite<Ts...>& s, Filter&& filter, Transform t, Container&& c, const PreviousSuites&... previous)
     {
       auto emplacer{
         [&] <class V> (V&& val) {
-          if(filter(val, previous..., s)) c.emplace_back(t(std::forward<V>(val)));
+          if(filter(val, previous..., s)) c.emplace_back(t(std::move(val)));
         }
       };
 
-      [emplacer, &s] <std::size_t... Is> (std::index_sequence<Is...>) {
-        (emplacer(std::move(std::get<Is>(s.values))), ...);
-      }(std::make_index_sequence<sizeof...(Ts)>{});
-
+      extract_leaves(s, emplacer);
       return std::forward<Container>(c);
     }
 
     template<class... Ts, class Filter, class Transform, class Container, class... PreviousSuites>
       requires (is_suite_v<PreviousSuites> && ...) && ((is_suite_v<Ts>) && ...)
-    Container&& get(suite<Ts...>& s, Filter&& filter, Transform t, Container&& c, const PreviousSuites&... previous)
+    Container&& extract_leaves(suite<Ts...>& s, Filter&& filter, Transform t, Container&& c, const PreviousSuites&... previous)
     {
-      [&] <std::size_t... Is> (std::index_sequence<Is...>) {
-        (get(std::get<Is>(s.values), std::forward<Filter>(filter), t, c, previous..., s), ...);
-      }(std::make_index_sequence<sizeof...(Ts)>{});
+      auto extractor{
+        [&]<class V>(V&& val) { extract_leaves(std::forward<V>(val), std::forward<Filter>(filter), t, std::forward<Container>(c), previous..., s); }
+      };
 
+      extract_leaves(s, extractor);
       return std::forward<Container>(c);
     }
   }
@@ -166,7 +172,7 @@ namespace sequoia::object
   [[nodiscard]]
   Container extract_leaves(Suite s, Filter&& filter, Transform t = {})
   {
-    return impl::get(s, std::forward<Filter>(filter), std::move(t), Container{});
+    return impl::extract_leaves(s, std::forward<Filter>(filter), std::move(t), Container{});
   }
 
   class filter_by_names
