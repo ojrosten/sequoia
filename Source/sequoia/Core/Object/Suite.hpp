@@ -127,10 +127,23 @@ namespace sequoia::object
     using type = typename to_variant_or_unqiue_type<leaf_extractor_t<suite<Ts...>>, Transform>::type;
   };
 
+  enum class suite_extraction_flavour { leaves, tree, leaves_and_tree };
+
+  template<suite_extraction_flavour F>
+  struct suite_extraction_constant : std::integral_constant<suite_extraction_flavour, F> {};
+
+  using suite_leaves_t          = suite_extraction_constant<suite_extraction_flavour::leaves>;
+  using suite_tree_t            = suite_extraction_constant<suite_extraction_flavour::tree>;
+  using suite_leaves_and_tree_t = suite_extraction_constant<suite_extraction_flavour::leaves_and_tree>;
+
+  constexpr suite_leaves_t suite_leaves{};
+  constexpr suite_tree_t suite_tree{};
+  constexpr suite_leaves_and_tree_t suite_leaves_and_tree{};
+
   namespace impl
   {
     template<class... Ts, class Fn>
-    void extract_leaves(suite<Ts...>& s, Fn fn)
+    void extract(suite_leaves_t, suite<Ts...>& s, Fn fn)
     {
       [&] <std::size_t... Is> (std::index_sequence<Is...>) {
         (fn(std::get<Is>(s.values)), ...);
@@ -139,7 +152,7 @@ namespace sequoia::object
 
     template<class... Ts, class Filter, class Transform, class Container, class... PreviousSuites>
       requires (is_suite_v<PreviousSuites> && ...) && ((!is_suite_v<Ts>) && ...)
-    Container&& extract_leaves(suite<Ts...>& s, Filter&& filter, Transform t, Container&& c, const PreviousSuites&... previous)
+    Container&& extract(suite_leaves_t, suite<Ts...>& s, Filter&& filter, Transform t, Container&& c, const PreviousSuites&... previous)
     {
       auto emplacer{
         [&] <class V> (V&& val) {
@@ -147,19 +160,19 @@ namespace sequoia::object
         }
       };
 
-      extract_leaves(s, emplacer);
+      extract(suite_leaves, s, emplacer);
       return std::forward<Container>(c);
     }
 
     template<class... Ts, class Filter, class Transform, class Container, class... PreviousSuites>
       requires (is_suite_v<PreviousSuites> && ...) && ((is_suite_v<Ts>) && ...)
-    Container&& extract_leaves(suite<Ts...>& s, Filter&& filter, Transform t, Container&& c, const PreviousSuites&... previous)
+    Container&& extract(suite_leaves_t, suite<Ts...>& s, Filter&& filter, Transform t, Container&& c, const PreviousSuites&... previous)
     {
       auto extractor{
-        [&]<class V>(V&& val) { extract_leaves(std::forward<V>(val), std::forward<Filter>(filter), t, std::forward<Container>(c), previous..., s); }
+        [&]<class V>(V&& val) { extract(suite_leaves, std::forward<V>(val), std::forward<Filter>(filter), t, std::forward<Container>(c), previous..., s); }
       };
 
-      extract_leaves(s, extractor);
+      extract(suite_leaves, s, extractor);
       return std::forward<Container>(c);
     }
 
@@ -167,7 +180,7 @@ namespace sequoia::object
       class Tree,
       class SizeType = typename Tree::size_type,
       class Fn>
-    static Tree&& to_tree(suite<Ts...>& s, Tree&& tree, const SizeType parentNode, Fn fn)
+    static Tree&& extract(suite_tree_t, suite<Ts...>& s, Tree&& tree, const SizeType parentNode, Fn fn)
     {
       const auto node{tree.add_node(parentNode, nomenclator<suite<Ts...>>::name(s))};
 
@@ -184,7 +197,7 @@ namespace sequoia::object
 
     template<class... Ts, class Filter, class Transform, class Tree, class SizeType = typename Tree::size_type, class... PreviousSuites>
       requires (is_suite_v<PreviousSuites> && ...) && ((!is_suite_v<Ts>) && ...)
-    Tree&& to_tree(suite<Ts...>& s, Filter&& filter, Transform transform, Tree&& tree, const SizeType parentNode, const PreviousSuites&... previous)
+    Tree&& extract(suite_tree_t, suite<Ts...>& s, Filter&& filter, Transform transform, Tree&& tree, const SizeType parentNode, const PreviousSuites&... previous)
     {
       auto emplacer{
         [&](SizeType node, auto&& val) {
@@ -193,20 +206,20 @@ namespace sequoia::object
         }
       };
 
-      return to_tree(s, std::forward<Tree>(tree), parentNode, emplacer);
+      return extract(suite_tree, s, std::forward<Tree>(tree), parentNode, emplacer);
     }
 
     template<class... Ts, class Filter, class Transform, class Tree, class SizeType = typename Tree::size_type, class... PreviousSuites>
       requires (is_suite_v<PreviousSuites> && ...) && ((is_suite_v<Ts>) && ...)
-    Tree&& to_tree(suite<Ts...>& s, Filter&& filter, Transform transform, Tree&& tree, const SizeType parentNode, const PreviousSuites&... previous)
+    Tree&& extract(suite_tree_t, suite<Ts...>& s, Filter&& filter, Transform transform, Tree&& tree, const SizeType parentNode, const PreviousSuites&... previous)
     {
       auto recurser{
         [&] <class V> (SizeType node, V && val) {
-          to_tree(std::forward<V>(val), std::forward<Filter>(filter), transform, tree, node, previous..., s);
+          extract(suite_tree, std::forward<V>(val), std::forward<Filter>(filter), transform, tree, node, previous..., s);
         }
       };
 
-      return to_tree(s, std::forward<Tree>(tree), parentNode, recurser);
+      return extract(suite_tree, s, std::forward<Tree>(tree), parentNode, recurser);
     }
   }
 
@@ -216,9 +229,9 @@ namespace sequoia::object
            class Container = std::vector<to_variant_or_unique_type_t<Suite, Transform>>>
     requires is_suite_v<Suite>
   [[nodiscard]]
-  Container extract_leaves(Suite s, Filter&& filter, Transform t = {})
+  Container extract(suite_leaves_t, Suite s, Filter&& filter, Transform t = {})
   {
-    return impl::extract_leaves(s, std::forward<Filter>(filter), std::move(t), Container{});
+    return impl::extract(suite_leaves, s, std::forward<Filter>(filter), std::move(t), Container{});
   }
 
   template<class Suite,
@@ -227,9 +240,9 @@ namespace sequoia::object
            class Tree = maths::tree<maths::directed_flavour::directed, maths::tree_link_direction::forward, maths::null_weight, to_variant_or_unique_type_t<Suite, Transform>>>
     requires is_suite_v<Suite>
   [[nodiscard]]
-  Tree to_tree(Suite s, Filter&& filter, Transform transform = {})
+  Tree extract(suite_tree_t, Suite s, Filter&& filter, Transform transform = {})
   {
-    return impl::to_tree(s, std::forward<Filter>(filter), std::move(transform), Tree{}, Tree::npos);
+    return impl::extract(suite_tree, s, std::forward<Filter>(filter), std::move(transform), Tree{}, Tree::npos);
   }
 
   class filter_by_names
