@@ -463,5 +463,20 @@ namespace sequoia::testing
     using tree_type = tree<directed_flavour::directed, tree_link_direction::forward, null_weight, std::string>;
     check(equality, LINE(""), to_tree(make_test_suite(), [](auto&&...) { return false; }, [](const auto& s) { return s.name; }), tree_type{});
     check(equality, LINE(""), to_tree(make_test_suite(), filter_by_names{{}, {"foo"}}, [](const auto& s) { return s.name; }), tree_type{{"root", {{"suite_0", {{"foo"}}}}}});
+    check(equality,
+          LINE(""),
+          to_tree(make_test_suite(),
+          filter_by_names{{"suite_2"}, {}},
+          [](const auto& s) { return s.name; }),
+          tree_type{{"root",
+                      {{"suite_2",
+                        {
+                          {"suite_2_0", {{"foo1"}} },
+                          {"suite_2_1",
+                            { {"suite_2_1_0", {{"bar1"}}} }
+                          }
+                        }
+                       }}
+                    }});
   }
 }

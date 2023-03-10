@@ -131,7 +131,7 @@ namespace sequoia::object
   {
     template<class... Ts, class Filter, class Transform, class Container, class... PreviousSuites>
       requires (is_suite_v<PreviousSuites> && ...) && ((!is_suite_v<Ts>) && ...)
-    static Container&& get(suite<Ts...>& s, Filter&& filter, Transform t, Container&& c, const PreviousSuites&... previous)
+    Container&& get(suite<Ts...>& s, Filter&& filter, Transform t, Container&& c, const PreviousSuites&... previous)
     {
       auto emplacer{
         [&] <class V> (V&& val) {
@@ -148,7 +148,7 @@ namespace sequoia::object
 
     template<class... Ts, class Filter, class Transform, class Container, class... PreviousSuites>
       requires (is_suite_v<PreviousSuites> && ...) && ((is_suite_v<Ts>) && ...)
-    static Container&& get(suite<Ts...>& s, Filter&& filter, Transform t, Container&& c, const PreviousSuites&... previous)
+    Container&& get(suite<Ts...>& s, Filter&& filter, Transform t, Container&& c, const PreviousSuites&... previous)
     {
       [&] <std::size_t... Is> (std::index_sequence<Is...>) {
         (get(std::get<Is>(s.values), std::forward<Filter>(filter), t, c, previous..., s), ...);
