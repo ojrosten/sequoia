@@ -162,6 +162,52 @@ namespace sequoia::object
       extract_leaves(s, extractor);
       return std::forward<Container>(c);
     }
+
+    template<class... Ts,
+      class Tree,
+      class SizeType = typename Tree::size_type,
+      class Fn>
+    static Tree&& to_tree(suite<Ts...>& s, Tree&& tree, const SizeType parentNode, Fn fn)
+    {
+      const auto node{tree.add_node(parentNode, nomenclator<suite<Ts...>>::name(s))};
+
+      [node, fn, &s] <std::size_t... Is> (std::index_sequence<Is...>) {
+        (fn(node, std::get<Is>(s.values)), ...);
+      }(std::make_index_sequence<sizeof...(Ts)>{});
+
+      if(!std::distance(tree.cbegin_edges(node), tree.cend_edges(node)))
+        tree.prune(node);
+
+      return std::forward<Tree>(tree);
+    }
+
+
+    template<class... Ts, class Filter, class Transform, class Tree, class SizeType = typename Tree::size_type, class... PreviousSuites>
+      requires (is_suite_v<PreviousSuites> && ...) && ((!is_suite_v<Ts>) && ...)
+    Tree&& to_tree(suite<Ts...>& s, Filter&& filter, Transform transform, Tree&& tree, const SizeType parentNode, const PreviousSuites&... previous)
+    {
+      auto emplacer{
+        [&](SizeType node, auto&& val) {
+          if(filter(val, previous..., s))
+            tree.add_node(node, transform(std::move(val)));
+        }
+      };
+
+      return to_tree(s, std::forward<Tree>(tree), parentNode, emplacer);
+    }
+
+    template<class... Ts, class Filter, class Transform, class Tree, class SizeType = typename Tree::size_type, class... PreviousSuites>
+      requires (is_suite_v<PreviousSuites> && ...) && ((is_suite_v<Ts>) && ...)
+    Tree&& to_tree(suite<Ts...>& s, Filter&& filter, Transform transform, Tree&& tree, const SizeType parentNode, const PreviousSuites&... previous)
+    {
+      auto recurser{
+        [&] <class V> (SizeType node, V && val) {
+          to_tree(std::forward<V>(val), std::forward<Filter>(filter), transform, tree, node, previous..., s);
+        }
+      };
+
+      return to_tree(s, std::forward<Tree>(tree), parentNode, recurser);
+    }
   }
 
   template<class Suite,
@@ -173,6 +219,17 @@ namespace sequoia::object
   Container extract_leaves(Suite s, Filter&& filter, Transform t = {})
   {
     return impl::extract_leaves(s, std::forward<Filter>(filter), std::move(t), Container{});
+  }
+
+  template<class Suite,
+           class Filter,
+           class Transform = std::identity,
+           class Tree = maths::tree<maths::directed_flavour::directed, maths::tree_link_direction::forward, maths::null_weight, to_variant_or_unique_type_t<Suite, Transform>>>
+    requires is_suite_v<Suite>
+  [[nodiscard]]
+  Tree to_tree(Suite s, Filter&& filter, Transform transform = {})
+  {
+    return impl::to_tree(s, std::forward<Filter>(filter), std::move(transform), Tree{}, Tree::npos);
   }
 
   class filter_by_names
