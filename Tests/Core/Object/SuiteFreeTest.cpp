@@ -478,5 +478,23 @@ namespace sequoia::testing
                         }
                        }}
                     }});
+    check(equality,
+          LINE(""),
+          to_tree(make_test_suite(),
+          filter_by_names{{"suite_2"}, {"bar"}},
+          [](const auto& s) { return s.name; }),
+          tree_type{{"root",
+                      {
+                        {"suite_1", {{"bar"}}},
+                        {"suite_2",
+                          {
+                            {"suite_2_0", {{"foo1"}} },
+                            {"suite_2_1",
+                              { {"suite_2_1_0", {{"bar1"}}} }
+                            }
+                          }
+                        }
+                      }
+                    }});
   }
 }
