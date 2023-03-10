@@ -20,21 +20,16 @@ namespace sequoia::testing
 
   namespace
   {
-    template<class... Ts, class Filter, class Transform, class Tree, class SizeType = typename Tree::size_type, class... PreviousSuites>
-      requires (is_suite_v<PreviousSuites> && ...) && ((!is_suite_v<Ts>) && ...)
-    static Tree&& to_tree(suite<Ts...>& s, Filter&& filter, Transform transform, Tree&& tree, const SizeType parentNode, const PreviousSuites&... previous)
+    template<class... Ts,
+             class Tree,
+             class SizeType = typename Tree::size_type,
+             class Fn>
+    static Tree&& to_tree(suite<Ts...>& s, Tree&& tree, const SizeType parentNode, Fn fn)
     {
       const auto node{tree.add_node(parentNode, nomenclator<suite<Ts...>>::name(s))};
 
-      auto emplacer{
-        [&] <class V> (V && val) {
-          if(filter(val, previous..., s))
-            tree.add_node(node, transform(std::forward<V>(val)));
-        }
-      };
-
-      [emplacer, &s] <std::size_t... Is> (std::index_sequence<Is...>) {
-        (emplacer(std::move(std::get<Is>(s.values))), ...);
+      [node, fn, &s] <std::size_t... Is> (std::index_sequence<Is...>) {
+        (fn(node, std::move(std::get<Is>(s.values))), ...);
       }(std::make_index_sequence<sizeof...(Ts)>{});
 
       if(!std::distance(tree.cbegin_edges(node), tree.cend_edges(node)))
@@ -43,20 +38,32 @@ namespace sequoia::testing
       return std::forward<Tree>(tree);
     }
 
+
+    template<class... Ts, class Filter, class Transform, class Tree, class SizeType = typename Tree::size_type, class... PreviousSuites>
+      requires (is_suite_v<PreviousSuites> && ...) && ((!is_suite_v<Ts>) && ...)
+    Tree&& to_tree(suite<Ts...>& s, Filter&& filter, Transform transform, Tree&& tree, const SizeType parentNode, const PreviousSuites&... previous)
+    {
+      auto emplacer{
+        [&] <class V> (SizeType node, V&& val) {
+          if(filter(val, previous..., s))
+            tree.add_node(node, transform(std::forward<V>(val)));
+        }
+      };
+
+      return to_tree(s, std::forward<Tree>(tree), parentNode, emplacer);
+    }
+
     template<class... Ts, class Filter, class Transform, class Tree, class SizeType = typename Tree::size_type, class... PreviousSuites>
       requires (is_suite_v<PreviousSuites> && ...) && ((is_suite_v<Ts>) && ...)
-    static Tree&& to_tree(suite<Ts...>& s, Filter&& filter, Transform transform, Tree&& tree, const SizeType parentNode, const PreviousSuites&... previous)
+    Tree&& to_tree(suite<Ts...>& s, Filter&& filter, Transform transform, Tree&& tree, const SizeType parentNode, const PreviousSuites&... previous)
     {
-      const auto node{tree.add_node(parentNode, nomenclator<suite<Ts...>>::name(s))};
+      auto recurser{
+        [&](SizeType node, auto&& val) {
+          to_tree(val, std::forward<Filter>(filter), transform, tree, node, previous..., s);
+        }
+      };
 
-      [&] <std::size_t... Is> (std::index_sequence<Is...>) {
-        (to_tree(std::get<Is>(s.values), std::forward<Filter>(filter), transform, tree, node, previous..., s), ...);
-      }(std::make_index_sequence<sizeof...(Ts)>{});
-
-      if(!std::distance(tree.cbegin_edges(node), tree.cend_edges(node)))
-        tree.prune(node);
-
-      return std::forward<Tree>(tree);
+      return to_tree(s, std::forward<Tree>(tree), parentNode, recurser);
     }
 
     template<class Suite,
