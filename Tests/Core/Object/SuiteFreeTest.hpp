@@ -28,6 +28,7 @@ namespace sequoia::testing
     void test_nested_suite();
     void test_name_filter();
 
-    void test_to_tree();
+    void test_flat_to_tree();
+    void test_nested_to_tree();
   };
 }

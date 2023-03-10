@@ -24,15 +24,21 @@ namespace sequoia::testing
       requires (is_suite_v<PreviousSuites> && ...) && ((!is_suite_v<Ts>) && ...)
     static Tree&& to_tree(suite<Ts...>& s, Filter&& filter, Transform transform, Tree&& tree, const SizeType parentNode, const PreviousSuites&... previous)
     {
+      const auto node{tree.add_node(parentNode, nomenclator<suite<Ts...>>::name(s))};
+
       auto emplacer{
         [&] <class V> (V && val) {
-          if(filter(val, previous..., s)) tree.add_node(parentNode, transform(std::forward<V>(val)));
+          if(filter(val, previous..., s))
+            tree.add_node(node, transform(std::forward<V>(val)));
         }
       };
 
       [emplacer, &s] <std::size_t... Is> (std::index_sequence<Is...>) {
         (emplacer(std::move(std::get<Is>(s.values))), ...);
       }(std::make_index_sequence<sizeof...(Ts)>{});
+
+      if(!std::distance(tree.cbegin_edges(node), tree.cend_edges(node)))
+        tree.prune(node);
 
       return std::forward<Tree>(tree);
     }
@@ -61,9 +67,7 @@ namespace sequoia::testing
     [[nodiscard]]
     Tree to_tree(Suite s, Filter&& filter, Transform transform = {})
     {
-      auto t{to_tree(s, std::forward<Filter>(filter), std::move(transform), Tree{{nomenclator<Suite>::name(s)}}, 0)};
-      if(!t.size()) t.prune(0); // TO DO: clear
-      return t;
+      return to_tree(s, std::forward<Filter>(filter), std::move(transform), Tree{}, Tree::npos);
     }
 
     template<int I, template<int> class T>
@@ -168,7 +172,8 @@ namespace sequoia::testing
     test_flat_suite();
     test_nested_suite();
     test_name_filter();
-    test_to_tree();
+    test_flat_to_tree();
+    test_nested_to_tree();
   }
 
   void suite_free_test::test_flat_suite()
@@ -433,33 +438,23 @@ namespace sequoia::testing
     }
   }
 
-  void suite_free_test::test_to_tree()
+  void suite_free_test::test_flat_to_tree()
   {
     using namespace maths;
 
-    {
-      using tree_type = tree<directed_flavour::directed, tree_link_direction::forward, null_weight, std::string>;
-      check(equality, LINE(""), to_tree(suite{"Numbers", int{42}}, [](auto&&...) { return false; }, [](const auto& val) { return std::to_string(val); }), tree_type{});
-    }
+    using tree_type = tree<directed_flavour::directed, tree_link_direction::forward, null_weight, std::string>;
+    check(equality, LINE(""), to_tree(suite{"Numbers", int{42}}, [](auto&&...) { return false; }, [](const auto& val) { return std::to_string(val); }), tree_type{});
+    check(equality, LINE(""), to_tree(suite{"Numbers", int{42}}, [](auto&&...) { return true; }, [](const auto& val) { return std::to_string(val); }), tree_type{{"Numbers", {{"42"}}}});
+    check(equality, LINE(""), to_tree(suite{"Numbers", int{42}, long{314}}, [](auto&&...) { return true; }, [](const auto& val) { return std::to_string(val); }), tree_type{{"Numbers", {{"42"}, {"314"}}}});
+    check(equality, LINE(""), to_tree(suite{"Numbers", int{42}, long{314}}, [](const auto& val, const auto&...) { return val==314; }, [](const auto& val) { return std::to_string(val); }), tree_type{{"Numbers", {{"314"}}}});
+  }
 
-    {
-      using tree_type = tree<directed_flavour::directed, tree_link_direction::forward, null_weight, std::string>;
-      check(equality, LINE(""), to_tree(suite{"Numbers", int{42}}, [](auto&&...) { return true; }, [](const auto& val) { return std::to_string(val); }), tree_type{{"Numbers", {{"42"}}}});
-    }
+  void suite_free_test::test_nested_to_tree()
+  {
+    using namespace maths;
 
-    {
-      using tree_type = tree<directed_flavour::directed, tree_link_direction::forward, null_weight, std::string>;
-      check(equality, LINE(""), to_tree(suite{"Numbers", int{42}, long{314}}, [](auto&&...) { return true; }, [](const auto& val) { return std::to_string(val); }), tree_type{{"Numbers", {{"42"}, {"314"}}}});
-    }
-
-    {
-      using tree_type = tree<directed_flavour::directed, tree_link_direction::forward, null_weight, std::string>;
-      check(equality, LINE(""), to_tree(suite{"Numbers", int{42}, long{314}}, [](const auto& val, const auto&...) { return val==314; }, [](const auto& val) { return std::to_string(val); }), tree_type{{"Numbers", {{"314"}}}});
-    }
-
-    {
-      using tree_type = tree<directed_flavour::directed, tree_link_direction::forward, null_weight, std::string>;
-      check(equality, LINE(""), to_tree(make_test_suite(), [](auto&&...) { return false; }, [](const auto& s) { return s.name; }), tree_type{});
-    }
+    using tree_type = tree<directed_flavour::directed, tree_link_direction::forward, null_weight, std::string>;
+    check(equality, LINE(""), to_tree(make_test_suite(), [](auto&&...) { return false; }, [](const auto& s) { return s.name; }), tree_type{});
+    check(equality, LINE(""), to_tree(make_test_suite(), filter_by_names{{}, {"foo"}}, [](const auto& s) { return s.name; }), tree_type{{"root", {{"suite_0", {{"foo"}}}}}});
   }
 }
