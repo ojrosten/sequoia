@@ -177,12 +177,12 @@ namespace sequoia::object
     }
 
     template<class... Ts,
-      class Tree,
-      class SizeType = typename Tree::size_type,
-      class Fn>
-    static Tree&& extract(suite_tree_t, suite<Ts...>& s, Tree&& tree, const SizeType parentNode, Fn fn)
+             class Tree,
+             class SizeType = typename Tree::size_type,
+             class Fn>
+    Tree&& extract(suite_tree_t, suite<Ts...>& s, Tree&& tree, const SizeType parentNode, Fn fn)
     {
-      const auto node{tree.add_node(parentNode, nomenclator<suite<Ts...>>::name(s))};
+      const auto node{tree.add_node(parentNode, nomenclature(s))};
 
       [node, fn, &s] <std::size_t... Is> (std::index_sequence<Is...>) {
         (fn(node, std::get<Is>(s.values)), ...);
@@ -214,7 +214,7 @@ namespace sequoia::object
     Tree&& extract(suite_tree_t, suite<Ts...>& s, Filter&& filter, Transform transform, Tree&& tree, const SizeType parentNode, const PreviousSuites&... previous)
     {
       auto recurser{
-        [&] <class V> (SizeType node, V && val) {
+        [&] <class V> (SizeType node, V&& val) {
           extract(suite_tree, std::forward<V>(val), std::forward<Filter>(filter), transform, tree, node, previous..., s);
         }
       };
@@ -236,11 +236,11 @@ namespace sequoia::object
 
   template<class Suite,
            class Filter,
-           class Transform = std::identity,
+           class Transform,
            class Tree = maths::tree<maths::directed_flavour::directed, maths::tree_link_direction::forward, maths::null_weight, to_variant_or_unique_type_t<Suite, Transform>>>
     requires is_suite_v<Suite>
   [[nodiscard]]
-  Tree extract(suite_tree_t, Suite s, Filter&& filter, Transform transform = {})
+  Tree extract(suite_tree_t, Suite s, Filter&& filter, Transform transform)
   {
     return impl::extract(suite_tree, s, std::forward<Filter>(filter), std::move(transform), Tree{}, Tree::npos);
   }

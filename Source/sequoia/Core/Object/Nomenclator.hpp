@@ -56,4 +56,14 @@ namespace sequoia::object
   inline constexpr bool has_intrinsic_nomenclator{
     requires(const T& t) { { nomenclator<T>::name(t) } -> std::convertible_to<std::string>; }
   };
+
+  template<class T>
+    requires has_intrinsic_nomenclator<T> || has_extrinsic_nomenclator<T>
+  [[nodiscard]]
+  std::string nomenclature([[maybe_unused]] const T& t){
+    if constexpr(has_intrinsic_nomenclator<T>)
+      return nomenclator<T>::name(t);
+    else
+      return nomenclator<T>::name();
+  }
 }
