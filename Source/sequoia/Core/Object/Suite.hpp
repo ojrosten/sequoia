@@ -103,28 +103,29 @@ namespace sequoia::object
   };
 
   template<class T, class Transform>
-  struct to_variant_or_unqiue_type;
+  struct leaves_to_variant_or_unique_type;
 
   template<class T, class Transform>
-  using to_variant_or_unique_type_t = typename to_variant_or_unqiue_type<T, Transform>::type;
+  using leaves_to_variant_or_unique_type_t = typename leaves_to_variant_or_unique_type<T, Transform>::type;
 
   template<class... Ts, class Transform>
-  struct to_variant_or_unqiue_type<std::tuple<Ts...>, Transform>
+    requires (std::invocable<Transform, Ts> && ...)
+  struct leaves_to_variant_or_unique_type<std::tuple<Ts...>, Transform>
   {
     using type = std::variant<std::remove_cvref_t<std::invoke_result_t<Transform, Ts>>...>;
   };
 
   template<class T, class... Ts, class Transform>
     requires (std::is_same_v<std::remove_cvref_t<std::invoke_result_t<Transform, T>>, std::remove_cvref_t<std::invoke_result_t<Transform, Ts>>> && ...)
-  struct to_variant_or_unqiue_type<std::tuple<T, Ts...>, Transform>
+  struct leaves_to_variant_or_unique_type<std::tuple<T, Ts...>, Transform>
   {
     using type = std::remove_cvref_t<std::invoke_result_t<Transform, T>>;
   };
 
   template<class... Ts, class Transform>
-  struct to_variant_or_unqiue_type<suite<Ts...>, Transform>
+  struct leaves_to_variant_or_unique_type<suite<Ts...>, Transform>
   {
-    using type = typename to_variant_or_unqiue_type<leaf_extractor_t<suite<Ts...>>, Transform>::type;
+    using type = typename leaves_to_variant_or_unique_type<leaf_extractor_t<suite<Ts...>>, Transform>::type;
   };
 
   enum class suite_extraction_flavour { leaves, tree, leaves_and_tree };
@@ -226,7 +227,7 @@ namespace sequoia::object
   template<class Suite,
            class Filter,
            class Transform = std::identity,
-           class Container = std::vector<to_variant_or_unique_type_t<Suite, Transform>>>
+           class Container = std::vector<leaves_to_variant_or_unique_type_t<Suite, Transform>>>
     requires is_suite_v<Suite>
   [[nodiscard]]
   Container extract(suite_leaves_t, Suite s, Filter&& filter, Transform t = {})
@@ -237,7 +238,7 @@ namespace sequoia::object
   template<class Suite,
            class Filter,
            class Transform,
-           class Tree = maths::tree<maths::directed_flavour::directed, maths::tree_link_direction::forward, maths::null_weight, to_variant_or_unique_type_t<Suite, Transform>>>
+           class Tree = maths::tree<maths::directed_flavour::directed, maths::tree_link_direction::forward, maths::null_weight, leaves_to_variant_or_unique_type_t<Suite, Transform>>>
     requires is_suite_v<Suite>
   [[nodiscard]]
   Tree extract(suite_tree_t, Suite s, Filter&& filter, Transform transform)
