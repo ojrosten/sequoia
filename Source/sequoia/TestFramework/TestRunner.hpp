@@ -136,7 +136,7 @@ namespace sequoia::testing
       using namespace object;
 
       // fix filter: filter_by_names{{etc}, {etc}}
-      auto vessels{extract(suite_leaves, suite{std::move(name), std::forward<Tests>(tests)...}, [](auto&&...) { return true; }, [](auto&& test) { return test_vessel{std::move(test)}; })};
+      auto vessels{extract_leaves(suite{std::move(name), std::forward<Tests>(tests)...}, [](auto&&...) { return true; }, [](auto&& test) { return test_vessel{std::move(test)}; })};
       m_Tests.insert(m_Tests.end(), std::make_move_iterator(vessels.begin()), std::make_move_iterator(vessels.end()));
     }
 
