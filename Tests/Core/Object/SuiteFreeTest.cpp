@@ -31,7 +31,7 @@ namespace sequoia::testing
   template<class T>
   struct build_faithful_variant<T>
   {
-    using type = T;
+    using type = std::variant<T>;
   };
 
   template<class... Ts, class T>
@@ -72,7 +72,8 @@ namespace sequoia::testing
   template<class... Ts, std::invocable<suite<Ts...>> Transform>
   struct to_variant_or_unique_type<suite<Ts...>, Transform>
   {
-    using type = faithful_variant<std::invoke_result_t<Transform, suite<Ts...>>, to_variant_or_unique_type_t<Ts, Transform>...>;
+    using variant_type = faithful_variant<std::invoke_result_t<Transform, suite<Ts...>>, to_variant_or_unique_type_t<Ts, Transform>...>;
+    using type = std::conditional_t<std::variant_size_v<variant_type> == 1, std::variant_alternative_t<0, variant_type>, variant_type>;
   };
 
 
@@ -459,7 +460,7 @@ namespace sequoia::testing
         [](int x) -> std::string { return std::to_string(x); }
       };
 
-      static_assert(std::is_same_v<to_variant_or_unique_type_t<decltype(s), decltype(f)>, std::variant<std::string>>);
+      static_assert(std::is_same_v<to_variant_or_unique_type_t<decltype(s), decltype(f)>, std::string>);
     }
 
     {
