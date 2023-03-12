@@ -17,6 +17,65 @@ namespace sequoia::testing
 {
   using namespace object;
 
+
+  template<class...>
+  struct build_faithful_variant;
+
+  template<class... Ts>
+  using faithful_variant = typename build_faithful_variant<Ts...>::type;
+
+  template<>
+  struct build_faithful_variant<>
+  {};
+
+  template<class T>
+  struct build_faithful_variant<T>
+  {
+    using type = T;
+  };
+
+  template<class... Ts, class T>
+    requires (std::is_same_v<Ts, T> || ...)
+  struct build_faithful_variant<std::variant<Ts...>, T>
+  {
+    using type = std::variant<Ts...>;
+  };
+
+  template<class... Ts, class T>
+  struct build_faithful_variant<std::variant<Ts...>, T>
+  {
+    using type = std::variant<Ts..., T>;
+  };
+
+  template<class... Ts, class T, class... Us>
+  struct build_faithful_variant<std::variant<Ts...>, T, Us...>
+  {
+    using type = faithful_variant<faithful_variant<std::variant<Ts...>, T>, Us...>;
+  };
+
+  template<class T, class... Ts>
+  struct build_faithful_variant<T, Ts...>
+  {
+    using type = faithful_variant<std::variant<T>, Ts...>;
+  };
+
+
+  template<class T, std::invocable<T> Transform>
+  struct to_variant_or_unique_type
+  {
+    using type = std::invoke_result_t<Transform, T>;
+  };
+
+  template<class T, class Transform>
+  using to_variant_or_unique_type_t = typename to_variant_or_unique_type<T, Transform>::type;
+
+  template<class... Ts, std::invocable<suite<Ts...>> Transform>
+  struct to_variant_or_unique_type<suite<Ts...>, Transform>
+  {
+    using type = faithful_variant<std::invoke_result_t<Transform, suite<Ts...>>, to_variant_or_unique_type_t<Ts, Transform>...>;
+  };
+
+
   namespace
   {
     template<int I, template<int> class T>
@@ -390,6 +449,28 @@ namespace sequoia::testing
   void suite_free_test::test_flat_to_tree()
   {
     using namespace maths;
+
+    static_assert(std::is_same_v<to_variant_or_unique_type_t<int, decltype([](int) -> int { return 42; })>, int>);
+
+    {
+      suite s{"Numbers", int{42}};
+      overloaded f{
+        [](const auto& s) -> std::string { return s.name; },
+        [](int x) -> std::string { return std::to_string(x); }
+      };
+
+      static_assert(std::is_same_v<to_variant_or_unique_type_t<decltype(s), decltype(f)>, std::variant<std::string>>);
+    }
+
+    {
+      suite s{"Numbers", int{42}};
+      overloaded f{
+        [](const auto& s) -> std::string { return s.name; },
+        [](int x) -> int { return x; }
+      };
+
+      static_assert(std::is_same_v<to_variant_or_unique_type_t<decltype(s), decltype(f)>, std::variant<std::string, int>>);
+    }
 
     using tree_type = tree<directed_flavour::directed, tree_link_direction::forward, null_weight, std::string>;
     check(equality, LINE(""), extract(suite_tree, suite{"Numbers", int{42}}, [](auto&&...) { return false; }, [](const auto& val) { return std::to_string(val); }), tree_type{});
