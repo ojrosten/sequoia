@@ -108,6 +108,21 @@ namespace sequoia::testing
     {
       return foo<-1>{t.name};
     }
+
+    struct stringify
+    {
+      template<class... Ts>
+      [[nodiscard]]
+      std::string operator()(const suite<Ts...>& s) const
+      {
+        return s.name;
+      }
+
+      template<class T>
+        requires std::is_arithmetic_v<T>
+      [[nodiscard]]
+      std::string operator()(T t) const { return std::to_string(t);}
+    };
   }
 
   [[nodiscard]]
@@ -396,10 +411,25 @@ namespace sequoia::testing
     {
       using tree_type = tree<directed_flavour::directed, tree_link_direction::forward, null_weight, std::string>;
 
-      check(equality, LINE(""), extract_tree(suite{"Numbers", int{42}}, [](auto&&...) { return false; }, overloaded{[] <class S> requires is_suite_v<S>(const S & s) -> std::string { return s.name; },  [](auto x) -> std::string { return std::to_string(x); }}), tree_type{});
-      check(equality, LINE(""), extract_tree(suite{"Numbers", int{42}}, [](auto&&...) { return true; }, overloaded{[] <class S> requires is_suite_v<S>(const S & s) -> std::string { return s.name; },  [](auto x) -> std::string { return std::to_string(x); }}), tree_type{{"Numbers", {{"42"}}}});
-      check(equality, LINE(""), extract_tree(suite{"Numbers", int{42}, long{314}}, [](auto&&...) { return true; }, overloaded{[] <class S> requires is_suite_v<S>(const S & s) -> std::string { return s.name; },  [](auto x) -> std::string { return std::to_string(x); }}), tree_type{{"Numbers", {{"42"}, {"314"}}}});
-      check(equality, LINE(""), extract_tree(suite{"Numbers", int{42}, long{314}}, [](const auto& val, const auto&...) { return val == 314; }, overloaded{[] <class S> requires is_suite_v<S>(const S & s) -> std::string { return s.name; },  [](auto x) -> std::string { return std::to_string(x); }}), tree_type{{"Numbers", {{"314"}}}});
+      check(equality,
+            LINE(""),
+            extract_tree(suite{"Numbers", int{42}}, [](auto&&...) { return false; }, stringify{}),
+            tree_type{});
+
+      check(equality,
+            LINE(""),
+            extract_tree(suite{"Numbers", int{42}}, [](auto&&...) { return true; }, stringify{}),
+            tree_type{{"Numbers", {{"42"}}}});
+
+      check(equality,
+            LINE(""),
+            extract_tree(suite{"Numbers", int{42}, long{314}}, [](auto&&...) { return true; }, stringify{}),
+            tree_type{{"Numbers", {{"42"}, {"314"}}}});
+
+      check(equality,
+            LINE(""),
+            extract_tree(suite{"Numbers", int{42}, long{314}}, [](const auto& val, const auto&...) { return val == 314; }, stringify{}),
+            tree_type{{"Numbers", {{"314"}}}});
     }
 
     {
@@ -410,7 +440,7 @@ namespace sequoia::testing
             extract_tree(suite{"Numbers", int{42}},
                          [](auto&&...) { return true; },
                          overloaded{
-                           [] <class S> requires is_suite_v<S>(const S & s) -> std::string { return s.name; },
+                           [] <class... Ts> (const suite<Ts...>& s) -> std::string { return s.name; },
                            [](auto x) { return x; }
                          }),
             tree_type{{"Numbers", {{42}}}});
