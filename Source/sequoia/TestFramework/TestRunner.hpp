@@ -11,10 +11,11 @@
     \brief Utilities for running tests from the command line.
 */
 
-#include "sequoia/Core/Object/Suite.hpp"
 #include "sequoia/TestFramework/TestFamilySelector.hpp"
 
 #include "sequoia/Core/Logic/Bitmask.hpp"
+#include "sequoia/Core/Object/Suite.hpp"
+#include "sequoia/Maths/Graph/DynamicTree.hpp"
 #include "sequoia/PlatformSpecific/Helpers.hpp"
 #include "sequoia/TextProcessing/Indent.hpp"
 
@@ -134,6 +135,17 @@ namespace sequoia::testing
     void add_test_suite(std::string name, Tests&&... tests)
     {
       using namespace object;
+      using namespace maths;
+
+      //using suite_type = maths::tree<maths::directed_flavour::directed, maths::tree_link_direction::forward, maths::null_weight, std::variant<log_summary, test_vessel>>;
+
+        /*extract_tree(suite{std::move(name), std::forward<Tests>(tests)...},
+                     [](auto&&...) { return true; },
+                     overloaded{
+                       []<class S> requires is_suite_v<S> (const auto& s) -> log_summary { return log_summary{s.name}; },
+                       []<concrete_test T>(T&& test) -> test_vessel { return test_vessel{std::move(test)}; }
+                     });*/
+
 
       // fix filter: filter_by_names{{etc}, {etc}}
       auto vessels{extract_leaves(suite{std::move(name), std::forward<Tests>(tests)...}, [](auto&&...) { return true; }, [](auto&& test) { return test_vessel{std::move(test)}; })};
@@ -154,12 +166,15 @@ namespace sequoia::testing
     enum class output_mode { standard = 0, verbose = 1 };
     enum class instability_mode { none = 0, single_instance, coordinator, sandbox };
 
+    //using suite_type = maths::tree<maths::directed_flavour::directed, maths::tree_link_direction::forward, maths::null_weight, std::variant<log_summary, test_vessel>>;
+
     std::string      m_Copyright{};
     family_selector  m_Selector;
     indentation      m_CodeIndent{"  "};
     std::ostream*    m_Stream;
 
     std::vector<test_vessel> m_Tests{};
+    //std::vector<suite_type> m_Suites{};
 
     runner_mode      m_RunnerMode{runner_mode::none};
     output_mode      m_OutputMode{output_mode::standard};
