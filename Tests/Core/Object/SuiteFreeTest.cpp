@@ -393,12 +393,28 @@ namespace sequoia::testing
 
     static_assert(std::is_same_v<to_variant_or_unique_type_t<int, decltype([](int) -> int { return 42; })>, int>);
 
-    using tree_type = tree<directed_flavour::directed, tree_link_direction::forward, null_weight, std::string>;
+    {
+      using tree_type = tree<directed_flavour::directed, tree_link_direction::forward, null_weight, std::string>;
 
-    check(equality, LINE(""), extract_tree(suite{"Numbers", int{42}}, [](auto&&...) { return false; }, overloaded{[] <class S> requires is_suite_v<S>(const S & s) -> std::string { return s.name; },  [](auto x) -> std::string { return std::to_string(x); }}), tree_type{});
-    check(equality, LINE(""), extract_tree(suite{"Numbers", int{42}}, [](auto&&...) { return true; }, overloaded{[] <class S> requires is_suite_v<S>(const S & s) -> std::string { return s.name; },  [](auto x) -> std::string { return std::to_string(x); }}), tree_type{{"Numbers", {{"42"}}}});
-    check(equality, LINE(""), extract_tree(suite{"Numbers", int{42}, long{314}}, [](auto&&...) { return true; }, overloaded{[] <class S> requires is_suite_v<S>(const S & s) -> std::string { return s.name; },  [](auto x) -> std::string { return std::to_string(x); }}), tree_type{{"Numbers", {{"42"}, {"314"}}}});
-    check(equality, LINE(""), extract_tree(suite{"Numbers", int{42}, long{314}}, [](const auto& val, const auto&...) { return val==314; }, overloaded{[] <class S> requires is_suite_v<S>(const S & s) -> std::string { return s.name; },  [](auto x) -> std::string { return std::to_string(x); }}), tree_type{{"Numbers", {{"314"}}}});
+      check(equality, LINE(""), extract_tree(suite{"Numbers", int{42}}, [](auto&&...) { return false; }, overloaded{[] <class S> requires is_suite_v<S>(const S & s) -> std::string { return s.name; },  [](auto x) -> std::string { return std::to_string(x); }}), tree_type{});
+      check(equality, LINE(""), extract_tree(suite{"Numbers", int{42}}, [](auto&&...) { return true; }, overloaded{[] <class S> requires is_suite_v<S>(const S & s) -> std::string { return s.name; },  [](auto x) -> std::string { return std::to_string(x); }}), tree_type{{"Numbers", {{"42"}}}});
+      check(equality, LINE(""), extract_tree(suite{"Numbers", int{42}, long{314}}, [](auto&&...) { return true; }, overloaded{[] <class S> requires is_suite_v<S>(const S & s) -> std::string { return s.name; },  [](auto x) -> std::string { return std::to_string(x); }}), tree_type{{"Numbers", {{"42"}, {"314"}}}});
+      check(equality, LINE(""), extract_tree(suite{"Numbers", int{42}, long{314}}, [](const auto& val, const auto&...) { return val == 314; }, overloaded{[] <class S> requires is_suite_v<S>(const S & s) -> std::string { return s.name; },  [](auto x) -> std::string { return std::to_string(x); }}), tree_type{{"Numbers", {{"314"}}}});
+    }
+
+    {
+      using tree_type = tree<directed_flavour::directed, tree_link_direction::forward, null_weight, std::variant<std::string, int>>;
+
+      check(equality,
+            LINE(""),
+            extract_tree(suite{"Numbers", int{42}},
+                         [](auto&&...) { return true; },
+                         overloaded{
+                           [] <class S> requires is_suite_v<S>(const S & s) -> std::string { return s.name; },
+                           [](auto x) { return x; }
+                         }),
+            tree_type{{"Numbers", {{42}}}});
+    }
   }
 
   void suite_free_test::test_nested_to_tree()
