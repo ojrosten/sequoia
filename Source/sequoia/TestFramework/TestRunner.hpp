@@ -38,7 +38,8 @@ namespace sequoia::testing
   class test_vessel
   {
   public:
-    template<concrete_test Test>
+    template<class Test>
+      requires (!std::is_same_v<std::remove_cvref_t<Test>, test_vessel>) && concrete_test<Test>
     test_vessel(Test&& t)
       : m_pTest{std::make_unique<essence<Test>>(std::forward<Test>(t))}
     {}
@@ -136,16 +137,15 @@ namespace sequoia::testing
     {
       using namespace object;
       using namespace maths;
-
-      //using suite_type = maths::tree<maths::directed_flavour::directed, maths::tree_link_direction::forward, maths::null_weight, std::variant<log_summary, test_vessel>>;
-
-        /*extract_tree(suite{std::move(name), std::forward<Tests>(tests)...},
+      /*
+      m_Suites.emplace_back(
+        extract_tree(suite{std::move(name), std::forward<Tests>(tests)...},
                      [](auto&&...) { return true; },
                      overloaded{
-                       []<class S> requires is_suite_v<S> (const auto& s) -> log_summary { return log_summary{s.name}; },
+                       []<class... Ts> (const suite<Ts...>& s) -> log_summary { return log_summary{s.name}; },
                        []<concrete_test T>(T&& test) -> test_vessel { return test_vessel{std::move(test)}; }
-                     });*/
-
+                     }));
+      */
 
       // fix filter: filter_by_names{{etc}, {etc}}
       auto vessels{extract_leaves(suite{std::move(name), std::forward<Tests>(tests)...}, [](auto&&...) { return true; }, [](auto&& test) { return test_vessel{std::move(test)}; })};
@@ -166,7 +166,7 @@ namespace sequoia::testing
     enum class output_mode { standard = 0, verbose = 1 };
     enum class instability_mode { none = 0, single_instance, coordinator, sandbox };
 
-    //using suite_type = maths::tree<maths::directed_flavour::directed, maths::tree_link_direction::forward, maths::null_weight, std::variant<log_summary, test_vessel>>;
+    using suite_type = maths::tree<maths::directed_flavour::directed, maths::tree_link_direction::forward, maths::null_weight, std::variant<log_summary, test_vessel>>;
 
     std::string      m_Copyright{};
     family_selector  m_Selector;
@@ -174,7 +174,7 @@ namespace sequoia::testing
     std::ostream*    m_Stream;
 
     std::vector<test_vessel> m_Tests{};
-    //std::vector<suite_type> m_Suites{};
+    std::vector<suite_type> m_Suites{};
 
     runner_mode      m_RunnerMode{runner_mode::none};
     output_mode      m_OutputMode{output_mode::standard};
