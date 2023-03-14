@@ -653,7 +653,7 @@ namespace sequoia::testing
 
       traverse(depth_first, s, find_disconnected_t{}, nodeEarly, nodeLate, null_func_obj{});
 
-      stream() << summarize(s.cbegin_node_weights()->summary, detail, tab, tab);
+      stream() << summarize(s.cbegin_node_weights()->summary, detail, no_indent, tab);
     }
 
     stream() << "\n-----------Grand Totals-----------\n";

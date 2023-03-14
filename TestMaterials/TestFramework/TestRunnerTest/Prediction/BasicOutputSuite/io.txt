@@ -4,11 +4,11 @@ Running tests...
 
 	--Using asynchronous execution, level: Unit
 
-	Failing Family
-	[0ms]
-		Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
-		False Negative Checks:                     1;  Failures:  1
-		False Positive Checks:                     1;  Failures:  1
+Failing Family
+[0ms]
+	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
+	False Negative Checks:                     1;  Failures:  1
+	False Positive Checks:                     1;  Failures:  1
 
 	Standard Failure
 	[int]
