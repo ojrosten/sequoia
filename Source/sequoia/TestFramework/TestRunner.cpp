@@ -625,9 +625,35 @@ namespace sequoia::testing
     }
 
     const auto detail{summary_detail::failure_messages | summary_detail::timings};
-    for(auto& test : m_Tests)
+    for(auto& s : m_Suites)
     {
-      stream() << summarize(test.execute(id), detail, tab, tab);
+      using namespace maths;
+      auto nodeEarly{
+        [&s,id](auto n) {
+          s.mutate_node_weight(
+            std::next(s.cbegin_node_weights(), n),
+            [id](suite_node& wt) {
+                if(wt.optTest) { wt.summary = wt.optTest->execute(id); }
+            }
+          );
+        }
+      };
+
+      auto nodeLate{
+        [&s](auto n) {
+          s.mutate_node_weight(
+            std::next(s.cbegin_node_weights(), n),
+            [&s,n](suite_node& wt) {
+              for(auto i{s.cbegin_edges(n)}; i != s.cend_edges(n); ++i)
+                wt.summary += std::next(s.cbegin_node_weights(), i->target_node())->summary;
+            }
+          );
+        }
+      };
+
+      traverse(depth_first, s, find_disconnected_t{}, nodeEarly, nodeLate, null_func_obj{});
+
+      stream() << summarize(s.cbegin_node_weights()->summary, detail, tab, tab);
     }
 
     stream() << "\n-----------Grand Totals-----------\n";
@@ -640,7 +666,7 @@ namespace sequoia::testing
   bool test_runner::nothing_to_do()
   {
     // Temporary hack!
-    if(!m_Tests.empty()) return false;
+    if(!m_Suites.empty()) return false;
 
     if(!m_Selector.families_presented())
     {

@@ -233,12 +233,13 @@ namespace sequoia::testing
   };
 
   template<class T>
-  concept concrete_test = !std::is_abstract_v<T> && std::movable<T> && std::constructible_from<std::string>
+  concept concrete_test = !std::is_abstract_v<T> && std::constructible_from<std::string>
     && requires (T& test){
          { test.execute(std::nullopt) } -> std::same_as<log_summary>;
          { test.source_filename() }     -> std::convertible_to<std::filesystem::path>;
          { test.name() }                -> std::convertible_to<std::string>;
-       };
+       }
+    && std::movable<T>;
 
   template<test_mode Mode>
   using basic_free_test = basic_test<checker<Mode>>;

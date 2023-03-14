@@ -4,9 +4,11 @@ Running tests...
 
 	--Using asynchronous execution, level: Unit
 
-	Free Test
+	Failing Family
 	[0ms]
 		Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
+		False Negative Checks:                     1;  Failures:  1
+		False Positive Checks:                     1;  Failures:  1
 
 	Standard Failure
 	[int]
@@ -16,19 +18,11 @@ Running tests...
 
 	=======================================
 
-	False positive Test
-	[0ms]
-		False Positive Checks:                     1;  Failures:  1
-
 	False Positive Failure:
 	False positive failure
 	[int]
 
 	=======================================
-
-	False negative Test
-	[0ms]
-		False Negative Checks:                     1;  Failures:  1
 
 	False negative failure
 	[int]
