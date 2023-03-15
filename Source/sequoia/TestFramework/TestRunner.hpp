@@ -144,18 +144,23 @@ namespace sequoia::testing
     }
 
     template<concrete_test... Tests>
-    void add_test_suite(std::string name, Tests&&... tests)
+    void add_test_suite(std::string_view name, Tests&&... tests)
     {
       using namespace object;
       using namespace maths;
       // fix filter: filter_by_names{{etc}, {etc}}
 
+      std::vector<std::filesystem::path> materialsPaths{};
+
       m_Suites.emplace_back(
-        extract_tree(suite{std::move(name), std::forward<Tests>(tests)...},
+        extract_tree(suite{std::string{name}, std::forward<Tests>(tests)...},
                      [](auto&&...) { return true; },
                      overloaded{
                        [] <class... Ts> (const suite<Ts...>&s) -> suite_node { return {.summary{log_summary{s.name}}}; },
-                       []<concrete_test T>(T&& test) -> suite_node { return {.summary{log_summary{test.name()}}, .optTest{std::move(test)}}; }
+                       [this, name, &materialsPaths]<concrete_test T>(T&& test) -> suite_node {
+                         init(name, test, materialsPaths);
+                         return {.summary{log_summary{test.name()}}, .optTest{std::move(test)}};
+                       }
                      }));
     }
 
@@ -209,6 +214,17 @@ namespace sequoia::testing
     bool concurrent_execution() const noexcept { return m_ConcurrencyMode != concurrency_mode::serial; }
 
     void check_argument_consistency();
+
+    [[nodiscard]]
+    individual_materials_paths set_materials(const std::filesystem::path& sourceFile, std::vector<std::filesystem::path>& materialsPaths) const;
+
+    template<concrete_test Test>
+    void init(std::string_view suiteName, Test& test, std::vector<std::filesystem::path>& materialsPaths) const
+    {
+      test.set_filesystem_data(proj_paths(), suiteName);
+      test.set_recovery_paths(make_active_recovery_paths(m_RecoveryMode, proj_paths()));
+      test.set_materials(set_materials(test.source_filename(), materialsPaths));
+    }
 
     void run_tests(std::optional<std::size_t> id);
 

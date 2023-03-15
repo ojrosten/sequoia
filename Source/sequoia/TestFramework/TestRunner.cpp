@@ -710,6 +710,39 @@ namespace sequoia::testing
         stream() << "[" << dur << unit << "]\n\n";
       }
       break;
-    } 
+    }
   }
+
+  [[nodiscard]]
+  individual_materials_paths test_runner::set_materials(const std::filesystem::path& sourceFile, std::vector<std::filesystem::path>& materialsPaths) const
+  {
+    individual_materials_paths materials{sourceFile, proj_paths()};
+    if(!fs::exists(materials.original_materials())) return {};
+
+    const auto workingCopy{materials.working()};
+    if(std::find(materialsPaths.cbegin(), materialsPaths.cend(), workingCopy) == materialsPaths.cend())
+    {
+      fs::remove_all(materials.temporary_materials());
+      fs::create_directories(materials.temporary_materials());
+
+      if(const auto originalWorking{materials.original_working()}; fs::exists(originalWorking))
+      {
+        fs::copy(originalWorking, workingCopy, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
+      }
+      else
+      {
+        fs::create_directory(workingCopy);
+      }
+
+      if(const auto originalAux{materials.original_auxiliary()}; fs::exists(originalAux))
+      {
+        fs::copy(originalAux, materials.auxiliary(), fs::copy_options::recursive | fs::copy_options::overwrite_existing);
+      }
+
+      materialsPaths.emplace_back(workingCopy);
+    }
+
+    return materials;
+  }
+
 }
