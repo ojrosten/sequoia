@@ -154,8 +154,8 @@ namespace sequoia::testing
         extract_tree(suite{std::move(name), std::forward<Tests>(tests)...},
                      [](auto&&...) { return true; },
                      overloaded{
-                       [] <class... Ts> (const suite<Ts...>&s) -> suite_node { return {.summary{s.name}}; },
-                       []<concrete_test T>(T&& test) -> suite_node { return {.summary{test.name()}, .optTest{std::move(test)}}; }
+                       [] <class... Ts> (const suite<Ts...>&s) -> suite_node { return {.summary{log_summary{s.name}}}; },
+                       []<concrete_test T>(T&& test) -> suite_node { return {.summary{log_summary{test.name()}}, .optTest{std::move(test)}}; }
                      }));
     }
 
