@@ -152,7 +152,7 @@ namespace sequoia::testing
 
       if(!m_Suites.order())
       {
-        m_Suites.add_node(suite_type::npos, log_summary{"Selected Tests"});
+        m_Suites.add_node(suite_type::npos, log_summary{});
       }
 
       std::vector<std::filesystem::path> materialsPaths{};

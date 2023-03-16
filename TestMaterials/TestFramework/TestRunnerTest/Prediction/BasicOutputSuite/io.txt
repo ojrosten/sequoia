@@ -34,8 +34,7 @@ Failing Family
 
 
 -----------Grand Totals-----------
-	Selected Tests
-	[0 (0)ms]
+[0 (0)ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     1;  Failures:  1
