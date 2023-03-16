@@ -150,18 +150,24 @@ namespace sequoia::testing
       using namespace maths;
       // fix filter: filter_by_names{{etc}, {etc}}
 
+      if(!m_Suites.order())
+      {
+        m_Suites.add_node(suite_type::npos, log_summary{"Selected Tests"});
+      }
+
       std::vector<std::filesystem::path> materialsPaths{};
 
-      m_Suites.emplace_back(
-        extract_tree(suite{std::string{name}, std::forward<Tests>(tests)...},
-                     [](auto&&...) { return true; },
-                     overloaded{
-                       [] <class... Ts> (const suite<Ts...>&s) -> suite_node { return {.summary{log_summary{s.name}}}; },
-                       [this, name, &materialsPaths]<concrete_test T>(T&& test) -> suite_node {
-                         init(name, test, materialsPaths);
-                         return {.summary{log_summary{test.name()}}, .optTest{std::move(test)}};
-                       }
-                     }));
+      extract_tree(suite{std::string{name}, std::forward<Tests>(tests)...},
+                   [](auto&&...) { return true; },
+                   overloaded{
+                     [] <class... Ts> (const suite<Ts...>&s) -> suite_node { return {.summary{log_summary{s.name}}}; },
+                     [this, name, &materialsPaths]<concrete_test T>(T&& test) -> suite_node {
+                       init(name, test, materialsPaths);
+                       return {.summary{log_summary{test.name()}}, .optTest{std::move(test)}};
+                     }
+                   },
+                   m_Suites,
+                   0);
     }
 
     void execute([[maybe_unused]] timer_resolution r={});
@@ -191,7 +197,7 @@ namespace sequoia::testing
     indentation      m_CodeIndent{"  "};
     std::ostream*    m_Stream;
 
-    std::vector<suite_type> m_Suites{};
+    suite_type m_Suites{};
 
     runner_mode      m_RunnerMode{runner_mode::none};
     output_mode      m_OutputMode{output_mode::standard};

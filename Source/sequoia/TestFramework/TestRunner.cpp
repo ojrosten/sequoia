@@ -625,11 +625,12 @@ namespace sequoia::testing
     }
 
     const auto detail{summary_detail::failure_messages | summary_detail::timings};
-    for(auto& s : m_Suites)
+
+    if(m_Suites.order())
     {
       using namespace maths;
       auto nodeEarly{
-        [&s,id](auto n) {
+        [&s{m_Suites},id](auto n) {
           s.mutate_node_weight(
             std::next(s.cbegin_node_weights(), n),
             [id](suite_node& wt) {
@@ -640,7 +641,7 @@ namespace sequoia::testing
       };
 
       auto nodeLate{
-        [&s](auto n) {
+        [&s{m_Suites}](auto n) {
           s.mutate_node_weight(
             std::next(s.cbegin_node_weights(), n),
             [&s,n](suite_node& wt) {
@@ -651,13 +652,22 @@ namespace sequoia::testing
         }
       };
 
-      traverse(depth_first, s, find_disconnected_t{}, nodeEarly, nodeLate, null_func_obj{});
+      traverse(depth_first, m_Suites, find_disconnected_t{}, nodeEarly, nodeLate, null_func_obj{});
 
-      stream() << summarize(s.cbegin_node_weights()->summary, detail, no_indent, tab);
+      for(auto i{m_Suites.cbegin_edges(0)}; i != m_Suites.cend_edges(0); ++i)
+      {
+        stream() << summarize(std::next(m_Suites.cbegin_node_weights(), i->target_node())->summary, detail, no_indent, tab);
+      }
+
+      stream() << "\n-----------Grand Totals-----------\n";
+      stream() << summarize(m_Suites.cbegin_node_weights()->summary, t.time_elapsed(), summary_detail::absent_checks | summary_detail::timings, indentation{"\t"}, no_indent);
     }
+    else
+    {
 
-    stream() << "\n-----------Grand Totals-----------\n";
-    stream() << summarize(summary, t.time_elapsed(), summary_detail::absent_checks | summary_detail::timings, indentation{"\t"}, no_indent);
+      stream() << "\n-----------Grand Totals-----------\n";
+      stream() << summarize(summary, t.time_elapsed(), summary_detail::absent_checks | summary_detail::timings, indentation{"\t"}, no_indent);
+    }
 
     m_Selector.update_prune_info(std::move(failedTests), id);
   }
@@ -666,7 +676,7 @@ namespace sequoia::testing
   bool test_runner::nothing_to_do()
   {
     // Temporary hack!
-    if(!m_Suites.empty()) return false;
+    if(m_Suites.order()) return false;
 
     if(!m_Selector.families_presented())
     {

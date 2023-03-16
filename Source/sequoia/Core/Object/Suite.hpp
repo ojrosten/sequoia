@@ -227,9 +227,10 @@ namespace sequoia::object
 
     template<class... Ts,
              class Transform,
-             maths::dynamic_tree Tree,
+             class Tree,
              std::integral SizeType = typename Tree::size_type,
              class Fn>
+      requires maths::dynamic_tree<std::remove_cvref_t<Tree>>
     Tree&& extract_tree(suite<Ts...>& s, Transform transform, Tree&& tree, const SizeType parentNode, Fn fn)
     {
       const auto node{tree.add_node(parentNode, transform(s))};
@@ -245,8 +246,8 @@ namespace sequoia::object
     }
 
 
-    template<class... Ts, class Filter, class Transform, maths::dynamic_tree Tree, std::integral SizeType = typename Tree::size_type, class... PreviousSuites>
-      requires (is_suite_v<PreviousSuites> && ...) && ((!is_suite_v<Ts>) && ...)
+    template<class... Ts, class Filter, class Transform, class Tree, std::integral SizeType = typename Tree::size_type, class... PreviousSuites>
+      requires maths::dynamic_tree<std::remove_cvref_t<Tree>> && (is_suite_v<PreviousSuites> && ...) && ((!is_suite_v<Ts>) && ...)
     Tree&& extract_tree(suite<Ts...>& s, Filter&& filter, Transform transform, Tree&& tree, const SizeType parentNode, const PreviousSuites&... previous)
     {
       auto emplacer{
@@ -259,8 +260,8 @@ namespace sequoia::object
       return impl::extract_tree(s, transform, std::forward<Tree>(tree), parentNode, emplacer);
     }
 
-    template<class... Ts, class Filter, class Transform, maths::dynamic_tree Tree, std::integral SizeType = typename Tree::size_type, class... PreviousSuites>
-      requires (is_suite_v<PreviousSuites> && ...) && ((is_suite_v<Ts>) && ...)
+    template<class... Ts, class Filter, class Transform, class Tree, std::integral SizeType = typename Tree::size_type, class... PreviousSuites>
+      requires maths::dynamic_tree<std::remove_cvref_t<Tree>> && (is_suite_v<PreviousSuites> && ...) && ((is_suite_v<Ts>) && ...)
     Tree&& extract_tree(suite<Ts...>& s, Filter&& filter, Transform transform, Tree&& tree, const SizeType parentNode, const PreviousSuites&... previous)
     {
       auto recurser{
@@ -293,6 +294,16 @@ namespace sequoia::object
   Tree extract_tree(Suite s, Filter&& filter, Transform transform)
   {
     return impl::extract_tree(s, std::forward<Filter>(filter), std::move(transform), Tree{}, Tree::npos);
+  }
+
+  template<class Suite,
+           class Filter,
+           class Transform,
+           maths::dynamic_tree Tree>
+    requires is_suite_v<Suite>
+  Tree& extract_tree(Suite s, Filter&& filter, Transform transform, Tree& tree, typename Tree::size_type pos)
+  {
+    return impl::extract_tree(s, std::forward<Filter>(filter), std::move(transform), tree, pos);
   }
 
   class filter_by_names
