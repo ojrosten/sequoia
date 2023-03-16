@@ -68,6 +68,12 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
+    normal_path source_filename() const
+    {
+      return m_pTest->source_filename();
+    }
+
+    [[nodiscard]]
     log_summary execute(std::optional<std::size_t> index)
     {
       return m_pTest->execute(index);
@@ -77,6 +83,7 @@ namespace sequoia::testing
     {
       virtual ~soul() = default;
       virtual const std::string& name() const noexcept = 0;
+      virtual normal_path source_filename() const = 0;
       virtual log_summary execute(std::optional<std::size_t> index) = 0;
     };
 
@@ -96,6 +103,12 @@ namespace sequoia::testing
       log_summary execute(std::optional<std::size_t> index) final
       {
         return m_Test.execute(index);
+      }
+
+      [[nodiscard]]
+      normal_path source_filename() const final
+      {
+        return m_Test.source_filename();
       }
 
       Test m_Test;

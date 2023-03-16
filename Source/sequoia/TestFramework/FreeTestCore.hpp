@@ -107,7 +107,7 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    normal_path source_filename() const noexcept
+    normal_path source_filename() const
     {
       return {source_file()};
     }

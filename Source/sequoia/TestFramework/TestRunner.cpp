@@ -628,9 +628,46 @@ namespace sequoia::testing
 
     if(m_Suites.order())
     {
+      // TO TRACK:
+      // std::set<std::filesystem::path> m_FilesWrittenTo{};
+      // std::set<test_paths, paths_comparator> m_Updateables{};
+      // std::vector<std::filesystem::path> failed_tests{};
+
+      class test_tracker
+      {
+      public:
+        test_tracker() = default;
+
+        void increment_depth() noexcept { ++m_Depth; }
+        void decrement_depth() noexcept
+        { 
+          if(!--m_Depth)
+          {
+            *this = test_tracker{0};
+            // TO DO: etc
+          }
+        }
+
+        void register_failure(std::filesystem::path testSource)
+        {
+          m_FailedTests.push_back(testSource);
+        }
+      private:
+        int m_Depth{-1};
+
+        test_tracker(int depth) : m_Depth{depth} {}
+
+        std::vector<std::filesystem::path> m_FailedTests{};
+        std::set<test_paths, paths_comparator> m_Updateables{};
+        std::set<std::filesystem::path> m_FilesWrittenTo{};
+      };
+
+      test_tracker tracker{};
+
       using namespace maths;
       auto nodeEarly{
-        [&s{m_Suites},id](auto n) {
+        [&s{m_Suites},&tracker,id](auto n) {
+          tracker.increment_depth();
           s.mutate_node_weight(
             std::next(s.cbegin_node_weights(), n),
             [id](suite_node& wt) {
@@ -641,14 +678,22 @@ namespace sequoia::testing
       };
 
       auto nodeLate{
-        [&s{m_Suites}](auto n) {
+        [&s{m_Suites},&tracker](auto n) {
           s.mutate_node_weight(
             std::next(s.cbegin_node_weights(), n),
-            [&s,n](suite_node& wt) {
+            [&s,&tracker,n](suite_node& wt) {
               for(auto i{s.cbegin_edges(n)}; i != s.cend_edges(n); ++i)
                 wt.summary += std::next(s.cbegin_node_weights(), i->target_node())->summary;
+
+              if(wt.optTest)
+              {
+                if(wt.summary.soft_failures() || wt.summary.critical_failures())
+                  tracker.register_failure(wt.optTest->source_filename());
+              }
             }
           );
+
+          tracker.decrement_depth();
         }
       };
 

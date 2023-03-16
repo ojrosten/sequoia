@@ -486,11 +486,11 @@ namespace sequoia::testing
   std::size_t log_summary::soft_failures() const noexcept
   {
     return standard_top_level_failures()
-        || false_positive_failures()
-        || false_negative_failures()
-        || standard_performance_failures()
-        || false_positive_performance_failures()
-        || false_negative_performance_failures();
+         + false_positive_failures()
+         + false_negative_failures()
+         + standard_performance_failures()
+         + false_positive_performance_failures()
+         + false_negative_performance_failures();
   }
 
   log_summary& log_summary::operator+=(const log_summary& rhs)
