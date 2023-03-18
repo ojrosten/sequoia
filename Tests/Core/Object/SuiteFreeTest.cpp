@@ -313,8 +313,9 @@ namespace sequoia::testing
 
         check(equality, LINE(""), extract_leaves(make_test_suite(), filter), std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
 
-        using map_t = filter_by_names::map_type;
-        check(equivalence, LINE(""), filter, map_t{{{"suite_2"}, true}}, map_t{});
+        using suites_map_t = filter_by_names<std::string>::suites_map_type;
+        using items_map_t = filter_by_names<std::string>::suites_map_type;
+        check(equivalence, LINE(""), filter, suites_map_t{{{"suite_2"}, true}}, items_map_t{});
       }
     }
 
@@ -327,8 +328,9 @@ namespace sequoia::testing
 
         check(equality, LINE(""), extract_leaves(make_test_suite(), filter), std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
 
-        using map_t = filter_by_names::map_type;
-        check(equivalence, LINE(""), filter, map_t{{"plurgh", false}, {{"suite_2"}, true}}, map_t{});
+        using suites_map_t = filter_by_names<std::string>::suites_map_type;
+        using items_map_t = filter_by_names<std::string>::suites_map_type;
+        check(equivalence, LINE(""), filter, suites_map_t{{"plurgh", false}, {{"suite_2"}, true}}, items_map_t{});
       }
     }
 
@@ -339,8 +341,9 @@ namespace sequoia::testing
 
       check(equality, LINE(""), extract_leaves(make_test_suite(), filter), std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
 
-      using map_t = filter_by_names::map_type;
-      check(equivalence, LINE(""), filter, map_t{}, map_t{{"bar1", true}});
+      using suites_map_t = filter_by_names<std::string>::suites_map_type;
+      using items_map_t = filter_by_names<std::string>::suites_map_type;
+      check(equivalence, LINE(""), filter, suites_map_t{}, items_map_t{{"bar1", true}});
     }
 
     {
@@ -350,8 +353,9 @@ namespace sequoia::testing
 
       check(equality, LINE(""), extract_leaves(make_test_suite(), filter), std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
 
-      using map_t = filter_by_names::map_type;
-      check(equivalence, LINE(""), filter, map_t{}, map_t{{"bar1", true}, {"far", false}});
+      using suites_map_t = filter_by_names<std::string>::suites_map_type;
+      using items_map_t = filter_by_names<std::string>::suites_map_type;
+      check(equivalence, LINE(""), filter, suites_map_t{}, items_map_t{{"bar1", true}, {"far", false}});
     }
 
     {
@@ -368,8 +372,9 @@ namespace sequoia::testing
 
       check(equality, LINE(""), extract_leaves(make_test_suite(), filter), std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
 
-      using map_t = filter_by_names::map_type;
-      check(equivalence, LINE(""), filter, map_t{{{"suite_2"}, true}}, map_t{{{"bar1"}, true}});
+      using suites_map_t = filter_by_names<std::string>::suites_map_type;
+      using items_map_t = filter_by_names<std::string>::suites_map_type;
+      check(equivalence, LINE(""), filter, suites_map_t{{{"suite_2"}, true}}, items_map_t{{{"bar1"}, true}});
     }
 
     {
@@ -379,8 +384,9 @@ namespace sequoia::testing
 
       check(equality, LINE(""), extract_leaves(make_test_suite(), filter), std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
 
-      using map_t = filter_by_names::map_type;
-      check(equivalence, LINE(""), filter, map_t{{{"suite_2"}, true}, {{"suite_2_0"}, true}}, map_t{{{"bar1"}, true}});
+      using suites_map_t = filter_by_names<std::string>::suites_map_type;
+      using items_map_t = filter_by_names<std::string>::suites_map_type;
+      check(equivalence, LINE(""), filter, suites_map_t{{{"suite_2"}, true}, {{"suite_2_0"}, true}}, items_map_t{{{"bar1"}, true}});
     }
 
     {
@@ -390,8 +396,9 @@ namespace sequoia::testing
 
       check(equality, LINE(""), extract_leaves(make_test_suite(), filter), std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
 
-      using map_t = filter_by_names::map_type;
-      check(equivalence, LINE(""), filter, map_t{{{"aardvark"}, false}, {{"suite_2"}, true}}, map_t{{{"aardvark"}, false}, {{"bar1"}, true}});
+      using suites_map_t = filter_by_names<std::string>::suites_map_type;
+      using items_map_t = filter_by_names<std::string>::suites_map_type;
+      check(equivalence, LINE(""), filter, suites_map_t{{{"aardvark"}, false}, {{"suite_2"}, true}}, items_map_t{{{"aardvark"}, false}, {{"bar1"}, true}});
     }
 
     {

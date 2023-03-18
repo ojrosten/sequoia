@@ -15,14 +15,15 @@
 
 namespace sequoia::testing
 {
-  template<>
-  struct value_tester<object::filter_by_names>
+  template<class ItemsKeyType>
+  struct value_tester<object::filter_by_names<ItemsKeyType>>
   {
-    using type            = object::filter_by_names;
-    using equivalent_type = typename object::filter_by_names::map_type;
+    using type                   = object::filter_by_names<ItemsKeyType>;
+    using equivalent_suites_type = typename type::suites_map_type;
+    using equivalent_items_type  = typename type::items_map_type;
 
     template<test_mode Mode>
-    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& data, const equivalent_type& selectedSuites, const equivalent_type& selectedItems)
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& data, const equivalent_suites_type& selectedSuites, const equivalent_items_type& selectedItems)
     {
       check(equality, "Selected Suites", logger, data.begin_selected_suites(), data.end_selected_suites(), selectedSuites.begin(), selectedSuites.end());
       check(equality, "Selected Items", logger, data.begin_selected_items(), data.end_selected_items(), selectedItems.begin(), selectedItems.end());
