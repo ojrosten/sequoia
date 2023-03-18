@@ -74,6 +74,18 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
+    std::filesystem::path working_materials() const
+    {
+      return m_pTest->working_materials();
+    }
+
+    [[nodiscard]]
+    std::filesystem::path predictive_materials() const
+    {
+      return m_pTest->predictive_materials();
+    }
+
+    [[nodiscard]]
     log_summary execute(std::optional<std::size_t> index)
     {
       return m_pTest->execute(index);
@@ -82,8 +94,12 @@ namespace sequoia::testing
     struct soul
     {
       virtual ~soul() = default;
+
       virtual const std::string& name() const noexcept = 0;
       virtual normal_path source_filename() const = 0;
+      virtual std::filesystem::path working_materials() const = 0;
+      virtual std::filesystem::path predictive_materials() const = 0;
+
       virtual log_summary execute(std::optional<std::size_t> index) = 0;
     };
 
@@ -109,6 +125,18 @@ namespace sequoia::testing
       normal_path source_filename() const final
       {
         return m_Test.source_filename();
+      }
+
+      [[nodiscard]]
+      std::filesystem::path working_materials() const final
+      {
+        return m_Test.working_materials();
+      }
+
+      [[nodiscard]]
+      std::filesystem::path predictive_materials() const final
+      {
+        return m_Test.predictive_materials();
       }
 
       Test m_Test;

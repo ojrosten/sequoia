@@ -91,6 +91,75 @@ namespace sequoia::testing
 
       throw std::logic_error{"Illegal option for concurrency_mode"};
     }
+
+    class test_tracker
+    {
+    public:
+      test_tracker() = default;
+
+      void increment_depth() noexcept { ++m_Depth; }
+
+      void decrement_depth() noexcept
+      {
+        if(!--m_Depth)
+        {
+          *this = test_tracker{0};
+        }
+      }
+
+      void process_test(const test_paths files, const log_summary& summary, update_mode updateMode)
+      {
+        if(summary.soft_failures() || summary.critical_failures())
+          m_FailedTests.push_back(files.test_file);
+
+        to_file(files.summary, summary);
+
+        if(updateMode != update_mode::none)
+        {
+          if(summary.soft_failures())
+          {
+            if(fs::exists(files.workingMaterials) && fs::exists(files.predictions))
+            {
+              m_Updateables.insert(files);
+            }
+          }
+        }
+      }
+    private:
+      int m_Depth{-1};
+
+      test_tracker(int depth) : m_Depth{depth} {}
+
+      std::vector<std::filesystem::path> m_FailedTests{};
+      std::set<test_paths, paths_comparator> m_Updateables{};
+      std::set<std::filesystem::path> m_FilesWrittenTo{};
+
+      void to_file(const std::filesystem::path& filename, const log_summary& summary)
+      {
+        if(filename.empty()) return;
+
+        auto mode{std::ios_base::out};
+        if(auto found{m_FilesWrittenTo.find(filename)}; found != m_FilesWrittenTo.end())
+        {
+          mode = std::ios_base::app;
+        }
+        else
+        {
+          m_FilesWrittenTo.insert(filename);
+        }
+
+        std::filesystem::create_directories(filename.parent_path());
+
+        if(std::ofstream file{filename, mode})
+        {
+          file << summarize(summary, summary_detail::failure_messages, no_indent, no_indent);
+        }
+        else
+        {
+          throw std::runtime_error{report_failed_write(filename)};
+        }
+      }
+    };
   }
 
   [[nodiscard]]
@@ -628,40 +697,6 @@ namespace sequoia::testing
 
     if(m_Suites.order())
     {
-      // TO TRACK:
-      // std::set<std::filesystem::path> m_FilesWrittenTo{};
-      // std::set<test_paths, paths_comparator> m_Updateables{};
-      // std::vector<std::filesystem::path> failed_tests{};
-
-      class test_tracker
-      {
-      public:
-        test_tracker() = default;
-
-        void increment_depth() noexcept { ++m_Depth; }
-        void decrement_depth() noexcept
-        { 
-          if(!--m_Depth)
-          {
-            *this = test_tracker{0};
-            // TO DO: etc
-          }
-        }
-
-        void register_failure(std::filesystem::path testSource)
-        {
-          m_FailedTests.push_back(testSource);
-        }
-      private:
-        int m_Depth{-1};
-
-        test_tracker(int depth) : m_Depth{depth} {}
-
-        std::vector<std::filesystem::path> m_FailedTests{};
-        std::set<test_paths, paths_comparator> m_Updateables{};
-        std::set<std::filesystem::path> m_FilesWrittenTo{};
-      };
-
       test_tracker tracker{};
 
       using namespace maths;
@@ -678,17 +713,25 @@ namespace sequoia::testing
       };
 
       auto nodeLate{
-        [&s{m_Suites},&tracker](auto n) {
-          s.mutate_node_weight(
-            std::next(s.cbegin_node_weights(), n),
-            [&s,&tracker,n](suite_node& wt) {
-              for(auto i{s.cbegin_edges(n)}; i != s.cend_edges(n); ++i)
-                wt.summary += std::next(s.cbegin_node_weights(), i->target_node())->summary;
+        [this,&tracker](auto n) {
+          m_Suites.mutate_node_weight(
+            std::next(m_Suites.cbegin_node_weights(), n),
+            [this, &tracker,n](suite_node& wt) {
+              for(auto i{m_Suites.cbegin_edges(n)}; i != m_Suites.cend_edges(n); ++i)
+                wt.summary += std::next(m_Suites.cbegin_node_weights(), i->target_node())->summary;
 
               if(wt.optTest)
               {
-                if(wt.summary.soft_failures() || wt.summary.critical_failures())
-                  tracker.register_failure(wt.optTest->source_filename());
+                auto pathsMaker{
+                    [this](auto& test) -> test_paths {
+                      return {test.source_filename(),
+                              test.working_materials(),
+                              test.predictive_materials(),
+                              proj_paths()};
+                    }
+                };
+
+                tracker.process_test(pathsMaker(wt.optTest.value()), wt.summary, m_UpdateMode);
               }
             }
           );
