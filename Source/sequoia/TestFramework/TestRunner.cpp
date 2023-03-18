@@ -12,6 +12,7 @@
 #include "sequoia/TestFramework/TestRunner.hpp"
 
 #include "sequoia/TestFramework/DependencyAnalyzer.hpp"
+#include "sequoia/TestFramework/MaterialsUpdater.hpp"
 #include "sequoia/TestFramework/ProjectCreator.hpp"
 #include "sequoia/TestFramework/Summary.hpp"
 #include "sequoia/TestFramework/TestCreator.hpp"
@@ -95,20 +96,30 @@ namespace sequoia::testing
     class test_tracker
     {
     public:
-      test_tracker() = default;
+      explicit test_tracker(const project_paths& projPaths, std::optional<std::size_t> id)
+        : m_ProjPaths{projPaths}
+        , m_Id{id}
+      {}
 
       void increment_depth() noexcept { ++m_Depth; }
 
       void decrement_depth() noexcept
       {
-        if(!--m_Depth)
+        if(--m_Depth == npos)
         {
-          *this = test_tracker{0};
+          for(const auto& update : m_Updateables)
+          {
+            soft_update(update.workingMaterials, update.predictions);
+          }
+
+          update_prune_info();
         }
       }
 
-      void process_test(const test_paths files, const log_summary& summary, update_mode updateMode)
+      void process_test(const test_paths& files, const log_summary& summary, update_mode updateMode)
       {
+        m_ExecutedTests.push_back(files.test_file);
+
         if(summary.soft_failures() || summary.critical_failures())
           m_FailedTests.push_back(files.test_file);
 
@@ -126,11 +137,13 @@ namespace sequoia::testing
         }
       }
     private:
-      int m_Depth{-1};
+      constexpr static int npos{-1};
 
-      test_tracker(int depth) : m_Depth{depth} {}
+      int m_Depth{npos};
+      project_paths m_ProjPaths;
+      std::optional<std::size_t> m_Id{};
 
-      std::vector<std::filesystem::path> m_FailedTests{};
+      std::vector<std::filesystem::path> m_FailedTests{}, m_ExecutedTests{};
       std::set<test_paths, paths_comparator> m_Updateables{};
       std::set<std::filesystem::path> m_FilesWrittenTo{};
 
@@ -158,6 +171,18 @@ namespace sequoia::testing
         {
           throw std::runtime_error{report_failed_write(filename)};
         }
+      }
+
+      void update_prune_info() const
+      {
+        /*if((pruned() == prune_mode::passive) && bespoke_selection())
+        {
+          update_prune_files(m_Paths, m_ExecutedTests, m_FailedTests, m_Id);
+        }
+        else
+        {
+          update_prune_files(m_Paths, m_FailedTests, m_PruneInfo.stamps.current, m_Id);
+        }*/
       }
     };
   }
@@ -697,7 +722,7 @@ namespace sequoia::testing
 
     if(m_Suites.order())
     {
-      test_tracker tracker{};
+      test_tracker tracker{proj_paths(), id};
 
       using namespace maths;
       auto nodeEarly{
