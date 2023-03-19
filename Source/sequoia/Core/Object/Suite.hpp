@@ -306,7 +306,17 @@ namespace sequoia::object
     return impl::extract_tree(s, std::forward<Filter>(filter), std::move(transform), tree, pos);
   }
 
-  template<class ItemKeyType = std::string>
+  struct item_to_name
+  {
+    template<class T>
+    [[nodiscard]]
+    std::string operator()(const T& t) const
+    {
+      return object::nomenclature(t);
+    }
+  };
+
+  template<class ItemKeyType = std::string, class ItemToKeyFn = item_to_name>
   class filter_by_names
   {
   public:
@@ -330,7 +340,7 @@ namespace sequoia::object
         [] <class Key, class OtherKey, class U>(std::map<Key, bool>& selected, const std::map<OtherKey, bool>& other, const U& u) {
           if(selected.empty()) return other.empty();
 
-          auto found{selected.find(nomenclator<U>::name(u))}; // needs generalizing
+          auto found{selected.find(ItemToKeyFn{}(u))};
           const bool isFound{found != selected.end()};
           if(isFound) found->second = true;
 

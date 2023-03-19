@@ -81,14 +81,14 @@ namespace sequoia::object
   struct nomenclator<foo<int>>
   {
     [[nodiscard]]
-    static std::string name() { return "foo-int"; }
+    std::string operator()() const { return "foo-int"; }
   };
 
   template<>
   struct nomenclator<foo<double>>
   {
     [[nodiscard]]
-    static std::string name() { return "foo-double"; }
+    std::string operator()() const { return "foo-double"; }
   };
 }
 

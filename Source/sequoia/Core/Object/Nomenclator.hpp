@@ -38,7 +38,7 @@ namespace sequoia::object
   struct nomenclator<T>
   {
     [[nodiscard]]
-    static std::string name(const T& t)
+    std::string operator()(const T& t) const
     {
       if constexpr(has_name_function<T>)
         return t.name();
@@ -49,12 +49,12 @@ namespace sequoia::object
 
   template<class T>
   inline constexpr bool has_extrinsic_nomenclator{
-    requires { { nomenclator<T>::name() } -> std::convertible_to<std::string>; }
+    requires { { nomenclator<T>{}() } -> std::convertible_to<std::string>; }
   };
 
   template<class T>
   inline constexpr bool has_intrinsic_nomenclator{
-    requires(const T& t) { { nomenclator<T>::name(t) } -> std::convertible_to<std::string>; }
+    requires(const T& t) { { nomenclator<T>{}(t) } -> std::convertible_to<std::string>; }
   };
 
   template<class T>
@@ -62,8 +62,8 @@ namespace sequoia::object
   [[nodiscard]]
   std::string nomenclature([[maybe_unused]] const T& t){
     if constexpr(has_intrinsic_nomenclator<T>)
-      return nomenclator<T>::name(t);
+      return nomenclator<T>{}(t);
     else
-      return nomenclator<T>::name();
+      return nomenclator<T>{}();
   }
 }

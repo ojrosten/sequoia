@@ -94,7 +94,7 @@ namespace sequoia::object
 
     factory()
       requires (has_extrinsic_nomenclator<Products> && ...)
-      : factory{ {nomenclator<Products>::name()...}}
+      : factory{ {nomenclator<Products>{}()...}}
     {}
 
     factory(const std::array<std::string_view, size()>& names)
