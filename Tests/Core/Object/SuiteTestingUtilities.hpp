@@ -15,10 +15,10 @@
 
 namespace sequoia::testing
 {
-  template<class ItemsKeyType>
-  struct value_tester<object::filter_by_names<ItemsKeyType>>
+  template<class ItemsKeyType, class ItemToKeyFn>
+  struct value_tester<object::filter_by_names<ItemsKeyType, ItemToKeyFn>>
   {
-    using type                   = object::filter_by_names<ItemsKeyType>;
+    using type                   = object::filter_by_names<ItemsKeyType, ItemToKeyFn>;
     using equivalent_suites_type = typename type::suites_map_type;
     using equivalent_items_type  = typename type::items_map_type;
 

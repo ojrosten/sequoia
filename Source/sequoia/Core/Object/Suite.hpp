@@ -309,6 +309,7 @@ namespace sequoia::object
   struct item_to_name
   {
     template<class T>
+      requires has_intrinsic_nomenclator<T> || has_extrinsic_nomenclator<T>
     [[nodiscard]]
     std::string operator()(const T& t) const
     {
@@ -340,7 +341,8 @@ namespace sequoia::object
         [] <class Key, class OtherKey, class U>(std::map<Key, bool>& selected, const std::map<OtherKey, bool>& other, const U& u) {
           if(selected.empty()) return other.empty();
 
-          auto found{selected.find(ItemToKeyFn{}(u))};
+          using transformer = std::conditional_t<std::is_same_v<Key, ItemKeyType>, ItemToKeyFn, item_to_name>;
+          auto found{selected.find(transformer{}(u))};
           const bool isFound{found != selected.end()};
           if(isFound) found->second = true;
 
