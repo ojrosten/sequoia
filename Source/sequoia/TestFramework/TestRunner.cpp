@@ -93,12 +93,41 @@ namespace sequoia::testing
       throw std::logic_error{"Illegal option for concurrency_mode"};
     }
 
+    using time_type = std::filesystem::file_time_type;
+
+    struct time_stamps
+    {
+      using stamp = std::optional<time_type>;
+
+      static auto from_file(const std::filesystem::path& stampFile) -> stamp
+      {
+        if(fs::exists(stampFile))
+        {
+          return fs::last_write_time(stampFile);
+        }
+
+        return std::nullopt;
+      }
+
+      stamp ondisk, executable;
+      time_type current{std::chrono::file_clock::now()};
+    };
+
+    struct prune_info
+    {
+      time_stamps stamps{};
+      prune_mode mode{prune_mode::passive};
+      std::string include_cutoff{};
+    };
+
     class test_tracker
     {
     public:
       explicit test_tracker(const project_paths& projPaths, std::optional<std::size_t> id)
         : m_ProjPaths{projPaths}
         , m_Id{id}
+        , m_PruneInfo{time_stamps::from_file(m_ProjPaths.prune().stamp()),
+                      time_stamps::from_file(m_ProjPaths.executable())}
       {}
 
       void increment_depth() noexcept { ++m_Depth; }
@@ -142,10 +171,17 @@ namespace sequoia::testing
       int m_Depth{npos};
       project_paths m_ProjPaths;
       std::optional<std::size_t> m_Id{};
+      prune_info m_PruneInfo{};
 
       std::vector<std::filesystem::path> m_FailedTests{}, m_ExecutedTests{};
       std::set<test_paths, paths_comparator> m_Updateables{};
       std::set<std::filesystem::path> m_FilesWrittenTo{};
+
+      [[nodiscard]]
+      prune_mode pruned() const noexcept
+      {
+        return m_PruneInfo.mode;
+      }
 
       void to_file(const std::filesystem::path& filename, const log_summary& summary)
       {
@@ -175,14 +211,14 @@ namespace sequoia::testing
 
       void update_prune_info() const
       {
-        /*if((pruned() == prune_mode::passive) && bespoke_selection())
+        if((pruned() == prune_mode::passive) /*&& bespoke_selection()*/)
         {
-          update_prune_files(m_Paths, m_ExecutedTests, m_FailedTests, m_Id);
+          update_prune_files(m_ProjPaths, m_ExecutedTests, m_FailedTests, m_Id);
         }
         else
         {
-          update_prune_files(m_Paths, m_FailedTests, m_PruneInfo.stamps.current, m_Id);
-        }*/
+          update_prune_files(m_ProjPaths, m_FailedTests, m_PruneInfo.stamps.current, m_Id);
+        }
       }
     };
   }
@@ -342,10 +378,17 @@ namespace sequoia::testing
                       m_Selector.select_family(args.front());
                     }}
                   }},
+                  /*{{{"suite", {}, {"test suite name"},
+                    [this](const arg_list& args) {
+                      m_RunnerMode |= runner_mode::test;
+                      m_SelectedSuites.push_back(args.front());
+                    }}
+                  }},*/
                   {{{"select", {"s"}, {"source file name"},
                     [this](const arg_list& args) {
                       m_RunnerMode |= runner_mode::test;
                       m_Selector.select_source_file(fs::path{args.front()});
+                      m_SelectedSources.emplace_back(fs::path{args.front()});
                     }}
                   }},
                   {{{"prune", {"p"}, {},
