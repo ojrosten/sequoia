@@ -190,7 +190,8 @@ namespace sequoia::testing
     {
       using namespace object;
       using namespace maths;
-      // fix filter: filter_by_names{{etc}, {etc}}
+
+      //filter_by_names<normal_path, ???> filter{};
 
       if(!m_Suites.order())
       {
@@ -240,6 +241,8 @@ namespace sequoia::testing
     std::ostream*    m_Stream;
 
     suite_type m_Suites{};
+    std::vector<std::string> m_SelectedSuites{};
+    std::vector<normal_path> m_SelectedSources{};
 
     runner_mode      m_RunnerMode{runner_mode::none};
     output_mode      m_OutputMode{output_mode::standard};
