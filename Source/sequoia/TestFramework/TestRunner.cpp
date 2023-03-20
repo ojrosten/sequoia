@@ -726,7 +726,7 @@ namespace sequoia::testing
 
       using namespace maths;
       auto nodeEarly{
-        [&s{m_Suites},&tracker,id](auto n) {
+        [&s=m_Suites,&tracker,id](auto n) {
           tracker.increment_depth();
           s.mutate_node_weight(
             std::next(s.cbegin_node_weights(), n),
