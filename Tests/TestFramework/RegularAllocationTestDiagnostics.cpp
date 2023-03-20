@@ -158,6 +158,8 @@ namespace sequoia::testing
         using allocator = typename beast::allocator_type;
         using getter = typename beast::alloc_acquirer;
 
+        static_assert(std::is_same_v<alloc_equivalence_class_generator_t<beast, getter>, allocation_equivalence_classes::container_of_pointers<allocator>>);
+
         auto m{
           [](beast& b) {
             *b.x.front() = 9;
