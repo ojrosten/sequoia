@@ -50,7 +50,8 @@ namespace sequoia::testing
   class test_vessel
   {
   public:
-    template<concrete_test Test>
+    template<class Test>
+      requires (!std::is_same_v<Test, test_vessel> && concrete_test<Test>)
     test_vessel(Test&& t)
       : m_pTest{std::make_unique<essence<Test>>(std::forward<Test>(t))}
     {}
