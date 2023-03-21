@@ -16,7 +16,6 @@
 #include "sequoia/Maths/Graph/GraphTraits.hpp"
 
 #include <algorithm>
-#include <map>
 #include <ranges>
 #include <string>
 #include <tuple>
@@ -322,14 +321,14 @@ namespace sequoia::object
   {
   public:
     using items_key_type  = ItemKeyType;
-    using suites_map_type = std::map<std::string, bool>;
-    using items_map_type  = std::map<ItemKeyType, bool>;
+    using suites_map_type = std::vector<std::pair<std::string, bool>>;
+    using items_map_type  = std::vector<std::pair<ItemKeyType, bool>>;
     using selected_suites_iterator = typename suites_map_type::const_iterator;
     using selected_items_iterator  = typename items_map_type::const_iterator;
 
-    filter_by_names(const std::vector<std::string>& selectedSuites, const std::vector<items_key_type>& selectedItems)
-      : m_SelectedSuites{make(selectedSuites)}
-      , m_SelectedItems{make(selectedItems)}
+    filter_by_names(std::vector<std::string> selectedSuites, std::vector<items_key_type> selectedItems)
+      : m_SelectedSuites{make(std::move(selectedSuites))}
+      , m_SelectedItems{make(std::move(selectedItems))}
     {}
 
     template<class T, class... Suites>
@@ -338,15 +337,20 @@ namespace sequoia::object
     bool operator()(const T& val, const Suites&... suites)
     {
       auto finder{
-        [] <class Key, class OtherKey, class U>(std::map<Key, bool>& selected, const std::map<OtherKey, bool>& other, const U& u) {
+        [] <class Key, class OtherKey, class U>(std::vector<std::pair<Key, bool>>& selected, const std::vector<std::pair<OtherKey, bool>>& other, const U& u) {
           if(selected.empty()) return other.empty();
 
           using transformer = std::conditional_t<std::is_same_v<Key, ItemKeyType>, ItemToKeyFn, item_to_name>;
-          auto found{selected.find(transformer{}(u))};
-          const bool isFound{found != selected.end()};
-          if(isFound) found->second = true;
+          using pair_t = std::pair<Key, bool>;
+          const auto transformedVal{ transformer{}(u) };
+          auto found{ std::lower_bound(selected.begin(), selected.end(), pair_t{transformedVal, false}, [](const pair_t& lhs, const pair_t& rhs) { return lhs.first < rhs.first; }) };
+          if ((found != selected.end()) && (found->first == transformedVal))
+          {
+            found->second = true;
+            return true;
+          }
 
-          return isFound;
+          return false;
         }
       };
 
@@ -376,9 +380,11 @@ namespace sequoia::object
 
     template<class KeyType>
     [[nodiscard]]
-    static std::map<KeyType, bool> make(const std::vector<KeyType>& selected)
+    static std::vector<std::pair<KeyType, bool>> make(std::vector<KeyType> selected)
     {
-      std::map<KeyType, bool> selection{};
+      std::sort(selected.begin(), selected.end());
+
+      std::vector<std::pair<KeyType, bool>> selection{};
 //      std::ranges::transform(selected, std::inserter(selection, selection.end()), [](const std::string& s) -> std::pair<std::string, bool> { return {s, false}; });
       std::transform(selected.begin(), selected.end(), std::inserter(selection, selection.end()), []<class Key> (const Key& s) -> std::pair<Key, bool> { return {s, false}; });
       return selection;
