@@ -362,12 +362,14 @@ namespace sequoia::testing
     {
       using variant_t = std::variant<foo<0>, bar<0>, baz<0>, foo<1>, bar<1>>;
       variant_t init[]{bar<1>{"bar1"}};
-      auto filter{filter_by_names<std::filesystem::path, to_path>{{}, {{"bar1"}}}};
+
+      using filter_t = filter_by_names<std::filesystem::path, to_path>;
+      auto filter{filter_t{{}, {{"bar1"}}}};
 
       check(equality, LINE(""), extract_leaves(make_test_suite(), filter), std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
 
-      using suites_map_t = filter_by_names<std::filesystem::path, to_path>::suites_map_type;
-      using items_map_t  = filter_by_names<std::filesystem::path, to_path>::items_map_type;
+      using suites_map_t = filter_t::suites_map_type;
+      using items_map_t  = filter_t::items_map_type;
       check(equivalence, LINE(""), filter, suites_map_t{}, items_map_t{{"bar1", true}});
     }
 

@@ -316,7 +316,11 @@ namespace sequoia::object
     }
   };
 
-  template<class ItemKeyType = std::string, class ItemToKeyFn = item_to_name>
+  template<
+    class ItemKeyType = std::string,
+    class ItemToKeyFn = item_to_name,
+    class Compare     = std::less<>
+  >
   class filter_by_names
   {
   public:
@@ -326,9 +330,10 @@ namespace sequoia::object
     using selected_suites_iterator = typename suites_map_type::const_iterator;
     using selected_items_iterator  = typename items_map_type::const_iterator;
 
-    filter_by_names(std::vector<std::string> selectedSuites, std::vector<items_key_type> selectedItems)
-      : m_SelectedSuites{make(std::move(selectedSuites))}
-      , m_SelectedItems{make(std::move(selectedItems))}
+    filter_by_names(std::vector<std::string> selectedSuites, std::vector<items_key_type> selectedItems, Compare compare = {})
+      : m_Compare{std::move(compare)}
+      , m_SelectedSuites{make(std::move(selectedSuites), std::less<>{})}
+      , m_SelectedItems{make(std::move(selectedItems), m_Compare)}
     {}
 
     template<class T, class... Suites>
@@ -337,13 +342,13 @@ namespace sequoia::object
     bool operator()(const T& val, const Suites&... suites)
     {
       auto finder{
-        [] <class Key, class OtherKey, class U>(std::vector<std::pair<Key, bool>>& selected, const std::vector<std::pair<OtherKey, bool>>& other, const U& u) {
+        [] <class Key, class OtherKey, class U>(std::vector<std::pair<Key, bool>>&selected, const std::vector<std::pair<OtherKey, bool>>&other, const U& u, Compare compare) {
           if(selected.empty()) return other.empty();
 
-          using transformer = std::conditional_t<std::is_same_v<Key, ItemKeyType>, ItemToKeyFn, item_to_name>;
+          using transformer_t = std::conditional_t<std::is_same_v<Key, ItemKeyType>, ItemToKeyFn, item_to_name>;
           using pair_t = std::pair<Key, bool>;
-          const auto transformedVal{ transformer{}(u) };
-          auto found{ std::lower_bound(selected.begin(), selected.end(), pair_t{transformedVal, false}, [](const pair_t& lhs, const pair_t& rhs) { return lhs.first < rhs.first; }) };
+          const auto transformedVal{ transformer_t{}(u) };
+          auto found{ std::lower_bound(selected.begin(), selected.end(), pair_t{transformedVal, false}, [&compare](const pair_t& lhs, const pair_t& rhs) { return compare(lhs.first,rhs.first); }) };
           if ((found != selected.end()) && (found->first == transformedVal))
           {
             found->second = true;
@@ -355,7 +360,7 @@ namespace sequoia::object
       };
 
       // Don't use logical short-circuit, otherwise the maps may not accurately update
-      std::array<bool, sizeof...(Suites) + 1> isFound{finder(m_SelectedItems, m_SelectedSuites, val), finder(m_SelectedSuites, m_SelectedItems, suites) ...};
+      std::array<bool, sizeof...(Suites) + 1> isFound{finder(m_SelectedItems, m_SelectedSuites, val, m_Compare), finder(m_SelectedSuites, m_SelectedItems, suites, std::less<>{}) ...};
 
       return std::any_of(isFound.begin(), isFound.end(), [](bool b) { return b; });
     }
@@ -375,14 +380,15 @@ namespace sequoia::object
     [[nodiscard]]
     friend bool operator==(const filter_by_names&, const filter_by_names&) noexcept = default;
   private:
+    [[no_unique_address]] Compare m_Compare{};
     suites_map_type m_SelectedSuites{};
     items_map_type m_SelectedItems{};
 
     template<class KeyType>
     [[nodiscard]]
-    static std::vector<std::pair<KeyType, bool>> make(std::vector<KeyType> selected)
+    static std::vector<std::pair<KeyType, bool>> make(std::vector<KeyType> selected, Compare compare)
     {
-      std::sort(selected.begin(), selected.end());
+      std::sort(selected.begin(), selected.end(), compare);
 
       std::vector<std::pair<KeyType, bool>> selection{};
       for (auto& e : selected)
