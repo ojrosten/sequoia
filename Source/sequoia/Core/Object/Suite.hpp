@@ -385,8 +385,9 @@ namespace sequoia::object
       std::sort(selected.begin(), selected.end());
 
       std::vector<std::pair<KeyType, bool>> selection{};
-//      std::ranges::transform(selected, std::inserter(selection, selection.end()), [](const std::string& s) -> std::pair<std::string, bool> { return {s, false}; });
-      std::transform(selected.begin(), selected.end(), std::inserter(selection, selection.end()), []<class Key> (const Key& s) -> std::pair<Key, bool> { return {s, false}; });
+      for (auto& e : selected)
+        selection.emplace_back(std::move(e), false);
+
       return selection;
     }
   };
