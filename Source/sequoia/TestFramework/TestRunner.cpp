@@ -224,6 +224,33 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
+  bool path_equivalence::operator()(const normal_path& selectedSource, const normal_path& filepath) const
+  {
+    if(filepath.path().empty() || selectedSource.path().empty() || (back(selectedSource) != back(filepath)))
+      return false;
+
+    if(filepath == selectedSource) return true;
+
+    // filepath is relative to where compilation was performed which
+    // cannot be known here. Therefore fallback to assuming the 'selected sources'
+    // live in the test repository
+
+    if(!m_Repo.empty())
+    {
+      if(rebase_from(selectedSource, m_Repo) == rebase_from(filepath, m_Repo))
+        return true;
+
+      if(const auto path{find_in_tree(m_Repo, selectedSource)}; !path.empty())
+      {
+        if(rebase_from(path, m_Repo) == rebase_from(filepath, m_Repo))
+          return true;
+      }
+    }
+
+    return false;
+  }
+
+  [[nodiscard]]
   std::string report_time(const family_summary& s)
   {
     return report_time(s.log, s.execution_time);

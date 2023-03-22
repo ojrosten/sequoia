@@ -35,17 +35,19 @@ namespace sequoia
 
 namespace sequoia::testing
 {
-  template<class T>
-  struct is_variant : std::false_type {};
+  class path_equivalence
+  {
+  public:
+    explicit path_equivalence(const std::filesystem::path& repo)
+      : m_Repo{repo}
+    {}
 
-  template<class... Ts>
-  struct is_variant<std::variant<Ts...>> : std::true_type {};
+    [[nodiscard]]
+    bool operator()(const normal_path& selectedSource, const normal_path& filepath) const;
 
-  template<class T>
-  using is_variant_t = typename is_variant<T>::type;
-
-  template<class T>
-  inline constexpr bool is_variant_v{is_variant<T>::value};
+  private:
+    const std::filesystem::path& m_Repo;
+  };
 
   class test_vessel
   {
@@ -191,7 +193,13 @@ namespace sequoia::testing
       using namespace object;
       using namespace maths;
 
-      //filter_by_names<normal_path, ???> filter{};
+      auto projector{[](const auto& test) -> normal_path { return test.source_filename(); }};
+
+      using filter_t = filter_by_names<normal_path, decltype(projector), path_equivalence>;
+      filter_t filter{m_SelectedSuites,
+                      m_SelectedSources,
+                      projector,
+                      path_equivalence{m_Selector.proj_paths().tests().repo()}};
 
       if(!m_Suites.order())
       {
@@ -201,7 +209,7 @@ namespace sequoia::testing
       std::vector<std::filesystem::path> materialsPaths{};
 
       extract_tree(suite{std::string{name}, std::forward<Tests>(tests)...},
-                   [](auto&&...) { return true; },
+                   filter,
                    overloaded{
                      [] <class... Ts> (const suite<Ts...>&s) -> suite_node { return {.summary{log_summary{s.name}}}; },
                      [this, name, &materialsPaths]<concrete_test T>(T&& test) -> suite_node {

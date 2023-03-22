@@ -316,7 +316,8 @@ namespace sequoia::object
     }
   };
 
-  template<
+  template
+  <
     class ItemKeyType   = std::string,
     class ItemProjector = item_to_name,
     class Compare       = std::equal_to<>
@@ -342,25 +343,8 @@ namespace sequoia::object
     [[nodiscard]]
     bool operator()(const T& val, const Suites&... suites)
     {
-      auto finder{
-        [] <class Key, class OtherKey, class U, class Projector, class Comp>(std::vector<std::pair<Key, bool>>&selected, const std::vector<std::pair<OtherKey, bool>>&other, const U& u, Projector proj, Comp compare) {
-          if(selected.empty()) return other.empty();
-
-          using pair_t = std::pair<Key, bool>;
-          auto found{std::find_if(selected.begin(), selected.end(), [&proj, &compare, &u](const pair_t& e) { return compare(e.first, proj(u)); })};
-
-          if (found != selected.end())
-          {
-            found->second = true;
-            return true;
-          }
-
-          return false;
-        }
-      };
-
       // Don't use logical short-circuit, otherwise the maps may not accurately update
-      std::array<bool, sizeof...(Suites) + 1> isFound{ finder(m_SelectedItems, m_SelectedSuites, val, m_Proj, m_Compare), finder(m_SelectedSuites, m_SelectedItems, suites, item_to_name{}, std::equal_to<>{}) ... };
+      std::array<bool, sizeof...(Suites) + 1> isFound{ finder(m_SelectedItems, m_SelectedSuites, val, m_Proj, m_Compare), finder(m_SelectedSuites, m_SelectedItems, suites, item_to_name{}, std::equal_to<std::string>{}) ... };
 
       return std::any_of(isFound.begin(), isFound.end(), [](bool b) { return b; });
     }
@@ -394,6 +378,22 @@ namespace sequoia::object
         selection.emplace_back(std::move(e), false);
 
       return selection;
+    }
+
+    template<class Key, class OtherKey, class U, class Projector, class Comp>
+    static bool finder(std::vector<std::pair<Key, bool>>& selected, const std::vector<std::pair<OtherKey, bool>>& other, const U& u, Projector proj, Comp compare)
+    {
+      if(selected.empty()) return other.empty();
+
+      auto found{std::find_if(selected.begin(), selected.end(), [&proj, &compare, &u](const std::pair<Key, bool>& e) { return compare(e.first, proj(u)); })};
+
+      if(found != selected.end())
+      {
+        found->second = true;
+        return true;
+      }
+
+      return false;
     }
   };
 }

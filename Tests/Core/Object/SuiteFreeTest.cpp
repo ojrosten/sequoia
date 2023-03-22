@@ -105,7 +105,7 @@ namespace sequoia::testing
     struct path_equivalence
     {
       [[nodiscard]]
-      bool operator()(const fs::path& lhs, const fs::path& rhs)
+      bool operator()(const fs::path& lhs, const fs::path& rhs) const
       {
         if(lhs.empty() && rhs.empty()) return true;
 
@@ -179,6 +179,23 @@ namespace sequoia::testing
 
     {
       check(equality, LINE(""), extract_leaves(suite{"root", int{42}}, [](auto&&...) { return true; }), std::vector<int>{ 42 });
+    }
+
+    {
+      using variant_t = std::variant<foo<0>, bar<1>>;
+      variant_t init[]{bar<1>{"bar1"}};
+
+      using filter_t = filter_by_names<fs::path, to_path, path_equivalence>;
+      auto filter{filter_t{{}, {{"foo/bar1"}}}};
+
+      check(equality,
+            LINE("Projection from items to paths, which are compared using an equivalence relationship, rather than equality"),
+            extract_leaves(suite{"flat", foo<0>{"foo"}, bar<1>{"bar1"}}, filter),
+            std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
+
+      using suites_map_t = filter_t::suites_map_type;
+      using items_map_t  = filter_t::items_map_type;
+      check(equivalence, LINE(""), filter, suites_map_t{}, items_map_t{{"foo/bar1", true}});
     }
   }
 
@@ -516,6 +533,24 @@ namespace sequoia::testing
                          }),
             tree_type{{"Numbers", {{42}}}});
     }
+
+    {
+      using tree_type = tree<directed_flavour::directed, tree_link_direction::forward, null_weight, std::string>;
+
+      using filter_t = filter_by_names<fs::path, to_path, path_equivalence>;
+      auto filter{filter_t{{}, {{"foo/bar1"}}}};
+
+      check(equality,
+            LINE("Projection from items to paths, which are compared using an equivalence relationship, rather than equality"),
+            extract_tree(suite{"flat", foo<0>{"foo"}, bar<1>{"bar1"}},
+                         filter,
+                         [](const auto& s) { return s.name; }),
+            tree_type{{"flat", {{"bar1"}}}});
+
+      using suites_map_t = filter_t::suites_map_type;
+      using items_map_t  = filter_t::items_map_type;
+      check(equivalence, LINE(""), filter, suites_map_t{}, items_map_t{{"foo/bar1", true}});
+    }
   }
 
   void suite_free_test::test_nested_to_tree()
@@ -523,13 +558,16 @@ namespace sequoia::testing
     using namespace maths;
 
     using tree_type = tree<directed_flavour::directed, tree_link_direction::forward, null_weight, std::string>;
+
     check(equality, LINE(""), extract_tree(make_test_suite(), [](auto&&...) { return false; }, [](const auto& s) { return s.name; }), tree_type{});
+
     check(equality, LINE(""), extract_tree(make_test_suite(), filter_by_names{{}, {"foo"}}, [](const auto& s) { return s.name; }), tree_type{{"root", {{"suite_0", {{"foo"}}}}}});
+
     check(equality,
           LINE(""),
           extract_tree(make_test_suite(),
-          filter_by_names{{"suite_2"}, {}},
-          [](const auto& s) { return s.name; }),
+                       filter_by_names{{"suite_2"}, {}},
+                       [](const auto& s) { return s.name; }),
           tree_type{{"root",
                       {{"suite_2",
                         {
@@ -540,11 +578,31 @@ namespace sequoia::testing
                         }
                        }}
                     }});
+
     check(equality,
           LINE(""),
           extract_tree(make_test_suite(),
-          filter_by_names{{"suite_2"}, {"bar"}},
-          [](const auto& s) { return s.name; }),
+                       filter_by_names{{"suite_2"}, {"bar"}},
+                       [](const auto& s) { return s.name; }),
+          tree_type{{"root",
+                      {
+                        {"suite_1", {{"bar"}}},
+                        {"suite_2",
+                          {
+                            {"suite_2_0", {{"foo1"}} },
+                            {"suite_2_1",
+                              { {"suite_2_1_0", {{"bar1"}}} }
+                            }
+                          }
+                        }
+                      }
+                    }});
+
+    check(equality,
+          LINE(""),
+          extract_tree(make_test_suite(),
+                       filter_by_names<fs::path, to_path, path_equivalence>{{"suite_2"}, {"foo/bar"}},
+                       [](const auto& s) { return s.name; }),
           tree_type{{"root",
                       {
                         {"suite_1", {{"bar"}}},
