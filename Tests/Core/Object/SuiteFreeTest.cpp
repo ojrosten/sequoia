@@ -15,6 +15,7 @@
 
 namespace sequoia::testing
 {
+  namespace fs = std::filesystem;
   using namespace object;
 
   namespace
@@ -31,7 +32,7 @@ namespace sequoia::testing
     {
       std::string name;
 
-      std::filesystem::path to_path() const { return {name}; }
+      fs::path to_path() const { return {name}; }
 
       [[nodiscard]]
       foo<I + 1> next() const { return {make_next_name(*this)}; }
@@ -51,7 +52,7 @@ namespace sequoia::testing
     {
       std::string name;
 
-      std::filesystem::path to_path() const { return {name}; }
+      fs::path to_path() const { return {name}; }
 
       [[nodiscard]]
       friend bool operator==(const bar&, const bar&) noexcept = default;
@@ -71,7 +72,7 @@ namespace sequoia::testing
     {
       std::string name;
 
-      std::filesystem::path to_path() const { return {name}; }
+      fs::path to_path() const { return {name}; }
 
       baz(std::string s) : name{std::move(s)} {}
 
@@ -98,7 +99,23 @@ namespace sequoia::testing
     {
       template<class T>
       [[nodiscard]]
-      std::filesystem::path operator()(const T& t) const { return t.to_path(); }
+      fs::path operator()(const T& t) const { return t.to_path(); }
+    };
+
+    struct path_equivalence
+    {
+      [[nodiscard]]
+      bool operator()(const fs::path& lhs, const fs::path& rhs)
+      {
+        if(lhs.empty() && rhs.empty()) return true;
+
+        if(!lhs.empty() && !rhs.empty())
+        {
+          return (lhs == rhs) || (back(lhs) == back(rhs));
+        }
+
+        return false;
+      }
     };
 
     auto make_test_suite()
@@ -363,14 +380,34 @@ namespace sequoia::testing
       using variant_t = std::variant<foo<0>, bar<0>, baz<0>, foo<1>, bar<1>>;
       variant_t init[]{bar<1>{"bar1"}};
 
-      using filter_t = filter_by_names<std::filesystem::path, to_path>;
+      using filter_t = filter_by_names<fs::path, to_path>;
       auto filter{filter_t{{}, {{"bar1"}}}};
 
-      check(equality, LINE(""), extract_leaves(make_test_suite(), filter), std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
+      check(equality,
+           LINE("Projection from items to paths"),
+           extract_leaves(make_test_suite(), filter),
+           std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
 
       using suites_map_t = filter_t::suites_map_type;
       using items_map_t  = filter_t::items_map_type;
       check(equivalence, LINE(""), filter, suites_map_t{}, items_map_t{{"bar1", true}});
+    }
+
+    {
+      using variant_t = std::variant<foo<0>, bar<0>, baz<0>, foo<1>, bar<1>>;
+      variant_t init[]{ bar<1>{"bar1"} };
+
+      using filter_t = filter_by_names<fs::path, to_path, path_equivalence>;
+      auto filter{ filter_t{{}, {{"foo/bar1"}}} };
+
+      check(equality,
+            LINE("Projection from items to paths, which are compared using an equivalence relationship, rather than equality"),
+            extract_leaves(make_test_suite(), filter),
+            std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
+
+      using suites_map_t = filter_t::suites_map_type;
+      using items_map_t = filter_t::items_map_type;
+      check(equivalence, LINE(""), filter, suites_map_t{}, items_map_t{ {"foo/bar1", true} });
     }
 
     {
