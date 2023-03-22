@@ -343,7 +343,7 @@ namespace sequoia::testing
 
         using suites_map_t = filter_by_names<std::string>::suites_map_type;
         using items_map_t  = filter_by_names<std::string>::items_map_type;
-        check(equivalence, LINE(""), filter, suites_map_t{{"plurgh", false}, {{"suite_2"}, true}}, items_map_t{});
+        check(equivalence, LINE(""), filter, suites_map_t{{{"suite_2"}, true}, {"plurgh", false}}, items_map_t{});
       }
     }
 
@@ -425,7 +425,7 @@ namespace sequoia::testing
 
       using suites_map_t = filter_by_names<std::string>::suites_map_type;
       using items_map_t  = filter_by_names<std::string>::items_map_type;
-      check(equivalence, LINE(""), filter, suites_map_t{{{"aardvark"}, false}, {{"suite_2"}, true}}, items_map_t{{{"aardvark"}, false}, {{"bar1"}, true}});
+      check(equivalence, LINE(""), filter, suites_map_t{{{"suite_2"}, true},  {{"aardvark"}, false}}, items_map_t{{{"bar1"}, true}, {{"aardvark"}, false}});
     }
 
     {
