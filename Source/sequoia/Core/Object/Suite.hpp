@@ -331,12 +331,30 @@ namespace sequoia::object
     using selected_suites_iterator = typename suites_map_type::const_iterator;
     using selected_items_iterator  = typename items_map_type::const_iterator;
 
+    filter_by_names(ItemProjector proj = {}, Compare compare = {})
+      : m_Proj{std::move(proj)}
+      , m_Compare{std::move(compare)}
+    {}
+
     filter_by_names(std::vector<std::string> selectedSuites, std::vector<items_key_type> selectedItems, ItemProjector proj = {}, Compare compare = {})
       : m_Proj{std::move(proj)}
       , m_Compare{std::move(compare)}
       , m_SelectedSuites{make(std::move(selectedSuites))}
       , m_SelectedItems{make(std::move(selectedItems))}
     {}
+
+    void add_selected_suite(std::string name)
+    {
+      m_SelectedSuites.emplace_back(std::move(name), false);
+    }
+
+    void add_selected_item(items_key_type key)
+    {
+      m_SelectedItems.emplace_back(std::move(key), false);
+    }
+
+    [[nodiscard]]
+    bool empty() const noexcept { return m_SelectedSuites.empty() && m_SelectedItems.empty(); }
 
     template<class T, class... Suites>
       requires (is_suite_v<Suites> && ...)

@@ -35,6 +35,15 @@ namespace sequoia
 
 namespace sequoia::testing
 {
+  struct test_to_path
+  {
+    template<concrete_test Test>
+    [[nodiscard]]
+    normal_path operator()(const Test& test) const {
+      return test.source_filename();
+    }
+  };
+
   class path_equivalence
   {
   public:
@@ -193,14 +202,6 @@ namespace sequoia::testing
       using namespace object;
       using namespace maths;
 
-      auto projector{[](const auto& test) -> normal_path { return test.source_filename(); }};
-
-      using filter_t = filter_by_names<normal_path, decltype(projector), path_equivalence>;
-      filter_t filter{m_SelectedSuites,
-                      m_SelectedSources,
-                      projector,
-                      path_equivalence{m_Selector.proj_paths().tests().repo()}};
-
       if(!m_Suites.order())
       {
         m_Suites.add_node(suite_type::npos, log_summary{});
@@ -209,7 +210,7 @@ namespace sequoia::testing
       std::vector<std::filesystem::path> materialsPaths{};
 
       extract_tree(suite{std::string{name}, std::forward<Tests>(tests)...},
-                   filter,
+                   m_Filter,
                    overloaded{
                      [] <class... Ts> (const suite<Ts...>&s) -> suite_node { return {.summary{log_summary{s.name}}}; },
                      [this, name, &materialsPaths]<concrete_test T>(T&& test) -> suite_node {
@@ -249,8 +250,7 @@ namespace sequoia::testing
     std::ostream*    m_Stream;
 
     suite_type m_Suites{};
-    std::vector<std::string> m_SelectedSuites{};
-    std::vector<normal_path> m_SelectedSources{};
+    object::filter_by_names<normal_path, test_to_path, path_equivalence> m_Filter;
 
     runner_mode      m_RunnerMode{runner_mode::none};
     output_mode      m_OutputMode{output_mode::standard};

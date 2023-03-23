@@ -281,6 +281,7 @@ namespace sequoia::testing
     , m_Selector{project_paths{argc, argv, pathsFromProjectRoot}}
     , m_CodeIndent{std::move(codeIndent)}
     , m_Stream{&stream}
+    , m_Filter{test_to_path{}, path_equivalence{m_Selector.proj_paths().tests().repo()}}
   {
     check_indent(m_CodeIndent);
 
@@ -403,19 +404,14 @@ namespace sequoia::testing
                     [this](const arg_list& args) {
                       m_RunnerMode |= runner_mode::test;
                       m_Selector.select_family(args.front());
+                      //m_Filter.add_selected_suite(args.front());
                     }}
                   }},
-                  /*{{{"suite", {}, {"test suite name"},
-                    [this](const arg_list& args) {
-                      m_RunnerMode |= runner_mode::test;
-                      m_SelectedSuites.push_back(args.front());
-                    }}
-                  }},*/
                   {{{"select", {"s"}, {"source file name"},
                     [this](const arg_list& args) {
                       m_RunnerMode |= runner_mode::test;
                       m_Selector.select_source_file(fs::path{args.front()});
-                      m_SelectedSources.emplace_back(fs::path{args.front()});
+                      m_Filter.add_selected_item(fs::path{args.front()});
                     }}
                   }},
                   {{{"prune", {"p"}, {},
