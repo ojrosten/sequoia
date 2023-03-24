@@ -14,6 +14,7 @@
 #include "sequoia/TestFramework/Output.hpp"
 #include "sequoia/TestFramework/ProjectPaths.hpp"
 
+#include <algorithm>
 #include <fstream>
 #include <regex>
 

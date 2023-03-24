@@ -15,6 +15,7 @@
 #include "sequoia/TextProcessing/Substitutions.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
 
+#include <algorithm>
 #include <fstream>
 #include <iomanip>
 

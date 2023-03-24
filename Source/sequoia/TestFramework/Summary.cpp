@@ -11,6 +11,7 @@
 
 #include "sequoia/TestFramework/Summary.hpp"
 
+#include <algorithm>
 #include <array>
 
 namespace sequoia::testing

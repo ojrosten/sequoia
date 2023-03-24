@@ -16,6 +16,8 @@
 #include "sequoia/TestFramework/FileSystemUtilities.hpp"
 #include "sequoia/TestFramework/ProjectPaths.hpp"
 
+#include <algorithm>
+
 namespace sequoia::testing
 {
   namespace fs = std::filesystem;
