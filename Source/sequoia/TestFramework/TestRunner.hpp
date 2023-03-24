@@ -128,12 +128,6 @@ namespace sequoia::testing
       }
 
       [[nodiscard]]
-      log_summary execute(std::optional<std::size_t> index) final
-      {
-        return m_Test.execute(index);
-      }
-
-      [[nodiscard]]
       normal_path source_filename() const final
       {
         return m_Test.source_filename();
@@ -151,6 +145,12 @@ namespace sequoia::testing
         return m_Test.predictive_materials();
       }
 
+      [[nodiscard]]
+      log_summary execute(std::optional<std::size_t> index) final
+      {
+        return m_Test.execute(index);
+      }
+
       Test m_Test;
     };
 
@@ -159,6 +159,30 @@ namespace sequoia::testing
 
   [[nodiscard]]
   std::string report_time(const family_summary& s);
+
+  using time_type = std::filesystem::file_time_type;
+
+  struct time_stamps
+  {
+    using stamp = std::optional<time_type>;
+
+    static auto from_file(const std::filesystem::path& stampFile) -> stamp;
+
+    stamp ondisk, executable;
+    time_type current{std::chrono::file_clock::now()};
+  };
+
+  enum class is_filtered { no, yes };
+
+  struct prune_info
+  {
+    time_stamps stamps{};
+    prune_mode mode{prune_mode::passive};
+    std::string include_cutoff{};
+    is_filtered filtered;
+
+    void enable_prune() noexcept { mode = prune_mode::active; }
+  };
 
   /*! \brief Consumes command-line arguments and holds all test families
 
@@ -189,18 +213,21 @@ namespace sequoia::testing
     test_runner& operator=(const test_runner&)     = delete;
     test_runner& operator=(test_runner&&) noexcept = default;
 
-    template<concrete_test... Tests>
+    /*template<concrete_test... Tests>
       requires (sizeof...(Tests) > 0)
     void add_test_family(std::string_view name, Tests... tests)
     {
       m_Selector.add_test_family(name, m_RecoveryMode, std::move(tests)...);
-    }
+    }*/
 
     template<concrete_test... Tests>
-    void add_test_suite(std::string_view name, Tests&&... tests)
+      requires (sizeof...(Tests) > 0)
+    void add_test_family(std::string_view name, Tests&&... tests)
     {
       using namespace object;
       using namespace maths;
+
+      check_for_duplicates(name, tests...);
 
       if(!m_Suites.order())
       {
@@ -226,7 +253,7 @@ namespace sequoia::testing
 
     std::ostream& stream() noexcept { return *m_Stream; }
 
-    const project_paths& proj_paths() const noexcept { return m_Selector.proj_paths(); }
+    const project_paths& proj_paths() const noexcept { return m_ProjPaths; }
 
     const std::string& copyright() const noexcept { return m_Copyright; }
 
@@ -245,12 +272,14 @@ namespace sequoia::testing
     using suite_type = maths::tree<maths::directed_flavour::directed, maths::tree_link_direction::forward, maths::null_weight, suite_node>;
 
     std::string      m_Copyright{};
-    family_selector  m_Selector;
+    project_paths    m_ProjPaths;
+    //family_selector  m_Selector;
     indentation      m_CodeIndent{"  "};
     std::ostream*    m_Stream;
 
     suite_type m_Suites{};
     object::filter_by_names<normal_path, test_to_path, path_equivalence> m_Filter;
+    prune_info m_PruneInfo{};
 
     runner_mode      m_RunnerMode{runner_mode::none};
     output_mode      m_OutputMode{output_mode::standard};
@@ -266,13 +295,15 @@ namespace sequoia::testing
 
     void finalize_concurrency_mode();
 
-    [[nodiscard]]
-    family_summary process_family(family_results results);
+    void check_argument_consistency();
+
+    void check_for_missing_tests();
+
+    //[[nodiscard]]
+    //family_summary process_family(family_results results);
 
     [[nodiscard]]
     bool concurrent_execution() const noexcept { return m_ConcurrencyMode != concurrency_mode::serial; }
-
-    void check_argument_consistency();
 
     [[nodiscard]]
     individual_materials_paths set_materials(const std::filesystem::path& sourceFile, std::vector<std::filesystem::path>& materialsPaths) const;
@@ -297,5 +328,31 @@ namespace sequoia::testing
     }
 
     void prune();
+
+    [[nodiscard]]
+    prune_outcome do_prune();
+
+    template<concrete_test... Tests>
+      requires (sizeof...(Tests) > 0)
+    static void check_for_duplicates(std::string_view name, const Tests&... tests)
+    {
+      using duplicate_set = std::set<std::pair<std::string_view, std::filesystem::path>>;
+
+      duplicate_set namesAndSources{};
+
+      auto check{
+        [&,name](concrete_test auto const& test) {
+          if(!namesAndSources.emplace(test.name(), test.source_filename()).second)
+            throw std::runtime_error{duplication_message(name, test.name(), test.source_filename())};
+        }
+      };
+
+      (check(tests), ...);
+    }
+
+    [[nodiscard]]
+    static std::string duplication_message(std::string_view familyName,
+      std::string_view testName,
+      const std::filesystem::path& source);
  };
 }
