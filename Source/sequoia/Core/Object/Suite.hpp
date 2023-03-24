@@ -16,7 +16,6 @@
 #include "sequoia/Maths/Graph/GraphTraits.hpp"
 
 #include <algorithm>
-#include <map>
 #include <ranges>
 #include <string>
 #include <tuple>
@@ -317,41 +316,53 @@ namespace sequoia::object
     }
   };
 
-  template<class ItemKeyType = std::string, class ItemToKeyFn = item_to_name>
+  template
+  <
+    class ItemKeyType   = std::string,
+    class ItemProjector = item_to_name,
+    class Compare       = std::equal_to<>
+  >
   class filter_by_names
   {
   public:
     using items_key_type  = ItemKeyType;
-    using suites_map_type = std::map<std::string, bool>;
-    using items_map_type  = std::map<ItemKeyType, bool>;
+    using suites_map_type = std::vector<std::pair<std::string, bool>>;
+    using items_map_type  = std::vector<std::pair<ItemKeyType, bool>>;
     using selected_suites_iterator = typename suites_map_type::const_iterator;
     using selected_items_iterator  = typename items_map_type::const_iterator;
 
-    filter_by_names(const std::vector<std::string>& selectedSuites, const std::vector<items_key_type>& selectedItems)
-      : m_SelectedSuites{make(selectedSuites)}
-      , m_SelectedItems{make(selectedItems)}
+    filter_by_names(ItemProjector proj = {}, Compare compare = {})
+      : m_Proj{std::move(proj)}
+      , m_Compare{std::move(compare)}
     {}
+
+    filter_by_names(std::vector<std::string> selectedSuites, std::vector<items_key_type> selectedItems, ItemProjector proj = {}, Compare compare = {})
+      : m_Proj{std::move(proj)}
+      , m_Compare{std::move(compare)}
+      , m_SelectedSuites{make(std::move(selectedSuites))}
+      , m_SelectedItems{make(std::move(selectedItems))}
+    {}
+
+    void add_selected_suite(std::string name)
+    {
+      m_SelectedSuites.emplace_back(std::move(name), false);
+    }
+
+    void add_selected_item(items_key_type key)
+    {
+      m_SelectedItems.emplace_back(std::move(key), false);
+    }
+
+    [[nodiscard]]
+    bool empty() const noexcept { return m_SelectedSuites.empty() && m_SelectedItems.empty(); }
 
     template<class T, class... Suites>
       requires (is_suite_v<Suites> && ...)
     [[nodiscard]]
     bool operator()(const T& val, const Suites&... suites)
     {
-      auto finder{
-        [] <class Key, class OtherKey, class U>(std::map<Key, bool>& selected, const std::map<OtherKey, bool>& other, const U& u) {
-          if(selected.empty()) return other.empty();
-
-          using transformer = std::conditional_t<std::is_same_v<Key, ItemKeyType>, ItemToKeyFn, item_to_name>;
-          auto found{selected.find(transformer{}(u))};
-          const bool isFound{found != selected.end()};
-          if(isFound) found->second = true;
-
-          return isFound;
-        }
-      };
-
       // Don't use logical short-circuit, otherwise the maps may not accurately update
-      std::array<bool, sizeof...(Suites) + 1> isFound{finder(m_SelectedItems, m_SelectedSuites, val), finder(m_SelectedSuites, m_SelectedItems, suites) ...};
+      std::array<bool, sizeof...(Suites) + 1> isFound{ finder(m_SelectedItems, m_SelectedSuites, val, m_Proj, m_Compare), finder(m_SelectedSuites, m_SelectedItems, suites, item_to_name{}, std::equal_to<std::string>{}) ... };
 
       return std::any_of(isFound.begin(), isFound.end(), [](bool b) { return b; });
     }
@@ -371,17 +382,36 @@ namespace sequoia::object
     [[nodiscard]]
     friend bool operator==(const filter_by_names&, const filter_by_names&) noexcept = default;
   private:
+    [[no_unique_address]] ItemProjector m_Proj{};
+    [[no_unique_address]] Compare m_Compare{};
     suites_map_type m_SelectedSuites{};
     items_map_type m_SelectedItems{};
 
     template<class KeyType>
     [[nodiscard]]
-    static std::map<KeyType, bool> make(const std::vector<KeyType>& selected)
+    static std::vector<std::pair<KeyType, bool>> make(std::vector<KeyType> selected)
     {
-      std::map<KeyType, bool> selection{};
-//      std::ranges::transform(selected, std::inserter(selection, selection.end()), [](const std::string& s) -> std::pair<std::string, bool> { return {s, false}; });
-      std::transform(selected.begin(), selected.end(), std::inserter(selection, selection.end()), []<class Key> (const Key& s) -> std::pair<Key, bool> { return {s, false}; });
+      std::vector<std::pair<KeyType, bool>> selection{};
+      for (auto& e : selected)
+        selection.emplace_back(std::move(e), false);
+
       return selection;
+    }
+
+    template<class Key, class OtherKey, class U, class Projector, class Comp>
+    static bool finder(std::vector<std::pair<Key, bool>>& selected, const std::vector<std::pair<OtherKey, bool>>& other, const U& u, Projector proj, Comp compare)
+    {
+      if(selected.empty()) return other.empty();
+
+      auto found{std::find_if(selected.begin(), selected.end(), [&proj, &compare, &u](const std::pair<Key, bool>& e) { return compare(e.first, proj(u)); })};
+
+      if(found != selected.end())
+      {
+        found->second = true;
+        return true;
+      }
+
+      return false;
     }
   };
 }

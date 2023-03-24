@@ -113,21 +113,25 @@ namespace sequoia::testing
       time_type current{std::chrono::file_clock::now()};
     };
 
+    enum class filtered_flavour {no, yes};
+
     struct prune_info
     {
       time_stamps stamps{};
       prune_mode mode{prune_mode::passive};
       std::string include_cutoff{};
+      filtered_flavour filtered;
     };
+
 
     class test_tracker
     {
     public:
-      explicit test_tracker(const project_paths& projPaths, std::optional<std::size_t> id)
+      explicit test_tracker(const project_paths& projPaths, std::optional<std::size_t> id, filtered_flavour filtered)
         : m_ProjPaths{projPaths}
         , m_Id{id}
-        , m_PruneInfo{time_stamps::from_file(m_ProjPaths.prune().stamp()),
-                      time_stamps::from_file(m_ProjPaths.executable())}
+        , m_PruneInfo{.stamps{time_stamps::from_file(m_ProjPaths.prune().stamp()), time_stamps::from_file(m_ProjPaths.executable())},
+                      .filtered{filtered}}
       {}
 
       void increment_depth() noexcept { ++m_Depth; }
@@ -211,7 +215,7 @@ namespace sequoia::testing
 
       void update_prune_info() const
       {
-        if((pruned() == prune_mode::passive) /*&& bespoke_selection()*/)
+        if((pruned() == prune_mode::passive) && (m_PruneInfo.filtered == filtered_flavour::yes))
         {
           update_prune_files(m_ProjPaths, m_ExecutedTests, m_FailedTests, m_Id);
         }
@@ -221,6 +225,33 @@ namespace sequoia::testing
         }
       }
     };
+  }
+
+  [[nodiscard]]
+  bool path_equivalence::operator()(const normal_path& selectedSource, const normal_path& filepath) const
+  {
+    if(filepath.path().empty() || selectedSource.path().empty() || (back(selectedSource) != back(filepath)))
+      return false;
+
+    if(filepath == selectedSource) return true;
+
+    // filepath is relative to where compilation was performed which
+    // cannot be known here. Therefore fallback to assuming the 'selected sources'
+    // live in the test repository
+
+    if(!m_Repo.empty())
+    {
+      if(rebase_from(selectedSource, m_Repo) == rebase_from(filepath, m_Repo))
+        return true;
+
+      if(const auto path{find_in_tree(m_Repo, selectedSource)}; !path.empty())
+      {
+        if(rebase_from(path, m_Repo) == rebase_from(filepath, m_Repo))
+          return true;
+      }
+    }
+
+    return false;
   }
 
   [[nodiscard]]
@@ -254,6 +285,7 @@ namespace sequoia::testing
     , m_Selector{project_paths{argc, argv, pathsFromProjectRoot}}
     , m_CodeIndent{std::move(codeIndent)}
     , m_Stream{&stream}
+    , m_Filter{test_to_path{}, path_equivalence{m_Selector.proj_paths().tests().repo()}}
   {
     check_indent(m_CodeIndent);
 
@@ -376,19 +408,14 @@ namespace sequoia::testing
                     [this](const arg_list& args) {
                       m_RunnerMode |= runner_mode::test;
                       m_Selector.select_family(args.front());
+                      //m_Filter.add_selected_suite(args.front());
                     }}
                   }},
-                  /*{{{"suite", {}, {"test suite name"},
-                    [this](const arg_list& args) {
-                      m_RunnerMode |= runner_mode::test;
-                      m_SelectedSuites.push_back(args.front());
-                    }}
-                  }},*/
                   {{{"select", {"s"}, {"source file name"},
                     [this](const arg_list& args) {
                       m_RunnerMode |= runner_mode::test;
                       m_Selector.select_source_file(fs::path{args.front()});
-                      m_SelectedSources.emplace_back(fs::path{args.front()});
+                      m_Filter.add_selected_item(fs::path{args.front()});
                     }}
                   }},
                   {{{"prune", {"p"}, {},
@@ -765,7 +792,7 @@ namespace sequoia::testing
 
     if(m_Suites.order())
     {
-      test_tracker tracker{proj_paths(), id};
+      test_tracker tracker{proj_paths(), id, m_Filter.empty() ? filtered_flavour::no : filtered_flavour::yes};
 
       using namespace maths;
       auto nodeEarly{

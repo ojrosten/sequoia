@@ -35,17 +35,28 @@ namespace sequoia
 
 namespace sequoia::testing
 {
-  template<class T>
-  struct is_variant : std::false_type {};
+  struct test_to_path
+  {
+    template<concrete_test Test>
+    [[nodiscard]]
+    normal_path operator()(const Test& test) const {
+      return test.source_filename();
+    }
+  };
 
-  template<class... Ts>
-  struct is_variant<std::variant<Ts...>> : std::true_type {};
+  class path_equivalence
+  {
+  public:
+    explicit path_equivalence(const std::filesystem::path& repo)
+      : m_Repo{repo}
+    {}
 
-  template<class T>
-  using is_variant_t = typename is_variant<T>::type;
+    [[nodiscard]]
+    bool operator()(const normal_path& selectedSource, const normal_path& filepath) const;
 
-  template<class T>
-  inline constexpr bool is_variant_v{is_variant<T>::value};
+  private:
+    const std::filesystem::path& m_Repo;
+  };
 
   class test_vessel
   {
@@ -191,8 +202,6 @@ namespace sequoia::testing
       using namespace object;
       using namespace maths;
 
-      //filter_by_names<normal_path, ???> filter{};
-
       if(!m_Suites.order())
       {
         m_Suites.add_node(suite_type::npos, log_summary{});
@@ -201,7 +210,7 @@ namespace sequoia::testing
       std::vector<std::filesystem::path> materialsPaths{};
 
       extract_tree(suite{std::string{name}, std::forward<Tests>(tests)...},
-                   [](auto&&...) { return true; },
+                   m_Filter,
                    overloaded{
                      [] <class... Ts> (const suite<Ts...>&s) -> suite_node { return {.summary{log_summary{s.name}}}; },
                      [this, name, &materialsPaths]<concrete_test T>(T&& test) -> suite_node {
@@ -241,8 +250,7 @@ namespace sequoia::testing
     std::ostream*    m_Stream;
 
     suite_type m_Suites{};
-    std::vector<std::string> m_SelectedSuites{};
-    std::vector<normal_path> m_SelectedSources{};
+    object::filter_by_names<normal_path, test_to_path, path_equivalence> m_Filter;
 
     runner_mode      m_RunnerMode{runner_mode::none};
     output_mode      m_OutputMode{output_mode::standard};

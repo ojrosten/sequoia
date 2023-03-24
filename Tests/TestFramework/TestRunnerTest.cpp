@@ -253,6 +253,7 @@ namespace sequoia::testing
     test_exceptions();
     test_critical_errors();
     test_suites();
+    test_filtered_suites();
     test_basic_output();
     test_prune_basic_output();
     test_instability_analysis();
@@ -500,6 +501,11 @@ namespace sequoia::testing
 
     runner.execute();
     check_output(LINE("Basic Output"), "BasicOutputSuite", outputStream);
+  }
+
+  void test_runner_test::test_filtered_suites()
+  {
+    // TO DO
   }
 
   void test_runner_test::test_basic_output()
