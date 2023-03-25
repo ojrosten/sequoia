@@ -978,6 +978,8 @@ namespace sequoia::testing
             {
               suiteName = wt.summary.name();
             }
+
+            wt.summary = log_summary{wt.summary.name()};
           }
         );
       }
