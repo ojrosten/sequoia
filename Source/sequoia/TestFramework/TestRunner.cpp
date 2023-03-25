@@ -792,46 +792,8 @@ namespace sequoia::testing
   {
     const timer t{};
     log_summary summary{};
-    //std::vector<fs::path> failedTests;
-
-    /*auto update{
-      [&summary, &failedTests](const family_summary& familySummary) {
-        summary += familySummary.log;
-        failedTests.insert(failedTests.end(), familySummary.failed_tests.begin(), familySummary.failed_tests.end());
-      }
-    };*/
 
     stream() << "\nRunning tests...\n\n";
-    /*if(!concurrent_execution())
-    {
-      for(auto& family : m_Selector)
-      {
-        stream() << family.name() << ":\n";
-        update(process_family(family.execute(m_UpdateMode, m_ConcurrencyMode, id)));
-      }
-    }
-    else
-    {
-      stream() << "\n\t--Using asynchronous execution, level: "
-               << to_string(m_ConcurrencyMode)
-               << "\n\n";
-
-      std::vector<std::pair<std::string, std::future<family_results>>> results{};
-      results.reserve(m_Selector.size());
-
-      for(auto& family : m_Selector)
-      {
-        results.emplace_back(family.name(),
-          std::async([&family, umode=m_UpdateMode, cmode=m_ConcurrencyMode, id](){
-            return family.execute(umode, cmode, id); }));
-      }
-
-      for(auto& res : results)
-      {
-        stream() << res.first << ":\n";
-        update(process_family(res.second.get()));
-      }
-    }*/
 
     const auto detail{summary_detail::failure_messages | summary_detail::timings};
 
@@ -842,98 +804,89 @@ namespace sequoia::testing
                << "\n\n";
     }
 
-    if(m_Suites.order())
-    {
-      test_tracker tracker{proj_paths(), id, m_Filter.empty() ? is_filtered::no : is_filtered::yes};
+    test_tracker tracker{proj_paths(), id, m_Filter.empty() ? is_filtered::no : is_filtered::yes};
 
-      using namespace maths;
-      auto nodeEarly{
-        [&s=m_Suites,&tracker,id](auto n) {
-          tracker.increment_depth();
-          s.mutate_node_weight(
-            std::next(s.cbegin_node_weights(), n),
-            [id](suite_node& wt) {
-                if(wt.optTest) { wt.summary = wt.optTest->execute(id); }
-            }
-          );
-        }
-      };
+    using namespace maths;
+    auto nodeEarly{
+      [&s=m_Suites,&tracker,id](auto n) {
+        tracker.increment_depth();
+        s.mutate_node_weight(
+          std::next(s.cbegin_node_weights(), n),
+          [id](suite_node& wt) {
+              if(wt.optTest) { wt.summary = wt.optTest->execute(id); }
+          }
+        );
+      }
+    };
 
-      auto nodeLate{
-        [this,&tracker](auto n) {
-          m_Suites.mutate_node_weight(
-            std::next(m_Suites.cbegin_node_weights(), n),
-            [this, &tracker,n](suite_node& wt) {
-              for(auto i{m_Suites.cbegin_edges(n)}; i != m_Suites.cend_edges(n); ++i)
-                wt.summary += std::next(m_Suites.cbegin_node_weights(), i->target_node())->summary;
+    auto nodeLate{
+      [this,&tracker](auto n) {
+        m_Suites.mutate_node_weight(
+          std::next(m_Suites.cbegin_node_weights(), n),
+          [this, &tracker,n](suite_node& wt) {
+            for(auto i{m_Suites.cbegin_edges(n)}; i != m_Suites.cend_edges(n); ++i)
+              wt.summary += std::next(m_Suites.cbegin_node_weights(), i->target_node())->summary;
 
-              if(wt.optTest)
-              {
-                auto pathsMaker{
-                    [this](auto& test) -> test_paths {
-                      return {test.source_filename(),
-                              test.working_materials(),
-                              test.predictive_materials(),
-                              proj_paths()};
-                    }
-                };
-
-                tracker.process_test(pathsMaker(wt.optTest.value()), wt.summary, m_UpdateMode);
-              }
-            }
-          );
-
-          tracker.decrement_depth();
-        }
-      };
-
-      traverse(depth_first, m_Suites, find_disconnected_t{}, nodeEarly, nodeLate, null_func_obj{});
-
-      if(m_OutputMode == output_mode::verbose)
-      {
-        indentation indent0{no_indent}, indent1{tab};
-        auto printNode{
-          [&s=m_Suites,&indent0,&indent1,&stream=stream(),detail](auto n) {
-            if(n)
+            if(wt.optTest)
             {
-              const auto& wt{s.cbegin_node_weights()[n]};
-              if(wt.optTest)
-              {
-                stream << summarize(wt.summary, "", detail, indent0, indent1);
-              }
-              else
-              {
-                auto message{sequoia::indent(wt.summary.name() + ":", indent0)};
-                stream << append_indented(message, report_time(wt.summary, wt.summary.execution_time()), indent0);
-              }
+              auto pathsMaker{
+                  [this](auto& test) -> test_paths {
+                    return {test.source_filename(),
+                            test.working_materials(),
+                            test.predictive_materials(),
+                            proj_paths()};
+                  }
+              };
 
-              indent0.append("\t");
+              tracker.process_test(pathsMaker(wt.optTest.value()), wt.summary, m_UpdateMode);
             }
           }
-        };
+        );
 
-        auto decreaseIndent{ [&indent0](auto n) { if(n) indent0.trim(1); } };
-
-        traverse(depth_first, m_Suites, find_disconnected_t{}, printNode, decreaseIndent, null_func_obj{});
+        tracker.decrement_depth();
       }
-      else
-      {
-        for(auto i{m_Suites.cbegin_edges(0)}; i != m_Suites.cend_edges(0); ++i)
-        {
-          auto targetNodeIter{std::next(m_Suites.cbegin_node_weights(), i->target_node())};
-          stream() << summarize(targetNodeIter->summary, ":", detail, no_indent, tab);
+    };
+
+    traverse(depth_first, m_Suites, find_disconnected_t{}, nodeEarly, nodeLate, null_func_obj{});
+
+    if(m_OutputMode == output_mode::verbose)
+    {
+      indentation indent0{no_indent}, indent1{tab};
+      auto printNode{
+        [&s=m_Suites,&indent0,&indent1,&stream=stream(),detail](auto n) {
+          if(n)
+          {
+            const auto& wt{s.cbegin_node_weights()[n]};
+            if(wt.optTest)
+            {
+              stream << summarize(wt.summary, "", detail, indent0, indent1);
+            }
+            else
+            {
+              auto message{sequoia::indent(wt.summary.name() + ":", indent0)};
+              stream << append_indented(message, report_time(wt.summary, wt.summary.execution_time()), indent0);
+            }
+
+            indent0.append("\t");
+          }
         }
-      }
+      };
 
-      stream() << "\n-----------Grand Totals-----------\n";
-      stream() << summarize(m_Suites.cbegin_node_weights()->summary, "", t.time_elapsed(), summary_detail::absent_checks | summary_detail::timings, indentation{"\t"}, no_indent);
+      auto decreaseIndent{ [&indent0](auto n) { if(n) indent0.trim(1); } };
+
+      traverse(depth_first, m_Suites, find_disconnected_t{}, printNode, decreaseIndent, null_func_obj{});
     }
     else
     {
-
-      stream() << "\n-----------Grand Totals-----------\n";
-      stream() << summarize(summary, "", t.time_elapsed(), summary_detail::absent_checks | summary_detail::timings, indentation{"\t"}, no_indent);
+      for(auto i{m_Suites.cbegin_edges(0)}; i != m_Suites.cend_edges(0); ++i)
+      {
+        auto targetNodeIter{std::next(m_Suites.cbegin_node_weights(), i->target_node())};
+        stream() << summarize(targetNodeIter->summary, ":", detail, no_indent, tab);
+      }
     }
+
+    stream() << "\n-----------Grand Totals-----------\n";
+    stream() << summarize(m_Suites.cbegin_node_weights()->summary, "", t.time_elapsed(), summary_detail::absent_checks | summary_detail::timings, indentation{"\t"}, no_indent);
   }
 
   [[nodiscard]]
