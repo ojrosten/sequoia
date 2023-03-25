@@ -970,6 +970,7 @@ namespace sequoia::testing
             {
               auto& test{*wt.optTest};
 
+              test.reset();
               test.set_filesystem_data(proj_paths(), suiteName);
               test.set_recovery_paths(make_active_recovery_paths(m_RecoveryMode, proj_paths()));
               test.set_materials(set_materials(test.source_filename(), materialsPaths));

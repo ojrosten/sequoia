@@ -117,6 +117,11 @@ namespace sequoia::testing
     {
       return m_pTest->execute(index);
     }
+
+    void reset()
+    {
+      m_pTest->reset();
+    }
   private:
     struct soul
     {
@@ -134,6 +139,8 @@ namespace sequoia::testing
       virtual void set_filesystem_data(const project_paths& projPaths, std::string_view suiteName) = 0;
 
       virtual void set_recovery_paths(active_recovery_files files) = 0;
+
+      virtual void reset() = 0;
     };
 
     template<concrete_test Test>
@@ -185,6 +192,11 @@ namespace sequoia::testing
       void set_recovery_paths(active_recovery_files files)
       {
         m_Test.set_recovery_paths(std::move(files));
+      }
+
+      void reset()
+      {
+        m_Test = Test{m_Test.name()};
       }
 
       Test m_Test;
