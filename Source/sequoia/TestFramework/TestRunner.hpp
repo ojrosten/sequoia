@@ -97,6 +97,21 @@ namespace sequoia::testing
       return m_pTest->predictive_materials();
     }
 
+    void set_materials(individual_materials_paths materials)
+    {
+      m_pTest->set_materials(std::move(materials));
+    }
+
+    void set_filesystem_data(const project_paths& projPaths, std::string_view suiteName)
+    {
+      m_pTest->set_filesystem_data(projPaths, suiteName);
+    }
+
+    void set_recovery_paths(active_recovery_files files)
+    {
+      m_pTest->set_recovery_paths(std::move(files));
+    }
+
     [[nodiscard]]
     log_summary execute(std::optional<std::size_t> index)
     {
@@ -113,6 +128,12 @@ namespace sequoia::testing
       virtual std::filesystem::path predictive_materials() const = 0;
 
       virtual log_summary execute(std::optional<std::size_t> index) = 0;
+
+      virtual void set_materials(individual_materials_paths materials) = 0;
+
+      virtual void set_filesystem_data(const project_paths& projPaths, std::string_view suiteName) = 0;
+
+      virtual void set_recovery_paths(active_recovery_files files) = 0;
     };
 
     template<concrete_test Test>
@@ -149,6 +170,21 @@ namespace sequoia::testing
       log_summary execute(std::optional<std::size_t> index) final
       {
         return m_Test.execute(index);
+      }
+
+      void set_materials(individual_materials_paths materials) final
+      {
+        m_Test.set_materials(std::move(materials));
+      }
+
+      void set_filesystem_data(const project_paths& projPaths, std::string_view suiteName) final
+      {
+        m_Test.set_filesystem_data(projPaths, suiteName);
+      }
+
+      void set_recovery_paths(active_recovery_files files)
+      {
+        m_Test.set_recovery_paths(std::move(files));
       }
 
       Test m_Test;
@@ -315,6 +351,8 @@ namespace sequoia::testing
       test.set_recovery_paths(make_active_recovery_paths(m_RecoveryMode, proj_paths()));
       test.set_materials(set_materials(test.source_filename(), materialsPaths));
     }
+
+    void reset_tests();
 
     void run_tests(std::optional<std::size_t> id);
 

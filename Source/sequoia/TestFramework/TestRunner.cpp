@@ -758,11 +758,7 @@ namespace sequoia::testing
       {
         for(std::size_t i{}; i < m_NumReps; ++i)
         {
-          if(i)
-          {
-            // TO DO
-            // for(auto& f : m_Selector) f.reset();
-          }
+          if(i) reset_tests();
 
           const auto optIndex{m_NumReps > 1 ? std::optional<std::size_t>{i} : std::nullopt};
           run_tests(optIndex);
@@ -957,6 +953,37 @@ namespace sequoia::testing
     }
 
     return false;
+  }
+
+  void test_runner::reset_tests()
+  {
+    using namespace maths;
+
+    std::vector<std::filesystem::path> materialsPaths{};
+    std::string suiteName{};
+
+    auto resetFn{
+      [&,this](auto n){
+        m_Suites.mutate_node_weight(std::next(m_Suites.cbegin_node_weights(), n),
+          [&,this](auto& wt){
+            if(wt.optTest)
+            {
+              auto& test{*wt.optTest};
+
+              test.set_filesystem_data(proj_paths(), suiteName);
+              test.set_recovery_paths(make_active_recovery_paths(m_RecoveryMode, proj_paths()));
+              test.set_materials(set_materials(test.source_filename(), materialsPaths));
+            }
+            else
+            {
+              suiteName = wt.summary.name();
+            }
+          }
+        );
+      }
+    };
+
+    traverse(depth_first, m_Suites, find_disconnected_t{}, resetFn, null_func_obj{}, null_func_obj{});
   }
 
   void test_runner::prune()
