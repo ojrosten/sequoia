@@ -37,6 +37,8 @@ namespace sequoia::object
       allows for a homogeneous treatment of families of classes, some of which must
       necessarily use proxies but all of which are desired to have the same semantics in terms
       of getting/setting/mutating the underlying data.
+
+      The exception to this is that the faithful_wrapper includes a non-const getter.
    */
 
   template <class T> class faithful_wrapper
@@ -63,6 +65,9 @@ namespace sequoia::object
 
     [[nodiscard]]
     constexpr const T& get() const noexcept { return m_Type; }
+
+    [[nodiscard]]
+    constexpr T& get() noexcept { return m_Type; }
 
     [[nodiscard]]
     friend bool operator==(const faithful_wrapper&, const faithful_wrapper&) noexcept = default;

@@ -87,6 +87,9 @@ namespace sequoia::maths::graph_impl
     using weight_type                = typename weight_proxy_type::value_type;
     using size_type                  = typename node_weight_container_type::size_type;
 
+    using iterator         = utilities::iterator<typename node_weight_container_type::iterator, proxy_dereference_policy<typename node_weight_container_type::iterator>>;
+    using reverse_iterator = utilities::iterator<typename node_weight_container_type::reverse_iterator, proxy_dereference_policy<typename node_weight_container_type::reverse_iterator>>;
+
     using const_iterator         = utilities::iterator<typename node_weight_container_type::const_iterator, proxy_dereference_policy<typename node_weight_container_type::const_iterator>>;
     using const_reverse_iterator = utilities::iterator<typename node_weight_container_type::const_reverse_iterator, proxy_dereference_policy<typename node_weight_container_type::const_reverse_iterator>>;
 
@@ -106,6 +109,18 @@ namespace sequoia::maths::graph_impl
     constexpr auto size() const noexcept { return m_NodeWeights.size(); }
 
     [[nodiscard]]
+    constexpr iterator begin_node_weights() noexcept
+    {
+      return iterator{m_NodeWeights.begin()};
+    }
+
+    [[nodiscard]]
+    constexpr reverse_iterator rbegin_node_weights() noexcept
+    {
+      return reverse_iterator{m_NodeWeights.rbegin()};
+    }
+
+    [[nodiscard]]
     constexpr const_iterator cbegin_node_weights() const noexcept
     {
       return const_iterator{m_NodeWeights.cbegin()};
@@ -118,9 +133,21 @@ namespace sequoia::maths::graph_impl
     }
 
     [[nodiscard]]
+    constexpr iterator end_node_weights() noexcept
+    {
+      return iterator{m_NodeWeights.end()};
+    }
+
+    [[nodiscard]]
     constexpr const_iterator cend_node_weights() const noexcept
     {
       return const_iterator{m_NodeWeights.cend()};
+    }
+
+    [[nodiscard]]
+    constexpr reverse_iterator rend_node_weights() noexcept
+    {
+      return reverse_iterator{m_NodeWeights.rend()};
     }
 
     [[nodiscard]]

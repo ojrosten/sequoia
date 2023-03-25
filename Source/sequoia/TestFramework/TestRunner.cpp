@@ -21,6 +21,7 @@
 #include "sequoia/Runtime/ShellCommands.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
+#include <execution>
 #include <fstream>
 #include <future>
 
@@ -802,20 +803,39 @@ namespace sequoia::testing
       stream() << "\n\t--Using asynchronous execution, level: "
                << to_string(m_ConcurrencyMode)
                << "\n\n";
+
+      m_Suites.sort_nodes([&s = m_Suites](auto i, auto j) {
+          auto& lhs{s.cbegin_node_weights()[i]};
+          auto& rhs{s.cbegin_node_weights()[j]};
+
+          // TO DO: temporary hack; introduce stable sorting!
+          if(lhs.summary.name().empty()) return true;
+          if(rhs.summary.name().empty()) return false;
+
+          if(!lhs.optTest && rhs.optTest) return true;
+          if(lhs.optTest && !rhs.optTest) return false;
+
+          return i < j;
+        });
+
+      auto first{std::find_if(m_Suites.begin_node_weights(), m_Suites.end_node_weights(), [](const auto& wt) -> bool { return wt.optTest != std::nullopt; })};
+      std::for_each(std::execution::par, first, m_Suites.end_node_weights(), [&s{m_Suites},id](auto& wt){
+          wt.summary = wt.optTest->execute(id);
+        }
+      );
     }
 
     test_tracker tracker{proj_paths(), id, m_Filter.empty() ? is_filtered::no : is_filtered::yes};
 
     using namespace maths;
     auto nodeEarly{
-      [&s=m_Suites,&tracker,id](auto n) {
+      [&s = m_Suites,&tracker,id,serial{!concurrent_execution()}](auto n) {
         tracker.increment_depth();
-        s.mutate_node_weight(
-          std::next(s.cbegin_node_weights(), n),
-          [id](suite_node& wt) {
-              if(wt.optTest) { wt.summary = wt.optTest->execute(id); }
-          }
-        );
+        if(serial)
+        {
+          auto& wt{s.begin_node_weights()[n]};
+          if(wt.optTest) { wt.summary = wt.optTest->execute(id); }
+        }
       }
     };
 
