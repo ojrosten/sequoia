@@ -19,14 +19,21 @@
 namespace sequoia::object
 {
   template<class W>
-  concept uniform_wrapper = requires(W & w) {
+  concept uniform_wrapper = requires(W& w, const W& cw) {
     typename W::value_type;
 
-    { w.get() } -> std::same_as<const typename W::value_type&>;
+    { cw.get() } -> std::same_as<const typename W::value_type&>;
 
     w.mutate([](typename W::value_type&) {});
 
     w.set(std::declval<typename W::value_type>());
+  };
+
+  template<class W>
+  concept transparent_wrapper = uniform_wrapper<W> && requires (W& w) {
+    typename W::value_type;
+
+    { w.get() } -> std::same_as<typename W::value_type&>;
   };
 
   /*! \brief A wrapper which allows for getting, setting and mutation of its stored value.

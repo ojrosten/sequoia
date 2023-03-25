@@ -110,12 +110,14 @@ namespace sequoia::maths::graph_impl
 
     [[nodiscard]]
     constexpr iterator begin_node_weights() noexcept
+      requires object::transparent_wrapper<weight_proxy_type>
     {
       return iterator{m_NodeWeights.begin()};
     }
 
     [[nodiscard]]
     constexpr reverse_iterator rbegin_node_weights() noexcept
+      requires object::transparent_wrapper<weight_proxy_type>
     {
       return reverse_iterator{m_NodeWeights.rbegin()};
     }
@@ -134,20 +136,22 @@ namespace sequoia::maths::graph_impl
 
     [[nodiscard]]
     constexpr iterator end_node_weights() noexcept
+      requires object::transparent_wrapper<weight_proxy_type>
     {
       return iterator{m_NodeWeights.end()};
+    }
+
+    [[nodiscard]]
+    constexpr reverse_iterator rend_node_weights() noexcept
+      requires object::transparent_wrapper<weight_proxy_type>
+    {
+      return reverse_iterator{m_NodeWeights.rend()};
     }
 
     [[nodiscard]]
     constexpr const_iterator cend_node_weights() const noexcept
     {
       return const_iterator{m_NodeWeights.cend()};
-    }
-
-    [[nodiscard]]
-    constexpr reverse_iterator rend_node_weights() noexcept
-    {
-      return reverse_iterator{m_NodeWeights.rend()};
     }
 
     [[nodiscard]]
