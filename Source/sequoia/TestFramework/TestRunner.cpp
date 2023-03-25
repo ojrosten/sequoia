@@ -626,7 +626,7 @@ namespace sequoia::testing
     if((m_PruneInfo.mode == prune_mode::active) && !m_Filter.empty())
     {
       m_PruneInfo.mode = prune_mode::passive;
-      stream() << "'prune' ignored if either test families or test source files are specified\n";
+      stream() << warning("'prune' ignored if either test families or test source files are specified\n");
     }
   }
 
