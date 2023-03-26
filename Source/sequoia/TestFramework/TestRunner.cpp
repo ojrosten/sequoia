@@ -785,23 +785,8 @@ namespace sequoia::testing
                << to_string(m_ConcurrencyMode)
                << "\n\n";
 
-      m_Suites.sort_nodes([&s = m_Suites](auto i, auto j) {
-          auto& lhs{s.cbegin_node_weights()[i]};
-          auto& rhs{s.cbegin_node_weights()[j]};
-
-          // TO DO: temporary hack; introduce stable sorting!
-          if(lhs.summary.name().empty()) return true;
-          if(rhs.summary.name().empty()) return false;
-
-          if(!lhs.optTest && rhs.optTest) return true;
-          if(lhs.optTest && !rhs.optTest) return false;
-
-          return i < j;
-        });
-
-      auto first{std::find_if(m_Suites.begin_node_weights(), m_Suites.end_node_weights(), [](const auto& wt) -> bool { return wt.optTest != std::nullopt; })};
-      std::for_each(std::execution::par, first, m_Suites.end_node_weights(), [&s{m_Suites},id](auto& wt){
-          wt.summary = wt.optTest->execute(id);
+      std::for_each(std::execution::par, m_Suites.begin_node_weights(), m_Suites.end_node_weights(), [&s{m_Suites}, id](auto& wt){
+          if(wt.optTest) wt.summary = wt.optTest->execute(id);
         }
       );
     }
