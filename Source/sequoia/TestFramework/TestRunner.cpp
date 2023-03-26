@@ -242,14 +242,14 @@ namespace sequoia::testing
     // cannot be known here. Therefore fallback to assuming the 'selected sources'
     // live in the test repository
 
-    if(!m_Repo.empty())
+    if(auto repo{*m_Repo};!repo.empty())
     {
-      if(rebase_from(selectedSource, m_Repo) == rebase_from(filepath, m_Repo))
+      if(rebase_from(selectedSource, repo) == rebase_from(filepath, repo))
         return true;
 
-      if(const auto path{find_in_tree(m_Repo, selectedSource)}; !path.empty())
+      if(const auto path{find_in_tree(repo, selectedSource)}; !path.empty())
       {
-        if(rebase_from(path, m_Repo) == rebase_from(filepath, m_Repo))
+        if(rebase_from(path, repo) == rebase_from(filepath, repo))
           return true;
       }
     }
@@ -288,7 +288,6 @@ namespace sequoia::testing
     , m_ProjPaths{project_paths{argc, argv, pathsFromProjectRoot}}
     , m_CodeIndent{std::move(codeIndent)}
     , m_Stream{&stream}
-    , m_Filter{test_to_path{}, path_equivalence{proj_paths().tests().repo()}}
   {
     check_indent(m_CodeIndent);
 
@@ -410,13 +409,19 @@ namespace sequoia::testing
                 { {{{"test", {"t"}, {"test family name"},
                     [this](const arg_list& args) {
                       m_RunnerMode |= runner_mode::test;
-                      m_Filter.add_selected_suite(args.front());
+                      if(!m_Filter)
+                        m_Filter = filter_type{test_to_path{}, path_equivalence{proj_paths().tests().repo()}};
+
+                      m_Filter->add_selected_suite(args.front());
                     }}
                   }},
                   {{{"select", {"s"}, {"source file name"},
                     [this](const arg_list& args) {
                       m_RunnerMode |= runner_mode::test;
-                      m_Filter.add_selected_item(fs::path{args.front()});
+                      if(!m_Filter)
+                        m_Filter = filter_type{test_to_path{}, path_equivalence{proj_paths().tests().repo()}};
+
+                      m_Filter->add_selected_item(fs::path{args.front()});
                     }}
                   }},
                   {{{"prune", {"p"}, {},
@@ -623,7 +628,7 @@ namespace sequoia::testing
     if((m_ConcurrencyMode != concurrency_mode::serial) && (m_RecoveryMode != recovery_mode::none))
       throw std::runtime_error{error("Can't run asynchronously in recovery/dump mode\n")};
 
-    if((m_PruneInfo.mode == prune_mode::active) && !m_Filter.empty())
+    if((m_PruneInfo.mode == prune_mode::active) && m_Filter)
     {
       m_PruneInfo.mode = prune_mode::passive;
       stream() << warning("'prune' ignored if either test families or test source files are specified\n");
@@ -652,55 +657,29 @@ namespace sequoia::testing
       }
     };
 
-    check(m_Filter.begin_selected_suites(), m_Filter.end_selected_suites(), "Family", [](const std::string& name) -> std::string {
-      if(auto pos{name.rfind('.')}; pos < std::string::npos)
-      {
-        return "    If trying to select a source file use 'select' rather than 'test'\n";
-      }
+    if(m_Filter)
+    {
+      check(m_Filter->begin_selected_suites(), m_Filter->end_selected_suites(), "Family", [](const std::string& name) -> std::string {
+        if(auto pos{name.rfind('.')}; pos < std::string::npos)
+        {
+          return "    If trying to select a source file use 'select' rather than 'test'\n";
+        }
 
-      return "";
-      }
-    );
+        return "";
+        }
+      );
 
-    check(m_Filter.begin_selected_items(), m_Filter.end_selected_items(), "File", [](const std::filesystem::path& p) -> std::string {
-      if(!p.has_extension())
-      {
-        return "    If trying to test a family use 'test' rather than 'select'\n";
-      }
+      check(m_Filter->begin_selected_items(), m_Filter->end_selected_items(), "File", [](const std::filesystem::path& p) -> std::string {
+        if(!p.has_extension())
+        {
+          return "    If trying to test a family use 'test' rather than 'select'\n";
+        }
 
-      return "";
-      }
-    );
+        return "";
+        }
+      );
+    }
   }
-
-  /*[[nodiscard]]
-  family_summary test_runner::process_family(family_results results)
-  {
-    family_summary familySummary{results.execution_time};
-    std::string output{};
-    const auto detail{summary_detail::failure_messages | summary_detail::timings};
-    for(const auto& s : results.logs)
-    {
-      if(m_OutputMode == output_mode::verbose) output += summarize(s, detail, tab, tab);
-      familySummary.log += s;
-    }
-
-    if(m_OutputMode == output_mode::verbose)
-    {
-      output.insert(0, report_time(familySummary));
-    }
-    else
-    {
-      output += summarize(familySummary, detail, tab, no_indent);
-    }
-
-    stream() << output;
-
-
-    familySummary.failed_tests = std::move(results.failed_tests);
-
-    return familySummary;
-  }*/
 
   void test_runner::execute([[maybe_unused]] timer_resolution r)
   {
@@ -727,15 +706,17 @@ namespace sequoia::testing
       const auto specified{
         [&filter=m_Filter] () -> std::string {
           std::string srcs{};
-          // TO DO: use ranges when supported by libc++
-          for(auto i{filter.begin_selected_items()}; i != filter.end_selected_items(); ++i)
+          if(filter)
           {
-            if(i->second) srcs.append(" select " + i->first.path().generic_string());
-          }
+            for(auto i{filter->begin_selected_items()}; i != filter->end_selected_items(); ++i)
+            {
+              if(i->second) srcs.append(" select " + i->first.path().generic_string());
+            }
 
-          for(auto i{filter.begin_selected_suites()}; i != filter.end_selected_suites(); ++i)
-          {
-            if(i->second) srcs.append(" test " + i->first);
+            for(auto i{filter->begin_selected_suites()}; i != filter->end_selected_suites(); ++i)
+            {
+              if(i->second) srcs.append(" test " + i->first);
+            }
           }
 
           return srcs;
@@ -825,7 +806,7 @@ namespace sequoia::testing
       );
     }
 
-    test_tracker tracker{proj_paths(), id, m_Filter.empty() ? is_filtered::no : is_filtered::yes};
+    test_tracker tracker{proj_paths(), id, m_Filter ? is_filtered::yes : is_filtered::no};
 
     using namespace maths;
     auto nodeEarly{
@@ -998,9 +979,10 @@ namespace sequoia::testing
 
     if(auto maybeToRun{tests_to_run(proj_paths(), m_PruneInfo.include_cutoff)})
     {
+      m_Filter = filter_type{test_to_path{}, path_equivalence{proj_paths().tests().repo()}};
       for(const auto& src : maybeToRun.value())
       {
-        m_Filter.add_selected_item(src);
+        m_Filter->add_selected_item(src);
       }
 
       return prune_outcome::success;

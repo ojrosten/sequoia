@@ -48,14 +48,14 @@ namespace sequoia::testing
   {
   public:
     explicit path_equivalence(const std::filesystem::path& repo)
-      : m_Repo{repo}
+      : m_Repo{&repo}
     {}
 
     [[nodiscard]]
     bool operator()(const normal_path& selectedSource, const normal_path& filepath) const;
 
   private:
-    const std::filesystem::path& m_Repo;
+    const std::filesystem::path* m_Repo;
   };
 
   class test_vessel
@@ -261,13 +261,6 @@ namespace sequoia::testing
     test_runner& operator=(const test_runner&)     = delete;
     test_runner& operator=(test_runner&&) noexcept = default;
 
-    /*template<concrete_test... Tests>
-      requires (sizeof...(Tests) > 0)
-    void add_test_family(std::string_view name, Tests... tests)
-    {
-      m_Selector.add_test_family(name, m_RecoveryMode, std::move(tests)...);
-    }*/
-
     template<concrete_test... Tests>
       requires (sizeof...(Tests) > 0)
     void add_test_family(std::string_view name, Tests&&... tests)
@@ -277,24 +270,10 @@ namespace sequoia::testing
 
       check_for_duplicates(name, tests...);
 
-      if(!m_Suites.order())
-      {
-        m_Suites.add_node(suite_type::npos, log_summary{});
-      }
-
-      std::vector<std::filesystem::path> materialsPaths{};
-
-      extract_tree(suite{std::string{name}, std::forward<Tests>(tests)...},
-                   m_Filter,
-                   overloaded{
-                     [] <class... Ts> (const suite<Ts...>&s) -> suite_node { return {.summary{log_summary{s.name}}}; },
-                     [this, name, &materialsPaths]<concrete_test T>(T&& test) -> suite_node {
-                       init(name, test, materialsPaths);
-                       return {.summary{log_summary{test.name()}}, .optTest{std::move(test)}};
-                     }
-                   },
-                   m_Suites,
-                   0);
+      if(m_Filter)
+        extract_suite_tree(name, *m_Filter, std::forward<Tests>(tests)...);
+      else
+        extract_suite_tree(name, [](auto&&...) { return true; }, std::forward<Tests>(tests)...);
     }
 
     void execute([[maybe_unused]] timer_resolution r={});
@@ -318,15 +297,15 @@ namespace sequoia::testing
     };
 
     using suite_type = maths::tree<maths::directed_flavour::directed, maths::tree_link_direction::forward, maths::null_weight, suite_node>;
+    using filter_type = object::filter_by_names<normal_path, test_to_path, path_equivalence>;
 
     std::string      m_Copyright{};
     project_paths    m_ProjPaths;
-    //family_selector  m_Selector;
     indentation      m_CodeIndent{"  "};
     std::ostream*    m_Stream;
 
     suite_type m_Suites{};
-    object::filter_by_names<normal_path, test_to_path, path_equivalence> m_Filter;
+    std::optional<filter_type> m_Filter;
     prune_info m_PruneInfo{};
 
     runner_mode      m_RunnerMode{runner_mode::none};
@@ -346,9 +325,6 @@ namespace sequoia::testing
     void check_argument_consistency();
 
     void check_for_missing_tests();
-
-    //[[nodiscard]]
-    //family_summary process_family(family_results results);
 
     [[nodiscard]]
     bool concurrent_execution() const noexcept { return m_ConcurrencyMode != concurrency_mode::serial; }
@@ -382,6 +358,33 @@ namespace sequoia::testing
     [[nodiscard]]
     prune_outcome do_prune();
 
+    template<class Filter, concrete_test... Tests>
+      requires (sizeof...(Tests) > 0)
+    void extract_suite_tree(std::string_view name, Filter&& filter, Tests&&... tests)
+    {
+      using namespace object;
+      using namespace maths;
+
+      if(!m_Suites.order())
+      {
+        m_Suites.add_node(suite_type::npos, log_summary{});
+      }
+
+      std::vector<std::filesystem::path> materialsPaths{};
+
+      extract_tree(suite{std::string{name}, std::forward<Tests>(tests)...},
+                   std::forward<Filter>(filter),
+                   overloaded{
+                     [] <class... Ts> (const suite<Ts...>&s) -> suite_node { return {.summary{log_summary{s.name}}}; },
+                     [this, name, &materialsPaths]<concrete_test T>(T && test) -> suite_node {
+                       init(name, test, materialsPaths);
+                       return {.summary{log_summary{test.name()}}, .optTest{std::move(test)}};
+                     }
+                   },
+                   m_Suites,
+                   0);
+    }
+
     template<concrete_test... Tests>
       requires (sizeof...(Tests) > 0)
     static void check_for_duplicates(std::string_view name, const Tests&... tests)
@@ -401,8 +404,6 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    static std::string duplication_message(std::string_view familyName,
-      std::string_view testName,
-      const std::filesystem::path& source);
+    static std::string duplication_message(std::string_view familyName, std::string_view testName, const std::filesystem::path& source);
  };
 }
