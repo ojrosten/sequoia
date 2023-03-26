@@ -250,7 +250,7 @@ namespace sequoia::testing
     //=================== Create tests and run ===================//
 
     create_run_and_check(LINE("Test Runner Creation Output"), b);
-    check_timings("Async run (level: family)", fs::path{"Output/TestRunOutput.txt"}, 1.8);
+    check_timings(LINE("Async run (level: family)"), fs::path{"Output/TestRunOutput.txt"}, 1.8);
 
     //=================== Rerun with async execution ===================//
     // --> async depth should be automatically set to "family" since number of families is > 4
