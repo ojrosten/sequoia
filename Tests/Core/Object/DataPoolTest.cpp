@@ -30,6 +30,7 @@ namespace sequoia::testing
     using namespace object;
     using pool_t = data_pool<int>;
     static_assert(uniform_wrapper<pool_t::proxy>);
+    static_assert(!transparent_wrapper<pool_t::proxy>);
 
     using prediction_t = typename value_tester<pool_t>::prediction_type;
 

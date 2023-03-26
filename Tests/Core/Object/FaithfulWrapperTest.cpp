@@ -45,6 +45,7 @@ namespace sequoia::testing
 
     static_assert(sizeof(wrapper) == sizeof(int));
     static_assert(uniform_wrapper<wrapper>);
+    static_assert(transparent_wrapper<wrapper>);
 
     wrapper w{};
     constexpr wrapper v{1};
@@ -66,6 +67,7 @@ namespace sequoia::testing
 
     static_assert(sizeof(wrapper) == sizeof(std::vector<int>));
     static_assert(uniform_wrapper<wrapper>);
+    static_assert(transparent_wrapper<wrapper>);
 
     wrapper w{}, v{1};
 
@@ -108,6 +110,7 @@ namespace sequoia::testing
 
     static_assert(sizeof(wrapper) == sizeof(data));
     static_assert(uniform_wrapper<wrapper>);
+    static_assert(transparent_wrapper<wrapper>);
 
     wrapper w{};
     constexpr wrapper v{make(1, 2.0)};

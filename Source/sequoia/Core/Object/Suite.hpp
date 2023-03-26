@@ -362,7 +362,7 @@ namespace sequoia::object
     bool operator()(const T& val, const Suites&... suites)
     {
       // Don't use logical short-circuit, otherwise the maps may not accurately update
-      std::array<bool, sizeof...(Suites) + 1> isFound{ finder(m_SelectedItems, m_SelectedSuites, val, m_Proj, m_Compare), finder(m_SelectedSuites, m_SelectedItems, suites, item_to_name{}, std::equal_to<std::string>{}) ... };
+      std::array<bool, sizeof...(Suites) + 1> isFound{ find(m_SelectedItems, val, m_Proj, m_Compare), find(m_SelectedSuites, suites, item_to_name{}, std::equal_to<std::string>{}) ... };
 
       return std::any_of(isFound.begin(), isFound.end(), [](bool b) { return b; });
     }
@@ -398,11 +398,9 @@ namespace sequoia::object
       return selection;
     }
 
-    template<class Key, class OtherKey, class U, class Projector, class Comp>
-    static bool finder(std::vector<std::pair<Key, bool>>& selected, const std::vector<std::pair<OtherKey, bool>>& other, const U& u, Projector proj, Comp compare)
+    template<class Key, class U, class Projector, class Comp>
+    static bool find(std::vector<std::pair<Key, bool>>& selected, const U& u, Projector proj, Comp compare)
     {
-      if(selected.empty()) return other.empty();
-
       auto found{std::find_if(selected.begin(), selected.end(), [&proj, &compare, &u](const std::pair<Key, bool>& e) { return compare(e.first, proj(u)); })};
 
       if(found != selected.end())

@@ -39,7 +39,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string summarize(const log_summary& log, const opt_duration duration, const summary_detail verbosity, indentation ind_0, indentation ind_1)
+  std::string summarize(const log_summary& log, std::string_view namesuffix, const opt_duration duration, const summary_detail verbosity, indentation ind_0, indentation ind_1)
   {
     constexpr std::size_t entries{6};
 
@@ -98,7 +98,8 @@ namespace sequoia::testing
     if(log.standard_top_level_checks())
       summaries.front().append("  [Deep checks: " + std::to_string(log.standard_deep_checks()) + "]");
 
-    std::string summary{sequoia::indent(log.name(), ind_0)};
+    const std::string name{log.name().empty() ? "" : std::string{log.name()} += namesuffix};
+    std::string summary{sequoia::indent(name, ind_0)};
 
     if((verbosity & summary_detail::timings) == summary_detail::timings)
     {
@@ -149,8 +150,8 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string summarize(const log_summary& log, const summary_detail verbosity, indentation ind_0, indentation ind_1)
+  std::string summarize(const log_summary& log, std::string_view namesuffix, const summary_detail verbosity, indentation ind_0, indentation ind_1)
   {
-    return summarize(log, std::nullopt, verbosity, ind_0, ind_1);
+    return summarize(log, namesuffix, std::nullopt, verbosity, ind_0, ind_1);
   }
 }

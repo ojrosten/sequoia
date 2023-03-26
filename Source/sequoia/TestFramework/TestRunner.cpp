@@ -21,12 +21,23 @@
 #include "sequoia/Runtime/ShellCommands.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
+#include <execution>
 #include <fstream>
 #include <future>
 
 namespace sequoia::testing
 {
   namespace fs = std::filesystem;
+
+  auto time_stamps::from_file(const std::filesystem::path& stampFile) -> stamp
+  {
+    if(fs::exists(stampFile))
+    {
+      return fs::last_write_time(stampFile);
+    }
+
+    return std::nullopt;
+  }
 
   namespace
   {
@@ -93,7 +104,10 @@ namespace sequoia::testing
       throw std::logic_error{"Illegal option for concurrency_mode"};
     }
 
-    using time_type = std::filesystem::file_time_type;
+    const std::string& convert(const std::string& s) { return s; }
+    std::string convert(const std::filesystem::path& p) { return p.generic_string(); }
+
+    /*using time_type = std::filesystem::file_time_type;
 
     struct time_stamps
     {
@@ -111,23 +125,12 @@ namespace sequoia::testing
 
       stamp ondisk, executable;
       time_type current{std::chrono::file_clock::now()};
-    };
-
-    enum class filtered_flavour {no, yes};
-
-    struct prune_info
-    {
-      time_stamps stamps{};
-      prune_mode mode{prune_mode::passive};
-      std::string include_cutoff{};
-      filtered_flavour filtered;
-    };
-
+    };*/
 
     class test_tracker
     {
     public:
-      explicit test_tracker(const project_paths& projPaths, std::optional<std::size_t> id, filtered_flavour filtered)
+      explicit test_tracker(const project_paths& projPaths, std::optional<std::size_t> id, is_filtered filtered)
         : m_ProjPaths{projPaths}
         , m_Id{id}
         , m_PruneInfo{.stamps{time_stamps::from_file(m_ProjPaths.prune().stamp()), time_stamps::from_file(m_ProjPaths.executable())},
@@ -205,7 +208,7 @@ namespace sequoia::testing
 
         if(std::ofstream file{filename, mode})
         {
-          file << summarize(summary, summary_detail::failure_messages, no_indent, no_indent);
+          file << summarize(summary, "", summary_detail::failure_messages, no_indent, no_indent);
         }
         else
         {
@@ -215,7 +218,7 @@ namespace sequoia::testing
 
       void update_prune_info() const
       {
-        if((pruned() == prune_mode::passive) && (m_PruneInfo.filtered == filtered_flavour::yes))
+        if((pruned() == prune_mode::passive) && (m_PruneInfo.filtered == is_filtered::yes))
         {
           update_prune_files(m_ProjPaths, m_ExecutedTests, m_FailedTests, m_Id);
         }
@@ -239,14 +242,14 @@ namespace sequoia::testing
     // cannot be known here. Therefore fallback to assuming the 'selected sources'
     // live in the test repository
 
-    if(!m_Repo.empty())
+    if(auto repo{*m_Repo};!repo.empty())
     {
-      if(rebase_from(selectedSource, m_Repo) == rebase_from(filepath, m_Repo))
+      if(rebase_from(selectedSource, repo) == rebase_from(filepath, repo))
         return true;
 
-      if(const auto path{find_in_tree(m_Repo, selectedSource)}; !path.empty())
+      if(const auto path{find_in_tree(repo, selectedSource)}; !path.empty())
       {
-        if(rebase_from(path, m_Repo) == rebase_from(filepath, m_Repo))
+        if(rebase_from(path, repo) == rebase_from(filepath, repo))
           return true;
       }
     }
@@ -282,10 +285,9 @@ namespace sequoia::testing
                            std::string codeIndent,
                            std::ostream& stream)
     : m_Copyright{std::move(copyright)}
-    , m_Selector{project_paths{argc, argv, pathsFromProjectRoot}}
+    , m_ProjPaths{project_paths{argc, argv, pathsFromProjectRoot}}
     , m_CodeIndent{std::move(codeIndent)}
     , m_Stream{&stream}
-    , m_Filter{test_to_path{}, path_equivalence{m_Selector.proj_paths().tests().repo()}}
   {
     check_indent(m_CodeIndent);
 
@@ -407,26 +409,30 @@ namespace sequoia::testing
                 { {{{"test", {"t"}, {"test family name"},
                     [this](const arg_list& args) {
                       m_RunnerMode |= runner_mode::test;
-                      m_Selector.select_family(args.front());
-                      //m_Filter.add_selected_suite(args.front());
+                      if(!m_Filter)
+                        m_Filter = filter_type{test_to_path{}, path_equivalence{proj_paths().tests().repo()}};
+
+                      m_Filter->add_selected_suite(args.front());
                     }}
                   }},
                   {{{"select", {"s"}, {"source file name"},
                     [this](const arg_list& args) {
                       m_RunnerMode |= runner_mode::test;
-                      m_Selector.select_source_file(fs::path{args.front()});
-                      m_Filter.add_selected_item(fs::path{args.front()});
+                      if(!m_Filter)
+                        m_Filter = filter_type{test_to_path{}, path_equivalence{proj_paths().tests().repo()}};
+
+                      m_Filter->add_selected_item(fs::path{args.front()});
                     }}
                   }},
                   {{{"prune", {"p"}, {},
                     [this](const arg_list&) {
                       m_RunnerMode |= runner_mode::test;
-                      m_Selector.enable_prune();
+                      m_PruneInfo.enable_prune();
                     },
                     {}},
                     {{{"--cutoff", {"-c"}, {"Cutoff for #include search e.g. 'namespace'"},
                       [this](const arg_list& args) {
-                        m_Selector.set_prune_cutoff(args[0]);
+                        m_PruneInfo.include_cutoff = args[0];
                       }}}
                     }
                   }},
@@ -622,36 +628,57 @@ namespace sequoia::testing
     if((m_ConcurrencyMode != concurrency_mode::serial) && (m_RecoveryMode != recovery_mode::none))
       throw std::runtime_error{error("Can't run asynchronously in recovery/dump mode\n")};
 
-    stream() << m_Selector.check_argument_consistency();
+    if((m_PruneInfo.mode == prune_mode::active) && m_Filter)
+    {
+      m_PruneInfo.mode = prune_mode::passive;
+      stream() << warning("'prune' ignored if either test families or test source files are specified\n");
+    }
   }
 
-  [[nodiscard]]
-  family_summary test_runner::process_family(family_results results)
+  void test_runner::check_for_missing_tests()
   {
-    family_summary familySummary{results.execution_time};
-    std::string output{};
-    const auto detail{summary_detail::failure_messages | summary_detail::timings};
-    for(const auto& s : results.logs)
+    if(m_PruneInfo.mode == prune_mode::active) return;
+
+    auto check{
+      [this](auto first, auto last, std::string_view type, auto fn) {
+        for(; first != last; ++first)
+        {
+          const auto [id, found]{*first};
+          if(!found)
+          {
+            using namespace parsing::commandline;
+            stream() << warning(std::string{"Test "}.append(type)
+                                                    .append(" '")
+                                                    .append(convert(id))
+                                                    .append("' not found\n")
+                                                    .append(fn(id)));
+          }
+        }
+      }
+    };
+
+    if(m_Filter)
     {
-      if(m_OutputMode == output_mode::verbose) output += summarize(s, detail, tab, tab);
-      familySummary.log += s;
+      check(m_Filter->begin_selected_suites(), m_Filter->end_selected_suites(), "Family", [](const std::string& name) -> std::string {
+        if(auto pos{name.rfind('.')}; pos < std::string::npos)
+        {
+          return "    If trying to select a source file use 'select' rather than 'test'\n";
+        }
+
+        return "";
+        }
+      );
+
+      check(m_Filter->begin_selected_items(), m_Filter->end_selected_items(), "File", [](const std::filesystem::path& p) -> std::string {
+        if(!p.has_extension())
+        {
+          return "    If trying to test a family use 'test' rather than 'select'\n";
+        }
+
+        return "";
+        }
+      );
     }
-
-    if(m_OutputMode == output_mode::verbose)
-    {
-      output.insert(0, report_time(familySummary));
-    }
-    else
-    {
-      output += summarize(familySummary, detail, tab, no_indent);
-    }
-
-    stream() << output;
-
-
-    familySummary.failed_tests = std::move(results.failed_tests);
-
-    return familySummary;
   }
 
   void test_runner::execute([[maybe_unused]] timer_resolution r)
@@ -660,7 +687,7 @@ namespace sequoia::testing
       return;
 
     fs::create_directories(proj_paths().prune().dir());
-    stream() << m_Selector.check_for_missing_tests();
+    check_for_missing_tests();
 
     if(nothing_to_do()) return;
 
@@ -677,17 +704,19 @@ namespace sequoia::testing
         throw std::runtime_error{"Unable to run in sandbox mode, as executable cannot be found"};
 
       const auto specified{
-        [&selector=m_Selector] () -> std::string {
+        [&filter=m_Filter] () -> std::string {
           std::string srcs{};
-          // TO DO: use ranges when supported by libc++
-          for(auto i{selector.begin_selected_sources()}; i != selector.end_selected_sources(); ++i)
+          if(filter)
           {
-            if(i->second) srcs.append(" select " + i->first.path().generic_string());
-          }
+            for(auto i{filter->begin_selected_items()}; i != filter->end_selected_items(); ++i)
+            {
+              if(i->second) srcs.append(" select " + i->first.path().generic_string());
+            }
 
-          for(auto i{selector.begin_selected_families()}; i != selector.end_selected_families(); ++i)
-          {
-            if(i->second) srcs.append(" test " + i->first);
+            for(auto i{filter->begin_selected_suites()}; i != filter->end_selected_suites(); ++i)
+            {
+              if(i->second) srcs.append(" test " + i->first);
+            }
           }
 
           return srcs;
@@ -711,10 +740,7 @@ namespace sequoia::testing
       {
         for(std::size_t i{}; i < m_NumReps; ++i)
         {
-          if(i)
-          {
-            for(auto& f : m_Selector) f.reset();
-          }
+          if(i) reset_tests();
 
           const auto optIndex{m_NumReps > 1 ? std::optional<std::size_t>{i} : std::nullopt};
           run_tests(optIndex);
@@ -725,18 +751,19 @@ namespace sequoia::testing
     if(   (m_InstabilityMode == instability_mode::single_instance)
        || (m_InstabilityMode == instability_mode::coordinator))
     {
-      aggregate_instability_analysis_prune_files(m_Selector.proj_paths(), m_Selector.pruned(), m_Selector.current_time_stamp(), m_NumReps);
-      const auto outputDir{m_Selector.proj_paths().output().instability_analysis()};
+      aggregate_instability_analysis_prune_files(proj_paths(), m_PruneInfo.mode, m_PruneInfo.stamps.current, m_NumReps);
+      const auto outputDir{proj_paths().output().instability_analysis()};
       stream() << instability_analysis(outputDir, m_NumReps);
     }
   }
 
   void test_runner::finalize_concurrency_mode()
   {
+    // TO DO: fix this
     if(m_ConcurrencyMode == concurrency_mode::dynamic)
     {
-      const bool serial{(m_Selector.size() == 1) && (m_Selector.begin()->size() == 1)};
-      const bool small{(m_Selector.size() < 4)};
+      const bool serial{(m_Suites.order() == 3)};
+      const bool small{std::distance(m_Suites.cbegin_edges(0), m_Suites.cend_edges(0)) < 4};
       m_ConcurrencyMode = serial ? concurrency_mode::serial
                         : small  ? concurrency_mode::unit
                                  : concurrency_mode::family;
@@ -747,128 +774,133 @@ namespace sequoia::testing
   {
     const timer t{};
     log_summary summary{};
-    std::vector<fs::path> failedTests;
-
-    auto update{
-      [&summary, &failedTests](const family_summary& familySummary) {
-        summary += familySummary.log;
-        failedTests.insert(failedTests.end(), familySummary.failed_tests.begin(), familySummary.failed_tests.end());
-      }
-    };
 
     stream() << "\nRunning tests...\n\n";
-    if(!concurrent_execution())
-    {
-      for(auto& family : m_Selector)
-      {
-        stream() << family.name() << ":\n";
-        update(process_family(family.execute(m_UpdateMode, m_ConcurrencyMode, id)));
-      }
-    }
-    else
+
+    const auto detail{summary_detail::failure_messages | summary_detail::timings};
+
+    if(concurrent_execution())
     {
       stream() << "\n\t--Using asynchronous execution, level: "
                << to_string(m_ConcurrencyMode)
                << "\n\n";
 
-      std::vector<std::pair<std::string, std::future<family_results>>> results{};
-      results.reserve(m_Selector.size());
+      m_Suites.sort_nodes([&s = m_Suites](auto i, auto j) {
+          auto& lhs{s.cbegin_node_weights()[i]};
+          auto& rhs{s.cbegin_node_weights()[j]};
 
-      for(auto& family : m_Selector)
-      {
-        results.emplace_back(family.name(),
-          std::async([&family, umode=m_UpdateMode, cmode=m_ConcurrencyMode, id](){
-            return family.execute(umode, cmode, id); }));
-      }
+          // TO DO: temporary hack; introduce stable sorting!
+          if(lhs.summary.name().empty()) return true;
+          if(rhs.summary.name().empty()) return false;
 
-      for(auto& res : results)
-      {
-        stream() << res.first << ":\n";
-        update(process_family(res.second.get()));
-      }
+          if(!lhs.optTest && rhs.optTest) return true;
+          if(lhs.optTest && !rhs.optTest) return false;
+
+          return i < j;
+        });
+
+      auto first{std::find_if(m_Suites.begin_node_weights(), m_Suites.end_node_weights(), [](const auto& wt) -> bool { return wt.optTest != std::nullopt; })};
+      std::for_each(std::execution::par, first, m_Suites.end_node_weights(), [&s{m_Suites},id](auto& wt){
+          wt.summary = wt.optTest->execute(id);
+        }
+      );
     }
 
-    const auto detail{summary_detail::failure_messages | summary_detail::timings};
+    test_tracker tracker{proj_paths(), id, m_Filter ? is_filtered::yes : is_filtered::no};
 
-    if(m_Suites.order())
-    {
-      test_tracker tracker{proj_paths(), id, m_Filter.empty() ? filtered_flavour::no : filtered_flavour::yes};
-
-      using namespace maths;
-      auto nodeEarly{
-        [&s=m_Suites,&tracker,id](auto n) {
-          tracker.increment_depth();
-          s.mutate_node_weight(
-            std::next(s.cbegin_node_weights(), n),
-            [id](suite_node& wt) {
-                if(wt.optTest) { wt.summary = wt.optTest->execute(id); }
-            }
-          );
+    using namespace maths;
+    auto nodeEarly{
+      [&s = m_Suites,&tracker,id,serial{!concurrent_execution()}](auto n) {
+        tracker.increment_depth();
+        if(serial)
+        {
+          auto& wt{s.begin_node_weights()[n]};
+          if(wt.optTest) { wt.summary = wt.optTest->execute(id); }
         }
-      };
-
-      auto nodeLate{
-        [this,&tracker](auto n) {
-          m_Suites.mutate_node_weight(
-            std::next(m_Suites.cbegin_node_weights(), n),
-            [this, &tracker,n](suite_node& wt) {
-              for(auto i{m_Suites.cbegin_edges(n)}; i != m_Suites.cend_edges(n); ++i)
-                wt.summary += std::next(m_Suites.cbegin_node_weights(), i->target_node())->summary;
-
-              if(wt.optTest)
-              {
-                auto pathsMaker{
-                    [this](auto& test) -> test_paths {
-                      return {test.source_filename(),
-                              test.working_materials(),
-                              test.predictive_materials(),
-                              proj_paths()};
-                    }
-                };
-
-                tracker.process_test(pathsMaker(wt.optTest.value()), wt.summary, m_UpdateMode);
-              }
-            }
-          );
-
-          tracker.decrement_depth();
-        }
-      };
-
-      traverse(depth_first, m_Suites, find_disconnected_t{}, nodeEarly, nodeLate, null_func_obj{});
-
-      for(auto i{m_Suites.cbegin_edges(0)}; i != m_Suites.cend_edges(0); ++i)
-      {
-        stream() << summarize(std::next(m_Suites.cbegin_node_weights(), i->target_node())->summary, detail, no_indent, tab);
       }
+    };
 
-      stream() << "\n-----------Grand Totals-----------\n";
-      stream() << summarize(m_Suites.cbegin_node_weights()->summary, t.time_elapsed(), summary_detail::absent_checks | summary_detail::timings, indentation{"\t"}, no_indent);
+    auto nodeLate{
+      [this,&tracker](auto n) {
+        m_Suites.mutate_node_weight(
+          std::next(m_Suites.cbegin_node_weights(), n),
+          [this, &tracker,n](suite_node& wt) {
+            for(auto i{m_Suites.cbegin_edges(n)}; i != m_Suites.cend_edges(n); ++i)
+              wt.summary += std::next(m_Suites.cbegin_node_weights(), i->target_node())->summary;
+
+            if(wt.optTest)
+            {
+              auto pathsMaker{
+                  [this](auto& test) -> test_paths {
+                    return {test.source_filename(),
+                            test.working_materials(),
+                            test.predictive_materials(),
+                            proj_paths()};
+                  }
+              };
+
+              tracker.process_test(pathsMaker(wt.optTest.value()), wt.summary, m_UpdateMode);
+            }
+          }
+        );
+
+        tracker.decrement_depth();
+      }
+    };
+
+    traverse(depth_first, m_Suites, find_disconnected_t{}, nodeEarly, nodeLate, null_func_obj{});
+
+    if(m_OutputMode == output_mode::verbose)
+    {
+      indentation indent0{no_indent}, indent1{tab};
+      auto printNode{
+        [&s=m_Suites,&indent0,&indent1,&stream=stream(),detail](auto n) {
+          if(n)
+          {
+            const auto& wt{s.cbegin_node_weights()[n]};
+            if(wt.optTest)
+            {
+              stream << summarize(wt.summary, "", detail, indent0, indent1);
+            }
+            else
+            {
+              auto message{sequoia::indent(wt.summary.name() + ":", indent0)};
+              stream << append_indented(message, report_time(wt.summary, wt.summary.execution_time()), indent0);
+            }
+
+            indent0.append("\t");
+          }
+        }
+      };
+
+      auto decreaseIndent{ [&indent0](auto n) { if(n) indent0.trim(1); } };
+
+      traverse(depth_first, m_Suites, find_disconnected_t{}, printNode, decreaseIndent, null_func_obj{});
     }
     else
     {
-
-      stream() << "\n-----------Grand Totals-----------\n";
-      stream() << summarize(summary, t.time_elapsed(), summary_detail::absent_checks | summary_detail::timings, indentation{"\t"}, no_indent);
+      for(auto i{m_Suites.cbegin_edges(0)}; i != m_Suites.cend_edges(0); ++i)
+      {
+        auto targetNodeIter{std::next(m_Suites.cbegin_node_weights(), i->target_node())};
+        stream() << summarize(targetNodeIter->summary, ":", detail, no_indent, tab);
+      }
     }
 
-    m_Selector.update_prune_info(std::move(failedTests), id);
+    stream() << "\n-----------Grand Totals-----------\n";
+    stream() << summarize(m_Suites.cbegin_node_weights()->summary, "", t.time_elapsed(), summary_detail::absent_checks | summary_detail::timings, indentation{"\t"}, no_indent);
   }
 
   [[nodiscard]]
   bool test_runner::nothing_to_do()
   {
-    // Temporary hack!
-    if(m_Suites.order()) return false;
-
-    if(!m_Selector.families_presented())
+    if(!m_Suites.order())
     {
       stream() << "Nothing to do: try creating some tests!\nRun with --help to see options\n";
       return true;
     }
-    else if(m_Selector.empty())
+    else if(m_Suites.order() == 1)
     {
-      if(m_Selector.pruned() == prune_mode::active)
+      if(m_PruneInfo.mode == prune_mode::active)
         stream() << "Nothing to do: no changes since the last run, therefore 'prune' has pruned all tests\n";
 
       return true;
@@ -877,15 +909,49 @@ namespace sequoia::testing
     return false;
   }
 
+  void test_runner::reset_tests()
+  {
+    using namespace maths;
+
+    std::vector<std::filesystem::path> materialsPaths{};
+    std::string suiteName{};
+
+    auto resetFn{
+      [&,this](auto n){
+        m_Suites.mutate_node_weight(std::next(m_Suites.cbegin_node_weights(), n),
+          [&,this](auto& wt){
+            if(wt.optTest)
+            {
+              auto& test{*wt.optTest};
+
+              test.reset();
+              test.set_filesystem_data(proj_paths(), suiteName);
+              test.set_recovery_paths(make_active_recovery_paths(m_RecoveryMode, proj_paths()));
+              test.set_materials(set_materials(test.source_filename(), materialsPaths));
+            }
+            else
+            {
+              suiteName = wt.summary.name();
+            }
+
+            wt.summary = log_summary{wt.summary.name()};
+          }
+        );
+      }
+    };
+
+    traverse(depth_first, m_Suites, find_disconnected_t{}, resetFn, null_func_obj{}, null_func_obj{});
+  }
+
   void test_runner::prune()
   {
-    if(m_Selector.pruned() == prune_mode::passive) return;
+    if(m_PruneInfo.mode == prune_mode::passive) return;
 
     // Do this here: if pruning throws an exception, this output should make it clearer what's going on
     stream() << "\nAnalyzing dependencies...\n";
     const timer t{};
 
-    switch(m_Selector.prune())
+    switch(do_prune())
     {
     case prune_outcome::not_attempted:
       break;
@@ -904,6 +970,27 @@ namespace sequoia::testing
       }
       break;
     }
+  }
+
+  [[nodiscard]]
+  prune_outcome test_runner::do_prune()
+  {
+    if(m_PruneInfo.mode == prune_mode::passive) return prune_outcome::not_attempted;
+
+    if(auto maybeToRun{tests_to_run(proj_paths(), m_PruneInfo.include_cutoff)})
+    {
+      m_Filter = filter_type{test_to_path{}, path_equivalence{proj_paths().tests().repo()}};
+      for(const auto& src : maybeToRun.value())
+      {
+        m_Filter->add_selected_item(src);
+      }
+
+      return prune_outcome::success;
+    }
+
+    m_PruneInfo.mode = prune_mode::passive;
+
+    return prune_outcome::no_time_stamp;
   }
 
   [[nodiscard]]
@@ -938,4 +1025,16 @@ namespace sequoia::testing
     return materials;
   }
 
+  [[nodiscard]]
+  std::string test_runner::duplication_message(std::string_view familyName, std::string_view testName, const fs::path& source)
+  {
+    using namespace parsing::commandline;
+
+    return error(std::string{"Family/Test: \""}
+                  .append(familyName).append("/").append(testName).append("\"\n")
+                  .append("Source file: \"").append(source.generic_string()).append("\"\n")
+                  .append("Please do not include tests in the same family"
+                    " which both have the same name and are defined"
+                    " in the same source file.\n"));
+  }
 }

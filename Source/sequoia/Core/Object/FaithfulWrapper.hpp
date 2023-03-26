@@ -19,14 +19,21 @@
 namespace sequoia::object
 {
   template<class W>
-  concept uniform_wrapper = requires(W & w) {
+  concept uniform_wrapper = requires(W& w, const W& cw) {
     typename W::value_type;
 
-    { w.get() } -> std::same_as<const typename W::value_type&>;
+    { cw.get() } -> std::same_as<const typename W::value_type&>;
 
     w.mutate([](typename W::value_type&) {});
 
     w.set(std::declval<typename W::value_type>());
+  };
+
+  template<class W>
+  concept transparent_wrapper = uniform_wrapper<W> && requires (W& w) {
+    typename W::value_type;
+
+    { w.get() } -> std::same_as<typename W::value_type&>;
   };
 
   /*! \brief A wrapper which allows for getting, setting and mutation of its stored value.
@@ -37,6 +44,8 @@ namespace sequoia::object
       allows for a homogeneous treatment of families of classes, some of which must
       necessarily use proxies but all of which are desired to have the same semantics in terms
       of getting/setting/mutating the underlying data.
+
+      The exception to this is that the faithful_wrapper includes a non-const getter.
    */
 
   template <class T> class faithful_wrapper
@@ -63,6 +72,9 @@ namespace sequoia::object
 
     [[nodiscard]]
     constexpr const T& get() const noexcept { return m_Type; }
+
+    [[nodiscard]]
+    constexpr T& get() noexcept { return m_Type; }
 
     [[nodiscard]]
     friend bool operator==(const faithful_wrapper&, const faithful_wrapper&) noexcept = default;

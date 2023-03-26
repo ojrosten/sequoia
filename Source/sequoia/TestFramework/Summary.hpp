@@ -80,8 +80,8 @@ namespace sequoia::testing
   std::string report_time(const log_summary& log, opt_duration duration);
 
   [[nodiscard]]
-  std::string summarize(const log_summary& log, opt_duration duration, const summary_detail verbosity, indentation ind_0, indentation ind_1);
+  std::string summarize(const log_summary& log, std::string_view namesuffix, opt_duration duration, const summary_detail verbosity, indentation ind_0, indentation ind_1);
 
   [[nodiscard]]
-  std::string summarize(const log_summary& log, summary_detail verbosity, indentation ind_0, indentation ind_1);
+  std::string summarize(const log_summary& log, std::string_view namesuffix, summary_detail verbosity, indentation ind_0, indentation ind_1);
 }

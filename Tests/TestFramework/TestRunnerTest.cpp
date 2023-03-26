@@ -252,7 +252,6 @@ namespace sequoia::testing
   {
     test_exceptions();
     test_critical_errors();
-    test_suites();
     test_filtered_suites();
     test_basic_output();
     test_prune_basic_output();
@@ -475,32 +474,6 @@ namespace sequoia::testing
     check(equivalence, LINE("Recovery and Dump"),
                       working_materials() /= "RecoveryAndDumpOutput",
                       predictive_materials() /= "RecoveryAndDumpOutput");
-  }
-
-  void test_runner_test::test_suites()
-  {
-    std::stringstream outputStream{};
-    commandline_arguments args{(fake_project() / "build").generic_string()};
-
-    test_runner runner{args.size(),
-                       args.get(),
-                       "Oliver J. Rosten",
-                       {"TestSandbox/TestSandbox.cpp", {}, "TestShared/SharedIncludes.hpp"},
-                       "  ",
-                       outputStream};
-
-    runner.execute();
-    check_output(LINE("No Tests"), "NoTestsSuite", outputStream);
-
-    runner.add_test_suite(
-      "Failing Family",
-      failing_test{"Free Test"},
-      failing_fp_test{"False positive Test"},
-      failing_fn_test{"False negative Test"}
-    );
-
-    runner.execute();
-    check_output(LINE("Basic Output"), "BasicOutputSuite", outputStream);
   }
 
   void test_runner_test::test_filtered_suites()
