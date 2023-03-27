@@ -2,11 +2,12 @@
 Running tests...
 
 Family:
-[5 (3)ms]
+[Execution Time: 3.07ms]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 
 -----------Grand Totals-----------
-[5 (3)ms]
+[Total Run Time: 10.6ms]
+[Execution Time: 3.07ms]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -17,7 +18,7 @@ Family:
 Running tests...
 
 Family:
-[6 (3)ms]
+[Execution Time: 2.77ms]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
 	Period 2: Pass/Fail/Pass
@@ -30,7 +31,8 @@ Family:
 
 
 -----------Grand Totals-----------
-[6 (3)ms]
+[Total Run Time: 11.1ms]
+[Execution Time: 2.77ms]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -41,7 +43,7 @@ Family:
 Running tests...
 
 Family:
-[5 (2)ms]
+[Execution Time: 2.94ms]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
 	Period 3: Pass/Pass/Fail
@@ -52,7 +54,8 @@ Family:
 
 
 -----------Grand Totals-----------
-[5 (2)ms]
+[Total Run Time: 11.6ms]
+[Execution Time: 2.94ms]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -63,7 +66,7 @@ Family:
 Running tests...
 
 Family:
-[5 (2)ms]
+[Execution Time: 2.84ms]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
 	Period 2: Pass/Fail/Pass
@@ -76,7 +79,8 @@ Family:
 
 
 -----------Grand Totals-----------
-[5 (2)ms]
+[Total Run Time: 10.7ms]
+[Execution Time: 2.84ms]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -87,11 +91,12 @@ Family:
 Running tests...
 
 Family:
-[6 (3)ms]
+[Execution Time: 2.44ms]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 
 -----------Grand Totals-----------
-[6 (3)ms]
+[Total Run Time: 9.19ms]
+[Execution Time: 2.44ms]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -102,7 +107,7 @@ Family:
 Running tests...
 
 Family:
-[5 (2)ms]
+[Execution Time: 3.09ms]
 	Standard Top Level Checks:                 2;  Failures:  2  [Deep checks: 2]
 
 	Period 2: Pass/Fail/Pass
@@ -121,7 +126,8 @@ Family:
 
 
 -----------Grand Totals-----------
-[5 (2)ms]
+[Total Run Time: 10.1ms]
+[Execution Time: 3.09ms]
 	Standard Top Level Checks:                 2;  Failures:  2  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

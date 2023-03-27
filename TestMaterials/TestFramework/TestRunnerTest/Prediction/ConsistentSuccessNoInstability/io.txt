@@ -2,11 +2,12 @@
 Running tests...
 
 Family:
-[4 (2)ms]
+[Execution Time: 2.55ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 
 -----------Grand Totals-----------
-[4 (2)ms]
+[Total Run Time: 9.08ms]
+[Execution Time: 2.55ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -17,11 +18,12 @@ Family:
 Running tests...
 
 Family:
-[4 (2)ms]
+[Execution Time: 2.29ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 
 -----------Grand Totals-----------
-[4 (2)ms]
+[Total Run Time: 9.41ms]
+[Execution Time: 2.29ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

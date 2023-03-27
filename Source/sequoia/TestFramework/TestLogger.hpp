@@ -336,6 +336,8 @@ namespace sequoia::testing
     [[nodiscard]]
     duration execution_time() const noexcept { return m_Duration; }
 
+    void execution_time(const duration delta) { m_Duration = delta; }
+
     log_summary& operator+=(const log_summary& rhs);
 
     [[nodiscard]]

@@ -257,12 +257,6 @@ namespace sequoia::testing
     return false;
   }
 
-  [[nodiscard]]
-  std::string report_time(const family_summary& s)
-  {
-    return report_time(s.log, s.execution_time);
-  }
-
   //=========================================== test_runner ===========================================//
 
   test_runner::test_runner(int argc,
@@ -773,22 +767,23 @@ namespace sequoia::testing
   void test_runner::run_tests(const std::optional<std::size_t> id)
   {
     const timer t{};
-    log_summary summary{};
 
     stream() << "\nRunning tests...\n\n";
 
-    const auto detail{summary_detail::failure_messages | summary_detail::timings};
-
+    std::optional<log_summary::duration> asyncDuration{};
     if(concurrent_execution())
     {
       stream() << "\n\t--Using asynchronous execution, level: "
                << to_string(m_ConcurrencyMode)
                << "\n\n";
 
+      const timer asyncTimer{};
       std::for_each(std::execution::par, m_Suites.begin_node_weights(), m_Suites.end_node_weights(), [&s{m_Suites}, id](auto& wt){
           if(wt.optTest) wt.summary = wt.optTest->execute(id);
         }
       );
+
+      asyncDuration = asyncTimer.time_elapsed();
     }
 
     test_tracker tracker{proj_paths(), id, m_Filter ? is_filtered::yes : is_filtered::no};
@@ -839,18 +834,25 @@ namespace sequoia::testing
     {
       indentation indent0{no_indent}, indent1{tab};
       auto printNode{
-        [&s=m_Suites,&indent0,&indent1,&stream=stream(),detail](auto n) {
+        [&s=m_Suites,&indent0,&indent1,&stream=stream(),serial{!concurrent_execution()}](auto n) {
           if(n)
           {
             const auto& wt{s.cbegin_node_weights()[n]};
             if(wt.optTest)
             {
-              stream << summarize(wt.summary, "", detail, indent0, indent1);
+              stream << summarize(wt.summary, "", summary_detail::failure_messages | summary_detail::timings, indent0, indent1);
             }
             else
             {
-              auto message{sequoia::indent(wt.summary.name() + ":", indent0)};
-              stream << append_indented(message, report_time(wt.summary, wt.summary.execution_time()), indent0);
+              if(serial)
+              {
+                const auto message{sequoia::indent(wt.summary.name() + ":", indent0)};
+                stream << append_indented(message, report_time(wt.summary, std::nullopt), indent0);
+              }
+              else
+              {
+                stream << sequoia::indent(wt.summary.name() + ":", indent0) << '\n';
+              }
             }
 
             indent0.append("\t");
@@ -866,10 +868,13 @@ namespace sequoia::testing
     {
       for(auto i{m_Suites.cbegin_edges(0)}; i != m_Suites.cend_edges(0); ++i)
       {
+        const auto detail{!concurrent_execution() ? summary_detail::failure_messages | summary_detail::timings : summary_detail::failure_messages};
         auto targetNodeIter{std::next(m_Suites.cbegin_node_weights(), i->target_node())};
         stream() << summarize(targetNodeIter->summary, ":", detail, no_indent, tab);
       }
     }
+
+    if(asyncDuration) m_Suites.begin_node_weights()->summary.execution_time(*asyncDuration);
 
     stream() << "\n-----------Grand Totals-----------\n";
     stream() << summarize(m_Suites.cbegin_node_weights()->summary, "", t.time_elapsed(), summary_detail::absent_checks | summary_detail::timings, indentation{"\t"}, no_indent);

@@ -2,9 +2,9 @@
 Running tests...
 
 Bar:
-[6 (5)ms]
+[Execution Time: 6.03ms]
 	Free Test
-	[5ms]
+	[Execution Time: 6.03ms]
 		Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 1]
 
 ******  Critical Failures:  1  ******
@@ -22,9 +22,9 @@ Bar:
 	=======================================
 
 Foo:
-[4 (4)ms]
+[Execution Time: 6.57ms]
 	Unit Test
-	[4ms]
+	[Execution Time: 6.57ms]
 		Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 0]
 
 ******  Critical Failures:  1  ******
@@ -43,7 +43,8 @@ Foo:
 
 
 -----------Grand Totals-----------
-[10 (9)ms]
+[Total Run Time: 41.4ms]
+[Execution Time: 12.6ms]
 	Standard Top Level Checks:                 4;  Failures:  0  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

@@ -2,7 +2,7 @@
 Running tests...
 
 Family:
-[6 (3)ms]
+[Execution Time: 2.51ms]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
 	Always fails
@@ -13,7 +13,8 @@ Family:
 
 
 -----------Grand Totals-----------
-[6 (3)ms]
+[Total Run Time: 9.65ms]
+[Execution Time: 2.51ms]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -24,7 +25,7 @@ Family:
 Running tests...
 
 Family:
-[5 (2)ms]
+[Execution Time: 3.09ms]
 	Standard Top Level Checks:                 2;  Failures:  2  [Deep checks: 2]
 
 	Always fails
@@ -41,7 +42,8 @@ Family:
 
 
 -----------Grand Totals-----------
-[5 (2)ms]
+[Total Run Time: 10.1ms]
+[Execution Time: 3.09ms]
 	Standard Top Level Checks:                 2;  Failures:  2  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

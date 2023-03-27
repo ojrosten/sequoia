@@ -2,11 +2,12 @@
 Running tests...
 
 Family:
-[5 (3)ms]
+[Execution Time: 2.95ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 
 -----------Grand Totals-----------
-[5 (3)ms]
+[Total Run Time: 11.1ms]
+[Execution Time: 2.95ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -17,7 +18,7 @@ Family:
 Running tests...
 
 Family:
-[5 (2)ms]
+[Execution Time: 3.61ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
 	Period 4
@@ -30,7 +31,8 @@ Family:
 
 
 -----------Grand Totals-----------
-[5 (2)ms]
+[Total Run Time: 13.1ms]
+[Execution Time: 3.61ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -41,7 +43,7 @@ Family:
 Running tests...
 
 Family:
-[5 (2)ms]
+[Execution Time: 3.75ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
 	Period 4
@@ -54,7 +56,8 @@ Family:
 
 
 -----------Grand Totals-----------
-[5 (2)ms]
+[Total Run Time: 14.3ms]
+[Execution Time: 3.75ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -65,7 +68,7 @@ Family:
 Running tests...
 
 Family:
-[5 (2)ms]
+[Execution Time: 3.52ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
 	Period 4
@@ -78,7 +81,8 @@ Family:
 
 
 -----------Grand Totals-----------
-[5 (2)ms]
+[Total Run Time: 12.3ms]
+[Execution Time: 3.52ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

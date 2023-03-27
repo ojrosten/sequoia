@@ -205,9 +205,6 @@ namespace sequoia::testing
     std::unique_ptr<soul> m_pTest{};
   };
 
-  [[nodiscard]]
-  std::string report_time(const family_summary& s);
-
   using time_type = std::filesystem::file_time_type;
 
   struct time_stamps

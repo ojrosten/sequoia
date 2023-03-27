@@ -44,15 +44,17 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string report_time(const log_summary& log, const opt_duration duration)
   {
-    auto mess{std::string{"["}};
-    if(duration) mess.append(stringify(*duration).time).append(" (");
+    std::string mess{};
+    if(duration)
+    {
+      const auto [dur, unit]{stringify(*duration)};
+      mess.append("[Total Run Time: ").append(dur).append(unit).append("]\n");
+    }
 
     const auto[dur, unit]{stringify(log.execution_time())};
-    mess.append(dur);
+    mess.append("[Execution Time: ").append(dur).append(unit).append("]\n");
 
-    if(duration) mess.append(")");
-
-    return mess.append(unit).append("]\n");
+    return mess;
   }
 
   [[nodiscard]]
