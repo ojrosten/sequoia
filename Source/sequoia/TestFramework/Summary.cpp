@@ -16,12 +16,29 @@
 
 namespace sequoia::testing
 {
+  namespace
+  {
+    template<class Period>
+    [[nodiscard]]
+    std::string to_string(const log_summary::duration& d)
+    {
+      using namespace std::chrono;
+      std::stringstream ss{};
+      ss << std::setprecision(3) << duration_cast<duration<double, Period>>(d).count();
+      return ss.str();
+    }
+  }
+
   [[nodiscard]]
   stringified_duration stringify(const log_summary::duration& d)
   {
     using namespace std::chrono;
-    const auto count{duration_cast<milliseconds>(d).count()};
-    return {std::to_string(count), "ms"};
+    const auto count{duration_cast<nanoseconds>(d).count()};
+    if(count >= 1'000'000'000) return {to_string<std::ratio<1>>(d), "s"};
+    if(count >= 1'000'000)     return {to_string<std::milli>(d),   "ms"};
+    if(count >= 1'000)         return {to_string<std::micro>(d),   "us"};
+
+    return {std::to_string(count), "ns"};
   }
 
   [[nodiscard]]
