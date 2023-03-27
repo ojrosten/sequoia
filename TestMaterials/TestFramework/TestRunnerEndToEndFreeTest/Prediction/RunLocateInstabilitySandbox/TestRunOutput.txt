@@ -5,30 +5,20 @@ Running tests...
 	--Using asynchronous execution, level: Family
 
 Utilities:
-[11 (4)ms]
 Useful Things:
-[9 (5)ms]
 Bar:
-[9 (5)ms]
 Unstable:
-[9 (5)ms]
 Maybe:
-[22 (11)ms]
 Oldschool:
-[21 (10)ms]
 Probability:
-[16 (7)ms]
 Foo:
-[20 (13)ms]
 Unique Thing:
-[20 (10)ms]
 Container:
-[18 (10)ms]
 House:
-[12 (9)ms]
 
 -----------Grand Totals-----------
-[31 (96)ms]
+[Total Run Time: 79.4ms]
+[Execution Time: 16.4ms]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -42,30 +32,20 @@ Running tests...
 	--Using asynchronous execution, level: Family
 
 Utilities:
-[10 (6)ms]
 Useful Things:
-[10 (5)ms]
 Bar:
-[13 (4)ms]
 Unstable:
-[14 (7)ms]
 Maybe:
-[18 (11)ms]
 Oldschool:
-[17 (10)ms]
 Probability:
-[20 (13)ms]
 Foo:
-[22 (15)ms]
 Unique Thing:
-[17 (9)ms]
 Container:
-[15 (8)ms]
 House:
-[13 (10)ms]
 
 -----------Grand Totals-----------
-[26 (102)ms]
+[Total Run Time: 57.8ms]
+[Execution Time: 12.5ms]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

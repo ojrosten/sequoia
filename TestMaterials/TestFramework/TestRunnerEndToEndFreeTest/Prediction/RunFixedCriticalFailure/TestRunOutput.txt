@@ -2,11 +2,12 @@
 Running tests...
 
 Foo:
-[14 (13)ms]
+[Execution Time: 11.7ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 37]
 
 -----------Grand Totals-----------
-[14 (13)ms]
+[Total Run Time: 16.9ms]
+[Execution Time: 11.7ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 37]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

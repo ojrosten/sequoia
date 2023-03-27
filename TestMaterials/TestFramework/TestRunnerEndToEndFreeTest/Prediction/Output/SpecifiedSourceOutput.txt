@@ -5,14 +5,12 @@ Running tests...
 	--Using asynchronous execution, level: Unit
 
 Maybe:
-[4 (0)ms]
 Foo:
-[3 (0)ms]
 House:
-[3 (0)ms]
 
 -----------Grand Totals-----------
-[5 (0)ms]
+[Total Run Time: 15.9ms]
+[Execution Time: 348us]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

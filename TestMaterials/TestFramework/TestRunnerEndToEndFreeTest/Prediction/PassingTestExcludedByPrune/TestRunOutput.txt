@@ -1,6 +1,6 @@
 
 Analyzing dependencies...
-[29ms]
+[21.6ms]
 
 
 Running tests...
@@ -9,7 +9,6 @@ Running tests...
 	--Using asynchronous execution, level: Unit
 
 Probability:
-[3 (1)ms]
 	Standard Top Level Checks:                 3;  Failures:  1  [Deep checks: 39]
 
 	Tests/Maths/ProbabilityTest.cpp, Line 22
@@ -28,7 +27,6 @@ Probability:
 	=======================================
 
 Foo:
-[5 (3)ms]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 
 ******  Critical Failures:  1  ******
@@ -51,7 +49,8 @@ Foo:
 
 
 -----------Grand Totals-----------
-[6 (5)ms]
+[Total Run Time: 12ms]
+[Execution Time: 5.33ms]
 	Standard Top Level Checks:                 5;  Failures:  1  [Deep checks: 41]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

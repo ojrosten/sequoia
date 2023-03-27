@@ -5,10 +5,10 @@ Running tests...
 	--Using asynchronous execution, level: Unit
 
 Foo:
-[5 (0)ms]
 
 -----------Grand Totals-----------
-[6 (0)ms]
+[Total Run Time: 11ms]
+[Execution Time: 250us]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

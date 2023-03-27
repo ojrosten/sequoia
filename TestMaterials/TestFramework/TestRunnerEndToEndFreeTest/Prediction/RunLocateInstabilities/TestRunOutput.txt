@@ -5,9 +5,7 @@ Running tests...
 	--Using asynchronous execution, level: Family
 
 Utilities:
-[21 (15)ms]
 Useful Things:
-[24 (17)ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
 	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 21
@@ -20,32 +18,24 @@ Useful Things:
 	=======================================
 
 Bar:
-[32 (19)ms]
 Unstable:
-[41 (31)ms]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 Maybe:
-[51 (29)ms]
 Oldschool:
-[40 (26)ms]
 Probability:
-[46 (30)ms]
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 39]
 	False Positive Checks:                     2;  Failures:  0
 Foo:
-[54 (46)ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 37]
 Unique Thing:
-[46 (23)ms]
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 35]
 	False Positive Checks:                     2;  Failures:  0
 Container:
-[35 (26)ms]
 House:
-[20 (15)ms]
 
 -----------Grand Totals-----------
-[66 (282)ms]
+[Total Run Time: 65.3ms]
+[Execution Time: 23.9ms]
 	Standard Top Level Checks:                10;  Failures:  1  [Deep checks: 114]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -59,9 +49,7 @@ Running tests...
 	--Using asynchronous execution, level: Family
 
 Utilities:
-[26 (14)ms]
 Useful Things:
-[22 (15)ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
 	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 21
@@ -74,9 +62,7 @@ Useful Things:
 	=======================================
 
 Bar:
-[26 (15)ms]
 Unstable:
-[22 (16)ms]
 	Standard Top Level Checks:                 2;  Failures:  2  [Deep checks: 2]
 
 	Tests/Unstable/FlipperFreeTest.cpp, Line 24
@@ -94,27 +80,21 @@ Unstable:
 	=======================================
 
 Maybe:
-[25 (9)ms]
 Oldschool:
-[25 (10)ms]
 Probability:
-[33 (21)ms]
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 39]
 	False Positive Checks:                     2;  Failures:  0
 Foo:
-[34 (26)ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 37]
 Unique Thing:
-[24 (13)ms]
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 35]
 	False Positive Checks:                     2;  Failures:  0
 Container:
-[17 (10)ms]
 House:
-[21 (18)ms]
 
 -----------Grand Totals-----------
-[35 (172)ms]
+[Total Run Time: 76.1ms]
+[Execution Time: 25.6ms]
 	Standard Top Level Checks:                10;  Failures:  3  [Deep checks: 114]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

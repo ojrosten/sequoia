@@ -5,12 +5,11 @@ Running tests...
 	--Using asynchronous execution, level: Family
 
 Probability:
-[1 (0)ms]
 House:
-[1 (0)ms]
 
 -----------Grand Totals-----------
-[2 (0)ms]
+[Total Run Time: 6.56ms]
+[Execution Time: 159us]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

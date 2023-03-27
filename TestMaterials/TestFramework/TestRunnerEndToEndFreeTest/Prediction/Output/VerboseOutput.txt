@@ -5,64 +5,54 @@ Running tests...
 	--Using asynchronous execution, level: Family
 
 Utilities:
-[2 (0)ms]
 	Utilities Free Test
-	[0ms]
+	[Execution Time: 2us]
 Useful Things:
-[1 (0)ms]
 	Useful Things Free Test
-	[0ms]
+	[Execution Time: 200ns]
 Bar:
-[2 (0)ms]
 	Bar Free Test
-	[0ms]
+	[Execution Time: 200ns]
 Unstable:
-[1 (0)ms]
 	Flipper Free Test
-	[0ms]
+	[Execution Time: 200ns]
 Maybe:
-[5 (0)ms]
 	False Positive Test
-	[0ms]
+	[Execution Time: 600ns]
 	Unit Test
-	[0ms]
+	[Execution Time: 300ns]
 Oldschool:
-[5 (0)ms]
 	False Positive Test
-	[0ms]
+	[Execution Time: 100ns]
 	Unit Test
-	[0ms]
+	[Execution Time: 300ns]
 Probability:
-[7 (0)ms]
 	False Positive Test
-	[0ms]
+	[Execution Time: 200ns]
 	Unit Test
-	[0ms]
+	[Execution Time: 400ns]
 Foo:
-[5 (0)ms]
 	False Positive Test
-	[0ms]
+	[Execution Time: 300ns]
 	Unit Test
-	[0ms]
+	[Execution Time: 600ns]
 Unique Thing:
-[5 (0)ms]
 	False Positive Test
-	[0ms]
+	[Execution Time: 200ns]
 	Unit Test
-	[0ms]
+	[Execution Time: 300ns]
 Container:
-[5 (0)ms]
 	Container Performance Test
-	[0ms]
+	[Execution Time: 400ns]
 	Allocation Test
-	[0ms]
+	[Execution Time: 400ns]
 House:
-[4 (0)ms]
 	Allocation Test
-	[0ms]
+	[Execution Time: 200ns]
 
 -----------Grand Totals-----------
-[10 (0)ms]
+[Total Run Time: 46ms]
+[Execution Time: 745us]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

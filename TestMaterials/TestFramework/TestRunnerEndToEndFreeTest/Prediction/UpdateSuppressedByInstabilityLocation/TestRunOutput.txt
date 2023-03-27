@@ -1,13 +1,13 @@
   Warning: Update of materials suppressed when checking for instabilities
 
 Analyzing dependencies...
-[22ms]
+[20.1ms]
 
 
 Running tests...
 
 Foo:
-[14 (12)ms]
+[Execution Time: 15.1ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 42]
 
 	Tests/Stuff/FooTest.cpp, Line 41
@@ -18,9 +18,9 @@ Foo:
 	[std::filesystem::path]
 
 	  Contents of
-	  C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/NoSeqpat/baz.txt
+	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/NoSeqpat/baz.txt
 	  vs
-	  C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/NoSeqpat/baz.txt
+	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/NoSeqpat/baz.txt
 
 	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
 	  operator== returned false
@@ -36,9 +36,9 @@ Foo:
 	    Predicted: Old
 
 	  Contents of
-	  C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/NoSeqpat/baz2.txt
+	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/NoSeqpat/baz2.txt
 	  vs
-	  C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/NoSeqpat/baz2.txt
+	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/NoSeqpat/baz2.txt
 
 	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
 	  operator== returned false
@@ -54,9 +54,9 @@ Foo:
 	    Predicted: Old
 
 	  Contents of
-	  C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/RemovedSeqpat/bar2.txt
+	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/RemovedSeqpat/bar2.txt
 	  vs
-	  C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/RemovedSeqpat/bar2.txt
+	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/RemovedSeqpat/bar2.txt
 
 	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
 	  operator== returned false
@@ -72,9 +72,9 @@ Foo:
 	    Predicted: Old
 
 	  Contents of
-	  C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/RetainedSeqpat/foo.txt
+	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/RetainedSeqpat/foo.txt
 	  vs
-	  C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/RetainedSeqpat/foo.txt
+	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/RetainedSeqpat/foo.txt
 
 	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
 	  operator== returned false
@@ -90,9 +90,9 @@ Foo:
 	    Predicted: Old
 
 	  Contents of
-	  C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/RetainedSeqpat/foo2.txt
+	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/RetainedSeqpat/foo2.txt
 	  vs
-	  C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/RetainedSeqpat/foo2.txt
+	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/RetainedSeqpat/foo2.txt
 
 	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
 	  operator== returned false
@@ -111,7 +111,8 @@ Foo:
 
 
 -----------Grand Totals-----------
-[14 (12)ms]
+[Total Run Time: 19.6ms]
+[Execution Time: 15.1ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 42]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -122,7 +123,7 @@ Foo:
 Running tests...
 
 Foo:
-[13 (11)ms]
+[Execution Time: 13.7ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 42]
 
 	Tests/Stuff/FooTest.cpp, Line 41
@@ -133,9 +134,9 @@ Foo:
 	[std::filesystem::path]
 
 	  Contents of
-	  C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/NoSeqpat/baz.txt
+	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/NoSeqpat/baz.txt
 	  vs
-	  C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/NoSeqpat/baz.txt
+	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/NoSeqpat/baz.txt
 
 	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
 	  operator== returned false
@@ -151,9 +152,9 @@ Foo:
 	    Predicted: Old
 
 	  Contents of
-	  C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/NoSeqpat/baz2.txt
+	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/NoSeqpat/baz2.txt
 	  vs
-	  C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/NoSeqpat/baz2.txt
+	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/NoSeqpat/baz2.txt
 
 	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
 	  operator== returned false
@@ -169,9 +170,9 @@ Foo:
 	    Predicted: Old
 
 	  Contents of
-	  C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/RemovedSeqpat/bar2.txt
+	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/RemovedSeqpat/bar2.txt
 	  vs
-	  C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/RemovedSeqpat/bar2.txt
+	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/RemovedSeqpat/bar2.txt
 
 	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
 	  operator== returned false
@@ -187,9 +188,9 @@ Foo:
 	    Predicted: Old
 
 	  Contents of
-	  C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/RetainedSeqpat/foo.txt
+	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/RetainedSeqpat/foo.txt
 	  vs
-	  C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/RetainedSeqpat/foo.txt
+	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/RetainedSeqpat/foo.txt
 
 	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
 	  operator== returned false
@@ -205,9 +206,9 @@ Foo:
 	    Predicted: Old
 
 	  Contents of
-	  C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/RetainedSeqpat/foo2.txt
+	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/RetainedSeqpat/foo2.txt
 	  vs
-	  C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/RetainedSeqpat/foo2.txt
+	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/RetainedSeqpat/foo2.txt
 
 	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
 	  operator== returned false
@@ -226,7 +227,8 @@ Foo:
 
 
 -----------Grand Totals-----------
-[13 (11)ms]
+[Total Run Time: 19ms]
+[Execution Time: 13.7ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 42]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

@@ -2,9 +2,9 @@
 Running tests...
 
 Utilities:
-[1 (0)ms]
+[Execution Time: 2.5us]
 Useful Things:
-[2 (1)ms]
+[Execution Time: 1.15ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
 	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 21
@@ -17,20 +17,20 @@ Useful Things:
 	=======================================
 
 Bar:
-[1 (0)ms]
+[Execution Time: 500ns]
 Unstable:
-[2 (1)ms]
+[Execution Time: 2.31ms]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 Maybe:
-[2 (0)ms]
+[Execution Time: 900ns]
 Oldschool:
-[2 (0)ms]
+[Execution Time: 400ns]
 Probability:
-[9 (6)ms]
+[Execution Time: 5.07ms]
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 39]
 	False Positive Checks:                     2;  Failures:  0
 Foo:
-[6 (3)ms]
+[Execution Time: 5.39ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
 	Tests/Stuff/FooTest.cpp, Line 41
@@ -41,9 +41,9 @@ Foo:
 	[std::filesystem::path]
 
 	  Path type
-	  C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases
+	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases
 	  vs
-	  C:/Users/olive/OneDrive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases
+	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases
 
 	  [std::filesystem::file_type]
 	  operator== returned false
@@ -53,16 +53,17 @@ Foo:
 	=======================================
 
 Unique Thing:
-[7 (4)ms]
+[Execution Time: 4.5ms]
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 35]
 	False Positive Checks:                     2;  Failures:  0
 Container:
-[2 (0)ms]
+[Execution Time: 800ns]
 House:
-[1 (0)ms]
+[Execution Time: 400ns]
 
 -----------Grand Totals-----------
-[39 (17)ms]
+[Total Run Time: 64ms]
+[Execution Time: 18.4ms]
 	Standard Top Level Checks:                10;  Failures:  2  [Deep checks: 78]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
