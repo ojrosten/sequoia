@@ -29,8 +29,6 @@ set(SourceList sequoia/TestFramework/Advice.cpp
     sequoia/TestFramework/SemanticsCheckersDetails.cpp
     sequoia/TestFramework/Summary.cpp
     sequoia/TestFramework/TestCreator.cpp
-    sequoia/TestFramework/TestFamily.cpp
-    sequoia/TestFramework/TestFamilySelector.cpp
     sequoia/TestFramework/TestLogger.cpp
     sequoia/TestFramework/TestRunner.cpp
     sequoia/TestFramework/TestRunnerUtilities.cpp

@@ -11,7 +11,8 @@
     \brief Utilities for running tests from the command line.
 */
 
-#include "sequoia/TestFramework/TestFamilySelector.hpp"
+#include "sequoia/TestFramework/DependencyAnalyzer.hpp"
+#include "sequoia/TestFramework/FreeTestCore.hpp"
 
 #include "sequoia/Core/Logic/Bitmask.hpp"
 #include "sequoia/Core/Object/Suite.hpp"
@@ -25,16 +26,35 @@
 namespace sequoia::testing
 {
   enum class runner_mode { none=0, help=1, test=2, create=4, init=8};
+
+  enum class update_mode { none = 0, soft };
+
+  enum class recovery_mode { none = 0, recovery = 1, dump = 2 };
+
+  enum class prune_outcome { not_attempted, no_time_stamp, success };
 }
 
 namespace sequoia
 {
   template<>
   struct as_bitmask<testing::runner_mode> : std::true_type {};
+
+  template<>
+  struct as_bitmask<testing::recovery_mode> : std::true_type {};
 }
 
 namespace sequoia::testing
 {
+  enum class concurrency_mode {
+    serial,    /// serial execution
+    dynamic,   /// determined at runtime
+    family,    /// families of tests are executed concurrently
+    unit,      /// tests are executed concurrently, independently of their families
+  };
+
+  [[nodiscard]]
+  std::string to_string(concurrency_mode mode);
+
   struct test_to_path
   {
     template<concrete_test Test>
@@ -57,6 +77,9 @@ namespace sequoia::testing
   private:
     const std::filesystem::path* m_Repo;
   };
+
+  [[nodiscard]]
+  active_recovery_files make_active_recovery_paths(recovery_mode mode, const project_paths& projPaths);
 
   class test_vessel
   {

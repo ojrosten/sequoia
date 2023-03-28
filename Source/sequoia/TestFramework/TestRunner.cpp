@@ -29,6 +29,24 @@ namespace sequoia::testing
 {
   namespace fs = std::filesystem;
 
+  [[nodiscard]]
+  std::string to_string(concurrency_mode mode)
+  {
+    switch(mode)
+    {
+    case concurrency_mode::serial:
+      return "Serial";
+    case concurrency_mode::dynamic:
+      return "Dynamic";
+    case concurrency_mode::family:
+      return "Family";
+    case concurrency_mode::unit:
+      return "Unit";
+    }
+
+    throw std::logic_error{"Unknown option for concurrency_mode"};
+  }
+
   auto time_stamps::from_file(const std::filesystem::path& stampFile) -> stamp
   {
     if(fs::exists(stampFile))
@@ -41,6 +59,62 @@ namespace sequoia::testing
 
   namespace
   {
+    [[nodiscard]]
+    fs::path test_summary_filename(const fs::path& sourceFile, const project_paths& projPaths)
+    {
+      const auto name{fs::path{sourceFile}.replace_extension(".txt")};
+      if(name.empty())
+        throw std::logic_error("Source files should have a non-trivial name!");
+
+      if(!name.is_absolute())
+      {
+        if(const auto testRepo{projPaths.tests().repo()}; !testRepo.empty())
+        {
+          return projPaths.output().test_summaries() / back(testRepo) / rebase_from(name, testRepo);
+        }
+      }
+      else
+      {
+        auto summaryFile{projPaths.output().test_summaries()};
+        auto iters{std::mismatch(name.begin(), name.end(), summaryFile.begin(), summaryFile.end())};
+
+        while(iters.first != name.end())
+          summaryFile /= *iters.first++;
+
+        return summaryFile;
+      }
+
+      return name;
+    }
+
+    struct test_paths
+    {
+      test_paths(const std::filesystem::path& sourceFile,
+                 const std::filesystem::path& workingMaterials,
+                 const std::filesystem::path& predictiveMaterials,
+                 const project_paths& projPaths)
+        : test_file{rebase_from(sourceFile, projPaths.tests().repo())}
+        , summary{test_summary_filename(sourceFile, projPaths)}
+        , workingMaterials{workingMaterials}
+        , predictions{predictiveMaterials}
+      {}
+
+      std::filesystem::path
+        test_file,
+        summary,
+        workingMaterials,
+        predictions;
+    };
+
+    struct paths_comparator
+    {
+      [[nodiscard]]
+      bool operator()(const test_paths& lhs, const test_paths& rhs) const noexcept
+      {
+        return lhs.workingMaterials < rhs.workingMaterials;
+      }
+    };
+
     struct nascent_test_data
     {
       nascent_test_data(std::string type, std::string subType, test_runner& r, std::vector<nascent_test_vessel>& nascentTests);
@@ -106,26 +180,6 @@ namespace sequoia::testing
 
     const std::string& convert(const std::string& s) { return s; }
     std::string convert(const std::filesystem::path& p) { return p.generic_string(); }
-
-    /*using time_type = std::filesystem::file_time_type;
-
-    struct time_stamps
-    {
-      using stamp = std::optional<time_type>;
-
-      static auto from_file(const std::filesystem::path& stampFile) -> stamp
-      {
-        if(fs::exists(stampFile))
-        {
-          return fs::last_write_time(stampFile);
-        }
-
-        return std::nullopt;
-      }
-
-      stamp ondisk, executable;
-      time_type current{std::chrono::file_clock::now()};
-    };*/
 
     class test_tracker
     {
@@ -255,6 +309,19 @@ namespace sequoia::testing
     }
 
     return false;
+  }
+
+  [[nodiscard]]
+  active_recovery_files make_active_recovery_paths(recovery_mode mode, const project_paths& projPaths)
+  {
+    active_recovery_files paths{};
+    if((mode & recovery_mode::recovery) == recovery_mode::recovery)
+      paths.recovery_file = projPaths.output().recovery().recovery_file();
+
+    if((mode & recovery_mode::dump) == recovery_mode::dump)
+      paths.dump_file = projPaths.output().recovery().dump_file();
+
+    return paths;
   }
 
   //=========================================== test_runner ===========================================//
