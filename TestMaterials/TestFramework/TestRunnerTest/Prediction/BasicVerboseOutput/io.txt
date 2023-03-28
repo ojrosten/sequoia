@@ -1,0 +1,51 @@
+
+Running tests...
+
+
+	--Using asynchronous execution, level: Unit
+
+Failing Family:
+	Free Test
+	[Execution Time: 125us]
+		Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
+
+	Standard Failure
+	[int]
+	operator== returned false
+	Obtained : 43
+	Predicted: 42
+
+	=======================================
+
+	False positive Test
+	[Execution Time: 86.2us]
+		False Positive Checks:                     1;  Failures:  1
+
+	False Positive Failure:
+	False positive failure
+	[int]
+
+	=======================================
+
+	False negative Test
+	[Execution Time: 79.1us]
+		False Negative Checks:                     1;  Failures:  1
+
+	False negative failure
+	[int]
+	operator== returned false
+	Obtained : 43
+	Predicted: 42
+
+	=======================================
+
+
+-----------Grand Totals-----------
+[Total Run Time: 15.9ms]
+[Execution Time: 283us]
+	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
+	Standard Performance Checks:               0;  Failures:  0
+	False Negative Checks:                     1;  Failures:  1
+	False Negative Performance Checks:         0;  Failures:  0
+	False Positive Checks:                     1;  Failures:  1
+	False Positive Performance Checks:         0;  Failures:  0

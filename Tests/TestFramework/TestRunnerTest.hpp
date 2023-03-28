@@ -33,6 +33,14 @@ namespace sequoia::testing
 
     void test_basic_output();
 
+    void test_verbose_output();
+
+    void test_serial_verbose_output();
+
+    void test_parallel_acceleration();
+
+    void test_serial_execution();
+
     void test_prune_basic_output();
 
     void test_instability_analysis();
@@ -64,8 +72,8 @@ namespace sequoia::testing
     [[nodiscard]]
     std::string zeroth_arg() const;
 
-    void write(std::string_view dirName, std::stringstream& output) const;
+    std::filesystem::path write(std::string_view dirName, std::stringstream& output) const;
 
-    void check_output(std::string_view description, std::string_view dirName, std::stringstream& output);
+    std::filesystem::path check_output(std::string_view description, std::string_view dirName, std::stringstream& output);
   };
 }

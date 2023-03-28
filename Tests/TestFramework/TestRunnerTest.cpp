@@ -11,6 +11,7 @@
 #include "TestRunnerDiagnosticsUtilities.hpp"
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
 
+#include <charconv>
 #include <fstream>
 
 namespace sequoia::testing
@@ -19,6 +20,29 @@ namespace sequoia::testing
 
   namespace
   {
+    double get_timing(const std::filesystem::path& file)
+    {
+      if(const auto optContents{read_to_string(file)})
+      {
+        const auto& contents{optContents.value()};
+        constexpr std::string_view pattern{"Execution Time:"};
+        if(auto pos{contents.find(pattern)}; pos != std::string::npos)
+        {
+          auto start{pos + pattern.size() + 1};
+          if(auto end{contents.find("ms]", start)}; end > start)
+          {
+            auto timing{contents.substr(start, end-start)};
+            double d{};
+            std::from_chars(timing.data(), std::next(timing.data(), end - start), d);
+
+            return d;
+          }
+        }
+      }
+
+      throw std::runtime_error{"Unable to extract timing from: " + file.generic_string()};
+    }
+
     struct foo
     {
       int x{};
@@ -38,6 +62,26 @@ namespace sequoia::testing
       void run_tests() final
       {
         check(equality, "Throw during check", foo{}, foo{});
+      }
+    };
+
+    template<std::size_t I>
+    class slow_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      std::string_view source_file() const noexcept final
+      {
+        return __FILE__;
+      }
+    private:
+      void run_tests() final
+      {
+        using namespace std::chrono_literals;
+        std::this_thread::sleep_for(10ms);
+        check(equality, "Integer equality", I, I);
       }
     };
 
@@ -230,6 +274,43 @@ namespace sequoia::testing
           throw std::runtime_error{"Error"};
       }
     };
+
+    test_runner make_failing_family(commandline_arguments args, std::stringstream& outputStream)
+    {
+      test_runner runner{args.size(),
+                         args.get(),
+                         "Oliver J. Rosten",
+                         {"TestSandbox/TestSandbox.cpp", {}, "TestShared/SharedIncludes.hpp"},
+                         "  ",
+                         outputStream};
+
+      runner.add_test_family(
+        "Failing Family",
+        failing_test{"Free Test"},
+        failing_fp_test{"False positive Test"},
+        failing_fn_test{"False negative Test"}
+      );
+
+      return runner;
+    }
+
+    test_runner make_slow_family(commandline_arguments args, std::stringstream& outputStream)
+    {
+      test_runner runner{args.size(),
+                         args.get(),
+                         "Oliver J. Rosten",
+                         {"TestSandbox/TestSandbox.cpp", {}, "TestShared/SharedIncludes.hpp"},
+                         "  ",
+                         outputStream};
+
+      runner.add_test_family(
+        "Slow Family",
+        slow_test<0>{"Slow test 0"},
+        slow_test<1>{"Slow test 1"}
+      );
+
+      return runner;
+    }
   }
 
   template<>
@@ -252,8 +333,12 @@ namespace sequoia::testing
   {
     test_exceptions();
     test_critical_errors();
-    test_filtered_suites();
     test_basic_output();
+    test_verbose_output();
+    test_serial_verbose_output();
+    test_parallel_acceleration();
+    test_serial_execution();
+    test_filtered_suites();
     test_prune_basic_output();
     test_instability_analysis();
   }
@@ -270,23 +355,28 @@ namespace sequoia::testing
     return (fake_project() / "build").generic_string();
   }
 
-  void test_runner_test::write(std::string_view dirName, std::stringstream& output) const
+  fs::path test_runner_test::write(std::string_view dirName, std::stringstream& output) const
   {
     const auto outputDir{working_materials() /= dirName};
     fs::create_directory(outputDir);
 
-    if(std::ofstream file{outputDir / "io.txt"})
+    const auto filePath{outputDir / "io.txt"};
+    if(std::ofstream file{filePath})
     {
       file << output.str();
     }
 
     output.str("");
+
+    return filePath;
   }
 
-  void test_runner_test::check_output(std::string_view description, std::string_view dirName, std::stringstream& output)
+  fs::path test_runner_test::check_output(std::string_view description, std::string_view dirName, std::stringstream& output)
   {
-    write(dirName, output);
+    fs::path filePath{write(dirName, output)};
     check(equivalence, description, working_materials() /= dirName, predictive_materials() /= dirName);
+
+    return filePath;
   }
 
   void test_runner_test::test_exceptions()
@@ -476,11 +566,6 @@ namespace sequoia::testing
                       predictive_materials() /= "RecoveryAndDumpOutput");
   }
 
-  void test_runner_test::test_filtered_suites()
-  {
-    // TO DO
-  }
-
   void test_runner_test::test_basic_output()
   {
     std::stringstream outputStream{};
@@ -505,6 +590,50 @@ namespace sequoia::testing
 
     runner.execute();
     check_output(LINE("Basic Output"), "BasicOutput", outputStream);
+  }
+
+  void test_runner_test::test_verbose_output()
+  {
+    std::stringstream outputStream{};
+    auto runner{make_failing_family({(fake_project() / "build").generic_string(), "-v"}, outputStream)};
+
+    runner.execute();
+    check_output(LINE("Basic Verbose Output"), "BasicVerboseOutput", outputStream);
+  }
+
+  void test_runner_test::test_serial_verbose_output()
+  {
+    std::stringstream outputStream{};
+    auto runner{make_failing_family({(fake_project() / "build").generic_string(), "-v", "--async-depth", "null"}, outputStream)};
+
+    runner.execute();
+    check_output(LINE("Basic Serial Verbose Output"), "BasicSerialVerboseOutput", outputStream);
+  }
+
+  void test_runner_test::test_parallel_acceleration()
+  {
+    std::stringstream outputStream{};
+    auto runner{make_slow_family({(fake_project() / "build").generic_string()}, outputStream)};
+    runner.execute();
+
+    auto outputFile{check_output(LINE("Parallel Acceleration Output"), "ParallelAccelerationOutput", outputStream)};
+    check(within_tolerance{2.0}, LINE(""), get_timing(outputFile), 10.0);
+  }
+
+  void test_runner_test::test_serial_execution()
+  {
+    std::stringstream outputStream{};
+    auto runner{make_slow_family({(fake_project() / "build").generic_string(), "--async-depth", "null"}, outputStream)};
+    runner.execute();
+
+    auto outputFile{check_output(LINE("Serial Output"), "Serial Output", outputStream)};
+    check(within_tolerance{3.0}, LINE(""), get_timing(outputFile), 20.0);
+  }
+
+
+  void test_runner_test::test_filtered_suites()
+  {
+    // TO DO
   }
 
   void test_runner_test::test_prune_basic_output()
