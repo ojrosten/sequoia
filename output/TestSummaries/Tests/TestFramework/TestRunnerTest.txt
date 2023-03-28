@@ -1,2 +1,23 @@
 Functionality Test
-Standard Top Level Checks:                31;  Failures:  0  [Deep checks: 193]
+Standard Top Level Checks:                32;  Failures:  1  [Deep checks: 194]
+
+	Tests/TestFramework/TestRunnerTest.cpp, Line 660
+	Basic Output
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::filesystem::path>]
+	Checking for equivalence with:
+	[std::filesystem::path]
+
+	  Path type
+	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/FilteredSuiteOutput
+	  vs
+	  C:/Users/olive/sequoia/TestMaterials/TestFramework/TestRunnerTest/Prediction/FilteredSuiteOutput
+
+	  [std::filesystem::file_type]
+	  operator== returned false
+	  Obtained : directory
+	  Predicted: not found
+
+	=======================================
+

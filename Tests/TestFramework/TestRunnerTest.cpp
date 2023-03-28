@@ -633,7 +633,31 @@ namespace sequoia::testing
 
   void test_runner_test::test_filtered_suites()
   {
-    // TO DO
+    std::stringstream outputStream{};
+    commandline_arguments args{(fake_project() / "build").generic_string(), "test", "Failing Family"};
+
+    test_runner runner{args.size(),
+                       args.get(),
+                       "Oliver J. Rosten",
+                       {"TestSandbox/TestSandbox.cpp", {}, "TestShared/SharedIncludes.hpp"},
+                       "  ",
+                       outputStream};
+
+    runner.add_test_family(
+      "Slow Family",
+      slow_test<0>{"Slow test 0"},
+      slow_test<1>{"Slow test 1"}
+    );
+
+    runner.add_test_family(
+      "Failing Family",
+      failing_test{"Free Test"},
+      failing_fp_test{"False positive Test"},
+      failing_fn_test{"False negative Test"}
+    );
+
+    runner.execute();
+    check_output(LINE("Filtered Suite Output"), "FilteredSuiteOutput", outputStream);
   }
 
   void test_runner_test::test_prune_basic_output()
