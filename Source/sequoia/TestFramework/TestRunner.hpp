@@ -81,6 +81,10 @@ namespace sequoia::testing
   [[nodiscard]]
   active_recovery_files make_active_recovery_paths(recovery_mode mode, const project_paths& projPaths);
 
+
+  [[nodiscard]]
+  individual_materials_paths set_materials(const std::filesystem::path& sourceFile, const project_paths& projPaths, std::vector<std::filesystem::path>& materialsPaths);
+
   class test_vessel
   {
   public:
@@ -120,30 +124,15 @@ namespace sequoia::testing
       return m_pTest->predictive_materials();
     }
 
-    void set_materials(individual_materials_paths materials)
-    {
-      m_pTest->set_materials(std::move(materials));
-    }
-
-    void set_filesystem_data(const project_paths& projPaths, std::string_view suiteName)
-    {
-      m_pTest->set_filesystem_data(projPaths, suiteName);
-    }
-
-    void set_recovery_paths(active_recovery_files files)
-    {
-      m_pTest->set_recovery_paths(std::move(files));
-    }
-
     [[nodiscard]]
     log_summary execute(std::optional<std::size_t> index)
     {
       return m_pTest->execute(index);
     }
 
-    void reset()
+    void reset(std::string_view suiteName, recovery_mode recoveryMode, const project_paths& projPaths, std::vector<std::filesystem::path>& materialsPaths)
     {
-      m_pTest->reset();
+      m_pTest->reset(suiteName, recoveryMode, projPaths, materialsPaths);
     }
   private:
     struct soul
@@ -157,13 +146,7 @@ namespace sequoia::testing
 
       virtual log_summary execute(std::optional<std::size_t> index) = 0;
 
-      virtual void set_materials(individual_materials_paths materials) = 0;
-
-      virtual void set_filesystem_data(const project_paths& projPaths, std::string_view suiteName) = 0;
-
-      virtual void set_recovery_paths(active_recovery_files files) = 0;
-
-      virtual void reset() = 0;
+      virtual void reset(std::string_view suiteName, recovery_mode recoveryMode, const project_paths& projPaths, std::vector<std::filesystem::path>& materialsPaths) = 0;
     };
 
     template<concrete_test Test>
@@ -202,24 +185,12 @@ namespace sequoia::testing
         return m_Test.execute(index);
       }
 
-      void set_materials(individual_materials_paths materials) final
-      {
-        m_Test.set_materials(std::move(materials));
-      }
-
-      void set_filesystem_data(const project_paths& projPaths, std::string_view suiteName) final
-      {
-        m_Test.set_filesystem_data(projPaths, suiteName);
-      }
-
-      void set_recovery_paths(active_recovery_files files)
-      {
-        m_Test.set_recovery_paths(std::move(files));
-      }
-
-      void reset()
+      void reset(std::string_view suiteName, recovery_mode recoveryMode, const project_paths& projPaths, std::vector<std::filesystem::path>& materialsPaths)
       {
         m_Test = Test{m_Test.name()};
+        m_Test.set_filesystem_data(projPaths, suiteName);
+        m_Test.set_recovery_paths(make_active_recovery_paths(recoveryMode, projPaths));
+        m_Test.set_materials(set_materials(m_Test.source_filename(), projPaths, materialsPaths));
       }
 
       Test m_Test;
@@ -349,15 +320,12 @@ namespace sequoia::testing
     [[nodiscard]]
     bool concurrent_execution() const noexcept { return m_ConcurrencyMode != concurrency_mode::serial; }
 
-    [[nodiscard]]
-    individual_materials_paths set_materials(const std::filesystem::path& sourceFile, std::vector<std::filesystem::path>& materialsPaths) const;
-
     template<concrete_test Test>
     void init(std::string_view suiteName, Test& test, std::vector<std::filesystem::path>& materialsPaths) const
     {
       test.set_filesystem_data(proj_paths(), suiteName);
       test.set_recovery_paths(make_active_recovery_paths(m_RecoveryMode, proj_paths()));
-      test.set_materials(set_materials(test.source_filename(), materialsPaths));
+      test.set_materials(set_materials(test.source_filename(), proj_paths(), materialsPaths));
     }
 
     void reset_tests();
@@ -396,7 +364,7 @@ namespace sequoia::testing
                    std::forward<Filter>(filter),
                    overloaded{
                      [] <class... Ts> (const suite<Ts...>&s) -> suite_node { return {.summary{log_summary{s.name}}}; },
-                     [this, name, &materialsPaths]<concrete_test T>(T && test) -> suite_node {
+                     [this, name, &materialsPaths]<concrete_test T>(T&& test) -> suite_node {
                        init(name, test, materialsPaths);
                        return {.summary{log_summary{test.name()}}, .optTest{std::move(test)}};
                      }

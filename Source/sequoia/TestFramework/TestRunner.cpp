@@ -324,6 +324,39 @@ namespace sequoia::testing
     return paths;
   }
 
+  [[nodiscard]]
+  individual_materials_paths set_materials(const std::filesystem::path& sourceFile, const project_paths& projPaths, std::vector<std::filesystem::path>& materialsPaths)
+  {
+    individual_materials_paths materials{sourceFile, projPaths};
+    if(!fs::exists(materials.original_materials())) return {};
+
+    const auto workingCopy{materials.working()};
+    if(std::find(materialsPaths.cbegin(), materialsPaths.cend(), workingCopy) == materialsPaths.cend())
+    {
+      fs::remove_all(materials.temporary_materials());
+      fs::create_directories(materials.temporary_materials());
+
+      if(const auto originalWorking{materials.original_working()}; fs::exists(originalWorking))
+      {
+        fs::copy(originalWorking, workingCopy, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
+      }
+      else
+      {
+        fs::create_directory(workingCopy);
+      }
+
+      if(const auto originalAux{materials.original_auxiliary()}; fs::exists(originalAux))
+      {
+        fs::copy(originalAux, materials.auxiliary(), fs::copy_options::recursive | fs::copy_options::overwrite_existing);
+      }
+
+      materialsPaths.emplace_back(workingCopy);
+    }
+
+    return materials;
+  }
+
+
   //=========================================== test_runner ===========================================//
 
   test_runner::test_runner(int argc,
@@ -980,11 +1013,7 @@ namespace sequoia::testing
             if(wt.optTest)
             {
               auto& test{*wt.optTest};
-
-              test.reset();
-              test.set_filesystem_data(proj_paths(), suiteName);
-              test.set_recovery_paths(make_active_recovery_paths(m_RecoveryMode, proj_paths()));
-              test.set_materials(set_materials(test.source_filename(), materialsPaths));
+              test.reset(suiteName, m_RecoveryMode, proj_paths(), materialsPaths);              
             }
             else
             {
@@ -1050,37 +1079,6 @@ namespace sequoia::testing
     return prune_outcome::no_time_stamp;
   }
 
-  [[nodiscard]]
-  individual_materials_paths test_runner::set_materials(const std::filesystem::path& sourceFile, std::vector<std::filesystem::path>& materialsPaths) const
-  {
-    individual_materials_paths materials{sourceFile, proj_paths()};
-    if(!fs::exists(materials.original_materials())) return {};
-
-    const auto workingCopy{materials.working()};
-    if(std::find(materialsPaths.cbegin(), materialsPaths.cend(), workingCopy) == materialsPaths.cend())
-    {
-      fs::remove_all(materials.temporary_materials());
-      fs::create_directories(materials.temporary_materials());
-
-      if(const auto originalWorking{materials.original_working()}; fs::exists(originalWorking))
-      {
-        fs::copy(originalWorking, workingCopy, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
-      }
-      else
-      {
-        fs::create_directory(workingCopy);
-      }
-
-      if(const auto originalAux{materials.original_auxiliary()}; fs::exists(originalAux))
-      {
-        fs::copy(originalAux, materials.auxiliary(), fs::copy_options::recursive | fs::copy_options::overwrite_existing);
-      }
-
-      materialsPaths.emplace_back(workingCopy);
-    }
-
-    return materials;
-  }
 
   [[nodiscard]]
   std::string test_runner::duplication_message(std::string_view familyName, std::string_view testName, const fs::path& source)
