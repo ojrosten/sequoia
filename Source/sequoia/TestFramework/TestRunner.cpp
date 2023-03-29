@@ -878,7 +878,7 @@ namespace sequoia::testing
                << "\n\n";
 
       const timer asyncTimer{};
-      std::for_each(std::execution::par, m_Suites.begin_node_weights(), m_Suites.end_node_weights(), [&s{m_Suites}, id](auto& wt){
+      std::for_each(std::execution::par, m_Suites.begin_node_weights(), m_Suites.end_node_weights(), [&s=m_Suites, id](auto& wt){
           if(wt.optTest) wt.summary = wt.optTest->execute(id);
         }
       );
