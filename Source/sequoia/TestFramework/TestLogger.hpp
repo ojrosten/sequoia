@@ -43,91 +43,6 @@ namespace sequoia::testing
     std::filesystem::path dump_file{};
   };
 
-  /*! \class
-      \brief Logs test results.
-
-      \anchor test_logger_primary
-   */
-
-  template<test_mode Mode>
-  class test_logger;
-
-  /*! \class
-      \brief Marshals the logging of checks and failures.
-
-      The sentinel class template serves several purposes.
-
-      1. This RAII class ensures robust treatment in the presence of exceptions.
-
-      2. sentinel is befriended by test_logger and effectively provides access to a limited
-      component of the the private, mutating part of the test_logger interface. The point of
-      this is that while test_logger is exposed to clients of the test framework clients
-      should use it, directly, only very sparingly. This is encouraged by the extra level
-      of indirection provided by the sentinels.
-
-      3. sentinel caters for some of the complexity of the testing framework in
-      a localized and simple manner. In particular, a given check may actually be
-      composed of many sub-checks. For standard checks, we want to count this as a
-      single 'top-level' check. For false-positive checks success is counted as a failure
-      of one or more of the sub-checks. The sentinels deal with all of this smoothly
-      in a way which clients of the framework can generally ignore.
-
-      4. sentinel may be used to help coordinate output.
-  */
-
-  template<test_mode Mode>
-  class [[nodiscard]] sentinel
-  {
-  public:
-    sentinel(test_logger<Mode>& logger, std::string_view message);
-
-    ~sentinel();
-
-    sentinel(const sentinel&)     = delete;
-    sentinel(sentinel&&) noexcept = default;
-
-    sentinel& operator=(const sentinel&)     = delete;
-    sentinel& operator=(sentinel&&) noexcept = default;
-
-    void log_performance_check();
-
-    void log_check();
-
-    void log_failure(std::string_view message);
-
-    void log_performance_failure(std::string_view message);
-
-    void log_critical_failure(std::string_view message);
-
-    void log_caught_exception_message(std::string_view message);
-
-    [[nodiscard]]
-    bool critical_failure_detected() const noexcept;
-
-    [[nodiscard]]
-    bool failure_detected() const noexcept;
-
-    [[nodiscard]]
-    bool checks_registered() const noexcept;
-  private:
-    [[nodiscard]]
-    test_logger<Mode>& get() noexcept;
-
-    [[nodiscard]]
-    const test_logger<Mode>& get() const noexcept;
-
-    test_logger<Mode>* m_pLogger;
-    std::string m_Message;
-    std::size_t
-      m_PriorFailures{},
-      m_PriorCriticalFailures{},
-      m_PriorDeepChecks{};
-  };
-  
-  extern template class sentinel<test_mode::standard>;
-  extern template class sentinel<test_mode::false_positive>;
-  extern template class sentinel<test_mode::false_negative>;
-
   struct test_results
   {
     failure_output
@@ -147,20 +62,26 @@ namespace sequoia::testing
       performance_checks{};
   };
 
-  template<test_mode Mode>
-  class test_logger
+  /*! \class 
+      \brief Helper class for safe interaction with test_logger.
+
+      \anchor sentinel_base_primary
+   */
+
+  class sentinel_base;
+
+  /*! \class
+      \brief Helper class for logging of results.
+
+      \anchor test_logger_base_primary
+   */
+
+  class test_logger_base
   {
-    friend class sentinel<Mode>;
+    friend sentinel_base;
   public:
-    test_logger() = default;
-
-    test_logger(const test_logger&)     = delete;
-    test_logger(test_logger&&) noexcept = default;
-
-    test_logger& operator=(const test_logger&)     = delete;
-    test_logger& operator=(test_logger&&) noexcept = default;
-
-    constexpr static test_mode mode{Mode};
+    test_logger_base(const test_logger_base&)            = delete;
+    test_logger_base& operator=(const test_logger_base&) = delete;
 
     [[nodiscard]]
     const test_results& results() const noexcept { return m_Results; }
@@ -183,6 +104,17 @@ namespace sequoia::testing
     {
       return m_Results.uncaught_exception_info;
     }
+
+    [[nodiscard]]
+    test_mode mode() const noexcept { return m_Mode; }
+  protected:
+
+    explicit test_logger_base(test_mode mode)
+      : m_Mode{mode}
+    {}
+
+    test_logger_base(test_logger_base&&)            noexcept = default;
+    test_logger_base& operator=(test_logger_base&&) noexcept = default;
   private:
     struct level_message
     {
@@ -196,6 +128,7 @@ namespace sequoia::testing
 
     enum class is_critical{yes, no};
 
+    test_mode m_Mode;
     test_results m_Results;
     std::vector<level_message> m_SentinelDepth;
     active_recovery_files m_Recovery{};
@@ -247,9 +180,114 @@ namespace sequoia::testing
     failure_output& add_to_output(failure_output& output, std::string_view message);
   };
 
-  extern template class test_logger<test_mode::standard>;
-  extern template class test_logger<test_mode::false_positive>;
-  extern template class test_logger<test_mode::false_negative>;
+  /*! \class
+      \brief Logs test results.
+
+      \anchor test_logger_primary
+   */
+
+  template<test_mode Mode>
+  class test_logger : public test_logger_base
+  {
+  public:
+    test_logger() : test_logger_base{Mode} {}
+
+    test_logger(const test_logger&)     = delete;
+    test_logger(test_logger&&) noexcept = default;
+
+    test_logger& operator=(const test_logger&)     = delete;
+    test_logger& operator=(test_logger&&) noexcept = default;
+
+    constexpr static test_mode mode{Mode};
+  };
+
+
+  class sentinel_base
+  {
+  public:
+    sentinel_base(const sentinel_base&)            = delete;
+    sentinel_base& operator=(const sentinel_base&) = delete;
+
+    void log_performance_check() { get().log_performance_check(); }
+
+    void log_check() { get().log_check(); }
+
+    void log_failure(std::string_view message) { get().log_failure(message); }
+
+    void log_performance_failure(std::string_view message) { get().log_performance_failure(message); }
+
+    void log_critical_failure(std::string_view message) { get().log_critical_failure(message); }
+
+    void log_caught_exception_message(std::string_view message) { get().log_caught_exception_message(message); }
+
+    [[nodiscard]]
+    bool critical_failure_detected() const noexcept { return get().results().critical_failures != m_PriorCriticalFailures; }
+
+    [[nodiscard]]
+    bool failure_detected() const noexcept { return get().results().failures != m_PriorFailures; }
+
+    [[nodiscard]]
+    bool checks_registered() const noexcept { return get().results().deep_checks != m_PriorDeepChecks; }
+  protected:
+
+    sentinel_base(test_logger_base& logger, std::string_view message);
+
+    ~sentinel_base();
+
+    sentinel_base(sentinel_base&&)            noexcept = default;
+    sentinel_base& operator=(sentinel_base&&) noexcept = default;
+  private:
+    [[nodiscard]]
+    test_logger_base& get() noexcept { return *m_pLogger; }
+
+    [[nodiscard]]
+    const test_logger_base& get() const noexcept { return *m_pLogger; }
+
+    test_logger_base* m_pLogger;
+    std::string m_Message;
+    std::size_t
+      m_PriorFailures{},
+      m_PriorCriticalFailures{},
+      m_PriorDeepChecks{};
+  };
+
+  /*! \class
+      \brief Marshals the logging of checks and failures.
+
+      The sentinel class template serves several purposes.
+
+      1. This RAII class ensures robust treatment in the presence of exceptions.
+
+      2. sentinel is befriended by test_logger_base and effectively provides access to a limited
+      component of the the private, mutating part of the test_logger interface. The point of
+      this is that while test_logger is exposed to clients of the test framework clients
+      should use it, directly, only very sparingly. This is encouraged by the extra level
+      of indirection provided by the sentinels.
+
+      3. sentinel caters for some of the complexity of the testing framework in
+      a localized and simple manner. In particular, a given check may actually be
+      composed of many sub-checks. For standard checks, we want to count this as a
+      single 'top-level' check. For false-positive checks success is counted as a failure
+      of one or more of the sub-checks. The sentinels deal with all of this smoothly
+      in a way which clients of the framework can generally ignore.
+
+      4. sentinel may be used to help coordinate output.
+  */
+
+  template<test_mode Mode>
+  class [[nodiscard]] sentinel : public sentinel_base
+  {
+  public:
+    sentinel(test_logger<Mode>& logger, std::string_view message)
+      : sentinel_base{logger, message}
+    {}
+
+    sentinel(const sentinel&)     = delete;
+    sentinel(sentinel&&) noexcept = default;
+
+    sentinel& operator=(const sentinel&)     = delete;
+    sentinel& operator=(sentinel&&) noexcept = default;
+  };
 
   /*! \brief Summaries data generated by the logger, for the purposes of reporting.
 

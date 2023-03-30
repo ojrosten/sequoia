@@ -76,10 +76,9 @@ namespace sequoia::testing
     }
   }
 
-  //================================== sentinel ==================================//
+  //================================== sentinel_base ==================================//
 
-  template<test_mode Mode>
-  sentinel<Mode>::sentinel(test_logger<Mode>& logger, std::string_view message)
+  sentinel_base::sentinel_base(test_logger_base& logger, std::string_view message)
     : m_pLogger{&logger}
     , m_Message{message}
     , m_PriorFailures{logger.results().failures}
@@ -96,8 +95,7 @@ namespace sequoia::testing
     logger.increment_depth(message);
   }
 
-  template<test_mode Mode>
-  sentinel<Mode>::~sentinel()
+  sentinel_base::~sentinel_base()
   {
     auto& logger{get()};
 
@@ -105,11 +103,13 @@ namespace sequoia::testing
     {
       if(critical_failure_detected())
       {
-        logger.end_message(test_logger<Mode>::is_critical::yes);
+        logger.end_message(test_logger_base::is_critical::yes);
       }
       else
       {
-        if(failure_detected()) logger.end_message(test_logger<Mode>::is_critical::no);
+        const auto mode{get().mode()};
+
+        if(failure_detected()) logger.end_message(test_logger_base::is_critical::no);
 
         auto fpMessageMaker{
           [&logger](){
@@ -121,15 +121,15 @@ namespace sequoia::testing
         };
 
         const bool modeSpecificFailure{
-             ((Mode == test_mode::false_positive) && !failure_detected())
-          || ((Mode != test_mode::false_positive) &&  failure_detected())
+             ((mode == test_mode::false_positive) && !failure_detected())
+          || ((mode != test_mode::false_positive) && failure_detected())
         };
 
         if(modeSpecificFailure)
         {
-          logger.log_top_level_failure((Mode == test_mode::false_positive) ? fpMessageMaker() : "");
+          logger.log_top_level_failure((mode == test_mode::false_positive) ? fpMessageMaker() : "");
         }
-        else if constexpr(Mode == test_mode::false_negative)
+        else if (mode == test_mode::false_negative)
         {
           if(!critical_failure_detected())
             logger.append_to_diagnostics_output(fpMessageMaker());
@@ -144,79 +144,9 @@ namespace sequoia::testing
     logger.decrement_depth();
   }
 
-  template<test_mode Mode>
-  void sentinel<Mode>::log_performance_check()
-  {
-    get().log_performance_check();
-  }
-
-  template<test_mode Mode>
-  void sentinel<Mode>::log_check()
-  {
-    get().log_check();
-  }
-
-  template<test_mode Mode>
-  void sentinel<Mode>::log_failure(std::string_view message)
-  {
-    get().log_failure(message);
-  }
-
-  template<test_mode Mode>
-  void sentinel<Mode>::log_performance_failure(std::string_view message)
-  {
-    get().log_performance_failure(message);
-  }
-
-  template<test_mode Mode>
-  void sentinel<Mode>::log_critical_failure(std::string_view message)
-  {
-    get().log_critical_failure(message);
-  }
-
-  template<test_mode Mode>
-  void sentinel<Mode>::log_caught_exception_message(std::string_view message)
-  {
-    get().log_caught_exception_message(message);
-  }
-
-  template<test_mode Mode>
-  [[nodiscard]]
-  bool sentinel<Mode>::critical_failure_detected() const noexcept
-  {
-    return get().results().critical_failures != m_PriorCriticalFailures;
-  }
-
-  template<test_mode Mode>
-  [[nodiscard]]
-  bool sentinel<Mode>::failure_detected() const noexcept
-  {
-    return get().results().failures != m_PriorFailures;
-  }
-
-  template<test_mode Mode>
-  [[nodiscard]]
-  bool sentinel<Mode>::checks_registered() const noexcept
-  {
-    return get().results().deep_checks != m_PriorDeepChecks;
-  }
-
-  template<test_mode Mode>
-  [[nodiscard]]
-  test_logger<Mode>& sentinel<Mode>::get() noexcept { return *m_pLogger; }
-
-  template<test_mode Mode>
-  [[nodiscard]]
-  const test_logger<Mode>& sentinel<Mode>::get() const noexcept { return *m_pLogger; }
-
-  template class sentinel<test_mode::standard>;
-  template class sentinel<test_mode::false_positive>;
-  template class sentinel<test_mode::false_negative>;
-
   //================================== test_logger ==================================//
 
-  template<test_mode Mode>
-  void test_logger<Mode>::failure_message(std::string_view message, const is_critical isCritical)
+  void test_logger_base::failure_message(std::string_view message, const is_critical isCritical)
   {
     std::string msg{};
     auto build{
@@ -252,16 +182,14 @@ namespace sequoia::testing
     end_block(output.back().message, 1_linebreaks, "");
   }
 
-  template<test_mode Mode>
-  void test_logger<Mode>::log_critical_failure(std::string_view message)
+  void test_logger_base::log_critical_failure(std::string_view message)
   {
     ++m_Results.critical_failures;
     failure_message(message, is_critical::yes);
     recored_critical_failure(m_Recovery.recovery_file, message);
   }
 
-  template<test_mode Mode>
-  void test_logger<Mode>::log_top_level_failure(std::string message)
+  void test_logger_base::log_top_level_failure(std::string message)
   {
     ++m_Results.top_level_failures;
     if(m_SentinelDepth.empty())
@@ -273,14 +201,13 @@ namespace sequoia::testing
       m_SentinelDepth.back().message.append(std::move(message));
     }
 
-    if constexpr(Mode == test_mode::false_positive)
+    if(m_Mode == test_mode::false_positive)
     {
       m_Results.failure_messages.push_back(failure_info{m_Results.top_level_checks, std::string{message}});
     }
   }
 
-  template<test_mode Mode>
-  void test_logger<Mode>::log_caught_exception_message(std::string_view message)
+  void test_logger_base::log_caught_exception_message(std::string_view message)
   {
     auto mess{std::string{top_level_message()}.append("\n").append(message)};
     end_block(mess, 2_linebreaks, indent(footer(), tab));
@@ -288,20 +215,17 @@ namespace sequoia::testing
     add_to_output(m_Results.caught_exception_messages, mess);
   }
 
-  template<test_mode Mode>
-  void test_logger<Mode>::append_to_diagnostics_output(std::string message)
+  void test_logger_base::append_to_diagnostics_output(std::string message)
   {
     m_Results.diagnostics_output.push_back(failure_info{m_Results.top_level_checks, std::move(message)});
   }
 
-  template<test_mode Mode>
-  void test_logger<Mode>::increment_depth(std::string_view message)
+  void test_logger_base::increment_depth(std::string_view message)
   {
     m_SentinelDepth.emplace_back(message);
   }
 
-  template<test_mode Mode>
-  void test_logger<Mode>::decrement_depth()
+  void test_logger_base::decrement_depth()
   {
     if(m_SentinelDepth.empty())
       throw std::logic_error{"Cannot pop from TestLogger's empty stack"};
@@ -314,23 +238,20 @@ namespace sequoia::testing
     m_SentinelDepth.pop_back();
   }
 
-  template<test_mode Mode>
-  void test_logger<Mode>::end_message(const is_critical isCritical)
+  void test_logger_base::end_message(const is_critical isCritical)
   {
     auto& output{output_channel(isCritical)};
     auto& mess{output.back().message};
     end_block(mess, 2_linebreaks, indent(footer(), tab));
   }
 
-  template<test_mode Mode>
-  failure_output& test_logger<Mode>::output_channel(const is_critical isCritical) noexcept
+  failure_output& test_logger_base::output_channel(const is_critical isCritical) noexcept
   {
-    const bool toMessages{(Mode != test_mode::false_positive) || (isCritical == is_critical::yes)};
+    const bool toMessages{(m_Mode != test_mode::false_positive) || (isCritical == is_critical::yes)};
     return toMessages ? m_Results.failure_messages : m_Results.diagnostics_output;
   }
 
-  template<test_mode Mode>
-  failure_output& test_logger<Mode>::add_to_output(failure_output& output, std::string_view message)
+  failure_output& test_logger_base::add_to_output(failure_output& output, std::string_view message)
   {
     output.push_back(failure_info{m_Results.top_level_checks, std::string{message}});
     return output;
