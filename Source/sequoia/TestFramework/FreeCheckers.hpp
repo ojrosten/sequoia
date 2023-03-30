@@ -828,7 +828,7 @@ namespace sequoia::testing
     [[nodiscard]]
     const failure_output& failure_messages() const noexcept
     {
-      return logger().failure_messages();
+      return logger().results().failure_messages;
     }
 
     void recovery(active_recovery_files files)

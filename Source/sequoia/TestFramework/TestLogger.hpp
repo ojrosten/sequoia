@@ -128,6 +128,25 @@ namespace sequoia::testing
   extern template class sentinel<test_mode::false_positive>;
   extern template class sentinel<test_mode::false_negative>;
 
+  struct test_results
+  {
+    failure_output
+      failure_messages,
+      diagnostics_output,
+      caught_exception_messages;
+
+    uncaught_exception_info uncaught_exception_info{};
+
+    std::size_t
+      failures{},
+      top_level_failures{},
+      performance_failures{},
+      critical_failures{},
+      top_level_checks{},
+      deep_checks{},
+      performance_checks{};
+  };
+
   template<test_mode Mode>
   class test_logger
   {
@@ -144,45 +163,26 @@ namespace sequoia::testing
     constexpr static test_mode mode{Mode};
 
     [[nodiscard]]
-    std::size_t failures() const noexcept;
+    const test_results& results() const noexcept { return m_Results; }
+
+    void reset_results() { m_Results = {}; }
 
     [[nodiscard]]
-    std::size_t top_level_failures() const noexcept;
+    const active_recovery_files& recovery() const noexcept { return m_Recovery; }
+
+    void recovery(active_recovery_files paths) { m_Recovery = std::move(paths); }
 
     [[nodiscard]]
-    std::size_t performance_failures() const noexcept;
+    std::string_view top_level_message() const noexcept
+    {
+      return !m_SentinelDepth.empty() ? std::string_view{m_SentinelDepth.front().message} : "";
+    }
 
     [[nodiscard]]
-    std::size_t critical_failures() const noexcept;
-
-    [[nodiscard]]
-    std::size_t top_level_checks() const noexcept;
-
-    [[nodiscard]]
-    std::size_t deep_checks() const noexcept;
-
-    [[nodiscard]]
-    std::size_t performance_checks() const noexcept;
-
-    [[nodiscard]]
-    const failure_output& failure_messages() const noexcept;
-
-    [[nodiscard]]
-    const failure_output& diagnostics_output() const noexcept;
-
-    [[nodiscard]]
-    const failure_output& caught_exceptions_output() const noexcept;
-
-    [[nodiscard]]
-    const uncaught_exception_info& exceptions_detected_by_sentinel() const;
-
-    [[nodiscard]]
-    std::string_view top_level_message() const noexcept;
-
-    [[nodiscard]]
-    const active_recovery_files& recovery() const noexcept;
-
-    void recovery(active_recovery_files paths);
+    const uncaught_exception_info& exceptions_detected_by_sentinel() const noexcept
+    {
+      return m_Results.uncaught_exception_info;
+    }
   private:
     struct level_message
     {
@@ -196,40 +196,36 @@ namespace sequoia::testing
 
     enum class is_critical{yes, no};
 
-    failure_output
-      m_FailureMessages,
-      m_DiagnosticsOutput,
-      m_CaughtExceptionMessages;
-
+    test_results m_Results;
     std::vector<level_message> m_SentinelDepth;
-
-    uncaught_exception_info m_UncaughtExceptionInfo{};
-
-    std::size_t
-      m_Failures{},
-      m_TopLevelFailures{},
-      m_PerformanceFailures{},
-      m_CriticalFailures{},
-      m_TopLevelChecks{},
-      m_Checks{},
-      m_PerformanceChecks{};
-
     active_recovery_files m_Recovery{};
 
     [[nodiscard]]
-    std::size_t depth() const noexcept;
+    std::size_t depth() const noexcept { return m_SentinelDepth.size(); }
 
-    void log_check() noexcept;
+    void log_check() noexcept { ++m_Results.deep_checks; }
 
-    void log_top_level_check() noexcept;
+    void log_top_level_check() noexcept { ++m_Results.top_level_checks; }
 
-    void log_performance_check() noexcept;
+    void log_performance_check() noexcept
+    {
+      log_check();
+      ++m_Results.performance_checks;
+    }
 
     void failure_message(std::string_view message, is_critical isCritical);
     
-    void log_failure(std::string_view message);
+    void log_failure(std::string_view message)
+    {
+      ++m_Results.failures;
+      failure_message(message, is_critical::no);
+    }
 
-    void log_performance_failure(std::string_view message);
+    void log_performance_failure(std::string_view message)
+    {
+      ++m_Results.performance_failures;
+      log_failure(message);
+    }
 
     void log_critical_failure(std::string_view message);
 

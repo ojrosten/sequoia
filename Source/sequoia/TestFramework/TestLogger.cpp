@@ -82,9 +82,9 @@ namespace sequoia::testing
   sentinel<Mode>::sentinel(test_logger<Mode>& logger, std::string_view message)
     : m_pLogger{&logger}
     , m_Message{message}
-    , m_PriorFailures{logger.failures()}
-    , m_PriorCriticalFailures{logger.critical_failures()}
-    , m_PriorDeepChecks{logger.deep_checks()}
+    , m_PriorFailures{logger.results().failures}
+    , m_PriorCriticalFailures{logger.results().critical_failures}
+    , m_PriorDeepChecks{logger.results().deep_checks}
   {
     if(!logger.depth())
     {
@@ -184,21 +184,21 @@ namespace sequoia::testing
   [[nodiscard]]
   bool sentinel<Mode>::critical_failure_detected() const noexcept
   {
-    return get().critical_failures() != m_PriorCriticalFailures;
+    return get().results().critical_failures != m_PriorCriticalFailures;
   }
 
   template<test_mode Mode>
   [[nodiscard]]
   bool sentinel<Mode>::failure_detected() const noexcept
   {
-    return get().failures() != m_PriorFailures;
+    return get().results().failures != m_PriorFailures;
   }
 
   template<test_mode Mode>
   [[nodiscard]]
   bool sentinel<Mode>::checks_registered() const noexcept
   {
-    return get().deep_checks() != m_PriorDeepChecks;
+    return get().results().deep_checks != m_PriorDeepChecks;
   }
 
   template<test_mode Mode>
@@ -214,90 +214,6 @@ namespace sequoia::testing
   template class sentinel<test_mode::false_negative>;
 
   //================================== test_logger ==================================//
-
-  //================================== public ==================================//
-  template<test_mode Mode>
-  [[nodiscard]]
-  std::size_t test_logger<Mode>::failures() const noexcept { return m_Failures; }
-
-  template<test_mode Mode>
-  [[nodiscard]]
-  std::size_t test_logger<Mode>::top_level_failures() const noexcept { return m_TopLevelFailures; }
-
-  template<test_mode Mode>
-  [[nodiscard]]
-  std::size_t test_logger<Mode>::performance_failures() const noexcept { return m_PerformanceFailures; }
-
-  template<test_mode Mode>
-  [[nodiscard]]
-  std::size_t test_logger<Mode>::critical_failures() const noexcept { return m_CriticalFailures; }
-
-  template<test_mode Mode>
-  [[nodiscard]]
-  std::size_t test_logger<Mode>::top_level_checks() const noexcept { return m_TopLevelChecks; }
-
-  template<test_mode Mode>
-  [[nodiscard]]
-  std::size_t test_logger<Mode>::deep_checks() const noexcept { return m_Checks; }
-
-  template<test_mode Mode>
-  [[nodiscard]]
-  std::size_t test_logger<Mode>::performance_checks() const noexcept { return m_PerformanceChecks; }
-
-  template<test_mode Mode>
-  [[nodiscard]]
-  const failure_output& test_logger<Mode>::failure_messages() const noexcept { return m_FailureMessages; }
-
-  template<test_mode Mode>
-  [[nodiscard]]
-  const failure_output& test_logger<Mode>::diagnostics_output() const noexcept { return m_DiagnosticsOutput; }    
-
-  template<test_mode Mode>
-  [[nodiscard]]
-  const failure_output& test_logger<Mode>::caught_exceptions_output() const noexcept { return m_CaughtExceptionMessages; }
-
-  template<test_mode Mode>
-  [[nodiscard]]
-  const uncaught_exception_info& test_logger<Mode>::exceptions_detected_by_sentinel() const
-  {
-    return m_UncaughtExceptionInfo;
-  }
-  
-  template<test_mode Mode>
-  [[nodiscard]]
-  std::string_view test_logger<Mode>::top_level_message() const noexcept
-  {
-    return !m_SentinelDepth.empty() ? std::string_view{m_SentinelDepth.front().message} : "";
-  }
-
-  template<test_mode Mode>
-  [[nodiscard]]
-  const active_recovery_files& test_logger<Mode>::recovery() const noexcept { return m_Recovery; }
-
-  template<test_mode Mode>
-  void test_logger<Mode>::recovery(active_recovery_files paths)
-  {
-    m_Recovery = std::move(paths);
-  }
-
-  //================================== private ==================================//
-
-  template<test_mode Mode>
-  [[nodiscard]]
-  std::size_t test_logger<Mode>::depth() const noexcept { return m_SentinelDepth.size(); }
-
-  template<test_mode Mode>
-  void test_logger<Mode>::log_check() noexcept { ++m_Checks; }
-
-  template<test_mode Mode>
-  void test_logger<Mode>::log_top_level_check() noexcept { ++m_TopLevelChecks; }
-
-  template<test_mode Mode>
-  void test_logger<Mode>::log_performance_check() noexcept
-  {
-    log_check();
-    ++m_PerformanceChecks;
-  }
 
   template<test_mode Mode>
   void test_logger<Mode>::failure_message(std::string_view message, const is_critical isCritical)
@@ -337,23 +253,9 @@ namespace sequoia::testing
   }
 
   template<test_mode Mode>
-  void test_logger<Mode>::log_failure(std::string_view message)
-  {
-    ++m_Failures;
-    failure_message(message, is_critical::no);
-  }
-
-  template<test_mode Mode>
-  void test_logger<Mode>::log_performance_failure(std::string_view message)
-  {
-    ++m_PerformanceFailures;
-    log_failure(message);
-  }
-
-  template<test_mode Mode>
   void test_logger<Mode>::log_critical_failure(std::string_view message)
   {
-    ++m_CriticalFailures;
+    ++m_Results.critical_failures;
     failure_message(message, is_critical::yes);
     recored_critical_failure(m_Recovery.recovery_file, message);
   }
@@ -361,7 +263,7 @@ namespace sequoia::testing
   template<test_mode Mode>
   void test_logger<Mode>::log_top_level_failure(std::string message)
   {
-    ++m_TopLevelFailures;
+    ++m_Results.top_level_failures;
     if(m_SentinelDepth.empty())
     {
       m_SentinelDepth.push_back(level_message{message});
@@ -373,7 +275,7 @@ namespace sequoia::testing
 
     if constexpr(Mode == test_mode::false_positive)
     {
-      m_FailureMessages.push_back(failure_info{m_TopLevelChecks, std::string{message}});
+      m_Results.failure_messages.push_back(failure_info{m_Results.top_level_checks, std::string{message}});
     }
   }
 
@@ -383,13 +285,13 @@ namespace sequoia::testing
     auto mess{std::string{top_level_message()}.append("\n").append(message)};
     end_block(mess, 2_linebreaks, indent(footer(), tab));
 
-    add_to_output(m_CaughtExceptionMessages, mess);
+    add_to_output(m_Results.caught_exception_messages, mess);
   }
 
   template<test_mode Mode>
   void test_logger<Mode>::append_to_diagnostics_output(std::string message)
   {
-    m_DiagnosticsOutput.push_back(failure_info{m_TopLevelChecks, std::move(message)});
+    m_Results.diagnostics_output.push_back(failure_info{m_Results.top_level_checks, std::move(message)});
   }
 
   template<test_mode Mode>
@@ -406,7 +308,7 @@ namespace sequoia::testing
 
     if(depth() == 1)
     {
-      m_UncaughtExceptionInfo = {std::uncaught_exceptions(), std::move(m_SentinelDepth.front().message)}; 
+      m_Results.uncaught_exception_info = {std::uncaught_exceptions(), std::move(m_SentinelDepth.front().message)}; 
     }
       
     m_SentinelDepth.pop_back();
@@ -424,13 +326,13 @@ namespace sequoia::testing
   failure_output& test_logger<Mode>::output_channel(const is_critical isCritical) noexcept
   {
     const bool toMessages{(Mode != test_mode::false_positive) || (isCritical == is_critical::yes)};
-    return toMessages ? m_FailureMessages : m_DiagnosticsOutput;
+    return toMessages ? m_Results.failure_messages : m_Results.diagnostics_output;
   }
 
   template<test_mode Mode>
   failure_output& test_logger<Mode>::add_to_output(failure_output& output, std::string_view message)
   {
-    output.push_back(failure_info{m_TopLevelChecks, std::string{message}});
+    output.push_back(failure_info{m_Results.top_level_checks, std::string{message}});
     return output;
   }
 
@@ -445,33 +347,33 @@ namespace sequoia::testing
   template<test_mode Mode>
   log_summary::log_summary(std::string_view name, const test_logger<Mode>& logger, const duration delta)
     : m_Name{name}
-    , m_FailureMessages{to_reduced_string(logger.failure_messages())}
-    , m_DiagnosticsOutput{to_reduced_string(logger.diagnostics_output())}
-    , m_CaughtExceptionMessages{to_reduced_string(logger.caught_exceptions_output())}
-    , m_CriticalFailures{logger.critical_failures()}
+    , m_FailureMessages{to_reduced_string(logger.results().failure_messages)}
+    , m_DiagnosticsOutput{to_reduced_string(logger.results().diagnostics_output)}
+    , m_CaughtExceptionMessages{to_reduced_string(logger.results().caught_exception_messages)}
+    , m_CriticalFailures{logger.results().critical_failures}
     , m_Duration{delta}
   {
     switch(Mode)
     {
     case test_mode::standard:
-      m_StandardTopLevelFailures    = logger.top_level_failures() - logger.performance_failures();
-      m_StandardDeepFailures        = logger.failures() - logger.performance_failures();
-      m_StandardPerformanceFailures = logger.performance_failures();
-      m_StandardTopLevelChecks      = logger.top_level_checks() - logger.performance_checks();
-      m_StandardDeepChecks          = logger.deep_checks() - logger.performance_checks();
-      m_StandardPerformanceChecks   = logger.performance_checks();
+      m_StandardTopLevelFailures    = logger.results().top_level_failures - logger.results().performance_failures;
+      m_StandardDeepFailures        = logger.results().failures - logger.results().performance_failures;
+      m_StandardPerformanceFailures = logger.results().performance_failures;
+      m_StandardTopLevelChecks      = logger.results().top_level_checks - logger.results().performance_checks;
+      m_StandardDeepChecks          = logger.results().deep_checks - logger.results().performance_checks;
+      m_StandardPerformanceChecks   = logger.results().performance_checks;
       break;
     case test_mode::false_negative:
-      m_FalseNegativeFailures            = logger.top_level_failures() - logger.performance_failures();
-      m_FalseNegativePerformanceFailures = logger.performance_failures();
-      m_FalseNegativeChecks              = logger.top_level_checks() - logger.performance_checks();
-      m_FalseNegativePerformanceChecks   = logger.performance_checks();
+      m_FalseNegativeFailures            = logger.results().top_level_failures - logger.results().performance_failures;
+      m_FalseNegativePerformanceFailures = logger.results().performance_failures;
+      m_FalseNegativeChecks              = logger.results().top_level_checks - logger.results().performance_checks;
+      m_FalseNegativePerformanceChecks   = logger.results().performance_checks;
       break;
     case test_mode::false_positive:
-      m_FalsePositivePerformanceFailures = logger.performance_checks() - logger.performance_failures();
-      m_FalsePositiveFailures            = logger.top_level_failures() - m_FalsePositivePerformanceFailures;
-      m_FalsePositiveChecks              = logger.top_level_checks() - logger.performance_checks();
-      m_FalsePositivePerformanceChecks   = logger.performance_checks();
+      m_FalsePositivePerformanceFailures = logger.results().performance_checks - logger.results().performance_failures;
+      m_FalsePositiveFailures            = logger.results().top_level_failures - m_FalsePositivePerformanceFailures;
+      m_FalsePositiveChecks              = logger.results().top_level_checks - logger.results().performance_checks;
+      m_FalsePositivePerformanceChecks   = logger.results().performance_checks;
       break;
     }
   }
