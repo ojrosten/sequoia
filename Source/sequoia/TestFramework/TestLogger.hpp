@@ -50,7 +50,7 @@ namespace sequoia::testing
       diagnostics_output,
       caught_exception_messages;
 
-    uncaught_exception_info uncaught_exception_info{};
+    uncaught_exception_info exception_info{};
 
     std::size_t
       failures{},
@@ -102,7 +102,7 @@ namespace sequoia::testing
     [[nodiscard]]
     const uncaught_exception_info& exceptions_detected_by_sentinel() const noexcept
     {
-      return m_Results.uncaught_exception_info;
+      return m_Results.exception_info;
     }
 
     [[nodiscard]]
