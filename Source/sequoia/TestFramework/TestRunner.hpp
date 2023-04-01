@@ -12,7 +12,7 @@
 */
 
 #include "sequoia/TestFramework/DependencyAnalyzer.hpp"
-#include "sequoia/TestFramework/FreeTestCore.hpp"
+#include "sequoia/TestFramework/PerformanceTestCore.hpp"
 
 #include "sequoia/Core/Logic/Bitmask.hpp"
 #include "sequoia/Core/Object/Suite.hpp"
@@ -90,7 +90,10 @@ namespace sequoia::testing
       requires (!std::is_same_v<Test, test_vessel> && concrete_test<Test>)
     test_vessel(Test&& t)
       : m_pTest{std::make_unique<essence<Test>>(std::forward<Test>(t))}
-    {}
+    {
+      if constexpr(is_performance_test_v<Test>)
+        m_Parallelizable = parallelizable_candidate::no;
+    }
 
     test_vessel(const test_vessel&)     = delete;
     test_vessel(test_vessel&&) noexcept = default;
@@ -120,6 +123,12 @@ namespace sequoia::testing
     std::filesystem::path predictive_materials() const
     {
       return m_pTest->predictive_materials();
+    }
+
+    [[nodiscard]]
+    bool parallelizable() const noexcept
+    {
+      return m_Parallelizable == parallelizable_candidate::yes;
     }
 
     [[nodiscard]]
@@ -192,7 +201,10 @@ namespace sequoia::testing
       Test m_Test;
     };
 
+    enum class parallelizable_candidate { no, yes };
+
     std::unique_ptr<soul> m_pTest{};
+    parallelizable_candidate m_Parallelizable{parallelizable_candidate::yes};
   };
 
   using time_type = std::filesystem::file_time_type;

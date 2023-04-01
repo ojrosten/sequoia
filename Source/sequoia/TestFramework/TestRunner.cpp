@@ -880,19 +880,26 @@ namespace sequoia::testing
           auto& lhs{s.cbegin_node_weights()[i]};
           auto& rhs{s.cbegin_node_weights()[j]};
 
+          if(!lhs.optTest && !rhs.optTest) return i < j;
+
           if(!lhs.optTest && rhs.optTest) return true;
           if(lhs.optTest && !rhs.optTest) return false;
+
+          if(!lhs.optTest->parallelizable() && rhs.optTest->parallelizable()) return true;
+          if(lhs.optTest->parallelizable() && !rhs.optTest->parallelizable()) return false;
 
           return i < j;
         });
 
       auto first{std::find_if(m_Suites.begin_node_weights(), m_Suites.end_node_weights(), [](const auto& wt) -> bool { return wt.optTest != std::nullopt; })};
+      auto next{std::find_if(first, m_Suites.end_node_weights(), [](const auto& wt) -> bool { return wt.optTest->parallelizable(); })};
+
+      auto executor{[&s{m_Suites}, id](auto& wt){ wt.summary = wt.optTest->execute(id); }};
 
       const timer asyncTimer{};
-      std::for_each(std::execution::par, first, m_Suites.end_node_weights(), [&s{m_Suites}, id](auto& wt){
-        wt.summary = wt.optTest->execute(id);
-        }
-      );
+      std::for_each(first, next, executor);
+
+      std::for_each(std::execution::par, next, m_Suites.end_node_weights(), executor);
 
       asyncDuration = asyncTimer.time_elapsed();
     }
