@@ -781,6 +781,8 @@ namespace sequoia::testing
     {
       return log_summary{prefix, logger(), delta};
     }
+
+    void reset_results() noexcept { logger().reset_results(); }
   protected:
     checker(checker&& other) noexcept
       : logger_type{static_cast<logger_type&&>(other)}

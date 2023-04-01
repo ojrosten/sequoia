@@ -86,7 +86,7 @@ namespace sequoia::testing
     [[nodiscard]]
     const test_results& results() const noexcept { return m_Results; }
 
-    void reset_results() { m_Results = {}; }
+    void reset_results() noexcept { m_Results = {}; }
 
     [[nodiscard]]
     const active_recovery_files& recovery() const noexcept { return m_Recovery; }

@@ -177,6 +177,8 @@ namespace sequoia::testing
     {
       Checker::recovery(std::move(files));
     }
+
+    using Checker::reset_results;
   protected:
     using duration = std::chrono::steady_clock::duration;
 
@@ -238,8 +240,9 @@ namespace sequoia::testing
           { test.execute(std::nullopt) } -> std::same_as<log_summary>;
           { test.source_filename() }     -> std::convertible_to<std::filesystem::path>;
           { test.name() }                -> std::convertible_to<std::string>;
+          { test.reset_results() };
         }
-    && std::constructible_from<std::string> && !std::is_abstract_v<T> && std::movable<T>;
+    && !std::is_abstract_v<T> && std::movable<T>;
 
   template<test_mode Mode>
   using basic_free_test = basic_test<checker<Mode>>;

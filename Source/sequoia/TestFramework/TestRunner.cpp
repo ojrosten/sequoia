@@ -324,7 +324,6 @@ namespace sequoia::testing
     return paths;
   }
 
-  [[nodiscard]]
   individual_materials_paths set_materials(const std::filesystem::path& sourceFile, const project_paths& projPaths, std::vector<std::filesystem::path>& materialsPaths)
   {
     individual_materials_paths materials{sourceFile, projPaths};
@@ -1012,8 +1011,7 @@ namespace sequoia::testing
           [&,this](auto& wt){
             if(wt.optTest)
             {
-              auto& test{*wt.optTest};
-              test.reset(suiteName, m_RecoveryMode, proj_paths(), materialsPaths);              
+              wt.optTest->reset(proj_paths(), materialsPaths);
             }
             else
             {

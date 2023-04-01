@@ -81,8 +81,6 @@ namespace sequoia::testing
   [[nodiscard]]
   active_recovery_files make_active_recovery_paths(recovery_mode mode, const project_paths& projPaths);
 
-
-  [[nodiscard]]
   individual_materials_paths set_materials(const std::filesystem::path& sourceFile, const project_paths& projPaths, std::vector<std::filesystem::path>& materialsPaths);
 
   class test_vessel
@@ -130,9 +128,9 @@ namespace sequoia::testing
       return m_pTest->execute(index);
     }
 
-    void reset(std::string_view suiteName, recovery_mode recoveryMode, const project_paths& projPaths, std::vector<std::filesystem::path>& materialsPaths)
+    void reset(const project_paths& projPaths, std::vector<std::filesystem::path>& materialsPaths)
     {
-      m_pTest->reset(suiteName, recoveryMode, projPaths, materialsPaths);
+      m_pTest->reset(projPaths, materialsPaths);
     }
   private:
     struct soul
@@ -146,7 +144,7 @@ namespace sequoia::testing
 
       virtual log_summary execute(std::optional<std::size_t> index) = 0;
 
-      virtual void reset(std::string_view suiteName, recovery_mode recoveryMode, const project_paths& projPaths, std::vector<std::filesystem::path>& materialsPaths) = 0;
+      virtual void reset(const project_paths& projPaths, std::vector<std::filesystem::path>& materialsPaths) = 0;
     };
 
     template<concrete_test Test>
@@ -185,12 +183,10 @@ namespace sequoia::testing
         return m_Test.execute(index);
       }
 
-      void reset(std::string_view suiteName, recovery_mode recoveryMode, const project_paths& projPaths, std::vector<std::filesystem::path>& materialsPaths)
+      void reset(const project_paths& projPaths, std::vector<std::filesystem::path>& materialsPaths)
       {
-        m_Test = Test{m_Test.name()};
-        m_Test.set_filesystem_data(projPaths, suiteName);
-        m_Test.set_recovery_paths(make_active_recovery_paths(recoveryMode, projPaths));
-        m_Test.set_materials(set_materials(m_Test.source_filename(), projPaths, materialsPaths));
+        m_Test.reset_results();
+        set_materials(m_Test.source_filename(), projPaths, materialsPaths);
       }
 
       Test m_Test;
