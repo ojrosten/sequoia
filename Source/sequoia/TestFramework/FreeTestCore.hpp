@@ -160,22 +160,14 @@ namespace sequoia::testing
       return testing::report_line(file, line, message, m_TestRepo.repo());
     }
 
-    void set_filesystem_data(const project_paths& projPaths, std::string_view familyName)
+    void initialize(std::string_view suiteName, const project_paths& projPaths, individual_materials_paths materials, active_recovery_files files)
     {
       m_TestRepo    = projPaths.tests();
-      m_Diagnostics = {project_root(), familyName, source_file(), to_tag(mode)};
+      m_Diagnostics = {project_root(), suiteName, source_file(), to_tag(mode)};
+      m_Materials   = std::move(materials);
+      Checker::recovery(std::move(files));
 
       std::filesystem::create_directories(m_Diagnostics.diagnostics_file().parent_path());
-    }
-
-    void set_materials(individual_materials_paths materials)
-    {
-      m_Materials = std::move(materials);
-    }
-
-    void set_recovery_paths(active_recovery_files files)
-    {
-      Checker::recovery(std::move(files));
     }
 
     using Checker::reset_results;

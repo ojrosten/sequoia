@@ -316,14 +316,6 @@ namespace sequoia::testing
     [[nodiscard]]
     bool concurrent_execution() const noexcept { return m_ConcurrencyMode != concurrency_mode::serial; }
 
-    template<concrete_test Test>
-    void init(std::string_view suiteName, Test& test, std::vector<std::filesystem::path>& materialsPaths) const
-    {
-      test.set_filesystem_data(proj_paths(), suiteName);
-      test.set_recovery_paths(make_active_recovery_paths(m_RecoveryMode, proj_paths()));
-      test.set_materials(set_materials(test.source_filename(), proj_paths(), materialsPaths));
-    }
-
     void reset_tests();
 
     void run_tests(std::optional<std::size_t> id);
@@ -361,7 +353,11 @@ namespace sequoia::testing
                    overloaded{
                      [] <class... Ts> (const suite<Ts...>&s) -> suite_node { return {.summary{log_summary{s.name}}}; },
                      [this, name, &materialsPaths]<concrete_test T>(T&& test) -> suite_node {
-                       init(name, test, materialsPaths);
+                       test.initialize(name,
+                                       proj_paths(),
+                                       set_materials(test.source_filename(), proj_paths(), materialsPaths),
+                                       make_active_recovery_paths(m_RecoveryMode, proj_paths()));
+
                        return {.summary{log_summary{test.name()}}, .optTest{std::move(test)}};
                      }
                    },
