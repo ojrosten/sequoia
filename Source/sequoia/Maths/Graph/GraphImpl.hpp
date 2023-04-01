@@ -238,7 +238,13 @@ namespace sequoia
       template<class Compare>
       constexpr void sort_nodes(Compare c)
       {
-        sequoia::sort(begin(), end(), c);
+        sort_nodes(edge_index_type{}, Connectivity::order(), std::move(c));
+      }
+
+      template<class Compare>
+      constexpr void sort_nodes(const edge_index_type first, const edge_index_type last, Compare c)
+      {
+        sequoia::sort(graph_iterator{*this, first}, graph_iterator{*this, last}, std::move(c));
       }
 
       //===============================equality (not isomorphism) operators================================//
@@ -588,6 +594,8 @@ namespace sequoia
 
       friend insertion_sentinel;
 
+      using graph_iterator = graph_impl::graph_iterator<Connectivity, Nodes>;
+
       constexpr static bool emptyNodes{std::is_empty_v<typename Nodes::weight_type>};
 
       constexpr graph_primitive(homo_init_type, edges_initializer edges, std::initializer_list<node_weight_type> nodeWeights)
@@ -648,13 +656,13 @@ namespace sequoia
       }
 
       [[nodiscard]]
-      graph_impl::graph_iterator<Connectivity, Nodes> begin()
+      graph_iterator begin()
       {
         return {*this, edge_index_type{}};
       }
 
       [[nodiscard]]
-      graph_impl::graph_iterator<Connectivity, Nodes> end()
+      graph_iterator end()
       {
         return {*this, Connectivity::order()};
       }
