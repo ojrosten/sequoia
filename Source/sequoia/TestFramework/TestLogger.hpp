@@ -303,8 +303,7 @@ namespace sequoia::testing
 
     explicit log_summary(std::string_view name);
 
-    template<test_mode Mode>
-    log_summary(std::string_view name, const test_logger<Mode>& logger, const duration delta);
+    log_summary(std::string_view name, const test_logger_base& logger, const duration delta);
 
     void clear() noexcept;
 

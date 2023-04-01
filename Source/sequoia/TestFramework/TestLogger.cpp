@@ -265,8 +265,7 @@ namespace sequoia::testing
 
   log_summary::log_summary(std::string_view name) : m_Name{name} {}
 
-  template<test_mode Mode>
-  log_summary::log_summary(std::string_view name, const test_logger<Mode>& logger, const duration delta)
+  log_summary::log_summary(std::string_view name, const test_logger_base& logger, const duration delta)
     : m_Name{name}
     , m_FailureMessages{to_reduced_string(logger.results().failure_messages)}
     , m_DiagnosticsOutput{to_reduced_string(logger.results().diagnostics_output)}
@@ -274,7 +273,7 @@ namespace sequoia::testing
     , m_CriticalFailures{logger.results().critical_failures}
     , m_Duration{delta}
   {
-    switch(Mode)
+    switch(logger.mode())
     {
     case test_mode::standard:
       m_StandardTopLevelFailures    = logger.results().top_level_failures - logger.results().performance_failures;
@@ -301,8 +300,7 @@ namespace sequoia::testing
   
   void log_summary::clear() noexcept
   {
-    log_summary clean{""};
-    std::swap(*this, clean);
+    *this = log_summary{""};
   }
 
   [[nodiscard]]
@@ -355,8 +353,4 @@ namespace sequoia::testing
     log_summary s{lhs};
     return s += rhs;
   }
-
-  template log_summary::log_summary(std::string_view, const test_logger<test_mode::standard>&, const duration);
-  template log_summary::log_summary(std::string_view, const test_logger<test_mode::false_positive>&, const duration);
-  template log_summary::log_summary(std::string_view, const test_logger<test_mode::false_negative>&, const duration);
 }
