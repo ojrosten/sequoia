@@ -22,14 +22,12 @@ FUNCTION(sequoia_init)
 ENDFUNCTION()
 
 FUNCTION(sequoia_link_libraries target)
-    target_link_libraries(${target} PUBLIC TestFramework)
-
     if(MSVC)
-        target_link_libraries(${target} PRIVATE winmm)
+        target_link_libraries(${target} PUBLIC winmm)
         set_target_properties(${target} PROPERTIES LINK_FLAGS "/INCREMENTAL:NO")
     else()
-        target_link_libraries(${target} PRIVATE Threads::Threads)
-        target_link_libraries(${target} PRIVATE TBB::tbb)
+        target_link_libraries(${target} PUBLIC Threads::Threads)
+        target_link_libraries(${target} PUBLIC TBB::tbb)
     endif()
 ENDFUNCTION()
 
@@ -46,8 +44,7 @@ FUNCTION(sequoia_finalize target headerDirForIDE)
 	sequoia_compile_features(${target})
 
     add_subdirectory(${CMAKE_CURRENT_FUNCTION_LIST_DIR}/../Source TestFramework)
-
-    sequoia_link_libraries(${target})
+    target_link_libraries(${target} PUBLIC TestFramework)
 	
 	if (MSVC)
 		set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${target})
@@ -65,6 +62,7 @@ ENDFUNCTION()
 
 FUNCTION(sequoia_finalize_library target)
 	sequoia_compile_features(${target})
+    sequoia_link_libraries(${target})
 
 	set_headers_for_ide(${target} ${CMAKE_CURRENT_LIST_DIR})
 ENDFUNCTION()
