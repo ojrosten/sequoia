@@ -37,10 +37,6 @@ namespace sequoia::testing
 
     void test_serial_verbose_output();
 
-    void test_parallel_acceleration();
-
-    void test_serial_execution();
-
     void test_prune_basic_output();
 
     void test_instability_analysis();

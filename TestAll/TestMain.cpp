@@ -26,6 +26,7 @@ int main(int argc, char** argv)
       "Test Runner",
       test_runner_false_positive_test{"False Positive Diagnostics"},
       test_runner_test{"Functionality Test"},
+      test_runner_performance_test{"Test Runner Performance Test"},
       test_runner_test_creation{"Test Creation"},
       test_runner_project_creation{"Project Creation"},
       test_runner_end_to_end_test{"End to End Test"}

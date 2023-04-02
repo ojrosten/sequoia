@@ -20,29 +20,6 @@ namespace sequoia::testing
 
   namespace
   {
-    double get_timing(const std::filesystem::path& file)
-    {
-      if(const auto optContents{read_to_string(file)})
-      {
-        const auto& contents{optContents.value()};
-        constexpr std::string_view pattern{"Execution Time:"};
-        if(auto pos{contents.find(pattern)}; pos != std::string::npos)
-        {
-          auto start{pos + pattern.size() + 1};
-          if(auto end{contents.find("ms]", start)}; end > start)
-          {
-            auto timing{contents.substr(start, end-start)};
-            double d{};
-            std::from_chars(timing.data(), std::next(timing.data(), end - start), d);
-
-            return d;
-          }
-        }
-      }
-
-      throw std::runtime_error{"Unable to extract timing from: " + file.generic_string()};
-    }
-
     struct foo
     {
       int x{};
@@ -65,8 +42,7 @@ namespace sequoia::testing
       }
     };
 
-    template<std::size_t I>
-    class slow_test final : public free_test
+    class passing_test final : public free_test
     {
     public:
       using free_test::free_test;
@@ -79,9 +55,7 @@ namespace sequoia::testing
     private:
       void run_tests() final
       {
-        using namespace std::chrono_literals;
-        std::this_thread::sleep_for(10ms);
-        check(equality, "Integer equality", I, I);
+        check(equality, "Integer equality", 42, 42);
       }
     };
 
@@ -293,24 +267,6 @@ namespace sequoia::testing
 
       return runner;
     }
-
-    test_runner make_slow_family(commandline_arguments args, std::stringstream& outputStream)
-    {
-      test_runner runner{args.size(),
-                         args.get(),
-                         "Oliver J. Rosten",
-                         {"TestSandbox/TestSandbox.cpp", {}, "TestShared/SharedIncludes.hpp"},
-                         "  ",
-                         outputStream};
-
-      runner.add_test_family(
-        "Slow Family",
-        slow_test<0>{"Slow test 0"},
-        slow_test<1>{"Slow test 1"}
-      );
-
-      return runner;
-    }
   }
 
   template<>
@@ -336,8 +292,6 @@ namespace sequoia::testing
     test_basic_output();
     test_verbose_output();
     test_serial_verbose_output();
-    test_parallel_acceleration();
-    test_serial_execution();
     test_filtered_suites();
     test_prune_basic_output();
     test_instability_analysis();
@@ -610,27 +564,6 @@ namespace sequoia::testing
     check_output(LINE("Basic Serial Verbose Output"), "BasicSerialVerboseOutput", outputStream);
   }
 
-  void test_runner_test::test_parallel_acceleration()
-  {
-    std::stringstream outputStream{};
-    auto runner{make_slow_family({(fake_project() / "build").generic_string()}, outputStream)};
-    runner.execute();
-
-    auto outputFile{check_output(LINE("Parallel Acceleration Output"), "ParallelAccelerationOutput", outputStream)};
-    check(within_tolerance{2.0}, LINE(""), get_timing(outputFile), 10.0);
-  }
-
-  void test_runner_test::test_serial_execution()
-  {
-    std::stringstream outputStream{};
-    auto runner{make_slow_family({(fake_project() / "build").generic_string(), "--async-depth", "null"}, outputStream)};
-    runner.execute();
-
-    auto outputFile{check_output(LINE("Serial Output"), "Serial Output", outputStream)};
-    check(within_tolerance{3.0}, LINE(""), get_timing(outputFile), 20.0);
-  }
-
-
   void test_runner_test::test_filtered_suites()
   {
     std::stringstream outputStream{};
@@ -644,9 +577,8 @@ namespace sequoia::testing
                        outputStream};
 
     runner.add_test_family(
-      "Slow Family",
-      slow_test<0>{"Slow test 0"},
-      slow_test<1>{"Slow test 1"}
+      "Passing Family",
+      passing_test{"Free Test"}
     );
 
     runner.add_test_family(
