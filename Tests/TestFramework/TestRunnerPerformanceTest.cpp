@@ -59,7 +59,7 @@ namespace sequoia::testing
       void run_tests() final
       {
         using namespace std::chrono_literals;
-        std::this_thread::sleep_for(10ms);
+        std::this_thread::sleep_for(25ms);
         check(equality, "Integer equality", I, I);
       }
     };
@@ -76,7 +76,13 @@ namespace sequoia::testing
       runner.add_test_family(
         "Slow Family",
         slow_test<0>{"Slow test 0"},
-        slow_test<1>{"Slow test 1"}
+        slow_test<1>{"Slow test 1"},
+        slow_test<2>{"Slow test 2"},
+        slow_test<3>{"Slow test 3"},
+        slow_test<0>{"Slow test 4"},
+        slow_test<1>{"Slow test 5"},
+        slow_test<2>{"Slow test 6"},
+        slow_test<3>{"Slow test 7"}
       );
 
       return runner;
@@ -132,7 +138,7 @@ namespace sequoia::testing
     runner.execute();
 
     auto outputFile{check_output(LINE("Parallel Acceleration Output"), "ParallelAccelerationOutput", outputStream)};
-    check(within_tolerance{2.0}, LINE(""), get_timing(outputFile), 10.0);
+    check(within_tolerance{25.0}, LINE(""), get_timing(outputFile), 50.0);
   }
 
   void test_runner_performance_test::test_serial_execution()
@@ -142,6 +148,6 @@ namespace sequoia::testing
     runner.execute();
 
     auto outputFile{check_output(LINE("Serial Output"), "Serial Output", outputStream)};
-    check(within_tolerance{3.0}, LINE(""), get_timing(outputFile), 20.0);
+    check(within_tolerance{30.0}, LINE(""), get_timing(outputFile), 200.0);
   }
 }
