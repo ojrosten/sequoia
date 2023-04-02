@@ -40,7 +40,4 @@ add_library(TestFramework STATIC ${SourceList})
 
 target_include_directories(TestFramework PUBLIC .)
 
-#target_link_libraries(TestFramework PRIVATE Threads::Threads)
-#target_link_libraries(TestFramework PRIVATE TBB::tbb)
-
 sequoia_finalize_library(TestFramework)
