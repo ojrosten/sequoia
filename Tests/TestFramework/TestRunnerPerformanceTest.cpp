@@ -12,6 +12,7 @@
 
 #include "sequoia/TestFramework/TestRunner.hpp"
 
+#include <charconv>
 #include <fstream>
 
 namespace sequoia::testing

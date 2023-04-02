@@ -11,7 +11,6 @@
 #include "TestRunnerDiagnosticsUtilities.hpp"
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
 
-#include <charconv>
 #include <fstream>
 
 namespace sequoia::testing
