@@ -32,9 +32,10 @@ init | i | copyright owner, path ending with project name, code indent
   --no-ide
 update-materials | u |
 locate-instabilities | locate | number of repetitions >= 2
-  --sandbox | -s |
+  --sandbox
   --runner-id private option, best avoided
 recover
 dump
---async-depth | -a | depth [null,family,unit]
+--serial
+--thread-pool Number of threads
 --verbose | -v |

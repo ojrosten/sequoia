@@ -3,11 +3,10 @@
 Running tests...
 
 Foo:
-[Execution Time: 4.5us]
 
 -----------Grand Totals-----------
-[Total Run Time: 5.89ms]
-[Execution Time: 4.5us]
+[Total Run Time: 3.98ms]
+[Execution Time: 54us]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

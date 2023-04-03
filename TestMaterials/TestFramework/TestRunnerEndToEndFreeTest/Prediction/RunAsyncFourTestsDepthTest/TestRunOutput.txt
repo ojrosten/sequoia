@@ -1,17 +1,14 @@
 
 Running tests...
 
-
-	--Using asynchronous execution, level: Unit
-
 Maybe:
 Probability:
 Foo:
 House:
 
 -----------Grand Totals-----------
-[Total Run Time: 11.5ms]
-[Execution Time: 237us]
+[Total Run Time: 10.4ms]
+[Execution Time: 223us]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

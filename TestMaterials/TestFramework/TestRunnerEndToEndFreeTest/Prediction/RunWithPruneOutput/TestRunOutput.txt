@@ -1,17 +1,16 @@
 
 Analyzing dependencies...
-[25.5ms]
+[24.7ms]
 
 
 Running tests...
 
 Foo:
-[Execution Time: 12.9ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 37]
 
 -----------Grand Totals-----------
-[Total Run Time: 17.7ms]
-[Execution Time: 12.9ms]
+[Total Run Time: 17.9ms]
+[Execution Time: 12.4ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 37]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

@@ -1,10 +1,10 @@
 
-Running tests...
+Running tests, synchronously...
 
 Bar:
-[Execution Time: 6.03ms]
+[Execution Time: 2.97ms]
 	Free Test
-	[Execution Time: 6.03ms]
+	[Execution Time: 2.97ms]
 		Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 1]
 
 ******  Critical Failures:  1  ******
@@ -22,9 +22,9 @@ Bar:
 	=======================================
 
 Foo:
-[Execution Time: 6.57ms]
+[Execution Time: 2.87ms]
 	Unit Test
-	[Execution Time: 6.57ms]
+	[Execution Time: 2.87ms]
 		Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 0]
 
 ******  Critical Failures:  1  ******
@@ -43,8 +43,8 @@ Foo:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 41.4ms]
-[Execution Time: 12.6ms]
+[Total Run Time: 13.4ms]
+[Execution Time: 5.84ms]
 	Standard Top Level Checks:                 4;  Failures:  0  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

@@ -47,9 +47,8 @@ namespace sequoia::testing
 {
   enum class concurrency_mode {
     serial,    /// serial execution
-    dynamic,   /// determined at runtime
-    family,    /// families of tests are executed concurrently
-    unit,      /// tests are executed concurrently, independently of their families
+    dynamic,   /// determined implicitly by the stl
+    fixed      /// fixed-size thread pool
   };
 
   [[nodiscard]]
@@ -315,11 +314,10 @@ namespace sequoia::testing
     instability_mode m_InstabilityMode{instability_mode::none};
 
     std::size_t m_NumReps{1},
-                m_RunnerID{};
+                m_RunnerID{},
+                m_PoolSize{};
 
     void process_args(int argc, char** argv);
-
-    void finalize_concurrency_mode();
 
     void check_argument_consistency();
 

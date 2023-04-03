@@ -1,8 +1,8 @@
 
-Running tests...
+Running tests, synchronously...
 
 Family:
-[Execution Time: 9.12ms]
+[Execution Time: 16.4ms]
 	Standard Top Level Checks:                 5;  Failures:  1  [Deep checks: 5]
 
 	Always fails
@@ -13,8 +13,8 @@ Family:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 22ms]
-[Execution Time: 9.12ms]
+[Total Run Time: 27ms]
+[Execution Time: 16.4ms]
 	Standard Top Level Checks:                 5;  Failures:  1  [Deep checks: 5]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -22,10 +22,10 @@ Family:
 	False Positive Checks:                     0;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0
 
-Running tests...
+Running tests, synchronously...
 
 Family:
-[Execution Time: 8.83ms]
+[Execution Time: 7.58ms]
 	Standard Top Level Checks:                 5;  Failures:  3  [Deep checks: 5]
 
 	Always fails
@@ -50,8 +50,8 @@ Family:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 19.7ms]
-[Execution Time: 8.83ms]
+[Total Run Time: 18.3ms]
+[Execution Time: 7.58ms]
 	Standard Top Level Checks:                 5;  Failures:  3  [Deep checks: 5]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -59,10 +59,10 @@ Family:
 	False Positive Checks:                     0;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0
 
-Running tests...
+Running tests, synchronously...
 
 Family:
-[Execution Time: 7.65ms]
+[Execution Time: 8.01ms]
 	Standard Top Level Checks:                 5;  Failures:  2  [Deep checks: 5]
 
 	Always fails
@@ -79,8 +79,8 @@ Family:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 18.9ms]
-[Execution Time: 7.65ms]
+[Total Run Time: 19.5ms]
+[Execution Time: 8.01ms]
 	Standard Top Level Checks:                 5;  Failures:  2  [Deep checks: 5]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -88,10 +88,10 @@ Family:
 	False Positive Checks:                     0;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0
 
-Running tests...
+Running tests, synchronously...
 
 Family:
-[Execution Time: 7.71ms]
+[Execution Time: 7.75ms]
 	Standard Top Level Checks:                 5;  Failures:  3  [Deep checks: 5]
 
 	Always fails
@@ -116,8 +116,8 @@ Family:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 19.9ms]
-[Execution Time: 7.71ms]
+[Total Run Time: 18.5ms]
+[Execution Time: 7.75ms]
 	Standard Top Level Checks:                 5;  Failures:  3  [Deep checks: 5]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -125,10 +125,10 @@ Family:
 	False Positive Checks:                     0;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0
 
-Running tests...
+Running tests, synchronously...
 
 Family:
-[Execution Time: 8.57ms]
+[Execution Time: 8.39ms]
 	Standard Top Level Checks:                 5;  Failures:  1  [Deep checks: 5]
 
 	Always fails
@@ -139,8 +139,8 @@ Family:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 19.9ms]
-[Execution Time: 8.57ms]
+[Total Run Time: 20.4ms]
+[Execution Time: 8.39ms]
 	Standard Top Level Checks:                 5;  Failures:  1  [Deep checks: 5]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -148,10 +148,10 @@ Family:
 	False Positive Checks:                     0;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0
 
-Running tests...
+Running tests, synchronously...
 
 Family:
-[Execution Time: 8.83ms]
+[Execution Time: 7.98ms]
 	Standard Top Level Checks:                 5;  Failures:  4  [Deep checks: 5]
 
 	Always fails
@@ -182,8 +182,8 @@ Family:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 21.4ms]
-[Execution Time: 8.83ms]
+[Total Run Time: 18.7ms]
+[Execution Time: 7.98ms]
 	Standard Top Level Checks:                 5;  Failures:  4  [Deep checks: 5]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

@@ -2,12 +2,11 @@
 Running tests...
 
 Another Family:
-[Execution Time: 2.2ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 
 -----------Grand Totals-----------
-[Total Run Time: 7.07ms]
-[Execution Time: 2.2ms]
+[Total Run Time: 6.59ms]
+[Execution Time: 2.1ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -18,7 +17,6 @@ Another Family:
 Running tests...
 
 Another Family:
-[Execution Time: 1.96ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
 	Flipper
@@ -29,8 +27,8 @@ Another Family:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 7.61ms]
-[Execution Time: 1.96ms]
+[Total Run Time: 7ms]
+[Execution Time: 2.01ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

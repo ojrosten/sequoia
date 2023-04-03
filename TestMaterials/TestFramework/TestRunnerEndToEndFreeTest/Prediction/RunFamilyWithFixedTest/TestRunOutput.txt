@@ -1,16 +1,13 @@
 
 Running tests...
 
-
-	--Using asynchronous execution, level: Unit
-
 Probability:
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 39]
 	False Positive Checks:                     2;  Failures:  0
 
 -----------Grand Totals-----------
-[Total Run Time: 8.83ms]
-[Execution Time: 1.59ms]
+[Total Run Time: 8.21ms]
+[Execution Time: 1.29ms]
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 39]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

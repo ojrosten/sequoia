@@ -1,13 +1,13 @@
 
-Running tests...
+Running tests, synchronously...
 
 Family:
-[Execution Time: 3.65ms]
+[Execution Time: 2.57ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 
 -----------Grand Totals-----------
-[Total Run Time: 13.7ms]
-[Execution Time: 3.65ms]
+[Total Run Time: 7.12ms]
+[Execution Time: 2.57ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -15,10 +15,10 @@ Family:
 	False Positive Checks:                     0;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0
 
-Running tests...
+Running tests, synchronously...
 
 Family:
-[Execution Time: 2.88ms]
+[Execution Time: 1.97ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
 	Flipper
@@ -29,8 +29,8 @@ Family:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 12ms]
-[Execution Time: 2.88ms]
+[Total Run Time: 6.4ms]
+[Execution Time: 1.97ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

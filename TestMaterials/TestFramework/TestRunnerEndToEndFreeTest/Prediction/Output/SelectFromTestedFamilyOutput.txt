@@ -1,18 +1,15 @@
 
 Running tests...
 
-
-	--Using asynchronous execution, level: Unit
-
 Foo:
 	False Positive Test
-	[Execution Time: 2.4us]
+	[Execution Time: 400ns]
 	Unit Test
-	[Execution Time: 200ns]
+	[Execution Time: 1.9us]
 
 -----------Grand Totals-----------
-[Total Run Time: 6.37ms]
-[Execution Time: 142us]
+[Total Run Time: 6.13ms]
+[Execution Time: 132us]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

@@ -17,6 +17,7 @@
 #include "sequoia/TestFramework/Summary.hpp"
 #include "sequoia/TestFramework/TestCreator.hpp"
 
+#include "sequoia/Core/Concurrency/ConcurrencyModels.hpp"
 #include "sequoia/Parsing/CommandLineArguments.hpp"
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
 #include "sequoia/Runtime/ShellCommands.hpp"
@@ -31,6 +32,15 @@ namespace sequoia::testing
 
   namespace
   {
+    [[nodiscard]]
+    std::string running_tests_message(concurrency_mode mode)
+    {
+      std::string mess{"\nRunning tests"};
+      if(mode == concurrency_mode::serial) mess.append(", synchronously");
+
+      return mess.append("...\n\n");
+    }
+
     template<class ExecutionPolicy, class ForwardIt, class UnaryFn>
     void accelerate(ExecutionPolicy&& policy, ForwardIt first, ForwardIt last, UnaryFn f)
     {
@@ -54,10 +64,8 @@ namespace sequoia::testing
       return "Serial";
     case concurrency_mode::dynamic:
       return "Dynamic";
-    case concurrency_mode::family:
-      return "Family";
-    case concurrency_mode::unit:
-      return "Unit";
+    case concurrency_mode::fixed:
+      return "Fixed";
     }
 
     throw std::logic_error{"Unknown option for concurrency_mode"};
@@ -177,18 +185,16 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    std::string to_async_option(concurrency_mode mode)
+    std::string to_async_option(concurrency_mode mode, std::size_t threadPoolSize)
     {
       switch(mode)
       {
       case concurrency_mode::serial:
-        return " -a null";
+        return " --serial";
       case concurrency_mode::dynamic:
         return "";
-      case concurrency_mode::family:
-        return " -a family";
-      case concurrency_mode::unit:
-        return " -a unit";
+      case concurrency_mode::fixed:
+        return " --thread-pool " + std::to_string(threadPoolSize);
       }
 
       throw std::logic_error{"Illegal option for concurrency_mode"};
@@ -631,7 +637,7 @@ namespace sequoia::testing
                       m_NumReps = i;
                     },
                     {}},
-                    { {{"--sandbox", {"-s"}, {},
+                    { {{"--sandbox", {}, {},
                         [this](const arg_list&) {
                           m_InstabilityMode = instability_mode::coordinator;
                         }}},
@@ -664,26 +670,17 @@ namespace sequoia::testing
                         m_ConcurrencyMode = concurrency_mode::serial;
                     }
                   }}},
-                  {{{"--async-depth", {"-a"}, {"depth [null,family,unit]"},
+                  {{{"--serial",  {}, {}, [this](const arg_list&) { m_ConcurrencyMode = concurrency_mode::serial; }}}},
+                  {{{"--thread-pool", {}, {"Number of threads"},
                     [this](const arg_list& args) {
-                      const auto& depth{args.front()};
-                      if(depth == "null")
+                      if(const auto num{std::stoi(args.front())}; num > 0)
                       {
-                        m_ConcurrencyMode = concurrency_mode::serial;
-                      }
-                      else if(depth == "family")
-                      {
-                        m_ConcurrencyMode = concurrency_mode::family;
-                      }
-                      else if(depth == "unit")
-                      {
-                        m_ConcurrencyMode = concurrency_mode::unit;
+                        m_ConcurrencyMode = concurrency_mode::fixed;
+                        m_PoolSize = num;
                       }
                       else
                       {
-                        using parsing::commandline::warning;
-
-                        stream() << warning(std::string{"Unrecognized async depth option "}.append(depth).append(" should be one of [null,family,unit]\n"));
+                        stream() << warning(std::string{"Thread pool size must be non-zero"});
                       }
                     }
                   }}},
@@ -800,8 +797,6 @@ namespace sequoia::testing
 
     if(nothing_to_do()) return;
 
-    finalize_concurrency_mode();
-
     if((m_InstabilityMode != instability_mode::sandbox))
     {
       fs::remove_all(proj_paths().output().instability_analysis());
@@ -836,7 +831,7 @@ namespace sequoia::testing
       {
         invoke(runtime::shell_command(proj_paths().executable().string().append(" locate ").append(std::to_string(m_NumReps))
                                                                .append(" --runner-id ").append(std::to_string(i)).append(specified)
-                                                               .append(to_async_option(m_ConcurrencyMode))));
+                                                               .append(to_async_option(m_ConcurrencyMode, m_PoolSize))));
       }
     }
     else
@@ -866,32 +861,15 @@ namespace sequoia::testing
     }
   }
 
-  void test_runner::finalize_concurrency_mode()
-  {
-    // TO DO: fix this
-    if(m_ConcurrencyMode == concurrency_mode::dynamic)
-    {
-      const bool serial{(m_Suites.order() == 3)};
-      const bool small{std::distance(m_Suites.cbegin_edges(0), m_Suites.cend_edges(0)) < 4};
-      m_ConcurrencyMode = serial ? concurrency_mode::serial
-                        : small  ? concurrency_mode::unit
-                                 : concurrency_mode::family;
-    }
-  }
-
   void test_runner::run_tests(const std::optional<std::size_t> id)
   {
     const timer t{};
 
-    stream() << "\nRunning tests...\n\n";
+    stream() << running_tests_message(m_ConcurrencyMode);
 
     std::optional<log_summary::duration> asyncDuration{};
     if(concurrent_execution())
     {
-      stream() << "\n\t--Using asynchronous execution, level: "
-               << to_string(m_ConcurrencyMode)
-               << "\n\n";
-
       m_Suites.sort_nodes(1, m_Suites.order(), [&s = m_Suites](auto i, auto j) {
           auto& lhs{s.cbegin_node_weights()[i]};
           auto& rhs{s.cbegin_node_weights()[j]};

@@ -217,7 +217,7 @@ namespace sequoia::testing
     //=================== Rerun with async execution ===================//
     // --> async depth should be automatically set to "family" since number of families is > 4
 
-    run_and_check(LINE("Run synchronously"), b, "RunSynchronous", "-a null");
+    run_and_check(LINE("Run synchronously"), b, "RunSynchronous", "--serial");
 
     //=================== Rerun with async selecting 3 tests from 3 families ===================//
     // --> async depth should be automatically set to "test" since number of families is < 4
@@ -233,20 +233,17 @@ namespace sequoia::testing
                        " select Stuff/FooTest.cpp");
 
     //=================== Rerun with async selecting 4 tests from 4 families, and setting async-depth to test===================//
-    // --> async depth should be overridden to "test"
 
-    run_and_check(LINE("Run asynchronously (level: test) with 4 selected tests"), b, "RunAsyncFourTestsDepthTest",
-                       "-a unit select HouseAllocationTest.cpp select Maths/ProbabilityTest.cpp select Maybe/MaybeTest.cpp"
+    run_and_check(LINE("Run asynchronously with 4 selected tests"), b, "RunAsyncFourTestsDepthTest",
+                       "select HouseAllocationTest.cpp select Maths/ProbabilityTest.cpp select Maybe/MaybeTest.cpp"
                        " select Stuff/FooTest.cpp");
 
     //=================== Rerun with async, selecting 2 tests, and setting async-depth to family ===================//
-    // --> async depth should be overridden to "family"
 
-    run_and_check(LINE("Run asynchronously (level: family) with 2 selected tests"), b, "RunAsyncTwoTestsDepthFamily",
-                       "-a family select HouseAllocationTest.cpp select Maths/ProbabilityTest.cpp");
+    run_and_check(LINE("Run asynchronously with 2 selected tests"), b, "RunAsyncTwoTestsDepthFamily",
+                       "select HouseAllocationTest.cpp select Maths/ProbabilityTest.cpp");
 
     //=================== Rerun with async, selecting one family ===================//
-    // --> async depth should be set "test"
 
     run_and_check(LINE("Run asynchronously with 1 family"), b, "RunAsyncOneTestOneFamily", "test Probability");
 

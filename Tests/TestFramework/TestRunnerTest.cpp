@@ -557,7 +557,7 @@ namespace sequoia::testing
   void test_runner_test::test_serial_verbose_output()
   {
     std::stringstream outputStream{};
-    auto runner{make_failing_family({(fake_project() / "build").generic_string(), "-v", "--async-depth", "null"}, outputStream)};
+    auto runner{make_failing_family({(fake_project() / "build").generic_string(), "-v", "--serial"}, outputStream)};
 
     runner.execute();
     check_output(LINE("Basic Serial Verbose Output"), "BasicSerialVerboseOutput", outputStream);
@@ -617,56 +617,56 @@ namespace sequoia::testing
     test_instability_analysis("Instability comprising pass/failure",
                               "BinaryInstabilityAnalysis",
                               "2",
-                              {"-a", "null"},
+                              {"--serial"},
                               flipper_free_test{"Free Test"});
 
     test_instability_analysis("Instability comprising pass/multiple distinct failures",
                               "MultiInstabilityAnalysis",
                               "4",
-                              {"-a", "null"},
+                              {"--serial"},
                               periodic_free_test{"Free Test"});
 
     test_instability_analysis("Instability comprising failures from two checks",
                               "MultiCheckInstabilityAnalysis",
                               "6",
-                              {"-a", "null"},
+                              {"--serial"},
                               multi_periodic_free_test{"Free Test"});
 
     test_instability_analysis("Instability following consistent failure",
                               "BinaryInstabilityFollowingFailures",
                               "2",
-                              {"-a", "null"},
+                              {"--serial"},
                               failing_plus_instabilities_free_test{"Free Test"});
 
     test_instability_analysis("Failure but no instability",
                               "ConsistentFailureNoInstability",
                               "2",
-                              {"-a", "null"},
+                              {"--serial"},
                               consistently_failing_free_test{"Free Test"});
 
     test_instability_analysis("Always passes",
                               "ConsistentSuccessNoInstability",
                               "2",
-                              {"-a", "null"},
+                              {"--serial"},
                               consistently_passing_free_test<0>{"Free Test"});
 
     test_instability_analysis("Critical failure instability",
                               "CriticalFailureInstability",
                               "2",
-                              {"-a", "null"},
+                              {"--serial"},
                               critical_free_test{"Free Test"});
 
     test_instability_analysis("Two tests always passing",
                               "ConsistentSuccessTwoTests",
                               "2",
-                              {"-a", "null"},
+                              {"--serial"},
                               consistently_passing_free_test<0>{"Free Test 0"},
                               consistently_passing_free_test<1>{"Free Test 1"});
 
     test_instability_analysis("Consistent success/consistent failure/instability",
                               "MixedBag",
                               "6",
-                              {"-a", "null"},
+                              {"--serial"},
                               consistently_passing_free_test<0>{"Passing Free Test"},
                               consistently_failing_free_test{"Failing Free Test"},
                               flipper_free_test{"Flipper Free Test"},

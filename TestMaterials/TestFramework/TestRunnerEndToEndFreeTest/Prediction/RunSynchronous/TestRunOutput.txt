@@ -1,32 +1,32 @@
 
-Running tests...
+Running tests, synchronously...
 
 Utilities:
-[Execution Time: 2us]
+[Execution Time: 1.4us]
 Useful Things:
-[Execution Time: 300ns]
+[Execution Time: 200ns]
 Bar:
 [Execution Time: 300ns]
 Unstable:
-[Execution Time: 300ns]
+[Execution Time: 200ns]
 Maybe:
-[Execution Time: 1.2us]
+[Execution Time: 900ns]
 Oldschool:
-[Execution Time: 1.2us]
+[Execution Time: 400ns]
 Probability:
-[Execution Time: 1.2us]
+[Execution Time: 400ns]
 Foo:
-[Execution Time: 1.3us]
+[Execution Time: 900ns]
 Unique Thing:
-[Execution Time: 800ns]
+[Execution Time: 500ns]
 Container:
-[Execution Time: 1.5us]
+[Execution Time: 900ns]
 House:
-[Execution Time: 600ns]
+[Execution Time: 500ns]
 
 -----------Grand Totals-----------
-[Total Run Time: 52.8ms]
-[Execution Time: 10.7us]
+[Total Run Time: 36.7ms]
+[Execution Time: 6.6us]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

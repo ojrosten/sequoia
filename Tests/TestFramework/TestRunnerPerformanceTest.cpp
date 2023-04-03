@@ -162,7 +162,7 @@ namespace sequoia::testing
   void test_runner_performance_test::test_serial_execution()
   {
     std::stringstream outputStream{};
-    auto runner{make_slow_family({(fake_project() / "build").generic_string(), "--async-depth", "null"}, outputStream)};
+    auto runner{make_slow_family({(fake_project() / "build").generic_string(), "--serial"}, outputStream)};
     runner.execute();
 
     auto outputFile{check_output(LINE("Serial Output"), "Serial Output", outputStream)};

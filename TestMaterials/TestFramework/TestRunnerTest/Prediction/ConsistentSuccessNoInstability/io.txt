@@ -1,13 +1,13 @@
 
-Running tests...
+Running tests, synchronously...
 
 Family:
-[Execution Time: 2.55ms]
+[Execution Time: 2.07ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 
 -----------Grand Totals-----------
-[Total Run Time: 9.08ms]
-[Execution Time: 2.55ms]
+[Total Run Time: 6.44ms]
+[Execution Time: 2.07ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -15,15 +15,15 @@ Family:
 	False Positive Checks:                     0;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0
 
-Running tests...
+Running tests, synchronously...
 
 Family:
-[Execution Time: 2.29ms]
+[Execution Time: 2.03ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 
 -----------Grand Totals-----------
-[Total Run Time: 9.41ms]
-[Execution Time: 2.29ms]
+[Total Run Time: 6.29ms]
+[Execution Time: 2.03ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

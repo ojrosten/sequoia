@@ -1,12 +1,9 @@
 
 Analyzing dependencies...
-[26ms]
+[23.8ms]
 
 
 Running tests...
-
-
-	--Using asynchronous execution, level: Family
 
 Useful Things:
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
@@ -30,8 +27,8 @@ Unique Thing:
 	False Positive Checks:                     2;  Failures:  0
 
 -----------Grand Totals-----------
-[Total Run Time: 23.3ms]
-[Execution Time: 2.15ms]
+[Total Run Time: 20.7ms]
+[Execution Time: 2.41ms]
 	Standard Top Level Checks:                 9;  Failures:  1  [Deep checks: 77]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

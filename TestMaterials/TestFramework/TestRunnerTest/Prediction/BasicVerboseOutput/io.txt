@@ -1,12 +1,9 @@
 
 Running tests...
 
-
-	--Using asynchronous execution, level: Unit
-
 Failing Family:
 	Free Test
-	[Execution Time: 125us]
+	[Execution Time: 42.3us]
 		Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
 	Standard Failure
@@ -18,7 +15,7 @@ Failing Family:
 	=======================================
 
 	False positive Test
-	[Execution Time: 86.2us]
+	[Execution Time: 25.3us]
 		False Positive Checks:                     1;  Failures:  1
 
 	False Positive Failure:
@@ -28,7 +25,7 @@ Failing Family:
 	=======================================
 
 	False negative Test
-	[Execution Time: 79.1us]
+	[Execution Time: 37us]
 		False Negative Checks:                     1;  Failures:  1
 
 	False negative failure
@@ -41,8 +38,8 @@ Failing Family:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 15.9ms]
-[Execution Time: 283us]
+[Total Run Time: 9ms]
+[Execution Time: 259us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     1;  Failures:  1

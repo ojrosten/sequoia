@@ -1,13 +1,13 @@
 
-Running tests...
+Running tests, synchronously...
 
 Slow Family:
-[Execution Time: 171ms]
+[Execution Time: 205ms]
 	Standard Top Level Checks:                 8;  Failures:  0  [Deep checks: 8]
 
 -----------Grand Totals-----------
-[Total Run Time: 182ms]
-[Execution Time: 171ms]
+[Total Run Time: 234ms]
+[Execution Time: 205ms]
 	Standard Top Level Checks:                 8;  Failures:  0  [Deep checks: 8]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

@@ -221,7 +221,7 @@ namespace sequoia::parsing::commandline
   [[nodiscard]]
   bool argument_parser::process_concatenated_aliases(Iter beginOptions, Sentinel endOptions, std::string_view arg, operation_data currentOperationData, top_level topLevel)
   {
-    if((arg.size() < 2) || ((arg[0] == '-') && (arg[1] == ' ')))
+    if((arg.size() < 2) || ((arg[0] == '-') && ((arg[1] == ' ') || arg[1] == '-')))
       return false;
 
     for(auto j{arg.cbegin() + 1}; j != arg.cend(); ++j)

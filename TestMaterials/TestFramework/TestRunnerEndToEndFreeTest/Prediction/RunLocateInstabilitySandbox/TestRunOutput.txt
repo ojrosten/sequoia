@@ -1,9 +1,6 @@
 
 Running tests...
 
-
-	--Using asynchronous execution, level: Family
-
 Utilities:
 Useful Things:
 Bar:
@@ -17,8 +14,8 @@ Container:
 House:
 
 -----------Grand Totals-----------
-[Total Run Time: 79.4ms]
-[Execution Time: 16.4ms]
+[Total Run Time: 50.1ms]
+[Execution Time: 11.4ms]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -28,9 +25,6 @@ House:
 
 Running tests...
 
-
-	--Using asynchronous execution, level: Family
-
 Utilities:
 Useful Things:
 Bar:
@@ -44,8 +38,8 @@ Container:
 House:
 
 -----------Grand Totals-----------
-[Total Run Time: 57.8ms]
-[Execution Time: 12.5ms]
+[Total Run Time: 51.4ms]
+[Execution Time: 8.97ms]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

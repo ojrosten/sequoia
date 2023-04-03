@@ -2,12 +2,11 @@
 Running tests...
 
 Useful Things:
-[Execution Time: 100us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 
 -----------Grand Totals-----------
-[Total Run Time: 4.77ms]
-[Execution Time: 100us]
+[Total Run Time: 4.67ms]
+[Execution Time: 184us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
