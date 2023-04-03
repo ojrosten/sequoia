@@ -18,16 +18,32 @@
 #include "sequoia/TestFramework/TestCreator.hpp"
 
 #include "sequoia/Parsing/CommandLineArguments.hpp"
+#include "sequoia/PlatformSpecific/Preprocessor.hpp"
 #include "sequoia/Runtime/ShellCommands.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
-#include <execution>
 #include <fstream>
 #include <future>
 
 namespace sequoia::testing
 {
   namespace fs = std::filesystem;
+
+  namespace
+  {
+    template<class ExecutionPolicy, class ForwardIt, class UnaryFn>
+    void accelerate(ExecutionPolicy&& policy, ForwardIt first, ForwardIt last, UnaryFn f)
+    {
+      if constexpr(!with_clang_v)
+      {
+        std::for_each(std::forward<ExecutionPolicy>(policy), first, last, f);
+      }
+      else
+      {
+        std::for_each(first, last, f);
+      }
+    }
+  }
 
   [[nodiscard]]
   std::string to_string(concurrency_mode mode)
@@ -899,7 +915,7 @@ namespace sequoia::testing
       const timer asyncTimer{};
       std::for_each(first, next, executor);
 
-      std::for_each(std::execution::par, next, m_Suites.end_node_weights(), executor);
+      accelerate(sequoia::execution::par, next, m_Suites.end_node_weights(), executor);
 
       asyncDuration = asyncTimer.time_elapsed();
     }

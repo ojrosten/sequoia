@@ -21,11 +21,32 @@ namespace sequoia::testing
 
   namespace
   {
+    template<class T>
+    [[nodiscard]]
+    T to_number(std::string_view timing)
+    {
+      if constexpr(!with_clang_v)
+      {        
+        T x{};
+        if(std::from_chars(timing.data(), std::next(timing.data(), timing.size()), x).ec == std::errc{})
+          return x;
+      }
+      else
+      {
+        T x{};
+        std::stringstream ss{std::string{timing}};
+        if(ss >> x) return x;
+      }
+
+      throw std::runtime_error{"Unable to extract timing from: " + std::string{timing}};
+    }
+    
+    [[nodiscard]]
     double get_timing(const std::filesystem::path& file)
     {
       if(const auto optContents{read_to_string(file)})
       {
-        const auto& contents{optContents.value()};
+        std::string_view contents{optContents.value()};
         constexpr std::string_view pattern{"Execution Time:"};
         if(auto pos{contents.find(pattern)}; pos != std::string::npos)
         {
@@ -33,10 +54,7 @@ namespace sequoia::testing
           if(auto end{contents.find("ms]", start)}; end > start)
           {
             auto timing{contents.substr(start, end - start)};
-            double d{};
-            std::from_chars(timing.data(), std::next(timing.data(), end - start), d);
-
-            return d;
+            return to_number<double>(timing);
           }
         }
       }

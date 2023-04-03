@@ -11,6 +11,7 @@
     \brief Tools for generating compiler-specific behaviour.
  */
 
+#include <execution>
 #include <vector>
 #include <type_traits>
 
@@ -31,7 +32,7 @@ namespace sequoia
   #ifdef _MSC_VER
     using compiler_constant = msvc_type;
 
-  [[nodiscard]]
+    [[nodiscard]]
     constexpr int iterator_debug_level() noexcept
     {
       return _ITERATOR_DEBUG_LEVEL;
@@ -54,6 +55,18 @@ namespace sequoia
     #define MSVC_EMPTY_BASE_HACK
 
     #define NO_UNIQUE_ADDRESS [[no_unique_address]]
+  #endif
+
+  #if defined(__clang__)
+    namespace execution
+    {
+      inline constexpr int par{0};
+    }
+  #else
+    namespace execution
+    {
+      inline constexpr auto par{std::execution::par};
+    }
   #endif
 
   inline constexpr bool with_msvc_v{std::is_same_v<compiler_constant, msvc_type>};
