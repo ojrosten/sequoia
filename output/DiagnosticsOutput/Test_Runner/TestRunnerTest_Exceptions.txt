@@ -96,7 +96,7 @@ Insufficient repetitions for instability analysis
 
 Expected Exception Type:
 [std::runtime_error]
-  Error: Number of repetitions must be >= 2
+  Error: Number of repetitions, must be >= 2
 
 	=======================================
 

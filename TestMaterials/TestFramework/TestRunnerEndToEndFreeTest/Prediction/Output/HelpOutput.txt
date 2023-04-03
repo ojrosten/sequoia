@@ -37,5 +37,5 @@ locate-instabilities | locate | number of repetitions >= 2
 recover
 dump
 --serial
---thread-pool Number of threads
+--thread-pool Number of threads, must be >= 1
 --verbose | -v |

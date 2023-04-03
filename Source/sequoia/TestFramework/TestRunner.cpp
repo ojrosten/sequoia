@@ -631,7 +631,7 @@ namespace sequoia::testing
                       };
 
                       if(i < 2)
-                        throw std::runtime_error{error("Number of repetitions must be >= 2")};
+                        throw std::runtime_error{error("Number of repetitions, must be >= 2")};
 
                       m_InstabilityMode = instability_mode::single_instance;
                       m_NumReps = i;
@@ -671,7 +671,7 @@ namespace sequoia::testing
                     }
                   }}},
                   {{{"--serial",  {}, {}, [this](const arg_list&) { m_ConcurrencyMode = concurrency_mode::serial; }}}},
-                  {{{"--thread-pool", {}, {"Number of threads"},
+                  {{{"--thread-pool", {}, {"Number of threads, must be >= 1"},
                     [this](const arg_list& args) {
                       if(const auto num{std::stoi(args.front())}; num > 0)
                       {
