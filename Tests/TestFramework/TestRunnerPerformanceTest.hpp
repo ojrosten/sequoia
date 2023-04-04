@@ -26,6 +26,8 @@ namespace sequoia::testing
 
     void test_parallel_acceleration();
 
+    void test_thread_pool_acceleration();
+
     void test_serial_execution();
 
     [[nodiscard]]

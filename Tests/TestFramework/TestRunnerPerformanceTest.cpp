@@ -146,6 +146,7 @@ namespace sequoia::testing
   void test_runner_performance_test::run_tests()
   {
     test_parallel_acceleration();
+    test_thread_pool_acceleration();
     test_serial_execution();
   }
 
@@ -157,6 +158,16 @@ namespace sequoia::testing
 
     auto outputFile{check_output(LINE("Parallel Acceleration Output"), "ParallelAccelerationOutput", outputStream)};
     check(within_tolerance{25.0}, LINE(""), get_timing(outputFile), 50.0);
+  }
+
+  void test_runner_performance_test::test_thread_pool_acceleration()
+  {
+    std::stringstream outputStream{};
+    auto runner{make_slow_family({(fake_project() / "build").generic_string(), "--thread-pool", "8"}, outputStream)};
+    runner.execute();
+
+    auto outputFile{check_output(LINE("Thread Pool Acceleration Output"), "ThreadPoolAccelerationOutput", outputStream)};
+    check(within_tolerance{10.0}, LINE(""), get_timing(outputFile), 25.0);
   }
 
   void test_runner_performance_test::test_serial_execution()
