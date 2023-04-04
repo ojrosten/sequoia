@@ -41,16 +41,33 @@ namespace sequoia::testing
       return mess.append("...\n\n");
     }
 
+    struct thread_pool_policy
+    {
+      std::size_t num{8};
+    };
+
+    template<class ForwardIt, class UnaryFn>
+    void accelerate(thread_pool_policy p, ForwardIt first, ForwardIt last, UnaryFn f)
+    {
+      concurrency::thread_pool<void> pool{p.num};
+      while(first != last)
+      {
+        pool.push([f, &wt{*(first++)}](){ f(wt); });
+      }
+
+      pool.get();
+    }
+
     template<class ExecutionPolicy, class ForwardIt, class UnaryFn>
     void accelerate(ExecutionPolicy&& policy, ForwardIt first, ForwardIt last, UnaryFn f)
     {
       if constexpr(!with_clang_v)
       {
-        std::for_each(std::forward<ExecutionPolicy>(policy), first, last, f);
+        std::for_each(std::forward<ExecutionPolicy>(policy), first, last, std::move(f));
       }
       else
       {
-        std::for_each(first, last, f);
+        accelerate(thread_pool_policy{.num{8}}, first, last, std::move(f));
       }
     }
   }
@@ -893,7 +910,18 @@ namespace sequoia::testing
       const timer asyncTimer{};
       std::for_each(first, next, executor);
 
-      accelerate(sequoia::execution::par, next, m_Suites.end_node_weights(), executor);
+      switch(m_ConcurrencyMode)
+      {
+        using enum concurrency_mode;
+      case dynamic:
+        accelerate(sequoia::execution::par, next, m_Suites.end_node_weights(), executor);
+        break;
+      case fixed:
+        accelerate(thread_pool_policy{.num{m_PoolSize}}, next, m_Suites.end_node_weights(), executor);
+        break;
+      default:
+        throw std::logic_error{"Unexpected concurrency_mode"};
+      }
 
       asyncDuration = asyncTimer.time_elapsed();
     }

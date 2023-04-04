@@ -282,15 +282,12 @@ namespace sequoia::concurrency
     thread_pool& operator=(const thread_pool&) = delete;
     thread_pool& operator=(thread_pool&&)      = delete;
 
-    template<class Fn, class... Args>
-    void push(Fn&& fn, Args&&... args)
+    template<std::invocable Fn>
+      requires std::is_convertible_v<std::invoke_result_t<Fn>, R> && std::move_constructible<Fn>
+    void push(Fn fn)
     {
-      static_assert(std::is_convertible_v<R, std::invoke_result_t<std::decay_t<Fn>, std::decay_t<Args>...>>,
-                    "Function return type inconsistent!");
-
-      task_t task{[=](){ return fn(args...); }};
+      task_t task{std::move(fn)};
       m_Futures.push_back(task.get_future());
-
 
       if constexpr(MultiPipeline)
       {
@@ -312,6 +309,16 @@ namespace sequoia::concurrency
       {
         m_Queues.push(std::move(task));
       }
+    }
+
+    template<class Fn, class... Args>
+      requires    std::invocable<Fn, Args...>
+               && std::is_convertible_v<std::invoke_result_t<Fn, Args...>, R>
+               && std::move_constructible<Fn>
+               && (std::move_constructible<Args> && ...)
+    void push(Fn fn, Args... args)
+    {
+      push([fn = std::move(fn), ...args = std::move(args)](){ return fn(args...); });
     }
 
     void join()

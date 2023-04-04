@@ -315,7 +315,7 @@ namespace sequoia::testing
 
     std::size_t m_NumReps{1},
                 m_RunnerID{},
-                m_PoolSize{};
+                m_PoolSize{8};
 
     void process_args(int argc, char** argv);
 
