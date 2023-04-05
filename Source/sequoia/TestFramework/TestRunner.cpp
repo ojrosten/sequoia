@@ -856,6 +856,8 @@ namespace sequoia::testing
     }
     else
     {
+      if(concurrent_execution()) sort_tests();
+
       if(m_InstabilityMode == instability_mode::sandbox)
       {
         run_tests(m_RunnerID);
@@ -881,6 +883,24 @@ namespace sequoia::testing
     }
   }
 
+  void test_runner::sort_tests()
+  {
+    m_Suites.sort_nodes(1, m_Suites.order(), [&s = m_Suites](auto i, auto j) {
+      auto& lhs{s.cbegin_node_weights()[i]};
+      auto& rhs{s.cbegin_node_weights()[j]};
+
+      if(!lhs.optTest && !rhs.optTest) return i < j;
+
+      if(!lhs.optTest && rhs.optTest) return true;
+      if(lhs.optTest && !rhs.optTest) return false;
+
+      if(!lhs.optTest->parallelizable() && rhs.optTest->parallelizable()) return true;
+      if(lhs.optTest->parallelizable() && !rhs.optTest->parallelizable()) return false;
+
+      return i < j;
+      });
+  }
+
   void test_runner::run_tests(const std::optional<std::size_t> id)
   {
     const timer t{};
@@ -890,21 +910,6 @@ namespace sequoia::testing
     std::optional<log_summary::duration> asyncDuration{};
     if(concurrent_execution())
     {
-      m_Suites.sort_nodes(1, m_Suites.order(), [&s = m_Suites](auto i, auto j) {
-          auto& lhs{s.cbegin_node_weights()[i]};
-          auto& rhs{s.cbegin_node_weights()[j]};
-
-          if(!lhs.optTest && !rhs.optTest) return i < j;
-
-          if(!lhs.optTest && rhs.optTest) return true;
-          if(lhs.optTest && !rhs.optTest) return false;
-
-          if(!lhs.optTest->parallelizable() && rhs.optTest->parallelizable()) return true;
-          if(lhs.optTest->parallelizable() && !rhs.optTest->parallelizable()) return false;
-
-          return i < j;
-        });
-
       auto first{std::find_if(m_Suites.begin_node_weights(), m_Suites.end_node_weights(), [](const auto& wt) -> bool { return wt.optTest != std::nullopt; })};
       auto next{std::find_if(first, m_Suites.end_node_weights(), [](const auto& wt) -> bool { return wt.optTest->parallelizable(); })};
 

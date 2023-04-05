@@ -326,6 +326,8 @@ namespace sequoia::testing
     [[nodiscard]]
     bool concurrent_execution() const noexcept { return m_ConcurrencyMode != concurrency_mode::serial; }
 
+    void sort_tests();
+
     void reset_tests();
 
     void run_tests(std::optional<std::size_t> id);
