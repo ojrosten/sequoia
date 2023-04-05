@@ -227,7 +227,7 @@ namespace sequoia::testing
             }
           };
 
-          if(auto [b, e] {std::equal_range(g.cbegin_node_weights(), g.cend_node_weights(), includedFile, comparer)}; b != e)
+          if(auto [b, e] {std::equal_range(g.begin_node_weights(), g.end_node_weights(), includedFile, comparer)}; b != e)
           {
             auto found{
               [&includedFile,&projPaths,&file](auto b, auto e) {
@@ -256,10 +256,10 @@ namespace sequoia::testing
             {
               if((file.stem() == includedFile.stem()) && i->stale)
               {
-                g.mutate_node_weight(found, [](auto& w) { w.stale = true; });
+                found->stale = true;
               }
 
-              const auto includeNodePos{static_cast<size_type>(distance(g.cbegin_node_weights(), found))};
+              const auto includeNodePos{static_cast<size_type>(distance(g.begin_node_weights(), found))};
               g.join(nodePos, includeNodePos);
 
               if(is_cpp(file))
