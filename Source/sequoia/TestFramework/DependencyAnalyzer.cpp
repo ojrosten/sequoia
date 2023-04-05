@@ -194,7 +194,7 @@ namespace sequoia::testing
     }
 
     using tests_dependency_graph = maths::graph<maths::directed_flavour::directed, maths::null_weight, file_info>;
-    using node_iterator = tests_dependency_graph::const_iterator;
+    using node_iterator = tests_dependency_graph::iterator;
 
     void add_files(tests_dependency_graph& g, const fs::path& repo, const fs::file_time_type& timeStamp, const std::optional<fs::file_time_type>& exeTimeStamp)
     {
@@ -268,6 +268,8 @@ namespace sequoia::testing
                 // as these are what ultimately determine whether or not
                 // the test cpp is considered stale. Sorting of g ensures
                 // that headers are directly after sources
+
+                //This could easily breakdown!
                 if(auto next{std::next(i)}; next != g.cend_node_weights())
                 {
                   if(next->file.stem() == file.stem())
@@ -328,14 +330,13 @@ namespace sequoia::testing
       return std::nullopt;
     }
 
-    void consider_passing_tests(tests_dependency_graph& g,
-                            node_iterator i,
-                            const fs::path& relFilePath,
-                            const std::vector<fs::path>& passingTests)
+    void consider_passing_tests(node_iterator i,
+                                const fs::path& relFilePath,
+                                const std::vector<fs::path>& passingTests)
     {
       if(auto iter{std::lower_bound(passingTests.begin(), passingTests.end(), relFilePath)}; (iter != passingTests.end() && (*iter == relFilePath)))
       {
-        g.mutate_node_weight(i, [](auto& w) { w.stale = false; });
+        i->stale = false;
       }
     }
 
@@ -377,7 +378,7 @@ namespace sequoia::testing
           {
             if((g.cbegin_node_weights() + i->target_node())->stale)
             {
-              g.mutate_node_weight(g.cbegin_node_weights() + node, [](auto& w) { w.stale = true; });
+              g.begin_node_weights()[node].stale = true;
               break;
             }
           }
@@ -392,7 +393,7 @@ namespace sequoia::testing
 
       std::vector<fs::path> staleTests{};
 
-      for(auto i{g.cbegin_node_weights()}; i != g.cend_node_weights(); ++i)
+      for(auto i{g.begin_node_weights()}; i != g.end_node_weights(); ++i)
       {
         if(const auto& weight{*i}; is_cpp(weight.file) && in_repo(weight.file, projPaths.tests().repo()))
         {
@@ -402,7 +403,7 @@ namespace sequoia::testing
           {
             const auto materialsWriteTime{materials_max_write_time(relPath, projPaths.test_materials().repo())};
             if(!weight.stale && (materialsWriteTime > timeStamp))
-              g.mutate_node_weight(i, [](auto& w) { w.stale = true; });
+              i->stale = true;
 
             const auto maxWriteTime{
               [materialsWriteTime,&weight]() {
@@ -412,13 +413,13 @@ namespace sequoia::testing
             };
 
             if(weight.stale && (passesStamp.value() > maxWriteTime))
-              consider_passing_tests(g, i, relPath, passingTestsFromFile);
+              consider_passing_tests(i, relPath, passingTestsFromFile);
           }
           else if(!weight.stale)
           {
             if(materials_modified(relPath, projPaths.test_materials().repo(), timeStamp))
             {
-              g.mutate_node_weight(i, [](auto& w) { w.stale = true; });
+              i->stale = true;
             }
           }
 
@@ -493,7 +494,6 @@ namespace sequoia::testing
     }
   }
 
-  [[nodiscard]]
   std::vector<fs::path>& read_tests(const fs::path& file, std::vector<fs::path>& tests)
   {
     if(std::ifstream ifile{file})
