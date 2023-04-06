@@ -44,6 +44,12 @@ namespace sequoia::testing
       opt_test_list failures{}, passes{};
     };
 
+    struct file_states
+    {
+      std::vector<updated_file> stale;
+      std::vector<std::filesystem::path> to_run;
+    };
+
     std::filesystem::file_time_type m_ResetTime{};
 
     [[nodiscard]]
@@ -62,10 +68,9 @@ namespace sequoia::testing
     void check_tests_to_run(std::string_view description,
                             const project_paths& projPaths,
                             std::string_view cutoff,
-                            const std::vector<updated_file>& makeStale,
+                            const std::vector<file_states>& fileStates,
                             std::vector<std::filesystem::path> failures,
-                            passing_tests passes,
-                            const std::vector<std::filesystem::path>& toRun);
+                            passing_tests passes);
 
     void check_data(std::string_view description, const test_outcomes& obtained, const test_outcomes& prediction);
 
