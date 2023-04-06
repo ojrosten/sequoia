@@ -412,6 +412,11 @@ namespace sequoia::testing
               }()
             };
 
+            // Bug here!
+            // 1, x.cpp is modified;
+            // 2. Pasing tests added to passing list
+            // 3. x.cpp modified again
+            // 4. maxWriteTime doesn't take into account step 3.
             if(weight.stale && (passesStamp.value() > maxWriteTime))
               consider_passing_tests(i, relPath, passingTestsFromFile);
           }

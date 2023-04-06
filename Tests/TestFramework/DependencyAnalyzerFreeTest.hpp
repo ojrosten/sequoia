@@ -18,12 +18,12 @@ namespace sequoia::testing
   public:
     using free_test::free_test;
 
-    using test_list           = std::vector<std::filesystem::path>;
-    using opt_test_list       = std::optional<test_list>;
-    using multi_test_list     = std::vector<test_list>;
-
   private:
-    enum class modification_time { very_early, early, late , very_late};
+    using test_list       = std::vector<std::filesystem::path>;
+    using opt_test_list   = std::optional<test_list>;
+    using multi_test_list = std::vector<test_list>;
+
+    enum class modification_time { very_early, early, late, very_late};
 
     struct updated_file
     {
@@ -37,9 +37,9 @@ namespace sequoia::testing
       modification_time modification{modification_time::early};
     };
 
-    struct data
+    struct test_outcomes
     {
-      data(opt_test_list fail, opt_test_list pass);
+      test_outcomes(opt_test_list fail, opt_test_list pass);
 
       opt_test_list failures{}, passes{};
     };
@@ -67,7 +67,7 @@ namespace sequoia::testing
                             passing_tests passes,
                             const std::vector<std::filesystem::path>& toRun);
 
-    void check_data(std::string_view description, const data& obtained, const data& prediction);
+    void check_data(std::string_view description, const test_outcomes& obtained, const test_outcomes& prediction);
 
     [[nodiscard]]
     static std::chrono::seconds to_duration(modification_time modTime);
@@ -76,6 +76,6 @@ namespace sequoia::testing
 
     static void write_or_remove(const project_paths& projPaths, const std::filesystem::path& file, const opt_test_list& tests);
 
-    static void write_or_remove(const project_paths& projPaths, const std::filesystem::path& failureFile, const std::filesystem::path& passesFile, const data& d);
+    static void write_or_remove(const project_paths& projPaths, const std::filesystem::path& failureFile, const std::filesystem::path& passesFile, const test_outcomes& d);
   };
 }
