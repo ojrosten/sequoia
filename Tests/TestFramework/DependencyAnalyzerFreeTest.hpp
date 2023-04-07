@@ -68,7 +68,7 @@ namespace sequoia::testing
     void check_tests_to_run(std::string_view description,
                             const project_paths& projPaths,
                             std::string_view cutoff,
-                            const std::vector<file_states>& fileStates,
+                            const file_states& fileStates,
                             std::vector<std::filesystem::path> failures,
                             passing_tests passes);
 

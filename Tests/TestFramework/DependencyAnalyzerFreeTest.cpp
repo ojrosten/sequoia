@@ -86,7 +86,7 @@ namespace sequoia::testing
   void dependency_analyzer_free_test::check_tests_to_run(std::string_view description,
                                                          const project_paths& projPaths,
                                                          std::string_view cutoff,
-                                                         const std::vector<file_states>& fileStates,
+                                                         const file_states& fileStates,
                                                          std::vector<fs::path> failures,
                                                          passing_tests passes)
   {
@@ -101,27 +101,21 @@ namespace sequoia::testing
 
     fs::last_write_time(passesFile, m_ResetTime + to_duration(passes.modification));
 
-    for(auto& [makeStale, toRun] : fileStates)
+    for(const auto& f : fileStates.stale)
     {
-      for(const auto& f : makeStale)
-      {
-        fs::last_write_time(f.file, m_ResetTime + to_duration(f.modification));
-      }
-
-      opt_test_list actual{tests_to_run(projPaths, cutoff)};
-
-      opt_test_list prediction{toRun};
-      std::sort(prediction->begin(), prediction->end());
-
-      check(equality, description, actual, prediction);
+      fs::last_write_time(f.file, m_ResetTime + to_duration(f.modification));
     }
 
-    for(auto& files : fileStates)
+    opt_test_list actual{tests_to_run(projPaths, cutoff)};
+
+    opt_test_list prediction{fileStates.to_run};
+    std::sort(prediction->begin(), prediction->end());
+
+    check(equality, description, actual, prediction);
+
+    for(const auto& f : fileStates.stale)
     {
-      for(const auto& f : files.stale)
-      {
-        fs::last_write_time(f.file, m_ResetTime);
-      }
+      fs::last_write_time(f.file, m_ResetTime);
     }
 
     fs::remove(failureFile);
@@ -181,184 +175,184 @@ namespace sequoia::testing
     check_tests_to_run(LINE("Test cpp stale (no cutoff)"),
                        projPaths,
                        "",
-                       {{.stale{{{testRepo / "HouseAllocationTest.cpp"}, modification_time::early}}, .to_run{{"HouseAllocationTest.cpp"}}}},
+                       {.stale{{{testRepo / "HouseAllocationTest.cpp"}, modification_time::early}}, .to_run{{"HouseAllocationTest.cpp"}}},
                        {},
                        {});
 
     check_tests_to_run(LINE("Test cpp naively stale, but has passed (when selected)"),
                        projPaths,
                        "namespace",
-                       {{.stale{{{testRepo / "HouseAllocationTest.cpp"}, modification_time::early}}, .to_run{}}},
+                       {.stale{{{testRepo / "HouseAllocationTest.cpp"}, modification_time::early}}, .to_run{}},
                        {},
                        {{{"HouseAllocationTest.cpp"}}, modification_time::late});
 
     check_tests_to_run(LINE("Test cpp stale; has previously passed (when selected), but this should be ignored"),
                        projPaths,
                        "namespace",
-                       {{.stale{{{testRepo / "HouseAllocationTest.cpp"}, modification_time::early}}, .to_run{{"HouseAllocationTest.cpp"}}}},
+                       {.stale{{{testRepo / "HouseAllocationTest.cpp"}, modification_time::early}}, .to_run{{"HouseAllocationTest.cpp"}}},
                        {},
                        {{{"HouseAllocationTest.cpp"}}, modification_time::very_early});
 
     check_tests_to_run(LINE("Test hpp stale (no cutoff)"),
                        projPaths,
                        "",
-                       {{.stale{{{testRepo / "HouseAllocationTest.cpp"}, modification_time::early}}, .to_run{{"HouseAllocationTest.cpp"}}}},
+                       {.stale{{{testRepo / "HouseAllocationTest.cpp"}, modification_time::early}}, .to_run{{"HouseAllocationTest.cpp"}}},
                        {},
                        {});
 
     check_tests_to_run(LINE("Test hpp stale"),
                        projPaths,
                        "namespace",
-                       {{.stale{{{testRepo / "HouseAllocationTest.cpp"}, modification_time::early}}, .to_run{{"HouseAllocationTest.cpp"}}}},
+                       {.stale{{{testRepo / "HouseAllocationTest.cpp"}, modification_time::early}}, .to_run{{"HouseAllocationTest.cpp"}}},
                        {},
                        {});
 
     check_tests_to_run(LINE("Test utils stale"),
                        projPaths,
                        "namespace",
-                       {{.stale{{{testRepo / "Maths" / "ProbabilityTestingUtilities.hpp"}, modification_time::early}},
-                         .to_run{{"Maths/ProbabilityTest.cpp"}, {"Maths/ProbabilityTestingDiagnostics.cpp"}}}},
+                       {.stale{{{testRepo / "Maths" / "ProbabilityTestingUtilities.hpp"}, modification_time::early}},
+                         .to_run{{"Maths/ProbabilityTest.cpp"}, {"Maths/ProbabilityTestingDiagnostics.cpp"}}},
                        {},
                        {});
 
     check_tests_to_run(LINE("Reused utils stale"),
                        projPaths,
                        "namespace",
-                       {{.stale{{{testRepo / "Stuff" / "OldschoolTestingUtilities.hpp"}, modification_time::early}},
-                         .to_run{{"Maybe/MaybeTest.cpp"}, {"Stuff/OldschoolTest.cpp"}, {"Stuff/OldschoolTestingDiagnostics.cpp"}}}},
+                       {.stale{{{testRepo / "Stuff" / "OldschoolTestingUtilities.hpp"}, modification_time::early}},
+                         .to_run{{"Maybe/MaybeTest.cpp"}, {"Stuff/OldschoolTest.cpp"}, {"Stuff/OldschoolTestingDiagnostics.cpp"}}},
                        {},
                        {});
 
     check_tests_to_run(LINE("Reused utils stale, but one of the tests has passed"),
                        projPaths,
                        "namespace",
-                       {{.stale{{{testRepo / "Stuff" / "OldschoolTestingUtilities.hpp"}, modification_time::early}},
-                         .to_run{{"Stuff/OldschoolTest.cpp"}, {"Stuff/OldschoolTestingDiagnostics.cpp"}}}},
+                       {.stale{{{testRepo / "Stuff" / "OldschoolTestingUtilities.hpp"}, modification_time::early}},
+                         .to_run{{"Stuff/OldschoolTest.cpp"}, {"Stuff/OldschoolTestingDiagnostics.cpp"}}},
                        {},
                        {{{"Maybe/MaybeTest.cpp"}}, modification_time::late});
 
     check_tests_to_run(LINE("Reused utils stale, but two of the tests have passed"),
                        projPaths,
                        "namespace",
-                       {{.stale{{{testRepo / "Stuff" / "OldschoolTestingUtilities.hpp"}, modification_time::early}},
-                         .to_run{{"Stuff/OldschoolTestingDiagnostics.cpp"}}}},
+                       {.stale{{{testRepo / "Stuff" / "OldschoolTestingUtilities.hpp"}, modification_time::early}},
+                         .to_run{{"Stuff/OldschoolTestingDiagnostics.cpp"}}},
                        {},
                        {{{"Maybe/MaybeTest.cpp"}, {"Stuff/OldschoolTest.cpp"}}, modification_time::late});
 
     check_tests_to_run(LINE("Reused utils stale, but two of the tests have passed and a different one has failed"),
                        projPaths,
                        "namespace",
-                       {{.stale{{{testRepo / "Stuff" / "OldschoolTestingUtilities.hpp"}, modification_time::early}},
-                         .to_run{{"Stuff/OldschoolTestingDiagnostics.cpp"}, {"HouseAllocationTest.cpp"}}}},
+                       {.stale{{{testRepo / "Stuff" / "OldschoolTestingUtilities.hpp"}, modification_time::early}},
+                         .to_run{{"Stuff/OldschoolTestingDiagnostics.cpp"}, {"HouseAllocationTest.cpp"}}},
                        {{"HouseAllocationTest.cpp"}},
                        {{{"Maybe/MaybeTest.cpp"}, {"Stuff/OldschoolTest.cpp"}}, modification_time::late});
 
     check_tests_to_run(LINE("Reused utils stale, relative path"),
                        projPaths,
                        "namespace",
-                       {{.stale{{{testRepo / "Stuff" / "FooTestingUtilities.hpp"}, modification_time::early}},
-                         .to_run{{"Stuff/FooTest.cpp"}, {"Stuff/FooTestingDiagnostics.cpp"}, {"Utilities/Thing/UniqueThingTest.cpp"}, {"Utilities/Thing/UniqueThingTestingDiagnostics.cpp"}}}},
+                       {.stale{{{testRepo / "Stuff" / "FooTestingUtilities.hpp"}, modification_time::early}},
+                         .to_run{{"Stuff/FooTest.cpp"}, {"Stuff/FooTestingDiagnostics.cpp"}, {"Utilities/Thing/UniqueThingTest.cpp"}, {"Utilities/Thing/UniqueThingTestingDiagnostics.cpp"}}},
                        {},
                        {});
 
     check_tests_to_run(LINE("Source cpp stale"),
                        projPaths,
                        "namespace",
-                       {{.stale{{{sourceRepo / "Maths" / "Probability.cpp"}, modification_time::early}},
-                         .to_run{{"Maths/ProbabilityTest.cpp"}, {"Maths/ProbabilityTestingDiagnostics.cpp"}}}},
+                       {.stale{{{sourceRepo / "Maths" / "Probability.cpp"}, modification_time::early}},
+                         .to_run{{"Maths/ProbabilityTest.cpp"}, {"Maths/ProbabilityTestingDiagnostics.cpp"}}},
                        {},
                        {});
 
     check_tests_to_run(LINE("Source hpp stale"),
                        projPaths,
                        "namespace",
-                       {{.stale{{{sourceRepo / "Maths" / "Probability.hpp"}, modification_time::early}},
-                         .to_run{{"Maths/ProbabilityTest.cpp"}, {"Maths/ProbabilityTestingDiagnostics.cpp"}}}},
+                       {.stale{{{sourceRepo / "Maths" / "Probability.hpp"}, modification_time::early}},
+                         .to_run{{"Maths/ProbabilityTest.cpp"}, {"Maths/ProbabilityTestingDiagnostics.cpp"}}},
                        {},
                        {});
 
     check_tests_to_run(LINE("Source cpp stale, following a previously successful run"),
                        projPaths,
                        "namespace",
-                       {{.stale{{{sourceRepo / "Maths" / "Probability.cpp"}, modification_time::early}},
-                         .to_run{{"Maths/ProbabilityTest.cpp"}, {"Maths/ProbabilityTestingDiagnostics.cpp"}}}},
+                       {.stale{{{sourceRepo / "Maths" / "Probability.cpp"}, modification_time::early}},
+                         .to_run{{"Maths/ProbabilityTest.cpp"}, {"Maths/ProbabilityTestingDiagnostics.cpp"}}},
                        {},
                        {{{"Maths/ProbabilityTest.cpp"}, {"Maths/ProbabilityTestingDiagnostics.cpp"}}, modification_time::early});
 
     check_tests_to_run(LINE("Source cpp indirectly stale via included header"),
                        projPaths,
                        "namespace",
-                       {{.stale{{{sourceRepo / "Maths" / "Helper.hpp"}, modification_time::early}},
-                         .to_run{{"Maths/ProbabilityTest.cpp"}, {"Maths/ProbabilityTestingDiagnostics.cpp"}}}},
+                       {.stale{{{sourceRepo / "Maths" / "Helper.hpp"}, modification_time::early}},
+                         .to_run{{"Maths/ProbabilityTest.cpp"}, {"Maths/ProbabilityTestingDiagnostics.cpp"}}},
                        {},
                        {});
 
     check_tests_to_run(LINE("Source cpp indirectly stale via cpp definitions for included header"),
                        projPaths,
                        "namespace",
-                       {{.stale{{{sourceRepo / "Maths" / "Helper.cpp"}, modification_time::early}},
-                         .to_run{{"Maths/ProbabilityTest.cpp"}, {"Maths/ProbabilityTestingDiagnostics.cpp"}}}},
+                       {.stale{{{sourceRepo / "Maths" / "Helper.cpp"}, modification_time::early}},
+                         .to_run{{"Maths/ProbabilityTest.cpp"}, {"Maths/ProbabilityTestingDiagnostics.cpp"}}},
                        {},
                        {});
 
     check_tests_to_run(LINE("Materials stale"),
                        projPaths,
                        "namespace",
-                       {{.stale{{{materials / "Stuff" / "FooTest" / "Prediction" / "RepresentativeCasesTemp" / "NoSeqpat" / "baz.txt"}, modification_time::early}},
-                         .to_run{{"Stuff/FooTest.cpp"}}}},
+                       {.stale{{{materials / "Stuff" / "FooTest" / "Prediction" / "RepresentativeCasesTemp" / "NoSeqpat" / "baz.txt"}, modification_time::early}},
+                         .to_run{{"Stuff/FooTest.cpp"}}},
                        {},
                        {});
 
     check_tests_to_run(LINE("Materials naively stale, but test previously passed (when selected)"),
                        projPaths,
                        "namespace",
-                       {{.stale{{{materials / "Stuff" / "FooTest" / "Prediction" / "RepresentativeCasesTemp" / "NoSeqpat" / "baz.txt"}, modification_time::early}},
-                         .to_run{}}},
+                       {.stale{{{materials / "Stuff" / "FooTest" / "Prediction" / "RepresentativeCasesTemp" / "NoSeqpat" / "baz.txt"}, modification_time::early}},
+                         .to_run{}},
                        {},
                        {{{"Stuff/FooTest.cpp"}}, modification_time::late});
 
     check_tests_to_run(LINE("Materials stale; test previously passed (when selected), but materials subsequently modified"),
                        projPaths,
                        "namespace",
-                       {{.stale{{{materials / "Stuff" / "FooTest" / "Prediction" / "RepresentativeCasesTemp" / "NoSeqpat" / "baz.txt"}, modification_time::early}},
-                         .to_run{{"Stuff/FooTest.cpp"}}}},
+                       {.stale{{{materials / "Stuff" / "FooTest" / "Prediction" / "RepresentativeCasesTemp" / "NoSeqpat" / "baz.txt"}, modification_time::early}},
+                         .to_run{{"Stuff/FooTest.cpp"}}},
                        {},
                        {{{"Stuff/FooTest.cpp"}}, modification_time::very_early});
 
     check_tests_to_run(LINE("Materials stale; test previously passed (when selected); materials subsequently modified some early some late"),
                        projPaths,
                        "namespace",
-                       {{.stale{{{materials / "Stuff" / "FooTest" / "Prediction" / "RepresentativeCasesTemp" / "NoSeqpat" / "baz.txt"}, modification_time::early},
+                       {.stale{{{materials / "Stuff" / "FooTest" / "Prediction" / "RepresentativeCasesTemp" / "NoSeqpat" / "baz.txt"}, modification_time::early},
                                 {{materials / "Stuff" / "FooTest" / "Prediction" / "RepresentativeCasesTemp" / "NoSeqpat" / "baz2.txt"}, modification_time::very_late}},
-                         .to_run{{"Stuff/FooTest.cpp"}}}},
+                         .to_run{{"Stuff/FooTest.cpp"}}},
                        {},
                        {{{"Stuff/FooTest.cpp"}}, modification_time::late});
 
     check_tests_to_run(LINE("Nothing stale, but a previous failure"),
                        projPaths,
                        "namespace",
-                       {{.stale{}, .to_run{{"Maths/ProbabilityTest.cpp"}}}},
+                       {.stale{}, .to_run{{"Maths/ProbabilityTest.cpp"}}},
                        {{"Maths/ProbabilityTest.cpp"}},
                        {});
 
     check_tests_to_run(LINE("Inconsistency: both passed and failed; failure wins"),
                        projPaths,
                        "namespace",
-                       {{.stale{}, .to_run{{"Maths/ProbabilityTest.cpp"}}}},
+                       {.stale{}, .to_run{{"Maths/ProbabilityTest.cpp"}}},
                        {{"Maths/ProbabilityTest.cpp"}},
                        {{{"Maths/ProbabilityTest.cpp"}}, modification_time::late});
 
     check_tests_to_run(LINE("Stale and a previous failure"),
                        projPaths,
                        "namespace",
-                       {{.stale{{{testRepo / "Maths/ProbabilityTest.cpp"}, modification_time::early}}, .to_run{{"Maths/ProbabilityTest.cpp"}}}},
+                       {.stale{{{testRepo / "Maths/ProbabilityTest.cpp"}, modification_time::early}}, .to_run{{"Maths/ProbabilityTest.cpp"}}},
                        {{"Maths/ProbabilityTest.cpp"}},
                        {});
 
     check_tests_to_run(LINE("Nothing stale, but two previous failures"),
                        projPaths,
                        "namespace",
-                       {{.stale{}, .to_run{{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}}},
+                       {.stale{}, .to_run{{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}},
                        {{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}},
                        {});
   }
