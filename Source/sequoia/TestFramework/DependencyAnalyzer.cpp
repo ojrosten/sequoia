@@ -255,33 +255,35 @@ namespace sequoia::testing
 
             if(found != e)
             {
-              if((file.stem() == includedFile.stem()) && i->stale)
-              {
-                found->stale = true;
-              }
-
               const auto includeNodePos{static_cast<size_type>(distance(g.begin_node_weights(), found))};
               g.join(nodePos, includeNodePos);
 
               if(is_cpp(file))
               {
-                // Furnish the associated header with the same dependencies,
-                // as these are what ultimately determine whether or not
-                // the test cpp is considered stale. Sorting of g ensures
-                // that headers are directly after sources; note that since
-                // only files considered to be headers or sources are added
-                // to g, this is robust.
-
-                if(auto next{std::next(i)}; next != g.end_node_weights())
+                if(file.stem() == includedFile.stem())
                 {
-                  if(next->file.stem() == file.stem())
+                  // Ensure that if cpp is stale, then its associated hpp is
+                  // also rendered stale
+                  if(i->stale) found->stale = true;
+
+                  found->implicit_modification_time = std::max(i->implicit_modification_time, found->implicit_modification_time);
+                }
+                else
+                {
+                  // Furnish the associated header with the same dependencies,
+                  // as these are what ultimately determine whether or not
+                  // the test cpp is considered stale. Sorting of g ensures
+                  // that headers are directly after sources; note that since
+                  // only files considered to be headers or sources are added
+                  // to g, this is robust.
+
+                  if(auto next{std::next(i)}; next != g.end_node_weights())
                   {
-                    next->implicit_modification_time = std::max(i->implicit_modification_time, next->implicit_modification_time);
-                    if(i->stale) next->stale = true;
-
-                    const auto nextPos{static_cast<size_type>(distance(g.begin_node_weights(), next))};
-                    g.join(nextPos, includeNodePos);
-
+                    if(next->file.stem() == file.stem())
+                    {
+                      const auto nextPos{static_cast<size_type>(distance(g.begin_node_weights(), next))};
+                      g.join(nextPos, includeNodePos);
+                    }
                   }
                 }
               }
