@@ -25,20 +25,20 @@ namespace sequoia::testing
   namespace
   {
     [[nodiscard]]
-    bool is_stale(const fs::path& file, const fs::file_time_type& timeStamp, const std::optional<fs::file_time_type>& exeTimeStamp)
+    bool is_stale(const fs::file_time_type& lastImplicitModTime, const fs::file_time_type& pruneTimeStamp, const std::optional<fs::file_time_type>& exeTimeStamp)
     {
-      const auto lwt{fs::last_write_time(file)};
-      if(exeTimeStamp.has_value() && (lwt >= exeTimeStamp.value()))
+      if(exeTimeStamp.has_value() && (lastImplicitModTime >= exeTimeStamp.value()))
         throw std::runtime_error{"Executable is out of date; please build it!\n"};
 
-      return lwt > timeStamp;
+      return lastImplicitModTime > pruneTimeStamp;
     }
 
     struct file_info
     {
-      file_info(fs::path f, const fs::file_time_type& timeStamp, const std::optional<fs::file_time_type>& exeTimeStamp)
+      file_info(fs::path f, const fs::file_time_type& pruneTimeStamp, const std::optional<fs::file_time_type>& exeTimeStamp)
         : file{std::move(f)}
-        , stale{is_stale(file, timeStamp, exeTimeStamp)}
+        , last_implicit_modification_time{fs::last_write_time(file)}
+        , stale{is_stale(last_implicit_modification_time, pruneTimeStamp, exeTimeStamp)}
       {}
 
       file_info(fs::path f)
@@ -46,6 +46,7 @@ namespace sequoia::testing
       {}
 
       fs::path file;
+      fs::file_time_type last_implicit_modification_time;
       bool stale{true};
     };
 
@@ -196,14 +197,14 @@ namespace sequoia::testing
     using tests_dependency_graph = maths::graph<maths::directed_flavour::directed, maths::null_weight, file_info>;
     using node_iterator = tests_dependency_graph::iterator;
 
-    void add_files(tests_dependency_graph& g, const fs::path& repo, const fs::file_time_type& timeStamp, const std::optional<fs::file_time_type>& exeTimeStamp)
+    void add_files(tests_dependency_graph& g, const fs::path& repo, const fs::file_time_type& pruneTimeStamp, const std::optional<fs::file_time_type>& exeTimeStamp)
     {
       for(const auto& entry : fs::recursive_directory_iterator(repo))
       {
         const auto file{entry.path()};
         if(is_cpp(file) || is_header(file))
         {
-          g.add_node(file, timeStamp, exeTimeStamp);
+          g.add_node(file, pruneTimeStamp, exeTimeStamp);
         }
       }
     }
@@ -264,12 +265,11 @@ namespace sequoia::testing
 
               if(is_cpp(file))
               {
-                // Furnish the associated hpp with the same dependencies,
+                // Furnish the associated header with the same dependencies,
                 // as these are what ultimately determine whether or not
                 // the test cpp is considered stale. Sorting of g ensures
                 // that headers are directly after sources
 
-                //This could easily breakdown!
                 if(auto next{std::next(i)}; next != g.cend_node_weights())
                 {
                   if(next->file.stem() == file.stem())
@@ -297,14 +297,14 @@ namespace sequoia::testing
     [[nodiscard]]
     bool materials_modified(const fs::path& relFilePath,
                             const fs::path& materialsRepo,
-                            const fs::file_time_type timeStamp)
+                            const fs::file_time_type pruneTimeStamp)
     {
       const auto materials{materialsRepo / fs::path{relFilePath}.replace_extension("")};
       if(fs::exists(materials))
       {
         for(const auto& entry : fs::recursive_directory_iterator(materials))
         {
-          if(fs::last_write_time(entry) > timeStamp) return true;
+          if(fs::last_write_time(entry) > pruneTimeStamp) return true;
         }
       }
 
@@ -349,15 +349,15 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    std::vector<fs::path> find_stale_tests(fs::file_time_type timeStamp, const project_paths& projPaths, std::string_view cutoff)
+    std::vector<fs::path> find_stale_tests(fs::file_time_type pruneTimeStamp, const project_paths& projPaths, std::string_view cutoff)
     {
       using namespace maths;
 
       tests_dependency_graph g{};
 
       const auto exeTimeStamp{get_stamp(projPaths.executable())};
-      add_files(g, projPaths.source().project(), timeStamp, exeTimeStamp);
-      add_files(g, projPaths.tests().repo(), timeStamp, exeTimeStamp);
+      add_files(g, projPaths.source().project(), pruneTimeStamp, exeTimeStamp);
+      add_files(g, projPaths.tests().repo(), pruneTimeStamp, exeTimeStamp);
       g.sort_nodes([&g](auto i, auto j) {
         const fs::path&
           lfile{(g.cbegin_node_weights() + i)->file},
@@ -402,7 +402,7 @@ namespace sequoia::testing
           if(passesStamp && std::binary_search(passingTestsFromFile.begin(), passingTestsFromFile.end(), relPath))
           {
             const auto materialsWriteTime{materials_max_write_time(relPath, projPaths.test_materials().repo())};
-            if(!weight.stale && (materialsWriteTime > timeStamp))
+            if(!weight.stale && (materialsWriteTime > pruneTimeStamp))
               i->stale = true;
 
             const auto maxWriteTime{
@@ -422,7 +422,7 @@ namespace sequoia::testing
           }
           else if(!weight.stale)
           {
-            if(materials_modified(relPath, projPaths.test_materials().repo(), timeStamp))
+            if(materials_modified(relPath, projPaths.test_materials().repo(), pruneTimeStamp))
             {
               i->stale = true;
             }
@@ -540,11 +540,11 @@ namespace sequoia::testing
   tests_to_run(const project_paths& projPaths, std::string_view cutoff)
   {
     const auto prunePaths{projPaths.prune()};
-    const auto timeStamp{get_stamp(prunePaths.stamp())};
+    const auto pruneTimeStamp{get_stamp(prunePaths.stamp())};
 
-    if(!timeStamp) return std::nullopt;
+    if(!pruneTimeStamp) return std::nullopt;
 
-    const auto staleTests{find_stale_tests(timeStamp.value(), projPaths, cutoff)};
+    const auto staleTests{find_stale_tests(pruneTimeStamp.value(), projPaths, cutoff)};
 
     const std::vector<fs::path> failingTests{read_tests(prunePaths.failures(std::nullopt))};
 
