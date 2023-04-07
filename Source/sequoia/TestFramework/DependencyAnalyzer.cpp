@@ -268,9 +268,10 @@ namespace sequoia::testing
                 // Furnish the associated header with the same dependencies,
                 // as these are what ultimately determine whether or not
                 // the test cpp is considered stale. Sorting of g ensures
-                // that headers are directly after sources
+                // that headers are directly after sources; note that since
+                // only files considered to be headers or sources are added
+                // to g, this is robust.
 
-                // TO DO: make more robust
                 if(auto next{std::next(i)}; next != g.end_node_weights())
                 {
                   if(next->file.stem() == file.stem())
