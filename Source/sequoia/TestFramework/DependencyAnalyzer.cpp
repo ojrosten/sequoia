@@ -37,8 +37,8 @@ namespace sequoia::testing
     {
       file_info(fs::path f, const fs::file_time_type& pruneTimeStamp, const std::optional<fs::file_time_type>& exeTimeStamp)
         : file{std::move(f)}
-        , last_implicit_modification_time{fs::last_write_time(file)}
-        , stale{is_stale(last_implicit_modification_time, pruneTimeStamp, exeTimeStamp)}
+        , implicit_modification_time{fs::last_write_time(file)}
+        , stale{is_stale(implicit_modification_time, pruneTimeStamp, exeTimeStamp)}
       {}
 
       file_info(fs::path f)
@@ -46,7 +46,7 @@ namespace sequoia::testing
       {}
 
       fs::path file;
-      fs::file_time_type last_implicit_modification_time;
+      fs::file_time_type implicit_modification_time;
       bool stale{true};
     };
 
@@ -215,9 +215,9 @@ namespace sequoia::testing
       using size_type = tests_dependency_graph::size_type;
       std::vector<fs::path> externalDependencies{};
 
-      for(auto i{g.cbegin_node_weights()}; i != g.cend_node_weights(); ++i)
+      for(auto i{g.begin_node_weights()}; i != g.end_node_weights(); ++i)
       {
-        const auto nodePos{static_cast<size_type>(distance(g.cbegin_node_weights(), i))};
+        const auto nodePos{static_cast<size_type>(distance(g.begin_node_weights(), i))};
         const auto& file{i->file};
 
         for(const auto& includedFile : get_includes(file, cutoff))
@@ -270,12 +270,16 @@ namespace sequoia::testing
                 // the test cpp is considered stale. Sorting of g ensures
                 // that headers are directly after sources
 
-                if(auto next{std::next(i)}; next != g.cend_node_weights())
+                // TO DO: make more robust
+                if(auto next{std::next(i)}; next != g.end_node_weights())
                 {
                   if(next->file.stem() == file.stem())
                   {
-                    const auto nextPos{static_cast<size_type>(distance(g.cbegin_node_weights(), next))};
+                    next->implicit_modification_time = std::max(i->implicit_modification_time, next->implicit_modification_time);
+
+                    const auto nextPos{static_cast<size_type>(distance(g.begin_node_weights(), next))};
                     g.join(nextPos, includeNodePos);
+
                   }
                 }
               }
@@ -376,11 +380,12 @@ namespace sequoia::testing
         [&g](const std::size_t node) {
           for(auto i{g.cbegin_edges(node)}; i != g.cend_edges(node); ++i)
           {
-            if((g.cbegin_node_weights() + i->target_node())->stale)
-            {
-              g.begin_node_weights()[node].stale = true;
-              break;
-            }
+            auto& wt{g.begin_node_weights()[node]};
+            auto& targetWt{g.cbegin_node_weights()[i->target_node()]};
+
+            wt.implicit_modification_time = std::max(wt.implicit_modification_time, targetWt.implicit_modification_time);
+
+            if(targetWt.stale) wt.stale = true;
           }
         }
       };
@@ -405,19 +410,9 @@ namespace sequoia::testing
             if(!weight.stale && (materialsWriteTime > pruneTimeStamp))
               i->stale = true;
 
-            const auto maxWriteTime{
-              [materialsWriteTime,&weight]() {
-                const auto fileWriteTime{fs::last_write_time(weight.file)};
-                return materialsWriteTime ? std::max(materialsWriteTime.value(), fileWriteTime) : fileWriteTime;
-              }()
-            };
+            const auto maxModificationTime{materialsWriteTime ? std::max(materialsWriteTime.value(), weight.implicit_modification_time) : weight.implicit_modification_time};
 
-            // Bug here!
-            // 1, x.cpp is modified;
-            // 2. Pasing tests added to passing list
-            // 3. x.cpp modified again
-            // 4. maxWriteTime doesn't take into account step 3.
-            if(weight.stale && (passesStamp.value() > maxWriteTime))
+            if(weight.stale && (passesStamp.value() > maxModificationTime))
               consider_passing_tests(i, relPath, passingTestsFromFile);
           }
           else if(!weight.stale)
