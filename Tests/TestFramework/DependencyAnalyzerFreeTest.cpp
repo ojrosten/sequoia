@@ -277,6 +277,14 @@ namespace sequoia::testing
                        {},
                        {});
 
+    check_tests_to_run(LINE("Source cpp stale, following a previously successful run"),
+                       projPaths,
+                       "namespace",
+                       {{.stale{{{sourceRepo / "Maths" / "Probability.cpp"}, modification_time::early}},
+                         .to_run{{"Maths/ProbabilityTest.cpp"}, {"Maths/ProbabilityTestingDiagnostics.cpp"}}}},
+                       {},
+                       {{{"Maths/ProbabilityTest.cpp"}, {"Maths/ProbabilityTestingDiagnostics.cpp"}}, modification_time::early});
+
     check_tests_to_run(LINE("Source cpp indirectly stale via included header"),
                        projPaths,
                        "namespace",
