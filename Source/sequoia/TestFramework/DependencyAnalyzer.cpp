@@ -277,6 +277,7 @@ namespace sequoia::testing
                   if(next->file.stem() == file.stem())
                   {
                     next->implicit_modification_time = std::max(i->implicit_modification_time, next->implicit_modification_time);
+                    if(i->stale) next->stale = true;
 
                     const auto nextPos{static_cast<size_type>(distance(g.begin_node_weights(), next))};
                     g.join(nextPos, includeNodePos);
