@@ -186,7 +186,6 @@ namespace sequoia::testing
     static auto from_file(const std::filesystem::path& stampFile) -> stamp;
 
     stamp ondisk, executable;
-    time_type current{std::chrono::file_clock::now()};
   };
 
   enum class is_filtered { no, yes };

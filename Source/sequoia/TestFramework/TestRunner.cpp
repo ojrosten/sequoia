@@ -30,6 +30,8 @@ namespace sequoia::testing
 {
   namespace fs = std::filesystem;
 
+  const time_type entry_time_stamp{std::chrono::file_clock::now()};
+
   namespace
   {
     [[nodiscard]]
@@ -291,7 +293,7 @@ namespace sequoia::testing
         }
         else
         {
-          update_prune_files(m_ProjPaths, m_FailedTests, m_PruneInfo.stamps.current, m_Id);
+          update_prune_files(m_ProjPaths, m_FailedTests, entry_time_stamp, m_Id);
         }
       }
     };
@@ -845,7 +847,7 @@ namespace sequoia::testing
     if(   (m_InstabilityMode == instability_mode::single_instance)
        || (m_InstabilityMode == instability_mode::coordinator))
     {
-      aggregate_instability_analysis_prune_files(proj_paths(), m_PruneInfo.mode, m_PruneInfo.stamps.current, m_NumReps);
+      aggregate_instability_analysis_prune_files(proj_paths(), m_PruneInfo.mode, entry_time_stamp, m_NumReps);
       const auto outputDir{proj_paths().output().instability_analysis()};
       stream() << instability_analysis(outputDir, m_NumReps);
     }
