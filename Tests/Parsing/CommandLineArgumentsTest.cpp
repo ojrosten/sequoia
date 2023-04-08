@@ -96,22 +96,22 @@ namespace sequoia::testing
     check(weak_equivalence,
           LINE("Concatenated alias"),
           parse({"foo", "-av"}, {{{"--async",   {"-a"}, {}, fo{}}},
-                                                  {{"--verbose", {"-v"}, {}, fo{}}}}),
+                                 {{"--verbose", {"-v"}, {}, fo{}}}}),
           outcome{"foo", { {{fo{}, nullptr, {}}}, {{fo{}, nullptr, {}}} }});
 
 
     check(weak_equivalence,
           LINE("Concatenated alias with dash"),
           parse({"foo", "-a-v"}, {{{"--async", {"-a"}, {}, fo{}}},
-                                                  {{"--verbose", {"-v"}, {}, fo{}}}}),
+                                  {{"--verbose", {"-v"}, {}, fo{}}}}),
           outcome{"foo", { {{fo{}, nullptr, {}}}, {{fo{}, nullptr, {}}} }});
 
 
     check(weak_equivalence,
           LINE("Concatenated alias and single alias"),
           parse({"foo", "-av", "-p"}, {{{"--async",   {"-a"}, {}, fo{}}},
-                                                  {{"--verbose", {"-v"}, {}, fo{}}},
-                                                  {{"--pause",   {"-p"}, {}, fo{}}}}),
+                                       {{"--verbose", {"-v"}, {}, fo{}}},
+                                       {{"--pause",   {"-p"}, {}, fo{}}}}),
           outcome{"foo", { {{fo{}, nullptr, {}}}, {{fo{}, nullptr, {}}}, {{fo{}, nullptr, {}}} }});
 
     check_exception_thrown<std::runtime_error>(LINE("Concatenated alias with only partial match"), [](){
@@ -242,6 +242,15 @@ namespace sequoia::testing
                    }},
                    {{"--verbose", {"-v"}, {}, fo{}}}}),
            outcome{"", {{{fo{}, nullptr, {"class", "dir", "foo"}}}, {{fo{}, nullptr, {}}}}});
+
+     check(weak_equivalence,
+           LINE("A nested option, for which the optional alias could potentially clash with a different option"),
+           parse({"", "create", "class", "dir", "--e"},
+                 { {{"create", {}, {"class_name", "directory"}, fo{}, {},
+                      { {"--equivalent-type", {"-e"}, {"type"}}}
+                   }},
+                   {{"--e", {}, {}, fo{"e"}}}}),
+           outcome{"", {{{fo{}, nullptr, {"class", "dir"}}}, {{fo{"e"}, nullptr, {}}}}});
 
      check(weak_equivalence,
            LINE("Two options, one with nesting, the other aliased without a leading dash"),
