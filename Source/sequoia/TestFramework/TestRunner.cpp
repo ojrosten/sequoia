@@ -30,7 +30,7 @@ namespace sequoia::testing
 {
   namespace fs = std::filesystem;
 
-  const time_type entry_time_stamp{std::chrono::file_clock::now()};
+  const fs::file_time_type entry_time_stamp{std::chrono::file_clock::now()};
 
   namespace
   {
@@ -196,14 +196,15 @@ namespace sequoia::testing
     const std::string& convert(const std::string& s) { return s; }
     std::string convert(const std::filesystem::path& p) { return p.generic_string(); }
 
+    enum class is_filtered { no, yes };
+
     class test_tracker
     {
     public:
-      explicit test_tracker(const project_paths& projPaths, std::optional<std::size_t> id, is_filtered filtered)
+      explicit test_tracker(const project_paths& projPaths, std::optional<std::size_t> id, is_filtered isFiltered)
         : m_ProjPaths{projPaths}
         , m_Id{id}
-        , m_PruneInfo{.stamps{time_stamps::from_file(m_ProjPaths.prune().stamp()), time_stamps::from_file(m_ProjPaths.executable())},
-                      .filtered{filtered}}
+        , m_Filtered{isFiltered}
       {}
 
       void increment_depth() noexcept { ++m_Depth; }
@@ -247,17 +248,11 @@ namespace sequoia::testing
       int m_Depth{npos};
       project_paths m_ProjPaths;
       std::optional<std::size_t> m_Id{};
-      prune_info m_PruneInfo{};
+      is_filtered m_Filtered{};
 
       std::vector<std::filesystem::path> m_FailedTests{}, m_ExecutedTests{};
       std::set<test_paths, paths_comparator> m_Updateables{};
       std::set<std::filesystem::path> m_FilesWrittenTo{};
-
-      [[nodiscard]]
-      prune_mode pruned() const noexcept
-      {
-        return m_PruneInfo.mode;
-      }
 
       void to_file(const std::filesystem::path& filename, const log_summary& summary)
       {
@@ -287,7 +282,7 @@ namespace sequoia::testing
 
       void update_prune_info() const
       {
-        if((pruned() == prune_mode::passive) && (m_PruneInfo.filtered == is_filtered::yes))
+        if(m_Filtered == is_filtered::yes)
         {
           update_prune_files(m_ProjPaths, m_ExecutedTests, m_FailedTests, m_Id);
         }
@@ -297,16 +292,6 @@ namespace sequoia::testing
         }
       }
     };
-  }
-
-  auto time_stamps::from_file(const std::filesystem::path& stampFile) -> stamp
-  {
-    if(fs::exists(stampFile))
-    {
-      return fs::last_write_time(stampFile);
-    }
-
-    return std::nullopt;
   }
 
   individual_materials_paths set_materials(const std::filesystem::path& sourceFile, const project_paths& projPaths, std::vector<std::filesystem::path>& materialsPaths)

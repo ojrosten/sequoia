@@ -177,29 +177,6 @@ namespace sequoia::testing
     parallelizable_candidate m_Parallelizable{parallelizable_candidate::yes};
   };
 
-  using time_type = std::filesystem::file_time_type;
-
-  struct time_stamps
-  {
-    using stamp = std::optional<time_type>;
-
-    static auto from_file(const std::filesystem::path& stampFile) -> stamp;
-
-    stamp ondisk, executable;
-  };
-
-  enum class is_filtered { no, yes };
-
-  struct prune_info
-  {
-    time_stamps stamps{};
-    prune_mode mode{prune_mode::passive};
-    std::string include_cutoff{};
-    is_filtered filtered;
-
-    void enable_prune() noexcept { mode = prune_mode::active; }
-  };
-
   /*! \brief Consumes command-line arguments and holds all test suites.
 
       If no arguments are specified, all tests are run; run with --help
@@ -256,6 +233,14 @@ namespace sequoia::testing
   private:
     enum class output_mode { standard = 0, verbose = 1 };
     enum class instability_mode { none = 0, single_instance, coordinator, sandbox };
+
+    struct prune_info
+    {
+      prune_mode mode{prune_mode::passive};
+      std::string include_cutoff{};
+
+      void enable_prune() noexcept { mode = prune_mode::active; }
+    };
 
     struct test_to_path
     {
