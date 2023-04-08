@@ -201,11 +201,10 @@ namespace sequoia::testing
     void enable_prune() noexcept { mode = prune_mode::active; }
   };
 
-  /*! \brief Consumes command-line arguments and holds all test families
+  /*! \brief Consumes command-line arguments and holds all test suites.
 
-      If no arguments are specified, all tests are run with the diagnostic
-      files generated; run with --help for information on the various options
-
+      If no arguments are specified, all tests are run; run with --help
+      for information on the various options.
    */
 
   class test_runner

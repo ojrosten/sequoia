@@ -73,20 +73,7 @@ namespace sequoia::testing
         accelerate(thread_pool_policy{.num{8}}, first, last, std::move(f));
       }
     }
-  }
 
-  auto time_stamps::from_file(const std::filesystem::path& stampFile) -> stamp
-  {
-    if(fs::exists(stampFile))
-    {
-      return fs::last_write_time(stampFile);
-    }
-
-    return std::nullopt;
-  }
-
-  namespace
-  {
     [[nodiscard]]
     fs::path test_summary_filename(const fs::path& sourceFile, const project_paths& projPaths)
     {
@@ -310,44 +297,14 @@ namespace sequoia::testing
     };
   }
 
-  [[nodiscard]]
-  bool test_runner::path_equivalence::operator()(const normal_path& selectedSource, const normal_path& filepath) const
+  auto time_stamps::from_file(const std::filesystem::path& stampFile) -> stamp
   {
-    if(filepath.path().empty() || selectedSource.path().empty() || (back(selectedSource) != back(filepath)))
-      return false;
-
-    if(filepath == selectedSource) return true;
-
-    // filepath is relative to where compilation was performed which
-    // cannot be known here. Therefore fallback to assuming the 'selected sources'
-    // live in the test repository
-
-    if(auto repo{*m_Repo};!repo.empty())
+    if(fs::exists(stampFile))
     {
-      if(rebase_from(selectedSource, repo) == rebase_from(filepath, repo))
-        return true;
-
-      if(const auto path{find_in_tree(repo, selectedSource)}; !path.empty())
-      {
-        if(rebase_from(path, repo) == rebase_from(filepath, repo))
-          return true;
-      }
+      return fs::last_write_time(stampFile);
     }
 
-    return false;
-  }
-
-  [[nodiscard]]
-  active_recovery_files test_runner::make_active_recovery_paths(recovery_mode mode, const project_paths& projPaths)
-  {
-    active_recovery_files paths{};
-    if((mode & recovery_mode::recovery) == recovery_mode::recovery)
-      paths.recovery_file = projPaths.output().recovery().recovery_file();
-
-    if((mode & recovery_mode::dump) == recovery_mode::dump)
-      paths.dump_file = projPaths.output().recovery().dump_file();
-
-    return paths;
+    return std::nullopt;
   }
 
   individual_materials_paths set_materials(const std::filesystem::path& sourceFile, const project_paths& projPaths, std::vector<std::filesystem::path>& materialsPaths)
@@ -383,6 +340,33 @@ namespace sequoia::testing
 
 
   //=========================================== test_runner ===========================================//
+
+  [[nodiscard]]
+  bool test_runner::path_equivalence::operator()(const normal_path& selectedSource, const normal_path& filepath) const
+  {
+    if(filepath.path().empty() || selectedSource.path().empty() || (back(selectedSource) != back(filepath)))
+      return false;
+
+    if(filepath == selectedSource) return true;
+
+    // filepath is relative to where compilation was performed which
+    // cannot be known here. Therefore fallback to assuming the 'selected sources'
+    // live in the test repository
+
+    if(auto repo{*m_Repo}; !repo.empty())
+    {
+      if(rebase_from(selectedSource, repo) == rebase_from(filepath, repo))
+        return true;
+
+      if(const auto path{find_in_tree(repo, selectedSource)}; !path.empty())
+      {
+        if(rebase_from(path, repo) == rebase_from(filepath, repo))
+          return true;
+      }
+    }
+
+    return false;
+  }
 
   test_runner::test_runner(int argc,
                            char** argv,
@@ -1123,4 +1107,19 @@ namespace sequoia::testing
                     " which both have the same name and are defined"
                     " in the same source file.\n"));
   }
+
+  [[nodiscard]]
+  active_recovery_files test_runner::make_active_recovery_paths(recovery_mode mode, const project_paths& projPaths)
+  {
+    active_recovery_files paths{};
+    if((mode & recovery_mode::recovery) == recovery_mode::recovery)
+      paths.recovery_file = projPaths.output().recovery().recovery_file();
+
+    if((mode & recovery_mode::dump) == recovery_mode::dump)
+      paths.dump_file = projPaths.output().recovery().dump_file();
+
+    return paths;
+  }
+
+
 }
