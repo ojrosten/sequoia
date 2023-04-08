@@ -32,6 +32,12 @@ namespace sequoia::testing
   enum class recovery_mode { none = 0, recovery = 1, dump = 2 };
 
   enum class prune_outcome { not_attempted, no_time_stamp, success };
+
+  enum class concurrency_mode {
+    serial,    /// serial execution
+    dynamic,   /// determined implicitly by the stl
+    fixed      /// fixed-size thread pool
+  };
 }
 
 namespace sequoia
@@ -45,41 +51,6 @@ namespace sequoia
 
 namespace sequoia::testing
 {
-  enum class concurrency_mode {
-    serial,    /// serial execution
-    dynamic,   /// determined implicitly by the stl
-    fixed      /// fixed-size thread pool
-  };
-
-  [[nodiscard]]
-  std::string to_string(concurrency_mode mode);
-
-  struct test_to_path
-  {
-    template<concrete_test Test>
-    [[nodiscard]]
-    normal_path operator()(const Test& test) const {
-      return test.source_filename();
-    }
-  };
-
-  class path_equivalence
-  {
-  public:
-    explicit path_equivalence(const std::filesystem::path& repo)
-      : m_Repo{&repo}
-    {}
-
-    [[nodiscard]]
-    bool operator()(const normal_path& selectedSource, const normal_path& filepath) const;
-
-  private:
-    const std::filesystem::path* m_Repo;
-  };
-
-  [[nodiscard]]
-  active_recovery_files make_active_recovery_paths(recovery_mode mode, const project_paths& projPaths);
-
   individual_materials_paths set_materials(const std::filesystem::path& sourceFile, const project_paths& projPaths, std::vector<std::filesystem::path>& materialsPaths);
 
   class test_vessel
@@ -288,6 +259,29 @@ namespace sequoia::testing
     enum class output_mode { standard = 0, verbose = 1 };
     enum class instability_mode { none = 0, single_instance, coordinator, sandbox };
 
+    struct test_to_path
+    {
+      template<concrete_test Test>
+      [[nodiscard]]
+      normal_path operator()(const Test& test) const {
+        return test.source_filename();
+      }
+    };
+
+    class path_equivalence
+    {
+    public:
+      explicit path_equivalence(const std::filesystem::path& repo)
+        : m_Repo{&repo}
+      {}
+
+      [[nodiscard]]
+      bool operator()(const normal_path& selectedSource, const normal_path& filepath) const;
+
+    private:
+      const std::filesystem::path* m_Repo;
+    };
+
     struct suite_node
     {
       log_summary summary{};
@@ -336,10 +330,7 @@ namespace sequoia::testing
     bool nothing_to_do();
 
     [[nodiscard]]
-    bool mode(runner_mode m) const noexcept
-    {
-      return (m_RunnerMode & m) == m;
-    }
+    bool in_mode(runner_mode m) const noexcept { return (m_RunnerMode & m) == m; }
 
     void prune();
 
@@ -397,5 +388,8 @@ namespace sequoia::testing
 
     [[nodiscard]]
     static std::string duplication_message(std::string_view familyName, std::string_view testName, const std::filesystem::path& source);
+
+    [[nodiscard]]
+    static active_recovery_files make_active_recovery_paths(recovery_mode mode, const project_paths& projPaths);
  };
 }

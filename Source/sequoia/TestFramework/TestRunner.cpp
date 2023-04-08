@@ -75,22 +75,6 @@ namespace sequoia::testing
     }
   }
 
-  [[nodiscard]]
-  std::string to_string(concurrency_mode mode)
-  {
-    switch(mode)
-    {
-    case concurrency_mode::serial:
-      return "Serial";
-    case concurrency_mode::dynamic:
-      return "Dynamic";
-    case concurrency_mode::fixed:
-      return "Fixed";
-    }
-
-    throw std::logic_error{"Unknown option for concurrency_mode"};
-  }
-
   auto time_stamps::from_file(const std::filesystem::path& stampFile) -> stamp
   {
     if(fs::exists(stampFile))
@@ -327,7 +311,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  bool path_equivalence::operator()(const normal_path& selectedSource, const normal_path& filepath) const
+  bool test_runner::path_equivalence::operator()(const normal_path& selectedSource, const normal_path& filepath) const
   {
     if(filepath.path().empty() || selectedSource.path().empty() || (back(selectedSource) != back(filepath)))
       return false;
@@ -354,7 +338,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  active_recovery_files make_active_recovery_paths(recovery_mode mode, const project_paths& projPaths)
+  active_recovery_files test_runner::make_active_recovery_paths(recovery_mode mode, const project_paths& projPaths)
   {
     active_recovery_files paths{};
     if((mode & recovery_mode::recovery) == recovery_mode::recovery)
@@ -721,13 +705,13 @@ namespace sequoia::testing
 
       check_argument_consistency();
 
-      if(mode(runner_mode::create))
+      if(in_mode(runner_mode::create))
         cmake_nascent_tests(proj_paths(), stream());
   
-      if(mode(runner_mode::init))
+      if(in_mode(runner_mode::init))
         init_projects(proj_paths(), nascentProjects, stream());
 
-      if(mode(runner_mode::test))
+      if(in_mode(runner_mode::test))
       {
         if((m_InstabilityMode == instability_mode::single_instance) || (m_InstabilityMode == instability_mode::coordinator))
         {
@@ -809,7 +793,7 @@ namespace sequoia::testing
 
   void test_runner::execute([[maybe_unused]] timer_resolution r)
   {
-    if(!mode(runner_mode::test))
+    if(!in_mode(runner_mode::test))
       return;
 
     fs::create_directories(proj_paths().prune().dir());
