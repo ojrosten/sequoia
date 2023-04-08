@@ -22,7 +22,7 @@ int main(int argc, char** argv)
                        "Oliver J. Rosten",
                        {"TestFrameworkDiagnostics/TestFrameworkDiagnosticsMain.cpp", {"TestAll/TestMain.cpp"}, "TestCommon/TestIncludes.hpp"}};
 
-    runner.add_test_family(
+    runner.add_test_suite(
       "Test Runner",
       test_runner_false_positive_test{"False Positive Diagnostics"},
       test_runner_test{"Functionality Test"},
@@ -31,7 +31,7 @@ int main(int argc, char** argv)
       test_runner_project_creation{"Project Creation"}
     );
 
-    runner.add_test_family(
+    runner.add_test_suite(
       "Test Framework Auxiliary",
       commands_free_test{"Commands Free Test"},
       failure_info_test{"failure_info Unit Test"},
@@ -42,7 +42,7 @@ int main(int argc, char** argv)
       materials_updater_free_test{"Free Test"}
     );
 
-    runner.add_test_family(
+    runner.add_test_suite(
       "Core Diagnostics",
       elementary_false_positive_free_diagnostics{"Elementary False Positive Free Diagnostics"},
       elementary_false_negative_free_diagnostics{"Elementary False Negative Free Diagnostics"},
@@ -66,7 +66,7 @@ int main(int argc, char** argv)
       function_false_negative_free_diagnostics{"Function False Negative Free Diagnostics"}
     );
     
-    runner.add_test_family(
+    runner.add_test_suite(
       "Semantics Testing Diagnostics",
       regular_false_positive_diagnostics{"Regular False Positive Diagnostics"},
       move_only_false_positive_diagnostics{"Move-Only False Positive Diagnostics"},
@@ -78,7 +78,7 @@ int main(int argc, char** argv)
       orderable_regular_false_negative_diagnostics{"Orderable Regular False Negative Diagnostics"}
     );
 
-    runner.add_test_family(
+    runner.add_test_suite(
       "Allocation Diagnostics",
       allocation_false_positive_diagnostics{"Allocation False Positive Diagnostics"},
       move_only_allocation_false_positive_diagnostics{"Move-Only Alloction False Positive Diagnostics"},
@@ -86,7 +86,7 @@ int main(int argc, char** argv)
       move_only_allocation_false_negative_diagnostics{"Move-Only Allocation False Negative Diagnostics"}
     );
 
-    runner.add_test_family(
+    runner.add_test_suite(
       "Scoped Allocation Diagnostics",
       scoped_allocation_false_positive_diagnostics{"Scoped Allocation False Positive Diagnostics"},
       move_only_scoped_allocation_false_positive_diagnostics{"Move-Only Scoped Allocation False Positive Diagnostics"},
@@ -94,27 +94,27 @@ int main(int argc, char** argv)
       move_only_scoped_allocation_false_negative_diagnostics{"Move-Only Scoped Allocation False Negative Diagnostics"}
     );
 
-    runner.add_test_family(
+    runner.add_test_suite(
       "Extended Allocation Diagnostics",
       orderable_move_only_allocation_false_negative_diagnostics{"Orderable Move-Only Allocation False Negative Diagnostics"},
       orderable_regular_allocation_false_negative_diagnostics{"Orderable Regular Allocation False Negative Diagnostics"},
       orderable_regular_allocation_false_positive_diagnostics{"Orderable Regular Allocation False Positive Diagnostics"}
     );
 
-    runner.add_test_family(
+    runner.add_test_suite(
       "Performance Diagnostics",
       performance_false_positive_diagnostics{"Performance False Positive Diagnostics"},
       performance_false_negative_diagnostics{"Performance False Negative Diagnostics"},
       performance_utilities_test{"Performance Utilities"}
     );
 
-    runner.add_test_family(
+    runner.add_test_suite(
       "Relational Diagnostics",
       relational_false_positive_diagnostics{"Relational False Positive Diagnostics"},
       relational_false_negative_diagnostics{"Relational False Negative Diagnostics"}
     );
 
-    runner.add_test_family(
+    runner.add_test_suite(
       "State Transition Utilities",
       regular_state_transition_false_positive_diagnostics{"Regular False Positive Diagnostics"},
       regular_state_transition_false_negative_diagnostics{"Regular False Negative Diagnostics"},
@@ -122,25 +122,25 @@ int main(int argc, char** argv)
       move_only_state_transition_false_positive_diagnostics{"Move-Only False Negative Diagnostics"}
     );
 
-    runner.add_test_family(
+    runner.add_test_suite(
       "CommandLine Arguments",
       commandline_arguments_false_positive_test{"False Positive Test"},
       commandline_arguments_test{"Unit Test"}
     );
 
-    runner.add_test_family(
+    runner.add_test_suite(
       "Factory",
       factory_false_positive_test{"False Positive Test"},
       factory_test{"Unit Test"}
     );
 
-    runner.add_test_family(
+    runner.add_test_suite(
       "Shell Commands",
       shell_commands_false_positive_test{"False Positive Test"},
       shell_commands_test{"Unit Test"}
     );
 
-    runner.add_test_family(
+    runner.add_test_suite(
       "Text Processing",
       indent_free_test{"Indent Free Test"},
       patterns_free_test{"Patterns Free Test"},

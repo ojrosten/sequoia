@@ -22,7 +22,7 @@ int main(int argc, char** argv)
                        "Oliver J. Rosten",
                        {"TestChamber/TestChamberMain.cpp", {}, "TestCommon/TestIncludes.hpp"}};
 
-    runner.add_test_family(
+    runner.add_test_suite(
       "Experimental",
       experimental_test{"Unit Test"}
     );

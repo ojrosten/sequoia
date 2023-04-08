@@ -22,7 +22,7 @@ int main(int argc, char** argv)
                        "Oliver J. Rosten",
                        {"TestFrameworkHarness/TestFrameworkHarnessMain.cpp", {}, "TestCommon/TestIncludes.hpp"}};
 
-    runner.add_test_family(
+    runner.add_test_suite(
       "Test Runner",
       test_runner_end_to_end_test("End to End Test")
     );
