@@ -30,7 +30,7 @@ namespace sequoia::testing
 {
   namespace fs = std::filesystem;
 
-  const fs::file_time_type entry_time_stamp{std::chrono::file_clock::now()};
+  const auto entry_time_stamp{std::chrono::file_clock::now()};
 
   namespace
   {
@@ -517,7 +517,7 @@ namespace sequoia::testing
                   {{{"prune", {"p"}, {},
                     [this](const arg_list&) {
                       m_RunnerMode |= runner_mode::test;
-                      m_PruneInfo.enable_prune();
+                      m_PruneInfo.mode = prune_mode::active;
                     },
                     {}},
                     {{{"--cutoff", {"-c"}, {"Cutoff for #include search e.g. 'namespace'"},

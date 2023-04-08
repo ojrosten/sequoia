@@ -162,7 +162,7 @@ namespace sequoia::testing
         return m_Test.execute(index);
       }
 
-      void reset(const project_paths& projPaths, std::vector<std::filesystem::path>& materialsPaths)
+      void reset(const project_paths& projPaths, std::vector<std::filesystem::path>& materialsPaths) final
       {
         m_Test.reset_results();
         set_materials(m_Test.source_filename(), projPaths, materialsPaths);
@@ -238,17 +238,13 @@ namespace sequoia::testing
     {
       prune_mode mode{prune_mode::passive};
       std::string include_cutoff{};
-
-      void enable_prune() noexcept { mode = prune_mode::active; }
     };
 
     struct test_to_path
     {
       template<concrete_test Test>
       [[nodiscard]]
-      normal_path operator()(const Test& test) const {
-        return test.source_filename();
-      }
+      normal_path operator()(const Test& test) const { return test.source_filename(); }
     };
 
     class path_equivalence
