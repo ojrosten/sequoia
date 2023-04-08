@@ -46,7 +46,7 @@ namespace sequoia::testing
       return run_cmd().append(" create free_test Utilities.hpp"
                               " create free_test \"Utilities/UsefulThings.hpp\" gen-source utils"
                               " create free_test \"Source/generatedProject/Stuff/Bar.hpp\""
-                              " create free \"Unstable/Flipper.hpp\" -f Unstable"
+                              " create free \"Unstable/Flipper.hpp\" -s Unstable"
                               " create regular_test \"other::functional::maybe<class T>\" \"std::optional<T>\" gen-source Maybe"
                               " create regular_test \"stuff::oldschool\" double --header \"NoTemplate.hpp\""
                               " create regular \"maths::probability\" double gen-source Maths"
@@ -76,11 +76,11 @@ namespace sequoia::testing
                             output / "SpecifiedSourceOutput.txt"}
            && shell_command{"", run_cmd().append(" select FooTest.cpp prune"), output / "SelectedSourcePruneConflictOutput.txt"}
            && shell_command{"", run_cmd().append(" select Plurgh.cpp test Absent select Foo test FooTest.cpp"), output / "FailedSpecifiedSourceOutput.txt"}
-           && shell_command{"", run_cmd().append(" test Foo"), output / "SpecifiedFamilyOutput.txt"}
-           && shell_command{"", run_cmd().append(" test Foo prune"), output / "SpecifiedFamilyPruneConflictOutput.txt"}
+           && shell_command{"", run_cmd().append(" test Foo"), output / "SpecifiedSuiteOutput.txt"}
+           && shell_command{"", run_cmd().append(" test Foo prune"), output / "SpecifiedSuitePruneConflictOutput.txt"}
            && shell_command{"", run_cmd().append(" prune --cutoff namespace"), output / "FullyPrunedOutput.txt"}
            && shell_command{"", run_cmd().append(" -v"), output / "VerboseOutput.txt"}
-           && shell_command{"", run_cmd().append(" -v select FooTest.cpp test Foo"), output / "SelectFromTestedFamilyOutput.txt"}
+           && shell_command{"", run_cmd().append(" -v select FooTest.cpp test Foo"), output / "SelectFromTestedSuiteOutput.txt"}
            && shell_command{"", run_cmd().append(" --help"), output / "HelpOutput.txt"});
   }
 
@@ -215,7 +215,7 @@ namespace sequoia::testing
     create_run_and_check(LINE("Test Runner Creation Output"), b);
 
     //=================== Rerun with async execution ===================//
-    // --> async depth should be automatically set to "family" since number of families is > 4
+    // --> async depth should be automatically set to "suite" since number of families is > 4
 
     run_and_check(LINE("Run synchronously"), b, "RunSynchronous", "--serial");
 
@@ -226,7 +226,7 @@ namespace sequoia::testing
                        "select HouseAllocationTest.cpp select Maths/ProbabilityTest.cpp select Maybe/MaybeTest.cpp");
 
     //=================== Rerun with async selecting 4 tests from 4 families===================//
-    // --> async depth should be automatically set to "family"
+    // --> async depth should be automatically set to "suite"
 
     run_and_check(LINE("Run asynchronously with 4 selected tests"), b, "RunAsyncFourTests",
                        "select HouseAllocationTest.cpp select Maths/ProbabilityTest.cpp select Maybe/MaybeTest.cpp"
@@ -238,14 +238,14 @@ namespace sequoia::testing
                        "select HouseAllocationTest.cpp select Maths/ProbabilityTest.cpp select Maybe/MaybeTest.cpp"
                        " select Stuff/FooTest.cpp");
 
-    //=================== Rerun with async, selecting 2 tests, and setting async-depth to family ===================//
+    //=================== Rerun with async, selecting 2 tests, and setting async-depth to suite ===================//
 
-    run_and_check(LINE("Run asynchronously with 2 selected tests"), b, "RunAsyncTwoTestsDepthFamily",
+    run_and_check(LINE("Run asynchronously with 2 selected tests"), b, "RunAsyncTwoTestsDepthSuite",
                        "select HouseAllocationTest.cpp select Maths/ProbabilityTest.cpp");
 
-    //=================== Rerun with async, selecting one family ===================//
+    //=================== Rerun with async, selecting one suite ===================//
 
-    run_and_check(LINE("Run asynchronously with 1 family"), b, "RunAsyncOneTestOneFamily", "test Probability");
+    run_and_check(LINE("Run asynchronously with 1 suite"), b, "RunAsyncOneTestOneSuite", "test Probability");
 
     //=================== Rerun, seeking instabilities in sandbox mode ===================//
 
@@ -400,7 +400,7 @@ namespace sequoia::testing
 
     copy_aux_materials("ModifiedTests/Maths/ProbabilityTest.cpp", "Tests/Maths");
 
-    rebuild_run_and_check(LINE("Rebuild, run and 'test' after fixing a test"), b, "RunFamilyWithFixedTest", "CMakeOutput6.txt", "BuildOutput6.txt", "test Probability");
+    rebuild_run_and_check(LINE("Rebuild, run and 'test' after fixing a test"), b, "RunSuiteWithFixedTest", "CMakeOutput6.txt", "BuildOutput6.txt", "test Probability");
 
     check(equivalence, LINE("Fixed Test Output"), working_materials() /= "RunSelectedFixedTest", predictive_materials() /= "RunSelectedFixedTest");
 

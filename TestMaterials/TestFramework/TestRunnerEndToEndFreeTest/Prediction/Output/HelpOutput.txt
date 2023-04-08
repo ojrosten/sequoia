@@ -1,31 +1,31 @@
-test | t | test family name
+test | t | test suite name
 select | s | source file name
 prune | p |
   --cutoff | -c | Cutoff for #include search e.g. 'namespace'
 create | c |
   regular_test | regular | qualified::class_name<class T>, equivalent type
     --equivalent-type | -e | equivalent_type
-    --family | -f | family
+    --suite | -s | suite name
     --header | -h | header of class to test
     gen-source | g | source dir
   move_only_test | move_only | qualified::class_name<class T>, equivalent type
     --equivalent-type | -e | equivalent_type
-    --family | -f | family
+    --suite | -s | suite name
     --header | -h | header of class to test
     gen-source | g | source dir
   regular_allocation_test | regular_allocation allocation_test | raw class name
-    --family | -f | family
+    --suite | -s | suite name
     --header | -h | header of class to test
   move_only_allocation_test | move_only_allocation | raw class name
-    --family | -f | family
+    --suite | -s | suite name
     --header | -h | header of class to test
   free_test | free | header
-    --family | -f | family
+    --suite | -s | suite name
     --test-class-forename | --forename | test class is named <forename>_...
     gen-source | g | namespace
     --framework-diagnostics | --diagnostics |
   performance_test | performance | header
-    --family | -f | family
+    --suite | -s | suite name
 init | i | copyright owner, path ending with project name, code indent
   --no-build
   --to-files filename (A file of this name will appear in multiple directories)

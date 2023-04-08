@@ -29,7 +29,7 @@ namespace sequoia::testing
                     std::string_view patternClose,
                     std::string_view cmakeEntryPrexfix);
 
-  void add_to_family(const std::filesystem::path& file, std::string_view familyName, indentation indent, const std::vector<std::string>& tests);
+  void add_to_suite(const std::filesystem::path& file, std::string_view suiteName, indentation indent, const std::vector<std::string>& tests);
 
 
   struct reduced_file_contents

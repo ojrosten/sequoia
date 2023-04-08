@@ -1,7 +1,7 @@
 
 Running tests...
 
-Failing Family:
+Failing Suite:
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	False Negative Checks:                     1;  Failures:  1
 	False Positive Checks:                     1;  Failures:  1
@@ -30,8 +30,8 @@ Failing Family:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 9.7ms]
-[Execution Time: 395us]
+[Total Run Time: 9.93ms]
+[Execution Time: 341us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     1;  Failures:  1

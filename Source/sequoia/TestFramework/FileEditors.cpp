@@ -70,17 +70,17 @@ namespace sequoia::testing
     read_modify_write(file, inserter);
   }
 
-  void add_to_family(const std::filesystem::path& file, std::string_view familyName, indentation indent, const std::vector<std::string>& tests)
+  void add_to_suite(const std::filesystem::path& file, std::string_view suiteName, indentation indent, const std::vector<std::string>& tests)
   {
     namespace fs = std::filesystem;
 
     if(tests.empty())
-      throw std::logic_error{std::string{"No tests specified to be added to the test family \""}.append(familyName).append("\"")};
+      throw std::logic_error{std::string{"No tests specified to be added to the test suite \""}.append(suiteName).append("\"")};
 
     const auto text{
-      [&file, familyName, &tests, indent]() -> std::string {
+      [&file, suiteName, &tests, indent]() -> std::string {
         constexpr auto npos{std::string::npos};
-        const auto pattern{std::string{"\""}.append(familyName).append("\",")};
+        const auto pattern{std::string{"\""}.append(suiteName).append("\",")};
         auto contents{read_to_string(file)};
         if(!contents)
           throw std::runtime_error{report_failed_read(file)};
@@ -90,7 +90,7 @@ namespace sequoia::testing
         {
           if(const auto linePos{text.rfind('\n', pos)}; linePos != npos)
           {
-            std::string_view preamble{"add_test_family("};
+            std::string_view preamble{"add_test_suite("};
             if((linePos > preamble.size()) && (text.find(preamble, linePos - preamble.size()) != npos))
             {
               if(const auto nextLinePos{text.find('\n', pos)}; nextLinePos != npos)
@@ -116,12 +116,12 @@ namespace sequoia::testing
           if(const auto linePos{text.rfind('\n', pos)}; linePos != npos)
           {
             auto builder{
-              [&tests, familyName, indent](){
+              [&tests, suiteName, indent](){
                 const indentation indent_0{indent + indent};
-                auto str{std::string{"\n"}.append(indent_0).append("runner.add_test_family(")};
+                auto str{std::string{"\n"}.append(indent_0).append("runner.add_test_suite(")};
                 const indentation indent_1{indent_0 + indent};
 
-                append_indented(str, std::string{"\""}.append(familyName).append("\","), indent_1);
+                append_indented(str, std::string{"\""}.append(suiteName).append("\","), indent_1);
 
                 for(auto i{tests.cbegin()}; i != tests.cend() - 1; ++i)
                 {
@@ -146,7 +146,7 @@ namespace sequoia::testing
 
     if(text.empty())
     {
-      throw std::runtime_error{"Unable to find appropriate place to add test family"};
+      throw std::runtime_error{"Unable to find appropriate place to add test suite"};
     }
 
     write_to_file(file, text);

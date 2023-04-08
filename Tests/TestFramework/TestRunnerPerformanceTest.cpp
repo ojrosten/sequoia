@@ -82,7 +82,7 @@ namespace sequoia::testing
       }
     };
 
-    test_runner make_slow_family(commandline_arguments args, std::stringstream& outputStream)
+    test_runner make_slow_suite(commandline_arguments args, std::stringstream& outputStream)
     {
       test_runner runner{args.size(),
                          args.get(),
@@ -91,8 +91,8 @@ namespace sequoia::testing
                          "  ",
                          outputStream};
 
-      runner.add_test_family(
-        "Slow Family",
+      runner.add_test_suite(
+        "Slow Suite",
         slow_test<0>{"Slow test 0"},
         slow_test<1>{"Slow test 1"},
         slow_test<2>{"Slow test 2"},
@@ -153,7 +153,7 @@ namespace sequoia::testing
   void test_runner_performance_test::test_parallel_acceleration()
   {
     std::stringstream outputStream{};
-    auto runner{make_slow_family({(fake_project() / "build").generic_string()}, outputStream)};
+    auto runner{make_slow_suite({(fake_project() / "build").generic_string()}, outputStream)};
     runner.execute();
 
     auto outputFile{check_output(LINE("Parallel Acceleration Output"), "ParallelAccelerationOutput", outputStream)};
@@ -164,7 +164,7 @@ namespace sequoia::testing
   {
     {
       std::stringstream outputStream{};
-      auto runner{make_slow_family({(fake_project() / "build").generic_string(), "--thread-pool", "8"}, outputStream)};
+      auto runner{make_slow_suite({(fake_project() / "build").generic_string(), "--thread-pool", "8"}, outputStream)};
       runner.execute();
 
       auto outputFile{check_output(LINE("Thread Pool (8) Acceleration Output"), "ThreadPool8AccelerationOutput", outputStream)};
@@ -173,7 +173,7 @@ namespace sequoia::testing
 
     {
       std::stringstream outputStream{};
-      auto runner{make_slow_family({(fake_project() / "build").generic_string(), "--thread-pool", "2"}, outputStream)};
+      auto runner{make_slow_suite({(fake_project() / "build").generic_string(), "--thread-pool", "2"}, outputStream)};
       runner.execute();
 
       auto outputFile{check_output(LINE("Thread Pool (2) Acceleration Output"), "ThreadPool2AccelerationOutput", outputStream)};
@@ -184,7 +184,7 @@ namespace sequoia::testing
   void test_runner_performance_test::test_serial_execution()
   {
     std::stringstream outputStream{};
-    auto runner{make_slow_family({(fake_project() / "build").generic_string(), "--serial"}, outputStream)};
+    auto runner{make_slow_suite({(fake_project() / "build").generic_string(), "--serial"}, outputStream)};
     runner.execute();
 
     auto outputFile{check_output(LINE("Serial Output"), "Serial Output", outputStream)};

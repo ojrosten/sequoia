@@ -21,7 +21,7 @@ namespace sequoia::testing
   namespace
   {
     [[nodiscard]]
-    fs::path versioned_diagnostics(std::filesystem::path dir, std::string_view family, std::string_view source, std::string_view mode, std::string_view suffix)
+    fs::path versioned_diagnostics(std::filesystem::path dir, std::string_view suite, std::string_view source, std::string_view mode, std::string_view suffix)
     {
       const auto file{
               fs::path{source}.filename()
@@ -31,7 +31,7 @@ namespace sequoia::testing
                               .concat(suffix)
                               .concat(".txt")};
 
-      return (dir /= fs::path{replace_all(family, " ", "_")}) /= file;
+      return (dir /= fs::path{replace_all(suite, " ", "_")}) /= file;
     }
   }
 
@@ -84,8 +84,8 @@ namespace sequoia::testing
 
   //===================================== individual_diagnostics_paths =====================================//
 
-  individual_diagnostics_paths::individual_diagnostics_paths(std::filesystem::path projectRoot, std::string_view family, std::string_view source, std::string_view mode)
-    : m_Diagnostics{versioned_diagnostics(output_paths::diagnostics(projectRoot), family, source, mode, "Output")}
-    , m_CaughtExceptions{versioned_diagnostics(output_paths::diagnostics(projectRoot), family, source, mode, "Exceptions")}
+  individual_diagnostics_paths::individual_diagnostics_paths(std::filesystem::path projectRoot, std::string_view suite, std::string_view source, std::string_view mode)
+    : m_Diagnostics{versioned_diagnostics(output_paths::diagnostics(projectRoot), suite, source, mode, "Output")}
+    , m_CaughtExceptions{versioned_diagnostics(output_paths::diagnostics(projectRoot), suite, source, mode, "Exceptions")}
   {}
 }

@@ -1,12 +1,12 @@
 
 Running tests...
 
-Slow Family:
+Slow Suite:
 	Standard Top Level Checks:                 8;  Failures:  0  [Deep checks: 8]
 
 -----------Grand Totals-----------
-[Total Run Time: 78.8ms]
-[Execution Time: 53ms]
+[Total Run Time: 72.9ms]
+[Execution Time: 51.7ms]
 	Standard Top Level Checks:                 8;  Failures:  0  [Deep checks: 8]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

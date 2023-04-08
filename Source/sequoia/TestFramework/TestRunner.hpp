@@ -207,7 +207,7 @@ namespace sequoia::testing
 
     template<concrete_test... Tests>
       requires (sizeof...(Tests) > 0)
-    void add_test_family(std::string_view name, Tests&&... tests)
+    void add_test_suite(std::string_view name, Tests&&... tests)
     {
       using namespace object;
       using namespace maths;
@@ -366,7 +366,7 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    static std::string duplication_message(std::string_view familyName, std::string_view testName, const std::filesystem::path& source);
+    static std::string duplication_message(std::string_view suiteName, std::string_view testName, const std::filesystem::path& source);
 
     [[nodiscard]]
     static active_recovery_files make_active_recovery_paths(recovery_mode mode, const project_paths& projPaths);

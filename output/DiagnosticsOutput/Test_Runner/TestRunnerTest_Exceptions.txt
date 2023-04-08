@@ -76,9 +76,9 @@ Neither name nor source unique
 
 Expected Exception Type:
 [std::runtime_error]
-  Error: Family/Test: "Duplicates/Free Test"
+  Error: Suite/Test: "Duplicates/Free Test"
 Source file: ".../Tests/TestFramework/TestRunnerTest.cpp"
-Please do not include tests in the same family which both have the same name and are defined in the same source file.
+Please do not include tests in the same suite which both have the same name and are defined in the same source file.
 
 	=======================================
 

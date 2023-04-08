@@ -1,13 +1,13 @@
 
 Running tests, synchronously...
 
-Family:
-[Execution Time: 2.02ms]
+Suite:
+[Execution Time: 2.78ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 
 -----------Grand Totals-----------
-[Total Run Time: 6.19ms]
-[Execution Time: 2.02ms]
+[Total Run Time: 6.86ms]
+[Execution Time: 2.78ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -17,8 +17,8 @@ Family:
 
 Running tests, synchronously...
 
-Family:
-[Execution Time: 1.99ms]
+Suite:
+[Execution Time: 2.58ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
 	Period 4
@@ -31,8 +31,8 @@ Family:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 6.94ms]
-[Execution Time: 1.99ms]
+[Total Run Time: 6.9ms]
+[Execution Time: 2.58ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -42,8 +42,8 @@ Family:
 
 Running tests, synchronously...
 
-Family:
-[Execution Time: 1.92ms]
+Suite:
+[Execution Time: 2.26ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
 	Period 4
@@ -56,8 +56,8 @@ Family:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 6.99ms]
-[Execution Time: 1.92ms]
+[Total Run Time: 6.56ms]
+[Execution Time: 2.26ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -67,8 +67,8 @@ Family:
 
 Running tests, synchronously...
 
-Family:
-[Execution Time: 1.9ms]
+Suite:
+[Execution Time: 2.04ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
 	Period 4
@@ -81,8 +81,8 @@ Family:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 6.68ms]
-[Execution Time: 1.9ms]
+[Total Run Time: 6.01ms]
+[Execution Time: 2.04ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

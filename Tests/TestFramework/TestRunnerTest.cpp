@@ -248,7 +248,7 @@ namespace sequoia::testing
       }
     };
 
-    test_runner make_failing_family(commandline_arguments args, std::stringstream& outputStream)
+    test_runner make_failing_suite(commandline_arguments args, std::stringstream& outputStream)
     {
       test_runner runner{args.size(),
                          args.get(),
@@ -257,8 +257,8 @@ namespace sequoia::testing
                          "  ",
                          outputStream};
 
-      runner.add_test_family(
-        "Failing Family",
+      runner.add_test_suite(
+        "Failing Suite",
         failing_test{"Free Test"},
         failing_fp_test{"False positive Test"},
         failing_fn_test{"False negative Test"}
@@ -428,7 +428,7 @@ namespace sequoia::testing
                            "  ",
                            outputStream};
 
-        runner.add_test_family(
+        runner.add_test_suite(
           "Duplicates",
           foo_test{"Free Test"},
           flipper_free_test{"Free Test"}
@@ -482,17 +482,17 @@ namespace sequoia::testing
                          "  ",
                          outputStream};
 
-      runner.add_test_family(
+      runner.add_test_suite(
         "Bar",
         bar_free_test{"Free Test"}
       );
 
-      runner.add_test_family(
+      runner.add_test_suite(
         "Foo",
         foo_test{"Unit Test"}
       );
 
-      runner.add_test_family(
+      runner.add_test_suite(
         "Baz",
         foo_test{"Unit Test"}
       );
@@ -534,8 +534,8 @@ namespace sequoia::testing
     runner.execute();
     check_output(LINE("No Tests"), "NoTests", outputStream);
 
-    runner.add_test_family(
-      "Failing Family",
+    runner.add_test_suite(
+      "Failing Suite",
       failing_test{"Free Test"},
       failing_fp_test{"False positive Test"},
       failing_fn_test{"False negative Test"}
@@ -548,7 +548,7 @@ namespace sequoia::testing
   void test_runner_test::test_verbose_output()
   {
     std::stringstream outputStream{};
-    auto runner{make_failing_family({(fake_project() / "build").generic_string(), "-v"}, outputStream)};
+    auto runner{make_failing_suite({(fake_project() / "build").generic_string(), "-v"}, outputStream)};
 
     runner.execute();
     check_output(LINE("Basic Verbose Output"), "BasicVerboseOutput", outputStream);
@@ -557,7 +557,7 @@ namespace sequoia::testing
   void test_runner_test::test_serial_verbose_output()
   {
     std::stringstream outputStream{};
-    auto runner{make_failing_family({(fake_project() / "build").generic_string(), "-v", "--serial"}, outputStream)};
+    auto runner{make_failing_suite({(fake_project() / "build").generic_string(), "-v", "--serial"}, outputStream)};
 
     runner.execute();
     check_output(LINE("Basic Serial Verbose Output"), "BasicSerialVerboseOutput", outputStream);
@@ -566,7 +566,7 @@ namespace sequoia::testing
   void test_runner_test::test_filtered_suites()
   {
     std::stringstream outputStream{};
-    commandline_arguments args{(fake_project() / "build").generic_string(), "test", "Failing Family"};
+    commandline_arguments args{(fake_project() / "build").generic_string(), "test", "Failing Suite"};
 
     test_runner runner{args.size(),
                        args.get(),
@@ -575,13 +575,13 @@ namespace sequoia::testing
                        "  ",
                        outputStream};
 
-    runner.add_test_family(
-      "Passing Family",
+    runner.add_test_suite(
+      "Passing Suite",
       passing_test{"Free Test"}
     );
 
-    runner.add_test_family(
-      "Failing Family",
+    runner.add_test_suite(
+      "Failing Suite",
       failing_test{"Free Test"},
       failing_fp_test{"False positive Test"},
       failing_fn_test{"False negative Test"}
@@ -673,11 +673,11 @@ namespace sequoia::testing
                               multi_periodic_free_test("Free Test")
                              );
 
-    test_instability_analysis("Family selection",
-                              "InstabilityFamilySelection",
+    test_instability_analysis("Suite selection",
+                              "InstabilitySuiteSelection",
                               "2",
-                              {"test", "Another Family"},
-                              [](test_runner& r){ r.add_test_family("Another Family", flipper_free_test{"Flipper Free Test"}); },
+                              {"test", "Another Suite"},
+                              [](test_runner& r){ r.add_test_suite("Another Suite", flipper_free_test{"Flipper Free Test"}); },
                               flipper_free_test{"Flipper Free Test"}
                              );
   }
@@ -710,8 +710,8 @@ namespace sequoia::testing
                        "  ",
                        outputStream};
 
-    runner.add_test_family(
-      "Family",
+    runner.add_test_suite(
+      "Suite",
       std::forward<Ts>(ts)...
     );
 

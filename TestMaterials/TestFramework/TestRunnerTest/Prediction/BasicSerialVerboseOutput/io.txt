@@ -1,10 +1,10 @@
 
 Running tests, synchronously...
 
-Failing Family:
-[Execution Time: 156us]
+Failing Suite:
+[Execution Time: 167us]
 	Free Test
-	[Execution Time: 54.5us]
+	[Execution Time: 69.7us]
 		Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
 	Standard Failure
@@ -16,7 +16,7 @@ Failing Family:
 	=======================================
 
 	False positive Test
-	[Execution Time: 28us]
+	[Execution Time: 31.3us]
 		False Positive Checks:                     1;  Failures:  1
 
 	False Positive Failure:
@@ -26,7 +26,7 @@ Failing Family:
 	=======================================
 
 	False negative Test
-	[Execution Time: 73.3us]
+	[Execution Time: 66.3us]
 		False Negative Checks:                     1;  Failures:  1
 
 	False negative failure
@@ -39,8 +39,8 @@ Failing Family:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 9.43ms]
-[Execution Time: 156us]
+[Total Run Time: 9.04ms]
+[Execution Time: 167us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     1;  Failures:  1

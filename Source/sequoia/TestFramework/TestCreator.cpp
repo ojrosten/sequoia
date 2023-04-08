@@ -347,23 +347,23 @@ namespace sequoia::testing
       stream() << create_file(nameStub, stub, transformer) << '\n';
     }
 
-    auto addToFamily{
+    auto addToSuite{
       [this, &constructors](const fs::path& mainCpp) {
-        add_to_family(mainCpp, family(), m_CodeIndent, constructors);
+        add_to_suite(mainCpp, suite(), m_CodeIndent, constructors);
       }
     };
 
-    ammend_file(m_Paths, addToFamily, [](const main_paths& info) { return info.file(); });
+    ammend_file(m_Paths, addToSuite, [](const main_paths& info) { return info.file(); });
 
     stream() << '\n';
   }
 
-  void nascent_test_base::finalize_family(std::string_view fallbackIngredient)
+  void nascent_test_base::finalize_suite(std::string_view fallbackIngredient)
   {
-    if(m_Family.empty())
+    if(m_Suite.empty())
     {
-      m_Family = fallbackIngredient;
-      camel_to_words(m_Family);
+      m_Suite = fallbackIngredient;
+      camel_to_words(m_Suite);
     }
   }
 
@@ -487,7 +487,7 @@ namespace sequoia::testing
     if(surname().empty()) surname(to_surname(flavour()));
 
     camel_name(forename());
-    finalize_family(camel_name());
+    finalize_suite(camel_name());
     if(header().empty()) header(std::filesystem::path{camel_name()}.concat(".hpp"));
 
     nascent_test_base::finalize([this, &nameSpace](const fs::path& filename) { return when_header_absent(filename, nameSpace); },
@@ -646,7 +646,7 @@ namespace sequoia::testing
   {
     if(surname().empty()) surname(std::string{"allocation_"}.append(to_surname(flavour())));
     camel_name(forename());
-    finalize_family(camel_name());
+    finalize_suite(camel_name());
     if(header().empty()) header(std::filesystem::path{camel_name()}.concat(".hpp"));
 
     nascent_test_base::finalize([](const fs::path& p) { return p; },
@@ -688,10 +688,10 @@ namespace sequoia::testing
 
   void nascent_behavioural_test::finalize()
   {
-    const auto fallbackFamily{capitalize(forename().empty() ? header().filename().replace_extension().string() : forename())};
-    finalize_family(fallbackFamily);
+    const auto fallbackSuite{capitalize(forename().empty() ? header().filename().replace_extension().string() : forename())};
+    finalize_suite(fallbackSuite);
 
-    if(forename().empty()) forename(to_snake_case(fallbackFamily));
+    if(forename().empty()) forename(to_snake_case(fallbackSuite));
 
     if(surname().empty()) surname(std::string{test_type()}.append("_").append(to_surname(flavour())));
 

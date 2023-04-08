@@ -65,9 +65,9 @@ namespace sequoia::testing
     void flavour(nascent_test_flavour f) { m_Flavour = f; }
 
     [[nodiscard]]
-    const std::string& family() const noexcept { return m_Family; }
+    const std::string& suite() const noexcept { return m_Suite; }
 
-    void family(std::string name) { m_Family = std::move(name); }
+    void suite(std::string name) { m_Suite = std::move(name); }
 
     [[nodiscard]]
     const std::filesystem::path& header() const noexcept { return m_Header; }
@@ -150,7 +150,7 @@ namespace sequoia::testing
     [[nodiscard]]
     std::ostream& stream() noexcept { return *m_Stream; }
 
-    void finalize_family(std::string_view fallbackIngredient);
+    void finalize_suite(std::string_view fallbackIngredient);
   private:
     constexpr static std::array<std::string_view, 3> st_HeaderExtensions{".hpp", ".h", ".hxx"};
 
@@ -160,7 +160,7 @@ namespace sequoia::testing
     std::ostream* m_Stream;
 
     nascent_test_flavour m_Flavour{nascent_test_flavour::standard};
-    std::string m_Family{}, m_TestType{}, m_Forename{}, m_Surname{}, m_CamelName{};
+    std::string m_Suite{}, m_TestType{}, m_Forename{}, m_Surname{}, m_CamelName{};
     std::filesystem::path m_Header{}, m_HostDir{}, m_HeaderPath{};
     gen_source_option m_SourceOption{};
 

@@ -395,12 +395,12 @@ namespace sequoia::testing
     std::vector<nascent_test_vessel> nascentTests{};
     std::vector<project_data> nascentProjects{};
 
-    const option familyOption{"--family", {"-f"}, {"family"},
+    const option suiteOption{"--suite", {"-s"}, {"suite name"},
       [&nascentTests](const arg_list& args){
         if(nascentTests.empty())
           throw std::logic_error{"Unable to find nascent test"};
 
-        std::visit(overloaded{[&args](auto& nascent){ nascent.family(args[0]);}}, nascentTests.back());
+        std::visit(overloaded{[&args](auto& nascent){ nascent.suite(args[0]);}}, nascentTests.back());
       }
     };
 
@@ -489,14 +489,14 @@ namespace sequoia::testing
       }
     };
 
-    const std::initializer_list<maths::tree_initializer<option>> semanticsOptions{{equivOption}, {familyOption}, {headerOption}, {genSemanticsSourceOption}};
-    const std::initializer_list<maths::tree_initializer<option>> allocationOptions{{familyOption}, {headerOption}};
-    const std::initializer_list<maths::tree_initializer<option>> performanceOptions{{familyOption}};
-    const std::initializer_list<maths::tree_initializer<option>> freeOptions{{familyOption}, {forenameOption}, {genFreeSourceOption}, {diagnosticsOption}};
+    const std::initializer_list<maths::tree_initializer<option>> semanticsOptions{{equivOption}, {suiteOption}, {headerOption}, {genSemanticsSourceOption}};
+    const std::initializer_list<maths::tree_initializer<option>> allocationOptions{{suiteOption}, {headerOption}};
+    const std::initializer_list<maths::tree_initializer<option>> performanceOptions{{suiteOption}};
+    const std::initializer_list<maths::tree_initializer<option>> freeOptions{{suiteOption}, {forenameOption}, {genFreeSourceOption}, {diagnosticsOption}};
 
     const auto help{
       parse_invoke_depth_first(argc, argv,
-                { {{{"test", {"t"}, {"test family name"},
+                { {{{"test", {"t"}, {"test suite name"},
                     [this](const arg_list& args) {
                       m_RunnerMode |= runner_mode::test;
                       if(!m_Filter)
@@ -740,7 +740,7 @@ namespace sequoia::testing
 
     if(m_Filter)
     {
-      check(m_Filter->begin_selected_suites(), m_Filter->end_selected_suites(), "Family", [](const std::string& name) -> std::string {
+      check(m_Filter->begin_selected_suites(), m_Filter->end_selected_suites(), "Suite", [](const std::string& name) -> std::string {
         if(auto pos{name.rfind('.')}; pos < std::string::npos)
         {
           return "    If trying to select a source file use 'select' rather than 'test'\n";
@@ -753,7 +753,7 @@ namespace sequoia::testing
       check(m_Filter->begin_selected_items(), m_Filter->end_selected_items(), "File", [](const std::filesystem::path& p) -> std::string {
         if(!p.has_extension())
         {
-          return "    If trying to test a family use 'test' rather than 'select'\n";
+          return "    If trying to test a suite use 'test' rather than 'select'\n";
         }
 
         return "";
@@ -1081,16 +1081,15 @@ namespace sequoia::testing
     return prune_outcome::no_time_stamp;
   }
 
-
   [[nodiscard]]
-  std::string test_runner::duplication_message(std::string_view familyName, std::string_view testName, const fs::path& source)
+  std::string test_runner::duplication_message(std::string_view suiteName, std::string_view testName, const fs::path& source)
   {
     using namespace parsing::commandline;
 
-    return error(std::string{"Family/Test: \""}
-                  .append(familyName).append("/").append(testName).append("\"\n")
+    return error(std::string{"Suite/Test: \""}
+                  .append(suiteName).append("/").append(testName).append("\"\n")
                   .append("Source file: \"").append(source.generic_string()).append("\"\n")
-                  .append("Please do not include tests in the same family"
+                  .append("Please do not include tests in the same suite"
                     " which both have the same name and are defined"
                     " in the same source file.\n"));
   }
