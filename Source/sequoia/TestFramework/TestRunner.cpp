@@ -30,10 +30,10 @@ namespace sequoia::testing
 {
   namespace fs = std::filesystem;
 
-  const auto entry_time_stamp{std::chrono::file_clock::now()};
-
   namespace
   {
+    const auto entry_time_stamp{std::chrono::file_clock::now()};
+
     [[nodiscard]]
     std::string running_tests_message(concurrency_mode mode)
     {

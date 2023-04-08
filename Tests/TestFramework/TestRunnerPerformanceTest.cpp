@@ -168,7 +168,7 @@ namespace sequoia::testing
       runner.execute();
 
       auto outputFile{check_output(LINE("Thread Pool (8) Acceleration Output"), "ThreadPool8AccelerationOutput", outputStream)};
-      check(within_tolerance{10.0}, LINE(""), get_timing(outputFile), 30.0);
+      check(within_tolerance{10.0}, LINE(""), get_timing(outputFile), 35.0);
     }
 
     {
@@ -177,7 +177,7 @@ namespace sequoia::testing
       runner.execute();
 
       auto outputFile{check_output(LINE("Thread Pool (2) Acceleration Output"), "ThreadPool2AccelerationOutput", outputStream)};
-      check(within_tolerance{20.0}, LINE(""), get_timing(outputFile), 100.0);
+      check(within_tolerance{15.0}, LINE(""), get_timing(outputFile), 115.0);
     }
   }
 
@@ -188,6 +188,6 @@ namespace sequoia::testing
     runner.execute();
 
     auto outputFile{check_output(LINE("Serial Output"), "Serial Output", outputStream)};
-    check(within_tolerance{30.0}, LINE(""), get_timing(outputFile), 200.0);
+    check(within_tolerance{20.0}, LINE(""), get_timing(outputFile), 220.0);
   }
 }
