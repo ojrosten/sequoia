@@ -63,8 +63,12 @@ var searchData=
   ['substitutions_2ehpp_60',['Substitutions.hpp',['../d1/d50/Substitutions_8hpp.html',1,'']]],
   ['substitutionsfreetest_2ecpp_61',['SubstitutionsFreeTest.cpp',['../d9/d3d/SubstitutionsFreeTest_8cpp.html',1,'']]],
   ['substitutionsfreetest_2ehpp_62',['SubstitutionsFreeTest.hpp',['../d9/db1/SubstitutionsFreeTest_8hpp.html',1,'']]],
-  ['summary_2ecpp_63',['Summary.cpp',['../d1/dd4/Summary_8cpp.html',1,'']]],
-  ['summary_2ehpp_64',['Summary.hpp',['../dc/d7f/Summary_8hpp.html',1,'']]],
-  ['sumtypesfreediagnostics_2ecpp_65',['SumTypesFreeDiagnostics.cpp',['../df/d31/SumTypesFreeDiagnostics_8cpp.html',1,'']]],
-  ['sumtypesfreediagnostics_2ehpp_66',['SumTypesFreeDiagnostics.hpp',['../de/dde/SumTypesFreeDiagnostics_8hpp.html',1,'']]]
+  ['suite_2ehpp_63',['Suite.hpp',['../dc/d4a/Suite_8hpp.html',1,'']]],
+  ['suitefreetest_2ecpp_64',['SuiteFreeTest.cpp',['../da/d50/SuiteFreeTest_8cpp.html',1,'']]],
+  ['suitefreetest_2ehpp_65',['SuiteFreeTest.hpp',['../dc/d54/SuiteFreeTest_8hpp.html',1,'']]],
+  ['suitetestingutilities_2ehpp_66',['SuiteTestingUtilities.hpp',['../df/d2e/SuiteTestingUtilities_8hpp.html',1,'']]],
+  ['summary_2ecpp_67',['Summary.cpp',['../d1/dd4/Summary_8cpp.html',1,'']]],
+  ['summary_2ehpp_68',['Summary.hpp',['../dc/d7f/Summary_8hpp.html',1,'']]],
+  ['sumtypesfreediagnostics_2ecpp_69',['SumTypesFreeDiagnostics.cpp',['../df/d31/SumTypesFreeDiagnostics_8cpp.html',1,'']]],
+  ['sumtypesfreediagnostics_2ehpp_70',['SumTypesFreeDiagnostics.hpp',['../de/dde/SumTypesFreeDiagnostics_8hpp.html',1,'']]]
 ];

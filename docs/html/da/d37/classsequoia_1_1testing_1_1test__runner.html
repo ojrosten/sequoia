@@ -74,13 +74,14 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="../../d1/d62/classsequoia_1_1testing_1_1test__runner-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">sequoia::testing::test_runner Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>Consumes command-line arguments and holds all test families.  
+<p>Consumes command-line arguments and holds all test suites.  
  <a href="../../da/d37/classsequoia_1_1testing_1_1test__runner.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="../../de/d13/TestRunner_8hpp_source.html">TestRunner.hpp</a>&gt;</code></p>
@@ -105,11 +106,11 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a3f64cf9726735d53cc9fad2bbbef58e5"><td class="memItemLeft" align="right" valign="top"><a id="a3f64cf9726735d53cc9fad2bbbef58e5" name="a3f64cf9726735d53cc9fad2bbbef58e5"></a>
 <a class="el" href="../../da/d37/classsequoia_1_1testing_1_1test__runner.html">test_runner</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="../../da/d37/classsequoia_1_1testing_1_1test__runner.html">test_runner</a> &amp;&amp;) noexcept=default</td></tr>
 <tr class="separator:a3f64cf9726735d53cc9fad2bbbef58e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1b21897670eb4a9806e9ae4b4b47d741"><td class="memTemplParams" colspan="2"><a id="a1b21897670eb4a9806e9ae4b4b47d741" name="a1b21897670eb4a9806e9ae4b4b47d741"></a>
+<tr class="memitem:a7ddd5d2bce99643924474d8077b96cfb"><td class="memTemplParams" colspan="2"><a id="a7ddd5d2bce99643924474d8077b96cfb" name="a7ddd5d2bce99643924474d8077b96cfb"></a>
 template&lt;concrete_test... Tests&gt; <br />
 requires (sizeof...(Tests) &gt; 0)</td></tr>
-<tr class="memitem:a1b21897670eb4a9806e9ae4b4b47d741"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>add_test_family</b> (std::string_view name, Tests... tests)</td></tr>
-<tr class="separator:a1b21897670eb4a9806e9ae4b4b47d741"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7ddd5d2bce99643924474d8077b96cfb"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>add_test_suite</b> (std::string_view name, Tests &amp;&amp;... tests)</td></tr>
+<tr class="separator:a7ddd5d2bce99643924474d8077b96cfb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad5e5d434a5dec2ec79c5e24d27af5ecb"><td class="memItemLeft" align="right" valign="top"><a id="ad5e5d434a5dec2ec79c5e24d27af5ecb" name="ad5e5d434a5dec2ec79c5e24d27af5ecb"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>execute</b> (<a class="el" href="../../d2/daa/classsequoia_1_1timer__resolution.html">timer_resolution</a> r={})</td></tr>
 <tr class="separator:ad5e5d434a5dec2ec79c5e24d27af5ecb"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -127,11 +128,11 @@ const <a class="el" href="../../dc/d0f/classsequoia_1_1indentation.html">indenta
 <tr class="separator:a176bbd419ae51ec2e8de4e817f12b40a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Consumes command-line arguments and holds all test families. </p>
-<p>If no arguments are specified, all tests are run, in serial, with the diagnostic files generated; run with &ndash;help for information on the various options </p>
+<div class="textblock"><p>Consumes command-line arguments and holds all test suites. </p>
+<p>If no arguments are specified, all tests are run; run with &ndash;help for information on the various options. </p>
 </div><hr/>The documentation for this class was generated from the following files:<ul>
-<li>C:/Users/oliverrosten/sequoia/Source/sequoia/TestFramework/<a class="el" href="../../de/d13/TestRunner_8hpp_source.html">TestRunner.hpp</a></li>
-<li>C:/Users/oliverrosten/sequoia/Source/sequoia/TestFramework/<a class="el" href="../../d3/dac/TestRunner_8cpp.html">TestRunner.cpp</a></li>
+<li>C:/Users/olive/sequoia/Source/sequoia/TestFramework/<a class="el" href="../../de/d13/TestRunner_8hpp_source.html">TestRunner.hpp</a></li>
+<li>C:/Users/olive/sequoia/Source/sequoia/TestFramework/<a class="el" href="../../d3/dac/TestRunner_8cpp.html">TestRunner.cpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

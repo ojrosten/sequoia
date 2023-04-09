@@ -23,10 +23,10 @@
     In particular:
        -# cpp files should supply definitions only for the header of the same name;
        -# Given a test file `Tests/Foo/Bar.cpp`, any testing materials should be stored in `TestMaterials/Foo/Bar`.
-    - Concurrency: by default, tests run concurrently. Tests are grouped into families and,
-      by default, concurrency will be at the family level if there are more than three families; otherwise,
-      concurrency is at the level of individual tests. However, this may be overridden using 
-      `--async-depth`.
+    - Concurrency: by default, all tests (bar performance tests) are run concurrently. Where supported,
+	  this is done using a `std` algorithm invoked with the parallel execution policy.
+	  For libc++, a thread pool supplied by `sequoia` is utilized instead. This may
+	  be employed on any platform by running with `--thread-pool <desired num threads>`.
     - Instability detection: `locate-instabilities` is called with an integer, specifying the number
       of times tests should be run. Instabilities are pinned down to the line of test code where
       they first manifest. By default, everything is run within the same program, allowing detection

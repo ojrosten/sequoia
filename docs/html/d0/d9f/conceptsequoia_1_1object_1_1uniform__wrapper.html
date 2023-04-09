@@ -78,10 +78,10 @@ $(function() {
 <div class="contents">
 <h2 class="groupheader">Concept definition</h2>
 <div class="fragment"><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> W&gt;</div>
-<div class="line"><span class="keyword">concept </span><a class="code hl_concept" href="../../d0/d9f/conceptsequoia_1_1object_1_1uniform__wrapper.html">sequoia::object::uniform_wrapper</a> =  <span class="keyword">requires</span>(W &amp; w) {</div>
+<div class="line"><span class="keyword">concept </span><a class="code hl_concept" href="../../d0/d9f/conceptsequoia_1_1object_1_1uniform__wrapper.html">sequoia::object::uniform_wrapper</a> =  <span class="keyword">requires</span>(W&amp; w, <span class="keyword">const</span> W&amp; cw) {</div>
 <div class="line">    <span class="keyword">typename</span> W::value_type;</div>
 <div class="line"> </div>
-<div class="line">    { w.get() } -&gt; std::same_as&lt;const typename W::value_type&amp;&gt;;</div>
+<div class="line">    { cw.get() } -&gt; std::same_as&lt;const typename W::value_type&amp;&gt;;</div>
 <div class="line"> </div>
 <div class="line">    w.mutate([](<span class="keyword">typename</span> W::value_type&amp;) {});</div>
 <div class="line"> </div>

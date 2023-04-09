@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.6"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: C:/Users/oliverrosten/sequoia/Source/sequoia/TestFramework/FreeCheckers.hpp Source File</title>
+<title>Sequoia: C:/Users/olive/sequoia/Source/sequoia/TestFramework/FreeCheckers.hpp Source File</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -729,74 +729,76 @@ $(function() {
 <div class="line"><a id="l00781" name="l00781"></a><span class="lineno">  781</span><span class="keyword">    </span>{</div>
 <div class="line"><a id="l00782" name="l00782"></a><span class="lineno">  782</span>      <span class="keywordflow">return</span> <a class="code hl_class" href="../../d2/daa/classsequoia_1_1testing_1_1log__summary.html">log_summary</a>{prefix, logger(), delta};</div>
 <div class="line"><a id="l00783" name="l00783"></a><span class="lineno">  783</span>    }</div>
-<div class="line"><a id="l00784" name="l00784"></a><span class="lineno">  784</span>  <span class="keyword">protected</span>:</div>
-<div class="line"><a id="l00785" name="l00785"></a><span class="lineno">  785</span>    <a class="code hl_class" href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">checker</a>(<a class="code hl_class" href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">checker</a>&amp;&amp; other) noexcept</div>
-<div class="line"><a id="l00786" name="l00786"></a><span class="lineno">  786</span>      : <a class="code hl_class" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">logger_type</a>{<span class="keyword">static_cast&lt;</span><a class="code hl_class" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">logger_type</a>&amp;&amp;<span class="keyword">&gt;</span>(other)}</div>
-<div class="line"><a id="l00787" name="l00787"></a><span class="lineno">  787</span>      , Extenders{logger()}...</div>
-<div class="line"><a id="l00788" name="l00788"></a><span class="lineno">  788</span>    {}</div>
-<div class="line"><a id="l00789" name="l00789"></a><span class="lineno">  789</span> </div>
-<div class="line"><a id="l00790" name="l00790"></a><span class="lineno">  790</span>    <a class="code hl_class" href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">checker</a>&amp; operator=(<a class="code hl_class" href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">checker</a>&amp;&amp; other) <span class="keyword">noexcept</span></div>
-<div class="line"><a id="l00791" name="l00791"></a><span class="lineno">  791</span>    {</div>
-<div class="line"><a id="l00792" name="l00792"></a><span class="lineno">  792</span>      <span class="keywordflow">if</span>(&amp;other != <span class="keyword">this</span>)</div>
-<div class="line"><a id="l00793" name="l00793"></a><span class="lineno">  793</span>      {</div>
-<div class="line"><a id="l00794" name="l00794"></a><span class="lineno">  794</span>        <span class="keyword">static_cast&lt;</span><a class="code hl_class" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">logger_type</a>&amp;<span class="keyword">&gt;</span>(*this) = <span class="keyword">static_cast&lt;</span><a class="code hl_class" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">logger_type</a>&amp;&amp;<span class="keyword">&gt;</span>(other);</div>
-<div class="line"><a id="l00795" name="l00795"></a><span class="lineno">  795</span>        <span class="comment">// The only state the Extenders possess is a handle to the logger,</span></div>
-<div class="line"><a id="l00796" name="l00796"></a><span class="lineno">  796</span>        <span class="comment">// which should not be reset.</span></div>
-<div class="line"><a id="l00797" name="l00797"></a><span class="lineno">  797</span>      }</div>
-<div class="line"><a id="l00798" name="l00798"></a><span class="lineno">  798</span> </div>
-<div class="line"><a id="l00799" name="l00799"></a><span class="lineno">  799</span>      <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
-<div class="line"><a id="l00800" name="l00800"></a><span class="lineno">  800</span>    }</div>
-<div class="line"><a id="l00801" name="l00801"></a><span class="lineno">  801</span> </div>
-<div class="line"><a id="l00802" name="l00802"></a><span class="lineno">  802</span>    <a class="code hl_class" href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">~checker</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00784" name="l00784"></a><span class="lineno">  784</span> </div>
+<div class="line"><a id="l00785" name="l00785"></a><span class="lineno">  785</span>    <span class="keywordtype">void</span> reset_results() <span class="keyword">noexcept</span> { logger().reset_results(); }</div>
+<div class="line"><a id="l00786" name="l00786"></a><span class="lineno">  786</span>  <span class="keyword">protected</span>:</div>
+<div class="line"><a id="l00787" name="l00787"></a><span class="lineno">  787</span>    <a class="code hl_class" href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">checker</a>(<a class="code hl_class" href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">checker</a>&amp;&amp; other) noexcept</div>
+<div class="line"><a id="l00788" name="l00788"></a><span class="lineno">  788</span>      : <a class="code hl_class" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">logger_type</a>{<span class="keyword">static_cast&lt;</span><a class="code hl_class" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">logger_type</a>&amp;&amp;<span class="keyword">&gt;</span>(other)}</div>
+<div class="line"><a id="l00789" name="l00789"></a><span class="lineno">  789</span>      , Extenders{logger()}...</div>
+<div class="line"><a id="l00790" name="l00790"></a><span class="lineno">  790</span>    {}</div>
+<div class="line"><a id="l00791" name="l00791"></a><span class="lineno">  791</span> </div>
+<div class="line"><a id="l00792" name="l00792"></a><span class="lineno">  792</span>    <a class="code hl_class" href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">checker</a>&amp; operator=(<a class="code hl_class" href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">checker</a>&amp;&amp; other) <span class="keyword">noexcept</span></div>
+<div class="line"><a id="l00793" name="l00793"></a><span class="lineno">  793</span>    {</div>
+<div class="line"><a id="l00794" name="l00794"></a><span class="lineno">  794</span>      <span class="keywordflow">if</span>(&amp;other != <span class="keyword">this</span>)</div>
+<div class="line"><a id="l00795" name="l00795"></a><span class="lineno">  795</span>      {</div>
+<div class="line"><a id="l00796" name="l00796"></a><span class="lineno">  796</span>        <span class="keyword">static_cast&lt;</span><a class="code hl_class" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">logger_type</a>&amp;<span class="keyword">&gt;</span>(*this) = <span class="keyword">static_cast&lt;</span><a class="code hl_class" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">logger_type</a>&amp;&amp;<span class="keyword">&gt;</span>(other);</div>
+<div class="line"><a id="l00797" name="l00797"></a><span class="lineno">  797</span>        <span class="comment">// The only state the Extenders possess is a handle to the logger,</span></div>
+<div class="line"><a id="l00798" name="l00798"></a><span class="lineno">  798</span>        <span class="comment">// which should not be reset.</span></div>
+<div class="line"><a id="l00799" name="l00799"></a><span class="lineno">  799</span>      }</div>
+<div class="line"><a id="l00800" name="l00800"></a><span class="lineno">  800</span> </div>
+<div class="line"><a id="l00801" name="l00801"></a><span class="lineno">  801</span>      <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a id="l00802" name="l00802"></a><span class="lineno">  802</span>    }</div>
 <div class="line"><a id="l00803" name="l00803"></a><span class="lineno">  803</span> </div>
-<div class="line"><a id="l00804" name="l00804"></a><span class="lineno">  804</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00805" name="l00805"></a><span class="lineno">  805</span>    std::size_t checks() <span class="keyword">const</span> <span class="keyword">noexcept</span> { <span class="keywordflow">return</span> logger().checks(); }</div>
-<div class="line"><a id="l00806" name="l00806"></a><span class="lineno">  806</span> </div>
-<div class="line"><a id="l00807" name="l00807"></a><span class="lineno">  807</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00808" name="l00808"></a><span class="lineno">  808</span>    std::size_t failures() <span class="keyword">const</span> <span class="keyword">noexcept</span> { <span class="keywordflow">return</span> logger().failures(); }</div>
-<div class="line"><a id="l00809" name="l00809"></a><span class="lineno">  809</span> </div>
-<div class="line"><a id="l00810" name="l00810"></a><span class="lineno">  810</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00811" name="l00811"></a><span class="lineno">  811</span>    <span class="keyword">const</span> <a class="code hl_struct" href="../../db/d2c/structsequoia_1_1testing_1_1uncaught__exception__info.html">uncaught_exception_info</a>&amp; exceptions_detected_by_sentinel() <span class="keyword">const</span> <span class="keyword">noexcept</span></div>
-<div class="line"><a id="l00812" name="l00812"></a><span class="lineno">  812</span>    {</div>
-<div class="line"><a id="l00813" name="l00813"></a><span class="lineno">  813</span>      <span class="keywordflow">return</span> logger().exceptions_detected_by_sentinel();</div>
-<div class="line"><a id="l00814" name="l00814"></a><span class="lineno">  814</span>    }</div>
-<div class="line"><a id="l00815" name="l00815"></a><span class="lineno">  815</span> </div>
-<div class="line"><a id="l00816" name="l00816"></a><span class="lineno">  816</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00817" name="l00817"></a><span class="lineno">  817</span>    <a class="code hl_class" href="../../d1/d8f/classsequoia_1_1testing_1_1sentinel.html">sentinel&lt;Mode&gt;</a> make_sentinel(std::string_view message)</div>
-<div class="line"><a id="l00818" name="l00818"></a><span class="lineno">  818</span>    {</div>
-<div class="line"><a id="l00819" name="l00819"></a><span class="lineno">  819</span>      <span class="keywordflow">return</span> {logger(), message};</div>
-<div class="line"><a id="l00820" name="l00820"></a><span class="lineno">  820</span>    }</div>
-<div class="line"><a id="l00821" name="l00821"></a><span class="lineno">  821</span> </div>
-<div class="line"><a id="l00822" name="l00822"></a><span class="lineno">  822</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00823" name="l00823"></a><span class="lineno">  823</span>    std::string_view top_level_message()<span class="keyword"> const</span></div>
-<div class="line"><a id="l00824" name="l00824"></a><span class="lineno">  824</span><span class="keyword">    </span>{</div>
-<div class="line"><a id="l00825" name="l00825"></a><span class="lineno">  825</span>      <span class="keywordflow">return</span> logger().top_level_message();</div>
-<div class="line"><a id="l00826" name="l00826"></a><span class="lineno">  826</span>    }</div>
-<div class="line"><a id="l00827" name="l00827"></a><span class="lineno">  827</span> </div>
-<div class="line"><a id="l00828" name="l00828"></a><span class="lineno">  828</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00829" name="l00829"></a><span class="lineno">  829</span>    <span class="keyword">const</span> failure_output&amp; failure_messages() <span class="keyword">const</span> <span class="keyword">noexcept</span></div>
-<div class="line"><a id="l00830" name="l00830"></a><span class="lineno">  830</span>    {</div>
-<div class="line"><a id="l00831" name="l00831"></a><span class="lineno">  831</span>      <span class="keywordflow">return</span> logger().failure_messages();</div>
-<div class="line"><a id="l00832" name="l00832"></a><span class="lineno">  832</span>    }</div>
-<div class="line"><a id="l00833" name="l00833"></a><span class="lineno">  833</span> </div>
-<div class="line"><a id="l00834" name="l00834"></a><span class="lineno">  834</span>    <span class="keywordtype">void</span> recovery(<a class="code hl_struct" href="../../d2/d70/structsequoia_1_1testing_1_1active__recovery__files.html">active_recovery_files</a> files)</div>
-<div class="line"><a id="l00835" name="l00835"></a><span class="lineno">  835</span>    {</div>
-<div class="line"><a id="l00836" name="l00836"></a><span class="lineno">  836</span>      <a class="code hl_class" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger&lt;Mode&gt;::recovery</a>(std::move(files));</div>
-<div class="line"><a id="l00837" name="l00837"></a><span class="lineno">  837</span>    }</div>
-<div class="line"><a id="l00838" name="l00838"></a><span class="lineno">  838</span>  <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00839" name="l00839"></a><span class="lineno">  839</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00840" name="l00840"></a><span class="lineno">  840</span>    <a class="code hl_class" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger&lt;Mode&gt;</a>&amp; logger() <span class="keyword">noexcept</span></div>
-<div class="line"><a id="l00841" name="l00841"></a><span class="lineno">  841</span>    {</div>
-<div class="line"><a id="l00842" name="l00842"></a><span class="lineno">  842</span>      <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span><a class="code hl_class" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger&lt;Mode&gt;</a>&amp;<span class="keyword">&gt;</span>(*this);</div>
-<div class="line"><a id="l00843" name="l00843"></a><span class="lineno">  843</span>    }</div>
-<div class="line"><a id="l00844" name="l00844"></a><span class="lineno">  844</span> </div>
-<div class="line"><a id="l00845" name="l00845"></a><span class="lineno">  845</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00846" name="l00846"></a><span class="lineno">  846</span>    <span class="keyword">const</span> <a class="code hl_class" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger&lt;Mode&gt;</a>&amp; logger() <span class="keyword">const</span> <span class="keyword">noexcept</span></div>
-<div class="line"><a id="l00847" name="l00847"></a><span class="lineno">  847</span>    {</div>
-<div class="line"><a id="l00848" name="l00848"></a><span class="lineno">  848</span>      <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span><span class="keyword">const </span><a class="code hl_class" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger&lt;Mode&gt;</a>&amp;<span class="keyword">&gt;</span>(*this);</div>
-<div class="line"><a id="l00849" name="l00849"></a><span class="lineno">  849</span>    }</div>
-<div class="line"><a id="l00850" name="l00850"></a><span class="lineno">  850</span>  };</div>
-<div class="line"><a id="l00851" name="l00851"></a><span class="lineno">  851</span>}</div>
+<div class="line"><a id="l00804" name="l00804"></a><span class="lineno">  804</span>    <a class="code hl_class" href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">~checker</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00805" name="l00805"></a><span class="lineno">  805</span> </div>
+<div class="line"><a id="l00806" name="l00806"></a><span class="lineno">  806</span>    [[nodiscard]]</div>
+<div class="line"><a id="l00807" name="l00807"></a><span class="lineno">  807</span>    std::size_t checks() <span class="keyword">const</span> <span class="keyword">noexcept</span> { <span class="keywordflow">return</span> logger().checks(); }</div>
+<div class="line"><a id="l00808" name="l00808"></a><span class="lineno">  808</span> </div>
+<div class="line"><a id="l00809" name="l00809"></a><span class="lineno">  809</span>    [[nodiscard]]</div>
+<div class="line"><a id="l00810" name="l00810"></a><span class="lineno">  810</span>    std::size_t failures() <span class="keyword">const</span> <span class="keyword">noexcept</span> { <span class="keywordflow">return</span> logger().failures(); }</div>
+<div class="line"><a id="l00811" name="l00811"></a><span class="lineno">  811</span> </div>
+<div class="line"><a id="l00812" name="l00812"></a><span class="lineno">  812</span>    [[nodiscard]]</div>
+<div class="line"><a id="l00813" name="l00813"></a><span class="lineno">  813</span>    <span class="keyword">const</span> <a class="code hl_struct" href="../../db/d2c/structsequoia_1_1testing_1_1uncaught__exception__info.html">uncaught_exception_info</a>&amp; exceptions_detected_by_sentinel() <span class="keyword">const</span> <span class="keyword">noexcept</span></div>
+<div class="line"><a id="l00814" name="l00814"></a><span class="lineno">  814</span>    {</div>
+<div class="line"><a id="l00815" name="l00815"></a><span class="lineno">  815</span>      <span class="keywordflow">return</span> logger().exceptions_detected_by_sentinel();</div>
+<div class="line"><a id="l00816" name="l00816"></a><span class="lineno">  816</span>    }</div>
+<div class="line"><a id="l00817" name="l00817"></a><span class="lineno">  817</span> </div>
+<div class="line"><a id="l00818" name="l00818"></a><span class="lineno">  818</span>    [[nodiscard]]</div>
+<div class="line"><a id="l00819" name="l00819"></a><span class="lineno">  819</span>    <a class="code hl_class" href="../../d1/d8f/classsequoia_1_1testing_1_1sentinel.html">sentinel&lt;Mode&gt;</a> make_sentinel(std::string_view message)</div>
+<div class="line"><a id="l00820" name="l00820"></a><span class="lineno">  820</span>    {</div>
+<div class="line"><a id="l00821" name="l00821"></a><span class="lineno">  821</span>      <span class="keywordflow">return</span> {logger(), message};</div>
+<div class="line"><a id="l00822" name="l00822"></a><span class="lineno">  822</span>    }</div>
+<div class="line"><a id="l00823" name="l00823"></a><span class="lineno">  823</span> </div>
+<div class="line"><a id="l00824" name="l00824"></a><span class="lineno">  824</span>    [[nodiscard]]</div>
+<div class="line"><a id="l00825" name="l00825"></a><span class="lineno">  825</span>    std::string_view top_level_message()<span class="keyword"> const</span></div>
+<div class="line"><a id="l00826" name="l00826"></a><span class="lineno">  826</span><span class="keyword">    </span>{</div>
+<div class="line"><a id="l00827" name="l00827"></a><span class="lineno">  827</span>      <span class="keywordflow">return</span> logger().top_level_message();</div>
+<div class="line"><a id="l00828" name="l00828"></a><span class="lineno">  828</span>    }</div>
+<div class="line"><a id="l00829" name="l00829"></a><span class="lineno">  829</span> </div>
+<div class="line"><a id="l00830" name="l00830"></a><span class="lineno">  830</span>    [[nodiscard]]</div>
+<div class="line"><a id="l00831" name="l00831"></a><span class="lineno">  831</span>    <span class="keyword">const</span> failure_output&amp; failure_messages() <span class="keyword">const</span> <span class="keyword">noexcept</span></div>
+<div class="line"><a id="l00832" name="l00832"></a><span class="lineno">  832</span>    {</div>
+<div class="line"><a id="l00833" name="l00833"></a><span class="lineno">  833</span>      <span class="keywordflow">return</span> logger().results().failure_messages;</div>
+<div class="line"><a id="l00834" name="l00834"></a><span class="lineno">  834</span>    }</div>
+<div class="line"><a id="l00835" name="l00835"></a><span class="lineno">  835</span> </div>
+<div class="line"><a id="l00836" name="l00836"></a><span class="lineno">  836</span>    <span class="keywordtype">void</span> recovery(<a class="code hl_struct" href="../../d2/d70/structsequoia_1_1testing_1_1active__recovery__files.html">active_recovery_files</a> files)</div>
+<div class="line"><a id="l00837" name="l00837"></a><span class="lineno">  837</span>    {</div>
+<div class="line"><a id="l00838" name="l00838"></a><span class="lineno">  838</span>      <a class="code hl_class" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger&lt;Mode&gt;::recovery</a>(std::move(files));</div>
+<div class="line"><a id="l00839" name="l00839"></a><span class="lineno">  839</span>    }</div>
+<div class="line"><a id="l00840" name="l00840"></a><span class="lineno">  840</span>  <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00841" name="l00841"></a><span class="lineno">  841</span>    [[nodiscard]]</div>
+<div class="line"><a id="l00842" name="l00842"></a><span class="lineno">  842</span>    <a class="code hl_class" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger&lt;Mode&gt;</a>&amp; logger() <span class="keyword">noexcept</span></div>
+<div class="line"><a id="l00843" name="l00843"></a><span class="lineno">  843</span>    {</div>
+<div class="line"><a id="l00844" name="l00844"></a><span class="lineno">  844</span>      <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span><a class="code hl_class" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger&lt;Mode&gt;</a>&amp;<span class="keyword">&gt;</span>(*this);</div>
+<div class="line"><a id="l00845" name="l00845"></a><span class="lineno">  845</span>    }</div>
+<div class="line"><a id="l00846" name="l00846"></a><span class="lineno">  846</span> </div>
+<div class="line"><a id="l00847" name="l00847"></a><span class="lineno">  847</span>    [[nodiscard]]</div>
+<div class="line"><a id="l00848" name="l00848"></a><span class="lineno">  848</span>    <span class="keyword">const</span> <a class="code hl_class" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger&lt;Mode&gt;</a>&amp; logger() <span class="keyword">const</span> <span class="keyword">noexcept</span></div>
+<div class="line"><a id="l00849" name="l00849"></a><span class="lineno">  849</span>    {</div>
+<div class="line"><a id="l00850" name="l00850"></a><span class="lineno">  850</span>      <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span><span class="keyword">const </span><a class="code hl_class" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger&lt;Mode&gt;</a>&amp;<span class="keyword">&gt;</span>(*this);</div>
+<div class="line"><a id="l00851" name="l00851"></a><span class="lineno">  851</span>    }</div>
+<div class="line"><a id="l00852" name="l00852"></a><span class="lineno">  852</span>  };</div>
+<div class="line"><a id="l00853" name="l00853"></a><span class="lineno">  853</span>}</div>
 <div class="ttc" id="aAdvice_8hpp_html"><div class="ttname"><a href="../../da/d27/Advice_8hpp.html">Advice.hpp</a></div><div class="ttdoc">Utilities for the advice framework, which provides hints for certain failures.</div></div>
 <div class="ttc" id="aBinaryRelationships_8hpp_html"><div class="ttname"><a href="../../d1/d8b/BinaryRelationships_8hpp.html">BinaryRelationships.hpp</a></div><div class="ttdoc">Utilities for performing checks with respect to a binary operator.</div></div>
 <div class="ttc" id="aCoreInfrastructure_8hpp_html"><div class="ttname"><a href="../../d0/dae/CoreInfrastructure_8hpp.html">CoreInfrastructure.hpp</a></div><div class="ttdoc">Core declarations / definitions used in the testing framework.</div></div>
@@ -806,9 +808,9 @@ $(function() {
 <div class="ttc" id="aTestLogger_8hpp_html_ae4e97c9d45a89647799f0d308ba6d244"><div class="ttname"><a href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">sequoia::testing::test_mode</a></div><div class="ttdeci">test_mode</div><div class="ttdoc">Specifies whether tests are run as standard tests or in false postive/negative mode.</div><div class="ttdef"><b>Definition:</b> TestLogger.hpp:35</div></div>
 <div class="ttc" id="aUtilities_8hpp_html"><div class="ttname"><a href="../../db/d8f/Utilities_8hpp.html">Utilities.hpp</a></div><div class="ttdoc">Meta-programming utilities.</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1checker_html"><div class="ttname"><a href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">sequoia::testing::checker</a></div><div class="ttdef"><b>Definition:</b> FreeCheckers.hpp:672</div></div>
-<div class="ttc" id="aclasssequoia_1_1testing_1_1log__summary_html"><div class="ttname"><a href="../../d2/daa/classsequoia_1_1testing_1_1log__summary.html">sequoia::testing::log_summary</a></div><div class="ttdoc">Summaries data generated by the logger, for the purposes of reporting.</div><div class="ttdef"><b>Definition:</b> TestLogger.hpp:264</div></div>
-<div class="ttc" id="aclasssequoia_1_1testing_1_1sentinel_html"><div class="ttname"><a href="../../d1/d8f/classsequoia_1_1testing_1_1sentinel.html">sequoia::testing::sentinel</a></div><div class="ttdef"><b>Definition:</b> TestLogger.hpp:80</div></div>
-<div class="ttc" id="aclasssequoia_1_1testing_1_1test__logger_html"><div class="ttname"><a href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">sequoia::testing::test_logger</a></div><div class="ttdef"><b>Definition:</b> TestLogger.hpp:133</div></div>
+<div class="ttc" id="aclasssequoia_1_1testing_1_1log__summary_html"><div class="ttname"><a href="../../d2/daa/classsequoia_1_1testing_1_1log__summary.html">sequoia::testing::log_summary</a></div><div class="ttdoc">Summaries data generated by the logger, for the purposes of reporting.</div><div class="ttdef"><b>Definition:</b> TestLogger.hpp:298</div></div>
+<div class="ttc" id="aclasssequoia_1_1testing_1_1sentinel_html"><div class="ttname"><a href="../../d1/d8f/classsequoia_1_1testing_1_1sentinel.html">sequoia::testing::sentinel</a></div><div class="ttdef"><b>Definition:</b> TestLogger.hpp:279</div></div>
+<div class="ttc" id="aclasssequoia_1_1testing_1_1test__logger_html"><div class="ttname"><a href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">sequoia::testing::test_logger</a></div><div class="ttdef"><b>Definition:</b> TestLogger.hpp:191</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1tutor_html"><div class="ttname"><a href="../../d6/d71/classsequoia_1_1testing_1_1tutor.html">sequoia::testing::tutor</a></div><div class="ttdoc">class template used to wrap function objects which proffer advice.</div><div class="ttdef"><b>Definition:</b> Advice.hpp:127</div></div>
 <div class="ttc" id="aconceptsequoia_1_1deep__equality__comparable_html"><div class="ttname"><a href="../../da/d5f/conceptsequoia_1_1deep__equality__comparable.html">sequoia::deep_equality_comparable</a></div><div class="ttdoc">Concept to work around the fact that currently the stl typically underconstrains operator==.</div><div class="ttdef"><b>Definition:</b> Concepts.hpp:105</div></div>
 <div class="ttc" id="aconceptsequoia_1_1faithful__range_html"><div class="ttname"><a href="../../dd/d51/conceptsequoia_1_1faithful__range.html">sequoia::faithful_range</a></div><div class="ttdoc">Similar to std::range but excludes the case where dereferencing yields the same type as the range.</div><div class="ttdef"><b>Definition:</b> Concepts.hpp:91</div></div>

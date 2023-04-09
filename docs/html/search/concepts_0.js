@@ -34,5 +34,6 @@ var searchData=
   ['static_5fnetwork_31',['static_network',['../dd/d45/conceptsequoia_1_1maths_1_1static__network.html',1,'sequoia::maths']]],
   ['tester_5ffor_32',['tester_for',['../de/da4/conceptsequoia_1_1testing_1_1tester__for.html',1,'sequoia::testing']]],
   ['three_5fway_5fcomparable_33',['three_way_comparable',['../dd/dd8/conceptsequoia_1_1three__way__comparable.html',1,'sequoia']]],
-  ['uniform_5fwrapper_34',['uniform_wrapper',['../d0/d9f/conceptsequoia_1_1object_1_1uniform__wrapper.html',1,'sequoia::object']]]
+  ['transparent_5fwrapper_34',['transparent_wrapper',['../d2/d87/conceptsequoia_1_1object_1_1transparent__wrapper.html',1,'sequoia::object']]],
+  ['uniform_5fwrapper_35',['uniform_wrapper',['../d0/d9f/conceptsequoia_1_1object_1_1uniform__wrapper.html',1,'sequoia::object']]]
 ];

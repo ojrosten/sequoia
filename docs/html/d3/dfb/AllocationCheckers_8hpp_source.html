@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.6"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: C:/Users/oliverrosten/sequoia/Source/sequoia/TestFramework/AllocationCheckers.hpp Source File</title>
+<title>Sequoia: C:/Users/olive/sequoia/Source/sequoia/TestFramework/AllocationCheckers.hpp Source File</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -395,7 +395,7 @@ $(function() {
 <div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>  };</div>
 <div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span> </div>
 <div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>  <span class="keyword">template</span>&lt;movable_comparable T, alloc_getter&lt;T&gt; Getter&gt;</div>
-<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>    <span class="keyword">requires</span> <span class="keyword">requires</span> { Getter::alloc_equivalence_class; }</div>
+<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>    <span class="keyword">requires</span> <span class="keyword">requires</span> { <span class="keyword">typename</span> Getter::alloc_equivalence_class; }</div>
 <div class="line"><a id="l00342" name="l00342"></a><span class="lineno"><a class="line" href="../../da/dba/structsequoia_1_1testing_1_1alloc__equivalence__class__generator_3_01T_00_01Getter_01_4.html">  342</a></span>  <span class="keyword">struct </span><a class="code hl_struct" href="../../d5/d5e/structsequoia_1_1testing_1_1alloc__equivalence__class__generator.html">alloc_equivalence_class_generator</a>&lt;T, Getter&gt;</div>
 <div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span>  {</div>
 <div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>    <span class="keyword">using </span>type = <span class="keyword">typename</span> Getter::alloc_equivalence_class;</div>

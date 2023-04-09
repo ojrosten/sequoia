@@ -78,13 +78,15 @@ $(function() {
 <div class="contents">
 <h2 class="groupheader">Concept definition</h2>
 <div class="fragment"><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt;</div>
-<div class="line"><span class="keyword">concept </span><a class="code hl_concept" href="../../d9/dab/conceptsequoia_1_1testing_1_1concrete__test.html">sequoia::testing::concrete_test</a> =  !std::is_abstract_v&lt;T&gt; &amp;&amp; std::movable&lt;T&gt; &amp;&amp; std::constructible_from&lt;std::string&gt;</div>
-<div class="line">    &amp;&amp; <span class="keyword">requires</span> (T&amp; test){</div>
-<div class="line">         { test.execute(std::nullopt) } -&gt; std::same_as&lt;log_summary&gt;;</div>
-<div class="line">         { test.source_filename() }     -&gt; std::convertible_to&lt;std::filesystem::path&gt;;</div>
-<div class="line">         { test.name() }                -&gt; std::convertible_to&lt;std::string&gt;;</div>
-<div class="line">       }</div>
-<div class="ttc" id="aconceptsequoia_1_1testing_1_1concrete__test_html"><div class="ttname"><a href="../../d9/dab/conceptsequoia_1_1testing_1_1concrete__test.html">sequoia::testing::concrete_test</a></div><div class="ttdef"><b>Definition:</b> FreeTestCore.hpp:236</div></div>
+<div class="line"><span class="keyword">concept </span><a class="code hl_concept" href="../../d9/dab/conceptsequoia_1_1testing_1_1concrete__test.html">sequoia::testing::concrete_test</a> = </div>
+<div class="line">        <span class="keyword">requires</span> (T&amp; test){</div>
+<div class="line">          { test.execute(std::nullopt) } -&gt; std::same_as&lt;log_summary&gt;;</div>
+<div class="line">          { test.source_filename() }     -&gt; std::convertible_to&lt;std::filesystem::path&gt;;</div>
+<div class="line">          { test.name() }                -&gt; std::convertible_to&lt;std::string&gt;;</div>
+<div class="line">          { test.reset_results() };</div>
+<div class="line">        }</div>
+<div class="line">    &amp;&amp; !std::is_abstract_v&lt;T&gt; &amp;&amp; std::movable&lt;T&gt;</div>
+<div class="ttc" id="aconceptsequoia_1_1testing_1_1concrete__test_html"><div class="ttname"><a href="../../d9/dab/conceptsequoia_1_1testing_1_1concrete__test.html">sequoia::testing::concrete_test</a></div><div class="ttdef"><b>Definition:</b> FreeTestCore.hpp:230</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

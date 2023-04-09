@@ -112,6 +112,9 @@ template&lt;std::invocable&lt; T &amp; &gt; Fn&gt; </td></tr>
 <tr class="memitem:afe7cc58ec890ec71759aa0799bea2fe1"><td class="memItemLeft" align="right" valign="top"><a id="afe7cc58ec890ec71759aa0799bea2fe1" name="afe7cc58ec890ec71759aa0799bea2fe1"></a>
 constexpr const T &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>get</b> () const noexcept</td></tr>
 <tr class="separator:afe7cc58ec890ec71759aa0799bea2fe1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5faaee72db40dcbe30668a1fe4d9f085"><td class="memItemLeft" align="right" valign="top"><a id="a5faaee72db40dcbe30668a1fe4d9f085" name="a5faaee72db40dcbe30668a1fe4d9f085"></a>
+constexpr T &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>get</b> () noexcept</td></tr>
+<tr class="separator:a5faaee72db40dcbe30668a1fe4d9f085"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="friends" name="friends"></a>
 Friends</h2></td></tr>
@@ -125,9 +128,10 @@ auto&#160;</td><td class="memItemRight" valign="bottom"><b>operator&lt;=&gt;</b>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;class T&gt;<br />
 class sequoia::object::faithful_wrapper&lt; T &gt;</div><p>A wrapper which allows for getting, setting and mutation of its stored value. </p>
-<p>This wrapper is designed for use alongside classes which expose proxies to the underlying data of interest. Throughout sequoia, such proxies should have the same get/set/mutate interface as <a class="el" href="../../d5/d59/classsequoia_1_1object_1_1faithful__wrapper.html" title="A wrapper which allows for getting, setting and mutation of its stored value.">faithful_wrapper</a>. Thus the <a class="el" href="../../d5/d59/classsequoia_1_1object_1_1faithful__wrapper.html" title="A wrapper which allows for getting, setting and mutation of its stored value.">faithful_wrapper</a> allows for a homogeneous treatment of families of classes, some of which must necessarily use proxies but all of which are desired to have the same semantics in terms of getting/setting/mutating the underlying data. </p>
+<p>This wrapper is designed for use alongside classes which expose proxies to the underlying data of interest. Throughout sequoia, such proxies should have the same get/set/mutate interface as <a class="el" href="../../d5/d59/classsequoia_1_1object_1_1faithful__wrapper.html" title="A wrapper which allows for getting, setting and mutation of its stored value.">faithful_wrapper</a>. Thus the <a class="el" href="../../d5/d59/classsequoia_1_1object_1_1faithful__wrapper.html" title="A wrapper which allows for getting, setting and mutation of its stored value.">faithful_wrapper</a> allows for a homogeneous treatment of families of classes, some of which must necessarily use proxies but all of which are desired to have the same semantics in terms of getting/setting/mutating the underlying data.</p>
+<p>The exception to this is that the <a class="el" href="../../d5/d59/classsequoia_1_1object_1_1faithful__wrapper.html" title="A wrapper which allows for getting, setting and mutation of its stored value.">faithful_wrapper</a> includes a non-const getter. </p>
 </div><hr/>The documentation for this class was generated from the following file:<ul>
-<li>C:/Users/oliverrosten/sequoia/Source/sequoia/Core/Object/<a class="el" href="../../d7/d7b/FaithfulWrapper_8hpp_source.html">FaithfulWrapper.hpp</a></li>
+<li>C:/Users/olive/sequoia/Source/sequoia/Core/Object/<a class="el" href="../../d7/d7b/FaithfulWrapper_8hpp_source.html">FaithfulWrapper.hpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

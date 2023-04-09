@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.6"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: C:/Users/oliverrosten/sequoia/Source/sequoia/TestFramework/TestRunner.cpp File Reference</title>
+<title>Sequoia: C:/Users/olive/sequoia/Source/sequoia/TestFramework/TestRunner.cpp File Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -83,10 +83,13 @@ $(function() {
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="../../de/d13/TestRunner_8hpp_source.html">sequoia/TestFramework/TestRunner.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d8/d3c/DependencyAnalyzer_8hpp_source.html">sequoia/TestFramework/DependencyAnalyzer.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../dd/d4b/MaterialsUpdater_8hpp_source.html">sequoia/TestFramework/MaterialsUpdater.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d8/df2/ProjectCreator_8hpp_source.html">sequoia/TestFramework/ProjectCreator.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../dc/d7f/Summary_8hpp_source.html">sequoia/TestFramework/Summary.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d7/dce/TestCreator_8hpp_source.html">sequoia/TestFramework/TestCreator.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d9/d70/ConcurrencyModels_8hpp_source.html">sequoia/Core/Concurrency/ConcurrencyModels.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d2/d4b/CommandLineArguments_8hpp_source.html">sequoia/Parsing/CommandLineArguments.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../de/d56/Preprocessor_8hpp_source.html">sequoia/PlatformSpecific/Preprocessor.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d1/db1/ShellCommands_8hpp_source.html">sequoia/Runtime/ShellCommands.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d1/d50/Substitutions_8hpp_source.html">sequoia/TextProcessing/Substitutions.hpp</a>&quot;</code><br />
 <code>#include &lt;fstream&gt;</code><br />
@@ -94,9 +97,9 @@ $(function() {
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a6adaa077c32635161c79c834abde86e5"><td class="memItemLeft" align="right" valign="top"><a id="a6adaa077c32635161c79c834abde86e5" name="a6adaa077c32635161c79c834abde86e5"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::report_time</b> (const family_summary &amp;s)</td></tr>
-<tr class="separator:a6adaa077c32635161c79c834abde86e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3cae954a5139f2a6dd552c86dccdc40d"><td class="memItemLeft" align="right" valign="top"><a id="a3cae954a5139f2a6dd552c86dccdc40d" name="a3cae954a5139f2a6dd552c86dccdc40d"></a>
+individual_materials_paths&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::set_materials</b> (const std::filesystem::path &amp;sourceFile, const project_paths &amp;projPaths, std::vector&lt; std::filesystem::path &gt; &amp;materialsPaths)</td></tr>
+<tr class="separator:a3cae954a5139f2a6dd552c86dccdc40d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Definitions for <a class="el" href="../../de/d13/TestRunner_8hpp.html" title="Utilities for running tests from the command line.">TestRunner.hpp</a>. </p>

@@ -81,7 +81,7 @@ Scalability</h1>
 <li>Given a test file <code>Tests/Foo/Bar.cpp</code>, any testing materials should be stored in <code>TestMaterials/Foo/Bar</code>.</li>
 </ol>
 </li>
-<li>Concurrency: by default, tests run concurrently. Tests are grouped into families and, by default, concurrency will be at the family level if there are more than three families; otherwise, concurrency is at the level of individual tests. However, this may be overridden using <code>--async-depth</code>.</li>
+<li>Concurrency: by default, all tests (bar performance tests) are run concurrently. Where supported, this is done using a <code>std</code> algorithm invoked with the parallel execution policy. For libc++, a thread pool supplied by <code>sequoia</code> is utilized instead. This may be employed on any platform by running with <code>--thread-pool &lt;desired num threads&gt;</code>.</li>
 <li>Instability detection: <code>locate-instabilities</code> is called with an integer, specifying the number of times tests should be run. Instabilities are pinned down to the line of test code where they first manifest. By default, everything is run within the same program, allowing detection of changes to static data. However, it's conceivable that these changes are desired. If appropriate, use the <code>--sandbox</code> flag to ensure that each run is done in an independent process.</li>
 </ul>
 <h1><a class="anchor" id="sec_platform"></a>

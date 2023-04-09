@@ -47,7 +47,7 @@ var searchData=
   ['conceptstest_2ehpp_44',['ConceptsTest.hpp',['../d9/d14/ConceptsTest_8hpp.html',1,'']]],
   ['concretetypecheckers_2ecpp_45',['ConcreteTypeCheckers.cpp',['../d3/d9f/ConcreteTypeCheckers_8cpp.html',1,'']]],
   ['concretetypecheckers_2ehpp_46',['ConcreteTypeCheckers.hpp',['../dc/d9c/ConcreteTypeCheckers_8hpp.html',1,'']]],
-  ['concurrency_5fmode_47',['concurrency_mode',['../db/d6a/TestFamily_8hpp.html#a5bf3cc5ec793288c6c7da7ceeb3249a7',1,'sequoia::testing']]],
+  ['concurrency_5fmode_47',['concurrency_mode',['../de/d13/TestRunner_8hpp.html#a5bf3cc5ec793288c6c7da7ceeb3249a7',1,'sequoia::testing']]],
   ['concurrencymodels_2ehpp_48',['ConcurrencyModels.hpp',['../d9/d70/ConcurrencyModels_8hpp.html',1,'']]],
   ['concurrencymodelsperformancetest_2ecpp_49',['ConcurrencyModelsPerformanceTest.cpp',['../d7/d7f/ConcurrencyModelsPerformanceTest_8cpp.html',1,'']]],
   ['concurrencymodelsperformancetest_2ehpp_50',['ConcurrencyModelsPerformanceTest.hpp',['../d4/d87/ConcurrencyModelsPerformanceTest_8hpp.html',1,'']]],

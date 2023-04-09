@@ -1,11 +1,22 @@
 var searchData=
 [
-  ['line_5fbreaks_0',['line_breaks',['../d3/d49/classsequoia_1_1testing_1_1line__breaks.html',1,'sequoia::testing']]],
-  ['linear_5fsequence_1',['linear_sequence',['../d8/d4a/classsequoia_1_1maths_1_1linear__sequence.html',1,'sequoia::maths']]],
-  ['linear_5fsequence_5ffalse_5fpositive_5ftest_2',['linear_sequence_false_positive_test',['../d5/df8/classsequoia_1_1testing_1_1linear__sequence__false__positive__test.html',1,'sequoia::testing']]],
-  ['linear_5fsequence_5ftest_3',['linear_sequence_test',['../d4/d2e/classsequoia_1_1testing_1_1linear__sequence__test.html',1,'sequoia::testing']]],
-  ['log_5fsummary_4',['log_summary',['../d2/daa/classsequoia_1_1testing_1_1log__summary.html',1,'sequoia::testing']]],
-  ['loop_5fprocessor_5',['loop_processor',['../dc/d07/classsequoia_1_1maths_1_1graph__impl_1_1loop__processor.html',1,'sequoia::maths::graph_impl']]],
-  ['loop_5fprocessor_3c_20g_2c_20graph_5fflavour_3a_3aundirected_20_3e_6',['loop_processor&lt; G, graph_flavour::undirected &gt;',['../dc/d1a/classsequoia_1_1maths_1_1graph__impl_1_1loop__processor_3_01G_00_01graph__flavour_1_1undirected_01_4.html',1,'sequoia::maths::graph_impl']]],
-  ['loop_5fprocessor_3c_20g_2c_20graphflavour_20_3e_7',['loop_processor&lt; G, GraphFlavour &gt;',['../d9/d97/classsequoia_1_1maths_1_1graph__impl_1_1loop__processor_3_01G_00_01GraphFlavour_01_4.html',1,'sequoia::maths::graph_impl']]]
+  ['leaf_5fextractor_0',['leaf_extractor',['../d9/d4e/structsequoia_1_1object_1_1leaf__extractor.html',1,'sequoia::object']]],
+  ['leaf_5fextractor_3c_20std_3a_3atuple_3c_20ts_2e_2e_2e_20_3e_20_3e_1',['leaf_extractor&lt; std::tuple&lt; Ts... &gt; &gt;',['../dc/d7e/structsequoia_1_1object_1_1leaf__extractor_3_01std_1_1tuple_3_01Ts_8_8_8_01_4_01_4.html',1,'sequoia::object']]],
+  ['leaf_5fextractor_3c_20std_3a_3atuple_3c_20ts_2e_2e_2e_20_3e_2c_20std_3a_3atuple_3c_20us_2e_2e_2e_20_3e_20_3e_2',['leaf_extractor&lt; std::tuple&lt; Ts... &gt;, std::tuple&lt; Us... &gt; &gt;',['../da/dbe/structsequoia_1_1object_1_1leaf__extractor_3_01std_1_1tuple_3_01Ts_8_8_8_01_4_00_01std_1_1tuple_3_01Us_8_8_8_01_4_01_4.html',1,'sequoia::object']]],
+  ['leaf_5fextractor_3c_20std_3a_3atuple_3c_20ts_2e_2e_2e_20_3e_2c_20suite_3c_20us_2e_2e_2e_20_3e_20_3e_3',['leaf_extractor&lt; std::tuple&lt; Ts... &gt;, suite&lt; Us... &gt; &gt;',['../de/d72/structsequoia_1_1object_1_1leaf__extractor_3_01std_1_1tuple_3_01Ts_8_8_8_01_4_00_01suite_3_01Us_8_8_8_01_4_01_4.html',1,'sequoia::object']]],
+  ['leaf_5fextractor_3c_20suite_3c_20ts_2e_2e_2e_20_3e_20_3e_4',['leaf_extractor&lt; suite&lt; Ts... &gt; &gt;',['../dd/d63/structsequoia_1_1object_1_1leaf__extractor_3_01suite_3_01Ts_8_8_8_01_4_01_4.html',1,'sequoia::object']]],
+  ['leaf_5fextractor_3c_20suite_3c_20ts_2e_2e_2e_20_3e_2c_20std_3a_3atuple_3c_20us_2e_2e_2e_20_3e_20_3e_5',['leaf_extractor&lt; suite&lt; Ts... &gt;, std::tuple&lt; Us... &gt; &gt;',['../db/dd0/structsequoia_1_1object_1_1leaf__extractor_3_01suite_3_01Ts_8_8_8_01_4_00_01std_1_1tuple_3_01Us_8_8_8_01_4_01_4.html',1,'sequoia::object']]],
+  ['leaf_5fextractor_3c_20t_2c_20u_2c_20vs_2e_2e_2e_20_3e_6',['leaf_extractor&lt; T, U, Vs... &gt;',['../db/d1d/structsequoia_1_1object_1_1leaf__extractor_3_01T_00_01U_00_01Vs_8_8_8_01_4.html',1,'sequoia::object']]],
+  ['leaves_5fto_5fvariant_5for_5funique_5ftype_7',['leaves_to_variant_or_unique_type',['../d9/d7d/structsequoia_1_1object_1_1leaves__to__variant__or__unique__type.html',1,'sequoia::object']]],
+  ['leaves_5fto_5fvariant_5for_5funique_5ftype_3c_20std_3a_3atuple_3c_20t_2c_20ts_2e_2e_2e_20_3e_2c_20transform_20_3e_8',['leaves_to_variant_or_unique_type&lt; std::tuple&lt; T, Ts... &gt;, Transform &gt;',['../d6/de9/structsequoia_1_1object_1_1leaves__to__variant__or__unique__type_3_01std_1_1tuple_3_01T_00_01Ts_8_8_8_01_4_00_01Transform_01_4.html',1,'sequoia::object']]],
+  ['leaves_5fto_5fvariant_5for_5funique_5ftype_3c_20std_3a_3atuple_3c_20ts_2e_2e_2e_20_3e_2c_20transform_20_3e_9',['leaves_to_variant_or_unique_type&lt; std::tuple&lt; Ts... &gt;, Transform &gt;',['../d3/db3/structsequoia_1_1object_1_1leaves__to__variant__or__unique__type_3_01std_1_1tuple_3_01Ts_8_8_8_01_4_00_01Transform_01_4.html',1,'sequoia::object']]],
+  ['leaves_5fto_5fvariant_5for_5funique_5ftype_3c_20suite_3c_20ts_2e_2e_2e_20_3e_2c_20transform_20_3e_10',['leaves_to_variant_or_unique_type&lt; suite&lt; Ts... &gt;, Transform &gt;',['../da/d63/structsequoia_1_1object_1_1leaves__to__variant__or__unique__type_3_01suite_3_01Ts_8_8_8_01_4_00_01Transform_01_4.html',1,'sequoia::object']]],
+  ['line_5fbreaks_11',['line_breaks',['../d3/d49/classsequoia_1_1testing_1_1line__breaks.html',1,'sequoia::testing']]],
+  ['linear_5fsequence_12',['linear_sequence',['../d8/d4a/classsequoia_1_1maths_1_1linear__sequence.html',1,'sequoia::maths']]],
+  ['linear_5fsequence_5ffalse_5fpositive_5ftest_13',['linear_sequence_false_positive_test',['../d5/df8/classsequoia_1_1testing_1_1linear__sequence__false__positive__test.html',1,'sequoia::testing']]],
+  ['linear_5fsequence_5ftest_14',['linear_sequence_test',['../d4/d2e/classsequoia_1_1testing_1_1linear__sequence__test.html',1,'sequoia::testing']]],
+  ['log_5fsummary_15',['log_summary',['../d2/daa/classsequoia_1_1testing_1_1log__summary.html',1,'sequoia::testing']]],
+  ['loop_5fprocessor_16',['loop_processor',['../dc/d07/classsequoia_1_1maths_1_1graph__impl_1_1loop__processor.html',1,'sequoia::maths::graph_impl']]],
+  ['loop_5fprocessor_3c_20g_2c_20graph_5fflavour_3a_3aundirected_20_3e_17',['loop_processor&lt; G, graph_flavour::undirected &gt;',['../dc/d1a/classsequoia_1_1maths_1_1graph__impl_1_1loop__processor_3_01G_00_01graph__flavour_1_1undirected_01_4.html',1,'sequoia::maths::graph_impl']]],
+  ['loop_5fprocessor_3c_20g_2c_20graphflavour_20_3e_18',['loop_processor&lt; G, GraphFlavour &gt;',['../d9/d97/classsequoia_1_1maths_1_1graph__impl_1_1loop__processor_3_01G_00_01GraphFlavour_01_4.html',1,'sequoia::maths::graph_impl']]]
 ];

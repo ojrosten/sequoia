@@ -1,8 +1,8 @@
 var searchData=
 [
   ['has_5fallocator_5ftype_0',['has_allocator_type',['../d6/dea/structsequoia_1_1has__allocator__type.html',1,'sequoia']]],
-  ['head_5fof_1',['head_of',['../d4/dc6/structsequoia_1_1head__of.html',1,'sequoia']]],
-  ['head_5fof_3c_20type_5flist_3c_20ts_2e_2e_2e_20_3e_20_3e_2',['head_of&lt; type_list&lt; Ts... &gt; &gt;',['../db/d80/structsequoia_1_1head__of_3_01type__list_3_01Ts_8_8_8_01_4_01_4.html',1,'sequoia']]],
+  ['head_5fof_1',['head_of',['../d0/da6/structsequoia_1_1testing_1_1head__of.html',1,'sequoia::testing']]],
+  ['head_5fof_3c_20type_5flist_3c_20ts_2e_2e_2e_20_3e_20_3e_2',['head_of&lt; type_list&lt; Ts... &gt; &gt;',['../dc/d55/structsequoia_1_1testing_1_1head__of_3_01type__list_3_01Ts_8_8_8_01_4_01_4.html',1,'sequoia::testing']]],
   ['heterogeneous_5fdeep_5fequality_3',['heterogeneous_deep_equality',['../d4/dfa/structsequoia_1_1heterogeneous__deep__equality.html',1,'sequoia']]],
   ['heterogeneous_5fdeep_5fequality_3c_20t_3c_20ts_2e_2e_2e_20_3e_20_3e_4',['heterogeneous_deep_equality&lt; T&lt; Ts... &gt; &gt;',['../d8/d71/structsequoia_1_1heterogeneous__deep__equality_3_01T_3_01Ts_8_8_8_01_4_01_4.html',1,'sequoia']]],
   ['heterogeneous_5fembedded_5fgraph_5ftraits_5',['heterogeneous_embedded_graph_traits',['../df/dd2/structsequoia_1_1maths_1_1heterogeneous__embedded__graph__traits.html',1,'sequoia::maths']]],
