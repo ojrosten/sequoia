@@ -312,7 +312,7 @@ namespace sequoia::testing
       {
         for(const auto& entry : fs::recursive_directory_iterator(materials))
         {
-          if(fs::last_write_time(entry) >= pruneTimeStamp) return true;
+          if(fs::last_write_time(entry) > pruneTimeStamp) return true;
         }
       }
 
