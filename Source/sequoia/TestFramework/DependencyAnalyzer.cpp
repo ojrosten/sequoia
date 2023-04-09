@@ -312,7 +312,7 @@ namespace sequoia::testing
       {
         for(const auto& entry : fs::recursive_directory_iterator(materials))
         {
-          if(fs::last_write_time(entry) > pruneTimeStamp) return true;
+          if(fs::last_write_time(entry) >= pruneTimeStamp) return true;
         }
       }
 
@@ -416,7 +416,7 @@ namespace sequoia::testing
 
             const auto maxModificationTime{materialsWriteTime ? std::max(materialsWriteTime.value(), weight.implicit_modification_time) : weight.implicit_modification_time};
 
-            if(weight.stale && (passesStamp.value() > maxModificationTime))
+            if(weight.stale && (passesStamp.value() >= maxModificationTime))
               consider_passing_tests(i, relPath, passingTestsFromFile);
           }
           else if(!weight.stale)
