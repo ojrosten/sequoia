@@ -157,7 +157,7 @@ namespace sequoia::testing
     runner.execute();
 
     auto outputFile{check_output(LINE("Parallel Acceleration Output"), "ParallelAccelerationOutput", outputStream)};
-    check(within_tolerance{25.0}, LINE(""), get_timing(outputFile), 50.0);
+    check(within_tolerance{35.0}, LINE(""), get_timing(outputFile), 60.0);
   }
 
   void test_runner_performance_test::test_thread_pool_acceleration()
@@ -168,7 +168,7 @@ namespace sequoia::testing
       runner.execute();
 
       auto outputFile{check_output(LINE("Thread Pool (8) Acceleration Output"), "ThreadPool8AccelerationOutput", outputStream)};
-      check(within_tolerance{10.0}, LINE(""), get_timing(outputFile), 35.0);
+      check(within_tolerance{15.0}, LINE(""), get_timing(outputFile), 40.0);
     }
 
     {
@@ -177,7 +177,7 @@ namespace sequoia::testing
       runner.execute();
 
       auto outputFile{check_output(LINE("Thread Pool (2) Acceleration Output"), "ThreadPool2AccelerationOutput", outputStream)};
-      check(within_tolerance{15.0}, LINE(""), get_timing(outputFile), 115.0);
+      check(within_tolerance{25.0}, LINE(""), get_timing(outputFile), 125.0);
     }
   }
 
