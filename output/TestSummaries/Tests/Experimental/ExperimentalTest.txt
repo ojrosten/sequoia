@@ -1,12 +1,1 @@
 Unit Test
-Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
-
-	Tests/Experimental/ExperimentalTest.cpp, Line 25
-
-	[int]
-	operator== returned false
-	Obtained : 42
-	Predicted: 41
-
-	=======================================
-

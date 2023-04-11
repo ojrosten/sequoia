@@ -9,9 +9,6 @@
 
 #include "ExperimentalTest.hpp"
 
-#include <iostream>
-#include <source_location>
-
 namespace sequoia::testing
 {
   [[nodiscard]]
@@ -22,6 +19,5 @@ namespace sequoia::testing
 
   void experimental_test::run_tests()
   {
-    check(equality, report_line(""), 42, 41);
   }
 }
