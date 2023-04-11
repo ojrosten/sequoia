@@ -18,6 +18,6 @@ namespace sequoia::testing
 
   void useful_things_free_test::run_tests()
   {
-    check(equality, LINE(""), utils::foo(), 43);
+    check(equality, report_line(""), utils::foo(), 43);
   }
 }

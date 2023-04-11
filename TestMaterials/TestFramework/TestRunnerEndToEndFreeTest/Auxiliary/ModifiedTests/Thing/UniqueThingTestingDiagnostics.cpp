@@ -20,7 +20,7 @@ namespace sequoia::testing
 		auto x = []() { return stuff::unique_thing{0.0}; };
 		auto y = []() { return stuff::unique_thing{1.0}; };
 
-		check(equivalence, LINE("Useful Description"), x(), 1.0);
-		check(equality, LINE("Useful Description"), x(), y());
+		check(equivalence, report_line("Useful Description"), x(), 1.0);
+		check(equality, report_line("Useful Description"), x(), y());
 	}
 }

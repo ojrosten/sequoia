@@ -18,6 +18,6 @@ namespace sequoia::testing
 
 	void ?_behavioural_test::run_tests()
 	{
-		// e.g. check_equality(LINE("Useful description"), some_function(), 42);
+		// e.g. check_equality(report_line("Useful description"), some_function(), 42);
 	}
 }

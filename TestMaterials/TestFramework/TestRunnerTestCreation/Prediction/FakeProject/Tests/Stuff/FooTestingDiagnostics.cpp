@@ -23,7 +23,7 @@ namespace sequoia::testing
 
         // auto x = []() { return bar::baz::foo<T>{args}; };
         // auto y = []() { return bar::baz::foo<T>{different args}; };
-        // check(equivalence, LINE("Useful Description"), x(), something inequivalent - ordinarily this would fail);
-        // check(equality, LINE("Useful Description"), x(), y());
+        // check(equivalence, report_line("Useful Description"), x(), something inequivalent - ordinarily this would fail);
+        // check(equality, report_line("Useful Description"), x(), y());
     }
 }
