@@ -108,21 +108,21 @@ namespace sequoia::testing
     {
       using prediction_type = std::array<std::pair<std::string, std::variant<int, double>>, 2>;
 
-      check_exception_thrown<std::logic_error>(LINE("Empty string"), [](){ factory<int, double> f{{"int", ""}}; });
-      check_exception_thrown<std::logic_error>(LINE("Empty string"), [](){ factory<int, double> f{{"", "bar"}}; });
-      check_exception_thrown<std::logic_error>(LINE("Duplicated names"), [](){ factory<int, double> f{{"bar", "bar"}}; });
+      check_exception_thrown<std::logic_error>(report_line("Empty string"), [](){ factory<int, double> f{{"int", ""}}; });
+      check_exception_thrown<std::logic_error>(report_line("Empty string"), [](){ factory<int, double> f{{"", "bar"}}; });
+      check_exception_thrown<std::logic_error>(report_line("Duplicated names"), [](){ factory<int, double> f{{"bar", "bar"}}; });
 
       factory<int, double> f{{"int", "double"}}, g{{"bar", std::string{"foo"}}};
 
-      check(equivalence, LINE(""), f, prediction_type{{{"int", 0}, {"double", 0.0}}});
-      check(equivalence, LINE(""), g, prediction_type{{{"bar", 0}, {"foo", 0.0}}});
+      check(equivalence, report_line(""), f, prediction_type{{{"int", 0}, {"double", 0.0}}});
+      check(equivalence, report_line(""), g, prediction_type{{{"bar", 0}, {"foo", 0.0}}});
 
-      check_semantics(LINE(""), f, g);
+      check_semantics(report_line(""), f, g);
 
-      check_exception_thrown<std::runtime_error>(LINE(""), [&f](){ return f.make("plurgh"); });
+      check_exception_thrown<std::runtime_error>(report_line(""), [&f](){ return f.make("plurgh"); });
 
       const auto created{f.make_or<int>("plurgh")};
-      check(equality, LINE(""), created, std::variant<int, double>{0});
+      check(equality, report_line(""), created, std::variant<int, double>{0});
     }
 
     {
@@ -130,18 +130,18 @@ namespace sequoia::testing
 
       using factory_type = factory<std::vector<int>, int, std::complex<float>, double>;
 
-      check_exception_thrown<std::logic_error>(LINE("Duplicated names"),
+      check_exception_thrown<std::logic_error>(report_line("Duplicated names"),
                                                [](){ factory_type f{{"baz", "foo", "baz", "huh"}}; });
 
       factory_type f{{"vec", "int", "complex", "double"}}, g{{"baz", "foo", "bar", "huh"}};
 
-      check(equivalence, LINE(""), f,
+      check(equivalence, report_line(""), f,
                         prediction_type{{{"vec", std::vector<int>{}}, {"int", 0}, {"complex", std::complex<float>{}}, {"double", 0.0}}});
 
-      check(equivalence, LINE(""), g,
+      check(equivalence, report_line(""), g,
                         prediction_type{{{"baz", std::vector<int>{}}, {"foo", 0}, {"bar", std::complex<float>{}}, {"huh", 0.0}}});
 
-      check_semantics(LINE(""), f, g);
+      check_semantics(report_line(""), f, g);
     }
 
     {
@@ -149,20 +149,20 @@ namespace sequoia::testing
 
       factory<regular_type, move_only_type> f{{"x", "y"}}, g{{"make_x", "make_y"}};
 
-      check(equivalence, LINE(""), f, prediction_type{{{"x", regular_type{1}}, {"y", move_only_type{1}}}}, 1);
-      check(equivalence, LINE(""), g, prediction_type{{{"make_x", regular_type{2}}, {"make_y", move_only_type{2}}}}, 2);
+      check(equivalence, report_line(""), f, prediction_type{{{"x", regular_type{1}}, {"y", move_only_type{1}}}}, 1);
+      check(equivalence, report_line(""), g, prediction_type{{{"make_x", regular_type{2}}, {"make_y", move_only_type{2}}}}, 2);
 
-      check_semantics(LINE(""), f, g);
+      check_semantics(report_line(""), f, g);
     }
 
     {
       using prediction_type = std::array<std::pair<std::string, std::variant<foo<int>, foo<double>>>, 2>;
 
       factory<foo<int>, foo<double>> f{}, g{{"int", "double"}};
-      check(equivalence, LINE(""), f, prediction_type{ {{"foo-int", foo<int>{}}, {"foo-double", foo<double>{}}} });
-      check(equivalence, LINE(""), g, prediction_type{ {{"int", foo<int>{42}}, {"double", foo<double>{42}}} }, 42);
+      check(equivalence, report_line(""), f, prediction_type{ {{"foo-int", foo<int>{}}, {"foo-double", foo<double>{}}} });
+      check(equivalence, report_line(""), g, prediction_type{ {{"int", foo<int>{42}}, {"double", foo<double>{42}}} }, 42);
 
-      check_semantics(LINE(""), f, g);
+      check_semantics(report_line(""), f, g);
     }
   }
 }

@@ -133,7 +133,7 @@ namespace sequoia::testing
     commandline_arguments args{(build_paths{fake, main}.cmade_dir() / "TestAll").generic_string()};
     const project_paths projPaths{args.size(), args.get(), {main.file(), {}, main.file()}};
 
-    check(equality, LINE("No timestamp"), tests_to_run(projPaths, ""), opt_test_list{});
+    check(equality, report_line("No timestamp"), tests_to_run(projPaths, ""), opt_test_list{});
 
     const auto prunePaths{projPaths.prune()};
     fs::create_directories(prunePaths.dir());
@@ -152,7 +152,7 @@ namespace sequoia::testing
 
   void dependency_analyzer_free_test::test_exceptions(const project_paths& projPaths)
   {
-    check_exception_thrown<std::runtime_error>(LINE("Executable out of date"), 
+    check_exception_thrown<std::runtime_error>(report_line("Executable out of date"), 
       [this, projPaths]() {
         fs::last_write_time(projPaths.executable(), m_ResetTime + earlyExecutableOffset);
         return tests_to_run(projPaths, "");
@@ -167,47 +167,47 @@ namespace sequoia::testing
     const auto& sourceRepo{projPaths.source().project()};
     const auto& materials{projPaths.test_materials().repo()};
 
-    check_tests_to_run(LINE("Nothing stale"), projPaths, "", {}, {}, {});
+    check_tests_to_run(report_line("Nothing stale"), projPaths, "", {}, {}, {});
 
     fs::copy(projPaths.prune().external_dependencies(), working_materials());
-    check(weak_equivalence, LINE("External Dependencies"), working_materials(), predictive_materials());
+    check(weak_equivalence, report_line("External Dependencies"), working_materials(), predictive_materials());
 
-    check_tests_to_run(LINE("Test cpp stale (no cutoff)"),
+    check_tests_to_run(report_line("Test cpp stale (no cutoff)"),
                        projPaths,
                        "",
                        {.stale{{{testRepo / "HouseAllocationTest.cpp"}, modification_time::early}}, .to_run{{"HouseAllocationTest.cpp"}}},
                        {},
                        {});
 
-    check_tests_to_run(LINE("Test cpp naively stale, but has passed (when selected)"),
+    check_tests_to_run(report_line("Test cpp naively stale, but has passed (when selected)"),
                        projPaths,
                        "namespace",
                        {.stale{{{testRepo / "HouseAllocationTest.cpp"}, modification_time::early}}, .to_run{}},
                        {},
                        {{{"HouseAllocationTest.cpp"}}, modification_time::late});
 
-    check_tests_to_run(LINE("Test cpp stale; has previously passed (when selected), but this should be ignored"),
+    check_tests_to_run(report_line("Test cpp stale; has previously passed (when selected), but this should be ignored"),
                        projPaths,
                        "namespace",
                        {.stale{{{testRepo / "HouseAllocationTest.cpp"}, modification_time::early}}, .to_run{{"HouseAllocationTest.cpp"}}},
                        {},
                        {{{"HouseAllocationTest.cpp"}}, modification_time::very_early});
 
-    check_tests_to_run(LINE("Test hpp stale (no cutoff)"),
+    check_tests_to_run(report_line("Test hpp stale (no cutoff)"),
                        projPaths,
                        "",
                        {.stale{{{testRepo / "HouseAllocationTest.cpp"}, modification_time::early}}, .to_run{{"HouseAllocationTest.cpp"}}},
                        {},
                        {});
 
-    check_tests_to_run(LINE("Test hpp stale"),
+    check_tests_to_run(report_line("Test hpp stale"),
                        projPaths,
                        "namespace",
                        {.stale{{{testRepo / "HouseAllocationTest.cpp"}, modification_time::early}}, .to_run{{"HouseAllocationTest.cpp"}}},
                        {},
                        {});
 
-    check_tests_to_run(LINE("Test utils stale"),
+    check_tests_to_run(report_line("Test utils stale"),
                        projPaths,
                        "namespace",
                        {.stale{{{testRepo / "Maths" / "ProbabilityTestingUtilities.hpp"}, modification_time::early}},
@@ -215,7 +215,7 @@ namespace sequoia::testing
                        {},
                        {});
 
-    check_tests_to_run(LINE("Reused utils stale"),
+    check_tests_to_run(report_line("Reused utils stale"),
                        projPaths,
                        "namespace",
                        {.stale{{{testRepo / "Stuff" / "OldschoolTestingUtilities.hpp"}, modification_time::early}},
@@ -223,7 +223,7 @@ namespace sequoia::testing
                        {},
                        {});
 
-    check_tests_to_run(LINE("Reused utils stale, but one of the tests has passed"),
+    check_tests_to_run(report_line("Reused utils stale, but one of the tests has passed"),
                        projPaths,
                        "namespace",
                        {.stale{{{testRepo / "Stuff" / "OldschoolTestingUtilities.hpp"}, modification_time::early}},
@@ -231,7 +231,7 @@ namespace sequoia::testing
                        {},
                        {{{"Maybe/MaybeTest.cpp"}}, modification_time::late});
 
-    check_tests_to_run(LINE("Reused utils stale, but two of the tests have passed"),
+    check_tests_to_run(report_line("Reused utils stale, but two of the tests have passed"),
                        projPaths,
                        "namespace",
                        {.stale{{{testRepo / "Stuff" / "OldschoolTestingUtilities.hpp"}, modification_time::early}},
@@ -239,7 +239,7 @@ namespace sequoia::testing
                        {},
                        {{{"Maybe/MaybeTest.cpp"}, {"Stuff/OldschoolTest.cpp"}}, modification_time::late});
 
-    check_tests_to_run(LINE("Reused utils stale, but two of the tests have passed and a different one has failed"),
+    check_tests_to_run(report_line("Reused utils stale, but two of the tests have passed and a different one has failed"),
                        projPaths,
                        "namespace",
                        {.stale{{{testRepo / "Stuff" / "OldschoolTestingUtilities.hpp"}, modification_time::early}},
@@ -247,7 +247,7 @@ namespace sequoia::testing
                        {{"HouseAllocationTest.cpp"}},
                        {{{"Maybe/MaybeTest.cpp"}, {"Stuff/OldschoolTest.cpp"}}, modification_time::late});
 
-    check_tests_to_run(LINE("Reused utils stale, relative path"),
+    check_tests_to_run(report_line("Reused utils stale, relative path"),
                        projPaths,
                        "namespace",
                        {.stale{{{testRepo / "Stuff" / "FooTestingUtilities.hpp"}, modification_time::early}},
@@ -255,7 +255,7 @@ namespace sequoia::testing
                        {},
                        {});
 
-    check_tests_to_run(LINE("Source cpp stale"),
+    check_tests_to_run(report_line("Source cpp stale"),
                        projPaths,
                        "namespace",
                        {.stale{{{sourceRepo / "Maths" / "Probability.cpp"}, modification_time::early}},
@@ -263,7 +263,7 @@ namespace sequoia::testing
                        {},
                        {});
 
-    check_tests_to_run(LINE("Source hpp stale"),
+    check_tests_to_run(report_line("Source hpp stale"),
                        projPaths,
                        "namespace",
                        {.stale{{{sourceRepo / "Maths" / "Probability.hpp"}, modification_time::early}},
@@ -271,7 +271,7 @@ namespace sequoia::testing
                        {},
                        {});
 
-    check_tests_to_run(LINE("Source hpp stale, following a previously successful run"),
+    check_tests_to_run(report_line("Source hpp stale, following a previously successful run"),
                        projPaths,
                        "namespace",
                        {.stale{{{sourceRepo / "Maths" / "Probability.hpp"}, modification_time::early}},
@@ -279,7 +279,7 @@ namespace sequoia::testing
                        {},
                        {{{"Maths/ProbabilityTest.cpp"}, {"Maths/ProbabilityTestingDiagnostics.cpp"}}, modification_time::very_early});
 
-    check_tests_to_run(LINE("Source cpp stale, following a previously successful run"),
+    check_tests_to_run(report_line("Source cpp stale, following a previously successful run"),
                        projPaths,
                        "namespace",
                        {.stale{{{sourceRepo / "Maths" / "Probability.cpp"}, modification_time::early}},
@@ -287,7 +287,7 @@ namespace sequoia::testing
                        {},
                        {{{"Maths/ProbabilityTest.cpp"}, {"Maths/ProbabilityTestingDiagnostics.cpp"}}, modification_time::very_early});
 
-    check_tests_to_run(LINE("Source cpp indirectly stale via included header"),
+    check_tests_to_run(report_line("Source cpp indirectly stale via included header"),
                        projPaths,
                        "namespace",
                        {.stale{{{sourceRepo / "Maths" / "Helper.hpp"}, modification_time::early}},
@@ -295,7 +295,7 @@ namespace sequoia::testing
                        {},
                        {});
 
-    check_tests_to_run(LINE("Source cpp indirectly stale via cpp definitions for included header"),
+    check_tests_to_run(report_line("Source cpp indirectly stale via cpp definitions for included header"),
                        projPaths,
                        "namespace",
                        {.stale{{{sourceRepo / "Maths" / "Helper.cpp"}, modification_time::early}},
@@ -303,7 +303,7 @@ namespace sequoia::testing
                        {},
                        {});
 
-    check_tests_to_run(LINE("Materials stale"),
+    check_tests_to_run(report_line("Materials stale"),
                        projPaths,
                        "namespace",
                        {.stale{{{materials / "Stuff" / "FooTest" / "Prediction" / "RepresentativeCasesTemp" / "NoSeqpat" / "baz.txt"}, modification_time::early}},
@@ -311,7 +311,7 @@ namespace sequoia::testing
                        {},
                        {});
 
-    check_tests_to_run(LINE("Materials naively stale, but test previously passed (when selected)"),
+    check_tests_to_run(report_line("Materials naively stale, but test previously passed (when selected)"),
                        projPaths,
                        "namespace",
                        {.stale{{{materials / "Stuff" / "FooTest" / "Prediction" / "RepresentativeCasesTemp" / "NoSeqpat" / "baz.txt"}, modification_time::early}},
@@ -319,7 +319,7 @@ namespace sequoia::testing
                        {},
                        {{{"Stuff/FooTest.cpp"}}, modification_time::late});
 
-    check_tests_to_run(LINE("Materials stale; test previously passed (when selected), but materials subsequently modified"),
+    check_tests_to_run(report_line("Materials stale; test previously passed (when selected), but materials subsequently modified"),
                        projPaths,
                        "namespace",
                        {.stale{{{materials / "Stuff" / "FooTest" / "Prediction" / "RepresentativeCasesTemp" / "NoSeqpat" / "baz.txt"}, modification_time::early}},
@@ -327,7 +327,7 @@ namespace sequoia::testing
                        {},
                        {{{"Stuff/FooTest.cpp"}}, modification_time::very_early});
 
-    check_tests_to_run(LINE("Materials stale; test previously passed (when selected); materials subsequently modified some early some late"),
+    check_tests_to_run(report_line("Materials stale; test previously passed (when selected); materials subsequently modified some early some late"),
                        projPaths,
                        "namespace",
                        {.stale{{{materials / "Stuff" / "FooTest" / "Prediction" / "RepresentativeCasesTemp" / "NoSeqpat" / "baz.txt"}, modification_time::early},
@@ -336,28 +336,28 @@ namespace sequoia::testing
                        {},
                        {{{"Stuff/FooTest.cpp"}}, modification_time::late});
 
-    check_tests_to_run(LINE("Nothing stale, but a previous failure"),
+    check_tests_to_run(report_line("Nothing stale, but a previous failure"),
                        projPaths,
                        "namespace",
                        {.stale{}, .to_run{{"Maths/ProbabilityTest.cpp"}}},
                        {{"Maths/ProbabilityTest.cpp"}},
                        {});
 
-    check_tests_to_run(LINE("Inconsistency: both passed and failed; failure wins"),
+    check_tests_to_run(report_line("Inconsistency: both passed and failed; failure wins"),
                        projPaths,
                        "namespace",
                        {.stale{}, .to_run{{"Maths/ProbabilityTest.cpp"}}},
                        {{"Maths/ProbabilityTest.cpp"}},
                        {{{"Maths/ProbabilityTest.cpp"}}, modification_time::late});
 
-    check_tests_to_run(LINE("Stale and a previous failure"),
+    check_tests_to_run(report_line("Stale and a previous failure"),
                        projPaths,
                        "namespace",
                        {.stale{{{testRepo / "Maths/ProbabilityTest.cpp"}, modification_time::early}}, .to_run{{"Maths/ProbabilityTest.cpp"}}},
                        {{"Maths/ProbabilityTest.cpp"}},
                        {});
 
-    check_tests_to_run(LINE("Nothing stale, but two previous failures"),
+    check_tests_to_run(report_line("Nothing stale, but two previous failures"),
                        projPaths,
                        "namespace",
                        {.stale{}, .to_run{{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}},
@@ -516,7 +516,7 @@ namespace sequoia::testing
         }
     };
 
-    transition_checker<test_outcomes>::check(LINE(""), g, checker);
+    transition_checker<test_outcomes>::check(report_line(""), g, checker);
   }
 
   void dependency_analyzer_free_test::test_instability_analysis_prune_upate(const project_paths& projPaths)
@@ -641,7 +641,7 @@ namespace sequoia::testing
         }
     };
 
-    transition_checker<test_outcomes>::check(LINE(""), g, checker);
+    transition_checker<test_outcomes>::check(report_line(""), g, checker);
   }
 
   void dependency_analyzer_free_test::check_data(std::string_view description, const test_outcomes& obtained, const test_outcomes& prediction)

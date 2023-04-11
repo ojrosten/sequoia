@@ -31,24 +31,24 @@ namespace sequoia::testing
   void faithful_wrapper_false_positive_test::test_basic_type()
   {
     faithful_wrapper<int> w{1}, v{};
-    check(equality, LINE(""), w, v);
+    check(equality, report_line(""), w, v);
   }
 
   void faithful_wrapper_false_positive_test::test_container_type()
   {
     faithful_wrapper<std::vector<int>> w{}, v{1};
-    check(equality, LINE(""), w, v);
+    check(equality, report_line(""), w, v);
 
     w.mutate([](auto& vec) { vec.push_back(2); });
-    check(equality, LINE(""), w, v);
+    check(equality, report_line(""), w, v);
 
     faithful_wrapper<std::vector<int>> u{std::vector<int>(1)};
-    check(equality, LINE(""), u, v);
+    check(equality, report_line(""), u, v);
   }
 
   void faithful_wrapper_false_positive_test::test_aggregate_type()
   {
     faithful_wrapper<data> w{}, v{1, 2.0};
-    check(equality, LINE(""), w, v);
+    check(equality, report_line(""), w, v);
   }
 }

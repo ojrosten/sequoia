@@ -32,13 +32,13 @@ namespace sequoia::testing
 
     pool_t pool{};
     auto elt{pool.make(-1)};
-    check(weak_equivalence, LINE(""), pool, prediction_t{{-1, 1}});
-    check(equality, LINE(""), elt.get(), -1);
+    check(weak_equivalence, report_line(""), pool, prediction_t{{-1, 1}});
+    check(equality, report_line(""), elt.get(), -1);
 
     pool_t clonePool{};
     auto cloneElt{clonePool.make(-1)};
-    check(weak_equivalence, LINE(""), clonePool, prediction_t{{-1, 1}});
-    check(equality, LINE(""), cloneElt.get(), -1);
+    check(weak_equivalence, report_line(""), clonePool, prediction_t{{-1, 1}});
+    check(equality, report_line(""), cloneElt.get(), -1);
 
     auto allocGetter{
       [](const pool_t& pool){
@@ -52,7 +52,7 @@ namespace sequoia::testing
       }
     };
 
-    check_semantics(LINE(""), pool_t{}, std::move(clonePool), pool_t{}, pool, mutator,
+    check_semantics(report_line(""), pool_t{}, std::move(clonePool), pool_t{}, pool, mutator,
                     allocation_info{allocGetter, {0_pm, {1_pm, 1_mu}, {1_manp}}});
   }
 }

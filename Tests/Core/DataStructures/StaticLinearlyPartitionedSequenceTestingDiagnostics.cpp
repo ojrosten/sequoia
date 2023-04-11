@@ -25,11 +25,11 @@ namespace sequoia::testing
     using prediction = std::array<std::array<int, 1>, 1>;
 
     sequence a{};
-    check(equivalence, LINE(""), a, prediction{{1}});
+    check(equivalence, report_line(""), a, prediction{{1}});
 
     sequence b{{1}};
-    check(equivalence, LINE(""), b, prediction{{2}});
+    check(equivalence, report_line(""), b, prediction{{2}});
 
-    check(equality, LINE(""), a, b);
+    check(equality, report_line(""), a, b);
   }
 }

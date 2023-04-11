@@ -100,7 +100,7 @@ namespace sequoia::testing
       // Think about alignment for non-empty T...
       if constexpr (std::is_empty_v<NodeWeight> && std::is_empty_v<EdgeWeight>)
       {
-        check(equality, LINE("2 bytes for each half edge and 2 for the partition data"), sizeof(g_type), 4_sz);
+        check(equality, report_line("2 bytes for each half edge and 2 for the partition data"), sizeof(g_type), 4_sz);
       }
 
       static_assert(std::is_same_v<typename g_type::edge_index_type, unsigned char>);

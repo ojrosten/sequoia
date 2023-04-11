@@ -22,6 +22,6 @@ namespace sequoia::testing
     using namespace maths;
 
     linear_sequence<int, std::size_t> s{1, 3};
-    check(equivalence, LINE(""), s, 0, 2);
+    check(equivalence, report_line(""), s, 0, 2);
   }
 }

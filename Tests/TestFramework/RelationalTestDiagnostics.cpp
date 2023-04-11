@@ -28,42 +28,42 @@ namespace sequoia::testing
 
   void relational_false_positive_diagnostics::basic_tests()
   {
-    check(within_tolerance{1.0}, LINE(""), 3.0, 5.0);
-    check(within_tolerance{1.0}, LINE(""),
+    check(within_tolerance{1.0}, report_line(""), 3.0, 5.0);
+    check(within_tolerance{1.0}, report_line(""),
            7.0, 5.0,
            tutor{[](double, double){ return "Tweak your tolerance!"; }});
 
-    check(std::less<int>{},          LINE("<"),  5, 4);
-    check(std::less_equal<int>{},    LINE("<="), 5, 4);
-    check(std::greater<int>{},       LINE(">"),  4, 5);
-    check(std::greater_equal<int>{}, LINE(">="), 4, 5);
+    check(std::less<int>{},          report_line("<"),  5, 4);
+    check(std::less_equal<int>{},    report_line("<="), 5, 4);
+    check(std::greater<int>{},       report_line(">"),  4, 5);
+    check(std::greater_equal<int>{}, report_line(">="), 4, 5);
   }
 
   void relational_false_positive_diagnostics::range_tests()
   {
     {
       std::vector<double> v{0.5, 0.6}, p{-0.1, 1.0};
-      check(within_tolerance{0.5}, LINE(""), v.cbegin(), v.cend(), p.cbegin(), p.cend());
-      check(within_tolerance{0.5}, LINE(""),
+      check(within_tolerance{0.5}, report_line(""), v.cbegin(), v.cend(), p.cbegin(), p.cend());
+      check(within_tolerance{0.5}, report_line(""),
             v.cbegin(), v.cend(), p.cbegin(), p.cend(),
             tutor{[](double, double) { return "Consider increasing tolerance!"; }});
 
       p = {0.5, 1.2};
-      check(within_tolerance{0.5}, LINE(""), v.cbegin(), v.cend(), p.cbegin(), p.cend());
+      check(within_tolerance{0.5}, report_line(""), v.cbegin(), v.cend(), p.cbegin(), p.cend());
     }
 
     {
       std::vector<int> v{4, 5}, p{5, 4};
-      check(std::less<int>{}, LINE("<"),v.cbegin(), v.cend(), p.cbegin(), p.cend());
+      check(std::less<int>{}, report_line("<"),v.cbegin(), v.cend(), p.cbegin(), p.cend());
     }
   }
 
   void relational_false_positive_diagnostics::container_tests()
   {
-    check(within_tolerance{0.5}, LINE(""), std::vector<double>{2.2, -1.0}, std::vector<double>{2.1, -1.8});
+    check(within_tolerance{0.5}, report_line(""), std::vector<double>{2.2, -1.0}, std::vector<double>{2.1, -1.8});
 
     using comp_t = std::vector<std::vector<double>>;
-    check(within_tolerance{0.5}, LINE(""), comp_t{{2.2, -1.0}, {5.1}}, comp_t{{2.1, -1.1}, {3.7}});
+    check(within_tolerance{0.5}, report_line(""), comp_t{{2.2, -1.0}, {5.1}}, comp_t{{2.1, -1.1}, {3.7}});
   }
 
   [[nodiscard]]
@@ -81,36 +81,36 @@ namespace sequoia::testing
 
   void relational_false_negative_diagnostics::basic_tests()
   {
-    check(within_tolerance{1.0}, LINE(""), 4.5, 5.0);
-    check(within_tolerance{1.0}, LINE(""), 5.5, 5.0);
+    check(within_tolerance{1.0}, report_line(""), 4.5, 5.0);
+    check(within_tolerance{1.0}, report_line(""), 5.5, 5.0);
 
-    check(within_tolerance{0.5}, LINE(""), 4.5, 5.0);
-    check(within_tolerance{0.5}, LINE(""), 5.5, 5.0);
+    check(within_tolerance{0.5}, report_line(""), 4.5, 5.0);
+    check(within_tolerance{0.5}, report_line(""), 5.5, 5.0);
 
-    check(std::less<int>{},          LINE("<"),  4, 5);
-    check(std::less_equal<int>{},    LINE("<="), 4, 5);
-    check(std::greater<int>{},       LINE(">"),  5, 4);
-    check(std::greater_equal<int>{}, LINE(">="), 5, 4);
+    check(std::less<int>{},          report_line("<"),  4, 5);
+    check(std::less_equal<int>{},    report_line("<="), 4, 5);
+    check(std::greater<int>{},       report_line(">"),  5, 4);
+    check(std::greater_equal<int>{}, report_line(">="), 5, 4);
   }
 
   void relational_false_negative_diagnostics::range_tests()
   {
     {
       std::vector<double> v{0.5, 0.6}, p{0, 1.0};
-      check(within_tolerance{0.5}, LINE(""), v.cbegin(), v.cend(), p.cbegin(), p.cend());
+      check(within_tolerance{0.5}, report_line(""), v.cbegin(), v.cend(), p.cbegin(), p.cend());
     }
 
     {
       std::vector<int> v{4, 3}, p{5, 4};
-      check(std::less<int>{}, LINE("<"), v.cbegin(), v.cend(), p.cbegin(), p.cend());
+      check(std::less<int>{}, report_line("<"), v.cbegin(), v.cend(), p.cbegin(), p.cend());
     }
   }
 
   void relational_false_negative_diagnostics::container_tests()
   {
-    check(within_tolerance{0.5}, LINE(""), std::vector<double>{2.2, -1.0}, std::vector<double>{2.1, -1.1});
+    check(within_tolerance{0.5}, report_line(""), std::vector<double>{2.2, -1.0}, std::vector<double>{2.1, -1.1});
 
     using comp_t = std::vector<std::vector<double>>;
-    check(within_tolerance{0.5}, LINE(""), comp_t{{2.2, -1.0}, {5.1}}, comp_t{{2.1, -1.1}, {4.7}});
+    check(within_tolerance{0.5}, report_line(""), comp_t{{2.2, -1.0}, {5.1}}, comp_t{{2.1, -1.1}, {4.7}});
   }
 }

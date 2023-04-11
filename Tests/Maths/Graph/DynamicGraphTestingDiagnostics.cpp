@@ -44,24 +44,24 @@ namespace sequoia::testing
 
     graph_type g{};
 
-    check(equality, LINE("Check false positive: empty graph versus single node"), g, graph_type{{}});
+    check(equality, report_line("Check false positive: empty graph versus single node"), g, graph_type{{}});
 
     std::string message{"Check false positive: empty graph versus single node with loop"};
     if constexpr (GraphFlavour == graph_flavour::directed)
     {
-      check(equality, LINE(message), g, graph_type{{edge_init_t{0}}});
+      check(equality, report_line(message), g, graph_type{{edge_init_t{0}}});
     }
     else if constexpr(GraphFlavour == graph_flavour::undirected)
     {
-      check(equality, LINE(message), g, graph_type{{edge_init_t{0}, edge_init_t{0}}});
+      check(equality, report_line(message), g, graph_type{{edge_init_t{0}, edge_init_t{0}}});
     }
     else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
     {
-      check(equality, LINE(message), g, graph_type{{edge_init_t{0,0,1}, edge_init_t{0,0,0}}});
+      check(equality, report_line(message), g, graph_type{{edge_init_t{0,0,1}, edge_init_t{0,0,0}}});
     }
     else
     {
-      check(equality, LINE(message), g, graph_type{{edge_init_t{0,1}, edge_init_t{0,0}}});
+      check(equality, report_line(message), g, graph_type{{edge_init_t{0,1}, edge_init_t{0,0}}});
     }
   }
 }

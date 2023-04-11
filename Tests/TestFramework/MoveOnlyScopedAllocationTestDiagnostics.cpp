@@ -51,7 +51,7 @@ namespace sequoia::testing
       }
     };
 
-    check_semantics(LINE(""),
+    check_semantics(report_line(""),
                     beast{},
                     beast{{"something too long for small string optimization"}},
                     beast{},
@@ -64,7 +64,7 @@ namespace sequoia::testing
                     }
     );
 
-    auto[x,y]{check_semantics(LINE(""),
+    auto[x,y]{check_semantics(report_line(""),
                               [](){ return beast{}; },
                               [](){ return beast{{"something too long for small string optimization"}}; },
                               mutator,
@@ -77,8 +77,8 @@ namespace sequoia::testing
               )
     };
 
-    check(equality, LINE("check_semantics return value (x)"), x, beast{});
-    check(equality, LINE("check_semantics return value (y)"), y, beast{{"something too long for small string optimization"}});
+    check(equality, report_line("check_semantics return value (x)"), x, beast{});
+    check(equality, report_line("check_semantics return value (y)"), y, beast{{"something too long for small string optimization"}});
   }
 
 
@@ -119,7 +119,7 @@ namespace sequoia::testing
 
     if constexpr(!PropagateMove)
     {
-      check_semantics(LINE("Incorrect assigment outer allocs"),
+      check_semantics(report_line("Incorrect assigment outer allocs"),
                       beast{},
                       beast{{"something too long for small string optimization"}},
                       beast{},
@@ -132,7 +132,7 @@ namespace sequoia::testing
       );
     }
 
-    check_semantics(LINE("Incorrect mutation outer allocs"),
+    check_semantics(report_line("Incorrect mutation outer allocs"),
                     beast{},
                     beast{{"something too long for small string optimization"}},
                     beast{},
@@ -144,7 +144,7 @@ namespace sequoia::testing
                     }
     );
 
-    check_semantics(LINE("Incorrect para move outer allocs"),
+    check_semantics(report_line("Incorrect para move outer allocs"),
                     beast{},
                     beast{{"something too long for small string optimization"}},
                     beast{},
@@ -158,7 +158,7 @@ namespace sequoia::testing
 
     if constexpr(!PropagateMove)
     {
-      check_semantics(LINE("Incorrect assigment inner allocs"),
+      check_semantics(report_line("Incorrect assigment inner allocs"),
                       beast{},
                       beast{{"something too long for small string optimization"}},
                       beast{},
@@ -171,7 +171,7 @@ namespace sequoia::testing
       );
     }
 
-    check_semantics(LINE("Incorrect mutation inner allocs"),
+    check_semantics(report_line("Incorrect mutation inner allocs"),
                     beast{},
                     beast{{"something too long for small string optimization"}},
                     beast{},
@@ -182,7 +182,7 @@ namespace sequoia::testing
                     }
     );
 
-    check_semantics(LINE("Incorrect para move inner allocs"),
+    check_semantics(report_line("Incorrect para move inner allocs"),
                     beast{},
                     beast{{"something too long for small string optimization"}},
                     beast{},

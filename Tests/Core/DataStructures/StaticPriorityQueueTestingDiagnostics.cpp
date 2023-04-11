@@ -31,13 +31,13 @@ namespace sequoia::testing
     static_priority_queue<int, 1> s{}, t{};
     t.push(1);
 
-    check(equality, LINE("Empty queue versus populated queue"), s, t);
+    check(equality, report_line("Empty queue versus populated queue"), s, t);
 
     s.push(2);
-    check(equality, LINE("Differing elements"), s, t);
+    check(equality, report_line("Differing elements"), s, t);
 
     s.pop();
-    check(equality, LINE("Empty queue versus populated queue"), s, t);
+    check(equality, report_line("Empty queue versus populated queue"), s, t);
   }
 
   void test_static_priority_queue_false_positives::check_depth_2()
@@ -45,6 +45,6 @@ namespace sequoia::testing
     using namespace data_structures;
 
     static_priority_queue<int, 2> s{1, 2}, t{1};
-    check(equality, LINE("Two element queue versus one element queue"), s, t);
+    check(equality, report_line("Two element queue versus one element queue"), s, t);
   }
 }

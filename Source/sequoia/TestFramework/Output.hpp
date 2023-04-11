@@ -16,7 +16,7 @@
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
 
 #include <filesystem>
-#include <iostream>
+#include <source_location>
 
 namespace sequoia::testing
 {
@@ -173,9 +173,7 @@ namespace sequoia::testing
   std::string instability_footer();
 
   [[nodiscard]]
-  std::string report_line(const std::filesystem::path& file, int line, std::string_view message, const std::filesystem::path& repository={});
-
-  #define LINE(message) report_line(__FILE__, __LINE__, message)
+  std::string report_line(std::string_view message, const std::source_location loc = std::source_location::current(), const std::filesystem::path& repository = {});
 
   [[nodiscard]]
   std::string tidy_name(std::string name, clang_type);

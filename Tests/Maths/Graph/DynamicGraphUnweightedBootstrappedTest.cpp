@@ -52,7 +52,7 @@ namespace sequoia::testing
             graph_description::empty,
             "",
             [this](const graph_to_test& g) -> const graph_to_test& {
-              check_exception_thrown<std::out_of_range>(LINE("cbegin_edges throws for empty graph"), [&g]() { return g.cbegin_edges(0); });
+              check_exception_thrown<std::out_of_range>(report_line("cbegin_edges throws for empty graph"), [&g]() { return g.cbegin_edges(0); });
               return g;
             }
           },
@@ -60,7 +60,7 @@ namespace sequoia::testing
             graph_description::empty,
             "",
             [this](const graph_to_test& g) -> const graph_to_test& {
-              check_exception_thrown<std::out_of_range>(LINE("cend_edges throws for empty graph"), [&g]() { return g.cend_edges(0); });
+              check_exception_thrown<std::out_of_range>(report_line("cend_edges throws for empty graph"), [&g]() { return g.cend_edges(0); });
               return g;
             }
           },
@@ -68,7 +68,7 @@ namespace sequoia::testing
             graph_description::empty,
             "",
             [this](const graph_to_test& g) -> const graph_to_test& {
-              check_exception_thrown<std::out_of_range>(LINE("crbegin_edges throws for empty graph"), [&g]() { return g.crbegin_edges(0); });
+              check_exception_thrown<std::out_of_range>(report_line("crbegin_edges throws for empty graph"), [&g]() { return g.crbegin_edges(0); });
               return g;
             }
           },
@@ -76,7 +76,7 @@ namespace sequoia::testing
             graph_description::empty,
             "",
             [this](const graph_to_test& g) -> const graph_to_test& {
-              check_exception_thrown<std::out_of_range>(LINE("crend_edges throws for empty graph"), [&g]() { return g.crend_edges(0); });
+              check_exception_thrown<std::out_of_range>(report_line("crend_edges throws for empty graph"), [&g]() { return g.crend_edges(0); });
               return g;
             }
           },
@@ -84,7 +84,7 @@ namespace sequoia::testing
             graph_description::empty,
             "",
             [this](const graph_to_test& g) -> const graph_to_test& {
-              check_exception_thrown<std::out_of_range>(LINE("swapping nodes throws for empty graph"), [g{g}]() mutable { g.swap_nodes(0,0); });
+              check_exception_thrown<std::out_of_range>(report_line("swapping nodes throws for empty graph"), [g{g}]() mutable { g.swap_nodes(0,0); });
               return g;
             }
           },
@@ -93,7 +93,7 @@ namespace sequoia::testing
             "Add node to empty graph",
             [this](const graph_to_test& g) -> graph_to_test {
               auto gr{g};
-              check(equality, LINE("Index of added node is 0"), gr.add_node(), 0_sz);
+              check(equality, report_line("Index of added node is 0"), gr.add_node(), 0_sz);
               return gr;
             }
           }
@@ -131,7 +131,7 @@ namespace sequoia::testing
             "Add second node",
             [this](const graph_to_test& g) -> graph_to_test {
               auto gr{g};
-              check(equality, LINE("Index of added node is 1"), gr.add_node(), 1_sz);
+              check(equality, report_line("Index of added node is 1"), gr.add_node(), 1_sz);
               return gr;
             }
           }
@@ -362,6 +362,6 @@ namespace sequoia::testing
         }
     };
 
-    transition_checker<graph_to_test>::check(LINE(""), trg, checker);
+    transition_checker<graph_to_test>::check(report_line(""), trg, checker);
   }
 }

@@ -54,19 +54,19 @@ namespace sequoia::testing
     tree_state_graph g{
       {
         {
-          edge_t{1, LINE("Add node to empty tree"), [](tree_type t) { t.add_node(tree_type::npos, 42); return t; }}
+          edge_t{1, report_line("Add node to empty tree"), [](tree_type t) { t.add_node(tree_type::npos, 42); return t; }}
         }, // end node 0 edges
         {
-          edge_t{2, LINE("Add second node"), [](tree_type t) { t.add_node(0, -7); return t; }},
-          edge_t{3, LINE("Add second node"), [](tree_type t) { t.add_node(0, 6); return t; }}
+          edge_t{2, report_line("Add second node"), [](tree_type t) { t.add_node(0, -7); return t; }},
+          edge_t{3, report_line("Add second node"), [](tree_type t) { t.add_node(0, 6); return t; }}
         }, // end node 1 edges
         {
-          edge_t{4, LINE("Add third node"),    [](tree_type t) { t.add_node(0, 6); return t; }},
-          edge_t{1, LINE("Prune single node"), [](tree_type t) { t.prune(1); return t; }},
-          edge_t{0, LINE("Prune both nodes"),  [](tree_type t) { t.prune(0); return t; }}
+          edge_t{4, report_line("Add third node"),    [](tree_type t) { t.add_node(0, 6); return t; }},
+          edge_t{1, report_line("Prune single node"), [](tree_type t) { t.prune(1); return t; }},
+          edge_t{0, report_line("Prune both nodes"),  [](tree_type t) { t.prune(0); return t; }}
         }, // end node 2 edges
         {
-          edge_t{4, LINE("Insert node"), [](tree_type t) {
+          edge_t{4, report_line("Insert node"), [](tree_type t) {
               t.insert_node(1, 0, -7);
               t.sort_edges(t.cbegin_edges(0), t.cend_edges(0), [](const auto& l, const auto& r) { return l.target_node() < r.target_node(); });
               return t;
@@ -74,39 +74,39 @@ namespace sequoia::testing
           }
         }, // end node 3 edges
         {
-          edge_t{0, LINE("Prune three nodes"),   [](tree_type t) { t.prune(0); return t; }},
-          edge_t{2, LINE("Prune right node"),    [](tree_type t) { t.prune(2); return t; }},
-          edge_t{3, LINE("Prune left node"),     [](tree_type t) { t.prune(1); return t; }},
-          edge_t{5, LINE("Add to right branch"), [](tree_type t) { t.add_node(2, 3); return t; }}
+          edge_t{0, report_line("Prune three nodes"),   [](tree_type t) { t.prune(0); return t; }},
+          edge_t{2, report_line("Prune right node"),    [](tree_type t) { t.prune(2); return t; }},
+          edge_t{3, report_line("Prune left node"),     [](tree_type t) { t.prune(1); return t; }},
+          edge_t{5, report_line("Add to right branch"), [](tree_type t) { t.add_node(2, 3); return t; }}
         }, // end node 4 edges
         {
-          edge_t{0, LINE("Prune four nodes"),   [](tree_type t) { t.prune(0); return t; }},
-          edge_t{2, LINE("Prune right branch"), [](tree_type t) { t.prune(2); return t; }}
+          edge_t{0, report_line("Prune four nodes"),   [](tree_type t) { t.prune(0); return t; }},
+          edge_t{2, report_line("Prune right branch"), [](tree_type t) { t.prune(2); return t; }}
         } // end node 5 edges
       }, // end edges
       {
         // empty
         tree_type{},
         // 42
-        {LINE(""), initCheckFn, initializer{42}},
+        {report_line(""), initCheckFn, initializer{42}},
         // -7
         //  \
         //   42
-        {LINE(""), initCheckFn, initializer{42, {{-7}}}},
+        {report_line(""), initCheckFn, initializer{42, {{-7}}}},
         //  6
         //  \
         //   42
-        {LINE(""), initCheckFn, initializer{42, {{6}}}},
+        {report_line(""), initCheckFn, initializer{42, {{6}}}},
         // -7  6
         //  \ /
         //   42
-        {LINE(""), initCheckFn, initializer{42, {{-7}, {6}}}},
+        {report_line(""), initCheckFn, initializer{42, {{-7}, {6}}}},
         //       3
         //      /
         // -7  6
         //  \ /
         //   42
-        {LINE(""), initCheckFn, initializer{42, {{-7}, {6, {{3}}}}}}
+        {report_line(""), initCheckFn, initializer{42, {{-7}, {6, {{3}}}}}}
       } // end nodes
     };
 
@@ -117,7 +117,7 @@ namespace sequoia::testing
         }
     };
 
-    transition_checker_type::check(LINE(""), g, checker);
+    transition_checker_type::check(report_line(""), g, checker);
   }
 
   template<maths::directed_flavour Directedness, maths::tree_link_direction TreeLinkDir>
@@ -139,45 +139,45 @@ namespace sequoia::testing
     tree_state_graph g{
       {
         {
-          edge_t{1, LINE("Add node to empty tree"), [](tree_type t) { t.add_node(tree_type::npos); return t; }}
+          edge_t{1, report_line("Add node to empty tree"), [](tree_type t) { t.add_node(tree_type::npos); return t; }}
         }, // end node 0 edges
         {
-          edge_t{2, LINE("Add second node"), [](tree_type t) { t.add_node(0); return t; }},
+          edge_t{2, report_line("Add second node"), [](tree_type t) { t.add_node(0); return t; }},
         }, // end node 1 edges
         {
-          edge_t{3, LINE("Add third node"),    [](tree_type t) { t.add_node(0); return t; }},
-          edge_t{1, LINE("Prune single node"), [](tree_type t) { t.prune(1); return t; }},
-          edge_t{0, LINE("Prune both nodes"),  [](tree_type t) { t.prune(0); return t; }}
+          edge_t{3, report_line("Add third node"),    [](tree_type t) { t.add_node(0); return t; }},
+          edge_t{1, report_line("Prune single node"), [](tree_type t) { t.prune(1); return t; }},
+          edge_t{0, report_line("Prune both nodes"),  [](tree_type t) { t.prune(0); return t; }}
         }, // end node 2 edges
         {
-          edge_t{0, LINE("Prune three nodes"),   [](tree_type t) { t.prune(0); return t; }},
-          edge_t{2, LINE("Prune right node"),    [](tree_type t) { t.prune(2); return t; }},
-          edge_t{4, LINE("Add to right branch"), [](tree_type t) { t.add_node(2); return t; }}
+          edge_t{0, report_line("Prune three nodes"),   [](tree_type t) { t.prune(0); return t; }},
+          edge_t{2, report_line("Prune right node"),    [](tree_type t) { t.prune(2); return t; }},
+          edge_t{4, report_line("Add to right branch"), [](tree_type t) { t.add_node(2); return t; }}
         }, // end node 3 edges
         {
-          edge_t{0, LINE("Prune four nodes"),   [](tree_type t) { t.prune(0); return t; }},
-          edge_t{2, LINE("Prune right branch"), [](tree_type t) { t.prune(2); return t; }}
+          edge_t{0, report_line("Prune four nodes"),   [](tree_type t) { t.prune(0); return t; }},
+          edge_t{2, report_line("Prune right branch"), [](tree_type t) { t.prune(2); return t; }}
         } // end node 4 edges
       }, // end edges
       {
         // empty
         tree_type{},
         // x
-        {LINE(""), initCheckFn, initializer{}},
+        {report_line(""), initCheckFn, initializer{}},
         // x
         //  \
         //   x
-        {LINE(""), initCheckFn, initializer{{{}}}},
+        {report_line(""), initCheckFn, initializer{{{}}}},
         // x   x
         //  \ /
         //   42
-        {LINE(""), initCheckFn, initializer{{{}, {}}}},
+        {report_line(""), initCheckFn, initializer{{{}, {}}}},
         //       x
         //      /
         // x   x
         //  \ /
         //   42
-        {LINE(""), initCheckFn, initializer{{{}, {{{}}}}}}
+        {report_line(""), initCheckFn, initializer{{{}, {{{}}}}}}
       } // end nodes
     };
 
@@ -188,17 +188,17 @@ namespace sequoia::testing
         }
     };
 
-    transition_checker_type::check(LINE(""), g, checker);
+    transition_checker_type::check(report_line(""), g, checker);
 
     using tree_type = tree<Directedness, TreeLinkDir, null_weight, null_weight>;
     using initializer = tree_initializer<null_weight>;
 
     tree_type x{}, y{{}}, z{{{{}}}};
 
-    check(equivalence, LINE(""), y, initializer{});
-    check(equivalence, LINE(""), z, initializer{{{}}});
+    check(equivalence, report_line(""), y, initializer{});
+    check(equivalence, report_line(""), z, initializer{{{}}});
 
-    check_semantics(LINE(""), x, y);
-    check_semantics(LINE(""), y, z);
+    check_semantics(report_line(""), x, y);
+    check_semantics(report_line(""), y, z);
   }
 }

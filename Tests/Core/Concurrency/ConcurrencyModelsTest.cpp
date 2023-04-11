@@ -24,13 +24,13 @@ namespace sequoia::testing
 
     test_task_queue();
 
-    test_exceptions<thread_pool<void>, std::runtime_error>(LINE("pool_2"), 2u);
-    test_exceptions<thread_pool<void, false>, std::runtime_error>(LINE("pool_2M"), 2u);
-    test_exceptions<asynchronous<void>, std::runtime_error>(LINE("async"));
+    test_exceptions<thread_pool<void>, std::runtime_error>(report_line("pool_2"), 2u);
+    test_exceptions<thread_pool<void, false>, std::runtime_error>(report_line("pool_2M"), 2u);
+    test_exceptions<asynchronous<void>, std::runtime_error>(report_line("async"));
 
-    test_exceptions<thread_pool<int>, std::runtime_error>(LINE("pool_2"), 2u);
-    test_exceptions<thread_pool<int, false>, std::runtime_error>(LINE("pool_2M"), 2u);
-    test_exceptions<asynchronous<int>, std::runtime_error>(LINE("async"));
+    test_exceptions<thread_pool<int>, std::runtime_error>(report_line("pool_2"), 2u);
+    test_exceptions<thread_pool<int, false>, std::runtime_error>(report_line("pool_2M"), 2u);
+    test_exceptions<asynchronous<int>, std::runtime_error>(report_line("async"));
 
     // Both the thread pool and asynchronous processing models
     // ultimately take copies of the functor, so ony for
@@ -52,17 +52,17 @@ namespace sequoia::testing
       q_t q{};
 
       int a{};
-      check(LINE(""), q.push(task_t{[&a](){ a+= 1; }}, std::try_to_lock));
+      check(report_line(""), q.push(task_t{[&a](){ a+= 1; }}, std::try_to_lock));
       auto t{q.pop(std::try_to_lock)};
 
       t();
-      check(equality, LINE(""), a, 1);
+      check(equality, report_line(""), a, 1);
 
       q.push(task_t{[&a](){ a+= 2; }});
       t = q.pop();
 
       t();
-      check(equality, LINE(""), a, 3);
+      check(equality, report_line(""), a, 3);
 
       q.finish();
     }
@@ -73,13 +73,13 @@ namespace sequoia::testing
 
       q_t q{};
 
-      check(LINE(""), q.push(task_t{[](){ return 1;}}, std::try_to_lock));
+      check(report_line(""), q.push(task_t{[](){ return 1;}}, std::try_to_lock));
       auto t{q.pop(std::try_to_lock)};
 
       auto fut{t.get_future()};
       t();
 
-      check(equality, LINE(""), fut.get(), 1);
+      check(equality, report_line(""), fut.get(), 1);
 
       q.push(task_t{[](){ return 2;}});
       t = q.pop();
@@ -87,7 +87,7 @@ namespace sequoia::testing
       fut = t.get_future();
       t();
 
-      check(equality, LINE(""), fut.get(), 2);
+      check(equality, report_line(""), fut.get(), 2);
 
       q.finish();
     }
@@ -115,6 +115,6 @@ namespace sequoia::testing
 
     threadModel.get();
 	
-    check(equality, LINE(""), u.get_data(), std::vector<int>{0});
+    check(equality, report_line(""), u.get_data(), std::vector<int>{0});
   }
 }

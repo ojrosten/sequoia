@@ -33,42 +33,42 @@ namespace sequoia::testing
 
   void utilities_test::test_filtered_sequence()
   {
-    check(LINE("One element which survives"), []() {
+    check(report_line("One element which survives"), []() {
         static_assert(std::is_same_v<make_filtered_sequence<void, identity, int>, std::index_sequence<0>>);
 
         return true;
       }()
     );
 
-    check(LINE("One element which is filtered"), []() {
+    check(report_line("One element which is filtered"), []() {
         static_assert(std::is_same_v<make_filtered_sequence<int, identity, int>, std::index_sequence<>>);
 
         return true;
       }()
     );
 
-    check(LINE("Two elements, both of which survive"), []() {
+    check(report_line("Two elements, both of which survive"), []() {
         static_assert(std::is_same_v<make_filtered_sequence<void, identity, int, double>, std::index_sequence<0, 1>>);
 
         return true;
       }()
     );
 
-    check(LINE("Two elements, the zeroth of which survives"), []() {
+    check(report_line("Two elements, the zeroth of which survives"), []() {
         static_assert(std::is_same_v<make_filtered_sequence<double, identity, int, double>, std::index_sequence<0>>);
 
         return true;
       }()
     );
 
-    check(LINE("Two elements, the first of which survives"), []() {
+    check(report_line("Two elements, the first of which survives"), []() {
         static_assert(std::is_same_v<make_filtered_sequence<int, identity, int, double>, std::index_sequence<1>>);
 
         return true;
       }()
     );
 
-    check(LINE("Two elements, both of which are filtered"), []() {
+    check(report_line("Two elements, both of which are filtered"), []() {
         static_assert(std::is_same_v<make_filtered_sequence<int, identity, int, int>, std::index_sequence<>>);
 
         return true;
@@ -78,7 +78,7 @@ namespace sequoia::testing
 
   void utilities_test::test_function_signature()
   {
-    check(LINE("Signature of lambda operator()"), []() {
+    check(report_line("Signature of lambda operator()"), []() {
         auto l{[](int) -> double { return 1.0; }};
         using clo = decltype(l);
         using sig = function_signature<decltype(&clo::operator())>;
@@ -89,7 +89,7 @@ namespace sequoia::testing
       }()
     );
 
-    check(LINE("Signature of struct operator() noexcept"), []() {
+    check(report_line("Signature of struct operator() noexcept"), []() {
         struct foo
         {
           double operator()(int) { return 1.0; }
@@ -103,7 +103,7 @@ namespace sequoia::testing
       }()
     );
 
-    check(LINE("Signature of struct operator() noexcept"), []() {
+    check(report_line("Signature of struct operator() noexcept"), []() {
         struct foo
         {
           double operator()(int) noexcept { return 1.0; }
@@ -117,7 +117,7 @@ namespace sequoia::testing
       }()
     );
 
-    check(LINE("Signature of struct operator() const noexcept"), []() {
+    check(report_line("Signature of struct operator() const noexcept"), []() {
         struct foo
         {
           double operator()(int) const noexcept { return 1.0; }
@@ -131,7 +131,7 @@ namespace sequoia::testing
       }()
     );
 
-    check(LINE("Signature of struct static function noexcept"), []() {
+    check(report_line("Signature of struct static function noexcept"), []() {
         struct foo
         {
           static double bar(int) noexcept { return 1.0; }
@@ -145,7 +145,7 @@ namespace sequoia::testing
       }()
     );
 
-    check(LINE("Signature of function"), []() {
+    check(report_line("Signature of function"), []() {
         using sig = function_signature<decltype(&f)>;
         static_assert(std::is_same_v<sig::arg, int>);
         static_assert(std::is_same_v<sig::ret, double>);
@@ -154,7 +154,7 @@ namespace sequoia::testing
       }()
     );
 
-    check(LINE("Signature of noexcept function"), []() {
+    check(report_line("Signature of noexcept function"), []() {
         using sig = function_signature<decltype(&g)>;
         static_assert(std::is_same_v<sig::arg, int>);
         static_assert(std::is_same_v<sig::ret, double>);

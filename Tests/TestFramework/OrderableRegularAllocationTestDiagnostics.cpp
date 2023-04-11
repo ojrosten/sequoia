@@ -37,14 +37,14 @@ namespace sequoia::testing
     auto getter{[](const beast& b){ return b.x.get_allocator(); }};
     auto mutator{[](beast& b) { b.x.shrink_to_fit(); b.x.push_back(3); }};
 
-    check_semantics(LINE(""),
+    check_semantics(report_line(""),
                     [](){ return beast{}; },
                     [](){ return beast{2}; },
                     std::weak_ordering::less,
                     mutator,
                     allocation_info{getter, {0_c, {1_c, 1_mu}, {1_anp, 1_awp}}});
 
-    check_semantics(LINE(""),
+    check_semantics(report_line(""),
                     beast{},
                     beast{2},
                     std::weak_ordering::less,
@@ -78,14 +78,14 @@ namespace sequoia::testing
     auto getter{[](const beast& b){ return b.x.get_allocator(); }};
     auto mutator{[](beast& b) { b.x.shrink_to_fit(); b.x.push_back(3); }};
 
-    check_semantics(LINE(""),
+    check_semantics(report_line(""),
                     [](){ return beast{}; },
                     [](){ return beast{2}; },
                     std::weak_ordering::less,
                     mutator,
                     allocation_info{getter, {0_c, {1_c, 1_mu}, {1_anp, 0_awp}}});
 
-    check_semantics(LINE(""),
+    check_semantics(report_line(""),
                     beast{},
                     beast{2},
                     std::weak_ordering::less,

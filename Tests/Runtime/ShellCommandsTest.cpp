@@ -28,16 +28,16 @@ namespace sequoia::testing
                   cmdNoAppend{"", "foo", "dir", append_mode::no},
                   cmdAppend{"", "foo", "dir", append_mode::yes};
 
-    check(equivalence, LINE(""), nullCmd, "");
-    check(equivalence, LINE(""), simpleCmd, "cmd");
-    check(equivalence, LINE(""), cmdNoAppend, "foo> dir 2>&1");
-    check(equivalence, LINE(""), cmdAppend, "foo>> dir 2>&1");
+    check(equivalence, report_line(""), nullCmd, "");
+    check(equivalence, report_line(""), simpleCmd, "cmd");
+    check(equivalence, report_line(""), cmdNoAppend, "foo> dir 2>&1");
+    check(equivalence, report_line(""), cmdAppend, "foo>> dir 2>&1");
 
-    check_semantics(LINE(""), nullCmd, simpleCmd);
-    check_semantics(LINE(""), simpleCmd, cmdNoAppend);
-    check_semantics(LINE(""), cmdAppend, cmdNoAppend);
+    check_semantics(report_line(""), nullCmd, simpleCmd);
+    check_semantics(report_line(""), simpleCmd, cmdNoAppend);
+    check_semantics(report_line(""), cmdAppend, cmdNoAppend);
 
-    check(equivalence, LINE("Space after digit, before >"),  shell_command{"", "foo1", "dir", append_mode::no}, "foo1 > dir 2>&1");
-    check(equivalence, LINE("Space after digit, before >>"), shell_command{"", "foo1", "dir", append_mode::yes}, "foo1 >> dir 2>&1");
+    check(equivalence, report_line("Space after digit, before >"),  shell_command{"", "foo1", "dir", append_mode::no}, "foo1 > dir 2>&1");
+    check(equivalence, report_line("Space after digit, before >>"), shell_command{"", "foo1", "dir", append_mode::yes}, "foo1 >> dir 2>&1");
   }
 }

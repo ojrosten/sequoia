@@ -107,14 +107,14 @@ namespace sequoia::testing
     {
       using typeList = type_list<>;
 
-      check(LINE(""), []() {
+      check(report_line(""), []() {
           static_assert(std::is_same_v<head_of_t<>, void>);
           static_assert(std::is_same_v<head_of_t<typeList>, void>);
           return true;
         }()
       );
 
-      check(LINE(""), []() {
+      check(report_line(""), []() {
           static_assert(std::is_same_v<tail_of_t<>, type_list<>>);
           static_assert(std::is_same_v<tail_of_t<typeList>, type_list<>>);
           return true;
@@ -125,14 +125,14 @@ namespace sequoia::testing
     {
       using typeList = type_list<int>;
 
-      check(LINE(""), []() {
+      check(report_line(""), []() {
           static_assert(std::is_same_v<head_of_t<int>, int>);
           static_assert(std::is_same_v<head_of_t<typeList>, int>);
           return true;
         }()
       );
 
-      check(LINE(""), []() {
+      check(report_line(""), []() {
           static_assert(std::is_same_v<tail_of_t<int>, type_list<>>);
           static_assert(std::is_same_v<tail_of_t<typeList>, type_list<>>);
           return true;
@@ -143,14 +143,14 @@ namespace sequoia::testing
     {
       using typeList = type_list<int, double>;
 
-      check(LINE(""), []() {
+      check(report_line(""), []() {
           static_assert(std::is_same_v<head_of_t<int, double>, int>);
           static_assert(std::is_same_v<head_of_t<typeList>, int>);
           return true;
         }()
       );
 
-      check(LINE(""), []() {
+      check(report_line(""), []() {
           static_assert(std::is_same_v<tail_of_t<int, double>, type_list<double>>);
           static_assert(std::is_same_v<tail_of_t<typeList>, type_list<double>>);
           return true;
@@ -161,14 +161,14 @@ namespace sequoia::testing
     {
       using typeList = type_list<int, double, char>;
 
-      check(LINE(""), []() {
+      check(report_line(""), []() {
           static_assert(std::is_same_v<head_of_t<int, double, char>, int>);
           static_assert(std::is_same_v<head_of_t<typeList>, int>);
           return true;
         }()
       );
 
-      check(LINE(""), []() {
+      check(report_line(""), []() {
           static_assert(std::is_same_v<tail_of_t<int, double, char>, type_list<double, char>>);
           static_assert(std::is_same_v<tail_of_t<typeList>, type_list<double, char>>);
           return true;

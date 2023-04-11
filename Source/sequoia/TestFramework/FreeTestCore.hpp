@@ -155,9 +155,9 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    std::string report_line(const std::filesystem::path& file, int line, std::string_view message)
+    std::string report_line(std::string_view message, const std::source_location loc = std::source_location::current())
     {
-      return testing::report_line(file, line, message, m_TestRepo.repo());
+      return testing::report_line(message, loc, m_TestRepo.repo());
     }
 
     void initialize(std::string_view suiteName, const project_paths& projPaths, individual_materials_paths materials, active_recovery_files files)

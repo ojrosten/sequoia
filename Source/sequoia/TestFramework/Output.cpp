@@ -22,6 +22,8 @@
 
 namespace sequoia::testing
 {
+  namespace fs = std::filesystem;
+
   namespace
   {    
     std::string& remove_enum_spec(std::string& name)
@@ -167,7 +169,7 @@ namespace sequoia::testing
 
   [[nodiscard]]
   std::string exception_message(std::string_view tag,
-                                const std::filesystem::path& filename,
+                                const fs::path& filename,
                                 const uncaught_exception_info& info,
                                 std::string_view exceptionMessage)
   {
@@ -225,8 +227,10 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string report_line(const std::filesystem::path& file, const int line, std::string_view message, const std::filesystem::path& repository)
+  std::string report_line(std::string_view message, const std::source_location loc, const fs::path& repository)
   {
+    fs::path file{loc.file_name()};
+
     auto pathToString{
       [&file,&repository](){
         if(file.is_relative())
@@ -237,7 +241,7 @@ namespace sequoia::testing
             ++it;
           }
 
-          std::filesystem::path p{};
+          fs::path p{};
           for(; it != file.end(); ++it)
           {
             p /= *it;
@@ -256,7 +260,7 @@ namespace sequoia::testing
             ++filepathIter;
           }
 
-          std::filesystem::path p{back(repository)};
+          fs::path p{back(repository)};
           for(; filepathIter != file.end(); ++filepathIter)
           {
             p /= *filepathIter;
@@ -270,7 +274,7 @@ namespace sequoia::testing
 
     };
 
-    return append_lines(pathToString().append(", Line ").append(std::to_string(line)), message).append("\n");
+    return append_lines(pathToString().append(", Line ").append(std::to_string(loc.line())), message).append("\n");
   }
 
   [[nodiscard]]

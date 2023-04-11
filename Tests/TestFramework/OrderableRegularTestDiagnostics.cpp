@@ -28,44 +28,44 @@ namespace sequoia::testing
     {
       using beast = orderable_regular_beast<int>;
 
-      check_semantics(LINE("Broken check invariant"), beast{1}, beast{2}, std::weak_ordering::equivalent);
-      check_semantics(LINE("Broken check invariant"), beast{1}, beast{2}, std::weak_ordering::greater);
+      check_semantics(report_line("Broken check invariant"), beast{1}, beast{2}, std::weak_ordering::equivalent);
+      check_semantics(report_line("Broken check invariant"), beast{1}, beast{2}, std::weak_ordering::greater);
     }
 
     {
       using beast = regular_broken_less<int>;
 
-      check_semantics(LINE(""), beast{1}, beast{2}, std::weak_ordering::less);
+      check_semantics(report_line(""), beast{1}, beast{2}, std::weak_ordering::less);
     }
 
     {
       using beast = regular_broken_lesseq<int>;
 
-      check_semantics(LINE(""), beast{1}, beast{2}, std::weak_ordering::less);
+      check_semantics(report_line(""), beast{1}, beast{2}, std::weak_ordering::less);
     }
 
     {
       using beast = regular_broken_greater<int>;
 
-      check_semantics(LINE(""), beast{1}, beast{2}, std::weak_ordering::less);
+      check_semantics(report_line(""), beast{1}, beast{2}, std::weak_ordering::less);
     }
 
     {
       using beast = regular_broken_greatereq<int>;
 
-      check_semantics(LINE(""), beast{1}, beast{2}, std::weak_ordering::less);
+      check_semantics(report_line(""), beast{1}, beast{2}, std::weak_ordering::less);
     }
 
     {
       using beast = regular_inverted_comparisons<int>;
 
-      check_semantics(LINE(""), beast{1}, beast{2}, std::weak_ordering::less);
+      check_semantics(report_line(""), beast{1}, beast{2}, std::weak_ordering::less);
     }
 
     {
       using beast = regular_broken_spaceship<int>;
 
-      check_semantics(LINE(""), beast{1}, beast{2}, std::weak_ordering::less);
+      check_semantics(report_line(""), beast{1}, beast{2}, std::weak_ordering::less);
     }
   }
 
@@ -84,7 +84,7 @@ namespace sequoia::testing
   {
     using beast = orderable_regular_beast<int>;
 
-    check_semantics(LINE(""), beast{1}, beast{2}, std::weak_ordering::less);
-    check_semantics(LINE(""), beast{2}, beast{1}, std::weak_ordering::greater);
+    check_semantics(report_line(""), beast{1}, beast{2}, std::weak_ordering::less);
+    check_semantics(report_line(""), beast{2}, beast{1}, std::weak_ordering::greater);
   }
 }

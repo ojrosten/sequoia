@@ -63,7 +63,7 @@ namespace sequoia::testing
       }
     };
 
-    check_semantics(LINE(""),
+    check_semantics(report_line(""),
                     beast{},
                     beast{ {"something too long for small string optimization"},
                            {"something else too long for small string optimization"}
@@ -76,7 +76,7 @@ namespace sequoia::testing
                     }
     );
 
-    auto[s,t]{check_semantics(LINE(""),
+    auto[s,t]{check_semantics(report_line(""),
                     [](){ return beast{}; },
                     [](){ return beast{ {"something too long for small string optimization"},
                                          {"something else too long for small string optimization"}};
@@ -89,8 +89,8 @@ namespace sequoia::testing
                     }
     )};
 
-    check(equality, LINE("check_semantics return value (x)"), s, beast{});
-    check(equality, LINE("check_semantics return value (y)"),
+    check(equality, report_line("check_semantics return value (x)"), s, beast{});
+    check(equality, report_line("check_semantics return value (y)"),
                    t,
                    beast{{"something too long for small string optimization"},
                                          {"something else too long for small string optimization"}});
@@ -111,7 +111,7 @@ namespace sequoia::testing
       }
     };
 
-    check_semantics(LINE(""),
+    check_semantics(report_line(""),
       beast{},
       beast{{1}},
       mutator,
@@ -122,7 +122,7 @@ namespace sequoia::testing
       }
     );
 
-    check_semantics(LINE(""),
+    check_semantics(report_line(""),
       beast{},
       beast{{1}, {2, 3}},
       mutator,
@@ -133,7 +133,7 @@ namespace sequoia::testing
       }
     );
 
-    check_semantics(LINE(""),
+    check_semantics(report_line(""),
       beast{{1}},
       beast{},
       mutator,
@@ -144,7 +144,7 @@ namespace sequoia::testing
       }
     );
 
-    check_semantics(LINE(""),
+    check_semantics(report_line(""),
       beast{{2}},
       beast{{1}},
       mutator,
@@ -155,7 +155,7 @@ namespace sequoia::testing
       }
     );
 
-    check_semantics(LINE(""),
+    check_semantics(report_line(""),
       beast{{2}},
       beast{{1}, {5,6}},
       mutator,
@@ -166,7 +166,7 @@ namespace sequoia::testing
       }
     );
 
-    check_semantics(LINE(""),
+    check_semantics(report_line(""),
       beast{{2}, {7,8}},
       beast{{1}},
       mutator,
@@ -177,7 +177,7 @@ namespace sequoia::testing
       }
     );
 
-    check_semantics(LINE(""),
+    check_semantics(report_line(""),
       beast{{2}, {7,8}},
       beast{{1}, {5,6}},
       mutator,
@@ -204,7 +204,7 @@ namespace sequoia::testing
       }
     };
 
-    check_semantics(LINE(""),
+    check_semantics(report_line(""),
       beast{},
       beast{{1}},
       mutator,
@@ -235,7 +235,7 @@ namespace sequoia::testing
       }
     };
 
-    check_semantics(LINE(""),
+    check_semantics(report_line(""),
       beast{},
       beast{{{1}, {2}}},
       mutator,
@@ -261,7 +261,7 @@ namespace sequoia::testing
 
     auto getter{[](const beast& b) { return b.x.get_allocator(); }};
 
-    check_semantics(LINE(""),
+    check_semantics(report_line(""),
       beast{},
       beast{{{1}}},
       [](beast& b) { b.x.push_back({{2}}); },
@@ -310,62 +310,62 @@ namespace sequoia::testing
       }
     };
 
-    check_semantics(LINE("Incorrect copy x outer allocs"), beast{}, beast{{"something too long for small string optimization"}, {"something else too long for small string optimization"}}, mutator, allocation_info{
+    check_semantics(report_line("Incorrect copy x outer allocs"), beast{}, beast{{"something too long for small string optimization"}, {"something else too long for small string optimization"}}, mutator, allocation_info{
         allocGetter, {1_c, {1_c,1_mu}, {1_anp,1_awp}}, {{0_c, {2_c,0_mu}, {2_anp,2_awp}, {0_containers, 2_containers, 3_postmutation}}}
       }
     );
 
-    check_semantics(LINE("Incorrect copy y outer allocs"), beast{}, beast{{"something too long for small string optimization"}, {"something else too long for small string optimization"}}, mutator, allocation_info{
+    check_semantics(report_line("Incorrect copy y outer allocs"), beast{}, beast{{"something too long for small string optimization"}, {"something else too long for small string optimization"}}, mutator, allocation_info{
         allocGetter, {0_c, {0_c,1_mu}, {1_anp,1_awp}}, {{0_c, {2_c,0_mu}, {2_anp,2_awp}, {0_containers, 2_containers, 3_postmutation}}}
       }
     );
 
-    check_semantics(LINE("Incorrect mutation outer allocs"), beast{}, beast{{"something too long for small string optimization"}, {"something else too long for small string optimization"}}, mutator, allocation_info{
+    check_semantics(report_line("Incorrect mutation outer allocs"), beast{}, beast{{"something too long for small string optimization"}, {"something else too long for small string optimization"}}, mutator, allocation_info{
         allocGetter, {0_c, {1_c,2_mu}, {1_anp,1_awp}}, {{0_c, {2_c,0_mu}, {2_anp,2_awp}, {0_containers, 2_containers, 3_postmutation}}}
       }
     );
 
-    check_semantics(LINE("Incorrect assignment outer allocs"), beast{}, beast{{"something too long for small string optimization"}, {"something else too long for small string optimization"}}, mutator, allocation_info{
+    check_semantics(report_line("Incorrect assignment outer allocs"), beast{}, beast{{"something too long for small string optimization"}, {"something else too long for small string optimization"}}, mutator, allocation_info{
         allocGetter, {0_c, {1_c,1_mu}, {3_anp,2_awp}}, {{0_c, {2_c,0_mu}, {2_anp,2_awp}, {0_containers, 2_containers, 3_postmutation}}}
       }
     );
 
-    check_semantics(LINE("Incorrect para copy x outer allocs"), beast{}, beast{{"something too long for small string optimization"}, {"something else too long for small string optimization"}}, mutator, allocation_info{
+    check_semantics(report_line("Incorrect para copy x outer allocs"), beast{}, beast{{"something too long for small string optimization"}, {"something else too long for small string optimization"}}, mutator, allocation_info{
         allocGetter, {0_c, {1_c,1_mu, 2_pc}, {1_anp,1_awp}}, {{0_c, {2_c,0_mu}, {2_anp,2_awp}, {0_containers, 2_containers, 3_postmutation}}}
       }
     );
 
-    check_semantics(LINE("Incorrect para move x outer allocs"), beast{}, beast{{"something too long for small string optimization"}, {"something else too long for small string optimization"}}, mutator, allocation_info{
+    check_semantics(report_line("Incorrect para move x outer allocs"), beast{}, beast{{"something too long for small string optimization"}, {"something else too long for small string optimization"}}, mutator, allocation_info{
         allocGetter, {0_c, {1_c,1_mu, 1_pc, 0_pm}, {1_anp,1_awp}}, {{0_c, {2_c,0_mu}, {2_anp,2_awp}, {0_containers, 2_containers, 3_postmutation}}}
       }
     );
 
-    check_semantics(LINE("Incorrect copy x inner allocs"), beast{}, beast{{"something too long for small string optimization"}, {"something else too long for small string optimization"}}, mutator, allocation_info{
+    check_semantics(report_line("Incorrect copy x inner allocs"), beast{}, beast{{"something too long for small string optimization"}, {"something else too long for small string optimization"}}, mutator, allocation_info{
         allocGetter, {0_c, {1_c,1_mu}, {1_anp,1_awp}}, {{4_c, {2_c,0_mu}, {2_anp,2_awp}, {0_containers, 2_containers, 3_postmutation}}}
       }
     );
 
-    check_semantics(LINE("Incorrect copy y inner allocs"), beast{}, beast{{"something too long for small string optimization"}, {"something else too long for small string optimization"}}, mutator, allocation_info{
+    check_semantics(report_line("Incorrect copy y inner allocs"), beast{}, beast{{"something too long for small string optimization"}, {"something else too long for small string optimization"}}, mutator, allocation_info{
         allocGetter, {0_c, {1_c,1_mu}, {1_anp,1_awp}}, {{0_c, {0_c,0_mu}, {2_anp,2_awp}, {0_containers, 2_containers, 3_postmutation}}}
       }
     );
 
-    check_semantics(LINE("Incorrect mutation inner allocs"), beast{}, beast{{"something too long for small string optimization"}, {"something else too long for small string optimization"}}, mutator, allocation_info{
+    check_semantics(report_line("Incorrect mutation inner allocs"), beast{}, beast{{"something too long for small string optimization"}, {"something else too long for small string optimization"}}, mutator, allocation_info{
         allocGetter, {0_c, {1_c,1_mu}, {1_anp,1_awp}}, {{0_c, {2_c,3_mu}, {2_anp,2_awp}, {0_containers, 2_containers, 3_postmutation}}}
       }
     );
 
-    check_semantics(LINE("Incorrect assignment inner allocs"), beast{}, beast{{"something too long for small string optimization"}, {"something else too long for small string optimization"}}, mutator, allocation_info{
+    check_semantics(report_line("Incorrect assignment inner allocs"), beast{}, beast{{"something too long for small string optimization"}, {"something else too long for small string optimization"}}, mutator, allocation_info{
         allocGetter, {0_c, {1_c,1_mu}, {1_anp,1_awp}}, {{0_c, {2_c,0_mu}, {0_anp,1_awp}, {0_containers, 2_containers, 3_postmutation}}}
       }
     );
 
-    check_semantics(LINE("Incorrect para copy x inner allocs"), beast{}, beast{{"something too long for small string optimization"}, {"something else too long for small string optimization"}}, mutator, allocation_info{
+    check_semantics(report_line("Incorrect para copy x inner allocs"), beast{}, beast{{"something too long for small string optimization"}, {"something else too long for small string optimization"}}, mutator, allocation_info{
         allocGetter, {0_c, {1_c,1_mu}, {1_anp,1_awp}}, {{0_c, {2_c,0_mu,4_pc}, {2_anp,2_awp}, {0_containers, 2_containers, 3_postmutation}}}
       }
     );
 
-    check_semantics(LINE("Incorrect para move x inner allocs"), beast{}, beast{{"something too long for small string optimization"}, {"something else too long for small string optimization"}}, mutator, allocation_info{
+    check_semantics(report_line("Incorrect para move x inner allocs"), beast{}, beast{{"something too long for small string optimization"}, {"something else too long for small string optimization"}}, mutator, allocation_info{
         allocGetter, {0_c, {1_c,1_mu}, {1_anp,1_awp}}, {{0_c, {2_c,0_mu,2_pc,0_pm}, {2_anp,2_awp}, {0_containers, 2_containers, 3_postmutation}}}
       }
     );

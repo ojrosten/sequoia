@@ -175,7 +175,7 @@ namespace sequoia::testing
 
   void test_runner_end_to_end_test::test_project_creation()
   {
-    check(LINE("Command processor existance"), std::system(nullptr) > 0);
+    check(report_line("Command processor existance"), std::system(nullptr) > 0);
 
     commandline_arguments args{build_paths{project_root(), main_paths{}}.dir().generic_string(),
                                "init",
@@ -198,95 +198,95 @@ namespace sequoia::testing
 
     const cmd_builder b{generated_project()};
 
-    check(LINE("First CMake output existance"), fs::exists(b.main.dir() / "GenerationOutput.txt"));
-    check(LINE("First build output existance"), fs::exists(b.build.cmade_dir() / "GenerationOutput.txt"));
-    check(LINE("First git output existance"), fs::exists(generated_project() / "GenerationOutput.txt"));
-    check(LINE(".git existance"), fs::exists(generated_project() / ".git"));
+    check(report_line("First CMake output existance"), fs::exists(b.main.dir() / "GenerationOutput.txt"));
+    check(report_line("First build output existance"), fs::exists(b.build.cmade_dir() / "GenerationOutput.txt"));
+    check(report_line("First git output existance"), fs::exists(generated_project() / "GenerationOutput.txt"));
+    check(report_line(".git existance"), fs::exists(generated_project() / ".git"));
 
     fs::copy(generated_project() / "GenerationOutput.txt", working_materials() /= "InitOutput");
-    check(equivalence, LINE(""), working_materials() /= "InitOutput", predictive_materials() /= "InitOutput");
+    check(equivalence, report_line(""), working_materials() /= "InitOutput", predictive_materials() /= "InitOutput");
 
     //=================== Run the test executable ===================//
 
-    run_and_check(LINE("Empty Run"), b, "EmptyRunOutput", "");
+    run_and_check(report_line("Empty Run"), b, "EmptyRunOutput", "");
 
     //=================== Create tests and run ===================//
 
-    create_run_and_check(LINE("Test Runner Creation Output"), b);
+    create_run_and_check(report_line("Test Runner Creation Output"), b);
 
     //=================== Rerun with async execution ===================//
     // --> async depth should be automatically set to "suite" since number of families is > 4
 
-    run_and_check(LINE("Run synchronously"), b, "RunSynchronous", "--serial");
+    run_and_check(report_line("Run synchronously"), b, "RunSynchronous", "--serial");
 
     //=================== Rerun with async selecting 3 tests from 3 families ===================//
     // --> async depth should be automatically set to "test" since number of families is < 4
 
-    run_and_check(LINE("Run asynchronously with 3 selected tests"), b, "RunAsyncThreeTests",
+    run_and_check(report_line("Run asynchronously with 3 selected tests"), b, "RunAsyncThreeTests",
                        "select HouseAllocationTest.cpp select Maths/ProbabilityTest.cpp select Maybe/MaybeTest.cpp");
 
     //=================== Rerun with async selecting 4 tests from 4 families===================//
     // --> async depth should be automatically set to "suite"
 
-    run_and_check(LINE("Run asynchronously with 4 selected tests"), b, "RunAsyncFourTests",
+    run_and_check(report_line("Run asynchronously with 4 selected tests"), b, "RunAsyncFourTests",
                        "select HouseAllocationTest.cpp select Maths/ProbabilityTest.cpp select Maybe/MaybeTest.cpp"
                        " select Stuff/FooTest.cpp");
 
     //=================== Rerun with async selecting 4 tests from 4 families, and setting async-depth to test===================//
 
-    run_and_check(LINE("Run asynchronously with 4 selected tests"), b, "RunAsyncFourTestsDepthTest",
+    run_and_check(report_line("Run asynchronously with 4 selected tests"), b, "RunAsyncFourTestsDepthTest",
                        "select HouseAllocationTest.cpp select Maths/ProbabilityTest.cpp select Maybe/MaybeTest.cpp"
                        " select Stuff/FooTest.cpp");
 
     //=================== Rerun with async, selecting 2 tests, and setting async-depth to suite ===================//
 
-    run_and_check(LINE("Run asynchronously with 2 selected tests"), b, "RunAsyncTwoTestsDepthSuite",
+    run_and_check(report_line("Run asynchronously with 2 selected tests"), b, "RunAsyncTwoTestsDepthSuite",
                        "select HouseAllocationTest.cpp select Maths/ProbabilityTest.cpp");
 
     //=================== Rerun with async, selecting one suite ===================//
 
-    run_and_check(LINE("Run asynchronously with 1 suite"), b, "RunAsyncOneTestOneSuite", "test Probability");
+    run_and_check(report_line("Run asynchronously with 1 suite"), b, "RunAsyncOneTestOneSuite", "test Probability");
 
     //=================== Rerun, seeking instabilities in sandbox mode ===================//
 
-    run_and_check(LINE("Run in sandbox mode"), b, "RunLocateInstabilitySandbox", "locate 2 --sandbox");
+    run_and_check(report_line("Run in sandbox mode"), b, "RunLocateInstabilitySandbox", "locate 2 --sandbox");
 
     //=================== Change some test materials and run with prune ===================//
 
     copy_aux_materials("ModifiedTests/Stuff/FooTest.cpp", "Tests/Stuff");
     copy_aux_materials("TestMaterials", "TestMaterials");
 
-    rebuild_run_and_check(LINE("Change Materials (pruned)"), b, "RunWithChangedMaterials", "CMakeOutput3.txt", "BuildOutput3.txt", "prune --cutoff namespace");
+    rebuild_run_and_check(report_line("Change Materials (pruned)"), b, "RunWithChangedMaterials", "CMakeOutput3.txt", "BuildOutput3.txt", "prune --cutoff namespace");
 
     // Check materials are unchanged
     fs::copy(generated_project() / "TestMaterials", working_materials() /= "OriginalTestMaterials", fs::copy_options::recursive);
-    check(equivalence, LINE("Original Test Materials"), working_materials() /= "OriginalTestMaterials", predictive_materials() /= "OriginalTestMaterials");
+    check(equivalence, report_line("Original Test Materials"), working_materials() /= "OriginalTestMaterials", predictive_materials() /= "OriginalTestMaterials");
 
     //=================== Run again, locating instabilities, and try to update ===================//
     //--> update should be suppressed by instability location
 
-    run_and_check(LINE("Instability location suppressing update"), b, "UpdateSuppressedByInstabilityLocation", "locate 2 prune -c namespace u");
-    check(equivalence, LINE("Original Test Materials"), working_materials() /= "OriginalTestMaterials", predictive_materials() /= "OriginalTestMaterials");
+    run_and_check(report_line("Instability location suppressing update"), b, "UpdateSuppressedByInstabilityLocation", "locate 2 prune -c namespace u");
+    check(equivalence, report_line("Original Test Materials"), working_materials() /= "OriginalTestMaterials", predictive_materials() /= "OriginalTestMaterials");
 
     //=================== Rerun with prune but update materials ===================//
 
-    run_and_check(LINE("Updated Materials"), b, "RunWithUpdateOutput", "prune --cutoff namespace u");
+    run_and_check(report_line("Updated Materials"), b, "RunWithUpdateOutput", "prune --cutoff namespace u");
 
     fs::copy(generated_project() / "TestMaterials", working_materials() /= "UpdatedTestMaterials", fs::copy_options::recursive);
-    check(equivalence, LINE("Updated Test Materials"), working_materials() /= "UpdatedTestMaterials", predictive_materials() /= "UpdatedTestMaterials");
+    check(equivalence, report_line("Updated Test Materials"), working_materials() /= "UpdatedTestMaterials", predictive_materials() /= "UpdatedTestMaterials");
 
     //=================== Rerun with prune, which should detect the change to materials ===================//
 
-    run_and_check(LINE("Pruned output, post materials update"), b, "RunWithPruneOutput", "prune");
+    run_and_check(report_line("Pruned output, post materials update"), b, "RunWithPruneOutput", "prune");
 
     //=================== Rerun again with prune, which should do nothing  ===================//
 
-    run_and_check(LINE("Prune again, no tests should run"), b, "NullRunWithPruneOutput", "prune");
+    run_and_check(report_line("Prune again, no tests should run"), b, "NullRunWithPruneOutput", "prune");
 
     //=================== Change a file, don't build and run with prune ===================//
 
     copy_aux_materials("ModifiedSource/UsefulThings.hpp", "Source/generatedProject/Utilities");
-    run_and_check(LINE("Attempt to prune when build is out of date"), b, "PruneWithStaleBuild", "prune");
+    run_and_check(report_line("Attempt to prune when build is out of date"), b, "PruneWithStaleBuild", "prune");
 
     //=================== Change several of the tests, and some of the source, rebuild and run asynchronously, with prune ===================//
 
@@ -298,9 +298,9 @@ namespace sequoia::testing
     copy_aux_materials("ModifiedTests/Thing",                    "Tests/Utilities/Thing");
     copy_aux_materials("ModifiedTests/Unstable",                 "Tests/Unstable");
 
-    rebuild_run_and_check(LINE("Rebuild and run after source/test changes (pruned)"), b, "RebuiltOutput", "CMakeOutput4.txt", "BuildOutput4.txt", "prune --cutoff namespace");
+    rebuild_run_and_check(report_line("Rebuild and run after source/test changes (pruned)"), b, "RebuiltOutput", "CMakeOutput4.txt", "BuildOutput4.txt", "prune --cutoff namespace");
 
-    check(equivalence, LINE("Test Runner Output"), working_materials() /= "RebuiltOutput", predictive_materials() /= "RebuiltOutput");
+    check(equivalence, report_line("Test Runner Output"), working_materials() /= "RebuiltOutput", predictive_materials() /= "RebuiltOutput");
     fs::create_directory(working_materials() /= "TestAll");
     const auto generatedProject{working_materials().parent_path() /= "GeneratedProject"};
 
@@ -308,37 +308,37 @@ namespace sequoia::testing
                    mainCmake{main_paths::default_cmake_from_root()};
     fs::copy_file(generatedProject / mainCpp,   working_materials() /= mainCpp);
     fs::copy_file(generatedProject / mainCmake, working_materials() /= mainCmake);
-    check(equivalence, LINE("TestAllMain.cpp"),  working_materials() /= mainCpp,   predictive_materials() /= mainCpp);
-    check(equivalence, LINE("CMakeLists.tt"), working_materials() /= mainCmake, predictive_materials() /= mainCmake);
+    check(equivalence, report_line("TestAllMain.cpp"),  working_materials() /= mainCpp,   predictive_materials() /= mainCpp);
+    check(equivalence, report_line("CMakeLists.tt"), working_materials() /= mainCmake, predictive_materials() /= mainCmake);
 
     //=================== Rerun with prune ===================//
     // --> only failing tests should rerun
 
-    run_and_check(LINE("Pruned output, post failures"), b, "RunPrunePostFailureOutput", "prune -c namespace");
+    run_and_check(report_line("Pruned output, post failures"), b, "RunPrunePostFailureOutput", "prune -c namespace");
 
     //=================== Rerun and locate instabilities ===================//
     // --> UsefulThingsFreeTest.cpp will continue to exhibit a stable failure,
     // whereas  FlipperFreeTest.cpp is unstable
 
-    run_and_check(LINE("Locate instabilities"), b, "RunLocateInstabilities", "locate 2");
+    run_and_check(report_line("Locate instabilities"), b, "RunLocateInstabilities", "locate 2");
 
     //=================== Rerun and locate instabilities, with pruning ===================//
 
-    run_and_check(LINE("Locate instabilities"), b, "RunLocateInstabilitiesPrune", "locate 2 prune -c namespace");
+    run_and_check(report_line("Locate instabilities"), b, "RunLocateInstabilitiesPrune", "locate 2 prune -c namespace");
 
     //=================== Rerun with selected, unstable test in sandbox mode ===================//
     // --> The first of the checks in FlipperFreeTest.cpp is stable in sandbox mode, but the second isn't
 
-    run_and_check(LINE("Run in sandbox mode with an explicit selection"), b, "SelectRunLocateInstabilitySandbox",
+    run_and_check(report_line("Run in sandbox mode with an explicit selection"), b, "SelectRunLocateInstabilitySandbox",
       "locate 2 --sandbox select FlipperFreeTest.cpp");
 
     //=================== Rerun and do a dump ===================//
 
-    run_and_check(LINE("Do a dump"), b, "RunPostUpdate", "dump");
+    run_and_check(report_line("Do a dump"), b, "RunPostUpdate", "dump");
 
     fs::create_directory(working_materials() /= "Dump");
     fs::copy(generated_project() /= "output/Recovery/Dump.txt", working_materials() /= "Dump");
-    check(equivalence, LINE("Dump File"), working_materials() /= "Dump", predictive_materials() /= "Dump");
+    check(equivalence, report_line("Dump File"), working_materials() /= "Dump", predictive_materials() /= "Dump");
 
     //=================== Rerun in the presence of an exception ===================//
     // Rename generated_project() / TestMaterials / Stuff / FooTest / WorkingCopy / RepresentativeCases,
@@ -349,11 +349,11 @@ namespace sequoia::testing
     fs::copy(generatedWorkingCopy / "RepresentativeCases", generatedWorkingCopy / "RepresentativeCasesTemp", fs::copy_options::recursive);
     fs::remove_all(generatedWorkingCopy / "RepresentativeCases");
 
-    run_and_check(LINE("Recovery mode"), b, "RunRecovery", "recover");
+    run_and_check(report_line("Recovery mode"), b, "RunRecovery", "recover");
 
     fs::create_directory(working_materials() /= "Recovery");
     fs::copy(generated_project() /= "output/Recovery/Recovery.txt", working_materials() /= "Recovery");
-    check(equivalence, LINE("Recovery File"), working_materials() /= "Recovery", predictive_materials() /= "Recovery");
+    check(equivalence, report_line("Recovery File"), working_materials() /= "Recovery", predictive_materials() /= "Recovery");
 
     //=================== Rerun in the presence of an exception mid-check ===================//
     // Rename generated_project() / TestMaterials / Stuff / FooTest / Prediction / RepresentativeCases,
@@ -364,23 +364,23 @@ namespace sequoia::testing
     fs::copy(generatedPredictive / "RepresentativeCases", generatedPredictive / "RepresentativeCasesTemp", fs::copy_options::recursive);
     fs::remove_all(generatedPredictive / "RepresentativeCases");
 
-    run_and_check(LINE("Recovery mode, throw mid-check"), b, "RunRecoveryMidCheck", "recover");
+    run_and_check(report_line("Recovery mode, throw mid-check"), b, "RunRecoveryMidCheck", "recover");
 
     fs::create_directory(working_materials() /= "RecoveryMidCheck");
     fs::copy(generated_project() /= "output/Recovery/Recovery.txt", working_materials() /= "RecoveryMidCheck");
-    check(equivalence, LINE("Recovery File"), working_materials() /= "RecoveryMidCheck", predictive_materials() /= "RecoveryMidCheck");
+    check(equivalence, report_line("Recovery File"), working_materials() /= "RecoveryMidCheck", predictive_materials() /= "RecoveryMidCheck");
 
     //=================== Change one of the failing tests, and 'select' it at the same time as breaking a different test ===================//
 
     copy_aux_materials("FurtherModifiedTests/UsefulThingsFreeTest.cpp", "Tests/Utilities");
     copy_aux_materials("FurtherModifiedTests/ProbabilityTest.cpp", "Tests/Maths");
-    rebuild_run_and_check(LINE("Rebuild, run and 'select' after fixing a test"), b, "RunSelectedFixedTest", "CMakeOutput5.txt", "BuildOutput5.txt", "select UsefulThingsFreeTest.cpp");
+    rebuild_run_and_check(report_line("Rebuild, run and 'select' after fixing a test"), b, "RunSelectedFixedTest", "CMakeOutput5.txt", "BuildOutput5.txt", "select UsefulThingsFreeTest.cpp");
 
-    check(equivalence, LINE("Fixed Test Output"), working_materials() /= "RunSelectedFixedTest", predictive_materials() /= "RunSelectedFixedTest");
+    check(equivalence, report_line("Fixed Test Output"), working_materials() /= "RunSelectedFixedTest", predictive_materials() /= "RunSelectedFixedTest");
 
     //=================== Rerun with prune to confirm that the previously selected test - now passing - is not run ===================//
 
-    run_and_check(LINE("Passing test not included by prune"), b, "PassingTestExcludedByPrune", "prune -c namespace");
+    run_and_check(report_line("Passing test not included by prune"), b, "PassingTestExcludedByPrune", "prune -c namespace");
 
     //=================== Fix a failing test and 'select' it ===================//
 
@@ -390,23 +390,23 @@ namespace sequoia::testing
     fs::copy(generatedWorkingCopy / "RepresentativeCasesTemp", generatedWorkingCopy / "RepresentativeCases", fs::copy_options::recursive);
     fs::remove_all(generatedWorkingCopy / "RepresentativeCasesTemp");
 
-    run_and_check(LINE("Critical failure fixed"), b, "RunFixedCriticalFailure", "select FooTest.cpp");
+    run_and_check(report_line("Critical failure fixed"), b, "RunFixedCriticalFailure", "select FooTest.cpp");
 
     //=================== Rerun with prune to confirm that the previously selected test - now passing - is not run ===================//
 
-    run_and_check(LINE("Fixed test not included by prune"), b, "AnotherPassingTestExcludedByPrune", "prune -c namespace");
+    run_and_check(report_line("Fixed test not included by prune"), b, "AnotherPassingTestExcludedByPrune", "prune -c namespace");
 
     //=================== Fix the final failing test and 'test' it ===================//
 
     copy_aux_materials("ModifiedTests/Maths/ProbabilityTest.cpp", "Tests/Maths");
 
-    rebuild_run_and_check(LINE("Rebuild, run and 'test' after fixing a test"), b, "RunSuiteWithFixedTest", "CMakeOutput6.txt", "BuildOutput6.txt", "test Probability");
+    rebuild_run_and_check(report_line("Rebuild, run and 'test' after fixing a test"), b, "RunSuiteWithFixedTest", "CMakeOutput6.txt", "BuildOutput6.txt", "test Probability");
 
-    check(equivalence, LINE("Fixed Test Output"), working_materials() /= "RunSelectedFixedTest", predictive_materials() /= "RunSelectedFixedTest");
+    check(equivalence, report_line("Fixed Test Output"), working_materials() /= "RunSelectedFixedTest", predictive_materials() /= "RunSelectedFixedTest");
 
     //=================== Rerun with prune to confirm that the previously selected test - now passing - is not run ===================//
 
-    run_and_check(LINE("Final fixed test not included by prune"), b, "FinalPassingTestExcludedByPrune", "prune -c namespace");
+    run_and_check(report_line("Final fixed test not included by prune"), b, "FinalPassingTestExcludedByPrune", "prune -c namespace");
 
   }
 }

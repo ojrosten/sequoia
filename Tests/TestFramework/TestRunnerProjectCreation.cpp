@@ -31,7 +31,7 @@ namespace sequoia::testing
   void test_runner_project_creation::test_exceptions()
   {
     check_exception_thrown<std::runtime_error>(
-      LINE("Project name with space"),
+      report_line("Project name with space"),
       [this]() {
         commandline_arguments args{zeroth_arg(), "init", "Oliver Jacob Rosten", (working_materials() /= "Generated Project").string(), "  "};
 
@@ -42,7 +42,7 @@ namespace sequoia::testing
       });
 
     check_exception_thrown<std::runtime_error>(
-      LINE("Project name with $"),
+      report_line("Project name with $"),
       [this]() {
         commandline_arguments args{zeroth_arg(), "init", "Oliver Jacob Rosten", (working_materials() /= "Generated$Project").string(), "  "};
 
@@ -53,7 +53,7 @@ namespace sequoia::testing
       });
 
     check_exception_thrown<std::runtime_error>(
-      LINE("Project path that is not absolute"),
+      report_line("Project path that is not absolute"),
       [this]() {
         commandline_arguments args{zeroth_arg(), "init", "Oliver Jacob Rosten", "Generated_Project", "  "};
 
@@ -64,7 +64,7 @@ namespace sequoia::testing
       });
 
     check_exception_thrown<std::runtime_error>(
-      LINE("Empty project path"),
+      report_line("Empty project path"),
       [this]() {
         commandline_arguments args{zeroth_arg(), "init", "Oliver Jacob Rosten", "", "  "};
 
@@ -75,7 +75,7 @@ namespace sequoia::testing
       });
 
     check_exception_thrown<std::runtime_error>(
-      LINE("Project name clash"),
+      report_line("Project name clash"),
       [this]() {
         commandline_arguments args{zeroth_arg(), "init", "Oliver Jacob Rosten", working_materials().string(), "  "};
 
@@ -93,7 +93,7 @@ namespace sequoia::testing
       });
 
     check_exception_thrown<std::runtime_error>(
-      LINE("Illegal indent"),
+      report_line("Illegal indent"),
       [this]() {
         commandline_arguments args{zeroth_arg(), "init", "Oliver Jacob Rosten", (working_materials() /= "GeneratedProject").string(), "  "};
 
@@ -104,7 +104,7 @@ namespace sequoia::testing
       });
 
     check_exception_thrown<std::runtime_error>(
-      LINE("Illegal init indent"),
+      report_line("Illegal init indent"),
       [this]() {
         commandline_arguments args{zeroth_arg(), "init", "Oliver Jacob Rosten", (working_materials() /= "GeneratedProject").string(), "\n"};
 
@@ -155,8 +155,8 @@ namespace sequoia::testing
         file << outputStream.rdbuf();
       }
 
-      check(equivalence, LINE(""), generated(), predictive_materials() /= "GeneratedProject");
-      check(equivalence, LINE(""), fake_project(), predictive_materials() /= "FakeProject");
+      check(equivalence, report_line(""), generated(), predictive_materials() /= "GeneratedProject");
+      check(equivalence, report_line(""), fake_project(), predictive_materials() /= "FakeProject");
     }
 
     {
@@ -168,7 +168,7 @@ namespace sequoia::testing
 
       tr.execute();
 
-      check(equivalence, LINE(""), hostDir, predictive_materials() /= "AnotherGeneratedProject");
+      check(equivalence, report_line(""), hostDir, predictive_materials() /= "AnotherGeneratedProject");
     }
   }
 }
