@@ -20,7 +20,7 @@ namespace sequoia::testing
 		// For example:
 
 		// other::functional::maybe<T> x{args}, y{different args};
-		// check_equivalence(LINE("Useful Description"), x, something inequivalent - ordinarily this would fail);
-		// check_equality(LINE("Useful Description"), x, y);
+		// check_equivalence(report_line("Useful Description"), x, something inequivalent - ordinarily this would fail);
+		// check_equality(report_line("Useful Description"), x, y);
 	}
 }

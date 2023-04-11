@@ -20,8 +20,8 @@ namespace sequoia::testing
 		auto x = []() { return stuff::unique_thing{0.0}; };
 		auto y = []() { return stuff::unique_thing{1.0}; };
 
-		check_equivalence(LINE(""), x(), 0.0);
-		check_equivalence(LINE(""), y(), 1.0);
-		check_semantics(LINE(""), x, y, std::weak_ordering::less);
+		check_equivalence(report_line(""), x(), 0.0);
+		check_equivalence(report_line(""), y(), 1.0);
+		check_semantics(report_line(""), x, y, std::weak_ordering::less);
 	}
 }
