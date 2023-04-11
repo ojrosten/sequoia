@@ -24,9 +24,9 @@ namespace sequoia
       init_checker(Checker& checker) : m_Checker{checker} {}
 
       [[nodiscard]]
-      std::string report_line(const std::filesystem::path& file, int line, std::string_view message)
+      std::string report_line(std::string_view message, const std::source_location loc=std::source_location::current())
       {
-        return m_Checker.report_line(file, line, message);
+        return m_Checker.report_line(message, loc);
       }
 
     protected:
