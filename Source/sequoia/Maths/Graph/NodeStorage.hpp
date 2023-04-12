@@ -353,7 +353,7 @@ namespace sequoia::maths::graph_impl
     }
 
     // private data
-    NO_UNIQUE_ADDRESS WeightMaker m_WeightMaker{};
+    SEQUOIA_NO_UNIQUE_ADDRESS WeightMaker m_WeightMaker{};
     node_weight_container_type m_NodeWeights;
 
     // constructors impl

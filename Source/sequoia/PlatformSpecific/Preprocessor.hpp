@@ -38,9 +38,9 @@ namespace sequoia
       return _ITERATOR_DEBUG_LEVEL;
     }
 
-    #define MSVC_EMPTY_BASE_HACK __declspec(empty_bases)
+    #define SEQUOIA_MSVC_EMPTY_BASE_HACK __declspec(empty_bases)
 
-    #define NO_UNIQUE_ADDRESS [[msvc::no_unique_address]]
+    #define SEQUOIA_NO_UNIQUE_ADDRESS [[msvc::no_unique_address]]
   #else
     #if defined(__clang__)
       using compiler_constant = clang_type;
@@ -52,9 +52,9 @@ namespace sequoia
 
     int iterator_debug_level() noexcept;
 
-    #define MSVC_EMPTY_BASE_HACK
+    #define SEQUOIA_MSVC_EMPTY_BASE_HACK
 
-    #define NO_UNIQUE_ADDRESS [[no_unique_address]]
+    #define SEQUOIA_NO_UNIQUE_ADDRESS [[no_unique_address]]
   #endif
 
   #if defined(__clang__)

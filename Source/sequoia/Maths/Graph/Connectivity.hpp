@@ -874,7 +874,7 @@ namespace sequoia
       };
 
       // private data
-      NO_UNIQUE_ADDRESS WeightMaker m_WeightMaker{};
+      SEQUOIA_NO_UNIQUE_ADDRESS WeightMaker m_WeightMaker{};
       edge_storage_type m_Edges;
 
       // helper methods

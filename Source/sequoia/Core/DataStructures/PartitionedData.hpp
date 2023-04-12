@@ -933,7 +933,7 @@ namespace sequoia
       using PartitionsType = typename Traits::partitions_type;
       constexpr static index_type npos{partition_iterator::npos};
 
-      NO_UNIQUE_ADDRESS PartitionsType m_Partitions;
+      SEQUOIA_NO_UNIQUE_ADDRESS PartitionsType m_Partitions;
       container_type m_Storage;
 
       constexpr partitioned_sequence_base(static_init_type, std::initializer_list<std::initializer_list<T>> list)

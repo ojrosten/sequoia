@@ -21,7 +21,7 @@ namespace sequoia
   namespace maths
   {
     template<network Connectivity, class Nodes>
-    class MSVC_EMPTY_BASE_HACK graph_primitive;
+    class SEQUOIA_MSVC_EMPTY_BASE_HACK graph_primitive;
 
     namespace graph_impl
     {
@@ -158,7 +158,7 @@ namespace sequoia
     using backward_tree_type  = tree_link_direction_constant<tree_link_direction::backward>;
 
     template<network Connectivity, class Nodes>
-    class MSVC_EMPTY_BASE_HACK graph_primitive : public Connectivity, public Nodes
+    class SEQUOIA_MSVC_EMPTY_BASE_HACK graph_primitive : public Connectivity, public Nodes
     {
     private:
       using node_weight_type = typename Nodes::weight_type;

@@ -96,7 +96,7 @@ namespace sequoia::data_structures
 
     std::size_t m_End{};
 
-    NO_UNIQUE_ADDRESS Compare m_Compare;
+    SEQUOIA_NO_UNIQUE_ADDRESS Compare m_Compare;
 
     constexpr static std::array<T, MaxDepth> make_Q(std::initializer_list<T> l, const Compare& compare)
     {
