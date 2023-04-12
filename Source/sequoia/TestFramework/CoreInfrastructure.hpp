@@ -13,7 +13,6 @@
  */
 
 #include "sequoia/Core/Meta/Concepts.hpp"
-#include "sequoia/PlatformSpecific/Preprocessor.hpp"
 
 #include <string>
 #include <sstream>

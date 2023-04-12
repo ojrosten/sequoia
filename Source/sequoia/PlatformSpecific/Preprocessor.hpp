@@ -7,29 +7,17 @@
 
 #pragma once
 
-/*! \file
-    \brief Tools for generating compiler-specific behaviour.
- */
+/*! \file Preprocessor logic for dealing with different platforms */
+
+#include "PlatformDiscriminators.hpp"
 
 #include <execution>
 #include <vector>
-#include <type_traits>
-
-/*! \file Preprocessor logic for dealing with different platforms */
 
 namespace sequoia
 {
-  enum class compiler_flavour { clang, gcc, msvc, other };
 
-  template<compiler_flavour F>
-  using compiler_flavour_constant = std::integral_constant<compiler_flavour, F>;
-
-  using clang_type          = compiler_flavour_constant<compiler_flavour::clang>;
-  using gcc_type            = compiler_flavour_constant<compiler_flavour::gcc>;
-  using msvc_type           = compiler_flavour_constant<compiler_flavour::msvc>;
-  using other_compiler_type = compiler_flavour_constant<compiler_flavour::other>;
-
-  #ifdef _MSC_VER
+  #if defined(_MSC_VER)
     using compiler_constant = msvc_type;
 
     [[nodiscard]]

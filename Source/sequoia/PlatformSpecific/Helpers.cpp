@@ -10,7 +10,7 @@
 */
 
 #include "sequoia/PlatformSpecific/Helpers.hpp"
-#include "sequoia/PlatformSpecific/Preprocessor.hpp"
+
 #ifdef _MSC_VER
   #include "Windows.h"
 #endif

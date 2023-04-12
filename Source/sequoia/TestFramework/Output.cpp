@@ -14,7 +14,6 @@
 #include "sequoia/FileSystem/FileSystem.hpp"
 #include "sequoia/TextProcessing/Patterns.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
-#include "sequoia/PlatformSpecific/Preprocessor.hpp"
 
 #ifndef _MSC_VER
   #include <cxxabi.h>
