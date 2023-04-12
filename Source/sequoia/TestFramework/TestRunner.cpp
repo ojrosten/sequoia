@@ -24,7 +24,6 @@
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
 #include <fstream>
-#include <future>
 
 namespace sequoia::testing
 {
