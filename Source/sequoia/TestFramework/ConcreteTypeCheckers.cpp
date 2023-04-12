@@ -13,9 +13,20 @@
 
 namespace sequoia::testing
 {
+  namespace
+  {
+    using basic_file_checker_t = general_file_checker<string_based_file_comparer>;
+  }
+  
   [[nodiscard]]
   std::string path_check_preamble(std::string_view prefix, const std::filesystem::path& path, const std::filesystem::path& prediction)
   {
     return append_lines(prefix, path.generic_string(), "vs", prediction.generic_string()).append("\n");
   }
+
+  const basic_file_checker_t value_tester<std::filesystem::path>::basic_file_checker{{".*"}};
+
+  const general_equivalence_check_t<basic_file_checker_t> value_tester<std::filesystem::path>::basic_path_equivalence{basic_file_checker};
+
+  const general_weak_equivalence_check_t<basic_file_checker_t> value_tester<std::filesystem::path>::basic_path_weak_equivalence{basic_file_checker};
 }

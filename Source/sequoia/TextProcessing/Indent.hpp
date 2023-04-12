@@ -65,8 +65,8 @@ namespace sequoia
     std::string m_Data;
   };
 
-  inline const indentation tab{"\t"};
-  inline const indentation no_indent{""};
+  const indentation tab{"\t"};
+  const indentation no_indent{""};
 
   /// For a non-empty string_view prepends with an indentation; otherwise returns an empty string
   [[nodiscard]]

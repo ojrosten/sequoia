@@ -446,10 +446,10 @@ namespace sequoia::testing
 
     using basic_file_checker_t = general_file_checker<string_based_file_comparer>;
 
-    inline static const basic_file_checker_t basic_file_checker{{".*"}};
+    static const basic_file_checker_t basic_file_checker;
 
-    inline static const general_equivalence_check_t<basic_file_checker_t>      basic_path_equivalence{basic_file_checker};
-    inline static const general_weak_equivalence_check_t<basic_file_checker_t> basic_path_weak_equivalence{basic_file_checker};
+    static const general_equivalence_check_t<basic_file_checker_t>      basic_path_equivalence;
+    static const general_weak_equivalence_check_t<basic_file_checker_t> basic_path_weak_equivalence;
 
     template<test_mode Mode, class Customization, invocable_r<bool, std::filesystem::path, std::filesystem::path> FinalTokenComparison>
     static void check_path(test_logger<Mode>& logger, const Customization& custom, const std::filesystem::path& path, const std::filesystem::path& prediction, FinalTokenComparison compare)
