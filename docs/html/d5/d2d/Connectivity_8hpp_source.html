@@ -92,7 +92,7 @@ $(function() {
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#include &quot;<a class="code" href="../../d0/d81/TypeTraits_8hpp.html">sequoia/Core/Meta/TypeTraits.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="preprocessor">#include &quot;<a class="code" href="../../d0/dbb/AssignmentUtilities_8hpp.html">sequoia/Core/ContainerUtilities/AssignmentUtilities.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="preprocessor">#include &quot;<a class="code" href="../../d5/d43/HandlerTraits_8hpp.html">sequoia/Core/Object/HandlerTraits.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="preprocessor">#include &quot;<a class="code" href="../../de/d56/Preprocessor_8hpp.html">sequoia/PlatformSpecific/Preprocessor.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="preprocessor">#include &quot;sequoia/PlatformSpecific/Preprocessor.hpp&quot;</span></div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="preprocessor">#include &lt;limits&gt;</span></div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="preprocessor">#include &lt;set&gt;</span></div>
@@ -928,7 +928,7 @@ $(function() {
 <div class="line"><a id="l00874" name="l00874"></a><span class="lineno">  874</span>      };</div>
 <div class="line"><a id="l00875" name="l00875"></a><span class="lineno">  875</span> </div>
 <div class="line"><a id="l00876" name="l00876"></a><span class="lineno">  876</span>      <span class="comment">// private data</span></div>
-<div class="line"><a id="l00877" name="l00877"></a><span class="lineno">  877</span>      NO_UNIQUE_ADDRESS WeightMaker m_WeightMaker{};</div>
+<div class="line"><a id="l00877" name="l00877"></a><span class="lineno">  877</span>      SEQUOIA_NO_UNIQUE_ADDRESS WeightMaker m_WeightMaker{};</div>
 <div class="line"><a id="l00878" name="l00878"></a><span class="lineno">  878</span>      edge_storage_type m_Edges;</div>
 <div class="line"><a id="l00879" name="l00879"></a><span class="lineno">  879</span> </div>
 <div class="line"><a id="l00880" name="l00880"></a><span class="lineno">  880</span>      <span class="comment">// helper methods</span></div>
@@ -1852,7 +1852,6 @@ $(function() {
 <div class="ttc" id="aGraphErrors_8hpp_html"><div class="ttname"><a href="../../de/d52/GraphErrors_8hpp.html">GraphErrors.hpp</a></div><div class="ttdoc">Error messages for graphs.</div></div>
 <div class="ttc" id="aGraphTraits_8hpp_html"><div class="ttname"><a href="../../d9/d96/GraphTraits_8hpp.html">GraphTraits.hpp</a></div><div class="ttdoc">Traits and Concepts for graphs.</div></div>
 <div class="ttc" id="aHandlerTraits_8hpp_html"><div class="ttname"><a href="../../d5/d43/HandlerTraits_8hpp.html">HandlerTraits.hpp</a></div><div class="ttdoc">Traits and Concepts for Sharing Policies.</div></div>
-<div class="ttc" id="aPreprocessor_8hpp_html"><div class="ttname"><a href="../../de/d56/Preprocessor_8hpp.html">Preprocessor.hpp</a></div><div class="ttdoc">Tools for generating compiler-specific behaviour.</div></div>
 <div class="ttc" id="aTypeTraits_8hpp_html"><div class="ttname"><a href="../../d0/d81/TypeTraits_8hpp.html">TypeTraits.hpp</a></div><div class="ttdoc">Traits which are sufficiently general to appear in the sequoia namespace.</div></div>
 <div class="ttc" id="aclasssequoia_1_1maths_1_1connectivity_html"><div class="ttname"><a href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">sequoia::maths::connectivity</a></div><div class="ttdoc">Graph connectivity, used as a building block for concrete graphs.</div><div class="ttdef"><b>Definition:</b> Connectivity.hpp:67</div></div>
 <div class="ttc" id="aclasssequoia_1_1maths_1_1edge_html"><div class="ttname"><a href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">sequoia::maths::edge</a></div><div class="ttdoc">Stores the source node as well as the target node and an optional weight.</div><div class="ttdef"><b>Definition:</b> Edge.hpp:325</div></div>

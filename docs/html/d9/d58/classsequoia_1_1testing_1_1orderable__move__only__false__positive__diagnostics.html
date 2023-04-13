@@ -91,9 +91,9 @@ Inheritance diagram for sequoia::testing::orderable_move_only_false_positive_dia
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aa294cdc54e20b93eaab39d28956ba6ba"><td class="memItemLeft" align="right" valign="top">std::string_view&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d58/classsequoia_1_1testing_1_1orderable__move__only__false__positive__diagnostics.html#aa294cdc54e20b93eaab39d28956ba6ba">source_file</a> () const noexcept final</td></tr>
-<tr class="memdesc:aa294cdc54e20b93eaab39d28956ba6ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pure virtual method which should be overridden in a concrete test's cpp file in order to provide the correct <b>FILE</b>  <br /></td></tr>
-<tr class="separator:aa294cdc54e20b93eaab39d28956ba6ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a931b504c3812c5fc3fbef1e12b0047e0"><td class="memItemLeft" align="right" valign="top">std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d58/classsequoia_1_1testing_1_1orderable__move__only__false__positive__diagnostics.html#a931b504c3812c5fc3fbef1e12b0047e0">source_file</a> () const noexcept final</td></tr>
+<tr class="memdesc:a931b504c3812c5fc3fbef1e12b0047e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pure virtual method which should be overridden in a concrete test's cpp file in order to provide the correct <b>FILE</b>  <br /></td></tr>
+<tr class="separator:a931b504c3812c5fc3fbef1e12b0047e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classsequoia_1_1testing_1_1basic__test"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classsequoia_1_1testing_1_1basic__test')"><img src="../../closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">sequoia::testing::basic_test&lt; Checker &gt;</a></td></tr>
 <tr class="memitem:abefc8ec7a6485637ac59842479bf8bfa inherit pub_methods_classsequoia_1_1testing_1_1basic__test"><td class="memItemLeft" align="right" valign="top"><a id="abefc8ec7a6485637ac59842479bf8bfa" name="abefc8ec7a6485637ac59842479bf8bfa"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>basic_test</b> (std::string name)</td></tr>
@@ -131,9 +131,9 @@ const std::filesystem::path &amp;&#160;</td><td class="memItemRight" valign="bot
 <tr class="memitem:a60f717e41de072169fa47637be74a19f inherit pub_methods_classsequoia_1_1testing_1_1basic__test"><td class="memItemLeft" align="right" valign="top"><a id="a60f717e41de072169fa47637be74a19f" name="a60f717e41de072169fa47637be74a19f"></a>
 const std::filesystem::path &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>caught_exceptions_output_filename</b> () const noexcept</td></tr>
 <tr class="separator:a60f717e41de072169fa47637be74a19f inherit pub_methods_classsequoia_1_1testing_1_1basic__test"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a789da14fe0ff33d6eefb4a2c748db779 inherit pub_methods_classsequoia_1_1testing_1_1basic__test"><td class="memItemLeft" align="right" valign="top"><a id="a789da14fe0ff33d6eefb4a2c748db779" name="a789da14fe0ff33d6eefb4a2c748db779"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>report_line</b> (const std::filesystem::path &amp;file, int line, std::string_view message)</td></tr>
-<tr class="separator:a789da14fe0ff33d6eefb4a2c748db779 inherit pub_methods_classsequoia_1_1testing_1_1basic__test"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a13429ed4179c83f3659cf11e517188bb inherit pub_methods_classsequoia_1_1testing_1_1basic__test"><td class="memItemLeft" align="right" valign="top"><a id="a13429ed4179c83f3659cf11e517188bb" name="a13429ed4179c83f3659cf11e517188bb"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>report_line</b> (std::string_view message, const std::source_location loc=std::source_location::current())</td></tr>
+<tr class="separator:a13429ed4179c83f3659cf11e517188bb inherit pub_methods_classsequoia_1_1testing_1_1basic__test"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9861cae1f1e73ba1974a837a71a1bc40 inherit pub_methods_classsequoia_1_1testing_1_1basic__test"><td class="memItemLeft" align="right" valign="top"><a id="a9861cae1f1e73ba1974a837a71a1bc40" name="a9861cae1f1e73ba1974a837a71a1bc40"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>initialize</b> (std::string_view suiteName, const <a class="el" href="../../d4/dbe/classsequoia_1_1testing_1_1project__paths.html">project_paths</a> &amp;projPaths, <a class="el" href="../../df/d98/classsequoia_1_1testing_1_1individual__materials__paths.html">individual_materials_paths</a> materials, <a class="el" href="../../d2/d70/structsequoia_1_1testing_1_1active__recovery__files.html">active_recovery_files</a> files)</td></tr>
 <tr class="separator:a9861cae1f1e73ba1974a837a71a1bc40 inherit pub_methods_classsequoia_1_1testing_1_1basic__test"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -161,8 +161,8 @@ virtual <a class="el" href="../../d2/daa/classsequoia_1_1testing_1_1log__summary
 <tr class="separator:a74f379026bb979d1253c5660a70530cb inherit pro_methods_classsequoia_1_1testing_1_1basic__test"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="aa294cdc54e20b93eaab39d28956ba6ba" name="aa294cdc54e20b93eaab39d28956ba6ba"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa294cdc54e20b93eaab39d28956ba6ba">&#9670;&#160;</a></span>source_file()</h2>
+<a id="a931b504c3812c5fc3fbef1e12b0047e0" name="a931b504c3812c5fc3fbef1e12b0047e0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a931b504c3812c5fc3fbef1e12b0047e0">&#9670;&#160;</a></span>source_file()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -171,7 +171,7 @@ virtual <a class="el" href="../../d2/daa/classsequoia_1_1testing_1_1log__summary
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::string_view sequoia::testing::orderable_move_only_false_positive_diagnostics::source_file </td>
+          <td class="memname">std::filesystem::path sequoia::testing::orderable_move_only_false_positive_diagnostics::source_file </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
