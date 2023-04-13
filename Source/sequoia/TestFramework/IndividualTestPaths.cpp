@@ -21,7 +21,7 @@ namespace sequoia::testing
   namespace
   {
     [[nodiscard]]
-    fs::path versioned_diagnostics(std::filesystem::path dir, std::string_view suite, std::string_view source, std::string_view mode, std::string_view suffix)
+    fs::path versioned_diagnostics(std::filesystem::path dir, std::string_view suite, const std::filesystem::path& source, std::string_view mode, std::string_view suffix)
     {
       const auto file{
               fs::path{source}.filename()
@@ -84,7 +84,7 @@ namespace sequoia::testing
 
   //===================================== individual_diagnostics_paths =====================================//
 
-  individual_diagnostics_paths::individual_diagnostics_paths(std::filesystem::path projectRoot, std::string_view suite, std::string_view source, std::string_view mode)
+  individual_diagnostics_paths::individual_diagnostics_paths(std::filesystem::path projectRoot, std::string_view suite, const std::filesystem::path& source, std::string_view mode)
     : m_Diagnostics{versioned_diagnostics(output_paths::diagnostics(projectRoot), suite, source, mode, "Output")}
     , m_CaughtExceptions{versioned_diagnostics(output_paths::diagnostics(projectRoot), suite, source, mode, "Exceptions")}
   {}

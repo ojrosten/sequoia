@@ -208,9 +208,9 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string_view test_graph_traversals::source_file() const noexcept
+  std::filesystem::path test_graph_traversals::source_file() const noexcept
   {
-    return __FILE__;
+    return std::source_location::current().file_name();
   }
 
   void test_graph_traversals::run_tests()

@@ -32,7 +32,7 @@ namespace sequoia::testing
     using free_test::free_test;
 
     [[nodiscard]]
-    std::string_view source_file() const noexcept final;
+    std::filesystem::path source_file() const noexcept final;
   private:
     void run_tests() final
     {

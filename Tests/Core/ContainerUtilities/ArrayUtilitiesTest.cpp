@@ -15,9 +15,9 @@
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::string_view array_utilities_test::source_file() const noexcept
+  std::filesystem::path array_utilities_test::source_file() const noexcept
   {
-    return __FILE__;
+    return std::source_location::current().file_name();
   }
 
   void array_utilities_test::run_tests()

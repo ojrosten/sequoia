@@ -22,9 +22,9 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string_view performance_false_positive_diagnostics::source_file() const noexcept
+  std::filesystem::path performance_false_positive_diagnostics::source_file() const noexcept
   {
-    return __FILE__;
+    return std::source_location::current().file_name();
   }
 
   void performance_false_positive_diagnostics::run_tests()
@@ -48,9 +48,9 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string_view performance_false_negative_diagnostics::source_file() const noexcept
+  std::filesystem::path performance_false_negative_diagnostics::source_file() const noexcept
   {
-    return __FILE__;
+    return std::source_location::current().file_name();
   }
 
   void performance_false_negative_diagnostics::run_tests()
@@ -65,9 +65,9 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string_view performance_utilities_test::source_file() const noexcept
+  std::filesystem::path performance_utilities_test::source_file() const noexcept
   {
-    return __FILE__;
+    return std::source_location::current().file_name();
   }
 
   void performance_utilities_test::run_tests()

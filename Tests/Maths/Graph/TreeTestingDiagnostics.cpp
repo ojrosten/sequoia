@@ -61,9 +61,9 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string_view tree_false_positive_test::source_file() const noexcept
+  std::filesystem::path tree_false_positive_test::source_file() const noexcept
   {
-    return __FILE__;
+    return std::source_location::current().file_name();
   }
 
   void tree_false_positive_test::run_tests()

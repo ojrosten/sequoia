@@ -15,9 +15,9 @@
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::string_view node_storage_allocation_test::source_file() const noexcept
+  std::filesystem::path node_storage_allocation_test::source_file() const noexcept
   {
-    return __FILE__;
+    return std::source_location::current().file_name();
   }
 
   void node_storage_allocation_test::run_tests()

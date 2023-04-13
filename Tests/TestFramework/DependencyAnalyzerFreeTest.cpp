@@ -78,9 +78,9 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string_view dependency_analyzer_free_test::source_file() const noexcept
+  std::filesystem::path dependency_analyzer_free_test::source_file() const noexcept
   {
-    return __FILE__;
+    return std::source_location::current().file_name();
   }
 
   void dependency_analyzer_free_test::check_tests_to_run(std::string_view description,

@@ -43,9 +43,9 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string_view path_false_positive_free_diagnostics::source_file() const noexcept
+  std::filesystem::path path_false_positive_free_diagnostics::source_file() const noexcept
   {
-    return __FILE__;
+    return std::source_location::current().file_name();
   }
 
   [[nodiscard]]
@@ -135,9 +135,9 @@ namespace sequoia::testing
   }
   
   [[nodiscard]]
-  std::string_view path_false_negative_free_diagnostics::source_file() const noexcept
+  std::filesystem::path path_false_negative_free_diagnostics::source_file() const noexcept
   {
-    return __FILE__;
+    return std::source_location::current().file_name();
   }
 
   [[nodiscard]]

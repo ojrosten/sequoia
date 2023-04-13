@@ -60,9 +60,9 @@ namespace sequoia::testing
     && requires(DerefPolicy& d) { d.scale(); };
 
   [[nodiscard]]
-  std::string_view iterator_test::source_file() const noexcept
+  std::filesystem::path iterator_test::source_file() const noexcept
   {
-    return __FILE__;
+    return std::source_location::current().file_name();
   }
 
   void iterator_test::run_tests()

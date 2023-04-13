@@ -20,9 +20,9 @@
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::string_view test_runner_test_creation::source_file() const noexcept
+  std::filesystem::path test_runner_test_creation::source_file() const noexcept
   {
-    return __FILE__;
+    return std::source_location::current().file_name();
   }
 
   [[nodiscard]]

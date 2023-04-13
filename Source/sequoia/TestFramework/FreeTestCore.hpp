@@ -220,7 +220,7 @@ namespace sequoia::testing
 
     /// Pure virtual method which should be overridden in a concrete test's cpp file in order to provide the correct __FILE__
     [[nodiscard]]
-    virtual std::string_view source_file() const noexcept = 0;
+    virtual std::filesystem::path source_file() const noexcept = 0;
     
     /// The override in a derived test should call the checks performed by the test.
     virtual void run_tests() = 0;

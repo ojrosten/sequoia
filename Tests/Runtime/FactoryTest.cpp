@@ -97,9 +97,9 @@ namespace sequoia::testing
   using namespace object;
 
   [[nodiscard]]
-  std::string_view factory_test::source_file() const noexcept
+  std::filesystem::path factory_test::source_file() const noexcept
   {
-    return __FILE__;
+    return std::source_location::current().file_name();
   }
 
 

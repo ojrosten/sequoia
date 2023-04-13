@@ -26,9 +26,9 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string_view commandline_arguments_test::source_file() const noexcept
+  std::filesystem::path commandline_arguments_test::source_file() const noexcept
   {
-    return __FILE__;
+    return std::source_location::current().file_name();
   }
 
   void commandline_arguments_test::run_tests()

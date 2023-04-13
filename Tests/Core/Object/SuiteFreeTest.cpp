@@ -156,9 +156,9 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string_view suite_free_test::source_file() const noexcept
+  std::filesystem::path suite_free_test::source_file() const noexcept
   {
-    return __FILE__;
+    return std::source_location::current().file_name();
   }
 
   void suite_free_test::run_tests()

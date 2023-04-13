@@ -14,9 +14,9 @@ namespace sequoia::testing
   using namespace object;
 
   [[nodiscard]]
-  std::string_view factory_false_positive_test::source_file() const noexcept
+  std::filesystem::path factory_false_positive_test::source_file() const noexcept
   {
-    return __FILE__;
+    return std::source_location::current().file_name();
   }
 
   void factory_false_positive_test::run_tests()

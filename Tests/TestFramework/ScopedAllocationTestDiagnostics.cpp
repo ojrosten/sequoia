@@ -26,9 +26,9 @@ namespace sequoia::testing
     = typename scoped_beast_builder<perfectly_normal_beast, inefficient_para_copy<int, InnerAllocator>>::beast;
 
   [[nodiscard]]
-  std::string_view scoped_allocation_false_negative_diagnostics::source_file() const noexcept
+  std::filesystem::path scoped_allocation_false_negative_diagnostics::source_file() const noexcept
   {
-    return __FILE__;
+    return std::source_location::current().file_name();
   }
 
   void scoped_allocation_false_negative_diagnostics::run_tests()
@@ -276,9 +276,9 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string_view scoped_allocation_false_positive_diagnostics::source_file() const noexcept
+  std::filesystem::path scoped_allocation_false_positive_diagnostics::source_file() const noexcept
   {
-    return __FILE__;
+    return std::source_location::current().file_name();
   }
 
   void scoped_allocation_false_positive_diagnostics::run_tests()

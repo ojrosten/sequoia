@@ -22,7 +22,7 @@ namespace sequoia::testing
 
   private:
     [[nodiscard]]
-    std::string_view source_file() const noexcept final;
+    std::filesystem::path source_file() const noexcept final;
 
     void run_tests() final;
 
@@ -39,7 +39,7 @@ namespace sequoia::testing
 
   private:
     [[nodiscard]]
-    std::string_view source_file() const noexcept final;
+    std::filesystem::path source_file() const noexcept final;
 
     void run_tests() final;
 

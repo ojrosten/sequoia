@@ -14,9 +14,9 @@
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::string_view streaming_free_test::source_file() const noexcept
+  std::filesystem::path streaming_free_test::source_file() const noexcept
   {
-    return __FILE__;
+    return std::source_location::current().file_name();
   }
 
   void streaming_free_test::run_tests()

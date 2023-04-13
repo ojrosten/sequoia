@@ -30,9 +30,9 @@ namespace sequoia::testing
       using regular_test::regular_test;
 
       [[nodiscard]]
-      std::string_view source_file() const noexcept final
+      std::filesystem::path source_file() const noexcept final
       {
-        return __FILE__;
+        return std::source_location::current().file_name();
       }
     private:
       void run_tests() final
@@ -47,9 +47,9 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      std::string_view source_file() const noexcept final
+      std::filesystem::path source_file() const noexcept final
       {
-        return __FILE__;
+        return std::source_location::current().file_name();
       }
     private:
       void run_tests() final
@@ -64,9 +64,9 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      std::string_view source_file() const noexcept final
+      std::filesystem::path source_file() const noexcept final
       {
-        return __FILE__;
+        return std::source_location::current().file_name();
       }
 
     private:
@@ -82,9 +82,9 @@ namespace sequoia::testing
       using free_false_positive_test::free_false_positive_test;
 
       [[nodiscard]]
-      std::string_view source_file() const noexcept final
+      std::filesystem::path source_file() const noexcept final
       {
-        return __FILE__;
+        return std::source_location::current().file_name();
       }
 
     private:
@@ -100,9 +100,9 @@ namespace sequoia::testing
       using free_false_negative_test::free_false_negative_test;
 
       [[nodiscard]]
-      std::string_view source_file() const noexcept final
+      std::filesystem::path source_file() const noexcept final
       {
-        return __FILE__;
+        return std::source_location::current().file_name();
       }
 
     private:
@@ -125,9 +125,9 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      std::string_view source_file() const noexcept final
+      std::filesystem::path source_file() const noexcept final
       {
-        return __FILE__;
+        return std::source_location::current().file_name();
       }
     private:
       void run_tests() final
@@ -150,9 +150,9 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      std::string_view source_file() const noexcept final
+      std::filesystem::path source_file() const noexcept final
       {
-        return __FILE__;
+        return std::source_location::current().file_name();
       }
     private:
       void run_tests() final
@@ -168,9 +168,9 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      std::string_view source_file() const noexcept final
+      std::filesystem::path source_file() const noexcept final
       {
-        return __FILE__;
+        return std::source_location::current().file_name();
       }
     private:
       void run_tests() final
@@ -185,9 +185,9 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      std::string_view source_file() const noexcept final
+      std::filesystem::path source_file() const noexcept final
       {
-        return __FILE__;
+        return std::source_location::current().file_name();
       }
     private:
       void run_tests() final
@@ -203,9 +203,9 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      std::string_view source_file() const noexcept final
+      std::filesystem::path source_file() const noexcept final
       {
-        return __FILE__;
+        return std::source_location::current().file_name();
       }
     private:
       void run_tests() final
@@ -220,9 +220,9 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      std::string_view source_file() const noexcept final
+      std::filesystem::path source_file() const noexcept final
       {
-        return __FILE__;
+        return std::source_location::current().file_name();
       }
     private:
       void run_tests() final
@@ -236,9 +236,9 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      std::string_view source_file() const noexcept final
+      std::filesystem::path source_file() const noexcept final
       {
-        return __FILE__;
+        return std::source_location::current().file_name();
       }
     private:
       void run_tests() final
@@ -279,9 +279,9 @@ namespace sequoia::testing
   };
 
   [[nodiscard]]
-  std::string_view test_runner_test::source_file() const noexcept
+  std::filesystem::path test_runner_test::source_file() const noexcept
   {
-    return __FILE__;
+    return std::source_location::current().file_name();
   }
 
   void test_runner_test::run_tests()
