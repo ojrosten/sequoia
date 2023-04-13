@@ -12,9 +12,9 @@
 namespace sequoia::testing
 {
     [[nodiscard]]
-    std::string_view widget_test::source_file() const noexcept
+    std::filesystem::path widget_test::source_file() const noexcept
     {
-        return __FILE__;
+        return std::source_location::current().file_name();
     }
 
     void widget_test::run_tests()

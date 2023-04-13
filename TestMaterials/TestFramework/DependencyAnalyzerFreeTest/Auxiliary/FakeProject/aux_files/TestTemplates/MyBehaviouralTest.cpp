@@ -11,9 +11,9 @@
 namespace sequoia::testing
 {
 	[[nodiscard]]
-	std::string_view ?_behavioural_test::source_file() const noexcept
+	std::filesystem::path ?_behavioural_test::source_file() const noexcept
 	{
-		return __FILE__;
+		return std::source_location::current().file_name();
 	}
 
 	void ?_behavioural_test::run_tests()

@@ -14,9 +14,9 @@ namespace sequoia::testing
 	using namespace unstable;
 
 	[[nodiscard]]
-	std::string_view flipper_free_test::source_file() const noexcept
+	std::filesystem::path flipper_free_test::source_file() const noexcept
 	{
-		return __FILE__;
+		return std::source_location::current().file_name();
 	}
 
 	void flipper_free_test::run_tests()

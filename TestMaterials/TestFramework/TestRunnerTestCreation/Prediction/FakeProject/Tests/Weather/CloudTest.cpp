@@ -12,9 +12,9 @@
 namespace sequoia::testing
 {
     [[nodiscard]]
-    std::string_view cloud_test::source_file() const noexcept
+    std::filesystem::path cloud_test::source_file() const noexcept
     {
-        return __FILE__;
+        return std::source_location::current().file_name();
     }
 
     void cloud_test::run_tests()
