@@ -91,7 +91,7 @@ $(function() {
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#include &quot;<a class="code" href="../../d6/d07/Algorithms_8hpp.html">sequoia/Algorithms/Algorithms.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#include &quot;<a class="code" href="../../d7/d1c/MonotonicSequence_8hpp.html">sequoia/Maths/Sequences/MonotonicSequence.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#include &quot;<a class="code" href="../../d0/dbb/AssignmentUtilities_8hpp.html">sequoia/Core/ContainerUtilities/AssignmentUtilities.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#include &quot;<a class="code" href="../../de/d56/Preprocessor_8hpp.html">sequoia/PlatformSpecific/Preprocessor.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#include &quot;sequoia/PlatformSpecific/Preprocessor.hpp&quot;</span></div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &lt;numeric&gt;</span></div>
@@ -1000,7 +1000,7 @@ $(function() {
 <div class="line"><a id="l00933" name="l00933"></a><span class="lineno">  933</span>      <span class="keyword">using </span>PartitionsType = <span class="keyword">typename</span> Traits::partitions_type;</div>
 <div class="line"><a id="l00934" name="l00934"></a><span class="lineno">  934</span>      <span class="keyword">constexpr</span> <span class="keyword">static</span> index_type npos{partition_iterator::npos};</div>
 <div class="line"><a id="l00935" name="l00935"></a><span class="lineno">  935</span> </div>
-<div class="line"><a id="l00936" name="l00936"></a><span class="lineno">  936</span>      NO_UNIQUE_ADDRESS PartitionsType m_Partitions;</div>
+<div class="line"><a id="l00936" name="l00936"></a><span class="lineno">  936</span>      SEQUOIA_NO_UNIQUE_ADDRESS PartitionsType m_Partitions;</div>
 <div class="line"><a id="l00937" name="l00937"></a><span class="lineno">  937</span>      container_type m_Storage;</div>
 <div class="line"><a id="l00938" name="l00938"></a><span class="lineno">  938</span> </div>
 <div class="line"><a id="l00939" name="l00939"></a><span class="lineno">  939</span>      <span class="keyword">constexpr</span> <a class="code hl_class" href="../../d1/d3a/classsequoia_1_1data__structures_1_1partitioned__sequence__base.html">partitioned_sequence_base</a>(static_init_type, std::initializer_list&lt;std::initializer_list&lt;T&gt;&gt; list)</div>
@@ -1405,7 +1405,6 @@ $(function() {
 <div class="ttc" id="aIterator_8hpp_html"><div class="ttname"><a href="../../d7/de4/Iterator_8hpp.html">Iterator.hpp</a></div><div class="ttdoc">Implementation for an iterator with policies controlling dereferencing and auxiliary data.</div></div>
 <div class="ttc" id="aMonotonicSequence_8hpp_html"><div class="ttname"><a href="../../d7/d1c/MonotonicSequence_8hpp.html">MonotonicSequence.hpp</a></div><div class="ttdoc">Classes implementing the concept of a monotonic sequence.</div></div>
 <div class="ttc" id="aPartitionedDataDetails_8hpp_html"><div class="ttname"><a href="../../d4/d71/PartitionedDataDetails_8hpp.html">PartitionedDataDetails.hpp</a></div><div class="ttdoc">Metaprogramming components for partitioned data.</div></div>
-<div class="ttc" id="aPreprocessor_8hpp_html"><div class="ttname"><a href="../../de/d56/Preprocessor_8hpp.html">Preprocessor.hpp</a></div><div class="ttdoc">Tools for generating compiler-specific behaviour.</div></div>
 <div class="ttc" id="aTypeTraits_8hpp_html"><div class="ttname"><a href="../../d0/d81/TypeTraits_8hpp.html">TypeTraits.hpp</a></div><div class="ttdoc">Traits which are sufficiently general to appear in the sequoia namespace.</div></div>
 <div class="ttc" id="aclasssequoia_1_1data__structures_1_1bucketed__sequence_html"><div class="ttname"><a href="../../d4/db3/classsequoia_1_1data__structures_1_1bucketed__sequence.html">sequoia::data_structures::bucketed_sequence</a></div><div class="ttdoc">Storage for partitioned data such that data within each partition is contiguous.</div><div class="ttdef"><b>Definition:</b> PartitionedData.hpp:86</div></div>
 <div class="ttc" id="aclasssequoia_1_1data__structures_1_1partition__impl_1_1data__duplicator_html"><div class="ttname"><a href="../../d2/d63/classsequoia_1_1data__structures_1_1partition__impl_1_1data__duplicator.html">sequoia::data_structures::partition_impl::data_duplicator</a></div><div class="ttdef"><b>Definition:</b> PartitionedDataDetails.hpp:164</div></div>
