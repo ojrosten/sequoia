@@ -206,7 +206,7 @@ namespace sequoia::testing
     }
   };
 
-  enum class top_level { yes, no };
+  enum class top_level { no, yes };
 
   /*! \brief class template for shifting allocation predictions, especially for MSVC debug builds.
 

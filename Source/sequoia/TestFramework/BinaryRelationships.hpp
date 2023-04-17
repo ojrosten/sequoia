@@ -27,11 +27,11 @@ namespace sequoia::testing
     using std::abs;
 
     template<class T, class NormType>
-    constexpr static bool has_abs{requires(const T& x) { { abs(x) } -> std::same_as<NormType>; }};
+    inline constexpr static bool has_abs{requires(const T& x) { { abs(x) } -> std::same_as<NormType>; }};
   }
 
   template<class T, class NormType>
-  constexpr static bool has_abs{abs_detail::has_abs<T, NormType>};
+  inline constexpr static bool has_abs{abs_detail::has_abs<T, NormType>};
 
   /*! \brief Specialize this struct template to provide custom reporting for comparisons
              performed with a binary operator.

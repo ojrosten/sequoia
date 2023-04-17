@@ -86,7 +86,7 @@ namespace sequoia::testing
   };
 
   template<class Advisor, class T>
-  constexpr bool use_advisor_v{advisor_analyser<Advisor, T>::utilize};
+  inline constexpr bool use_advisor_v{advisor_analyser<Advisor, T>::utilize};
 
   /// \brief Represents the absence of advice
   struct null_advisor

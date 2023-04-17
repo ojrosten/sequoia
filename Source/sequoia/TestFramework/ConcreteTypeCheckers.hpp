@@ -89,7 +89,7 @@ namespace sequoia::testing
       {
         if(pos > sv.size()) throw std::out_of_range{"pos out of range"};
         const auto end{count > sv.size() - pos ? sv.size() : pos + count};
-        std::transform(sv.begin() + pos, sv.begin() + end, std::back_inserter(mess), [](Char c) { return static_cast<char>(c); });
+        std::ranges::transform(sv.begin() + pos, sv.begin() + end, std::back_inserter(mess), [](Char c) { return static_cast<char>(c); });
       }
     }
 
