@@ -100,10 +100,10 @@ namespace sequoia::object
     factory(const std::array<std::string_view, size()>& names)
       : m_Creators{make_array(names, std::make_index_sequence<size()>{})}
     {
-      std::sort(m_Creators.begin(), m_Creators.end(), [](const element& lhs, const element& rhs){ return lhs.first < rhs.first; });
+      std::ranges::sort(m_Creators, [](const element& lhs, const element& rhs){ return lhs.first < rhs.first; });
 
       auto comp{[](const element& lhs, const element& rhs) { return lhs.first == rhs.first; }};
-      if(std::adjacent_find(m_Creators.cbegin(), m_Creators.cend(), comp) != m_Creators.cend())
+      if(std::ranges::adjacent_find(m_Creators, comp) != m_Creators.cend())
         throw std::logic_error{"Factory product names must be unique!"};
     }
 
@@ -129,8 +129,7 @@ namespace sequoia::object
       auto found{find(name)};
       if(found == m_Creators.end())
       {
-        found = std::find_if(m_Creators.begin(), m_Creators.end(),
-                             [](const element& e){ return std::holds_alternative<product_creator<Product>>(e.second); });
+        found = std::ranges::find_if(m_Creators, [](const element& e){ return std::holds_alternative<product_creator<Product>>(e.second); });
       }
 
       return std::visit(overloaded{[&](const auto& v) { return vessel{v.make(std::forward<Args>(args)...)}; }}, found->second);
@@ -156,8 +155,7 @@ namespace sequoia::object
     [[nodiscard]]
     auto find(std::string_view name) const
     {
-      const auto found{std::lower_bound(m_Creators.begin(), m_Creators.end(), name,
-                              [](const element& e, std::string_view n) { return e.first < n; })};
+      const auto found{std::ranges::lower_bound(m_Creators, name, std::ranges::less{}, [](const element& e){ return e.first; })};
 
       return (found != m_Creators.end()) && (found->first == name) ? found : m_Creators.end();
     }

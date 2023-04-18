@@ -789,17 +789,17 @@ namespace sequoia
         edge_index_type bsource{begin.partition_index()}, esource{end.partition_index()};
         if(bsource == esource)
         {
-          sequoia::sort(begin_edges(bsource) + distance(cbegin_edges(bsource), begin), begin_edges(esource) + distance(cbegin_edges(esource), end), comp);
+          sequoia::sort(begin_edges(bsource) + std::ranges::distance(cbegin_edges(bsource), begin), begin_edges(esource) + std::ranges::distance(cbegin_edges(esource), end), comp);
         }
         else
         {
-          if(bsource > esource) std::swap(bsource, esource);
-          sequoia::sort(begin_edges(bsource) + distance(cbegin_edges(bsource), begin), end_edges(bsource), comp);
+          if(bsource > esource) std::ranges::swap(bsource, esource);
+          sequoia::sort(begin_edges(bsource) + std::ranges::distance(cbegin_edges(bsource), begin), end_edges(bsource), comp);
           for(edge_index_type i = bsource + 1; i < esource; ++i)
           {
             sequoia::sort(begin_edges(i), end_edges(i), comp);
           }
-          sequoia::sort(begin_edges(esource), begin_edges(esource) + distance(cbegin_edges(esource), end), comp);
+          sequoia::sort(begin_edges(esource), begin_edges(esource) + std::ranges::distance(cbegin_edges(esource), end), comp);
         }
       }
 

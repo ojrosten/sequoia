@@ -210,7 +210,7 @@ namespace sequoia::object
       else
       {
         m_Data.reserve(other.m_Data.size());
-        std::copy(other.m_Data.cbegin(), other.m_Data.cend(), std::back_inserter(m_Data));
+        std::ranges::copy(other.m_Data, std::back_inserter(m_Data));
 
         for(auto& pData : m_Data) pData->m_pPool = this;
         other.m_Data.clear();
@@ -245,10 +245,7 @@ namespace sequoia::object
     [[nodiscard]]
     friend bool operator==(const data_pool& lhs, const data_pool& rhs) noexcept
     {
-      return std::equal(lhs.m_Data.cbegin(), lhs.m_Data.cend(), rhs.m_Data.cbegin(), rhs.m_Data.cend(),
-                        [](const wrapper_handle& l, const wrapper_handle& r){
-                          return l->get() == r->get();
-                        });
+      return std::ranges::equal(lhs.m_Data, rhs.m_Data, [](const wrapper_handle& l, const wrapper_handle& r){ return l->get() == r->get(); });
     }
 
     [[nodiscard]]
@@ -307,7 +304,7 @@ namespace sequoia::object
     /*! \brief Removes elements to which no proxies point. */
     void tidy()
     {
-      m_Data.erase(std::remove_if(m_Data.begin(), m_Data.end(), [](const auto& ptr) { ptr.use_count() == 1;}), m_Data.end());
+      m_Data.erase(std::ranges::remove_if(m_Data, [](const auto& ptr) { ptr.use_count() == 1;}), m_Data.end());
     }
 
   private:
@@ -318,7 +315,7 @@ namespace sequoia::object
     {
       const T nascent{std::forward<Args>(args)...};
       const auto found{
-        std::find_if(m_Data.begin(), m_Data.end(), [&nascent](const auto& pData) { return pData->get() == nascent;})
+        std::ranges::find_if(m_Data, [&nascent](const auto& pData) { return pData->get() == nascent;})
       };
 
       if(found == m_Data.end())

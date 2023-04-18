@@ -364,7 +364,7 @@ namespace sequoia::object
       // Don't use logical short-circuit, otherwise the maps may not accurately update
       std::array<bool, sizeof...(Suites) + 1> isFound{ find(m_SelectedItems, val, m_Proj, m_Compare), find(m_SelectedSuites, suites, item_to_name{}, std::equal_to<std::string>{}) ... };
 
-      return std::any_of(isFound.begin(), isFound.end(), [](bool b) { return b; });
+      return std::ranges::any_of(isFound, [](bool b) { return b; });
     }
 
     [[nodiscard]]
