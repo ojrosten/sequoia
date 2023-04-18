@@ -168,7 +168,7 @@ namespace sequoia::testing
     template<test_mode Mode, class Advisor>
     static void test(equality_check_t, test_logger<Mode>& logger, string_view_type obtained, string_view_type prediction, const tutor<Advisor>& advisor)
     {
-      auto iters{std::ranges::mismatch(obtained.begin(), obtained.end(), prediction.begin(), prediction.end())};
+      auto iters{std::ranges::mismatch(obtained, prediction)};
 
       if((iters.in1 != obtained.end()) && (iters.in2 != prediction.end()))
       {
