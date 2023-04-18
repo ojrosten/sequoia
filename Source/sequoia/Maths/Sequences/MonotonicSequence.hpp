@@ -115,10 +115,9 @@ namespace sequoia::maths
     template<class UnaryOp>
     constexpr void mutate(unsafe_t, const_iterator first, const_iterator last, UnaryOp op)
     {
-      using std::ranges::distance;
       while(first != last)
       {
-        auto pos{m_Sequence.begin() + distance(cbegin(), first++)};
+        auto pos{m_Sequence.begin() + std::ranges::distance(cbegin(), first++)};
         *pos = op(*pos);
       }
     }

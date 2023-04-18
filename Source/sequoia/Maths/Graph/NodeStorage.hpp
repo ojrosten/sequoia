@@ -422,8 +422,7 @@ namespace sequoia::maths::graph_impl
     void clone(const node_weight_container_type& from)
     {
       m_NodeWeights.reserve(from.size());
-      std::transform(from.cbegin(), from.cend(), std::back_inserter(m_NodeWeights),
-        [this](const auto& weight) { return make_node_weight(weight.get()); });
+      std::ranges::transform(from, std::back_inserter(m_NodeWeights), [this](const auto& weight) { return make_node_weight(weight.get()); });
     }
 
     [[nodiscard]]

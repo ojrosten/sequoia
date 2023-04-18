@@ -21,14 +21,14 @@ namespace sequoia::testing
 {
   namespace
   {
-    template<class T, std::size_t N, class Comparer = std::less<T>>
+    template<class T, std::size_t N, class Comparer = std::ranges::less>
     constexpr std::array<T, N> sort(std::array<T, N> a, Comparer comp = Comparer{})
     {
       sequoia::sort(std::begin(a), std::end(a), comp);
       return a;
     }
 
-    template<class T, std::size_t N, class Comparer = std::equal_to<T>>
+    template<class T, std::size_t N, class Comparer = std::ranges::equal_to>
     constexpr std::array<T, N> cluster(std::array<T, N> a, Comparer comp = Comparer{})
     {
       sequoia::cluster(std::begin(a), std::end(a), comp);

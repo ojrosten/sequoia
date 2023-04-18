@@ -248,7 +248,7 @@ namespace sequoia::parsing::commandline
   [[nodiscard]]
   bool argument_parser::is_alias(const option& opt, std::string_view s)
   {
-    return std::find(opt.aliases.begin(), opt.aliases.end(), s) != opt.aliases.end();
+    return std::ranges::find(opt.aliases, s) != opt.aliases.end();
   }
 
   template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>

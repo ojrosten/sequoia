@@ -296,8 +296,9 @@ namespace sequoia::testing
         }
       }
 
-      std::sort(externalDependencies.begin(), externalDependencies.end());
-      externalDependencies.erase(std::unique(externalDependencies.begin(), externalDependencies.end()), externalDependencies.end());
+      std::ranges::sort(externalDependencies);
+      auto iters{std::ranges::unique(externalDependencies)};
+      externalDependencies.erase(iters.begin(), iters.end());
 
       write_tests(projPaths.prune().external_dependencies(), externalDependencies);
     }
@@ -329,7 +330,7 @@ namespace sequoia::testing
 
         for(const auto& entry : fs::recursive_directory_iterator(materials))
         {
-          maxTime = std::max(maxTime, fs::last_write_time(entry));
+          maxTime = std::ranges::max(maxTime, fs::last_write_time(entry));
         }
 
         return maxTime;
@@ -342,7 +343,7 @@ namespace sequoia::testing
                                 const fs::path& relFilePath,
                                 const std::vector<fs::path>& passingTests)
     {
-      if(auto iter{std::lower_bound(passingTests.begin(), passingTests.end(), relFilePath)}; (iter != passingTests.end() && (*iter == relFilePath)))
+      if(auto iter{std::ranges::lower_bound(passingTests, relFilePath)}; (iter != passingTests.end() && (*iter == relFilePath)))
       {
         i->stale = false;
       }
@@ -414,7 +415,7 @@ namespace sequoia::testing
             if(!weight.stale && (materialsWriteTime > pruneTimeStamp))
               i->stale = true;
 
-            const auto maxModificationTime{materialsWriteTime ? std::max(materialsWriteTime.value(), weight.implicit_modification_time) : weight.implicit_modification_time};
+            const auto maxModificationTime{materialsWriteTime ? std::ranges::max(materialsWriteTime.value(), weight.implicit_modification_time) : weight.implicit_modification_time};
 
             if(weight.stale && (passesStamp.value() >= maxModificationTime))
               consider_passing_tests(i, relPath, passingTestsFromFile);
@@ -431,7 +432,7 @@ namespace sequoia::testing
         }
       }
 
-      std::sort(staleTests.begin(), staleTests.end());
+      std::ranges::sort(staleTests);
 
       return staleTests;
     }
@@ -449,7 +450,7 @@ namespace sequoia::testing
     [[nodiscard]]
     prune_paths prepare(const project_paths& projPaths, std::vector<fs::path>& failedTests)
     {
-      std::sort(failedTests.begin(), failedTests.end());
+      std::ranges::sort(failedTests);
 
       return projPaths.prune();
     }
@@ -464,9 +465,9 @@ namespace sequoia::testing
         read_tests(file, allTests);
       }
 
-      std::sort(allTests.begin(), allTests.end());
-      auto last{std::unique(allTests.begin(), allTests.end())};
-      allTests.erase(last, allTests.end());
+      std::ranges::sort(allTests);
+      auto last{std::ranges::unique(allTests)};
+      allTests.erase(last.begin(), last.end());
 
       return allTests;
     }
@@ -485,7 +486,7 @@ namespace sequoia::testing
         if(i)
         {
           std::vector<fs::path> currentIntersection{};
-          std::set_intersection(tests.begin(), tests.end(), intersection.begin(), intersection.end(), std::back_inserter(currentIntersection));
+          std::ranges::set_intersection(tests, intersection, std::back_inserter(currentIntersection));
           intersection = std::move(currentIntersection);
         }
         else
@@ -548,7 +549,7 @@ namespace sequoia::testing
     const std::vector<fs::path> failingTests{read_tests(prunePaths.failures(std::nullopt))};
 
     std::vector<fs::path> testsToRun{};
-    std::set_union(staleTests.begin(), staleTests.end(), failingTests.begin(), failingTests.end(), std::back_inserter(testsToRun));
+    std::ranges::set_union(staleTests, failingTests, std::back_inserter(testsToRun));
 
     return testsToRun;
   }
@@ -570,7 +571,7 @@ namespace sequoia::testing
                           std::vector<fs::path> failedTests,
                           std::optional<std::size_t> id)
   {
-    std::sort(executedTests.begin(), executedTests.end());
+    std::ranges::sort(executedTests);
     const auto prunePaths{prepare(projPaths, failedTests)};
     const auto passesFile{prunePaths.selected_passes(id)},
                failuresFile{prunePaths.failures(id)};
@@ -578,34 +579,18 @@ namespace sequoia::testing
     const auto previousPasses{read_tests(passesFile)};
     std::vector<fs::path> trialPasses{};
 
-    std::set_union(executedTests.begin(),
-                   executedTests.end(),
-                   previousPasses.begin(),
-                   previousPasses.end(),
-                   std::back_inserter(trialPasses));
+    std::ranges::set_union(executedTests, previousPasses, std::back_inserter(trialPasses));
 
     std::vector<fs::path> passingTests{};
-    std::set_difference(trialPasses.begin(),
-                        trialPasses.end(),
-                        failedTests.begin(),
-                        failedTests.end(),
-                        std::back_inserter(passingTests));
+    std::ranges::set_difference(trialPasses, failedTests, std::back_inserter(passingTests));
 
     const auto previousFailures{read_tests(failuresFile)};
 
     std::vector<fs::path> remainingPreviousFailures{};
-    std::set_difference(previousFailures.begin(),
-                        previousFailures.end(),
-                        passingTests.begin(),
-                        passingTests.end(),
-                        std::back_inserter(remainingPreviousFailures));
+    std::ranges::set_difference(previousFailures, passingTests, std::back_inserter(remainingPreviousFailures));
 
     std::vector<fs::path> allFailures{};
-    std::set_union(remainingPreviousFailures.begin(),
-                   remainingPreviousFailures.end(),
-                   failedTests.begin(),
-                   failedTests.end(),
-                   std::back_inserter(allFailures));
+    std::ranges::set_union(remainingPreviousFailures, failedTests, std::back_inserter(allFailures));
 
     write_tests(projPaths, failuresFile, allFailures);
     write_tests(projPaths, passesFile, passingTests);

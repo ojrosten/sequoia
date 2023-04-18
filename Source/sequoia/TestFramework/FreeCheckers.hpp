@@ -542,7 +542,7 @@ namespace sequoia::testing
     if constexpr(deep_equality_comparable<T>)
     {
       using finality = final_message_constant<!(binary_tester_for<equality_check_t, Mode, T, tutor<Advisor>> || faithful_range<T>)>;
-      binary_comparison(finality{}, sentry, std::equal_to<T>{}, obtained, prediction, advisor);
+      binary_comparison(finality{}, sentry, std::ranges::equal_to{}, obtained, prediction, advisor);
     }
 
     if constexpr(binary_tester_for<equality_check_t, Mode, T, tutor<Advisor>>)
@@ -610,7 +610,7 @@ namespace sequoia::testing
     if constexpr(deep_equality_comparable<T>)
     {
       using finality = final_message_constant<!(has_detailed_agnostic_check<Mode, T, Advisor> || faithful_range<T>)>;
-      binary_comparison(finality{}, sentry, std::equal_to<T>{}, obtained, prediction, advisor);
+      binary_comparison(finality{}, sentry, std::ranges::equal_to{}, obtained, prediction, advisor);
     }
 
     if constexpr(binary_tester_for<with_best_available_check_t, Mode, T, tutor<Advisor>>)

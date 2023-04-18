@@ -97,16 +97,16 @@ namespace sequoia::testing
     static auto make_advisor(std::string_view info, string_view_type obtained, string_view_type prediction, size_type pos, const tutor<Advisor>& advisor)
     {
       constexpr size_type defaultOffset{30}, defaultCount{60}, npos{string_view_type::npos};
-      const auto sz{std::min(obtained.size(), prediction.size())};
+      const auto sz{std::ranges::min(obtained.size(), prediction.size())};
 
       auto newlineBackwards{ [pos](string_view_type sv){ return pos < sv.size() ? sv.rfind('\n', pos) : npos; } };
 
-      const auto loc{std::min(newlineBackwards(prediction), newlineBackwards(obtained))};
+      const auto loc{std::ranges::min(newlineBackwards(prediction), newlineBackwards(obtained))};
 
-      const size_type offset{loc < npos ? std::min(defaultOffset, pos - loc) : defaultOffset};
+      const size_type offset{loc < npos ? std::ranges::min(defaultOffset, pos - loc) : defaultOffset};
 
       const auto lpos{pos < offset ? 0 :
-                         pos < sz  ? pos - offset : sz - std::min(sz, offset)};
+                         pos < sz  ? pos - offset : sz - std::ranges::min(sz, offset)};
 
       struct message{ std::string mess; bool trunc{}; };
 
@@ -494,14 +494,14 @@ namespace sequoia::testing
           std::vector<fs::path> paths{};
           for(const auto& p : fs::directory_iterator(dir))
           {
-            if(    std::find(excluded_files.begin(),      excluded_files.end(),      p.path().filename()) == excluded_files.end()
-                && std::find(excluded_extensions.begin(), excluded_extensions.end(), p.path().extension()) == excluded_extensions.end())
+            if(    std::ranges::find(excluded_files,      p.path().filename())  == excluded_files.end()
+                && std::ranges::find(excluded_extensions, p.path().extension()) == excluded_extensions.end())
             {
                paths.push_back(p);
             }
           }
 
-          std::sort(paths.begin(), paths.end());
+          std::ranges::sort(paths);
 
           return paths;
         }
@@ -514,21 +514,21 @@ namespace sequoia::testing
         paths.size(),
         predictedPaths.size());
 
-      const auto iters{std::mismatch(paths.begin(), paths.end(), predictedPaths.begin(), predictedPaths.end(),
+      const auto iters{std::ranges::mismatch(paths, predictedPaths,
           [&dir,&prediction](const fs::path& lhs, const fs::path& rhs) {
             return fs::relative(lhs, dir) == fs::relative(rhs, prediction);
           })};
-      if((iters.first != paths.end()) && (iters.second != predictedPaths.end()))
+      if((iters.in1 != paths.end()) && (iters.in2 != predictedPaths.end()))
       {
-        check(equality, "First directory entry mismatch", logger, *iters.first, *iters.second);
+        check(equality, "First directory entry mismatch", logger, *iters.in1, *iters.in2);
       }
-      else if(iters.first != paths.end())
+      else if(iters.in1 != paths.end())
       {
-        check(equality, "First directory entry mismatch", logger, *iters.first, fs::path{});
+        check(equality, "First directory entry mismatch", logger, *iters.in1, fs::path{});
       }
-      else if(iters.second != predictedPaths.end())
+      else if(iters.in2 != predictedPaths.end())
       {
-        check(equality, "First directory entry mismatch", logger, fs::path{}, *iters.second);
+        check(equality, "First directory entry mismatch", logger, fs::path{}, *iters.in2);
       }
       else
       {

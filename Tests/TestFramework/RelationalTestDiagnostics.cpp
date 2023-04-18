@@ -33,10 +33,10 @@ namespace sequoia::testing
            7.0, 5.0,
            tutor{[](double, double){ return "Tweak your tolerance!"; }});
 
-    check(std::less<int>{},          report_line("<"),  5, 4);
-    check(std::less_equal<int>{},    report_line("<="), 5, 4);
-    check(std::greater<int>{},       report_line(">"),  4, 5);
-    check(std::greater_equal<int>{}, report_line(">="), 4, 5);
+    check(std::ranges::less{},          report_line("<"),  5, 4);
+    check(std::ranges::less_equal{},    report_line("<="), 5, 4);
+    check(std::ranges::greater{},       report_line(">"),  4, 5);
+    check(std::ranges::greater_equal{}, report_line(">="), 4, 5);
   }
 
   void relational_false_positive_diagnostics::range_tests()
@@ -54,7 +54,7 @@ namespace sequoia::testing
 
     {
       std::vector<int> v{4, 5}, p{5, 4};
-      check(std::less<int>{}, report_line("<"),v.cbegin(), v.cend(), p.cbegin(), p.cend());
+      check(std::ranges::less{}, report_line("<"),v.cbegin(), v.cend(), p.cbegin(), p.cend());
     }
   }
 
@@ -87,10 +87,10 @@ namespace sequoia::testing
     check(within_tolerance{0.5}, report_line(""), 4.5, 5.0);
     check(within_tolerance{0.5}, report_line(""), 5.5, 5.0);
 
-    check(std::less<int>{},          report_line("<"),  4, 5);
-    check(std::less_equal<int>{},    report_line("<="), 4, 5);
-    check(std::greater<int>{},       report_line(">"),  5, 4);
-    check(std::greater_equal<int>{}, report_line(">="), 5, 4);
+    check(std::ranges::less{},          report_line("<"),  4, 5);
+    check(std::ranges::less_equal{},    report_line("<="), 4, 5);
+    check(std::ranges::greater{},       report_line(">"),  5, 4);
+    check(std::ranges::greater_equal{}, report_line(">="), 5, 4);
   }
 
   void relational_false_negative_diagnostics::range_tests()
@@ -102,7 +102,7 @@ namespace sequoia::testing
 
     {
       std::vector<int> v{4, 3}, p{5, 4};
-      check(std::less<int>{}, report_line("<"), v.cbegin(), v.cend(), p.cbegin(), p.cend());
+      check(std::ranges::less{}, report_line("<"), v.cbegin(), v.cend(), p.cbegin(), p.cend());
     }
   }
 
