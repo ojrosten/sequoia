@@ -238,7 +238,7 @@ namespace sequoia::object
         (fn(node, std::get<Is>(s.values)), ...);
       }(std::make_index_sequence<sizeof...(Ts)>{});
 
-      if(!std::distance(tree.cbegin_edges(node), tree.cend_edges(node)))
+      if(!std::ranges::distance(tree.cbegin_edges(node), tree.cend_edges(node)))
         tree.prune(node);
 
       return std::forward<Tree>(tree);

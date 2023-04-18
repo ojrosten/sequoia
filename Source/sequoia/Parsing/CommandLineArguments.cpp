@@ -177,7 +177,7 @@ namespace sequoia::parsing::commandline
       for(auto i{params.begin()}; i != params.end(); ++i)
       {
         mess.append(*i);
-        if(std::distance(i, params.end()) > 1) mess.append(", ");
+        if(std::ranges::distance(i, params.end()) > 1) mess.append(", ");
       }
 
       const auto actual{root_weight(currentOperationData.oper_tree).arguments.size()};

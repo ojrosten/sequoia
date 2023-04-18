@@ -106,7 +106,7 @@ namespace sequoia::maths
   private:
     void prune(const size_type node, forward_tree_type ftt)
     {
-      while(std::distance(this->crbegin_edges(node), this->crend_edges(node)))
+      while(std::ranges::distance(this->crbegin_edges(node), this->crend_edges(node)))
       {
         const auto target{this->crbegin_edges(node)->target_node()};
         prune(target, ftt);
@@ -119,7 +119,7 @@ namespace sequoia::maths
     {
       const std::ptrdiff_t offset{node == 0 ? 0 : 1};
 
-      while(std::distance(this->crbegin_edges(node), this->crend_edges(node)) > offset)
+      while(std::ranges::distance(this->crbegin_edges(node), this->crend_edges(node)) > offset)
       {
         const auto target{this->crbegin_edges(node)->target_node()};
         prune(target, stt);

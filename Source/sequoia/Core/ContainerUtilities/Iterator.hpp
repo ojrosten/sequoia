@@ -163,9 +163,9 @@ namespace sequoia::utilities
       return DereferencePolicy::get_ptr(*m_BaseIterator);
     }
 
-    constexpr iterator& operator++() { std::advance(m_BaseIterator, 1); return *this; }
+    constexpr iterator& operator++() { std::ranges::advance(m_BaseIterator, 1); return *this; }
 
-    constexpr iterator& operator+=(const difference_type n) { std::advance(m_BaseIterator, n); return *this; }
+    constexpr iterator& operator+=(const difference_type n) { std::ranges::advance(m_BaseIterator, n); return *this; }
 
     [[nodiscard]]
     friend constexpr iterator operator+(const iterator& it, const difference_type n)
@@ -181,9 +181,9 @@ namespace sequoia::utilities
       return tmp;
     }
 
-    constexpr iterator& operator--() { std::advance(m_BaseIterator, -1); return *this; }
+    constexpr iterator& operator--() { std::ranges::advance(m_BaseIterator, -1); return *this; }
 
-    constexpr iterator& operator-=(const difference_type n) { std::advance(m_BaseIterator, -n); return *this; }
+    constexpr iterator& operator-=(const difference_type n) { std::ranges::advance(m_BaseIterator, -n); return *this; }
 
     [[nodiscard]]
     friend constexpr iterator operator-(const iterator& it, const difference_type n)
@@ -244,7 +244,7 @@ namespace sequoia::utilities
     [[nodiscard]]
     friend constexpr auto distance(iterator lhs, iterator rhs)
     {
-      return std::distance(lhs.m_BaseIterator, rhs.m_BaseIterator);
+      return std::ranges::distance(lhs.m_BaseIterator, rhs.m_BaseIterator);
     }
   private:
     Iterator m_BaseIterator;

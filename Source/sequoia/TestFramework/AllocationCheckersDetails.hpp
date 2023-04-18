@@ -151,8 +151,7 @@ namespace sequoia::testing::impl
 
       if constexpr(std::allocator_traits<allocator_type>::propagate_on_container_swap::value)
       {
-        using std::swap;
-        swap(lhCount, rhCount);
+        std::ranges::swap(lhCount, rhCount);
       }
 
       const auto lhPrediction{info().get_predictions().mutation_allocs()};

@@ -53,7 +53,7 @@ namespace sequoia::testing
     [[nodiscard]]
     bool in_repo(const fs::path& file, const fs::path& repo)
     {
-      if(std::distance(repo.begin(), repo.end()) >= std::distance(file.begin(), file.end())) return false;
+      if(std::ranges::distance(repo.begin(), repo.end()) >= std::ranges::distance(file.begin(), file.end())) return false;
 
       auto fIter{file.begin()}, rIter{repo.begin()};
       while(rIter != repo.end())

@@ -92,12 +92,12 @@ namespace sequoia::testing
 
     using dir_iter = fs::recursive_directory_iterator;
 
-    if(const auto toFindLen{std::distance(toFind.begin(), toFind.end())}; toFindLen)
+    if(const auto toFindLen{std::ranges::distance(toFind.begin(), toFind.end())}; toFindLen)
     {
       for(const auto& i : dir_iter{root})
       {
         const auto p{i.path()};
-        const auto entryPathLen{std::distance(p.begin(), p.end())};
+        const auto entryPathLen{std::ranges::distance(p.begin(), p.end())};
         if(entryPathLen >= toFindLen)
         {
           auto entryIter{p.end()}, toFindIter{toFind.begin()};

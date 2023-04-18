@@ -86,12 +86,11 @@ namespace sequoia::maths
     template<class UnaryOp>
     constexpr void mutate(const_iterator first, const_iterator last, UnaryOp op)
     {
-      using std::distance;
       if(first != last)
       {
         auto tmp{m_Sequence};
-        auto f{tmp.begin() + distance(cbegin(), first)};
-        auto l{tmp.begin() + distance(cbegin(), last)};
+        auto f{tmp.begin() + std::ranges::distance(cbegin(), first)};
+        auto l{tmp.begin() + std::ranges::distance(cbegin(), last)};
 
         for(auto i{f}; i != l; ++i)
         {
@@ -116,7 +115,7 @@ namespace sequoia::maths
     template<class UnaryOp>
     constexpr void mutate(unsafe_t, const_iterator first, const_iterator last, UnaryOp op)
     {
-      using std::distance;
+      using std::ranges::distance;
       while(first != last)
       {
         auto pos{m_Sequence.begin() + distance(cbegin(), first++)};
@@ -159,8 +158,7 @@ namespace sequoia::maths
 
     constexpr void swap(monotonic_sequence_base& other) noexcept(impl::noexcept_spec_v<C>)
     {
-      using std::swap;
-      swap(m_Sequence, other.m_Sequence);
+      std::ranges::swap(m_Sequence, other.m_Sequence);
     }
 
     auto get_allocator() const

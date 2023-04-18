@@ -22,7 +22,7 @@ namespace sequoia::testing
       if((iters.first != testOutput.end()) && (iters.second != referenceOutput.end()))
       {
         constexpr auto npos{std::string::npos};
-        const auto pos{std::distance(testOutput.begin(), iters.first)};
+        const auto pos{std::ranges::distance(testOutput.begin(), iters.first)};
         if(testOutput.rfind("Task duration:", pos) != npos)
         {
           const auto endLine{testOutput.find('\n', pos)};

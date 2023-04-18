@@ -58,7 +58,7 @@ namespace sequoia::testing
         if(const auto exectable{fs::canonical(fs::path(zeroth))}; !exectable.empty())
         {
           auto trialRoot{exectable};
-          while((std::distance(trialRoot.begin(), trialRoot.end()) > 1))
+          while((std::ranges::distance(trialRoot.begin(), trialRoot.end()) > 1))
           {
             const auto last{back(trialRoot)};
             const auto parent{trialRoot.parent_path()};

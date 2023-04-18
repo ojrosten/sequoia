@@ -37,8 +37,7 @@ namespace sequoia::testing
 
         for(;i_prediction != prediction.end(); ++i_prediction, ++i, ++ci_prediction, ++ci, ++ri_prediction, ++ri, ++cri_prediction, ++cri)
         {
-          using std::distance;
-          const auto d{distance(prediction.begin(), i_prediction)};
+          const auto d{std::ranges::distance(prediction.begin(), i_prediction)};
           const auto mess{std::string{" for index "}.append(std::to_string(d))};
 
           check(equality, std::string{"Dereferenced iterator wrong"}.append(mess), logger, *i, *i_prediction);

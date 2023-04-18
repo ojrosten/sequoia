@@ -89,8 +89,8 @@ namespace sequoia
    */
   template<class T>
   concept faithful_range = requires(T& t) {
-    std::begin(t);
-    std::end(t);
+    std::ranges::begin(t);
+    std::ranges::end(t);
 
     requires (!std::same_as<std::remove_cvref_t<decltype(*std::begin(t))>, std::remove_cvref_t<T>>);
   };

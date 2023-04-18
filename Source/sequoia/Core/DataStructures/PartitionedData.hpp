@@ -114,7 +114,7 @@ namespace sequoia
         for(auto iter{list.begin()}; iter != list.end(); ++iter)
         {
           add_slot();
-          const auto dist{std::distance(list.begin(), iter)};
+          const auto dist{std::ranges::distance(list.begin(), iter)};
           m_Buckets[dist].reserve(iter->size());
           for(const auto& element : (*iter))
           {
@@ -136,7 +136,7 @@ namespace sequoia
         for(auto i{in.m_Buckets.cbegin()}; i != in.m_Buckets.cend(); ++i)
         {
           const auto& bucket{*i};
-          const auto dist{std::distance(in.m_Buckets.cbegin(), i)};
+          const auto dist{std::ranges::distance(in.m_Buckets.cbegin(), i)};
           add_slot();
           m_Buckets.back().reserve(in.m_Buckets[dist].size());
           for(const auto& elt : bucket)
@@ -170,9 +170,9 @@ namespace sequoia
       }
 
       void swap(bucketed_sequence& other)
-        noexcept(noexcept(std::swap(this->m_Buckets, other.m_Buckets)))
+        noexcept(noexcept(std::ranges::swap(this->m_Buckets, other.m_Buckets)))
       {
-        std::swap(m_Buckets, other.m_Buckets);
+        std::ranges::swap(m_Buckets, other.m_Buckets);
       }
 
       friend void swap(bucketed_sequence& lhs, bucketed_sequence& rhs)
@@ -199,7 +199,7 @@ namespace sequoia
       [[nodiscard]]
       size_type size_of_partition(size_type i) const
       {
-        return static_cast<size_type>(std::distance(begin_partition(i), end_partition(i)));
+        return static_cast<size_type>(std::ranges::distance(begin_partition(i), end_partition(i)));
       }
 
       [[nodiscard]]
@@ -209,8 +209,7 @@ namespace sequoia
       {
         if((i < num_partitions()) && (j < num_partitions()))
         {
-          using std::swap;
-          swap(m_Buckets[i], m_Buckets[j]);
+          std::ranges::swap(m_Buckets[i], m_Buckets[j]);
         }
         else if constexpr(throw_on_range_error)
         {
@@ -548,7 +547,7 @@ namespace sequoia
       [[nodiscard]]
       constexpr size_type size_of_partition(index_type i) const
       {
-        return static_cast<size_type>(std::distance(begin_partition(i), end_partition(i)));
+        return static_cast<size_type>(std::ranges::distance(begin_partition(i), end_partition(i)));
       }
 
       [[nodiscard]]
@@ -638,7 +637,7 @@ namespace sequoia
         {
           if(i != j)
           {
-            if(i > j) std::swap(i, j);
+            if(i > j) std::ranges::swap(i, j);
 
             const auto len_i{distance(begin_partition(i), end_partition(i))};
             const auto len_j{distance(begin_partition(j), end_partition(j))};
@@ -652,11 +651,11 @@ namespace sequoia
 
             if(len_i > len_j)
             {
-              std::rotate(begin_i + len_j, begin_i + len_i, end_j);
+              std::ranges::rotate(begin_i + len_j, begin_i + len_i, end_j);
             }
             else if(len_j > len_i)
             {
-              std::rotate(begin_i + len_i, begin_j + len_i, end_j);
+              std::ranges::rotate(begin_i + len_i, begin_j + len_i, end_j);
             }
 
             if(len_i != len_j)
@@ -730,12 +729,10 @@ namespace sequoia
       }
 
       void swap(partitioned_sequence_base& other)
-        // TO DO: Strictly speaking incorrect but will be fine when ranges::swap available
-        noexcept(noexcept(std::swap(this->m_Partitions, other.m_Partitions)) && noexcept(std::swap(this->m_Storage, other.m_Storage)))
+        noexcept(noexcept(std::ranges::swap(this->m_Partitions, other.m_Partitions)) && noexcept(std::ranges::swap(this->m_Storage, other.m_Storage)))
       {
-        using std::swap;
-        swap(m_Partitions, other.m_Partitions);
-        swap(m_Storage, other.m_Storage);
+        std::ranges::swap(m_Partitions, other.m_Partitions);
+        std::ranges::swap(m_Storage, other.m_Storage);
       }
 
       [[nodiscard]]
@@ -986,7 +983,7 @@ namespace sequoia
         for(auto iter{list.begin()}; iter != list.end(); ++iter)
         {
           add_slot();
-          const auto dist{std::distance(list.begin(), iter)};
+          const auto dist{std::ranges::distance(list.begin(), iter)};
           for(const auto& element : (*iter))
           {
             push_back_to_partition(dist, element);

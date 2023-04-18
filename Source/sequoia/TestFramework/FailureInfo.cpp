@@ -52,7 +52,7 @@ namespace sequoia::testing
       {
         if(*first != *current)
         {
-          freqs += to_percent(std::distance(current, first)) += "%,";
+          freqs += to_percent(std::ranges::distance(current, first)) += "%,";
           auto[i,j]{std::mismatch(current->begin(), current->end(), first->begin(), first->end())};
           if(j == first->end())
           {
@@ -99,7 +99,7 @@ namespace sequoia::testing
 
       if(current != initial)
       {
-        freqs += to_percent(std::distance(current, last)) += "%]\n\n"s;
+        freqs += to_percent(std::ranges::distance(current, last)) += "%]\n\n"s;
 
         return std::string{"\nInstability detected in file \""}
           .append(filename.string())

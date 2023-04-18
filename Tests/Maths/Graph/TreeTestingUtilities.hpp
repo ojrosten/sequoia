@@ -108,17 +108,15 @@ namespace sequoia::testing
     template<test_mode Mode>
     static std::optional<edge_iterator> check_num_edges(test_logger<Mode>& logger, size_type node, [[maybe_unused]] size_type parent, const tree_type& actual, const maths::tree_initializer<NodeWeight>& prediction)
     {
-      using std::distance;
-
       if constexpr (TreeLinkDir == maths::tree_link_direction::forward)
       {
-        if (check(equality, "Number of children for node " + std::to_string(node), logger, static_cast<std::size_t>(distance(actual.cbegin_edges(node), actual.cend_edges(node))), prediction.children.size()))
+        if (check(equality, "Number of children for node " + std::to_string(node), logger, static_cast<std::size_t>(std::ranges::distance(actual.cbegin_edges(node), actual.cend_edges(node))), prediction.children.size()))
           return actual.cbegin_edges(node);
       }
       else
       {
         const auto begin{ actual.cbegin_edges(node) };
-        const auto dist{ static_cast<std::size_t>(distance(begin, actual.cend_edges(node))) };
+        const auto dist{ static_cast<std::size_t>(std::ranges::distance(begin, actual.cend_edges(node))) };
         using dist_t = decltype(dist);
 
         const auto num{
@@ -154,7 +152,7 @@ namespace sequoia::testing
     template<test_mode Mode, std::input_or_output_iterator EdgeIter>
     static bool check_edge(test_logger<Mode>& logger, EdgeIter iter, size_type nodeCounter, const tree_type& actual)
     {
-      using std::distance;
+      using std::ranges::distance;
 
       if constexpr (TreeLinkDir == maths::tree_link_direction::forward)
       {

@@ -247,19 +247,16 @@ namespace sequoia::maths::graph_impl
     constexpr node_storage& operator=(node_storage&&) = default;
 
     constexpr void swap(node_storage& rhs)
-      // TO DO: Strictly speaking incorrect but will be fine when ranges::swap available
-      noexcept(noexcept(std::swap(this->m_NodeWeights, rhs.m_NodeWeights)))
+      noexcept(noexcept(std::ranges::swap(this->m_NodeWeights, rhs.m_NodeWeights)))
     {
-      using std::swap;
-      swap(m_NodeWeights, rhs.m_NodeWeights);
+      std::ranges::swap(m_NodeWeights, rhs.m_NodeWeights);
     }
 
     constexpr void swap_nodes(const size_type i, const size_type j)
     {
       if((i < size()) && (j < size()))
       {
-        using std::swap;
-        swap(m_NodeWeights[i], m_NodeWeights[j]);
+        std::ranges::swap(m_NodeWeights[i], m_NodeWeights[j]);
       }
       else if constexpr (throw_on_range_error)
       {
@@ -298,7 +295,7 @@ namespace sequoia::maths::graph_impl
     {
       auto iter = m_NodeWeights.emplace(pos.base_iterator(), make_node_weight(std::forward<Args>(args)...));
 
-      return cbegin_node_weights() + std::distance(m_NodeWeights.begin(), iter);
+      return cbegin_node_weights() + std::ranges::distance(m_NodeWeights.begin(), iter);
     }
 
     const_iterator erase_node(const_iterator pos)

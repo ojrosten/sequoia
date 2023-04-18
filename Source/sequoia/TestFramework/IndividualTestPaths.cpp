@@ -24,12 +24,12 @@ namespace sequoia::testing
     fs::path versioned_diagnostics(std::filesystem::path dir, std::string_view suite, const std::filesystem::path& source, std::string_view mode, std::string_view suffix)
     {
       const auto file{
-              fs::path{source}.filename()
-                              .replace_extension()
-                              .concat("_")
-                              .concat(mode)
-                              .concat(suffix)
-                              .concat(".txt")};
+        fs::path{source}.filename()
+                        .replace_extension()
+                        .concat("_")
+                        .concat(mode)
+                        .concat(suffix)
+                        .concat(".txt")};
 
       return (dir /= fs::path{replace_all(suite, " ", "_")}) /= file;
     }

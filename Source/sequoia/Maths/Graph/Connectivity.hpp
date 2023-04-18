@@ -269,11 +269,9 @@ namespace sequoia
       }
 
       void swap(connectivity& rhs)
-        // TO DO: Strictly speaking incorrect but will be fine when ranges::swap available
-        noexcept(noexcept(std::swap(this->m_Edges, rhs.m_Edges)))
+        noexcept(noexcept(std::ranges::swap(this->m_Edges, rhs.m_Edges)))
       {
-        using std::swap;
-        swap(m_Edges, rhs.m_Edges);
+        std::ranges::swap(m_Edges, rhs.m_Edges);
       }
 
       constexpr void swap_edges(edge_index_type node, edge_index_type i, edge_index_type j)
@@ -1041,11 +1039,11 @@ namespace sequoia
       {
         for(auto nodeEdgesIter{edges.begin()}; nodeEdgesIter != edges.end(); ++nodeEdgesIter)
         {
-          const auto nodeIndex{static_cast<std::size_t>(std::distance(edges.begin(), nodeEdgesIter))};
+          const auto nodeIndex{static_cast<std::size_t>(std::ranges::distance(edges.begin(), nodeEdgesIter))};
           const auto& nodeEdges{*nodeEdgesIter};
           for(auto edgeIter{nodeEdges.begin()}; edgeIter != nodeEdges.end(); ++edgeIter)
           {
-            const auto edgeIndex{static_cast<std::size_t>(std::distance(nodeEdges.begin(), edgeIter))};
+            const auto edgeIndex{static_cast<std::size_t>(std::ranges::distance(nodeEdges.begin(), edgeIter))};
             const auto& edge{*edgeIter};
             const auto target{edge.target_node()};
 
@@ -1119,11 +1117,11 @@ namespace sequoia
       {
         for(auto nodeEdgesIter{edges.begin()}; nodeEdgesIter != edges.end(); ++nodeEdgesIter)
         {
-          const auto nodeIndex{static_cast<std::size_t>(std::distance(edges.begin(), nodeEdgesIter))};
+          const auto nodeIndex{static_cast<std::size_t>(std::ranges::distance(edges.begin(), nodeEdgesIter))};
           const auto& nodeEdges{*nodeEdgesIter};
           for(auto edgeIter{nodeEdges.begin()}; edgeIter != nodeEdges.end(); ++edgeIter)
           {
-            const auto edgeIndex{static_cast<std::size_t>(std::distance(nodeEdges.begin(), edgeIter))};
+            const auto edgeIndex{static_cast<std::size_t>(std::ranges::distance(nodeEdges.begin(), edgeIter))};
             const auto& edge{*edgeIter};
 
             const auto target{edge.target_node()};
@@ -1149,22 +1147,22 @@ namespace sequoia
           edges,
           []() {},
           [](edge_index_type i, range_t hostRange) {
-            if(std::distance(hostRange.first, hostRange.second) % 2) throw std::logic_error{graph_errors::odd_num_loops_error("process_edges", i)};
+            if(std::ranges::distance(hostRange.first, hostRange.second) % 2) throw std::logic_error{graph_errors::odd_num_loops_error("process_edges", i)};
           },
           [&](edge_index_type i, edge_index_type target, range_t hostRange, range_t targetRange) {
-            if(auto reciprocalCount{std::distance(targetRange.first, targetRange.second)}; !reciprocalCount)
+            if(auto reciprocalCount{std::ranges::distance(targetRange.first, targetRange.second)}; !reciprocalCount)
             {
-              const auto edgeIndex{static_cast<std::size_t>(std::distance(edges.cbegin_partition(i), hostRange.first))};
+              const auto edgeIndex{static_cast<std::size_t>(std::ranges::distance(edges.cbegin_partition(i), hostRange.first))};
               throw std::logic_error{graph_errors::error_prefix("process_edges", {i, edgeIndex}).append("Reciprocated partial edge does not exist")};
             }
-            else if(auto count{std::distance(hostRange.first, hostRange.second)}; count > reciprocalCount)
+            else if(auto count{std::ranges::distance(hostRange.first, hostRange.second)}; count > reciprocalCount)
             {
-              const auto edgeIndex{static_cast<std::size_t>(std::distance(edges.cbegin_partition(i), hostRange.first) + reciprocalCount)};
+              const auto edgeIndex{static_cast<std::size_t>(std::ranges::distance(edges.cbegin_partition(i), hostRange.first) + reciprocalCount)};
               throw std::logic_error{graph_errors::error_prefix("process_edges", {i, edgeIndex}).append("Reciprocated partial edge does not exist")};
             }
             else if(count < reciprocalCount)
             {
-              const auto edgeIndex{static_cast<std::size_t>(std::distance(edges.cbegin_partition(target), targetRange.first) + count)};
+              const auto edgeIndex{static_cast<std::size_t>(std::ranges::distance(edges.cbegin_partition(target), targetRange.first) + count)};
               throw std::logic_error{graph_errors::error_prefix("process_edges", {target, edgeIndex}).append("Reciprocated partial edge does not exist")};
             }
           }
@@ -1206,7 +1204,7 @@ namespace sequoia
         {
           storage.add_slot();
 
-          const auto nodeIndex{static_cast<edge_index_type>(std::distance(edges.begin(), nodeEdgesIter))};
+          const auto nodeIndex{static_cast<edge_index_type>(std::ranges::distance(edges.begin(), nodeEdgesIter))};
           const auto& nodeEdges{*nodeEdgesIter};
           for(auto edgeIter{nodeEdges.begin()}; edgeIter != nodeEdges.end(); ++edgeIter)
           {
@@ -1230,7 +1228,7 @@ namespace sequoia
         {
           storage.add_slot();
 
-          const auto nodeIndex{static_cast<edge_index_type>(std::distance(edges.begin(), nodeEdgesIter))};
+          const auto nodeIndex{static_cast<edge_index_type>(std::ranges::distance(edges.begin(), nodeEdgesIter))};
           const auto& nodeEdges{*nodeEdgesIter};
           for(auto edgeIter{nodeEdges.begin()}; edgeIter != nodeEdges.end(); ++edgeIter)
           {
@@ -1245,7 +1243,7 @@ namespace sequoia
               const auto target{edge.target_node()};
               const auto partner{target == nodeIndex ? source : target};
               const auto compIndex{edge.complementary_index()};
-              const auto edgeIndex{static_cast<edge_index_type>(std::distance(nodeEdges.begin(), edgeIter))};
+              const auto edgeIndex{static_cast<edge_index_type>(std::ranges::distance(nodeEdges.begin(), edgeIter))};
               if((partner > nodeIndex) || ((partner == nodeIndex) && (compIndex > edgeIndex)))
               {
                 storage.push_back_to_partition(nodeIndex, make_edge(source, edge));
@@ -1398,7 +1396,7 @@ namespace sequoia
               {
                 auto appender{[node, first, i, &storage, &weightMap](auto&& e){
                     storage.push_back_to_partition(node, std::move(e));
-                    const std::pair<edge_index_type, edge_index_type> indices{node, static_cast<edge_index_type>(std::distance(first, i))};
+                    const std::pair<edge_index_type, edge_index_type> indices{node, static_cast<edge_index_type>(std::ranges::distance(first, i))};
                     weightMap.emplace(&i->weight_proxy(), indices);
                   }
                 };
@@ -1526,7 +1524,7 @@ namespace sequoia
           storage.add_slot();
           if constexpr(graph_impl::has_reservable_partitions<edge_storage_type>)
           {
-            storage.reserve_partition(i, std::distance(in.cbegin_edges(i), in.cend_edges(i)));
+            storage.reserve_partition(i, std::ranges::distance(in.cbegin_edges(i), in.cend_edges(i)));
           }
           for(auto inIter{in.cbegin_edges(i)}; inIter != in.cend_edges(i); ++inIter)
           {

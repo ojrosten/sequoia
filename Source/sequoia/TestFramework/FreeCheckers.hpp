@@ -458,18 +458,15 @@ namespace sequoia::testing
     sentinel<Mode> sentry{logger, info()};
     bool equal{true};
 
-    using std::distance;
-    using std::advance;
-
-    const auto actualSize{fixed_width_unsigned_cast(distance(first, last))};
-    const auto predictedSize{fixed_width_unsigned_cast(distance(predictionFirst, predictionLast))};
+    const auto actualSize{fixed_width_unsigned_cast(std::ranges::distance(first, last))};
+    const auto predictedSize{fixed_width_unsigned_cast(std::ranges::distance(predictionFirst, predictionLast))};
     if(check(equality, "Container size wrong", logger, actualSize, predictedSize))
     {
       auto predictionIter{predictionFirst};
       auto iter{first};
-      for(; predictionIter != predictionLast; advance(predictionIter, 1), advance(iter, 1))
+      for(; predictionIter != predictionLast; std::ranges::advance(predictionIter, 1), std::ranges::advance(iter, 1))
       {
-        const auto dist{distance(predictionFirst, predictionIter)};
+        const auto dist{std::ranges::distance(predictionFirst, predictionIter)};
         auto mess{("Element " + std::to_string(dist)).append(" of range incorrect")};
         if(!check(flavour, std::move(mess), logger, *iter, *predictionIter, advisor)) equal = false;
       }

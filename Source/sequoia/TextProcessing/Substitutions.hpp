@@ -36,10 +36,10 @@ namespace sequoia
       if(std::isupper(c))
       {
         c = onUpper(c);
-        if((std::distance(text.begin(), i) > 0))
+        if((std::ranges::distance(text.begin(), i) > 0))
         {
           i = text.insert(i, separator.begin(), separator.end());
-          i += std::distance(separator.begin(), separator.end());
+          i += std::ranges::distance(separator.begin(), separator.end());
         }
       }
 

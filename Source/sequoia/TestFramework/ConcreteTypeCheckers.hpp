@@ -172,7 +172,7 @@ namespace sequoia::testing
 
       if((iters.in1 != obtained.end()) && (iters.in2 != prediction.end()))
       {
-        const auto dist{std::distance(obtained.begin(), iters.in1)};
+        const auto dist{std::ranges::distance(obtained.begin(), iters.in1)};
         auto adv{make_advisor("", obtained, prediction, dist, advisor)};
 
         const auto numLines{std::count(prediction.begin(), iters.in2, '\n')};
@@ -193,7 +193,7 @@ namespace sequoia::testing
       {
         auto checker{
           [&logger, obtained, prediction, &advisor](auto begin, auto iter, std::string_view state, std::string_view adjective){
-            const auto dist{std::distance(begin, iter)};
+            const auto dist{std::ranges::distance(begin, iter)};
             const auto info{std::string{"First "}.append(state).append(" character: ").append(display_character(*iter))};
             auto adv{make_advisor(info, obtained, prediction, dist, advisor)};
 

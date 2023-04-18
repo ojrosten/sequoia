@@ -22,11 +22,9 @@ namespace sequoia::maths
   [[nodiscard]]
   std::optional<T> mean(Iter first, Iter last)
   {
-    using std::distance;
-
     std::optional<T> m{};
 
-    if(const auto dist{distance(first, last)})
+    if(const auto dist{std::ranges::distance(first, last)})
     {
       m = std::accumulate(first, last, T{}) / dist;
     }
@@ -39,9 +37,7 @@ namespace sequoia::maths
   std::pair<std::optional<T>, std::optional<T>>
     cummulative_square_diffs(Iter first, Iter last)
   {
-    using std::distance;
-
-    if(distance(first, last))
+    if(std::ranges::distance(first, last))
     {
       const auto m{mean(first, last)};
       const auto var{
@@ -62,9 +58,7 @@ namespace sequoia::maths
   std::pair<std::optional<T>, std::optional<T>>
     variance(Iter first, Iter last)
   {
-    using std::distance;
-
-    if(const auto dist{distance(first, last)})
+    if(const auto dist{std::ranges::distance(first, last)})
     {
       auto [sq, mean]{cummulative_square_diffs(first, last)};
 
@@ -79,9 +73,7 @@ namespace sequoia::maths
   std::pair<std::optional<T>, std::optional<T>>
     sample_variance(Iter first, Iter last)
   {
-    using std::distance;
-
-    if(const auto dist{distance(first, last)}; !dist)
+    if(const auto dist{std::ranges::distance(first, last)}; !dist)
     {
       return {{}, {}};
     }
@@ -102,9 +94,7 @@ namespace sequoia::maths
   std::pair<std::optional<T>, std::optional<T>>
     standard_deviation(Iter first, Iter last)
   {
-    using std::distance;
-
-    if(const auto dist{distance(first, last)})
+    if(const auto dist{std::ranges::distance(first, last)})
     {
       auto [var, mean]{variance(first, last)};
 
@@ -123,9 +113,7 @@ namespace sequoia::maths
       std::pair<std::optional<T>, std::optional<T>>
         operator()(Iter first, Iter last) const
       {
-        using std::distance;
-
-        if(const auto dist{distance(first, last)}; !dist)
+        if(const auto dist{std::ranges::distance(first, last)}; !dist)
         {
           return {{}, {}};
         }

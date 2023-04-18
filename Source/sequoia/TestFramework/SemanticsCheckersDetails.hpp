@@ -409,8 +409,7 @@ namespace sequoia::testing::impl
   template<test_mode Mode, class Actions, movable_comparable T, class... Args>
   bool do_check_swap(test_logger<Mode>& logger, [[maybe_unused]] const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, [[maybe_unused]] const Args&... args)
   {
-    using std::swap;
-    swap(x, y);
+    std::ranges::swap(x, y);
 
     const bool swapy{
       check(equality, "Inconsistent Swap (y)", logger, y, xClone)
@@ -427,7 +426,7 @@ namespace sequoia::testing::impl
         actions.post_swap_action(logger, x, y, yClone, args...);
       }
 
-      swap(y,y);
+      std::ranges::swap(y,y);
       return check(equality, "Inconsistent Self Swap", logger, y, xClone);
     }
 
