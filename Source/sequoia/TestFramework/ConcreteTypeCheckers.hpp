@@ -168,14 +168,14 @@ namespace sequoia::testing
     template<test_mode Mode, class Advisor>
     static void test(equality_check_t, test_logger<Mode>& logger, string_view_type obtained, string_view_type prediction, const tutor<Advisor>& advisor)
     {
-      auto iters{std::mismatch(obtained.begin(), obtained.end(), prediction.begin(), prediction.end())};
+      auto iters{std::ranges::mismatch(obtained.begin(), obtained.end(), prediction.begin(), prediction.end())};
 
-      if((iters.first != obtained.end()) && (iters.second != prediction.end()))
+      if((iters.in1 != obtained.end()) && (iters.in2 != prediction.end()))
       {
-        const auto dist{std::distance(obtained.begin(), iters.first)};
+        const auto dist{std::distance(obtained.begin(), iters.in1)};
         auto adv{make_advisor("", obtained, prediction, dist, advisor)};
 
-        const auto numLines{std::count(prediction.begin(), iters.second, '\n')};
+        const auto numLines{std::count(prediction.begin(), iters.in2, '\n')};
 
         const auto mess{
           [dist,numLines]() {
@@ -187,9 +187,9 @@ namespace sequoia::testing
           }()
         };
 
-        check(equality, mess, logger, *(iters.first), *(iters.second), adv);
+        check(equality, mess, logger, *(iters.in1), *(iters.in2), adv);
       }
-      else if((iters.first != obtained.end()) || (iters.second != prediction.end()))
+      else if((iters.in1 != obtained.end()) || (iters.in2 != prediction.end()))
       {
         auto checker{
           [&logger, obtained, prediction, &advisor](auto begin, auto iter, std::string_view state, std::string_view adjective){
@@ -203,13 +203,13 @@ namespace sequoia::testing
           }
         };
 
-        if(iters.second != prediction.end())
+        if(iters.in2 != prediction.end())
         {
-          checker(prediction.begin(), iters.second, "missing", "short");
+          checker(prediction.begin(), iters.in2, "missing", "short");
         }
-        else if(iters.first != obtained.end())
+        else if(iters.in1 != obtained.end())
         {
-          checker(obtained.begin(), iters.first, "excess", "long");
+          checker(obtained.begin(), iters.in1, "excess", "long");
         }
       }
     }
