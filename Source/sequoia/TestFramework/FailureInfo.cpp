@@ -249,7 +249,7 @@ namespace sequoia::testing
     for(auto i{files.begin()}; i != files.end(); i+=trials)
     {
       std::vector<failure_output> failuresFromFiles{};
-      std::ranges::transform(i, std::next(i, trials), std::back_inserter(failuresFromFiles), [](const fs::path& file){
+      std::ranges::transform(i, std::ranges::next(i, trials), std::back_inserter(failuresFromFiles), [](const fs::path& file){
         failure_output output{};
         if(std::ifstream ifile{file})
         {

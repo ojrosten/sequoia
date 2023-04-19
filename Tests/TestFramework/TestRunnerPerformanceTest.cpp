@@ -26,9 +26,9 @@ namespace sequoia::testing
     T to_number(std::string_view timing)
     {
       if constexpr(!with_clang_v)
-      {        
+      {
         T x{};
-        if(std::from_chars(timing.data(), std::next(timing.data(), timing.size()), x).ec == std::errc{})
+        if(std::from_chars(timing.data(), std::ranges::next(timing.data(), timing.size()), x).ec == std::errc{})
           return x;
       }
       else
