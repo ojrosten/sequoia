@@ -30,10 +30,9 @@ namespace sequoia::testing
     {
       std::vector<main_paths> ancillaryInfo;
 
-      std::transform(initializer.ancillaryMainCpps.begin(),
-                     initializer.ancillaryMainCpps.end(),
-                     std::back_inserter(ancillaryInfo),
-                     [&root,&commonIncludes](const fs::path& relPath) { return main_paths{root / relPath, commonIncludes}; });
+      std::ranges::transform(initializer.ancillaryMainCpps,
+                             std::back_inserter(ancillaryInfo),
+                             [&root,&commonIncludes](const fs::path& relPath) { return main_paths{root / relPath, commonIncludes}; });
 
       return ancillaryInfo;
     }

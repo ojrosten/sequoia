@@ -134,7 +134,7 @@ namespace sequoia::testing
     if(!s.empty())
     {
       std::size_t n{};
-      for(; n < std::min(s.size(), newlines.value()); ++n)
+      for(; n < std::ranges::min(s.size(), newlines.value()); ++n)
       {
         if(s[s.size() - 1 - n] != '\n') break;
       }

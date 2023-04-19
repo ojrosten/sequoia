@@ -266,7 +266,7 @@ namespace sequoia::testing
                   // also rendered stale
                   if(i->stale) found->stale = true;
 
-                  found->implicit_modification_time = std::max(i->implicit_modification_time, found->implicit_modification_time);
+                  found->implicit_modification_time = std::ranges::max(i->implicit_modification_time, found->implicit_modification_time);
                 }
                 else
                 {
@@ -388,7 +388,7 @@ namespace sequoia::testing
             auto& wt{g.begin_node_weights()[node]};
             auto& targetWt{g.cbegin_node_weights()[i->target_node()]};
 
-            wt.implicit_modification_time = std::max(wt.implicit_modification_time, targetWt.implicit_modification_time);
+            wt.implicit_modification_time = std::ranges::max(wt.implicit_modification_time, targetWt.implicit_modification_time);
 
             if(targetWt.stale) wt.stale = true;
           }

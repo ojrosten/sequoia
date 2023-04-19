@@ -35,8 +35,8 @@ namespace sequoia::testing
     : failures{std::move(fail)}
     , passes{std::move(pass)}
   {
-    if(failures) std::sort(failures->begin(), failures->end());
-    if(passes)   std::sort(passes->begin(), passes->end());
+    if(failures) std::ranges::sort(*failures);
+    if(passes)   std::ranges::sort(*passes);
   }
 
   [[nodiscard]]
@@ -90,8 +90,8 @@ namespace sequoia::testing
                                                          std::vector<fs::path> failures,
                                                          passing_tests passes)
   {
-    std::sort(failures.begin(), failures.end());
-    std::sort(passes.tests.begin(), passes.tests.end());
+    std::ranges::sort(failures);
+    std::ranges::sort(passes.tests);
 
     const auto prune{projPaths.prune()};
     const auto failureFile{prune.failures(std::nullopt)};
@@ -109,7 +109,7 @@ namespace sequoia::testing
     opt_test_list actual{tests_to_run(projPaths, cutoff)};
 
     opt_test_list prediction{fileStates.to_run};
-    std::sort(prediction->begin(), prediction->end());
+    std::ranges::sort(*prediction);
 
     check(equality, description, actual, prediction);
 

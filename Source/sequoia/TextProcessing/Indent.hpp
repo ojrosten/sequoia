@@ -48,7 +48,7 @@ namespace sequoia
 
     indentation& trim(size_type count)
     {
-      const auto pos{m_Data.size() - std::min(count, m_Data.size())};
+      const auto pos{m_Data.size() - std::ranges::min(count, m_Data.size())};
       m_Data.erase(pos);
       return *this;
     }

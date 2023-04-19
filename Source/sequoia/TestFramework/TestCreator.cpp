@@ -466,7 +466,7 @@ namespace sequoia::testing
           m_QualifiedName.erase(start + pos);
 
           std::string args{"<"};
-          std::for_each(m_TemplateData.cbegin(), m_TemplateData.cend(),
+          std::ranges::for_each(m_TemplateData,
             [&args](const template_spec& d) {
               args.append(d.symbol);
               if(!d.species.empty() && (d.species.back() == '.'))

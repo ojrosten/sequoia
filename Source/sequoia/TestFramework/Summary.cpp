@@ -91,7 +91,7 @@ namespace sequoia::testing
     constexpr std::size_t minChars{8};
     pad_left(checkNums.begin(), checkNums.end(), minChars);
 
-    const auto len{10u - std::min(std::size_t{minChars}, checkNums.front().size())};
+    const auto len{10u - std::ranges::min(std::size_t{minChars}, checkNums.front().size())};
 
     for(std::size_t i{}; i<entries; ++i)
     {

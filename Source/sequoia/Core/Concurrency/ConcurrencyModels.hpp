@@ -133,13 +133,13 @@ namespace sequoia::concurrency
     {
       if constexpr(std::is_same_v<R, void>)
       {
-        std::for_each(futures.begin(), futures.end(), [](std::future<R>& fut) { fut.get(); });
+        std::ranges::for_each(futures, [](std::future<R>& fut) { fut.get(); });
       }
       else
       {
         std::vector<R> values;
         values.reserve(futures.size());
-        std::transform(futures.begin(), futures.end(), std::back_inserter(values), [](std::future<R>& fut) { return fut.get(); });
+        std::ranges::transform(futures, std::back_inserter(values), [](std::future<R>& fut) { return fut.get(); });
         futures.clear();
 
         return values;

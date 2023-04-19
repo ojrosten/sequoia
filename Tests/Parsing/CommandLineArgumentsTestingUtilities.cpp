@@ -18,7 +18,7 @@ namespace sequoia::testing
     {
       std::vector<std::string> a{};
 
-      std::transform(args.begin(), args.end(), std::back_inserter(a), [](auto view){ return std::string{view}; });
+      std::ranges::transform(args, std::back_inserter(a), [](auto view){ return std::string{view}; });
 
       return a;
     }
@@ -35,6 +35,6 @@ namespace sequoia::testing
       throw std::runtime_error{"No commandline arguments - not even empty ones!"};
 
     m_Ptrs.reserve(m_Args.size());
-    std::transform(m_Args.begin(), m_Args.end(), std::back_inserter(m_Ptrs), [](std::string& s){ return s.data(); });
+    std::ranges::transform(m_Args, std::back_inserter(m_Ptrs), [](std::string& s){ return s.data(); });
   }
 }

@@ -31,7 +31,7 @@ namespace sequoia::testing
         constexpr auto npos{std::string::npos};
 
         const auto lastIncludePos{text.rfind(include)};
-        const auto endBlock{std::min(text.find('\n', lastIncludePos), text.size())};
+        const auto endBlock{std::ranges::min(text.find('\n', lastIncludePos), text.size())};
         if(lastIncludePos != npos)
         {
           std::string::size_type start{npos}, end{};
@@ -45,7 +45,7 @@ namespace sequoia::testing
           }
         }
 
-        std::sort(entries.begin(), entries.end(), [](const std::string& lhs, const std::string& rhs) {
+        std::ranges::sort(entries, [](const std::string& lhs, const std::string& rhs) {
             auto lAnglePos{lhs.find('<')}, rAnglePos{rhs.find('>')};
             if((lAnglePos < npos) && (rAnglePos == npos)) return false;
             if((lAnglePos == npos) && (rAnglePos < npos)) return true;
@@ -53,8 +53,13 @@ namespace sequoia::testing
             return lhs < rhs;
           });
 
-        std::string sorted{};
-        std::for_each(entries.begin(), entries.end(), [&sorted](const std::string& e) { sorted.append(e); });
+        const std::string sorted{
+          [&entries](){
+            std::string s{};
+            std::ranges::for_each(entries, [&s](const std::string& e) { s.append(e); });
+            return s;
+          }()
+        };
 
         if(const auto firstIncludePos{text.find(include)}; firstIncludePos < npos)
         {
@@ -171,7 +176,7 @@ namespace sequoia::testing
             auto newlinePos{npos}, next{startPos + patternOpen.size()};
             while((newlinePos = text.find("\n", next)) < endPos)
             {
-              next = std::min(text.find("\n", newlinePos + 1), endPos);
+              next = std::ranges::min(text.find("\n", newlinePos + 1), endPos);
               const auto entryStart{text.find_first_not_of(' ', newlinePos+1)};
 
               entries.push_back(text.substr(entryStart, next - entryStart));
@@ -186,12 +191,12 @@ namespace sequoia::testing
               }()
             };
 
-            std::sort(entries.begin(), entries.end());
+            std::ranges::sort(entries);
             std::string sorted{};
-            std::for_each(entries.begin(), entries.end(), [&sorted, numSpaces](const std::string& e) {
+            std::ranges::for_each(entries, [&sorted, numSpaces](const std::string& e) {
               sorted.append("\n").append(numSpaces, ' ').append(e); });
 
-            const auto startSection{std::min(text.find("\n", startPos + patternOpen.size()), endPos)};
+            const auto startSection{std::ranges::min(text.find("\n", startPos + patternOpen.size()), endPos)};
             text.replace(startSection, endPos - startSection, sorted);
 
             return;

@@ -46,13 +46,9 @@ namespace sequoia::testing
 
   template<std::forward_iterator Iter> void pad_left(Iter begin, Iter end, const std::size_t minChars)
   {
-    auto maxIter{std::max_element(begin, end, [](const std::string& lhs, const std::string& rhs) {
-          return lhs.size() < rhs.size();
-        }
-      )
-    };
+    auto maxIter{std::ranges::max_element(begin, end, std::ranges::less{}, [](const std::string& s) { return s.size(); })};
 
-    const auto maxChars{std::max(maxIter->size(), minChars)};
+    const auto maxChars{std::ranges::max(maxIter->size(), minChars)};
 
     for(; begin != end; ++begin)
     {

@@ -237,7 +237,7 @@ namespace sequoia::testing
           }
         }
 
-        std::sort(outputFiles.begin(), outputFiles.end());
+        std::ranges::sort(outputFiles);
 
         return outputFiles;
       }()
@@ -249,7 +249,7 @@ namespace sequoia::testing
     for(auto i{files.begin()}; i != files.end(); i+=trials)
     {
       std::vector<failure_output> failuresFromFiles{};
-      std::transform(i, std::next(i, trials), std::back_inserter(failuresFromFiles), [](const fs::path& file){
+      std::ranges::transform(i, std::next(i, trials), std::back_inserter(failuresFromFiles), [](const fs::path& file){
         failure_output output{};
         if(std::ifstream ifile{file})
         {
@@ -262,7 +262,7 @@ namespace sequoia::testing
         return output;
       });
 
-      std::sort(failuresFromFiles.begin(), failuresFromFiles.end());
+      std::ranges::sort(failuresFromFiles);
       message += analyse_output(source_from_instability_analysis(i->parent_path()), failuresFromFiles);
     }
 

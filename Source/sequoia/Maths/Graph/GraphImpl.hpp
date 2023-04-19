@@ -494,7 +494,7 @@ namespace sequoia
       {
         if constexpr(!std::is_empty_v<node_weight_type>)
         {
-          return std::min(Connectivity::node_capacity(), Nodes::capacity());
+          return std::ranges::min(Connectivity::node_capacity(), Nodes::capacity());
         }
         else
         {
@@ -670,7 +670,7 @@ namespace sequoia
       template<class... Args>
       size_type insert_node_impl(const size_type pos, Args&&... args)
       {
-        const auto node{std::min(pos, this->order())};
+        const auto node{std::ranges::min(pos, this->order())};
         if constexpr (!emptyNodes)
         {
           Nodes::insert_node(this->cbegin_node_weights() + node, std::forward<Args>(args)...);
