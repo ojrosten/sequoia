@@ -131,10 +131,7 @@ namespace sequoia::testing
 
     if((verbosity & summary_detail::absent_checks) == summary_detail::absent_checks)
     {
-      std::for_each(std::cbegin(summaries), std::cend(summaries), [&summary](const std::string& s){
-          (summary += s) += "\n";
-        }
-      );
+      std::ranges::for_each(summaries, [&summary](const std::string& s){ (summary += s) += "\n"; } );
     }
     else
     {

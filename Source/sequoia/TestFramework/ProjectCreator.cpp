@@ -153,7 +153,7 @@ namespace sequoia::testing
       if(name.empty())
         throw std::runtime_error{"Project name, deduced as the last token of path, is empty\n"};
 
-      if(std::find_if(name.cbegin(), name.cend(), [](char c) { return !std::isalnum(c) || (c == '_') || (c == '-'); }) != name.cend())
+      if(std::ranges::find_if(name, [](char c) { return !std::isalnum(c) || (c == '_') || (c == '-'); }) != name.cend())
       {
         throw std::runtime_error{std::string{"Please ensure the project name '"}
           .append(name)

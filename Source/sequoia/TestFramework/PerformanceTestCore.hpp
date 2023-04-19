@@ -137,8 +137,8 @@ namespace sequoia::testing
         }
       };
 
-      std::sort(fastData.begin(), fastData.end());
-      std::sort(slowData.begin(), slowData.end());
+      std::ranges::sort(fastData);
+      std::ranges::sort(slowData);
 
       const auto [sig_f, m_f]{compute_stats(fastData.cbegin()+1, fastData.cend()-1)};
       const auto [sig_s, m_s]{compute_stats(slowData.cbegin()+1, slowData.cend()-1)};
@@ -213,7 +213,7 @@ namespace sequoia::testing
       t = profile([target]() { std::this_thread::sleep_for(target); }).count();
     }
 
-    std::sort(timings.begin(), timings.end());
+    std::ranges::sort(timings);
     const auto [sig_f, m_f] {maths::sample_standard_deviation(timings.cbegin() + 1, timings.cend() - 1)};
     if (sig_f && m_f)
     {

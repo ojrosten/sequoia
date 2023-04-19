@@ -53,7 +53,7 @@ namespace sequoia::testing
         if(*first != *current)
         {
           freqs += to_percent(std::ranges::distance(current, first)) += "%,";
-          auto[i,j]{std::mismatch(current->begin(), current->end(), first->begin(), first->end())};
+          auto[i,j]{std::ranges::mismatch(*current, *first)};
           if(j == first->end())
           {
             throw std::logic_error{"Unable to identify instability"};

@@ -18,11 +18,11 @@ namespace sequoia::testing
     [[nodiscard]]
     bool acceptable_mismatch(std::string_view testOutput, std::string_view referenceOutput)
     {
-      auto iters{std::mismatch(testOutput.begin(), testOutput.end(), referenceOutput.begin(), referenceOutput.end())};
-      if((iters.first != testOutput.end()) && (iters.second != referenceOutput.end()))
+      auto iters{std::ranges::mismatch(testOutput, referenceOutput)};
+      if((iters.in1 != testOutput.end()) && (iters.in2 != referenceOutput.end()))
       {
         constexpr auto npos{std::string::npos};
-        const auto pos{std::ranges::distance(testOutput.begin(), iters.first)};
+        const auto pos{std::ranges::distance(testOutput.begin(), iters.in1)};
         if(testOutput.rfind("Task duration:", pos) != npos)
         {
           const auto endLine{testOutput.find('\n', pos)};
@@ -42,8 +42,8 @@ namespace sequoia::testing
                 if((closePos != npos) && (openPos < closePos) && (refClosePos != npos) &&(refOpenPos < refClosePos))
                 {
                   const auto[lineIter, refLineIter]{
-                          std::mismatch(lineView.begin() + openPos, lineView.begin() + closePos,
-                                        refLineView.begin() + refOpenPos, refLineView.begin() + refClosePos)};
+                    std::ranges::mismatch(lineView.begin() + openPos, lineView.begin() + closePos,
+                                          refLineView.begin() + refOpenPos, refLineView.begin() + refClosePos)};
 
                   return (lineIter == (lineView.begin() + closePos)) && (refLineIter == (refLineView.begin() + refClosePos));
                 }
@@ -60,7 +60,7 @@ namespace sequoia::testing
         }
       }
 
-      return (iters.first == testOutput.end()) && (iters.second == referenceOutput.end());
+      return (iters.in1 == testOutput.end()) && (iters.in2 == referenceOutput.end());
     }
   }
 

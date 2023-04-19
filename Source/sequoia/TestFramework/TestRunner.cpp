@@ -52,7 +52,7 @@ namespace sequoia::testing
     {
       if(const auto dist{static_cast<std::size_t>(std::ranges::distance(first, last))}; dist > 0)
       {
-        concurrency::thread_pool<void> pool{std::min(dist, p.num)};
+        concurrency::thread_pool<void> pool{std::ranges::min(dist, p.num)};
         while(first != last)
         {
           pool.push([f, &wt{*(first++)}](){ f(wt); });

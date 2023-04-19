@@ -80,7 +80,7 @@ namespace sequoia::testing
         paths.push_back({entry.path(), fs::relative(entry.path(), dir)});
       }
 
-      std::sort(paths.begin(), paths.end(), compare{});
+      std::ranges::sort(paths, compare{});
       return paths;
     }
 
@@ -96,8 +96,8 @@ namespace sequoia::testing
         }
       };
 
-      auto iters{std::mismatch(fromBegin, fromEnd, toBegin, toEnd, equiv)};
-      for(auto fi{fromBegin}, ti{toBegin}; fi != iters.first; ++fi, ++ti)
+      auto iters{std::ranges::mismatch(fromBegin, fromEnd, toBegin, toEnd, equiv)};
+      for(auto fi{fromBegin}, ti{toBegin}; fi != iters.in1; ++fi, ++ti)
       {
         const auto pathType{fs::status(fi->full).type()};
 
@@ -126,38 +126,38 @@ namespace sequoia::testing
         }
       }
 
-      if(iters.first != fromEnd)
+      if(iters.in1 != fromEnd)
       {
-        for(; (iters.first != fromEnd) && ((iters.second == toEnd) || (compare{}(*iters.first, *iters.second))); ++iters.first)
+        for(; (iters.in1 != fromEnd) && ((iters.in2 == toEnd) || (compare{}(*iters.in1, *iters.in2))); ++iters.in1)
         {
-          if(fs::is_directory(iters.first->full))
+          if(fs::is_directory(iters.in1->full))
           {
-            const auto subdir{to / iters.first->relative};
+            const auto subdir{to / iters.in1->relative};
             fs::create_directory(subdir);
-            fs::copy(iters.first->full, subdir, fs::copy_options::recursive);
+            fs::copy(iters.in1->full, subdir, fs::copy_options::recursive);
           }
           else
           {
-            fs::copy(iters.first->full, to);
+            fs::copy(iters.in1->full, to);
           }
         }
 
-        if(iters.second != toEnd)
+        if(iters.in2 != toEnd)
         {
-          while(compare{}(*iters.second, *iters.first))
+          while(compare{}(*iters.in2, *iters.in1))
           {
-            fs::remove_all(iters.second->full);
-            ++iters.second;
+            fs::remove_all(iters.in2->full);
+            ++iters.in2;
           }
 
-          soft_update(from, to, iters.first, fromEnd, iters.second, toEnd);
+          soft_update(from, to, iters.in1, fromEnd, iters.in2, toEnd);
         }
       }
-      else if(iters.second != toEnd)
+      else if(iters.in2 != toEnd)
       {
-        for(; iters.second != toEnd; ++iters.second)
+        for(; iters.in2 != toEnd; ++iters.in2)
         {
-          fs::remove_all(iters.second->full);
+          fs::remove_all(iters.in2->full);
         }
       }
     }
