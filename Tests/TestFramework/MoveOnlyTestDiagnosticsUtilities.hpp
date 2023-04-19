@@ -36,9 +36,9 @@ namespace sequoia::testing
 
     move_only_beast& operator=(move_only_beast&&) = default;
 
-    void swap(move_only_beast& other) noexcept(noexcept(std::swap(this->x, other.x)))
+    void swap(move_only_beast& other) noexcept(noexcept(std::ranges::swap(this->x, other.x)))
     {
-      std::swap(x, other.x);
+      std::ranges::swap(x, other.x);
     }
 
     friend void swap(move_only_beast& lhs, move_only_beast& rhs)
@@ -136,9 +136,9 @@ namespace sequoia::testing
       return *this;
     }
 
-    void swap(specified_moved_from_beast& other) noexcept(noexcept(std::swap(this->x, other.x)))
+    void swap(specified_moved_from_beast& other) noexcept(noexcept(std::ranges::swap(this->x, other.x)))
     {
-      std::swap(x, other.x);
+      std::ranges::swap(x, other.x);
     }
 
     friend void swap(specified_moved_from_beast& lhs, specified_moved_from_beast& rhs)
@@ -181,7 +181,7 @@ namespace sequoia::testing
 
     friend void swap(move_only_broken_equality& lhs, move_only_broken_equality& rhs)
     {
-      std::swap(lhs.x, rhs.x);
+      std::ranges::swap(lhs.x, rhs.x);
     }
 
     std::vector<T, Allocator> x{};
@@ -227,7 +227,7 @@ namespace sequoia::testing
 
     friend void swap(move_only_broken_inequality& lhs, move_only_broken_inequality& rhs)
     {
-      std::swap(lhs.x, rhs.x);
+      std::ranges::swap(lhs.x, rhs.x);
     }
 
     std::vector<T, Allocator> x{};
@@ -277,7 +277,7 @@ namespace sequoia::testing
 
     friend void swap(move_only_broken_move& lhs, move_only_broken_move& rhs)
     {
-      std::swap(lhs.x, rhs.x);
+      std::ranges::swap(lhs.x, rhs.x);
     }
 
     std::vector<T, Allocator> x{};
@@ -326,7 +326,7 @@ namespace sequoia::testing
 
     friend void swap(move_only_broken_move_assignment& lhs, move_only_broken_move_assignment& rhs)
     {
-      std::swap(lhs.x, rhs.x);
+      std::ranges::swap(lhs.x, rhs.x);
     }
 
     std::vector<T, Allocator> x{};
@@ -421,9 +421,9 @@ namespace sequoia::testing
 
     move_only_inefficient_move& operator=(move_only_inefficient_move&&) = default;
 
-    void swap(move_only_inefficient_move& other) noexcept(noexcept(std::swap(this->x, other.x)))
+    void swap(move_only_inefficient_move& other) noexcept(noexcept(std::ranges::swap(this->x, other.x)))
     {
-      std::swap(x, other.x);
+      std::ranges::swap(x, other.x);
     }
 
     friend void swap(move_only_inefficient_move& lhs, move_only_inefficient_move& rhs)
@@ -483,9 +483,9 @@ namespace sequoia::testing
       return *this;
     }
 
-    void swap(move_only_inefficient_move_assignment& other) noexcept(noexcept(std::swap(this->x, other.x)))
+    void swap(move_only_inefficient_move_assignment& other) noexcept(noexcept(std::ranges::swap(this->x, other.x)))
     {
-      std::swap(x, other.x);
+      std::ranges::swap(x, other.x);
     }
 
     friend void swap(move_only_inefficient_move_assignment& lhs, move_only_inefficient_move_assignment& rhs)

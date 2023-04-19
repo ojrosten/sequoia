@@ -36,9 +36,9 @@ namespace sequoia::testing
 
     orderable_move_only_beast& operator=(orderable_move_only_beast&&) = default;
 
-    void swap(orderable_move_only_beast& other) noexcept(noexcept(std::swap(this->x, other.x)))
+    void swap(orderable_move_only_beast& other) noexcept(noexcept(std::ranges::swap(this->x, other.x)))
     {
-      std::swap(x, other.x);
+      std::ranges::swap(x, other.x);
     }
 
     friend void swap(orderable_move_only_beast& lhs, orderable_move_only_beast& rhs)
@@ -162,9 +162,9 @@ namespace sequoia::testing
 
     move_only_broken_less& operator=(move_only_broken_less&&) = default;
 
-    void swap(move_only_broken_less& other) noexcept(noexcept(std::swap(this->x, other.x)))
+    void swap(move_only_broken_less& other) noexcept(noexcept(std::ranges::swap(this->x, other.x)))
     {
-      std::swap(x, other.x);
+      std::ranges::swap(x, other.x);
     }
 
     friend void swap(move_only_broken_less& lhs, move_only_broken_less& rhs)
@@ -241,9 +241,9 @@ namespace sequoia::testing
 
     move_only_broken_lesseq& operator=(move_only_broken_lesseq&&) = default;
 
-    void swap(move_only_broken_lesseq& other) noexcept(noexcept(std::swap(this->x, other.x)))
+    void swap(move_only_broken_lesseq& other) noexcept(noexcept(std::ranges::swap(this->x, other.x)))
     {
-      std::swap(x, other.x);
+      std::ranges::swap(x, other.x);
     }
 
     friend void swap(move_only_broken_lesseq& lhs, move_only_broken_lesseq& rhs)
@@ -320,9 +320,9 @@ namespace sequoia::testing
 
     move_only_broken_greater& operator=(move_only_broken_greater&&) = default;
 
-    void swap(move_only_broken_greater& other) noexcept(noexcept(std::swap(this->x, other.x)))
+    void swap(move_only_broken_greater& other) noexcept(noexcept(std::ranges::swap(this->x, other.x)))
     {
-      std::swap(x, other.x);
+      std::ranges::swap(x, other.x);
     }
 
     friend void swap(move_only_broken_greater& lhs, move_only_broken_greater& rhs)
@@ -402,9 +402,9 @@ namespace sequoia::testing
 
     move_only_broken_greatereq& operator=(move_only_broken_greatereq&&) = default;
 
-    void swap(move_only_broken_greatereq& other) noexcept(noexcept(std::swap(this->x, other.x)))
+    void swap(move_only_broken_greatereq& other) noexcept(noexcept(std::ranges::swap(this->x, other.x)))
     {
-      std::swap(x, other.x);
+      std::ranges::swap(x, other.x);
     }
 
     friend void swap(move_only_broken_greatereq& lhs, move_only_broken_greatereq& rhs)
@@ -484,9 +484,9 @@ namespace sequoia::testing
 
     move_only_inverted_comparisons& operator=(move_only_inverted_comparisons&&) = default;
 
-    void swap(move_only_inverted_comparisons& other) noexcept(noexcept(std::swap(this->x, other.x)))
+    void swap(move_only_inverted_comparisons& other) noexcept(noexcept(std::ranges::swap(this->x, other.x)))
     {
-      std::swap(x, other.x);
+      std::ranges::swap(x, other.x);
     }
 
     friend void swap(move_only_inverted_comparisons& lhs, move_only_inverted_comparisons& rhs)
@@ -566,9 +566,9 @@ namespace sequoia::testing
 
     move_only_broken_spaceship& operator=(move_only_broken_spaceship&&) = default;
 
-    void swap(move_only_broken_spaceship& other) noexcept(noexcept(std::swap(this->x, other.x)))
+    void swap(move_only_broken_spaceship& other) noexcept(noexcept(std::ranges::swap(this->x, other.x)))
     {
-      std::swap(x, other.x);
+      std::ranges::swap(x, other.x);
     }
 
     friend void swap(move_only_broken_spaceship& lhs, move_only_broken_spaceship& rhs)

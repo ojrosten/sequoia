@@ -112,8 +112,8 @@ namespace sequoia
 
       check_semantics(report_line("Standard semantics with one having a shared weight"), edge2, edge);
 
-      std::swap(edge, edge2);
-      std::swap(edge, edge3);
+      std::ranges::swap(edge, edge2);
+      std::ranges::swap(edge, edge3);
       check(equality, report_line("Swap edge with one of an edge sharing pair"), edge, edge_t{2, 8});
       check(equality, report_line("Swap edge with one of an edge sharing pair"), edge2, edge_t{1, -3});
       check(equality, report_line("Swap edge with one of an edge sharing pair"), edge3, edge_t{5, -3});

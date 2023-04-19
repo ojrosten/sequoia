@@ -38,7 +38,7 @@ namespace sequoia::testing
 
     friend void swap(inefficient_equality& lhs, inefficient_equality& rhs)
     {
-      std::swap(lhs.x, rhs.x);
+      std::ranges::swap(lhs.x, rhs.x);
     }
 
     std::vector<T, Allocator> x{};
@@ -102,7 +102,7 @@ namespace sequoia::testing
 
     friend void swap(inefficient_inequality& lhs, inefficient_inequality& rhs)
     {
-      std::swap(lhs.x, rhs.x);
+      std::ranges::swap(lhs.x, rhs.x);
     }
 
     std::vector<T, Allocator> x{};
@@ -175,7 +175,7 @@ namespace sequoia::testing
 
     friend void swap(inefficient_copy& lhs, inefficient_copy& rhs)
     {
-      std::swap(lhs.x, rhs.x);
+      std::ranges::swap(lhs.x, rhs.x);
     }
 
     std::vector<T, Allocator> x{};
@@ -230,7 +230,7 @@ namespace sequoia::testing
 
     friend void swap(inefficient_para_copy& lhs, inefficient_para_copy& rhs)
     {
-      std::swap(lhs.x, rhs.x);
+      std::ranges::swap(lhs.x, rhs.x);
     }
 
     std::vector<T, Allocator> x{};
@@ -283,7 +283,7 @@ namespace sequoia::testing
 
     friend void swap(inefficient_move& lhs, inefficient_move& rhs)
     {
-      std::swap(lhs.x, rhs.x);
+      std::ranges::swap(lhs.x, rhs.x);
     }
 
     std::vector<T, Allocator> x{};
@@ -336,7 +336,7 @@ namespace sequoia::testing
 
     friend void swap(inefficient_para_move& lhs, inefficient_para_move& rhs)
     {
-      std::swap(lhs.x, rhs.x);
+      std::ranges::swap(lhs.x, rhs.x);
     }
 
     std::vector<T, Allocator> x{};
@@ -384,9 +384,9 @@ namespace sequoia::testing
 
     inefficient_serialization& operator=(inefficient_serialization&&) = default;
 
-    void swap(inefficient_serialization& other) noexcept(noexcept(std::swap(this->x, other.x)))
+    void swap(inefficient_serialization& other) noexcept(noexcept(std::ranges::swap(this->x, other.x)))
     {
-      std::swap(x, other.x);
+      std::ranges::swap(x, other.x);
     }
 
     friend void swap(inefficient_serialization& lhs, inefficient_serialization& rhs)
@@ -471,9 +471,9 @@ namespace sequoia::testing
 
     broken_copy_assignment_propagation& operator=(broken_copy_assignment_propagation&&) = default;
 
-    void swap(broken_copy_assignment_propagation& other) noexcept(noexcept(std::swap(this->x, other.x)))
+    void swap(broken_copy_assignment_propagation& other) noexcept(noexcept(std::ranges::swap(this->x, other.x)))
     {
-      std::swap(x, other.x);
+      std::ranges::swap(x, other.x);
     }
 
     friend void swap(broken_copy_assignment_propagation& lhs, broken_copy_assignment_propagation& rhs)

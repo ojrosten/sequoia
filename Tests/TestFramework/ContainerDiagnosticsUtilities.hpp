@@ -40,9 +40,9 @@ namespace sequoia::testing
 
     perfectly_normal_beast& operator=(perfectly_normal_beast&&) = default;
 
-    void swap(perfectly_normal_beast& other) noexcept(noexcept(std::swap(this->x, other.x)))
+    void swap(perfectly_normal_beast& other) noexcept(noexcept(std::ranges::swap(this->x, other.x)))
     {
-      std::swap(x, other.x);
+      std::ranges::swap(x, other.x);
     }
 
     friend void swap(perfectly_normal_beast& lhs, perfectly_normal_beast& rhs)
@@ -131,9 +131,9 @@ namespace sequoia::testing
 
     perfectly_stringy_beast& operator=(perfectly_stringy_beast&&) noexcept = default;
 
-    void swap(perfectly_stringy_beast& other) noexcept(noexcept(std::swap(this->x, other.x)))
+    void swap(perfectly_stringy_beast& other) noexcept(noexcept(std::ranges::swap(this->x, other.x)))
     {
-      std::swap(x, other.x);
+      std::ranges::swap(x, other.x);
     }
 
     friend void swap(perfectly_stringy_beast& lhs, perfectly_stringy_beast& rhs)
@@ -228,9 +228,9 @@ namespace sequoia::testing
 
     perfectly_sharing_beast& operator=(perfectly_sharing_beast&&) = default;
 
-    void swap(perfectly_sharing_beast& other) noexcept(noexcept(std::swap(this->x, other.x)))
+    void swap(perfectly_sharing_beast& other) noexcept(noexcept(std::ranges::swap(this->x, other.x)))
     {
-      std::swap(x, other.x);
+      std::ranges::swap(x, other.x);
     }
 
     friend void swap(perfectly_sharing_beast& lhs, perfectly_sharing_beast& rhs)
@@ -299,10 +299,10 @@ namespace sequoia::testing
 
     doubly_normal_beast& operator=(doubly_normal_beast&&) = default;
 
-    void swap(doubly_normal_beast& other) noexcept(noexcept(std::swap(this->x, other.x)) && noexcept(std::swap(this->y, other.y)))
+    void swap(doubly_normal_beast& other) noexcept(noexcept(std::ranges::swap(this->x, other.x)) && noexcept(std::ranges::swap(this->y, other.y)))
     {
-      std::swap(x, other.x);
-      std::swap(y, other.y);
+      std::ranges::swap(x, other.x);
+      std::ranges::swap(y, other.y);
     }
 
     friend void swap(doubly_normal_beast& lhs, doubly_normal_beast& rhs)
@@ -358,7 +358,7 @@ namespace sequoia::testing
 
     friend void swap(broken_equality& lhs, broken_equality& rhs)
     {
-      std::swap(lhs.x, rhs.x);
+      std::ranges::swap(lhs.x, rhs.x);
     }
 
     std::vector<T, Allocator> x{};
@@ -406,7 +406,7 @@ namespace sequoia::testing
 
     friend void swap(broken_inequality& lhs, broken_inequality& rhs)
     {
-      std::swap(lhs.x, rhs.x);
+      std::ranges::swap(lhs.x, rhs.x);
     }
 
     std::vector<T, Allocator> x{};
@@ -455,7 +455,7 @@ namespace sequoia::testing
 
     friend void swap(broken_copy& lhs, broken_copy& rhs)
     {
-      std::swap(lhs.x, rhs.x);
+      std::ranges::swap(lhs.x, rhs.x);
     }
 
     std::vector<T, Allocator> x{};
@@ -506,7 +506,7 @@ namespace sequoia::testing
 
     friend void swap(broken_para_copy& lhs, broken_para_copy& rhs)
     {
-      std::swap(lhs.x, rhs.x);
+      std::ranges::swap(lhs.x, rhs.x);
     }
 
     std::vector<T, Allocator> x{};
@@ -558,7 +558,7 @@ namespace sequoia::testing
 
     friend void swap(broken_move& lhs, broken_move& rhs)
     {
-      std::swap(lhs.x, rhs.x);
+      std::ranges::swap(lhs.x, rhs.x);
     }
 
     std::vector<T, Allocator> x{};
@@ -609,7 +609,7 @@ namespace sequoia::testing
 
     friend void swap(broken_para_move& lhs, broken_para_move& rhs)
     {
-      std::swap(lhs.x, rhs.x);
+      std::ranges::swap(lhs.x, rhs.x);
     }
 
     std::vector<T, Allocator> x{};
@@ -660,7 +660,7 @@ namespace sequoia::testing
 
     friend void swap(broken_copy_assignment& lhs, broken_copy_assignment& rhs)
     {
-      std::swap(lhs.x, rhs.x);
+      std::ranges::swap(lhs.x, rhs.x);
     }
 
     std::vector<T, Allocator> x{};
@@ -720,7 +720,7 @@ namespace sequoia::testing
 
     friend void swap(broken_self_copy_assignment& lhs, broken_self_copy_assignment& rhs)
     {
-      std::swap(lhs.x, rhs.x);
+      std::ranges::swap(lhs.x, rhs.x);
     }
 
     std::vector<T, Allocator> x{};
@@ -762,7 +762,7 @@ namespace sequoia::testing
 
     friend void swap(broken_move_assignment& lhs, broken_move_assignment& rhs)
     {
-      std::swap(lhs.x, rhs.x);
+      std::ranges::swap(lhs.x, rhs.x);
     }
 
     std::vector<T, Allocator> x{};
@@ -847,7 +847,7 @@ namespace sequoia::testing
 
     broken_self_swap& operator=(broken_self_swap&&) noexcept = default;
 
-    void swap(broken_self_swap& other) noexcept(noexcept(std::swap(this->x, other.x)))
+    void swap(broken_self_swap& other) noexcept(noexcept(std::ranges::swap(this->x, other.x)))
     {
       if(&other == this)
       {
@@ -855,7 +855,7 @@ namespace sequoia::testing
       }
       else
       {
-        std::swap(this->x, other.x);
+        std::ranges::swap(this->x, other.x);
       }
     }
 
@@ -935,9 +935,9 @@ namespace sequoia::testing
 
     broken_copy_value_semantics& operator=(broken_copy_value_semantics&&) = default;
 
-    void swap(broken_copy_value_semantics& other) noexcept(noexcept(std::swap(this->x, other.x)))
+    void swap(broken_copy_value_semantics& other) noexcept(noexcept(std::ranges::swap(this->x, other.x)))
     {
-      std::swap(x, other.x);
+      std::ranges::swap(x, other.x);
     }
 
     friend void swap(broken_copy_value_semantics& lhs, broken_copy_value_semantics& rhs)
@@ -1015,7 +1015,7 @@ namespace sequoia::testing
 
     friend void swap(broken_copy_assignment_value_semantics& lhs, broken_copy_assignment_value_semantics& rhs)
     {
-      std::swap(lhs.x, rhs.x);
+      std::ranges::swap(lhs.x, rhs.x);
     }
 
     std::vector<product_type, allocator_type> x{};
@@ -1065,9 +1065,9 @@ namespace sequoia::testing
 
     broken_serialization& operator=(broken_serialization&&) = default;
 
-    void swap(broken_serialization& other) noexcept(noexcept(std::swap(this->x, other.x)))
+    void swap(broken_serialization& other) noexcept(noexcept(std::ranges::swap(this->x, other.x)))
     {
-      std::swap(x, other.x);
+      std::ranges::swap(x, other.x);
     }
 
     friend void swap(broken_serialization& lhs, broken_serialization& rhs)
@@ -1125,9 +1125,9 @@ namespace sequoia::testing
 
     broken_deserialization& operator=(broken_deserialization&&) = default;
 
-    void swap(broken_deserialization& other) noexcept(noexcept(std::swap(this->x, other.x)))
+    void swap(broken_deserialization& other) noexcept(noexcept(std::ranges::swap(this->x, other.x)))
     {
-      std::swap(x, other.x);
+      std::ranges::swap(x, other.x);
     }
 
     friend void swap(broken_deserialization& lhs, broken_deserialization& rhs)

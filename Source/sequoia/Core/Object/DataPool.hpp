@@ -232,7 +232,7 @@ namespace sequoia::object
 
     void swap(data_pool& rhs) noexcept
     {
-      std::swap(this->m_Data, rhs.m_Data);
+      std::ranges::swap(this->m_Data, rhs.m_Data);
       for(auto& pData : this->m_Data) pData->m_pPool = this;
       for(auto& pData : rhs.m_Data)   pData->m_pPool = &rhs;
     }
