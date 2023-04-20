@@ -1171,9 +1171,9 @@ namespace sequoia
         return std::forward<IntermediateEdges>(edges);
       }
 
-      template<std::bidirectional_iterator Iter> constexpr static Iter find_cluster_end(std::ranges::subrange<Iter> r)
+      template<std::ranges::view View> constexpr static auto find_cluster_end(View v) -> decltype(v.begin())
       {
-        return !r.empty() ? std::ranges::find_if_not(r, [&front{r.front()}](const auto& e){ return e == front; }) : r.end();
+        return !v.empty() ? std::ranges::find_if_not(v, [&front{v.front()}](const auto& e){ return e == front; }) : v.end();
       }
 
       template<class Edges, alloc... Allocators>
@@ -1335,12 +1335,8 @@ namespace sequoia
 
               if constexpr(clusterEdges)
               {
-                //std::views::drop_while(eqrange, [&wt{lowerIter->weight()}](const auto& e) { return e.wt == wt; );
-                //std::ranges::find_if_not(eqrange, [&wt{lowerIter->weight()}](const auto& e) { return e.wt == wt; });
-
-                while((eqrange.begin() != eqrange.end()) && (eqrange.front().weight() != lowerIter->weight())) eqrange.advance(1);
-
-                eqrange = {eqrange.begin(), find_cluster_end(eqrange)};
+                auto clusters{std::views::drop_while(eqrange, [&wt{lowerIter->weight()}](const auto& e) { return e.weight() != wt; })};
+                eqrange = {clusters.begin(), find_cluster_end(clusters)};
               }
 
               perLink(i, target, {lowerIter, upperIter}, eqrange);
