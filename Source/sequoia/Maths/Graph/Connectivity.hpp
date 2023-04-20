@@ -1134,7 +1134,7 @@ namespace sequoia
 
 
       template<class Edges>
-      using partition_iterator_range = std::pair<typename Edges::const_partition_iterator, typename Edges::const_partition_iterator>;
+      using partition_iterator_range = std::ranges::subrange<typename Edges::const_partition_iterator>;
 
       template<class IntermediateEdges>
       [[nodiscard]]
@@ -1147,22 +1147,22 @@ namespace sequoia
           edges,
           []() {},
           [](edge_index_type i, range_t hostRange) {
-            if(std::ranges::distance(hostRange.first, hostRange.second) % 2) throw std::logic_error{graph_errors::odd_num_loops_error("process_edges", i)};
+            if(std::ranges::distance(hostRange) % 2) throw std::logic_error{graph_errors::odd_num_loops_error("process_edges", i)};
           },
           [&](edge_index_type i, edge_index_type target, range_t hostRange, range_t targetRange) {
-            if(auto reciprocalCount{std::ranges::distance(targetRange.first, targetRange.second)}; !reciprocalCount)
+            if(auto reciprocalCount{std::ranges::distance(targetRange)}; !reciprocalCount)
             {
-              const auto edgeIndex{static_cast<std::size_t>(std::ranges::distance(edges.cbegin_partition(i), hostRange.first))};
+              const auto edgeIndex{static_cast<std::size_t>(std::ranges::distance(edges.cbegin_partition(i), hostRange.begin()))};
               throw std::logic_error{graph_errors::error_prefix("process_edges", {i, edgeIndex}).append("Reciprocated partial edge does not exist")};
             }
-            else if(auto count{std::ranges::distance(hostRange.first, hostRange.second)}; count > reciprocalCount)
+            else if(auto count{std::ranges::distance(hostRange)}; count > reciprocalCount)
             {
-              const auto edgeIndex{static_cast<std::size_t>(std::ranges::distance(edges.cbegin_partition(i), hostRange.first) + reciprocalCount)};
+              const auto edgeIndex{static_cast<std::size_t>(std::ranges::distance(edges.cbegin_partition(i), hostRange.begin()) + reciprocalCount)};
               throw std::logic_error{graph_errors::error_prefix("process_edges", {i, edgeIndex}).append("Reciprocated partial edge does not exist")};
             }
             else if(count < reciprocalCount)
             {
-              const auto edgeIndex{static_cast<std::size_t>(std::ranges::distance(edges.cbegin_partition(target), targetRange.first) + count)};
+              const auto edgeIndex{static_cast<std::size_t>(std::ranges::distance(edges.cbegin_partition(target), targetRange.begin()) + count)};
               throw std::logic_error{graph_errors::error_prefix("process_edges", {target, edgeIndex}).append("Reciprocated partial edge does not exist")};
             }
           }
@@ -1171,17 +1171,9 @@ namespace sequoia
         return std::forward<IntermediateEdges>(edges);
       }
 
-      template<std::bidirectional_iterator Iter> constexpr static Iter find_cluster_end(Iter begin, Iter end)
+      template<std::bidirectional_iterator Iter> constexpr static Iter find_cluster_end(std::ranges::subrange<Iter> r)
       {
-        if(std::ranges::distance(begin, end) > 1)
-        {
-          auto testIter{end - 1};
-          while(*testIter != *begin) --testIter;
-
-          end = testIter + 1;
-        }
-
-        return end;
+        return !r.empty() ? std::ranges::find_if_not(r, [&front{r.front()}](const auto& e){ return e == front; }) : r.end();
       }
 
       template<class Edges, alloc... Allocators>
@@ -1273,29 +1265,29 @@ namespace sequoia
           orderedEdges,
           [&storage]() { storage.add_slot(); },
           [&,this](edge_index_type i, range_t hostRange) {
-            for(; hostRange.first != hostRange.second; ++hostRange.first)
+            for(; hostRange.begin() != hostRange.end(); hostRange.advance(1))
             {
-              if(!(distance(hostRange.first, hostRange.second) % 2) || !EdgeTraits::shared_weight_v)
+              if(!(std::ranges::distance(hostRange) % 2) || !EdgeTraits::shared_weight_v)
               {
-                storage.push_back_to_partition(i, make_edge(i, *hostRange.first));
+                storage.push_back_to_partition(i, make_edge(i, hostRange.front()));
               }
               else
               {
-                const auto compIndex{static_cast<edge_index_type>(distance(orderedEdges.cbegin_partition(i), hostRange.first - 1))};
+                const auto compIndex{static_cast<edge_index_type>(std::ranges::distance(orderedEdges.cbegin_partition(i), hostRange.begin()) - 1)};
                 storage.push_back_to_partition(i, cbegin_edges(i) + compIndex);
               }
             }
           },
           [&,this](edge_index_type i, edge_index_type target, range_t hostRange, range_t targetRange) {
-            for(; hostRange.first != hostRange.second; ++hostRange.first)
+            for(; hostRange.begin() != hostRange.end(); hostRange.advance(1))
             {
               if((i < target) || !EdgeTraits::shared_weight_v)
               {
-                storage.push_back_to_partition(i, make_edge(i, *hostRange.first));
+                storage.push_back_to_partition(i, make_edge(i, hostRange.front()));
               }
               else
               {
-                const auto compIndex{static_cast<edge_index_type>(distance(orderedEdges.cbegin_partition(target), targetRange.second + distance(hostRange.second, hostRange.first)))};
+                const auto compIndex{static_cast<edge_index_type>(std::ranges::distance(orderedEdges.cbegin_partition(target), targetRange.end()) - std::ranges::distance(hostRange))};
                 storage.push_back_to_partition(i, edge_type{target, *(cbegin_edges(target) + compIndex)});
               }
             }
@@ -1322,8 +1314,8 @@ namespace sequoia
           auto lowerIter{orderedEdges.cbegin_partition(i)}, upperIter{orderedEdges.cbegin_partition(i)};
           while(lowerIter != orderedEdges.cend_partition(i))
           {
-            upperIter = std::upper_bound(lowerIter, orderedEdges.cend_partition(i), *lowerIter, edge_comparer{});
-            if constexpr(clusterEdges) upperIter = find_cluster_end(lowerIter, upperIter);
+            upperIter = std::ranges::upper_bound(lowerIter, orderedEdges.cend_partition(i), *lowerIter, edge_comparer{});
+            if constexpr(clusterEdges) upperIter = find_cluster_end(std::ranges::subrange{lowerIter, upperIter});
 
             if(const auto target{lowerIter->target_node()}; target == i)
             {
@@ -1339,13 +1331,16 @@ namespace sequoia
                 }()
               };
 
-              auto eqrange{std::equal_range(orderedEdges.cbegin_partition(target), orderedEdges.cend_partition(target), comparisonEdge, edge_comparer{})};
+              auto eqrange{std::ranges::equal_range(orderedEdges.cbegin_partition(target), orderedEdges.cend_partition(target), comparisonEdge, edge_comparer{})};
 
               if constexpr(clusterEdges)
               {
-                while((eqrange.first != eqrange.second) && (eqrange.first->weight() != lowerIter->weight())) ++eqrange.first;
+                //std::views::drop_while(eqrange, [&wt{lowerIter->weight()}](const auto& e) { return e.wt == wt; );
+                //std::ranges::find_if_not(eqrange, [&wt{lowerIter->weight()}](const auto& e) { return e.wt == wt; });
 
-                eqrange.second = find_cluster_end(eqrange.first, eqrange.second);
+                while((eqrange.begin() != eqrange.end()) && (eqrange.front().weight() != lowerIter->weight())) eqrange.advance(1);
+
+                eqrange = {eqrange.begin(), find_cluster_end(eqrange)};
               }
 
               perLink(i, target, {lowerIter, upperIter}, eqrange);
