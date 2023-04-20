@@ -217,7 +217,7 @@ namespace sequoia::testing
 
       for(auto i{g.begin_node_weights()}; i != g.end_node_weights(); ++i)
       {
-        const auto nodePos{static_cast<size_type>(distance(g.begin_node_weights(), i))};
+        const auto nodePos{static_cast<size_type>(std::ranges::distance(g.begin_node_weights(), i))};
         const auto& file{i->file};
 
         for(const auto& includedFile : get_includes(file, cutoff))
@@ -255,7 +255,7 @@ namespace sequoia::testing
 
             if(found != e)
             {
-              const auto includeNodePos{static_cast<size_type>(distance(g.begin_node_weights(), found))};
+              const auto includeNodePos{static_cast<size_type>(std::ranges::distance(g.begin_node_weights(), found))};
               g.join(nodePos, includeNodePos);
 
               if(is_cpp(file))
@@ -281,7 +281,7 @@ namespace sequoia::testing
                   {
                     if(next->file.stem() == file.stem())
                     {
-                      const auto nextPos{static_cast<size_type>(distance(g.begin_node_weights(), next))};
+                      const auto nextPos{static_cast<size_type>(std::ranges::distance(g.begin_node_weights(), next))};
                       g.join(nextPos, includeNodePos);
                     }
                   }

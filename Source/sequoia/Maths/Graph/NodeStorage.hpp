@@ -165,7 +165,7 @@ namespace sequoia::maths::graph_impl
     {
       if constexpr (throw_on_range_error) if(pos == cend_node_weights()) throw std::out_of_range("node_storage::node_weight - index out of range!\n");
 
-      const auto index{distance(cbegin_node_weights(), pos)};
+      const auto index{std::ranges::distance(cbegin_node_weights(), pos)};
       m_NodeWeights[index].set(std::forward<Arg>(arg), std::forward<Args>(args)...);
     }
 
@@ -174,7 +174,7 @@ namespace sequoia::maths::graph_impl
     {
       if constexpr (throw_on_range_error) if(pos == cend_node_weights()) throw std::out_of_range("node_storage::node_weight - index out of range!\n");
 
-      const auto index{distance(cbegin_node_weights(), pos)};
+      const auto index{std::ranges::distance(cbegin_node_weights(), pos)};
       return m_NodeWeights[index].mutate(std::forward<Fn>(fn));
     }
 

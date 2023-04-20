@@ -244,7 +244,7 @@ namespace sequoia::maths::graph_impl
     constexpr static bool loop_matched(Iter begin, Iter current)
     {
       using index_type = typename G::edge_index_type;
-      const auto dist{static_cast<index_type>(distance(begin, current))};
+      const auto dist{static_cast<index_type>(std::ranges::distance(begin, current))};
       return (current->complementary_index() < dist);
     }
   };

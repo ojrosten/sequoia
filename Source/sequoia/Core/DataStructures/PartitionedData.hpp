@@ -346,7 +346,7 @@ namespace sequoia
       {
         auto iter{begin_partition(index)};
         auto next{end_partition(index).base_iterator()};
-        if(iter != end_partition(index) && pos < static_cast<size_type>(distance(iter, end_partition(index))))
+        if(iter != end_partition(index) && pos < static_cast<size_type>(std::ranges::distance(iter, end_partition(index))))
         {
           next = m_Buckets[index].erase((iter + pos).base_iterator());
         }
@@ -639,8 +639,8 @@ namespace sequoia
           {
             if(i > j) std::ranges::swap(i, j);
 
-            const auto len_i{distance(begin_partition(i), end_partition(i))};
-            const auto len_j{distance(begin_partition(j), end_partition(j))};
+            const auto len_i{std::ranges::distance(begin_partition(i), end_partition(i))};
+            const auto len_j{std::ranges::distance(begin_partition(j), end_partition(j))};
 
             auto begin_i{begin_partition(i).base_iterator()}, begin_j{begin_partition(j).base_iterator()};
             auto end_i{end_partition(i).base_iterator()}, end_j{end_partition(j).base_iterator()};
@@ -899,7 +899,7 @@ namespace sequoia
       {
         auto next{end_partition(index).base_iterator()};
         auto iter{begin_partition(index)};
-        if(iter != end_partition(num_partitions() - 1) && pos < static_cast<size_type>(distance(iter, end_partition(index))))
+        if(iter != end_partition(num_partitions() - 1) && pos < static_cast<size_type>(std::ranges::distance(iter, end_partition(index))))
         {
           next = m_Storage.erase((iter + pos).base_iterator());
           decrement_partition_indices(index);
@@ -1301,8 +1301,7 @@ namespace sequoia
 
       for(size_type i{}; i < lhs.num_partitions(); ++i)
       {
-        if(distance(lhs.cbegin_partition(i), lhs.cend_partition(i))
-          != distance(rhs.cbegin_partition(i), rhs.cend_partition(i)))
+        if(std::ranges::distance(lhs.cbegin_partition(i), lhs.cend_partition(i)) != std::ranges::distance(rhs.cbegin_partition(i), rhs.cend_partition(i)))
         {
           return false;
         }
