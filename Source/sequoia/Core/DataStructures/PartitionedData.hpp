@@ -1325,7 +1325,7 @@ namespace sequoia
     auto i{data.begin_partition(partitionIndex)};
     while(i != data.end_partition(partitionIndex))
     {
-      i = pred(*i) ? data.erase_from_partition(i) : std::next(i);
+      i = pred(*i) ? data.erase_from_partition(i) : std::ranges::next(i);
     }
   }
 }

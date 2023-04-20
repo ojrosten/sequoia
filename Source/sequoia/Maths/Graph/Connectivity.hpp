@@ -1173,7 +1173,7 @@ namespace sequoia
 
       template<std::bidirectional_iterator Iter> constexpr static Iter find_cluster_end(Iter begin, Iter end)
       {
-        if(distance(begin, end) > 1)
+        if(std::ranges::distance(begin, end) > 1)
         {
           auto testIter{end - 1};
           while(*testIter != *begin) --testIter;
