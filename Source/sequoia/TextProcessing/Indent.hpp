@@ -11,6 +11,7 @@
     \brief A collection of functions for formatting test output.
  */
 
+#include <algorithm>
 #include <string>
 #include <utility>
 

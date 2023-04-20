@@ -82,7 +82,8 @@ namespace sequoia
   template<class Iter, class Comparer=std::less<std::decay_t<decltype(*Iter())>>>
   constexpr void sort(Iter begin, Iter end, Comparer comp = Comparer{})
   {
-    if(std::distance(begin, end) <= 1) return;
+    using namespace std;
+    if(distance(begin, end) <= 1) return;
 
     sequoia::make_heap(begin, end, comp);
     while(end != begin)
