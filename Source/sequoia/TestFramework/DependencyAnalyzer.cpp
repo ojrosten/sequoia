@@ -222,38 +222,29 @@ namespace sequoia::testing
 
         for(const auto& includedFile : get_includes(file, cutoff))
         {
-          auto comparer{
-            [](const file_info& weight, const file_info& incFile) {
-              return weight.file.filename() < incFile.file.filename();
-            }
-          };
-
-          if(auto [b, e] {std::equal_range(g.begin_node_weights(), g.end_node_weights(), includedFile, comparer)}; b != e)
+          if(auto eqrange{std::ranges::equal_range(g.begin_node_weights(), g.end_node_weights(), includedFile.filename(), std::ranges::less{}, [](const file_info& weight){ return weight.file.filename(); })}; !eqrange.empty())
           {
             auto found{
-              [&includedFile,&projPaths,&file](auto b, auto e) {
-                while(b != e)
-                {
+              std::ranges::find_if(eqrange, [&includedFile,&projPaths,&file](const file_info& wt){
                   if(includedFile.is_absolute())
                   {
-                    if(b->file == includedFile) return b;
-                    else                        continue;
+                    if(wt.file == includedFile) return true;
+                  }
+                  else
+                  {
+                    if((wt.file == (projPaths.source().repo() / includedFile)) || (wt.file == (projPaths.tests().repo() / includedFile)))
+                      return true;
+
+                    if(const auto trial{file.parent_path() / includedFile}; fs::exists(trial) && (wt.file == fs::canonical(trial)))
+                      return true;
                   }
 
-                  if((b->file == (projPaths.source().repo() / includedFile)) || (b->file == (projPaths.tests().repo() / includedFile)))
-                    return b;
-
-                  if(const auto trial{file.parent_path() / includedFile}; fs::exists(trial) && (b->file == fs::canonical(trial)))
-                    return b;
-
-                  ++b;
+                  return false;
                 }
-
-                return b;
-              }(b, e)
+              )
             };
 
-            if(found != e)
+            if(found != eqrange.end())
             {
               const auto includeNodePos{static_cast<size_type>(std::ranges::distance(g.begin_node_weights(), found))};
               g.join(nodePos, includeNodePos);
@@ -277,7 +268,7 @@ namespace sequoia::testing
                   // only files considered to be headers or sources are added
                   // to g, this is robust.
 
-                  if(auto next{std::next(i)}; next != g.end_node_weights())
+                  if(auto next{std::ranges::next(i)}; next != g.end_node_weights())
                   {
                     if(next->file.stem() == file.stem())
                     {
