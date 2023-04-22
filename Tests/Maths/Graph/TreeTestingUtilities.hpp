@@ -136,12 +136,12 @@ namespace sequoia::testing
           if constexpr (TreeLinkDir == maths::tree_link_direction::symmetric)
           {
             if (check(equality, "Number of children for node " + std::to_string(node), logger, num.value(), prediction.children.size()))
-              return num < dist ? std::next(begin) : begin;
+              return num < dist ? std::ranges::next(begin) : begin;
           }
           else
           {
             if (check(equality, "No reachable children for node " + std::to_string(node), logger, num.value(), size_type{}))
-              return num < dist ? std::next(begin) : begin;
+              return num < dist ? std::ranges::next(begin) : begin;
           }
         }
       }

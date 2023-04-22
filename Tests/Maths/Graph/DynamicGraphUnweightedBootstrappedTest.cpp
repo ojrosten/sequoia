@@ -171,7 +171,7 @@ namespace sequoia::testing
             "Remove second loop",
             [](const graph_to_test& g) -> graph_to_test {
               auto gr{g};
-              gr.erase_edge(std::next(gr.cbegin_edges(0)));
+              gr.erase_edge(std::ranges::next(gr.cbegin_edges(0)));
               return gr;
             }
           },
@@ -304,7 +304,7 @@ namespace sequoia::testing
             "Remove link",
             [](const graph_to_test& g) -> graph_to_test {
               auto gr{g};
-              gr.erase_edge(std::next(gr.cbegin_edges(0)));
+              gr.erase_edge(std::ranges::next(gr.cbegin_edges(0)));
               return gr;
             }
           }
@@ -315,7 +315,7 @@ namespace sequoia::testing
             "Remove link",
             [](const graph_to_test& g) -> graph_to_test {
               auto gr{g};
-              gr.erase_edge(std::next(gr.cbegin_edges(0)));
+              gr.erase_edge(std::ranges::next(gr.cbegin_edges(0)));
               return gr;
             }
           }

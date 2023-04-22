@@ -905,10 +905,10 @@ namespace sequoia::testing
     auto nodeLate{
       [this,&tracker](auto n) {
         m_Suites.mutate_node_weight(
-          std::next(m_Suites.cbegin_node_weights(), n),
+          std::ranges::next(m_Suites.cbegin_node_weights(), n),
           [this, &tracker,n](suite_node& wt) {
             for(auto i{m_Suites.cbegin_edges(n)}; i != m_Suites.cend_edges(n); ++i)
-              wt.summary += std::next(m_Suites.cbegin_node_weights(), i->target_node())->summary;
+              wt.summary += std::ranges::next(m_Suites.cbegin_node_weights(), i->target_node())->summary;
 
             if(wt.optTest)
             {
@@ -971,7 +971,7 @@ namespace sequoia::testing
       for(auto i{m_Suites.cbegin_edges(0)}; i != m_Suites.cend_edges(0); ++i)
       {
         const auto detail{!concurrent_execution() ? summary_detail::failure_messages | summary_detail::timings : summary_detail::failure_messages};
-        auto targetNodeIter{std::next(m_Suites.cbegin_node_weights(), i->target_node())};
+        auto targetNodeIter{std::ranges::next(m_Suites.cbegin_node_weights(), i->target_node())};
         stream() << summarize(targetNodeIter->summary, ":", detail, no_indent, tab);
       }
     }
@@ -1010,7 +1010,7 @@ namespace sequoia::testing
 
     auto resetFn{
       [&,this](auto n){
-        m_Suites.mutate_node_weight(std::next(m_Suites.cbegin_node_weights(), n),
+        m_Suites.mutate_node_weight(std::ranges::next(m_Suites.cbegin_node_weights(), n),
           [&,this](auto& wt){
             if(wt.optTest)
             {
