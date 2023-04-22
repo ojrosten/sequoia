@@ -33,9 +33,10 @@
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
 
 #include <limits>
-#include <set>
 #include <map>
+#include <set>
 #include <stdexcept>
+#include <ranges>
 
 namespace sequoia
 {
