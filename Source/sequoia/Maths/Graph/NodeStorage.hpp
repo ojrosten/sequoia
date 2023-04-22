@@ -39,9 +39,9 @@ namespace sequoia::maths::graph_impl
     using proxy_reference = typename std::iterator_traits<Iterator>::reference;
     using proxy_pointer   = typename std::iterator_traits<Iterator>::pointer;
 
-    using reference = decltype(std::declval<proxy_reference>().get());
-    using pointer = std::add_pointer_t<reference>;
-    using value_type = std::remove_cv_t<reference>;
+    using reference  = decltype(std::declval<proxy_reference>().get());
+    using pointer    = std::add_pointer_t<reference>;
+    using value_type = std::remove_cvref_t<reference>;
 
     constexpr proxy_dereference_policy() = default;
     constexpr proxy_dereference_policy(const proxy_dereference_policy&) = default;
@@ -50,6 +50,9 @@ namespace sequoia::maths::graph_impl
 
     [[nodiscard]]
     constexpr static pointer get_ptr(proxy_reference ref) noexcept { return &ref.get(); }
+
+    [[nodiscard]]
+    friend constexpr bool operator==(const proxy_dereference_policy&, const proxy_dereference_policy&) noexcept = default;
   protected:
     constexpr proxy_dereference_policy(proxy_dereference_policy&&) noexcept = default;
 
