@@ -182,6 +182,15 @@
 	    Predicted: 2
 
 	  Partition 0
+	  subrange (const)
+	  [std::ranges::subrange<sequoia::utilities::iterator<std::_Vector_const_iterator<std::_Vector_val<std::_Simple_types<int> > >, sequoia::data_structures::partition_impl::dereference_policy<sequoia::object::by_value<int>, sequoia::data_structures::partition_impl::const_reference, sequoia::data_structures::partition_impl::partition_index_policy<0, unsigned long long> > >, sequoia::utilities::iterator<std::_Vector_const_iterator<std::_Vector_val<std::_Simple_types<int> > >, sequoia::data_structures::partition_impl::dereference_policy<sequoia::object::by_value<int>, sequoia::data_structures::partition_impl::const_reference, sequoia::data_structures::partition_impl::partition_index_policy<0, unsigned long long> > >, 1>]
+	    Element 0 of range incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	  Partition 0
 	  iterator
 
 	    Element 0 of range incorrect
@@ -193,6 +202,15 @@
 	  Partition 0
 	  r_iterator
 
+	    Element 0 of range incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	  Partition 0
+	  subrange
+	  [std::ranges::subrange<sequoia::utilities::iterator<std::_Vector_iterator<std::_Vector_val<std::_Simple_types<int> > >, sequoia::data_structures::partition_impl::dereference_policy<sequoia::object::by_value<int>, sequoia::data_structures::partition_impl::mutable_reference, sequoia::data_structures::partition_impl::partition_index_policy<0, unsigned long long> > >, sequoia::utilities::iterator<std::_Vector_iterator<std::_Vector_val<std::_Simple_types<int> > >, sequoia::data_structures::partition_impl::dereference_policy<sequoia::object::by_value<int>, sequoia::data_structures::partition_impl::mutable_reference, sequoia::data_structures::partition_impl::partition_index_policy<0, unsigned long long> > >, 1>]
 	    Element 0 of range incorrect
 	    [int]
 	    operator== returned false
@@ -742,6 +760,15 @@
 	    Predicted: 2
 
 	  Partition 0
+	  subrange (const)
+	  [std::ranges::subrange<sequoia::utilities::iterator<std::_Vector_const_iterator<std::_Vector_val<std::_Simple_types<std::shared_ptr<int> > > >, sequoia::data_structures::partition_impl::dereference_policy<sequoia::object::shared<int>, sequoia::data_structures::partition_impl::const_reference, sequoia::data_structures::partition_impl::partition_index_policy<0, unsigned long long> > >, sequoia::utilities::iterator<std::_Vector_const_iterator<std::_Vector_val<std::_Simple_types<std::shared_ptr<int> > > >, sequoia::data_structures::partition_impl::dereference_policy<sequoia::object::shared<int>, sequoia::data_structures::partition_impl::const_reference, sequoia::data_structures::partition_impl::partition_index_policy<0, unsigned long long> > >, 1>]
+	    Element 0 of range incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	  Partition 0
 	  iterator
 
 	    Element 0 of range incorrect
@@ -753,6 +780,15 @@
 	  Partition 0
 	  r_iterator
 
+	    Element 0 of range incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	  Partition 0
+	  subrange
+	  [std::ranges::subrange<sequoia::utilities::iterator<std::_Vector_iterator<std::_Vector_val<std::_Simple_types<std::shared_ptr<int> > > >, sequoia::data_structures::partition_impl::dereference_policy<sequoia::object::shared<int>, sequoia::data_structures::partition_impl::mutable_reference, sequoia::data_structures::partition_impl::partition_index_policy<0, unsigned long long> > >, sequoia::utilities::iterator<std::_Vector_iterator<std::_Vector_val<std::_Simple_types<std::shared_ptr<int> > > >, sequoia::data_structures::partition_impl::dereference_policy<sequoia::object::shared<int>, sequoia::data_structures::partition_impl::mutable_reference, sequoia::data_structures::partition_impl::partition_index_policy<0, unsigned long long> > >, 1>]
 	    Element 0 of range incorrect
 	    [int]
 	    operator== returned false
@@ -1302,6 +1338,15 @@
 	    Predicted: 2
 
 	  Partition 0
+	  subrange (const)
+	  [std::ranges::subrange<sequoia::utilities::iterator<std::_Vector_const_iterator<std::_Vector_val<std::_Simple_types<int> > >, sequoia::data_structures::partition_impl::dereference_policy<sequoia::object::by_value<int>, sequoia::data_structures::partition_impl::const_reference, sequoia::data_structures::partition_impl::partition_index_policy<0, unsigned long long> > >, sequoia::utilities::iterator<std::_Vector_const_iterator<std::_Vector_val<std::_Simple_types<int> > >, sequoia::data_structures::partition_impl::dereference_policy<sequoia::object::by_value<int>, sequoia::data_structures::partition_impl::const_reference, sequoia::data_structures::partition_impl::partition_index_policy<0, unsigned long long> > >, 1>]
+	    Element 0 of range incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	  Partition 0
 	  iterator
 
 	    Element 0 of range incorrect
@@ -1313,6 +1358,15 @@
 	  Partition 0
 	  r_iterator
 
+	    Element 0 of range incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	  Partition 0
+	  subrange
+	  [std::ranges::subrange<sequoia::utilities::iterator<std::_Vector_iterator<std::_Vector_val<std::_Simple_types<int> > >, sequoia::data_structures::partition_impl::dereference_policy<sequoia::object::by_value<int>, sequoia::data_structures::partition_impl::mutable_reference, sequoia::data_structures::partition_impl::partition_index_policy<0, unsigned long long> > >, sequoia::utilities::iterator<std::_Vector_iterator<std::_Vector_val<std::_Simple_types<int> > >, sequoia::data_structures::partition_impl::dereference_policy<sequoia::object::by_value<int>, sequoia::data_structures::partition_impl::mutable_reference, sequoia::data_structures::partition_impl::partition_index_policy<0, unsigned long long> > >, 1>]
 	    Element 0 of range incorrect
 	    [int]
 	    operator== returned false
@@ -1862,6 +1916,15 @@
 	    Predicted: 2
 
 	  Partition 0
+	  subrange (const)
+	  [std::ranges::subrange<sequoia::utilities::iterator<std::_Vector_const_iterator<std::_Vector_val<std::_Simple_types<std::shared_ptr<int> > > >, sequoia::data_structures::partition_impl::dereference_policy<sequoia::object::shared<int>, sequoia::data_structures::partition_impl::const_reference, sequoia::data_structures::partition_impl::partition_index_policy<0, unsigned long long> > >, sequoia::utilities::iterator<std::_Vector_const_iterator<std::_Vector_val<std::_Simple_types<std::shared_ptr<int> > > >, sequoia::data_structures::partition_impl::dereference_policy<sequoia::object::shared<int>, sequoia::data_structures::partition_impl::const_reference, sequoia::data_structures::partition_impl::partition_index_policy<0, unsigned long long> > >, 1>]
+	    Element 0 of range incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	  Partition 0
 	  iterator
 
 	    Element 0 of range incorrect
@@ -1873,6 +1936,15 @@
 	  Partition 0
 	  r_iterator
 
+	    Element 0 of range incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 1
+	    Predicted: 2
+
+	  Partition 0
+	  subrange
+	  [std::ranges::subrange<sequoia::utilities::iterator<std::_Vector_iterator<std::_Vector_val<std::_Simple_types<std::shared_ptr<int> > > >, sequoia::data_structures::partition_impl::dereference_policy<sequoia::object::shared<int>, sequoia::data_structures::partition_impl::mutable_reference, sequoia::data_structures::partition_impl::partition_index_policy<0, unsigned long long> > >, sequoia::utilities::iterator<std::_Vector_iterator<std::_Vector_val<std::_Simple_types<std::shared_ptr<int> > > >, sequoia::data_structures::partition_impl::dereference_policy<sequoia::object::shared<int>, sequoia::data_structures::partition_impl::mutable_reference, sequoia::data_structures::partition_impl::partition_index_policy<0, unsigned long long> > >, 1>]
 	    Element 0 of range incorrect
 	    [int]
 	    operator== returned false
@@ -2446,6 +2518,19 @@
 	      Predicted: 2
 
 	  Partition 0
+	  subrange (const)
+	  [std::ranges::subrange<sequoia::utilities::iterator<std::_Vector_const_iterator<std::_Vector_val<std::_Simple_types<std::vector<double, std::allocator<double> > > > >, sequoia::data_structures::partition_impl::dereference_policy<sequoia::object::by_value<std::vector<double, std::allocator<double> > >, sequoia::data_structures::partition_impl::const_reference, sequoia::data_structures::partition_impl::partition_index_policy<0, unsigned long long> > >, sequoia::utilities::iterator<std::_Vector_const_iterator<std::_Vector_val<std::_Simple_types<std::vector<double, std::allocator<double> > > > >, sequoia::data_structures::partition_impl::dereference_policy<sequoia::object::by_value<std::vector<double, std::allocator<double> > >, sequoia::data_structures::partition_impl::const_reference, sequoia::data_structures::partition_impl::partition_index_policy<0, unsigned long long> > >, 1>]
+	    Element 0 of range incorrect
+	    [std::vector<double, std::allocator<double> >]
+	    operator== returned false
+
+	      Element 0 of range incorrect
+	      [double]
+	      operator== returned false
+	      Obtained : 1
+	      Predicted: 2
+
+	  Partition 0
 	  iterator
 
 	    Element 0 of range incorrect
@@ -2461,6 +2546,19 @@
 	  Partition 0
 	  r_iterator
 
+	    Element 0 of range incorrect
+	    [std::vector<double, std::allocator<double> >]
+	    operator== returned false
+
+	      Element 0 of range incorrect
+	      [double]
+	      operator== returned false
+	      Obtained : 1
+	      Predicted: 2
+
+	  Partition 0
+	  subrange
+	  [std::ranges::subrange<sequoia::utilities::iterator<std::_Vector_iterator<std::_Vector_val<std::_Simple_types<std::vector<double, std::allocator<double> > > > >, sequoia::data_structures::partition_impl::dereference_policy<sequoia::object::by_value<std::vector<double, std::allocator<double> > >, sequoia::data_structures::partition_impl::mutable_reference, sequoia::data_structures::partition_impl::partition_index_policy<0, unsigned long long> > >, sequoia::utilities::iterator<std::_Vector_iterator<std::_Vector_val<std::_Simple_types<std::vector<double, std::allocator<double> > > > >, sequoia::data_structures::partition_impl::dereference_policy<sequoia::object::by_value<std::vector<double, std::allocator<double> > >, sequoia::data_structures::partition_impl::mutable_reference, sequoia::data_structures::partition_impl::partition_index_policy<0, unsigned long long> > >, 1>]
 	    Element 0 of range incorrect
 	    [std::vector<double, std::allocator<double> >]
 	    operator== returned false
@@ -3166,6 +3264,19 @@
 	      Predicted: 2
 
 	  Partition 0
+	  subrange (const)
+	  [std::ranges::subrange<sequoia::utilities::iterator<std::_Vector_const_iterator<std::_Vector_val<std::_Simple_types<std::shared_ptr<std::vector<double, std::allocator<double> > > > > >, sequoia::data_structures::partition_impl::dereference_policy<sequoia::object::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::partition_impl::const_reference, sequoia::data_structures::partition_impl::partition_index_policy<0, unsigned long long> > >, sequoia::utilities::iterator<std::_Vector_const_iterator<std::_Vector_val<std::_Simple_types<std::shared_ptr<std::vector<double, std::allocator<double> > > > > >, sequoia::data_structures::partition_impl::dereference_policy<sequoia::object::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::partition_impl::const_reference, sequoia::data_structures::partition_impl::partition_index_policy<0, unsigned long long> > >, 1>]
+	    Element 0 of range incorrect
+	    [std::vector<double, std::allocator<double> >]
+	    operator== returned false
+
+	      Element 0 of range incorrect
+	      [double]
+	      operator== returned false
+	      Obtained : 1
+	      Predicted: 2
+
+	  Partition 0
 	  iterator
 
 	    Element 0 of range incorrect
@@ -3181,6 +3292,19 @@
 	  Partition 0
 	  r_iterator
 
+	    Element 0 of range incorrect
+	    [std::vector<double, std::allocator<double> >]
+	    operator== returned false
+
+	      Element 0 of range incorrect
+	      [double]
+	      operator== returned false
+	      Obtained : 1
+	      Predicted: 2
+
+	  Partition 0
+	  subrange
+	  [std::ranges::subrange<sequoia::utilities::iterator<std::_Vector_iterator<std::_Vector_val<std::_Simple_types<std::shared_ptr<std::vector<double, std::allocator<double> > > > > >, sequoia::data_structures::partition_impl::dereference_policy<sequoia::object::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::partition_impl::mutable_reference, sequoia::data_structures::partition_impl::partition_index_policy<0, unsigned long long> > >, sequoia::utilities::iterator<std::_Vector_iterator<std::_Vector_val<std::_Simple_types<std::shared_ptr<std::vector<double, std::allocator<double> > > > > >, sequoia::data_structures::partition_impl::dereference_policy<sequoia::object::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::partition_impl::mutable_reference, sequoia::data_structures::partition_impl::partition_index_policy<0, unsigned long long> > >, 1>]
 	    Element 0 of range incorrect
 	    [std::vector<double, std::allocator<double> >]
 	    operator== returned false
@@ -3886,6 +4010,19 @@
 	      Predicted: 2
 
 	  Partition 0
+	  subrange (const)
+	  [std::ranges::subrange<sequoia::utilities::iterator<std::_Vector_const_iterator<std::_Vector_val<std::_Simple_types<std::vector<double, std::allocator<double> > > > >, sequoia::data_structures::partition_impl::dereference_policy<sequoia::object::by_value<std::vector<double, std::allocator<double> > >, sequoia::data_structures::partition_impl::const_reference, sequoia::data_structures::partition_impl::partition_index_policy<0, unsigned long long> > >, sequoia::utilities::iterator<std::_Vector_const_iterator<std::_Vector_val<std::_Simple_types<std::vector<double, std::allocator<double> > > > >, sequoia::data_structures::partition_impl::dereference_policy<sequoia::object::by_value<std::vector<double, std::allocator<double> > >, sequoia::data_structures::partition_impl::const_reference, sequoia::data_structures::partition_impl::partition_index_policy<0, unsigned long long> > >, 1>]
+	    Element 0 of range incorrect
+	    [std::vector<double, std::allocator<double> >]
+	    operator== returned false
+
+	      Element 0 of range incorrect
+	      [double]
+	      operator== returned false
+	      Obtained : 1
+	      Predicted: 2
+
+	  Partition 0
 	  iterator
 
 	    Element 0 of range incorrect
@@ -3901,6 +4038,19 @@
 	  Partition 0
 	  r_iterator
 
+	    Element 0 of range incorrect
+	    [std::vector<double, std::allocator<double> >]
+	    operator== returned false
+
+	      Element 0 of range incorrect
+	      [double]
+	      operator== returned false
+	      Obtained : 1
+	      Predicted: 2
+
+	  Partition 0
+	  subrange
+	  [std::ranges::subrange<sequoia::utilities::iterator<std::_Vector_iterator<std::_Vector_val<std::_Simple_types<std::vector<double, std::allocator<double> > > > >, sequoia::data_structures::partition_impl::dereference_policy<sequoia::object::by_value<std::vector<double, std::allocator<double> > >, sequoia::data_structures::partition_impl::mutable_reference, sequoia::data_structures::partition_impl::partition_index_policy<0, unsigned long long> > >, sequoia::utilities::iterator<std::_Vector_iterator<std::_Vector_val<std::_Simple_types<std::vector<double, std::allocator<double> > > > >, sequoia::data_structures::partition_impl::dereference_policy<sequoia::object::by_value<std::vector<double, std::allocator<double> > >, sequoia::data_structures::partition_impl::mutable_reference, sequoia::data_structures::partition_impl::partition_index_policy<0, unsigned long long> > >, 1>]
 	    Element 0 of range incorrect
 	    [std::vector<double, std::allocator<double> >]
 	    operator== returned false
@@ -4606,6 +4756,19 @@
 	      Predicted: 2
 
 	  Partition 0
+	  subrange (const)
+	  [std::ranges::subrange<sequoia::utilities::iterator<std::_Vector_const_iterator<std::_Vector_val<std::_Simple_types<std::shared_ptr<std::vector<double, std::allocator<double> > > > > >, sequoia::data_structures::partition_impl::dereference_policy<sequoia::object::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::partition_impl::const_reference, sequoia::data_structures::partition_impl::partition_index_policy<0, unsigned long long> > >, sequoia::utilities::iterator<std::_Vector_const_iterator<std::_Vector_val<std::_Simple_types<std::shared_ptr<std::vector<double, std::allocator<double> > > > > >, sequoia::data_structures::partition_impl::dereference_policy<sequoia::object::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::partition_impl::const_reference, sequoia::data_structures::partition_impl::partition_index_policy<0, unsigned long long> > >, 1>]
+	    Element 0 of range incorrect
+	    [std::vector<double, std::allocator<double> >]
+	    operator== returned false
+
+	      Element 0 of range incorrect
+	      [double]
+	      operator== returned false
+	      Obtained : 1
+	      Predicted: 2
+
+	  Partition 0
 	  iterator
 
 	    Element 0 of range incorrect
@@ -4621,6 +4784,19 @@
 	  Partition 0
 	  r_iterator
 
+	    Element 0 of range incorrect
+	    [std::vector<double, std::allocator<double> >]
+	    operator== returned false
+
+	      Element 0 of range incorrect
+	      [double]
+	      operator== returned false
+	      Obtained : 1
+	      Predicted: 2
+
+	  Partition 0
+	  subrange
+	  [std::ranges::subrange<sequoia::utilities::iterator<std::_Vector_iterator<std::_Vector_val<std::_Simple_types<std::shared_ptr<std::vector<double, std::allocator<double> > > > > >, sequoia::data_structures::partition_impl::dereference_policy<sequoia::object::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::partition_impl::mutable_reference, sequoia::data_structures::partition_impl::partition_index_policy<0, unsigned long long> > >, sequoia::utilities::iterator<std::_Vector_iterator<std::_Vector_val<std::_Simple_types<std::shared_ptr<std::vector<double, std::allocator<double> > > > > >, sequoia::data_structures::partition_impl::dereference_policy<sequoia::object::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::partition_impl::mutable_reference, sequoia::data_structures::partition_impl::partition_index_policy<0, unsigned long long> > >, 1>]
 	    Element 0 of range incorrect
 	    [std::vector<double, std::allocator<double> >]
 	    operator== returned false

@@ -445,6 +445,12 @@ namespace sequoia
       }
 
       [[nodiscard]]
+      std::ranges::subrange<partition_iterator> partition(const size_type i) { return {begin_partition(i), end_partition(i)}; }
+
+      [[nodiscard]]
+      std::ranges::subrange<const_partition_iterator> partition(const size_type i) const { return {begin_partition(i), end_partition(i)}; }
+
+      [[nodiscard]]
       const_partition_iterator operator[](const size_type i) const { return cbegin_partition(i); }
 
       [[nodiscard]]
@@ -624,6 +630,12 @@ namespace sequoia
       {
         return rend_partition(i);
       }
+
+      [[nodiscard]]
+      std::ranges::subrange<partition_iterator> partition(const size_type i) { return {begin_partition(i), end_partition(i)}; }
+
+      [[nodiscard]]
+      std::ranges::subrange<const_partition_iterator> partition(const size_type i) const { return {begin_partition(i), end_partition(i)}; }
 
       [[nodiscard]]
       constexpr const_partition_iterator operator[](const index_type i) const noexcept { return cbegin_partition(i); }
