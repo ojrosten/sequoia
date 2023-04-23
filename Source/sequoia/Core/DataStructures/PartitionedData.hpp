@@ -199,7 +199,7 @@ namespace sequoia
       [[nodiscard]]
       size_type size_of_partition(size_type i) const
       {
-        return static_cast<size_type>(std::ranges::distance(begin_partition(i), end_partition(i)));
+        return static_cast<size_type>(std::ranges::distance(partition(i)));
       }
 
       [[nodiscard]]
@@ -451,6 +451,9 @@ namespace sequoia
       std::ranges::subrange<const_partition_iterator> partition(const size_type i) const { return {begin_partition(i), end_partition(i)}; }
 
       [[nodiscard]]
+      std::ranges::subrange<const_partition_iterator> cpartition(const size_type i) const { return partition(i); }
+
+      [[nodiscard]]
       const_partition_iterator operator[](const size_type i) const { return cbegin_partition(i); }
 
       [[nodiscard]]
@@ -553,7 +556,7 @@ namespace sequoia
       [[nodiscard]]
       constexpr size_type size_of_partition(index_type i) const
       {
-        return static_cast<size_type>(std::ranges::distance(begin_partition(i), end_partition(i)));
+        return static_cast<size_type>(std::ranges::distance(partition(i)));
       }
 
       [[nodiscard]]
@@ -632,10 +635,13 @@ namespace sequoia
       }
 
       [[nodiscard]]
-      std::ranges::subrange<partition_iterator> partition(const size_type i) { return {begin_partition(i), end_partition(i)}; }
+      constexpr std::ranges::subrange<partition_iterator> partition(const index_type i) noexcept { return {begin_partition(i), end_partition(i)}; }
 
       [[nodiscard]]
-      std::ranges::subrange<const_partition_iterator> partition(const size_type i) const { return {begin_partition(i), end_partition(i)}; }
+      constexpr std::ranges::subrange<const_partition_iterator> partition(const index_type i) const noexcept { return {begin_partition(i), end_partition(i)}; }
+
+      [[nodiscard]]
+      constexpr std::ranges::subrange<const_partition_iterator> cpartition(const index_type i) const noexcept { return partition(i); }
 
       [[nodiscard]]
       constexpr const_partition_iterator operator[](const index_type i) const noexcept { return cbegin_partition(i); }
@@ -651,8 +657,8 @@ namespace sequoia
           {
             if(i > j) std::ranges::swap(i, j);
 
-            const auto len_i{std::ranges::distance(begin_partition(i), end_partition(i))};
-            const auto len_j{std::ranges::distance(begin_partition(j), end_partition(j))};
+            const auto len_i{std::ranges::distance(partition(i))};
+            const auto len_j{std::ranges::distance(partition(j))};
 
             auto begin_i{begin_partition(i).base_iterator()}, begin_j{begin_partition(j).base_iterator()};
             auto end_i{end_partition(i).base_iterator()}, end_j{end_partition(j).base_iterator()};
@@ -1313,7 +1319,7 @@ namespace sequoia
 
       for(size_type i{}; i < lhs.num_partitions(); ++i)
       {
-        if(std::ranges::distance(lhs.cbegin_partition(i), lhs.cend_partition(i)) != std::ranges::distance(rhs.cbegin_partition(i), rhs.cend_partition(i)))
+        if(std::ranges::distance(lhs.partition(i)) != std::ranges::distance(rhs.partition(i)))
         {
           return false;
         }

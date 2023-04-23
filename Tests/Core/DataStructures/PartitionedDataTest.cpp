@@ -541,9 +541,7 @@ namespace sequoia
 
       check(equality, report_line(""), storage, Storage{{-5, 6, -2}, {4, 6, -2}});
 
-      auto found{std::find_if(storage.begin_partition(0), storage.end_partition(0),
-        [](const int& elt) { return elt == 6; }
-      )};
+      auto found{std::ranges::find_if(storage.partition(0), [](const int& elt) { return elt == 6; })};
 
       if(check(report_line(""), found != storage.end_partition(0)))
         check(equality, report_line(""), *found, 6);
@@ -553,9 +551,7 @@ namespace sequoia
 
       check(equality, report_line(""), storage, Storage{{-5, -2}, {4, 6, -2}});
 
-      auto found2{std::find_if(storage.cbegin_partition(0), storage.cend_partition(0),
-        [](const int& elt) { return elt == 6; })
-      };
+      auto found2{std::ranges::find_if(storage.cpartition(0), [](const int& elt) { return elt == 6; })};
 
       check(report_line(""), found2 == storage.cend_partition(0));
       check(equality, report_line(""), storage.size(), 5_sz);

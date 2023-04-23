@@ -432,14 +432,14 @@ namespace sequoia
         if constexpr (EdgeTraits::mutual_info_v)
         {
           std::set<size_type> partitionsToVisit{};
-          for(auto citer{m_Edges.cbegin_partition(node)}; citer != m_Edges.cend_partition(node); ++citer)
+          for(const auto& edge : m_Edges.partition(node))
           {
-            const auto target{citer->target_node()};
+            const auto target{edge.target_node()};
             if(target != node) partitionsToVisit.insert(target);
 
             if constexpr (directed(directedness))
             {
-              const auto source{citer->source_node()};
+              const auto source{edge.source_node()};
               if(source != node) partitionsToVisit.insert(source);
             }
           }
@@ -1330,7 +1330,7 @@ namespace sequoia
                 }()
               };
 
-              auto eqrange{std::ranges::equal_range(orderedEdges.cbegin_partition(target), orderedEdges.cend_partition(target), comparisonEdge, edge_comparer{})};
+              auto eqrange{std::ranges::equal_range(orderedEdges.partition(target), comparisonEdge, edge_comparer{})};
 
               if constexpr(clusterEdges)
               {
@@ -1745,30 +1745,30 @@ namespace sequoia
       {
         for(size_type i{}; i < m_Edges.num_partitions(); ++i)
         {
-          for(auto iter{m_Edges.begin_partition(i)}; iter != m_Edges.end_partition(i); ++iter)
+          for(auto& edge : m_Edges.partition(i))
           {
-            const auto target{iter->target_node()};
+            const auto target{edge.target_node()};
             if constexpr(EdgeTraits::shared_edge_v)
             {
-              const auto source{iter->source_node()}, currentNode{iter.partition_index()};
+              const auto source{edge.source_node()}, currentNode{i};
 
               if(pred(target, node))
               {
-                if(const auto newTarget{modifier(target)}; newTarget == currentNode) iter->target_node(newTarget);
+                if(const auto newTarget{modifier(target)}; newTarget == currentNode) edge.target_node(newTarget);
               }
               if(pred(source, node))
               {
-                if(const auto newHost{modifier(source)}; newHost == currentNode) iter->source_node(newHost);
+                if(const auto newHost{modifier(source)}; newHost == currentNode) edge.source_node(newHost);
               }
             }
             else
             {
-              if(pred(target, node)) iter->target_node(modifier(target));
+              if(pred(target, node)) edge.target_node(modifier(target));
 
               if constexpr(edge_type::flavour == edge_flavour::full_embedded)
               {
-                const auto source{iter->source_node()};
-                if(pred(source, node)) iter->source_node(modifier(source));
+                const auto source{edge.source_node()};
+                if(pred(source, node)) edge.source_node(modifier(source));
               }
             }
           }

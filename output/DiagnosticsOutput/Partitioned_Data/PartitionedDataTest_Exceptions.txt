@@ -178,43 +178,11 @@ partitioned_sequence::swap_partitions - index out of range
 
 	=======================================
 
-Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 686
+Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 682
 
 Expected Exception Type:
 [std::out_of_range]
 bucketed_sequence::index 0 out of range!
-
-	=======================================
-
-Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 690
-
-Expected Exception Type:
-[std::out_of_range]
-bucketed_sequence::index 0 out of range!
-
-	=======================================
-
-Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 694
-
-Expected Exception Type:
-[std::out_of_range]
-bucketed_sequence::index 0 out of range!
-
-	=======================================
-
-Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 698
-
-Expected Exception Type:
-[std::out_of_range]
-bucketed_sequence::index 1 out of range!
-
-	=======================================
-
-Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 705
-
-Expected Exception Type:
-[std::out_of_range]
-bucketed_sequence::index 1 out of range!
 
 	=======================================
 
@@ -238,11 +206,11 @@ Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 694
 
 Expected Exception Type:
 [std::out_of_range]
-bucketed_sequence::index 0 out of range!
+bucketed_sequence::index 1 out of range!
 
 	=======================================
 
-Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 698
+Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 701
 
 Expected Exception Type:
 [std::out_of_range]
@@ -250,7 +218,39 @@ bucketed_sequence::index 1 out of range!
 
 	=======================================
 
-Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 705
+Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 682
+
+Expected Exception Type:
+[std::out_of_range]
+bucketed_sequence::index 0 out of range!
+
+	=======================================
+
+Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 686
+
+Expected Exception Type:
+[std::out_of_range]
+bucketed_sequence::index 0 out of range!
+
+	=======================================
+
+Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 690
+
+Expected Exception Type:
+[std::out_of_range]
+bucketed_sequence::index 0 out of range!
+
+	=======================================
+
+Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 694
+
+Expected Exception Type:
+[std::out_of_range]
+bucketed_sequence::index 1 out of range!
+
+	=======================================
+
+Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 701
 
 Expected Exception Type:
 [std::out_of_range]
