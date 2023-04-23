@@ -151,7 +151,7 @@ $(function() {
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>  <span class="keyword">template</span>&lt;<span class="keyword">class</span> Iter, <span class="keyword">class</span> Comparer=std::less&lt;std::decay_t&lt;decltype(*Iter())&gt;&gt;&gt;</div>
 <div class="line"><a id="l00083" name="l00083"></a><span class="lineno"><a class="line" href="../../d6/d07/Algorithms_8hpp.html#acea3d5784387d9a7cf99326563ed0a5c">   83</a></span>  <span class="keyword">constexpr</span> <span class="keywordtype">void</span> <a class="code hl_function" href="../../d6/d07/Algorithms_8hpp.html#acea3d5784387d9a7cf99326563ed0a5c">sort</a>(Iter begin, Iter end, Comparer comp = Comparer{})</div>
 <div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>  {</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    <span class="keyword">using </span>std::distance;</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    <span class="keyword">using namespace </span>std;</div>
 <div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    <span class="keywordflow">if</span>(distance(begin, end) &lt;= 1) <span class="keywordflow">return</span>;</div>
 <div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span> </div>
 <div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    sequoia::make_heap(begin, end, comp);</div>

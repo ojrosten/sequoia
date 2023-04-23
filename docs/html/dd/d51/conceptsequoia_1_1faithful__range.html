@@ -84,8 +84,8 @@ $(function() {
 <h2 class="groupheader">Concept definition</h2>
 <div class="fragment"><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt;</div>
 <div class="line"><span class="keyword">concept </span><a class="code hl_concept" href="../../dd/d51/conceptsequoia_1_1faithful__range.html">sequoia::faithful_range</a> =  <span class="keyword">requires</span>(T&amp; t) {</div>
-<div class="line">    std::begin(t);</div>
-<div class="line">    std::end(t);</div>
+<div class="line">    std::ranges::begin(t);</div>
+<div class="line">    std::ranges::end(t);</div>
 <div class="line"> </div>
 <div class="line">    <span class="keyword">requires</span> (!std::same_as&lt;std::remove_cvref_t&lt;<span class="keyword">decltype</span>(*std::begin(t))&gt;, std::remove_cvref_t&lt;T&gt;&gt;);</div>
 <div class="line">  }</div>

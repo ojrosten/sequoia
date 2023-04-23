@@ -145,8 +145,8 @@ $(function() {
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span> </div>
 <div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>  <span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt;</div>
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno"><a class="line" href="../../dd/d51/conceptsequoia_1_1faithful__range.html">   91</a></span>  <span class="keyword">concept </span><a class="code hl_concept" href="../../dd/d51/conceptsequoia_1_1faithful__range.html">faithful_range</a> = <span class="keyword">requires</span>(T&amp; t) {</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    std::begin(t);</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    std::end(t);</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    std::ranges::begin(t);</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    std::ranges::end(t);</div>
 <div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span> </div>
 <div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    <span class="keyword">requires</span> (!std::same_as&lt;std::remove_cvref_t&lt;<span class="keyword">decltype</span>(*std::begin(t))&gt;, std::remove_cvref_t&lt;T&gt;&gt;);</div>
 <div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>  };</div>

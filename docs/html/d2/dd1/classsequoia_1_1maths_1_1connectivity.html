@@ -227,9 +227,9 @@ template&lt;alloc... Allocs&gt; <br />
 requires ( (sizeof...(Allocs) &gt; 0) &amp;&amp; (std::allocator_traits&lt;Allocs&gt;::propagate_on_container_copy_assignment::value &amp;&amp; ...))</td></tr>
 <tr class="memitem:a8f83ac52138ad773394bf9532c7a0542"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>reset</b> (const Allocs &amp;... allocs)</td></tr>
 <tr class="separator:a8f83ac52138ad773394bf9532c7a0542"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa8f4ef75e2200bf396e8d405a8878b00"><td class="memItemLeft" align="right" valign="top"><a id="aa8f4ef75e2200bf396e8d405a8878b00" name="aa8f4ef75e2200bf396e8d405a8878b00"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>swap</b> (<a class="el" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity</a> &amp;rhs) noexcept(noexcept(std::swap(this-&gt;m_Edges, rhs.m_Edges)))</td></tr>
-<tr class="separator:aa8f4ef75e2200bf396e8d405a8878b00"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7b4bcc3ce2278b7c8d5bad90600fdda7"><td class="memItemLeft" align="right" valign="top"><a id="a7b4bcc3ce2278b7c8d5bad90600fdda7" name="a7b4bcc3ce2278b7c8d5bad90600fdda7"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>swap</b> (<a class="el" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity</a> &amp;rhs) noexcept(noexcept(std::ranges::swap(this-&gt;m_Edges, rhs.m_Edges)))</td></tr>
+<tr class="separator:a7b4bcc3ce2278b7c8d5bad90600fdda7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a83e213ed368909f00f87b3eee18f115c"><td class="memItemLeft" align="right" valign="top"><a id="a83e213ed368909f00f87b3eee18f115c" name="a83e213ed368909f00f87b3eee18f115c"></a>
 constexpr void&#160;</td><td class="memItemRight" valign="bottom"><b>swap_edges</b> (edge_index_type node, edge_index_type i, edge_index_type j)</td></tr>
 <tr class="separator:a83e213ed368909f00f87b3eee18f115c"><td class="memSeparator" colspan="2">&#160;</td></tr>

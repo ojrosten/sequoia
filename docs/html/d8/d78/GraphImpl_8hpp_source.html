@@ -567,7 +567,7 @@ $(function() {
 <div class="line"><a id="l00494" name="l00494"></a><span class="lineno">  494</span>      {</div>
 <div class="line"><a id="l00495" name="l00495"></a><span class="lineno">  495</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(!std::is_empty_v&lt;node_weight_type&gt;)</div>
 <div class="line"><a id="l00496" name="l00496"></a><span class="lineno">  496</span>        {</div>
-<div class="line"><a id="l00497" name="l00497"></a><span class="lineno">  497</span>          <span class="keywordflow">return</span> std::min(Connectivity::node_capacity(), Nodes::capacity());</div>
+<div class="line"><a id="l00497" name="l00497"></a><span class="lineno">  497</span>          <span class="keywordflow">return</span> std::ranges::min(Connectivity::node_capacity(), Nodes::capacity());</div>
 <div class="line"><a id="l00498" name="l00498"></a><span class="lineno">  498</span>        }</div>
 <div class="line"><a id="l00499" name="l00499"></a><span class="lineno">  499</span>        <span class="keywordflow">else</span></div>
 <div class="line"><a id="l00500" name="l00500"></a><span class="lineno">  500</span>        {</div>
@@ -743,7 +743,7 @@ $(function() {
 <div class="line"><a id="l00670" name="l00670"></a><span class="lineno">  670</span>      <span class="keyword">template</span>&lt;<span class="keyword">class</span>... Args&gt;</div>
 <div class="line"><a id="l00671" name="l00671"></a><span class="lineno">  671</span>      size_type insert_node_impl(<span class="keyword">const</span> size_type pos, Args&amp;&amp;... args)</div>
 <div class="line"><a id="l00672" name="l00672"></a><span class="lineno">  672</span>      {</div>
-<div class="line"><a id="l00673" name="l00673"></a><span class="lineno">  673</span>        <span class="keyword">const</span> <span class="keyword">auto</span> node{std::min(pos, this-&gt;order())};</div>
+<div class="line"><a id="l00673" name="l00673"></a><span class="lineno">  673</span>        <span class="keyword">const</span> <span class="keyword">auto</span> node{std::ranges::min(pos, this-&gt;order())};</div>
 <div class="line"><a id="l00674" name="l00674"></a><span class="lineno">  674</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (!emptyNodes)</div>
 <div class="line"><a id="l00675" name="l00675"></a><span class="lineno">  675</span>        {</div>
 <div class="line"><a id="l00676" name="l00676"></a><span class="lineno">  676</span>          Nodes::insert_node(this-&gt;cbegin_node_weights() + node, std::forward&lt;Args&gt;(args)...);</div>

@@ -122,7 +122,7 @@ $(function() {
 <div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>      {</div>
 <div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>        <span class="keywordflow">if</span>(pos &gt; sv.size()) <span class="keywordflow">throw</span> std::out_of_range{<span class="stringliteral">&quot;pos out of range&quot;</span>};</div>
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>        <span class="keyword">const</span> <span class="keyword">auto</span> end{count &gt; sv.size() - pos ? sv.size() : pos + count};</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>        std::transform(sv.begin() + pos, sv.begin() + end, std::back_inserter(mess), [](Char c) { return static_cast&lt;char&gt;(c); });</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>        std::ranges::transform(sv.begin() + pos, sv.begin() + end, std::back_inserter(mess), [](Char c) { return static_cast&lt;char&gt;(c); });</div>
 <div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>      }</div>
 <div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    }</div>
 <div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span> </div>
@@ -130,16 +130,16 @@ $(function() {
 <div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    <span class="keyword">static</span> <span class="keyword">auto</span> make_advisor(std::string_view info, string_view_type obtained, string_view_type prediction, size_type pos, <span class="keyword">const</span> <a class="code hl_class" href="../../d6/d71/classsequoia_1_1testing_1_1tutor.html">tutor&lt;Advisor&gt;</a>&amp; advisor)</div>
 <div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    {</div>
 <div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>      <span class="keyword">constexpr</span> size_type defaultOffset{30}, defaultCount{60}, npos{string_view_type::npos};</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>      <span class="keyword">const</span> <span class="keyword">auto</span> sz{std::min(obtained.size(), prediction.size())};</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>      <span class="keyword">const</span> <span class="keyword">auto</span> sz{std::ranges::min(obtained.size(), prediction.size())};</div>
 <div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span> </div>
 <div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>      <span class="keyword">auto</span> newlineBackwards{ [pos](string_view_type sv){ <span class="keywordflow">return</span> pos &lt; sv.size() ? sv.rfind(<span class="charliteral">&#39;\n&#39;</span>, pos) : npos; } };</div>
 <div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span> </div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>      <span class="keyword">const</span> <span class="keyword">auto</span> loc{std::min(newlineBackwards(prediction), newlineBackwards(obtained))};</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>      <span class="keyword">const</span> <span class="keyword">auto</span> loc{std::ranges::min(newlineBackwards(prediction), newlineBackwards(obtained))};</div>
 <div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span> </div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>      <span class="keyword">const</span> size_type offset{loc &lt; npos ? std::min(defaultOffset, pos - loc) : defaultOffset};</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>      <span class="keyword">const</span> size_type offset{loc &lt; npos ? std::ranges::min(defaultOffset, pos - loc) : defaultOffset};</div>
 <div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span> </div>
 <div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>      <span class="keyword">const</span> <span class="keyword">auto</span> lpos{pos &lt; offset ? 0 :</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>                         pos &lt; sz  ? pos - offset : sz - std::min(sz, offset)};</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>                         pos &lt; sz  ? pos - offset : sz - std::ranges::min(sz, offset)};</div>
 <div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span> </div>
 <div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>      <span class="keyword">struct </span>message{ std::string mess; <span class="keywordtype">bool</span> trunc{}; };</div>
 <div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span> </div>
@@ -201,14 +201,14 @@ $(function() {
 <div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>    <span class="keyword">template</span>&lt;test_mode Mode, <span class="keyword">class</span> Advisor&gt;</div>
 <div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> test(<a class="code hl_struct" href="../../d2/d95/structsequoia_1_1testing_1_1equality__check__t.html">equality_check_t</a>, <a class="code hl_class" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger&lt;Mode&gt;</a>&amp; logger, string_view_type obtained, string_view_type prediction, <span class="keyword">const</span> <a class="code hl_class" href="../../d6/d71/classsequoia_1_1testing_1_1tutor.html">tutor&lt;Advisor&gt;</a>&amp; advisor)</div>
 <div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>    {</div>
-<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>      <span class="keyword">auto</span> iters{std::mismatch(obtained.begin(), obtained.end(), prediction.begin(), prediction.end())};</div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>      <span class="keyword">auto</span> iters{std::ranges::mismatch(obtained, prediction)};</div>
 <div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span> </div>
-<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>      <span class="keywordflow">if</span>((iters.first != obtained.end()) &amp;&amp; (iters.second != prediction.end()))</div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>      <span class="keywordflow">if</span>((iters.in1 != obtained.end()) &amp;&amp; (iters.in2 != prediction.end()))</div>
 <div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>      {</div>
-<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>        <span class="keyword">const</span> <span class="keyword">auto</span> dist{std::distance(obtained.begin(), iters.first)};</div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>        <span class="keyword">const</span> <span class="keyword">auto</span> dist{std::ranges::distance(obtained.begin(), iters.in1)};</div>
 <div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>        <span class="keyword">auto</span> adv{make_advisor(<span class="stringliteral">&quot;&quot;</span>, obtained, prediction, dist, advisor)};</div>
 <div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span> </div>
-<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>        <span class="keyword">const</span> <span class="keyword">auto</span> numLines{std::count(prediction.begin(), iters.second, <span class="charliteral">&#39;\n&#39;</span>)};</div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>        <span class="keyword">const</span> <span class="keyword">auto</span> numLines{std::count(prediction.begin(), iters.in2, <span class="charliteral">&#39;\n&#39;</span>)};</div>
 <div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span> </div>
 <div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>        <span class="keyword">const</span> <span class="keyword">auto</span> mess{</div>
 <div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>          [dist,numLines]() {</div>
@@ -220,13 +220,13 @@ $(function() {
 <div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>          }()</div>
 <div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>        };</div>
 <div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span> </div>
-<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>        <a class="code hl_function" href="../../d2/d0d/FreeCheckers_8hpp.html#a75993733a577e6b76bb93628fe2b722b">check</a>(equality, mess, logger, *(iters.first), *(iters.second), adv);</div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>        <a class="code hl_function" href="../../d2/d0d/FreeCheckers_8hpp.html#a75993733a577e6b76bb93628fe2b722b">check</a>(equality, mess, logger, *(iters.in1), *(iters.in2), adv);</div>
 <div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>      }</div>
-<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>      <span class="keywordflow">else</span> <span class="keywordflow">if</span>((iters.first != obtained.end()) || (iters.second != prediction.end()))</div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>      <span class="keywordflow">else</span> <span class="keywordflow">if</span>((iters.in1 != obtained.end()) || (iters.in2 != prediction.end()))</div>
 <div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>      {</div>
 <div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>        <span class="keyword">auto</span> <a class="code hl_class" href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">checker</a>{</div>
 <div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>          [&amp;logger, obtained, prediction, &amp;advisor](<span class="keyword">auto</span> begin, <span class="keyword">auto</span> iter, std::string_view state, std::string_view adjective){</div>
-<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>            <span class="keyword">const</span> <span class="keyword">auto</span> dist{std::distance(begin, iter)};</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>            <span class="keyword">const</span> <span class="keyword">auto</span> dist{std::ranges::distance(begin, iter)};</div>
 <div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>            <span class="keyword">const</span> <span class="keyword">auto</span> info{std::string{<span class="stringliteral">&quot;First &quot;</span>}.append(state).append(<span class="stringliteral">&quot; character: &quot;</span>).append(display_character(*iter))};</div>
 <div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>            <span class="keyword">auto</span> adv{make_advisor(info, obtained, prediction, dist, advisor)};</div>
 <div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span> </div>
@@ -236,13 +236,13 @@ $(function() {
 <div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>          }</div>
 <div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>        };</div>
 <div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span> </div>
-<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>        <span class="keywordflow">if</span>(iters.second != prediction.end())</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>        <span class="keywordflow">if</span>(iters.in2 != prediction.end())</div>
 <div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>        {</div>
-<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>          <a class="code hl_class" href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">checker</a>(prediction.begin(), iters.second, <span class="stringliteral">&quot;missing&quot;</span>, <span class="stringliteral">&quot;short&quot;</span>);</div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>          <a class="code hl_class" href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">checker</a>(prediction.begin(), iters.in2, <span class="stringliteral">&quot;missing&quot;</span>, <span class="stringliteral">&quot;short&quot;</span>);</div>
 <div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>        }</div>
-<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>        <span class="keywordflow">else</span> <span class="keywordflow">if</span>(iters.first != obtained.end())</div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>        <span class="keywordflow">else</span> <span class="keywordflow">if</span>(iters.in1 != obtained.end())</div>
 <div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>        {</div>
-<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>          <a class="code hl_class" href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">checker</a>(obtained.begin(), iters.first, <span class="stringliteral">&quot;excess&quot;</span>, <span class="stringliteral">&quot;long&quot;</span>);</div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>          <a class="code hl_class" href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">checker</a>(obtained.begin(), iters.in1, <span class="stringliteral">&quot;excess&quot;</span>, <span class="stringliteral">&quot;long&quot;</span>);</div>
 <div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>        }</div>
 <div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>      }</div>
 <div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>    }</div>
@@ -500,14 +500,14 @@ $(function() {
 <div class="line"><a id="l00494" name="l00494"></a><span class="lineno">  494</span>          std::vector&lt;fs::path&gt; paths{};</div>
 <div class="line"><a id="l00495" name="l00495"></a><span class="lineno">  495</span>          <span class="keywordflow">for</span>(<span class="keyword">const</span> <span class="keyword">auto</span>&amp; p : fs::directory_iterator(dir))</div>
 <div class="line"><a id="l00496" name="l00496"></a><span class="lineno">  496</span>          {</div>
-<div class="line"><a id="l00497" name="l00497"></a><span class="lineno">  497</span>            <span class="keywordflow">if</span>(    std::find(excluded_files.begin(),      excluded_files.end(),      p.path().filename()) == excluded_files.end()</div>
-<div class="line"><a id="l00498" name="l00498"></a><span class="lineno">  498</span>                &amp;&amp; std::find(excluded_extensions.begin(), excluded_extensions.end(), p.path().extension()) == excluded_extensions.end())</div>
+<div class="line"><a id="l00497" name="l00497"></a><span class="lineno">  497</span>            <span class="keywordflow">if</span>(    std::ranges::find(excluded_files,      p.path().filename())  == excluded_files.end()</div>
+<div class="line"><a id="l00498" name="l00498"></a><span class="lineno">  498</span>                &amp;&amp; std::ranges::find(excluded_extensions, p.path().extension()) == excluded_extensions.end())</div>
 <div class="line"><a id="l00499" name="l00499"></a><span class="lineno">  499</span>            {</div>
 <div class="line"><a id="l00500" name="l00500"></a><span class="lineno">  500</span>               paths.push_back(p);</div>
 <div class="line"><a id="l00501" name="l00501"></a><span class="lineno">  501</span>            }</div>
 <div class="line"><a id="l00502" name="l00502"></a><span class="lineno">  502</span>          }</div>
 <div class="line"><a id="l00503" name="l00503"></a><span class="lineno">  503</span> </div>
-<div class="line"><a id="l00504" name="l00504"></a><span class="lineno">  504</span>          std::sort(paths.begin(), paths.end());</div>
+<div class="line"><a id="l00504" name="l00504"></a><span class="lineno">  504</span>          std::ranges::sort(paths);</div>
 <div class="line"><a id="l00505" name="l00505"></a><span class="lineno">  505</span> </div>
 <div class="line"><a id="l00506" name="l00506"></a><span class="lineno">  506</span>          <span class="keywordflow">return</span> paths;</div>
 <div class="line"><a id="l00507" name="l00507"></a><span class="lineno">  507</span>        }</div>
@@ -520,21 +520,21 @@ $(function() {
 <div class="line"><a id="l00514" name="l00514"></a><span class="lineno">  514</span>        paths.size(),</div>
 <div class="line"><a id="l00515" name="l00515"></a><span class="lineno">  515</span>        predictedPaths.size());</div>
 <div class="line"><a id="l00516" name="l00516"></a><span class="lineno">  516</span> </div>
-<div class="line"><a id="l00517" name="l00517"></a><span class="lineno">  517</span>      <span class="keyword">const</span> <span class="keyword">auto</span> iters{std::mismatch(paths.begin(), paths.end(), predictedPaths.begin(), predictedPaths.end(),</div>
+<div class="line"><a id="l00517" name="l00517"></a><span class="lineno">  517</span>      <span class="keyword">const</span> <span class="keyword">auto</span> iters{std::ranges::mismatch(paths, predictedPaths,</div>
 <div class="line"><a id="l00518" name="l00518"></a><span class="lineno">  518</span>          [&amp;dir,&amp;prediction](<span class="keyword">const</span> fs::path&amp; lhs, <span class="keyword">const</span> fs::path&amp; rhs) {</div>
-<div class="line"><a id="l00519" name="l00519"></a><span class="lineno">  519</span>            return fs::relative(lhs, dir) == fs::relative(rhs, prediction);</div>
+<div class="line"><a id="l00519" name="l00519"></a><span class="lineno">  519</span>            <span class="keywordflow">return</span> fs::relative(lhs, dir) == fs::relative(rhs, prediction);</div>
 <div class="line"><a id="l00520" name="l00520"></a><span class="lineno">  520</span>          })};</div>
-<div class="line"><a id="l00521" name="l00521"></a><span class="lineno">  521</span>      <span class="keywordflow">if</span>((iters.first != paths.end()) &amp;&amp; (iters.second != predictedPaths.end()))</div>
+<div class="line"><a id="l00521" name="l00521"></a><span class="lineno">  521</span>      <span class="keywordflow">if</span>((iters.in1 != paths.end()) &amp;&amp; (iters.in2 != predictedPaths.end()))</div>
 <div class="line"><a id="l00522" name="l00522"></a><span class="lineno">  522</span>      {</div>
-<div class="line"><a id="l00523" name="l00523"></a><span class="lineno">  523</span>        <a class="code hl_function" href="../../d2/d0d/FreeCheckers_8hpp.html#a75993733a577e6b76bb93628fe2b722b">check</a>(equality, <span class="stringliteral">&quot;First directory entry mismatch&quot;</span>, logger, *iters.first, *iters.second);</div>
+<div class="line"><a id="l00523" name="l00523"></a><span class="lineno">  523</span>        <a class="code hl_function" href="../../d2/d0d/FreeCheckers_8hpp.html#a75993733a577e6b76bb93628fe2b722b">check</a>(equality, <span class="stringliteral">&quot;First directory entry mismatch&quot;</span>, logger, *iters.in1, *iters.in2);</div>
 <div class="line"><a id="l00524" name="l00524"></a><span class="lineno">  524</span>      }</div>
-<div class="line"><a id="l00525" name="l00525"></a><span class="lineno">  525</span>      <span class="keywordflow">else</span> <span class="keywordflow">if</span>(iters.first != paths.end())</div>
+<div class="line"><a id="l00525" name="l00525"></a><span class="lineno">  525</span>      <span class="keywordflow">else</span> <span class="keywordflow">if</span>(iters.in1 != paths.end())</div>
 <div class="line"><a id="l00526" name="l00526"></a><span class="lineno">  526</span>      {</div>
-<div class="line"><a id="l00527" name="l00527"></a><span class="lineno">  527</span>        <a class="code hl_function" href="../../d2/d0d/FreeCheckers_8hpp.html#a75993733a577e6b76bb93628fe2b722b">check</a>(equality, <span class="stringliteral">&quot;First directory entry mismatch&quot;</span>, logger, *iters.first, fs::path{});</div>
+<div class="line"><a id="l00527" name="l00527"></a><span class="lineno">  527</span>        <a class="code hl_function" href="../../d2/d0d/FreeCheckers_8hpp.html#a75993733a577e6b76bb93628fe2b722b">check</a>(equality, <span class="stringliteral">&quot;First directory entry mismatch&quot;</span>, logger, *iters.in1, fs::path{});</div>
 <div class="line"><a id="l00528" name="l00528"></a><span class="lineno">  528</span>      }</div>
-<div class="line"><a id="l00529" name="l00529"></a><span class="lineno">  529</span>      <span class="keywordflow">else</span> <span class="keywordflow">if</span>(iters.second != predictedPaths.end())</div>
+<div class="line"><a id="l00529" name="l00529"></a><span class="lineno">  529</span>      <span class="keywordflow">else</span> <span class="keywordflow">if</span>(iters.in2 != predictedPaths.end())</div>
 <div class="line"><a id="l00530" name="l00530"></a><span class="lineno">  530</span>      {</div>
-<div class="line"><a id="l00531" name="l00531"></a><span class="lineno">  531</span>        <a class="code hl_function" href="../../d2/d0d/FreeCheckers_8hpp.html#a75993733a577e6b76bb93628fe2b722b">check</a>(equality, <span class="stringliteral">&quot;First directory entry mismatch&quot;</span>, logger, fs::path{}, *iters.second);</div>
+<div class="line"><a id="l00531" name="l00531"></a><span class="lineno">  531</span>        <a class="code hl_function" href="../../d2/d0d/FreeCheckers_8hpp.html#a75993733a577e6b76bb93628fe2b722b">check</a>(equality, <span class="stringliteral">&quot;First directory entry mismatch&quot;</span>, logger, fs::path{}, *iters.in2);</div>
 <div class="line"><a id="l00532" name="l00532"></a><span class="lineno">  532</span>      }</div>
 <div class="line"><a id="l00533" name="l00533"></a><span class="lineno">  533</span>      <span class="keywordflow">else</span></div>
 <div class="line"><a id="l00534" name="l00534"></a><span class="lineno">  534</span>      {</div>
@@ -787,7 +787,7 @@ $(function() {
 <div class="ttc" id="aStreaming_8hpp_html"><div class="ttname"><a href="../../de/db5/Streaming_8hpp.html">Streaming.hpp</a></div><div class="ttdoc">Utilities for reading/writing to files.</div></div>
 <div class="ttc" id="aTestLogger_8hpp_html_ae4e97c9d45a89647799f0d308ba6d244"><div class="ttname"><a href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">sequoia::testing::test_mode</a></div><div class="ttdeci">test_mode</div><div class="ttdoc">Specifies whether tests are run as standard tests or in false postive/negative mode.</div><div class="ttdef"><b>Definition:</b> TestLogger.hpp:35</div></div>
 <div class="ttc" id="aclasssequoia_1_1object_1_1factory_html"><div class="ttname"><a href="../../dc/d0c/classsequoia_1_1object_1_1factory.html">sequoia::object::factory&lt; DefaultComparer, Comparers... &gt;</a></div></div>
-<div class="ttc" id="aclasssequoia_1_1testing_1_1checker_html"><div class="ttname"><a href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">sequoia::testing::checker</a></div><div class="ttdef"><b>Definition:</b> FreeCheckers.hpp:672</div></div>
+<div class="ttc" id="aclasssequoia_1_1testing_1_1checker_html"><div class="ttname"><a href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">sequoia::testing::checker</a></div><div class="ttdef"><b>Definition:</b> FreeCheckers.hpp:669</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1general__file__checker_html"><div class="ttname"><a href="../../d9/d4c/classsequoia_1_1testing_1_1general__file__checker.html">sequoia::testing::general_file_checker</a></div><div class="ttdoc">A file checker, which accepts a variadic set of file comparison function objects.</div><div class="ttdef"><b>Definition:</b> ConcreteTypeCheckers.hpp:355</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1test__logger_html"><div class="ttname"><a href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">sequoia::testing::test_logger</a></div><div class="ttdef"><b>Definition:</b> TestLogger.hpp:191</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1tutor_html"><div class="ttname"><a href="../../d6/d71/classsequoia_1_1testing_1_1tutor.html">sequoia::testing::tutor</a></div><div class="ttdoc">class template used to wrap function objects which proffer advice.</div><div class="ttdef"><b>Definition:</b> Advice.hpp:127</div></div>

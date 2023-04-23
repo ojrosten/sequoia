@@ -311,7 +311,7 @@ $(function() {
 <div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>        (fn(node, std::get&lt;Is&gt;(s.values)), ...);</div>
 <div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>      }(std::make_index_sequence&lt;<span class="keyword">sizeof</span>...(Ts)&gt;{});</div>
 <div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span> </div>
-<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>      <span class="keywordflow">if</span>(!std::distance(tree.cbegin_edges(node), tree.cend_edges(node)))</div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>      <span class="keywordflow">if</span>(!std::ranges::distance(tree.cbegin_edges(node), tree.cend_edges(node)))</div>
 <div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>        tree.prune(node);</div>
 <div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span> </div>
 <div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>      <span class="keywordflow">return</span> std::forward&lt;Tree&gt;(tree);</div>
@@ -437,7 +437,7 @@ $(function() {
 <div class="line"><a id="l00364" name="l00364"></a><span class="lineno">  364</span>      <span class="comment">// Don&#39;t use logical short-circuit, otherwise the maps may not accurately update</span></div>
 <div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span>      std::array&lt;bool, <span class="keyword">sizeof</span>...(Suites) + 1&gt; isFound{ find(m_SelectedItems, val, m_Proj, m_Compare), find(m_SelectedSuites, suites, <a class="code hl_struct" href="../../d1/d0c/structsequoia_1_1object_1_1item__to__name.html">item_to_name</a>{}, std::equal_to&lt;std::string&gt;{}) ... };</div>
 <div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span> </div>
-<div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span>      <span class="keywordflow">return</span> std::any_of(isFound.begin(), isFound.end(), [](<span class="keywordtype">bool</span> b) { return b; });</div>
+<div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span>      <span class="keywordflow">return</span> std::ranges::any_of(isFound, [](<span class="keywordtype">bool</span> b) { <span class="keywordflow">return</span> b; });</div>
 <div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span>    }</div>
 <div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span> </div>
 <div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span>    [[nodiscard]]</div>
@@ -474,7 +474,7 @@ $(function() {
 <div class="line"><a id="l00401" name="l00401"></a><span class="lineno">  401</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> Key, <span class="keyword">class</span> U, <span class="keyword">class</span> Projector, <span class="keyword">class</span> Comp&gt;</div>
 <div class="line"><a id="l00402" name="l00402"></a><span class="lineno">  402</span>    <span class="keyword">static</span> <span class="keywordtype">bool</span> find(std::vector&lt;std::pair&lt;Key, bool&gt;&gt;&amp; selected, <span class="keyword">const</span> U&amp; u, Projector proj, Comp compare)</div>
 <div class="line"><a id="l00403" name="l00403"></a><span class="lineno">  403</span>    {</div>
-<div class="line"><a id="l00404" name="l00404"></a><span class="lineno">  404</span>      <span class="keyword">auto</span> found{std::find_if(selected.begin(), selected.end(), [&amp;proj, &amp;compare, &amp;u](<span class="keyword">const</span> std::pair&lt;Key, bool&gt;&amp; e) { return compare(e.first, proj(u)); })};</div>
+<div class="line"><a id="l00404" name="l00404"></a><span class="lineno">  404</span>      <span class="keyword">auto</span> found{std::ranges::find_if(selected, [&amp;proj, &amp;compare, &amp;u](<span class="keyword">const</span> std::pair&lt;Key, bool&gt;&amp; e) { <span class="keywordflow">return</span> compare(e.first, proj(u)); })};</div>
 <div class="line"><a id="l00405" name="l00405"></a><span class="lineno">  405</span> </div>
 <div class="line"><a id="l00406" name="l00406"></a><span class="lineno">  406</span>      <span class="keywordflow">if</span>(found != selected.end())</div>
 <div class="line"><a id="l00407" name="l00407"></a><span class="lineno">  407</span>      {</div>

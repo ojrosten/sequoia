@@ -78,6 +78,7 @@ $(function() {
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
+<a href="#friends">Friends</a> &#124;
 <a href="../../dd/d36/structsequoia_1_1maths_1_1graph__impl_1_1proxy__dereference__policy-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">sequoia::maths::graph_impl::proxy_dereference_policy&lt; Iterator &gt; Struct Template Reference</div></div>
 </div><!--header-->
@@ -97,9 +98,9 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>reference</b> = decl
 <tr class="memitem:a0dfcdce6a5454e3e3d46916083bb6d2c"><td class="memItemLeft" align="right" valign="top"><a id="a0dfcdce6a5454e3e3d46916083bb6d2c" name="a0dfcdce6a5454e3e3d46916083bb6d2c"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>pointer</b> = std::add_pointer_t&lt; reference &gt;</td></tr>
 <tr class="separator:a0dfcdce6a5454e3e3d46916083bb6d2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae34818e773e41ad6d7d8225afc8c38c4"><td class="memItemLeft" align="right" valign="top"><a id="ae34818e773e41ad6d7d8225afc8c38c4" name="ae34818e773e41ad6d7d8225afc8c38c4"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>value_type</b> = std::remove_cv_t&lt; reference &gt;</td></tr>
-<tr class="separator:ae34818e773e41ad6d7d8225afc8c38c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a12e26f6134e379d93b81a96ae0c18e41"><td class="memItemLeft" align="right" valign="top"><a id="a12e26f6134e379d93b81a96ae0c18e41" name="a12e26f6134e379d93b81a96ae0c18e41"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>value_type</b> = std::remove_cvref_t&lt; reference &gt;</td></tr>
+<tr class="separator:a12e26f6134e379d93b81a96ae0c18e41"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -127,6 +128,12 @@ constexpr <a class="el" href="../../db/d8a/structsequoia_1_1maths_1_1graph__impl
 <tr class="memitem:af834b929a48e59def5ced003406cd84d"><td class="memItemLeft" align="right" valign="top"><a id="af834b929a48e59def5ced003406cd84d" name="af834b929a48e59def5ced003406cd84d"></a>
 constexpr <a class="el" href="../../db/d8a/structsequoia_1_1maths_1_1graph__impl_1_1proxy__dereference__policy.html">proxy_dereference_policy</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="../../db/d8a/structsequoia_1_1maths_1_1graph__impl_1_1proxy__dereference__policy.html">proxy_dereference_policy</a> &amp;&amp;) noexcept=default</td></tr>
 <tr class="separator:af834b929a48e59def5ced003406cd84d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="friends" name="friends"></a>
+Friends</h2></td></tr>
+<tr class="memitem:ab1c1d6011f4d8038321483b58b460ea2"><td class="memItemLeft" align="right" valign="top"><a id="ab1c1d6011f4d8038321483b58b460ea2" name="ab1c1d6011f4d8038321483b58b460ea2"></a>
+constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const <a class="el" href="../../db/d8a/structsequoia_1_1maths_1_1graph__impl_1_1proxy__dereference__policy.html">proxy_dereference_policy</a> &amp;, const <a class="el" href="../../db/d8a/structsequoia_1_1maths_1_1graph__impl_1_1proxy__dereference__policy.html">proxy_dereference_policy</a> &amp;) noexcept=default</td></tr>
+<tr class="separator:ab1c1d6011f4d8038321483b58b460ea2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li>C:/Users/olive/sequoia/Source/sequoia/Maths/Graph/<a class="el" href="../../dd/d8b/NodeStorage_8hpp_source.html">NodeStorage.hpp</a></li>

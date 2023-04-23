@@ -179,7 +179,7 @@ $(function() {
 <div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>  <span class="keyword">private</span>:</div>
 <div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    <span class="keywordtype">void</span> prune(<span class="keyword">const</span> size_type node, <a class="code hl_struct" href="../../d1/de4/structsequoia_1_1maths_1_1tree__link__direction__constant.html">forward_tree_type</a> ftt)</div>
 <div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>    {</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>      <span class="keywordflow">while</span>(std::distance(this-&gt;crbegin_edges(node), this-&gt;crend_edges(node)))</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>      <span class="keywordflow">while</span>(std::ranges::distance(this-&gt;crbegin_edges(node), this-&gt;crend_edges(node)))</div>
 <div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>      {</div>
 <div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>        <span class="keyword">const</span> <span class="keyword">auto</span> target{this-&gt;crbegin_edges(node)-&gt;target_node()};</div>
 <div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>        prune(target, ftt);</div>
@@ -192,7 +192,7 @@ $(function() {
 <div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>    {</div>
 <div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>      <span class="keyword">const</span> std::ptrdiff_t offset{node == 0 ? 0 : 1};</div>
 <div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span> </div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>      <span class="keywordflow">while</span>(std::distance(this-&gt;crbegin_edges(node), this-&gt;crend_edges(node)) &gt; offset)</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>      <span class="keywordflow">while</span>(std::ranges::distance(this-&gt;crbegin_edges(node), this-&gt;crend_edges(node)) &gt; offset)</div>
 <div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>      {</div>
 <div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>        <span class="keyword">const</span> <span class="keyword">auto</span> target{this-&gt;crbegin_edges(node)-&gt;target_node()};</div>
 <div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>        prune(target, stt);</div>

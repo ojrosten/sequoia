@@ -115,9 +115,9 @@ $(function() {
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <a class="code hl_struct" href="../../d9/d0c/structsequoia_1_1testing_1_1perfectly__normal__beast.html">perfectly_normal_beast</a>&amp; operator=(<a class="code hl_struct" href="../../d9/d0c/structsequoia_1_1testing_1_1perfectly__normal__beast.html">perfectly_normal_beast</a>&amp;&amp;) = <span class="keywordflow">default</span>;</div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="keywordtype">void</span> swap(<a class="code hl_struct" href="../../d9/d0c/structsequoia_1_1testing_1_1perfectly__normal__beast.html">perfectly_normal_beast</a>&amp; other) <span class="keyword">noexcept</span>(<span class="keyword">noexcept</span>(std::swap(this-&gt;x, other.x)))</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="keywordtype">void</span> swap(<a class="code hl_struct" href="../../d9/d0c/structsequoia_1_1testing_1_1perfectly__normal__beast.html">perfectly_normal_beast</a>&amp; other) <span class="keyword">noexcept</span>(<span class="keyword">noexcept</span>(std::ranges::swap(this-&gt;x, other.x)))</div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    {</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>      std::swap(x, other.x);</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>      std::ranges::swap(x, other.x);</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    }</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="keyword">friend</span> <span class="keywordtype">void</span> swap(<a class="code hl_struct" href="../../d9/d0c/structsequoia_1_1testing_1_1perfectly__normal__beast.html">perfectly_normal_beast</a>&amp; lhs, <a class="code hl_struct" href="../../d9/d0c/structsequoia_1_1testing_1_1perfectly__normal__beast.html">perfectly_normal_beast</a>&amp; rhs)</div>
@@ -206,9 +206,9 @@ $(function() {
 <div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span> </div>
 <div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>    <a class="code hl_struct" href="../../de/d17/structsequoia_1_1testing_1_1perfectly__stringy__beast.html">perfectly_stringy_beast</a>&amp; operator=(<a class="code hl_struct" href="../../de/d17/structsequoia_1_1testing_1_1perfectly__stringy__beast.html">perfectly_stringy_beast</a>&amp;&amp;) <span class="keyword">noexcept</span> = <span class="keywordflow">default</span>;</div>
 <div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span> </div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>    <span class="keywordtype">void</span> swap(<a class="code hl_struct" href="../../de/d17/structsequoia_1_1testing_1_1perfectly__stringy__beast.html">perfectly_stringy_beast</a>&amp; other) <span class="keyword">noexcept</span>(<span class="keyword">noexcept</span>(std::swap(this-&gt;x, other.x)))</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>    <span class="keywordtype">void</span> swap(<a class="code hl_struct" href="../../de/d17/structsequoia_1_1testing_1_1perfectly__stringy__beast.html">perfectly_stringy_beast</a>&amp; other) <span class="keyword">noexcept</span>(<span class="keyword">noexcept</span>(std::ranges::swap(this-&gt;x, other.x)))</div>
 <div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>    {</div>
-<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>      std::swap(x, other.x);</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>      std::ranges::swap(x, other.x);</div>
 <div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>    }</div>
 <div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span> </div>
 <div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>    <span class="keyword">friend</span> <span class="keywordtype">void</span> swap(<a class="code hl_struct" href="../../de/d17/structsequoia_1_1testing_1_1perfectly__stringy__beast.html">perfectly_stringy_beast</a>&amp; lhs, <a class="code hl_struct" href="../../de/d17/structsequoia_1_1testing_1_1perfectly__stringy__beast.html">perfectly_stringy_beast</a>&amp; rhs)</div>
@@ -303,9 +303,9 @@ $(function() {
 <div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span> </div>
 <div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>    perfectly_sharing_beast&amp; operator=(perfectly_sharing_beast&amp;&amp;) = <span class="keywordflow">default</span>;</div>
 <div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span> </div>
-<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>    <span class="keywordtype">void</span> swap(perfectly_sharing_beast&amp; other) <span class="keyword">noexcept</span>(<span class="keyword">noexcept</span>(std::swap(this-&gt;x, other.x)))</div>
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>    <span class="keywordtype">void</span> swap(perfectly_sharing_beast&amp; other) <span class="keyword">noexcept</span>(<span class="keyword">noexcept</span>(std::ranges::swap(this-&gt;x, other.x)))</div>
 <div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>    {</div>
-<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>      std::swap(x, other.x);</div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>      std::ranges::swap(x, other.x);</div>
 <div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>    }</div>
 <div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span> </div>
 <div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>    <span class="keyword">friend</span> <span class="keywordtype">void</span> swap(perfectly_sharing_beast&amp; lhs, perfectly_sharing_beast&amp; rhs)</div>
@@ -374,10 +374,10 @@ $(function() {
 <div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span> </div>
 <div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span>    <a class="code hl_struct" href="../../d7/d85/structsequoia_1_1testing_1_1doubly__normal__beast.html">doubly_normal_beast</a>&amp; operator=(<a class="code hl_struct" href="../../d7/d85/structsequoia_1_1testing_1_1doubly__normal__beast.html">doubly_normal_beast</a>&amp;&amp;) = <span class="keywordflow">default</span>;</div>
 <div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span> </div>
-<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span>    <span class="keywordtype">void</span> swap(<a class="code hl_struct" href="../../d7/d85/structsequoia_1_1testing_1_1doubly__normal__beast.html">doubly_normal_beast</a>&amp; other) <span class="keyword">noexcept</span>(<span class="keyword">noexcept</span>(std::swap(this-&gt;x, other.x)) &amp;&amp; <span class="keyword">noexcept</span>(std::swap(this-&gt;y, other.y)))</div>
+<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span>    <span class="keywordtype">void</span> swap(<a class="code hl_struct" href="../../d7/d85/structsequoia_1_1testing_1_1doubly__normal__beast.html">doubly_normal_beast</a>&amp; other) <span class="keyword">noexcept</span>(<span class="keyword">noexcept</span>(std::ranges::swap(this-&gt;x, other.x)) &amp;&amp; <span class="keyword">noexcept</span>(std::ranges::swap(this-&gt;y, other.y)))</div>
 <div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span>    {</div>
-<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span>      std::swap(x, other.x);</div>
-<div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span>      std::swap(y, other.y);</div>
+<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span>      std::ranges::swap(x, other.x);</div>
+<div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span>      std::ranges::swap(y, other.y);</div>
 <div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span>    }</div>
 <div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span> </div>
 <div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>    <span class="keyword">friend</span> <span class="keywordtype">void</span> swap(<a class="code hl_struct" href="../../d7/d85/structsequoia_1_1testing_1_1doubly__normal__beast.html">doubly_normal_beast</a>&amp; lhs, <a class="code hl_struct" href="../../d7/d85/structsequoia_1_1testing_1_1doubly__normal__beast.html">doubly_normal_beast</a>&amp; rhs)</div>
@@ -433,7 +433,7 @@ $(function() {
 <div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span> </div>
 <div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span>    <span class="keyword">friend</span> <span class="keywordtype">void</span> swap(<a class="code hl_struct" href="../../d4/dda/structsequoia_1_1testing_1_1broken__equality.html">broken_equality</a>&amp; lhs, <a class="code hl_struct" href="../../d4/dda/structsequoia_1_1testing_1_1broken__equality.html">broken_equality</a>&amp; rhs)</div>
 <div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span>    {</div>
-<div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span>      std::swap(lhs.x, rhs.x);</div>
+<div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span>      std::ranges::swap(lhs.x, rhs.x);</div>
 <div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span>    }</div>
 <div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span> </div>
 <div class="line"><a id="l00364" name="l00364"></a><span class="lineno">  364</span>    std::vector&lt;T, Allocator&gt; x{};</div>
@@ -481,7 +481,7 @@ $(function() {
 <div class="line"><a id="l00406" name="l00406"></a><span class="lineno">  406</span> </div>
 <div class="line"><a id="l00407" name="l00407"></a><span class="lineno">  407</span>    <span class="keyword">friend</span> <span class="keywordtype">void</span> swap(<a class="code hl_struct" href="../../d9/d13/structsequoia_1_1testing_1_1broken__inequality.html">broken_inequality</a>&amp; lhs, <a class="code hl_struct" href="../../d9/d13/structsequoia_1_1testing_1_1broken__inequality.html">broken_inequality</a>&amp; rhs)</div>
 <div class="line"><a id="l00408" name="l00408"></a><span class="lineno">  408</span>    {</div>
-<div class="line"><a id="l00409" name="l00409"></a><span class="lineno">  409</span>      std::swap(lhs.x, rhs.x);</div>
+<div class="line"><a id="l00409" name="l00409"></a><span class="lineno">  409</span>      std::ranges::swap(lhs.x, rhs.x);</div>
 <div class="line"><a id="l00410" name="l00410"></a><span class="lineno">  410</span>    }</div>
 <div class="line"><a id="l00411" name="l00411"></a><span class="lineno">  411</span> </div>
 <div class="line"><a id="l00412" name="l00412"></a><span class="lineno">  412</span>    std::vector&lt;T, Allocator&gt; x{};</div>
@@ -530,7 +530,7 @@ $(function() {
 <div class="line"><a id="l00455" name="l00455"></a><span class="lineno">  455</span> </div>
 <div class="line"><a id="l00456" name="l00456"></a><span class="lineno">  456</span>    <span class="keyword">friend</span> <span class="keywordtype">void</span> swap(<a class="code hl_struct" href="../../db/d99/structsequoia_1_1testing_1_1broken__copy.html">broken_copy</a>&amp; lhs, <a class="code hl_struct" href="../../db/d99/structsequoia_1_1testing_1_1broken__copy.html">broken_copy</a>&amp; rhs)</div>
 <div class="line"><a id="l00457" name="l00457"></a><span class="lineno">  457</span>    {</div>
-<div class="line"><a id="l00458" name="l00458"></a><span class="lineno">  458</span>      std::swap(lhs.x, rhs.x);</div>
+<div class="line"><a id="l00458" name="l00458"></a><span class="lineno">  458</span>      std::ranges::swap(lhs.x, rhs.x);</div>
 <div class="line"><a id="l00459" name="l00459"></a><span class="lineno">  459</span>    }</div>
 <div class="line"><a id="l00460" name="l00460"></a><span class="lineno">  460</span> </div>
 <div class="line"><a id="l00461" name="l00461"></a><span class="lineno">  461</span>    std::vector&lt;T, Allocator&gt; x{};</div>
@@ -581,7 +581,7 @@ $(function() {
 <div class="line"><a id="l00506" name="l00506"></a><span class="lineno">  506</span> </div>
 <div class="line"><a id="l00507" name="l00507"></a><span class="lineno">  507</span>    <span class="keyword">friend</span> <span class="keywordtype">void</span> swap(<a class="code hl_struct" href="../../db/dfc/structsequoia_1_1testing_1_1broken__para__copy.html">broken_para_copy</a>&amp; lhs, <a class="code hl_struct" href="../../db/dfc/structsequoia_1_1testing_1_1broken__para__copy.html">broken_para_copy</a>&amp; rhs)</div>
 <div class="line"><a id="l00508" name="l00508"></a><span class="lineno">  508</span>    {</div>
-<div class="line"><a id="l00509" name="l00509"></a><span class="lineno">  509</span>      std::swap(lhs.x, rhs.x);</div>
+<div class="line"><a id="l00509" name="l00509"></a><span class="lineno">  509</span>      std::ranges::swap(lhs.x, rhs.x);</div>
 <div class="line"><a id="l00510" name="l00510"></a><span class="lineno">  510</span>    }</div>
 <div class="line"><a id="l00511" name="l00511"></a><span class="lineno">  511</span> </div>
 <div class="line"><a id="l00512" name="l00512"></a><span class="lineno">  512</span>    std::vector&lt;T, Allocator&gt; x{};</div>
@@ -633,7 +633,7 @@ $(function() {
 <div class="line"><a id="l00558" name="l00558"></a><span class="lineno">  558</span> </div>
 <div class="line"><a id="l00559" name="l00559"></a><span class="lineno">  559</span>    <span class="keyword">friend</span> <span class="keywordtype">void</span> swap(<a class="code hl_struct" href="../../d4/de1/structsequoia_1_1testing_1_1broken__move.html">broken_move</a>&amp; lhs, <a class="code hl_struct" href="../../d4/de1/structsequoia_1_1testing_1_1broken__move.html">broken_move</a>&amp; rhs)</div>
 <div class="line"><a id="l00560" name="l00560"></a><span class="lineno">  560</span>    {</div>
-<div class="line"><a id="l00561" name="l00561"></a><span class="lineno">  561</span>      std::swap(lhs.x, rhs.x);</div>
+<div class="line"><a id="l00561" name="l00561"></a><span class="lineno">  561</span>      std::ranges::swap(lhs.x, rhs.x);</div>
 <div class="line"><a id="l00562" name="l00562"></a><span class="lineno">  562</span>    }</div>
 <div class="line"><a id="l00563" name="l00563"></a><span class="lineno">  563</span> </div>
 <div class="line"><a id="l00564" name="l00564"></a><span class="lineno">  564</span>    std::vector&lt;T, Allocator&gt; x{};</div>
@@ -684,7 +684,7 @@ $(function() {
 <div class="line"><a id="l00609" name="l00609"></a><span class="lineno">  609</span> </div>
 <div class="line"><a id="l00610" name="l00610"></a><span class="lineno">  610</span>    <span class="keyword">friend</span> <span class="keywordtype">void</span> swap(<a class="code hl_struct" href="../../d4/da1/structsequoia_1_1testing_1_1broken__para__move.html">broken_para_move</a>&amp; lhs, <a class="code hl_struct" href="../../d4/da1/structsequoia_1_1testing_1_1broken__para__move.html">broken_para_move</a>&amp; rhs)</div>
 <div class="line"><a id="l00611" name="l00611"></a><span class="lineno">  611</span>    {</div>
-<div class="line"><a id="l00612" name="l00612"></a><span class="lineno">  612</span>      std::swap(lhs.x, rhs.x);</div>
+<div class="line"><a id="l00612" name="l00612"></a><span class="lineno">  612</span>      std::ranges::swap(lhs.x, rhs.x);</div>
 <div class="line"><a id="l00613" name="l00613"></a><span class="lineno">  613</span>    }</div>
 <div class="line"><a id="l00614" name="l00614"></a><span class="lineno">  614</span> </div>
 <div class="line"><a id="l00615" name="l00615"></a><span class="lineno">  615</span>    std::vector&lt;T, Allocator&gt; x{};</div>
@@ -735,7 +735,7 @@ $(function() {
 <div class="line"><a id="l00660" name="l00660"></a><span class="lineno">  660</span> </div>
 <div class="line"><a id="l00661" name="l00661"></a><span class="lineno">  661</span>    <span class="keyword">friend</span> <span class="keywordtype">void</span> swap(<a class="code hl_struct" href="../../de/de5/structsequoia_1_1testing_1_1broken__copy__assignment.html">broken_copy_assignment</a>&amp; lhs, <a class="code hl_struct" href="../../de/de5/structsequoia_1_1testing_1_1broken__copy__assignment.html">broken_copy_assignment</a>&amp; rhs)</div>
 <div class="line"><a id="l00662" name="l00662"></a><span class="lineno">  662</span>    {</div>
-<div class="line"><a id="l00663" name="l00663"></a><span class="lineno">  663</span>      std::swap(lhs.x, rhs.x);</div>
+<div class="line"><a id="l00663" name="l00663"></a><span class="lineno">  663</span>      std::ranges::swap(lhs.x, rhs.x);</div>
 <div class="line"><a id="l00664" name="l00664"></a><span class="lineno">  664</span>    }</div>
 <div class="line"><a id="l00665" name="l00665"></a><span class="lineno">  665</span> </div>
 <div class="line"><a id="l00666" name="l00666"></a><span class="lineno">  666</span>    std::vector&lt;T, Allocator&gt; x{};</div>
@@ -795,7 +795,7 @@ $(function() {
 <div class="line"><a id="l00720" name="l00720"></a><span class="lineno">  720</span> </div>
 <div class="line"><a id="l00721" name="l00721"></a><span class="lineno">  721</span>    <span class="keyword">friend</span> <span class="keywordtype">void</span> swap(<a class="code hl_struct" href="../../d5/de6/structsequoia_1_1testing_1_1broken__self__copy__assignment.html">broken_self_copy_assignment</a>&amp; lhs, <a class="code hl_struct" href="../../d5/de6/structsequoia_1_1testing_1_1broken__self__copy__assignment.html">broken_self_copy_assignment</a>&amp; rhs)</div>
 <div class="line"><a id="l00722" name="l00722"></a><span class="lineno">  722</span>    {</div>
-<div class="line"><a id="l00723" name="l00723"></a><span class="lineno">  723</span>      std::swap(lhs.x, rhs.x);</div>
+<div class="line"><a id="l00723" name="l00723"></a><span class="lineno">  723</span>      std::ranges::swap(lhs.x, rhs.x);</div>
 <div class="line"><a id="l00724" name="l00724"></a><span class="lineno">  724</span>    }</div>
 <div class="line"><a id="l00725" name="l00725"></a><span class="lineno">  725</span> </div>
 <div class="line"><a id="l00726" name="l00726"></a><span class="lineno">  726</span>    std::vector&lt;T, Allocator&gt; x{};</div>
@@ -837,7 +837,7 @@ $(function() {
 <div class="line"><a id="l00762" name="l00762"></a><span class="lineno">  762</span> </div>
 <div class="line"><a id="l00763" name="l00763"></a><span class="lineno">  763</span>    <span class="keyword">friend</span> <span class="keywordtype">void</span> swap(<a class="code hl_struct" href="../../d6/ded/structsequoia_1_1testing_1_1broken__move__assignment.html">broken_move_assignment</a>&amp; lhs, <a class="code hl_struct" href="../../d6/ded/structsequoia_1_1testing_1_1broken__move__assignment.html">broken_move_assignment</a>&amp; rhs)</div>
 <div class="line"><a id="l00764" name="l00764"></a><span class="lineno">  764</span>    {</div>
-<div class="line"><a id="l00765" name="l00765"></a><span class="lineno">  765</span>      std::swap(lhs.x, rhs.x);</div>
+<div class="line"><a id="l00765" name="l00765"></a><span class="lineno">  765</span>      std::ranges::swap(lhs.x, rhs.x);</div>
 <div class="line"><a id="l00766" name="l00766"></a><span class="lineno">  766</span>    }</div>
 <div class="line"><a id="l00767" name="l00767"></a><span class="lineno">  767</span> </div>
 <div class="line"><a id="l00768" name="l00768"></a><span class="lineno">  768</span>    std::vector&lt;T, Allocator&gt; x{};</div>
@@ -922,7 +922,7 @@ $(function() {
 <div class="line"><a id="l00847" name="l00847"></a><span class="lineno">  847</span> </div>
 <div class="line"><a id="l00848" name="l00848"></a><span class="lineno">  848</span>    <a class="code hl_struct" href="../../d4/d60/structsequoia_1_1testing_1_1broken__self__swap.html">broken_self_swap</a>&amp; operator=(<a class="code hl_struct" href="../../d4/d60/structsequoia_1_1testing_1_1broken__self__swap.html">broken_self_swap</a>&amp;&amp;) <span class="keyword">noexcept</span> = <span class="keywordflow">default</span>;</div>
 <div class="line"><a id="l00849" name="l00849"></a><span class="lineno">  849</span> </div>
-<div class="line"><a id="l00850" name="l00850"></a><span class="lineno">  850</span>    <span class="keywordtype">void</span> swap(<a class="code hl_struct" href="../../d4/d60/structsequoia_1_1testing_1_1broken__self__swap.html">broken_self_swap</a>&amp; other) <span class="keyword">noexcept</span>(<span class="keyword">noexcept</span>(std::swap(this-&gt;x, other.x)))</div>
+<div class="line"><a id="l00850" name="l00850"></a><span class="lineno">  850</span>    <span class="keywordtype">void</span> swap(<a class="code hl_struct" href="../../d4/d60/structsequoia_1_1testing_1_1broken__self__swap.html">broken_self_swap</a>&amp; other) <span class="keyword">noexcept</span>(<span class="keyword">noexcept</span>(std::ranges::swap(this-&gt;x, other.x)))</div>
 <div class="line"><a id="l00851" name="l00851"></a><span class="lineno">  851</span>    {</div>
 <div class="line"><a id="l00852" name="l00852"></a><span class="lineno">  852</span>      <span class="keywordflow">if</span>(&amp;other == <span class="keyword">this</span>)</div>
 <div class="line"><a id="l00853" name="l00853"></a><span class="lineno">  853</span>      {</div>
@@ -930,7 +930,7 @@ $(function() {
 <div class="line"><a id="l00855" name="l00855"></a><span class="lineno">  855</span>      }</div>
 <div class="line"><a id="l00856" name="l00856"></a><span class="lineno">  856</span>      <span class="keywordflow">else</span></div>
 <div class="line"><a id="l00857" name="l00857"></a><span class="lineno">  857</span>      {</div>
-<div class="line"><a id="l00858" name="l00858"></a><span class="lineno">  858</span>        std::swap(this-&gt;x, other.x);</div>
+<div class="line"><a id="l00858" name="l00858"></a><span class="lineno">  858</span>        std::ranges::swap(this-&gt;x, other.x);</div>
 <div class="line"><a id="l00859" name="l00859"></a><span class="lineno">  859</span>      }</div>
 <div class="line"><a id="l00860" name="l00860"></a><span class="lineno">  860</span>    }</div>
 <div class="line"><a id="l00861" name="l00861"></a><span class="lineno">  861</span> </div>
@@ -1010,9 +1010,9 @@ $(function() {
 <div class="line"><a id="l00935" name="l00935"></a><span class="lineno">  935</span> </div>
 <div class="line"><a id="l00936" name="l00936"></a><span class="lineno">  936</span>    broken_copy_value_semantics&amp; operator=(broken_copy_value_semantics&amp;&amp;) = <span class="keywordflow">default</span>;</div>
 <div class="line"><a id="l00937" name="l00937"></a><span class="lineno">  937</span> </div>
-<div class="line"><a id="l00938" name="l00938"></a><span class="lineno">  938</span>    <span class="keywordtype">void</span> swap(broken_copy_value_semantics&amp; other) <span class="keyword">noexcept</span>(<span class="keyword">noexcept</span>(std::swap(this-&gt;x, other.x)))</div>
+<div class="line"><a id="l00938" name="l00938"></a><span class="lineno">  938</span>    <span class="keywordtype">void</span> swap(broken_copy_value_semantics&amp; other) <span class="keyword">noexcept</span>(<span class="keyword">noexcept</span>(std::ranges::swap(this-&gt;x, other.x)))</div>
 <div class="line"><a id="l00939" name="l00939"></a><span class="lineno">  939</span>    {</div>
-<div class="line"><a id="l00940" name="l00940"></a><span class="lineno">  940</span>      std::swap(x, other.x);</div>
+<div class="line"><a id="l00940" name="l00940"></a><span class="lineno">  940</span>      std::ranges::swap(x, other.x);</div>
 <div class="line"><a id="l00941" name="l00941"></a><span class="lineno">  941</span>    }</div>
 <div class="line"><a id="l00942" name="l00942"></a><span class="lineno">  942</span> </div>
 <div class="line"><a id="l00943" name="l00943"></a><span class="lineno">  943</span>    <span class="keyword">friend</span> <span class="keywordtype">void</span> swap(broken_copy_value_semantics&amp; lhs, broken_copy_value_semantics&amp; rhs)</div>
@@ -1090,7 +1090,7 @@ $(function() {
 <div class="line"><a id="l01015" name="l01015"></a><span class="lineno"> 1015</span> </div>
 <div class="line"><a id="l01016" name="l01016"></a><span class="lineno"> 1016</span>    <span class="keyword">friend</span> <span class="keywordtype">void</span> swap(<a class="code hl_struct" href="../../d6/dda/structsequoia_1_1testing_1_1broken__copy__assignment__value__semantics.html">broken_copy_assignment_value_semantics</a>&amp; lhs, <a class="code hl_struct" href="../../d6/dda/structsequoia_1_1testing_1_1broken__copy__assignment__value__semantics.html">broken_copy_assignment_value_semantics</a>&amp; rhs)</div>
 <div class="line"><a id="l01017" name="l01017"></a><span class="lineno"> 1017</span>    {</div>
-<div class="line"><a id="l01018" name="l01018"></a><span class="lineno"> 1018</span>      std::swap(lhs.x, rhs.x);</div>
+<div class="line"><a id="l01018" name="l01018"></a><span class="lineno"> 1018</span>      std::ranges::swap(lhs.x, rhs.x);</div>
 <div class="line"><a id="l01019" name="l01019"></a><span class="lineno"> 1019</span>    }</div>
 <div class="line"><a id="l01020" name="l01020"></a><span class="lineno"> 1020</span> </div>
 <div class="line"><a id="l01021" name="l01021"></a><span class="lineno"> 1021</span>    std::vector&lt;product_type, allocator_type&gt; x{};</div>
@@ -1140,9 +1140,9 @@ $(function() {
 <div class="line"><a id="l01065" name="l01065"></a><span class="lineno"> 1065</span> </div>
 <div class="line"><a id="l01066" name="l01066"></a><span class="lineno"> 1066</span>    <a class="code hl_struct" href="../../d4/d59/structsequoia_1_1testing_1_1broken__serialization.html">broken_serialization</a>&amp; operator=(<a class="code hl_struct" href="../../d4/d59/structsequoia_1_1testing_1_1broken__serialization.html">broken_serialization</a>&amp;&amp;) = <span class="keywordflow">default</span>;</div>
 <div class="line"><a id="l01067" name="l01067"></a><span class="lineno"> 1067</span> </div>
-<div class="line"><a id="l01068" name="l01068"></a><span class="lineno"> 1068</span>    <span class="keywordtype">void</span> swap(<a class="code hl_struct" href="../../d4/d59/structsequoia_1_1testing_1_1broken__serialization.html">broken_serialization</a>&amp; other) <span class="keyword">noexcept</span>(<span class="keyword">noexcept</span>(std::swap(this-&gt;x, other.x)))</div>
+<div class="line"><a id="l01068" name="l01068"></a><span class="lineno"> 1068</span>    <span class="keywordtype">void</span> swap(<a class="code hl_struct" href="../../d4/d59/structsequoia_1_1testing_1_1broken__serialization.html">broken_serialization</a>&amp; other) <span class="keyword">noexcept</span>(<span class="keyword">noexcept</span>(std::ranges::swap(this-&gt;x, other.x)))</div>
 <div class="line"><a id="l01069" name="l01069"></a><span class="lineno"> 1069</span>    {</div>
-<div class="line"><a id="l01070" name="l01070"></a><span class="lineno"> 1070</span>      std::swap(x, other.x);</div>
+<div class="line"><a id="l01070" name="l01070"></a><span class="lineno"> 1070</span>      std::ranges::swap(x, other.x);</div>
 <div class="line"><a id="l01071" name="l01071"></a><span class="lineno"> 1071</span>    }</div>
 <div class="line"><a id="l01072" name="l01072"></a><span class="lineno"> 1072</span> </div>
 <div class="line"><a id="l01073" name="l01073"></a><span class="lineno"> 1073</span>    <span class="keyword">friend</span> <span class="keywordtype">void</span> swap(<a class="code hl_struct" href="../../d4/d59/structsequoia_1_1testing_1_1broken__serialization.html">broken_serialization</a>&amp; lhs, <a class="code hl_struct" href="../../d4/d59/structsequoia_1_1testing_1_1broken__serialization.html">broken_serialization</a>&amp; rhs)</div>
@@ -1200,9 +1200,9 @@ $(function() {
 <div class="line"><a id="l01125" name="l01125"></a><span class="lineno"> 1125</span> </div>
 <div class="line"><a id="l01126" name="l01126"></a><span class="lineno"> 1126</span>    <a class="code hl_struct" href="../../d8/d35/structsequoia_1_1testing_1_1broken__deserialization.html">broken_deserialization</a>&amp; operator=(<a class="code hl_struct" href="../../d8/d35/structsequoia_1_1testing_1_1broken__deserialization.html">broken_deserialization</a>&amp;&amp;) = <span class="keywordflow">default</span>;</div>
 <div class="line"><a id="l01127" name="l01127"></a><span class="lineno"> 1127</span> </div>
-<div class="line"><a id="l01128" name="l01128"></a><span class="lineno"> 1128</span>    <span class="keywordtype">void</span> swap(<a class="code hl_struct" href="../../d8/d35/structsequoia_1_1testing_1_1broken__deserialization.html">broken_deserialization</a>&amp; other) <span class="keyword">noexcept</span>(<span class="keyword">noexcept</span>(std::swap(this-&gt;x, other.x)))</div>
+<div class="line"><a id="l01128" name="l01128"></a><span class="lineno"> 1128</span>    <span class="keywordtype">void</span> swap(<a class="code hl_struct" href="../../d8/d35/structsequoia_1_1testing_1_1broken__deserialization.html">broken_deserialization</a>&amp; other) <span class="keyword">noexcept</span>(<span class="keyword">noexcept</span>(std::ranges::swap(this-&gt;x, other.x)))</div>
 <div class="line"><a id="l01129" name="l01129"></a><span class="lineno"> 1129</span>    {</div>
-<div class="line"><a id="l01130" name="l01130"></a><span class="lineno"> 1130</span>      std::swap(x, other.x);</div>
+<div class="line"><a id="l01130" name="l01130"></a><span class="lineno"> 1130</span>      std::ranges::swap(x, other.x);</div>
 <div class="line"><a id="l01131" name="l01131"></a><span class="lineno"> 1131</span>    }</div>
 <div class="line"><a id="l01132" name="l01132"></a><span class="lineno"> 1132</span> </div>
 <div class="line"><a id="l01133" name="l01133"></a><span class="lineno"> 1133</span>    <span class="keyword">friend</span> <span class="keywordtype">void</span> swap(<a class="code hl_struct" href="../../d8/d35/structsequoia_1_1testing_1_1broken__deserialization.html">broken_deserialization</a>&amp; lhs, <a class="code hl_struct" href="../../d8/d35/structsequoia_1_1testing_1_1broken__deserialization.html">broken_deserialization</a>&amp; rhs)</div>
