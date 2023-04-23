@@ -292,9 +292,7 @@ namespace sequoia::parsing::commandline
         }
       };
 
-      auto nodeLate{
-        [&ind](auto) { ind.trim(2); }
-      };
+      auto nodeLate{ [&ind](auto) { ind.trim(2); } };
 
       traverse(maths::depth_first, optTree, maths::ignore_disconnected_t{subTreeRootNode}, nodeEarly, nodeLate);
     }

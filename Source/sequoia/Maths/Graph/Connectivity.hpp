@@ -719,11 +719,10 @@ namespace sequoia
             }
             else if constexpr (EdgeTraits::shared_edge_v)
             {
-              auto pEdge{&*citer};
               auto hiter{cbegin_edges(source)};
               while(hiter != cend_edges(source))
               {
-                if((hiter != citer) && (&*hiter == pEdge)) break;
+                if((hiter != citer) && (&*hiter == &*citer)) break;
 
                 ++hiter;
               }
@@ -1019,8 +1018,7 @@ namespace sequoia
             auto lowerIter{edges.begin_partition(i)}, upperIter{edges.begin_partition(i)};
             while(lowerIter != edges.end_partition(i))
             {
-              while((upperIter != edges.end_partition(i)) && (lowerIter->target_node() == upperIter->target_node()))
-                ++upperIter;
+              upperIter = std::ranges::find_if_not(upperIter, edges.end_partition(i), [target{lowerIter->target_node()}](const auto& wt) { return target == wt.target_node(); });
 
               sequoia::cluster(lowerIter, upperIter, [](const auto& e1, const auto& e2) {
                 return e1.weight() == e2.weight();
