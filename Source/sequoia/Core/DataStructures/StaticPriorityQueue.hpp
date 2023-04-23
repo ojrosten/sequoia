@@ -24,7 +24,7 @@ namespace sequoia::data_structures
 
    */
 
-  template<class T, std::size_t MaxDepth, class Compare=std::less<T>>
+  template<class T, std::size_t MaxDepth, class Compare=std::ranges::less>
   class static_priority_queue
   {
   public:

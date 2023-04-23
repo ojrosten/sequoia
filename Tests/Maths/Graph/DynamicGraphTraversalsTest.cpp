@@ -267,7 +267,7 @@ namespace sequoia::testing
     graph.add_node(3);
     graph.add_node(2);
 
-    using node_comparer = graph_impl::node_comparer<graph_type, std::less<int>>;
+    using node_comparer = graph_impl::node_comparer<graph_type, std::ranges::less>;
     node_comparer compare(graph);
 
     check(report_line("node_comparer sees that weight_0 > weight_1 and so returns false"), !compare(0, 1));
@@ -279,7 +279,7 @@ namespace sequoia::testing
     stack.pop();
     check(equality, report_line(""), stack.top(), 0_sz);
 
-    using compare_t = graph_impl::node_comparer<graph_type, std::less<int>>;
+    using compare_t = graph_impl::node_comparer<graph_type, std::ranges::less>;
     auto pqueue = graph_impl::traversal_traits<graph_type, traversal_flavour::priority, compare_t>::make(compare_t{graph});
     pqueue.push(0);
     pqueue.push(1);

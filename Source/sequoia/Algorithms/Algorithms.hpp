@@ -19,13 +19,12 @@
 
 namespace sequoia
 {
-  template<class Iter, class Comparer=std::less<std::decay_t<decltype(*Iter())>>>
+  template<class Iter, class Comparer=std::ranges::less>
   constexpr void bubble_up(Iter begin, Iter current, Comparer comp = Comparer{})
   {
     if(current == begin) return;
 
-    using namespace std;
-    auto parent{begin + (distance(begin, current) - 1) / 2};
+    auto parent{begin + (std::ranges::distance(begin, current) - 1) / 2};
     if(comp(*parent, *current))
     {
       std::ranges::iter_swap(parent, current);
@@ -33,15 +32,14 @@ namespace sequoia
     }
   }
 
-  template<class Iter, class Comparer=std::less<std::decay_t<decltype(*Iter())>>>
+  template<class Iter, class Comparer=std::ranges::less>
   constexpr void bubble_down(Iter begin, Iter current, Iter end, Comparer comp = Comparer{})
   {
-    using namespace std;
-    if(distance(begin, end) <= 1) return;
+    if(std::ranges::distance(begin, end) <= 1) return;
 
-    if(2*(distance(begin, current) + 1) < distance(begin, end))
+    if(2*(std::ranges::distance(begin, current) + 1) < std::ranges::distance(begin, end))
     {
-      auto rightChild{begin + 2*(distance(begin, current) + 1)};
+      auto rightChild{begin + 2*(std::ranges::distance(begin, current) + 1)};
       auto leftChild{rightChild - 1};
 
       auto dominantChild{comp(*rightChild, *leftChild) ? leftChild : rightChild};
@@ -51,24 +49,23 @@ namespace sequoia
         bubble_down(begin, dominantChild, end, comp);
       }
     }
-    else if(2*distance(begin, current) + 1 < distance(begin, end))
+    else if(2* std::ranges::distance(begin, current) + 1 < std::ranges::distance(begin, end))
     {
-      auto leftChild{begin + 2*distance(begin, current) + 1};
+      auto leftChild{begin + 2* std::ranges::distance(begin, current) + 1};
       if(comp(*current, *leftChild)) std::ranges::iter_swap(leftChild, current);
     }
   }
 
-  template<class Iter, class Comparer=std::less<std::decay_t<decltype(*Iter())>>>
+  template<class Iter, class Comparer=std::ranges::less>
   constexpr void make_heap(Iter begin, Iter end, Comparer comp = Comparer{})
   {
-    using namespace std;
-    if(distance(begin, end) <= 1) return;
+    if(std::ranges::distance(begin, end) <= 1) return;
 
     auto current{begin+1};
     while(current != end)
     {
       bubble_up(begin, current, comp);
-      ++current;
+      std::ranges::advance(current,1);
     }
   }
 
@@ -76,11 +73,12 @@ namespace sequoia
   /// is guaranteed to use iter_swap internally.
   /// This means that the behaviour can be customized by specializing
   /// the latter. Currently, this is exploited to sort graph nodes.
-  template<class Iter, class Comparer=std::less<std::decay_t<decltype(*Iter())>>>
+  /// This needs further thought, not least since ranges::advance tc
+  /// cannot be used in the implementation
+  template<class Iter, class Comparer=std::ranges::less>
   constexpr void sort(Iter begin, Iter end, Comparer comp = Comparer{})
   {
-    using namespace std;
-    if(distance(begin, end) <= 1) return;
+    if(std::ranges::distance(begin, end) <= 1) return;
 
     sequoia::make_heap(begin, end, comp);
     while(end != begin)
@@ -94,13 +92,13 @@ namespace sequoia
   /// \brief An algorithm which clusters together elements which compare equal.
   ///
   /// This is best used in situations where operator< is not defined.
-  template<std::forward_iterator Iter, class Comparer=std::equal_to<std::decay_t<decltype(*Iter())>>>
+  template<std::forward_iterator Iter, class Comparer=std::ranges::equal_to>
   constexpr void cluster(Iter begin, Iter end, Comparer comp = Comparer{})
   {
     if(begin == end) return;
 
     auto current{begin};
-    while((current != end) && comp(*current, *begin)) ++current;
+    while((current != end) && comp(*current, *begin)) std::ranges::advance(current, 1);
 
     auto endOfCluster{current};
 
@@ -109,10 +107,10 @@ namespace sequoia
       if(comp(*current, *begin))
       {
         std::ranges::iter_swap(endOfCluster, current);
-        ++endOfCluster;
+        std::ranges::advance(endOfCluster, 1);
       }
 
-      ++current;
+      std::ranges::advance(current, 1);
     }
 
     cluster(endOfCluster, end, comp);

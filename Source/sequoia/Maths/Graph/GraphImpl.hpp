@@ -38,6 +38,8 @@ namespace sequoia
         using index_type      = typename graph_type::edge_index_type;
         using difference_type = std::make_signed_t<index_type>;
 
+        constexpr graph_iterator() = default;
+
         constexpr graph_iterator(graph_type& g, const index_type i)
           : m_Graph{&g}
           , m_Index{i}
@@ -115,8 +117,8 @@ namespace sequoia
           return lhs.m_Index <=> rhs.m_Index;
         }
       private:
-        graph_type* m_Graph;
-        index_type m_Index;
+        graph_type* m_Graph{};
+        index_type m_Index{};
       };
     }
 

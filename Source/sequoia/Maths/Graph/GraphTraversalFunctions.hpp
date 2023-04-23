@@ -130,7 +130,7 @@ namespace sequoia::maths
     class NAEF     = null_func_obj,
     class EFTF     = null_func_obj,
     class ESTF     = null_func_obj,
-    class QCompare = graph_impl::node_comparer<G, std::less<typename G::node_weight_type>>
+    class QCompare = graph_impl::node_comparer<G, std::ranges::less>
   >
     requires (G::directedness != directed_flavour::directed)
           && (std::invocable<NBEF, typename G::edge_index_type>)
@@ -167,7 +167,7 @@ namespace sequoia::maths
     class NBEF     = null_func_obj,
     class NAEF     = null_func_obj,
     class EFTF     = null_func_obj,
-    class QCompare = graph_impl::node_comparer<G, std::less<typename G::node_weight_type>>
+    class QCompare = graph_impl::node_comparer<G, std::ranges::less>
   >
     requires (G::directedness == directed_flavour::directed)
           && (std::invocable<NBEF, typename G::edge_index_type>)

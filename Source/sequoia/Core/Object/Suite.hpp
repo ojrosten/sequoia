@@ -320,7 +320,7 @@ namespace sequoia::object
   <
     class ItemKeyType   = std::string,
     class ItemProjector = item_to_name,
-    class Compare       = std::equal_to<>
+    class Compare       = std::ranges::equal_to
   >
   class filter_by_names
   {
@@ -362,7 +362,7 @@ namespace sequoia::object
     bool operator()(const T& val, const Suites&... suites)
     {
       // Don't use logical short-circuit, otherwise the maps may not accurately update
-      std::array<bool, sizeof...(Suites) + 1> isFound{ find(m_SelectedItems, val, m_Proj, m_Compare), find(m_SelectedSuites, suites, item_to_name{}, std::equal_to<std::string>{}) ... };
+      std::array<bool, sizeof...(Suites) + 1> isFound{ find(m_SelectedItems, val, m_Proj, m_Compare), find(m_SelectedSuites, suites, item_to_name{}, std::ranges::equal_to{}) ... };
 
       return std::ranges::any_of(isFound, [](bool b) { return b; });
     }

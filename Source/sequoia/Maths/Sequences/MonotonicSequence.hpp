@@ -243,7 +243,7 @@ namespace sequoia::maths
   };
 
 
-  template<class T, class Compare=std::less<T>, class C=std::vector<T>>
+  template<class T, class Compare=std::ranges::less, class C=std::vector<T>>
   class monotonic_sequence : public monotonic_sequence_base<T, C, Compare>
   {
     using base_t = monotonic_sequence_base<T, C, Compare>;
@@ -298,7 +298,7 @@ namespace sequoia::maths
     using base_t::clear;
   };
 
-  template<class T, std::size_t N, class Compare=std::less<T>>
+  template<class T, std::size_t N, class Compare=std::ranges::less>
   class static_monotonic_sequence : public monotonic_sequence_base<T, std::array<T, N>, Compare>
   {
   public:

@@ -29,7 +29,7 @@ namespace sequoia::testing
     using namespace maths;
 
     using allocator = shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>;
-    using sequence = monotonic_sequence<int, std::less<int>, std::vector<int, allocator>>;
+    using sequence = monotonic_sequence<int, std::ranges::less, std::vector<int, allocator>>;
 
     auto getter{
       [](const sequence& s){ return s.get_allocator(); }
