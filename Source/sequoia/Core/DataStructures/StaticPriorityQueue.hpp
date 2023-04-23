@@ -89,7 +89,7 @@ namespace sequoia::data_structures
     [[nodiscard]]
     friend constexpr bool operator==(const static_priority_queue& lhs, const static_priority_queue& rhs) noexcept
     {
-      return (lhs.m_End == rhs.m_End) && std::equal(lhs.m_Q.begin(), lhs.m_Q.begin() + lhs.m_End, rhs.m_Q.begin(), rhs.m_Q.begin() + rhs.m_End);
+      return (lhs.m_End == rhs.m_End) && std::ranges::equal(lhs.m_Q.begin(), lhs.m_Q.begin() + lhs.m_End, rhs.m_Q.begin(), rhs.m_Q.begin() + rhs.m_End);
     }
   private:
     std::array<T, MaxDepth> m_Q{};

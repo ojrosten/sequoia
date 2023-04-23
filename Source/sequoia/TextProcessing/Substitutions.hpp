@@ -39,7 +39,7 @@ namespace sequoia
         if((std::ranges::distance(text.begin(), i) > 0))
         {
           i = text.insert(i, separator.begin(), separator.end());
-          i += std::ranges::distance(separator.begin(), separator.end());
+          i += std::ranges::distance(separator);
         }
       }
 

@@ -53,7 +53,7 @@ namespace sequoia::testing
     [[nodiscard]]
     bool in_repo(const fs::path& file, const fs::path& repo)
     {
-      if(std::ranges::distance(repo.begin(), repo.end()) >= std::ranges::distance(file.begin(), file.end())) return false;
+      if(std::ranges::distance(repo) >= std::ranges::distance(file)) return false;
 
       auto fIter{file.begin()}, rIter{repo.begin()};
       while(rIter != repo.end())
@@ -400,7 +400,7 @@ namespace sequoia::testing
         {
           const auto relPath{fs::relative(weight.file, projPaths.tests().repo())};
 
-          if(passesStamp && std::binary_search(passingTestsFromFile.begin(), passingTestsFromFile.end(), relPath))
+          if(passesStamp && std::ranges::binary_search(passingTestsFromFile, relPath))
           {
             const auto materialsWriteTime{materials_max_write_time(relPath, projPaths.test_materials().repo())};
             if(!weight.stale && (materialsWriteTime > pruneTimeStamp))

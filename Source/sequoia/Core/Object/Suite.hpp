@@ -401,7 +401,7 @@ namespace sequoia::object
     template<class Key, class U, class Projector, class Comp>
     static bool find(std::vector<std::pair<Key, bool>>& selected, const U& u, Projector proj, Comp compare)
     {
-      auto found{std::find_if(selected.begin(), selected.end(), [&proj, &compare, &u](const std::pair<Key, bool>& e) { return compare(e.first, proj(u)); })};
+      auto found{std::ranges::find_if(selected, [&proj, &compare, &u](const std::pair<Key, bool>& e) { return compare(e.first, proj(u)); })};
 
       if(found != selected.end())
       {

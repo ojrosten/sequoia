@@ -92,10 +92,10 @@ namespace sequoia::testing
       else
       {
         auto summaryFile{projPaths.output().test_summaries()};
-        auto iters{std::mismatch(name.begin(), name.end(), summaryFile.begin(), summaryFile.end())};
+        auto iters{std::ranges::mismatch(name, summaryFile)};
 
-        while(iters.first != name.end())
-          summaryFile /= *iters.first++;
+        while(iters.in1 != name.end())
+          summaryFile /= *iters.in1++;
 
         return summaryFile;
       }
@@ -299,7 +299,7 @@ namespace sequoia::testing
     if(!fs::exists(materials.original_materials())) return {};
 
     const auto workingCopy{materials.working()};
-    if(std::find(materialsPaths.cbegin(), materialsPaths.cend(), workingCopy) == materialsPaths.cend())
+    if(std::ranges::find(materialsPaths, workingCopy) == materialsPaths.cend())
     {
       fs::remove_all(materials.temporary_materials());
       fs::create_directories(materials.temporary_materials());

@@ -289,7 +289,7 @@ namespace sequoia::object
     proxy make(Args&&... args)
     {
       const T nascent{std::forward<Args>(args)...};
-      const auto found = std::find_if(m_Data.begin(), m_Data.end(), [&nascent](const auto& pData) { return pData->get() == nascent;});
+      const auto found = std::ranges::find_if(m_Data, [&nascent](const auto& pData) { return pData->get() == nascent;});
       if(found == m_Data.end())
       {
         m_Data.emplace_back(std::make_shared<data_wrapper>(*this, nascent));
