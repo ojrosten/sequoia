@@ -28,8 +28,7 @@ namespace sequoia
     auto parent{begin + (distance(begin, current) - 1) / 2};
     if(comp(*parent, *current))
     {
-      using std::iter_swap;
-      iter_swap(parent, current);
+      std::ranges::iter_swap(parent, current);
       bubble_up(begin, parent, comp);
     }
   }
@@ -48,16 +47,14 @@ namespace sequoia
       auto dominantChild{comp(*rightChild, *leftChild) ? leftChild : rightChild};
       if(comp(*current, *dominantChild))
       {
-        using std::iter_swap;
-        iter_swap(dominantChild, current);
+        std::ranges::iter_swap(dominantChild, current);
         bubble_down(begin, dominantChild, end, comp);
       }
     }
     else if(2*distance(begin, current) + 1 < distance(begin, end))
     {
-      using std::iter_swap;
       auto leftChild{begin + 2*distance(begin, current) + 1};
-      if(comp(*current, *leftChild)) iter_swap(leftChild, current);
+      if(comp(*current, *leftChild)) std::ranges::iter_swap(leftChild, current);
     }
   }
 
@@ -88,8 +85,7 @@ namespace sequoia
     sequoia::make_heap(begin, end, comp);
     while(end != begin)
     {
-      using std::iter_swap;
-      iter_swap(begin, end-1);
+      std::ranges::iter_swap(begin, end-1);
       bubble_down(begin, begin, end-1, comp);
       --end;
     }
@@ -112,8 +108,7 @@ namespace sequoia
     {
       if(comp(*current, *begin))
       {
-        using std::iter_swap;
-        iter_swap(endOfCluster, current);
+        std::ranges::iter_swap(endOfCluster, current);
         ++endOfCluster;
       }
 

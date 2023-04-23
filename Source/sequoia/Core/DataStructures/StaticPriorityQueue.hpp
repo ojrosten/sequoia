@@ -69,7 +69,7 @@ namespace sequoia::data_structures
 
     constexpr void pop() noexcept
     {
-      std::iter_swap(m_Q.begin(), m_Q.begin() + m_End -1);
+      std::ranges::iter_swap(m_Q.begin(), m_Q.begin() + m_End -1);
       --m_End;
       sequoia::make_heap(m_Q.begin(), m_Q.begin() + m_End, m_Compare);
     }
