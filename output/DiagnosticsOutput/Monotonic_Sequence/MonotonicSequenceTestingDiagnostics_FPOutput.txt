@@ -2,7 +2,7 @@
 	Empty sequence inequivalent to a single value
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::maths::monotonic_sequence<int, std::less<int>, std::vector<int, std::allocator<int> > > >]
+	[sequoia::testing::value_tester<sequoia::maths::monotonic_sequence<int, std::ranges::less, std::vector<int, std::allocator<int> > > >]
 	Checking for equivalence with:
 	[std::initializer_list<int>]
 
@@ -18,7 +18,7 @@
 	Non-empty sequence inequivalent to empty list
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::maths::monotonic_sequence<int, std::less<int>, std::vector<int, std::allocator<int> > > >]
+	[sequoia::testing::value_tester<sequoia::maths::monotonic_sequence<int, std::ranges::less, std::vector<int, std::allocator<int> > > >]
 	Checking for equivalence with:
 	[std::initializer_list<int>]
 
@@ -34,7 +34,7 @@
 	Sequence of size one inequivalent to list with different value
 
 	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::maths::monotonic_sequence<int, std::less<int>, std::vector<int, std::allocator<int> > > >]
+	[sequoia::testing::value_tester<sequoia::maths::monotonic_sequence<int, std::ranges::less, std::vector<int, std::allocator<int> > > >]
 	Checking for equivalence with:
 	[std::initializer_list<int>]
 
@@ -49,7 +49,7 @@
 	Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 30
 	Empty/non-empty sequences should compare different
 
-	[sequoia::maths::monotonic_sequence<int, std::less<int>, std::vector<int, std::allocator<int> > >]
+	[sequoia::maths::monotonic_sequence<int, std::ranges::less, std::vector<int, std::allocator<int> > >]
 	operator== returned false
 
 	  Emptiness incorrect
@@ -67,7 +67,7 @@
 	Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 35
 	Sequences of size 1 with different elements should compare different
 
-	[sequoia::maths::monotonic_sequence<int, std::less<int>, std::vector<int, std::allocator<int> > >]
+	[sequoia::maths::monotonic_sequence<int, std::ranges::less, std::vector<int, std::allocator<int> > >]
 	operator== returned false
 
 	  Back element wrong
@@ -117,7 +117,7 @@
 	Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 40
 	Sequences of different sizes should compare different
 
-	[sequoia::maths::monotonic_sequence<int, std::less<int>, std::vector<int, std::allocator<int> > >]
+	[sequoia::maths::monotonic_sequence<int, std::ranges::less, std::vector<int, std::allocator<int> > >]
 	operator== returned false
 
 	  Size incorrect
@@ -131,7 +131,7 @@
 	Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 45
 	Sequences of size 2 with different elements should compare different
 
-	[sequoia::maths::monotonic_sequence<int, std::less<int>, std::vector<int, std::allocator<int> > >]
+	[sequoia::maths::monotonic_sequence<int, std::ranges::less, std::vector<int, std::allocator<int> > >]
 	operator== returned false
 
 	  Back element wrong
@@ -211,7 +211,7 @@
 	Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 50
 	Sequences of size 2 with different final elements should compare different
 
-	[sequoia::maths::monotonic_sequence<int, std::less<int>, std::vector<int, std::allocator<int> > >]
+	[sequoia::maths::monotonic_sequence<int, std::ranges::less, std::vector<int, std::allocator<int> > >]
 	operator== returned false
 
 	  Back element wrong
@@ -243,7 +243,7 @@
 	Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 55
 	Sequences of size 2 with different first elements should compare different
 
-	[sequoia::maths::monotonic_sequence<int, std::less<int>, std::vector<int, std::allocator<int> > >]
+	[sequoia::maths::monotonic_sequence<int, std::ranges::less, std::vector<int, std::allocator<int> > >]
 	operator== returned false
 
 	  Front element wrong

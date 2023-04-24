@@ -141,12 +141,13 @@ namespace sequoia::utilities
 
     [[nodiscard]]
     constexpr const_dereference_type operator[](const difference_type n) const
+      requires (!impl::provides_mutable_reference_v<DereferencePolicy>)
     {
       return DereferencePolicy::get(m_BaseIterator[n]);
     }
 
     [[nodiscard]]
-    constexpr reference operator[](const difference_type n)
+    constexpr reference operator[](const difference_type n) const
       requires impl::provides_mutable_reference_v<DereferencePolicy>
     {
       return DereferencePolicy::get(m_BaseIterator[n]);
@@ -172,6 +173,12 @@ namespace sequoia::utilities
     {
       iterator tmp{it};
       return tmp+=n;
+    }
+
+    [[nodiscard]]
+    friend constexpr iterator operator+(const difference_type n, const iterator& it)
+    {
+      return it + n;
     }
 
     constexpr iterator operator++(int)

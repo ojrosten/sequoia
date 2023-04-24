@@ -783,23 +783,25 @@ namespace sequoia
       }
 
       template<class Comparer>
-        requires (edge_type::flavour == edge_flavour::partial)
       constexpr void sort_edges(const_edge_iterator begin, const_edge_iterator end, Comparer comp)
+        requires ((edge_type::flavour == edge_flavour::partial) && std::random_access_iterator<edge_iterator>)
       {
-        edge_index_type bsource{begin.partition_index()}, esource{end.partition_index()};
+        const edge_index_type bsource{begin.partition_index()}, esource{end.partition_index()};
+
+        if(bsource > esource) return;
+
         if(bsource == esource)
         {
-          sequoia::sort(begin_edges(bsource) + std::ranges::distance(cbegin_edges(bsource), begin), begin_edges(esource) + std::ranges::distance(cbegin_edges(esource), end), comp);
+          std::ranges::sort(to_edge_iterator(begin), to_edge_iterator(end), comp);
         }
         else
         {
-          if(bsource > esource) std::ranges::swap(bsource, esource);
-          sequoia::sort(begin_edges(bsource) + std::ranges::distance(cbegin_edges(bsource), begin), end_edges(bsource), comp);
+          std::ranges::sort(to_edge_iterator(begin), end_edges(bsource), comp);
           for(edge_index_type i = bsource + 1; i < esource; ++i)
           {
-            sequoia::sort(begin_edges(i), end_edges(i), comp);
+            std::ranges::sort(begin_edges(i), end_edges(i), comp);
           }
-          sequoia::sort(begin_edges(esource), begin_edges(esource) + std::ranges::distance(cbegin_edges(esource), end), comp);
+          std::ranges::sort(begin_edges(esource), to_edge_iterator(end), comp);
         }
       }
 
@@ -876,6 +878,7 @@ namespace sequoia
       edge_storage_type m_Edges;
 
       // helper methods
+
       template<class... Args>
         requires initializable_from<edge_weight_type, Args...>
       [[nodiscard]]
@@ -1011,6 +1014,7 @@ namespace sequoia
 
         for(edge_index_type i{}; i < edges.num_partitions(); ++i)
         {
+//          std::ranges::sort(edges.partition(i), edge_comparer{});
           sequoia::sort(edges.begin_partition(i), edges.end_partition(i), edge_comparer{});
 
           if constexpr(clusterEdges)
@@ -1524,7 +1528,7 @@ namespace sequoia
       }
 
       [[nodiscard]]
-      constexpr auto to_edge_iterator(const_edge_iterator citer)
+      constexpr edge_iterator to_edge_iterator(const_edge_iterator citer)
       {
         const auto source{citer.partition_index()};
         const auto dist{std::ranges::distance(cbegin_edges(source), citer)};
