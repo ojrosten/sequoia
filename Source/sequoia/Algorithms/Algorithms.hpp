@@ -91,11 +91,9 @@ namespace sequoia
 
   template<class Iter>
   inline constexpr bool merge_sortable{
-    requires {
-      std::input_iterator<Iter>;
-      std::is_copy_constructible_v<typename Iter::value_type>;
-      std::is_copy_assignable_v<typename Iter::value_type>;
-    }
+       std::input_iterator<Iter> 
+    && std::is_copy_constructible_v<typename Iter::value_type>
+    && std::is_copy_assignable_v<typename Iter::value_type>
   };
 
   template<std::input_iterator Iter, std::weakly_incrementable OutIter, class Compare=std::ranges::less>
