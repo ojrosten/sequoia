@@ -61,6 +61,8 @@ namespace sequoia::testing
     sort_partial_edge(unstable{});
     sort_partial_edge(stable{});
 
+    stable_sort_stability();
+
     cluster_basic_type();
   }
    
@@ -132,6 +134,14 @@ namespace sequoia::testing
 
     for(std::size_t i{}; i < 3; ++i)
       check(equality, report_line("Check array of partial edges, element " + std::to_string(i)), b[i].target_node(), i);
+  }
+
+  void algorithms_test::stable_sort_stability()
+  {
+    using pair_t = std::pair<int, int>;
+    constexpr std::array<pair_t, 10> a{pair_t{5,1}, {5,2}, {4,1}, {4,0}, {6, -1}, {6,-2}, {6, 0}, {2,0}, {2,-1}, {2,2}};
+    constexpr auto b = sort(stable{}, a, [](const pair_t& lhs, const pair_t& rhs){ return lhs.first < rhs.first; });
+    check(equality, report_line("Stable sort"), b, {pair_t{2,0}, {2,-1}, {2,2}, {4,1}, {4,0}, {5,1}, {5,2}, {6, -1}, {6,-2},{6, 0}});
   }
 
   void algorithms_test::cluster_basic_type()
