@@ -26,8 +26,11 @@ namespace sequoia::testing
     template<class Stability>
     void sort_basic_type(Stability stability);
 
-    void sort_faithful_wrapper();
-    void sort_partial_edge();
+    template<class Stability>
+    void sort_faithful_wrapper(Stability stability);
+
+    template<class Stability>
+    void sort_partial_edge(Stability stability);
 
     void cluster_basic_type();
   };

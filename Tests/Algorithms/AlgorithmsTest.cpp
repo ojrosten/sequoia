@@ -56,8 +56,10 @@ namespace sequoia::testing
   {
     sort_basic_type(unstable{});
     sort_basic_type(stable{});
-    sort_faithful_wrapper();
-    sort_partial_edge();
+    sort_faithful_wrapper(unstable{});
+    sort_faithful_wrapper(stable{});
+    sort_partial_edge(unstable{});
+    sort_partial_edge(stable{});
 
     cluster_basic_type();
   }
@@ -110,21 +112,23 @@ namespace sequoia::testing
     }
   }
 
-  void algorithms_test::sort_faithful_wrapper()
+  template<class Stability>
+  void algorithms_test::sort_faithful_wrapper(Stability stability)
   {
     using wrapper = object::faithful_wrapper<int>;
     constexpr std::array<wrapper, 4> a{wrapper{3}, wrapper{2}, wrapper{4}, wrapper{1}};
-    constexpr auto b = sort(unstable{}, a);
+    constexpr auto b = sort(stability, a);
     for(int i{}; i < 4; ++i)
       check(equality, report_line("Check array of wrapped ints, element " + std::to_string(i)), b[i].get(), i + 1);
   }
 
-  void algorithms_test::sort_partial_edge()
+  template<class Stability>
+  void algorithms_test::sort_partial_edge(Stability stability)
   {
     struct null_type{};
     using edge = maths::partial_edge<object::by_value<object::faithful_wrapper<null_type>>>;
     constexpr std::array<edge, 3> a{edge{1}, edge{2}, edge{0}};
-    constexpr auto b = sort(unstable{}, a, [](const edge& lhs, const edge& rhs) { return lhs.target_node() < rhs.target_node(); });
+    constexpr auto b = sort(stability, a, [](const edge& lhs, const edge& rhs) { return lhs.target_node() < rhs.target_node(); });
 
     for(std::size_t i{}; i < 3; ++i)
       check(equality, report_line("Check array of partial edges, element " + std::to_string(i)), b[i].target_node(), i);
