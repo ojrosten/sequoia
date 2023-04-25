@@ -89,6 +89,44 @@ namespace sequoia
     }
   }
 
+  template<class Iter>
+  inline constexpr bool merge_sortable{
+    requires {
+      std::input_iterator<Iter>;
+      std::is_copy_constructible_v<typename Iter::value_type>;
+      std::is_copy_assignable_v<typename Iter::value_type>;
+    }
+  };
+
+  template<std::input_iterator Iter, std::weakly_incrementable OutIter, class Compare=std::ranges::less>
+    requires merge_sortable<Iter>
+  constexpr void stable_sort(Iter first, Iter last, OutIter out, Compare compare= {})
+  {
+    const auto dist{std::ranges::distance(first, last)};
+    if(dist < 2) return;
+
+    const auto partition{std::ranges::next(first, dist / 2)};
+    stable_sort(first, partition, out, compare);
+    stable_sort(partition, last, std::ranges::next(out, dist / 2), compare);
+    std::ranges::merge(first, partition, partition, last, out, compare);
+    std::ranges::copy(out, std::ranges::next(out, dist), first);
+  }
+
+  template<class Iter, class Compare = std::ranges::less>
+    requires merge_sortable<Iter>
+  constexpr void stable_sort(Iter first, Iter last, Compare compare = {})
+  {
+    using T = typename Iter::value_type;
+    auto v{
+      [first, last](){
+        if      constexpr (is_initializable_v<T>)           return std::vector<T>(std::ranges::distance(first, last));
+        else if constexpr (std::is_copy_constructible_v<T>) return std::vector<T>(first, last);
+      }()
+    };
+
+    stable_sort(first, last, v.begin(), compare);
+  }
+
   /// \brief An algorithm which clusters together elements which compare equal.
   ///
   /// This is best used in situations where operator< is not defined.

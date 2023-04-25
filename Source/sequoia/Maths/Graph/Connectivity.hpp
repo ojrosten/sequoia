@@ -1014,8 +1014,7 @@ namespace sequoia
 
         for(edge_index_type i{}; i < edges.num_partitions(); ++i)
         {
-//          std::ranges::sort(edges.partition(i), edge_comparer{});
-          sequoia::sort(edges.begin_partition(i), edges.end_partition(i), edge_comparer{});
+          sequoia::stable_sort(edges.begin_partition(i), edges.end_partition(i), edge_comparer{});
 
           if constexpr(clusterEdges)
           {

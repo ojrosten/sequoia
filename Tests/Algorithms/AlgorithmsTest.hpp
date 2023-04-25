@@ -27,6 +27,8 @@ namespace sequoia::testing
     void sort_faithful_wrapper();
     void sort_partial_edge();
 
+    void stable_sort_basic_type();
+
     void cluster_basic_type();
   };
 }

@@ -629,7 +629,14 @@ namespace sequoia
 
         using NodeWeight = typename Graph::node_weight_type;
 
-        check_graph(report_line(""), g, {{edge{0, 0}, edge{0, 0}, edge{0, 1}, edge{0, 1}}}, {NodeWeight{}});
+        if constexpr(std::totally_ordered<typename Graph::edge_weight_type>)
+        {
+          check_graph(report_line(""), g, {{edge{0, 0}, edge{0, 0}, edge{0, 1}, edge{0, 1}}}, {NodeWeight{}});
+        }
+        else
+        {
+          check_graph(report_line(""), g, {{edge{0, 1}, edge{0, 1}, edge{0, 0}, edge{0, 0}}}, {NodeWeight{}});
+        }
         check_graph(report_line(""), g2, {{edge{0, -1}, edge{0, -1}, edge{0, -1}, edge{0, -1}}}, {NodeWeight{}});
       }
 

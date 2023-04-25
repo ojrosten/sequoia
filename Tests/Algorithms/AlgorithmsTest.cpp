@@ -28,6 +28,13 @@ namespace sequoia::testing
       return a;
     }
 
+    template<class T, std::size_t N, class Comparer = std::ranges::less>
+    constexpr std::array<T, N> stable_sort(std::array<T, N> a, Comparer comp = Comparer{})
+    {
+      sequoia::stable_sort(std::begin(a), std::end(a), comp);
+      return a;
+    }
+
     template<class T, std::size_t N, class Comparer = std::ranges::equal_to>
     constexpr std::array<T, N> cluster(std::array<T, N> a, Comparer comp = Comparer{})
     {
@@ -47,6 +54,8 @@ namespace sequoia::testing
     sort_basic_type();
     sort_faithful_wrapper();
     sort_partial_edge();
+
+    void stable_sort_basic_type();
 
     cluster_basic_type();
   }
@@ -116,6 +125,15 @@ namespace sequoia::testing
 
     for(std::size_t i{}; i < 3; ++i)
       check(equality, report_line("Check array of partial edges, element " + std::to_string(i)), b[i].target_node(), i);
+  }
+
+  void algorithms_test::stable_sort_basic_type()
+  {
+    {
+      constexpr std::array<int, 0> a{};
+      constexpr auto b = stable_sort(a);
+      check(equality, report_line("Sort an empty array"), b, a);
+    }
   }
 
   void algorithms_test::cluster_basic_type()
