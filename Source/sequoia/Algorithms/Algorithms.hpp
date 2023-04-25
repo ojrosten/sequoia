@@ -92,8 +92,11 @@ namespace sequoia
   template<class Iter>
   inline constexpr bool merge_sortable{
        std::input_iterator<Iter> 
-    && std::is_copy_constructible_v<typename Iter::value_type>
-    && std::is_copy_assignable_v<typename Iter::value_type>
+     && requires{
+         typename std::iterator_traits<Iter>::value_type;
+         requires   std::is_copy_constructible_v<typename std::iterator_traits<Iter>::value_type>
+                 && std::is_copy_assignable_v<typename std::iterator_traits<Iter>::value_type>;
+       }
   };
 
   template<std::input_iterator Iter, std::weakly_incrementable OutIter, class Compare=std::ranges::less>
@@ -110,11 +113,11 @@ namespace sequoia
     std::ranges::copy(out, std::ranges::next(out, dist), first);
   }
 
-  template<class Iter, class Compare = std::ranges::less>
+  template<std::input_iterator Iter, class Compare = std::ranges::less>
     requires merge_sortable<Iter>
   constexpr void stable_sort(Iter first, Iter last, Compare compare = {})
   {
-    using T = typename Iter::value_type;
+    using T = typename std::iterator_traits<Iter>::value_type;
     auto v{
       [first, last](){
         if      constexpr (is_initializable_v<T>)           return std::vector<T>(std::ranges::distance(first, last));
