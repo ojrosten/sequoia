@@ -23,11 +23,11 @@ namespace sequoia::testing
   private:
     void run_tests() final;
 
-    void sort_basic_type();
+    template<class Stability>
+    void sort_basic_type(Stability stability);
+
     void sort_faithful_wrapper();
     void sort_partial_edge();
-
-    void stable_sort_basic_type();
 
     void cluster_basic_type();
   };
