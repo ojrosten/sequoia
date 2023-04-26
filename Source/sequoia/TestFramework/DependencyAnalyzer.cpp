@@ -374,10 +374,10 @@ namespace sequoia::testing
 
       auto nodesLate{
         [&g](const std::size_t node) {
-          for(auto i{g.cbegin_edges(node)}; i != g.cend_edges(node); ++i)
+          for(const auto& edge : g.cedges(node))
           {
             auto& wt{g.begin_node_weights()[node]};
-            auto& targetWt{g.cbegin_node_weights()[i->target_node()]};
+            auto& targetWt{g.cbegin_node_weights()[edge.target_node()]};
 
             wt.implicit_modification_time = std::ranges::max(wt.implicit_modification_time, targetWt.implicit_modification_time);
 

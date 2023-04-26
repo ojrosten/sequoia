@@ -139,6 +139,9 @@ namespace sequoia
         return m_Edges.crend_partition(node);
       }
 
+      [[nodiscard]]
+      std::ranges::subrange<const_edge_iterator> cedges(const edge_index_type node) const { return {cbegin_edges(node), cend_edges(node)}; }
+
       template<std::invocable<edge_weight_type&> Fn>
         requires (!std::is_empty_v<edge_weight_type>)
       constexpr std::invoke_result_t<Fn, edge_weight_type&> mutate_edge_weight(const_edge_iterator citer, Fn fn)

@@ -25,10 +25,18 @@ namespace sequoia
 
     namespace graph_impl
     {
-      template<class N>
-      inline constexpr bool has_allocating_nodes = requires {
-        has_allocator_type_v<typename N::node_weight_container_type>;
+      /*template<network Connectivity, class Nodes>
+      struct graph_proxy
+      {
+
       };
+
+      template<network Connectivity, class Nodes>
+        requires std::is_empty_v<Nodes>
+      struct graph_proxy<Connectivity, Nodes>
+      {
+
+      };*/
 
       template<network Connectivity, class Nodes>
       class graph_iterator

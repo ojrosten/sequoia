@@ -907,8 +907,8 @@ namespace sequoia::testing
         m_Suites.mutate_node_weight(
           std::ranges::next(m_Suites.cbegin_node_weights(), n),
           [this, &tracker,n](suite_node& wt) {
-            for(auto i{m_Suites.cbegin_edges(n)}; i != m_Suites.cend_edges(n); ++i)
-              wt.summary += std::ranges::next(m_Suites.cbegin_node_weights(), i->target_node())->summary;
+            for(const auto& edge : m_Suites.cedges(n))
+              wt.summary += std::ranges::next(m_Suites.cbegin_node_weights(), edge.target_node())->summary;
 
             if(wt.optTest)
             {
@@ -968,10 +968,10 @@ namespace sequoia::testing
     }
     else
     {
-      for(auto i{m_Suites.cbegin_edges(0)}; i != m_Suites.cend_edges(0); ++i)
+      for(const auto& edge : m_Suites.cedges(0))
       {
         const auto detail{!concurrent_execution() ? summary_detail::failure_messages | summary_detail::timings : summary_detail::failure_messages};
-        auto targetNodeIter{std::ranges::next(m_Suites.cbegin_node_weights(), i->target_node())};
+        auto targetNodeIter{std::ranges::next(m_Suites.cbegin_node_weights(), edge.target_node())};
         stream() << summarize(targetNodeIter->summary, ":", detail, no_indent, tab);
       }
     }

@@ -20,6 +20,8 @@ namespace sequoia::utilities
     typename Policy::value_type;
     typename Policy::reference;
     typename Policy::pointer;
+
+
   };
 
   namespace impl
@@ -56,8 +58,11 @@ namespace sequoia::utilities
     template<class DereferencePolicy>
     inline constexpr bool provides_mutable_reference_v{
            !has_proxy_type<DereferencePolicy>
-        &&  std::is_reference_v<typename DereferencePolicy::reference>
-        && !is_const_reference_v<typename DereferencePolicy::reference>
+        && requires{
+              typename DereferencePolicy::reference;
+              requires     std::is_reference_v<typename DereferencePolicy::reference>
+                       && (!is_const_reference_v<typename DereferencePolicy::reference>);
+          }
     };
   }
 }
