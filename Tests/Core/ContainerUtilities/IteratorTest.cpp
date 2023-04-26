@@ -113,7 +113,7 @@ namespace sequoia::testing
     check(equality, report_line(""), i[0], 5);
     check(equality, report_line(""), i[1], 1);
 
-    std::sort(custom_iter_t{a.begin()}, custom_iter_t{a.end()});
+    std::ranges::sort(custom_iter_t{a.begin()}, custom_iter_t{a.end()});
     // 1 5 7
 
     check(equality, report_line(""), i[-1], 1);
