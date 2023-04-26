@@ -279,7 +279,8 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string tidy_name(std::string name, clang_type)
   {
-    replace_all(name, "::__", "::", "");
+    replace_all(name, "::__1::", "::");
+    replace_all(name, "::__fs::", "::");
     return tidy_name(name);
   }
 
