@@ -119,6 +119,9 @@ namespace sequoia::testing
     check(equality, report_line(""), i[-1], 1);
     check(equality, report_line(""), i[0], 5);
     check(equality, report_line(""), i[1], 7);
+
+    i = 1 + i;
+    check(equality, report_line(""), *i, 7);
   }
 
   void iterator_test::test_const_iterator()
