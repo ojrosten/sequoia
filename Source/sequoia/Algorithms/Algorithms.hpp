@@ -70,10 +70,10 @@ namespace sequoia
   }
 
   /// This version of swap is retained, at least for now, since it
-  /// is guaranteed to use iter_swap internally.
-  /// This means that the behaviour can be customized by specializing
-  /// the latter. Currently, this is exploited to sort graph nodes.
-  /// This needs further thought, not least since ranges::advance tc
+  /// is guaranteed to use ranges::iter_swap internally.
+  /// This means that the behaviour can be customized by overloading
+  /// iter_swap. Currently, this is exploited to sort graph nodes.
+  /// This needs further thought, not least since ranges::advance etc
   /// cannot be used in the implementation
   template<class Iter, class Comparer=std::ranges::less>
   constexpr void sort(Iter begin, Iter end, Comparer comp = Comparer{})

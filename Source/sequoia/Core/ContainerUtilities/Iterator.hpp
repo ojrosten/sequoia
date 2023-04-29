@@ -200,9 +200,9 @@ namespace sequoia::utilities
     }
 
     [[nodiscard]]
-    friend constexpr difference_type operator-(const iterator& i, const iterator& j)
+    friend constexpr difference_type operator-(const iterator& lhs, const iterator& rhs)
     {
-      return i.base_iterator() - j.base_iterator();
+      return lhs.base_iterator() - rhs.base_iterator();
     }
 
     constexpr iterator operator--(int)

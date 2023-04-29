@@ -25,30 +25,20 @@ namespace sequoia
 
     namespace graph_impl
     {
-      /*template<network Connectivity, class Nodes>
-      struct graph_proxy
-      {
-
-      };
-
+      /// Designed to swap nodes, when used in conjunction with sequoia::swap,
+      /// courtesy of the overload of iter_swap, below.
+      /// This is a pseudo iterator since it doesn't have reference semantics
       template<network Connectivity, class Nodes>
-        requires std::is_empty_v<Nodes>
-      struct graph_proxy<Connectivity, Nodes>
-      {
-
-      };*/
-
-      template<network Connectivity, class Nodes>
-      class graph_iterator
+      class pseudo_iterator
       {
       public:
         using graph_type      = graph_primitive<Connectivity, Nodes>;
         using index_type      = typename graph_type::edge_index_type;
         using difference_type = std::make_signed_t<index_type>;
 
-        constexpr graph_iterator() = default;
+        constexpr pseudo_iterator() noexcept = default;
 
-        constexpr graph_iterator(graph_type& g, const index_type i)
+        constexpr pseudo_iterator(graph_type& g, const index_type i) noexcept
           : m_Graph{&g}
           , m_Index{i}
         {}
@@ -71,58 +61,81 @@ namespace sequoia
           return m_Index;
         }
 
+        /// The options here are either to have a const function
+        /// returning by value (or const reference), or a non-const
+        /// one returning by reference. None of the options
+        /// satisfies indirectly_writeable.
         [[nodiscard]]
-        constexpr index_type operator*() const
+        constexpr index_type operator*() const noexcept
         {
           return m_Index;
         }
 
-        constexpr graph_iterator& operator++() { ++m_Index; return *this; }
-
-        constexpr graph_iterator& operator+=(const difference_type n) { m_Index += n; return *this; }
-
         [[nodiscard]]
-        friend constexpr graph_iterator operator+(const graph_iterator& it, const difference_type n)
+        constexpr index_type operator[](const difference_type n) const noexcept
         {
-          graph_iterator tmp{it};
-          return tmp += n;
+          operator+=(n);
+          return m_Index;
         }
 
-        constexpr graph_iterator operator++(int)
+        constexpr pseudo_iterator& operator++() noexcept { ++m_Index; return *this; }
+
+        constexpr pseudo_iterator operator++(int) noexcept
         {
-          graph_iterator tmp{*this};
+          pseudo_iterator tmp{*this};
           operator++();
           return tmp;
         }
 
-        constexpr graph_iterator& operator--() { --m_Index; return *this; }
-
-        constexpr graph_iterator& operator-=(const difference_type n) { m_Index -= n; return *this; }
+        constexpr pseudo_iterator& operator+=(const difference_type n) noexcept { m_Index += n; return *this; }
 
         [[nodiscard]]
-        friend constexpr graph_iterator operator-(const graph_iterator& it, const difference_type n)
+        friend constexpr pseudo_iterator operator+(const pseudo_iterator& it, const difference_type n) noexcept
         {
-          graph_iterator tmp{it};
-          return tmp -= n;
+          pseudo_iterator tmp{it};
+          return tmp += n;
         }
 
-        constexpr graph_iterator operator--(int)
+        [[nodiscard]]
+        friend constexpr pseudo_iterator operator+(const difference_type n, const pseudo_iterator& it) noexcept
         {
-          graph_iterator tmp{*this};
+          return it + n;
+        }
+
+        constexpr pseudo_iterator& operator--() noexcept { --m_Index; return *this; }
+
+        constexpr pseudo_iterator operator--(int) noexcept
+        {
+          pseudo_iterator tmp{*this};
           operator--();
           return tmp;
         }
 
+        constexpr pseudo_iterator& operator-=(const difference_type n) noexcept { m_Index -= n; return *this; }
+
         [[nodiscard]]
-        friend auto operator==(const graph_iterator& lhs, const graph_iterator& rhs) noexcept
+        friend constexpr pseudo_iterator operator-(const pseudo_iterator& it, const difference_type n) noexcept
         {
-          return lhs.m_Index == rhs.m_Index;
+          pseudo_iterator tmp{it};
+          return tmp -= n;
         }
 
         [[nodiscard]]
-        friend auto operator<=>(const graph_iterator& lhs, const graph_iterator& rhs) noexcept
+        friend constexpr difference_type operator-(const pseudo_iterator& lhs, const pseudo_iterator& rhs) noexcept
         {
-          return lhs.m_Index <=> rhs.m_Index;
+          return lhs.index() - rhs.index();
+        }
+
+        [[nodiscard]]
+        friend auto operator==(const pseudo_iterator& lhs, const pseudo_iterator& rhs) noexcept
+        {
+          return lhs.index() == rhs.index();
+        }
+
+        [[nodiscard]]
+        friend auto operator<=>(const pseudo_iterator& lhs, const pseudo_iterator& rhs) noexcept
+        {
+          return lhs.index() <=> rhs.index();
         }
       private:
         graph_type* m_Graph{};
@@ -131,15 +144,7 @@ namespace sequoia
     }
 
     template<network Connectivity, class Nodes>
-    constexpr auto distance(graph_impl::graph_iterator<Connectivity, Nodes> a, graph_impl::graph_iterator<Connectivity, Nodes> b)
-      -> typename graph_impl::graph_iterator<Connectivity, Nodes>::difference_type
-    {
-      using dist_type = typename graph_impl::graph_iterator<Connectivity, Nodes>::difference_type;
-      return static_cast<dist_type>(b.index()) - static_cast<dist_type>(a.index());
-    }
-
-    template<network Connectivity, class Nodes>
-    constexpr void iter_swap(graph_impl::graph_iterator<Connectivity, Nodes> a, graph_impl::graph_iterator<Connectivity, Nodes> b)
+    constexpr void iter_swap(graph_impl::pseudo_iterator<Connectivity, Nodes> a, graph_impl::pseudo_iterator<Connectivity, Nodes> b)
     {
       a.graph().swap_nodes(a.index(), b.index());
     }
@@ -187,6 +192,7 @@ namespace sequoia
       using edge_init_type    = typename Connectivity::edge_init_type;
       using edge_index_type   = typename Connectivity::edge_index_type;
       using size_type         = std::common_type_t<typename Connectivity::size_type, typename Nodes::size_type>;
+      using pseudo_iterator    = graph_impl::pseudo_iterator<Connectivity, Nodes>;
 
       using edges_initializer = std::initializer_list<std::initializer_list<edge_init_type>>;
 
@@ -254,7 +260,7 @@ namespace sequoia
       template<class Compare>
       constexpr void sort_nodes(const edge_index_type first, const edge_index_type last, Compare c)
       {
-        sequoia::sort(graph_iterator{*this, first}, graph_iterator{*this, last}, std::move(c));
+        sequoia::sort(pseudo_iterator{*this, first}, pseudo_iterator{*this, last}, std::move(c));
       }
 
       //===============================equality (not isomorphism) operators================================//
@@ -604,8 +610,6 @@ namespace sequoia
 
       friend insertion_sentinel;
 
-      using graph_iterator = graph_impl::graph_iterator<Connectivity, Nodes>;
-
       constexpr static bool emptyNodes{std::is_empty_v<typename Nodes::weight_type>};
 
       constexpr graph_primitive(homo_init_type, edges_initializer edges, std::initializer_list<node_weight_type> nodeWeights)
@@ -666,16 +670,10 @@ namespace sequoia
       }
 
       [[nodiscard]]
-      graph_iterator begin()
-      {
-        return {*this, edge_index_type{}};
-      }
+      pseudo_iterator begin() noexcept { return {*this, edge_index_type{}}; }
 
       [[nodiscard]]
-      graph_iterator end()
-      {
-        return {*this, Connectivity::order()};
-      }
+      pseudo_iterator end() noexcept { return {*this, Connectivity::order()}; }
 
       template<class... Args>
       size_type insert_node_impl(const size_type pos, Args&&... args)

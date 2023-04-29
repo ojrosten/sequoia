@@ -81,6 +81,7 @@ namespace sequoia
       using const_edge_iterator         = typename edge_storage_type::const_partition_iterator;
       using const_reverse_edge_iterator = typename edge_storage_type::const_reverse_partition_iterator;
       using edges_initializer           = std::initializer_list<std::initializer_list<edge_init_type>>;
+      using const_node_edges            = std::ranges::subrange<const_edge_iterator>;
 
       static_assert(std::is_unsigned_v<edge_index_type>);
 
@@ -140,7 +141,7 @@ namespace sequoia
       }
 
       [[nodiscard]]
-      std::ranges::subrange<const_edge_iterator> cedges(const edge_index_type node) const { return {cbegin_edges(node), cend_edges(node)}; }
+      const_node_edges cedges(const edge_index_type node) const { return {cbegin_edges(node), cend_edges(node)}; }
 
       template<std::invocable<edge_weight_type&> Fn>
         requires (!std::is_empty_v<edge_weight_type>)

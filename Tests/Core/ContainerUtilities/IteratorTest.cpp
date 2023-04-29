@@ -43,7 +43,7 @@ namespace sequoia::testing
       constexpr scaling_dereference_policy& operator=(scaling_dereference_policy&&) noexcept = default;
 
       [[nodiscard]]
-      constexpr proxy get(typename std::iterator_traits<Iterator>::reference ref) const noexcept
+      constexpr proxy get(reference ref) const noexcept
       {
         return ref * m_Scale;
       }
