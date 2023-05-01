@@ -121,6 +121,7 @@ namespace sequoia
 
       [[nodiscard]]
       friend constexpr bool operator==(const weighting& lhs, const weighting& rhs) noexcept
+        requires is_deep_equality_comparable_v<weight_type>
       {
         return lhs.weight() == rhs.weight();
       }
