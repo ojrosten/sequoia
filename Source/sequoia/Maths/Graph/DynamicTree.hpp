@@ -282,8 +282,6 @@ namespace sequoia::maths
     [[nodiscard]]
     constexpr static pointer get_ptr(reference ref) noexcept { return &ref; }
   private:
-    TreeAdaptor m_Proxy;
-
     using tree_pointer_type = std::remove_reference_t<tree_reference_type>*;
 
     tree_pointer_type m_pTree{};

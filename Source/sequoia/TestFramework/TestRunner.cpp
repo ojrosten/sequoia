@@ -864,8 +864,8 @@ namespace sequoia::testing
     std::optional<log_summary::duration> asyncDuration{};
     if(concurrent_execution())
     {
-      auto first{std::find_if(m_Suites.begin_node_weights(), m_Suites.end_node_weights(), [](const auto& wt) -> bool { return wt.optTest != std::nullopt; })};
-      auto next{std::find_if(first, m_Suites.end_node_weights(), [](const auto& wt) -> bool { return wt.optTest->parallelizable(); })};
+      auto first{std::ranges::find_if(m_Suites.begin_node_weights(), m_Suites.end_node_weights(), [](const auto& wt) -> bool { return wt.optTest != std::nullopt; })};
+      auto next{std::ranges::find_if(first, m_Suites.end_node_weights(), [](const auto& wt) -> bool { return wt.optTest->parallelizable(); })};
 
       auto executor{[&s=m_Suites, id](auto& wt){ wt.summary = wt.optTest->execute(id); }};
 
