@@ -168,6 +168,18 @@ namespace sequoia::testing
     check(append_lines(description, "Build output existance"), fs::exists(b.build.cmade_dir() / BuildOutput));
   }
 
+  void test_runner_end_to_end_test::check_project_files(std::string_view description)
+  {
+    if constexpr(with_msvc_v)
+    {
+      const std::filesystem::path subdirs{"ProjectFiles/win"};
+      fs::create_directories(working_materials() /= subdirs);
+      fs::copy(generated_project() / "build/CMade/win/TestAll/TestAll.vcxproj", working_materials() /= subdirs);
+      fs::copy(generated_project() / "build/CMade/win/TestAll/TestAll.vcxproj.filters", working_materials() /= subdirs);
+      check(equivalence, description, working_materials() /= subdirs, predictive_materials() /= subdirs);
+    }
+  }
+
   void test_runner_end_to_end_test::run_tests()
   {
     test_project_creation();
@@ -205,6 +217,10 @@ namespace sequoia::testing
 
     fs::copy(generated_project() / "GenerationOutput.txt", working_materials() /= "InitOutput");
     check(equivalence, report_line(""), working_materials() /= "InitOutput", predictive_materials() /= "InitOutput");
+
+    // TO DO: restore this when version-controlled test summary files can be
+    // generated independently for different platforms
+    //check_project_files(report_line("Project Files"));
 
     //=================== Run the test executable ===================//
 
@@ -407,6 +423,5 @@ namespace sequoia::testing
     //=================== Rerun with prune to confirm that the previously selected test - now passing - is not run ===================//
 
     run_and_check(report_line("Final fixed test not included by prune"), b, "FinalPassingTestExcludedByPrune", "prune -c namespace");
-
   }
 }
