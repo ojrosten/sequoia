@@ -197,18 +197,18 @@ namespace sequoia::parsing::commandline
     char** m_Argv{};
     std::string m_ZerothArg{}, m_Help{};
 
-    template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
-    void parse(Iter beginOptions, Sentinel endOptions, const operation_data& previousOperationData, top_level topLevel);
+    template<std::input_iterator Iter>
+    void parse(std::ranges::subrange<Iter> options, const operation_data& previousOperationData, top_level topLevel);
 
-    template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
+    template<std::input_iterator Iter>
     [[nodiscard]]
-    bool process_concatenated_aliases(Iter beginOptions, Sentinel endOptions, std::string_view arg, operation_data currentOperationData, top_level topLevel);
+    bool process_concatenated_aliases(std::ranges::subrange<Iter> options, std::string_view arg, operation_data currentOperationData, top_level topLevel);
 
     auto process_option(option_tree currentOptionTree, operation_data currentOperationData, top_level topLevel)->operation_data;
 
-    template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
+    template<std::input_iterator Iter>
     [[nodiscard]]
-    static std::string generate_help(Iter beginOptions, Sentinel endOptions);
+    static std::string generate_help(std::ranges::subrange<Iter> options);
 
     static bool is_alias(const option& opt, std::string_view s);
   };

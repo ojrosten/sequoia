@@ -86,13 +86,13 @@ namespace sequoia::parsing::commandline
     using iter_t = decltype(options.begin());
     using forest_iter = maths::forest_iterator<iter_t, maths::const_tree_adaptor<options_tree>>;
 
-    parse(forest_iter{options.begin()}, forest_iter{options.end()}, {}, top_level::yes);
+    parse(std::ranges::subrange{forest_iter{options.begin()}, forest_iter{options.end()}}, {}, top_level::yes);
   }
 
-  template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
-  void argument_parser::parse(Iter beginOptions, Sentinel endOptions, const operation_data& previousOperationData, top_level topLevel)
+  template<std::input_iterator Iter>
+  void argument_parser::parse(std::ranges::subrange<Iter> options, const operation_data& previousOperationData, top_level topLevel)
   {
-    if(!m_Help.empty() || (beginOptions == endOptions)) return;
+    if(!m_Help.empty() || options.empty()) return;
 
     option_tree currentOptionTree{};
     auto currentOperationData{previousOperationData};
@@ -103,21 +103,21 @@ namespace sequoia::parsing::commandline
       {
         if(arg.empty()) continue;
 
-        const auto optionsIter{std::find_if(beginOptions, endOptions,
+        const auto optionsIter{std::ranges::find_if(options,
           [arg](const auto& tree) {
             return (root_weight(tree).name == arg) || is_alias(root_weight(tree), arg);
           })
         };
 
-        if(optionsIter == endOptions)
+        if(optionsIter == options.end())
         {
           if(arg == "--help")
           {
-            m_Help = generate_help(beginOptions, endOptions);
+            m_Help = generate_help(options);
             return;
           }
 
-          if(process_concatenated_aliases(beginOptions, endOptions, arg, currentOperationData, topLevel))
+          if(process_concatenated_aliases(options, arg, currentOperationData, topLevel))
             continue;
 
           if(topLevel == top_level::yes)
@@ -151,8 +151,8 @@ namespace sequoia::parsing::commandline
         using iter_t = decltype(currentOptionTree.tree().cbegin_edges(node));
         using forest_iter = maths::forest_from_tree_iterator<iter_t, maths::const_tree_adaptor<options_tree>>;
 
-        parse(forest_iter{currentOptionTree.tree().cbegin_edges(node), currentOptionTree.tree()},
-              forest_iter{currentOptionTree.tree().cend_edges(node), currentOptionTree.tree()},
+        parse(std::ranges::subrange{forest_iter{currentOptionTree.tree().cbegin_edges(node), currentOptionTree.tree()},
+                                    forest_iter{currentOptionTree.tree().cend_edges(node), currentOptionTree.tree()}},
               currentOperationData,
               top_level::no);
 
@@ -217,9 +217,9 @@ namespace sequoia::parsing::commandline
     return currentOperationData;
   }
 
-  template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
+  template<std::input_iterator Iter>
   [[nodiscard]]
-  bool argument_parser::process_concatenated_aliases(Iter beginOptions, Sentinel endOptions, std::string_view arg, operation_data currentOperationData, top_level topLevel)
+  bool argument_parser::process_concatenated_aliases(std::ranges::subrange<Iter> options, std::string_view arg, operation_data currentOperationData, top_level topLevel)
   {
     if((arg.size() < 2) || ((arg[0] == '-') && ((arg[1] == ' ') || arg[1] == '-')))
       return false;
@@ -231,10 +231,9 @@ namespace sequoia::parsing::commandline
       {
         const auto alias{std::string{'-'} + c};
 
-        auto optionsIter{std::find_if(beginOptions, endOptions,
-          [&alias](const auto& tree) { return is_alias(root_weight(tree), alias); })};
+        auto optionsIter{std::ranges::find_if(options, [&alias](const auto& tree) { return is_alias(root_weight(tree), alias); })};
 
-        if(optionsIter == endOptions)  return false;
+        if(optionsIter == options.end())  return false;
 
         const option_tree currentOptionTree{*optionsIter};
         process_option(currentOptionTree, currentOperationData, topLevel);
@@ -251,19 +250,17 @@ namespace sequoia::parsing::commandline
     return std::ranges::find(opt.aliases, s) != opt.aliases.end();
   }
 
-  template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
+  template<std::input_iterator Iter>
   [[nodiscard]]
-  std::string argument_parser::generate_help(Iter beginOptions, Sentinel endOptions)
+  std::string argument_parser::generate_help(std::ranges::subrange<Iter> options)
   {
     indentation ind{};
     std::string help;
 
-    while(beginOptions != endOptions)
+    for(const auto& opt : options)
     {
-      const auto& optTree{(*beginOptions).tree()};
-      const auto subTreeRootNode{(*beginOptions).node()};
-
-      ++beginOptions;
+      const auto& optTree{opt.tree()};
+      const auto subTreeRootNode{opt.node()};
 
       auto nodeEarly{
         [&](const auto n) {
