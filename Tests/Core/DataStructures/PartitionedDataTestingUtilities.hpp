@@ -33,7 +33,7 @@ namespace sequoia::testing
 
           if(check(flavour, append_lines(message, "iterator (const)"), logger, data.begin_partition(i), data.end_partition(i), prediction.begin_partition(i), prediction.end_partition(i)))
           {
-            for(int64_t j{}; j<distance(prediction.begin_partition(i), prediction.end_partition(i)); ++j)
+            for(int64_t j{}; j<std::ranges::distance(prediction.partition(i)); ++j)
             {
               check(flavour, append_lines(message,"[] (const)"), logger, data[i][j], prediction[i][j]);
             }
@@ -50,7 +50,7 @@ namespace sequoia::testing
           auto& d{const_cast<PartitionedData&>(data)};
           if(check(flavour, append_lines(message, "iterator"), logger, d.begin_partition(i), d.end_partition(i), r.begin_partition(i), r.end_partition(i)))
           {
-            for(int64_t j{}; j<distance(r.begin_partition(i), r.end_partition(i)); ++j)
+            for(int64_t j{}; j<std::ranges::distance(r.partition(i)); ++j)
             {
               check(flavour, append_lines(message,"[]"), logger, d[i][j], r[i][j]);
             }
