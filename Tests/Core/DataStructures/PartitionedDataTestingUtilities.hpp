@@ -42,7 +42,9 @@ namespace sequoia::testing
           check(flavour, append_lines(message, "r_iterator (const)"), logger, data.rbegin_partition(i), data.rend_partition(i), prediction.rbegin_partition(i), prediction.rend_partition(i));
           check(flavour, append_lines(message, "c_iterator"), logger, data.cbegin_partition(i), data.cend_partition(i), prediction.cbegin_partition(i), prediction.cend_partition(i));
           check(flavour, append_lines(message, "cr_iterator"), logger, data.crbegin_partition(i), data.crend_partition(i), prediction.crbegin_partition(i), prediction.crend_partition(i));
-          check(flavour, append_lines(message, "subrange (const)"), logger, data.partition(i), prediction.partition(i));
+          // TO DO: just pass the subranges as arguments; for now call begin() and end() to
+          // defer a difficult bit of cross-platform consistent demangling
+          check(flavour, append_lines(message, "subrange (const)"), logger, data.partition(i).begin(), data.partition(i).end(), prediction.partition(i).begin(), prediction.partition(i).end());
 
           auto& r{const_cast<PartitionedData&>(prediction)};
           auto& d{const_cast<PartitionedData&>(data)};
