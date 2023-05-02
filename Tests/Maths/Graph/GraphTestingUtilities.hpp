@@ -65,6 +65,7 @@ namespace sequoia::testing
         {
           const auto message{"Partition " + std::to_string(i)};
           check(flavour, append_lines(message, "cedge_iterator"), logger, connectivity.cbegin_edges(i), connectivity.cend_edges(i), (prediction.begin() + i)->begin(), (prediction.begin() + i)->end());
+          check(flavour, append_lines(message, "cedges"), logger, connectivity.cedges(i).begin(), connectivity.cedges(i).end(), (prediction.begin() + i)->begin(), (prediction.begin() + i)->end());
         }
       }
     }

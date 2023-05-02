@@ -90,11 +90,13 @@ namespace sequoia::maths::graph_impl
     using weight_type                = typename weight_proxy_type::value_type;
     using size_type                  = typename node_weight_container_type::size_type;
 
-    using iterator         = utilities::iterator<typename node_weight_container_type::iterator, proxy_dereference_policy<typename node_weight_container_type::iterator>>;
-    using reverse_iterator = utilities::iterator<typename node_weight_container_type::reverse_iterator, proxy_dereference_policy<typename node_weight_container_type::reverse_iterator>>;
+    using iterator           = utilities::iterator<typename node_weight_container_type::iterator, proxy_dereference_policy<typename node_weight_container_type::iterator>>;
+    using reverse_iterator   = utilities::iterator<typename node_weight_container_type::reverse_iterator, proxy_dereference_policy<typename node_weight_container_type::reverse_iterator>>;
+    using node_weights_range = std::ranges::subrange<iterator>;
 
-    using const_iterator         = utilities::iterator<typename node_weight_container_type::const_iterator, proxy_dereference_policy<typename node_weight_container_type::const_iterator>>;
-    using const_reverse_iterator = utilities::iterator<typename node_weight_container_type::const_reverse_iterator, proxy_dereference_policy<typename node_weight_container_type::const_reverse_iterator>>;
+    using const_iterator           = utilities::iterator<typename node_weight_container_type::const_iterator, proxy_dereference_policy<typename node_weight_container_type::const_iterator>>;
+    using const_reverse_iterator   = utilities::iterator<typename node_weight_container_type::const_reverse_iterator, proxy_dereference_policy<typename node_weight_container_type::const_reverse_iterator>>;
+    using const_node_weights_range = std::ranges::subrange<const_iterator>;
 
     constexpr static bool throw_on_range_error{Traits::throw_on_range_error};
 
@@ -161,6 +163,25 @@ namespace sequoia::maths::graph_impl
     constexpr const_reverse_iterator crend_node_weights() const noexcept
     {
       return const_reverse_iterator{m_NodeWeights.crend()};
+    }
+
+    [[nodiscard]]
+    constexpr node_weights_range node_weights() noexcept
+      requires object::transparent_wrapper<weight_proxy_type>
+    {
+      return {begin_node_weights(), end_node_weights()};
+    }
+
+    [[nodiscard]]
+    constexpr const_node_weights_range node_weights() const noexcept
+    {
+      return {cbegin_node_weights(), cend_node_weights()};
+    }
+
+    [[nodiscard]]
+    constexpr const_node_weights_range cnode_weights() const noexcept
+    {
+      return node_weights();
     }
 
     template<class Arg, class... Args>
