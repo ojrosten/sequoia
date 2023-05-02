@@ -57,7 +57,9 @@ namespace sequoia::testing
           }
 
           check(flavour, append_lines(message, "r_iterator"), logger, d.rbegin_partition(i), d.rend_partition(i), r.rbegin_partition(i), r.rend_partition(i));
-          check(flavour, append_lines(message, "subrange"), logger, d.partition(i), r.partition(i));
+          // TO DO: just pass the subranges as arguments; for now call begin() and end() to
+          // defer a difficult bit of cross-platform consistent demangling
+          check(flavour, append_lines(message, "subrange"), logger, d.partition(i).begin(), d.partition(i).end(), r.partition(i).begin(), r.partition(i).end());
         }
       }
     }
