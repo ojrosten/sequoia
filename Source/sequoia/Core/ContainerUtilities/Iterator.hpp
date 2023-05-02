@@ -218,10 +218,41 @@ namespace sequoia::utilities
       return lhs.m_BaseIterator == rhs.m_BaseIterator;
     }
 
-    [[nodiscard]]
+    // TO DO: reinstate once libc++ can cope :(
+    /*[[nodiscard]]
     friend constexpr auto operator<=>(const iterator& lhs, const iterator& rhs) noexcept
     {
       return lhs.m_BaseIterator <=> rhs.m_BaseIterator;
+    }*/
+
+    [[nodiscard]]
+    friend constexpr bool operator!=(const iterator& lhs, const iterator& rhs) noexcept
+    {
+      return !(lhs == rhs);
+    }
+
+    [[nodiscard]]
+    friend constexpr bool operator<(const iterator& lhs, const iterator& rhs) noexcept
+    {
+      return lhs.m_BaseIterator < rhs.m_BaseIterator;
+    }
+
+    [[nodiscard]]
+    friend constexpr bool operator<=(const iterator& lhs, const iterator& rhs) noexcept
+    {
+      return (lhs < rhs) || (lhs == rhs);
+    }
+
+    [[nodiscard]]
+    friend constexpr bool operator>(const iterator& lhs, const iterator& rhs) noexcept
+    {
+      return !(lhs <= rhs);
+    }
+
+    [[nodiscard]]
+    friend constexpr bool operator>=(const iterator& lhs, const iterator& rhs) noexcept
+    {
+      return !(lhs < rhs);
     }
   private:
     Iterator m_BaseIterator;
