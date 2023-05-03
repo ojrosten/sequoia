@@ -19,7 +19,9 @@ namespace sequoia:: testing
     using graph_init_test::graph_init_test;
 
     [[nodiscard]]
-    std::filesystem::path source_file() const noexcept final;
+    std::filesystem::path source_file() const noexcept;
+
+    void run_tests();
   private:
     template<class>
     friend class init_checker;
@@ -35,8 +37,6 @@ namespace sequoia:: testing
 
     template<class>
     friend class directed_embedded_init_checker;
-
-    void run_tests() final;
 
     template<class NodeWeight, class EdgeWeight> void test_generic_undirected();
     template<class NodeWeight, class EdgeWeight> void test_generic_embedded_undirected();

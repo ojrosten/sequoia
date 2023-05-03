@@ -32,9 +32,9 @@ namespace sequoia::testing
     using free_test::free_test;
 
     [[nodiscard]]
-    std::filesystem::path source_file() const noexcept final;
-  private:
-    void run_tests() final
+    std::filesystem::path source_file() const noexcept;
+
+    void run_tests()
     {
       check(equality, "Phoney equality check", 1, 1);
       throw std::runtime_error{"Throw after check"};

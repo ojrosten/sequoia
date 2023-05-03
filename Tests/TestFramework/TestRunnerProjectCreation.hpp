@@ -19,9 +19,10 @@ namespace sequoia::testing
     using free_test::free_test;
 
     [[nodiscard]]
-    std::filesystem::path source_file() const noexcept final;
+    std::filesystem::path source_file() const noexcept;
+
+    void run_tests();
   private:
-    void run_tests() final;
 
     void test_exceptions();
     void test_project_creation();

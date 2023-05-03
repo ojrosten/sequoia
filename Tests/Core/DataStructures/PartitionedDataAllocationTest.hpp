@@ -19,15 +19,16 @@ namespace sequoia::testing
     using regular_allocation_test::regular_allocation_test;
 
     [[nodiscard]]
-    std::filesystem::path source_file() const noexcept final;
+    std::filesystem::path source_file() const noexcept;
 
     template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
     void test_allocation();
+
+    void run_tests();
   private:
     template<class Test>
     friend void do_allocation_tests(Test&);
 
-    void run_tests() final;
 
     template<class T, class Handler, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
     void test_bucketed_allocation();

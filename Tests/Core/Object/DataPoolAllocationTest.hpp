@@ -21,11 +21,11 @@ namespace sequoia::testing
     using move_only_allocation_test::move_only_allocation_test;
 
     [[nodiscard]]
-    std::filesystem::path source_file() const noexcept final;
+    std::filesystem::path source_file() const noexcept;
 
     template<bool PropagateMove, bool PropagateSwap>
     void test_allocation();
-  private:
-    void run_tests() final;
+
+    void run_tests();
   };
 }

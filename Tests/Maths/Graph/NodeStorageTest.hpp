@@ -19,12 +19,12 @@ namespace sequoia::testing
     using regular_test::regular_test;
 
     [[nodiscard]]
-    std::filesystem::path source_file() const noexcept final;
+    std::filesystem::path source_file() const noexcept;
+
+    void run_tests();
   private:
     template<class Test>
     friend void do_allocation_tests(Test&);
-
-    void run_tests() final;
 
     template<class Sharing>
     void test_dynamic_node_storage();

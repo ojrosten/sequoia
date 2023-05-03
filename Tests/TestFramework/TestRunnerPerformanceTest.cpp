@@ -69,12 +69,12 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      std::filesystem::path source_file() const noexcept final
+      std::filesystem::path source_file() const noexcept
       {
         return std::source_location::current().file_name();
       }
-    private:
-      void run_tests() final
+
+      void run_tests()
       {
         using namespace std::chrono_literals;
         std::this_thread::sleep_for(25ms);

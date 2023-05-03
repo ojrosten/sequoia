@@ -18,11 +18,11 @@ namespace sequoia::testing
   public:
     using regular_false_positive_test::regular_false_positive_test;
 
-  private:
     [[nodiscard]]
-    std::filesystem::path source_file() const noexcept final;
+    std::filesystem::path source_file() const noexcept;
 
-    void run_tests() final;
+    void run_tests();
+  private:
 
     template<maths::directed_flavour Directedness, maths::tree_link_direction TreeLinkDir>
     void test_tree(maths::directed_flavour_constant<Directedness>, maths::tree_link_direction_constant<TreeLinkDir>);

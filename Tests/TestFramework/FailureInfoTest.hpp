@@ -18,12 +18,11 @@ namespace sequoia::testing
   public:
     using regular_test::regular_test;
 
-  private:
     [[nodiscard]]
-    std::filesystem::path source_file() const noexcept final;
+    std::filesystem::path source_file() const noexcept;
 
-    void run_tests() final;
-
+    void run_tests();
+  private:
     void check_exceptions();
 
     void check_failure_info();

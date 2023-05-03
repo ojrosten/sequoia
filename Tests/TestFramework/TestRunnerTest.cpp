@@ -30,12 +30,12 @@ namespace sequoia::testing
       using regular_test::regular_test;
 
       [[nodiscard]]
-      std::filesystem::path source_file() const noexcept final
+      std::filesystem::path source_file() const noexcept
       {
         return std::source_location::current().file_name();
       }
-    private:
-      void run_tests() final
+
+      void run_tests()
       {
         check(equality, "Throw during check", foo{}, foo{});
       }
@@ -47,12 +47,12 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      std::filesystem::path source_file() const noexcept final
+      std::filesystem::path source_file() const noexcept
       {
         return std::source_location::current().file_name();
       }
-    private:
-      void run_tests() final
+
+      void run_tests()
       {
         check(equality, "Integer equality", 42, 42);
       }
@@ -64,13 +64,12 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      std::filesystem::path source_file() const noexcept final
+      std::filesystem::path source_file() const noexcept
       {
         return std::source_location::current().file_name();
       }
 
-    private:
-      void run_tests() final
+      void run_tests()
       {
         check(equality, "Standard Failure", 43, 42);
       }
@@ -82,13 +81,12 @@ namespace sequoia::testing
       using free_false_positive_test::free_false_positive_test;
 
       [[nodiscard]]
-      std::filesystem::path source_file() const noexcept final
+      std::filesystem::path source_file() const noexcept
       {
         return std::source_location::current().file_name();
       }
 
-    private:
-      void run_tests() final
+      void run_tests()
       {
         check(equality, "False positive failure", 42, 42);
       }
@@ -100,13 +98,12 @@ namespace sequoia::testing
       using free_false_negative_test::free_false_negative_test;
 
       [[nodiscard]]
-      std::filesystem::path source_file() const noexcept final
+      std::filesystem::path source_file() const noexcept
       {
         return std::source_location::current().file_name();
       }
 
-    private:
-      void run_tests() final
+      void run_tests()
       {
         check(equality, "False negative failure", 43, 42);
       }
@@ -125,12 +122,12 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      std::filesystem::path source_file() const noexcept final
+      std::filesystem::path source_file() const noexcept
       {
         return std::source_location::current().file_name();
       }
-    private:
-      void run_tests() final
+
+      void run_tests()
       {
         check(equality, "Flipper", flipper{}.x, true);
       }
@@ -150,12 +147,12 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      std::filesystem::path source_file() const noexcept final
+      std::filesystem::path source_file() const noexcept
       {
         return std::source_location::current().file_name();
       }
-    private:
-      void run_tests() final
+
+      void run_tests()
       {
         check(equality, "Period 4", periodic<4>{}.x, 1);
       }
@@ -168,12 +165,12 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      std::filesystem::path source_file() const noexcept final
+      std::filesystem::path source_file() const noexcept
       {
         return std::source_location::current().file_name();
       }
-    private:
-      void run_tests() final
+
+      void run_tests()
       {
         check(equality, "Period 2: Pass/Fail/Pass", periodic<2>{}.x, 1);
         check("Period 3: Pass/Pass/Fail", periodic<3>{}.x > 0);
@@ -182,15 +179,16 @@ namespace sequoia::testing
 
     class failing_plus_instabilities_free_test final : public free_test
     {
+    public:
       using free_test::free_test;
 
       [[nodiscard]]
-      std::filesystem::path source_file() const noexcept final
+      std::filesystem::path source_file() const noexcept
       {
         return std::source_location::current().file_name();
       }
-    private:
-      void run_tests() final
+
+      void run_tests()
       {
         check("Always fails", false);
 
@@ -200,15 +198,16 @@ namespace sequoia::testing
 
     class consistently_failing_free_test final : public free_test
     {
+    public:
       using free_test::free_test;
 
       [[nodiscard]]
-      std::filesystem::path source_file() const noexcept final
+      std::filesystem::path source_file() const noexcept
       {
         return std::source_location::current().file_name();
       }
-    private:
-      void run_tests() final
+
+      void run_tests()
       {
         check("Always fails", false);
       }
@@ -217,15 +216,16 @@ namespace sequoia::testing
     template<std::size_t N>
     class consistently_passing_free_test final : public free_test
     {
+    public:
       using free_test::free_test;
 
       [[nodiscard]]
-      std::filesystem::path source_file() const noexcept final
+      std::filesystem::path source_file() const noexcept
       {
         return std::source_location::current().file_name();
       }
-    private:
-      void run_tests() final
+
+      void run_tests()
       {
         check("Always passes", true);
       }
@@ -233,15 +233,16 @@ namespace sequoia::testing
 
     class critical_free_test final : public free_test
     {
+    public:
       using free_test::free_test;
 
       [[nodiscard]]
-      std::filesystem::path source_file() const noexcept final
+      std::filesystem::path source_file() const noexcept
       {
         return std::source_location::current().file_name();
       }
-    private:
-      void run_tests() final
+
+      void run_tests()
       {
         if(flipper{}.x)
           throw std::runtime_error{"Error"};

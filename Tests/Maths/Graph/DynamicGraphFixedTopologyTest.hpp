@@ -22,7 +22,9 @@ namespace sequoia
       using graph_init_test::graph_init_test;
 
       [[nodiscard]]
-      std::filesystem::path source_file() const noexcept final;
+      std::filesystem::path source_file() const noexcept;
+
+      void run_tests();
     private:
       template<class, class, class>
       friend class graph_test_helper;
@@ -38,8 +40,6 @@ namespace sequoia
 
       template<class>
       friend class e_directed_fixed_topology_checker;
-
-      void run_tests() final;
 
       template
       <

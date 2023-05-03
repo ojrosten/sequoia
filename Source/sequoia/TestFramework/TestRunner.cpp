@@ -914,7 +914,7 @@ namespace sequoia::testing
             {
               auto pathsMaker{
                   [this](auto& test) -> test_paths {
-                    return {test.source_filename(),
+                    return {test.source_file(),
                             test.working_materials(),
                             test.predictive_materials(),
                             proj_paths()};

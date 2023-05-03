@@ -12,9 +12,10 @@ namespace sequoia::testing
     using regular_false_positive_test::regular_false_positive_test;
 
     [[nodiscard]]
-    std::filesystem::path source_file() const noexcept final;
+    std::filesystem::path source_file() const noexcept;
+
+    void run_tests();
   private:
-    void run_tests() final;
 
     void test_plain_partial_edge();
     void test_partial_edge_indep_weight();

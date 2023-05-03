@@ -21,12 +21,12 @@ namespace sequoia::testing
     using free_test::free_test;
 
     [[nodiscard]]
-    std::filesystem::path source_file() const noexcept final;
+    std::filesystem::path source_file() const noexcept;
+
+    void run_tests();
   private:
     template <class, class, class>
     friend class graph_test_helper;
-
-    void run_tests() final;
 
     template
     <

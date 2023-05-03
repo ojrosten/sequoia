@@ -57,13 +57,6 @@ namespace sequoia::testing
       The inheritance is protected in order to keep the public interface of basic_test minimal,
       while allowing convenient internal access to the Checkers various check methods, in particular.
 
-      Customisation of the way in which the log_summary is generated
-      is allowed through the virtual function summarize.
-
-      The execute method delegates to the pure virtual function run_tests. In a concrete test case,
-      this method will contain, either directly or indirectly, the various checks which are to be
-      performed.
-
       The semantics are such that, of the special member functions, only explicit construction from a
       string_view is publicly available. Destruction and moves are protected; copy
       contruction / assignment are deleted.
@@ -82,35 +75,6 @@ namespace sequoia::testing
 
     basic_test(const basic_test&)            = delete;
     basic_test& operator=(const basic_test&) = delete;
-
-    [[nodiscard]]
-    log_summary execute(std::optional<std::size_t> index)
-    {
-      const timer t{};
-
-      try
-      {
-        run_tests();
-      }
-      catch(const std::exception& e)
-      {
-        log_critical_failure("Unexpected", e.what());
-      }
-      catch(...)
-      {
-        log_critical_failure("Unknown", "");
-      }
-
-      write_instability_analysis_output(index);
-
-      return write_versioned_output(summarize(t.time_elapsed()));
-    }
-
-    [[nodiscard]]
-    normal_path source_filename() const
-    {
-      return {source_file()};
-    }
 
     [[nodiscard]]
     const std::string& name() const noexcept
@@ -160,10 +124,10 @@ namespace sequoia::testing
       return testing::report_line(message, loc, m_TestRepo.repo());
     }
 
-    void initialize(std::string_view suiteName, const project_paths& projPaths, individual_materials_paths materials, active_recovery_files files)
+    void initialize(std::string_view suiteName, const normal_path& srcFile, const project_paths& projPaths, individual_materials_paths materials, active_recovery_files files)
     {
       m_TestRepo    = projPaths.tests();
-      m_Diagnostics = {project_root(), suiteName, source_file(), to_tag(mode)};
+      m_Diagnostics = {project_root(), suiteName, srcFile, to_tag(mode)};
       m_Materials   = std::move(materials);
       Checker::recovery(std::move(files));
 
@@ -179,33 +143,30 @@ namespace sequoia::testing
     basic_test(basic_test&&)            noexcept = default;
     basic_test& operator=(basic_test&&) noexcept = default;
 
-    /// Any override of this is likely to call this first and potentially append to the log_summary
     [[nodiscard]]
-    virtual log_summary summarize(duration delta) const
+    log_summary summarize(duration delta) const
     {
       return Checker::summary(name(), delta);
     }
   private:
+    friend class test_vessel;
+
     std::string m_Name{};
     tests_paths m_TestRepo{};
     individual_materials_paths m_Materials{};
     individual_diagnostics_paths m_Diagnostics{};
 
-    void log_critical_failure(std::string_view tag, std::string_view what)
+    void log_critical_failure(const normal_path& srcFile, std::string_view tag, std::string_view what)
     {
-      const auto message{
-        exception_message(tag, source_filename(), Checker::exceptions_detected_by_sentinel(), what)
-      };
-
       auto sentry{Checker::make_sentinel("")};
-      sentry.log_critical_failure(message);
+      sentry.log_critical_failure(exception_message(tag, srcFile, Checker::exceptions_detected_by_sentinel(), what));
     }
 
-    void write_instability_analysis_output(std::optional<std::size_t> index) const
+    void write_instability_analysis_output(const normal_path& srcFile, std::optional<std::size_t> index) const
     {
       if(index.has_value())
       {
-        const auto file{output_paths::instability_analysis_file(project_root(), source_file(), name(), index.value())};
+        const auto file{output_paths::instability_analysis_file(project_root(), srcFile, name(), index.value())};
         impl::serialize(file, Checker::failure_messages());
       }
     }
@@ -217,21 +178,14 @@ namespace sequoia::testing
 
       return summary;
     }
-
-    /// Pure virtual method which should be overridden in a concrete test's cpp file in order to provide the correct __FILE__
-    [[nodiscard]]
-    virtual std::filesystem::path source_file() const noexcept = 0;
-    
-    /// The override in a derived test should call the checks performed by the test.
-    virtual void run_tests() = 0;
   };
 
   template<class T>
   concept concrete_test =
         requires (T& test){
-          { test.execute(std::nullopt) } -> std::same_as<log_summary>;
-          { test.source_filename() }     -> std::convertible_to<std::filesystem::path>;
-          { test.name() }                -> std::convertible_to<std::string>;
+          { test.run_tests() };
+          { test.source_file() } -> std::convertible_to<std::filesystem::path>;
+          { test.name() }        -> std::convertible_to<std::string>;
           { test.reset_results() };
         }
     && !std::is_abstract_v<T> && std::movable<T>;

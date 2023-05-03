@@ -18,6 +18,10 @@ namespace sequoia::testing
   public:
     using free_test::free_test;
 
+    [[nodiscard]]
+    std::filesystem::path source_file() const noexcept;
+
+    void run_tests();
   private:
     using test_list       = std::vector<std::filesystem::path>;
     using opt_test_list   = std::optional<test_list>;
@@ -51,11 +55,6 @@ namespace sequoia::testing
     };
 
     std::filesystem::file_time_type m_ResetTime{};
-
-    [[nodiscard]]
-    std::filesystem::path source_file() const noexcept final;
-
-    void run_tests() final;
 
     void test_exceptions(const project_paths& projPaths);
 

@@ -19,9 +19,10 @@ namespace sequoia::testing
     using performance_test::performance_test;
 
     [[nodiscard]]
-    std::filesystem::path source_file() const noexcept final;
+    std::filesystem::path source_file() const noexcept;
+
+    void run_tests();
   private:
-    void run_tests() final;
 
     void test_waiting_task(const std::chrono::milliseconds millisecs);
     void test_waiting_task_return(const std::chrono::milliseconds millisecs);

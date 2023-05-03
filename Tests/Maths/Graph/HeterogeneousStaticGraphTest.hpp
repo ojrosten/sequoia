@@ -19,9 +19,10 @@ namespace sequoia::testing
     using graph_init_test::graph_init_test;
 
     [[nodiscard]]
-    std::filesystem::path source_file() const noexcept final;
+    std::filesystem::path source_file() const noexcept;
+
+    void run_tests();
   private:
-    void run_tests() final;
 
     constexpr static auto make_undirected_graph();
     constexpr static auto make_directed_graph();

@@ -20,15 +20,14 @@ namespace sequoia::testing
   public:
     using free_false_positive_test::free_false_positive_test;
 
+    [[nodiscard]]
+    std::filesystem::path source_file() const noexcept;
+
+    void run_tests();
+
+    [[nodiscard]]
+    log_summary summarize(duration delta) const;
   private:
-    [[nodiscard]]
-    std::filesystem::path source_file() const noexcept final;
-
-    void run_tests() final;
-
-    [[nodiscard]]
-    log_summary summarize(duration delta) const final;
-
     void test_paths();
   };
   
@@ -37,15 +36,14 @@ namespace sequoia::testing
   public:
     using free_false_negative_test::free_false_negative_test;
 
+    [[nodiscard]]
+    std::filesystem::path source_file() const noexcept;
+
+    void run_tests();
+
+    [[nodiscard]]
+    log_summary summarize(duration delta) const;
   private:
-    [[nodiscard]]
-    std::filesystem::path source_file() const noexcept final;
-
-    void run_tests() final;
-
-    [[nodiscard]]
-    log_summary summarize(duration delta) const final;
-
     void test_paths();
   };
 }

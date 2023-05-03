@@ -268,14 +268,14 @@ namespace sequoia::testing
   class basic_performance_test : public basic_test<performance_checker<Mode>>
   {
   public:
-    using base_t = basic_test<performance_checker<Mode>>;
-
-    using basic_test<performance_checker<Mode>>::basic_test;
-  protected:
+    using base_t   = basic_test<performance_checker<Mode>>;
     using duration = typename base_t::duration;
 
+    using basic_test<performance_checker<Mode>>::basic_test;
+
     [[nodiscard]]
-    log_summary summarize(duration delta) const override;
+    log_summary summarize(duration delta) const;
+  protected:
   };
 
   extern template class basic_performance_test<test_mode::standard>;

@@ -13,6 +13,7 @@
 
 #include "sequoia/TestFramework/DependencyAnalyzer.hpp"
 #include "sequoia/TestFramework/PerformanceTestCore.hpp"
+#include "sequoia/TestFramework/TestLogger.hpp"
 
 #include "sequoia/Core/Logic/Bitmask.hpp"
 #include "sequoia/Core/Object/Suite.hpp"
@@ -78,9 +79,9 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    normal_path source_filename() const
+    std::filesystem::path source_file() const
     {
-      return m_pTest->source_filename();
+      return m_pTest->source_file();
     }
 
     [[nodiscard]]
@@ -117,10 +118,9 @@ namespace sequoia::testing
       virtual ~soul() = default;
 
       virtual const std::string& name() const noexcept = 0;
-      virtual normal_path source_filename() const = 0;
+      virtual std::filesystem::path source_file() const = 0;
       virtual std::filesystem::path working_materials() const = 0;
       virtual std::filesystem::path predictive_materials() const = 0;
-
       virtual log_summary execute(std::optional<std::size_t> index) = 0;
 
       virtual void reset(const project_paths& projPaths, std::vector<std::filesystem::path>& materialsPaths) = 0;
@@ -133,15 +133,15 @@ namespace sequoia::testing
       {}
 
       [[nodiscard]]
-      const std::string& name() const noexcept final
+      std::filesystem::path source_file() const final
       {
-        return m_Test.name();
+        return m_Test.source_file();
       }
 
       [[nodiscard]]
-      normal_path source_filename() const final
+      const std::string& name() const noexcept final
       {
-        return m_Test.source_filename();
+        return m_Test.name();
       }
 
       [[nodiscard]]
@@ -159,13 +159,30 @@ namespace sequoia::testing
       [[nodiscard]]
       log_summary execute(std::optional<std::size_t> index) final
       {
-        return m_Test.execute(index);
+        const timer t{};
+
+        try
+        {
+          m_Test.run_tests();
+        }
+        catch(const std::exception& e)
+        {
+          m_Test.log_critical_failure(m_Test.source_file(), "Unexpected", e.what());
+        }
+        catch(...)
+        {
+          m_Test.log_critical_failure(m_Test.source_file(), "Unknown", "");
+        }
+
+        m_Test.write_instability_analysis_output(m_Test.source_file(), index);
+
+        return m_Test.write_versioned_output(m_Test.summarize(t.time_elapsed()));
       }
 
       void reset(const project_paths& projPaths, std::vector<std::filesystem::path>& materialsPaths) final
       {
         m_Test.reset_results();
-        set_materials(m_Test.source_filename(), projPaths, materialsPaths);
+        set_materials(m_Test.source_file(), projPaths, materialsPaths);
       }
 
       Test m_Test;
@@ -244,7 +261,7 @@ namespace sequoia::testing
     {
       template<concrete_test Test>
       [[nodiscard]]
-      normal_path operator()(const Test& test) const { return test.source_filename(); }
+      normal_path operator()(const Test& test) const { return test.source_file(); }
     };
 
     class path_equivalence
@@ -336,8 +353,9 @@ namespace sequoia::testing
                      [] <class... Ts> (const suite<Ts...>&s) -> suite_node { return {.summary{log_summary{s.name}}}; },
                      [this, name, &materialsPaths]<concrete_test T>(T&& test) -> suite_node {
                        test.initialize(name,
+                                       test.source_file(),
                                        proj_paths(),
-                                       set_materials(test.source_filename(), proj_paths(), materialsPaths),
+                                       set_materials(test.source_file(), proj_paths(), materialsPaths),
                                        make_active_recovery_paths(m_RecoveryMode, proj_paths()));
 
                        return {.summary{log_summary{test.name()}}, .optTest{std::move(test)}};
@@ -357,8 +375,8 @@ namespace sequoia::testing
 
       auto check{
         [&,name](concrete_test auto const& test) {
-          if(!namesAndSources.emplace(test.name(), test.source_filename()).second)
-            throw std::runtime_error{duplication_message(name, test.name(), test.source_filename())};
+          if(!namesAndSources.emplace(test.name(), test.source_file()).second)
+            throw std::runtime_error{duplication_message(name, test.name(), test.source_file())};
         }
       };
 

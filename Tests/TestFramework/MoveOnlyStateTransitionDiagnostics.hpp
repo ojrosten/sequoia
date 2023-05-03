@@ -18,12 +18,11 @@ namespace sequoia::testing
   public:
     using move_only_false_negative_test::move_only_false_negative_test;
 
-  private:
     [[nodiscard]]
-    std::filesystem::path source_file() const noexcept final;
+    std::filesystem::path source_file() const noexcept;
 
-    void run_tests() final;
-
+    void run_tests();
+  private:
     void test_orderable();
     void test_equality_comparable();
   };
@@ -33,12 +32,11 @@ namespace sequoia::testing
   public:
     using move_only_false_positive_test::move_only_false_positive_test;
 
-  private:
     [[nodiscard]]
-    std::filesystem::path source_file() const noexcept final;
+    std::filesystem::path source_file() const noexcept;
 
-    void run_tests() final;
-
+    void run_tests();
+  private:
     void test_orderable();
     void test_equality_comparable();
   };

@@ -19,9 +19,10 @@ namespace sequoia::testing
     using free_false_positive_test::free_false_positive_test;
 
     [[nodiscard]]
-    std::filesystem::path source_file() const noexcept final;
+    std::filesystem::path source_file() const noexcept;
+
+    void run_tests();
   private:
-    void run_tests() final;
 
     void built_in_type_tests();
     void test_equality_checks();
@@ -36,9 +37,10 @@ namespace sequoia::testing
     using free_false_negative_test::free_false_negative_test;
 
     [[nodiscard]]
-    std::filesystem::path source_file() const noexcept final;
+    std::filesystem::path source_file() const noexcept;
+
+    void run_tests();
   private:
-    void run_tests() final;
 
     void built_in_type_tests();
     void test_equality_checks();

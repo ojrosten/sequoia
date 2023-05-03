@@ -21,9 +21,10 @@ namespace sequoia::testing
     using move_only_test::move_only_test;
 
     [[nodiscard]]
-    std::filesystem::path source_file() const noexcept final;
+    std::filesystem::path source_file() const noexcept;
+
+    void run_tests();
   private:
-    void run_tests() final;
 
     void test_pooled();
     void test_multi_pools();

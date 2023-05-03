@@ -18,10 +18,10 @@ namespace sequoia::testing
     using performance_false_positive_test::performance_false_positive_test;
 
     [[nodiscard]]
-    std::filesystem::path source_file() const noexcept final;
-  private:
+    std::filesystem::path source_file() const noexcept;
 
-    void run_tests() final;
+    void run_tests();
+  private:
 
     void test_relative_performance();
   };
@@ -32,9 +32,10 @@ namespace sequoia::testing
     using performance_false_negative_test::performance_false_negative_test;
 
     [[nodiscard]]
-    std::filesystem::path source_file() const noexcept final;
+    std::filesystem::path source_file() const noexcept;
+
+    void run_tests();
   private:
-    void run_tests() final;
 
     void test_relative_performance();
   };
@@ -45,9 +46,10 @@ namespace sequoia::testing
     using free_test::free_test;
 
     [[nodiscard]]
-    std::filesystem::path source_file() const noexcept final;
+    std::filesystem::path source_file() const noexcept;
+
+    void run_tests();
   private:
-    void run_tests() final;
 
     void test_postprocessing();
   };
