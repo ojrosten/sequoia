@@ -109,15 +109,9 @@ namespace sequoia::testing
     test_base(test_base&&)            noexcept = default;
     test_base& operator=(test_base&&) noexcept = default;
 
-    void initialize(test_mode mode, std::string_view suiteName, const normal_path& srcFile, const project_paths& projPaths, individual_materials_paths materials)
-    {
-      m_TestRepo    = projPaths.tests();
-      m_Diagnostics = {project_root(), suiteName, srcFile, to_tag(mode)};
-      m_Materials   = std::move(materials);
-      std::filesystem::create_directories(m_Diagnostics.diagnostics_file().parent_path());
-    }
+    void initialize(test_mode mode, std::string_view suiteName, const normal_path& srcFile, const project_paths& projPaths, individual_materials_paths materials);
 
-    static void serialize(const std::filesystem::path& file, const failure_output& output);
+    void write_instability_analysis_output(const normal_path& srcFile, std::optional<std::size_t> index, const failure_output& output) const;
   private:
     std::string m_Name{};
     tests_paths m_TestRepo{};
@@ -181,11 +175,7 @@ namespace sequoia::testing
 
     void write_instability_analysis_output(const normal_path& srcFile, std::optional<std::size_t> index) const
     {
-      if(index.has_value())
-      {
-        const auto file{output_paths::instability_analysis_file(project_root(), srcFile, name(), index.value())};
-        test_base::serialize(file, Checker::failure_messages());
-      }
+      test_base::write_instability_analysis_output(srcFile, index, Checker::failure_messages());
     }
   };
 

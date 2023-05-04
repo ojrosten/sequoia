@@ -18,16 +18,36 @@ namespace sequoia::testing
 {
   namespace fs = std::filesystem;
 
-  void test_base::serialize(const fs::path& file, const failure_output& output)
+  namespace
   {
-    fs::create_directories(file.parent_path());
-    if(std::ofstream ofile{file})
+    void serialize(const fs::path& file, const failure_output& output)
     {
-      ofile << output;
+      fs::create_directories(file.parent_path());
+      if(std::ofstream ofile{file})
+      {
+        ofile << output;
+      }
+      else
+      {
+        throw std::runtime_error{report_failed_write(file)};
+      }
     }
-    else
+  }
+
+  void test_base::initialize(test_mode mode, std::string_view suiteName, const normal_path& srcFile, const project_paths& projPaths, individual_materials_paths materials)
+  {
+    m_TestRepo    = projPaths.tests();
+    m_Diagnostics = {project_root(), suiteName, srcFile, to_tag(mode)};
+    m_Materials   = std::move(materials);
+    std::filesystem::create_directories(m_Diagnostics.diagnostics_file().parent_path());
+  }
+
+  void test_base::write_instability_analysis_output(const normal_path& srcFile, std::optional<std::size_t> index, const failure_output& output) const
+  {
+    if(index.has_value())
     {
-      throw std::runtime_error{report_failed_write(file)};
+      const auto file{output_paths::instability_analysis_file(project_root(), srcFile, name(), index.value())};
+      serialize(file, output);
     }
   }
   
