@@ -870,7 +870,7 @@ namespace sequoia::testing
       auto executor{[&s=m_Suites, id](auto& wt){ wt.summary = wt.optTest->execute(id); }};
 
       const timer asyncTimer{};
-      std::for_each(first, next, executor);
+      std::ranges::for_each(first, next, executor);
 
       switch(m_ConcurrencyMode)
       {
