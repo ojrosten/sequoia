@@ -40,41 +40,21 @@ namespace sequoia::testing
     time_point m_Start;
   };
 
-  namespace impl
-  {
-    void versioned_write(const std::filesystem::path& file, const failure_output& output);
-    void versioned_write(const std::filesystem::path& file, std::string_view text);
-
-    void serialize(const std::filesystem::path& file, const failure_output& output);
-  }
-
   [[nodiscard]]
   std::string to_tag(test_mode mode);
 
-  /*! \brief class template from which all concrete tests should derive.
+  /*! \brief class from which all tests ultimately derive
 
-      The class template inherits in a protected manner from the template parameter Checker.
-      The inheritance is protected in order to keep the public interface of basic_test minimal,
-      while allowing convenient internal access to the Checkers various check methods, in particular.
-
-      The semantics are such that, of the special member functions, only explicit construction from a
-      string_view is publicly available. Destruction and moves are protected; copy
-      contruction / assignment are deleted.
-
-      \anchor basic_test_primary
+      The primary purpose of this class is to reduce code which is templated.
    */
 
-  template<class Checker>
-    requires std::is_same_v<decltype(Checker::mode), const test_mode>
-  class basic_test : protected Checker
+  class test_base
   {
   public:
-    constexpr static test_mode mode{Checker::mode};
+    explicit test_base(std::string name) : m_Name{std::move(name)} {}
 
-    explicit basic_test(std::string name) : m_Name{std::move(name)} {}
-
-    basic_test(const basic_test&)            = delete;
-    basic_test& operator=(const basic_test&) = delete;
+    test_base(const test_base&)            = delete;
+    test_base& operator=(const test_base&) = delete;
 
     [[nodiscard]]
     const std::string& name() const noexcept
@@ -123,15 +103,57 @@ namespace sequoia::testing
     {
       return testing::report_line(message, loc, m_TestRepo.repo());
     }
+  protected:
+    ~test_base() = default;
 
-    void initialize(std::string_view suiteName, const normal_path& srcFile, const project_paths& projPaths, individual_materials_paths materials, active_recovery_files files)
+    test_base(test_base&&)            noexcept = default;
+    test_base& operator=(test_base&&) noexcept = default;
+
+    void initialize(test_mode mode, std::string_view suiteName, const normal_path& srcFile, const project_paths& projPaths, individual_materials_paths materials)
     {
       m_TestRepo    = projPaths.tests();
       m_Diagnostics = {project_root(), suiteName, srcFile, to_tag(mode)};
       m_Materials   = std::move(materials);
-      Checker::recovery(std::move(files));
-
       std::filesystem::create_directories(m_Diagnostics.diagnostics_file().parent_path());
+    }
+
+    static void serialize(const std::filesystem::path& file, const failure_output& output);
+  private:
+    std::string m_Name{};
+    tests_paths m_TestRepo{};
+    individual_materials_paths m_Materials{};
+    individual_diagnostics_paths m_Diagnostics{};
+  };
+
+  /*! \brief class template from which all concrete tests should derive.
+
+      The class template inherits in a protected manner from the template parameter Checker.
+      The inheritance is protected in order to keep the public interface of basic_test minimal,
+      while allowing convenient internal access to the Checkers various check methods, in particular.
+
+      The semantics are such that, of the special member functions, only explicit construction from a
+      string_view is publicly available. Destruction and moves are protected; copy
+      contruction / assignment are deleted.
+
+      \anchor basic_test_primary
+   */
+
+  template<class Checker>
+    requires std::is_same_v<decltype(Checker::mode), const test_mode>
+  class basic_test : public test_base, protected Checker
+  {
+  public:
+    constexpr static test_mode mode{Checker::mode};
+
+    using test_base::test_base;
+
+    basic_test(const basic_test&)            = delete;
+    basic_test& operator=(const basic_test&) = delete;
+
+    void initialize(std::string_view suiteName, const normal_path& srcFile, const project_paths& projPaths, individual_materials_paths materials, active_recovery_files files)
+    {
+      test_base::initialize(mode, suiteName, srcFile, projPaths, std::move(materials));
+      Checker::recovery(std::move(files));
     }
 
     using Checker::reset_results;
@@ -151,11 +173,6 @@ namespace sequoia::testing
   private:
     friend class test_vessel;
 
-    std::string m_Name{};
-    tests_paths m_TestRepo{};
-    individual_materials_paths m_Materials{};
-    individual_diagnostics_paths m_Diagnostics{};
-
     void log_critical_failure(const normal_path& srcFile, std::string_view tag, std::string_view what)
     {
       auto sentry{Checker::make_sentinel("")};
@@ -167,16 +184,8 @@ namespace sequoia::testing
       if(index.has_value())
       {
         const auto file{output_paths::instability_analysis_file(project_root(), srcFile, name(), index.value())};
-        impl::serialize(file, Checker::failure_messages());
+        test_base::serialize(file, Checker::failure_messages());
       }
-    }
-
-    const log_summary& write_versioned_output(const log_summary& summary) const
-    {
-      impl::versioned_write(diagnostics_output_filename(), summary.diagnostics_output());
-      impl::versioned_write(caught_exceptions_output_filename(), summary.caught_exceptions_output());
-
-      return summary;
     }
   };
 
@@ -185,10 +194,9 @@ namespace sequoia::testing
         requires (T& test){
           { test.run_tests() };
           { test.source_file() } -> std::convertible_to<std::filesystem::path>;
-          { test.name() }        -> std::convertible_to<std::string>;
           { test.reset_results() };
         }
-    && !std::is_abstract_v<T> && std::movable<T>;
+    && std::derived_from<T, test_base> && !std::is_abstract_v<T> && std::movable<T>;
 
   template<test_mode Mode>
   using basic_free_test = basic_test<checker<Mode>>;

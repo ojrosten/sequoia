@@ -113,22 +113,26 @@ namespace sequoia::testing
       m_pTest->reset(projPaths, materialsPaths);
     }
   private:
+    static void versioned_write(const std::filesystem::path& file, const failure_output& output);
+    static void versioned_write(const std::filesystem::path& file, std::string_view text);
+
     struct soul
     {
       virtual ~soul() = default;
 
-      virtual const std::string& name() const noexcept = 0;
-      virtual std::filesystem::path source_file() const = 0;
-      virtual std::filesystem::path working_materials() const = 0;
+      virtual const std::string& name() const noexcept           = 0;
+      virtual std::filesystem::path source_file() const          = 0;
+      virtual std::filesystem::path working_materials() const    = 0;
       virtual std::filesystem::path predictive_materials() const = 0;
-      virtual log_summary execute(std::optional<std::size_t> index) = 0;
 
+      virtual log_summary execute(std::optional<std::size_t> index) = 0;
       virtual void reset(const project_paths& projPaths, std::vector<std::filesystem::path>& materialsPaths) = 0;
     };
 
     template<concrete_test Test>
-    struct essence final : soul
+    class essence final : public soul
     {
+    public:
       essence(Test&& t) : m_Test{std::forward<Test>(t)}
       {}
 
@@ -176,13 +180,23 @@ namespace sequoia::testing
 
         m_Test.write_instability_analysis_output(m_Test.source_file(), index);
 
-        return m_Test.write_versioned_output(m_Test.summarize(t.time_elapsed()));
+        return write_versioned_output(t);
       }
 
       void reset(const project_paths& projPaths, std::vector<std::filesystem::path>& materialsPaths) final
       {
         m_Test.reset_results();
         set_materials(m_Test.source_file(), projPaths, materialsPaths);
+      }
+    private:
+      log_summary write_versioned_output(const timer& t) const
+      {
+        auto summary{m_Test.summarize(t.time_elapsed())};
+
+        versioned_write(m_Test.diagnostics_output_filename(), summary.diagnostics_output());
+        versioned_write(m_Test.caught_exceptions_output_filename(), summary.caught_exceptions_output());
+
+        return summary;
       }
 
       Test m_Test;

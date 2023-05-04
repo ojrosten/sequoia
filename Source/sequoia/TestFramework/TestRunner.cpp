@@ -325,6 +325,22 @@ namespace sequoia::testing
   }
 
 
+  void test_vessel::versioned_write(const std::filesystem::path& file, std::string_view text)
+  {
+    if(!text.empty() || std::filesystem::exists(file))
+    {
+      write_to_file(file, text);
+    }
+  }
+
+  void test_vessel::versioned_write(const std::filesystem::path& file, const failure_output& output)
+  {
+    for(const auto& info : output)
+    {
+      versioned_write(file, info.message);
+    }
+  }
+
   //=========================================== test_runner ===========================================//
 
   [[nodiscard]]

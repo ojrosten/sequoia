@@ -17,36 +17,17 @@
 namespace sequoia::testing
 {
   namespace fs = std::filesystem;
-  
-  namespace impl
+
+  void test_base::serialize(const fs::path& file, const failure_output& output)
   {
-    void versioned_write(const std::filesystem::path& file, std::string_view text)
+    fs::create_directories(file.parent_path());
+    if(std::ofstream ofile{file})
     {
-      if(!text.empty() || std::filesystem::exists(file))
-      {
-        write_to_file(file, text);
-      }
+      ofile << output;
     }
-
-    void versioned_write(const std::filesystem::path& file, const failure_output& output)
+    else
     {
-      for(const auto& info : output)
-      {
-        versioned_write(file, info.message);
-      }
-    }
-
-    void serialize(const std::filesystem::path& file, const failure_output& output)
-    {
-      fs::create_directories(file.parent_path());
-      if(std::ofstream ofile{file})
-      {
-        ofile << output;
-      }
-      else
-      {
-        throw std::runtime_error{report_failed_write(file)};
-      }
+      throw std::runtime_error{report_failed_write(file)};
     }
   }
   
