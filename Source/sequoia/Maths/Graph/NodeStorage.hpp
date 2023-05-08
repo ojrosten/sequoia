@@ -109,14 +109,14 @@ namespace sequoia::maths::graph_impl
 
     [[nodiscard]]
     constexpr iterator begin_node_weights() noexcept
-      requires object::transparent_wrapper<weight_proxy_type>
+      requires std::indirectly_writable<iterator, std::iter_value_t<iterator>>
     {
       return iterator{m_NodeWeights.begin()};
     }
 
     [[nodiscard]]
     constexpr reverse_iterator rbegin_node_weights() noexcept
-      requires object::transparent_wrapper<weight_proxy_type>
+      requires std::indirectly_writable<iterator, std::iter_value_t<iterator>>
     {
       return reverse_iterator{m_NodeWeights.rbegin()};
     }
@@ -135,14 +135,14 @@ namespace sequoia::maths::graph_impl
 
     [[nodiscard]]
     constexpr iterator end_node_weights() noexcept
-      requires object::transparent_wrapper<weight_proxy_type>
+      requires std::indirectly_writable<iterator, std::iter_value_t<iterator>>
     {
       return iterator{m_NodeWeights.end()};
     }
 
     [[nodiscard]]
     constexpr reverse_iterator rend_node_weights() noexcept
-      requires object::transparent_wrapper<weight_proxy_type>
+      requires std::indirectly_writable<iterator, std::iter_value_t<iterator>>
     {
       return reverse_iterator{m_NodeWeights.rend()};
     }
@@ -161,7 +161,7 @@ namespace sequoia::maths::graph_impl
 
     [[nodiscard]]
     constexpr node_weights_range node_weights() noexcept
-      requires object::transparent_wrapper<weight_proxy_type>
+      requires std::indirectly_writable<iterator, std::iter_value_t<iterator>>
     {
       return {begin_node_weights(), end_node_weights()};
     }
