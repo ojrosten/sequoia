@@ -21,9 +21,8 @@ namespace sequoia::testing
     {
     public:
       using value_type = typename std::iterator_traits<Iterator>::value_type;
-      using proxy      = value_type;
       using pointer    = typename std::iterator_traits<Iterator>::pointer;
-      using reference  = typename std::iterator_traits<Iterator>::reference;
+      using reference  = value_type;
 
       constexpr scaling_dereference_policy() = default;
       constexpr scaling_dereference_policy(const value_type scale) : m_Scale{scale} {}
@@ -43,21 +42,18 @@ namespace sequoia::testing
       constexpr scaling_dereference_policy& operator=(scaling_dereference_policy&&) noexcept = default;
 
       [[nodiscard]]
-      constexpr proxy get(reference ref) const noexcept
+      constexpr reference get(reference ref) const noexcept
       {
         return ref * m_Scale;
       }
-
-      [[nodiscard]]
-      static constexpr pointer get_ptr(reference ref) noexcept { return &ref; }
     private:
       value_type m_Scale{1};
     };
-  }
 
-  template<class DerefPolicy>
-  concept scaling = sequoia::utilities::dereference_policy<DerefPolicy>
-    && requires(DerefPolicy& d) { d.scale(); };
+    template<class DerefPolicy>
+    concept scaling = sequoia::utilities::dereference_policy<DerefPolicy>
+      && requires(DerefPolicy & d) { d.scale(); };
+  }
 
   [[nodiscard]]
   std::filesystem::path iterator_test::source_file() const noexcept
@@ -88,10 +84,11 @@ namespace sequoia::testing
     static_assert(std::is_same_v<custom_iter_t::value_type, int>);
     static_assert(std::is_same_v<custom_iter_t::pointer, int*>);
     static_assert(std::is_same_v<custom_iter_t::reference, int&>);
-    static_assert(std::is_same_v<custom_iter_t::const_dereference_type, const int&>);
-
+    static_assert(std::random_access_iterator<custom_iter_t>);
+    static_assert(std::permutable<custom_iter_t>);
+ 
     std::array<int, 3> a{3, 0, 1};
-    basic_checks<custom_iter_t>(a.begin(), a.end(), &*a.begin(), "Custom iterator from iterator");
+    basic_checks<custom_iter_t>(a.begin(), a.end(), a.data(), "Custom iterator from iterator");
 
     custom_iter_t i{a.begin() + 1};
 
@@ -136,7 +133,8 @@ namespace sequoia::testing
     static_assert(std::is_same_v<custom_citer_t::value_type, int>);
     static_assert(std::is_same_v<custom_citer_t::pointer, const int*>);
     static_assert(std::is_same_v<custom_citer_t::reference, const int&>);
-    static_assert(std::is_same_v<custom_citer_t::const_dereference_type, const int&>);
+    static_assert(std::random_access_iterator<custom_citer_t>);
+    static_assert(!std::permutable<custom_citer_t>);
 
     std::array<int, 3> a{3, 0, 1};
     basic_checks<custom_citer_t>(a.cbegin(), a.cend(), &*a.cbegin(), "Custom const_iterator from const_iterator");
@@ -160,7 +158,8 @@ namespace sequoia::testing
     static_assert(std::is_same_v<custom_riter_t::value_type, int>);
     static_assert(std::is_same_v<custom_riter_t::pointer, int*>);
     static_assert(std::is_same_v<custom_riter_t::reference, int&>);
-    static_assert(std::is_same_v<custom_riter_t::const_dereference_type, const int&>);
+    static_assert(std::random_access_iterator<custom_riter_t>);
+    static_assert(std::permutable<custom_riter_t>);
 
     std::array<int, 3> a{3, 0, 1};
     basic_checks<custom_riter_t>(a.rbegin(), a.rend(), &*a.rbegin(), "Custom reverse_iterator from reverse_iterator");
@@ -198,7 +197,8 @@ namespace sequoia::testing
     static_assert(std::is_same_v<custom_criter_t::value_type, int>);
     static_assert(std::is_same_v<custom_criter_t::pointer, const int*>);
     static_assert(std::is_same_v<custom_criter_t::reference, const int&>);
-    static_assert(std::is_same_v<custom_criter_t::const_dereference_type, const int&>);
+    static_assert(std::random_access_iterator<custom_criter_t>);
+    static_assert(!std::permutable<custom_criter_t>);
 
     std::array<int, 3> a{3, 0, 1};
     basic_checks<custom_criter_t>(a.crbegin(), a.crend(), &*a.crbegin(), "Custom const_reverse_iterator from const_reverse_iterator");
@@ -221,8 +221,8 @@ namespace sequoia::testing
     static_assert(std::is_same_v<custom_citer_t::difference_type, std::ptrdiff_t>);
     static_assert(std::is_same_v<custom_citer_t::value_type, int>);
     static_assert(std::is_same_v<custom_citer_t::pointer, const int*>);
-    static_assert(std::is_same_v<custom_citer_t::proxy, int>);
-    static_assert(std::is_same_v<custom_citer_t::const_dereference_type, int>);
+    static_assert(std::random_access_iterator<custom_citer_t>);
+    static_assert(!std::permutable<custom_citer_t>);
 
     std::array<int, 3> a{3, 0, 1};
     basic_checks<custom_citer_t>(a.cbegin(), a.cend(), &*a.cbegin(), "Custom scaling iterator from const_iterator", 3);
@@ -244,8 +244,8 @@ namespace sequoia::testing
     static_assert(std::is_same_v<custom_criter_t::difference_type, std::ptrdiff_t>);
     static_assert(std::is_same_v<custom_criter_t::value_type, int>);
     static_assert(std::is_same_v<custom_criter_t::pointer, const int*>);
-    static_assert(std::is_same_v<custom_criter_t::proxy, int>);
-    static_assert(std::is_same_v<custom_criter_t::const_dereference_type, int>);
+    static_assert(std::random_access_iterator<custom_criter_t>);
+    static_assert(!std::permutable<custom_criter_t>);
 
     std::array<int, 3> a{3, 0, 1};
     basic_checks<custom_criter_t>(a.crbegin(), a.crend(), &*a.crbegin(), "Custom reverse scaling iterator from const_reverse_iterator", -1);
@@ -295,7 +295,10 @@ namespace sequoia::testing
     check(equality, report_line(message), i[1], begin[1] * scale);
     check(equality, report_line(message), i[2], begin[2] * scale);
 
-    check(equality, report_line(append_lines(message, "Operator ->")), i.operator->(), pBegin);
+    if constexpr(requires (CustomIter i) { i.operator->(); })
+    {
+      check(equality, report_line(append_lines(message, "Operator ->")), i.operator->(), pBegin);
+    }
 
     CustomIter j{end, args...};
     check_semantics(report_line(append_lines(message, "Regular semantics; one iterator at end")), i, j, std::weak_ordering::less);

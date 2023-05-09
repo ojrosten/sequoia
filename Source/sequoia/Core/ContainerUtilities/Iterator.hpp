@@ -17,6 +17,21 @@
 
 namespace sequoia::utilities
 {
+  template<class I>
+  concept decrementable = requires(I i) {
+    { --i } -> std::same_as<I&>;
+    { i-- } -> std::same_as<I>;
+  };
+
+  template<class I>
+  concept steppable = requires(I i, const I j, const std::iter_difference_t<I> n) {
+    { i += n } -> std::same_as<I&>;
+    { j + n }  -> std::same_as<I>;
+    { n + j }  -> std::same_as<I>;
+    { i -= n } -> std::same_as<I&>;
+    { j - n }  -> std::same_as<I>;
+  };
+
   struct null_data_policy
   {
   protected:
@@ -44,7 +59,6 @@ namespace sequoia::utilities
     using reference  = typename std::iterator_traits<Iterator>::reference;
     using pointer    = typename std::iterator_traits<Iterator>::pointer;
 
-
     template<class... Args>
       requires (!resolve_to_copy_v<identity_dereference_policy, Args...>)
     constexpr explicit(sizeof...(Args) == 1) identity_dereference_policy(Args&&... args)
@@ -70,28 +84,36 @@ namespace sequoia::utilities
     constexpr identity_dereference_policy& operator=(identity_dereference_policy&&) noexcept = default;
   };
 
+  template<std::input_or_output_iterator Iterator, dereference_policy DereferencePolicy>
+  inline constexpr bool has_sensible_semantics{
+       (    std::indirectly_writable<std::iter_reference_t<Iterator>, std::iter_value_t<Iterator>>
+         && std::indirectly_writable<typename DereferencePolicy::reference, typename DereferencePolicy::value_type>)
+    || (    !std::indirectly_writable<std::iter_reference_t<Iterator>, std::iter_value_t<Iterator>>
+         && !std::indirectly_writable<typename DereferencePolicy::reference, typename DereferencePolicy::value_type>)
+  };
+
   /*! \class iterator
       \brief An iterator with policies controlling dereferencing and auxiliary data.
 
       The DereferencePolicy allows customisation of the various dereferencing operators. In principle
-      it is therefore possible that deferencing will not return a reference. This is forbidden
-      in the case that the underlying iterator is non-const since the semantics could then
-      be rather confusing. However, for const iterators this is tacitly allowed.
+      it is therefore possible that dereferencing will not return a reference, which can be useful. 
+      However, this can cause the semantics to be confusing if the underlying iterator is
+      indirectly_writable. Therefore, this is forbidden.
    */
 
   template<std::input_or_output_iterator Iterator, dereference_policy DereferencePolicy>
+    requires has_sensible_semantics<Iterator, DereferencePolicy>
   class iterator : public DereferencePolicy
   {
   public:
     using dereference_policy = DereferencePolicy;
     using base_iterator_type = Iterator;
 
-    using iterator_category      = typename std::iterator_traits<Iterator>::iterator_category;
-    using difference_type        = typename std::iterator_traits<Iterator>::difference_type;
-    using value_type             = typename DereferencePolicy::value_type;
-    using pointer                = typename DereferencePolicy::pointer;
-    using reference              = typename DereferencePolicy::reference;
-    using const_dereference_type = impl::type_generator_t<DereferencePolicy>;
+    using iterator_category  = typename std::iterator_traits<Iterator>::iterator_category;
+    using difference_type    = typename std::iterator_traits<Iterator>::difference_type;
+    using value_type         = typename DereferencePolicy::value_type;
+    using reference          = typename DereferencePolicy::reference;
+    using pointer            = pointer_type_t<DereferencePolicy>;
 
     constexpr iterator() = default;
 
@@ -104,16 +126,12 @@ namespace sequoia::utilities
 
     template<std::input_or_output_iterator Iter, class DerefPol>
       requires (   !std::is_same_v<Iter, Iterator>
-                && std::is_convertible_v<Iter, base_iterator_type>
-                && impl::are_compatible_v<DereferencePolicy, DerefPol>
-                && std::is_same_v<
-                     std::remove_cvref_t<impl::type_generator_t<DereferencePolicy>>,
-                     std::remove_cvref_t<impl::type_generator_t<DerefPol>>>)
+                && initializable_from<DereferencePolicy, DerefPol const&>
+                && initializable_from<Iterator, Iter>)
     constexpr iterator(iterator<Iter, DerefPol> iter)
-      : DereferencePolicy{static_cast<DerefPol&>(iter)}
+      : DereferencePolicy{static_cast<const DerefPol&>(iter)}
       , m_BaseIterator{iter.base_iterator()}
-    {
-    }
+    {}
 
     ~iterator() = default;
 
@@ -126,50 +144,47 @@ namespace sequoia::utilities
     constexpr base_iterator_type base_iterator() const noexcept { return m_BaseIterator; }
 
     [[nodiscard]]
-    constexpr const_dereference_type operator*() const
-      requires (!impl::provides_mutable_reference_v<DereferencePolicy>)
-    {
-      return DereferencePolicy::get(*m_BaseIterator);
-    }
-
-    [[nodiscard]]
     constexpr reference operator*() const
-      requires impl::provides_mutable_reference_v<DereferencePolicy>
     {
       return DereferencePolicy::get(*m_BaseIterator);
-    }
-
-    [[nodiscard]]
-    constexpr const_dereference_type operator[](const difference_type n) const
-      requires (!impl::provides_mutable_reference_v<DereferencePolicy>)
-    {
-      return DereferencePolicy::get(m_BaseIterator[n]);
     }
 
     [[nodiscard]]
     constexpr reference operator[](const difference_type n) const
-      requires impl::provides_mutable_reference_v<DereferencePolicy>
     {
       return DereferencePolicy::get(m_BaseIterator[n]);
     }
 
-    constexpr std::conditional_t<is_const_pointer_v<pointer>, pointer, const pointer> operator->() const
+    constexpr pointer operator->() const
+      requires requires (Iterator i){ DereferencePolicy::get_ptr(*i); }
     {
       return DereferencePolicy::get_ptr(*m_BaseIterator);
     }
 
-    constexpr pointer operator->()
-      requires is_const_pointer_v<pointer>
+    constexpr iterator& operator++()
+      requires std::weakly_incrementable<Iterator>
     {
-      return DereferencePolicy::get_ptr(*m_BaseIterator);
+      std::ranges::advance(m_BaseIterator, 1);
+      return *this;
     }
 
-    constexpr iterator& operator++() { std::ranges::advance(m_BaseIterator, 1); return *this; }
+    constexpr iterator operator++(int)
+      requires std::weakly_incrementable<Iterator>
+    {
+      iterator tmp{*this};
+      operator++();
+      return tmp;
+    }
 
-    constexpr iterator& operator+=(const difference_type n) { std::ranges::advance(m_BaseIterator, n); return *this; }
+    constexpr iterator& operator+=(const difference_type n)
+      requires steppable<Iterator>
+    {
+      std::ranges::advance(m_BaseIterator, n); return *this;
+    }
 
     [[nodiscard]]
     friend constexpr iterator operator+(const iterator& it, const difference_type n)
+      requires steppable<Iterator>
     {
       iterator tmp{it};
       return tmp+=n;
@@ -177,23 +192,35 @@ namespace sequoia::utilities
 
     [[nodiscard]]
     friend constexpr iterator operator+(const difference_type n, const iterator& it)
+      requires steppable<Iterator>
     {
       return it + n;
     }
 
-    constexpr iterator operator++(int)
+    constexpr iterator& operator--()
+      requires decrementable<Iterator>
+    {
+      --m_BaseIterator; return *this;
+    }
+
+    constexpr iterator operator--(int)
+      requires decrementable<Iterator>
     {
       iterator tmp{*this};
-      operator++();
+      operator--();
       return tmp;
     }
 
-    constexpr iterator& operator--() { std::ranges::advance(m_BaseIterator, -1); return *this; }
-
-    constexpr iterator& operator-=(const difference_type n) { std::ranges::advance(m_BaseIterator, -n); return *this; }
+    constexpr iterator& operator-=(const difference_type n)
+      requires steppable<Iterator>
+    {
+      m_BaseIterator -=n;
+      return *this;
+    }
 
     [[nodiscard]]
     friend constexpr iterator operator-(const iterator& it, const difference_type n)
+      requires steppable<Iterator>
     {
       iterator tmp{it};
       return tmp-=n;
@@ -201,15 +228,9 @@ namespace sequoia::utilities
 
     [[nodiscard]]
     friend constexpr difference_type operator-(const iterator& lhs, const iterator& rhs)
+      requires steppable<Iterator>
     {
       return lhs.base_iterator() - rhs.base_iterator();
-    }
-
-    constexpr iterator operator--(int)
-    {
-      iterator tmp{*this};
-      operator--();
-      return tmp;
     }
 
     [[nodiscard]]

@@ -33,9 +33,8 @@ namespace sequoia::object
     struct pool_deref_policy
     {
       using value_type = typename Wrapper::value_type;
-      using pointer    = const value_type*;
-      using reference  = const value_type&;
-      using proxy      = std::pair<reference, long>;
+      using proxy      = std::pair<const value_type&, long>;
+      using reference  = proxy;
 
     protected:
       using product_type = std::shared_ptr<Wrapper>;

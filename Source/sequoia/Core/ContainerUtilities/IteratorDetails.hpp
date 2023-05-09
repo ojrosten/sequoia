@@ -19,50 +19,22 @@ namespace sequoia::utilities
   concept dereference_policy = requires() {
     typename Policy::value_type;
     typename Policy::reference;
-    typename Policy::pointer;
-
-
+    //typename Policy::pointer;
   };
 
-  namespace impl
+  template<dereference_policy Deref>
+  struct pointer_type
   {
-    template<class Policy>
-    concept has_proxy_type = requires() {
-      typename Policy::proxy;
-    };
+    using type = void;
+  };
 
-    template<dereference_policy DerefPolicy1, dereference_policy DerefPolicy2>
-    inline constexpr bool are_compatible_v{
-         (   (has_proxy_type<DerefPolicy1> && has_proxy_type<DerefPolicy2>)
-          || (!has_proxy_type<DerefPolicy1> && !has_proxy_type<DerefPolicy2>))
-    };
+  template<dereference_policy Deref>
+    requires requires { typename Deref::pointer; }
+  struct pointer_type<Deref>
+  {
+    using type = typename Deref::pointer;
+  };
 
-    template<dereference_policy DereferencePolicy>
-    struct type_generator
-    {
-      using reference = typename DereferencePolicy::reference;
-      using type = std::conditional_t<std::is_lvalue_reference_v<reference>, std::remove_reference_t<reference> const&, reference>;
-    };
-
-    template<dereference_policy DereferencePolicy>
-      requires has_proxy_type<DereferencePolicy>
-    struct type_generator<DereferencePolicy>
-    {
-      using type = typename DereferencePolicy::proxy;
-    };
-
-
-    template<class DereferencePolicy>
-    using type_generator_t = typename type_generator<DereferencePolicy>::type;
-
-    template<class DereferencePolicy>
-    inline constexpr bool provides_mutable_reference_v{
-           !has_proxy_type<DereferencePolicy>
-        && requires{
-              typename DereferencePolicy::reference;
-              requires     std::is_reference_v<typename DereferencePolicy::reference>
-                       && (!is_const_reference_v<typename DereferencePolicy::reference>);
-          }
-    };
-  }
+  template<dereference_policy Deref>
+  using pointer_type_t = typename pointer_type<Deref>::type;
 }

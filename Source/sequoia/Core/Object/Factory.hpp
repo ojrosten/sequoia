@@ -31,10 +31,9 @@ namespace sequoia::object
   class factory_dereference_policy
   {
   public:
-    using value_type = typename std::iterator_traits<Iterator>::value_type;
-    using proxy      = std::string;
-    using pointer    = typename std::iterator_traits<Iterator>::pointer;
-    using reference  = typename std::iterator_traits<Iterator>::reference;
+    using value_type      = typename std::iterator_traits<Iterator>::value_type;
+    using true_reference  = typename std::iterator_traits<Iterator>::reference;
+    using reference       = std::string;
 
     constexpr factory_dereference_policy() = default;
     constexpr factory_dereference_policy(const factory_dereference_policy&) = default;
@@ -50,13 +49,10 @@ namespace sequoia::object
     constexpr factory_dereference_policy& operator=(factory_dereference_policy&&) noexcept = default;
 
     [[nodiscard]]
-    proxy get(reference ref) const noexcept
+    reference get(true_reference ref) const noexcept
     {
       return ref.first;
     }
-
-    [[nodiscard]]
-    static pointer get_ptr(reference ref) noexcept { return &ref; }
   };
 
   /*! \brief Generic factory with statically defined products.
