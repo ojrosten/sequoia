@@ -117,6 +117,14 @@ namespace sequoia::data_structures::partition_impl
     constexpr dereference_policy(Args&&... args) : AuxiliaryDataPolicy{std::forward<Args>(args)...} {}
 
     constexpr dereference_policy(const dereference_policy&) = default;
+
+    template<std::input_or_output_iterator I>
+    [[nodiscard]]
+    constexpr static reference get(I i) { return Handler::get(*i); }
+
+    template<std::input_or_output_iterator I>
+    [[nodiscard]]
+    constexpr static pointer get_ptr(I i) { return Handler::get_ptr(*i); }
   protected:
     constexpr dereference_policy(dereference_policy&&) noexcept = default;
 

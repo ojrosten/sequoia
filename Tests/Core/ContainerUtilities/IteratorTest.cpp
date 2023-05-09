@@ -42,16 +42,16 @@ namespace sequoia::testing
       constexpr scaling_dereference_policy& operator=(scaling_dereference_policy&&) noexcept = default;
 
       [[nodiscard]]
-      constexpr reference get(reference ref) const noexcept
+      constexpr reference get(Iterator i) const noexcept
       {
-        return ref * m_Scale;
+        return (*i) * m_Scale;
       }
     private:
       value_type m_Scale{1};
     };
 
-    template<class DerefPolicy>
-    concept scaling = sequoia::utilities::dereference_policy<DerefPolicy>
+    template<class Iterator, class DerefPolicy>
+    concept scaling = sequoia::utilities::dereference_policy<Iterator, DerefPolicy>
       && requires(DerefPolicy & d) { d.scale(); };
   }
 
@@ -268,7 +268,7 @@ namespace sequoia::testing
     using namespace std;
 
     using value_type = typename std::iterator_traits<Iter>::value_type;
-    using deref_pol = typename CustomIter::dereference_policy;
+    using deref_pol = typename CustomIter::dereference_policy_type;
 
     if(!check(equality, report_line(append_lines(message, "Contract violated")), distance(begin, end), ptrdiff_t{3}))
       return;
@@ -279,7 +279,7 @@ namespace sequoia::testing
 
     const auto scale{
       []([[maybe_unused]] CustomIter iter) -> value_type {
-        if constexpr(scaling<deref_pol>)
+        if constexpr(scaling<CustomIter, deref_pol>)
         {
           return iter.scale();
         }

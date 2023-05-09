@@ -15,26 +15,4 @@
 
 namespace sequoia::utilities
 {
-  template<class Policy>
-  concept dereference_policy = requires() {
-    typename Policy::value_type;
-    typename Policy::reference;
-    //typename Policy::pointer;
-  };
-
-  template<dereference_policy Deref>
-  struct pointer_type
-  {
-    using type = void;
-  };
-
-  template<dereference_policy Deref>
-    requires requires { typename Deref::pointer; }
-  struct pointer_type<Deref>
-  {
-    using type = typename Deref::pointer;
-  };
-
-  template<dereference_policy Deref>
-  using pointer_type_t = typename pointer_type<Deref>::type;
 }

@@ -32,7 +32,6 @@ namespace sequoia::object
   {
   public:
     using value_type      = typename std::iterator_traits<Iterator>::value_type;
-    using true_reference  = typename std::iterator_traits<Iterator>::reference;
     using reference       = std::string;
 
     constexpr factory_dereference_policy() = default;
@@ -40,6 +39,12 @@ namespace sequoia::object
 
     [[nodiscard]]
     friend constexpr bool operator==(const factory_dereference_policy&, const factory_dereference_policy&) noexcept = default;
+
+    [[nodiscard]]
+    static reference get(Iterator i)
+    {
+      return i->first;
+    }
   protected:
     constexpr factory_dereference_policy(factory_dereference_policy&&) noexcept = default;
 
@@ -47,12 +52,6 @@ namespace sequoia::object
 
     constexpr factory_dereference_policy& operator=(const factory_dereference_policy&)     = default;
     constexpr factory_dereference_policy& operator=(factory_dereference_policy&&) noexcept = default;
-
-    [[nodiscard]]
-    reference get(true_reference ref) const noexcept
-    {
-      return ref.first;
-    }
   };
 
   /*! \brief Generic factory with statically defined products.

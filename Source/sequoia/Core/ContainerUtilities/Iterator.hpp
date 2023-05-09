@@ -32,6 +32,28 @@ namespace sequoia::utilities
     { j - n }  -> std::same_as<I>;
   };
 
+  template<class Policy, class Iterator>
+  concept dereference_policy = requires(Iterator i) {
+    typename Policy::value_type;
+    typename Policy::reference;
+  };
+
+  template<class Iterator, dereference_policy<Iterator> Deref>
+  struct pointer_type
+  {
+    using type = void;
+  };
+
+  template<class Iterator, dereference_policy<Iterator> Deref>
+    requires requires { typename Deref::pointer; }
+  struct pointer_type<Iterator, Deref>
+  {
+    using type = typename Deref::pointer;
+  };
+
+  template<class Iterator, dereference_policy<Iterator> Deref>
+  using pointer_type_t = typename pointer_type<Iterator, Deref>::type;
+
   struct null_data_policy
   {
   protected:
@@ -68,10 +90,10 @@ namespace sequoia::utilities
     constexpr identity_dereference_policy(const identity_dereference_policy&) = default;
 
     [[nodiscard]]
-    constexpr static reference get(reference ref) noexcept { return ref; }
+    constexpr static reference get(Iterator i) { return *i; }
 
     [[nodiscard]]
-    constexpr static pointer get_ptr(reference ref) noexcept { return &ref; }
+    constexpr static pointer get_ptr(Iterator i) { return &*i; }
 
     [[nodiscard]]
     friend constexpr bool operator==(const identity_dereference_policy&, const identity_dereference_policy&) noexcept = default;
@@ -84,7 +106,7 @@ namespace sequoia::utilities
     constexpr identity_dereference_policy& operator=(identity_dereference_policy&&) noexcept = default;
   };
 
-  template<std::input_or_output_iterator Iterator, dereference_policy DereferencePolicy>
+  template<std::input_or_output_iterator Iterator, dereference_policy<Iterator> DereferencePolicy>
   inline constexpr bool has_sensible_semantics{
        (    std::indirectly_writable<std::iter_reference_t<Iterator>, std::iter_value_t<Iterator>>
          && std::indirectly_writable<typename DereferencePolicy::reference, typename DereferencePolicy::value_type>)
@@ -101,19 +123,19 @@ namespace sequoia::utilities
       indirectly_writable. Therefore, this is forbidden.
    */
 
-  template<std::input_or_output_iterator Iterator, dereference_policy DereferencePolicy>
+  template<std::input_or_output_iterator Iterator, dereference_policy<Iterator> DereferencePolicy>
     requires has_sensible_semantics<Iterator, DereferencePolicy>
   class iterator : public DereferencePolicy
   {
   public:
-    using dereference_policy = DereferencePolicy;
-    using base_iterator_type = Iterator;
+    using dereference_policy_type = DereferencePolicy;
+    using base_iterator_type      = Iterator;
 
     using iterator_category  = typename std::iterator_traits<Iterator>::iterator_category;
     using difference_type    = typename std::iterator_traits<Iterator>::difference_type;
     using value_type         = typename DereferencePolicy::value_type;
     using reference          = typename DereferencePolicy::reference;
-    using pointer            = pointer_type_t<DereferencePolicy>;
+    using pointer            = pointer_type_t<Iterator, DereferencePolicy>;
 
     constexpr iterator() = default;
 
@@ -146,25 +168,25 @@ namespace sequoia::utilities
     [[nodiscard]]
     constexpr reference operator*() const
     {
-      return DereferencePolicy::get(*m_BaseIterator);
+      return DereferencePolicy::get(m_BaseIterator);
     }
 
     [[nodiscard]]
     constexpr reference operator[](const difference_type n) const
     {
-      return DereferencePolicy::get(m_BaseIterator[n]);
+      return DereferencePolicy::get(m_BaseIterator + n);
     }
 
     constexpr pointer operator->() const
-      requires requires (Iterator i){ DereferencePolicy::get_ptr(*i); }
+      requires requires (Iterator i){ DereferencePolicy::get_ptr(i); }
     {
-      return DereferencePolicy::get_ptr(*m_BaseIterator);
+      return DereferencePolicy::get_ptr(m_BaseIterator);
     }
 
     constexpr iterator& operator++()
       requires std::weakly_incrementable<Iterator>
     {
-      std::ranges::advance(m_BaseIterator, 1);
+      ++m_BaseIterator;
       return *this;
     }
 
@@ -179,7 +201,8 @@ namespace sequoia::utilities
     constexpr iterator& operator+=(const difference_type n)
       requires steppable<Iterator>
     {
-      std::ranges::advance(m_BaseIterator, n); return *this;
+      m_BaseIterator += n;
+      return *this;
     }
 
     [[nodiscard]]

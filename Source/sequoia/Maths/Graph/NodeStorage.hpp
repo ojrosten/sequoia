@@ -46,10 +46,10 @@ namespace sequoia::maths::graph_impl
     constexpr proxy_dereference_policy() = default;
     constexpr proxy_dereference_policy(const proxy_dereference_policy&) = default;
 
-    constexpr static reference get(proxy_reference ref) noexcept { return ref.get(); }
+    constexpr static reference get(Iterator i) { return i->get(); }
 
     [[nodiscard]]
-    constexpr static pointer get_ptr(proxy_reference ref) noexcept { return &ref.get(); }
+    constexpr static pointer get_ptr(Iterator i) { return &i->get(); }
 
     [[nodiscard]]
     friend constexpr bool operator==(const proxy_dereference_policy&, const proxy_dereference_policy&) noexcept = default;

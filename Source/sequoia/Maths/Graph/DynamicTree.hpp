@@ -256,7 +256,6 @@ namespace sequoia::maths
     using proxy               = TreeAdaptor;
     using value_type          = proxy;
     using reference           = proxy;
-    using pointer             = typename std::iterator_traits<Iterator>::pointer;
     using tree_reference_type = typename TreeAdaptor::value_type&;
 
     constexpr forest_from_tree_dereference_policy() = default;
@@ -274,13 +273,10 @@ namespace sequoia::maths
     constexpr forest_from_tree_dereference_policy& operator=(forest_from_tree_dereference_policy&&) = default;
 
     [[nodiscard]]
-    constexpr proxy get(typename std::iterator_traits<Iterator>::reference ref) const
+    constexpr proxy get(Iterator i) const
     {
-      return {*m_pTree, ref.target_node()};
+      return {*m_pTree, i->target_node()};
     }
-
-    [[nodiscard]]
-    constexpr static pointer get_ptr(typename std::iterator_traits<Iterator>::reference ref) noexcept { return &ref; }
   private:
     using tree_pointer_type = std::remove_reference_t<tree_reference_type>*;
 
@@ -298,7 +294,6 @@ namespace sequoia::maths
     using proxy      = TreeAdaptor;
     using value_type = proxy;
     using reference  = proxy;
-    using pointer    = typename std::iterator_traits<Iterator>::pointer;
 
     constexpr forest_dereference_policy() = default;
     constexpr forest_dereference_policy(const forest_dereference_policy&) = default;
@@ -314,13 +309,10 @@ namespace sequoia::maths
     constexpr forest_dereference_policy& operator=(forest_dereference_policy&&) = default;
 
     [[nodiscard]]
-    constexpr proxy get(typename std::iterator_traits<Iterator>::reference ref) const noexcept
+    constexpr static proxy get(Iterator i)
     {
-      return {ref, 0};
+      return {*i, 0};
     }
-
-    [[nodiscard]]
-    constexpr static pointer get_ptr(typename std::iterator_traits<Iterator>::reference ref) noexcept { return &ref; }
   };
 
   template<std::input_or_output_iterator Iterator, class Adaptor>
