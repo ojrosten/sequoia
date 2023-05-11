@@ -36,19 +36,18 @@ namespace sequoia::object
       using proxy      = std::pair<const value_type&, long>;
       using reference  = proxy;
 
-    protected:
-      pool_deref_policy() = default;
-      pool_deref_policy(const pool_deref_policy&)     = default;
-      pool_deref_policy(pool_deref_policy&&) noexcept = default;
-      pool_deref_policy& operator=(const pool_deref_policy&)     = default;
-      pool_deref_policy& operator=(pool_deref_policy&&) noexcept = default;
-
       template<std::input_or_output_iterator I>
       [[nodiscard]]
       static proxy get(I i)
       {
         return {(*i)->get(), i->use_count() - 1};
       }
+    protected:
+      pool_deref_policy() = default;
+      pool_deref_policy(const pool_deref_policy&)     = default;
+      pool_deref_policy(pool_deref_policy&&) noexcept = default;
+      pool_deref_policy& operator=(const pool_deref_policy&)     = default;
+      pool_deref_policy& operator=(pool_deref_policy&&) noexcept = default;
     };
 
     template<std::input_or_output_iterator Iterator, class Wrapper>

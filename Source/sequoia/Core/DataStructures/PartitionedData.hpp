@@ -35,7 +35,7 @@ namespace sequoia
     using partition_iterator
       = utilities::iterator<
           typename partition_impl::partition_iterator_generator<Traits, Handler, partition_impl::mutable_reference, false>::iterator,
-          partition_impl::dereference_policy<Handler, partition_impl::mutable_reference, partition_impl::partition_index_policy<false, IndexType>>
+          partition_impl::dereference_policy_for<Handler, partition_impl::mutable_reference, partition_impl::partition_index_policy<false, IndexType>>
         >;
 
     template<class Traits, class Handler, std::integral IndexType>
@@ -43,7 +43,7 @@ namespace sequoia
     using const_partition_iterator
       = utilities::iterator<
           typename partition_impl::partition_iterator_generator<Traits, Handler, partition_impl::const_reference, false>::iterator,
-        partition_impl::dereference_policy<Handler, partition_impl::const_reference, partition_impl::partition_index_policy<false, IndexType>>
+        partition_impl::dereference_policy_for<Handler, partition_impl::const_reference, partition_impl::partition_index_policy<false, IndexType>>
       >;
 
     template<class Traits, class Handler, std::integral IndexType>
@@ -51,7 +51,7 @@ namespace sequoia
     using reverse_partition_iterator
       = utilities::iterator<
           typename partition_impl::partition_iterator_generator<Traits, Handler, partition_impl::mutable_reference, true>::iterator,
-        partition_impl::dereference_policy<Handler, partition_impl::mutable_reference, partition_impl::partition_index_policy<true, IndexType>>
+        partition_impl::dereference_policy_for<Handler, partition_impl::mutable_reference, partition_impl::partition_index_policy<true, IndexType>>
       >;
 
     template<class Traits, class Handler, std::integral IndexType>
@@ -59,7 +59,7 @@ namespace sequoia
     using const_reverse_partition_iterator
       = utilities::iterator<
           typename partition_impl::partition_iterator_generator<Traits, Handler, partition_impl::const_reference, true>::iterator,
-          partition_impl::dereference_policy<Handler, partition_impl::const_reference, partition_impl::partition_index_policy<true, IndexType>>
+          partition_impl::dereference_policy_for<Handler, partition_impl::const_reference, partition_impl::partition_index_policy<true, IndexType>>
       >;
 
     //===================================Storage using buckets===================================//

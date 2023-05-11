@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "sequoia/Core/ContainerUtilities/IteratorDetails.hpp"
+#include "sequoia/Core/Meta/TypeTraits.hpp"
 
 #include <iterator>
 
@@ -47,27 +47,27 @@ namespace sequoia::utilities
   }
 
   template<class Policy, class Iterator>
-  concept dereference_policy = requires(impl::aggregator<Policy> agg, Iterator i) {
+  concept dereference_policy_for = requires(impl::aggregator<Policy> agg, Iterator i) {
     typename Policy::value_type;
     typename Policy::reference;
 
     { agg.get(i) } -> std::same_as<typename Policy::reference>;
   };
 
-  template<class Iterator, dereference_policy<Iterator> Deref>
+  template<class Iterator, dereference_policy_for<Iterator> Deref>
   struct pointer_type
   {
     using type = void;
   };
 
-  template<class Iterator, dereference_policy<Iterator> Deref>
+  template<class Iterator, dereference_policy_for<Iterator> Deref>
     requires requires { typename Deref::pointer; }
   struct pointer_type<Iterator, Deref>
   {
     using type = typename Deref::pointer;
   };
 
-  template<class Iterator, dereference_policy<Iterator> Deref>
+  template<class Iterator, dereference_policy_for<Iterator> Deref>
   using pointer_type_t = typename pointer_type<Iterator, Deref>::type;
 
   struct null_data_policy
@@ -122,7 +122,7 @@ namespace sequoia::utilities
     constexpr identity_dereference_policy& operator=(identity_dereference_policy&&) noexcept = default;
   };
 
-  template<std::input_or_output_iterator Iterator, dereference_policy<Iterator> DereferencePolicy>
+  template<std::input_or_output_iterator Iterator, dereference_policy_for<Iterator> DereferencePolicy>
   inline constexpr bool has_sensible_semantics{
        (    std::indirectly_writable<std::iter_reference_t<Iterator>, std::iter_value_t<Iterator>>
          && std::indirectly_writable<typename DereferencePolicy::reference, typename DereferencePolicy::value_type>)
@@ -139,7 +139,7 @@ namespace sequoia::utilities
       indirectly_writable. Therefore, this is forbidden.
    */
 
-  template<std::input_or_output_iterator Iterator, dereference_policy<Iterator> DereferencePolicy>
+  template<std::input_or_output_iterator Iterator, dereference_policy_for<Iterator> DereferencePolicy>
     requires has_sensible_semantics<Iterator, DereferencePolicy>
   class iterator : public DereferencePolicy
   {
@@ -189,6 +189,7 @@ namespace sequoia::utilities
 
     [[nodiscard]]
     constexpr reference operator[](const difference_type n) const
+      requires steppable<Iterator>
     {
       return DereferencePolicy::get(m_BaseIterator + n);
     }

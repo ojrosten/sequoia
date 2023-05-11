@@ -106,17 +106,17 @@ namespace sequoia::data_structures::partition_impl
     class AuxiliaryDataPolicy
   >
     requires object::handler<Handler>
-  struct dereference_policy : protected Handler, public AuxiliaryDataPolicy
+  struct dereference_policy_for : protected Handler, public AuxiliaryDataPolicy
   {
     using value_type = typename Handler::value_type;
     using reference  = typename ReferencePolicy<value_type>::reference;
     using pointer    = typename ReferencePolicy<value_type>::pointer;
 
     template<class... Args>
-      requires (!resolve_to_copy_v<dereference_policy, Args...>)
-    constexpr dereference_policy(Args&&... args) : AuxiliaryDataPolicy{std::forward<Args>(args)...} {}
+      requires (!resolve_to_copy_v<dereference_policy_for, Args...>)
+    constexpr dereference_policy_for(Args&&... args) : AuxiliaryDataPolicy{std::forward<Args>(args)...} {}
 
-    constexpr dereference_policy(const dereference_policy&) = default;
+    constexpr dereference_policy_for(const dereference_policy_for&) = default;
 
     template<std::input_or_output_iterator I>
     [[nodiscard]]
@@ -126,12 +126,12 @@ namespace sequoia::data_structures::partition_impl
     [[nodiscard]]
     constexpr static pointer get_ptr(I i) { return Handler::get_ptr(*i); }
   protected:
-    constexpr dereference_policy(dereference_policy&&) noexcept = default;
+    constexpr dereference_policy_for(dereference_policy_for&&) noexcept = default;
 
-    ~dereference_policy() = default;
+    ~dereference_policy_for() = default;
 
-    constexpr dereference_policy& operator=(const dereference_policy&) = default;
-    constexpr dereference_policy& operator=(dereference_policy&&) noexcept = default;
+    constexpr dereference_policy_for& operator=(const dereference_policy_for&) = default;
+    constexpr dereference_policy_for& operator=(dereference_policy_for&&) noexcept = default;
   };
 
   //============================= Helper classes for copy constructor ===================================//

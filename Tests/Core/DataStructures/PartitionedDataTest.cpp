@@ -588,7 +588,7 @@ namespace sequoia
       using p_i_t
         = utilities::iterator<
             typename partition_impl::partition_iterator_generator<Traits, Handler<int>, ReferencePolicy, false>::iterator,
-            partition_impl::dereference_policy<Handler<int>, ReferencePolicy, partition_impl::partition_index_policy<false, std::size_t>>
+            partition_impl::dereference_policy_for<Handler<int>, ReferencePolicy, partition_impl::partition_index_policy<false, std::size_t>>
           >;
 
       p_i_t iter(vec.begin(), 4u);

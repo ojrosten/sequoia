@@ -53,7 +53,7 @@ namespace sequoia::testing
     };
 
     template<class Iterator, class DerefPolicy>
-    concept scaling_iterator = sequoia::utilities::dereference_policy<DerefPolicy, Iterator>
+    concept scaling_iterator = sequoia::utilities::dereference_policy_for<DerefPolicy, Iterator>
       && requires(DerefPolicy & d) { d.scale(); };
   }
 
