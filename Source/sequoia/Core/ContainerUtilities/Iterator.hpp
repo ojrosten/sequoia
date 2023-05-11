@@ -32,10 +32,26 @@ namespace sequoia::utilities
     { j - n }  -> std::same_as<I>;
   };
 
+  namespace impl
+  {
+    template<class Policy>
+    struct aggregator : Policy
+    {
+      template<class I>
+      decltype(auto) get(I i) const
+        requires requires { static_cast<const Policy&>(*this).get(i); }
+      {
+        return Policy::get(i);
+      }
+    };
+  }
+
   template<class Policy, class Iterator>
-  concept dereference_policy = requires(Iterator i) {
+  concept dereference_policy = requires(impl::aggregator<Policy> agg, Iterator i) {
     typename Policy::value_type;
     typename Policy::reference;
+
+    { agg.get(i) } -> std::same_as<typename Policy::reference>;
   };
 
   template<class Iterator, dereference_policy<Iterator> Deref>

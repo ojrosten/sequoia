@@ -31,6 +31,14 @@ namespace sequoia::testing
       [[nodiscard]]
       constexpr value_type scale() const noexcept { return m_Scale; }
 
+      // This must be public (not that there's really a problem with that) due to MSVC bug:
+      // https://developercommunity.visualstudio.com/t/Compiler-crash-attempting-to-detect-prot/10361090
+      [[nodiscard]]
+      constexpr reference get(Iterator i) const
+      {
+        return (*i) * m_Scale;
+      }
+
       [[nodiscard]]
       friend constexpr bool operator==(const scaling_dereference_policy&, const scaling_dereference_policy&) noexcept = default;
     protected:
@@ -40,18 +48,12 @@ namespace sequoia::testing
 
       constexpr scaling_dereference_policy& operator=(const scaling_dereference_policy&)     = default;
       constexpr scaling_dereference_policy& operator=(scaling_dereference_policy&&) noexcept = default;
-
-      [[nodiscard]]
-      constexpr reference get(Iterator i) const noexcept
-      {
-        return (*i) * m_Scale;
-      }
     private:
       value_type m_Scale{1};
     };
 
     template<class Iterator, class DerefPolicy>
-    concept scaling = sequoia::utilities::dereference_policy<Iterator, DerefPolicy>
+    concept scaling_iterator = sequoia::utilities::dereference_policy<DerefPolicy, Iterator>
       && requires(DerefPolicy & d) { d.scale(); };
   }
 
@@ -279,7 +281,7 @@ namespace sequoia::testing
 
     const auto scale{
       []([[maybe_unused]] CustomIter iter) -> value_type {
-        if constexpr(scaling<CustomIter, deref_pol>)
+        if constexpr(scaling_iterator<typename CustomIter::base_iterator_type, deref_pol>)
         {
           return iter.scale();
         }

@@ -263,6 +263,12 @@ namespace sequoia::maths
     constexpr forest_from_tree_dereference_policy(const forest_from_tree_dereference_policy&) = default;
 
     [[nodiscard]]
+    constexpr proxy get(Iterator i) const
+    {
+      return {*m_pTree, i->target_node()};
+    }
+
+    [[nodiscard]]
     friend constexpr bool operator==(const forest_from_tree_dereference_policy&, const forest_from_tree_dereference_policy&) noexcept = default;
   protected:
     constexpr forest_from_tree_dereference_policy(forest_from_tree_dereference_policy&&) = default;
@@ -271,12 +277,6 @@ namespace sequoia::maths
 
     constexpr forest_from_tree_dereference_policy& operator=(const forest_from_tree_dereference_policy&) = default;
     constexpr forest_from_tree_dereference_policy& operator=(forest_from_tree_dereference_policy&&) = default;
-
-    [[nodiscard]]
-    constexpr proxy get(Iterator i) const
-    {
-      return {*m_pTree, i->target_node()};
-    }
   private:
     using tree_pointer_type = std::remove_reference_t<tree_reference_type>*;
 
@@ -299,6 +299,12 @@ namespace sequoia::maths
     constexpr forest_dereference_policy(const forest_dereference_policy&) = default;
 
     [[nodiscard]]
+    constexpr static proxy get(Iterator i)
+    {
+      return {*i, 0};
+    }
+
+    [[nodiscard]]
     friend constexpr bool operator==(const forest_dereference_policy&, const forest_dereference_policy&) noexcept = default;
   protected:
     constexpr forest_dereference_policy(forest_dereference_policy&&) = default;
@@ -307,12 +313,6 @@ namespace sequoia::maths
 
     constexpr forest_dereference_policy& operator=(const forest_dereference_policy&) = default;
     constexpr forest_dereference_policy& operator=(forest_dereference_policy&&) = default;
-
-    [[nodiscard]]
-    constexpr static proxy get(Iterator i)
-    {
-      return {*i, 0};
-    }
   };
 
   template<std::input_or_output_iterator Iterator, class Adaptor>
