@@ -70,6 +70,30 @@ namespace sequoia::utilities
   template<class Iterator, dereference_policy_for<Iterator> Deref>
   using pointer_type_t = typename pointer_type<Iterator, Deref>::type;
 
+  template<class T>
+  inline constexpr bool has_difference_type{requires { typename T::diference_type; }};
+
+  template<class Iterator, dereference_policy_for<Iterator> Deref>
+  struct difference_type;
+
+  template<class Iterator, dereference_policy_for<Iterator> Deref>
+    requires has_difference_type<Deref>
+  struct difference_type<Iterator, Deref>
+  {
+    using type = typename Deref::difference_type;
+  };
+
+  template<class Iterator, dereference_policy_for<Iterator> Deref>
+    requires (!has_difference_type<Deref> && std::input_or_output_iterator<Iterator>)
+  struct difference_type<Iterator, Deref>
+  {
+    using type = typename std::iterator_traits<Iterator>::difference_type;
+  };
+
+  template<class Iterator, dereference_policy_for<Iterator> Deref>
+  using difference_type_t = typename difference_type<Iterator, Deref>::type;
+
+
   struct null_data_policy
   {
   protected:
@@ -147,10 +171,10 @@ namespace sequoia::utilities
     using dereference_policy_type = DereferencePolicy;
     using base_iterator_type      = Iterator;
 
-    using iterator_category  = typename std::iterator_traits<Iterator>::iterator_category;
-    using difference_type    = typename std::iterator_traits<Iterator>::difference_type;
+    //using iterator_category  = typename std::iterator_traits<Iterator>::iterator_category;
     using value_type         = typename DereferencePolicy::value_type;
     using reference          = typename DereferencePolicy::reference;
+    using difference_type    = difference_type_t<Iterator, DereferencePolicy>;
     using pointer            = pointer_type_t<Iterator, DereferencePolicy>;
 
     constexpr iterator() = default;
