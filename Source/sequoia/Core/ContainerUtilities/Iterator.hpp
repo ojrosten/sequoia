@@ -54,6 +54,8 @@ namespace sequoia::utilities
     { agg.get(i) } -> std::same_as<typename Policy::reference>;
   };
 
+  /*! \brief Detects pointer_type */
+
   template<class Iterator, dereference_policy_for<Iterator> Deref>
   struct pointer_type
   {
@@ -70,8 +72,10 @@ namespace sequoia::utilities
   template<class Iterator, dereference_policy_for<Iterator> Deref>
   using pointer_type_t = typename pointer_type<Iterator, Deref>::type;
 
+  /*! \brief Detects difference_type */
+
   template<class T>
-  inline constexpr bool has_difference_type{requires { typename T::diference_type; }};
+  inline constexpr bool has_difference_type{requires { typename T::difference_type; }};
 
   template<class Iterator, dereference_policy_for<Iterator> Deref>
   struct difference_type;
@@ -93,6 +97,63 @@ namespace sequoia::utilities
   template<class Iterator, dereference_policy_for<Iterator> Deref>
   using difference_type_t = typename difference_type<Iterator, Deref>::type;
 
+  /*! \brief Detects value_type */
+
+  template<class T>
+  inline constexpr bool has_value_type{requires { typename T::value_type; }};
+
+  template<class T>
+  struct value_type
+  {
+    using type = void;
+  };
+
+  template<class I>
+    requires std::input_or_output_iterator<I>
+  struct value_type<I>
+  {
+    using type = std::iter_value_t<I>;
+  };
+
+  template<class T>
+    requires (!std::input_or_output_iterator<T> && has_value_type<T>)
+  struct value_type<T>
+  {
+    using type = typename T::value_type;
+  };
+
+  template<class T>
+  using value_type_t = typename value_type<T>::type;
+
+  /*! \brief Detects reference_type */
+
+  template<class T>
+  inline constexpr bool has_reference_type{requires { typename T::reference; }};
+
+  template<class T>
+  struct reference_type
+  {
+    using type = void;
+  };
+
+  template<class I>
+    requires std::input_or_output_iterator<I>
+  struct reference_type<I>
+  {
+    using type = std::iter_reference_t<I>;
+  };
+
+  template<class T>
+    requires (!std::input_or_output_iterator<T> && has_reference_type<T>)
+  struct reference_type<T>
+  {
+    using type = typename T::reference;
+  };
+
+  template<class T>
+  using reference_type_t = typename reference_type<T>::type;
+
+  /*! \brief Policy representing absence of additional data carried by the`identity_dereference_policy` */
 
   struct null_data_policy
   {
@@ -146,36 +207,35 @@ namespace sequoia::utilities
     constexpr identity_dereference_policy& operator=(identity_dereference_policy&&) noexcept = default;
   };
 
-  template<std::input_or_output_iterator Iterator, dereference_policy_for<Iterator> DereferencePolicy>
+  template<class Iterator, dereference_policy_for<Iterator> DereferencePolicy>
   inline constexpr bool has_sensible_semantics{
-       (    std::indirectly_writable<std::iter_reference_t<Iterator>, std::iter_value_t<Iterator>>
-         && std::indirectly_writable<typename DereferencePolicy::reference, typename DereferencePolicy::value_type>)
-    || (    !std::indirectly_writable<std::iter_reference_t<Iterator>, std::iter_value_t<Iterator>>
-         && !std::indirectly_writable<typename DereferencePolicy::reference, typename DereferencePolicy::value_type>)
+       (    std::indirectly_writable<reference_type_t<Iterator>, value_type_t<Iterator>>
+         && std::indirectly_writable<reference_type_t<DereferencePolicy>, value_type_t<DereferencePolicy>>)
+    || (    !std::indirectly_writable<reference_type_t<Iterator>, value_type_t<Iterator>>
+         && !std::indirectly_writable<reference_type_t<DereferencePolicy>, value_type_t<DereferencePolicy>>)
   };
 
   /*! \class iterator
       \brief An iterator with policies controlling dereferencing and auxiliary data.
 
       The DereferencePolicy allows customisation of the various dereferencing operators. In principle
-      it is therefore possible that dereferencing will not return a reference, which can be useful. 
+      it is therefore possible that dereferencing will not return a reference, which can be useful.
       However, this can cause the semantics to be confusing if the underlying iterator is
       indirectly_writable. Therefore, this is forbidden.
    */
 
-  template<std::input_or_output_iterator Iterator, dereference_policy_for<Iterator> DereferencePolicy>
+  template<class Iterator, dereference_policy_for<Iterator> DereferencePolicy>
     requires has_sensible_semantics<Iterator, DereferencePolicy>
   class iterator : public DereferencePolicy
   {
   public:
-    using dereference_policy_type = DereferencePolicy;
     using base_iterator_type      = Iterator;
+    using dereference_policy_type = DereferencePolicy;
 
-    //using iterator_category  = typename std::iterator_traits<Iterator>::iterator_category;
-    using value_type         = typename DereferencePolicy::value_type;
-    using reference          = typename DereferencePolicy::reference;
-    using difference_type    = difference_type_t<Iterator, DereferencePolicy>;
-    using pointer            = pointer_type_t<Iterator, DereferencePolicy>;
+    using value_type      = typename DereferencePolicy::value_type;
+    using reference       = typename DereferencePolicy::reference;
+    using difference_type = difference_type_t<Iterator, DereferencePolicy>;
+    using pointer         = pointer_type_t<Iterator, DereferencePolicy>;
 
     constexpr iterator() = default;
 
