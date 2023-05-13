@@ -37,6 +37,8 @@ namespace sequoia::utilities
     template<class Policy>
     struct aggregator : Policy
     {
+      using Policy::Policy;
+      
       template<class I>
       decltype(auto) get(I i) const
         requires requires { static_cast<const Policy&>(*this).get(i); }
@@ -52,6 +54,11 @@ namespace sequoia::utilities
     typename Policy::reference;
 
     { agg.get(i) } -> std::same_as<typename Policy::reference>;
+  };
+
+  template<class Policy1, class Policy2>
+  inline constexpr bool consistent_policies_v{
+    initializable_from<impl::aggregator<Policy1>, impl::aggregator<Policy2>>
   };
 
   /*! \brief Detects pointer_type */
@@ -246,10 +253,10 @@ namespace sequoia::utilities
       , m_BaseIterator{std::forward<Arg>(baseIterArg)}
     {}
 
-    template<std::input_or_output_iterator Iter, class DerefPol>
+    template<class Iter, class DerefPol>
       requires (   !std::is_same_v<Iter, Iterator>
-                && initializable_from<DereferencePolicy, DerefPol const&>
-                && initializable_from<Iterator, Iter>)
+                && initializable_from<Iterator, Iter>
+                && consistent_policies_v<DereferencePolicy, DerefPol>)
     constexpr iterator(iterator<Iter, DerefPol> iter)
       : DereferencePolicy{static_cast<const DerefPol&>(iter)}
       , m_BaseIterator{iter.base_iterator()}
