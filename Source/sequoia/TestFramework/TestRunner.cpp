@@ -855,6 +855,7 @@ namespace sequoia::testing
 
   void test_runner::sort_tests()
   {
+    // TO DO: replace this with a stable_sort
     m_Suites.sort_nodes(1, m_Suites.order(), [&s = m_Suites](auto i, auto j) {
       auto& lhs{s.cbegin_node_weights()[i]};
       auto& rhs{s.cbegin_node_weights()[j]};

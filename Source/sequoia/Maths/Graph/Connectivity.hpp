@@ -81,7 +81,7 @@ namespace sequoia
       using const_edge_iterator         = typename edge_storage_type::const_partition_iterator;
       using const_reverse_edge_iterator = typename edge_storage_type::const_reverse_partition_iterator;
       using edges_initializer           = std::initializer_list<std::initializer_list<edge_init_type>>;
-      using const_edges_range            = std::ranges::subrange<const_edge_iterator>;
+      using const_edges_range           = std::ranges::subrange<const_edge_iterator>;
 
       static_assert(std::is_unsigned_v<edge_index_type>);
 
