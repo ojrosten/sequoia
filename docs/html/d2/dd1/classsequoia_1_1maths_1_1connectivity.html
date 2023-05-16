@@ -123,6 +123,9 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>const_reverse_edge_i
 <tr class="memitem:a860c8abce34823fe5239aa9dda1b9b0e"><td class="memItemLeft" align="right" valign="top"><a id="a860c8abce34823fe5239aa9dda1b9b0e" name="a860c8abce34823fe5239aa9dda1b9b0e"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>edges_initializer</b> = std::initializer_list&lt; std::initializer_list&lt; edge_init_type &gt; &gt;</td></tr>
 <tr class="separator:a860c8abce34823fe5239aa9dda1b9b0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a08de9cdd43000c42a17d687a79cf6451"><td class="memItemLeft" align="right" valign="top"><a id="a08de9cdd43000c42a17d687a79cf6451" name="a08de9cdd43000c42a17d687a79cf6451"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>const_edges_range</b> = std::ranges::subrange&lt; const_edge_iterator &gt;</td></tr>
+<tr class="separator:a08de9cdd43000c42a17d687a79cf6451"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -150,6 +153,9 @@ constexpr const_reverse_edge_iterator&#160;</td><td class="memItemRight" valign=
 <tr class="memitem:a7af80d75ef346dbb85f9b6f3dd60b7f0"><td class="memItemLeft" align="right" valign="top"><a id="a7af80d75ef346dbb85f9b6f3dd60b7f0" name="a7af80d75ef346dbb85f9b6f3dd60b7f0"></a>
 constexpr const_reverse_edge_iterator&#160;</td><td class="memItemRight" valign="bottom"><b>crend_edges</b> (const edge_index_type node) const</td></tr>
 <tr class="separator:a7af80d75ef346dbb85f9b6f3dd60b7f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad790d6400107a0099eb81e058be86186"><td class="memItemLeft" align="right" valign="top"><a id="ad790d6400107a0099eb81e058be86186" name="ad790d6400107a0099eb81e058be86186"></a>
+const_edges_range&#160;</td><td class="memItemRight" valign="bottom"><b>cedges</b> (const edge_index_type node) const</td></tr>
+<tr class="separator:ad790d6400107a0099eb81e058be86186"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a886617372ac4810a2f8020da62c6cad7"><td class="memTemplParams" colspan="2"><a id="a886617372ac4810a2f8020da62c6cad7" name="a886617372ac4810a2f8020da62c6cad7"></a>
 template&lt;std::invocable&lt; edge_weight_type &amp; &gt; Fn&gt; <br />
 requires (!std::is_empty_v&lt;edge_weight_type&gt;)</td></tr>
@@ -299,11 +305,11 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>erase_edge</b> (const
 <tr class="memitem:a711ed92839f2a54af63512d19ed3d05f"><td class="memItemLeft" align="right" valign="top"><a id="a711ed92839f2a54af63512d19ed3d05f" name="a711ed92839f2a54af63512d19ed3d05f"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>clear</b> () noexcept</td></tr>
 <tr class="separator:a711ed92839f2a54af63512d19ed3d05f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aadb1778a4dd973b508e8f018e1d016f8"><td class="memTemplParams" colspan="2"><a id="aadb1778a4dd973b508e8f018e1d016f8" name="aadb1778a4dd973b508e8f018e1d016f8"></a>
+<tr class="memitem:a9e8db9fec5fa1a93fb8b675e5c8f4df2"><td class="memTemplParams" colspan="2"><a id="a9e8db9fec5fa1a93fb8b675e5c8f4df2" name="a9e8db9fec5fa1a93fb8b675e5c8f4df2"></a>
 template&lt;class Comparer &gt; <br />
-requires (edge_type::flavour == edge_flavour::partial)</td></tr>
-<tr class="memitem:aadb1778a4dd973b508e8f018e1d016f8"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sort_edges</b> (const_edge_iterator begin, const_edge_iterator end, Comparer comp)</td></tr>
-<tr class="separator:aadb1778a4dd973b508e8f018e1d016f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+requires ((edge_type::flavour == edge_flavour::partial) &amp;&amp; std::random_access_iterator&lt;edge_iterator&gt;)</td></tr>
+<tr class="memitem:a9e8db9fec5fa1a93fb8b675e5c8f4df2"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sort_edges</b> (const_edge_iterator begin, const_edge_iterator end, Comparer comp)</td></tr>
+<tr class="separator:a9e8db9fec5fa1a93fb8b675e5c8f4df2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="friends" name="friends"></a>
 Friends</h2></td></tr>

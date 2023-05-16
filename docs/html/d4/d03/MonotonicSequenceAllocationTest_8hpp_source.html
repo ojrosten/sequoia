@@ -96,19 +96,18 @@ $(function() {
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    <span class="keyword">using </span>regular_allocation_test::regular_allocation_test;</div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    std::filesystem::path <a class="code hl_function" href="../../da/d11/classsequoia_1_1testing_1_1monotonic__sequence__allocation__test.html#a4ffcdd22acb8e28822e280657f411b0b">source_file</a>() <span class="keyword">const</span> <span class="keyword">noexcept</span> <span class="keyword">final</span>;</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    std::filesystem::path source_file() <span class="keyword">const</span> <span class="keyword">noexcept</span>;</div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    <span class="keyword">template</span>&lt;<span class="keywordtype">bool</span> PropagateCopy, <span class="keywordtype">bool</span> PropagateMove, <span class="keywordtype">bool</span> PropagateSwap&gt;</div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    <span class="keywordtype">void</span> test_allocation();</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>  <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    <span class="keywordtype">void</span> run_tests() <span class="keyword">final</span>;</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    <span class="keywordtype">void</span> run_tests();</div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>  };</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>}</div>
 <div class="ttc" id="aMonotonicSequence_8hpp_html"><div class="ttname"><a href="../../d7/d1c/MonotonicSequence_8hpp.html">MonotonicSequence.hpp</a></div><div class="ttdoc">Classes implementing the concept of a monotonic sequence.</div></div>
 <div class="ttc" id="aRegularAllocationTestCore_8hpp_html"><div class="ttname"><a href="../../d8/da2/RegularAllocationTestCore_8hpp.html">RegularAllocationTestCore.hpp</a></div><div class="ttdoc">Extension for checking allocations for types with regular semantics, see here.</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1basic__regular__allocation__test_html"><div class="ttname"><a href="../../db/dbc/classsequoia_1_1testing_1_1basic__regular__allocation__test.html">sequoia::testing::basic_regular_allocation_test</a></div><div class="ttdoc">Templated on the test_mode, this forms the basis of all allocation tests for regular types.</div><div class="ttdef"><b>Definition:</b> RegularAllocationTestCore.hpp:118</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1monotonic__sequence__allocation__test_html"><div class="ttname"><a href="../../da/d11/classsequoia_1_1testing_1_1monotonic__sequence__allocation__test.html">sequoia::testing::monotonic_sequence_allocation_test</a></div><div class="ttdef"><b>Definition:</b> MonotonicSequenceAllocationTest.hpp:19</div></div>
-<div class="ttc" id="aclasssequoia_1_1testing_1_1monotonic__sequence__allocation__test_html_a4ffcdd22acb8e28822e280657f411b0b"><div class="ttname"><a href="../../da/d11/classsequoia_1_1testing_1_1monotonic__sequence__allocation__test.html#a4ffcdd22acb8e28822e280657f411b0b">sequoia::testing::monotonic_sequence_allocation_test::source_file</a></div><div class="ttdeci">std::filesystem::path source_file() const noexcept final</div><div class="ttdoc">Pure virtual method which should be overridden in a concrete test's cpp file in order to provide the ...</div><div class="ttdef"><b>Definition:</b> MonotonicSequenceAllocationTest.cpp:16</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

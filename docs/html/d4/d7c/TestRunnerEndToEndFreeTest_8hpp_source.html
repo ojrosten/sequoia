@@ -113,34 +113,36 @@ $(function() {
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    <span class="keyword">using </span>free_test::free_test;</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    std::filesystem::path <a class="code hl_function" href="../../d1/dbf/classsequoia_1_1testing_1_1test__runner__end__to__end__test.html#a03eb53cd52106c1cadce1b61ac295670">source_file</a>() <span class="keyword">const</span> <span class="keyword">noexcept</span> <span class="keyword">final</span>;</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>  <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="keywordtype">void</span> run_tests() <span class="keyword">final</span>;</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <span class="keywordtype">void</span> test_project_creation();</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    std::filesystem::path generated_project() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="keywordtype">void</span> copy_aux_materials(<span class="keyword">const</span> std::filesystem::path&amp; relativeFrom, <span class="keyword">const</span> std::filesystem::path&amp; relativeTo) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="keywordtype">void</span> create_run_and_check(std::string_view description, <span class="keyword">const</span> <a class="code hl_struct" href="../../d1/d98/structsequoia_1_1testing_1_1cmd__builder.html">cmd_builder</a>&amp; b);</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="keywordtype">void</span> run_and_check(std::string_view description, <span class="keyword">const</span> <a class="code hl_struct" href="../../d1/d98/structsequoia_1_1testing_1_1cmd__builder.html">cmd_builder</a>&amp; b, std::string_view relOutputDir, std::string_view options);</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <span class="keywordtype">void</span> rebuild_run_and_check(std::string_view description, <span class="keyword">const</span> <a class="code hl_struct" href="../../d1/d98/structsequoia_1_1testing_1_1cmd__builder.html">cmd_builder</a>&amp; b, std::string_view relOutputDir, std::string_view CMakeOutput, std::string_view BuildOutput, std::string_view options);</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <span class="keywordtype">void</span> check_timings(std::string_view description, <span class="keyword">const</span> std::filesystem::path&amp; relOutputFile, <span class="keyword">const</span> <span class="keywordtype">double</span> speedupFactor);</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>  };</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>}</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    std::filesystem::path source_file() <span class="keyword">const</span> <span class="keyword">noexcept</span>;</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="keywordtype">void</span> run_tests();</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>  <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="keywordtype">void</span> test_project_creation();</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    [[nodiscard]]</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    std::filesystem::path generated_project() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="keywordtype">void</span> copy_aux_materials(<span class="keyword">const</span> std::filesystem::path&amp; relativeFrom, <span class="keyword">const</span> std::filesystem::path&amp; relativeTo) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="keywordtype">void</span> create_run_and_check(std::string_view description, <span class="keyword">const</span> <a class="code hl_struct" href="../../d1/d98/structsequoia_1_1testing_1_1cmd__builder.html">cmd_builder</a>&amp; b);</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="keywordtype">void</span> run_and_check(std::string_view description, <span class="keyword">const</span> <a class="code hl_struct" href="../../d1/d98/structsequoia_1_1testing_1_1cmd__builder.html">cmd_builder</a>&amp; b, std::string_view relOutputDir, std::string_view options);</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="keywordtype">void</span> rebuild_run_and_check(std::string_view description, <span class="keyword">const</span> <a class="code hl_struct" href="../../d1/d98/structsequoia_1_1testing_1_1cmd__builder.html">cmd_builder</a>&amp; b, std::string_view relOutputDir, std::string_view CMakeOutput, std::string_view BuildOutput, std::string_view options);</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <span class="keywordtype">void</span> check_timings(std::string_view description, <span class="keyword">const</span> std::filesystem::path&amp; relOutputFile, <span class="keyword">const</span> <span class="keywordtype">double</span> speedupFactor);</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <span class="keywordtype">void</span> check_project_files(std::string_view description);</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>  };</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>}</div>
 <div class="ttc" id="aCommands_8hpp_html"><div class="ttname"><a href="../../dc/d4b/Commands_8hpp.html">Commands.hpp</a></div><div class="ttdoc">Shell Command specifically for the testing framework.</div></div>
 <div class="ttc" id="aFreeTestCore_8hpp_html"><div class="ttname"><a href="../../dd/d3e/FreeTestCore_8hpp.html">FreeTestCore.hpp</a></div><div class="ttdoc">Core functionality for the testing framework.</div></div>
 <div class="ttc" id="aclasssequoia_1_1runtime_1_1shell__command_html"><div class="ttname"><a href="../../d6/dd5/classsequoia_1_1runtime_1_1shell__command.html">sequoia::runtime::shell_command</a></div><div class="ttdef"><b>Definition:</b> ShellCommands.hpp:20</div></div>
-<div class="ttc" id="aclasssequoia_1_1testing_1_1basic__test_html"><div class="ttname"><a href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">sequoia::testing::basic_test</a></div><div class="ttdoc">class template from which all concrete tests should derive.</div><div class="ttdef"><b>Definition:</b> FreeTestCore.hpp:77</div></div>
+<div class="ttc" id="aclasssequoia_1_1testing_1_1basic__test_html"><div class="ttname"><a href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">sequoia::testing::basic_test</a></div><div class="ttdoc">class template from which all concrete tests should derive.</div><div class="ttdef"><b>Definition:</b> FreeTestCore.hpp:138</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1build__paths_html"><div class="ttname"><a href="../../d2/d9f/classsequoia_1_1testing_1_1build__paths.html">sequoia::testing::build_paths</a></div><div class="ttdoc">Paths relating to the build directory.</div><div class="ttdef"><b>Definition:</b> ProjectPaths.hpp:193</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1main__paths_html"><div class="ttname"><a href="../../dc/d82/classsequoia_1_1testing_1_1main__paths.html">sequoia::testing::main_paths</a></div><div class="ttdoc">Paths relating to the main cpp.</div><div class="ttdef"><b>Definition:</b> ProjectPaths.hpp:56</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1test__runner__end__to__end__test_html"><div class="ttname"><a href="../../d1/dbf/classsequoia_1_1testing_1_1test__runner__end__to__end__test.html">sequoia::testing::test_runner_end_to_end_test</a></div><div class="ttdef"><b>Definition:</b> TestRunnerEndToEndFreeTest.hpp:36</div></div>
-<div class="ttc" id="aclasssequoia_1_1testing_1_1test__runner__end__to__end__test_html_a03eb53cd52106c1cadce1b61ac295670"><div class="ttname"><a href="../../d1/dbf/classsequoia_1_1testing_1_1test__runner__end__to__end__test.html#a03eb53cd52106c1cadce1b61ac295670">sequoia::testing::test_runner_end_to_end_test::source_file</a></div><div class="ttdeci">std::filesystem::path source_file() const noexcept final</div><div class="ttdoc">Pure virtual method which should be overridden in a concrete test's cpp file in order to provide the ...</div><div class="ttdef"><b>Definition:</b> TestRunnerEndToEndFreeTest.cpp:105</div></div>
 <div class="ttc" id="astructsequoia_1_1testing_1_1cmd__builder_html"><div class="ttname"><a href="../../d1/d98/structsequoia_1_1testing_1_1cmd__builder.html">sequoia::testing::cmd_builder</a></div><div class="ttdef"><b>Definition:</b> TestRunnerEndToEndFreeTest.hpp:18</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->

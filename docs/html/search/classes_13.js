@@ -56,5 +56,8 @@ var searchData=
   ['value_5ftester_3c_20std_3a_3avector_3c_20foo_20_3e_20_3e_53',['value_tester&lt; std::vector&lt; foo &gt; &gt;',['../df/d20/structsequoia_1_1testing_1_1value__tester_3_01std_1_1vector_3_01foo_01_4_01_4.html',1,'sequoia::testing']]],
   ['value_5ftester_3c_20std_3a_3aweak_5fptr_3c_20t_20_3e_20_3e_54',['value_tester&lt; std::weak_ptr&lt; T &gt; &gt;',['../dd/d2e/structsequoia_1_1testing_1_1value__tester_3_01std_1_1weak__ptr_3_01T_01_4_01_4.html',1,'sequoia::testing']]],
   ['value_5ftester_3c_20t_20_2a_20_3e_55',['value_tester&lt; T * &gt;',['../dd/d92/structsequoia_1_1testing_1_1value__tester_3_01T_01_5_01_4.html',1,'sequoia::testing']]],
-  ['value_5ftester_3c_20template_5fspec_20_3e_56',['value_tester&lt; template_spec &gt;',['../d4/d90/structsequoia_1_1testing_1_1value__tester_3_01template__spec_01_4.html',1,'sequoia::testing']]]
+  ['value_5ftester_3c_20template_5fspec_20_3e_56',['value_tester&lt; template_spec &gt;',['../d4/d90/structsequoia_1_1testing_1_1value__tester_3_01template__spec_01_4.html',1,'sequoia::testing']]],
+  ['value_5ftype_57',['value_type',['../d3/d9e/structsequoia_1_1utilities_1_1value__type.html',1,'sequoia::utilities']]],
+  ['value_5ftype_3c_20i_20_3e_58',['value_type&lt; I &gt;',['../d1/d8b/structsequoia_1_1utilities_1_1value__type_3_01I_01_4.html',1,'sequoia::utilities']]],
+  ['value_5ftype_3c_20t_20_3e_59',['value_type&lt; T &gt;',['../dd/da1/structsequoia_1_1utilities_1_1value__type_3_01T_01_4.html',1,'sequoia::utilities']]]
 ];

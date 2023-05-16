@@ -96,30 +96,24 @@ Inheritance diagram for sequoia::utilities::iterator&lt; Iterator, DereferencePo
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a49b612fb9c500ed05c6b2f58a3474ef5"><td class="memItemLeft" align="right" valign="top"><a id="a49b612fb9c500ed05c6b2f58a3474ef5" name="a49b612fb9c500ed05c6b2f58a3474ef5"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>dereference_policy</b> = DereferencePolicy</td></tr>
-<tr class="separator:a49b612fb9c500ed05c6b2f58a3474ef5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aea89451f8efcb12854140f2dbcb7b61a"><td class="memItemLeft" align="right" valign="top"><a id="aea89451f8efcb12854140f2dbcb7b61a" name="aea89451f8efcb12854140f2dbcb7b61a"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>base_iterator_type</b> = Iterator</td></tr>
 <tr class="separator:aea89451f8efcb12854140f2dbcb7b61a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad9f6d22e0b2fb37936c6b1c32b0e1e9a"><td class="memItemLeft" align="right" valign="top"><a id="ad9f6d22e0b2fb37936c6b1c32b0e1e9a" name="ad9f6d22e0b2fb37936c6b1c32b0e1e9a"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>iterator_category</b> = typename std::iterator_traits&lt; Iterator &gt;::iterator_category</td></tr>
-<tr class="separator:ad9f6d22e0b2fb37936c6b1c32b0e1e9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a71ef5ae1c7adee2caf4522c93511c16c"><td class="memItemLeft" align="right" valign="top"><a id="a71ef5ae1c7adee2caf4522c93511c16c" name="a71ef5ae1c7adee2caf4522c93511c16c"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>difference_type</b> = typename std::iterator_traits&lt; Iterator &gt;::difference_type</td></tr>
-<tr class="separator:a71ef5ae1c7adee2caf4522c93511c16c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6b6a0353e51627f6f90c4db8619b2821"><td class="memItemLeft" align="right" valign="top"><a id="a6b6a0353e51627f6f90c4db8619b2821" name="a6b6a0353e51627f6f90c4db8619b2821"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>dereference_policy_type</b> = DereferencePolicy</td></tr>
+<tr class="separator:a6b6a0353e51627f6f90c4db8619b2821"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4038ee70e5092e742810af2ca7014f7e"><td class="memItemLeft" align="right" valign="top"><a id="a4038ee70e5092e742810af2ca7014f7e" name="a4038ee70e5092e742810af2ca7014f7e"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>value_type</b> = typename DereferencePolicy::value_type</td></tr>
 <tr class="separator:a4038ee70e5092e742810af2ca7014f7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af730575ed8a4b8ff25c99da4a088242f"><td class="memItemLeft" align="right" valign="top"><a id="af730575ed8a4b8ff25c99da4a088242f" name="af730575ed8a4b8ff25c99da4a088242f"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>pointer</b> = typename DereferencePolicy::pointer</td></tr>
-<tr class="separator:af730575ed8a4b8ff25c99da4a088242f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a76474424c7f342acdd7d0fbd7bcbc04c"><td class="memItemLeft" align="right" valign="top"><a id="a76474424c7f342acdd7d0fbd7bcbc04c" name="a76474424c7f342acdd7d0fbd7bcbc04c"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>reference</b> = typename DereferencePolicy::reference</td></tr>
 <tr class="separator:a76474424c7f342acdd7d0fbd7bcbc04c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3b49f2e96f162b59a3a29118bff50916"><td class="memItemLeft" align="right" valign="top"><a id="a3b49f2e96f162b59a3a29118bff50916" name="a3b49f2e96f162b59a3a29118bff50916"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>const_dereference_type</b> = impl::type_generator_t&lt; DereferencePolicy &gt;</td></tr>
-<tr class="separator:a3b49f2e96f162b59a3a29118bff50916"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2d9ebf913da2b8f369daaf719c00d604"><td class="memItemLeft" align="right" valign="top"><a id="a2d9ebf913da2b8f369daaf719c00d604" name="a2d9ebf913da2b8f369daaf719c00d604"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>difference_type</b> = difference_type_t&lt; Iterator, DereferencePolicy &gt;</td></tr>
+<tr class="separator:a2d9ebf913da2b8f369daaf719c00d604"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c28aa3fc6e57a7904bffc1f6f450a42"><td class="memItemLeft" align="right" valign="top"><a id="a1c28aa3fc6e57a7904bffc1f6f450a42" name="a1c28aa3fc6e57a7904bffc1f6f450a42"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>pointer</b> = pointer_type_t&lt; Iterator, DereferencePolicy &gt;</td></tr>
+<tr class="separator:a1c28aa3fc6e57a7904bffc1f6f450a42"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -143,42 +137,33 @@ constexpr <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator
 <tr class="memitem:acae0c916cabf518fa03fa36d5e4a6553"><td class="memItemLeft" align="right" valign="top"><a id="acae0c916cabf518fa03fa36d5e4a6553" name="acae0c916cabf518fa03fa36d5e4a6553"></a>
 constexpr base_iterator_type&#160;</td><td class="memItemRight" valign="bottom"><b>base_iterator</b> () const noexcept</td></tr>
 <tr class="separator:acae0c916cabf518fa03fa36d5e4a6553"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7c81a14552de7b08709b4760a8710aa4"><td class="memItemLeft" align="right" valign="top"><a id="a7c81a14552de7b08709b4760a8710aa4" name="a7c81a14552de7b08709b4760a8710aa4"></a>
-constexpr const_dereference_type&#160;</td><td class="memItemRight" valign="bottom"><b>operator*</b> () const</td></tr>
-<tr class="separator:a7c81a14552de7b08709b4760a8710aa4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a87d523587348d1a08072f79ea5e5ba44"><td class="memItemLeft" align="right" valign="top"><a id="a87d523587348d1a08072f79ea5e5ba44" name="a87d523587348d1a08072f79ea5e5ba44"></a>
+<tr class="memitem:a7bd556a2132bf93d6d88047f7db04b83"><td class="memItemLeft" align="right" valign="top"><a id="a7bd556a2132bf93d6d88047f7db04b83" name="a7bd556a2132bf93d6d88047f7db04b83"></a>
 constexpr reference&#160;</td><td class="memItemRight" valign="bottom"><b>operator*</b> () const</td></tr>
-<tr class="separator:a87d523587348d1a08072f79ea5e5ba44"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af2493fba35c33be454d38bd54602a5e4"><td class="memItemLeft" align="right" valign="top"><a id="af2493fba35c33be454d38bd54602a5e4" name="af2493fba35c33be454d38bd54602a5e4"></a>
-constexpr const_dereference_type&#160;</td><td class="memItemRight" valign="bottom"><b>operator[]</b> (const difference_type n) const</td></tr>
-<tr class="separator:af2493fba35c33be454d38bd54602a5e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1ab3202bb238b8a4f5b8ed495846346a"><td class="memItemLeft" align="right" valign="top"><a id="a1ab3202bb238b8a4f5b8ed495846346a" name="a1ab3202bb238b8a4f5b8ed495846346a"></a>
-constexpr reference&#160;</td><td class="memItemRight" valign="bottom"><b>operator[]</b> (const difference_type n)</td></tr>
-<tr class="separator:a1ab3202bb238b8a4f5b8ed495846346a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1439ed71630b98d86990322e02e30937"><td class="memItemLeft" align="right" valign="top"><a id="a1439ed71630b98d86990322e02e30937" name="a1439ed71630b98d86990322e02e30937"></a>
-constexpr std::conditional_t&lt; is_const_pointer_v&lt; pointer &gt;, pointer, const pointer &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>operator-&gt;</b> () const</td></tr>
-<tr class="separator:a1439ed71630b98d86990322e02e30937"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab34181127f61ca90e12a3b0d22e3c150"><td class="memItemLeft" align="right" valign="top"><a id="ab34181127f61ca90e12a3b0d22e3c150" name="ab34181127f61ca90e12a3b0d22e3c150"></a>
-constexpr pointer&#160;</td><td class="memItemRight" valign="bottom"><b>operator-&gt;</b> ()</td></tr>
-<tr class="separator:ab34181127f61ca90e12a3b0d22e3c150"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ace4159ed7a97b3e693826018e9b13047"><td class="memItemLeft" align="right" valign="top"><a id="ace4159ed7a97b3e693826018e9b13047" name="ace4159ed7a97b3e693826018e9b13047"></a>
+<tr class="separator:a7bd556a2132bf93d6d88047f7db04b83"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a33a376ede86e5bdf8a5356a6c9ef3eac"><td class="memItemLeft" align="right" valign="top"><a id="a33a376ede86e5bdf8a5356a6c9ef3eac" name="a33a376ede86e5bdf8a5356a6c9ef3eac"></a>
+constexpr reference&#160;</td><td class="memItemRight" valign="bottom"><b>operator[]</b> (const difference_type n) const</td></tr>
+<tr class="separator:a33a376ede86e5bdf8a5356a6c9ef3eac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d260b7d95ac5f1c2c562180f19f6a47"><td class="memItemLeft" align="right" valign="top"><a id="a7d260b7d95ac5f1c2c562180f19f6a47" name="a7d260b7d95ac5f1c2c562180f19f6a47"></a>
+constexpr pointer&#160;</td><td class="memItemRight" valign="bottom"><b>operator-&gt;</b> () const</td></tr>
+<tr class="separator:a7d260b7d95ac5f1c2c562180f19f6a47"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad60d8403f82172f604fd576a7c91503c"><td class="memItemLeft" align="right" valign="top"><a id="ad60d8403f82172f604fd576a7c91503c" name="ad60d8403f82172f604fd576a7c91503c"></a>
 constexpr <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">iterator</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator++</b> ()</td></tr>
-<tr class="separator:ace4159ed7a97b3e693826018e9b13047"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8eb8725d96caf502073ed6a55dd04718"><td class="memItemLeft" align="right" valign="top"><a id="a8eb8725d96caf502073ed6a55dd04718" name="a8eb8725d96caf502073ed6a55dd04718"></a>
-constexpr <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">iterator</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator+=</b> (const difference_type n)</td></tr>
-<tr class="separator:a8eb8725d96caf502073ed6a55dd04718"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0e9e125f234d533b45e94d36ef216b0a"><td class="memItemLeft" align="right" valign="top"><a id="a0e9e125f234d533b45e94d36ef216b0a" name="a0e9e125f234d533b45e94d36ef216b0a"></a>
+<tr class="separator:ad60d8403f82172f604fd576a7c91503c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2123ad6ae0c36948c792093d9efad1e2"><td class="memItemLeft" align="right" valign="top"><a id="a2123ad6ae0c36948c792093d9efad1e2" name="a2123ad6ae0c36948c792093d9efad1e2"></a>
 constexpr <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>operator++</b> (int)</td></tr>
-<tr class="separator:a0e9e125f234d533b45e94d36ef216b0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad7988b262257caa3b2d3b6aa8e84b502"><td class="memItemLeft" align="right" valign="top"><a id="ad7988b262257caa3b2d3b6aa8e84b502" name="ad7988b262257caa3b2d3b6aa8e84b502"></a>
+<tr class="separator:a2123ad6ae0c36948c792093d9efad1e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af6dd91f537a4ba341f728c8cd3992248"><td class="memItemLeft" align="right" valign="top"><a id="af6dd91f537a4ba341f728c8cd3992248" name="af6dd91f537a4ba341f728c8cd3992248"></a>
+constexpr <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">iterator</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator+=</b> (const difference_type n)</td></tr>
+<tr class="separator:af6dd91f537a4ba341f728c8cd3992248"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa32fbb95a1bdf9c5cf52d933243b8624"><td class="memItemLeft" align="right" valign="top"><a id="aa32fbb95a1bdf9c5cf52d933243b8624" name="aa32fbb95a1bdf9c5cf52d933243b8624"></a>
 constexpr <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">iterator</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator--</b> ()</td></tr>
-<tr class="separator:ad7988b262257caa3b2d3b6aa8e84b502"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abd3996df88f7efaf3a6bc51320fde6de"><td class="memItemLeft" align="right" valign="top"><a id="abd3996df88f7efaf3a6bc51320fde6de" name="abd3996df88f7efaf3a6bc51320fde6de"></a>
-constexpr <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">iterator</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator-=</b> (const difference_type n)</td></tr>
-<tr class="separator:abd3996df88f7efaf3a6bc51320fde6de"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a805e4f587882879f16b945ca663f02ca"><td class="memItemLeft" align="right" valign="top"><a id="a805e4f587882879f16b945ca663f02ca" name="a805e4f587882879f16b945ca663f02ca"></a>
+<tr class="separator:aa32fbb95a1bdf9c5cf52d933243b8624"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a74c78a44e2caa264d58c13aa716fe3ed"><td class="memItemLeft" align="right" valign="top"><a id="a74c78a44e2caa264d58c13aa716fe3ed" name="a74c78a44e2caa264d58c13aa716fe3ed"></a>
 constexpr <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>operator--</b> (int)</td></tr>
-<tr class="separator:a805e4f587882879f16b945ca663f02ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a74c78a44e2caa264d58c13aa716fe3ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a45b87d632cbc846008e314cd8ef2b096"><td class="memItemLeft" align="right" valign="top"><a id="a45b87d632cbc846008e314cd8ef2b096" name="a45b87d632cbc846008e314cd8ef2b096"></a>
+constexpr <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">iterator</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator-=</b> (const difference_type n)</td></tr>
+<tr class="separator:a45b87d632cbc846008e314cd8ef2b096"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -190,41 +175,42 @@ constexpr Args &amp;&amp;&#160;</td><td class="memItemRight" valign="bottom"><b>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="friends" name="friends"></a>
 Friends</h2></td></tr>
-<tr class="memitem:a3f317066146fccb292eeb0b14690d905"><td class="memItemLeft" align="right" valign="top"><a id="a3f317066146fccb292eeb0b14690d905" name="a3f317066146fccb292eeb0b14690d905"></a>
+<tr class="memitem:aaa781762f1fc2c2d8bc815eaf40e62bf"><td class="memItemLeft" align="right" valign="top"><a id="aaa781762f1fc2c2d8bc815eaf40e62bf" name="aaa781762f1fc2c2d8bc815eaf40e62bf"></a>
 constexpr <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>operator+</b> (const <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">iterator</a> &amp;it, const difference_type n)</td></tr>
-<tr class="separator:a3f317066146fccb292eeb0b14690d905"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab67e1399ffbbe7dcb5968d7359bc2270"><td class="memItemLeft" align="right" valign="top"><a id="ab67e1399ffbbe7dcb5968d7359bc2270" name="ab67e1399ffbbe7dcb5968d7359bc2270"></a>
+<tr class="separator:aaa781762f1fc2c2d8bc815eaf40e62bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9969eac75e82eecff0f74f906f181854"><td class="memItemLeft" align="right" valign="top"><a id="a9969eac75e82eecff0f74f906f181854" name="a9969eac75e82eecff0f74f906f181854"></a>
+constexpr <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>operator+</b> (const difference_type n, const <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">iterator</a> &amp;it)</td></tr>
+<tr class="separator:a9969eac75e82eecff0f74f906f181854"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a966c56082b1fe7e50a5de77db10e8817"><td class="memItemLeft" align="right" valign="top"><a id="a966c56082b1fe7e50a5de77db10e8817" name="a966c56082b1fe7e50a5de77db10e8817"></a>
 constexpr <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>operator-</b> (const <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">iterator</a> &amp;it, const difference_type n)</td></tr>
-<tr class="separator:ab67e1399ffbbe7dcb5968d7359bc2270"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ade50a9c9f459839c96fa8f8d19301619"><td class="memItemLeft" align="right" valign="top"><a id="ade50a9c9f459839c96fa8f8d19301619" name="ade50a9c9f459839c96fa8f8d19301619"></a>
-constexpr difference_type&#160;</td><td class="memItemRight" valign="bottom"><b>operator-</b> (const <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">iterator</a> &amp;i, const <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">iterator</a> &amp;j)</td></tr>
-<tr class="separator:ade50a9c9f459839c96fa8f8d19301619"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a966c56082b1fe7e50a5de77db10e8817"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4ded3d17122688c6ad1327da2c36d7bd"><td class="memItemLeft" align="right" valign="top"><a id="a4ded3d17122688c6ad1327da2c36d7bd" name="a4ded3d17122688c6ad1327da2c36d7bd"></a>
+constexpr difference_type&#160;</td><td class="memItemRight" valign="bottom"><b>operator-</b> (const <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">iterator</a> &amp;lhs, const <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">iterator</a> &amp;rhs)</td></tr>
+<tr class="separator:a4ded3d17122688c6ad1327da2c36d7bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3c507bd7b7ccef9adec9b2d024cbd8dc"><td class="memItemLeft" align="right" valign="top"><a id="a3c507bd7b7ccef9adec9b2d024cbd8dc" name="a3c507bd7b7ccef9adec9b2d024cbd8dc"></a>
 constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">iterator</a> &amp;lhs, const <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">iterator</a> &amp;rhs) noexcept</td></tr>
 <tr class="separator:a3c507bd7b7ccef9adec9b2d024cbd8dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aacbecc86727f6544d850384be5a84b88"><td class="memItemLeft" align="right" valign="top"><a id="aacbecc86727f6544d850384be5a84b88" name="aacbecc86727f6544d850384be5a84b88"></a>
 constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator!=</b> (const <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">iterator</a> &amp;lhs, const <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">iterator</a> &amp;rhs) noexcept</td></tr>
 <tr class="separator:aacbecc86727f6544d850384be5a84b88"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afba8b26a0e531e9e68212ed41067cbe5"><td class="memItemLeft" align="right" valign="top"><a id="afba8b26a0e531e9e68212ed41067cbe5" name="afba8b26a0e531e9e68212ed41067cbe5"></a>
-constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator&gt;</b> (const <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">iterator</a> &amp;lhs, const <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">iterator</a> &amp;rhs) noexcept</td></tr>
-<tr class="separator:afba8b26a0e531e9e68212ed41067cbe5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a576f3834e1e44f9aac4d3b806e41148c"><td class="memItemLeft" align="right" valign="top"><a id="a576f3834e1e44f9aac4d3b806e41148c" name="a576f3834e1e44f9aac4d3b806e41148c"></a>
 constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator&lt;</b> (const <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">iterator</a> &amp;lhs, const <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">iterator</a> &amp;rhs) noexcept</td></tr>
 <tr class="separator:a576f3834e1e44f9aac4d3b806e41148c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a03e896fd960e9f457ac0c28703adbc0e"><td class="memItemLeft" align="right" valign="top"><a id="a03e896fd960e9f457ac0c28703adbc0e" name="a03e896fd960e9f457ac0c28703adbc0e"></a>
 constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator&lt;=</b> (const <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">iterator</a> &amp;lhs, const <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">iterator</a> &amp;rhs) noexcept</td></tr>
 <tr class="separator:a03e896fd960e9f457ac0c28703adbc0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afba8b26a0e531e9e68212ed41067cbe5"><td class="memItemLeft" align="right" valign="top"><a id="afba8b26a0e531e9e68212ed41067cbe5" name="afba8b26a0e531e9e68212ed41067cbe5"></a>
+constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator&gt;</b> (const <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">iterator</a> &amp;lhs, const <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">iterator</a> &amp;rhs) noexcept</td></tr>
+<tr class="separator:afba8b26a0e531e9e68212ed41067cbe5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae5a820a6abec8178568e72b4010d9262"><td class="memItemLeft" align="right" valign="top"><a id="ae5a820a6abec8178568e72b4010d9262" name="ae5a820a6abec8178568e72b4010d9262"></a>
 constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator&gt;=</b> (const <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">iterator</a> &amp;lhs, const <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">iterator</a> &amp;rhs) noexcept</td></tr>
 <tr class="separator:ae5a820a6abec8178568e72b4010d9262"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae1d5fa3395b5367bf186e63b78e5b260"><td class="memItemLeft" align="right" valign="top"><a id="ae1d5fa3395b5367bf186e63b78e5b260" name="ae1d5fa3395b5367bf186e63b78e5b260"></a>
-constexpr auto&#160;</td><td class="memItemRight" valign="bottom"><b>distance</b> (<a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">iterator</a> lhs, <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">iterator</a> rhs)</td></tr>
-<tr class="separator:ae1d5fa3395b5367bf186e63b78e5b260"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><div class="compoundTemplParams">template&lt;std::input_or_output_iterator Iterator, dereference_policy DereferencePolicy&gt;<br />
+<div class="textblock"><div class="compoundTemplParams">template&lt;class Iterator, dereference_policy_for&lt; Iterator &gt; DereferencePolicy&gt;<br />
+requires has_sensible_semantics&lt;Iterator, DereferencePolicy&gt;<br />
 class sequoia::utilities::iterator&lt; Iterator, DereferencePolicy &gt;</div><p>An iterator with policies controlling dereferencing and auxiliary data. </p>
-<p>The DereferencePolicy allows customisation of the various dereferencing operators. In principle it is therefore possible that deferencing will not return a reference. This is forbidden in the case that the underlying iterator is non-const since the semantics could then be rather confusing. However, for const iterators this is tacitly allowed. </p>
+<p>The DereferencePolicy allows customisation of the various dereferencing operators. In principle it is therefore possible that dereferencing will not return a reference, which can be useful. However, this can cause the semantics to be confusing if the underlying iterator is indirectly_writable. Therefore, this is forbidden. </p>
 </div><h2 class="groupheader">Member Data Documentation</h2>
 <a id="a06fa7090f513414cb102f32cabdcda41" name="a06fa7090f513414cb102f32cabdcda41"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a06fa7090f513414cb102f32cabdcda41">&#9670;&#160;</a></span>m_BaseIterator</h2>
@@ -232,7 +218,7 @@ class sequoia::utilities::iterator&lt; Iterator, DereferencePolicy &gt;</div><p>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;std::input_or_output_iterator Iterator, dereference_policy DereferencePolicy&gt; </div>
+template&lt;class Iterator , dereference_policy_for&lt; Iterator &gt; DereferencePolicy&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">constexpr Args <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">sequoia::utilities::iterator</a>&lt; Iterator, DereferencePolicy &gt;::m_BaseIterator</td>
@@ -242,16 +228,14 @@ template&lt;std::input_or_output_iterator Iterator, dereference_policy Dereferen
 <b>Initial value:</b><div class="fragment"><div class="line">{std::forward&lt;Arg&gt;(baseIterArg)}</div>
 <div class="line">    {}</div>
 <div class="line"> </div>
-<div class="line">    <span class="keyword">template</span>&lt;std::input_or_output_iterator Iter, <span class="keyword">class</span> DerefPol&gt;</div>
+<div class="line">    <span class="keyword">template</span>&lt;<span class="keyword">class</span> Iter, <span class="keyword">class</span> DerefPol&gt;</div>
 <div class="line">      <span class="keyword">requires</span> (   !std::is_same_v&lt;Iter, Iterator&gt;</div>
-<div class="line">                &amp;&amp; std::is_convertible_v&lt;Iter, base_iterator_type&gt;</div>
-<div class="line">                &amp;&amp; impl::are_compatible_v&lt;DereferencePolicy, DerefPol&gt;</div>
-<div class="line">                &amp;&amp; std::is_same_v&lt;</div>
-<div class="line">                     std::remove_cvref_t&lt;impl::type_generator_t&lt;DereferencePolicy&gt;&gt;,</div>
-<div class="line">                     std::remove_cvref_t&lt;impl::type_generator_t&lt;DerefPol&gt;&gt;&gt;)</div>
+<div class="line">                &amp;&amp; <a class="code hl_concept" href="../../d9/d92/conceptsequoia_1_1initializable__from.html">initializable_from&lt;Iterator, Iter&gt;</a></div>
+<div class="line">                &amp;&amp; consistent_policies_v&lt;DereferencePolicy, DerefPol&gt;)</div>
 <div class="line">    <span class="keyword">constexpr</span> <a class="code hl_class" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">iterator</a>(<a class="code hl_class" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">iterator&lt;Iter, DerefPol&gt;</a> iter)</div>
-<div class="line">      : DereferencePolicy{<span class="keyword">static_cast&lt;</span>DerefPol&amp;<span class="keyword">&gt;</span>(iter)}</div>
-<div class="ttc" id="aclasssequoia_1_1utilities_1_1iterator_html"><div class="ttname"><a href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">sequoia::utilities::iterator</a></div><div class="ttdoc">An iterator with policies controlling dereferencing and auxiliary data.</div><div class="ttdef"><b>Definition:</b> Iterator.hpp:84</div></div>
+<div class="line">      : DereferencePolicy{<span class="keyword">static_cast&lt;</span><span class="keyword">const </span>DerefPol&amp;<span class="keyword">&gt;</span>(iter)}</div>
+<div class="ttc" id="aclasssequoia_1_1utilities_1_1iterator_html"><div class="ttname"><a href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">sequoia::utilities::iterator</a></div><div class="ttdoc">An iterator with policies controlling dereferencing and auxiliary data.</div><div class="ttdef"><b>Definition:</b> Iterator.hpp:237</div></div>
+<div class="ttc" id="aconceptsequoia_1_1initializable__from_html"><div class="ttname"><a href="../../d9/d92/conceptsequoia_1_1initializable__from.html">sequoia::initializable_from</a></div><div class="ttdoc">A concept similar to std::constructible_from, but which considers braced-init.</div><div class="ttdef"><b>Definition:</b> Concepts.hpp:79</div></div>
 </div><!-- fragment -->
 </div>
 </div>

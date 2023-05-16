@@ -50,8 +50,7 @@ var searchData=
   ['iterator_5fgetter_47',['iterator_getter',['../dc/d46/structsequoia_1_1maths_1_1graph__impl_1_1iterator__getter.html',1,'sequoia::maths::graph_impl']]],
   ['iterator_5fgetter_3c_20traversal_5fflavour_3a_3apseudo_5fdepth_5ffirst_20_3e_48',['iterator_getter&lt; traversal_flavour::pseudo_depth_first &gt;',['../da/d50/structsequoia_1_1maths_1_1graph__impl_1_1iterator__getter_3_01traversal__flavour_1_1pseudo__depth__first_01_4.html',1,'sequoia::maths::graph_impl']]],
   ['iterator_5ftest_49',['iterator_test',['../d9/d53/classsequoia_1_1testing_1_1iterator__test.html',1,'sequoia::testing']]],
-  ['iteratordetails_2ehpp_50',['IteratorDetails.hpp',['../dc/dce/IteratorDetails_8hpp.html',1,'']]],
-  ['iteratortest_2ecpp_51',['IteratorTest.cpp',['../d5/d58/IteratorTest_8cpp.html',1,'']]],
-  ['iteratortest_2ehpp_52',['IteratorTest.hpp',['../d7/d0d/IteratorTest_8hpp.html',1,'']]],
-  ['iteratortestingutilities_2ehpp_53',['IteratorTestingUtilities.hpp',['../d3/db3/IteratorTestingUtilities_8hpp.html',1,'']]]
+  ['iteratortest_2ecpp_50',['IteratorTest.cpp',['../d5/d58/IteratorTest_8cpp.html',1,'']]],
+  ['iteratortest_2ehpp_51',['IteratorTest.hpp',['../d7/d0d/IteratorTest_8hpp.html',1,'']]],
+  ['iteratortestingutilities_2ehpp_52',['IteratorTestingUtilities.hpp',['../d3/db3/IteratorTestingUtilities_8hpp.html',1,'']]]
 ];

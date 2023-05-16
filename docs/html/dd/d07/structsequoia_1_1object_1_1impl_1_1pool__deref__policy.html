@@ -75,9 +75,8 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
-<a href="#pro-types">Protected Types</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
-<a href="#pro-static-methods">Static Protected Member Functions</a> &#124;
 <a href="../../df/d23/structsequoia_1_1object_1_1impl_1_1pool__deref__policy-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">sequoia::object::impl::pool_deref_policy&lt; Wrapper &gt; Struct Template Reference</div></div>
 </div><!--header-->
@@ -88,21 +87,19 @@ Public Types</h2></td></tr>
 <tr class="memitem:a217ba39639b9919777c07ad5c14abf75"><td class="memItemLeft" align="right" valign="top"><a id="a217ba39639b9919777c07ad5c14abf75" name="a217ba39639b9919777c07ad5c14abf75"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>value_type</b> = typename Wrapper::value_type</td></tr>
 <tr class="separator:a217ba39639b9919777c07ad5c14abf75"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a26fb2b55d415b91710c8c91dfea5ee4d"><td class="memItemLeft" align="right" valign="top"><a id="a26fb2b55d415b91710c8c91dfea5ee4d" name="a26fb2b55d415b91710c8c91dfea5ee4d"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>pointer</b> = const value_type *</td></tr>
-<tr class="separator:a26fb2b55d415b91710c8c91dfea5ee4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a211ad44e06a6e7bc6c8f6fd677539c77"><td class="memItemLeft" align="right" valign="top"><a id="a211ad44e06a6e7bc6c8f6fd677539c77" name="a211ad44e06a6e7bc6c8f6fd677539c77"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>reference</b> = const value_type &amp;</td></tr>
-<tr class="separator:a211ad44e06a6e7bc6c8f6fd677539c77"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a634e5dccddf254277b6f29ec1ab71ac6"><td class="memItemLeft" align="right" valign="top"><a id="a634e5dccddf254277b6f29ec1ab71ac6" name="a634e5dccddf254277b6f29ec1ab71ac6"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>proxy</b> = std::pair&lt; reference, long &gt;</td></tr>
-<tr class="separator:a634e5dccddf254277b6f29ec1ab71ac6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a52c33f8921ad5efd31958ef9a70f44cc"><td class="memItemLeft" align="right" valign="top"><a id="a52c33f8921ad5efd31958ef9a70f44cc" name="a52c33f8921ad5efd31958ef9a70f44cc"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>proxy</b> = std::pair&lt; const value_type &amp;, long &gt;</td></tr>
+<tr class="separator:a52c33f8921ad5efd31958ef9a70f44cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac927d58c8409947592798ae0d47c4dbb"><td class="memItemLeft" align="right" valign="top"><a id="ac927d58c8409947592798ae0d47c4dbb" name="ac927d58c8409947592798ae0d47c4dbb"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>reference</b> = proxy</td></tr>
+<tr class="separator:ac927d58c8409947592798ae0d47c4dbb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-types" name="pro-types"></a>
-Protected Types</h2></td></tr>
-<tr class="memitem:a6149492aff2fc6fdec49b6044bad0f54"><td class="memItemLeft" align="right" valign="top"><a id="a6149492aff2fc6fdec49b6044bad0f54" name="a6149492aff2fc6fdec49b6044bad0f54"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>product_type</b> = std::shared_ptr&lt; Wrapper &gt;</td></tr>
-<tr class="separator:a6149492aff2fc6fdec49b6044bad0f54"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:ae73173c1fa36657a2958581e0d671cc1"><td class="memTemplParams" colspan="2"><a id="ae73173c1fa36657a2958581e0d671cc1" name="ae73173c1fa36657a2958581e0d671cc1"></a>
+template&lt;std::input_or_output_iterator I&gt; </td></tr>
+<tr class="memitem:ae73173c1fa36657a2958581e0d671cc1"><td class="memTemplItemLeft" align="right" valign="top">static proxy&#160;</td><td class="memTemplItemRight" valign="bottom"><b>get</b> (I i)</td></tr>
+<tr class="separator:ae73173c1fa36657a2958581e0d671cc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -118,12 +115,6 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a9957e90b879e3c9753b9c76f6a7ca09f"><td class="memItemLeft" align="right" valign="top"><a id="a9957e90b879e3c9753b9c76f6a7ca09f" name="a9957e90b879e3c9753b9c76f6a7ca09f"></a>
 <a class="el" href="../../dd/d07/structsequoia_1_1object_1_1impl_1_1pool__deref__policy.html">pool_deref_policy</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="../../dd/d07/structsequoia_1_1object_1_1impl_1_1pool__deref__policy.html">pool_deref_policy</a> &amp;&amp;) noexcept=default</td></tr>
 <tr class="separator:a9957e90b879e3c9753b9c76f6a7ca09f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-static-methods" name="pro-static-methods"></a>
-Static Protected Member Functions</h2></td></tr>
-<tr class="memitem:a72ffa8bc62f8485d65d0a467c3d90bb8"><td class="memItemLeft" align="right" valign="top"><a id="a72ffa8bc62f8485d65d0a467c3d90bb8" name="a72ffa8bc62f8485d65d0a467c3d90bb8"></a>
-static proxy&#160;</td><td class="memItemRight" valign="bottom"><b>get</b> (const product_type &amp;ptr)</td></tr>
-<tr class="separator:a72ffa8bc62f8485d65d0a467c3d90bb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li>C:/Users/olive/sequoia/Source/sequoia/Core/Object/<a class="el" href="../../df/d01/DataPool_8hpp_source.html">DataPool.hpp</a></li>

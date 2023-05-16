@@ -75,7 +75,6 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle"><div class="title">NodeStorage.hpp File Reference</div></div>
 </div><!--header-->
@@ -105,29 +104,48 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d75/classsequoia_1_1maths_1_1graph__impl_1_1node__storage_3_01WeightMaker_00_01Traits_01_4.html">sequoia::maths::graph_impl::node_storage&lt; WeightMaker, Traits &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
-Functions</h2></td></tr>
-<tr class="memitem:a78277a70998b82cfc3cd3655736d63a3"><td class="memTemplParams" colspan="2"><a id="a78277a70998b82cfc3cd3655736d63a3" name="a78277a70998b82cfc3cd3655736d63a3"></a>
-template&lt;class N &gt; </td></tr>
-<tr class="memitem:a78277a70998b82cfc3cd3655736d63a3"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::graph_impl::get_allocator</b> (const N &amp;)</td></tr>
-<tr class="separator:a78277a70998b82cfc3cd3655736d63a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af14d52f3ae9e5c72dde5f202db41d7e1"><td class="memTemplParams" colspan="2"><a id="af14d52f3ae9e5c72dde5f202db41d7e1" name="af14d52f3ae9e5c72dde5f202db41d7e1"></a>
-template&lt;class N &gt; <br />
-requires requires (const N&amp; n) { n.get_allocator(); }</td></tr>
-<tr class="memitem:af14d52f3ae9e5c72dde5f202db41d7e1"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::graph_impl::get_allocator</b> (const N &amp;nodes)</td></tr>
-<tr class="separator:af14d52f3ae9e5c72dde5f202db41d7e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
 <tr class="memitem:a263848760cb75e61024a29af3decd16c"><td class="memTemplParams" colspan="2"><a id="a263848760cb75e61024a29af3decd16c" name="a263848760cb75e61024a29af3decd16c"></a>
 template&lt;class T &gt; </td></tr>
 <tr class="memitem:a263848760cb75e61024a29af3decd16c"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::graph_impl::empty_proxy</b> = object::creator&lt;T&gt; &amp;&amp; std::is_empty_v&lt;typename T::product_type::value_type&gt;</td></tr>
 <tr class="separator:a263848760cb75e61024a29af3decd16c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1a9236ba1cb442298c64c7e95a3e527c"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
+<tr class="memitem:a1a9236ba1cb442298c64c7e95a3e527c"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dd/d8b/NodeStorage_8hpp.html#a1a9236ba1cb442298c64c7e95a3e527c">sequoia::maths::graph_impl::has_get_allocator</a></td></tr>
+<tr class="separator:a1a9236ba1cb442298c64c7e95a3e527c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Classes to allow homogeneous treatment of graphs with empty/non-empty node weights. </p>
 <p>These classes are designed to be inherited from publically, in order that graphs may aggregate the interface of the node storage. For empty node weights, the node storage specialization is itself empty, meaning that empty base class optimization will ensure that no space is wasted. </p>
-</div></div><!-- contents -->
+</div><h2 class="groupheader">Variable Documentation</h2>
+<a id="a1a9236ba1cb442298c64c7e95a3e527c" name="a1a9236ba1cb442298c64c7e95a3e527c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1a9236ba1cb442298c64c7e95a3e527c">&#9670;&#160;</a></span>has_get_allocator</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr bool sequoia::maths::graph_impl::has_get_allocator</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">{</div>
+<div class="line">    <span class="keyword">requires</span>(<span class="keyword">const</span> T&amp; t) { t.get_allocator(); }</div>
+<div class="line">  }</div>
+</div><!-- fragment -->
+</div>
+</div>
+</div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.6

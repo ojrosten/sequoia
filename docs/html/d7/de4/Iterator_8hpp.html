@@ -74,31 +74,167 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a>  </div>
+<a href="#nested-classes">Classes</a> &#124;
+<a href="#concepts">Concepts</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle"><div class="title">Iterator.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
 <p>Implementation for an iterator with policies controlling dereferencing and auxiliary data.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="../../dc/dce/IteratorDetails_8hpp_source.html">sequoia/Core/ContainerUtilities/IteratorDetails.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="../../d0/d81/TypeTraits_8hpp_source.html">sequoia/Core/Meta/TypeTraits.hpp</a>&quot;</code><br />
 <code>#include &lt;iterator&gt;</code><br />
 </div>
 <p><a href="../../d7/de4/Iterator_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/df7/structsequoia_1_1utilities_1_1impl_1_1aggregator.html">sequoia::utilities::impl::aggregator&lt; Policy &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d05/structsequoia_1_1utilities_1_1pointer__type.html">sequoia::utilities::pointer_type&lt; Iterator, Deref &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Detects <a class="el" href="../../df/d05/structsequoia_1_1utilities_1_1pointer__type.html" title="Detects pointer_type.">pointer_type</a>.  <a href="../../df/d05/structsequoia_1_1utilities_1_1pointer__type.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/de3/structsequoia_1_1utilities_1_1pointer__type_3_01Iterator_00_01Deref_01_4.html">sequoia::utilities::pointer_type&lt; Iterator, Deref &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d8c/structsequoia_1_1utilities_1_1difference__type_3_01Iterator_00_01Deref_01_4.html">sequoia::utilities::difference_type&lt; Iterator, Deref &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d9e/structsequoia_1_1utilities_1_1value__type.html">sequoia::utilities::value_type&lt; T &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d8b/structsequoia_1_1utilities_1_1value__type_3_01I_01_4.html">sequoia::utilities::value_type&lt; I &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/da1/structsequoia_1_1utilities_1_1value__type_3_01T_01_4.html">sequoia::utilities::value_type&lt; T &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d64/structsequoia_1_1utilities_1_1reference__type.html">sequoia::utilities::reference_type&lt; T &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d83/structsequoia_1_1utilities_1_1reference__type_3_01I_01_4.html">sequoia::utilities::reference_type&lt; I &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d22/structsequoia_1_1utilities_1_1reference__type_3_01T_01_4.html">sequoia::utilities::reference_type&lt; T &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d81/structsequoia_1_1utilities_1_1null__data__policy.html">sequoia::utilities::null_data_policy</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Policy representing absence of additional data carried by the<code><a class="el" href="../../da/deb/structsequoia_1_1utilities_1_1identity__dereference__policy.html">identity_dereference_policy</a></code>  <a href="../../d1/d81/structsequoia_1_1utilities_1_1null__data__policy.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/deb/structsequoia_1_1utilities_1_1identity__dereference__policy.html">sequoia::utilities::identity_dereference_policy&lt; Iterator, AuxiliaryDataPolicy &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">sequoia::utilities::iterator&lt; Iterator, DereferencePolicy &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">An iterator with policies controlling dereferencing and auxiliary data.  <a href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="concepts" name="concepts"></a>
+Concepts</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d04/conceptsequoia_1_1utilities_1_1decrementable.html">sequoia::utilities::decrementable</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d81/conceptsequoia_1_1utilities_1_1steppable.html">sequoia::utilities::steppable</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d5f/conceptsequoia_1_1utilities_1_1dereference__policy__for.html">sequoia::utilities::dereference_policy_for</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:a7f0aa96474bc63021759046b95800617"><td class="memTemplParams" colspan="2"><a id="a7f0aa96474bc63021759046b95800617" name="a7f0aa96474bc63021759046b95800617"></a>
+template&lt;class Iterator , dereference_policy_for&lt; Iterator &gt; Deref&gt; </td></tr>
+<tr class="memitem:a7f0aa96474bc63021759046b95800617"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::utilities::pointer_type_t</b> = typename pointer_type&lt; Iterator, Deref &gt;::type</td></tr>
+<tr class="separator:a7f0aa96474bc63021759046b95800617"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aff492072683e307c3119abf09f401a72"><td class="memTemplParams" colspan="2"><a id="aff492072683e307c3119abf09f401a72" name="aff492072683e307c3119abf09f401a72"></a>
+template&lt;class Iterator , dereference_policy_for&lt; Iterator &gt; Deref&gt; </td></tr>
+<tr class="memitem:aff492072683e307c3119abf09f401a72"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::utilities::difference_type_t</b> = typename difference_type&lt; Iterator, Deref &gt;::type</td></tr>
+<tr class="separator:aff492072683e307c3119abf09f401a72"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d40c84aded6532b9dc20fd58a05a4e9"><td class="memTemplParams" colspan="2"><a id="a7d40c84aded6532b9dc20fd58a05a4e9" name="a7d40c84aded6532b9dc20fd58a05a4e9"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:a7d40c84aded6532b9dc20fd58a05a4e9"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::utilities::value_type_t</b> = typename value_type&lt; T &gt;::type</td></tr>
+<tr class="separator:a7d40c84aded6532b9dc20fd58a05a4e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a78639ef592d3b527afc6842d3a543f0e"><td class="memTemplParams" colspan="2"><a id="a78639ef592d3b527afc6842d3a543f0e" name="a78639ef592d3b527afc6842d3a543f0e"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:a78639ef592d3b527afc6842d3a543f0e"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::utilities::reference_type_t</b> = typename reference_type&lt; T &gt;::type</td></tr>
+<tr class="separator:a78639ef592d3b527afc6842d3a543f0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:a7a4517a9a290da3db738ff07e7c6a345"><td class="memTemplParams" colspan="2">template&lt;class Policy1 , class Policy2 &gt; </td></tr>
+<tr class="memitem:a7a4517a9a290da3db738ff07e7c6a345"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d7/de4/Iterator_8hpp.html#a7a4517a9a290da3db738ff07e7c6a345">sequoia::utilities::consistent_policies_v</a></td></tr>
+<tr class="separator:a7a4517a9a290da3db738ff07e7c6a345"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad91216e083c10095768a0e84992cc419"><td class="memTemplParams" colspan="2"><a id="ad91216e083c10095768a0e84992cc419" name="ad91216e083c10095768a0e84992cc419"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:ad91216e083c10095768a0e84992cc419"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::utilities::has_difference_type</b> {requires { typename T::difference_type; }}</td></tr>
+<tr class="memdesc:ad91216e083c10095768a0e84992cc419"><td class="mdescLeft">&#160;</td><td class="mdescRight">Detects <a class="el" href="../../da/dc9/structsequoia_1_1utilities_1_1difference__type.html">difference_type</a>. <br /></td></tr>
+<tr class="separator:ad91216e083c10095768a0e84992cc419"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6d27f6654bb099f205a2a64fe988d669"><td class="memTemplParams" colspan="2"><a id="a6d27f6654bb099f205a2a64fe988d669" name="a6d27f6654bb099f205a2a64fe988d669"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:a6d27f6654bb099f205a2a64fe988d669"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::utilities::has_value_type</b> {requires { typename T::value_type; }}</td></tr>
+<tr class="memdesc:a6d27f6654bb099f205a2a64fe988d669"><td class="mdescLeft">&#160;</td><td class="mdescRight">Detects <a class="el" href="../../d3/d9e/structsequoia_1_1utilities_1_1value__type.html">value_type</a>. <br /></td></tr>
+<tr class="separator:a6d27f6654bb099f205a2a64fe988d669"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8278e0d7d41d6edb43d6bf789aa99d76"><td class="memTemplParams" colspan="2"><a id="a8278e0d7d41d6edb43d6bf789aa99d76" name="a8278e0d7d41d6edb43d6bf789aa99d76"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:a8278e0d7d41d6edb43d6bf789aa99d76"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::utilities::has_reference_type</b> {requires { typename T::reference; }}</td></tr>
+<tr class="memdesc:a8278e0d7d41d6edb43d6bf789aa99d76"><td class="mdescLeft">&#160;</td><td class="mdescRight">Detects <a class="el" href="../../d1/d64/structsequoia_1_1utilities_1_1reference__type.html">reference_type</a>. <br /></td></tr>
+<tr class="separator:a8278e0d7d41d6edb43d6bf789aa99d76"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aea8211f20b5b298328822ebb608d50ff"><td class="memTemplParams" colspan="2">template&lt;class Iterator , dereference_policy_for&lt; Iterator &gt; DereferencePolicy&gt; </td></tr>
+<tr class="memitem:aea8211f20b5b298328822ebb608d50ff"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d7/de4/Iterator_8hpp.html#aea8211f20b5b298328822ebb608d50ff">sequoia::utilities::has_sensible_semantics</a></td></tr>
+<tr class="separator:aea8211f20b5b298328822ebb608d50ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Implementation for an iterator with policies controlling dereferencing and auxiliary data. </p>
-</div></div><!-- contents -->
+</div><h2 class="groupheader">Variable Documentation</h2>
+<a id="a7a4517a9a290da3db738ff07e7c6a345" name="a7a4517a9a290da3db738ff07e7c6a345"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7a4517a9a290da3db738ff07e7c6a345">&#9670;&#160;</a></span>consistent_policies_v</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Policy1 , class Policy2 &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr bool sequoia::utilities::consistent_policies_v</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">{</div>
+<div class="line">    <a class="code hl_concept" href="../../d9/d92/conceptsequoia_1_1initializable__from.html">initializable_from&lt;impl::aggregator&lt;Policy1&gt;</a>, impl::aggregator&lt;Policy2&gt;&gt;</div>
+<div class="line">  }</div>
+<div class="ttc" id="aconceptsequoia_1_1initializable__from_html"><div class="ttname"><a href="../../d9/d92/conceptsequoia_1_1initializable__from.html">sequoia::initializable_from</a></div><div class="ttdoc">A concept similar to std::constructible_from, but which considers braced-init.</div><div class="ttdef"><b>Definition:</b> Concepts.hpp:79</div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="aea8211f20b5b298328822ebb608d50ff" name="aea8211f20b5b298328822ebb608d50ff"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aea8211f20b5b298328822ebb608d50ff">&#9670;&#160;</a></span>has_sensible_semantics</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Iterator , dereference_policy_for&lt; Iterator &gt; DereferencePolicy&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr bool sequoia::utilities::has_sensible_semantics</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">{</div>
+<div class="line">       (    std::indirectly_writable&lt;reference_type_t&lt;Iterator&gt;, value_type_t&lt;Iterator&gt;&gt;</div>
+<div class="line">         &amp;&amp; std::indirectly_writable&lt;reference_type_t&lt;DereferencePolicy&gt;, value_type_t&lt;DereferencePolicy&gt;&gt;)</div>
+<div class="line">    || (    !std::indirectly_writable&lt;reference_type_t&lt;Iterator&gt;, value_type_t&lt;Iterator&gt;&gt;</div>
+<div class="line">         &amp;&amp; !std::indirectly_writable&lt;reference_type_t&lt;DereferencePolicy&gt;, value_type_t&lt;DereferencePolicy&gt;&gt;)</div>
+<div class="line">  }</div>
+</div><!-- fragment -->
+</div>
+</div>
+</div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.6

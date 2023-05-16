@@ -235,18 +235,18 @@ $(function() {
 <div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>    <span class="keywordtype">char</span>** m_Argv{};</div>
 <div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>    std::string m_ZerothArg{}, m_Help{};</div>
 <div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span> </div>
-<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>    <span class="keyword">template</span>&lt;std::input_or_output_iterator Iter, std::sentinel_for&lt;Iter&gt; Sentinel&gt;</div>
-<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>    <span class="keywordtype">void</span> parse(Iter beginOptions, Sentinel endOptions, <span class="keyword">const</span> operation_data&amp; previousOperationData, top_level topLevel);</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>    <span class="keyword">template</span>&lt;std::input_iterator Iter&gt;</div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>    <span class="keywordtype">void</span> parse(std::ranges::subrange&lt;Iter&gt; options, <span class="keyword">const</span> operation_data&amp; previousOperationData, top_level topLevel);</div>
 <div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span> </div>
-<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>    <span class="keyword">template</span>&lt;std::input_or_output_iterator Iter, std::sentinel_for&lt;Iter&gt; Sentinel&gt;</div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>    <span class="keyword">template</span>&lt;std::input_iterator Iter&gt;</div>
 <div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>    <span class="keywordtype">bool</span> process_concatenated_aliases(Iter beginOptions, Sentinel endOptions, std::string_view arg, operation_data currentOperationData, top_level topLevel);</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>    <span class="keywordtype">bool</span> process_concatenated_aliases(std::ranges::subrange&lt;Iter&gt; options, std::string_view arg, operation_data currentOperationData, top_level topLevel);</div>
 <div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span> </div>
 <div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>    <span class="keyword">auto</span> process_option(<a class="code hl_class" href="../../d1/d4b/classsequoia_1_1maths_1_1basic__tree__adaptor.html">option_tree</a> currentOptionTree, operation_data currentOperationData, top_level topLevel)-&gt;operation_data;</div>
 <div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span> </div>
-<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>    <span class="keyword">template</span>&lt;std::input_or_output_iterator Iter, std::sentinel_for&lt;Iter&gt; Sentinel&gt;</div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>    <span class="keyword">template</span>&lt;std::input_iterator Iter&gt;</div>
 <div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>    <span class="keyword">static</span> std::string generate_help(Iter beginOptions, Sentinel endOptions);</div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>    <span class="keyword">static</span> std::string generate_help(std::ranges::subrange&lt;Iter&gt; options);</div>
 <div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span> </div>
 <div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>    <span class="keyword">static</span> <span class="keywordtype">bool</span> is_alias(<span class="keyword">const</span> <a class="code hl_struct" href="../../db/da8/structsequoia_1_1parsing_1_1commandline_1_1option.html">option</a>&amp; opt, std::string_view s);</div>
 <div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>  };</div>

@@ -76,8 +76,8 @@ $(function() {
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
-<a href="#pro-static-methods">Static Protected Member Functions</a> &#124;
 <a href="#friends">Friends</a> &#124;
 <a href="../../d7/d5e/classsequoia_1_1maths_1_1forest__dereference__policy-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">sequoia::maths::forest_dereference_policy&lt; Iterator, TreeAdaptor &gt; Class Template Reference</div></div>
@@ -86,24 +86,27 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a77517892da56cc0c8ab3d5034db25400"><td class="memItemLeft" align="right" valign="top"><a id="a77517892da56cc0c8ab3d5034db25400" name="a77517892da56cc0c8ab3d5034db25400"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>value_type</b> = typename std::iterator_traits&lt; Iterator &gt;::value_type</td></tr>
-<tr class="separator:a77517892da56cc0c8ab3d5034db25400"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af7c9baba1b83576b06caadc03077d66a"><td class="memItemLeft" align="right" valign="top"><a id="af7c9baba1b83576b06caadc03077d66a" name="af7c9baba1b83576b06caadc03077d66a"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>proxy</b> = TreeAdaptor</td></tr>
 <tr class="separator:af7c9baba1b83576b06caadc03077d66a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ada18a00b898b2a4ff8efdeeb40dbb865"><td class="memItemLeft" align="right" valign="top"><a id="ada18a00b898b2a4ff8efdeeb40dbb865" name="ada18a00b898b2a4ff8efdeeb40dbb865"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>pointer</b> = typename std::iterator_traits&lt; Iterator &gt;::pointer</td></tr>
-<tr class="separator:ada18a00b898b2a4ff8efdeeb40dbb865"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ade1776486b1e8859d8b59058cc0a08c3"><td class="memItemLeft" align="right" valign="top"><a id="ade1776486b1e8859d8b59058cc0a08c3" name="ade1776486b1e8859d8b59058cc0a08c3"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>reference</b> = typename std::iterator_traits&lt; Iterator &gt;::reference</td></tr>
-<tr class="separator:ade1776486b1e8859d8b59058cc0a08c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af6435545c6b743b04d327b2b286c116b"><td class="memItemLeft" align="right" valign="top"><a id="af6435545c6b743b04d327b2b286c116b" name="af6435545c6b743b04d327b2b286c116b"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>value_type</b> = proxy</td></tr>
+<tr class="separator:af6435545c6b743b04d327b2b286c116b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa5cc2c775563484950e886500a06fa18"><td class="memItemLeft" align="right" valign="top"><a id="aa5cc2c775563484950e886500a06fa18" name="aa5cc2c775563484950e886500a06fa18"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>reference</b> = proxy</td></tr>
+<tr class="separator:aa5cc2c775563484950e886500a06fa18"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:ad1452d599dac16d9f6b844e163cd6e88"><td class="memItemLeft" align="right" valign="top"><a id="ad1452d599dac16d9f6b844e163cd6e88" name="ad1452d599dac16d9f6b844e163cd6e88"></a>
 constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>forest_dereference_policy</b> (const <a class="el" href="../../d8/d77/classsequoia_1_1maths_1_1forest__dereference__policy.html">forest_dereference_policy</a> &amp;)=default</td></tr>
 <tr class="separator:ad1452d599dac16d9f6b844e163cd6e88"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:a8821ef1ba0eba07b5eaca9866dc3c593"><td class="memItemLeft" align="right" valign="top"><a id="a8821ef1ba0eba07b5eaca9866dc3c593" name="a8821ef1ba0eba07b5eaca9866dc3c593"></a>
+static constexpr proxy&#160;</td><td class="memItemRight" valign="bottom"><b>get</b> (Iterator i)</td></tr>
+<tr class="separator:a8821ef1ba0eba07b5eaca9866dc3c593"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -116,15 +119,6 @@ constexpr <a class="el" href="../../d8/d77/classsequoia_1_1maths_1_1forest__dere
 <tr class="memitem:a861efbe20a1ee86240f362347a014a55"><td class="memItemLeft" align="right" valign="top"><a id="a861efbe20a1ee86240f362347a014a55" name="a861efbe20a1ee86240f362347a014a55"></a>
 constexpr <a class="el" href="../../d8/d77/classsequoia_1_1maths_1_1forest__dereference__policy.html">forest_dereference_policy</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="../../d8/d77/classsequoia_1_1maths_1_1forest__dereference__policy.html">forest_dereference_policy</a> &amp;&amp;)=default</td></tr>
 <tr class="separator:a861efbe20a1ee86240f362347a014a55"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acf0e8762242b39acba1cec78afa882dc"><td class="memItemLeft" align="right" valign="top"><a id="acf0e8762242b39acba1cec78afa882dc" name="acf0e8762242b39acba1cec78afa882dc"></a>
-constexpr proxy&#160;</td><td class="memItemRight" valign="bottom"><b>get</b> (reference ref) const noexcept</td></tr>
-<tr class="separator:acf0e8762242b39acba1cec78afa882dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-static-methods" name="pro-static-methods"></a>
-Static Protected Member Functions</h2></td></tr>
-<tr class="memitem:a0b99e1879168fe7909f37941b7c6886c"><td class="memItemLeft" align="right" valign="top"><a id="a0b99e1879168fe7909f37941b7c6886c" name="a0b99e1879168fe7909f37941b7c6886c"></a>
-static constexpr pointer&#160;</td><td class="memItemRight" valign="bottom"><b>get_ptr</b> (reference ref) noexcept</td></tr>
-<tr class="separator:a0b99e1879168fe7909f37941b7c6886c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="friends" name="friends"></a>
 Friends</h2></td></tr>

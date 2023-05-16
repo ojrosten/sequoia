@@ -94,7 +94,7 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/dec/classsequoia_1_1maths_1_1graph__impl_1_1graph__iterator.html">sequoia::maths::graph_impl::graph_iterator&lt; Connectivity, Nodes &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d45/classsequoia_1_1maths_1_1graph__impl_1_1graph__dereference__policy.html">sequoia::maths::graph_impl::graph_dereference_policy&lt; Connectivity, Nodes &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d81/structsequoia_1_1maths_1_1tree__initializer.html">sequoia::maths::tree_initializer&lt; NodeWeight &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -107,6 +107,9 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
+<tr class="memitem:a28af1e6048ba58fa2916e782344297a9"><td class="memTemplParams" colspan="2">template&lt;network Connectivity, class Nodes &gt; </td></tr>
+<tr class="memitem:a28af1e6048ba58fa2916e782344297a9"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d8/d78/GraphImpl_8hpp.html#a28af1e6048ba58fa2916e782344297a9">sequoia::maths::graph_impl::pseudo_iterator</a> = utilities::iterator&lt; typename graph_primitive&lt; Connectivity, Nodes &gt;::edge_index_type, graph_dereference_policy&lt; Connectivity, Nodes &gt; &gt;</td></tr>
+<tr class="separator:a28af1e6048ba58fa2916e782344297a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a41a19f8f9da0401404d3ecd5563066ce"><td class="memItemLeft" align="right" valign="top"><a id="a41a19f8f9da0401404d3ecd5563066ce" name="a41a19f8f9da0401404d3ecd5563066ce"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::symmetric_tree_type</b> = tree_link_direction_constant&lt; tree_link_direction::symmetric &gt;</td></tr>
 <tr class="separator:a41a19f8f9da0401404d3ecd5563066ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -127,14 +130,10 @@ Enumerations</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a32ceca40f7e566997a4878b65d63ee8c"><td class="memTemplParams" colspan="2"><a id="a32ceca40f7e566997a4878b65d63ee8c" name="a32ceca40f7e566997a4878b65d63ee8c"></a>
+<tr class="memitem:ac5ccd457abf52d1ed607e1c8c4af5cbc"><td class="memTemplParams" colspan="2"><a id="ac5ccd457abf52d1ed607e1c8c4af5cbc" name="ac5ccd457abf52d1ed607e1c8c4af5cbc"></a>
 template&lt;network Connectivity, class Nodes &gt; </td></tr>
-<tr class="memitem:a32ceca40f7e566997a4878b65d63ee8c"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::distance</b> (graph_impl::graph_iterator&lt; Connectivity, Nodes &gt; a, graph_impl::graph_iterator&lt; Connectivity, Nodes &gt; b) -&gt; typename graph_impl::graph_iterator&lt; Connectivity, Nodes &gt;::difference_type</td></tr>
-<tr class="separator:a32ceca40f7e566997a4878b65d63ee8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:accd55b1d559d0b56c06c577fc8d9237b"><td class="memTemplParams" colspan="2"><a id="accd55b1d559d0b56c06c577fc8d9237b" name="accd55b1d559d0b56c06c577fc8d9237b"></a>
-template&lt;network Connectivity, class Nodes &gt; </td></tr>
-<tr class="memitem:accd55b1d559d0b56c06c577fc8d9237b"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::iter_swap</b> (graph_impl::graph_iterator&lt; Connectivity, Nodes &gt; a, graph_impl::graph_iterator&lt; Connectivity, Nodes &gt; b)</td></tr>
-<tr class="separator:accd55b1d559d0b56c06c577fc8d9237b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac5ccd457abf52d1ed607e1c8c4af5cbc"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::iter_swap</b> (graph_impl::pseudo_iterator&lt; Connectivity, Nodes &gt; a, graph_impl::pseudo_iterator&lt; Connectivity, Nodes &gt; b)</td></tr>
+<tr class="separator:ac5ccd457abf52d1ed607e1c8c4af5cbc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
@@ -142,38 +141,25 @@ Variables</h2></td></tr>
 template&lt;network Connectivity, class Nodes &gt; </td></tr>
 <tr class="memitem:a0cedbcc956e12358df4b1e8deb3a8e85"><td class="memTemplItemLeft" align="right" valign="top">class SEQUOIA_MSVC_EMPTY_BASE_HACK&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::graph_primitive</b></td></tr>
 <tr class="separator:a0cedbcc956e12358df4b1e8deb3a8e85"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a638c66f94233035f3e7ea4c22485368a"><td class="memTemplParams" colspan="2">template&lt;class N &gt; </td></tr>
-<tr class="memitem:a638c66f94233035f3e7ea4c22485368a"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d8/d78/GraphImpl_8hpp.html#a638c66f94233035f3e7ea4c22485368a">sequoia::maths::graph_impl::has_allocating_nodes</a></td></tr>
-<tr class="separator:a638c66f94233035f3e7ea4c22485368a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Underlying class for the various different graph species. </p>
-</div><h2 class="groupheader">Variable Documentation</h2>
-<a id="a638c66f94233035f3e7ea4c22485368a" name="a638c66f94233035f3e7ea4c22485368a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a638c66f94233035f3e7ea4c22485368a">&#9670;&#160;</a></span>has_allocating_nodes</h2>
+</div><h2 class="groupheader">Typedef Documentation</h2>
+<a id="a28af1e6048ba58fa2916e782344297a9" name="a28af1e6048ba58fa2916e782344297a9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a28af1e6048ba58fa2916e782344297a9">&#9670;&#160;</a></span>pseudo_iterator</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class N &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
+template&lt;network Connectivity, class Nodes &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">constexpr bool sequoia::maths::graph_impl::has_allocating_nodes</td>
+          <td class="memname">using <a class="el" href="../../d8/d78/GraphImpl_8hpp.html#a28af1e6048ba58fa2916e782344297a9">sequoia::maths::graph_impl::pseudo_iterator</a> = typedef utilities::iterator&lt;typename graph_primitive&lt;Connectivity, Nodes&gt;::edge_index_type, graph_dereference_policy&lt;Connectivity, Nodes&gt; &gt;</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= <span class="keyword">requires</span> {</div>
-<div class="line">        has_allocator_type_v&lt;typename N::node_weight_container_type&gt;;</div>
-<div class="line">      }</div>
-</div><!-- fragment -->
+<p>Designed to swap nodes, when used in conjunction with sequoia::swap, courtesy of the overload of iter_swap, below. This is a pseudo iterator since it doesn't have reference semantics </p>
+
 </div>
 </div>
 </div><!-- contents -->
