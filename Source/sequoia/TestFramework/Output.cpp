@@ -72,10 +72,12 @@ namespace sequoia::testing
 
     std::string& tidy_name(std::string& name)
     {
-      if constexpr(sizeof(std::size_t) == sizeof(uint64_t))
+      if constexpr(sizeof(unsigned long) == sizeof(unsigned long long))
       {
-        const auto replacement{demangle<uint64_t>([](std::string name) -> std::string { return name; })};
-        replace_all(name, "", "unsigned long", ",>", replacement);
+        // Do this first, to avoid the second replace_all potentially 
+        // leading to unsigned long long long long (!)
+        replace_all(name, "long long", "long");
+        replace_all(name, "long", "long long");
       }
 
       // It is a pity to have to make the following substitutions, but it appears

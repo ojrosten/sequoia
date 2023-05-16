@@ -750,7 +750,7 @@ namespace sequoia::testing
       The `test(equivalence_check_t,...)` overload checks whether the pointers either both point to
       something or both point to nullptr, reporting a failure if this is not the case. If both
       pointers are not null, a check is dispatched to test the underlying type. This is done using
-      the strongest available check. In addition, the the `use_counts` are compared.
+      the strongest available check.
    */
 
   template<class T>
@@ -763,7 +763,6 @@ namespace sequoia::testing
     template<test_mode Mode, class Advisor>
     static void test(equivalence_check_t, test_logger<Mode>& logger, const type& obtained, const type& prediction, const tutor<Advisor>& advisor)
     {
-      check(equality, "Use count", logger, obtained.use_count(), prediction.use_count());
       base_t::test_pointees(logger, obtained, prediction, advisor);
     }
   };

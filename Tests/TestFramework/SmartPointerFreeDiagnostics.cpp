@@ -84,9 +84,6 @@ namespace sequoia::testing
             std::make_shared<int>(42),
             std::make_shared<int>(43),
             tutor{[](int, int) { return "int advice"; }});
-
-      auto p{std::make_shared<int>(42)}, q{p};
-      check(equivalence, report_line("Different use counts"), p, std::make_shared<int>(42));
     }
 
     {

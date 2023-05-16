@@ -1,5 +1,5 @@
 	False Positive Failure:
-	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 137
+	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 134
 	Equality of null pointer with itself
 
 	[std::unique_ptr<int, std::default_delete<int> >]
@@ -7,7 +7,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 138
+	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 135
 	Equality of non-null pointer with itself
 
 	[std::unique_ptr<int, std::default_delete<int> >]
@@ -15,7 +15,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 139
+	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 136
 	Different pointers pointing to identical values
 
 	Comparison performed using:
@@ -26,7 +26,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 144
+	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 141
 	Different pointers pointing to identical values
 
 	Comparison performed using:
@@ -37,7 +37,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 151
+	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 148
 	Different pointers pointing to identical values
 
 	Comparison performed using:
@@ -48,7 +48,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 159
+	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 156
 	Different pointers pointing to identical values
 
 	Comparison performed using:
@@ -59,7 +59,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 170
+	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 167
 	Equality of null pointer with itself
 
 	[std::shared_ptr<int>]
@@ -67,7 +67,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 171
+	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 168
 	Equality of non-null pointer with itself
 
 	[std::shared_ptr<int>]
@@ -75,7 +75,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 172
+	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 169
 	Different pointers pointing to identical values
 
 	Comparison performed using:
@@ -86,7 +86,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 178
+	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 175
 	Different pointers pointing to identical values
 
 	Comparison performed using:
@@ -97,7 +97,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 189
+	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 186
 	Equality of null pointer with itself
 
 	[std::weak_ptr<int>]
@@ -105,7 +105,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 194
+	Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 191
 	Different pointers weakly pointing to identical values
 
 	Comparison performed using:
