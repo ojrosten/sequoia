@@ -9,9 +9,11 @@
 
 #include "ExperimentalTest.hpp"
 #include <execution>
+#include <iterator>
 
 namespace experimental
 {
+  // From pstl/glue_algorithm_impl.h
   template <class _ExecutionPolicy, class _ForwardIterator, class _Predicate>
   __pstl::__internal::__enable_if_execution_policy<_ExecutionPolicy, bool>
   constexpr any_of(_ExecutionPolicy&& __exec, _ForwardIterator __first, _ForwardIterator __last, _Predicate __pred)
@@ -29,9 +31,32 @@ namespace experimental
     }
   }
 
+  // From pstl/glue_numeric_impl.h
+  template <class _ExecutionPolicy, class _ForwardIterator>
+  constexpr __pstl::__internal::__enable_if_execution_policy<_ExecutionPolicy,
+                                                   typename std::iterator_traits<_ForwardIterator>::value_type>
+  reduce(_ExecutionPolicy&& __exec, _ForwardIterator __first, _ForwardIterator __last)
+  {
+    if consteval
+    {
+      return std::reduce(__first, __last);
+    }
+    else
+    {
+      typedef typename std::iterator_traits<_ForwardIterator>::value_type _ValueType;
+      return transform_reduce(std::forward<_ExecutionPolicy>(__exec), __first, __last, _ValueType{},
+                              std::plus<_ValueType>(), __pstl::__internal::__no_op());
+    }
+  }
+
   constexpr bool contains(std::vector<int> v, int num)
   {
     return experimental::any_of(std::execution::par, v.begin(), v.end(), [num](int i){ return i == num; });
+  }
+
+  constexpr int sum(std::vector<int> v)
+  {
+    return experimental::reduce(std::execution::par, v.begin(), v.end());
   }
 }
 
@@ -47,5 +72,8 @@ namespace sequoia::testing
   {
     static_assert(experimental::contains({1,2,3,4,5,6}, 4));
     static_assert(!experimental::contains({1,2,3,4,5,6}, 42));
+
+    static_assert(experimental::sum({1,2,3,4,5}) == 15);
+    check(equality, report_line("Runtime branch"), experimental::sum({1,2,3,4,5}), 15);
   }
 }
