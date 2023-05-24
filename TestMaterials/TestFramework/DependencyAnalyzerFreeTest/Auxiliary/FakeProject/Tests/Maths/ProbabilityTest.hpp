@@ -18,8 +18,8 @@ namespace sequoia::testing
 
 	private:
 		[[nodiscard]]
-		std::filesystem::path source_file() const noexcept final;
+		std::filesystem::path source_file() const;
 
-		void run_tests() final;
+		void run_tests();
 	};
 }

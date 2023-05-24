@@ -20,9 +20,9 @@ namespace sequoia::testing
 
     private:
         [[nodiscard]]
-        std::filesystem::path source_file() const noexcept final;
+        std::filesystem::path source_file() const;
 
-        void run_tests() final;
+        void run_tests();
     };
     
     class angle_false_negative_free_diagnostics final : public free_false_negative_test
@@ -32,8 +32,8 @@ namespace sequoia::testing
 
     private:
         [[nodiscard]]
-        std::filesystem::path source_file() const noexcept final;
+        std::filesystem::path source_file() const;
 
-        void run_tests() final;
+        void run_tests();
     };
 }
