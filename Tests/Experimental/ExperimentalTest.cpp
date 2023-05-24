@@ -29,10 +29,9 @@ namespace experimental
     }
   }
 
-  constexpr bool foo()
+  constexpr bool contains(std::vector<int> v, int num)
   {
-    std::vector<int> v{1,2,3,4,5,6};
-    return experimental::any_of(std::execution::par, v.begin(), v.end(), [](int i){ return i == 4; });
+    return experimental::any_of(std::execution::par, v.begin(), v.end(), [num](int i){ return i == num; });
   }
 }
 
@@ -46,7 +45,7 @@ namespace sequoia::testing
 
   void experimental_test::run_tests()
   {
-    constexpr bool b{experimental::foo()};
-    check(report_line(""), b);
+    static_assert(experimental::contains({1,2,3,4,5,6}, 4));
+    static_assert(!experimental::contains({1,2,3,4,5,6}, 42));
   }
 }
