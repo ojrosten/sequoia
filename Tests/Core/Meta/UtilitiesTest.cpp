@@ -21,7 +21,7 @@ namespace sequoia::testing
   double g(int) noexcept { return 1.0; }
 
   [[nodiscard]]
-  std::filesystem::path utilities_test::source_file() const noexcept
+  std::filesystem::path utilities_test::source_file() const
   {
     return std::source_location::current().file_name();
   }

@@ -102,7 +102,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path test_runner_end_to_end_test::source_file() const noexcept
+  std::filesystem::path test_runner_end_to_end_test::source_file() const
   {
     return std::source_location::current().file_name();
   }

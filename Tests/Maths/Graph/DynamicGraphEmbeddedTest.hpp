@@ -21,7 +21,7 @@ namespace sequoia
       using regular_test::regular_test;
 
       [[nodiscard]]
-      std::filesystem::path source_file() const noexcept;
+      std::filesystem::path source_file() const;
 
       void run_tests();
     private:

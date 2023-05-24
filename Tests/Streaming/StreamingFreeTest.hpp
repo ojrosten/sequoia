@@ -18,7 +18,7 @@ namespace sequoia::testing
   public:
     using free_test::free_test;
 
-    std::filesystem::path source_file() const noexcept;
+    std::filesystem::path source_file() const;
 
     void run_tests();
   };

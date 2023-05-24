@@ -14,7 +14,7 @@ namespace sequoia::testing
   using namespace runtime;
 
   [[nodiscard]]
-  std::filesystem::path shell_commands_test::source_file() const noexcept
+  std::filesystem::path shell_commands_test::source_file() const
   {
     return std::source_location::current().file_name();
   }

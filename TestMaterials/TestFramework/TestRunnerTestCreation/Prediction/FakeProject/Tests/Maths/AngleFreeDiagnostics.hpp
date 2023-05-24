@@ -18,7 +18,6 @@ namespace sequoia::testing
     public:
         using free_false_positive_test::free_false_positive_test;
 
-    private:
         [[nodiscard]]
         std::filesystem::path source_file() const;
 
@@ -30,7 +29,6 @@ namespace sequoia::testing
     public:
         using free_false_negative_test::free_false_negative_test;
 
-    private:
         [[nodiscard]]
         std::filesystem::path source_file() const;
 

@@ -39,7 +39,7 @@ namespace sequoia
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::filesystem::path bitmask_free_test::source_file() const noexcept
+  std::filesystem::path bitmask_free_test::source_file() const
   {
     return std::source_location::current().file_name();
   }
