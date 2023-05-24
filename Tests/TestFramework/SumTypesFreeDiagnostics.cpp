@@ -15,7 +15,7 @@
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::filesystem::path sum_types_false_positive_free_diagnostics::source_file() const noexcept
+  std::filesystem::path sum_types_false_positive_free_diagnostics::source_file() const
   {
     return std::source_location::current().file_name();
   }
@@ -117,7 +117,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path sum_types_false_negative_free_diagnostics::source_file() const noexcept
+  std::filesystem::path sum_types_false_negative_free_diagnostics::source_file() const
   {
     return std::source_location::current().file_name();
   }

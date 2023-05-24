@@ -14,7 +14,7 @@ namespace sequoia
   namespace testing
   {
     [[nodiscard]]
-    std::filesystem::path test_edge_insertion::source_file() const noexcept
+    std::filesystem::path test_edge_insertion::source_file() const
     {
       return std::source_location::current().file_name();
     }

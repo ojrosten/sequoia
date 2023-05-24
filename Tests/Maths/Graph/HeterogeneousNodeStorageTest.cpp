@@ -41,7 +41,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path test_heterogeneous_node_storage::source_file() const noexcept
+  std::filesystem::path test_heterogeneous_node_storage::source_file() const
   {
     return std::source_location::current().file_name();
   }

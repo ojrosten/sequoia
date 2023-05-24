@@ -17,7 +17,7 @@ namespace sequoia::testing
   using namespace maths;
 
   [[nodiscard]]
-  std::filesystem::path tree_test::source_file() const noexcept
+  std::filesystem::path tree_test::source_file() const
   {
     return std::source_location::current().file_name();
   }

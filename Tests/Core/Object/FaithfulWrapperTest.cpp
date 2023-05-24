@@ -27,7 +27,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path faithful_wrapper_test::source_file() const noexcept
+  std::filesystem::path faithful_wrapper_test::source_file() const
   {
     return std::source_location::current().file_name();
   }

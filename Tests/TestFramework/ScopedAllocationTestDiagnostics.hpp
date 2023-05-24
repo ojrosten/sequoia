@@ -20,7 +20,7 @@ namespace sequoia::testing
     using regular_allocation_false_negative_test::regular_allocation_false_negative_test;
 
     [[nodiscard]]
-    std::filesystem::path source_file() const noexcept;
+    std::filesystem::path source_file() const;
 
     template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
     void test_allocation();
@@ -51,7 +51,7 @@ namespace sequoia::testing
     using regular_allocation_false_positive_test::regular_allocation_false_positive_test;
 
     [[nodiscard]]
-    std::filesystem::path source_file() const noexcept;
+    std::filesystem::path source_file() const;
 
     template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
     void test_allocation();

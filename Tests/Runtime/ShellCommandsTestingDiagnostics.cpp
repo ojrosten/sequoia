@@ -15,7 +15,7 @@ namespace sequoia::testing
   using namespace std::string_literals;
 
   [[nodiscard]]
-  std::filesystem::path shell_commands_false_positive_test::source_file() const noexcept
+  std::filesystem::path shell_commands_false_positive_test::source_file() const
   {
     return std::source_location::current().file_name();
   }

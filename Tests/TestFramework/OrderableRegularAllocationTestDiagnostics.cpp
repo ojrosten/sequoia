@@ -13,7 +13,7 @@
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::filesystem::path orderable_regular_allocation_false_negative_diagnostics::source_file() const noexcept
+  std::filesystem::path orderable_regular_allocation_false_negative_diagnostics::source_file() const
   {
     return std::source_location::current().file_name();
   }
@@ -54,7 +54,7 @@ namespace sequoia::testing
 
 
   [[nodiscard]]
-  std::filesystem::path orderable_regular_allocation_false_positive_diagnostics::source_file() const noexcept
+  std::filesystem::path orderable_regular_allocation_false_positive_diagnostics::source_file() const
   {
     return std::source_location::current().file_name();
   }

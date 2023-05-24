@@ -15,7 +15,7 @@
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::filesystem::path test_static_priority_queue::source_file() const noexcept
+  std::filesystem::path test_static_priority_queue::source_file() const
   {
     return std::source_location::current().file_name();
   }

@@ -16,7 +16,7 @@ namespace sequoia::testing
   using namespace object;
 
   [[nodiscard]]
-  std::filesystem::path faithful_wrapper_false_positive_test::source_file() const noexcept
+  std::filesystem::path faithful_wrapper_false_positive_test::source_file() const
   {
     return std::source_location::current().file_name();
   }

@@ -30,7 +30,7 @@ namespace sequoia::testing
       using regular_test::regular_test;
 
       [[nodiscard]]
-      std::filesystem::path source_file() const noexcept
+      std::filesystem::path source_file() const
       {
         return std::source_location::current().file_name();
       }
@@ -47,7 +47,7 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      std::filesystem::path source_file() const noexcept
+      std::filesystem::path source_file() const
       {
         return std::source_location::current().file_name();
       }
@@ -64,7 +64,7 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      std::filesystem::path source_file() const noexcept
+      std::filesystem::path source_file() const
       {
         return std::source_location::current().file_name();
       }
@@ -81,7 +81,7 @@ namespace sequoia::testing
       using free_false_positive_test::free_false_positive_test;
 
       [[nodiscard]]
-      std::filesystem::path source_file() const noexcept
+      std::filesystem::path source_file() const
       {
         return std::source_location::current().file_name();
       }
@@ -98,7 +98,7 @@ namespace sequoia::testing
       using free_false_negative_test::free_false_negative_test;
 
       [[nodiscard]]
-      std::filesystem::path source_file() const noexcept
+      std::filesystem::path source_file() const
       {
         return std::source_location::current().file_name();
       }
@@ -122,7 +122,7 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      std::filesystem::path source_file() const noexcept
+      std::filesystem::path source_file() const
       {
         return std::source_location::current().file_name();
       }
@@ -147,7 +147,7 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      std::filesystem::path source_file() const noexcept
+      std::filesystem::path source_file() const
       {
         return std::source_location::current().file_name();
       }
@@ -165,7 +165,7 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      std::filesystem::path source_file() const noexcept
+      std::filesystem::path source_file() const
       {
         return std::source_location::current().file_name();
       }
@@ -183,7 +183,7 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      std::filesystem::path source_file() const noexcept
+      std::filesystem::path source_file() const
       {
         return std::source_location::current().file_name();
       }
@@ -202,7 +202,7 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      std::filesystem::path source_file() const noexcept
+      std::filesystem::path source_file() const
       {
         return std::source_location::current().file_name();
       }
@@ -220,7 +220,7 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      std::filesystem::path source_file() const noexcept
+      std::filesystem::path source_file() const
       {
         return std::source_location::current().file_name();
       }
@@ -237,7 +237,7 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      std::filesystem::path source_file() const noexcept
+      std::filesystem::path source_file() const
       {
         return std::source_location::current().file_name();
       }
@@ -280,7 +280,7 @@ namespace sequoia::testing
   };
 
   [[nodiscard]]
-  std::filesystem::path test_runner_test::source_file() const noexcept
+  std::filesystem::path test_runner_test::source_file() const
   {
     return std::source_location::current().file_name();
   }

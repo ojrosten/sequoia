@@ -26,7 +26,7 @@ namespace sequoia
     using namespace object;
 
     [[nodiscard]]
-    std::filesystem::path test_edges::source_file() const noexcept
+    std::filesystem::path test_edges::source_file() const
     {
       return std::source_location::current().file_name();
     }

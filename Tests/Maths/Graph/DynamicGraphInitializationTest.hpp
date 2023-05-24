@@ -23,7 +23,7 @@ namespace sequoia
       using graph_init_test::graph_init_test;
 
       [[nodiscard]]
-      std::filesystem::path source_file() const noexcept;
+      std::filesystem::path source_file() const;
 
       void run_tests();
     private:

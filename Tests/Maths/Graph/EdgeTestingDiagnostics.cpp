@@ -18,7 +18,7 @@ namespace sequoia::testing
   using namespace object;
 
   [[nodiscard]]
-  std::filesystem::path test_edge_false_positives::source_file() const noexcept
+  std::filesystem::path test_edge_false_positives::source_file() const
   {
     return std::source_location::current().file_name();
   }

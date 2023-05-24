@@ -19,7 +19,7 @@ namespace sequoia::testing
     using regular_false_negative_test::regular_false_negative_test;
 
     [[nodiscard]]
-    std::filesystem::path source_file() const noexcept;
+    std::filesystem::path source_file() const;
 
     void run_tests();
   private:
@@ -34,7 +34,7 @@ namespace sequoia::testing
     using regular_false_positive_test::regular_false_positive_test;
 
     [[nodiscard]]
-    std::filesystem::path source_file() const noexcept;
+    std::filesystem::path source_file() const;
 
     void run_tests();
   private:

@@ -42,7 +42,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path commands_free_test::source_file() const noexcept
+  std::filesystem::path commands_free_test::source_file() const
   {
     return std::source_location::current().file_name();
   }
