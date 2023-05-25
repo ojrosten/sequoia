@@ -54,9 +54,10 @@ namespace experimental
     return experimental::any_of(std::execution::par, v.begin(), v.end(), [num](int i){ return i == num; });
   }
 
-  constexpr int sum(std::vector<int> v)
+  template<class ExecPolicy>
+  constexpr int sum(ExecPolicy&& execPol, std::vector<int> v)
   {
-    return experimental::reduce(std::execution::par, v.begin(), v.end());
+    return experimental::reduce(std::forward<ExecPolicy>(execPol), v.begin(), v.end());
   }
 }
 
@@ -73,7 +74,16 @@ namespace sequoia::testing
     static_assert(experimental::contains({1,2,3,4,5,6}, 4));
     static_assert(!experimental::contains({1,2,3,4,5,6}, 42));
 
-    static_assert(experimental::sum({1,2,3,4,5}) == 15);
-    check(equality, report_line("Runtime branch"), experimental::sum({1,2,3,4,5}), 15);
+    static_assert(experimental::sum(std::execution::par, {1,2,3,4}) == 10);
+    static_assert(experimental::sum(std::execution::par, {1,2,3,4,5}) == 15);
+    check(equality, report_line("Check runtime result"), experimental::sum(std::execution::par, {1,2,3,4,5}), 15);
+
+    check_relative_performance(
+      report_line("Check acceleration still works with a speed up of at least 2"),
+      [](){ experimental::sum(std::execution::par, std::vector<int>(1000000,1)); },
+      [](){ experimental::sum(std::execution::seq, std::vector<int>(1000000,1)); },
+      2.0,
+      10.0
+    );
   }
 }

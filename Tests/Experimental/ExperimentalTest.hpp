@@ -9,14 +9,14 @@
 
 /*! \file */
 
-#include "sequoia/TestFramework/RegularTestCore.hpp"
+#include "sequoia/TestFramework/PerformanceTestCore.hpp"
 
 namespace sequoia::testing
 {
-  class experimental_test final : public regular_test
+  class experimental_test final : public performance_test
   {
   public:
-    using regular_test::regular_test;
+    using performance_test::performance_test;
 
     [[nodiscard]]
     std::filesystem::path source_file() const;
