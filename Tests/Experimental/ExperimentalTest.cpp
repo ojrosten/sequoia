@@ -74,8 +74,10 @@ namespace sequoia::testing
     static_assert(experimental::contains({1,2,3,4,5,6}, 4));
     static_assert(!experimental::contains({1,2,3,4,5,6}, 42));
 
-    static_assert(experimental::sum(std::execution::par, {1,2,3,4}) == 10);
-    static_assert(experimental::sum(std::execution::par, {1,2,3,4,5}) == 15);
+    static_assert(experimental::sum(std::execution::seq,       {1,2,3})       == 6);
+    static_assert(experimental::sum(std::execution::par,       {1,2,3,4})     == 10);
+    static_assert(experimental::sum(std::execution::par_unseq, {1,2,3,4,5})   == 15);
+    static_assert(experimental::sum(std::execution::unseq,     {1,2,3,4,5,6}) == 21);
     check(equality, report_line("Check runtime result"), experimental::sum(std::execution::par, {1,2,3,4,5}), 15);
 
     check_relative_performance(
