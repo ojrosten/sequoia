@@ -40,6 +40,8 @@ namespace sequoia::testing
 
     void test_prune_basic_output();
 
+    void test_nested_suite();
+
     void test_instability_analysis();
 
     template<std::invocable<test_runner&> Manipulator, concrete_test... Ts>

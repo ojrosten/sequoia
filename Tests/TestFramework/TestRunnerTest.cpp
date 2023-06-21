@@ -294,6 +294,7 @@ namespace sequoia::testing
     test_serial_verbose_output();
     test_filtered_suites();
     test_prune_basic_output();
+    test_nested_suite();
     test_instability_analysis();
   }
 
@@ -611,6 +612,34 @@ namespace sequoia::testing
 
     runner.execute();
     check_output(report_line("Prune with no tests"), "PruneWithNoTests", outputStream);
+  }
+
+  void test_runner_test::test_nested_suite()
+  {
+      std::stringstream outputStream{};
+      commandline_arguments args{(fake_project() / "build").generic_string()};
+
+      test_runner runner{args.size(),
+                         args.get(),
+                         "Oliver J. Rosten",
+                         {"TestSandbox/TestSandbox.cpp", {}, "TestShared/SharedIncludes.hpp"},
+                         "  ",
+                         outputStream};
+
+      using namespace object;
+
+      runner.add_test_suite(
+          suite{
+            suite{"Failing Suite",
+                  failing_test{"Free Test"},
+                  failing_fp_test{"False positive Test"},
+                  failing_fn_test{"False negative Test"}
+            }
+          }
+      );
+
+      runner.execute();
+      check_output(report_line("Basic Nested Output"), "BasicNestedOutput", outputStream);
   }
 
   void test_runner_test::test_instability_analysis()

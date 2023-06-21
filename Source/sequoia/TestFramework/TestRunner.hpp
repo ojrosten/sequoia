@@ -251,6 +251,16 @@ namespace sequoia::testing
         extract_suite_tree(name, [](auto&&...) { return true; }, std::forward<Tests>(tests)...);
     }
 
+    template<class Suite>
+      requires object::is_suite_v<Suite>
+    void add_test_suite(Suite s)
+    {
+      if(m_Filter)
+        extract_suite_tree(*m_Filter, std::move(s));
+      else
+        extract_suite_tree([](auto&&...) { return true; }, std::move(s));
+    }
+
     void execute([[maybe_unused]] timer_resolution r={});
 
     std::ostream& stream() noexcept { return *m_Stream; }
@@ -347,36 +357,45 @@ namespace sequoia::testing
     [[nodiscard]]
     prune_outcome do_prune();
 
-    template<class Filter, concrete_test... Tests>
-      requires (sizeof...(Tests) > 0)
-    void extract_suite_tree(std::string_view name, Filter&& filter, Tests&&... tests)
+    template<class Filter, class Suite>
+      requires object::is_suite_v<Suite>
+    void extract_suite_tree(Filter&& filter, Suite&& s)
     {
       using namespace object;
-      using namespace maths;
 
       if(!m_Suites.order())
       {
-        m_Suites.add_node(suite_type::npos, log_summary{});
+        m_Suites.add_node(suite_type::npos);
       }
 
       std::vector<std::filesystem::path> materialsPaths{};
 
-      extract_tree(suite{std::string{name}, std::forward<Tests>(tests)...},
+      // TO DO: may need generalizing
+      std::string name{s.name};
+
+      extract_tree(std::forward<Suite>(s),
                    std::forward<Filter>(filter),
                    overloaded{
                      [] <class... Ts> (const suite<Ts...>&s) -> suite_node { return {.summary{log_summary{s.name}}}; },
-                     [this, name, &materialsPaths]<concrete_test T>(T&& test) -> suite_node {
+                     [this, &name, &materialsPaths]<concrete_test T>(T&& test) -> suite_node {
                        test.initialize(name,
                                        test.source_file(),
                                        proj_paths(),
                                        set_materials(test.source_file(), proj_paths(), materialsPaths),
                                        make_active_recovery_paths(m_RecoveryMode, proj_paths()));
-
+                   
                        return {.summary{log_summary{test.name()}}, .optTest{std::move(test)}};
                      }
                    },
                    m_Suites,
                    0);
+    }
+
+    template<class Filter, concrete_test... Tests>
+      requires (sizeof...(Tests) > 0)
+    void extract_suite_tree(std::string_view name, Filter&& filter, Tests&&... tests)
+    {
+      extract_suite_tree(std::forward<Filter>(filter), object::suite{std::string{name}, std::forward<Tests>(tests)...});
     }
 
     template<concrete_test... Tests>
