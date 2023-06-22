@@ -630,8 +630,11 @@ namespace sequoia::testing
 
       runner.add_test_suite(
           suite{
-            suite{"Failing Suite",
-                  failing_test{"Free Test"},
+            "Failing Suite",
+            suite{"Free Suite",
+                  failing_test{"Free Test"}
+            },
+            suite{"Diagnostics Suite",
                   failing_fp_test{"False positive Test"},
                   failing_fn_test{"False negative Test"}
             }
