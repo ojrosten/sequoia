@@ -1,102 +1,102 @@
-	Tests/Core/DataStructures/StaticPriorityQueueTestingDiagnostics.cpp, Line 34
-	Empty queue versus populated queue
+Tests/Core/DataStructures/StaticPriorityQueueTestingDiagnostics.cpp, Line 34
+Empty queue versus populated queue
 
-	[sequoia::data_structures::static_priority_queue<int, 1, std::ranges::less>]
-	operator== returned false
+[sequoia::data_structures::static_priority_queue<int, 1, std::ranges::less>]
+operator== returned false
 
-	  Emptiness incorrect
-	  [bool]
-	  check failed
+  Emptiness incorrect
+  [bool]
+  check failed
 
-	  Size incorrect
-	  [unsigned long long]
-	  operator== returned false
-	  Obtained : 0
-	  Predicted: 1
+  Size incorrect
+  [unsigned long long]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
 
-	  Hidden state incorrect
-	  [bool]
-	  check failed
+  Hidden state incorrect
+  [bool]
+  check failed
 
-	  Hidden state, symmetry of == incorrect
-	  [bool]
-	  check failed
+  Hidden state, symmetry of == incorrect
+  [bool]
+  check failed
 
-	=======================================
+=======================================
 
-	Tests/Core/DataStructures/StaticPriorityQueueTestingDiagnostics.cpp, Line 37
-	Differing elements
+Tests/Core/DataStructures/StaticPriorityQueueTestingDiagnostics.cpp, Line 37
+Differing elements
 
-	[sequoia::data_structures::static_priority_queue<int, 1, std::ranges::less>]
-	operator== returned false
+[sequoia::data_structures::static_priority_queue<int, 1, std::ranges::less>]
+operator== returned false
 
-	  Top element incorrect
-	  [int]
-	  operator== returned false
-	  Obtained : 2
-	  Predicted: 1
+  Top element incorrect
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 1
 
-	  Hidden state incorrect
-	  [bool]
-	  check failed
+  Hidden state incorrect
+  [bool]
+  check failed
 
-	  Hidden state, symmetry of == incorrect
-	  [bool]
-	  check failed
+  Hidden state, symmetry of == incorrect
+  [bool]
+  check failed
 
-	=======================================
+=======================================
 
-	Tests/Core/DataStructures/StaticPriorityQueueTestingDiagnostics.cpp, Line 40
-	Empty queue versus populated queue
+Tests/Core/DataStructures/StaticPriorityQueueTestingDiagnostics.cpp, Line 40
+Empty queue versus populated queue
 
-	[sequoia::data_structures::static_priority_queue<int, 1, std::ranges::less>]
-	operator== returned false
+[sequoia::data_structures::static_priority_queue<int, 1, std::ranges::less>]
+operator== returned false
 
-	  Emptiness incorrect
-	  [bool]
-	  check failed
+  Emptiness incorrect
+  [bool]
+  check failed
 
-	  Size incorrect
-	  [unsigned long long]
-	  operator== returned false
-	  Obtained : 0
-	  Predicted: 1
+  Size incorrect
+  [unsigned long long]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
 
-	  Hidden state incorrect
-	  [bool]
-	  check failed
+  Hidden state incorrect
+  [bool]
+  check failed
 
-	  Hidden state, symmetry of == incorrect
-	  [bool]
-	  check failed
+  Hidden state, symmetry of == incorrect
+  [bool]
+  check failed
 
-	=======================================
+=======================================
 
-	Tests/Core/DataStructures/StaticPriorityQueueTestingDiagnostics.cpp, Line 48
-	Two element queue versus one element queue
+Tests/Core/DataStructures/StaticPriorityQueueTestingDiagnostics.cpp, Line 48
+Two element queue versus one element queue
 
-	[sequoia::data_structures::static_priority_queue<int, 2, std::ranges::less>]
-	operator== returned false
+[sequoia::data_structures::static_priority_queue<int, 2, std::ranges::less>]
+operator== returned false
 
-	  Size incorrect
-	  [unsigned long long]
-	  operator== returned false
-	  Obtained : 2
-	  Predicted: 1
+  Size incorrect
+  [unsigned long long]
+  operator== returned false
+  Obtained : 2
+  Predicted: 1
 
-	  Top element incorrect
-	  [int]
-	  operator== returned false
-	  Obtained : 2
-	  Predicted: 1
+  Top element incorrect
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 1
 
-	  Hidden state incorrect
-	  [bool]
-	  check failed
+  Hidden state incorrect
+  [bool]
+  check failed
 
-	  Hidden state, symmetry of == incorrect
-	  [bool]
-	  check failed
+  Hidden state, symmetry of == incorrect
+  [bool]
+  check failed
 
-	=======================================
+=======================================
 

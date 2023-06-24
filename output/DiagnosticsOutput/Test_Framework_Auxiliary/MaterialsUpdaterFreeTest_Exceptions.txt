@@ -5,7 +5,7 @@ Expected Exception Type:
 [std::runtime_error]
 File path is empty
 
-	=======================================
+=======================================
 
 Tests/TestFramework/MaterialsUpdaterFreeTest.cpp, Line 26
 Empty 'from' path
@@ -14,5 +14,5 @@ Expected Exception Type:
 [std::runtime_error]
 File path is empty
 
-	=======================================
+=======================================
 

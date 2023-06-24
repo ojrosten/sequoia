@@ -113,8 +113,9 @@ namespace sequoia::testing
 
         auto fpMessageMaker{
           [&logger](){
-            auto mess{indent("False Positive Failure:", logger.top_level_message(), tab)};
-            end_block(mess, 2_linebreaks, indent(footer(), tab));
+            
+            auto mess{append_lines("False Positive Failure:", logger.top_level_message())};
+            end_block(mess, 2_linebreaks, footer());
 
             return mess;
           }
@@ -162,7 +163,7 @@ namespace sequoia::testing
       }
     };
 
-    indentation ind{tab};
+    indentation ind{no_indent};
     std::size_t activeLevels{};
     for(auto& info : m_SentinelDepth)
     {
@@ -210,7 +211,7 @@ namespace sequoia::testing
   void test_logger_base::log_caught_exception_message(std::string_view message)
   {
     auto mess{std::string{top_level_message()}.append("\n").append(message)};
-    end_block(mess, 2_linebreaks, indent(footer(), tab));
+    end_block(mess, 2_linebreaks, footer());
 
     add_to_output(m_Results.caught_exception_messages, mess);
   }
@@ -242,7 +243,7 @@ namespace sequoia::testing
   {
     auto& output{output_channel(isCritical)};
     auto& mess{output.back().message};
-    end_block(mess, 2_linebreaks, indent(footer(), tab));
+    end_block(mess, 2_linebreaks, footer());
   }
 
   failure_output& test_logger_base::output_channel(const is_critical isCritical) noexcept

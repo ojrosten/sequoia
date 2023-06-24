@@ -2,49 +2,49 @@
 Running tests, synchronously...
 
 Bar:
-[Execution Time: 2.97ms]
+[Execution Time: 4.09ms]
 	Free Test
-	[Execution Time: 2.97ms]
+	[Execution Time: 4.09ms]
 		Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 1]
 
 ******  Critical Failures:  1  ******
 
 
-	Error -- Unexpected Exception:
-	Throw after check
+		Error -- Unexpected Exception:
+		Throw after check
 
-	Exception thrown after check completed
-	Last Recorded Message:
+		Exception thrown after check completed
+		Last Recorded Message:
 
-	Phoney equality check
-	[int]
+		Phoney equality check
+		[int]
 
-	=======================================
+		=======================================
 
 Foo:
-[Execution Time: 2.87ms]
+[Execution Time: 6.73ms]
 	Unit Test
-	[Execution Time: 2.87ms]
+	[Execution Time: 6.73ms]
 		Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 0]
 
 ******  Critical Failures:  1  ******
 
 
-	Error -- Unexpected Exception:
-	This is bad
+		Error -- Unexpected Exception:
+		This is bad
 
-	Exception thrown during last check
-	Last Recorded Message:
+		Exception thrown during last check
+		Last Recorded Message:
 
-	Throw during check
-	[sequoia::testing::(anonymous namespace)::foo]
+		Throw during check
+		[sequoia::testing::(anonymous namespace)::foo]
 
-	=======================================
+		=======================================
 
 
 -----------Grand Totals-----------
-[Total Run Time: 13.4ms]
-[Execution Time: 5.84ms]
+[Total Run Time: 27.4ms]
+[Execution Time: 10.8ms]
 	Standard Top Level Checks:                 4;  Failures:  0  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

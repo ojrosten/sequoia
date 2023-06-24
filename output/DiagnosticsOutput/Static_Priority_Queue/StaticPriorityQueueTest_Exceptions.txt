@@ -5,7 +5,7 @@ Expected Exception Type:
 [std::logic_error]
 Attempting to exceed max priority_queue depth
 
-	=======================================
+=======================================
 
 Tests/Core/DataStructures/StaticPriorityQueueTest.cpp, Line 41
 Can't construct non-null null queue
@@ -14,7 +14,7 @@ Expected Exception Type:
 [std::logic_error]
 initializer_list too big for array
 
-	=======================================
+=======================================
 
 Tests/Core/DataStructures/StaticPriorityQueueTest.cpp, Line 56
 Trying to push two elements to queue of depth 1
@@ -23,7 +23,7 @@ Expected Exception Type:
 [std::logic_error]
 Attempting to exceed max priority_queue depth
 
-	=======================================
+=======================================
 
 Tests/Core/DataStructures/StaticPriorityQueueTest.cpp, Line 57
 Can't construct queue of depth 1 with 2 elements
@@ -32,7 +32,7 @@ Expected Exception Type:
 [std::logic_error]
 initializer_list too big for array
 
-	=======================================
+=======================================
 
 Tests/Core/DataStructures/StaticPriorityQueueTest.cpp, Line 80
 Trying to push three elements to queue of depth 2
@@ -41,7 +41,7 @@ Expected Exception Type:
 [std::logic_error]
 Attempting to exceed max priority_queue depth
 
-	=======================================
+=======================================
 
 Tests/Core/DataStructures/StaticPriorityQueueTest.cpp, Line 81
 Can't construct queue of depth 2 with 3 elements
@@ -50,5 +50,5 @@ Expected Exception Type:
 [std::logic_error]
 initializer_list too big for array
 
-	=======================================
+=======================================
 

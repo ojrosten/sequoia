@@ -4,7 +4,7 @@ Expected Exception Type:
 [std::out_of_range]
 bucketed_sequence::index 0 out of range!
 
-	=======================================
+=======================================
 
 Tests/Maths/Graph/DynamicGraphUnweightedAllocationTest.cpp, Line 140
 
@@ -12,7 +12,7 @@ Expected Exception Type:
 [std::out_of_range]
 bucketed_sequence::index 0 out of range!
 
-	=======================================
+=======================================
 
 Tests/Maths/Graph/DynamicGraphUnweightedAllocationTest.cpp, Line 139
 
@@ -20,7 +20,7 @@ Expected Exception Type:
 [std::out_of_range]
 bucketed_sequence::index 0 out of range!
 
-	=======================================
+=======================================
 
 Tests/Maths/Graph/DynamicGraphUnweightedAllocationTest.cpp, Line 140
 
@@ -28,7 +28,7 @@ Expected Exception Type:
 [std::out_of_range]
 bucketed_sequence::index 0 out of range!
 
-	=======================================
+=======================================
 
 Tests/Maths/Graph/DynamicGraphUnweightedAllocationTest.cpp, Line 139
 
@@ -36,7 +36,7 @@ Expected Exception Type:
 [std::out_of_range]
 bucketed_sequence::index 0 out of range!
 
-	=======================================
+=======================================
 
 Tests/Maths/Graph/DynamicGraphUnweightedAllocationTest.cpp, Line 140
 
@@ -44,7 +44,7 @@ Expected Exception Type:
 [std::out_of_range]
 bucketed_sequence::index 0 out of range!
 
-	=======================================
+=======================================
 
 Tests/Maths/Graph/DynamicGraphUnweightedAllocationTest.cpp, Line 139
 
@@ -52,7 +52,7 @@ Expected Exception Type:
 [std::out_of_range]
 bucketed_sequence::index 0 out of range!
 
-	=======================================
+=======================================
 
 Tests/Maths/Graph/DynamicGraphUnweightedAllocationTest.cpp, Line 140
 
@@ -60,5 +60,5 @@ Expected Exception Type:
 [std::out_of_range]
 bucketed_sequence::index 0 out of range!
 
-	=======================================
+=======================================
 

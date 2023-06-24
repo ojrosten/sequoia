@@ -1,16 +1,16 @@
-	False Positive Failure:
-	Tests/TestFramework/ExceptionsFreeDiagnostics.cpp, Line 36
+False Positive Failure:
+Tests/TestFramework/ExceptionsFreeDiagnostics.cpp, Line 36
 
-	Expected Exception Type:
-	[std::runtime_error]
+Expected Exception Type:
+[std::runtime_error]
 
-	=======================================
+=======================================
 
-	False Positive Failure:
-	Tests/TestFramework/ExceptionsFreeDiagnostics.cpp, Line 38
+False Positive Failure:
+Tests/TestFramework/ExceptionsFreeDiagnostics.cpp, Line 38
 
-	Expected Exception Type:
-	[int]
+Expected Exception Type:
+[int]
 
-	=======================================
+=======================================
 

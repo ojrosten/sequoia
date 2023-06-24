@@ -5,7 +5,7 @@ Expected Exception Type:
 [std::logic_error]
 Equivalent type is unspecified
 
-	=======================================
+=======================================
 
 Tests/TestFramework/TestRunnerTestCreation.cpp, Line 51
 Just spaces
@@ -14,7 +14,7 @@ Expected Exception Type:
 [std::logic_error]
 Equivalent type is unspecified
 
-	=======================================
+=======================================
 
 Tests/TestFramework/TestRunnerTestCreation.cpp, Line 73
 Unmatched <
@@ -23,7 +23,7 @@ Expected Exception Type:
 [std::runtime_error]
 <: < not matched by >
 
-	=======================================
+=======================================
 
 Tests/TestFramework/TestRunnerTestCreation.cpp, Line 75
 Backwards delimiters
@@ -32,7 +32,7 @@ Expected Exception Type:
 [std::runtime_error]
 ><: unable to parse template
 
-	=======================================
+=======================================
 
 Tests/TestFramework/TestRunnerTestCreation.cpp, Line 77
 Missing symbol
@@ -41,7 +41,7 @@ Expected Exception Type:
 [std::runtime_error]
 <class>:  Unable to locate species/symbol pair
 
-	=======================================
+=======================================
 
 Tests/TestFramework/TestRunnerTestCreation.cpp, Line 79
 Missing symbol
@@ -50,7 +50,7 @@ Expected Exception Type:
 [std::runtime_error]
 < class>:  Unable to locate species/symbol pair
 
-	=======================================
+=======================================
 
 Tests/TestFramework/TestRunnerTestCreation.cpp, Line 165
 Plurgh.h does not exist
@@ -60,7 +60,7 @@ Expected Exception Type:
 Unable to locate file Plurgh.h or Plurgh.hpp or Plurgh.hxx in the source repository
 ../Source/fakeProject
 
-	=======================================
+=======================================
 
 Tests/TestFramework/TestRunnerTestCreation.cpp, Line 174
 Typo in specified class header
@@ -70,5 +70,5 @@ Expected Exception Type:
 Unable to locate file fakeProject/Stuff/Thingz.hpp or fakeProject/Stuff/Thingz.h or fakeProject/Stuff/Thingz.hxx in the source repository
 ../Source/fakeProject
 
-	=======================================
+=======================================
 

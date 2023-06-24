@@ -7,7 +7,7 @@ output/TestsTemporaryData/TestFramework/TestRunnerTest/Auxiliary/FakeProject/  i
 
 Try ensuring that the application is run from the appropriate directory
 
-	=======================================
+=======================================
 
 Tests/TestFramework/TestRunnerTest.cpp, Line 368
 Test Main does not exist
@@ -18,7 +18,7 @@ output/TestsTemporaryData/TestFramework/TestRunnerTest/Auxiliary/FakeProject/Foo
 
 Try ensuring that the application is run from the appropriate directory
 
-	=======================================
+=======================================
 
 Tests/TestFramework/TestRunnerTest.cpp, Line 377
 Include Target has empty path
@@ -29,7 +29,7 @@ output/TestsTemporaryData/TestFramework/TestRunnerTest/Auxiliary/FakeProject/  i
 
 Common includes not found
 
-	=======================================
+=======================================
 
 Tests/TestFramework/TestRunnerTest.cpp, Line 386
 Include Target does not exist
@@ -40,7 +40,7 @@ output/TestsTemporaryData/TestFramework/TestRunnerTest/Auxiliary/FakeProject/Foo
 
 Common includes not found
 
-	=======================================
+=======================================
 
 Tests/TestFramework/TestRunnerTest.cpp, Line 395
 Project root is empty
@@ -49,7 +49,7 @@ Expected Exception Type:
 [std::runtime_error]
 Unable to locate project root as no commandline arguments supplied.
 
-	=======================================
+=======================================
 
 Tests/TestFramework/TestRunnerTest.cpp, Line 403
 Project root does not exist
@@ -58,7 +58,7 @@ Expected Exception Type:
 [std::runtime_error]
 canonical: unable to find path
 
-	=======================================
+=======================================
 
 Tests/TestFramework/TestRunnerTest.cpp, Line 412
 Project root not findable
@@ -69,7 +69,7 @@ Unable to locate project root from path:
 output/TestsTemporaryData/TestFramework/TestRunnerTest/Auxiliary/FakeProject/TestShared
 Please ensure that the build directory is a subdirectory of <project>/build.
 
-	=======================================
+=======================================
 
 Tests/TestFramework/TestRunnerTest.cpp, Line 422
 Neither name nor source unique
@@ -80,7 +80,7 @@ Expected Exception Type:
 Source file: ".../Tests/TestFramework/TestRunnerTest.cpp"
 Please do not include tests in the same suite which both have the same name and are defined in the same source file.
 
-	=======================================
+=======================================
 
 Tests/TestFramework/TestRunnerTest.cpp, Line 456
 Invalid repetitions for instability analysis
@@ -89,7 +89,7 @@ Expected Exception Type:
 [std::runtime_error]
 locate-instabilities: unable to interpret 'foo' as an integer number of repetitions
 
-	=======================================
+=======================================
 
 Tests/TestFramework/TestRunnerTest.cpp, Line 463
 Insufficient repetitions for instability analysis
@@ -98,5 +98,5 @@ Expected Exception Type:
 [std::runtime_error]
   Error: Number of repetitions, must be >= 2
 
-	=======================================
+=======================================
 

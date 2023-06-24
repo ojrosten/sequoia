@@ -1,48 +1,48 @@
-	Tests/Runtime/ShellCommandsTestingDiagnostics.cpp, Line 26
+Tests/Runtime/ShellCommandsTestingDiagnostics.cpp, Line 26
 
-	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::runtime::shell_command>]
-	Checking for equivalence with:
-	[std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::runtime::shell_command>]
+Checking for equivalence with:
+[std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
 
-	  Wrapped command
-	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
-	  operator== returned false
+  Wrapped command
+  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+  operator== returned false
 
-	    Lengths differ
-	    Obtained string is too short
-	    [unsigned long long]
-	    operator== returned false
-	    Obtained : 0
-	    Predicted: 3
+    Lengths differ
+    Obtained string is too short
+    [unsigned long long]
+    operator== returned false
+    Obtained : 0
+    Predicted: 3
 
-	    First missing character: c
-	    Full strings:
-	    Obtained : 
-	    Predicted: cmd
+    First missing character: c
+    Full strings:
+    Obtained : 
+    Predicted: cmd
 
-	=======================================
+=======================================
 
-	Tests/Runtime/ShellCommandsTestingDiagnostics.cpp, Line 27
+Tests/Runtime/ShellCommandsTestingDiagnostics.cpp, Line 27
 
-	[sequoia::runtime::shell_command]
-	operator== returned false
+[sequoia::runtime::shell_command]
+operator== returned false
 
-	  Description
-	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
-	  operator== returned false
+  Description
+  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+  operator== returned false
 
-	    Lengths differ
-	    Obtained string is too short
-	    [unsigned long long]
-	    operator== returned false
-	    Obtained : 0
-	    Predicted: 3
+    Lengths differ
+    Obtained string is too short
+    [unsigned long long]
+    operator== returned false
+    Obtained : 0
+    Predicted: 3
 
-	    First missing character: f
-	    Full strings:
-	    Obtained : 
-	    Predicted: foo
+    First missing character: f
+    Full strings:
+    Obtained : 
+    Predicted: foo
 
-	=======================================
+=======================================
 

@@ -5,7 +5,7 @@ Expected Exception Type:
 [std::runtime_error]
 Unable to find CMakeCache.txt in output/TestsTemporaryData/TestFramework/CommandsFreeTest/build/CMade/.../NoCacheFile
 
-	=======================================
+=======================================
 
 Tests/TestFramework/CommandsFreeTest.cpp, Line 62
 'Parent' with no cache file
@@ -14,7 +14,7 @@ Expected Exception Type:
 [std::runtime_error]
 Unable to find CMakeCache.txt in output/TestsTemporaryData/TestFramework/CommandsFreeTest/build/CMade/.../NoCacheFile
 
-	=======================================
+=======================================
 
 Tests/TestFramework/CommandsFreeTest.cpp, Line 66
 Empty cache file
@@ -23,7 +23,7 @@ Expected Exception Type:
 [std::runtime_error]
 Unable to deduce cmake command from output/TestsTemporaryData/TestFramework/CommandsFreeTest/build/CMade/.../EmptyCacheFile/CMakeCache.txt
 
-	=======================================
+=======================================
 
 Tests/TestFramework/CommandsFreeTest.cpp, Line 70
 No CXX compiler when Unix Makefiles specified
@@ -32,5 +32,5 @@ Expected Exception Type:
 [std::runtime_error]
 Unable to deduce cmake command from output/TestsTemporaryData/TestFramework/CommandsFreeTest/build/CMade/.../NoCXXCompiler/CMakeCache.txt
 
-	=======================================
+=======================================
 

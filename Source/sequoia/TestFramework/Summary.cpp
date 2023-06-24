@@ -159,7 +159,7 @@ namespace sequoia::testing
 
     if((verbosity & summary_detail::failure_messages) == summary_detail::failure_messages)
     {
-      append_lines(summary, log.failure_messages());
+      append_indented(summary, log.failure_messages(), ind_0 + ind_1);
     }
 
     return summary;

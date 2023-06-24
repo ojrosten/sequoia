@@ -1,113 +1,113 @@
-	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 31
+Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 31
 
-	[double]
-	Obtained : 3
-	Predicted: 5 +/- 1
+[double]
+Obtained : 3
+Predicted: 5 +/- 1
 
-	=======================================
+=======================================
 
-	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 32
+Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 32
 
-	[double]
-	Obtained : 7
-	Predicted: 5 +/- 1
-	Advice: Tweak your tolerance!
+[double]
+Obtained : 7
+Predicted: 5 +/- 1
+Advice: Tweak your tolerance!
 
-	=======================================
+=======================================
 
-	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 36
-	<
+Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 36
+<
 
-	[int]
-	Obtained : 5
-	Predicted: < 4
+[int]
+Obtained : 5
+Predicted: < 4
 
-	=======================================
+=======================================
 
-	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 37
-	<=
+Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 37
+<=
 
-	[int]
-	Obtained : 5
-	Predicted: <= 4
+[int]
+Obtained : 5
+Predicted: <= 4
 
-	=======================================
+=======================================
 
-	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 38
-	>
+Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 38
+>
 
-	[int]
-	Obtained : 4
-	Predicted: > 5
+[int]
+Obtained : 4
+Predicted: > 5
 
-	=======================================
+=======================================
 
-	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 39
-	>=
+Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 39
+>=
 
-	[int]
-	Obtained : 4
-	Predicted: >= 5
+[int]
+Obtained : 4
+Predicted: >= 5
 
-	=======================================
+=======================================
 
-	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 46
+Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 46
 
-	  Element 0 of range incorrect
-	  [double]
-	  Obtained : 0.5
-	  Predicted: -0.1 +/- 0.5
+  Element 0 of range incorrect
+  [double]
+  Obtained : 0.5
+  Predicted: -0.1 +/- 0.5
 
-	=======================================
+=======================================
 
-	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 47
+Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 47
 
-	  Element 0 of range incorrect
-	  [double]
-	  Obtained : 0.5
-	  Predicted: -0.1 +/- 0.5
-	  Advice: Consider increasing tolerance!
+  Element 0 of range incorrect
+  [double]
+  Obtained : 0.5
+  Predicted: -0.1 +/- 0.5
+  Advice: Consider increasing tolerance!
 
-	=======================================
+=======================================
 
-	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 52
+Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 52
 
-	  Element 1 of range incorrect
-	  [double]
-	  Obtained : 0.6
-	  Predicted: 1.2 +/- 0.5
+  Element 1 of range incorrect
+  [double]
+  Obtained : 0.6
+  Predicted: 1.2 +/- 0.5
 
-	=======================================
+=======================================
 
-	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 57
-	<
+Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 57
+<
 
-	  Element 1 of range incorrect
-	  [int]
-	  Obtained : 5
-	  Predicted: < 4
+  Element 1 of range incorrect
+  [int]
+  Obtained : 5
+  Predicted: < 4
 
-	=======================================
+=======================================
 
-	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 63
+Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 63
 
-	[std::vector<double, std::allocator<double> >]
-	  Element 1 of range incorrect
-	  [double]
-	  Obtained : -1
-	  Predicted: -1.8 +/- 0.5
+[std::vector<double, std::allocator<double> >]
+  Element 1 of range incorrect
+  [double]
+  Obtained : -1
+  Predicted: -1.8 +/- 0.5
 
-	=======================================
+=======================================
 
-	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 66
+Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 66
 
-	[std::vector<std::vector<double, std::allocator<double> >, std::allocator<std::vector<double, std::allocator<double> > > >]
-	  Element 1 of range incorrect
-	  [std::vector<double, std::allocator<double> >]
-	    Element 0 of range incorrect
-	    [double]
-	    Obtained : 5.1
-	    Predicted: 3.7 +/- 0.5
+[std::vector<std::vector<double, std::allocator<double> >, std::allocator<std::vector<double, std::allocator<double> > > >]
+  Element 1 of range incorrect
+  [std::vector<double, std::allocator<double> >]
+    Element 0 of range incorrect
+    [double]
+    Obtained : 5.1
+    Predicted: 3.7 +/- 0.5
 
-	=======================================
+=======================================
 

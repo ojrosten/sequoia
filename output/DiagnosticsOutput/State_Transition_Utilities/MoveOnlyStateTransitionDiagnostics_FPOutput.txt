@@ -1,48 +1,48 @@
-	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 191
-	Mistake in transition functions
+Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 191
+Mistake in transition functions
 
-	Transition from node 0 to 1
-	Adding 1.1
-	[sequoia::testing::(anonymous namespace)::foo<double>]
-	operator== returned false
-	Obtained : 1
-	Predicted: 1.1
+Transition from node 0 to 1
+Adding 1.1
+[sequoia::testing::(anonymous namespace)::foo<double>]
+operator== returned false
+Obtained : 1
+Predicted: 1.1
 
-	=======================================
+=======================================
 
-	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 191
-	Mistake in transition functions
+Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 191
+Mistake in transition functions
 
-	Transition from node 1 to 0
-	Subtracting 1.1
-	[sequoia::testing::(anonymous namespace)::foo<double>]
-	operator== returned false
-	Obtained : 0.1
-	Predicted: 0
+Transition from node 1 to 0
+Subtracting 1.1
+[sequoia::testing::(anonymous namespace)::foo<double>]
+operator== returned false
+Obtained : 0.1
+Predicted: 0
 
-	=======================================
+=======================================
 
-	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 215
-	Mistake in transition functions
+Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 215
+Mistake in transition functions
 
-	Transition from node 0 to 1
-	Adding (1.1, -0.7)
-	[sequoia::testing::(anonymous namespace)::foo<std::complex<double> >]
-	operator== returned false
-	Obtained : (1,-0.7)
-	Predicted: (1.1,-0.7)
+Transition from node 0 to 1
+Adding (1.1, -0.7)
+[sequoia::testing::(anonymous namespace)::foo<std::complex<double> >]
+operator== returned false
+Obtained : (1,-0.7)
+Predicted: (1.1,-0.7)
 
-	=======================================
+=======================================
 
-	Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 215
-	Mistake in transition functions
+Tests/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp, Line 215
+Mistake in transition functions
 
-	Transition from node 1 to 0
-	Subtracting (1.1, -0.7)
-	[sequoia::testing::(anonymous namespace)::foo<std::complex<double> >]
-	operator== returned false
-	Obtained : (0.1,0)
-	Predicted: (0,0)
+Transition from node 1 to 0
+Subtracting (1.1, -0.7)
+[sequoia::testing::(anonymous namespace)::foo<std::complex<double> >]
+operator== returned false
+Obtained : (0.1,0)
+Predicted: (0,0)
 
-	=======================================
+=======================================
 

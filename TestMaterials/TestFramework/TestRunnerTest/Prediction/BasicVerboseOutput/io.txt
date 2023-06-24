@@ -3,43 +3,43 @@ Running tests...
 
 Failing Suite:
 	Free Test
-	[Execution Time: 112us]
+	[Execution Time: 140us]
 		Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
-	Standard Failure
-	[int]
-	operator== returned false
-	Obtained : 43
-	Predicted: 42
+		Standard Failure
+		[int]
+		operator== returned false
+		Obtained : 43
+		Predicted: 42
 
-	=======================================
+		=======================================
 
 	False positive Test
-	[Execution Time: 58.2us]
+	[Execution Time: 43us]
 		False Positive Checks:                     1;  Failures:  1
 
-	False Positive Failure:
-	False positive failure
-	[int]
+		False Positive Failure:
+		False positive failure
+		[int]
 
-	=======================================
+		=======================================
 
 	False negative Test
-	[Execution Time: 95.2us]
+	[Execution Time: 72.9us]
 		False Negative Checks:                     1;  Failures:  1
 
-	False negative failure
-	[int]
-	operator== returned false
-	Obtained : 43
-	Predicted: 42
+		False negative failure
+		[int]
+		operator== returned false
+		Obtained : 43
+		Predicted: 42
 
-	=======================================
+		=======================================
 
 
 -----------Grand Totals-----------
-[Total Run Time: 9.38ms]
-[Execution Time: 229us]
+[Total Run Time: 3.7ms]
+[Execution Time: 230us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     1;  Failures:  1

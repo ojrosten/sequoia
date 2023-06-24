@@ -1,80 +1,80 @@
-	Tests/TestFramework/FailureInfoTestingDiagnostics.cpp, Line 23
+Tests/TestFramework/FailureInfoTestingDiagnostics.cpp, Line 23
 
-	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::testing::failure_info>]
-	Checking for equivalence with:
-	[int,
-	char [1]]
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::testing::failure_info>]
+Checking for equivalence with:
+[int,
+char [1]]
 
-	  Check index
-	  [unsigned long long]
-	  operator== returned false
-	  Obtained : 0
-	  Predicted: 1
+  Check index
+  [unsigned long long]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
 
-	=======================================
+=======================================
 
-	Tests/TestFramework/FailureInfoTestingDiagnostics.cpp, Line 24
+Tests/TestFramework/FailureInfoTestingDiagnostics.cpp, Line 24
 
-	Comparison performed using:
-	[sequoia::testing::value_tester<sequoia::testing::failure_info>]
-	Checking for equivalence with:
-	[int,
-	char [4]]
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::testing::failure_info>]
+Checking for equivalence with:
+[int,
+char [4]]
 
-	  Message
-	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
-	  operator== returned false
+  Message
+  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+  operator== returned false
 
-	    Lengths differ
-	    Obtained string is too short
-	    [unsigned long long]
-	    operator== returned false
-	    Obtained : 0
-	    Predicted: 3
+    Lengths differ
+    Obtained string is too short
+    [unsigned long long]
+    operator== returned false
+    Obtained : 0
+    Predicted: 3
 
-	    First missing character: f
-	    Full strings:
-	    Obtained : 
-	    Predicted: foo
+    First missing character: f
+    Full strings:
+    Obtained : 
+    Predicted: foo
 
-	=======================================
+=======================================
 
-	Tests/TestFramework/FailureInfoTestingDiagnostics.cpp, Line 25
-	check_index differs
+Tests/TestFramework/FailureInfoTestingDiagnostics.cpp, Line 25
+check_index differs
 
-	[sequoia::testing::failure_info]
-	operator== returned false
+[sequoia::testing::failure_info]
+operator== returned false
 
-	  Check index
-	  [unsigned long long]
-	  operator== returned false
-	  Obtained : 0
-	  Predicted: 4
+  Check index
+  [unsigned long long]
+  operator== returned false
+  Obtained : 0
+  Predicted: 4
 
-	=======================================
+=======================================
 
-	Tests/TestFramework/FailureInfoTestingDiagnostics.cpp, Line 26
-	message differs
+Tests/TestFramework/FailureInfoTestingDiagnostics.cpp, Line 26
+message differs
 
-	[sequoia::testing::failure_info]
-	operator== returned false
+[sequoia::testing::failure_info]
+operator== returned false
 
-	  Message
-	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
-	  operator== returned false
+  Message
+  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+  operator== returned false
 
-	    Lengths differ
-	    Obtained string is too short
-	    [unsigned long long]
-	    operator== returned false
-	    Obtained : 0
-	    Predicted: 3
+    Lengths differ
+    Obtained string is too short
+    [unsigned long long]
+    operator== returned false
+    Obtained : 0
+    Predicted: 3
 
-	    First missing character: f
-	    Full strings:
-	    Obtained : 
-	    Predicted: foo
+    First missing character: f
+    Full strings:
+    Obtained : 
+    Predicted: foo
 
-	=======================================
+=======================================
 
