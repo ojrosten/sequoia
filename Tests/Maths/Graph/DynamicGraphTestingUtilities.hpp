@@ -110,7 +110,7 @@ namespace sequoia::testing
     requires (object::creator<EdgeWeightCreator> && object::creator<NodeWeightCreator>)
   using graph_type_generator_t = typename graph_type_generator<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>::graph_type;
 
-  template <class EdgeWeight, class NodeWeight, class Test>
+  template <class EdgeWeight, class NodeWeight, concrete_test Test>
   class graph_test_helper
   {
   public:

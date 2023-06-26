@@ -23,7 +23,7 @@ namespace sequoia::testing
 
     void run_tests();
   private:
-    template <class, class, class>
+    template <class, class, concrete_test>
     friend class graph_test_helper;
 
 

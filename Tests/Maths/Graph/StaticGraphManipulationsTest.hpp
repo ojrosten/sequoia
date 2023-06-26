@@ -23,16 +23,16 @@ namespace sequoia::testing
 
     void run_tests();
   private:
-    template<class>
+    template<concrete_test>
     friend class undirected_fixed_topology_checker;
 
-    template<class>
+    template<concrete_test>
     friend class directed_fixed_topology_checker;
 
-    template<class>
+    template<concrete_test>
     friend class e_undirected_fixed_topology_checker;
 
-    template<class>
+    template<concrete_test>
     friend class e_directed_fixed_topology_checker;
 
     template<class EdgeWeight, class NodeWeight> void test_undirected();

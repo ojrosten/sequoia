@@ -76,12 +76,9 @@ namespace sequoia:: testing
   >
   void test_graph_init::execute_operations()
   {
-    using ESTraits = EdgeStorageTraits;
-    using NSTraits = NodeWeightStorageTraits;
+    using graph_type = graph_type_generator_t<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>;
 
-    using graph_type = graph_type_generator_t<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, ESTraits, NSTraits>;
-
-    typename checker_selector<GraphFlavour>::template init_checker<test_graph_init> checker{*this};
+    checker_selector_checker_t<GraphFlavour, test_graph_init> checker{*this};
     checker.template check_all<graph_type>();
   }
 }

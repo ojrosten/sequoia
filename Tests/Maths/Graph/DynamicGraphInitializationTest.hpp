@@ -27,22 +27,22 @@ namespace sequoia
 
       void run_tests();
     private:
-      template<class, class, class>
+      template<class, class, concrete_test>
       friend class graph_test_helper;
 
-      template<class>
+      template<concrete_test>
       friend class init_checker;
 
-      template<class>
+      template<concrete_test>
       friend class undirected_init_checker;
 
-      template<class>
+      template<concrete_test>
       friend class undirected_embedded_init_checker;
 
-      template<class>
+      template<concrete_test>
       friend class directed_init_checker;
 
-      template<class>
+      template<concrete_test>
       friend class directed_embedded_init_checker;
 
       template
@@ -64,25 +64,28 @@ namespace sequoia
     template<>
     struct checker_selector<maths::graph_flavour::undirected>
     {
-      template<class Checker> using init_checker = undirected_init_checker<Checker>;
+      template<concrete_test Test> using init_checker = undirected_init_checker<Test>;
     };
 
     template<>
     struct checker_selector<maths::graph_flavour::undirected_embedded>
     {
-      template<class Checker> using init_checker = undirected_embedded_init_checker<Checker>;
+      template<concrete_test Test> using init_checker = undirected_embedded_init_checker<Test>;
     };
 
     template<>
     struct checker_selector<maths::graph_flavour::directed>
     {
-      template<class Checker> using init_checker = directed_init_checker<Checker>;
+      template<concrete_test Test> using init_checker = directed_init_checker<Test>;
     };
 
     template<>
     struct checker_selector<maths::graph_flavour::directed_embedded>
     {
-      template<class Checker> using init_checker = directed_embedded_init_checker<Checker>;
+      template<concrete_test Test> using init_checker = directed_embedded_init_checker<Test>;
     };
+
+    template<maths::graph_flavour GraphFlavour, concrete_test Test>
+    using checker_selector_checker_t = typename checker_selector<GraphFlavour>::template init_checker<Test>;
   }
 }

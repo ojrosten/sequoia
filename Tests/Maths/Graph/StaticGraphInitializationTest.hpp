@@ -23,19 +23,19 @@ namespace sequoia:: testing
 
     void run_tests();
   private:
-    template<class>
+    template<concrete_test>
     friend class init_checker;
 
-    template<class>
+    template<concrete_test>
     friend class undirected_init_checker;
 
-    template<class>
+    template<concrete_test>
     friend class undirected_embedded_init_checker;
 
-    template<class>
+    template<concrete_test>
     friend class directed_init_checker;
 
-    template<class>
+    template<concrete_test>
     friend class directed_embedded_init_checker;
 
     template<class NodeWeight, class EdgeWeight> void test_generic_undirected();

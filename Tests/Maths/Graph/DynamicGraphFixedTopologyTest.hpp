@@ -26,19 +26,19 @@ namespace sequoia
 
       void run_tests();
     private:
-      template<class, class, class>
+      template<class, class, concrete_test>
       friend class graph_test_helper;
 
-      template<class>
+      template<concrete_test>
       friend class undirected_fixed_topology_checker;
 
-      template<class>
+      template<concrete_test>
       friend class directed_fixed_topology_checker;
 
-      template<class>
+      template<concrete_test>
       friend class e_undirected_fixed_topology_checker;
 
-      template<class>
+      template<concrete_test>
       friend class e_directed_fixed_topology_checker;
 
       template
