@@ -27,7 +27,7 @@ namespace sequoia::testing
     template<class G, class... NodeWeights, class E=typename G::edge_init_type>
     void check_graph(std::string_view description, const G& graph, std::initializer_list<std::initializer_list<E>> edges, const std::tuple<NodeWeights...>& nodeWeights)
     {
-      checker_t::check(weak_equivalence, description, graph, std::move(edges), nodeWeights);
+      checker_t::check(weak_equivalence, description, graph, edges, nodeWeights);
     }
 
     template
