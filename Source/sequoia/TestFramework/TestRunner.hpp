@@ -251,14 +251,16 @@ namespace sequoia::testing
         extract_suite_tree(name, [](auto&&...) { return true; }, std::forward<Tests>(tests)...);
     }
 
-    template<class Suite>
-      requires object::is_suite_v<Suite>
-    void add_test_suite(Suite s)
+    template<class... Suites>
+      requires (object::is_suite_v<Suites> && ...)
+    void add_test_suite(std::string_view name, Suites... s)
     {
+      using namespace object;
+
       if(m_Filter)
-        extract_suite_tree(*m_Filter, std::move(s));
+        extract_suite_tree(*m_Filter, suite{std::string{name}, std::move(s)...});
       else
-        extract_suite_tree([](auto&&...) { return true; }, std::move(s));
+        extract_suite_tree([](auto&&...) { return true; }, suite{std::string{name}, std::move(s)...});
     }
 
     void execute([[maybe_unused]] timer_resolution r={});

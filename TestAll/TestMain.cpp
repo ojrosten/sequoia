@@ -14,6 +14,7 @@ int main(int argc, char** argv)
   try
   {
     using namespace sequoia;
+    using namespace object;
     using namespace testing;
     using namespace std::literals::chrono_literals;
 
@@ -257,19 +258,34 @@ int main(int argc, char** argv)
 
     runner.add_test_suite(
       "Graph",
-      test_graph_false_positives{"Graph false positive diagnostics"},
-      test_graph_meta{"Meta Tests"},
-      test_graph_init{"Dynamic Graph Init"},
-      test_static_graph{"Static Graph Init"},
-      test_heterogeneous_static_graph{"Heterogeneous Static Graphs"},
-      unweighted_graph_test{"Unweighted Graph Tests"},
-      unweighted_graph_bootstrapped_test{ "Unweighted Graph Bootstrapped Tests" },
-      weighted_graph_test{"Weighted Graph Tests"},
-      unweighted_graph_allocation_test{"Unweighted Graph Allocation Tests"},
-      weighted_graph_allocation_test{"Weighted Graph Allocation Tests"},
-      test_fixed_topology{"Dynamic Graph Fixed Topology"},
-      test_static_fixed_topology{"Static Graph Manipulations"},
-      test_edge_insertion{"Edge Insertions"}
+      suite{
+        "Infrastructure",
+        test_graph_false_positives{"Graph false positive diagnostics"},
+        test_graph_meta{"Meta Tests"}
+      },
+      suite{
+        "Initialization",
+        test_graph_init{"Dynamic Graph Init"},
+        test_static_graph{"Static Graph Init"}
+      },
+      suite{
+        "Manipulations",
+        unweighted_graph_test{"Unweighted Graph Tests"},
+        unweighted_graph_bootstrapped_test{"Unweighted Graph Bootstrapped Tests"},
+        weighted_graph_test{"Weighted Graph Tests"},
+        test_static_fixed_topology{"Static Graph Manipulations"},
+        test_edge_insertion{"Edge Insertions"}
+      },
+      suite{
+        "Allocations",
+        weighted_graph_allocation_test{"Weighted Graph Allocation Tests"},
+        unweighted_graph_allocation_test{"Unweighted Graph Allocation Tests"},
+      },
+      suite{
+        "Fixed Topology",
+        test_heterogeneous_static_graph{"Heterogeneous Static Graphs"},
+        test_fixed_topology{"Dynamic Graph Fixed Topology"}
+      }
     );
 
     runner.add_test_suite(

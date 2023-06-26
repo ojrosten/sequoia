@@ -630,16 +630,14 @@ namespace sequoia::testing
       using namespace object;
 
       runner.add_test_suite(
-          suite{
-            "Failing Suite",
-            suite{"Free Suite",
-                  failing_test{"Free Test"}
-            },
-            suite{"Diagnostics Suite",
-                  failing_fp_test{"False positive Test"},
-                  failing_fn_test{"False negative Test"}
-            }
-          }
+        "Failing Suite",
+        suite{"Free Suite",
+              failing_test{"Free Test"}
+        },
+        suite{"Diagnostics Suite",
+              failing_fp_test{"False positive Test"},
+              failing_fn_test{"False negative Test"}
+        }
       );
 
       runner.execute();
@@ -661,15 +659,13 @@ namespace sequoia::testing
     using namespace object;
 
     runner.add_test_suite(
-      suite{
-        "Failing Suite",
-        suite{"Free Suite",
-              failing_test{"Free Test"}
-        },
-        suite{"Diagnostics Suite",
-              failing_fp_test{"False positive Test"},
-              failing_fn_test{"False negative Test"}
-        }
+      "Failing Suite",
+      suite{"Free Suite",
+            failing_test{"Free Test"}
+      },
+      suite{"Diagnostics Suite",
+            failing_fp_test{"False positive Test"},
+            failing_fn_test{"False negative Test"}
       }
     );
 
