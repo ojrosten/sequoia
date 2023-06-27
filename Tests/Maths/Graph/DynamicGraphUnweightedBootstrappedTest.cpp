@@ -22,8 +22,9 @@ namespace sequoia::testing
       node_two_loops = 3,
       two_nodes = 4,
       node_link_node = 5,
-      node_loop_link_node = 6,
-      node_loop_node = 7
+      node_reverse_link_node = 6,
+      node_loop_link_node = 7,
+      node_loop_node = 8
     };
   }
 
@@ -283,6 +284,26 @@ namespace sequoia::testing
             }
           },
           {
+            graph_description::node,
+            "Erase node 1",
+            [](const graph_to_test& g) -> graph_to_test {
+              auto gr{g};
+              gr.erase_node(1);
+              return gr;
+            }
+          }
+        }, // end node 6 edges
+        {
+          {
+            graph_description::node,
+            "Erase node 0",
+            [](const graph_to_test& g) -> graph_to_test {
+              auto gr{g};
+              gr.erase_node(0);
+              return gr;
+            }
+          },
+          {
             graph_description::node_loop,
             "Erase node 1",
             [](const graph_to_test& g) -> graph_to_test {
@@ -309,7 +330,7 @@ namespace sequoia::testing
               return gr;
             }
           }
-        }, // end node 6 edges
+        }, // end node 7 edges
         {
           {
             graph_description::node_loop_node,
@@ -320,7 +341,7 @@ namespace sequoia::testing
               return gr;
             }
           }
-        } // end node 7 edges
+        } // end node 8 edges
       },
       {
         // [0] empty
@@ -375,7 +396,15 @@ namespace sequoia::testing
           return g;
         }(),
 
-        // [6] /\
+        // [6] x <--- x
+        [this](){
+          graph_to_test g{{}, {edge_t{0}}};
+          check(equivalence, report_line(""), g, edges_equivalent_t{{}, {edge_t{0}}});
+
+          return g;
+        }(),
+
+        // [7] /\
         //     \/
         //     x ---> x
         [this](){
@@ -385,7 +414,7 @@ namespace sequoia::testing
           return g;
         }(),
 
-        // [7] /\
+        // [8] /\
         //     \/
         //     x      x
         [this](){
