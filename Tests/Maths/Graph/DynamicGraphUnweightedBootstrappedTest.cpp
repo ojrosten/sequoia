@@ -43,6 +43,7 @@ namespace sequoia::testing
     using namespace maths;
     using graph_to_test = graph<directed_flavour::directed, null_weight, null_weight>;
     using edge_t = graph_to_test::edge_init_type;
+    using edges_equivalent_t = std::initializer_list<std::initializer_list<edge_t>>;
 
     using transition_graph = transition_checker<graph_to_test>::transition_graph;
 
@@ -322,37 +323,77 @@ namespace sequoia::testing
         } // end node 7 edges
       },
       {
-        graph_to_test{},
         // [0] empty
+        [this](){
+          graph_to_test g{};
+          check(equivalence, report_line(""), g, edges_equivalent_t{});
 
-        graph_to_test{{}},
+          return g;
+        }(),
+
         // [1] x
+        [this](){
+          graph_to_test g{{}};          
+          check(equivalence, report_line(""), g, edges_equivalent_t{{}});
 
-        graph_to_test{{edge_t{0}}},
+          return g;
+        }(),
+
         // [2] /\
         //     \/
         //     x
+        [this](){
+          graph_to_test g{{edge_t{0}}};
+          check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{0}}});
 
-        graph_to_test{{edge_t{0}, edge_t{0}}},
+          return g;
+        }(),
+
         // [3] /\ /\
         //     \/ \/
         //       x
+        [this](){
+          graph_to_test g{{edge_t{0}, edge_t{0}}};
+          check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{0}, edge_t{0}}});
 
-        graph_to_test{{}, {}},
+          return g;
+        }(),
+
         // [4] x    x
+        [this](){
+          graph_to_test g{{}, {}};
+          check(equivalence, report_line(""), g, edges_equivalent_t{{}, {}});
 
-        graph_to_test{{edge_t{1}}, {}},
+          return g;
+        }(),
+
         // [5] x ---> x
+        [this](){
+          graph_to_test g{{edge_t{1}}, {}};
+          check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{1}}, {}});
 
-        graph_to_test{{edge_t{0}, edge_t{1}}, {}},
+          return g;
+        }(),
+
         // [6] /\
         //     \/
         //     x ---> x
+        [this](){
+          graph_to_test g{{edge_t{0}, edge_t{1}}, {}};
+          check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{0}, edge_t{1}}, {}});
 
-        graph_to_test{{edge_t{0}}, {}}
+          return g;
+        }(),
+
         // [7] /\
         //     \/
         //     x      x
+        [this](){
+          graph_to_test g{{edge_t{0}}, {}};
+          check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{0}}, {}});
+
+          return g;
+        }()
       }
     };
 
