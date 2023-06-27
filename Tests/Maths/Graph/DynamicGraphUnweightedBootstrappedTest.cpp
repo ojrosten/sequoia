@@ -98,10 +98,9 @@ namespace sequoia::testing
           {
             graph_description::node,
             "Add node to empty graph",
-            [this](const graph_to_test& g) -> graph_to_test {
-              auto gr{g};
-              check(equality, report_line("Index of added node is 0"), gr.add_node(), 0_sz);
-              return gr;
+            [this](graph_to_test g) -> graph_to_test {
+              check(equality, report_line("Index of added node is 0"), g.add_node(), 0_sz);
+              return g;
             }
           }
         }, // end node 0 edges
@@ -109,37 +108,33 @@ namespace sequoia::testing
           {
             graph_description::empty,
             "Erase node to give empty graph",
-            [](const graph_to_test& g) -> graph_to_test {
-              auto gr{g};
-              gr.erase_node(0);
-              return gr;
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(0);
+              return g;
             }
           },
           {
             graph_description::node,
             "Attempt to erase edge past the end",
-            [](const graph_to_test& g) -> const graph_to_test {
-              auto gr{g};
-              gr.erase_edge(gr.cend_edges(0));
-              return gr;
+            [](graph_to_test g) -> const graph_to_test {
+              g.erase_edge(g.cend_edges(0));
+              return g;
             }
           },
           {
             graph_description::node_loop,
             "Add loop",
-            [](const graph_to_test & g) -> graph_to_test {
-              auto gr{g};
-              gr.join(0, 0);
-              return gr;
+            [](graph_to_test g) -> graph_to_test {
+              g.join(0, 0);
+              return g;
             }
           },
           {
             graph_description::node_node,
             "Add second node",
-            [this](const graph_to_test& g) -> graph_to_test {
-              auto gr{g};
-              check(equality, report_line("Index of added node is 1"), gr.add_node(), 1_sz);
-              return gr;
+            [this](graph_to_test g) -> graph_to_test {
+              check(equality, report_line("Index of added node is 1"), g.add_node(), 1_sz);
+              return g;
             }
           }
         }, // end node 1 edges
@@ -147,19 +142,17 @@ namespace sequoia::testing
           {
             graph_description::node,
             "Remove loop",
-            [](const graph_to_test& g) -> graph_to_test {
-              auto gr{g};
-              gr.erase_edge(gr.cbegin_edges(0));
-              return gr;
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_edge(g.cbegin_edges(0));
+              return g;
             }
           },
           {
             graph_description::node_two_loops,
             "Add a second loop",
-            [](const graph_to_test& g) -> graph_to_test {
-              auto gr{g};
-              gr.join(0, 0);
-              return gr;
+            [](graph_to_test g) -> graph_to_test {
+              g.join(0, 0);
+              return g;
             }
           }
         }, // end node 2 edges
@@ -167,37 +160,33 @@ namespace sequoia::testing
           {
             graph_description::node_loop,
             "Remove first loop",
-            [](const graph_to_test& g) -> graph_to_test {
-              auto gr{g};
-              gr.erase_edge(gr.cbegin_edges(0));
-              return gr;
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_edge(g.cbegin_edges(0));
+              return g;
             }
           },
           {
             graph_description::node_loop,
             "Remove second loop",
-            [](const graph_to_test& g) -> graph_to_test {
-              auto gr{g};
-              gr.erase_edge(std::ranges::next(gr.cbegin_edges(0)));
-              return gr;
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_edge(std::ranges::next(g.cbegin_edges(0)));
+              return g;
             }
           },
           {
             graph_description::node_two_loops,
             "Swap loops",
-            [](const graph_to_test& g) -> graph_to_test {
-              auto gr{g};
-              gr.swap_edges(0, 0, 1);
-              return gr;
+            [](graph_to_test g) -> graph_to_test {
+              g.swap_edges(0, 0, 1);
+              return g;
             }
           },
           {
             graph_description::node_two_loops,
             "Swap loops",
-            [](const graph_to_test& g) -> graph_to_test {
-              auto gr{g};
-              gr.swap_edges(0, 1, 0);
-              return gr;
+            [](graph_to_test g) -> graph_to_test {
+              g.swap_edges(0, 1, 0);
+              return g;
             }
           }
         }, // end node 3 edges
@@ -205,46 +194,41 @@ namespace sequoia::testing
           {
             graph_description::node,
             "Erase node 0",
-            [](const graph_to_test& g) -> graph_to_test {
-              auto gr{g};
-              gr.erase_node(0);
-              return gr;
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(0);
+              return g;
             }
           },
           {
             graph_description::node,
             "Erase node 1",
-            [](const graph_to_test& g) -> graph_to_test {
-              auto gr{g};
-              gr.erase_node(1);
-              return gr;
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(1);
+              return g;
             }
           },
           {
             graph_description::node_link_node,
             "Join nodes 0,1",
-            [](const graph_to_test& g) -> graph_to_test {
-              auto gr{g};
-              gr.join(0, 1);
-              return gr;
+            [](graph_to_test g) -> graph_to_test {
+              g.join(0, 1);
+              return g;
             }
           },
           {
             graph_description::node,
             "Erase node 0",
-            [](const graph_to_test& g) -> graph_to_test {
-              auto gr{g};
-              gr.erase_node(0);
-              return gr;
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(0);
+              return g;
             }
           },
           {
             graph_description::node,
             "Erase node 1",
-            [](const graph_to_test& g) -> graph_to_test {
-              auto gr{g};
-              gr.erase_node(1);
-              return gr;
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(1);
+              return g;
             }
           }
         }, // end node 4 edges
@@ -252,29 +236,26 @@ namespace sequoia::testing
           {
             graph_description::node,
             "Erase node 0",
-            [](const graph_to_test& g) -> graph_to_test {
-              auto gr{g};
-              gr.erase_node(0);
-              return gr;
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(0);
+              return g;
             }
           },
           {
             graph_description::node,
             "Erase node 1",
-            [](const graph_to_test& g) -> graph_to_test {
-              auto gr{g};
-              gr.erase_node(1);
-              return gr;
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(1);
+              return g;
             }
           },
           {
             graph_description::node_loop_link_node,
             "Add loop to node 0 and then swap it with link",
-            [](const graph_to_test& g) -> graph_to_test {
-              auto gr{g};
-              gr.join(0, 0);
-              gr.swap_edges(0, 0, 1);
-              return gr;
+            [](graph_to_test g) -> graph_to_test {
+              g.join(0, 0);
+              g.swap_edges(0, 0, 1);
+              return g;
             }
           }
         }, // end node 5 edges
@@ -282,19 +263,17 @@ namespace sequoia::testing
           {
             graph_description::node,
             "Erase node 0",
-            [](const graph_to_test& g) -> graph_to_test {
-              auto gr{g};
-              gr.erase_node(0);
-              return gr;
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(0);
+              return g;
             }
           },
           {
             graph_description::node,
             "Erase node 1",
-            [](const graph_to_test& g) -> graph_to_test {
-              auto gr{g};
-              gr.erase_node(1);
-              return gr;
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(1);
+              return g;
             }
           }
         }, // end node 6 edges
@@ -302,37 +281,33 @@ namespace sequoia::testing
           {
             graph_description::node,
             "Erase node 0",
-            [](const graph_to_test& g) -> graph_to_test {
-              auto gr{g};
-              gr.erase_node(0);
-              return gr;
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(0);
+              return g;
             }
           },
           {
             graph_description::node_loop,
             "Erase node 1",
-            [](const graph_to_test& g) -> graph_to_test {
-              auto gr{g};
-              gr.erase_node(1);
-              return gr;
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(1);
+              return g;
             }
           },
           {
             graph_description::node_link_node,
             "Remove loop",
-            [](const graph_to_test& g) -> graph_to_test {
-              auto gr{g};
-              gr.erase_edge(gr.cbegin_edges(0));
-              return gr;
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_edge(g.cbegin_edges(0));
+              return g;
             }
           },
           {
             graph_description::node_loop_node,
             "Remove link",
-            [](const graph_to_test& g) -> graph_to_test {
-              auto gr{g};
-              gr.erase_edge(std::ranges::next(gr.cbegin_edges(0)));
-              return gr;
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_edge(std::ranges::next(g.cbegin_edges(0)));
+              return g;
             }
           }
         }, // end node 7 edges
@@ -340,10 +315,9 @@ namespace sequoia::testing
           {
             graph_description::node_loop_node,
             "Remove link",
-            [](const graph_to_test& g) -> graph_to_test {
-              auto gr{g};
-              gr.erase_edge(std::ranges::next(gr.cbegin_edges(0)));
-              return gr;
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_edge(std::ranges::next(g.cbegin_edges(0)));
+              return g;
             }
           }
         }, // end node 8 edges
@@ -351,46 +325,41 @@ namespace sequoia::testing
           {
             graph_description::node_node,
             "Erase node 0",
-            [](const graph_to_test& g) -> graph_to_test {
-              auto gr{g};
-              gr.erase_node(0);
-              return gr;
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(0);
+              return g;
             }
           },
           {
             graph_description::node_node,
             "Erase node 1",
-            [](const graph_to_test& g) -> graph_to_test {
-              auto gr{g};
-              gr.erase_node(1);
-              return gr;
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(1);
+              return g;
             }
           },
           {
             graph_description::node_node,
             "Erase node 2",
-            [](const graph_to_test& g) -> graph_to_test {
-              auto gr{g};
-              gr.erase_node(2);
-              return gr;
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(2);
+              return g;
             }
           },
           {
             graph_description::node_link_node_node,
             "Join {0,1}",
-            [](const graph_to_test& g) -> graph_to_test {
-              auto gr{g};
-              gr.join(0,1);
-              return gr;
+            [](graph_to_test g) -> graph_to_test {
+              g.join(0,1);
+              return g;
             }
           },
           {
             graph_description::node_node_reverse_link_node,
             "Join {2,1}",
-            [](const graph_to_test& g) -> graph_to_test {
-              auto gr{g};
-              gr.join(2,1);
-              return gr;
+            [](graph_to_test g) -> graph_to_test {
+              g.join(2,1);
+              return g;
             }
           }
         }, // end node 9 edges
@@ -398,55 +367,49 @@ namespace sequoia::testing
           {
             graph_description::node_node,
             "Erase node 0",
-            [](const graph_to_test& g) -> graph_to_test {
-              auto gr{g};
-              gr.erase_node(0);
-              return gr;
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(0);
+              return g;
             }
           },
           {
             graph_description::node_node,
             "Erase node 1",
-            [](const graph_to_test& g) -> graph_to_test {
-              auto gr{g};
-              gr.erase_node(1);
-              return gr;
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(1);
+              return g;
             }
           },
           {
             graph_description::node_link_node,
             "Erase node 2",
-            [](const graph_to_test& g) -> graph_to_test {
-              auto gr{g};
-              gr.erase_node(2);
-              return gr;
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(2);
+              return g;
             }
           },
           {
             graph_description::node_node_node,
             "Remove link",
-            [](const graph_to_test& g) -> graph_to_test {
-              auto gr{g};
-              gr.erase_edge(gr.cbegin_edges(0));
-              return gr;
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_edge(g.cbegin_edges(0));
+              return g;
             }
           },
           {
             graph_description::node_link_node_link_node,
             "Join {2,1}",
-            [](const graph_to_test& g) -> graph_to_test {
-              auto gr{g};
-              gr.join(1,2);
-              return gr;
+            [](graph_to_test g) -> graph_to_test {
+              g.join(1,2);
+              return g;
             }
           },
           {
             graph_description::node_link_node_reverse_link_node,
             "Join {2,1}",
-            [](const graph_to_test& g) -> graph_to_test {
-              auto gr{g};
-              gr.join(2,1);
-              return gr;
+            [](graph_to_test g) -> graph_to_test {
+              g.join(2,1);
+              return g;
             }
           }
         }, // end node 10 edges
@@ -454,45 +417,119 @@ namespace sequoia::testing
           {
             graph_description::node_reverse_link_node,
             "Erase node 0",
-            [](const graph_to_test& g) -> graph_to_test {
-              auto gr{g};
-              gr.erase_node(0);
-              return gr;
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(0);
+              return g;
             }
           },
           {
             graph_description::node_node,
             "Erase node 1",
-            [](const graph_to_test& g) -> graph_to_test {
-              auto gr{g};
-              gr.erase_node(1);
-              return gr;
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(1);
+              return g;
             }
           },
           {
             graph_description::node_node,
             "Erase node 2",
-            [](const graph_to_test& g) -> graph_to_test {
-              auto gr{g};
-              gr.erase_node(2);
-              return gr;
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(2);
+              return g;
             }
           },
           {
             graph_description::node_node_node,
             "Remove link",
-            [](const graph_to_test& g) -> graph_to_test {
-              auto gr{g};
-              gr.erase_edge(gr.cbegin_edges(2));
-              return gr;
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_edge(g.cbegin_edges(2));
+              return g;
+            }
+          },
+          {
+            graph_description::node_link_node_reverse_link_node,
+            "Join {0,1}",
+            [](graph_to_test g) -> graph_to_test {
+              g.join(0,1);
+              return g;
             }
           }
         }, // end node 11 edges
         {
-
+          {
+            graph_description::node_link_node,
+            "Erase node 0",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(0);
+              return g;
+            }
+          },
+          {
+            graph_description::node_node,
+            "Erase node 1",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(1);
+              return g;
+            }
+          },
+          {
+            graph_description::node_link_node,
+            "Erase node 2",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(2);
+              return g;
+            }
+          },
+          {
+            graph_description::node_link_node_node,
+            "Remove link",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_edge(g.cbegin_edges(1));
+              return g;
+            }
+          }
         }, // end node 12 edges
         {
-
+          {
+            graph_description::node_reverse_link_node,
+            "Erase node 0",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(0);
+              return g;
+            }
+          },
+          {
+            graph_description::node_node,
+            "Erase node 1",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(1);
+              return g;
+            }
+          },
+          {
+            graph_description::node_link_node,
+            "Erase node 2",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(2);
+              return g;
+            }
+          },
+          {
+            graph_description::node_node_reverse_link_node,
+            "Remove link {0,1}",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_edge(g.cbegin_edges(0));
+              return g;
+            }
+          },
+          {
+            graph_description::node_link_node_node,
+            "Remove link {2,1}",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_edge(g.cbegin_edges(2));
+              return g;
+            }
+          }
         }, // end node 13 edges
       },
       {
