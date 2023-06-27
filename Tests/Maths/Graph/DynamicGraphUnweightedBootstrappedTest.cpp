@@ -460,6 +460,22 @@ namespace sequoia::testing
               g.join(2,1);
               return g;
             }
+          },
+          {
+            graph_description::node_node_reverse_link_node,
+            "Swap nodes {0,2}",
+            [](graph_to_test g) -> graph_to_test {
+              g.swap_nodes(0,2);
+              return g;
+            }
+          },
+          {
+            graph_description::node_node_reverse_link_node,
+            "Swap nodes {2,0}",
+            [](graph_to_test g) -> graph_to_test {
+              g.swap_nodes(2,0);
+              return g;
+            }
           }
         }, // end node 10 edges
         {
@@ -500,6 +516,22 @@ namespace sequoia::testing
             "Join {0,1}",
             [](graph_to_test g) -> graph_to_test {
               g.join(0,1);
+              return g;
+            }
+          },
+          {
+            graph_description::node_link_node_node,
+            "Swap nodes {0,2}",
+            [](graph_to_test g) -> graph_to_test {
+              g.swap_nodes(0,2);
+              return g;
+            }
+          },
+          {
+            graph_description::node_link_node_node,
+            "Swap nodes {2,0}",
+            [](graph_to_test g) -> graph_to_test {
+              g.swap_nodes(2,0);
               return g;
             }
           }
