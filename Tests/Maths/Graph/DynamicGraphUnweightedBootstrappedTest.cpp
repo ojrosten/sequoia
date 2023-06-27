@@ -17,19 +17,19 @@ namespace sequoia::testing
   {
     enum graph_description : std::size_t {
       empty = 0,
-      node = 1,
-      node_loop = 2,
-      node_two_loops = 3,
-      node_node = 4,
-      node_link_node = 5,
-      node_reverse_link_node = 6,
-      node_loop_link_node = 7,
-      node_loop_node = 8,
-      node_node_node = 9,
-      node_link_node_node = 10,
-      node_node_reverse_link_node = 11,
-      node_link_node_link_node = 12,
-      node_link_node_reverse_link_node = 13
+      node,
+      node_loop,
+      node_two_loops,
+      node_node,
+      node_link_node,
+      node_reverse_link_node,
+      node_loop_link_node,
+      node_loop_node,
+      node_node_node,
+      node_link_node_node,
+      node_node_reverse_link_node,
+      node_link_node_link_node,
+      node_link_node_reverse_link_node
     };
   }
 
@@ -103,7 +103,7 @@ namespace sequoia::testing
               return g;
             }
           }
-        }, // end node 0 edges
+        }, // end 'empty' edges
         {
           {
             graph_description::empty,
@@ -145,7 +145,7 @@ namespace sequoia::testing
               return g;
             }
           }
-        }, // end node 1 edges
+        }, // end 'node' edges
         {
           {
             graph_description::node,
@@ -171,7 +171,7 @@ namespace sequoia::testing
               return g;
             }
           }
-        }, // end node 2 edges
+        }, // end 'node_loop' edges
         {
           {
             graph_description::node_loop,
@@ -205,7 +205,7 @@ namespace sequoia::testing
               return g;
             }
           }
-        }, // end node 3 edges
+        }, // end 'node_two_loops' edges
         {
           {
             graph_description::node,
@@ -247,7 +247,7 @@ namespace sequoia::testing
               return g;
             }
           }
-        }, // end node 4 edges
+        }, // end 'node_node' edges
         {
           {
             graph_description::node,
@@ -290,7 +290,7 @@ namespace sequoia::testing
               return g;
             }
           }
-        }, // end node 5 edges
+        }, // end 'node_link_node' edges
         {
           {
             graph_description::node,
@@ -325,7 +325,7 @@ namespace sequoia::testing
               return g;
             }
           }
-        }, // end node 6 edges
+        }, // end 'node_reverse_link_node' edges
         {
           {
             graph_description::node,
@@ -359,7 +359,7 @@ namespace sequoia::testing
               return g;
             }
           }
-        }, // end node 7 edges
+        }, // end 'node_loop_link_node' edges
         {
           {
             graph_description::node_loop_node,
@@ -369,7 +369,7 @@ namespace sequoia::testing
               return g;
             }
           }
-        }, // end node 8 edges
+        }, // end 'node_loop_node' edges
         {
           {
             graph_description::node_node,
@@ -411,7 +411,7 @@ namespace sequoia::testing
               return g;
             }
           }
-        }, // end node 9 edges
+        }, // end 'node_node_node' edges
         {
           {
             graph_description::node_node,
@@ -477,7 +477,7 @@ namespace sequoia::testing
               return g;
             }
           }
-        }, // end node 10 edges
+        }, // end 'node_link_node_node' edges
         {
           {
             graph_description::node_reverse_link_node,
@@ -535,7 +535,7 @@ namespace sequoia::testing
               return g;
             }
           }
-        }, // end node 11 edges
+        }, // end 'node_node_reverse_link_node' edges
         {
           {
             graph_description::node_link_node,
@@ -569,7 +569,7 @@ namespace sequoia::testing
               return g;
             }
           }
-        }, // end node 12 edges
+        }, // end 'node_link_node_link_node' edges
         {
           {
             graph_description::node_reverse_link_node,
@@ -611,10 +611,10 @@ namespace sequoia::testing
               return g;
             }
           }
-        }, // end node 13 edges
+        }, // end 'node_link_node_reverse_link_node' edges
       },
       {
-        // [0] empty
+        //  'empty'
         [this](){
           graph_to_test g{};
           check(equivalence, report_line(""), g, edges_equivalent_t{});
@@ -622,7 +622,8 @@ namespace sequoia::testing
           return g;
         }(),
 
-        // [1] x
+        //  'node'
+        //  x
         [this](){
           graph_to_test g{{}};
           check(equivalence, report_line(""), g, edges_equivalent_t{{}});
@@ -630,9 +631,10 @@ namespace sequoia::testing
           return g;
         }(),
 
-        // [2] /\
-        //     \/
-        //     x
+        //  'node_loop'
+        //  /\
+        //  \/
+        //  x
         [this](){
           graph_to_test g{{edge_t{0}}};
           check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{0}}});
@@ -640,9 +642,10 @@ namespace sequoia::testing
           return g;
         }(),
 
-        // [3] /\ /\
-        //     \/ \/
-        //       x
+        //  'node_two_loops'
+        //  /\ /\
+        //  \/ \/
+        //    x
         [this](){
           graph_to_test g{{edge_t{0}, edge_t{0}}};
           check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{0}, edge_t{0}}});
@@ -650,7 +653,8 @@ namespace sequoia::testing
           return g;
         }(),
 
-        // [4] x    x
+        //  'node_node'
+        //  x    x
         [this](){
           graph_to_test g{{}, {}};
           check(equivalence, report_line(""), g, edges_equivalent_t{{}, {}});
@@ -658,7 +662,8 @@ namespace sequoia::testing
           return g;
         }(),
 
-        // [5] x ---> x
+        //  'node_link_node'
+        //  x ---> x
         [this](){
           graph_to_test g{{edge_t{1}}, {}};
           check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{1}}, {}});
@@ -666,7 +671,8 @@ namespace sequoia::testing
           return g;
         }(),
 
-        // [6] x <--- x
+        //  'node_reverse_link_node'
+        //  x <--- x
         [this](){
           graph_to_test g{{}, {edge_t{0}}};
           check(equivalence, report_line(""), g, edges_equivalent_t{{}, {edge_t{0}}});
@@ -674,9 +680,10 @@ namespace sequoia::testing
           return g;
         }(),
 
-        // [7] /\
-        //     \/
-        //     x ---> x
+        //  'node_loop_link_node'
+        //   /\
+        //   \/
+        //   x ---> x
         [this](){
           graph_to_test g{{edge_t{0}, edge_t{1}}, {}};
           check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{0}, edge_t{1}}, {}});
@@ -684,9 +691,10 @@ namespace sequoia::testing
           return g;
         }(),
 
-        // [8] /\
-        //     \/
-        //     x      x
+        //  node_loop_node
+        //  /\
+        //  \/
+        //  x      x
         [this](){
           graph_to_test g{{edge_t{0}}, {}};
           check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{0}}, {}});
@@ -694,7 +702,8 @@ namespace sequoia::testing
           return g;
         }(),
 
-        // [9] x    x    x
+        //  'node_node_node'
+        //  x    x    x
         [this](){
           graph_to_test g{{}, {}, {}};
           check(equivalence, report_line(""), g, edges_equivalent_t{{}, {}, {}});
@@ -702,7 +711,8 @@ namespace sequoia::testing
           return g;
         }(),
 
-        // [10] x ---> x    x
+        //  'node_link_node_node'
+        //   x ---> x    x
         [this](){
           graph_to_test g{{edge_t{1}}, {}, {}};
           check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{1}}, {}, {}});
@@ -710,7 +720,8 @@ namespace sequoia::testing
           return g;
         }(),
 
-        // [11] x    x <--- x
+        //  'node_node_reverse_link_node'
+        //  x    x <--- x
         [this](){
           graph_to_test g{{}, {}, {edge_t{1}}};
           check(equivalence, report_line(""), g, edges_equivalent_t{{}, {}, {edge_t{1}}});
@@ -718,7 +729,8 @@ namespace sequoia::testing
           return g;
         }(),
 
-        // [12] x ---> x ---> x
+        // 'node_link_node_link_node'
+        //  x ---> x ---> x
         [this](){
           graph_to_test g{{edge_t{1}}, {edge_t{2}}, {}};
           check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{1}}, {edge_t{2}}, {}});
@@ -726,7 +738,8 @@ namespace sequoia::testing
           return g;
         }(),
 
-        // [13] x ---> x <--- x
+        // 'node_link_node_reverse_link_node'
+        //  x ---> x <--- x
         [this](){
           graph_to_test g{{edge_t{1}}, {}, {edge_t{1}}};
           check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{1}}, {}, {edge_t{1}}});
