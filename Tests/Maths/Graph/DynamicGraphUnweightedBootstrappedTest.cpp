@@ -136,6 +136,14 @@ namespace sequoia::testing
               check(equality, report_line("Index of added node is 1"), g.add_node(), 1_sz);
               return g;
             }
+          },
+          {
+            graph_description::node,
+            "Swap nodes",
+            [](graph_to_test g) -> graph_to_test {
+              g.swap_nodes(0,0);
+              return g;
+            }
           }
         }, // end node 1 edges
         {
@@ -152,6 +160,14 @@ namespace sequoia::testing
             "Add a second loop",
             [](graph_to_test g) -> graph_to_test {
               g.join(0, 0);
+              return g;
+            }
+          },
+          {
+            graph_description::node_loop,
+            "Swap nodes",
+            [](graph_to_test g) -> graph_to_test {
+              g.swap_nodes(0,0);
               return g;
             }
           }
@@ -257,6 +273,22 @@ namespace sequoia::testing
               g.swap_edges(0, 0, 1);
               return g;
             }
+          },
+          {
+            graph_description::node_reverse_link_node,
+            "Swap nodes {0,1}",
+            [](graph_to_test g) -> graph_to_test {
+              g.swap_nodes(0,1);
+              return g;
+            }
+          },
+          {
+            graph_description::node_reverse_link_node,
+            "Swap nodes {1,0}",
+            [](graph_to_test g) -> graph_to_test {
+              g.swap_nodes(1,0);
+              return g;
+            }
           }
         }, // end node 5 edges
         {
@@ -273,6 +305,23 @@ namespace sequoia::testing
             "Erase node 1",
             [](graph_to_test g) -> graph_to_test {
               g.erase_node(1);
+              return g;
+            }
+          },
+          {
+            graph_description::node_link_node,
+            "Swap nodes {0,1}",
+            [](graph_to_test g) -> graph_to_test {
+              g.swap_nodes(0,1);
+              return g;
+            }
+          }
+          ,
+          {
+            graph_description::node_link_node,
+            "Swap nodes {1,0}",
+            [](graph_to_test g) -> graph_to_test {
+              g.swap_nodes(1,0);
               return g;
             }
           }
@@ -390,7 +439,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_node_node,
-            "Remove link",
+            "Remove link {0,1}",
             [](graph_to_test g) -> graph_to_test {
               g.erase_edge(g.cbegin_edges(0));
               return g;
@@ -440,7 +489,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_node_node,
-            "Remove link",
+            "Remove link {2,1}",
             [](graph_to_test g) -> graph_to_test {
               g.erase_edge(g.cbegin_edges(2));
               return g;
@@ -482,7 +531,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_link_node_node,
-            "Remove link",
+            "Remove link {1,2}",
             [](graph_to_test g) -> graph_to_test {
               g.erase_edge(g.cbegin_edges(1));
               return g;
