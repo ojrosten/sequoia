@@ -423,6 +423,15 @@ namespace sequoia::testing
             }
           },
           {
+            graph_description::node_node_node,
+            "Remove link",
+            [](const graph_to_test& g) -> graph_to_test {
+              auto gr{g};
+              gr.erase_edge(gr.cbegin_edges(0));
+              return gr;
+            }
+          },
+          {
             graph_description::node_link_node_link_node,
             "Join {2,1}",
             [](const graph_to_test& g) -> graph_to_test {
@@ -442,7 +451,42 @@ namespace sequoia::testing
           }
         }, // end node 10 edges
         {
-
+          {
+            graph_description::node_reverse_link_node,
+            "Erase node 0",
+            [](const graph_to_test& g) -> graph_to_test {
+              auto gr{g};
+              gr.erase_node(0);
+              return gr;
+            }
+          },
+          {
+            graph_description::node_node,
+            "Erase node 1",
+            [](const graph_to_test& g) -> graph_to_test {
+              auto gr{g};
+              gr.erase_node(1);
+              return gr;
+            }
+          },
+          {
+            graph_description::node_node,
+            "Erase node 2",
+            [](const graph_to_test& g) -> graph_to_test {
+              auto gr{g};
+              gr.erase_node(2);
+              return gr;
+            }
+          },
+          {
+            graph_description::node_node_node,
+            "Remove link",
+            [](const graph_to_test& g) -> graph_to_test {
+              auto gr{g};
+              gr.erase_edge(gr.cbegin_edges(2));
+              return gr;
+            }
+          }
         }, // end node 11 edges
         {
 
