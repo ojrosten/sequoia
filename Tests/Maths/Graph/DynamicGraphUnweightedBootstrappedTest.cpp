@@ -25,6 +25,8 @@ namespace sequoia::testing
       node_reverse_link_node,
       node_loop_link_node,
       node_loop_node,
+      node_link_link_node,
+      node_link_reverse_link_node,
       node_node_node,
       node_link_node_node,
       node_node_reverse_link_node,
@@ -103,7 +105,7 @@ namespace sequoia::testing
               return g;
             }
           }
-        }, // end 'empty' edges
+        }, // end 'empty'
         {
           {
             graph_description::empty,
@@ -145,7 +147,7 @@ namespace sequoia::testing
               return g;
             }
           }
-        }, // end 'node' edges
+        }, // end 'node'
         {
           {
             graph_description::node,
@@ -171,7 +173,7 @@ namespace sequoia::testing
               return g;
             }
           }
-        }, // end 'node_loop' edges
+        }, // end 'node_loop'
         {
           {
             graph_description::node_loop,
@@ -205,7 +207,7 @@ namespace sequoia::testing
               return g;
             }
           }
-        }, // end 'node_two_loops' edges
+        }, // end 'node_two_loops'
         {
           {
             graph_description::node,
@@ -247,7 +249,7 @@ namespace sequoia::testing
               return g;
             }
           }
-        }, // end 'node_node' edges
+        }, // end 'node_node'
         {
           {
             graph_description::node,
@@ -290,7 +292,7 @@ namespace sequoia::testing
               return g;
             }
           }
-        }, // end 'node_link_node' edges
+        }, // end 'node_link_node'
         {
           {
             graph_description::node,
@@ -325,7 +327,7 @@ namespace sequoia::testing
               return g;
             }
           }
-        }, // end 'node_reverse_link_node' edges
+        }, // end 'node_reverse_link_node'
         {
           {
             graph_description::node,
@@ -359,7 +361,7 @@ namespace sequoia::testing
               return g;
             }
           }
-        }, // end 'node_loop_link_node' edges
+        }, // end 'node_loop_link_node'
         {
           {
             graph_description::node_loop_node,
@@ -369,7 +371,76 @@ namespace sequoia::testing
               return g;
             }
           }
-        }, // end 'node_loop_node' edges
+        }, // end 'node_loop_node'
+        {
+          {
+            graph_description::node,
+            "Erase node 0",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(0);
+              return g;
+            }
+          },
+          {
+            graph_description::node,
+            "Erase node 1",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(1);
+              return g;
+            }
+          },
+          {
+            graph_description::node_link_node,
+            "Erase node 0 zeroth link",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_edge(g.cbegin_edges(0));
+              return g;
+            }
+          },
+          {
+            graph_description::node_link_node,
+            "Erase node 0 first link",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_edge(g.cbegin_edges(0)+1);
+              return g;
+            }
+          }
+
+        }, // end 'node_link_link_node'
+        {
+          {
+            graph_description::node,
+            "Erase node 0",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(0);
+              return g;
+            }
+          },
+          {
+            graph_description::node,
+            "Remove link",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(1);
+              return g;
+            }
+          },
+          {
+            graph_description::node_reverse_link_node,
+            "Erase node 0 link",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_edge(g.cbegin_edges(0));
+              return g;
+            }
+          },
+          {
+            graph_description::node_link_node,
+            "Erase node 1 link",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_edge(g.cbegin_edges(1));
+              return g;
+            }
+          }
+        }, // end 'node_link_reverse_link_node' 
         {
           {
             graph_description::node_node,
@@ -411,7 +482,7 @@ namespace sequoia::testing
               return g;
             }
           }
-        }, // end 'node_node_node' edges
+        }, // end 'node_node_node'
         {
           {
             graph_description::node_node,
@@ -477,7 +548,7 @@ namespace sequoia::testing
               return g;
             }
           }
-        }, // end 'node_link_node_node' edges
+        }, // end 'node_link_node_node'
         {
           {
             graph_description::node_reverse_link_node,
@@ -535,7 +606,7 @@ namespace sequoia::testing
               return g;
             }
           }
-        }, // end 'node_node_reverse_link_node' edges
+        }, // end 'node_node_reverse_link_node'
         {
           {
             graph_description::node_link_node,
@@ -569,7 +640,7 @@ namespace sequoia::testing
               return g;
             }
           }
-        }, // end 'node_link_node_link_node' edges
+        }, // end 'node_link_node_link_node'
         {
           {
             graph_description::node_reverse_link_node,
@@ -611,7 +682,7 @@ namespace sequoia::testing
               return g;
             }
           }
-        }, // end 'node_link_node_reverse_link_node' edges
+        }, // end 'node_link_node_reverse_link_node'
       },
       {
         //  'empty'
@@ -698,6 +769,22 @@ namespace sequoia::testing
         [this](){
           graph_to_test g{{edge_t{0}}, {}};
           check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{0}}, {}});
+
+          return g;
+        }(),
+
+        // node_link_link_node
+        [this](){
+          graph_to_test g{{edge_t{1}, edge_t{1}}, {}};
+          check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{1}, edge_t{1}}, {}});
+
+          return g;
+        }(),
+
+        // node_link_reverse_link_node
+        [this](){
+          graph_to_test g{{edge_t{1}}, {edge_t{0}}};
+          check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{1}}, {edge_t{0}}});
 
           return g;
         }(),
