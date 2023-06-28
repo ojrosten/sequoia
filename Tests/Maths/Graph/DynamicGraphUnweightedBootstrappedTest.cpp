@@ -83,13 +83,49 @@ namespace sequoia::testing
       //  x ---> x ---> x --->
       node_1_node_2_node_0,
 
-  
+      //      /\
+      //      \/
+      //  x    x    x
       node_node_1_node,
+
+      //        /\
+      //        \/
+      //  x ---> x    x
       node_1_node_1_node,
+
+
+      //        /\
+      //        \/
+      //  x ---> x    x
+      //    <---
       node_1_node_1_0_node,
+
+      //        /\
+      //        \/
+      //  x ---> x ---> x
       node_1_node_1_2_node,
+
+      //            /\
+      //            \/
+      //  x    x     x --->
       node_2_node_node_2,
+
+      //     [2]
+      //      x
+      //    ^^  ^
+      //   //    \
+      //  //      \
+      //  x  --->  x
+      // [0] ---> [1]
       node_1_1_2_2_node_2_node,
+
+       //     [2]
+      //       x
+      //    ^^  \^
+      //   //    \\
+      //  //     `'\
+      //  x  --->  x
+      // [0] ---> [1]
       node_1_1_2_2_node_2_node_1,
 
       //  x [3]
