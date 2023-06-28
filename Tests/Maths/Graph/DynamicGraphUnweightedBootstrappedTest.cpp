@@ -15,6 +15,7 @@ namespace sequoia::testing
 {
   namespace
   {
+    /// Convention: the indices following 'node' - separated by underscores - give the target node of the associated edges
     enum graph_description : std::size_t {
       empty = 0,
       node,
@@ -31,7 +32,8 @@ namespace sequoia::testing
       node_1_node_node,
       node_node_0_node,
       node_1_node_2_node,
-      node_1_node_node_1
+      node_1_node_node_1,
+      node_1_node_2_node_0
     };
   }
 
@@ -714,6 +716,32 @@ namespace sequoia::testing
             }
           }
         }, // end 'node_1_node_node_1'
+        {
+          {
+            graph_description::node_1_node,
+            "Erase node 0",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(0);
+              return g;
+            }
+          },
+          {
+            graph_description::node_node_0,
+            "Erase node 1",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(1);
+              return g;
+            }
+          },
+          {
+            graph_description::node_1_node,
+            "Erase node 2",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(2);
+              return g;
+            }
+          }
+        } // end 'node_1_node_2_node_0'
       },
       {
         //  'empty'
@@ -864,6 +892,15 @@ namespace sequoia::testing
 
           return g;
         }(),
+
+        // 'node_1_node_2_node_0'
+        //  x ---> x ---> x --->
+        [this](){
+          graph_to_test g{{edge_t{1}}, {edge_t{2}}, {edge_t{0}}};
+          check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{1}}, {edge_t{2}}, {edge_t{0}}});
+
+          return g;
+        }()
       }
     };
 
