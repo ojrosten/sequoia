@@ -115,6 +115,14 @@ namespace sequoia::testing
               check(equality, report_line("Index of added node is 0"), g.add_node(), 0_sz);
               return g;
             }
+          },
+          {
+            graph_description::node,
+            "insert node into empty graph",
+            [this](graph_to_test g) -> graph_to_test {
+              check(equality, report_line("Index of added node is 0"), g.insert_node(0), 0_sz);
+              return g;
+            }
           }
         }, // end 'empty'
         {
@@ -151,6 +159,22 @@ namespace sequoia::testing
             }
           },
           {
+            graph_description::node_node,
+            "Insert second node",
+            [this](graph_to_test g) -> graph_to_test {
+              check(equality, report_line("Index of added node is 0"), g.insert_node(0), 0_sz);
+              return g;
+            }
+          },
+          {
+            graph_description::node_node,
+            "Insert second node at end",
+            [this](graph_to_test g) -> graph_to_test {
+              check(equality, report_line("Index of added node is 1"), g.insert_node(1), 1_sz);
+              return g;
+            }
+          },
+          {
             graph_description::node,
             "Swap nodes",
             [](graph_to_test g) -> graph_to_test {
@@ -173,6 +197,22 @@ namespace sequoia::testing
             "Add a second loop",
             [](graph_to_test g) -> graph_to_test {
               g.join(0, 0);
+              return g;
+            }
+          },
+          {
+            graph_description::node_node_1,
+            "Insert node",
+            [this](graph_to_test g) -> graph_to_test {
+              check(equality, report_line("Index of added node is 0"), g.insert_node(0), 0_sz);
+              return g;
+            }
+          },
+          {
+            graph_description::node_0_node,
+            "Insert node at end",
+            [this](graph_to_test g) -> graph_to_test {
+              check(equality, report_line("Index of added node is 1"), g.insert_node(1), 1_sz);
               return g;
             }
           },
@@ -400,7 +440,38 @@ namespace sequoia::testing
           }
         }, // end 'node_0_node'
         {
-
+          {
+            graph_description::node_0,
+            "Erase node 0",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(0);
+              return g;
+            }
+          },
+          {
+            graph_description::node,
+            "Erase node 1",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(1);
+              return g;
+            }
+          },
+          {
+            graph_description::node_node,
+            "Remove link",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_edge(g.cbegin_edges(1));
+              return g;
+            }
+          },
+          {
+            graph_description::node_0_node,
+            "swap nodes",
+            [](graph_to_test g) -> graph_to_test {
+              g.swap_nodes(0,1);
+              return g;
+            }
+          }
         }, // end 'node_node_1'
         {
           {
