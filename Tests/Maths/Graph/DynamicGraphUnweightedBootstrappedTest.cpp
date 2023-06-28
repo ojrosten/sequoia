@@ -18,23 +18,72 @@ namespace sequoia::testing
     /// Convention: the indices following 'node' - separated by underscores - give the target node of the associated edges
     enum graph_description : std::size_t {
       empty = 0,
+
+      // x
       node,
+
+      //  /\
+      //  \/
+      //  x
       node_0,
+
+      //  /\ /\
+      //  \/ \/
+      //    x
       node_0_0,
+
+      //  x    x
       node_node,
+
+      //  x ---> x
       node_1_node,
+
+      //  x <--- x
       node_node_0,
+
+      //   /\
+      //   \/
+      //   x ---> x
       node_0_1_node,
+
+      //  /\
+      //  \/
+      //  x      x
       node_0_node,
+
+      //      /\
+      //      \/
+      //  x    x
       node_node_1,
+
+      //      /\
+      //      \/
+      //  x    x
       node_1_1_node,
+
+      // x ---> x
+      //   <---
       node_1_node_0,
+
+      //  x    x    x
       node_node_node,
+
+      //   x ---> x    x
       node_1_node_node,
+
+      //  x    x <--- x
       node_node_0_node,
+
+      //  x ---> x ---> x
       node_1_node_2_node,
+
+      //  x ---> x <--- x
       node_1_node_node_1,
+
+      //  x ---> x ---> x --->
       node_1_node_2_node_0,
+
+  
       node_node_1_node,
       node_1_node_1_node,
       node_1_node_1_0_node,
@@ -42,6 +91,13 @@ namespace sequoia::testing
       node_2_node_node_2,
       node_1_1_2_2_node_2_node,
       node_1_1_2_2_node_2_node_1,
+
+      //  x [3]
+      //  ^
+      //  |
+      //  |
+      //  x ---> x ---> x
+      // [0]    [1]    [2]
       node_3_1_node_2_node_node,
     };
   }
@@ -68,7 +124,8 @@ namespace sequoia::testing
 
     transition_graph trg{
       {
-        { {
+        { 
+          {
             graph_description::empty,
             "",
             [this](const graph_to_test& g) -> const graph_to_test& {
@@ -854,7 +911,6 @@ namespace sequoia::testing
         }(),
 
         //  'node'
-        //  x
         [this](){
           graph_to_test g{{}};
           check(equivalence, report_line(""), g, edges_equivalent_t{{}});
@@ -863,9 +919,6 @@ namespace sequoia::testing
         }(),
 
         //  'node_0'
-        //  /\
-        //  \/
-        //  x
         [this](){
           graph_to_test g{{edge_t{0}}};
           check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{0}}});
@@ -874,9 +927,6 @@ namespace sequoia::testing
         }(),
 
         //  'node_0_0'
-        //  /\ /\
-        //  \/ \/
-        //    x
         [this](){
           graph_to_test g{{edge_t{0}, edge_t{0}}};
           check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{0}, edge_t{0}}});
@@ -885,7 +935,6 @@ namespace sequoia::testing
         }(),
 
         //  'node_node'
-        //  x    x
         [this](){
           graph_to_test g{{}, {}};
           check(equivalence, report_line(""), g, edges_equivalent_t{{}, {}});
@@ -894,7 +943,6 @@ namespace sequoia::testing
         }(),
 
         //  'node_1_node'
-        //  x ---> x
         [this](){
           graph_to_test g{{edge_t{1}}, {}};
           check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{1}}, {}});
@@ -903,7 +951,6 @@ namespace sequoia::testing
         }(),
 
         //  'node_node_0'
-        //  x <--- x
         [this](){
           graph_to_test g{{}, {edge_t{0}}};
           check(equivalence, report_line(""), g, edges_equivalent_t{{}, {edge_t{0}}});
@@ -912,9 +959,6 @@ namespace sequoia::testing
         }(),
 
         //  'node_0_1_node'
-        //   /\
-        //   \/
-        //   x ---> x
         [this](){
           graph_to_test g{{edge_t{0}, edge_t{1}}, {}};
           check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{0}, edge_t{1}}, {}});
@@ -923,9 +967,6 @@ namespace sequoia::testing
         }(),
 
         //  'node_0_node'
-        //  /\
-        //  \/
-        //  x      x
         [this](){
           graph_to_test g{{edge_t{0}}, {}};
           check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{0}}, {}});
@@ -934,9 +975,6 @@ namespace sequoia::testing
         }(),
 
         //  'node_node_1'
-        //      /\
-        //      \/
-        //  x    x
         [this](){
           graph_to_test g{{}, {edge_t{1}}};
           check(equivalence, report_line(""), g, edges_equivalent_t{{}, {edge_t{1}}});
@@ -944,7 +982,7 @@ namespace sequoia::testing
           return g;
         }(),
 
-        // node_1_1_node
+        // 'node_1_1_node'
         [this](){
           graph_to_test g{{edge_t{1}, edge_t{1}}, {}};
           check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{1}, edge_t{1}}, {}});
@@ -952,7 +990,7 @@ namespace sequoia::testing
           return g;
         }(),
 
-        // node_1_node_0
+        // 'node_1_node_0'
         [this](){
           graph_to_test g{{edge_t{1}}, {edge_t{0}}};
           check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{1}}, {edge_t{0}}});
@@ -961,7 +999,6 @@ namespace sequoia::testing
         }(),
 
         //  'node_node_node'
-        //  x    x    x
         [this](){
           graph_to_test g{{}, {}, {}};
           check(equivalence, report_line(""), g, edges_equivalent_t{{}, {}, {}});
@@ -970,7 +1007,6 @@ namespace sequoia::testing
         }(),
 
         //  'node_1_node_node'
-        //   x ---> x    x
         [this](){
           graph_to_test g{{edge_t{1}}, {}, {}};
           check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{1}}, {}, {}});
@@ -979,7 +1015,6 @@ namespace sequoia::testing
         }(),
 
         //  'node_node_0_node'
-        //  x    x <--- x
         [this](){
           graph_to_test g{{}, {}, {edge_t{1}}};
           check(equivalence, report_line(""), g, edges_equivalent_t{{}, {}, {edge_t{1}}});
@@ -988,7 +1023,6 @@ namespace sequoia::testing
         }(),
 
         // 'node_1_node_2_node'
-        //  x ---> x ---> x
         [this](){
           graph_to_test g{{edge_t{1}}, {edge_t{2}}, {}};
           check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{1}}, {edge_t{2}}, {}});
@@ -997,7 +1031,6 @@ namespace sequoia::testing
         }(),
 
         // 'node_1_node_node_1'
-        //  x ---> x <--- x
         [this](){
           graph_to_test g{{edge_t{1}}, {}, {edge_t{1}}};
           check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{1}}, {}, {edge_t{1}}});
@@ -1006,7 +1039,6 @@ namespace sequoia::testing
         }(),
 
         // 'node_1_node_2_node_0'
-        //  x ---> x ---> x --->
         [this](){
           graph_to_test g{{edge_t{1}}, {edge_t{2}}, {edge_t{0}}};
           check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{1}}, {edge_t{2}}, {edge_t{0}}});
@@ -1015,12 +1047,6 @@ namespace sequoia::testing
         }(),
 
         //// 'node_3_1_node_2_node_node'
-        ////  x [3]
-        ////  ^
-        ////  |
-        ////  |
-        ////  x ---> x ---> x
-        //// [0]    [1]    [2]
         //[this](){
         //  graph_to_test g{{edge_t{3}, edge_t{1}}, {edge_t{2}}, {}};
         //  check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{3}, edge_t{1}}, {edge_t{2}}, {}});
