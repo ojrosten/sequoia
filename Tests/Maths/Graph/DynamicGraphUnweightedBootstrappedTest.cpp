@@ -740,6 +740,14 @@ namespace sequoia::testing
               g.erase_node(2);
               return g;
             }
+          },
+          {
+            graph_description::node_1_node_2_node,
+            "Remove {2,0}",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_edge(g.cbegin_edges(2));
+              return g;
+            }
           }
         } // end 'node_1_node_2_node_0'
       },
