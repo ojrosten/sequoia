@@ -298,7 +298,7 @@ namespace sequoia
 
       void clear() noexcept
       {
-        for(auto& bucket : m_Buckets) bucket.clear();
+        m_Buckets.clear();
       }
 
       template<class... Args>

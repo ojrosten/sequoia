@@ -115,8 +115,8 @@ namespace sequoia::testing
       //    ^^  ^
       //   //    \
       //  //      \
-      //  x  --->  x
-      // [0] ---> [1]
+      //  x  ===>  x
+      // [0]      [1]
       node_1_1_2_2_node_2_node,
 
        //     [2]
@@ -124,8 +124,8 @@ namespace sequoia::testing
       //    ^^  \^
       //   //    \\
       //  //     `'\
-      //  x  --->  x
-      // [0] ---> [1]
+      //  x  ===>  x
+      // [0]      [1]
       node_1_1_2_2_node_2_node_1,
 
       //  x [3]
@@ -135,6 +135,9 @@ namespace sequoia::testing
       //  x ---> x ---> x
       // [0]    [1]    [2]
       node_3_1_node_2_node_node,
+
+      // x ---> x    x <--- x
+      node_1_node_node_node_2
     };
   }
 
@@ -219,6 +222,15 @@ namespace sequoia::testing
           }
         }, // end 'empty'
         {
+
+          {
+            graph_description::empty,
+            "Clear graph",
+            [](graph_to_test g) -> graph_to_test {
+              g.clear();
+              return g;
+            }
+          },
           {
             graph_description::empty,
             "Erase node to give empty graph",
@@ -278,6 +290,14 @@ namespace sequoia::testing
         }, // end 'node'
         {
           {
+            graph_description::empty,
+            "Clear graph",
+            [](graph_to_test g) -> graph_to_test {
+              g.clear();
+              return g;
+            }
+          },
+          {
             graph_description::node,
             "Remove loop",
             [](graph_to_test g) -> graph_to_test {
@@ -319,6 +339,15 @@ namespace sequoia::testing
           }
         }, // end 'node_0'
         {
+
+          {
+            graph_description::empty,
+            "Clear graph",
+            [](graph_to_test g) -> graph_to_test {
+              g.clear();
+              return g;
+            }
+          },
           {
             graph_description::node_0,
             "Remove first loop",
@@ -353,6 +382,15 @@ namespace sequoia::testing
           }
         }, // end 'node_0_0'
         {
+
+          {
+            graph_description::empty,
+            "Clear graph",
+            [](graph_to_test g) -> graph_to_test {
+              g.clear();
+              return g;
+            }
+          },
           {
             graph_description::node,
             "Erase node 0",
@@ -395,6 +433,15 @@ namespace sequoia::testing
           }
         }, // end 'node_node'
         {
+
+          {
+            graph_description::empty,
+            "Clear graph",
+            [](graph_to_test g) -> graph_to_test {
+              g.clear();
+              return g;
+            }
+          },
           {
             graph_description::node,
             "Erase node 0",
@@ -446,6 +493,15 @@ namespace sequoia::testing
           }
         }, // end 'node_1_node'
         {
+
+          {
+            graph_description::empty,
+            "Clear graph",
+            [](graph_to_test g) -> graph_to_test {
+              g.clear();
+              return g;
+            }
+          },
           {
             graph_description::node,
             "Erase node 0",
@@ -489,6 +545,15 @@ namespace sequoia::testing
           }
         }, // end 'node_node_0'
         {
+
+          {
+            graph_description::empty,
+            "Clear graph",
+            [](graph_to_test g) -> graph_to_test {
+              g.clear();
+              return g;
+            }
+          },
           {
             graph_description::node,
             "Erase node 0",
@@ -523,6 +588,15 @@ namespace sequoia::testing
           }
         }, // end 'node_0_1_node'
         {
+
+          {
+            graph_description::empty,
+            "Clear graph",
+            [](graph_to_test g) -> graph_to_test {
+              g.clear();
+              return g;
+            }
+          },
           {
             graph_description::node_0_node,
             "Remove link",
@@ -541,6 +615,15 @@ namespace sequoia::testing
           }
         }, // end 'node_0_node'
         {
+
+          {
+            graph_description::empty,
+            "Clear graph",
+            [](graph_to_test g) -> graph_to_test {
+              g.clear();
+              return g;
+            }
+          },
           {
             graph_description::node_0,
             "Erase node 0",
@@ -575,6 +658,15 @@ namespace sequoia::testing
           }
         }, // end 'node_node_1'
         {
+
+          {
+            graph_description::empty,
+            "Clear graph",
+            [](graph_to_test g) -> graph_to_test {
+              g.clear();
+              return g;
+            }
+          },
           {
             graph_description::node,
             "Erase node 0",
@@ -625,6 +717,15 @@ namespace sequoia::testing
           }
         }, // end 'node_1_1_node'
         {
+
+          {
+            graph_description::empty,
+            "Clear graph",
+            [](graph_to_test g) -> graph_to_test {
+              g.clear();
+              return g;
+            }
+          },
           {
             graph_description::node,
             "Erase node 0",
@@ -665,8 +766,16 @@ namespace sequoia::testing
               return g;
             }
           }
-        }, // end 'node_1_node_0' 
+        }, // end 'node_1_node_0'
         {
+          {
+            graph_description::empty,
+            "Clear graph",
+            [](graph_to_test g) -> graph_to_test {
+              g.clear();
+              return g;
+            }
+          },
           {
             graph_description::node_node,
             "Erase node 0",
@@ -709,6 +818,15 @@ namespace sequoia::testing
           }
         }, // end 'node_node_node'
         {
+
+          {
+            graph_description::empty,
+            "Clear graph",
+            [](graph_to_test g) -> graph_to_test {
+              g.clear();
+              return g;
+            }
+          },
           {
             graph_description::node_node,
             "Erase node 0",
@@ -776,6 +894,14 @@ namespace sequoia::testing
         }, // end 'node_1_node_node'
         {
           {
+            graph_description::empty,
+            "Clear graph",
+            [](graph_to_test g) -> graph_to_test {
+              g.clear();
+              return g;
+            }
+          },
+          {
             graph_description::node_node_0,
             "Erase node 0",
             [](graph_to_test g) -> graph_to_test {
@@ -834,6 +960,14 @@ namespace sequoia::testing
         }, // end 'node_node_node_1'
         {
           {
+            graph_description::empty,
+            "Clear graph",
+            [](graph_to_test g) -> graph_to_test {
+              g.clear();
+              return g;
+            }
+          },
+          {
             graph_description::node_1_node,
             "Erase node 0",
             [](graph_to_test g) -> graph_to_test {
@@ -867,6 +1001,14 @@ namespace sequoia::testing
           }
         }, // end 'node_1_node_2_node'
         {
+          {
+            graph_description::empty,
+            "Clear graph",
+            [](graph_to_test g) -> graph_to_test {
+              g.clear();
+              return g;
+            }
+          },
           {
             graph_description::node_node_0,
             "Erase node 0",
@@ -909,6 +1051,14 @@ namespace sequoia::testing
           }
         }, // end 'node_1_node_node_1'
         {
+          {
+            graph_description::empty,
+            "Clear graph",
+            [](graph_to_test g) -> graph_to_test {
+              g.clear();
+              return g;
+            }
+          },
           {
             graph_description::node_1_node,
             "Erase node 0",
