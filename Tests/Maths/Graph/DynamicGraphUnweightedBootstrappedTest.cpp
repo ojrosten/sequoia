@@ -80,7 +80,7 @@ namespace sequoia::testing
       //  x ---> x <--- x
       node_1_node_node_1,
 
-      //  x ---> x ---> x --->
+      // -> x ---> x ---> x --
       node_1_node_2_node_0,
 
       //      /\
@@ -1092,6 +1092,41 @@ namespace sequoia::testing
             }
           }
         }, // end 'node_1_node_2_node_0'
+        {
+          {
+            graph_description::empty,
+            "Clear graph",
+            [](graph_to_test g) -> graph_to_test {
+              g.clear();
+              return g;
+            }
+          },
+          {
+            graph_description::node_0_node,
+            "Erase node 0",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(0);
+              return g;
+            }
+          },
+          {
+            graph_description::node_node,
+            "Erase node 1",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(1);
+              return g;
+            }
+          },
+          {
+            graph_description::node_node_1,
+            "Erase node 2",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(2);
+              return g;
+            }
+          },
+        }, // end 'node_node_1_node'
+
         //{
         //  {
         //    graph_description::node_1_node_node,
@@ -1248,6 +1283,13 @@ namespace sequoia::testing
           return g;
         }(),
 
+        // 'node_node_1_node'
+        [this](){
+          graph_to_test g{{}, {edge_t{1}}, {}};
+          check(equivalence, report_line(""), g, edges_equivalent_t{{}, {edge_t{1}}, {}});
+
+          return g;
+        }(),
         //// 'node_3_1_node_2_node_node'
         //[this](){
         //  graph_to_test g{{edge_t{3}, edge_t{1}}, {edge_t{2}}, {}};
