@@ -1362,16 +1362,17 @@ namespace sequoia::testing
           },
         }, // end 'node_2_2_1_1_node_2_node_1'
         {  // begin 'node_3_1_node_2_node_node'
-            // {
-            //    graph_description::node_1_node_node,
-            //    "Erase node 0",
-            //    [](graph_to_test g) -> graph_to_test {
-            //      g.erase_node(0);
-            //      return g;
-            //    }
-            //  }
+          {
+             graph_description::node_1_node_node,
+             "Erase node 0",
+             [](graph_to_test g) -> graph_to_test {
+               g.erase_node(0);
+               return g;
+             }
+          }
         }, // end 'node_3_1_node_2_node_node'
         {  // begin 'node_1_node_node_node_2'
+
         }, // end 'node_1_node_node_node_2'
       },
       {
@@ -1610,8 +1611,9 @@ namespace sequoia::testing
     };
 
     auto checker{
-        [this](std::string_view description, const graph_to_test& obtained, const graph_to_test& prediction) {
+        [this](std::string_view description, const graph_to_test& obtained, const graph_to_test& prediction, const graph_to_test& parent, transition_to_self tts) {
           check(equality, description, obtained, prediction);
+          if(tts == transition_to_self::no) check_semantics(description, prediction, parent);
         }
     };
 

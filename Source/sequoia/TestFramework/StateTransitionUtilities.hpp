@@ -70,6 +70,8 @@ namespace sequoia::testing
     std::function<T()> m_Fn;
   };
 
+  enum class transition_to_self { no, yes };
+
   template<class T>
   struct transition_checker
   {
@@ -125,6 +127,20 @@ namespace sequoia::testing
         [description,&g,checkFn](edge_iterator i) {
           const auto [message, parentGenerator, target] {make(description, g, i)};
           invoke_check_fn(g, i, checkFn, message, parentGenerator, target, parentGenerator());
+        }
+      };
+
+      check(g, edgeFn);
+    }
+
+    template<std::invocable<std::string, T, T, T, transition_to_self> CheckFn>
+    static void check(std::string_view description, const transition_graph& g, CheckFn checkFn)
+    {
+      auto edgeFn{
+        [description,&g,checkFn](edge_iterator i) {
+          const auto [message, parentGenerator, target] {make(description, g, i)};
+          const transition_to_self tts{i.partition_index() == target ? transition_to_self::yes : transition_to_self::no};
+          invoke_check_fn(g, i, checkFn, message, parentGenerator, target, parentGenerator(), tts);
         }
       };
 
