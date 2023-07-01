@@ -1231,12 +1231,30 @@ namespace sequoia::testing
           }
         }, // end 'node_1_node_1_0_2_node'
         {  // begin 'node_1_node_1_2_node'
+          {
+            graph_description::node_1_node_2_node,
+            "Remove {1,1}",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_edge(g.cbegin_edges(1));
+              return g;
+            }
+          }
         }, // end 'node_1_node_1_2_node'
         {  // begin 'node_2_node_node_2'
+          {
+            graph_description::node_1_node_1_node,
+            "Swap {1,2}",
+            [](graph_to_test g) -> graph_to_test {
+              g.swap_nodes(1,2);
+              return g;
+            }
+          }
         }, // end 'node_2_node_node_2'
         {  // begin 'node_1_1_2_2_node_2_node'
+
         }, // end 'node_1_1_2_2_node_2_node'
         {  // begin 'node_1_1_2_2_node_2_node_1'
+
         }, // end 'node_1_1_2_2_node_2_node_1'
         {  // begin 'node_3_1_node_2_node_node'
             // {
