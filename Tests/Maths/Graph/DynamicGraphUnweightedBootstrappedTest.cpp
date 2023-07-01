@@ -1336,6 +1336,15 @@ namespace sequoia::testing
               g.swap_nodes(2,1);
               return g;
             }
+          },
+          {
+            graph_description::node_2_2_1_1_node_2_node_1,
+            "Swap node 0 edges: {0,2}, {1,3}",
+            [](graph_to_test g) -> graph_to_test {
+              g.swap_edges(0, 0, 2);
+              g.swap_edges(0, 1, 3);
+              return g;
+            }
           }
         }, // end 'node_1_1_2_2_node_2_node_1'
         {  // begin 'node_2_2_1_1_node_2_node_1'
@@ -1363,6 +1372,15 @@ namespace sequoia::testing
               return g;
             }
           },
+          {
+            graph_description::node_1_1_2_2_node_2_node_1,
+            "Swap node 0 edges: {0,2}, {1,3}",
+            [](graph_to_test g) -> graph_to_test {
+              g.swap_edges(0, 0, 2);
+              g.swap_edges(0, 1, 3);
+              return g;
+            }
+          }
         }, // end 'node_2_2_1_1_node_2_node_1'
         {  // begin 'node_3_1_node_2_node_node'
           {
