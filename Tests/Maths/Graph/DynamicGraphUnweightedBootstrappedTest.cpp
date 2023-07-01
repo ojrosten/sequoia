@@ -123,7 +123,7 @@ namespace sequoia::testing
       // [0]      [1]
       node_1_1_2_2_node_2_node,
 
-       //     [2]
+      //      [2]
       //       x
       //    ^^  \^
       //   //    \\
@@ -131,6 +131,15 @@ namespace sequoia::testing
       //  x  ===>  x
       // [0]      [1]
       node_1_1_2_2_node_2_node_1,
+
+      //      [2]
+      //       x
+      //    ^^  \^
+      //   //    \\
+      //  //     `'\
+      //  x  ===>  x
+      // [0]      [1]
+      node_2_2_1_1_node_2_node_1,
 
       //  x [3]
       //  ^
@@ -1285,8 +1294,50 @@ namespace sequoia::testing
           }
         }, // end 'node_1_1_2_2_node_2_node'
         {  // begin 'node_1_1_2_2_node_2_node_1'
-
+          {
+            graph_description::node_1_node_0,
+            "Erase node 0",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(0);
+              return g;
+            }
+          },
+          {
+            graph_description::node_1_1_node,
+            "Erase node 1",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(1);
+              return g;
+            }
+          },
+          {
+            graph_description::node_1_1_node,
+            "Erase node 2",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(2);
+              return g;
+            }
+          },
+          {
+            graph_description::node_2_2_1_1_node_2_node_1,
+            "Swap {1,2}",
+            [](graph_to_test g) -> graph_to_test {
+              g.swap_nodes(1,2);
+              return g;
+            }
+          },
+          {
+            graph_description::node_2_2_1_1_node_2_node_1,
+            "Swap {2,1}",
+            [](graph_to_test g) -> graph_to_test {
+              g.swap_nodes(2,1);
+              return g;
+            }
+          }
         }, // end 'node_1_1_2_2_node_2_node_1'
+        {  // begin 'node_2_2_1_1_node_2_node_1'
+
+        }, // end 'node_2_2_1_1_node_2_node_1'
         {  // begin 'node_3_1_node_2_node_node'
             // {
             //    graph_description::node_1_node_node,
@@ -1505,6 +1556,14 @@ namespace sequoia::testing
         [this](){
           graph_to_test g{{edge_t{1}, edge_t{1}, edge_t{2}, edge_t{2}}, {edge_t{2}}, {edge_t{1}}};
           check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{1}, edge_t{1}, edge_t{2}, edge_t{2}}, {edge_t{2}}, {edge_t{1}}});
+
+          return g;
+        }(),
+
+        // 'node_2_2_1_1_node_2_node_1'
+        [this](){
+          graph_to_test g{{edge_t{2}, edge_t{2}, edge_t{1}, edge_t{1}}, {edge_t{2}}, {edge_t{1}}};
+          check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{2}, edge_t{2}, edge_t{1}, edge_t{1}}, {edge_t{2}}, {edge_t{1}}});
 
           return g;
         }(),
