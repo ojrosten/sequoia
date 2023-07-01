@@ -27,7 +27,7 @@ namespace sequoia::testing
     friend class graph_test_helper;
 
 
-    /*template
+    template
     <
       maths::graph_flavour GraphFlavour,
       class EdgeWeight,
@@ -36,7 +36,7 @@ namespace sequoia::testing
       class NodeWeightCreator,
       class EdgeStorageTraits,
       class NodeWeightStorageTraits
-    >*/
+    >
     void execute_operations();
   };
 }

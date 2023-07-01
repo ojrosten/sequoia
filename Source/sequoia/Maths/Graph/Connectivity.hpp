@@ -631,6 +631,8 @@ namespace sequoia
 
       void erase_edge(const_edge_iterator citer)
       {
+        if(!order() || (citer == cend_edges(citer.partition_index()))) return;
+
         if constexpr (EdgeTraits::mutual_info_v)
         {
           const auto source{citer.partition_index()};
