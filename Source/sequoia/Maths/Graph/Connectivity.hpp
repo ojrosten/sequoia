@@ -281,6 +281,11 @@ namespace sequoia
 
       constexpr void swap_edges(edge_index_type node, edge_index_type i, edge_index_type j)
       {
+        if constexpr (throw_on_range_error)
+        {
+          graph_errors::check_edge_swap_indices(node, i, j, static_cast<std::size_t>(std::ranges::distance(cedges(node))));
+        }
+
         std::ranges::iter_swap(begin_edges(node) + i, begin_edges(node) + j);
       }
 
@@ -1053,7 +1058,7 @@ namespace sequoia
             const auto& edge{*edgeIter};
             const auto target{edge.target_node()};
 
-            graph_errors::check_edge_index_range("process_complementary_edges", {nodeIndex, edgeIndex}, "complementary", edges.size(), target);
+            graph_errors::check_edge_index_range("process_complementary_edges", {nodeIndex, edgeIndex}, "target", edges.size(), target);
             const auto compIndex{edge.complementary_index()};
 
             const bool doValidate{
@@ -1105,7 +1110,7 @@ namespace sequoia
               if((edge.target_node() == nodeIndex) && (edge.source_node() != edge.target_node()))
               {
                 auto sourceEdgesIter{edges.begin() + source};
-                graph_errors::check_edge_index_range("process_complementary_edges", {nodeIndex, edgeIndex}, "source", sourceEdgesIter->size(), compIndex);
+                graph_errors::check_edge_index_range("process_complementary_edges", {nodeIndex, edgeIndex}, "complementary", sourceEdgesIter->size(), compIndex);
 
                 const auto& sourceEdge{*(sourceEdgesIter->begin() + compIndex)};
                 graph_errors::check_reciprocated_index({nodeIndex, edgeIndex}, "target", sourceEdge.target_node(), nodeIndex);

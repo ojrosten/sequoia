@@ -1,2 +1,2 @@
 Unweighted Graph Bootstrapped Tests
-Standard Top Level Checks:               325;  Failures:  0  [Deep checks: 19879]
+Standard Top Level Checks:               338;  Failures:  0  [Deep checks: 19948]

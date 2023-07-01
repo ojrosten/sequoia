@@ -63,7 +63,21 @@ namespace sequoia::maths::graph_errors
   constexpr void check_edge_index_range(std::string_view method, const edge_indices edgeIndices, std::string_view indexName, const std::size_t size, const std::size_t index)
   {
     if(index >= size)
-      throw std::out_of_range{error_prefix(method, edgeIndices).append(indexName).append(" index ").append(std::to_string(index)).append(" out of range - graph size is ").append(std::to_string(size))};
+      throw std::out_of_range{error_prefix(method, edgeIndices).append(indexName).append(" index ").append(std::to_string(index)).append(" out of range - max index is ").append(std::to_string(size))};
+  }
+
+  constexpr void check_edge_swap_indices(std::size_t node, std::size_t i, std::size_t j, std::size_t numEdges)
+  {
+    auto check{
+      [node, numEdges](std::size_t index){
+        if(index >= numEdges)
+          throw std::out_of_range{std::string{"swap_edges: edge index "}.append(std::to_string(index)).append(" out of range for node ")
+                              .append(std::to_string(node)).append(", which has ").append(std::to_string(numEdges)).append(" edge(s)")};
+      }
+    };
+
+    check(i);
+    check(j);
   }
 
   [[nodiscard]]

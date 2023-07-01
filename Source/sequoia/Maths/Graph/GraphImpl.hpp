@@ -542,16 +542,30 @@ namespace sequoia
 
       constexpr static bool emptyNodes{std::is_empty_v<typename Nodes::weight_type>};
 
+      [[nodiscard]]
+      constexpr static edges_initializer check_initialization(edges_initializer edges, std::size_t numNodes, std::size_t edgeParitions)
+      {
+        if(numNodes != edgeParitions)
+          throw std::logic_error{
+            std::string{"Error initializing graph\n"}
+              .append("Number of node weights:    ").append(std::to_string(numNodes)).append("\n")
+              .append("Number of edge paritions:  ").append(std::to_string(edgeParitions)).append("\n")
+              .append("Please ensure these numbers are the same")
+          };
+
+        return edges;
+      }
+
       constexpr graph_primitive(homo_init_type, edges_initializer edges, std::initializer_list<node_weight_type> nodeWeights)
         requires (!std::same_as<node_weight_type, graph_impl::heterogeneous_tag>)
-        : Connectivity{ (nodeWeights.size() == edges.size()) ? edges : throw std::logic_error("Node weight initializer and edges top-level initializer must be of same size") }
+        : Connectivity{check_initialization(edges, nodeWeights.size(), edges.size())}
         , Nodes{nodeWeights}
       {}
 
       template<class... NodeWeights>
         requires std::same_as<node_weight_type, graph_impl::heterogeneous_tag>
       constexpr graph_primitive(hetero_init_type, edges_initializer edges, NodeWeights&&... nodeWeights)
-        : Connectivity{ (sizeof...(NodeWeights) == edges.size()) ? edges : throw std::logic_error("Node weight initializer and edges top-level initializer must be of same size") }
+        : Connectivity{check_initialization(edges, sizeof...(NodeWeights), edges.size())}
         , Nodes{std::forward<NodeWeights>(nodeWeights)...}
       {}
 
