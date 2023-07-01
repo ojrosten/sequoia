@@ -70,8 +70,6 @@ namespace sequoia::testing
     std::function<T()> m_Fn;
   };
 
-  enum class transition_to_self { no, yes };
-
   template<class T>
   struct transition_checker
   {
@@ -79,9 +77,10 @@ namespace sequoia::testing
     using transition_graph
       = maths::graph<maths::directed_flavour::directed, transition_info<T, std::function<T(const T&)>>, object_generator<T>>;
 
+    using size_type = typename transition_graph::size_type;
+
   private:
     using edge_iterator = typename transition_graph::const_edge_iterator;
-    using size_type = typename transition_graph::size_type;
 
     template<class CheckFn, class... Args>
     static void invoke_check_fn(const transition_graph& g, edge_iterator i, CheckFn fn, const std::string& message, object_generator<T> parentGenerator, size_type target, Args... args)
@@ -133,14 +132,13 @@ namespace sequoia::testing
       check(g, edgeFn);
     }
 
-    template<std::invocable<std::string, T, T, T, transition_to_self> CheckFn>
+    template<std::invocable<std::string, T, T, T, size_type, size_type> CheckFn>
     static void check(std::string_view description, const transition_graph& g, CheckFn checkFn)
     {
       auto edgeFn{
         [description,&g,checkFn](edge_iterator i) {
           const auto [message, parentGenerator, target] {make(description, g, i)};
-          const transition_to_self tts{i.partition_index() == target ? transition_to_self::yes : transition_to_self::no};
-          invoke_check_fn(g, i, checkFn, message, parentGenerator, target, parentGenerator(), tts);
+          invoke_check_fn(g, i, checkFn, message, parentGenerator, target, parentGenerator(), i.partition_index(), target);
         }
       };
 

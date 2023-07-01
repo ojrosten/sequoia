@@ -1673,9 +1673,9 @@ namespace sequoia::testing
     };
 
     auto checker{
-        [this](std::string_view description, const graph_to_test& obtained, const graph_to_test& prediction, const graph_to_test& parent, transition_to_self tts) {
+        [this](std::string_view description, const graph_to_test& obtained, const graph_to_test& prediction, const graph_to_test& parent, std::size_t host, std::size_t target) {
           check(equality, description, obtained, prediction);
-          if(tts == transition_to_self::no) check_semantics(description, prediction, parent);
+          if(host != target) check_semantics(description, prediction, parent);
         }
     };
 
