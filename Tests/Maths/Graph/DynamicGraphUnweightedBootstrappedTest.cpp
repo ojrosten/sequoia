@@ -216,6 +216,14 @@ namespace sequoia::testing
             graph_description::empty,
             "",
             [this](const graph_to_test& g) -> const graph_to_test& {
+              check_exception_thrown<std::out_of_range>(report_line("cedges throws for empty graph"), [&g]() { return g.cedges(0); });
+              return g;
+            }
+          },
+          {
+            graph_description::empty,
+            "",
+            [this](const graph_to_test& g) -> const graph_to_test& {
               check_exception_thrown<std::out_of_range>(report_line("swapping nodes throws for empty graph"), [g{g}]() mutable { g.swap_nodes(0, 0); });
               return g;
             }
@@ -225,6 +233,14 @@ namespace sequoia::testing
             "",
             [this](const graph_to_test& g) -> const graph_to_test& {
               check_exception_thrown<std::out_of_range>(report_line("swapping edges throws for empty graph"), [g{g}]() mutable { g.swap_edges(0, 0, 0); });
+              return g;
+            }
+          },
+          {
+            graph_description::empty,
+            "Clear empty graph",
+            [](graph_to_test g) -> graph_to_test {
+              g.clear();
               return g;
             }
           },
@@ -246,6 +262,46 @@ namespace sequoia::testing
           }
         }, // end 'empty'
         {  // begin 'node'
+          {
+            graph_description::node,
+            "",
+            [this](const graph_to_test& g) -> const graph_to_test& {
+              check_exception_thrown<std::out_of_range>(report_line("cbegin_edges throws when index is out of range"), [&g]() { return g.cbegin_edges(1); });
+              return g;
+            }
+          },
+          {
+            graph_description::node,
+            "",
+            [this](const graph_to_test& g) -> const graph_to_test& {
+              check_exception_thrown<std::out_of_range>(report_line("cend_edges throws when index is out of range"), [&g]() { return g.cend_edges(1); });
+              return g;
+            }
+          },
+          {
+            graph_description::node,
+            "",
+            [this](const graph_to_test& g) -> const graph_to_test& {
+              check_exception_thrown<std::out_of_range>(report_line("crbegin_edges throws when index is out of range"), [&g]() { return g.crbegin_edges(1); });
+              return g;
+            }
+          },
+          {
+            graph_description::node,
+            "",
+            [this](const graph_to_test& g) -> const graph_to_test& {
+              check_exception_thrown<std::out_of_range>(report_line("crend_edges throws when index is out of range"), [&g]() { return g.crend_edges(1); });
+              return g;
+            }
+          },
+          {
+            graph_description::node,
+            "",
+            [this](const graph_to_test& g) -> const graph_to_test& {
+              check_exception_thrown<std::out_of_range>(report_line("cedges throws when index is out of range"), [&g]() { return g.cedges(1); });
+              return g;
+            }
+          },
           {
             graph_description::empty,
             "Clear graph",
