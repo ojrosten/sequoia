@@ -150,7 +150,10 @@ namespace sequoia::testing
       node_3_1_node_2_node_node,
 
       // x ---> x    x <--- x
-      node_1_node_node_node_2
+      node_1_node_node_node_2,
+
+      // x --   x <-   -> x  -- x
+      node_2_node_node_node_1
     };
   }
 
@@ -1372,8 +1375,41 @@ namespace sequoia::testing
           }
         }, // end 'node_3_1_node_2_node_node'
         {  // begin 'node_1_node_node_node_2'
-
+          {
+            graph_description::node_2_node_node_node_1,
+            "Swap {2,1}",
+            [](graph_to_test g) -> graph_to_test {
+              g.swap_nodes(2,1);
+              return g;
+            }
+          },
+          {
+            graph_description::node_2_node_node_node_1,
+            "Swap {0,3}",
+            [](graph_to_test g) -> graph_to_test {
+              g.swap_nodes(0,3);
+              return g;
+            }
+          }
         }, // end 'node_1_node_node_node_2'
+        {  // begin 'node_2_node_node_node_1'
+          {
+            graph_description::node_1_node_node_node_2,
+            "Swap {2,1}",
+            [](graph_to_test g) -> graph_to_test {
+              g.swap_nodes(2,1);
+              return g;
+            }
+          },
+          {
+            graph_description::node_1_node_node_node_2,
+            "Swap {0,3}",
+            [](graph_to_test g) -> graph_to_test {
+              g.swap_nodes(0,3);
+              return g;
+            }
+          }
+        }, // end 'node_2_node_node_node_1'
       },
       {
         //  'empty'
@@ -1604,6 +1640,14 @@ namespace sequoia::testing
         [this](){
           graph_to_test g{{edge_t{1}}, {}, {}, {edge_t{2}}};
           check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{1}}, {}, {}, {edge_t{2}}});
+
+          return g;
+        }(),
+
+        // 'node_2_node_node_node_1'
+        [this](){
+          graph_to_test g{{edge_t{2}}, {}, {}, {edge_t{1}}};
+          check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{2}}, {}, {}, {edge_t{1}}});
 
           return g;
         }()
