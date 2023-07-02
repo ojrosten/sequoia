@@ -464,46 +464,86 @@ namespace sequoia::testing
           }
         }, // end 'node_0'
         {  // begin 'node_0_0'
-        //  {
-        //    graph_description::empty,
-        //    "Clear graph",
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.clear();
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_0,
-        //    "Remove first loop",
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_edge(g.cbegin_edges(0));
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_0,
-        //    "Remove second loop",
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_edge(std::ranges::next(g.cbegin_edges(0)));
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_0_0,
-        //    "Swap loops",
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.swap_edges(0, 0, 1);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_0_0,
-        //    "Swap loops",
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.swap_edges(0, 1, 0);
-        //      return g;
-        //    }
-        //  }
+          {
+            graph_description::empty,
+            "Clear graph",
+            [](graph_to_test g) -> graph_to_test {
+              g.clear();
+              return g;
+            }
+          },
+          {
+            graph_description::node_0,
+            "Remove first loop, via first partial edge",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_edge(g.cbegin_edges(0));
+              return g;
+            }
+          },
+          {
+            graph_description::node_0,
+            "Remove first loop, via second partial edge",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_edge(g.cbegin_edges(0)+1);
+              return g;
+            }
+          },
+          {
+            graph_description::node_0,
+            "Remove second loop, via first partial edge",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_edge(g.cbegin_edges(0)+2);
+              return g;
+            }
+          },
+          {
+            graph_description::node_0,
+            "Remove second loop, via second partial edge",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_edge(g.cbegin_edges(0) + 3);
+              return g;
+            }
+          },
+          {
+            graph_description::node_0_0,
+            "Swap partial edges {0,1}",
+            [](graph_to_test g) -> graph_to_test {
+              g.swap_edges(0, 0, 1);
+              return g;
+            }
+          },
+          {
+            graph_description::node_0_0,
+            "Swap partial edges {0,2}",
+            [](graph_to_test g) -> graph_to_test {
+              g.swap_edges(0, 0, 2);
+              return g;
+            }
+          },
+          {
+            graph_description::node_0_0,
+            "Swap partial edges {0,3}",
+            [](graph_to_test g) -> graph_to_test {
+              g.swap_edges(0, 0, 3);
+              return g;
+            }
+          },
+          {
+            graph_description::node_0_0,
+            "Swap partial edges {1,2}",
+            [](graph_to_test g) -> graph_to_test {
+              g.swap_edges(0, 1, 2);
+              return g;
+            }
+          },
+          {
+            graph_description::node_0_0,
+            "Swap partial edges {2,1}",
+            [](graph_to_test g) -> graph_to_test {
+              g.swap_edges(0, 2, 1);
+              return g;
+            }
+          }
         }, // end 'node_0_0'
         {  // begin 'node_node'
         //  {
