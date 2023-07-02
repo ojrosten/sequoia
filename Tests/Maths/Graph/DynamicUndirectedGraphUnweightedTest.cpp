@@ -1063,46 +1063,64 @@ namespace sequoia::testing
           }
         }, // end 'node_node_2_node_1'
         {  // begin 'node_1_node_0_2_node_1'
-        //  {
-        //    graph_description::empty,
-        //    "Clear graph",
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.clear();
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_1_node,
-        //    "Erase node 0",
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_node(0);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_node,
-        //    "Erase node 1",
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_node(1);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_1_node,
-        //    "Erase node 2",
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_node(2);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_1_node_node,
-        //    "Remove link {1,2}",
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_edge(g.cbegin_edges(1));
-        //      return g;
-        //    }
-        //  }
+          {
+            graph_description::empty,
+            "Clear graph",
+            [](graph_to_test g) -> graph_to_test {
+              g.clear();
+              return g;
+            }
+          },
+          {
+            graph_description::node_1_node_0,
+            "Erase node 0",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(0);
+              return g;
+            }
+          },
+          {
+            graph_description::node_node,
+            "Erase node 1",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(1);
+              return g;
+            }
+          },
+          {
+            graph_description::node_1_node_0,
+            "Erase node 2",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(2);
+              return g;
+            }
+          },
+          {
+            graph_description::node_1_node_0_node,
+            "Remove link {1,2}",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_edge(g.cbegin_edges(1)+1);
+              return g;
+            }
+          },
+          {
+            graph_description::node_1_node_0_2_node_1,
+            "Swap nodes {0,2} then swap node 1's edges",
+            [](graph_to_test g) -> graph_to_test {
+              g.swap_nodes(0, 2);
+              g.swap_edges(1, 0, 1);
+              return g;
+            }
+          },
+          {
+            graph_description::node_1_node_0_2_node_1,
+            "Swap nodes {2,0} then swap node 1's edges",
+            [](graph_to_test g) -> graph_to_test {
+              g.swap_nodes(2, 0);
+              g.swap_edges(1, 1, 0);
+              return g;
+            }
+          }
         }, // end 'node_1_node_0_2_node_1'
         {  // begin 'node_1_2_node_2_0_node_0_1'
         //  {
