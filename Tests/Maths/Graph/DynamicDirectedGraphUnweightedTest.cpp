@@ -185,7 +185,7 @@ namespace sequoia::testing
   {
     using namespace maths;
     using namespace object;
-    using graph_to_test = graph<directed_flavour::directed, null_weight, null_weight, faithful_producer<null_weight>, faithful_producer<null_weight>, EdgeStorageTraits, NodeWeightStorageTraits>;
+    using graph_to_test = graph_type_generator_t<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>;
     using edge_t = graph_to_test::edge_init_type;
     using edges_equivalent_t = std::initializer_list<std::initializer_list<edge_t>>;
 

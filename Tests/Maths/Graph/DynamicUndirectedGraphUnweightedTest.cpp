@@ -35,15 +35,15 @@ namespace sequoia::testing
       //  x    x
       node_node,
 
-      //  x ---> x
+      //  x ---- x
       node_1_node,
 
-      //  x <--- x
+      //  x ---- x
       node_node_0,
 
       //   /\
       //   \/
-      //   x ---> x
+      //   x ---- x
       node_0_1_node,
 
       //  /\
@@ -185,7 +185,7 @@ namespace sequoia::testing
   {
     using namespace maths;
     using namespace object;
-    using graph_to_test = graph<directed_flavour::directed, null_weight, null_weight, faithful_producer<null_weight>, faithful_producer<null_weight>, EdgeStorageTraits, NodeWeightStorageTraits>;
+    using graph_to_test = graph_type_generator_t<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>;
     using edge_t = graph_to_test::edge_init_type;
     using edges_equivalent_t = std::initializer_list<std::initializer_list<edge_t>>;
 
@@ -340,7 +340,7 @@ namespace sequoia::testing
               return g;
             }
           },
-          /*{
+          {
             graph_description::node_0,
             "Add loop",
             [](graph_to_test g) -> graph_to_test {
@@ -348,7 +348,7 @@ namespace sequoia::testing
               return g;
             }
           },
-          {
+          /*{
             graph_description::node_node,
             "Add second node",
             [this](graph_to_test g) -> graph_to_test {
@@ -397,23 +397,23 @@ namespace sequoia::testing
             }
           },
         }, // end 'node'
-        //{  // begin 'node_0'
-        //  {
-        //    graph_description::empty,
-        //    "Clear graph",
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.clear();
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node,
-        //    "Remove loop",
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_edge(g.cbegin_edges(0));
-        //      return g;
-        //    }
-        //  },
+        {  // begin 'node_0'
+          {
+            graph_description::empty,
+            "Clear graph",
+            [](graph_to_test g) -> graph_to_test {
+              g.clear();
+              return g;
+            }
+          },
+          {
+            graph_description::node,
+            "Remove loop",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_edge(g.cbegin_edges(0));
+              return g;
+            }
+          },
         //  {
         //    graph_description::node_0_0,
         //    "Add a second loop",
@@ -478,7 +478,7 @@ namespace sequoia::testing
         //      return g;
         //    }
         //  }
-        //}, // end 'node_0'
+        }, // end 'node_0'
         //{  // begin 'node_0_0'
         //  {
         //    graph_description::empty,
@@ -1572,13 +1572,13 @@ namespace sequoia::testing
           return g;
         }(),
 
-        ////  'node_0'
-        //[this](){
-        //  graph_to_test g{{edge_t{0}}};
-        //  check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{0}}});
+        //  'node_0'
+        [this](){
+          graph_to_test g{{edge_t{0}, edge_t{0}}};
+          check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{0}, edge_t{0}}});
 
-        //  return g;
-        //}(),
+          return g;
+        }(),
 
         ////  'node_0_0'
         //[this](){
