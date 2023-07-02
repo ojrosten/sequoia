@@ -124,6 +124,33 @@ connectivity::swap_nodes: at least one node index [0, 1] out of range - graph or
 
 =======================================
 
+Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 445
+swapping edges throws for first edge index out of range
+
+Expected Exception Type:
+[std::out_of_range]
+swap_edges: edge index 2 out of range for node 0, which has 2 edge(s)
+
+=======================================
+
+Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 453
+swapping edges throws for second edge index out of range
+
+Expected Exception Type:
+[std::out_of_range]
+swap_edges: edge index 2 out of range for node 0, which has 2 edge(s)
+
+=======================================
+
+Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 461
+swapping edges throws for node index out of range
+
+Expected Exception Type:
+[std::out_of_range]
+connectivity::cend_edges: node index 1 out of range - graph order is 1
+
+=======================================
+
 Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 161
 cbegin_edges throws for empty graph
 
@@ -247,6 +274,33 @@ swapping nodes throws if second index is out of range
 Expected Exception Type:
 [std::out_of_range]
 connectivity::swap_nodes: at least one node index [0, 1] out of range - graph order is 1
+
+=======================================
+
+Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 445
+swapping edges throws for first edge index out of range
+
+Expected Exception Type:
+[std::out_of_range]
+swap_edges: edge index 2 out of range for node 0, which has 2 edge(s)
+
+=======================================
+
+Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 453
+swapping edges throws for second edge index out of range
+
+Expected Exception Type:
+[std::out_of_range]
+swap_edges: edge index 2 out of range for node 0, which has 2 edge(s)
+
+=======================================
+
+Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 461
+swapping edges throws for node index out of range
+
+Expected Exception Type:
+[std::out_of_range]
+connectivity::cend_edges: node index 1 out of range - graph order is 1
 
 =======================================
 
