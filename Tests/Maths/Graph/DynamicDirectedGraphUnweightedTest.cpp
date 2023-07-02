@@ -553,22 +553,6 @@ namespace sequoia::testing
               g.join(0, 1);
               return g;
             }
-          },
-          {
-            graph_description::node,
-            "Erase node 0",
-            [](graph_to_test g) -> graph_to_test {
-              g.erase_node(0);
-              return g;
-            }
-          },
-          {
-            graph_description::node,
-            "Erase node 1",
-            [](graph_to_test g) -> graph_to_test {
-              g.erase_node(1);
-              return g;
-            }
           }
         }, // end 'node_node'
         {  // begin 'node_1_node'
