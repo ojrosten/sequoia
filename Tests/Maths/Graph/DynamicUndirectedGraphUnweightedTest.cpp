@@ -705,38 +705,30 @@ namespace sequoia::testing
           }
         }, // end 'node_0_1_node_0'
         {  // begin 'node_0_node'
-        //  {
-        //    graph_description::empty,
-        //    "Clear graph",
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.clear();
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_0_node,
-        //    "Remove link",
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_edge(std::ranges::next(g.cbegin_edges(0)));
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_node_1_node,
-        //    "Insert node",
-        //    [this](graph_to_test g) -> graph_to_test {
-        //      check(equality, report_line("Index of added node is 0"), g.insert_node(0), 0_sz);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_node_1,
-        //    "Swap nodes",
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.swap_nodes(0,1);
-        //      return g;
-        //    }
-        //  }
+          {
+            graph_description::empty,
+            "Clear graph",
+            [](graph_to_test g) -> graph_to_test {
+              g.clear();
+              return g;
+            }
+          },
+          {
+            graph_description::node_node_1_node,
+            "Insert node",
+            [this](graph_to_test g) -> graph_to_test {
+              check(equality, report_line("Index of added node is 0"), g.insert_node(0), 0_sz);
+              return g;
+            }
+          },
+          {
+            graph_description::node_node_1,
+            "Swap nodes",
+            [](graph_to_test g) -> graph_to_test {
+              g.swap_nodes(0,1);
+              return g;
+            }
+          }
         }, // end 'node_0_node'
         {  // begin 'node_node_1'
         //  {
