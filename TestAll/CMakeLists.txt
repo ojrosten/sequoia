@@ -40,13 +40,13 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Core/Object/SuiteFreeTest.cpp
                ${TestDir}/Experimental/ExperimentalTest.cpp
                ${TestDir}/Experimental/TypeListFreeTest.cpp
+               ${TestDir}/Maths/Graph/DynamicDirectedGraphUnweightedTest.cpp
                ${TestDir}/Maths/Graph/DynamicGraphEmbeddedTest.cpp
                ${TestDir}/Maths/Graph/DynamicGraphFixedTopologyTest.cpp
                ${TestDir}/Maths/Graph/DynamicGraphInitializationTest.cpp
                ${TestDir}/Maths/Graph/DynamicGraphTestingDiagnostics.cpp
                ${TestDir}/Maths/Graph/DynamicGraphTraversalsTest.cpp
                ${TestDir}/Maths/Graph/DynamicGraphUnweightedAllocationTest.cpp
-               ${TestDir}/Maths/Graph/DynamicGraphUnweightedBootstrappedTest.cpp
                ${TestDir}/Maths/Graph/DynamicGraphUnweightedTest.cpp
                ${TestDir}/Maths/Graph/DynamicGraphUpdateTest.cpp
                ${TestDir}/Maths/Graph/DynamicGraphWeightedAllocationTest.cpp

@@ -7,7 +7,7 @@
 
 /*! \file */
 
-#include "DynamicGraphUnweightedBootstrappedTest.hpp"
+#include "DynamicDirectedGraphUnweightedTest.hpp"
 
 #include "sequoia/TestFramework/StateTransitionUtilities.hpp"
 
@@ -158,15 +158,15 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path unweighted_graph_bootstrapped_test::source_file() const
+  std::filesystem::path dynamic_directed_graph_unweighted_test::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void unweighted_graph_bootstrapped_test::run_tests()
+  void dynamic_directed_graph_unweighted_test::run_tests()
   {
     using namespace maths;
-    graph_test_helper<null_weight, null_weight, unweighted_graph_bootstrapped_test> helper{*this};
+    graph_test_helper<null_weight, null_weight, dynamic_directed_graph_unweighted_test> helper{*this};
 
     helper.run_tests<graph_flavour::directed>();
   }
@@ -181,7 +181,7 @@ namespace sequoia::testing
     class EdgeStorageTraits,
     class NodeWeightStorageTraits
   >
-  void unweighted_graph_bootstrapped_test::execute_operations()
+  void dynamic_directed_graph_unweighted_test::execute_operations()
   {
     using namespace maths;
     using namespace object;

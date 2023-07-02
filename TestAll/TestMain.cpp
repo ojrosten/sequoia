@@ -271,7 +271,7 @@ int main(int argc, char** argv)
       suite{
         "Manipulations",
         unweighted_graph_test{"Unweighted Graph Tests"},
-        unweighted_graph_bootstrapped_test{"Unweighted Graph Bootstrapped Tests"},
+        dynamic_directed_graph_unweighted_test{"Unweighted Directed GraphTests"},
         weighted_graph_test{"Weighted Graph Tests"},
         test_static_fixed_topology{"Static Graph Manipulations"},
         test_edge_insertion{"Edge Insertions"}

@@ -13,7 +13,7 @@
 
 namespace sequoia::testing
 {
-  class unweighted_graph_bootstrapped_test final : public regular_test
+  class dynamic_directed_graph_unweighted_test final : public regular_test
   {
   public:
     using regular_test::regular_test;
