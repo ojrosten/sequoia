@@ -36,10 +36,7 @@ namespace sequoia::testing
       node_node,
 
       //  x ---- x
-      node_1_node,
-
-      //  x ---- x
-      node_node_0,
+      node_1_node_0,
 
       //   /\
       //   \/
@@ -58,10 +55,6 @@ namespace sequoia::testing
 
       //  x ===> x
       node_1_1_node,
-
-      // x ---> x
-      //   <---
-      node_1_node_0,
 
       //  x    x    x
       node_node_node,
@@ -414,6 +407,14 @@ namespace sequoia::testing
               return g;
             }
           },
+          {
+            graph_description::node,
+            "Remove loop via second partial edge",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_edge(std::ranges::next(g.cbegin_edges(0)));
+              return g;
+            }
+          },
         //  {
         //    graph_description::node_0_0,
         //    "Add a second loop",
@@ -479,7 +480,7 @@ namespace sequoia::testing
         //    }
         //  }
         }, // end 'node_0'
-        //{  // begin 'node_0_0'
+        {  // begin 'node_0_0'
         //  {
         //    graph_description::empty,
         //    "Clear graph",
@@ -520,8 +521,8 @@ namespace sequoia::testing
         //      return g;
         //    }
         //  }
-        //}, // end 'node_0_0'
-        //{  // begin 'node_node'
+        }, // end 'node_0_0'
+        {  // begin 'node_node'
         //  {
         //    graph_description::empty,
         //    "Clear graph",
@@ -570,8 +571,8 @@ namespace sequoia::testing
         //      return g;
         //    }
         //  }
-        //}, // end 'node_node'
-        //{  // begin 'node_1_node'
+        }, // end 'node_node'
+        {  // begin 'node_1_node_0'
         //  {
         //    graph_description::empty,
         //    "Clear graph",
@@ -629,57 +630,7 @@ namespace sequoia::testing
         //      return g;
         //    }
         //  }
-        //}, // end 'node_1_node'
-        //{  // begin node_node_0
-        //  {
-        //    graph_description::empty,
-        //    "Clear graph",
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.clear();
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node,
-        //    "Erase node 0",
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_node(0);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node,
-        //    "Erase node 1",
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_node(1);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_1_node,
-        //    "Swap nodes {0,1}",
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.swap_nodes(0,1);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_1_node,
-        //    "Swap nodes {1,0}",
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.swap_nodes(1,0);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_1_node_0,
-        //    "Join nodes {0,1}",
-        //    [](graph_to_test g) {
-        //      g.join(0, 1);
-        //      return g;
-        //    }
-        //  }
-        //}, // end 'node_node_0'
+        }, // end 'node_1_node_0'
         //{  // begin 'node_0_1_node'
         //  {
         //    graph_description::empty,
@@ -1580,37 +1531,29 @@ namespace sequoia::testing
           return g;
         }(),
 
-        ////  'node_0_0'
-        //[this](){
-        //  graph_to_test g{{edge_t{0}, edge_t{0}}};
-        //  check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{0}, edge_t{0}}});
+        //  'node_0_0'
+        [this](){
+          graph_to_test g{{edge_t{0}, edge_t{0}, edge_t{0}, edge_t{0}}};
+          check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{0}, edge_t{0}, edge_t{0}, edge_t{0}}});
 
-        //  return g;
-        //}(),
+          return g;
+        }(),
 
-        ////  'node_node'
-        //[this](){
-        //  graph_to_test g{{}, {}};
-        //  check(equivalence, report_line(""), g, edges_equivalent_t{{}, {}});
+        //  'node_node'
+        [this](){
+          graph_to_test g{{}, {}};
+          check(equivalence, report_line(""), g, edges_equivalent_t{{}, {}});
 
-        //  return g;
-        //}(),
+          return g;
+        }(),
 
-        ////  'node_1_node'
-        //[this](){
-        //  graph_to_test g{{edge_t{1}}, {}};
-        //  check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{1}}, {}});
+        //  'node_1_node'
+        [this](){
+          graph_to_test g{{edge_t{1}}, {edge_t{0}}};
+          check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{1}}, {edge_t{0}}});
 
-        //  return g;
-        //}(),
-
-        ////  'node_node_0'
-        //[this](){
-        //  graph_to_test g{{}, {edge_t{0}}};
-        //  check(equivalence, report_line(""), g, edges_equivalent_t{{}, {edge_t{0}}});
-
-        //  return g;
-        //}(),
+          return g;
+        }(),
 
         ////  'node_0_1_node'
         //[this](){
