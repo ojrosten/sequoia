@@ -572,7 +572,15 @@ namespace sequoia::testing
           },
           {
             graph_description::node_1_node_0,
-            "Join nodes 0,1",
+            "Join {0,1}",
+            [](graph_to_test g) -> graph_to_test {
+              g.join(0, 1);
+              return g;
+            }
+          },
+          {
+            graph_description::node_1_node_0,
+            "Join {1,0}",
             [](graph_to_test g) -> graph_to_test {
               g.join(0, 1);
               return g;
@@ -580,63 +588,63 @@ namespace sequoia::testing
           }
         }, // end 'node_node'
         {  // begin 'node_1_node_0'
-        //  {
-        //    graph_description::empty,
-        //    "Clear graph",
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.clear();
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node,
-        //    "Erase node 0",
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_node(0);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node,
-        //    "Erase node 1",
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_node(1);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_0_1_node,
-        //    "Add loop to node 0 and then swap it with link",
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.join(0, 0);
-        //      g.swap_edges(0, 0, 1);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_node_0,
-        //    "Swap nodes {0,1}",
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.swap_nodes(0,1);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_node_0,
-        //    "Swap nodes {1,0}",
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.swap_nodes(1,0);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_1_1_node,
-        //    "Join {0,1}",
-        //    [](graph_to_test g) {
-        //      g.join(0, 1);
-        //      return g;
-        //    }
-        //  }
+          {
+            graph_description::empty,
+            "Clear graph",
+            [](graph_to_test g) -> graph_to_test {
+              g.clear();
+              return g;
+            }
+          },
+          {
+            graph_description::node,
+            "Erase node 0",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(0);
+              return g;
+            }
+          },
+          {
+            graph_description::node,
+            "Erase node 1",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(1);
+              return g;
+            }
+          },
+          {
+            graph_description::node_0_1_node_0,
+            "Add loop to node 0 and then swap it with link",
+            [](graph_to_test g) -> graph_to_test {
+              g.join(0, 0);
+              g.swap_edges(0, 0, 2);
+              return g;
+            }
+          },
+          {
+            graph_description::node_1_node_0,
+            "Swap nodes {0,1}",
+            [](graph_to_test g) -> graph_to_test {
+              g.swap_nodes(0,1);
+              return g;
+            }
+          },
+          {
+            graph_description::node_1_node_0,
+            "Swap nodes {1,0}",
+            [](graph_to_test g) -> graph_to_test {
+              g.swap_nodes(1,0);
+              return g;
+            }
+          },
+          {
+            graph_description::node_1_1_node_0_0,
+            "Join {0,1}",
+            [](graph_to_test g) {
+              g.join(0, 1);
+              return g;
+            }
+          }
         }, // end 'node_1_node_0'
         {  // begin 'node_0_1_node_0'
         //  {
