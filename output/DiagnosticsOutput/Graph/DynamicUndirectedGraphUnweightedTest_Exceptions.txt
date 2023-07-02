@@ -1,4 +1,4 @@
-Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 194
+Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 161
 cbegin_edges throws for empty graph
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ connectivity::cbegin_edges: node index 0 out of range - graph order is 0
 
 =======================================
 
-Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 202
+Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 169
 cend_edges throws for empty graph
 
 Expected Exception Type:
@@ -16,7 +16,7 @@ connectivity::cend_edges: node index 0 out of range - graph order is 0
 
 =======================================
 
-Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 210
+Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 177
 crbegin_edges throws for empty graph
 
 Expected Exception Type:
@@ -25,7 +25,7 @@ connectivity::crbegin_edges: node index 0 out of range - graph order is 0
 
 =======================================
 
-Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 218
+Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 185
 crend_edges throws for empty graph
 
 Expected Exception Type:
@@ -34,7 +34,7 @@ connectivity::crend_edges: node index 0 out of range - graph order is 0
 
 =======================================
 
-Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 226
+Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 193
 cedges throws for empty graph
 
 Expected Exception Type:
@@ -43,7 +43,7 @@ connectivity::cend_edges: node index 0 out of range - graph order is 0
 
 =======================================
 
-Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 234
+Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 201
 swapping nodes throws for empty graph
 
 Expected Exception Type:
@@ -52,7 +52,7 @@ connectivity::swap_nodes: at least one node index [0, 0] out of range - graph or
 
 =======================================
 
-Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 242
+Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 209
 swapping edges throws for empty graph
 
 Expected Exception Type:
@@ -61,7 +61,7 @@ connectivity::cend_edges: node index 0 out of range - graph order is 0
 
 =======================================
 
-Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 276
+Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 243
 cbegin_edges throws when index is out of range
 
 Expected Exception Type:
@@ -70,7 +70,7 @@ connectivity::cbegin_edges: node index 1 out of range - graph order is 1
 
 =======================================
 
-Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 284
+Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 251
 cend_edges throws when index is out of range
 
 Expected Exception Type:
@@ -79,7 +79,7 @@ connectivity::cend_edges: node index 1 out of range - graph order is 1
 
 =======================================
 
-Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 292
+Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 259
 crbegin_edges throws when index is out of range
 
 Expected Exception Type:
@@ -88,7 +88,7 @@ connectivity::crbegin_edges: node index 1 out of range - graph order is 1
 
 =======================================
 
-Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 300
+Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 267
 crend_edges throws when index is out of range
 
 Expected Exception Type:
@@ -97,7 +97,7 @@ connectivity::crend_edges: node index 1 out of range - graph order is 1
 
 =======================================
 
-Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 308
+Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 275
 cedges throws when index is out of range
 
 Expected Exception Type:
@@ -106,7 +106,7 @@ connectivity::cend_edges: node index 1 out of range - graph order is 1
 
 =======================================
 
-Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 380
+Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 347
 swapping nodes throws if first index is out of range
 
 Expected Exception Type:
@@ -115,7 +115,7 @@ connectivity::swap_nodes: at least one node index [1, 0] out of range - graph or
 
 =======================================
 
-Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 388
+Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 355
 swapping nodes throws if second index is out of range
 
 Expected Exception Type:
@@ -124,7 +124,7 @@ connectivity::swap_nodes: at least one node index [0, 1] out of range - graph or
 
 =======================================
 
-Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 194
+Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 161
 cbegin_edges throws for empty graph
 
 Expected Exception Type:
@@ -133,7 +133,7 @@ connectivity::cbegin_edges: node index 0 out of range - graph order is 0
 
 =======================================
 
-Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 202
+Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 169
 cend_edges throws for empty graph
 
 Expected Exception Type:
@@ -142,7 +142,7 @@ connectivity::cend_edges: node index 0 out of range - graph order is 0
 
 =======================================
 
-Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 210
+Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 177
 crbegin_edges throws for empty graph
 
 Expected Exception Type:
@@ -151,7 +151,7 @@ connectivity::crbegin_edges: node index 0 out of range - graph order is 0
 
 =======================================
 
-Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 218
+Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 185
 crend_edges throws for empty graph
 
 Expected Exception Type:
@@ -160,7 +160,7 @@ connectivity::crend_edges: node index 0 out of range - graph order is 0
 
 =======================================
 
-Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 226
+Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 193
 cedges throws for empty graph
 
 Expected Exception Type:
@@ -169,7 +169,7 @@ connectivity::cend_edges: node index 0 out of range - graph order is 0
 
 =======================================
 
-Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 234
+Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 201
 swapping nodes throws for empty graph
 
 Expected Exception Type:
@@ -178,7 +178,7 @@ connectivity::swap_nodes: at least one node index [0, 0] out of range - graph or
 
 =======================================
 
-Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 242
+Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 209
 swapping edges throws for empty graph
 
 Expected Exception Type:
@@ -187,7 +187,7 @@ connectivity::cend_edges: node index 0 out of range - graph order is 0
 
 =======================================
 
-Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 276
+Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 243
 cbegin_edges throws when index is out of range
 
 Expected Exception Type:
@@ -196,7 +196,7 @@ connectivity::cbegin_edges: node index 1 out of range - graph order is 1
 
 =======================================
 
-Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 284
+Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 251
 cend_edges throws when index is out of range
 
 Expected Exception Type:
@@ -205,7 +205,7 @@ connectivity::cend_edges: node index 1 out of range - graph order is 1
 
 =======================================
 
-Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 292
+Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 259
 crbegin_edges throws when index is out of range
 
 Expected Exception Type:
@@ -214,7 +214,7 @@ connectivity::crbegin_edges: node index 1 out of range - graph order is 1
 
 =======================================
 
-Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 300
+Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 267
 crend_edges throws when index is out of range
 
 Expected Exception Type:
@@ -223,7 +223,7 @@ connectivity::crend_edges: node index 1 out of range - graph order is 1
 
 =======================================
 
-Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 308
+Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 275
 cedges throws when index is out of range
 
 Expected Exception Type:
@@ -232,7 +232,7 @@ connectivity::cend_edges: node index 1 out of range - graph order is 1
 
 =======================================
 
-Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 380
+Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 347
 swapping nodes throws if first index is out of range
 
 Expected Exception Type:
@@ -241,7 +241,7 @@ connectivity::swap_nodes: at least one node index [1, 0] out of range - graph or
 
 =======================================
 
-Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 388
+Tests/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp, Line 355
 swapping nodes throws if second index is out of range
 
 Expected Exception Type:
