@@ -1269,48 +1269,49 @@ namespace sequoia::testing
           }
         }, // end 'node_2_node_node_0_2'
         {  // begin 'node_1_1_2_2_node_0_0_2_node_0_0_1'
-        //  {
-        //    graph_description::node_1_node,
-        //    "Erase node 0",
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_node(0);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_1_1_node,
-        //    "Erase node 1",
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_node(1);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_1_1_node,
-        //    "Erase node 2",
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_node(2);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_1_1_2_2_node_2_node_1,
-        //    "Join {2, 1}",
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.join(2,1);
-        //      return g;
-        //    }
-        //  }
+          {
+            graph_description::node_1_node_0,
+            "Erase node 0",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(0);
+              return g;
+            }
+          },
+          {
+            graph_description::node_1_1_node_0_0,
+            "Erase node 1",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(1);
+              return g;
+            }
+          },
+          {
+            graph_description::node_1_1_node_0_0,
+            "Erase node 2",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(2);
+              return g;
+            }
+          },
+          {
+            graph_description::node_1_1_2_2_node_0_0_2_node_0_0_1,
+            "Swap nodes {2, 1}",
+            [](graph_to_test g) -> graph_to_test {
+              g.swap_nodes(2,1);
+              g.sort_edges(g.cbegin_edges(0), g.cend_edges(0), [](const auto& lhs, const auto& rhs) { return lhs.target_node() < rhs.target_node(); });
+              return g;
+            }
+          }
         }, // end 'node_1_1_2_2_node_0_0_2_node_0_0_1'
         {  // begin 'node_3_1_node_0_2_node_1_node_0'
-        //  {
-        //     graph_description::node_1_node_node,
-        //     "Erase node 0",
-        //     [](graph_to_test g) -> graph_to_test {
-        //       g.erase_node(0);
-        //       return g;
-        //     }
-        //  }
+          {
+             graph_description::node_1_node_0_node,
+             "Erase node 0",
+             [](graph_to_test g) -> graph_to_test {
+               g.erase_node(0);
+               return g;
+             }
+          }
         }, // end 'node_3_1_node_0_2_node_1_node_0'
         {  // begin 'node_1_node_0_node_3_node_2'
         //  {
