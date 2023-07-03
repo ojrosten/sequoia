@@ -143,19 +143,16 @@ namespace sequoia::testing
   >
   void dynamic_undirected_graph_unweighted_test::execute_operations()
   {
-    using namespace maths;
-    using namespace object;
-    using graph_to_test = graph_type_generator_t<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>;
-    using edge_t = typename graph_to_test::edge_init_type;
+    using graph_to_test      = graph_type_generator_t<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>;
+    using edge_t             = typename graph_to_test::edge_init_type;
     using edges_equivalent_t = std::initializer_list<std::initializer_list<edge_t>>;
+    using transition_graph   = transition_checker<graph_to_test>::transition_graph;
 
     auto make_and_check{
       [this](std::string_view description, edges_equivalent_t init){
         return graph_initialization_checker<graph_to_test>::make_and_check(*this, description, init);
       }
     };
-
-    using transition_graph = transition_checker<graph_to_test>::transition_graph;
 
     transition_graph trg{
       {
