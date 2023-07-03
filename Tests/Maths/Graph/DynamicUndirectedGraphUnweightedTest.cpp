@@ -1259,14 +1259,14 @@ namespace sequoia::testing
           }
         }, // end 'node_1_node_0_1_2_node_1'
         {  // begin 'node_2_node_node_0_2'
-        //  {
-        //    graph_description::node_1_node_1_node,
-        //    "Swap {1,2}",
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.swap_nodes(1,2);
-        //      return g;
-        //    }
-        //  }
+          {
+            graph_description::node_1_node_0_1_node,
+            "Swap {1,2}",
+            [](graph_to_test g) -> graph_to_test {
+              g.swap_nodes(1,2);
+              return g;
+            }
+          }
         }, // end 'node_2_node_node_0_2'
         {  // begin 'node_1_1_2_2_node_0_0_2_node_0_0_1'
         //  {
