@@ -1123,46 +1123,46 @@ namespace sequoia::testing
           }
         }, // end 'node_1_node_0_2_node_1'
         {  // begin 'node_1_2_node_2_0_node_0_1'
-        //  {
-        //    graph_description::empty,
-        //    "Clear graph",
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.clear();
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_1_node,
-        //    "Erase node 0",
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_node(0);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_node_0,
-        //    "Erase node 1",
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_node(1);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_1_node,
-        //    "Erase node 2",
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_node(2);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_1_node_2_node,
-        //    "Remove {2,0}",
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_edge(g.cbegin_edges(2));
-        //      return g;
-        //    }
-        //  }
+          {
+            graph_description::empty,
+            "Clear graph",
+            [](graph_to_test g) -> graph_to_test {
+              g.clear();
+              return g;
+            }
+          },
+          {
+            graph_description::node_1_node_0,
+            "Erase node 0",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(0);
+              return g;
+            }
+          },
+          {
+            graph_description::node_1_node_0,
+            "Erase node 1",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(1);
+              return g;
+            }
+          },
+          {
+            graph_description::node_1_node_0,
+            "Erase node 2",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(2);
+              return g;
+            }
+          },
+          {
+            graph_description::node_1_node_0_2_node_1,
+            "Remove {2,0}",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_edge(g.cbegin_edges(2));
+              return g;
+            }
+          }
         }, // end 'node_1_2_node_0_2_node_0_1'
         {  // begin 'node_node_1_node'
         //  {
