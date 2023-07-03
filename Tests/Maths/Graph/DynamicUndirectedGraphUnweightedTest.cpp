@@ -1314,40 +1314,48 @@ namespace sequoia::testing
           }
         }, // end 'node_3_1_node_0_2_node_1_node_0'
         {  // begin 'node_1_node_0_node_3_node_2'
-        //  {
-        //    graph_description::node_2_node_node_node_1,
-        //    "Swap {2,1}",
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.swap_nodes(2,1);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_2_node_node_node_1,
-        //    "Swap {0,3}",
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.swap_nodes(0,3);
-        //      return g;
-        //    }
-        //  }
+          {
+            graph_description::node_1_node_0_node,
+            "Erase node 2",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(2);
+              return g;
+            }
+          },
+          {
+            graph_description::node_2_node_3_node_0_node_1,
+            "Swap {2,1}",
+            [](graph_to_test g) -> graph_to_test {
+              g.swap_nodes(2,1);
+              return g;
+            }
+          },
+          {
+            graph_description::node_2_node_3_node_0_node_1,
+            "Swap {0,3}",
+            [](graph_to_test g) -> graph_to_test {
+              g.swap_nodes(0,3);
+              return g;
+            }
+          }
         }, // end 'node_1_node_0_node_3_node_2'
         {  // begin 'node_2_node_3_node_0_node_1'
-        //  {
-        //    graph_description::node_1_node_node_node_2,
-        //    "Swap {2,1}",
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.swap_nodes(2,1);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_1_node_node_node_2,
-        //    "Swap {0,3}",
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.swap_nodes(0,3);
-        //      return g;
-        //    }
-        //  }
+          {
+            graph_description::node_1_node_0_node_3_node_2,
+            "Swap {2,1}",
+            [](graph_to_test g) -> graph_to_test {
+              g.swap_nodes(2,1);
+              return g;
+            }
+          },
+          {
+            graph_description::node_1_node_0_node_3_node_2,
+            "Swap {0,3}",
+            [](graph_to_test g) -> graph_to_test {
+              g.swap_nodes(0,3);
+              return g;
+            }
+          }
         }, // end 'node_2_node_3_node_0_node_1'
       },
       {
