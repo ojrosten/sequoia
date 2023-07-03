@@ -1233,38 +1233,30 @@ namespace sequoia::testing
           }
         }, // end 'node_1_node_0_1_node'
         {  // begin 'node_1_node_0_1_2_node_1'
-        //  {
-        //    graph_description::node_0_node,
-        //    "Erase node 0",
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_node(0);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_node,
-        //    "Erase node 1",
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_node(1);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_1_node_1_node,
-        //    "Remove {1,0}",
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_edge(++g.cbegin_edges(1));
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_1_node_1_0_2_node,
-        //    "Join {1,2}",
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.join(1, 2);
-        //      return g;
-        //    }
-        //  }
+          {
+            graph_description::node_0_1_node_0,
+            "Erase node 0",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(0);
+              return g;
+            }
+          },
+          {
+            graph_description::node_node,
+            "Erase node 1",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(1);
+              return g;
+            }
+          },
+          {
+            graph_description::node_1_node_0_1_node,
+            "Remove {1,2}",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_edge(g.cbegin_edges(1)+3);
+              return g;
+            }
+          }
         }, // end 'node_1_node_0_1_2_node_1'
         {  // begin 'node_2_node_node_0_2'
         //  {
