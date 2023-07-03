@@ -146,8 +146,14 @@ namespace sequoia::testing
     using namespace maths;
     using namespace object;
     using graph_to_test = graph_type_generator_t<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>;
-    using edge_t = graph_to_test::edge_init_type;
+    using edge_t = typename graph_to_test::edge_init_type;
     using edges_equivalent_t = std::initializer_list<std::initializer_list<edge_t>>;
+
+    auto make_and_check{
+      [this](std::string_view description, edges_equivalent_t init){
+        return graph_initialization_checker<graph_to_test>::make_and_check(*this, description, init);
+      }
+    };
 
     using transition_graph = transition_checker<graph_to_test>::transition_graph;
 
@@ -1368,180 +1374,83 @@ namespace sequoia::testing
         }(),
 
         //  'node'
-        [this](){
-          graph_to_test g{{}};
-          check(equivalence, report_line(""), g, edges_equivalent_t{{}});
-
-          return g;
-        }(),
+        make_and_check(report_line(""), {{}}),
 
         //  'node_0'
-        [this](){
-          graph_to_test g{{edge_t{0}, edge_t{0}}};
-          check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{0}, edge_t{0}}});
-
-          return g;
-        }(),
+        make_and_check(report_line(""), {{edge_t{0}, edge_t{0}}}),
 
         //  'node_0_0'
-        [this](){
-          graph_to_test g{{edge_t{0}, edge_t{0}, edge_t{0}, edge_t{0}}};
-          check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{0}, edge_t{0}, edge_t{0}, edge_t{0}}});
-
-          return g;
-        }(),
+        make_and_check(report_line(""), {{edge_t{0}, edge_t{0}, edge_t{0}, edge_t{0}}}),
 
         //  'node_node'
-        [this](){
-          graph_to_test g{{}, {}};
-          check(equivalence, report_line(""), g, edges_equivalent_t{{}, {}});
-
-          return g;
-        }(),
+        make_and_check(report_line(""), {{}, {}}),
 
         //  'node_1_node_0'
-        [this](){
-          graph_to_test g{{edge_t{1}}, {edge_t{0}}};
-          check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{1}}, {edge_t{0}}});
-
-          return g;
-        }(),
+        make_and_check(report_line(""), {{edge_t{1}}, {edge_t{0}}}),
 
         //  'node_0_1_node_0'
-        [this](){
-          graph_to_test g{{edge_t{0}, edge_t{0}, edge_t{1}}, {edge_t{0}}};
-          check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{0}, edge_t{0}, edge_t{1}}, {edge_t{0}}});
-
-          return g;
-        }(),
+        make_and_check(report_line(""), {{edge_t{0}, edge_t{0}, edge_t{1}}, {edge_t{0}}}),
 
         //  'node_0_node'
-        [this](){
-          graph_to_test g{{edge_t{0}, edge_t{0}}, {}};
-          check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{0}, edge_t{0}}, {}});
-
-          return g;
-        }(),
+        make_and_check(report_line(""), {{edge_t{0}, edge_t{0}}, {}}),
 
         //  'node_node_1'
-        [this](){
-          graph_to_test g{{}, {edge_t{1}, edge_t{1}}};
-          check(equivalence, report_line(""), g, edges_equivalent_t{{}, {edge_t{1}, edge_t{1}}});
-
-          return g;
-        }(),
+        make_and_check(report_line(""), {{}, {edge_t{1}, edge_t{1}}}),
 
         // 'node_1_1_node_0_0'
-        [this](){
-          graph_to_test g{{edge_t{1}, edge_t{1}}, {edge_t{0}, edge_t{0}}};
-          check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{1}, edge_t{1}}, {edge_t{0}, edge_t{0}}});
-
-          return g;
-        }(),
+        make_and_check(report_line(""), {{edge_t{1}, edge_t{1}}, {edge_t{0}, edge_t{0}}}),
 
         //  'node_node_node'
-        [this](){
-          graph_to_test g{{}, {}, {}};
-          check(equivalence, report_line(""), g, edges_equivalent_t{{}, {}, {}});
-
-          return g;
-        }(),
+        make_and_check(report_line(""), {{}, {}, {}}),
 
         //  'node_1_node_0_node'
-        [this](){
-          graph_to_test g{{edge_t{1}}, {edge_t{0}}, {}};
-          check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{1}}, {edge_t{0}}, {}});
-
-          return g;
-        }(),
+        make_and_check(report_line(""), {{edge_t{1}}, {edge_t{0}}, {}}),
 
         //  'node_node_2_node_1'
-        [this](){
-          graph_to_test g{{}, {edge_t{2}}, {edge_t{1}}};
-          check(equivalence, report_line(""), g, edges_equivalent_t{{}, {edge_t{2}}, {edge_t{1}}});
-
-          return g;
-        }(),
+        make_and_check(report_line(""), {{}, {edge_t{2}}, {edge_t{1}}}),
 
         // 'node_1_node_0_2_node_1'
-        [this](){
-          graph_to_test g{{edge_t{1}}, {edge_t{0}, edge_t{2}}, {edge_t{1}}};
-          check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{1}}, {edge_t{0}, edge_t{2}}, {edge_t{1}}});
-
-          return g;
-        }(),
+        make_and_check(report_line(""), {{edge_t{1}}, {edge_t{0}, edge_t{2}}, {edge_t{1}}}),
 
         // 'node_1_2_node_0_2_node_0_1'
-        [this](){
-          graph_to_test g{{edge_t{1}, edge_t{2}}, {edge_t{0}, edge_t{2}}, {edge_t{0}, edge_t{1}}};
-          check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{1}, edge_t{2}}, {edge_t{0}, edge_t{2}}, {edge_t{0}, edge_t{1}}});
+        [this,make_and_check](){
+          auto g{make_and_check(report_line(""), {{edge_t{1}, edge_t{2}}, {edge_t{0}, edge_t{2}}, {edge_t{0}, edge_t{1}}})};
+          check(equality, report_line("Check sorting of edges on construction"), graph_to_test{{edge_t{2}, edge_t{1}}, {edge_t{2}, edge_t{0}}, {edge_t{1}, edge_t{0}}}, g);
 
           return g;
         }(),
 
         // 'node_node_1_node'
-        [this](){
-          graph_to_test g{{}, {edge_t{1}, edge_t{1}}, {}};
-          check(equivalence, report_line(""), g, edges_equivalent_t{{}, {edge_t{1}, edge_t{1}}, {}});
-
-          return g;
-        }(),
+        make_and_check(report_line(""), {{}, {edge_t{1}, edge_t{1}}, {}}),
 
         // 'node_1_node_0_1_node'
-        [this](){
-          graph_to_test g{{edge_t{1}}, {edge_t{0}, edge_t{1}, edge_t{1}}, {}};
-          check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{1}}, {edge_t{0}, edge_t{1}, edge_t{1}}, {}});
-
-          return g;
-        }(),
+        make_and_check(report_line(""), {{edge_t{1}}, {edge_t{0}, edge_t{1}, edge_t{1}}, {}}),
 
         // 'node_1_node_0_1_2_node_1'
-        [this](){
-          graph_to_test g{{edge_t{1}}, {edge_t{0}, edge_t{1}, edge_t{1}, edge_t{2}}, {edge_t{1}}};
-          check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{1}}, {edge_t{0}, edge_t{1}, edge_t{1}, edge_t{2}}, {edge_t{1}}});
-
-          return g;
-        }(),
+        make_and_check(report_line(""), {{edge_t{1}}, {edge_t{0}, edge_t{1}, edge_t{1}, edge_t{2}}, {edge_t{1}}}),
 
         // 'node_2_node_node_0_2'
-        [this](){
-          graph_to_test g{{edge_t{2}}, {}, {edge_t{0}, edge_t{2}, edge_t{2}}};
-          check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{2}}, {}, {edge_t{0}, edge_t{2}, edge_t{2}}});
-
-          return g;
-        }(),
+        make_and_check(report_line(""), {{edge_t{2}}, {}, {edge_t{0}, edge_t{2}, edge_t{2}}}),
 
         // 'node_1_1_2_2_node_0_0_2_node_0_0_1'
-        [this](){
-          graph_to_test g{{edge_t{1}, edge_t{1}, edge_t{2}, edge_t{2}}, {edge_t{0}, edge_t{0}, edge_t{2}}, {edge_t{0}, edge_t{0}, edge_t{1}}};
-          check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{1}, edge_t{1}, edge_t{2}, edge_t{2}}, {edge_t{0}, edge_t{0}, edge_t{2}}, {edge_t{0}, edge_t{0}, edge_t{1}}});
+        [this, make_and_check](){
+          auto g{make_and_check(report_line(""), {{edge_t{1}, edge_t{1}, edge_t{2}, edge_t{2}}, {edge_t{0}, edge_t{0}, edge_t{2}}, {edge_t{0}, edge_t{0}, edge_t{1}}})};
+          check(equality,
+                report_line("Check sorting of edges on construction"),
+                graph_to_test{{edge_t{2}, edge_t{1}, edge_t{2}, edge_t{1}}, {edge_t{0}, edge_t{2}, edge_t{0}}, {edge_t{1}, edge_t{0}, edge_t{0}}},
+                g);
 
           return g;
         }(),
 
         // 'node_3_1_node_0_2_node_1_node_0'
-        [this](){
-          graph_to_test g{{edge_t{1}, edge_t{3}}, {edge_t{0}, edge_t{2}}, {edge_t{1}}, {edge_t{0}}};
-          check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{1}, edge_t{3}}, {edge_t{0}, edge_t{2}}, {edge_t{1}}, {edge_t{0}}});
-
-          return g;
-        }(),
+        make_and_check(report_line(""), {{edge_t{1}, edge_t{3}}, {edge_t{0}, edge_t{2}}, {edge_t{1}}, {edge_t{0}}}),
 
         // 'node_1_node_0_node_3_node_2'
-        [this](){
-          graph_to_test g{{edge_t{1}}, {edge_t{0}}, {edge_t{3}}, {edge_t{2}}};
-          check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{1}}, {edge_t{0}}, {edge_t{3}}, {edge_t{2}}});
-
-          return g;
-        }(),
+        make_and_check(report_line(""), {{edge_t{1}}, {edge_t{0}}, {edge_t{3}}, {edge_t{2}}}),
 
         // 'node_2_node_3_node_0_node_1'
-        [this](){
-          graph_to_test g{{edge_t{2}}, {edge_t{3}}, {edge_t{0}}, {edge_t{1}}};
-          check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{2}}, {edge_t{3}}, {edge_t{0}}, {edge_t{1}}});
-
-          return g;
-        }()
+        make_and_check(report_line(""), {{edge_t{2}}, {edge_t{3}}, {edge_t{0}}, {edge_t{1}}}),
       }
     };
 

@@ -215,4 +215,17 @@ namespace sequoia::testing
       >();
     }
   };
+
+  template<maths::network G>
+  struct graph_initialization_checker
+  {
+    template<concrete_test Test, class EdgeType = typename G::edge_init_type>
+    [[nodiscard]]
+    static G make_and_check(Test& t, std::string_view description, std::initializer_list<std::initializer_list<EdgeType>> init)
+    {
+      G g{init};
+      t.check(equivalence, description, g, init);
+      return g;
+    }
+  };
 }

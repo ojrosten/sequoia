@@ -26,6 +26,8 @@ namespace sequoia::testing
     template <class, class, concrete_test>
     friend class graph_test_helper;
 
+    template<maths::network>
+    friend struct graph_initialization_checker;
 
     template
     <

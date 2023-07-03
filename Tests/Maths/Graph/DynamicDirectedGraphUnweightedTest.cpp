@@ -186,7 +186,7 @@ namespace sequoia::testing
     using namespace maths;
     using namespace object;
     using graph_to_test = graph_type_generator_t<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>;
-    using edge_t = graph_to_test::edge_init_type;
+    using edge_t = typename graph_to_test::edge_init_type;
     using edges_equivalent_t = std::initializer_list<std::initializer_list<edge_t>>;
 
     using transition_graph = transition_checker<graph_to_test>::transition_graph;
