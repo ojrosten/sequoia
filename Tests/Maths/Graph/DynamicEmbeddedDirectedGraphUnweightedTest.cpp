@@ -168,7 +168,7 @@ namespace sequoia::testing
     using namespace maths;
     graph_test_helper<null_weight, null_weight, dynamic_embedded_directed_graph_unweighted_test> helper{*this};
 
-    helper.run_tests<graph_flavour::directed>();
+    helper.run_tests<graph_flavour::directed_embedded>();
   }
 
   template
@@ -190,7 +190,9 @@ namespace sequoia::testing
 
     auto make_and_check{
       [this](std::string_view description, edges_equivalent_t init){
-        return graph_initialization_checker<graph_to_test>::make_and_check(*this, description, init);
+        graph_to_test g{init};
+        this->check(weak_equivalence, description, g, init);
+        return g;
       }
     };
 
