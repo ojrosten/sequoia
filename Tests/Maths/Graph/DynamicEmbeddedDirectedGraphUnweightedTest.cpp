@@ -1313,7 +1313,7 @@ namespace sequoia::testing
         //    }
         //  }
         }, // end 'node_1_node_1_0_node'
-        //{  // begin 'node_1_node_1_0_2_node'
+        {  // begin 'node_1_node_1_0_2_node'
         //  {
         //    graph_description::node_0_1_node,
         //    "Erase node 0",
@@ -1346,8 +1346,8 @@ namespace sequoia::testing
         //      return g;
         //    }
         //  }
-        //}, // end 'node_1_node_1_0_2_node'
-        //{  // begin 'node_1_node_1_2_node'
+        }, // end 'node_1_node_1_0_2_node'
+        {  // begin 'node_1_node_1_2_node'
         //  {
         //    graph_description::node_1_node_2_node,
         //    "Remove {1,1}",
@@ -1356,8 +1356,8 @@ namespace sequoia::testing
         //      return g;
         //    }
         //  }
-        //}, // end 'node_1_node_1_2_node'
-        //{  // begin 'node_2_node_node_2'
+        }, // end 'node_1_node_1_2_node'
+        {  // begin 'node_2_node_node_2'
         //  {
         //    graph_description::node_1_node_1_node,
         //    "Swap {1,2}",
@@ -1366,8 +1366,8 @@ namespace sequoia::testing
         //      return g;
         //    }
         //  }
-        //}, // end 'node_2_node_node_2'
-        //{  // begin 'node_1_1_2_2_node_2_node'
+        }, // end 'node_2_node_node_2'
+        {  // begin 'node_1_1_2_2_node_2_node'
         //  {
         //    graph_description::node_1_node,
         //    "Erase node 0",
@@ -1400,8 +1400,8 @@ namespace sequoia::testing
         //      return g;
         //    }
         //  }
-        //}, // end 'node_1_1_2_2_node_2_node'
-        //{  // begin 'node_1_1_2_2_node_2_node_1'
+        }, // end 'node_1_1_2_2_node_2_node'
+        {  // begin 'node_1_1_2_2_node_2_node_1'
         //  {
         //    graph_description::node_1_node_0,
         //    "Erase node 0",
@@ -1451,7 +1451,7 @@ namespace sequoia::testing
         //      return g;
         //    }
         //  }
-        //}, // end 'node_1_1_2_2_node_2_node_1'
+        }, // end 'node_1_1_2_2_node_2_node_1'
         //{  // begin 'node_2_2_1_1_node_2_node_1'
         //  {
         //    graph_description::node_1_1_2_2_node_2_node_1,
@@ -1587,7 +1587,9 @@ namespace sequoia::testing
         make_and_check(report_line(""), {{edge_t{0, 1, 0}}, {edge_t{0, 1, 0}, edge_t{2, 1, 0}}, {edge_t{2, 1, 1}}}),
 
         // 'node_1_node_2_node_0'
-        make_and_check(report_line(""), {{edge_t{0, 1, 0}, edge_t{2, 0, 1}}, {edge_t{0, 1, 0}, edge_t{1, 2, 0}}, {edge_t{1, 2, 1}, edge_t{2, 0, 1}}}),
+        make_and_check(report_line(""), {{edge_t{0, 1, 0}, edge_t{2, 0, 1}},
+                                         {edge_t{0, 1, 0}, edge_t{1, 2, 0}},
+                                         {edge_t{1, 2, 1}, edge_t{2, 0, 1}}}),
 
         // 'node_node_1_node'
         make_and_check(report_line(""), {{}, {edge_t{1, 1, 1}, edge_t{1, 1, 0}}, {}}),
@@ -1596,21 +1598,32 @@ namespace sequoia::testing
         make_and_check(report_line(""), {{edge_t{0, 1, 0}}, {edge_t{0, 1, 0}, edge_t{1, 1, 2}, edge_t{1, 1, 1}}, {}}),
 
         // 'node_1_node_1_0_node'
-        make_and_check(report_line(""), {{edge_t{0, 1, 0}, edge_t{1, 0, 3}}, {edge_t{0, 1, 0}, edge_t{1, 1, 2}, edge_t{1, 1, 1}, edge_t{1, 0, 1}}, {}}),
+        make_and_check(report_line(""), {{edge_t{0, 1, 0}, edge_t{1, 0, 3}},
+                                         {edge_t{0, 1, 0}, edge_t{1, 1, 2}, edge_t{1, 1, 1}, edge_t{1, 0, 1}},
+                                         {}}),
 
-        //// 'node_1_node_1_0_2_node'
-        //make_and_check(report_line(""), {{edge_t{1}}, {edge_t{1}, edge_t{0}, edge_t{2}}, {}}),
+        // 'node_1_node_1_0_2_node'
+        make_and_check(report_line(""), {{edge_t{0, 1, 0}, edge_t{1, 0, 3}},
+                                         {edge_t{0, 1, 0}, edge_t{1, 1, 2}, edge_t{1, 1, 1}, edge_t{1, 0, 1}, edge_t{1, 2, 0}},
+                                         {edge_t{1, 2, 4}}}),
 
-        //// 'node_1_node_1_2_node'
-        //make_and_check(report_line(""), {{edge_t{1}}, {edge_t{1}, edge_t{2}}, {}}),
+        // 'node_1_node_1_2_node'
+        make_and_check(report_line(""), {{edge_t{0, 1, 0}},
+                                         {edge_t{0, 1, 0}, edge_t{1, 1, 2}, edge_t{1, 1, 1}, edge_t{1, 2, 0}},
+                                         {edge_t{1, 2, 3}}}),
 
-        //// 'node_2_node_node_2'
-        //make_and_check(report_line(""), {{edge_t{2}}, {}, {edge_t{2}}}),
+        // 'node_2_node_node_2'
+        make_and_check(report_line(""), {{edge_t{0, 2, 0}}, {}, {edge_t{0, 2, 0}, edge_t{2, 2, 2}, edge_t{2, 2, 1}}}),
 
-        //// 'node_1_1_2_2_node_2_node'
-        //make_and_check(report_line(""), {{edge_t{1}, edge_t{1}, edge_t{2}, edge_t{2}}, {edge_t{2}}, {}}),
+        // 'node_1_1_2_2_node_2_node'
+        make_and_check(report_line(""), {{edge_t{0, 1, 0}, edge_t{0, 1, 1}, edge_t{0, 2, 0}, edge_t{0, 2, 1}},
+                                         {edge_t{0, 1, 0}, edge_t{0, 1, 1}, edge_t{1, 2, 2}},
+                                         {edge_t{0, 2, 2}, edge_t{0, 2, 3}, edge_t{1, 2, 2}}}),
 
-        //// 'node_1_1_2_2_node_2_node_1'
+        // 'node_1_1_2_2_node_2_node_1'
+        make_and_check(report_line(""), {{edge_t{0, 1, 0}, edge_t{0, 1, 1}, edge_t{0, 2, 0}, edge_t{0, 2, 1}},
+                                         {edge_t{0, 1, 0}, edge_t{0, 1, 1}, edge_t{1, 2, 2}, edge_t{2, 1, 3}},
+                                         {edge_t{0, 2, 2}, edge_t{0, 2, 3}, edge_t{1, 2, 2}, edge_t{2, 1, 3}}}),
         //make_and_check(report_line(""), {{edge_t{1}, edge_t{1}, edge_t{2}, edge_t{2}}, {edge_t{2}}, {edge_t{1}}}),
 
         //// 'node_2_2_1_1_node_2_node_1'
