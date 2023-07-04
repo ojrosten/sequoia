@@ -22,14 +22,14 @@ namespace sequoia::testing
       // x
       node,
 
-      //  /\
-      //  \/
-      //  x
+      //  />\
+      //  \ /
+      //   x
       node_0,
 
-      //  /\ /\
-      //  \/ \/
-      //    x
+      //  />\ />\
+      //  \ / \ /
+      //     x
       node_0_0,
 
       //  x    x
@@ -41,18 +41,18 @@ namespace sequoia::testing
       //  x <--- x
       node_node_0,
 
-      //   /\
-      //   \/
-      //   x ---> x
+      //   />\
+      //   \ /
+      //    x ---> x
       node_0_1_node,
 
-      //  /\
-      //  \/
-      //  x      x
+      //  />\
+      //  \ /
+      //   x      x
       node_0_node,
 
-      //      /\
-      //      \/
+      //      />\
+      //      \ /
       //  x    x
       node_node_1,
 
@@ -66,7 +66,7 @@ namespace sequoia::testing
       //  x    x    x
       node_node_node,
 
-      //   x ---> x    x
+      //  x ---> x    x
       node_1_node_node,
 
       //  x    x <--- x
@@ -81,36 +81,36 @@ namespace sequoia::testing
       // -> x ---> x ---> x --
       node_1_node_2_node_0,
 
-      //      /\
-      //      \/
+      //      />\
+      //      \ /
       //  x    x    x
       node_node_1_node,
 
-      //        /\
-      //        \/
+      //        />\
+      //        \ /
       //  x ---> x    x
       node_1_node_1_node,
 
 
-      //        /\
-      //        \/
+      //        />\
+      //        \ /
       //  x ---> x    x
       //    <---
       node_1_node_1_0_node,
 
-      //        /\
-      //        \/
+      //        />\
+      //        \ /
       //  x ---> x ---> x
       //    <---
       node_1_node_1_0_2_node,
 
-      //        /\
-      //        \/
+      //        />\
+      //        \ /
       //  x ---> x ---> x
       node_1_node_1_2_node,
 
-      //             /\
-      //             \/
+      //             />\
+      //             \ /
       // -- x    x    x <-
       node_2_node_node_2,
 
@@ -394,7 +394,7 @@ namespace sequoia::testing
             }
           },
         }, // end 'node'
-        //{  // begin 'node_0'
+        {  // begin 'node_0'
         //  {
         //    graph_description::empty,
         //    "Clear graph",
@@ -475,8 +475,8 @@ namespace sequoia::testing
         //      return g;
         //    }
         //  }
-        //}, // end 'node_0'
-        //{  // begin 'node_0_0'
+        }, // end 'node_0'
+        {  // begin 'node_0_0'
         //  {
         //    graph_description::empty,
         //    "Clear graph",
@@ -517,8 +517,8 @@ namespace sequoia::testing
         //      return g;
         //    }
         //  }
-        //}, // end 'node_0_0'
-        //{  // begin 'node_node'
+        }, // end 'node_0_0'
+        {  // begin 'node_node'
         //  {
         //    graph_description::empty,
         //    "Clear graph",
@@ -551,8 +551,8 @@ namespace sequoia::testing
         //      return g;
         //    }
         //  }
-        //}, // end 'node_node'
-        //{  // begin 'node_1_node'
+        }, // end 'node_node'
+        {  // begin 'node_1_node'
         //  {
         //    graph_description::empty,
         //    "Clear graph",
@@ -610,8 +610,8 @@ namespace sequoia::testing
         //      return g;
         //    }
         //  }
-        //}, // end 'node_1_node'
-        //{  // begin node_node_0
+        }, // end 'node_1_node'
+        {  // begin node_node_0
         //  {
         //    graph_description::empty,
         //    "Clear graph",
@@ -660,8 +660,8 @@ namespace sequoia::testing
         //      return g;
         //    }
         //  }
-        //}, // end 'node_node_0'
-        //{  // begin 'node_0_1_node'
+        }, // end 'node_node_0'
+        {  // begin 'node_0_1_node'
         //  {
         //    graph_description::empty,
         //    "Clear graph",
@@ -702,8 +702,8 @@ namespace sequoia::testing
         //      return g;
         //    }
         //  }
-        //}, // end 'node_0_1_node'
-        //{  // begin 'node_0_node'
+        }, // end 'node_0_1_node'
+        {  // begin 'node_0_node'
         //  {
         //    graph_description::empty,
         //    "Clear graph",
@@ -736,7 +736,7 @@ namespace sequoia::testing
         //      return g;
         //    }
         //  }
-        //}, // end 'node_0_node'
+        }, // end 'node_0_node'
         //{  // begin 'node_node_1'
         //  {
         //    graph_description::empty,
@@ -1544,25 +1544,25 @@ namespace sequoia::testing
         make_and_check(report_line(""), {{}}),
 
         ////  'node_0'
-        //make_and_check(report_line(""), {{edge_t{0}}}),
+        make_and_check(report_line(""), {{edge_t{0, 0, 1}, edge_t{0, 0, 0}}}),
 
         ////  'node_0_0'
-        //make_and_check(report_line(""), {{edge_t{0}, edge_t{0}}}),
+        make_and_check(report_line(""), {{edge_t{0, 0, 1}, edge_t{0, 0, 0}, edge_t{0, 0, 3}, edge_t{0, 0, 2}}}),
 
         ////  'node_node'
-        //make_and_check(report_line(""), {{}, {}}),
+        make_and_check(report_line(""), {{}, {}}),
 
         ////  'node_1_node'
-        //make_and_check(report_line(""), {{edge_t{1}}, {}}),
+        make_and_check(report_line(""), {{edge_t{0, 1, 0}}, {edge_t{0, 1, 0}}}),
 
         ////  'node_node_0'
-        //make_and_check(report_line(""), {{}, {edge_t{0}}}),
+        make_and_check(report_line(""), {{edge_t{1, 0, 0}}, {edge_t{1, 0, 0}}}),
 
         ////  'node_0_1_node'
-        //make_and_check(report_line(""), {{edge_t{0}, edge_t{1}}, {}}),
+        make_and_check(report_line(""), {{edge_t{0, 1, 0}, edge_t{0, 1, 1}}, {edge_t{0, 1, 0}, edge_t{0, 1, 1}}}),
 
         ////  'node_0_node'
-        //make_and_check(report_line(""), {{edge_t{0}}, {}}),
+        make_and_check(report_line(""), {{edge_t{0, 0, 1}, edge_t{0, 0, 0}}, {}}),
 
         ////  'node_node_1'
         //make_and_check(report_line(""), {{}, {edge_t{1}}}),
