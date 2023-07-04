@@ -337,7 +337,7 @@ namespace sequoia::testing
               return g;
             }
           },
-          /*{
+          {
             graph_description::node_0,
             "Add loop",
             [](graph_to_test g) -> graph_to_test {
@@ -368,7 +368,7 @@ namespace sequoia::testing
               check(equality, report_line("Index of added node is 1"), g.insert_node(1), 1_sz);
               return g;
             }
-          },*/
+          },
           {
             graph_description::node,
             "Swap node with self",
