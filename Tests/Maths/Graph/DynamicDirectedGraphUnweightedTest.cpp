@@ -1631,12 +1631,7 @@ namespace sequoia::testing
         make_and_check(report_line(""), {{edge_t{1}}, {}, {}, {edge_t{2}}}),
 
         // 'node_2_node_node_node_1'
-        [this](){
-          graph_to_test g{{edge_t{2}}, {}, {}, {edge_t{1}}};
-          check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{2}}, {}, {}, {edge_t{1}}});
-
-          return g;
-        }()
+        make_and_check(report_line(""), {{edge_t{2}}, {}, {}, {edge_t{1}}})
       }
     };
 
