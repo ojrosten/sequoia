@@ -719,10 +719,10 @@ namespace sequoia::testing
             }
           },
           {
-            graph_description::node_0_node,
+            graph_description::node_node,
             "Remove link",
             [](graph_to_test g) -> graph_to_test {
-              g.erase_edge(std::ranges::next(g.cbegin_edges(0)));
+              g.erase_edge(g.cbegin_edges(0));
               return g;
             }
           },
