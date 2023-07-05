@@ -1,2 +1,2 @@
 Unweighted Embedded Directed Graph Tests
-Standard Top Level Checks:               340;  Failures:  0  [Deep checks: 21404]
+Standard Top Level Checks:               384;  Failures:  0  [Deep checks: 25464]

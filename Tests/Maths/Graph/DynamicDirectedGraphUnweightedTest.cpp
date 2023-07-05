@@ -863,7 +863,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node,
-            "Remove link",
+            "Erase node 1",
             [](graph_to_test g) -> graph_to_test {
               g.erase_node(1);
               return g;
