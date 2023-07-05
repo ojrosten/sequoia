@@ -1295,38 +1295,38 @@ namespace sequoia::testing
           }
         }, // end 'node_2_node_node_2'
         {  // begin 'node_1_1_2_2_node_2_node'
-        //  {
-        //    graph_description::node_1_node,
-        //    "Erase node 0",
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_node(0);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_1_1_node,
-        //    "Erase node 1",
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_node(1);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_1_1_node,
-        //    "Erase node 2",
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_node(2);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_1_1_2_2_node_2_node_1,
-        //    "Join {2, 1}",
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.join(2,1);
-        //      return g;
-        //    }
-        //  }
+          {
+            graph_description::node_1_node,
+            "Erase node 0",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(0);
+              return g;
+            }
+          },
+          {
+            graph_description::node_1_1_node,
+            "Erase node 1",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(1);
+              return g;
+            }
+          },
+          {
+            graph_description::node_1_1_node,
+            "Erase node 2",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(2);
+              return g;
+            }
+          },
+          {
+            graph_description::node_1_1_2_2_node_2_node_1,
+            "Join {2, 1}",
+            [](graph_to_test g) -> graph_to_test {
+              g.join(2,1);
+              return g;
+            }
+          }
         }, // end 'node_1_1_2_2_node_2_node'
         {  // begin 'node_1_1_2_2_node_2_node_1'
         //  {
