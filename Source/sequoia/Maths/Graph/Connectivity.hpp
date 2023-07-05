@@ -141,7 +141,7 @@ namespace sequoia
       }
 
       [[nodiscard]]
-      const_edges_range cedges(const edge_index_type node) const { return {cbegin_edges(node), cend_edges(node)}; }
+      constexpr const_edges_range cedges(const edge_index_type node) const { return {cbegin_edges(node), cend_edges(node)}; }
 
       template<std::invocable<edge_weight_type&> Fn>
         requires (!std::is_empty_v<edge_weight_type>)
@@ -207,6 +207,7 @@ namespace sequoia
       }
     protected:
       using edge_iterator = typename edge_storage_type::partition_iterator;
+      using edges_range   = std::ranges::subrange<edge_iterator>;
 
       template<alloc... Allocators>
         requires (sizeof...(Allocators) > 0)
@@ -300,49 +301,60 @@ namespace sequoia
         }
 
         auto setSouceNodes{
-            [i,j](auto iter) {
-                if      (iter->source_node() == i) iter->source_node(j);
-                else if (iter->source_node() == j) iter->source_node(i);
+            [i,j](auto& e) {
+                if      (e.source_node() == i) e.source_node(j);
+                else if (e.source_node() == j) e.source_node(i);
             }
         };
 
         auto setTargetNodes{
-            [i,j](auto iter) {
-                if      (iter->target_node() == i) iter->target_node(j);
-                else if (iter->target_node() == j) iter->target_node(i);
+            [i,j](auto& e) {
+                if      (e.target_node() == i) e.target_node(j);
+                else if (e.target_node() == j) e.target_node(i);
             }
         };
 
         if constexpr (EdgeTraits::shared_edge_v)
         {
-          for(auto iter{begin_edges(i)}; iter != end_edges(i); ++iter)
+          auto isProcessed{
+            [](size_type node, const edge_type& e){
+              return (e.source_node() == e.target_node()) && (e.source_node() != node);
+            }
+          };
+
+          for(auto& e : mut_edges(i))
           {
-            if((iter->source_node() != j) && (iter->target_node() != j))
+            if((e.source_node() != j) && (e.target_node() != j))
             {
-              setSouceNodes(iter);
-              setTargetNodes(iter);
+              if(!isProcessed(i, e))
+              {
+                setSouceNodes(e);
+                setTargetNodes(e);
+              }
             }
           }
 
-          for(auto iter{begin_edges(j)}; iter != end_edges(j); ++iter)
+          for(auto& e : mut_edges(j))
           {
-            setSouceNodes(iter);
-            setTargetNodes(iter);
+            if(!isProcessed(j, e))
+            {
+              setSouceNodes(e);
+              setTargetNodes(e);
+            }
           }
         }
         else
         {
           for(size_type n{}; n<order(); ++n)
           {
-
-            for(auto iter{begin_edges(n)}; iter != end_edges(n); ++iter)
+            for(auto& e : mut_edges(n))
             {
               if constexpr (EdgeTraits::mutual_info_v && directed(directedness))
               {
-                setSouceNodes(iter);
+                setSouceNodes(e);
               }
 
-              setTargetNodes(iter);
+              setTargetNodes(e);
             }
           }
         }
@@ -418,6 +430,9 @@ namespace sequoia
 
         return m_Edges.end_partition(node);
       }
+
+      [[nodiscard]]
+      constexpr edges_range mut_edges(const edge_index_type node) { return {begin_edges(node), end_edges(node)}; }
 
       void add_node()
       {

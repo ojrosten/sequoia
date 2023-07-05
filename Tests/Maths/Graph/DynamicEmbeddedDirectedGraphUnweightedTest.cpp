@@ -713,14 +713,14 @@ namespace sequoia::testing
               return g;
             }
           },
-          /*{
+          {
             graph_description::node_0_node,
             "swap nodes",
             [](graph_to_test g) -> graph_to_test {
               g.swap_nodes(0,1);
               return g;
             }
-          }*/
+          }
         }, // end 'node_node_1'
         {  // begin 'node_1_1_node'
         //  {
