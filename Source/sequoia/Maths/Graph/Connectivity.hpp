@@ -292,13 +292,10 @@ namespace sequoia
 
       constexpr void swap_nodes(size_type i, size_type j)
       {
-        if(!size())
-        {
-          if constexpr(throw_on_range_error)
-            graph_errors::check_node_index_range("swap_nodes", order(), i, j);
+        if constexpr(throw_on_range_error)
+          graph_errors::check_node_index_range("swap_nodes", order(), i, j);
 
-          return;
-        }
+        if(i == j) return;
 
         auto setSouceNodes{
             [i,j](auto& e) {

@@ -315,6 +315,10 @@ namespace sequoia
 
     template<bool Inverted> constexpr bool inversion_v{inversion_constant<Inverted>::value};
 
+    using inverted_edge_t = maths::inversion_constant<true>;
+
+    inline constexpr inverted_edge_t inverted_edge{};
+
     /*! \class edge
         \brief Stores the source node as well as the target node and an optional weight.
 

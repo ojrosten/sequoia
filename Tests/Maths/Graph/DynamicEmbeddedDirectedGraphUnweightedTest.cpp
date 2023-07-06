@@ -15,9 +15,6 @@ namespace sequoia::testing
 {
   namespace
   {
-    using inverted_edge_t = maths::inversion_constant<true>;
-    inline constexpr inverted_edge_t inverted_edge{};
-
     /// Convention: the indices following 'node' - separated by underscores - give the target node of the associated edges
     enum graph_description : std::size_t {
       empty = 0,
@@ -222,6 +219,7 @@ namespace sequoia::testing
     using edge_t             = typename graph_to_test::edge_init_type;
     using edges_equivalent_t = std::initializer_list<std::initializer_list<edge_t>>;
     using transition_graph   = transition_checker<graph_to_test>::transition_graph;
+    using maths::inverted_edge;
 
     auto make_and_check{
       [this](std::string_view description, edges_equivalent_t init){
