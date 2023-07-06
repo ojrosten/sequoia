@@ -199,7 +199,7 @@ namespace sequoia::testing
         { // begin, 'empty'
           {
             graph_description::empty,
-            "",
+            report_line(""),
             [this](const graph_to_test& g) -> const graph_to_test& {
               check_exception_thrown<std::out_of_range>(report_line("cbegin_edges throws for empty graph"), [&g]() { return g.cbegin_edges(0); });
               return g;
@@ -207,7 +207,7 @@ namespace sequoia::testing
           },
           {
             graph_description::empty,
-            "",
+            report_line(""),
             [this](const graph_to_test& g) -> const graph_to_test& {
               check_exception_thrown<std::out_of_range>(report_line("cend_edges throws for empty graph"), [&g]() { return g.cend_edges(0); });
               return g;
@@ -215,7 +215,7 @@ namespace sequoia::testing
           },
           {
             graph_description::empty,
-            "",
+            report_line(""),
             [this](const graph_to_test& g) -> const graph_to_test& {
               check_exception_thrown<std::out_of_range>(report_line("crbegin_edges throws for empty graph"), [&g]() { return g.crbegin_edges(0); });
               return g;
@@ -223,7 +223,7 @@ namespace sequoia::testing
           },
           {
             graph_description::empty,
-            "",
+            report_line(""),
             [this](const graph_to_test& g) -> const graph_to_test& {
               check_exception_thrown<std::out_of_range>(report_line("crend_edges throws for empty graph"), [&g]() { return g.crend_edges(0); });
               return g;
@@ -231,7 +231,7 @@ namespace sequoia::testing
           },
           {
             graph_description::empty,
-            "",
+            report_line(""),
             [this](const graph_to_test& g) -> const graph_to_test& {
               check_exception_thrown<std::out_of_range>(report_line("cedges throws for empty graph"), [&g]() { return g.cedges(0); });
               return g;
@@ -239,7 +239,7 @@ namespace sequoia::testing
           },
           {
             graph_description::empty,
-            "",
+            report_line(""),
             [this](const graph_to_test& g) -> const graph_to_test& {
               check_exception_thrown<std::out_of_range>(report_line("swapping nodes throws for empty graph"), [g{g}]() mutable { g.swap_nodes(0, 0); });
               return g;
@@ -247,7 +247,7 @@ namespace sequoia::testing
           },
           {
             graph_description::empty,
-            "",
+            report_line(""),
             [this](const graph_to_test& g) -> const graph_to_test& {
               check_exception_thrown<std::out_of_range>(report_line("swapping edges throws for empty graph"), [g{g}]() mutable { g.swap_edges(0, 0, 0); });
               return g;
@@ -255,7 +255,7 @@ namespace sequoia::testing
           },
           {
             graph_description::empty,
-            "Clear empty graph",
+            report_line("Clear empty graph"),
             [](graph_to_test g) -> graph_to_test {
               g.clear();
               return g;
@@ -263,7 +263,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node,
-            "Add node to empty graph",
+            report_line("Add node to empty graph"),
             [this](graph_to_test g) -> graph_to_test {
               check(equality, report_line("Index of added node is 0"), g.add_node(), 0_sz);
               return g;
@@ -271,7 +271,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node,
-            "insert node into empty graph",
+            report_line("insert node into empty graph"),
             [this](graph_to_test g) -> graph_to_test {
               check(equality, report_line("Index of added node is 0"), g.insert_node(0), 0_sz);
               return g;
@@ -281,7 +281,7 @@ namespace sequoia::testing
         {  // begin 'node'
           {
             graph_description::node,
-            "",
+            report_line(""),
             [this](const graph_to_test& g) -> const graph_to_test& {
               check_exception_thrown<std::out_of_range>(report_line("cbegin_edges throws when index is out of range"), [&g]() { return g.cbegin_edges(1); });
               return g;
@@ -289,7 +289,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node,
-            "",
+            report_line(""),
             [this](const graph_to_test& g) -> const graph_to_test& {
               check_exception_thrown<std::out_of_range>(report_line("cend_edges throws when index is out of range"), [&g]() { return g.cend_edges(1); });
               return g;
@@ -297,7 +297,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node,
-            "",
+            report_line(""),
             [this](const graph_to_test& g) -> const graph_to_test& {
               check_exception_thrown<std::out_of_range>(report_line("crbegin_edges throws when index is out of range"), [&g]() { return g.crbegin_edges(1); });
               return g;
@@ -305,7 +305,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node,
-            "",
+            report_line(""),
             [this](const graph_to_test& g) -> const graph_to_test& {
               check_exception_thrown<std::out_of_range>(report_line("crend_edges throws when index is out of range"), [&g]() { return g.crend_edges(1); });
               return g;
@@ -313,7 +313,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node,
-            "",
+            report_line(""),
             [this](const graph_to_test& g) -> const graph_to_test& {
               check_exception_thrown<std::out_of_range>(report_line("cedges throws when index is out of range"), [&g]() { return g.cedges(1); });
               return g;
@@ -321,7 +321,7 @@ namespace sequoia::testing
           },
           {
             graph_description::empty,
-            "Clear graph",
+            report_line("Clear graph"),
             [](graph_to_test g) -> graph_to_test {
               g.clear();
               return g;
@@ -329,7 +329,7 @@ namespace sequoia::testing
           },
           {
             graph_description::empty,
-            "Erase node to give empty graph",
+            report_line("Erase node to give empty graph"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_node(0);
               return g;
@@ -337,7 +337,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node,
-            "Attempt to erase edge past the end",
+            report_line("Attempt to erase edge past the end"),
             [](graph_to_test g) -> const graph_to_test {
               g.erase_edge(g.cend_edges(0));
               return g;
@@ -345,7 +345,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_0,
-            "Add loop",
+            report_line("Add loop"),
             [](graph_to_test g) -> graph_to_test {
               g.join(0, 0);
               return g;
@@ -353,7 +353,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_node,
-            "Add second node",
+            report_line("Add second node"),
             [this](graph_to_test g) -> graph_to_test {
               check(equality, report_line("Index of added node is 1"), g.add_node(), 1_sz);
               return g;
@@ -361,7 +361,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_node,
-            "Insert second node",
+            report_line("Insert second node"),
             [this](graph_to_test g) -> graph_to_test {
               check(equality, report_line("Index of added node is 0"), g.insert_node(0), 0_sz);
               return g;
@@ -369,7 +369,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_node,
-            "Insert second node at end",
+            report_line("Insert second node at end"),
             [this](graph_to_test g) -> graph_to_test {
               check(equality, report_line("Index of added node is 1"), g.insert_node(1), 1_sz);
               return g;
@@ -377,7 +377,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node,
-            "Swap node with self",
+            report_line("Swap node with self"),
             [](graph_to_test g) -> graph_to_test {
               g.swap_nodes(0,0);
               return g;
@@ -385,7 +385,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node,
-            "",
+            report_line(""),
             [this](const graph_to_test& g) -> const graph_to_test& {
               check_exception_thrown<std::out_of_range>(report_line("swapping nodes throws if first index is out of range"), [g{g}]() mutable { g.swap_nodes(1, 0); });
               return g;
@@ -393,7 +393,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node,
-            "",
+            report_line(""),
             [this](const graph_to_test& g) -> const graph_to_test& {
               check_exception_thrown<std::out_of_range>(report_line("swapping nodes throws if second index is out of range"), [g{g}]() mutable { g.swap_nodes(0, 1); });
               return g;
@@ -403,7 +403,7 @@ namespace sequoia::testing
         {  // begin 'node_0'
           {
             graph_description::empty,
-            "Clear graph",
+            report_line("Clear graph"),
             [](graph_to_test g) -> graph_to_test {
               g.clear();
               return g;
@@ -411,7 +411,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node,
-            "Remove loop",
+            report_line("Remove loop"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_edge(g.cbegin_edges(0));
               return g;
@@ -419,7 +419,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_0_0,
-            "Add a second loop",
+            report_line("Add a second loop"),
             [](graph_to_test g) -> graph_to_test {
               g.join(0, 0);
               return g;
@@ -427,7 +427,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_node_1,
-            "Insert node",
+            report_line("Insert node"),
             [this](graph_to_test g) -> graph_to_test {
               check(equality, report_line("Index of added node is 0"), g.insert_node(0), 0_sz);
               return g;
@@ -435,7 +435,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_0_node,
-            "Insert node at end",
+            report_line("Insert node at end"),
             [this](graph_to_test g) -> graph_to_test {
               check(equality, report_line("Index of added node is 1"), g.insert_node(1), 1_sz);
               return g;
@@ -443,7 +443,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_0,
-            "Swap node with self",
+            report_line("Swap node with self"),
             [](graph_to_test g) -> graph_to_test {
               g.swap_nodes(0,0);
               return g;
@@ -451,7 +451,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_0,
-            "Swap edge with self",
+            report_line("Swap edge with self"),
             [](graph_to_test g) -> graph_to_test {
               g.swap_edges(0, 0, 0);
               return g;
@@ -459,7 +459,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_0,
-            "",
+            report_line(""),
             [this](const graph_to_test& g) -> const graph_to_test& {
               check_exception_thrown<std::out_of_range>(report_line("swapping edges throws for first edge index out of range"), [g{g}]() mutable { g.swap_edges(0, 1, 0); });
               return g;
@@ -467,7 +467,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_0,
-            "",
+            report_line(""),
             [this](const graph_to_test& g) -> const graph_to_test& {
               check_exception_thrown<std::out_of_range>(report_line("swapping edges throws for second edge index out of range"), [g{g}]() mutable { g.swap_edges(0, 0, 1); });
               return g;
@@ -475,7 +475,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_0,
-            "",
+            report_line(""),
             [this](const graph_to_test& g) -> const graph_to_test& {
               check_exception_thrown<std::out_of_range>(report_line("swapping edges throws for node index out of range"), [g{g}]() mutable { g.swap_edges(1, 0, 0); });
               return g;
@@ -485,7 +485,7 @@ namespace sequoia::testing
         {  // begin 'node_0_0'
           {
             graph_description::empty,
-            "Clear graph",
+            report_line("Clear graph"),
             [](graph_to_test g) -> graph_to_test {
               g.clear();
               return g;
@@ -493,7 +493,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_0,
-            "Remove first loop",
+            report_line("Remove first loop"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_edge(g.cbegin_edges(0));
               return g;
@@ -501,7 +501,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_0,
-            "Remove second loop",
+            report_line("Remove second loop"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_edge(std::ranges::next(g.cbegin_edges(0)));
               return g;
@@ -509,7 +509,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_0_0,
-            "Swap loops",
+            report_line("Swap loops"),
             [](graph_to_test g) -> graph_to_test {
               g.swap_edges(0, 0, 1);
               return g;
@@ -517,7 +517,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_0_0,
-            "Swap loops",
+            report_line("Swap loops"),
             [](graph_to_test g) -> graph_to_test {
               g.swap_edges(0, 1, 0);
               return g;
@@ -527,7 +527,7 @@ namespace sequoia::testing
         {  // begin 'node_node'
           {
             graph_description::empty,
-            "Clear graph",
+            report_line("Clear graph"),
             [](graph_to_test g) -> graph_to_test {
               g.clear();
               return g;
@@ -535,7 +535,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node,
-            "Erase node 0",
+            report_line("Erase node 0"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_node(0);
               return g;
@@ -543,7 +543,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node,
-            "Erase node 1",
+            report_line("Erase node 1"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_node(1);
               return g;
@@ -551,7 +551,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_1_node,
-            "Join nodes 0,1",
+            report_line("Join nodes 0,1"),
             [](graph_to_test g) -> graph_to_test {
               g.join(0, 1);
               return g;
@@ -561,7 +561,7 @@ namespace sequoia::testing
         {  // begin 'node_1_node'
           {
             graph_description::empty,
-            "Clear graph",
+            report_line("Clear graph"),
             [](graph_to_test g) -> graph_to_test {
               g.clear();
               return g;
@@ -569,7 +569,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node,
-            "Erase node 0",
+            report_line("Erase node 0"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_node(0);
               return g;
@@ -577,7 +577,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node,
-            "Erase node 1",
+            report_line("Erase node 1"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_node(1);
               return g;
@@ -585,7 +585,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_0_1_node,
-            "Add loop to node 0 and then swap it with link",
+            report_line("Add loop to node 0 and then swap it with link"),
             [](graph_to_test g) -> graph_to_test {
               g.join(0, 0);
               g.swap_edges(0, 0, 1);
@@ -594,7 +594,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_node_0,
-            "Swap nodes {0,1}",
+            report_line("Swap nodes {0,1}"),
             [](graph_to_test g) -> graph_to_test {
               g.swap_nodes(0,1);
               return g;
@@ -602,7 +602,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_node_0,
-            "Swap nodes {1,0}",
+            report_line("Swap nodes {1,0}"),
             [](graph_to_test g) -> graph_to_test {
               g.swap_nodes(1,0);
               return g;
@@ -610,7 +610,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_1_1_node,
-            "Join {0,1}",
+            report_line("Join {0,1}"),
             [](graph_to_test g) {
               g.join(0, 1);
               return g;
@@ -620,7 +620,7 @@ namespace sequoia::testing
         {  // begin node_node_0
           {
             graph_description::empty,
-            "Clear graph",
+            report_line("Clear graph"),
             [](graph_to_test g) -> graph_to_test {
               g.clear();
               return g;
@@ -628,7 +628,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node,
-            "Erase node 0",
+            report_line("Erase node 0"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_node(0);
               return g;
@@ -636,7 +636,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node,
-            "Erase node 1",
+            report_line("Erase node 1"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_node(1);
               return g;
@@ -644,7 +644,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_1_node,
-            "Swap nodes {0,1}",
+            report_line("Swap nodes {0,1}"),
             [](graph_to_test g) -> graph_to_test {
               g.swap_nodes(0,1);
               return g;
@@ -652,7 +652,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_1_node,
-            "Swap nodes {1,0}",
+            report_line("Swap nodes {1,0}"),
             [](graph_to_test g) -> graph_to_test {
               g.swap_nodes(1,0);
               return g;
@@ -660,7 +660,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_1_node_0,
-            "Join nodes {0,1}",
+            report_line("Join nodes {0,1}"),
             [](graph_to_test g) {
               g.join(0, 1);
               return g;
@@ -670,7 +670,7 @@ namespace sequoia::testing
         {  // begin 'node_0_1_node'
           {
             graph_description::empty,
-            "Clear graph",
+            report_line("Clear graph"),
             [](graph_to_test g) -> graph_to_test {
               g.clear();
               return g;
@@ -678,7 +678,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node,
-            "Erase node 0",
+            report_line("Erase node 0"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_node(0);
               return g;
@@ -686,7 +686,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_0,
-            "Erase node 1",
+            report_line("Erase node 1"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_node(1);
               return g;
@@ -694,7 +694,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_1_node,
-            "Remove loop",
+            report_line("Remove loop"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_edge(g.cbegin_edges(0));
               return g;
@@ -702,7 +702,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_0_node,
-            "Remove link",
+            report_line("Remove link"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_edge(std::ranges::next(g.cbegin_edges(0)));
               return g;
@@ -712,7 +712,7 @@ namespace sequoia::testing
         {  // begin 'node_0_node'
           {
             graph_description::empty,
-            "Clear graph",
+            report_line("Clear graph"),
             [](graph_to_test g) -> graph_to_test {
               g.clear();
               return g;
@@ -720,7 +720,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_node,
-            "Remove link",
+            report_line("Remove link"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_edge(g.cbegin_edges(0));
               return g;
@@ -728,7 +728,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_node_1_node,
-            "Insert node",
+            report_line("Insert node"),
             [this](graph_to_test g) -> graph_to_test {
               check(equality, report_line("Index of added node is 0"), g.insert_node(0), 0_sz);
               return g;
@@ -736,7 +736,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_node_1,
-            "Swap nodes",
+            report_line("Swap nodes"),
             [](graph_to_test g) -> graph_to_test {
               g.swap_nodes(0,1);
               return g;
@@ -746,7 +746,7 @@ namespace sequoia::testing
         {  // begin 'node_node_1'
           {
             graph_description::empty,
-            "Clear graph",
+            report_line("Clear graph"),
             [](graph_to_test g) -> graph_to_test {
               g.clear();
               return g;
@@ -754,7 +754,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_0,
-            "Erase node 0",
+            report_line("Erase node 0"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_node(0);
               return g;
@@ -762,7 +762,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node,
-            "Erase node 1",
+            report_line("Erase node 1"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_node(1);
               return g;
@@ -770,7 +770,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_node,
-            "Remove link",
+            report_line("Remove link"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_edge(g.cbegin_edges(1));
               return g;
@@ -778,7 +778,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_0_node,
-            "swap nodes",
+            report_line("swap nodes"),
             [](graph_to_test g) -> graph_to_test {
               g.swap_nodes(0,1);
               return g;
@@ -789,7 +789,7 @@ namespace sequoia::testing
 
           {
             graph_description::empty,
-            "Clear graph",
+            report_line("Clear graph"),
             [](graph_to_test g) -> graph_to_test {
               g.clear();
               return g;
@@ -797,7 +797,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node,
-            "Erase node 0",
+            report_line("Erase node 0"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_node(0);
               return g;
@@ -805,7 +805,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node,
-            "Erase node 1",
+            report_line("Erase node 1"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_node(1);
               return g;
@@ -813,7 +813,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_1_node,
-            "Erase node 0 zeroth link",
+            report_line("Erase node 0 zeroth link"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_edge(g.cbegin_edges(0));
               return g;
@@ -821,7 +821,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_1_node,
-            "Erase node 0 first link",
+            report_line("Erase node 0 first link"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_edge(g.cbegin_edges(0)+1);
               return g;
@@ -829,7 +829,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_1_1_node,
-            "Swap edges",
+            report_line("Swap edges"),
             [](graph_to_test g) -> graph_to_test {
               g.swap_edges(0, 0, 1);
               return g;
@@ -837,7 +837,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_1_1_node,
-            "Swap edges",
+            report_line("Swap edges"),
             [](graph_to_test g) -> graph_to_test {
               g.swap_edges(0, 1, 0);
               return g;
@@ -847,7 +847,7 @@ namespace sequoia::testing
         {  // beging 'node_1_node_0'
           {
             graph_description::empty,
-            "Clear graph",
+            report_line("Clear graph"),
             [](graph_to_test g) -> graph_to_test {
               g.clear();
               return g;
@@ -855,7 +855,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node,
-            "Erase node 0",
+            report_line("Erase node 0"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_node(0);
               return g;
@@ -863,7 +863,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node,
-            "Erase node 1",
+            report_line("Erase node 1"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_node(1);
               return g;
@@ -871,7 +871,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_node_0,
-            "Erase node 0 link",
+            report_line("Erase node 0 link"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_edge(g.cbegin_edges(0));
               return g;
@@ -879,7 +879,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_1_node,
-            "Erase node 1 link",
+            report_line("Erase node 1 link"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_edge(g.cbegin_edges(1));
               return g;
@@ -887,7 +887,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_1_node_0,
-            "Swap nodes",
+            report_line("Swap nodes"),
             [](graph_to_test g) -> graph_to_test {
               g.swap_nodes(1,0);
               return g;
@@ -897,7 +897,7 @@ namespace sequoia::testing
         {  // begin 'node_node_node'
           {
             graph_description::empty,
-            "Clear graph",
+            report_line("Clear graph"),
             [](graph_to_test g) -> graph_to_test {
               g.clear();
               return g;
@@ -905,7 +905,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_node,
-            "Erase node 0",
+            report_line("Erase node 0"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_node(0);
               return g;
@@ -913,7 +913,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_node,
-            "Erase node 1",
+            report_line("Erase node 1"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_node(1);
               return g;
@@ -921,7 +921,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_node,
-            "Erase node 2",
+            report_line("Erase node 2"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_node(2);
               return g;
@@ -929,7 +929,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_1_node_node,
-            "Join {0,1}",
+            report_line("Join {0,1}"),
             [](graph_to_test g) -> graph_to_test {
               g.join(0,1);
               return g;
@@ -937,7 +937,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_node_node_1,
-            "Join {2,1}",
+            report_line("Join {2,1}"),
             [](graph_to_test g) -> graph_to_test {
               g.join(2,1);
               return g;
@@ -948,7 +948,7 @@ namespace sequoia::testing
 
           {
             graph_description::empty,
-            "Clear graph",
+            report_line("Clear graph"),
             [](graph_to_test g) -> graph_to_test {
               g.clear();
               return g;
@@ -956,7 +956,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_node,
-            "Erase node 0",
+            report_line("Erase node 0"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_node(0);
               return g;
@@ -964,7 +964,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_node,
-            "Erase node 1",
+            report_line("Erase node 1"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_node(1);
               return g;
@@ -972,7 +972,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_1_node,
-            "Erase node 2",
+            report_line("Erase node 2"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_node(2);
               return g;
@@ -980,7 +980,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_node_node,
-            "Remove link {0,1}",
+            report_line("Remove link {0,1}"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_edge(g.cbegin_edges(0));
               return g;
@@ -988,7 +988,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_1_node_2_node,
-            "Join {2,1}",
+            report_line("Join {2,1}"),
             [](graph_to_test g) -> graph_to_test {
               g.join(1,2);
               return g;
@@ -996,7 +996,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_1_node_node_1,
-            "Join {2,1}",
+            report_line("Join {2,1}"),
             [](graph_to_test g) -> graph_to_test {
               g.join(2,1);
               return g;
@@ -1004,7 +1004,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_node_node_1,
-            "Swap nodes {0,2}",
+            report_line("Swap nodes {0,2}"),
             [](graph_to_test g) -> graph_to_test {
               g.swap_nodes(0,2);
               return g;
@@ -1012,7 +1012,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_node_node_1,
-            "Swap nodes {2,0}",
+            report_line("Swap nodes {2,0}"),
             [](graph_to_test g) -> graph_to_test {
               g.swap_nodes(2,0);
               return g;
@@ -1022,7 +1022,7 @@ namespace sequoia::testing
         {  // begin 'node_node_node_1'
           {
             graph_description::empty,
-            "Clear graph",
+            report_line("Clear graph"),
             [](graph_to_test g) -> graph_to_test {
               g.clear();
               return g;
@@ -1030,7 +1030,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_node_0,
-            "Erase node 0",
+            report_line("Erase node 0"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_node(0);
               return g;
@@ -1038,7 +1038,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_node,
-            "Erase node 1",
+            report_line("Erase node 1"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_node(1);
               return g;
@@ -1046,7 +1046,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_node,
-            "Erase node 2",
+            report_line("Erase node 2"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_node(2);
               return g;
@@ -1054,7 +1054,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_node_node,
-            "Remove link {2,1}",
+            report_line("Remove link {2,1}"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_edge(g.cbegin_edges(2));
               return g;
@@ -1062,7 +1062,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_1_node_node_1,
-            "Join {0,1}",
+            report_line("Join {0,1}"),
             [](graph_to_test g) -> graph_to_test {
               g.join(0,1);
               return g;
@@ -1070,7 +1070,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_1_node_node,
-            "Swap nodes {0,2}",
+            report_line("Swap nodes {0,2}"),
             [](graph_to_test g) -> graph_to_test {
               g.swap_nodes(0,2);
               return g;
@@ -1078,7 +1078,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_1_node_node,
-            "Swap nodes {2,0}",
+            report_line("Swap nodes {2,0}"),
             [](graph_to_test g) -> graph_to_test {
               g.swap_nodes(2,0);
               return g;
@@ -1088,7 +1088,7 @@ namespace sequoia::testing
         {  // begin 'node_1_node_2_node'
           {
             graph_description::empty,
-            "Clear graph",
+            report_line("Clear graph"),
             [](graph_to_test g) -> graph_to_test {
               g.clear();
               return g;
@@ -1096,7 +1096,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_1_node,
-            "Erase node 0",
+            report_line("Erase node 0"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_node(0);
               return g;
@@ -1104,7 +1104,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_node,
-            "Erase node 1",
+            report_line("Erase node 1"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_node(1);
               return g;
@@ -1112,7 +1112,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_1_node,
-            "Erase node 2",
+            report_line("Erase node 2"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_node(2);
               return g;
@@ -1120,7 +1120,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_1_node_node,
-            "Remove link {1,2}",
+            report_line("Remove link {1,2}"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_edge(g.cbegin_edges(1));
               return g;
@@ -1130,7 +1130,7 @@ namespace sequoia::testing
         {  // begin 'node_1_node_node_1'
           {
             graph_description::empty,
-            "Clear graph",
+            report_line("Clear graph"),
             [](graph_to_test g) -> graph_to_test {
               g.clear();
               return g;
@@ -1138,7 +1138,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_node_0,
-            "Erase node 0",
+            report_line("Erase node 0"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_node(0);
               return g;
@@ -1146,7 +1146,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_node,
-            "Erase node 1",
+            report_line("Erase node 1"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_node(1);
               return g;
@@ -1154,7 +1154,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_1_node,
-            "Erase node 2",
+            report_line("Erase node 2"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_node(2);
               return g;
@@ -1162,7 +1162,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_node_node_1,
-            "Remove link {0,1}",
+            report_line("Remove link {0,1}"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_edge(g.cbegin_edges(0));
               return g;
@@ -1170,7 +1170,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_1_node_node,
-            "Remove link {2,1}",
+            report_line("Remove link {2,1}"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_edge(g.cbegin_edges(2));
               return g;
@@ -1180,7 +1180,7 @@ namespace sequoia::testing
         {  // begin 'node_1_node_2_node_0'
           {
             graph_description::empty,
-            "Clear graph",
+            report_line("Clear graph"),
             [](graph_to_test g) -> graph_to_test {
               g.clear();
               return g;
@@ -1188,7 +1188,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_1_node,
-            "Erase node 0",
+            report_line("Erase node 0"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_node(0);
               return g;
@@ -1196,7 +1196,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_node_0,
-            "Erase node 1",
+            report_line("Erase node 1"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_node(1);
               return g;
@@ -1204,7 +1204,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_1_node,
-            "Erase node 2",
+            report_line("Erase node 2"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_node(2);
               return g;
@@ -1212,7 +1212,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_1_node_2_node,
-            "Remove {2,0}",
+            report_line("Remove {2,0}"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_edge(g.cbegin_edges(2));
               return g;
@@ -1222,7 +1222,7 @@ namespace sequoia::testing
         {  // begin 'node_node_1_node'
           {
             graph_description::empty,
-            "Clear graph",
+            report_line("Clear graph"),
             [](graph_to_test g) -> graph_to_test {
               g.clear();
               return g;
@@ -1230,7 +1230,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_0_node,
-            "Erase node 0",
+            report_line("Erase node 0"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_node(0);
               return g;
@@ -1238,7 +1238,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_node,
-            "Erase node 1",
+            report_line("Erase node 1"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_node(1);
               return g;
@@ -1246,7 +1246,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_node_1,
-            "Erase node 2",
+            report_line("Erase node 2"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_node(2);
               return g;
@@ -1256,7 +1256,7 @@ namespace sequoia::testing
         {  // begin 'node_1_node_1_node'
           {
             graph_description::node_0_node,
-            "Erase node 0",
+            report_line("Erase node 0"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_node(0);
               return g;
@@ -1264,7 +1264,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_node,
-            "Erase node 1",
+            report_line("Erase node 1"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_node(1);
               return g;
@@ -1272,7 +1272,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_node_1_node,
-            "Remove {0,1}",
+            report_line("Remove {0,1}"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_edge(g.cbegin_edges(0));
               return g;
@@ -1280,7 +1280,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_1_node_1_0_node,
-            "Join {1,0}",
+            report_line("Join {1,0}"),
             [](graph_to_test g) -> graph_to_test {
               g.join(1, 0);
               return g;
@@ -1290,7 +1290,7 @@ namespace sequoia::testing
         {  // begin 'node_1_node_1_0_node'
           {
             graph_description::node_0_node,
-            "Erase node 0",
+            report_line("Erase node 0"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_node(0);
               return g;
@@ -1298,7 +1298,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_node,
-            "Erase node 1",
+            report_line("Erase node 1"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_node(1);
               return g;
@@ -1306,7 +1306,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_1_node_1_node,
-            "Remove {1,0}",
+            report_line("Remove {1,0}"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_edge(++g.cbegin_edges(1));
               return g;
@@ -1314,7 +1314,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_1_node_1_0_2_node,
-            "Join {1,2}",
+            report_line("Join {1,2}"),
             [](graph_to_test g) -> graph_to_test {
               g.join(1, 2);
               return g;
@@ -1324,7 +1324,7 @@ namespace sequoia::testing
         {  // begin 'node_1_node_1_0_2_node'
           {
             graph_description::node_0_1_node,
-            "Erase node 0",
+            report_line("Erase node 0"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_node(0);
               return g;
@@ -1332,7 +1332,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_node,
-            "Erase node 1",
+            report_line("Erase node 1"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_node(1);
               return g;
@@ -1340,7 +1340,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_1_node_1_2_node,
-            "Remove {1,0}",
+            report_line("Remove {1,0}"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_edge(++g.cbegin_edges(1));
               return g;
@@ -1348,7 +1348,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_1_node_1_0_node,
-            "Remove {1,2}",
+            report_line("Remove {1,2}"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_edge(g.cbegin_edges(1)+2);
               return g;
@@ -1358,7 +1358,7 @@ namespace sequoia::testing
         {  // begin 'node_1_node_1_2_node'
           {
             graph_description::node_1_node_2_node,
-            "Remove {1,1}",
+            report_line("Remove {1,1}"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_edge(g.cbegin_edges(1));
               return g;
@@ -1368,7 +1368,7 @@ namespace sequoia::testing
         {  // begin 'node_2_node_node_2'
           {
             graph_description::node_1_node_1_node,
-            "Swap {1,2}",
+            report_line("Swap {1,2}"),
             [](graph_to_test g) -> graph_to_test {
               g.swap_nodes(1,2);
               return g;
@@ -1378,7 +1378,7 @@ namespace sequoia::testing
         {  // begin 'node_1_1_2_2_node_2_node'
           {
             graph_description::node_1_node,
-            "Erase node 0",
+            report_line("Erase node 0"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_node(0);
               return g;
@@ -1386,7 +1386,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_1_1_node,
-            "Erase node 1",
+            report_line("Erase node 1"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_node(1);
               return g;
@@ -1394,7 +1394,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_1_1_node,
-            "Erase node 2",
+            report_line("Erase node 2"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_node(2);
               return g;
@@ -1402,7 +1402,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_1_1_2_2_node_2_node_1,
-            "Join {2, 1}",
+            report_line("Join {2, 1}"),
             [](graph_to_test g) -> graph_to_test {
               g.join(2,1);
               return g;
@@ -1412,7 +1412,7 @@ namespace sequoia::testing
         {  // begin 'node_1_1_2_2_node_2_node_1'
           {
             graph_description::node_1_node_0,
-            "Erase node 0",
+            report_line("Erase node 0"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_node(0);
               return g;
@@ -1420,7 +1420,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_1_1_node,
-            "Erase node 1",
+            report_line("Erase node 1"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_node(1);
               return g;
@@ -1428,7 +1428,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_1_1_node,
-            "Erase node 2",
+            report_line("Erase node 2"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_node(2);
               return g;
@@ -1436,7 +1436,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_2_2_1_1_node_2_node_1,
-            "Swap {1,2}",
+            report_line("Swap {1,2}"),
             [](graph_to_test g) -> graph_to_test {
               g.swap_nodes(1,2);
               return g;
@@ -1444,7 +1444,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_2_2_1_1_node_2_node_1,
-            "Swap {2,1}",
+            report_line("Swap {2,1}"),
             [](graph_to_test g) -> graph_to_test {
               g.swap_nodes(2,1);
               return g;
@@ -1452,7 +1452,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_2_2_1_1_node_2_node_1,
-            "Swap node 0 edges: {0,2}, {1,3}",
+            report_line("Swap node 0 edges: {0,2}, {1,3}"),
             [](graph_to_test g) -> graph_to_test {
               g.swap_edges(0, 0, 2);
               g.swap_edges(0, 1, 3);
@@ -1463,7 +1463,7 @@ namespace sequoia::testing
         {  // begin 'node_2_2_1_1_node_2_node_1'
           {
             graph_description::node_1_1_2_2_node_2_node_1,
-            "Swap {1,2}",
+            report_line("Swap {1,2}"),
             [](graph_to_test g) -> graph_to_test {
               g.swap_nodes(1,2);
               return g;
@@ -1471,7 +1471,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_1_1_2_2_node_2_node_1,
-            "Swap {2,1}",
+            report_line("Swap {2,1}"),
             [](graph_to_test g) -> graph_to_test {
               g.swap_nodes(2,1);
               return g;
@@ -1479,7 +1479,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_1_1_2_2_node_2_node_1,
-            "Sort Edges for node 0",
+            report_line("Sort Edges for node 0"),
             [](graph_to_test g) -> graph_to_test {
               g.sort_edges(g.cbegin_edges(0), g.cend_edges(0), [](const auto& lhs, const auto& rhs) { return lhs.target_node() < rhs.target_node(); });
               return g;
@@ -1487,7 +1487,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_1_1_2_2_node_2_node_1,
-            "Swap node 0 edges: {0,2}, {1,3}",
+            report_line("Swap node 0 edges: {0,2}, {1,3}"),
             [](graph_to_test g) -> graph_to_test {
               g.swap_edges(0, 0, 2);
               g.swap_edges(0, 1, 3);
@@ -1498,7 +1498,7 @@ namespace sequoia::testing
         {  // begin 'node_3_1_node_2_node_node'
           {
              graph_description::node_1_node_node,
-             "Erase node 0",
+             report_line("Erase node 0"),
              [](graph_to_test g) -> graph_to_test {
                g.erase_node(0);
                return g;
@@ -1508,7 +1508,7 @@ namespace sequoia::testing
         {  // begin 'node_1_node_node_node_2'
           {
             graph_description::node_2_node_node_node_1,
-            "Swap {2,1}",
+            report_line("Swap {2,1}"),
             [](graph_to_test g) -> graph_to_test {
               g.swap_nodes(2,1);
               return g;
@@ -1516,7 +1516,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_2_node_node_node_1,
-            "Swap {0,3}",
+            report_line("Swap {0,3}"),
             [](graph_to_test g) -> graph_to_test {
               g.swap_nodes(0,3);
               return g;
@@ -1526,7 +1526,7 @@ namespace sequoia::testing
         {  // begin 'node_2_node_node_node_1'
           {
             graph_description::node_1_node_node_node_2,
-            "Swap {2,1}",
+            report_line("Swap {2,1}"),
             [](graph_to_test g) -> graph_to_test {
               g.swap_nodes(2,1);
               return g;
@@ -1534,7 +1534,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_1_node_node_node_2,
-            "Swap {0,3}",
+            report_line("Swap {0,3}"),
             [](graph_to_test g) -> graph_to_test {
               g.swap_nodes(0,3);
               return g;
