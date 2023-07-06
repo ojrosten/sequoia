@@ -15,6 +15,9 @@ namespace sequoia::testing
 {
   namespace
   {
+    using inverted_t = maths::inversion_constant<true>;
+    inline constexpr inverted_t inverted{};
+
     /// Convention: the indices following 'node' - separated by underscores - give the target node of the associated edges
     enum graph_description : std::size_t {
       empty = 0,
@@ -31,6 +34,11 @@ namespace sequoia::testing
       //  \ / \ /
       //     x
       node_0_0,
+
+      //  />\
+      //  \ /
+      //   x
+      node_0inv,
 
       //  x    x
       node_node,
@@ -458,6 +466,14 @@ namespace sequoia::testing
             }
           },
           {
+            graph_description::empty,
+            report_line("Erase node 0"),
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(0);
+              return g;
+            }
+          },
+          {
             graph_description::node_0,
             report_line("Remove first loop"),
             [](graph_to_test g) -> graph_to_test {
@@ -474,6 +490,40 @@ namespace sequoia::testing
             }
           }
         }, // end 'node_0_0'
+        {  // begin 'node_0inv',
+          {
+            graph_description::empty,
+            report_line("Clear graph"),
+            [](graph_to_test g) -> graph_to_test {
+              g.clear();
+              return g;
+            }
+          },
+          {
+            graph_description::empty,
+            report_line("Erase node 0"),
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(0);
+              return g;
+            }
+          },
+          {
+            graph_description::node,
+            report_line("Remove loop via first insertion"),
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_edge(g.cbegin_edges(0));
+              return g;
+            }
+          },
+          {
+            graph_description::node,
+            report_line("Remove loop via second insertion"),
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_edge(++g.cbegin_edges(0));
+              return g;
+            }
+          },
+        }, // end 'node_0inv',
         {  // begin 'node_node'
           {
             graph_description::empty,
@@ -1493,6 +1543,9 @@ namespace sequoia::testing
 
         //  'node_0_0'
         make_and_check(report_line(""), {{edge_t{0, 0, 1}, edge_t{0, 0, 0}, edge_t{0, 0, 3}, edge_t{0, 0, 2}}}),
+
+        //  'node_0inv'
+        make_and_check(report_line(""), {{edge_t{0, inverted, 1}, edge_t{0, inverted, 0}}}),
 
         //  'node_node'
         make_and_check(report_line(""), {{}, {}}),
