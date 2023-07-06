@@ -282,6 +282,14 @@ namespace sequoia::testing
           },
           {
             graph_description::empty,
+            report_line(""),
+            [this](const graph_to_test& g) -> const graph_to_test& {
+              check_exception_thrown<std::out_of_range>(report_line("joining nodes throws for empty graph"), [g{g}]() mutable { g.join(0, 0); });
+              return g;
+            }
+          },
+          {
+            graph_description::empty,
             report_line("Clear empty graph"),
             [](graph_to_test g) -> graph_to_test {
               g.clear();
@@ -363,6 +371,22 @@ namespace sequoia::testing
             }
           },
           {
+            graph_description::node,
+            report_line(""),
+            [this](const graph_to_test& g) -> const graph_to_test& {
+              check_exception_thrown<std::out_of_range>(report_line("joining nodes throws if first index out of range"), [g{g}]() mutable { g.join(1, 0); });
+              return g;
+            }
+          },
+          {
+            graph_description::node,
+            report_line(""),
+            [this](const graph_to_test& g) -> const graph_to_test& {
+              check_exception_thrown<std::out_of_range>(report_line("joining nodes throws if second index out of range"), [g{g}]() mutable { g.join(0, 1); });
+              return g;
+            }
+          },
+          {
             graph_description::empty,
             report_line("Clear graph"),
             [](graph_to_test g) -> graph_to_test {
@@ -433,23 +457,7 @@ namespace sequoia::testing
               g.swap_nodes(0,0);
               return g;
             }
-          },
-          {
-            graph_description::node,
-            report_line(""),
-            [this](const graph_to_test& g) -> const graph_to_test& {
-              check_exception_thrown<std::out_of_range>(report_line("swapping nodes throws if first index is out of range"), [g{g}]() mutable { g.swap_nodes(1, 0); });
-              return g;
-            }
-          },
-          {
-            graph_description::node,
-            report_line(""),
-            [this](const graph_to_test& g) -> const graph_to_test& {
-              check_exception_thrown<std::out_of_range>(report_line("swapping nodes throws if second index is out of range"), [g{g}]() mutable { g.swap_nodes(0, 1); });
-              return g;
-            }
-          },
+          }
         }, // end 'node'
         {  // begin 'node_0'
           {
