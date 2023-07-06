@@ -51,6 +51,12 @@ namespace sequoia::testing
       //     x
       node_0inv_0inv,
 
+      //     /<\/<\
+      //    /  /\  \
+      //    \ /  \ /
+      //        x
+      node_0inv_0inv_interleaved,
+
       //  x    x
       node_node,
 
@@ -600,6 +606,14 @@ namespace sequoia::testing
               return g;
             }
           },
+          {
+            graph_description::node_0inv_0inv_interleaved,
+            report_line("Interleave second inverted loop"),
+            [](graph_to_test g) -> graph_to_test {
+              g.insert_join(g.cbegin_edges(0) + 2, 1);
+              return g;
+            }
+          }
         }, // end 'node_0inv',
         {  // begin 'node_0inv_0inv'
           {
@@ -651,6 +665,40 @@ namespace sequoia::testing
             }
           }
         }, // end 'node_0inv_0inv'
+        {  // begin 'node_0inv_0inv_interleaved'
+          {
+            graph_description::empty,
+            report_line("Clear graph"),
+            [](graph_to_test g) -> graph_to_test {
+              g.clear();
+              return g;
+            }
+          },
+          {
+            graph_description::empty,
+            report_line("Erase node 0"),
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(0);
+              return g;
+            }
+          },
+          {
+            graph_description::node_0inv,
+            report_line("Remove first loop"),
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_edge(g.cbegin_edges(0));
+              return g;
+            }
+          },
+          {
+            graph_description::node_0inv,
+            report_line("Remove second loop"),
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_edge(g.cbegin_edges(0)+2);
+              return g;
+            }
+          }
+        }, // end 'node_0inv_0inv_interleaved'
         {  // begin 'node_node'
           {
             graph_description::empty,
@@ -1679,6 +1727,9 @@ namespace sequoia::testing
 
         //  'node_0inv_0inv'
         make_and_check(report_line(""), {{edge_t{0, inverted_edge, 1}, edge_t{0, inverted_edge, 0}, edge_t{0, inverted_edge, 3}, edge_t{0, inverted_edge, 2}}}),
+
+        // 'node_0inv_0inv_interleaved'
+        make_and_check(report_line(""), {{edge_t{0, inverted_edge, 2}, edge_t{0, inverted_edge, 3}, edge_t{0, inverted_edge, 0}, edge_t{0, inverted_edge, 1}}}),
 
         //  'node_node'
         make_and_check(report_line(""), {{}, {}}),
