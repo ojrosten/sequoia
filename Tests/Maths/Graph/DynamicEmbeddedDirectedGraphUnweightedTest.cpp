@@ -358,6 +358,14 @@ namespace sequoia::testing
             }
           },
           {
+            graph_description::node_0inv,
+            report_line("Add inverted loop"),
+            [](graph_to_test g) -> graph_to_test {
+              g.insert_join(g.cbegin_edges(0), 0);
+              return g;
+            }
+          },
+          {
             graph_description::node_node,
             report_line("Add second node"),
             [this](graph_to_test g) -> graph_to_test {

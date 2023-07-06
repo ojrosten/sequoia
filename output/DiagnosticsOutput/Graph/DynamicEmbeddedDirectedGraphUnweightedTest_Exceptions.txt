@@ -97,7 +97,7 @@ connectivity::cend_edges: node index 1 out of range - graph order is 1
 
 =======================================
 
-Tests/Maths/Graph/DynamicEmbeddedDirectedGraphUnweightedTest.cpp, Line 396
+Tests/Maths/Graph/DynamicEmbeddedDirectedGraphUnweightedTest.cpp, Line 404
 swapping nodes throws if first index is out of range
 
 Expected Exception Type:
@@ -106,7 +106,7 @@ connectivity::swap_nodes: at least one node index [1, 0] out of range - graph or
 
 =======================================
 
-Tests/Maths/Graph/DynamicEmbeddedDirectedGraphUnweightedTest.cpp, Line 404
+Tests/Maths/Graph/DynamicEmbeddedDirectedGraphUnweightedTest.cpp, Line 412
 swapping nodes throws if second index is out of range
 
 Expected Exception Type:
@@ -214,7 +214,7 @@ connectivity::cend_edges: node index 1 out of range - graph order is 1
 
 =======================================
 
-Tests/Maths/Graph/DynamicEmbeddedDirectedGraphUnweightedTest.cpp, Line 396
+Tests/Maths/Graph/DynamicEmbeddedDirectedGraphUnweightedTest.cpp, Line 404
 swapping nodes throws if first index is out of range
 
 Expected Exception Type:
@@ -223,7 +223,7 @@ connectivity::swap_nodes: at least one node index [1, 0] out of range - graph or
 
 =======================================
 
-Tests/Maths/Graph/DynamicEmbeddedDirectedGraphUnweightedTest.cpp, Line 404
+Tests/Maths/Graph/DynamicEmbeddedDirectedGraphUnweightedTest.cpp, Line 412
 swapping nodes throws if second index is out of range
 
 Expected Exception Type:
