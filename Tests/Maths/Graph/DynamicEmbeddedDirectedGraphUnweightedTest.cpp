@@ -387,6 +387,14 @@ namespace sequoia::testing
             }
           },
           {
+            graph_description::node,
+            report_line(""),
+            [this](const graph_to_test& g) -> const graph_to_test& {
+              check_exception_thrown<std::out_of_range>(report_line("inserting join throws if second index out of range"), [g{g}]() mutable { g.insert_join(g.cbegin_edges(0), 2); });
+              return g;
+            }
+          },
+          {
             graph_description::empty,
             report_line("Clear graph"),
             [](graph_to_test g) -> graph_to_test {

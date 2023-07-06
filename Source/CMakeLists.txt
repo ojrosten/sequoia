@@ -4,11 +4,13 @@ include(../build_system/Utilities.cmake)
 
 sequoia_init()
 
-set(SourceList sequoia/TestFramework/Advice.cpp
+set(SourceList
+    sequoia/Maths/Graph/GraphErrors.cpp
     sequoia/Parsing/CommandLineArguments.cpp
     sequoia/PlatformSpecific/Helpers.cpp
     sequoia/Runtime/ShellCommands.cpp
     sequoia/Streaming/Streaming.cpp
+    sequoia/TestFramework/Advice.cpp
     sequoia/TestFramework/AllocationCheckersCore.cpp
     sequoia/TestFramework/AllocationCheckersDetails.cpp
     sequoia/TestFramework/Commands.cpp

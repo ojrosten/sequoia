@@ -605,6 +605,11 @@ namespace sequoia
         insert_join(const_edge_iterator citer1, const edge_index_type pos2, Args&&... args)
       {
         const auto node{ citer1.partition_index() };
+        if constexpr(throw_on_range_error)
+        {
+          graph_errors::check_edge_insertion_index("insert_join", node, std::ranges::distance(cedges(node)) + 1, pos2);
+        }
+
         const auto dist1{ static_cast<edge_index_type>(std::ranges::distance(cbegin_edges(node), citer1)) };
         citer1 = insert_single_join(cbegin_edges(node) + dist1, node, pos2, std::forward<Args>(args)...);
 
@@ -1110,7 +1115,7 @@ namespace sequoia
                 if constexpr(!std::is_empty_v<edge_weight_type>)
                 {
                   if(edge.weight() != targetEdge.weight())
-                    throw std::logic_error{ graph_errors::error_prefix("process_complementary_edges", {nodeIndex, edgeIndex}).append("Mismatch between weights") };
+                    throw std::logic_error{graph_errors::mismatched_weights_message("process_complementary_edges", {nodeIndex, edgeIndex})};
                 }
               }
             }
@@ -1172,23 +1177,23 @@ namespace sequoia
           edges,
           []() {},
           [](edge_index_type i, range_t hostRange) {
-            if(std::ranges::distance(hostRange) % 2) throw std::logic_error{graph_errors::odd_num_loops_error("process_edges", i)};
+            if(std::ranges::distance(hostRange) % 2) throw std::logic_error{graph_errors::odd_num_loops_error("connectivity", i)};
           },
           [&](edge_index_type i, edge_index_type target, range_t hostRange, range_t targetRange) {
             if(auto reciprocalCount{std::ranges::distance(targetRange)}; !reciprocalCount)
             {
               const auto edgeIndex{static_cast<std::size_t>(std::ranges::distance(edges.cbegin_partition(i), hostRange.begin()))};
-              throw std::logic_error{graph_errors::error_prefix("process_edges", {i, edgeIndex}).append("Reciprocated partial edge does not exist")};
+              throw std::logic_error{graph_errors::absent_reciprocated_partial_edge_message("connectivity", {i, edgeIndex})};
             }
             else if(auto count{std::ranges::distance(hostRange)}; count > reciprocalCount)
             {
               const auto edgeIndex{static_cast<std::size_t>(std::ranges::distance(edges.cbegin_partition(i), hostRange.begin()) + reciprocalCount)};
-              throw std::logic_error{graph_errors::error_prefix("process_edges", {i, edgeIndex}).append("Reciprocated partial edge does not exist")};
+              throw std::logic_error{graph_errors::absent_reciprocated_partial_edge_message("connectivity", {i, edgeIndex})};
             }
             else if(count < reciprocalCount)
             {
               const auto edgeIndex{static_cast<std::size_t>(std::ranges::distance(edges.cbegin_partition(target), targetRange.begin()) + count)};
-              throw std::logic_error{graph_errors::error_prefix("process_edges", {target, edgeIndex}).append("Reciprocated partial edge does not exist")};
+              throw std::logic_error{graph_errors::absent_reciprocated_partial_edge_message("connectivity", {target, edgeIndex})};
             }
           }
         );
@@ -1618,7 +1623,9 @@ namespace sequoia
           }
           else
           {
-            throw std::logic_error{ graph_errors::error_prefix("manipulate_partner_edge_weight").append("Partner weight not found") };
+            const auto node{citer.partition_index()};
+            const auto edgeIndex{static_cast<std::size_t>(std::ranges::distance(cbegin_edges(node), citer))};
+            throw std::logic_error{ graph_errors::absent_partner_weight_message("manipulate_partner_edge_weight", {node, edgeIndex}) };
           }
         }
       }
