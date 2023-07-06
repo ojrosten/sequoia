@@ -63,6 +63,10 @@ namespace sequoia::testing
       //   <---
       node_1_node_0,
 
+      // x ---> x
+      //   <---
+      node_1pos1_node_0pos0,
+
       //  x    x    x
       node_node_node,
 
@@ -814,6 +818,48 @@ namespace sequoia::testing
             }
           }*/
         }, // end 'node_1_node_0'
+        {  // begin 'node_1pos1_node_0pos0'
+          {
+            graph_description::empty,
+            "Clear graph",
+            [](graph_to_test g) -> graph_to_test {
+              g.clear();
+              return g;
+            }
+          },
+          {
+            graph_description::node,
+            "Erase node 0",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(0);
+              return g;
+            }
+          },
+          {
+            graph_description::node,
+            "Erease node 1",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(1);
+              return g;
+            }
+          },
+          {
+            graph_description::node_node_0,
+            "Erase node 0 link",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_edge(g.cbegin_edges(0));
+              return g;
+            }
+          },
+          {
+            graph_description::node_1_node,
+            "Erase node 1 link",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_edge(g.cbegin_edges(1));
+              return g;
+            }
+          },
+        }, // end 'node_1pos1_node_0pos0'
         {  // begin 'node_node_node'
           {
             graph_description::empty,
@@ -1330,6 +1376,14 @@ namespace sequoia::testing
         }, // end 'node_1_1_2_2_node_2_node'
         {  // begin 'node_1_1_2_2_node_2_node_1'
           {
+            graph_description::node_1pos1_node_0pos0,
+            "Erase node 0",
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(0);
+              return g;
+            }
+          },
+          {
             graph_description::node_1_1_node,
             "Erase node 1",
             [](graph_to_test g) -> graph_to_test {
@@ -1463,6 +1517,9 @@ namespace sequoia::testing
 
         // 'node_1_node_0'
         make_and_check(report_line(""), {{edge_t{0, 1, 0}, edge_t{1, 0, 1}}, {edge_t{0, 1, 0}, edge_t{1, 0, 1}}}),
+
+        // 'node_1pos1_node_0pos0'
+        make_and_check(report_line(""), {{edge_t{0, 1, 1}, edge_t{1, 0, 0}}, {edge_t{1, 0, 1}, edge_t{0, 1, 0}}}),
 
         //  'node_node_node'
         make_and_check(report_line(""), {{}, {}, {}}),
