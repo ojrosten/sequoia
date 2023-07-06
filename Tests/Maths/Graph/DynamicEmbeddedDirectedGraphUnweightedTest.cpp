@@ -15,8 +15,8 @@ namespace sequoia::testing
 {
   namespace
   {
-    using inverted_t = maths::inversion_constant<true>;
-    inline constexpr inverted_t inverted{};
+    using inverted_edge_t = maths::inversion_constant<true>;
+    inline constexpr inverted_edge_t inverted_edge{};
 
     /// Convention: the indices following 'node' - separated by underscores - give the target node of the associated edges
     enum graph_description : std::size_t {
@@ -35,7 +35,7 @@ namespace sequoia::testing
       //     x
       node_0_0,
 
-      //  />\
+      //  /<\
       //  \ /
       //   x
       node_0inv,
@@ -1545,7 +1545,7 @@ namespace sequoia::testing
         make_and_check(report_line(""), {{edge_t{0, 0, 1}, edge_t{0, 0, 0}, edge_t{0, 0, 3}, edge_t{0, 0, 2}}}),
 
         //  'node_0inv'
-        make_and_check(report_line(""), {{edge_t{0, inverted, 1}, edge_t{0, inverted, 0}}}),
+        make_and_check(report_line(""), {{edge_t{0, inverted_edge, 1}, edge_t{0, inverted_edge, 0}}}),
 
         //  'node_node'
         make_and_check(report_line(""), {{}, {}}),
