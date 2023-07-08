@@ -1387,12 +1387,7 @@ namespace sequoia::testing
       },
       {
         //  'empty'
-        [this](){
-          graph_to_test g{};
-          check(equivalence, report_line(""), g, edges_equivalent_t{});
-
-          return g;
-        }(),
+        make_and_check(report_line(""), {}),
 
         //  'node'
         make_and_check(report_line(""), {{}}),

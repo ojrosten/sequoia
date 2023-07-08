@@ -35,6 +35,7 @@
 #include "Experimental/TypeListFreeTest.hpp"
 #include "Maths/Graph/DynamicDirectedGraphUnweightedTest.hpp"
 #include "Maths/Graph/DynamicEmbeddedDirectedGraphUnweightedTest.hpp"
+#include "Maths/Graph/DynamicEmbeddedUndirectedGraphUnweightedTest.hpp"
 #include "Maths/Graph/DynamicGraphEmbeddedTest.hpp"
 #include "Maths/Graph/DynamicGraphFixedTopologyTest.hpp"
 #include "Maths/Graph/DynamicGraphInitializationTest.hpp"
