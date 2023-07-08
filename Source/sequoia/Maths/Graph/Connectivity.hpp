@@ -480,12 +480,13 @@ namespace sequoia
 
             if constexpr (embeddedEdge)
             {
+              // TO DO: consider reversing iteration
               for(auto iter{m_Edges.begin_partition(partition)}; iter != m_Edges.end_partition(partition);)
               {
                 if(fn(*iter))
                 {
                   iter = m_Edges.erase_from_partition(iter);
-                  decrement_comp_indices(iter,  m_Edges.end_partition(partition), 1);
+                  decrement_comp_indices(iter, m_Edges.end_partition(partition), 1);
                 }
                 else
                 {
@@ -648,6 +649,9 @@ namespace sequoia
 
       void erase_edge(const_edge_iterator citer)
       {
+        // TO DO: ensure strong exception guarantee (maybe just insist on
+        // noexcept move assignment for m_Edges
+
         if(!order() || (citer == cend_edges(citer.partition_index()))) return;
 
         if constexpr (EdgeTraits::mutual_info_v)
@@ -664,7 +668,7 @@ namespace sequoia
               decrement_comp_indices(to_edge_iterator(citer), m_Edges.end_partition(source), 1);
 
               auto partnerIter{m_Edges.erase_from_partition(partner, partnerLocalIndex)};
-              decrement_comp_indices(to_edge_iterator(partnerIter), m_Edges.end_partition(partner), 1);
+              decrement_comp_indices(partnerIter, m_Edges.end_partition(partner), 1);
             }
             else
             {
@@ -707,17 +711,20 @@ namespace sequoia
           {
             if constexpr (embeddedEdge)
             {
-              const auto sourceLocalIndex{citer->complementary_index()};
-              const auto dist = std::ranges::distance(citer, cbegin_edges(source) + sourceLocalIndex);
-              if(dist == 1)
+              const auto compIndex{citer->complementary_index()};
+              const auto pos{std::ranges::distance(cbegin_edges(source), citer)};
+              const auto separation{std::ranges::distance(citer, cbegin_edges(source) + compIndex)};
+              if(separation == 1)
               {
+                // TO DO: combine into single erase
                 citer = m_Edges.erase_from_partition(citer);
                 citer = m_Edges.erase_from_partition(citer);
 
                 decrement_comp_indices(to_edge_iterator(citer), m_Edges.end_partition(source), 2);
               }
-              else if(dist == -1)
+              else if(separation == -1)
               {
+                // TO DO: combine into single erase
                 citer = m_Edges.erase_from_partition(citer-1);
                 citer = m_Edges.erase_from_partition(citer);
 
@@ -725,24 +732,17 @@ namespace sequoia
               }
               else
               {
-                const bool pred{
-                  [dist, sourceLocalIndex](){
-                    return (dist < 0) || (sourceLocalIndex > static_cast<edge_index_type>(dist));
-                  }()
+                const bool negativeSeparation{separation < 0};
+
+                auto erase{
+                  [this, source](auto index){
+                    auto i{m_Edges.erase_from_partition(m_Edges.begin_partition(source) + index)};
+                    decrement_comp_indices(i, m_Edges.end_partition(source), 1);
+                  }
                 };
 
-                const auto eraseFirstIndex{pred ? sourceLocalIndex : dist};
-                const auto eraseSecondIndex{pred ? dist : sourceLocalIndex};
-
-                auto firstIter{m_Edges.begin_partition(source) + eraseFirstIndex};
-                firstIter = m_Edges.erase_from_partition(firstIter);
-
-                auto secondIter{m_Edges.begin_partition(source) + eraseSecondIndex};
-                secondIter = m_Edges.erase_from_partition(secondIter);
-                firstIter = m_Edges.begin_partition(source) + eraseFirstIndex;
-
-                decrement_comp_indices(firstIter, m_Edges.end_partition(source), 2);
-                decrement_comp_indices(secondIter, firstIter, 1);
+                erase(negativeSeparation ? pos : compIndex);
+                erase(negativeSeparation ? compIndex : pos);
               }
             }
             else if constexpr (EdgeTraits::shared_edge_v)
@@ -1733,23 +1733,15 @@ namespace sequoia
           };
 
           const auto compIndex{first->complementary_index()};
-          if(source != other)
+          const auto dist{static_cast<edge_index_type>(std::ranges::distance(begin_edges(source), start))};
+          if((source != other) || (fn(compIndex) < dist))
           {
             const auto edgeIter{m_Edges.begin_partition(other) + compIndex};
             edgeIter->complementary_index(fn(edgeIter->complementary_index()));
           }
           else
           {
-            const auto startPos{static_cast<edge_index_type>(std::ranges::distance(begin_edges(source), start))};
-            if(const auto shiftedCompIndex{fn(compIndex)}; shiftedCompIndex >= startPos)
-            {
-              first->complementary_index(shiftedCompIndex);
-            }
-            else if(const auto edgeIter{m_Edges.begin_partition(other) + compIndex};
-                    fn(edgeIter->complementary_index()) >= startPos)
-            {
-              edgeIter->complementary_index(fn(edgeIter->complementary_index()));
-            }
+            first->complementary_index(fn(compIndex));
           }
 
           ++first;
@@ -1759,12 +1751,7 @@ namespace sequoia
       template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
       constexpr void decrement_comp_indices(Iter first, Sentinel last, const edge_index_type num) noexcept
       {
-        auto decrementer{
-          [num](const auto compIndex){
-            return compIndex >= num ? compIndex - num : edge_index_type{};
-          }
-        };
-        modify_comp_indices(first, last, decrementer);
+        modify_comp_indices(first, last, [num](const auto compIndex) { return compIndex >= num ? compIndex - num : edge_index_type{}; });
       }
 
       template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel>
