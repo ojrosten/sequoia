@@ -22,128 +22,106 @@ namespace sequoia::testing
       // x
       node,
 
-      //  />\
+      //  /-\
       //  \ /
       //   x
       node_0,
 
-      //  />\ />\
+      //  /-\ /-\
       //  \ / \ /
       //     x
       node_0_0,
 
-      //     />\/>\
+      //     /-\/-\
       //    /  /\  \
       //    \ /  \ /
       //        x
       node_0_0_interleaved,
 
-      //  /<\
-      //  \ /
-      //   x
-      node_0inv,
-
-      //  /<\ /<\
-      //  \ / \ /
-      //     x
-      node_0inv_0inv,
-
-      //     /<\/<\
-      //    /  /\  \
-      //    \ /  \ /
-      //        x
-      node_0inv_0inv_interleaved,
-
-      //     />\/<\
-      //    /  /\  \
-      //    \ /  \ /
-      //        x
-      node_0_0inv_interleaved,
-
       //  x    x
       node_node,
 
-      //  x ---> x
+      //  x ---- x
       node_1_node,
 
-      //  x <--- x
+      //  x ---- x
       node_node_0,
 
-      //   />\
+      //   /-\
       //   \ /
-      //    x ---> x
+      //    x ---- x
       node_0_1_node,
 
-      //  />\
+      //  /-\
       //  \ /
       //   x      x
       node_0_node,
 
-      //      />\
+      //      /-\
       //      \ /
       //  x    x
       node_node_1,
 
-      //  x ===> x
+      //  x ===- x
       node_1_1_node,
 
-      // x ---> x
-      //   <---
+      // x ---- x
+      //   ----
       node_1_node_0,
 
-      // x ---> x
-      //   <---
+      // x ---- x
+      //   ----
       node_1pos1_node_0pos0,
 
       //  x    x    x
       node_node_node,
 
-      //  x ---> x    x
+      //  x ---- x    x
       node_1_node_node,
 
-      //  x    x <--- x
+      //  x    x ---- x
       node_node_node_1,
 
-      //  x ---> x ---> x
+      //  x ---- x ---- x
       node_1_node_2_node,
 
-      //  x ---> x <--- x
+      //  x ---- x ---- x
       node_1_node_node_1,
 
-      // -> x ---> x ---> x --
+      // -- x ---- x ---- x --
       node_1_node_2_node_0,
 
-      //      />\
+      //      /-\
       //      \ /
       //  x    x    x
       node_node_1_node,
 
-      //        />\
+      //        /-\
       //        \ /
-      //  x ---> x    x
+      //  x ---- x    x
       node_1_node_1_node,
 
 
-      //        />\
+      //        /-\
       //        \ /
-      //  x ---> x    x
-      //    <---
+      //  x ---- x    x
+      //    ----
       node_1_node_1_0_node,
 
-      //        />\
+      //        /-\
       //        \ /
-      //  x ---> x ---> x
-      //    <---
+      //  x ---- x ---- x
+      //    ----
       node_1_node_1_0_2_node,
 
-      //        />\
+      //        /-\
       //        \ /
-      //  x ---> x ---> x
+      //  x ---- x ---- x
       node_1_node_1_2_node,
 
-      //             />\
+      //             /-\
       //             \ /
-      // -- x    x    x <-
+      // -- x    x    x --
       node_2_node_node_2,
 
       //     [2]
@@ -151,25 +129,25 @@ namespace sequoia::testing
       //    ^^  ^
       //   //    \
       //  //      \
-      //  x  ===>  x
+      //  x  ====  x
       // [0]      [1]
       node_1_1_2_2_node_2_node,
 
       //      [2]
       //       x
-      //    ^^  \^
+      //    //  \\
       //   //    \\
-      //  //     `'\
-      //  x  ===>  x
+      //  //      \\
+      //  x  ====  x
       // [0]      [1]
       node_1_1_2_2_node_2_node_1,
 
       //      [2]
       //       x
-      //    ^^  \^
+      //    //  \\
       //   //    \\
-      //  //     `'\
-      //  x  ===>  x
+      //  //      \\
+      //  x  ====  x
       // [0]      [1]
       node_2_2_1_1_node_2pos3_node_1,
 
@@ -177,14 +155,14 @@ namespace sequoia::testing
       //  ^
       //  |
       //  |
-      //  x ---> x ---> x
+      //  x ---- x ---- x
       // [0]    [1]    [2]
       node_3_1_node_2_node_node,
 
-      // x ---> x    x <--- x
+      // x ---- x    x ---- x
       node_1_node_node_node_2,
 
-      // x --   x <-   -> x  -- x
+      // x --   x --   -- x  -- x
       node_2_node_node_node_1
     };
   }
@@ -219,13 +197,10 @@ namespace sequoia::testing
     using edge_t             = typename graph_to_test::edge_init_type;
     using edges_equivalent_t = std::initializer_list<std::initializer_list<edge_t>>;
     using transition_graph   = transition_checker<graph_to_test>::transition_graph;
-    using maths::inverted_edge;
 
     auto make_and_check{
       [this](std::string_view description, edges_equivalent_t init){
-        graph_to_test g{init};
-        this->check(weak_equivalence, description, g, init);
-        return g;
+        return graph_initialization_checker<graph_to_test>::make_and_check(*this, description, init);
       }
     };
 
@@ -427,14 +402,6 @@ namespace sequoia::testing
             }
           },
           {
-            graph_description::node_0inv,
-            report_line("Add inverted loop"),
-            [](graph_to_test g) -> graph_to_test {
-              g.insert_join(g.cbegin_edges(0), 0);
-              return g;
-            }
-          },
-          {
             graph_description::node_node,
             report_line("Add second node"),
             [this](graph_to_test g) -> graph_to_test {
@@ -497,14 +464,6 @@ namespace sequoia::testing
         //    report_line("Interleave a second loop"),
         //    [](graph_to_test g) -> graph_to_test {
         //      g.insert_join(g.cbegin_edges(0)+1, 3);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_0_0inv_interleaved,
-        //    report_line("Interleave an inverted second loop"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.insert_join(g.cbegin_edges(0) + 2, 1);
         //      return g;
         //    }
         //  },
@@ -609,190 +568,6 @@ namespace sequoia::testing
         //    }
         //  },
         //}, // end 'node_0_0_interleaved'
-        //{  // begin 'node_0inv',
-        //  {
-        //    graph_description::empty,
-        //    report_line("Clear graph"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.clear();
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::empty,
-        //    report_line("Erase node 0"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_node(0);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node,
-        //    report_line("Remove loop via first insertion"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_edge(g.cbegin_edges(0));
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node,
-        //    report_line("Remove loop via second insertion"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_edge(++g.cbegin_edges(0));
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_0inv_0inv,
-        //    report_line("Add second inverted loop"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.insert_join(g.cbegin_edges(0)+2, 2);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_0inv_0inv_interleaved,
-        //    report_line("Interleave second inverted loop"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.insert_join(g.cbegin_edges(0) + 2, 1);
-        //      return g;
-        //    }
-        //  }
-        //}, // end 'node_0inv',
-        //{  // begin 'node_0inv_0inv'
-        //  {
-        //    graph_description::empty,
-        //    report_line("Clear graph"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.clear();
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::empty,
-        //    report_line("Erase node 0"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_node(0);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_0inv,
-        //    report_line("Remove first loop"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_edge(g.cbegin_edges(0));
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_0inv,
-        //    report_line("Remove first loop via second insertion"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_edge(g.cbegin_edges(0) + 1);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_0inv,
-        //    report_line("Remove second loop"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_edge(std::ranges::next(g.cbegin_edges(0), 2));
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_0inv,
-        //    report_line("Remove second loop via second insertion"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_edge(std::ranges::next(g.cbegin_edges(0), 3));
-        //      return g;
-        //    }
-        //  }
-        //}, // end 'node_0inv_0inv'
-        //{  // begin 'node_0inv_0inv_interleaved'
-        //  {
-        //    graph_description::empty,
-        //    report_line("Clear graph"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.clear();
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::empty,
-        //    report_line("Erase node 0"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_node(0);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_0inv,
-        //    report_line("Remove first loop"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_edge(g.cbegin_edges(0));
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_0inv,
-        //    report_line("Remove second loop"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_edge(g.cbegin_edges(0)+2);
-        //      return g;
-        //    }
-        //  }
-        //}, // end 'node_0inv_0inv_interleaved'
-        //{  // begin 'node_0_0inv_interleaved'
-        //  {
-        //    graph_description::empty,
-        //    report_line("Clear graph"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.clear();
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::empty,
-        //    report_line("Erase node 0"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_node(0);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_0inv,
-        //    report_line("Remove first loop"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_edge(g.cbegin_edges(0));
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_0inv,
-        //    report_line("Remove first loop via second insertion"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_edge(g.cbegin_edges(0)+2);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_0,
-        //    report_line("Remove second loop"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_edge(g.cbegin_edges(0) + 1);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_0,
-        //    report_line("Remove second loop via second insertion"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_edge(g.cbegin_edges(0) + 3);
-        //      return g;
-        //    }
-        //  }
-        //}, // end 'node_0_0inv_interleaved'
         //{  // begin 'node_node'
         //  {
         //    graph_description::empty,
@@ -1815,18 +1590,6 @@ namespace sequoia::testing
 
         //// 'node_0_0_interleaved'
         //make_and_check(report_line(""), {{edge_t{0, 0, 2}, edge_t{0, 0, 3}, edge_t{0, 0, 0}, edge_t{0, 0, 1}}}),
-
-        ////  'node_0inv'
-        //make_and_check(report_line(""), {{edge_t{0, inverted_edge, 1}, edge_t{0, inverted_edge, 0}}}),
-
-        ////  'node_0inv_0inv'
-        //make_and_check(report_line(""), {{edge_t{0, inverted_edge, 1}, edge_t{0, inverted_edge, 0}, edge_t{0, inverted_edge, 3}, edge_t{0, inverted_edge, 2}}}),
-
-        //// 'node_0inv_0inv_interleaved'
-        //make_and_check(report_line(""), {{edge_t{0, inverted_edge, 2}, edge_t{0, inverted_edge, 3}, edge_t{0, inverted_edge, 0}, edge_t{0, inverted_edge, 1}}}),
-
-        //// 'node_0_0inv_interleaved'
-        //make_and_check(report_line(""), {{edge_t{0, 0, 2}, edge_t{0, inverted_edge, 3}, edge_t{0, 0, 0}, edge_t{0, inverted_edge, 1}}}),
 
         ////  'node_node'
         //make_and_check(report_line(""), {{}, {}}),
