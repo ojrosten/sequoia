@@ -393,7 +393,7 @@ namespace sequoia::testing
               return g;
             }
           },
-          /*{
+          {
             graph_description::node_0,
             report_line("Add loop"),
             [](graph_to_test g) -> graph_to_test {
@@ -432,9 +432,9 @@ namespace sequoia::testing
               g.swap_nodes(0,0);
               return g;
             }
-          }*/
+          }
         }, // end 'node'
-        //{  // begin 'node_0'
+        {  // begin 'node_0'
         //  {
         //    graph_description::empty,
         //    report_line("Clear graph"),
@@ -491,8 +491,8 @@ namespace sequoia::testing
         //      return g;
         //    }
         //  }
-        //}, // end 'node_0'
-        //{  // begin 'node_0_0'
+        }, // end 'node_0'
+        {  // begin 'node_0_0'
         //  {
         //    graph_description::empty,
         //    report_line("Clear graph"),
@@ -541,8 +541,8 @@ namespace sequoia::testing
         //      return g;
         //    }
         //  }
-        //}, // end 'node_0_0'
-        //{  // begin 'node_0_0_interleaved'
+        }, // end 'node_0_0'
+        {  // begin 'node_0_0_interleaved'
         //  {
         //    graph_description::empty,
         //    report_line("Clear graph"),
@@ -567,8 +567,8 @@ namespace sequoia::testing
         //      return g;
         //    }
         //  },
-        //}, // end 'node_0_0_interleaved'
-        //{  // begin 'node_node'
+        }, // end 'node_0_0_interleaved'
+        {  // begin 'node_node'
         //  {
         //    graph_description::empty,
         //    report_line("Clear graph"),
@@ -601,7 +601,7 @@ namespace sequoia::testing
         //      return g;
         //    }
         //  }
-        //}, // end 'node_node'
+        }, // end 'node_node'
         //{  // begin 'node_1_node'
         //  {
         //    graph_description::empty,
@@ -1582,17 +1582,17 @@ namespace sequoia::testing
         //  'node'
         make_and_check(report_line(""), {{}}),
 
-        ////  'node_0'
-        //make_and_check(report_line(""), {{edge_t{0, 0, 1}, edge_t{0, 0, 0}}}),
+        //  'node_0'
+        make_and_check(report_line(""), {{edge_t{0, 1}, edge_t{0, 0}}}),
 
-        ////  'node_0_0'
-        //make_and_check(report_line(""), {{edge_t{0, 0, 1}, edge_t{0, 0, 0}, edge_t{0, 0, 3}, edge_t{0, 0, 2}}}),
+        //  'node_0_0'
+        make_and_check(report_line(""), {{edge_t{0, 1}, edge_t{0, 0}, edge_t{0, 3}, edge_t{0, 2}}}),
 
-        //// 'node_0_0_interleaved'
-        //make_and_check(report_line(""), {{edge_t{0, 0, 2}, edge_t{0, 0, 3}, edge_t{0, 0, 0}, edge_t{0, 0, 1}}}),
+        // 'node_0_0_interleaved'
+        make_and_check(report_line(""), {{edge_t{0, 2}, edge_t{0, 3}, edge_t{0, 0}, edge_t{0, 1}}}),
 
-        ////  'node_node'
-        //make_and_check(report_line(""), {{}, {}}),
+        //  'node_node'
+        make_and_check(report_line(""), {{}, {}}),
 
         ////  'node_1_node'
         //make_and_check(report_line(""), {{edge_t{0, 1, 0}}, {edge_t{0, 1, 0}}}),
