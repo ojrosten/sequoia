@@ -425,112 +425,112 @@ namespace sequoia::testing
           }
         }, // end 'node'
         {  // begin 'node_0'
-        //  {
-        //    graph_description::empty,
-        //    report_line("Clear graph"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.clear();
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node,
-        //    report_line("Remove loop"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_edge(g.cbegin_edges(0));
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_0_0,
-        //    report_line("Add a second loop"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.join(0, 0);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_0_0_interleaved,
-        //    report_line("Interleave a second loop"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.insert_join(g.cbegin_edges(0)+1, 3);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_node_1,
-        //    report_line("Insert node"),
-        //    [this](graph_to_test g) -> graph_to_test {
-        //      check(equality, report_line("Index of added node is 0"), g.insert_node(0), 0_sz);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_0_node,
-        //    report_line("Insert node at end"),
-        //    [this](graph_to_test g) -> graph_to_test {
-        //      check(equality, report_line("Index of added node is 1"), g.insert_node(1), 1_sz);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_0,
-        //    report_line("Swap node with self"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.swap_nodes(0,0);
-        //      return g;
-        //    }
-        //  }
+          {
+            graph_description::empty,
+            report_line("Clear graph"),
+            [](graph_to_test g) -> graph_to_test {
+              g.clear();
+              return g;
+            }
+          },
+          {
+            graph_description::node,
+            report_line("Remove loop"),
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_edge(g.cbegin_edges(0));
+              return g;
+            }
+          },
+          {
+            graph_description::node_0_0,
+            report_line("Add a second loop"),
+            [](graph_to_test g) -> graph_to_test {
+              g.join(0, 0);
+              return g;
+            }
+          },
+          {
+            graph_description::node_0_0_interleaved,
+            report_line("Interleave a second loop"),
+            [](graph_to_test g) -> graph_to_test {
+              g.insert_join(g.cbegin_edges(0)+1, 3);
+              return g;
+            }
+          },
+          {
+            graph_description::node_node_1,
+            report_line("Insert node"),
+            [this](graph_to_test g) -> graph_to_test {
+              check(equality, report_line("Index of added node is 0"), g.insert_node(0), 0_sz);
+              return g;
+            }
+          },
+          {
+            graph_description::node_0_node,
+            report_line("Insert node at end"),
+            [this](graph_to_test g) -> graph_to_test {
+              check(equality, report_line("Index of added node is 1"), g.insert_node(1), 1_sz);
+              return g;
+            }
+          },
+          {
+            graph_description::node_0,
+            report_line("Swap node with self"),
+            [](graph_to_test g) -> graph_to_test {
+              g.swap_nodes(0,0);
+              return g;
+            }
+          }
         }, // end 'node_0'
         {  // begin 'node_0_0'
-        //  {
-        //    graph_description::empty,
-        //    report_line("Clear graph"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.clear();
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::empty,
-        //    report_line("Erase node 0"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_node(0);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_0,
-        //    report_line("Remove first loop"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_edge(g.cbegin_edges(0));
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_0,
-        //    report_line("Remove first loop via second insertion"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_edge(g.cbegin_edges(0) + 1);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_0,
-        //    report_line("Remove second loop"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_edge(std::ranges::next(g.cbegin_edges(0), 2));
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_0,
-        //    report_line("Remove second loop via second insertion"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_edge(std::ranges::next(g.cbegin_edges(0), 3));
-        //      return g;
-        //    }
-        //  }
+          {
+            graph_description::empty,
+            report_line("Clear graph"),
+            [](graph_to_test g) -> graph_to_test {
+              g.clear();
+              return g;
+            }
+          },
+          {
+            graph_description::empty,
+            report_line("Erase node 0"),
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(0);
+              return g;
+            }
+          },
+          {
+            graph_description::node_0,
+            report_line("Remove first loop"),
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_edge(g.cbegin_edges(0));
+              return g;
+            }
+          },
+          {
+            graph_description::node_0,
+            report_line("Remove first loop via second insertion"),
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_edge(g.cbegin_edges(0) + 1);
+              return g;
+            }
+          },
+          {
+            graph_description::node_0,
+            report_line("Remove second loop"),
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_edge(std::ranges::next(g.cbegin_edges(0), 2));
+              return g;
+            }
+          },
+          {
+            graph_description::node_0,
+            report_line("Remove second loop via second insertion"),
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_edge(std::ranges::next(g.cbegin_edges(0), 3));
+              return g;
+            }
+          }
         }, // end 'node_0_0'
         {  // begin 'node_0_0_interleaved'
         //  {
