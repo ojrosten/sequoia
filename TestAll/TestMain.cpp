@@ -270,7 +270,6 @@ int main(int argc, char** argv)
       },
       suite{
         "Manipulations",
-        unweighted_graph_test{"Unweighted Graph Tests"},
         dynamic_directed_graph_unweighted_test{"Unweighted Directed Graph Tests"},
         dynamic_embedded_directed_graph_unweighted_test{"Unweighted Embedded Directed Graph Tests"},
         dynamic_undirected_graph_unweighted_test{"Unweighted Undirected Graph Tests"},

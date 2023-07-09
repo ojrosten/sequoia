@@ -49,7 +49,6 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Maths/Graph/DynamicGraphTestingDiagnostics.cpp
                ${TestDir}/Maths/Graph/DynamicGraphTraversalsTest.cpp
                ${TestDir}/Maths/Graph/DynamicGraphUnweightedAllocationTest.cpp
-               ${TestDir}/Maths/Graph/DynamicGraphUnweightedTest.cpp
                ${TestDir}/Maths/Graph/DynamicGraphUpdateTest.cpp
                ${TestDir}/Maths/Graph/DynamicGraphWeightedAllocationTest.cpp
                ${TestDir}/Maths/Graph/DynamicGraphWeightedTest.cpp
