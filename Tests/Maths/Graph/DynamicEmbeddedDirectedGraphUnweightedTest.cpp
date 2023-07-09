@@ -833,10 +833,57 @@ namespace sequoia::testing
               g.erase_edge(g.cbegin_edges(0) + 3);
               return g;
             }
+          },
+          {
+            graph_description::node_node_1_1inv_interleaved,
+            report_line("Insert node"),
+            [](graph_to_test g) -> graph_to_test {
+              g.insert_node(0);
+              return g;
+            }
           }
         }, // end 'node_0_0inv_interleaved'
         {  // begin 'node_0inv_0_0inv_interleaved'
-
+          {
+            graph_description::node_0_0inv_interleaved,
+            report_line("Remove first loop via first insertion"),
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_edge(g.cbegin_edges(0));
+              return g;
+            }
+          },
+          {
+            graph_description::node_0_0inv_interleaved,
+            report_line("Remove first loop via second insertion"),
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_edge(g.cbegin_edges(0) + 1);
+              return g;
+            }
+          },
+          {
+            graph_description::node_0inv_0inv,
+            report_line("Remove second loop via first insertion"),
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_edge(g.cbegin_edges(0) + 2);
+              return g;
+            }
+          },
+          {
+            graph_description::node_0inv_0inv,
+            report_line("Remove second loop via second insertion"),
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_edge(g.cbegin_edges(0) + 4);
+              return g;
+            }
+          },
+          {
+            graph_description::node_node_1inv_1_1inv_interleaved,
+            report_line("Insert node"),
+            [](graph_to_test g) -> graph_to_test {
+              g.insert_node(0);
+              return g;
+            }
+          }
         }, // end 'node_0inv_0_0inv_interleaved'
         {  // begin 'node_node'
           {
