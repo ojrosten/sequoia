@@ -934,7 +934,7 @@ namespace sequoia::testing
         {  // begin 'node_1_1_node_1_1_1_interleaved'
           {
             graph_description::node_1_node_1_1_1_interleaved,
-            report_line("Remove link {0, 1; 6}"),
+            report_line("Remove link {1(6), 0(1)}"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_edge(g.cbegin_edges(1) + 6);
               return g;

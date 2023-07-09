@@ -1184,7 +1184,22 @@ namespace sequoia::testing
           }
         }, // end 'node_1_node_1inv_1_1inv_interleaved'
         {  //begin 'node_1_node_1inv_1_0_1inv_interleaved'
-
+          {
+            graph_description::node_1_node_1inv_1_1inv_interleaved,
+            report_line("Remove link {1(6), 0(1)}"),
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_edge(g.cbegin_edges(1) + 6);
+              return g;
+            }
+          },
+          {
+            graph_description::node_0inv_0_0inv_interleaved,
+            report_line("Erase node 0"),
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(0);
+              return g;
+            }
+          }
         }, // end 'node_1_node_1inv_1_0_1inv_interleaved'
         {  // begin 'node_1_1_node'
           {
