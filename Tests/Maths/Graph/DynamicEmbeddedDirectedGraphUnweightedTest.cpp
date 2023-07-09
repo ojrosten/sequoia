@@ -1193,6 +1193,14 @@ namespace sequoia::testing
             }
           },
           {
+            graph_description::node_1_node_1inv_1_1inv_interleaved,
+            report_line("Remove link {0(1), 1(6)}"),
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_edge(g.cbegin_edges(0) + 1);
+              return g;
+            }
+          },
+          {
             graph_description::node_0inv_0_0inv_interleaved,
             report_line("Erase node 0"),
             [](graph_to_test g) -> graph_to_test {
