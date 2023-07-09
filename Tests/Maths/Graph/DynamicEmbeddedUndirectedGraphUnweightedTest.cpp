@@ -903,6 +903,14 @@ namespace sequoia::testing
               g.erase_node(0);
               return g;
             }
+          },
+          {
+            graph_description::node_1_node_1_1_1_interleaved,
+            report_line("Join {0, 1; 4}"),
+            [](graph_to_test g) -> graph_to_test {
+              g.insert_join(g.cbegin_edges(0), g.cbegin_edges(1) + 4);
+              return g;
+            }
           }
         }, // end 'node_node_1_1_1_interleaved'
         {  // begin 'node_1_node_1_1_1_interleaved'
