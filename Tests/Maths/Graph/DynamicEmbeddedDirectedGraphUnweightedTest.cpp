@@ -1138,10 +1138,32 @@ namespace sequoia::testing
           }
         }, // end 'node_node_1'
         {  //begin 'node_node_1_1inv_interleaved'
-
+          {
+            graph_description::node_0_0inv_interleaved,
+            report_line("Erase node 0"),
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(0);
+              return g;
+            }
+          }
         }, // end 'node_node_1_1inv_interleaved'
         {  //begin 'node_node_1inv_1_1inv_interleaved'
-
+          {
+            graph_description::node_0inv_0_0inv_interleaved,
+            report_line("Erase node 0"),
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(0);
+              return g;
+            }
+          },
+          {
+            graph_description::node_1_node_1inv_1_1inv_interleaved,
+            report_line("Join {0, 1; 4}"),
+            [](graph_to_test g) -> graph_to_test {
+              g.insert_join(g.cbegin_edges(0), g.cbegin_edges(1) + 4);
+              return g;
+            }
+          }
         }, // end 'node_node_1inv_1_1inv_interleaved'
         {  //begin 'node_1_node_1inv_1_1inv_interleaved'
 
@@ -1960,8 +1982,8 @@ namespace sequoia::testing
         make_and_check(report_line(""), {{}, {edge_t{1, inverted_edge, 1}, edge_t{1, inverted_edge, 0}, edge_t{1, 1, 4}, edge_t{1, inverted_edge, 5}, edge_t{1, 1, 2}, edge_t{1, inverted_edge, 3}}}),
 
         // 'node_1_node_1inv_1_1inv_interleaved'
-        make_and_check(report_line(""), {{edge_t{0, 1, 2}},
-                                         {edge_t{1, inverted_edge, 1}, edge_t{1, inverted_edge, 0}, edge_t{0, 1, 0}, edge_t{1, 1, 5}, edge_t{1, inverted_edge, 6}, edge_t{1, 1, 3}, edge_t{1, inverted_edge, 4}}}),
+        make_and_check(report_line(""), {{edge_t{0, 1, 4}},
+                                         {edge_t{1, inverted_edge, 1}, edge_t{1, inverted_edge, 0}, edge_t{1, 1, 5}, edge_t{1, inverted_edge, 6}, edge_t{0, 1, 0}, edge_t{1, 1, 2}, edge_t{1, inverted_edge, 3}}}),
 
         // 'node_1_node_1inv_1_0_1inv_interleaved'
         make_and_check(report_line(""), {{edge_t{0, 1, 2}, edge_t{1, 0, 6}},
