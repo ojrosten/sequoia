@@ -1077,114 +1077,114 @@ namespace sequoia::testing
           }
         }, // end 'node_1_node_2_node'
         {  // begin 'node_1_node_2_node_0'
-        //  {
-        //    graph_description::empty,
-        //    report_line("Clear graph"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.clear();
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_1_node,
-        //    report_line("Erase node 0"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_node(0);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_node_0,
-        //    report_line("Erase node 1"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_node(1);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_1_node,
-        //    report_line("Erase node 2"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_node(2);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_1_node_2_node,
-        //    report_line("Remove {2,0}"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_edge(++g.cbegin_edges(2));
-        //      return g;
-        //    }
-        //  }
+          {
+            graph_description::empty,
+            report_line("Clear graph"),
+            [](graph_to_test g) -> graph_to_test {
+              g.clear();
+              return g;
+            }
+          },
+          {
+            graph_description::node_1_node,
+            report_line("Erase node 0"),
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(0);
+              return g;
+            }
+          },
+          {
+            graph_description::node_1_node,
+            report_line("Erase node 1"),
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(1);
+              return g;
+            }
+          },
+          {
+            graph_description::node_1_node,
+            report_line("Erase node 2"),
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(2);
+              return g;
+            }
+          },
+          {
+            graph_description::node_1_node_2_node,
+            report_line("Remove {2,0}"),
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_edge(++g.cbegin_edges(2));
+              return g;
+            }
+          }
         }, // end 'node_1_node_2_node_0'
         {  // begin 'node_node_1_node'
-        //  {
-        //    graph_description::empty,
-        //    report_line("Clear graph"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.clear();
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_0_node,
-        //    report_line("Erase node 0"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_node(0);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_node,
-        //    report_line("Erase node 1"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_node(1);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_node_1,
-        //    report_line("Erase node 2"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_node(2);
-        //      return g;
-        //    }
-        //  },
+          {
+            graph_description::empty,
+            report_line("Clear graph"),
+            [](graph_to_test g) -> graph_to_test {
+              g.clear();
+              return g;
+            }
+          },
+          {
+            graph_description::node_0_node,
+            report_line("Erase node 0"),
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(0);
+              return g;
+            }
+          },
+          {
+            graph_description::node_node,
+            report_line("Erase node 1"),
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(1);
+              return g;
+            }
+          },
+          {
+            graph_description::node_node_1,
+            report_line("Erase node 2"),
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(2);
+              return g;
+            }
+          },
         }, // end 'node_node_1_node'
         {  // begin 'node_1_node_1_node'
-        //  {
-        //    graph_description::node_0_node,
-        //    report_line("Erase node 0"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_node(0);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_node,
-        //    report_line("Erase node 1"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_node(1);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_node_1_node,
-        //    report_line("Remove {0,1}"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_edge(g.cbegin_edges(0));
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_1_node_1_0_node,
-        //    report_line("Join {1,0}"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.join(1, 0);
-        //      return g;
-        //    }
-        //  }
+          {
+            graph_description::node_0_node,
+            report_line("Erase node 0"),
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(0);
+              return g;
+            }
+          },
+          {
+            graph_description::node_node,
+            report_line("Erase node 1"),
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(1);
+              return g;
+            }
+          },
+          {
+            graph_description::node_node_1_node,
+            report_line("Remove {0,1}"),
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_edge(g.cbegin_edges(0));
+              return g;
+            }
+          },
+          {
+            graph_description::node_1_node_1_0_node,
+            report_line("Join {1,0}"),
+            [](graph_to_test g) -> graph_to_test {
+              g.join(1, 0);
+              return g;
+            }
+          }
         }, // end 'node_1_node_1_node'
         {  // begin 'node_1_node_1_0_node'
         //  {
