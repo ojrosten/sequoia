@@ -924,7 +924,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_1_1_node_1_1_1_interleaved,
-            report_line("Join {0, 1; 6}"),
+            report_line("Join {0(1), 1(6)}"),
             [](graph_to_test g) -> graph_to_test {
               g.insert_join(g.cbegin_edges(0)+1, g.cbegin_edges(1) + 6);
               return g;
