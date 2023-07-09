@@ -68,6 +68,21 @@ namespace sequoia::testing
       //  x    x
       node_node_1,
 
+      //      /-\/-\
+      //     /  /\  \
+      //     \ /  \ /
+      //  x      x
+      node_node_1_1_interleaved,
+
+      //      /-\/-\
+      //     /  /\  \
+      //     \ /  \ /
+      //  x     x
+      //       / \
+      //       \-/
+      //
+      node_node_1_1_1_interleaved,
+
       //  x ==== x
       node_1_1_node,
 
@@ -582,6 +597,14 @@ namespace sequoia::testing
               g.insert_join(g.cbegin_edges(0), g.cbegin_edges(0));
               return g;
             }
+          },
+          {
+            graph_description::node_node_1_1_interleaved,
+            report_line("Insert node"),
+            [](graph_to_test g) -> graph_to_test {
+              g.insert_node(0);
+              return g;
+            }
           }
         }, // end 'node_0_0_interleaved'
         {  // begin 'node_0_0_0_interleaved'
@@ -630,6 +653,14 @@ namespace sequoia::testing
             report_line("Remove third loop via second insertion"),
             [](graph_to_test g) -> graph_to_test {
               g.erase_edge(g.cbegin_edges(0) + 5);
+              return g;
+            }
+          },
+          {
+            graph_description::node_node_1_1_1_interleaved,
+            report_line("Insert node"),
+            [](graph_to_test g) -> graph_to_test {
+              g.insert_node(0);
               return g;
             }
           }
@@ -836,6 +867,26 @@ namespace sequoia::testing
             }
           }
         }, // end 'node_node_1'
+        {  // begin 'node_node_1_1_interleaved'
+          {
+            graph_description::node_0_0_interleaved,
+            report_line("Insert node"),
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(0);
+              return g;
+            }
+          }
+        }, // end 'node_node_1_1_interleaved'
+        {  // begin 'node_node_1_1_1_interleaved'
+          {
+            graph_description::node_0_0_0_interleaved,
+            report_line("Insert node"),
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(0);
+              return g;
+            }
+          }
+        }, // end 'node_node_1_1_1_interleaved'
         {  // begin 'node_1_1_node'
           {
             graph_description::empty,
@@ -1524,6 +1575,12 @@ namespace sequoia::testing
 
         //  'node_node_1'
         make_and_check(report_line(""), {{}, {edge_t{1, 1}, edge_t{1, 0}}}),
+
+        // 'node_1_1_interleaved'
+        make_and_check(report_line(""), {{}, {edge_t{1, 2}, edge_t{1, 3}, edge_t{1, 0}, edge_t{1, 1}}}),
+
+        // 'node_1_1_1_interleaved'
+        make_and_check(report_line(""), {{}, {edge_t{1, 1}, edge_t{1, 0}, edge_t{1, 4}, edge_t{1, 5}, edge_t{1, 2}, edge_t{1, 3}}}),
 
         // 'node_1_1_node'
         make_and_check(report_line(""), {{edge_t{1, 0}, edge_t{1, 1}}, {edge_t{0, 0}, edge_t{0, 1}}}),
