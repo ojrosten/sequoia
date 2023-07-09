@@ -1265,108 +1265,108 @@ namespace sequoia::testing
           }
         }, // end 'node_1_node_1_2_node'
         {  // begin 'node_2_node_node_2'
-        //  {
-        //    graph_description::node_1_node_1_node,
-        //    report_line("Swap {1,2}"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.swap_nodes(1,2);
-        //      return g;
-        //    }
-        //  }
+          {
+            graph_description::node_1_node_1_node,
+            report_line("Swap {1,2}"),
+            [](graph_to_test g) -> graph_to_test {
+              g.swap_nodes(1,2);
+              return g;
+            }
+          }
         }, // end 'node_2_node_node_2'
         {  // begin 'node_1_1_2_2_node_2_node'
-        //  {
-        //    graph_description::node_1_node,
-        //    report_line("Erase node 0"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_node(0);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_1_1_node,
-        //    report_line("Erase node 1"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_node(1);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_1_1_node,
-        //    report_line("Erase node 2"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_node(2);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_1_1_2_2_node_2_node_1,
-        //    report_line("Insert Join {2, 1}"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.insert_join(g.cbegin_edges(2)+1, g.cbegin_edges(1)+2);
-        //      return g;
-        //    }
-        //  }
+          {
+            graph_description::node_1_node,
+            report_line("Erase node 0"),
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(0);
+              return g;
+            }
+          },
+          {
+            graph_description::node_1_1_node,
+            report_line("Erase node 1"),
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(1);
+              return g;
+            }
+          },
+          {
+            graph_description::node_1_1_node,
+            report_line("Erase node 2"),
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(2);
+              return g;
+            }
+          },
+          {
+            graph_description::node_1_1_2_2_node_2_node_1,
+            report_line("Insert Join {2, 1}"),
+            [](graph_to_test g) -> graph_to_test {
+              g.insert_join(g.cbegin_edges(2)+1, g.cbegin_edges(1)+2);
+              return g;
+            }
+          }
         }, // end 'node_1_1_2_2_node_2_node'
         {  // begin 'node_1_1_2_2_node_2_node_1'
-        //  {
-        //    graph_description::node_1pos1_node_0pos0,
-        //    report_line("Erase node 0"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_node(0);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_1_1_node,
-        //    report_line("Erase node 1"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_node(1);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_1_1_node,
-        //    report_line("Erase node 2"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_node(2);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_2_2_1_1_node_2pos3_node_1,
-        //    report_line("Swap {1,2}"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.swap_nodes(1,2);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_2_2_1_1_node_2pos3_node_1,
-        //    report_line("Swap {2,1}"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.swap_nodes(2,1);
-        //      return g;
-        //    }
-        //  }
+          {
+            graph_description::node_1pos1_node_0pos0,
+            report_line("Erase node 0"),
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(0);
+              return g;
+            }
+          },
+          {
+            graph_description::node_1_1_node,
+            report_line("Erase node 1"),
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(1);
+              return g;
+            }
+          },
+          {
+            graph_description::node_1_1_node,
+            report_line("Erase node 2"),
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(2);
+              return g;
+            }
+          },
+          {
+            graph_description::node_2_2_1_1_node_2pos3_node_1,
+            report_line("Swap {1,2}"),
+            [](graph_to_test g) -> graph_to_test {
+              g.swap_nodes(1,2);
+              return g;
+            }
+          },
+          {
+            graph_description::node_2_2_1_1_node_2pos3_node_1,
+            report_line("Swap {2,1}"),
+            [](graph_to_test g) -> graph_to_test {
+              g.swap_nodes(2,1);
+              return g;
+            }
+          }
         }, // end 'node_1_1_2_2_node_2_node_1'
         {  // begin node_2_2_1_1_node_2_node_1
-        //  {
-        //    graph_description::node_1_1_2_2_node_2_node_1,
-        //    report_line("Swap {1,2}"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.swap_nodes(1,2);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_1_1_2_2_node_2_node_1,
-        //    report_line("Swap {2,1}"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.swap_nodes(2,1);
-        //      return g;
-        //    }
-        //  }
+          {
+            graph_description::node_1_1_2_2_node_2_node_1,
+            report_line("Swap {1,2}"),
+            [](graph_to_test g) -> graph_to_test {
+              g.swap_nodes(1,2);
+              return g;
+            }
+          },
+          {
+            graph_description::node_1_1_2_2_node_2_node_1,
+            report_line("Swap {2,1}"),
+            [](graph_to_test g) -> graph_to_test {
+              g.swap_nodes(2,1);
+              return g;
+            }
+          }
         }, // end node_2_2_1_1_node_2_node_1
         {  // begin 'node_3_1_node_2_node_node'
         //  {
