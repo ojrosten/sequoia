@@ -38,6 +38,15 @@ namespace sequoia::testing
       //        x
       node_0_0_interleaved,
 
+      //     /-\/-\
+      //    /  /\  \
+      //    \ /  \ /
+      //       x
+      //      / \
+      //      \-/
+      //
+      node_0_0_0_interleaved,
+
       //  x    x
       node_node,
 
@@ -557,7 +566,74 @@ namespace sequoia::testing
               return g;
             }
           },
+          {
+            graph_description::node_0_0_0_interleaved,
+            report_line("Insert a third loop"),
+            [](graph_to_test g) -> graph_to_test {
+              g.insert_join(g.cbegin_edges(0), ++g.cbegin_edges(0));
+              return g;
+            }
+          }
+          ,
+          {
+            graph_description::node_0_0_0_interleaved,
+            report_line("Insert a third loop, inverted"),
+            [](graph_to_test g) -> graph_to_test {
+              g.insert_join(g.cbegin_edges(0), g.cbegin_edges(0));
+              return g;
+            }
+          }
         }, // end 'node_0_0_interleaved'
+        {  // begin 'node_0_0_0_interleaved'
+          {
+            graph_description::node_0_0_interleaved,
+            report_line("Remove first loop via first insertion"),
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_edge(g.cbegin_edges(0));
+              return g;
+            }
+          },
+          {
+            graph_description::node_0_0_interleaved,
+            report_line("Remove first loop via second insertion"),
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_edge(g.cbegin_edges(0)+1);
+              return g;
+            }
+          },
+          {
+            graph_description::node_0_0,
+            report_line("Remove second loop via first insertion"),
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_edge(g.cbegin_edges(0)+2);
+              return g;
+            }
+          },
+          {
+            graph_description::node_0_0,
+            report_line("Remove second loop via second insertion"),
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_edge(g.cbegin_edges(0)+4);
+              return g;
+            }
+          },
+          {
+            graph_description::node_0_0,
+            report_line("Remove third loop via first insertion"),
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_edge(g.cbegin_edges(0) + 3);
+              return g;
+            }
+          },
+          {
+            graph_description::node_0_0,
+            report_line("Remove third loop via second insertion"),
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_edge(g.cbegin_edges(0) + 5);
+              return g;
+            }
+          }
+        }, // end 'node_0_0_0_interleaved'
         {  // begin 'node_node'
           {
             graph_description::empty,
@@ -1430,6 +1506,9 @@ namespace sequoia::testing
 
         // 'node_0_0_interleaved'
         make_and_check(report_line(""), {{edge_t{0, 2}, edge_t{0, 3}, edge_t{0, 0}, edge_t{0, 1}}}),
+
+        // 'node_0_0_0_interleaved'
+        make_and_check(report_line(""), {{edge_t{0, 1}, edge_t{0, 0}, edge_t{0, 4}, edge_t{0, 5}, edge_t{0, 2}, edge_t{0, 3}}}),
 
         //  'node_node'
         make_and_check(report_line(""), {{}, {}}),
