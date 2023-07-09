@@ -761,138 +761,138 @@ namespace sequoia::testing
           }
         }, // end 'node_node_1'
         {  // begin 'node_1_1_node'
-        //  {
-        //    graph_description::empty,
-        //    report_line("Clear graph"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.clear();
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node,
-        //    report_line("Erase node 0"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_node(0);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node,
-        //    report_line("Erase node 1"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_node(1);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_1_node,
-        //    report_line("Erase node 0 zeroth link"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_edge(g.cbegin_edges(0));
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_1_node,
-        //    report_line("Erase node 0 first link"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_edge(g.cbegin_edges(0)+1);
-        //      return g;
-        //    }
-        //  }
+          {
+            graph_description::empty,
+            report_line("Clear graph"),
+            [](graph_to_test g) -> graph_to_test {
+              g.clear();
+              return g;
+            }
+          },
+          {
+            graph_description::node,
+            report_line("Erase node 0"),
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(0);
+              return g;
+            }
+          },
+          {
+            graph_description::node,
+            report_line("Erase node 1"),
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(1);
+              return g;
+            }
+          },
+          {
+            graph_description::node_1_node,
+            report_line("Erase node 0 zeroth link"),
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_edge(g.cbegin_edges(0));
+              return g;
+            }
+          },
+          {
+            graph_description::node_1_node,
+            report_line("Erase node 0 first link"),
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_edge(g.cbegin_edges(0)+1);
+              return g;
+            }
+          }
         }, // end 'node_1_1_node'
         {  // begin 'node_1pos1_node_0pos0'
-        //  {
-        //    graph_description::empty,
-        //    report_line("Clear graph"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.clear();
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node,
-        //    report_line("Erase node 0"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_node(0);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node,
-        //    report_line("Erease node 1"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_node(1);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_node_0,
-        //    report_line("Erase node 0 link"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_edge(g.cbegin_edges(0));
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_1_node,
-        //    report_line("Erase node 1 link"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_edge(g.cbegin_edges(1));
-        //      return g;
-        //    }
-        //  },
+          {
+            graph_description::empty,
+            report_line("Clear graph"),
+            [](graph_to_test g) -> graph_to_test {
+              g.clear();
+              return g;
+            }
+          },
+          {
+            graph_description::node,
+            report_line("Erase node 0"),
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(0);
+              return g;
+            }
+          },
+          {
+            graph_description::node,
+            report_line("Erease node 1"),
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(1);
+              return g;
+            }
+          },
+          {
+            graph_description::node_1_node,
+            report_line("Erase node 0 link"),
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_edge(g.cbegin_edges(0));
+              return g;
+            }
+          },
+          {
+            graph_description::node_1_node,
+            report_line("Erase node 1 link"),
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_edge(g.cbegin_edges(1));
+              return g;
+            }
+          },
         }, // end 'node_1pos1_node_0pos0'
         {  // begin 'node_node_node'
-        //  {
-        //    graph_description::empty,
-        //    report_line("Clear graph"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.clear();
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_node,
-        //    report_line("Erase node 0"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_node(0);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_node,
-        //    report_line("Erase node 1"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_node(1);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_node,
-        //    report_line("Erase node 2"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.erase_node(2);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_1_node_node,
-        //    report_line("Join {0,1}"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.join(0,1);
-        //      return g;
-        //    }
-        //  },
-        //  {
-        //    graph_description::node_node_node_1,
-        //    report_line("Join {2,1}"),
-        //    [](graph_to_test g) -> graph_to_test {
-        //      g.join(2,1);
-        //      return g;
-        //    }
-        //  }
+          {
+            graph_description::empty,
+            report_line("Clear graph"),
+            [](graph_to_test g) -> graph_to_test {
+              g.clear();
+              return g;
+            }
+          },
+          {
+            graph_description::node_node,
+            report_line("Erase node 0"),
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(0);
+              return g;
+            }
+          },
+          {
+            graph_description::node_node,
+            report_line("Erase node 1"),
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(1);
+              return g;
+            }
+          },
+          {
+            graph_description::node_node,
+            report_line("Erase node 2"),
+            [](graph_to_test g) -> graph_to_test {
+              g.erase_node(2);
+              return g;
+            }
+          },
+          {
+            graph_description::node_1_node_node,
+            report_line("Join {0,1}"),
+            [](graph_to_test g) -> graph_to_test {
+              g.join(0,1);
+              return g;
+            }
+          },
+          {
+            graph_description::node_node_node_1,
+            report_line("Join {2,1}"),
+            [](graph_to_test g) -> graph_to_test {
+              g.join(2,1);
+              return g;
+            }
+          }
         }, // end 'node_node_node'
         {  // begin 'node_1_node_node'
         //  {
