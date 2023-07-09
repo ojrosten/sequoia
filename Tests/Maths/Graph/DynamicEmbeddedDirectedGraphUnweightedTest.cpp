@@ -60,6 +60,15 @@ namespace sequoia::testing
       //        x
       node_0_0inv_interleaved,
 
+      //     />\/<\
+      //    /  /\  \
+      //    \ /  \ /
+      //       x
+      //      / \
+      //      \>/
+      //
+      node_0inv_0_0inv_interleaved,
+
       //  x    x
       node_node,
 
@@ -83,6 +92,39 @@ namespace sequoia::testing
       //      \ /
       //  x    x
       node_node_1,
+
+      //      />\/<\
+      //     /  /\  \
+      //     \ /  \ /
+      //  x      x
+      node_node_1_1inv_interleaved,
+
+      //      />\/<\
+      //     /  /\  \
+      //     \ /  \ /
+      //  x     x
+      //       / \
+      //       \>/
+      //
+      node_node_1inv_1_1inv_interleaved,
+
+      //      />\/<\
+      //     /  /\  \
+      //     \ /  \ /
+      // x ---> x
+      //       / \
+      //       \>/
+      //
+      node_1_node_1inv_1_1inv_interleaved,
+
+      //         />\/<\
+      //        /  /\  \
+      //        \ /  \ /
+      // -> x ---> x-----
+      //          / \
+      //          \>/
+      //
+      node_1_node_1inv_1_0_1inv_interleaved,
 
       //  x ===> x
       node_1_1_node,
@@ -793,6 +835,9 @@ namespace sequoia::testing
             }
           }
         }, // end 'node_0_0inv_interleaved'
+        {  // begin 'node_0inv_0_0inv_interleaved'
+
+        }, // end 'node_0inv_0_0inv_interleaved'
         {  // begin 'node_node'
           {
             graph_description::empty,
@@ -1045,6 +1090,18 @@ namespace sequoia::testing
             }
           }
         }, // end 'node_node_1'
+        {  //begin 'node_node_1_1inv_interleaved'
+
+        }, // end 'node_node_1_1inv_interleaved'
+        {  //begin 'node_node_1inv_1_1inv_interleaved'
+
+        }, // end 'node_node_1inv_1_1inv_interleaved'
+        {  //begin 'node_1_node_1inv_1_1inv_interleaved'
+
+        }, // end 'node_1_node_1inv_1_1inv_interleaved'
+        {  //begin 'node_1_node_1inv_1_0_1inv_interleaved'
+
+        }, // end 'node_1_node_1inv_1_0_1inv_interleaved'
         {  // begin 'node_1_1_node'
           {
             graph_description::empty,
@@ -1828,6 +1885,9 @@ namespace sequoia::testing
         // 'node_0_0inv_interleaved'
         make_and_check(report_line(""), {{edge_t{0, 0, 2}, edge_t{0, inverted_edge, 3}, edge_t{0, 0, 0}, edge_t{0, inverted_edge, 1}}}),
 
+        // 'node_0inv_0_0inv_interleaved'
+        make_and_check(report_line(""), {{edge_t{0, inverted_edge, 1}, edge_t{0, inverted_edge, 0}, edge_t{0, 0, 4}, edge_t{0, inverted_edge, 5}, edge_t{0, 0, 2}, edge_t{0, inverted_edge, 3}}}),
+
         //  'node_node'
         make_and_check(report_line(""), {{}, {}}),
 
@@ -1845,6 +1905,20 @@ namespace sequoia::testing
 
         //  'node_node_1'
         make_and_check(report_line(""), {{}, {edge_t{1, 1, 1}, edge_t{1, 1, 0}}}),
+
+        // 'node_node_1_1inv_interleaved'
+        make_and_check(report_line(""), {{}, {edge_t{1, 1, 2}, edge_t{1, inverted_edge, 3}, edge_t{1, 1, 0}, edge_t{1, inverted_edge, 1}}}),
+
+        // 'node_node_1inv_1_1inv_interleaved'
+        make_and_check(report_line(""), {{}, {edge_t{1, inverted_edge, 1}, edge_t{1, inverted_edge, 0}, edge_t{1, 1, 4}, edge_t{1, inverted_edge, 5}, edge_t{1, 1, 2}, edge_t{1, inverted_edge, 3}}}),
+
+        // 'node_1_node_1inv_1_1inv_interleaved'
+        make_and_check(report_line(""), {{edge_t{0, 1, 2}},
+                                         {edge_t{1, inverted_edge, 1}, edge_t{1, inverted_edge, 0}, edge_t{0, 1, 0}, edge_t{1, 1, 5}, edge_t{1, inverted_edge, 6}, edge_t{1, 1, 3}, edge_t{1, inverted_edge, 4}}}),
+
+        // 'node_1_node_1inv_1_0_1inv_interleaved'
+        make_and_check(report_line(""), {{edge_t{0, 1, 2}, edge_t{1, 0, 6}},
+                                         {edge_t{1, inverted_edge, 1}, edge_t{1, inverted_edge, 0}, edge_t{0, 1, 0}, edge_t{1, 1, 5}, edge_t{1, inverted_edge, 7}, edge_t{1, 1, 3}, edge_t{1, 0, 1}, edge_t{1, inverted_edge, 4}}}),
 
         // 'node_1_1_node'
         make_and_check(report_line(""), {{edge_t{0, 1, 0}, edge_t{0, 1, 1}}, {edge_t{0, 1, 0}, edge_t{0, 1, 1}}}),
