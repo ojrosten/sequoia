@@ -359,11 +359,13 @@ namespace sequoia
         m_Edges.swap_partitions(i, j);
       }
 
+      [[nodiscard]]
       auto get_edge_allocator() const
       {
         return m_Edges.get_allocator();
       }
 
+      [[nodiscard]]
       auto get_edge_allocator(partitions_allocator_tag) const
         requires has_partitions_allocator<edge_storage_type>
       {
@@ -467,16 +469,19 @@ namespace sequoia
 
           for(const auto partition : partitionsToVisit)
           {
-            auto fn = [node](const edge_type& e) {
-              if constexpr (directed(directedness))
-              {
-                return (e.target_node() == node) || (e.source_node() == node);
-              }
-              else
-              {
-                return e.target_node() == node;
+            auto fn{
+              [node](const edge_type& e) {
+                if constexpr(directed(directedness))
+                {
+                  return (e.target_node() == node) || (e.source_node() == node);
+                }
+                else
+                {
+                  return e.target_node() == node;
+                }
               }
             };
+
 
             if constexpr (embeddedEdge)
             {
@@ -1172,36 +1177,44 @@ namespace sequoia
         requires (!is_embedded_v && !is_directed_v)
       {
         using range_t = partition_iterator_range<IntermediateEdges>;
+        using namespace graph_errors;
 
         visit_edges(
           edges,
           []() {},
           [](edge_index_type i, range_t hostRange) {
-            if(std::ranges::distance(hostRange) % 2) throw std::logic_error{graph_errors::odd_num_loops_error("connectivity", i)};
+            if(std::ranges::distance(hostRange) % 2) throw std::logic_error{odd_num_loops_error("connectivity", i)};
           },
           [&](edge_index_type i, edge_index_type target, range_t hostRange, range_t targetRange) {
-            if(auto reciprocalCount{std::ranges::distance(targetRange)}; !reciprocalCount)
-            {
-              const auto edgeIndex{static_cast<std::size_t>(std::ranges::distance(edges.cbegin_partition(i), hostRange.begin()))};
-              throw std::logic_error{graph_errors::absent_reciprocated_partial_edge_message("connectivity", {i, edgeIndex})};
-            }
-            else if(auto count{std::ranges::distance(hostRange)}; count > reciprocalCount)
-            {
-              const auto edgeIndex{static_cast<std::size_t>(std::ranges::distance(edges.cbegin_partition(i), hostRange.begin()) + reciprocalCount)};
-              throw std::logic_error{graph_errors::absent_reciprocated_partial_edge_message("connectivity", {i, edgeIndex})};
-            }
-            else if(count < reciprocalCount)
-            {
-              const auto edgeIndex{static_cast<std::size_t>(std::ranges::distance(edges.cbegin_partition(target), targetRange.begin()) + count)};
-              throw std::logic_error{graph_errors::absent_reciprocated_partial_edge_message("connectivity", {target, edgeIndex})};
-            }
+            const auto brokenEdge{
+              [&, i, target, hostRange, targetRange]() -> std::optional<edge_indices> {
+                if(auto reciprocalCount{std::ranges::distance(targetRange)}; !reciprocalCount)
+                {
+                  return edge_indices{i, static_cast<std::size_t>(std::ranges::distance(edges.cbegin_partition(i), hostRange.begin()))};
+                }
+                else if(auto count{std::ranges::distance(hostRange)}; count > reciprocalCount)
+                {
+                  return edge_indices{i, static_cast<std::size_t>(std::ranges::distance(edges.cbegin_partition(i), hostRange.begin()) + reciprocalCount)};
+                }
+                else if(count < reciprocalCount)
+                {
+                  return edge_indices{target, static_cast<std::size_t>(std::ranges::distance(edges.cbegin_partition(target), targetRange.begin()) + count)};
+                }
+
+                return {};
+              }()
+            };
+
+            if(brokenEdge)
+              throw std::logic_error{absent_reciprocated_partial_edge_message("connectivity", brokenEdge.value())};
           }
         );
 
         return std::forward<IntermediateEdges>(edges);
       }
 
-      template<std::ranges::view View> constexpr static auto find_cluster_end(View v) -> decltype(v.begin())
+      template<std::ranges::view View>
+      constexpr static auto find_cluster_end(View v) -> decltype(v.begin())
       {
         return !v.empty() ? std::ranges::find_if_not(v, [&front{v.front()}](const auto& e){ return e == front; }) : v.end();
       }
@@ -1228,10 +1241,9 @@ namespace sequoia
 
           const auto nodeIndex{static_cast<edge_index_type>(std::ranges::distance(edges.begin(), nodeEdgesIter))};
           const auto& nodeEdges{*nodeEdgesIter};
-          for(auto edgeIter{nodeEdges.begin()}; edgeIter != nodeEdges.end(); ++edgeIter)
+          for(const auto& edge : nodeEdges)
           {
-            const auto& edge{*edgeIter};
-            storage.push_back_to_partition(nodeIndex, edge_type{edge.target_node(), make_edge_weight(edge.weight())});
+            storage.push_back_to_partition(nodeIndex, edge.target_node(), make_edge_weight(edge.weight()));
           }
         }
 
@@ -1431,8 +1443,7 @@ namespace sequoia
                 {
                   if(i->inverted())
                   {
-                    using inv_t = inversion_constant<true>;
-                    edge_type e{i->source_node(), inv_t{}, make_edge_weight(i->weight())};
+                    edge_type e{i->source_node(), inverted_edge, make_edge_weight(i->weight())};
                     appender(std::move(e));
                   }
                   else
@@ -1713,6 +1724,7 @@ namespace sequoia
       }
 
       template<std::input_or_output_iterator Iter, std::sentinel_for<Iter> Sentinel, class Fn>
+        requires std::is_invocable_r_v<edge_index_type, Fn, edge_index_type>
       constexpr void modify_comp_indices(Iter first, Sentinel last, Fn fn) noexcept
       {
         const auto start{first};
