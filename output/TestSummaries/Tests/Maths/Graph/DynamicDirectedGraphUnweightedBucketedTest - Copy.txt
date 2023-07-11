@@ -1,2 +1,0 @@
-Unweighted Directed Graph Tests
-Standard Top Level Checks:               708;  Failures:  0  [Deep checks: 39916]
