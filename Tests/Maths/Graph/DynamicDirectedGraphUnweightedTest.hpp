@@ -9,14 +9,14 @@
 
 /*! \file */
 
-#include "DynamicGraphTestingUtilities.hpp"
+#include "DynamicDirectedGraphTestingUtilities.hpp"
 
 namespace sequoia::testing
 {
-  class dynamic_directed_graph_unweighted_test final : public regular_test
+  class dynamic_directed_graph_unweighted_test final : public dynamic_directed_graph_operations
   {
   public:
-    using regular_test::regular_test;
+    using dynamic_directed_graph_operations::dynamic_directed_graph_operations;
 
     [[nodiscard]]
     std::filesystem::path source_file() const;
@@ -25,20 +25,5 @@ namespace sequoia::testing
   private:
     template <class, class, concrete_test>
     friend class graph_test_helper;
-
-    template<maths::network>
-    friend struct graph_initialization_checker;
-
-    template
-    <
-      maths::graph_flavour GraphFlavour,
-      class EdgeWeight,
-      class NodeWeight,
-      class EdgeWeightCreator,
-      class NodeWeightCreator,
-      class EdgeStorageTraits,
-      class NodeWeightStorageTraits
-    >
-    void execute_operations();
   };
 }
