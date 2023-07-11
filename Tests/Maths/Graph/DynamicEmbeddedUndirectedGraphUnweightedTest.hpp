@@ -9,7 +9,7 @@
 
 /*! \file */
 
-#include "DynamicGraphTestingUtilities.hpp"
+#include "DynamicEmbeddedUndirectedGraphTestingUtilities.hpp"
 
 namespace sequoia::testing
 {
