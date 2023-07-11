@@ -1,2 +1,0 @@
-Directed Graph Unweighted Contiguous Tests
-Standard Top Level Checks:               354;  Failures:  0  [Deep checks: 19958]

@@ -11,6 +11,7 @@
 
 #include "DynamicGraphTestingUtilities.hpp"
 
+#include "sequoia/TestFramework/RegularTestCore.hpp"
 #include "sequoia/TestFramework/StateTransitionUtilities.hpp"
 
 namespace sequoia::testing
@@ -167,31 +168,24 @@ namespace sequoia::testing
     class EdgeStorageTraits,
     class NodeWeightStorageTraits
   >
-  class dynamic_directed_graph_operations : public regular_test
+  class dynamic_directed_graph_operations
   {
     template<maths::network>
     friend struct graph_initialization_checker;
   public:
-    using regular_test::regular_test;
-  protected:
-    ~dynamic_directed_graph_operations() = default;
-
-    dynamic_directed_graph_operations(dynamic_directed_graph_operations&&)            noexcept = default;
-    dynamic_directed_graph_operations& operator=(dynamic_directed_graph_operations&&) noexcept = default;
-
     using graph_t            = maths::graph<maths::directed_flavour::directed, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>;
     using edge_t             = typename graph_t::edge_init_type;
     using edges_equivalent_t = std::initializer_list<std::initializer_list<edge_t>>;
     using transition_graph   = typename transition_checker<graph_t>::transition_graph;
 
     [[nodiscard]]
-    graph_t make_and_check(std::string_view description, edges_equivalent_t init)
+    static graph_t make_and_check(regular_test& t, std::string_view description, edges_equivalent_t init)
     {
-      return graph_initialization_checker<graph_t>::make_and_check(*this, description, init);
+      return graph_initialization_checker<graph_t>::make_and_check(t, description, init);
     }
 
     [[nodiscard]]
-    transition_graph make_transition_graph()
+    static transition_graph make_transition_graph(regular_test& t)
     {
       return transition_graph{
         {
@@ -199,64 +193,64 @@ namespace sequoia::testing
             {
               directed_graph_description::empty,
               report_line(""),
-              [this](const graph_t& g) -> const graph_t& {
-                check_exception_thrown<std::out_of_range>(report_line("cbegin_edges throws for empty graph"), [&g]() { return g.cbegin_edges(0); });
+              [&t](const graph_t& g) -> const graph_t& {
+                t.check_exception_thrown<std::out_of_range>(report_line("cbegin_edges throws for empty graph"), [&g]() { return g.cbegin_edges(0); });
                 return g;
               }
             },
             {
               directed_graph_description::empty,
               report_line(""),
-              [this](const graph_t& g) -> const graph_t& {
-                check_exception_thrown<std::out_of_range>(report_line("cend_edges throws for empty graph"), [&g]() { return g.cend_edges(0); });
+              [&t](const graph_t& g) -> const graph_t& {
+                t.check_exception_thrown<std::out_of_range>(report_line("cend_edges throws for empty graph"), [&g]() { return g.cend_edges(0); });
                 return g;
               }
             },
             {
               directed_graph_description::empty,
               report_line(""),
-              [this](const graph_t& g) -> const graph_t& {
-                check_exception_thrown<std::out_of_range>(report_line("crbegin_edges throws for empty graph"), [&g]() { return g.crbegin_edges(0); });
+              [&t](const graph_t& g) -> const graph_t& {
+                t.check_exception_thrown<std::out_of_range>(report_line("crbegin_edges throws for empty graph"), [&g]() { return g.crbegin_edges(0); });
                 return g;
               }
             },
             {
               directed_graph_description::empty,
               report_line(""),
-              [this](const graph_t& g) -> const graph_t& {
-                check_exception_thrown<std::out_of_range>(report_line("crend_edges throws for empty graph"), [&g]() { return g.crend_edges(0); });
+              [&t](const graph_t& g) -> const graph_t& {
+                t.check_exception_thrown<std::out_of_range>(report_line("crend_edges throws for empty graph"), [&g]() { return g.crend_edges(0); });
                 return g;
               }
             },
             {
               directed_graph_description::empty,
               report_line(""),
-              [this](const graph_t& g) -> const graph_t& {
-                check_exception_thrown<std::out_of_range>(report_line("cedges throws for empty graph"), [&g]() { return g.cedges(0); });
+              [&t](const graph_t& g) -> const graph_t& {
+                t.check_exception_thrown<std::out_of_range>(report_line("cedges throws for empty graph"), [&g]() { return g.cedges(0); });
                 return g;
               }
             },
             {
               directed_graph_description::empty,
               report_line(""),
-              [this](const graph_t& g) -> const graph_t& {
-                check_exception_thrown<std::out_of_range>(report_line("swapping nodes throws for empty graph"), [g{g}]() mutable { g.swap_nodes(0, 0); });
+              [&t](const graph_t& g) -> const graph_t& {
+                t.check_exception_thrown<std::out_of_range>(report_line("swapping nodes throws for empty graph"), [g{g}]() mutable { g.swap_nodes(0, 0); });
                 return g;
               }
             },
             {
               directed_graph_description::empty,
               report_line(""),
-              [this](const graph_t& g) -> const graph_t& {
-                check_exception_thrown<std::out_of_range>(report_line("swapping edges throws for empty graph"), [g{g}]() mutable { g.swap_edges(0, 0, 0); });
+              [&t](const graph_t& g) -> const graph_t& {
+                t.check_exception_thrown<std::out_of_range>(report_line("swapping edges throws for empty graph"), [g{g}]() mutable { g.swap_edges(0, 0, 0); });
                 return g;
               }
             },
             {
               directed_graph_description::empty,
               report_line(""),
-              [this](const graph_t& g) -> const graph_t& {
-                check_exception_thrown<std::out_of_range>(report_line("joining nodes throws for empty graph"), [g{g}]() mutable { g.join(0, 0); });
+              [&t](const graph_t& g) -> const graph_t& {
+                t.check_exception_thrown<std::out_of_range>(report_line("joining nodes throws for empty graph"), [g{g}]() mutable { g.join(0, 0); });
                 return g;
               }
             },
@@ -271,16 +265,16 @@ namespace sequoia::testing
             {
               directed_graph_description::node,
               report_line("Add node to empty graph"),
-              [this](graph_t g) -> graph_t {
-                check(equality, report_line("Index of added node is 0"), g.add_node(), 0_sz);
+              [&t](graph_t g) -> graph_t {
+                t.check(equality, report_line("Index of added node is 0"), g.add_node(), 0_sz);
                 return g;
               }
             },
             {
               directed_graph_description::node,
               report_line("insert node into empty graph"),
-              [this](graph_t g) -> graph_t {
-                check(equality, report_line("Index of added node is 0"), g.insert_node(0), 0_sz);
+              [&t](graph_t g) -> graph_t {
+                t.check(equality, report_line("Index of added node is 0"), g.insert_node(0), 0_sz);
                 return g;
               }
             }
@@ -289,72 +283,72 @@ namespace sequoia::testing
             {
               directed_graph_description::node,
               report_line(""),
-              [this](const graph_t& g) -> const graph_t& {
-                check_exception_thrown<std::out_of_range>(report_line("cbegin_edges throws when index is out of range"), [&g]() { return g.cbegin_edges(1); });
+              [&t](const graph_t& g) -> const graph_t& {
+                t.check_exception_thrown<std::out_of_range>(report_line("cbegin_edges throws when index is out of range"), [&g]() { return g.cbegin_edges(1); });
                 return g;
               }
             },
             {
               directed_graph_description::node,
               report_line(""),
-              [this](const graph_t& g) -> const graph_t& {
-                check_exception_thrown<std::out_of_range>(report_line("cend_edges throws when index is out of range"), [&g]() { return g.cend_edges(1); });
+              [&t](const graph_t& g) -> const graph_t& {
+                t.check_exception_thrown<std::out_of_range>(report_line("cend_edges throws when index is out of range"), [&g]() { return g.cend_edges(1); });
                 return g;
               }
             },
             {
               directed_graph_description::node,
               report_line(""),
-              [this](const graph_t& g) -> const graph_t& {
-                check_exception_thrown<std::out_of_range>(report_line("crbegin_edges throws when index is out of range"), [&g]() { return g.crbegin_edges(1); });
+              [&t](const graph_t& g) -> const graph_t& {
+                t.check_exception_thrown<std::out_of_range>(report_line("crbegin_edges throws when index is out of range"), [&g]() { return g.crbegin_edges(1); });
                 return g;
               }
             },
             {
               directed_graph_description::node,
               report_line(""),
-              [this](const graph_t& g) -> const graph_t& {
-                check_exception_thrown<std::out_of_range>(report_line("crend_edges throws when index is out of range"), [&g]() { return g.crend_edges(1); });
+              [&t](const graph_t& g) -> const graph_t& {
+                t.check_exception_thrown<std::out_of_range>(report_line("crend_edges throws when index is out of range"), [&g]() { return g.crend_edges(1); });
                 return g;
               }
             },
             {
               directed_graph_description::node,
               report_line(""),
-              [this](const graph_t& g) -> const graph_t& {
-                check_exception_thrown<std::out_of_range>(report_line("cedges throws when index is out of range"), [&g]() { return g.cedges(1); });
+              [&t](const graph_t& g) -> const graph_t& {
+                t.check_exception_thrown<std::out_of_range>(report_line("cedges throws when index is out of range"), [&g]() { return g.cedges(1); });
                 return g;
               }
             },
             {
               directed_graph_description::node,
               report_line(""),
-              [this](const graph_t& g) -> const graph_t& {
-                check_exception_thrown<std::out_of_range>(report_line("swapping nodes throws if first index out of range"), [g{g}]() mutable { g.swap_nodes(1, 0); });
+              [&t](const graph_t& g) -> const graph_t& {
+                t.check_exception_thrown<std::out_of_range>(report_line("swapping nodes throws if first index out of range"), [g{g}]() mutable { g.swap_nodes(1, 0); });
                 return g;
               }
             },
             {
               directed_graph_description::node,
               report_line(""),
-              [this](const graph_t& g) -> const graph_t& {
-                check_exception_thrown<std::out_of_range>(report_line("swapping nodes throws if second index out of range"), [g{g}]() mutable { g.swap_nodes(0, 1); });
+              [&t](const graph_t& g) -> const graph_t& {
+                t.check_exception_thrown<std::out_of_range>(report_line("swapping nodes throws if second index out of range"), [g{g}]() mutable { g.swap_nodes(0, 1); });
                 return g;
               }
             },
             {
               directed_graph_description::node,
               report_line(""),
-              [this](const graph_t& g) -> const graph_t& {
-                check_exception_thrown<std::out_of_range>(report_line("joining nodes throws if first index out of range"), [g{g}]() mutable { g.join(1, 0); });
+              [&t](const graph_t& g) -> const graph_t& {
+                t.check_exception_thrown<std::out_of_range>(report_line("joining nodes throws if first index out of range"), [g{g}]() mutable { g.join(1, 0); });
                 return g;
               }
             },
             {
               directed_graph_description::node,
               report_line(""),
-              [this](const graph_t& g) -> const graph_t& {
-                check_exception_thrown<std::out_of_range>(report_line("joining nodes throws if second index out of range"), [g{g}]() mutable { g.join(0, 1); });
+              [&t](const graph_t& g) -> const graph_t& {
+                t.check_exception_thrown<std::out_of_range>(report_line("joining nodes throws if second index out of range"), [g{g}]() mutable { g.join(0, 1); });
                 return g;
               }
             },
@@ -393,24 +387,24 @@ namespace sequoia::testing
             {
               directed_graph_description::node_node,
               report_line("Add second node"),
-              [this](graph_t g) -> graph_t {
-                check(equality, report_line("Index of added node is 1"), g.add_node(), 1_sz);
+              [&t](graph_t g) -> graph_t {
+                t.check(equality, report_line("Index of added node is 1"), g.add_node(), 1_sz);
                 return g;
               }
             },
             {
               directed_graph_description::node_node,
               report_line("Insert second node"),
-              [this](graph_t g) -> graph_t {
-                check(equality, report_line("Index of added node is 0"), g.insert_node(0), 0_sz);
+              [&t](graph_t g) -> graph_t {
+                t.check(equality, report_line("Index of added node is 0"), g.insert_node(0), 0_sz);
                 return g;
               }
             },
             {
               directed_graph_description::node_node,
               report_line("Insert second node at end"),
-              [this](graph_t g) -> graph_t {
-                check(equality, report_line("Index of added node is 1"), g.insert_node(1), 1_sz);
+              [&t](graph_t g) -> graph_t {
+                t.check(equality, report_line("Index of added node is 1"), g.insert_node(1), 1_sz);
                 return g;
               }
             },
@@ -451,16 +445,16 @@ namespace sequoia::testing
             {
               directed_graph_description::node_node_1,
               report_line("Insert node"),
-              [this](graph_t g) -> graph_t {
-                check(equality, report_line("Index of added node is 0"), g.insert_node(0), 0_sz);
+              [&t](graph_t g) -> graph_t {
+                t.check(equality, report_line("Index of added node is 0"), g.insert_node(0), 0_sz);
                 return g;
               }
             },
             {
               directed_graph_description::node_0_node,
               report_line("Insert node at end"),
-              [this](graph_t g) -> graph_t {
-                check(equality, report_line("Index of added node is 1"), g.insert_node(1), 1_sz);
+              [&t](graph_t g) -> graph_t {
+                t.check(equality, report_line("Index of added node is 1"), g.insert_node(1), 1_sz);
                 return g;
               }
             },
@@ -483,24 +477,24 @@ namespace sequoia::testing
             {
               directed_graph_description::node_0,
               report_line(""),
-              [this](const graph_t& g) -> const graph_t& {
-                check_exception_thrown<std::out_of_range>(report_line("swapping edges throws for first edge index out of range"), [g{g}]() mutable { g.swap_edges(0, 1, 0); });
+              [&t](const graph_t& g) -> const graph_t& {
+                t.check_exception_thrown<std::out_of_range>(report_line("swapping edges throws for first edge index out of range"), [g{g}]() mutable { g.swap_edges(0, 1, 0); });
                 return g;
               }
             },
             {
               directed_graph_description::node_0,
               report_line(""),
-              [this](const graph_t& g) -> const graph_t& {
-                check_exception_thrown<std::out_of_range>(report_line("swapping edges throws for second edge index out of range"), [g{g}]() mutable { g.swap_edges(0, 0, 1); });
+              [&t](const graph_t& g) -> const graph_t& {
+                t.check_exception_thrown<std::out_of_range>(report_line("swapping edges throws for second edge index out of range"), [g{g}]() mutable { g.swap_edges(0, 0, 1); });
                 return g;
               }
             },
             {
               directed_graph_description::node_0,
               report_line(""),
-              [this](const graph_t& g) -> const graph_t& {
-                check_exception_thrown<std::out_of_range>(report_line("swapping edges throws for node index out of range"), [g{g}]() mutable { g.swap_edges(1, 0, 0); });
+              [&t](const graph_t& g) -> const graph_t& {
+                t.check_exception_thrown<std::out_of_range>(report_line("swapping edges throws for node index out of range"), [g{g}]() mutable { g.swap_edges(1, 0, 0); });
                 return g;
               }
             }
@@ -752,8 +746,8 @@ namespace sequoia::testing
             {
               directed_graph_description::node_node_1_node,
               report_line("Insert node"),
-              [this](graph_t g) -> graph_t {
-                check(equality, report_line("Index of added node is 0"), g.insert_node(0), 0_sz);
+              [&t](graph_t g) -> graph_t {
+                t.check(equality, report_line("Index of added node is 0"), g.insert_node(0), 0_sz);
                 return g;
               }
             },
@@ -1567,94 +1561,94 @@ namespace sequoia::testing
         },
         {
           //  'empty'
-          make_and_check(report_line(""), {}),
+          make_and_check(t, report_line(""), {}),
 
           //  'node'
-          make_and_check(report_line(""), {{}}),
+          make_and_check(t, report_line(""), {{}}),
 
           //  'node_0'
-          make_and_check(report_line(""), {{edge_t{0}}}),
+          make_and_check(t, report_line(""), {{edge_t{0}}}),
 
           //  'node_0_0'
-          make_and_check(report_line(""), {{edge_t{0}, edge_t{0}}}),
+          make_and_check(t, report_line(""), {{edge_t{0}, edge_t{0}}}),
 
           //  'node_node'
-          make_and_check(report_line(""), {{}, {}}),
+          make_and_check(t, report_line(""), {{}, {}}),
 
           //  'node_1_node'
-          make_and_check(report_line(""), {{edge_t{1}}, {}}),
+          make_and_check(t, report_line(""), {{edge_t{1}}, {}}),
 
           //  'node_node_0'
-          make_and_check(report_line(""), {{}, {edge_t{0}}}),
+          make_and_check(t, report_line(""), {{}, {edge_t{0}}}),
 
           //  'node_0_1_node'
-          make_and_check(report_line(""), {{edge_t{0}, edge_t{1}}, {}}),
+          make_and_check(t, report_line(""), {{edge_t{0}, edge_t{1}}, {}}),
 
           //  'node_0_node'
-          make_and_check(report_line(""), {{edge_t{0}}, {}}),
+          make_and_check(t, report_line(""), {{edge_t{0}}, {}}),
 
           //  'node_node_1'
-          make_and_check(report_line(""), {{}, {edge_t{1}}}),
+          make_and_check(t, report_line(""), {{}, {edge_t{1}}}),
 
           // 'node_1_1_node'
-          make_and_check(report_line(""), {{edge_t{1}, edge_t{1}}, {}}),
+          make_and_check(t, report_line(""), {{edge_t{1}, edge_t{1}}, {}}),
 
           // 'node_1_node_0'
-          make_and_check(report_line(""), {{edge_t{1}}, {edge_t{0}}}),
+          make_and_check(t, report_line(""), {{edge_t{1}}, {edge_t{0}}}),
 
           //  'node_node_node'
-          make_and_check(report_line(""), {{}, {}, {}}),
+          make_and_check(t, report_line(""), {{}, {}, {}}),
 
           //  'node_1_node_node'
-          make_and_check(report_line(""), {{edge_t{1}}, {}, {}}),
+          make_and_check(t, report_line(""), {{edge_t{1}}, {}, {}}),
 
           //  'node_node_node_1'
-          make_and_check(report_line(""), {{}, {}, {edge_t{1}}}),
+          make_and_check(t, report_line(""), {{}, {}, {edge_t{1}}}),
 
           // 'node_1_node_2_node'
-          make_and_check(report_line(""), {{edge_t{1}}, {edge_t{2}}, {}}),
+          make_and_check(t, report_line(""), {{edge_t{1}}, {edge_t{2}}, {}}),
 
           // 'node_1_node_node_1'
-          make_and_check(report_line(""), {{edge_t{1}}, {}, {edge_t{1}}}),
+          make_and_check(t, report_line(""), {{edge_t{1}}, {}, {edge_t{1}}}),
 
           // 'node_1_node_2_node_0'
-          make_and_check(report_line(""), {{edge_t{1}}, {edge_t{2}}, {edge_t{0}}}),
+          make_and_check(t, report_line(""), {{edge_t{1}}, {edge_t{2}}, {edge_t{0}}}),
 
           // 'node_node_1_node'
-          make_and_check(report_line(""), {{}, {edge_t{1}}, {}}),
+          make_and_check(t, report_line(""), {{}, {edge_t{1}}, {}}),
 
           // 'node_1_node_1_node'
-          make_and_check(report_line(""), {{edge_t{1}}, {edge_t{1}}, {}}),
+          make_and_check(t, report_line(""), {{edge_t{1}}, {edge_t{1}}, {}}),
 
           // 'node_1_node_1_0_node'
-          make_and_check(report_line(""), {{edge_t{1}}, {edge_t{1}, edge_t{0}}, {}}),
+          make_and_check(t, report_line(""), {{edge_t{1}}, {edge_t{1}, edge_t{0}}, {}}),
 
           // 'node_1_node_1_0_2_node'
-          make_and_check(report_line(""), {{edge_t{1}}, {edge_t{1}, edge_t{0}, edge_t{2}}, {}}),
+          make_and_check(t, report_line(""), {{edge_t{1}}, {edge_t{1}, edge_t{0}, edge_t{2}}, {}}),
 
           // 'node_1_node_1_2_node'
-          make_and_check(report_line(""), {{edge_t{1}}, {edge_t{1}, edge_t{2}}, {}}),
+          make_and_check(t, report_line(""), {{edge_t{1}}, {edge_t{1}, edge_t{2}}, {}}),
 
           // 'node_2_node_node_2'
-          make_and_check(report_line(""), {{edge_t{2}}, {}, {edge_t{2}}}),
+          make_and_check(t, report_line(""), {{edge_t{2}}, {}, {edge_t{2}}}),
 
           // 'node_1_1_2_2_node_2_node'
-          make_and_check(report_line(""), {{edge_t{1}, edge_t{1}, edge_t{2}, edge_t{2}}, {edge_t{2}}, {}}),
+          make_and_check(t, report_line(""), {{edge_t{1}, edge_t{1}, edge_t{2}, edge_t{2}}, {edge_t{2}}, {}}),
 
           // 'node_1_1_2_2_node_2_node_1'
-          make_and_check(report_line(""), {{edge_t{1}, edge_t{1}, edge_t{2}, edge_t{2}}, {edge_t{2}}, {edge_t{1}}}),
+          make_and_check(t, report_line(""), {{edge_t{1}, edge_t{1}, edge_t{2}, edge_t{2}}, {edge_t{2}}, {edge_t{1}}}),
 
           // 'node_2_2_1_1_node_2_node_1'
-          make_and_check(report_line(""), {{edge_t{2}, edge_t{2}, edge_t{1}, edge_t{1}}, {edge_t{2}}, {edge_t{1}}}),
+          make_and_check(t, report_line(""), {{edge_t{2}, edge_t{2}, edge_t{1}, edge_t{1}}, {edge_t{2}}, {edge_t{1}}}),
 
           // 'node_3_1_node_2_node_node'
-          make_and_check(report_line(""), {{edge_t{3}, edge_t{1}}, {edge_t{2}}, {}, {}}),
+          make_and_check(t, report_line(""), {{edge_t{3}, edge_t{1}}, {edge_t{2}}, {}, {}}),
 
           // 'node_1_node_node_node_2'
-          make_and_check(report_line(""), {{edge_t{1}}, {}, {}, {edge_t{2}}}),
+          make_and_check(t, report_line(""), {{edge_t{1}}, {}, {}, {edge_t{2}}}),
 
           // 'node_2_node_node_node_1'
-          make_and_check(report_line(""), {{edge_t{2}}, {}, {}, {edge_t{1}}})
+          make_and_check(t, report_line(""), {{edge_t{2}}, {}, {}, {edge_t{1}}})
         }
       };
     }

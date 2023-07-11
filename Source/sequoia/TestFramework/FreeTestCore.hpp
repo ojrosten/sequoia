@@ -121,10 +121,6 @@ namespace sequoia::testing
 
   /*! \brief class template from which all concrete tests should derive.
 
-      The class template inherits in a protected manner from the template parameter Checker.
-      The inheritance is protected in order to keep the public interface of basic_test minimal,
-      while allowing convenient internal access to the Checkers various check methods, in particular.
-
       The semantics are such that, of the special member functions, only explicit construction from a
       string_view is publicly available. Destruction and moves are protected; copy
       contruction / assignment are deleted.
@@ -134,7 +130,7 @@ namespace sequoia::testing
 
   template<class Checker>
     requires std::is_same_v<decltype(Checker::mode), const test_mode>
-  class basic_test : public test_base, protected Checker
+  class basic_test : public test_base, public Checker
   {
   public:
     constexpr static test_mode mode{Checker::mode};

@@ -13,17 +13,29 @@
 
 namespace sequoia::testing
 {
-  class dynamic_directed_graph_unweighted_bucketed_test final
-    : public dynamic_directed_graph_operations<maths::null_weight, maths::null_weight, object::faithful_producer<maths::null_weight>, object::faithful_producer<maths::null_weight>, independent_bucketed_edge_storage_traits, maths::node_weight_storage_traits<maths::null_weight>>
+  class dynamic_directed_graph_unweighted_test final : public regular_test
   {
   public:
-    using dynamic_directed_graph_operations<maths::null_weight, maths::null_weight, object::faithful_producer<maths::null_weight>, object::faithful_producer<maths::null_weight>, independent_bucketed_edge_storage_traits, maths::node_weight_storage_traits<maths::null_weight>>::dynamic_directed_graph_operations;
+    using regular_test::regular_test;
 
     [[nodiscard]]
     std::filesystem::path source_file() const;
 
     void run_tests();
   private:
+    template <class, class, concrete_test>
+    friend class graph_test_helper;
+
+    template
+    <
+      maths::graph_flavour GraphFlavour, // TO DO: remove this parameter
+      class EdgeWeight,
+      class NodeWeight,
+      class EdgeWeightCreator,
+      class NodeWeightCreator,
+      class EdgeStorageTraits,
+      class NodeWeightStorageTraits
+    >
     void execute_operations();
   };
 }

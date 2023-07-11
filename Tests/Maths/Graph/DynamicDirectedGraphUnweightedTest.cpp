@@ -7,25 +7,41 @@
 
 /*! \file */
 
-#include "DynamicDirectedGraphUnweightedBucketedTest.hpp"
+#include "DynamicDirectedGraphUnweightedTest.hpp"
 
 namespace sequoia::testing
 {
 
   [[nodiscard]]
-  std::filesystem::path dynamic_directed_graph_unweighted_bucketed_test::source_file() const
+  std::filesystem::path dynamic_directed_graph_unweighted_test::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void dynamic_directed_graph_unweighted_bucketed_test::run_tests()
+  void dynamic_directed_graph_unweighted_test::run_tests()
   {
-    execute_operations();
+    using namespace maths;
+    graph_test_helper<null_weight, null_weight, dynamic_directed_graph_unweighted_test> helper{*this};
+
+    helper.run_tests<graph_flavour::directed>();
   }
 
-  void dynamic_directed_graph_unweighted_bucketed_test::execute_operations()
+  template
+  <
+    maths::graph_flavour GraphFlavour,
+    class EdgeWeight,
+    class NodeWeight,
+    class EdgeWeightCreator,
+    class NodeWeightCreator,
+    class EdgeStorageTraits,
+    class NodeWeightStorageTraits
+  >
+  void dynamic_directed_graph_unweighted_test::execute_operations()
   {
-    auto trg{this->make_transition_graph()};
+    using ops = dynamic_directed_graph_operations<EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>;
+    using graph_t = ops::graph_t;
+
+    auto trg{ops::make_transition_graph(*this)};
 
     auto checker{
         [this](std::string_view description, const graph_t& obtained, const graph_t& prediction, const graph_t& parent, std::size_t host, std::size_t target) {
@@ -36,5 +52,4 @@ namespace sequoia::testing
 
     transition_checker<graph_t>::check(report_line(""), trg, checker);
   }
-
 }
