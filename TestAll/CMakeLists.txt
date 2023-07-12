@@ -40,6 +40,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Core/Object/SuiteFreeTest.cpp
                ${TestDir}/Experimental/ExperimentalTest.cpp
                ${TestDir}/Experimental/TypeListFreeTest.cpp
+               ${TestDir}/Maths/Graph/DynamicDirectedGraphFundamentalWeightTest.cpp
                ${TestDir}/Maths/Graph/DynamicDirectedGraphUnweightedTest.cpp
                ${TestDir}/Maths/Graph/DynamicEmbeddedDirectedGraphUnweightedTest.cpp
                ${TestDir}/Maths/Graph/DynamicEmbeddedUndirectedGraphUnweightedTest.cpp

@@ -33,6 +33,7 @@
 #include "Core/Object/SuiteFreeTest.hpp"
 #include "Experimental/ExperimentalTest.hpp"
 #include "Experimental/TypeListFreeTest.hpp"
+#include "Maths/Graph/DynamicDirectedGraphFundamentalWeightTest.hpp"
 #include "Maths/Graph/DynamicDirectedGraphUnweightedTest.hpp"
 #include "Maths/Graph/DynamicEmbeddedDirectedGraphUnweightedTest.hpp"
 #include "Maths/Graph/DynamicEmbeddedUndirectedGraphUnweightedTest.hpp"
