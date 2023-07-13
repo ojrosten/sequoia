@@ -41,7 +41,7 @@ namespace sequoia::testing
     using ops = dynamic_directed_graph_weighted_operations<EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>;
     using graph_t = ops::graph_t;
 
-    auto trg{ops::make_transition_graph(*this)};
+    auto trg{ops::make_weighted_transition_graph(*this)};
 
     auto checker{
         [this](std::string_view description, const graph_t& obtained, const graph_t& prediction, const graph_t& parent, std::size_t host, std::size_t target) {

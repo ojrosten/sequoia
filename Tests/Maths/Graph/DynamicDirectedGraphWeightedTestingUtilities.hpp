@@ -173,19 +173,25 @@ namespace sequoia::testing
    public:
     using graph_t            = maths::graph<maths::directed_flavour::directed, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>;
     using edge_t             = typename graph_t::edge_init_type;
+    using node_weight_type   = typename graph_t::node_weight_type;
     using edges_equivalent_t = std::initializer_list<std::initializer_list<edge_t>>;
     using transition_graph   = typename transition_checker<graph_t>::transition_graph;
 
     [[nodiscard]]
-    graph_t make_and_check(std::string_view description, edges_equivalent_t init)
+    static graph_t make_and_check(regular_test& t, std::string_view description, edges_equivalent_t edgeInit, std::initializer_list<node_weight_type> nodeInit)
     {
-      return graph_initialization_checker<graph_t>::make_and_check(*this, description, init);
+      return graph_initialization_checker<graph_t>::make_and_check(t, description, edgeInit, nodeInit);
     }
 
     [[nodiscard]]
-    transition_graph make_weighted_transition_graph()
+    static transition_graph make_weighted_transition_graph(regular_test& t)
     {
-      auto trg{this->make_weighted_transition_graph()};
+      using base_ops = dynamic_directed_graph_operations<EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>;
+      using namespace weighted_directed_graph;
+
+      auto trg{base_ops::make_transition_graph(t)};
+
+      trg.add_node(make_and_check(t, t.report_line(""), {{}}, {1.0}));
 
       return trg;
     }
