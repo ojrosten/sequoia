@@ -17,12 +17,17 @@ namespace sequoia::testing
     /// Convention: the indices following 'node' - separated by underscores - give the target node of the associated edges
     enum graph_description : std::size_t {
       // x
-      node = directed_graph::graph_description::end,
+      nodew = directed_graph::graph_description::end,
 
       //  /\
       //  \/
       //  x
-      node_0,
+      nodew_0,
+
+      //  /\
+      //  \/
+      //  x
+      node_0w,
 
       //  /\ /\
       //  \/ \/
@@ -191,8 +196,14 @@ namespace sequoia::testing
 
       auto trg{base_ops::make_transition_graph(t)};
 
-      // 'weighted_directed_graph::graph_description::node'
+      // 'weighted_directed_graph::graph_description::nodew'
       trg.add_node(make_and_check(t, t.report_line(""), {{}}, {1.0}));
+
+      // 'weighted_directed_graph::graph_description::nodew_0'
+      trg.add_node(make_and_check(t, t.report_line(""), {{{0, 0.0}}}, {1.0}));
+
+      // 'weighted_directed_graph::graph_description::node_0w'
+      trg.add_node(make_and_check(t, t.report_line(""), {{{0, 1.0}}}, {0.0}));
 
       // begin 'directed_graph::graph_description::empty'
 
@@ -218,7 +229,7 @@ namespace sequoia::testing
 
       trg.join(
         directed_graph::graph_description::empty,
-        weighted_directed_graph::graph_description::node,
+        weighted_directed_graph::graph_description::nodew,
         t.report_line("Add weighted node"),
         [](graph_t g) -> graph_t {
           g.add_node(1.0);
@@ -252,7 +263,7 @@ namespace sequoia::testing
 
       trg.join(
         directed_graph::graph_description::node,
-        weighted_directed_graph::graph_description::node,
+        weighted_directed_graph::graph_description::nodew,
         t.report_line("Change node weight"),
         [](graph_t g) -> graph_t {
           g.node_weight(g.cbegin_node_weights(), 1.0);
@@ -262,7 +273,7 @@ namespace sequoia::testing
 
       trg.join(
         directed_graph::graph_description::node,
-        weighted_directed_graph::graph_description::node,
+        weighted_directed_graph::graph_description::nodew,
         t.report_line("Mutate node weight"),
         [](graph_t g) -> graph_t {
           g.mutate_node_weight(g.cbegin_node_weights(), [](double& x) { x += 1.0; });
@@ -274,7 +285,7 @@ namespace sequoia::testing
       {
         trg.join(
           directed_graph::graph_description::node,
-          weighted_directed_graph::graph_description::node,
+          weighted_directed_graph::graph_description::nodew,
           t.report_line("Change node weight via iterator"),
           [](graph_t g) -> graph_t {
             *g.begin_node_weights() = 1.0;
@@ -284,6 +295,30 @@ namespace sequoia::testing
       }
 
       // end 'directed_graph::graph_description::node'
+
+      // begin 'directed_graph::graph_description::node_0'
+
+      trg.join(
+        directed_graph::graph_description::node_0,
+        weighted_directed_graph::graph_description::node_0w,
+        t.report_line("Set edge weight"),
+        [](graph_t g) -> graph_t {
+          g.set_edge_weight(g.cbegin_edges(0), 1.0);
+          return g;
+        }
+      );
+
+      trg.join(
+        directed_graph::graph_description::node_0,
+        weighted_directed_graph::graph_description::node_0w,
+        t.report_line("Mutate edge weight"),
+        [](graph_t g) -> graph_t {
+          g.mutate_edge_weight(g.cbegin_edges(0), [](double& x){ x += 1.0; });
+          return g;
+        }
+      );
+
+      // end 'directed_graph::graph_description::node_0'
 
       return trg;
     }
