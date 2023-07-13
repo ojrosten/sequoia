@@ -195,10 +195,40 @@ namespace sequoia::testing
 
       trg.join(
         directed_graph::graph_description::node,
+        directed_graph::graph_description::node,
+        t.report_line(""),
+        [&t](graph_t g) -> graph_t {
+          t.check_exception_thrown<std::out_of_range>(t.report_line("Attempt to set a node weight which does not exist"), [&g](){ g.node_weight(g.cend_node_weights(), 1.0); });
+          return g;
+        }
+      );
+
+      trg.join(
+        directed_graph::graph_description::node,
+        directed_graph::graph_description::node,
+        t.report_line("Attempt to mutate a node weight which does not exist"),
+        [&t](graph_t g) -> graph_t {
+          t.check_exception_thrown<std::out_of_range>(t.report_line("Attempt to mutate a node weight which does not exist"), [&g](){ g.mutate_node_weight(g.cend_node_weights(), [](double&){}); });
+          return g;
+        }
+      );
+
+      trg.join(
+        directed_graph::graph_description::node,
         weighted_directed_graph::graph_description::node,
         t.report_line("Change node weight"),
         [](graph_t g) -> graph_t {
           g.node_weight(g.cbegin_node_weights(), 1.0);
+          return g;
+        }
+      );
+
+      trg.join(
+        directed_graph::graph_description::node,
+        weighted_directed_graph::graph_description::node,
+        t.report_line("Mutate node weight"),
+        [](graph_t g) -> graph_t {
+          g.mutate_node_weight(g.cbegin_node_weights(), [](double& x) { x += 1.0; });
           return g;
         }
       );
