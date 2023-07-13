@@ -70,6 +70,24 @@ connectivity::join: at least one node index [0, 0] out of range - graph order is
 
 =======================================
 
+Tests/Maths/Graph/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 204
+Attempt to set a node weight which does not exist
+
+Expected Exception Type:
+[std::out_of_range]
+node_storage::node_weight - index out of range!
+
+=======================================
+
+Tests/Maths/Graph/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 214
+Attempt to mutate a node weight which does not exist
+
+Expected Exception Type:
+[std::out_of_range]
+node_storage::node_weight - index out of range!
+
+=======================================
+
 Tests/Maths/Graph/DynamicDirectedGraphTestingUtilities.hpp, Line 291
 cbegin_edges throws when index is out of range
 
@@ -151,7 +169,7 @@ connectivity::join: at least one node index [0, 1] out of range - graph order is
 
 =======================================
 
-Tests/Maths/Graph/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 204
+Tests/Maths/Graph/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 238
 Attempt to set a node weight which does not exist
 
 Expected Exception Type:
@@ -160,7 +178,7 @@ node_storage::node_weight - index out of range!
 
 =======================================
 
-Tests/Maths/Graph/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 214
+Tests/Maths/Graph/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 248
 Attempt to mutate a node weight which does not exist
 
 Expected Exception Type:
@@ -268,6 +286,24 @@ connectivity::join: at least one node index [0, 0] out of range - graph order is
 
 =======================================
 
+Tests/Maths/Graph/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 204
+Attempt to set a node weight which does not exist
+
+Expected Exception Type:
+[std::out_of_range]
+node_storage::node_weight - index out of range!
+
+=======================================
+
+Tests/Maths/Graph/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 214
+Attempt to mutate a node weight which does not exist
+
+Expected Exception Type:
+[std::out_of_range]
+node_storage::node_weight - index out of range!
+
+=======================================
+
 Tests/Maths/Graph/DynamicDirectedGraphTestingUtilities.hpp, Line 291
 cbegin_edges throws when index is out of range
 
@@ -349,7 +385,7 @@ connectivity::join: at least one node index [0, 1] out of range - graph order is
 
 =======================================
 
-Tests/Maths/Graph/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 204
+Tests/Maths/Graph/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 238
 Attempt to set a node weight which does not exist
 
 Expected Exception Type:
@@ -358,7 +394,7 @@ node_storage::node_weight - index out of range!
 
 =======================================
 
-Tests/Maths/Graph/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 214
+Tests/Maths/Graph/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 248
 Attempt to mutate a node weight which does not exist
 
 Expected Exception Type:
@@ -466,6 +502,24 @@ connectivity::join: at least one node index [0, 0] out of range - graph order is
 
 =======================================
 
+Tests/Maths/Graph/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 204
+Attempt to set a node weight which does not exist
+
+Expected Exception Type:
+[std::out_of_range]
+node_storage::node_weight - index out of range!
+
+=======================================
+
+Tests/Maths/Graph/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 214
+Attempt to mutate a node weight which does not exist
+
+Expected Exception Type:
+[std::out_of_range]
+node_storage::node_weight - index out of range!
+
+=======================================
+
 Tests/Maths/Graph/DynamicDirectedGraphTestingUtilities.hpp, Line 291
 cbegin_edges throws when index is out of range
 
@@ -547,7 +601,7 @@ connectivity::join: at least one node index [0, 1] out of range - graph order is
 
 =======================================
 
-Tests/Maths/Graph/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 204
+Tests/Maths/Graph/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 238
 Attempt to set a node weight which does not exist
 
 Expected Exception Type:
@@ -556,7 +610,7 @@ node_storage::node_weight - index out of range!
 
 =======================================
 
-Tests/Maths/Graph/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 214
+Tests/Maths/Graph/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 248
 Attempt to mutate a node weight which does not exist
 
 Expected Exception Type:
@@ -664,6 +718,24 @@ connectivity::join: at least one node index [0, 0] out of range - graph order is
 
 =======================================
 
+Tests/Maths/Graph/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 204
+Attempt to set a node weight which does not exist
+
+Expected Exception Type:
+[std::out_of_range]
+node_storage::node_weight - index out of range!
+
+=======================================
+
+Tests/Maths/Graph/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 214
+Attempt to mutate a node weight which does not exist
+
+Expected Exception Type:
+[std::out_of_range]
+node_storage::node_weight - index out of range!
+
+=======================================
+
 Tests/Maths/Graph/DynamicDirectedGraphTestingUtilities.hpp, Line 291
 cbegin_edges throws when index is out of range
 
@@ -745,7 +817,7 @@ connectivity::join: at least one node index [0, 1] out of range - graph order is
 
 =======================================
 
-Tests/Maths/Graph/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 204
+Tests/Maths/Graph/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 238
 Attempt to set a node weight which does not exist
 
 Expected Exception Type:
@@ -754,7 +826,7 @@ node_storage::node_weight - index out of range!
 
 =======================================
 
-Tests/Maths/Graph/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 214
+Tests/Maths/Graph/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 248
 Attempt to mutate a node weight which does not exist
 
 Expected Exception Type:
@@ -862,6 +934,24 @@ connectivity::join: at least one node index [0, 0] out of range - graph order is
 
 =======================================
 
+Tests/Maths/Graph/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 204
+Attempt to set a node weight which does not exist
+
+Expected Exception Type:
+[std::out_of_range]
+node_storage::node_weight - index out of range!
+
+=======================================
+
+Tests/Maths/Graph/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 214
+Attempt to mutate a node weight which does not exist
+
+Expected Exception Type:
+[std::out_of_range]
+node_storage::node_weight - index out of range!
+
+=======================================
+
 Tests/Maths/Graph/DynamicDirectedGraphTestingUtilities.hpp, Line 291
 cbegin_edges throws when index is out of range
 
@@ -943,7 +1033,7 @@ connectivity::join: at least one node index [0, 1] out of range - graph order is
 
 =======================================
 
-Tests/Maths/Graph/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 204
+Tests/Maths/Graph/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 238
 Attempt to set a node weight which does not exist
 
 Expected Exception Type:
@@ -952,7 +1042,7 @@ node_storage::node_weight - index out of range!
 
 =======================================
 
-Tests/Maths/Graph/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 214
+Tests/Maths/Graph/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 248
 Attempt to mutate a node weight which does not exist
 
 Expected Exception Type:
@@ -1060,6 +1150,24 @@ connectivity::join: at least one node index [0, 0] out of range - graph order is
 
 =======================================
 
+Tests/Maths/Graph/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 204
+Attempt to set a node weight which does not exist
+
+Expected Exception Type:
+[std::out_of_range]
+node_storage::node_weight - index out of range!
+
+=======================================
+
+Tests/Maths/Graph/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 214
+Attempt to mutate a node weight which does not exist
+
+Expected Exception Type:
+[std::out_of_range]
+node_storage::node_weight - index out of range!
+
+=======================================
+
 Tests/Maths/Graph/DynamicDirectedGraphTestingUtilities.hpp, Line 291
 cbegin_edges throws when index is out of range
 
@@ -1141,7 +1249,7 @@ connectivity::join: at least one node index [0, 1] out of range - graph order is
 
 =======================================
 
-Tests/Maths/Graph/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 204
+Tests/Maths/Graph/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 238
 Attempt to set a node weight which does not exist
 
 Expected Exception Type:
@@ -1150,7 +1258,7 @@ node_storage::node_weight - index out of range!
 
 =======================================
 
-Tests/Maths/Graph/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 214
+Tests/Maths/Graph/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 248
 Attempt to mutate a node weight which does not exist
 
 Expected Exception Type:
@@ -1258,6 +1366,24 @@ connectivity::join: at least one node index [0, 0] out of range - graph order is
 
 =======================================
 
+Tests/Maths/Graph/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 204
+Attempt to set a node weight which does not exist
+
+Expected Exception Type:
+[std::out_of_range]
+node_storage::node_weight - index out of range!
+
+=======================================
+
+Tests/Maths/Graph/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 214
+Attempt to mutate a node weight which does not exist
+
+Expected Exception Type:
+[std::out_of_range]
+node_storage::node_weight - index out of range!
+
+=======================================
+
 Tests/Maths/Graph/DynamicDirectedGraphTestingUtilities.hpp, Line 291
 cbegin_edges throws when index is out of range
 
@@ -1339,7 +1465,7 @@ connectivity::join: at least one node index [0, 1] out of range - graph order is
 
 =======================================
 
-Tests/Maths/Graph/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 204
+Tests/Maths/Graph/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 238
 Attempt to set a node weight which does not exist
 
 Expected Exception Type:
@@ -1348,7 +1474,7 @@ node_storage::node_weight - index out of range!
 
 =======================================
 
-Tests/Maths/Graph/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 214
+Tests/Maths/Graph/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 248
 Attempt to mutate a node weight which does not exist
 
 Expected Exception Type:
@@ -1456,6 +1582,24 @@ connectivity::join: at least one node index [0, 0] out of range - graph order is
 
 =======================================
 
+Tests/Maths/Graph/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 204
+Attempt to set a node weight which does not exist
+
+Expected Exception Type:
+[std::out_of_range]
+node_storage::node_weight - index out of range!
+
+=======================================
+
+Tests/Maths/Graph/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 214
+Attempt to mutate a node weight which does not exist
+
+Expected Exception Type:
+[std::out_of_range]
+node_storage::node_weight - index out of range!
+
+=======================================
+
 Tests/Maths/Graph/DynamicDirectedGraphTestingUtilities.hpp, Line 291
 cbegin_edges throws when index is out of range
 
@@ -1537,7 +1681,7 @@ connectivity::join: at least one node index [0, 1] out of range - graph order is
 
 =======================================
 
-Tests/Maths/Graph/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 204
+Tests/Maths/Graph/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 238
 Attempt to set a node weight which does not exist
 
 Expected Exception Type:
@@ -1546,7 +1690,7 @@ node_storage::node_weight - index out of range!
 
 =======================================
 
-Tests/Maths/Graph/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 214
+Tests/Maths/Graph/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 248
 Attempt to mutate a node weight which does not exist
 
 Expected Exception Type:

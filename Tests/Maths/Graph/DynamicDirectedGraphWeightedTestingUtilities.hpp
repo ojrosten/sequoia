@@ -194,6 +194,40 @@ namespace sequoia::testing
       // 'weighted_directed_graph::graph_description::node'
       trg.add_node(make_and_check(t, t.report_line(""), {{}}, {1.0}));
 
+      // begin 'directed_graph::graph_description::empty'
+
+      trg.join(
+        directed_graph::graph_description::empty,
+        directed_graph::graph_description::empty,
+        t.report_line(""),
+        [&t](graph_t g) -> graph_t {
+          t.check_exception_thrown<std::out_of_range>(t.report_line("Attempt to set a node weight which does not exist"), [&g](){ g.node_weight(g.cbegin_node_weights(), 1.0); });
+          return g;
+        }
+      );
+
+      trg.join(
+        directed_graph::graph_description::empty,
+        directed_graph::graph_description::empty,
+        t.report_line("Attempt to mutate a node weight which does not exist"),
+        [&t](graph_t g) -> graph_t {
+          t.check_exception_thrown<std::out_of_range>(t.report_line("Attempt to mutate a node weight which does not exist"), [&g](){ g.mutate_node_weight(g.cbegin_node_weights(), [](double&){}); });
+          return g;
+        }
+      );
+
+      trg.join(
+        directed_graph::graph_description::empty,
+        weighted_directed_graph::graph_description::node,
+        t.report_line("Add weighted node"),
+        [](graph_t g) -> graph_t {
+          g.add_node(1.0);
+          return g;
+        }
+      );
+
+      // end 'directed_graph::graph_description::empty'
+
       // begin 'directed_graph::graph_description::node'
 
       trg.join(
