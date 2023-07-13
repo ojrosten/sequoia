@@ -15,7 +15,7 @@ namespace sequoia::testing
 {
   namespace weighted_directed_graph{
     /// Convention: the indices following 'node' - separated by underscores - give the target node of the associated edges
-    enum dgraph_description : std::size_t {
+    enum graph_description : std::size_t {
       // x
       node = directed_graph::graph_description::end,
 
@@ -192,6 +192,16 @@ namespace sequoia::testing
       auto trg{base_ops::make_transition_graph(t)};
 
       trg.add_node(make_and_check(t, t.report_line(""), {{}}, {1.0}));
+
+      trg.join(
+        directed_graph::graph_description::node,
+        weighted_directed_graph::graph_description::node,
+        t.report_line("Change node weight"),
+        [](graph_t g) -> graph_t {
+          g.node_weight(g.cbegin_node_weights(), 1.0);
+          return g;
+        }
+      );
 
       return trg;
     }
