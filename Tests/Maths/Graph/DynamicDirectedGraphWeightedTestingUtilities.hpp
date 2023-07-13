@@ -191,7 +191,10 @@ namespace sequoia::testing
 
       auto trg{base_ops::make_transition_graph(t)};
 
+      // 'weighted_directed_graph::graph_description::node'
       trg.add_node(make_and_check(t, t.report_line(""), {{}}, {1.0}));
+
+      // begin 'directed_graph::graph_description::node'
 
       trg.join(
         directed_graph::graph_description::node,
@@ -232,6 +235,21 @@ namespace sequoia::testing
           return g;
         }
       );
+
+      if constexpr(std::same_as<object::faithful_producer<double>, NodeWeightCreator>)
+      {
+        trg.join(
+          directed_graph::graph_description::node,
+          weighted_directed_graph::graph_description::node,
+          t.report_line("Change node weight via iterator"),
+          [](graph_t g) -> graph_t {
+            *g.begin_node_weights() = 1.0;
+            return g;
+          }
+        );
+      }
+
+      // end 'directed_graph::graph_description::node'
 
       return trg;
     }
