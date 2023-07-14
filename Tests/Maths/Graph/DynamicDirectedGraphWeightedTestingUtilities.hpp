@@ -37,21 +37,24 @@ namespace sequoia::testing
       //  /\ /\
       //  \/ \/
       //    x
-      node_0w_0x,
+      node_0w_0,
 
       //  /\ /\
       //  \/ \/
       //    x
-      node_0x_0w,
+      node_0_0w,
 
       //  x    x
-      node_node,
+      nodex_nodew,
+
+      //  x    x
+      nodew_node,
 
       //  x ---> x
-      node_1_node,
+      node_1_nodew,
 
       //  x <--- x
-      node_node_0,
+      nodew_node_0,
 
       //   /\
       //   \/
@@ -218,12 +221,23 @@ namespace sequoia::testing
       // 'weighted_directed_graph::graph_description::node_0w_0w'
       trg.add_node(make_and_check(t, t.report_line(""), {{{0, 1.0}, {0, 1.0}}}, {0.0}));
 
-      // 'weighted_directed_graph::graph_description::node_0w_0x'
+      // 'weighted_directed_graph::graph_description::node_0w_0'
       trg.add_node(make_and_check(t, t.report_line(""), {{{0, 0.0}, {0, 1.0}}}, {0.0}));
 
-      // 'weighted_directed_graph::graph_description::node_0x_0w'
+      // 'weighted_directed_graph::graph_description::node_0_0w'
       trg.add_node(make_and_check(t, t.report_line(""), {{{0, 1.0}, {0, 0.0}}}, {0.0}));
 
+      // 'weighted_directed_graph::graph_description::node_nodew'
+      trg.add_node(make_and_check(t, t.report_line(""), {{}, {}}, {0.0, 1.0}));
+
+      // 'weighted_directed_graph::graph_description::nodew_node'
+      trg.add_node(make_and_check(t, t.report_line(""), {{}, {}}, {1.0, 0.0}));
+
+      // 'weighted_directed_graph::graph_description::node_1_nodew'
+      trg.add_node(make_and_check(t, t.report_line(""), {{{1, 0.0}}, {}}, {0.0, 1.0}));
+
+      // 'weighted_directed_graph::graph_description::nodew_node_0'
+      trg.add_node(make_and_check(t, t.report_line(""), {{}, {{0, 0.0}}}, {1.0, 0.0}));
 
       // begin 'directed_graph::graph_description::empty'
 
@@ -340,7 +354,7 @@ namespace sequoia::testing
 
       trg.join(
         directed_graph::graph_description::node_0,
-        weighted_directed_graph::graph_description::node_0w_0x,
+        weighted_directed_graph::graph_description::node_0w_0,
         t.report_line("Join {0,0}"),
         [](graph_t g) -> graph_t {
           g.join(0, 0, 1.0);
@@ -354,7 +368,7 @@ namespace sequoia::testing
 
       trg.join(
         directed_graph::graph_description::node_0_0,
-        weighted_directed_graph::graph_description::node_0x_0w,
+        weighted_directed_graph::graph_description::node_0_0w,
         t.report_line("Set first edge weight"),
         [](graph_t g) -> graph_t {
           g.set_edge_weight(g.cbegin_edges(0), 1.0);
@@ -364,7 +378,7 @@ namespace sequoia::testing
 
       trg.join(
         directed_graph::graph_description::node_0_0,
-        weighted_directed_graph::graph_description::node_0w_0x,
+        weighted_directed_graph::graph_description::node_0w_0,
         t.report_line("Set first edge weight"),
         [](graph_t g) -> graph_t {
           g.set_edge_weight(++g.cbegin_edges(0), 1.0);
@@ -374,11 +388,11 @@ namespace sequoia::testing
 
       // end 'directed_graph::graph_description::node_0_0'
 
-      // begin 'weighted_directed_graph::graph_description::node_0w_0x'
+      // begin 'weighted_directed_graph::graph_description::node_0w_0'
 
       trg.join(
-        weighted_directed_graph::graph_description::node_0w_0x,
-        weighted_directed_graph::graph_description::node_0x_0w,
+        weighted_directed_graph::graph_description::node_0w_0,
+        weighted_directed_graph::graph_description::node_0_0w,
         t.report_line("Swap edges"),
         [](graph_t g) -> graph_t {
           g.swap_edges(0, 0, 1);
@@ -387,8 +401,8 @@ namespace sequoia::testing
       );
 
       trg.join(
-        weighted_directed_graph::graph_description::node_0w_0x,
-        weighted_directed_graph::graph_description::node_0x_0w,
+        weighted_directed_graph::graph_description::node_0w_0,
+        weighted_directed_graph::graph_description::node_0_0w,
         t.report_line("Swap edges"),
         [](graph_t g) -> graph_t {
           g.swap_edges(0, 1, 0);
@@ -397,8 +411,8 @@ namespace sequoia::testing
       );
 
       trg.join(
-        weighted_directed_graph::graph_description::node_0w_0x,
-        weighted_directed_graph::graph_description::node_0x_0w,
+        weighted_directed_graph::graph_description::node_0w_0,
+        weighted_directed_graph::graph_description::node_0_0w,
         t.report_line("Sort edges"),
         [](graph_t g) -> graph_t {
           g.sort_edges(g.cbegin_edges(0), g.cend_edges(0), [](const auto& lhs, const auto& rhs) { return lhs.weight() > rhs.weight(); });
@@ -406,13 +420,13 @@ namespace sequoia::testing
         }
       );
 
-      // end 'weighted_directed_graph::graph_description::node_0w_0x'
+      // end 'weighted_directed_graph::graph_description::node_0w_0'
 
-      // begin 'weighted_directed_graph::graph_description::node_0x_0w'
+      // begin 'weighted_directed_graph::graph_description::node_0_0w'
 
       trg.join(
-        weighted_directed_graph::graph_description::node_0x_0w,
-        weighted_directed_graph::graph_description::node_0w_0x,
+        weighted_directed_graph::graph_description::node_0_0w,
+        weighted_directed_graph::graph_description::node_0w_0,
         t.report_line("Swap edges"),
         [](graph_t g) -> graph_t {
           g.swap_edges(0, 0, 1);
@@ -421,8 +435,8 @@ namespace sequoia::testing
       );
 
       trg.join(
-        weighted_directed_graph::graph_description::node_0x_0w,
-        weighted_directed_graph::graph_description::node_0w_0x,
+        weighted_directed_graph::graph_description::node_0_0w,
+        weighted_directed_graph::graph_description::node_0w_0,
         t.report_line("Swap edges"),
         [](graph_t g) -> graph_t {
           g.swap_edges(0, 1, 0);
@@ -431,8 +445,8 @@ namespace sequoia::testing
       );
 
       trg.join(
-        weighted_directed_graph::graph_description::node_0x_0w,
-        weighted_directed_graph::graph_description::node_0w_0x,
+        weighted_directed_graph::graph_description::node_0_0w,
+        weighted_directed_graph::graph_description::node_0w_0,
         t.report_line("Sort edges"),
         [](graph_t g) -> graph_t {
           g.sort_edges(g.cbegin_edges(0), g.cend_edges(0), [](const auto& lhs, const auto& rhs) { return lhs.weight() < rhs.weight(); });
@@ -440,7 +454,7 @@ namespace sequoia::testing
         }
       );
 
-      // end 'weighted_directed_graph::graph_description::node_0x_0w'
+      // end 'weighted_directed_graph::graph_description::node_0_0w'
 
       return trg;
     }
