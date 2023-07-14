@@ -340,6 +340,74 @@ namespace sequoia::testing
 
       // end 'directed_graph::graph_description::node_0'
 
+      // begin 'weighted_directed_graph::graph_description::node_0w_0x'
+
+      trg.join(
+        weighted_directed_graph::graph_description::node_0w_0x,
+        weighted_directed_graph::graph_description::node_0x_0w,
+        t.report_line("Swap edges"),
+        [](graph_t g) -> graph_t {
+          g.swap_edges(0, 0, 1);
+          return g;
+        }
+      );
+
+      trg.join(
+        weighted_directed_graph::graph_description::node_0w_0x,
+        weighted_directed_graph::graph_description::node_0x_0w,
+        t.report_line("Swap edges"),
+        [](graph_t g) -> graph_t {
+          g.swap_edges(0, 1, 0);
+          return g;
+        }
+      );
+
+      trg.join(
+        weighted_directed_graph::graph_description::node_0w_0x,
+        weighted_directed_graph::graph_description::node_0x_0w,
+        t.report_line("Sort edges"),
+        [](graph_t g) -> graph_t {
+          g.sort_edges(g.cbegin_edges(0), g.cend_edges(0), [](const auto& lhs, const auto& rhs) { return lhs.weight() > rhs.weight(); });
+          return g;
+        }
+      );
+
+      // end 'weighted_directed_graph::graph_description::node_0w_0x'
+
+      // begin 'weighted_directed_graph::graph_description::node_0x_0w'
+
+      trg.join(
+        weighted_directed_graph::graph_description::node_0x_0w,
+        weighted_directed_graph::graph_description::node_0w_0x,
+        t.report_line("Swap edges"),
+        [](graph_t g) -> graph_t {
+          g.swap_edges(0, 0, 1);
+          return g;
+        }
+      );
+
+      trg.join(
+        weighted_directed_graph::graph_description::node_0x_0w,
+        weighted_directed_graph::graph_description::node_0w_0x,
+        t.report_line("Swap edges"),
+        [](graph_t g) -> graph_t {
+          g.swap_edges(0, 1, 0);
+          return g;
+        }
+      );
+
+      trg.join(
+        weighted_directed_graph::graph_description::node_0x_0w,
+        weighted_directed_graph::graph_description::node_0w_0x,
+        t.report_line("Sort edges"),
+        [](graph_t g) -> graph_t {
+          g.sort_edges(g.cbegin_edges(0), g.cend_edges(0), [](const auto& lhs, const auto& rhs) { return lhs.weight() < rhs.weight(); });
+          return g;
+        }
+      );
+
+      // end 'weighted_directed_graph::graph_description::node_0x_0w'
+
       return trg;
     }
   };
