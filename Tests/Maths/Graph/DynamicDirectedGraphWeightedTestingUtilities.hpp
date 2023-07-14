@@ -32,7 +32,17 @@ namespace sequoia::testing
       //  /\ /\
       //  \/ \/
       //    x
-      node_0_0,
+      node_0w_0w,
+
+      //  /\ /\
+      //  \/ \/
+      //    x
+      node_0w_0x,
+
+      //  /\ /\
+      //  \/ \/
+      //    x
+      node_0x_0w,
 
       //  x    x
       node_node,
@@ -204,6 +214,16 @@ namespace sequoia::testing
 
       // 'weighted_directed_graph::graph_description::node_0w'
       trg.add_node(make_and_check(t, t.report_line(""), {{{0, 1.0}}}, {0.0}));
+
+      // 'weighted_directed_graph::graph_description::node_0w_0w'
+      trg.add_node(make_and_check(t, t.report_line(""), {{{0, 1.0}, {0, 1.0}}}, {0.0}));
+
+      // 'weighted_directed_graph::graph_description::node_0w_0x'
+      trg.add_node(make_and_check(t, t.report_line(""), {{{0, 1.0}, {0, 2.0}}}, {0.0}));
+
+      // 'weighted_directed_graph::graph_description::node_0x_0w'
+      trg.add_node(make_and_check(t, t.report_line(""), {{{0, 2.0}, {0, 1.0}}}, {0.0}));
+
 
       // begin 'directed_graph::graph_description::empty'
 
