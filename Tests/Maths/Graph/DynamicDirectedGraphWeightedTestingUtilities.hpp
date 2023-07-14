@@ -45,7 +45,7 @@ namespace sequoia::testing
       node_0_0w,
 
       //  x    x
-      nodex_nodew,
+      node_nodew,
 
       //  x    x
       nodew_node,
@@ -271,6 +271,16 @@ namespace sequoia::testing
         }
       );
 
+      trg.join(
+        directed_graph::graph_description::empty,
+        weighted_directed_graph::graph_description::nodew,
+        t.report_line("Insert weighted node"),
+        [](graph_t g) -> graph_t {
+          g.insert_node(0, 1.0);
+          return g;
+        }
+      );
+
       // end 'directed_graph::graph_description::empty'
 
       // begin 'directed_graph::graph_description::node'
@@ -327,6 +337,16 @@ namespace sequoia::testing
           }
         );
       }
+
+      trg.join(
+        directed_graph::graph_description::node,
+        weighted_directed_graph::graph_description::nodew_node,
+        t.report_line("Insert weighted node"),
+        [](graph_t g) -> graph_t {
+          g.insert_node(0, 1.0);
+          return g;
+        }
+      );
 
       // end 'directed_graph::graph_description::node'
 
@@ -387,6 +407,8 @@ namespace sequoia::testing
       );
 
       // end 'directed_graph::graph_description::node_0_0'
+
+      //======================================= joins from new nodes =======================================//
 
       // begin 'weighted_directed_graph::graph_description::node_0w_0'
 
@@ -455,6 +477,62 @@ namespace sequoia::testing
       );
 
       // end 'weighted_directed_graph::graph_description::node_0_0w'
+
+      // begin 'weighted_directed_graph::graph_description::node_nodew'
+
+      trg.join(
+        weighted_directed_graph::graph_description::node_nodew,
+        weighted_directed_graph::graph_description::nodew_node,
+        t.report_line("Swap nodes"),
+        [](graph_t g) -> graph_t {
+          g.swap_nodes(0, 1);
+          return g;
+        }
+      );
+
+      // end 'weighted_directed_graph::graph_description::node_nodew'
+
+      // begin 'weighted_directed_graph::graph_description::nodew_node'
+
+      trg.join(
+        weighted_directed_graph::graph_description::nodew_node,
+        weighted_directed_graph::graph_description::node_nodew,
+        t.report_line("Swap nodes"),
+        [](graph_t g) -> graph_t {
+          g.swap_nodes(1, 0);
+          return g;
+        }
+      );
+
+      // end 'weighted_directed_graph::graph_description::nodew_node'
+
+      // begin 'weighted_directed_graph::graph_description::node_1_nodew'
+
+      trg.join(
+        weighted_directed_graph::graph_description::node_1_nodew,
+        weighted_directed_graph::graph_description::nodew_node_0,
+        t.report_line("Swap nodes"),
+        [](graph_t g) -> graph_t {
+          g.swap_nodes(0, 1);
+          return g;
+        }
+      );
+
+      // end 'weighted_directed_graph::graph_description::node_1_nodew'
+
+      // begin 'weighted_directed_graph::graph_description::nodew_node_0'
+
+      trg.join(
+        weighted_directed_graph::graph_description::nodew_node_0,
+        weighted_directed_graph::graph_description::node_1_nodew,
+        t.report_line("Swap nodes"),
+        [](graph_t g) -> graph_t {
+          g.swap_nodes(1, 0);
+          return g;
+        }
+      );
+
+      // end 'weighted_directed_graph::graph_description::nodew_node_0'
 
       return trg;
     }
