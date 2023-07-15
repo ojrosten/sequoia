@@ -48,7 +48,7 @@ swapping nodes throws for empty graph
 
 Expected Exception Type:
 [std::out_of_range]
-connectivity::swap_nodes: at least one node index [0, 0] out of range - graph order is 0
+node_storage::swap - index out of range
 
 =======================================
 
@@ -67,6 +67,24 @@ joining nodes throws for empty graph
 Expected Exception Type:
 [std::out_of_range]
 connectivity::join: at least one node index [0, 0] out of range - graph order is 0
+
+=======================================
+
+Tests/Maths/Graph/Directed/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 262
+Attempt to set a node weight which does not exist
+
+Expected Exception Type:
+[std::out_of_range]
+node_storage::node_weight - index out of range!
+
+=======================================
+
+Tests/Maths/Graph/Directed/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 272
+Attempt to mutate a node weight which does not exist
+
+Expected Exception Type:
+[std::out_of_range]
+node_storage::node_weight - index out of range!
 
 =======================================
 
@@ -120,7 +138,7 @@ swapping nodes throws if first index out of range
 
 Expected Exception Type:
 [std::out_of_range]
-connectivity::swap_nodes: at least one node index [1, 0] out of range - graph order is 1
+node_storage::swap - index out of range
 
 =======================================
 
@@ -129,7 +147,7 @@ swapping nodes throws if second index out of range
 
 Expected Exception Type:
 [std::out_of_range]
-connectivity::swap_nodes: at least one node index [0, 1] out of range - graph order is 1
+node_storage::swap - index out of range
 
 =======================================
 
@@ -148,6 +166,24 @@ joining nodes throws if second index out of range
 Expected Exception Type:
 [std::out_of_range]
 connectivity::join: at least one node index [0, 1] out of range - graph order is 1
+
+=======================================
+
+Tests/Maths/Graph/Directed/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 306
+Attempt to set a node weight which does not exist
+
+Expected Exception Type:
+[std::out_of_range]
+node_storage::node_weight - index out of range!
+
+=======================================
+
+Tests/Maths/Graph/Directed/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 316
+Attempt to mutate a node weight which does not exist
+
+Expected Exception Type:
+[std::out_of_range]
+node_storage::node_weight - index out of range!
 
 =======================================
 
@@ -228,7 +264,7 @@ swapping nodes throws for empty graph
 
 Expected Exception Type:
 [std::out_of_range]
-connectivity::swap_nodes: at least one node index [0, 0] out of range - graph order is 0
+node_storage::swap - index out of range
 
 =======================================
 
@@ -247,6 +283,24 @@ joining nodes throws for empty graph
 Expected Exception Type:
 [std::out_of_range]
 connectivity::join: at least one node index [0, 0] out of range - graph order is 0
+
+=======================================
+
+Tests/Maths/Graph/Directed/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 262
+Attempt to set a node weight which does not exist
+
+Expected Exception Type:
+[std::out_of_range]
+node_storage::node_weight - index out of range!
+
+=======================================
+
+Tests/Maths/Graph/Directed/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 272
+Attempt to mutate a node weight which does not exist
+
+Expected Exception Type:
+[std::out_of_range]
+node_storage::node_weight - index out of range!
 
 =======================================
 
@@ -300,7 +354,7 @@ swapping nodes throws if first index out of range
 
 Expected Exception Type:
 [std::out_of_range]
-connectivity::swap_nodes: at least one node index [1, 0] out of range - graph order is 1
+node_storage::swap - index out of range
 
 =======================================
 
@@ -309,7 +363,7 @@ swapping nodes throws if second index out of range
 
 Expected Exception Type:
 [std::out_of_range]
-connectivity::swap_nodes: at least one node index [0, 1] out of range - graph order is 1
+node_storage::swap - index out of range
 
 =======================================
 
@@ -328,6 +382,24 @@ joining nodes throws if second index out of range
 Expected Exception Type:
 [std::out_of_range]
 connectivity::join: at least one node index [0, 1] out of range - graph order is 1
+
+=======================================
+
+Tests/Maths/Graph/Directed/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 306
+Attempt to set a node weight which does not exist
+
+Expected Exception Type:
+[std::out_of_range]
+node_storage::node_weight - index out of range!
+
+=======================================
+
+Tests/Maths/Graph/Directed/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 316
+Attempt to mutate a node weight which does not exist
+
+Expected Exception Type:
+[std::out_of_range]
+node_storage::node_weight - index out of range!
 
 =======================================
 

@@ -13,7 +13,7 @@
 
 namespace sequoia::testing
 {
-  class dynamic_directed_graph_fundamental_weight_test final : public regular_test
+  class dynamic_directed_graph_faithful_faithful_test final : public regular_test
   {
   public:
     using regular_test::regular_test;
@@ -22,20 +22,5 @@ namespace sequoia::testing
     std::filesystem::path source_file() const;
 
     void run_tests();
-  private:
-    template <class, class, concrete_test>
-    friend class graph_test_helper;
-
-    template
-    <
-      maths::graph_flavour GraphFlavour, // TO DO: remove this parameter
-      class EdgeWeight,
-      class NodeWeight,
-      class EdgeWeightCreator,
-      class NodeWeightCreator,
-      class EdgeStorageTraits,
-      class NodeWeightStorageTraits
-    >
-    void execute_operations();
   };
 }

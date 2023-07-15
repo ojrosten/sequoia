@@ -9,7 +9,7 @@
 
 /*! \file */
 
-#include "DynamicGraphTestingUtilities.hpp"
+#include "../DynamicGraphTestingUtilities.hpp"
 
 #include "sequoia/TestFramework/RegularTestCore.hpp"
 #include "sequoia/TestFramework/StateTransitionUtilities.hpp"

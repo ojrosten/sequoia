@@ -264,30 +264,42 @@ int main(int argc, char** argv)
         test_graph_meta{"Meta Tests"}
       },
       suite{
-        "Initialization",
-        test_graph_init{"Dynamic Graph Init"},
-        test_static_graph{"Static Graph Init"}
-      },
-      suite{
         "Manipulations",
-        dynamic_directed_graph_unweighted_test{"Directed Graph Unweighted Tests"},
-        dynamic_directed_graph_fundamental_weight_test{"Directed Graph Fundamental Weight Tests"},
-        dynamic_embedded_directed_graph_unweighted_test{"Unweighted Embedded Directed Graph Tests"},
-        dynamic_undirected_graph_unweighted_test{"Unweighted Undirected Graph Tests"},
-        dynamic_embedded_undirected_graph_unweighted_test{"Unweighted Embedded Undirected Graph Tests"},
-        weighted_graph_test{"Weighted Graph Tests"},
-        test_static_fixed_topology{"Static Graph Manipulations"},
-        test_edge_insertion{"Edge Insertions"}
+        suite{
+          "Directed",
+          dynamic_directed_graph_unweighted_test{"Directed Graph Unweighted Tests"},
+          dynamic_directed_graph_faithful_faithful_test{"Directed Graph Faithful-Faithful Tests"},
+          dynamic_directed_graph_faithful_pool_test{"Directed Graph Faithful-Pool Tests"},
+          dynamic_directed_graph_pool_faithful_test{"Directed Graph Pool-Faithful Tests"},
+          dynamic_directed_graph_pool_pool_test{"Directed Graph Pool-Pool Tests"}
+        },
+        suite{
+          "Directed Embedded",
+          dynamic_embedded_directed_graph_unweighted_test{"Unweighted Embedded Directed Graph Tests"},
+        },
+        suite{
+          "Undirected",
+          dynamic_undirected_graph_unweighted_test{"Unweighted Undirected Graph Tests"}
+        },
+        suite{
+          "Undirected Embedded",
+          dynamic_embedded_undirected_graph_unweighted_test{"Unweighted Embedded Undirected Graph Tests"},
+        },
+        suite{
+          "Legacy",
+          weighted_graph_test{"Weighted Graph Tests"},
+          test_static_fixed_topology{"Static Graph Manipulations"},
+          test_edge_insertion{"Edge Insertions"},
+          test_graph_init{"Dynamic Graph Init"},
+          test_static_graph{"Static Graph Init"},
+          test_heterogeneous_static_graph{"Heterogeneous Static Graphs"},
+          test_fixed_topology{"Dynamic Graph Fixed Topology"}
+        }
       },
       suite{
         "Allocations",
         weighted_graph_allocation_test{"Weighted Graph Allocation Tests"},
         unweighted_graph_allocation_test{"Unweighted Graph Allocation Tests"},
-      },
-      suite{
-        "Fixed Topology",
-        test_heterogeneous_static_graph{"Heterogeneous Static Graphs"},
-        test_fixed_topology{"Dynamic Graph Fixed Topology"}
       }
     );
 

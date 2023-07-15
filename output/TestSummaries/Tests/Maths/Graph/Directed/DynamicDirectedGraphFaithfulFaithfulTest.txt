@@ -1,0 +1,2 @@
+Directed Graph Faithful-Faithful Tests
+Standard Top Level Checks:               828;  Failures:  0  [Deep checks: 74032]
