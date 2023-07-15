@@ -1,2 +1,2 @@
 Directed Graph Pool-Faithful Tests
-Standard Top Level Checks:               828;  Failures:  0  [Deep checks: 74032]
+Standard Top Level Checks:               874;  Failures:  0  [Deep checks: 79328]
