@@ -1,2 +1,2 @@
 Directed Graph Pool-Pool Tests
-Standard Top Level Checks:               918;  Failures:  0  [Deep checks: 85224]
+Standard Top Level Checks:               936;  Failures:  0  [Deep checks: 87874]
