@@ -1,2 +1,2 @@
 Directed Graph Faithful-Pool Tests
-Standard Top Level Checks:               906;  Failures:  0  [Deep checks: 83640]
+Standard Top Level Checks:               918;  Failures:  0  [Deep checks: 85224]
