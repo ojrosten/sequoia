@@ -33,7 +33,6 @@
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
 
 #include <limits>
-#include <map>
 #include <set>
 #include <stdexcept>
 #include <ranges>
@@ -1411,6 +1410,67 @@ namespace sequoia
         }
       }
 
+      class edge_maker
+      {
+        using edge_weight_proxy = typename edge_type::weight_proxy_type;
+
+        struct data
+        {
+          const edge_weight_proxy* m_ProxyPtr{};
+          edge_index_type node_index{}, edge_index{};
+        };
+
+        connectivity& m_Conn;
+        edge_storage_type& m_Storage;
+        std::vector<data> m_WeightMap;
+      public:
+        edge_maker(connectivity& c, edge_storage_type& storage) 
+          : m_Conn{c}
+          , m_Storage{storage}
+        {}
+
+        void operator()(const size_type node, const_edge_iterator first, const_edge_iterator i)
+        {
+          auto weightPtr{&i->weight_proxy()};
+          auto found{std::ranges::lower_bound(m_WeightMap, weightPtr, [](const edge_weight_proxy* lhs, const edge_weight_proxy* rhs) { return lhs < rhs; }, [](const data& d) { return d.m_ProxyPtr; })};
+          if((found == m_WeightMap.end()) || (found->m_ProxyPtr != weightPtr))
+          {
+            auto appender{[=, this](auto e){
+                   m_Storage.push_back_to_partition(node, std::move(e));
+                   m_WeightMap.emplace(found, &i->weight_proxy(), node, static_cast<edge_index_type>(std::ranges::distance(first, i)));
+                 }
+            };
+
+            if constexpr(edge_type::flavour == edge_flavour::partial)
+            {
+              appender(edge_type{i->target_node(), m_Conn.make_edge_weight(i->weight())});
+            }
+            else
+            {
+              if(i->inverted())
+              {
+                appender(edge_type{i->source_node(), inverted_edge, m_Conn.make_edge_weight(i->weight())});
+              }
+              else
+              {
+                appender(edge_type{i->source_node(), i->target_node(), m_Conn.make_edge_weight(i->weight())});
+              }
+            }
+          }
+          else
+          {
+            if constexpr(edge_type::flavour == edge_flavour::partial)
+            {
+              m_Storage.push_back_to_partition(node, i->target_node(), *(m_Conn.cbegin_edges(found->node_index) + found->edge_index));
+            }
+            else if constexpr(edge_type::flavour == edge_flavour::full)
+            {
+              m_Storage.push_back_to_partition(node, m_Conn.cbegin_edges(found->node_index) + found->edge_index);
+            }
+          }
+        }
+      };
+
       template<alloc... Allocators>
       [[nodiscard]]
       edge_storage_type copy_edges(const connectivity& in, const Allocators&... as)
@@ -1420,55 +1480,7 @@ namespace sequoia
 
         if constexpr((edge_type::flavour == edge_flavour::partial) || (edge_type::flavour == edge_flavour::full))
         {
-          using edge_weight_proxy = typename edge_type::weight_proxy_type;
-          std::map<const edge_weight_proxy*, std::pair<edge_index_type, edge_index_type>> weightMap;
-          auto processor{
-            [this, &storage, &weightMap](const size_type node, const_edge_iterator first, const_edge_iterator i) {
-              auto weightPtr{&i->weight_proxy()};
-              if(auto found{weightMap.find(weightPtr)}; found == weightMap.end())
-              {
-                auto appender{[node, first, i, &storage, &weightMap](auto&& e){
-                    storage.push_back_to_partition(node, std::move(e));
-                    const std::pair<edge_index_type, edge_index_type> indices{node, static_cast<edge_index_type>(std::ranges::distance(first, i))};
-                    weightMap.emplace(&i->weight_proxy(), indices);
-                  }
-                };
-
-                if constexpr(edge_type::flavour == edge_flavour::partial)
-                {
-                  edge_type e{i->target_node(), make_edge_weight(i->weight())};
-                  appender(std::move(e));
-                }
-                else
-                {
-                  if(i->inverted())
-                  {
-                    edge_type e{i->source_node(), inverted_edge, make_edge_weight(i->weight())};
-                    appender(std::move(e));
-                  }
-                  else
-                  {
-                    edge_type e{i->source_node(), i->target_node(), make_edge_weight(i->weight())};
-                    appender(std::move(e));
-                  }
-                }
-              }
-              else
-              {
-                const auto& indices{found->second};
-                if constexpr(edge_type::flavour == edge_flavour::partial)
-                {
-                  storage.push_back_to_partition(node, i->target_node(), *(cbegin_edges(indices.first)+indices.second));
-                }
-                else if constexpr(edge_type::flavour == edge_flavour::full)
-                {
-                  storage.push_back_to_partition(node, cbegin_edges(indices.first)+indices.second);
-                }
-              }
-            }
-          };
-
-          copy_edges(in, storage, processor);
+          copy_edges(in, storage, edge_maker{*this, storage});
         }
         else if constexpr(edge_type::flavour == edge_flavour::full_embedded)
         {
