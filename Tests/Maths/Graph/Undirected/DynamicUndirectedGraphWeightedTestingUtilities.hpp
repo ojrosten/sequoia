@@ -177,116 +177,103 @@ namespace sequoia::testing
       // 'weighted_graph_description::node_0y_1_1w_1x_node'
       trg.add_node(make_and_check(t, t.report_line(""), {{{0, 3.0}, {0, 3.0}, {1, 0.0}, {1, 1.0}, {1, 2.0}}, {{0, 0.0}, {0, 1.0}, {0, 2.0}}}, {0.0, 0.0}));
 
-      //// begin 'graph_description::empty'
+      // begin 'graph_description::empty'
 
-      //trg.join(
-      //  graph_description::empty,
-      //  graph_description::empty,
-      //  t.report_line(""),
-      //  [&t](graph_t g) -> graph_t {
-      //    t.check_exception_thrown<std::out_of_range>(t.report_line("Attempt to set a node weight which does not exist"), [&g](){ g.node_weight(g.cbegin_node_weights(), 1.0); });
-      //    return g;
-      //  }
-      //);
+      trg.join(
+        graph_description::empty,
+        graph_description::empty,
+        t.report_line(""),
+        [&t](graph_t g) -> graph_t {
+          t.check_exception_thrown<std::out_of_range>(t.report_line("Attempt to set a node weight which does not exist"), [&g](){ g.node_weight(g.cbegin_node_weights(), 1.0); });
+          return g;
+        }
+      );
 
-      //trg.join(
-      //  graph_description::empty,
-      //  graph_description::empty,
-      //  t.report_line("Attempt to mutate a node weight which does not exist"),
-      //  [&t](graph_t g) -> graph_t {
-      //    t.check_exception_thrown<std::out_of_range>(t.report_line("Attempt to mutate a node weight which does not exist"), [&g](){ g.mutate_node_weight(g.cbegin_node_weights(), [](double&){}); });
-      //    return g;
-      //  }
-      //);
+      trg.join(
+        graph_description::empty,
+        graph_description::empty,
+        t.report_line("Attempt to mutate a node weight which does not exist"),
+        [&t](graph_t g) -> graph_t {
+          t.check_exception_thrown<std::out_of_range>(t.report_line("Attempt to mutate a node weight which does not exist"), [&g](){ g.mutate_node_weight(g.cbegin_node_weights(), [](double&){}); });
+          return g;
+        }
+      );
 
-      //trg.join(
-      //  graph_description::empty,
-      //  weighted_graph_description::nodew,
-      //  t.report_line("Add weighted node"),
-      //  [](graph_t g) -> graph_t {
-      //    g.add_node(1.0);
-      //    return g;
-      //  }
-      //);
+      trg.join(
+        graph_description::empty,
+        weighted_graph_description::nodew,
+        t.report_line("Add weighted node"),
+        [](graph_t g) -> graph_t {
+          g.add_node(1.0);
+          return g;
+        }
+      );
 
-      //trg.join(
-      //  graph_description::empty,
-      //  weighted_graph_description::nodew,
-      //  t.report_line("Insert weighted node"),
-      //  [](graph_t g) -> graph_t {
-      //    g.insert_node(0, 1.0);
-      //    return g;
-      //  }
-      //);
+      trg.join(
+        graph_description::empty,
+        weighted_graph_description::nodew,
+        t.report_line("Insert weighted node"),
+        [](graph_t g) -> graph_t {
+          g.insert_node(0, 1.0);
+          return g;
+        }
+      );
 
-      //// end 'graph_description::empty'
+      // end 'graph_description::empty'
 
-      //// begin 'graph_description::node'
+      // begin 'graph_description::node'
 
-      //trg.join(
-      //  graph_description::node,
-      //  graph_description::node,
-      //  t.report_line(""),
-      //  [&t](graph_t g) -> graph_t {
-      //    t.check_exception_thrown<std::out_of_range>(t.report_line("Attempt to set a node weight which does not exist"), [&g](){ g.node_weight(g.cend_node_weights(), 1.0); });
-      //    return g;
-      //  }
-      //);
+      trg.join(
+        graph_description::node,
+        graph_description::node,
+        t.report_line(""),
+        [&t](graph_t g) -> graph_t {
+          t.check_exception_thrown<std::out_of_range>(t.report_line("Attempt to set a node weight which does not exist"), [&g](){ g.node_weight(g.cend_node_weights(), 1.0); });
+          return g;
+        }
+      );
 
-      //trg.join(
-      //  graph_description::node,
-      //  graph_description::node,
-      //  t.report_line("Attempt to mutate a node weight which does not exist"),
-      //  [&t](graph_t g) -> graph_t {
-      //    t.check_exception_thrown<std::out_of_range>(t.report_line("Attempt to mutate a node weight which does not exist"), [&g](){ g.mutate_node_weight(g.cend_node_weights(), [](double&){}); });
-      //    return g;
-      //  }
-      //);
+      trg.join(
+        graph_description::node,
+        graph_description::node,
+        t.report_line("Attempt to mutate a node weight which does not exist"),
+        [&t](graph_t g) -> graph_t {
+          t.check_exception_thrown<std::out_of_range>(t.report_line("Attempt to mutate a node weight which does not exist"), [&g](){ g.mutate_node_weight(g.cend_node_weights(), [](double&){}); });
+          return g;
+        }
+      );
 
-      //trg.join(
-      //  graph_description::node,
-      //  weighted_graph_description::nodew,
-      //  t.report_line("Change node weight"),
-      //  [](graph_t g) -> graph_t {
-      //    g.node_weight(g.cbegin_node_weights(), 1.0);
-      //    return g;
-      //  }
-      //);
+      trg.join(
+        graph_description::node,
+        weighted_graph_description::nodew,
+        t.report_line("Change node weight"),
+        [](graph_t g) -> graph_t {
+          g.node_weight(g.cbegin_node_weights(), 1.0);
+          return g;
+        }
+      );
 
-      //trg.join(
-      //  graph_description::node,
-      //  weighted_graph_description::nodew,
-      //  t.report_line("Mutate node weight"),
-      //  [](graph_t g) -> graph_t {
-      //    g.mutate_node_weight(g.cbegin_node_weights(), [](double& x) { x += 1.0; });
-      //    return g;
-      //  }
-      //);
+      trg.join(
+        graph_description::node,
+        weighted_graph_description::nodew,
+        t.report_line("Mutate node weight"),
+        [](graph_t g) -> graph_t {
+          g.mutate_node_weight(g.cbegin_node_weights(), [](double& x) { x += 1.0; });
+          return g;
+        }
+      );
 
-      //if constexpr(std::same_as<object::faithful_producer<double>, NodeWeightCreator>)
-      //{
-      //  trg.join(
-      //    graph_description::node,
-      //    weighted_graph_description::nodew,
-      //    t.report_line("Change node weight via iterator"),
-      //    [](graph_t g) -> graph_t {
-      //      *g.begin_node_weights() = 1.0;
-      //      return g;
-      //    }
-      //  );
-      //}
+      trg.join(
+        graph_description::node,
+        weighted_graph_description::nodew_node,
+        t.report_line("Insert weighted node"),
+        [](graph_t g) -> graph_t {
+          g.insert_node(0, 1.0);
+          return g;
+        }
+      );
 
-      //trg.join(
-      //  graph_description::node,
-      //  weighted_graph_description::nodew_node,
-      //  t.report_line("Insert weighted node"),
-      //  [](graph_t g) -> graph_t {
-      //    g.insert_node(0, 1.0);
-      //    return g;
-      //  }
-      //);
-
-      //// end 'graph_description::node'
+      // end 'graph_description::node'
 
       //// begin 'graph_description::node_0'
 
