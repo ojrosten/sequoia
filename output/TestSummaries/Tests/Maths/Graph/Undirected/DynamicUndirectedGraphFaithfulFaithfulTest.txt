@@ -1,2 +1,2 @@
 Undirected Graph Faithful-Faithful Tests
-Standard Top Level Checks:               674;  Failures:  0  [Deep checks: 63924]
+Standard Top Level Checks:               694;  Failures:  0  [Deep checks: 66230]
