@@ -713,9 +713,29 @@ namespace sequoia::testing
 
       // end 'weighted_graph_description::node_1_1w_1x_node_0_0w_0x'
 
-      //// begin 'weighted_graph_description::node_0y_1_1w_1x_node_0_0w_0x'
+      // begin 'weighted_graph_description::node_0y_1_1w_1x_node_0_0w_0x'
 
-      //// end'weighted_graph_description::node_0y_1_1w_1x_node_0_0w_0x'
+      trg.join(
+        weighted_graph_description::node_0y_1_1w_1x_node_0_0w_0x,
+        weighted_graph_description::node_1_1w_1x_node_0_0w_0x,
+        t.report_line("Remove zeroth partial edge"),
+        [](graph_t g) -> graph_t {
+          g.erase_edge(g.cbegin_edges(0));
+          return g;
+        }
+      );
+
+      trg.join(
+        weighted_graph_description::node_0y_1_1w_1x_node_0_0w_0x,
+        weighted_graph_description::node_1_1w_1x_node_0_0w_0x,
+        t.report_line("Remove first partial edge"),
+        [](graph_t g) -> graph_t {
+          g.erase_edge(++g.cbegin_edges(0));
+          return g;
+        }
+      );
+
+      // end'weighted_graph_description::node_0y_1_1w_1x_node_0_0w_0x'
 
       return trg;
     }
