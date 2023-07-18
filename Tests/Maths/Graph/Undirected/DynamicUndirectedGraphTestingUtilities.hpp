@@ -9,7 +9,7 @@
 
 /*! \file */
 
-#include "DynamicGraphTestingUtilities.hpp"
+#include "../DynamicGraphTestingUtilities.hpp"
 
 #include "sequoia/TestFramework/RegularTestCore.hpp"
 #include "sequoia/TestFramework/StateTransitionUtilities.hpp"
@@ -115,7 +115,9 @@ namespace sequoia::testing
       node_1_node_0_node_3_node_2,
 
       // x --   x -   - x  -- x
-      node_2_node_3_node_0_node_1
+      node_2_node_3_node_0_node_1,
+
+      end
     };
   }
 

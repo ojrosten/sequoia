@@ -57,7 +57,6 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Maths/Graph/DynamicGraphWeightedAllocationTest.cpp
                ${TestDir}/Maths/Graph/DynamicGraphWeightedTest.cpp
                ${TestDir}/Maths/Graph/DynamicSubgraphTest.cpp
-               ${TestDir}/Maths/Graph/DynamicUndirectedGraphUnweightedTest.cpp
                ${TestDir}/Maths/Graph/EdgeTest.cpp
                ${TestDir}/Maths/Graph/EdgeTestingDiagnostics.cpp
                ${TestDir}/Maths/Graph/GraphMetaTest.cpp
@@ -71,6 +70,11 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Maths/Graph/StaticGraphTraversalsTest.cpp
                ${TestDir}/Maths/Graph/TreeTest.cpp
                ${TestDir}/Maths/Graph/TreeTestingDiagnostics.cpp
+               ${TestDir}/Maths/Graph/Undirected/DynamicUndirectedGraphFaithfulFaithfulTest.cpp
+               ${TestDir}/Maths/Graph/Undirected/DynamicUndirectedGraphFaithfulPoolTest.cpp
+               ${TestDir}/Maths/Graph/Undirected/DynamicUndirectedGraphPoolFaithfulTest.cpp
+               ${TestDir}/Maths/Graph/Undirected/DynamicUndirectedGraphPoolPoolTest.cpp
+               ${TestDir}/Maths/Graph/Undirected/DynamicUndirectedGraphUnweightedTest.cpp
                ${TestDir}/Maths/Sequences/LinearSequenceTest.cpp
                ${TestDir}/Maths/Sequences/LinearSequenceTestingDiagnostics.cpp
                ${TestDir}/Maths/Sequences/MonotonicSequenceAllocationTest.cpp

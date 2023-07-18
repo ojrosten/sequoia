@@ -279,7 +279,11 @@ int main(int argc, char** argv)
         },
         suite{
           "Undirected",
-          dynamic_undirected_graph_unweighted_test{"Unweighted Undirected Graph Tests"}
+          dynamic_undirected_graph_unweighted_test{"Undirected Graph Unweighted Tests"},
+          dynamic_undirected_graph_faithful_faithful_test{"Undirected Graph Faithful-Faithful Tests"},
+          dynamic_undirected_graph_faithful_pool_test{"Undirected Graph Faithful-Pool Tests"},
+          dynamic_undirected_graph_pool_faithful_test{"Undirected Graph Pool-Faithful Tests"},
+          dynamic_undirected_graph_pool_pool_test{"Undirected Graph Pool-Pool Tests"}
         },
         suite{
           "Undirected Embedded",

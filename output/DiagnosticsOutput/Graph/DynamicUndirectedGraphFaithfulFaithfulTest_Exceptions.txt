@@ -48,7 +48,7 @@ swapping nodes throws for empty graph
 
 Expected Exception Type:
 [std::out_of_range]
-connectivity::swap_nodes: at least one node index [0, 0] out of range - graph order is 0
+node_storage::swap - index out of range
 
 =======================================
 
@@ -120,7 +120,7 @@ swapping nodes throws if first index out of range
 
 Expected Exception Type:
 [std::out_of_range]
-connectivity::swap_nodes: at least one node index [1, 0] out of range - graph order is 1
+node_storage::swap - index out of range
 
 =======================================
 
@@ -129,7 +129,7 @@ swapping nodes throws if second index out of range
 
 Expected Exception Type:
 [std::out_of_range]
-connectivity::swap_nodes: at least one node index [0, 1] out of range - graph order is 1
+node_storage::swap - index out of range
 
 =======================================
 
@@ -228,7 +228,7 @@ swapping nodes throws for empty graph
 
 Expected Exception Type:
 [std::out_of_range]
-connectivity::swap_nodes: at least one node index [0, 0] out of range - graph order is 0
+node_storage::swap - index out of range
 
 =======================================
 
@@ -300,7 +300,7 @@ swapping nodes throws if first index out of range
 
 Expected Exception Type:
 [std::out_of_range]
-connectivity::swap_nodes: at least one node index [1, 0] out of range - graph order is 1
+node_storage::swap - index out of range
 
 =======================================
 
@@ -309,7 +309,7 @@ swapping nodes throws if second index out of range
 
 Expected Exception Type:
 [std::out_of_range]
-connectivity::swap_nodes: at least one node index [0, 1] out of range - graph order is 1
+node_storage::swap - index out of range
 
 =======================================
 
