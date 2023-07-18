@@ -64,25 +64,11 @@ namespace sequoia::testing
       //  x ==== x
       node_1_1w_1x_node,
 
-      //  x ==== x
-      //    ----
-      node_1w_1x_1_node,
-
-      //  x ==== x
-      //    ----
-      node_1x_1w_1_node,
-
       // />\
       // \ /
       //  x ==== x
       //    ----
-      node_1_1w_1x_0y_node,
-
-      // />\
-      // \ /
-      //  x ==== x
-      //    ----
-      node_0y_1x_1w_1_node
+      node_0y_1_1w_1x_node,
     };
   }
 
@@ -179,20 +165,17 @@ namespace sequoia::testing
       // 'weighted_graph_description::node_1w_1w_node'
       trg.add_node(make_and_check(t, t.report_line(""), {{{1, 1.0}, {1, 1.0}, {1, 1.0}, {1, 1.0}}, {{0, 1.0}, {0, 1.0}, {0, 1.0}, {0, 1.0}}}, {0.0, 0.0}));
 
-      //// 'weighted_graph_description::node_1_1w_1x_node'
-      //trg.add_node(make_and_check(t, t.report_line(""), {{{1, 0.0}, {1, 1.0}, {1, 2.0}}, {}}, {0.0, 0.0}));
+      // 'weighted_graph_description::node_1_1w_1x_node'
+      trg.add_node(
+        [&t]() {
+          auto g{make_and_check(t, t.report_line(""), {{{1, 0.0}, {1, 1.0}, {2, 2.0}}, {{0, 0.0}, {0, 1.0}, {0, 2.0}}}, {0.0, 0.0})};
+          t.check(equality, t.report_line("Canonical ordering of weighted edges"), graph_t{{{{1, 2.0}, {1, 0.0}, {0, 1.0}}, {{0, 1.0}, {0, 2.0}, {0, 0.0}}}, {0.0, 0.0}}, g);
+          return g;
+        }
+      );
 
-      //// 'weighted_graph_description::node_1w_1x_1_node'
-      //trg.add_node(make_and_check(t, t.report_line(""), {{{1, 1.0}, {1, 2.0}, {1, 0.0}}, {}}, {0.0, 0.0}));
-
-      //// 'weighted_graph_description::node_1x_1w_1_node'
-      //trg.add_node(make_and_check(t, t.report_line(""), {{{1, 2.0}, {1, 1.0}, {1, 0.0}}, {}}, {0.0, 0.0}));
-
-      //// 'weighted_graph_description::node_1_1w_1x_0y_node'
-      //trg.add_node(make_and_check(t, t.report_line(""), {{{1, 0.0}, {1, 1.0}, {1, 2.0}, {0, 3.0}}, {}}, {0.0, 0.0}));
-
-      //// 'weighted_graph_description::node_0y_1x_1w_1_node'
-      //trg.add_node(make_and_check(t, t.report_line(""), {{{0, 3.0}, {1, 2.0}, {1, 1.0}, {1, 0.0}}, {}}, {0.0, 0.0}));
+      // 'weighted_graph_description::node_0y_1_1w_1x_node'
+      trg.add_node(make_and_check(t, t.report_line(""), {{{0, 3.0}, {0, 3.0}, {1, 0.0}, {1, 1.0}, {1, 2.0}}, {{0, 0.0}, {0, 1.0}, {0, 2.0}}}, {0.0, 0.0}));
 
       //// begin 'graph_description::empty'
 
