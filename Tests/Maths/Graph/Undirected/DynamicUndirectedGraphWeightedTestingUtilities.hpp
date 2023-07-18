@@ -329,29 +329,55 @@ namespace sequoia::testing
 
       // end 'graph_description::node_0'
 
-      //// begin 'graph_description::node_0_0'
+      // begin 'graph_description::node_0_0'
 
-      //trg.join(
-      //  graph_description::node_0_0,
-      //  weighted_graph_description::node_0_0w,
-      //  t.report_line("Set first edge weight"),
-      //  [](graph_t g) -> graph_t {
-      //    g.set_edge_weight(g.cbegin_edges(0), 1.0);
-      //    return g;
-      //  }
-      //);
+      trg.join(
+        graph_description::node_0_0,
+        weighted_graph_description::node_0_0w,
+        t.report_line("Set edge weight via zeroth partial weight"),
+        [](graph_t g) -> graph_t {
+          g.set_edge_weight(g.cbegin_edges(0), 1.0);
+          g.swap_edges(0, 0, 2);
+          g.swap_edges(0, 1, 3);
+          return g;
+        }
+      );
 
-      //trg.join(
-      //  graph_description::node_0_0,
-      //  weighted_graph_description::node_0w_0,
-      //  t.report_line("Set first edge weight"),
-      //  [](graph_t g) -> graph_t {
-      //    g.set_edge_weight(++g.cbegin_edges(0), 1.0);
-      //    return g;
-      //  }
-      //);
+      trg.join(
+        graph_description::node_0_0,
+        weighted_graph_description::node_0_0w,
+        t.report_line("Set edge weight via first partial weight"),
+        [](graph_t g) -> graph_t {
+          g.set_edge_weight(g.cbegin_edges(0) + 1, 1.0);
+          g.swap_edges(0, 0, 2);
+          g.swap_edges(0, 1, 3);
+          return g;
+        }
+      );
 
-      //// end 'graph_description::node_0_0'
+      trg.join(
+        graph_description::node_0_0,
+        weighted_graph_description::node_0_0w,
+        t.report_line("Set edge weight via second partial weight"),
+        [](graph_t g) -> graph_t {
+          g.set_edge_weight(g.cbegin_edges(0) + 2, 1.0);
+          g.swap_edges(0, 0, 3);
+          return g;
+        }
+      );
+
+      trg.join(
+        graph_description::node_0_0,
+        weighted_graph_description::node_0_0w,
+        t.report_line("Set edge weight via third partial weight"),
+        [](graph_t g) -> graph_t {
+          g.set_edge_weight(g.cbegin_edges(0) + 3, 1.0);
+          g.swap_edges(0, 0, 2);
+          return g;
+        }
+      );
+
+      // end 'graph_description::node_0_0'
 
       //// begin 'graph_description::node_1_1_node'
 

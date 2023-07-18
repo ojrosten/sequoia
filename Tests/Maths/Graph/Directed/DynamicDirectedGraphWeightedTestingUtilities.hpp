@@ -343,7 +343,7 @@ namespace sequoia::testing
       trg.join(
         graph_description::node_0_0,
         weighted_graph_description::node_0w_0,
-        t.report_line("Set first edge weight"),
+        t.report_line("Set zeroth edge weight"),
         [](graph_t g) -> graph_t {
           g.set_edge_weight(g.cbegin_edges(0), 1.0);
           return g;
