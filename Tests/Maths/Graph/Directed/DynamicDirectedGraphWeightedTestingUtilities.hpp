@@ -404,7 +404,7 @@ namespace sequoia::testing
         }
       );
 
-      // end 'dgraph_description::node_1_1_node'
+      // end 'graph_description::node_1_1_node'
 
       //======================================= joins from new nodes =======================================//
 
