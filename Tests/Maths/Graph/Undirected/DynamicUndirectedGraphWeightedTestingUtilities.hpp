@@ -165,8 +165,8 @@ namespace sequoia::testing
       // 'weighted_graph_description::node_1_1w_1x_node_0_0w_0x'
       trg.add_node(
         [&t]() {
-          auto g{make_and_check(t, t.report_line(""), {{{1, 0.0}, {1, 1.0}, {2, 2.0}}, {{0, 0.0}, {0, 1.0}, {0, 2.0}}}, {0.0, 0.0})};
-          t.check(equality, t.report_line("Canonical ordering of weighted edges"), graph_t{{{{1, 2.0}, {1, 0.0}, {0, 1.0}}, {{0, 1.0}, {0, 2.0}, {0, 0.0}}}, {0.0, 0.0}}, g);
+          auto g{make_and_check(t, t.report_line(""), {{{1, 0.0}, {1, 1.0}, {1, 2.0}}, {{0, 0.0}, {0, 1.0}, {0, 2.0}}}, {0.0, 0.0})};
+          t.check(equality, t.report_line("Canonical ordering of weighted edges"), graph_t{{{{1, 2.0}, {1, 0.0}, {1, 1.0}}, {{0, 1.0}, {0, 2.0}, {0, 0.0}}}, {0.0, 0.0}}, g);
           return g;
         }
       );
@@ -670,7 +670,7 @@ namespace sequoia::testing
 
       // begin 'weighted_graph_description::node_1_1w_1x_node_0_0w_0x'
 
-      /*trg.join(
+      trg.join(
         weighted_graph_description::node_1_1w_1x_node_0_0w_0x,
         weighted_graph_description::node_0y_1_1w_1x_node_0_0w_0x,
         t.report_line("Join {0,0} and sort"),
@@ -685,7 +685,7 @@ namespace sequoia::testing
         }
       );
 
-      trg.join(
+      /*trg.join(
         weighted_graph_description::node_1_1w_1x_node_0_0w_0x,
         weighted_graph_description::node_1_1w_1x_node_0_0w_0x,
         t.report_line("Set multiple edge weights and sort"),
