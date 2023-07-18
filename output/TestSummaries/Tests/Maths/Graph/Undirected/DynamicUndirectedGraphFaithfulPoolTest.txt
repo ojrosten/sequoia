@@ -1,2 +1,2 @@
 Undirected Graph Faithful-Pool Tests
-Standard Top Level Checks:               806;  Failures:  0  [Deep checks: 79054]
+Standard Top Level Checks:               822;  Failures:  0  [Deep checks: 80774]
