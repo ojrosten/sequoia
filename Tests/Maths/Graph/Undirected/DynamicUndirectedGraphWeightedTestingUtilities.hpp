@@ -48,11 +48,14 @@ namespace sequoia::testing
       //  x ---- x
       node_1_nodew,
 
+      //  x ---- x
+      nodew_1_node,
+
       //  x ==== x
       node_1_1_node,
 
       //  x ==== x
-      node_1w_1_node,
+      node_1_1w_node,
 
       //  x ==== x
       node_1w_1w_node,
@@ -160,17 +163,21 @@ namespace sequoia::testing
       // 'weighted_graph_description::node_1_nodew'
       trg.add_node(make_and_check(t, t.report_line(""), {{{1, 0.0}}, {{0, 0.0}}}, {0.0, 1.0}));
 
-      //// 'weighted_graph_description::nodew_node_0'
-      //trg.add_node(make_and_check(t, t.report_line(""), {{}, {{0, 0.0}}}, {1.0, 0.0}));
+      // 'weighted_graph_description::nodew_1_node'
+      trg.add_node(make_and_check(t, t.report_line(""), {{{1, 0.0}}, {{0, 0.0}}}, {1.0, 0.0}));
 
-      //// 'weighted_graph_description::node_1_1w_node'
-      //trg.add_node(make_and_check(t, t.report_line(""), {{{1, 0.0}, {1, 1.0}}, {}}, {0.0, 0.0}));
+      // 'weighted_graph_description::node_1_1w_node'
+      trg.add_node(
+        [&t]() {
+          auto g{make_and_check(t, t.report_line(""), {{{1, 0.0}, {1, 1.0}}, {{0, 0.0}, {0, 1.0}}}, {0.0, 0.0})};
+          t.check(equality, t.report_line("Canonical ordering of weighted edges"), graph_t{{{{1, 1.0}, {1, 0.0}}, {{0, 0.0}, {0, 1.0}}}, {0.0, 0.0}}, g);
+          t.check(equality, t.report_line("Canonical ordering of weighted edges"), graph_t{{{{1, 1.0}, {1, 0.0}}, {{0, 1.0}, {0, 0.0}}}, {0.0, 0.0}}, g);
+          return g;
+        }
+      );
 
-      //// 'weighted_graph_description::node_1w_1_node'
-      //trg.add_node(make_and_check(t, t.report_line(""), {{{1, 1.0}, {1, 0.0}}, {}}, {0.0, 0.0}));
-
-      //// 'weighted_graph_description::node_1w_1w_node'
-      //trg.add_node(make_and_check(t, t.report_line(""), {{{1, 1.0}, {1, 1.0}}, {}}, {0.0, 0.0}));
+      // 'weighted_graph_description::node_1w_1w_node'
+      trg.add_node(make_and_check(t, t.report_line(""), {{{1, 1.0}, {1, 1.0}, {1, 1.0}, {1, 1.0}}, {{0, 1.0}, {0, 1.0}, {0, 1.0}, {0, 1.0}}}, {0.0, 0.0}));
 
       //// 'weighted_graph_description::node_1_1w_1x_node'
       //trg.add_node(make_and_check(t, t.report_line(""), {{{1, 0.0}, {1, 1.0}, {1, 2.0}}, {}}, {0.0, 0.0}));
