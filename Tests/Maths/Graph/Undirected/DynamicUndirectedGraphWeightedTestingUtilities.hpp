@@ -685,7 +685,7 @@ namespace sequoia::testing
         }
       );
 
-      /*trg.join(
+      trg.join(
         weighted_graph_description::node_1_1w_1x_node_0_0w_0x,
         weighted_graph_description::node_1_1w_1x_node_0_0w_0x,
         t.report_line("Set multiple edge weights and sort"),
@@ -709,7 +709,7 @@ namespace sequoia::testing
           g.sort_edges(g.cbegin_edges(0), g.cend_edges(1), [](const auto& lhs, const auto& rhs) { return lhs.weight() < rhs.weight(); });
           return g;
         }
-      );*/
+      );
 
       // end 'weighted_graph_description::node_1_1w_1x_node_0_0w_0x'
 
