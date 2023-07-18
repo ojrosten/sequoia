@@ -151,14 +151,14 @@ namespace sequoia::testing
           return g;
         }());
 
-      //// 'weighted_graph_description::node_nodew'
-      //trg.add_node(make_and_check(t, t.report_line(""), {{}, {}}, {0.0, 1.0}));
+      // 'weighted_graph_description::node_nodew'
+      trg.add_node(make_and_check(t, t.report_line(""), {{}, {}}, {0.0, 1.0}));
 
-      //// 'weighted_graph_description::nodew_node'
-      //trg.add_node(make_and_check(t, t.report_line(""), {{}, {}}, {1.0, 0.0}));
+      // 'weighted_graph_description::nodew_node'
+      trg.add_node(make_and_check(t, t.report_line(""), {{}, {}}, {1.0, 0.0}));
 
-      //// 'weighted_graph_description::node_1_nodew'
-      //trg.add_node(make_and_check(t, t.report_line(""), {{{1, 0.0}}, {}}, {0.0, 1.0}));
+      // 'weighted_graph_description::node_1_nodew'
+      trg.add_node(make_and_check(t, t.report_line(""), {{{1, 0.0}}, {{0, 0.0}}}, {0.0, 1.0}));
 
       //// 'weighted_graph_description::nodew_node_0'
       //trg.add_node(make_and_check(t, t.report_line(""), {{}, {{0, 0.0}}}, {1.0, 0.0}));
