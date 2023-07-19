@@ -19,29 +19,29 @@ namespace sequoia::testing
       // x
       nodew = graph_description::end,
 
-      //  /\
-      //  \/
-      //  x
+      //  />\
+      //  \ /
+      //   x
       nodew_0,
 
-      //  /\
-      //  \/
-      //  x
+      //  />\
+      //  \ /
+      //   x
       node_0w,
 
-      //  /\ /\
-      //  \/ \/
-      //    x
+      //  />\ />\
+      //  \ / \ /
+      //     x
       node_0w_0w,
 
-      //  /\ /\
-      //  \/ \/
-      //    x
+      //  />\ />\
+      //  \ / \ /
+      //     x
       node_0_0w,
 
-      //  /\ /\
-      //  \/ \/
-      //    x
+      //  />\ />\
+      //  \ / \ /
+      //     x
       node_0w_0,
 
       //  x    x
@@ -390,6 +390,30 @@ namespace sequoia::testing
       );
 
       // end 'graph_description::node_0_0'
+
+      // begin 'graph_description::node_1_node'
+
+      trg.join(
+        graph_description::node_1_node,
+        weighted_graph_description::node_1_1w_node,
+        t.report_line("Weighted join {0, 1}"),
+        [](graph_t g) -> graph_t {
+          g.join(0, 1, 1.0);
+          return g;
+        }
+      );
+
+      trg.join(
+        graph_description::node_1_node,
+        weighted_graph_description::node_1w_1_node,
+        t.report_line("Insert weighted join {0, 1}"),
+        [](graph_t g) -> graph_t {
+          g.insert_join(g.cbegin_edges(0), g.cbegin_edges(1), 1.0);
+          return g;
+        }
+      );
+
+      // end 'graph_description::node_1_node'
 
       // begin 'graph_description::node_1_1_node'
 
