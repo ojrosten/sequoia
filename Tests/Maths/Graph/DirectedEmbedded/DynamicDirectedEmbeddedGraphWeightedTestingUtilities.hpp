@@ -128,7 +128,9 @@ namespace sequoia::testing
     [[nodiscard]]
     static graph_t make_and_check(regular_test& t, std::string_view description, edges_equivalent_t edgeInit, std::initializer_list<node_weight_type> nodeInit)
     {
-      return graph_initialization_checker<graph_t>::make_and_check(t, description, edgeInit, nodeInit);
+      graph_t g{edgeInit, nodeInit};
+      t.check(weak_equivalence, description, g, edgeInit, nodeInit);
+      return g;
     }
 
     [[nodiscard]]
@@ -139,11 +141,11 @@ namespace sequoia::testing
 
       auto trg{base_ops::make_transition_graph(t)};
 
-      //// 'weighted_graph_description::nodew'
-      //trg.add_node(make_and_check(t, t.report_line(""), {{}}, {1.0}));
+      // 'weighted_graph_description::nodew'
+      trg.add_node(make_and_check(t, t.report_line(""), {{}}, {1.0}));
 
-      //// 'weighted_graph_description::nodew_0'
-      //trg.add_node(make_and_check(t, t.report_line(""), {{{0, 0.0}}}, {1.0}));
+      // 'weighted_graph_description::nodew_0'
+      trg.add_node(make_and_check(t, t.report_line(""), {{{0, 0, 1, 0.0}, {0, 0, 0, 0.0}}}, {1.0}));
 
       //// 'weighted_graph_description::node_0w'
       //trg.add_node(make_and_check(t, t.report_line(""), {{{0, 1.0}}}, {0.0}));
