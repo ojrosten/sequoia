@@ -293,39 +293,59 @@ namespace sequoia::testing
 
       // end 'graph_description::node'
 
-      //// begin 'graph_description::node_0'
+      // begin 'graph_description::node_0'
 
-      //trg.join(
-      //  graph_description::node_0,
-      //  weighted_graph_description::node_0w,
-      //  t.report_line("Set edge weight"),
-      //  [](graph_t g) -> graph_t {
-      //    g.set_edge_weight(g.cbegin_edges(0), 1.0);
-      //    return g;
-      //  }
-      //);
+      trg.join(
+        graph_description::node_0,
+        weighted_graph_description::node_0w,
+        t.report_line("Set edge weight via zeroth insertion"),
+        [](graph_t g) -> graph_t {
+          g.set_edge_weight(g.cbegin_edges(0), 1.0);
+          return g;
+        }
+      );
 
-      //trg.join(
-      //  graph_description::node_0,
-      //  weighted_graph_description::node_0w,
-      //  t.report_line("Mutate edge weight"),
-      //  [](graph_t g) -> graph_t {
-      //    g.mutate_edge_weight(g.cbegin_edges(0), [](double& x){ x += 1.0; });
-      //    return g;
-      //  }
-      //);
+      trg.join(
+        graph_description::node_0,
+        weighted_graph_description::node_0w,
+        t.report_line("Set edge weight via first insertion"),
+        [](graph_t g) -> graph_t {
+          g.set_edge_weight(++g.cbegin_edges(0), 1.0);
+          return g;
+        }
+      );
 
-      //trg.join(
-      //  graph_description::node_0,
-      //  weighted_graph_description::node_0_0w,
-      //  t.report_line("Join {0,0}"),
-      //  [](graph_t g) -> graph_t {
-      //    g.join(0, 0, 1.0);
-      //    return g;
-      //  }
-      //);
+      trg.join(
+        graph_description::node_0,
+        weighted_graph_description::node_0w,
+        t.report_line("Mutate edge weight via zeroth insertion"),
+        [](graph_t g) -> graph_t {
+          g.mutate_edge_weight(g.cbegin_edges(0), [](double& x){ x += 1.0; });
+          return g;
+        }
+      );
 
-      //// end 'graph_description::node_0'
+      trg.join(
+        graph_description::node_0,
+        weighted_graph_description::node_0w,
+        t.report_line("Mutate edge weight via first insertion"),
+        [](graph_t g) -> graph_t {
+          g.mutate_edge_weight(++g.cbegin_edges(0), [](double& x){ x += 1.0; });
+          return g;
+        }
+      );
+
+      trg.join(
+        graph_description::node_0,
+        weighted_graph_description::node_0_0w,
+        t.report_line("Join {0,0}"),
+        [](graph_t g) -> graph_t {
+          g.join(0, 0, 1.0);
+          return g;
+        }
+      );
+
+      // end 'graph_description::node_0'
 
       //// begin 'graph_description::node_0_0'
 
