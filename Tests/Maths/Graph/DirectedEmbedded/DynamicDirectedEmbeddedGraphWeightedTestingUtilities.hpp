@@ -836,6 +836,46 @@ namespace sequoia::testing
         }
       );
 
+      trg.join(
+        graph_description::node_1pos1_node_0pos1,
+        weighted_graph_description::node_1wpos1_node_0pos1,
+        t.report_line("Mutate {0,1} edge weight via node 0"),
+        [](graph_t g) -> graph_t {
+          g.mutate_edge_weight(g.cbegin_edges(0), [](double& x) { x += 1.0; });
+          return g;
+        }
+      );
+
+      trg.join(
+        graph_description::node_1pos1_node_0pos1,
+        weighted_graph_description::node_1wpos1_node_0pos1,
+        t.report_line("Mutate {0,1} edge weight via node 1"),
+        [](graph_t g) -> graph_t {
+          g.mutate_edge_weight(++g.cbegin_edges(1), [](double& x) { x += 1.0; });
+          return g;
+        }
+      );
+
+      trg.join(
+        graph_description::node_1pos1_node_0pos1,
+        weighted_graph_description::node_1pos1_node_0wpos1,
+        t.report_line("Mutate {1,0} edge weight via node 0"),
+        [](graph_t g) -> graph_t {
+          g.mutate_edge_weight(++g.cbegin_edges(0), [](double& x) { x += 1.0; });
+          return g;
+        }
+      );
+
+      trg.join(
+        graph_description::node_1pos1_node_0pos1,
+        weighted_graph_description::node_1pos1_node_0wpos1,
+        t.report_line("Mutate {1,0} edge weight via node 1"),
+        [](graph_t g) -> graph_t {
+          g.mutate_edge_weight(g.cbegin_edges(1), [](double& x) { x += 1.0; });
+          return g;
+        }
+      );
+
       // end 'graph_description::node_1pos1_node_0pos1'
 
       //======================================= joins from new nodes =======================================//
