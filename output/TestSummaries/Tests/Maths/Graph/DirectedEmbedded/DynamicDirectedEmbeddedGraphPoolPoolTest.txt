@@ -1,2 +1,2 @@
 Directed Embedded Graph Pool-Pool Tests
-Standard Top Level Checks:               982;  Failures:  0  [Deep checks: 162104]
+Standard Top Level Checks:               998;  Failures:  0  [Deep checks: 165888]
