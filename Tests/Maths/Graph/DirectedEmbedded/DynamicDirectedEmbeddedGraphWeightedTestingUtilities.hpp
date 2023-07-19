@@ -101,11 +101,11 @@ namespace sequoia::testing
 
       // x ---> x
       //   <---
-      node_1wpos1_node_0pos0,
+      node_1wpos1_node_0pos1,
 
       // x ---> x
       //   <---
-      node_1pos1_node_0wpos0,
+      node_1pos1_node_0wpos1,
 
       //    --->
       //  x ===> x
@@ -241,10 +241,10 @@ namespace sequoia::testing
       // 'weighted_graph_description::node_1w_1w_node'
       trg.add_node(make_and_check(t, t.report_line(""), {{{0, 1, 0, 1.0}, {0, 1, 1, 1.0}}, {{0, 1, 0, 1.0}, {0, 1, 1, 1.0}}}, {0.0, 0.0}));
 
-      // 'weighted_graph_description::node_1wpos1_node_0pos0'
+      // 'weighted_graph_description::node_1wpos1_node_0pos1'
       trg.add_node(make_and_check(t, t.report_line(""), {{{0, 1, 1, 1.0}, {1, 0, 0}}, {{1, 0, 1}, {0, 1, 0, 1.0}}}, {0.0, 0.0}));
 
-      // 'weighted_graph_description::node_1pos1_node_0wpos0'
+      // 'weighted_graph_description::node_1pos1_node_0wpos1'
       trg.add_node(make_and_check(t, t.report_line(""), {{{0, 1, 1}, {1, 0, 0, 1.0}}, {{1, 0, 1, 1.0}, {0, 1, 0}}}, {0.0, 0.0}));
 
       // 'weighted_graph_description::node_1_1w_1x_node'
@@ -684,6 +684,26 @@ namespace sequoia::testing
         t.report_line("Insert weighted join {0, 1}"),
         [](graph_t g) -> graph_t {
           g.insert_join(g.cbegin_edges(0), g.cbegin_edges(1), 1.0);
+          return g;
+        }
+      );
+
+      trg.join(
+        graph_description::node_node_0,
+        weighted_graph_description::node_1wpos1_node_0pos1,
+        t.report_line("Insert weighted braid {0, 1}"),
+        [](graph_t g) -> graph_t {
+          g.insert_join(g.cbegin_edges(0), g.cbegin_edges(1) + 1, 1.0);
+          return g;
+        }
+      );
+
+      trg.join(
+        graph_description::node_1_node,
+        weighted_graph_description::node_1pos1_node_0wpos1,
+        t.report_line("Insert weighted braid {0, 1}"),
+        [](graph_t g) -> graph_t {
+          g.insert_join(g.cbegin_edges(1), g.cbegin_edges(0) + 1, 1.0);
           return g;
         }
       );

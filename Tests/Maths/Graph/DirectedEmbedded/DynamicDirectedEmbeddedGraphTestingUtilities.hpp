@@ -138,7 +138,7 @@ namespace sequoia::testing
 
       // x ---> x
       //   <---
-      node_1pos1_node_0pos0,
+      node_1pos1_node_0pos1,
 
       //  x    x    x
       node_node_node,
@@ -1300,7 +1300,7 @@ namespace sequoia::testing
             }
           }*/
         }, // end 'node_1_node_0'
-        {  // begin 'node_1pos1_node_0pos0'
+        {  // begin 'node_1pos1_node_0pos1'
           {
             graph_description::empty,
             t.report_line("Clear graph"),
@@ -1341,7 +1341,7 @@ namespace sequoia::testing
               return g;
             }
           },
-        }, // end 'node_1pos1_node_0pos0'
+        }, // end 'node_1pos1_node_0pos1'
         {  // begin 'node_node_node'
           {
             graph_description::empty,
@@ -1858,7 +1858,7 @@ namespace sequoia::testing
         }, // end 'node_1_1_2_2_node_2_node'
         {  // begin 'node_1_1_2_2_node_2_node_1'
           {
-            graph_description::node_1pos1_node_0pos0,
+            graph_description::node_1pos1_node_0pos1,
             t.report_line("Erase node 0"),
             [](graph_t g) -> graph_t {
               g.erase_node(0);
@@ -2032,7 +2032,7 @@ namespace sequoia::testing
         // 'node_1_node_0'
         make_and_check(t, t.report_line(""), {{edge_t{0, 1, 0}, edge_t{1, 0, 1}}, {edge_t{0, 1, 0}, edge_t{1, 0, 1}}}),
 
-        // 'node_1pos1_node_0pos0'
+        // 'node_1pos1_node_0pos1'
         make_and_check(t, t.report_line(""), {{edge_t{0, 1, 1}, edge_t{1, 0, 0}}, {edge_t{1, 0, 1}, edge_t{0, 1, 0}}}),
 
         //  'node_node_node'
