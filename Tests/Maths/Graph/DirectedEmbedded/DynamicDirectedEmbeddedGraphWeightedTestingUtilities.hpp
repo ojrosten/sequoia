@@ -344,6 +344,26 @@ namespace sequoia::testing
         }
       );
 
+      trg.join(
+        graph_description::node,
+        weighted_graph_description::node_0w,
+        t.report_line("Weighted join {0,0}"),
+        [](graph_t g) -> graph_t {
+          g.join(0, 0, 1.0);
+          return g;
+        }
+      );
+
+      trg.join(
+        graph_description::node,
+        weighted_graph_description::node_0winv,
+        t.report_line("Inverted weighted join {0,0}"),
+        [](graph_t g) -> graph_t {
+          g.insert_join(g.cbegin_edges(0), 0, 1.0);
+          return g;
+        }
+      );
+
       // end 'graph_description::node'
 
       // begin 'graph_description::node_0'
