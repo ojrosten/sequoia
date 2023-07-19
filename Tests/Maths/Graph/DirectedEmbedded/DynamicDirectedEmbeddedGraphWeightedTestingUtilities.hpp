@@ -338,9 +338,19 @@ namespace sequoia::testing
       trg.join(
         graph_description::node_0,
         weighted_graph_description::node_0_0w,
-        t.report_line("Join {0,0}"),
+        t.report_line("Weighted join {0,0}"),
         [](graph_t g) -> graph_t {
           g.join(0, 0, 1.0);
+          return g;
+        }
+      );
+
+      trg.join(
+        graph_description::node_0,
+        weighted_graph_description::node_0w_0,
+        t.report_line("Insert weighted join {0,0}"),
+        [](graph_t g) -> graph_t {
+          g.insert_join(g.cbegin_edges(0), 1, 1.0);
           return g;
         }
       );

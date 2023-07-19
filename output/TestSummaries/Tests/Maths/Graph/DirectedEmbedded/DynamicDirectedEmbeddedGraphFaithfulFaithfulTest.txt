@@ -1,2 +1,2 @@
 Directed Embedded Graph Faithful-Faithful Tests
-Standard Top Level Checks:              1166;  Failures:  0  [Deep checks: 207604]
+Standard Top Level Checks:              1170;  Failures:  0  [Deep checks: 208350]
