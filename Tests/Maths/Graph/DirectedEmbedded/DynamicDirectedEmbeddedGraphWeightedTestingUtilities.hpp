@@ -578,6 +578,30 @@ namespace sequoia::testing
 
       // end 'graph_description::node_0_0_interleaved'
 
+      // begin 'graph_description::node_0inv'
+
+      trg.join(
+        graph_description::node_0inv,
+        weighted_graph_description::node_0winv,
+        t.report_line("Set inverted edge weight via zeroth insertion"),
+        [](graph_t g) -> graph_t {
+          g.set_edge_weight(++g.cbegin_edges(0), 1.0);
+          return g;
+        }
+      );
+
+      trg.join(
+        graph_description::node_0inv,
+        weighted_graph_description::node_0winv,
+        t.report_line("Set inverted edge weight via first insertion"),
+        [](graph_t g) -> graph_t {
+          g.set_edge_weight(g.cbegin_edges(0), 1.0);
+          return g;
+        }
+      );
+
+      // end 'graph_description::node_0inv'
+
       // begin 'graph_description::node_1_node'
 
       trg.join(
