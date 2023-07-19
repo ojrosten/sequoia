@@ -518,43 +518,52 @@ namespace sequoia::testing
           return g;
         }
       );
-      
 
       // end 'weighted_graph_description::node_0_0w'
 
-      //// begin 'weighted_graph_description::node_0w_0'
+      // begin 'weighted_graph_description::node_0w_0'
 
-      //trg.join(
-      //  weighted_graph_description::node_0w_0,
-      //  weighted_graph_description::node_0_0w,
-      //  t.report_line("Swap edges"),
-      //  [](graph_t g) -> graph_t {
-      //    g.swap_edges(0, 0, 1);
-      //    return g;
-      //  }
-      //);
+      trg.join(
+        weighted_graph_description::node_0w_0,
+        graph_description::node_0,
+        t.report_line("Remove zeroth link {0,0} via zeroth insertion"),
+        [](graph_t g) -> graph_t {
+          g.erase_edge(g.cbegin_edges(0));
+          return g;
+        }
+      );
 
-      //trg.join(
-      //  weighted_graph_description::node_0w_0,
-      //  weighted_graph_description::node_0_0w,
-      //  t.report_line("Swap edges"),
-      //  [](graph_t g) -> graph_t {
-      //    g.swap_edges(0, 1, 0);
-      //    return g;
-      //  }
-      //);
+      trg.join(
+        weighted_graph_description::node_0w_0,
+        graph_description::node_0,
+        t.report_line("Remove zeroth link {0,0} via first insertion"),
+        [](graph_t g) -> graph_t {
+          g.erase_edge(++g.cbegin_edges(0));
+          return g;
+        }
+      );
 
-      //trg.join(
-      //  weighted_graph_description::node_0w_0,
-      //  weighted_graph_description::node_0_0w,
-      //  t.report_line("Sort edges"),
-      //  [](graph_t g) -> graph_t {
-      //    g.sort_edges(g.cbegin_edges(0), g.cend_edges(0), [](const auto& lhs, const auto& rhs) { return lhs.weight() < rhs.weight(); });
-      //    return g;
-      //  }
-      //);
+      trg.join(
+        weighted_graph_description::node_0w_0,
+        weighted_graph_description::node_0w,
+        t.report_line("Remove first link {0,0} via zeroth insertion"),
+        [](graph_t g) -> graph_t {
+          g.erase_edge(g.cbegin_edges(0) + 2);
+          return g;
+        }
+      );
 
-      //// end 'weighted_graph_description::node_0w_0'
+      trg.join(
+        weighted_graph_description::node_0w_0,
+        weighted_graph_description::node_0w,
+        t.report_line("Remove first link {0,0} via first insertion"),
+        [](graph_t g) -> graph_t {
+          g.erase_edge(g.cbegin_edges(0) + 3);
+          return g;
+        }
+      );
+
+      // end 'weighted_graph_description::node_0w_0'
 
       //// begin 'weighted_graph_description::node_nodew'
 
