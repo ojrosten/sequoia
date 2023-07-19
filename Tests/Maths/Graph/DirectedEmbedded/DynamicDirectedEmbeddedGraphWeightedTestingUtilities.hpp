@@ -56,6 +56,28 @@ namespace sequoia::testing
       //        x
       node_0w_0_interleaved,
 
+      //  /<\
+      //  \ /
+      //   x
+      node_0winv,
+
+      //  /<\ /<\
+      //  \ / \ /
+      //     x
+      node_0winv_0inv,
+
+      //     /<\/<\
+      //    /  /\  \
+      //    \ /  \ /
+      //        x
+      node_0winv_0inv_interleaved,
+
+      //     />\/<\
+      //    /  /\  \
+      //    \ /  \ /
+      //        x
+      node_0_0winv_interleaved,
+
       //  x    x
       node_nodew,
 
@@ -150,6 +172,7 @@ namespace sequoia::testing
     {
       using base_ops = dynamic_directed_embedded_graph_operations<EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>;
       using namespace directed_embedded_graph;
+      using maths::inverted_edge;
 
       auto trg{base_ops::make_transition_graph(t)};
 
@@ -176,6 +199,18 @@ namespace sequoia::testing
 
       // 'weighted_graph_description::node_0w_0_interleaved'
       trg.add_node(make_and_check(t, t.report_line(""), {{{0, 0, 2, 1.0}, {0, 0, 3}, {0, 0, 0, 1.0}, {0, 0, 1}}}, {0.0}));
+
+      // 'weighted_graph_description::node_0winv'
+      trg.add_node(make_and_check(t, t.report_line(""), {{{0, inverted_edge, 1, 1.0}, {0, inverted_edge, 0, 1.0}}}, {0.0}));
+
+      // 'weighted_graph_description::node_0winv_0inv'
+      trg.add_node(make_and_check(t, t.report_line(""), {{{0, inverted_edge, 1, 1.0}, {0, inverted_edge, 0, 1.0}, {0, inverted_edge, 3}, {0, inverted_edge, 2}}}, {0.0}));
+
+      // 'weighted_graph_description::node_0winv_0inv_interleaved'
+      trg.add_node(make_and_check(t, t.report_line(""), {{{0, inverted_edge, 2, 1.0}, {0, inverted_edge, 3}, {0, inverted_edge, 0, 1.0}, {0, inverted_edge, 1}}}, {0.0}));
+
+      // 'weighted_graph_description::node_0_0winv_interleaved'
+      trg.add_node(make_and_check(t, t.report_line(""), {{{0, 0, 2}, {0, inverted_edge, 3, 1.0}, {0, 0, 0}, {0, inverted_edge, 1, 1.0}}}, {0.0}));
 
       // 'weighted_graph_description::node_nodew'
       trg.add_node(make_and_check(t, t.report_line(""), {{}, {}}, {0.0, 1.0}));
