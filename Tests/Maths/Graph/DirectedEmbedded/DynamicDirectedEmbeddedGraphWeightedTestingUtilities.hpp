@@ -448,6 +448,16 @@ namespace sequoia::testing
         }
       );
 
+      trg.join(
+        graph_description::node_0,
+        weighted_graph_description::node_0_0winv_interleaved,
+        t.report_line("Insert interleaved inverted weighted join {0,0}"),
+        [](graph_t g) -> graph_t {
+          g.insert_join(g.cbegin_edges(0)+2, 1, 1.0);
+          return g;
+        }
+      );
+
       // end 'graph_description::node_0'
 
       // begin 'graph_description::node_0_0'
