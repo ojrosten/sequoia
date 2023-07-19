@@ -44,6 +44,18 @@ namespace sequoia::testing
       //     x
       node_0w_0,
 
+      //     />\/>\
+      //    /  /\  \
+      //    \ /  \ /
+      //        x
+      node_0_0w_interleaved,
+
+      //     />\/>\
+      //    /  /\  \
+      //    \ /  \ /
+      //        x
+      node_0w_0_interleaved,
+
       //  x    x
       node_nodew,
 
@@ -158,6 +170,12 @@ namespace sequoia::testing
 
       // 'weighted_graph_description::node_0w_0'
       trg.add_node(make_and_check(t, t.report_line(""), {{{0, 0, 1, 1.0}, {0, 0, 0, 1.0}, {0, 0, 3, 0.0}, {0, 0, 2, 0.0}}}, {0.0}));
+
+      // 'weighted_graph_description::node_0_0w_interleaved'
+      trg.add_node(make_and_check(t, t.report_line(""), {{{0, 0, 2}, {0, 0, 3, 1.0}, {0, 0, 0}, {0, 0, 1, 1.0}}}, {0.0}));
+
+      // 'weighted_graph_description::node_0w_0_interleaved'
+      trg.add_node(make_and_check(t, t.report_line(""), {{{0, 0, 2, 1.0}, {0, 0, 3}, {0, 0, 0, 1.0}, {0, 0, 1}}}, {0.0}));
 
       // 'weighted_graph_description::node_nodew'
       trg.add_node(make_and_check(t, t.report_line(""), {{}, {}}, {0.0, 1.0}));
@@ -355,6 +373,26 @@ namespace sequoia::testing
         }
       );
 
+      trg.join(
+        graph_description::node_0,
+        weighted_graph_description::node_0w_0_interleaved,
+        t.report_line("Insert interleaved weighted join {0,0}"),
+        [](graph_t g) -> graph_t {
+          g.insert_join(g.cbegin_edges(0), 2, 1.0);
+          return g;
+        }
+      );
+
+      trg.join(
+        graph_description::node_0,
+        weighted_graph_description::node_0_0w_interleaved,
+        t.report_line("Insert interleaved weighted join {0,0}"),
+        [](graph_t g) -> graph_t {
+          g.insert_join(++g.cbegin_edges(0), 3, 1.0);
+          return g;
+        }
+      );
+
       // end 'graph_description::node_0'
 
       // begin 'graph_description::node_0_0'
@@ -400,6 +438,90 @@ namespace sequoia::testing
       );
 
       // end 'graph_description::node_0_0'
+
+      // begin 'graph_description::node_0_0_interleaved'
+
+      trg.join(
+        graph_description::node_0_0_interleaved,
+        weighted_graph_description::node_0w_0_interleaved,
+        t.report_line("Set zeroth edge weight via zeroth insertion"),
+        [](graph_t g) -> graph_t {
+          g.set_edge_weight(g.cbegin_edges(0), 1.0);
+          return g;
+        }
+      );
+
+      trg.join(
+        graph_description::node_0_0_interleaved,
+        weighted_graph_description::node_0w_0_interleaved,
+        t.report_line("Set zeroth edge weight via first insertion"),
+        [](graph_t g) -> graph_t {
+          g.set_edge_weight(g.cbegin_edges(0) + 2, 1.0);
+          return g;
+        }
+      );
+
+      trg.join(
+        graph_description::node_0_0_interleaved,
+        weighted_graph_description::node_0_0w_interleaved,
+        t.report_line("Set first edge weight via zeroth insertion"),
+        [](graph_t g) -> graph_t {
+          g.set_edge_weight(g.cbegin_edges(0)+1, 1.0);
+          return g;
+        }
+      );
+
+      trg.join(
+        graph_description::node_0_0_interleaved,
+        weighted_graph_description::node_0_0w_interleaved,
+        t.report_line("Set firt edge weight via first insertion"),
+        [](graph_t g) -> graph_t {
+          g.set_edge_weight(g.cbegin_edges(0) + 3, 1.0);
+          return g;
+        }
+      );
+
+      trg.join(
+        graph_description::node_0_0_interleaved,
+        weighted_graph_description::node_0w_0_interleaved,
+        t.report_line("Mutate zeroth edge weight via zeroth insertion"),
+        [](graph_t g) -> graph_t {
+          g.mutate_edge_weight(g.cbegin_edges(0), [](double& x) { x += 1.0; });
+          return g;
+        }
+      );
+
+      trg.join(
+        graph_description::node_0_0_interleaved,
+        weighted_graph_description::node_0w_0_interleaved,
+        t.report_line("Mutate zeroth edge weight via first insertion"),
+        [](graph_t g) -> graph_t {
+          g.mutate_edge_weight(g.cbegin_edges(0) + 2, [](double& x) { x += 1.0; });
+          return g;
+        }
+      );
+
+      trg.join(
+        graph_description::node_0_0_interleaved,
+        weighted_graph_description::node_0_0w_interleaved,
+        t.report_line("Mutate first edge weight via zeroth insertion"),
+        [](graph_t g) -> graph_t {
+          g.mutate_edge_weight(g.cbegin_edges(0) + 1, [](double& x) { x += 1.0; });
+          return g;
+        }
+      );
+
+      trg.join(
+        graph_description::node_0_0_interleaved,
+        weighted_graph_description::node_0_0w_interleaved,
+        t.report_line("Mutate firt edge weight via first insertion"),
+        [](graph_t g) -> graph_t {
+          g.mutate_edge_weight(g.cbegin_edges(0) + 3, [](double& x) { x += 1.0; });
+          return g;
+        }
+      );
+
+      // end 'graph_description::node_0_0_interleaved'
 
       // begin 'graph_description::node_1_node'
 
