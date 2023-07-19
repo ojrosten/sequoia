@@ -9,11 +9,11 @@
 
 /*! \file */
 
-#include "DynamicEmbeddedUndirectedGraphTestingUtilities.hpp"
+#include "DynamicUndirectedEmbeddedGraphWeightedTestingUtilities.hpp"
 
 namespace sequoia::testing
 {
-  class dynamic_embedded_undirected_graph_unweighted_test final : public regular_test
+  class dynamic_undirected_embedded_graph_pool_pool_test final : public regular_test
   {
   public:
     using regular_test::regular_test;
@@ -22,23 +22,5 @@ namespace sequoia::testing
     std::filesystem::path source_file() const;
 
     void run_tests();
-  private:
-    template <class, class, concrete_test>
-    friend class graph_test_helper;
-
-    template<maths::network>
-    friend struct graph_initialization_checker;
-
-    template
-    <
-      maths::graph_flavour GraphFlavour,
-      class EdgeWeight,
-      class NodeWeight,
-      class EdgeWeightCreator,
-      class NodeWeightCreator,
-      class EdgeStorageTraits,
-      class NodeWeightStorageTraits
-    >
-    void execute_operations();
   };
 }

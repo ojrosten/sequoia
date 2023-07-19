@@ -45,8 +45,11 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Maths/Graph/Directed/DynamicDirectedGraphPoolFaithfulTest.cpp
                ${TestDir}/Maths/Graph/Directed/DynamicDirectedGraphPoolPoolTest.cpp
                ${TestDir}/Maths/Graph/Directed/DynamicDirectedGraphUnweightedTest.cpp
-               ${TestDir}/Maths/Graph/DynamicEmbeddedDirectedGraphUnweightedTest.cpp
-               ${TestDir}/Maths/Graph/DynamicEmbeddedUndirectedGraphUnweightedTest.cpp
+               ${TestDir}/Maths/Graph/DirectedEmbedded/DynamicDirectedEmbeddedGraphFaithfulFaithfulTest.cpp
+               ${TestDir}/Maths/Graph/DirectedEmbedded/DynamicDirectedEmbeddedGraphFaithfulPoolTest.cpp
+               ${TestDir}/Maths/Graph/DirectedEmbedded/DynamicDirectedEmbeddedGraphPoolFaithfulTest.cpp
+               ${TestDir}/Maths/Graph/DirectedEmbedded/DynamicDirectedEmbeddedGraphPoolPoolTest.cpp
+               ${TestDir}/Maths/Graph/DirectedEmbedded/DynamicDirectedEmbeddedGraphUnweightedTest.cpp
                ${TestDir}/Maths/Graph/DynamicGraphEmbeddedTest.cpp
                ${TestDir}/Maths/Graph/DynamicGraphFixedTopologyTest.cpp
                ${TestDir}/Maths/Graph/DynamicGraphInitializationTest.cpp
@@ -75,6 +78,11 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Maths/Graph/Undirected/DynamicUndirectedGraphPoolFaithfulTest.cpp
                ${TestDir}/Maths/Graph/Undirected/DynamicUndirectedGraphPoolPoolTest.cpp
                ${TestDir}/Maths/Graph/Undirected/DynamicUndirectedGraphUnweightedTest.cpp
+               ${TestDir}/Maths/Graph/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphFaithfulFaithfulTest.cpp
+               ${TestDir}/Maths/Graph/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphFaithfulPoolTest.cpp
+               ${TestDir}/Maths/Graph/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphPoolFaithfulTest.cpp
+               ${TestDir}/Maths/Graph/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphPoolPoolTest.cpp
+               ${TestDir}/Maths/Graph/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphUnweightedTest.cpp
                ${TestDir}/Maths/Sequences/LinearSequenceTest.cpp
                ${TestDir}/Maths/Sequences/LinearSequenceTestingDiagnostics.cpp
                ${TestDir}/Maths/Sequences/MonotonicSequenceAllocationTest.cpp

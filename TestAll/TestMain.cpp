@@ -275,7 +275,11 @@ int main(int argc, char** argv)
         },
         suite{
           "Directed Embedded",
-          dynamic_embedded_directed_graph_unweighted_test{"Unweighted Embedded Directed Graph Tests"},
+          dynamic_directed_embedded_graph_unweighted_test{"Directed Embedded Graph Unweighted Tests"},
+          dynamic_directed_embedded_graph_faithful_faithful_test{"Directed Embedded Graph Faithful-Faithful Tests"},
+          dynamic_directed_embedded_graph_faithful_pool_test{"Directed Embedded Graph Faithful-Pool Tests"},
+          dynamic_directed_embedded_graph_pool_faithful_test{"Directed Embedded Graph Pool-Faithful Tests"},
+          dynamic_directed_embedded_graph_pool_pool_test{"Directed Embedded Graph Pool-Pool Tests"}
         },
         suite{
           "Undirected",
@@ -287,7 +291,11 @@ int main(int argc, char** argv)
         },
         suite{
           "Undirected Embedded",
-          dynamic_embedded_undirected_graph_unweighted_test{"Unweighted Embedded Undirected Graph Tests"},
+          dynamic_undirected_embedded_graph_unweighted_test{"Undirected Embedded Graph Unweighted Tests"},
+          dynamic_undirected_embedded_graph_faithful_faithful_test{"Undirected Embedded Graph Faithful-Faithful Tests"},
+          dynamic_undirected_embedded_graph_faithful_pool_test{"Undirected Embedded Graph Faithful-Pool Tests"},
+          dynamic_undirected_embedded_graph_pool_faithful_test{"Undirected Embedded Graph Pool-Faithful Tests"},
+          dynamic_undirected_embedded_graph_pool_pool_test{"Undirected Embedded Graph Pool-Pool Tests"}
         },
         suite{
           "Legacy",

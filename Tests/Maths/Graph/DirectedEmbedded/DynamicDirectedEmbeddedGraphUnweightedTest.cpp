@@ -7,24 +7,24 @@
 
 /*! \file */
 
-#include "DynamicEmbeddedUndirectedGraphUnweightedTest.hpp"
+#include "DynamicDirectedEmbeddedGraphUnweightedTest.hpp"
 
 #include "sequoia/TestFramework/StateTransitionUtilities.hpp"
 
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::filesystem::path dynamic_embedded_undirected_graph_unweighted_test::source_file() const
+  std::filesystem::path dynamic_directed_embedded_graph_unweighted_test::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void dynamic_embedded_undirected_graph_unweighted_test::run_tests()
+  void dynamic_directed_embedded_graph_unweighted_test::run_tests()
   {
     using namespace maths;
-    graph_test_helper<null_weight, null_weight, dynamic_embedded_undirected_graph_unweighted_test> helper{*this};
+    graph_test_helper<null_weight, null_weight, dynamic_directed_embedded_graph_unweighted_test> helper{*this};
 
-    helper.run_tests<graph_flavour::undirected_embedded>();
+    helper.run_tests<graph_flavour::directed_embedded>();
   }
 
   template
@@ -37,9 +37,9 @@ namespace sequoia::testing
     class EdgeStorageTraits,
     class NodeWeightStorageTraits
   >
-  void dynamic_embedded_undirected_graph_unweighted_test::execute_operations()
+  void dynamic_directed_embedded_graph_unweighted_test::execute_operations()
   {
-    using ops = dynamic_embedded_undirected_graph_operations<EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>;
+    using ops = dynamic_directed_embedded_graph_operations<EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>;
     using graph_t = ops::graph_t;
 
     auto trg{ops::make_transition_graph(*this)};

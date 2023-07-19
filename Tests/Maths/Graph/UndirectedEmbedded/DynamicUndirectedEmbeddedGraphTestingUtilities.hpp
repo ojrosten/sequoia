@@ -9,14 +9,14 @@
 
 /*! \file */
 
-#include "DynamicGraphTestingUtilities.hpp"
+#include "../DynamicGraphTestingUtilities.hpp"
 
 #include "sequoia/TestFramework/RegularTestCore.hpp"
 #include "sequoia/TestFramework/StateTransitionUtilities.hpp"
 
 namespace sequoia::testing
 {
-  namespace embedded_undirected_graph
+  namespace undirected_embedded_graph
   {
     /// Convention: the indices following 'node' - separated by underscores - give the target node of the associated edges
     enum graph_description : std::size_t {
@@ -198,7 +198,9 @@ namespace sequoia::testing
       node_1_node_node_node_2,
 
       // x --   x --   -- x  -- x
-      node_2_node_node_node_1
+      node_2_node_node_node_1,
+
+      end
     };
   }
 
@@ -211,7 +213,7 @@ namespace sequoia::testing
     class EdgeStorageTraits,
     class NodeWeightStorageTraits
   >
-  class dynamic_embedded_undirected_graph_operations
+  class dynamic_undirected_embedded_graph_operations
   {
     template<maths::network>
     friend struct graph_initialization_checker;
@@ -230,7 +232,7 @@ namespace sequoia::testing
     [[nodiscard]]
     static transition_graph make_transition_graph(regular_test& t)
     {
-      using namespace embedded_undirected_graph;
+      using namespace undirected_embedded_graph;
 
       return transition_graph{
         {
