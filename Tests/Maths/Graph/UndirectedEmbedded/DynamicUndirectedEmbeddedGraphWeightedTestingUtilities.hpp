@@ -500,61 +500,61 @@ namespace sequoia::testing
 
       // end 'weighted_graph_description::node_0_0w'
 
-      //// begin 'weighted_graph_description::node_nodew'
+      // begin 'weighted_graph_description::node_nodew'
 
-      //trg.join(
-      //  weighted_graph_description::node_nodew,
-      //  weighted_graph_description::nodew_node,
-      //  t.report_line("Swap nodes"),
-      //  [](graph_t g) -> graph_t {
-      //    g.swap_nodes(0, 1);
-      //    return g;
-      //  }
-      //);
+      trg.join(
+        weighted_graph_description::node_nodew,
+        weighted_graph_description::nodew_node,
+        t.report_line("Swap nodes"),
+        [](graph_t g) -> graph_t {
+          g.swap_nodes(0, 1);
+          return g;
+        }
+      );
 
-      //// end 'weighted_graph_description::node_nodew'
+      // end 'weighted_graph_description::node_nodew'
 
-      //// begin 'weighted_graph_description::nodew_node'
+      // begin 'weighted_graph_description::nodew_node'
 
-      //trg.join(
-      //  weighted_graph_description::nodew_node,
-      //  weighted_graph_description::node_nodew,
-      //  t.report_line("Swap nodes"),
-      //  [](graph_t g) -> graph_t {
-      //    g.swap_nodes(1, 0);
-      //    return g;
-      //  }
-      //);
+      trg.join(
+        weighted_graph_description::nodew_node,
+        weighted_graph_description::node_nodew,
+        t.report_line("Swap nodes"),
+        [](graph_t g) -> graph_t {
+          g.swap_nodes(1, 0);
+          return g;
+        }
+      );
 
-      //// end 'weighted_graph_description::nodew_node'
+      // end 'weighted_graph_description::nodew_node'
 
-      //// begin 'weighted_graph_description::node_1_nodew_0'
+      // begin 'weighted_graph_description::node_1_nodew_0'
 
-      //trg.join(
-      //  weighted_graph_description::node_1_nodew_0,
-      //  weighted_graph_description::nodew_1_node_0,
-      //  t.report_line("Swap nodes"),
-      //  [](graph_t g) -> graph_t {
-      //    g.swap_nodes(0, 1);
-      //    return g;
-      //  }
-      //);
+      trg.join(
+        weighted_graph_description::node_1_nodew_0,
+        weighted_graph_description::nodew_1_node_0,
+        t.report_line("Swap nodes"),
+        [](graph_t g) -> graph_t {
+          g.swap_nodes(0, 1);
+          return g;
+        }
+      );
 
-      //// end 'weighted_graph_description::node_1_nodew_0'
+      // end 'weighted_graph_description::node_1_nodew_0'
 
-      //// begin 'weighted_graph_description::nodew_node_0'
+      // begin 'weighted_graph_description::nodew_node_0'
 
-      //trg.join(
-      //  weighted_graph_description::nodew_1_node_0,
-      //  weighted_graph_description::node_1_nodew_0,
-      //  t.report_line("Swap nodes"),
-      //  [](graph_t g) -> graph_t {
-      //    g.swap_nodes(1, 0);
-      //    return g;
-      //  }
-      //);
+      trg.join(
+        weighted_graph_description::nodew_1_node_0,
+        weighted_graph_description::node_1_nodew_0,
+        t.report_line("Swap nodes"),
+        [](graph_t g) -> graph_t {
+          g.swap_nodes(1, 0);
+          return g;
+        }
+      );
 
-      //// end 'weighted_graph_description::nodew_node_0'
+      // end 'weighted_graph_description::nodew_node_0'
 
       //// begin 'weighted_graph_description::node_1_1w_node_0_0w'
       //
