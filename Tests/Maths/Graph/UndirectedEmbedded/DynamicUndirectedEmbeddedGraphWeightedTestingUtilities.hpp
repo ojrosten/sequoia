@@ -611,6 +611,90 @@ namespace sequoia::testing
 
       // end 'weighted_graph_description::node_0_0w'
 
+      // begin 'graph_description::node_0w_0_interleaved'
+
+      trg.join(
+        weighted_graph_description::node_0w_0_interleaved,
+        graph_description::node_0_0_interleaved,
+        t.report_line("Set edge weight via zeroth partial weight"),
+        [](graph_t g) -> graph_t {
+          g.set_edge_weight(g.cbegin_edges(0), 0.0);
+          return g;
+        }
+      );
+
+      trg.join(
+        weighted_graph_description::node_0w_0_interleaved,
+        weighted_graph_description::node_0w_0w_interleaved,
+        t.report_line("Set edge weight via first partial weight"),
+        [](graph_t g) -> graph_t {
+          g.set_edge_weight(++g.cbegin_edges(0), 1.0);
+          return g;
+        }
+      );
+
+      trg.join(
+        weighted_graph_description::node_0w_0_interleaved,
+        graph_description::node_0_0_interleaved,
+        t.report_line("Set edge weight via second partial weight"),
+        [](graph_t g) -> graph_t {
+          g.set_edge_weight(g.cbegin_edges(0) + 2, 0.0);
+          return g;
+        }
+      );
+
+      trg.join(
+        weighted_graph_description::node_0w_0_interleaved,
+        weighted_graph_description::node_0w_0w_interleaved,
+        t.report_line("Set edge weight via third partial weight"),
+        [](graph_t g) -> graph_t {
+          g.set_edge_weight(g.cbegin_edges(0) + 3, 1.0);
+          return g;
+        }
+      );
+
+      trg.join(
+        weighted_graph_description::node_0w_0_interleaved,
+        graph_description::node_0_0_interleaved,
+        t.report_line("Muteate edge weight via zeroth partial weight"),
+        [](graph_t g) -> graph_t {
+          g.mutate_edge_weight(g.cbegin_edges(0), [](double& x) { x -= 1.0; });
+          return g;
+        }
+      );
+
+      trg.join(
+        weighted_graph_description::node_0w_0_interleaved,
+        weighted_graph_description::node_0w_0w_interleaved,
+        t.report_line("Mutate edge weight via first partial weight"),
+        [](graph_t g) -> graph_t {
+          g.mutate_edge_weight(++g.cbegin_edges(0), [](double& x) { x += 1.0; });
+          return g;
+        }
+      );
+
+      trg.join(
+        weighted_graph_description::node_0w_0_interleaved,
+        graph_description::node_0_0_interleaved,
+        t.report_line("Mutate edge weight via second partial weight"),
+        [](graph_t g) -> graph_t {
+          g.mutate_edge_weight(g.cbegin_edges(0) + 2, [](double& x) { x -= 1.0; });
+          return g;
+        }
+      );
+
+      trg.join(
+        weighted_graph_description::node_0w_0_interleaved,
+        weighted_graph_description::node_0w_0w_interleaved,
+        t.report_line("Mutate edge weight via third partial weight"),
+        [](graph_t g) -> graph_t {
+          g.mutate_edge_weight(g.cbegin_edges(0) + 3, [](double& x) { x += 1.0; });
+          return g;
+        }
+      );
+
+      // end 'graph_description::node_0w_0_interleaved'
+
       // begin 'weighted_graph_description::node_nodew'
 
       trg.join(
