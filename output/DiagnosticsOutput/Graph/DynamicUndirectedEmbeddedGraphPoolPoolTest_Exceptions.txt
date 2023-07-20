@@ -169,6 +169,24 @@ connectivity::insert_join: insertion position 2 out of range for node 0 - max in
 
 =======================================
 
+Tests/Maths/Graph/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphWeightedTestingUtilities.hpp, Line 210
+Attempt to set a node weight which does not exist
+
+Expected Exception Type:
+[std::out_of_range]
+node_storage::node_weight - index out of range!
+
+=======================================
+
+Tests/Maths/Graph/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphWeightedTestingUtilities.hpp, Line 220
+Attempt to mutate a node weight which does not exist
+
+Expected Exception Type:
+[std::out_of_range]
+node_storage::node_weight - index out of range!
+
+=======================================
+
 Tests/Maths/Graph/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphTestingUtilities.hpp, Line 244
 cbegin_edges throws for empty graph
 
@@ -337,6 +355,24 @@ inserting join throws if second index out of range
 Expected Exception Type:
 [std::out_of_range]
 connectivity::insert_join: insertion position 2 out of range for node 0 - max index is 1
+
+=======================================
+
+Tests/Maths/Graph/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphWeightedTestingUtilities.hpp, Line 210
+Attempt to set a node weight which does not exist
+
+Expected Exception Type:
+[std::out_of_range]
+node_storage::node_weight - index out of range!
+
+=======================================
+
+Tests/Maths/Graph/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphWeightedTestingUtilities.hpp, Line 220
+Attempt to mutate a node weight which does not exist
+
+Expected Exception Type:
+[std::out_of_range]
+node_storage::node_weight - index out of range!
 
 =======================================
 
