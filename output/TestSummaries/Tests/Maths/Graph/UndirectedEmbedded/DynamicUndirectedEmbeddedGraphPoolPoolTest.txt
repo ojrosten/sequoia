@@ -1,2 +1,2 @@
 Undirected Embedded Graph Pool-Pool Tests
-Standard Top Level Checks:               860;  Failures:  0  [Deep checks: 128504]
+Standard Top Level Checks:               876;  Failures:  0  [Deep checks: 131200]

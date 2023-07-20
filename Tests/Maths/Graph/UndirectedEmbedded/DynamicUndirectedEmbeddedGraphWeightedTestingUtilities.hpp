@@ -454,31 +454,51 @@ namespace sequoia::testing
 
       // end 'graph_description::node_1_1_node_0_0'
 
-      //////======================================= joins from new nodes =======================================//
+      //======================================= joins from new nodes =======================================//
 
-      //// begin 'weighted_graph_description::node_0_0w'
+      // begin 'weighted_graph_description::node_0_0w'
 
-      //trg.join(
-      //  weighted_graph_description::node_0_0w,
-      //  weighted_graph_description::node_0w,
-      //  t.report_line("Remove zeroth partial edge"),
-      //  [](graph_t g) -> graph_t {
-      //    g.erase_edge(g.cbegin_edges(0));
-      //    return g;
-      //  }
-      //);
+      trg.join(
+        weighted_graph_description::node_0_0w,
+        weighted_graph_description::node_0w,
+        t.report_line("Remove zeroth partial edge"),
+        [](graph_t g) -> graph_t {
+          g.erase_edge(g.cbegin_edges(0));
+          return g;
+        }
+      );
 
-      //trg.join(
-      //  weighted_graph_description::node_0_0w,
-      //  weighted_graph_description::node_0w,
-      //  t.report_line("Remove first partial edge"),
-      //  [](graph_t g) -> graph_t {
-      //    g.erase_edge(++g.cbegin_edges(0));
-      //    return g;
-      //  }
-      //);
+      trg.join(
+        weighted_graph_description::node_0_0w,
+        weighted_graph_description::node_0w,
+        t.report_line("Remove first partial edge"),
+        [](graph_t g) -> graph_t {
+          g.erase_edge(++g.cbegin_edges(0));
+          return g;
+        }
+      );
 
-      //// end 'weighted_graph_description::node_0_0w'
+      trg.join(
+        weighted_graph_description::node_0_0w,
+        graph_description::node_0,
+        t.report_line("Remove second partial edge"),
+        [](graph_t g) -> graph_t {
+          g.erase_edge(g.cbegin_edges(0)+2);
+          return g;
+        }
+      );
+
+      trg.join(
+        weighted_graph_description::node_0_0w,
+        graph_description::node_0,
+        t.report_line("Remove third partial edge"),
+        [](graph_t g) -> graph_t {
+          g.erase_edge(g.cbegin_edges(0)+3);
+          return g;
+        }
+      );
+
+      // end 'weighted_graph_description::node_0_0w'
 
       //// begin 'weighted_graph_description::node_nodew'
 
