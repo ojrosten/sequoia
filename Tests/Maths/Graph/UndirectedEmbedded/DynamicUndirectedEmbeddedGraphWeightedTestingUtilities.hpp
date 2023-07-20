@@ -80,11 +80,19 @@ namespace sequoia::testing
       //  x ==== x
       node_1w_1w_node_0w_0w,
 
+      // x ---- x
+      //   ----
+      node_1w_1_node_0_0w,
+
+      // x ---- x
+      //   ----
+      node_1_1w_node_0w_0,
+
       //    ----
       //  x ==== x
       node_1_1w_1x_node_0_0w_0x,
 
-      // />\
+      // /-\
       // \ /
       //  x ==== x
       //    ----
@@ -184,6 +192,12 @@ namespace sequoia::testing
 
       // 'weighted_graph_description::node_1w_1w_node_0w_0w'
       trg.add_node(make_and_check(t, t.report_line(""), {{{1, 0, 1.0}, {1, 1, 1.0}}, {{0, 0, 1.0}, {0, 1, 1.0}}}, {0.0, 0.0}));
+
+      // 'weighted_graph_description::node_1w_1_node_0_0w'
+      trg.add_node(make_and_check(t, t.report_line(""), {{{1, 1, 1.0}, {1, 0, 0.0}}, {{0, 1, 0.0}, {0, 0, 1.0}}}, {0.0, 0.0}));
+
+      // 'weighted_graph_description::node_1_1w_node_0w_0'
+      trg.add_node(make_and_check(t, t.report_line(""), {{{1, 1, 0.0}, {1, 0, 1.0}}, {{0, 1, 1.0}, {0, 0, 0.0}}}, {0.0, 0.0}));
 
       // 'weighted_graph_description::node_1_1w_1x_node_0_0w_0x'
       trg.add_node(make_and_check(t, t.report_line(""), {{{1, 0, 0.0}, {1, 1, 1.0}, {1, 2, 2.0}}, {{0, 0, 0.0}, {0, 1, 1.0}, {0, 2, 2.0}}}, {0.0, 0.0}));
