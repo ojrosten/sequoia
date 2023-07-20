@@ -1,2 +1,2 @@
 Undirected Embedded Graph Pool-Faithful Tests
-Standard Top Level Checks:               790;  Failures:  0  [Deep checks: 115894]
+Standard Top Level Checks:               810;  Failures:  0  [Deep checks: 118592]
