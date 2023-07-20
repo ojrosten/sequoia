@@ -117,14 +117,14 @@ namespace sequoia::testing
 
       auto trg{base_ops::make_transition_graph(t)};
 
-      //// 'weighted_graph_description::nodew'
-      //trg.add_node(make_and_check(t, t.report_line(""), {{}}, {1.0}));
+      // 'weighted_graph_description::nodew'
+      trg.add_node(make_and_check(t, t.report_line(""), {{}}, {1.0}));
 
-      //// 'weighted_graph_description::nodew_0'
-      //trg.add_node(make_and_check(t, t.report_line(""), {{{0, 0.0}, {0, 0.0}}}, {1.0}));
+      // 'weighted_graph_description::nodew_0'
+      trg.add_node(make_and_check(t, t.report_line(""), {{{0, 1, 0.0}, {0, 0, 0.0}}}, {1.0}));
 
-      //// 'weighted_graph_description::node_0w'
-      //trg.add_node(make_and_check(t, t.report_line(""), {{{0, 1.0}, {0, 1.0}}}, {0.0}));
+      // 'weighted_graph_description::node_0w'
+      trg.add_node(make_and_check(t, t.report_line(""), {{{0, 1, 1.0}, {0, 0, 1.0}}}, {0.0}));
 
       //// 'weighted_graph_description::node_0w_0w'
       //trg.add_node(make_and_check(t, t.report_line(""), {{{0, 1.0}, {0, 1.0}, {0, 1.0}, {0, 1.0}}}, {0.0}));
