@@ -59,7 +59,7 @@ namespace sequoia::testing
       //   /-\
       //   \ /
       //    x ---- x
-      node_0_1_node,
+      node_0_1_node_0,
 
       //  /-\
       //  \ /
@@ -93,7 +93,7 @@ namespace sequoia::testing
       //       / \
       //       \-/
       //
-      node_1_node_1_1_1_interleaved,
+      node_1_node_1_1_1_0_interleaved,
 
       //         /-\/-\
       //        /  /\  \
@@ -102,10 +102,10 @@ namespace sequoia::testing
       //          / \
       //          \-/
       //
-      node_1_1_node_1_1_1_interleaved,
+      node_1_1_node_1_0_1_0_1_interleaved,
 
       //  x ==== x
-      node_1_1_node,
+      node_1_1_node_0_0,
 
       // x ---- x
       //   ----
@@ -115,10 +115,10 @@ namespace sequoia::testing
       node_node_node,
 
       //  x ---- x    x
-      node_1_node_node,
+      node_1_node_0_node,
 
       //  x    x ---- x
-      node_node_node_1,
+      node_node_2_node_1,
 
       //  x ---- x ---- x
       node_1_node_2_node,
@@ -757,7 +757,7 @@ namespace sequoia::testing
             }
           },
           {
-            graph_description::node_1_1_node,
+            graph_description::node_1_1_node_0_0,
             t.report_line("Join {0,1}"),
             [](graph_t g) {
               g.join(0, 1);
@@ -765,7 +765,7 @@ namespace sequoia::testing
             }
           }
         }, // end 'node_1_node'
-        {  // begin 'node_0_1_node'
+        {  // begin 'node_0_1_node_0'
           {
             graph_description::empty,
             t.report_line("Clear graph"),
@@ -806,7 +806,7 @@ namespace sequoia::testing
               return g;
             }
           }
-        }, // end 'node_0_1_node'
+        }, // end 'node_0_1_node_0'
         {  // begin 'node_0_node'
           {
             graph_description::empty,
@@ -903,7 +903,7 @@ namespace sequoia::testing
             }
           },
           {
-            graph_description::node_1_node_1_1_1_interleaved,
+            graph_description::node_1_node_1_1_1_0_interleaved,
             t.report_line("Join {0, 1; 4}"),
             [](graph_t g) -> graph_t {
               g.insert_join(g.cbegin_edges(0), g.cbegin_edges(1) + 4);
@@ -911,7 +911,7 @@ namespace sequoia::testing
             }
           }
         }, // end 'node_node_1_1_1_interleaved'
-        {  // begin 'node_1_node_1_1_1_interleaved'
+        {  // begin 'node_1_node_1_1_1_0_interleaved'
           {
             graph_description::node_0_0_0_interleaved,
             t.report_line("Erase node 0"),
@@ -921,17 +921,17 @@ namespace sequoia::testing
             }
           },
           {
-            graph_description::node_1_1_node_1_1_1_interleaved,
+            graph_description::node_1_1_node_1_0_1_0_1_interleaved,
             t.report_line("Join {0(1), 1(6)}"),
             [](graph_t g) -> graph_t {
               g.insert_join(g.cbegin_edges(0)+1, g.cbegin_edges(1) + 6);
               return g;
             }
           }
-        }, // end 'node_1_node_1_1_1_interleaved'
-        {  // begin 'node_1_1_node_1_1_1_interleaved'
+        }, // end 'node_1_node_1_1_1_0_interleaved'
+        {  // begin 'node_1_1_node_1_0_1_0_1_interleaved'
           {
-            graph_description::node_1_node_1_1_1_interleaved,
+            graph_description::node_1_node_1_1_1_0_interleaved,
             t.report_line("Remove link {1(6), 0(1)}"),
             [](graph_t g) -> graph_t {
               g.erase_edge(g.cbegin_edges(1) + 6);
@@ -939,7 +939,7 @@ namespace sequoia::testing
             }
           },
           {
-            graph_description::node_1_node_1_1_1_interleaved,
+            graph_description::node_1_node_1_1_1_0_interleaved,
             t.report_line("Remove link {0(1), 1(6)}"),
             [](graph_t g) -> graph_t {
               g.erase_edge(g.cbegin_edges(0) + 1);
@@ -954,8 +954,8 @@ namespace sequoia::testing
               return g;
             }
           }
-        }, // end 'node_1_1_node_1_1_1_interleaved'
-        {  // begin 'node_1_1_node'
+        }, // end 'node_1_1_node_1_0_1_0_1_interleaved'
+        {  // begin 'node_1_1_node_0_0'
           {
             graph_description::empty,
             t.report_line("Clear graph"),
@@ -996,7 +996,7 @@ namespace sequoia::testing
               return g;
             }
           }
-        }, // end 'node_1_1_node'
+        }, // end 'node_1_1_node_0_0'
         {  // begin 'node_1pos1_node_0pos0'
           {
             graph_description::empty,
@@ -1073,7 +1073,7 @@ namespace sequoia::testing
             }
           },
           {
-            graph_description::node_1_node_node,
+            graph_description::node_1_node_0_node,
             t.report_line("Join {0,1}"),
             [](graph_t g) -> graph_t {
               g.join(0,1);
@@ -1081,7 +1081,7 @@ namespace sequoia::testing
             }
           },
           {
-            graph_description::node_node_node_1,
+            graph_description::node_node_2_node_1,
             t.report_line("Join {2,1}"),
             [](graph_t g) -> graph_t {
               g.join(2,1);
@@ -1089,7 +1089,7 @@ namespace sequoia::testing
             }
           }
         }, // end 'node_node_node'
-        {  // begin 'node_1_node_node'
+        {  // begin 'node_1_node_0_node'
           {
             graph_description::empty,
             t.report_line("Clear graph"),
@@ -1147,7 +1147,7 @@ namespace sequoia::testing
             }
           },
           {
-            graph_description::node_node_node_1,
+            graph_description::node_node_2_node_1,
             t.report_line("Swap nodes {0,2}"),
             [](graph_t g) -> graph_t {
               g.swap_nodes(0,2);
@@ -1155,15 +1155,15 @@ namespace sequoia::testing
             }
           },
           {
-            graph_description::node_node_node_1,
+            graph_description::node_node_2_node_1,
             t.report_line("Swap nodes {2,0}"),
             [](graph_t g) -> graph_t {
               g.swap_nodes(2,0);
               return g;
             }
           }
-        }, // end 'node_1_node_node'
-        {  // begin 'node_node_node_1'
+        }, // end 'node_1_node_0_node'
+        {  // begin 'node_node_2_node_1'
           {
             graph_description::empty,
             t.report_line("Clear graph"),
@@ -1213,7 +1213,7 @@ namespace sequoia::testing
             }
           },
           {
-            graph_description::node_1_node_node,
+            graph_description::node_1_node_0_node,
             t.report_line("Swap nodes {0,2}"),
             [](graph_t g) -> graph_t {
               g.swap_nodes(0,2);
@@ -1221,14 +1221,14 @@ namespace sequoia::testing
             }
           },
           {
-            graph_description::node_1_node_node,
+            graph_description::node_1_node_0_node,
             t.report_line("Swap nodes {2,0}"),
             [](graph_t g) -> graph_t {
               g.swap_nodes(2,0);
               return g;
             }
           }
-        }, // end 'node_node_node_1'
+        }, // end 'node_node_2_node_1'
         {  // begin 'node_1_node_2_node'
           {
             graph_description::empty,
@@ -1263,7 +1263,7 @@ namespace sequoia::testing
             }
           },
           {
-            graph_description::node_1_node_node,
+            graph_description::node_1_node_0_node,
             t.report_line("Remove link {1,2}"),
             [](graph_t g) -> graph_t {
               g.erase_edge(++g.cbegin_edges(1));
@@ -1417,7 +1417,7 @@ namespace sequoia::testing
         }, // end 'node_1_node_1_0_node'
         {  // begin 'node_1_node_1_0_2_node'
           {
-            graph_description::node_0_1_node,
+            graph_description::node_0_1_node_0,
             t.report_line("Erase node 0"),
             [](graph_t g) -> graph_t {
               g.erase_node(0);
@@ -1479,7 +1479,7 @@ namespace sequoia::testing
             }
           },
           {
-            graph_description::node_1_1_node,
+            graph_description::node_1_1_node_0_0,
             t.report_line("Erase node 1"),
             [](graph_t g) -> graph_t {
               g.erase_node(1);
@@ -1487,7 +1487,7 @@ namespace sequoia::testing
             }
           },
           {
-            graph_description::node_1_1_node,
+            graph_description::node_1_1_node_0_0,
             t.report_line("Erase node 2"),
             [](graph_t g) -> graph_t {
               g.erase_node(2);
@@ -1513,7 +1513,7 @@ namespace sequoia::testing
             }
           },
           {
-            graph_description::node_1_1_node,
+            graph_description::node_1_1_node_0_0,
             t.report_line("Erase node 1"),
             [](graph_t g) -> graph_t {
               g.erase_node(1);
@@ -1521,7 +1521,7 @@ namespace sequoia::testing
             }
           },
           {
-            graph_description::node_1_1_node,
+            graph_description::node_1_1_node_0_0,
             t.report_line("Erase node 2"),
             [](graph_t g) -> graph_t {
               g.erase_node(2);
@@ -1565,7 +1565,7 @@ namespace sequoia::testing
         }, // end node_2_2_1_1_node_2_node_1
         {  // begin 'node_3_1_node_2_node_node'
           {
-             graph_description::node_1_node_node,
+             graph_description::node_1_node_0_node,
              t.report_line("Erase node 0"),
              [](graph_t g) -> graph_t {
                g.erase_node(0);
@@ -1635,7 +1635,7 @@ namespace sequoia::testing
         //  'node_1_node'
         make_and_check(t, t.report_line(""), {{edge_t{1, 0}}, {edge_t{0, 0}}}),
 
-        //  'node_0_1_node'
+        //  'node_0_1_node_0'
         make_and_check(t, t.report_line(""), {{edge_t{0, 1}, edge_t{0, 0}, edge_t{1, 0}}, {edge_t{0, 2}}}),
 
         //  'node_0_node'
@@ -1650,14 +1650,14 @@ namespace sequoia::testing
         // 'node_node_1_1_1_interleaved'
         make_and_check(t, t.report_line(""), {{}, {edge_t{1, 1}, edge_t{1, 0}, edge_t{1, 4}, edge_t{1, 5}, edge_t{1, 2}, edge_t{1, 3}}}),
 
-        // 'node_1_node_1_1_1_interleaved'
+        // 'node_1_node_1_1_1_0_interleaved'
         make_and_check(t, t.report_line(""), {{edge_t{1, 4}}, {edge_t{1, 1}, edge_t{1, 0}, edge_t{1, 5}, edge_t{1, 6}, edge_t{0, 0}, edge_t{1, 2}, edge_t{1, 3}}}),
 
-        // 'node_1_1_node_1_1_1_interleaved'
+        // 'node_1_1_node_1_0_1_0_1_interleaved'
         make_and_check(t, t.report_line(""), {{edge_t{1, 4}, edge_t{1, 6}},
                                          {edge_t{1, 1}, edge_t{1, 0}, edge_t{1, 5}, edge_t{1, 7}, edge_t{0, 0}, edge_t{1, 2}, edge_t{0, 1}, edge_t{1, 3}}}),
 
-        // 'node_1_1_node'
+        // 'node_1_1_node_0_0'
         make_and_check(t, t.report_line(""), {{edge_t{1, 0}, edge_t{1, 1}}, {edge_t{0, 0}, edge_t{0, 1}}}),
 
         // 'node_1pos1_node_0pos0'
@@ -1666,10 +1666,10 @@ namespace sequoia::testing
         //  'node_node_node'
         make_and_check(t, t.report_line(""), {{}, {}, {}}),
 
-        //  'node_1_node_node'
+        //  'node_1_node_0_node'
         make_and_check(t, t.report_line(""), {{edge_t{1, 0}}, {edge_t{0, 0}}, {}}),
 
-        //  'node_node_node_1'
+        //  'node_node_2_node_1'
         make_and_check(t, t.report_line(""), {{}, {edge_t{2, 0}}, {edge_t{1, 0}}}),
 
         // 'node_1_node_2_node'
