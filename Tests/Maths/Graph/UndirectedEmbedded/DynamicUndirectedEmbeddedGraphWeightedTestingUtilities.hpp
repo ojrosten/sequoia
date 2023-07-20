@@ -555,6 +555,10 @@ namespace sequoia::testing
 
       // end 'graph_description::node_0_0_interleaved'
 
+      // begin 'graph_description::node_1_node_0'
+
+      // end 'graph_description::node_1_node_0'
+
       // begin 'graph_description::node_1_1_node_0_0'
 
       trg.join(
