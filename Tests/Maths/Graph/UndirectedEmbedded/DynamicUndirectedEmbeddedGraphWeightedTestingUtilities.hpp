@@ -556,73 +556,73 @@ namespace sequoia::testing
 
       // end 'weighted_graph_description::nodew_node_0'
 
-      //// begin 'weighted_graph_description::node_1_1w_node_0_0w'
-      //
-      //trg.join(
-      //  weighted_graph_description::node_1_1w_node_0_0w,
-      //  weighted_graph_description::node_1w_1w_node_0w_0w,
-      //  t.report_line("Set edge weight {0, 1}"),
-      //  [](graph_t g) -> graph_t {
-      //    g.set_edge_weight(g.cbegin_edges(0), 1.0);
-      //    return g;
-      //  }
-      //);
+      // begin 'weighted_graph_description::node_1_1w_node_0_0w'
+      
+      trg.join(
+        weighted_graph_description::node_1_1w_node_0_0w,
+        weighted_graph_description::node_1w_1w_node_0w_0w,
+        t.report_line("Set edge weight {0, 1}"),
+        [](graph_t g) -> graph_t {
+          g.set_edge_weight(g.cbegin_edges(0), 1.0);
+          return g;
+        }
+      );
 
-      //trg.join(
-      //  weighted_graph_description::node_1_1w_node_0_0w,
-      //  weighted_graph_description::node_1w_1w_node_0w_0w,
-      //  t.report_line("Set edge weight {1, 0}"),
-      //  [](graph_t g) -> graph_t {
-      //    g.set_edge_weight(g.cbegin_edges(1), 1.0);
-      //    return g;
-      //  }
-      //);
+      trg.join(
+        weighted_graph_description::node_1_1w_node_0_0w,
+        weighted_graph_description::node_1w_1w_node_0w_0w,
+        t.report_line("Set edge weight {1, 0}"),
+        [](graph_t g) -> graph_t {
+          g.set_edge_weight(g.cbegin_edges(1), 1.0);
+          return g;
+        }
+      );
 
-      //// end 'weighted_graph_description::node_1_1w_node_0_0w'
+      // end 'weighted_graph_description::node_1_1w_node_0_0w'
 
-      ////// begin 'weighted_graph_description::node_1w_1w_node_0w_0w'
+      // begin 'weighted_graph_description::node_1w_1w_node_0w_0w'
 
-      //trg.join(
-      //  weighted_graph_description::node_1w_1w_node_0w_0w,
-      //  weighted_graph_description::node_1_1w_node_0_0w,
-      //  t.report_line("Set edge weight {0, 1}"),
-      //  [](graph_t g) -> graph_t {
-      //    g.set_edge_weight(g.cbegin_edges(0), 0.0);
-      //    return g;
-      //  }
-      //);
+      trg.join(
+        weighted_graph_description::node_1w_1w_node_0w_0w,
+        weighted_graph_description::node_1_1w_node_0_0w,
+        t.report_line("Set edge weight {0, 1}"),
+        [](graph_t g) -> graph_t {
+          g.set_edge_weight(g.cbegin_edges(0), 0.0);
+          return g;
+        }
+      );
 
-      //trg.join(
-      //  weighted_graph_description::node_1w_1w_node_0w_0w,
-      //  weighted_graph_description::node_1_1w_node_0_0w,
-      //  t.report_line("Set edge weight {1, 0}"),
-      //  [](graph_t g) -> graph_t {
-      //    g.set_edge_weight(g.cbegin_edges(1), 0.0);
-      //    return g;
-      //  }
-      //);
+      trg.join(
+        weighted_graph_description::node_1w_1w_node_0w_0w,
+        weighted_graph_description::node_1_1w_node_0_0w,
+        t.report_line("Set edge weight {1, 0}"),
+        [](graph_t g) -> graph_t {
+          g.set_edge_weight(g.cbegin_edges(1), 0.0);
+          return g;
+        }
+      );
 
-      //trg.join(
-      //  weighted_graph_description::node_1w_1w_node_0w_0w,
-      //  weighted_graph_description::node_1_1w_node_0_0w,
-      //  t.report_line("Mutate edge weight {0, 1}"),
-      //  [](graph_t g) -> graph_t {
-      //    g.mutate_edge_weight(g.cbegin_edges(0), [](double& x){ x -= 1.0; });
-      //    return g;
-      //  }
-      //);
+      trg.join(
+        weighted_graph_description::node_1w_1w_node_0w_0w,
+        weighted_graph_description::node_1_1w_node_0_0w,
+        t.report_line("Mutate edge weight {0, 1}"),
+        [](graph_t g) -> graph_t {
+          g.mutate_edge_weight(g.cbegin_edges(0), [](double& x){ x -= 1.0; });
+          return g;
+        }
+      );
 
-      //trg.join(
-      //  weighted_graph_description::node_1w_1w_node_0w_0w,
-      //  weighted_graph_description::node_1_1w_node_0_0w,
-      //  t.report_line("Mutate edge weight {1, 0}"),
-      //  [](graph_t g) -> graph_t {
-      //    g.mutate_edge_weight(g.cbegin_edges(1), [](double& x){ x -= 1.0; });
-      //    return g;
-      //  }
-      //);
+      trg.join(
+        weighted_graph_description::node_1w_1w_node_0w_0w,
+        weighted_graph_description::node_1_1w_node_0_0w,
+        t.report_line("Mutate edge weight {1, 0}"),
+        [](graph_t g) -> graph_t {
+          g.mutate_edge_weight(g.cbegin_edges(1), [](double& x){ x -= 1.0; });
+          return g;
+        }
+      );
 
-      //// end 'weighted_graph_description::node_1w_1w_node_0w_0w'
+      // end 'weighted_graph_description::node_1w_1w_node_0w_0w'
 
       //// begin 'weighted_graph_description::node_1_1w_1x_node_0_0w_0x'
 
