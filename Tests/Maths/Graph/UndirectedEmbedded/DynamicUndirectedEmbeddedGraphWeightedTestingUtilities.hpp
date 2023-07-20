@@ -351,6 +351,26 @@ namespace sequoia::testing
         }
       );
 
+      trg.join(
+        graph_description::node_0,
+        weighted_graph_description::node_0w_0_interleaved,
+        t.report_line("Insert weighted join {0,0}"),
+        [](graph_t g) -> graph_t {
+          g.insert_join(g.cbegin_edges(0), 2, 1.0);
+          return g;
+        }
+      );
+
+      trg.join(
+        graph_description::node_0,
+        weighted_graph_description::node_0_0w_interleaved,
+        t.report_line("Insert weighted join {0,0}"),
+        [](graph_t g) -> graph_t {
+          g.insert_join(g.cbegin_edges(0)+1, 3, 1.0);
+          return g;
+        }
+      );
+
       // end 'graph_description::node_0'
 
       // begin 'graph_description::node_0_0'
@@ -566,6 +586,30 @@ namespace sequoia::testing
       // end 'graph_description::node_1_1_node_0_0'
 
       //======================================= joins from new nodes =======================================//
+
+      // begin 'weighted_graph_description::node_0w'
+
+      trg.join(
+        weighted_graph_description::node_0w,
+        weighted_graph_description::node_0_0w_interleaved,
+        t.report_line("Insert join {0,0}"),
+        [](graph_t g) -> graph_t {
+          g.insert_join(g.cbegin_edges(0), 2, 0.0);
+          return g;
+        }
+      );
+
+      trg.join(
+        weighted_graph_description::node_0w,
+        weighted_graph_description::node_0w_0_interleaved,
+        t.report_line("Insert join {0,0}"),
+        [](graph_t g) -> graph_t {
+          g.insert_join(g.cbegin_edges(0)+1, 3, 0.0);
+          return g;
+        }
+      );
+
+      // end 'weighted_graph_description::node_0w'
 
       // begin 'weighted_graph_description::node_0_0w'
 
