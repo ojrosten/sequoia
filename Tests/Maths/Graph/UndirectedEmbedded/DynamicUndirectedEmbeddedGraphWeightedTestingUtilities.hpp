@@ -623,6 +623,50 @@ namespace sequoia::testing
 
       // end 'graph_description::node_1_1_node_0_0'
 
+      // begin 'graph_description::node_1pos1_1pos0_node_0pos1_0pos0'
+
+      trg.join(
+        graph_description::node_1pos1_1pos0_node_0pos1_0pos0,
+        weighted_graph_description::node_1w_1_node_0_0w,
+        t.report_line("Set edge weight via node 0, first partial edge"),
+        [](graph_t g) -> graph_t {
+          g.set_edge_weight(g.cbegin_edges(0), 1.0);
+          return g;
+        }
+      );
+
+      trg.join(
+        graph_description::node_1pos1_1pos0_node_0pos1_0pos0,
+        weighted_graph_description::node_1_1w_node_0w_0,
+        t.report_line("Set edge weight via node 0, first partial edge"),
+        [](graph_t g) -> graph_t {
+          g.set_edge_weight(g.cbegin_edges(0) + 1, 1.0);
+          return g;
+        }
+      );
+
+      trg.join(
+        graph_description::node_1pos1_1pos0_node_0pos1_0pos0,
+        weighted_graph_description::node_1_1w_node_0w_0,
+        t.report_line("Set edge weight via node 1, first partial edge"),
+        [](graph_t g) -> graph_t {
+          g.set_edge_weight(g.cbegin_edges(1), 1.0);
+          return g;
+        }
+      );
+
+      trg.join(
+        graph_description::node_1pos1_1pos0_node_0pos1_0pos0,
+        weighted_graph_description::node_1w_1_node_0_0w,
+        t.report_line("Set edge weight via node 1, first partial edge"),
+        [](graph_t g) -> graph_t {
+          g.set_edge_weight(g.cbegin_edges(1) + 1, 1.0);
+          return g;
+        }
+      );
+
+      // end 'graph_description::node_1pos1_1pos0_node_0pos1_0pos0'
+
       //======================================= joins from new nodes =======================================//
 
       // begin 'weighted_graph_description::node_0w'
