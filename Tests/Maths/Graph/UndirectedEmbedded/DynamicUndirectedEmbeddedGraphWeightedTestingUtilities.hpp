@@ -557,6 +557,26 @@ namespace sequoia::testing
 
       // begin 'graph_description::node_1_node_0'
 
+      trg.join(
+        graph_description::node_1_node_0,
+        weighted_graph_description::node_1w_1_node_0_0w,
+        t.report_line("Inserted braided join"),
+        [](graph_t g) -> graph_t {
+          g.insert_join(g.cbegin_edges(0), g.cbegin_edges(1)+1, 1.0);
+          return g;
+        }
+      );
+
+      trg.join(
+        graph_description::node_1_node_0,
+        weighted_graph_description::node_1_1w_node_0w_0,
+        t.report_line("Inserted braided join"),
+        [](graph_t g) -> graph_t {
+          g.insert_join(g.cbegin_edges(0) + 1, g.cbegin_edges(1), 1.0);
+          return g;
+        }
+      );
+
       // end 'graph_description::node_1_node_0'
 
       // begin 'graph_description::node_1_1_node_0_0'
