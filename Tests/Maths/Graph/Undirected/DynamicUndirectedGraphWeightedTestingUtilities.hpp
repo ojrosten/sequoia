@@ -448,6 +448,94 @@ namespace sequoia::testing
 
       // end 'graph_description::node_0_0'
 
+      // begin 'graph_description::node_0_1_node_0'
+
+      trg.join(
+        graph_description::node_0_1_node_0,
+        weighted_graph_description::node_0w_1_node_0,
+        t.report_line("Set loop weight via zeroth partial weight"),
+        [](graph_t g) -> graph_t {
+          g.set_edge_weight(g.cbegin_edges(0), 1.0);
+          return g;
+        }
+      );
+
+      trg.join(
+        graph_description::node_0_1_node_0,
+        weighted_graph_description::node_0w_1_node_0,
+        t.report_line("Set loop weight via first partial weight"),
+        [](graph_t g) -> graph_t {
+          g.set_edge_weight(++g.cbegin_edges(0), 1.0);
+          return g;
+        }
+      );
+
+      trg.join(
+        graph_description::node_0_1_node_0,
+        weighted_graph_description::node_0w_1_node_0,
+        t.report_line("Mutate loop weight via zeroth partial weight"),
+        [](graph_t g) -> graph_t {
+          g.mutate_edge_weight(g.cbegin_edges(0), [](double& x) { x += 1.0; });
+          return g;
+        }
+      );
+
+      trg.join(
+        graph_description::node_0_1_node_0,
+        weighted_graph_description::node_0w_1_node_0,
+        t.report_line("Mutate loop weight via first partial weight"),
+        [](graph_t g) -> graph_t {
+          g.mutate_edge_weight(++g.cbegin_edges(0), [](double& x) { x += 1.0; });
+          return g;
+        }
+      );
+
+      // end 'graph_description::node_0_1_node_0'
+
+      // begin 'graph_description::node_1_node_0_1'
+
+      trg.join(
+        graph_description::node_1_node_0_1,
+        weighted_graph_description::node_1_node_0_1w,
+        t.report_line("Set loop weight via zeroth partial weight"),
+        [](graph_t g) -> graph_t {
+          g.set_edge_weight(g.cbegin_edges(1)+1, 1.0);
+          return g;
+        }
+      );
+
+      trg.join(
+        graph_description::node_1_node_0_1,
+        weighted_graph_description::node_1_node_0_1w,
+        t.report_line("Set loop weight via first partial weight"),
+        [](graph_t g) -> graph_t {
+          g.set_edge_weight(g.cbegin_edges(1)+2, 1.0);
+          return g;
+        }
+      );
+
+      trg.join(
+        graph_description::node_1_node_0_1,
+        weighted_graph_description::node_1_node_0_1w,
+        t.report_line("Mutate loop weight via zeroth partial weight"),
+        [](graph_t g) -> graph_t {
+          g.mutate_edge_weight(g.cbegin_edges(1)+1, [](double& x) { x += 1.0; });
+          return g;
+        }
+      );
+
+      trg.join(
+        graph_description::node_1_node_0_1,
+        weighted_graph_description::node_1_node_0_1w,
+        t.report_line("Mutate loop weight via first partial weight"),
+        [](graph_t g) -> graph_t {
+          g.mutate_edge_weight(g.cbegin_edges(1)+2, [](double& x) { x += 1.0; });
+          return g;
+        }
+      );
+
+      // end 'graph_description::node_1_node_0_1'
+
       // begin 'graph_description::node_1_1_node_0_0'
 
       trg.join(
