@@ -1302,35 +1302,32 @@ namespace sequoia
         edge_storage_type storage(as...);
         storage.reserve_partitions(orderedEdges.num_partitions());
 
+        auto addToStorage{
+          [&storage,this](edge_index_type host, edge_index_type target, edge_index_type compIndex, range_t hostRange){
+              storage.push_back_to_partition(host, (compIndex == npos) ? make_edge(host, hostRange.front())
+                                                                     : edge_type{target, *(cbegin_edges(target) + compIndex)});
+          }
+        };
+
         visit_edges(
           orderedEdges,
           [&storage]() { storage.add_slot(); },
-          [&,this](edge_index_type i, range_t hostRange) {
+          [addToStorage,&orderedEdges](edge_index_type host, range_t hostRange) {
             for(; hostRange.begin() != hostRange.end(); hostRange.advance(1))
             {
-              if(!(std::ranges::distance(hostRange) % 2) || !EdgeTraits::shared_weight_v)
-              {
-                storage.push_back_to_partition(i, make_edge(i, hostRange.front()));
-              }
-              else
-              {
-                const auto compIndex{static_cast<edge_index_type>(std::ranges::distance(orderedEdges.cbegin_partition(i), hostRange.begin()) - 1)};
-                storage.push_back_to_partition(i, edge_type{i, *(cbegin_edges(i) + compIndex)});
-              }
+              const bool hasCompIndex{(std::ranges::distance(hostRange) % 2) && EdgeTraits::shared_weight_v};
+              const auto compIndex{hasCompIndex ? static_cast<edge_index_type>(std::ranges::distance(orderedEdges.cbegin_partition(host), hostRange.begin()) - 1) : npos};
+
+              addToStorage(host, host, compIndex, hostRange);
             }
           },
-          [&,this](edge_index_type i, edge_index_type target, range_t hostRange, range_t targetRange) {
+          [addToStorage,&orderedEdges](edge_index_type host, edge_index_type target, range_t hostRange, range_t targetRange) {
             for(; hostRange.begin() != hostRange.end(); hostRange.advance(1))
             {
-              if((i < target) || !EdgeTraits::shared_weight_v)
-              {
-                storage.push_back_to_partition(i, make_edge(i, hostRange.front()));
-              }
-              else
-              {
-                const auto compIndex{static_cast<edge_index_type>(std::ranges::distance(orderedEdges.cbegin_partition(target), targetRange.end()) - std::ranges::distance(hostRange))};
-                storage.push_back_to_partition(i, edge_type{target, *(cbegin_edges(target) + compIndex)});
-              }
+              const bool hasCompIndex{(host > target) && EdgeTraits::shared_weight_v};
+              const auto compIndex{hasCompIndex ? static_cast<edge_index_type>(std::ranges::distance(orderedEdges.cbegin_partition(target), targetRange.end()) - std::ranges::distance(hostRange)) : npos};
+
+              addToStorage(host, target, compIndex, hostRange);
             }
           }
         );

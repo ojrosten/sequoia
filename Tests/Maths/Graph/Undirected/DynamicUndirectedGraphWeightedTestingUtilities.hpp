@@ -61,7 +61,7 @@ namespace sequoia::testing
       //  x ==== x
       node_1_1w_1x_node_0_0w_0x,
 
-      // />\
+      // /-\
       // \ /
       //  x ==== x
       //    ----
