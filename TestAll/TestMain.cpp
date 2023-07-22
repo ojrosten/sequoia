@@ -297,7 +297,9 @@ int main(int argc, char** argv)
           dynamic_undirected_embedded_graph_faithful_faithful_test{"Undirected Embedded Graph Faithful-Faithful Tests"},
           dynamic_undirected_embedded_graph_faithful_pool_test{"Undirected Embedded Graph Faithful-Pool Tests"},
           dynamic_undirected_embedded_graph_pool_faithful_test{"Undirected Embedded Graph Pool-Faithful Tests"},
-          dynamic_undirected_embedded_graph_pool_pool_test{"Undirected Embedded Graph Pool-Pool Tests"}
+          dynamic_undirected_embedded_graph_pool_pool_test{"Undirected Embedded Graph Pool-Pool Tests"},
+          dynamic_undirected_embedded_graph_faithful_faithful_shared_weight_test{"Undirected Embedded Graph Faithful-Faithful Shared Weight Tests"},
+          dynamic_undirected_embedded_graph_pool_faithful_shared_weight_test{"Undirected Embedded Graph Pool-Faithful Shared Weight Tests"}
         },
         suite{
           "Legacy",

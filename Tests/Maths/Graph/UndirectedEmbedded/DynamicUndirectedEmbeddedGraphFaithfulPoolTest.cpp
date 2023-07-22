@@ -23,7 +23,7 @@ namespace sequoia::testing
     using namespace maths;
     using namespace object;
 
-    dynamic_undirected_embedded_graph_weighted_operations<double, double, faithful_producer<double>, data_pool<double>, contiguous_edge_storage_traits, node_weight_storage_traits<double>>::execute_operations(*this);
-    dynamic_undirected_embedded_graph_weighted_operations<double, double, faithful_producer<double>, data_pool<double>, bucketed_edge_storage_traits, node_weight_storage_traits<double>>::execute_operations(*this);
+    dynamic_undirected_embedded_graph_weighted_operations<double, double, faithful_producer<double>, data_pool<double>, independent_contiguous_edge_storage_traits, node_weight_storage_traits<double>>::execute_operations(*this);
+    dynamic_undirected_embedded_graph_weighted_operations<double, double, faithful_producer<double>, data_pool<double>, independent_bucketed_edge_storage_traits, node_weight_storage_traits<double>>::execute_operations(*this);
   }
 }
