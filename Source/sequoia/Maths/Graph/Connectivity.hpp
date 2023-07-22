@@ -1315,7 +1315,7 @@ namespace sequoia
               else
               {
                 const auto compIndex{static_cast<edge_index_type>(std::ranges::distance(orderedEdges.cbegin_partition(i), hostRange.begin()) - 1)};
-                storage.push_back_to_partition(i, cbegin_edges(i) + compIndex);
+                storage.push_back_to_partition(i, edge_type{i, *(cbegin_edges(i) + compIndex)});
               }
             }
           },

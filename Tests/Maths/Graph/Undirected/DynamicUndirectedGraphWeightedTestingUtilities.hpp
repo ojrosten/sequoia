@@ -89,6 +89,8 @@ namespace sequoia::testing
     using edges_equivalent_t = std::initializer_list<std::initializer_list<edge_t>>;
     using transition_graph   = typename transition_checker<graph_t>::transition_graph;
 
+    constexpr static bool has_shared_weight{EdgeStorageTraits::edge_sharing == maths::edge_sharing_preference::shared_weight};
+
     static void execute_operations(regular_test& t)
     {
       auto trg{make_weighted_transition_graph(t)};
@@ -358,7 +360,9 @@ namespace sequoia::testing
         t.report_line("Set edge weight via second partial weight"),
         [](graph_t g) -> graph_t {
           g.set_edge_weight(g.cbegin_edges(0) + 2, 1.0);
-          g.swap_edges(0, 0, 3);
+          if constexpr(!has_shared_weight)
+            g.swap_edges(0, 0, 3);
+
           return g;
         }
       );
@@ -369,7 +373,9 @@ namespace sequoia::testing
         t.report_line("Set edge weight via third partial weight"),
         [](graph_t g) -> graph_t {
           g.set_edge_weight(g.cbegin_edges(0) + 3, 1.0);
-          g.swap_edges(0, 0, 2);
+          if constexpr(!has_shared_weight)
+            g.swap_edges(0, 0, 2);
+  
           return g;
         }
       );
@@ -404,7 +410,9 @@ namespace sequoia::testing
         t.report_line("Mutate edge weight via second partial weight"),
         [](graph_t g) -> graph_t {
           g.mutate_edge_weight(g.cbegin_edges(0)+2, [](double& x) { x += 1.0; });
-          g.swap_edges(0, 0, 3);
+          if constexpr(!has_shared_weight)
+            g.swap_edges(0, 0, 3);
+
           return g;
         }
       );
@@ -415,7 +423,9 @@ namespace sequoia::testing
         t.report_line("Mutate edge weight via third partial weight"),
         [](graph_t g) -> graph_t {
           g.mutate_edge_weight(g.cbegin_edges(0)+3, [](double& x) { x += 1.0; });
-          g.swap_edges(0, 0, 2);
+          if constexpr(!has_shared_weight)
+            g.swap_edges(0, 0, 2);
+
           return g;
         }
       );
@@ -442,7 +452,9 @@ namespace sequoia::testing
         t.report_line("Set edge weight via node 0, first partial edge"),
         [](graph_t g) -> graph_t {
           g.set_edge_weight(++g.cbegin_edges(0), 1.0);
-          g.swap_edges(1, 0, 1);
+          if constexpr(!has_shared_weight)
+            g.swap_edges(1, 0, 1);
+
           return g;
         }
       );
@@ -465,7 +477,9 @@ namespace sequoia::testing
         t.report_line("Set edge weight via node 1, first partial edge"),
         [](graph_t g) -> graph_t {
           g.set_edge_weight(++g.cbegin_edges(1), 1.0);
-          g.swap_edges(0, 0, 1);
+          if constexpr(!has_shared_weight)
+            g.swap_edges(0, 0, 1);
+
           return g;
         }
       );
@@ -488,7 +502,9 @@ namespace sequoia::testing
         t.report_line("Mutate edge weight via node 0, first partial edge"),
         [](graph_t g) -> graph_t {
           g.mutate_edge_weight(++g.cbegin_edges(0), [](double& x) { x += 1.0; });
-          g.swap_edges(1, 0, 1);
+          if constexpr(!has_shared_weight)
+            g.swap_edges(1, 0, 1);
+
           return g;
         }
       );
@@ -511,7 +527,9 @@ namespace sequoia::testing
         t.report_line("Mutate edge weight via node 1, first partial edge"),
         [](graph_t g) -> graph_t {
           g.mutate_edge_weight(++g.cbegin_edges(1), [](double& x) { x += 1.0; });
-          g.swap_edges(0, 0, 1);
+          if constexpr(!has_shared_weight)
+            g.swap_edges(0, 0, 1);
+ 
           return g;
         }
       );

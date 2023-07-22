@@ -65,6 +65,7 @@
 #include "Maths/Graph/StaticGraphTraversalsTest.hpp"
 #include "Maths/Graph/TreeTest.hpp"
 #include "Maths/Graph/Undirected/DynamicUndirectedGraphFaithfulFaithfulTest.hpp"
+#include "Maths/Graph/Undirected/DynamicUndirectedGraphFaithfulFaithfulSharedWeightTest.hpp"
 #include "Maths/Graph/Undirected/DynamicUndirectedGraphFaithfulPoolTest.hpp"
 #include "Maths/Graph/Undirected/DynamicUndirectedGraphPoolFaithfulTest.hpp"
 #include "Maths/Graph/Undirected/DynamicUndirectedGraphPoolPoolTest.hpp"

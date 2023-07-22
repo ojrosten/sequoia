@@ -74,6 +74,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Maths/Graph/TreeTest.cpp
                ${TestDir}/Maths/Graph/TreeTestingDiagnostics.cpp
                ${TestDir}/Maths/Graph/Undirected/DynamicUndirectedGraphFaithfulFaithfulTest.cpp
+               ${TestDir}/Maths/Graph/Undirected/DynamicUndirectedGraphFaithfulFaithfulSharedWeightTest.cpp
                ${TestDir}/Maths/Graph/Undirected/DynamicUndirectedGraphFaithfulPoolTest.cpp
                ${TestDir}/Maths/Graph/Undirected/DynamicUndirectedGraphPoolFaithfulTest.cpp
                ${TestDir}/Maths/Graph/Undirected/DynamicUndirectedGraphPoolPoolTest.cpp
