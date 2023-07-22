@@ -45,6 +45,11 @@ namespace sequoia::testing
       //   x --- x
       node_0_1_node_0,
 
+      //         /\
+      //         \/
+      //   x --- x
+      node_1_node_0_1,
+
       //  /\
       //  \/
       //  x      x
@@ -728,6 +733,56 @@ namespace sequoia::testing
             }
           }
         }, // end 'node_0_1_node_0'
+        {  // begin 'node_1_node_0_1'
+          {
+            graph_description::node_0,
+            t.report_line("Erase node 0"),
+            [](graph_t g) -> graph_t {
+              g.erase_node(0);
+              return g;
+            }
+          },
+          {
+            graph_description::node,
+            t.report_line("Erase node 1"),
+            [](graph_t g) -> graph_t {
+              g.erase_node(1);
+              return g;
+            }
+          },
+          {
+            graph_description::node_node_1,
+            t.report_line("Remove edge {0,1}"),
+            [](graph_t g) -> graph_t {
+              g.erase_edge(g.cbegin_edges(0));
+              return g;
+            }
+          },
+          {
+            graph_description::node_node_1,
+            t.report_line("Remove edge {1,0}"),
+            [](graph_t g) -> graph_t {
+              g.erase_edge(g.cbegin_edges(1));
+              return g;
+            }
+          },
+          {
+            graph_description::node_1_node_0,
+            t.report_line("Remove loop via first partial edge"),
+            [](graph_t g) -> graph_t {
+              g.erase_edge(g.cbegin_edges(1)+1);
+              return g;
+            }
+          },
+          {
+            graph_description::node_1_node_0,
+            t.report_line("Remove loop via second partial edge"),
+            [](graph_t g) -> graph_t {
+              g.erase_edge(g.cbegin_edges(1)+2);
+              return g;
+            }
+          }
+        }, // end 'node_1_node_0_1'
         {  // begin 'node_0_node'
           {
             graph_description::empty,
@@ -1403,6 +1458,9 @@ namespace sequoia::testing
 
         //  'node_0_1_node_0'
         make_and_check(t, t.report_line(""), {{edge_t{0}, edge_t{0}, edge_t{1}}, {edge_t{0}}}),
+
+        // 'node_1_node_0_1'
+        make_and_check(t, t.report_line(""), {{edge_t{1}}, {edge_t{0}, edge_t{1}, edge_t{1}, }}),
 
         //  'node_0_node'
         make_and_check(t, t.report_line(""), {{edge_t{0}, edge_t{0}}, {}}),

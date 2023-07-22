@@ -1,2 +1,2 @@
 Undirected Graph Pool-Pool Tests
-Standard Top Level Checks:               958;  Failures:  0  [Deep checks: 93128]
+Standard Top Level Checks:               984;  Failures:  0  [Deep checks: 96832]
