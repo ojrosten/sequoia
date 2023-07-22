@@ -1460,7 +1460,7 @@ namespace sequoia::testing
         make_and_check(t, t.report_line(""), {{edge_t{0}, edge_t{0}, edge_t{1}}, {edge_t{0}}}),
 
         // 'node_1_node_0_1'
-        make_and_check(t, t.report_line(""), {{edge_t{1}}, {edge_t{0}, edge_t{1}, edge_t{1}, }}),
+        make_and_check(t, t.report_line(""), {{edge_t{1}}, {edge_t{0}, edge_t{1}, edge_t{1}}}),
 
         //  'node_0_node'
         make_and_check(t, t.report_line(""), {{edge_t{0}, edge_t{0}}, {}}),

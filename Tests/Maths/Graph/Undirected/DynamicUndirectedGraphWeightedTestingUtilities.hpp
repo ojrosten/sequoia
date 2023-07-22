@@ -51,6 +51,16 @@ namespace sequoia::testing
       //  x ---- x
       nodew_1_node_0,
 
+      //   /\
+      //   \/
+      //   x --- x
+      node_0w_1_node_0,
+
+      //         /\
+      //         \/
+      //   x --- x
+      node_1_node_0_1w,
+
       //  x ==== x
       node_1_1w_node_0_0w,
 
@@ -150,6 +160,12 @@ namespace sequoia::testing
 
       // 'weighted_graph_description::nodew_1_node_0'
       trg.add_node(make_and_check(t, t.report_line(""), {{{1, 0.0}}, {{0, 0.0}}}, {1.0, 0.0}));
+      
+      // 'weighted_graph_description::node_0w_1_node_0'
+      trg.add_node(make_and_check(t, t.report_line(""), {{{0, 1.0}, {0, 1.0}, {1, 0.0}}, {{0, 0.0}}}, {0.0, 0.0})),
+
+      // 'weighted_graph_description::node_1_node_0_1w'
+      trg.add_node(make_and_check(t, t.report_line(""), {{{1, 0.0}}, {{0, 0.0}, {1, 1.0}, {1, 1.0}}}, {0.0, 0.0})),
 
       // 'weighted_graph_description::node_1_1w_node_0_0w'
       trg.add_node(
