@@ -498,6 +498,14 @@ namespace sequoia::testing
             }
           },
           {
+            graph_description::node_0_0_interleaved,
+            t.report_line("Interleave a second loop, backwards"),
+            [](graph_t g) -> graph_t {
+              g.insert_join(g.cbegin_edges(0) + 1, 0);
+              return g;
+            }
+          },
+          {
             graph_description::node_node_1,
             t.report_line("Insert node"),
             [&t](graph_t g) -> graph_t {

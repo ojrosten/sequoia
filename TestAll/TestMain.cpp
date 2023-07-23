@@ -279,7 +279,11 @@ int main(int argc, char** argv)
           dynamic_directed_embedded_graph_faithful_faithful_test{"Directed Embedded Graph Faithful-Faithful Tests"},
           dynamic_directed_embedded_graph_faithful_pool_test{"Directed Embedded Graph Faithful-Pool Tests"},
           dynamic_directed_embedded_graph_pool_faithful_test{"Directed Embedded Graph Pool-Faithful Tests"},
-          dynamic_directed_embedded_graph_pool_pool_test{"Directed Embedded Graph Pool-Pool Tests"}
+          dynamic_directed_embedded_graph_pool_pool_test{"Directed Embedded Graph Pool-Pool Tests"},
+          dynamic_directed_embedded_graph_faithful_faithful_shared_edge_test{"Directed Embedded Graph Faithful-Faithful Shared Edge Tests"},
+          dynamic_directed_embedded_graph_faithful_faithful_shared_weight_test{"Directed Embedded Graph Faithful-Faithful Shared Weight Tests"},
+          dynamic_directed_embedded_graph_pool_faithful_shared_edge_test{"Directed Embedded Graph Pool-Faithful Shared Edge Tests"},
+          dynamic_directed_embedded_graph_pool_faithful_shared_weight_test{"Directed Embedded Graph Pool-Faithful Shared Weight Tests"},
         },
         suite{
           "Undirected",

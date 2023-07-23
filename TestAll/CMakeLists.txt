@@ -45,8 +45,12 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Maths/Graph/Directed/DynamicDirectedGraphPoolFaithfulTest.cpp
                ${TestDir}/Maths/Graph/Directed/DynamicDirectedGraphPoolPoolTest.cpp
                ${TestDir}/Maths/Graph/Directed/DynamicDirectedGraphUnweightedTest.cpp
+               ${TestDir}/Maths/Graph/DirectedEmbedded/DynamicDirectedEmbeddedGraphFaithfulFaithfulSharedEdgeTest.cpp
+               ${TestDir}/Maths/Graph/DirectedEmbedded/DynamicDirectedEmbeddedGraphFaithfulFaithfulSharedWeightTest.cpp
                ${TestDir}/Maths/Graph/DirectedEmbedded/DynamicDirectedEmbeddedGraphFaithfulFaithfulTest.cpp
                ${TestDir}/Maths/Graph/DirectedEmbedded/DynamicDirectedEmbeddedGraphFaithfulPoolTest.cpp
+               ${TestDir}/Maths/Graph/DirectedEmbedded/DynamicDirectedEmbeddedGraphPoolFaithfulSharedEdgeTest.cpp
+               ${TestDir}/Maths/Graph/DirectedEmbedded/DynamicDirectedEmbeddedGraphPoolFaithfulSharedWeightTest.cpp
                ${TestDir}/Maths/Graph/DirectedEmbedded/DynamicDirectedEmbeddedGraphPoolFaithfulTest.cpp
                ${TestDir}/Maths/Graph/DirectedEmbedded/DynamicDirectedEmbeddedGraphPoolPoolTest.cpp
                ${TestDir}/Maths/Graph/DirectedEmbedded/DynamicDirectedEmbeddedGraphUnweightedTest.cpp
@@ -80,9 +84,9 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Maths/Graph/Undirected/DynamicUndirectedGraphPoolFaithfulTest.cpp
                ${TestDir}/Maths/Graph/Undirected/DynamicUndirectedGraphPoolPoolTest.cpp
                ${TestDir}/Maths/Graph/Undirected/DynamicUndirectedGraphUnweightedTest.cpp
-               ${TestDir}/Maths/Graph/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphFaithfulFaithfulTest.cpp
                ${TestDir}/Maths/Graph/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphFaithfulFaithfulSharedWeightTest.cpp
-               ${TestDir}/Maths/Graph/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphFaithfulPoolTest.cpp              
+               ${TestDir}/Maths/Graph/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphFaithfulFaithfulTest.cpp
+               ${TestDir}/Maths/Graph/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphFaithfulPoolTest.cpp
                ${TestDir}/Maths/Graph/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphPoolFaithfulSharedWeightTest.cpp
                ${TestDir}/Maths/Graph/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphPoolFaithfulTest.cpp
                ${TestDir}/Maths/Graph/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphPoolPoolTest.cpp
