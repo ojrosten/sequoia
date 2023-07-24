@@ -304,17 +304,15 @@ int main(int argc, char** argv)
           dynamic_undirected_embedded_graph_pool_pool_test{"Undirected Embedded Graph Pool-Pool Tests"},
           dynamic_undirected_embedded_graph_faithful_faithful_shared_weight_test{"Undirected Embedded Graph Faithful-Faithful Shared Weight Tests"},
           dynamic_undirected_embedded_graph_pool_faithful_shared_weight_test{"Undirected Embedded Graph Pool-Faithful Shared Weight Tests"}
-        },
-        suite{
-          "Legacy",
-          weighted_graph_test{"Weighted Graph Tests"},
-          test_static_fixed_topology{"Static Graph Manipulations"},
-          test_edge_insertion{"Edge Insertions"},
-          test_graph_init{"Dynamic Graph Init"},
-          test_static_graph{"Static Graph Init"},
-          test_heterogeneous_static_graph{"Heterogeneous Static Graphs"},
-          test_fixed_topology{"Dynamic Graph Fixed Topology"}
         }
+      },
+      suite{
+        "Legacy",
+        test_static_fixed_topology{"Static Graph Manipulations"},
+        test_graph_init{"Dynamic Graph Init"},
+        test_static_graph{"Static Graph Init"},
+        test_heterogeneous_static_graph{"Heterogeneous Static Graphs"},
+        test_fixed_topology{"Dynamic Graph Fixed Topology"}
       },
       suite{
         "Allocations",

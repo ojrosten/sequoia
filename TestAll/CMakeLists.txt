@@ -54,7 +54,6 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Maths/Graph/DirectedEmbedded/DynamicDirectedEmbeddedGraphPoolFaithfulTest.cpp
                ${TestDir}/Maths/Graph/DirectedEmbedded/DynamicDirectedEmbeddedGraphPoolPoolTest.cpp
                ${TestDir}/Maths/Graph/DirectedEmbedded/DynamicDirectedEmbeddedGraphUnweightedTest.cpp
-               ${TestDir}/Maths/Graph/DynamicGraphEmbeddedTest.cpp
                ${TestDir}/Maths/Graph/DynamicGraphFixedTopologyTest.cpp
                ${TestDir}/Maths/Graph/DynamicGraphInitializationTest.cpp
                ${TestDir}/Maths/Graph/DynamicGraphTestingDiagnostics.cpp
@@ -62,7 +61,6 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Maths/Graph/DynamicGraphUnweightedAllocationTest.cpp
                ${TestDir}/Maths/Graph/DynamicGraphUpdateTest.cpp
                ${TestDir}/Maths/Graph/DynamicGraphWeightedAllocationTest.cpp
-               ${TestDir}/Maths/Graph/DynamicGraphWeightedTest.cpp
                ${TestDir}/Maths/Graph/DynamicSubgraphTest.cpp
                ${TestDir}/Maths/Graph/EdgeTest.cpp
                ${TestDir}/Maths/Graph/EdgeTestingDiagnostics.cpp
