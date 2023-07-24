@@ -1,4 +1,4 @@
-Tests/TestFramework/OrderableRegularAllocationTestDiagnostics.cpp, Line 81
+Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 81
 
 --Ordered Semantics--
 [sequoia::testing::orderable_regular_inefficient_comparisons<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
@@ -65,7 +65,7 @@ Tests/TestFramework/OrderableRegularAllocationTestDiagnostics.cpp, Line 81
 
 =======================================
 
-Tests/TestFramework/OrderableRegularAllocationTestDiagnostics.cpp, Line 88
+Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 88
 
 --Ordered Semantics--
 [sequoia::testing::orderable_regular_inefficient_comparisons<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
@@ -132,7 +132,7 @@ Tests/TestFramework/OrderableRegularAllocationTestDiagnostics.cpp, Line 88
 
 =======================================
 
-Tests/TestFramework/OrderableRegularAllocationTestDiagnostics.cpp, Line 81
+Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 81
 
 --Ordered Semantics--
 [sequoia::testing::orderable_regular_inefficient_comparisons<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
@@ -199,7 +199,7 @@ Tests/TestFramework/OrderableRegularAllocationTestDiagnostics.cpp, Line 81
 
 =======================================
 
-Tests/TestFramework/OrderableRegularAllocationTestDiagnostics.cpp, Line 88
+Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 88
 
 --Ordered Semantics--
 [sequoia::testing::orderable_regular_inefficient_comparisons<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
@@ -266,7 +266,7 @@ Tests/TestFramework/OrderableRegularAllocationTestDiagnostics.cpp, Line 88
 
 =======================================
 
-Tests/TestFramework/OrderableRegularAllocationTestDiagnostics.cpp, Line 81
+Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 81
 
 --Ordered Semantics--
 [sequoia::testing::orderable_regular_inefficient_comparisons<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
@@ -333,7 +333,7 @@ Tests/TestFramework/OrderableRegularAllocationTestDiagnostics.cpp, Line 81
 
 =======================================
 
-Tests/TestFramework/OrderableRegularAllocationTestDiagnostics.cpp, Line 88
+Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 88
 
 --Ordered Semantics--
 [sequoia::testing::orderable_regular_inefficient_comparisons<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
@@ -400,7 +400,7 @@ Tests/TestFramework/OrderableRegularAllocationTestDiagnostics.cpp, Line 88
 
 =======================================
 
-Tests/TestFramework/OrderableRegularAllocationTestDiagnostics.cpp, Line 81
+Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 81
 
 --Ordered Semantics--
 [sequoia::testing::orderable_regular_inefficient_comparisons<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
@@ -467,7 +467,7 @@ Tests/TestFramework/OrderableRegularAllocationTestDiagnostics.cpp, Line 81
 
 =======================================
 
-Tests/TestFramework/OrderableRegularAllocationTestDiagnostics.cpp, Line 88
+Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 88
 
 --Ordered Semantics--
 [sequoia::testing::orderable_regular_inefficient_comparisons<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
@@ -534,7 +534,7 @@ Tests/TestFramework/OrderableRegularAllocationTestDiagnostics.cpp, Line 88
 
 =======================================
 
-Tests/TestFramework/OrderableRegularAllocationTestDiagnostics.cpp, Line 81
+Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 81
 
 --Ordered Semantics--
 [sequoia::testing::orderable_regular_inefficient_comparisons<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
@@ -601,7 +601,7 @@ Tests/TestFramework/OrderableRegularAllocationTestDiagnostics.cpp, Line 81
 
 =======================================
 
-Tests/TestFramework/OrderableRegularAllocationTestDiagnostics.cpp, Line 88
+Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 88
 
 --Ordered Semantics--
 [sequoia::testing::orderable_regular_inefficient_comparisons<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
@@ -668,7 +668,7 @@ Tests/TestFramework/OrderableRegularAllocationTestDiagnostics.cpp, Line 88
 
 =======================================
 
-Tests/TestFramework/OrderableRegularAllocationTestDiagnostics.cpp, Line 81
+Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 81
 
 --Ordered Semantics--
 [sequoia::testing::orderable_regular_inefficient_comparisons<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
@@ -735,7 +735,7 @@ Tests/TestFramework/OrderableRegularAllocationTestDiagnostics.cpp, Line 81
 
 =======================================
 
-Tests/TestFramework/OrderableRegularAllocationTestDiagnostics.cpp, Line 88
+Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 88
 
 --Ordered Semantics--
 [sequoia::testing::orderable_regular_inefficient_comparisons<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
@@ -802,7 +802,7 @@ Tests/TestFramework/OrderableRegularAllocationTestDiagnostics.cpp, Line 88
 
 =======================================
 
-Tests/TestFramework/OrderableRegularAllocationTestDiagnostics.cpp, Line 81
+Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 81
 
 --Ordered Semantics--
 [sequoia::testing::orderable_regular_inefficient_comparisons<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
@@ -869,7 +869,7 @@ Tests/TestFramework/OrderableRegularAllocationTestDiagnostics.cpp, Line 81
 
 =======================================
 
-Tests/TestFramework/OrderableRegularAllocationTestDiagnostics.cpp, Line 88
+Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 88
 
 --Ordered Semantics--
 [sequoia::testing::orderable_regular_inefficient_comparisons<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
@@ -936,7 +936,7 @@ Tests/TestFramework/OrderableRegularAllocationTestDiagnostics.cpp, Line 88
 
 =======================================
 
-Tests/TestFramework/OrderableRegularAllocationTestDiagnostics.cpp, Line 81
+Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 81
 
 --Ordered Semantics--
 [sequoia::testing::orderable_regular_inefficient_comparisons<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
@@ -1003,7 +1003,7 @@ Tests/TestFramework/OrderableRegularAllocationTestDiagnostics.cpp, Line 81
 
 =======================================
 
-Tests/TestFramework/OrderableRegularAllocationTestDiagnostics.cpp, Line 88
+Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 88
 
 --Ordered Semantics--
 [sequoia::testing::orderable_regular_inefficient_comparisons<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]

@@ -1,5 +1,5 @@
 False Positive Failure:
-Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 54
+Tests/TestFramework/AllocationTesting/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 54
 
 --Move-only Semantics--
 [sequoia::testing::move_only_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >, 1, 0, 0>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> > >]
@@ -7,7 +7,7 @@ Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 54
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 67
+Tests/TestFramework/AllocationTesting/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 67
 
 --Move-only Semantics--
 [sequoia::testing::move_only_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >, 1, 0, 0>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> > >]
@@ -15,7 +15,7 @@ Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 67
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 80
+Tests/TestFramework/AllocationTesting/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 80
 check_semantics return value (x)
 
 [sequoia::testing::move_only_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >, 1, 0, 0>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> > >]
@@ -23,7 +23,7 @@ check_semantics return value (x)
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 81
+Tests/TestFramework/AllocationTesting/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 81
 check_semantics return value (y)
 
 [sequoia::testing::move_only_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >, 1, 0, 0>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> > >]
@@ -31,7 +31,7 @@ check_semantics return value (y)
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 54
+Tests/TestFramework/AllocationTesting/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 54
 
 --Move-only Semantics--
 [sequoia::testing::move_only_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >, 1, 0, 1>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> > >]
@@ -39,7 +39,7 @@ Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 54
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 67
+Tests/TestFramework/AllocationTesting/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 67
 
 --Move-only Semantics--
 [sequoia::testing::move_only_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >, 1, 0, 1>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> > >]
@@ -47,7 +47,7 @@ Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 67
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 80
+Tests/TestFramework/AllocationTesting/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 80
 check_semantics return value (x)
 
 [sequoia::testing::move_only_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >, 1, 0, 1>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> > >]
@@ -55,7 +55,7 @@ check_semantics return value (x)
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 81
+Tests/TestFramework/AllocationTesting/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 81
 check_semantics return value (y)
 
 [sequoia::testing::move_only_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >, 1, 0, 1>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> > >]
@@ -63,7 +63,7 @@ check_semantics return value (y)
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 54
+Tests/TestFramework/AllocationTesting/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 54
 
 --Move-only Semantics--
 [sequoia::testing::move_only_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >, 1, 1, 0>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> > >]
@@ -71,7 +71,7 @@ Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 54
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 67
+Tests/TestFramework/AllocationTesting/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 67
 
 --Move-only Semantics--
 [sequoia::testing::move_only_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >, 1, 1, 0>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> > >]
@@ -79,7 +79,7 @@ Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 67
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 80
+Tests/TestFramework/AllocationTesting/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 80
 check_semantics return value (x)
 
 [sequoia::testing::move_only_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >, 1, 1, 0>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> > >]
@@ -87,7 +87,7 @@ check_semantics return value (x)
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 81
+Tests/TestFramework/AllocationTesting/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 81
 check_semantics return value (y)
 
 [sequoia::testing::move_only_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >, 1, 1, 0>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> > >]
@@ -95,7 +95,7 @@ check_semantics return value (y)
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 54
+Tests/TestFramework/AllocationTesting/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 54
 
 --Move-only Semantics--
 [sequoia::testing::move_only_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >, 1, 1, 1>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> > >]
@@ -103,7 +103,7 @@ Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 54
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 67
+Tests/TestFramework/AllocationTesting/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 67
 
 --Move-only Semantics--
 [sequoia::testing::move_only_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >, 1, 1, 1>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> > >]
@@ -111,7 +111,7 @@ Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 67
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 80
+Tests/TestFramework/AllocationTesting/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 80
 check_semantics return value (x)
 
 [sequoia::testing::move_only_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >, 1, 1, 1>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> > >]
@@ -119,7 +119,7 @@ check_semantics return value (x)
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 81
+Tests/TestFramework/AllocationTesting/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 81
 check_semantics return value (y)
 
 [sequoia::testing::move_only_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >, 1, 1, 1>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> > >]

@@ -1,4 +1,4 @@
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 46
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 46
 Broken check invariant
 
 --Regular Semantics--
@@ -10,7 +10,7 @@ Broken check invariant
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 48
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 48
 Incorrect init allocs
 
 --Regular Semantics--
@@ -78,7 +78,7 @@ Incorrect init allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 62
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 62
 Incorrect copy x allocs
 
 --Regular Semantics--
@@ -98,7 +98,7 @@ Incorrect copy x allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 64
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 64
 Incorrect copy y allocs
 
 --Regular Semantics--
@@ -118,7 +118,7 @@ Incorrect copy y allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 66
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 66
 Incorrect mutation allocs
 
 --Regular Semantics--
@@ -138,7 +138,7 @@ Incorrect mutation allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 81
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 81
 Incorrect copy assign y to x allocs
 
 --Regular Semantics--
@@ -170,7 +170,7 @@ Incorrect copy assign y to x allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 92
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 92
 Incorrect copy x allocs
 
 --Regular Semantics--
@@ -190,7 +190,7 @@ Incorrect copy x allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 94
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 94
 Incorrect copy y allocs
 
 --Regular Semantics--
@@ -210,7 +210,7 @@ Incorrect copy y allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 96
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 96
 Incorrect mutation allocs
 
 --Regular Semantics--
@@ -230,7 +230,7 @@ Incorrect mutation allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 111
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 111
 Incorrect copy assign y to x allocs
 
 --Regular Semantics--
@@ -262,7 +262,7 @@ Incorrect copy assign y to x allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 46
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 46
 Broken check invariant
 
 --Regular Semantics--
@@ -274,7 +274,7 @@ Broken check invariant
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 48
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 48
 Incorrect init allocs
 
 --Regular Semantics--
@@ -342,7 +342,7 @@ Incorrect init allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 62
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 62
 Incorrect copy x allocs
 
 --Regular Semantics--
@@ -362,7 +362,7 @@ Incorrect copy x allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 64
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 64
 Incorrect copy y allocs
 
 --Regular Semantics--
@@ -382,7 +382,7 @@ Incorrect copy y allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 66
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 66
 Incorrect mutation allocs
 
 --Regular Semantics--
@@ -414,7 +414,7 @@ Incorrect mutation allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 81
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 81
 Incorrect copy assign y to x allocs
 
 --Regular Semantics--
@@ -446,7 +446,7 @@ Incorrect copy assign y to x allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 92
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 92
 Incorrect copy x allocs
 
 --Regular Semantics--
@@ -466,7 +466,7 @@ Incorrect copy x allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 94
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 94
 Incorrect copy y allocs
 
 --Regular Semantics--
@@ -486,7 +486,7 @@ Incorrect copy y allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 96
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 96
 Incorrect mutation allocs
 
 --Regular Semantics--
@@ -518,7 +518,7 @@ Incorrect mutation allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 111
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 111
 Incorrect copy assign y to x allocs
 
 --Regular Semantics--
@@ -550,7 +550,7 @@ Incorrect copy assign y to x allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 46
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 46
 Broken check invariant
 
 --Regular Semantics--
@@ -562,7 +562,7 @@ Broken check invariant
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 48
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 48
 Incorrect init allocs
 
 --Regular Semantics--
@@ -618,7 +618,7 @@ Incorrect init allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 62
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 62
 Incorrect copy x allocs
 
 --Regular Semantics--
@@ -638,7 +638,7 @@ Incorrect copy x allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 64
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 64
 Incorrect copy y allocs
 
 --Regular Semantics--
@@ -658,7 +658,7 @@ Incorrect copy y allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 66
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 66
 Incorrect mutation allocs
 
 --Regular Semantics--
@@ -678,7 +678,7 @@ Incorrect mutation allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 81
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 81
 Incorrect copy assign y to x allocs
 
 --Regular Semantics--
@@ -698,7 +698,7 @@ Incorrect copy assign y to x allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 92
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 92
 Incorrect copy x allocs
 
 --Regular Semantics--
@@ -718,7 +718,7 @@ Incorrect copy x allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 94
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 94
 Incorrect copy y allocs
 
 --Regular Semantics--
@@ -738,7 +738,7 @@ Incorrect copy y allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 96
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 96
 Incorrect mutation allocs
 
 --Regular Semantics--
@@ -758,7 +758,7 @@ Incorrect mutation allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 111
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 111
 Incorrect copy assign y to x allocs
 
 --Regular Semantics--
@@ -778,7 +778,7 @@ Incorrect copy assign y to x allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 46
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 46
 Broken check invariant
 
 --Regular Semantics--
@@ -790,7 +790,7 @@ Broken check invariant
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 48
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 48
 Incorrect init allocs
 
 --Regular Semantics--
@@ -846,7 +846,7 @@ Incorrect init allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 62
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 62
 Incorrect copy x allocs
 
 --Regular Semantics--
@@ -866,7 +866,7 @@ Incorrect copy x allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 64
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 64
 Incorrect copy y allocs
 
 --Regular Semantics--
@@ -886,7 +886,7 @@ Incorrect copy y allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 66
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 66
 Incorrect mutation allocs
 
 --Regular Semantics--
@@ -918,7 +918,7 @@ Incorrect mutation allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 81
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 81
 Incorrect copy assign y to x allocs
 
 --Regular Semantics--
@@ -938,7 +938,7 @@ Incorrect copy assign y to x allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 92
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 92
 Incorrect copy x allocs
 
 --Regular Semantics--
@@ -958,7 +958,7 @@ Incorrect copy x allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 94
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 94
 Incorrect copy y allocs
 
 --Regular Semantics--
@@ -978,7 +978,7 @@ Incorrect copy y allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 96
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 96
 Incorrect mutation allocs
 
 --Regular Semantics--
@@ -1010,7 +1010,7 @@ Incorrect mutation allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 111
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 111
 Incorrect copy assign y to x allocs
 
 --Regular Semantics--
@@ -1030,7 +1030,7 @@ Incorrect copy assign y to x allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 46
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 46
 Broken check invariant
 
 --Regular Semantics--
@@ -1042,7 +1042,7 @@ Broken check invariant
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 48
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 48
 Incorrect init allocs
 
 --Regular Semantics--
@@ -1110,7 +1110,7 @@ Incorrect init allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 62
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 62
 Incorrect copy x allocs
 
 --Regular Semantics--
@@ -1130,7 +1130,7 @@ Incorrect copy x allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 64
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 64
 Incorrect copy y allocs
 
 --Regular Semantics--
@@ -1150,7 +1150,7 @@ Incorrect copy y allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 66
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 66
 Incorrect mutation allocs
 
 --Regular Semantics--
@@ -1170,7 +1170,7 @@ Incorrect mutation allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 81
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 81
 Incorrect copy assign y to x allocs
 
 --Regular Semantics--
@@ -1202,7 +1202,7 @@ Incorrect copy assign y to x allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 92
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 92
 Incorrect copy x allocs
 
 --Regular Semantics--
@@ -1222,7 +1222,7 @@ Incorrect copy x allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 94
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 94
 Incorrect copy y allocs
 
 --Regular Semantics--
@@ -1242,7 +1242,7 @@ Incorrect copy y allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 96
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 96
 Incorrect mutation allocs
 
 --Regular Semantics--
@@ -1262,7 +1262,7 @@ Incorrect mutation allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 111
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 111
 Incorrect copy assign y to x allocs
 
 --Regular Semantics--
@@ -1294,7 +1294,7 @@ Incorrect copy assign y to x allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 46
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 46
 Broken check invariant
 
 --Regular Semantics--
@@ -1306,7 +1306,7 @@ Broken check invariant
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 48
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 48
 Incorrect init allocs
 
 --Regular Semantics--
@@ -1374,7 +1374,7 @@ Incorrect init allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 62
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 62
 Incorrect copy x allocs
 
 --Regular Semantics--
@@ -1394,7 +1394,7 @@ Incorrect copy x allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 64
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 64
 Incorrect copy y allocs
 
 --Regular Semantics--
@@ -1414,7 +1414,7 @@ Incorrect copy y allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 66
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 66
 Incorrect mutation allocs
 
 --Regular Semantics--
@@ -1446,7 +1446,7 @@ Incorrect mutation allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 81
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 81
 Incorrect copy assign y to x allocs
 
 --Regular Semantics--
@@ -1478,7 +1478,7 @@ Incorrect copy assign y to x allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 92
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 92
 Incorrect copy x allocs
 
 --Regular Semantics--
@@ -1498,7 +1498,7 @@ Incorrect copy x allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 94
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 94
 Incorrect copy y allocs
 
 --Regular Semantics--
@@ -1518,7 +1518,7 @@ Incorrect copy y allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 96
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 96
 Incorrect mutation allocs
 
 --Regular Semantics--
@@ -1550,7 +1550,7 @@ Incorrect mutation allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 111
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 111
 Incorrect copy assign y to x allocs
 
 --Regular Semantics--
@@ -1582,7 +1582,7 @@ Incorrect copy assign y to x allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 46
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 46
 Broken check invariant
 
 --Regular Semantics--
@@ -1594,7 +1594,7 @@ Broken check invariant
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 48
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 48
 Incorrect init allocs
 
 --Regular Semantics--
@@ -1650,7 +1650,7 @@ Incorrect init allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 62
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 62
 Incorrect copy x allocs
 
 --Regular Semantics--
@@ -1670,7 +1670,7 @@ Incorrect copy x allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 64
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 64
 Incorrect copy y allocs
 
 --Regular Semantics--
@@ -1690,7 +1690,7 @@ Incorrect copy y allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 66
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 66
 Incorrect mutation allocs
 
 --Regular Semantics--
@@ -1710,7 +1710,7 @@ Incorrect mutation allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 81
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 81
 Incorrect copy assign y to x allocs
 
 --Regular Semantics--
@@ -1742,7 +1742,7 @@ Incorrect copy assign y to x allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 92
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 92
 Incorrect copy x allocs
 
 --Regular Semantics--
@@ -1762,7 +1762,7 @@ Incorrect copy x allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 94
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 94
 Incorrect copy y allocs
 
 --Regular Semantics--
@@ -1782,7 +1782,7 @@ Incorrect copy y allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 96
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 96
 Incorrect mutation allocs
 
 --Regular Semantics--
@@ -1802,7 +1802,7 @@ Incorrect mutation allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 111
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 111
 Incorrect copy assign y to x allocs
 
 --Regular Semantics--
@@ -1834,7 +1834,7 @@ Incorrect copy assign y to x allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 46
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 46
 Broken check invariant
 
 --Regular Semantics--
@@ -1846,7 +1846,7 @@ Broken check invariant
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 48
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 48
 Incorrect init allocs
 
 --Regular Semantics--
@@ -1902,7 +1902,7 @@ Incorrect init allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 62
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 62
 Incorrect copy x allocs
 
 --Regular Semantics--
@@ -1922,7 +1922,7 @@ Incorrect copy x allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 64
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 64
 Incorrect copy y allocs
 
 --Regular Semantics--
@@ -1942,7 +1942,7 @@ Incorrect copy y allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 66
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 66
 Incorrect mutation allocs
 
 --Regular Semantics--
@@ -1974,7 +1974,7 @@ Incorrect mutation allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 81
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 81
 Incorrect copy assign y to x allocs
 
 --Regular Semantics--
@@ -2006,7 +2006,7 @@ Incorrect copy assign y to x allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 92
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 92
 Incorrect copy x allocs
 
 --Regular Semantics--
@@ -2026,7 +2026,7 @@ Incorrect copy x allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 94
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 94
 Incorrect copy y allocs
 
 --Regular Semantics--
@@ -2046,7 +2046,7 @@ Incorrect copy y allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 96
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 96
 Incorrect mutation allocs
 
 --Regular Semantics--
@@ -2078,7 +2078,7 @@ Incorrect mutation allocs
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 111
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 111
 Incorrect copy assign y to x allocs
 
 --Regular Semantics--

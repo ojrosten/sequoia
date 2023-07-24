@@ -1,4 +1,4 @@
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 49
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 49
 Broken equality
 
 --Regular Semantics--
@@ -14,7 +14,7 @@ Broken equality
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 60
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 60
 Broken inequality
 
 --Regular Semantics--
@@ -30,7 +30,7 @@ Broken inequality
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 71
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 71
 Broken copy
 
 --Regular Semantics--
@@ -44,7 +44,7 @@ Broken copy
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 82
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 82
 Broken para-copy
 
 --Regular Semantics--
@@ -58,7 +58,7 @@ Broken para-copy
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 93
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 93
 Broken move
 
 --Regular Semantics--
@@ -72,7 +72,7 @@ Broken move
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 104
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 104
 Broken para-move
 
 --Regular Semantics--
@@ -86,7 +86,7 @@ Broken para-move
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 115
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 115
 Broken copy assignment
 
 --Regular Semantics--
@@ -100,7 +100,7 @@ Broken copy assignment
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 126
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 126
 Broken move assignment
 
 --Regular Semantics--
@@ -114,7 +114,7 @@ Broken move assignment
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 49
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 49
 Broken equality
 
 --Regular Semantics--
@@ -130,7 +130,7 @@ Broken equality
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 60
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 60
 Broken inequality
 
 --Regular Semantics--
@@ -146,7 +146,7 @@ Broken inequality
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 71
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 71
 Broken copy
 
 --Regular Semantics--
@@ -160,7 +160,7 @@ Broken copy
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 82
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 82
 Broken para-copy
 
 --Regular Semantics--
@@ -174,7 +174,7 @@ Broken para-copy
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 93
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 93
 Broken move
 
 --Regular Semantics--
@@ -188,7 +188,7 @@ Broken move
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 104
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 104
 Broken para-move
 
 --Regular Semantics--
@@ -202,7 +202,7 @@ Broken para-move
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 115
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 115
 Broken copy assignment
 
 --Regular Semantics--
@@ -216,7 +216,7 @@ Broken copy assignment
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 126
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 126
 Broken move assignment
 
 --Regular Semantics--
@@ -230,7 +230,7 @@ Broken move assignment
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 49
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 49
 Broken equality
 
 --Regular Semantics--
@@ -246,7 +246,7 @@ Broken equality
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 60
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 60
 Broken inequality
 
 --Regular Semantics--
@@ -262,7 +262,7 @@ Broken inequality
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 71
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 71
 Broken copy
 
 --Regular Semantics--
@@ -276,7 +276,7 @@ Broken copy
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 82
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 82
 Broken para-copy
 
 --Regular Semantics--
@@ -290,7 +290,7 @@ Broken para-copy
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 93
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 93
 Broken move
 
 --Regular Semantics--
@@ -304,7 +304,7 @@ Broken move
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 104
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 104
 Broken para-move
 
 --Regular Semantics--
@@ -318,7 +318,7 @@ Broken para-move
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 115
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 115
 Broken copy assignment
 
 --Regular Semantics--
@@ -332,7 +332,7 @@ Broken copy assignment
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 126
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 126
 Broken move assignment
 
 --Regular Semantics--
@@ -346,7 +346,7 @@ Broken move assignment
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 49
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 49
 Broken equality
 
 --Regular Semantics--
@@ -362,7 +362,7 @@ Broken equality
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 60
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 60
 Broken inequality
 
 --Regular Semantics--
@@ -378,7 +378,7 @@ Broken inequality
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 71
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 71
 Broken copy
 
 --Regular Semantics--
@@ -392,7 +392,7 @@ Broken copy
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 82
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 82
 Broken para-copy
 
 --Regular Semantics--
@@ -406,7 +406,7 @@ Broken para-copy
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 93
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 93
 Broken move
 
 --Regular Semantics--
@@ -420,7 +420,7 @@ Broken move
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 104
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 104
 Broken para-move
 
 --Regular Semantics--
@@ -434,7 +434,7 @@ Broken para-move
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 115
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 115
 Broken copy assignment
 
 --Regular Semantics--
@@ -448,7 +448,7 @@ Broken copy assignment
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 126
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 126
 Broken move assignment
 
 --Regular Semantics--
@@ -462,7 +462,7 @@ Broken move assignment
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 49
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 49
 Broken equality
 
 --Regular Semantics--
@@ -478,7 +478,7 @@ Broken equality
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 60
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 60
 Broken inequality
 
 --Regular Semantics--
@@ -494,7 +494,7 @@ Broken inequality
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 71
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 71
 Broken copy
 
 --Regular Semantics--
@@ -508,7 +508,7 @@ Broken copy
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 82
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 82
 Broken para-copy
 
 --Regular Semantics--
@@ -522,7 +522,7 @@ Broken para-copy
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 93
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 93
 Broken move
 
 --Regular Semantics--
@@ -536,7 +536,7 @@ Broken move
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 104
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 104
 Broken para-move
 
 --Regular Semantics--
@@ -550,7 +550,7 @@ Broken para-move
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 115
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 115
 Broken copy assignment
 
 --Regular Semantics--
@@ -564,7 +564,7 @@ Broken copy assignment
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 126
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 126
 Broken move assignment
 
 --Regular Semantics--
@@ -578,7 +578,7 @@ Broken move assignment
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 49
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 49
 Broken equality
 
 --Regular Semantics--
@@ -594,7 +594,7 @@ Broken equality
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 60
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 60
 Broken inequality
 
 --Regular Semantics--
@@ -610,7 +610,7 @@ Broken inequality
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 71
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 71
 Broken copy
 
 --Regular Semantics--
@@ -624,7 +624,7 @@ Broken copy
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 82
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 82
 Broken para-copy
 
 --Regular Semantics--
@@ -638,7 +638,7 @@ Broken para-copy
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 93
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 93
 Broken move
 
 --Regular Semantics--
@@ -652,7 +652,7 @@ Broken move
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 104
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 104
 Broken para-move
 
 --Regular Semantics--
@@ -666,7 +666,7 @@ Broken para-move
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 115
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 115
 Broken copy assignment
 
 --Regular Semantics--
@@ -680,7 +680,7 @@ Broken copy assignment
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 126
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 126
 Broken move assignment
 
 --Regular Semantics--
@@ -694,7 +694,7 @@ Broken move assignment
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 49
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 49
 Broken equality
 
 --Regular Semantics--
@@ -710,7 +710,7 @@ Broken equality
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 60
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 60
 Broken inequality
 
 --Regular Semantics--
@@ -726,7 +726,7 @@ Broken inequality
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 71
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 71
 Broken copy
 
 --Regular Semantics--
@@ -740,7 +740,7 @@ Broken copy
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 82
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 82
 Broken para-copy
 
 --Regular Semantics--
@@ -754,7 +754,7 @@ Broken para-copy
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 93
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 93
 Broken move
 
 --Regular Semantics--
@@ -768,7 +768,7 @@ Broken move
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 104
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 104
 Broken para-move
 
 --Regular Semantics--
@@ -782,7 +782,7 @@ Broken para-move
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 115
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 115
 Broken copy assignment
 
 --Regular Semantics--
@@ -796,7 +796,7 @@ Broken copy assignment
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 126
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 126
 Broken move assignment
 
 --Regular Semantics--
@@ -810,7 +810,7 @@ Broken move assignment
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 49
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 49
 Broken equality
 
 --Regular Semantics--
@@ -826,7 +826,7 @@ Broken equality
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 60
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 60
 Broken inequality
 
 --Regular Semantics--
@@ -842,7 +842,7 @@ Broken inequality
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 71
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 71
 Broken copy
 
 --Regular Semantics--
@@ -856,7 +856,7 @@ Broken copy
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 82
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 82
 Broken para-copy
 
 --Regular Semantics--
@@ -870,7 +870,7 @@ Broken para-copy
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 93
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 93
 Broken move
 
 --Regular Semantics--
@@ -884,7 +884,7 @@ Broken move
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 104
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 104
 Broken para-move
 
 --Regular Semantics--
@@ -898,7 +898,7 @@ Broken para-move
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 115
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 115
 Broken copy assignment
 
 --Regular Semantics--
@@ -912,7 +912,7 @@ Broken copy assignment
 
 =======================================
 
-Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 126
+Tests/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 126
 Broken move assignment
 
 --Regular Semantics--
