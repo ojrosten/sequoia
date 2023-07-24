@@ -45,6 +45,7 @@ target_sources(TestFrameworkDiagnostics PRIVATE
                ${TestDir}/TestFramework/RegularAllocationTestFalseNegativeDiagnostics.cpp
                ${TestDir}/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp
                ${TestDir}/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp
+               ${TestDir}/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenValueSemantics.cpp
                ${TestDir}/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp
                ${TestDir}/TestFramework/RegularStateTransitionDiagnostics.cpp
                ${TestDir}/TestFramework/RegularTestDiagnostics.cpp

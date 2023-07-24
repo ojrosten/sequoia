@@ -120,6 +120,7 @@
 #include "TestFramework/RegularAllocationTestFalseNegativeDiagnostics.hpp"
 #include "TestFramework/RegularAllocationTestFalsePositiveDiagnostics.hpp"
 #include "TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.hpp"
+#include "TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenValueSemantics.hpp"
 #include "TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.hpp"
 #include "TestFramework/RegularStateTransitionDiagnostics.hpp"
 #include "TestFramework/RegularTestDiagnostics.hpp"
