@@ -1,0 +1,2112 @@
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 46
+Broken check invariant
+
+--Regular Semantics--
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
+
+  Precondition - for checking semantics, x and y are assumed to be different
+  [bool]
+  check failed
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 48
+Incorrect init allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = false,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for initialization (x)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = false,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for initialization (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = false,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for copy construction (x)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = false,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for copy construction (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = false,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected following mutation after assignment
+  [int]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 62
+Incorrect copy x allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = false,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for copy construction (x)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 64
+Incorrect copy y allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = false,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for copy construction (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 66
+Incorrect mutation allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = false,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected following mutation after assignment
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 81
+Incorrect copy assign y to x allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = false,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for copy assignment (x)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = false,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for move assignment (x)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 92
+Incorrect copy x allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 0> >]
+
+  [shared_counting_allocator<
+  		std::shared_ptr<int>,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = false,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for copy construction (x)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 94
+Incorrect copy y allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 0> >]
+
+  [shared_counting_allocator<
+  		std::shared_ptr<int>,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = false,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for copy construction (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 96
+Incorrect mutation allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 0> >]
+
+  [shared_counting_allocator<
+  		std::shared_ptr<int>,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = false,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected following mutation after assignment
+  [int]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 111
+Incorrect copy assign y to x allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 0> >]
+
+  [shared_counting_allocator<
+  		std::shared_ptr<int>,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = false,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for copy assignment (x)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+  [shared_counting_allocator<
+  		std::shared_ptr<int>,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = false,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for move assignment (x)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 46
+Broken check invariant
+
+--Regular Semantics--
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
+
+  Precondition - for checking semantics, x and y are assumed to be different
+  [bool]
+  check failed
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 48
+Incorrect init allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = false,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for initialization (x)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = false,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for initialization (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = false,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for copy construction (x)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = false,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for copy construction (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = false,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected following mutation after assignment
+  [int]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 62
+Incorrect copy x allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = false,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for copy construction (x)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 64
+Incorrect copy y allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = false,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for copy construction (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 66
+Incorrect mutation allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = false,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected following mutation after assignment
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = false,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected following mutation after swap (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 81
+Incorrect copy assign y to x allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = false,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for copy assignment (x)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = false,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for move assignment (x)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 92
+Incorrect copy x allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 1> >]
+
+  [shared_counting_allocator<
+  		std::shared_ptr<int>,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = false,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for copy construction (x)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 94
+Incorrect copy y allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 1> >]
+
+  [shared_counting_allocator<
+  		std::shared_ptr<int>,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = false,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for copy construction (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 96
+Incorrect mutation allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 1> >]
+
+  [shared_counting_allocator<
+  		std::shared_ptr<int>,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = false,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected following mutation after assignment
+  [int]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
+
+  [shared_counting_allocator<
+  		std::shared_ptr<int>,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = false,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected following mutation after swap (y)
+  [int]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 111
+Incorrect copy assign y to x allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 1> >]
+
+  [shared_counting_allocator<
+  		std::shared_ptr<int>,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = false,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for copy assignment (x)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+  [shared_counting_allocator<
+  		std::shared_ptr<int>,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = false,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for move assignment (x)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 46
+Broken check invariant
+
+--Regular Semantics--
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
+
+  Precondition - for checking semantics, x and y are assumed to be different
+  [bool]
+  check failed
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 48
+Incorrect init allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = true,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for initialization (x)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = true,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for initialization (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = true,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for copy construction (x)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = true,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for copy construction (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 62
+Incorrect copy x allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = true,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for copy construction (x)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 64
+Incorrect copy y allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = true,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for copy construction (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 66
+Incorrect mutation allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = true,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected following mutation after assignment
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 81
+Incorrect copy assign y to x allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = true,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for copy assignment (x)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 92
+Incorrect copy x allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 0> >]
+
+  [shared_counting_allocator<
+  		std::shared_ptr<int>,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = true,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for copy construction (x)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 94
+Incorrect copy y allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 0> >]
+
+  [shared_counting_allocator<
+  		std::shared_ptr<int>,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = true,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for copy construction (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 96
+Incorrect mutation allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 0> >]
+
+  [shared_counting_allocator<
+  		std::shared_ptr<int>,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = true,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected following mutation after assignment
+  [int]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 111
+Incorrect copy assign y to x allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 0> >]
+
+  [shared_counting_allocator<
+  		std::shared_ptr<int>,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = true,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for copy assignment (x)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 46
+Broken check invariant
+
+--Regular Semantics--
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
+
+  Precondition - for checking semantics, x and y are assumed to be different
+  [bool]
+  check failed
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 48
+Incorrect init allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = true,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for initialization (x)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = true,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for initialization (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = true,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for copy construction (x)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = true,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for copy construction (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 62
+Incorrect copy x allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = true,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for copy construction (x)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 64
+Incorrect copy y allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = true,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for copy construction (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 66
+Incorrect mutation allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = true,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected following mutation after assignment
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = true,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected following mutation after swap (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 81
+Incorrect copy assign y to x allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = true,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for copy assignment (x)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 92
+Incorrect copy x allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 1> >]
+
+  [shared_counting_allocator<
+  		std::shared_ptr<int>,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = true,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for copy construction (x)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 94
+Incorrect copy y allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 1> >]
+
+  [shared_counting_allocator<
+  		std::shared_ptr<int>,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = true,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for copy construction (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 96
+Incorrect mutation allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 1> >]
+
+  [shared_counting_allocator<
+  		std::shared_ptr<int>,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = true,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected following mutation after assignment
+  [int]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
+
+  [shared_counting_allocator<
+  		std::shared_ptr<int>,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = true,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected following mutation after swap (y)
+  [int]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 111
+Incorrect copy assign y to x allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 1> >]
+
+  [shared_counting_allocator<
+  		std::shared_ptr<int>,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = true,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for copy assignment (x)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 46
+Broken check invariant
+
+--Regular Semantics--
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+
+  Precondition - for checking semantics, x and y are assumed to be different
+  [bool]
+  check failed
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 48
+Incorrect init allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = false,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for initialization (x)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = false,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for initialization (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = false,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for copy construction (x)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = false,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for copy construction (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = false,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected following mutation after assignment
+  [int]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 62
+Incorrect copy x allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = false,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for copy construction (x)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 64
+Incorrect copy y allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = false,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for copy construction (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 66
+Incorrect mutation allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = false,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected following mutation after assignment
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 81
+Incorrect copy assign y to x allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = false,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for propagating copy assignment (x)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = false,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for propagating copy assignment (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 92
+Incorrect copy x allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 0> >]
+
+  [shared_counting_allocator<
+  		std::shared_ptr<int>,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = false,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for copy construction (x)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 94
+Incorrect copy y allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 0> >]
+
+  [shared_counting_allocator<
+  		std::shared_ptr<int>,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = false,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for copy construction (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 96
+Incorrect mutation allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 0> >]
+
+  [shared_counting_allocator<
+  		std::shared_ptr<int>,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = false,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected following mutation after assignment
+  [int]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 111
+Incorrect copy assign y to x allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 0> >]
+
+  [shared_counting_allocator<
+  		std::shared_ptr<int>,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = false,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for propagating copy assignment (x)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+  [shared_counting_allocator<
+  		std::shared_ptr<int>,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = false,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for propagating copy assignment (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 46
+Broken check invariant
+
+--Regular Semantics--
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+
+  Precondition - for checking semantics, x and y are assumed to be different
+  [bool]
+  check failed
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 48
+Incorrect init allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = false,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for initialization (x)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = false,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for initialization (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = false,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for copy construction (x)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = false,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for copy construction (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = false,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected following mutation after assignment
+  [int]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 62
+Incorrect copy x allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = false,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for copy construction (x)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 64
+Incorrect copy y allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = false,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for copy construction (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 66
+Incorrect mutation allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = false,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected following mutation after assignment
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = false,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected following mutation after swap (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 81
+Incorrect copy assign y to x allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = false,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for propagating copy assignment (x)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = false,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for propagating copy assignment (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 92
+Incorrect copy x allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 1> >]
+
+  [shared_counting_allocator<
+  		std::shared_ptr<int>,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = false,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for copy construction (x)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 94
+Incorrect copy y allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 1> >]
+
+  [shared_counting_allocator<
+  		std::shared_ptr<int>,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = false,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for copy construction (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 96
+Incorrect mutation allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 1> >]
+
+  [shared_counting_allocator<
+  		std::shared_ptr<int>,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = false,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected following mutation after assignment
+  [int]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
+
+  [shared_counting_allocator<
+  		std::shared_ptr<int>,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = false,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected following mutation after swap (y)
+  [int]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 111
+Incorrect copy assign y to x allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 1> >]
+
+  [shared_counting_allocator<
+  		std::shared_ptr<int>,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = false,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for propagating copy assignment (x)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+  [shared_counting_allocator<
+  		std::shared_ptr<int>,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = false,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for propagating copy assignment (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 46
+Broken check invariant
+
+--Regular Semantics--
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+
+  Precondition - for checking semantics, x and y are assumed to be different
+  [bool]
+  check failed
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 48
+Incorrect init allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = true,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for initialization (x)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = true,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for initialization (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = true,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for copy construction (x)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = true,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for copy construction (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 62
+Incorrect copy x allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = true,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for copy construction (x)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 64
+Incorrect copy y allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = true,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for copy construction (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 66
+Incorrect mutation allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = true,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected following mutation after assignment
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 81
+Incorrect copy assign y to x allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = true,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for propagating copy assignment (x)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = true,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for propagating copy assignment (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 92
+Incorrect copy x allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 0> >]
+
+  [shared_counting_allocator<
+  		std::shared_ptr<int>,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = true,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for copy construction (x)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 94
+Incorrect copy y allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 0> >]
+
+  [shared_counting_allocator<
+  		std::shared_ptr<int>,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = true,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for copy construction (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 96
+Incorrect mutation allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 0> >]
+
+  [shared_counting_allocator<
+  		std::shared_ptr<int>,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = true,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected following mutation after assignment
+  [int]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 111
+Incorrect copy assign y to x allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 0> >]
+
+  [shared_counting_allocator<
+  		std::shared_ptr<int>,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = true,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for propagating copy assignment (x)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+  [shared_counting_allocator<
+  		std::shared_ptr<int>,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = true,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for propagating copy assignment (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 46
+Broken check invariant
+
+--Regular Semantics--
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+
+  Precondition - for checking semantics, x and y are assumed to be different
+  [bool]
+  check failed
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 48
+Incorrect init allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = true,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for initialization (x)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = true,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for initialization (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = true,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for copy construction (x)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = true,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for copy construction (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 62
+Incorrect copy x allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = true,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for copy construction (x)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 64
+Incorrect copy y allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = true,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for copy construction (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 66
+Incorrect mutation allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = true,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected following mutation after assignment
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = true,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected following mutation after swap (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 81
+Incorrect copy assign y to x allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = true,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for propagating copy assignment (x)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = true,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for propagating copy assignment (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 92
+Incorrect copy x allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 1> >]
+
+  [shared_counting_allocator<
+  		std::shared_ptr<int>,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = true,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for copy construction (x)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 94
+Incorrect copy y allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 1> >]
+
+  [shared_counting_allocator<
+  		std::shared_ptr<int>,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = true,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for copy construction (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 96
+Incorrect mutation allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 1> >]
+
+  [shared_counting_allocator<
+  		std::shared_ptr<int>,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = true,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected following mutation after assignment
+  [int]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
+
+  [shared_counting_allocator<
+  		std::shared_ptr<int>,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = true,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected following mutation after swap (y)
+  [int]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp, Line 111
+Incorrect copy assign y to x allocs
+
+--Regular Semantics--
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 1> >]
+
+  [shared_counting_allocator<
+  		std::shared_ptr<int>,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = true,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for propagating copy assignment (x)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+  [shared_counting_allocator<
+  		std::shared_ptr<int>,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = true,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for propagating copy assignment (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+

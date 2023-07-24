@@ -1,0 +1,1380 @@
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 49
+Broken equality
+
+--Regular Semantics--
+[sequoia::testing::broken_equality<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
+
+  operator== is inconsistent (x)
+  [bool]
+  check failed
+
+  operator== is inconsistent (y)
+  [bool]
+  check failed
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 60
+Broken inequality
+
+--Regular Semantics--
+[sequoia::testing::broken_inequality<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
+
+  operator!= is inconsistent (x)
+  [bool]
+  check failed
+
+  operator!= is inconsistent (y)
+  [bool]
+  check failed
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 71
+Broken copy
+
+--Regular Semantics--
+[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
+
+  Inconsistent copy constructor (x)
+  [sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
+  operator== returned false
+  Obtained : 
+  Predicted: 1 
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 82
+Broken para-copy
+
+--Regular Semantics--
+[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
+
+  Inconsistent para-copy construction
+  [sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
+  operator== returned false
+  Obtained : 
+  Predicted: 5 6 
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 93
+Broken move
+
+--Regular Semantics--
+[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
+
+  Inconsistent move construction
+  [sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
+  operator== returned false
+  Obtained : 
+  Predicted: 5 6 
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 104
+Broken para-move
+
+--Regular Semantics--
+[sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
+
+  Inconsistent para-move construction
+  [sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
+  operator== returned false
+  Obtained : 
+  Predicted: 5 6 
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 115
+Broken copy assignment
+
+--Regular Semantics--
+[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
+
+  Inconsistent copy assignment (from y)
+  [sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
+  operator== returned false
+  Obtained : 1 
+  Predicted: 5 6 
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 126
+Broken move assignment
+
+--Regular Semantics--
+[sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
+
+  Inconsistent move assignment (from y)
+  [sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
+  operator== returned false
+  Obtained : 1 
+  Predicted: 5 6 
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 143
+Broken copy value semantics
+
+--Regular Semantics--
+[sequoia::testing::broken_copy_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 0> >]
+
+  Mutation is not doing anything following move assignment
+  [bool]
+  check failed
+
+  Either mutation is not doing anything following copy construction or value semantics are broken, with mutation of an object also changing the object from which it was copied
+  [bool]
+  check failed
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 161
+Broken copy assignment value semantics
+
+--Regular Semantics--
+[sequoia::testing::broken_copy_assignment_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 0> >]
+
+  Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
+  [bool]
+  check failed
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 49
+Broken equality
+
+--Regular Semantics--
+[sequoia::testing::broken_equality<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
+
+  operator== is inconsistent (x)
+  [bool]
+  check failed
+
+  operator== is inconsistent (y)
+  [bool]
+  check failed
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 60
+Broken inequality
+
+--Regular Semantics--
+[sequoia::testing::broken_inequality<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
+
+  operator!= is inconsistent (x)
+  [bool]
+  check failed
+
+  operator!= is inconsistent (y)
+  [bool]
+  check failed
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 71
+Broken copy
+
+--Regular Semantics--
+[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
+
+  Inconsistent copy constructor (x)
+  [sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
+  operator== returned false
+  Obtained : 
+  Predicted: 1 
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 82
+Broken para-copy
+
+--Regular Semantics--
+[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
+
+  Inconsistent para-copy construction
+  [sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
+  operator== returned false
+  Obtained : 
+  Predicted: 5 6 
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 93
+Broken move
+
+--Regular Semantics--
+[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
+
+  Inconsistent move construction
+  [sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
+  operator== returned false
+  Obtained : 
+  Predicted: 5 6 
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 104
+Broken para-move
+
+--Regular Semantics--
+[sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
+
+  Inconsistent para-move construction
+  [sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
+  operator== returned false
+  Obtained : 
+  Predicted: 5 6 
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 115
+Broken copy assignment
+
+--Regular Semantics--
+[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
+
+  Inconsistent copy assignment (from y)
+  [sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
+  operator== returned false
+  Obtained : 1 
+  Predicted: 5 6 
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 126
+Broken move assignment
+
+--Regular Semantics--
+[sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
+
+  Inconsistent move assignment (from y)
+  [sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
+  operator== returned false
+  Obtained : 1 
+  Predicted: 5 6 
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 143
+Broken copy value semantics
+
+--Regular Semantics--
+[sequoia::testing::broken_copy_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 1> >]
+
+  Mutation is not doing anything following move assignment
+  [bool]
+  check failed
+
+  Mutation is not doing anything following copy then swap
+  [bool]
+  check failed
+
+  Either mutation is not doing anything following copy construction or value semantics are broken, with mutation of an object also changing the object from which it was copied
+  [bool]
+  check failed
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 161
+Broken copy assignment value semantics
+
+--Regular Semantics--
+[sequoia::testing::broken_copy_assignment_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 1> >]
+
+  Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
+  [bool]
+  check failed
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 49
+Broken equality
+
+--Regular Semantics--
+[sequoia::testing::broken_equality<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
+
+  operator== is inconsistent (x)
+  [bool]
+  check failed
+
+  operator== is inconsistent (y)
+  [bool]
+  check failed
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 60
+Broken inequality
+
+--Regular Semantics--
+[sequoia::testing::broken_inequality<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
+
+  operator!= is inconsistent (x)
+  [bool]
+  check failed
+
+  operator!= is inconsistent (y)
+  [bool]
+  check failed
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 71
+Broken copy
+
+--Regular Semantics--
+[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
+
+  Inconsistent copy constructor (x)
+  [sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
+  operator== returned false
+  Obtained : 
+  Predicted: 1 
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 82
+Broken para-copy
+
+--Regular Semantics--
+[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
+
+  Inconsistent para-copy construction
+  [sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
+  operator== returned false
+  Obtained : 
+  Predicted: 5 6 
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 93
+Broken move
+
+--Regular Semantics--
+[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
+
+  Inconsistent move construction
+  [sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
+  operator== returned false
+  Obtained : 
+  Predicted: 5 6 
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 104
+Broken para-move
+
+--Regular Semantics--
+[sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
+
+  Inconsistent para-move construction
+  [sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
+  operator== returned false
+  Obtained : 
+  Predicted: 5 6 
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 115
+Broken copy assignment
+
+--Regular Semantics--
+[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
+
+  Inconsistent copy assignment (from y)
+  [sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
+  operator== returned false
+  Obtained : 1 
+  Predicted: 5 6 
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 126
+Broken move assignment
+
+--Regular Semantics--
+[sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
+
+  Inconsistent move assignment (from y)
+  [sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
+  operator== returned false
+  Obtained : 1 
+  Predicted: 5 6 
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 143
+Broken copy value semantics
+
+--Regular Semantics--
+[sequoia::testing::broken_copy_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 0> >]
+
+  Mutation is not doing anything following move assignment
+  [bool]
+  check failed
+
+  Either mutation is not doing anything following copy construction or value semantics are broken, with mutation of an object also changing the object from which it was copied
+  [bool]
+  check failed
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 161
+Broken copy assignment value semantics
+
+--Regular Semantics--
+[sequoia::testing::broken_copy_assignment_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 0> >]
+
+  Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
+  [bool]
+  check failed
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 172
+Broken copy assignment propagation
+
+--Regular Semantics--
+[sequoia::testing::broken_copy_assignment_propagation<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = true,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for copy assignment (x)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = true,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for copy assignment (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 173
+Broken copy assignment propagation; 'negative' allocation counts
+
+--Regular Semantics--
+[sequoia::testing::broken_copy_assignment_propagation<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = true,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for copy assignment (x)
+  [int]
+  operator== returned false
+  Obtained : -2
+  Predicted: 0
+  Advice: A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
+  Alternatively, for scoped allocator adaptors, it may be that the predicted number of (inner) containers is incorrect.
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 49
+Broken equality
+
+--Regular Semantics--
+[sequoia::testing::broken_equality<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
+
+  operator== is inconsistent (x)
+  [bool]
+  check failed
+
+  operator== is inconsistent (y)
+  [bool]
+  check failed
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 60
+Broken inequality
+
+--Regular Semantics--
+[sequoia::testing::broken_inequality<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
+
+  operator!= is inconsistent (x)
+  [bool]
+  check failed
+
+  operator!= is inconsistent (y)
+  [bool]
+  check failed
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 71
+Broken copy
+
+--Regular Semantics--
+[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
+
+  Inconsistent copy constructor (x)
+  [sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
+  operator== returned false
+  Obtained : 
+  Predicted: 1 
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 82
+Broken para-copy
+
+--Regular Semantics--
+[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
+
+  Inconsistent para-copy construction
+  [sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
+  operator== returned false
+  Obtained : 
+  Predicted: 5 6 
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 93
+Broken move
+
+--Regular Semantics--
+[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
+
+  Inconsistent move construction
+  [sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
+  operator== returned false
+  Obtained : 
+  Predicted: 5 6 
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 104
+Broken para-move
+
+--Regular Semantics--
+[sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
+
+  Inconsistent para-move construction
+  [sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
+  operator== returned false
+  Obtained : 
+  Predicted: 5 6 
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 115
+Broken copy assignment
+
+--Regular Semantics--
+[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
+
+  Inconsistent copy assignment (from y)
+  [sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
+  operator== returned false
+  Obtained : 1 
+  Predicted: 5 6 
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 126
+Broken move assignment
+
+--Regular Semantics--
+[sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
+
+  Inconsistent move assignment (from y)
+  [sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
+  operator== returned false
+  Obtained : 1 
+  Predicted: 5 6 
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 143
+Broken copy value semantics
+
+--Regular Semantics--
+[sequoia::testing::broken_copy_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 1> >]
+
+  Mutation is not doing anything following move assignment
+  [bool]
+  check failed
+
+  Mutation is not doing anything following copy then swap
+  [bool]
+  check failed
+
+  Either mutation is not doing anything following copy construction or value semantics are broken, with mutation of an object also changing the object from which it was copied
+  [bool]
+  check failed
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 161
+Broken copy assignment value semantics
+
+--Regular Semantics--
+[sequoia::testing::broken_copy_assignment_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 1> >]
+
+  Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
+  [bool]
+  check failed
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 172
+Broken copy assignment propagation
+
+--Regular Semantics--
+[sequoia::testing::broken_copy_assignment_propagation<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = true,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for copy assignment (x)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = true,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for copy assignment (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 173
+Broken copy assignment propagation; 'negative' allocation counts
+
+--Regular Semantics--
+[sequoia::testing::broken_copy_assignment_propagation<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = true,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for copy assignment (x)
+  [int]
+  operator== returned false
+  Obtained : -2
+  Predicted: 0
+  Advice: A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
+  Alternatively, for scoped allocator adaptors, it may be that the predicted number of (inner) containers is incorrect.
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 49
+Broken equality
+
+--Regular Semantics--
+[sequoia::testing::broken_equality<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+
+  operator== is inconsistent (x)
+  [bool]
+  check failed
+
+  operator== is inconsistent (y)
+  [bool]
+  check failed
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 60
+Broken inequality
+
+--Regular Semantics--
+[sequoia::testing::broken_inequality<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+
+  operator!= is inconsistent (x)
+  [bool]
+  check failed
+
+  operator!= is inconsistent (y)
+  [bool]
+  check failed
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 71
+Broken copy
+
+--Regular Semantics--
+[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+
+  Inconsistent copy constructor (x)
+  [sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+  operator== returned false
+  Obtained : 
+  Predicted: 1 
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 82
+Broken para-copy
+
+--Regular Semantics--
+[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+
+  Inconsistent para-copy construction
+  [sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+  operator== returned false
+  Obtained : 
+  Predicted: 5 6 
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 93
+Broken move
+
+--Regular Semantics--
+[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+
+  Inconsistent move construction
+  [sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+  operator== returned false
+  Obtained : 
+  Predicted: 5 6 
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 104
+Broken para-move
+
+--Regular Semantics--
+[sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+
+  Inconsistent para-move construction
+  [sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+  operator== returned false
+  Obtained : 
+  Predicted: 5 6 
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 115
+Broken copy assignment
+
+--Regular Semantics--
+[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+
+  Inconsistent copy assignment (from y)
+  [sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+  operator== returned false
+  Obtained : 1 
+  Predicted: 5 6 
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 126
+Broken move assignment
+
+--Regular Semantics--
+[sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+
+  Inconsistent move assignment (from y)
+  [sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+  operator== returned false
+  Obtained : 1 
+  Predicted: 5 6 
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 143
+Broken copy value semantics
+
+--Regular Semantics--
+[sequoia::testing::broken_copy_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 0> >]
+
+  Mutation is not doing anything following move assignment
+  [bool]
+  check failed
+
+  Either mutation is not doing anything following copy construction or value semantics are broken, with mutation of an object also changing the object from which it was copied
+  [bool]
+  check failed
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 161
+Broken copy assignment value semantics
+
+--Regular Semantics--
+[sequoia::testing::broken_copy_assignment_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 0> >]
+
+  Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
+  [bool]
+  check failed
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 172
+Broken copy assignment propagation
+
+--Regular Semantics--
+[sequoia::testing::broken_copy_assignment_propagation<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = false,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for propagating copy assignment (x)
+  [int]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 173
+Broken copy assignment propagation; 'negative' allocation counts
+
+--Regular Semantics--
+[sequoia::testing::broken_copy_assignment_propagation<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = false,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for propagating copy assignment (x)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 0
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = false,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected following mutation after assignment
+  [int]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 49
+Broken equality
+
+--Regular Semantics--
+[sequoia::testing::broken_equality<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+
+  operator== is inconsistent (x)
+  [bool]
+  check failed
+
+  operator== is inconsistent (y)
+  [bool]
+  check failed
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 60
+Broken inequality
+
+--Regular Semantics--
+[sequoia::testing::broken_inequality<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+
+  operator!= is inconsistent (x)
+  [bool]
+  check failed
+
+  operator!= is inconsistent (y)
+  [bool]
+  check failed
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 71
+Broken copy
+
+--Regular Semantics--
+[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+
+  Inconsistent copy constructor (x)
+  [sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+  operator== returned false
+  Obtained : 
+  Predicted: 1 
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 82
+Broken para-copy
+
+--Regular Semantics--
+[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+
+  Inconsistent para-copy construction
+  [sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+  operator== returned false
+  Obtained : 
+  Predicted: 5 6 
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 93
+Broken move
+
+--Regular Semantics--
+[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+
+  Inconsistent move construction
+  [sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+  operator== returned false
+  Obtained : 
+  Predicted: 5 6 
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 104
+Broken para-move
+
+--Regular Semantics--
+[sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+
+  Inconsistent para-move construction
+  [sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+  operator== returned false
+  Obtained : 
+  Predicted: 5 6 
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 115
+Broken copy assignment
+
+--Regular Semantics--
+[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+
+  Inconsistent copy assignment (from y)
+  [sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+  operator== returned false
+  Obtained : 1 
+  Predicted: 5 6 
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 126
+Broken move assignment
+
+--Regular Semantics--
+[sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+
+  Inconsistent move assignment (from y)
+  [sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+  operator== returned false
+  Obtained : 1 
+  Predicted: 5 6 
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 143
+Broken copy value semantics
+
+--Regular Semantics--
+[sequoia::testing::broken_copy_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 1> >]
+
+  Mutation is not doing anything following move assignment
+  [bool]
+  check failed
+
+  Mutation is not doing anything following copy then swap
+  [bool]
+  check failed
+
+  Either mutation is not doing anything following copy construction or value semantics are broken, with mutation of an object also changing the object from which it was copied
+  [bool]
+  check failed
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 161
+Broken copy assignment value semantics
+
+--Regular Semantics--
+[sequoia::testing::broken_copy_assignment_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 1> >]
+
+  Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
+  [bool]
+  check failed
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 172
+Broken copy assignment propagation
+
+--Regular Semantics--
+[sequoia::testing::broken_copy_assignment_propagation<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = false,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for propagating copy assignment (x)
+  [int]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 173
+Broken copy assignment propagation; 'negative' allocation counts
+
+--Regular Semantics--
+[sequoia::testing::broken_copy_assignment_propagation<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = false,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for propagating copy assignment (x)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 0
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = false,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected following mutation after assignment
+  [int]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 49
+Broken equality
+
+--Regular Semantics--
+[sequoia::testing::broken_equality<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+
+  operator== is inconsistent (x)
+  [bool]
+  check failed
+
+  operator== is inconsistent (y)
+  [bool]
+  check failed
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 60
+Broken inequality
+
+--Regular Semantics--
+[sequoia::testing::broken_inequality<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+
+  operator!= is inconsistent (x)
+  [bool]
+  check failed
+
+  operator!= is inconsistent (y)
+  [bool]
+  check failed
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 71
+Broken copy
+
+--Regular Semantics--
+[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+
+  Inconsistent copy constructor (x)
+  [sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+  operator== returned false
+  Obtained : 
+  Predicted: 1 
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 82
+Broken para-copy
+
+--Regular Semantics--
+[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+
+  Inconsistent para-copy construction
+  [sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+  operator== returned false
+  Obtained : 
+  Predicted: 5 6 
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 93
+Broken move
+
+--Regular Semantics--
+[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+
+  Inconsistent move construction
+  [sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+  operator== returned false
+  Obtained : 
+  Predicted: 5 6 
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 104
+Broken para-move
+
+--Regular Semantics--
+[sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+
+  Inconsistent para-move construction
+  [sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+  operator== returned false
+  Obtained : 
+  Predicted: 5 6 
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 115
+Broken copy assignment
+
+--Regular Semantics--
+[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+
+  Inconsistent copy assignment (from y)
+  [sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+  operator== returned false
+  Obtained : 1 
+  Predicted: 5 6 
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 126
+Broken move assignment
+
+--Regular Semantics--
+[sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+
+  Inconsistent move assignment (from y)
+  [sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+  operator== returned false
+  Obtained : 1 
+  Predicted: 5 6 
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 143
+Broken copy value semantics
+
+--Regular Semantics--
+[sequoia::testing::broken_copy_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 0> >]
+
+  Mutation is not doing anything following move assignment
+  [bool]
+  check failed
+
+  Either mutation is not doing anything following copy construction or value semantics are broken, with mutation of an object also changing the object from which it was copied
+  [bool]
+  check failed
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 161
+Broken copy assignment value semantics
+
+--Regular Semantics--
+[sequoia::testing::broken_copy_assignment_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 0> >]
+
+  Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
+  [bool]
+  check failed
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 49
+Broken equality
+
+--Regular Semantics--
+[sequoia::testing::broken_equality<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+
+  operator== is inconsistent (x)
+  [bool]
+  check failed
+
+  operator== is inconsistent (y)
+  [bool]
+  check failed
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 60
+Broken inequality
+
+--Regular Semantics--
+[sequoia::testing::broken_inequality<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+
+  operator!= is inconsistent (x)
+  [bool]
+  check failed
+
+  operator!= is inconsistent (y)
+  [bool]
+  check failed
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 71
+Broken copy
+
+--Regular Semantics--
+[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+
+  Inconsistent copy constructor (x)
+  [sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+  operator== returned false
+  Obtained : 
+  Predicted: 1 
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 82
+Broken para-copy
+
+--Regular Semantics--
+[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+
+  Inconsistent para-copy construction
+  [sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+  operator== returned false
+  Obtained : 
+  Predicted: 5 6 
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 93
+Broken move
+
+--Regular Semantics--
+[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+
+  Inconsistent move construction
+  [sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+  operator== returned false
+  Obtained : 
+  Predicted: 5 6 
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 104
+Broken para-move
+
+--Regular Semantics--
+[sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+
+  Inconsistent para-move construction
+  [sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+  operator== returned false
+  Obtained : 
+  Predicted: 5 6 
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 115
+Broken copy assignment
+
+--Regular Semantics--
+[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+
+  Inconsistent copy assignment (from y)
+  [sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+  operator== returned false
+  Obtained : 1 
+  Predicted: 5 6 
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 126
+Broken move assignment
+
+--Regular Semantics--
+[sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+
+  Inconsistent move assignment (from y)
+  [sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+  operator== returned false
+  Obtained : 1 
+  Predicted: 5 6 
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 143
+Broken copy value semantics
+
+--Regular Semantics--
+[sequoia::testing::broken_copy_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 1> >]
+
+  Mutation is not doing anything following move assignment
+  [bool]
+  check failed
+
+  Mutation is not doing anything following copy then swap
+  [bool]
+  check failed
+
+  Either mutation is not doing anything following copy construction or value semantics are broken, with mutation of an object also changing the object from which it was copied
+  [bool]
+  check failed
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp, Line 161
+Broken copy assignment value semantics
+
+--Regular Semantics--
+[sequoia::testing::broken_copy_assignment_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 1> >]
+
+  Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
+  [bool]
+  check failed
+
+=======================================
+

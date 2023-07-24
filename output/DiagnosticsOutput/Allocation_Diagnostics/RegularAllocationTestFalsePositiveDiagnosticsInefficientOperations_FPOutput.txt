@@ -1,0 +1,1472 @@
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 49
+Inefficient equality
+
+--Regular Semantics--
+[sequoia::testing::inefficient_equality<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = false,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for operator== (x)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 0
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = false,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for operator== (y)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 60
+Inefficient inequality
+
+--Regular Semantics--
+[sequoia::testing::inefficient_inequality<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = false,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for operator!= (x)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 0
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = false,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for operator!= (y)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 78
+Inefficient copy
+
+--Regular Semantics--
+[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = false,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for copy construction (y)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 3
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 79
+Inefficient copy
+
+--Regular Semantics--
+[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = false,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for copy construction (x)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 3
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 90
+Inefficient move
+
+--Regular Semantics--
+[sequoia::testing::inefficient_move<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = false,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for move construction (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 108
+Inefficient para-copy
+
+--Regular Semantics--
+[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = false,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for para-copy construction (y)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 3
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 126
+Inefficient para-move
+
+--Regular Semantics--
+[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = false,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for para-move construction (y)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 3
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 135
+Inefficient serialization
+
+--Regular Semantics--
+[sequoia::testing::inefficient_serialization<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = false,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for serialization (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 49
+Inefficient equality
+
+--Regular Semantics--
+[sequoia::testing::inefficient_equality<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = false,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for operator== (x)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 0
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = false,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for operator== (y)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 60
+Inefficient inequality
+
+--Regular Semantics--
+[sequoia::testing::inefficient_inequality<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = false,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for operator!= (x)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 0
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = false,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for operator!= (y)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 78
+Inefficient copy
+
+--Regular Semantics--
+[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = false,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for copy construction (y)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 3
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 79
+Inefficient copy
+
+--Regular Semantics--
+[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = false,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for copy construction (x)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 3
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 90
+Inefficient move
+
+--Regular Semantics--
+[sequoia::testing::inefficient_move<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = false,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for move construction (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 108
+Inefficient para-copy
+
+--Regular Semantics--
+[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = false,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for para-copy construction (y)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 3
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 126
+Inefficient para-move
+
+--Regular Semantics--
+[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = false,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for para-move construction (y)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 3
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 135
+Inefficient serialization
+
+--Regular Semantics--
+[sequoia::testing::inefficient_serialization<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = false,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for serialization (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 49
+Inefficient equality
+
+--Regular Semantics--
+[sequoia::testing::inefficient_equality<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = true,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for operator== (x)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 0
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = true,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for operator== (y)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 60
+Inefficient inequality
+
+--Regular Semantics--
+[sequoia::testing::inefficient_inequality<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = true,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for operator!= (x)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 0
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = true,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for operator!= (y)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 78
+Inefficient copy
+
+--Regular Semantics--
+[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = true,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for copy construction (y)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 3
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 79
+Inefficient copy
+
+--Regular Semantics--
+[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = true,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for copy construction (x)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 3
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 90
+Inefficient move
+
+--Regular Semantics--
+[sequoia::testing::inefficient_move<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = true,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for move construction (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 108
+Inefficient para-copy
+
+--Regular Semantics--
+[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = true,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for para-copy construction (y)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 3
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 126
+Inefficient para-move
+
+--Regular Semantics--
+[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = true,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for para-move construction (y)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 3
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 135
+Inefficient serialization
+
+--Regular Semantics--
+[sequoia::testing::inefficient_serialization<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = true,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for serialization (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 49
+Inefficient equality
+
+--Regular Semantics--
+[sequoia::testing::inefficient_equality<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = true,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for operator== (x)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 0
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = true,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for operator== (y)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 60
+Inefficient inequality
+
+--Regular Semantics--
+[sequoia::testing::inefficient_inequality<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = true,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for operator!= (x)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 0
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = true,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for operator!= (y)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 78
+Inefficient copy
+
+--Regular Semantics--
+[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = true,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for copy construction (y)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 3
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 79
+Inefficient copy
+
+--Regular Semantics--
+[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = true,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for copy construction (x)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 3
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 90
+Inefficient move
+
+--Regular Semantics--
+[sequoia::testing::inefficient_move<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = true,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for move construction (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 108
+Inefficient para-copy
+
+--Regular Semantics--
+[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = true,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for para-copy construction (y)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 3
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 126
+Inefficient para-move
+
+--Regular Semantics--
+[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = true,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for para-move construction (y)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 3
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 135
+Inefficient serialization
+
+--Regular Semantics--
+[sequoia::testing::inefficient_serialization<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = false,
+  		Propagate on move assignment = true,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for serialization (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 49
+Inefficient equality
+
+--Regular Semantics--
+[sequoia::testing::inefficient_equality<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = false,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for operator== (x)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 0
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = false,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for operator== (y)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 60
+Inefficient inequality
+
+--Regular Semantics--
+[sequoia::testing::inefficient_inequality<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = false,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for operator!= (x)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 0
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = false,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for operator!= (y)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 78
+Inefficient copy
+
+--Regular Semantics--
+[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = false,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for copy construction (y)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 3
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 79
+Inefficient copy
+
+--Regular Semantics--
+[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = false,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for copy construction (x)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 3
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 90
+Inefficient move
+
+--Regular Semantics--
+[sequoia::testing::inefficient_move<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = false,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for move construction (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 108
+Inefficient para-copy
+
+--Regular Semantics--
+[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = false,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for para-copy construction (y)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 3
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 126
+Inefficient para-move
+
+--Regular Semantics--
+[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = false,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for para-move construction (y)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 3
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 135
+Inefficient serialization
+
+--Regular Semantics--
+[sequoia::testing::inefficient_serialization<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = false,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for serialization (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 49
+Inefficient equality
+
+--Regular Semantics--
+[sequoia::testing::inefficient_equality<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = false,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for operator== (x)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 0
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = false,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for operator== (y)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 60
+Inefficient inequality
+
+--Regular Semantics--
+[sequoia::testing::inefficient_inequality<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = false,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for operator!= (x)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 0
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = false,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for operator!= (y)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 78
+Inefficient copy
+
+--Regular Semantics--
+[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = false,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for copy construction (y)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 3
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 79
+Inefficient copy
+
+--Regular Semantics--
+[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = false,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for copy construction (x)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 3
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 90
+Inefficient move
+
+--Regular Semantics--
+[sequoia::testing::inefficient_move<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = false,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for move construction (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 108
+Inefficient para-copy
+
+--Regular Semantics--
+[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = false,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for para-copy construction (y)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 3
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 126
+Inefficient para-move
+
+--Regular Semantics--
+[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = false,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for para-move construction (y)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 3
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 135
+Inefficient serialization
+
+--Regular Semantics--
+[sequoia::testing::inefficient_serialization<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = false,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for serialization (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 49
+Inefficient equality
+
+--Regular Semantics--
+[sequoia::testing::inefficient_equality<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = true,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for operator== (x)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 0
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = true,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for operator== (y)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 60
+Inefficient inequality
+
+--Regular Semantics--
+[sequoia::testing::inefficient_inequality<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = true,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for operator!= (x)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 0
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = true,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for operator!= (y)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 78
+Inefficient copy
+
+--Regular Semantics--
+[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = true,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for copy construction (y)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 3
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 79
+Inefficient copy
+
+--Regular Semantics--
+[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = true,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for copy construction (x)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 3
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 90
+Inefficient move
+
+--Regular Semantics--
+[sequoia::testing::inefficient_move<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = true,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for move construction (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 108
+Inefficient para-copy
+
+--Regular Semantics--
+[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = true,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for para-copy construction (y)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 3
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 126
+Inefficient para-move
+
+--Regular Semantics--
+[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = true,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for para-move construction (y)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 3
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 135
+Inefficient serialization
+
+--Regular Semantics--
+[sequoia::testing::inefficient_serialization<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = true,
+  		Propagate on swap = false
+   >]
+  Unexpected allocation detected for serialization (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 49
+Inefficient equality
+
+--Regular Semantics--
+[sequoia::testing::inefficient_equality<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = true,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for operator== (x)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 0
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = true,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for operator== (y)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 60
+Inefficient inequality
+
+--Regular Semantics--
+[sequoia::testing::inefficient_inequality<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = true,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for operator!= (x)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 0
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = true,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for operator!= (y)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 78
+Inefficient copy
+
+--Regular Semantics--
+[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = true,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for copy construction (y)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 3
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 79
+Inefficient copy
+
+--Regular Semantics--
+[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = true,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for copy construction (x)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 3
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 90
+Inefficient move
+
+--Regular Semantics--
+[sequoia::testing::inefficient_move<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = true,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for move construction (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 108
+Inefficient para-copy
+
+--Regular Semantics--
+[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = true,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for para-copy construction (y)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 3
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 126
+Inefficient para-move
+
+--Regular Semantics--
+[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = true,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for para-move construction (y)
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 3
+
+=======================================
+
+Tests/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp, Line 135
+Inefficient serialization
+
+--Regular Semantics--
+[sequoia::testing::inefficient_serialization<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+
+  [shared_counting_allocator<
+  		int,
+  		Propagate on copy assignment = true,
+  		Propagate on move assignment = true,
+  		Propagate on swap = true
+   >]
+  Unexpected allocation detected for serialization (y)
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+

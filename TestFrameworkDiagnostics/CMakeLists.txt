@@ -42,7 +42,10 @@ target_sources(TestFrameworkDiagnostics PRIVATE
                ${TestDir}/TestFramework/OutputFreeTest.cpp
                ${TestDir}/TestFramework/PathFreeDiagnostics.cpp
                ${TestDir}/TestFramework/PerformanceTestDiagnostics.cpp
-               ${TestDir}/TestFramework/RegularAllocationTestDiagnostics.cpp
+               ${TestDir}/TestFramework/RegularAllocationTestFalseNegativeDiagnostics.cpp
+               ${TestDir}/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp
+               ${TestDir}/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp
+               ${TestDir}/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp
                ${TestDir}/TestFramework/RegularStateTransitionDiagnostics.cpp
                ${TestDir}/TestFramework/RegularTestDiagnostics.cpp
                ${TestDir}/TestFramework/RelationalTestDiagnostics.cpp

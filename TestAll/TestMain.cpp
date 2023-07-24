@@ -83,6 +83,8 @@ int main(int argc, char** argv)
     runner.add_test_suite(
       "Allocation Diagnostics",
       allocation_false_positive_diagnostics{"Allocation False Positive Diagnostics"},
+      allocation_false_positive_diagnostics_broken_semantics{"Allocation False Positive Diagnostics: Broken Semantics"},
+      allocation_false_positive_diagnostics_inefficient_operations{"Allocation False Positive Diagnostics: Inefficient Operations"},
       move_only_allocation_false_positive_diagnostics{"Move-Only Alloction False Positive Diagnostics"},
       allocation_false_negative_diagnostics{"Allocation False Negative Diagnostics"},
       move_only_allocation_false_negative_diagnostics{"Move-Only Allocation False Negative Diagnostics"}
