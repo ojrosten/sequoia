@@ -1,5 +1,5 @@
 False Positive Failure:
-Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 58
+Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 58
 
 --Regular Semantics--
 [sequoia::testing::perfectly_normal_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 0, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 0, 0> >, 0, 0, 0>, sequoia::testing::shared_counting_allocator<char, 0, 0, 0> > >]
@@ -7,7 +7,7 @@ Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 58
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 71
+Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 71
 
 --Regular Semantics--
 [sequoia::testing::perfectly_normal_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 0, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 0, 0> >, 0, 0, 0>, sequoia::testing::shared_counting_allocator<char, 0, 0, 0> > >]
@@ -15,7 +15,7 @@ Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 71
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 84
+Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 84
 check_semantics return value (x)
 
 [sequoia::testing::perfectly_normal_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 0, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 0, 0> >, 0, 0, 0>, sequoia::testing::shared_counting_allocator<char, 0, 0, 0> > >]
@@ -23,7 +23,7 @@ check_semantics return value (x)
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 85
+Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 85
 check_semantics return value (y)
 
 [sequoia::testing::perfectly_normal_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 0, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 0, 0> >, 0, 0, 0>, sequoia::testing::shared_counting_allocator<char, 0, 0, 0> > >]
@@ -31,7 +31,7 @@ check_semantics return value (y)
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 110
+Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 110
 
 --Regular Semantics--
 [sequoia::testing::perfectly_normal_beast<std::tuple<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >, sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> > >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::tuple<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >, sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> > >, 0, 0, 0>, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> > >]
@@ -39,7 +39,7 @@ Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 110
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 58
+Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 58
 
 --Regular Semantics--
 [sequoia::testing::perfectly_normal_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 0, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 0, 1> >, 0, 0, 1>, sequoia::testing::shared_counting_allocator<char, 0, 0, 1> > >]
@@ -47,7 +47,7 @@ Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 58
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 71
+Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 71
 
 --Regular Semantics--
 [sequoia::testing::perfectly_normal_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 0, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 0, 1> >, 0, 0, 1>, sequoia::testing::shared_counting_allocator<char, 0, 0, 1> > >]
@@ -55,7 +55,7 @@ Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 71
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 84
+Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 84
 check_semantics return value (x)
 
 [sequoia::testing::perfectly_normal_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 0, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 0, 1> >, 0, 0, 1>, sequoia::testing::shared_counting_allocator<char, 0, 0, 1> > >]
@@ -63,7 +63,7 @@ check_semantics return value (x)
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 85
+Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 85
 check_semantics return value (y)
 
 [sequoia::testing::perfectly_normal_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 0, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 0, 1> >, 0, 0, 1>, sequoia::testing::shared_counting_allocator<char, 0, 0, 1> > >]
@@ -71,7 +71,7 @@ check_semantics return value (y)
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 110
+Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 110
 
 --Regular Semantics--
 [sequoia::testing::perfectly_normal_beast<std::tuple<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >, sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> > >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::tuple<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >, sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> > >, 0, 0, 1>, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> > >]
@@ -79,7 +79,7 @@ Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 110
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 58
+Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 58
 
 --Regular Semantics--
 [sequoia::testing::perfectly_normal_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 1, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 1, 0> >, 0, 1, 0>, sequoia::testing::shared_counting_allocator<char, 0, 1, 0> > >]
@@ -87,7 +87,7 @@ Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 58
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 71
+Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 71
 
 --Regular Semantics--
 [sequoia::testing::perfectly_normal_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 1, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 1, 0> >, 0, 1, 0>, sequoia::testing::shared_counting_allocator<char, 0, 1, 0> > >]
@@ -95,7 +95,7 @@ Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 71
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 84
+Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 84
 check_semantics return value (x)
 
 [sequoia::testing::perfectly_normal_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 1, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 1, 0> >, 0, 1, 0>, sequoia::testing::shared_counting_allocator<char, 0, 1, 0> > >]
@@ -103,7 +103,7 @@ check_semantics return value (x)
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 85
+Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 85
 check_semantics return value (y)
 
 [sequoia::testing::perfectly_normal_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 1, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 1, 0> >, 0, 1, 0>, sequoia::testing::shared_counting_allocator<char, 0, 1, 0> > >]
@@ -111,7 +111,7 @@ check_semantics return value (y)
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 110
+Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 110
 
 --Regular Semantics--
 [sequoia::testing::perfectly_normal_beast<std::tuple<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >, sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> > >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::tuple<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >, sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> > >, 0, 1, 0>, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> > >]
@@ -119,7 +119,7 @@ Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 110
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 58
+Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 58
 
 --Regular Semantics--
 [sequoia::testing::perfectly_normal_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 1, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 1, 1> >, 0, 1, 1>, sequoia::testing::shared_counting_allocator<char, 0, 1, 1> > >]
@@ -127,7 +127,7 @@ Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 58
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 71
+Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 71
 
 --Regular Semantics--
 [sequoia::testing::perfectly_normal_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 1, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 1, 1> >, 0, 1, 1>, sequoia::testing::shared_counting_allocator<char, 0, 1, 1> > >]
@@ -135,7 +135,7 @@ Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 71
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 84
+Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 84
 check_semantics return value (x)
 
 [sequoia::testing::perfectly_normal_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 1, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 1, 1> >, 0, 1, 1>, sequoia::testing::shared_counting_allocator<char, 0, 1, 1> > >]
@@ -143,7 +143,7 @@ check_semantics return value (x)
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 85
+Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 85
 check_semantics return value (y)
 
 [sequoia::testing::perfectly_normal_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 1, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 0, 1, 1> >, 0, 1, 1>, sequoia::testing::shared_counting_allocator<char, 0, 1, 1> > >]
@@ -151,7 +151,7 @@ check_semantics return value (y)
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 110
+Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 110
 
 --Regular Semantics--
 [sequoia::testing::perfectly_normal_beast<std::tuple<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >, sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> > >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::tuple<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >, sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> > >, 0, 1, 1>, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> > >]
@@ -159,7 +159,7 @@ Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 110
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 58
+Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 58
 
 --Regular Semantics--
 [sequoia::testing::perfectly_normal_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >, 1, 0, 0>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> > >]
@@ -167,7 +167,7 @@ Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 58
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 71
+Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 71
 
 --Regular Semantics--
 [sequoia::testing::perfectly_normal_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >, 1, 0, 0>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> > >]
@@ -175,7 +175,7 @@ Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 71
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 84
+Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 84
 check_semantics return value (x)
 
 [sequoia::testing::perfectly_normal_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >, 1, 0, 0>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> > >]
@@ -183,7 +183,7 @@ check_semantics return value (x)
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 85
+Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 85
 check_semantics return value (y)
 
 [sequoia::testing::perfectly_normal_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> >, 1, 0, 0>, sequoia::testing::shared_counting_allocator<char, 1, 0, 0> > >]
@@ -191,7 +191,7 @@ check_semantics return value (y)
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 110
+Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 110
 
 --Regular Semantics--
 [sequoia::testing::perfectly_normal_beast<std::tuple<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >, sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> > >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::tuple<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >, sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> > >, 1, 0, 0>, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> > >]
@@ -199,7 +199,7 @@ Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 110
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 58
+Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 58
 
 --Regular Semantics--
 [sequoia::testing::perfectly_normal_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >, 1, 0, 1>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> > >]
@@ -207,7 +207,7 @@ Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 58
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 71
+Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 71
 
 --Regular Semantics--
 [sequoia::testing::perfectly_normal_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >, 1, 0, 1>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> > >]
@@ -215,7 +215,7 @@ Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 71
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 84
+Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 84
 check_semantics return value (x)
 
 [sequoia::testing::perfectly_normal_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >, 1, 0, 1>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> > >]
@@ -223,7 +223,7 @@ check_semantics return value (x)
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 85
+Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 85
 check_semantics return value (y)
 
 [sequoia::testing::perfectly_normal_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> >, 1, 0, 1>, sequoia::testing::shared_counting_allocator<char, 1, 0, 1> > >]
@@ -231,7 +231,7 @@ check_semantics return value (y)
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 110
+Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 110
 
 --Regular Semantics--
 [sequoia::testing::perfectly_normal_beast<std::tuple<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >, sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> > >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::tuple<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >, sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> > >, 1, 0, 1>, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> > >]
@@ -239,7 +239,7 @@ Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 110
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 58
+Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 58
 
 --Regular Semantics--
 [sequoia::testing::perfectly_normal_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >, 1, 1, 0>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> > >]
@@ -247,7 +247,7 @@ Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 58
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 71
+Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 71
 
 --Regular Semantics--
 [sequoia::testing::perfectly_normal_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >, 1, 1, 0>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> > >]
@@ -255,7 +255,7 @@ Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 71
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 84
+Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 84
 check_semantics return value (x)
 
 [sequoia::testing::perfectly_normal_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >, 1, 1, 0>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> > >]
@@ -263,7 +263,7 @@ check_semantics return value (x)
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 85
+Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 85
 check_semantics return value (y)
 
 [sequoia::testing::perfectly_normal_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> >, 1, 1, 0>, sequoia::testing::shared_counting_allocator<char, 1, 1, 0> > >]
@@ -271,7 +271,7 @@ check_semantics return value (y)
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 110
+Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 110
 
 --Regular Semantics--
 [sequoia::testing::perfectly_normal_beast<std::tuple<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >, sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> > >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::tuple<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >, sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> > >, 1, 1, 0>, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> > >]
@@ -279,7 +279,7 @@ Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 110
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 58
+Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 58
 
 --Regular Semantics--
 [sequoia::testing::perfectly_normal_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >, 1, 1, 1>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> > >]
@@ -287,7 +287,7 @@ Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 58
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 71
+Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 71
 
 --Regular Semantics--
 [sequoia::testing::perfectly_normal_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >, 1, 1, 1>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> > >]
@@ -295,7 +295,7 @@ Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 71
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 84
+Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 84
 check_semantics return value (x)
 
 [sequoia::testing::perfectly_normal_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >, 1, 1, 1>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> > >]
@@ -303,7 +303,7 @@ check_semantics return value (x)
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 85
+Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 85
 check_semantics return value (y)
 
 [sequoia::testing::perfectly_normal_beast<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> >, 1, 1, 1>, sequoia::testing::shared_counting_allocator<char, 1, 1, 1> > >]
@@ -311,7 +311,7 @@ check_semantics return value (y)
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 110
+Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 110
 
 --Regular Semantics--
 [sequoia::testing::perfectly_normal_beast<std::tuple<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >, sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> > >, std::scoped_allocator_adaptor<sequoia::testing::shared_counting_allocator<std::tuple<sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >, sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> > >, 1, 1, 1>, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> > >]

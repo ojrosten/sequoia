@@ -9,7 +9,7 @@
 
 #include "RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.hpp"
 
-#include "ContainerDiagnosticsUtilities.hpp"
+#include "../ContainerDiagnosticsUtilities.hpp"
 #include "AllocationTestDiagnosticsUtilities.hpp"
 
 #include <vector>

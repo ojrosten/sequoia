@@ -19,6 +19,19 @@ target_sources(TestFrameworkDiagnostics PRIVATE
                ${TestDir}/Runtime/FactoryTestingDiagnostics.cpp
                ${TestDir}/Runtime/ShellCommandsTest.cpp
                ${TestDir}/Runtime/ShellCommandsTestingDiagnostics.cpp
+               ${TestDir}/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp
+               ${TestDir}/TestFramework/AllocationTesting/MoveOnlyScopedAllocationTestDiagnostics.cpp               
+               ${TestDir}/TestFramework/AllocationTesting/OrderableMoveOnlyAllocationTestDiagnostics.cpp
+               ${TestDir}/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp
+               ${TestDir}/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp
+               ${TestDir}/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp
+               ${TestDir}/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp
+               ${TestDir}/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenValueSemantics.cpp
+               ${TestDir}/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp
+               ${TestDir}/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp
+               ${TestDir}/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp
+               ${TestDir}/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsThreeLevel.cpp
+               ${TestDir}/TestFramework/AllocationTesting/ScopedAllocationTestFalsePositiveDiagnostics.cpp
                ${TestDir}/TestFramework/ChronoFreeDiagnostics.cpp
                ${TestDir}/TestFramework/CommandsFreeTest.cpp
                ${TestDir}/TestFramework/ComplexFreeDiagnostics.cpp
@@ -31,29 +44,16 @@ target_sources(TestFrameworkDiagnostics PRIVATE
                ${TestDir}/TestFramework/FileSystemUtilitiesFreeTest.cpp
                ${TestDir}/TestFramework/FunctionFreeDiagnostics.cpp
                ${TestDir}/TestFramework/MaterialsUpdaterFreeTest.cpp
-               ${TestDir}/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp
-               ${TestDir}/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp
                ${TestDir}/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp
                ${TestDir}/TestFramework/MoveOnlyTestDiagnostics.cpp
-               ${TestDir}/TestFramework/OrderableMoveOnlyAllocationTestDiagnostics.cpp
                ${TestDir}/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp
-               ${TestDir}/TestFramework/OrderableRegularAllocationTestDiagnostics.cpp
                ${TestDir}/TestFramework/OrderableRegularTestDiagnostics.cpp
                ${TestDir}/TestFramework/OutputFreeTest.cpp
                ${TestDir}/TestFramework/PathFreeDiagnostics.cpp
                ${TestDir}/TestFramework/PerformanceTestDiagnostics.cpp
-               ${TestDir}/TestFramework/RegularAllocationTestFalseNegativeDiagnostics.cpp
-               ${TestDir}/TestFramework/RegularAllocationTestFalsePositiveDiagnostics.cpp
-               ${TestDir}/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp
-               ${TestDir}/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsBrokenValueSemantics.cpp
-               ${TestDir}/TestFramework/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp
                ${TestDir}/TestFramework/RegularStateTransitionDiagnostics.cpp
                ${TestDir}/TestFramework/RegularTestDiagnostics.cpp
                ${TestDir}/TestFramework/RelationalTestDiagnostics.cpp
-               ${TestDir}/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp
-               ${TestDir}/TestFramework/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp
-               ${TestDir}/TestFramework/ScopedAllocationTestFalseNegativeDiagnosticsThreeLevel.cpp
-               ${TestDir}/TestFramework/ScopedAllocationTestFalsePositiveDiagnostics.cpp
                ${TestDir}/TestFramework/SmartPointerFreeDiagnostics.cpp
                ${TestDir}/TestFramework/StringFreeDiagnostics.cpp
                ${TestDir}/TestFramework/SumTypesFreeDiagnostics.cpp

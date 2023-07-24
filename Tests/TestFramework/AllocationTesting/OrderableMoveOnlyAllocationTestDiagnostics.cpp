@@ -8,7 +8,7 @@
 /*! \file */
 
 #include "OrderableMoveOnlyAllocationTestDiagnostics.hpp"
-#include "OrderableMoveOnlyTestDiagnosticsUtilities.hpp"
+#include "../OrderableMoveOnlyTestDiagnosticsUtilities.hpp"
 
 namespace sequoia::testing
 {

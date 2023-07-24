@@ -8,7 +8,7 @@
 /*! \file */
 
 #include "OrderableRegularAllocationTestDiagnostics.hpp"
-#include "OrderableRegularTestDiagnosticsUtilities.hpp"
+#include "../OrderableRegularTestDiagnosticsUtilities.hpp"
 
 namespace sequoia::testing
 {

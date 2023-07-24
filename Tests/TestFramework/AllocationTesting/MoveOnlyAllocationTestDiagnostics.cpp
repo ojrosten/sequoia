@@ -8,7 +8,7 @@
 /*! \file */
 
 #include "MoveOnlyAllocationTestDiagnostics.hpp"
-#include "MoveOnlyTestDiagnosticsUtilities.hpp"
+#include "../MoveOnlyTestDiagnosticsUtilities.hpp"
 
 #include <vector>
 

@@ -1,0 +1,2 @@
+Scoped Allocation False Positive Diagnostics
+False Positive Checks:                    96;  Failures:  0

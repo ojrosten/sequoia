@@ -8,7 +8,7 @@
 /*! \file */
 
 #include "MoveOnlyScopedAllocationTestDiagnostics.hpp"
-#include "MoveOnlyTestDiagnosticsUtilities.hpp"
+#include "../MoveOnlyTestDiagnosticsUtilities.hpp"
 #include "ScopedAllocationTestDiagnosticsUtilities.hpp"
 
 namespace sequoia::testing
