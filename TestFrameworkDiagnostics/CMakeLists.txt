@@ -49,7 +49,9 @@ target_sources(TestFrameworkDiagnostics PRIVATE
                ${TestDir}/TestFramework/RegularStateTransitionDiagnostics.cpp
                ${TestDir}/TestFramework/RegularTestDiagnostics.cpp
                ${TestDir}/TestFramework/RelationalTestDiagnostics.cpp
-               ${TestDir}/TestFramework/ScopedAllocationTestDiagnostics.cpp
+               ${TestDir}/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp
+               ${TestDir}/TestFramework/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp
+               ${TestDir}/TestFramework/ScopedAllocationTestFalsePositiveDiagnostics.cpp
                ${TestDir}/TestFramework/SmartPointerFreeDiagnostics.cpp
                ${TestDir}/TestFramework/StringFreeDiagnostics.cpp
                ${TestDir}/TestFramework/SumTypesFreeDiagnostics.cpp

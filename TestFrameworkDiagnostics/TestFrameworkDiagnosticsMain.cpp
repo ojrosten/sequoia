@@ -93,6 +93,7 @@ int main(int argc, char** argv)
       scoped_allocation_false_positive_diagnostics{"Scoped Allocation False Positive Diagnostics"},
       move_only_scoped_allocation_false_positive_diagnostics{"Move-Only Scoped Allocation False Positive Diagnostics"},
       scoped_allocation_false_negative_diagnostics{"Scoped Allocation False Negative Diagnostics"},
+      scoped_allocation_false_negative_diagnostics_mixed{"Scoped Allocation False Negative Diagnostics: Mixed"},
       move_only_scoped_allocation_false_negative_diagnostics{"Move-Only Scoped Allocation False Negative Diagnostics"}
     );
 

@@ -32,34 +32,9 @@ namespace sequoia::testing
     void test_perfectly_scoped();
 
     template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
-    void test_perfectly_mixed();
-
-    template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
-    void test_weirdly_mixed();
-
-    template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
     void test_perfectly_branched();
 
     template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
     void test_three_level_scoped();
-  };
-
-  class scoped_allocation_false_positive_diagnostics final
-    : public regular_allocation_false_positive_test
-  {
-  public:
-    using regular_allocation_false_positive_test::regular_allocation_false_positive_test;
-
-    [[nodiscard]]
-    std::filesystem::path source_file() const;
-
-    template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
-    void test_allocation();
-
-    void run_tests();
-  private:
-
-    template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
-    void test_regular_semantics();
   };
 }

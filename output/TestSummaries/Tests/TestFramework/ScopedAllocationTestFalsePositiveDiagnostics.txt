@@ -1,4 +1,2 @@
 Scoped Allocation False Positive Diagnostics
 False Positive Checks:                    96;  Failures:  0
-Scoped Allocation False Negative Diagnostics
-False Negative Checks:                   112;  Failures:  0
