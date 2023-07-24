@@ -36,7 +36,6 @@ namespace sequoia::testing
   {
     test_perfectly_scoped<PropagateCopy, PropagateMove, PropagateSwap>();
     test_perfectly_branched<PropagateCopy, PropagateMove, PropagateSwap>();
-    test_three_level_scoped<PropagateCopy, PropagateMove, PropagateSwap>();
   }
 
   template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
@@ -116,34 +115,6 @@ namespace sequoia::testing
         getter,
         {0_c, {1_c,1_mu}, {1_anp,1_awp}},
         { {0_c, {2_c,0_mu}, {2_anp,2_awp}, {0_containers, 2_containers, 4_postmutation}} }
-      }
-    );
-  }
-
-  template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
-  void scoped_allocation_false_negative_diagnostics::test_three_level_scoped()
-  {
-    using innermost_allocator = shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>;
-    using innermost_type = perfectly_normal_beast<int, innermost_allocator>;
-
-    using middle_allocator = shared_counting_allocator<innermost_type, PropagateCopy, PropagateMove, PropagateSwap>;
-    using middle_type = perfectly_normal_beast<innermost_type, std::scoped_allocator_adaptor<middle_allocator, innermost_allocator>>;
-
-    using outer_allocator = shared_counting_allocator<middle_type, PropagateCopy, PropagateMove, PropagateSwap>;
-    using beast = perfectly_normal_beast<middle_type, std::scoped_allocator_adaptor<outer_allocator, middle_allocator, innermost_allocator>>;
-
-    auto getter{[](const beast& b) { return b.x.get_allocator(); }};
-
-    check_semantics(report_line(""),
-      beast{},
-      beast{{{1}}},
-      [](beast& b) { b.x.push_back({{2}}); },
-      allocation_info{
-        getter,
-        {0_c, {1_c,1_mu}, {1_anp,1_awp}},
-        { {0_c, {1_c,1_mu}, {1_anp,1_awp}, {0_containers, 1_containers, 2_postmutation}},
-          {0_c, {1_c,1_mu}, {1_anp,1_awp}, {0_containers, 1_containers, 1_postmutation}}
-        }
       }
     );
   }

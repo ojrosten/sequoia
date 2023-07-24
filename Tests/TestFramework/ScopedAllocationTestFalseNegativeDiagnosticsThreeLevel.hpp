@@ -13,7 +13,7 @@
 
 namespace sequoia::testing
 {
-  class scoped_allocation_false_negative_diagnostics final
+  class scoped_allocation_false_negative_diagnostics_three_level final
     : public regular_allocation_false_negative_test
   {
   public:
@@ -27,11 +27,7 @@ namespace sequoia::testing
 
     void run_tests();
   private:
-
     template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
-    void test_perfectly_scoped();
-
-    template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
-    void test_perfectly_branched();
+    void test_three_level_scoped();
   };
 }

@@ -127,6 +127,7 @@
 #include "TestFramework/RelationalTestDiagnostics.hpp"
 #include "TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.hpp"
 #include "TestFramework/ScopedAllocationTestFalseNegativeDiagnosticsMixed.hpp"
+#include "TestFramework/ScopedAllocationTestFalseNegativeDiagnosticsThreeLevel.hpp"
 #include "TestFramework/ScopedAllocationTestFalsePositiveDiagnostics.hpp"
 #include "TestFramework/SmartPointerFreeDiagnostics.hpp"
 #include "TestFramework/StringFreeDiagnostics.hpp"

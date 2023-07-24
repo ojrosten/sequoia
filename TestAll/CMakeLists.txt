@@ -136,6 +136,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/TestFramework/RelationalTestDiagnostics.cpp
                ${TestDir}/TestFramework/ScopedAllocationTestFalseNegativeDiagnostics.cpp
                ${TestDir}/TestFramework/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp
+               ${TestDir}/TestFramework/ScopedAllocationTestFalseNegativeDiagnosticsThreeLevel.cpp
                ${TestDir}/TestFramework/ScopedAllocationTestFalsePositiveDiagnostics.cpp
                ${TestDir}/TestFramework/SmartPointerFreeDiagnostics.cpp
                ${TestDir}/TestFramework/StringFreeDiagnostics.cpp

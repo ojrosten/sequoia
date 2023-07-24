@@ -1,0 +1,2 @@
+Scoped Allocation False Negative Diagnostics: Three Level
+False Negative Checks:                     8;  Failures:  0
