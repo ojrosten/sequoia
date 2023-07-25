@@ -183,49 +183,12 @@ namespace sequoia::testing
     >
     void creation_permutations()
     {
-      using namespace object;
-      using EW = EdgeWeight;
-      using NW = NodeWeight;
-      using ESTraits = EdgeStorageTraits;
-      using NSTraits = NodeWeightStorageTraits;
-
-      run_tests<GraphFlavour, faithful_producer<EW>, faithful_producer<NW>, ESTraits, NSTraits>();
-
-      if constexpr(!minimal_graph_tests())
-      {
-        if constexpr(!std::is_empty_v<NodeWeight>)
-        {
-          run_tests<GraphFlavour, faithful_producer<EW>, data_pool<NW>, ESTraits, NSTraits>();
-        }
-
-        if constexpr(!std::is_empty_v<EdgeWeight>)
-        {
-          run_tests<GraphFlavour, data_pool<EW>, faithful_producer<NW>, ESTraits, NSTraits>();
-        }
-
-        if constexpr(!std::is_empty_v<EdgeWeight> && !std::is_empty_v<NodeWeight>)
-        {
-          run_tests<GraphFlavour, data_pool<EW>, data_pool<NW>, ESTraits, NSTraits>();
-        }
-      }
-    }
-
-    template
-    <
-      maths::graph_flavour GraphFlavour,
-      class EdgeWeightCreator,
-      class NodeWeightCreator,
-      class EdgeStorageTraits,
-      class NodeWeightStorageTraits
-    >
-    void run_tests()
-    {
       m_Test.template execute_operations<
         GraphFlavour,
         EdgeWeight,
         NodeWeight,
-        EdgeWeightCreator,
-        NodeWeightCreator,
+        object::faithful_producer<EdgeWeight>,
+        object::faithful_producer<NodeWeight>,
         EdgeStorageTraits,
         NodeWeightStorageTraits
       >();

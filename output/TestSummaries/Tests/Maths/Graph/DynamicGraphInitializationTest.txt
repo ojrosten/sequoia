@@ -1,2 +1,2 @@
 Dynamic Graph Init
-Standard Top Level Checks:              6288;  Failures:  0  [Deep checks: 202460]
+Standard Top Level Checks:              2218;  Failures:  0  [Deep checks: 70314]
