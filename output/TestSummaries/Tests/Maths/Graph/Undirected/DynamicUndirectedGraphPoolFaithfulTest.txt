@@ -1,2 +1,0 @@
-Undirected Graph Pool-Faithful Tests
-Standard Top Level Checks:              1020;  Failures:  0  [Deep checks: 103020]
