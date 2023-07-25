@@ -634,7 +634,7 @@ namespace sequoia
           join_sentinel sentinel{ *this, node, dist1 };
 
           auto citer2{
-            [=,&edges{m_Edges}](){
+            [=,this, &edges{m_Edges}](){
                if constexpr(edge_type::flavour == edge_flavour::partial_embedded)
                  return edges.insert_to_partition(cbegin_edges(node) + pos2, node, pos1, *citer1);
                else if constexpr(edge_type::flavour == edge_flavour::full_embedded)
