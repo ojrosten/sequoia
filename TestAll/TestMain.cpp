@@ -273,42 +273,26 @@ int main(int argc, char** argv)
         suite{
           "Directed",
           dynamic_directed_graph_unweighted_test{"Directed Graph Unweighted Tests"},
-          dynamic_directed_graph_faithful_faithful_test{"Directed Graph Faithful-Faithful Tests"},
-          dynamic_directed_graph_faithful_pool_test{"Directed Graph Faithful-Pool Tests"},
-          dynamic_directed_graph_pool_faithful_test{"Directed Graph Pool-Faithful Tests"},
-          dynamic_directed_graph_pool_pool_test{"Directed Graph Pool-Pool Tests"}
+          dynamic_directed_graph_fundamental_weight_test{"Directed Graph Fundamental Weight Tests"}
         },
         suite{
           "Directed Embedded",
           dynamic_directed_embedded_graph_unweighted_test{"Directed Embedded Graph Unweighted Tests"},
-          dynamic_directed_embedded_graph_faithful_faithful_test{"Directed Embedded Graph Faithful-Faithful Tests"},
-          dynamic_directed_embedded_graph_faithful_pool_test{"Directed Embedded Graph Faithful-Pool Tests"},
-          dynamic_directed_embedded_graph_pool_faithful_test{"Directed Embedded Graph Pool-Faithful Tests"},
-          dynamic_directed_embedded_graph_pool_pool_test{"Directed Embedded Graph Pool-Pool Tests"},
-          dynamic_directed_embedded_graph_faithful_faithful_shared_edge_test{"Directed Embedded Graph Faithful-Faithful Shared Edge Tests"},
-          dynamic_directed_embedded_graph_faithful_faithful_shared_weight_test{"Directed Embedded Graph Faithful-Faithful Shared Weight Tests"},
-          dynamic_directed_embedded_graph_pool_faithful_shared_edge_test{"Directed Embedded Graph Pool-Faithful Shared Edge Tests"},
-          dynamic_directed_embedded_graph_pool_faithful_shared_weight_test{"Directed Embedded Graph Pool-Faithful Shared Weight Tests"},
+          dynamic_directed_embedded_graph_fundamental_weight_test{"Directed Embedded Graph Fundamental Weight Tests"},
+          dynamic_directed_embedded_graph_fundamental_weight_shared_edge_test{"Directed Embedded Graph Fundamental Weight Shared Edge Tests"},
+          dynamic_directed_embedded_graph_shared_fundamental_weight_test{"Directed Embedded Graph Shared Fundamental Weight Tests"}
         },
         suite{
           "Undirected",
           dynamic_undirected_graph_unweighted_test{"Undirected Graph Unweighted Tests"},
-          dynamic_undirected_graph_faithful_faithful_test{"Undirected Graph Faithful-Faithful Tests"},
-          dynamic_undirected_graph_faithful_pool_test{"Undirected Graph Faithful-Pool Tests"},
-          dynamic_undirected_graph_pool_faithful_test{"Undirected Graph Pool-Faithful Tests"},
-          dynamic_undirected_graph_pool_pool_test{"Undirected Graph Pool-Pool Tests"},
-          dynamic_undirected_graph_faithful_faithful_shared_weight_test{"Undirected Graph Faithful-Faithful Shared Weight Tests"},
-          dynamic_undirected_graph_pool_faithful_shared_weight_test{"Undirected Graph Pool-Faithful Shared Weight Tests"}
+          dynamic_undirected_graph_fundamental_weight_test{"Undirected Graph Fundamental Weight Tests"},
+          dynamic_undirected_graph_shared_fundamental_weight_test{"Undirected Graph Shared Fundamental Weight Tests"}
         },
         suite{
           "Undirected Embedded",
           dynamic_undirected_embedded_graph_unweighted_test{"Undirected Embedded Graph Unweighted Tests"},
-          dynamic_undirected_embedded_graph_faithful_faithful_test{"Undirected Embedded Graph Faithful-Faithful Tests"},
-          dynamic_undirected_embedded_graph_faithful_pool_test{"Undirected Embedded Graph Faithful-Pool Tests"},
-          dynamic_undirected_embedded_graph_pool_faithful_test{"Undirected Embedded Graph Pool-Faithful Tests"},
-          dynamic_undirected_embedded_graph_pool_pool_test{"Undirected Embedded Graph Pool-Pool Tests"},
-          dynamic_undirected_embedded_graph_faithful_faithful_shared_weight_test{"Undirected Embedded Graph Faithful-Faithful Shared Weight Tests"},
-          dynamic_undirected_embedded_graph_pool_faithful_shared_weight_test{"Undirected Embedded Graph Pool-Faithful Shared Weight Tests"}
+          dynamic_undirected_embedded_graph_fundamental_weight_test{"Undirected Embedded Graph Fundamental Weight Tests"},
+          dynamic_undirected_embedded_graph_shared_fundamental_weight_test{"Undirected Embedded Graph Shared Fundamental Weight Tests"}
         }
       },
       suite{
