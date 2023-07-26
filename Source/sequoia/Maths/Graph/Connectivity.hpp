@@ -1730,7 +1730,6 @@ namespace sequoia
         requires std::is_invocable_r_v<edge_index_type, Fn, edge_index_type>
       constexpr void modify_comp_indices(Iter first, Sentinel last, Fn fn) noexcept
       {
-        const auto start{first};
         while(first != last)
         {
           const auto source{first.partition_index()};
