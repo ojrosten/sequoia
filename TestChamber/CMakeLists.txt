@@ -13,6 +13,8 @@ set(TestDir ../Tests)
 
 target_sources(TestChamber PRIVATE 
                ${TestDir}/Experimental/ExperimentalTest.cpp
+               ${TestDir}/Maths/Graph/NodeStorageAllocationTest.cpp
+               ${TestDir}/Maths/Graph/NodeStorageTest.cpp
 )
 
 sequoia_finalize_self(TestChamber ${TestDir}/Experimental)

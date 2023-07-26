@@ -85,16 +85,13 @@ namespace sequoia::testing
     maths::graph_flavour GraphFlavour,
     class EdgeWeight,
     class NodeWeight,
-    class EdgeWeightCreator,
-    class NodeWeightStorage,
     class EdgeStorageTraits,
     class NodeWeightStorageTraits,
     bool=embedded(GraphFlavour)
   >
-    requires object::creator<EdgeWeightCreator>
   struct graph_type_generator
   {
-    using graph_type = maths::graph<maths::to_directedness(GraphFlavour), EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightStorage, EdgeStorageTraits, NodeWeightStorageTraits>;
+    using graph_type = maths::graph<maths::to_directedness(GraphFlavour), EdgeWeight, NodeWeight, EdgeStorageTraits, NodeWeightStorageTraits>;
   };
 
   template
@@ -102,15 +99,12 @@ namespace sequoia::testing
     maths::graph_flavour GraphFlavour,
     class EdgeWeight,
     class NodeWeight,
-    class EdgeWeightCreator,
-    class NodeWeightCreator,
     class EdgeStorageTraits,
     class NodeWeightStorageTraits
   >
-    requires (object::creator<EdgeWeightCreator> && object::creator<NodeWeightCreator>)
-  struct graph_type_generator<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits, true>
+  struct graph_type_generator<GraphFlavour, EdgeWeight, NodeWeight, EdgeStorageTraits, NodeWeightStorageTraits, true>
   {
-    using graph_type = maths::embedded_graph<maths::to_directedness(GraphFlavour), EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>;
+    using graph_type = maths::embedded_graph<maths::to_directedness(GraphFlavour), EdgeWeight, NodeWeight, EdgeStorageTraits, NodeWeightStorageTraits>;
   };
 
   template
@@ -118,13 +112,10 @@ namespace sequoia::testing
     maths::graph_flavour GraphFlavour,
     class EdgeWeight,
     class NodeWeight,
-    class EdgeWeightCreator,
-    class NodeWeightCreator,
     class EdgeStorageTraits,
     class NodeWeightStorageTraits
   >
-    requires (object::creator<EdgeWeightCreator> && object::creator<NodeWeightCreator>)
-  using graph_type_generator_t = typename graph_type_generator<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>::graph_type;
+  using graph_type_generator_t = typename graph_type_generator<GraphFlavour, EdgeWeight, NodeWeight, EdgeStorageTraits, NodeWeightStorageTraits>::graph_type;
 
   template <class EdgeWeight, class NodeWeight, concrete_test Test>
   class graph_test_helper
@@ -187,8 +178,6 @@ namespace sequoia::testing
         GraphFlavour,
         EdgeWeight,
         NodeWeight,
-        object::faithful_producer<EdgeWeight>,
-        object::faithful_producer<NodeWeight>,
         EdgeStorageTraits,
         NodeWeightStorageTraits
       >();

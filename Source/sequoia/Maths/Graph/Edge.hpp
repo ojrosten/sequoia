@@ -97,26 +97,22 @@ namespace sequoia
     class weighting
     {
     public:
-      using weight_proxy_type = typename WeightHandler::value_type;
-      using weight_type       = typename weight_proxy_type::value_type;
+      using weight_type = typename WeightHandler::value_type;
 
       template<class... Args>
         requires (sizeof...(Args) > 0)
       constexpr void weight(Args&&... args)
       {
-        WeightHandler::get(m_Weight).set(std::forward<Args>(args)...);
+        WeightHandler::get(m_Weight) = weight_type{std::forward<Args>(args)...};
       }
 
       [[nodiscard]]
-      constexpr const weight_type& weight() const noexcept { return WeightHandler::get(m_Weight).get(); }
-
-      [[nodiscard]]
-      constexpr const weight_proxy_type& weight_proxy() const noexcept { return WeightHandler::get(m_Weight); }
+      constexpr const weight_type& weight() const noexcept { return WeightHandler::get(m_Weight); }
 
       template<std::invocable<weight_type&> Fn>
       constexpr std::invoke_result_t<Fn, weight_type&> mutate_weight(Fn fn)
       {
-        return WeightHandler::get(m_Weight).mutate(fn);
+        return fn(WeightHandler::get(m_Weight));
       }
 
       [[nodiscard]]
@@ -162,12 +158,11 @@ namespace sequoia
      */
 
     template<class WeightHandler, std::integral IndexType>
-      requires (object::handler<WeightHandler> && std::is_empty_v<typename WeightHandler::value_type::value_type>)
+      requires (object::handler<WeightHandler> && std::is_empty_v<typename WeightHandler::value_type>)
     class weighting<WeightHandler, IndexType>
     {
     public:
-      using weight_proxy_type = typename WeightHandler::value_type;
-      using weight_type       = typename weight_proxy_type::value_type;
+      using weight_type = typename WeightHandler::value_type;
 
       [[nodiscard]]
       friend constexpr bool operator==(const weighting&, const weighting&) noexcept = default;

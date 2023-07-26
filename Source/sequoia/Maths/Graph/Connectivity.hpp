@@ -57,12 +57,7 @@ namespace sequoia
         dynamic graphs are supported; for the purposes of the latter, the relevant
         protected methods of `connectivity` are allocator-aware.
      */
-    template
-    <
-      directed_flavour Directedness,
-      class EdgeTraits,
-      class WeightMaker
-    >
+    template<directed_flavour Directedness, class EdgeTraits>
     class connectivity
     {
       friend struct sequoia::assignment_helper;
@@ -76,7 +71,6 @@ namespace sequoia
       using edge_index_type             = typename edge_type::index_type;
       using edge_init_type              = typename EdgeTraits::edge_init_type;
       using size_type                   = typename edge_storage_type::size_type;
-      using weight_maker_type           = WeightMaker;
       using const_edge_iterator         = typename edge_storage_type::const_partition_iterator;
       using const_reverse_edge_iterator = typename edge_storage_type::const_reverse_partition_iterator;
       using edges_initializer           = std::initializer_list<std::initializer_list<edge_init_type>>;
@@ -534,7 +528,7 @@ namespace sequoia
         }
         else
         {
-          add_to_partition(node1, node2, make_edge_weight(std::forward<Args>(args)...));
+          add_to_partition(node1, node2, std::forward<Args>(args)...);
         }
 
         if constexpr (!directed(directedness))
@@ -845,16 +839,12 @@ namespace sequoia
       }
 
     private:
-      constexpr static bool faithfulEdgeWeightProxy{
-        std::is_same_v<typename edge_type::weight_proxy_type, object::faithful_wrapper<edge_weight_type>>
-      };
-
       constexpr static bool embeddedEdge{
         (edge_type::flavour == edge_flavour::partial_embedded) || (edge_type::flavour == edge_flavour::full_embedded)
       };
 
       constexpr static bool direct_init_v{std::is_same_v<edge_type, edge_init_type>};
-      constexpr static bool direct_copy_v{direct_init_v || (EdgeTraits::shared_edge_v && faithfulEdgeWeightProxy)};
+      constexpr static bool direct_copy_v{direct_init_v || EdgeTraits::shared_edge_v};
       constexpr static bool is_embedded_v{EdgeTraits::is_embedded_v};
       constexpr static bool is_directed_v{EdgeTraits::is_directed_v};
 
@@ -913,18 +903,9 @@ namespace sequoia
       };
 
       // private data
-      SEQUOIA_NO_UNIQUE_ADDRESS WeightMaker m_WeightMaker{};
       edge_storage_type m_Edges;
 
       // helper methods
-
-      template<class... Args>
-        requires initializable_from<edge_weight_type, Args...>
-      [[nodiscard]]
-      decltype(auto) make_edge_weight(Args&&... args)
-      {
-        return m_WeightMaker.make(std::forward<Args>(args)...);
-      }
 
       [[nodiscard]]
       constexpr static auto partner_index(const_edge_iterator citer)
@@ -950,12 +931,12 @@ namespace sequoia
         if constexpr(edge_type::flavour == edge_flavour::partial)
         {
           static_assert(!std::is_empty_v<edge_weight_type>);
-          return edge_type{edgeInit.target_node(), make_edge_weight(edgeInit.weight())};
+          return edge_type{edgeInit.target_node(), edgeInit.weight()};
         }
         else if constexpr(edge_type::flavour == edge_flavour::partial_embedded)
         {
           static_assert(!std::is_empty_v<edge_weight_type>);
-          return edge_type{edgeInit.target_node(), edgeInit.complementary_index(), make_edge_weight(edgeInit.weight())};
+          return edge_type{edgeInit.target_node(), edgeInit.complementary_index(), edgeInit.weight()};
         }
         else if constexpr(edge_type::flavour == edge_flavour::full)
         {
@@ -970,9 +951,9 @@ namespace sequoia
           else
           {
             if(edgeInit.inverted())
-              return edge_type{source, inv_t{}, make_edge_weight(edgeInit.weight())};
+              return edge_type{source, inv_t{}, edgeInit.weight()};
             else
-              return edge_type{source, edgeInit.target_node(), make_edge_weight(edgeInit.weight())};
+              return edge_type{source, edgeInit.target_node(), edgeInit.weight()};
           }
         }
         else if constexpr(edge_type::flavour == edge_flavour::full_embedded)
@@ -981,11 +962,11 @@ namespace sequoia
           using inv_t = inversion_constant<true>;
           if(edgeInit.inverted())
           {
-            return edge_type{edgeInit.source_node(), inv_t{}, edgeInit.complementary_index(), make_edge_weight(edgeInit.weight())};
+            return edge_type{edgeInit.source_node(), inv_t{}, edgeInit.complementary_index(), edgeInit.weight()};
           }
           else
           {
-            return edge_type{edgeInit.source_node(), edgeInit.target_node(), edgeInit.complementary_index(), make_edge_weight(edgeInit.weight())};
+            return edge_type{edgeInit.source_node(), edgeInit.target_node(), edgeInit.complementary_index(), edgeInit.weight()};
           }
         }
         else
@@ -1249,7 +1230,7 @@ namespace sequoia
           const auto& nodeEdges{*nodeEdgesIter};
           for(const auto& edge : nodeEdges)
           {
-            storage.push_back_to_partition(nodeIndex, edge.target_node(), make_edge_weight(edge.weight()));
+            storage.push_back_to_partition(nodeIndex, edge.target_node(), edge.weight());
           }
         }
 
@@ -1416,11 +1397,9 @@ namespace sequoia
 
       class edge_maker
       {
-        using edge_weight_proxy = typename edge_type::weight_proxy_type;
-
         struct data
         {
-          const edge_weight_proxy* m_ProxyPtr{};
+          const edge_weight_type* m_WeightPtr{};
           edge_index_type node_index{}, edge_index{};
         };
 
@@ -1435,29 +1414,29 @@ namespace sequoia
 
         void operator()(const size_type node, const_edge_iterator first, const_edge_iterator i)
         {
-          auto weightPtr{&i->weight_proxy()};
-          auto found{std::ranges::lower_bound(m_WeightMap, weightPtr, [](const edge_weight_proxy* lhs, const edge_weight_proxy* rhs) { return lhs < rhs; }, [](const data& d) { return d.m_ProxyPtr; })};
-          if((found == m_WeightMap.end()) || (found->m_ProxyPtr != weightPtr))
+          auto weightPtr{&i->weight()};
+          auto found{std::ranges::lower_bound(m_WeightMap, weightPtr, [](const edge_weight_type* lhs, const edge_weight_type* rhs) { return lhs < rhs; }, [](const data& d) { return d.m_WeightPtr; })};
+          if((found == m_WeightMap.end()) || (found->m_WeightPtr != weightPtr))
           {
             auto appender{[=, this](auto e){
                    m_Storage.push_back_to_partition(node, std::move(e));
-                   m_WeightMap.emplace(found, &i->weight_proxy(), node, static_cast<edge_index_type>(std::ranges::distance(first, i)));
+                   m_WeightMap.emplace(found, &i->weight(), node, static_cast<edge_index_type>(std::ranges::distance(first, i)));
                  }
             };
 
             if constexpr(edge_type::flavour == edge_flavour::partial)
             {
-              appender(edge_type{i->target_node(), m_Conn.make_edge_weight(i->weight())});
+              appender(edge_type{i->target_node(), i->weight()});
             }
             else
             {
               if(i->inverted())
               {
-                appender(edge_type{i->source_node(), inverted_edge, m_Conn.make_edge_weight(i->weight())});
+                appender(edge_type{i->source_node(), inverted_edge, i->weight()});
               }
               else
               {
-                appender(edge_type{i->source_node(), i->target_node(), m_Conn.make_edge_weight(i->weight())});
+                appender(edge_type{i->source_node(), i->target_node(), i->weight()});
               }
             }
           }
@@ -1509,12 +1488,12 @@ namespace sequoia
                 if(i->inverted())
                 {
                   using inv_t = inversion_constant<true>;
-                  edge_type e{i->source_node(), inv_t{}, i->complementary_index(), make_edge_weight(i->weight())};
+                  edge_type e{i->source_node(), inv_t{}, i->complementary_index(), i->weight()};
                   storage.push_back_to_partition(node, std::move(e));
                 }
                 else
                 {
-                  edge_type e{i->source_node(), i->target_node(), i->complementary_index(), make_edge_weight(i->weight())};
+                  edge_type e{i->source_node(), i->target_node(), i->complementary_index(), i->weight()};
                   storage.push_back_to_partition(node, std::move(e));
                 }
               }
@@ -1538,7 +1517,7 @@ namespace sequoia
 
               if(!encountered)
               {
-                edge_type e{i->target_node(), i->complementary_index(), make_edge_weight(i->weight())};
+                edge_type e{i->target_node(), i->complementary_index(), i->weight()};
                 storage.push_back_to_partition(node, std::move(e));
               }
               else
@@ -1590,9 +1569,9 @@ namespace sequoia
       }
 
       template<std::invocable<edge_weight_type&> Fn>
-      constexpr std::invoke_result_t<Fn, edge_weight_type&> mutate_source_edge_weight(const_edge_iterator citer, Fn fn)
+      constexpr std::invoke_result_t<Fn, edge_weight_type&> mutate_source_edge_weight(const_edge_iterator citer, Fn&& fn)
       {
-        return to_edge_iterator(citer)->mutate_weight(fn);
+        return to_edge_iterator(citer)->mutate_weight(std::forward<Fn>(fn));
       }
 
       template<class... Args>
@@ -1680,7 +1659,7 @@ namespace sequoia
         }
         else
         {
-          return insert_to_partition(citer1, node2, pos2, make_edge_weight(std::forward<Args>(args)...));
+          return insert_to_partition(citer1, node2, pos2, std::forward<Args>(args)...);
         }
       }
 

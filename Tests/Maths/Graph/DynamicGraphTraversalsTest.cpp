@@ -235,8 +235,6 @@ namespace sequoia::testing
     maths::graph_flavour GraphFlavour,
     class EdgeWeight,
     class NodeWeight,
-    class EdgeWeightCreator,
-    class NodeWeightCreator,
     class EdgeStorageTraits,
     class NodeWeightStorageTraits
    >
@@ -244,7 +242,7 @@ namespace sequoia::testing
   {
     using ESTraits = EdgeStorageTraits;
     using NSTraits = NodeWeightStorageTraits;
-    using graph_type = graph_type_generator_t<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, ESTraits, NSTraits>;
+    using graph_type = graph_type_generator_t<GraphFlavour, EdgeWeight, NodeWeight, ESTraits, NSTraits>;
 
     tracker_test<graph_type, Traverser<maths::traversal_flavour::breadth_first>>();
     tracker_test<graph_type, Traverser<maths::traversal_flavour::depth_first>>();

@@ -13,7 +13,6 @@
  */
 
 #include "sequoia/Core/DataStructures/PartitionedData.hpp"
-#include "sequoia/Core/Object/DataPool.hpp"
 #include "sequoia/Maths/Graph/GraphImpl.hpp"
 #include "sequoia/Maths/Graph/StaticGraphImpl.hpp"
 #include "sequoia/Maths/Graph/StaticNodeStorage.hpp"
@@ -41,10 +40,9 @@ namespace sequoia::maths
       connectivity
       <
         Directedness,
-        graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected, Order, Size, EdgeWeight, typename Traits::edge_index_type>,
-        object::faithful_producer<EdgeWeight>
+        graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected, Order, Size, EdgeWeight, typename Traits::edge_index_type>
       >,
-      graph_impl::static_node_storage<object::faithful_producer<NodeWeight>, Order>
+      graph_impl::static_node_storage<NodeWeight, Order>
     >
   {
   private:
@@ -54,10 +52,9 @@ namespace sequoia::maths
         connectivity
         <
           Directedness,
-          graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected, Order, Size, EdgeWeight, typename Traits::edge_index_type>,
-          object::faithful_producer<EdgeWeight>
+          graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected, Order, Size, EdgeWeight, typename Traits::edge_index_type>
         >,
-        graph_impl::static_node_storage<object::faithful_producer<NodeWeight>, Order>
+        graph_impl::static_node_storage<NodeWeight, Order>
       >;
 
   public:
@@ -78,10 +75,9 @@ namespace sequoia::maths
         connectivity
         <
           Directedness,
-          graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected, Order, Size, EdgeWeight, typename Traits::edge_index_type>,
-          object::faithful_producer<EdgeWeight>
+          graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected, Order, Size, EdgeWeight, typename Traits::edge_index_type>
         >,
-        graph_impl::static_node_storage<object::faithful_producer<NodeWeight>, Order>
+        graph_impl::static_node_storage<NodeWeight, Order>
       >::graph_primitive;
 
     using primitive_type::swap_nodes;
@@ -110,10 +106,9 @@ namespace sequoia::maths
       connectivity
       <
         Directedness,
-        graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded, Order, Size, EdgeWeight, typename Traits::edge_index_type>,
-        object::faithful_producer<EdgeWeight>
+        graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded, Order, Size, EdgeWeight, typename Traits::edge_index_type>
       >,
-      graph_impl::static_node_storage<object::faithful_producer<NodeWeight>, Order>
+      graph_impl::static_node_storage<NodeWeight, Order>
     >
   {
   private:
@@ -123,10 +118,9 @@ namespace sequoia::maths
         connectivity
         <
           Directedness,
-          graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded, Order, Size, EdgeWeight, typename Traits::edge_index_type>,
-          object::faithful_producer<EdgeWeight>
+          graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded, Order, Size, EdgeWeight, typename Traits::edge_index_type>
         >,
-        graph_impl::static_node_storage<object::faithful_producer<NodeWeight>, Order>
+        graph_impl::static_node_storage<NodeWeight, Order>
       >;
 
   public:
@@ -147,10 +141,9 @@ namespace sequoia::maths
         connectivity
         <
           Directedness,
-          graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded, Order, Size, EdgeWeight, typename Traits::edge_index_type>,
-          object::faithful_producer<EdgeWeight>
+          graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded, Order, Size, EdgeWeight, typename Traits::edge_index_type>
         >,
-        graph_impl::static_node_storage<object::faithful_producer<NodeWeight>, Order>
+        graph_impl::static_node_storage<NodeWeight, Order>
       >::graph_primitive;
 
     using primitive::swap_nodes;

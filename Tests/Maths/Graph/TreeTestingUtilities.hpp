@@ -22,16 +22,13 @@ namespace sequoia::testing
     maths::tree_link_direction TreeLinkDir,
     class EdgeWeight,
     class NodeWeight,
-    class EdgeWeightCreator,
-    class NodeWeightCreator,
     class EdgeStorageTraits,
     class NodeWeightStorageTraits
   >
-    requires (object::creator<EdgeWeightCreator> && object::creator<NodeWeightCreator>)
-  struct value_tester<maths::tree<Directedness, TreeLinkDir, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>>
-    : graph_value_tester_base<maths::tree<Directedness, TreeLinkDir, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>>
+  struct value_tester<maths::tree<Directedness, TreeLinkDir, EdgeWeight, NodeWeight,EdgeStorageTraits, NodeWeightStorageTraits>>
+    : graph_value_tester_base<maths::tree<Directedness, TreeLinkDir, EdgeWeight, NodeWeight, EdgeStorageTraits, NodeWeightStorageTraits>>
   {
-    using tree_type = maths::tree<Directedness, TreeLinkDir, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>;
+    using tree_type = maths::tree<Directedness, TreeLinkDir, EdgeWeight, NodeWeight, EdgeStorageTraits, NodeWeightStorageTraits>;
     using size_type = typename tree_type::size_type;
 
     using graph_value_tester_base<tree_type>::test;

@@ -13,7 +13,6 @@
 */
 
 #include "sequoia/Core/DataStructures/PartitionedData.hpp"
-#include "sequoia/Core/Object/DataPool.hpp"
 #include "sequoia/Maths/Graph/GraphImpl.hpp"
 #include "sequoia/Maths/Graph/DynamicGraphImpl.hpp"
 #include "sequoia/Maths/Graph/NodeStorage.hpp"
@@ -63,31 +62,27 @@ namespace sequoia::maths
     graph_flavour GraphFlavour,
     class EdgeWeight,
     class NodeWeight,
-    class EdgeWeightCreator,
-    class NodeWeightCreator,
     class EdgeStorageTraits,
     class NodeWeightStorageTraits
   >
-    requires (object::creator<EdgeWeightCreator> && object::creator<NodeWeightCreator>)
   class graph_base : public
     graph_primitive
     <
       connectivity
       <
         to_directedness(GraphFlavour),
-        graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeightCreator, EdgeStorageTraits, std::size_t>,
-        EdgeWeightCreator
+        graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeight, EdgeStorageTraits, std::size_t>
       >,
       graph_impl::node_storage
       <
-        NodeWeightCreator,
+        NodeWeight,
         NodeWeightStorageTraits
       >
     >
   {
   public:
-    using edge_traits_type  = graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeightCreator, EdgeStorageTraits, std::size_t>;
-    using node_storage_type = graph_impl::node_storage<NodeWeightCreator, NodeWeightStorageTraits>;
+    using edge_traits_type  = graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeight, EdgeStorageTraits, std::size_t>;
+    using node_storage_type = graph_impl::node_storage<NodeWeight, NodeWeightStorageTraits>;
 
     using primitive_type =
       graph_primitive
@@ -95,8 +90,7 @@ namespace sequoia::maths
         connectivity
         <
           to_directedness(GraphFlavour),
-          edge_traits_type,
-          EdgeWeightCreator
+          edge_traits_type
         >,
         node_storage_type
       >;
@@ -192,20 +186,14 @@ namespace sequoia::maths
     graph_flavour GraphFlavour,
     class EdgeWeight,
     class NodeWeight,
-    class EdgeWeightCreator,
-    class NodeWeightCreator,
     class EdgeStorageTraits,
     class NodeWeightStorageTraits
   >
-  requires (   object::creator<EdgeWeightCreator>
-            && object::creator<NodeWeightCreator>
-            && NodeWeightStorageTraits::has_allocator)
+  requires (NodeWeightStorageTraits::has_allocator)
   class graph_base<
       GraphFlavour,
       EdgeWeight,
       NodeWeight,
-      EdgeWeightCreator,
-      NodeWeightCreator,
       EdgeStorageTraits,
       NodeWeightStorageTraits
     > : public
@@ -214,19 +202,18 @@ namespace sequoia::maths
       connectivity
       <
         to_directedness(GraphFlavour),
-        graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeightCreator, EdgeStorageTraits, std::size_t>,
-        EdgeWeightCreator
+        graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeight, EdgeStorageTraits, std::size_t>
       >,
       graph_impl::node_storage
       <
-        NodeWeightCreator,
+        NodeWeight,
         NodeWeightStorageTraits
       >
     >
   {
   public:
-    using edge_traits_type = graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeightCreator, EdgeStorageTraits, std::size_t>;
-    using node_storage_type = graph_impl::node_storage<NodeWeightCreator, NodeWeightStorageTraits>;
+    using edge_traits_type = graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeight, EdgeStorageTraits, std::size_t>;
+    using node_storage_type = graph_impl::node_storage<NodeWeight, NodeWeightStorageTraits>;
 
     using primitive_type =
       graph_primitive
@@ -234,8 +221,7 @@ namespace sequoia::maths
         connectivity
         <
           to_directedness(GraphFlavour),
-          edge_traits_type,
-          EdgeWeightCreator
+          edge_traits_type
         >,
         node_storage_type
       >;
@@ -346,20 +332,15 @@ namespace sequoia::maths
     directed_flavour Directedness,
     class EdgeWeight,
     class NodeWeight,
-    class EdgeWeightCreator=object::faithful_producer<EdgeWeight>,
-    class NodeWeightCreator=object::faithful_producer<NodeWeight>,
     class EdgeStorageTraits = bucketed_edge_storage_traits,
     class NodeWeightStorageTraits = node_weight_storage_traits<NodeWeight>
   >
-    requires (object::creator<EdgeWeightCreator> && object::creator<NodeWeightCreator>)
   class graph final : public
     graph_base
     <
       graph_impl::to_graph_flavour<Directedness>(),
       EdgeWeight,
       NodeWeight,
-      EdgeWeightCreator,
-      NodeWeightCreator,
       EdgeStorageTraits,
       NodeWeightStorageTraits
     >
@@ -373,8 +354,6 @@ namespace sequoia::maths
         graph_impl::to_graph_flavour<Directedness>(),
         EdgeWeight,
         NodeWeight,
-        EdgeWeightCreator,
-        NodeWeightCreator,
         EdgeStorageTraits,
         NodeWeightStorageTraits
       >::graph_base;
@@ -385,8 +364,6 @@ namespace sequoia::maths
         graph_impl::to_graph_flavour<Directedness>(),
         EdgeWeight,
         NodeWeight,
-        EdgeWeightCreator,
-        NodeWeightCreator,
         EdgeStorageTraits,
         NodeWeightStorageTraits
       >;
@@ -418,20 +395,15 @@ namespace sequoia::maths
     directed_flavour Directedness,
     class EdgeWeight,
     class NodeWeight,
-    class EdgeWeightCreator=object::faithful_producer<EdgeWeight>,
-    class NodeWeightCreator=object::faithful_producer<NodeWeight>,
     class EdgeStorageTraits=bucketed_edge_storage_traits,
     class NodeWeightStorageTraits=node_weight_storage_traits<NodeWeight>
   >
-    requires (object::creator<EdgeWeightCreator> && object::creator<NodeWeightCreator>)
   class embedded_graph final : public
     graph_base
     <
       graph_impl::to_embedded_graph_flavour<Directedness>(),
       EdgeWeight,
       NodeWeight,
-      EdgeWeightCreator,
-      NodeWeightCreator,
       EdgeStorageTraits,
       NodeWeightStorageTraits
     >
@@ -445,8 +417,6 @@ namespace sequoia::maths
         graph_impl::to_embedded_graph_flavour<Directedness>(),
         EdgeWeight,
         NodeWeight,
-        EdgeWeightCreator,
-        NodeWeightCreator,
         EdgeStorageTraits,
         NodeWeightStorageTraits
       >::graph_base;
@@ -457,8 +427,6 @@ namespace sequoia::maths
         graph_impl::to_embedded_graph_flavour<Directedness>(),
         EdgeWeight,
         NodeWeight,
-        EdgeWeightCreator,
-        NodeWeightCreator,
         EdgeStorageTraits,
         NodeWeightStorageTraits
       >;

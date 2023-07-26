@@ -23,18 +23,8 @@ namespace sequoia::testing
 
     void run_tests();
   private:
-    template<class Test>
-    friend void do_allocation_tests(Test&);
-
-    template<class Sharing>
     void test_dynamic_node_storage();
 
     void test_static_node_storage();
-
-    template<class Sharing, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
-    void test_allocation_impl();
-
-    template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
-    void test_allocation();
   };
 }

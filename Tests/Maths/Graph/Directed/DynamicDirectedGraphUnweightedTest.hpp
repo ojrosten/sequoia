@@ -31,8 +31,6 @@ namespace sequoia::testing
       maths::graph_flavour GraphFlavour, // TO DO: remove this parameter
       class EdgeWeight,
       class NodeWeight,
-      class EdgeWeightCreator,
-      class NodeWeightCreator,
       class EdgeStorageTraits,
       class NodeWeightStorageTraits
     >

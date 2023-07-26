@@ -28,16 +28,16 @@ namespace sequoia::testing
   template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
   void node_storage_allocation_test::test_allocation()
   {
-    test_allocation_impl<object::faithful_producer<int>, PropagateCopy, PropagateMove, PropagateSwap>();
-    test_allocation_impl<object::data_pool<int>, PropagateCopy, PropagateMove, PropagateSwap>();
+    test_allocation_impl<int, PropagateCopy, PropagateMove, PropagateSwap>();
+    test_allocation_impl<int, PropagateCopy, PropagateMove, PropagateSwap>();
   }
 
-  template<class Sharing, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
+  template<class Weight, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
   void node_storage_allocation_test::test_allocation_impl()
   {
     using namespace maths::graph_impl;
 
-    using storage = node_storage_tester<Sharing, PropagateCopy, PropagateMove, PropagateSwap>;
+    using storage = node_storage_tester<Weight, PropagateCopy, PropagateMove, PropagateSwap>;
     using allocator = typename storage::allocator_type;
 
     auto mutator{

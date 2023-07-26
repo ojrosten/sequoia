@@ -28,6 +28,12 @@ int main(int argc, char** argv)
       experimental_test{"Unit Test"}
     );
 
+    runner.add_test_suite(
+      "Node Storage",
+      node_storage_test{"Dynamic and Static"},
+      node_storage_allocation_test{"Allocation Test"}
+    );
+
     runner.execute(timer_resolution{1ms});
   }
   catch(const std::exception& e)

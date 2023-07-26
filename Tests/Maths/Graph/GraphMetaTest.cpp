@@ -67,7 +67,6 @@ namespace sequoia::testing
   <
     maths::graph_flavour GraphFlavour,
     class EdgeWeight,
-    class EdgeWeightCreator,
     template<class, class> class EdgeType
   >
   void test_graph_meta::test_undirected_unshared()
@@ -76,13 +75,12 @@ namespace sequoia::testing
     using namespace graph_impl;
     using namespace data_structures;
 
-    static_assert(!big_proxy<EdgeWeightCreator>());
-    static_assert(!sharing_traits<GraphFlavour, edge_sharing_preference::independent, EdgeWeightCreator>::shared_weight_v);
+    static_assert(!big_weight<EdgeWeight>());
+    static_assert(!sharing_traits<GraphFlavour, edge_sharing_preference::independent, EdgeWeight>::shared_weight_v);
 
-    using gen_t = dynamic_edge_traits<GraphFlavour, EdgeWeightCreator, contiguous_edge_storage_traits, std::size_t>;
+    using gen_t = dynamic_edge_traits<GraphFlavour, EdgeWeight, contiguous_edge_storage_traits, std::size_t>;
     using edge_t       = typename gen_t::edge_type;
-    using proxy        = typename EdgeWeightCreator::product_type;
-    using handler_type = shared_to_handler_t<false, proxy>;
+    using handler_type = shared_to_handler_t<false, EdgeWeight>;
     static_assert(std::is_same_v<edge_t, EdgeType<handler_type, std::size_t>>);
   }
 
@@ -90,7 +88,6 @@ namespace sequoia::testing
   <
     maths::graph_flavour GraphFlavour,
     class EdgeWeight,
-    class EdgeWeightCreator,
     template<class, class> class EdgeType
   >
   void test_graph_meta::test_undirected_shared()
@@ -99,13 +96,12 @@ namespace sequoia::testing
     using namespace graph_impl;
     using namespace data_structures;
 
-    static_assert(big_proxy<EdgeWeightCreator>());
-    static_assert(sharing_traits<GraphFlavour, edge_sharing_preference::agnostic, EdgeWeightCreator>::shared_weight_v);
+    static_assert(big_weight<EdgeWeight>());
+    static_assert(sharing_traits<GraphFlavour, edge_sharing_preference::agnostic, EdgeWeight>::shared_weight_v);
 
-    using gen_t = dynamic_edge_traits<GraphFlavour, EdgeWeightCreator, contiguous_edge_storage_traits, std::size_t>;
+    using gen_t = dynamic_edge_traits<GraphFlavour, EdgeWeight, contiguous_edge_storage_traits, std::size_t>;
     using edge_t       = typename gen_t::edge_type;
-    using proxy        = typename EdgeWeightCreator::product_type;
-    using handler_type = shared_to_handler_t<true, proxy>;
+    using handler_type = shared_to_handler_t<true, EdgeWeight>;
     static_assert(std::is_same_v<edge_t, EdgeType<handler_type, std::size_t>>);
   }
 
@@ -117,32 +113,19 @@ namespace sequoia::testing
   >
   void test_graph_meta::test_undirected()
   {
-    test_undirected_unshared<GraphFlavour, int, object::faithful_producer<int>, EdgeType>();
-    test_undirected_unshared<GraphFlavour, int, object::data_pool<int>, EdgeType>();
-    test_undirected_unshared<GraphFlavour, wrapper<int>, object::faithful_producer<wrapper<int>>, EdgeType>();
-    test_undirected_unshared<GraphFlavour, wrapper<int>, object::data_pool<wrapper<int>>, EdgeType>();
+    test_undirected_unshared<GraphFlavour, int, EdgeType>();
+    test_undirected_unshared<GraphFlavour, wrapper<int>, EdgeType>();
 
-    test_undirected_unshared<GraphFlavour, double, object::faithful_producer<double>, EdgeType>();
-    test_undirected_unshared<GraphFlavour, double, object::data_pool<double>, EdgeType>();
-    test_undirected_unshared<GraphFlavour, wrapper<double>, object::faithful_producer<wrapper<double>>, EdgeType>();
-    test_undirected_unshared<GraphFlavour, wrapper<double>, object::data_pool<wrapper<double>>, EdgeType>();
+    test_undirected_unshared<GraphFlavour, double, EdgeType>();
+    test_undirected_unshared<GraphFlavour, wrapper<double>, EdgeType>();
 
-    test_undirected_unshared<GraphFlavour, std::tuple<double, double>, object::faithful_producer<std::tuple<double, double>>, EdgeType>();
-    test_undirected_unshared<GraphFlavour, std::tuple<double, double>, object::data_pool<std::tuple<double, double>>, EdgeType>();
+    test_undirected_unshared<GraphFlavour, std::tuple<double, double>, EdgeType>();
 
-    test_undirected_shared<GraphFlavour, std::tuple<double, double, double>, object::faithful_producer<std::tuple<double, double, double>>, EdgeType>();
-    // For the data pool, the sizeof the proxy is just the size of a shared_ptr
-    test_undirected_unshared<GraphFlavour, std::tuple<double, double, double>, object::data_pool<std::tuple<double, double, double>>, EdgeType>();
-
-    test_undirected_shared<GraphFlavour, std::vector<int>, object::faithful_producer<std::vector<int>>, EdgeType>();
-    test_undirected_unshared<GraphFlavour, std::vector<int>, object::data_pool<std::vector<int>>, EdgeType>();
+    test_undirected_shared<GraphFlavour, std::tuple<double, double, double>, EdgeType>();
+    test_undirected_shared<GraphFlavour, std::vector<int>, EdgeType>();
   }
 
-  template
-  <
-    class EdgeWeight,
-    class EdgeWeightCreator
-  >
+  template<class EdgeWeight>
   void test_graph_meta::test_directed_impl()
   {
     using namespace maths;
@@ -150,18 +133,13 @@ namespace sequoia::testing
     using namespace data_structures;
     using namespace object;
 
-    using gen_t = dynamic_edge_traits<graph_flavour::directed, EdgeWeightCreator, contiguous_edge_storage_traits, std::size_t>;
+    using gen_t = dynamic_edge_traits<graph_flavour::directed, EdgeWeight, contiguous_edge_storage_traits, std::size_t>;
     using edge_t       = typename gen_t::edge_type;
-    using proxy        = edge_weight_proxy_t<EdgeWeightCreator>;
-    using handler_type = shared_to_handler_t<false, proxy>;
+    using handler_type = shared_to_handler_t<false, EdgeWeight>;
     static_assert(std::is_same_v<edge_t, partial_edge<handler_type>>);
   }
 
-  template
-  <
-    class EdgeWeight,
-    class EdgeWeightCreator
-  >
+  template<class EdgeWeight>
   void test_graph_meta::test_directed_embedded_impl()
   {
     using namespace maths;
@@ -169,10 +147,9 @@ namespace sequoia::testing
     using namespace data_structures;
     using namespace object;
 
-    using gen_t = dynamic_edge_traits<graph_flavour::directed_embedded, EdgeWeightCreator, contiguous_edge_storage_traits, std::size_t>;
+    using gen_t = dynamic_edge_traits<graph_flavour::directed_embedded, EdgeWeight, contiguous_edge_storage_traits, std::size_t>;
     using edge_t       = typename gen_t::edge_type;
-    using proxy        = edge_weight_proxy_t<EdgeWeightCreator>;
-    using handler_type = shared_to_handler_t<false, proxy>;
+    using handler_type = shared_to_handler_t<false, EdgeWeight>;
     static_assert(std::is_same_v<edge_t, edge<handler_type>>);
   }
 
@@ -180,11 +157,11 @@ namespace sequoia::testing
   {
     using namespace maths;
 
-    test_directed_impl<int, object::faithful_producer<int>>();
-    test_directed_impl<int, object::data_pool<int>>();
+    test_directed_impl<int>();
+    test_directed_impl<int>();
 
-    test_directed_impl<std::tuple<double,double,double>, object::faithful_producer<std::tuple<double,double,double>>>();
-    test_directed_impl<std::tuple<double,double,double>, object::data_pool<std::tuple<double,double,double>>>();
+    test_directed_impl<std::tuple<double,double,double>>();
+    test_directed_impl<std::tuple<double,double,double>>();
   }
 
 
@@ -192,10 +169,10 @@ namespace sequoia::testing
   {
     using namespace maths;
 
-    test_directed_embedded_impl<int, object::faithful_producer<int>>();
-    test_directed_embedded_impl<int, object::data_pool<int>>();
+    test_directed_embedded_impl<int>();
+    test_directed_embedded_impl<int>();
 
-    test_directed_embedded_impl<std::tuple<double,double,double>, object::faithful_producer<std::tuple<double,double,double>>>();
-    test_directed_embedded_impl<std::tuple<double,double,double>, object::data_pool<std::tuple<double,double,double>>>();
+    test_directed_embedded_impl<std::tuple<double,double,double>>();
+    test_directed_embedded_impl<std::tuple<double,double,double>>();
   }
 }

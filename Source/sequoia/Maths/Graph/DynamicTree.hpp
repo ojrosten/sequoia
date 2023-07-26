@@ -21,21 +21,16 @@ namespace sequoia::maths
     tree_link_direction TreeLinkDir,
     class EdgeWeight,
     class NodeWeight,
-    class EdgeWeightCreator       = object::faithful_producer<EdgeWeight>,
-    class NodeWeightCreator       = object::faithful_producer<NodeWeight>,
     class EdgeStorageTraits       = bucketed_edge_storage_traits,
     class NodeWeightStorageTraits = node_weight_storage_traits<NodeWeight>
   >
-    requires (      object::creator<EdgeWeightCreator> && object::creator<NodeWeightCreator>
-               && ((TreeLinkDir == tree_link_direction::symmetric) || (Directedness == directed_flavour::directed)))
+    requires ((TreeLinkDir == tree_link_direction::symmetric) || (Directedness == directed_flavour::directed))
     class tree final : public
       graph_base
       <
         graph_impl::to_graph_flavour<Directedness>(),
         EdgeWeight,
         NodeWeight,
-        EdgeWeightCreator,
-        NodeWeightCreator,
         EdgeStorageTraits,
         NodeWeightStorageTraits
       >
@@ -47,8 +42,6 @@ namespace sequoia::maths
         graph_impl::to_graph_flavour<Directedness>(),
         EdgeWeight,
         NodeWeight,
-        EdgeWeightCreator,
-        NodeWeightCreator,
         EdgeStorageTraits,
         NodeWeightStorageTraits
       >;

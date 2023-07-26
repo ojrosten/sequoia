@@ -12,9 +12,7 @@
 #include "EdgeTestingUtilities.hpp"
 #include "NodeStorageTestingUtilities.hpp"
 
-#include "sequoia/Core/Object/FaithfulWrapper.hpp"
 #include "sequoia/Core/DataStructures/PartitionedData.hpp"
-#include "sequoia/Core/Object/DataPool.hpp"
 #include "sequoia/Maths/Graph/GraphImpl.hpp"
 #include "sequoia/Maths/Graph/GraphTraits.hpp"
 
@@ -23,12 +21,11 @@ namespace sequoia::testing
   template
   <
     maths::directed_flavour Directedness,
-    class EdgeTraits,
-    class WeightMaker
+    class EdgeTraits
   >
-  struct value_tester<maths::connectivity<Directedness, EdgeTraits, WeightMaker>>
+  struct value_tester<maths::connectivity<Directedness, EdgeTraits>>
   {
-    using type            = maths::connectivity<Directedness, EdgeTraits, WeightMaker>;
+    using type            = maths::connectivity<Directedness, EdgeTraits>;
     using edge_index_type = typename type::edge_index_type;
 
     template<class E>

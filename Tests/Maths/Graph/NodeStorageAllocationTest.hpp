@@ -29,7 +29,7 @@ namespace sequoia::testing
     void run_tests();
   private:
 
-    template<class Sharing, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
+    template<class Weight, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
     void test_allocation_impl();
   };
 }

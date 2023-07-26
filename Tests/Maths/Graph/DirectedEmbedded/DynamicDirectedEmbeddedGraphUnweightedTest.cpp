@@ -32,14 +32,12 @@ namespace sequoia::testing
     maths::graph_flavour GraphFlavour,
     class EdgeWeight,
     class NodeWeight,
-    class EdgeWeightCreator,
-    class NodeWeightCreator,
     class EdgeStorageTraits,
     class NodeWeightStorageTraits
   >
   void dynamic_directed_embedded_graph_unweighted_test::execute_operations()
   {
-    using ops = dynamic_directed_embedded_graph_operations<EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>;
+    using ops = dynamic_directed_embedded_graph_operations<EdgeWeight, NodeWeight, EdgeStorageTraits, NodeWeightStorageTraits>;
     using graph_t = ops::graph_t;
 
     auto trg{ops::make_transition_graph(*this)};

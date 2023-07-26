@@ -46,8 +46,6 @@ namespace sequoia
         maths::graph_flavour GraphFlavour,
         class EdgeWeight,
         class NodeWeight,
-        class EdgeWeightCreator,
-        class NodeWeightCreator,
         class EdgeStorageTraits,
         class NodeWeightStorageTraits
       >

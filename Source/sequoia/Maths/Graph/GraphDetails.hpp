@@ -13,8 +13,6 @@
  */
 
 #include "sequoia/Maths/Graph/Edge.hpp"
-#include "sequoia/Core/Object/Creator.hpp"
-#include "sequoia/Core/Object/FaithfulWrapper.hpp"
 
 namespace sequoia
 {
@@ -65,45 +63,28 @@ namespace sequoia
         return (flavour != graph_flavour::directed) ? 2*size : size;
       }
 
-      template<bool Shared, class Proxy>
-      using shared_to_handler_t = std::conditional_t<Shared, object::shared<Proxy>, object::by_value<Proxy>>;
+      template<bool Shared, class Weight>
+      using shared_to_handler_t = std::conditional_t<Shared, object::shared<Weight>, object::by_value<Weight>>;
 
-      template<class EdgeWeightCreator>
-        requires object::creator<EdgeWeightCreator>
-      using edge_weight_proxy_t = typename EdgeWeightCreator::product_type;
-
-      template<class EdgeWeightCreator>
-        requires object::creator<EdgeWeightCreator>
+      template<class Weight>
       [[nodiscard]]
-      constexpr bool big_proxy() noexcept
+      constexpr bool big_weight() noexcept
       {
-        using proxy = edge_weight_proxy_t<EdgeWeightCreator>;
-
-        return sizeof(proxy) > 2*sizeof(proxy*);
-      }
-
-      template<class EdgeWeightCreator>
-        requires object::creator<EdgeWeightCreator>
-      [[nodiscard]]
-      constexpr bool copy_constructible_proxy() noexcept
-      {
-        using proxy = edge_weight_proxy_t<EdgeWeightCreator>;
-        return std::is_copy_constructible_v<proxy>;
+        return sizeof(Weight) > 2*sizeof(Weight*);
       }
 
       template
       <
         graph_flavour GraphFlavour,
         edge_sharing_preference SharingPreference,
-        class EdgeWeightCreator
+        class EdgeWeight
       >
-        requires object::creator<EdgeWeightCreator>
       struct sharing_traits
       {
       private:
         constexpr static bool default_weight_sharing{
               undirected(GraphFlavour)
-           && (big_proxy<EdgeWeightCreator>() || !copy_constructible_proxy<EdgeWeightCreator>())
+           && (big_weight<EdgeWeight>() || !std::is_copy_constructible_v<EdgeWeight>)
         };
       public:
         static_assert((GraphFlavour != graph_flavour::directed) || (SharingPreference != edge_sharing_preference::shared_weight),
@@ -154,8 +135,7 @@ namespace sequoia
       struct edge_to_init_type
       {
         using weight_type    = typename Edge::weight_type;
-        using proxy_type     = object::faithful_wrapper<weight_type>;
-        using handler_type   = object::by_value<proxy_type>;
+        using handler_type   = object::by_value<weight_type>;
         using index_type     = typename Edge::index_type;
         using edge_init_type = std::conditional_t<Embedded,
                                                   std::conditional_t<Edge::flavour == edge_flavour::partial_embedded,
@@ -171,14 +151,13 @@ namespace sequoia
       template
       <
         graph_flavour GraphFlavour,
-        class EdgeWeightCreator,
+        class EdgeWeight,
         std::integral IndexType,
         edge_sharing_preference SharingPreference
       >
-        requires object::creator<EdgeWeightCreator>
       struct edge_type_generator
       {
-        using sharing = sharing_traits<GraphFlavour, SharingPreference, EdgeWeightCreator>;
+        using sharing = sharing_traits<GraphFlavour, SharingPreference, EdgeWeight>;
         constexpr static bool shared_weight_v{sharing::shared_weight_v};
         constexpr static bool shared_edge_v{sharing::shared_edge_v};
         constexpr static bool is_embedded_v{(GraphFlavour == graph_flavour::undirected_embedded) || (GraphFlavour == graph_flavour::directed_embedded)};
@@ -186,11 +165,10 @@ namespace sequoia
 
         static_assert((GraphFlavour != graph_flavour::directed_embedded) || !sharing::shared_edge_v || !shared_weight_v);
 
-        using edge_weight_proxy = edge_weight_proxy_t<EdgeWeightCreator>;
-        using handler_type      = shared_to_handler_t<shared_weight_v, edge_weight_proxy>;
-        using edge_type         = flavour_to_edge_t<GraphFlavour, handler_type, IndexType, shared_edge_v>;
-        using edge_init_type    = edge_to_init_type_t<edge_type, is_embedded_v>;
-        using edge_weight_type  = typename edge_type::weight_type;
+        using handler_type     = shared_to_handler_t<shared_weight_v, EdgeWeight>;
+        using edge_type        = flavour_to_edge_t<GraphFlavour, handler_type, IndexType, shared_edge_v>;
+        using edge_init_type   = edge_to_init_type_t<edge_type, is_embedded_v>;
+        using edge_weight_type = EdgeWeight;
       };
 
       template<class T>

@@ -8,12 +8,6 @@
 /*! \file */
 
 #include "NodeStorageTest.hpp"
-#include "sequoia/Core/Object/FaithfulWrapper.hpp"
-#include "sequoia/Core/Object/DataPool.hpp"
-#include "sequoia/Maths/Graph/GraphDetails.hpp"
-
-#include <complex>
-#include <list>
 
 namespace sequoia:: testing
 {
@@ -25,18 +19,13 @@ namespace sequoia:: testing
 
   void node_storage_test::run_tests()
   {
-    test_dynamic_node_storage<object::faithful_producer<double>>();
-    test_dynamic_node_storage<object::data_pool<double>>();
-
+    test_dynamic_node_storage();
     test_static_node_storage();
   }
 
-  template<class Sharing>
   void node_storage_test::test_dynamic_node_storage()
   {
-    using namespace maths::graph_impl;
-
-    using storage = node_storage_tester<Sharing>;
+    using storage = node_storage_tester<double>;
 
     storage store{};
     check(equivalence, report_line(""), store, std::initializer_list<double>{});
@@ -113,8 +102,7 @@ namespace sequoia:: testing
 
   void node_storage_test::test_static_node_storage()
   {
-    using namespace maths::graph_impl;
-    using storage = static_node_storage_tester<object::faithful_producer<int>, 4>;
+    using storage = static_node_storage_tester<int, 4>;
 
     constexpr storage store{4, 4, 7, 9};
 

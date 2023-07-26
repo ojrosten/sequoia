@@ -47,8 +47,7 @@ namespace sequoia::maths
           Size,
           EdgeWeight,
           typename heterogeneous_graph_traits<Size, Order, EdgeWeight>::edge_index_type
-        >,
-        object::faithful_producer<EdgeWeight>
+        >
       >,
       graph_impl::heterogeneous_node_storage<NodeWeights...>
     >
@@ -67,8 +66,7 @@ namespace sequoia::maths
             Size,
             EdgeWeight,
             typename heterogeneous_graph_traits<Size, Order, EdgeWeight>::edge_index_type
-          >,
-          object::faithful_producer<EdgeWeight>
+          >
         >,
         graph_impl::heterogeneous_node_storage<NodeWeights...>
       >;
@@ -99,8 +97,7 @@ namespace sequoia::maths
             Size,
             EdgeWeight,
             typename heterogeneous_graph_traits<Size, Order, EdgeWeight>::edge_index_type
-          >,
-          object::faithful_producer<EdgeWeight>
+          >
         >,
         graph_impl::heterogeneous_node_storage<NodeWeights...>
       >::graph_primitive;
@@ -138,8 +135,7 @@ namespace sequoia::maths
           Size,
           EdgeWeight,
           typename heterogeneous_embedded_graph_traits<Size, Order, EdgeWeight>::edge_index_type
-        >,
-        object::faithful_producer<EdgeWeight>
+        >
       >,
       graph_impl::heterogeneous_node_storage<NodeWeights...>
     >
@@ -158,8 +154,7 @@ namespace sequoia::maths
             Size,
             EdgeWeight,
             typename heterogeneous_embedded_graph_traits<Size, Order, EdgeWeight>::edge_index_type
-          >,
-          object::faithful_producer<EdgeWeight>
+          >
         >,
         graph_impl::heterogeneous_node_storage<NodeWeights...>
       >;
@@ -188,8 +183,7 @@ namespace sequoia::maths
             Size,
             EdgeWeight,
             typename heterogeneous_embedded_graph_traits<Size, Order, EdgeWeight>::edge_index_type
-          >,
-          object::faithful_producer<EdgeWeight>
+          >
         >,
         graph_impl::heterogeneous_node_storage<NodeWeights...>
       >::graph_primitive;

@@ -41,7 +41,6 @@ namespace sequoia::testing
     <
       maths::graph_flavour GraphFlavour,
       class EdgeWeight,
-      class EdgeWeightCreator,
       template<class, class> class EdgeType
     >
     void test_undirected_unshared();
@@ -50,23 +49,14 @@ namespace sequoia::testing
     <
       maths::graph_flavour GraphFlavour,
       class EdgeWeight,
-      class EdgeWeightCreator,
       template<class, class> class EdgeType
     >
     void test_undirected_shared();
 
-    template
-    <
-      class EdgeWeight,
-      class EdgeWeightPooling
-    >
+    template<class EdgeWeight>
     void test_directed_impl();
 
-    template
-    <
-      class EdgeWeight,
-      class EdgeWeightPooling
-    >
+    template<class EdgeWeight>
     void test_directed_embedded_impl();
 
     void test_static_edge_index_generator();

@@ -95,8 +95,6 @@ namespace sequoia::testing
   <
     class EdgeWeight,
     class NodeWeight,
-    class EdgeWeightCreator,
-    class NodeWeightCreator,
     class EdgeStorageTraits,
     class NodeWeightStorageTraits
   >
@@ -105,7 +103,7 @@ namespace sequoia::testing
     template<maths::network>
     friend struct graph_initialization_checker;
    public:
-    using graph_t            = maths::graph<maths::directed_flavour::directed, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>;
+    using graph_t            = maths::graph<maths::directed_flavour::directed, EdgeWeight, NodeWeight, EdgeStorageTraits, NodeWeightStorageTraits>;
     using edge_t             = typename graph_t::edge_init_type;
     using node_weight_type   = typename graph_t::node_weight_type;
     using edges_equivalent_t = std::initializer_list<std::initializer_list<edge_t>>;
@@ -134,7 +132,7 @@ namespace sequoia::testing
     [[nodiscard]]
     static transition_graph make_weighted_transition_graph(regular_test& t)
     {
-      using base_ops = dynamic_directed_graph_operations<EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits>;
+      using base_ops = dynamic_directed_graph_operations<EdgeWeight, NodeWeight, EdgeStorageTraits, NodeWeightStorageTraits>;
       using namespace directed_graph;
 
       auto trg{base_ops::make_transition_graph(t)};
@@ -279,18 +277,16 @@ namespace sequoia::testing
         }
       );
 
-      if constexpr(std::same_as<object::faithful_producer<double>, NodeWeightCreator>)
-      {
-        trg.join(
-          graph_description::node,
-          weighted_graph_description::nodew,
-          t.report_line("Change node weight via iterator"),
-          [](graph_t g) -> graph_t {
-            *g.begin_node_weights() = 1.0;
-            return g;
-          }
-        );
-      }
+
+      trg.join(
+        graph_description::node,
+        weighted_graph_description::nodew,
+        t.report_line("Change node weight via iterator"),
+        [](graph_t g) -> graph_t {
+          *g.begin_node_weights() = 1.0;
+          return g;
+        }
+      );
 
       trg.join(
         graph_description::node,
