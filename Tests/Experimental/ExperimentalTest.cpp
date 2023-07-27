@@ -276,7 +276,7 @@ namespace sequoia::testing::temp
                 g.clear();
                 return g;
               }
-            }/*,
+            },
             {
               graph_description::node,
               t.report_line("Add node to empty graph"),
@@ -285,7 +285,7 @@ namespace sequoia::testing::temp
                 return g;
               }
             },
-            {
+            /*{
               graph_description::node,
               t.report_line("insert node into empty graph"),
               [&t](graph_t g) -> graph_t {
@@ -294,7 +294,7 @@ namespace sequoia::testing::temp
               }
             }*/
           }, // end 'empty'
-          //{  // begin 'node'
+          {  // begin 'node'
           //  {
           //    graph_description::node,
           //    t.report_line(""),
@@ -431,7 +431,7 @@ namespace sequoia::testing::temp
           //      return g;
           //    }
           //  }
-          //}, // end 'node'
+          }, // end 'node'
           //{  // begin 'node_0'
           //  {
           //    graph_description::empty,
@@ -1579,7 +1579,7 @@ namespace sequoia::testing::temp
           make_and_check(t, t.report_line(""), {}),
 
           ////  'node'
-          //make_and_check(t, t.report_line(""), {{}}),
+          make_and_check(t, t.report_line(""), {{}}),
 
           ////  'node_0'
           //make_and_check(t, t.report_line(""), {{edge_t{0}}}),
