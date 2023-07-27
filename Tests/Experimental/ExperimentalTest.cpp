@@ -204,7 +204,7 @@ namespace sequoia::testing::temp
 
       return transition_graph{
         {
-          { // begin, 'empty'
+          //{ // begin, 'empty'
             /*{
               graph_description::empty,
               t.report_line(""),
@@ -269,7 +269,7 @@ namespace sequoia::testing::temp
                 return g;
               }
             },*/
-            {
+            /*{
               graph_description::empty,
               t.report_line("Clear empty graph"),
               [](graph_t g) -> graph_t {
@@ -284,7 +284,7 @@ namespace sequoia::testing::temp
                 t.check(equality, t.report_line("Index of added node is 0"), g.add_node(), 0_sz);
                 return g;
               }
-            },
+            },*/
             /*{
               graph_description::node,
               t.report_line("insert node into empty graph"),
@@ -293,8 +293,8 @@ namespace sequoia::testing::temp
                 return g;
               }
             }*/
-          }, // end 'empty'
-          {  // begin 'node'
+          //}, // end 'empty'
+          //{  // begin 'node'
           //  {
           //    graph_description::node,
           //    t.report_line(""),
@@ -431,7 +431,7 @@ namespace sequoia::testing::temp
           //      return g;
           //    }
           //  }
-          }, // end 'node'
+          //}, // end 'node'
           {  // begin 'node_0'
           //  {
           //    graph_description::empty,
@@ -1576,10 +1576,10 @@ namespace sequoia::testing::temp
         },
         {
           //  'empty'
-          make_and_check(t, t.report_line(""), {}),
+          //make_and_check(t, t.report_line(""), {}),
 
           ////  'node'
-          make_and_check(t, t.report_line(""), {{}}),
+          //make_and_check(t, t.report_line(""), {{}}),
 
           ////  'node_0'
           make_and_check(t, t.report_line(""), {{edge_t{0}}}),
