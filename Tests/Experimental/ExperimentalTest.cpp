@@ -432,7 +432,7 @@ namespace sequoia::testing::temp
           //    }
           //  }
           }, // end 'node'
-          //{  // begin 'node_0'
+          {  // begin 'node_0'
           //  {
           //    graph_description::empty,
           //    t.report_line("Clear graph"),
@@ -513,7 +513,7 @@ namespace sequoia::testing::temp
           //      return g;
           //    }
           //  }
-          //}, // end 'node_0'
+          }, // end 'node_0'
           //{  // begin 'node_0_0'
           //  {
           //    graph_description::empty,
@@ -1582,7 +1582,7 @@ namespace sequoia::testing::temp
           make_and_check(t, t.report_line(""), {{}}),
 
           ////  'node_0'
-          //make_and_check(t, t.report_line(""), {{edge_t{0}}}),
+          make_and_check(t, t.report_line(""), {{edge_t{0}}}),
 
           ////  'node_0_0'
           //make_and_check(t, t.report_line(""), {{edge_t{0}, edge_t{0}}}),
