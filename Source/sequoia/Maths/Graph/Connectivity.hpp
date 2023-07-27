@@ -134,7 +134,12 @@ namespace sequoia
       }
 
       [[nodiscard]]
-      constexpr const_edges_range cedges(const edge_index_type node) const { return {cbegin_edges(node), cend_edges(node)}; }
+      constexpr const_edges_range cedges(const edge_index_type node) const
+      {
+        if constexpr(throw_on_range_error) graph_errors::check_node_index_range("cedges", order(), node);
+
+        return {m_Edges.cbegin_partition(node), m_Edges.cend_partition(node)};
+      }
 
       template<std::invocable<edge_weight_type&> Fn>
         requires (!std::is_empty_v<edge_weight_type>)

@@ -39,7 +39,7 @@ cedges throws for empty graph
 
 Expected Exception Type:
 [std::out_of_range]
-connectivity::cend_edges: node index 0 out of range - graph order is 0
+connectivity::cedges: node index 0 out of range - graph order is 0
 
 =======================================
 
@@ -102,7 +102,7 @@ cedges throws when index is out of range
 
 Expected Exception Type:
 [std::out_of_range]
-connectivity::cend_edges: node index 1 out of range - graph order is 1
+connectivity::cedges: node index 1 out of range - graph order is 1
 
 =======================================
 
@@ -192,7 +192,7 @@ cedges throws for empty graph
 
 Expected Exception Type:
 [std::out_of_range]
-connectivity::cend_edges: node index 0 out of range - graph order is 0
+connectivity::cedges: node index 0 out of range - graph order is 0
 
 =======================================
 
@@ -255,7 +255,7 @@ cedges throws when index is out of range
 
 Expected Exception Type:
 [std::out_of_range]
-connectivity::cend_edges: node index 1 out of range - graph order is 1
+connectivity::cedges: node index 1 out of range - graph order is 1
 
 =======================================
 
