@@ -1,4 +1,4 @@
-Tests/Experimental/ExperimentalTest.cpp, Line 213
+Tests/Experimental/ExperimentalTest.cpp, Line 212
 cbegin_edges throws for empty graph
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ connectivity::cbegin_edges: node index 0 out of range - graph order is 0
 
 =======================================
 
-Tests/Experimental/ExperimentalTest.cpp, Line 221
+Tests/Experimental/ExperimentalTest.cpp, Line 220
 cend_edges throws for empty graph
 
 Expected Exception Type:
@@ -16,7 +16,7 @@ connectivity::cend_edges: node index 0 out of range - graph order is 0
 
 =======================================
 
-Tests/Experimental/ExperimentalTest.cpp, Line 229
+Tests/Experimental/ExperimentalTest.cpp, Line 228
 crbegin_edges throws for empty graph
 
 Expected Exception Type:
@@ -25,7 +25,7 @@ connectivity::crbegin_edges: node index 0 out of range - graph order is 0
 
 =======================================
 
-Tests/Experimental/ExperimentalTest.cpp, Line 237
+Tests/Experimental/ExperimentalTest.cpp, Line 236
 crend_edges throws for empty graph
 
 Expected Exception Type:
@@ -34,7 +34,7 @@ connectivity::crend_edges: node index 0 out of range - graph order is 0
 
 =======================================
 
-Tests/Experimental/ExperimentalTest.cpp, Line 245
+Tests/Experimental/ExperimentalTest.cpp, Line 244
 cedges throws for empty graph
 
 Expected Exception Type:
@@ -43,7 +43,7 @@ connectivity::cedges: node index 0 out of range - graph order is 0
 
 =======================================
 
-Tests/Experimental/ExperimentalTest.cpp, Line 253
+Tests/Experimental/ExperimentalTest.cpp, Line 252
 swapping nodes throws for empty graph
 
 Expected Exception Type:
@@ -52,7 +52,7 @@ node_storage::swap - index out of range
 
 =======================================
 
-Tests/Experimental/ExperimentalTest.cpp, Line 261
+Tests/Experimental/ExperimentalTest.cpp, Line 260
 swapping edges throws for empty graph
 
 Expected Exception Type:
@@ -61,7 +61,7 @@ connectivity::cedges: node index 0 out of range - graph order is 0
 
 =======================================
 
-Tests/Experimental/ExperimentalTest.cpp, Line 269
+Tests/Experimental/ExperimentalTest.cpp, Line 268
 joining nodes throws for empty graph
 
 Expected Exception Type:
@@ -70,7 +70,7 @@ connectivity::join: at least one node index [0, 0] out of range - graph order is
 
 =======================================
 
-Tests/Experimental/ExperimentalTest.cpp, Line 303
+Tests/Experimental/ExperimentalTest.cpp, Line 302
 cbegin_edges throws when index is out of range
 
 Expected Exception Type:
@@ -79,7 +79,7 @@ connectivity::cbegin_edges: node index 1 out of range - graph order is 1
 
 =======================================
 
-Tests/Experimental/ExperimentalTest.cpp, Line 311
+Tests/Experimental/ExperimentalTest.cpp, Line 310
 cend_edges throws when index is out of range
 
 Expected Exception Type:
@@ -88,7 +88,7 @@ connectivity::cend_edges: node index 1 out of range - graph order is 1
 
 =======================================
 
-Tests/Experimental/ExperimentalTest.cpp, Line 319
+Tests/Experimental/ExperimentalTest.cpp, Line 318
 crbegin_edges throws when index is out of range
 
 Expected Exception Type:
@@ -97,7 +97,7 @@ connectivity::crbegin_edges: node index 1 out of range - graph order is 1
 
 =======================================
 
-Tests/Experimental/ExperimentalTest.cpp, Line 327
+Tests/Experimental/ExperimentalTest.cpp, Line 326
 crend_edges throws when index is out of range
 
 Expected Exception Type:
@@ -106,7 +106,7 @@ connectivity::crend_edges: node index 1 out of range - graph order is 1
 
 =======================================
 
-Tests/Experimental/ExperimentalTest.cpp, Line 335
+Tests/Experimental/ExperimentalTest.cpp, Line 334
 cedges throws when index is out of range
 
 Expected Exception Type:
@@ -115,7 +115,7 @@ connectivity::cedges: node index 1 out of range - graph order is 1
 
 =======================================
 
-Tests/Experimental/ExperimentalTest.cpp, Line 343
+Tests/Experimental/ExperimentalTest.cpp, Line 342
 swapping nodes throws if first index out of range
 
 Expected Exception Type:
@@ -124,7 +124,7 @@ node_storage::swap - index out of range
 
 =======================================
 
-Tests/Experimental/ExperimentalTest.cpp, Line 351
+Tests/Experimental/ExperimentalTest.cpp, Line 350
 swapping nodes throws if second index out of range
 
 Expected Exception Type:
@@ -133,7 +133,7 @@ node_storage::swap - index out of range
 
 =======================================
 
-Tests/Experimental/ExperimentalTest.cpp, Line 359
+Tests/Experimental/ExperimentalTest.cpp, Line 358
 joining nodes throws if first index out of range
 
 Expected Exception Type:
@@ -142,7 +142,7 @@ connectivity::join: at least one node index [1, 0] out of range - graph order is
 
 =======================================
 
-Tests/Experimental/ExperimentalTest.cpp, Line 367
+Tests/Experimental/ExperimentalTest.cpp, Line 366
 joining nodes throws if second index out of range
 
 Expected Exception Type:
@@ -151,7 +151,7 @@ connectivity::join: at least one node index [0, 1] out of range - graph order is
 
 =======================================
 
-Tests/Experimental/ExperimentalTest.cpp, Line 497
+Tests/Experimental/ExperimentalTest.cpp, Line 496
 swapping edges throws for first edge index out of range
 
 Expected Exception Type:
@@ -160,7 +160,7 @@ swap_edges: edge index 1 out of range for node 0, which has 1 edge(s)
 
 =======================================
 
-Tests/Experimental/ExperimentalTest.cpp, Line 505
+Tests/Experimental/ExperimentalTest.cpp, Line 504
 swapping edges throws for second edge index out of range
 
 Expected Exception Type:
@@ -169,7 +169,7 @@ swap_edges: edge index 1 out of range for node 0, which has 1 edge(s)
 
 =======================================
 
-Tests/Experimental/ExperimentalTest.cpp, Line 513
+Tests/Experimental/ExperimentalTest.cpp, Line 512
 swapping edges throws for node index out of range
 
 Expected Exception Type:

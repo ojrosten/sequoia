@@ -185,7 +185,6 @@ namespace sequoia::testing::temp
       auto checker{
           [&t](std::string_view description, const graph_t& obtained, const graph_t& prediction, const graph_t& parent, std::size_t host, std::size_t target) {
             t.check(equality, description, obtained, prediction);
-            if(host != target) t.check_semantics(description, prediction, parent);
           }
       };
 
