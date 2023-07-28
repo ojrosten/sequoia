@@ -12,6 +12,7 @@
 #include "sequoia/TestFramework/TestPreprocessorDefinitions.hpp"
 
 #include "GraphTestingUtilities.hpp"
+#include "EdgeTestingUtilities.hpp"
 #include "NodeStorageTestingUtilities.hpp"
 #include "Core/DataStructures/PartitionedDataTestingUtilities.hpp"
 
