@@ -75,7 +75,7 @@ namespace sequoia::testing
     }
 
     template<test_mode Mode, class OtherHandler>
-      requires object::handler<OtherHandler>
+      requires (object::handler<OtherHandler> && !std::is_same_v<WeightHandler, OtherHandler>)
     static void test(equivalence_check_t, test_logger<Mode>& logger, const type& edge, const maths::embedded_partial_edge<OtherHandler, IndexType>& prediction)
     {
       impl::check_partial(with_best_available, logger, edge, prediction);
@@ -97,7 +97,7 @@ namespace sequoia::testing
     }
 
     template<test_mode Mode, class OtherHandler>
-      requires object::handler<OtherHandler>
+      requires (object::handler<OtherHandler> && !std::is_same_v<WeightHandler, OtherHandler>)
     static void test(equivalence_check_t, test_logger<Mode>& logger, const type& edge, const maths::edge<OtherHandler, IndexType>& prediction)
     {
       impl::check_partial(with_best_available, logger, edge, prediction);
@@ -127,7 +127,7 @@ namespace sequoia::testing
     }
 
     template<test_mode Mode, class OtherHandler>
-      requires object::handler<OtherHandler>
+      requires (object::handler<OtherHandler> && !std::is_same_v<WeightHandler, OtherHandler>)
     static void test(equivalence_check_t, test_logger<Mode>& logger, const type& edge, const maths::embedded_edge<OtherHandler, IndexType>& prediction)
     {
       impl::check_partial(with_best_available, logger, edge, prediction);
