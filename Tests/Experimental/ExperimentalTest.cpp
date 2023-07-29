@@ -18,6 +18,5 @@ namespace sequoia::testing
   }
 
   void experimental_test::run_tests()
-  {
-  }
+  {}
 }

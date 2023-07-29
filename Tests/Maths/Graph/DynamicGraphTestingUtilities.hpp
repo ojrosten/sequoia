@@ -12,7 +12,6 @@
 #include "sequoia/TestFramework/TestPreprocessorDefinitions.hpp"
 
 #include "GraphTestingUtilities.hpp"
-#include "NodeStorageTestingUtilities.hpp"
 #include "Core/DataStructures/PartitionedDataTestingUtilities.hpp"
 
 #include "sequoia/Maths/Graph/DynamicGraph.hpp"
