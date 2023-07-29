@@ -34,12 +34,9 @@ var searchData=
   ['pointer_5ftype_3c_20iterator_2c_20deref_20_3e_31',['pointer_type&lt; Iterator, Deref &gt;',['../d4/de3/structsequoia_1_1utilities_1_1pointer__type_3_01Iterator_00_01Deref_01_4.html',1,'sequoia::utilities']]],
   ['pool_5fderef_5fpolicy_32',['pool_deref_policy',['../dd/d07/structsequoia_1_1object_1_1impl_1_1pool__deref__policy.html',1,'sequoia::object::impl']]],
   ['producer_33',['producer',['../de/dda/classsequoia_1_1object_1_1producer.html',1,'sequoia::object']]],
-  ['producer_3c_20nodeweight_20_3e_34',['producer&lt; NodeWeight &gt;',['../de/dda/classsequoia_1_1object_1_1producer.html',1,'sequoia::object']]],
-  ['producer_3c_20suite_5fnode_20_3e_35',['producer&lt; suite_node &gt;',['../de/dda/classsequoia_1_1object_1_1producer.html',1,'sequoia::object']]],
-  ['project_5fdata_36',['project_data',['../d4/d05/structsequoia_1_1testing_1_1project__data.html',1,'sequoia::testing']]],
-  ['project_5fpaths_37',['project_paths',['../d4/dbe/classsequoia_1_1testing_1_1project__paths.html',1,'sequoia::testing']]],
-  ['proper_5fstring_38',['proper_string',['../d6/dbe/classsequoia_1_1parsing_1_1commandline_1_1proper__string.html',1,'sequoia::parsing::commandline']]],
-  ['proxy_39',['proxy',['../d0/d59/classsequoia_1_1object_1_1data__pool_1_1proxy.html',1,'sequoia::object::data_pool']]],
-  ['proxy_5fdereference_5fpolicy_40',['proxy_dereference_policy',['../db/d8a/structsequoia_1_1maths_1_1graph__impl_1_1proxy__dereference__policy.html',1,'sequoia::maths::graph_impl']]],
-  ['prune_5fpaths_41',['prune_paths',['../dd/df6/classsequoia_1_1testing_1_1prune__paths.html',1,'sequoia::testing']]]
+  ['project_5fdata_34',['project_data',['../d4/d05/structsequoia_1_1testing_1_1project__data.html',1,'sequoia::testing']]],
+  ['project_5fpaths_35',['project_paths',['../d4/dbe/classsequoia_1_1testing_1_1project__paths.html',1,'sequoia::testing']]],
+  ['proper_5fstring_36',['proper_string',['../d6/dbe/classsequoia_1_1parsing_1_1commandline_1_1proper__string.html',1,'sequoia::parsing::commandline']]],
+  ['proxy_37',['proxy',['../d0/d59/classsequoia_1_1object_1_1data__pool_1_1proxy.html',1,'sequoia::object::data_pool']]],
+  ['prune_5fpaths_38',['prune_paths',['../dd/df6/classsequoia_1_1testing_1_1prune__paths.html',1,'sequoia::testing']]]
 ];

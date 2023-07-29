@@ -612,91 +612,100 @@ $(function() {
 <div class="line"><a id="l00542" name="l00542"></a><span class="lineno">  542</span> </div>
 <div class="line"><a id="l00543" name="l00543"></a><span class="lineno">  543</span>      <span class="keyword">constexpr</span> <span class="keyword">static</span> <span class="keywordtype">bool</span> emptyNodes{std::is_empty_v&lt;typename Nodes::weight_type&gt;};</div>
 <div class="line"><a id="l00544" name="l00544"></a><span class="lineno">  544</span> </div>
-<div class="line"><a id="l00545" name="l00545"></a><span class="lineno">  545</span>      <span class="keyword">constexpr</span> <a class="code hl_class" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a>(homo_init_type, edges_initializer edges, std::initializer_list&lt;node_weight_type&gt; nodeWeights)</div>
-<div class="line"><a id="l00546" name="l00546"></a><span class="lineno">  546</span>        <span class="keyword">requires</span> (!std::same_as&lt;node_weight_type, graph_impl::heterogeneous_tag&gt;)</div>
-<div class="line"><a id="l00547" name="l00547"></a><span class="lineno">  547</span>        : Connectivity{ (nodeWeights.size() == edges.size()) ? edges : <span class="keywordflow">throw</span> std::logic_error(<span class="stringliteral">&quot;Node weight initializer and edges top-level initializer must be of same size&quot;</span>) }</div>
-<div class="line"><a id="l00548" name="l00548"></a><span class="lineno">  548</span>        , Nodes{nodeWeights}</div>
-<div class="line"><a id="l00549" name="l00549"></a><span class="lineno">  549</span>      {}</div>
+<div class="line"><a id="l00545" name="l00545"></a><span class="lineno">  545</span>      [[nodiscard]]</div>
+<div class="line"><a id="l00546" name="l00546"></a><span class="lineno">  546</span>      <span class="keyword">constexpr</span> <span class="keyword">static</span> <span class="keyword">const</span> edges_initializer&amp; check_initialization(<span class="keyword">const</span> edges_initializer&amp; edges, std::size_t numNodes, std::size_t edgeParitions)</div>
+<div class="line"><a id="l00547" name="l00547"></a><span class="lineno">  547</span>      {</div>
+<div class="line"><a id="l00548" name="l00548"></a><span class="lineno">  548</span>        <span class="keywordflow">if</span>(numNodes != edgeParitions)</div>
+<div class="line"><a id="l00549" name="l00549"></a><span class="lineno">  549</span>          <span class="keywordflow">throw</span> std::logic_error{graph_errors::inconsistent_initialization_message(numNodes, edgeParitions)};</div>
 <div class="line"><a id="l00550" name="l00550"></a><span class="lineno">  550</span> </div>
-<div class="line"><a id="l00551" name="l00551"></a><span class="lineno">  551</span>      <span class="keyword">template</span>&lt;<span class="keyword">class</span>... NodeWeights&gt;</div>
-<div class="line"><a id="l00552" name="l00552"></a><span class="lineno">  552</span>        <span class="keyword">requires</span> std::same_as&lt;node_weight_type, graph_impl::heterogeneous_tag&gt;</div>
-<div class="line"><a id="l00553" name="l00553"></a><span class="lineno">  553</span>      <span class="keyword">constexpr</span> <a class="code hl_class" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a>(hetero_init_type, edges_initializer edges, NodeWeights&amp;&amp;... nodeWeights)</div>
-<div class="line"><a id="l00554" name="l00554"></a><span class="lineno">  554</span>        : Connectivity{ (<span class="keyword">sizeof</span>...(NodeWeights) == edges.size()) ? edges : <span class="keywordflow">throw</span> std::logic_error(<span class="stringliteral">&quot;Node weight initializer and edges top-level initializer must be of same size&quot;</span>) }</div>
-<div class="line"><a id="l00555" name="l00555"></a><span class="lineno">  555</span>        , Nodes{std::forward&lt;NodeWeights&gt;(nodeWeights)...}</div>
-<div class="line"><a id="l00556" name="l00556"></a><span class="lineno">  556</span>      {}</div>
-<div class="line"><a id="l00557" name="l00557"></a><span class="lineno">  557</span> </div>
-<div class="line"><a id="l00558" name="l00558"></a><span class="lineno">  558</span>      <span class="keyword">constexpr</span> <a class="code hl_class" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a>(homo_init_type, edges_initializer edges)</div>
-<div class="line"><a id="l00559" name="l00559"></a><span class="lineno">  559</span>        <span class="keyword">requires</span> (!std::same_as&lt;node_weight_type, graph_impl::heterogeneous_tag&gt; &amp;&amp; !std::is_empty_v&lt;node_weight_type&gt;)</div>
-<div class="line"><a id="l00560" name="l00560"></a><span class="lineno">  560</span>        : Connectivity{edges}</div>
-<div class="line"><a id="l00561" name="l00561"></a><span class="lineno">  561</span>        , Nodes(edges.size())</div>
-<div class="line"><a id="l00562" name="l00562"></a><span class="lineno">  562</span>      {}</div>
-<div class="line"><a id="l00563" name="l00563"></a><span class="lineno">  563</span> </div>
-<div class="line"><a id="l00564" name="l00564"></a><span class="lineno">  564</span>      <span class="keyword">constexpr</span> <a class="code hl_class" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a>(homo_init_type, edges_initializer edges)</div>
-<div class="line"><a id="l00565" name="l00565"></a><span class="lineno">  565</span>        <span class="keyword">requires</span> (!std::same_as&lt;node_weight_type, graph_impl::heterogeneous_tag&gt;&amp;&amp; std::is_empty_v&lt;node_weight_type&gt;)</div>
-<div class="line"><a id="l00566" name="l00566"></a><span class="lineno">  566</span>        : Connectivity{edges}</div>
-<div class="line"><a id="l00567" name="l00567"></a><span class="lineno">  567</span>        , Nodes{}</div>
-<div class="line"><a id="l00568" name="l00568"></a><span class="lineno">  568</span>      {}</div>
-<div class="line"><a id="l00569" name="l00569"></a><span class="lineno">  569</span> </div>
-<div class="line"><a id="l00570" name="l00570"></a><span class="lineno">  570</span>      <span class="keyword">constexpr</span> <a class="code hl_class" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a>(hetero_init_type, edges_initializer edges)</div>
-<div class="line"><a id="l00571" name="l00571"></a><span class="lineno">  571</span>        <span class="keyword">requires</span> std::same_as&lt;node_weight_type, graph_impl::heterogeneous_tag&gt;</div>
-<div class="line"><a id="l00572" name="l00572"></a><span class="lineno">  572</span>        : Connectivity{edges},</div>
-<div class="line"><a id="l00573" name="l00573"></a><span class="lineno">  573</span>          Nodes{}</div>
-<div class="line"><a id="l00574" name="l00574"></a><span class="lineno">  574</span>      {}</div>
-<div class="line"><a id="l00575" name="l00575"></a><span class="lineno">  575</span> </div>
-<div class="line"><a id="l00576" name="l00576"></a><span class="lineno">  576</span>      <span class="keyword">template</span>&lt;tree_link_direction dir&gt;</div>
-<div class="line"><a id="l00577" name="l00577"></a><span class="lineno">  577</span>        <span class="keyword">requires</span> (!std::same_as&lt;node_weight_type, graph_impl::heterogeneous_tag&gt; &amp;&amp; !std::is_empty_v&lt;node_weight_type&gt;)</div>
-<div class="line"><a id="l00578" name="l00578"></a><span class="lineno">  578</span>      <span class="keyword">constexpr</span> <span class="keywordtype">void</span> build_tree(size_type root, <a class="code hl_struct" href="../../d2/d81/structsequoia_1_1maths_1_1tree__initializer.html">tree_initializer&lt;node_weight_type&gt;</a> <a class="code hl_class" href="../../d6/dce/classsequoia_1_1maths_1_1tree.html">tree</a>, <a class="code hl_struct" href="../../d1/de4/structsequoia_1_1maths_1_1tree__link__direction__constant.html">tree_link_direction_constant&lt;dir&gt;</a> tdc)</div>
-<div class="line"><a id="l00579" name="l00579"></a><span class="lineno">  579</span>      {</div>
-<div class="line"><a id="l00580" name="l00580"></a><span class="lineno">  580</span>        <span class="keywordflow">if</span>(root &gt;= Connectivity::order()) root = add_node(<a class="code hl_class" href="../../d6/dce/classsequoia_1_1maths_1_1tree.html">tree</a>.node);</div>
-<div class="line"><a id="l00581" name="l00581"></a><span class="lineno">  581</span> </div>
-<div class="line"><a id="l00582" name="l00582"></a><span class="lineno">  582</span>        <span class="keywordflow">for</span>(<span class="keyword">const</span> <span class="keyword">auto</span>&amp; child : <a class="code hl_class" href="../../d6/dce/classsequoia_1_1maths_1_1tree.html">tree</a>.children)</div>
-<div class="line"><a id="l00583" name="l00583"></a><span class="lineno">  583</span>        {</div>
-<div class="line"><a id="l00584" name="l00584"></a><span class="lineno">  584</span>          <span class="keyword">const</span> <span class="keyword">auto</span> n{add_node_to_tree(tdc, root, child.node)};</div>
-<div class="line"><a id="l00585" name="l00585"></a><span class="lineno">  585</span>          build_tree(n, child, tdc);</div>
-<div class="line"><a id="l00586" name="l00586"></a><span class="lineno">  586</span>        }</div>
-<div class="line"><a id="l00587" name="l00587"></a><span class="lineno">  587</span>      }</div>
-<div class="line"><a id="l00588" name="l00588"></a><span class="lineno">  588</span> </div>
-<div class="line"><a id="l00589" name="l00589"></a><span class="lineno">  589</span>      <span class="keyword">template</span>&lt;tree_link_direction dir&gt;</div>
-<div class="line"><a id="l00590" name="l00590"></a><span class="lineno">  590</span>        <span class="keyword">requires</span> (!std::same_as&lt;node_weight_type, graph_impl::heterogeneous_tag&gt; &amp;&amp; std::is_empty_v&lt;node_weight_type&gt;)</div>
-<div class="line"><a id="l00591" name="l00591"></a><span class="lineno">  591</span>      <span class="keyword">constexpr</span> <span class="keywordtype">void</span> build_tree(size_type root, <a class="code hl_struct" href="../../d2/d81/structsequoia_1_1maths_1_1tree__initializer.html">tree_initializer&lt;node_weight_type&gt;</a> <a class="code hl_class" href="../../d6/dce/classsequoia_1_1maths_1_1tree.html">tree</a>, <a class="code hl_struct" href="../../d1/de4/structsequoia_1_1maths_1_1tree__link__direction__constant.html">tree_link_direction_constant&lt;dir&gt;</a> tdc)</div>
-<div class="line"><a id="l00592" name="l00592"></a><span class="lineno">  592</span>      {</div>
-<div class="line"><a id="l00593" name="l00593"></a><span class="lineno">  593</span>        <span class="keywordflow">if</span>(root &gt;= Connectivity::order()) root = add_node();</div>
-<div class="line"><a id="l00594" name="l00594"></a><span class="lineno">  594</span> </div>
-<div class="line"><a id="l00595" name="l00595"></a><span class="lineno">  595</span>        <span class="keywordflow">for</span>(<span class="keyword">const</span> <span class="keyword">auto</span>&amp; child : <a class="code hl_class" href="../../d6/dce/classsequoia_1_1maths_1_1tree.html">tree</a>.children)</div>
-<div class="line"><a id="l00596" name="l00596"></a><span class="lineno">  596</span>        {</div>
-<div class="line"><a id="l00597" name="l00597"></a><span class="lineno">  597</span>          <span class="keyword">const</span> <span class="keyword">auto</span> n{add_node_to_tree(tdc, root)};</div>
-<div class="line"><a id="l00598" name="l00598"></a><span class="lineno">  598</span>          build_tree(n, child, tdc);</div>
-<div class="line"><a id="l00599" name="l00599"></a><span class="lineno">  599</span>        }</div>
-<div class="line"><a id="l00600" name="l00600"></a><span class="lineno">  600</span>      }</div>
-<div class="line"><a id="l00601" name="l00601"></a><span class="lineno">  601</span> </div>
-<div class="line"><a id="l00602" name="l00602"></a><span class="lineno">  602</span>      [[nodiscard]]</div>
-<div class="line"><a id="l00603" name="l00603"></a><span class="lineno">  603</span>      <a class="code hl_class" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">pseudo_iterator</a> begin() <span class="keyword">noexcept</span> { <span class="keywordflow">return</span> {edge_index_type{}, *<span class="keyword">this</span>}; }</div>
-<div class="line"><a id="l00604" name="l00604"></a><span class="lineno">  604</span> </div>
-<div class="line"><a id="l00605" name="l00605"></a><span class="lineno">  605</span>      [[nodiscard]]</div>
-<div class="line"><a id="l00606" name="l00606"></a><span class="lineno">  606</span>      <a class="code hl_class" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">pseudo_iterator</a> end() <span class="keyword">noexcept</span> { <span class="keywordflow">return</span> {Connectivity::order(), *<span class="keyword">this</span>}; }</div>
-<div class="line"><a id="l00607" name="l00607"></a><span class="lineno">  607</span> </div>
-<div class="line"><a id="l00608" name="l00608"></a><span class="lineno">  608</span>      <span class="keyword">template</span>&lt;<span class="keyword">class</span>... Args&gt;</div>
-<div class="line"><a id="l00609" name="l00609"></a><span class="lineno">  609</span>      size_type insert_node_impl(<span class="keyword">const</span> size_type pos, Args&amp;&amp;... args)</div>
-<div class="line"><a id="l00610" name="l00610"></a><span class="lineno">  610</span>      {</div>
-<div class="line"><a id="l00611" name="l00611"></a><span class="lineno">  611</span>        <span class="keyword">const</span> <span class="keyword">auto</span> node{std::ranges::min(pos, this-&gt;order())};</div>
-<div class="line"><a id="l00612" name="l00612"></a><span class="lineno">  612</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (!emptyNodes)</div>
-<div class="line"><a id="l00613" name="l00613"></a><span class="lineno">  613</span>        {</div>
-<div class="line"><a id="l00614" name="l00614"></a><span class="lineno">  614</span>          Nodes::insert_node(this-&gt;cbegin_node_weights() + node, std::forward&lt;Args&gt;(args)...);</div>
-<div class="line"><a id="l00615" name="l00615"></a><span class="lineno">  615</span>        }</div>
+<div class="line"><a id="l00551" name="l00551"></a><span class="lineno">  551</span>        <span class="keywordflow">return</span> edges;</div>
+<div class="line"><a id="l00552" name="l00552"></a><span class="lineno">  552</span>      }</div>
+<div class="line"><a id="l00553" name="l00553"></a><span class="lineno">  553</span> </div>
+<div class="line"><a id="l00554" name="l00554"></a><span class="lineno">  554</span>      <span class="keyword">constexpr</span> <a class="code hl_class" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a>(homo_init_type, edges_initializer edges, std::initializer_list&lt;node_weight_type&gt; nodeWeights)</div>
+<div class="line"><a id="l00555" name="l00555"></a><span class="lineno">  555</span>        <span class="keyword">requires</span> (!std::same_as&lt;node_weight_type, graph_impl::heterogeneous_tag&gt;)</div>
+<div class="line"><a id="l00556" name="l00556"></a><span class="lineno">  556</span>        : Connectivity{check_initialization(edges, nodeWeights.size(), edges.size())}</div>
+<div class="line"><a id="l00557" name="l00557"></a><span class="lineno">  557</span>        , Nodes{nodeWeights}</div>
+<div class="line"><a id="l00558" name="l00558"></a><span class="lineno">  558</span>      {}</div>
+<div class="line"><a id="l00559" name="l00559"></a><span class="lineno">  559</span> </div>
+<div class="line"><a id="l00560" name="l00560"></a><span class="lineno">  560</span>      <span class="keyword">template</span>&lt;<span class="keyword">class</span>... NodeWeights&gt;</div>
+<div class="line"><a id="l00561" name="l00561"></a><span class="lineno">  561</span>        <span class="keyword">requires</span> std::same_as&lt;node_weight_type, graph_impl::heterogeneous_tag&gt;</div>
+<div class="line"><a id="l00562" name="l00562"></a><span class="lineno">  562</span>      <span class="keyword">constexpr</span> <a class="code hl_class" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a>(hetero_init_type, edges_initializer edges, NodeWeights&amp;&amp;... nodeWeights)</div>
+<div class="line"><a id="l00563" name="l00563"></a><span class="lineno">  563</span>        : Connectivity{check_initialization(edges, <span class="keyword">sizeof</span>...(NodeWeights), edges.size())}</div>
+<div class="line"><a id="l00564" name="l00564"></a><span class="lineno">  564</span>        , Nodes{std::forward&lt;NodeWeights&gt;(nodeWeights)...}</div>
+<div class="line"><a id="l00565" name="l00565"></a><span class="lineno">  565</span>      {}</div>
+<div class="line"><a id="l00566" name="l00566"></a><span class="lineno">  566</span> </div>
+<div class="line"><a id="l00567" name="l00567"></a><span class="lineno">  567</span>      <span class="keyword">constexpr</span> <a class="code hl_class" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a>(homo_init_type, edges_initializer edges)</div>
+<div class="line"><a id="l00568" name="l00568"></a><span class="lineno">  568</span>        <span class="keyword">requires</span> (!std::same_as&lt;node_weight_type, graph_impl::heterogeneous_tag&gt; &amp;&amp; !std::is_empty_v&lt;node_weight_type&gt;)</div>
+<div class="line"><a id="l00569" name="l00569"></a><span class="lineno">  569</span>        : Connectivity{edges}</div>
+<div class="line"><a id="l00570" name="l00570"></a><span class="lineno">  570</span>        , Nodes(edges.size())</div>
+<div class="line"><a id="l00571" name="l00571"></a><span class="lineno">  571</span>      {}</div>
+<div class="line"><a id="l00572" name="l00572"></a><span class="lineno">  572</span> </div>
+<div class="line"><a id="l00573" name="l00573"></a><span class="lineno">  573</span>      <span class="keyword">constexpr</span> <a class="code hl_class" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a>(homo_init_type, edges_initializer edges)</div>
+<div class="line"><a id="l00574" name="l00574"></a><span class="lineno">  574</span>        <span class="keyword">requires</span> (!std::same_as&lt;node_weight_type, graph_impl::heterogeneous_tag&gt;&amp;&amp; std::is_empty_v&lt;node_weight_type&gt;)</div>
+<div class="line"><a id="l00575" name="l00575"></a><span class="lineno">  575</span>        : Connectivity{edges}</div>
+<div class="line"><a id="l00576" name="l00576"></a><span class="lineno">  576</span>        , Nodes{}</div>
+<div class="line"><a id="l00577" name="l00577"></a><span class="lineno">  577</span>      {}</div>
+<div class="line"><a id="l00578" name="l00578"></a><span class="lineno">  578</span> </div>
+<div class="line"><a id="l00579" name="l00579"></a><span class="lineno">  579</span>      <span class="keyword">constexpr</span> <a class="code hl_class" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a>(hetero_init_type, edges_initializer edges)</div>
+<div class="line"><a id="l00580" name="l00580"></a><span class="lineno">  580</span>        <span class="keyword">requires</span> std::same_as&lt;node_weight_type, graph_impl::heterogeneous_tag&gt;</div>
+<div class="line"><a id="l00581" name="l00581"></a><span class="lineno">  581</span>        : Connectivity{edges},</div>
+<div class="line"><a id="l00582" name="l00582"></a><span class="lineno">  582</span>          Nodes{}</div>
+<div class="line"><a id="l00583" name="l00583"></a><span class="lineno">  583</span>      {}</div>
+<div class="line"><a id="l00584" name="l00584"></a><span class="lineno">  584</span> </div>
+<div class="line"><a id="l00585" name="l00585"></a><span class="lineno">  585</span>      <span class="keyword">template</span>&lt;tree_link_direction dir&gt;</div>
+<div class="line"><a id="l00586" name="l00586"></a><span class="lineno">  586</span>        <span class="keyword">requires</span> (!std::same_as&lt;node_weight_type, graph_impl::heterogeneous_tag&gt; &amp;&amp; !std::is_empty_v&lt;node_weight_type&gt;)</div>
+<div class="line"><a id="l00587" name="l00587"></a><span class="lineno">  587</span>      <span class="keyword">constexpr</span> <span class="keywordtype">void</span> build_tree(size_type root, <a class="code hl_struct" href="../../d2/d81/structsequoia_1_1maths_1_1tree__initializer.html">tree_initializer&lt;node_weight_type&gt;</a> <a class="code hl_class" href="../../d6/dce/classsequoia_1_1maths_1_1tree.html">tree</a>, <a class="code hl_struct" href="../../d1/de4/structsequoia_1_1maths_1_1tree__link__direction__constant.html">tree_link_direction_constant&lt;dir&gt;</a> tdc)</div>
+<div class="line"><a id="l00588" name="l00588"></a><span class="lineno">  588</span>      {</div>
+<div class="line"><a id="l00589" name="l00589"></a><span class="lineno">  589</span>        <span class="keywordflow">if</span>(root &gt;= Connectivity::order()) root = add_node(<a class="code hl_class" href="../../d6/dce/classsequoia_1_1maths_1_1tree.html">tree</a>.node);</div>
+<div class="line"><a id="l00590" name="l00590"></a><span class="lineno">  590</span> </div>
+<div class="line"><a id="l00591" name="l00591"></a><span class="lineno">  591</span>        <span class="keywordflow">for</span>(<span class="keyword">const</span> <span class="keyword">auto</span>&amp; child : <a class="code hl_class" href="../../d6/dce/classsequoia_1_1maths_1_1tree.html">tree</a>.children)</div>
+<div class="line"><a id="l00592" name="l00592"></a><span class="lineno">  592</span>        {</div>
+<div class="line"><a id="l00593" name="l00593"></a><span class="lineno">  593</span>          <span class="keyword">const</span> <span class="keyword">auto</span> n{add_node_to_tree(tdc, root, child.node)};</div>
+<div class="line"><a id="l00594" name="l00594"></a><span class="lineno">  594</span>          build_tree(n, child, tdc);</div>
+<div class="line"><a id="l00595" name="l00595"></a><span class="lineno">  595</span>        }</div>
+<div class="line"><a id="l00596" name="l00596"></a><span class="lineno">  596</span>      }</div>
+<div class="line"><a id="l00597" name="l00597"></a><span class="lineno">  597</span> </div>
+<div class="line"><a id="l00598" name="l00598"></a><span class="lineno">  598</span>      <span class="keyword">template</span>&lt;tree_link_direction dir&gt;</div>
+<div class="line"><a id="l00599" name="l00599"></a><span class="lineno">  599</span>        <span class="keyword">requires</span> (!std::same_as&lt;node_weight_type, graph_impl::heterogeneous_tag&gt; &amp;&amp; std::is_empty_v&lt;node_weight_type&gt;)</div>
+<div class="line"><a id="l00600" name="l00600"></a><span class="lineno">  600</span>      <span class="keyword">constexpr</span> <span class="keywordtype">void</span> build_tree(size_type root, <a class="code hl_struct" href="../../d2/d81/structsequoia_1_1maths_1_1tree__initializer.html">tree_initializer&lt;node_weight_type&gt;</a> <a class="code hl_class" href="../../d6/dce/classsequoia_1_1maths_1_1tree.html">tree</a>, <a class="code hl_struct" href="../../d1/de4/structsequoia_1_1maths_1_1tree__link__direction__constant.html">tree_link_direction_constant&lt;dir&gt;</a> tdc)</div>
+<div class="line"><a id="l00601" name="l00601"></a><span class="lineno">  601</span>      {</div>
+<div class="line"><a id="l00602" name="l00602"></a><span class="lineno">  602</span>        <span class="keywordflow">if</span>(root &gt;= Connectivity::order()) root = add_node();</div>
+<div class="line"><a id="l00603" name="l00603"></a><span class="lineno">  603</span> </div>
+<div class="line"><a id="l00604" name="l00604"></a><span class="lineno">  604</span>        <span class="keywordflow">for</span>(<span class="keyword">const</span> <span class="keyword">auto</span>&amp; child : <a class="code hl_class" href="../../d6/dce/classsequoia_1_1maths_1_1tree.html">tree</a>.children)</div>
+<div class="line"><a id="l00605" name="l00605"></a><span class="lineno">  605</span>        {</div>
+<div class="line"><a id="l00606" name="l00606"></a><span class="lineno">  606</span>          <span class="keyword">const</span> <span class="keyword">auto</span> n{add_node_to_tree(tdc, root)};</div>
+<div class="line"><a id="l00607" name="l00607"></a><span class="lineno">  607</span>          build_tree(n, child, tdc);</div>
+<div class="line"><a id="l00608" name="l00608"></a><span class="lineno">  608</span>        }</div>
+<div class="line"><a id="l00609" name="l00609"></a><span class="lineno">  609</span>      }</div>
+<div class="line"><a id="l00610" name="l00610"></a><span class="lineno">  610</span> </div>
+<div class="line"><a id="l00611" name="l00611"></a><span class="lineno">  611</span>      [[nodiscard]]</div>
+<div class="line"><a id="l00612" name="l00612"></a><span class="lineno">  612</span>      <a class="code hl_class" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">pseudo_iterator</a> begin() <span class="keyword">noexcept</span> { <span class="keywordflow">return</span> {edge_index_type{}, *<span class="keyword">this</span>}; }</div>
+<div class="line"><a id="l00613" name="l00613"></a><span class="lineno">  613</span> </div>
+<div class="line"><a id="l00614" name="l00614"></a><span class="lineno">  614</span>      [[nodiscard]]</div>
+<div class="line"><a id="l00615" name="l00615"></a><span class="lineno">  615</span>      <a class="code hl_class" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">pseudo_iterator</a> end() <span class="keyword">noexcept</span> { <span class="keywordflow">return</span> {Connectivity::order(), *<span class="keyword">this</span>}; }</div>
 <div class="line"><a id="l00616" name="l00616"></a><span class="lineno">  616</span> </div>
-<div class="line"><a id="l00617" name="l00617"></a><span class="lineno">  617</span>        <span class="keywordflow">return</span> node;</div>
-<div class="line"><a id="l00618" name="l00618"></a><span class="lineno">  618</span>      }</div>
-<div class="line"><a id="l00619" name="l00619"></a><span class="lineno">  619</span> </div>
-<div class="line"><a id="l00620" name="l00620"></a><span class="lineno">  620</span>      <span class="keywordtype">void</span> remove_excess_node(size_type index)</div>
-<div class="line"><a id="l00621" name="l00621"></a><span class="lineno">  621</span>      {</div>
-<div class="line"><a id="l00622" name="l00622"></a><span class="lineno">  622</span>        <span class="keywordflow">if</span>(!emptyNodes)</div>
-<div class="line"><a id="l00623" name="l00623"></a><span class="lineno">  623</span>        {</div>
-<div class="line"><a id="l00624" name="l00624"></a><span class="lineno">  624</span>          Nodes::erase_node(this-&gt;cbegin_node_weights() + index);</div>
-<div class="line"><a id="l00625" name="l00625"></a><span class="lineno">  625</span>        }</div>
-<div class="line"><a id="l00626" name="l00626"></a><span class="lineno">  626</span>      }</div>
-<div class="line"><a id="l00627" name="l00627"></a><span class="lineno">  627</span>    };</div>
-<div class="line"><a id="l00628" name="l00628"></a><span class="lineno">  628</span>  }</div>
-<div class="line"><a id="l00629" name="l00629"></a><span class="lineno">  629</span>}</div>
+<div class="line"><a id="l00617" name="l00617"></a><span class="lineno">  617</span>      <span class="keyword">template</span>&lt;<span class="keyword">class</span>... Args&gt;</div>
+<div class="line"><a id="l00618" name="l00618"></a><span class="lineno">  618</span>      size_type insert_node_impl(<span class="keyword">const</span> size_type pos, Args&amp;&amp;... args)</div>
+<div class="line"><a id="l00619" name="l00619"></a><span class="lineno">  619</span>      {</div>
+<div class="line"><a id="l00620" name="l00620"></a><span class="lineno">  620</span>        <span class="keyword">const</span> <span class="keyword">auto</span> node{std::ranges::min(pos, this-&gt;order())};</div>
+<div class="line"><a id="l00621" name="l00621"></a><span class="lineno">  621</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (!emptyNodes)</div>
+<div class="line"><a id="l00622" name="l00622"></a><span class="lineno">  622</span>        {</div>
+<div class="line"><a id="l00623" name="l00623"></a><span class="lineno">  623</span>          Nodes::insert_node(this-&gt;cbegin_node_weights() + node, std::forward&lt;Args&gt;(args)...);</div>
+<div class="line"><a id="l00624" name="l00624"></a><span class="lineno">  624</span>        }</div>
+<div class="line"><a id="l00625" name="l00625"></a><span class="lineno">  625</span> </div>
+<div class="line"><a id="l00626" name="l00626"></a><span class="lineno">  626</span>        <span class="keywordflow">return</span> node;</div>
+<div class="line"><a id="l00627" name="l00627"></a><span class="lineno">  627</span>      }</div>
+<div class="line"><a id="l00628" name="l00628"></a><span class="lineno">  628</span> </div>
+<div class="line"><a id="l00629" name="l00629"></a><span class="lineno">  629</span>      <span class="keywordtype">void</span> remove_excess_node(size_type index)</div>
+<div class="line"><a id="l00630" name="l00630"></a><span class="lineno">  630</span>      {</div>
+<div class="line"><a id="l00631" name="l00631"></a><span class="lineno">  631</span>        <span class="keywordflow">if</span>(!emptyNodes)</div>
+<div class="line"><a id="l00632" name="l00632"></a><span class="lineno">  632</span>        {</div>
+<div class="line"><a id="l00633" name="l00633"></a><span class="lineno">  633</span>          Nodes::erase_node(this-&gt;cbegin_node_weights() + index);</div>
+<div class="line"><a id="l00634" name="l00634"></a><span class="lineno">  634</span>        }</div>
+<div class="line"><a id="l00635" name="l00635"></a><span class="lineno">  635</span>      }</div>
+<div class="line"><a id="l00636" name="l00636"></a><span class="lineno">  636</span>    };</div>
+<div class="line"><a id="l00637" name="l00637"></a><span class="lineno">  637</span>  }</div>
+<div class="line"><a id="l00638" name="l00638"></a><span class="lineno">  638</span>}</div>
 <div class="ttc" id="aAlgorithms_8hpp_html"><div class="ttname"><a href="../../d6/d07/Algorithms_8hpp.html">Algorithms.hpp</a></div><div class="ttdoc">A collection of constexpr algorithms.</div></div>
 <div class="ttc" id="aAlgorithms_8hpp_html_acea3d5784387d9a7cf99326563ed0a5c"><div class="ttname"><a href="../../d6/d07/Algorithms_8hpp.html#acea3d5784387d9a7cf99326563ed0a5c">sequoia::sort</a></div><div class="ttdeci">constexpr void sort(Iter begin, Iter end, Comparer comp=Comparer{})</div><div class="ttdef"><b>Definition:</b> Algorithms.hpp:79</div></div>
 <div class="ttc" id="aAssignmentUtilities_8hpp_html"><div class="ttname"><a href="../../d0/dbb/AssignmentUtilities_8hpp.html">AssignmentUtilities.hpp</a></div><div class="ttdoc">Helper for dealing with allocator propagation during copy assignment.</div></div>
@@ -704,8 +713,8 @@ $(function() {
 <div class="ttc" id="aHeterogeneousNodeDetails_8hpp_html"><div class="ttname"><a href="../../dd/d8b/HeterogeneousNodeDetails_8hpp.html">HeterogeneousNodeDetails.hpp</a></div><div class="ttdoc">Implementation details for heterogeneous nodes.</div></div>
 <div class="ttc" id="aclasssequoia_1_1maths_1_1graph__impl_1_1graph__dereference__policy_html"><div class="ttname"><a href="../../d8/d45/classsequoia_1_1maths_1_1graph__impl_1_1graph__dereference__policy.html">sequoia::maths::graph_impl::graph_dereference_policy</a></div><div class="ttdef"><b>Definition:</b> GraphImpl.hpp:30</div></div>
 <div class="ttc" id="aclasssequoia_1_1maths_1_1graph__primitive_html"><div class="ttname"><a href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">sequoia::maths::graph_primitive</a></div><div class="ttdef"><b>Definition:</b> GraphImpl.hpp:107</div></div>
-<div class="ttc" id="aclasssequoia_1_1maths_1_1graph_html"><div class="ttname"><a href="../../d8/d87/classsequoia_1_1maths_1_1graph.html">sequoia::maths::graph</a></div><div class="ttdef"><b>Definition:</b> DynamicGraph.hpp:366</div></div>
-<div class="ttc" id="aclasssequoia_1_1maths_1_1tree_html"><div class="ttname"><a href="../../d6/dce/classsequoia_1_1maths_1_1tree.html">sequoia::maths::tree</a></div><div class="ttdef"><b>Definition:</b> DynamicTree.hpp:42</div></div>
+<div class="ttc" id="aclasssequoia_1_1maths_1_1graph_html"><div class="ttname"><a href="../../d8/d87/classsequoia_1_1maths_1_1graph.html">sequoia::maths::graph</a></div><div class="ttdef"><b>Definition:</b> DynamicGraph.hpp:347</div></div>
+<div class="ttc" id="aclasssequoia_1_1maths_1_1tree_html"><div class="ttname"><a href="../../d6/dce/classsequoia_1_1maths_1_1tree.html">sequoia::maths::tree</a></div><div class="ttdef"><b>Definition:</b> DynamicTree.hpp:37</div></div>
 <div class="ttc" id="aclasssequoia_1_1utilities_1_1iterator_html"><div class="ttname"><a href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">sequoia::utilities::iterator</a></div><div class="ttdoc">An iterator with policies controlling dereferencing and auxiliary data.</div><div class="ttdef"><b>Definition:</b> Iterator.hpp:237</div></div>
 <div class="ttc" id="aconceptsequoia_1_1alloc_html"><div class="ttname"><a href="../../df/d4b/conceptsequoia_1_1alloc.html">sequoia::alloc</a></div><div class="ttdoc">A concept for allocators.</div><div class="ttdef"><b>Definition:</b> Concepts.hpp:52</div></div>
 <div class="ttc" id="astructsequoia_1_1maths_1_1tree__initializer_html"><div class="ttname"><a href="../../d2/d81/structsequoia_1_1maths_1_1tree__initializer.html">sequoia::maths::tree_initializer</a></div><div class="ttdef"><b>Definition:</b> GraphImpl.hpp:84</div></div>

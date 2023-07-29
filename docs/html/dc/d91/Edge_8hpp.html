@@ -75,6 +75,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
 <a href="#enum-members">Enumerations</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle"><div class="title">Edge.hpp File Reference</div></div>
@@ -122,6 +123,12 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decoration of edge to record the location on the target node into which the edge is embedded.  <a href="../../db/db0/classsequoia_1_1maths_1_1embedded__edge.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:a62f4e7369a8b5387858894f958998400"><td class="memItemLeft" align="right" valign="top"><a id="a62f4e7369a8b5387858894f958998400" name="a62f4e7369a8b5387858894f958998400"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::inverted_edge_t</b> = maths::inversion_constant&lt; true &gt;</td></tr>
+<tr class="separator:a62f4e7369a8b5387858894f958998400"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
 <tr class="memitem:a251f462788ec4f5e7e6a5ab5a3acf7ee"><td class="memItemLeft" align="right" valign="top"><a id="a251f462788ec4f5e7e6a5ab5a3acf7ee" name="a251f462788ec4f5e7e6a5ab5a3acf7ee"></a>enum class &#160;</td><td class="memItemRight" valign="bottom"><b>edge_flavour</b> { <b>partial</b>
@@ -137,6 +144,9 @@ Variables</h2></td></tr>
 template&lt;bool Inverted&gt; </td></tr>
 <tr class="memitem:a9bb774e8f8b0d1b426e0c39e37b9fdc6"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::inversion_v</b> {inversion_constant&lt;Inverted&gt;::value}</td></tr>
 <tr class="separator:a9bb774e8f8b0d1b426e0c39e37b9fdc6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a84639edef2a1c3b7467312a4de71f8ee"><td class="memItemLeft" align="right" valign="top"><a id="a84639edef2a1c3b7467312a4de71f8ee" name="a84639edef2a1c3b7467312a4de71f8ee"></a>
+constexpr inverted_edge_t&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::inverted_edge</b> {}</td></tr>
+<tr class="separator:a84639edef2a1c3b7467312a4de71f8ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Various edge types for use by graphs. </p>

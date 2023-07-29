@@ -82,7 +82,6 @@ $(function() {
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="../../dc/de3/TestPreprocessorDefinitions_8hpp_source.html">sequoia/TestFramework/TestPreprocessorDefinitions.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d3/d0b/GraphTestingUtilities_8hpp_source.html">GraphTestingUtilities.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d4/dae/NodeStorageTestingUtilities_8hpp_source.html">NodeStorageTestingUtilities.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../da/d10/PartitionedDataTestingUtilities_8hpp_source.html">Core/DataStructures/PartitionedDataTestingUtilities.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d8/d97/DynamicGraph_8hpp_source.html">sequoia/Maths/Graph/DynamicGraph.hpp</a>&quot;</code><br />
 <code>#include &lt;variant&gt;</code><br />
@@ -99,19 +98,25 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/db5/structsequoia_1_1testing_1_1shared__weight__bucketed__edge__storage__traits.html">sequoia::testing::shared_weight_bucketed_edge_storage_traits</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d4e/structsequoia_1_1testing_1_1graph__type__generator.html">sequoia::testing::graph_type_generator&lt; GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightStorage, EdgeStorageTraits, NodeWeightStorageTraits, bool &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d9c/structsequoia_1_1testing_1_1shared__edge__contiguous__edge__storage__traits.html">sequoia::testing::shared_edge_contiguous_edge_storage_traits</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d67/structsequoia_1_1testing_1_1graph__type__generator_3_01GraphFlavour_00_01EdgeWeight_00_01NodeWei8c11d443f5e5a7bc7fcb2d9c1fc4a807.html">sequoia::testing::graph_type_generator&lt; GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits, true &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d8a/structsequoia_1_1testing_1_1shared__edge__bucketed__edge__storage__traits.html">sequoia::testing::shared_edge_bucketed_edge_storage_traits</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d4e/structsequoia_1_1testing_1_1graph__type__generator.html">sequoia::testing::graph_type_generator&lt; GraphFlavour, EdgeWeight, NodeWeight, EdgeStorageTraits, NodeWeightStorageTraits, bool &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d6a/structsequoia_1_1testing_1_1graph__type__generator_3_01GraphFlavour_00_01EdgeWeight_00_01NodeWeida760b58d7a3e07edab7415a17b0b02b.html">sequoia::testing::graph_type_generator&lt; GraphFlavour, EdgeWeight, NodeWeight, EdgeStorageTraits, NodeWeightStorageTraits, true &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/de0/classsequoia_1_1testing_1_1graph__test__helper.html">sequoia::testing::graph_test_helper&lt; EdgeWeight, NodeWeight, Test &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d1d/structsequoia_1_1testing_1_1graph__initialization__checker.html">sequoia::testing::graph_initialization_checker&lt; G &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:ab601ac36fd91a9423a47788f5b969bda"><td class="memTemplParams" colspan="2"><a id="ab601ac36fd91a9423a47788f5b969bda" name="ab601ac36fd91a9423a47788f5b969bda"></a>
-template&lt;maths::graph_flavour GraphFlavour, class EdgeWeight , class NodeWeight , class EdgeWeightCreator , class NodeWeightCreator , class EdgeStorageTraits , class NodeWeightStorageTraits &gt; </td></tr>
-<tr class="memitem:ab601ac36fd91a9423a47788f5b969bda"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::graph_type_generator_t</b> = typename graph_type_generator&lt; GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits &gt;::graph_type</td></tr>
-<tr class="separator:ab601ac36fd91a9423a47788f5b969bda"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab332f7c59dd47fba6fea00aaf5ddf816"><td class="memTemplParams" colspan="2"><a id="ab332f7c59dd47fba6fea00aaf5ddf816" name="ab332f7c59dd47fba6fea00aaf5ddf816"></a>
+template&lt;maths::graph_flavour GraphFlavour, class EdgeWeight , class NodeWeight , class EdgeStorageTraits , class NodeWeightStorageTraits &gt; </td></tr>
+<tr class="memitem:ab332f7c59dd47fba6fea00aaf5ddf816"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::graph_type_generator_t</b> = typename graph_type_generator&lt; GraphFlavour, EdgeWeight, NodeWeight, EdgeStorageTraits, NodeWeightStorageTraits &gt;::graph_type</td></tr>
+<tr class="separator:ab332f7c59dd47fba6fea00aaf5ddf816"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>

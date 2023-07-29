@@ -82,14 +82,10 @@ $(function() {
 
 <p>Classes to allow homogeneous treatment of graphs with empty/non-empty node weights.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="../../d6/d07/Algorithms_8hpp_source.html">sequoia/Algorithms/Algorithms.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d8/def/ArrayUtilities_8hpp_source.html">sequoia/Core/ContainerUtilities/ArrayUtilities.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="../../d8/def/ArrayUtilities_8hpp_source.html">sequoia/Core/ContainerUtilities/ArrayUtilities.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d0/dbb/AssignmentUtilities_8hpp_source.html">sequoia/Core/ContainerUtilities/AssignmentUtilities.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d7/de4/Iterator_8hpp_source.html">sequoia/Core/ContainerUtilities/Iterator.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d7/d7b/FaithfulWrapper_8hpp_source.html">sequoia/Core/Object/FaithfulWrapper.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d3/da1/Creator_8hpp_source.html">sequoia/Core/Object/Creator.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../db/d4a/EdgesAndNodesUtilities_8hpp_source.html">sequoia/Maths/Graph/EdgesAndNodesUtilities.hpp</a>&quot;</code><br />
-<code>#include &quot;sequoia/PlatformSpecific/Preprocessor.hpp&quot;</code><br />
 <code>#include &lt;type_traits&gt;</code><br />
 <code>#include &lt;algorithm&gt;</code><br />
 </div>
@@ -97,19 +93,13 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d8a/structsequoia_1_1maths_1_1graph__impl_1_1proxy__dereference__policy.html">sequoia::maths::graph_impl::proxy_dereference_policy&lt; Iterator &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/de4/classsequoia_1_1maths_1_1graph__impl_1_1node__storage.html">sequoia::maths::graph_impl::node_storage&lt; Weight, Traits &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/de4/classsequoia_1_1maths_1_1graph__impl_1_1node__storage.html">sequoia::maths::graph_impl::node_storage&lt; WeightMaker, Traits &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d75/classsequoia_1_1maths_1_1graph__impl_1_1node__storage_3_01WeightMaker_00_01Traits_01_4.html">sequoia::maths::graph_impl::node_storage&lt; WeightMaker, Traits &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d68/classsequoia_1_1maths_1_1graph__impl_1_1node__storage_3_01Weight_00_01Traits_01_4.html">sequoia::maths::graph_impl::node_storage&lt; Weight, Traits &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a263848760cb75e61024a29af3decd16c"><td class="memTemplParams" colspan="2"><a id="a263848760cb75e61024a29af3decd16c" name="a263848760cb75e61024a29af3decd16c"></a>
-template&lt;class T &gt; </td></tr>
-<tr class="memitem:a263848760cb75e61024a29af3decd16c"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::graph_impl::empty_proxy</b> = object::creator&lt;T&gt; &amp;&amp; std::is_empty_v&lt;typename T::product_type::value_type&gt;</td></tr>
-<tr class="separator:a263848760cb75e61024a29af3decd16c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1a9236ba1cb442298c64c7e95a3e527c"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
 <tr class="memitem:a1a9236ba1cb442298c64c7e95a3e527c"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dd/d8b/NodeStorage_8hpp.html#a1a9236ba1cb442298c64c7e95a3e527c">sequoia::maths::graph_impl::has_get_allocator</a></td></tr>
 <tr class="separator:a1a9236ba1cb442298c64c7e95a3e527c"><td class="memSeparator" colspan="2">&#160;</td></tr>

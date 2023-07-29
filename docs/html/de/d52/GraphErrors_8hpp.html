@@ -94,18 +94,30 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a0b5243aaa081cf1861e54e61d4352262"><td class="memItemLeft" align="right" valign="top"><a id="a0b5243aaa081cf1861e54e61d4352262" name="a0b5243aaa081cf1861e54e61d4352262"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::graph_errors::to_string</b> (const edge_indices &amp;indices)</td></tr>
-<tr class="separator:a0b5243aaa081cf1861e54e61d4352262"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af59672f9f7a715ba3433d424608c6da9"><td class="memItemLeft" align="right" valign="top"><a id="af59672f9f7a715ba3433d424608c6da9" name="af59672f9f7a715ba3433d424608c6da9"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::graph_errors::prefix</b> (std::string_view method)</td></tr>
-<tr class="separator:af59672f9f7a715ba3433d424608c6da9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af6b56161b0464c6ead1add72291d8bc8"><td class="memItemLeft" align="right" valign="top"><a id="af6b56161b0464c6ead1add72291d8bc8" name="af6b56161b0464c6ead1add72291d8bc8"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::graph_errors::error_prefix</b> (std::string_view method)</td></tr>
-<tr class="separator:af6b56161b0464c6ead1add72291d8bc8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6211656e6d65d4ae0d9df34b7e4e6c41"><td class="memItemLeft" align="right" valign="top"><a id="a6211656e6d65d4ae0d9df34b7e4e6c41" name="a6211656e6d65d4ae0d9df34b7e4e6c41"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::graph_errors::error_prefix</b> (std::string_view method, const edge_indices indices)</td></tr>
-<tr class="separator:a6211656e6d65d4ae0d9df34b7e4e6c41"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a11e6047a3f5ec86e9621cfac11e390dc"><td class="memItemLeft" align="right" valign="top"><a id="a11e6047a3f5ec86e9621cfac11e390dc" name="a11e6047a3f5ec86e9621cfac11e390dc"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::graph_errors::node_index_range_message</b> (std::string_view method, const std::size_t order, const std::size_t node)</td></tr>
+<tr class="separator:a11e6047a3f5ec86e9621cfac11e390dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acd50c1f45726dbc4271e0661b4191d8c"><td class="memItemLeft" align="right" valign="top"><a id="acd50c1f45726dbc4271e0661b4191d8c" name="acd50c1f45726dbc4271e0661b4191d8c"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::graph_errors::node_index_range_message</b> (std::string_view method, const std::size_t order, const std::size_t node1, const std::size_t node2)</td></tr>
+<tr class="separator:acd50c1f45726dbc4271e0661b4191d8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3b94f3ceea2401051e2e8a4dd90b802b"><td class="memItemLeft" align="right" valign="top"><a id="a3b94f3ceea2401051e2e8a4dd90b802b" name="a3b94f3ceea2401051e2e8a4dd90b802b"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::graph_errors::edge_index_range_message</b> (std::string_view method, const edge_indices edgeIndices, std::string_view indexName, const std::size_t size, const std::size_t index)</td></tr>
+<tr class="separator:a3b94f3ceea2401051e2e8a4dd90b802b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a968b1cd36fd215a74a98fdccb2ed8b64"><td class="memItemLeft" align="right" valign="top"><a id="a968b1cd36fd215a74a98fdccb2ed8b64" name="a968b1cd36fd215a74a98fdccb2ed8b64"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::graph_errors::edge_insertion_index_message</b> (std::string_view method, const std::size_t node, const std::size_t sizeAfterFirstInsertion, const std::size_t index)</td></tr>
+<tr class="separator:a968b1cd36fd215a74a98fdccb2ed8b64"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7681fd2c28d7ba952caf9fe79c6cfc00"><td class="memItemLeft" align="right" valign="top"><a id="a7681fd2c28d7ba952caf9fe79c6cfc00" name="a7681fd2c28d7ba952caf9fe79c6cfc00"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::graph_errors::edge_swap_indices_message</b> (std::size_t node, std::size_t index, std::size_t numEdges)</td></tr>
+<tr class="separator:a7681fd2c28d7ba952caf9fe79c6cfc00"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac1aead25f0642b2b461e7eb8d3ca14f8"><td class="memItemLeft" align="right" valign="top"><a id="ac1aead25f0642b2b461e7eb8d3ca14f8" name="ac1aead25f0642b2b461e7eb8d3ca14f8"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::graph_errors::reciprocated_error_message</b> (const edge_indices edgeIndices, const std::string_view indexName, const std::size_t reciprocatedIndex, const std::size_t index)</td></tr>
+<tr class="separator:ac1aead25f0642b2b461e7eb8d3ca14f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acbe6515dc4550bce1adc284696d7d116"><td class="memItemLeft" align="right" valign="top"><a id="acbe6515dc4550bce1adc284696d7d116" name="acbe6515dc4550bce1adc284696d7d116"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::graph_errors::embedded_edge_message</b> (const std::size_t nodeIndex, const std::size_t source, const std::size_t target)</td></tr>
+<tr class="separator:acbe6515dc4550bce1adc284696d7d116"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af5c16155fb39a3c8f02ffd48f10f9bc2"><td class="memItemLeft" align="right" valign="top"><a id="af5c16155fb39a3c8f02ffd48f10f9bc2" name="af5c16155fb39a3c8f02ffd48f10f9bc2"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::graph_errors::inconsistent_initialization_message</b> (std::size_t numNodes, std::size_t edgeParitions)</td></tr>
+<tr class="separator:af5c16155fb39a3c8f02ffd48f10f9bc2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a35a224a087971ad02124a58fa18780bb"><td class="memItemLeft" align="right" valign="top"><a id="a35a224a087971ad02124a58fa18780bb" name="a35a224a087971ad02124a58fa18780bb"></a>
 constexpr void&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::graph_errors::check_node_index_range</b> (std::string_view method, const std::size_t order, const std::size_t node)</td></tr>
 <tr class="separator:a35a224a087971ad02124a58fa18780bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -115,12 +127,12 @@ constexpr void&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::ma
 <tr class="memitem:ae03c5fcde83c613769387d44776d0c7e"><td class="memItemLeft" align="right" valign="top"><a id="ae03c5fcde83c613769387d44776d0c7e" name="ae03c5fcde83c613769387d44776d0c7e"></a>
 constexpr void&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::graph_errors::check_edge_index_range</b> (std::string_view method, const edge_indices edgeIndices, std::string_view indexName, const std::size_t size, const std::size_t index)</td></tr>
 <tr class="separator:ae03c5fcde83c613769387d44776d0c7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af101505a3e9a6d3f3a5d533b4ac899ad"><td class="memItemLeft" align="right" valign="top"><a id="af101505a3e9a6d3f3a5d533b4ac899ad" name="af101505a3e9a6d3f3a5d533b4ac899ad"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::graph_errors::self_referential_error</b> (const edge_indices edgeIndices, const std::size_t target, const std::size_t compIndex)</td></tr>
-<tr class="separator:af101505a3e9a6d3f3a5d533b4ac899ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac1aead25f0642b2b461e7eb8d3ca14f8"><td class="memItemLeft" align="right" valign="top"><a id="ac1aead25f0642b2b461e7eb8d3ca14f8" name="ac1aead25f0642b2b461e7eb8d3ca14f8"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::graph_errors::reciprocated_error_message</b> (const edge_indices edgeIndices, const std::string_view indexName, const std::size_t reciprocatedIndex, const std::size_t index)</td></tr>
-<tr class="separator:ac1aead25f0642b2b461e7eb8d3ca14f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3b4d6f46f0402c561ed759e0a6500985"><td class="memItemLeft" align="right" valign="top"><a id="a3b4d6f46f0402c561ed759e0a6500985" name="a3b4d6f46f0402c561ed759e0a6500985"></a>
+constexpr void&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::graph_errors::check_edge_insertion_index</b> (std::string_view method, const std::size_t node, const std::size_t sizeAfterFirstInsertion, const std::size_t index)</td></tr>
+<tr class="separator:a3b4d6f46f0402c561ed759e0a6500985"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a03bd44976e6aef23dc0d72c15a795171"><td class="memItemLeft" align="right" valign="top"><a id="a03bd44976e6aef23dc0d72c15a795171" name="a03bd44976e6aef23dc0d72c15a795171"></a>
+constexpr void&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::graph_errors::check_edge_swap_indices</b> (std::size_t node, std::size_t i, std::size_t j, std::size_t numEdges)</td></tr>
+<tr class="separator:a03bd44976e6aef23dc0d72c15a795171"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3e0fce1899f4c2ce2199497015594e2e"><td class="memItemLeft" align="right" valign="top"><a id="a3e0fce1899f4c2ce2199497015594e2e" name="a3e0fce1899f4c2ce2199497015594e2e"></a>
 constexpr void&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::graph_errors::check_reciprocated_index</b> (const edge_indices edgeIndices, std::string_view indexName, const std::size_t reciprocatedIndex, const std::size_t index)</td></tr>
 <tr class="separator:a3e0fce1899f4c2ce2199497015594e2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -133,6 +145,18 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths
 <tr class="memitem:a9e3af629a7f58b294106af95a0015f4a"><td class="memItemLeft" align="right" valign="top"><a id="a9e3af629a7f58b294106af95a0015f4a" name="a9e3af629a7f58b294106af95a0015f4a"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::graph_errors::odd_num_loops_error</b> (std::string_view method, std::size_t nodeIndex)</td></tr>
 <tr class="separator:a9e3af629a7f58b294106af95a0015f4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af101505a3e9a6d3f3a5d533b4ac899ad"><td class="memItemLeft" align="right" valign="top"><a id="af101505a3e9a6d3f3a5d533b4ac899ad" name="af101505a3e9a6d3f3a5d533b4ac899ad"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::graph_errors::self_referential_error</b> (const edge_indices edgeIndices, const std::size_t target, const std::size_t compIndex)</td></tr>
+<tr class="separator:af101505a3e9a6d3f3a5d533b4ac899ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac2962cc27a1886b7c9762f1b92e8ac75"><td class="memItemLeft" align="right" valign="top"><a id="ac2962cc27a1886b7c9762f1b92e8ac75" name="ac2962cc27a1886b7c9762f1b92e8ac75"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::graph_errors::mismatched_weights_message</b> (std::string_view method, edge_indices edgeIndices)</td></tr>
+<tr class="separator:ac2962cc27a1886b7c9762f1b92e8ac75"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a84df3d834c6036e082ee6cd6519c9806"><td class="memItemLeft" align="right" valign="top"><a id="a84df3d834c6036e082ee6cd6519c9806" name="a84df3d834c6036e082ee6cd6519c9806"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::graph_errors::absent_reciprocated_partial_edge_message</b> (std::string_view method, edge_indices edgeIndices)</td></tr>
+<tr class="separator:a84df3d834c6036e082ee6cd6519c9806"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeec49b3539f04b8e56f323646f4d296a"><td class="memItemLeft" align="right" valign="top"><a id="aeec49b3539f04b8e56f323646f4d296a" name="aeec49b3539f04b8e56f323646f4d296a"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::graph_errors::absent_partner_weight_message</b> (std::string_view method, edge_indices edgeIndices)</td></tr>
+<tr class="separator:aeec49b3539f04b8e56f323646f4d296a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Error messages for graphs. </p>

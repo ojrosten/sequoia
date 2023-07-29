@@ -7,8 +7,6 @@ var searchData=
   ['unsafe_5ft_4',['unsafe_t',['../db/d6f/structsequoia_1_1maths_1_1unsafe__t.html',1,'sequoia::maths']]],
   ['unsortable_5',['unsortable',['../d2/d09/structsequoia_1_1testing_1_1unsortable.html',1,'sequoia::testing']]],
   ['unweighted_5fgraph_5fallocation_5ftest_6',['unweighted_graph_allocation_test',['../dd/d43/classsequoia_1_1testing_1_1unweighted__graph__allocation__test.html',1,'sequoia::testing']]],
-  ['unweighted_5fgraph_5fbootstrapped_5ftest_7',['unweighted_graph_bootstrapped_test',['../d1/da8/classsequoia_1_1testing_1_1unweighted__graph__bootstrapped__test.html',1,'sequoia::testing']]],
-  ['unweighted_5fgraph_5ftest_8',['unweighted_graph_test',['../dc/d37/classsequoia_1_1testing_1_1unweighted__graph__test.html',1,'sequoia::testing']]],
-  ['updatable_9',['updatable',['../d9/d74/classsequoia_1_1testing_1_1updatable.html',1,'sequoia::testing']]],
-  ['utilities_5ftest_10',['utilities_test',['../de/d71/classsequoia_1_1testing_1_1utilities__test.html',1,'sequoia::testing']]]
+  ['updatable_7',['updatable',['../d9/d74/classsequoia_1_1testing_1_1updatable.html',1,'sequoia::testing']]],
+  ['utilities_5ftest_8',['utilities_test',['../de/d71/classsequoia_1_1testing_1_1utilities__test.html',1,'sequoia::testing']]]
 ];

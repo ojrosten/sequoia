@@ -87,30 +87,28 @@ $(function() {
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &quot;<a class="code" href="../../d4/dae/NodeStorageTestingUtilities_8hpp.html">NodeStorageTestingUtilities.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &quot;<a class="code" href="../../d3/dfb/AllocationCheckers_8hpp.html">sequoia/TestFramework/AllocationCheckers.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &quot;<a class="code" href="../../df/d01/DataPool_8hpp.html">sequoia/Core/Object/DataPool.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &quot;<a class="code" href="../../d3/d84/Concepts_8hpp.html">sequoia/Core/Meta/Concepts.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="keyword">namespace </span>sequoia::testing</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>{</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>  <span class="keyword">template</span>&lt;<span class="keyword">class</span> Storage&gt;</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="../../db/d88/structsequoia_1_1testing_1_1node__storage__alloc__getter.html">   21</a></span>  <span class="keyword">struct </span><a class="code hl_struct" href="../../db/d88/structsequoia_1_1testing_1_1node__storage__alloc__getter.html">node_storage_alloc_getter</a></div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>  {</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    <span class="keyword">using </span>allocator_type = <span class="keyword">typename</span> Storage::allocator_type;</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    <span class="keyword">using </span><a class="code hl_struct" href="../../dc/dc9/structsequoia_1_1testing_1_1allocation__equivalence__classes_1_1container__of__pointers.html">alloc_equivalence_class</a> = <a class="code hl_struct" href="../../dc/dc9/structsequoia_1_1testing_1_1allocation__equivalence__classes_1_1container__of__pointers.html">allocation_equivalence_classes::container_of_pointers&lt;allocator_type&gt;</a>;</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    allocator_type operator()(<span class="keyword">const</span> Storage&amp; s)<span class="keyword"> const</span></div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="keyword">    </span>{</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>      <span class="keywordflow">return</span> s.get_node_allocator();</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    }</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>  };</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>}</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &quot;<a class="code" href="../../d3/d84/Concepts_8hpp.html">sequoia/Core/Meta/Concepts.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="keyword">namespace </span>sequoia::testing</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>{</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>  <span class="keyword">template</span>&lt;<span class="keyword">class</span> Storage&gt;</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="../../db/d88/structsequoia_1_1testing_1_1node__storage__alloc__getter.html">   20</a></span>  <span class="keyword">struct </span><a class="code hl_struct" href="../../db/d88/structsequoia_1_1testing_1_1node__storage__alloc__getter.html">node_storage_alloc_getter</a></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>  {</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    <span class="keyword">using </span>allocator_type = <span class="keyword">typename</span> Storage::allocator_type;</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    <span class="keyword">using </span><a class="code hl_struct" href="../../dc/dc9/structsequoia_1_1testing_1_1allocation__equivalence__classes_1_1container__of__pointers.html">alloc_equivalence_class</a> = <a class="code hl_struct" href="../../dc/dc9/structsequoia_1_1testing_1_1allocation__equivalence__classes_1_1container__of__pointers.html">allocation_equivalence_classes::container_of_pointers&lt;allocator_type&gt;</a>;</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    [[nodiscard]]</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    allocator_type operator()(<span class="keyword">const</span> Storage&amp; s)<span class="keyword"> const</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="keyword">    </span>{</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>      <span class="keywordflow">return</span> s.get_node_allocator();</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    }</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>  };</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>}</div>
 <div class="ttc" id="aAllocationCheckers_8hpp_html"><div class="ttname"><a href="../../d3/dfb/AllocationCheckers_8hpp.html">AllocationCheckers.hpp</a></div><div class="ttdoc">Client-facing utilities for performing allocation checks.</div></div>
 <div class="ttc" id="aConcepts_8hpp_html"><div class="ttname"><a href="../../d3/d84/Concepts_8hpp.html">Concepts.hpp</a></div><div class="ttdoc">Concepts which are sufficiently general to appear in the sequoia namespace.</div></div>
-<div class="ttc" id="aDataPool_8hpp_html"><div class="ttname"><a href="../../df/d01/DataPool_8hpp.html">DataPool.hpp</a></div><div class="ttdoc">Classes to allow homogenous treatment of pooled/independently spawned data.</div></div>
 <div class="ttc" id="aNodeStorageTestingUtilities_8hpp_html"><div class="ttname"><a href="../../d4/dae/NodeStorageTestingUtilities_8hpp.html">NodeStorageTestingUtilities.hpp</a></div></div>
 <div class="ttc" id="astructsequoia_1_1testing_1_1allocation__equivalence__classes_1_1container__of__pointers_html"><div class="ttname"><a href="../../dc/dc9/structsequoia_1_1testing_1_1allocation__equivalence__classes_1_1container__of__pointers.html">sequoia::testing::allocation_equivalence_classes::container_of_pointers</a></div><div class="ttdef"><b>Definition:</b> AllocationCheckers.hpp:178</div></div>
-<div class="ttc" id="astructsequoia_1_1testing_1_1node__storage__alloc__getter_html"><div class="ttname"><a href="../../db/d88/structsequoia_1_1testing_1_1node__storage__alloc__getter.html">sequoia::testing::node_storage_alloc_getter</a></div><div class="ttdef"><b>Definition:</b> NodeStorageAllocationTestingUtilities.hpp:22</div></div>
+<div class="ttc" id="astructsequoia_1_1testing_1_1node__storage__alloc__getter_html"><div class="ttname"><a href="../../db/d88/structsequoia_1_1testing_1_1node__storage__alloc__getter.html">sequoia::testing::node_storage_alloc_getter</a></div><div class="ttdef"><b>Definition:</b> NodeStorageAllocationTestingUtilities.hpp:21</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
