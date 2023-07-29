@@ -125,4 +125,14 @@ namespace sequoia::maths::graph_errors
   {
     return error_prefix(method, edgeIndices).append("Partner weight not found");
   }
+
+  [[nodiscard]]
+  std::string inconsistent_initialization_message(std::size_t numNodes, std::size_t edgeParitions)
+  {
+    return std::string{"Error initializing graph\n"}
+            .append("Number of node weights:    ").append(std::to_string(numNodes)).append("\n")
+            .append("Number of edge paritions:  ").append(std::to_string(edgeParitions)).append("\n")
+            .append("Please ensure these numbers are the same");
+  }
+
 }

@@ -543,15 +543,10 @@ namespace sequoia
       constexpr static bool emptyNodes{std::is_empty_v<typename Nodes::weight_type>};
 
       [[nodiscard]]
-      constexpr static edges_initializer check_initialization(edges_initializer edges, std::size_t numNodes, std::size_t edgeParitions)
+      constexpr static const edges_initializer& check_initialization(const edges_initializer& edges, std::size_t numNodes, std::size_t edgeParitions)
       {
         if(numNodes != edgeParitions)
-          throw std::logic_error{
-            std::string{"Error initializing graph\n"}
-              .append("Number of node weights:    ").append(std::to_string(numNodes)).append("\n")
-              .append("Number of edge paritions:  ").append(std::to_string(edgeParitions)).append("\n")
-              .append("Please ensure these numbers are the same")
-          };
+          throw std::logic_error{graph_errors::inconsistent_initialization_message(numNodes, edgeParitions)};
 
         return edges;
       }
