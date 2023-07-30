@@ -230,7 +230,7 @@ namespace sequoia::testing
     cmake(projPaths.main(), projPaths.build());
     for(const auto& main : projPaths.ancillary_main_cpps())
     {
-      cmake(main, build_paths{projPaths.project_root(), main});
+      cmake(main, build_paths{projPaths.project_root(), main, projPaths.cmake_subdir()});
     }
   }
 

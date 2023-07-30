@@ -71,6 +71,9 @@ namespace sequoia::testing
     std::filesystem::path fake_project() const;
 
     [[nodiscard]]
+    std::filesystem::path minimal_fake_path() const;
+
+    [[nodiscard]]
     std::string zeroth_arg() const;
 
     std::filesystem::path write(std::string_view dirName, std::stringstream& output) const;

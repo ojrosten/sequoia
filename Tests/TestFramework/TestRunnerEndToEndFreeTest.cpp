@@ -26,12 +26,12 @@ namespace sequoia::testing
     [[nodiscard]]
     std::string run_cmd()
     {
-      if constexpr (with_msvc_v)
+      if constexpr(with_msvc_v)
       {
 #ifdef CMAKE_INTDIR
         return std::string{CMAKE_INTDIR}.append("\\TestAll.exe");
 #else
-        throw std::logic_error{"Unable to find preprocessor definition for CMAKE_INTDIR"};
+        return "\\TestAll.exe";
 #endif
       }
       else
@@ -44,44 +44,50 @@ namespace sequoia::testing
     std::string create_cmd()
     {
       return run_cmd().append(" create free_test Utilities.hpp"
-                              " create free_test \"Utilities/UsefulThings.hpp\" gen-source utils"
-                              " create free_test \"Source/generatedProject/Stuff/Bar.hpp\""
-                              " create free \"Unstable/Flipper.hpp\" -s Unstable"
-                              " create regular_test \"other::functional::maybe<class T>\" \"std::optional<T>\" gen-source Maybe"
-                              " create regular_test \"stuff::oldschool\" double --header \"NoTemplate.hpp\""
-                              " create regular \"maths::probability\" double gen-source Maths"
-                              " create move_only_test \"bar::baz::foo<maths::floating_point T>\" T"
-                              " create move_only \"stuff::unique_thing\" double gen-source Utilities/Thing"
-                              " create regular_allocation_test container"
-                              " create move_only_allocation_test house"
-                              " create performance_test Container.hpp");
+        " create free_test \"Utilities/UsefulThings.hpp\" gen-source utils"
+        " create free_test \"Source/generatedProject/Stuff/Bar.hpp\""
+        " create free \"Unstable/Flipper.hpp\" -s Unstable"
+        " create regular_test \"other::functional::maybe<class T>\" \"std::optional<T>\" gen-source Maybe"
+        " create regular_test \"stuff::oldschool\" double --header \"NoTemplate.hpp\""
+        " create regular \"maths::probability\" double gen-source Maths"
+        " create move_only_test \"bar::baz::foo<maths::floating_point T>\" T"
+        " create move_only \"stuff::unique_thing\" double gen-source Utilities/Thing"
+        " create regular_allocation_test container"
+        " create move_only_allocation_test house"
+        " create performance_test Container.hpp");
     }
   }
 
-  cmd_builder::cmd_builder(const std::filesystem::path& projRoot)
+
+
+  cmd_builder::cmd_builder(const std::filesystem::path& projRoot, const fs::path& cmakeSubdir)
     : main{projRoot / main_paths::default_main_cpp_from_root()}
-    , build{projRoot, main}
+    , build{projRoot, main, cmakeSubdir}
   {}
 
   void cmd_builder::create_build_run(const std::filesystem::path& creationOutput, std::string_view buildOutput, const std::filesystem::path& output) const
   {
-    invoke(   cd_cmd(build.cmade_dir())
-           && shell_command{"", create_cmd(), creationOutput / "CreationOutput.txt" }
-           && build_cmd(build, buildOutput)
-           && shell_command{"", run_cmd(), output / "TestRunOutput.txt" }
-           && shell_command{"",
-                            run_cmd().append(" select ../../../Tests/HouseAllocationTest.cpp")
-                                     .append(" select Maybe/MaybeTest.cpp")
-                                     .append(" select FooTest.cpp"),
-                            output / "SpecifiedSourceOutput.txt"}
-           && shell_command{"", run_cmd().append(" select FooTest.cpp prune"), output / "SelectedSourcePruneConflictOutput.txt"}
-           && shell_command{"", run_cmd().append(" select Plurgh.cpp test Absent select Foo test FooTest.cpp"), output / "FailedSpecifiedSourceOutput.txt"}
-           && shell_command{"", run_cmd().append(" test Foo"), output / "SpecifiedSuiteOutput.txt"}
-           && shell_command{"", run_cmd().append(" test Foo prune"), output / "SpecifiedSuitePruneConflictOutput.txt"}
-           && shell_command{"", run_cmd().append(" prune --cutoff namespace"), output / "FullyPrunedOutput.txt"}
-           && shell_command{"", run_cmd().append(" -v"), output / "VerboseOutput.txt"}
-           && shell_command{"", run_cmd().append(" -v select FooTest.cpp test Foo"), output / "SelectFromTestedSuiteOutput.txt"}
-           && shell_command{"", run_cmd().append(" --help"), output / "HelpOutput.txt"});
+    invoke(cd_cmd(build.cmade_dir())
+      && shell_command{
+      "", create_cmd(), creationOutput / "CreationOutput.txt"
+    }
+    && build_cmd(build, buildOutput)
+      && shell_command{
+      "", run_cmd(), output / "TestRunOutput.txt"
+    }
+    && shell_command{"",
+      run_cmd().append(" select ../../../Tests/HouseAllocationTest.cpp")
+      .append(" select Maybe/MaybeTest.cpp")
+      .append(" select FooTest.cpp"),
+      output / "SpecifiedSourceOutput.txt"}
+    && shell_command{"", run_cmd().append(" select FooTest.cpp prune"), output / "SelectedSourcePruneConflictOutput.txt"}
+    && shell_command{"", run_cmd().append(" select Plurgh.cpp test Absent select Foo test FooTest.cpp"), output / "FailedSpecifiedSourceOutput.txt"}
+    && shell_command{"", run_cmd().append(" test Foo"), output / "SpecifiedSuiteOutput.txt"}
+    && shell_command{"", run_cmd().append(" test Foo prune"), output / "SpecifiedSuitePruneConflictOutput.txt"}
+    && shell_command{"", run_cmd().append(" prune --cutoff namespace"), output / "FullyPrunedOutput.txt"}
+    && shell_command{"", run_cmd().append(" -v"), output / "VerboseOutput.txt"}
+    && shell_command{"", run_cmd().append(" -v select FooTest.cpp test Foo"), output / "SelectFromTestedSuiteOutput.txt"}
+    && shell_command{"", run_cmd().append(" --help"), output / "HelpOutput.txt"});
   }
 
   void cmd_builder::rebuild_run(const std::filesystem::path& outputDir, std::string_view cmakeOutput, std::string_view buildOutput, std::string_view options) const
@@ -194,8 +200,9 @@ namespace sequoia::testing
   void test_runner_end_to_end_test::test_project_creation()
   {
     check(report_line("Command processor existance"), std::system(nullptr) > 0);
+    const std::string cmakeSubdir{"CMade"}; // TODO: need to extract this
 
-    commandline_arguments args{build_paths{project_root(), main_paths{}}.dir().generic_string(),
+    commandline_arguments args{build_paths{project_root(), main_paths{}, cmakeSubdir}.cmade_dir().generic_string(),
                                "init",
                                "Oliver Jacob Rosten",
                                generated_project().string(),
@@ -214,7 +221,7 @@ namespace sequoia::testing
       file << outputStream.rdbuf();
     }
 
-    const cmd_builder b{generated_project()};
+    const cmd_builder b{generated_project(), cmakeSubdir};
 
     check(report_line("First CMake output existance"), fs::exists(b.main.dir() / "GenerationOutput.txt"));
     check(report_line("First build output existance"), fs::exists(b.build.cmade_dir() / "GenerationOutput.txt"));

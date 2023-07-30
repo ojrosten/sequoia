@@ -176,7 +176,7 @@ namespace sequoia::testing
       if(data.do_build != build_invocation::no)
       {
         const main_paths main{data.project_root / main_paths::default_main_cpp_from_root()};
-        const build_paths build{data.project_root, main};
+        const build_paths build{data.project_root, main, parentProjectPaths.cmake_subdir()};
 
         invoke(cd_cmd(main.dir())
             && cmake_cmd(parentProjectPaths.build(), build, data.output)

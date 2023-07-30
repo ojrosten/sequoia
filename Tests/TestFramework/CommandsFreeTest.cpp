@@ -56,19 +56,19 @@ namespace sequoia::testing
   {
     const auto root{working_materials()};
     check_exception_thrown<std::runtime_error>(report_line("No cache file"),
-      [&root]() { return cmake_cmd(std::nullopt, build_paths{root, {root / "NoCacheFile/CMakeLists.txt" , ""}}, ""); },
+      [&root]() { return cmake_cmd(std::nullopt, build_paths{root, {root / "NoCacheFile/CMakeLists.txt" , ""}, "CMade"}, ""); },
       postprocessor{" in "});
 
     check_exception_thrown<std::runtime_error>(report_line("'Parent' with no cache file"),
-      [&root]() { return cmake_cmd(build_paths{root, {root / "NoCacheFile/CMakeLists.txt" , ""}}, build_paths{root, {root / "NoCacheFile/CMakeLists.txt" , ""}}, ""); },
+      [&root]() { return cmake_cmd(build_paths{root, {root / "NoCacheFile/CMakeLists.txt" , ""}, "CMade"}, build_paths{root, {root / "NoCacheFile/CMakeLists.txt" , ""}, "CMade"}, ""); },
       postprocessor{" in "});
 
     check_exception_thrown<std::runtime_error>(report_line("Empty cache file"),
-      [&root]() { return cmake_cmd(std::nullopt, build_paths{root, {root / "EmptyCacheFile/CMakeLists.txt" , ""}}, ""); },
+      [&root]() { return cmake_cmd(std::nullopt, build_paths{root, {root / "EmptyCacheFile/CMakeLists.txt" , ""}, "CMade"}, ""); },
       postprocessor{" from "});
 
     check_exception_thrown<std::runtime_error>(report_line("No CXX compiler when Unix Makefiles specified"),
-      [&root]() { return cmake_cmd(std::nullopt, build_paths{root, {root / "NoCXXCompiler/CMakeLists.txt" , ""}}, ""); },
+      [&root]() { return cmake_cmd(std::nullopt, build_paths{root, {root / "NoCXXCompiler/CMakeLists.txt" , ""}, "CMade"}, ""); },
       postprocessor{" from "});
   }
 }

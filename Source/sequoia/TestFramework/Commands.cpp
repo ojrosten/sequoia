@@ -42,26 +42,39 @@ namespace sequoia::testing
         const auto& text{optText.value()};
 
         const auto finder{
-          [&text](std::string_view pattern) {
+          [&text](std::string_view pattern) -> std::string {
             const auto pos{text.find(pattern)};
             const auto offset{pos < npos ? pos + pattern.size() : pos};
 
-            return find_sandwiched_text(text, "=", "\n", offset);
+            auto [begin, end]{find_sandwiched_text(text, "=", "\n", offset)};
+            return ((begin != npos) && (end != npos)) ? text.substr(begin, end - begin) : "";
           }
         };
 
-        auto positions{finder("CMAKE_GENERATOR:")};
-        if((positions.first != npos) && (positions.second != npos))
+        if(auto generator{finder("CMAKE_GENERATOR:")}; !generator.empty())
         {
-          auto generator{text.substr(positions.first, positions.second - positions.first)};
           if(generator != "Unix Makefiles")
-            return std::string{"-G \""}.append(generator).append("\"");
+          {
+            auto genCmd{std::string{"-G \""}.append(generator).append("\"")};
+
+            if(auto buildType{finder("CMAKE_BUILD_TYPE:")}; !buildType.empty())
+            {
+              genCmd.append(" -DCMAKE_BUILD_TYPE=" + buildType);
+            }
+
+
+            if(auto makeProgram{finder("CMAKE_MAKE_PROGRAM:")}; !makeProgram.empty())
+            {
+              genCmd.append(" -DCMAKE_MAKE_PROGRAM=" + makeProgram);
+            }
+
+            return genCmd;
+          }
         }
 
-        positions = finder("CMAKE_CXX_COMPILER:");
-        if((positions.first != npos) && (positions.second != npos))
+        if(auto compiler{finder("CMAKE_CXX_COMPILER:")}; !compiler.empty())
         {
-          return std::string{"-D CMAKE_CXX_COMPILER="}.append(text.substr(positions.first, positions.second - positions.first));
+          return std::string{"-D CMAKE_CXX_COMPILER="}.append(compiler);
         }
 
         throw std::runtime_error{"Unable to deduce cmake command from " + cmakeCache.generic_string()};
@@ -94,8 +107,6 @@ namespace sequoia::testing
         {
 #ifdef CMAKE_INTDIR
           str.append(" --config ").append(std::string{CMAKE_INTDIR});
-#else
-          std::cerr << parsing::commandline::warning("Unable to find preprocessor definition for CMAKE_INTDIR");
 #endif
         }
         else

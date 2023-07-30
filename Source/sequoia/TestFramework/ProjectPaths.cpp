@@ -42,9 +42,10 @@ namespace sequoia::testing
     : discoverable_paths{make(argc, argv)}
   {}
 
-  discoverable_paths::discoverable_paths(fs::path rt, fs::path ex)
+  discoverable_paths::discoverable_paths(std::filesystem::path rt, std::filesystem::path exec, std::filesystem::path subdir)
     : m_Root{std::move(rt)}
-    , m_Executable{std::move(ex)}
+    , m_Executable{std::move(exec)}
+    , m_BuildSubdir{std::move(subdir)}
   {}
 
   [[nodiscard]]
@@ -54,18 +55,14 @@ namespace sequoia::testing
     {
       if(std::string_view zeroth{argv[0]}; !zeroth.empty())
       {
-        if(const auto exectable{fs::canonical(fs::path(zeroth))}; !exectable.empty())
+        if(const auto exec{fs::canonical(fs::path(zeroth))}; !exec.empty())
         {
-          auto trialRoot{exectable};
-          while((std::ranges::distance(trialRoot) > 1))
+          auto found{std::ranges::find(exec, fs::path{"build"})};
+          if((found != exec.begin()) && (std::ranges::distance(found, exec.end()) > 1))
           {
-            const auto last{back(trialRoot)};
-            const auto parent{trialRoot.parent_path()};
-
-            if(trialRoot == parent) break;
-
-            trialRoot = parent;
-            if(last == "build") return {trialRoot, exectable};
+            return {std::accumulate(exec.begin(), found, fs::path{}, [](const fs::path& lhs, const fs::path& rhs){ return lhs / rhs; }), 
+                    exec,
+                    *(std::ranges::next(found))};
           }
         }
 
@@ -160,13 +157,13 @@ namespace sequoia::testing
 
   //===================================== build_paths =====================================//
 
-  build_paths::build_paths(fs::path projectRoot, const main_paths& main)
+  build_paths::build_paths(fs::path projectRoot, const main_paths& main, const std::filesystem::path& cmakeSubdir)
     : m_Dir{std::move(projectRoot /= "build")}
-    , m_CMadeBuildDir{cmade_dir(main)}
+    , m_CMadeBuildDir{cmade_dir(main, cmakeSubdir)}
   {}
 
   [[nodiscard]]
-  fs::path build_paths::cmade_dir(const main_paths& main)
+  fs::path build_paths::cmade_dir(const main_paths& main, const std::filesystem::path& cmakeSubdir)
   {
     auto compilerDir{
       []() -> std::string {
@@ -177,7 +174,7 @@ namespace sequoia::testing
       }
     };
 
-    return (dir() / "CMade").append(compilerDir()) /= fs::relative(main.dir(), dir().parent_path());
+    return (dir() / cmakeSubdir).append(compilerDir()) /= fs::relative(main.dir(), dir().parent_path());
   }
 
   [[nodiscard]]
@@ -354,7 +351,7 @@ namespace sequoia::testing
     : m_Discovered{argc, argv}
     , m_Main{project_root() / pathsFromRoot.mainCpp, project_root() / pathsFromRoot.commonIncludes}
     , m_Source{project_root()}
-    , m_Build{project_root(), main()}
+    , m_Build{project_root(), main(), cmake_subdir()}
     , m_Auxiliary{project_root()}
     , m_Output{project_root()}
     , m_Tests{project_root()}

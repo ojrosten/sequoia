@@ -34,7 +34,7 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string test_runner_test_creation::zeroth_arg() const
   {
-    return (fake_project() / "build").generic_string();
+    return (fake_project() / "build/CMade").generic_string();
   }
 
   void test_runner_test_creation::run_tests()

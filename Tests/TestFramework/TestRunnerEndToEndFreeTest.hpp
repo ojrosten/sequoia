@@ -16,7 +16,7 @@ namespace sequoia::testing
 {
   struct cmd_builder
   {
-    cmd_builder(const std::filesystem::path& projRoot);
+    cmd_builder(const std::filesystem::path& projRoot, const std::filesystem::path& cmakeSubdir);
 
     void create_build_run(const std::filesystem::path& creationOutput, std::string_view buildOutput, const std::filesystem::path& output) const;
 
