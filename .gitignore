@@ -16,6 +16,7 @@ output/TestsTemporaryData
 #ignore file recording prune info
 output/Prune
 
-#ignore Visual Studio files created when opening a CMake file
+#ignore Visual Studio / CLion files
 .vs
+.idea
 out
