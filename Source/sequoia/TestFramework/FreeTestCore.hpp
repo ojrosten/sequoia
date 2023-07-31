@@ -112,11 +112,18 @@ namespace sequoia::testing
     void initialize(test_mode mode, std::string_view suiteName, const normal_path& srcFile, const project_paths& projPaths, individual_materials_paths materials);
 
     void write_instability_analysis_output(const normal_path& srcFile, std::optional<std::size_t> index, const failure_output& output) const;
+
+    [[nodiscard]]
+    const std::filesystem::path& cmake_subdir() const noexcept
+    {
+      return m_CMakeSubdir;
+    }
   private:
     std::string m_Name{};
     tests_paths m_TestRepo{};
     individual_materials_paths m_Materials{};
     individual_diagnostics_paths m_Diagnostics{};
+    std::filesystem::path m_CMakeSubdir{};
   };
 
   /*! \brief class template from which all concrete tests should derive.

@@ -31,7 +31,7 @@ namespace sequoia::testing
 #ifdef CMAKE_INTDIR
         return std::string{CMAKE_INTDIR}.append("\\TestAll.exe");
 #else
-        return "\\TestAll.exe";
+        return "TestAll.exe";
 #endif
       }
       else
@@ -180,12 +180,12 @@ namespace sequoia::testing
     fs::create_directories(working_materials() /= subdirs);
     if constexpr(with_msvc_v)
     {      
-      fs::copy(generated_project() / "build/CMade/win/TestAll/TestAll.vcxproj", working_materials() /= subdirs);
+      fs::copy(generated_project() / "build"/ this->cmake_subdir() / "win/TestAll/TestAll.vcxproj", working_materials() /= subdirs);
     }
     else
     {
       // TO DO: fake this for now on other platforms to ensure the number of checks/deep checks match;
-      // The proper solution is to introduce platform-specific summaries.
+      // A solution might be to introduce platform-specific summaries.
       fs::copy(predictive_materials() /= subdirs, working_materials() /= subdirs);
     }
 
@@ -200,7 +200,7 @@ namespace sequoia::testing
   void test_runner_end_to_end_test::test_project_creation()
   {
     check(report_line("Command processor existance"), std::system(nullptr) > 0);
-    const std::string cmakeSubdir{"CMade"}; // TODO: need to extract this
+    const fs::path cmakeSubdir{this->cmake_subdir()};
 
     commandline_arguments args{build_paths{project_root(), main_paths{}, cmakeSubdir}.cmade_dir().generic_string(),
                                "init",

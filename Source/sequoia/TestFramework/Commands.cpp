@@ -26,6 +26,27 @@ namespace sequoia::testing
 
   namespace
   {
+    constexpr auto npos{std::string::npos};
+
+    [[nodiscard]]
+    std::string find_property(std::string_view text, std::string_view pattern)
+    {
+      const auto pos{text.find(pattern)};
+      const auto offset{pos < npos ? pos + pattern.size() : pos};
+
+      auto [begin, end]{find_sandwiched_text(text, "=", "\n", offset)};
+      return ((begin != npos) && (end != npos)) ? std::string{text.substr(begin, end - begin)} : "";
+    };
+
+    [[nodiscard]]
+    std::string find_and_set_property(std::string_view text, std::string_view pattern)
+    {
+      auto property{find_property(text, pattern)};
+      return !property.empty() ? std::string{" \"-D"}.append(pattern).append("=").append(property).append("\"") : "";
+    }
+
+
+
     [[nodiscard]]
     std::string cmake_extractor(const std::optional<build_paths>& parentBuildPaths,
                                 const build_paths& buildPaths)
@@ -38,43 +59,22 @@ namespace sequoia::testing
 
       if(const auto optText{read_to_string(cmakeCache)})
       {
-        constexpr auto npos{std::string::npos};
         const auto& text{optText.value()};
 
-        const auto finder{
-          [&text](std::string_view pattern) -> std::string {
-            const auto pos{text.find(pattern)};
-            const auto offset{pos < npos ? pos + pattern.size() : pos};
-
-            auto [begin, end]{find_sandwiched_text(text, "=", "\n", offset)};
-            return ((begin != npos) && (end != npos)) ? text.substr(begin, end - begin) : "";
-          }
-        };
-
-        if(auto generator{finder("CMAKE_GENERATOR:")}; !generator.empty())
+        if(auto generator{find_property(text, "CMAKE_GENERATOR")}; !generator.empty())
         {
+          std::string genCmd{};
+
           if(generator != "Unix Makefiles")
           {
-            auto genCmd{std::string{"-G \""}.append(generator).append("\"")};
-
-            if(auto buildType{finder("CMAKE_BUILD_TYPE:")}; !buildType.empty())
-            {
-              genCmd.append(" -DCMAKE_BUILD_TYPE=" + buildType);
-            }
-
-
-            if(auto makeProgram{finder("CMAKE_MAKE_PROGRAM:")}; !makeProgram.empty())
-            {
-              genCmd.append(" -DCMAKE_MAKE_PROGRAM=" + makeProgram);
-            }
-
-            return genCmd;
+            genCmd.append("-G \"").append(generator).append("\"");
+            genCmd.append(find_and_set_property(text, "CMAKE_BUILD_TYPE"));
+            genCmd.append(find_and_set_property(text, "CMAKE_MAKE_PROGRAM"));
           }
-        }
 
-        if(auto compiler{finder("CMAKE_CXX_COMPILER:")}; !compiler.empty())
-        {
-          return std::string{"-D CMAKE_CXX_COMPILER="}.append(compiler);
+          genCmd.append(find_and_set_property(text, "CMAKE_CXX_COMPILER"));
+
+          if(!genCmd.empty()) return genCmd;
         }
 
         throw std::runtime_error{"Unable to deduce cmake command from " + cmakeCache.generic_string()};

@@ -39,6 +39,7 @@ namespace sequoia::testing
     m_TestRepo    = projPaths.tests();
     m_Diagnostics = {project_root(), suiteName, srcFile, to_tag(mode)};
     m_Materials   = std::move(materials);
+    m_CMakeSubdir = projPaths.cmake_subdir();
     std::filesystem::create_directories(m_Diagnostics.diagnostics_file().parent_path());
   }
 
