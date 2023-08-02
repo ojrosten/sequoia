@@ -11,6 +11,7 @@
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
 
 #include "sequoia/TestFramework/FileEditors.hpp"
+#include "sequoia/TestFramework/FileSystemUtilities.hpp"
 #include "sequoia/TestFramework/TestRunner.hpp"
 
 #include <fstream>
@@ -172,8 +173,12 @@ namespace sequoia::testing
     const std::filesystem::path subdirs{"ProjectFiles/win"};
     fs::create_directories(working_materials() /= subdirs);
     if constexpr(with_msvc_v)
-    {      
-      fs::copy(generated_project() / "build/CMade/win/TestAll/TestAll.vcxproj", working_materials() /= subdirs);
+    {
+      if(const auto& cache{get_project_paths().discovered().cmake_cache()}; cache)
+      {
+        const auto projFile{generated_project() / "build" / rebase_from(cache->parent_path(), get_project_paths().build().dir()) / "TestAll.vcxproj"};
+        fs::copy(projFile, working_materials() /= subdirs);
+      }
     }
     else
     {
