@@ -176,13 +176,13 @@ namespace sequoia::testing
       if(data.do_build != build_invocation::no)
       {
         const main_paths main{data.project_root / main_paths::default_main_cpp_from_root()};
-        const build_paths build{data.project_root, main, parentProjectPaths.cmake_subdir()};
+        const build_paths build{data.project_root, parentProjectPaths.build()};
 
         invoke(cd_cmd(main.dir())
             && cmake_cmd(parentProjectPaths.build(), build, data.output)
             && build_cmd(build, data.output)
             && git_first_cmd(data.project_root, data.output)
-            && (data.do_build == build_invocation::launch_ide ? launch_cmd(parentProjectPaths, data.project_root, build.cmade_dir()) : shell_command{})
+            && ((data.do_build == build_invocation::launch_ide) && build.cmake_cache() ? launch_cmd(parentProjectPaths, data.project_root, build.cmake_cache()->parent_path()) : shell_command{})
         );
       }
     }
@@ -210,20 +210,21 @@ namespace sequoia::testing
 
     if constexpr(with_msvc_v)
     {
-      const auto cmakeCache{parentProjectPaths.build().cmake_cache()};
-
-      if(const auto optText{read_to_string(cmakeCache)})
+      if(const auto cmakeCache{parentProjectPaths.build().cmake_cache()})
       {
-        const auto [first, last]{find_sandwiched_text(optText.value(), "CMAKE_GENERATOR_INSTANCE:INTERNAL=", "\n")};
-        if((first != npos) && (last != npos))
+        if(const auto optText{read_to_string(cmakeCache.value())})
         {
-          const auto devenv{fs::path(optText->substr(first, last - first)).append("Common7/IDE/devenv.exe")};
-          if(fs::exists(devenv))
+          const auto [first, last]{find_sandwiched_text(optText.value(), "CMAKE_GENERATOR_INSTANCE:INTERNAL=", "\n")};
+          if((first != npos) && (last != npos))
           {
-            const auto token{back(root)};
-            const auto sln{(buildDir / token).concat("Tests.sln")};
+            const auto devenv{fs::path(optText->substr(first, last - first)).append("Common7/IDE/devenv.exe")};
+            if(fs::exists(devenv))
+            {
+              const auto token{back(root)};
+              const auto sln{(buildDir / token).concat("Tests.sln")};
 
-            return {"Attempting to open IDE...", std::string{"\""}.append(devenv.string()).append("\" ").append("/Run ").append(sln.string()), ""};
+              return {"Attempting to open IDE...", std::string{"\""}.append(devenv.string()).append("\" ").append("/Run ").append(sln.string()), ""};
+            }
           }
         }
       }

@@ -14,6 +14,7 @@
 #include "sequoia/Parsing/CommandLineArguments.hpp"
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
+#include "sequoia/TestFramework/FileSystemUtilities.hpp"
 #include "sequoia/TextProcessing/Patterns.hpp"
 
 #include <iostream>
@@ -53,11 +54,11 @@ namespace sequoia::testing
     {
       const auto buildPathsToUse{parentBuildPaths.has_value() ? parentBuildPaths.value() : buildPaths};
 
-      const fs::path cmakeCache{buildPathsToUse.cmake_cache()};
-      if(!fs::exists(cmakeCache))
-        throw std::runtime_error{"Unable to find CMakeCache.txt in " + buildPathsToUse.cmade_dir().generic_string()};
+      const auto cmakeCache{buildPathsToUse.cmake_cache()};
+      if(!cmakeCache || !fs::exists(*cmakeCache))
+        throw std::runtime_error{"Unable to find CMakeCache.txt in " + cmakeCache->parent_path().generic_string()};
 
-      if(const auto optText{read_to_string(cmakeCache)})
+      if(const auto optText{read_to_string(*cmakeCache)})
       {
         const auto& text{optText.value()};
 
@@ -77,11 +78,11 @@ namespace sequoia::testing
           if(!genCmd.empty()) return genCmd;
         }
 
-        throw std::runtime_error{"Unable to deduce cmake command from " + cmakeCache.generic_string()};
+        throw std::runtime_error{"Unable to deduce cmake command from " + cmakeCache->generic_string()};
       }
       else
       {
-        throw std::runtime_error{"Unable to read from " + cmakeCache.generic_string()};
+        throw std::runtime_error{"Unable to read from " + cmakeCache->generic_string()};
       }
     }
   }
@@ -91,7 +92,10 @@ namespace sequoia::testing
                           const build_paths& buildPaths,
                           const std::filesystem::path& output)
   {
-    auto cmd{std::string{"cmake -S ."}.append(" -B \"").append(buildPaths.cmade_dir().string()).append("\" ")};
+    if(!buildPaths.cmake_cache())
+      throw std::runtime_error{"CMakeCache.txt location not specified"};
+
+    auto cmd{std::string{"cmake -S ."}.append(" -B \"").append(buildPaths.cmake_cache()->parent_path().string()).append("\" ")};
     cmd.append(cmake_extractor(parentBuildPaths, buildPaths));
 
     return {"Running CMake...", cmd, output};
@@ -100,16 +104,20 @@ namespace sequoia::testing
   [[nodiscard]]
   shell_command build_cmd(const build_paths& build, const std::filesystem::path& output)
   {
+    if(!build.cmake_cache())
+      throw std::runtime_error{"Cannot perform build without a CMakeCache.txt file"};
+
     const auto cmd{
-      [&output]() -> shell_command {
+      [&]() -> shell_command {
         std::string str{"cmake --build . --target TestAll"};
-        if constexpr(with_msvc_v)
+        if(build.executable_dir() != build.cmake_cache()->parent_path())
         {
-#ifdef CMAKE_INTDIR
-          str.append(" --config ").append(std::string{CMAKE_INTDIR});
-#endif
+          const auto subdir{rebase_from(build.executable_dir(), build.cmake_cache()->parent_path())};
+          if(!subdir.empty())
+            str.append(" --config ").append(subdir.generic_string());
         }
-        else
+
+        if constexpr(!with_msvc_v)
         {
           str.append(" -- -j8");
         }
@@ -118,6 +126,6 @@ namespace sequoia::testing
       }()
     };
 
-    return cd_cmd(build.cmade_dir()) && cmd;
+    return cd_cmd(build.cmake_cache()->parent_path()) && cmd;
   }
 }

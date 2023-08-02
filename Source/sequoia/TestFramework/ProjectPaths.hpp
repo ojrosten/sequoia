@@ -25,6 +25,8 @@ namespace sequoia::testing
   class discoverable_paths
   {
   public:
+    discoverable_paths() = default;
+
     discoverable_paths(int argc, char** argv);
 
     [[nodiscard]]
@@ -40,17 +42,18 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    const std::filesystem::path& cmake_subdir() const noexcept
+    const std::optional<std::filesystem::path>& cmake_cache() const noexcept
     {
-      return m_BuildSubdir;
+      return m_CMakeCache;
     }
 
     [[nodiscard]]
     friend bool operator==(const discoverable_paths&, const discoverable_paths&) noexcept = default;
   private:
-    std::filesystem::path m_Root, m_Executable, m_BuildSubdir;
+    std::filesystem::path m_Root{}, m_Executable{};
+    std::optional<std::filesystem::path> m_CMakeCache{};
 
-    discoverable_paths(std::filesystem::path rt, std::filesystem::path exec, std::filesystem::path subdir);
+    discoverable_paths(std::filesystem::path rt, std::filesystem::path exec, std::optional<std::filesystem::path> cmakeCache);
 
     [[nodiscard]]
     static discoverable_paths make(int argc, char** argv);
@@ -200,27 +203,30 @@ namespace sequoia::testing
   public:
     build_paths() = default;
 
-    explicit build_paths(std::filesystem::path projectRoot, const main_paths& main, const std::filesystem::path& cmakeSubdir);
+    build_paths(std::filesystem::path projectRoot, const std::filesystem::path& executable, std::optional<std::filesystem::path> cmakeCache);
+
+    build_paths(std::filesystem::path projectRoot, const build_paths& other);
 
     [[nodiscard]]
     const std::filesystem::path& dir() const { return m_Dir; }
 
     [[nodiscard]]
-    const std::filesystem::path& cmade_dir() const noexcept
+    const std::filesystem::path& executable_dir() const noexcept
     {
-      return m_CMadeBuildDir;
+      return m_ExecutableDir;
     }
 
     [[nodiscard]]
-    std::filesystem::path cmake_cache() const;
+    const std::optional<std::filesystem::path>& cmake_cache() const noexcept
+    {
+      return m_CMakeCache;
+    }
 
     [[nodiscard]]
     friend bool operator==(const build_paths&, const build_paths&) noexcept = default;
   private:
-    std::filesystem::path m_Dir, m_CMadeBuildDir{};
-
-    [[nodiscard]]
-    std::filesystem::path cmade_dir(const main_paths& main, const std::filesystem::path& cmakeSubdir);
+    std::filesystem::path m_Dir, m_ExecutableDir{};
+    std::optional<std::filesystem::path> m_CMakeCache{};
   };
 
   /*! \brief Paths for auxiliary materials, used in creating projects/tests */
@@ -448,6 +454,8 @@ namespace sequoia::testing
       std::filesystem::path commonIncludes{};
     };
 
+    project_paths() = default;
+
     project_paths(int argc, char** argv, const initializer& pathsFromRoot);
 
     [[nodiscard]]
@@ -460,12 +468,6 @@ namespace sequoia::testing
     const std::filesystem::path& executable() const noexcept
     {
       return m_Discovered.executable();
-    }
-
-    [[nodiscard]]
-    const std::filesystem::path& cmake_subdir() const noexcept
-    {
-      return m_Discovered.cmake_subdir();
     }
 
     [[nodiscard]]
@@ -521,6 +523,13 @@ namespace sequoia::testing
     {
       return m_AncillaryMainCpps;
     }
+
+    [[nodiscard]]
+    const discoverable_paths& discovered() const noexcept
+    {
+      return m_Discovered;
+    }
+
 
     [[nodiscard]]
     prune_paths prune() const;

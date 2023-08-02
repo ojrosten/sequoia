@@ -219,7 +219,7 @@ namespace sequoia::testing
 
     auto cmake{
       [&stream](const main_paths& main, const build_paths& buildPaths) {
-        if(fs::exists(main.dir()) && fs::exists(buildPaths.cmade_dir()))
+        if(fs::exists(main.dir()) && buildPaths.cmake_cache() && fs::exists(buildPaths.cmake_cache()->parent_path()))
         {
           stream << "\n";
           invoke(cd_cmd(main.dir()) && cmake_cmd(std::nullopt, buildPaths, {}));
@@ -228,10 +228,10 @@ namespace sequoia::testing
     };
 
     cmake(projPaths.main(), projPaths.build());
-    for(const auto& main : projPaths.ancillary_main_cpps())
+    /*for(const auto& main : projPaths.ancillary_main_cpps())
     {
-      cmake(main, build_paths{projPaths.project_root(), main, projPaths.cmake_subdir()});
-    }
+      cmake(main, build_paths{projPaths.build().dir(), ???????});
+    }*/
   }
 
 

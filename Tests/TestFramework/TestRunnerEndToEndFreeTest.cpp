@@ -26,18 +26,7 @@ namespace sequoia::testing
     [[nodiscard]]
     std::string run_cmd()
     {
-      if constexpr(with_msvc_v)
-      {
-#ifdef CMAKE_INTDIR
-        return std::string{CMAKE_INTDIR}.append("\\TestAll.exe");
-#else
-        return "TestAll.exe";
-#endif
-      }
-      else
-      {
-        return "./TestAll";
-      }
+      return with_msvc_v ? "TestAll.exe" : "./TestAll";
     }
 
     [[nodiscard]]
@@ -58,41 +47,45 @@ namespace sequoia::testing
     }
   }
 
-
-
-  cmd_builder::cmd_builder(const std::filesystem::path& projRoot, const fs::path& cmakeSubdir)
-    : main{projRoot / main_paths::default_main_cpp_from_root()}
-    , build{projRoot, main, cmakeSubdir}
+  cmd_builder::cmd_builder(const std::filesystem::path& projRoot, const build_paths& applicationBuildPaths)
+    : m_Main{projRoot / main_paths::default_main_cpp_from_root()}
+    , m_Build{projRoot, applicationBuildPaths}
   {}
+
+  [[nodiscard]]
+  fs::path cmd_builder::cmake_cache_dir() const
+  {
+    if(!build().cmake_cache())
+      throw std::logic_error{"No CMakeCache.txt"};
+
+    return build().cmake_cache()->parent_path();
+  }
 
   void cmd_builder::create_build_run(const std::filesystem::path& creationOutput, std::string_view buildOutput, const std::filesystem::path& output) const
   {
-    invoke(cd_cmd(build.cmade_dir())
-      && shell_command{
-      "", create_cmd(), creationOutput / "CreationOutput.txt"
-    }
-    && build_cmd(build, buildOutput)
-      && shell_command{
-      "", run_cmd(), output / "TestRunOutput.txt"
-    }
-    && shell_command{"",
-      run_cmd().append(" select ../../../Tests/HouseAllocationTest.cpp")
-      .append(" select Maybe/MaybeTest.cpp")
-      .append(" select FooTest.cpp"),
-      output / "SpecifiedSourceOutput.txt"}
-    && shell_command{"", run_cmd().append(" select FooTest.cpp prune"), output / "SelectedSourcePruneConflictOutput.txt"}
-    && shell_command{"", run_cmd().append(" select Plurgh.cpp test Absent select Foo test FooTest.cpp"), output / "FailedSpecifiedSourceOutput.txt"}
-    && shell_command{"", run_cmd().append(" test Foo"), output / "SpecifiedSuiteOutput.txt"}
-    && shell_command{"", run_cmd().append(" test Foo prune"), output / "SpecifiedSuitePruneConflictOutput.txt"}
-    && shell_command{"", run_cmd().append(" prune --cutoff namespace"), output / "FullyPrunedOutput.txt"}
-    && shell_command{"", run_cmd().append(" -v"), output / "VerboseOutput.txt"}
-    && shell_command{"", run_cmd().append(" -v select FooTest.cpp test Foo"), output / "SelectFromTestedSuiteOutput.txt"}
-    && shell_command{"", run_cmd().append(" --help"), output / "HelpOutput.txt"});
+    invoke(cd_cmd(build().executable_dir())
+      && shell_command{"", create_cmd(), creationOutput / "CreationOutput.txt"}
+      && build_cmd(build(), buildOutput)
+      && cd_cmd(build().executable_dir())
+      && shell_command{"", run_cmd(), output / "TestRunOutput.txt"}
+      && shell_command{"",
+                       run_cmd().append(" select ../../../Tests/HouseAllocationTest.cpp")
+                        .append(" select Maybe/MaybeTest.cpp")
+                        .append(" select FooTest.cpp"),
+                       output / "SpecifiedSourceOutput.txt"}
+      && shell_command{"", run_cmd().append(" select FooTest.cpp prune"), output / "SelectedSourcePruneConflictOutput.txt"}
+      && shell_command{"", run_cmd().append(" select Plurgh.cpp test Absent select Foo test FooTest.cpp"), output / "FailedSpecifiedSourceOutput.txt"}
+      && shell_command{"", run_cmd().append(" test Foo"), output / "SpecifiedSuiteOutput.txt"}
+      && shell_command{"", run_cmd().append(" test Foo prune"), output / "SpecifiedSuitePruneConflictOutput.txt"}
+      && shell_command{"", run_cmd().append(" prune --cutoff namespace"), output / "FullyPrunedOutput.txt"}
+      && shell_command{"", run_cmd().append(" -v"), output / "VerboseOutput.txt"}
+      && shell_command{"", run_cmd().append(" -v select FooTest.cpp test Foo"), output / "SelectFromTestedSuiteOutput.txt"}
+      && shell_command{"", run_cmd().append(" --help"), output / "HelpOutput.txt"});
   }
 
   void cmd_builder::rebuild_run(const std::filesystem::path& outputDir, std::string_view cmakeOutput, std::string_view buildOutput, std::string_view options) const
   {
-    invoke(cd_cmd(main.dir()) && cmake_cmd(std::nullopt, build, cmakeOutput) && build_cmd(build, buildOutput) && run(outputDir, options));
+    invoke(cd_cmd(main().dir()) && cmake_cmd(std::nullopt, build(), cmakeOutput) && build_cmd(build(), buildOutput) && run(outputDir, options));
   }
 
   void cmd_builder::run_executable(const std::filesystem::path& outputDir, std::string_view options) const
@@ -104,7 +97,7 @@ namespace sequoia::testing
   [[nodiscard]]
   shell_command cmd_builder::run(const std::filesystem::path& outputDir, std::string_view options) const
   {
-    return cd_cmd(build.cmade_dir()) && shell_command("", run_cmd().append(" ").append(options), outputDir / "TestRunOutput.txt");
+    return cd_cmd(build().executable_dir()) && shell_command("", run_cmd().append(" ").append(options), outputDir / "TestRunOutput.txt");
   }
 
   [[nodiscard]]
@@ -154,7 +147,7 @@ namespace sequoia::testing
 
     // Note: the act of creation invokes cmake, and so the first check implicitly checks the cmake output
     check(equivalence, description, working_materials() /= "CreationOutput", predictive_materials() /= "CreationOutput");
-    check(append_lines(description, "Second build output existance"), fs::exists(b.build.cmade_dir() / "BuildOutput2.txt"));
+    check(append_lines(description, "Second build output existance"), fs::exists(b.cmake_cache_dir() / "BuildOutput2.txt"));
     check(equivalence, append_lines(description, "Test Runner Output"), working_materials() /= "Output", predictive_materials() /= "Output");
   }
 
@@ -170,8 +163,8 @@ namespace sequoia::testing
 
     b.rebuild_run(working_materials() /= relOutputDir, CMakeOutput, BuildOutput, options);
     check(equivalence, description, working_materials() /= relOutputDir, predictive_materials() /= relOutputDir);
-    check(append_lines(description, "CMake output existance"), fs::exists(b.main.dir() / CMakeOutput));
-    check(append_lines(description, "Build output existance"), fs::exists(b.build.cmade_dir() / BuildOutput));
+    check(append_lines(description, "CMake output existance"), fs::exists(b.main().dir() / CMakeOutput));
+    check(append_lines(description, "Build output existance"), fs::exists(b.cmake_cache_dir() / BuildOutput));
   }
 
   void test_runner_end_to_end_test::check_project_files(std::string_view description)
@@ -180,7 +173,7 @@ namespace sequoia::testing
     fs::create_directories(working_materials() /= subdirs);
     if constexpr(with_msvc_v)
     {      
-      fs::copy(generated_project() / "build"/ this->cmake_subdir() / "win/TestAll/TestAll.vcxproj", working_materials() /= subdirs);
+      fs::copy(generated_project() / "build/CMade/win/TestAll/TestAll.vcxproj", working_materials() /= subdirs);
     }
     else
     {
@@ -200,9 +193,8 @@ namespace sequoia::testing
   void test_runner_end_to_end_test::test_project_creation()
   {
     check(report_line("Command processor existance"), std::system(nullptr) > 0);
-    const fs::path cmakeSubdir{this->cmake_subdir()};
 
-    commandline_arguments args{build_paths{project_root(), main_paths{}, cmakeSubdir}.cmade_dir().generic_string(),
+    commandline_arguments args{get_project_paths().discovered().executable().generic_string(),
                                "init",
                                "Oliver Jacob Rosten",
                                generated_project().string(),
@@ -221,10 +213,10 @@ namespace sequoia::testing
       file << outputStream.rdbuf();
     }
 
-    const cmd_builder b{generated_project(), cmakeSubdir};
+    const cmd_builder b{generated_project(), get_project_paths().build()};
 
-    check(report_line("First CMake output existance"), fs::exists(b.main.dir() / "GenerationOutput.txt"));
-    check(report_line("First build output existance"), fs::exists(b.build.cmade_dir() / "GenerationOutput.txt"));
+    check(report_line("First CMake output existance"), fs::exists(b.main().dir() / "GenerationOutput.txt"));
+    check(report_line("First build output existance"), fs::exists(b.cmake_cache_dir() / "GenerationOutput.txt"));
     check(report_line("First git output existance"), fs::exists(generated_project() / "GenerationOutput.txt"));
     check(report_line(".git existance"), fs::exists(generated_project() / ".git"));
 

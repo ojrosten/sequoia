@@ -65,7 +65,7 @@ namespace sequoia::testing
     [[nodiscard]]
     std::filesystem::path project_root() const
     {
-      return m_TestRepo.project_root();
+      return m_ProjectPaths.project_root();
     }
 
     [[nodiscard]]
@@ -101,7 +101,7 @@ namespace sequoia::testing
     [[nodiscard]]
     std::string report_line(std::string_view message, const std::source_location loc = std::source_location::current())
     {
-      return testing::report_line(message, loc, m_TestRepo.repo());
+      return testing::report_line(message, loc, m_ProjectPaths.tests().repo());
     }
   protected:
     ~test_base() = default;
@@ -114,16 +114,15 @@ namespace sequoia::testing
     void write_instability_analysis_output(const normal_path& srcFile, std::optional<std::size_t> index, const failure_output& output) const;
 
     [[nodiscard]]
-    const std::filesystem::path& cmake_subdir() const noexcept
+    const project_paths& get_project_paths() const noexcept
     {
-      return m_CMakeSubdir;
+      return m_ProjectPaths;
     }
   private:
     std::string m_Name{};
-    tests_paths m_TestRepo{};
+    project_paths m_ProjectPaths{};
     individual_materials_paths m_Materials{};
     individual_diagnostics_paths m_Diagnostics{};
-    std::filesystem::path m_CMakeSubdir{};
   };
 
   /*! \brief class template from which all concrete tests should derive.

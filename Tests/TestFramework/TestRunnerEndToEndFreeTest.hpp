@@ -14,9 +14,10 @@
 
 namespace sequoia::testing
 {
-  struct cmd_builder
+  class cmd_builder
   {
-    cmd_builder(const std::filesystem::path& projRoot, const std::filesystem::path& cmakeSubdir);
+  public:
+    cmd_builder(const std::filesystem::path& projRoot, const build_paths& applicationBuildPaths);
 
     void create_build_run(const std::filesystem::path& creationOutput, std::string_view buildOutput, const std::filesystem::path& output) const;
 
@@ -24,10 +25,19 @@ namespace sequoia::testing
 
     void run_executable(const std::filesystem::path& outputDir, std::string_view options) const;
 
-    main_paths main;
-    build_paths build;
+    [[nodiscard]]
+    std::filesystem::path cmake_cache_dir() const;
+
+    [[nodiscard]]
+    const main_paths& main() const noexcept { return m_Main; }
+
+    [[nodiscard]]
+    const build_paths& build() const noexcept { return m_Build; }
 
   private:
+    main_paths m_Main;
+    build_paths m_Build;
+
     [[nodiscard]]
     runtime::shell_command run(const std::filesystem::path& outputDir, std::string_view options) const;
   };

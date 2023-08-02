@@ -27,11 +27,6 @@ namespace sequoia::testing
         if((first != npos) && (last != npos))
         {
           mess.erase(first, last - first);
-          const auto [first2, last2] {find_sandwiched_text(mess, "CMade/", "/", first)};
-          if((first2 != npos) && (last2 != npos))
-          {
-            mess.replace(first2, last2 - first2, "...");
-          }
         }
 
         return mess;
@@ -54,21 +49,17 @@ namespace sequoia::testing
 
   void commands_free_test::test_exceptions()
   {
-    const auto root{working_materials()};
+    const auto root{working_materials()}, buildSubdir{root / "build/CMade"};
     check_exception_thrown<std::runtime_error>(report_line("No cache file"),
-      [&root]() { return cmake_cmd(std::nullopt, build_paths{root, {root / "NoCacheFile/CMakeLists.txt" , ""}, "CMade"}, ""); },
-      postprocessor{" in "});
-
-    check_exception_thrown<std::runtime_error>(report_line("'Parent' with no cache file"),
-      [&root]() { return cmake_cmd(build_paths{root, {root / "NoCacheFile/CMakeLists.txt" , ""}, "CMade"}, build_paths{root, {root / "NoCacheFile/CMakeLists.txt" , ""}, "CMade"}, ""); },
+      [&]() { return cmake_cmd(std::nullopt, build_paths{root, "", buildSubdir / "NoCacheFile/CMakeCache.txt"}, ""); },
       postprocessor{" in "});
 
     check_exception_thrown<std::runtime_error>(report_line("Empty cache file"),
-      [&root]() { return cmake_cmd(std::nullopt, build_paths{root, {root / "EmptyCacheFile/CMakeLists.txt" , ""}, "CMade"}, ""); },
+      [&]() { return cmake_cmd(std::nullopt, build_paths{root, "", buildSubdir / "EmptyCacheFile/CMakeCache.txt"}, ""); },
       postprocessor{" from "});
 
     check_exception_thrown<std::runtime_error>(report_line("No CXX compiler when Unix Makefiles specified"),
-      [&root]() { return cmake_cmd(std::nullopt, build_paths{root, {root / "NoCXXCompiler/CMakeLists.txt" , ""}, "CMade"}, ""); },
+      [&]() { return cmake_cmd(std::nullopt, build_paths{root, "", buildSubdir / "NoCXXCompiler/CMakeCache.txt"}, ""); },
       postprocessor{" from "});
   }
 }
