@@ -1,2 +1,2 @@
 Undirected Graph Unweighted Tests
-Standard Top Level Checks:               640;  Failures:  0  [Deep checks: 40304]
+Standard Top Level Checks:               320;  Failures:  0  [Deep checks: 20152]

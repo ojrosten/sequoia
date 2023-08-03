@@ -9,7 +9,7 @@
 
 /*! \file */
 
-#include "DynamicDirectedEmbeddedGraphTestingUtilities.hpp"
+#include "sequoia/TestFramework/RegularTestCore.hpp"
 
 namespace sequoia::testing
 {
@@ -22,21 +22,5 @@ namespace sequoia::testing
     std::filesystem::path source_file() const;
 
     void run_tests();
-  private:
-    template <class, class, concrete_test>
-    friend class graph_test_helper;
-
-    template<maths::network>
-    friend struct graph_initialization_checker;
-
-    template
-    <
-      maths::graph_flavour GraphFlavour,
-      class EdgeWeight,
-      class NodeWeight,
-      class EdgeStorageTraits,
-      class NodeWeightStorageTraits
-    >
-    void execute_operations();
   };
 }

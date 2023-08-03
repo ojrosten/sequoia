@@ -9,7 +9,7 @@
 
 /*! \file */
 
-#include "DynamicUndirectedEmbeddedGraphWeightedTestingUtilities.hpp"
+#include "sequoia/TestFramework/RegularTestCore.hpp"
 
 namespace sequoia::testing
 {

@@ -1,0 +1,2 @@
+Undirected Graph Shared Fundamental Weight Contiguous Tests
+Standard Top Level Checks:               510;  Failures:  0  [Deep checks: 51510]

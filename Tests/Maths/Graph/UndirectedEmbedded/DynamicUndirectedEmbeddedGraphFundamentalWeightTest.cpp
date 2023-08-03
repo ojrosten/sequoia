@@ -8,6 +8,7 @@
 /*! \file */
 
 #include "DynamicUndirectedEmbeddedGraphFundamentalWeightTest.hpp"
+#include "DynamicUndirectedEmbeddedGraphWeightedTestingUtilities.hpp"
 
 namespace sequoia::testing
 {
@@ -20,9 +21,6 @@ namespace sequoia::testing
   void dynamic_undirected_embedded_graph_fundamental_weight_test::run_tests()
   {
     using namespace maths;
-    using namespace object;
-
-    dynamic_undirected_embedded_graph_weighted_operations<double, double, independent_contiguous_edge_storage_traits, node_weight_storage_traits<double>>::execute_operations(*this);
     dynamic_undirected_embedded_graph_weighted_operations<double, double, independent_bucketed_edge_storage_traits, node_weight_storage_traits<double>>::execute_operations(*this);
   }
 }

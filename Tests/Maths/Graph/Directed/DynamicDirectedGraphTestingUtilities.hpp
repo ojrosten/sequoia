@@ -178,6 +178,20 @@ namespace sequoia::testing
     using edges_equivalent_t = std::initializer_list<std::initializer_list<edge_t>>;
     using transition_graph   = typename transition_checker<graph_t>::transition_graph;
 
+    static void execute_operations(regular_test& t)
+    {
+      auto trg{make_transition_graph(t)};
+
+      auto checker{
+          [&t](std::string_view description, const graph_t& obtained, const graph_t& prediction, const graph_t& parent, std::size_t host, std::size_t target) {
+            t.check(equality, description, obtained, prediction);
+            if(host != target) t.check_semantics(description, prediction, parent);
+          }
+      };
+
+      transition_checker<graph_t>::check(report_line(""), trg, checker);
+    }
+
     [[nodiscard]]
     static graph_t make_and_check(regular_test& t, std::string_view description, edges_equivalent_t init)
     {

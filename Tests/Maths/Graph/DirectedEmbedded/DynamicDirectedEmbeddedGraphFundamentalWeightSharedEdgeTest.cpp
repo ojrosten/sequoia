@@ -8,6 +8,7 @@
 /*! \file */
 
 #include "DynamicDirectedEmbeddedGraphFundamentalWeightSharedEdgeTest.hpp"
+#include "DynamicDirectedEmbeddedGraphWeightedTestingUtilities.hpp"
 
 namespace sequoia::testing
 {
@@ -21,9 +22,6 @@ namespace sequoia::testing
   void dynamic_directed_embedded_graph_fundamental_weight_shared_edge_test::run_tests()
   {
     using namespace maths;
-    using namespace object;
-
-    dynamic_directed_embedded_graph_weighted_operations<double, double, shared_edge_contiguous_edge_storage_traits, node_weight_storage_traits<double>>::execute_operations(*this);
     dynamic_directed_embedded_graph_weighted_operations<double, double, shared_edge_bucketed_edge_storage_traits, node_weight_storage_traits<double>>::execute_operations(*this);
   }
 }

@@ -20,9 +20,6 @@ namespace sequoia::testing
   void dynamic_undirected_graph_shared_fundamental_weight_test::run_tests()
   {
     using namespace maths;
-    using namespace object;
-
-    dynamic_undirected_graph_weighted_operations<double, double, shared_weight_contiguous_edge_storage_traits, node_weight_storage_traits<double>>::execute_operations(*this);
     dynamic_undirected_graph_weighted_operations<double, double, shared_weight_bucketed_edge_storage_traits, node_weight_storage_traits<double>>::execute_operations(*this);
   }
 }
