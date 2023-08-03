@@ -23,6 +23,7 @@
 
 #include <iostream>
 #include <chrono>
+#include <set>
 
 namespace sequoia::testing
 {

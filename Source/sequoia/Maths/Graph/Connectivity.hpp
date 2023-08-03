@@ -33,7 +33,6 @@
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
 
 #include <limits>
-#include <set>
 #include <stdexcept>
 #include <ranges>
 
@@ -452,16 +451,23 @@ namespace sequoia
 
         if constexpr (EdgeTraits::mutual_info_v)
         {
-          std::set<size_type> partitionsToVisit{};
+          std::vector<size_type> partitionsToVisit{};
+          auto insert{
+            [&partitionsToVisit](size_type i){
+              auto pos{std::ranges::lower_bound(partitionsToVisit, i)};
+              if((pos == partitionsToVisit.end()) || (*pos != i))
+                partitionsToVisit.insert(pos, i);
+            }
+          };
           for(const auto& edge : m_Edges.partition(node))
           {
             const auto target{edge.target_node()};
-            if(target != node) partitionsToVisit.insert(target);
+            if(target != node) insert(target);
 
             if constexpr (directed(directedness))
             {
               const auto source{edge.source_node()};
-              if(source != node) partitionsToVisit.insert(source);
+              if(source != node) insert(source);
             }
           }
 
