@@ -237,6 +237,9 @@ namespace sequoia::testing
     //=================== Create tests and run ===================//
 
     create_run_and_check(report_line("Test Runner Creation Output"), b);
+    fs::copy(generated_project() /= "output/TestSummaries", working_materials() /= "TestSummaries_0", fs::copy_options::recursive);
+    check(equivalence, report_line(""), working_materials() /= "TestSummaries_0", predictive_materials() /= "TestSummaries_0");
+
 
     //=================== Rerun with async execution ===================//
     // --> async depth should be automatically set to "suite" since number of families is > 4
