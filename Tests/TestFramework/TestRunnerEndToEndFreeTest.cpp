@@ -338,6 +338,9 @@ namespace sequoia::testing
     check(equivalence, report_line("TestAllMain.cpp"),  working_materials() /= mainCpp,   predictive_materials() /= mainCpp);
     check(equivalence, report_line("CMakeLists.tt"), working_materials() /= mainCmake, predictive_materials() /= mainCmake);
 
+    fs::copy(generated_project() /= "output/TestSummaries", working_materials() /= "TestSummaries_1", fs::copy_options::recursive);
+    check(equivalence, report_line(""), working_materials() /= "TestSummaries_1", predictive_materials() /= "TestSummaries_1");
+
     //=================== Rerun with prune ===================//
     // --> only failing tests should rerun
 
