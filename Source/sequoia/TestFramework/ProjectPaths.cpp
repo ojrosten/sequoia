@@ -182,16 +182,10 @@ namespace sequoia::testing
 
   //===================================== build_paths =====================================//
 
-  build_paths::build_paths(fs::path projectRoot, const std::filesystem::path& executable, std::optional<fs::path> cmakeCache)
+  build_paths::build_paths(fs::path projectRoot, const std::filesystem::path& executableDir, std::optional<fs::path> cmakeCache)
     : m_Dir{std::move(projectRoot /= "build")}
-    , m_ExecutableDir{executable.parent_path()}
+    , m_ExecutableDir{executableDir}
     , m_CMakeCache{std::move(cmakeCache)}
-  {}
-
-  build_paths::build_paths(fs::path projectRoot, const build_paths& other)
-    : m_Dir{std::move(projectRoot /= "build")}
-    , m_ExecutableDir{m_Dir / rebase_from(other.executable_dir(), other.dir())}
-    , m_CMakeCache{other.cmake_cache() ? std::optional<fs::path>{m_Dir / rebase_from(*other.cmake_cache(), other.dir())} : std::nullopt}
   {}
 
   //===================================== auxiliary_paths =====================================//
@@ -362,7 +356,7 @@ namespace sequoia::testing
     : m_Discovered{argc, argv}
     , m_Main{project_root() / pathsFromRoot.mainCpp, project_root() / pathsFromRoot.commonIncludes}
     , m_Source{project_root()}
-    , m_Build{project_root(), m_Discovered.executable(), m_Discovered.cmake_cache()}
+    , m_Build{project_root(), m_Discovered.executable().parent_path(), m_Discovered.cmake_cache()}
     , m_Auxiliary{project_root()}
     , m_Output{project_root()}
     , m_Tests{project_root()}

@@ -68,6 +68,6 @@ namespace sequoia::testing
 
     void check_timings(std::string_view description, const std::filesystem::path& relOutputFile, const double speedupFactor);
 
-    void check_project_files(std::string_view description);
+    void check_project_files(std::string_view description, const cmd_builder& b);
   };
 }

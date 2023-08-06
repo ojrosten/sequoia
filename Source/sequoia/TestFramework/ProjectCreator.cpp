@@ -10,7 +10,7 @@
  */
 
 #include "sequoia/TestFramework/ProjectCreator.hpp"
-#include "sequoia/TestFramework/ProjectPaths.hpp"
+#include "sequoia/TestFramework/FileSystemUtilities.hpp"
 #include "sequoia/TestFramework/TestRunnerUtilities.hpp"
 
 #include "sequoia/FileSystem/FileSystem.hpp"
@@ -134,6 +134,20 @@ namespace sequoia::testing
     );
   }
 
+  [[nodiscard]]
+  build_paths make_new_build_paths(const std::filesystem::path& projectRoot, const build_paths& parentBuildPaths)
+  {
+    if(!parentBuildPaths.cmake_cache() || parentBuildPaths.cmake_cache()->empty())
+      throw std::logic_error{"init_project: No CMakeCache file found"};
+
+    auto cmakeCacheDir{parentBuildPaths.cmake_cache()->parent_path()};
+
+    return {projectRoot,
+            projectRoot / "build" / rebase_from(cmakeCacheDir.parent_path() / "TestAll" / rebase_from(parentBuildPaths.executable_dir(), cmakeCacheDir), parentBuildPaths.dir()),
+            projectRoot / "build" / rebase_from(parentBuildPaths.cmake_cache()->parent_path().parent_path() / "TestAll/CMakeCache.txt", parentBuildPaths.dir())
+    };
+  }
+
   void init_projects(const project_paths& parentProjectPaths, const std::vector<project_data>& projects, std::ostream& stream)
   {
     stream << "Initializing Project(s)....\n\n";
@@ -176,7 +190,7 @@ namespace sequoia::testing
       if(data.do_build != build_invocation::no)
       {
         const main_paths main{data.project_root / main_paths::default_main_cpp_from_root()};
-        const build_paths build{data.project_root, parentProjectPaths.build()};
+        const auto build{make_new_build_paths(data.project_root, parentProjectPaths.build())};
 
         invoke(cd_cmd(main.dir())
             && cmake_cmd(parentProjectPaths.build(), build, data.output)

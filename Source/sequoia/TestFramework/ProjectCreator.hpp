@@ -12,14 +12,13 @@
   */
 
 #include "sequoia/TestFramework/Commands.hpp"
+#include "sequoia/TestFramework/ProjectPaths.hpp"
 #include "sequoia/TextProcessing/Indent.hpp"
 
 #include <vector>
 
 namespace sequoia::testing
 {
-  class project_paths;
-
   enum class build_invocation { no = 0, yes, launch_ide };
 
   struct project_data
@@ -36,6 +35,9 @@ namespace sequoia::testing
   void generate_test_main(std::string_view copyright, const std::filesystem::path& projRoot, indentation codeIndent);
 
   void generate_build_system_files(const std::filesystem::path& parentProjRoot, const std::filesystem::path& projRoot);
+
+  [[nodiscard]]
+  build_paths make_new_build_paths(const std::filesystem::path& projectRoot, const build_paths& parentBuildPaths);
 
   void init_projects(const project_paths& parentProjectPaths, const std::vector<project_data>& projects, std::ostream& stream);
 

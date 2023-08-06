@@ -203,9 +203,7 @@ namespace sequoia::testing
   public:
     build_paths() = default;
 
-    build_paths(std::filesystem::path projectRoot, const std::filesystem::path& executable, std::optional<std::filesystem::path> cmakeCache);
-
-    build_paths(std::filesystem::path projectRoot, const build_paths& other);
+    build_paths(std::filesystem::path projectRoot, const std::filesystem::path& executableDir, std::optional<std::filesystem::path> cmakeCache);
 
     [[nodiscard]]
     const std::filesystem::path& dir() const { return m_Dir; }

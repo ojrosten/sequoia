@@ -10,6 +10,7 @@
 #include "TestRunnerEndToEndFreeTest.hpp"
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
 
+#include "sequoia/TestFramework/ProjectCreator.hpp"
 #include "sequoia/TestFramework/FileEditors.hpp"
 #include "sequoia/TestFramework/FileSystemUtilities.hpp"
 #include "sequoia/TestFramework/TestRunner.hpp"
@@ -50,7 +51,7 @@ namespace sequoia::testing
 
   cmd_builder::cmd_builder(const std::filesystem::path& projRoot, const build_paths& applicationBuildPaths)
     : m_Main{projRoot / main_paths::default_main_cpp_from_root()}
-    , m_Build{projRoot, applicationBuildPaths}
+    , m_Build{make_new_build_paths(projRoot, applicationBuildPaths)}
   {}
 
   [[nodiscard]]
@@ -168,17 +169,14 @@ namespace sequoia::testing
     check(append_lines(description, "Build output existance"), fs::exists(b.cmake_cache_dir() / BuildOutput));
   }
 
-  void test_runner_end_to_end_test::check_project_files(std::string_view description)
+  void test_runner_end_to_end_test::check_project_files(std::string_view description, const cmd_builder& b)
   {
     const std::filesystem::path subdirs{"ProjectFiles/win"};
     fs::create_directories(working_materials() /= subdirs);
     if constexpr(with_msvc_v)
     {
-      if(const auto& cache{get_project_paths().discovered().cmake_cache()}; cache)
-      {
-        const auto projFile{generated_project() / "build" / rebase_from(cache->parent_path(), get_project_paths().build().dir()) / "TestAll.vcxproj"};
-        fs::copy(projFile, working_materials() /= subdirs);
-      }
+      const auto projFile{b.cmake_cache_dir() / "TestAll.vcxproj"};
+      fs::copy(projFile, working_materials() /= subdirs);
     }
     else
     {
@@ -208,7 +206,9 @@ namespace sequoia::testing
                                "--no-ide"};
 
     std::stringstream outputStream{};
-    test_runner tr{args.size(), args.get(), "Oliver J. Rosten", {"TestAll/TestMain.cpp", {}, "TestCommon/TestIncludes.hpp"}, "  ", outputStream};
+
+    const auto relativeMainCppPath{rebase_from(get_project_paths().main().file(), project_root())};
+    test_runner tr{args.size(), args.get(), "Oliver J. Rosten", {relativeMainCppPath.generic_string(), {}, "TestCommon/TestIncludes.hpp"}, "  ", outputStream};
 
     //=================== Initialize, cmake and build new project ===================//
 
@@ -228,7 +228,7 @@ namespace sequoia::testing
     fs::copy(generated_project() / "GenerationOutput.txt", working_materials() /= "InitOutput");
     check(equivalence, report_line(""), working_materials() /= "InitOutput", predictive_materials() /= "InitOutput");
 
-    check_project_files(report_line("Project Files"));
+    check_project_files(report_line("Project Files"), b);
 
     //=================== Run the test executable ===================//
 
