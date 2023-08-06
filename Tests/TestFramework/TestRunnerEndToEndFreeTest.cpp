@@ -317,13 +317,13 @@ namespace sequoia::testing
 
     //=================== Change several of the tests, and some of the source, rebuild and run asynchronously, with prune ===================//
 
-    copy_aux_materials("ModifiedSource/UsefulThings.cpp",        "Source/generatedProject/Utilities");
-    copy_aux_materials("ModifiedSource/Maths",                   "Source/generatedProject/Maths");
-    copy_aux_materials("ModifiedSource/Thing",                   "Source/generatedProject/Utilities/Thing");
-    copy_aux_materials("ModifiedTests/UsefulThingsFreeTest.cpp", "Tests/Utilities");
-    copy_aux_materials("ModifiedTests/Maths",                    "Tests/Maths");
-    copy_aux_materials("ModifiedTests/Thing",                    "Tests/Utilities/Thing");
-    copy_aux_materials("ModifiedTests/Unstable",                 "Tests/Unstable");
+    copy_aux_materials("ModifiedSource/UsefulThings.cpp", "Source/generatedProject/Utilities");
+    copy_aux_materials("ModifiedSource/Maths",            "Source/generatedProject/Maths");
+    copy_aux_materials("ModifiedSource/Thing",            "Source/generatedProject/Utilities/Thing");
+    copy_aux_materials("ModifiedTests/Utilities",         "Tests/Utilities");
+    copy_aux_materials("ModifiedTests/Maths",             "Tests/Maths");
+    copy_aux_materials("ModifiedTests/Thing",             "Tests/Utilities/Thing");
+    copy_aux_materials("ModifiedTests/Unstable",          "Tests/Unstable");
 
     rebuild_run_and_check(report_line("Rebuild and run after source/test changes (pruned)"), b, "RebuiltOutput", "CMakeOutput4.txt", "BuildOutput4.txt", "prune --cutoff namespace");
 

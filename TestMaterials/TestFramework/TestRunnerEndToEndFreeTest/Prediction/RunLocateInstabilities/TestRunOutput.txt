@@ -3,7 +3,7 @@ Running tests...
 
 Utilities:
 Useful Things:
-	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
+	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
 	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 21
 
@@ -31,9 +31,9 @@ Container:
 House:
 
 -----------Grand Totals-----------
-[Total Run Time: 76.8ms]
-[Execution Time: 26.1ms]
-	Standard Top Level Checks:                10;  Failures:  1  [Deep checks: 114]
+[Total Run Time: 36.3ms]
+[Execution Time: 16.5ms]
+	Standard Top Level Checks:                11;  Failures:  1  [Deep checks: 115]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
 	False Negative Performance Checks:         0;  Failures:  0
@@ -44,7 +44,7 @@ Running tests...
 
 Utilities:
 Useful Things:
-	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
+	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
 	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 21
 
@@ -87,9 +87,9 @@ Container:
 House:
 
 -----------Grand Totals-----------
-[Total Run Time: 79ms]
-[Execution Time: 26.6ms]
-	Standard Top Level Checks:                10;  Failures:  3  [Deep checks: 114]
+[Total Run Time: 30.8ms]
+[Execution Time: 13.5ms]
+	Standard Top Level Checks:                11;  Failures:  3  [Deep checks: 115]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
 	False Negative Performance Checks:         0;  Failures:  0

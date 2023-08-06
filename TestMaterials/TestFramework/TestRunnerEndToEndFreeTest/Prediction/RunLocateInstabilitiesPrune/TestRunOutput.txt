@@ -1,12 +1,12 @@
 
 Analyzing dependencies...
-[22.4ms]
+[26.6ms]
 
 
 Running tests...
 
 Useful Things:
-	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
+	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
 	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 21
 
@@ -21,9 +21,9 @@ Unstable:
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 
 -----------Grand Totals-----------
-[Total Run Time: 10.4ms]
-[Execution Time: 3.33ms]
-	Standard Top Level Checks:                 3;  Failures:  1  [Deep checks: 3]
+[Total Run Time: 5.43ms]
+[Execution Time: 1.91ms]
+	Standard Top Level Checks:                 4;  Failures:  1  [Deep checks: 4]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
 	False Negative Performance Checks:         0;  Failures:  0
@@ -33,7 +33,7 @@ Unstable:
 Running tests...
 
 Useful Things:
-	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
+	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
 	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 21
 
@@ -63,9 +63,9 @@ Unstable:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 10.2ms]
-[Execution Time: 2.93ms]
-	Standard Top Level Checks:                 3;  Failures:  3  [Deep checks: 3]
+[Total Run Time: 7.03ms]
+[Execution Time: 1.8ms]
+	Standard Top Level Checks:                 4;  Failures:  3  [Deep checks: 4]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
 	False Negative Performance Checks:         0;  Failures:  0
