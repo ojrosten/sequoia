@@ -129,6 +129,12 @@ namespace sequoia::testing
       t.check_exception_thrown<std::out_of_range>(t.report_line("First partial index of edge out of range"), [](){ return graph_t{{edge_t{0, 1.0}, edge_t{1, 1.0}}}; });
       t.check_exception_thrown<std::out_of_range>(t.report_line("First partial index of edge out of range"), [](){ return graph_t{{edge_t{0, 1.0}, edge_t{2, 1.0}}, {}}; });
       t.check_exception_thrown<std::out_of_range>(t.report_line("Zeroth partial index of node 1's edge out of range"), [](){ return graph_t{{edge_t{0, 1.0}, edge_t{1, 1.0}}, {edge_t{2, 1.0}}}; });
+
+      t.check_exception_thrown<std::logic_error>(t.report_line("Mismatched edge/node initialization"), [](){ return graph_t{{}, {1.0}}; });
+      t.check_exception_thrown<std::logic_error>(t.report_line("Mismatched edge/node initialization"), [](){ return graph_t{{{}}, {1.0, 2.0}}; });
+      t.check_exception_thrown<std::logic_error>(t.report_line("Mismatched edge/node initialization"), [](){ return graph_t{{{edge_t{0, 1.0}}}, {1.0, 2.0}}; });
+      t.check_exception_thrown<std::logic_error>(t.report_line("Mismatched edge/node initialization"), [](){ return graph_t{{{}, {}}, {1.0}}; });
+      t.check_exception_thrown<std::logic_error>(t.report_line("Mismatched edge/node initialization"), [](){ return graph_t{{{edge_t{1}}, {edge_t{0}}}, {1.0}}; });
     }
 
 
