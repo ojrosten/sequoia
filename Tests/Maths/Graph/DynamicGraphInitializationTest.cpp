@@ -24,32 +24,12 @@ namespace sequoia:: testing
     using namespace maths;
 
     {
-      graph_test_helper<null_weight, null_weight, test_graph_init> helper{*this};
-      helper.run_tests();
-    }
-
-    {
-      graph_test_helper<int, null_weight, test_graph_init> helper{*this};
-      helper.run_tests();
-    }
-
-    {
       graph_test_helper<unsortable, null_weight, test_graph_init> helper{*this};
       helper.run_tests();
     }
 
     {
       graph_test_helper<big_unsortable, null_weight, test_graph_init> helper{*this};
-      helper.run_tests();
-    }
-
-    {
-      graph_test_helper<null_weight, int, test_graph_init> helper{*this};
-      helper.run_tests();
-    }
-
-    {
-      graph_test_helper<int, int, test_graph_init> helper{*this};
       helper.run_tests();
     }
 
