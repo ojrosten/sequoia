@@ -1365,6 +1365,8 @@ namespace sequoia
             }
             else
             {
+              graph_errors::check_edge_index_range("", {i, static_cast<std::size_t>(std::ranges::distance(orderedEdges.cbegin_partition(i), lowerIter))}, "target", orderedEdges.num_partitions(), lowerIter->target_node());
+
               const auto comparisonEdge{
                 [lowerIter, i]() {
                   auto compEdge{*lowerIter};

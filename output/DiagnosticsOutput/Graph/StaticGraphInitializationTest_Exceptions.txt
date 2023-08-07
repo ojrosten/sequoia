@@ -30,7 +30,7 @@ Both partial indices out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::connectivity [node: 0, edge: 0]: Reciprocated partial edge does not exist
+connectivity:: [node: 0, edge: 0]: target index 1 out of range - max index is 1
 
 =======================================
 
@@ -174,223 +174,7 @@ Both partial indices out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::connectivity [node: 0, edge: 0]: Reciprocated partial edge does not exist
-
-=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 221
-Initializer list too long
-
-Expected Exception Type:
-[std::logic_error]
-initializer_list too big for array
-
-=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 226
-Mismatch between weights
-
-Expected Exception Type:
-[std::logic_error]
-connectivity::connectivity: Odd number of loop edges for node 0
-
-=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 301
-Too few elements in initializer list
-
-Expected Exception Type:
-[std::logic_error]
-Inconsistent number of elements supplied by initializer lists
-
-=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 302
-Partial index out of range
-
-Expected Exception Type:
-[std::logic_error]
-connectivity::connectivity: Odd number of loop edges for node 0
-
-=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 303
-Too Many elements in initializer list
-
-Expected Exception Type:
-[std::logic_error]
-Inconsistent number of elements supplied by initializer lists
-
-=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 308
-Weight mismatch
-
-Expected Exception Type:
-[std::logic_error]
-connectivity::connectivity: Odd number of loop edges for node 0
-
-=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 356
-Too few elements in both sub-initializer list
-
-Expected Exception Type:
-[std::logic_error]
-Inconsistent number of elements supplied by initializer lists
-
-=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 357
-Too few elements in first sub-initializer list
-
-Expected Exception Type:
-[std::logic_error]
-Inconsistent number of elements supplied by initializer lists
-
-=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 358
-Too few elements in second sub-initializer list
-
-Expected Exception Type:
-[std::logic_error]
-Inconsistent number of elements supplied by initializer lists
-
-=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 360
-Too many elements in first sub-initializer list
-
-Expected Exception Type:
-[std::logic_error]
-Inconsistent number of elements supplied by initializer lists
-
-=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 361
-Too many elements in second sub-initializer list
-
-Expected Exception Type:
-[std::logic_error]
-Inconsistent number of elements supplied by initializer lists
-
-=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 363
-Mismatched indices
-
-Expected Exception Type:
-[std::logic_error]
-connectivity::connectivity: Odd number of loop edges for node 0
-
-=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 368
-Mismatched weights
-
-Expected Exception Type:
-[std::logic_error]
-connectivity::connectivity [node: 0, edge: 0]: Reciprocated partial edge does not exist
-
-=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 407
-Too few elements in sub-initializer list
-
-Expected Exception Type:
-[std::logic_error]
-Inconsistent number of elements supplied by initializer lists
-
-=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 408
-Mismatched partial indices
-
-Expected Exception Type:
-[std::logic_error]
-connectivity::connectivity [node: 1, edge: 1]: Reciprocated partial edge does not exist
-
-=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 413
-Mismatched weights
-
-Expected Exception Type:
-[std::logic_error]
-connectivity::connectivity [node: 0, edge: 0]: Reciprocated partial edge does not exist
-
-=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 414
-Mismatched weight
-
-Expected Exception Type:
-[std::logic_error]
-connectivity::connectivity [node: 0, edge: 0]: Reciprocated partial edge does not exist
-
-=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 465
-Mismatched weights
-
-Expected Exception Type:
-[std::logic_error]
-connectivity::connectivity [node: 1, edge: 3]: Reciprocated partial edge does not exist
-
-=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 467
-Mismatched weights
-
-Expected Exception Type:
-[std::logic_error]
-connectivity::connectivity [node: 0, edge: 1]: Reciprocated partial edge does not exist
-
-=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 556
-Mismatched weights
-
-Expected Exception Type:
-[std::logic_error]
-connectivity::connectivity [node: 1, edge: 1]: Reciprocated partial edge does not exist
-
-=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 217
-Too few elements in initializer list
-
-Expected Exception Type:
-[std::logic_error]
-Inconsistent number of elements supplied by initializer lists
-
-=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 218
-First partial index of loop out of range
-
-Expected Exception Type:
-[std::logic_error]
-connectivity::connectivity: Odd number of loop edges for node 0
-
-=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 219
-Second partial index of loop out of range
-
-Expected Exception Type:
-[std::logic_error]
-connectivity::connectivity: Odd number of loop edges for node 0
-
-=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 220
-Both partial indices out of range
-
-Expected Exception Type:
-[std::logic_error]
-connectivity::connectivity [node: 0, edge: 0]: Reciprocated partial edge does not exist
+connectivity:: [node: 0, edge: 0]: target index 1 out of range - max index is 1
 
 =======================================
 
@@ -606,7 +390,7 @@ Both partial indices out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::connectivity [node: 0, edge: 0]: Reciprocated partial edge does not exist
+connectivity:: [node: 0, edge: 0]: target index 1 out of range - max index is 1
 
 =======================================
 
@@ -822,7 +606,223 @@ Both partial indices out of range
 
 Expected Exception Type:
 [std::logic_error]
+connectivity:: [node: 0, edge: 0]: target index 1 out of range - max index is 1
+
+=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 221
+Initializer list too long
+
+Expected Exception Type:
+[std::logic_error]
+initializer_list too big for array
+
+=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 226
+Mismatch between weights
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::connectivity: Odd number of loop edges for node 0
+
+=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 301
+Too few elements in initializer list
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists
+
+=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 302
+Partial index out of range
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::connectivity: Odd number of loop edges for node 0
+
+=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 303
+Too Many elements in initializer list
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists
+
+=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 308
+Weight mismatch
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::connectivity: Odd number of loop edges for node 0
+
+=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 356
+Too few elements in both sub-initializer list
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists
+
+=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 357
+Too few elements in first sub-initializer list
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists
+
+=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 358
+Too few elements in second sub-initializer list
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists
+
+=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 360
+Too many elements in first sub-initializer list
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists
+
+=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 361
+Too many elements in second sub-initializer list
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists
+
+=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 363
+Mismatched indices
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::connectivity: Odd number of loop edges for node 0
+
+=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 368
+Mismatched weights
+
+Expected Exception Type:
+[std::logic_error]
 connectivity::connectivity [node: 0, edge: 0]: Reciprocated partial edge does not exist
+
+=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 407
+Too few elements in sub-initializer list
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists
+
+=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 408
+Mismatched partial indices
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::connectivity [node: 1, edge: 1]: Reciprocated partial edge does not exist
+
+=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 413
+Mismatched weights
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::connectivity [node: 0, edge: 0]: Reciprocated partial edge does not exist
+
+=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 414
+Mismatched weight
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::connectivity [node: 0, edge: 0]: Reciprocated partial edge does not exist
+
+=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 465
+Mismatched weights
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::connectivity [node: 1, edge: 3]: Reciprocated partial edge does not exist
+
+=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 467
+Mismatched weights
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::connectivity [node: 0, edge: 1]: Reciprocated partial edge does not exist
+
+=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 556
+Mismatched weights
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::connectivity [node: 1, edge: 1]: Reciprocated partial edge does not exist
+
+=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 217
+Too few elements in initializer list
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists
+
+=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 218
+First partial index of loop out of range
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::connectivity: Odd number of loop edges for node 0
+
+=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 219
+Second partial index of loop out of range
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::connectivity: Odd number of loop edges for node 0
+
+=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 220
+Both partial indices out of range
+
+Expected Exception Type:
+[std::logic_error]
+connectivity:: [node: 0, edge: 0]: target index 1 out of range - max index is 1
 
 =======================================
 
@@ -990,247 +990,7 @@ Both partial indices out of range
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::connectivity [node: 0, edge: 0]: Reciprocated partial edge does not exist
-
-=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 221
-Initializer list too long
-
-Expected Exception Type:
-[std::logic_error]
-initializer_list too big for array
-
-=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 226
-Mismatch between weights
-
-Expected Exception Type:
-[std::logic_error]
-connectivity::connectivity: Odd number of loop edges for node 0
-
-=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 263
-Mismatch between node and edge init
-
-Expected Exception Type:
-[std::logic_error]
-Error initializing graph
-Number of node weights:    1
-Number of edge paritions:  2
-Please ensure these numbers are the same
-
-=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 265
-Mismatch between node and edge init
-
-Expected Exception Type:
-[std::logic_error]
-Error initializing graph
-Number of node weights:    2
-Number of edge paritions:  1
-Please ensure these numbers are the same
-
-=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 301
-Too few elements in initializer list
-
-Expected Exception Type:
-[std::logic_error]
-Inconsistent number of elements supplied by initializer lists
-
-=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 302
-Partial index out of range
-
-Expected Exception Type:
-[std::logic_error]
-connectivity::connectivity: Odd number of loop edges for node 0
-
-=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 303
-Too Many elements in initializer list
-
-Expected Exception Type:
-[std::logic_error]
-Inconsistent number of elements supplied by initializer lists
-
-=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 308
-Weight mismatch
-
-Expected Exception Type:
-[std::logic_error]
-connectivity::connectivity: Odd number of loop edges for node 0
-
-=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 356
-Too few elements in both sub-initializer list
-
-Expected Exception Type:
-[std::logic_error]
-Inconsistent number of elements supplied by initializer lists
-
-=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 357
-Too few elements in first sub-initializer list
-
-Expected Exception Type:
-[std::logic_error]
-Inconsistent number of elements supplied by initializer lists
-
-=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 358
-Too few elements in second sub-initializer list
-
-Expected Exception Type:
-[std::logic_error]
-Inconsistent number of elements supplied by initializer lists
-
-=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 360
-Too many elements in first sub-initializer list
-
-Expected Exception Type:
-[std::logic_error]
-Inconsistent number of elements supplied by initializer lists
-
-=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 361
-Too many elements in second sub-initializer list
-
-Expected Exception Type:
-[std::logic_error]
-Inconsistent number of elements supplied by initializer lists
-
-=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 363
-Mismatched indices
-
-Expected Exception Type:
-[std::logic_error]
-connectivity::connectivity: Odd number of loop edges for node 0
-
-=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 368
-Mismatched weights
-
-Expected Exception Type:
-[std::logic_error]
-connectivity::connectivity [node: 0, edge: 0]: Reciprocated partial edge does not exist
-
-=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 407
-Too few elements in sub-initializer list
-
-Expected Exception Type:
-[std::logic_error]
-Inconsistent number of elements supplied by initializer lists
-
-=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 408
-Mismatched partial indices
-
-Expected Exception Type:
-[std::logic_error]
-connectivity::connectivity [node: 1, edge: 1]: Reciprocated partial edge does not exist
-
-=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 413
-Mismatched weights
-
-Expected Exception Type:
-[std::logic_error]
-connectivity::connectivity [node: 0, edge: 0]: Reciprocated partial edge does not exist
-
-=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 414
-Mismatched weight
-
-Expected Exception Type:
-[std::logic_error]
-connectivity::connectivity [node: 0, edge: 0]: Reciprocated partial edge does not exist
-
-=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 465
-Mismatched weights
-
-Expected Exception Type:
-[std::logic_error]
-connectivity::connectivity [node: 1, edge: 3]: Reciprocated partial edge does not exist
-
-=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 467
-Mismatched weights
-
-Expected Exception Type:
-[std::logic_error]
-connectivity::connectivity [node: 0, edge: 1]: Reciprocated partial edge does not exist
-
-=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 556
-Mismatched weights
-
-Expected Exception Type:
-[std::logic_error]
-connectivity::connectivity [node: 1, edge: 1]: Reciprocated partial edge does not exist
-
-=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 217
-Too few elements in initializer list
-
-Expected Exception Type:
-[std::logic_error]
-Inconsistent number of elements supplied by initializer lists
-
-=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 218
-First partial index of loop out of range
-
-Expected Exception Type:
-[std::logic_error]
-connectivity::connectivity: Odd number of loop edges for node 0
-
-=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 219
-Second partial index of loop out of range
-
-Expected Exception Type:
-[std::logic_error]
-connectivity::connectivity: Odd number of loop edges for node 0
-
-=======================================
-
-Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 220
-Both partial indices out of range
-
-Expected Exception Type:
-[std::logic_error]
-connectivity::connectivity [node: 0, edge: 0]: Reciprocated partial edge does not exist
+connectivity:: [node: 0, edge: 0]: target index 1 out of range - max index is 1
 
 =======================================
 
@@ -1470,7 +1230,247 @@ Both partial indices out of range
 
 Expected Exception Type:
 [std::logic_error]
+connectivity:: [node: 0, edge: 0]: target index 1 out of range - max index is 1
+
+=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 221
+Initializer list too long
+
+Expected Exception Type:
+[std::logic_error]
+initializer_list too big for array
+
+=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 226
+Mismatch between weights
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::connectivity: Odd number of loop edges for node 0
+
+=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 263
+Mismatch between node and edge init
+
+Expected Exception Type:
+[std::logic_error]
+Error initializing graph
+Number of node weights:    1
+Number of edge paritions:  2
+Please ensure these numbers are the same
+
+=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 265
+Mismatch between node and edge init
+
+Expected Exception Type:
+[std::logic_error]
+Error initializing graph
+Number of node weights:    2
+Number of edge paritions:  1
+Please ensure these numbers are the same
+
+=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 301
+Too few elements in initializer list
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists
+
+=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 302
+Partial index out of range
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::connectivity: Odd number of loop edges for node 0
+
+=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 303
+Too Many elements in initializer list
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists
+
+=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 308
+Weight mismatch
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::connectivity: Odd number of loop edges for node 0
+
+=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 356
+Too few elements in both sub-initializer list
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists
+
+=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 357
+Too few elements in first sub-initializer list
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists
+
+=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 358
+Too few elements in second sub-initializer list
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists
+
+=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 360
+Too many elements in first sub-initializer list
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists
+
+=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 361
+Too many elements in second sub-initializer list
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists
+
+=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 363
+Mismatched indices
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::connectivity: Odd number of loop edges for node 0
+
+=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 368
+Mismatched weights
+
+Expected Exception Type:
+[std::logic_error]
 connectivity::connectivity [node: 0, edge: 0]: Reciprocated partial edge does not exist
+
+=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 407
+Too few elements in sub-initializer list
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists
+
+=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 408
+Mismatched partial indices
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::connectivity [node: 1, edge: 1]: Reciprocated partial edge does not exist
+
+=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 413
+Mismatched weights
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::connectivity [node: 0, edge: 0]: Reciprocated partial edge does not exist
+
+=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 414
+Mismatched weight
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::connectivity [node: 0, edge: 0]: Reciprocated partial edge does not exist
+
+=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 465
+Mismatched weights
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::connectivity [node: 1, edge: 3]: Reciprocated partial edge does not exist
+
+=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 467
+Mismatched weights
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::connectivity [node: 0, edge: 1]: Reciprocated partial edge does not exist
+
+=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 556
+Mismatched weights
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::connectivity [node: 1, edge: 1]: Reciprocated partial edge does not exist
+
+=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 217
+Too few elements in initializer list
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists
+
+=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 218
+First partial index of loop out of range
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::connectivity: Odd number of loop edges for node 0
+
+=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 219
+Second partial index of loop out of range
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::connectivity: Odd number of loop edges for node 0
+
+=======================================
+
+Tests/Maths/Graph/GraphInitializationGenericTests.hpp, Line 220
+Both partial indices out of range
+
+Expected Exception Type:
+[std::logic_error]
+connectivity:: [node: 0, edge: 0]: target index 1 out of range - max index is 1
 
 =======================================
 

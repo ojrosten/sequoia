@@ -163,10 +163,25 @@ namespace sequoia::testing
       return graph_initialization_checker<graph_t>::make_and_check(t, description, init);
     }
 
+    static void check_initialization_exceptions(regular_test& t)
+    {
+      using namespace maths;
+
+      // One node
+      t.check_exception_thrown<std::out_of_range>(t.report_line("Target index of edge out of range"), [](){ return graph_t{{edge_t{1}}}; });
+      t.check_exception_thrown<std::logic_error>(t.report_line("Mismatched loop"), [](){ return graph_t{{edge_t{0}}}; });
+
+      // Two nodes
+      t.check_exception_thrown<std::logic_error>(t.report_line("Mismatched partial edges"), [](){ return graph_t{{edge_t{1}}, {edge_t{1}}}; });
+      t.check_exception_thrown<std::logic_error>(t.report_line("Mismatched loop"), [](){ return graph_t{{edge_t{1}}, {edge_t{0}, edge_t{1}}}; });
+    }
+
     [[nodiscard]]
     static transition_graph make_transition_graph(regular_test& t)
     {
       using namespace undirected_graph;
+
+      check_initialization_exceptions(t);
 
       return transition_graph{
       {
