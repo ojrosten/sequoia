@@ -1,2 +1,2 @@
 Directed Embedded Graph Fundamental Weight Shared Edge Tests
-Standard Top Level Checks:               662;  Failures:  0  [Deep checks: 116631]
+Standard Top Level Checks:               665;  Failures:  0  [Deep checks: 116634]
