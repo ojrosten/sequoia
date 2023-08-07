@@ -178,13 +178,14 @@ namespace sequoia::testing
 
     static void check_initialization_exceptions(regular_test& t)
     {
-      t.check_exception_thrown<std::logic_error>(t.report_line("Partial index of edge out of range"), [](){ return graph_t{{edge_t{1}}}; });
+      t.check_exception_thrown<std::out_of_range>(t.report_line("Zeroth partial index of edge out of range"), [](){ return graph_t{{edge_t{1}}}; });
+      t.check_exception_thrown<std::out_of_range>(t.report_line("First partial index of edge out of range"), [](){ return graph_t{{edge_t{0}, edge_t{1}}}; });
+      t.check_exception_thrown<std::out_of_range>(t.report_line("First partial index of edge out of range"), [](){ return graph_t{{edge_t{0}, edge_t{2}}, {}}; });
+      t.check_exception_thrown<std::out_of_range>(t.report_line("Zeroth partial index of node 1's edge out of range"), [](){ return graph_t{{edge_t{0}, edge_t{1}}, {edge_t{2}}}; });
     }
 
     static void execute_operations(regular_test& t)
     {
-      check_initialization_exceptions(t);
-
       auto trg{make_transition_graph(t)};
 
       auto checker{
@@ -207,6 +208,8 @@ namespace sequoia::testing
     static transition_graph make_transition_graph(regular_test& t)
     {
       using namespace directed_graph;
+
+      check_initialization_exceptions(t);
 
       return transition_graph{
         {

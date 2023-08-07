@@ -276,11 +276,33 @@ namespace sequoia::testing
       return g;
     }
 
+    static void check_initialization_exceptions(regular_test& t)
+    {
+      using namespace maths;
+
+      // One node
+      t.check_exception_thrown<std::out_of_range>(t.report_line("Zeroth target index of edge out of range"), [](){ return graph_t{{{0, 1, 0}}}; });
+      t.check_exception_thrown<std::out_of_range>(t.report_line("First target index of edge out of range"), [](){ return graph_t{{{1, 0, 0}}}; });
+      t.check_exception_thrown<std::out_of_range>(t.report_line("Complimentary index of edge out of range"), [](){ return graph_t{{{0, 0, 1}}}; });
+      t.check_exception_thrown<std::out_of_range>(t.report_line("Complimentary index of edge out of range (inverted)"), [](){ return graph_t{{{0, inverted_edge, 1}}}; });
+      t.check_exception_thrown<std::logic_error>(t.report_line("Self-referential complimentary index"), [](){ return graph_t{{{0, 0, 0}}}; });
+      t.check_exception_thrown<std::logic_error>(t.report_line("Self-referential complimentary index (inverted_"), [](){ return graph_t{{{0, inverted_edge, 0}}}; });
+      t.check_exception_thrown<std::logic_error>(t.report_line("Mismatched complimentary indices"), [](){ return graph_t{{{0, 0, 1}, {0, 0, 1}}}; });
+      t.check_exception_thrown<std::logic_error>(t.report_line("Mismatched complimentary indices"), [](){ return graph_t{{{0, 0, 1}, {0, 0, 2}, {0, 0, 0}}}; });
+
+      // Two nodes
+      t.check_exception_thrown<std::logic_error>(t.report_line("Mismatched complimentary indices"), [](){ return graph_t{{{0, 1, 0}}, {{0, 1, 1}}}; });
+      t.check_exception_thrown<std::logic_error>(t.report_line("Inconsistent host/target"), [](){ return graph_t{{{0, 1, 0}}, {{1, 0, 0}}}; });
+      t.check_exception_thrown<std::logic_error>(t.report_line("Inconsistent host/target"), [](){ return graph_t{{{0, 1, 0}}, {{1, 1, 0}}}; });
+    }
+
     [[nodiscard]]
     static transition_graph make_transition_graph(regular_test& t)
     {
       using namespace directed_embedded_graph;
       using maths::inverted_edge;
+
+      check_initialization_exceptions(t);
 
       return transition_graph{
       {

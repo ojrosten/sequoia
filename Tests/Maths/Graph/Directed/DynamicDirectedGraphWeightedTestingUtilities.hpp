@@ -123,6 +123,15 @@ namespace sequoia::testing
       transition_checker<graph_t>::check(report_line(""), trg, checker);
     }
 
+    static void check_initialization_exceptions(regular_test& t)
+    {
+      t.check_exception_thrown<std::out_of_range>(t.report_line("Zeroth partial index of edge out of range"), [](){ return graph_t{{edge_t{1, 1.0}}}; });
+      t.check_exception_thrown<std::out_of_range>(t.report_line("First partial index of edge out of range"), [](){ return graph_t{{edge_t{0, 1.0}, edge_t{1, 1.0}}}; });
+      t.check_exception_thrown<std::out_of_range>(t.report_line("First partial index of edge out of range"), [](){ return graph_t{{edge_t{0, 1.0}, edge_t{2, 1.0}}, {}}; });
+      t.check_exception_thrown<std::out_of_range>(t.report_line("Zeroth partial index of node 1's edge out of range"), [](){ return graph_t{{edge_t{0, 1.0}, edge_t{1, 1.0}}, {edge_t{2, 1.0}}}; });
+    }
+
+
     [[nodiscard]]
     static graph_t make_and_check(regular_test& t, std::string_view description, edges_equivalent_t edgeInit, std::initializer_list<node_weight_type> nodeInit)
     {
@@ -136,6 +145,8 @@ namespace sequoia::testing
       using namespace directed_graph;
 
       auto trg{base_ops::make_transition_graph(t)};
+
+      check_initialization_exceptions(t);
 
       // 'weighted_graph_description::nodew'
       trg.add_node(make_and_check(t, t.report_line(""), {{}}, {1.0}));
