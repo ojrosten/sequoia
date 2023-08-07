@@ -128,6 +128,12 @@ namespace sequoia::testing
 
       // Two nodes
       t.check_exception_thrown<std::logic_error>(t.report_line("Mismatched weights"), [](){ return graph_t{{edge_t{1, 1.0}}, {edge_t{0, 2.0}}}; });
+
+      t.check_exception_thrown<std::logic_error>(t.report_line("Mismatched edge/node initialization"), [](){ return graph_t{{}, {1.0}}; });
+      t.check_exception_thrown<std::logic_error>(t.report_line("Mismatched edge/node initialization"), [](){ return graph_t{{{}}, {1.0, 2.0}}; });
+      t.check_exception_thrown<std::logic_error>(t.report_line("Mismatched edge/node initialization"), [](){ return graph_t{{{edge_t{0, 1.0}, edge_t{0, 1.0}}}, {1.0, 2.0}}; });
+      t.check_exception_thrown<std::logic_error>(t.report_line("Mismatched edge/node initialization"), [](){ return graph_t{{{}, {}}, {1.0}}; });
+      t.check_exception_thrown<std::logic_error>(t.report_line("Mismatched edge/node initialization"), [](){ return graph_t{{{edge_t{1}}, {edge_t{0}}}, {1.0}}; });
     }
 
     [[nodiscard]]

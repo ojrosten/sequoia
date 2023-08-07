@@ -52,6 +52,66 @@ connectivity::connectivity [node: 0, edge: 0]: Reciprocated partial edge does no
 
 =======================================
 
+Tests/Maths/Graph/Undirected/DynamicUndirectedGraphWeightedTestingUtilities.hpp, Line 132
+Mismatched edge/node initialization
+
+Expected Exception Type:
+[std::logic_error]
+Error initializing graph
+Number of node weights:    1
+Number of edge paritions:  0
+Please ensure these numbers are the same
+
+=======================================
+
+Tests/Maths/Graph/Undirected/DynamicUndirectedGraphWeightedTestingUtilities.hpp, Line 133
+Mismatched edge/node initialization
+
+Expected Exception Type:
+[std::logic_error]
+Error initializing graph
+Number of node weights:    2
+Number of edge paritions:  1
+Please ensure these numbers are the same
+
+=======================================
+
+Tests/Maths/Graph/Undirected/DynamicUndirectedGraphWeightedTestingUtilities.hpp, Line 134
+Mismatched edge/node initialization
+
+Expected Exception Type:
+[std::logic_error]
+Error initializing graph
+Number of node weights:    2
+Number of edge paritions:  1
+Please ensure these numbers are the same
+
+=======================================
+
+Tests/Maths/Graph/Undirected/DynamicUndirectedGraphWeightedTestingUtilities.hpp, Line 135
+Mismatched edge/node initialization
+
+Expected Exception Type:
+[std::logic_error]
+Error initializing graph
+Number of node weights:    1
+Number of edge paritions:  2
+Please ensure these numbers are the same
+
+=======================================
+
+Tests/Maths/Graph/Undirected/DynamicUndirectedGraphWeightedTestingUtilities.hpp, Line 136
+Mismatched edge/node initialization
+
+Expected Exception Type:
+[std::logic_error]
+Error initializing graph
+Number of node weights:    1
+Number of edge paritions:  2
+Please ensure these numbers are the same
+
+=======================================
+
 Tests/Maths/Graph/Undirected/DynamicUndirectedGraphTestingUtilities.hpp, Line 193
 cbegin_edges throws for empty graph
 
@@ -124,7 +184,7 @@ connectivity::join: at least one node index [0, 0] out of range - graph order is
 
 =======================================
 
-Tests/Maths/Graph/Undirected/DynamicUndirectedGraphWeightedTestingUtilities.hpp, Line 213
+Tests/Maths/Graph/Undirected/DynamicUndirectedGraphWeightedTestingUtilities.hpp, Line 219
 Attempt to set a node weight which does not exist
 
 Expected Exception Type:
@@ -133,7 +193,7 @@ node_storage::node_weight - index out of range!
 
 =======================================
 
-Tests/Maths/Graph/Undirected/DynamicUndirectedGraphWeightedTestingUtilities.hpp, Line 223
+Tests/Maths/Graph/Undirected/DynamicUndirectedGraphWeightedTestingUtilities.hpp, Line 229
 Attempt to mutate a node weight which does not exist
 
 Expected Exception Type:
@@ -223,7 +283,7 @@ connectivity::join: at least one node index [0, 1] out of range - graph order is
 
 =======================================
 
-Tests/Maths/Graph/Undirected/DynamicUndirectedGraphWeightedTestingUtilities.hpp, Line 257
+Tests/Maths/Graph/Undirected/DynamicUndirectedGraphWeightedTestingUtilities.hpp, Line 263
 Attempt to set a node weight which does not exist
 
 Expected Exception Type:
@@ -232,7 +292,7 @@ node_storage::node_weight - index out of range!
 
 =======================================
 
-Tests/Maths/Graph/Undirected/DynamicUndirectedGraphWeightedTestingUtilities.hpp, Line 267
+Tests/Maths/Graph/Undirected/DynamicUndirectedGraphWeightedTestingUtilities.hpp, Line 273
 Attempt to mutate a node weight which does not exist
 
 Expected Exception Type:
