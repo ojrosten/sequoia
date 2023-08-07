@@ -289,6 +289,8 @@ namespace sequoia::testing
       t.check_exception_thrown<std::logic_error>(t.report_line("Self-referential complimentary index (inverted_"), [](){ return graph_t{{{0, inverted_edge, 0}}}; });
       t.check_exception_thrown<std::logic_error>(t.report_line("Mismatched complimentary indices"), [](){ return graph_t{{{0, 0, 1}, {0, 0, 1}}}; });
       t.check_exception_thrown<std::logic_error>(t.report_line("Mismatched complimentary indices"), [](){ return graph_t{{{0, 0, 1}, {0, 0, 2}, {0, 0, 0}}}; });
+      t.check_exception_thrown<std::logic_error>(t.report_line("Standard/inverted mismatch"), [](){ return graph_t{{{0, 0, 1}, {0, inverted_edge, 0}}}; });
+      t.check_exception_thrown<std::logic_error>(t.report_line("Inverted/standard mismatch"), [](){ return graph_t{{{0, inverted_edge, 1}, {0, 0, 0}}}; });
 
       // Two nodes
       t.check_exception_thrown<std::logic_error>(t.report_line("Mismatched complimentary indices"), [](){ return graph_t{{{0, 1, 0}}, {{0, 1, 1}}}; });

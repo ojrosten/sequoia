@@ -135,4 +135,16 @@ namespace sequoia::maths::graph_errors
             .append("Please ensure these numbers are the same");
   }
 
+  [[nodiscard]]
+  std::string inversion_consistency_message(std::size_t nodeIndex, edge_inversion_info zerothEdge, edge_inversion_info firstEdge)
+  {
+    auto toString{
+      [](edge_inversion_info info){
+        return std::to_string(info.edge).append(" / ").append(info.inverted ? "inverted" : "standard");
+      }
+    };
+
+    return error_prefix("process_complementary_edges").append("mismatched inverson for node ").append(std::to_string(nodeIndex))
+      .append(", edges (").append(toString(zerothEdge)).append(", ").append(toString(firstEdge)).append(")");
+  }
 }

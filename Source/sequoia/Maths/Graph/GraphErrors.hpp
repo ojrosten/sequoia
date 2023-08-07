@@ -22,6 +22,12 @@ namespace sequoia::maths::graph_errors
     std::size_t node{}, edge{};
   };
 
+  struct edge_inversion_info
+  {
+    std::size_t edge{};
+    bool inverted{};
+  };
+
   [[nodiscard]]
   std::string node_index_range_message(std::string_view method, std::size_t order, std::size_t node);
 
@@ -45,6 +51,9 @@ namespace sequoia::maths::graph_errors
 
   [[nodiscard]]
   std::string inconsistent_initialization_message(std::size_t numNodes, std::size_t edgeParitions);
+
+  [[nodiscard]]
+  std::string inversion_consistency_message(std::size_t nodeIndex, edge_inversion_info zerothEdge, edge_inversion_info firstEdge);
 
   constexpr void check_node_index_range(std::string_view method, const std::size_t order, const std::size_t node)
   {
@@ -93,6 +102,12 @@ namespace sequoia::maths::graph_errors
   {
     if((source != nodeIndex) && (target != nodeIndex))
       throw std::logic_error{embedded_edge_message(nodeIndex, source, target)};
+  }
+
+  constexpr void check_inversion_consistency(std::size_t nodeIndex, edge_inversion_info zerothEdge, edge_inversion_info firstEdge)
+  {
+    if(zerothEdge.inverted != firstEdge.inverted)
+      throw std::logic_error{inversion_consistency_message(nodeIndex, zerothEdge, firstEdge)};
   }
 
   [[nodiscard]]

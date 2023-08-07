@@ -1113,6 +1113,11 @@ namespace sequoia
                 {
                   graph_errors::check_reciprocated_index({nodeIndex, edgeIndex}, "target", targetEdge.target_node(), target);
                   graph_errors::check_reciprocated_index({nodeIndex, edgeIndex}, "source", targetEdge.source_node(), edge.source_node());
+
+                  if constexpr(is_embedded_v)
+                  {
+                    graph_errors::check_inversion_consistency(nodeIndex, {edgeIndex, edge.inverted()}, {compIndex, targetEdge.inverted()});
+                  }
                 }
 
                 if constexpr(!std::is_empty_v<edge_weight_type>)

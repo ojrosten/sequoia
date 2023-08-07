@@ -1,2 +1,2 @@
 Directed Embedded Graph Shared Fundamental Weight Contiguous Tests
-Standard Top Level Checks:               665;  Failures:  0  [Deep checks: 132366]
+Standard Top Level Checks:               667;  Failures:  0  [Deep checks: 132368]
