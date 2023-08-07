@@ -241,10 +241,27 @@ namespace sequoia::testing
       return graph_initialization_checker<graph_t>::make_and_check(t, description, init);
     }
 
+    static void check_initialization_exceptions(regular_test& t)
+    {
+      using namespace maths;
+
+      // One node
+      t.check_exception_thrown<std::out_of_range>(t.report_line("Target index of edge out of range"), [](){ return graph_t{{{1, 0}}}; });
+      t.check_exception_thrown<std::out_of_range>(t.report_line("Complimentary index of edge out of range"), [](){ return graph_t{{{0, 1}}}; });
+      t.check_exception_thrown<std::logic_error>(t.report_line("Self-referential complimentary index"), [](){ return graph_t{{{0, 0}}}; });
+      t.check_exception_thrown<std::logic_error>(t.report_line("Mismatched complimentary indices"), [](){ return graph_t{{{0, 1}, {0, 1}}}; });
+      t.check_exception_thrown<std::logic_error>(t.report_line("Mismatched complimentary indices"), [](){ return graph_t{{{0, 1}, {0, 2}, {0, 0}}}; });
+
+      // Two nodes
+      t.check_exception_thrown<std::logic_error>(t.report_line("Mismatched complimentary indices"), [](){ return graph_t{{{1, 0}, {0, 2}, {0, 1}}, {{0, 1}}}; });
+    }
+
     [[nodiscard]]
     static transition_graph make_transition_graph(regular_test& t)
     {
       using namespace undirected_embedded_graph;
+
+      check_initialization_exceptions(t);
 
       return transition_graph{
         {
