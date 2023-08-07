@@ -138,6 +138,24 @@ namespace sequoia::testing
       return graph_initialization_checker<graph_t>::make_and_check(t, description, edgeInit, nodeInit);
     }
 
+    static void check_initialization_exceptions(regular_test& t)
+    {
+      using namespace maths;
+
+      // One node
+      t.check_exception_thrown<std::logic_error>(t.report_line("Mismatched weights"), [](){ return graph_t{{{0, 1, 1.0}, {0, 0, 0.0}}}; });
+ 
+      // Two nodes
+      t.check_exception_thrown<std::logic_error>(t.report_line("IMismatched weights"), [](){ return graph_t{{{1, 0, 1.0}}, {{0, 0, 2.0}}}; });
+
+      t.check_exception_thrown<std::logic_error>(t.report_line("Mismatched edge/node initialization"), [](){ return graph_t{{}, {1.0}}; });
+      t.check_exception_thrown<std::logic_error>(t.report_line("Mismatched edge/node initialization"), [](){ return graph_t{{{}}, {1.0, 2.0}}; });
+      t.check_exception_thrown<std::logic_error>(t.report_line("Mismatched edge/node initialization"), [](){ return graph_t{{{edge_t{0, 1, 1.0}, edge_t{0, 0, 1.0}}}, {1.0, 2.0}}; });
+      t.check_exception_thrown<std::logic_error>(t.report_line("Mismatched edge/node initialization"), [](){ return graph_t{{{}, {}}, {1.0}}; });
+      t.check_exception_thrown<std::logic_error>(t.report_line("Mismatched edge/node initialization"), [](){ return graph_t{{{edge_t{1, 0}}, {edge_t{0, 0}}}, {1.0}}; });
+    }
+    
+
     [[nodiscard]]
     static transition_graph make_weighted_transition_graph(regular_test& t)
     {
@@ -145,6 +163,8 @@ namespace sequoia::testing
       using namespace undirected_embedded_graph;
 
       auto trg{base_ops::make_transition_graph(t)};
+
+      check_initialization_exceptions(t);
 
       // 'weighted_graph_description::nodew'
       trg.add_node(make_and_check(t, t.report_line(""), {{}}, {1.0}));
