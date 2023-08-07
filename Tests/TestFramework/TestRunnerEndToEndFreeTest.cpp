@@ -341,6 +341,10 @@ namespace sequoia::testing
     fs::copy(generated_project() /= "output/TestSummaries", working_materials() /= "TestSummaries_1", fs::copy_options::recursive);
     check(equivalence, report_line(""), working_materials() /= "TestSummaries_1", predictive_materials() /= "TestSummaries_1");
 
+    fs::create_directories(working_materials() /= "DiagnosticsOutput_0/Useful_Things");
+    fs::copy(generated_project() /= "output/DiagnosticsOutput/Useful_Things", working_materials() /= "DiagnosticsOutput_0/Useful_Things", fs::copy_options::recursive);
+    check(equivalence, report_line("Diagnostics Output"), working_materials() /= "DiagnosticsOutput_0", predictive_materials() /= "DiagnosticsOutput_0");
+
     //=================== Rerun with prune ===================//
     // --> only failing tests should rerun
 

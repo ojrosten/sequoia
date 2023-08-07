@@ -36,9 +36,9 @@ namespace sequoia::testing
 
   void test_base::initialize(test_mode mode, std::string_view suiteName, const normal_path& srcFile, const project_paths& projPaths, individual_materials_paths materials)
   {
-    m_Diagnostics = {project_root(), suiteName, srcFile, to_tag(mode)};
-    m_Materials   = std::move(materials);
     m_ProjectPaths = projPaths;
+    m_Materials   = std::move(materials);
+    m_Diagnostics = {project_root(), suiteName, srcFile, to_tag(mode)};
     std::filesystem::create_directories(m_Diagnostics.diagnostics_file().parent_path());
   }
 
