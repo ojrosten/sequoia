@@ -170,16 +170,21 @@ namespace sequoia::testing
   >
   class dynamic_directed_graph_operations
   {
-    template<maths::network>
-    friend struct graph_initialization_checker;
   public:
     using graph_t            = maths::graph<maths::directed_flavour::directed, EdgeWeight, NodeWeight,EdgeStorageTraits, NodeWeightStorageTraits>;
     using edge_t             = typename graph_t::edge_init_type;
     using edges_equivalent_t = std::initializer_list<std::initializer_list<edge_t>>;
     using transition_graph   = typename transition_checker<graph_t>::transition_graph;
 
+    static void check_initialization_exceptions(regular_test& t)
+    {
+      t.check_exception_thrown<std::logic_error>(t.report_line("Partial index of edge out of range"), [](){ return graph_t{{edge_t{1}}}; });
+    }
+
     static void execute_operations(regular_test& t)
     {
+      check_initialization_exceptions(t);
+
       auto trg{make_transition_graph(t)};
 
       auto checker{
