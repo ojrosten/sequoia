@@ -34,6 +34,24 @@ connectivity::connectivity: Odd number of loop edges for node 1
 
 =======================================
 
+Tests/Maths/Graph/Undirected/DynamicUndirectedGraphWeightedTestingUtilities.hpp, Line 127
+Mismatched loop weights
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::connectivity: Odd number of loop edges for node 0
+
+=======================================
+
+Tests/Maths/Graph/Undirected/DynamicUndirectedGraphWeightedTestingUtilities.hpp, Line 130
+Mismatched weights
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::connectivity [node: 0, edge: 0]: Reciprocated partial edge does not exist
+
+=======================================
+
 Tests/Maths/Graph/Undirected/DynamicUndirectedGraphTestingUtilities.hpp, Line 193
 cbegin_edges throws for empty graph
 
@@ -106,7 +124,7 @@ connectivity::join: at least one node index [0, 0] out of range - graph order is
 
 =======================================
 
-Tests/Maths/Graph/Undirected/DynamicUndirectedGraphWeightedTestingUtilities.hpp, Line 200
+Tests/Maths/Graph/Undirected/DynamicUndirectedGraphWeightedTestingUtilities.hpp, Line 213
 Attempt to set a node weight which does not exist
 
 Expected Exception Type:
@@ -115,7 +133,7 @@ node_storage::node_weight - index out of range!
 
 =======================================
 
-Tests/Maths/Graph/Undirected/DynamicUndirectedGraphWeightedTestingUtilities.hpp, Line 210
+Tests/Maths/Graph/Undirected/DynamicUndirectedGraphWeightedTestingUtilities.hpp, Line 223
 Attempt to mutate a node weight which does not exist
 
 Expected Exception Type:
@@ -205,7 +223,7 @@ connectivity::join: at least one node index [0, 1] out of range - graph order is
 
 =======================================
 
-Tests/Maths/Graph/Undirected/DynamicUndirectedGraphWeightedTestingUtilities.hpp, Line 244
+Tests/Maths/Graph/Undirected/DynamicUndirectedGraphWeightedTestingUtilities.hpp, Line 257
 Attempt to set a node weight which does not exist
 
 Expected Exception Type:
@@ -214,7 +232,7 @@ node_storage::node_weight - index out of range!
 
 =======================================
 
-Tests/Maths/Graph/Undirected/DynamicUndirectedGraphWeightedTestingUtilities.hpp, Line 254
+Tests/Maths/Graph/Undirected/DynamicUndirectedGraphWeightedTestingUtilities.hpp, Line 267
 Attempt to mutate a node weight which does not exist
 
 Expected Exception Type:
