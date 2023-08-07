@@ -18,6 +18,7 @@
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
 #include <algorithm>
+#include <numeric>
 
 namespace sequoia::testing
 {
