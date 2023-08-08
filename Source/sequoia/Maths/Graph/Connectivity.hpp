@@ -596,26 +596,22 @@ namespace sequoia
         if constexpr (EdgeTraits::mutual_info_v)
         {
           std::vector<size_type> partitionsToVisit{};
-          auto insert{
-            [&partitionsToVisit](size_type i){
-              auto pos{std::ranges::lower_bound(partitionsToVisit, i)};
-              if((pos == partitionsToVisit.end()) || (*pos != i))
-                partitionsToVisit.insert(pos, i);
-            }
-          };
           for(const auto& edge : m_Edges.partition(node))
           {
             const auto target{edge.target_node()};
-            if(target != node) insert(target);
+            if(target != node) partitionsToVisit.push_back(target);
 
             if constexpr (directed(directedness))
             {
               const auto source{edge.source_node()};
-              if(source != node) insert(source);
+              if(source != node) partitionsToVisit.push_back(source);
             }
           }
 
-          for(const auto partition : partitionsToVisit)
+          std::ranges::sort(partitionsToVisit);
+          auto duplicates{std::ranges::unique(partitionsToVisit)};
+
+          for(const auto partition : std::ranges::subrange{partitionsToVisit.begin(), duplicates.begin()})
           {
             auto fn{
               [node](const edge_type& e) {
