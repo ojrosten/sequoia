@@ -1,2 +1,2 @@
 Subgraph
-Standard Top Level Checks:               150;  Failures:  0  [Deep checks: 3560]
+Standard Top Level Checks:               150;  Failures:  0  [Deep checks: 2230]

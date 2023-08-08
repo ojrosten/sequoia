@@ -30,9 +30,7 @@ namespace sequoia::testing
       static void test(equality_check_t, test_logger<Mode>& logger, const Nodes& nodes, const Nodes& prediction)
       {
         check(equality, "Sizes different", logger, nodes.size(), prediction.size());
-
         check(with_best_available, "const_node_iter", logger, nodes.cbegin_node_weights(), nodes.cend_node_weights(), prediction.cbegin_node_weights(), prediction.cend_node_weights());
-        check(with_best_available, "const_reverse_node_iter", logger, nodes.crbegin_node_weights(), nodes.crend_node_weights(), prediction.crbegin_node_weights(), prediction.crend_node_weights());
       }
     };
 
@@ -61,6 +59,7 @@ namespace sequoia::testing
         check(equality, "Sizes different", logger, nodes.size(), prediction.size());
 
         check(with_best_available, "const_node_iter", logger, nodes.cbegin_node_weights(), nodes.cend_node_weights(), prediction.begin(), prediction.end());
+        check(with_best_available, "const_reverse_node_iter", logger, nodes.crbegin_node_weights(), nodes.crend_node_weights(), std::reverse_iterator(prediction.end()), std::reverse_iterator(prediction.begin()));
         check(with_best_available, "implicitly const range", logger, nodes.node_weights().begin(), nodes.node_weights().end(), prediction.begin(), prediction.end());
         check(with_best_available, "explicitly const range", logger, nodes.cnode_weights().begin(), nodes.cnode_weights().end(), prediction.begin(), prediction.end());
 

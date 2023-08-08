@@ -1,2 +1,2 @@
 Updates
-Standard Top Level Checks:               174;  Failures:  0  [Deep checks: 11492]
+Standard Top Level Checks:               174;  Failures:  0  [Deep checks: 6278]

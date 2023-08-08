@@ -90,14 +90,6 @@ Checking for weak equivalence with:
             [bool]
             check failed
 
-        const_reverse_node_iter
-
-          Element 0 of range incorrect
-          [sequoia::parsing::commandline::operation]
-            Existence ofearly function objects differs
-            [bool]
-            check failed
-
 =======================================
 
 Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 72
@@ -126,14 +118,6 @@ Checking for weak equivalence with:
             [bool]
             check failed
 
-        const_reverse_node_iter
-
-          Element 0 of range incorrect
-          [sequoia::parsing::commandline::operation]
-            Existence oflate function objects differs
-            [bool]
-            check failed
-
 =======================================
 
 Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 74
@@ -155,26 +139,6 @@ Checking for weak equivalence with:
 
       [sequoia::maths::graph_impl::node_storage<sequoia::parsing::commandline::operation, sequoia::maths::node_weight_storage_traits<sequoia::parsing::commandline::operation> >]
         const_node_iter
-
-          Element 0 of range incorrect
-          [sequoia::parsing::commandline::operation]
-            Function object tag
-            [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
-            operator== returned false
-
-              Lengths differ
-              Obtained string is too short
-              [unsigned long long]
-              operator== returned false
-              Obtained : 0
-              Predicted: 1
-
-              First missing character: x
-              Full strings:
-              Obtained : 
-              Predicted: x
-
-        const_reverse_node_iter
 
           Element 0 of range incorrect
           [sequoia::parsing::commandline::operation]
@@ -234,26 +198,6 @@ Checking for weak equivalence with:
               Obtained : 
               Predicted: y
 
-        const_reverse_node_iter
-
-          Element 0 of range incorrect
-          [sequoia::parsing::commandline::operation]
-            Function object tag
-            [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
-            operator== returned false
-
-              Lengths differ
-              Obtained string is too short
-              [unsigned long long]
-              operator== returned false
-              Obtained : 0
-              Predicted: 1
-
-              First missing character: y
-              Full strings:
-              Obtained : 
-              Predicted: y
-
 =======================================
 
 Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 78
@@ -275,38 +219,6 @@ Checking for weak equivalence with:
 
       [sequoia::maths::graph_impl::node_storage<sequoia::parsing::commandline::operation, sequoia::maths::node_weight_storage_traits<sequoia::parsing::commandline::operation> >]
         const_node_iter
-
-          Element 0 of range incorrect
-          [sequoia::parsing::commandline::operation]
-            Function object tag
-            [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
-            operator== returned false
-
-              First difference detected at character 0:
-              [char]
-              operator== returned false
-              Obtained : x
-              Predicted: y
-
-              Full strings:
-              Obtained : x
-              Predicted: y
-
-            Function object tag
-            [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
-            operator== returned false
-
-              First difference detected at character 0:
-              [char]
-              operator== returned false
-              Obtained : y
-              Predicted: x
-
-              Full strings:
-              Obtained : y
-              Predicted: x
-
-        const_reverse_node_iter
 
           Element 0 of range incorrect
           [sequoia::parsing::commandline::operation]
