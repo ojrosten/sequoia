@@ -58,12 +58,24 @@ namespace sequoia::maths::graph_impl
 
     constexpr node_storage() = default;
 
-    constexpr explicit node_storage(const size_type n)
-      : node_storage(static_constant{}, n)
+    constexpr node_storage(const size_type)
+      requires (Traits::static_storage_v)
+      : m_NodeWeights{make_default_array(std::make_index_sequence<Traits::num_elements_v>{})}
+    {}
+
+    constexpr node_storage(const size_type n)
+      requires (!Traits::static_storage_v)
+      : m_NodeWeights(n)
     {}
 
     constexpr node_storage(std::initializer_list<weight_type> weights)
-      : node_storage(static_constant{}, weights)
+      requires (Traits::static_storage_v)
+      : m_NodeWeights{make_array(weights)}
+    {}
+
+    constexpr node_storage(std::initializer_list<weight_type> weights)
+      requires (!Traits::static_storage_v)
+      : m_NodeWeights{weights}
     {}
 
     [[nodiscard]]
@@ -303,34 +315,7 @@ namespace sequoia::maths::graph_impl
     }
 
   private:
-
-    template<bool b=Traits::static_storage_v>
-    struct static_constant : std::bool_constant<b>
-    {};
-
-    using static_init_type  = static_constant<true>;
-    using dynamic_init_type = static_constant<false>;
-
-    // private data
     node_weight_container_type m_NodeWeights;
-
-    // constructors impl
-    constexpr node_storage(static_init_type, const size_type)
-      : m_NodeWeights{make_default_array(std::make_index_sequence<Traits::num_elements_v>{})} {}
-
-    constexpr node_storage(dynamic_init_type, const size_type n)
-      : m_NodeWeights(n)
-    {}
-
-    constexpr node_storage(static_init_type, std::initializer_list<weight_type> weights)
-      : m_NodeWeights{make_array(weights)}
-    {}
-
-    constexpr node_storage(dynamic_init_type, std::initializer_list<weight_type> weights)
-      : m_NodeWeights{weights}
-    {}
-
-    // helper methods
 
     [[nodiscard]]
     constexpr node_weight_container_type make_array(std::initializer_list<weight_type> weights)
