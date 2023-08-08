@@ -34,7 +34,7 @@ connectivity::process_edges [node: 1, edge: 0]: target index 2 out of range - ma
 
 =======================================
 
-Tests/Maths/Graph/Directed/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 128
+Tests/Maths/Graph/Directed/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 130
 Zeroth partial index of edge out of range
 
 Expected Exception Type:
@@ -43,7 +43,7 @@ connectivity::process_edges [node: 0, edge: 0]: target index 1 out of range - ma
 
 =======================================
 
-Tests/Maths/Graph/Directed/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 129
+Tests/Maths/Graph/Directed/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 131
 First partial index of edge out of range
 
 Expected Exception Type:
@@ -52,7 +52,7 @@ connectivity::process_edges [node: 0, edge: 1]: target index 1 out of range - ma
 
 =======================================
 
-Tests/Maths/Graph/Directed/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 130
+Tests/Maths/Graph/Directed/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 132
 First partial index of edge out of range
 
 Expected Exception Type:
@@ -61,7 +61,7 @@ connectivity::process_edges [node: 0, edge: 1]: target index 2 out of range - ma
 
 =======================================
 
-Tests/Maths/Graph/Directed/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 131
+Tests/Maths/Graph/Directed/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 133
 Zeroth partial index of node 1's edge out of range
 
 Expected Exception Type:
@@ -70,7 +70,7 @@ connectivity::process_edges [node: 1, edge: 0]: target index 2 out of range - ma
 
 =======================================
 
-Tests/Maths/Graph/Directed/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 133
+Tests/Maths/Graph/Directed/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 135
 Mismatched edge/node initialization
 
 Expected Exception Type:
@@ -82,31 +82,31 @@ Please ensure these numbers are the same
 
 =======================================
 
-Tests/Maths/Graph/Directed/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 134
-Mismatched edge/node initialization
-
-Expected Exception Type:
-[std::logic_error]
-Error initializing graph
-Number of node weights:    2
-Number of edge paritions:  1
-Please ensure these numbers are the same
-
-=======================================
-
-Tests/Maths/Graph/Directed/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 135
-Mismatched edge/node initialization
-
-Expected Exception Type:
-[std::logic_error]
-Error initializing graph
-Number of node weights:    2
-Number of edge paritions:  1
-Please ensure these numbers are the same
-
-=======================================
-
 Tests/Maths/Graph/Directed/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 136
+Mismatched edge/node initialization
+
+Expected Exception Type:
+[std::logic_error]
+Error initializing graph
+Number of node weights:    2
+Number of edge paritions:  1
+Please ensure these numbers are the same
+
+=======================================
+
+Tests/Maths/Graph/Directed/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 137
+Mismatched edge/node initialization
+
+Expected Exception Type:
+[std::logic_error]
+Error initializing graph
+Number of node weights:    2
+Number of edge paritions:  1
+Please ensure these numbers are the same
+
+=======================================
+
+Tests/Maths/Graph/Directed/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 138
 Mismatched edge/node initialization
 
 Expected Exception Type:
@@ -118,7 +118,7 @@ Please ensure these numbers are the same
 
 =======================================
 
-Tests/Maths/Graph/Directed/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 137
+Tests/Maths/Graph/Directed/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 139
 Mismatched edge/node initialization
 
 Expected Exception Type:
@@ -202,7 +202,7 @@ connectivity::join: at least one node index [0, 0] out of range - graph order is
 
 =======================================
 
-Tests/Maths/Graph/Directed/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 218
+Tests/Maths/Graph/Directed/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 220
 Attempt to set a node weight which does not exist
 
 Expected Exception Type:
@@ -211,7 +211,7 @@ node_storage::node_weight - index out of range!
 
 =======================================
 
-Tests/Maths/Graph/Directed/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 228
+Tests/Maths/Graph/Directed/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 230
 Attempt to mutate a node weight which does not exist
 
 Expected Exception Type:
@@ -301,7 +301,7 @@ connectivity::join: at least one node index [0, 1] out of range - graph order is
 
 =======================================
 
-Tests/Maths/Graph/Directed/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 262
+Tests/Maths/Graph/Directed/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 264
 Attempt to set a node weight which does not exist
 
 Expected Exception Type:
@@ -310,7 +310,7 @@ node_storage::node_weight - index out of range!
 
 =======================================
 
-Tests/Maths/Graph/Directed/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 272
+Tests/Maths/Graph/Directed/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 274
 Attempt to mutate a node weight which does not exist
 
 Expected Exception Type:

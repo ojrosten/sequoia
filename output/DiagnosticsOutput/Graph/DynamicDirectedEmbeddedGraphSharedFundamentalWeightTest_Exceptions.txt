@@ -115,7 +115,7 @@ connectivity::process_complementary_edges [node: 0, edge: 0]: Reciprocated sourc
 
 =======================================
 
-Tests/Maths/Graph/DirectedEmbedded/DynamicDirectedEmbeddedGraphWeightedTestingUtilities.hpp, Line 181
+Tests/Maths/Graph/DirectedEmbedded/DynamicDirectedEmbeddedGraphWeightedTestingUtilities.hpp, Line 182
 Mismatched weights
 
 Expected Exception Type:
@@ -124,7 +124,7 @@ connectivity::process_complementary_edges [node: 0, edge: 0]: Mismatch between w
 
 =======================================
 
-Tests/Maths/Graph/DirectedEmbedded/DynamicDirectedEmbeddedGraphWeightedTestingUtilities.hpp, Line 182
+Tests/Maths/Graph/DirectedEmbedded/DynamicDirectedEmbeddedGraphWeightedTestingUtilities.hpp, Line 183
 Mismatched weights (inverted)
 
 Expected Exception Type:
@@ -133,24 +133,12 @@ connectivity::process_complementary_edges [node: 0, edge: 0]: Mismatch between w
 
 =======================================
 
-Tests/Maths/Graph/DirectedEmbedded/DynamicDirectedEmbeddedGraphWeightedTestingUtilities.hpp, Line 185
+Tests/Maths/Graph/DirectedEmbedded/DynamicDirectedEmbeddedGraphWeightedTestingUtilities.hpp, Line 186
 IMismatched weights
 
 Expected Exception Type:
 [std::logic_error]
 connectivity::process_complementary_edges [node: 0, edge: 0]: Mismatch between weights
-
-=======================================
-
-Tests/Maths/Graph/DirectedEmbedded/DynamicDirectedEmbeddedGraphWeightedTestingUtilities.hpp, Line 187
-Mismatched edge/node initialization
-
-Expected Exception Type:
-[std::logic_error]
-Error initializing graph
-Number of node weights:    1
-Number of edge paritions:  0
-Please ensure these numbers are the same
 
 =======================================
 
@@ -160,8 +148,8 @@ Mismatched edge/node initialization
 Expected Exception Type:
 [std::logic_error]
 Error initializing graph
-Number of node weights:    2
-Number of edge paritions:  1
+Number of node weights:    1
+Number of edge paritions:  0
 Please ensure these numbers are the same
 
 =======================================
@@ -184,13 +172,25 @@ Mismatched edge/node initialization
 Expected Exception Type:
 [std::logic_error]
 Error initializing graph
+Number of node weights:    2
+Number of edge paritions:  1
+Please ensure these numbers are the same
+
+=======================================
+
+Tests/Maths/Graph/DirectedEmbedded/DynamicDirectedEmbeddedGraphWeightedTestingUtilities.hpp, Line 191
+Mismatched edge/node initialization
+
+Expected Exception Type:
+[std::logic_error]
+Error initializing graph
 Number of node weights:    1
 Number of edge paritions:  2
 Please ensure these numbers are the same
 
 =======================================
 
-Tests/Maths/Graph/DirectedEmbedded/DynamicDirectedEmbeddedGraphWeightedTestingUtilities.hpp, Line 191
+Tests/Maths/Graph/DirectedEmbedded/DynamicDirectedEmbeddedGraphWeightedTestingUtilities.hpp, Line 192
 Mismatched edge/node initialization
 
 Expected Exception Type:
@@ -265,7 +265,7 @@ connectivity::join: at least one node index [0, 0] out of range - graph order is
 
 =======================================
 
-Tests/Maths/Graph/DirectedEmbedded/DynamicDirectedEmbeddedGraphWeightedTestingUtilities.hpp, Line 290
+Tests/Maths/Graph/DirectedEmbedded/DynamicDirectedEmbeddedGraphWeightedTestingUtilities.hpp, Line 291
 Attempt to set a node weight which does not exist
 
 Expected Exception Type:
@@ -274,7 +274,7 @@ node_storage::node_weight - index out of range!
 
 =======================================
 
-Tests/Maths/Graph/DirectedEmbedded/DynamicDirectedEmbeddedGraphWeightedTestingUtilities.hpp, Line 300
+Tests/Maths/Graph/DirectedEmbedded/DynamicDirectedEmbeddedGraphWeightedTestingUtilities.hpp, Line 301
 Attempt to mutate a node weight which does not exist
 
 Expected Exception Type:
@@ -373,7 +373,7 @@ connectivity::insert_join: insertion position 2 out of range for node 0 - max in
 
 =======================================
 
-Tests/Maths/Graph/DirectedEmbedded/DynamicDirectedEmbeddedGraphWeightedTestingUtilities.hpp, Line 334
+Tests/Maths/Graph/DirectedEmbedded/DynamicDirectedEmbeddedGraphWeightedTestingUtilities.hpp, Line 335
 Attempt to set a node weight which does not exist
 
 Expected Exception Type:
@@ -382,7 +382,7 @@ node_storage::node_weight - index out of range!
 
 =======================================
 
-Tests/Maths/Graph/DirectedEmbedded/DynamicDirectedEmbeddedGraphWeightedTestingUtilities.hpp, Line 344
+Tests/Maths/Graph/DirectedEmbedded/DynamicDirectedEmbeddedGraphWeightedTestingUtilities.hpp, Line 345
 Attempt to mutate a node weight which does not exist
 
 Expected Exception Type:
