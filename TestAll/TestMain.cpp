@@ -247,19 +247,6 @@ int main(int argc, char** argv)
       test_static_priority_queue_false_positives{"False Positive Diagnostics"},
       test_static_priority_queue{"Unit Test"}
     );
-  
-    runner.add_test_suite(
-      "Edges",
-      test_edge_false_positives{"False positive diagnostics"},
-      test_edges{"Unit Test"}
-    );
-
-    runner.add_test_suite(
-      "Node Storage",
-      node_storage_test{"Dynamic and Static"},
-      node_storage_allocation_test{"Allocation Test"},
-      test_heterogeneous_node_storage{"Heterogeneuous"}
-    );
 
     runner.add_test_suite(
       "Graph",
@@ -267,6 +254,17 @@ int main(int argc, char** argv)
         "Infrastructure",
         test_graph_false_positives{"Graph false positive diagnostics"},
         test_graph_meta{"Meta Tests"}
+      },
+      suite{
+        "Edges",
+        test_edge_false_positives{"False positive diagnostics"},
+        test_edges{"Unit Test"}
+      },
+      suite{
+        "Node Storage",
+         node_storage_test{"Dynamic and Static"},
+         node_storage_allocation_test{"Allocation Test"},
+         test_heterogeneous_node_storage{"Heterogeneuous"}
       },
       suite{
         "Manipulations",
