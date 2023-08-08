@@ -14,7 +14,8 @@
 #include "sequoia/Core/Object/Handlers.hpp"
 #include "sequoia/Core/Meta/TypeTraits.hpp"
 
-#include <map>
+#include <algorithm>
+#include <vector>
 
 namespace sequoia::data_structures::partition_impl
 {
@@ -179,7 +180,8 @@ namespace sequoia::data_structures::partition_impl
   private:
   };
 
-  template<class T> class data_duplicator<object::shared<T>>
+  template<class T>
+  class data_duplicator<object::shared<T>>
   {
   public:
     using product_type = typename object::shared<T>::product_type;
@@ -187,23 +189,13 @@ namespace sequoia::data_structures::partition_impl
     [[nodiscard]]
     product_type duplicate(const product_type in)
     {
-      product_type ptr{};
-      auto found{m_ProcessedPointers.find(in)};
-      if(found == m_ProcessedPointers.end())
-      {
-        ptr = object::shared<T>::producer_type::make(*in);
-        m_ProcessedPointers.insert(make_pair(in, ptr));
-      }
-      else
-      {
-        ptr = found->second;
-      }
-      return ptr;
+      auto found{std::ranges::lower_bound(m_ProcessedPointers, in, std::ranges::less{}, [](const key_val& keyVal){ return keyVal.first; })};
+      return ((found == m_ProcessedPointers.end()) || (found->first != in))
+        ? m_ProcessedPointers.emplace(found, in, object::shared<T>::producer_type::make(*in))->second
+        : found->second;
     }
   private:
-    std::map<product_type, product_type> m_ProcessedPointers;
+    using key_val = std::pair<product_type, product_type>;
+    std::vector<key_val> m_ProcessedPointers;
   };
-
-  template<class>
-  struct static_partitions_maker;
 }
