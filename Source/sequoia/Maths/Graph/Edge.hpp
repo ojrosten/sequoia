@@ -35,11 +35,6 @@
 
 namespace sequoia
 {
-  namespace object
-  {
-    template<class> struct by_value;
-  }
-
   namespace maths
   {
     /*! \class edge_base

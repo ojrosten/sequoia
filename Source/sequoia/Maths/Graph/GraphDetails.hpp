@@ -13,15 +13,10 @@
  */
 
 #include "sequoia/Maths/Graph/Edge.hpp"
+#include "sequoia/Core/Object/Handlers.hpp"
 
 namespace sequoia
 {
-  namespace object
-  {
-    template <class> struct shared;
-    template <class> struct by_value;
-  }
-
   namespace maths
   {
     enum class directed_flavour { undirected, directed };
@@ -94,12 +89,12 @@ namespace sequoia
                       "Edges may only be shared for directed, embedded graphs");
 
         constexpr static bool shared_edge_v{
-          (GraphFlavour == graph_flavour::directed_embedded)
+              (GraphFlavour == graph_flavour::directed_embedded)
           && ((SharingPreference == edge_sharing_preference::shared_edge) || (SharingPreference == edge_sharing_preference::agnostic))
         };
 
         constexpr static bool shared_weight_v{
-               SharingPreference == edge_sharing_preference::shared_weight
+              (SharingPreference == edge_sharing_preference::shared_weight)
           || ((SharingPreference == edge_sharing_preference::agnostic) && default_weight_sharing)
         };
       };
@@ -130,23 +125,6 @@ namespace sequoia
         requires object::handler<Handler>
       using flavour_to_edge_t = typename flavour_to_edge<GraphFlavour, Handler, IndexType, SharedEdge>::edge_type;
 
-      // Edge Init Type
-      template<class Edge, bool Embedded>
-      struct edge_to_init_type
-      {
-        using weight_type    = typename Edge::weight_type;
-        using handler_type   = object::by_value<weight_type>;
-        using index_type     = typename Edge::index_type;
-        using edge_init_type = std::conditional_t<Embedded,
-                                                  std::conditional_t<Edge::flavour == edge_flavour::partial_embedded,
-                                                                     embedded_partial_edge<handler_type, index_type>,
-                                                                     embedded_edge<handler_type, index_type>>,
-                                                  partial_edge<handler_type, index_type>>;
-      };
-
-      template<class Edge, bool Embedded>
-      using edge_to_init_type_t = typename edge_to_init_type<Edge, Embedded>::edge_init_type;
-
       // Edge Type Generator
       template
       <
@@ -167,8 +145,12 @@ namespace sequoia
 
         using handler_type     = shared_to_handler_t<shared_weight_v, EdgeWeight>;
         using edge_type        = flavour_to_edge_t<GraphFlavour, handler_type, IndexType, shared_edge_v>;
-        using edge_init_type   = edge_to_init_type_t<edge_type, is_embedded_v>;
-        using edge_weight_type = EdgeWeight;
+        using index_type       = typename edge_type::index_type;
+        using edge_init_type   = std::conditional_t<is_embedded_v,
+                                                   std::conditional_t<edge_type::flavour == edge_flavour::partial_embedded,
+                                                                      embedded_partial_edge<object::by_value<EdgeWeight>, index_type>,
+                                                                      embedded_edge<object::by_value<EdgeWeight>, index_type>>,
+                                                   partial_edge<object::by_value<EdgeWeight>, index_type>>;
       };
 
       template<class T>
