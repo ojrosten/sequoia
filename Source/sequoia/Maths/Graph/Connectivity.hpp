@@ -201,7 +201,7 @@ namespace sequoia
         dynamic graphs are supported; for the purposes of the latter, the relevant
         protected methods of `connectivity` are allocator-aware.
      */
-    template<directed_flavour Directedness, class EdgeTraits>
+    template<class EdgeTraits>
     class connectivity
     {
       friend struct sequoia::assignment_helper;
@@ -222,7 +222,7 @@ namespace sequoia
       static_assert(std::is_unsigned_v<edge_index_type>);
 
       constexpr static auto npos{std::numeric_limits<edge_index_type>::max()};
-      constexpr static directed_flavour directedness{Directedness};
+      constexpr static directed_flavour directedness{to_directedness(EdgeTraits::graph_species)};
       constexpr static bool throw_on_range_error{edge_storage_type::throw_on_range_error};
 
       constexpr connectivity() = default;

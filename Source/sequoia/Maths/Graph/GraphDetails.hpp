@@ -48,6 +48,18 @@ namespace sequoia
       return ((gf == graph_flavour::directed) || (gf == graph_flavour::directed_embedded)) ? directed_flavour::directed : directed_flavour::undirected;
     }
 
+    [[nodiscard]]
+    constexpr bool is_embedded(const graph_flavour gf) noexcept
+    {
+      return (gf == graph_flavour::undirected_embedded) || (gf == graph_flavour::directed_embedded);
+    }
+
+    [[nodiscard]]
+    constexpr bool is_directed(const graph_flavour gf) noexcept
+    {
+      return (gf == graph_flavour::directed) || (gf == graph_flavour::directed_embedded);
+    }
+
     enum class edge_sharing_preference {agnostic, shared_edge, shared_weight, independent};
 
     namespace graph_impl
@@ -104,6 +116,8 @@ namespace sequoia
       >
       struct edge_type_generator
       {
+        constexpr static graph_flavour graph_species{GraphFlavour};
+
         constexpr static bool default_weight_sharing{
               undirected(GraphFlavour)
            && (big_weight<EdgeWeight>() || !std::is_copy_constructible_v<EdgeWeight>)

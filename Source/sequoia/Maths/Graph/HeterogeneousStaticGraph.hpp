@@ -39,7 +39,6 @@ namespace sequoia::maths
     <
       connectivity
       <
-        Directedness,
         graph_impl::static_edge_traits
         <
           (Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected,
@@ -58,7 +57,6 @@ namespace sequoia::maths
       <
         connectivity
         <
-          Directedness,
           graph_impl::static_edge_traits
           <
             (Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected,
@@ -89,7 +87,6 @@ namespace sequoia::maths
       <
         connectivity
         <
-          Directedness,
           graph_impl::static_edge_traits
           <
             (Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected,
@@ -127,7 +124,6 @@ namespace sequoia::maths
     <
       connectivity
       <
-        Directedness,
         graph_impl::static_edge_traits
         <
           (Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded,
@@ -146,7 +142,6 @@ namespace sequoia::maths
       <
         connectivity
         <
-          Directedness,
           graph_impl::static_edge_traits
           <
             (Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded,
@@ -175,7 +170,6 @@ namespace sequoia::maths
       <
         connectivity
         <
-          Directedness,
           graph_impl::static_edge_traits
           <
             (Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded,

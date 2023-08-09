@@ -68,32 +68,14 @@ namespace sequoia::maths
   class graph_base : public
     graph_primitive
     <
-      connectivity
-      <
-        to_directedness(GraphFlavour),
-        graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeight, EdgeStorageTraits, std::size_t>
-      >,
-      graph_impl::node_storage
-      <
-        NodeWeight,
-        NodeWeightStorageTraits
-      >
+      connectivity<graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeight, EdgeStorageTraits, std::size_t>>,
+      graph_impl::node_storage<NodeWeight, NodeWeightStorageTraits>
     >
   {
   public:
     using edge_traits_type  = graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeight, EdgeStorageTraits, std::size_t>;
     using node_storage_type = graph_impl::node_storage<NodeWeight, NodeWeightStorageTraits>;
-
-    using primitive_type =
-      graph_primitive
-      <
-        connectivity
-        <
-          to_directedness(GraphFlavour),
-          edge_traits_type
-        >,
-        node_storage_type
-      >;
+    using primitive_type    = graph_primitive<connectivity<edge_traits_type>, node_storage_type>;
 
     using node_weight_type    = NodeWeight;
     using size_type           = typename primitive_type::size_type;
@@ -199,32 +181,14 @@ namespace sequoia::maths
     > : public
     graph_primitive
     <
-      connectivity
-      <
-        to_directedness(GraphFlavour),
-        graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeight, EdgeStorageTraits, std::size_t>
-      >,
-      graph_impl::node_storage
-      <
-        NodeWeight,
-        NodeWeightStorageTraits
-      >
+      connectivity<graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeight, EdgeStorageTraits, std::size_t>>,
+      graph_impl::node_storage<NodeWeight,NodeWeightStorageTraits>
     >
   {
   public:
-    using edge_traits_type = graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeight, EdgeStorageTraits, std::size_t>;
+    using edge_traits_type  = graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeight, EdgeStorageTraits, std::size_t>;
     using node_storage_type = graph_impl::node_storage<NodeWeight, NodeWeightStorageTraits>;
-
-    using primitive_type =
-      graph_primitive
-      <
-        connectivity
-        <
-          to_directedness(GraphFlavour),
-          edge_traits_type
-        >,
-        node_storage_type
-      >;
+    using primitive_type    = graph_primitive<connectivity<edge_traits_type>, node_storage_type>;
 
     using node_weight_type           = NodeWeight;
     using size_type                  = typename primitive_type::size_type;
