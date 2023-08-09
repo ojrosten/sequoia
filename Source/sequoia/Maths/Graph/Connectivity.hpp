@@ -1034,34 +1034,20 @@ namespace sequoia
         }
         else if constexpr(edge_type::flavour == edge_flavour::full)
         {
-          using inv_t = inversion_constant<true>;
           if constexpr(std::is_empty_v<edge_weight_type>)
           {
-            if(edgeInit.inverted())
-              return edge_type{source, inv_t{}};
-            else
-              return edge_type{source, edgeInit.target_node()};
+            return edgeInit.inverted() ? edge_type{source, inverted_edge} : edge_type{source, edgeInit.target_node()};
           }
           else
           {
-            if(edgeInit.inverted())
-              return edge_type{source, inv_t{}, edgeInit.weight()};
-            else
-              return edge_type{source, edgeInit.target_node(), edgeInit.weight()};
+            return edgeInit.inverted() ? edge_type{source, inverted_edge, edgeInit.weight()} : edge_type{source, edgeInit.target_node(), edgeInit.weight()};
           }
         }
         else if constexpr(edge_type::flavour == edge_flavour::full_embedded)
         {
           static_assert(!std::is_empty_v<edge_weight_type>);
-          using inv_t = inversion_constant<true>;
-          if(edgeInit.inverted())
-          {
-            return edge_type{edgeInit.source_node(), inv_t{}, edgeInit.complementary_index(), edgeInit.weight()};
-          }
-          else
-          {
-            return edge_type{edgeInit.source_node(), edgeInit.target_node(), edgeInit.complementary_index(), edgeInit.weight()};
-          }
+          return edgeInit.inverted() ? edge_type{edgeInit.source_node(), inverted_edge, edgeInit.complementary_index(), edgeInit.weight()}
+                                     : edge_type{edgeInit.source_node(), edgeInit.target_node(), edgeInit.complementary_index(), edgeInit.weight()};
         }
         else
         {
@@ -1374,7 +1360,7 @@ namespace sequoia
         auto addToStorage{
           [&storage,this](edge_index_type host, edge_index_type target, edge_index_type compIndex, range_t hostRange){
               storage.push_back_to_partition(host, (compIndex == npos) ? make_edge(host, hostRange.front())
-                                                                     : edge_type{target, *(cbegin_edges(target) + compIndex)});
+                                                                       : edge_type{target, *(cbegin_edges(target) + compIndex)});
           }
         };
 
@@ -1511,14 +1497,11 @@ namespace sequoia
               {
                 if(i->inverted())
                 {
-                  using inv_t = inversion_constant<true>;
-                  edge_type e{i->source_node(), inv_t{}, i->complementary_index(), i->weight()};
-                  storage.push_back_to_partition(node, std::move(e));
+                  storage.push_back_to_partition(node, i->source_node(), inverted_edge, i->complementary_index(), i->weight());
                 }
                 else
                 {
-                  edge_type e{i->source_node(), i->target_node(), i->complementary_index(), i->weight()};
-                  storage.push_back_to_partition(node, std::move(e));
+                  storage.push_back_to_partition(node, i->source_node(), i->target_node(), i->complementary_index(), i->weight());
                 }
               }
               else
@@ -1541,8 +1524,7 @@ namespace sequoia
 
               if(!encountered)
               {
-                edge_type e{i->target_node(), i->complementary_index(), i->weight()};
-                storage.push_back_to_partition(node, std::move(e));
+                storage.push_back_to_partition(node, i->target_node(), i->complementary_index(), i->weight());
               }
               else
               {
@@ -1554,10 +1536,6 @@ namespace sequoia
 
           copy_edges(in, storage, processor);
         }
-        /*else
-        {
-          static_assert(dependent_false<edge_type>::value, "Edge flavour not dealt with");
-        }*/
 
         return storage;
       }
