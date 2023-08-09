@@ -60,7 +60,7 @@ namespace sequoia::maths::graph_impl
 
     constexpr node_storage(const size_type)
       requires (Traits::static_storage_v)
-      : m_NodeWeights{make_default_array(std::make_index_sequence<Traits::num_elements_v>{})}
+      : m_NodeWeights{}
     {}
 
     constexpr node_storage(const size_type n)
@@ -70,7 +70,7 @@ namespace sequoia::maths::graph_impl
 
     constexpr node_storage(std::initializer_list<weight_type> weights)
       requires (Traits::static_storage_v)
-      : m_NodeWeights{make_array(weights)}
+      : m_NodeWeights{utilities::to_array<weight_type, Traits::num_elements_v>(weights, std::identity{})}
     {}
 
     constexpr node_storage(std::initializer_list<weight_type> weights)
@@ -179,11 +179,9 @@ namespace sequoia::maths::graph_impl
     }
 
     [[nodiscard]]
-    friend constexpr bool operator==(const node_storage& lhs, const node_storage& rhs) noexcept
+    friend constexpr bool operator==(const node_storage&, const node_storage&) noexcept
       requires deep_equality_comparable<weight_type>
-    {
-      return lhs.m_NodeWeights == rhs.m_NodeWeights;
-    }
+        = default;
   protected:
     template<alloc Allocator>
     constexpr explicit node_storage(const Allocator& allocator)
@@ -316,30 +314,6 @@ namespace sequoia::maths::graph_impl
 
   private:
     node_weight_container_type m_NodeWeights;
-
-    [[nodiscard]]
-    constexpr node_weight_container_type make_array(std::initializer_list<weight_type> weights)
-    {
-      if(weights.size() != Traits::num_elements_v)
-        throw std::logic_error("Initializer list of wrong size");
-
-      constexpr auto N{Traits::num_elements_v};
-      return utilities::to_array<weight_type, N>(weights, [](const auto& weight) {
-          return weight_type{weight}; });
-    }
-
-    template<std::size_t... Inds>
-    [[nodiscard]]
-    constexpr node_weight_container_type make_default_array(std::index_sequence<Inds...>)
-    {
-      return { make_default_element(Inds)... };
-    }
-
-    [[nodiscard]]
-    constexpr weight_type make_default_element(const std::size_t)
-    {
-      return weight_type{weight_type{}};
-    }
   };
 
   template<class Weight, class Traits>
