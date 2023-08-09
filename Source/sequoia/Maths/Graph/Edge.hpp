@@ -63,10 +63,7 @@ namespace sequoia
       constexpr void target_node(const index_type target) noexcept { m_Target = target; }
 
       [[nodiscard]]
-      friend constexpr bool operator==(const edge_base& lhs, const edge_base& rhs) noexcept
-      {
-        return (lhs.target_node() == rhs.target_node());
-      }
+      friend constexpr bool operator==(const edge_base&, const edge_base&) noexcept = default;
     protected:
       ~edge_base() = default;
 
@@ -421,13 +418,7 @@ namespace sequoia
       constexpr bool inverted() const noexcept { return m_HostIndex == npos; }
 
       [[nodiscard]]
-      friend constexpr bool operator==(const embedded_edge& lhs, const embedded_edge& rhs) noexcept
-      {
-        return (lhs.source_node() == rhs.source_node())
-          && (lhs.inverted() == rhs.inverted())
-          && (static_cast<const decorated_edge_base<WeightHandler, IndexType>&>(lhs) ==
-              static_cast<const decorated_edge_base<WeightHandler, IndexType>&>(rhs));
-      }
+      friend constexpr bool operator==(const embedded_edge&, const embedded_edge&) noexcept = default;
     private:
       constexpr static auto npos = std::numeric_limits<IndexType>::max();
 
