@@ -30,14 +30,15 @@ namespace sequoia::maths::graph_impl
     return F == directed_flavour::directed ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded;
   }
 
-  template<class NodeStorage, bool=std::is_empty_v<typename NodeStorage::weight_type>>
+  template<class NodeStorage>
   struct node_allocator_generator
   {
     using allocator_type = typename NodeStorage::node_weight_container_type::allocator_type;
   };
 
   template<class NodeStorage>
-  struct node_allocator_generator<NodeStorage, true>
+    requires std::is_empty_v<typename NodeStorage::weight_type>
+  struct node_allocator_generator<NodeStorage>
   {};
 
   template
@@ -66,9 +67,8 @@ namespace sequoia::maths::graph_impl
       >;
 
     using edge_type = typename edge_type_gen::edge_type;
-    constexpr static bool shared_edge_v{edge_type_gen::shared_edge_v};
 
-    using edge_storage_handler = std::conditional_t<shared_edge_v,
+    using edge_storage_handler = std::conditional_t<edge_type_gen::shared_edge_v,
                                                     object::shared<edge_type>,
                                                     object::by_value<edge_type>>;
 
@@ -79,7 +79,5 @@ namespace sequoia::maths::graph_impl
       = typename EdgeStorageTraits::template storage_type<edge_type, edge_storage_handler, edge_storage_traits>;
 
     using edge_allocator_type = typename edge_storage_type::allocator_type;
-
-    constexpr static bool mutual_info_v{GraphFlavour != graph_flavour::directed};
   };
 }

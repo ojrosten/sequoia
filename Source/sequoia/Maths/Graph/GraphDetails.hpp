@@ -141,6 +141,7 @@ namespace sequoia
 
         constexpr static bool is_embedded_v{(GraphFlavour == graph_flavour::undirected_embedded) || (GraphFlavour == graph_flavour::directed_embedded)};
         constexpr static bool is_directed_v{(GraphFlavour == graph_flavour::directed)            || (GraphFlavour == graph_flavour::directed_embedded)};
+        constexpr static bool mutual_info_v{GraphFlavour != graph_flavour::directed};
 
         using handler_type     = shared_to_handler_t<shared_weight_v, EdgeWeight>;
         using edge_type        = flavour_to_edge_t<GraphFlavour, handler_type, IndexType, shared_edge_v>;
