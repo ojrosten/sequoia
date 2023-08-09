@@ -68,37 +68,6 @@ namespace sequoia
         return sizeof(Weight) > 2*sizeof(Weight*);
       }
 
-      template
-      <
-        graph_flavour GraphFlavour,
-        edge_sharing_preference SharingPreference,
-        class EdgeWeight
-      >
-      struct sharing_traits
-      {
-      private:
-        constexpr static bool default_weight_sharing{
-              undirected(GraphFlavour)
-           && (big_weight<EdgeWeight>() || !std::is_copy_constructible_v<EdgeWeight>)
-        };
-      public:
-        static_assert((GraphFlavour != graph_flavour::directed) || (SharingPreference != edge_sharing_preference::shared_weight),
-                      "A directed graph without embedding cannot have shared weights");
-
-        static_assert((SharingPreference != edge_sharing_preference::shared_edge) || (GraphFlavour == graph_flavour::directed_embedded),
-                      "Edges may only be shared for directed, embedded graphs");
-
-        constexpr static bool shared_edge_v{
-              (GraphFlavour == graph_flavour::directed_embedded)
-          && ((SharingPreference == edge_sharing_preference::shared_edge) || (SharingPreference == edge_sharing_preference::agnostic))
-        };
-
-        constexpr static bool shared_weight_v{
-              (SharingPreference == edge_sharing_preference::shared_weight)
-          || ((SharingPreference == edge_sharing_preference::agnostic) && default_weight_sharing)
-        };
-      };
-
       // Flavour to Edge
       template<graph_flavour GraphFlavour, class Handler, std::integral IndexType, bool SharedEdge>
         requires object::handler<Handler>
@@ -135,13 +104,29 @@ namespace sequoia
       >
       struct edge_type_generator
       {
-        using sharing = sharing_traits<GraphFlavour, SharingPreference, EdgeWeight>;
-        constexpr static bool shared_weight_v{sharing::shared_weight_v};
-        constexpr static bool shared_edge_v{sharing::shared_edge_v};
+        constexpr static bool default_weight_sharing{
+              undirected(GraphFlavour)
+           && (big_weight<EdgeWeight>() || !std::is_copy_constructible_v<EdgeWeight>)
+        };
+
+        constexpr static bool shared_edge_v{
+              (GraphFlavour == graph_flavour::directed_embedded)
+          && ((SharingPreference == edge_sharing_preference::shared_edge) || (SharingPreference == edge_sharing_preference::agnostic))
+        };
+
+        constexpr static bool shared_weight_v{
+              (SharingPreference == edge_sharing_preference::shared_weight)
+          || ((SharingPreference == edge_sharing_preference::agnostic) && default_weight_sharing)
+        };
+
+        static_assert(!shared_weight_v || (GraphFlavour != graph_flavour::directed),
+          "A directed graph without embedding cannot have shared weights");
+
+        static_assert(!shared_edge_v || (GraphFlavour == graph_flavour::directed_embedded),
+          "Edges may only be shared for directed, embedded graphs");
+
         constexpr static bool is_embedded_v{(GraphFlavour == graph_flavour::undirected_embedded) || (GraphFlavour == graph_flavour::directed_embedded)};
         constexpr static bool is_directed_v{(GraphFlavour == graph_flavour::directed)            || (GraphFlavour == graph_flavour::directed_embedded)};
-
-        static_assert((GraphFlavour != graph_flavour::directed_embedded) || !sharing::shared_edge_v || !shared_weight_v);
 
         using handler_type     = shared_to_handler_t<shared_weight_v, EdgeWeight>;
         using edge_type        = flavour_to_edge_t<GraphFlavour, handler_type, IndexType, shared_edge_v>;
