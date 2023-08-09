@@ -60,6 +60,12 @@ namespace sequoia
       return (gf == graph_flavour::directed) || (gf == graph_flavour::directed_embedded);
     }
 
+    [[nodiscard]]
+    constexpr bool has_mutual_info(const graph_flavour gf) noexcept
+    {
+      return gf != graph_flavour::directed;
+    }
+
     enum class edge_sharing_preference {agnostic, shared_edge, shared_weight, independent};
 
     namespace graph_impl
@@ -139,14 +145,10 @@ namespace sequoia
         static_assert(!shared_edge_v || (GraphFlavour == graph_flavour::directed_embedded),
           "Edges may only be shared for directed, embedded graphs");
 
-        constexpr static bool is_embedded_v{(GraphFlavour == graph_flavour::undirected_embedded) || (GraphFlavour == graph_flavour::directed_embedded)};
-        constexpr static bool is_directed_v{(GraphFlavour == graph_flavour::directed)            || (GraphFlavour == graph_flavour::directed_embedded)};
-        constexpr static bool mutual_info_v{GraphFlavour != graph_flavour::directed};
-
         using handler_type     = shared_to_handler_t<shared_weight_v, EdgeWeight>;
         using edge_type        = flavour_to_edge_t<GraphFlavour, handler_type, IndexType, shared_edge_v>;
         using index_type       = typename edge_type::index_type;
-        using edge_init_type   = std::conditional_t<is_embedded_v,
+        using edge_init_type   = std::conditional_t<is_embedded(GraphFlavour),
                                                    std::conditional_t<edge_type::flavour == edge_flavour::partial_embedded,
                                                                       embedded_partial_edge<object::by_value<EdgeWeight>, index_type>,
                                                                       embedded_edge<object::by_value<EdgeWeight>, index_type>>,
