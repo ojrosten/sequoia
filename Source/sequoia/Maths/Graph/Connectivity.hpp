@@ -1583,6 +1583,7 @@ namespace sequoia
       }
 
       template<class Setter>
+        requires std::is_invocable_r_v<edge_iterator, Setter, edge_iterator>
       constexpr const_edge_iterator manipulate_partner_edge_weight(const_edge_iterator citer, Setter setter)
       {
         const auto partner{partner_index(citer)};
@@ -1590,14 +1591,13 @@ namespace sequoia
         if constexpr(has_embedded_edge_v)
         {
           const auto comp{citer->complementary_index()};
-          setter(m_Edges.begin_partition(partner) + comp);
-          return m_Edges.cbegin_partition(partner) + comp;
+          return setter(m_Edges.begin_partition(partner) + comp);
         }
         else
         {
-          const auto source{citer.partition_index()};
-          auto found{cend_edges(partner)};
-          if(source == partner)
+          
+          auto found{end_edges(partner)};
+          if(const auto source{citer.partition_index()}; source == partner)
           {
             for(auto iter{m_Edges.begin_partition(partner)}; iter != m_Edges.end_partition(partner); ++iter)
             {
@@ -1606,8 +1606,7 @@ namespace sequoia
 
               if(*iter == *citer)
               {
-                setter(iter);
-                found = cbegin_edges(partner) + std::ranges::distance(m_Edges.begin_partition(partner), iter);
+                found = setter(iter);
                 break;
               }
             }
@@ -1618,14 +1617,13 @@ namespace sequoia
             {
               if((iter->target_node() == source) && (iter->weight() == citer->weight()))
               {
-                setter(iter);
-                found = cbegin_edges(partner) + std::ranges::distance(m_Edges.begin_partition(partner), iter);
+                found = setter(iter);
                 break;
               }
             }
           }
 
-          if(found != cend_edges(partner))
+          if(found != end_edges(partner))
           {
             return found;
           }
@@ -1641,14 +1639,14 @@ namespace sequoia
       template<std::invocable<edge_weight_type&> Fn>
       constexpr void mutate_partner_edge_weight(const_edge_iterator citer, Fn fn)
       {
-        manipulate_partner_edge_weight(citer, [fn](auto iter){ iter->mutate_weight(fn); });
+        manipulate_partner_edge_weight(citer, [fn](edge_iterator iter) -> edge_iterator { iter->mutate_weight(fn); return iter; });
       }
 
       template<class... Args>
         requires initializable_from<edge_weight_type, Args...>
       constexpr const_edge_iterator set_partner_edge_weight(const_edge_iterator citer, Args&&... args)
       {
-        return manipulate_partner_edge_weight(citer, [&args...](auto iter){ iter->weight(std::forward<Args>(args)...); });
+        return manipulate_partner_edge_weight(citer, [&args...](edge_iterator iter) -> edge_iterator { iter->weight(std::forward<Args>(args)...); return iter; });
       }
 
       template<class... Args>
