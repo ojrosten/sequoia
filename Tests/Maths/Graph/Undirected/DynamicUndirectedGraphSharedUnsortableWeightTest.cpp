@@ -8,7 +8,7 @@
 /*! \file */
 
 #include "DynamicUndirectedGraphSharedUnsortableWeightTest.hpp"
-#include "DynamicUndirectedGraphTestingUtilities.hpp"
+#include "DynamicUndirectedGraphUnsortableWeightTestingUtilities.hpp"
 
 #include <complex>
 
@@ -24,6 +24,6 @@ namespace sequoia::testing
   {
     using namespace maths;
     using comp_t = std::complex<double>;
-    dynamic_undirected_graph_operations<comp_t, comp_t, shared_weight_bucketed_edge_storage_traits, node_weight_storage_traits<comp_t>>::execute_operations(*this);
+    dynamic_undirected_graph_unsortable_weight_operations<comp_t, comp_t, shared_weight_bucketed_edge_storage_traits, node_weight_storage_traits<comp_t>>::execute_operations(*this);
   }
 }

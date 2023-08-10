@@ -34,6 +34,84 @@ connectivity::connectivity: Odd number of loop edges for node 1
 
 =======================================
 
+Tests/Maths/Graph/Undirected/DynamicUndirectedGraphUnsortableWeightTestingUtilities.hpp, Line 127
+Mismatched loop weights
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::connectivity: Odd number of loop edges for node 0
+
+=======================================
+
+Tests/Maths/Graph/Undirected/DynamicUndirectedGraphUnsortableWeightTestingUtilities.hpp, Line 130
+Mismatched weights
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::connectivity [node: 0, edge: 0]: Reciprocated partial edge does not exist
+
+=======================================
+
+Tests/Maths/Graph/Undirected/DynamicUndirectedGraphUnsortableWeightTestingUtilities.hpp, Line 132
+Mismatched edge/node initialization
+
+Expected Exception Type:
+[std::logic_error]
+Error initializing graph
+Number of node weights:    1
+Number of edge paritions:  0
+Please ensure these numbers are the same
+
+=======================================
+
+Tests/Maths/Graph/Undirected/DynamicUndirectedGraphUnsortableWeightTestingUtilities.hpp, Line 133
+Mismatched edge/node initialization
+
+Expected Exception Type:
+[std::logic_error]
+Error initializing graph
+Number of node weights:    2
+Number of edge paritions:  1
+Please ensure these numbers are the same
+
+=======================================
+
+Tests/Maths/Graph/Undirected/DynamicUndirectedGraphUnsortableWeightTestingUtilities.hpp, Line 134
+Mismatched edge/node initialization
+
+Expected Exception Type:
+[std::logic_error]
+Error initializing graph
+Number of node weights:    2
+Number of edge paritions:  1
+Please ensure these numbers are the same
+
+=======================================
+
+Tests/Maths/Graph/Undirected/DynamicUndirectedGraphUnsortableWeightTestingUtilities.hpp, Line 135
+Mismatched edge/node initialization
+
+Expected Exception Type:
+[std::logic_error]
+Error initializing graph
+Number of node weights:    1
+Number of edge paritions:  2
+Please ensure these numbers are the same
+
+=======================================
+
+Tests/Maths/Graph/Undirected/DynamicUndirectedGraphUnsortableWeightTestingUtilities.hpp, Line 136
+Mismatched edge/node initialization
+
+Expected Exception Type:
+[std::logic_error]
+Error initializing graph
+Number of node weights:    1
+Number of edge paritions:  2
+Please ensure these numbers are the same
+
+=======================================
+
 Tests/Maths/Graph/Undirected/DynamicUndirectedGraphTestingUtilities.hpp, Line 193
 cbegin_edges throws for empty graph
 
