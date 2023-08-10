@@ -8,6 +8,7 @@
 /*! \file */
 
 #include "DynamicUndirectedGraphFundamentalWeightTest.hpp"
+#include "DynamicUndirectedGraphWeightedTestingUtilities.hpp"
 
 namespace sequoia::testing
 {

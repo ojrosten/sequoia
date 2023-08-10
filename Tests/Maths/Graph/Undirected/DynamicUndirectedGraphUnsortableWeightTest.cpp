@@ -8,6 +8,7 @@
 /*! \file */
 
 #include "DynamicUndirectedGraphUnsortableWeightTest.hpp"
+#include "DynamicUndirectedGraphTestingUtilities.hpp"
 
 #include <complex>
 
