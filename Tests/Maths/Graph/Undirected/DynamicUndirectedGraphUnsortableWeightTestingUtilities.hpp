@@ -52,13 +52,13 @@ namespace sequoia::testing
       //         /\
       //         \/
       //   x --- x
-      node_1_node_0_1w,
+      node_1_node_1w_0,
 
       //  x ==== x
       node_1_1w_node_0_0w,
 
       //  x ==== x
-      node_1w_1w_node_0w_0w,
+      node_1w_1_node_0_0w,
 
       //    ----
       //  x ==== x
@@ -174,6 +174,20 @@ namespace sequoia::testing
           t.check(equality, t.report_line("Canonical ordering of weighted edges"), graph_t{{{{0, 1.0, -1.0}, {1, 0.0, 0.0}, {0, 1.0, -1.0}}, {{0, 0.0, 0.0}}}, {{}, {}}}, g);
           return g;
         }());
+
+      // 'weighted_graph_description::node_1_node_1w_0,'
+      trg.add_node(
+        [&t](){
+          auto g{make_and_check(t, t.report_line(""), {{{1, 0.0, 0.0}}, {{0, 0.0, 0.0}, {1, 1.0, -1.0}, {1, 1.0, -1.0}}}, {{}, {}})};
+          t.check(equality, t.report_line("Canonical ordering of weighted edges"), graph_t{{{{1, 0.0, 0.0}}, {{1, 1.0, -1.0}, {0, 0.0, 0.0}, {1, 1.0, -1.0}}}, {{}, {}}}, g);
+          return g;
+        }());
+
+      // 'weighted_graph_description::node_1_1w_node_0_0w'
+      trg.add_node(make_and_check(t, t.report_line(""), {{{1, 0.0, 0.0}, {1, 1.0, -1.0}}, {{0, 0.0, 0.0}, {0, 1.0, -1.0}}}, {{}, {}}));
+
+      // 'weighted_graph_description::node_1w_1_node_0_0w'
+      trg.add_node(make_and_check(t, t.report_line(""), {{{1, 1.0, -1.0}, {1, 0.0, 0.0}}, {{0, 0.0, 0.0}, {0, 1.0, -1.0}}}, {{}, {}}));
 
       return trg;
     }
