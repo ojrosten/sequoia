@@ -60,15 +60,15 @@ namespace sequoia::testing
       //  x ==== x
       node_1w_1_node_0_0w,
 
-      //    ----
+      //    ====
       //  x ==== x
-      node_1_1w_1x_node_0_0w_0x,
+      node_1_1_1w_1w_node_0w_0w_0_0,
 
       // /-\
       // \ /
       //  x ==== x
-      //    ----
-      node_0y_1_1w_1x_node_0_0w_0x,
+      //    ====
+      node_0w_1_1_1w_1w_node_0w_0w_0_0
     };
   }
 
@@ -139,16 +139,16 @@ namespace sequoia::testing
 
       check_initialization_exceptions(t);
 
-      // 'weighted_graph_description::nodew'
+      // 'unsortable_weight_graph_description::nodew'
       trg.add_node(make_and_check(t, t.report_line(""), {{}}, {{1.0, -1.0}}));
 
-      // 'weighted_graph_description::node_0w'
+      // 'unsortable_weight_graph_description::node_0w'
       trg.add_node(make_and_check(t, t.report_line(""), {{{0, 1.0, -1.0}, {0, 1.0, -1.0}}}, {{0.0}}));
 
-      // 'weighted_graph_description::node_0w_0w'
+      // 'unsortable_weight_graph_description::node_0w_0w'
       trg.add_node(make_and_check(t, t.report_line(""), {{{0, 1.0, -1.0}, {0, 1.0, -1.0}, {0, 1.0, -1.0}, {0, 1.0, -1.0}}}, {{0.0}}));
 
-      // 'weighted_graph_description::node_0_0w'
+      // 'unsortable_weight_graph_description::node_0_0w'
       trg.add_node(
         [&t](){
           auto g{make_and_check(t, t.report_line(""), {{{0, 0.0, 0.0}, {0, 0.0, 0.0}, {0, 1.0, -1.0}, {0, 1.0, -1.0}}}, {{0.0}})};
@@ -156,7 +156,7 @@ namespace sequoia::testing
           return g;
         }());
       
-      // 'weighted_graph_description::node_0w_0'
+      // 'unsortable_weight_graph_description::node_0w_0'
       trg.add_node(
         [&t](){
           auto g{make_and_check(t, t.report_line(""), {{{0, 1.0, -1.0}, {0, 1.0, -1.0}, {0, 0.0, 0.0}, {0, 0.0, 0.0}}}, {{0.0}})};
@@ -164,10 +164,10 @@ namespace sequoia::testing
           return g;
         }());
 
-      // 'weighted_graph_description::node_0w_1_node_0'
+      // 'unsortable_weight_graph_description::node_0w_1_node_0'
       trg.add_node(make_and_check(t, t.report_line(""), {{{0, 1.0, -1.0}, {0, 1.0, -1.0}, {1, 0.0, 0.0}}, {{0, 0.0, 0.0}}}, {{}, {}}));
 
-      // 'weighted_graph_description::node_0_1w_node_0w'
+      // 'unsortable_weight_graph_description::node_0_1w_node_0w'
       trg.add_node(
         [&t](){
           auto g{make_and_check(t, t.report_line(""), {{{0, 1.0, -1.0}, {0, 1.0, -1.0}, {1, 0.0, 0.0}}, {{0, 0.0, 0.0}}}, {{}, {}})};
@@ -175,7 +175,7 @@ namespace sequoia::testing
           return g;
         }());
 
-      // 'weighted_graph_description::node_1_node_1w_0,'
+      // 'unsortable_weight_graph_description::node_1_node_1w_0,'
       trg.add_node(
         [&t](){
           auto g{make_and_check(t, t.report_line(""), {{{1, 0.0, 0.0}}, {{0, 0.0, 0.0}, {1, 1.0, -1.0}, {1, 1.0, -1.0}}}, {{}, {}})};
@@ -183,11 +183,41 @@ namespace sequoia::testing
           return g;
         }());
 
-      // 'weighted_graph_description::node_1_1w_node_0_0w'
+      // 'unsortable_weight_graph_description::node_1_1w_node_0_0w'
       trg.add_node(make_and_check(t, t.report_line(""), {{{1, 0.0, 0.0}, {1, 1.0, -1.0}}, {{0, 0.0, 0.0}, {0, 1.0, -1.0}}}, {{}, {}}));
 
-      // 'weighted_graph_description::node_1w_1_node_0_0w'
+      // 'unsortable_weight_graph_description::node_1w_1_node_0_0w'
       trg.add_node(make_and_check(t, t.report_line(""), {{{1, 1.0, -1.0}, {1, 0.0, 0.0}}, {{0, 0.0, 0.0}, {0, 1.0, -1.0}}}, {{}, {}}));
+
+      // 'unsortable_weight_graph_description::node_1_1_1w_1w_node_0w_0w_0_0,'
+      trg.add_node(
+        [&t](){
+          auto g{make_and_check(t, t.report_line(""), {{{1, 0.0, 0.0}, {1, 0.0, 0.0}, {1, 1.0, -1.0}, {1, 1.0, -1.0}}, {{0, 1.0, -1.0}, {0, 1.0, -1.0}, {0, 0.0, 0.0}, {0, 0.0, 0.0}}}, {{}, {}})};
+          t.check(equality,
+                  t.report_line("Canonical ordering of weighted edges"),
+                  graph_t{{{{1, 0.0, 0.0}, {1, 1.0, -1.0}, {1, 1.0, -1.0}, {1, 0.0, 0.0}}, 
+                           {{0, 1.0, -1.0}, {0, 0.0, 0.0}, {0, 1.0, -1.0}, {0, 0.0, 0.0}}}, {{}, {}}},
+                  g);
+
+          return g;
+        }());
+
+      // 'unsortable_weight_graph_description::node_0w_1_1_1w_1w_node_0w_0w_0_0,'
+      trg.add_node(
+        [&t](){
+          auto g{make_and_check(t,
+                                t.report_line(""),
+                                {{{0, 1.0, -1.0}, {0, 1.0, -1.0}, {1, 0.0, 0.0}, {1, 0.0, 0.0}, {1, 1.0, -1.0}, {1, 1.0, -1.0}},
+                                 {{0, 1.0, -1.0}, {0, 1.0, -1.0}, {0, 0.0, 0.0}, {0, 0.0, 0.0}}},
+                                {{}, {}})};
+          t.check(equality,
+            t.report_line("Canonical ordering of weighted edges"),
+            graph_t{{{{1, 0.0, 0.0}, {0, 1.0, -1.0}, {1, 1.0, -1.0}, {1, 1.0, -1.0}, {1, 0.0, 0.0}, {0, 1.0, -1.0}},
+                     {{0, 1.0, -1.0}, {0, 0.0, 0.0}, {0, 1.0, -1.0}, {0, 0.0, 0.0}}}, {{}, {}}},
+            g);
+
+          return g;
+        }());
 
       return trg;
     }
