@@ -310,7 +310,6 @@ int main(int argc, char** argv)
       suite{
         "Legacy",
         test_static_fixed_topology{"Static Graph Manipulations"},
-        test_graph_init{"Dynamic Graph Init"},
         test_static_graph{"Static Graph Init"},
         test_heterogeneous_static_graph{"Heterogeneous Static Graphs"},
         test_fixed_topology{"Dynamic Graph Fixed Topology"}

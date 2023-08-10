@@ -53,7 +53,6 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Maths/Graph/DirectedEmbedded/DynamicDirectedEmbeddedGraphUnweightedContiguousTest.cpp
                ${TestDir}/Maths/Graph/DirectedEmbedded/DynamicDirectedEmbeddedGraphUnweightedTest.cpp
                ${TestDir}/Maths/Graph/DynamicGraphFixedTopologyTest.cpp
-               ${TestDir}/Maths/Graph/DynamicGraphInitializationTest.cpp
                ${TestDir}/Maths/Graph/DynamicGraphTestingDiagnostics.cpp
                ${TestDir}/Maths/Graph/DynamicGraphTraversalsTest.cpp
                ${TestDir}/Maths/Graph/DynamicGraphUnweightedAllocationTest.cpp

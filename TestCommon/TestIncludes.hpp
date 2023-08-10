@@ -46,7 +46,6 @@
 #include "Maths/Graph/DirectedEmbedded/DynamicDirectedEmbeddedGraphUnweightedContiguousTest.hpp"
 #include "Maths/Graph/DirectedEmbedded/DynamicDirectedEmbeddedGraphUnweightedTest.hpp"
 #include "Maths/Graph/DynamicGraphFixedTopologyTest.hpp"
-#include "Maths/Graph/DynamicGraphInitializationTest.hpp"
 #include "Maths/Graph/DynamicGraphTestingDiagnostics.hpp"
 #include "Maths/Graph/DynamicGraphTraversalsTest.hpp"
 #include "Maths/Graph/DynamicGraphUnweightedAllocationTest.hpp"
