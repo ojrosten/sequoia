@@ -292,8 +292,10 @@ int main(int argc, char** argv)
           dynamic_undirected_graph_unweighted_contiguous_test{"Undirected Graph Unweighted Contiguous Tests"},
           dynamic_undirected_graph_fundamental_weight_test{"Undirected Graph Fundamental Weight Tests"},
           dynamic_undirected_graph_fundamental_weight_contiguous_test{"Undirected Graph Fundamental Weight Contiguous Tests"},
+          dynamic_undirected_graph_unsortable_weight_test{"Undirected Graph Unsortable Weight Tests"},
           dynamic_undirected_graph_shared_fundamental_weight_test{"Undirected Graph Shared Fundamental Weight Tests"},
-          dynamic_undirected_graph_shared_fundamental_weight_contiguous_test{"Undirected Graph Shared Fundamental Weight Contiguous Tests"}
+          dynamic_undirected_graph_shared_fundamental_weight_contiguous_test{"Undirected Graph Shared Fundamental Weight Contiguous Tests"},
+          dynamic_undirected_graph_shared_unsortable_weight_test{"Undirected Graph Shared Unsortable Weight Tests"},
         },
         suite{
           "Undirected Embedded",
