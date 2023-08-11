@@ -1,5 +1,5 @@
 Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 66
-cbegin_edges throws for empty graph
+pushing back to non-existent partition throws
 
 Expected Exception Type:
 [std::out_of_range]

@@ -1,9 +1,144 @@
 Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 66
-cbegin_edges throws for empty graph
+pushing back to non-existent partition throws
 
 Expected Exception Type:
 [std::out_of_range]
 bucketed_sequence::index 0 out of range!
+
+=======================================
+
+Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 32
+begin_partition throws for empty container
+
+Expected Exception Type:
+[std::out_of_range]
+bucketed_sequence::begin_partition: no buckets!
+
+=======================================
+
+Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 41
+end_partition throws for empty container
+
+Expected Exception Type:
+[std::out_of_range]
+bucketed_sequence::end_partition: no buckets!
+
+=======================================
+
+Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 50
+begin_partition throws for empty container in const context
+
+Expected Exception Type:
+[std::out_of_range]
+bucketed_sequence::begin_partition: no buckets!
+
+=======================================
+
+Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 59
+end_partition throws for empty container in const context
+
+Expected Exception Type:
+[std::out_of_range]
+bucketed_sequence::end_partition: no buckets!
+
+=======================================
+
+Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 68
+rbegin_partition throws for empty container
+
+Expected Exception Type:
+[std::out_of_range]
+bucketed_sequence::begin_partition: no buckets!
+
+=======================================
+
+Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 77
+rend_partition throws for empty container
+
+Expected Exception Type:
+[std::out_of_range]
+bucketed_sequence::end_partition: no buckets!
+
+=======================================
+
+Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 86
+rbegin_partition throws for empty container in const context
+
+Expected Exception Type:
+[std::out_of_range]
+bucketed_sequence::begin_partition: no buckets!
+
+=======================================
+
+Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 95
+rend_partition throws for empty container in const context
+
+Expected Exception Type:
+[std::out_of_range]
+bucketed_sequence::end_partition: no buckets!
+
+=======================================
+
+Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 104
+cbegin_partition throws for empty container
+
+Expected Exception Type:
+[std::out_of_range]
+bucketed_sequence::begin_partition: no buckets!
+
+=======================================
+
+Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 113
+cend_partition throws for empty container
+
+Expected Exception Type:
+[std::out_of_range]
+bucketed_sequence::end_partition: no buckets!
+
+=======================================
+
+Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 122
+crbegin_partition throws for empty container
+
+Expected Exception Type:
+[std::out_of_range]
+bucketed_sequence::begin_partition: no buckets!
+
+=======================================
+
+Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 131
+crend_partition throws for empty container
+
+Expected Exception Type:
+[std::out_of_range]
+bucketed_sequence::end_partition: no buckets!
+
+=======================================
+
+Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 140
+partition throws for empty container
+
+Expected Exception Type:
+[std::out_of_range]
+bucketed_sequence::end_partition: no buckets!
+
+=======================================
+
+Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 149
+partition throws for empty container in const context
+
+Expected Exception Type:
+[std::out_of_range]
+bucketed_sequence::end_partition: no buckets!
+
+=======================================
+
+Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 158
+cpartition throws for empty container
+
+Expected Exception Type:
+[std::out_of_range]
+bucketed_sequence::end_partition: no buckets!
 
 =======================================
 

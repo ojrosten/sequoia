@@ -22,7 +22,7 @@ namespace sequoia::testing
   }
 
   template<class PartitionedData>
-  class partition_data_operations
+  class partitioned_data_operations
   {
   public:
     using data_t           = PartitionedData;
@@ -63,7 +63,7 @@ namespace sequoia::testing
               data_description::empty,
               t.report_line(""),
               [&t](data_t d) -> data_t {
-                t.check_exception_thrown<std::out_of_range>(t.report_line("cbegin_edges throws for empty graph"), [&d]() { return d.push_back_to_partition(0, 8.0); });
+                t.check_exception_thrown<std::out_of_range>(t.report_line("pushing back to non-existent partition throws"), [&d]() { return d.push_back_to_partition(0, 8); });
                 return d;
               }
             }
@@ -71,7 +71,7 @@ namespace sequoia::testing
         },
         {
           //  'empty'
-          make_and_check(t, t.report_line(""), {}),
+          make_and_check(t, t.report_line(""), {})
         }
       };
     }
