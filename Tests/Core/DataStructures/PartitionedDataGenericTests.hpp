@@ -18,6 +18,33 @@ namespace sequoia::testing
   {
     enum data_description : std::size_t {
       empty = 0,
+
+      // []
+      empty_partition,
+
+      // [][]
+      two_empty_partitions,
+
+      // [2][]
+      two_2__,
+
+      // [][2]
+      two__2,
+
+      // [3][]
+      two_3__,
+
+      // [3][4]
+      two_3__4,
+
+      // [4][3]
+      two_4__3,
+
+      // [3][4][9,2]
+      three_3__4__9_2,
+
+      // [3][9,2][4]
+      three_3__9_2_4,
     };
   }
 
@@ -91,11 +118,56 @@ namespace sequoia::testing
                 return d;
               }
             }
-          } // end 'empty'
+          }, // end 'empty'
+          {  // begin 'empty_partition'
+            {
+              data_description::empty_partition,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                t.check_exception_thrown<std::out_of_range>(t.report_line("Pushing back to non-existent partition throws"), [&d]() { return d.push_back_to_partition(1, 8); });
+                return d;
+              }
+            },
+            /*{
+              data_description::empty_partition,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                t.check_exception_thrown<std::out_of_range>(t.report_line("Inserting to non-existent partition throws"), [&d]() { return d.insert_to_partition(d.cbegin_partition(1), 8); });
+                return d;
+              }
+            },*/
+            {
+              data_description::empty_partition,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                t.check_exception_thrown<std::out_of_range>(t.report_line("Swapping non-existent partition throws"), [&d]() { return d.swap_partitions(0, 1); });
+                return d;
+              }
+            },
+            {
+              data_description::empty_partition,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                t.check_exception_thrown<std::out_of_range>(t.report_line("Swapping non-existent partition throws"), [&d]() { return d.swap_partitions(1, 0); });
+                return d;
+              }
+            },
+            {
+              data_description::empty,
+              t.report_line("Clear empty container"),
+              [&t](data_t d) -> data_t {
+                d.clear();
+                return d;
+              }
+            }
+          }  // end 'empty_partition'
         },
         {
           //  'empty'
-          make_and_check(t, t.report_line(""), {})
+          make_and_check(t, t.report_line(""), {}),
+
+          // 'empty_partition'
+          make_and_check(t, t.report_line(""), {{}}),
         }
       };
     }
