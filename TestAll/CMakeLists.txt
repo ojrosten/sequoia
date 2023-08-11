@@ -17,9 +17,11 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Core/Concurrency/ConcurrencyModelsTest.cpp
                ${TestDir}/Core/ContainerUtilities/ArrayUtilitiesTest.cpp
                ${TestDir}/Core/ContainerUtilities/IteratorTest.cpp
+               ${TestDir}/Core/DataStructures/BucketedSequenceRegularTest.cpp
                ${TestDir}/Core/DataStructures/PartitionedDataAllocationTest.cpp
-               ${TestDir}/Core/DataStructures/PartitionedDataTest.cpp
                ${TestDir}/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp
+               ${TestDir}/Core/DataStructures/PartitionedDataTest.cpp
+               ${TestDir}/Core/DataStructures/PartitionedSequenceRegularTest.cpp
                ${TestDir}/Core/DataStructures/StaticLinearlyPartitionedSequenceTest.cpp
                ${TestDir}/Core/DataStructures/StaticLinearlyPartitionedSequenceTestingDiagnostics.cpp
                ${TestDir}/Core/DataStructures/StaticPriorityQueueTest.cpp

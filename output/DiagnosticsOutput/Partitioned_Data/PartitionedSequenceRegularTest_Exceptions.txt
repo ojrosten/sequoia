@@ -1,0 +1,9 @@
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 66
+cbegin_edges throws for empty graph
+
+Expected Exception Type:
+[std::out_of_range]
+partitioned_sequence::index0out of range
+
+=======================================
+
