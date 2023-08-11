@@ -1,9 +1,27 @@
 Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 66
-pushing back to non-existent partition throws
+Pushing back to non-existent partition throws
 
 Expected Exception Type:
 [std::out_of_range]
 partitioned_sequence::index0out of range
+
+=======================================
+
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 74
+Inserting to non-existent partition throws
+
+Expected Exception Type:
+[std::out_of_range]
+partitioned_sequence: no partitions into which to insert
+
+=======================================
+
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 82
+Swapping non-existent partition throws
+
+Expected Exception Type:
+[std::out_of_range]
+partitioned_sequence::swap_partitions - index out of range
 
 =======================================
 
