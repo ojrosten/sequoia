@@ -498,7 +498,7 @@ namespace sequoia
       {
         if(index >= m_Buckets.size())
         {
-          throw std::out_of_range("bucketed_sequence::index " + std::to_string(index) + " out of range!");
+          throw std::out_of_range("bucketed_sequence::index " + std::to_string(index) + " out of range");
         }
       }
 
@@ -1081,7 +1081,7 @@ namespace sequoia
       {
         if(index >= m_Partitions.size())
         {
-          throw std::out_of_range("partitioned_sequence::index" + std::to_string(index) +  "out of range");
+          throw std::out_of_range("partitioned_sequence::index " + std::to_string(index) +  " out of range");
         }
       }
 
