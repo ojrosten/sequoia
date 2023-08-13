@@ -128,14 +128,14 @@ namespace sequoia::testing
                 return d;
               }
             },
-            /*{
+            {
               data_description::empty_partition,
               t.report_line(""),
               [&t](data_t d) -> data_t {
                 t.check_exception_thrown<std::out_of_range>(t.report_line("Inserting to non-existent partition throws"), [&d]() { return d.insert_to_partition(d.cbegin_partition(1), 8); });
                 return d;
               }
-            },*/
+            },
             {
               data_description::empty_partition,
               t.report_line(""),

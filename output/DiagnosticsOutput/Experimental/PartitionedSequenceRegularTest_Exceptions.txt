@@ -12,7 +12,7 @@ Inserting to non-existent partition throws
 
 Expected Exception Type:
 [std::out_of_range]
-partitioned_sequence: no partitions into which to insert
+bucketed_sequence: partition index 18446744073709551615 out of range
 
 =======================================
 
@@ -31,6 +31,15 @@ Pushing back to non-existent partition throws
 Expected Exception Type:
 [std::out_of_range]
 partitioned_sequence::index 1 out of range
+
+=======================================
+
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 135
+Inserting to non-existent partition throws
+
+Expected Exception Type:
+[std::out_of_range]
+bucketed_sequence: partition index 18446744073709551615 out of range
 
 =======================================
 

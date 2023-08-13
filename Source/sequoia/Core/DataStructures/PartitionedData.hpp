@@ -215,7 +215,7 @@ namespace sequoia
         }
         else if constexpr(throw_on_range_error)
         {
-          throw std::out_of_range("bucketed_sequence::swap_partitions - index out of range");
+          throw std::out_of_range{"bucketed_sequence::swap_partitions - index out of range"};
         }
       }
 
@@ -319,23 +319,24 @@ namespace sequoia
       template<class... Args>
       partition_iterator insert_to_partition(const_partition_iterator pos, Args&&... args)
       {
+        const auto source{pos.partition_index()};
         if constexpr(throw_on_range_error)
         {
-          if(!m_Buckets.size()) throw std::out_of_range("bucketed_sequence: no partitions into which to insert");
+          if(source >= m_Buckets.size()) throw std::out_of_range{std::string{"bucketed_sequence: partition index "}.append(std::to_string(source)).append(" out of range")};
         }
 
-        const auto soure{pos.partition_index()};
-        auto iter{m_Buckets[soure].insert(pos.base_iterator(), Handler::producer_type::make(std::forward<Args>(args)...))};
+        auto iter{m_Buckets[source].insert(pos.base_iterator(), Handler::producer_type::make(std::forward<Args>(args)...))};
 
-        return partition_iterator{iter, soure};
+        return partition_iterator{iter, source};
       }
 
+      // TO DO: remove this
       template<class... Args>
       partition_iterator insert_to_partition(const_partition_iterator pos, const_partition_iterator setFromIter)
       {
         if constexpr(throw_on_range_error)
         {
-          if(!m_Buckets.size()) throw std::out_of_range("bucketed_sequence: no partitions into which to insert");
+          if(!m_Buckets.size()) throw std::out_of_range{"bucketed_sequence: no partitions into which to insert"};
         }
 
         const auto soure{pos.partition_index()};
@@ -368,49 +369,49 @@ namespace sequoia
       [[nodiscard]]
       partition_iterator begin_partition(const size_type i)
       {
-        if constexpr(throw_on_range_error) if(m_Buckets.empty()) throw std::out_of_range("bucketed_sequence::begin_partition: no buckets!\n");
+        if constexpr(throw_on_range_error) if(m_Buckets.empty()) throw std::out_of_range{"bucketed_sequence::begin_partition: no buckets!\n"};
         return (i < m_Buckets.size()) ? partition_iterator{m_Buckets[i].begin(), i} : partition_iterator{m_Buckets.back().end(), npos};
       }
 
       [[nodiscard]]
       partition_iterator end_partition(const size_type i)
       {
-        if constexpr(throw_on_range_error) if(m_Buckets.empty()) throw std::out_of_range("bucketed_sequence::end_partition: no buckets!\n");
+        if constexpr(throw_on_range_error) if(m_Buckets.empty()) throw std::out_of_range{"bucketed_sequence::end_partition: no buckets!\n"};
         return (i < m_Buckets.size()) ? partition_iterator{m_Buckets[i].end(), i} : partition_iterator{m_Buckets.back().end(), npos};
       }
 
       [[nodiscard]]
       const_partition_iterator begin_partition(const size_type i) const
       {
-        if constexpr(throw_on_range_error) if(m_Buckets.empty()) throw std::out_of_range("bucketed_sequence::begin_partition: no buckets!\n");
+        if constexpr(throw_on_range_error) if(m_Buckets.empty()) throw std::out_of_range{"bucketed_sequence::begin_partition: no buckets!\n"};
         return (i < m_Buckets.size()) ? const_partition_iterator{m_Buckets[i].cbegin(), i} : const_partition_iterator{m_Buckets.back().cend(), npos};
       }
 
       [[nodiscard]]
       const_partition_iterator end_partition(const size_type i) const
       {
-        if constexpr(throw_on_range_error) if(m_Buckets.empty()) throw std::out_of_range("bucketed_sequence::end_partition: no buckets!\n");
+        if constexpr(throw_on_range_error) if(m_Buckets.empty()) throw std::out_of_range{"bucketed_sequence::end_partition: no buckets!\n"};
         return (i < m_Buckets.size()) ? const_partition_iterator{m_Buckets[i].cend(), i} : const_partition_iterator{m_Buckets.back().cend(), npos};
       }
 
       [[nodiscard]]
       reverse_partition_iterator rbegin_partition(const size_type i)
       {
-        if(m_Buckets.empty()) throw std::out_of_range("bucketed_sequence::begin_partition: no buckets!\n");
+        if(m_Buckets.empty()) throw std::out_of_range{"bucketed_sequence::begin_partition: no buckets!\n"};
         return (i < m_Buckets.size()) ? reverse_partition_iterator{m_Buckets[i].rbegin(), i} : reverse_partition_iterator{m_Buckets.front().rend(), npos};
       }
 
       [[nodiscard]]
       reverse_partition_iterator rend_partition(const size_type i)
       {
-        if constexpr(throw_on_range_error) if(m_Buckets.empty()) throw std::out_of_range("bucketed_sequence::end_partition: no buckets!\n");
+        if constexpr(throw_on_range_error) if(m_Buckets.empty()) throw std::out_of_range{"bucketed_sequence::end_partition: no buckets!\n"};
         return (i < m_Buckets.size()) ? reverse_partition_iterator{m_Buckets[i].rend(), i} : reverse_partition_iterator{m_Buckets.front().rend(), npos};
       }
 
       [[nodiscard]]
       const_reverse_partition_iterator rbegin_partition(const size_type i) const
       {
-        if constexpr(throw_on_range_error) if(m_Buckets.empty()) throw std::out_of_range("bucketed_sequence::begin_partition: no buckets!\n");
+        if constexpr(throw_on_range_error) if(m_Buckets.empty()) throw std::out_of_range{"bucketed_sequence::begin_partition: no buckets!\n"};
         return (i < m_Buckets.size()) ? const_reverse_partition_iterator{m_Buckets[i].crbegin(), i} : const_reverse_partition_iterator{m_Buckets.front().crend(), npos};
 
       }
@@ -418,7 +419,7 @@ namespace sequoia
       [[nodiscard]]
       const_reverse_partition_iterator rend_partition(const size_type i) const
       {
-        if constexpr(throw_on_range_error) if(m_Buckets.empty()) throw std::out_of_range("bucketed_sequence::end_partition: no buckets!\n");
+        if constexpr(throw_on_range_error) if(m_Buckets.empty()) throw std::out_of_range{"bucketed_sequence::end_partition: no buckets!\n"};
         return (i < m_Buckets.size()) ? const_reverse_partition_iterator{m_Buckets[i].crend(), i} : const_reverse_partition_iterator{m_Buckets.front().crend(), npos};
       }
 
@@ -498,7 +499,7 @@ namespace sequoia
       {
         if(index >= m_Buckets.size())
         {
-          throw std::out_of_range("bucketed_sequence::index " + std::to_string(index) + " out of range");
+          throw std::out_of_range{"bucketed_sequence::index " + std::to_string(index) + " out of range"};
         }
       }
 
@@ -508,7 +509,7 @@ namespace sequoia
         const auto bucketSize{m_Buckets[index].size()};
         if(pos > bucketSize)
         {
-          throw std::out_of_range("bucketed_sequence::partition " + std::to_string(index) + " pos " + std::to_string(pos) + " out of range");
+          throw std::out_of_range{"bucketed_sequence::partition " + std::to_string(index) + " pos " + std::to_string(pos) + " out of range"};
         }
       }
     };
@@ -689,7 +690,7 @@ namespace sequoia
         }
         else if constexpr(throw_on_range_error)
         {
-          throw std::out_of_range("partitioned_sequence::swap_partitions - index out of range");
+          throw std::out_of_range{"partitioned_sequence::swap_partitions - index out of range"};
         }
       }
 
@@ -906,6 +907,7 @@ namespace sequoia
         return insert(pos, maker, std::forward<Args>(args)...);
       }
 
+      // TO DO: remove this
       partition_iterator insert_to_partition(const_partition_iterator pos, const_partition_iterator setFromIter)
       {
         auto maker{
@@ -1081,7 +1083,7 @@ namespace sequoia
       {
         if(index >= m_Partitions.size())
         {
-          throw std::out_of_range("partitioned_sequence::index " + std::to_string(index) +  " out of range");
+          throw std::out_of_range{"partitioned_sequence::index " + std::to_string(index) +  " out of range"};
         }
       }
 
@@ -1091,14 +1093,14 @@ namespace sequoia
         const index_type maxPos{index ? m_Partitions[index] - m_Partitions[index - 1] : m_Partitions[index]};
         if(pos > maxPos)
         {
-          throw std::out_of_range("partitioned_sequence::partition " + std::to_string(index) + " pos " + std::to_string(pos) + " out of range");
+          throw std::out_of_range{"partitioned_sequence::partition " + std::to_string(index) + " pos " + std::to_string(pos) + " out of range"};
         }
       }
 
       void check_pos_validity(const index_type index, const index_type pos, const index_type expand)
       {
         const index_type maxPos{index ? m_Partitions[index] - m_Partitions[index - 1] : m_Partitions[index]};
-        if(pos > maxPos + expand) throw std::out_of_range("partitioned_sequence::pos index out of range");
+        if(pos > maxPos + expand) throw std::out_of_range{"partitioned_sequence::pos index out of range"};
       }
 
       template<class Maker, class... Args>
@@ -1123,16 +1125,16 @@ namespace sequoia
       template<class Maker, class... Args>
       auto insert(const_partition_iterator pos, Maker maker, Args&&... args)
       {
+        const auto source{pos.partition_index()};
         if constexpr(throw_on_range_error)
         {
-          if(!m_Partitions.size()) throw std::out_of_range("partitioned_sequence: no partitions into which to insert");
+          if(source >= m_Partitions.size()) throw std::out_of_range{std::string{"bucketed_sequence: partition index "}.append(std::to_string(source)).append(" out of range")};
         }
 
-        const auto soure{pos.partition_index()};
         auto iter{m_Storage.insert(pos.base_iterator(), maker(std::forward<Args>(args)...))};
-        increment_partition_indices(soure);
+        increment_partition_indices(source);
 
-        return partition_iterator{iter, soure};
+        return partition_iterator{iter, source};
       }
 
       template<class PartitionIterator, std::input_or_output_iterator Iterator>
