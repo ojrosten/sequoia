@@ -309,6 +309,7 @@ namespace sequoia
         m_Buckets[index].push_back(Handler::producer_type::make(std::forward<Args>(args)...));
       }
 
+      // TO DO: remove this
       void push_back_to_partition(const size_type index, const_partition_iterator iter)
       {
         if constexpr(throw_on_range_error) check_range(index);
@@ -345,16 +346,10 @@ namespace sequoia
         return partition_iterator{iter, soure};
       }
 
-      partition_iterator erase_from_partition(const size_type index, const size_type pos)
+      template<class... Args>
+      partition_iterator insert_to_partition(const size_type index, const size_type pos, Args&&... args)
       {
-        auto iter{begin_partition(index)};
-        auto next{end_partition(index).base_iterator()};
-        if(iter != end_partition(index) && pos < static_cast<size_type>(std::ranges::distance(iter, end_partition(index))))
-        {
-          next = m_Buckets[index].erase((iter + pos).base_iterator());
-        }
-
-        return {next, index};
+        return insert_to_partition(std::ranges::next(cbegin_partition(index), pos, cend_partition(index)), std::forward<Args>(args)...);
       }
 
       partition_iterator erase_from_partition(const_partition_iterator iter)
@@ -364,6 +359,11 @@ namespace sequoia
 
         const auto next{m_Buckets[partition].erase(iter.base_iterator())};
         return {next, partition};
+      }
+
+      partition_iterator erase_from_partition(const size_type index, const size_type pos)
+      {
+        return erase_from_partition(std::ranges::next(cbegin_partition(index), pos, cend_partition(index)));
       }
 
       [[nodiscard]]
@@ -882,6 +882,7 @@ namespace sequoia
         insert(index, maker, std::forward<Args>(args)...);
       }
 
+      // TO DO: remove this
       void push_back_to_partition(const index_type index, const_partition_iterator iter)
       {
         if constexpr(throw_on_range_error) check_range(index);
@@ -907,6 +908,12 @@ namespace sequoia
         return insert(pos, maker, std::forward<Args>(args)...);
       }
 
+      template<class... Args>
+      partition_iterator insert_to_partition(const size_type index, const size_type pos, Args&&... args)
+      {
+        return insert_to_partition(std::ranges::next(cbegin_partition(index), pos, cend_partition(index)), std::forward<Args>(args)...);
+      }
+
       // TO DO: remove this
       partition_iterator insert_to_partition(const_partition_iterator pos, const_partition_iterator setFromIter)
       {
@@ -919,19 +926,6 @@ namespace sequoia
         return insert(pos, maker, setFromIter);
       }
 
-      partition_iterator erase_from_partition(const index_type index, const size_type pos)
-      {
-        auto next{end_partition(index).base_iterator()};
-        auto iter{begin_partition(index)};
-        if(iter != end_partition(num_partitions() - 1) && pos < static_cast<size_type>(std::ranges::distance(iter, end_partition(index))))
-        {
-          next = m_Storage.erase((iter + pos).base_iterator());
-          decrement_partition_indices(index);
-        }
-
-        return {next, index};
-      }
-
       partition_iterator erase_from_partition(const_partition_iterator iter)
       {
         const auto next{m_Storage.erase(iter.base_iterator())};
@@ -939,6 +933,11 @@ namespace sequoia
         decrement_partition_indices(index);
 
         return {next, iter.partition_index()};
+      }
+
+      partition_iterator erase_from_partition(const index_type index, const size_type pos)
+      {
+        return erase_from_partition(std::ranges::next(cbegin_partition(index), pos, cend_partition(index)));
       }
     private:
       template<bool Direct>

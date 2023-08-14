@@ -106,6 +106,14 @@ namespace sequoia::testing
               data_description::empty,
               t.report_line(""),
               [&t](data_t d) -> data_t {
+                t.check_exception_thrown<std::out_of_range>(t.report_line("Inserting to non-existent partition throws"), [&d]() { return d.insert_to_partition(0, 0, 8); });
+                return d;
+              }
+            },
+            {
+              data_description::empty,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
                 t.check_exception_thrown<std::out_of_range>(t.report_line("Swapping non-existent partition throws"), [&d]() { return d.swap_partitions(0, 0); });
                 return d;
               }
@@ -133,6 +141,14 @@ namespace sequoia::testing
               t.report_line(""),
               [&t](data_t d) -> data_t {
                 t.check_exception_thrown<std::out_of_range>(t.report_line("Inserting to non-existent partition throws"), [&d]() { return d.insert_to_partition(d.cbegin_partition(1), 8); });
+                return d;
+              }
+            },
+            {
+              data_description::empty_partition,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                t.check_exception_thrown<std::out_of_range>(t.report_line("Inserting to non-existent partition throws"), [&d]() { return d.insert_to_partition(1, 0, 8); });
                 return d;
               }
             },
