@@ -928,8 +928,10 @@ namespace sequoia
 
       partition_iterator erase_from_partition(const_partition_iterator iter)
       {
-        const auto next{m_Storage.erase(iter.base_iterator())};
         const auto index{iter.partition_index()};
+        if(index >= size()) return {m_Storage.end(), npos};
+
+        const auto next{m_Storage.erase(iter.base_iterator())};
         decrement_partition_indices(index);
 
         return {next, iter.partition_index()};

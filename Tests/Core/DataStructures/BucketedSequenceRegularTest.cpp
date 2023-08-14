@@ -160,6 +160,24 @@ namespace sequoia::testing
                  }
           );
 
+        trg.join(data_description::empty,
+                 data_description::empty,
+                 t.report_line(""),
+                 [&t](data_t d) -> data_t {
+                   t.check_exception_thrown<std::out_of_range>(t.report_line("Erasing from non-existent partition throws"), [&d]() { return d.erase_from_partition(d.cbegin_partition(0)); });
+                   return d;
+                 }
+          );
+
+        trg.join(data_description::empty,
+          data_description::empty,
+          t.report_line(""),
+          [&t](data_t d) -> data_t {
+            t.check_exception_thrown<std::out_of_range>(t.report_line("Erasing from non-existent partition throws"), [&d]() { return d.erase_from_partition(0, 0); });
+            return d;
+          }
+        );
+
         auto checker{
             [&t](std::string_view description, const data_t& obtained, const data_t& prediction, const data_t& parent, std::size_t host, std::size_t target) {
               t.check(equality, description, obtained, prediction);

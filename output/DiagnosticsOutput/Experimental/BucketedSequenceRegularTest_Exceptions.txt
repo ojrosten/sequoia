@@ -169,6 +169,24 @@ bucketed_sequence::end_partition: no buckets!
 
 =======================================
 
+Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 167
+Erasing from non-existent partition throws
+
+Expected Exception Type:
+[std::out_of_range]
+bucketed_sequence::begin_partition: no buckets!
+
+=======================================
+
+Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 176
+Erasing from non-existent partition throws
+
+Expected Exception Type:
+[std::out_of_range]
+bucketed_sequence::end_partition: no buckets!
+
+=======================================
+
 Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 135
 Pushing back to non-existent partition throws
 
