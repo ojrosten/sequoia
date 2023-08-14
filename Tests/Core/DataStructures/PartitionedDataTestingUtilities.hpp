@@ -140,4 +140,20 @@ namespace sequoia::testing
       impl::check(equivalence, logger, data, prediction);
     }
   };
+
+  template<std::input_or_output_iterator I, class Handler, template<class> class RefType, class IndexPolicy>
+    requires object::handler<Handler>
+  struct value_tester<utilities::iterator<I, data_structures::partition_impl::dereference_policy_for<Handler, RefType, IndexPolicy>>>
+  {
+    using type = utilities::iterator<I, data_structures::partition_impl::dereference_policy_for<Handler, RefType, IndexPolicy>>;
+
+    template<test_mode Mode>
+    static void test(equality_check_t, test_logger<Mode>& logger, const type& data, const type& prediction)
+    {
+      const auto dist{std::ranges::distance(data, prediction)};
+      using dist_t = decltype(dist);
+      check(equality, "Distance from prediction", logger, dist, dist_t{});
+      check(equality, "Partition Index", logger, data.partition_index(), prediction.partition_index());
+    }
+  };
 }

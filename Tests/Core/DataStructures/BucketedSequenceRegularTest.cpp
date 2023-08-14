@@ -170,12 +170,12 @@ namespace sequoia::testing
           );
 
         trg.join(data_description::empty,
-          data_description::empty,
-          t.report_line(""),
-          [&t](data_t d) -> data_t {
-            t.check_exception_thrown<std::out_of_range>(t.report_line("Erasing from non-existent partition throws"), [&d]() { return d.erase_from_partition(0, 0); });
-            return d;
-          }
+                 data_description::empty,
+                 t.report_line(""),
+                 [&t](data_t d) -> data_t {
+                   t.check_exception_thrown<std::out_of_range>(t.report_line("Erasing from non-existent partition throws"), [&d]() { return d.erase_from_partition(0, 0); });
+                   return d;
+                 }
         );
 
         auto checker{
