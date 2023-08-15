@@ -360,6 +360,10 @@ namespace sequoia
         {
           return end_partition(n);
         }
+        else if(iter == cend_partition(partition))
+        {
+          return end_partition(partition);
+        }
 
         const auto next{m_Buckets[partition].erase(iter.base_iterator())};
         return {next, partition};
