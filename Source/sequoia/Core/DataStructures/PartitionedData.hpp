@@ -101,6 +101,7 @@ namespace sequoia
       using const_partition_range            = std::ranges::subrange<const_partition_iterator>;
 
       constexpr static bool throw_on_range_error{Traits::throw_on_range_error};
+      constexpr static auto npos{partition_iterator::npos};
 
       bucketed_sequence() noexcept(noexcept(allocator_type{})) = default;
 
@@ -355,7 +356,10 @@ namespace sequoia
       partition_iterator erase_from_partition(const_partition_iterator iter)
       {
         const auto partition{iter.partition_index()};
-        if (iter == cend_partition(partition)) return { m_Buckets[partition].end(), partition };
+        if(const auto n{num_partitions()}; partition >= n)
+        {
+          return end_partition(n);
+        }
 
         const auto next{m_Buckets[partition].erase(iter.base_iterator())};
         return {next, partition};
@@ -482,7 +486,6 @@ namespace sequoia
         }
       }
     private:
-      constexpr static auto npos{partition_iterator::npos};
       constexpr static bool directCopy{partition_impl::direct_copy_v<Handler, T>};
 
       storage_type m_Buckets;
