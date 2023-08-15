@@ -40,17 +40,11 @@ namespace sequoia::testing
       // [3][]
       two_3__,
 
-      // [3][4]
-      two_3__4,
+      // [2][3]
+      two_2__3,
 
-      // [4][3]
-      two_4__3,
-
-      // [3][4][9,2]
-      three_3__4__9_2,
-
-      // [3][9,2][4]
-      three_3__9_2_4,
+      // [3][2]
+      two_3__2
     };
   }
 
@@ -264,6 +258,38 @@ namespace sequoia::testing
                 d.push_back_to_partition(0, 2);
                 return d;
               }
+            },
+            {
+              data_description::one_2,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                d.insert_to_partition(d.cbegin_partition(0), 2);
+                return d;
+              }
+            },
+            {
+              data_description::two_empty_partitions,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                d.add_slot();
+                return d;
+              }
+            },
+            {
+              data_description::two_empty_partitions,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                d.insert_slot(0);
+                return d;
+              }
+            },
+            {
+              data_description::two_empty_partitions,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                d.insert_slot(1);
+                return d;
+              }
             }
           }, // end 'empty_partition'
           {  // begin 'one_2'
@@ -325,7 +351,33 @@ namespace sequoia::testing
                 return d;
               }
             }
-          }  // end 'one_3'
+          }, // end 'one_3'
+          {  // begin 'two_empty_partitions'
+            {
+              data_description::two_empty_partitions,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                d.swap_partitions(0, 0);
+                return d;
+              }
+            },
+            {
+              data_description::empty_partition,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                d.erase_slot(0);
+                return d;
+              }
+            },
+            {
+              data_description::empty_partition,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                d.erase_slot(1);
+                return d;
+              }
+            }
+          }  // end 'two_empty_partitions'
         },
         {
           //  'empty'
@@ -339,6 +391,9 @@ namespace sequoia::testing
 
           // 'one_3'
           make_and_check(t, t.report_line(""), {{3}}),
+
+          // 'two_empty_partitions'
+          make_and_check(t, t.report_line(""), {{}, {}})
         }
       };
     }

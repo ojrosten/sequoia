@@ -1,4 +1,4 @@
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 99
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 93
 Pushing back to non-existent partition throws
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ partitioned_sequence::index 0 out of range
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 107
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 101
 Inserting to non-existent partition throws
 
 Expected Exception Type:
@@ -16,7 +16,7 @@ bucketed_sequence: partition index 18446744073709551615 out of range
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 115
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 109
 Inserting to non-existent partition throws
 
 Expected Exception Type:
@@ -25,7 +25,7 @@ bucketed_sequence: partition index 18446744073709551615 out of range
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 123
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 117
 Swapping non-existent partition throws
 
 Expected Exception Type:
@@ -34,7 +34,7 @@ partitioned_sequence::swap_partitions - index out of range
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 157
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 151
 Pushing back to non-existent partition throws
 
 Expected Exception Type:
@@ -43,7 +43,7 @@ partitioned_sequence::index 1 out of range
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 165
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 159
 Inserting to non-existent partition throws
 
 Expected Exception Type:
@@ -52,7 +52,7 @@ bucketed_sequence: partition index 18446744073709551615 out of range
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 173
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 167
 Inserting to non-existent partition throws
 
 Expected Exception Type:
@@ -61,7 +61,7 @@ bucketed_sequence: partition index 18446744073709551615 out of range
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 181
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 175
 Swapping non-existent partition throws
 
 Expected Exception Type:
@@ -70,7 +70,7 @@ partitioned_sequence::swap_partitions - index out of range
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 189
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 183
 Swapping non-existent partition throws
 
 Expected Exception Type:
@@ -79,7 +79,7 @@ partitioned_sequence::swap_partitions - index out of range
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 232
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 226
 
 Expected Exception Type:
 [std::out_of_range]
@@ -87,7 +87,7 @@ partitioned_sequence::swap_partitions - index out of range
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 240
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 234
 
 Expected Exception Type:
 [std::out_of_range]
