@@ -224,7 +224,7 @@ namespace sequoia::testing
             },
             {
               data_description::empty,
-              t.report_line("Clear empty container"),
+              t.report_line(""),
               [&t](data_t d) -> data_t {
                 d.erase_slot(0);
                 return d;
@@ -240,7 +240,30 @@ namespace sequoia::testing
             }
           }, // end 'empty_partition'
           {  // begin 'one_2'
-
+            {
+              data_description::empty_partition,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                d.erase_from_partition(d.cbegin_partition(0));
+                return d;
+              }
+            },
+            {
+              data_description::empty,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                d.erase_slot(0);
+                return d;
+              }
+            },
+            {
+              data_description::empty,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                d.clear();
+                return d;
+              }
+            }
           }  // end 'one_2'
         },
         {
