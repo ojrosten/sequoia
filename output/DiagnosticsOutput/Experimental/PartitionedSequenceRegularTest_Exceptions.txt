@@ -79,3 +79,19 @@ partitioned_sequence::swap_partitions - index out of range
 
 =======================================
 
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 229
+
+Expected Exception Type:
+[std::out_of_range]
+partitioned_sequence::swap_partitions - index out of range
+
+=======================================
+
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 237
+
+Expected Exception Type:
+[std::out_of_range]
+partitioned_sequence::swap_partitions - index out of range
+
+=======================================
+

@@ -212,7 +212,7 @@ namespace sequoia
       {
         if((i < num_partitions()) && (j < num_partitions()))
         {
-          std::ranges::swap(m_Buckets[i], m_Buckets[j]);
+          if(i != j) std::ranges::swap(m_Buckets[i], m_Buckets[j]);
         }
         else if constexpr(throw_on_range_error)
         {

@@ -215,6 +215,30 @@ namespace sequoia::testing
               }
             },
             {
+              data_description::empty_partition,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                d.swap_partitions(0, 0);
+                return d;
+              }
+            },
+            {
+              data_description::empty_partition,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                t.check_exception_thrown<std::out_of_range>(t.report_line(""), [&d]() { return d.swap_partitions(1, 0); });
+                return d;
+              }
+            },
+            {
+              data_description::empty_partition,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                t.check_exception_thrown<std::out_of_range>(t.report_line(""), [&d]() { return d.swap_partitions(0, 1); });
+                return d;
+              }
+            },
+            {
               data_description::empty,
               t.report_line("Clear empty container"),
               [&t](data_t d) -> data_t {
@@ -261,6 +285,14 @@ namespace sequoia::testing
               t.report_line(""),
               [&t](data_t d) -> data_t {
                 d.clear();
+                return d;
+              }
+            },
+            {
+              data_description::one_2,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                d.swap_partitions(0, 0);
                 return d;
               }
             }
