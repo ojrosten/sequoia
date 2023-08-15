@@ -25,6 +25,9 @@ namespace sequoia::testing
       // [2]
       one_2,
 
+      // [3]
+      one_3,
+
       // [][]
       two_empty_partitions,
 
@@ -295,8 +298,34 @@ namespace sequoia::testing
                 d.swap_partitions(0, 0);
                 return d;
               }
+            },
+            {
+              data_description::one_3,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                *d.begin_partition(0) = 3;
+                return d;
+              }
+            },
+            {
+              data_description::one_3,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                *d.rbegin_partition(0) = 3;
+                return d;
+              }
             }
-          }  // end 'one_2'
+          }, // end 'one_2'
+          {  // begin 'one_3'
+            {
+              data_description::one_2,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                *d.begin_partition(0) = 2;
+                return d;
+              }
+            }
+          }  // end 'one_3'
         },
         {
           //  'empty'
@@ -307,6 +336,9 @@ namespace sequoia::testing
 
           // 'one_2'
           make_and_check(t, t.report_line(""), {{2}}),
+
+          // 'one_3'
+          make_and_check(t, t.report_line(""), {{3}}),
         }
       };
     }
