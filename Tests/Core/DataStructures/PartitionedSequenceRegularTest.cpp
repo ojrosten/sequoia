@@ -26,12 +26,13 @@ namespace sequoia::testing
       {
         auto trg{partitioned_data_operations<PartitionedData>::make_transition_graph(t)};
 
+        // begin 'empty'
         trg.join(data_description::empty,
                  data_description::empty,
                  t.report_line(""),
                  [&t](data_t d) -> data_t {
                    auto i{d.erase_from_partition(d.cbegin_partition(0))};
-                   t.check(equality, report_line(""), i, d.begin_partition(0));
+                   t.check(equality, report_line("Erase from non-existent partition"), i, d.begin_partition(0));
                    return d;
                  }
           );
@@ -41,7 +42,7 @@ namespace sequoia::testing
                  t.report_line(""),
                  [&t](data_t d) -> data_t {
                    auto i{d.erase_from_partition(0, 0)};
-                   t.check(equality, report_line(""), i, d.begin_partition(0));
+                   t.check(equality, report_line("Erase from non-existent partition"), i, d.begin_partition(0));
                    return d;
                  }
           );
@@ -75,6 +76,51 @@ namespace sequoia::testing
                    return d;
                  }
           );
+        
+        // end 'empty'
+        // begin 'empty_partition'
+
+        trg.join(data_description::empty_partition,
+                 data_description::empty_partition,
+                 t.report_line(""),
+                 [&t](data_t d) -> data_t {
+                   auto i{d.erase_from_partition(d.cbegin_partition(0))};
+                   t.check(equality, report_line("Erase from partition with nothing in it"), i, d.begin_partition(0));
+                   return d;
+                 }
+          );
+
+        trg.join(data_description::empty_partition,
+                 data_description::empty_partition,
+                 t.report_line(""),
+                 [&t](data_t d) -> data_t {
+                   auto i{d.erase_from_partition(0, 0)};
+                   t.check(equality, report_line("Erase from non-existent partition"), i, d.begin_partition(0));
+                   return d;
+                 }
+          );
+
+        trg.join(data_description::empty_partition,
+                 data_description::empty_partition,
+                 t.report_line(""),
+                 [&t](data_t d) -> data_t {
+                   auto i{d.erase_from_partition(0, 1)};
+                   t.check(equality, report_line("Erase from non-existent partition"), i, d.begin_partition(0));
+                   return d;
+                 }
+          );
+
+        trg.join(data_description::empty_partition,
+                 data_description::empty_partition,
+                 t.report_line(""),
+                 [&t](data_t d) -> data_t {
+                   auto i{d.erase_from_partition(d.cbegin_partition(1))};
+                   t.check(equality, report_line("Erase from non-existent partition"), i, d.begin_partition(1));
+                   return d;
+                 }
+          );
+
+        // end 'empty_partition'
 
         auto checker{
             [&t](std::string_view description, const data_t& obtained, const data_t& prediction, const data_t& parent, std::size_t host, std::size_t target) {
