@@ -202,26 +202,6 @@ namespace sequoia::testing
                  }
           );
 
-        trg.join(data_description::empty_partition,
-                 data_description::empty_partition,
-                 t.report_line(""),
-                 [&t](data_t d) -> data_t {
-                   auto i{d.erase_from_partition(d.cbegin_partition(0))};
-                   t.check(equality, report_line("Erase from partition with nothing in it"), i, d.begin_partition(0));
-                   return d;
-                 }
-          );
-
-        trg.join(data_description::empty_partition,
-                 data_description::empty_partition,
-                 t.report_line(""),
-                 [&t](data_t d) -> data_t {
-                   auto i{d.erase_from_partition(0, 0)};
-                   t.check(equality, report_line("Erase from non-existent partition"), i, d.begin_partition(0));
-                   return d;
-                 }
-          );
-
         // end 'empty_partition'
 
         auto checker{

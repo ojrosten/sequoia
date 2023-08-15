@@ -22,6 +22,9 @@ namespace sequoia::testing
       // []
       empty_partition,
 
+      // [2]
+      one_2,
+
       // [][]
       two_empty_partitions,
 
@@ -125,6 +128,22 @@ namespace sequoia::testing
                 d.clear();
                 return d;
               }
+            },
+            {
+              data_description::empty_partition,
+              t.report_line("Add slot to empty container"),
+              [&t](data_t d) -> data_t {
+                d.add_slot();
+                return d;
+              }
+            },
+            {
+              data_description::empty_partition,
+              t.report_line("Insert slot to empty container"),
+              [&t](data_t d) -> data_t {
+                d.insert_slot(0);
+                return d;
+              }
             }
           }, // end 'empty'
           {  // begin 'empty_partition'
@@ -169,14 +188,60 @@ namespace sequoia::testing
               }
             },
             {
+              data_description::empty_partition,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                auto i{d.erase_from_partition(d.cbegin_partition(0))};
+                t.check(equality, report_line("Erase from partition with nothing in it"), i, d.begin_partition(0));
+                return d;
+              }
+            },
+            {
+              data_description::empty_partition,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                auto i{d.erase_from_partition(0, 0)};
+                t.check(equality, report_line("Erase from partition with nothing in it"), i, d.begin_partition(0));
+                return d;
+              }
+            },
+            {
+              data_description::empty_partition,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                auto i{d.erase_from_partition(0, 1)};
+                t.check(equality, report_line("Erase from partition with nothing in it"), i, d.begin_partition(0));
+                return d;
+              }
+            },
+            {
               data_description::empty,
               t.report_line("Clear empty container"),
               [&t](data_t d) -> data_t {
                 d.clear();
                 return d;
               }
+            },
+            {
+              data_description::empty,
+              t.report_line("Clear empty container"),
+              [&t](data_t d) -> data_t {
+                d.erase_slot(0);
+                return d;
+              }
+            },
+            {
+              data_description::one_2,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                d.push_back_to_partition(0, 2);
+                return d;
+              }
             }
-          }  // end 'empty_partition'
+          }, // end 'empty_partition'
+          {  // begin 'one_2'
+
+          }  // end 'one_2'
         },
         {
           //  'empty'
@@ -184,6 +249,9 @@ namespace sequoia::testing
 
           // 'empty_partition'
           make_and_check(t, t.report_line(""), {{}}),
+
+          // 'one_2'
+          make_and_check(t, t.report_line(""), {{2}}),
         }
       };
     }
