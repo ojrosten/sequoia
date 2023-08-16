@@ -21,16 +21,16 @@ namespace sequoia::maths
 {
   struct contiguous_edge_storage_traits
   {
-    template <class T, class Sharing, class Traits> using storage_type = data_structures::partitioned_sequence<T, Sharing, Traits>;
-    template <class T, class Sharing> using traits_type = data_structures::partitioned_sequence_traits<T, Sharing>;
+    template <class T, class Traits> using storage_type = data_structures::partitioned_sequence<T, Traits>;
+    template <class T> using traits_type = data_structures::partitioned_sequence_traits<T>;
 
     constexpr static edge_sharing_preference edge_sharing{edge_sharing_preference::agnostic};
   };
 
   struct bucketed_edge_storage_traits
   {
-    template <class T, class Sharing, class Traits> using storage_type = data_structures::bucketed_sequence<T, Sharing, Traits>;
-    template <class T, class Sharing> using traits_type = data_structures::bucketed_sequence_traits<T, Sharing>;
+    template <class T, class Traits> using storage_type = data_structures::bucketed_sequence<T, Traits>;
+    template <class T> using traits_type = data_structures::bucketed_sequence_traits<T>;
 
     constexpr static edge_sharing_preference edge_sharing{edge_sharing_preference::agnostic};
   };

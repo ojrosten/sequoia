@@ -278,17 +278,6 @@ int main(int argc, char** argv)
           dynamic_directed_graph_fundamental_weight_contiguous_test{"Directed Graph Fundamental Weight Contiguous Tests"}
         },
         suite{
-          "Directed Embedded",
-          dynamic_directed_embedded_graph_unweighted_test{"Directed Embedded Graph Unweighted Tests"},
-          dynamic_directed_embedded_graph_unweighted_contiguous_test{"Directed Embedded Graph Unweighted Contiguous Tests"},
-          dynamic_directed_embedded_graph_fundamental_weight_test{"Directed Embedded Graph Fundamental Weight Tests"},
-          dynamic_directed_embedded_graph_fundamental_weight_contiguous_test{"Directed Embedded Graph Fundamental Weight Contiguous Tests"},
-          dynamic_directed_embedded_graph_fundamental_weight_shared_edge_test{"Directed Embedded Graph Fundamental Weight Shared Edge Tests"},
-          dynamic_directed_embedded_graph_fundamental_weight_shared_edge_contiguous_test{"Directed Embedded Graph Fundamental Weight Shared Edge Contiguous Tests"},
-          dynamic_directed_embedded_graph_shared_fundamental_weight_test{"Directed Embedded Graph Shared Fundamental Weight Tests"},
-          dynamic_directed_embedded_graph_shared_fundamental_weight_contiguous_test{"Directed Embedded Graph Shared Fundamental Weight Contiguous Tests"}
-        },
-        suite{
           "Undirected",
           dynamic_undirected_graph_unweighted_test{"Undirected Graph Unweighted Tests"},
           dynamic_undirected_graph_unweighted_contiguous_test{"Undirected Graph Unweighted Contiguous Tests"},

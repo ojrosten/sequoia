@@ -28,11 +28,8 @@ namespace sequoia::testing
     using namespace data_structures;
     using namespace object;
 
-    test<bucketed_sequence<T, object::by_value<T>>>();
-    test<bucketed_sequence<T, object::shared<T>>>();
-
-    test<partitioned_sequence<T, object::by_value<T>>>();
-    test<partitioned_sequence<T, object::shared<T>>>();
+    test<bucketed_sequence<T>>();
+    test<partitioned_sequence<T>>();
   }
 
   template<class PartitionedData> void partitioned_data_false_positive_test::test()

@@ -86,10 +86,10 @@ namespace sequoia::testing
     }
   }
 
-  template<class T, class Handler, class Traits>
-  struct value_tester<data_structures::bucketed_sequence<T, Handler, Traits>>
+  template<class T, class Traits>
+  struct value_tester<data_structures::bucketed_sequence<T, Traits>>
   {
-    using type = data_structures::bucketed_sequence<T, Handler, Traits>;
+    using type = data_structures::bucketed_sequence<T, Traits>;
 
     template<class CheckType, test_mode Mode>
     static void test(CheckType flavour, test_logger<Mode>& logger, const type& data, const type& prediction)
@@ -104,10 +104,10 @@ namespace sequoia::testing
     }
   };
 
-  template<class T, class Handler, class Traits>
-  struct value_tester<data_structures::partitioned_sequence<T, Handler, Traits>>
+  template<class T, class Traits>
+  struct value_tester<data_structures::partitioned_sequence<T, Traits>>
   {
-    using type = data_structures::partitioned_sequence<T, Handler, Traits>;
+    using type = data_structures::partitioned_sequence<T, Traits>;
     using equivalent_type = std::initializer_list<std::initializer_list<T>>;
 
     template<class CheckType, test_mode Mode>
@@ -141,11 +141,11 @@ namespace sequoia::testing
     }
   };
 
-  template<std::input_or_output_iterator I, class Handler, template<class> class RefType, class IndexPolicy>
-    requires object::handler<Handler>
-  struct value_tester<utilities::iterator<I, data_structures::partition_impl::dereference_policy_for<Handler, RefType, IndexPolicy>>>
+  template<std::input_or_output_iterator I, class DerefPolicy>
+    requires requires(utilities::iterator<I, DerefPolicy>  i){ i.partition_index(); }
+  struct value_tester<utilities::iterator<I, DerefPolicy>>
   {
-    using type = utilities::iterator<I, data_structures::partition_impl::dereference_policy_for<Handler, RefType, IndexPolicy>>;
+    using type = utilities::iterator<I, DerefPolicy>;
 
     template<test_mode Mode>
     static void test(equality_check_t, test_logger<Mode>& logger, const type& data, const type& prediction)

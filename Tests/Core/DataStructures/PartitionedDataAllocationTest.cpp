@@ -28,19 +28,17 @@ namespace sequoia::testing
   {
     using namespace object;
 
-    test_bucketed_allocation<int, by_value<int>, PropagateCopy, PropagateMove, PropagateSwap>();
-    test_bucketed_allocation<int, shared<int>, PropagateCopy, PropagateMove, PropagateSwap>();
+    test_bucketed_allocation<int, PropagateCopy, PropagateMove, PropagateSwap>();
 
-    test_contiguous_allocation<int, by_value<int>, PropagateCopy, PropagateMove, PropagateSwap>();
-    test_contiguous_allocation<int, shared<int>, PropagateCopy, PropagateMove, PropagateSwap>();
+    test_contiguous_allocation<int, PropagateCopy, PropagateMove, PropagateSwap>();
   }
 
-  template<class T, class Handler, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
+  template<class T, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
   void partitioned_data_allocation_test::test_bucketed_allocation()
   {
     using namespace data_structures;
 
-    using storage = bucketed_sequence<T, Handler, custom_bucketed_storage_traits<T, Handler, PropagateCopy, PropagateMove, PropagateSwap>>;
+    using storage = bucketed_sequence<T, custom_bucketed_storage_traits<T, PropagateCopy, PropagateMove, PropagateSwap>>;
     using allocator = typename storage::allocator_type;
     using prediction = std::initializer_list<std::initializer_list<int>>;
 
@@ -87,12 +85,12 @@ namespace sequoia::testing
                     });
   }
 
-  template<class T, class Handler, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
+  template<class T, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
   void partitioned_data_allocation_test::test_contiguous_allocation()
   {
     using namespace data_structures;
 
-    using storage = partitioned_sequence<T, Handler, custom_partitioned_sequence_traits<T, Handler, PropagateCopy, PropagateMove, PropagateSwap>>;
+    using storage = partitioned_sequence<T, custom_partitioned_sequence_traits<T, PropagateCopy, PropagateMove, PropagateSwap>>;
     using allocator = typename storage::allocator_type;
     using partitions_allocator = typename storage::traits_type::partitions_allocator_type;
     using prediction = std::initializer_list<std::initializer_list<int>>;

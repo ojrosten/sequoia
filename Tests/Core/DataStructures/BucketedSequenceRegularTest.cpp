@@ -225,6 +225,6 @@ namespace sequoia::testing
   void bucketed_sequence_regular_test::run_tests()
   {
     using namespace data_structures;
-    bucketed_operations<bucketed_sequence<int, object::by_value<int>>>::execute(*this);
+    bucketed_operations<bucketed_sequence<int>>::execute(*this);
   }
 }

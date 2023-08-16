@@ -24,6 +24,7 @@ namespace sequoia::data_structures
     constexpr static std::size_t num_partitions_v{Npartitions};
     constexpr static std::size_t num_elements_v{Npartitions * NelementsPerPartition};
 
+    using value_type           = T;
     using index_type           = IndexType;
     using partition_index_type = std::make_unsigned_t<IndexType>;
     using partitions_type      = maths::static_linear_sequence<partition_index_type, NelementsPerPartition, NelementsPerPartition, Npartitions, partition_index_type>;
@@ -38,12 +39,11 @@ namespace sequoia::data_structures
 
   template<class T, std::size_t Npartitions, std::size_t NelementsPerPartition, std::integral IndexType=std::size_t>
   class static_linearly_partitioned_sequence :
-    public partitioned_sequence_base<T, object::by_value<T>, static_linearly_partitioned_sequence_traits<T, Npartitions, NelementsPerPartition, IndexType>>
+    public partitioned_sequence_base<T, static_linearly_partitioned_sequence_traits<T, Npartitions, NelementsPerPartition, IndexType>>
   {
   public:
     using partitioned_sequence_base<
       T,
-      object::by_value<T>,
       static_linearly_partitioned_sequence_traits<T, Npartitions, NelementsPerPartition, IndexType>
     >::partitioned_sequence_base;
   };

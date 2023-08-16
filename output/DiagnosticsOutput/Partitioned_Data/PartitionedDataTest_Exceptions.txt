@@ -1,5 +1,4 @@
-Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 143
-No partition available to push back to
+Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 212
 
 Expected Exception Type:
 [std::out_of_range]
@@ -7,26 +6,23 @@ bucketed_sequence::index 0 out of range
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 150
-No partition available to insert into
+Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 216
 
 Expected Exception Type:
 [std::out_of_range]
-bucketed_sequence::begin_partition: no buckets!
+bucketed_sequence::index 0 out of range
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 157
-No partitions to swap
+Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 220
 
 Expected Exception Type:
 [std::out_of_range]
-bucketed_sequence::swap_partitions - index out of range
+bucketed_sequence::index 0 out of range
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 173
-Only one partition available so cannot push back to the second
+Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 224
 
 Expected Exception Type:
 [std::out_of_range]
@@ -34,89 +30,7 @@ bucketed_sequence::index 1 out of range
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 180
-No partitions to swap
-
-Expected Exception Type:
-[std::out_of_range]
-bucketed_sequence::swap_partitions - index out of range
-
-=======================================
-
-Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 143
-No partition available to push back to
-
-Expected Exception Type:
-[std::out_of_range]
-partitioned_sequence::index 0 out of range
-
-=======================================
-
-Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 150
-No partition available to insert into
-
-Expected Exception Type:
-[std::out_of_range]
-bucketed_sequence: partition index 18446744073709551615 out of range
-
-=======================================
-
-Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 157
-No partitions to swap
-
-Expected Exception Type:
-[std::out_of_range]
-partitioned_sequence::swap_partitions - index out of range
-
-=======================================
-
-Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 173
-Only one partition available so cannot push back to the second
-
-Expected Exception Type:
-[std::out_of_range]
-partitioned_sequence::index 1 out of range
-
-=======================================
-
-Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 180
-No partitions to swap
-
-Expected Exception Type:
-[std::out_of_range]
-partitioned_sequence::swap_partitions - index out of range
-
-=======================================
-
-Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 143
-No partition available to push back to
-
-Expected Exception Type:
-[std::out_of_range]
-bucketed_sequence::index 0 out of range
-
-=======================================
-
-Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 150
-No partition available to insert into
-
-Expected Exception Type:
-[std::out_of_range]
-bucketed_sequence::begin_partition: no buckets!
-
-=======================================
-
-Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 157
-No partitions to swap
-
-Expected Exception Type:
-[std::out_of_range]
-bucketed_sequence::swap_partitions - index out of range
-
-=======================================
-
-Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 173
-Only one partition available so cannot push back to the second
+Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 231
 
 Expected Exception Type:
 [std::out_of_range]
@@ -124,61 +38,7 @@ bucketed_sequence::index 1 out of range
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 180
-No partitions to swap
-
-Expected Exception Type:
-[std::out_of_range]
-bucketed_sequence::swap_partitions - index out of range
-
-=======================================
-
-Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 143
-No partition available to push back to
-
-Expected Exception Type:
-[std::out_of_range]
-partitioned_sequence::index 0 out of range
-
-=======================================
-
-Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 150
-No partition available to insert into
-
-Expected Exception Type:
-[std::out_of_range]
-bucketed_sequence: partition index 18446744073709551615 out of range
-
-=======================================
-
-Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 157
-No partitions to swap
-
-Expected Exception Type:
-[std::out_of_range]
-partitioned_sequence::swap_partitions - index out of range
-
-=======================================
-
-Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 173
-Only one partition available so cannot push back to the second
-
-Expected Exception Type:
-[std::out_of_range]
-partitioned_sequence::index 1 out of range
-
-=======================================
-
-Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 180
-No partitions to swap
-
-Expected Exception Type:
-[std::out_of_range]
-partitioned_sequence::swap_partitions - index out of range
-
-=======================================
-
-Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 682
+Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 212
 
 Expected Exception Type:
 [std::out_of_range]
@@ -186,7 +46,7 @@ bucketed_sequence::index 0 out of range
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 686
+Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 216
 
 Expected Exception Type:
 [std::out_of_range]
@@ -194,7 +54,7 @@ bucketed_sequence::index 0 out of range
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 690
+Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 220
 
 Expected Exception Type:
 [std::out_of_range]
@@ -202,7 +62,7 @@ bucketed_sequence::index 0 out of range
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 694
+Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 224
 
 Expected Exception Type:
 [std::out_of_range]
@@ -210,47 +70,7 @@ bucketed_sequence::index 1 out of range
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 701
-
-Expected Exception Type:
-[std::out_of_range]
-bucketed_sequence::index 1 out of range
-
-=======================================
-
-Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 682
-
-Expected Exception Type:
-[std::out_of_range]
-bucketed_sequence::index 0 out of range
-
-=======================================
-
-Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 686
-
-Expected Exception Type:
-[std::out_of_range]
-bucketed_sequence::index 0 out of range
-
-=======================================
-
-Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 690
-
-Expected Exception Type:
-[std::out_of_range]
-bucketed_sequence::index 0 out of range
-
-=======================================
-
-Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 694
-
-Expected Exception Type:
-[std::out_of_range]
-bucketed_sequence::index 1 out of range
-
-=======================================
-
-Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 701
+Tests/Core/DataStructures/PartitionedDataTest.cpp, Line 231
 
 Expected Exception Type:
 [std::out_of_range]

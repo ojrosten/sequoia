@@ -24,48 +24,48 @@ namespace sequoia::testing
 
   struct independent_contiguous_edge_storage_traits
   {
-    template <class T, class Sharing, class Traits> using storage_type = data_structures::partitioned_sequence<T, Sharing, Traits>;
-    template <class T, class Sharing> using traits_type = data_structures::partitioned_sequence_traits<T, Sharing>;
+    template <class T, class Traits> using storage_type = data_structures::partitioned_sequence<T, Traits>;
+    template <class T> using traits_type = data_structures::partitioned_sequence_traits<T>;
 
     constexpr static maths::edge_sharing_preference edge_sharing{maths::edge_sharing_preference::independent};
   };
 
   struct independent_bucketed_edge_storage_traits
   {
-    template <class T, class Sharing, class Traits> using storage_type = data_structures::bucketed_sequence<T, Sharing, Traits>;
-    template <class T, class Sharing> using traits_type = data_structures::bucketed_sequence_traits<T, Sharing>;
+    template <class T, class Traits> using storage_type = data_structures::bucketed_sequence<T, Traits>;
+    template <class T> using traits_type = data_structures::bucketed_sequence_traits<T>;
 
     constexpr static maths::edge_sharing_preference edge_sharing{maths::edge_sharing_preference::independent};
   };
 
   struct shared_weight_contiguous_edge_storage_traits
   {
-    template <class T, class Sharing, class Traits> using storage_type = data_structures::partitioned_sequence<T, Sharing, Traits>;
-    template <class T, class Sharing> using traits_type = data_structures::partitioned_sequence_traits<T, Sharing>;
+    template <class T, class Traits> using storage_type = data_structures::partitioned_sequence<T, Traits>;
+    template <class T> using traits_type = data_structures::partitioned_sequence_traits<T>;
 
     constexpr static maths::edge_sharing_preference edge_sharing{maths::edge_sharing_preference::shared_weight};
   };
 
   struct shared_weight_bucketed_edge_storage_traits
   {
-    template <class T, class Sharing, class Traits> using storage_type = data_structures::bucketed_sequence<T, Sharing, Traits>;
-    template <class T, class Sharing> using traits_type = data_structures::bucketed_sequence_traits<T, Sharing>;
+    template <class T, class Traits> using storage_type = data_structures::bucketed_sequence<T, Traits>;
+    template <class T> using traits_type = data_structures::bucketed_sequence_traits<T>;
 
     constexpr static maths::edge_sharing_preference edge_sharing{maths::edge_sharing_preference::shared_weight};
   };
 
   struct shared_edge_contiguous_edge_storage_traits
   {
-    template <class T, class Sharing, class Traits> using storage_type = data_structures::partitioned_sequence<T, Sharing, Traits>;
-    template <class T, class Sharing> using traits_type = data_structures::partitioned_sequence_traits<T, Sharing>;
+    template <class T, class Traits> using storage_type = data_structures::partitioned_sequence<T, Traits>;
+    template <class T> using traits_type = data_structures::partitioned_sequence_traits<T>;
 
     constexpr static maths::edge_sharing_preference edge_sharing{maths::edge_sharing_preference::shared_edge};
   };
 
   struct shared_edge_bucketed_edge_storage_traits
   {
-    template <class T, class Sharing, class Traits> using storage_type = data_structures::bucketed_sequence<T, Sharing, Traits>;
-    template <class T, class Sharing> using traits_type = data_structures::bucketed_sequence_traits<T, Sharing>;
+    template <class T, class Traits> using storage_type = data_structures::bucketed_sequence<T, Traits>;
+    template <class T> using traits_type = data_structures::bucketed_sequence_traits<T>;
 
     constexpr static maths::edge_sharing_preference edge_sharing{maths::edge_sharing_preference::shared_edge};
   };
@@ -132,11 +132,6 @@ namespace sequoia::testing
       {
         run_tests<flavour::undirected_embedded>();
         run_tests<flavour::directed>();
-        run_tests<flavour::directed_embedded>();
-
-        using NSTraits = maths::node_weight_storage_traits<NodeWeight>;
-        creation_permutations<flavour::directed_embedded, independent_contiguous_edge_storage_traits, NSTraits>();
-        creation_permutations<flavour::directed_embedded, independent_bucketed_edge_storage_traits,   NSTraits>();
       }
     }
 
@@ -149,7 +144,6 @@ namespace sequoia::testing
       {
         creation_permutations<flavour::undirected_embedded, EdgeStorageTraits, NodeStorageTraits>();
         creation_permutations<flavour::directed,            EdgeStorageTraits, NodeStorageTraits>();
-        creation_permutations<flavour::directed_embedded,   EdgeStorageTraits, NodeStorageTraits>();
       }
     }
 

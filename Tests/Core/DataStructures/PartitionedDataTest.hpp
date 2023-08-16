@@ -23,26 +23,23 @@ namespace sequoia::testing
 
     void run_tests();
   private:
-
-    void test_storage();
-
-    template <class Storage> Storage test_generic_storage();
-
     void test_static_storage();
 
-    template<class T, class Handler, bool ThrowOnRangeError>
+    template<class T>
     void test_contiguous_capacity();
 
-    template<class T, class Handler, bool ThrowOnRangeError>
+    template<class T>
     void test_bucketed_capacity();
 
-    template<class Traits, template<class> class Handler, template<class> class ReferencePolicy>
+    template<class Traits, template<class> class ReferencePolicy>
     void test_generic_iterator_properties();
 
-    template<template<class> class Handler> void test_iterators();
+    void test_iterators();
 
+    template<class T>
     struct traits
     {
+      using value_type = T;
       template<class S> using container_type = std::vector<S, std::allocator<S>>;
     };
   };

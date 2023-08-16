@@ -113,6 +113,6 @@ namespace sequoia::testing
   void partitioned_sequence_regular_test::run_tests()
   {
     using namespace data_structures;
-    partitioned_operations<partitioned_sequence<int, object::by_value<int>>>::execute(*this);
+    partitioned_operations<partitioned_sequence<int>>::execute(*this);
   }
 }

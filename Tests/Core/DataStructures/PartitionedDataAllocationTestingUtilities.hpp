@@ -17,7 +17,6 @@ namespace sequoia::testing
   template
   <
     class T,
-    class Handler,
     bool PropagateCopy=true,
     bool PropagateMove=false,
     bool PropagateSwap=false
@@ -25,6 +24,8 @@ namespace sequoia::testing
   struct custom_bucketed_storage_traits
   {
     constexpr static bool throw_on_range_error{true};
+
+    using value_type = T;
 
     template<class S>
     using allocator_template = shared_counting_allocator<S, PropagateCopy, PropagateMove, PropagateSwap>;
@@ -46,7 +47,6 @@ namespace sequoia::testing
   template
   <
     class T,
-    class Handler,
     bool PropagateCopy=true,
     bool PropagateMove=false,
     bool PropagateSwap=false
@@ -56,6 +56,7 @@ namespace sequoia::testing
     constexpr static bool static_storage_v{false};
     constexpr static bool throw_on_range_error{true};
 
+    using value_type = T;
     using index_type = std::size_t;
     using partition_index_type = std::size_t;
     using partitions_type

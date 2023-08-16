@@ -30,10 +30,10 @@ namespace sequoia::testing
     friend void do_allocation_tests(Test&);
 
 
-    template<class T, class Handler, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
+    template<class T, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
     void test_bucketed_allocation();
 
-    template<class T, class Handler, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
+    template<class T, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
     void test_contiguous_allocation();
   };
 }

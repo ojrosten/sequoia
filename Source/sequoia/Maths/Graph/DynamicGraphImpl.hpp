@@ -68,15 +68,11 @@ namespace sequoia::maths::graph_impl
 
     using edge_type = typename edge_type_gen::edge_type;
 
-    using edge_storage_handler = std::conditional_t<edge_type_gen::shared_edge_v,
-                                                    object::shared<edge_type>,
-                                                    object::by_value<edge_type>>;
-
     using edge_storage_traits
-      = typename EdgeStorageTraits::template traits_type<edge_type, edge_storage_handler>;
+      = typename EdgeStorageTraits::template traits_type<edge_type>;
 
     using edge_storage_type
-      = typename EdgeStorageTraits::template storage_type<edge_type, edge_storage_handler, edge_storage_traits>;
+      = typename EdgeStorageTraits::template storage_type<edge_type, edge_storage_traits>;
 
     using edge_allocator_type = typename edge_storage_type::allocator_type;
   };
