@@ -35,8 +35,6 @@ namespace sequoia::testing
 
     void test_directed();
 
-    void test_directed_embedded();
-
     template
     <
       maths::graph_flavour GraphFlavour,
@@ -55,9 +53,6 @@ namespace sequoia::testing
 
     template<class EdgeWeight>
     void test_directed_impl();
-
-    template<class EdgeWeight>
-    void test_directed_embedded_impl();
 
     void test_static_edge_index_generator();
   };

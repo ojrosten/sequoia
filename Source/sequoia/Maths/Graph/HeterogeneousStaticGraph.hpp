@@ -126,7 +126,7 @@ namespace sequoia::maths
       <
         graph_impl::static_edge_traits
         <
-          (Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded,
+          graph_flavour::undirected_embedded,
           Order,
           Size,
           EdgeWeight,
@@ -144,7 +144,7 @@ namespace sequoia::maths
         <
           graph_impl::static_edge_traits
           <
-            (Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded,
+            graph_flavour::undirected_embedded,
             Order,
             Size,
             EdgeWeight,
@@ -157,7 +157,7 @@ namespace sequoia::maths
   public:
     static_assert(sizeof...(NodeWeights) == Order);
 
-    constexpr static graph_flavour flavour{(Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded};
+    constexpr static graph_flavour flavour{graph_flavour::undirected_embedded};
 
     constexpr static std::size_t order() noexcept { return Order; }
 
@@ -172,7 +172,7 @@ namespace sequoia::maths
         <
           graph_impl::static_edge_traits
           <
-            (Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded,
+            graph_flavour::undirected_embedded,
             Order,
             Size,
             EdgeWeight,

@@ -35,12 +35,8 @@ namespace sequoia:: testing
     template<concrete_test>
     friend class directed_init_checker;
 
-    template<concrete_test>
-    friend class directed_embedded_init_checker;
-
     template<class NodeWeight, class EdgeWeight> void test_generic_undirected();
     template<class NodeWeight, class EdgeWeight> void test_generic_embedded_undirected();
     template<class NodeWeight, class EdgeWeight> void test_generic_directed();
-    template<class NodeWeight, class EdgeWeight> void test_generic_embedded_directed();
   };
 }

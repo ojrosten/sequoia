@@ -259,7 +259,7 @@ namespace sequoia::testing
   {
     using namespace maths;
 
-    using graph_type = embedded_graph<directed_flavour::undirected, null_weight, int>;
+    using graph_type = embedded_graph<null_weight, int>;
     graph_type graph;
 
     graph.add_node(3);

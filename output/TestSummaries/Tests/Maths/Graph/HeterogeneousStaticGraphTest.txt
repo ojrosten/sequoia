@@ -1,2 +1,2 @@
 Heterogeneous Static Graphs
-Standard Top Level Checks:                 9;  Failures:  0  [Deep checks: 229]
+Standard Top Level Checks:                 7;  Failures:  0  [Deep checks: 145]

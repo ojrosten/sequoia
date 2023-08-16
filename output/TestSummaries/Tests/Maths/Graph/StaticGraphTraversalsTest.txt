@@ -1,2 +1,2 @@
 Static Graph Traversals
-Standard Top Level Checks:                 8;  Failures:  0  [Deep checks: 8]
+Standard Top Level Checks:                 6;  Failures:  0  [Deep checks: 6]

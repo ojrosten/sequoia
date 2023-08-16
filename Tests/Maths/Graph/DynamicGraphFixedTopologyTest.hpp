@@ -38,9 +38,6 @@ namespace sequoia
       template<concrete_test>
       friend class e_undirected_fixed_topology_checker;
 
-      template<concrete_test>
-      friend class e_directed_fixed_topology_checker;
-
       template
       <
         maths::graph_flavour GraphFlavour,
@@ -71,12 +68,6 @@ namespace sequoia
     struct ft_checker_selector<maths::graph_flavour::directed>
     {
       template<class Checker> using ft_checker = directed_fixed_topology_checker<Checker>;
-    };
-
-    template<>
-    struct ft_checker_selector<maths::graph_flavour::directed_embedded>
-    {
-      template<class Checker> using ft_checker = e_directed_fixed_topology_checker<Checker>;
     };
   }
 }

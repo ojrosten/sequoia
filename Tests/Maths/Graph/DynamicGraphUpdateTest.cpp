@@ -154,7 +154,7 @@ namespace sequoia::testing
 
       check(equality, report_line(""), graph, expected);
     }
-    else if constexpr(GraphFlavour == flavour::directed_embedded)
+    /*else if constexpr(GraphFlavour == flavour::directed_embedded)
     {
       Graph expected{
         {{ei_t{0,1,0,1_sz}, ei_t{0,2,1,7_sz}, ei_t{2,0,2,2_sz}},
@@ -165,7 +165,7 @@ namespace sequoia::testing
       };
 
       check(equality, report_line(""), graph, expected);
-    }
+    }*/
     else
     {
       static_assert(dependent_false<Graph>::value);
@@ -270,7 +270,7 @@ namespace sequoia::testing
 
       check(equality, report_line(""), graph, expected);
     }
-    else if constexpr(GraphFlavour == flavour::directed_embedded)
+    /*else if constexpr(GraphFlavour == flavour::directed_embedded)
     {
       Graph expected{
         {{ei_t{0,1,0,12_sz}, ei_t{0,2,1,17_sz}, ei_t{2,0,2,16_sz}},
@@ -281,7 +281,7 @@ namespace sequoia::testing
       };
 
       check(equality, report_line(""), graph, expected);
-    }
+    }*/
     else
     {
       static_assert(dependent_false<Graph>::value);
@@ -347,7 +347,7 @@ namespace sequoia::testing
 
       check(equality, report_line(""), graph, expected);
     }
-    else if constexpr(GraphFlavour == flavour::directed_embedded)
+    /*else if constexpr(GraphFlavour == flavour::directed_embedded)
     {
       Graph expected{
         {{ei_t{0,1,0,1_sz}, ei_t{0,2,1,7_sz}, ei_t{2,0,2,2_sz}},
@@ -358,7 +358,7 @@ namespace sequoia::testing
       };
 
       check(equality, report_line(""), graph, expected);
-    }
+    }*/
     else
     {
       static_assert(dependent_false<Graph>::value);
@@ -461,7 +461,7 @@ namespace sequoia::testing
 
       check(equality, report_line(""), graph, expected);
     }
-    else if constexpr(GraphFlavour == flavour::directed_embedded)
+    /*else if constexpr(GraphFlavour == flavour::directed_embedded)
     {
       Graph expected{
         {{ei_t{0,1,0,11_sz}, ei_t{0,2,1,18_sz}, ei_t{2,0,2,15_sz}},
@@ -472,7 +472,7 @@ namespace sequoia::testing
       };
 
       check(equality, report_line(""), graph, expected);
-    }
+    }*/
     else
     {
       static_assert(dependent_false<Graph>::value);
@@ -598,7 +598,7 @@ namespace sequoia::testing
 
       check(equality, report_line(""), graph, expected);
     }
-    else if constexpr(GraphFlavour == flavour::directed_embedded)
+    /*else if constexpr(GraphFlavour == flavour::directed_embedded)
     {
       Graph expected{
         {{ei_t{0,1,0,11_sz}, ei_t{0,2,1,18_sz}, ei_t{2,0,2,14_sz}},
@@ -609,7 +609,7 @@ namespace sequoia::testing
       };
 
       check(equality, report_line(""), graph, expected);
-    }
+    }*/
     else
     {
       static_assert(dependent_false<Graph>::value);
@@ -677,7 +677,7 @@ namespace sequoia::testing
 
       check(equality, report_line(""), graph, expected);
     }
-    else if constexpr(GraphFlavour == flavour::directed_embedded)
+    /*else if constexpr(GraphFlavour == flavour::directed_embedded)
     {
       Graph expected{
         {{ei_t{0,1,0,1_sz}, ei_t{0,2,1,7_sz}, ei_t{2,0,2,2_sz}},
@@ -688,7 +688,7 @@ namespace sequoia::testing
       };
 
       check(equality, report_line(""), graph, expected);
-    }
+    }*/
     else
     {
       static_assert(dependent_false<Graph>::value);
@@ -779,7 +779,7 @@ namespace sequoia::testing
 
       check(equality, report_line(""), graph, expected);
     }
-    else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
+    /*else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
     {
       Graph expected{
         {{ei_t{0,1,0}, ei_t{1,0,1}, ei_t{2,0,1}},
@@ -789,7 +789,7 @@ namespace sequoia::testing
       };
 
       check(equality, report_line(""), graph, expected);
-    }
+    }*/
     else
     {
       static_assert(dependent_false<Graph>::value);
@@ -853,7 +853,7 @@ namespace sequoia::testing
 
       check(equality, report_line(""), graph, expected);
     }
-    else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
+    /*else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
     {
       Graph expected{
         {{ei_t{0,1,0,ew_t{0}}, ei_t{1,0,1,ew_t{0}}, ei_t{2,0,1,ew_t{0}}},
@@ -863,7 +863,7 @@ namespace sequoia::testing
       };
 
       check(equality, report_line(""), graph, expected);
-    }
+    }*/
     else
     {
       static_assert(dependent_false<Graph>::value);

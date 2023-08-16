@@ -54,29 +54,13 @@ namespace sequoia::testing
     constexpr static maths::edge_sharing_preference edge_sharing{maths::edge_sharing_preference::shared_weight};
   };
 
-  struct shared_edge_contiguous_edge_storage_traits
-  {
-    template <class T, class Traits> using storage_type = data_structures::partitioned_sequence<T, Traits>;
-    template <class T> using traits_type = data_structures::partitioned_sequence_traits<T>;
-
-    constexpr static maths::edge_sharing_preference edge_sharing{maths::edge_sharing_preference::shared_edge};
-  };
-
-  struct shared_edge_bucketed_edge_storage_traits
-  {
-    template <class T, class Traits> using storage_type = data_structures::bucketed_sequence<T, Traits>;
-    template <class T> using traits_type = data_structures::bucketed_sequence_traits<T>;
-
-    constexpr static maths::edge_sharing_preference edge_sharing{maths::edge_sharing_preference::shared_edge};
-  };
-
   // Meta
 
   [[nodiscard]]
   constexpr bool embedded(const maths::graph_flavour graphFlavour) noexcept
   {
     using gf = maths::graph_flavour;
-    return (graphFlavour == gf::directed_embedded) || (graphFlavour == gf::undirected_embedded);
+    return graphFlavour == gf::undirected_embedded;
   }
 
   template
@@ -103,7 +87,7 @@ namespace sequoia::testing
   >
   struct graph_type_generator<GraphFlavour, EdgeWeight, NodeWeight, EdgeStorageTraits, NodeWeightStorageTraits, true>
   {
-    using graph_type = maths::embedded_graph<maths::to_directedness(GraphFlavour), EdgeWeight, NodeWeight, EdgeStorageTraits, NodeWeightStorageTraits>;
+    using graph_type = maths::embedded_graph<EdgeWeight, NodeWeight, EdgeStorageTraits, NodeWeightStorageTraits>;
   };
 
   template

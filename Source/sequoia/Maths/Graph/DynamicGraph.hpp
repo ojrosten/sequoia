@@ -356,7 +356,6 @@ namespace sequoia::maths
 
   template
   <
-    directed_flavour Directedness,
     class EdgeWeight,
     class NodeWeight,
     class EdgeStorageTraits=bucketed_edge_storage_traits,
@@ -365,7 +364,7 @@ namespace sequoia::maths
   class embedded_graph final : public
     graph_base
     <
-      graph_impl::to_embedded_graph_flavour<Directedness>(),
+      graph_flavour::undirected_embedded,
       EdgeWeight,
       NodeWeight,
       EdgeStorageTraits,
@@ -378,7 +377,7 @@ namespace sequoia::maths
     using
       graph_base
       <
-        graph_impl::to_embedded_graph_flavour<Directedness>(),
+        graph_flavour::undirected_embedded,
         EdgeWeight,
         NodeWeight,
         EdgeStorageTraits,
@@ -388,7 +387,7 @@ namespace sequoia::maths
     using base_type =
       graph_base
       <
-        graph_impl::to_embedded_graph_flavour<Directedness>(),
+        graph_flavour::undirected_embedded,
         EdgeWeight,
         NodeWeight,
         EdgeStorageTraits,

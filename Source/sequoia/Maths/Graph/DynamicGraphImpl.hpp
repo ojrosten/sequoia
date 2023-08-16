@@ -23,13 +23,6 @@ namespace sequoia::maths::graph_impl
     return F == directed_flavour::directed ? graph_flavour::directed : graph_flavour::undirected;
   }
 
-  template<directed_flavour F>
-  [[nodiscard]]
-  constexpr graph_flavour to_embedded_graph_flavour() noexcept
-  {
-    return F == directed_flavour::directed ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded;
-  }
-
   template<class NodeStorage>
   struct node_allocator_generator
   {

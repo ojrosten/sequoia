@@ -26,7 +26,7 @@ namespace sequoia::testing
 
     constexpr static auto arrage();
 
-    constexpr static auto bfs();
+    //constexpr static auto bfs();
 
     constexpr static auto priority_search();
   };

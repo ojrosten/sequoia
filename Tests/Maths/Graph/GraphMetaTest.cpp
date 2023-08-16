@@ -30,7 +30,6 @@ namespace sequoia::testing
     test_undirected<graph_flavour::undirected, partial_edge>();
     test_undirected<graph_flavour::undirected_embedded, embedded_partial_edge>();
     test_directed();
-    test_directed_embedded();
   }
 
   void test_graph_meta::test_method_detectors()
@@ -137,20 +136,6 @@ namespace sequoia::testing
     static_assert(std::is_same_v<edge_t, partial_edge<handler_type>>);
   }
 
-  template<class EdgeWeight>
-  void test_graph_meta::test_directed_embedded_impl()
-  {
-    using namespace maths;
-    using namespace graph_impl;
-    using namespace data_structures;
-    using namespace object;
-
-    using gen_t = dynamic_edge_traits<graph_flavour::directed_embedded, EdgeWeight, contiguous_edge_storage_traits, std::size_t>;
-    using edge_t       = typename gen_t::edge_type;
-    using handler_type = shared_to_handler_t<false, EdgeWeight>;
-    static_assert(std::is_same_v<edge_t, edge<handler_type>>);
-  }
-
   void test_graph_meta::test_directed()
   {
     using namespace maths;
@@ -160,17 +145,5 @@ namespace sequoia::testing
 
     test_directed_impl<std::tuple<double,double,double>>();
     test_directed_impl<std::tuple<double,double,double>>();
-  }
-
-
-  void test_graph_meta::test_directed_embedded()
-  {
-    using namespace maths;
-
-    test_directed_embedded_impl<int>();
-    test_directed_embedded_impl<int>();
-
-    test_directed_embedded_impl<std::tuple<double,double,double>>();
-    test_directed_embedded_impl<std::tuple<double,double,double>>();
   }
 }

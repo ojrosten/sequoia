@@ -404,10 +404,7 @@ namespace sequoia::maths::graph_impl
     [[nodiscard]]
     constexpr static bool is_loop(Iter iter, [[maybe_unused]] const edge_index_type currentNodeIndex)
     {
-      if constexpr(G::flavour == graph_flavour::directed_embedded)
-        return iter->target_node() == iter->source_node();
-      else
-        return iter->target_node() == currentNodeIndex;
+      return iter->target_node() == currentNodeIndex;
     }
 
     template
@@ -464,24 +461,7 @@ namespace sequoia::maths::graph_impl
         else if constexpr(G::flavour != graph_flavour::directed)
         {
           constexpr bool hasEdgeSecondFn{!std::same_as<std::remove_cvref_t<ESTF>, null_func_obj>};
-          if constexpr(G::flavour == graph_flavour::directed_embedded)
-          {
-            if(is_loop(iter, nodeIndex))
-            {
-              const bool loopMatched{loops.loop_matched(begin, iter)};
-              if((iter->inverted() && !loopMatched) || (!iter->inverted() && loopMatched)) continue;
-            }
-            else
-            {
-              if(iter->source_node() != nodeIndex) continue;
-            }
-
-            if constexpr(hasEdgeFirstFn)
-            {
-              taskProcessingModel.push(edgeFirstTraversalFn, iter);
-            }
-          }
-          else if constexpr(hasEdgeFirstFn || hasEdgeSecondFn)
+          if constexpr(hasEdgeFirstFn || hasEdgeSecondFn)
           {
             const bool loopMatched{is_loop(iter, nodeIndex) && loops.loop_matched(begin, iter)};
             const bool secondTraversal{processed[nextNode] || loopMatched};

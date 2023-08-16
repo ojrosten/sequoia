@@ -41,37 +41,37 @@ namespace sequoia::testing
     return ordering;
   }
 
-  constexpr auto test_static_graph_traversals::bfs()
-  {
-    using namespace maths;
-    using g_type = static_embedded_graph<directed_flavour::directed, 2, 1, null_weight, null_weight>;
-    using edge_t = typename g_type::edge_init_type;
+  //constexpr auto test_static_graph_traversals::bfs()
+  //{
+  //  using namespace maths;
+  //  using g_type = static_embedded_graph<directed_flavour::directed, 2, 1, null_weight, null_weight>;
+  //  using edge_t = typename g_type::edge_init_type;
 
-    //   /--<--\ ->-\
-    //   \   / /    /
-    //    \ / /    /
+  //  //   /--<--\ ->-\
+  //  //   \   / /    /
+  //  //    \ / /    /
 
-    constexpr g_type g{
-      {
-        edge_t{0, inversion_constant<true>{}, 2},
-        edge_t{0, 0, 3},
-        edge_t{0, inversion_constant<true>{}, 0},
-        edge_t{0, 0, 1}
-      },
-    };
+  //  constexpr g_type g{
+  //    {
+  //      edge_t{0, inversion_constant<true>{}, 2},
+  //      edge_t{0, 0, 3},
+  //      edge_t{0, inversion_constant<true>{}, 0},
+  //      edge_t{0, 0, 1}
+  //    },
+  //  };
 
-    std::array<std::size_t, 2> edgeData{};
-    std::size_t index{};
-    auto edgeFn{
-      [&edgeData, &index](const auto edgeIter){
-        edgeData[index++] = edgeIter->complementary_index();
-      }
-    };
+  //  std::array<std::size_t, 2> edgeData{};
+  //  std::size_t index{};
+  //  auto edgeFn{
+  //    [&edgeData, &index](const auto edgeIter){
+  //      edgeData[index++] = edgeIter->complementary_index();
+  //    }
+  //  };
 
-    traverse(breadth_first, g, find_disconnected_t{}, null_func_obj{}, null_func_obj{}, edgeFn);
+  //  traverse(breadth_first, g, find_disconnected_t{}, null_func_obj{}, null_func_obj{}, edgeFn);
 
-    return edgeData;
-  }
+  //  return edgeData;
+  //}
 
   constexpr auto test_static_graph_traversals::priority_search()
   {
@@ -118,11 +118,11 @@ namespace sequoia::testing
       check(equality, report_line(""), ordering[1], 1_sz);
     }
 
-    {
+    /*{
       constexpr auto data{bfs()};
       check(equality, report_line(""), data[0], 3_sz);
       check(equality, report_line(""), data[1], 0_sz);
-    }
+    }*/
 
     {
       constexpr auto weights{priority_search()};

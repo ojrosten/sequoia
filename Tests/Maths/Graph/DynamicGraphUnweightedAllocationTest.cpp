@@ -107,14 +107,6 @@ namespace sequoia::testing
                       allocation_info{edge_alloc_getter<Graph>{}, {0_c, {1_c, 0_mu}, {1_anp, 1_awp}}},
                       allocation_info{edge_partitions_alloc_getter<Graph>{}, {0_c, {1_c, 1_mu}, {1_anp, 1_awp}}});
     }
-    else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
-    {
-      check_semantics(report_line(""),
-                      g2,
-                      Graph{{edge_init_t{0,1,0}}, {edge_init_t{0,1,0}}},
-                      nodeMaker, allocation_info{edge_alloc_getter<Graph>{}, {0_c, {1_c, 0_mu}, {1_anp, 1_awp}}},
-                      allocation_info{edge_partitions_alloc_getter<Graph>{}, {0_c, {1_c, 1_mu}, {1_anp, 1_awp}}});
-    }
     else
     {
       check_semantics(report_line(""),
@@ -190,17 +182,6 @@ namespace sequoia::testing
       check_semantics(report_line(""),
                       g2,
                       Graph{{edge_init_t{1}}, {edge_init_t{0}}},
-                      nodeMaker,
-                      allocation_info{edge_alloc_getter<Graph>{},
-                                      {0_c, {1_c, 1_mu}, {1_anp, 1_awp}},
-                                      { {0_c, {2_c, 0_mu}, {2_anp, 2_awp}, {0_containers, 2_containers, 3_postmutation}} }
-                      });
-    }
-    else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
-    {
-      check_semantics(report_line(""),
-                      g2,
-                      Graph{{edge_init_t{0,1,0}}, {edge_init_t{0,1,0}}},
                       nodeMaker,
                       allocation_info{edge_alloc_getter<Graph>{},
                                       {0_c, {1_c, 1_mu}, {1_anp, 1_awp}},

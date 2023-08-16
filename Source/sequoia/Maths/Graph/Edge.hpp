@@ -209,7 +209,7 @@ namespace sequoia
 
     //===================================Helper Enum===================================//
 
-    enum class edge_flavour{ partial, partial_embedded, full, full_embedded};
+    enum class edge_flavour : bool { partial, partial_embedded };
 
     //===================================Partial Edge===================================//
 
@@ -294,135 +294,6 @@ namespace sequoia
       [[nodiscard]]
       constexpr index_type complementary_index() const noexcept { return this->auxiliary_index(); }
       constexpr void complementary_index(const index_type index) noexcept { return this->auxiliary_index(index); }
-    };
-
-    //===================================Full Edge===================================//
-
-    template<bool Inverted> struct inversion_constant : public std::bool_constant<Inverted> {};
-
-    template<bool Inverted> constexpr bool inversion_v{inversion_constant<Inverted>::value};
-
-    using inverted_edge_t = maths::inversion_constant<true>;
-
-    inline constexpr inverted_edge_t inverted_edge{};
-
-    /*! \class edge
-        \brief Stores the source node as well as the target node and an optional weight.
-
-     */
-
-    template<class WeightHandler, std::integral IndexType=std::size_t>
-      requires object::handler<WeightHandler>
-    class edge : public decorated_edge_base<WeightHandler, IndexType>
-    {
-    public:
-      constexpr static edge_flavour flavour{edge_flavour::full};
-      using weight_type = typename decorated_edge_base<WeightHandler, IndexType>::weight_type;
-      using index_type  = typename decorated_edge_base<WeightHandler, IndexType>::index_type;
-
-      template<class... Args>
-      constexpr edge(const index_type source, const index_type target, Args&&... args)
-        : decorated_edge_base<WeightHandler, IndexType>{target, source, std::forward<Args>(args)...}
-      {
-        if(source == npos) throw std::runtime_error("Cannot initialize full edge using max value of index");
-      }
-
-      template<bool Inverted, class... Args>
-      constexpr edge(const index_type node, const inversion_constant<Inverted> inverted, Args&&... args)
-        : decorated_edge_base<WeightHandler, IndexType>{node, inverted.value ? npos : node, std::forward<Args>(args)...}
-      {
-        if(node == npos) throw std::runtime_error("Cannot initialize full edge using max value of index");
-      }
-
-      constexpr edge(const edge&)            = default;
-      constexpr edge(edge&&)                 = default;
-      constexpr edge& operator=(const edge&) = default;
-      constexpr edge& operator=(edge&&)      = default;
-
-      [[nodiscard]]
-      constexpr index_type source_node() const noexcept
-      {
-        return this->auxiliary_index() < npos ? this->auxiliary_index() : this->target_node();
-      }
-
-      constexpr void source_node(const index_type source) noexcept
-      {
-        if(!inverted()) this->auxiliary_index(source);
-        else            this->target_node(source);
-      }
-
-      [[nodiscard]]
-      constexpr bool inverted() const noexcept { return this->auxiliary_index() == npos; }
-    private:
-      constexpr static auto npos = std::numeric_limits<IndexType>::max();
-    };
-
-    //===================================Full Embedded Edge===================================//
-
-    /*! \class embedded_edge
-        \brief Decoration of edge to record the location on the target node into
-               which the edge is embedded.
-
-     */
-
-    template<class WeightHandler, std::integral IndexType=std::size_t>
-      requires object::handler<WeightHandler>
-    class embedded_edge : public decorated_edge_base<WeightHandler, IndexType>
-    {
-    public:
-      constexpr static edge_flavour flavour{edge_flavour::full_embedded};
-      using weight_type = typename decorated_edge_base<WeightHandler, IndexType>::weight_type;
-      using index_type  = typename decorated_edge_base<WeightHandler, IndexType>::index_type;
-
-      template<class... Args>
-      constexpr embedded_edge(const index_type source, const index_type target, const index_type auxIndex, Args&&... args)
-        : decorated_edge_base<WeightHandler, IndexType>{target, auxIndex, std::forward<Args>(args)...}
-        , m_HostIndex{source}
-      {
-        if(source == npos) throw std::runtime_error("Cannot initialize full edge using max value of index");
-      }
-
-      template<bool Inverted, class... Args>
-      constexpr embedded_edge(const index_type node, const inversion_constant<Inverted> inverted, const index_type auxIndex, Args&&... args)
-        : decorated_edge_base<WeightHandler, IndexType>{node, auxIndex, std::forward<Args>(args)...}
-        , m_HostIndex{inverted.value ? npos : node}
-      {
-        if(node == npos) throw std::runtime_error("Cannot initialize full edge using max value of index");
-      }
-
-      constexpr embedded_edge(const index_type auxIndex, const embedded_edge& in)
-        : decorated_edge_base<WeightHandler, IndexType>{in.target_node(), auxIndex, in}
-        , m_HostIndex{in.m_HostIndex}
-      {
-      }
-
-      constexpr embedded_edge(const embedded_edge&)            = default;
-      constexpr embedded_edge(embedded_edge&&)                 = default;
-      constexpr embedded_edge& operator=(const embedded_edge&) = default;
-      constexpr embedded_edge& operator=(embedded_edge&&)      = default;
-
-      [[nodiscard]]
-      constexpr index_type complementary_index() const noexcept { return this->auxiliary_index(); }
-      constexpr void complementary_index(const index_type auxIndex) noexcept { return this->auxiliary_index(auxIndex); }
-
-      [[nodiscard]]
-      constexpr index_type source_node() const noexcept { return !inverted() ? m_HostIndex : this->target_node(); }
-
-      constexpr void source_node(const index_type source) noexcept
-      {
-        if(!inverted()) m_HostIndex = source;
-        else            this->target_node(source);
-      }
-
-      [[nodiscard]]
-      constexpr bool inverted() const noexcept { return m_HostIndex == npos; }
-
-      [[nodiscard]]
-      friend constexpr bool operator==(const embedded_edge&, const embedded_edge&) noexcept = default;
-    private:
-      constexpr static auto npos = std::numeric_limits<IndexType>::max();
-
-      IndexType m_HostIndex;
     };
   }
 }

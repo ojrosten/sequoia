@@ -32,9 +32,6 @@ namespace sequoia::testing
 
     test_directed<int, null_weight>();
     test_directed<int, int>();
-
-    test_embedded_directed<int, null_weight>();
-    test_embedded_directed<int, int>();
    }
 
   template<class EdgeWeight, class NodeWeight>
@@ -73,19 +70,6 @@ namespace sequoia::testing
     {
       using g_type = static_graph<directed_flavour::directed, 10, 3, EdgeWeight, NodeWeight>;
       checker.template check_3_10<g_type>();
-    }
-  }
-
-  template<class EdgeWeight, class NodeWeight>
-  void test_static_fixed_topology::test_embedded_directed()
-  {
-    using namespace maths;
-
-    e_directed_fixed_topology_checker<test_static_fixed_topology> checker{*this};
-
-    {
-      using g_type = static_embedded_graph<directed_flavour::directed, 2, 2, EdgeWeight, NodeWeight>;
-      checker.template check_2_2<g_type>();
     }
   }
 }

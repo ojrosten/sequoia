@@ -80,15 +80,6 @@ namespace sequoia::testing
     test_generic_directed<int, int>();
     test_generic_directed<int, unsortable>();
     test_generic_directed<int, big_unsortable>();
-
-    test_generic_embedded_directed<null_weight, null_weight>();
-    test_generic_embedded_directed<null_weight, int>();
-    test_generic_embedded_directed<null_weight, unsortable>();
-    test_generic_embedded_directed<null_weight, big_unsortable>();
-    test_generic_embedded_directed<int, null_weight>();
-    test_generic_embedded_directed<int, int>();
-    test_generic_embedded_directed<int, unsortable>();
-    test_generic_embedded_directed<int, big_unsortable>();
   }
 
   template<class NodeWeight, class EdgeWeight>
@@ -246,43 +237,5 @@ namespace sequoia::testing
        using g_type = static_graph<directed_flavour::directed, 2, 4, EdgeWeight, NodeWeight>;
        checker.template check_4_2<g_type>();
      }
-  }
-
-  template<class NodeWeight, class EdgeWeight>
-  void test_static_graph::test_generic_embedded_directed()
-  {
-    using namespace maths;
-
-    directed_embedded_init_checker<test_static_graph> checker{*this};
-
-    {
-      using g_type = static_embedded_graph<directed_flavour::directed, 0, 0, EdgeWeight, NodeWeight>;
-      checker.template check_0_0<g_type>();
-    }
-
-    {
-      using g_type = static_embedded_graph<directed_flavour::directed, 0, 1, EdgeWeight, NodeWeight>;
-      checker.template check_1_0<g_type>();
-    }
-
-    {
-      using g_type = static_embedded_graph<directed_flavour::directed, 1, 1, EdgeWeight, NodeWeight>;
-      checker.template check_1_1<g_type>();
-    }
-
-    {
-      using g_type = static_embedded_graph<directed_flavour::directed, 0, 2, EdgeWeight, NodeWeight>;
-      checker.template check_2_0<g_type>();
-    }
-
-    {
-      using g_type = static_embedded_graph<directed_flavour::directed, 1, 2, EdgeWeight, NodeWeight>;
-      checker.template check_2_1<g_type>();
-    }
-
-    {
-      using g_type = static_embedded_graph<directed_flavour::directed, 1, 3, EdgeWeight, NodeWeight>;
-      checker.template check_3_1<g_type>();
-    }
   }
 }
