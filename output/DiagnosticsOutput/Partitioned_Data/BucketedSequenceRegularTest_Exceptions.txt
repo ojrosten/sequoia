@@ -1,4 +1,4 @@
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 93
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 114
 Pushing back to non-existent partition throws
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ bucketed_sequence::index 0 out of range
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 101
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 122
 Inserting to non-existent partition throws
 
 Expected Exception Type:
@@ -16,7 +16,7 @@ bucketed_sequence::begin_partition: no buckets!
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 109
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 130
 Inserting to non-existent partition throws
 
 Expected Exception Type:
@@ -25,7 +25,7 @@ bucketed_sequence::end_partition: no buckets!
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 117
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 138
 Swapping non-existent partition throws
 
 Expected Exception Type:
@@ -147,7 +147,7 @@ partition throws for empty container
 
 Expected Exception Type:
 [std::out_of_range]
-bucketed_sequence::begin_partition: no buckets!
+bucketed_sequence::end_partition: no buckets!
 
 =======================================
 
@@ -156,7 +156,7 @@ partition throws for empty container in const context
 
 Expected Exception Type:
 [std::out_of_range]
-bucketed_sequence::begin_partition: no buckets!
+bucketed_sequence::end_partition: no buckets!
 
 =======================================
 
@@ -165,7 +165,7 @@ cpartition throws for empty container
 
 Expected Exception Type:
 [std::out_of_range]
-bucketed_sequence::begin_partition: no buckets!
+bucketed_sequence::end_partition: no buckets!
 
 =======================================
 
@@ -187,7 +187,7 @@ bucketed_sequence::end_partition: no buckets!
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 151
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 172
 Pushing back to non-existent partition throws
 
 Expected Exception Type:
@@ -196,7 +196,7 @@ bucketed_sequence::index 1 out of range
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 159
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 180
 Inserting to non-existent partition throws
 
 Expected Exception Type:
@@ -205,7 +205,7 @@ bucketed_sequence: partition index 18446744073709551615 out of range
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 167
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 188
 Inserting to non-existent partition throws
 
 Expected Exception Type:
@@ -214,7 +214,7 @@ bucketed_sequence: partition index 18446744073709551615 out of range
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 175
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 196
 Swapping non-existent partition throws
 
 Expected Exception Type:
@@ -223,7 +223,7 @@ bucketed_sequence::swap_partitions - index out of range
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 183
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 204
 Swapping non-existent partition throws
 
 Expected Exception Type:
@@ -232,7 +232,7 @@ bucketed_sequence::swap_partitions - index out of range
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 226
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 247
 
 Expected Exception Type:
 [std::out_of_range]
@@ -240,7 +240,7 @@ bucketed_sequence::swap_partitions - index out of range
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 234
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 255
 
 Expected Exception Type:
 [std::out_of_range]
