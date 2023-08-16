@@ -1,2 +1,2 @@
 Bucketed Sequence Regular Test
-Standard Top Level Checks:               109;  Failures:  0  [Deep checks: 2912]
+Standard Top Level Checks:               187;  Failures:  0  [Deep checks: 12297]

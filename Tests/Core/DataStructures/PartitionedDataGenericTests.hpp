@@ -28,23 +28,44 @@ namespace sequoia::testing
       // [3]
       one_3,
 
+      // [2,3]
+      one_2_3,
+
+      // [3,2]
+      one_3_2,
+
       // [][]
       two_empty_partitions,
 
       // [2][]
       two_2__,
 
+      // [3][]
+      two_3__,
+
+      // [2,3][]
+      two_2_3__,
+
       // [][2]
       two__2,
 
-      // [3][]
-      two_3__,
+      // [][2,3]
+      two__2_3,
 
       // [2][3]
       two_2__3,
 
       // [3][2]
-      two_3__2
+      two_3__2,
+
+      // [2][][3]
+      three_2____3,
+
+      // [3][][2]
+      three_3____2,
+
+      // [2][3][]
+      three_2__3__
     };
   }
 
@@ -340,6 +361,38 @@ namespace sequoia::testing
                 *d.rbegin_partition(0) = 3;
                 return d;
               }
+            },
+            {
+              data_description::one_2_3,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                d.push_back_to_partition(0, 3);
+                return d;
+              }
+            },
+            {
+              data_description::one_2_3,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                d.insert_to_partition(d.cbegin_partition(0)+1, 3);
+                return d;
+              }
+            },
+            {
+              data_description::two_2__,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                d.add_slot();
+                return d;
+              }
+            },
+            {
+              data_description::two__2,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                d.insert_slot(0);
+                return d;
+              }
             }
           }, // end 'one_2'
           {  // begin 'one_3'
@@ -350,8 +403,100 @@ namespace sequoia::testing
                 *d.begin_partition(0) = 2;
                 return d;
               }
+            },
+            {
+              data_description::one_3_2,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                d.push_back_to_partition(0, 2);
+                return d;
+              }
+            },
+            {
+              data_description::one_2_3,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                d.insert_to_partition(d.cbegin_partition(0), 2);
+                return d;
+              }
             }
           }, // end 'one_3'
+          {  // begin 'one_2_3'
+            {
+              data_description::one_3,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                d.erase_from_partition(d.cbegin_partition(0));
+                return d;
+              }
+            },
+            {
+              data_description::one_2,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                d.erase_from_partition(d.cbegin_partition(0)+1);
+                return d;
+              }
+            },
+            {
+              data_description::empty,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                d.erase_slot(0);
+                return d;
+              }
+            },
+            {
+              data_description::empty,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                d.clear();
+                return d;
+              }
+            },
+            {
+              data_description::one_3_2,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                std::ranges::sort(d.begin_partition(0), d.end_partition(0), std::greater{});
+                return d;
+              }
+            },
+            {
+              data_description::two__2_3,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                d.insert_slot(0);
+                return d;
+              }
+            }
+          }, // end 'one_2_3'
+          {  // begin 'one_3_2'
+            {
+              data_description::one_2,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                d.erase_from_partition(d.cbegin_partition(0));
+                return d;
+              }
+            },
+            {
+              data_description::one_3,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                d.erase_from_partition(d.cbegin_partition(0) + 1);
+                return d;
+              }
+            },
+            {
+              data_description::one_2_3,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                std::ranges::sort(d.begin_partition(0), d.end_partition(0));
+                return d;
+              }
+            }
+          }, // end 'one_3_2'
           {  // begin 'two_empty_partitions'
             {
               data_description::two_empty_partitions,
@@ -376,8 +521,175 @@ namespace sequoia::testing
                 d.erase_slot(1);
                 return d;
               }
+            },
+            {
+              data_description::empty,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                d.clear();
+                return d;
+              }
+            },
+            {
+              data_description::two_2__,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                d.push_back_to_partition(0, 2);
+                return d;
+              }
+            },
+            {
+              data_description::two_2__,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                d.insert_to_partition(d.cbegin_partition(0), 2);
+                return d;
+              }
+            },
+            {
+              data_description::two__2,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                d.insert_to_partition(d.cbegin_partition(1), 2);
+                return d;
+              }
             }
-          }  // end 'two_empty_partitions'
+          }, // end 'two_empty_partitions'
+          {  // begin 'two_2__'
+            {
+              data_description::empty_partition,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                d.erase_slot(0);
+                return d;
+              }
+            },
+            {
+              data_description::one_2,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                d.erase_slot(1);
+                return d;
+              }
+            },
+            {
+              data_description::two__2,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                d.swap_partitions(0, 1);
+                return d;
+              }
+            },
+            {
+              data_description::two__2,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                d.swap_partitions(1, 0);
+                return d;
+              }
+            }
+          }, // end 'two_2__'
+          {  // begin 'two_3__'
+            {
+              data_description::two_2_3__,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                d.insert_to_partition(d.cbegin_partition(0), 2);
+                return d;
+              }
+            }
+          }, // end 'two_3__'
+          {  // begin 'two_2_3__'
+            {
+              data_description::two__2_3,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                d.swap_partitions(0, 1);
+                return d;
+              }
+            },
+            {
+              data_description::two_3__,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                d.erase_from_partition(d.cbegin_partition(0));
+                return d;
+              }
+            },
+          }, // end 'two_2_3__'
+          {  // begin 'two__2'
+            {
+              data_description::two_2__,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                d.swap_partitions(1, 0);
+                return d;
+              }
+            }
+          }, // end 'two__2'
+          {  // begin 'two__2_3'
+            {
+              data_description::two__2,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                d.erase_from_partition(d.cbegin_partition(1) + 1);
+                return d;
+              }
+            },
+            {
+              data_description::two_2_3__,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                d.swap_partitions(0, 1);
+                return d;
+              }
+            }
+          }, // end 'two__2_3'
+          {  // begin 'two_2__3'
+            {
+              data_description::two_3__2,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                d.swap_partitions(0, 1);
+                return d;
+              }
+            },
+            {
+              data_description::one_2,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                d.erase_slot(1);
+                return d;
+              }
+            },
+            {
+              data_description::one_3,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                d.erase_slot(0);
+                return d;
+              }
+            }
+          }, // end 'two_2__3'
+          {  // begin 'two_3__2'
+            {
+              data_description::two_2__3,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                d.swap_partitions(1, 0);
+                return d;
+              }
+            }
+          }, // end 'two_3__2'
+          {  // begin 'three_2____3'
+
+          }, // end 'three_2____3'
+          {  // begin 'three_3____2'
+
+          }, // end 'three_3____2'
+          {  // begin 'three_2__3__'
+
+          }, // end 'three_2__3__'
         },
         {
           //  'empty'
@@ -392,8 +704,44 @@ namespace sequoia::testing
           // 'one_3'
           make_and_check(t, t.report_line(""), {{3}}),
 
+          // 'one_2_3'
+          make_and_check(t, t.report_line(""), {{2, 3}}),
+
+          // 'one_3_2'
+          make_and_check(t, t.report_line(""), {{3, 2}}),
+
           // 'two_empty_partitions'
-          make_and_check(t, t.report_line(""), {{}, {}})
+          make_and_check(t, t.report_line(""), {{}, {}}),
+
+          // 'two_2__'
+          make_and_check(t, t.report_line(""), {{2}, {}}),
+
+          // 'two_3__'
+          make_and_check(t, t.report_line(""), {{3}, {}}),
+
+          // 'two_2_3__'
+          make_and_check(t, t.report_line(""), {{2,3}, {}}),
+
+          // 'two__2'
+          make_and_check(t, t.report_line(""), {{}, {2}}),
+
+          // 'two__2_3'
+          make_and_check(t, t.report_line(""), {{}, {2, 3}}),
+
+          // 'two_2__3'
+          make_and_check(t, t.report_line(""), {{2}, {3}}),
+
+          // 'two_3__2'
+          make_and_check(t, t.report_line(""), {{3}, {2}}),
+
+          // 'three_2____3'
+          make_and_check(t, t.report_line(""), {{2}, {}, {3}}),
+
+          // 'three_3____2'
+          make_and_check(t, t.report_line(""), {{3}, {}, {2}}),
+
+          // 'three_2__3__'
+          make_and_check(t, t.report_line(""), {{2}, {3}, {}}),
         }
       };
     }
