@@ -669,6 +669,22 @@ namespace sequoia::testing
                 d.erase_slot(0);
                 return d;
               }
+            },
+            {
+              data_description::three_2____3,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                d.insert_slot(1);
+                return d;
+              }
+            },
+            {
+              data_description::three_2__3__,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                d.insert_slot(2);
+                return d;
+              }
             }
           }, // end 'two_2__3'
           {  // begin 'two_3__2'
@@ -679,16 +695,69 @@ namespace sequoia::testing
                 d.swap_partitions(1, 0);
                 return d;
               }
+            },
+            {
+              data_description::three_3____2,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                d.insert_slot(1);
+                return d;
+              }
             }
           }, // end 'two_3__2'
           {  // begin 'three_2____3'
-
+            {
+              data_description::three_3____2,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                d.swap_partitions(0,2);
+                return d;
+              }
+            },
+            {
+              data_description::three_2__3__,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                d.swap_partitions(1,2);
+                return d;
+              }
+            },
+            {
+              data_description::two_2__3,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                d.erase_slot(1);
+                return d;
+              }
+            }
           }, // end 'three_2____3'
           {  // begin 'three_3____2'
-
+            {
+              data_description::three_2____3,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                d.swap_partitions(2,0);
+                return d;
+              }
+            },
+            {
+              data_description::two__2,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                d.erase_slot(0);
+                return d;
+              }
+            }
           }, // end 'three_3____2'
           {  // begin 'three_2__3__'
-
+            {
+              data_description::three_2____3,
+              t.report_line(""),
+              [&t](data_t d) -> data_t {
+                d.swap_partitions(2,1);
+                return d;
+              }
+            }
           }, // end 'three_2__3__'
         },
         {
