@@ -1,2 +1,0 @@
-Directed Embedded Graph Fundamental Weight Tests
-Standard Top Level Checks:               672;  Failures:  0  [Deep checks: 75450]
