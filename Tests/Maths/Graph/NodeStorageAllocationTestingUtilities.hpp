@@ -20,7 +20,7 @@ namespace sequoia::testing
   struct node_storage_alloc_getter
   {
     using allocator_type = typename Storage::allocator_type;
-    using alloc_equivalence_class = allocation_equivalence_classes::container_of_pointers<allocator_type>;
+    using alloc_equivalence_class = allocation_equivalence_classes::container_of_values<allocator_type>;
 
     [[nodiscard]]
     allocator_type operator()(const Storage& s) const

@@ -16,7 +16,6 @@
 #include "sequoia/Core/ContainerUtilities/Iterator.hpp"
 #include "sequoia/Algorithms/Algorithms.hpp"
 #include "sequoia/Maths/Sequences/MonotonicSequence.hpp"
-#include "sequoia/Core/ContainerUtilities/AssignmentUtilities.hpp"
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
 
 #include <string>
@@ -149,22 +148,9 @@ namespace sequoia
         : m_Buckets(std::move(other).m_Buckets, allocator)
       {}
 
-      bucketed_sequence& operator=(bucketed_sequence&&) = default;
+      bucketed_sequence& operator=(bucketed_sequence&&) noexcept = default;
 
-      bucketed_sequence& operator=(const bucketed_sequence& other)
-      {
-        if(&other != this)
-        {
-          auto allocGetter{
-            [](const  bucketed_sequence& s){
-              return s.get_allocator();
-            }
-          };
-          assignment_helper::assign(*this, other, allocGetter);
-        }
-
-        return *this;
-      }
+      bucketed_sequence& operator=(const bucketed_sequence&) = default;
 
       void swap(bucketed_sequence& other)
         noexcept(noexcept(std::ranges::swap(this->m_Buckets, other.m_Buckets)))
@@ -492,7 +478,6 @@ namespace sequoia
     template<class T, class Traits>
     class partitioned_sequence_base
     {
-      friend struct sequoia::assignment_helper;
     public:
       using value_type          = T;
       using traits_type         = Traits;
@@ -661,9 +646,9 @@ namespace sequoia
       }
 
       template<alloc Allocator, alloc PartitionsAllocator>
-        requires (   std::allocator_traits<Allocator>::propagate_on_container_copy_assignment::value
-                  && std::allocator_traits<PartitionsAllocator>::propagate_on_container_copy_assignment::value)
-      void reset(const Allocator& allocator, const PartitionsAllocator& partitionsAllocator) noexcept
+        requires (std::allocator_traits<Allocator>::propagate_on_container_copy_assignment::value
+      && std::allocator_traits<PartitionsAllocator>::propagate_on_container_copy_assignment::value)
+        void reset(const Allocator& allocator, const PartitionsAllocator& partitionsAllocator) noexcept
       {
         const PartitionsType partitions(partitionsAllocator);
         m_Partitions = partitions;
@@ -679,33 +664,7 @@ namespace sequoia
 
       constexpr partitioned_sequence_base& operator=(partitioned_sequence_base&&) noexcept = default;
 
-      constexpr partitioned_sequence_base& operator=(const partitioned_sequence_base& other)
-      {
-        if(&other != this)
-        {
-          auto allocGetter{
-            []([[maybe_unused]] const partitioned_sequence_base& other) {
-              if constexpr(has_allocator_type_v<container_type>)
-              {
-                return other.m_Storage.get_allocator();
-              }
-            }
-          };
-
-          auto partitionsAllocGetter{
-            []([[maybe_unused]] const partitioned_sequence_base& other){
-              if constexpr(has_allocator_type_v<PartitionsType>)
-              {
-                return other.m_Partitions.get_allocator();
-              }
-            }
-          };
-
-          assignment_helper::assign(*this, other, allocGetter, partitionsAllocGetter);
-        }
-
-        return *this;
-      }
+      constexpr partitioned_sequence_base& operator=(const partitioned_sequence_base&) = default;
 
       void swap(partitioned_sequence_base& other)
         noexcept(noexcept(std::ranges::swap(this->m_Partitions, other.m_Partitions)) && noexcept(std::ranges::swap(this->m_Storage, other.m_Storage)))

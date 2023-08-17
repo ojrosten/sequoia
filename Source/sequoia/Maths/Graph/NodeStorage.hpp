@@ -18,7 +18,6 @@
  */
 
 #include "sequoia/Core/ContainerUtilities/ArrayUtilities.hpp"
-#include "sequoia/Core/ContainerUtilities/AssignmentUtilities.hpp"
 #include "sequoia/Core/ContainerUtilities/Iterator.hpp"
 #include "sequoia/Maths/Graph/EdgesAndNodesUtilities.hpp"
 
@@ -37,8 +36,6 @@ namespace sequoia::maths::graph_impl
   template<class Weight, class Traits>
   class node_storage
   {
-    friend struct sequoia::assignment_helper;
-
     template<class S> using Container = typename Traits::template container_type<S>;
   public:
     using weight_type                = Weight;
@@ -170,14 +167,6 @@ namespace sequoia::maths::graph_impl
       return std::forward<Fn>(fn)(m_NodeWeights[index]);
     }
 
-    template<alloc Allocator>
-      requires (std::allocator_traits<Allocator>::propagate_on_container_copy_assignment::value)
-    void reset(const Allocator& allocator) noexcept
-    {
-      const node_weight_container_type storage(allocator);
-      m_NodeWeights = storage;
-    }
-
     [[nodiscard]]
     friend constexpr bool operator==(const node_storage&, const node_storage&) noexcept
       requires deep_equality_comparable<weight_type>
@@ -214,25 +203,8 @@ namespace sequoia::maths::graph_impl
 
     ~node_storage() = default;
 
-    constexpr node_storage& operator=(const node_storage& other)
-    {
-      if(&other != this)
-      {
-        auto allocGetter{
-          []([[maybe_unused]] const node_storage& other){
-            if constexpr(has_allocator_type_v<node_weight_container_type>)
-            {
-              return other.m_NodeWeights.get_allocator();
-            }
-          }
-        };
-        assignment_helper::assign(*this, other, allocGetter);
-      }
-
-      return *this;
-    }
-
-    constexpr node_storage& operator=(node_storage&&) = default;
+    constexpr node_storage& operator=(const node_storage&)     = default;
+    constexpr node_storage& operator=(node_storage&&) noexcept = default;
 
     constexpr void swap(node_storage& rhs)
       noexcept(noexcept(std::ranges::swap(this->m_NodeWeights, rhs.m_NodeWeights)))

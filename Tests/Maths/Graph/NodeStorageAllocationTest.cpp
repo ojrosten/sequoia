@@ -29,7 +29,6 @@ namespace sequoia::testing
   void node_storage_allocation_test::test_allocation()
   {
     test_allocation_impl<int, PropagateCopy, PropagateMove, PropagateSwap>();
-    test_allocation_impl<int, PropagateCopy, PropagateMove, PropagateSwap>();
   }
 
   template<class Weight, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>

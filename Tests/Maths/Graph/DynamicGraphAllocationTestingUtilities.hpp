@@ -77,7 +77,7 @@ namespace sequoia::testing
   struct node_alloc_getter
   {
     using node_allocator = typename Graph::node_weight_container_type::allocator_type;
-    using alloc_equivalence_class = allocation_equivalence_classes::container_of_pointers<node_allocator>;
+    using alloc_equivalence_class = allocation_equivalence_classes::container_of_values<node_allocator>;
 
     [[nodiscard]]
     node_allocator operator()(const Graph& g) const
