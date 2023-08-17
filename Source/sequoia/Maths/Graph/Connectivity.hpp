@@ -201,7 +201,7 @@ namespace sequoia
       static_assert(std::is_unsigned_v<edge_index_type>);
 
       constexpr static auto npos{std::numeric_limits<edge_index_type>::max()};
-      constexpr static directed_flavour directedness{to_directedness(EdgeTraits::graph_species)};
+      constexpr static graph_flavour species{EdgeTraits::graph_species};
       constexpr static bool throw_on_range_error{edge_storage_type::throw_on_range_error};
 
       constexpr connectivity() = default;
@@ -220,7 +220,7 @@ namespace sequoia
       [[nodiscard]]
       constexpr size_type size() const noexcept
       {
-        return !is_directed(EdgeTraits::graph_species) ? m_Edges.size() / 2 : m_Edges.size();
+        return !is_directed(species) ? m_Edges.size() / 2 : m_Edges.size();
       }
 
       [[nodiscard]]
@@ -435,11 +435,6 @@ namespace sequoia
         {
           for(auto& e : mut_edges(n))
           {
-            if constexpr (!is_directed(EdgeTraits::graph_species) && directed(directedness))
-            {
-              setSouceNodes(e);
-            }
-
             setTargetNodes(e);
           }
         }
@@ -547,12 +542,6 @@ namespace sequoia
           {
             const auto target{edge.target_node()};
             if(target != node) partitionsToVisit.push_back(target);
-
-            if constexpr (directed(directedness))
-            {
-              const auto source{edge.source_node()};
-              if(source != node) partitionsToVisit.push_back(source);
-            }
           }
 
           std::ranges::sort(partitionsToVisit);
@@ -560,21 +549,9 @@ namespace sequoia
 
           for(const auto partition : std::ranges::subrange{partitionsToVisit.begin(), duplicates.begin()})
           {
-            auto fn{
-              [node](const edge_type& e) {
-                if constexpr(directed(directedness))
-                {
-                  return (e.target_node() == node) || (e.source_node() == node);
-                }
-                else
-                {
-                  return e.target_node() == node;
-                }
-              }
-            };
+            auto fn{[node](const edge_type& e) { return e.target_node() == node;}};
 
-
-            if constexpr (has_embedded_edge_v)
+            if constexpr (edge_type::flavour == edge_flavour::partial_embedded)
             {
               // TO DO: consider reversing iteration
               for(auto iter{m_Edges.begin_partition(partition)}; iter != m_Edges.end_partition(partition);)
@@ -620,16 +597,9 @@ namespace sequoia
       {
         if constexpr (throw_on_range_error) graph_errors::check_node_index_range("join", order(), node1, node2);
 
-        if constexpr(std::is_empty_v<edge_weight_type>)
-        {
-          add_to_partition(node1, node2);
-        }
-        else
-        {
-          add_to_partition(node1, node2, std::forward<Args>(args)...);
-        }
+        add_to_partition(node1, node2, std::forward<Args>(args)...);
 
-        if constexpr (!directed(directedness))
+        if constexpr (!is_directed(species))
         {
           if constexpr (edge_type::flavour == edge_flavour::partial)
           {
@@ -728,7 +698,7 @@ namespace sequoia
 
           if(source != partner)
           {
-            if constexpr (has_embedded_edge_v)
+            if constexpr (edge_type::flavour == edge_flavour::partial_embedded)
             {
               const auto partnerLocalIndex{citer->complementary_index()};
               citer = m_Edges.erase_from_partition(citer);
@@ -741,7 +711,7 @@ namespace sequoia
             {
               const auto partnerDist{
                 [this, partner]([[maybe_unused]] const auto source, [[maybe_unused]] const auto citer){
-                  if constexpr (directed(directedness))
+                  if constexpr (is_directed(species))
                   {
                     for(auto oiter{cbegin_edges(partner)}; oiter != cend_edges(partner); ++oiter)
                     {
@@ -776,7 +746,7 @@ namespace sequoia
           }
           else
           {
-            if constexpr (has_embedded_edge_v)
+            if constexpr (edge_type::flavour == edge_flavour::partial_embedded)
             {
               const auto compIndex{citer->complementary_index()};
               const auto pos{std::ranges::distance(cbegin_edges(source), citer)};
@@ -880,8 +850,6 @@ namespace sequoia
       }
 
     private:
-      constexpr static bool has_embedded_edge_v{edge_type::flavour == edge_flavour::partial_embedded};
-
       constexpr static bool direct_init_v{std::is_same_v<edge_type, edge_init_type>};
       constexpr static bool direct_copy_v{direct_init_v};
       // private data
@@ -892,17 +860,7 @@ namespace sequoia
       [[nodiscard]]
       constexpr static auto partner_index(const_edge_iterator citer)
       {
-        const auto& edge{*citer};
-        const auto target{edge.target_node()};
-        if constexpr (directed(directedness))
-        {
-          const auto source{citer.partition_index()};
-          return target == source ? edge.source_node() : target;
-        }
-        else
-        {
-          return target;
-        }
+        return citer->target_node();
       }
 
       template<class EdgeInitializer>
@@ -1396,7 +1354,7 @@ namespace sequoia
       {
         const auto partner{partner_index(citer)};
 
-        if constexpr(has_embedded_edge_v)
+        if constexpr(edge_type::flavour == edge_flavour::partial_embedded)
         {
           const auto comp{citer->complementary_index()};
           return setter(m_Edges.begin_partition(partner) + comp);

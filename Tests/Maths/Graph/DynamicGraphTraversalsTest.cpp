@@ -30,7 +30,7 @@ namespace sequoia::testing
     trackers<G, Traverser::flavour> traverse_graph(const G& g, const maths::traversal_conditions<Mode> conditions)
     {
       trackers<G, Traverser::flavour> t{g};
-      if constexpr(maths::undirected(G::flavour) && (Traverser::flavour != maths::traversal_flavour::depth_first))
+      if constexpr(!maths::is_directed(G::flavour) && (Traverser::flavour != maths::traversal_flavour::depth_first))
       {
         Traverser::traverse(g, conditions, t.nodeBefore, t.nodeAfter, t.edgeFirst, t.edgeSecond);
       }
@@ -130,7 +130,7 @@ namespace sequoia::testing
       };
 
       using namespace maths;
-      if constexpr(Graph::directedness == directed_flavour::directed)
+      if constexpr(is_directed(Graph::species))
       {
         return early
           ? traverse(breadth_first, graph, ignore_disconnected_t{}, fn, null_func_obj{}, null_func_obj{}, ProcessingModel{std::forward<Args>(args)...})
@@ -154,7 +154,7 @@ namespace sequoia::testing
       };
 
       using namespace maths;
-      if constexpr(Graph::directedness == maths::directed_flavour::directed)
+      if constexpr(is_directed(Graph::species))
       {
         return traverse(breadth_first, graph, ignore_disconnected_t{}, null_func_obj{}, null_func_obj{}, fn, ProcessingModel{std::forward<Args>(args)...});
       }
@@ -295,7 +295,7 @@ namespace sequoia::testing
 
     constexpr auto GraphFlavour{Graph::flavour};
     constexpr bool mutualInfo{!is_directed(GraphFlavour)};
-    constexpr bool undirected{maths::undirected(GraphFlavour)};
+    constexpr bool undirected{!maths::is_directed(GraphFlavour)};
     constexpr bool isBFS{Traverser::flavour == traversal_flavour::breadth_first};
     constexpr bool isDFS{Traverser::flavour == traversal_flavour::depth_first};
     constexpr bool forwardIter{Traverser::uses_forward_iterator()};
@@ -462,7 +462,7 @@ namespace sequoia::testing
     using edge_order = typename decltype(edgeDiscovery1)::result_type;
     std::vector<std::size_t> nodeAnswers;
     edge_order edgeAnswers;
-    if constexpr(maths::undirected(G::flavour))
+    if constexpr(!maths::is_directed(G::flavour))
     {
       edge_order edgeAnswers2;
       if(start == 0)
@@ -509,7 +509,7 @@ namespace sequoia::testing
     using edge_order = typename decltype(edgeDiscovery1)::result_type;
     std::vector<std::size_t> nodeAnswers, nodeAnswers2;
     edge_order edgeAnswers;
-    if constexpr(maths::undirected(G::flavour))
+    if constexpr(!maths::is_directed(G::flavour))
     {
       if(start == 0)
       {
@@ -555,7 +555,7 @@ namespace sequoia::testing
     using edge_order = typename decltype(edgeDiscovery1)::result_type;
     std::vector<std::size_t> nodeAnswers;
     edge_order edgeAnswers;
-    if constexpr(maths::undirected(G::flavour))
+    if constexpr(!maths::is_directed(G::flavour))
     {
       edge_order edgeAnswers2;
       if(start == 0)
@@ -613,7 +613,7 @@ namespace sequoia::testing
   {
     test_node_and_first_edge_traversal<Graph>();
 
-    if constexpr(maths::undirected(Graph::flavour))
+    if constexpr(!maths::is_directed(Graph::flavour))
     {
       test_edge_second_traversal<Graph>();
     }

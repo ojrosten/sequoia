@@ -28,19 +28,7 @@ namespace sequoia
     using undirected_type = directed_flavour_constant<directed_flavour::undirected>;
     using directed_type   = directed_flavour_constant<directed_flavour::directed>;
 
-    [[nodiscard]]
-    constexpr bool directed(const directed_flavour directedness) noexcept
-    {
-      return directedness == directed_flavour::directed;
-    }
-
     enum class graph_flavour { undirected, undirected_embedded, directed };
-
-    [[nodiscard]]
-    constexpr bool undirected(const graph_flavour flavour) noexcept
-    {
-      return (flavour == graph_flavour::undirected) || ( flavour == graph_flavour::undirected_embedded);
-    }
 
     [[nodiscard]]
     constexpr directed_flavour to_directedness(const graph_flavour gf) noexcept
@@ -112,7 +100,7 @@ namespace sequoia
         constexpr static graph_flavour graph_species{GraphFlavour};
 
         constexpr static bool default_weight_sharing{
-              undirected(GraphFlavour)
+              !is_directed(GraphFlavour)
            && (big_weight<EdgeWeight>() || !std::is_copy_constructible_v<EdgeWeight>)
         };
 

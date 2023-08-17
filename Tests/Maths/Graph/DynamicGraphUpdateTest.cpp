@@ -230,7 +230,7 @@ namespace sequoia::testing
     using ei_t = typename Graph::edge_init_type;
     using flavour = maths::graph_flavour;
     constexpr auto GraphFlavour{Graph::flavour};
-    constexpr bool undirected{maths::undirected(GraphFlavour)};
+    constexpr bool undirected{!maths::is_directed(GraphFlavour)};
 
     if constexpr(GraphFlavour == flavour::undirected)
     {
@@ -421,7 +421,7 @@ namespace sequoia::testing
     using ei_t = typename Graph::edge_init_type;
     using flavour = maths::graph_flavour;
     constexpr auto GraphFlavour{Graph::flavour};
-    constexpr bool undirected{maths::undirected(GraphFlavour)};
+    constexpr bool undirected{!maths::is_directed(GraphFlavour)};
 
     if constexpr(GraphFlavour == flavour::undirected)
     {
@@ -523,7 +523,7 @@ namespace sequoia::testing
     //        3                  3
 
     auto expectedNodeWeights =
-      undirected(Graph::flavour) ? std::array<std::size_t, 4>{10,10,30,16} : std::array<std::size_t, 4>{10,8,30,20};
+      is_directed(Graph::flavour) ? std::array<std::size_t, 4>{10, 8, 30, 20} : std::array<std::size_t, 4>{10,10,30,16};
     check(equality, report_line(""), graph.cbegin_node_weights(), graph.cend_node_weights(), expectedNodeWeights.cbegin(), expectedNodeWeights.cend());
 
     auto secondNodeFn = [&updater](const std::size_t index){ updater.secondNodeTraversal(index); };
@@ -616,7 +616,7 @@ namespace sequoia::testing
     }
 
     auto secondEdgeFn = [&updater](auto citer) { updater.secondEdgeTraversal(citer); };
-    if constexpr(undirected(Graph::flavour))
+    if constexpr(!is_directed(Graph::flavour))
     {
       traverse(priority_first, graph, find_disconnected_t{}, null_func_obj{}, null_func_obj{}, null_func_obj{}, secondEdgeFn);
     }
@@ -869,7 +869,7 @@ namespace sequoia::testing
       static_assert(dependent_false<Graph>::value);
     }
 
-    if constexpr(maths::undirected(GraphFlavour))
+    if constexpr(!maths::is_directed(GraphFlavour))
     {
       test_second_edge_traversal_update(graph);
     }
