@@ -361,8 +361,6 @@ Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 92
 Differing complementary indices, identical targets and weights
 
 [sequoia::maths::embedded_partial_edge<sequoia::object::by_value<double>, unsigned long long>]
-operator== returned false
-
   Complementary index incorrect
   [unsigned long long]
   operator== returned false
@@ -375,8 +373,6 @@ Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 93
 Differing complementary indices, identical targets and weights
 
 [sequoia::maths::embedded_partial_edge<sequoia::object::by_value<double>, unsigned long long>]
-operator== returned false
-
   Complementary index incorrect
   [unsigned long long]
   operator== returned false
@@ -389,8 +385,6 @@ Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 94
 Differing complementary indices, identical targets and weights
 
 [sequoia::maths::embedded_partial_edge<sequoia::object::by_value<double>, unsigned long long>]
-operator== returned false
-
   Complementary index incorrect
   [unsigned long long]
   operator== returned false
@@ -573,8 +567,6 @@ Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 115
 Differing complementary indices, identical targets and weights
 
 [sequoia::maths::embedded_partial_edge<sequoia::object::by_value<double>, unsigned long long>]
-operator== returned false
-
   Complementary index incorrect
   [unsigned long long]
   operator== returned false
@@ -587,8 +579,6 @@ Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 116
 Differing complementary indices, identical targets and weights
 
 [sequoia::maths::embedded_partial_edge<sequoia::object::by_value<double>, unsigned long long>]
-operator== returned false
-
   Complementary index incorrect
   [unsigned long long]
   operator== returned false
@@ -601,8 +591,6 @@ Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 117
 Differing complementary indices, identical targets and weights
 
 [sequoia::maths::embedded_partial_edge<sequoia::object::by_value<double>, unsigned long long>]
-operator== returned false
-
   Complementary index incorrect
   [unsigned long long]
   operator== returned false
