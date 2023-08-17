@@ -109,8 +109,7 @@ namespace sequoia
           || ((SharingPreference == edge_sharing_preference::agnostic) && default_weight_sharing)
         };
 
-        static_assert(!shared_weight_v || (GraphFlavour != graph_flavour::directed),
-          "A directed graph without embedding cannot have shared weights");
+        static_assert(!shared_weight_v || (GraphFlavour != graph_flavour::directed));
 
         using handler_type     = shared_to_handler_t<shared_weight_v, EdgeWeight>;
         using edge_type        = flavour_to_edge_t<GraphFlavour, handler_type, IndexType>;

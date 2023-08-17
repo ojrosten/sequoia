@@ -14,15 +14,12 @@
     can be thought of as a directed edge with no additional information; as
     such is 'points', via an index, to a target node.
 
-    All concrete edges
-    inherit from this class but may have additional adornments. Depending on
-    the context, edges may have one or more of the following:
+    All concrete edges inherit from this class but may have additional adornments.
+    Depending on the context, edges may have one or more of the following:
 
     1. A non-trivial weight;
 
-    2. A record of the 'source' node, from which the edge points to its target;
-
-    3. An index recording the location on the target node into which the edge is
+    2. An index recording the location on the target node into which the edge is
     embedded.
 */
 
