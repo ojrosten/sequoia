@@ -294,7 +294,7 @@ namespace sequoia::testing
     using TraversalType = traversal_constant<Traverser::flavour>;
 
     constexpr auto GraphFlavour{Graph::flavour};
-    constexpr bool mutualInfo{has_mutual_info(GraphFlavour)};
+    constexpr bool mutualInfo{!is_directed(GraphFlavour)};
     constexpr bool undirected{maths::undirected(GraphFlavour)};
     constexpr bool isBFS{Traverser::flavour == traversal_flavour::breadth_first};
     constexpr bool isDFS{Traverser::flavour == traversal_flavour::depth_first};
@@ -482,7 +482,7 @@ namespace sequoia::testing
     }
     else
     {
-      constexpr auto mutualInfo{has_mutual_info(G::flavour)};
+      constexpr auto mutualInfo{!is_directed(G::flavour)};
       if(start == 0)
       {
         nodeAnswers = std::vector<std::size_t>{0,1,2,3};
@@ -526,7 +526,7 @@ namespace sequoia::testing
     }
     else
     {
-      constexpr auto mutualInfo{has_mutual_info(G::flavour)};
+      constexpr auto mutualInfo{!is_directed(G::flavour)};
       if(start == 0)
       {
         nodeAnswers = std::vector<std::size_t>{0,1,2,3};
@@ -575,7 +575,7 @@ namespace sequoia::testing
     }
     else
     {
-      constexpr auto mutualInfo{has_mutual_info(G::flavour)};
+      constexpr auto mutualInfo{!is_directed(G::flavour)};
       if(start == 0)
       {
         nodeAnswers = std::vector<std::size_t>{0,1,2,3};

@@ -220,7 +220,7 @@ namespace sequoia
       [[nodiscard]]
       constexpr size_type size() const noexcept
       {
-        return has_mutual_info(EdgeTraits::graph_species) ? m_Edges.size() / 2 : m_Edges.size();
+        return !is_directed(EdgeTraits::graph_species) ? m_Edges.size() / 2 : m_Edges.size();
       }
 
       [[nodiscard]]
@@ -267,7 +267,7 @@ namespace sequoia
         requires (!std::is_empty_v<edge_weight_type>)
       constexpr std::invoke_result_t<Fn, edge_weight_type&> mutate_edge_weight(const_edge_iterator citer, Fn fn)
       {
-        if constexpr (!EdgeTraits::shared_weight_v && has_mutual_info(EdgeTraits::graph_species))
+        if constexpr (!EdgeTraits::shared_weight_v && !is_directed(EdgeTraits::graph_species))
         {
           mutate_partner_edge_weight(citer, fn);
         }
@@ -287,7 +287,7 @@ namespace sequoia
         requires initializable_from<edge_weight_type, Args...>
       constexpr void set_edge_weight(const_edge_iterator citer, Args&&... args)
       {
-        if constexpr (!EdgeTraits::shared_weight_v && has_mutual_info(EdgeTraits::graph_species))
+        if constexpr (!EdgeTraits::shared_weight_v && !is_directed(EdgeTraits::graph_species))
         {
           auto partnerSetter{
             [this](const_edge_iterator iter, auto&&... args){
@@ -435,7 +435,7 @@ namespace sequoia
         {
           for(auto& e : mut_edges(n))
           {
-            if constexpr (has_mutual_info(EdgeTraits::graph_species) && directed(directedness))
+            if constexpr (!is_directed(EdgeTraits::graph_species) && directed(directedness))
             {
               setSouceNodes(e);
             }
@@ -540,7 +540,7 @@ namespace sequoia
       {
         if constexpr (throw_on_range_error) graph_errors::check_node_index_range("erase_node", order(), node);
 
-        if constexpr (has_mutual_info(EdgeTraits::graph_species))
+        if constexpr (!is_directed(EdgeTraits::graph_species))
         {
           std::vector<size_type> partitionsToVisit{};
           for(const auto& edge : m_Edges.partition(node))
@@ -721,7 +721,7 @@ namespace sequoia
 
         if(!order() || (citer == cend_edges(citer.partition_index()))) return;
 
-        if constexpr (has_mutual_info(EdgeTraits::graph_species))
+        if constexpr (!is_directed(EdgeTraits::graph_species))
         {
           const auto source{citer.partition_index()};
           const auto partner{partner_index(citer)};

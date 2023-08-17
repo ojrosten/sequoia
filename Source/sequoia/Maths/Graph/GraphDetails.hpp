@@ -60,12 +60,6 @@ namespace sequoia
       return gf == graph_flavour::directed;
     }
 
-    [[nodiscard]]
-    constexpr bool has_mutual_info(const graph_flavour gf) noexcept
-    {
-      return gf != graph_flavour::directed;
-    }
-
     enum class edge_sharing_preference {agnostic, shared_weight, independent};
 
     namespace graph_impl
