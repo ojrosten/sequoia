@@ -179,6 +179,9 @@ namespace sequoia
 
       constexpr edge_t edge2{5, 0.8f};
       check_semantics(report_line("Standard semantics"), edge2, edge);
+
+      constexpr edge_t edge3{7, edge2};
+      check(equality, report_line(""), edge3, edge_t{7, 0.8f});
     }
 
     void test_edges::test_partial_edge_indep_weight_meta_data()
@@ -200,6 +203,9 @@ namespace sequoia
 
       constexpr edge_t edge2{5, 1.0, 0.8f};
       check_semantics(report_line("Standard semantics"), edge2, edge);
+
+      constexpr edge_t edge3{7, edge2};
+      check(equality, report_line(""), edge3, edge_t{7, 1.0, 0.8f});
     }
 
     void test_edges::test_partial_edge_shared_weight_meta_data()
@@ -221,6 +227,9 @@ namespace sequoia
 
       const edge_t edge2{5, 1.0, 0.8f};
       check_semantics(report_line("Standard semantics"), edge2, edge);
+
+      const edge_t edge3{7, edge2};
+      check(equality, report_line(""), edge3, edge_t{7, 1.0, 0.8f});
     }
 
 
@@ -314,6 +323,9 @@ namespace sequoia
 
       constexpr edge_t edge2{5, 8, 0.8f};
       check_semantics(report_line("Standard semantics"), edge2, edge);
+
+      constexpr edge_t edge3{7, 4, edge2};
+      check(equality, report_line(""), edge3, edge_t{7, 4, 0.8f});
     }
 
     void test_edges::test_embedded_partial_edge_indep_weight_meta_data()
@@ -338,6 +350,9 @@ namespace sequoia
 
       constexpr edge_t edge2{5, 7, 1.0, 0.8f};
       check_semantics(report_line("Standard semantics"), edge2, edge);
+
+      constexpr edge_t edge3{7, 4, edge2};
+      check(equality, report_line(""), edge3, edge_t{7, 4, 1.0, 0.8f});
     }
 
     void test_edges::test_embedded_partial_edge_shared_weight_meta_data()
@@ -362,6 +377,9 @@ namespace sequoia
 
       const edge_t edge2{5, 7, 1.0, 0.8f};
       check_semantics(report_line("Standard semantics"), edge2, edge);
+
+      const edge_t edge3{7, 4, edge2};
+      check(equality, report_line(""), edge3, edge_t{7, 4, 1.0, 0.8f});
     }
   }
 }

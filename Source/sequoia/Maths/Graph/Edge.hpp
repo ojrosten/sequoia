@@ -216,7 +216,7 @@ namespace sequoia
       {}
 
       constexpr decorated_partial_edge_base(const index_type target, const decorated_partial_edge_base& other)
-        : partial_edge_base<WeightHandler, IndexType>{other}
+        : partial_edge_base<WeightHandler, IndexType>{target, other}
         , m_MetaData{other.m_MetaData}
       {}
 
