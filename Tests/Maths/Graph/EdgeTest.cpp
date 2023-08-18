@@ -75,6 +75,7 @@ namespace sequoia
     void test_edges::test_partial_edge_shared_weight()
     {
       using edge_t = partial_edge<shared<int>, null_meta_data>;
+      static_assert(sizeof(std::shared_ptr<int>) + sizeof(std::size_t) == sizeof(edge_t));
 
       edge_t edge{1, 4};
       check(equivalence, report_line("Construction"), edge, 1, 4);
@@ -204,7 +205,7 @@ namespace sequoia
     void test_edges::test_partial_edge_shared_weight_meta_data()
     {
       using edge_t = partial_edge<shared<double>, float, std::size_t>;
-      static_assert(sizeof(std::shared_ptr<double>)*2 == sizeof(edge_t));
+      static_assert(sizeof(std::shared_ptr<double>) + 2*sizeof(std::size_t) == sizeof(edge_t));
 
       edge_t edge{2, 1.0, 0.5f};
       check(equivalence, report_line("Construction"), edge, 2, 1.0, 0.5f);
@@ -273,6 +274,7 @@ namespace sequoia
     void test_edges::test_embedded_partial_edge_shared_weight()
     {
       using edge_t = embedded_partial_edge<shared<double>, null_meta_data>;
+      static_assert(sizeof(std::shared_ptr<double>) + 2*sizeof(std::size_t) == sizeof(edge_t));
 
       edge_t edge1{1, 2, 5.0};
       check(equivalence, report_line("Construction"), edge1, 1, 2, 5.0);
