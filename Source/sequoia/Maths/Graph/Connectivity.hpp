@@ -417,25 +417,12 @@ namespace sequoia
 
         if(i == j) return;
 
-        auto setSouceNodes{
-            [i,j](auto& e) {
-                if      (e.source_node() == i) e.source_node(j);
-                else if (e.source_node() == j) e.source_node(i);
-            }
-        };
-
-        auto setTargetNodes{
-            [i,j](auto& e) {
-                if      (e.target_node() == i) e.target_node(j);
-                else if (e.target_node() == j) e.target_node(i);
-            }
-        };
-
         for(size_type n{}; n<order(); ++n)
         {
           for(auto& e : mut_edges(n))
           {
-            setTargetNodes(e);
+            if(e.target_node() == i) e.target_node(j);
+            else if(e.target_node() == j) e.target_node(i);
           }
         }
 
