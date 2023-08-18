@@ -142,7 +142,8 @@ namespace sequoia
     class partial_edge_base : public weighting<WeightHandler, IndexType>
     {
     public:
-      using index_type = IndexType;
+      using index_type  = IndexType;
+      using weight_type = typename weighting<WeightHandler, IndexType>::weight_type;
 
       template<class... Args>
         requires (!resolve_to_copy_v<partial_edge_base, Args...>)
@@ -175,6 +176,61 @@ namespace sequoia
       IndexType m_Target;
     };
 
+    //===================================Decorated Partial Edge Base===================================//
+
+    template<class WeightHandler, class MetaData, std::integral IndexType>
+      requires object::handler<WeightHandler> && std::is_empty_v<MetaData>
+    class decorated_partial_edge_base : public partial_edge_base<WeightHandler, IndexType>
+    {
+    public:
+      using partial_edge_base<WeightHandler, IndexType>::partial_edge_base;
+
+      constexpr decorated_partial_edge_base(const decorated_partial_edge_base&)     = default;
+      constexpr decorated_partial_edge_base(decorated_partial_edge_base&&) noexcept = default;
+    protected:
+      ~decorated_partial_edge_base() = default;
+
+      constexpr decorated_partial_edge_base& operator=(const decorated_partial_edge_base&)     = default;
+      constexpr decorated_partial_edge_base& operator=(decorated_partial_edge_base&&) noexcept = default;
+    };
+
+    template<class WeightHandler, class MetaData, std::integral IndexType>
+      requires object::handler<WeightHandler> && (!std::is_empty_v<MetaData>)
+    class decorated_partial_edge_base<WeightHandler, MetaData, IndexType> : public partial_edge_base<WeightHandler, IndexType>
+    {
+    public:
+      using index_type     = IndexType;
+      using meta_data_type = MetaData;
+      using weight_type    = typename partial_edge_base<WeightHandler, IndexType>::weight_type;
+
+      constexpr decorated_partial_edge_base(const index_type target, weight_type w, meta_data_type m)
+        : partial_edge_base<WeightHandler, IndexType>{target, std::move(w)}
+        , m_MetaData{std::move(m)}
+      {}
+
+      constexpr decorated_partial_edge_base(const index_type target, const decorated_partial_edge_base& other)
+        : partial_edge_base<WeightHandler, IndexType>{other}
+        , m_MetaData{other.m_MetaData}
+      {}
+
+      constexpr decorated_partial_edge_base(const decorated_partial_edge_base&)     = default;
+      constexpr decorated_partial_edge_base(decorated_partial_edge_base&&) noexcept = default;
+
+      [[nodiscard]]
+      constexpr const MetaData& meta_data() const noexcept { return m_MetaData; }
+
+      constexpr void meta_data(MetaData m) { m_MetaData = m; }
+    protected:
+      ~decorated_partial_edge_base() = default;
+
+      constexpr decorated_partial_edge_base& operator=(const decorated_partial_edge_base&)     = default;
+      constexpr decorated_partial_edge_base& operator=(decorated_partial_edge_base&&) noexcept = default;
+    private:
+      MetaData m_MetaData;
+    };
+
+    struct null_meta_data {};
+
     //===================================Helper Enum===================================//
 
     enum class edge_flavour : bool { partial, partial_embedded };
@@ -186,13 +242,18 @@ namespace sequoia
 
      */
 
-    template<class WeightHandler, std::integral IndexType=std::size_t>
+    template<class WeightHandler, class MetaData, std::integral IndexType=std::size_t>
       requires object::handler<WeightHandler>
-    class partial_edge : public partial_edge_base<WeightHandler, IndexType>
+    class partial_edge : public decorated_partial_edge_base<WeightHandler, MetaData, IndexType>
     {
     public:
       constexpr static edge_flavour flavour{edge_flavour::partial};
-      using partial_edge_base<WeightHandler, IndexType>::partial_edge_base;
+
+      using weight_type    = typename decorated_partial_edge_base<WeightHandler, MetaData, IndexType>::weight_type;
+      using meta_data_type = MetaData;
+      using index_type     = IndexType;
+
+      using decorated_partial_edge_base<WeightHandler, MetaData, IndexType>::decorated_partial_edge_base;
     };
 
     //===================================Embedded Partial Edge===================================//
@@ -203,32 +264,34 @@ namespace sequoia
 
      */
 
-    template<class WeightHandler, std::integral IndexType=std::size_t>
+    template<class WeightHandler, class MetaData, std::integral IndexType=std::size_t>
       requires object::handler<WeightHandler>
-    class embedded_partial_edge : public partial_edge_base<WeightHandler, IndexType>
+    class embedded_partial_edge : public decorated_partial_edge_base<WeightHandler, MetaData, IndexType>
     {
     public:
       constexpr static edge_flavour flavour{edge_flavour::partial_embedded};
-      using weight_type = typename partial_edge_base<WeightHandler, IndexType>::weight_type;
-      using index_type  = typename partial_edge_base<WeightHandler, IndexType>::index_type;
+
+      using weight_type    = typename decorated_partial_edge_base<WeightHandler, MetaData, IndexType>::weight_type;
+      using meta_data_type = MetaData;
+      using index_type     = IndexType;
 
       template<class... Args>
         requires (!resolve_to_copy_v<embedded_partial_edge, Args...>)
       constexpr embedded_partial_edge(const index_type target, const index_type complimentaryIndex, Args&&... args)
-        : partial_edge_base<WeightHandler, IndexType>{target, std::forward<Args>(args)...}
-        , m_ComplimentaryIndex{complimentaryIndex}
+        : decorated_partial_edge_base<WeightHandler, MetaData, IndexType>{target, std::forward<Args>(args)...}
+        , m_ComplementaryIndex{complimentaryIndex}
       {}
 
       constexpr embedded_partial_edge(const index_type target, const index_type complimentaryIndex, const embedded_partial_edge& other)
-        : partial_edge_base<WeightHandler, IndexType>{target, other}
-        , m_ComplimentaryIndex{complimentaryIndex}
+        : decorated_partial_edge_base<WeightHandler, MetaData, IndexType>{target, other}
+        , m_ComplementaryIndex{complimentaryIndex}
       {}
 
       [[nodiscard]]
-      constexpr index_type complementary_index() const noexcept { return m_ComplimentaryIndex; }
-      constexpr void complementary_index(const index_type index) noexcept { m_ComplimentaryIndex = index; }
+      constexpr index_type complementary_index() const noexcept { return m_ComplementaryIndex; }
+      constexpr void complementary_index(const index_type index) noexcept { m_ComplementaryIndex = index; }
     private:
-      IndexType m_ComplimentaryIndex;
+      IndexType m_ComplementaryIndex;
     };
   }
 }

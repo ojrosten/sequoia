@@ -29,6 +29,7 @@ namespace sequoia
       void test_plain_partial_edge();
       void test_partial_edge_indep_weight();
       void test_partial_edge_shared_weight();
+      void test_partial_edge_meta_data();
 
       void test_plain_embedded_partial_edge();
       void test_embedded_partial_edge_indep_weight();

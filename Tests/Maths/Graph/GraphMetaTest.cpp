@@ -14,6 +14,8 @@
 
 namespace sequoia::testing
 {
+  using namespace maths;
+
   [[nodiscard]]
   std::filesystem::path test_graph_meta::source_file() const
   {
@@ -22,8 +24,6 @@ namespace sequoia::testing
 
   void test_graph_meta::run_tests()
   {
-    using namespace maths;
-
     test_method_detectors();
     test_static_edge_index_generator();
 
@@ -66,7 +66,8 @@ namespace sequoia::testing
   <
     maths::graph_flavour GraphFlavour,
     class EdgeWeight,
-    template<class, class> class EdgeType
+    class EdgeMetaData,
+    template<class, class, class> class EdgeType
   >
   void test_graph_meta::test_undirected_unshared()
   {
@@ -76,17 +77,18 @@ namespace sequoia::testing
 
     static_assert(!big_weight<EdgeWeight>());
 
-    using gen_t = dynamic_edge_traits<GraphFlavour, EdgeWeight, contiguous_edge_storage_traits, std::size_t>;
+    using gen_t = dynamic_edge_traits<GraphFlavour, EdgeWeight, EdgeMetaData, contiguous_edge_storage_traits, std::size_t>;
     using edge_t       = typename gen_t::edge_type;
     using handler_type = shared_to_handler_t<false, EdgeWeight>;
-    static_assert(std::is_same_v<edge_t, EdgeType<handler_type, std::size_t>>);
+    static_assert(std::is_same_v<edge_t, EdgeType<handler_type, EdgeMetaData, std::size_t>>);
   }
 
   template
   <
     maths::graph_flavour GraphFlavour,
     class EdgeWeight,
-    template<class, class> class EdgeType
+    class EdgeMetaData,
+    template<class, class, class> class EdgeType
   >
   void test_graph_meta::test_undirected_shared()
   {
@@ -96,30 +98,30 @@ namespace sequoia::testing
 
     static_assert(big_weight<EdgeWeight>());
 
-    using gen_t = dynamic_edge_traits<GraphFlavour, EdgeWeight, contiguous_edge_storage_traits, std::size_t>;
+    using gen_t = dynamic_edge_traits<GraphFlavour, EdgeWeight, EdgeMetaData, contiguous_edge_storage_traits, std::size_t>;
     using edge_t       = typename gen_t::edge_type;
     using handler_type = shared_to_handler_t<true, EdgeWeight>;
-    static_assert(std::is_same_v<edge_t, EdgeType<handler_type, std::size_t>>);
+    static_assert(std::is_same_v<edge_t, EdgeType<handler_type, EdgeMetaData, std::size_t>>);
   }
 
 
   template
   <
     maths::graph_flavour GraphFlavour,
-    template<class, class> class EdgeType
+    template<class, class, class> class EdgeType
   >
   void test_graph_meta::test_undirected()
   {
-    test_undirected_unshared<GraphFlavour, int, EdgeType>();
-    test_undirected_unshared<GraphFlavour, wrapper<int>, EdgeType>();
+    test_undirected_unshared<GraphFlavour, int, null_meta_data, EdgeType>();
+    test_undirected_unshared<GraphFlavour, wrapper<int>, null_meta_data, EdgeType>();
 
-    test_undirected_unshared<GraphFlavour, double, EdgeType>();
-    test_undirected_unshared<GraphFlavour, wrapper<double>, EdgeType>();
+    test_undirected_unshared<GraphFlavour, double, null_meta_data, EdgeType>();
+    test_undirected_unshared<GraphFlavour, wrapper<double>, null_meta_data, EdgeType>();
 
-    test_undirected_unshared<GraphFlavour, std::tuple<double, double>, EdgeType>();
+    test_undirected_unshared<GraphFlavour, std::tuple<double, double>, null_meta_data, EdgeType>();
 
-    test_undirected_shared<GraphFlavour, std::tuple<double, double, double>, EdgeType>();
-    test_undirected_shared<GraphFlavour, std::vector<int>, EdgeType>();
+    test_undirected_shared<GraphFlavour, std::tuple<double, double, double>, null_meta_data, EdgeType>();
+    test_undirected_shared<GraphFlavour, std::vector<int>, null_meta_data, EdgeType>();
   }
 
   template<class EdgeWeight>
@@ -130,10 +132,10 @@ namespace sequoia::testing
     using namespace data_structures;
     using namespace object;
 
-    using gen_t = dynamic_edge_traits<graph_flavour::directed, EdgeWeight, contiguous_edge_storage_traits, std::size_t>;
+    using gen_t = dynamic_edge_traits<graph_flavour::directed, EdgeWeight, null_meta_data, contiguous_edge_storage_traits, std::size_t>;
     using edge_t       = typename gen_t::edge_type;
     using handler_type = shared_to_handler_t<false, EdgeWeight>;
-    static_assert(std::is_same_v<edge_t, partial_edge<handler_type>>);
+    static_assert(std::is_same_v<edge_t, partial_edge<handler_type, null_meta_data>>);
   }
 
   void test_graph_meta::test_directed()

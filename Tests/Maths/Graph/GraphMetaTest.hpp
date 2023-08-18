@@ -29,7 +29,7 @@ namespace sequoia::testing
     template
     <
       maths::graph_flavour GraphFlavour,
-      template<class, class> class EdgeType
+      template<class, class, class> class EdgeType
     >
     void test_undirected();
 
@@ -39,7 +39,8 @@ namespace sequoia::testing
     <
       maths::graph_flavour GraphFlavour,
       class EdgeWeight,
-      template<class, class> class EdgeType
+      class EdgeMetaData,
+      template<class, class, class> class EdgeType
     >
     void test_undirected_unshared();
 
@@ -47,7 +48,8 @@ namespace sequoia::testing
     <
       maths::graph_flavour GraphFlavour,
       class EdgeWeight,
-      template<class, class> class EdgeType
+      class EdgeMetaData,
+      template<class, class, class> class EdgeType
     >
     void test_undirected_shared();
 

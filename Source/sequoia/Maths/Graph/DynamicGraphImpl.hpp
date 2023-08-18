@@ -38,6 +38,7 @@ namespace sequoia::maths::graph_impl
   <
     graph_flavour GraphFlavour,
     class EdgeWeight,
+    class EdgeMetaData,
     class EdgeStorageTraits,
     std::integral IndexType
   >
@@ -46,6 +47,7 @@ namespace sequoia::maths::graph_impl
     <
       GraphFlavour,
       EdgeWeight,
+      EdgeMetaData,
       IndexType,
       EdgeStorageTraits::edge_sharing
     >
@@ -55,6 +57,7 @@ namespace sequoia::maths::graph_impl
       <
         GraphFlavour,
         EdgeWeight,
+        EdgeMetaData,
         IndexType,
         EdgeStorageTraits::edge_sharing
       >;

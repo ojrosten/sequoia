@@ -69,29 +69,30 @@ namespace sequoia
       }
 
       // Flavour to Edge
-      template<graph_flavour GraphFlavour, class Handler, std::integral IndexType>
+      template<graph_flavour GraphFlavour, class Handler, class MetaData, std::integral IndexType>
         requires object::handler<Handler>
       struct flavour_to_edge
       {
-        using edge_type  = partial_edge<Handler, IndexType>;
+        using edge_type  = partial_edge<Handler, MetaData, IndexType>;
       };
 
-      template<class Handler, std::integral IndexType>
+      template<class Handler, class MetaData, std::integral IndexType>
         requires object::handler<Handler>
-      struct flavour_to_edge<graph_flavour::undirected_embedded, Handler, IndexType>
+      struct flavour_to_edge<graph_flavour::undirected_embedded, Handler, MetaData, IndexType>
       {
-        using edge_type = embedded_partial_edge<Handler, IndexType>;
+        using edge_type = embedded_partial_edge<Handler, MetaData, IndexType>;
       };
 
-      template<graph_flavour GraphFlavour, class Handler, std::integral IndexType>
+      template<graph_flavour GraphFlavour, class Handler, class MetaData, std::integral IndexType>
         requires object::handler<Handler>
-      using flavour_to_edge_t = typename flavour_to_edge<GraphFlavour, Handler, IndexType>::edge_type;
+      using flavour_to_edge_t = typename flavour_to_edge<GraphFlavour, Handler, MetaData, IndexType>::edge_type;
 
       // Edge Type Generator
       template
       <
         graph_flavour GraphFlavour,
         class EdgeWeight,
+        class EdgeMetaData,
         std::integral IndexType,
         edge_sharing_preference SharingPreference
       >
@@ -112,11 +113,11 @@ namespace sequoia
         static_assert(!shared_weight_v || (GraphFlavour != graph_flavour::directed));
 
         using handler_type     = shared_to_handler_t<shared_weight_v, EdgeWeight>;
-        using edge_type        = flavour_to_edge_t<GraphFlavour, handler_type, IndexType>;
+        using edge_type        = flavour_to_edge_t<GraphFlavour, handler_type, EdgeMetaData, IndexType>;
         using index_type       = typename edge_type::index_type;
         using edge_init_type   = std::conditional_t<is_embedded(GraphFlavour),
-                                                    embedded_partial_edge<object::by_value<EdgeWeight>, index_type>,
-                                                    partial_edge<object::by_value<EdgeWeight>, index_type>>;
+                                                    embedded_partial_edge<object::by_value<EdgeWeight>, EdgeMetaData, index_type>,
+                                                    partial_edge<object::by_value<EdgeWeight>, EdgeMetaData, index_type>>;
       };
 
       template<class T>

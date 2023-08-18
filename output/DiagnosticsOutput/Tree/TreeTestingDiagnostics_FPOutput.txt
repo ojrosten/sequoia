@@ -136,7 +136,7 @@ Directedness: directed / Tree Link Dir: forward
 [sequoia::maths::tree<1, 1, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> >]
 operator== returned false
 
-  [sequoia::maths::connectivity<sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::maths::null_weight, sequoia::maths::bucketed_edge_storage_traits, unsigned long long> >]
+  [sequoia::maths::connectivity<sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_traits, unsigned long long> >]
   operator== returned false
 
     Connectivity order incorrect
@@ -170,7 +170,7 @@ Directedness: directed / Tree Link Dir: forward
 [sequoia::maths::tree<1, 1, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> >]
 operator== returned false
 
-  [sequoia::maths::connectivity<sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::maths::null_weight, sequoia::maths::bucketed_edge_storage_traits, unsigned long long> >]
+  [sequoia::maths::connectivity<sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_traits, unsigned long long> >]
   operator== returned false
 
     Connectivity size incorrect
@@ -336,7 +336,7 @@ Directedness: directed / Tree Link Dir: backward
 [sequoia::maths::tree<1, 2, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> >]
 operator== returned false
 
-  [sequoia::maths::connectivity<sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::maths::null_weight, sequoia::maths::bucketed_edge_storage_traits, unsigned long long> >]
+  [sequoia::maths::connectivity<sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_traits, unsigned long long> >]
   operator== returned false
 
     Connectivity order incorrect
@@ -370,7 +370,7 @@ Directedness: directed / Tree Link Dir: backward
 [sequoia::maths::tree<1, 2, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> >]
 operator== returned false
 
-  [sequoia::maths::connectivity<sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::maths::null_weight, sequoia::maths::bucketed_edge_storage_traits, unsigned long long> >]
+  [sequoia::maths::connectivity<sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_traits, unsigned long long> >]
   operator== returned false
 
     Connectivity size incorrect
@@ -542,7 +542,7 @@ Directedness: directed / Tree Link Dir: symmetric
 [sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> >]
 operator== returned false
 
-  [sequoia::maths::connectivity<sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::maths::null_weight, sequoia::maths::bucketed_edge_storage_traits, unsigned long long> >]
+  [sequoia::maths::connectivity<sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_traits, unsigned long long> >]
   operator== returned false
 
     Connectivity order incorrect
@@ -576,7 +576,7 @@ Directedness: directed / Tree Link Dir: symmetric
 [sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> >]
 operator== returned false
 
-  [sequoia::maths::connectivity<sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::maths::null_weight, sequoia::maths::bucketed_edge_storage_traits, unsigned long long> >]
+  [sequoia::maths::connectivity<sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_traits, unsigned long long> >]
   operator== returned false
 
     Connectivity size incorrect
@@ -748,7 +748,7 @@ Directedness: undirected / Tree Link Dir: symmetric
 [sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> >]
 operator== returned false
 
-  [sequoia::maths::connectivity<sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::maths::null_weight, sequoia::maths::bucketed_edge_storage_traits, unsigned long long> >]
+  [sequoia::maths::connectivity<sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_traits, unsigned long long> >]
   operator== returned false
 
     Connectivity order incorrect
@@ -782,7 +782,7 @@ Directedness: undirected / Tree Link Dir: symmetric
 [sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> >]
 operator== returned false
 
-  [sequoia::maths::connectivity<sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::maths::null_weight, sequoia::maths::bucketed_edge_storage_traits, unsigned long long> >]
+  [sequoia::maths::connectivity<sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_traits, unsigned long long> >]
   operator== returned false
 
     Connectivity size incorrect

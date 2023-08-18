@@ -45,6 +45,7 @@ namespace sequoia::maths
           Order,
           Size,
           EdgeWeight,
+          null_meta_data,
           typename heterogeneous_graph_traits<Size, Order, EdgeWeight>::edge_index_type
         >
       >,
@@ -63,6 +64,7 @@ namespace sequoia::maths
             Order,
             Size,
             EdgeWeight,
+            null_meta_data,
             typename heterogeneous_graph_traits<Size, Order, EdgeWeight>::edge_index_type
           >
         >,
@@ -93,6 +95,7 @@ namespace sequoia::maths
             Order,
             Size,
             EdgeWeight,
+            null_meta_data,
             typename heterogeneous_graph_traits<Size, Order, EdgeWeight>::edge_index_type
           >
         >,
@@ -130,6 +133,7 @@ namespace sequoia::maths
           Order,
           Size,
           EdgeWeight,
+          null_meta_data,
           typename heterogeneous_embedded_graph_traits<Size, Order, EdgeWeight>::edge_index_type
         >
       >,
@@ -148,6 +152,7 @@ namespace sequoia::maths
             Order,
             Size,
             EdgeWeight,
+            null_meta_data,
             typename heterogeneous_embedded_graph_traits<Size, Order, EdgeWeight>::edge_index_type
           >
         >,
@@ -176,6 +181,7 @@ namespace sequoia::maths
             Order,
             Size,
             EdgeWeight,
+            null_meta_data,
             typename heterogeneous_embedded_graph_traits<Size, Order, EdgeWeight>::edge_index_type
           >
         >,

@@ -36,18 +36,18 @@ namespace sequoia::testing
 
   void test_edge_false_positives::test_plain_partial_edge()
   {
-    using edge_t = partial_edge<by_value<null_weight>>;
+    using edge_t = partial_edge<by_value<null_weight>, null_meta_data>;
 
     check(equality, report_line("Differing target indices"), edge_t{0}, edge_t{1});
 
-    using compact_edge_t = partial_edge<by_value<null_weight>, unsigned char>;
+    using compact_edge_t = partial_edge<by_value<null_weight>, null_meta_data, unsigned char>;
 
     check(equality, report_line("Differing target indices"), compact_edge_t{10}, compact_edge_t{255});
   }
 
   void test_edge_false_positives::test_partial_edge_indep_weight()
   {
-    using edge_t = partial_edge<by_value<int>>;
+    using edge_t = partial_edge<by_value<int>, null_meta_data>;
 
     check(equality, report_line("Differing targets, identical weights"), edge_t{0,0}, edge_t{1,0});
     check(equality, report_line("Differing targets, identical weights"), edge_t{0,5}, edge_t{1,5});
@@ -59,7 +59,7 @@ namespace sequoia::testing
 
   void test_edge_false_positives::test_partial_edge_shared_weight()
   {
-    using edge_t = partial_edge<shared<int>>;
+    using edge_t = partial_edge<shared<int>, null_meta_data>;
 
     check(equality, report_line("Differing targets, identical weights"), edge_t{0,0}, edge_t{1,0});
     check(equality, report_line("Differing targets, identical weights"), edge_t{0,5}, edge_t{1,5});
@@ -71,7 +71,7 @@ namespace sequoia::testing
 
   void test_edge_false_positives::test_plain_embedded_partial_edge()
   {
-    using edge_t = partial_edge<shared<int>>;
+    using edge_t = partial_edge<shared<int>, null_meta_data>;
 
     check(equality, report_line("Differing targets, identical complementary indices"), edge_t{0,0}, edge_t{1,0});
     check(equality, report_line("Differing targets, identical complementary indices"), edge_t{0,5}, edge_t{1,5});
@@ -83,7 +83,7 @@ namespace sequoia::testing
 
   void test_edge_false_positives::test_embedded_partial_edge_indep_weight()
   {
-    using edge_t = embedded_partial_edge<by_value<double>>;
+    using edge_t = embedded_partial_edge<by_value<double>, null_meta_data>;
 
     check(equality, report_line("Differing targets, identical complementary indices and weights"), edge_t{0,0,0.0}, edge_t{1,0,0.0});
     check(equality, report_line("Differing targets, identical complementary indices and weights"), edge_t{1,10,0.0}, edge_t{0,10,0.0});
@@ -106,7 +106,7 @@ namespace sequoia::testing
 
   void test_edge_false_positives::test_embedded_partial_edge_shared_weight()
   {
-    using edge_t = embedded_partial_edge<by_value<double>>;
+    using edge_t = embedded_partial_edge<by_value<double>, null_meta_data>;
 
     check(equality, report_line("Differing targets, identical complementary indices and weights"), edge_t{0,0,0.0}, edge_t{1,0,0.0});
     check(equality, report_line("Differing targets, identical complementary indices and weights"), edge_t{0,10,0.0}, edge_t{1,10,0.0});

@@ -35,6 +35,7 @@ namespace sequoia
       test_plain_partial_edge();
       test_partial_edge_indep_weight();
       test_partial_edge_shared_weight();
+      test_partial_edge_meta_data();
 
       test_plain_embedded_partial_edge();
       test_embedded_partial_edge_indep_weight();
@@ -43,30 +44,35 @@ namespace sequoia
 
     void test_edges::test_plain_partial_edge()
     {
-      using edge_t = partial_edge<by_value<null_weight>>;
+      using edge_t = partial_edge<by_value<null_weight>, null_meta_data>;
       static_assert(sizeof(std::size_t) == sizeof(edge_t));
 
-      using compact_edge_t = partial_edge<by_value<null_weight>, unsigned char>;
+      using compact_edge_t = partial_edge<by_value<null_weight>, null_meta_data, unsigned char>;
       static_assert(sizeof(unsigned char) == sizeof(compact_edge_t));
 
-      edge_t e1{0};
-      check(equality, report_line("Construction"), e1, edge_t{0});
+      edge_t e0{0};
+      check(equivalence, report_line("Construction"), e0, 0);
 
-      e1.target_node(1);
-      check(equality, report_line("Changing target node"), e1, edge_t{1});
+      edge_t e1{1};
+      check(equivalence, report_line("Construction"), e1, 1);
+
+      check_semantics(report_line("Standard semantics"), e0, e1);
+
+      e0.target_node(1);
+      check(equality, report_line("Changing target node"), e0, e1);
 
       edge_t e2{3};
-      check(equality, report_line(""), e2, edge_t{3});
+      check(equivalence, report_line(""), e2, 3);
 
       check_semantics(report_line("Standard semantics"), e2, e1);
     }
 
     void test_edges::test_partial_edge_shared_weight()
     {
-      using edge_t = partial_edge<shared<int>>;
+      using edge_t = partial_edge<shared<int>, null_meta_data>;
 
       edge_t edge{1, 4};
-      check(equality, report_line("Construction"), edge, edge_t{1, 4});
+      check(equivalence, report_line("Construction"), edge, 1, 4);
 
       edge.weight(5);
       check(equality, report_line("Set weight"), edge, edge_t{1, 5});
@@ -78,7 +84,7 @@ namespace sequoia
       check(equality, report_line("Change target node"), edge, edge_t{2, -1});
 
       edge_t edge1{2,-7};
-      check(equality, report_line("Construction"), edge1, edge_t{2, -7});
+      check(equivalence, report_line("Construction"), edge1, 2, -7);
 
       check_semantics(report_line("Standard Semantics"), edge1, edge);
 
@@ -100,7 +106,7 @@ namespace sequoia
       check_semantics(report_line("Standard semantics with shared weight"), edge2, edge);
 
       edge_t edge3(2, 8);
-      check(equality, report_line(""), edge3, edge_t{2, 8});
+      check(equivalence, report_line(""), edge3, 2, 8);
 
       check_semantics(report_line("Standard semantics with one having a shared weight"), edge2, edge);
 
@@ -128,11 +134,11 @@ namespace sequoia
 
     void test_edges::test_partial_edge_indep_weight()
     {
-      using edge_t = partial_edge<by_value<int>>;
+      using edge_t = partial_edge<by_value<int>, null_meta_data>;
       static_assert(2 * sizeof(std::size_t) == sizeof(edge_t));
 
       edge_t edge{2, 7};
-      check(equality, report_line("Construction"), edge, edge_t{2, 7});
+      check(equivalence, report_line("Construction"), edge, 2, 7);
 
       edge.target_node(3);
       check(equality, report_line("Change target node"), edge, edge_t{3, 7});
@@ -141,7 +147,7 @@ namespace sequoia
       check(equality, report_line("Set weight"), edge, edge_t{3, -5});
 
       edge_t edge2(5, edge);
-      check(equality, report_line("Construction with by_value weight"), edge2, edge_t{5, -5});
+      check(equivalence, report_line("Construction with by_value weight"), edge2, 5, -5);
       check(equality, report_line(""), edge, edge_t{3, -5});
 
       edge.mutate_weight([](int& a) { a *= 2;} );
@@ -151,17 +157,24 @@ namespace sequoia
       check_semantics(report_line("Standard semantics"), edge2, edge);
     }
 
+    void test_edges::test_partial_edge_meta_data()
+    {
+      using edge_t = partial_edge<by_value<null_weight>, std::size_t, int>;
+
+    }
+
+
     void test_edges::test_plain_embedded_partial_edge()
     {
-      using edge_t = embedded_partial_edge<by_value<null_weight>>;
+      using edge_t = embedded_partial_edge<by_value<null_weight>, null_meta_data>;
       static_assert(2*sizeof(std::size_t) == sizeof(edge_t));
 
       using compact_edge_t
-        = embedded_partial_edge<by_value<null_weight>, unsigned char>;
+        = embedded_partial_edge<by_value<null_weight>, null_meta_data, unsigned char>;
       static_assert(2*sizeof(unsigned char) == sizeof(compact_edge_t));
 
       edge_t e1{0, 4};
-      check(equality, report_line("Construction"), e1, edge_t{0, 4});
+      check(equivalence, report_line("Construction"), e1, 0, 4);
 
       e1.target_node(1);
       check(equality, report_line("Change target"), e1, edge_t{1, 4});
@@ -170,18 +183,18 @@ namespace sequoia
       check(equality, report_line("Change complementary index"), e1, edge_t{1, 5});
 
       edge_t e2{10, 10};
-      check(equality, report_line("Construction"), e2, edge_t{10, 10});
+      check(equivalence, report_line("Construction"), e2, 10, 10);
 
       check_semantics(report_line("Standard semantics"), e2, e1);
     }
 
     void test_edges::test_embedded_partial_edge_indep_weight()
     {
-      using edge_t = embedded_partial_edge<by_value<double>>;
+      using edge_t = embedded_partial_edge<by_value<double>, null_meta_data>;
       static_assert(2*sizeof(std::size_t) + sizeof(double) == sizeof(edge_t));
 
       constexpr edge_t edge1{1, 2, 5.0};
-      check(equality, report_line("Construction"), edge1, edge_t{1, 2, 5.0});
+      check(equivalence, report_line("Construction"), edge1, 1, 2, 5.0);
 
       edge_t edge2{3, 7, edge1};
       check(equality, report_line("Construction with by_value weight"), edge2, edge_t{3, 7, 5.0});
@@ -200,10 +213,10 @@ namespace sequoia
 
     void test_edges::test_embedded_partial_edge_shared_weight()
     {
-      using edge_t = embedded_partial_edge<shared<double>>;
+      using edge_t = embedded_partial_edge<shared<double>, null_meta_data>;
 
       edge_t edge1{1, 2, 5.0};
-      check(equality, report_line("Construction"), edge1, edge_t{1, 2, 5.0});
+      check(equivalence, report_line("Construction"), edge1, 1, 2, 5.0);
 
       edge_t edge2{3, 7, edge1};
       check(equality, report_line("Construction with shared weight"), edge2, edge_t{3, 7, 5.0});

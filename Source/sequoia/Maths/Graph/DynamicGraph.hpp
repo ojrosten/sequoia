@@ -68,12 +68,12 @@ namespace sequoia::maths
   class graph_base : public
     graph_primitive
     <
-      connectivity<graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeight, EdgeStorageTraits, std::size_t>>,
+      connectivity<graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeight, null_meta_data, EdgeStorageTraits, std::size_t>>,
       graph_impl::node_storage<NodeWeight, NodeWeightStorageTraits>
     >
   {
   public:
-    using edge_traits_type  = graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeight, EdgeStorageTraits, std::size_t>;
+    using edge_traits_type  = graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeight, null_meta_data, EdgeStorageTraits, std::size_t>;
     using node_storage_type = graph_impl::node_storage<NodeWeight, NodeWeightStorageTraits>;
     using primitive_type    = graph_primitive<connectivity<edge_traits_type>, node_storage_type>;
 
@@ -181,12 +181,12 @@ namespace sequoia::maths
     > : public
     graph_primitive
     <
-      connectivity<graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeight, EdgeStorageTraits, std::size_t>>,
+      connectivity<graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeight, null_meta_data, EdgeStorageTraits, std::size_t>>,
       graph_impl::node_storage<NodeWeight,NodeWeightStorageTraits>
     >
   {
   public:
-    using edge_traits_type  = graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeight, EdgeStorageTraits, std::size_t>;
+    using edge_traits_type  = graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeight, null_meta_data, EdgeStorageTraits, std::size_t>;
     using node_storage_type = graph_impl::node_storage<NodeWeight, NodeWeightStorageTraits>;
     using primitive_type    = graph_primitive<connectivity<edge_traits_type>, node_storage_type>;
 
