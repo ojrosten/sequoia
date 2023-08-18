@@ -27,10 +27,12 @@ namespace sequoia::testing
     test_plain_partial_edge();
     test_partial_edge_indep_weight();
     test_partial_edge_shared_weight();
+    test_partial_edge_meta_data();
 
     test_plain_embedded_partial_edge();
     test_embedded_partial_edge_indep_weight();
     test_embedded_partial_edge_shared_weight();
+    test_embedded_partial_edge_meta_data();
   }
 
 
@@ -67,6 +69,14 @@ namespace sequoia::testing
     check(equality, report_line("Identical targets, differeing weights"), edge_t{0,5}, edge_t{0,6});
     check(equality, report_line("Differing targets and weights"), edge_t{0,0}, edge_t{1,1});
     check(equality, report_line("Differing targets and weights"), edge_t{0,1}, edge_t{2,3});
+  }
+
+  void test_edge_false_positives::test_partial_edge_meta_data()
+  {
+    using edge_t = partial_edge<by_value<null_weight>, float>;
+
+    check(equality, report_line("Differing target indices"), edge_t{0, 0.5f}, edge_t{1, 0.5f});
+    check(equality, report_line("Differing meta data"), edge_t{0, 0.5f}, edge_t{1, -0.5f});
   }
 
   void test_edge_false_positives::test_plain_embedded_partial_edge()
@@ -125,5 +135,14 @@ namespace sequoia::testing
     check(equality, report_line("Differing complementary indices and weights, identical targets"), edge_t{0,1,4.0}, edge_t{0,3,5.0});
 
     check(equality, report_line("Differing targets, complementary indices and weights"), edge_t{0,1,2.0}, edge_t{1,0,5.0});
+  }
+
+  void test_edge_false_positives::test_embedded_partial_edge_meta_data()
+  {
+    using edge_t = embedded_partial_edge<by_value<null_weight>, float>;
+
+    check(equality, report_line("Differing target indices"), edge_t{0, 1, 0.5f}, edge_t{1, 1, 0.5f});
+    check(equality, report_line("Differing complementary indices"), edge_t{0, 1, 0.5f}, edge_t{0, 2, 0.5f});
+    check(equality, report_line("Differing meta data"), edge_t{0, 1, 0.5f}, edge_t{0, 1, -0.5f});
   }
 }

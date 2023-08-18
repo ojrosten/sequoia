@@ -40,7 +40,7 @@ namespace sequoia
       test_plain_embedded_partial_edge();
       test_embedded_partial_edge_indep_weight();
       test_embedded_partial_edge_shared_weight();
-      test_plain_embedded_partial_edge_meta_data();
+      test_embedded_partial_edge_meta_data();
     }
 
     void test_edges::test_plain_partial_edge()
@@ -247,7 +247,7 @@ namespace sequoia
       check_semantics(report_line("Standard semantics"), edge2, edge1);
     }
 
-    void test_edges::test_plain_embedded_partial_edge_meta_data()
+    void test_edges::test_embedded_partial_edge_meta_data()
     {
       using edge_t = embedded_partial_edge<by_value<null_weight>, float, std::size_t>;
       static_assert(3 * sizeof(std::size_t) == sizeof(edge_t));
