@@ -43,6 +43,8 @@ namespace sequoia
       test_embedded_partial_edge_indep_weight();
       test_embedded_partial_edge_shared_weight();
       test_embedded_partial_edge_meta_data();
+      test_embedded_partial_edge_indep_weight_meta_data();
+      test_embedded_partial_edge_shared_weight_meta_data();
     }
 
     void test_edges::test_plain_partial_edge()
@@ -172,7 +174,7 @@ namespace sequoia
       check(equality, report_line("Change target node"), edge, edge_t{3, 0.5f});
 
       edge.meta_data(0.7f);
-      check(equality, report_line("Set weight"), edge, edge_t{3, 0.7f});
+      check(equality, report_line("Change meta data"), edge, edge_t{3, 0.7f});
 
       constexpr edge_t edge2{5, 0.8f};
       check_semantics(report_line("Standard semantics"), edge2, edge);
@@ -189,8 +191,11 @@ namespace sequoia
       edge.target_node(3);
       check(equality, report_line("Change target node"), edge, edge_t{3, 1.0, 0.5f});
 
+      edge.weight(1.2);
+      check(equality, report_line("Change weight"), edge, edge_t{3, 1.2, 0.5f});
+
       edge.meta_data(0.7f);
-      check(equality, report_line("Set weight"), edge, edge_t{3, 1.0, 0.7f});
+      check(equality, report_line("Change meta data"), edge, edge_t{3, 1.2, 0.7f});
 
       constexpr edge_t edge2{5, 1.0, 0.8f};
       check_semantics(report_line("Standard semantics"), edge2, edge);
@@ -207,10 +212,13 @@ namespace sequoia
       edge.target_node(3);
       check(equality, report_line("Change target node"), edge, edge_t{3, 1.0, 0.5f});
 
-      edge.meta_data(0.7f);
-      check(equality, report_line("Set weight"), edge, edge_t{3, 1.0, 0.7f});
+      edge.weight(1.2);
+      check(equality, report_line("Change weight"), edge, edge_t{3, 1.2, 0.5f});
 
-      edge_t edge2{5, 1.0, 0.8f};
+      edge.meta_data(0.7f);
+      check(equality, report_line("Change meta data"), edge, edge_t{3, 1.2, 0.7f});
+
+      const edge_t edge2{5, 1.0, 0.8f};
       check_semantics(report_line("Standard semantics"), edge2, edge);
     }
 
@@ -303,6 +311,54 @@ namespace sequoia
       check(equality, report_line("Set weight"), edge, edge_t{3, 4, 0.7f});
 
       constexpr edge_t edge2{5, 8, 0.8f};
+      check_semantics(report_line("Standard semantics"), edge2, edge);
+    }
+
+    void test_edges::test_embedded_partial_edge_indep_weight_meta_data()
+    {
+      using edge_t = embedded_partial_edge<by_value<double>, float, std::size_t>;
+      static_assert(4 * sizeof(std::size_t) == sizeof(edge_t));
+
+      edge_t edge{2, 5, 1.0, 0.5f};
+      check(equivalence, report_line("Construction"), edge, 2, 5, 1.0, 0.5f);
+
+      edge.complementary_index(6);
+      check(equality, report_line("Change complementary index"), edge, edge_t{2, 6, 1.0, 0.5f});
+
+      edge.target_node(3);
+      check(equality, report_line("Change target node"), edge, edge_t{3, 6, 1.0, 0.5f});
+
+      edge.weight(1.2);
+      check(equality, report_line("Change weight"), edge, edge_t{3, 6, 1.2, 0.5f});
+
+      edge.meta_data(0.7f);
+      check(equality, report_line("Change meta data"), edge, edge_t{3, 6, 1.2, 0.7f});
+
+      constexpr edge_t edge2{5, 7, 1.0, 0.8f};
+      check_semantics(report_line("Standard semantics"), edge2, edge);
+    }
+
+    void test_edges::test_embedded_partial_edge_shared_weight_meta_data()
+    {
+      using edge_t = embedded_partial_edge<shared<double>, float, std::size_t>;
+      static_assert(sizeof(std::shared_ptr<double>) + 3*sizeof(std::size_t) == sizeof(edge_t));
+
+      edge_t edge{2, 5, 1.0, 0.5f};
+      check(equivalence, report_line("Construction"), edge, 2, 5, 1.0, 0.5f);
+
+      edge.complementary_index(6);
+      check(equality, report_line("Change complementary index"), edge, edge_t{2, 6, 1.0, 0.5f});
+
+      edge.target_node(3);
+      check(equality, report_line("Change target node"), edge, edge_t{3, 6, 1.0, 0.5f});
+
+      edge.weight(1.2);
+      check(equality, report_line("Change weight"), edge, edge_t{3, 6, 1.2, 0.5f});
+
+      edge.meta_data(0.7f);
+      check(equality, report_line("Change meta data"), edge, edge_t{3, 6, 1.2, 0.7f});
+
+      const edge_t edge2{5, 7, 1.0, 0.8f};
       check_semantics(report_line("Standard semantics"), edge2, edge);
     }
   }
