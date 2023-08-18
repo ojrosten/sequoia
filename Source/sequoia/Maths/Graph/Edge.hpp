@@ -204,7 +204,14 @@ namespace sequoia
       using weight_type    = typename partial_edge_base<WeightHandler, IndexType>::weight_type;
 
       constexpr decorated_partial_edge_base(const index_type target, weight_type w, meta_data_type m)
+        requires (!std::is_empty_v<weight_type>)
         : partial_edge_base<WeightHandler, IndexType>{target, std::move(w)}
+        , m_MetaData{std::move(m)}
+      {}
+
+      constexpr decorated_partial_edge_base(const index_type target, meta_data_type m)
+        requires std::is_empty_v<weight_type>
+        : partial_edge_base<WeightHandler, IndexType>{target}
         , m_MetaData{std::move(m)}
       {}
 

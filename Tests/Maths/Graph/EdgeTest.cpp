@@ -40,6 +40,7 @@ namespace sequoia
       test_plain_embedded_partial_edge();
       test_embedded_partial_edge_indep_weight();
       test_embedded_partial_edge_shared_weight();
+      test_plain_embedded_partial_edge_meta_data();
     }
 
     void test_edges::test_plain_partial_edge()
@@ -159,8 +160,20 @@ namespace sequoia
 
     void test_edges::test_partial_edge_meta_data()
     {
-      using edge_t = partial_edge<by_value<null_weight>, std::size_t, int>;
+      using edge_t = partial_edge<by_value<null_weight>, float, std::size_t>;
+      static_assert(2 * sizeof(std::size_t) == sizeof(edge_t));
 
+      edge_t edge{2, 0.5f};
+      check(equivalence, report_line("Construction"), edge, 2, 0.5f);
+
+      edge.target_node(3);
+      check(equality, report_line("Change target node"), edge, edge_t{3, 0.5f});
+
+      edge.meta_data(0.7f);
+      check(equality, report_line("Set weight"), edge, edge_t{3, 0.7f});
+
+      constexpr edge_t edge2{5, 0.8f};
+      check_semantics(report_line("Standard semantics"), edge2, edge);
     }
 
 
@@ -232,6 +245,27 @@ namespace sequoia
       check(equality, report_line("Induced change in shared weight"), edge1, edge_t{1, 2, 5.6});
 
       check_semantics(report_line("Standard semantics"), edge2, edge1);
+    }
+
+    void test_edges::test_plain_embedded_partial_edge_meta_data()
+    {
+      using edge_t = embedded_partial_edge<by_value<null_weight>, float, std::size_t>;
+      static_assert(3 * sizeof(std::size_t) == sizeof(edge_t));
+
+      edge_t edge{2, 1, 0.5f};
+      check(equivalence, report_line("Construction"), edge, 2, 1, 0.5f);
+
+      edge.target_node(3);
+      check(equality, report_line("Change target node"), edge, edge_t{3, 1, 0.5f});
+
+      edge.complementary_index(4);
+      check(equality, report_line("Change complementary index"), edge, edge_t{3, 4, 0.5f});
+
+      edge.meta_data(0.7f);
+      check(equality, report_line("Set weight"), edge, edge_t{3, 4, 0.7f});
+
+      constexpr edge_t edge2{5, 8, 0.8f};
+      check_semantics(report_line("Standard semantics"), edge2, edge);
     }
   }
 }
