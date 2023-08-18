@@ -52,7 +52,7 @@ namespace sequoia::testing
       impl::check_partial(flavour, logger, edge, prediction);
     }
 
-    template<test_mode Mode, class MetaData, class OtherHandler>
+    template<test_mode Mode, class OtherHandler>
       requires (object::handler<OtherHandler> && !std::is_same_v<WeightHandler, OtherHandler>)
     static void test(equivalence_check_t, test_logger<Mode>& logger, const type& edge, const maths::partial_edge<OtherHandler, MetaData, IndexType>& prediction)
     {

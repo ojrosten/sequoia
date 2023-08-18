@@ -179,7 +179,7 @@ namespace sequoia
     //===================================Decorated Partial Edge Base===================================//
 
     template<class WeightHandler, class MetaData, std::integral IndexType>
-      requires object::handler<WeightHandler> && std::is_empty_v<MetaData>
+      requires object::handler<WeightHandler>
     class decorated_partial_edge_base : public partial_edge_base<WeightHandler, IndexType>
     {
     public:
