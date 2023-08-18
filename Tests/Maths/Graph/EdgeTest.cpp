@@ -36,6 +36,8 @@ namespace sequoia
       test_partial_edge_indep_weight();
       test_partial_edge_shared_weight();
       test_partial_edge_meta_data();
+      test_partial_edge_indep_weight_meta_data();
+      test_partial_edge_shared_weight_meta_data();
 
       test_plain_embedded_partial_edge();
       test_embedded_partial_edge_indep_weight();
@@ -173,6 +175,42 @@ namespace sequoia
       check(equality, report_line("Set weight"), edge, edge_t{3, 0.7f});
 
       constexpr edge_t edge2{5, 0.8f};
+      check_semantics(report_line("Standard semantics"), edge2, edge);
+    }
+
+    void test_edges::test_partial_edge_indep_weight_meta_data()
+    {
+      using edge_t = partial_edge<by_value<double>, float, std::size_t>;
+      static_assert(3 * sizeof(std::size_t) == sizeof(edge_t));
+
+      edge_t edge{2, 1.0, 0.5f};
+      check(equivalence, report_line("Construction"), edge, 2, 1.0, 0.5f);
+
+      edge.target_node(3);
+      check(equality, report_line("Change target node"), edge, edge_t{3, 1.0, 0.5f});
+
+      edge.meta_data(0.7f);
+      check(equality, report_line("Set weight"), edge, edge_t{3, 1.0, 0.7f});
+
+      constexpr edge_t edge2{5, 1.0, 0.8f};
+      check_semantics(report_line("Standard semantics"), edge2, edge);
+    }
+
+    void test_edges::test_partial_edge_shared_weight_meta_data()
+    {
+      using edge_t = partial_edge<shared<double>, float, std::size_t>;
+      static_assert(sizeof(std::shared_ptr<double>)*2 == sizeof(edge_t));
+
+      edge_t edge{2, 1.0, 0.5f};
+      check(equivalence, report_line("Construction"), edge, 2, 1.0, 0.5f);
+
+      edge.target_node(3);
+      check(equality, report_line("Change target node"), edge, edge_t{3, 1.0, 0.5f});
+
+      edge.meta_data(0.7f);
+      check(equality, report_line("Set weight"), edge, edge_t{3, 1.0, 0.7f});
+
+      edge_t edge2{5, 1.0, 0.8f};
       check_semantics(report_line("Standard semantics"), edge2, edge);
     }
 
