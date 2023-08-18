@@ -28,6 +28,8 @@ namespace sequoia::testing
     void test_embedded_partial_edge_indep_weight();
     void test_embedded_partial_edge_shared_weight();
     void test_embedded_partial_edge_meta_data();
+    void test_embedded_partial_edge_indep_weight_meta_data();
+    void test_embedded_partial_edge_shared_weight_meta_data();
   };
 
 }
