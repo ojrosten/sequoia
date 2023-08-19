@@ -342,16 +342,6 @@ namespace sequoia::maths
 
     using base_type::sort_edges;
     using base_type::swap_edges;
-
-    void swap(graph& rhs) noexcept(noexcept(this->base_type::swap(rhs)))
-    {
-      base_type::swap(rhs);
-    }
-
-    friend void swap(graph& lhs, graph& rhs) noexcept(noexcept(lhs.swap(rhs)))
-    {
-      lhs.swap(rhs);
-    }
   };
 
   template
@@ -403,15 +393,5 @@ namespace sequoia::maths
     using base_type::erase_edge;
 
     using base_type::primitive_type::insert_join;
-
-    void swap(embedded_graph& rhs) noexcept(noexcept(this->base_type::swap(rhs)))
-    {
-      base_type::swap(rhs);
-    }
-
-    friend void swap(embedded_graph& lhs, embedded_graph& rhs) noexcept(noexcept(lhs.swap(rhs)))
-    {
-      lhs.swap(rhs);
-    }
   };
 }
