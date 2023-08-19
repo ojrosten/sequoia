@@ -130,7 +130,7 @@ namespace sequoia::testing
       };
 
       using namespace maths;
-      if constexpr(is_directed(Graph::species))
+      if constexpr(is_directed(Graph::flavour))
       {
         return early
           ? traverse(breadth_first, graph, ignore_disconnected_t{}, fn, null_func_obj{}, null_func_obj{}, ProcessingModel{std::forward<Args>(args)...})
@@ -154,7 +154,7 @@ namespace sequoia::testing
       };
 
       using namespace maths;
-      if constexpr(is_directed(Graph::species))
+      if constexpr(is_directed(Graph::flavour))
       {
         return traverse(breadth_first, graph, ignore_disconnected_t{}, null_func_obj{}, null_func_obj{}, fn, ProcessingModel{std::forward<Args>(args)...});
       }

@@ -21,7 +21,7 @@ Inserting to non-existent partition throws
 
 Expected Exception Type:
 [std::out_of_range]
-bucketed_sequence::end_partition: no buckets
+bucketed_sequence::insert_to_partition: no buckets
 
 =======================================
 
@@ -75,7 +75,7 @@ rbegin_partition throws for empty container
 
 Expected Exception Type:
 [std::out_of_range]
-bucketed_sequence::begin_partition: no buckets
+bucketed_sequence::rbegin_partition: no buckets
 
 =======================================
 
@@ -84,7 +84,7 @@ rend_partition throws for empty container
 
 Expected Exception Type:
 [std::out_of_range]
-bucketed_sequence::end_partition: no buckets
+bucketed_sequence::rend_partition: no buckets
 
 =======================================
 
@@ -93,7 +93,7 @@ rbegin_partition throws for empty container in const context
 
 Expected Exception Type:
 [std::out_of_range]
-bucketed_sequence::begin_partition: no buckets
+bucketed_sequence::rbegin_partition: no buckets
 
 =======================================
 
@@ -102,7 +102,7 @@ rend_partition throws for empty container in const context
 
 Expected Exception Type:
 [std::out_of_range]
-bucketed_sequence::end_partition: no buckets
+bucketed_sequence::rend_partition: no buckets
 
 =======================================
 
@@ -129,7 +129,7 @@ crbegin_partition throws for empty container
 
 Expected Exception Type:
 [std::out_of_range]
-bucketed_sequence::begin_partition: no buckets
+bucketed_sequence::rbegin_partition: no buckets
 
 =======================================
 
@@ -138,7 +138,7 @@ crend_partition throws for empty container
 
 Expected Exception Type:
 [std::out_of_range]
-bucketed_sequence::end_partition: no buckets
+bucketed_sequence::rend_partition: no buckets
 
 =======================================
 
@@ -183,7 +183,7 @@ Erasing from non-existent partition throws
 
 Expected Exception Type:
 [std::out_of_range]
-bucketed_sequence::end_partition: no buckets
+bucketed_sequence::erase_from_partition: no buckets
 
 =======================================
 

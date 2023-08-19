@@ -8,7 +8,7 @@
 #pragma once
 
 /*! \file
-    \brief Underlying class for the various different graph species.
+    \brief Underlying class for the various different graph flavour.
  */
 
 #include "sequoia/Algorithms/Algorithms.hpp"
@@ -146,7 +146,7 @@ namespace sequoia
 
       template<tree_link_direction dir>
         requires (    !std::same_as<node_weight_type, graph_impl::heterogeneous_tag>
-                   && ((dir == tree_link_direction::symmetric) || is_directed(Connectivity::species)))
+                   && ((dir == tree_link_direction::symmetric) || is_directed(Connectivity::flavour)))
       constexpr graph_primitive(std::initializer_list<tree_initializer<node_weight_type>> forest, tree_link_direction_constant<dir> tdc)
       {
         for(const auto& tree : forest)
@@ -157,7 +157,7 @@ namespace sequoia
 
       template<tree_link_direction dir>
       requires (    !std::same_as<node_weight_type, graph_impl::heterogeneous_tag>
-                 && ((dir == tree_link_direction::symmetric) || is_directed(Connectivity::species)))
+                 && ((dir == tree_link_direction::symmetric) || is_directed(Connectivity::flavour)))
       constexpr graph_primitive(tree_initializer<node_weight_type> tree, tree_link_direction_constant<dir> tdc)
       {
         build_tree(std::numeric_limits<size_type>::max(), tree, tdc);
@@ -497,7 +497,7 @@ namespace sequoia
 
         if(this->order() > 1)
         {
-          if constexpr((dir != tree_link_direction::forward) && is_directed(Connectivity::species))
+          if constexpr((dir != tree_link_direction::forward) && is_directed(Connectivity::flavour))
           {
             join(n, parent);
           }

@@ -301,7 +301,7 @@ namespace sequoia::maths::graph_impl
       // external visibility.
 
       constexpr bool hasEdgeSecondFn{!std::same_as<std::remove_cvref_t<ESTF>, null_func_obj>};
-      static_assert(!is_directed(G::species) || !hasEdgeSecondFn,
+      static_assert(!is_directed(G::flavour) || !hasEdgeSecondFn,
                     "For a directed graph, edges are traversed only once: the edgeSecondTraversalFn is ignored and so should be the null_func_obj");
 
       if(conditions.starting_index() < graph.order())

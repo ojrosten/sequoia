@@ -108,14 +108,14 @@ namespace sequoia::maths
 
     template<tree_link_direction dir>
       requires (    !std::same_as<node_weight_type, graph_impl::heterogeneous_tag>
-                 && ((dir == tree_link_direction::symmetric) || is_directed(primitive_type::connectivity::species)))
+                 && ((dir == tree_link_direction::symmetric) || is_directed(primitive_type::connectivity::flavour)))
     graph_base(std::initializer_list<tree_initializer<node_weight_type>> forest, tree_link_direction_constant<dir> tdc)
       : primitive_type{forest, tdc}
     {}
 
     template<tree_link_direction dir>
       requires (    !std::same_as<node_weight_type, graph_impl::heterogeneous_tag>
-                 && ((dir == tree_link_direction::symmetric) || is_directed(primitive_type::connectivity::species)))
+                 && ((dir == tree_link_direction::symmetric) || is_directed(primitive_type::connectivity::flavour)))
     graph_base(tree_initializer<node_weight_type> tree, tree_link_direction_constant<dir> tdc)
       : primitive_type{tree, tdc}
     {}
@@ -146,7 +146,7 @@ namespace sequoia::maths
 
     graph_base& operator=(const graph_base&) = default;
 
-    graph_base& operator=(graph_base&&) = default;
+    graph_base& operator=(graph_base&&) noexcept = default;
 
     using primitive_type::swap;
     using primitive_type::clear;
@@ -235,14 +235,14 @@ namespace sequoia::maths
     {}
 
     template<tree_link_direction dir>
-      requires ((dir == tree_link_direction::symmetric) || is_directed(primitive_type::connectivity::species))
+      requires ((dir == tree_link_direction::symmetric) || is_directed(primitive_type::connectivity::flavour))
     graph_base(std::initializer_list<tree_initializer<node_weight_type>> forest, tree_link_direction_constant<dir> tdc)
       : primitive_type{forest, tdc}
     {}
 
     template<tree_link_direction dir>
       requires (    !std::is_empty_v<node_weight_type> && !std::same_as<node_weight_type, graph_impl::heterogeneous_tag>
-                 && ((dir == tree_link_direction::symmetric) || is_directed(primitive_type::connectivity::species)))
+                 && ((dir == tree_link_direction::symmetric) || is_directed(primitive_type::connectivity::flavour)))
     graph_base(tree_initializer<node_weight_type> tree, tree_link_direction_constant<dir> tdc)
       : primitive_type{tree, tdc}
     {}
@@ -274,7 +274,8 @@ namespace sequoia::maths
     graph_base& operator=(const graph_base&)     = default;
     graph_base& operator=(graph_base&&) noexcept = default;
 
-    using primitive_type::swap;
+    constexpr static graph_flavour flavour{GraphFlavour};
+
     using primitive_type::clear;
 
     using primitive_type::get_edge_allocator;
@@ -286,7 +287,12 @@ namespace sequoia::maths
 
     using primitive_type::get_node_allocator;
 
-    constexpr static graph_flavour flavour{GraphFlavour};
+    using primitive_type::swap;
+
+    friend void swap(graph_base& lhs, graph_base& rhs) noexcept(noexcept(lhs.swap(rhs)))
+    {
+      lhs.swap(rhs);
+    }
   protected:
     ~graph_base() = default;
   };

@@ -30,7 +30,7 @@ namespace sequoia::maths
     class EFTF = null_func_obj,
     class ESTF = null_func_obj
   >
-    requires (!is_directed(G::species))
+    requires (!is_directed(G::flavour))
           && (std::invocable<NBEF, typename G::edge_index_type>)
           && (std::invocable<NAEF, typename G::edge_index_type>)
           && (std::invocable<EFTF, typename G::const_edge_iterator>)
@@ -66,7 +66,7 @@ namespace sequoia::maths
     class NAEF = null_func_obj,
     class EFTF = null_func_obj
   >
-    requires (is_directed(G::species))
+    requires (is_directed(G::flavour))
           && (std::invocable<NBEF, typename G::edge_index_type>)
           && (std::invocable<NAEF, typename G::edge_index_type>)
           && (std::invocable<EFTF, typename G::const_edge_iterator>)
@@ -132,7 +132,7 @@ namespace sequoia::maths
     class ESTF     = null_func_obj,
     class QCompare = graph_impl::node_comparer<G, std::ranges::less>
   >
-    requires (!is_directed(G::species))
+    requires (!is_directed(G::flavour))
           && (std::invocable<NBEF, typename G::edge_index_type>)
           && (std::invocable<NAEF, typename G::edge_index_type>)
           && (std::invocable<EFTF, typename G::const_edge_iterator>)
@@ -169,7 +169,7 @@ namespace sequoia::maths
     class EFTF     = null_func_obj,
     class QCompare = graph_impl::node_comparer<G, std::ranges::less>
   >
-    requires (is_directed(G::species))
+    requires (is_directed(G::flavour))
           && (std::invocable<NBEF, typename G::edge_index_type>)
           && (std::invocable<NAEF, typename G::edge_index_type>)
           && (std::invocable<EFTF, typename G::const_edge_iterator>)

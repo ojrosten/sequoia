@@ -201,7 +201,7 @@ namespace sequoia
       static_assert(std::is_unsigned_v<edge_index_type>);
 
       constexpr static auto npos{std::numeric_limits<edge_index_type>::max()};
-      constexpr static graph_flavour species{EdgeTraits::graph_species};
+      constexpr static graph_flavour flavour{EdgeTraits::graph_species};
       constexpr static bool throw_on_range_error{edge_storage_type::throw_on_range_error};
 
       constexpr connectivity() = default;
@@ -220,7 +220,7 @@ namespace sequoia
       [[nodiscard]]
       constexpr size_type size() const noexcept
       {
-        return !is_directed(species) ? m_Edges.size() / 2 : m_Edges.size();
+        return !is_directed(flavour) ? m_Edges.size() / 2 : m_Edges.size();
       }
 
       [[nodiscard]]
@@ -586,7 +586,7 @@ namespace sequoia
 
         add_to_partition(node1, node2, std::forward<Args>(args)...);
 
-        if constexpr (!is_directed(species))
+        if constexpr (!is_directed(flavour))
         {
           if constexpr (edge_type::flavour == edge_flavour::partial)
           {
@@ -698,7 +698,7 @@ namespace sequoia
             {
               const auto partnerDist{
                 [this, partner]([[maybe_unused]] const auto source, [[maybe_unused]] const auto citer){
-                  if constexpr (is_directed(species))
+                  if constexpr (is_directed(flavour))
                   {
                     for(auto oiter{cbegin_edges(partner)}; oiter != cend_edges(partner); ++oiter)
                     {
