@@ -216,7 +216,7 @@ namespace sequoia::testing
     template<maths::network>
     friend struct graph_initialization_checker;
   public:
-    using graph_t            = maths::embedded_graph<EdgeWeight, NodeWeight, EdgeStorageTraits, NodeWeightStorageTraits>;
+    using graph_t            = maths::embedded_graph<EdgeWeight, NodeWeight, maths::null_meta_data, EdgeStorageTraits, NodeWeightStorageTraits>;
     using edge_t             = typename graph_t::edge_init_type;
     using edges_equivalent_t = std::initializer_list<std::initializer_list<edge_t>>;
     using transition_graph   = typename transition_checker<graph_t>::transition_graph;

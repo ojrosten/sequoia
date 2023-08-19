@@ -194,7 +194,7 @@ namespace sequoia::testing
       return includes;
     }
 
-    using tests_dependency_graph = maths::graph<maths::directed_flavour::directed, maths::null_weight, file_info>;
+    using tests_dependency_graph = maths::directed_graph<maths::null_weight, file_info>;
     using node_iterator = tests_dependency_graph::iterator;
 
     void add_files(tests_dependency_graph& g, const fs::path& repo, const fs::file_time_type& pruneTimeStamp, const std::optional<fs::file_time_type>& exeTimeStamp)

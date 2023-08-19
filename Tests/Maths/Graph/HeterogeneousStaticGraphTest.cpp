@@ -31,7 +31,7 @@ namespace sequoia::testing
   {
     using namespace maths;
 
-    using graph_t = heterogeneous_static_graph<directed_flavour::undirected, 1, 3, float, float, int, double>;
+    using graph_t = heterogeneous_undirected_graph<1, 3, float, null_meta_data, float, int, double>;
     using edge = typename graph_t::edge_init_type;
 
     graph_t g{{{edge{1, 0.5f}}, {edge{0, 0.5f}}, {}}, 6.6f, -5, 10.2};
@@ -49,7 +49,7 @@ namespace sequoia::testing
   {
     using namespace maths;
 
-    using graph_t = heterogeneous_embedded_static_graph<directed_flavour::undirected, 1, 3, float, float, int, double>;
+    using graph_t = heterogeneous_embedded_graph<1, 3, float, null_meta_data, float, int, double>;
     using edge = typename graph_t::edge_init_type;
 
     graph_t g{{{edge{1, 0, 0.5f}}, {edge{0, 0, 0.5f}}, {}}, 6.6f, -5, 10.2};
@@ -67,7 +67,7 @@ namespace sequoia::testing
   {
     using namespace maths;
 
-    using graph_t = heterogeneous_static_graph<directed_flavour::directed, 1, 3, float, float, int, double>;
+    using graph_t = heterogeneous_directed_graph<1, 3, float, float, int, double>;
     using edge = typename graph_t::edge_init_type;
 
     graph_t g{{{edge{1, 0.5f}}, {}, {}}, 6.6f, -5, 10.2};
@@ -87,7 +87,7 @@ namespace sequoia::testing
     using namespace maths;
 
     {
-      using graph_t = heterogeneous_static_graph<directed_flavour::undirected, 1, 2, float, int, double>;
+      using graph_t = heterogeneous_undirected_graph<1, 2, float, null_meta_data, int, double>;
       using edge = typename graph_t::edge_init_type;
 
       constexpr graph_t g{{edge{1, 0.5f}}, {edge{0, 0.5f}}};
@@ -102,7 +102,7 @@ namespace sequoia::testing
     }
 
     {
-      using graph_t = heterogeneous_static_graph<directed_flavour::undirected, 1, 1, float, function_object>;
+      using graph_t = heterogeneous_undirected_graph<1, 1, float, null_meta_data, function_object>;
       using edge = typename graph_t::edge_init_type;
 
       constexpr graph_t g{ {{edge{0, 0.2f}, edge{0, 0.2f}}}, function_object{}};
@@ -115,7 +115,7 @@ namespace sequoia::testing
     using namespace maths;
 
     {
-      using graph_t = heterogeneous_embedded_static_graph<directed_flavour::undirected, 1, 2, float, int, double>;
+      using graph_t = heterogeneous_embedded_graph<1, 2, float, null_meta_data, int, double>;
       using edge = typename graph_t::edge_init_type;
 
       constexpr graph_t g{{edge{1, 0, 0.5f}}, {edge{0, 0, 0.5f}}};
@@ -135,7 +135,7 @@ namespace sequoia::testing
     using namespace maths;
 
     {
-      using graph_t = heterogeneous_static_graph<directed_flavour::directed, 1, 2, float, int, double>;
+      using graph_t = heterogeneous_directed_graph<1, 2, float, int, double>;
       using edge = typename graph_t::edge_init_type;
 
       constexpr graph_t g{{edge{1, 0.5f}}, {}};

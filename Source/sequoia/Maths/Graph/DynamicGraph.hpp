@@ -62,18 +62,19 @@ namespace sequoia::maths
     graph_flavour GraphFlavour,
     class EdgeWeight,
     class NodeWeight,
+    class EdgeMetaData,
     class EdgeStorageTraits,
     class NodeWeightStorageTraits
   >
   class graph_base : public
     graph_primitive
     <
-      connectivity<graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeight, null_meta_data, EdgeStorageTraits, std::size_t>>,
+      connectivity<graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeight, EdgeMetaData, EdgeStorageTraits, std::size_t>>,
       graph_impl::node_storage<NodeWeight, NodeWeightStorageTraits>
     >
   {
   public:
-    using edge_traits_type  = graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeight, null_meta_data, EdgeStorageTraits, std::size_t>;
+    using edge_traits_type  = graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeight, EdgeMetaData, EdgeStorageTraits, std::size_t>;
     using node_storage_type = graph_impl::node_storage<NodeWeight, NodeWeightStorageTraits>;
     using primitive_type    = graph_primitive<connectivity<edge_traits_type>, node_storage_type>;
 
@@ -168,25 +169,27 @@ namespace sequoia::maths
     graph_flavour GraphFlavour,
     class EdgeWeight,
     class NodeWeight,
+    class EdgeMetaData,
     class EdgeStorageTraits,
     class NodeWeightStorageTraits
   >
-  requires (NodeWeightStorageTraits::has_allocator)
+    requires (NodeWeightStorageTraits::has_allocator)
   class graph_base<
       GraphFlavour,
       EdgeWeight,
       NodeWeight,
+      EdgeMetaData,
       EdgeStorageTraits,
       NodeWeightStorageTraits
     > : public
     graph_primitive
     <
-      connectivity<graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeight, null_meta_data, EdgeStorageTraits, std::size_t>>,
+      connectivity<graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeight, EdgeMetaData, EdgeStorageTraits, std::size_t>>,
       graph_impl::node_storage<NodeWeight,NodeWeightStorageTraits>
     >
   {
   public:
-    using edge_traits_type  = graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeight, null_meta_data, EdgeStorageTraits, std::size_t>;
+    using edge_traits_type  = graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeight, EdgeMetaData, EdgeStorageTraits, std::size_t>;
     using node_storage_type = graph_impl::node_storage<NodeWeight, NodeWeightStorageTraits>;
     using primitive_type    = graph_primitive<connectivity<edge_traits_type>, node_storage_type>;
 
@@ -299,18 +302,18 @@ namespace sequoia::maths
 
   template
   <
-    directed_flavour Directedness,
     class EdgeWeight,
     class NodeWeight,
-    class EdgeStorageTraits = bucketed_edge_storage_traits,
+    class EdgeStorageTraits       = bucketed_edge_storage_traits,
     class NodeWeightStorageTraits = node_weight_storage_traits<NodeWeight>
   >
-  class graph final : public
+  class directed_graph final : public
     graph_base
     <
-      graph_impl::to_graph_flavour<Directedness>(),
+      graph_flavour::directed,
       EdgeWeight,
       NodeWeight,
+      null_meta_data,
       EdgeStorageTraits,
       NodeWeightStorageTraits
     >
@@ -321,9 +324,10 @@ namespace sequoia::maths
     using
       graph_base
       <
-        graph_impl::to_graph_flavour<Directedness>(),
+        graph_flavour::directed,
         EdgeWeight,
         NodeWeight,
+        null_meta_data,
         EdgeStorageTraits,
         NodeWeightStorageTraits
       >::graph_base;
@@ -331,9 +335,10 @@ namespace sequoia::maths
     using base_type =
       graph_base
       <
-        graph_impl::to_graph_flavour<Directedness>(),
+        graph_flavour::directed,
         EdgeWeight,
         NodeWeight,
+        null_meta_data,
         EdgeStorageTraits,
         NodeWeightStorageTraits
       >;
@@ -354,8 +359,65 @@ namespace sequoia::maths
   <
     class EdgeWeight,
     class NodeWeight,
-    class EdgeStorageTraits=bucketed_edge_storage_traits,
-    class NodeWeightStorageTraits=node_weight_storage_traits<NodeWeight>
+    class EdgeMetaData            = null_meta_data,
+    class EdgeStorageTraits       = bucketed_edge_storage_traits,
+    class NodeWeightStorageTraits = node_weight_storage_traits<NodeWeight>
+  >
+  class undirected_graph final : public
+    graph_base
+    <
+      graph_flavour::undirected,
+      EdgeWeight,
+      NodeWeight,
+      EdgeMetaData,
+      EdgeStorageTraits,
+      NodeWeightStorageTraits
+    >
+  {
+  public:
+    using node_weight_type = NodeWeight;
+
+    using
+      graph_base
+      <
+        graph_flavour::undirected,
+        EdgeWeight,
+        NodeWeight,
+        EdgeMetaData,
+        EdgeStorageTraits,
+        NodeWeightStorageTraits
+      >::graph_base;
+
+    using base_type =
+      graph_base
+      <
+        graph_flavour::undirected,
+        EdgeWeight,
+        NodeWeight,
+        EdgeMetaData,
+        EdgeStorageTraits,
+        NodeWeightStorageTraits
+      >;
+
+    using base_type::swap_nodes;
+    using base_type::add_node;
+    using base_type::insert_node;
+    using base_type::erase_node;
+
+    using base_type::join;
+    using base_type::erase_edge;
+
+    using base_type::sort_edges;
+    using base_type::swap_edges;
+  };
+
+  template
+  <
+    class EdgeWeight,
+    class NodeWeight,
+    class EdgeMetaData            = null_meta_data,
+    class EdgeStorageTraits       = bucketed_edge_storage_traits,
+    class NodeWeightStorageTraits = node_weight_storage_traits<NodeWeight>
   >
   class embedded_graph final : public
     graph_base
@@ -363,6 +425,7 @@ namespace sequoia::maths
       graph_flavour::undirected_embedded,
       EdgeWeight,
       NodeWeight,
+      EdgeMetaData,
       EdgeStorageTraits,
       NodeWeightStorageTraits
     >
@@ -376,6 +439,7 @@ namespace sequoia::maths
         graph_flavour::undirected_embedded,
         EdgeWeight,
         NodeWeight,
+        EdgeMetaData,
         EdgeStorageTraits,
         NodeWeightStorageTraits
       >::graph_base;
@@ -386,6 +450,7 @@ namespace sequoia::maths
         graph_flavour::undirected_embedded,
         EdgeWeight,
         NodeWeight,
+        EdgeMetaData,
         EdgeStorageTraits,
         NodeWeightStorageTraits
       >;

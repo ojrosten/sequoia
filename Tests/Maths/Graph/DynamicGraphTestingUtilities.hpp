@@ -69,12 +69,11 @@ namespace sequoia::testing
     class EdgeWeight,
     class NodeWeight,
     class EdgeStorageTraits,
-    class NodeWeightStorageTraits,
-    bool=embedded(GraphFlavour)
+    class NodeWeightStorageTraits
   >
   struct graph_type_generator
   {
-    using graph_type = maths::graph<maths::to_directedness(GraphFlavour), EdgeWeight, NodeWeight, EdgeStorageTraits, NodeWeightStorageTraits>;
+    using graph_type = maths::directed_graph<EdgeWeight, NodeWeight, EdgeStorageTraits, NodeWeightStorageTraits>;
   };
 
   template
@@ -85,9 +84,24 @@ namespace sequoia::testing
     class EdgeStorageTraits,
     class NodeWeightStorageTraits
   >
-  struct graph_type_generator<GraphFlavour, EdgeWeight, NodeWeight, EdgeStorageTraits, NodeWeightStorageTraits, true>
+    requires (GraphFlavour == maths::graph_flavour::undirected)
+  struct graph_type_generator<GraphFlavour, EdgeWeight, NodeWeight, EdgeStorageTraits, NodeWeightStorageTraits>
   {
-    using graph_type = maths::embedded_graph<EdgeWeight, NodeWeight, EdgeStorageTraits, NodeWeightStorageTraits>;
+    using graph_type = maths::undirected_graph<EdgeWeight, NodeWeight, maths::null_meta_data, EdgeStorageTraits, NodeWeightStorageTraits>;
+  };
+
+  template
+  <
+    maths::graph_flavour GraphFlavour,
+    class EdgeWeight,
+    class NodeWeight,
+    class EdgeStorageTraits,
+    class NodeWeightStorageTraits
+  >
+    requires (GraphFlavour == maths::graph_flavour::undirected_embedded)
+  struct graph_type_generator<GraphFlavour, EdgeWeight, NodeWeight, EdgeStorageTraits, NodeWeightStorageTraits>
+  {
+    using graph_type = maths::embedded_graph<EdgeWeight, NodeWeight, maths::null_meta_data, EdgeStorageTraits, NodeWeightStorageTraits>;
   };
 
   template

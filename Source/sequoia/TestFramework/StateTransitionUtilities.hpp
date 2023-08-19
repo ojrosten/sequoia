@@ -75,7 +75,7 @@ namespace sequoia::testing
   {
   public:
     using transition_graph
-      = maths::graph<maths::directed_flavour::directed, transition_info<T, std::function<T(const T&)>>, object_generator<T>>;
+      = maths::directed_graph<transition_info<T, std::function<T(const T&)>>, object_generator<T>>;
 
     using size_type = typename transition_graph::size_type;
 

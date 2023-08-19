@@ -31,6 +31,7 @@ namespace sequoia::maths
         graph_impl::to_graph_flavour<Directedness>(),
         EdgeWeight,
         NodeWeight,
+        null_meta_data,
         EdgeStorageTraits,
         NodeWeightStorageTraits
       >
@@ -42,6 +43,7 @@ namespace sequoia::maths
         graph_impl::to_graph_flavour<Directedness>(),
         EdgeWeight,
         NodeWeight,
+        null_meta_data,
         EdgeStorageTraits,
         NodeWeightStorageTraits
       >;
@@ -62,16 +64,6 @@ namespace sequoia::maths
     tree(tree_initializer<NodeWeight> tree)
       : base_type{tree, tree_link_direction_constant<TreeLinkDir>{}}
     {}
-
-    void swap(tree& rhs) noexcept(noexcept(this->base_type::swap(rhs)))
-    {
-      base_type::swap(rhs);
-    }
-
-    friend void swap(tree& lhs, tree& rhs) noexcept(noexcept(lhs.swap(rhs)))
-    {
-      lhs.swap(rhs);
-    }
 
     template<class... Args>
       requires is_initializable_v<NodeWeight, Args...>
