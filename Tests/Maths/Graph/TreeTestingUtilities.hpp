@@ -32,8 +32,7 @@ namespace sequoia::testing
       check_node(flavour, logger, 0, tree_type::npos, actual, prediction);
     }
   private:
-    using edge_iterator    = typename tree_type::const_edge_iterator;
-    using node_weight_type = typename tree_type::node_weight_type;
+    using edge_iterator = typename tree_type::const_edge_iterator;
 
     template<class CheckType, test_mode Mode>
     static size_type check_node(CheckType flavour, test_logger<Mode>& logger, size_type node, size_type parent, const tree_type& actual, const maths::tree_initializer<node_weight_type>& prediction)
