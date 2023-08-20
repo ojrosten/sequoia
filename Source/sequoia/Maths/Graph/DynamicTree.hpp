@@ -52,14 +52,10 @@ namespace sequoia::maths
 
     constexpr static tree_link_direction link_dir{TreeLinkDir};
 
-    using graph_base<
-            Flavour,
-            EdgeWeight,
-            NodeWeight,
-            EdgeMetaData,
-            EdgeStorageTraits,
-            NodeWeightStorageTraits
-          >::graph_base;
+    tree_base() = default;
+
+    tree_base(const tree_base&)            = default;
+    tree_base& operator=(const tree_base&) = default;
 
     // TO DO: think about depth-like vs breadth-like initialization
     tree_base(tree_initializer<NodeWeight> tree)
@@ -89,6 +85,11 @@ namespace sequoia::maths
     using base_type::sort_edges;
     using base_type::swap_nodes;
     using base_type::sort_nodes;
+  protected:
+    ~tree_base() = default;
+
+    tree_base(tree_base&&) noexcept = default;
+    tree_base& operator=(tree_base&&) noexcept = default;
   private:
     void prune(const size_type node, forward_tree_type ftt)
     {
