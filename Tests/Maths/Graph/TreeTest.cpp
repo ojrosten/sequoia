@@ -24,21 +24,21 @@ namespace sequoia::testing
 
   void tree_test::run_tests()
   {
-    test_tree(directed_type{},   forward_tree_type{});
-    test_tree(directed_type{},   backward_tree_type{});
-    test_tree(directed_type{},   symmetric_tree_type{});
-    test_tree(undirected_type{}, symmetric_tree_type{});
+    test_tree<directed_tree<tree_link_direction::forward, null_weight, int>>();
+    test_tree<directed_tree<tree_link_direction::backward, null_weight, int>>();
+    test_tree<directed_tree<tree_link_direction::symmetric, null_weight, int>>();
+    test_tree<undirected_tree<tree_link_direction::symmetric, null_weight, int>>();
 
-    test_tree_unweighted_nodes(directed_type{}, forward_tree_type{});
-    test_tree_unweighted_nodes(directed_type{}, backward_tree_type{});
-    test_tree_unweighted_nodes(directed_type{}, symmetric_tree_type{});
-    test_tree_unweighted_nodes(undirected_type{}, symmetric_tree_type{});
+    test_tree_unweighted_nodes<directed_tree<tree_link_direction::forward, null_weight, null_weight>>();
+    test_tree_unweighted_nodes<directed_tree<tree_link_direction::backward, null_weight, null_weight>>();
+    test_tree_unweighted_nodes<directed_tree<tree_link_direction::symmetric, null_weight, null_weight>>();
+    test_tree_unweighted_nodes<undirected_tree<tree_link_direction::symmetric, null_weight, null_weight>>();
   }
 
-  template<maths::directed_flavour Directedness, maths::tree_link_direction TreeLinkDir>
-  void tree_test::test_tree(maths::directed_flavour_constant<Directedness>, maths::tree_link_direction_constant<TreeLinkDir>)
+  template<maths::dynamic_tree Tree>
+  void tree_test::test_tree()
   {
-    using tree_type = tree<Directedness, TreeLinkDir, null_weight, int>;
+    using tree_type = Tree;
     using initializer = tree_initializer<int>;
 
     auto initCheckFn{
@@ -120,10 +120,10 @@ namespace sequoia::testing
     transition_checker_type::check(report_line(""), g, checker);
   }
 
-  template<maths::directed_flavour Directedness, maths::tree_link_direction TreeLinkDir>
-  void tree_test::test_tree_unweighted_nodes(maths::directed_flavour_constant<Directedness>, maths::tree_link_direction_constant<TreeLinkDir>)
+  template<maths::dynamic_tree Tree>
+  void tree_test::test_tree_unweighted_nodes()
   {
-    using tree_type   = tree<Directedness, TreeLinkDir, null_weight, null_weight>;
+    using tree_type   = Tree;
     using initializer = tree_initializer<null_weight>;
 
     auto initCheckFn{
@@ -189,16 +189,5 @@ namespace sequoia::testing
     };
 
     transition_checker_type::check(report_line(""), g, checker);
-
-    using tree_type = tree<Directedness, TreeLinkDir, null_weight, null_weight>;
-    using initializer = tree_initializer<null_weight>;
-
-    tree_type x{}, y{{}}, z{{{{}}}};
-
-    check(equivalence, report_line(""), y, initializer{});
-    check(equivalence, report_line(""), z, initializer{{{}}});
-
-    check_semantics(report_line(""), x, y);
-    check_semantics(report_line(""), y, z);
   }
 }

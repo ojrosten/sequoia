@@ -497,7 +497,7 @@ namespace sequoia::testing
     static_assert(std::is_same_v<to_variant_or_unique_type_t<int, decltype([](int) -> int { return 42; })>, int>);
 
     {
-      using tree_type = tree<directed_flavour::directed, tree_link_direction::forward, null_weight, std::string>;
+      using tree_type = directed_tree<tree_link_direction::forward, null_weight, std::string>;
 
       check(equality,
             report_line(""),
@@ -521,7 +521,7 @@ namespace sequoia::testing
     }
 
     {
-      using tree_type = tree<directed_flavour::directed, tree_link_direction::forward, null_weight, std::variant<std::string, int>>;
+      using tree_type = directed_tree<tree_link_direction::forward, null_weight, std::variant<std::string, int>>;
 
       check(equality,
             report_line(""),
@@ -535,7 +535,7 @@ namespace sequoia::testing
     }
 
     {
-      using tree_type = tree<directed_flavour::directed, tree_link_direction::forward, null_weight, std::string>;
+      using tree_type = directed_tree<tree_link_direction::forward, null_weight, std::string>;
 
       using filter_t = filter_by_names<fs::path, to_path, path_equivalence>;
       auto filter{filter_t{{}, {{"foo/bar1"}}}};
@@ -557,7 +557,7 @@ namespace sequoia::testing
   {
     using namespace maths;
 
-    using tree_type = tree<directed_flavour::directed, tree_link_direction::forward, null_weight, std::string>;
+    using tree_type = directed_tree<tree_link_direction::forward, null_weight, std::string>;
 
     check(equality, report_line(""), extract_tree(make_test_suite(), [](auto&&...) { return false; }, [](const auto& s) { return s.name; }), tree_type{});
 

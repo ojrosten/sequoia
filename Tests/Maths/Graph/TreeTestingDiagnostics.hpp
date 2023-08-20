@@ -24,7 +24,7 @@ namespace sequoia::testing
     void run_tests();
   private:
 
-    template<maths::directed_flavour Directedness, maths::tree_link_direction TreeLinkDir>
-    void test_tree(maths::directed_flavour_constant<Directedness>, maths::tree_link_direction_constant<TreeLinkDir>);
+    template<maths::dynamic_tree Tree>
+    void test_tree();
   };
 }

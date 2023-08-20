@@ -1,8 +1,8 @@
-Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 89
-Directedness: directed / Tree Link Dir: forward - Empty vs non-empty
+Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 41
+Empty vs non-empty
 
 Comparison performed using:
-[sequoia::testing::value_tester<sequoia::maths::tree<1, 1, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+[sequoia::testing::value_tester<sequoia::maths::directed_tree<1, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 Checking for equivalence with:
 [sequoia::maths::tree_initializer<int>]
 
@@ -12,11 +12,11 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 90
-Directedness: directed / Tree Link Dir: forward - Incorrect weight
+Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 42
+Incorrect weight
 
 Comparison performed using:
-[sequoia::testing::value_tester<sequoia::maths::tree<1, 1, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+[sequoia::testing::value_tester<sequoia::maths::directed_tree<1, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 Checking for equivalence with:
 [sequoia::maths::tree_initializer<int>]
 
@@ -28,11 +28,11 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 91
-Directedness: directed / Tree Link Dir: forward - Too many children
+Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 43
+Too many children
 
 Comparison performed using:
-[sequoia::testing::value_tester<sequoia::maths::tree<1, 1, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+[sequoia::testing::value_tester<sequoia::maths::directed_tree<1, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 Checking for equivalence with:
 [sequoia::maths::tree_initializer<int>]
 
@@ -44,11 +44,11 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 92
-Directedness: directed / Tree Link Dir: forward - Incorrect child weight
+Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 44
+Incorrect child weight
 
 Comparison performed using:
-[sequoia::testing::value_tester<sequoia::maths::tree<1, 1, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+[sequoia::testing::value_tester<sequoia::maths::directed_tree<1, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 Checking for equivalence with:
 [sequoia::maths::tree_initializer<int>]
 
@@ -60,11 +60,11 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 93
-Directedness: directed / Tree Link Dir: forward - Too few children
+Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 45
+Too few children
 
 Comparison performed using:
-[sequoia::testing::value_tester<sequoia::maths::tree<1, 1, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+[sequoia::testing::value_tester<sequoia::maths::directed_tree<1, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 Checking for equivalence with:
 [sequoia::maths::tree_initializer<int>]
 
@@ -76,11 +76,11 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 95
-Directedness: directed / Tree Link Dir: forward - Too many grand children
+Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 47
+Too many grand children
 
 Comparison performed using:
-[sequoia::testing::value_tester<sequoia::maths::tree<1, 1, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+[sequoia::testing::value_tester<sequoia::maths::directed_tree<1, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 Checking for equivalence with:
 [sequoia::maths::tree_initializer<int>]
 
@@ -92,11 +92,11 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 96
-Directedness: directed / Tree Link Dir: forward - Incorrect grand child weight
+Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 48
+Incorrect grand child weight
 
 Comparison performed using:
-[sequoia::testing::value_tester<sequoia::maths::tree<1, 1, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+[sequoia::testing::value_tester<sequoia::maths::directed_tree<1, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 Checking for equivalence with:
 [sequoia::maths::tree_initializer<int>]
 
@@ -114,11 +114,11 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 97
-Directedness: directed / Tree Link Dir: forward - Too few grand children
+Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 49
+Too few grand children
 
 Comparison performed using:
-[sequoia::testing::value_tester<sequoia::maths::tree<1, 1, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+[sequoia::testing::value_tester<sequoia::maths::directed_tree<1, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 Checking for equivalence with:
 [sequoia::maths::tree_initializer<int>]
 
@@ -130,10 +130,9 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 99
-Directedness: directed / Tree Link Dir: forward
+Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 51
 
-[sequoia::maths::tree<1, 1, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> >]
+[sequoia::maths::directed_tree<1, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> >]
 operator== returned false
 
   [sequoia::maths::connectivity<sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_traits, unsigned long long> >]
@@ -164,10 +163,9 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 100
-Directedness: directed / Tree Link Dir: forward
+Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 52
 
-[sequoia::maths::tree<1, 1, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> >]
+[sequoia::maths::directed_tree<1, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> >]
 operator== returned false
 
   [sequoia::maths::connectivity<sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_traits, unsigned long long> >]
@@ -204,11 +202,11 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 89
-Directedness: directed / Tree Link Dir: backward - Empty vs non-empty
+Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 41
+Empty vs non-empty
 
 Comparison performed using:
-[sequoia::testing::value_tester<sequoia::maths::tree<1, 2, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+[sequoia::testing::value_tester<sequoia::maths::directed_tree<2, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 Checking for equivalence with:
 [sequoia::maths::tree_initializer<int>]
 
@@ -218,11 +216,11 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 90
-Directedness: directed / Tree Link Dir: backward - Incorrect weight
+Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 42
+Incorrect weight
 
 Comparison performed using:
-[sequoia::testing::value_tester<sequoia::maths::tree<1, 2, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+[sequoia::testing::value_tester<sequoia::maths::directed_tree<2, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 Checking for equivalence with:
 [sequoia::maths::tree_initializer<int>]
 
@@ -234,11 +232,11 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 91
-Directedness: directed / Tree Link Dir: backward - Too many children
+Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 43
+Too many children
 
 Comparison performed using:
-[sequoia::testing::value_tester<sequoia::maths::tree<1, 2, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+[sequoia::testing::value_tester<sequoia::maths::directed_tree<2, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 Checking for equivalence with:
 [sequoia::maths::tree_initializer<int>]
 
@@ -248,11 +246,11 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 92
-Directedness: directed / Tree Link Dir: backward - Incorrect child weight
+Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 44
+Incorrect child weight
 
 Comparison performed using:
-[sequoia::testing::value_tester<sequoia::maths::tree<1, 2, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+[sequoia::testing::value_tester<sequoia::maths::directed_tree<2, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 Checking for equivalence with:
 [sequoia::maths::tree_initializer<int>]
 
@@ -264,11 +262,11 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 93
-Directedness: directed / Tree Link Dir: backward - Too few children
+Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 45
+Too few children
 
 Comparison performed using:
-[sequoia::testing::value_tester<sequoia::maths::tree<1, 2, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+[sequoia::testing::value_tester<sequoia::maths::directed_tree<2, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 Checking for equivalence with:
 [sequoia::maths::tree_initializer<int>]
 
@@ -278,11 +276,11 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 95
-Directedness: directed / Tree Link Dir: backward - Too many grand children
+Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 47
+Too many grand children
 
 Comparison performed using:
-[sequoia::testing::value_tester<sequoia::maths::tree<1, 2, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+[sequoia::testing::value_tester<sequoia::maths::directed_tree<2, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 Checking for equivalence with:
 [sequoia::maths::tree_initializer<int>]
 
@@ -292,11 +290,11 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 96
-Directedness: directed / Tree Link Dir: backward - Incorrect grand child weight
+Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 48
+Incorrect grand child weight
 
 Comparison performed using:
-[sequoia::testing::value_tester<sequoia::maths::tree<1, 2, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+[sequoia::testing::value_tester<sequoia::maths::directed_tree<2, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 Checking for equivalence with:
 [sequoia::maths::tree_initializer<int>]
 
@@ -314,11 +312,11 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 97
-Directedness: directed / Tree Link Dir: backward - Too few grand children
+Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 49
+Too few grand children
 
 Comparison performed using:
-[sequoia::testing::value_tester<sequoia::maths::tree<1, 2, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+[sequoia::testing::value_tester<sequoia::maths::directed_tree<2, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 Checking for equivalence with:
 [sequoia::maths::tree_initializer<int>]
 
@@ -330,10 +328,9 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 99
-Directedness: directed / Tree Link Dir: backward
+Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 51
 
-[sequoia::maths::tree<1, 2, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> >]
+[sequoia::maths::directed_tree<2, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> >]
 operator== returned false
 
   [sequoia::maths::connectivity<sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_traits, unsigned long long> >]
@@ -364,10 +361,9 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 100
-Directedness: directed / Tree Link Dir: backward
+Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 52
 
-[sequoia::maths::tree<1, 2, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> >]
+[sequoia::maths::directed_tree<2, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> >]
 operator== returned false
 
   [sequoia::maths::connectivity<sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_traits, unsigned long long> >]
@@ -404,11 +400,11 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 89
-Directedness: directed / Tree Link Dir: symmetric - Empty vs non-empty
+Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 41
+Empty vs non-empty
 
 Comparison performed using:
-[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+[sequoia::testing::value_tester<sequoia::maths::directed_tree<0, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 Checking for equivalence with:
 [sequoia::maths::tree_initializer<int>]
 
@@ -418,11 +414,11 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 90
-Directedness: directed / Tree Link Dir: symmetric - Incorrect weight
+Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 42
+Incorrect weight
 
 Comparison performed using:
-[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+[sequoia::testing::value_tester<sequoia::maths::directed_tree<0, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 Checking for equivalence with:
 [sequoia::maths::tree_initializer<int>]
 
@@ -434,11 +430,11 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 91
-Directedness: directed / Tree Link Dir: symmetric - Too many children
+Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 43
+Too many children
 
 Comparison performed using:
-[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+[sequoia::testing::value_tester<sequoia::maths::directed_tree<0, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 Checking for equivalence with:
 [sequoia::maths::tree_initializer<int>]
 
@@ -450,11 +446,11 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 92
-Directedness: directed / Tree Link Dir: symmetric - Incorrect child weight
+Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 44
+Incorrect child weight
 
 Comparison performed using:
-[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+[sequoia::testing::value_tester<sequoia::maths::directed_tree<0, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 Checking for equivalence with:
 [sequoia::maths::tree_initializer<int>]
 
@@ -466,11 +462,11 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 93
-Directedness: directed / Tree Link Dir: symmetric - Too few children
+Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 45
+Too few children
 
 Comparison performed using:
-[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+[sequoia::testing::value_tester<sequoia::maths::directed_tree<0, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 Checking for equivalence with:
 [sequoia::maths::tree_initializer<int>]
 
@@ -482,11 +478,11 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 95
-Directedness: directed / Tree Link Dir: symmetric - Too many grand children
+Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 47
+Too many grand children
 
 Comparison performed using:
-[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+[sequoia::testing::value_tester<sequoia::maths::directed_tree<0, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 Checking for equivalence with:
 [sequoia::maths::tree_initializer<int>]
 
@@ -498,11 +494,11 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 96
-Directedness: directed / Tree Link Dir: symmetric - Incorrect grand child weight
+Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 48
+Incorrect grand child weight
 
 Comparison performed using:
-[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+[sequoia::testing::value_tester<sequoia::maths::directed_tree<0, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 Checking for equivalence with:
 [sequoia::maths::tree_initializer<int>]
 
@@ -520,11 +516,11 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 97
-Directedness: directed / Tree Link Dir: symmetric - Too few grand children
+Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 49
+Too few grand children
 
 Comparison performed using:
-[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+[sequoia::testing::value_tester<sequoia::maths::directed_tree<0, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 Checking for equivalence with:
 [sequoia::maths::tree_initializer<int>]
 
@@ -536,10 +532,9 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 99
-Directedness: directed / Tree Link Dir: symmetric
+Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 51
 
-[sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> >]
+[sequoia::maths::directed_tree<0, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> >]
 operator== returned false
 
   [sequoia::maths::connectivity<sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_traits, unsigned long long> >]
@@ -570,10 +565,9 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 100
-Directedness: directed / Tree Link Dir: symmetric
+Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 52
 
-[sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> >]
+[sequoia::maths::directed_tree<0, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> >]
 operator== returned false
 
   [sequoia::maths::connectivity<sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_traits, unsigned long long> >]
@@ -610,11 +604,11 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 89
-Directedness: undirected / Tree Link Dir: symmetric - Empty vs non-empty
+Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 41
+Empty vs non-empty
 
 Comparison performed using:
-[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+[sequoia::testing::value_tester<sequoia::maths::undirected_tree<0, sequoia::maths::null_weight, int, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 Checking for equivalence with:
 [sequoia::maths::tree_initializer<int>]
 
@@ -624,11 +618,11 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 90
-Directedness: undirected / Tree Link Dir: symmetric - Incorrect weight
+Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 42
+Incorrect weight
 
 Comparison performed using:
-[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+[sequoia::testing::value_tester<sequoia::maths::undirected_tree<0, sequoia::maths::null_weight, int, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 Checking for equivalence with:
 [sequoia::maths::tree_initializer<int>]
 
@@ -640,11 +634,11 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 91
-Directedness: undirected / Tree Link Dir: symmetric - Too many children
+Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 43
+Too many children
 
 Comparison performed using:
-[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+[sequoia::testing::value_tester<sequoia::maths::undirected_tree<0, sequoia::maths::null_weight, int, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 Checking for equivalence with:
 [sequoia::maths::tree_initializer<int>]
 
@@ -656,11 +650,11 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 92
-Directedness: undirected / Tree Link Dir: symmetric - Incorrect child weight
+Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 44
+Incorrect child weight
 
 Comparison performed using:
-[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+[sequoia::testing::value_tester<sequoia::maths::undirected_tree<0, sequoia::maths::null_weight, int, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 Checking for equivalence with:
 [sequoia::maths::tree_initializer<int>]
 
@@ -672,11 +666,11 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 93
-Directedness: undirected / Tree Link Dir: symmetric - Too few children
+Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 45
+Too few children
 
 Comparison performed using:
-[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+[sequoia::testing::value_tester<sequoia::maths::undirected_tree<0, sequoia::maths::null_weight, int, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 Checking for equivalence with:
 [sequoia::maths::tree_initializer<int>]
 
@@ -688,11 +682,11 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 95
-Directedness: undirected / Tree Link Dir: symmetric - Too many grand children
+Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 47
+Too many grand children
 
 Comparison performed using:
-[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+[sequoia::testing::value_tester<sequoia::maths::undirected_tree<0, sequoia::maths::null_weight, int, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 Checking for equivalence with:
 [sequoia::maths::tree_initializer<int>]
 
@@ -704,11 +698,11 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 96
-Directedness: undirected / Tree Link Dir: symmetric - Incorrect grand child weight
+Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 48
+Incorrect grand child weight
 
 Comparison performed using:
-[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+[sequoia::testing::value_tester<sequoia::maths::undirected_tree<0, sequoia::maths::null_weight, int, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 Checking for equivalence with:
 [sequoia::maths::tree_initializer<int>]
 
@@ -726,11 +720,11 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 97
-Directedness: undirected / Tree Link Dir: symmetric - Too few grand children
+Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 49
+Too few grand children
 
 Comparison performed using:
-[sequoia::testing::value_tester<sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
+[sequoia::testing::value_tester<sequoia::maths::undirected_tree<0, sequoia::maths::null_weight, int, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> > >]
 Checking for equivalence with:
 [sequoia::maths::tree_initializer<int>]
 
@@ -742,13 +736,12 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 99
-Directedness: undirected / Tree Link Dir: symmetric
+Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 51
 
-[sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> >]
+[sequoia::maths::undirected_tree<0, sequoia::maths::null_weight, int, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> >]
 operator== returned false
 
-  [sequoia::maths::connectivity<sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_traits, unsigned long long> >]
+  [sequoia::maths::connectivity<sequoia::maths::graph_impl::dynamic_edge_traits<0, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_traits, unsigned long long> >]
   operator== returned false
 
     Connectivity order incorrect
@@ -776,20 +769,19 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 100
-Directedness: undirected / Tree Link Dir: symmetric
+Tests/Maths/Graph/TreeTestingDiagnostics.cpp, Line 52
 
-[sequoia::maths::tree<1, 0, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> >]
+[sequoia::maths::undirected_tree<0, sequoia::maths::null_weight, int, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<int> >]
 operator== returned false
 
-  [sequoia::maths::connectivity<sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_traits, unsigned long long> >]
+  [sequoia::maths::connectivity<sequoia::maths::graph_impl::dynamic_edge_traits<0, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_traits, unsigned long long> >]
   operator== returned false
 
     Connectivity size incorrect
     [unsigned long long]
     operator== returned false
     Obtained : 0
-    Predicted: 2
+    Predicted: 1
 
     Connectivity order incorrect
     [unsigned long long]

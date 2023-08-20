@@ -42,7 +42,7 @@ namespace sequoia::testing
     undirected_fixed_topology_checker<test_static_fixed_topology> checker{*this};
 
     {
-      using g_type = static_graph<directed_flavour::undirected, 4, 2, EdgeWeight, NodeWeight>;
+      using g_type = static_undirected_graph<4, 2, EdgeWeight, NodeWeight>;
       checker.template check_2_4<g_type>();
     }
   }
@@ -55,7 +55,7 @@ namespace sequoia::testing
     e_undirected_fixed_topology_checker<test_static_fixed_topology> checker{*this};
 
     {
-      using g_type = static_embedded_graph<directed_flavour::undirected, 2, 2, EdgeWeight, NodeWeight>;
+      using g_type = static_embedded_graph<2, 2, EdgeWeight, NodeWeight>;
       checker.template check_2_2<g_type>();
     }
   }
@@ -68,7 +68,7 @@ namespace sequoia::testing
     directed_fixed_topology_checker<test_static_fixed_topology> checker{*this};
 
     {
-      using g_type = static_graph<directed_flavour::directed, 10, 3, EdgeWeight, NodeWeight>;
+      using g_type = static_directed_graph<10, 3, EdgeWeight, NodeWeight>;
       checker.template check_3_10<g_type>();
     }
   }

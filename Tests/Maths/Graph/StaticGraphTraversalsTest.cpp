@@ -24,7 +24,7 @@ namespace sequoia::testing
   {
     using namespace maths;
 
-    using g_type = static_graph<directed_flavour::directed, 1, 2, null_weight, null_weight>;
+    using g_type = static_directed_graph<1, 2, null_weight, null_weight>;
     using edge_t = typename g_type::edge_init_type;
 
     std::array<std::size_t, 2> ordering{};
@@ -76,7 +76,7 @@ namespace sequoia::testing
   constexpr auto test_static_graph_traversals::priority_search()
   {
     using namespace maths;
-    using g_type = static_graph<directed_flavour::undirected, 3, 4, null_weight, int>;
+    using g_type = static_undirected_graph<3, 4, null_weight, int>;
     using edge_t = typename g_type::edge_init_type;
 
     // 6  4  2

@@ -17,51 +17,52 @@ namespace sequoia::maths
 {
   template
   <
-    directed_flavour Directedness,
+    graph_flavour Flavour,
     tree_link_direction TreeLinkDir,
     class EdgeWeight,
     class NodeWeight,
+    class EdgeMetaData,
     class EdgeStorageTraits       = bucketed_edge_storage_traits,
     class NodeWeightStorageTraits = node_weight_storage_traits<NodeWeight>
   >
-    requires ((TreeLinkDir == tree_link_direction::symmetric) || (Directedness == directed_flavour::directed))
-    class tree final : public
+    requires ((TreeLinkDir == tree_link_direction::symmetric) || (Flavour == graph_flavour::directed))
+    class tree_base : public
       graph_base
       <
-        graph_impl::to_graph_flavour<Directedness>(),
+        Flavour,
         EdgeWeight,
         NodeWeight,
-        null_meta_data,
+        EdgeMetaData,
         EdgeStorageTraits,
         NodeWeightStorageTraits
       >
   {
+      using base_type =
+        graph_base
+        <
+          Flavour,
+          EdgeWeight,
+          NodeWeight,
+          EdgeMetaData,
+          EdgeStorageTraits,
+          NodeWeightStorageTraits
+        >;
   public:
-    using base_type =
-      graph_base
-      <
-        graph_impl::to_graph_flavour<Directedness>(),
-        EdgeWeight,
-        NodeWeight,
-        null_meta_data,
-        EdgeStorageTraits,
-        NodeWeightStorageTraits
-      >;
-
     using size_type = typename base_type::size_type;
 
     constexpr static tree_link_direction link_dir{TreeLinkDir};
 
-    tree(const tree&)     = default;
-    tree(tree&&) noexcept = default;
-
-    tree& operator=(const tree&)     = default;
-    tree& operator=(tree&&) noexcept = default;
-
-    tree() = default;
+    using graph_base<
+            Flavour,
+            EdgeWeight,
+            NodeWeight,
+            EdgeMetaData,
+            EdgeStorageTraits,
+            NodeWeightStorageTraits
+          >::graph_base;
 
     // TO DO: think about depth-like vs breadth-like initialization
-    tree(tree_initializer<NodeWeight> tree)
+    tree_base(tree_initializer<NodeWeight> tree)
       : base_type{tree, tree_link_direction_constant<TreeLinkDir>{}}
     {}
 
@@ -149,6 +150,72 @@ namespace sequoia::maths
         }
       }
     }
+  };
+
+  template
+  <
+    tree_link_direction TreeLinkDir,
+    class EdgeWeight,
+    class NodeWeight,
+    class EdgeStorageTraits       = bucketed_edge_storage_traits,
+    class NodeWeightStorageTraits = node_weight_storage_traits<NodeWeight>
+  >
+  class directed_tree final : public
+    tree_base
+    <
+      graph_flavour::directed,
+      TreeLinkDir,
+      EdgeWeight,
+      NodeWeight,
+      null_meta_data,
+      EdgeStorageTraits,
+      NodeWeightStorageTraits
+    >
+  {
+  public:
+    using tree_base<
+            graph_flavour::directed,
+            TreeLinkDir,
+            EdgeWeight,
+            NodeWeight,
+            null_meta_data,
+            EdgeStorageTraits,
+            NodeWeightStorageTraits
+        >::tree_base;
+  };
+
+  template
+  <
+    tree_link_direction TreeLinkDir,
+    class EdgeWeight,
+    class NodeWeight,
+    class EdgeMetaData            = null_meta_data,
+    class EdgeStorageTraits       = bucketed_edge_storage_traits,
+    class NodeWeightStorageTraits = node_weight_storage_traits<NodeWeight>
+  >
+    requires (TreeLinkDir == tree_link_direction::symmetric)
+  class undirected_tree final : public
+    tree_base
+    <
+      graph_flavour::undirected,
+      TreeLinkDir,
+      EdgeWeight,
+      NodeWeight,
+      EdgeMetaData,
+      EdgeStorageTraits,
+      NodeWeightStorageTraits
+    >
+  {
+  public:
+    using tree_base<
+            graph_flavour::undirected,
+            TreeLinkDir,
+            EdgeWeight,
+            NodeWeight,
+            EdgeMetaData,
+            EdgeStorageTraits,
+            NodeWeightStorageTraits
+        >::tree_base;
   };
 
   template<class Tree>

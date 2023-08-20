@@ -287,7 +287,7 @@ namespace sequoia::object
   template<class Suite,
            class Filter,
            class Transform,
-           maths::dynamic_tree Tree = maths::tree<maths::directed_flavour::directed, maths::tree_link_direction::forward, maths::null_weight, to_variant_or_unique_type_t<Suite, Transform>>>
+           maths::dynamic_tree Tree = maths::directed_tree<maths::tree_link_direction::forward, maths::null_weight, to_variant_or_unique_type_t<Suite, Transform>>>
     requires is_suite_v<Suite>
   [[nodiscard]]
   Tree extract_tree(Suite s, Filter&& filter, Transform transform)

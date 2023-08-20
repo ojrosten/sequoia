@@ -19,22 +19,7 @@ namespace sequoia
 {
   namespace maths
   {
-    enum class directed_flavour { undirected, directed };
-
-    template<directed_flavour Directedness>
-    struct directed_flavour_constant : std::integral_constant<directed_flavour, Directedness>
-    {};
-
-    using undirected_type = directed_flavour_constant<directed_flavour::undirected>;
-    using directed_type   = directed_flavour_constant<directed_flavour::directed>;
-
     enum class graph_flavour { undirected, undirected_embedded, directed };
-
-    [[nodiscard]]
-    constexpr directed_flavour to_directedness(const graph_flavour gf) noexcept
-    {
-      return (gf == graph_flavour::directed) ? directed_flavour::directed : directed_flavour::undirected;
-    }
 
     [[nodiscard]]
     constexpr bool is_embedded(const graph_flavour gf) noexcept
