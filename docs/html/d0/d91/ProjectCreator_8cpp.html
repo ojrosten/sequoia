@@ -82,7 +82,7 @@ $(function() {
 <p>Definitions for <a class="el" href="../../d8/df2/ProjectCreator_8hpp.html" title="Utilities for creating new projects, especially from the commandline.">ProjectCreator.hpp</a>.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="../../d8/df2/ProjectCreator_8hpp_source.html">sequoia/TestFramework/ProjectCreator.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../db/dc0/ProjectPaths_8hpp_source.html">sequoia/TestFramework/ProjectPaths.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d2/de5/FileSystemUtilities_8hpp_source.html">sequoia/TestFramework/FileSystemUtilities.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d9/d8f/TestRunnerUtilities_8hpp_source.html">sequoia/TestFramework/TestRunnerUtilities.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d2/dbb/FileSystem_8hpp_source.html">sequoia/FileSystem/FileSystem.hpp</a>&quot;</code><br />
 <code>#include &quot;sequoia/PlatformSpecific/Preprocessor.hpp&quot;</code><br />
@@ -101,6 +101,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::gen
 <tr class="memitem:ac234b92af2d9e1fc83c3d4c513aba890"><td class="memItemLeft" align="right" valign="top"><a id="ac234b92af2d9e1fc83c3d4c513aba890" name="ac234b92af2d9e1fc83c3d4c513aba890"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::generate_build_system_files</b> (const fs::path &amp;parentProjRoot, const fs::path &amp;newProjRoot)</td></tr>
 <tr class="separator:ac234b92af2d9e1fc83c3d4c513aba890"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a00608411f7ebba0c97bc6c05a4a035af"><td class="memItemLeft" align="right" valign="top"><a id="a00608411f7ebba0c97bc6c05a4a035af" name="a00608411f7ebba0c97bc6c05a4a035af"></a>
+build_paths&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::make_new_build_paths</b> (const std::filesystem::path &amp;projectRoot, const build_paths &amp;parentBuildPaths)</td></tr>
+<tr class="separator:a00608411f7ebba0c97bc6c05a4a035af"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1797cc5d15679d12ee2ed6c5365e5bb9"><td class="memItemLeft" align="right" valign="top"><a id="a1797cc5d15679d12ee2ed6c5365e5bb9" name="a1797cc5d15679d12ee2ed6c5365e5bb9"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::init_projects</b> (const project_paths &amp;parentProjectPaths, const std::vector&lt; project_data &gt; &amp;projects, std::ostream &amp;stream)</td></tr>
 <tr class="separator:a1797cc5d15679d12ee2ed6c5365e5bb9"><td class="memSeparator" colspan="2">&#160;</td></tr>

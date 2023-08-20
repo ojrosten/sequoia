@@ -85,9 +85,9 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:abe47b31af554224d40e99fd88c1c3a6e"><td class="memItemLeft" align="right" valign="top"><a id="abe47b31af554224d40e99fd88c1c3a6e" name="abe47b31af554224d40e99fd88c1c3a6e"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>graph_t</b> = <a class="el" href="../../d8/d87/classsequoia_1_1maths_1_1graph.html">maths::graph</a>&lt; maths::directed_flavour::undirected, EdgeWeight, NodeWeight, EdgeStorageTraits, NodeWeightStorageTraits &gt;</td></tr>
-<tr class="separator:abe47b31af554224d40e99fd88c1c3a6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa9a4838cc2390d5773dd41054ee41a8a"><td class="memItemLeft" align="right" valign="top"><a id="aa9a4838cc2390d5773dd41054ee41a8a" name="aa9a4838cc2390d5773dd41054ee41a8a"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>graph_t</b> = <a class="el" href="../../da/d44/classsequoia_1_1maths_1_1undirected__graph.html">maths::undirected_graph</a>&lt; EdgeWeight, NodeWeight, <a class="el" href="../../d8/d64/structsequoia_1_1maths_1_1null__meta__data.html">maths::null_meta_data</a>, EdgeStorageTraits, NodeWeightStorageTraits &gt;</td></tr>
+<tr class="separator:aa9a4838cc2390d5773dd41054ee41a8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a908cc048f1fc81c3c2af7b824a282cfd"><td class="memItemLeft" align="right" valign="top"><a id="a908cc048f1fc81c3c2af7b824a282cfd" name="a908cc048f1fc81c3c2af7b824a282cfd"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_t</b> = typename graph_t::edge_init_type</td></tr>
 <tr class="separator:a908cc048f1fc81c3c2af7b824a282cfd"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -98,7 +98,7 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>node_weight_type</b>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>edges_equivalent_t</b> = std::initializer_list&lt; std::initializer_list&lt; edge_t &gt; &gt;</td></tr>
 <tr class="separator:aab7ab1ec6dc2943ce42c851fff797a56"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a89c5b04fcd2a841eac554476ee62eebe"><td class="memItemLeft" align="right" valign="top"><a id="a89c5b04fcd2a841eac554476ee62eebe" name="a89c5b04fcd2a841eac554476ee62eebe"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>transition_graph</b> = typename <a class="el" href="../../da/d5a/structsequoia_1_1testing_1_1transition__checker.html">transition_checker</a>&lt; <a class="el" href="../../d8/d87/classsequoia_1_1maths_1_1graph.html">graph_t</a> &gt;::transition_graph</td></tr>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>transition_graph</b> = typename <a class="el" href="../../da/d5a/structsequoia_1_1testing_1_1transition__checker.html">transition_checker</a>&lt; <a class="el" href="../../da/d44/classsequoia_1_1maths_1_1undirected__graph.html">graph_t</a> &gt;::transition_graph</td></tr>
 <tr class="separator:a89c5b04fcd2a841eac554476ee62eebe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
@@ -107,8 +107,11 @@ Static Public Member Functions</h2></td></tr>
 static void&#160;</td><td class="memItemRight" valign="bottom"><b>execute_operations</b> (<a class="el" href="../../d9/daf/RegularTestCore_8hpp.html#aef38d8778074b365d465f7775bb74dab">regular_test</a> &amp;t)</td></tr>
 <tr class="separator:ac653d4d7d21d15c686ac06106fae8946"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab366c79eaeb53d2cb41366a61a769e18"><td class="memItemLeft" align="right" valign="top"><a id="ab366c79eaeb53d2cb41366a61a769e18" name="ab366c79eaeb53d2cb41366a61a769e18"></a>
-static <a class="el" href="../../d8/d87/classsequoia_1_1maths_1_1graph.html">graph_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>make_and_check</b> (<a class="el" href="../../d9/daf/RegularTestCore_8hpp.html#aef38d8778074b365d465f7775bb74dab">regular_test</a> &amp;t, std::string_view description, edges_equivalent_t edgeInit, std::initializer_list&lt; node_weight_type &gt; nodeInit)</td></tr>
+static <a class="el" href="../../da/d44/classsequoia_1_1maths_1_1undirected__graph.html">graph_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>make_and_check</b> (<a class="el" href="../../d9/daf/RegularTestCore_8hpp.html#aef38d8778074b365d465f7775bb74dab">regular_test</a> &amp;t, std::string_view description, edges_equivalent_t edgeInit, std::initializer_list&lt; node_weight_type &gt; nodeInit)</td></tr>
 <tr class="separator:ab366c79eaeb53d2cb41366a61a769e18"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa05344d7abc060bb064baa9a39ebe990"><td class="memItemLeft" align="right" valign="top"><a id="aa05344d7abc060bb064baa9a39ebe990" name="aa05344d7abc060bb064baa9a39ebe990"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>check_initialization_exceptions</b> (<a class="el" href="../../d9/daf/RegularTestCore_8hpp.html#aef38d8778074b365d465f7775bb74dab">regular_test</a> &amp;t)</td></tr>
+<tr class="separator:aa05344d7abc060bb064baa9a39ebe990"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a710b0d572387f4f9b1222fc29e57926e"><td class="memItemLeft" align="right" valign="top"><a id="a710b0d572387f4f9b1222fc29e57926e" name="a710b0d572387f4f9b1222fc29e57926e"></a>
 static transition_graph&#160;</td><td class="memItemRight" valign="bottom"><b>make_weighted_transition_graph</b> (<a class="el" href="../../d9/daf/RegularTestCore_8hpp.html#aef38d8778074b365d465f7775bb74dab">regular_test</a> &amp;t)</td></tr>
 <tr class="separator:a710b0d572387f4f9b1222fc29e57926e"><td class="memSeparator" colspan="2">&#160;</td></tr>

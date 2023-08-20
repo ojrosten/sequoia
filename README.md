@@ -23,9 +23,9 @@ of these charities.
 
 git 2.40.0  
 CMake 3.26  
-clang 16.0.2  
+clang 16.0.6
 g++ 13.1  
-Visual Studio 2022, 17.5.5
+Visual Studio 2022, 17.7.0
 
 ## Testing Framework API:
 
@@ -33,5 +33,5 @@ Nearly stable, but still being refined.
 
 ## Documentation:
 
-High-level documentation is up-to-date, but per-file documentation may be slightly inaccurate.
+High-level documentation is up-to-date; but per-file documentation in progess.
 

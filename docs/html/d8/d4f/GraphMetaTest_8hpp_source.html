@@ -104,52 +104,49 @@ $(function() {
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    <span class="keyword">template</span></div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    &lt;</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>      maths::graph_flavour GraphFlavour,</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>      <span class="keyword">template</span>&lt;<span class="keyword">class</span>, <span class="keyword">class</span>&gt; <span class="keyword">class </span>EdgeType</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>      <span class="keyword">template</span>&lt;<span class="keyword">class</span>, <span class="keyword">class</span>, <span class="keyword">class</span>&gt; <span class="keyword">class </span>EdgeType</div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    &gt;</div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    <span class="keywordtype">void</span> test_undirected();</div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    <span class="keywordtype">void</span> test_directed();</div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    <span class="keywordtype">void</span> test_directed_embedded();</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="keyword">template</span></div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    &lt;</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>      maths::graph_flavour GraphFlavour,</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>      <span class="keyword">class </span>EdgeWeight,</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>      <span class="keyword">template</span>&lt;<span class="keyword">class</span>, <span class="keyword">class</span>&gt; <span class="keyword">class </span>EdgeType</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    &gt;</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="keywordtype">void</span> test_undirected_unshared();</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="keyword">template</span></div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    &lt;</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>      maths::graph_flavour GraphFlavour,</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>      <span class="keyword">class </span>EdgeWeight,</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>      <span class="keyword">template</span>&lt;<span class="keyword">class</span>, <span class="keyword">class</span>&gt; <span class="keyword">class </span>EdgeType</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    <span class="keyword">template</span></div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    &lt;</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>      maths::graph_flavour GraphFlavour,</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>      <span class="keyword">class </span>EdgeWeight,</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>      <span class="keyword">class </span>EdgeMetaData,</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>      <span class="keyword">template</span>&lt;<span class="keyword">class</span>, <span class="keyword">class</span>, <span class="keyword">class</span>&gt; <span class="keyword">class </span>EdgeType</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    &gt;</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <span class="keywordtype">void</span> test_undirected_unshared();</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="keyword">template</span></div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    &lt;</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>      maths::graph_flavour GraphFlavour,</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>      <span class="keyword">class </span>EdgeWeight,</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>      <span class="keyword">class </span>EdgeMetaData,</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>      <span class="keyword">template</span>&lt;<span class="keyword">class</span>, <span class="keyword">class</span>, <span class="keyword">class</span>&gt; <span class="keyword">class </span>EdgeType</div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    &gt;</div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="keywordtype">void</span> test_undirected_shared();</div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> EdgeWeight&gt;</div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="keywordtype">void</span> test_directed_impl();</div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> EdgeWeight&gt;</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <span class="keywordtype">void</span> test_directed_embedded_impl();</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <span class="keywordtype">void</span> test_static_edge_index_generator();</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>  };</div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    <span class="keywordtype">void</span> test_static_edge_index_generator();</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>  };</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno"><a class="line" href="../../df/d3a/structsequoia_1_1testing_1_1wrapper.html">   65</a></span>  <span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt; <span class="keyword">struct </span><a class="code hl_struct" href="../../df/d3a/structsequoia_1_1testing_1_1wrapper.html">wrapper</a></div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>  {</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    T val{};</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span> </div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    [[nodiscard]] <span class="keyword">friend</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> operator==(<span class="keyword">const</span> <a class="code hl_struct" href="../../df/d3a/structsequoia_1_1testing_1_1wrapper.html">wrapper</a>&amp; lhs, <span class="keyword">const</span> <a class="code hl_struct" href="../../df/d3a/structsequoia_1_1testing_1_1wrapper.html">wrapper</a>&amp; rhs) <span class="keyword">noexcept</span> = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    [[nodiscard]] <span class="keyword">friend</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> operator&lt;=&gt;(<span class="keyword">const</span> <a class="code hl_struct" href="../../df/d3a/structsequoia_1_1testing_1_1wrapper.html">wrapper</a>&amp; lhs, <span class="keyword">const</span> <a class="code hl_struct" href="../../df/d3a/structsequoia_1_1testing_1_1wrapper.html">wrapper</a>&amp; rhs) <span class="keyword">noexcept</span> = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>  };</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>}</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno"><a class="line" href="../../df/d3a/structsequoia_1_1testing_1_1wrapper.html">   62</a></span>  <span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt; <span class="keyword">struct </span><a class="code hl_struct" href="../../df/d3a/structsequoia_1_1testing_1_1wrapper.html">wrapper</a></div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>  {</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    T val{};</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    [[nodiscard]] <span class="keyword">friend</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> operator==(<span class="keyword">const</span> <a class="code hl_struct" href="../../df/d3a/structsequoia_1_1testing_1_1wrapper.html">wrapper</a>&amp; lhs, <span class="keyword">const</span> <a class="code hl_struct" href="../../df/d3a/structsequoia_1_1testing_1_1wrapper.html">wrapper</a>&amp; rhs) <span class="keyword">noexcept</span> = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> </div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    [[nodiscard]] <span class="keyword">friend</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> operator&lt;=&gt;(<span class="keyword">const</span> <a class="code hl_struct" href="../../df/d3a/structsequoia_1_1testing_1_1wrapper.html">wrapper</a>&amp; lhs, <span class="keyword">const</span> <a class="code hl_struct" href="../../df/d3a/structsequoia_1_1testing_1_1wrapper.html">wrapper</a>&amp; rhs) <span class="keyword">noexcept</span> = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>  };</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>}</div>
 <div class="ttc" id="aGraphTestingUtilities_8hpp_html"><div class="ttname"><a href="../../d3/d0b/GraphTestingUtilities_8hpp.html">GraphTestingUtilities.hpp</a></div></div>
-<div class="ttc" id="aclasssequoia_1_1testing_1_1basic__test_html"><div class="ttname"><a href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">sequoia::testing::basic_test</a></div><div class="ttdoc">class template from which all concrete tests should derive.</div><div class="ttdef"><b>Definition:</b> FreeTestCore.hpp:134</div></div>
+<div class="ttc" id="aclasssequoia_1_1testing_1_1basic__test_html"><div class="ttname"><a href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">sequoia::testing::basic_test</a></div><div class="ttdoc">class template from which all concrete tests should derive.</div><div class="ttdef"><b>Definition:</b> FreeTestCore.hpp:140</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1test__graph__meta_html"><div class="ttname"><a href="../../d2/de3/classsequoia_1_1testing_1_1test__graph__meta.html">sequoia::testing::test_graph_meta</a></div><div class="ttdef"><b>Definition:</b> GraphMetaTest.hpp:17</div></div>
-<div class="ttc" id="astructsequoia_1_1testing_1_1wrapper_html"><div class="ttname"><a href="../../df/d3a/structsequoia_1_1testing_1_1wrapper.html">sequoia::testing::wrapper</a></div><div class="ttdef"><b>Definition:</b> GraphMetaTest.hpp:66</div></div>
+<div class="ttc" id="astructsequoia_1_1testing_1_1wrapper_html"><div class="ttname"><a href="../../df/d3a/structsequoia_1_1testing_1_1wrapper.html">sequoia::testing::wrapper</a></div><div class="ttdef"><b>Definition:</b> GraphMetaTest.hpp:63</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

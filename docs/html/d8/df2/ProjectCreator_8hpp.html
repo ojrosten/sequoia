@@ -84,6 +84,7 @@ $(function() {
 <p>Utilities for creating new projects, especially from the commandline.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="../../dc/d4b/Commands_8hpp_source.html">sequoia/TestFramework/Commands.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../db/dc0/ProjectPaths_8hpp_source.html">sequoia/TestFramework/ProjectPaths.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d7/d62/Indent_8hpp_source.html">sequoia/TextProcessing/Indent.hpp</a>&quot;</code><br />
 <code>#include &lt;vector&gt;</code><br />
 </div>
@@ -113,6 +114,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::gen
 <tr class="memitem:a12cbb6d26383c2bfde7a2e673262eaad"><td class="memItemLeft" align="right" valign="top"><a id="a12cbb6d26383c2bfde7a2e673262eaad" name="a12cbb6d26383c2bfde7a2e673262eaad"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::generate_build_system_files</b> (const std::filesystem::path &amp;parentProjRoot, const std::filesystem::path &amp;projRoot)</td></tr>
 <tr class="separator:a12cbb6d26383c2bfde7a2e673262eaad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a00608411f7ebba0c97bc6c05a4a035af"><td class="memItemLeft" align="right" valign="top"><a id="a00608411f7ebba0c97bc6c05a4a035af" name="a00608411f7ebba0c97bc6c05a4a035af"></a>
+build_paths&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::make_new_build_paths</b> (const std::filesystem::path &amp;projectRoot, const build_paths &amp;parentBuildPaths)</td></tr>
+<tr class="separator:a00608411f7ebba0c97bc6c05a4a035af"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1797cc5d15679d12ee2ed6c5365e5bb9"><td class="memItemLeft" align="right" valign="top"><a id="a1797cc5d15679d12ee2ed6c5365e5bb9" name="a1797cc5d15679d12ee2ed6c5365e5bb9"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::init_projects</b> (const project_paths &amp;parentProjectPaths, const std::vector&lt; project_data &gt; &amp;projects, std::ostream &amp;stream)</td></tr>
 <tr class="separator:a1797cc5d15679d12ee2ed6c5365e5bb9"><td class="memSeparator" colspan="2">&#160;</td></tr>

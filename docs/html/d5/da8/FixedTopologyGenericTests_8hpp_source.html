@@ -110,11 +110,11 @@ $(function() {
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>      <span class="keyword">template</span>&lt;<span class="keyword">class</span> Graph&gt;</div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>      <span class="keywordtype">void</span> check_2_2()</div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>      {</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        <span class="keyword">using </span><a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a> = <span class="keyword">typename</span> Graph::edge_init_type;</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        <span class="keyword">using </span>edge = <span class="keyword">typename</span> Graph::edge_init_type;</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>        <span class="comment">// x=====x</span></div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>        Graph g{{<a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{1}, <a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{1}}, {<a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{0}, <a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{0}}};</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>        Graph g{{edge{1}, edge{1}}, {edge{0}, edge{0}}};</div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>        <span class="keyword">auto</span> mutator{</div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>          [](Graph&amp; gr){</div>
@@ -145,14 +145,14 @@ $(function() {
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>      <span class="keyword">template</span>&lt;<span class="keyword">class</span> Graph&gt;</div>
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>      <span class="keyword">constexpr</span> <span class="keyword">static</span> Graph make_2_4()</div>
 <div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>      {</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>        <span class="keyword">using </span><a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a> = <span class="keyword">typename</span> Graph::edge_init_type;</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>        <span class="keyword">using </span>edge = <span class="keyword">typename</span> Graph::edge_init_type;</div>
 <div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>        <span class="comment">// 10</span></div>
 <div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>        <span class="comment">// /\</span></div>
 <div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span><span class="comment">        // \/___5___</span></div>
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>        <span class="comment">//  x---1---x</span></div>
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>        <span class="comment">//   ---2---</span></div>
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>        <span class="comment">//</span></div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>        Graph g{{<a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{1,5}, <a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{0,10}, <a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{1,2}, <a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{1,1}, <a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{0, 10}}, {<a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{0,2}, <a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{0,5}, <a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{0, 1}}};</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>        Graph g{{edge{1,5}, edge{0,10}, edge{1,2}, edge{1,1}, edge{0, 10}}, {edge{0,2}, edge{0,5}, edge{0, 1}}};</div>
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span> </div>
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>        g.sort_edges(g.cbegin_edges(0), g.cend_edges(0), [](<span class="keyword">const</span> <span class="keyword">auto</span>&amp; e1, <span class="keyword">const</span> <span class="keyword">auto</span>&amp;e2){</div>
 <div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>            return e1.weight() &lt; e2.weight();</div>
@@ -175,17 +175,17 @@ $(function() {
 <div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>      <span class="keyword">template</span>&lt;<span class="keyword">class</span> Graph&gt;</div>
 <div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>      <span class="keywordtype">void</span> check_2_4(<span class="keyword">const</span> Graph&amp; g)</div>
 <div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>      {</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>        <span class="keyword">using </span><a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a> = <span class="keyword">typename</span> Graph::edge_init_type;</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>        <span class="keyword">using </span>edge = <span class="keyword">typename</span> Graph::edge_init_type;</div>
 <div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span> </div>
 <div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>        <span class="keyword">using </span>NodeWeight = <span class="keyword">typename</span> Graph::node_weight_type;</div>
 <div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span> </div>
 <div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_empty_v&lt;NodeWeight&gt;)</div>
 <div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>        {</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>          m_Test.check_graph(report_line(<span class="stringliteral">&quot;&quot;</span>), g, {{<a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{1,1}, <a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{1,2}, <a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{1,5}, <a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{0,9}, <a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{0, 9}}, {<a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{0, 1}, <a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{0,2}, <a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{0,5}}});</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>          m_Test.check_graph(report_line(<span class="stringliteral">&quot;&quot;</span>), g, {{edge{1,1}, edge{1,2}, edge{1,5}, edge{0,9}, edge{0, 9}}, {edge{0, 1}, edge{0,2}, edge{0,5}}});</div>
 <div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>        }</div>
 <div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>        <span class="keywordflow">else</span></div>
 <div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>        {</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>          m_Test.check_graph(report_line(<span class="stringliteral">&quot;&quot;</span>), g, {{<a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{1,1}, <a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{1,2}, <a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{1,5}, <a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{0,9}, <a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{0, 9}}, {<a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{0, 1}, <a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{0,2}, <a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{0,5}}}, {NodeWeight{2}, NodeWeight{-3}});</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>          m_Test.check_graph(report_line(<span class="stringliteral">&quot;&quot;</span>), g, {{edge{1,1}, edge{1,2}, edge{1,5}, edge{0,9}, edge{0, 9}}, {edge{0, 1}, edge{0,2}, edge{0,5}}}, {NodeWeight{2}, NodeWeight{-3}});</div>
 <div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>        }</div>
 <div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>      }</div>
 <div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    };</div>
@@ -224,7 +224,7 @@ $(function() {
 <div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>      <span class="keyword">template</span>&lt;<span class="keyword">class</span> Graph&gt;</div>
 <div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>      <span class="keyword">constexpr</span> <span class="keyword">static</span> Graph make_3_10()</div>
 <div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>      {</div>
-<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>        <span class="keyword">using </span><a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a> = <span class="keyword">typename</span> Graph::edge_init_type;</div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>        <span class="keyword">using </span>edge = <span class="keyword">typename</span> Graph::edge_init_type;</div>
 <div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span> </div>
 <div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>        <span class="comment">//  -2        6         -3  14</span></div>
 <div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>        <span class="comment">// /&gt;\       /&gt;\       /&gt;\ /&gt;\</span></div>
@@ -234,7 +234,7 @@ $(function() {
 <div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>        <span class="comment">//    --3&gt;---   ---&lt;7---</span></div>
 <div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>        <span class="comment">//    --&lt;9---</span></div>
 <div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span> </div>
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>        Graph g{{<a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{1,1}, <a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{1,0}, <a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{0, -2}, <a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{1,3}}, {<a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{2,8}, <a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{1,6}, <a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{0,9}}, {<a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{2,-3}, <a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{1,7}, <a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{2,14}}};</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>        Graph g{{edge{1,1}, edge{1,0}, edge{0, -2}, edge{1,3}}, {edge{2,8}, edge{1,6}, edge{0,9}}, {edge{2,-3}, edge{1,7}, edge{2,14}}};</div>
 <div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span> </div>
 <div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>        g.sort_edges(g.cbegin_edges(0)+1, g.cbegin_edges(0) + 3, [](<span class="keyword">const</span> <span class="keyword">auto</span>&amp; e1, <span class="keyword">const</span> <span class="keyword">auto</span>&amp; e2) {</div>
 <div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>            return e1.weight() &gt; e2.weight();</div>
@@ -261,7 +261,7 @@ $(function() {
 <div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>      <span class="keyword">template</span>&lt;<span class="keyword">class</span> Graph&gt;</div>
 <div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>      <span class="keywordtype">void</span> check_3_10(<span class="keyword">const</span> Graph&amp; g)</div>
 <div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>      {</div>
-<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>        <span class="keyword">using </span><a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a> = <span class="keyword">typename</span> Graph::edge_init_type;</div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>        <span class="keyword">using </span>edge = <span class="keyword">typename</span> Graph::edge_init_type;</div>
 <div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span> </div>
 <div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>        <span class="keyword">using </span>NodeWeight = <span class="keyword">typename</span> Graph::node_weight_type;</div>
 <div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span> </div>
@@ -269,18 +269,18 @@ $(function() {
 <div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>        {</div>
 <div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>          m_Test.check(equality,  report_line(<span class="stringliteral">&quot;&quot;</span>), g,</div>
 <div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>            {</div>
-<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>              {<a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{1,1}, <a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{1,0}, <a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{0, -2}, <a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{1,3}},</div>
-<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>              {<a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{2,8}, <a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{0,9}, <a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{1,6}},</div>
-<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>              {<a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{1, 7}, <a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{2, -3}, <a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{2, 42}}</div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>              {edge{1,1}, edge{1,0}, edge{0, -2}, edge{1,3}},</div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>              {edge{2,8}, edge{0,9}, edge{1,6}},</div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>              {edge{1, 7}, edge{2, -3}, edge{2, 42}}</div>
 <div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>            });</div>
 <div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>        }</div>
 <div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>        <span class="keywordflow">else</span></div>
 <div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>        {</div>
 <div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>          m_Test.check(equality,  report_line(<span class="stringliteral">&quot;&quot;</span>), g,</div>
 <div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>            {{</div>
-<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>              {<a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{1,1}, <a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{1,0}, <a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{0, -2}, <a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{1,3}},</div>
-<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>              {<a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{2,8}, <a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{0,9}, <a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{1,6}},</div>
-<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>              {<a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{1, 7}, <a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{2, -3}, <a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{2, 42}}</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>              {edge{1,1}, edge{1,0}, edge{0, -2}, edge{1,3}},</div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>              {edge{2,8}, edge{0,9}, edge{1,6}},</div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>              {edge{1, 7}, edge{2, -3}, edge{2, 42}}</div>
 <div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>             }, {NodeWeight{}, NodeWeight{2}, NodeWeight{-3}}});</div>
 <div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>        }</div>
 <div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>      }</div>
@@ -320,13 +320,13 @@ $(function() {
 <div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>      <span class="keyword">template</span>&lt;<span class="keyword">class</span> Graph&gt;</div>
 <div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>      <span class="keyword">constexpr</span> <span class="keyword">static</span> Graph make_2_2()</div>
 <div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>      {</div>
-<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>        <span class="keyword">using </span><a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a> = <span class="keyword">typename</span> Graph::edge_init_type;</div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>        <span class="keyword">using </span>edge = <span class="keyword">typename</span> Graph::edge_init_type;</div>
 <div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>        <span class="comment">//     3  4</span></div>
 <div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>        <span class="comment">//     /\/\</span></div>
 <div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span><span class="comment">        //    / /\ \</span></div>
 <div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span><span class="comment">        //    \/ / /</span></div>
 <div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>        <span class="comment">//  x    x</span></div>
-<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>        Graph g{{}, {<a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{1,2,3}, <a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{1,3,4}, <a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{1,0,3}, <a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{1,1,4}}};</div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>        Graph g{{}, {edge{1,2,3}, edge{1,3,4}, edge{1,0,3}, edge{1,1,4}}};</div>
 <div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span> </div>
 <div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>        g.set_edge_weight(g.cbegin_edges(1) + 3, -4);</div>
 <div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>        g.mutate_edge_weight(g.cbegin_edges(1) + 3, [](<span class="keyword">auto</span>&amp; w) { w += 2; });</div>
@@ -344,105 +344,27 @@ $(function() {
 <div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>      <span class="keyword">template</span>&lt;<span class="keyword">class</span> Graph&gt;</div>
 <div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>      <span class="keywordtype">void</span> check_2_2(<span class="keyword">const</span> Graph&amp; g)</div>
 <div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>      {</div>
-<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>        <span class="keyword">using </span><a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a> = <span class="keyword">typename</span> Graph::edge_init_type;</div>
+<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>        <span class="keyword">using </span>edge = <span class="keyword">typename</span> Graph::edge_init_type;</div>
 <div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span> </div>
 <div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>        <span class="keyword">using </span>NodeWeight = <span class="keyword">typename</span> Graph::node_weight_type;</div>
 <div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span> </div>
 <div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_empty_v&lt;NodeWeight&gt;)</div>
 <div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>        {</div>
-<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>          m_Test.check(equality, report_line(<span class="stringliteral">&quot;&quot;</span>), g, {{}, {<a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{1,2,3}, <a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{1,3,-2}, <a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{1,0,3}, <a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{1,1,-2}}});</div>
+<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>          m_Test.check(equality, report_line(<span class="stringliteral">&quot;&quot;</span>), g, {{}, {edge{1,2,3}, edge{1,3,-2}, edge{1,0,3}, edge{1,1,-2}}});</div>
 <div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>        }</div>
 <div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>        <span class="keywordflow">else</span></div>
 <div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>        {</div>
-<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>          m_Test.check(equality, report_line(<span class="stringliteral">&quot;&quot;</span>), g, {{{}, {<a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{1,2,3}, <a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{1,3,-2}, <a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{1,0,3}, <a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{1,1,-2}}}, {NodeWeight{2}, NodeWeight{-3}}});</div>
+<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>          m_Test.check(equality, report_line(<span class="stringliteral">&quot;&quot;</span>), g, {{{}, {edge{1,2,3}, edge{1,3,-2}, edge{1,0,3}, edge{1,1,-2}}}, {NodeWeight{2}, NodeWeight{-3}}});</div>
 <div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>        }</div>
 <div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>      }</div>
 <div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span>    };</div>
-<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span> </div>
-<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>    <span class="keyword">template</span>&lt;concrete_test Test&gt;</div>
-<div class="line"><a id="l00288" name="l00288"></a><span class="lineno"><a class="line" href="../../d5/d93/classsequoia_1_1testing_1_1e__directed__fixed__topology__checker.html">  288</a></span>    <span class="keyword">class </span><a class="code hl_class" href="../../d5/d93/classsequoia_1_1testing_1_1e__directed__fixed__topology__checker.html">e_directed_fixed_topology_checker</a></div>
-<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>    {</div>
-<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span>    <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span>      <a class="code hl_class" href="../../d5/d93/classsequoia_1_1testing_1_1e__directed__fixed__topology__checker.html">e_directed_fixed_topology_checker</a>(Test&amp; <a class="code hl_class" href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">checker</a>) : m_Test{<a class="code hl_class" href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">checker</a>} {}</div>
-<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span> </div>
-<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span>      <span class="keyword">template</span>&lt;<span class="keyword">class</span> Graph&gt;</div>
-<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span>      <span class="keywordtype">void</span> check_all()</div>
-<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span>      {</div>
-<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span>        <span class="keyword">static_assert</span>(!static_nodes&lt;Graph&gt;, <span class="stringliteral">&quot;This call only makes sense for dynamic graphs, which are of the same type for all orders/sizes&quot;</span>);</div>
-<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span> </div>
-<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span>        check_2_2&lt;Graph&gt;();</div>
-<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span>      }</div>
-<div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span> </div>
-<div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span>      <span class="keyword">template</span>&lt;<span class="keyword">class</span> Graph&gt;</div>
-<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span>      <span class="keywordtype">void</span> check_2_2()</div>
-<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span>      {</div>
-<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(static_nodes&lt;Graph&gt;)</div>
-<div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span>        {</div>
-<div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span>          <span class="keyword">constexpr</span> Graph g{make_2_2&lt;Graph&gt;()};</div>
-<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span>          check_2_2(g);</div>
-<div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>        }</div>
-<div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span>        <span class="keywordflow">else</span></div>
-<div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span>        {</div>
-<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span>          <span class="keyword">const</span> Graph g{make_2_2&lt;Graph&gt;()};</div>
-<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span>          check_2_2(g);</div>
-<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span>        }</div>
-<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>      }</div>
-<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>    <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>      Test&amp; m_Test;</div>
-<div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span> </div>
-<div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span>      <span class="keyword">template</span>&lt;<span class="keywordtype">bool</span> B&gt; <span class="keyword">using </span><a class="code hl_struct" href="../../d8/dc0/structsequoia_1_1maths_1_1inversion__constant.html">inversion_constant</a> = <a class="code hl_struct" href="../../d8/dc0/structsequoia_1_1maths_1_1inversion__constant.html">maths::inversion_constant&lt;B&gt;</a>;</div>
-<div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span> </div>
-<div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span>      <span class="keyword">template</span>&lt;<span class="keyword">class</span> Graph&gt;</div>
-<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span>      <span class="keyword">constexpr</span> <span class="keyword">static</span> Graph make_2_2()</div>
-<div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span>      {</div>
-<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span>        <span class="keyword">using </span><a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a> = <span class="keyword">typename</span> Graph::edge_init_type;</div>
-<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span>        <span class="comment">//     3  4</span></div>
-<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>        <span class="comment">//     /&lt;\/&gt;\</span></div>
-<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span><span class="comment">        //    /  /\  \</span></div>
-<div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span><span class="comment">        //    \ / /  /</span></div>
-<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>        <span class="comment">//        x      x</span></div>
-<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>        Graph g{{<a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{0,<a class="code hl_struct" href="../../d8/dc0/structsequoia_1_1maths_1_1inversion__constant.html">inversion_constant&lt;true&gt;</a>{},2,3}, <a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{0,0,3,4}, <a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{0,<a class="code hl_struct" href="../../d8/dc0/structsequoia_1_1maths_1_1inversion__constant.html">inversion_constant&lt;true&gt;</a>{},0,3}, <a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{0,0,1,4}}, {}};</div>
-<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span> </div>
-<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>        g.set_edge_weight(g.cbegin_edges(0) + 3, 8);</div>
-<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>        g.mutate_edge_weight(g.cbegin_edges(0) + 3, [](<span class="keyword">auto</span>&amp; w) { w -= 2; });</div>
-<div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span> </div>
-<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>        <span class="keyword">using </span>NodeWeight = <span class="keyword">typename</span> Graph::node_weight_type;</div>
-<div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(!std::is_empty_v&lt;NodeWeight&gt;)</div>
-<div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span>        {</div>
-<div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>          g.node_weight(g.cbegin_node_weights(), 2);</div>
-<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>          g.mutate_node_weight(g.cbegin_node_weights() + 1, [](<span class="keyword">auto</span>&amp; w) { w -= 3; });</div>
-<div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>        }</div>
-<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span> </div>
-<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>        <span class="keywordflow">return</span> g;</div>
-<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span>      }</div>
-<div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span> </div>
-<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>      <span class="keyword">template</span>&lt;<span class="keyword">class</span> Graph&gt;</div>
-<div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span>      <span class="keywordtype">void</span> check_2_2(<span class="keyword">const</span> Graph&amp; g)</div>
-<div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span>      {</div>
-<div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span>        <span class="keyword">using </span><a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a> = <span class="keyword">typename</span> Graph::edge_init_type;</div>
-<div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span> </div>
-<div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span>        <span class="keyword">using </span>NodeWeight = <span class="keyword">typename</span> Graph::node_weight_type;</div>
-<div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span> </div>
-<div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_empty_v&lt;NodeWeight&gt;)</div>
-<div class="line"><a id="l00352" name="l00352"></a><span class="lineno">  352</span>        {</div>
-<div class="line"><a id="l00353" name="l00353"></a><span class="lineno">  353</span>          m_Test.check(equality, report_line(<span class="stringliteral">&quot;&quot;</span>), g, {{<a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{0,<a class="code hl_struct" href="../../d8/dc0/structsequoia_1_1maths_1_1inversion__constant.html">inversion_constant&lt;true&gt;</a>{},2,3}, <a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{0,0,3,6}, <a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{0,<a class="code hl_struct" href="../../d8/dc0/structsequoia_1_1maths_1_1inversion__constant.html">inversion_constant&lt;true&gt;</a>{},0,3}, <a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{0,0,1,6}}, {}});</div>
-<div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span>        }</div>
-<div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span>        <span class="keywordflow">else</span></div>
-<div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span>        {</div>
-<div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span>          m_Test.check(equality, report_line(<span class="stringliteral">&quot;&quot;</span>), g, {{{<a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{0,<a class="code hl_struct" href="../../d8/dc0/structsequoia_1_1maths_1_1inversion__constant.html">inversion_constant&lt;true&gt;</a>{},2,3}, <a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{0,0,3,6}, <a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{0,<a class="code hl_struct" href="../../d8/dc0/structsequoia_1_1maths_1_1inversion__constant.html">inversion_constant&lt;true&gt;</a>{},0,3}, <a class="code hl_class" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>{0,0,1,6}}, {}}, {NodeWeight{2}, NodeWeight{-3}}});</div>
-<div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span>        }</div>
-<div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span>      }</div>
-<div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span>    };</div>
-<div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span>  }</div>
-<div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span>}</div>
+<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>  }</div>
+<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>}</div>
 <div class="ttc" id="aGraphInitializationTestingUtilities_8hpp_html"><div class="ttname"><a href="../../db/d57/GraphInitializationTestingUtilities_8hpp.html">GraphInitializationTestingUtilities.hpp</a></div></div>
-<div class="ttc" id="aclasssequoia_1_1maths_1_1edge_html"><div class="ttname"><a href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">sequoia::maths::edge</a></div><div class="ttdoc">Stores the source node as well as the target node and an optional weight.</div><div class="ttdef"><b>Definition:</b> Edge.hpp:325</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1checker_html"><div class="ttname"><a href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">sequoia::testing::checker</a></div><div class="ttdef"><b>Definition:</b> FreeCheckers.hpp:669</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1directed__fixed__topology__checker_html"><div class="ttname"><a href="../../df/df0/classsequoia_1_1testing_1_1directed__fixed__topology__checker.html">sequoia::testing::directed_fixed_topology_checker</a></div><div class="ttdef"><b>Definition:</b> FixedTopologyGenericTests.hpp:120</div></div>
-<div class="ttc" id="aclasssequoia_1_1testing_1_1e__directed__fixed__topology__checker_html"><div class="ttname"><a href="../../d5/d93/classsequoia_1_1testing_1_1e__directed__fixed__topology__checker.html">sequoia::testing::e_directed_fixed_topology_checker</a></div><div class="ttdef"><b>Definition:</b> FixedTopologyGenericTests.hpp:289</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1e__undirected__fixed__topology__checker_html"><div class="ttname"><a href="../../d5/d99/classsequoia_1_1testing_1_1e__undirected__fixed__topology__checker.html">sequoia::testing::e_undirected_fixed_topology_checker</a></div><div class="ttdef"><b>Definition:</b> FixedTopologyGenericTests.hpp:216</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1undirected__fixed__topology__checker_html"><div class="ttname"><a href="../../df/ddc/classsequoia_1_1testing_1_1undirected__fixed__topology__checker.html">sequoia::testing::undirected_fixed_topology_checker</a></div><div class="ttdef"><b>Definition:</b> FixedTopologyGenericTests.hpp:22</div></div>
-<div class="ttc" id="astructsequoia_1_1maths_1_1inversion__constant_html"><div class="ttname"><a href="../../d8/dc0/structsequoia_1_1maths_1_1inversion__constant.html">sequoia::maths::inversion_constant</a></div><div class="ttdef"><b>Definition:</b> Edge.hpp:309</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

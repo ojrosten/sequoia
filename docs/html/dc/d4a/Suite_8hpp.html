@@ -201,7 +201,7 @@ requires is_suite_v&lt;Suite&gt;</td></tr>
 <tr class="memitem:a661fe47f47f34a12eb3d1eede8f33b15"><td class="memTemplItemLeft" align="right" valign="top">Container&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::object::extract_leaves</b> (Suite s, Filter &amp;&amp;filter, Transform t={})</td></tr>
 <tr class="separator:a661fe47f47f34a12eb3d1eede8f33b15"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7e7bd6c40bfdd1bb090a93296a36502c"><td class="memTemplParams" colspan="2"><a id="a7e7bd6c40bfdd1bb090a93296a36502c" name="a7e7bd6c40bfdd1bb090a93296a36502c"></a>
-template&lt;class Suite , class Filter , class Transform , maths::dynamic_tree Tree = maths::tree&lt;maths::directed_flavour::directed, maths::tree_link_direction::forward, maths::null_weight, to_variant_or_unique_type_t&lt;Suite, Transform&gt;&gt;&gt; <br />
+template&lt;class Suite , class Filter , class Transform , maths::dynamic_tree Tree = maths::directed_tree&lt;maths::tree_link_direction::forward, maths::null_weight, to_variant_or_unique_type_t&lt;Suite, Transform&gt;&gt;&gt; <br />
 requires is_suite_v&lt;Suite&gt;</td></tr>
 <tr class="memitem:a7e7bd6c40bfdd1bb090a93296a36502c"><td class="memTemplItemLeft" align="right" valign="top">Tree&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::object::extract_tree</b> (Suite s, Filter &amp;&amp;filter, Transform transform)</td></tr>
 <tr class="separator:a7e7bd6c40bfdd1bb090a93296a36502c"><td class="memSeparator" colspan="2">&#160;</td></tr>

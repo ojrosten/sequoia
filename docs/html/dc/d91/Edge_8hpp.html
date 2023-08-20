@@ -75,9 +75,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#typedef-members">Typedefs</a> &#124;
-<a href="#enum-members">Enumerations</a> &#124;
-<a href="#var-members">Variables</a>  </div>
+<a href="#enum-members">Enumerations</a>  </div>
   <div class="headertitle"><div class="title">Edge.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
@@ -94,59 +92,33 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d60/classsequoia_1_1maths_1_1edge__base.html">sequoia::maths::edge_base&lt; IndexType &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The base class of all edges.  <a href="../../d2/d60/classsequoia_1_1maths_1_1edge__base.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/de5/classsequoia_1_1maths_1_1weighting.html">sequoia::maths::weighting&lt; WeightHandler, IndexType &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A class to store non-trivial edge weights.  <a href="../../dc/de5/classsequoia_1_1maths_1_1weighting.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/ded/classsequoia_1_1maths_1_1weighting_3_01WeightHandler_00_01IndexType_01_4.html">sequoia::maths::weighting&lt; WeightHandler, IndexType &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/de0/classsequoia_1_1maths_1_1partial__edge__base.html">sequoia::maths::partial_edge_base&lt; WeightHandler, IndexType &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Combines the <a class="el" href="../../d2/d60/classsequoia_1_1maths_1_1edge__base.html" title="The base class of all edges.">edge_base</a> and weighting class.  <a href="../../d5/de0/classsequoia_1_1maths_1_1partial__edge__base.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Combines the edge_base and weighting class.  <a href="../../d5/de0/classsequoia_1_1maths_1_1partial__edge__base.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d14/classsequoia_1_1maths_1_1partial__edge.html">sequoia::maths::partial_edge&lt; WeightHandler, IndexType &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d2e/classsequoia_1_1maths_1_1decorated__partial__edge__base.html">sequoia::maths::decorated_partial_edge_base&lt; WeightHandler, MetaData, IndexType &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d67/classsequoia_1_1maths_1_1decorated__partial__edge__base_3_01WeightHandler_00_01MetaData_00_01IndexType_01_4.html">sequoia::maths::decorated_partial_edge_base&lt; WeightHandler, MetaData, IndexType &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d64/structsequoia_1_1maths_1_1null__meta__data.html">sequoia::maths::null_meta_data</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d14/classsequoia_1_1maths_1_1partial__edge.html">sequoia::maths::partial_edge&lt; WeightHandler, MetaData, IndexType &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A concrete edge containing a target index and, optionally, a weight.  <a href="../../da/d14/classsequoia_1_1maths_1_1partial__edge.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d41/classsequoia_1_1maths_1_1decorated__edge__base.html">sequoia::maths::decorated_edge_base&lt; WeightHandler, IndexType &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A new base class which aggregates a <a class="el" href="../../d5/de0/classsequoia_1_1maths_1_1partial__edge__base.html" title="Combines the edge_base and weighting class.">partial_edge_base</a> and an auxiliary index.  <a href="../../d4/d41/classsequoia_1_1maths_1_1decorated__edge__base.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d4d/classsequoia_1_1maths_1_1embedded__partial__edge.html">sequoia::maths::embedded_partial_edge&lt; WeightHandler, IndexType &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d4d/classsequoia_1_1maths_1_1embedded__partial__edge.html">sequoia::maths::embedded_partial_edge&lt; WeightHandler, MetaData, IndexType &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decoration of a <a class="el" href="../../da/d14/classsequoia_1_1maths_1_1partial__edge.html" title="A concrete edge containing a target index and, optionally, a weight.">partial_edge</a> to record the location on the target node into which the edge is embedded.  <a href="../../d8/d4d/classsequoia_1_1maths_1_1embedded__partial__edge.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/dc0/structsequoia_1_1maths_1_1inversion__constant.html">sequoia::maths::inversion_constant&lt; Inverted &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">sequoia::maths::edge&lt; WeightHandler, IndexType &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stores the source node as well as the target node and an optional weight.  <a href="../../d1/de6/classsequoia_1_1maths_1_1edge.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/db0/classsequoia_1_1maths_1_1embedded__edge.html">sequoia::maths::embedded_edge&lt; WeightHandler, IndexType &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decoration of edge to record the location on the target node into which the edge is embedded.  <a href="../../db/db0/classsequoia_1_1maths_1_1embedded__edge.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
-Typedefs</h2></td></tr>
-<tr class="memitem:a62f4e7369a8b5387858894f958998400"><td class="memItemLeft" align="right" valign="top"><a id="a62f4e7369a8b5387858894f958998400" name="a62f4e7369a8b5387858894f958998400"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::inverted_edge_t</b> = maths::inversion_constant&lt; true &gt;</td></tr>
-<tr class="separator:a62f4e7369a8b5387858894f958998400"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:a251f462788ec4f5e7e6a5ab5a3acf7ee"><td class="memItemLeft" align="right" valign="top"><a id="a251f462788ec4f5e7e6a5ab5a3acf7ee" name="a251f462788ec4f5e7e6a5ab5a3acf7ee"></a>enum class &#160;</td><td class="memItemRight" valign="bottom"><b>edge_flavour</b> { <b>partial</b>
+<tr class="memitem:a539b70e17834e37dae22b486620861d4"><td class="memItemLeft" align="right" valign="top"><a id="a539b70e17834e37dae22b486620861d4" name="a539b70e17834e37dae22b486620861d4"></a>enum class &#160;</td><td class="memItemRight" valign="bottom"><b>edge_flavour</b> : bool { <b>partial</b>
 , <b>partial_embedded</b>
-, <b>full</b>
-, <b>full_embedded</b>
  }</td></tr>
-<tr class="separator:a251f462788ec4f5e7e6a5ab5a3acf7ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
-Variables</h2></td></tr>
-<tr class="memitem:a9bb774e8f8b0d1b426e0c39e37b9fdc6"><td class="memTemplParams" colspan="2"><a id="a9bb774e8f8b0d1b426e0c39e37b9fdc6" name="a9bb774e8f8b0d1b426e0c39e37b9fdc6"></a>
-template&lt;bool Inverted&gt; </td></tr>
-<tr class="memitem:a9bb774e8f8b0d1b426e0c39e37b9fdc6"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::inversion_v</b> {inversion_constant&lt;Inverted&gt;::value}</td></tr>
-<tr class="separator:a9bb774e8f8b0d1b426e0c39e37b9fdc6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a84639edef2a1c3b7467312a4de71f8ee"><td class="memItemLeft" align="right" valign="top"><a id="a84639edef2a1c3b7467312a4de71f8ee" name="a84639edef2a1c3b7467312a4de71f8ee"></a>
-constexpr inverted_edge_t&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::inverted_edge</b> {}</td></tr>
-<tr class="separator:a84639edef2a1c3b7467312a4de71f8ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a539b70e17834e37dae22b486620861d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Various edge types for use by graphs. </p>
@@ -154,7 +126,6 @@ constexpr inverted_edge_t&#160;</td><td class="memItemRight" valign="bottom"><b>
 <p>All concrete edges inherit from this class but may have additional adornments. Depending on the context, edges may have one or more of the following:</p>
 <ol type="1">
 <li>A non-trivial weight;</li>
-<li>A record of the 'source' node, from which the edge points to its target;</li>
 <li>An index recording the location on the target node into which the edge is embedded. </li>
 </ol>
 </div></div><!-- contents -->

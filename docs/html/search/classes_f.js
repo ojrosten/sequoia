@@ -1,27 +1,6 @@
 var searchData=
 [
-  ['rebind_0',['rebind',['../d2/df3/structsequoia_1_1testing_1_1shared__counting__allocator_1_1rebind.html',1,'sequoia::testing::shared_counting_allocator']]],
-  ['recovery_5fpaths_1',['recovery_paths',['../dd/db2/classsequoia_1_1testing_1_1recovery__paths.html',1,'sequoia::testing']]],
-  ['reduced_5ffile_5fcontents_2',['reduced_file_contents',['../d9/d08/structsequoia_1_1testing_1_1reduced__file__contents.html',1,'sequoia::testing']]],
-  ['reference_5ftype_3',['reference_type',['../d1/d64/structsequoia_1_1utilities_1_1reference__type.html',1,'sequoia::utilities']]],
-  ['reference_5ftype_3c_20i_20_3e_4',['reference_type&lt; I &gt;',['../df/d83/structsequoia_1_1utilities_1_1reference__type_3_01I_01_4.html',1,'sequoia::utilities']]],
-  ['reference_5ftype_3c_20t_20_3e_5',['reference_type&lt; T &gt;',['../df/d22/structsequoia_1_1utilities_1_1reference__type_3_01T_01_4.html',1,'sequoia::utilities']]],
-  ['regular_5fallocation_5factions_6',['regular_allocation_actions',['../da/dbd/structsequoia_1_1testing_1_1impl_1_1regular__allocation__actions.html',1,'sequoia::testing::impl']]],
-  ['regular_5fallocation_5fextender_7',['regular_allocation_extender',['../da/dcc/classsequoia_1_1testing_1_1regular__allocation__extender.html',1,'sequoia::testing']]],
-  ['regular_5fbroken_5fgreater_8',['regular_broken_greater',['../dc/da1/structsequoia_1_1testing_1_1regular__broken__greater.html',1,'sequoia::testing']]],
-  ['regular_5fbroken_5fgreatereq_9',['regular_broken_greatereq',['../db/d9c/structsequoia_1_1testing_1_1regular__broken__greatereq.html',1,'sequoia::testing']]],
-  ['regular_5fbroken_5fless_10',['regular_broken_less',['../d2/dc0/structsequoia_1_1testing_1_1regular__broken__less.html',1,'sequoia::testing']]],
-  ['regular_5fbroken_5flesseq_11',['regular_broken_lesseq',['../d9/d25/structsequoia_1_1testing_1_1regular__broken__lesseq.html',1,'sequoia::testing']]],
-  ['regular_5fbroken_5fspaceship_12',['regular_broken_spaceship',['../da/da8/structsequoia_1_1testing_1_1regular__broken__spaceship.html',1,'sequoia::testing']]],
-  ['regular_5fextender_13',['regular_extender',['../d4/d5d/classsequoia_1_1testing_1_1regular__extender.html',1,'sequoia::testing']]],
-  ['regular_5ffalse_5fnegative_5fdiagnostics_14',['regular_false_negative_diagnostics',['../de/d50/classsequoia_1_1testing_1_1regular__false__negative__diagnostics.html',1,'sequoia::testing']]],
-  ['regular_5ffalse_5fpositive_5fdiagnostics_15',['regular_false_positive_diagnostics',['../d8/d12/classsequoia_1_1testing_1_1regular__false__positive__diagnostics.html',1,'sequoia::testing']]],
-  ['regular_5finverted_5fcomparisons_16',['regular_inverted_comparisons',['../d1/d55/structsequoia_1_1testing_1_1regular__inverted__comparisons.html',1,'sequoia::testing']]],
-  ['regular_5fstate_5ftransition_5ffalse_5fnegative_5fdiagnostics_17',['regular_state_transition_false_negative_diagnostics',['../da/d2c/classsequoia_1_1testing_1_1regular__state__transition__false__negative__diagnostics.html',1,'sequoia::testing']]],
-  ['regular_5fstate_5ftransition_5ffalse_5fpositive_5fdiagnostics_18',['regular_state_transition_false_positive_diagnostics',['../df/d35/classsequoia_1_1testing_1_1regular__state__transition__false__positive__diagnostics.html',1,'sequoia::testing']]],
-  ['relational_5ffalse_5fnegative_5fdiagnostics_19',['relational_false_negative_diagnostics',['../dd/d50/classsequoia_1_1testing_1_1relational__false__negative__diagnostics.html',1,'sequoia::testing']]],
-  ['relational_5ffalse_5fpositive_5fdiagnostics_20',['relational_false_positive_diagnostics',['../da/d4f/classsequoia_1_1testing_1_1relational__false__positive__diagnostics.html',1,'sequoia::testing']]],
-  ['replacement_21',['replacement',['../da/dd8/structsequoia_1_1replacement.html',1,'sequoia']]],
-  ['resolve_5fto_5fcopy_22',['resolve_to_copy',['../dc/d48/structsequoia_1_1resolve__to__copy.html',1,'sequoia']]],
-  ['resource_5fbinder_23',['resource_binder',['../de/d91/classsequoia_1_1testing_1_1resource__binder.html',1,'sequoia::testing']]]
+  ['queue_5fdetails_0',['queue_details',['../d9/d5e/structsequoia_1_1concurrency_1_1impl_1_1queue__details.html',1,'sequoia::concurrency::impl']]],
+  ['queue_5fdetails_3c_20r_2c_20false_20_3e_1',['queue_details&lt; R, false &gt;',['../db/d34/structsequoia_1_1concurrency_1_1impl_1_1queue__details_3_01R_00_01false_01_4.html',1,'sequoia::concurrency::impl']]],
+  ['queue_5fdetails_3c_20r_2c_20true_20_3e_2',['queue_details&lt; R, true &gt;',['../d9/d5e/structsequoia_1_1concurrency_1_1impl_1_1queue__details.html',1,'sequoia::concurrency::impl']]]
 ];

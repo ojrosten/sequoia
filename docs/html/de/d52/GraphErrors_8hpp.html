@@ -91,6 +91,8 @@ $(function() {
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d7a/structsequoia_1_1maths_1_1graph__errors_1_1edge__indices.html">sequoia::maths::graph_errors::edge_indices</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/dda/structsequoia_1_1maths_1_1graph__errors_1_1edge__inversion__info.html">sequoia::maths::graph_errors::edge_inversion_info</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
@@ -118,6 +120,9 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths
 <tr class="memitem:af5c16155fb39a3c8f02ffd48f10f9bc2"><td class="memItemLeft" align="right" valign="top"><a id="af5c16155fb39a3c8f02ffd48f10f9bc2" name="af5c16155fb39a3c8f02ffd48f10f9bc2"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::graph_errors::inconsistent_initialization_message</b> (std::size_t numNodes, std::size_t edgeParitions)</td></tr>
 <tr class="separator:af5c16155fb39a3c8f02ffd48f10f9bc2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af33a0bc9d2c37cfb0c65b11b42b570a2"><td class="memItemLeft" align="right" valign="top"><a id="af33a0bc9d2c37cfb0c65b11b42b570a2" name="af33a0bc9d2c37cfb0c65b11b42b570a2"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::graph_errors::inversion_consistency_message</b> (std::size_t nodeIndex, edge_inversion_info zerothEdge, edge_inversion_info firstEdge)</td></tr>
+<tr class="separator:af33a0bc9d2c37cfb0c65b11b42b570a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a35a224a087971ad02124a58fa18780bb"><td class="memItemLeft" align="right" valign="top"><a id="a35a224a087971ad02124a58fa18780bb" name="a35a224a087971ad02124a58fa18780bb"></a>
 constexpr void&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::graph_errors::check_node_index_range</b> (std::string_view method, const std::size_t order, const std::size_t node)</td></tr>
 <tr class="separator:a35a224a087971ad02124a58fa18780bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -139,6 +144,9 @@ constexpr void&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::ma
 <tr class="memitem:acafbc8404014273da8d2eb2cc3fa3d91"><td class="memItemLeft" align="right" valign="top"><a id="acafbc8404014273da8d2eb2cc3fa3d91" name="acafbc8404014273da8d2eb2cc3fa3d91"></a>
 constexpr void&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::graph_errors::check_embedded_edge</b> (const std::size_t nodeIndex, const std::size_t source, const std::size_t target)</td></tr>
 <tr class="separator:acafbc8404014273da8d2eb2cc3fa3d91"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a54d9e719403cfe8190c9578c919cbd44"><td class="memItemLeft" align="right" valign="top"><a id="a54d9e719403cfe8190c9578c919cbd44" name="a54d9e719403cfe8190c9578c919cbd44"></a>
+constexpr void&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::graph_errors::check_inversion_consistency</b> (std::size_t nodeIndex, edge_inversion_info zerothEdge, edge_inversion_info firstEdge)</td></tr>
+<tr class="separator:a54d9e719403cfe8190c9578c919cbd44"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6abd92f1fe3234d136b333ff47bd0551"><td class="memItemLeft" align="right" valign="top"><a id="a6abd92f1fe3234d136b333ff47bd0551" name="a6abd92f1fe3234d136b333ff47bd0551"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::graph_errors::erase_edge_error</b> (const std::size_t partner, const edge_indices indices)</td></tr>
 <tr class="separator:a6abd92f1fe3234d136b333ff47bd0551"><td class="memSeparator" colspan="2">&#160;</td></tr>
