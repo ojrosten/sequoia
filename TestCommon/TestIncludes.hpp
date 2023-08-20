@@ -60,6 +60,7 @@
 #include "Maths/Graph/Undirected/DynamicUndirectedGraphSharedFundamentalWeightContiguousTest.hpp"
 #include "Maths/Graph/Undirected/DynamicUndirectedGraphSharedFundamentalWeightTest.hpp"
 #include "Maths/Graph/Undirected/DynamicUndirectedGraphSharedUnsortableWeightTest.hpp"
+#include "Maths/Graph/Undirected/DynamicUndirectedGraphFundamentalMetaDataTest.hpp"
 #include "Maths/Graph/Undirected/DynamicUndirectedGraphFundamentalWeightContiguousTest.hpp"
 #include "Maths/Graph/Undirected/DynamicUndirectedGraphFundamentalWeightTest.hpp"
 #include "Maths/Graph/Undirected/DynamicUndirectedGraphUnsortableWeightTest.hpp"

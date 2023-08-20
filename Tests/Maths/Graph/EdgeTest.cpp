@@ -177,11 +177,14 @@ namespace sequoia
       edge.meta_data(0.7f);
       check(equality, report_line("Change meta data"), edge, edge_t{3, 0.7f});
 
-      constexpr edge_t edge2{5, 0.8f};
-      check_semantics(report_line("Standard semantics"), edge2, edge);
+      constexpr edge_t edge1{5, 0.8f};
+      check_semantics(report_line("Standard semantics"), edge1, edge);
 
-      constexpr edge_t edge3{7, edge2};
-      check(equality, report_line(""), edge3, edge_t{7, 0.8f});
+      constexpr edge_t edge2{7, edge1};
+      check(equality, report_line(""), edge2, edge_t{7, 0.8f});
+
+      constexpr edge_t edge3{7};
+      check(equivalence, report_line("Construction"), edge3, 7, 0.0f);
     }
 
     void test_edges::test_partial_edge_indep_weight_meta_data()
@@ -201,11 +204,14 @@ namespace sequoia
       edge.meta_data(0.7f);
       check(equality, report_line("Change meta data"), edge, edge_t{3, 1.2, 0.7f});
 
-      constexpr edge_t edge2{5, 1.0, 0.8f};
-      check_semantics(report_line("Standard semantics"), edge2, edge);
+      constexpr edge_t edge1{5, 1.0, 0.8f};
+      check_semantics(report_line("Standard semantics"), edge1, edge);
 
-      constexpr edge_t edge3{7, edge2};
-      check(equality, report_line(""), edge3, edge_t{7, 1.0, 0.8f});
+      constexpr edge_t edge2{7, edge1};
+      check(equality, report_line(""), edge2, edge_t{7, 1.0, 0.8f});
+
+      constexpr edge_t edge3{7};
+      check(equivalence, report_line("Construction"), edge3, 7, 0.0, 0.0f);
     }
 
     void test_edges::test_partial_edge_shared_weight_meta_data()
@@ -225,11 +231,14 @@ namespace sequoia
       edge.meta_data(0.7f);
       check(equality, report_line("Change meta data"), edge, edge_t{3, 1.2, 0.7f});
 
-      const edge_t edge2{5, 1.0, 0.8f};
-      check_semantics(report_line("Standard semantics"), edge2, edge);
+      const edge_t edge1{5, 1.0, 0.8f};
+      check_semantics(report_line("Standard semantics"), edge1, edge);
 
-      const edge_t edge3{7, edge2};
-      check(equality, report_line(""), edge3, edge_t{7, 1.0, 0.8f});
+      const edge_t edge2{7, edge1};
+      check(equality, report_line(""), edge2, edge_t{7, 1.0, 0.8f});
+
+      const edge_t edge3{7};
+      check(equivalence, report_line("Construction"), edge3, 7, 0.0, 0.0f);
     }
 
 
@@ -321,11 +330,14 @@ namespace sequoia
       edge.meta_data(0.7f);
       check(equality, report_line("Set weight"), edge, edge_t{3, 4, 0.7f});
 
-      constexpr edge_t edge2{5, 8, 0.8f};
-      check_semantics(report_line("Standard semantics"), edge2, edge);
+      constexpr edge_t edge1{5, 8, 0.8f};
+      check_semantics(report_line("Standard semantics"), edge1, edge);
 
-      constexpr edge_t edge3{7, 4, edge2};
-      check(equality, report_line(""), edge3, edge_t{7, 4, 0.8f});
+      constexpr edge_t edge2{7, 4, edge1};
+      check(equality, report_line(""), edge2, edge_t{7, 4, 0.8f});
+
+      constexpr edge_t edge3{8, 2};
+      check(equivalence, report_line("Construction"), edge3, 8, 2, 0.0f);
     }
 
     void test_edges::test_embedded_partial_edge_indep_weight_meta_data()
@@ -348,11 +360,14 @@ namespace sequoia
       edge.meta_data(0.7f);
       check(equality, report_line("Change meta data"), edge, edge_t{3, 6, 1.2, 0.7f});
 
-      constexpr edge_t edge2{5, 7, 1.0, 0.8f};
-      check_semantics(report_line("Standard semantics"), edge2, edge);
+      constexpr edge_t edge1{5, 7, 1.0, 0.8f};
+      check_semantics(report_line("Standard semantics"), edge1, edge);
 
-      constexpr edge_t edge3{7, 4, edge2};
-      check(equality, report_line(""), edge3, edge_t{7, 4, 1.0, 0.8f});
+      constexpr edge_t edge2{7, 4, edge1};
+      check(equality, report_line(""), edge2, edge_t{7, 4, 1.0, 0.8f});
+
+      constexpr edge_t edge3{8, 2};
+      check(equivalence, report_line("Construction"), edge3, 8, 2, 0.0, 0.0f);
     }
 
     void test_edges::test_embedded_partial_edge_shared_weight_meta_data()
@@ -375,11 +390,14 @@ namespace sequoia
       edge.meta_data(0.7f);
       check(equality, report_line("Change meta data"), edge, edge_t{3, 6, 1.2, 0.7f});
 
-      const edge_t edge2{5, 7, 1.0, 0.8f};
-      check_semantics(report_line("Standard semantics"), edge2, edge);
+      const edge_t edge1{5, 7, 1.0, 0.8f};
+      check_semantics(report_line("Standard semantics"), edge1, edge);
 
-      const edge_t edge3{7, 4, edge2};
-      check(equality, report_line(""), edge3, edge_t{7, 4, 1.0, 0.8f});
+      const edge_t edge2{7, 4, edge1};
+      check(equality, report_line(""), edge2, edge_t{7, 4, 1.0, 0.8f});
+
+      const edge_t edge3{8, 2};
+      check(equivalence, report_line("Construction"), edge3, 8, 2, 0.0, 0.0f);
     }
   }
 }

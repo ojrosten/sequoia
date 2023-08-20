@@ -7,20 +7,20 @@
 
 /*! \file */
 
-#include "DynamicUndirectedGraphUnweightedContiguousTest.hpp"
+#include "DynamicUndirectedGraphFundamentalMetaDataTest.hpp"
 #include "DynamicUndirectedGraphTestingUtilities.hpp"
 
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::filesystem::path dynamic_undirected_graph_unweighted_contiguous_test::source_file() const
+  std::filesystem::path dynamic_undirected_graph_fundamental_meta_data_test::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void dynamic_undirected_graph_unweighted_contiguous_test::run_tests()
+  void dynamic_undirected_graph_fundamental_meta_data_test::run_tests()
   {
     using namespace maths;
-    dynamic_undirected_graph_operations<null_weight, null_weight, null_meta_data, independent_contiguous_edge_storage_traits, node_weight_storage_traits<null_weight>>::execute_operations(*this);
+    dynamic_undirected_graph_operations<null_weight, null_weight, float, independent_bucketed_edge_storage_traits, node_weight_storage_traits<null_weight>>::execute_operations(*this);
   }
 }

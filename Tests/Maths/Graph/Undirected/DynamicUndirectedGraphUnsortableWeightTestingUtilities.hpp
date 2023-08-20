@@ -132,7 +132,7 @@ namespace sequoia::testing
     [[nodiscard]]
     static transition_graph make_weighted_transition_graph(regular_test& t)
     {
-      using base_ops = dynamic_undirected_graph_operations<EdgeWeight, NodeWeight, EdgeStorageTraits, NodeWeightStorageTraits>;
+      using base_ops = dynamic_undirected_graph_operations<EdgeWeight, NodeWeight, maths::null_meta_data, EdgeStorageTraits, NodeWeightStorageTraits>;
       using namespace undirected_graph;
 
       auto trg{base_ops::make_transition_graph(t)};
