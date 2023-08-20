@@ -19,7 +19,7 @@ of these charities.
 
 [WWT: A Conservation charity dedicated to wetlands](https://www.wwt.org.uk/)
 
-## Requirements (as of 2023-05-17):
+## Requirements (as of 2023-08-20):
 
 git 2.40.0  
 CMake 3.26  
