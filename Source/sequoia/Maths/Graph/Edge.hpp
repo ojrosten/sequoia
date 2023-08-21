@@ -52,15 +52,20 @@ namespace sequoia
     public:
       using weight_type = typename WeightHandler::value_type;
 
+      [[nodiscard]]
+      constexpr const weight_type& weight() const noexcept { return WeightHandler::get(m_Weight); }
+
+      constexpr void weight(weight_type w)
+      {
+        WeightHandler::get(m_Weight) = std::move(w);
+      }
+
       template<class... Args>
-        requires (sizeof...(Args) > 0)
+        requires ((sizeof...(Args) > 0) && is_initializable_v<weight_type, Args...>)
       constexpr void weight(Args&&... args)
       {
         WeightHandler::get(m_Weight) = weight_type{std::forward<Args>(args)...};
       }
-
-      [[nodiscard]]
-      constexpr const weight_type& weight() const noexcept { return WeightHandler::get(m_Weight); }
 
       template<std::invocable<weight_type&> Fn>
       constexpr std::invoke_result_t<Fn, weight_type&> mutate_weight(Fn fn)
@@ -232,7 +237,20 @@ namespace sequoia
       [[nodiscard]]
       constexpr const MetaData& meta_data() const noexcept { return m_MetaData; }
 
-      constexpr void meta_data(MetaData m) { m_MetaData = m; }
+      constexpr void meta_data(MetaData m) { m_MetaData = std::move(m); }
+
+      template<class... Args>
+        requires ((sizeof...(Args) > 0) && is_initializable_v<meta_data_type, Args...>)
+      constexpr void meta_data(Args&&... args)
+      {
+        m_MetaData = {std::forward<Args>(args)...};
+      }
+
+      template<std::invocable<meta_data_type&> Fn>
+      constexpr std::invoke_result_t<Fn, meta_data_type&> mutate_meta_data(Fn fn)
+      {
+        return fn(m_MetaData);
+      }
     protected:
       ~decorated_partial_edge_base() = default;
 

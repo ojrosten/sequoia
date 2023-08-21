@@ -96,6 +96,7 @@ namespace sequoia
         };
 
         static_assert(!shared_weight_v || (GraphFlavour != graph_flavour::directed));
+        static_assert((GraphFlavour == graph_flavour::directed) || std::is_empty_v<EdgeMetaData> || std::is_empty_v<EdgeWeight> || shared_weight_v);
 
         using handler_type     = shared_to_handler_t<shared_weight_v, EdgeWeight>;
         using edge_type        = flavour_to_edge_t<GraphFlavour, handler_type, EdgeMetaData, IndexType>;

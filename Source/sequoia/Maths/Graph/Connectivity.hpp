@@ -189,6 +189,7 @@ namespace sequoia
       using edge_traits_type            = EdgeTraits;
       using edge_type                   = typename EdgeTraits::edge_type;
       using edge_weight_type            = typename edge_type::weight_type;
+      using edge_meta_data_type         = typename edge_type::meta_data_type;
       using edge_index_type             = typename edge_type::index_type;
       using edge_init_type              = typename EdgeTraits::edge_init_type;
       using edge_storage_type           = typename EdgeTraits::edge_storage_type;
@@ -263,26 +264,6 @@ namespace sequoia
         return {m_Edges.cbegin_partition(node), m_Edges.cend_partition(node)};
       }
 
-      template<std::invocable<edge_weight_type&> Fn>
-        requires (!std::is_empty_v<edge_weight_type>)
-      constexpr std::invoke_result_t<Fn, edge_weight_type&> mutate_edge_weight(const_edge_iterator citer, Fn fn)
-      {
-        if constexpr (!EdgeTraits::shared_weight_v && !is_directed(EdgeTraits::graph_species))
-        {
-          mutate_partner_edge_weight(citer, fn);
-        }
-
-        return mutate_source_edge_weight(citer, fn);
-      }
-
-      template<std::invocable<edge_weight_type&> Fn>
-        requires (!std::is_empty_v<edge_weight_type>)
-      constexpr std::invoke_result_t<Fn, edge_weight_type&> mutate_edge_weight(const_reverse_edge_iterator criter, Fn fn)
-      {
-        const auto source{criter.partition_index()};
-        return mutate_edge_weight(m_Edges.cbegin_partition(source) + std::ranges::distance(criter, m_Edges.crend_partition(source)) - 1, fn);
-      }
-
       template<class... Args>
         requires initializable_from<edge_weight_type, Args...>
       constexpr void set_edge_weight(const_edge_iterator citer, Args&&... args)
@@ -315,6 +296,40 @@ namespace sequoia
       {
         const auto source{criter.partition_index()};
         set_edge_weight(m_Edges.cbegin_partition(source) + std::ranges::distance(criter, m_Edges.crend_partition(source)) - 1, std::forward<Args>(args)...);
+      }
+
+      template<std::invocable<edge_weight_type&> Fn>
+        requires (!std::is_empty_v<edge_weight_type>)
+      constexpr std::invoke_result_t<Fn, edge_weight_type&> mutate_edge_weight(const_edge_iterator citer, Fn fn)
+      {
+        if constexpr(!EdgeTraits::shared_weight_v && !is_directed(EdgeTraits::graph_species))
+        {
+          mutate_partner_edge_weight(citer, fn);
+        }
+
+        return mutate_source_edge_weight(citer, fn);
+      }
+
+      template<std::invocable<edge_weight_type&> Fn>
+        requires (!std::is_empty_v<edge_weight_type>)
+      constexpr std::invoke_result_t<Fn, edge_weight_type&> mutate_edge_weight(const_reverse_edge_iterator criter, Fn fn)
+      {
+        const auto source{criter.partition_index()};
+        return mutate_edge_weight(m_Edges.cbegin_partition(source) + std::ranges::distance(criter, m_Edges.crend_partition(source)) - 1, fn);
+      }
+
+      template<class... Args>
+        requires initializable_from<edge_weight_type, Args...>
+      constexpr void set_edge_meta_data(const_edge_iterator citer, Args&&... args)
+      {
+        to_edge_iterator(citer)->set_meta_data(std::forward<Args>(args)...);
+      }
+
+      template<std::invocable<edge_meta_data_type&> Fn>
+        requires (!std::is_empty_v<edge_meta_data_type>)
+      constexpr std::invoke_result_t<Fn, edge_meta_data_type&> mutate_edge_meta_data(const_edge_iterator citer, Fn fn)
+      {
+        to_edge_iterator(citer)->mutate_meta_data(std::move(fn));
       }
 
       //===============================equality (not isomorphism) operators================================//
