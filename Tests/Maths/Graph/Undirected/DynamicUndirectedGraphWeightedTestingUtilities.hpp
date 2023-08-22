@@ -697,6 +697,28 @@ namespace sequoia::testing
         }
       );
 
+      trg.join(
+        weighted_graph_description::node_0w_0w,
+        graph_description::node_0,
+        t.report_line("Ensure edge erasure treats shared weights properly"),
+        [](graph_t g) -> graph_t {
+          g.erase_edge(g.cbegin_edges(0)+2);
+          g.set_edge_weight(g.cbegin_edges(0), 0.0);
+          return g;
+        }
+      );
+
+      trg.join(
+        weighted_graph_description::node_0w_0w,
+        graph_description::node_0,
+        t.report_line("Ensure edge erasure treats shared weights properly"),
+        [](graph_t g) -> graph_t {
+          g.erase_edge(g.cbegin_edges(0) + 3);
+          g.set_edge_weight(g.cbegin_edges(0), 0.0);
+          return g;
+        }
+      );
+
       // end 'weighted_graph_description::node_0w_0w'
 
       // begin 'weighted_graph_description::node_nodew'
