@@ -220,15 +220,15 @@ namespace sequoia
         , m_MetaData{std::move(m)}
       {}
 
-      constexpr decorated_partial_edge_base(const index_type target, weight_type w, meta_data_type m)
+      constexpr decorated_partial_edge_base(const index_type target, weight_type w, meta_data_type m) // swap args?
         requires (!std::is_empty_v<weight_type> && !std::is_empty_v<meta_data_type>)
         : partial_edge_base<WeightHandler, IndexType>{target, std::move(w)}
         , m_MetaData{std::move(m)}
       {}
 
-      constexpr decorated_partial_edge_base(const index_type target, const decorated_partial_edge_base& other)
+      constexpr decorated_partial_edge_base(const index_type target, meta_data_type m, const decorated_partial_edge_base& other)
         : partial_edge_base<WeightHandler, IndexType>{target, other}
-        , m_MetaData{other.m_MetaData}
+        , m_MetaData{std::move(m)}
       {}
 
       constexpr decorated_partial_edge_base(const decorated_partial_edge_base&)     = default;
@@ -251,6 +251,9 @@ namespace sequoia
       {
         return fn(m_MetaData);
       }
+
+      [[nodiscard]]
+      friend constexpr bool operator==(const decorated_partial_edge_base&, const decorated_partial_edge_base&) noexcept = default;
     protected:
       ~decorated_partial_edge_base() = default;
 
@@ -285,6 +288,9 @@ namespace sequoia
       using index_type     = IndexType;
 
       using decorated_partial_edge_base<WeightHandler, MetaData, IndexType>::decorated_partial_edge_base;
+
+      [[nodiscard]]
+      friend constexpr bool operator==(const partial_edge&, const partial_edge&) noexcept = default;
     };
 
     //===================================Embedded Partial Edge===================================//
@@ -314,13 +320,22 @@ namespace sequoia
       {}
 
       constexpr embedded_partial_edge(const index_type target, const index_type complimentaryIndex, const embedded_partial_edge& other)
+        requires std::is_empty_v<meta_data_type>
         : decorated_partial_edge_base<WeightHandler, MetaData, IndexType>{target, other}
+        , m_ComplementaryIndex{complimentaryIndex}
+      {}
+
+      constexpr embedded_partial_edge(const index_type target, const index_type complimentaryIndex, meta_data_type m, const embedded_partial_edge& other)
+        : decorated_partial_edge_base<WeightHandler, MetaData, IndexType>{target, std::move(m), other}
         , m_ComplementaryIndex{complimentaryIndex}
       {}
 
       [[nodiscard]]
       constexpr index_type complementary_index() const noexcept { return m_ComplementaryIndex; }
       constexpr void complementary_index(const index_type index) noexcept { m_ComplementaryIndex = index; }
+
+      [[nodiscard]]
+      friend constexpr bool operator==(const embedded_partial_edge&, const embedded_partial_edge&) noexcept = default;
     private:
       IndexType m_ComplementaryIndex;
     };

@@ -478,12 +478,6 @@ namespace sequoia
         if constexpr (!emptyNodes) Nodes::erase_node(this->cbegin_node_weights() + node);
       }
 
-      template<class... Args>
-      void join(const edge_index_type node1, const edge_index_type node2, Args&&... args)
-      {
-        Connectivity::join(node1, node2, std::forward<Args>(args)...);
-      }
-
       void clear() noexcept
       {
         if constexpr (!emptyNodes) Nodes::clear();
@@ -499,12 +493,12 @@ namespace sequoia
         {
           if constexpr((dir != tree_link_direction::forward) && is_directed(Connectivity::flavour))
           {
-            join(n, parent);
+            Connectivity::join(n, parent);
           }
 
           if constexpr(dir != tree_link_direction::backward)
           {
-            join(parent, n);
+            Connectivity::join(parent, n);
           }
         }
 

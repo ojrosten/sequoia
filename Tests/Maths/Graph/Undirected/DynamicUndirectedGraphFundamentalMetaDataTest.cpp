@@ -8,7 +8,7 @@
 /*! \file */
 
 #include "DynamicUndirectedGraphFundamentalMetaDataTest.hpp"
-#include "DynamicUndirectedGraphTestingUtilities.hpp"
+#include "DynamicUndirectedGraphMetaDataTestingUtilities.hpp"
 
 namespace sequoia::testing
 {
@@ -21,6 +21,6 @@ namespace sequoia::testing
   void dynamic_undirected_graph_fundamental_meta_data_test::run_tests()
   {
     using namespace maths;
-    dynamic_undirected_graph_operations<null_weight, null_weight, float, independent_bucketed_edge_storage_traits, node_weight_storage_traits<null_weight>>::execute_operations(*this);
+    dynamic_undirected_graph_meta_data_operations<null_weight, null_weight, float, independent_bucketed_edge_storage_traits, node_weight_storage_traits<null_weight>>::execute_operations(*this);
   }
 }

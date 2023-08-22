@@ -319,10 +319,10 @@ namespace sequoia
       }
 
       template<class... Args>
-        requires initializable_from<edge_weight_type, Args...>
+        requires initializable_from<edge_meta_data_type, Args...>
       constexpr void set_edge_meta_data(const_edge_iterator citer, Args&&... args)
       {
-        to_edge_iterator(citer)->set_meta_data(std::forward<Args>(args)...);
+        to_edge_iterator(citer)->meta_data(std::forward<Args>(args)...);
       }
 
       template<std::invocable<edge_meta_data_type&> Fn>
@@ -593,8 +593,7 @@ namespace sequoia
       }
 
       template<class... Args>
-        requires initializable_from<edge_weight_type, Args...>
-        // && copyable in some situations
+        requires (std::is_empty_v<edge_meta_data_type> && initializable_from<edge_weight_type, Args...> && (is_directed(flavour) || std::is_copy_constructible_v<edge_type>))
       void join(const edge_index_type node1, const edge_index_type node2, Args&&... args)
       {
         if constexpr (throw_on_range_error) graph_errors::check_node_index_range("join", order(), node1, node2);
@@ -618,7 +617,31 @@ namespace sequoia
       }
 
       template<class... Args>
-        requires initializable_from<edge_weight_type, Args...>
+        requires (!std::is_empty_v<edge_meta_data_type> && initializable_from<edge_weight_type, Args...> && (is_directed(flavour) || std::is_copy_constructible_v<edge_type>))
+      void join(const edge_index_type node1, const edge_index_type node2, edge_meta_data_type meta1, edge_meta_data_type meta2, Args&&... args)
+      {
+        if constexpr(throw_on_range_error) graph_errors::check_node_index_range("join", order(), node1, node2);
+
+        add_to_partition(node1, node2, meta1, std::forward<Args>(args)...);
+
+        if constexpr(!is_directed(flavour))
+        {
+          if constexpr(edge_type::flavour == edge_flavour::partial)
+          {
+            graph_impl::join_sentinel sentinel{m_Edges, node1, m_Edges.size_of_partition(node1) - 1};
+            m_Edges.push_back_to_partition(node2, node1, meta2, *crbegin_edges(node1));
+          }
+          else if constexpr(edge_type::flavour == edge_flavour::partial_embedded)
+          {
+            graph_impl::join_sentinel sentinel{m_Edges, node1, m_Edges.size_of_partition(node1) - 1};
+            const edge_index_type compIndex(std::ranges::distance(cbegin_edges(node1), cend_edges(node1)) - 1);
+            m_Edges.push_back_to_partition(node2, node1, compIndex, meta2, *crbegin_edges(node1));
+          }
+        }
+      }
+
+      template<class... Args>
+        requires (initializable_from<edge_weight_type, Args...> && is_embedded(flavour) && std::is_copy_constructible_v<edge_type>)
       std::pair<const_edge_iterator, const_edge_iterator>
       insert_join(const_edge_iterator citer1, const_edge_iterator citer2, Args&&... args)
       {
@@ -644,7 +667,7 @@ namespace sequoia
       }
 
       template<class... Args>
-        requires initializable_from<edge_weight_type, Args...>
+        requires (initializable_from<edge_weight_type, Args...> && is_embedded(flavour) && std::is_copy_constructible_v<edge_type>)
       std::pair<const_edge_iterator, const_edge_iterator>
         insert_join(const_edge_iterator citer1, const edge_index_type pos2, Args&&... args)
       {

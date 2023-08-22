@@ -285,6 +285,8 @@ Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 92
 Differing meta data
 
 [sequoia::maths::partial_edge<sequoia::object::by_value<double>, float, unsigned long long>]
+operator== returned false
+
   Meta data incorrect
   [float]
   operator== returned false
@@ -325,6 +327,8 @@ Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 101
 Differing meta data
 
 [sequoia::maths::partial_edge<sequoia::object::shared<double>, float, unsigned long long>]
+operator== returned false
+
   Meta data incorrect
   [float]
   operator== returned false
@@ -475,6 +479,8 @@ Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 124
 Differing complementary indices, identical targets and weights
 
 [sequoia::maths::embedded_partial_edge<sequoia::object::by_value<double>, sequoia::maths::null_meta_data, unsigned long long>]
+operator== returned false
+
   Complementary index incorrect
   [unsigned long long]
   operator== returned false
@@ -487,6 +493,8 @@ Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 125
 Differing complementary indices, identical targets and weights
 
 [sequoia::maths::embedded_partial_edge<sequoia::object::by_value<double>, sequoia::maths::null_meta_data, unsigned long long>]
+operator== returned false
+
   Complementary index incorrect
   [unsigned long long]
   operator== returned false
@@ -499,6 +507,8 @@ Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 126
 Differing complementary indices, identical targets and weights
 
 [sequoia::maths::embedded_partial_edge<sequoia::object::by_value<double>, sequoia::maths::null_meta_data, unsigned long long>]
+operator== returned false
+
   Complementary index incorrect
   [unsigned long long]
   operator== returned false
@@ -681,6 +691,8 @@ Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 147
 Differing complementary indices, identical targets and weights
 
 [sequoia::maths::embedded_partial_edge<sequoia::object::by_value<double>, sequoia::maths::null_meta_data, unsigned long long>]
+operator== returned false
+
   Complementary index incorrect
   [unsigned long long]
   operator== returned false
@@ -693,6 +705,8 @@ Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 148
 Differing complementary indices, identical targets and weights
 
 [sequoia::maths::embedded_partial_edge<sequoia::object::by_value<double>, sequoia::maths::null_meta_data, unsigned long long>]
+operator== returned false
+
   Complementary index incorrect
   [unsigned long long]
   operator== returned false
@@ -705,6 +719,8 @@ Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 149
 Differing complementary indices, identical targets and weights
 
 [sequoia::maths::embedded_partial_edge<sequoia::object::by_value<double>, sequoia::maths::null_meta_data, unsigned long long>]
+operator== returned false
+
   Complementary index incorrect
   [unsigned long long]
   operator== returned false
@@ -859,6 +875,8 @@ Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 167
 Differing complementary indices
 
 [sequoia::maths::embedded_partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, float, unsigned long long>]
+operator== returned false
+
   Complementary index incorrect
   [unsigned long long]
   operator== returned false
@@ -871,6 +889,8 @@ Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 168
 Differing meta data
 
 [sequoia::maths::embedded_partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, float, unsigned long long>]
+operator== returned false
+
   Meta data incorrect
   [float]
   operator== returned false
@@ -897,6 +917,8 @@ Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 176
 Differing complementary indices
 
 [sequoia::maths::embedded_partial_edge<sequoia::object::by_value<double>, float, unsigned long long>]
+operator== returned false
+
   Complementary index incorrect
   [unsigned long long]
   operator== returned false
@@ -923,6 +945,8 @@ Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 178
 Differing meta data
 
 [sequoia::maths::embedded_partial_edge<sequoia::object::by_value<double>, float, unsigned long long>]
+operator== returned false
+
   Meta data incorrect
   [float]
   operator== returned false
@@ -949,6 +973,8 @@ Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 186
 Differing complementary indices
 
 [sequoia::maths::embedded_partial_edge<sequoia::object::shared<double>, float, unsigned long long>]
+operator== returned false
+
   Complementary index incorrect
   [unsigned long long]
   operator== returned false
@@ -975,6 +1001,8 @@ Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 188
 Differing meta data
 
 [sequoia::maths::embedded_partial_edge<sequoia::object::shared<double>, float, unsigned long long>]
+operator== returned false
+
   Meta data incorrect
   [float]
   operator== returned false
