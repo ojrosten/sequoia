@@ -701,6 +701,24 @@ namespace sequoia
           const auto source{citer.partition_index()};
           const auto partner{partner_index(citer)};
 
+          auto pred{
+            [=](const edge_type& potentialPartner){
+              if(potentialPartner.target_node() == source)
+              {
+                if constexpr(std::is_empty_v<edge_weight_type>)
+                  return true;
+                else if constexpr(EdgeTraits::shared_weight_v)
+                  return std::addressof(citer->weight()) == std::addressof(potentialPartner.weight());
+                else if constexpr(std::is_empty_v<edge_meta_data_type>)
+                  return citer->weight() == potentialPartner.weight();
+                else
+                  static_assert(dependent_false<edge_type>::value);
+              }
+
+              return false;
+            }
+          };
+
           if(source != partner)
           {
             if constexpr (edge_type::flavour == edge_flavour::partial_embedded)
@@ -714,21 +732,7 @@ namespace sequoia
             }
             else
             {
-              auto found{std::ranges::find_if(cedges(partner), [=](const edge_type& potentialPartner){
-                  if(potentialPartner.target_node() == source)
-                  {
-                    if constexpr(std::is_empty_v<edge_weight_type>)
-                      return true;
-                    else if constexpr(EdgeTraits::shared_weight_v)
-                      return std::addressof(citer->weight()) == std::addressof(potentialPartner.weight());
-                    else if constexpr(std::is_empty_v<edge_meta_data_type>)
-                      return citer->weight() == potentialPartner.weight();
-                    else
-                      static_assert(dependent_false<edge_type>::value);
-                  }
-
-                  return false;
-                })};
+              auto found{std::ranges::find_if(cedges(partner), pred)};
 
               if(found == cend_edges(partner))
                 throw std::logic_error{graph_errors::erase_edge_error(partner, {source, static_cast<edge_index_type>(std::ranges::distance(cbegin_edges(source), citer))})};
@@ -779,33 +783,16 @@ namespace sequoia
             }
             else
             {
+              auto found{std::ranges::find_if(cbegin_edges(source), citer, pred)};
+              if(found == citer) found = std::ranges::find_if(std::ranges::next(citer), cend_edges(source), pred);
+
+              if(found == cend_edges(source))
+                throw std::logic_error{graph_errors::erase_edge_error(source, {source, static_cast<edge_index_type>(std::ranges::distance(cbegin_edges(source), citer))})};
+
               auto dist{std::ranges::distance(cbegin_edges(source), citer)};
-              for(auto ci{cbegin_edges(source)}; ci != cend_edges(source); ++ci)
-              {
-                if((ci != citer) && (ci->target_node() == source))
-                {
-                  const bool remove{[]([[maybe_unused]] const auto ci, [[maybe_unused]] const auto citer){
-                      if constexpr(std::is_empty_v<edge_weight_type>)
-                      {
-                        return true;
-                      }
-                      else
-                      {
-                        return ci->weight() == citer->weight();
-                      }
-                    }(ci, citer)
-                  };
+              if(std::ranges::distance(cbegin_edges(source), found) < dist) --dist;
 
-                  if(remove)
-                  {
-                    if(std::ranges::distance(cbegin_edges(source), ci) < dist) --dist;
-
-                    m_Edges.erase_from_partition(ci);
-                    break;
-                  }
-                }
-              }
-
+              m_Edges.erase_from_partition(found);
               m_Edges.erase_from_partition(cbegin_edges(source) + dist);
             }
           }
