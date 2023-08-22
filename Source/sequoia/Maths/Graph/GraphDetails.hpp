@@ -83,7 +83,7 @@ namespace sequoia
       >
       struct edge_type_generator
       {
-        constexpr static graph_flavour graph_species{GraphFlavour};
+        constexpr static graph_flavour flavour{GraphFlavour};
 
         constexpr static bool default_weight_sharing{
               !is_directed(GraphFlavour)

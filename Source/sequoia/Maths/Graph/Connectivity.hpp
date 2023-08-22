@@ -202,7 +202,7 @@ namespace sequoia
       static_assert(std::is_unsigned_v<edge_index_type>);
 
       constexpr static auto npos{std::numeric_limits<edge_index_type>::max()};
-      constexpr static graph_flavour flavour{EdgeTraits::graph_species};
+      constexpr static graph_flavour flavour{EdgeTraits::flavour};
       constexpr static bool throw_on_range_error{edge_storage_type::throw_on_range_error};
 
       constexpr connectivity() = default;
@@ -268,7 +268,7 @@ namespace sequoia
         requires initializable_from<edge_weight_type, Args...>
       constexpr void set_edge_weight(const_edge_iterator citer, Args&&... args)
       {
-        if constexpr (!EdgeTraits::shared_weight_v && !is_directed(EdgeTraits::graph_species))
+        if constexpr (!EdgeTraits::shared_weight_v && !is_directed(flavour))
         {
           auto partnerSetter{
             [this](const_edge_iterator iter, auto&&... args){
@@ -302,7 +302,7 @@ namespace sequoia
         requires (!std::is_empty_v<edge_weight_type>)
       constexpr std::invoke_result_t<Fn, edge_weight_type&> mutate_edge_weight(const_edge_iterator citer, Fn fn)
       {
-        if constexpr(!EdgeTraits::shared_weight_v && !is_directed(EdgeTraits::graph_species))
+        if constexpr(!EdgeTraits::shared_weight_v && !is_directed(flavour))
         {
           mutate_partner_edge_weight(citer, fn);
         }
@@ -537,7 +537,7 @@ namespace sequoia
       {
         if constexpr (throw_on_range_error) graph_errors::check_node_index_range("erase_node", order(), node);
 
-        if constexpr (!is_directed(EdgeTraits::graph_species))
+        if constexpr (!is_directed(flavour))
         {
           std::vector<size_type> partitionsToVisit{};
           for(const auto& edge : m_Edges.partition(node))
@@ -696,7 +696,7 @@ namespace sequoia
 
         if(!order() || (citer == cend_edges(citer.partition_index()))) return;
 
-        if constexpr (!is_directed(EdgeTraits::graph_species))
+        if constexpr (!is_directed(flavour))
         {
           const auto source{citer.partition_index()};
           const auto partner{partner_index(citer)};
@@ -871,21 +871,21 @@ namespace sequoia
 
       [[nodiscard]]
       constexpr static const edges_initializer& preprocess(const edges_initializer& edges)
-        requires (is_embedded(EdgeTraits::graph_species) || is_directed(EdgeTraits::graph_species))
+        requires (is_embedded(flavour) || is_directed(flavour))
       {
         return edges;
       }
 
       [[nodiscard]]
       constexpr static edge_storage_type preprocess(edges_initializer edges)
-        requires (direct_init_v && !is_embedded(EdgeTraits::graph_species) && !is_directed(EdgeTraits::graph_species))
+        requires (direct_init_v && !is_embedded(flavour) && !is_directed(flavour))
       {
         return preprocess(edge_storage_type{edges});
       }
 
       [[nodiscard]]
       constexpr static auto preprocess(edges_initializer edges)
-        requires (!direct_init_v && !is_embedded(EdgeTraits::graph_species) && !is_directed(EdgeTraits::graph_species))
+        requires (!direct_init_v && !is_embedded(flavour) && !is_directed(flavour))
       {
         using namespace data_structures;
         using sequence_t = partitioned_sequence<edge_init_type, partitioned_sequence_traits<edge_init_type>>;
@@ -896,7 +896,7 @@ namespace sequoia
       template<class IntermediateEdges>
       [[nodiscard]]
       constexpr static IntermediateEdges preprocess(IntermediateEdges edges)
-        requires (!is_embedded(EdgeTraits::graph_species) && !is_directed(EdgeTraits::graph_species))
+        requires (!is_embedded(flavour) && !is_directed(flavour))
       {
         constexpr bool clusterEdges{!std::is_empty_v<edge_weight_type> && !std::totally_ordered<edge_weight_type>};
 
@@ -925,7 +925,7 @@ namespace sequoia
 
       [[nodiscard]]
       constexpr static const edges_initializer& validate(const edges_initializer& edges)
-        requires (is_embedded(EdgeTraits::graph_species))
+        requires (is_embedded(flavour))
       {
         for(auto nodeEdgesIter{edges.begin()}; nodeEdgesIter != edges.end(); ++nodeEdgesIter)
         {
@@ -942,7 +942,7 @@ namespace sequoia
 
             const bool doValidate{
               [&]() {
-                if constexpr(!is_directed(EdgeTraits::graph_species)) return true;
+                if constexpr(!is_directed(flavour)) return true;
                 else return (edge.target_node() != nodeIndex) || (edge.source_node() == edge.target_node());
               }()
             };
@@ -962,7 +962,7 @@ namespace sequoia
               }
               else
               {
-                if constexpr(!is_directed(EdgeTraits::graph_species))
+                if constexpr(!is_directed(flavour))
                 {
                   graph_errors::check_reciprocated_index({nodeIndex, edgeIndex}, "target", targetEdge.target_node(), nodeIndex);
                 }
@@ -971,7 +971,7 @@ namespace sequoia
                   graph_errors::check_reciprocated_index({nodeIndex, edgeIndex}, "target", targetEdge.target_node(), target);
                   graph_errors::check_reciprocated_index({nodeIndex, edgeIndex}, "source", targetEdge.source_node(), edge.source_node());
 
-                  if constexpr(is_embedded(EdgeTraits::graph_species))
+                  if constexpr(is_embedded(flavour))
                   {
                     graph_errors::check_inversion_consistency(nodeIndex, {edgeIndex, edge.inverted()}, {compIndex, targetEdge.inverted()});
                   }
@@ -985,7 +985,7 @@ namespace sequoia
               }
             }
 
-            if constexpr(is_directed(EdgeTraits::graph_species))
+            if constexpr(is_directed(flavour))
             {
               const auto source{edge.source_node()};
               graph_errors::check_edge_index_range("process_complementary_edges", {nodeIndex, edgeIndex}, "source", edges.size(), source);
@@ -1008,7 +1008,7 @@ namespace sequoia
 
       [[nodiscard]]
       constexpr static const edges_initializer& validate(const edges_initializer& edges)
-        requires (!is_embedded(EdgeTraits::graph_species) && is_directed(EdgeTraits::graph_species))
+        requires (!is_embedded(flavour) && is_directed(flavour))
       {
         for(auto nodeEdgesIter{edges.begin()}; nodeEdgesIter != edges.end(); ++nodeEdgesIter)
         {
@@ -1034,7 +1034,7 @@ namespace sequoia
       template<class IntermediateEdges>
       [[nodiscard]]
       constexpr static decltype(auto) validate(IntermediateEdges&& edges)
-        requires (!is_embedded(EdgeTraits::graph_species) && !is_directed(EdgeTraits::graph_species))
+        requires (!is_embedded(flavour) && !is_directed(flavour))
       {
         using range_t = partition_iterator_range<IntermediateEdges>;
         using namespace graph_errors;
@@ -1090,7 +1090,7 @@ namespace sequoia
       template<alloc... Allocators>
       [[nodiscard]]
       constexpr edge_storage_type process_edges(edges_initializer edges, const Allocators&... as)
-        requires (!direct_init_v && !is_embedded(EdgeTraits::graph_species))
+        requires (!direct_init_v && !is_embedded(flavour))
       {
         edge_storage_type storage(as...);
         storage.reserve_partitions(edges.size());
@@ -1113,7 +1113,7 @@ namespace sequoia
       template<alloc... Allocators>
       [[nodiscard]]
       constexpr edge_storage_type process_edges(edges_initializer edges, const Allocators&... as)
-        requires (!direct_init_v && is_embedded(EdgeTraits::graph_species))
+        requires (!direct_init_v && is_embedded(flavour))
       {
         edge_storage_type storage(as...);
         storage.reserve_partitions(edges.size());
@@ -1137,7 +1137,7 @@ namespace sequoia
       template<class Edges, alloc... Allocators>
       [[nodiscard]]
       constexpr edge_storage_type process_edges(const Edges& orderedEdges, const Allocators&... as)
-        requires (!direct_init_v && !is_embedded(EdgeTraits::graph_species) && !is_directed(EdgeTraits::graph_species))
+        requires (!direct_init_v && !is_embedded(flavour) && !is_directed(flavour))
       {
         using range_t = partition_iterator_range<Edges>;
 
@@ -1183,7 +1183,7 @@ namespace sequoia
                std::invocable<edge_index_type, edge_index_type, partition_iterator_range<Edges>, partition_iterator_range<Edges>> PerLinkFn
       >
       constexpr static void visit_edges(const Edges& orderedEdges, PerNodeFn perNode, PerLoopFn perLoop, PerLinkFn perLink)
-        requires (!is_embedded(EdgeTraits::graph_species) && !is_directed(EdgeTraits::graph_species))
+        requires (!is_embedded(flavour) && !is_directed(flavour))
       {
         constexpr bool clusterEdges{!std::is_empty_v<edge_weight_type> && !std::totally_ordered<edge_weight_type>};
 
