@@ -192,26 +192,26 @@ namespace sequoia
       using edge_t = partial_edge<by_value<double>, float, std::size_t>;
       static_assert(3 * sizeof(std::size_t) == sizeof(edge_t));
 
-      edge_t edge{2, 1.0, 0.5f};
-      check(equivalence, report_line("Construction"), edge, 2, 1.0, 0.5f);
+      edge_t edge{2, 0.5f, 1.0};
+      check(equivalence, report_line("Construction"), edge, 2, 0.5f, 1.0);
 
       edge.target_node(3);
-      check(equality, report_line("Change target node"), edge, edge_t{3, 1.0, 0.5f});
+      check(equality, report_line("Change target node"), edge, edge_t{3, 0.5f, 1.0});
 
       edge.weight(1.2);
-      check(equality, report_line("Change weight"), edge, edge_t{3, 1.2, 0.5f});
+      check(equality, report_line("Change weight"), edge, edge_t{3, 0.5f, 1.2});
 
       edge.meta_data(0.7f);
-      check(equality, report_line("Change meta data"), edge, edge_t{3, 1.2, 0.7f});
+      check(equality, report_line("Change meta data"), edge, edge_t{3, 0.7f, 1.2});
 
-      constexpr edge_t edge1{5, 1.0, 0.8f};
+      constexpr edge_t edge1{5, 0.8f, 1.0};
       check_semantics(report_line("Standard semantics"), edge1, edge);
 
       constexpr edge_t edge2{7, 0.9f, edge1};
-      check(equality, report_line(""), edge2, edge_t{7, 1.0, 0.9f});
+      check(equality, report_line(""), edge2, edge_t{7, 0.9f, 1.0});
 
       constexpr edge_t edge3{7};
-      check(equivalence, report_line("Construction"), edge3, 7, 0.0, 0.0f);
+      check(equivalence, report_line("Construction"), edge3, 7, 0.0f, 0.0);
     }
 
     void test_edges::test_partial_edge_shared_weight_meta_data()
@@ -219,26 +219,26 @@ namespace sequoia
       using edge_t = partial_edge<shared<double>, float, std::size_t>;
       static_assert(sizeof(std::shared_ptr<double>) + 2*sizeof(std::size_t) == sizeof(edge_t));
 
-      edge_t edge{2, 1.0, 0.5f};
-      check(equivalence, report_line("Construction"), edge, 2, 1.0, 0.5f);
+      edge_t edge{2, 0.5f, 1.0};
+      check(equivalence, report_line("Construction"), edge, 2, 0.5f, 1.0);
 
       edge.target_node(3);
-      check(equality, report_line("Change target node"), edge, edge_t{3, 1.0, 0.5f});
+      check(equality, report_line("Change target node"), edge, edge_t{3, 0.5f, 1.0});
 
       edge.weight(1.2);
-      check(equality, report_line("Change weight"), edge, edge_t{3, 1.2, 0.5f});
+      check(equality, report_line("Change weight"), edge, edge_t{3, 0.5f, 1.2});
 
       edge.meta_data(0.7f);
-      check(equality, report_line("Change meta data"), edge, edge_t{3, 1.2, 0.7f});
+      check(equality, report_line("Change meta data"), edge, edge_t{3, 0.7f, 1.2});
 
-      const edge_t edge1{5, 1.0, 0.8f};
+      const edge_t edge1{5, 0.8f, 1.0};
       check_semantics(report_line("Standard semantics"), edge1, edge);
 
       const edge_t edge2{7, 0.9f, edge1};
-      check(equality, report_line(""), edge2, edge_t{7, 1.0, 0.9f});
+      check(equality, report_line(""), edge2, edge_t{7, 0.9f, 1.0});
 
       const edge_t edge3{7};
-      check(equivalence, report_line("Construction"), edge3, 7, 0.0, 0.0f);
+      check(equivalence, report_line("Construction"), edge3, 7, 0.0f, 0.0);
     }
 
 
@@ -345,29 +345,29 @@ namespace sequoia
       using edge_t = embedded_partial_edge<by_value<double>, float, std::size_t>;
       static_assert(4 * sizeof(std::size_t) == sizeof(edge_t));
 
-      edge_t edge{2, 5, 1.0, 0.5f};
-      check(equivalence, report_line("Construction"), edge, 2, 5, 1.0, 0.5f);
+      edge_t edge{2, 5, 0.5f, 1.0};
+      check(equivalence, report_line("Construction"), edge, 2, 5, 0.5f, 1.0);
 
       edge.complementary_index(6);
-      check(equality, report_line("Change complementary index"), edge, edge_t{2, 6, 1.0, 0.5f});
+      check(equality, report_line("Change complementary index"), edge, edge_t{2, 6, 0.5f, 1.0});
 
       edge.target_node(3);
-      check(equality, report_line("Change target node"), edge, edge_t{3, 6, 1.0, 0.5f});
+      check(equality, report_line("Change target node"), edge, edge_t{3, 6, 0.5f, 1.0});
 
       edge.weight(1.2);
-      check(equality, report_line("Change weight"), edge, edge_t{3, 6, 1.2, 0.5f});
+      check(equality, report_line("Change weight"), edge, edge_t{3, 6, 0.5f, 1.2});
 
       edge.meta_data(0.7f);
-      check(equality, report_line("Change meta data"), edge, edge_t{3, 6, 1.2, 0.7f});
+      check(equality, report_line("Change meta data"), edge, edge_t{3, 6, 0.7f, 1.2});
 
-      constexpr edge_t edge1{5, 7, 1.0, 0.8f};
+      constexpr edge_t edge1{5, 7, 0.8f, 1.0};
       check_semantics(report_line("Standard semantics"), edge1, edge);
 
       constexpr edge_t edge2{7, 4, 0.9f, edge1};
-      check(equality, report_line(""), edge2, edge_t{7, 4, 1.0, 0.9f});
+      check(equality, report_line(""), edge2, edge_t{7, 4, 0.9f, 1.0});
 
       constexpr edge_t edge3{8, 2};
-      check(equivalence, report_line("Construction"), edge3, 8, 2, 0.0, 0.0f);
+      check(equivalence, report_line("Construction"), edge3, 8, 2, 0.0f, 0.0);
     }
 
     void test_edges::test_embedded_partial_edge_shared_weight_meta_data()
@@ -375,29 +375,29 @@ namespace sequoia
       using edge_t = embedded_partial_edge<shared<double>, float, std::size_t>;
       static_assert(sizeof(std::shared_ptr<double>) + 3*sizeof(std::size_t) == sizeof(edge_t));
 
-      edge_t edge{2, 5, 1.0, 0.5f};
-      check(equivalence, report_line("Construction"), edge, 2, 5, 1.0, 0.5f);
+      edge_t edge{2, 5, 0.5f, 1.0};
+      check(equivalence, report_line("Construction"), edge, 2, 5, 0.5f, 1.0);
 
       edge.complementary_index(6);
-      check(equality, report_line("Change complementary index"), edge, edge_t{2, 6, 1.0, 0.5f});
+      check(equality, report_line("Change complementary index"), edge, edge_t{2, 6, 0.5f, 1.0});
 
       edge.target_node(3);
-      check(equality, report_line("Change target node"), edge, edge_t{3, 6, 1.0, 0.5f});
+      check(equality, report_line("Change target node"), edge, edge_t{3, 6, 0.5f, 1.0});
 
       edge.weight(1.2);
-      check(equality, report_line("Change weight"), edge, edge_t{3, 6, 1.2, 0.5f});
+      check(equality, report_line("Change weight"), edge, edge_t{3, 6, 0.5f, 1.2});
 
       edge.meta_data(0.7f);
-      check(equality, report_line("Change meta data"), edge, edge_t{3, 6, 1.2, 0.7f});
+      check(equality, report_line("Change meta data"), edge, edge_t{3, 6, 0.7f, 1.2});
 
-      const edge_t edge1{5, 7, 1.0, 0.8f};
+      const edge_t edge1{5, 7, 0.8f, 1.0};
       check_semantics(report_line("Standard semantics"), edge1, edge);
 
       const edge_t edge2{7, 4, 0.9f, edge1};
-      check(equality, report_line(""), edge2, edge_t{7, 4, 1.0, 0.9f});
+      check(equality, report_line(""), edge2, edge_t{7, 4, 0.9f, 1.0});
 
       const edge_t edge3{8, 2};
-      check(equivalence, report_line("Construction"), edge3, 8, 2, 0.0, 0.0f);
+      check(equivalence, report_line("Construction"), edge3, 8, 2, 0.0f, 0.0);
     }
   }
 }

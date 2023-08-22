@@ -84,7 +84,7 @@ namespace sequoia::testing
 
     template<test_mode Mode>
       requires (!std::is_empty_v<weight_type>) && (!std::is_empty_v<MetaData>)
-    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& edge, const IndexType& target, const weight_type& w, const MetaData& m)
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& edge, const IndexType& target, const MetaData& m, const weight_type& w)
     {
       check(equality, "Target node incorrect", logger, edge.target_node(), target);
       check(equality, "Weight incorrect", logger, edge.weight(), w);
@@ -142,7 +142,7 @@ namespace sequoia::testing
 
     template<test_mode Mode>
       requires (!std::is_empty_v<weight_type>) && (!std::is_empty_v<MetaData>)
-    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& edge, const IndexType& target, const IndexType& comp, const weight_type& w, const MetaData& m)
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& edge, const IndexType& target, const IndexType& comp, const MetaData& m, const weight_type& w)
     {
       check(equality, "Target node incorrect", logger, edge.target_node(), target);
       check(equality, "Complementary index incorrect", logger, edge.complementary_index(), comp);

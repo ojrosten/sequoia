@@ -602,17 +602,7 @@ namespace sequoia
 
         if constexpr (!is_directed(flavour))
         {
-          if constexpr (edge_type::flavour == edge_flavour::partial)
-          {
-            graph_impl::join_sentinel sentinel{ m_Edges, node1, m_Edges.size_of_partition(node1) - 1 };
-            m_Edges.push_back_to_partition(node2, node1, *crbegin_edges(node1));
-          }
-          else if constexpr (edge_type::flavour == edge_flavour::partial_embedded)
-          {
-            graph_impl::join_sentinel sentinel{ m_Edges, node1, m_Edges.size_of_partition(node1) - 1 };
-            const edge_index_type compIndex(std::ranges::distance(cbegin_edges(node1), cend_edges(node1)) - 1);
-            m_Edges.push_back_to_partition(node2, node1, compIndex, *crbegin_edges(node1));
-          }
+          undirected_mirror_join(node1, node2);
         }
       }
 
@@ -626,17 +616,7 @@ namespace sequoia
 
         if constexpr(!is_directed(flavour))
         {
-          if constexpr(edge_type::flavour == edge_flavour::partial)
-          {
-            graph_impl::join_sentinel sentinel{m_Edges, node1, m_Edges.size_of_partition(node1) - 1};
-            m_Edges.push_back_to_partition(node2, node1, meta2, *crbegin_edges(node1));
-          }
-          else if constexpr(edge_type::flavour == edge_flavour::partial_embedded)
-          {
-            graph_impl::join_sentinel sentinel{m_Edges, node1, m_Edges.size_of_partition(node1) - 1};
-            const edge_index_type compIndex(std::ranges::distance(cbegin_edges(node1), cend_edges(node1)) - 1);
-            m_Edges.push_back_to_partition(node2, node1, compIndex, meta2, *crbegin_edges(node1));
-          }
+          undirected_mirror_join(node1, node2, std::move(meta2));
         }
       }
 
@@ -1451,6 +1431,23 @@ namespace sequoia
         else
         {
           return insert_to_partition(citer1, node2, pos2, std::forward<Args>(args)...);
+        }
+      }
+
+      template<class... MetaData>
+        requires std::is_copy_constructible_v<edge_type> && (std::is_same_v<MetaData, edge_meta_data_type> && ...)
+      void undirected_mirror_join(const edge_index_type node1, const edge_index_type node2, MetaData... md)
+      {
+        if constexpr(edge_type::flavour == edge_flavour::partial)
+        {
+          graph_impl::join_sentinel sentinel{m_Edges, node1, m_Edges.size_of_partition(node1) - 1};
+          m_Edges.push_back_to_partition(node2, node1, std::move(md)..., *crbegin_edges(node1));
+        }
+        else if constexpr(edge_type::flavour == edge_flavour::partial_embedded)
+        {
+          graph_impl::join_sentinel sentinel{m_Edges, node1, m_Edges.size_of_partition(node1) - 1};
+          const edge_index_type compIndex(std::ranges::distance(cbegin_edges(node1), cend_edges(node1)) - 1);
+          m_Edges.push_back_to_partition(node2, node1, compIndex, std::move(md)..., *crbegin_edges(node1));
         }
       }
 

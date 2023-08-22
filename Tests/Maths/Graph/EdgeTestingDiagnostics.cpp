@@ -87,18 +87,18 @@ namespace sequoia::testing
   {
     using edge_t = partial_edge<by_value<double>, float>;
 
-    check(equality, report_line("Differing target indices"), edge_t{0, 2.2, 0.5f}, edge_t{1, 2.2, 0.5f});
-    check(equality, report_line("Differing weights"), edge_t{0, 2.2, 0.5f}, edge_t{0, 2.1, 0.5f});
-    check(equality, report_line("Differing meta data"), edge_t{0, 2.2, 0.5f}, edge_t{0, 2.2, -0.5f});
+    check(equality, report_line("Differing target indices"), edge_t{0, 0.5f, 2.2}, edge_t{1, 0.5f, 2.2});
+    check(equality, report_line("Differing weights"), edge_t{0, 0.5f, 2.2}, edge_t{0, 0.5f, 2.1});
+    check(equality, report_line("Differing meta data"), edge_t{0, 0.5f, 2.2}, edge_t{0, -0.5f, 2.2});
   }
 
   void test_edge_false_positives::test_partial_edge_shared_weight_meta_data()
   {
     using edge_t = partial_edge<shared<double>, float>;
 
-    check(equality, report_line("Differing target indices"), edge_t{0, 2.2, 0.5f}, edge_t{1, 2.2, 0.5f});
-    check(equality, report_line("Differing weights"), edge_t{0, 2.2, 0.5f}, edge_t{0, 2.1, 0.5f});
-    check(equality, report_line("Differing meta data"), edge_t{0, 2.2, 0.5f}, edge_t{0, 2.2, -0.5f});
+    check(equality, report_line("Differing target indices"), edge_t{0, 0.5f, 2.2}, edge_t{1, 0.5f, 2.2});
+    check(equality, report_line("Differing weights"), edge_t{0, 0.5f, 2.2}, edge_t{0, 0.5f, 2.1});
+    check(equality, report_line("Differing meta data"), edge_t{0, 0.5f, 2.2}, edge_t{0, -0.5f, 2.2});
   }
 
   void test_edge_false_positives::test_plain_embedded_partial_edge()
@@ -172,19 +172,19 @@ namespace sequoia::testing
   {
     using edge_t = embedded_partial_edge<by_value<double>, float>;
 
-    check(equality, report_line("Differing target indices"), edge_t{0, 2, 2.2, 0.5f}, edge_t{1, 2, 2.2, 0.5f});
-    check(equality, report_line("Differing complementary indices"), edge_t{0, 2, 2.2, 0.5f}, edge_t{0, 3, 2.2, 0.5f});
-    check(equality, report_line("Differing weights"), edge_t{0, 2, 2.2, 0.5f}, edge_t{0, 2, 2.1, 0.5f});
-    check(equality, report_line("Differing meta data"), edge_t{0, 2, 2.2, 0.5f}, edge_t{0, 2, 2.2, -0.5f});
+    check(equality, report_line("Differing target indices"), edge_t{0, 2, 0.5f, 2.2}, edge_t{1, 2, 0.5f, 2.2});
+    check(equality, report_line("Differing complementary indices"), edge_t{0, 2, 0.5f, 2.2}, edge_t{0, 3, 0.5f, 2.2});
+    check(equality, report_line("Differing weights"), edge_t{0, 2, 0.5f, 2.2}, edge_t{0, 2, 0.5f, 2.1});
+    check(equality, report_line("Differing meta data"), edge_t{0, 2, 0.5f, 2.2}, edge_t{0, 2, -0.5f, 2.2});
   }
 
   void test_edge_false_positives::test_embedded_partial_edge_shared_weight_meta_data()
   {
     using edge_t = embedded_partial_edge<shared<double>, float>;
 
-    check(equality, report_line("Differing target indices"), edge_t{0, 2, 2.2, 0.5f}, edge_t{1, 2, 2.2, 0.5f});
-    check(equality, report_line("Differing complementary indices"), edge_t{0, 2, 2.2, 0.5f}, edge_t{0, 3, 2.2, 0.5f});
-    check(equality, report_line("Differing weights"), edge_t{0, 2, 2.2, 0.5f}, edge_t{0, 2, 2.1, 0.5f});
-    check(equality, report_line("Differing meta data"), edge_t{0, 2, 2.2, 0.5f}, edge_t{0, 2, 2.2, -0.5f});
+    check(equality, report_line("Differing target indices"), edge_t{0, 2, 0.5f, 2.2}, edge_t{1, 2, 0.5f, 2.2});
+    check(equality, report_line("Differing complementary indices"), edge_t{0, 2, 0.5f, 2.2}, edge_t{0, 3, 0.5f, 2.2});
+    check(equality, report_line("Differing weights"), edge_t{0, 2, 0.5f, 2.2}, edge_t{0, 2, 0.5f, 2.1});
+    check(equality, report_line("Differing meta data"), edge_t{0, 2, 0.5f, 2.2}, edge_t{0, 2, -0.5f, 2.2});
   }
 }

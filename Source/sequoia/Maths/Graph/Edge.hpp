@@ -220,7 +220,7 @@ namespace sequoia
         , m_MetaData{std::move(m)}
       {}
 
-      constexpr decorated_partial_edge_base(const index_type target, weight_type w, meta_data_type m) // swap args?
+      constexpr decorated_partial_edge_base(const index_type target, meta_data_type m, weight_type w)
         requires (!std::is_empty_v<weight_type> && !std::is_empty_v<meta_data_type>)
         : partial_edge_base<WeightHandler, IndexType>{target, std::move(w)}
         , m_MetaData{std::move(m)}
