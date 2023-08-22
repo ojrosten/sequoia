@@ -714,36 +714,26 @@ namespace sequoia
             }
             else
             {
-              const auto partnerDist{
-                [this, partner]([[maybe_unused]] const auto source, [[maybe_unused]] const auto citer){
-                  if constexpr (is_directed(flavour))
+              auto found{std::ranges::find_if(cedges(partner), [=](const edge_type& potentialPartner){
+                  if(potentialPartner.target_node() == source)
                   {
-                    for(auto oiter{cbegin_edges(partner)}; oiter != cend_edges(partner); ++oiter)
-                    {
-                      if(&*oiter == &*citer) return std::ranges::distance(cbegin_edges(partner), oiter);
-                    }
-                  }
-                  else
-                  {
-                    for(auto oiter{cbegin_edges(partner)}; oiter != cend_edges(partner); ++oiter)
-                    {
-                      if(oiter->target_node() == source)
-                      {
-                        if constexpr(std::is_empty_v<edge_weight_type>)
-                        {
-                          return std::ranges::distance(cbegin_edges(partner), oiter);
-                        }
-                        else
-                        {
-                          if(citer->weight() == oiter->weight())
-                            return std::ranges::distance(cbegin_edges(partner), oiter);
-                        }
-                      }
-                    }
+                    if constexpr(std::is_empty_v<edge_weight_type>)
+                      return true;
+                    else if constexpr(EdgeTraits::shared_weight_v)
+                      return std::addressof(citer->weight()) == std::addressof(potentialPartner.weight());
+                    else if constexpr(std::is_empty_v<edge_meta_data_type>)
+                      return citer->weight() == potentialPartner.weight();
+                    else
+                      static_assert(dependent_false<edge_type>::value);
                   }
 
-                  throw std::logic_error{graph_errors::erase_edge_error( partner, {source, static_cast<edge_index_type>(std::ranges::distance(cbegin_edges(source), citer))} )};
-                }(source, citer)};
+                  return false;
+                })};
+
+              if(found == cend_edges(partner))
+                throw std::logic_error{graph_errors::erase_edge_error(partner, {source, static_cast<edge_index_type>(std::ranges::distance(cbegin_edges(source), citer))})};
+
+              const auto partnerDist{std::ranges::distance(cbegin_edges(partner), found)};
 
               m_Edges.erase_from_partition(citer);
               m_Edges.erase_from_partition(cbegin_edges(partner) + partnerDist);
