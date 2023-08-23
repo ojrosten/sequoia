@@ -294,8 +294,7 @@ namespace sequoia
         requires initializable_from<edge_weight_type, Args...>
       constexpr void set_edge_weight(const_reverse_edge_iterator criter, Args&&... args)
       {
-        const auto source{criter.partition_index()};
-        set_edge_weight(m_Edges.cbegin_partition(source) + std::ranges::distance(criter, m_Edges.crend_partition(source)) - 1, std::forward<Args>(args)...);
+        set_edge_weight(to_const_edge_iterator(criter), std::forward<Args>(args)...);
       }
 
       template<std::invocable<edge_weight_type&> Fn>
@@ -314,8 +313,7 @@ namespace sequoia
         requires (!std::is_empty_v<edge_weight_type>)
       constexpr std::invoke_result_t<Fn, edge_weight_type&> mutate_edge_weight(const_reverse_edge_iterator criter, Fn fn)
       {
-        const auto source{criter.partition_index()};
-        return mutate_edge_weight(m_Edges.cbegin_partition(source) + std::ranges::distance(criter, m_Edges.crend_partition(source)) - 1, fn);
+        return mutate_edge_weight(to_const_edge_iterator(criter), std::move(fn));
       }
 
       template<class... Args>
@@ -325,11 +323,27 @@ namespace sequoia
         to_edge_iterator(citer)->meta_data(std::forward<Args>(args)...);
       }
 
+      template<class... Args>
+        requires initializable_from<edge_meta_data_type, Args...>
+      constexpr void set_edge_meta_data(const_reverse_edge_iterator criter, Args&&... args)
+      {
+        set_edge_meta_data(to_const_edge_iterator(criter), std::forward<Args>(args)...);
+      }
+
+
       template<std::invocable<edge_meta_data_type&> Fn>
         requires (!std::is_empty_v<edge_meta_data_type>)
       constexpr std::invoke_result_t<Fn, edge_meta_data_type&> mutate_edge_meta_data(const_edge_iterator citer, Fn fn)
       {
-        to_edge_iterator(citer)->mutate_meta_data(std::move(fn));
+        return to_edge_iterator(citer)->mutate_meta_data(std::move(fn));
+      }
+
+
+      template<std::invocable<edge_meta_data_type&> Fn>
+        requires (!std::is_empty_v<edge_meta_data_type>)
+      constexpr std::invoke_result_t<Fn, edge_meta_data_type&> mutate_edge_meta_data(const_reverse_edge_iterator criter, Fn fn)
+      {
+        return mutate_edge_meta_data(to_const_edge_iterator(criter), std::move(fn));
       }
 
       //===============================equality (not isomorphism) operators================================//
@@ -1308,6 +1322,13 @@ namespace sequoia
             processor(i, in.cbegin_edges(i), inIter);
           }
         }
+      }
+
+      [[nodiscard]]
+      constexpr const_edge_iterator to_const_edge_iterator(const_reverse_edge_iterator criter) const
+      {
+        const auto source{criter.partition_index()};
+        return m_Edges.cbegin_partition(source) + std::ranges::distance(criter, m_Edges.crend_partition(source)) - 1;
       }
 
       [[nodiscard]]
