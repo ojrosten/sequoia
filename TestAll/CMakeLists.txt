@@ -70,8 +70,8 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Maths/Graph/Undirected/DynamicUndirectedGraphSharedFundamentalWeightTest.cpp
                ${TestDir}/Maths/Graph/Undirected/DynamicUndirectedGraphSharedUnsortableWeightTest.cpp
                ${TestDir}/Maths/Graph/Undirected/DynamicUndirectedGraphFundamentalWeightContiguousTest.cpp
-               ${TestDir}/Maths/Graph/Undirected/DynamicUndirectedGraphFundamentalMetaDataTest.cpp
                ${TestDir}/Maths/Graph/Undirected/DynamicUndirectedGraphFundamentalWeightTest.cpp
+               ${TestDir}/Maths/Graph/Undirected/DynamicUndirectedGraphMetaDataTest.cpp
                ${TestDir}/Maths/Graph/Undirected/DynamicUndirectedGraphUnsortableWeightTest.cpp
                ${TestDir}/Maths/Graph/Undirected/DynamicUndirectedGraphUnweightedContiguousTest.cpp
                ${TestDir}/Maths/Graph/Undirected/DynamicUndirectedGraphUnweightedTest.cpp
@@ -79,6 +79,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Maths/Graph/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphSharedFundamentalWeightTest.cpp
                ${TestDir}/Maths/Graph/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphFundamentalWeightContiguousTest.cpp
                ${TestDir}/Maths/Graph/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphFundamentalWeightTest.cpp
+               ${TestDir}/Maths/Graph/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphMetaDataTest.cpp
                ${TestDir}/Maths/Graph/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphUnweightedContiguousTest.cpp
                ${TestDir}/Maths/Graph/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphUnweightedTest.cpp
                ${TestDir}/Maths/Sequences/LinearSequenceTest.cpp

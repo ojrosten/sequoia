@@ -287,7 +287,7 @@ int main(int argc, char** argv)
           dynamic_undirected_graph_shared_fundamental_weight_test{"Undirected Graph Shared Fundamental Weight Tests"},
           dynamic_undirected_graph_shared_fundamental_weight_contiguous_test{"Undirected Graph Shared Fundamental Weight Contiguous Tests"},
           dynamic_undirected_graph_shared_unsortable_weight_test{"Undirected Graph Shared Unsortable Weight Tests"},
-          dynamic_undirected_graph_fundamental_meta_data_test{"Undirected Graph Fundamental Meta Data Tests"}
+          dynamic_undirected_graph_meta_data_test{"Undirected Graph Meta Data Tests"}
         },
         suite{
           "Undirected Embedded",
@@ -296,7 +296,8 @@ int main(int argc, char** argv)
           dynamic_undirected_embedded_graph_fundamental_weight_test{"Undirected Embedded Graph Fundamental Weight Tests"},
           dynamic_undirected_embedded_graph_fundamental_weight_contiguous_test{"Undirected Embedded Graph Fundamental Weight Contiguous Tests"},
           dynamic_undirected_embedded_graph_shared_fundamental_weight_test{"Undirected Embedded Graph Shared Fundamental Weight Tests"},
-          dynamic_undirected_embedded_graph_shared_fundamental_weight_contiguous_test{"Undirected Embedded Graph Shared Fundamental Weight Contiguous Tests"}
+          dynamic_undirected_embedded_graph_shared_fundamental_weight_contiguous_test{"Undirected Embedded Graph Shared Fundamental Weight Contiguous Tests"},
+          dynamic_undirected_embedded_graph_meta_data_test{"Undirected Graph Meta Data Tests"}
         }
       },
       suite{

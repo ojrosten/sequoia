@@ -1,0 +1,108 @@
+Tests/Maths/Graph/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphMetaDataTestingUtilities.hpp, Line 98
+Target index of edge out of range
+
+Expected Exception Type:
+[std::out_of_range]
+connectivity::process_complementary_edges [node: 0, edge: 0]: target index 1 out of range - max index is 1
+
+=======================================
+
+Tests/Maths/Graph/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphMetaDataTestingUtilities.hpp, Line 99
+Complimentary index of edge out of range
+
+Expected Exception Type:
+[std::out_of_range]
+connectivity::process_complementary_edges [node: 0, edge: 0]: complementary index 1 out of range - max index is 1
+
+=======================================
+
+Tests/Maths/Graph/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphMetaDataTestingUtilities.hpp, Line 100
+Self-referential complimentary index
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::process_complementary_edges [node: 0, edge: 0]: Indices [target: 0, comp: 0] are self-referential
+
+=======================================
+
+Tests/Maths/Graph/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphMetaDataTestingUtilities.hpp, Line 101
+Mismatched complimentary indices
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::process_complementary_edges [node: 0, edge: 0]: Reciprocated complementary index 1 does not match 0
+
+=======================================
+
+Tests/Maths/Graph/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphMetaDataTestingUtilities.hpp, Line 102
+Mismatched complimentary indices
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::process_complementary_edges [node: 0, edge: 0]: Reciprocated complementary index 2 does not match 0
+
+=======================================
+
+Tests/Maths/Graph/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphMetaDataTestingUtilities.hpp, Line 105
+Mismatched complimentary indices
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::process_complementary_edges [node: 0, edge: 0]: Reciprocated complementary index 1 does not match 0
+
+=======================================
+
+Tests/Maths/Graph/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphMetaDataTestingUtilities.hpp, Line 98
+Target index of edge out of range
+
+Expected Exception Type:
+[std::out_of_range]
+connectivity::process_complementary_edges [node: 0, edge: 0]: target index 1 out of range - max index is 1
+
+=======================================
+
+Tests/Maths/Graph/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphMetaDataTestingUtilities.hpp, Line 99
+Complimentary index of edge out of range
+
+Expected Exception Type:
+[std::out_of_range]
+connectivity::process_complementary_edges [node: 0, edge: 0]: complementary index 1 out of range - max index is 1
+
+=======================================
+
+Tests/Maths/Graph/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphMetaDataTestingUtilities.hpp, Line 100
+Self-referential complimentary index
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::process_complementary_edges [node: 0, edge: 0]: Indices [target: 0, comp: 0] are self-referential
+
+=======================================
+
+Tests/Maths/Graph/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphMetaDataTestingUtilities.hpp, Line 101
+Mismatched complimentary indices
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::process_complementary_edges [node: 0, edge: 0]: Reciprocated complementary index 1 does not match 0
+
+=======================================
+
+Tests/Maths/Graph/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphMetaDataTestingUtilities.hpp, Line 102
+Mismatched complimentary indices
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::process_complementary_edges [node: 0, edge: 0]: Reciprocated complementary index 2 does not match 0
+
+=======================================
+
+Tests/Maths/Graph/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphMetaDataTestingUtilities.hpp, Line 105
+Mismatched complimentary indices
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::process_complementary_edges [node: 0, edge: 0]: Reciprocated complementary index 1 does not match 0
+
+=======================================
+

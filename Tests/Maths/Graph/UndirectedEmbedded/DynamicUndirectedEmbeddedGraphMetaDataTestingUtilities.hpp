@@ -16,7 +16,7 @@
 
 namespace sequoia::testing
 {
-  namespace undirected_graph{
+  namespace undirected_embedded_graph{
     // Convention: the indices following 'node' - separated by underscores - give the target node of the associated edges
     // Letters near the start of the alphabet distinguish meta-data values
     enum meta_data_graph_description : std::size_t {
@@ -40,6 +40,12 @@ namespace sequoia::testing
       //  \/
       //  x
       node_0b_0a,
+
+      // x   x
+      node_node,
+
+      // x---x
+      node_1b_node_0a
     };
   }
 
@@ -51,12 +57,12 @@ namespace sequoia::testing
     class EdgeStorageTraits,
     class NodeWeightStorageTraits
   >
-  class dynamic_undirected_graph_meta_data_operations
+  class dynamic_undirected_embedded_graph_meta_data_operations
   {
     template<maths::network>
     friend struct graph_initialization_checker;
    public:
-    using graph_t            = maths::undirected_graph<EdgeWeight, NodeWeight, EdgeMetaData, EdgeStorageTraits, NodeWeightStorageTraits>;
+    using graph_t            = maths::embedded_graph<EdgeWeight, NodeWeight, EdgeMetaData, EdgeStorageTraits, NodeWeightStorageTraits>;
     using edge_t             = typename graph_t::edge_init_type;
     using node_weight_type   = typename graph_t::node_weight_type;
     using edges_equivalent_t = std::initializer_list<std::initializer_list<edge_t>>;
@@ -89,19 +95,21 @@ namespace sequoia::testing
       using namespace maths;
 
       // One node
-      t.check_exception_thrown<std::out_of_range>(t.report_line("Target index of edge out of range"), [](){ return graph_t{{edge_t{1, 0.5f}}}; });
-      t.check_exception_thrown<std::logic_error>(t.report_line("Mismatched loop"), [](){ return graph_t{{edge_t{0, 0.5f}}}; });
+      t.check_exception_thrown<std::out_of_range>(t.report_line("Target index of edge out of range"), [](){ return graph_t{{{1, 0, 0.5f}}}; });
+      t.check_exception_thrown<std::out_of_range>(t.report_line("Complimentary index of edge out of range"), [](){ return graph_t{{{0, 1, 0.5f}}}; });
+      t.check_exception_thrown<std::logic_error>(t.report_line("Self-referential complimentary index"), [](){ return graph_t{{{0, 0, 0.5f}}}; });
+      t.check_exception_thrown<std::logic_error>(t.report_line("Mismatched complimentary indices"), [](){ return graph_t{{{0, 1, 0.5f}, {0, 1, 0.5f}}}; });
+      t.check_exception_thrown<std::logic_error>(t.report_line("Mismatched complimentary indices"), [](){ return graph_t{{{0, 1, 0.5f}, {0, 2, 0.5f}, {0, 0, 0.5f}}}; });
 
       // Two nodes
-      t.check_exception_thrown<std::logic_error>(t.report_line("Mismatched partial edges"), [](){ return graph_t{{edge_t{1, 0.5f}}, {edge_t{1, -0.5f}}}; });
-      t.check_exception_thrown<std::logic_error>(t.report_line("Mismatched loop"), [](){ return graph_t{{edge_t{1, 0.5f}}, {edge_t{0, 0.6f}, edge_t{1, -0.5f}}}; });
+      t.check_exception_thrown<std::logic_error>(t.report_line("Mismatched complimentary indices"), [](){ return graph_t{{{1, 0, 0.5f}, {0, 2, 0.5f}, {0, 1, 0.5f}}, {{0, 1, 0.5f}}}; });
     }
 
     [[nodiscard]]
     static transition_graph make_meta_data_transition_graph(regular_test& t)
     {
       using meta_data_t = EdgeMetaData;
-      using namespace undirected_graph;
+      using namespace undirected_embedded_graph;
 
       check_initialization_exceptions(t);
 
@@ -123,6 +131,22 @@ namespace sequoia::testing
               t.report_line("Add loop"),
               [](graph_t g) -> graph_t {
                 g.join(0, 0, 0.5f, 0.0f);
+                return g;
+              }
+            },
+            {
+              meta_data_graph_description::node_0a_0b,
+              t.report_line("Insert loop"),
+              [](graph_t g) -> graph_t {
+                g.insert_join(g.cbegin_edges(0), 1, 0.0f, 0.5f);
+                return g;
+              }
+            },
+            {
+              meta_data_graph_description::node_0b_0a,
+              t.report_line("Insert loop"),
+              [](graph_t g) -> graph_t {
+                g.insert_join(g.cbegin_edges(0), g.cbegin_edges(0), 0.0f, 0.5f);
                 return g;
               }
             }
@@ -173,6 +197,34 @@ namespace sequoia::testing
           }, // end 'meta_data_graph_description::node_0a_0b'
           {  // begin 'meta_data_graph_description::node_0b_0a'
           }, // end 'meta_data_graph_description::node_0b_0a'
+          {  // begin 'meta_data_graph_description::node_node'
+            {
+              meta_data_graph_description::node_1b_node_0a,
+              t.report_line("Join {0,1}"),
+              [](graph_t g) -> graph_t {
+                g.join(0, 1, 0.5f, 0.0f);
+                return g;
+              }
+            },
+            {
+              meta_data_graph_description::node_1b_node_0a,
+              t.report_line("Join {0,1}"),
+              [](graph_t g) -> graph_t {
+                g.insert_join(g.cbegin_edges(0), g.cbegin_edges(1), 0.5f, 0.0f);
+                return g;
+              }
+            },
+            {
+              meta_data_graph_description::node_1b_node_0a,
+              t.report_line("Join {0,1}"),
+              [](graph_t g) -> graph_t {
+                g.insert_join(g.cbegin_edges(1), g.cbegin_edges(0), 0.0f, 0.5f);
+                return g;
+              }
+            }
+          }, // end 'meta_data_graph_description::node_node'
+          {  // begin 'meta_data_graph_description::node_1b_node_0a'
+          }  // end 'meta_data_graph_description::node_1b_node_0a'
         },
         {
           //  'empty'
@@ -182,13 +234,19 @@ namespace sequoia::testing
           make_and_check(t, t.report_line(""), {{}}),
 
           // 'node_0a_0a
-          make_and_check(t, t.report_line(""), {{{0, 0.0f}, {0, 0.0f}}}),
+          make_and_check(t, t.report_line(""), {{{0, 1, 0.0f}, {0, 0, 0.0f}}}),
 
           // 'node_0a_0b
-          make_and_check(t, t.report_line(""), {{{0, 0.0f}, {0, 0.5f}}}),
+          make_and_check(t, t.report_line(""), {{{0, 1, 0.0f}, {0, 0, 0.5f}}}),
 
           // 'node_0b_0a
-          make_and_check(t, t.report_line(""), {{{0, 0.5f}, {0, 0.0f}}}),
+          make_and_check(t, t.report_line(""), {{{0, 1, 0.5f}, {0, 0, 0.0f}}}),
+
+          //  'node_node'
+          make_and_check(t, t.report_line(""), {{}, {}}),
+
+          //  'node_1b_node_0a'
+          make_and_check(t, t.report_line(""), {{{1, 0, 0.5f}}, {{0, 0, 0.0f}}})
         }
       };
     }

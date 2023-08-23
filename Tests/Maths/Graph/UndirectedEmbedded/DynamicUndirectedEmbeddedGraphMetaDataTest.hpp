@@ -13,7 +13,7 @@
 
 namespace sequoia::testing
 {
-  class dynamic_undirected_graph_fundamental_meta_data_test final : public regular_test
+  class dynamic_undirected_embedded_graph_meta_data_test final : public regular_test
   {
   public:
     using regular_test::regular_test;
