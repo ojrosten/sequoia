@@ -190,12 +190,19 @@ namespace sequoia
     public:
       using partial_edge_base<WeightHandler, IndexType>::partial_edge_base;
 
-      constexpr decorated_partial_edge_base(const decorated_partial_edge_base&)     = default;
-      constexpr decorated_partial_edge_base(decorated_partial_edge_base&&) noexcept = default;
+      template<class OtherHandler>
+        requires (object::handler<OtherHandler> && !std::is_same_v<WeightHandler, OtherHandler> && std::is_same_v<typename OtherHandler::value_type, typename WeightHandler::value_type>)
+      constexpr decorated_partial_edge_base(const decorated_partial_edge_base<OtherHandler, MetaData, IndexType>& other)
+        : partial_edge_base<WeightHandler, IndexType>{other.target_node(), other.weight()}
+      {}
+
+      constexpr decorated_partial_edge_base(const decorated_partial_edge_base&)            = default;
+      constexpr decorated_partial_edge_base& operator=(const decorated_partial_edge_base&) = default;
+
     protected:
       ~decorated_partial_edge_base() = default;
 
-      constexpr decorated_partial_edge_base& operator=(const decorated_partial_edge_base&)     = default;
+      constexpr decorated_partial_edge_base(decorated_partial_edge_base&&) noexcept = default;
       constexpr decorated_partial_edge_base& operator=(decorated_partial_edge_base&&) noexcept = default;
     };
 
@@ -231,8 +238,17 @@ namespace sequoia
         , m_MetaData{std::move(m)}
       {}
 
-      constexpr decorated_partial_edge_base(const decorated_partial_edge_base&)     = default;
-      constexpr decorated_partial_edge_base(decorated_partial_edge_base&&) noexcept = default;
+
+      template<class OtherHandler>
+        requires (object::handler<OtherHandler> && !std::is_same_v<WeightHandler, OtherHandler>  && std::is_same_v<typename OtherHandler::value_type, typename WeightHandler::value_type>)
+      constexpr decorated_partial_edge_base(const decorated_partial_edge_base<OtherHandler, MetaData, IndexType>& other)
+        : partial_edge_base<WeightHandler, IndexType>{other.target_node(), other.weight()}
+        , m_MetaData{other.meta_data()}
+      {}
+
+      constexpr decorated_partial_edge_base(const decorated_partial_edge_base&)            = default;
+      constexpr decorated_partial_edge_base& operator=(const decorated_partial_edge_base&) = default;
+
 
       [[nodiscard]]
       constexpr const MetaData& meta_data() const noexcept { return m_MetaData; }
@@ -257,7 +273,7 @@ namespace sequoia
     protected:
       ~decorated_partial_edge_base() = default;
 
-      constexpr decorated_partial_edge_base& operator=(const decorated_partial_edge_base&)     = default;
+      constexpr decorated_partial_edge_base(decorated_partial_edge_base&&) noexcept            = default;
       constexpr decorated_partial_edge_base& operator=(decorated_partial_edge_base&&) noexcept = default;
     private:
       MetaData m_MetaData;
@@ -329,6 +345,19 @@ namespace sequoia
         : decorated_partial_edge_base<WeightHandler, MetaData, IndexType>{target, std::move(m), other}
         , m_ComplementaryIndex{complimentaryIndex}
       {}
+
+      template<class OtherHandler>
+        requires (object::handler<OtherHandler> && !std::is_same_v<WeightHandler, OtherHandler> && std::is_same_v<typename OtherHandler::value_type, typename WeightHandler::value_type>)
+      constexpr embedded_partial_edge(const embedded_partial_edge<OtherHandler, MetaData, IndexType>& other)
+        : decorated_partial_edge_base<WeightHandler, MetaData, IndexType>{static_cast<const decorated_partial_edge_base<OtherHandler, MetaData, IndexType>&>(other)}
+        , m_ComplementaryIndex{other.complementary_index()}
+      {}
+
+      constexpr embedded_partial_edge(const embedded_partial_edge&)     = default;
+      constexpr embedded_partial_edge(embedded_partial_edge&&) noexcept = default;
+
+      constexpr embedded_partial_edge& operator=(const embedded_partial_edge&)     = default;
+      constexpr embedded_partial_edge& operator=(embedded_partial_edge&&) noexcept = default;
 
       [[nodiscard]]
       constexpr index_type complementary_index() const noexcept { return m_ComplementaryIndex; }

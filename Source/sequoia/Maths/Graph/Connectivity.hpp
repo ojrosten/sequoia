@@ -848,21 +848,6 @@ namespace sequoia
         return citer->target_node();
       }
 
-      template<class EdgeInitializer>
-        requires (!std::is_same_v<edge_type, edge_init_type> && !std::is_empty_v<edge_weight_type>)
-      [[nodiscard]]
-      edge_type make_edge(const EdgeInitializer& edgeInit)
-      {
-        if constexpr(edge_type::flavour == edge_flavour::partial)
-        {
-          return edge_type{edgeInit.target_node(), edgeInit.weight()};
-        }
-        else if constexpr(edge_type::flavour == edge_flavour::partial_embedded)
-        {
-          return edge_type{edgeInit.target_node(), edgeInit.complementary_index(), edgeInit.weight()};
-        }
-      }
-
       template<alloc... Allocators>
       [[nodiscard]]
       constexpr edge_storage_type make_edges(edges_initializer edges, const Allocators&... as)
@@ -1128,7 +1113,7 @@ namespace sequoia
           for(auto edgeIter{nodeEdges.begin()}; edgeIter != nodeEdges.end(); ++edgeIter)
           {
             const auto& edge{*edgeIter};
-            storage.push_back_to_partition(nodeIndex, make_edge(edge));
+            storage.push_back_to_partition(nodeIndex, edge_type{edge});
           }
         }
 
@@ -1147,7 +1132,7 @@ namespace sequoia
 
         auto addToStorage{
           [&storage,this](edge_index_type host, edge_index_type target, edge_index_type compIndex, range_t hostRange){
-              storage.push_back_to_partition(host, (compIndex == npos) ? make_edge(hostRange.front())
+              storage.push_back_to_partition(host, (compIndex == npos) ? edge_type{hostRange.front()}
                                                                        : edge_type{target, *(cbegin_edges(target) + compIndex)});
           }
         };

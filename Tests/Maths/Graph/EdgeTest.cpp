@@ -35,16 +35,22 @@ namespace sequoia
       test_plain_partial_edge();
       test_partial_edge_indep_weight();
       test_partial_edge_shared_weight();
+      test_partial_edge_conversions();
+
       test_partial_edge_meta_data();
       test_partial_edge_indep_weight_meta_data();
       test_partial_edge_shared_weight_meta_data();
+      test_partial_edge_meta_data_conversions();
 
       test_plain_embedded_partial_edge();
       test_embedded_partial_edge_indep_weight();
       test_embedded_partial_edge_shared_weight();
+      test_embedded_partial_edge_conversions();
+
       test_embedded_partial_edge_meta_data();
       test_embedded_partial_edge_indep_weight_meta_data();
       test_embedded_partial_edge_shared_weight_meta_data();
+      test_embedded_partial_edge_meta_data_conversions();
     }
 
     void test_edges::test_plain_partial_edge()
@@ -163,6 +169,15 @@ namespace sequoia
       check_semantics(report_line("Standard semantics"), edge2, edge);
     }
 
+    void test_edges::test_partial_edge_conversions()
+    {
+      using edge_a = partial_edge<shared<int>, null_meta_data>;
+      using edge_b = partial_edge<by_value<int>, null_meta_data>;
+
+      edge_a edge{edge_b{1, -7}};
+      check(equivalence, report_line(""), edge, 1, -7);
+    }
+
     void test_edges::test_partial_edge_meta_data()
     {
       using edge_t = partial_edge<by_value<null_weight>, float, std::size_t>;
@@ -241,6 +256,15 @@ namespace sequoia
       check(equivalence, report_line("Construction"), edge3, 7, 0.0f, 0.0);
     }
 
+    void test_edges::test_partial_edge_meta_data_conversions()
+    {
+      using edge_a = partial_edge<shared<double>, float>;
+      using edge_b = partial_edge<by_value<double>, float>;
+
+      edge_a edge{edge_b{1, 0.6f, 5.5}};
+      check(equivalence, report_line(""), edge, 1, 0.6f, 5.5);
+    }
+
 
     void test_edges::test_plain_embedded_partial_edge()
     {
@@ -311,6 +335,15 @@ namespace sequoia
       check(equality, report_line("Induced change in shared weight"), edge1, edge_t{1, 2, 5.6});
 
       check_semantics(report_line("Standard semantics"), edge2, edge1);
+    }
+
+    void test_edges::test_embedded_partial_edge_conversions()
+    {
+      using edge_a = embedded_partial_edge<shared<double>, null_meta_data>;
+      using edge_b = embedded_partial_edge<by_value<double>, null_meta_data>;
+
+      edge_a edge{edge_b{1, 5, 1.0}};
+      check(equivalence, report_line(""), edge, 1, 5, 1.0);
     }
 
     void test_edges::test_embedded_partial_edge_meta_data()
@@ -398,6 +431,15 @@ namespace sequoia
 
       const edge_t edge3{8, 2};
       check(equivalence, report_line("Construction"), edge3, 8, 2, 0.0f, 0.0);
+    }
+
+    void test_edges::test_embedded_partial_edge_meta_data_conversions()
+    {
+      using edge_a = embedded_partial_edge<shared<double>, float>;
+      using edge_b = embedded_partial_edge<by_value<double>, float>;
+
+      edge_a edge{edge_b{1, 5, 0.4f, 1.0}};
+      check(equivalence, report_line(""), edge, 1, 5, 0.4f, 1.0);
     }
   }
 }
