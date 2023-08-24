@@ -755,17 +755,13 @@ namespace sequoia
               const auto separation{std::ranges::distance(citer, cbegin_edges(source) + compIndex)};
               if(separation == 1)
               {
-                // TO DO: combine into single erase
-                citer = m_Edges.erase_from_partition(citer);
-                citer = m_Edges.erase_from_partition(citer);
+                citer = m_Edges.erase_from_partition(citer, citer+2);
 
                 decrement_comp_indices(to_edge_iterator(citer), m_Edges.end_partition(source), 2);
               }
               else if(separation == -1)
               {
-                // TO DO: combine into single erase
-                citer = m_Edges.erase_from_partition(citer-1);
-                citer = m_Edges.erase_from_partition(citer);
+                citer = m_Edges.erase_from_partition(citer-1, citer+1);
 
                 decrement_comp_indices(to_edge_iterator(citer), m_Edges.end_partition(source), 2);
               }
