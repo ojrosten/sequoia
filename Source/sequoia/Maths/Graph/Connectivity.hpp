@@ -753,15 +753,10 @@ namespace sequoia
               const auto compIndex{citer->complementary_index()};
               const auto pos{std::ranges::distance(cbegin_edges(source), citer)};
               const auto separation{std::ranges::distance(citer, cbegin_edges(source) + compIndex)};
-              if(separation == 1)
+              if((separation == 1) || (separation == -1))
               {
-                citer = m_Edges.erase_from_partition(citer, citer+2);
-
-                decrement_comp_indices(to_edge_iterator(citer), m_Edges.end_partition(source), 2);
-              }
-              else if(separation == -1)
-              {
-                citer = m_Edges.erase_from_partition(citer-1, citer+1);
+                const auto delta{separation == 1 ? 0 : -1};
+                citer = m_Edges.erase_from_partition(citer+delta, citer+(2+delta));
 
                 decrement_comp_indices(to_edge_iterator(citer), m_Edges.end_partition(source), 2);
               }
