@@ -1267,14 +1267,4 @@ namespace sequoia
       return true;
     }
   }
-
-  template<class PartitionedData, class Pred, std::integral Index=typename PartitionedData::index_type>
-  void erase_from_partition_if(PartitionedData& data, const Index partitionIndex, Pred pred)
-  {
-    auto i{data.begin_partition(partitionIndex)};
-    while(i != data.end_partition(partitionIndex))
-    {
-      i = pred(*i) ? data.erase_from_partition(i) : std::ranges::next(i);
-    }
-  }
 }

@@ -554,6 +554,7 @@ namespace sequoia
         if constexpr(!is_directed(flavour))
         {
           std::vector<size_type> partitionsToVisit{};
+
           for(const auto& edge : m_Edges.partition(node))
           {
             const auto target{edge.target_node()};
@@ -585,7 +586,7 @@ namespace sequoia
             }
             else
             {
-              erase_from_partition_if(m_Edges, partition, fn);
+              erase_from_partition_if(partition, fn);
             }
           }
         }
@@ -594,7 +595,7 @@ namespace sequoia
           for(size_type i{}; i < m_Edges.num_partitions(); ++i)
           {
             if(i == node) continue;
-            erase_from_partition_if(m_Edges, i, [node](const edge_type& e) {
+            erase_from_partition_if(i, [node](const edge_type& e) {
               return (e.target_node() == node);
               });
           }
@@ -702,7 +703,7 @@ namespace sequoia
         if constexpr (!is_directed(flavour))
         {
           const auto source{citer.partition_index()};
-          const auto partner{partner_index(citer)};
+          const auto partner{citer->target_node()};
 
           auto pred{
             [=](const edge_type& potentialPartner){
@@ -833,10 +834,11 @@ namespace sequoia
 
       // helper methods
 
-      [[nodiscard]]
-      constexpr static auto partner_index(const_edge_iterator citer)
+      template<class Pred>
+      void erase_from_partition_if(const edge_index_type partitionIndex, Pred pred)
       {
-        return citer->target_node();
+        auto discarded{std::ranges::remove_if(m_Edges.begin_partition(partitionIndex), m_Edges.end_partition(partitionIndex), pred)};
+        m_Edges.erase_from_partition(discarded.begin(), discarded.end());
       }
 
       template<alloc... Allocators>
@@ -1317,7 +1319,7 @@ namespace sequoia
         requires std::is_invocable_r_v<edge_iterator, Setter, edge_iterator>
       constexpr const_edge_iterator manipulate_partner_edge_weight(const_edge_iterator citer, Setter setter)
       {
-        const auto partner{partner_index(citer)};
+        const auto partner{citer->target_node()};
 
         if constexpr(edge_type::flavour == edge_flavour::partial_embedded)
         {
