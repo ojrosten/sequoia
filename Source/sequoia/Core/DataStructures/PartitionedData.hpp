@@ -973,8 +973,7 @@ namespace sequoia
         if(list.size() != Traits::num_partitions_v)
           throw std::logic_error("Overall initializer list of wrong size");
 
-        size_type total{};
-        for(auto l : list) total += l.size();
+        const size_type total{std::accumulate(list.begin(), list.end(), size_type{}, [](size_type val, std::initializer_list<T> l){ return val + l.size(); })};
 
         if(total != Traits::num_elements_v)
           throw std::logic_error("Inconsistent number of elements supplied by initializer lists");
