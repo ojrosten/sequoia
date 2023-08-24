@@ -1,4 +1,4 @@
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 114
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 117
 Pushing back to non-existent partition throws
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ bucketed_sequence::index 0 out of range
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 122
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 125
 Inserting to non-existent partition throws
 
 Expected Exception Type:
@@ -16,7 +16,7 @@ bucketed_sequence::begin_partition: no buckets
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 130
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 133
 Inserting to non-existent partition throws
 
 Expected Exception Type:
@@ -25,7 +25,7 @@ bucketed_sequence::insert_to_partition: no buckets
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 138
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 141
 Swapping non-existent partition throws
 
 Expected Exception Type:
@@ -187,7 +187,7 @@ bucketed_sequence::erase_from_partition: no buckets
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 172
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 175
 Pushing back to non-existent partition throws
 
 Expected Exception Type:
@@ -196,7 +196,7 @@ bucketed_sequence::index 1 out of range
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 180
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 183
 Inserting to non-existent partition throws
 
 Expected Exception Type:
@@ -205,7 +205,7 @@ bucketed_sequence: partition index 18446744073709551615 out of range
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 188
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 191
 Inserting to non-existent partition throws
 
 Expected Exception Type:
@@ -214,7 +214,7 @@ bucketed_sequence: partition index 18446744073709551615 out of range
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 196
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 199
 Swapping non-existent partition throws
 
 Expected Exception Type:
@@ -223,7 +223,7 @@ bucketed_sequence::swap_partitions - index out of range
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 204
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 207
 Swapping non-existent partition throws
 
 Expected Exception Type:
@@ -232,7 +232,23 @@ bucketed_sequence::swap_partitions - index out of range
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 247
+C:/Users/olive/sequoia/Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 251
+
+Expected Exception Type:
+[std::domain_error]
+bucketed_sequence::erase - Invalid range specified by iterators belonging to partitions [0, 18446744073709551615]
+
+=======================================
+
+C:/Users/olive/sequoia/Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 259
+
+Expected Exception Type:
+[std::domain_error]
+bucketed_sequence::erase - Invalid range specified by iterators belonging to partitions [18446744073709551615, 0]
+
+=======================================
+
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 284
 
 Expected Exception Type:
 [std::out_of_range]
@@ -240,11 +256,19 @@ bucketed_sequence::swap_partitions - index out of range
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 255
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 292
 
 Expected Exception Type:
 [std::out_of_range]
 bucketed_sequence::swap_partitions - index out of range
+
+=======================================
+
+C:/Users/olive/sequoia/Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 616
+
+Expected Exception Type:
+[std::domain_error]
+bucketed_sequence::erase - Invalid range specified by iterators belonging to partitions [0, 1]
 
 =======================================
 

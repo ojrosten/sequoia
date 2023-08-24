@@ -1110,9 +1110,8 @@ namespace sequoia
 
           const auto nodeIndex{static_cast<edge_index_type>(std::ranges::distance(edges.begin(), nodeEdgesIter))};
           const auto& nodeEdges{*nodeEdgesIter};
-          for(auto edgeIter{nodeEdges.begin()}; edgeIter != nodeEdges.end(); ++edgeIter)
+          for(const edge_init_type& edge : nodeEdges)
           {
-            const auto& edge{*edgeIter};
             storage.push_back_to_partition(nodeIndex, edge_type{edge});
           }
         }
@@ -1394,14 +1393,13 @@ namespace sequoia
         requires std::is_copy_constructible_v<edge_type> && (std::is_same_v<MetaData, edge_meta_data_type> && ...)
       void reciprocal_join(const edge_index_type node1, const edge_index_type node2, MetaData... md)
       {
+        graph_impl::join_sentinel sentinel{m_Edges, node1, m_Edges.size_of_partition(node1) - 1};
         if constexpr(edge_type::flavour == edge_flavour::partial)
         {
-          graph_impl::join_sentinel sentinel{m_Edges, node1, m_Edges.size_of_partition(node1) - 1};
           m_Edges.push_back_to_partition(node2, node1, std::move(md)..., *crbegin_edges(node1));
         }
         else if constexpr(edge_type::flavour == edge_flavour::partial_embedded)
         {
-          graph_impl::join_sentinel sentinel{m_Edges, node1, m_Edges.size_of_partition(node1) - 1};
           const edge_index_type compIndex(std::ranges::distance(cbegin_edges(node1), cend_edges(node1)) - 1);
           m_Edges.push_back_to_partition(node2, node1, compIndex, std::move(md)..., *crbegin_edges(node1));
         }

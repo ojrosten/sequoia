@@ -13,6 +13,11 @@ set(TestDir ../Tests)
 
 target_sources(TestChamber PRIVATE 
                ${TestDir}/Experimental/ExperimentalTest.cpp
+               ${TestDir}/Core/DataStructures/BucketedSequenceRegularTest.cpp
+               ${TestDir}/Core/DataStructures/PartitionedDataAllocationTest.cpp
+               ${TestDir}/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp
+               ${TestDir}/Core/DataStructures/PartitionedDataTest.cpp
+               ${TestDir}/Core/DataStructures/PartitionedSequenceRegularTest.cpp
 )
 
 sequoia_finalize_self(TestChamber ${TestDir}/Experimental)

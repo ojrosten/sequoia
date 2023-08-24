@@ -38,6 +38,16 @@ namespace sequoia::testing
           );
 
         trg.join(data_description::empty,
+          data_description::empty,
+          t.report_line(""),
+          [&t](data_t d) -> data_t {
+            auto i{d.erase_from_partition(d.cbegin_partition(0), d.cend_partition(0))};
+            t.check(equality, report_line("Erase range from non-existent partition"), i, d.begin_partition(0));
+            return d;
+          }
+        );
+
+        trg.join(data_description::empty,
                  data_description::empty,
                  t.report_line(""),
                  [&t](data_t d) -> data_t {

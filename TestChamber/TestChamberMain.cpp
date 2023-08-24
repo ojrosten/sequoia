@@ -28,6 +28,15 @@ int main(int argc, char** argv)
       experimental_test{"Unit Test"}
     );
 
+    runner.add_test_suite(
+      "Partitioned Data",
+      partitioned_data_false_positive_test{"False Positive Diagnostics"},
+      partitioned_data_test{"Unit Test"},
+      bucketed_sequence_regular_test{"Bucketed Sequence Regular Test"},
+      partitioned_sequence_regular_test{"Partitioned Sequence Regular Test"},
+      partitioned_data_allocation_test{"Allocation Test"}
+    );
+
     runner.execute(timer_resolution{1ms});
   }
   catch(const std::exception& e)

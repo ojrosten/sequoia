@@ -327,6 +327,28 @@ namespace sequoia
         return {next, partition};
       }
 
+      partition_iterator erase_from_partition(const_partition_iterator first, const_partition_iterator last)
+      {
+        const auto firstPartition{first.partition_index()}, lastPartition{last.partition_index()};
+        if(const auto n{num_partitions()}; (firstPartition >= n) && (lastPartition >= n))
+        {
+          return end_partition(n);
+        }
+        else if(lastPartition == firstPartition)
+        {
+          if(std::ranges::distance(first, last) > 0)
+          {
+            const auto next{m_Buckets[firstPartition].erase(first.base_iterator(), last.base_iterator())};
+            return {next, firstPartition};
+          }
+
+          return std::ranges::next(begin_partition(firstPartition), std::ranges::distance(cbegin_partition(firstPartition), first));
+        }
+
+        throw std::domain_error{std::string{"bucketed_sequence::erase - Invalid range specified by iterators belonging to partitions ["}
+        .append(std::to_string(firstPartition)).append(", ").append(std::to_string(lastPartition)).append("]")};
+      }
+
       partition_iterator erase_from_partition(const size_type index, const size_type pos)
       {
         check_for_empty("erase_from_partition");
@@ -670,7 +692,7 @@ namespace sequoia
       && std::allocator_traits<PartitionsAllocator>::propagate_on_container_copy_assignment::value)
         void reset(const Allocator& allocator, const PartitionsAllocator& partitionsAllocator) noexcept
       {
-        const PartitionsType partitions(partitionsAllocator);
+        const partitions_type partitions(partitionsAllocator);
         m_Partitions = partitions;
 
         const container_type container{allocator};
@@ -840,9 +862,33 @@ namespace sequoia
         }
 
         const auto next{m_Storage.erase(iter.base_iterator())};
-        decrement_partition_indices(partition);
+        decrement_partition_indices(partition, num_partitions(), 1);
 
         return {next, iter.partition_index()};
+      }
+
+      partition_iterator erase_from_partition(const_partition_iterator first, const_partition_iterator last)
+      {
+        const auto firstPartition{first.partition_index()}, lastPartition{last.partition_index()};
+        if(const auto n{num_partitions()}; (firstPartition >= n) && (lastPartition >= n))
+        {
+          return end_partition(n);
+        }
+        else if(lastPartition == firstPartition)
+        {
+          if(const auto numErased{std::ranges::distance(first, last)}; numErased > 0)
+          {
+            const auto next{m_Storage.erase(first.base_iterator(), last.base_iterator())};
+            decrement_partition_indices(firstPartition, num_partitions(), numErased);
+
+            return {next, firstPartition};
+          }
+
+          return std::ranges::next(begin_partition(firstPartition), std::ranges::distance(cbegin_partition(firstPartition), first));
+        }
+
+        throw std::domain_error{std::string{"partitioned_sequence::erase - Invalid range specified by iterators belonging to partitions ["}
+          .append(std::to_string(firstPartition)).append(", ").append(std::to_string(lastPartition)).append("]")};
       }
 
       partition_iterator erase_from_partition(const index_type index, const size_type pos)
@@ -859,10 +905,11 @@ namespace sequoia
 
       constexpr static bool staticStorage{Traits::static_storage_v};
 
-      using PartitionsType = typename Traits::partitions_type;
+      using partitions_type       = typename Traits::partitions_type;
+      using partitions_index_type = typename Traits::partition_index_type;
       constexpr static index_type npos{partition_iterator::npos};
 
-      SEQUOIA_NO_UNIQUE_ADDRESS PartitionsType m_Partitions;
+      SEQUOIA_NO_UNIQUE_ADDRESS partitions_type m_Partitions;
       container_type m_Storage;
 
       constexpr partitioned_sequence_base(static_init_type, std::initializer_list<std::initializer_list<T>> list)
@@ -945,12 +992,18 @@ namespace sequoia
 
       void increment_partition_indices(const size_type first) noexcept
       {
-        m_Partitions.mutate(maths::unsafe_t{}, m_Partitions.begin() + first, m_Partitions.end(), [](const auto index){ return index + 1; });
+        m_Partitions.mutate(maths::unsafe_t{},
+                            std::ranges::next(m_Partitions.begin(), first, m_Partitions.end()),
+                            m_Partitions.end(),
+                            [](partitions_index_type index){ return ++index; });
       }
 
-      void decrement_partition_indices(const size_type first) noexcept
+      void decrement_partition_indices(const size_type first, const size_type last, const partitions_index_type num) noexcept
       {
-        m_Partitions.mutate(maths::unsafe_t{}, m_Partitions.begin() + first, m_Partitions.end(), [](const auto index){ return index - 1; });
+        m_Partitions.mutate(maths::unsafe_t{},
+                            std::ranges::next(m_Partitions.begin(), first, m_Partitions.end()),
+                            std::ranges::next(m_Partitions.begin(), last, m_Partitions.end()),
+                            [num](partitions_index_type index){ return index -= num; });
       }
 
       void check_range(const size_type index) const
@@ -1041,7 +1094,6 @@ namespace sequoia
 
         return PartitionIterator::reversed() ? PartitionIterator{iter, index} - offset : PartitionIterator{iter, index} + offset;
       }
-
     };
 
     template<class T>
