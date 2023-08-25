@@ -1,2 +1,2 @@
 Weighted Graph Allocation Tests
-Standard Top Level Checks:               207;  Failures:  0  [Deep checks: 8146]
+Standard Top Level Checks:               189;  Failures:  0  [Deep checks: 8128]

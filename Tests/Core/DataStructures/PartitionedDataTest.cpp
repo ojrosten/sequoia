@@ -209,26 +209,25 @@ namespace sequoia
       bucketed_sequence<T> s{};
 
       check(equality, report_line(""), s.num_partitions_capacity(), 0_sz);
-      check_exception_thrown<std::out_of_range>(report_line(""), [&s](){ return s.partition_capacity(0); });
+      check(equality, report_line(""), s.partition_capacity(0), 0_sz);
 
       s.reserve_partitions(4);
       check(equality, report_line(""), s.num_partitions_capacity(), 4_sz);
-      check_exception_thrown<std::out_of_range>(report_line(""), [&s](){ return s.partition_capacity(0); });
+      check(equality, report_line(""), s.partition_capacity(0), 0_sz);
 
       s.shrink_num_partitions_to_fit();
       check(equality, report_line("May fail if shrink to fit impl does not reduce capacity"), s.num_partitions_capacity(), 0_sz);
-      check_exception_thrown<std::out_of_range>(report_line(""), [&s](){ return s.partition_capacity(0); });
+      check(equality, report_line(""), s.partition_capacity(0), 0_sz);
 
       s.add_slot();
       check(equality, report_line(""), s.partition_capacity(0), 0_sz);
-      check_exception_thrown<std::out_of_range>(report_line(""), [&s](){ return s.partition_capacity(1); });
+      check(equality, report_line(""), s.partition_capacity(1), 0_sz);
 
       s.reserve_partition(0, 4);
       check(equality, report_line(""), s.partition_capacity(0), 4_sz);
 
       s.shrink_to_fit(0);
       check(equality, report_line("May fail if shrink to fit impl does not reduce capacity"), s.partition_capacity(0), 0_sz);
-      check_exception_thrown<std::out_of_range>(report_line(""), [&s](){ s.shrink_to_fit(1); });
     }
   }
 }

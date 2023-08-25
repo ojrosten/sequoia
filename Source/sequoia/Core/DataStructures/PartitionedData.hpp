@@ -67,8 +67,6 @@ namespace sequoia
     {
       using value_type = T;
 
-      constexpr static bool throw_on_range_error{true};
-
       template<class S>
       using container_type = std::vector<S>;
 
@@ -96,7 +94,6 @@ namespace sequoia
       using partition_range                  = std::ranges::subrange<partition_iterator>;
       using const_partition_range            = std::ranges::subrange<const_partition_iterator>;
 
-      constexpr static bool throw_on_range_error{Traits::throw_on_range_error};
       constexpr static auto npos{partition_iterator::npos};
 
       bucketed_sequence() noexcept(noexcept(allocator_type{})) = default;
@@ -194,10 +191,6 @@ namespace sequoia
         {
           if(i != j) std::ranges::swap(m_Buckets[i], m_Buckets[j]);
         }
-        else if constexpr(throw_on_range_error)
-        {
-          throw std::out_of_range{"bucketed_sequence::swap_partitions - index out of range"};
-        }
       }
 
       [[nodiscard]]
@@ -234,17 +227,14 @@ namespace sequoia
 
       void reserve_partition(const size_type partition, const size_type size)
       {
-        if constexpr(throw_on_range_error) check_range(partition);
-
-        m_Buckets[partition].reserve(size);
+        if(partition < num_partitions())
+          m_Buckets[partition].reserve(size);
       }
 
       [[nodiscard]]
       size_type partition_capacity(const size_type partition) const
       {
-        if constexpr(throw_on_range_error) check_range(partition);
-
-        return m_Buckets[partition].capacity();
+        return partition < num_partitions() ? m_Buckets[partition].capacity() : 0;
       }
 
       void reserve_partitions(const size_type numPartitions)
@@ -266,9 +256,7 @@ namespace sequoia
 
       void shrink_to_fit(const size_type partition)
       {
-        if constexpr(throw_on_range_error) check_range(partition);
-
-        m_Buckets[partition].shrink_to_fit();
+        if(partition < num_partitions()) m_Buckets[partition].shrink_to_fit();
       }
 
       void shrink_to_fit()
@@ -285,7 +273,7 @@ namespace sequoia
       template<class... Args>
       void push_back_to_partition(const size_type index, Args&&... args)
       {
-        if constexpr(throw_on_range_error) check_range(index);
+        check_range("push_back_to_partition", index);
 
         m_Buckets[index].emplace_back(std::forward<Args>(args)...);
       }
@@ -294,10 +282,7 @@ namespace sequoia
       partition_iterator insert_to_partition(const_partition_iterator pos, Args&&... args)
       {
         const auto source{pos.partition_index()};
-        if constexpr(throw_on_range_error)
-        {
-          if(source >= m_Buckets.size()) throw std::out_of_range{std::string{"bucketed_sequence: partition index "}.append(std::to_string(source)).append(" out of range")};
-        }
+        check_range("insert_to_partition", source);
 
         auto iter{m_Buckets[source].emplace(pos.base_iterator(), std::forward<Args>(args)...)};
 
@@ -307,7 +292,7 @@ namespace sequoia
       template<class... Args>
       partition_iterator insert_to_partition(const size_type index, const size_type pos, Args&&... args)
       {
-        check_for_empty("insert_to_partition");
+        check_range("insert_to_partition", index, pos);
         return insert_to_partition(std::ranges::next(begin_partition_raw(index), pos, end_partition_raw(index)), std::forward<Args>(args)...);
       }
 
@@ -475,27 +460,26 @@ namespace sequoia
     private:
       storage_type m_Buckets;
 
-      void check_range(const size_type index) const
+      void check_range(std::string_view method, const size_type index) const
       {
         if(index >= m_Buckets.size())
         {
-          throw std::out_of_range{"bucketed_sequence::index " + std::to_string(index) + " out of range"};
+          throw std::out_of_range{std::string{"bucketed_sequence::"}.append(method).append("index ").append(std::to_string(index)).append(" out of range")};
         }
       }
 
-      void check_range(const size_type index, const size_type pos) const
+      void check_range(std::string_view method, const size_type index, const size_type pos) const
       {
-        check_range(index);
+        check_range(method, index);
         const auto bucketSize{m_Buckets[index].size()};
         if(pos > bucketSize)
         {
-          throw std::out_of_range{"bucketed_sequence::partition " + std::to_string(index) + " pos " + std::to_string(pos) + " out of range"};
+          throw std::out_of_range{std::string{"bucketed_sequence::"}.append(method).append("pos ").append(std::to_string(pos)).append(" out of range")};
         }
       }
 
       void check_for_empty(std::string_view method) const
       {
-        if constexpr(throw_on_range_error)
           if(m_Buckets.empty()) throw std::out_of_range{std::string{"bucketed_sequence::"}.append(method).append(": no buckets\n")};
       }
 
@@ -534,8 +518,6 @@ namespace sequoia
       using const_reverse_partition_iterator = data_structures::const_reverse_partition_iterator<Traits, index_type>;
       using partition_range                  = std::ranges::subrange<partition_iterator>;
       using const_partition_range            = std::ranges::subrange<const_partition_iterator>;
-
-      constexpr static bool throw_on_range_error{Traits::throw_on_range_error};
 
       constexpr partitioned_sequence_base() = default;
 
@@ -680,10 +662,6 @@ namespace sequoia
                                   [len_i, len_j](const auto index){ return index + len_j - len_i;});
             }
           }
-        }
-        else if constexpr(throw_on_range_error)
-        {
-          throw std::out_of_range{"partitioned_sequence::swap_partitions - index out of range"};
         }
       }
 
@@ -832,15 +810,32 @@ namespace sequoia
       template<class... Args>
       void push_back_to_partition(const index_type index, Args&&... args)
       {
-        if constexpr(throw_on_range_error) check_range(index);
+        check_range("push_back_to_partition", index);
 
-        insert(index, std::forward<Args>(args)...);
+        auto iter{m_Storage.end()};
+        if(index == m_Partitions.size() - 1)
+        {
+          m_Storage.emplace_back(std::forward<Args>(args)...);
+          iter = --m_Storage.end();
+        }
+        else
+        {
+          iter = m_Storage.emplace(m_Storage.begin() + m_Partitions[index], std::forward<Args>(args)...);
+        }
+
+        increment_partition_indices(index);
       }
 
       template<class... Args>
       partition_iterator insert_to_partition(const_partition_iterator pos, Args&&... args)
       {
-        return insert(pos, std::forward<Args>(args)...);
+        const auto source{pos.partition_index()};
+        check_range("insert_to_partition", source);
+
+        auto iter{m_Storage.emplace(pos.base_iterator(), std::forward<Args>(args)...)};
+        increment_partition_indices(source);
+
+        return partition_iterator{iter, source};
       }
 
       template<class... Args>
@@ -1005,62 +1000,22 @@ namespace sequoia
                             [num](partitions_index_type index){ return index -= num; });
       }
 
-      void check_range(const size_type index) const
+      void check_range(std::string_view method, const size_type index) const
       {
         if(index >= m_Partitions.size())
         {
-          throw std::out_of_range{"partitioned_sequence::index " + std::to_string(index) +  " out of range"};
+          throw std::out_of_range{std::string{"partition_sequence::"}.append(method).append("index ").append(std::to_string(index)).append(" out of range")};
         }
       }
 
-      void check_range(const size_type index, const index_type pos) const
+      void check_range(std::string_view method, const size_type index, const index_type pos) const
       {
-        check_range(index);
+        check_range(method, index);
         const index_type maxPos{index ? m_Partitions[index] - m_Partitions[index - 1] : m_Partitions[index]};
         if(pos > maxPos)
         {
-          throw std::out_of_range{"partitioned_sequence::partition " + std::to_string(index) + " pos " + std::to_string(pos) + " out of range"};
+          throw std::out_of_range{std::string{"partition_sequence::"}.append(method).append("pos ").append(std::to_string(pos)).append(" out of range")};
         }
-      }
-
-      void check_pos_validity(const index_type index, const index_type pos, const index_type expand)
-      {
-        const index_type maxPos{index ? m_Partitions[index] - m_Partitions[index - 1] : m_Partitions[index]};
-        if(pos > maxPos + expand) throw std::out_of_range{"partitioned_sequence::pos index out of range"};
-      }
-
-      template<class... Args>
-      auto insert(const index_type index, Args&&... args)
-      {
-        auto iter{m_Storage.end()};
-        if(index == m_Partitions.size() - 1)
-        {
-          m_Storage.emplace_back(std::forward<Args>(args)...);
-          iter = --m_Storage.end();
-        }
-        else
-        {
-          iter = m_Storage.emplace(m_Storage.begin() + m_Partitions[index], std::forward<Args>(args)...);
-        }
-
-        increment_partition_indices(index);
-
-        return iter;
-      }
-
-      template<class... Args>
-      auto insert(const_partition_iterator pos, Args&&... args)
-      {
-        const auto source{pos.partition_index()};
-        if constexpr(throw_on_range_error)
-        {
-          if(source >= m_Partitions.size()) throw std::out_of_range{std::string{"partitioned_sequence: partition index "}.append(std::to_string(source)).append(" out of range")};
-        }
-
-        auto iter{m_Storage.emplace(pos.base_iterator(), std::forward<Args>(args)...)};
-        increment_partition_indices(source);
-
-        return partition_iterator{iter, source};
       }
 
       template<class PartitionIterator, std::input_or_output_iterator Iterator>
@@ -1099,7 +1054,6 @@ namespace sequoia
     struct partitioned_sequence_traits
     {
       constexpr static bool static_storage_v{false};
-      constexpr static bool throw_on_range_error{true};
 
       using value_type = T;
       using index_type = std::size_t;
@@ -1177,7 +1131,6 @@ namespace sequoia
     struct static_partitioned_sequence_traits
     {
       constexpr static bool static_storage_v{true};
-      constexpr static bool throw_on_range_error{true};
       constexpr static std::size_t num_partitions_v{Npartitions};
       constexpr static std::size_t num_elements_v{Nelements};
 

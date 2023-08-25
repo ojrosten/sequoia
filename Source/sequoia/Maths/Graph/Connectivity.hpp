@@ -203,7 +203,7 @@ namespace sequoia
 
       constexpr static auto npos{std::numeric_limits<edge_index_type>::max()};
       constexpr static graph_flavour flavour{EdgeTraits::flavour};
-      constexpr static bool throw_on_range_error{edge_storage_type::throw_on_range_error};
+      constexpr static bool throw_on_range_error{true};
 
       constexpr connectivity() = default;
 

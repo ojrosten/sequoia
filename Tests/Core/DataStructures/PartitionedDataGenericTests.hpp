@@ -136,9 +136,9 @@ namespace sequoia::testing
             },
             {
               data_description::empty,
-              t.report_line(""),
+              t.report_line("Swapping non-existent partition"),
               [&t](data_t d) -> data_t {
-                t.check_exception_thrown<std::out_of_range>(t.report_line("Swapping non-existent partition throws"), [&d]() { return d.swap_partitions(0, 0); });
+                d.swap_partitions(0, 0);
                 return d;
               }
             },
@@ -194,17 +194,17 @@ namespace sequoia::testing
             },
             {
               data_description::empty_partition,
-              t.report_line(""),
+              t.report_line("Swapping non-existent partition"),
               [&t](data_t d) -> data_t {
-                t.check_exception_thrown<std::out_of_range>(t.report_line("Swapping non-existent partition throws"), [&d]() { return d.swap_partitions(0, 1); });
+                d.swap_partitions(0, 1);
                 return d;
               }
             },
             {
               data_description::empty_partition,
-              t.report_line(""),
+              t.report_line("Swapping non-existent partition"),
               [&t](data_t d) -> data_t {
-                t.check_exception_thrown<std::out_of_range>(t.report_line("Swapping non-existent partition throws"), [&d]() { return d.swap_partitions(1, 0); });
+                d.swap_partitions(1, 0);
                 return d;
               }
             },
@@ -271,7 +271,7 @@ namespace sequoia::testing
             },
             {
               data_description::empty_partition,
-              t.report_line(""),
+              t.report_line("Swapping non-existent partition"),
               [&t](data_t d) -> data_t {
                 d.swap_partitions(0, 0);
                 return d;
@@ -279,9 +279,9 @@ namespace sequoia::testing
             },
             {
               data_description::empty_partition,
-              t.report_line(""),
+              t.report_line("Swapping non-existent partition"),
               [&t](data_t d) -> data_t {
-                t.check_exception_thrown<std::out_of_range>(t.report_line(""), [&d]() { return d.swap_partitions(1, 0); });
+                d.swap_partitions(1, 0);
                 return d;
               }
             },
@@ -289,7 +289,7 @@ namespace sequoia::testing
               data_description::empty_partition,
               t.report_line(""),
               [&t](data_t d) -> data_t {
-                t.check_exception_thrown<std::out_of_range>(t.report_line(""), [&d]() { return d.swap_partitions(0, 1); });
+                d.swap_partitions(0, 1);
                 return d;
               }
             },

@@ -153,8 +153,8 @@ namespace sequoia::testing
 
     Graph g{edge_allocator{}, node_allocator{}};
 
-    this->template check_exception_thrown<std::out_of_range>(report_line(""), [&g](){ g.reserve_edges(0, 4);});
-    this->template check_exception_thrown<std::out_of_range>(report_line(""), [&g](){ return g.edges_capacity(0);});
+    //this->template check_exception_thrown<std::out_of_range>(report_line(""), [&g](){ g.reserve_edges(0, 4);});
+    //this->template check_exception_thrown<std::out_of_range>(report_line(""), [&g](){ return g.edges_capacity(0);});
     check(equality, report_line(""), g.node_capacity(), 0_sz);
 
     g.add_node();
