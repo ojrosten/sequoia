@@ -30,12 +30,6 @@ namespace sequoia
     {
       test_iterators();
       test_static_storage();
-
-      test_contiguous_capacity<int>();
-      test_contiguous_capacity<int>();
-
-      test_bucketed_capacity<int>();
-      test_bucketed_capacity<int>();
     }
 
     void partitioned_data_test::test_static_storage()
@@ -181,53 +175,6 @@ namespace sequoia
       auto std_iter = iter.base_iterator();
 
       check(equality, report_line(""), *std_iter, 1);
-    }
-
-    template<class T>
-    void partitioned_data_test::test_contiguous_capacity()
-    {
-      partitioned_sequence<T> s{};
-      check(equality, report_line(""), s.capacity(), 0_sz);
-      check(equality, report_line(""), s.num_partitions_capacity(), 0_sz);
-
-      s.reserve(4);
-      check(equality, report_line(""), s.capacity(), 4_sz);
-      check(equality, report_line(""), s.num_partitions_capacity(), 0_sz);
-
-      s.reserve_partitions(8);
-      check(equality, report_line(""), s.capacity(), 4_sz);
-      check(equality, report_line(""), s.num_partitions_capacity(), 8_sz);
-
-      s.shrink_to_fit();
-      check(equality, report_line(""), s.capacity(), 0_sz);
-      check(equality, report_line(""), s.num_partitions_capacity(), 0_sz);
-    }
-
-    template<class T>
-    void partitioned_data_test::test_bucketed_capacity()
-    {
-      bucketed_sequence<T> s{};
-
-      check(equality, report_line(""), s.num_partitions_capacity(), 0_sz);
-      check(equality, report_line(""), s.partition_capacity(0), 0_sz);
-
-      s.reserve_partitions(4);
-      check(equality, report_line(""), s.num_partitions_capacity(), 4_sz);
-      check(equality, report_line(""), s.partition_capacity(0), 0_sz);
-
-      s.shrink_num_partitions_to_fit();
-      check(equality, report_line("May fail if shrink to fit impl does not reduce capacity"), s.num_partitions_capacity(), 0_sz);
-      check(equality, report_line(""), s.partition_capacity(0), 0_sz);
-
-      s.add_slot();
-      check(equality, report_line(""), s.partition_capacity(0), 0_sz);
-      check(equality, report_line(""), s.partition_capacity(1), 0_sz);
-
-      s.reserve_partition(0, 4);
-      check(equality, report_line(""), s.partition_capacity(0), 4_sz);
-
-      s.shrink_to_fit(0);
-      check(equality, report_line("May fail if shrink to fit impl does not reduce capacity"), s.partition_capacity(0), 0_sz);
     }
   }
 }

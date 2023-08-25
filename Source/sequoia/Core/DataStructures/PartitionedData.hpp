@@ -1188,35 +1188,5 @@ namespace sequoia
         lhs.swap(rhs);
       }
     };
-
-
-    template<class Storage1, class Storage2>
-    [[nodiscard]]
-    constexpr bool isomorphic(const Storage1& lhs, const Storage2& rhs) noexcept
-    {
-      using size_type = std::common_type_t<
-        typename Storage1::size_type,
-        typename Storage2::size_type
-      >;
-
-      if(lhs.num_partitions() != rhs.num_partitions()) return false;
-
-      for(size_type i{}; i < lhs.num_partitions(); ++i)
-      {
-        if(std::ranges::distance(lhs.partition(i)) != std::ranges::distance(rhs.partition(i)))
-        {
-          return false;
-        }
-
-        auto iter1{lhs.cbegin_partition(i)};
-        auto iter2{rhs.cbegin_partition(i)};
-        for(; iter1 != lhs.cend_partition(i); ++iter1, ++iter2)
-        {
-          if(*iter1 != *iter2) return false;
-        }
-      }
-
-      return true;
-    }
   }
 }

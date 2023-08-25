@@ -179,6 +179,32 @@ namespace sequoia::testing
                  }
         );
 
+        trg.join(data_description::empty,
+          data_description::empty,
+          t.report_line(""),
+          [&t](data_t d) -> data_t {
+            t.check(equality, t.report_line(""), d.num_partitions_capacity(), 0_sz);
+            t.check(equality, t.report_line(""), d.partition_capacity(0), 0_sz);
+            return d;
+          }
+        );
+
+        trg.join(data_description::empty,
+          data_description::empty,
+          t.report_line(""),
+          [&t](data_t d) -> data_t {
+            d.reserve_partitions(4);
+            t.check(equality, t.report_line(""), d.num_partitions_capacity(), 4_sz);
+            t.check(equality, t.report_line(""), d.partition_capacity(0), 0_sz);
+
+            d.shrink_num_partitions_to_fit();
+            t.check(equality, report_line("May fail if shrink to fit impl does not reduce capacity"), d.num_partitions_capacity(), 0_sz);
+            t.check(equality, report_line(""), d.partition_capacity(0), 0_sz);
+
+            return d;
+          }
+        );
+
         // end 'empty'
         // begin 'empty_partition'
 
@@ -201,6 +227,24 @@ namespace sequoia::testing
                    return d;
                  }
           );
+
+        trg.join(data_description::empty_partition,
+                 data_description::empty_partition,
+                 t.report_line(""),
+                 [&t](data_t d) -> data_t {
+                   t.check(equality, t.report_line(""), d.partition_capacity(0), 0_sz);
+                   t.check(equality, t.report_line(""), d.partition_capacity(1), 0_sz);
+                   
+                   d.reserve_partition(0, 4);
+                   t.check(equality, t.report_line(""), d.partition_capacity(0), 4_sz);
+                   t.check(equality, t.report_line(""), d.partition_capacity(1), 0_sz);
+                   
+                   d.shrink_to_fit(0);
+                   t.check(equality, t.report_line("May fail if shrink to fit impl does not reduce capacity"), d.partition_capacity(0), 0_sz);
+                 
+                   return d;
+                 }
+        );
 
         // end 'empty_partition'
 

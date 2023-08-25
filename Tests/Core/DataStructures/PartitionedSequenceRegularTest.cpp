@@ -86,7 +86,30 @@ namespace sequoia::testing
                    return d;
                  }
           );
-        
+
+        trg.join(data_description::empty,
+          data_description::empty,
+          t.report_line(""),
+          [&t](data_t d) -> data_t {
+            t.check(equality, t.report_line(""), d.capacity(), 0_sz);
+            t.check(equality, t.report_line(""), d.num_partitions_capacity(), 0_sz);
+
+            d.reserve(4);
+            t.check(equality, t.report_line(""), d.capacity(), 4_sz);
+            t.check(equality, t.report_line(""), d.num_partitions_capacity(), 0_sz);
+
+            d.reserve_partitions(8);
+            t.check(equality, t.report_line(""), d.capacity(), 4_sz);
+            t.check(equality, t.report_line(""), d.num_partitions_capacity(), 8_sz);
+
+            d.shrink_to_fit();
+            t.check(equality, t.report_line("May fail if shrink to fit impl does not reduce capacity"), d.capacity(), 0_sz);
+            t.check(equality, t.report_line("May fail if shrink to fit impl does not reduce capacity"), d.num_partitions_capacity(), 0_sz);
+
+            return d;
+          }
+        );
+
         // end 'empty'
         // begin 'empty_partition'
 

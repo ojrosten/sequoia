@@ -25,12 +25,6 @@ namespace sequoia::testing
   private:
     void test_static_storage();
 
-    template<class T>
-    void test_contiguous_capacity();
-
-    template<class T>
-    void test_bucketed_capacity();
-
     template<class Traits, template<class> class ReferencePolicy>
     void test_generic_iterator_properties();
 
