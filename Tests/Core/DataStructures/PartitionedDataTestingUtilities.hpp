@@ -124,9 +124,9 @@ namespace sequoia::testing
   };
 
   template<class T, std::size_t Npartitions, std::size_t Nelements, std::integral IndexType>
-  struct value_tester<data_structures::static_partitioned_sequence<T, Npartitions, Nelements, IndexType>>
+  struct value_tester<data_structures::static_partitioned_sequence<T, Npartitions, Nelements, maths::static_monotonic_sequence<IndexType, Npartitions, std::ranges::greater>>>
   {
-    using type = data_structures::static_partitioned_sequence<T, Npartitions, Nelements, IndexType>;
+    using type = data_structures::static_partitioned_sequence<T, Npartitions, Nelements, maths::static_monotonic_sequence<IndexType, Npartitions, std::ranges::greater>>;
 
     template<class CheckType, test_mode Mode>
     static void test(CheckType flavour, test_logger<Mode>& logger, const type& data, const type& prediction)

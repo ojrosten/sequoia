@@ -1,7 +1,7 @@
 Tests/Core/DataStructures/StaticLinearlyPartitionedSequenceTestingDiagnostics.cpp, Line 28
 
 Comparison performed using:
-[sequoia::testing::value_tester<sequoia::data_structures::static_linearly_partitioned_sequence<int, 1, 1, unsigned long long> >]
+[sequoia::testing::value_tester<sequoia::data_structures::static_partitioned_sequence<int, 1, 1, sequoia::maths::static_linear_sequence<unsigned long long, 1, 1, 1, unsigned long long> > >]
 Checking for equivalence with:
 [std::array<std::array<int, 1>, 1>]
 
@@ -26,7 +26,7 @@ Checking for equivalence with:
 Tests/Core/DataStructures/StaticLinearlyPartitionedSequenceTestingDiagnostics.cpp, Line 31
 
 Comparison performed using:
-[sequoia::testing::value_tester<sequoia::data_structures::static_linearly_partitioned_sequence<int, 1, 1, unsigned long long> >]
+[sequoia::testing::value_tester<sequoia::data_structures::static_partitioned_sequence<int, 1, 1, sequoia::maths::static_linear_sequence<unsigned long long, 1, 1, 1, unsigned long long> > >]
 Checking for equivalence with:
 [std::array<std::array<int, 1>, 1>]
 
@@ -50,7 +50,7 @@ Checking for equivalence with:
 
 Tests/Core/DataStructures/StaticLinearlyPartitionedSequenceTestingDiagnostics.cpp, Line 33
 
-[sequoia::data_structures::static_linearly_partitioned_sequence<int, 1, 1, unsigned long long>]
+[sequoia::data_structures::static_partitioned_sequence<int, 1, 1, sequoia::maths::static_linear_sequence<unsigned long long, 1, 1, 1, unsigned long long> >]
 operator== returned false
 
   Partition 0

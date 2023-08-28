@@ -17,6 +17,7 @@ namespace sequoia::maths
   class linear_sequence
   {
   public:
+    using value_type = T;
     using size_type = Index;
 
     constexpr linear_sequence(T start, T step)
@@ -46,6 +47,7 @@ namespace sequoia::maths
   template<class T, T Start, T Step, std::size_t Size, std::integral Index>
   struct static_linear_sequence
   {
+    using value_type = T;
     using size_type = Index;
 
     [[nodiscard]]

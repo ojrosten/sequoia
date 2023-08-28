@@ -491,8 +491,8 @@ namespace sequoia
       using value_type      = T;
       using container_type  = Container;
       using partitions_type = Partitions;
-      using size_type       = std::common_type_t<typename partitions_type::value_type, typename container_type::size_type>;
       using index_type      = typename partitions_type::value_type;
+      using size_type       = std::common_type_t<index_type, typename container_type::size_type>;
 
       using partition_iterator               = data_structures::partition_iterator<container_type, index_type>;
       using const_partition_iterator         = data_structures::const_partition_iterator<container_type, index_type>;
@@ -1048,38 +1048,17 @@ namespace sequoia
       using base_t::erase_from_partition;
     };
 
-    template<class T, std::size_t Npartitions, std::size_t Nelements, std::integral IndexType=std::size_t>
-    class static_partitioned_sequence :
-      public partitioned_sequence_base<T, std::array<T, Nelements>, maths::static_monotonic_sequence<IndexType, Npartitions, std::ranges::greater>>
+    template<class T>
+    struct static_partitions_maker;
+
+    template<std::integral IndexType, std::size_t Npartitions>
+    struct static_partitions_maker<maths::static_monotonic_sequence<IndexType, Npartitions, std::ranges::greater>>
     {
-      using base_t = partitioned_sequence_base<T, std::array<T, Nelements>, maths::static_monotonic_sequence<IndexType, Npartitions, std::ranges::greater>>;
-    public:
-      using container_type  = typename base_t::container_type;
-      using partitions_type = typename base_t::partitions_type;
-      using size_type       = typename base_t::size_type;
+      using partitions_type = maths::static_monotonic_sequence<IndexType, Npartitions, std::ranges::greater>;
 
       constexpr static std::size_t num_partitions_v{Npartitions};
-      constexpr static std::size_t num_elements_v{Nelements};
 
-      constexpr static_partitioned_sequence(std::initializer_list<std::initializer_list<T>> list)
-        : base_t{fill(std::make_index_sequence<num_elements_v>(), list)}
-      {}
-
-      constexpr static_partitioned_sequence(const static_partitioned_sequence&)     = default;
-      constexpr static_partitioned_sequence(static_partitioned_sequence&&) noexcept = default;
-
-      constexpr static_partitioned_sequence& operator=(const static_partitioned_sequence&)     = default;
-      constexpr static_partitioned_sequence& operator=(static_partitioned_sequence&&) noexcept = default;
-
-      using base_t::swap;
-
-      friend void swap(static_partitioned_sequence& lhs, static_partitioned_sequence& rhs)
-        noexcept(noexcept(lhs.swap(rhs)))
-      {
-        lhs.swap(rhs);
-      }
-    private:
-
+      template<class T>
       [[nodiscard]]
       constexpr static partitions_type make_partitions(std::initializer_list<std::initializer_list<T>> list)
       {
@@ -1110,11 +1089,47 @@ namespace sequoia
         return sizes;
       }
 
+    };
+
+    template<class T, std::size_t Npartitions, std::size_t Nelements, class Partitions=maths::static_monotonic_sequence<std::size_t, Npartitions, std::ranges::greater>>
+    class static_partitioned_sequence :
+      public partitioned_sequence_base<T, std::array<T, Nelements>, Partitions>
+    {
+      using base_t = partitioned_sequence_base<T, std::array<T, Nelements>, Partitions>;
+    public:
+      using container_type  = typename base_t::container_type;
+      using partitions_type = typename base_t::partitions_type;
+      using size_type       = typename base_t::size_type;
+      using index_type      = typename base_t::index_type;
+
+      constexpr static std::size_t num_partitions_v{Npartitions};
+      constexpr static std::size_t num_elements_v{Nelements};
+
+      constexpr static_partitioned_sequence() = default;
+
+      constexpr static_partitioned_sequence(std::initializer_list<std::initializer_list<T>> list)
+        : base_t{fill(std::make_index_sequence<num_elements_v>(), list)}
+      {}
+
+      constexpr static_partitioned_sequence(const static_partitioned_sequence&)     = default;
+      constexpr static_partitioned_sequence(static_partitioned_sequence&&) noexcept = default;
+
+      constexpr static_partitioned_sequence& operator=(const static_partitioned_sequence&)     = default;
+      constexpr static_partitioned_sequence& operator=(static_partitioned_sequence&&) noexcept = default;
+
+      using base_t::swap;
+
+      friend void swap(static_partitioned_sequence& lhs, static_partitioned_sequence& rhs)
+        noexcept(noexcept(lhs.swap(rhs)))
+      {
+        lhs.swap(rhs);
+      }
+    private:
       template<size_type... Inds>
       [[nodiscard]]
       constexpr static std::pair<partitions_type, container_type> fill(std::index_sequence<Inds...>, std::initializer_list<std::initializer_list<T>> list)
       {
-        auto partitions{make_partitions(list)};
+        auto partitions{static_partitions_maker<partitions_type>::make_partitions(list)};
 
         if(list.size() != num_partitions_v)
           throw std::logic_error("Overall initializer list of wrong size");
@@ -1126,7 +1141,7 @@ namespace sequoia
 
         if constexpr(sizeof...(Inds) > 0)
         {
-          IndexType partitionIndex{};
+          index_type partitionIndex{};
           return {partitions, container_type{make_element(Inds, list, partitions, partitionIndex)...}};
         }
         else
@@ -1137,7 +1152,7 @@ namespace sequoia
 
 
       [[nodiscard]]
-      constexpr static T make_element(size_type i, std::initializer_list<std::initializer_list<T>> list, const partitions_type& partitions, IndexType& partitionIndex)
+      constexpr static T make_element(size_type i, std::initializer_list<std::initializer_list<T>> list, const partitions_type& partitions, index_type& partitionIndex)
       {
         auto boundary{partitions[partitionIndex]};
         while(i == boundary)

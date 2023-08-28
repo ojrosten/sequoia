@@ -37,6 +37,12 @@ int main(int argc, char** argv)
       partitioned_data_allocation_test{"Allocation Test"}
     );
 
+    runner.add_test_suite(
+      "StaticLinearlyPartitionedSequence",
+      static_linearly_partitioned_sequence_false_positive_test{"False Positive Test"},
+      static_linearly_partitioned_sequence_test{"Unit Test"}
+    );
+
     runner.execute(timer_resolution{1ms});
   }
   catch(const std::exception& e)

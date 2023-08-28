@@ -17,7 +17,9 @@ target_sources(TestChamber PRIVATE
                ${TestDir}/Core/DataStructures/PartitionedDataAllocationTest.cpp
                ${TestDir}/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp
                ${TestDir}/Core/DataStructures/PartitionedDataTest.cpp
-               ${TestDir}/Core/DataStructures/PartitionedSequenceRegularTest.cpp
+               ${TestDir}/Core/DataStructures/PartitionedSequenceRegularTest.cpp               
+               ${TestDir}/Core/DataStructures/StaticLinearlyPartitionedSequenceTest.cpp
+               ${TestDir}/Core/DataStructures/StaticLinearlyPartitionedSequenceTestingDiagnostics.cpp
 )
 
 sequoia_finalize_self(TestChamber ${TestDir}/Experimental)
