@@ -16,16 +16,14 @@ namespace sequoia::testing
 {
   struct custom_allocator_contiguous_edge_storage_traits
   {
-    template <class T, class Traits> using storage_type = data_structures::partitioned_sequence<T, Traits>;
-    template <class T> using traits_type = custom_partitioned_sequence_traits<T>;
+    template <class T, class Container, class Partitions> using storage_type = data_structures::partitioned_sequence<T, Container, Partitions>;
 
     constexpr static maths::edge_sharing_preference edge_sharing{maths::edge_sharing_preference::agnostic};
   };
 
   struct custom_allocator_bucketed_edge_storage_traits
   {
-    template <class T, class Traits> using storage_type = data_structures::bucketed_sequence<T, Traits>;
-    template <class T> using traits_type = custom_bucketed_storage_traits<T>;
+    template <class T, class Container> using storage_type = data_structures::bucketed_sequence<T, Container>;
 
     constexpr static maths::edge_sharing_preference edge_sharing{maths::edge_sharing_preference::agnostic};
   };

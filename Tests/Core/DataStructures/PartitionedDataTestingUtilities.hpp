@@ -86,10 +86,10 @@ namespace sequoia::testing
     }
   }
 
-  template<class T, class Traits>
-  struct value_tester<data_structures::bucketed_sequence<T, Traits>>
+  template<class T, class Container>
+  struct value_tester<data_structures::bucketed_sequence<T, Container>>
   {
-    using type = data_structures::bucketed_sequence<T, Traits>;
+    using type = data_structures::bucketed_sequence<T, Container>;
 
     template<class CheckType, test_mode Mode>
     static void test(CheckType flavour, test_logger<Mode>& logger, const type& data, const type& prediction)
@@ -104,10 +104,10 @@ namespace sequoia::testing
     }
   };
 
-  template<class T, class Traits>
-  struct value_tester<data_structures::partitioned_sequence<T, Traits>>
+  template<class T, class Container, class Partitions>
+  struct value_tester<data_structures::partitioned_sequence<T, Container, Partitions>>
   {
-    using type = data_structures::partitioned_sequence<T, Traits>;
+    using type = data_structures::partitioned_sequence<T, Container, Partitions>;
     using equivalent_type = std::initializer_list<std::initializer_list<T>>;
 
     template<class CheckType, test_mode Mode>

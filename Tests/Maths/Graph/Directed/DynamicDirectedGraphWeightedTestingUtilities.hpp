@@ -95,7 +95,7 @@ namespace sequoia::testing
   <
     class EdgeWeight,
     class NodeWeight,
-    class EdgeStorageTraits,
+    class EdgeStorage,
     class NodeWeightStorageTraits
   >
   class dynamic_directed_graph_weighted_operations
@@ -103,7 +103,7 @@ namespace sequoia::testing
     template<maths::network>
     friend struct graph_initialization_checker;
    public:
-    using graph_t            = maths::directed_graph<EdgeWeight, NodeWeight, EdgeStorageTraits, NodeWeightStorageTraits>;
+    using graph_t            = maths::directed_graph<EdgeWeight, NodeWeight, EdgeStorage, NodeWeightStorageTraits>;
     using edge_t             = typename graph_t::edge_init_type;
     using node_weight_type   = typename graph_t::node_weight_type;
     using edges_equivalent_t = std::initializer_list<std::initializer_list<edge_t>>;
@@ -149,7 +149,7 @@ namespace sequoia::testing
     [[nodiscard]]
     static transition_graph make_weighted_transition_graph(regular_test& t)
     {
-      using base_ops = dynamic_directed_graph_operations<EdgeWeight, NodeWeight, EdgeStorageTraits, NodeWeightStorageTraits>;
+      using base_ops = dynamic_directed_graph_operations<EdgeWeight, NodeWeight, EdgeStorage, NodeWeightStorageTraits>;
       using namespace directed_graph;
 
       auto trg{base_ops::make_transition_graph(t)};

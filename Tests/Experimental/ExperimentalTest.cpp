@@ -9,6 +9,8 @@
 
 #include "ExperimentalTest.hpp"
 
+#include "sequoia/Core/DataStructures/PartitionedData.hpp"
+
 namespace sequoia::testing
 {
   [[nodiscard]]
@@ -18,5 +20,9 @@ namespace sequoia::testing
   }
 
   void experimental_test::run_tests()
-  {}
+  {
+    using namespace data_structures;
+
+    bucketed_sequence<int> s{};
+  }
 }

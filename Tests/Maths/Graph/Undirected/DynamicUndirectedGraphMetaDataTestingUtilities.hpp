@@ -48,7 +48,7 @@ namespace sequoia::testing
     class EdgeWeight,
     class NodeWeight,
     class EdgeMetaData,
-    class EdgeStorageTraits,
+    class EdgeStorage,
     class NodeWeightStorageTraits
   >
   class dynamic_undirected_graph_meta_data_operations
@@ -56,13 +56,13 @@ namespace sequoia::testing
     template<maths::network>
     friend struct graph_initialization_checker;
    public:
-    using graph_t            = maths::undirected_graph<EdgeWeight, NodeWeight, EdgeMetaData, EdgeStorageTraits, NodeWeightStorageTraits>;
+    using graph_t            = maths::undirected_graph<EdgeWeight, NodeWeight, EdgeMetaData, EdgeStorage, NodeWeightStorageTraits>;
     using edge_t             = typename graph_t::edge_init_type;
     using node_weight_type   = typename graph_t::node_weight_type;
     using edges_equivalent_t = std::initializer_list<std::initializer_list<edge_t>>;
     using transition_graph   = typename transition_checker<graph_t>::transition_graph;
 
-    constexpr static bool has_shared_weight{EdgeStorageTraits::edge_sharing == maths::edge_sharing_preference::shared_weight};
+    constexpr static bool has_shared_weight{EdgeStorage::edge_sharing == maths::edge_sharing_preference::shared_weight};
 
     static void execute_operations(regular_test& t)
     {

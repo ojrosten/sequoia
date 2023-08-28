@@ -20,36 +20,32 @@
 
 namespace sequoia::testing
 {
-  // Edge Storage Traits
+  // Edge Storage Container
 
   struct independent_contiguous_edge_storage_traits
   {
-    template <class T, class Traits> using storage_type = data_structures::partitioned_sequence<T, Traits>;
-    template <class T> using traits_type = data_structures::partitioned_sequence_traits<T>;
+    template <class T, class Container, class Partitions> using storage_type = data_structures::partitioned_sequence<T, Container, Partitions>;
 
     constexpr static maths::edge_sharing_preference edge_sharing{maths::edge_sharing_preference::independent};
   };
 
   struct independent_bucketed_edge_storage_traits
   {
-    template <class T, class Traits> using storage_type = data_structures::bucketed_sequence<T, Traits>;
-    template <class T> using traits_type = data_structures::bucketed_sequence_traits<T>;
+    template <class T, class Container> using storage_type = data_structures::bucketed_sequence<T, Container>;
 
     constexpr static maths::edge_sharing_preference edge_sharing{maths::edge_sharing_preference::independent};
   };
 
   struct shared_weight_contiguous_edge_storage_traits
   {
-    template <class T, class Traits> using storage_type = data_structures::partitioned_sequence<T, Traits>;
-    template <class T> using traits_type = data_structures::partitioned_sequence_traits<T>;
+    template <class T, class Container, class Partitions> using storage_type = data_structures::partitioned_sequence<T, Container, Partitions>;
 
     constexpr static maths::edge_sharing_preference edge_sharing{maths::edge_sharing_preference::shared_weight};
   };
 
   struct shared_weight_bucketed_edge_storage_traits
   {
-    template <class T, class Traits> using storage_type = data_structures::bucketed_sequence<T, Traits>;
-    template <class T> using traits_type = data_structures::bucketed_sequence_traits<T>;
+    template <class T, class Container> using storage_type = data_structures::bucketed_sequence<T, Container>;
 
     constexpr static maths::edge_sharing_preference edge_sharing{maths::edge_sharing_preference::shared_weight};
   };
@@ -68,12 +64,12 @@ namespace sequoia::testing
     maths::graph_flavour GraphFlavour,
     class EdgeWeight,
     class NodeWeight,
-    class EdgeStorageTraits,
+    class EdgeStorage,
     class NodeWeightStorageTraits
   >
   struct graph_type_generator
   {
-    using graph_type = maths::directed_graph<EdgeWeight, NodeWeight, EdgeStorageTraits, NodeWeightStorageTraits>;
+    using graph_type = maths::directed_graph<EdgeWeight, NodeWeight, EdgeStorage, NodeWeightStorageTraits>;
   };
 
   template
@@ -81,13 +77,13 @@ namespace sequoia::testing
     maths::graph_flavour GraphFlavour,
     class EdgeWeight,
     class NodeWeight,
-    class EdgeStorageTraits,
+    class EdgeStorage,
     class NodeWeightStorageTraits
   >
     requires (GraphFlavour == maths::graph_flavour::undirected)
-  struct graph_type_generator<GraphFlavour, EdgeWeight, NodeWeight, EdgeStorageTraits, NodeWeightStorageTraits>
+  struct graph_type_generator<GraphFlavour, EdgeWeight, NodeWeight, EdgeStorage, NodeWeightStorageTraits>
   {
-    using graph_type = maths::undirected_graph<EdgeWeight, NodeWeight, maths::null_meta_data, EdgeStorageTraits, NodeWeightStorageTraits>;
+    using graph_type = maths::undirected_graph<EdgeWeight, NodeWeight, maths::null_meta_data, EdgeStorage, NodeWeightStorageTraits>;
   };
 
   template
@@ -95,13 +91,13 @@ namespace sequoia::testing
     maths::graph_flavour GraphFlavour,
     class EdgeWeight,
     class NodeWeight,
-    class EdgeStorageTraits,
+    class EdgeStorage,
     class NodeWeightStorageTraits
   >
     requires (GraphFlavour == maths::graph_flavour::undirected_embedded)
-  struct graph_type_generator<GraphFlavour, EdgeWeight, NodeWeight, EdgeStorageTraits, NodeWeightStorageTraits>
+  struct graph_type_generator<GraphFlavour, EdgeWeight, NodeWeight, EdgeStorage, NodeWeightStorageTraits>
   {
-    using graph_type = maths::embedded_graph<EdgeWeight, NodeWeight, maths::null_meta_data, EdgeStorageTraits, NodeWeightStorageTraits>;
+    using graph_type = maths::embedded_graph<EdgeWeight, NodeWeight, maths::null_meta_data, EdgeStorage, NodeWeightStorageTraits>;
   };
 
   template
@@ -109,10 +105,10 @@ namespace sequoia::testing
     maths::graph_flavour GraphFlavour,
     class EdgeWeight,
     class NodeWeight,
-    class EdgeStorageTraits,
+    class EdgeStorage,
     class NodeWeightStorageTraits
   >
-  using graph_type_generator_t = typename graph_type_generator<GraphFlavour, EdgeWeight, NodeWeight, EdgeStorageTraits, NodeWeightStorageTraits>::graph_type;
+  using graph_type_generator_t = typename graph_type_generator<GraphFlavour, EdgeWeight, NodeWeight, EdgeStorage, NodeWeightStorageTraits>::graph_type;
 
   template <class EdgeWeight, class NodeWeight, concrete_test Test>
   class graph_test_helper
@@ -133,15 +129,15 @@ namespace sequoia::testing
       }
     }
 
-    template<class EdgeStorageTraits, class NodeStorageTraits>
+    template<class EdgeStorage, class NodeStorageTraits>
     void run_tests()
     {
       using flavour = maths::graph_flavour;
-      creation_permutations<flavour::undirected, EdgeStorageTraits, NodeStorageTraits>();
+      creation_permutations<flavour::undirected, EdgeStorage, NodeStorageTraits>();
       if constexpr (!minimal_graph_tests())
       {
-        creation_permutations<flavour::undirected_embedded, EdgeStorageTraits, NodeStorageTraits>();
-        creation_permutations<flavour::directed,            EdgeStorageTraits, NodeStorageTraits>();
+        creation_permutations<flavour::undirected_embedded, EdgeStorage, NodeStorageTraits>();
+        creation_permutations<flavour::directed,            EdgeStorage, NodeStorageTraits>();
       }
     }
 
@@ -160,7 +156,7 @@ namespace sequoia::testing
     template
     <
       maths::graph_flavour GraphFlavour,
-      class EdgeStorageTraits,
+      class EdgeStorage,
       class NodeWeightStorageTraits
     >
     void creation_permutations()
@@ -169,7 +165,7 @@ namespace sequoia::testing
         GraphFlavour,
         EdgeWeight,
         NodeWeight,
-        EdgeStorageTraits,
+        EdgeStorage,
         NodeWeightStorageTraits
       >();
     }

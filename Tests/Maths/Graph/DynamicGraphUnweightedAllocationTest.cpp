@@ -34,12 +34,12 @@ namespace sequoia::testing
     maths::graph_flavour GraphFlavour,
     class EdgeWeight,
     class NodeWeight,
-    class EdgeStorageTraits,
+    class EdgeStorage,
     class NodeWeightStorageTraits
   >
   void unweighted_graph_allocation_test::execute_operations()
   {
-    using ESTraits = EdgeStorageTraits;
+    using ESTraits = EdgeStorage;
     using NSTraits = NodeWeightStorageTraits;
     using graph_type = graph_type_generator_t<GraphFlavour, EdgeWeight, NodeWeight, ESTraits, NSTraits>;
 

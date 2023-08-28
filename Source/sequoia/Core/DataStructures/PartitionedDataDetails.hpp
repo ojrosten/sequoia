@@ -15,51 +15,6 @@
 
 namespace sequoia::data_structures::partition_impl
 {
-  template<class T> struct const_reference
-  {
-    using type      = const T;
-    using reference = const T&;
-    using pointer   = const T*;
-  };
-
-  template <class T> struct mutable_reference
-  {
-    using type      = T;
-    using reference = T&;
-    using pointer   = T*;
-  };
-
-  template<class Traits>
-  struct storage_type_generator
-  {
-    using value_type     = typename Traits::value_type;
-    using container_type = typename Traits::template container_type<value_type>;
-  };
-
-  template<class Traits, template<class> class ReferencePolicy, bool Reversed>
-  struct partition_iterator_generator
-  {
-    using iterator = typename storage_type_generator<Traits>::container_type::iterator;
-  };
-
-  template<class Traits>
-  struct partition_iterator_generator<Traits, mutable_reference, true>
-  {
-    using iterator = typename storage_type_generator<Traits>::container_type::reverse_iterator;
-  };
-
-  template<class Traits>
-  struct partition_iterator_generator<Traits, const_reference, false>
-  {
-    using iterator = typename storage_type_generator<Traits>::container_type::const_iterator;
-  };
-
-  template<class Traits>
-  struct partition_iterator_generator<Traits, const_reference, true>
-  {
-    using iterator = typename storage_type_generator<Traits>::container_type::const_reverse_iterator;
-  };
-
   template<bool Reversed, std::integral IndexType>
   class partition_index_policy
   {

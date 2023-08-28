@@ -40,8 +40,7 @@ namespace sequoia
 {
   namespace data_structures
   {
-    template <class, class> class partitioned_sequence;
-    template <class>        struct partitioned_sequence_traits;
+    template <class, class, class> class partitioned_sequence;
   }
 
   namespace maths
@@ -867,7 +866,7 @@ namespace sequoia
         requires (!direct_init_v && !is_embedded(flavour) && !is_directed(flavour))
       {
         using namespace data_structures;
-        using sequence_t = partitioned_sequence<edge_init_type, partitioned_sequence_traits<edge_init_type>>;
+        using sequence_t = partitioned_sequence<edge_init_type>;
 
         return preprocess(sequence_t{edges});
       }

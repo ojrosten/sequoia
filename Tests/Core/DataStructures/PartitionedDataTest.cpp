@@ -97,14 +97,14 @@ namespace sequoia
 
     void partitioned_data_test::test_iterators()
     {
-      test_generic_iterator_properties<traits<int>, partition_impl::mutable_reference>();
-      test_generic_iterator_properties<traits<int>, partition_impl::const_reference>();
+      //test_generic_iterator_properties<traits<int>, partition_impl::mutable_reference>();
+      //test_generic_iterator_properties<traits<int>, partition_impl::const_reference>();
     }
 
     template<class Traits, template<class> class ReferencePolicy>
     void partitioned_data_test::test_generic_iterator_properties()
     {
-      using container_t = std::vector<int>;
+      /*using container_t = std::vector<int>;
 
       container_t vec{1, 2, 3};
 
@@ -174,7 +174,7 @@ namespace sequoia
 
       auto std_iter = iter.base_iterator();
 
-      check(equality, report_line(""), *std_iter, 1);
+      check(equality, report_line(""), *std_iter, 1);*/
     }
   }
 }

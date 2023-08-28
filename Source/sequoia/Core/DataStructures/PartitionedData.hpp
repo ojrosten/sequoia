@@ -28,69 +28,52 @@ namespace sequoia
   {
     //===================================A Custom Iterator===================================//
 
-    template<class Traits, std::integral IndexType>
+    template<class Container, std::integral IndexType>
     using partition_iterator
       = utilities::iterator<
-          typename partition_impl::partition_iterator_generator<Traits, partition_impl::mutable_reference, false>::iterator,
-          utilities::identity_dereference_policy<typename partition_impl::partition_iterator_generator<Traits, partition_impl::mutable_reference, false>::iterator,
-                                                 partition_impl::partition_index_policy<false, IndexType>>
-        >;
+          typename Container::iterator,
+          utilities::identity_dereference_policy<typename Container::iterator, partition_impl::partition_index_policy<false, IndexType>>>;
 
-    template<class Traits, std::integral IndexType>
+    template<class Container, std::integral IndexType>
     using const_partition_iterator
       = utilities::iterator<
-          typename partition_impl::partition_iterator_generator<Traits, partition_impl::const_reference, false>::iterator,
-          utilities::identity_dereference_policy<typename partition_impl::partition_iterator_generator<Traits, partition_impl::const_reference, false>::iterator,
-                                                 partition_impl::partition_index_policy<false, IndexType>>
-        >;
+          typename Container::const_iterator,
+          utilities::identity_dereference_policy<typename Container::const_iterator, partition_impl::partition_index_policy<false, IndexType>>>;
 
-    template<class Traits, std::integral IndexType>
+    template<class Container, std::integral IndexType>
     using reverse_partition_iterator
       = utilities::iterator<
-          typename partition_impl::partition_iterator_generator<Traits, partition_impl::mutable_reference, true>::iterator,
-          utilities::identity_dereference_policy<typename partition_impl::partition_iterator_generator<Traits, partition_impl::mutable_reference, true>::iterator,
-                                                 partition_impl::partition_index_policy<true, IndexType>>
-        >;
+          typename Container::reverse_iterator,
+          utilities::identity_dereference_policy<typename Container::reverse_iterator, partition_impl::partition_index_policy<true, IndexType>>>;
 
-    template<class Traits, std::integral IndexType>
+    template<class Container, std::integral IndexType>
     using const_reverse_partition_iterator
       = utilities::iterator<
-          typename partition_impl::partition_iterator_generator<Traits, partition_impl::const_reference, true>::iterator,
-          utilities::identity_dereference_policy<typename partition_impl::partition_iterator_generator<Traits, partition_impl::const_reference, true>::iterator,
-                                                 partition_impl::partition_index_policy<true, IndexType>>
-        >;
+          typename Container::const_reverse_iterator,
+          utilities::identity_dereference_policy<typename Container::const_reverse_iterator, partition_impl::partition_index_policy<true, IndexType>>>;
+
 
     //===================================Storage using buckets===================================//
-
-    template<class T>
-    struct bucketed_sequence_traits
-    {
-      using value_type = T;
-
-      template<class S>
-      using container_type = std::vector<S>;
-
-      template<class S>
-      using buckets_type = std::vector<std::vector<S>>;
-    };
 
     /*! \brief Storage for partitioned data such that data within each partition is contiguous.
      */
 
-    template<class T, class Traits=bucketed_sequence_traits<T>>
+    template<class T, class Container=std::vector<std::vector<T>>>
     class bucketed_sequence
     {
-      using storage_type = typename Traits::template buckets_type<T>;
     public:
       using value_type     = T;
-      using size_type      = typename storage_type::size_type;
+      using container_type = Container;
+      using bucket_type    = typename container_type::value_type;
+      using size_type      = typename container_type::size_type;
       using index_type     = size_type;
-      using allocator_type = typename storage_type::allocator_type;
+      using allocator_type = typename container_type::allocator_type;
+      using partitions_allocator_type = typename bucket_type::allocator_type;
 
-      using partition_iterator               = data_structures::partition_iterator<Traits, size_type>;
-      using const_partition_iterator         = data_structures::const_partition_iterator<Traits, size_type>;
-      using reverse_partition_iterator       = data_structures::reverse_partition_iterator<Traits, size_type>;
-      using const_reverse_partition_iterator = data_structures::const_reverse_partition_iterator<Traits, size_type>;
+      using partition_iterator               = data_structures::partition_iterator<bucket_type, size_type>;
+      using const_partition_iterator         = data_structures::const_partition_iterator<bucket_type, size_type>;
+      using reverse_partition_iterator       = data_structures::reverse_partition_iterator<bucket_type, size_type>;
+      using const_reverse_partition_iterator = data_structures::const_reverse_partition_iterator<bucket_type, size_type>;
       using partition_range                  = std::ranges::subrange<partition_iterator>;
       using const_partition_range            = std::ranges::subrange<const_partition_iterator>;
 
@@ -451,14 +434,14 @@ namespace sequoia
       void reset(const allocator_type& allocator) noexcept
         requires (std::allocator_traits<allocator_type>::propagate_on_container_copy_assignment::value)
       {
-        const storage_type buckets(allocator);
+        const container_type buckets(allocator);
         m_Buckets = buckets;
       }
 
       [[nodiscard]]
       friend bool operator==(const bucketed_sequence& lhs, const bucketed_sequence& rhs) noexcept = default;
     private:
-      storage_type m_Buckets;
+      container_type m_Buckets;
 
       void check_range(std::string_view method, const size_type index) const
       {
@@ -501,37 +484,32 @@ namespace sequoia
     /*! \brief Base class for partitioned sequences where data is contiguous across all partitions.
      */
 
-    template<class T, class Traits>
+    template<class T, class Container, class Partitions>
     class partitioned_sequence_base
     {
     public:
-      using value_type          = T;
-      using traits_type         = Traits;
+      using value_type      = T;
+      using container_type  = Container;
+      using partitions_type = Partitions;
+      using size_type       = std::common_type_t<typename partitions_type::value_type, typename container_type::size_type>;
+      using index_type      = typename partitions_type::value_type;
 
-      using container_type      = typename partition_impl::storage_type_generator<Traits>::container_type;
-      using size_type           = std::common_type_t<typename Traits::partition_index_type, typename container_type::size_type>;
-      using index_type          = typename Traits::index_type;
-
-      using partition_iterator               = data_structures::partition_iterator<Traits, index_type>;
-      using const_partition_iterator         = data_structures::const_partition_iterator<Traits, index_type>;
-      using reverse_partition_iterator       = data_structures::reverse_partition_iterator<Traits, index_type>;
-      using const_reverse_partition_iterator = data_structures::const_reverse_partition_iterator<Traits, index_type>;
+      using partition_iterator               = data_structures::partition_iterator<container_type, index_type>;
+      using const_partition_iterator         = data_structures::const_partition_iterator<container_type, index_type>;
+      using reverse_partition_iterator       = data_structures::reverse_partition_iterator<container_type, index_type>;
+      using const_reverse_partition_iterator = data_structures::const_reverse_partition_iterator<container_type, index_type>;
       using partition_range                  = std::ranges::subrange<partition_iterator>;
       using const_partition_range            = std::ranges::subrange<const_partition_iterator>;
 
       constexpr partitioned_sequence_base() = default;
 
-      constexpr partitioned_sequence_base(std::initializer_list<std::initializer_list<T>> list)
-        : partitioned_sequence_base(init_constant<staticStorage>{}, list)
-      {}
-
       constexpr partitioned_sequence_base(const partitioned_sequence_base&) = default;
 
       [[nodiscard]]
-      constexpr bool empty() const noexcept { return m_Storage.empty(); }
+      constexpr bool empty() const noexcept { return m_Data.empty(); }
 
       [[nodiscard]]
-      constexpr auto size() const noexcept { return m_Storage.size(); }
+      constexpr auto size() const noexcept { return m_Data.size(); }
 
       [[nodiscard]]
       constexpr size_type size_of_partition(index_type i) const
@@ -545,25 +523,25 @@ namespace sequoia
       [[nodiscard]]
       constexpr partition_iterator begin_partition(const index_type i) noexcept
       {
-        return get_begin_iterator<partition_iterator>(i, m_Storage.begin());
+        return get_begin_iterator<partition_iterator>(i, m_Data.begin());
       }
 
       [[nodiscard]]
       constexpr partition_iterator end_partition(const index_type i) noexcept
       {
-        return get_end_iterator<partition_iterator>(i, m_Storage.begin());
+        return get_end_iterator<partition_iterator>(i, m_Data.begin());
       }
 
       [[nodiscard]]
       constexpr const_partition_iterator begin_partition(const index_type i) const noexcept
       {
-        return get_begin_iterator<const_partition_iterator>(i, m_Storage.cbegin());
+        return get_begin_iterator<const_partition_iterator>(i, m_Data.cbegin());
       }
 
       [[nodiscard]]
       constexpr const_partition_iterator end_partition(const index_type i) const noexcept
       {
-        return get_end_iterator<const_partition_iterator>(i, m_Storage.cbegin());
+        return get_end_iterator<const_partition_iterator>(i, m_Data.cbegin());
       }
 
       [[nodiscard]]
@@ -581,25 +559,25 @@ namespace sequoia
       [[nodiscard]]
       constexpr reverse_partition_iterator rbegin_partition(const index_type i) noexcept
       {
-        return get_end_iterator<reverse_partition_iterator>(i, m_Storage.rend());
+        return get_end_iterator<reverse_partition_iterator>(i, m_Data.rend());
       }
 
       [[nodiscard]]
       constexpr reverse_partition_iterator rend_partition(const index_type i) noexcept
       {
-        return get_begin_iterator<reverse_partition_iterator>(i, m_Storage.rend());
+        return get_begin_iterator<reverse_partition_iterator>(i, m_Data.rend());
       }
 
       [[nodiscard]]
       constexpr const_reverse_partition_iterator rbegin_partition(const index_type i) const noexcept
       {
-        return get_end_iterator<const_reverse_partition_iterator>(i, m_Storage.crend());
+        return get_end_iterator<const_reverse_partition_iterator>(i, m_Data.crend());
       }
 
       [[nodiscard]]
       constexpr const_reverse_partition_iterator rend_partition(const index_type i) const noexcept
       {
-        return get_begin_iterator<const_reverse_partition_iterator>(i, m_Storage.crend());
+        return get_begin_iterator<const_reverse_partition_iterator>(i, m_Data.crend());
       }
 
       [[nodiscard]]
@@ -674,12 +652,17 @@ namespace sequoia
         m_Partitions = partitions;
 
         const container_type container{allocator};
-        m_Storage = container;
+        m_Data = container;
       }
 
       [[nodiscard]]
       friend constexpr bool operator==(const partitioned_sequence_base&, const partitioned_sequence_base&) noexcept = default;
     protected:
+      explicit constexpr partitioned_sequence_base(std::pair<partitions_type, container_type> data)
+        : m_Partitions{std::move(data.first)}
+        , m_Data{std::move(data.second)}
+      {}
+
       constexpr partitioned_sequence_base(partitioned_sequence_base&&) noexcept = default;
 
       constexpr partitioned_sequence_base& operator=(partitioned_sequence_base&&) noexcept = default;
@@ -689,16 +672,16 @@ namespace sequoia
       ~partitioned_sequence_base() = default;
 
       void swap(partitioned_sequence_base& other)
-        noexcept(noexcept(std::ranges::swap(this->m_Partitions, other.m_Partitions)) && noexcept(std::ranges::swap(this->m_Storage, other.m_Storage)))
+        noexcept(noexcept(std::ranges::swap(this->m_Partitions, other.m_Partitions)) && noexcept(std::ranges::swap(this->m_Data, other.m_Data)))
       {
         std::ranges::swap(m_Partitions, other.m_Partitions);
-        std::ranges::swap(m_Storage, other.m_Storage);
+        std::ranges::swap(m_Data, other.m_Data);
       }
 
       [[nodiscard]]
       auto get_allocator() const
       {
-        return m_Storage.get_allocator();
+        return m_Data.get_allocator();
       }
 
       [[nodiscard]]
@@ -709,19 +692,19 @@ namespace sequoia
 
       template<alloc Allocator>
       constexpr explicit partitioned_sequence_base(const Allocator& allocator) noexcept
-        : m_Storage(allocator)
+        : m_Data(allocator)
       {}
 
       template<alloc Allocator, alloc PartitionsAllocator>
       constexpr partitioned_sequence_base(const Allocator& allocator, const PartitionsAllocator& partitionsAllocator) noexcept
         : m_Partitions(partitionsAllocator)
-        , m_Storage(allocator)
+        , m_Data(allocator)
       {}
 
       template<alloc Allocator, alloc PartitionsAllocator>
       constexpr partitioned_sequence_base(std::initializer_list<std::initializer_list<T>> list, const Allocator& allocator, const PartitionsAllocator& partitionsAllocator)
         : m_Partitions(partitionsAllocator)
-        , m_Storage(allocator)
+        , m_Data(allocator)
       {
         init(list);
       }
@@ -729,18 +712,18 @@ namespace sequoia
       template<alloc Allocator, alloc PartitionsAllocator>
       constexpr partitioned_sequence_base(const partitioned_sequence_base& other, const Allocator& allocator, const PartitionsAllocator& partitionsAllocator)
         : m_Partitions{other.m_Partitions, partitionsAllocator}
-        , m_Storage(copy(other.m_Storage, allocator))
+        , m_Data(copy(other.m_Data, allocator))
       {}
 
       template<alloc Allocator, alloc PartitionsAllocator>
       constexpr partitioned_sequence_base(partitioned_sequence_base&& in, const Allocator& allocator, const PartitionsAllocator& partitionsAllocator)
         : m_Partitions{std::move(in.m_Partitions), partitionsAllocator}
-        , m_Storage{std::move(in.m_Storage), allocator}
+        , m_Data{std::move(in.m_Data), allocator}
       {}
 
       void add_slot()
       {
-        m_Partitions.push_back(m_Storage.size());
+        m_Partitions.push_back(m_Data.size());
       }
 
       void insert_slot(const size_t pos)
@@ -766,7 +749,7 @@ namespace sequoia
           if(m_Partitions[n] > 0)
           {
             erased = m_Partitions[n] - offset;
-            m_Storage.erase(m_Storage.begin() + offset, m_Storage.begin() + m_Partitions[n]);
+            m_Data.erase(m_Data.begin() + offset, m_Data.begin() + m_Partitions[n]);
           }
           m_Partitions.erase(m_Partitions.begin() + n);
           m_Partitions.mutate(maths::unsafe_t{}, m_Partitions.begin() + n, m_Partitions.end(), [erased](const auto index){ return index - erased; });
@@ -775,13 +758,13 @@ namespace sequoia
 
       void reserve(const size_type size)
       {
-        m_Storage.reserve(size);
+        m_Data.reserve(size);
       }
 
       [[nodiscard]]
       index_type capacity() const noexcept
       {
-        return m_Storage.capacity();
+        return m_Data.capacity();
       }
 
       void reserve_partitions(const size_type numPartitions)
@@ -798,13 +781,13 @@ namespace sequoia
       void shrink_to_fit()
       {
         m_Partitions.shrink_to_fit();
-        m_Storage.shrink_to_fit();
+        m_Data.shrink_to_fit();
       }
 
       void clear() noexcept
       {
         m_Partitions.clear();
-        m_Storage.clear();
+        m_Data.clear();
       }
 
       template<class... Args>
@@ -812,15 +795,15 @@ namespace sequoia
       {
         check_range("push_back_to_partition", index);
 
-        auto iter{m_Storage.end()};
+        auto iter{m_Data.end()};
         if(index == m_Partitions.size() - 1)
         {
-          m_Storage.emplace_back(std::forward<Args>(args)...);
-          iter = --m_Storage.end();
+          m_Data.emplace_back(std::forward<Args>(args)...);
+          iter = --m_Data.end();
         }
         else
         {
-          iter = m_Storage.emplace(m_Storage.begin() + m_Partitions[index], std::forward<Args>(args)...);
+          iter = m_Data.emplace(m_Data.begin() + m_Partitions[index], std::forward<Args>(args)...);
         }
 
         increment_partition_indices(index);
@@ -832,7 +815,7 @@ namespace sequoia
         const auto source{pos.partition_index()};
         check_range("insert_to_partition", source);
 
-        auto iter{m_Storage.emplace(pos.base_iterator(), std::forward<Args>(args)...)};
+        auto iter{m_Data.emplace(pos.base_iterator(), std::forward<Args>(args)...)};
         increment_partition_indices(source);
 
         return partition_iterator{iter, source};
@@ -856,7 +839,7 @@ namespace sequoia
           return end_partition(partition);
         }
 
-        const auto next{m_Storage.erase(iter.base_iterator())};
+        const auto next{m_Data.erase(iter.base_iterator())};
         decrement_partition_indices(partition, num_partitions(), 1);
 
         return {next, iter.partition_index()};
@@ -873,7 +856,7 @@ namespace sequoia
         {
           if(const auto numErased{std::ranges::distance(first, last)}; numErased > 0)
           {
-            const auto next{m_Storage.erase(first.base_iterator(), last.base_iterator())};
+            const auto next{m_Data.erase(first.base_iterator(), last.base_iterator())};
             decrement_partition_indices(firstPartition, num_partitions(), numErased);
 
             return {next, firstPartition};
@@ -891,28 +874,12 @@ namespace sequoia
         return erase_from_partition(std::ranges::next(cbegin_partition(index), pos, cend_partition(index)));
       }
     private:
-      template<bool Direct>
-      struct init_constant : std::bool_constant<Direct>
-      {};
-
-      using static_init_type  = init_constant<true>;
-      using dynamic_init_type = init_constant<false>;
-
-      constexpr static bool staticStorage{Traits::static_storage_v};
-
-      using partitions_type       = typename Traits::partitions_type;
-      using partitions_index_type = typename Traits::partition_index_type;
       constexpr static index_type npos{partition_iterator::npos};
 
       SEQUOIA_NO_UNIQUE_ADDRESS partitions_type m_Partitions;
-      container_type m_Storage;
+      container_type m_Data;
 
-      constexpr partitioned_sequence_base(static_init_type, std::initializer_list<std::initializer_list<T>> list)
-        : m_Partitions{Traits::make_partitions(list)}
-        , m_Storage{fill(std::make_index_sequence<Traits::num_elements_v>{}, list)}
-      {}
-
-      partitioned_sequence_base(dynamic_init_type, std::initializer_list<std::initializer_list<T>> list)
+      partitioned_sequence_base(std::initializer_list<std::initializer_list<T>> list)
       {
         init(list);
       }
@@ -920,7 +887,7 @@ namespace sequoia
       void init(std::initializer_list<std::initializer_list<T>> list)
       {
         m_Partitions.reserve(list.size());
-        m_Storage.reserve(std::accumulate(list.begin(), list.end(), std::size_t{}, [](std::size_t n, auto l) { return n += l.size(); }));
+        m_Data.reserve(std::accumulate(list.begin(), list.end(), std::size_t{}, [](std::size_t n, auto l) { return n += l.size(); }));
         for(auto iter{list.begin()}; iter != list.end(); ++iter)
         {
           add_slot();
@@ -947,57 +914,20 @@ namespace sequoia
         return container;
       }
 
-      [[nodiscard]]
-      constexpr T make_element(size_type i, std::initializer_list<std::initializer_list<T>> list, index_type& partition)
-      {
-        auto boundary{m_Partitions[partition]};
-        while(i == boundary)
-        {
-          boundary = m_Partitions[++partition];
-        }
-
-        auto index{partition ? i - m_Partitions[partition-1] : i};
-
-        return T{*((list.begin() + partition)->begin() + index)};
-      }
-
-      template<size_type... Inds>
-      [[nodiscard]]
-      constexpr container_type fill(std::index_sequence<Inds...>, std::initializer_list<std::initializer_list<T>> list)
-      {
-        if(list.size() != Traits::num_partitions_v)
-          throw std::logic_error("Overall initializer list of wrong size");
-
-        const size_type total{std::accumulate(list.begin(), list.end(), size_type{}, [](size_type val, std::initializer_list<T> l){ return val + l.size(); })};
-
-        if(total != Traits::num_elements_v)
-          throw std::logic_error("Inconsistent number of elements supplied by initializer lists");
-
-        if constexpr(sizeof...(Inds) > 0)
-        {
-          index_type partition{};
-          return container_type{ make_element(Inds, list, partition)... };
-        }
-        else
-        {
-          return container_type{};
-        }
-      }
-
       void increment_partition_indices(const size_type first) noexcept
       {
         m_Partitions.mutate(maths::unsafe_t{},
                             std::ranges::next(m_Partitions.begin(), first, m_Partitions.end()),
                             m_Partitions.end(),
-                            [](partitions_index_type index){ return ++index; });
+                            [](index_type index){ return ++index; });
       }
 
-      void decrement_partition_indices(const size_type first, const size_type last, const partitions_index_type num) noexcept
+      void decrement_partition_indices(const size_type first, const size_type last, const index_type num) noexcept
       {
         m_Partitions.mutate(maths::unsafe_t{},
                             std::ranges::next(m_Partitions.begin(), first, m_Partitions.end()),
                             std::ranges::next(m_Partitions.begin(), last, m_Partitions.end()),
-                            [num](partitions_index_type index){ return index -= num; });
+                            [num](index_type index){ return index -= num; });
       }
 
       void check_range(std::string_view method, const size_type index) const
@@ -1033,7 +963,7 @@ namespace sequoia
       {
         index_type index{PartitionIterator::reversed() ? index_type{} : npos};
         index_type offset{
-          [sz{m_Storage.size()}] () {
+          [sz{m_Data.size()}] () {
             if (sz > std::numeric_limits<index_type>::max())
               throw std::out_of_range{"Partition offset out of range"};
             return static_cast<index_type>(sz);
@@ -1050,50 +980,41 @@ namespace sequoia
       }
     };
 
-    template<class T>
-    struct partitioned_sequence_traits
-    {
-      constexpr static bool static_storage_v{false};
+    /*! \class
+    
+     */
 
-      using value_type = T;
-      using index_type = std::size_t;
-      using partition_index_type = std::size_t;
-      using partitions_type = maths::monotonic_sequence<partition_index_type, std::greater<partition_index_type>>;
-      using partitions_allocator_type = typename partitions_type::allocator_type;
-
-      template<class S> using container_type = std::vector<S, std::allocator<S>>;
-    };
-
-    template<class T, class Traits=partitioned_sequence_traits<T>>
-    class partitioned_sequence : public partitioned_sequence_base<T, Traits>
+    template<class T, class Container=std::vector<T>, class Partitions=maths::monotonic_sequence<std::size_t, std::ranges::greater>>
+    class partitioned_sequence : public partitioned_sequence_base<T, Container, Partitions>
     {
     private:
-      using base_t = partitioned_sequence_base<T, Traits>;
+      using base_t = partitioned_sequence_base<T, Container, Partitions>;
     public:
-      using container_type            = typename partitioned_sequence_base<T, Traits>::container_type;
+      using container_type            = typename partitioned_sequence_base<T, Container, Partitions>::container_type;
+      using partitions_type           = typename partitioned_sequence_base<T, Container, Partitions>::partitions_type;
       using allocator_type            = typename container_type::allocator_type;
-      using partitions_allocator_type = typename Traits::partitions_allocator_type;
+      using partitions_allocator_type = typename partitions_type::allocator_type;
 
       partitioned_sequence() = default;
 
       partitioned_sequence(const allocator_type& allocator, const partitions_allocator_type& partitionAllocator) noexcept
-        : partitioned_sequence_base<T, Traits>(allocator, partitionAllocator)
+        : partitioned_sequence_base<T, Container, Partitions>(allocator, partitionAllocator)
       {}
 
       partitioned_sequence(std::initializer_list<std::initializer_list<T>> list, const allocator_type& allocator=allocator_type{}, const partitions_allocator_type& partitionAllocator=partitions_allocator_type{})
-        : partitioned_sequence_base<T, Traits>(list, allocator, partitionAllocator)
+        : partitioned_sequence_base<T, Container, Partitions>(list, allocator, partitionAllocator)
       {}
 
       partitioned_sequence(const partitioned_sequence&) = default;
 
       partitioned_sequence(const partitioned_sequence& s, const allocator_type& allocator, const partitions_allocator_type& partitionAllocator)
-        : partitioned_sequence_base<T, Traits>(s, allocator, partitionAllocator)
+        : partitioned_sequence_base<T, Container, Partitions>(s, allocator, partitionAllocator)
       {}
 
       partitioned_sequence(partitioned_sequence&&) noexcept = default;
 
       partitioned_sequence(partitioned_sequence&& s, const allocator_type& allocator, const partitions_allocator_type& partitionAllocator)
-        : partitioned_sequence_base<T, Traits>(std::move(s), allocator, partitionAllocator)
+        : partitioned_sequence_base<T, Container, Partitions>(std::move(s), allocator, partitionAllocator)
       {}
 
       ~partitioned_sequence() = default;
@@ -1127,38 +1048,55 @@ namespace sequoia
       using base_t::erase_from_partition;
     };
 
-    template<class T, std::size_t Npartitions, std::size_t Nelements, std::integral IndexType>
-    struct static_partitioned_sequence_traits
+    template<class T, std::size_t Npartitions, std::size_t Nelements, std::integral IndexType=std::size_t>
+    class static_partitioned_sequence :
+      public partitioned_sequence_base<T, std::array<T, Nelements>, maths::static_monotonic_sequence<IndexType, Npartitions, std::ranges::greater>>
     {
-      constexpr static bool static_storage_v{true};
+      using base_t = partitioned_sequence_base<T, std::array<T, Nelements>, maths::static_monotonic_sequence<IndexType, Npartitions, std::ranges::greater>>;
+    public:
+      using container_type  = typename base_t::container_type;
+      using partitions_type = typename base_t::partitions_type;
+      using size_type       = typename base_t::size_type;
+
       constexpr static std::size_t num_partitions_v{Npartitions};
       constexpr static std::size_t num_elements_v{Nelements};
 
-      using value_type = T;
-      using index_type = IndexType;
-      using partition_index_type = std::make_unsigned_t<IndexType>;
-      using partitions_type = maths::static_monotonic_sequence<partition_index_type, Npartitions, std::greater<partition_index_type>>;
+      constexpr static_partitioned_sequence(std::initializer_list<std::initializer_list<T>> list)
+        : base_t{fill(std::make_index_sequence<num_elements_v>(), list)}
+      {}
 
-      template<class S> using container_type = std::array<S, Nelements>;
+      constexpr static_partitioned_sequence(const static_partitioned_sequence&)     = default;
+      constexpr static_partitioned_sequence(static_partitioned_sequence&&) noexcept = default;
+
+      constexpr static_partitioned_sequence& operator=(const static_partitioned_sequence&)     = default;
+      constexpr static_partitioned_sequence& operator=(static_partitioned_sequence&&) noexcept = default;
+
+      using base_t::swap;
+
+      friend void swap(static_partitioned_sequence& lhs, static_partitioned_sequence& rhs)
+        noexcept(noexcept(lhs.swap(rhs)))
+      {
+        lhs.swap(rhs);
+      }
+    private:
 
       [[nodiscard]]
-      constexpr static auto make_partitions(std::initializer_list<std::initializer_list<T>> list)
+      constexpr static partitions_type make_partitions(std::initializer_list<std::initializer_list<T>> list)
       {
-        constexpr auto N{num_partitions_v};
-        constexpr auto upper{std::numeric_limits<partition_index_type>::max()};
+        constexpr auto upper{std::numeric_limits<IndexType>::max()};
         const auto fn{
           [](const auto& l) {
-            if (l.size() > upper)
+            if(l.size() > upper)
               throw std::out_of_range{"Partition size out of bounds"};
 
-            return static_cast<partition_index_type>(l.size());
+            return static_cast<IndexType>(l.size());
           }
         };
 
-        auto sizes{utilities::to_array<partition_index_type, N>(list, fn)};
+        auto sizes{utilities::to_array<IndexType, num_partitions_v>(list, fn)};
         if(!sizes.empty())
         {
-          for(auto iter{sizes.begin()+1}; iter!=sizes.end(); ++iter)
+          for(auto iter{sizes.begin() + 1}; iter != sizes.end(); ++iter)
           {
             const auto prev{*(iter - 1)};
             auto& curr{*iter};
@@ -1171,21 +1109,45 @@ namespace sequoia
 
         return sizes;
       }
-    };
 
-    template<class T, std::size_t Npartitions, std::size_t Nelements, std::integral IndexType=std::size_t>
-    class static_partitioned_sequence :
-      public partitioned_sequence_base<T, static_partitioned_sequence_traits<T, Npartitions, Nelements,IndexType>>
-    {
-    public:
-      using partitioned_sequence_base<T, static_partitioned_sequence_traits<T, Npartitions, Nelements,IndexType>>::partitioned_sequence_base;
-
-      using partitioned_sequence_base<T, static_partitioned_sequence_traits<T, Npartitions, Nelements, IndexType>>::swap;
-
-      friend void swap(static_partitioned_sequence& lhs, static_partitioned_sequence& rhs)
-        noexcept(noexcept(lhs.swap(rhs)))
+      template<size_type... Inds>
+      [[nodiscard]]
+      constexpr static std::pair<partitions_type, container_type> fill(std::index_sequence<Inds...>, std::initializer_list<std::initializer_list<T>> list)
       {
-        lhs.swap(rhs);
+        auto partitions{make_partitions(list)};
+
+        if(list.size() != num_partitions_v)
+          throw std::logic_error("Overall initializer list of wrong size");
+
+        const size_type total{std::accumulate(list.begin(), list.end(), size_type{}, [](size_type val, std::initializer_list<T> l){ return val + l.size(); })};
+
+        if(total != num_elements_v)
+          throw std::logic_error("Inconsistent number of elements supplied by initializer lists");
+
+        if constexpr(sizeof...(Inds) > 0)
+        {
+          IndexType partitionIndex{};
+          return {partitions, container_type{make_element(Inds, list, partitions, partitionIndex)...}};
+        }
+        else
+        {
+          return {partitions, container_type{}};
+        }
+      }
+
+
+      [[nodiscard]]
+      constexpr static T make_element(size_type i, std::initializer_list<std::initializer_list<T>> list, const partitions_type& partitions, IndexType& partitionIndex)
+      {
+        auto boundary{partitions[partitionIndex]};
+        while(i == boundary)
+        {
+          boundary = partitions[++partitionIndex];
+        }
+
+        auto index{partitionIndex ? i - partitions[partitionIndex - 1] : i};
+
+        return T{*((list.begin() + partitionIndex)->begin() + index)};
       }
     };
   }

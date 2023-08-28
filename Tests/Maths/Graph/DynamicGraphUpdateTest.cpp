@@ -58,12 +58,12 @@ namespace sequoia::testing
     maths::graph_flavour GraphFlavour,
     class EdgeWeight,
     class NodeWeight,
-    class EdgeStorageTraits,
+    class EdgeStorage,
     class NodeWeightStorageTraits
   >
   void test_graph_update::execute_operations()
   {
-    using ESTraits = EdgeStorageTraits;
+    using ESTraits = EdgeStorage;
     using NSTraits = NodeWeightStorageTraits;
     using graph_type = graph_type_generator_t<GraphFlavour, EdgeWeight, NodeWeight, ESTraits, NSTraits>;
     if constexpr(std::is_same_v<EdgeWeight, std::vector<double>>)

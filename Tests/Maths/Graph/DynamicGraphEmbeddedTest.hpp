@@ -35,7 +35,7 @@ namespace sequoia
         class NodeWeight,
         class EdgeWeightCreator,
         class NodeWeightCreator,
-        class EdgeStorageTraits,
+        class EdgeStorage,
         class NodeWeightStorageTraits
       >
       void execute_operations();

@@ -43,7 +43,7 @@ namespace sequoia
         maths::graph_flavour GraphFlavour,
         class EdgeWeight,
         class NodeWeight,
-        class EdgeStorageTraits,
+        class EdgeStorage,
         class NodeWeightStorageTraits
       >
       void execute_operations();

@@ -165,13 +165,13 @@ namespace sequoia::testing
   <
     class EdgeWeight,
     class NodeWeight,
-    class EdgeStorageTraits,
+    class EdgeStorage,
     class NodeWeightStorageTraits
   >
   class dynamic_directed_graph_operations
   {
   public:
-    using graph_t            = maths::directed_graph<EdgeWeight, NodeWeight,EdgeStorageTraits, NodeWeightStorageTraits>;
+    using graph_t            = maths::directed_graph<EdgeWeight, NodeWeight,EdgeStorage, NodeWeightStorageTraits>;
     using edge_t             = typename graph_t::edge_init_type;
     using edges_equivalent_t = std::initializer_list<std::initializer_list<edge_t>>;
     using transition_graph   = typename transition_checker<graph_t>::transition_graph;
