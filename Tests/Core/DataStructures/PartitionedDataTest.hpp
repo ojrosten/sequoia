@@ -25,7 +25,7 @@ namespace sequoia::testing
   private:
     void test_static_storage();
 
-    template<class Traits, template<class> class ReferencePolicy>
+    template<class Container, std::bidirectional_iterator I>
     void test_generic_iterator_properties();
 
     void test_iterators();

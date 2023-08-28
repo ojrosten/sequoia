@@ -97,27 +97,20 @@ namespace sequoia
 
     void partitioned_data_test::test_iterators()
     {
-      //test_generic_iterator_properties<traits<int>, partition_impl::mutable_reference>();
-      //test_generic_iterator_properties<traits<int>, partition_impl::const_reference>();
+      test_generic_iterator_properties<std::vector<int>, std::vector<int>::iterator>();
+      test_generic_iterator_properties<std::vector<int>, std::vector<int>::const_iterator>();
     }
 
-    template<class Traits, template<class> class ReferencePolicy>
+    template<class Container, std::bidirectional_iterator I>
     void partitioned_data_test::test_generic_iterator_properties()
     {
-      /*using container_t = std::vector<int>;
+      Container vec{1, 2, 3};
 
-      container_t vec{1, 2, 3};
-
-      using p_i_t
-        = utilities::iterator<
-            typename partition_impl::partition_iterator_generator<Traits, ReferencePolicy, false>::iterator,
-            utilities::identity_dereference_policy<typename partition_impl::partition_iterator_generator<Traits, ReferencePolicy, false>::iterator,
-                                                   partition_impl::partition_index_policy<false, std::size_t>>
-          >;
+      using p_i_t = utilities::iterator<I, utilities::identity_dereference_policy<I, partition_impl::partition_index_policy<false, std::size_t>>>;
 
       p_i_t iter(vec.begin(), 4u);
 
-      if constexpr(std::is_same_v<ReferencePolicy<int>, partition_impl::mutable_reference<int>>)
+      if constexpr(std::is_same_v<I, typename Container::iterator>)
       {
         check(equality, report_line(""), iter.operator->(), &(*vec.begin()));
       }
@@ -125,7 +118,6 @@ namespace sequoia
       {
         check(equality, report_line(""), iter.operator->(), &(*vec.cbegin()));
       }
-
 
       check(equality, report_line(""), vec[0],*iter);
       check(equality, report_line(""), iter.partition_index(), 4_sz);
@@ -174,7 +166,7 @@ namespace sequoia
 
       auto std_iter = iter.base_iterator();
 
-      check(equality, report_line(""), *std_iter, 1);*/
+      check(equality, report_line(""), *std_iter, 1);
     }
   }
 }
