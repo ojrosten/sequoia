@@ -220,14 +220,15 @@ int main(int argc, char** argv)
     runner.add_test_suite(
       "Partitioned Data",
       partitioned_data_false_positive_test{"False Positive Diagnostics"},
-      partitioned_data_test{"Unit Test"},
+      partition_iterator_test{"Iterator Test"},
       bucketed_sequence_regular_test{"Bucketed Sequence Regular Test"},
       partitioned_sequence_regular_test{"Partitioned Sequence Regular Test"},
-      partitioned_data_allocation_test{"Allocation Test"}
+      partitioned_data_allocation_test{"Allocation Test"},
+      static_partitioned_sequence_test{"Static Partitioned Sequence Regular Test"}
     );
 
     runner.add_test_suite(
-      "StaticLinearlyPartitionedSequence",
+      "Static Linearly Partitioned Sequence",
       static_linearly_partitioned_sequence_false_positive_test{"False Positive Test"},
       static_linearly_partitioned_sequence_test{"Unit Test"}
     );

@@ -9,11 +9,11 @@
 
 /*! \file */
 
-#include "PartitionedDataTestingUtilities.hpp"
+#include "sequoia/TestFramework/RegularTestCore.hpp"
 
 namespace sequoia::testing
 {
-  class partitioned_data_test final : public regular_test
+  class partition_iterator_test final : public regular_test
   {
   public:
     using regular_test::regular_test;
@@ -23,7 +23,6 @@ namespace sequoia::testing
 
     void run_tests();
   private:
-    void test_static_storage();
 
     template<class Container, std::bidirectional_iterator I>
     void test_generic_iterator_properties();
