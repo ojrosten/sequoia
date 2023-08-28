@@ -29,12 +29,5 @@ namespace sequoia::testing
     void test_generic_iterator_properties();
 
     void test_iterators();
-
-    template<class T>
-    struct traits
-    {
-      using value_type = T;
-      template<class S> using container_type = std::vector<S, std::allocator<S>>;
-    };
   };
 }
