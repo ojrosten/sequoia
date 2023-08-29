@@ -23,8 +23,8 @@ namespace sequoia::testing
   {
     using std::complex;
 
-    using contig_edge_traits = custom_allocator_contiguous_edge_storage_traits;
-    using bucket_edge_traits = custom_allocator_bucketed_edge_storage_traits;
+    using contig_edge_traits = custom_allocator_contiguous_edge_storage_config;
+    using bucket_edge_traits = custom_allocator_bucketed_edge_storage_config;
 
     {
       graph_test_helper<int, complex<double>, weighted_graph_allocation_test>  helper{*this};
@@ -59,16 +59,16 @@ namespace sequoia::testing
     maths::graph_flavour GraphFlavour,
     class EdgeWeight,
     class NodeWeight,
-    class EdgeStorage,
-    class NodeWeightStorageTraits
+    class EdgeStorageConfig,
+    class NodeWeightStorageConfig
   >
   void weighted_graph_allocation_test::execute_operations()
   {
-    using ESTraits = EdgeStorage;
-    using NSTraits = NodeWeightStorageTraits;
+    using ESTraits = EdgeStorageConfig;
+    using NSTraits = NodeWeightStorageConfig;
     using graph_type = graph_type_generator_t<GraphFlavour, EdgeWeight, NodeWeight, ESTraits, NSTraits>;
 
-    if constexpr(std::is_same_v<ESTraits, custom_allocator_contiguous_edge_storage_traits>)
+    if constexpr(std::is_same_v<ESTraits, custom_allocator_contiguous_edge_storage_config>)
     {
       contiguous_memory<graph_type>();
     }

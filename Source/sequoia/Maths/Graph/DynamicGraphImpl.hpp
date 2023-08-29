@@ -32,7 +32,7 @@ namespace sequoia::maths::graph_impl
     graph_flavour GraphFlavour,
     class EdgeWeight,
     class EdgeMetaData,
-    class EdgeStorage,
+    class EdgeStorageConfig,
     std::integral IndexType
   >
   struct dynamic_edge_traits : public
@@ -42,7 +42,7 @@ namespace sequoia::maths::graph_impl
       EdgeWeight,
       EdgeMetaData,
       IndexType,
-      EdgeStorage::edge_sharing
+      EdgeStorageConfig::edge_sharing
     >
   {
     using edge_type_gen =
@@ -52,13 +52,13 @@ namespace sequoia::maths::graph_impl
         EdgeWeight,
         EdgeMetaData,
         IndexType,
-        EdgeStorage::edge_sharing
+        EdgeStorageConfig::edge_sharing
       >;
 
     using edge_type = typename edge_type_gen::edge_type;
 
     using edge_storage_type
-      = typename EdgeStorage::template storage_type<edge_type>;
+      = typename EdgeStorageConfig::template storage_type<edge_type>;
 
     using edge_allocator_type = typename edge_storage_type::allocator_type;
   };

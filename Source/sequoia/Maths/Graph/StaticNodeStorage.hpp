@@ -21,9 +21,8 @@ namespace sequoia::maths::graph_impl
     class Weight,
     std::size_t N
   >
-  struct static_node_storage_traits
+  struct static_node_storage_config
   {
-    constexpr static bool throw_on_range_error{true};
     constexpr static bool static_storage_v{true};
     constexpr static std::size_t num_elements_v{N};
     template<class S> using container_type = std::array<S, N>;
@@ -31,7 +30,7 @@ namespace sequoia::maths::graph_impl
 
   template<class Weight, std::size_t N>
     requires std::is_empty_v<Weight>
-  struct static_node_storage_traits<Weight, N>
+  struct static_node_storage_config<Weight, N>
   {};
 
   template
@@ -39,10 +38,10 @@ namespace sequoia::maths::graph_impl
     class Weight,
     std::size_t N
   >
-  class static_node_storage : public node_storage<Weight, static_node_storage_traits<Weight, N>>
+  class static_node_storage : public node_storage<Weight, static_node_storage_config<Weight, N>>
   {
   public:
-    using node_storage<Weight, static_node_storage_traits<Weight, N>>::node_storage;
+    using node_storage<Weight, static_node_storage_config<Weight, N>>::node_storage;
   };
 
   template<class Weight, std::size_t N>

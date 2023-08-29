@@ -14,16 +14,16 @@
 
 namespace sequoia::testing
 {
-  struct custom_allocator_contiguous_edge_storage_traits
+  struct custom_allocator_contiguous_edge_storage_config
   {
-    template <class T> using storage_type = typename custom_partitioned_sequence_generator<T, true, true, true>::storage_type;
+    template <class T> using storage_type = typename custom_partitioned_sequence_generator<T, true, false, false>::storage_type;
 
     constexpr static maths::edge_sharing_preference edge_sharing{maths::edge_sharing_preference::agnostic};
   };
 
-  struct custom_allocator_bucketed_edge_storage_traits
+  struct custom_allocator_bucketed_edge_storage_config
   {
-    template <class T> using storage_type = typename custom_bucketed_sequence_generator<T, true, true, true>::storage_type;
+    template <class T> using storage_type = typename custom_bucketed_sequence_generator<T, true, false, false>::storage_type;
 
     constexpr static maths::edge_sharing_preference edge_sharing{maths::edge_sharing_preference::agnostic};
   };
@@ -31,7 +31,6 @@ namespace sequoia::testing
   template<class NodeWeight>
   struct node_traits
   {
-    constexpr static bool throw_on_range_error{true};
     constexpr static bool static_storage_v{false};
     constexpr static bool has_allocator{true};
     template<class S> using container_type = std::vector<S, shared_counting_allocator<S, true, true, true>>;

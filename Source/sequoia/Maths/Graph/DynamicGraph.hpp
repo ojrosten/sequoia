@@ -19,14 +19,14 @@
 
 namespace sequoia::maths
 {
-  struct contiguous_edge_storage_traits
+  struct contiguous_edge_storage_config
   {
     template <class T> using storage_type = data_structures::partitioned_sequence<T>;
 
     constexpr static edge_sharing_preference edge_sharing{edge_sharing_preference::agnostic};
   };
 
-  struct bucketed_edge_storage_traits
+  struct bucketed_edge_storage_config
   {
     template <class T> using storage_type = data_structures::bucketed_sequence<T>;
 
@@ -34,9 +34,8 @@ namespace sequoia::maths
   };
 
   template<class NodeWeight>
-  struct node_weight_storage_traits
+  struct node_weight_storage_config
   {
-    constexpr static bool throw_on_range_error{true};
     constexpr static bool static_storage_v{false};
     constexpr static bool has_allocator{true};
     template<class S> using container_type = std::vector<S, std::allocator<S>>;
@@ -44,7 +43,7 @@ namespace sequoia::maths
 
   template<class NodeWeight>
     requires std::is_empty_v<NodeWeight>
-  struct node_weight_storage_traits<NodeWeight>
+  struct node_weight_storage_config<NodeWeight>
   {
     constexpr static bool has_allocator{false};
   };
@@ -61,19 +60,19 @@ namespace sequoia::maths
     class EdgeWeight,
     class NodeWeight,
     class EdgeMetaData,
-    class EdgeStorage,
-    class NodeWeightStorageTraits
+    class EdgeStorageConfig,
+    class NodeWeightStorageConfig
   >
   class graph_base : public
     graph_primitive
     <
-      connectivity<graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeight, EdgeMetaData, EdgeStorage, std::size_t>>,
-      graph_impl::node_storage<NodeWeight, NodeWeightStorageTraits>
+      connectivity<graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeight, EdgeMetaData, EdgeStorageConfig, std::size_t>>,
+      graph_impl::node_storage<NodeWeight, NodeWeightStorageConfig>
     >
   {
   public:
-    using edge_traits_type  = graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeight, EdgeMetaData, EdgeStorage, std::size_t>;
-    using node_storage_type = graph_impl::node_storage<NodeWeight, NodeWeightStorageTraits>;
+    using edge_traits_type  = graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeight, EdgeMetaData, EdgeStorageConfig, std::size_t>;
+    using node_storage_type = graph_impl::node_storage<NodeWeight, NodeWeightStorageConfig>;
     using primitive_type    = graph_primitive<connectivity<edge_traits_type>, node_storage_type>;
 
     using node_weight_type    = NodeWeight;
@@ -168,27 +167,27 @@ namespace sequoia::maths
     class EdgeWeight,
     class NodeWeight,
     class EdgeMetaData,
-    class EdgeStorage,
-    class NodeWeightStorageTraits
+    class EdgeStorageConfig,
+    class NodeWeightStorageConfig
   >
-    requires (NodeWeightStorageTraits::has_allocator)
+    requires (NodeWeightStorageConfig::has_allocator)
   class graph_base<
       GraphFlavour,
       EdgeWeight,
       NodeWeight,
       EdgeMetaData,
-      EdgeStorage,
-      NodeWeightStorageTraits
+      EdgeStorageConfig,
+      NodeWeightStorageConfig
     > : public
     graph_primitive
     <
-      connectivity<graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeight, EdgeMetaData, EdgeStorage, std::size_t>>,
-      graph_impl::node_storage<NodeWeight,NodeWeightStorageTraits>
+      connectivity<graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeight, EdgeMetaData, EdgeStorageConfig, std::size_t>>,
+      graph_impl::node_storage<NodeWeight,NodeWeightStorageConfig>
     >
   {
   public:
-    using edge_traits_type  = graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeight, EdgeMetaData, EdgeStorage, std::size_t>;
-    using node_storage_type = graph_impl::node_storage<NodeWeight, NodeWeightStorageTraits>;
+    using edge_traits_type  = graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeight, EdgeMetaData, EdgeStorageConfig, std::size_t>;
+    using node_storage_type = graph_impl::node_storage<NodeWeight, NodeWeightStorageConfig>;
     using primitive_type    = graph_primitive<connectivity<edge_traits_type>, node_storage_type>;
 
     using node_weight_type           = NodeWeight;
@@ -302,8 +301,8 @@ namespace sequoia::maths
   <
     class EdgeWeight,
     class NodeWeight,
-    class EdgeStorage       = bucketed_edge_storage_traits,
-    class NodeWeightStorageTraits = node_weight_storage_traits<NodeWeight>
+    class EdgeStorageConfig       = bucketed_edge_storage_config,
+    class NodeWeightStorageConfig = node_weight_storage_config<NodeWeight>
   >
   class directed_graph final : public
     graph_base
@@ -312,8 +311,8 @@ namespace sequoia::maths
       EdgeWeight,
       NodeWeight,
       null_meta_data,
-      EdgeStorage,
-      NodeWeightStorageTraits
+      EdgeStorageConfig,
+      NodeWeightStorageConfig
     >
   {
   public:
@@ -326,8 +325,8 @@ namespace sequoia::maths
         EdgeWeight,
         NodeWeight,
         null_meta_data,
-        EdgeStorage,
-        NodeWeightStorageTraits
+        EdgeStorageConfig,
+        NodeWeightStorageConfig
       >::graph_base;
 
     using base_type =
@@ -337,8 +336,8 @@ namespace sequoia::maths
         EdgeWeight,
         NodeWeight,
         null_meta_data,
-        EdgeStorage,
-        NodeWeightStorageTraits
+        EdgeStorageConfig,
+        NodeWeightStorageConfig
       >;
 
     using base_type::swap_nodes;
@@ -358,8 +357,8 @@ namespace sequoia::maths
     class EdgeWeight,
     class NodeWeight,
     class EdgeMetaData            = null_meta_data,
-    class EdgeStorage       = bucketed_edge_storage_traits,
-    class NodeWeightStorageTraits = node_weight_storage_traits<NodeWeight>
+    class EdgeStorageConfig       = bucketed_edge_storage_config,
+    class NodeWeightStorageConfig = node_weight_storage_config<NodeWeight>
   >
   class undirected_graph final : public
     graph_base
@@ -368,8 +367,8 @@ namespace sequoia::maths
       EdgeWeight,
       NodeWeight,
       EdgeMetaData,
-      EdgeStorage,
-      NodeWeightStorageTraits
+      EdgeStorageConfig,
+      NodeWeightStorageConfig
     >
   {
   public:
@@ -382,8 +381,8 @@ namespace sequoia::maths
         EdgeWeight,
         NodeWeight,
         EdgeMetaData,
-        EdgeStorage,
-        NodeWeightStorageTraits
+        EdgeStorageConfig,
+        NodeWeightStorageConfig
       >::graph_base;
 
     using base_type =
@@ -393,8 +392,8 @@ namespace sequoia::maths
         EdgeWeight,
         NodeWeight,
         EdgeMetaData,
-        EdgeStorage,
-        NodeWeightStorageTraits
+        EdgeStorageConfig,
+        NodeWeightStorageConfig
       >;
 
     using base_type::swap_nodes;
@@ -414,8 +413,8 @@ namespace sequoia::maths
     class EdgeWeight,
     class NodeWeight,
     class EdgeMetaData            = null_meta_data,
-    class EdgeStorage       = bucketed_edge_storage_traits,
-    class NodeWeightStorageTraits = node_weight_storage_traits<NodeWeight>
+    class EdgeStorageConfig       = bucketed_edge_storage_config,
+    class NodeWeightStorageConfig = node_weight_storage_config<NodeWeight>
   >
   class embedded_graph final : public
     graph_base
@@ -424,8 +423,8 @@ namespace sequoia::maths
       EdgeWeight,
       NodeWeight,
       EdgeMetaData,
-      EdgeStorage,
-      NodeWeightStorageTraits
+      EdgeStorageConfig,
+      NodeWeightStorageConfig
     >
   {
   public:
@@ -438,8 +437,8 @@ namespace sequoia::maths
         EdgeWeight,
         NodeWeight,
         EdgeMetaData,
-        EdgeStorage,
-        NodeWeightStorageTraits
+        EdgeStorageConfig,
+        NodeWeightStorageConfig
       >::graph_base;
 
     using base_type =
@@ -449,8 +448,8 @@ namespace sequoia::maths
         EdgeWeight,
         NodeWeight,
         EdgeMetaData,
-        EdgeStorage,
-        NodeWeightStorageTraits
+        EdgeStorageConfig,
+        NodeWeightStorageConfig
       >;
 
     using base_type::swap_nodes;

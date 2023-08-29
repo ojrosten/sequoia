@@ -202,7 +202,6 @@ namespace sequoia
 
       constexpr static auto npos{std::numeric_limits<edge_index_type>::max()};
       constexpr static graph_flavour flavour{EdgeTraits::flavour};
-      constexpr static bool throw_on_range_error{true};
 
       constexpr connectivity() = default;
 
@@ -226,7 +225,7 @@ namespace sequoia
       [[nodiscard]]
       constexpr const_edge_iterator cbegin_edges(const edge_index_type node) const
       {
-        if constexpr(throw_on_range_error) graph_errors::check_node_index_range("cbegin_edges", order(), node);
+        graph_errors::check_node_index_range("cbegin_edges", order(), node);
 
         return m_Edges.cbegin_partition(node);
       }
@@ -234,7 +233,7 @@ namespace sequoia
       [[nodiscard]]
       constexpr const_edge_iterator cend_edges(const edge_index_type node) const
       {
-        if constexpr(throw_on_range_error) graph_errors::check_node_index_range("cend_edges", order(), node);
+        graph_errors::check_node_index_range("cend_edges", order(), node);
 
         return m_Edges.cend_partition(node);
       }
@@ -242,7 +241,7 @@ namespace sequoia
       [[nodiscard]]
       constexpr const_reverse_edge_iterator crbegin_edges(const edge_index_type node) const
       {
-        if constexpr(throw_on_range_error) graph_errors::check_node_index_range("crbegin_edges", order(), node);
+        graph_errors::check_node_index_range("crbegin_edges", order(), node);
 
         return m_Edges.crbegin_partition(node);
       }
@@ -250,7 +249,7 @@ namespace sequoia
       [[nodiscard]]
       constexpr const_reverse_edge_iterator crend_edges(const edge_index_type node) const
       {
-        if constexpr(throw_on_range_error) graph_errors::check_node_index_range("crend_edges", order(), node);
+        graph_errors::check_node_index_range("crend_edges", order(), node);
 
         return m_Edges.crend_partition(node);
       }
@@ -258,7 +257,7 @@ namespace sequoia
       [[nodiscard]]
       constexpr const_edges_range cedges(const edge_index_type node) const
       {
-        if constexpr(throw_on_range_error) graph_errors::check_node_index_range("cedges", order(), node);
+        graph_errors::check_node_index_range("cedges", order(), node);
 
         return {m_Edges.cbegin_partition(node), m_Edges.cend_partition(node)};
       }
@@ -428,20 +427,18 @@ namespace sequoia
         std::ranges::swap(m_Edges, rhs.m_Edges);
       }
 
+      // TO DO: change semantics to non-throwing?
       constexpr void swap_edges(edge_index_type node, edge_index_type i, edge_index_type j)
       {
-        if constexpr(throw_on_range_error)
-        {
-          graph_errors::check_edge_swap_indices(node, i, j, static_cast<std::size_t>(std::ranges::distance(cedges(node))));
-        }
+        graph_errors::check_edge_swap_indices(node, i, j, static_cast<std::size_t>(std::ranges::distance(cedges(node))));
 
         std::ranges::iter_swap(begin_edges(node) + i, begin_edges(node) + j);
       }
 
+      // TO DO: change semantics to non-throwing?
       constexpr void swap_nodes(size_type i, size_type j)
       {
-        if constexpr(throw_on_range_error)
-          graph_errors::check_node_index_range("swap_nodes", order(), i, j);
+        graph_errors::check_node_index_range("swap_nodes", order(), i, j);
 
         if(i == j) return;
 
@@ -512,10 +509,11 @@ namespace sequoia
         m_Edges.shrink_to_fit();
       }
 
+      // TO DO: Consider interaction of throwing semantics with that of edge storage class
       [[nodiscard]]
       constexpr edge_iterator begin_edges(const edge_index_type node)
       {
-        if constexpr(throw_on_range_error) graph_errors::check_node_index_range("begin_edges", order(), node);
+        graph_errors::check_node_index_range("begin_edges", order(), node);
 
         return m_Edges.begin_partition(node);
       }
@@ -523,7 +521,7 @@ namespace sequoia
       [[nodiscard]]
       constexpr edge_iterator end_edges(const edge_index_type node)
       {
-        if constexpr(throw_on_range_error) graph_errors::check_node_index_range("end_edges", order(), node);
+        graph_errors::check_node_index_range("end_edges", order(), node);
 
         return m_Edges.end_partition(node);
       }
@@ -548,7 +546,7 @@ namespace sequoia
 
       void erase_node(const size_type node)
       {
-        if constexpr(throw_on_range_error) graph_errors::check_node_index_range("erase_node", order(), node);
+        graph_errors::check_node_index_range("erase_node", order(), node);
 
         if constexpr(!is_directed(flavour))
         {
@@ -610,7 +608,7 @@ namespace sequoia
         requires (std::is_empty_v<edge_meta_data_type>&& initializable_from<edge_weight_type, Args...> && (is_directed(flavour) || std::is_copy_constructible_v<edge_type>))
       void join(const edge_index_type node1, const edge_index_type node2, Args&&... args)
       {
-        if constexpr(throw_on_range_error) graph_errors::check_node_index_range("join", order(), node1, node2);
+        graph_errors::check_node_index_range("join", order(), node1, node2);
 
         add_to_partition(node1, node2, std::forward<Args>(args)...);
 
@@ -624,7 +622,7 @@ namespace sequoia
         requires (!std::is_empty_v<edge_meta_data_type>&& initializable_from<edge_weight_type, Args...> && (is_directed(flavour) || std::is_copy_constructible_v<edge_type>))
       void join(const edge_index_type node1, const edge_index_type node2, edge_meta_data_type meta1, edge_meta_data_type meta2, Args&&... args)
       {
-        if constexpr(throw_on_range_error) graph_errors::check_node_index_range("join", order(), node1, node2);
+        graph_errors::check_node_index_range("join", order(), node1, node2);
 
         add_to_partition(node1, node2, meta1, std::forward<Args>(args)...);
 
@@ -666,10 +664,7 @@ namespace sequoia
         insert_join(const_edge_iterator citer1, const edge_index_type pos2, Args&&... args)
       {
         const auto node{citer1.partition_index()};
-        if constexpr(throw_on_range_error)
-        {
-          graph_errors::check_edge_insertion_index("insert_join", node, std::ranges::distance(cedges(node)) + 1, pos2);
-        }
+        graph_errors::check_edge_insertion_index("insert_join", node, std::ranges::distance(cedges(node)) + 1, pos2);
 
         citer1 = insert_to_partition(citer1, node, pos2, std::forward<Args>(args)...);
 
@@ -682,10 +677,7 @@ namespace sequoia
         insert_join(const_edge_iterator citer1, const edge_index_type pos2, edge_meta_data_type meta1, edge_meta_data_type meta2, Args&&... args)
       {
         const auto node{citer1.partition_index()};
-        if constexpr(throw_on_range_error)
-        {
-          graph_errors::check_edge_insertion_index("insert_join", node, std::ranges::distance(cedges(node)) + 1, pos2);
-        }
+        graph_errors::check_edge_insertion_index("insert_join", node, std::ranges::distance(cedges(node)) + 1, pos2);
 
         citer1 = insert_to_partition(citer1, node, pos2, meta1, std::forward<Args>(args)...);
 

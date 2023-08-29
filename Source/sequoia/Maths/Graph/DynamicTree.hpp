@@ -22,8 +22,8 @@ namespace sequoia::maths
     class EdgeWeight,
     class NodeWeight,
     class EdgeMetaData,
-    class EdgeStorage       = bucketed_edge_storage_traits,
-    class NodeWeightStorageTraits = node_weight_storage_traits<NodeWeight>
+    class EdgeStorageConfig       = bucketed_edge_storage_config,
+    class NodeWeightStorageConfig = node_weight_storage_config<NodeWeight>
   >
     requires ((TreeLinkDir == tree_link_direction::symmetric) || (Flavour == graph_flavour::directed))
     class tree_base : public
@@ -33,8 +33,8 @@ namespace sequoia::maths
         EdgeWeight,
         NodeWeight,
         EdgeMetaData,
-        EdgeStorage,
-        NodeWeightStorageTraits
+        EdgeStorageConfig,
+        NodeWeightStorageConfig
       >
   {
       using base_type =
@@ -44,8 +44,8 @@ namespace sequoia::maths
           EdgeWeight,
           NodeWeight,
           EdgeMetaData,
-          EdgeStorage,
-          NodeWeightStorageTraits
+          EdgeStorageConfig,
+          NodeWeightStorageConfig
         >;
   public:
     using size_type = typename base_type::size_type;
@@ -158,8 +158,8 @@ namespace sequoia::maths
     tree_link_direction TreeLinkDir,
     class EdgeWeight,
     class NodeWeight,
-    class EdgeStorage       = bucketed_edge_storage_traits,
-    class NodeWeightStorageTraits = node_weight_storage_traits<NodeWeight>
+    class EdgeStorageConfig       = bucketed_edge_storage_config,
+    class NodeWeightStorageConfig = node_weight_storage_config<NodeWeight>
   >
   class directed_tree final : public
     tree_base
@@ -169,8 +169,8 @@ namespace sequoia::maths
       EdgeWeight,
       NodeWeight,
       null_meta_data,
-      EdgeStorage,
-      NodeWeightStorageTraits
+      EdgeStorageConfig,
+      NodeWeightStorageConfig
     >
   {
   public:
@@ -180,8 +180,8 @@ namespace sequoia::maths
             EdgeWeight,
             NodeWeight,
             null_meta_data,
-            EdgeStorage,
-            NodeWeightStorageTraits
+            EdgeStorageConfig,
+            NodeWeightStorageConfig
         >::tree_base;
   };
 
@@ -191,8 +191,8 @@ namespace sequoia::maths
     class EdgeWeight,
     class NodeWeight,
     class EdgeMetaData            = null_meta_data,
-    class EdgeStorage       = bucketed_edge_storage_traits,
-    class NodeWeightStorageTraits = node_weight_storage_traits<NodeWeight>
+    class EdgeStorageConfig       = bucketed_edge_storage_config,
+    class NodeWeightStorageConfig = node_weight_storage_config<NodeWeight>
   >
     requires (TreeLinkDir == tree_link_direction::symmetric)
   class undirected_tree final : public
@@ -203,8 +203,8 @@ namespace sequoia::maths
       EdgeWeight,
       NodeWeight,
       EdgeMetaData,
-      EdgeStorage,
-      NodeWeightStorageTraits
+      EdgeStorageConfig,
+      NodeWeightStorageConfig
     >
   {
   public:
@@ -214,8 +214,8 @@ namespace sequoia::maths
             EdgeWeight,
             NodeWeight,
             EdgeMetaData,
-            EdgeStorage,
-            NodeWeightStorageTraits
+            EdgeStorageConfig,
+            NodeWeightStorageConfig
         >::tree_base;
   };
 

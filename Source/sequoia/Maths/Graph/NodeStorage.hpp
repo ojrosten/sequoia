@@ -51,8 +51,6 @@ namespace sequoia::maths::graph_impl
     using const_reverse_iterator   = utilities::iterator<typename node_weight_container_type::const_reverse_iterator, utilities::identity_dereference_policy<typename node_weight_container_type::const_reverse_iterator>>;
     using const_node_weights_range = std::ranges::subrange<const_iterator>;
 
-    constexpr static bool throw_on_range_error{Traits::throw_on_range_error};
-
     constexpr node_storage() = default;
 
     constexpr node_storage(const size_type)
@@ -152,7 +150,7 @@ namespace sequoia::maths::graph_impl
     template<class... Args>
     constexpr void node_weight(const_iterator pos, Args&&... args)
     {
-      if constexpr (throw_on_range_error) if(pos == cend_node_weights()) throw std::out_of_range("node_storage::node_weight - index out of range!\n");
+      if(pos == cend_node_weights()) throw std::out_of_range("node_storage::node_weight - index out of range!\n");
 
       const auto index{std::ranges::distance(cbegin_node_weights(), pos)};
       m_NodeWeights[index] = weight_type{std::forward<Args>(args)...};
@@ -161,7 +159,7 @@ namespace sequoia::maths::graph_impl
     template<class Fn>
     constexpr decltype(auto) mutate_node_weight(const_iterator pos, Fn&& fn)
     {
-      if constexpr (throw_on_range_error) if(pos == cend_node_weights()) throw std::out_of_range("node_storage::node_weight - index out of range!\n");
+      if(pos == cend_node_weights()) throw std::out_of_range("node_storage::node_weight - index out of range!\n");
 
       const auto index{std::ranges::distance(cbegin_node_weights(), pos)};
       return std::forward<Fn>(fn)(m_NodeWeights[index]);
@@ -212,16 +210,13 @@ namespace sequoia::maths::graph_impl
       std::ranges::swap(m_NodeWeights, rhs.m_NodeWeights);
     }
 
+    // TO DO: consider throwing semantics
     constexpr void swap_nodes(const size_type i, const size_type j)
     {
-      if((i < size()) && (j < size()))
-      {
-        std::ranges::swap(m_NodeWeights[i], m_NodeWeights[j]);
-      }
-      else if constexpr (throw_on_range_error)
-      {
+      if((i >= size()) || (j >= size()))
         throw std::out_of_range("node_storage::swap - index out of range");
-      }
+
+      std::ranges::swap(m_NodeWeights[i], m_NodeWeights[j]);
     }
 
     auto get_node_allocator() const
@@ -261,20 +256,14 @@ namespace sequoia::maths::graph_impl
 
     const_iterator erase_node(const_iterator pos)
     {
-      if constexpr (throw_on_range_error)
-      {
-        if(pos == cend_node_weights()) throw std::out_of_range("Attempting to erase a node which does not exist");
-      }
+      if(pos == cend_node_weights()) throw std::out_of_range("Attempting to erase a node which does not exist");
 
       return const_iterator{m_NodeWeights.erase(pos.base_iterator())};
     }
 
     const_iterator erase_nodes(const_iterator first, const_iterator last)
     {
-      if constexpr (throw_on_range_error)
-      {
-        if(first > last) throw std::out_of_range("Attempting to erase a range of nodes with first > last");
-      }
+      if(first > last) throw std::out_of_range("Attempting to erase a range of nodes with first > last");
 
       return const_iterator{m_NodeWeights.erase(first.base_iterator(), last.base_iterator())};
     }

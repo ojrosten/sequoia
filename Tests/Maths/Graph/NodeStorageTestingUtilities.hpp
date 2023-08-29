@@ -166,19 +166,18 @@ namespace sequoia::testing
 
 
   template<bool PropagateCopy=true, bool PropagateMove=true, bool PropagateSwap=true>
-  struct node_storage_traits
+  struct node_storage_config
   {
-    constexpr static bool throw_on_range_error{true};
     constexpr static bool static_storage_v{};
     template<class S> using container_type = std::vector<S, shared_counting_allocator<S, PropagateCopy, PropagateMove, PropagateSwap>>;
   };
 
   template<class Weight, bool PropagateCopy=true, bool PropagateMove=true, bool PropagateSwap=true>
   class node_storage_tester
-    : public maths::graph_impl::node_storage<Weight, node_storage_traits<PropagateCopy, PropagateMove, PropagateSwap>>
+    : public maths::graph_impl::node_storage<Weight, node_storage_config<PropagateCopy, PropagateMove, PropagateSwap>>
   {
   private:
-    using base_t = maths::graph_impl::node_storage<Weight, node_storage_traits<PropagateCopy, PropagateMove, PropagateSwap>>;
+    using base_t = maths::graph_impl::node_storage<Weight, node_storage_config<PropagateCopy, PropagateMove, PropagateSwap>>;
 
   public:
     using allocator_type = typename base_t::node_weight_container_type::allocator_type;
@@ -251,7 +250,7 @@ namespace sequoia::testing
 
   template<class Weight, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
   struct value_tester<node_storage_tester<Weight, PropagateCopy, PropagateMove, PropagateSwap>>
-    : public value_tester<maths::graph_impl::node_storage<Weight, node_storage_traits<PropagateCopy, PropagateMove, PropagateSwap>>>
+    : public value_tester<maths::graph_impl::node_storage<Weight, node_storage_config<PropagateCopy, PropagateMove, PropagateSwap>>>
   {
   };
 

@@ -21,6 +21,6 @@ namespace sequoia::testing
   void dynamic_undirected_graph_unweighted_contiguous_test::run_tests()
   {
     using namespace maths;
-    dynamic_undirected_graph_operations<null_weight, null_weight, null_meta_data, independent_contiguous_edge_storage_traits, node_weight_storage_traits<null_weight>>::execute_operations(*this);
+    dynamic_undirected_graph_operations<null_weight, null_weight, null_meta_data, independent_contiguous_edge_storage_config, node_weight_storage_config<null_weight>>::execute_operations(*this);
   }
 }

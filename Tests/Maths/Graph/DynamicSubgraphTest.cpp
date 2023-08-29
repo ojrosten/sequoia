@@ -36,15 +36,15 @@ namespace sequoia::testing
     maths::graph_flavour GraphFlavour,
     class EdgeWeight,
     class NodeWeight,
-    class EdgeStorage,
-    class NodeWeightStorageTraits
+    class EdgeStorageConfig,
+    class NodeWeightStorageConfig
   >
   void test_subgraph::execute_operations()
   {
     using std::complex;
     using namespace maths;
-    using ESTraits = EdgeStorage;
-    using NSTraits = NodeWeightStorageTraits;
+    using ESTraits = EdgeStorageConfig;
+    using NSTraits = NodeWeightStorageConfig;
     using graph_type = graph_type_generator_t<GraphFlavour, EdgeWeight, NodeWeight, ESTraits, NSTraits>;
     using edge_init_t = typename graph_type::edge_init_type;
     using edge_init_list_t = std::initializer_list<std::initializer_list<edge_init_t>>;
