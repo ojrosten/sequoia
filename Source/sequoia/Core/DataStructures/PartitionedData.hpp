@@ -68,7 +68,7 @@ namespace sequoia
       using size_type      = typename container_type::size_type;
       using index_type     = size_type;
       using allocator_type = typename container_type::allocator_type;
-      using partitions_allocator_type = typename bucket_type::allocator_type;
+      //using partitions_allocator_type = typename bucket_type::allocator_type;
 
       using partition_iterator               = data_structures::partition_iterator<bucket_type, size_type>;
       using const_partition_iterator         = data_structures::const_partition_iterator<bucket_type, size_type>;

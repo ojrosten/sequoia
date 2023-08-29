@@ -21,10 +21,8 @@ namespace sequoia::testing
     bool PropagateMove=false,
     bool PropagateSwap=false
   >
-  struct custom_bucketed_storage_generator
+  struct custom_bucketed_sequence_generator
   {
-    constexpr static bool throw_on_range_error{true};
-
     using value_type = T;
 
     template<class S>
@@ -39,12 +37,24 @@ namespace sequoia::testing
 
     using bucket_type = std::vector<T, allocator_template<T>>;
     using storage_type = data_structures::bucketed_sequence<T, std::vector<bucket_type, allocator_type<bucket_type>>>;
+  };
 
-    template<class S>
-    using container_type = std::vector<S, allocator_template<S>>;
-
-    template<class S>
-    using buckets_type = std::vector<container_type<S>, allocator_type<container_type<S>>>;
+  template
+  <
+    class T,
+    bool PropagateCopy = true,
+    bool PropagateMove = false,
+    bool PropagateSwap = false
+  >
+  struct custom_partitioned_sequence_generator
+  {
+    using storage_type 
+      = data_structures::partitioned_sequence<T,
+                                              std::vector<T, shared_counting_allocator<T, PropagateCopy, PropagateMove, PropagateSwap>>,
+                                              maths::monotonic_sequence<
+                                                std::size_t,
+                                                std::ranges::greater,
+                                                std::vector<std::size_t, shared_counting_allocator<std::size_t, PropagateCopy, PropagateMove, PropagateSwap>>>>;
   };
 
   template<class Storage>

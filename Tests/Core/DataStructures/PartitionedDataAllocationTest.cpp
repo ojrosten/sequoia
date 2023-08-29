@@ -51,7 +51,7 @@ namespace sequoia::testing
   {
     using namespace data_structures;
 
-    using storage    = typename custom_bucketed_storage_generator<T, PropagateCopy, PropagateMove, PropagateSwap>::storage_type;
+    using storage    = typename custom_bucketed_sequence_generator<T, PropagateCopy, PropagateMove, PropagateSwap>::storage_type;
     using allocator  = typename storage::allocator_type;
     using prediction = std::initializer_list<std::initializer_list<int>>;
 
@@ -103,13 +103,7 @@ namespace sequoia::testing
   {
     using namespace data_structures;
 
-    using storage = partitioned_sequence<T,
-                                         std::vector<T, shared_counting_allocator<T, PropagateCopy, PropagateMove, PropagateSwap>>,
-                                         maths::monotonic_sequence<
-                                           std::size_t,
-                                           std::ranges::greater,
-                                           std::vector<std::size_t, shared_counting_allocator<std::size_t, PropagateCopy, PropagateMove, PropagateSwap>>
-                                         >>;
+    using storage = typename custom_partitioned_sequence_generator<T, PropagateCopy, PropagateMove, PropagateSwap>::storage_type;
 
     using allocator = typename storage::allocator_type;
     using partitions_allocator = typename storage::partitions_allocator_type;
