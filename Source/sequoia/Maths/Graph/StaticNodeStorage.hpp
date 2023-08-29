@@ -12,36 +12,30 @@
 
  */
 
+#include "sequoia/Core/ContainerUtilities/ArrayUtilities.hpp"
 #include "sequoia/Maths/Graph/NodeStorage.hpp"
 
-namespace sequoia::maths::graph_impl
+namespace sequoia::maths
 {
   template
   <
     class Weight,
     std::size_t N
   >
-  struct static_node_storage_config
+  class static_node_storage : public node_storage_base<Weight, std::array<Weight, N>>
   {
-    constexpr static bool static_storage_v{true};
-    constexpr static std::size_t num_elements_v{N};
-    template<class S> using container_type = std::array<S, N>;
-  };
-
-  template<class Weight, std::size_t N>
-    requires std::is_empty_v<Weight>
-  struct static_node_storage_config<Weight, N>
-  {};
-
-  template
-  <
-    class Weight,
-    std::size_t N
-  >
-  class static_node_storage : public node_storage<Weight, static_node_storage_config<Weight, N>>
-  {
+    using base_t = node_storage_base<Weight, std::array<Weight, N>>;
   public:
-    using node_storage<Weight, static_node_storage_config<Weight, N>>::node_storage;
+    using size_type   = typename base_t::size_type;
+    using weight_type = typename base_t::weight_type;;
+
+    constexpr static_node_storage(const size_type)
+      : base_t{}
+    {}
+
+    constexpr static_node_storage(std::initializer_list<weight_type> weights)
+      : base_t{utilities::to_array<weight_type, N>(weights, std::identity{})}
+    {}
   };
 
   template<class Weight, std::size_t N>

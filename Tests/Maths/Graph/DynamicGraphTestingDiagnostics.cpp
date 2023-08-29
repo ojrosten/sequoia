@@ -31,12 +31,12 @@ namespace sequoia::testing
     class EdgeWeight,
     class NodeWeight,
     class EdgeStorageConfig,
-    class NodeWeightStorageConfig
+    class NodeWeightStorage
   >
   void test_graph_false_positives::execute_operations()
   {
     using namespace maths;
-    using graph_type = typename graph_type_generator<GraphFlavour, EdgeWeight, NodeWeight, EdgeStorageConfig, NodeWeightStorageConfig>::graph_type;
+    using graph_type = typename graph_type_generator<GraphFlavour, EdgeWeight, NodeWeight, EdgeStorageConfig, NodeWeightStorage>::graph_type;
 
     using edge_init_t = typename graph_type::edge_init_type;
 

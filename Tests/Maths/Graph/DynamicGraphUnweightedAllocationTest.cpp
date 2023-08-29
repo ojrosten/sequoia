@@ -25,8 +25,8 @@ namespace sequoia::testing
 
     graph_test_helper<null_weight, null_weight, unweighted_graph_allocation_test> helper{*this};
 
-    helper.run_tests<contig_edge_traits, node_traits<null_weight>>();
-    helper.run_tests<bucket_edge_traits, node_traits<null_weight>>();
+    helper.run_tests<contig_edge_traits, node_storage<null_weight>>();
+    helper.run_tests<bucket_edge_traits, node_storage<null_weight>>();
   }
 
   template
@@ -35,12 +35,12 @@ namespace sequoia::testing
     class EdgeWeight,
     class NodeWeight,
     class EdgeStorageConfig,
-    class NodeWeightStorageConfig
+    class NodeWeightStorage
   >
   void unweighted_graph_allocation_test::execute_operations()
   {
     using ESTraits = EdgeStorageConfig;
-    using NSTraits = NodeWeightStorageConfig;
+    using NSTraits = NodeWeightStorage;
     using graph_type = graph_type_generator_t<GraphFlavour, EdgeWeight, NodeWeight, ESTraits, NSTraits>;
 
     if constexpr(std::is_same_v<ESTraits, custom_allocator_contiguous_edge_storage_config>)

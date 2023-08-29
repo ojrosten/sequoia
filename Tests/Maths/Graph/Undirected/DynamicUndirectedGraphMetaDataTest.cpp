@@ -23,7 +23,7 @@ namespace sequoia::testing
   void dynamic_undirected_graph_meta_data_test::run_tests()
   {
     using namespace maths;
-    dynamic_undirected_graph_meta_data_operations<null_weight, null_weight, float, independent_bucketed_edge_storage_config, node_weight_storage_config<null_weight>>::execute_operations(*this);
-    dynamic_undirected_graph_meta_data_operations<null_weight, null_weight, std::complex<float>, independent_bucketed_edge_storage_config, node_weight_storage_config<null_weight>>::execute_operations(*this);
+    dynamic_undirected_graph_meta_data_operations<null_weight, null_weight, float, independent_bucketed_edge_storage_config, node_storage<null_weight>>::execute_operations(*this);
+    dynamic_undirected_graph_meta_data_operations<null_weight, null_weight, std::complex<float>, independent_bucketed_edge_storage_config, node_storage<null_weight>>::execute_operations(*this);
   }
 }

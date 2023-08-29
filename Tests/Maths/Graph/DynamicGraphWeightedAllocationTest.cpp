@@ -13,6 +13,18 @@
 
 namespace sequoia::testing
 {
+  namespace
+  {
+    template<class T>
+    struct node_storage_generator
+    {
+      using type = maths::node_storage<T, std::vector<T, shared_counting_allocator<T, true, true, true>>>;
+    };
+
+    template<class T>
+    using node_storage_generator_t = typename node_storage_generator<T>::type;
+  }
+
   [[nodiscard]]
   std::filesystem::path weighted_graph_allocation_test::source_file() const
   {
@@ -23,34 +35,34 @@ namespace sequoia::testing
   {
     using std::complex;
 
-    using contig_edge_traits = custom_allocator_contiguous_edge_storage_config;
-    using bucket_edge_traits = custom_allocator_bucketed_edge_storage_config;
+    using contig_edge_config = custom_allocator_contiguous_edge_storage_config;
+    using bucket_edge_config = custom_allocator_bucketed_edge_storage_config;
 
     {
       graph_test_helper<int, complex<double>, weighted_graph_allocation_test>  helper{*this};
 
-      using ntraits = node_traits<complex<double>>;
+      using nstorage = node_storage_generator_t<complex<double>>;
 
-      helper.run_tests<contig_edge_traits, ntraits>();
-      helper.run_tests<bucket_edge_traits, ntraits>();
+      helper.run_tests<contig_edge_config, nstorage>();
+      helper.run_tests<bucket_edge_config, nstorage>();
     }
 
     {
       graph_test_helper<complex<float>, complex<double>, weighted_graph_allocation_test>  helper{*this};
 
-      using ntraits = node_traits<complex<double>>;
+      using nstorage = node_storage_generator_t<complex<double>>;
 
-      helper.run_tests<contig_edge_traits, ntraits>();
-      helper.run_tests<bucket_edge_traits, ntraits>();
+      helper.run_tests<contig_edge_config, nstorage>();
+      helper.run_tests<bucket_edge_config, nstorage>();
     }
 
     {
       graph_test_helper<std::vector<int>, std::vector<complex<double>>, weighted_graph_allocation_test>  helper{*this};
 
-      using ntraits = node_traits<std::vector<complex<double>>>;
+      using nstorage = node_storage_generator_t<std::vector<complex<double>>>;
 
-      helper.run_tests<contig_edge_traits, ntraits>();
-      helper.run_tests<bucket_edge_traits, ntraits>();
+      helper.run_tests<contig_edge_config, nstorage>();
+      helper.run_tests<bucket_edge_config, nstorage>();
     }
   }
 
@@ -60,15 +72,13 @@ namespace sequoia::testing
     class EdgeWeight,
     class NodeWeight,
     class EdgeStorageConfig,
-    class NodeWeightStorageConfig
+    class NodeWeightStorage
   >
   void weighted_graph_allocation_test::execute_operations()
   {
-    using ESTraits = EdgeStorageConfig;
-    using NSTraits = NodeWeightStorageConfig;
-    using graph_type = graph_type_generator_t<GraphFlavour, EdgeWeight, NodeWeight, ESTraits, NSTraits>;
+    using graph_type = graph_type_generator_t<GraphFlavour, EdgeWeight, NodeWeight, EdgeStorageConfig, NodeWeightStorage>;
 
-    if constexpr(std::is_same_v<ESTraits, custom_allocator_contiguous_edge_storage_config>)
+    if constexpr(std::is_same_v<EdgeStorageConfig, custom_allocator_contiguous_edge_storage_config>)
     {
       contiguous_memory<graph_type>();
     }
@@ -109,7 +119,7 @@ namespace sequoia::testing
       [](Graph& g) { g.add_node(); }
     };
 
-    using node_allocator = typename Graph::node_weight_container_type::allocator_type;
+    using node_allocator = typename Graph::node_weight_allocator_type;
     using edge_allocator = typename Graph::edge_allocator_type;
     constexpr auto GraphFlavour{Graph::flavour};
 

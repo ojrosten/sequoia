@@ -236,12 +236,12 @@ namespace sequoia::testing
     class EdgeWeight,
     class NodeWeight,
     class EdgeStorageConfig,
-    class NodeWeightStorageConfig
+    class NodeWeightStorage
    >
   void test_graph_traversals::execute_operations()
   {
     using ESTraits = EdgeStorageConfig;
-    using NSTraits = NodeWeightStorageConfig;
+    using NSTraits = NodeWeightStorage;
     using graph_type = graph_type_generator_t<GraphFlavour, EdgeWeight, NodeWeight, ESTraits, NSTraits>;
 
     tracker_test<graph_type, Traverser<maths::traversal_flavour::breadth_first>>();

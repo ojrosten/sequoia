@@ -37,7 +37,7 @@ namespace sequoia::maths
     graph_primitive
     <
       connectivity<graph_impl::static_edge_traits<graph_flavour::directed, Order, Size, EdgeWeight, null_meta_data, typename Traits::edge_index_type>>,
-      graph_impl::static_node_storage<NodeWeight, Order>
+      static_node_storage<NodeWeight, Order>
     >
   {
   private:
@@ -45,7 +45,7 @@ namespace sequoia::maths
       graph_primitive
       <
         connectivity<graph_impl::static_edge_traits<graph_flavour::directed, Order, Size, EdgeWeight, null_meta_data, typename Traits::edge_index_type>>,
-        graph_impl::static_node_storage<NodeWeight, Order>
+        static_node_storage<NodeWeight, Order>
       >;
 
   public:
@@ -64,7 +64,7 @@ namespace sequoia::maths
       graph_primitive
       <
         connectivity<graph_impl::static_edge_traits<graph_flavour::directed, Order, Size, EdgeWeight, null_meta_data, typename Traits::edge_index_type>>,
-        graph_impl::static_node_storage<NodeWeight, Order>
+        static_node_storage<NodeWeight, Order>
       >::graph_primitive;
 
     using primitive_type::swap_nodes;
@@ -85,7 +85,7 @@ namespace sequoia::maths
     graph_primitive
     <
       connectivity<graph_impl::static_edge_traits<graph_flavour::undirected, Order, Size, EdgeWeight, EdgeMetaData, typename Traits::edge_index_type>>,
-      graph_impl::static_node_storage<NodeWeight, Order>
+      static_node_storage<NodeWeight, Order>
     >
   {
   private:
@@ -93,7 +93,7 @@ namespace sequoia::maths
       graph_primitive
       <
         connectivity<graph_impl::static_edge_traits<graph_flavour::undirected, Order, Size, EdgeWeight, EdgeMetaData, typename Traits::edge_index_type>>,
-        graph_impl::static_node_storage<NodeWeight, Order>
+        static_node_storage<NodeWeight, Order>
       >;
 
   public:
@@ -112,7 +112,7 @@ namespace sequoia::maths
       graph_primitive
       <
         connectivity<graph_impl::static_edge_traits<graph_flavour::undirected, Order, Size, EdgeWeight, EdgeMetaData, typename Traits::edge_index_type>>,
-        graph_impl::static_node_storage<NodeWeight, Order>
+        static_node_storage<NodeWeight, Order>
       >::graph_primitive;
 
     using primitive_type::swap_nodes;
@@ -139,7 +139,7 @@ namespace sequoia::maths
     graph_primitive
     <
       connectivity<graph_impl::static_edge_traits<graph_flavour::undirected_embedded, Order, Size, EdgeWeight, EdgeMetaData, typename Traits::edge_index_type>>,
-      graph_impl::static_node_storage<NodeWeight, Order>
+      static_node_storage<NodeWeight, Order>
     >
   {
   private:
@@ -147,7 +147,7 @@ namespace sequoia::maths
       graph_primitive
       <
         connectivity<graph_impl::static_edge_traits<graph_flavour::undirected_embedded, Order, Size, EdgeWeight, EdgeMetaData, typename Traits::edge_index_type>>,
-        graph_impl::static_node_storage<NodeWeight, Order>
+        static_node_storage<NodeWeight, Order>
       >;
 
   public:
@@ -166,7 +166,7 @@ namespace sequoia::maths
       graph_primitive
       <
         connectivity<graph_impl::static_edge_traits<graph_flavour::undirected_embedded, Order, Size, EdgeWeight, EdgeMetaData, typename Traits::edge_index_type>>,
-        graph_impl::static_node_storage<NodeWeight, Order>
+        static_node_storage<NodeWeight, Order>
       >::graph_primitive;
 
     using primitive::swap_nodes;

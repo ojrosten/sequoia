@@ -15,7 +15,7 @@
 #include "sequoia/Maths/Graph/HeterogeneousNodeDetails.hpp"
 #include <tuple>
 
-namespace sequoia::maths::graph_impl
+namespace sequoia::maths
 {
   /*! class heterogeneous_node_storage
       \brief Storage for heterogeneous node weights.
@@ -27,10 +27,11 @@ namespace sequoia::maths::graph_impl
   public:
     using size_type = std::size_t;
 
+    heterogeneous_node_storage() = default;
+
     template<class... Args>
-    constexpr explicit heterogeneous_node_storage(Args&&... args) : m_Weights{std::forward<Args>(args)...}
-    {
-    }
+    constexpr explicit(sizeof...(Args) == 1) heterogeneous_node_storage(Args&&... args) : m_Weights{std::forward<Args>(args)...}
+    {}
 
     [[nodiscard]]
     constexpr std::size_t size() const noexcept
@@ -87,18 +88,15 @@ namespace sequoia::maths::graph_impl
     friend constexpr bool operator==(const heterogeneous_node_storage&, const heterogeneous_node_storage&) noexcept = default;
 
   protected:
-    struct null_proxy_tag {};
+    using weight_type = graph_impl::heterogeneous_tag;
 
-    using weight_type = heterogeneous_tag;
-    using weight_proxy_type = null_proxy_tag;
-
-    constexpr heterogeneous_node_storage(const heterogeneous_node_storage& in) = default;
+    constexpr heterogeneous_node_storage(const heterogeneous_node_storage&) = default;
 
     constexpr heterogeneous_node_storage(heterogeneous_node_storage&&) noexcept = default;
 
     ~heterogeneous_node_storage() = default;
 
-    constexpr heterogeneous_node_storage& operator=(const heterogeneous_node_storage& in) = default;
+    constexpr heterogeneous_node_storage& operator=(const heterogeneous_node_storage&) = default;
 
     constexpr heterogeneous_node_storage& operator=(heterogeneous_node_storage&&) noexcept = default;
   private:

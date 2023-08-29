@@ -21,6 +21,6 @@ namespace sequoia::testing
   void dynamic_undirected_embedded_graph_fundamental_weight_test::run_tests()
   {
     using namespace maths;
-    dynamic_undirected_embedded_graph_weighted_operations<double, double, independent_bucketed_edge_storage_config, node_weight_storage_config<double>>::execute_operations(*this);
+    dynamic_undirected_embedded_graph_weighted_operations<double, double, independent_bucketed_edge_storage_config, node_storage<double>>::execute_operations(*this);
   }
 }

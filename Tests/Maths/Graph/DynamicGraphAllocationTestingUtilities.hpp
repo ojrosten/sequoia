@@ -28,21 +28,6 @@ namespace sequoia::testing
     constexpr static maths::edge_sharing_preference edge_sharing{maths::edge_sharing_preference::agnostic};
   };
 
-  template<class NodeWeight>
-  struct node_traits
-  {
-    constexpr static bool static_storage_v{false};
-    constexpr static bool has_allocator{true};
-    template<class S> using container_type = std::vector<S, shared_counting_allocator<S, true, true, true>>;
-  };
-
-  template<class NodeWeight>
-    requires std::is_empty_v<NodeWeight>
-  struct node_traits<NodeWeight>
-  {
-    constexpr static bool has_allocator{false};
-  };
-
   template<class Graph>
   struct edge_alloc_getter
   {
@@ -73,7 +58,7 @@ namespace sequoia::testing
   template<class Graph>
   struct node_alloc_getter
   {
-    using node_allocator = typename Graph::node_weight_container_type::allocator_type;
+    using node_allocator = typename Graph::node_weight_allocator_type;
     using alloc_equivalence_class = allocation_equivalence_classes::container_of_values<node_allocator>;
 
     [[nodiscard]]

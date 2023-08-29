@@ -48,7 +48,7 @@ namespace sequoia::maths
           typename heterogeneous_graph_traits<Size, Order, EdgeWeight>::edge_index_type
         >
       >,
-      graph_impl::heterogeneous_node_storage<NodeWeights...>
+      heterogeneous_node_storage<NodeWeights...>
     >
   {
   private:
@@ -67,7 +67,7 @@ namespace sequoia::maths
             typename heterogeneous_graph_traits<Size, Order, EdgeWeight>::edge_index_type
           >
         >,
-        graph_impl::heterogeneous_node_storage<NodeWeights...>
+        heterogeneous_node_storage<NodeWeights...>
       >;
 
   public:
@@ -98,7 +98,7 @@ namespace sequoia::maths
             typename heterogeneous_graph_traits<Size, Order, EdgeWeight>::edge_index_type
           >
         >,
-        graph_impl::heterogeneous_node_storage<NodeWeights...>
+        heterogeneous_node_storage<NodeWeights...>
       >::graph_primitive;
 
     using primitive_type::set_edge_weight;
@@ -130,7 +130,7 @@ namespace sequoia::maths
           typename heterogeneous_graph_traits<Size, Order, EdgeWeight>::edge_index_type
         >
       >,
-      graph_impl::heterogeneous_node_storage<NodeWeights...>
+      heterogeneous_node_storage<NodeWeights...>
     >
   {
   private:
@@ -149,7 +149,7 @@ namespace sequoia::maths
             typename heterogeneous_graph_traits<Size, Order, EdgeWeight>::edge_index_type
           >
         >,
-        graph_impl::heterogeneous_node_storage<NodeWeights...>
+        heterogeneous_node_storage<NodeWeights...>
       >;
 
   public:
@@ -180,7 +180,7 @@ namespace sequoia::maths
             typename heterogeneous_graph_traits<Size, Order, EdgeWeight>::edge_index_type
           >
         >,
-        graph_impl::heterogeneous_node_storage<NodeWeights...>
+        heterogeneous_node_storage<NodeWeights...>
       >::graph_primitive;
 
     using primitive_type::set_edge_weight;
@@ -218,7 +218,7 @@ namespace sequoia::maths
           typename heterogeneous_embedded_graph_traits<Size, Order, EdgeWeight>::edge_index_type
         >
       >,
-      graph_impl::heterogeneous_node_storage<NodeWeights...>
+      heterogeneous_node_storage<NodeWeights...>
     >
   {
   private:
@@ -237,7 +237,7 @@ namespace sequoia::maths
             typename heterogeneous_embedded_graph_traits<Size, Order, EdgeWeight>::edge_index_type
           >
         >,
-        graph_impl::heterogeneous_node_storage<NodeWeights...>
+        heterogeneous_node_storage<NodeWeights...>
       >;
 
   public:
@@ -266,7 +266,7 @@ namespace sequoia::maths
             typename heterogeneous_embedded_graph_traits<Size, Order, EdgeWeight>::edge_index_type
           >
         >,
-        graph_impl::heterogeneous_node_storage<NodeWeights...>
+        heterogeneous_node_storage<NodeWeights...>
       >::graph_primitive;
 
     using primitive_type::set_edge_weight;

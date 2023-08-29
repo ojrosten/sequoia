@@ -16,12 +16,12 @@ namespace sequoia::testing
   namespace
   {
     template<class... Ts>
-    class storage_tester : public maths::graph_impl::heterogeneous_node_storage<Ts...>
+    class storage_tester : public maths::heterogeneous_node_storage<Ts...>
     {
     public:
       template<class... Args>
       constexpr explicit storage_tester(Args&&... args)
-        : maths::graph_impl::heterogeneous_node_storage<Ts...>(std::forward<Args>(args)...)
+        : maths::heterogeneous_node_storage<Ts...>(std::forward<Args>(args)...)
       {
       }
     };

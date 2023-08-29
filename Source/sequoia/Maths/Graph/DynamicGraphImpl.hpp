@@ -16,17 +16,6 @@
 
 namespace sequoia::maths::graph_impl
 {
-  template<class NodeStorage>
-  struct node_allocator_generator
-  {
-    using allocator_type = typename NodeStorage::node_weight_container_type::allocator_type;
-  };
-
-  template<class NodeStorage>
-    requires std::is_empty_v<typename NodeStorage::weight_type>
-  struct node_allocator_generator<NodeStorage>
-  {};
-
   template
   <
     graph_flavour GraphFlavour,

@@ -176,10 +176,10 @@ namespace sequoia::testing
     class EdgeWeight,
     class node_weight_type,
     class EdgeStorageConfig,
-    class NodeWeightStorageConfig
+    class NodeWeightStorage
   >
-  struct value_tester<maths::directed_tree<link_dir, EdgeWeight, node_weight_type, EdgeStorageConfig, NodeWeightStorageConfig>>
-    : tree_tester<maths::directed_tree<link_dir, EdgeWeight, node_weight_type, EdgeStorageConfig, NodeWeightStorageConfig>>
+  struct value_tester<maths::directed_tree<link_dir, EdgeWeight, node_weight_type, EdgeStorageConfig, NodeWeightStorage>>
+    : tree_tester<maths::directed_tree<link_dir, EdgeWeight, node_weight_type, EdgeStorageConfig, NodeWeightStorage>>
   {};
 
   template
@@ -189,9 +189,9 @@ namespace sequoia::testing
     class node_weight_type,
     class EdgeMetaData,
     class EdgeStorageConfig,
-    class NodeWeightStorageConfig
+    class NodeWeightStorage
   >
-  struct value_tester<maths::undirected_tree<link_dir, EdgeWeight, node_weight_type, EdgeMetaData, EdgeStorageConfig, NodeWeightStorageConfig>>
-    : tree_tester<maths::undirected_tree<link_dir, EdgeWeight, node_weight_type, EdgeMetaData, EdgeStorageConfig, NodeWeightStorageConfig>>
+  struct value_tester<maths::undirected_tree<link_dir, EdgeWeight, node_weight_type, EdgeMetaData, EdgeStorageConfig, NodeWeightStorage>>
+    : tree_tester<maths::undirected_tree<link_dir, EdgeWeight, node_weight_type, EdgeMetaData, EdgeStorageConfig, NodeWeightStorage>>
   {};
 }

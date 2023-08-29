@@ -90,32 +90,32 @@ namespace sequoia::testing
 
   // Details Checkers
 
-  template<class Weight, class Traits>
-  struct value_tester<maths::graph_impl::node_storage<Weight, Traits>>
-    : impl::node_value_tester<maths::graph_impl::node_storage<Weight, Traits>>
-    , impl::node_equivalence_checker<maths::graph_impl::node_storage<Weight, Traits>>
+  template<class Weight, class Container>
+  struct value_tester<maths::node_storage<Weight, Container>>
+    : impl::node_value_tester<maths::node_storage<Weight, Container>>
+    , impl::node_equivalence_checker<maths::node_storage<Weight, Container>>
   {
-    using impl::node_value_tester<maths::graph_impl::node_storage<Weight, Traits>>::test;
-    using impl::node_equivalence_checker<maths::graph_impl::node_storage<Weight, Traits>>::test;
+    using impl::node_value_tester<maths::node_storage<Weight, Container>>::test;
+    using impl::node_equivalence_checker<maths::node_storage<Weight, Container>>::test;
   };
 
   // Static
 
   template<class Weight, std::size_t N>
-  struct value_tester<maths::graph_impl::static_node_storage<Weight, N>>
-    : impl::node_value_tester<maths::graph_impl::static_node_storage<Weight, N>>
-    , impl::node_equivalence_checker<maths::graph_impl::static_node_storage<Weight, N>>
+  struct value_tester<maths::static_node_storage<Weight, N>>
+    : impl::node_value_tester<maths::static_node_storage<Weight, N>>
+    , impl::node_equivalence_checker<maths::static_node_storage<Weight, N>>
   {
-    using impl::node_value_tester<maths::graph_impl::static_node_storage<Weight, N>>::test;
-    using impl::node_equivalence_checker<maths::graph_impl::static_node_storage<Weight, N>>::test;
+    using impl::node_value_tester<maths::static_node_storage<Weight, N>>::test;
+    using impl::node_equivalence_checker<maths::static_node_storage<Weight, N>>::test;
   };
 
   // Heterogeneous
 
   template<class... Ts>
-  struct value_tester<maths::graph_impl::heterogeneous_node_storage<Ts...>>
+  struct value_tester<maths::heterogeneous_node_storage<Ts...>>
   {
-    using type = maths::graph_impl::heterogeneous_node_storage<Ts...>;
+    using type = maths::heterogeneous_node_storage<Ts...>;
     using equivalent_type = std::tuple<Ts...>;
 
     template<test_mode Mode>
@@ -164,21 +164,12 @@ namespace sequoia::testing
     }
   };
 
-
-  template<bool PropagateCopy=true, bool PropagateMove=true, bool PropagateSwap=true>
-  struct node_storage_config
-  {
-    constexpr static bool static_storage_v{};
-    template<class S> using container_type = std::vector<S, shared_counting_allocator<S, PropagateCopy, PropagateMove, PropagateSwap>>;
-  };
-
   template<class Weight, bool PropagateCopy=true, bool PropagateMove=true, bool PropagateSwap=true>
   class node_storage_tester
-    : public maths::graph_impl::node_storage<Weight, node_storage_config<PropagateCopy, PropagateMove, PropagateSwap>>
+    : public maths::node_storage_base<Weight, std::vector<Weight, shared_counting_allocator<Weight, PropagateCopy, PropagateMove, PropagateSwap>>>
   {
   private:
-    using base_t = maths::graph_impl::node_storage<Weight, node_storage_config<PropagateCopy, PropagateMove, PropagateSwap>>;
-
+    using base_t = maths::node_storage_base<Weight, std::vector<Weight, shared_counting_allocator<Weight, PropagateCopy, PropagateMove, PropagateSwap>>>;
   public:
     using allocator_type = typename base_t::node_weight_container_type::allocator_type;
     using size_type      = typename base_t::size_type;
@@ -241,22 +232,26 @@ namespace sequoia::testing
   };
 
   template<class Weight, std::size_t N>
-  class static_node_storage_tester : public maths::graph_impl::static_node_storage<Weight, N>
+  class static_node_storage_tester : public maths::static_node_storage<Weight, N>
   {
   public:
-    using maths::graph_impl::static_node_storage<Weight, N>::static_node_storage;
+    using maths::static_node_storage<Weight, N>::static_node_storage;
   };
 
 
   template<class Weight, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
   struct value_tester<node_storage_tester<Weight, PropagateCopy, PropagateMove, PropagateSwap>>
-    : public value_tester<maths::graph_impl::node_storage<Weight, node_storage_config<PropagateCopy, PropagateMove, PropagateSwap>>>
+    : impl::node_value_tester<node_storage_tester<Weight, PropagateCopy, PropagateMove, PropagateSwap>>
+    , impl::node_equivalence_checker<node_storage_tester<Weight, PropagateCopy, PropagateMove, PropagateSwap>>
   {
+    using impl::node_value_tester<node_storage_tester<Weight, PropagateCopy, PropagateMove, PropagateSwap>>::test;
+    using impl::node_equivalence_checker<node_storage_tester<Weight, PropagateCopy, PropagateMove, PropagateSwap>>::test;
   };
+
+
 
   template<class Weight, std::size_t N>
   struct value_tester<static_node_storage_tester<Weight, N>>
-    : public value_tester<maths::graph_impl::static_node_storage<Weight, N>>
-  {
-  };
+    : public value_tester<maths::static_node_storage<Weight, N>>
+  {};
 }

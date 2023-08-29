@@ -17,14 +17,13 @@
 
  */
 
-#include "sequoia/Core/ContainerUtilities/ArrayUtilities.hpp"
 #include "sequoia/Core/ContainerUtilities/Iterator.hpp"
 #include "sequoia/Maths/Graph/EdgesAndNodesUtilities.hpp"
 
 #include <type_traits>
 #include <algorithm>
 
-namespace sequoia::maths::graph_impl
+namespace sequoia::maths
 {
   //===================================Storage for the list of nodes===================================//
 
@@ -33,14 +32,12 @@ namespace sequoia::maths::graph_impl
     requires(const T& t) { t.get_allocator(); }
   };
 
-  template<class Weight, class Traits>
-  class node_storage
+  template<class Weight, class Container>
+  class node_storage_base
   {
-    template<class S> using Container = typename Traits::template container_type<S>;
   public:
     using weight_type                = Weight;
-    using traits_type                = Traits;
-    using node_weight_container_type = Container<Weight>;
+    using node_weight_container_type = Container;
     using size_type                  = typename node_weight_container_type::size_type;
 
     using iterator           = utilities::iterator<typename node_weight_container_type::iterator, utilities::identity_dereference_policy<typename node_weight_container_type::iterator>>;
@@ -50,28 +47,6 @@ namespace sequoia::maths::graph_impl
     using const_iterator           = utilities::iterator<typename node_weight_container_type::const_iterator, utilities::identity_dereference_policy<typename node_weight_container_type::const_iterator>>;
     using const_reverse_iterator   = utilities::iterator<typename node_weight_container_type::const_reverse_iterator, utilities::identity_dereference_policy<typename node_weight_container_type::const_reverse_iterator>>;
     using const_node_weights_range = std::ranges::subrange<const_iterator>;
-
-    constexpr node_storage() = default;
-
-    constexpr node_storage(const size_type)
-      requires (Traits::static_storage_v)
-      : m_NodeWeights{}
-    {}
-
-    constexpr node_storage(const size_type n)
-      requires (!Traits::static_storage_v)
-      : m_NodeWeights(n)
-    {}
-
-    constexpr node_storage(std::initializer_list<weight_type> weights)
-      requires (Traits::static_storage_v)
-      : m_NodeWeights{utilities::to_array<weight_type, Traits::num_elements_v>(weights, std::identity{})}
-    {}
-
-    constexpr node_storage(std::initializer_list<weight_type> weights)
-      requires (!Traits::static_storage_v)
-      : m_NodeWeights{weights}
-    {}
 
     [[nodiscard]]
     constexpr auto size() const noexcept { return m_NodeWeights.size(); }
@@ -166,45 +141,60 @@ namespace sequoia::maths::graph_impl
     }
 
     [[nodiscard]]
-    friend constexpr bool operator==(const node_storage&, const node_storage&) noexcept
+    friend constexpr bool operator==(const node_storage_base&, const node_storage_base&) noexcept
       requires deep_equality_comparable<weight_type>
         = default;
   protected:
+    constexpr node_storage_base() = default;
+
+    constexpr node_storage_base(const size_type n)
+      : m_NodeWeights(n)
+    {}
+
+    template<std::size_t N>
+    constexpr node_storage_base(const std::array<weight_type, N>& weights)
+      : m_NodeWeights{weights}
+    {}
+
+    constexpr node_storage_base(std::initializer_list<weight_type> weights)
+      : m_NodeWeights{weights}
+    {}
+
     template<alloc Allocator>
-    constexpr explicit node_storage(const Allocator& allocator)
+    constexpr explicit node_storage_base(const Allocator& allocator)
       : m_NodeWeights(allocator)
     {}
 
     template<alloc Allocator>
-    constexpr node_storage(const size_t n, const Allocator& allocator)
+    constexpr node_storage_base(const size_t n, const Allocator& allocator)
       : m_NodeWeights(n, allocator)
     {}
 
     template<alloc Allocator>
-    constexpr node_storage(std::initializer_list<weight_type> weights, const Allocator& allocator)
+    constexpr node_storage_base(std::initializer_list<weight_type> weights, const Allocator& allocator)
       : m_NodeWeights{weights, allocator}
     {}
 
-    constexpr node_storage(const node_storage&) = default;
+    constexpr node_storage_base(const node_storage_base&) = default;
 
     template<alloc Allocator>
-    constexpr node_storage(const node_storage& other, const Allocator& allocator)
+    constexpr node_storage_base(const node_storage_base& other, const Allocator& allocator)
       : m_NodeWeights{other.m_NodeWeights, allocator}
     {}
 
-    constexpr node_storage(node_storage&&) noexcept = default;
+    constexpr node_storage_base(node_storage_base&&) noexcept = default;
 
     template<alloc Allocator>
-    constexpr node_storage(node_storage&& s, const Allocator& allocator) noexcept
+    constexpr node_storage_base(node_storage_base&& s, const Allocator& allocator) noexcept
       : m_NodeWeights{std::move(s.m_NodeWeights), allocator}
     {}
 
-    ~node_storage() = default;
+    ~node_storage_base() = default;
 
-    constexpr node_storage& operator=(const node_storage&)     = default;
-    constexpr node_storage& operator=(node_storage&&) noexcept = default;
+    constexpr node_storage_base& operator=(const node_storage_base&)     = default;
+    constexpr node_storage_base& operator=(node_storage_base&&) noexcept = default;
 
-    constexpr void swap(node_storage& rhs)
+    constexpr void swap(node_storage_base& rhs)
       noexcept(noexcept(std::ranges::swap(this->m_NodeWeights, rhs.m_NodeWeights)))
     {
       std::ranges::swap(m_NodeWeights, rhs.m_NodeWeights);
@@ -277,9 +267,35 @@ namespace sequoia::maths::graph_impl
     node_weight_container_type m_NodeWeights;
   };
 
-  template<class Weight, class Traits>
+  template<class Weight, class Container = std::vector<Weight>>
+  class node_storage : public node_storage_base<Weight, Container>
+  {
+    using base_t = node_storage_base<Weight, Container>;
+  public:
+    using size_type   = typename base_t::size_type;
+    using weight_type = typename base_t::weight_type;
+
+    using node_storage_base<Weight, Container>::node_storage_base;
+
+    node_storage(const node_storage&) = default;
+
+    node_storage& operator=(const node_storage&) noexcept = default;
+  protected:
+    ~node_storage() = default;
+
+    node_storage(node_storage&&) noexcept = default;
+
+    node_storage& operator=(node_storage&&) noexcept = default;
+
+    template<alloc Allocator>
+    constexpr node_storage(node_storage&& s, const Allocator& allocator) noexcept
+      : base_t{std::move(s), allocator}
+    {}
+  };
+
+  template<class Weight, class Container>
     requires std::is_empty_v<Weight>
-  class node_storage<Weight, Traits>
+  class node_storage<Weight, Container>
   {
   public:
     using weight_type = Weight;
@@ -287,16 +303,18 @@ namespace sequoia::maths::graph_impl
 
     constexpr node_storage() noexcept = default;
 
+    constexpr node_storage(const node_storage&) noexcept = default;
+
+    constexpr node_storage& operator=(const node_storage&) noexcept = default;
+
     [[nodiscard]]
     constexpr friend bool operator==(const node_storage&, const node_storage&) noexcept = default;
   protected:
-    constexpr node_storage(const node_storage&) noexcept = default;
-    constexpr node_storage(node_storage&&)      noexcept = default;
+    constexpr node_storage(node_storage&&) noexcept = default;
 
     ~node_storage() = default;
 
-    constexpr node_storage& operator=(const node_storage&) noexcept = default;
-    constexpr node_storage& operator=(node_storage&&)      noexcept = default;
+    constexpr node_storage& operator=(node_storage&&) noexcept = default;
 
     void swap(node_storage&) noexcept {};
   };

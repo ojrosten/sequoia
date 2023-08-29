@@ -9,6 +9,8 @@
 
 #include "NodeStorageTest.hpp"
 
+#include "NodeStorageTestingUtilities.hpp"
+
 namespace sequoia:: testing
 {
   [[nodiscard]]

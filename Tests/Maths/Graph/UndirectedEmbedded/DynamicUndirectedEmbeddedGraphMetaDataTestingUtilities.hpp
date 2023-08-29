@@ -55,14 +55,14 @@ namespace sequoia::testing
     class NodeWeight,
     class EdgeMetaData,
     class EdgeStorageConfig,
-    class NodeWeightStorageConfig
+    class NodeWeightStorage
   >
   class dynamic_undirected_embedded_graph_meta_data_operations
   {
     template<maths::network>
     friend struct graph_initialization_checker;
    public:
-    using graph_t            = maths::embedded_graph<EdgeWeight, NodeWeight, EdgeMetaData, EdgeStorageConfig, NodeWeightStorageConfig>;
+    using graph_t            = maths::embedded_graph<EdgeWeight, NodeWeight, EdgeMetaData, EdgeStorageConfig, NodeWeightStorage>;
     using edge_t             = typename graph_t::edge_init_type;
     using node_weight_type   = typename graph_t::node_weight_type;
     using edges_equivalent_t = std::initializer_list<std::initializer_list<edge_t>>;

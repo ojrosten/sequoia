@@ -1,7 +1,7 @@
 Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 45
 Check false positive: empty graph versus single node
 
-[sequoia::maths::undirected_graph<sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::contiguous_edge_storage_config, sequoia::maths::node_weight_storage_config<sequoia::maths::null_weight> >]
+[sequoia::maths::undirected_graph<sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::contiguous_edge_storage_config, sequoia::maths::node_storage<sequoia::maths::null_weight, std::vector<sequoia::maths::null_weight, std::allocator<sequoia::maths::null_weight> > > >]
 operator== returned false
 
   [sequoia::maths::connectivity<sequoia::maths::graph_impl::dynamic_edge_traits<0, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::contiguous_edge_storage_config, unsigned long long> >]
@@ -18,7 +18,7 @@ operator== returned false
 Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 54
 Check false positive: empty graph versus single node with loop
 
-[sequoia::maths::undirected_graph<sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::contiguous_edge_storage_config, sequoia::maths::node_weight_storage_config<sequoia::maths::null_weight> >]
+[sequoia::maths::undirected_graph<sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::contiguous_edge_storage_config, sequoia::maths::node_storage<sequoia::maths::null_weight, std::vector<sequoia::maths::null_weight, std::allocator<sequoia::maths::null_weight> > > >]
 operator== returned false
 
   [sequoia::maths::connectivity<sequoia::maths::graph_impl::dynamic_edge_traits<0, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::contiguous_edge_storage_config, unsigned long long> >]
@@ -41,7 +41,7 @@ operator== returned false
 Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 45
 Check false positive: empty graph versus single node
 
-[sequoia::maths::undirected_graph<sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_weight_storage_config<sequoia::maths::null_weight> >]
+[sequoia::maths::undirected_graph<sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_storage<sequoia::maths::null_weight, std::vector<sequoia::maths::null_weight, std::allocator<sequoia::maths::null_weight> > > >]
 operator== returned false
 
   [sequoia::maths::connectivity<sequoia::maths::graph_impl::dynamic_edge_traits<0, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_config, unsigned long long> >]
@@ -58,7 +58,7 @@ operator== returned false
 Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 54
 Check false positive: empty graph versus single node with loop
 
-[sequoia::maths::undirected_graph<sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_weight_storage_config<sequoia::maths::null_weight> >]
+[sequoia::maths::undirected_graph<sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_storage<sequoia::maths::null_weight, std::vector<sequoia::maths::null_weight, std::allocator<sequoia::maths::null_weight> > > >]
 operator== returned false
 
   [sequoia::maths::connectivity<sequoia::maths::graph_impl::dynamic_edge_traits<0, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_config, unsigned long long> >]
@@ -81,7 +81,7 @@ operator== returned false
 Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 45
 Check false positive: empty graph versus single node
 
-[sequoia::maths::embedded_graph<sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::contiguous_edge_storage_config, sequoia::maths::node_weight_storage_config<sequoia::maths::null_weight> >]
+[sequoia::maths::embedded_graph<sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::contiguous_edge_storage_config, sequoia::maths::node_storage<sequoia::maths::null_weight, std::vector<sequoia::maths::null_weight, std::allocator<sequoia::maths::null_weight> > > >]
 operator== returned false
 
   [sequoia::maths::connectivity<sequoia::maths::graph_impl::dynamic_edge_traits<1, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::contiguous_edge_storage_config, unsigned long long> >]
@@ -98,7 +98,7 @@ operator== returned false
 Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 58
 Check false positive: empty graph versus single node with loop
 
-[sequoia::maths::embedded_graph<sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::contiguous_edge_storage_config, sequoia::maths::node_weight_storage_config<sequoia::maths::null_weight> >]
+[sequoia::maths::embedded_graph<sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::contiguous_edge_storage_config, sequoia::maths::node_storage<sequoia::maths::null_weight, std::vector<sequoia::maths::null_weight, std::allocator<sequoia::maths::null_weight> > > >]
 operator== returned false
 
   [sequoia::maths::connectivity<sequoia::maths::graph_impl::dynamic_edge_traits<1, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::contiguous_edge_storage_config, unsigned long long> >]
@@ -121,7 +121,7 @@ operator== returned false
 Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 45
 Check false positive: empty graph versus single node
 
-[sequoia::maths::embedded_graph<sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_weight_storage_config<sequoia::maths::null_weight> >]
+[sequoia::maths::embedded_graph<sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_storage<sequoia::maths::null_weight, std::vector<sequoia::maths::null_weight, std::allocator<sequoia::maths::null_weight> > > >]
 operator== returned false
 
   [sequoia::maths::connectivity<sequoia::maths::graph_impl::dynamic_edge_traits<1, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_config, unsigned long long> >]
@@ -138,7 +138,7 @@ operator== returned false
 Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 58
 Check false positive: empty graph versus single node with loop
 
-[sequoia::maths::embedded_graph<sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_weight_storage_config<sequoia::maths::null_weight> >]
+[sequoia::maths::embedded_graph<sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_storage<sequoia::maths::null_weight, std::vector<sequoia::maths::null_weight, std::allocator<sequoia::maths::null_weight> > > >]
 operator== returned false
 
   [sequoia::maths::connectivity<sequoia::maths::graph_impl::dynamic_edge_traits<1, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_config, unsigned long long> >]
@@ -161,7 +161,7 @@ operator== returned false
 Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 45
 Check false positive: empty graph versus single node
 
-[sequoia::maths::directed_graph<sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::maths::contiguous_edge_storage_config, sequoia::maths::node_weight_storage_config<sequoia::maths::null_weight> >]
+[sequoia::maths::directed_graph<sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::maths::contiguous_edge_storage_config, sequoia::maths::node_storage<sequoia::maths::null_weight, std::vector<sequoia::maths::null_weight, std::allocator<sequoia::maths::null_weight> > > >]
 operator== returned false
 
   [sequoia::maths::connectivity<sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::contiguous_edge_storage_config, unsigned long long> >]
@@ -178,7 +178,7 @@ operator== returned false
 Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 50
 Check false positive: empty graph versus single node with loop
 
-[sequoia::maths::directed_graph<sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::maths::contiguous_edge_storage_config, sequoia::maths::node_weight_storage_config<sequoia::maths::null_weight> >]
+[sequoia::maths::directed_graph<sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::maths::contiguous_edge_storage_config, sequoia::maths::node_storage<sequoia::maths::null_weight, std::vector<sequoia::maths::null_weight, std::allocator<sequoia::maths::null_weight> > > >]
 operator== returned false
 
   [sequoia::maths::connectivity<sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::contiguous_edge_storage_config, unsigned long long> >]
@@ -201,7 +201,7 @@ operator== returned false
 Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 45
 Check false positive: empty graph versus single node
 
-[sequoia::maths::directed_graph<sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_weight_storage_config<sequoia::maths::null_weight> >]
+[sequoia::maths::directed_graph<sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_storage<sequoia::maths::null_weight, std::vector<sequoia::maths::null_weight, std::allocator<sequoia::maths::null_weight> > > >]
 operator== returned false
 
   [sequoia::maths::connectivity<sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_config, unsigned long long> >]
@@ -218,7 +218,7 @@ operator== returned false
 Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 50
 Check false positive: empty graph versus single node with loop
 
-[sequoia::maths::directed_graph<sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_weight_storage_config<sequoia::maths::null_weight> >]
+[sequoia::maths::directed_graph<sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_storage<sequoia::maths::null_weight, std::vector<sequoia::maths::null_weight, std::allocator<sequoia::maths::null_weight> > > >]
 operator== returned false
 
   [sequoia::maths::connectivity<sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_config, unsigned long long> >]

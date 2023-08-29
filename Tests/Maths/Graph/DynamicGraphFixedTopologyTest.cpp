@@ -38,12 +38,12 @@ namespace sequoia::testing
     class EdgeWeight,
     class NodeWeight,
     class EdgeStorageConfig,
-    class NodeWeightStorageConfig
+    class NodeWeightStorage
   >
   void test_fixed_topology::execute_operations()
   {
     using ESTraits = EdgeStorageConfig;
-    using NSTraits = NodeWeightStorageConfig;
+    using NSTraits = NodeWeightStorage;
 
     using graph_type = graph_type_generator_t<GraphFlavour, EdgeWeight, NodeWeight, ESTraits, NSTraits>;
 
