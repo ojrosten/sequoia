@@ -24,28 +24,28 @@ namespace sequoia::testing
 
   struct independent_contiguous_edge_storage_traits
   {
-    template <class T, class Container, class Partitions> using storage_type = data_structures::partitioned_sequence<T, Container, Partitions>;
+    template <class T> using storage_type = data_structures::partitioned_sequence<T>;
 
     constexpr static maths::edge_sharing_preference edge_sharing{maths::edge_sharing_preference::independent};
   };
 
   struct independent_bucketed_edge_storage_traits
   {
-    template <class T, class Container> using storage_type = data_structures::bucketed_sequence<T, Container>;
+    template <class T> using storage_type = data_structures::bucketed_sequence<T>;
 
     constexpr static maths::edge_sharing_preference edge_sharing{maths::edge_sharing_preference::independent};
   };
 
   struct shared_weight_contiguous_edge_storage_traits
   {
-    template <class T, class Container, class Partitions> using storage_type = data_structures::partitioned_sequence<T, Container, Partitions>;
+    template <class T> using storage_type = data_structures::partitioned_sequence<T>;
 
     constexpr static maths::edge_sharing_preference edge_sharing{maths::edge_sharing_preference::shared_weight};
   };
 
   struct shared_weight_bucketed_edge_storage_traits
   {
-    template <class T, class Container> using storage_type = data_structures::bucketed_sequence<T, Container>;
+    template <class T> using storage_type = data_structures::bucketed_sequence<T>;
 
     constexpr static maths::edge_sharing_preference edge_sharing{maths::edge_sharing_preference::shared_weight};
   };

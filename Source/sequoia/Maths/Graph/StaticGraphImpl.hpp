@@ -78,6 +78,6 @@ namespace sequoia::maths::graph_impl
     : public edge_type_generator<GraphFlavour, EdgeWeight, EdgeMetaData, IndexType, edge_sharing_preference::independent>
   {
     using edge_type = typename edge_type_generator<GraphFlavour, EdgeWeight, EdgeMetaData, IndexType, edge_sharing_preference::independent>::edge_type;
-    using edge_storage_type = data_structures::static_partitioned_sequence<edge_type, Order, num_static_edges(GraphFlavour, Size), IndexType>;
+    using edge_storage_type = data_structures::static_partitioned_sequence<edge_type, Order, num_static_edges(GraphFlavour, Size), maths::static_monotonic_sequence<IndexType, Order, std::ranges::greater>>;
   };
 }
