@@ -52,7 +52,7 @@ partition_sequence::insert_to_partitionindex 18446744073709551615 out of range
 
 =======================================
 
-/home/ojr/sequoia/Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 251
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 251
 
 Expected Exception Type:
 [std::domain_error]
@@ -60,7 +60,7 @@ partitioned_sequence::erase - Invalid range specified by iterators belonging to 
 
 =======================================
 
-/home/ojr/sequoia/Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 259
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 259
 
 Expected Exception Type:
 [std::domain_error]
@@ -68,7 +68,7 @@ partitioned_sequence::erase - Invalid range specified by iterators belonging to 
 
 =======================================
 
-/home/ojr/sequoia/Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 616
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 616
 
 Expected Exception Type:
 [std::domain_error]

@@ -205,7 +205,7 @@ bucketed_sequence::insert_to_partitionindex 1 out of range
 
 =======================================
 
-/home/ojr/sequoia/Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 251
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 251
 
 Expected Exception Type:
 [std::domain_error]
@@ -213,7 +213,7 @@ bucketed_sequence::erase - Invalid range specified by iterators belonging to par
 
 =======================================
 
-/home/ojr/sequoia/Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 259
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 259
 
 Expected Exception Type:
 [std::domain_error]
@@ -221,7 +221,7 @@ bucketed_sequence::erase - Invalid range specified by iterators belonging to par
 
 =======================================
 
-/home/ojr/sequoia/Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 616
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 616
 
 Expected Exception Type:
 [std::domain_error]
