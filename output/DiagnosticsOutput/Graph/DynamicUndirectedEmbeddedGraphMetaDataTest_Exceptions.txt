@@ -1,4 +1,4 @@
-Tests/Maths/Graph/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphMetaDataTestingUtilities.hpp, Line 94
+Tests/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphMetaDataTestingUtilities.hpp, Line 94
 Target index of edge out of range
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ connectivity::process_complementary_edges [node: 0, edge: 0]: target index 1 out
 
 =======================================
 
-Tests/Maths/Graph/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphMetaDataTestingUtilities.hpp, Line 95
+Tests/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphMetaDataTestingUtilities.hpp, Line 95
 Complimentary index of edge out of range
 
 Expected Exception Type:
@@ -16,7 +16,7 @@ connectivity::process_complementary_edges [node: 0, edge: 0]: complementary inde
 
 =======================================
 
-Tests/Maths/Graph/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphMetaDataTestingUtilities.hpp, Line 96
+Tests/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphMetaDataTestingUtilities.hpp, Line 96
 Self-referential complimentary index
 
 Expected Exception Type:
@@ -25,7 +25,7 @@ connectivity::process_complementary_edges [node: 0, edge: 0]: Indices [target: 0
 
 =======================================
 
-Tests/Maths/Graph/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphMetaDataTestingUtilities.hpp, Line 97
+Tests/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphMetaDataTestingUtilities.hpp, Line 97
 Mismatched complimentary indices
 
 Expected Exception Type:
@@ -34,7 +34,7 @@ connectivity::process_complementary_edges [node: 0, edge: 0]: Reciprocated compl
 
 =======================================
 
-Tests/Maths/Graph/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphMetaDataTestingUtilities.hpp, Line 98
+Tests/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphMetaDataTestingUtilities.hpp, Line 98
 Mismatched complimentary indices
 
 Expected Exception Type:
@@ -43,7 +43,7 @@ connectivity::process_complementary_edges [node: 0, edge: 0]: Reciprocated compl
 
 =======================================
 
-Tests/Maths/Graph/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphMetaDataTestingUtilities.hpp, Line 101
+Tests/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphMetaDataTestingUtilities.hpp, Line 101
 Mismatched complimentary indices
 
 Expected Exception Type:
@@ -52,7 +52,7 @@ connectivity::process_complementary_edges [node: 0, edge: 0]: Reciprocated compl
 
 =======================================
 
-Tests/Maths/Graph/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphMetaDataTestingUtilities.hpp, Line 94
+Tests/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphMetaDataTestingUtilities.hpp, Line 94
 Target index of edge out of range
 
 Expected Exception Type:
@@ -61,7 +61,7 @@ connectivity::process_complementary_edges [node: 0, edge: 0]: target index 1 out
 
 =======================================
 
-Tests/Maths/Graph/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphMetaDataTestingUtilities.hpp, Line 95
+Tests/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphMetaDataTestingUtilities.hpp, Line 95
 Complimentary index of edge out of range
 
 Expected Exception Type:
@@ -70,7 +70,7 @@ connectivity::process_complementary_edges [node: 0, edge: 0]: complementary inde
 
 =======================================
 
-Tests/Maths/Graph/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphMetaDataTestingUtilities.hpp, Line 96
+Tests/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphMetaDataTestingUtilities.hpp, Line 96
 Self-referential complimentary index
 
 Expected Exception Type:
@@ -79,7 +79,7 @@ connectivity::process_complementary_edges [node: 0, edge: 0]: Indices [target: 0
 
 =======================================
 
-Tests/Maths/Graph/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphMetaDataTestingUtilities.hpp, Line 97
+Tests/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphMetaDataTestingUtilities.hpp, Line 97
 Mismatched complimentary indices
 
 Expected Exception Type:
@@ -88,7 +88,7 @@ connectivity::process_complementary_edges [node: 0, edge: 0]: Reciprocated compl
 
 =======================================
 
-Tests/Maths/Graph/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphMetaDataTestingUtilities.hpp, Line 98
+Tests/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphMetaDataTestingUtilities.hpp, Line 98
 Mismatched complimentary indices
 
 Expected Exception Type:
@@ -97,7 +97,7 @@ connectivity::process_complementary_edges [node: 0, edge: 0]: Reciprocated compl
 
 =======================================
 
-Tests/Maths/Graph/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphMetaDataTestingUtilities.hpp, Line 101
+Tests/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphMetaDataTestingUtilities.hpp, Line 101
 Mismatched complimentary indices
 
 Expected Exception Type:

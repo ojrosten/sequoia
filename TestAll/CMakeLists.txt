@@ -43,47 +43,47 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Core/Object/SuiteFreeTest.cpp
                ${TestDir}/Experimental/ExperimentalTest.cpp
                ${TestDir}/Experimental/TypeListFreeTest.cpp
-               ${TestDir}/Maths/Graph/Directed/DynamicDirectedGraphFundamentalWeightContiguousTest.cpp
-               ${TestDir}/Maths/Graph/Directed/DynamicDirectedGraphFundamentalWeightTest.cpp
-               ${TestDir}/Maths/Graph/Directed/DynamicDirectedGraphUnweightedContiguousTest.cpp
-               ${TestDir}/Maths/Graph/Directed/DynamicDirectedGraphUnweightedTest.cpp
+               ${TestDir}/Maths/Graph/Algorithms/DynamicGraphTraversalsTest.cpp
+               ${TestDir}/Maths/Graph/Algorithms/DynamicGraphUpdateTest.cpp
+               ${TestDir}/Maths/Graph/Algorithms/DynamicSubgraphTest.cpp
+               ${TestDir}/Maths/Graph/Algorithms/GraphTraversalTestingUtilities.cpp               
+               ${TestDir}/Maths/Graph/Algorithms/StaticGraphTraversalsTest.cpp
+               ${TestDir}/Maths/Graph/Components/Edges/EdgeTest.cpp
+               ${TestDir}/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp
+               ${TestDir}/Maths/Graph/Components/Meta/GraphMetaTest.cpp
+               ${TestDir}/Maths/Graph/Components/Nodes/HeterogeneousNodeStorageTest.cpp
+               ${TestDir}/Maths/Graph/Components/Nodes/NodeStorageAllocationTest.cpp
+               ${TestDir}/Maths/Graph/Components/Nodes/NodeStorageTest.cpp
+               ${TestDir}/Maths/Graph/Dynamic/Allocations/DynamicGraphUnweightedAllocationTest.cpp
+               ${TestDir}/Maths/Graph/Dynamic/Allocations/DynamicGraphWeightedAllocationTest.cpp
+               ${TestDir}/Maths/Graph/Dynamic/Allocations/DynamicGraphWeightedAllocationContiguousTest.cpp
+               ${TestDir}/Maths/Graph/Dynamic/Diagnostics/DynamicGraphTestingDiagnostics.cpp
+               ${TestDir}/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphFundamentalWeightContiguousTest.cpp
+               ${TestDir}/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphFundamentalWeightTest.cpp
+               ${TestDir}/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphUnweightedContiguousTest.cpp
+               ${TestDir}/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphUnweightedTest.cpp
+               ${TestDir}/Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphSharedFundamentalWeightContiguousTest.cpp
+               ${TestDir}/Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphSharedFundamentalWeightTest.cpp
+               ${TestDir}/Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphSharedUnsortableWeightTest.cpp
+               ${TestDir}/Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphFundamentalWeightContiguousTest.cpp
+               ${TestDir}/Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphFundamentalWeightTest.cpp
+               ${TestDir}/Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphMetaDataTest.cpp
+               ${TestDir}/Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphUnsortableWeightTest.cpp
+               ${TestDir}/Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphUnweightedContiguousTest.cpp
+               ${TestDir}/Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphUnweightedTest.cpp
+               ${TestDir}/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphSharedFundamentalWeightContiguousTest.cpp
+               ${TestDir}/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphSharedFundamentalWeightTest.cpp
+               ${TestDir}/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphFundamentalWeightContiguousTest.cpp
+               ${TestDir}/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphFundamentalWeightTest.cpp
+               ${TestDir}/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphMetaDataTest.cpp
+               ${TestDir}/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphUnweightedContiguousTest.cpp
+               ${TestDir}/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphUnweightedTest.cpp
                ${TestDir}/Maths/Graph/DynamicGraphFixedTopologyTest.cpp
-               ${TestDir}/Maths/Graph/DynamicGraphTestingDiagnostics.cpp
-               ${TestDir}/Maths/Graph/DynamicGraphTraversalsTest.cpp
-               ${TestDir}/Maths/Graph/DynamicGraphUnweightedAllocationTest.cpp
-               ${TestDir}/Maths/Graph/DynamicGraphUpdateTest.cpp
-               ${TestDir}/Maths/Graph/DynamicGraphWeightedAllocationTest.cpp
-               ${TestDir}/Maths/Graph/DynamicGraphWeightedAllocationContiguousTest.cpp
-               ${TestDir}/Maths/Graph/DynamicSubgraphTest.cpp
-               ${TestDir}/Maths/Graph/EdgeTest.cpp
-               ${TestDir}/Maths/Graph/EdgeTestingDiagnostics.cpp
-               ${TestDir}/Maths/Graph/GraphMetaTest.cpp
-               ${TestDir}/Maths/Graph/GraphTraversalTestingUtilities.cpp
-               ${TestDir}/Maths/Graph/HeterogeneousNodeStorageTest.cpp
                ${TestDir}/Maths/Graph/HeterogeneousStaticGraphTest.cpp
-               ${TestDir}/Maths/Graph/NodeStorageAllocationTest.cpp
-               ${TestDir}/Maths/Graph/NodeStorageTest.cpp
                ${TestDir}/Maths/Graph/StaticGraphInitializationTest.cpp
                ${TestDir}/Maths/Graph/StaticGraphManipulationsTest.cpp
-               ${TestDir}/Maths/Graph/StaticGraphTraversalsTest.cpp
-               ${TestDir}/Maths/Graph/TreeTest.cpp
-               ${TestDir}/Maths/Graph/TreeTestingDiagnostics.cpp
-               ${TestDir}/Maths/Graph/Undirected/DynamicUndirectedGraphSharedFundamentalWeightContiguousTest.cpp
-               ${TestDir}/Maths/Graph/Undirected/DynamicUndirectedGraphSharedFundamentalWeightTest.cpp
-               ${TestDir}/Maths/Graph/Undirected/DynamicUndirectedGraphSharedUnsortableWeightTest.cpp
-               ${TestDir}/Maths/Graph/Undirected/DynamicUndirectedGraphFundamentalWeightContiguousTest.cpp
-               ${TestDir}/Maths/Graph/Undirected/DynamicUndirectedGraphFundamentalWeightTest.cpp
-               ${TestDir}/Maths/Graph/Undirected/DynamicUndirectedGraphMetaDataTest.cpp
-               ${TestDir}/Maths/Graph/Undirected/DynamicUndirectedGraphUnsortableWeightTest.cpp
-               ${TestDir}/Maths/Graph/Undirected/DynamicUndirectedGraphUnweightedContiguousTest.cpp
-               ${TestDir}/Maths/Graph/Undirected/DynamicUndirectedGraphUnweightedTest.cpp
-               ${TestDir}/Maths/Graph/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphSharedFundamentalWeightContiguousTest.cpp
-               ${TestDir}/Maths/Graph/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphSharedFundamentalWeightTest.cpp
-               ${TestDir}/Maths/Graph/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphFundamentalWeightContiguousTest.cpp
-               ${TestDir}/Maths/Graph/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphFundamentalWeightTest.cpp
-               ${TestDir}/Maths/Graph/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphMetaDataTest.cpp
-               ${TestDir}/Maths/Graph/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphUnweightedContiguousTest.cpp
-               ${TestDir}/Maths/Graph/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphUnweightedTest.cpp
+               ${TestDir}/Maths/Graph/Tree/TreeTest.cpp
+               ${TestDir}/Maths/Graph/Tree/TreeTestingDiagnostics.cpp
                ${TestDir}/Maths/Sequences/LinearSequenceTest.cpp
                ${TestDir}/Maths/Sequences/LinearSequenceTestingDiagnostics.cpp
                ${TestDir}/Maths/Sequences/MonotonicSequenceAllocationTest.cpp

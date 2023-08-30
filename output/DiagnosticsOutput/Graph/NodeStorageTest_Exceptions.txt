@@ -1,4 +1,4 @@
-Tests/Maths/Graph/NodeStorageTest.cpp, Line 101
+Tests/Maths/Graph/Components/Nodes/NodeStorageTest.cpp, Line 101
 
 Expected Exception Type:
 [std::out_of_range]
@@ -6,7 +6,7 @@ Attempting to erase a range of nodes with first > last
 
 =======================================
 
-Tests/Maths/Graph/NodeStorageTest.cpp, Line 102
+Tests/Maths/Graph/Components/Nodes/NodeStorageTest.cpp, Line 102
 
 Expected Exception Type:
 [std::out_of_range]

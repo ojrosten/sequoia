@@ -9,7 +9,7 @@
 
 #include "SuiteFreeTest.hpp"
 #include "SuiteTestingUtilities.hpp"
-#include "Maths/Graph/TreeTestingUtilities.hpp"
+#include "Maths/Graph/Tree/TreeTestingUtilities.hpp"
 
 #include "sequoia/Maths/Graph/DynamicTree.hpp"
 

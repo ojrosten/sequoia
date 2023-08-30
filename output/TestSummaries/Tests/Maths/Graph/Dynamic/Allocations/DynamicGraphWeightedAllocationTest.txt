@@ -1,0 +1,2 @@
+Weighted Graph Allocation Test
+Standard Top Level Checks:               108;  Failures:  0  [Deep checks: 4163]

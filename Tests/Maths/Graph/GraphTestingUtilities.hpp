@@ -9,8 +9,8 @@
 
 /*! \file */
 
-#include "EdgeTestingUtilities.hpp"
-#include "NodeStorageTestingUtilities.hpp"
+#include "Components/Edges/EdgeTestingUtilities.hpp"
+#include "Components/Nodes/NodeStorageTestingUtilities.hpp"
 
 #include "sequoia/Core/DataStructures/PartitionedData.hpp"
 #include "sequoia/Maths/Graph/GraphImpl.hpp"

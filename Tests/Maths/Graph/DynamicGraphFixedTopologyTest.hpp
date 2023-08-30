@@ -9,7 +9,7 @@
 
 /*! \file */
 
-#include "DynamicGraphTestingUtilities.hpp"
+#include "Dynamic/DynamicGraphTestingUtilities.hpp"
 #include "FixedTopologyGenericTests.hpp"
 
 namespace sequoia
