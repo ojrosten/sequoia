@@ -80,6 +80,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphUnweightedTest.cpp
                ${TestDir}/Maths/Graph/DynamicGraphFixedTopologyTest.cpp
                ${TestDir}/Maths/Graph/HeterogeneousStaticGraphTest.cpp
+               ${TestDir}/Maths/Graph/Static/Directed/StaticDirectedGraphUnweightedTest.cpp
                ${TestDir}/Maths/Graph/StaticGraphInitializationTest.cpp
                ${TestDir}/Maths/Graph/StaticGraphManipulationsTest.cpp
                ${TestDir}/Maths/Graph/Tree/TreeTest.cpp

@@ -270,7 +270,7 @@ int main(int argc, char** argv)
          test_heterogeneous_node_storage{"Heterogeneuous"}
       },
       suite{
-        "Manipulations",
+        "Dynamic",
         suite{
           "Directed",
           dynamic_directed_graph_unweighted_test{"Directed Graph Unweighted Test"},
@@ -299,6 +299,13 @@ int main(int argc, char** argv)
           dynamic_undirected_embedded_graph_shared_fundamental_weight_test{"Undirected Embedded Graph Shared Fundamental Weight Test"},
           dynamic_undirected_embedded_graph_shared_fundamental_weight_contiguous_test{"Undirected Embedded Graph Shared Fundamental Weight Contiguous Test"},
           dynamic_undirected_embedded_graph_meta_data_test{"Undirected Graph Meta Data Test"}
+        }
+      },
+      suite{
+        "Static",
+        suite{
+          "Directed",
+          static_directed_graph_unweighted_test{"Static Directed Graph Unweighted Test"}
         }
       },
       suite{
