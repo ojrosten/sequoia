@@ -53,6 +53,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Maths/Graph/DynamicGraphUnweightedAllocationTest.cpp
                ${TestDir}/Maths/Graph/DynamicGraphUpdateTest.cpp
                ${TestDir}/Maths/Graph/DynamicGraphWeightedAllocationTest.cpp
+               ${TestDir}/Maths/Graph/DynamicGraphWeightedAllocationContiguousTest.cpp
                ${TestDir}/Maths/Graph/DynamicSubgraphTest.cpp
                ${TestDir}/Maths/Graph/EdgeTest.cpp
                ${TestDir}/Maths/Graph/EdgeTestingDiagnostics.cpp

@@ -68,4 +68,12 @@ namespace sequoia::testing
     }
   };
 
+  template<class T>
+  struct node_storage_generator
+  {
+    using type = maths::node_storage<T, std::vector<T, shared_counting_allocator<T, true, true, true>>>;
+  };
+
+  template<class T>
+  using node_storage_generator_t = typename node_storage_generator<T>::type;
 }

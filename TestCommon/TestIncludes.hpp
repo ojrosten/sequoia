@@ -46,6 +46,7 @@
 #include "Maths/Graph/DynamicGraphUnweightedAllocationTest.hpp"
 #include "Maths/Graph/DynamicGraphUpdateTest.hpp"
 #include "Maths/Graph/DynamicGraphWeightedAllocationTest.hpp"
+#include "Maths/Graph/DynamicGraphWeightedAllocationContiguousTest.hpp"
 #include "Maths/Graph/DynamicSubgraphTest.hpp"
 #include "Maths/Graph/EdgeTest.hpp"
 #include "Maths/Graph/EdgeTestingDiagnostics.hpp"

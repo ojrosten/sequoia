@@ -256,7 +256,7 @@ int main(int argc, char** argv)
       suite{
         "Infrastructure",
         test_graph_false_positives{"Graph false positive diagnostics"},
-        test_graph_meta{"Meta Tests"}
+        test_graph_meta{"Meta Test"}
       },
       suite{
         "Edges",
@@ -273,32 +273,32 @@ int main(int argc, char** argv)
         "Manipulations",
         suite{
           "Directed",
-          dynamic_directed_graph_unweighted_test{"Directed Graph Unweighted Tests"},
-          dynamic_directed_graph_unweighted_contiguous_test{"Directed Graph Unweighted Contiguous Tests"},
-          dynamic_directed_graph_fundamental_weight_test{"Directed Graph Fundamental Weight Tests"},
-          dynamic_directed_graph_fundamental_weight_contiguous_test{"Directed Graph Fundamental Weight Contiguous Tests"}
+          dynamic_directed_graph_unweighted_test{"Directed Graph Unweighted Test"},
+          dynamic_directed_graph_unweighted_contiguous_test{"Directed Graph Unweighted Contiguous Test"},
+          dynamic_directed_graph_fundamental_weight_test{"Directed Graph Fundamental Weight Test"},
+          dynamic_directed_graph_fundamental_weight_contiguous_test{"Directed Graph Fundamental Weight Contiguous Test"}
         },
         suite{
           "Undirected",
-          dynamic_undirected_graph_unweighted_test{"Undirected Graph Unweighted Tests"},
-          dynamic_undirected_graph_unweighted_contiguous_test{"Undirected Graph Unweighted Contiguous Tests"},
-          dynamic_undirected_graph_fundamental_weight_test{"Undirected Graph Fundamental Weight Tests"},
-          dynamic_undirected_graph_fundamental_weight_contiguous_test{"Undirected Graph Fundamental Weight Contiguous Tests"},
-          dynamic_undirected_graph_unsortable_weight_test{"Undirected Graph Unsortable Weight Tests"},
-          dynamic_undirected_graph_shared_fundamental_weight_test{"Undirected Graph Shared Fundamental Weight Tests"},
-          dynamic_undirected_graph_shared_fundamental_weight_contiguous_test{"Undirected Graph Shared Fundamental Weight Contiguous Tests"},
-          dynamic_undirected_graph_shared_unsortable_weight_test{"Undirected Graph Shared Unsortable Weight Tests"},
-          dynamic_undirected_graph_meta_data_test{"Undirected Graph Meta Data Tests"}
+          dynamic_undirected_graph_unweighted_test{"Undirected Graph Unweighted Test"},
+          dynamic_undirected_graph_unweighted_contiguous_test{"Undirected Graph Unweighted Contiguous Test"},
+          dynamic_undirected_graph_fundamental_weight_test{"Undirected Graph Fundamental Weight Test"},
+          dynamic_undirected_graph_fundamental_weight_contiguous_test{"Undirected Graph Fundamental Weight Contiguous Test"},
+          dynamic_undirected_graph_unsortable_weight_test{"Undirected Graph Unsortable Weight Test"},
+          dynamic_undirected_graph_shared_fundamental_weight_test{"Undirected Graph Shared Fundamental Weight Test"},
+          dynamic_undirected_graph_shared_fundamental_weight_contiguous_test{"Undirected Graph Shared Fundamental Weight Contiguous Test"},
+          dynamic_undirected_graph_shared_unsortable_weight_test{"Undirected Graph Shared Unsortable Weight Test"},
+          dynamic_undirected_graph_meta_data_test{"Undirected Graph Meta Data Test"}
         },
         suite{
           "Undirected Embedded",
-          dynamic_undirected_embedded_graph_unweighted_test{"Undirected Embedded Graph Unweighted Tests"},
-          dynamic_undirected_embedded_graph_unweighted_contiguous_test{"Undirected Embedded Graph Unweighted Contiguous Tests"},
-          dynamic_undirected_embedded_graph_fundamental_weight_test{"Undirected Embedded Graph Fundamental Weight Tests"},
-          dynamic_undirected_embedded_graph_fundamental_weight_contiguous_test{"Undirected Embedded Graph Fundamental Weight Contiguous Tests"},
-          dynamic_undirected_embedded_graph_shared_fundamental_weight_test{"Undirected Embedded Graph Shared Fundamental Weight Tests"},
-          dynamic_undirected_embedded_graph_shared_fundamental_weight_contiguous_test{"Undirected Embedded Graph Shared Fundamental Weight Contiguous Tests"},
-          dynamic_undirected_embedded_graph_meta_data_test{"Undirected Graph Meta Data Tests"}
+          dynamic_undirected_embedded_graph_unweighted_test{"Undirected Embedded Graph Unweighted Test"},
+          dynamic_undirected_embedded_graph_unweighted_contiguous_test{"Undirected Embedded Graph Unweighted Contiguous Test"},
+          dynamic_undirected_embedded_graph_fundamental_weight_test{"Undirected Embedded Graph Fundamental Weight Test"},
+          dynamic_undirected_embedded_graph_fundamental_weight_contiguous_test{"Undirected Embedded Graph Fundamental Weight Contiguous Test"},
+          dynamic_undirected_embedded_graph_shared_fundamental_weight_test{"Undirected Embedded Graph Shared Fundamental Weight Test"},
+          dynamic_undirected_embedded_graph_shared_fundamental_weight_contiguous_test{"Undirected Embedded Graph Shared Fundamental Weight Contiguous Test"},
+          dynamic_undirected_embedded_graph_meta_data_test{"Undirected Graph Meta Data Test"}
         }
       },
       suite{
@@ -310,8 +310,9 @@ int main(int argc, char** argv)
       },
       suite{
         "Allocations",
-        weighted_graph_allocation_test{"Weighted Graph Allocation Tests"},
-        unweighted_graph_allocation_test{"Unweighted Graph Allocation Tests"},
+        weighted_graph_allocation_test{"Weighted Graph Allocation Test"},
+        weighted_graph_allocation_contiguous_test{"Weighted Graph Allocation Contiguous Test"},
+        unweighted_graph_allocation_test{"Unweighted Graph Allocation Test"},
       }
     );
 

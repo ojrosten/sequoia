@@ -1,2 +1,2 @@
-Unweighted Graph Allocation Tests
+Unweighted Graph Allocation Test
 Standard Top Level Checks:                56;  Failures:  0  [Deep checks: 1163]
