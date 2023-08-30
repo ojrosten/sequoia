@@ -60,8 +60,6 @@ namespace sequoia::testing
     using edges_equivalent_t = std::initializer_list<std::initializer_list<edge_t>>;
     using transition_graph   = typename transition_checker<graph_t>::transition_graph;
 
-    constexpr static bool has_shared_weight{EdgeStorageConfig::edge_sharing == maths::edge_sharing_preference::shared_weight};
-
     static void execute_operations(regular_test& t)
     {
       auto trg{make_meta_data_transition_graph(t)};
