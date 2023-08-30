@@ -34,7 +34,9 @@ namespace sequoia::testing
     using graph_t = static_directed_graph<0, 0, null_weight, null_weight>;
     using edge_t = typename graph_t::edge_init_type;
     using edges_equivalent_t = std::initializer_list<std::initializer_list<edge_t>>;
-    
+
+    check_exception_thrown<std::out_of_range>(report_line(""), [](){ graph_t{{}}; });
+
     constexpr graph_t g{};
     check(equivalence, report_line(""), g, edges_equivalent_t{});
     check(equality, report_line(""), g, graph_t{});

@@ -1,2 +1,2 @@
 Static Directed Graph Unweighted Test
-Standard Top Level Checks:                 6;  Failures:  0  [Deep checks: 31]
+Standard Top Level Checks:                 7;  Failures:  0  [Deep checks: 32]
