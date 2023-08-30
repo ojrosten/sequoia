@@ -28,5 +28,7 @@ namespace sequoia::testing
     void test_0_1();
 
     void test_1_1();
+
+    void test_2_1();
   };
 }

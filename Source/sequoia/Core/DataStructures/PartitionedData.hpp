@@ -658,9 +658,9 @@ namespace sequoia
       [[nodiscard]]
       friend constexpr bool operator==(const partitioned_sequence_base&, const partitioned_sequence_base&) noexcept = default;
     protected:
-      explicit constexpr partitioned_sequence_base(std::pair<partitions_type, container_type> data)
-        : m_Partitions{std::move(data.first)}
-        , m_Data{std::move(data.second)}
+      explicit constexpr partitioned_sequence_base(const std::pair<partitions_type, container_type>& data)
+        : m_Partitions{data.first}
+        , m_Data{data.second}
       {}
 
       constexpr partitioned_sequence_base(partitioned_sequence_base&&) noexcept = default;
@@ -1137,7 +1137,8 @@ namespace sequoia
         const size_type total{std::accumulate(list.begin(), list.end(), size_type{}, [](size_type val, std::initializer_list<T> l){ return val + l.size(); })};
 
         if(total != num_elements_v)
-          throw std::logic_error("Inconsistent number of elements supplied by initializer lists");
+          throw std::logic_error{std::string{"Inconsistent number of elements supplied by initializer lists: expected "}
+              .append(std::to_string(num_elements_v)).append(" but got ").append(std::to_string(total))};
 
         if constexpr(sizeof...(Inds) > 0)
         {

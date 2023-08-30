@@ -13,9 +13,10 @@
  */
 
 #include <array>
-#include <utility>
-#include <type_traits>
+#include <string>
 #include <stdexcept>
+#include <type_traits>
+#include <utility>
 
 namespace sequoia::utilities
 {
@@ -61,7 +62,8 @@ namespace sequoia::utilities
   constexpr std::array<T, N> to_array(std::initializer_list<InitType> l, Fn fn = Fn{})
   {
     if(l.size() > N)
-      throw std::out_of_range{"initializer_list too big for array"};
+      throw std::out_of_range{std::string{"initializer_list of size "}.append(std::to_string(l.size())).append(" too big for array: expected at most ")
+        .append(std::to_string(N)).append(" elements")};
 
     return impl::to_array<T, N>(l, std::make_index_sequence<N>{}, fn);
   }
