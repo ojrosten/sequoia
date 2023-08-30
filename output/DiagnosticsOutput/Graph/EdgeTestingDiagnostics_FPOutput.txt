@@ -1,4 +1,4 @@
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 47
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 47
 Differing target indices
 
 [sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>]
@@ -12,7 +12,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 51
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 51
 Differing target indices
 
 [sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned char>]
@@ -27,7 +27,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 58
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 58
 Differing targets, identical weights
 
 [sequoia::maths::partial_edge<sequoia::object::by_value<int>, sequoia::maths::null_meta_data, unsigned long long>]
@@ -41,7 +41,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 59
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 59
 Differing targets, identical weights
 
 [sequoia::maths::partial_edge<sequoia::object::by_value<int>, sequoia::maths::null_meta_data, unsigned long long>]
@@ -55,7 +55,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 60
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 60
 Identical targets, differeing weights
 
 [sequoia::maths::partial_edge<sequoia::object::by_value<int>, sequoia::maths::null_meta_data, unsigned long long>]
@@ -69,7 +69,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 61
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 61
 Identical targets, differeing weights
 
 [sequoia::maths::partial_edge<sequoia::object::by_value<int>, sequoia::maths::null_meta_data, unsigned long long>]
@@ -83,7 +83,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 62
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 62
 Differing targets and weights
 
 [sequoia::maths::partial_edge<sequoia::object::by_value<int>, sequoia::maths::null_meta_data, unsigned long long>]
@@ -103,7 +103,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 63
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 63
 Differing targets and weights
 
 [sequoia::maths::partial_edge<sequoia::object::by_value<int>, sequoia::maths::null_meta_data, unsigned long long>]
@@ -123,7 +123,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 70
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 70
 Differing targets, identical weights
 
 [sequoia::maths::partial_edge<sequoia::object::shared<int>, sequoia::maths::null_meta_data, unsigned long long>]
@@ -137,7 +137,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 71
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 71
 Differing targets, identical weights
 
 [sequoia::maths::partial_edge<sequoia::object::shared<int>, sequoia::maths::null_meta_data, unsigned long long>]
@@ -151,7 +151,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 72
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 72
 Identical targets, differeing weights
 
 [sequoia::maths::partial_edge<sequoia::object::shared<int>, sequoia::maths::null_meta_data, unsigned long long>]
@@ -165,7 +165,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 73
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 73
 Identical targets, differeing weights
 
 [sequoia::maths::partial_edge<sequoia::object::shared<int>, sequoia::maths::null_meta_data, unsigned long long>]
@@ -179,7 +179,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 74
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 74
 Differing targets and weights
 
 [sequoia::maths::partial_edge<sequoia::object::shared<int>, sequoia::maths::null_meta_data, unsigned long long>]
@@ -199,7 +199,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 75
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 75
 Differing targets and weights
 
 [sequoia::maths::partial_edge<sequoia::object::shared<int>, sequoia::maths::null_meta_data, unsigned long long>]
@@ -219,7 +219,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 82
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 82
 Differing target indices
 
 [sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, float, unsigned long long>]
@@ -233,7 +233,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 83
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 83
 Differing meta data
 
 [sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, float, unsigned long long>]
@@ -253,7 +253,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 90
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 90
 Differing target indices
 
 [sequoia::maths::partial_edge<sequoia::object::by_value<double>, float, unsigned long long>]
@@ -267,7 +267,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 91
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 91
 Differing weights
 
 [sequoia::maths::partial_edge<sequoia::object::by_value<double>, float, unsigned long long>]
@@ -281,7 +281,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 92
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 92
 Differing meta data
 
 [sequoia::maths::partial_edge<sequoia::object::by_value<double>, float, unsigned long long>]
@@ -295,7 +295,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 99
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 99
 Differing target indices
 
 [sequoia::maths::partial_edge<sequoia::object::shared<double>, float, unsigned long long>]
@@ -309,7 +309,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 100
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 100
 Differing weights
 
 [sequoia::maths::partial_edge<sequoia::object::shared<double>, float, unsigned long long>]
@@ -323,7 +323,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 101
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 101
 Differing meta data
 
 [sequoia::maths::partial_edge<sequoia::object::shared<double>, float, unsigned long long>]
@@ -337,7 +337,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 108
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 108
 Differing targets, identical complementary indices
 
 [sequoia::maths::partial_edge<sequoia::object::shared<int>, sequoia::maths::null_meta_data, unsigned long long>]
@@ -351,7 +351,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 109
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 109
 Differing targets, identical complementary indices
 
 [sequoia::maths::partial_edge<sequoia::object::shared<int>, sequoia::maths::null_meta_data, unsigned long long>]
@@ -365,7 +365,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 110
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 110
 Identical targets, differeing complementary indices
 
 [sequoia::maths::partial_edge<sequoia::object::shared<int>, sequoia::maths::null_meta_data, unsigned long long>]
@@ -379,7 +379,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 111
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 111
 Identical targets, differeing complementary indices
 
 [sequoia::maths::partial_edge<sequoia::object::shared<int>, sequoia::maths::null_meta_data, unsigned long long>]
@@ -393,7 +393,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 112
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 112
 Differing targets and complementary indices
 
 [sequoia::maths::partial_edge<sequoia::object::shared<int>, sequoia::maths::null_meta_data, unsigned long long>]
@@ -413,7 +413,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 113
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 113
 Differing targets and complementary indices
 
 [sequoia::maths::partial_edge<sequoia::object::shared<int>, sequoia::maths::null_meta_data, unsigned long long>]
@@ -433,7 +433,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 120
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 120
 Differing targets, identical complementary indices and weights
 
 [sequoia::maths::embedded_partial_edge<sequoia::object::by_value<double>, sequoia::maths::null_meta_data, unsigned long long>]
@@ -447,7 +447,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 121
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 121
 Differing targets, identical complementary indices and weights
 
 [sequoia::maths::embedded_partial_edge<sequoia::object::by_value<double>, sequoia::maths::null_meta_data, unsigned long long>]
@@ -461,7 +461,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 122
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 122
 Differing targets, identical complementary indices and weights
 
 [sequoia::maths::embedded_partial_edge<sequoia::object::by_value<double>, sequoia::maths::null_meta_data, unsigned long long>]
@@ -475,7 +475,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 124
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 124
 Differing complementary indices, identical targets and weights
 
 [sequoia::maths::embedded_partial_edge<sequoia::object::by_value<double>, sequoia::maths::null_meta_data, unsigned long long>]
@@ -489,7 +489,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 125
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 125
 Differing complementary indices, identical targets and weights
 
 [sequoia::maths::embedded_partial_edge<sequoia::object::by_value<double>, sequoia::maths::null_meta_data, unsigned long long>]
@@ -503,7 +503,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 126
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 126
 Differing complementary indices, identical targets and weights
 
 [sequoia::maths::embedded_partial_edge<sequoia::object::by_value<double>, sequoia::maths::null_meta_data, unsigned long long>]
@@ -517,7 +517,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 128
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 128
 Differing weights, identical targets and complementary indices
 
 [sequoia::maths::embedded_partial_edge<sequoia::object::by_value<double>, sequoia::maths::null_meta_data, unsigned long long>]
@@ -531,7 +531,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 129
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 129
 Differing weights, identical targets and complementary indices
 
 [sequoia::maths::embedded_partial_edge<sequoia::object::by_value<double>, sequoia::maths::null_meta_data, unsigned long long>]
@@ -545,7 +545,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 130
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 130
 Differing weights, identical targets and complementary indices
 
 [sequoia::maths::embedded_partial_edge<sequoia::object::by_value<double>, sequoia::maths::null_meta_data, unsigned long long>]
@@ -559,7 +559,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 132
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 132
 Differing targets and complementary indices, identical weights
 
 [sequoia::maths::embedded_partial_edge<sequoia::object::by_value<double>, sequoia::maths::null_meta_data, unsigned long long>]
@@ -579,7 +579,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 133
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 133
 Differing targets and weights, identical complementary indices
 
 [sequoia::maths::embedded_partial_edge<sequoia::object::by_value<double>, sequoia::maths::null_meta_data, unsigned long long>]
@@ -599,7 +599,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 134
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 134
 Differing complementary indices and weights, identical targets
 
 [sequoia::maths::embedded_partial_edge<sequoia::object::by_value<double>, sequoia::maths::null_meta_data, unsigned long long>]
@@ -619,7 +619,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 136
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 136
 Differing targets, complementary indices and weights
 
 [sequoia::maths::embedded_partial_edge<sequoia::object::by_value<double>, sequoia::maths::null_meta_data, unsigned long long>]
@@ -645,7 +645,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 143
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 143
 Differing targets, identical complementary indices and weights
 
 [sequoia::maths::embedded_partial_edge<sequoia::object::by_value<double>, sequoia::maths::null_meta_data, unsigned long long>]
@@ -659,7 +659,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 144
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 144
 Differing targets, identical complementary indices and weights
 
 [sequoia::maths::embedded_partial_edge<sequoia::object::by_value<double>, sequoia::maths::null_meta_data, unsigned long long>]
@@ -673,7 +673,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 145
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 145
 Differing targets, identical complementary indices and weights
 
 [sequoia::maths::embedded_partial_edge<sequoia::object::by_value<double>, sequoia::maths::null_meta_data, unsigned long long>]
@@ -687,7 +687,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 147
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 147
 Differing complementary indices, identical targets and weights
 
 [sequoia::maths::embedded_partial_edge<sequoia::object::by_value<double>, sequoia::maths::null_meta_data, unsigned long long>]
@@ -701,7 +701,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 148
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 148
 Differing complementary indices, identical targets and weights
 
 [sequoia::maths::embedded_partial_edge<sequoia::object::by_value<double>, sequoia::maths::null_meta_data, unsigned long long>]
@@ -715,7 +715,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 149
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 149
 Differing complementary indices, identical targets and weights
 
 [sequoia::maths::embedded_partial_edge<sequoia::object::by_value<double>, sequoia::maths::null_meta_data, unsigned long long>]
@@ -729,7 +729,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 151
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 151
 Differing weights, identical targets and complementary indices
 
 [sequoia::maths::embedded_partial_edge<sequoia::object::by_value<double>, sequoia::maths::null_meta_data, unsigned long long>]
@@ -743,7 +743,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 152
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 152
 Differing weights, identical targets and complementary indices
 
 [sequoia::maths::embedded_partial_edge<sequoia::object::by_value<double>, sequoia::maths::null_meta_data, unsigned long long>]
@@ -757,7 +757,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 153
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 153
 Differing weights, identical targets and complementary indices
 
 [sequoia::maths::embedded_partial_edge<sequoia::object::by_value<double>, sequoia::maths::null_meta_data, unsigned long long>]
@@ -771,7 +771,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 155
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 155
 Differing targets and complementary indices, identical weights
 
 [sequoia::maths::embedded_partial_edge<sequoia::object::by_value<double>, sequoia::maths::null_meta_data, unsigned long long>]
@@ -791,7 +791,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 156
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 156
 Differing targets and weights, identical complementary indices
 
 [sequoia::maths::embedded_partial_edge<sequoia::object::by_value<double>, sequoia::maths::null_meta_data, unsigned long long>]
@@ -811,7 +811,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 157
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 157
 Differing complementary indices and weights, identical targets
 
 [sequoia::maths::embedded_partial_edge<sequoia::object::by_value<double>, sequoia::maths::null_meta_data, unsigned long long>]
@@ -831,7 +831,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 159
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 159
 Differing targets, complementary indices and weights
 
 [sequoia::maths::embedded_partial_edge<sequoia::object::by_value<double>, sequoia::maths::null_meta_data, unsigned long long>]
@@ -857,7 +857,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 166
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 166
 Differing target indices
 
 [sequoia::maths::embedded_partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, float, unsigned long long>]
@@ -871,7 +871,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 167
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 167
 Differing complementary indices
 
 [sequoia::maths::embedded_partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, float, unsigned long long>]
@@ -885,7 +885,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 168
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 168
 Differing meta data
 
 [sequoia::maths::embedded_partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, float, unsigned long long>]
@@ -899,7 +899,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 175
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 175
 Differing target indices
 
 [sequoia::maths::embedded_partial_edge<sequoia::object::by_value<double>, float, unsigned long long>]
@@ -913,7 +913,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 176
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 176
 Differing complementary indices
 
 [sequoia::maths::embedded_partial_edge<sequoia::object::by_value<double>, float, unsigned long long>]
@@ -927,7 +927,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 177
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 177
 Differing weights
 
 [sequoia::maths::embedded_partial_edge<sequoia::object::by_value<double>, float, unsigned long long>]
@@ -941,7 +941,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 178
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 178
 Differing meta data
 
 [sequoia::maths::embedded_partial_edge<sequoia::object::by_value<double>, float, unsigned long long>]
@@ -955,7 +955,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 185
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 185
 Differing target indices
 
 [sequoia::maths::embedded_partial_edge<sequoia::object::shared<double>, float, unsigned long long>]
@@ -969,7 +969,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 186
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 186
 Differing complementary indices
 
 [sequoia::maths::embedded_partial_edge<sequoia::object::shared<double>, float, unsigned long long>]
@@ -983,7 +983,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 187
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 187
 Differing weights
 
 [sequoia::maths::embedded_partial_edge<sequoia::object::shared<double>, float, unsigned long long>]
@@ -997,7 +997,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 188
+Tests/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp, Line 188
 Differing meta data
 
 [sequoia::maths::embedded_partial_edge<sequoia::object::shared<double>, float, unsigned long long>]
