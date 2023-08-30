@@ -94,7 +94,7 @@ namespace sequoia::testing
     using namespace maths;
     using edge_partitions_allocator = decltype(Graph{}.get_edge_allocator(partitions_allocator_tag{}));
     using edge_allocator = typename Graph::edge_allocator_type;
-    using node_allocator = typename Graph::node_weight_container_type::allocator_type;
+    using node_allocator = typename Graph::node_weight_allocator_type;
 
     // null
     Graph g{edge_allocator{}, edge_partitions_allocator{}, node_allocator{}};
@@ -119,8 +119,6 @@ namespace sequoia::testing
       [](Graph& g) { g.add_node(); }
     };
 
-    using node_allocator = typename Graph::node_weight_allocator_type;
-    using edge_allocator = typename Graph::edge_allocator_type;
     constexpr auto GraphFlavour{Graph::flavour};
 
     check_semantics(report_line(""),
@@ -159,7 +157,7 @@ namespace sequoia::testing
   void weighted_graph_allocation_test::bucketed_memory()
   {
     using edge_allocator = typename Graph::edge_allocator_type;
-    using node_allocator = typename Graph::node_weight_container_type::allocator_type;
+    using node_allocator = typename Graph::node_weight_allocator_type;
 
     Graph g{edge_allocator{}, node_allocator{}};
 
