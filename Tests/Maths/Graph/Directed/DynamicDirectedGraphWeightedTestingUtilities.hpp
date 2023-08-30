@@ -100,8 +100,6 @@ namespace sequoia::testing
   >
   class dynamic_directed_graph_weighted_operations
   {
-    template<maths::network>
-    friend struct graph_initialization_checker;
    public:
     using graph_t            = maths::directed_graph<EdgeWeight, NodeWeight, EdgeStorageConfig, NodeWeightStorage>;
     using edge_t             = typename graph_t::edge_init_type;

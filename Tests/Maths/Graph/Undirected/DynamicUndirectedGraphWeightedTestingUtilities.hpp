@@ -88,8 +88,6 @@ namespace sequoia::testing
   >
   class dynamic_undirected_graph_weighted_operations
   {
-    template<maths::network>
-    friend struct graph_initialization_checker;
    public:
     using graph_t            = maths::undirected_graph<EdgeWeight, NodeWeight, maths::null_meta_data, EdgeStorageConfig, NodeWeightStorage>;
     using edge_t             = typename graph_t::edge_init_type;
