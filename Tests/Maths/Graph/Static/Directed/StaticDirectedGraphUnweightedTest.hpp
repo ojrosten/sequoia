@@ -9,6 +9,8 @@
 
 #include "sequoia/TestFramework/RegularTestCore.hpp"
 
+#include "sequoia/Maths/Graph/StaticGraph.hpp"
+
 namespace sequoia::testing
 {
   class static_directed_graph_unweighted_test final : public regular_test
@@ -22,5 +24,9 @@ namespace sequoia::testing
     void run_tests();
 
     void test_empty();
+
+    void test_0_1();
+
+    void test_1_1();
   };
 }
