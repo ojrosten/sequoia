@@ -194,8 +194,6 @@ namespace sequoia::testing
 
     Graph g2{};
 
-    using node_allocator = typename Graph::node_weight_container_type::allocator_type;
-    using edge_allocator = typename Graph::edge_allocator_type;
     constexpr auto GraphFlavour{Graph::flavour};
 
     check_semantics(report_line(""),
