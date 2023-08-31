@@ -29,6 +29,8 @@ namespace sequoia::maths
     using size_type   = typename base_t::size_type;
     using weight_type = typename base_t::weight_type;
 
+    constexpr static_node_storage() = default;
+
     constexpr static_node_storage(const size_type)
       : base_t{}
     {}

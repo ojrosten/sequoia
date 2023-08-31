@@ -1,4 +1,4 @@
-Tests/Maths/Graph/Static/Directed/StaticDirectedGraphUnweightedTest.cpp, Line 42
+Tests/Maths/Graph/Static/Directed/StaticDirectedGraphFundamentalWeightTest.cpp, Line 42
 
 Expected Exception Type:
 [std::logic_error]
@@ -6,7 +6,7 @@ Inconsistent number of elements supplied by initializer lists: expected 0 but go
 
 =======================================
 
-Tests/Maths/Graph/Static/Directed/StaticDirectedGraphUnweightedTest.cpp, Line 55
+Tests/Maths/Graph/Static/Directed/StaticDirectedGraphFundamentalWeightTest.cpp, Line 55
 
 Expected Exception Type:
 [std::logic_error]
@@ -14,7 +14,7 @@ Inconsistent number of elements supplied by initializer lists: expected 0 but go
 
 =======================================
 
-Tests/Maths/Graph/Static/Directed/StaticDirectedGraphUnweightedTest.cpp, Line 68
+Tests/Maths/Graph/Static/Directed/StaticDirectedGraphFundamentalWeightTest.cpp, Line 68
 
 Expected Exception Type:
 [std::logic_error]
@@ -22,7 +22,7 @@ Inconsistent number of elements supplied by initializer lists: expected 1 but go
 
 =======================================
 
-Tests/Maths/Graph/Static/Directed/StaticDirectedGraphUnweightedTest.cpp, Line 92
+Tests/Maths/Graph/Static/Directed/StaticDirectedGraphFundamentalWeightTest.cpp, Line 92
 
 Expected Exception Type:
 [std::logic_error]
@@ -30,7 +30,7 @@ Inconsistent number of elements supplied by initializer lists: expected 2 but go
 
 =======================================
 
-Tests/Maths/Graph/Static/Directed/StaticDirectedGraphUnweightedTest.cpp, Line 105
+Tests/Maths/Graph/Static/Directed/StaticDirectedGraphFundamentalWeightTest.cpp, Line 105
 
 Expected Exception Type:
 [std::logic_error]
@@ -38,7 +38,7 @@ Inconsistent number of elements supplied by initializer lists: expected 2 but go
 
 =======================================
 
-Tests/Maths/Graph/Static/Directed/StaticDirectedGraphUnweightedTest.cpp, Line 106
+Tests/Maths/Graph/Static/Directed/StaticDirectedGraphFundamentalWeightTest.cpp, Line 106
 
 Expected Exception Type:
 [std::logic_error]
@@ -46,7 +46,7 @@ connectivity::process_edges [node: 0, edge: 0]: target index 1 out of range - ma
 
 =======================================
 
-Tests/Maths/Graph/Static/Directed/StaticDirectedGraphUnweightedTest.cpp, Line 107
+Tests/Maths/Graph/Static/Directed/StaticDirectedGraphFundamentalWeightTest.cpp, Line 107
 
 Expected Exception Type:
 [std::logic_error]

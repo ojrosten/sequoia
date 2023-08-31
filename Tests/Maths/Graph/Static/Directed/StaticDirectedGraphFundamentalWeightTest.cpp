@@ -7,7 +7,7 @@
 
 /*! \file */
 
-#include "StaticDirectedGraphUnweightedTest.hpp"
+#include "StaticDirectedGraphFundamentalWeightTest.hpp"
 #include "Maths/Graph/GraphTestingUtilities.hpp"
 
 #include "sequoia/TestFramework/StateTransitionUtilities.hpp"
@@ -17,12 +17,12 @@ namespace sequoia::testing
   using namespace maths;
 
   [[nodiscard]]
-  std::filesystem::path static_directed_graph_unweighted_test::source_file() const
+  std::filesystem::path static_directed_graph_fundamental_weight_test::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void static_directed_graph_unweighted_test::run_tests()
+  void static_directed_graph_fundamental_weight_test::run_tests()
   {
     test_empty();
     test_node();
@@ -33,9 +33,9 @@ namespace sequoia::testing
     test_node_1_node_0();
   }
 
-  void static_directed_graph_unweighted_test::test_empty()
+  void static_directed_graph_fundamental_weight_test::test_empty()
   {
-    using graph_t = static_directed_graph<0, 0, null_weight, null_weight>;
+    using graph_t = static_directed_graph<0, 0, float, double>;
     using edge_t = typename graph_t::edge_init_type;
     using edges_equivalent_t = std::initializer_list<std::initializer_list<edge_t>>;
 
@@ -46,9 +46,9 @@ namespace sequoia::testing
     check(equality, report_line(""), g, graph_t{});
   }
 
-  void static_directed_graph_unweighted_test::test_node()
+  void static_directed_graph_fundamental_weight_test::test_node()
   {
-    using graph_t = static_directed_graph<0, 1, null_weight, null_weight>;
+    using graph_t = static_directed_graph<0, 1, float, double>;
     using edge_t = typename graph_t::edge_init_type;
     using edges_equivalent_t = std::initializer_list<std::initializer_list<edge_t>>;
 
@@ -59,9 +59,9 @@ namespace sequoia::testing
     check(equality, report_line(""), g, graph_t{{}});
   }
 
-  void static_directed_graph_unweighted_test::test_node_0()
+  void static_directed_graph_fundamental_weight_test::test_node_0()
   {
-    using graph_t = static_directed_graph<1, 1, null_weight, null_weight>;
+    using graph_t = static_directed_graph<1, 1, float, double>;
     using edge_t = typename graph_t::edge_init_type;
     using edges_equivalent_t = std::initializer_list<std::initializer_list<edge_t>>;
 
@@ -72,9 +72,9 @@ namespace sequoia::testing
     check(equality, report_line(""), g, graph_t{{edge_t{0}}});
   }
 
-  void static_directed_graph_unweighted_test::test_node_0_0()
+  void static_directed_graph_fundamental_weight_test::test_node_0_0()
   {
-    using graph_t = static_directed_graph<2, 1, null_weight, null_weight>;
+    using graph_t = static_directed_graph<2, 1, float, double>;
     using edge_t = typename graph_t::edge_init_type;
     using edges_equivalent_t = std::initializer_list<std::initializer_list<edge_t>>;
 
@@ -83,9 +83,9 @@ namespace sequoia::testing
     check(equality, report_line(""), g, graph_t{{edge_t{0}, edge_t{0}}});
   }
 
-  void static_directed_graph_unweighted_test::test_node_node()
+  void static_directed_graph_fundamental_weight_test::test_node_node()
   {
-    using graph_t = static_directed_graph<0, 2, null_weight, null_weight>;
+    using graph_t = static_directed_graph<0, 2, float, double>;
     using edge_t = typename graph_t::edge_init_type;
     using edges_equivalent_t = std::initializer_list<std::initializer_list<edge_t>>;
 
@@ -96,9 +96,9 @@ namespace sequoia::testing
     check(equality, report_line(""), g, graph_t{{}, {}});
   }
 
-  void static_directed_graph_unweighted_test::test_node_1_node()
+  void static_directed_graph_fundamental_weight_test::test_node_1_node()
   {
-    using graph_t = static_directed_graph<1, 2, null_weight, null_weight>;
+    using graph_t = static_directed_graph<1, 2, float, double>;
     using edge_t = typename graph_t::edge_init_type;
     using edges_equivalent_t = std::initializer_list<std::initializer_list<edge_t>>;
 
@@ -111,9 +111,9 @@ namespace sequoia::testing
     check(equality, report_line(""), g, graph_t{{edge_t{1}}, {}});
   }
 
-  void static_directed_graph_unweighted_test::test_node_1_node_0()
+  void static_directed_graph_fundamental_weight_test::test_node_1_node_0()
   {
-    using graph_t = static_directed_graph<2, 2, null_weight, null_weight>;
+    using graph_t = static_directed_graph<2, 2, float, double>;
     using edge_t = typename graph_t::edge_init_type;
     using edges_equivalent_t = std::initializer_list<std::initializer_list<edge_t>>;
 

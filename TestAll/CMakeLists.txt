@@ -46,7 +46,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Maths/Graph/Algorithms/DynamicGraphTraversalsTest.cpp
                ${TestDir}/Maths/Graph/Algorithms/DynamicGraphUpdateTest.cpp
                ${TestDir}/Maths/Graph/Algorithms/DynamicSubgraphTest.cpp
-               ${TestDir}/Maths/Graph/Algorithms/GraphTraversalTestingUtilities.cpp               
+               ${TestDir}/Maths/Graph/Algorithms/GraphTraversalTestingUtilities.cpp
                ${TestDir}/Maths/Graph/Algorithms/StaticGraphTraversalsTest.cpp
                ${TestDir}/Maths/Graph/Components/Edges/EdgeTest.cpp
                ${TestDir}/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp
@@ -81,6 +81,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Maths/Graph/DynamicGraphFixedTopologyTest.cpp
                ${TestDir}/Maths/Graph/HeterogeneousStaticGraphTest.cpp
                ${TestDir}/Maths/Graph/Static/Directed/StaticDirectedGraphUnweightedTest.cpp
+               ${TestDir}/Maths/Graph/Static/Directed/StaticDirectedGraphFundamentalWeightTest.cpp
                ${TestDir}/Maths/Graph/StaticGraphInitializationTest.cpp
                ${TestDir}/Maths/Graph/StaticGraphManipulationsTest.cpp
                ${TestDir}/Maths/Graph/Tree/TreeTest.cpp
@@ -100,7 +101,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Runtime/ShellCommandsTestingDiagnostics.cpp
                ${TestDir}/Streaming/StreamingFreeTest.cpp
                ${TestDir}/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp
-               ${TestDir}/TestFramework/AllocationTesting/MoveOnlyScopedAllocationTestDiagnostics.cpp               
+               ${TestDir}/TestFramework/AllocationTesting/MoveOnlyScopedAllocationTestDiagnostics.cpp
                ${TestDir}/TestFramework/AllocationTesting/OrderableMoveOnlyAllocationTestDiagnostics.cpp
                ${TestDir}/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp
                ${TestDir}/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp

@@ -73,6 +73,7 @@
 #include "Maths/Graph/DynamicGraphFixedTopologyTest.hpp"
 #include "Maths/Graph/HeterogeneousStaticGraphTest.hpp"
 #include "Maths/Graph/Static/Directed/StaticDirectedGraphUnweightedTest.hpp"
+#include "Maths/Graph/Static/Directed/StaticDirectedGraphFundamentalWeightTest.hpp"
 #include "Maths/Graph/StaticGraphInitializationTest.hpp"
 #include "Maths/Graph/StaticGraphManipulationsTest.hpp"
 #include "Maths/Graph/Tree/TreeTest.hpp"

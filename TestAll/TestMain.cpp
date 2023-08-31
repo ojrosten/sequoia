@@ -305,7 +305,8 @@ int main(int argc, char** argv)
         "Static",
         suite{
           "Directed",
-          static_directed_graph_unweighted_test{"Static Directed Graph Unweighted Test"}
+          static_directed_graph_unweighted_test{"Static Directed Graph Unweighted Test"},
+          static_directed_graph_fundamental_weight_test{"Static Directed Graph Fundamental Weight Test"}
         }
       },
       suite{
