@@ -38,6 +38,14 @@ namespace sequoia::maths
     constexpr static_node_storage(std::initializer_list<weight_type> weights)
       : base_t{utilities::to_array<weight_type, N>(weights, std::identity{})}
     {}
+
+    constexpr static_node_storage(const static_node_storage&)                = default;
+    constexpr static_node_storage& operator=(const static_node_storage&)     = default;
+  protected:
+    constexpr static_node_storage(static_node_storage&&) noexcept            = default;
+    constexpr static_node_storage& operator=(static_node_storage&&) noexcept = default;
+
+    ~static_node_storage() = default;
   };
 
   template<class Weight, std::size_t N>
@@ -56,10 +64,11 @@ namespace sequoia::maths
 
     [[nodiscard]]
     constexpr static std::size_t size() noexcept { return N; }
-  protected:
+
     constexpr static_node_storage(const static_node_storage&)                = default;
-    constexpr static_node_storage(static_node_storage&&) noexcept            = default;
     constexpr static_node_storage& operator=(const static_node_storage&)     = default;
+  protected:
+    constexpr static_node_storage(static_node_storage&&) noexcept            = default;
     constexpr static_node_storage& operator=(static_node_storage&&) noexcept = default;
 
     ~static_node_storage() = default;

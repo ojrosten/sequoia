@@ -12,6 +12,13 @@
 
 #include "sequoia/TestFramework/StateTransitionUtilities.hpp"
 
+#ifdef _MSC_VER
+#define DODGY_MSVC_CONSTEXPR const
+#else
+#define DODGY_MSVC_CONSTEXPR constexpr
+#endif
+
+
 namespace sequoia::testing
 {
   using namespace maths;
@@ -93,7 +100,7 @@ namespace sequoia::testing
 
         // 'graph_description::nodew'
         [this]() -> graph_t {
-          const graph_t g{edges_init_t{{}},  nodes_init_t{2.1}};
+          DODGY_MSVC_CONSTEXPR graph_t g{edges_init_t{{}},  nodes_init_t{2.1}};
 
           check(equivalence, report_line(""), g, edges_init_t{{}}, nodes_init_t{2.1});
           check(equality, report_line(""), g, graph_t{edges_init_t{{}},  nodes_init_t{2.1}});
