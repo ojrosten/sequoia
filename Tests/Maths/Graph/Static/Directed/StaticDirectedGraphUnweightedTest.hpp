@@ -25,10 +25,14 @@ namespace sequoia::testing
 
     void test_empty();
 
-    void test_0_1();
+    void test_node();
 
-    void test_1_1();
+    void test_node_0();
 
-    void test_2_1();
+    void test_node_0_0();
+
+    void test_node_node();
+
+    void test_node_1_node();
   };
 }

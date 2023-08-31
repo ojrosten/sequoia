@@ -1,12 +1,4 @@
-Tests/Maths/Graph/Static/Directed/StaticDirectedGraphUnweightedTest.cpp, Line 39
-
-Expected Exception Type:
-[std::out_of_range]
-initializer_list of size 1 too big for array: expected at most 0 elements
-
-=======================================
-
-Tests/Maths/Graph/Static/Directed/StaticDirectedGraphUnweightedTest.cpp, Line 52
+Tests/Maths/Graph/Static/Directed/StaticDirectedGraphUnweightedTest.cpp, Line 41
 
 Expected Exception Type:
 [std::logic_error]
@@ -14,11 +6,35 @@ Inconsistent number of elements supplied by initializer lists: expected 0 but go
 
 =======================================
 
-Tests/Maths/Graph/Static/Directed/StaticDirectedGraphUnweightedTest.cpp, Line 65
+Tests/Maths/Graph/Static/Directed/StaticDirectedGraphUnweightedTest.cpp, Line 54
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists: expected 0 but got 1
+
+=======================================
+
+Tests/Maths/Graph/Static/Directed/StaticDirectedGraphUnweightedTest.cpp, Line 67
 
 Expected Exception Type:
 [std::logic_error]
 Inconsistent number of elements supplied by initializer lists: expected 1 but got 2
+
+=======================================
+
+Tests/Maths/Graph/Static/Directed/StaticDirectedGraphUnweightedTest.cpp, Line 91
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists: expected 2 but got 1
+
+=======================================
+
+Tests/Maths/Graph/Static/Directed/StaticDirectedGraphUnweightedTest.cpp, Line 104
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists: expected 2 but got 1
 
 =======================================
 

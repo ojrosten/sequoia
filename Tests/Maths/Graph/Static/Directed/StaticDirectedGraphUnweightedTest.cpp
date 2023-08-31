@@ -25,9 +25,11 @@ namespace sequoia::testing
   void static_directed_graph_unweighted_test::run_tests()
   {
     test_empty();
-    test_0_1();
-    test_1_1();
-    test_2_1();
+    test_node();
+    test_node_0();
+    test_node_0_0();
+    test_node_node();
+    test_node_1_node();
   }
 
   void static_directed_graph_unweighted_test::test_empty()
@@ -36,14 +38,14 @@ namespace sequoia::testing
     using edge_t = typename graph_t::edge_init_type;
     using edges_equivalent_t = std::initializer_list<std::initializer_list<edge_t>>;
 
-    check_exception_thrown<std::out_of_range>(report_line(""), [](){ graph_t{{}}; });
+    check_exception_thrown<std::logic_error>(report_line(""), [](){ graph_t{{}}; });
 
     constexpr graph_t g{};
     check(equivalence, report_line(""), g, edges_equivalent_t{});
     check(equality, report_line(""), g, graph_t{});
   }
 
-  void static_directed_graph_unweighted_test::test_0_1()
+  void static_directed_graph_unweighted_test::test_node()
   {
     using graph_t = static_directed_graph<0, 1, null_weight, null_weight>;
     using edge_t = typename graph_t::edge_init_type;
@@ -56,7 +58,7 @@ namespace sequoia::testing
     check(equality, report_line(""), g, graph_t{{}});
   }
 
-  void static_directed_graph_unweighted_test::test_1_1()
+  void static_directed_graph_unweighted_test::test_node_0()
   {
     using graph_t = static_directed_graph<1, 1, null_weight, null_weight>;
     using edge_t = typename graph_t::edge_init_type;
@@ -69,7 +71,7 @@ namespace sequoia::testing
     check(equality, report_line(""), g, graph_t{{edge_t{0}}});
   }
 
-  void static_directed_graph_unweighted_test::test_2_1()
+  void static_directed_graph_unweighted_test::test_node_0_0()
   {
     using graph_t = static_directed_graph<2, 1, null_weight, null_weight>;
     using edge_t = typename graph_t::edge_init_type;
@@ -78,5 +80,31 @@ namespace sequoia::testing
     constexpr graph_t g{{edge_t{0}, edge_t{0}}};
     check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{0}, edge_t{0}}});
     check(equality, report_line(""), g, graph_t{{edge_t{0}, edge_t{0}}});
+  }
+
+  void static_directed_graph_unweighted_test::test_node_node()
+  {
+    using graph_t = static_directed_graph<0, 2, null_weight, null_weight>;
+    using edge_t = typename graph_t::edge_init_type;
+    using edges_equivalent_t = std::initializer_list<std::initializer_list<edge_t>>;
+
+    check_exception_thrown<std::logic_error>(report_line(""), [](){ graph_t{{}}; });
+
+    constexpr graph_t g{{}, {}};
+    check(equivalence, report_line(""), g, edges_equivalent_t{{}, {}});
+    check(equality, report_line(""), g, graph_t{{}, {}});
+  }
+
+  void static_directed_graph_unweighted_test::test_node_1_node()
+  {
+    using graph_t = static_directed_graph<1, 2, null_weight, null_weight>;
+    using edge_t = typename graph_t::edge_init_type;
+    using edges_equivalent_t = std::initializer_list<std::initializer_list<edge_t>>;
+
+    check_exception_thrown<std::logic_error>(report_line(""), [](){ graph_t{{}}; });
+
+    constexpr graph_t g{{edge_t{1}}, {}};
+    check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{1}}, {}});
+    check(equality, report_line(""), g, graph_t{{edge_t{1}}, {}});
   }
 }

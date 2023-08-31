@@ -1129,10 +1129,11 @@ namespace sequoia
       [[nodiscard]]
       constexpr static std::pair<partitions_type, container_type> fill(std::index_sequence<Inds...>, std::initializer_list<std::initializer_list<T>> list)
       {
-        auto partitions{static_partitions_maker<partitions_type>::make_partitions(list)};
-
         if(list.size() != num_partitions_v)
-          throw std::logic_error("Overall initializer list of wrong size");
+          throw std::logic_error{std::string{"Inconsistent number of elements supplied by initializer lists: expected "}
+              .append(std::to_string(num_partitions_v)).append(" but got ").append(std::to_string(list.size()))};
+
+        auto partitions{static_partitions_maker<partitions_type>::make_partitions(list)};
 
         const size_type total{std::accumulate(list.begin(), list.end(), size_type{}, [](size_type val, std::initializer_list<T> l){ return val + l.size(); })};
 
