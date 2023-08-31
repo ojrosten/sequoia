@@ -2,7 +2,7 @@ Tests/Core/ContainerUtilities/ArrayUtilitiesTest.cpp, Line 28
 
 Expected Exception Type:
 [std::logic_error]
-initializer_list too big for array
+initializer_list of size 1 too big for array: expected at most 0 elements
 
 =======================================
 
@@ -10,7 +10,7 @@ Tests/Core/ContainerUtilities/ArrayUtilitiesTest.cpp, Line 36
 
 Expected Exception Type:
 [std::logic_error]
-initializer_list too big for array
+initializer_list of size 6 too big for array: expected at most 5 elements
 
 =======================================
 
@@ -18,7 +18,7 @@ Tests/Core/ContainerUtilities/ArrayUtilitiesTest.cpp, Line 43
 
 Expected Exception Type:
 [std::logic_error]
-initializer_list too big for array
+initializer_list of size 4 too big for array: expected at most 3 elements
 
 =======================================
 
@@ -26,7 +26,7 @@ Tests/Core/ContainerUtilities/ArrayUtilitiesTest.cpp, Line 56
 
 Expected Exception Type:
 [std::logic_error]
-initializer_list too big for array
+initializer_list of size 3 too big for array: expected at most 2 elements
 
 =======================================
 
