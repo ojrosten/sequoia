@@ -23,6 +23,24 @@ namespace sequoia::testing
 {
   using namespace maths;
 
+  namespace
+  {
+    class compare
+    {
+      static_directed_graph_fundamental_weight_test& m_Test;
+    public:
+      explicit compare(static_directed_graph_fundamental_weight_test& test)
+        : m_Test{test}
+      {}
+
+      template<static_network G>
+      void operator()(std::string_view description, const G& obtained, const G& prediction, const G& parent, std::size_t host, std::size_t target) const {
+        m_Test.check(equality, description, obtained, prediction);
+        if(host != target) m_Test.check_semantics(description, prediction, parent);
+      }
+    };
+  }
+
   [[nodiscard]]
   std::filesystem::path static_directed_graph_fundamental_weight_test::source_file() const
   {
@@ -110,14 +128,7 @@ namespace sequoia::testing
       }
     };
 
-    auto checker{
-          [this](std::string_view description, const graph_t& obtained, const graph_t& prediction, const graph_t& parent, std::size_t host, std::size_t target) {
-            check(equality, description, obtained, prediction);
-            if(host != target) check_semantics(description, prediction, parent);
-          }
-    };
-
-    transition_checker<graph_t>::check(report_line(""), trg, checker);
+    transition_checker<graph_t>::check(report_line(""), trg, compare{*this});
   }
 
   void static_directed_graph_fundamental_weight_test::test_node_0()
