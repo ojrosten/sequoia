@@ -607,7 +607,7 @@ namespace sequoia
       [[nodiscard]]
       constexpr partition_iterator operator[](const index_type i) noexcept { return begin_partition(i); }
 
-      constexpr void swap_partitions(size_type i, size_type j)
+      constexpr void swap_partitions(index_type i, index_type j)
       {
         if((i < num_partitions()) && (j < num_partitions()))
         {
@@ -636,8 +636,10 @@ namespace sequoia
 
             if(len_i != len_j)
             {
-              m_Partitions.mutate(maths::unsafe_t{}, m_Partitions.begin() + i, m_Partitions.begin() + j,
-                                  [len_i, len_j](const auto index){ return index + len_j - len_i;});
+              m_Partitions.mutate(maths::unsafe_t{},
+                                  m_Partitions.begin() + i,
+                                  m_Partitions.begin() + j,
+                                  [len_i, len_j](const index_type index) -> index_type { return static_cast<index_type>(index + len_j - len_i);});
             }
           }
         }

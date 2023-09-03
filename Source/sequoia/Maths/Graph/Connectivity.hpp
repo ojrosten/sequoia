@@ -436,13 +436,13 @@ namespace sequoia
       }
 
       // TO DO: change semantics to non-throwing?
-      constexpr void swap_nodes(size_type i, size_type j)
+      constexpr void swap_nodes(edge_index_type i, edge_index_type j)
       {
         graph_errors::check_node_index_range("swap_nodes", order(), i, j);
 
         if(i == j) return;
 
-        for(size_type n{}; n < order(); ++n)
+        for(edge_index_type n{}; n < static_cast<edge_index_type>(order()); ++n)
         {
           for(auto& e : mut_edges(n))
           {

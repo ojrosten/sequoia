@@ -171,7 +171,7 @@ namespace sequoia
         return connectivity_type::size();
       }
 
-      constexpr void swap_nodes(size_type i, size_type j)
+      constexpr void swap_nodes(edge_index_type i, edge_index_type j)
       {
         if constexpr(!std::is_empty_v<node_weight_type>)
         {
