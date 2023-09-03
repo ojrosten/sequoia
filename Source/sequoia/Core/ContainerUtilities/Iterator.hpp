@@ -20,16 +20,16 @@ namespace sequoia::utilities
   template<class I>
   concept decrementable = requires(I i) {
     { --i } -> std::same_as<I&>;
-    { i-- } -> std::same_as<I>;
+    { i-- } -> std::convertible_to<I>;
   };
 
   template<class I>
   concept steppable = requires(I i, const I j, const std::iter_difference_t<I> n) {
     { i += n } -> std::same_as<I&>;
-    { j + n }  -> std::same_as<I>;
-    { n + j }  -> std::same_as<I>;
+    { j + n }  -> std::convertible_to<I>;
+    { n + j }  -> std::convertible_to<I>;
     { i -= n } -> std::same_as<I&>;
-    { j - n }  -> std::same_as<I>;
+    { j - n }  -> std::convertible_to<I>;
   };
 
   namespace impl

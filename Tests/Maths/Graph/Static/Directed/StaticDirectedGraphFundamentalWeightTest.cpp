@@ -94,14 +94,14 @@ namespace sequoia::testing
               return g;
             }
           },
-          /*{
-            graph_description::nodew,
+          {
+            graph_description::node,
             report_line(""),
             [this](graph_t g) -> graph_t {
               g.sort_nodes(0, 0, [](auto i, auto j){ return i < j; });
               return g;
             }
-          },*/
+          },
           {
             graph_description::nodew,
             report_line(""),
