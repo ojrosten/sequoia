@@ -471,17 +471,112 @@ namespace sequoia::testing
 
   void static_directed_graph_fundamental_weight_test::test_node_1_node()
   {
+    enum graph_description { node_1_node = 0, node_1u_node, node_node_0u, nodew_1u_nodex, nodex_nodew_0u };
+
     using graph_t = static_directed_graph<1, 2, float, double>;
     using edge_t = typename graph_t::edge_init_type;
     using edges_init_t = std::initializer_list<std::initializer_list<edge_t>>;
+    using nodes_init_t = std::initializer_list<double>;
+    using transition_graph = typename transition_checker<graph_t>::transition_graph;
 
     check_exception_thrown<std::logic_error>(report_line(""), [](){ graph_t{{}}; });
     check_exception_thrown<std::logic_error>(report_line(""), [](){ graph_t{{edge_t{1}}}; });
     check_exception_thrown<std::logic_error>(report_line(""), [](){ graph_t{{edge_t{1}}, {}, {}}; });
 
-    constexpr graph_t g{{edge_t{1}}, {}};
-    check(equivalence, report_line(""), g, edges_init_t{{edge_t{1}}, {}});
-    check(equality, report_line(""), g, graph_t{{edge_t{1}}, {}});
+    transition_graph trg{
+      {
+        { // begin 'graph_description::node_1_node'
+          {
+            graph_description::node_1u_node,
+            report_line(""),
+            [this](graph_t g) -> graph_t {
+              g.set_edge_weight(g.cbegin_edges(0), 0.2f);
+              return g;
+            }
+          }
+        }, // end 'graph_description::node_1_node'
+        {  // begin 'graph_description::node_1u_node'
+          {
+            graph_description::node_node_0u,
+            report_line(""),
+            [this](graph_t g) -> graph_t {
+              g.swap_nodes(0, 1);
+              return g;
+            }
+          },
+        }, // end 'graph_description::node_1u_node'
+        {  // begin 'graph_description::node_node_0u'
+          {
+            graph_description::node_1u_node,
+            report_line(""),
+            [this](graph_t g) -> graph_t {
+              g.swap_nodes(1, 0);
+              return g;
+            }
+          },
+          {
+            graph_description::node_1u_node,
+            report_line(""),
+            [this](graph_t g) -> graph_t {
+              g.sort_nodes(0, 2, [&g](auto i, auto j){ return i > j; });
+              return g;
+            }
+          },
+        }, // end 'graph_description::node_node_0u'
+        {  // begin 'graph_description::nodew_1u_nodex'
+        }, // end 'graph_description::nodew_1u_nodex'
+        {  // begin 'graph_description::nodex_nodew_0u'
+        }  // end 'graph_description::nodex_nodew_0u'
+      },
+      {
+        // 'graph_description::node_1_node'
+        [this]() -> graph_t {
+          constexpr graph_t g{{edge_t{1}}, {}};
+          check(equivalence, report_line(""), g, edges_init_t{{edge_t{1}}, {}});
+          check(equality, report_line(""), g, graph_t{{edge_t{1}}, {}});
+
+          return g;
+        },
+
+        // 'graph_description::node_1u_node'
+        [this]() -> graph_t {
+          constexpr graph_t g{{edge_t{1, 0.2f}}, {}};
+          check(equivalence, report_line(""), g, edges_init_t{{edge_t{1, 0.2f}}, {}});
+          check(equality, report_line(""), g, graph_t{{edge_t{1, 0.2f}}, {}});
+
+          return g;
+        },
+
+        // 'graph_description::node_node_0u'
+        [this]() -> graph_t {
+          constexpr graph_t g{{}, {edge_t{0, 0.2f}}};
+          check(equivalence, report_line(""), g, edges_init_t{{}, {edge_t{0, 0.2f}}});
+          check(equality, report_line(""), g, graph_t{{}, {edge_t{0, 0.2f}}});
+
+          return g;
+        },
+
+        // 'graph_description::nodew_1u_nodex'
+        [this]() -> graph_t {
+          DODGY_MSVC_CONSTEXPR graph_t g{edges_init_t{{edge_t{1, 0.2f}}, {}}, nodes_init_t{2.1, -0.7}};
+          check(equivalence, report_line(""), g, edges_init_t{{edge_t{1, 0.2f}}, {}}, nodes_init_t{2.1, -0.7});
+          check(equality, report_line(""), g, graph_t{edges_init_t{{edge_t{1, 0.2f}}, {}}, nodes_init_t{2.1, -0.7}});
+
+          return g;
+        },
+
+        // 'graph_description::nodex_nodew_0u'
+        [this]() -> graph_t {
+          DODGY_MSVC_CONSTEXPR graph_t g{edges_init_t{{}, {edge_t{0, 0.2f}}}, nodes_init_t{-0.7, 2.1}};
+          check(equivalence, report_line(""), g, edges_init_t{{}, {edge_t{0, 0.2f}}}, nodes_init_t{-0.7, 2.1});
+          check(equality, report_line(""), g, graph_t{edges_init_t{{}, {edge_t{0, 0.2f}}}, nodes_init_t{-0.7, 2.1}});
+
+          return g;
+        }
+      }
+    };
+
+    transition_checker<graph_t>::check(report_line(""), trg, compare{*this});
   }
 
   void static_directed_graph_fundamental_weight_test::test_node_1_node_0()
