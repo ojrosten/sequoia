@@ -36,5 +36,7 @@ namespace sequoia::testing
     void test_node_1_node();
 
     void test_node_1_node_0();
+
+    void test_node_1_node_2_node_0();
   };
 }
