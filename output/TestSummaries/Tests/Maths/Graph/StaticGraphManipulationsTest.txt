@@ -1,2 +1,0 @@
-Static Graph Manipulations
-Standard Top Level Checks:                 6;  Failures:  0  [Deep checks: 257]

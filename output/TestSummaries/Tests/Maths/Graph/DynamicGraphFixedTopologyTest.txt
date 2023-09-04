@@ -1,2 +1,0 @@
-Dynamic Graph Fixed Topology
-Standard Top Level Checks:                16;  Failures:  0  [Deep checks: 1118]
