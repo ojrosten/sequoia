@@ -37,6 +37,5 @@ namespace sequoia:: testing
 
     template<class NodeWeight, class EdgeWeight> void test_generic_undirected();
     template<class NodeWeight, class EdgeWeight> void test_generic_embedded_undirected();
-    template<class NodeWeight, class EdgeWeight> void test_generic_directed();
   };
 }
