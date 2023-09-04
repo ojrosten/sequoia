@@ -1,2 +1,2 @@
-False Positive Test
+Linearly Partitioned False Positive Diagnostics
 False Positive Checks:                     3;  Failures:  0
