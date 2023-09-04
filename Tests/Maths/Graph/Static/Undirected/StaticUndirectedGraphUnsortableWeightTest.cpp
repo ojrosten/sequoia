@@ -177,7 +177,7 @@ namespace sequoia::testing
             graph_description::node_0x,
             report_line(""),
             [this](graph_t g) -> graph_t {
-              check(equality, report_line(""), g.mutate_edge_weight(g.cbegin_edges(0), [](auto& w) { w -= {0.2f, -0.1f}; return 42; }), 42);
+              check(equality, report_line(""), g.mutate_edge_weight(g.cbegin_edges(0), [](auto& w) { w -=  std::complex<float>{0.2f, -0.1f}; return 42; }), 42);
               return g;
             }
           },
@@ -185,7 +185,7 @@ namespace sequoia::testing
             graph_description::node_0x,
             report_line(""),
             [this](graph_t g) -> graph_t {
-              check(equality, report_line(""), g.mutate_edge_weight(g.cbegin_edges(0) + 1, [](auto& w) { w -= {0.2f, -0.1f}; return 42; }), 42);
+              check(equality, report_line(""), g.mutate_edge_weight(g.cbegin_edges(0) + 1, [](auto& w) { w -=  std::complex<float>{0.2f, -0.1f}; return 42; }), 42);
               return g;
             }
           },
@@ -307,7 +307,7 @@ namespace sequoia::testing
             graph_description::node_0x_0,
             report_line(""),
             [this](graph_t g) -> graph_t {
-              check(equality, report_line(""), g.mutate_edge_weight(g.cbegin_edges(0), [](auto& w) { w -= {0.2f, -0.1f}; return 42; }), 42);
+              check(equality, report_line(""), g.mutate_edge_weight(g.cbegin_edges(0), [](auto& w) { w -=  std::complex<float>{0.2f, -0.1f}; return 42; }), 42);
               return g;
             }
           },
@@ -315,7 +315,7 @@ namespace sequoia::testing
             graph_description::node_0x_0,
             report_line(""),
             [this](graph_t g) -> graph_t {
-              check(equality, report_line(""), g.mutate_edge_weight(++g.cbegin_edges(0), [](auto& w) { w -= {0.2f, -0.1f}; return 42; }), 42);
+              check(equality, report_line(""), g.mutate_edge_weight(++g.cbegin_edges(0), [](auto& w) { w -=  std::complex<float>{0.2f, -0.1f}; return 42; }), 42);
               return g;
             }
           }
@@ -637,7 +637,7 @@ namespace sequoia::testing
             graph_description::node_1u_1_node_0u_0,
             report_line(""),
             [this](graph_t g) -> graph_t {
-              check(equality, report_line(""), g.mutate_edge_weight(g.cbegin_edges(0), [](auto& w) { w -= {0.2f, -0.1f}; return 42; }), 42);
+              check(equality, report_line(""), g.mutate_edge_weight(g.cbegin_edges(0), [](auto& w) { w -=  std::complex<float>{0.2f, -0.1f}; return 42; }), 42);
               return g;
             }
          },
@@ -653,7 +653,7 @@ namespace sequoia::testing
             graph_description::node_1u_1_node_0u_0,
             report_line(""),
             [this](graph_t g) -> graph_t {
-              check(equality, report_line(""), g.mutate_edge_weight(g.cbegin_edges(1), [](auto& w) { w -= {0.2f, -0.1f}; return 42; }), 42);
+              check(equality, report_line(""), g.mutate_edge_weight(g.cbegin_edges(1), [](auto& w) { w -=  std::complex<float>{0.2f, -0.1f}; return 42; }), 42);
               return g;
             }
          },
@@ -669,7 +669,7 @@ namespace sequoia::testing
             graph_description::node_1u_1_node_0_0u,
             report_line(""),
             [this](graph_t g) -> graph_t {
-              check(equality, report_line(""), g.mutate_edge_weight(g.cbegin_edges(1) + 1, [](auto& w) { w -= {0.2f, -0.1f}; return 42; }), 42);
+              check(equality, report_line(""), g.mutate_edge_weight(g.cbegin_edges(1) + 1, [](auto& w) { w -=  std::complex<float>{0.2f, -0.1f}; return 42; }), 42);
               return g;
             }
          }
