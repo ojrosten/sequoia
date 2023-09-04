@@ -21,6 +21,12 @@
 #define DODGY_MSVC_CONSTEXPR constexpr
 #endif
 
+#ifdef _MSC_VER
+#define ANOTHER_DODGY_MSVC_CONSTEXPR const
+#else
+#define ANOTHER_DODGY_MSVC_CONSTEXPR constexpr
+#endif
+
 namespace sequoia::testing
 {
   using namespace maths;
@@ -69,7 +75,7 @@ namespace sequoia::testing
 
     check_exception_thrown<std::logic_error>(report_line(""), [](){ graph_t{{}}; });
 
-    const graph_t g{};
+    ANOTHER_DODGY_MSVC_CONSTEXPR graph_t g{};
     check(equivalence, report_line(""), g, edges_init_t{});
     check(equality, report_line(""), g, graph_t{});
   }
@@ -136,7 +142,7 @@ namespace sequoia::testing
       {
         // 'graph_description::node'
         [this]() -> graph_t {
-          const graph_t g{{}};
+          ANOTHER_DODGY_MSVC_CONSTEXPR graph_t g{{}};
           check(equivalence, report_line(""), g, edges_init_t{{}});
           check(equality, report_line(""), g, graph_t{{}});
 
@@ -234,7 +240,7 @@ namespace sequoia::testing
       {
         // 'graph_description::node_0'
         [this]() -> graph_t {
-          const graph_t g{{edge_t{0}, edge_t{0}}};
+          ANOTHER_DODGY_MSVC_CONSTEXPR graph_t g{{edge_t{0}, edge_t{0}}};
           check(equivalence, report_line(""), g, edges_init_t{{edge_t{0}, edge_t{0}}});
           check(equality, report_line(""), g, graph_t{{edge_t{0}, edge_t{0}}});
 
@@ -243,7 +249,7 @@ namespace sequoia::testing
 
         // 'graph_description::node_0x'
         [this]() -> graph_t {
-          const graph_t g{{edge_t{0, -0.2f, 0.1f}, edge_t{0, -0.2f, 0.1f}}};
+          ANOTHER_DODGY_MSVC_CONSTEXPR graph_t g{{edge_t{0, -0.2f, 0.1f}, edge_t{0, -0.2f, 0.1f}}};
           check(equivalence, report_line(""), g, edges_init_t{{edge_t{0, -0.2f, 0.1f}, edge_t{0, -0.2f, 0.1f}}});
           check(equality, report_line(""), g, graph_t{{edge_t{0, -0.2f, 0.1f}, edge_t{0, -0.2f, 0.1f}}});
 
@@ -252,7 +258,7 @@ namespace sequoia::testing
 
         // 'graph_description::nodew_0x'
         [this]() -> graph_t {
-          const graph_t g{edges_init_t{{edge_t{0, -0.2f, 0.1f}, edge_t{0, -0.2f, 0.1f}}},  nodes_init_t{{2.1, 1.1}}};
+          ANOTHER_DODGY_MSVC_CONSTEXPR graph_t g{edges_init_t{{edge_t{0, -0.2f, 0.1f}, edge_t{0, -0.2f, 0.1f}}},  nodes_init_t{{2.1, 1.1}}};
           check(equivalence, report_line(""), g, edges_init_t{{edge_t{0, -0.2f, 0.1f}, edge_t{0, -0.2f, 0.1f}}}, nodes_init_t{{2.1, 1.1}});
           check(equality, report_line(""), g, graph_t{edges_init_t{{edge_t{0, -0.2f, 0.1f}, edge_t{0, -0.2f, 0.1f}}},  nodes_init_t{{2.1, 1.1}}});
 
@@ -342,7 +348,7 @@ namespace sequoia::testing
       {
         // 'graph_description::node_0_0'
         [this]() -> graph_t {
-          const graph_t g{{edge_t{0}, edge_t{0}, edge_t{0}, edge_t{0}}};
+          ANOTHER_DODGY_MSVC_CONSTEXPR graph_t g{{edge_t{0}, edge_t{0}, edge_t{0}, edge_t{0}}};
           check(equivalence, report_line(""), g, edges_init_t{{edge_t{0}, edge_t{0}, edge_t{0}, edge_t{0}}});
           check(equality, report_line(""), g, graph_t{{edge_t{0}, edge_t{0}, edge_t{0}, edge_t{0}}});
 
@@ -361,7 +367,7 @@ namespace sequoia::testing
 
         // 'graph_description::node_0x_0'
         [this]() -> graph_t {
-          const graph_t g{{edge_t{0, -0.2f, 0.1f}, edge_t{0, -0.2f, 0.1f}, edge_t{0}, edge_t{0}}};
+          ANOTHER_DODGY_MSVC_CONSTEXPR graph_t g{{edge_t{0, -0.2f, 0.1f}, edge_t{0, -0.2f, 0.1f}, edge_t{0}, edge_t{0}}};
           check(equivalence, report_line(""), g, edges_init_t{{edge_t{0, -0.2f, 0.1f},  edge_t{0, -0.2f, 0.1f}, edge_t{0}, edge_t{0}}});
           check(equality, report_line(""), g, graph_t{{edge_t{0, -0.2f, 0.1f},  edge_t{0, -0.2f, 0.1f}, edge_t{0}, edge_t{0}}});
           check(equality, report_line(""), g, graph_t{{edge_t{0, -0.2f, 0.1f}, edge_t{0}, edge_t{0}, edge_t{0, -0.2f, 0.1f}}});
@@ -371,7 +377,7 @@ namespace sequoia::testing
 
         // 'graph_description::node_0x_0y'
         [this]() -> graph_t {
-          const graph_t g{{edge_t{0, -0.2f, 0.1f}, edge_t{0, -0.2f, 0.1f}, edge_t{0, 0.3f}, edge_t{0, 0.3f}}};
+          ANOTHER_DODGY_MSVC_CONSTEXPR graph_t g{{edge_t{0, -0.2f, 0.1f}, edge_t{0, -0.2f, 0.1f}, edge_t{0, 0.3f}, edge_t{0, 0.3f}}};
           check(equivalence, report_line(""), g, edges_init_t{{edge_t{0, -0.2f, 0.1f},  edge_t{0, -0.2f, 0.1f}, edge_t{0, 0.3f}, edge_t{0, 0.3f}}});
           check(equality, report_line(""), g, graph_t{{edge_t{0, -0.2f, 0.1f}, edge_t{0, -0.2f, 0.1f}, edge_t{0, 0.3f}, edge_t{0, 0.3f}}});
           check(equality, report_line(""), g, graph_t{{edge_t{0, -0.2f, 0.1f}, edge_t{0, 0.3f},  edge_t{0, -0.2f, 0.1f}, edge_t{0, 0.3f}}});
@@ -381,7 +387,7 @@ namespace sequoia::testing
 
         // 'graph_description::node_0y_0x'
         [this]() -> graph_t {
-          const graph_t g{{edge_t{0, 0.3f}, edge_t{0, 0.3f}, edge_t{0, -0.2f, 0.1f}, edge_t{0, -0.2f, 0.1f}}};
+          ANOTHER_DODGY_MSVC_CONSTEXPR graph_t g{{edge_t{0, 0.3f}, edge_t{0, 0.3f}, edge_t{0, -0.2f, 0.1f}, edge_t{0, -0.2f, 0.1f}}};
           check(equivalence, report_line(""), g, edges_init_t{{edge_t{0, 0.3f}, edge_t{0, 0.3f}, edge_t{0, -0.2f, 0.1f}, edge_t{0, -0.2f, 0.1f}}});
           check(equality, report_line(""), g, graph_t{{edge_t{0, 0.3f}, edge_t{0, 0.3f}, edge_t{0, -0.2f, 0.1f}, edge_t{0, -0.2f, 0.1f}}});
           check(equality, report_line(""), g, graph_t{{edge_t{0, 0.3f}, edge_t{0, 0.3f}, edge_t{0, -0.2f, 0.1f}, edge_t{0, -0.2f, 0.1f}}});
@@ -452,7 +458,7 @@ namespace sequoia::testing
       {
         // 'graph_description::node_node'
         [this]() -> graph_t {
-          const graph_t g{{}, {}};
+          ANOTHER_DODGY_MSVC_CONSTEXPR graph_t g{{}, {}};
           check(equivalence, report_line(""), g, edges_init_t{{}, {}});
           check(equality, report_line(""), g, graph_t{{}, {}});
 
@@ -566,7 +572,7 @@ namespace sequoia::testing
       {
         // 'graph_description::node_1_node_0'
         [this]() -> graph_t {
-          const graph_t g{{edge_t{1}}, {edge_t{0}}};
+          ANOTHER_DODGY_MSVC_CONSTEXPR graph_t g{{edge_t{1}}, {edge_t{0}}};
           check(equivalence, report_line(""), g, edges_init_t{{edge_t{1}}, {edge_t{0}}});
           check(equality, report_line(""), g, graph_t{{edge_t{1}}, {edge_t{0}}});
 
@@ -575,7 +581,7 @@ namespace sequoia::testing
 
         // 'graph_description::node_1u_node_0u'
         [this]() -> graph_t {
-          const graph_t g{{edge_t{1, -0.2f, 0.1f}}, {edge_t{0, -0.2f, 0.1f}}};
+          ANOTHER_DODGY_MSVC_CONSTEXPR graph_t g{{edge_t{1, -0.2f, 0.1f}}, {edge_t{0, -0.2f, 0.1f}}};
           check(equivalence, report_line(""), g, edges_init_t{{edge_t{1, -0.2f, 0.1f}}, {edge_t{0, -0.2f, 0.1f}}});
           check(equality, report_line(""), g, graph_t{{edge_t{1, -0.2f, 0.1f}}, {edge_t{0, -0.2f, 0.1f}}});
 
@@ -700,7 +706,7 @@ namespace sequoia::testing
      {
        // 'graph_description::node_1_1_node_0_0'
        [this]() -> graph_t {
-         const graph_t g{{edge_t{1}, edge_t{1}}, {edge_t{0}, edge_t{0}}};
+         ANOTHER_DODGY_MSVC_CONSTEXPR graph_t g{{edge_t{1}, edge_t{1}}, {edge_t{0}, edge_t{0}}};
          check(equivalence, report_line(""), g, edges_init_t{{edge_t{1}, edge_t{1}}, {edge_t{0}, edge_t{0}}});
          check(equality, report_line(""), g, graph_t{{edge_t{1}, edge_t{1}}, {edge_t{0}, edge_t{0}}});
 
@@ -709,7 +715,7 @@ namespace sequoia::testing
 
        // 'graph_description::node_1u_1_node_0u_0'
        [this]() -> graph_t {
-         const graph_t g{{edge_t{1, -0.2f, 0.1f}, edge_t{1}}, {edge_t{0, -0.2f, 0.1f}, edge_t{0}}};
+         ANOTHER_DODGY_MSVC_CONSTEXPR graph_t g{{edge_t{1, -0.2f, 0.1f}, edge_t{1}}, {edge_t{0, -0.2f, 0.1f}, edge_t{0}}};
          check(equivalence, report_line(""), g, edges_init_t{{edge_t{1, -0.2f, 0.1f}, edge_t{1}}, {edge_t{0, -0.2f, 0.1f}, edge_t{0}}});
          check(equality, report_line(""), g, graph_t{{edge_t{1, -0.2f, 0.1f}, edge_t{1}}, {edge_t{0, -0.2f, 0.1f}, edge_t{0}}});
 
