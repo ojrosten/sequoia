@@ -1,0 +1,2 @@
+Static Undirected Graph Fundamental Weight Test
+Standard Top Level Checks:               372;  Failures:  0  [Deep checks: 11068]

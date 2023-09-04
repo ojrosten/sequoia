@@ -193,7 +193,7 @@ namespace sequoia
         if constexpr(std::is_empty_v<NodeWeight>)
         {
           m_Test.check(equality,  report_line(""), g,
-            {
+            Graph{
               {edge{1,1}, edge{1,0}, edge{0, -2}, edge{1,3}},
               {edge{2,8}, edge{0,9}, edge{1,6}},
               {edge{1, 7}, edge{2, -3}, edge{2, 42}}
@@ -202,7 +202,7 @@ namespace sequoia
         else
         {
           m_Test.check(equality,  report_line(""), g,
-            {{
+            Graph{{
               {edge{1,1}, edge{1,0}, edge{0, -2}, edge{1,3}},
               {edge{2,8}, edge{0,9}, edge{1,6}},
               {edge{1, 7}, edge{2, -3}, edge{2, 42}}
@@ -275,11 +275,11 @@ namespace sequoia
 
         if constexpr(std::is_empty_v<NodeWeight>)
         {
-          m_Test.check(equality, report_line(""), g, {{}, {edge{1,2,3}, edge{1,3,-2}, edge{1,0,3}, edge{1,1,-2}}});
+          m_Test.check(equality, report_line(""), g, Graph{{}, {edge{1,2,3}, edge{1,3,-2}, edge{1,0,3}, edge{1,1,-2}}});
         }
         else
         {
-          m_Test.check(equality, report_line(""), g, {{{}, {edge{1,2,3}, edge{1,3,-2}, edge{1,0,3}, edge{1,1,-2}}}, {NodeWeight{2}, NodeWeight{-3}}});
+          m_Test.check(equality, report_line(""), g, Graph{{{}, {edge{1,2,3}, edge{1,3,-2}, edge{1,0,3}, edge{1,1,-2}}}, {NodeWeight{2}, NodeWeight{-3}}});
         }
       }
     };

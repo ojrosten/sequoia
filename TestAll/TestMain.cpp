@@ -307,14 +307,21 @@ int main(int argc, char** argv)
           "Directed",
           static_directed_graph_unweighted_test{"Static Directed Graph Unweighted Test"},
           static_directed_graph_fundamental_weight_test{"Static Directed Graph Fundamental Weight Test"}
+        },
+        suite{
+          "Undirected",
+          static_undirected_graph_unweighted_test{"Static Undirected Graph Unweighted Test"},
+          static_undirected_graph_fundamental_weight_test{"Static Undirected Graph Fundamental Weight Test"}
+        },
+        suite{
+          "Undirected Embedded",
+          static_undirected_embedded_graph_unweighted_test{"Static Undirected Embedded Graph Unweighted Test"},
+          static_undirected_embedded_graph_fundamental_weight_test{"Static Undirected Embedded Graph Fundamental Weight Test"}
         }
       },
       suite{
         "Legacy",
-        test_static_fixed_topology{"Static Graph Manipulations"},
-        test_static_graph{"Static Graph Init"},
         test_heterogeneous_static_graph{"Heterogeneous Static Graphs"},
-        test_fixed_topology{"Dynamic Graph Fixed Topology"}
       },
       suite{
         "Allocations",

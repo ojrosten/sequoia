@@ -147,7 +147,7 @@ namespace sequoia::maths
   protected:
     constexpr node_storage_base() = default;
 
-    constexpr node_storage_base(const size_type n)
+    constexpr explicit node_storage_base(const size_type n)
       : m_NodeWeights(n)
     {}
 

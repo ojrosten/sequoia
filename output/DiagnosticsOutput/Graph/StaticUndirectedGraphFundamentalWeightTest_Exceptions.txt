@@ -1,0 +1,80 @@
+Tests/Maths/Graph/Static/Undirected/StaticUndirectedGraphFundamentalWeightTest.cpp, Line 77
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists: expected 0 but got 1
+
+=======================================
+
+Tests/Maths/Graph/Static/Undirected/StaticUndirectedGraphFundamentalWeightTest.cpp, Line 77
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists: expected 0 but got 1
+
+=======================================
+
+Tests/Maths/Graph/Static/Undirected/StaticUndirectedGraphFundamentalWeightTest.cpp, Line 77
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists: expected 0 but got 1
+
+=======================================
+
+Tests/Maths/Graph/Static/Undirected/StaticUndirectedGraphFundamentalWeightTest.cpp, Line 95
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists: expected 0 but got 1
+
+=======================================
+
+Tests/Maths/Graph/Static/Undirected/StaticUndirectedGraphFundamentalWeightTest.cpp, Line 95
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists: expected 0 but got 1
+
+=======================================
+
+Tests/Maths/Graph/Static/Undirected/StaticUndirectedGraphFundamentalWeightTest.cpp, Line 179
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists: expected 2 but got 1
+
+=======================================
+
+Tests/Maths/Graph/Static/Undirected/StaticUndirectedGraphFundamentalWeightTest.cpp, Line 180
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::connectivity: Odd number of loop edges for node 0
+
+=======================================
+
+Tests/Maths/Graph/Static/Undirected/StaticUndirectedGraphFundamentalWeightTest.cpp, Line 179
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists: expected 2 but got 1
+
+=======================================
+
+Tests/Maths/Graph/Static/Undirected/StaticUndirectedGraphFundamentalWeightTest.cpp, Line 180
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::connectivity: Odd number of loop edges for node 0
+
+=======================================
+
+Tests/Maths/Graph/Static/Undirected/StaticUndirectedGraphFundamentalWeightTest.cpp, Line 426
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists: expected 2 but got 1
+
+=======================================
+

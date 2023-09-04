@@ -11,7 +11,7 @@
 
 namespace sequoia::testing
 {
-  class static_directed_graph_fundamental_weight_test final : public regular_test
+  class static_undirected_embedded_graph_fundamental_weight_test final : public regular_test
   {
   public:
     using regular_test::regular_test;
@@ -32,12 +32,14 @@ namespace sequoia::testing
 
     void test_node_0_0();
 
-    void test_node_node();
+    void test_node_0_0interleaved();
 
-    void test_node_1_node();
+    void test_node_node();
 
     void test_node_1_node_0();
 
-    void test_node_1_node_2_node_0();
+    void test_node_1_1_node_0_0();
+
+    void test_node_1_1_node_0_0interleaved();
   };
 }

@@ -1,0 +1,32 @@
+Tests/Maths/Graph/Static/UndirectedEmbedded/StaticUndirectedEmbeddedGraphUnweightedTest.cpp, Line 45
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists: expected 0 but got 1
+
+=======================================
+
+Tests/Maths/Graph/Static/UndirectedEmbedded/StaticUndirectedEmbeddedGraphUnweightedTest.cpp, Line 58
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::process_complementary_edges [node: 0, edge: 0]: complementary index 1 out of range - max index is 1
+
+=======================================
+
+Tests/Maths/Graph/Static/UndirectedEmbedded/StaticUndirectedEmbeddedGraphUnweightedTest.cpp, Line 71
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::process_complementary_edges [node: 0, edge: 0]: Indices [target: 0, comp: 0] are self-referential
+
+=======================================
+
+Tests/Maths/Graph/Static/UndirectedEmbedded/StaticUndirectedEmbeddedGraphUnweightedTest.cpp, Line 106
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists: expected 2 but got 1
+
+=======================================
+

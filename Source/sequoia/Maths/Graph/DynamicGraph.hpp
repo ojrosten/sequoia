@@ -68,7 +68,7 @@ namespace sequoia::maths
 
     graph_base() = default;
 
-    graph_base(const edge_allocator_type& edgeAllocator)
+    explicit graph_base(const edge_allocator_type& edgeAllocator)
       : primitive_type(edgeAllocator)
     {}
 

@@ -78,12 +78,13 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphMetaDataTest.cpp
                ${TestDir}/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphUnweightedContiguousTest.cpp
                ${TestDir}/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphUnweightedTest.cpp
-               ${TestDir}/Maths/Graph/DynamicGraphFixedTopologyTest.cpp
                ${TestDir}/Maths/Graph/HeterogeneousStaticGraphTest.cpp
                ${TestDir}/Maths/Graph/Static/Directed/StaticDirectedGraphUnweightedTest.cpp
                ${TestDir}/Maths/Graph/Static/Directed/StaticDirectedGraphFundamentalWeightTest.cpp
-               ${TestDir}/Maths/Graph/StaticGraphInitializationTest.cpp
-               ${TestDir}/Maths/Graph/StaticGraphManipulationsTest.cpp
+               ${TestDir}/Maths/Graph/Static/Undirected/StaticUndirectedGraphUnweightedTest.cpp
+               ${TestDir}/Maths/Graph/Static/Undirected/StaticUndirectedGraphFundamentalWeightTest.cpp
+               ${TestDir}/Maths/Graph/Static/UndirectedEmbedded/StaticUndirectedEmbeddedGraphUnweightedTest.cpp
+               ${TestDir}/Maths/Graph/Static/UndirectedEmbedded/StaticUndirectedEmbeddedGraphFundamentalWeightTest.cpp
                ${TestDir}/Maths/Graph/Tree/TreeTest.cpp
                ${TestDir}/Maths/Graph/Tree/TreeTestingDiagnostics.cpp
                ${TestDir}/Maths/Sequences/LinearSequenceTest.cpp

@@ -27,6 +27,8 @@ namespace sequoia::maths
   public:
     using size_type = std::size_t;
 
+    using heterogeneous_nodes_type = std::tuple<Ts...>;
+
     heterogeneous_node_storage() = default;
 
     template<class... Args>

@@ -75,8 +75,9 @@ namespace sequoia::testing
     using connectivity_type = typename type::connectivity_type;
     using nodes_type = typename type::nodes_type;
 
-    template<class CheckType, test_mode Mode>
-    static void test(CheckType flavour, test_logger<Mode>& logger, const Graph& graph, const Graph& prediction)
+    template<class CheckType, test_mode Mode, maths::network G>
+      requires std::is_same_v<Graph, G> // inhibit implicit conversions
+    static void test(CheckType flavour, test_logger<Mode>& logger, const Graph& graph, const G& prediction)
     {
       check(flavour, "", logger, static_cast<const connectivity_type&>(graph), static_cast<const connectivity_type&>(prediction));
       check(flavour, "", logger, static_cast<const nodes_type &>(graph), static_cast<const nodes_type&>(prediction));
@@ -88,6 +89,15 @@ namespace sequoia::testing
     {
       check(flavour, "", logger, static_cast<const connectivity_type&>(graph), connPrediction);
       check(flavour, "", logger, static_cast<const nodes_type&>(graph), std::forward<NodesEquivalentType>(nodesPrediction));
+    }
+
+    template<class CheckType, test_mode Mode, class E>
+      requires (!std::is_empty_v<nodes_type>) && (!maths::heterogeneous_network<Graph>)
+    static void test(CheckType flavour, test_logger<Mode>& logger, const type& graph, connectivity_equivalent_type<E> connPrediction)
+    {
+      check(flavour, "", logger, static_cast<const connectivity_type&>(graph), connPrediction);
+      const std::vector<typename Graph::node_weight_type> defaultNodes(connPrediction.size());
+      check(flavour, "", logger, graph.cbegin_node_weights(), graph.cend_node_weights(), defaultNodes.begin(), defaultNodes.end());
     }
 
     template<class CheckType, test_mode Mode, class E>
