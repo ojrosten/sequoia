@@ -631,7 +631,6 @@ namespace sequoia::testing
     using graph_t = static_undirected_graph<2, 2, float, double>;
     using edge_t = typename graph_t::edge_init_type;
     using edges_init_t = std::initializer_list<std::initializer_list<edge_t>>;
-    using nodes_init_t = std::initializer_list<double>;
     using transition_graph = typename transition_checker<graph_t>::transition_graph;
 
     transition_graph trg{
