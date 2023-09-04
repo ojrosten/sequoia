@@ -117,7 +117,7 @@ namespace sequoia::testing
             graph_description::nodew,
             report_line(""),
             [this](graph_t g) -> graph_t {
-              check(equality, report_line(""), g.mutate_node_weight(g.cbegin_node_weights(), [](auto& w) { w += {2.1, 1.1}; return 42; }), 42);
+              check(equality, report_line(""), g.mutate_node_weight(g.cbegin_node_weights(), [](auto& w) { w +=  std::complex<double>{2.1, 1.1}; return 42; }), 42);
               return g;
             }
           },
@@ -263,7 +263,7 @@ namespace sequoia::testing
     //    graph_description::nodew_0,
     //    report_line(""),
     //    [this](graph_t g) -> graph_t {
-    //      check(equality, report_line(""), g.mutate_node_weight(g.cbegin_node_weights(), [](auto& w) { w += {2.1, 1.1}; return 42; }), 42);
+    //      check(equality, report_line(""), g.mutate_node_weight(g.cbegin_node_weights(), [](auto& w) { w +=  std::complex<double>{2.1, 1.1}; return 42; }), 42);
     //      return g;
     //    }
     //  );
@@ -299,7 +299,7 @@ namespace sequoia::testing
             graph_description::nodew_0_0,
             report_line(""),
             [this](graph_t g) -> graph_t {
-              check(equality, report_line(""), g.mutate_node_weight(g.cbegin_node_weights(), [](auto& w) { w += {2.1, 1.1}; return 42; }), 42);
+              check(equality, report_line(""), g.mutate_node_weight(g.cbegin_node_weights(), [](auto& w) { w +=  std::complex<double>{2.1, 1.1}; return 42; }), 42);
               return g;
             }
           },
@@ -421,7 +421,7 @@ namespace sequoia::testing
             graph_description::nodew_node,
             report_line(""),
             [this](graph_t g) -> graph_t {
-              check(equality, report_line(""), g.mutate_node_weight(g.cbegin_node_weights(), [](auto& w) { w += {2.1, 1.1}; return 42; }), 42);
+              check(equality, report_line(""), g.mutate_node_weight(g.cbegin_node_weights(), [](auto& w) { w +=  std::complex<double>{2.1, 1.1}; return 42; }), 42);
               return g;
             }
           },
