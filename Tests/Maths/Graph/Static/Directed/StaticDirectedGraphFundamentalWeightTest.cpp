@@ -56,7 +56,9 @@ namespace sequoia::testing
     test_node<float, double>();
     test_node<null_weight, double>();
 
-    test_node_0();
+    test_node_0<float, double>();
+    test_node_0<float, null_weight>();
+
     test_node_0_0();
     test_node_node();
     test_node_1_node();
@@ -86,7 +88,7 @@ namespace sequoia::testing
     using graph_t = static_directed_graph<0, 1, EdgeWeight, NodeWeight>;
     using edge_t = typename graph_t::edge_init_type;
     using edges_init_t = std::initializer_list<std::initializer_list<edge_t>>;
-    using nodes_init_t = std::initializer_list<double>;
+    using nodes_init_t = std::initializer_list<NodeWeight>;
     using transition_graph = typename transition_checker<graph_t>::transition_graph;
 
     check_exception_thrown<std::logic_error>(report_line(""), [](){ graph_t{{edge_t{0}}}; });
@@ -163,14 +165,14 @@ namespace sequoia::testing
     transition_checker<graph_t>::check(report_line(""), trg, compare{*this});
   }
 
+  template<class EdgeWeight, class NodeWeight>
   void static_directed_graph_fundamental_weight_test::test_node_0()
   {
-    enum graph_description { node_0=0, nodew_0, node_0x, nodew_0x};
+    enum graph_description { node_0=0, node_0x, nodew_0x, nodew_0 };
 
-    using graph_t = static_directed_graph<1, 1, float, double>;
+    using graph_t = static_directed_graph<1, 1, EdgeWeight, NodeWeight>;
     using edge_t = typename graph_t::edge_init_type;
     using edges_init_t = std::initializer_list<std::initializer_list<edge_t>>;
-    using nodes_init_t = std::initializer_list<double>;
     using transition_graph = typename transition_checker<graph_t>::transition_graph;
 
     check_exception_thrown<std::logic_error>(report_line(""), [](){ graph_t{{edge_t{0}, edge_t{0}}}; });
@@ -178,22 +180,6 @@ namespace sequoia::testing
     transition_graph trg{
       {
         { // begin 'graph_description::node_0'
-          {
-            graph_description::nodew_0,
-            report_line(""),
-            [this](graph_t g) -> graph_t {
-              check(equality, report_line(""), g.mutate_node_weight(g.cbegin_node_weights(), [](auto& w) { w += 2.1; return 42; }), 42);
-              return g;
-            }
-          },
-          {
-            graph_description::nodew_0,
-            report_line(""),
-            [this](graph_t g) -> graph_t {
-              g.node_weight(g.cbegin_node_weights(), 2.1);
-              return g;
-            }
-          },
           {
             graph_description::node_0x,
             report_line(""),
@@ -211,12 +197,8 @@ namespace sequoia::testing
             }
           },
         }, // end 'graph_description::node_0'
-        {  // begin 'graph_description::nodew_0'
-        }, // end 'graph_description::nodew_0'
         {  // begin 'graph_description::node_0x'
-        }, // end 'graph_description::node_0x'
-        {  // begin 'graph_description::nodew_0x'
-        }  // end 'graph_description::nodew_0x'
+        }  // end 'graph_description::node_0x'
       },
       {
         // 'graph_description::node_0'
@@ -228,16 +210,6 @@ namespace sequoia::testing
           return g;
         },
 
-        // 'graph_description::nodew_0'
-        [this]() -> graph_t {
-          DODGY_MSVC_CONSTEXPR graph_t g{edges_init_t{{edge_t{0}}},  nodes_init_t{2.1}};
-
-          check(equivalence, report_line(""), g, edges_init_t{{edge_t{0}}}, nodes_init_t{2.1});
-          check(equality, report_line(""), g, graph_t{edges_init_t{{edge_t{0}}},  nodes_init_t{2.1}});
-
-          return g;
-        },
-
         // 'graph_description::node_0x'
         [this]() -> graph_t {
           constexpr graph_t g{{edge_t{0, 0.2f}}};
@@ -245,9 +217,16 @@ namespace sequoia::testing
           check(equality, report_line(""), g, graph_t{{edge_t{0, 0.2f}}});
 
           return g;
-        },
+        }
+      }
+    };
 
-        // 'graph_description::nodew_0x'
+    if constexpr(!std::is_empty_v<NodeWeight>)
+    {
+      using nodes_init_t = std::initializer_list<NodeWeight>;
+
+      // 'graph_description::nodew_0x'
+      trg.add_node(        
         [this]() -> graph_t {
           constexpr graph_t g{edges_init_t{{edge_t{0, 0.2f}}},  nodes_init_t{2.1}};
 
@@ -256,8 +235,40 @@ namespace sequoia::testing
 
           return g;
         }
-      }
-    };
+      );
+
+      // 'graph_description::nodew_0'
+      trg.add_node(
+        [this]() -> graph_t {
+          DODGY_MSVC_CONSTEXPR graph_t g{edges_init_t{{edge_t{0}}},  nodes_init_t{2.1}};
+
+          check(equivalence, report_line(""), g, edges_init_t{{edge_t{0}}}, nodes_init_t{2.1});
+          check(equality, report_line(""), g, graph_t{edges_init_t{{edge_t{0}}},  nodes_init_t{2.1}});
+
+          return g;
+        }
+      );
+
+      trg.join(
+        graph_description::node_0,
+        graph_description::nodew_0,
+        report_line(""),
+        [this](graph_t g) -> graph_t {
+          check(equality, report_line(""), g.mutate_node_weight(g.cbegin_node_weights(), [](auto& w) { w += 2.1; return 42; }), 42);
+          return g;
+        }
+      );
+
+      trg.join(
+        graph_description::node_0,
+        graph_description::nodew_0,
+        report_line(""),
+        [this](graph_t g) -> graph_t {
+          g.node_weight(g.cbegin_node_weights(), 2.1);
+          return g;
+        }
+      );
+    }
 
     transition_checker<graph_t>::check(report_line(""), trg, compare{*this});
   }

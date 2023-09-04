@@ -29,6 +29,7 @@ namespace sequoia::testing
     template<class EdgeWeight, class NodeWeight>
     void test_node();
 
+    template<class EdgeWeight, class NodeWeight>
     void test_node_0();
 
     void test_node_0_0();
