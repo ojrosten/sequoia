@@ -49,8 +49,13 @@ namespace sequoia::testing
 
   void static_directed_graph_fundamental_weight_test::run_tests()
   {
-    test_empty();
-    test_node();
+    test_empty<float, double>();
+    test_empty<null_weight, double>();
+    test_empty<float, null_weight>();
+
+    test_node<float, double>();
+    test_node<null_weight, double>();
+
     test_node_0();
     test_node_0_0();
     test_node_node();
@@ -59,9 +64,10 @@ namespace sequoia::testing
     test_node_1_node_2_node_0();
   }
 
+  template<class EdgeWeight, class NodeWeight>
   void static_directed_graph_fundamental_weight_test::test_empty()
   {
-    using graph_t = static_directed_graph<0, 0, float, double>;
+    using graph_t = static_directed_graph<0, 0, EdgeWeight, NodeWeight>;
     using edge_t = typename graph_t::edge_init_type;
     using edges_init_t = std::initializer_list<std::initializer_list<edge_t>>;
 
@@ -72,11 +78,12 @@ namespace sequoia::testing
     check(equality, report_line(""), g, graph_t{});
   }
 
+  template<class EdgeWeight, class NodeWeight>
   void static_directed_graph_fundamental_weight_test::test_node()
   {
     enum graph_description { node=0, nodew};
 
-    using graph_t = static_directed_graph<0, 1, float, double>;
+    using graph_t = static_directed_graph<0, 1, EdgeWeight, NodeWeight>;
     using edge_t = typename graph_t::edge_init_type;
     using edges_init_t = std::initializer_list<std::initializer_list<edge_t>>;
     using nodes_init_t = std::initializer_list<double>;
