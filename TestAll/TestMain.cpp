@@ -222,8 +222,9 @@ int main(int argc, char** argv)
       partitioned_data_false_positive_test{"False Positive Diagnostics"},
       partition_iterator_test{"Iterator Test"},
       bucketed_sequence_regular_test{"Bucketed Sequence Regular Test"},
+      bucketed_sequence_allocation_test{"Bucketed Sequence Allocation Test"},
       partitioned_sequence_regular_test{"Partitioned Sequence Regular Test"},
-      partitioned_data_allocation_test{"Allocation Test"},
+      partitioned_sequence_allocation_test{"Partitioned Sequence Allocation Test"},
       static_partitioned_sequence_test{"Static Partitioned Sequence Regular Test"}
     );
 

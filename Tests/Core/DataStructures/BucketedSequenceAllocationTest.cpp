@@ -7,7 +7,9 @@
 
 /*! \file */
 
-#include "PartitionedDataAllocationTest.hpp"
+#include "BucketedSequenceAllocationTest.hpp"
+
+#include "PartitionedDataAllocationTestingUtilities.hpp"
 
 namespace sequoia::testing
 {
@@ -25,29 +27,25 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path partitioned_data_allocation_test::source_file() const
+  std::filesystem::path bucketed_sequence_allocation_test::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void partitioned_data_allocation_test::run_tests()
+  void bucketed_sequence_allocation_test::run_tests()
   {
     do_allocation_tests(*this);
   }
 
 
   template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
-  void partitioned_data_allocation_test::test_allocation()
+  void bucketed_sequence_allocation_test::test_allocation()
   {
-    using namespace object;
-
     test_bucketed_allocation<int, PropagateCopy, PropagateMove, PropagateSwap>();
-
-    test_contiguous_allocation<int, PropagateCopy, PropagateMove, PropagateSwap>();
   }
 
   template<class T, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
-  void partitioned_data_allocation_test::test_bucketed_allocation()
+  void bucketed_sequence_allocation_test::test_bucketed_allocation()
   {
     using namespace data_structures;
 
@@ -96,40 +94,5 @@ namespace sequoia::testing
                                     {1_c, {1_c,1_mu}, {1_anp,1_awp}},
                                     { {0_c, {2_c,1_mu}, {2_anp,2_awp}, {1_containers, 2_containers, 3_postmutation}} }
                     });
-  }
-
-  template<class T, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
-  void partitioned_data_allocation_test::test_contiguous_allocation()
-  {
-    using namespace data_structures;
-
-    using storage = typename custom_partitioned_sequence_generator<T, PropagateCopy, PropagateMove, PropagateSwap>::storage_type;
-
-    using allocator = typename storage::allocator_type;
-    using partitions_allocator = typename storage::partitions_allocator_type;
-    using prediction = std::initializer_list<std::initializer_list<int>>;
-
-    auto makeMessage{
-      [](std::string_view message) {
-        return add_type_info<storage>(message);
-      }
-    };
-
-    auto partitionMaker{ [](storage& s) { s.add_slot(); } };
-    // null; [0,2][1]
-    auto[s,t]{check_semantics(report_line(add_type_info<storage>("")),
-                              [](){ return storage{allocator{}, partitions_allocator{}}; },
-                              [](){ return storage{{{0,2}, {1}}, allocator{}, partitions_allocator{}}; },
-                              partitionMaker,
-                              allocation_info{contiguous_alloc_getter<storage>{}, {0_c, {1_c,0_mu}, {1_anp, 1_awp}}},
-                              allocation_info{partitions_alloc_getter<storage>{}, {0_c, {1_c,1_mu}, {1_anp, 1_awp}}})};
-
-    check(equivalence, report_line(makeMessage("")), s, prediction{});
-    check(equivalence, report_line(makeMessage("")), t, prediction{{0,2}, {1}});
-
-    s.add_slot();
-    // []
-
-    check(equality, report_line(makeMessage("")), s, storage{{{}}, allocator{}, partitions_allocator{}});
   }
 }

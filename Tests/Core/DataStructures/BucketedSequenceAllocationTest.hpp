@@ -9,11 +9,11 @@
 
 /*! \file */
 
-#include "PartitionedDataAllocationTestingUtilities.hpp"
+#include "sequoia/TestFramework/RegularAllocationTestCore.hpp"
 
 namespace sequoia::testing
 {
-  class partitioned_data_allocation_test final : public regular_allocation_test
+  class bucketed_sequence_allocation_test final : public regular_allocation_test
   {
   public:
     using regular_allocation_test::regular_allocation_test;
@@ -26,14 +26,7 @@ namespace sequoia::testing
 
     void run_tests();
   private:
-    template<class Test>
-    friend void do_allocation_tests(Test&);
-
-
     template<class T, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
     void test_bucketed_allocation();
-
-    template<class T, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
-    void test_contiguous_allocation();
   };
 }
