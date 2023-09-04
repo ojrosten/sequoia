@@ -83,6 +83,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Maths/Graph/Static/Directed/StaticDirectedGraphFundamentalWeightTest.cpp
                ${TestDir}/Maths/Graph/Static/Undirected/StaticUndirectedGraphUnweightedTest.cpp
                ${TestDir}/Maths/Graph/Static/Undirected/StaticUndirectedGraphFundamentalWeightTest.cpp
+               ${TestDir}/Maths/Graph/Static/Undirected/StaticUndirectedGraphUnsortableWeightTest.cpp
                ${TestDir}/Maths/Graph/Static/UndirectedEmbedded/StaticUndirectedEmbeddedGraphUnweightedTest.cpp
                ${TestDir}/Maths/Graph/Static/UndirectedEmbedded/StaticUndirectedEmbeddedGraphFundamentalWeightTest.cpp
                ${TestDir}/Maths/Graph/Tree/TreeTest.cpp

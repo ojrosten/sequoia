@@ -75,6 +75,7 @@
 #include "Maths/Graph/Static/Directed/StaticDirectedGraphFundamentalWeightTest.hpp"
 #include "Maths/Graph/Static/Undirected/StaticUndirectedGraphUnweightedTest.hpp"
 #include "Maths/Graph/Static/Undirected/StaticUndirectedGraphFundamentalWeightTest.hpp"
+#include "Maths/Graph/Static/Undirected/StaticUndirectedGraphUnsortableWeightTest.hpp"
 #include "Maths/Graph/Static/UndirectedEmbedded/StaticUndirectedEmbeddedGraphUnweightedTest.hpp"
 #include "Maths/Graph/Static/UndirectedEmbedded/StaticUndirectedEmbeddedGraphFundamentalWeightTest.hpp"
 #include "Maths/Graph/Tree/TreeTest.hpp"

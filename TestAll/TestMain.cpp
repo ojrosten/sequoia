@@ -311,7 +311,8 @@ int main(int argc, char** argv)
         suite{
           "Undirected",
           static_undirected_graph_unweighted_test{"Static Undirected Graph Unweighted Test"},
-          static_undirected_graph_fundamental_weight_test{"Static Undirected Graph Fundamental Weight Test"}
+          static_undirected_graph_fundamental_weight_test{"Static Undirected Graph Fundamental Weight Test"},
+          static_undirected_graph_unsortable_weight_test{"Static Undirected Graph Unsortable Weight Test"}
         },
         suite{
           "Undirected Embedded",
