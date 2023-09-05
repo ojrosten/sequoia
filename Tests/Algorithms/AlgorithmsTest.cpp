@@ -11,7 +11,6 @@
 #include "AlgorithmsTest.hpp"
 
 #include "sequoia/Algorithms/Algorithms.hpp"
-#include "sequoia/Core/Object/FaithfulWrapper.hpp"
 #include "sequoia/Maths/Graph/Edge.hpp"
 #include "sequoia/Core/Object/Handlers.hpp"
 
@@ -56,8 +55,6 @@ namespace sequoia::testing
   {
     sort_basic_type(unstable{});
     sort_basic_type(stable{});
-    sort_faithful_wrapper(unstable{});
-    sort_faithful_wrapper(stable{});
     sort_partial_edge(unstable{});
     sort_partial_edge(stable{});
 
@@ -112,16 +109,6 @@ namespace sequoia::testing
       constexpr auto c = sort(stability, a, std::greater<int>{});
       check(equality, report_line("Reverse sort digits from 0--10"), c, {10,9,8,7,6,5,4,3,2,1,0});
     }
-  }
-
-  template<class Stability>
-  void algorithms_test::sort_faithful_wrapper(Stability stability)
-  {
-    using wrapper = object::faithful_wrapper<int>;
-    constexpr std::array<wrapper, 4> a{wrapper{3}, wrapper{2}, wrapper{4}, wrapper{1}};
-    constexpr auto b = sort(stability, a);
-    for(int i{}; i < 4; ++i)
-      check(equality, report_line("Check array of wrapped ints, element " + std::to_string(i)), b[i].get(), i + 1);
   }
 
   template<class Stability>

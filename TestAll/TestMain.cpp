@@ -200,18 +200,6 @@ int main(int argc, char** argv)
     );
 
     runner.add_test_suite(
-      "Faithful Wrapper",
-      faithful_wrapper_false_positive_test{"False Positive Diagnostics"},
-      faithful_wrapper_test{"Unit Test"}
-    );
-
-    runner.add_test_suite(
-      "Data Pool",
-      data_pool_test{"Unit Test"},
-      data_pool_allocation_test{"Allocation Test"}
-    );
-
-    runner.add_test_suite(
       "Concurrency Models",
       threading_models_test{"Unit Test"},
       threading_models_performance_test{"Performance Test"}
