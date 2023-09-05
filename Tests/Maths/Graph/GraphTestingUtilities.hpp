@@ -18,10 +18,10 @@
 
 namespace sequoia::testing
 {
-  template<class EdgeTraits>
-  struct value_tester<maths::connectivity<EdgeTraits>>
+  template<maths::graph_flavour Flavour, class EdgeStorage>
+  struct value_tester<maths::connectivity<Flavour, EdgeStorage>>
   {
-    using type            = maths::connectivity<EdgeTraits>;
+    using type            = maths::connectivity<Flavour, EdgeStorage>;
     using edge_index_type = typename type::edge_index_type;
 
     template<class E>

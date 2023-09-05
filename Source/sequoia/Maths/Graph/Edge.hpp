@@ -50,7 +50,8 @@ namespace sequoia
     class weighting
     {
     public:
-      using weight_type = typename WeightHandler::value_type;
+      using weight_handler_type = WeightHandler;
+      using weight_type         = typename WeightHandler::value_type;
 
       [[nodiscard]]
       constexpr const weight_type& weight() const noexcept { return WeightHandler::get(m_Weight); }
@@ -120,7 +121,8 @@ namespace sequoia
     class weighting<WeightHandler, IndexType>
     {
     public:
-      using weight_type = typename WeightHandler::value_type;
+      using weight_handler_type = WeightHandler;
+      using weight_type         = typename WeightHandler::value_type;
 
       [[nodiscard]]
       friend constexpr bool operator==(const weighting&, const weighting&) noexcept = default;

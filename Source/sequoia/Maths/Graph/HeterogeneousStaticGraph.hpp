@@ -8,7 +8,7 @@
 #pragma once
 
 /*! \file
-    \brief Traits and classes for static graphs with heterogeneous node weights.
+    \brief Classes for static graphs with heterogeneous node weights.
 
  */
 
@@ -20,12 +20,6 @@
 
 namespace sequoia::maths
 {
-  template<std::size_t Size, std::size_t Order, class EdgeWeight>
-  struct heterogeneous_graph_traits
-  {
-    using edge_index_type = typename graph_impl::static_edge_index_type_generator<Size, Order, false>::index_type;
-  };
-
   template
   <
     std::size_t Size,
@@ -36,18 +30,7 @@ namespace sequoia::maths
   class heterogeneous_directed_graph final : public
     graph_primitive
     <
-      connectivity
-      <
-        graph_impl::static_edge_traits
-        <
-          graph_flavour::directed,
-          Order,
-          Size,
-          EdgeWeight,
-          null_meta_data,
-          typename heterogeneous_graph_traits<Size, Order, EdgeWeight>::edge_index_type
-        >
-      >,
+      connectivity<graph_flavour::directed, graph_impl::edge_storage_generator_t<graph_flavour::directed, EdgeWeight, null_meta_data, typename static_edge_storage_config<graph_flavour::directed, Size, Order>::index_type, static_edge_storage_config<graph_flavour::directed, Size, Order>>>,
       heterogeneous_node_storage<NodeWeights...>
     >
   {
@@ -55,18 +38,7 @@ namespace sequoia::maths
     using primitive_type =
       graph_primitive
       <
-        connectivity
-        <
-          graph_impl::static_edge_traits
-          <
-            graph_flavour::directed,
-            Order,
-            Size,
-            EdgeWeight,
-            null_meta_data,
-            typename heterogeneous_graph_traits<Size, Order, EdgeWeight>::edge_index_type
-          >
-        >,
+        connectivity<graph_flavour::directed, graph_impl::edge_storage_generator_t<graph_flavour::directed, EdgeWeight, null_meta_data, typename static_edge_storage_config<graph_flavour::directed, Size, Order>::index_type, static_edge_storage_config<graph_flavour::directed, Size, Order>>>,
         heterogeneous_node_storage<NodeWeights...>
       >;
 
@@ -81,23 +53,10 @@ namespace sequoia::maths
     [[nodiscard]]
     constexpr static std::size_t size() noexcept { return Size; }
 
-    using edge_index_type = typename heterogeneous_graph_traits<Size, Order, EdgeWeight>::edge_index_type;
-
     using
       graph_primitive
       <
-        connectivity
-        <
-          graph_impl::static_edge_traits
-          <
-            graph_flavour::directed,
-            Order,
-            Size,
-            EdgeWeight,
-            null_meta_data,
-            typename heterogeneous_graph_traits<Size, Order, EdgeWeight>::edge_index_type
-          >
-        >,
+        connectivity<graph_flavour::directed, graph_impl::edge_storage_generator_t<graph_flavour::directed, EdgeWeight, null_meta_data, typename static_edge_storage_config<graph_flavour::directed, Size, Order>::index_type, static_edge_storage_config<graph_flavour::directed, Size, Order>>>,
         heterogeneous_node_storage<NodeWeights...>
       >::graph_primitive;
 
@@ -118,18 +77,7 @@ namespace sequoia::maths
   class heterogeneous_undirected_graph final : public
     graph_primitive
     <
-      connectivity
-      <
-        graph_impl::static_edge_traits
-        <
-          graph_flavour::undirected,
-          Order,
-          Size,
-          EdgeWeight,
-          EdgeMetaData,
-          typename heterogeneous_graph_traits<Size, Order, EdgeWeight>::edge_index_type
-        >
-      >,
+      connectivity<graph_flavour::undirected, graph_impl::edge_storage_generator_t<graph_flavour::undirected, EdgeWeight, EdgeMetaData, typename static_edge_storage_config<graph_flavour::undirected, Size, Order>::index_type, static_edge_storage_config<graph_flavour::undirected, Size, Order>>>,
       heterogeneous_node_storage<NodeWeights...>
     >
   {
@@ -137,18 +85,7 @@ namespace sequoia::maths
     using primitive_type =
       graph_primitive
       <
-        connectivity
-        <
-          graph_impl::static_edge_traits
-          <
-            graph_flavour::undirected,
-            Order,
-            Size,
-            EdgeWeight,
-            EdgeMetaData,
-            typename heterogeneous_graph_traits<Size, Order, EdgeWeight>::edge_index_type
-          >
-        >,
+        connectivity<graph_flavour::undirected, graph_impl::edge_storage_generator_t<graph_flavour::undirected, EdgeWeight, EdgeMetaData, typename static_edge_storage_config<graph_flavour::undirected, Size, Order>::index_type, static_edge_storage_config<graph_flavour::undirected, Size, Order>>>,
         heterogeneous_node_storage<NodeWeights...>
       >;
 
@@ -163,23 +100,10 @@ namespace sequoia::maths
     [[nodiscard]]
     constexpr static std::size_t size() noexcept { return Size; }
 
-    using edge_index_type = typename heterogeneous_graph_traits<Size, Order, EdgeWeight>::edge_index_type;
-
     using
       graph_primitive
       <
-        connectivity
-        <
-          graph_impl::static_edge_traits
-          <
-            graph_flavour::undirected,
-            Order,
-            Size,
-            EdgeWeight,
-            null_meta_data,
-            typename heterogeneous_graph_traits<Size, Order, EdgeWeight>::edge_index_type
-          >
-        >,
+        connectivity<graph_flavour::undirected, graph_impl::edge_storage_generator_t<graph_flavour::undirected, EdgeWeight, EdgeMetaData, typename static_edge_storage_config<graph_flavour::undirected, Size, Order>::index_type, static_edge_storage_config<graph_flavour::undirected, Size, Order>>>,
         heterogeneous_node_storage<NodeWeights...>
       >::graph_primitive;
 
@@ -187,12 +111,6 @@ namespace sequoia::maths
     using primitive_type::mutate_edge_weight;
     using primitive_type::sort_edges;
     using primitive_type::swap_edges;
-  };
-
-  template<std::size_t Size, std::size_t Order, class EdgeWeight>
-  struct heterogeneous_embedded_graph_traits
-  {
-    using edge_index_type = typename graph_impl::static_edge_index_type_generator<Size, Order, true>::index_type;
   };
 
   template
@@ -206,18 +124,7 @@ namespace sequoia::maths
   class heterogeneous_embedded_graph final : public
     graph_primitive
     <
-      connectivity
-      <
-        graph_impl::static_edge_traits
-        <
-          graph_flavour::undirected_embedded,
-          Order,
-          Size,
-          EdgeWeight,
-          EdgeMetaData,
-          typename heterogeneous_embedded_graph_traits<Size, Order, EdgeWeight>::edge_index_type
-        >
-      >,
+      connectivity<graph_flavour::undirected_embedded, graph_impl::edge_storage_generator_t<graph_flavour::undirected_embedded, EdgeWeight, EdgeMetaData, typename static_edge_storage_config<graph_flavour::undirected_embedded, Size, Order>::index_type, static_edge_storage_config<graph_flavour::undirected_embedded, Size, Order>>>,
       heterogeneous_node_storage<NodeWeights...>
     >
   {
@@ -225,18 +132,7 @@ namespace sequoia::maths
     using primitive_type =
       graph_primitive
       <
-        connectivity
-        <
-          graph_impl::static_edge_traits
-          <
-            graph_flavour::undirected_embedded,
-            Order,
-            Size,
-            EdgeWeight,
-            EdgeMetaData,
-            typename heterogeneous_embedded_graph_traits<Size, Order, EdgeWeight>::edge_index_type
-          >
-        >,
+        connectivity<graph_flavour::undirected_embedded, graph_impl::edge_storage_generator_t<graph_flavour::undirected_embedded, EdgeWeight, EdgeMetaData, typename static_edge_storage_config<graph_flavour::undirected_embedded, Size, Order>::index_type, static_edge_storage_config<graph_flavour::undirected_embedded, Size, Order>>>,
         heterogeneous_node_storage<NodeWeights...>
       >;
 
@@ -249,23 +145,10 @@ namespace sequoia::maths
 
     constexpr static std::size_t size() noexcept { return Size; }
 
-    using edge_index_type = typename heterogeneous_embedded_graph_traits<Size, Order, EdgeWeight>::edge_index_type;
-
     using
       graph_primitive
       <
-        connectivity
-        <
-          graph_impl::static_edge_traits
-          <
-            graph_flavour::undirected_embedded,
-            Order,
-            Size,
-            EdgeWeight,
-            EdgeMetaData,
-            typename heterogeneous_embedded_graph_traits<Size, Order, EdgeWeight>::edge_index_type
-          >
-        >,
+        connectivity<graph_flavour::undirected_embedded, graph_impl::edge_storage_generator_t<graph_flavour::undirected_embedded, EdgeWeight, EdgeMetaData, typename static_edge_storage_config<graph_flavour::undirected_embedded, Size, Order>::index_type, static_edge_storage_config<graph_flavour::undirected_embedded, Size, Order>>>,
         heterogeneous_node_storage<NodeWeights...>
       >::graph_primitive;
 

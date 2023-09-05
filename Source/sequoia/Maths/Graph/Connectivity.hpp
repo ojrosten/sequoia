@@ -179,29 +179,29 @@ namespace sequoia
         dynamic graphs are supported; for the purposes of the latter, the relevant
         protected methods of `connectivity` are allocator-aware.
      */
-    template<class EdgeTraits>
+    template<graph_flavour Flavour, class EdgeStorage>
     class connectivity
     {
       friend struct sequoia::assignment_helper;
     public:
+      using edge_storage_type = EdgeStorage;
 
-      using edge_traits_type = EdgeTraits;
-      using edge_type = typename EdgeTraits::edge_type;
-      using edge_weight_type = typename edge_type::weight_type;
+      using edge_type           = typename edge_storage_type::value_type;
+      using edge_weight_type    = typename edge_type::weight_type;
       using edge_meta_data_type = typename edge_type::meta_data_type;
-      using edge_index_type = typename edge_type::index_type;
-      using edge_init_type = typename EdgeTraits::edge_init_type;
-      using edge_storage_type = typename EdgeTraits::edge_storage_type;
-      using size_type = typename edge_storage_type::size_type;
-      using const_edge_iterator = typename edge_storage_type::const_partition_iterator;
+      using edge_index_type     = typename edge_type::index_type;
+      using edge_init_type      = edge_init_type_generator_t<edge_type>;
+      using edges_initializer   = std::initializer_list<std::initializer_list<edge_init_type>>;
+
+      using size_type                   = typename edge_storage_type::size_type;
+      using const_edge_iterator         = typename edge_storage_type::const_partition_iterator;
       using const_reverse_edge_iterator = typename edge_storage_type::const_reverse_partition_iterator;
-      using edges_initializer = std::initializer_list<std::initializer_list<edge_init_type>>;
-      using const_edges_range = std::ranges::subrange<const_edge_iterator>;
+      using const_edges_range           = std::ranges::subrange<const_edge_iterator>;
 
       static_assert(std::is_unsigned_v<edge_index_type>);
 
       constexpr static auto npos{std::numeric_limits<edge_index_type>::max()};
-      constexpr static graph_flavour flavour{EdgeTraits::flavour};
+      constexpr static graph_flavour flavour{Flavour};
 
       constexpr connectivity() = default;
 
@@ -266,7 +266,7 @@ namespace sequoia
         requires initializable_from<edge_weight_type, Args...>
       constexpr void set_edge_weight(const_edge_iterator citer, Args&&... args)
       {
-        if constexpr(!EdgeTraits::shared_weight_v && !is_directed(flavour))
+        if constexpr(!shared_weight_v && !is_directed(flavour))
         {
           auto partnerSetter{
             [this](const_edge_iterator iter, auto&&... args){
@@ -299,7 +299,7 @@ namespace sequoia
         requires (!std::is_empty_v<edge_weight_type>)
       constexpr std::invoke_result_t<Fn, edge_weight_type&> mutate_edge_weight(const_edge_iterator citer, Fn fn)
       {
-        if constexpr(!EdgeTraits::shared_weight_v && !is_directed(flavour))
+        if constexpr(!shared_weight_v && !is_directed(flavour))
         {
           mutate_partner_edge_weight(citer, fn);
         }
@@ -702,7 +702,7 @@ namespace sequoia
               {
                 if constexpr(std::is_empty_v<edge_weight_type>)
                   return true;
-                else if constexpr(EdgeTraits::shared_weight_v)
+                else if constexpr(shared_weight_v)
                   return std::addressof(citer->weight()) == std::addressof(potentialPartner.weight());
                 else if constexpr(std::is_empty_v<edge_meta_data_type>)
                   return citer->weight() == potentialPartner.weight();
@@ -820,6 +820,8 @@ namespace sequoia
     private:
       constexpr static bool direct_init_v{std::is_same_v<edge_type, edge_init_type>};
       constexpr static bool direct_copy_v{direct_init_v};
+      constexpr static bool shared_weight_v{graph_impl::has_shared_weight_v<edge_type>};
+
       // private data
       edge_storage_type m_Edges;
 
@@ -1126,7 +1128,7 @@ namespace sequoia
           [addToStorage,&orderedEdges](edge_index_type host, range_t hostRange) {
             for(; hostRange.begin() != hostRange.end(); hostRange.advance(1))
             {
-              const bool hasCompIndex{(std::ranges::distance(hostRange) % 2) && EdgeTraits::shared_weight_v};
+              const bool hasCompIndex{(std::ranges::distance(hostRange) % 2) && shared_weight_v};
               const auto compIndex{hasCompIndex ? static_cast<edge_index_type>(std::ranges::distance(orderedEdges.cbegin_partition(host), hostRange.begin()) - 1) : npos};
 
               addToStorage(host, host, compIndex, hostRange);
@@ -1135,7 +1137,7 @@ namespace sequoia
           [addToStorage,&orderedEdges](edge_index_type host, edge_index_type target, range_t hostRange, range_t targetRange) {
             for(; hostRange.begin() != hostRange.end(); hostRange.advance(1))
             {
-              const bool hasCompIndex{(host > target) && EdgeTraits::shared_weight_v};
+              const bool hasCompIndex{(host > target) && shared_weight_v};
               const auto compIndex{hasCompIndex ? static_cast<edge_index_type>(std::ranges::distance(orderedEdges.cbegin_partition(target), targetRange.end()) - std::ranges::distance(hostRange)) : npos};
 
               addToStorage(host, target, compIndex, hostRange);

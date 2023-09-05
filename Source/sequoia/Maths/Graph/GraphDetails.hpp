@@ -35,8 +35,38 @@ namespace sequoia
 
     enum class edge_sharing_preference {agnostic, shared_weight, independent};
 
+    template<class T>
+    struct edge_init_type_generator;
+
+    template<class WeightHandler, class MetaData, std::integral IndexType>
+      requires object::handler<WeightHandler>
+    struct edge_init_type_generator<partial_edge<WeightHandler, MetaData, IndexType>>
+    {
+      using type = partial_edge<object::by_value<typename WeightHandler::value_type>, MetaData, IndexType>;
+    };
+
+    template<class WeightHandler, class MetaData, std::integral IndexType>
+      requires object::handler<WeightHandler>
+    struct edge_init_type_generator<embedded_partial_edge<WeightHandler, MetaData, IndexType>>
+    {
+      using type = embedded_partial_edge<object::by_value<typename WeightHandler::value_type>, MetaData, IndexType>;
+    };
+
+    template<class T>
+    using edge_init_type_generator_t = typename edge_init_type_generator<T>::type;
+
     namespace graph_impl
     {
+      template<class Edge>
+      inline constexpr bool has_shared_weight_v{
+        requires{
+          typename Edge::weight_handler_type;
+          typename Edge::weight_type;
+
+          requires std::is_same_v<object::shared<typename Edge::weight_type>, typename Edge::weight_handler_type>;
+        }
+      };
+
       [[nodiscard]]
       constexpr std::size_t num_static_edges(const graph_flavour flavour, const std::size_t size) noexcept
       {
@@ -72,18 +102,18 @@ namespace sequoia
         requires object::handler<Handler>
       using flavour_to_edge_t = typename flavour_to_edge<GraphFlavour, Handler, MetaData, IndexType>::edge_type;
 
-      // Edge Type Generator
       template
       <
         graph_flavour GraphFlavour,
         class EdgeWeight,
         class EdgeMetaData,
         std::integral IndexType,
-        edge_sharing_preference SharingPreference
+        class EdgeStorageConfig
       >
-      struct edge_type_generator
+      struct edge_storage_generator
       {
         constexpr static graph_flavour flavour{GraphFlavour};
+        constexpr static edge_sharing_preference sharing_preference{EdgeStorageConfig::edge_sharing};
 
         constexpr static bool default_weight_sharing{
               !is_directed(GraphFlavour)
@@ -91,20 +121,27 @@ namespace sequoia
         };
 
         constexpr static bool shared_weight_v{
-              (SharingPreference == edge_sharing_preference::shared_weight)
-          || ((SharingPreference == edge_sharing_preference::agnostic) && default_weight_sharing)
+              (sharing_preference == edge_sharing_preference::shared_weight)
+          || ((sharing_preference == edge_sharing_preference::agnostic) && default_weight_sharing)
         };
 
         static_assert(!shared_weight_v || (GraphFlavour != graph_flavour::directed));
         static_assert((GraphFlavour == graph_flavour::directed) || std::is_empty_v<EdgeMetaData> || std::is_empty_v<EdgeWeight> || shared_weight_v);
 
-        using handler_type     = shared_to_handler_t<shared_weight_v, EdgeWeight>;
-        using edge_type        = flavour_to_edge_t<GraphFlavour, handler_type, EdgeMetaData, IndexType>;
-        using index_type       = typename edge_type::index_type;
-        using edge_init_type   = std::conditional_t<is_embedded(GraphFlavour),
-                                                    embedded_partial_edge<object::by_value<EdgeWeight>, EdgeMetaData, index_type>,
-                                                    partial_edge<object::by_value<EdgeWeight>, EdgeMetaData, index_type>>;
+        using handler_type = shared_to_handler_t<shared_weight_v, EdgeWeight>;
+        using edge_type    = flavour_to_edge_t<GraphFlavour, handler_type, EdgeMetaData, IndexType>;
+        using storage_type = EdgeStorageConfig::template storage_type<edge_type>;
       };
+
+      template
+      <
+        graph_flavour GraphFlavour,
+        class EdgeWeight,
+        class EdgeMetaData,
+        std::integral IndexType,
+        class EdgeStorageConfig
+      >
+      using edge_storage_generator_t = typename edge_storage_generator<GraphFlavour, EdgeWeight, EdgeMetaData, IndexType, EdgeStorageConfig>::storage_type;
 
       template<class T>
       inline constexpr bool has_reservable_partitions = requires(T& t) {

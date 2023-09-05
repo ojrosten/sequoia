@@ -14,7 +14,6 @@
 
 #include "sequoia/Core/DataStructures/PartitionedData.hpp"
 #include "sequoia/Maths/Graph/GraphImpl.hpp"
-#include "sequoia/Maths/Graph/DynamicGraphImpl.hpp"
 #include "sequoia/Maths/Graph/NodeStorage.hpp"
 
 namespace sequoia::maths
@@ -34,10 +33,9 @@ namespace sequoia::maths
   };
 
 
-  template<class Traits>
+  template<class Storage>
   concept allocatable_partitions = requires{
-    typename Traits::edge_storage_type;
-    typename Traits::edge_storage_type::partitions_allocator_type;
+    typename Storage::partitions_allocator_type;
   };
 
   template
@@ -52,19 +50,20 @@ namespace sequoia::maths
   class graph_base : public
     graph_primitive
     <
-      connectivity<graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeight, EdgeMetaData, EdgeStorageConfig, std::size_t>>,
+      connectivity<GraphFlavour, graph_impl::edge_storage_generator_t<GraphFlavour, EdgeWeight, EdgeMetaData, std::size_t, EdgeStorageConfig>>,
       NodeWeightStorage
     >
   {
   public:
-    using edge_traits_type  = graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeight, EdgeMetaData, EdgeStorageConfig, std::size_t>;
+    using connectivity_type = connectivity<GraphFlavour, graph_impl::edge_storage_generator_t<GraphFlavour, EdgeWeight, EdgeMetaData, std::size_t, EdgeStorageConfig>>;
     using node_storage_type = NodeWeightStorage;
-    using primitive_type    = graph_primitive<connectivity<edge_traits_type>, node_storage_type>;
+    using primitive_type    = graph_primitive<connectivity_type, node_storage_type>;
 
     using node_weight_type    = NodeWeight;
     using size_type           = typename primitive_type::size_type;
     using edges_initializer   = typename primitive_type::edges_initializer;
-    using edge_allocator_type = typename edge_traits_type::edge_allocator_type;
+    using edge_storage_type   = typename connectivity_type::edge_storage_type;
+    using edge_allocator_type = typename edge_storage_type::allocator_type;
 
     graph_base() = default;
 
@@ -73,7 +72,7 @@ namespace sequoia::maths
     {}
 
     template<alloc EdgePartitionsAllocator>
-      requires allocatable_partitions<edge_traits_type>
+      requires allocatable_partitions<edge_storage_type>
     graph_base(const edge_allocator_type& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator)
       : primitive_type(edgeAllocator, edgePartitionsAllocator)
     {}
@@ -85,7 +84,7 @@ namespace sequoia::maths
     {}
 
     template<alloc EdgePartitionsAllocator>
-      requires allocatable_partitions<edge_traits_type>
+      requires allocatable_partitions<edge_storage_type>
     graph_base(edges_initializer edges, const edge_allocator_type& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator)
       : primitive_type{edges, edgeAllocator, edgePartitionsAllocator}
     {}
@@ -111,7 +110,7 @@ namespace sequoia::maths
     {}
 
     template<alloc EdgePartitionsAllocator>
-      requires allocatable_partitions<edge_traits_type>
+      requires allocatable_partitions<edge_storage_type>
     graph_base(const graph_base& in, const edge_allocator_type& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator)
       : primitive_type{in, edgeAllocator, edgePartitionsAllocator}
     {}
@@ -123,7 +122,7 @@ namespace sequoia::maths
     {}
 
     template<alloc EdgePartitionsAllocator>
-      requires allocatable_partitions<edge_traits_type>
+      requires allocatable_partitions<edge_storage_type>
     graph_base(graph_base&& in, const edge_allocator_type& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator)
       : primitive_type{std::move(in), edgeAllocator, edgePartitionsAllocator}
     {}
@@ -167,19 +166,20 @@ namespace sequoia::maths
     > : public
     graph_primitive
     <
-      connectivity<graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeight, EdgeMetaData, EdgeStorageConfig, std::size_t>>,
+      connectivity<GraphFlavour, graph_impl::edge_storage_generator_t<GraphFlavour, EdgeWeight, EdgeMetaData, std::size_t, EdgeStorageConfig>>,
       NodeWeightStorage
     >
   {
   public:
-    using edge_traits_type  = graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeight, EdgeMetaData, EdgeStorageConfig, std::size_t>;
+    using connectivity_type = connectivity<GraphFlavour, graph_impl::edge_storage_generator_t<GraphFlavour, EdgeWeight, EdgeMetaData, std::size_t, EdgeStorageConfig>>;
     using node_storage_type = NodeWeightStorage;
-    using primitive_type    = graph_primitive<connectivity<edge_traits_type>, node_storage_type>;
+    using primitive_type    = graph_primitive<connectivity_type, node_storage_type>;
 
     using node_weight_type           = NodeWeight;
     using size_type                  = typename primitive_type::size_type;
     using edges_initializer          = typename primitive_type::edges_initializer;
-    using edge_allocator_type        = typename edge_traits_type::edge_allocator_type;
+    using edge_storage_type          = typename connectivity_type::edge_storage_type;
+    using edge_allocator_type        = typename edge_storage_type::allocator_type;
     using node_weight_allocator_type = typename node_storage_type::node_weight_container_type::allocator_type;
 
     graph_base() = default;
@@ -191,7 +191,7 @@ namespace sequoia::maths
     {}
 
     template<alloc EdgePartitionsAllocator>
-      requires allocatable_partitions<edge_traits_type>
+      requires allocatable_partitions<edge_storage_type>
     graph_base(const edge_allocator_type& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator, const node_weight_allocator_type& nodeWeightAllocator)
       : primitive_type(edgeAllocator, edgePartitionsAllocator, nodeWeightAllocator)
     {}
@@ -201,7 +201,7 @@ namespace sequoia::maths
     {}
 
     template<alloc EdgePartitionsAllocator>
-      requires allocatable_partitions<edge_traits_type>
+      requires allocatable_partitions<edge_storage_type>
     graph_base(edges_initializer edges, const edge_allocator_type& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator, const node_weight_allocator_type& nodeWeightAllocator)
       : primitive_type{edges, edgeAllocator, edgePartitionsAllocator, nodeWeightAllocator}
     {}
@@ -215,7 +215,7 @@ namespace sequoia::maths
     {}
 
     template<alloc EdgePartitionsAllocator>
-      requires allocatable_partitions<edge_traits_type>
+      requires allocatable_partitions<edge_storage_type>
     graph_base(edges_initializer edges, const edge_allocator_type& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator, std::initializer_list<node_weight_type> nodeWeights, const node_weight_allocator_type& nodeWeightAllocator)
       : primitive_type{edges, edgeAllocator, edgePartitionsAllocator, nodeWeights, nodeWeightAllocator}
     {}
@@ -238,7 +238,7 @@ namespace sequoia::maths
     {}
 
     template<alloc EdgePartitionsAllocator>
-      requires allocatable_partitions<edge_traits_type>
+      requires allocatable_partitions<edge_storage_type>
     graph_base(const graph_base& in, const edge_allocator_type& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator, const node_weight_allocator_type& nodeWeightAllocator)
       : primitive_type{in, edgeAllocator, edgePartitionsAllocator, nodeWeightAllocator}
     {}
@@ -249,7 +249,7 @@ namespace sequoia::maths
     {}
 
     template<alloc EdgePartitionsAllocator>
-      requires allocatable_partitions<edge_traits_type>
+      requires allocatable_partitions<edge_storage_type>
     graph_base(graph_base&& in, const edge_allocator_type& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator, const node_weight_allocator_type& nodeWeightAllocator)
       : primitive_type{std::move(in), edgeAllocator, edgePartitionsAllocator, nodeWeightAllocator}
     {}

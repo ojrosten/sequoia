@@ -135,7 +135,7 @@ Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 51
 [sequoia::maths::directed_tree<1, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_storage<int, std::vector<int, std::allocator<int> > > >]
 operator== returned false
 
-  [sequoia::maths::connectivity<sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_config, unsigned long long> >]
+  [sequoia::maths::connectivity<2, sequoia::data_structures::bucketed_sequence<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::vector<std::vector<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::allocator<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long> > >, std::allocator<std::vector<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::allocator<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long> > > > > > >]
   operator== returned false
 
     Connectivity order incorrect
@@ -168,7 +168,7 @@ Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 52
 [sequoia::maths::directed_tree<1, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_storage<int, std::vector<int, std::allocator<int> > > >]
 operator== returned false
 
-  [sequoia::maths::connectivity<sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_config, unsigned long long> >]
+  [sequoia::maths::connectivity<2, sequoia::data_structures::bucketed_sequence<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::vector<std::vector<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::allocator<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long> > >, std::allocator<std::vector<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::allocator<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long> > > > > > >]
   operator== returned false
 
     Connectivity size incorrect
@@ -333,7 +333,7 @@ Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 51
 [sequoia::maths::directed_tree<2, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_storage<int, std::vector<int, std::allocator<int> > > >]
 operator== returned false
 
-  [sequoia::maths::connectivity<sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_config, unsigned long long> >]
+  [sequoia::maths::connectivity<2, sequoia::data_structures::bucketed_sequence<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::vector<std::vector<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::allocator<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long> > >, std::allocator<std::vector<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::allocator<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long> > > > > > >]
   operator== returned false
 
     Connectivity order incorrect
@@ -366,7 +366,7 @@ Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 52
 [sequoia::maths::directed_tree<2, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_storage<int, std::vector<int, std::allocator<int> > > >]
 operator== returned false
 
-  [sequoia::maths::connectivity<sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_config, unsigned long long> >]
+  [sequoia::maths::connectivity<2, sequoia::data_structures::bucketed_sequence<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::vector<std::vector<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::allocator<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long> > >, std::allocator<std::vector<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::allocator<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long> > > > > > >]
   operator== returned false
 
     Connectivity size incorrect
@@ -537,7 +537,7 @@ Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 51
 [sequoia::maths::directed_tree<0, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_storage<int, std::vector<int, std::allocator<int> > > >]
 operator== returned false
 
-  [sequoia::maths::connectivity<sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_config, unsigned long long> >]
+  [sequoia::maths::connectivity<2, sequoia::data_structures::bucketed_sequence<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::vector<std::vector<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::allocator<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long> > >, std::allocator<std::vector<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::allocator<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long> > > > > > >]
   operator== returned false
 
     Connectivity order incorrect
@@ -570,7 +570,7 @@ Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 52
 [sequoia::maths::directed_tree<0, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_storage<int, std::vector<int, std::allocator<int> > > >]
 operator== returned false
 
-  [sequoia::maths::connectivity<sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_config, unsigned long long> >]
+  [sequoia::maths::connectivity<2, sequoia::data_structures::bucketed_sequence<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::vector<std::vector<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::allocator<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long> > >, std::allocator<std::vector<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::allocator<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long> > > > > > >]
   operator== returned false
 
     Connectivity size incorrect
@@ -741,7 +741,7 @@ Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 51
 [sequoia::maths::undirected_tree<0, sequoia::maths::null_weight, int, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_storage<int, std::vector<int, std::allocator<int> > > >]
 operator== returned false
 
-  [sequoia::maths::connectivity<sequoia::maths::graph_impl::dynamic_edge_traits<0, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_config, unsigned long long> >]
+  [sequoia::maths::connectivity<0, sequoia::data_structures::bucketed_sequence<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::vector<std::vector<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::allocator<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long> > >, std::allocator<std::vector<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::allocator<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long> > > > > > >]
   operator== returned false
 
     Connectivity order incorrect
@@ -774,7 +774,7 @@ Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 52
 [sequoia::maths::undirected_tree<0, sequoia::maths::null_weight, int, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_storage<int, std::vector<int, std::allocator<int> > > >]
 operator== returned false
 
-  [sequoia::maths::connectivity<sequoia::maths::graph_impl::dynamic_edge_traits<0, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_config, unsigned long long> >]
+  [sequoia::maths::connectivity<0, sequoia::data_structures::bucketed_sequence<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::vector<std::vector<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::allocator<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long> > >, std::allocator<std::vector<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::allocator<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long> > > > > > >]
   operator== returned false
 
     Connectivity size incorrect

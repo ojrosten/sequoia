@@ -64,20 +64,22 @@ namespace sequoia::maths::graph_impl
   {
     using index_type = unsigned short;
   };
+}
 
-  template
-  <
-    graph_flavour GraphFlavour,
-    std::size_t Order,
-    std::size_t Size,
-    class EdgeWeight,
-    class EdgeMetaData,
-    std::integral IndexType
-  >
-  struct static_edge_traits
-    : public edge_type_generator<GraphFlavour, EdgeWeight, EdgeMetaData, IndexType, edge_sharing_preference::independent>
+namespace sequoia::maths
+{
+  template<graph_flavour Flavour, std::size_t Size, std::size_t Order>
+  struct static_edge_storage_config
   {
-    using edge_type = typename edge_type_generator<GraphFlavour, EdgeWeight, EdgeMetaData, IndexType, edge_sharing_preference::independent>::edge_type;
-    using edge_storage_type = data_structures::static_partitioned_sequence<edge_type, Order, num_static_edges(GraphFlavour, Size), maths::static_monotonic_sequence<IndexType, Order, std::ranges::greater>>;
+    using index_type = typename graph_impl::static_edge_index_type_generator<Size, Order, is_embedded(Flavour)>::index_type;
+
+    template <class T> using storage_type
+      = data_structures::static_partitioned_sequence<
+          T,
+          Order,
+          graph_impl::num_static_edges(Flavour, Size),
+          maths::static_monotonic_sequence<index_type, Order, std::ranges::greater>>;
+
+    constexpr static edge_sharing_preference edge_sharing{edge_sharing_preference::independent};
   };
 }

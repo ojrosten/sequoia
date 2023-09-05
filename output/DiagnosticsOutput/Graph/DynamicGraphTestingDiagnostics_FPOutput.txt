@@ -4,7 +4,7 @@ Check false positive: empty graph versus single node
 [sequoia::maths::undirected_graph<sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::contiguous_edge_storage_config, sequoia::maths::node_storage<sequoia::maths::null_weight, std::vector<sequoia::maths::null_weight, std::allocator<sequoia::maths::null_weight> > > >]
 operator== returned false
 
-  [sequoia::maths::connectivity<sequoia::maths::graph_impl::dynamic_edge_traits<0, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::contiguous_edge_storage_config, unsigned long long> >]
+  [sequoia::maths::connectivity<0, sequoia::data_structures::partitioned_sequence<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::vector<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::allocator<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long> > >, sequoia::maths::monotonic_sequence<unsigned long long, std::ranges::greater, std::vector<unsigned long long, std::allocator<unsigned long long> > > > >]
   operator== returned false
 
     Connectivity order incorrect
@@ -21,7 +21,7 @@ Check false positive: empty graph versus single node with loop
 [sequoia::maths::undirected_graph<sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::contiguous_edge_storage_config, sequoia::maths::node_storage<sequoia::maths::null_weight, std::vector<sequoia::maths::null_weight, std::allocator<sequoia::maths::null_weight> > > >]
 operator== returned false
 
-  [sequoia::maths::connectivity<sequoia::maths::graph_impl::dynamic_edge_traits<0, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::contiguous_edge_storage_config, unsigned long long> >]
+  [sequoia::maths::connectivity<0, sequoia::data_structures::partitioned_sequence<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::vector<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::allocator<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long> > >, sequoia::maths::monotonic_sequence<unsigned long long, std::ranges::greater, std::vector<unsigned long long, std::allocator<unsigned long long> > > > >]
   operator== returned false
 
     Connectivity size incorrect
@@ -44,7 +44,7 @@ Check false positive: empty graph versus single node
 [sequoia::maths::undirected_graph<sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_storage<sequoia::maths::null_weight, std::vector<sequoia::maths::null_weight, std::allocator<sequoia::maths::null_weight> > > >]
 operator== returned false
 
-  [sequoia::maths::connectivity<sequoia::maths::graph_impl::dynamic_edge_traits<0, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_config, unsigned long long> >]
+  [sequoia::maths::connectivity<0, sequoia::data_structures::bucketed_sequence<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::vector<std::vector<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::allocator<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long> > >, std::allocator<std::vector<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::allocator<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long> > > > > > >]
   operator== returned false
 
     Connectivity order incorrect
@@ -61,7 +61,7 @@ Check false positive: empty graph versus single node with loop
 [sequoia::maths::undirected_graph<sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_storage<sequoia::maths::null_weight, std::vector<sequoia::maths::null_weight, std::allocator<sequoia::maths::null_weight> > > >]
 operator== returned false
 
-  [sequoia::maths::connectivity<sequoia::maths::graph_impl::dynamic_edge_traits<0, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_config, unsigned long long> >]
+  [sequoia::maths::connectivity<0, sequoia::data_structures::bucketed_sequence<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::vector<std::vector<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::allocator<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long> > >, std::allocator<std::vector<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::allocator<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long> > > > > > >]
   operator== returned false
 
     Connectivity size incorrect
@@ -84,7 +84,7 @@ Check false positive: empty graph versus single node
 [sequoia::maths::embedded_graph<sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::contiguous_edge_storage_config, sequoia::maths::node_storage<sequoia::maths::null_weight, std::vector<sequoia::maths::null_weight, std::allocator<sequoia::maths::null_weight> > > >]
 operator== returned false
 
-  [sequoia::maths::connectivity<sequoia::maths::graph_impl::dynamic_edge_traits<1, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::contiguous_edge_storage_config, unsigned long long> >]
+  [sequoia::maths::connectivity<1, sequoia::data_structures::partitioned_sequence<sequoia::maths::embedded_partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::vector<sequoia::maths::embedded_partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::allocator<sequoia::maths::embedded_partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long> > >, sequoia::maths::monotonic_sequence<unsigned long long, std::ranges::greater, std::vector<unsigned long long, std::allocator<unsigned long long> > > > >]
   operator== returned false
 
     Connectivity order incorrect
@@ -101,7 +101,7 @@ Check false positive: empty graph versus single node with loop
 [sequoia::maths::embedded_graph<sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::contiguous_edge_storage_config, sequoia::maths::node_storage<sequoia::maths::null_weight, std::vector<sequoia::maths::null_weight, std::allocator<sequoia::maths::null_weight> > > >]
 operator== returned false
 
-  [sequoia::maths::connectivity<sequoia::maths::graph_impl::dynamic_edge_traits<1, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::contiguous_edge_storage_config, unsigned long long> >]
+  [sequoia::maths::connectivity<1, sequoia::data_structures::partitioned_sequence<sequoia::maths::embedded_partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::vector<sequoia::maths::embedded_partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::allocator<sequoia::maths::embedded_partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long> > >, sequoia::maths::monotonic_sequence<unsigned long long, std::ranges::greater, std::vector<unsigned long long, std::allocator<unsigned long long> > > > >]
   operator== returned false
 
     Connectivity size incorrect
@@ -124,7 +124,7 @@ Check false positive: empty graph versus single node
 [sequoia::maths::embedded_graph<sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_storage<sequoia::maths::null_weight, std::vector<sequoia::maths::null_weight, std::allocator<sequoia::maths::null_weight> > > >]
 operator== returned false
 
-  [sequoia::maths::connectivity<sequoia::maths::graph_impl::dynamic_edge_traits<1, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_config, unsigned long long> >]
+  [sequoia::maths::connectivity<1, sequoia::data_structures::bucketed_sequence<sequoia::maths::embedded_partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::vector<std::vector<sequoia::maths::embedded_partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::allocator<sequoia::maths::embedded_partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long> > >, std::allocator<std::vector<sequoia::maths::embedded_partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::allocator<sequoia::maths::embedded_partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long> > > > > > >]
   operator== returned false
 
     Connectivity order incorrect
@@ -141,7 +141,7 @@ Check false positive: empty graph versus single node with loop
 [sequoia::maths::embedded_graph<sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_storage<sequoia::maths::null_weight, std::vector<sequoia::maths::null_weight, std::allocator<sequoia::maths::null_weight> > > >]
 operator== returned false
 
-  [sequoia::maths::connectivity<sequoia::maths::graph_impl::dynamic_edge_traits<1, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_config, unsigned long long> >]
+  [sequoia::maths::connectivity<1, sequoia::data_structures::bucketed_sequence<sequoia::maths::embedded_partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::vector<std::vector<sequoia::maths::embedded_partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::allocator<sequoia::maths::embedded_partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long> > >, std::allocator<std::vector<sequoia::maths::embedded_partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::allocator<sequoia::maths::embedded_partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long> > > > > > >]
   operator== returned false
 
     Connectivity size incorrect
@@ -164,7 +164,7 @@ Check false positive: empty graph versus single node
 [sequoia::maths::directed_graph<sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::maths::contiguous_edge_storage_config, sequoia::maths::node_storage<sequoia::maths::null_weight, std::vector<sequoia::maths::null_weight, std::allocator<sequoia::maths::null_weight> > > >]
 operator== returned false
 
-  [sequoia::maths::connectivity<sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::contiguous_edge_storage_config, unsigned long long> >]
+  [sequoia::maths::connectivity<2, sequoia::data_structures::partitioned_sequence<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::vector<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::allocator<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long> > >, sequoia::maths::monotonic_sequence<unsigned long long, std::ranges::greater, std::vector<unsigned long long, std::allocator<unsigned long long> > > > >]
   operator== returned false
 
     Connectivity order incorrect
@@ -181,7 +181,7 @@ Check false positive: empty graph versus single node with loop
 [sequoia::maths::directed_graph<sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::maths::contiguous_edge_storage_config, sequoia::maths::node_storage<sequoia::maths::null_weight, std::vector<sequoia::maths::null_weight, std::allocator<sequoia::maths::null_weight> > > >]
 operator== returned false
 
-  [sequoia::maths::connectivity<sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::contiguous_edge_storage_config, unsigned long long> >]
+  [sequoia::maths::connectivity<2, sequoia::data_structures::partitioned_sequence<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::vector<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::allocator<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long> > >, sequoia::maths::monotonic_sequence<unsigned long long, std::ranges::greater, std::vector<unsigned long long, std::allocator<unsigned long long> > > > >]
   operator== returned false
 
     Connectivity size incorrect
@@ -204,7 +204,7 @@ Check false positive: empty graph versus single node
 [sequoia::maths::directed_graph<sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_storage<sequoia::maths::null_weight, std::vector<sequoia::maths::null_weight, std::allocator<sequoia::maths::null_weight> > > >]
 operator== returned false
 
-  [sequoia::maths::connectivity<sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_config, unsigned long long> >]
+  [sequoia::maths::connectivity<2, sequoia::data_structures::bucketed_sequence<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::vector<std::vector<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::allocator<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long> > >, std::allocator<std::vector<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::allocator<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long> > > > > > >]
   operator== returned false
 
     Connectivity order incorrect
@@ -221,7 +221,7 @@ Check false positive: empty graph versus single node with loop
 [sequoia::maths::directed_graph<sequoia::maths::null_weight, sequoia::maths::null_weight, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_storage<sequoia::maths::null_weight, std::vector<sequoia::maths::null_weight, std::allocator<sequoia::maths::null_weight> > > >]
 operator== returned false
 
-  [sequoia::maths::connectivity<sequoia::maths::graph_impl::dynamic_edge_traits<2, sequoia::maths::null_weight, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_config, unsigned long long> >]
+  [sequoia::maths::connectivity<2, sequoia::data_structures::bucketed_sequence<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::vector<std::vector<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::allocator<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long> > >, std::allocator<std::vector<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::allocator<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long> > > > > > >]
   operator== returned false
 
     Connectivity size incorrect
