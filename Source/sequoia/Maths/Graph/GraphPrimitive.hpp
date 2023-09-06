@@ -473,12 +473,12 @@ namespace sequoia
       void erase_node(const size_type node)
       {
         Connectivity::erase_node(node);
-        if constexpr (!emptyNodes) Nodes::erase_node(this->cbegin_node_weights() + node);
+        if constexpr (!std::is_empty_v<node_weight_type>) Nodes::erase_node(this->cbegin_node_weights() + node);
       }
 
       void clear() noexcept
       {
-        if constexpr (!emptyNodes) Nodes::clear();
+        if constexpr (!std::is_empty_v<node_weight_type>) Nodes::clear();
         Connectivity::clear();
       }
 
@@ -519,7 +519,7 @@ namespace sequoia
 
         ~insertion_sentinel()
         {
-          if constexpr(!emptyNodes)
+          if constexpr(!std::is_empty_v<node_weight_type>)
           {
             if(static_cast<Nodes&>(m_Graph).size() > static_cast<Connectivity&>(m_Graph).order())
               m_Graph.remove_excess_node(m_NodeIndex);
@@ -531,8 +531,6 @@ namespace sequoia
       };
 
       friend insertion_sentinel;
-
-      constexpr static bool emptyNodes{std::is_empty_v<typename Nodes::weight_type>};
 
       [[nodiscard]]
       constexpr static const edges_initializer& check_initialization(const edges_initializer& edges, std::size_t numNodes, std::size_t edgeParitions)
@@ -610,7 +608,7 @@ namespace sequoia
       size_type insert_node_impl(const size_type pos, Args&&... args)
       {
         const auto node{std::ranges::min(pos, this->order())};
-        if constexpr (!emptyNodes)
+        if constexpr (!std::is_empty_v<node_weight_type>)
         {
           Nodes::insert_node(this->cbegin_node_weights() + node, std::forward<Args>(args)...);
         }
@@ -620,7 +618,7 @@ namespace sequoia
 
       void remove_excess_node(size_type index)
       {
-        if(!emptyNodes)
+        if(!std::is_empty_v<node_weight_type>)
         {
           Nodes::erase_node(this->cbegin_node_weights() + index);
         }
