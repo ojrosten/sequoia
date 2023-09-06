@@ -12,7 +12,6 @@
 
  */
 
-#include "sequoia/Maths/Graph/HeterogeneousNodeDetails.hpp"
 #include <tuple>
 
 namespace sequoia::maths
@@ -91,7 +90,8 @@ namespace sequoia::maths
     friend constexpr bool operator==(const heterogeneous_node_storage&, const heterogeneous_node_storage&) noexcept = default;
 
   protected:
-    using weight_type = graph_impl::heterogeneous_tag;
+    struct dummy_weight{};
+    using weight_type = dummy_weight;
 
     constexpr heterogeneous_node_storage(const heterogeneous_node_storage&) = default;
 

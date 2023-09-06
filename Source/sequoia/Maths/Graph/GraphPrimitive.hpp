@@ -13,7 +13,7 @@
 
 #include "sequoia/Algorithms/Algorithms.hpp"
 #include "sequoia/Maths/Graph/Connectivity.hpp"
-#include "sequoia/Maths/Graph/HeterogeneousNodeDetails.hpp"
+#include "sequoia/Maths/Graph/GraphTraits.hpp"
 #include "sequoia/Core/ContainerUtilities/AssignmentUtilities.hpp"
 
 namespace sequoia
@@ -108,8 +108,6 @@ namespace sequoia
     private:
       using node_weight_type = typename Nodes::weight_type;
 
-      constexpr static bool heteroNodes{std::is_same_v<node_weight_type, graph_impl::heterogeneous_tag>};
-
       template<bool Hetero>
       struct node_init_constant : std::bool_constant<Hetero>
       {};
@@ -130,22 +128,22 @@ namespace sequoia
 
       constexpr graph_primitive(edges_initializer edges)
         requires (std::is_empty_v<node_weight_type> || std::is_default_constructible_v<node_weight_type>)
-        : graph_primitive(node_init_constant<heteroNodes>{}, edges)
+        : graph_primitive(node_init_constant<heterogeneous_nodes<graph_primitive>>{}, edges)
       {}
 
       constexpr graph_primitive(edges_initializer edges, std::initializer_list<node_weight_type> nodeWeights)
-        requires (!std::is_empty_v<node_weight_type> && !std::same_as<node_weight_type, graph_impl::heterogeneous_tag>)
+        requires (!std::is_empty_v<node_weight_type> && !heterogeneous_nodes<graph_primitive>)
         : graph_primitive(homo_init_type{}, edges, nodeWeights)
       {}
 
       template<class... NodeWeights>
-        requires std::same_as<node_weight_type, graph_impl::heterogeneous_tag>
+        requires heterogeneous_nodes<graph_primitive>
       constexpr graph_primitive(edges_initializer edges, NodeWeights&&... nodeWeights)
         : graph_primitive(hetero_init_type{}, edges, std::forward<NodeWeights>(nodeWeights)...)
       {}
 
       template<tree_link_direction dir>
-        requires (    !std::same_as<node_weight_type, graph_impl::heterogeneous_tag>
+        requires (    !heterogeneous_nodes<graph_primitive>
                    && ((dir == tree_link_direction::symmetric) || is_directed(Connectivity::flavour)))
       constexpr graph_primitive(std::initializer_list<tree_initializer<node_weight_type>> forest, tree_link_direction_constant<dir> tdc)
       {
@@ -156,7 +154,7 @@ namespace sequoia
       }
 
       template<tree_link_direction dir>
-      requires (    !std::same_as<node_weight_type, graph_impl::heterogeneous_tag>
+      requires (    !heterogeneous_nodes<graph_primitive>
                  && ((dir == tree_link_direction::symmetric) || is_directed(Connectivity::flavour)))
       constexpr graph_primitive(tree_initializer<node_weight_type> tree, tree_link_direction_constant<dir> tdc)
       {
@@ -201,7 +199,7 @@ namespace sequoia
       // Constructors with allocators
 
       template<class N>
-      constexpr static bool enableNodeAllocation{!std::is_same_v<N, graph_impl::heterogeneous_tag> && !std::is_empty_v<N>};
+      constexpr static bool enableNodeAllocation{!heterogeneous_nodes<graph_primitive> && !std::is_empty_v<N>};
 
       template
       <
@@ -272,7 +270,7 @@ namespace sequoia
         alloc EdgePartitionsAllocator,
         class... NodeWeights
       >
-        requires std::same_as<node_weight_type, graph_impl::heterogeneous_tag>
+        requires heterogeneous_nodes<graph_primitive>
       constexpr graph_primitive(edges_initializer edges, const EdgeAllocator& edgeAlloc, const EdgePartitionsAllocator& edgeParitionsAlloc, NodeWeights&&... nodeWeights)
         : Connectivity{edges, edgeAlloc, edgeParitionsAlloc}
         , Nodes{std::forward<NodeWeights>(nodeWeights)...}
@@ -546,38 +544,38 @@ namespace sequoia
       }
 
       constexpr graph_primitive(homo_init_type, edges_initializer edges, std::initializer_list<node_weight_type> nodeWeights)
-        requires (!std::same_as<node_weight_type, graph_impl::heterogeneous_tag>)
+        requires (!heterogeneous_nodes<graph_primitive>)
         : Connectivity{check_initialization(edges, nodeWeights.size(), edges.size())}
         , Nodes{nodeWeights}
       {}
 
       template<class... NodeWeights>
-        requires std::same_as<node_weight_type, graph_impl::heterogeneous_tag>
+        requires heterogeneous_nodes<graph_primitive>
       constexpr graph_primitive(hetero_init_type, edges_initializer edges, NodeWeights&&... nodeWeights)
         : Connectivity{check_initialization(edges, sizeof...(NodeWeights), edges.size())}
         , Nodes{std::forward<NodeWeights>(nodeWeights)...}
       {}
 
       constexpr graph_primitive(homo_init_type, edges_initializer edges)
-        requires (!std::same_as<node_weight_type, graph_impl::heterogeneous_tag> && !std::is_empty_v<node_weight_type>)
+        requires (!heterogeneous_nodes<graph_primitive> && !std::is_empty_v<node_weight_type>)
         : Connectivity{edges}
         , Nodes(edges.size())
       {}
 
       constexpr graph_primitive(homo_init_type, edges_initializer edges)
-        requires (!std::same_as<node_weight_type, graph_impl::heterogeneous_tag>&& std::is_empty_v<node_weight_type>)
+        requires (!heterogeneous_nodes<graph_primitive>&& std::is_empty_v<node_weight_type>)
         : Connectivity{edges}
         , Nodes{}
       {}
 
       constexpr graph_primitive(hetero_init_type, edges_initializer edges)
-        requires std::same_as<node_weight_type, graph_impl::heterogeneous_tag>
+        requires heterogeneous_nodes<graph_primitive>
         : Connectivity{edges},
           Nodes{}
       {}
 
       template<tree_link_direction dir>
-        requires (!std::same_as<node_weight_type, graph_impl::heterogeneous_tag> && !std::is_empty_v<node_weight_type>)
+        requires (!heterogeneous_nodes<graph_primitive> && !std::is_empty_v<node_weight_type>)
       constexpr void build_tree(size_type root, tree_initializer<node_weight_type> tree, tree_link_direction_constant<dir> tdc)
       {
         if(root >= Connectivity::order()) root = add_node(tree.node);
@@ -590,7 +588,7 @@ namespace sequoia
       }
 
       template<tree_link_direction dir>
-        requires (!std::same_as<node_weight_type, graph_impl::heterogeneous_tag> && std::is_empty_v<node_weight_type>)
+        requires (!heterogeneous_nodes<graph_primitive> && std::is_empty_v<node_weight_type>)
       constexpr void build_tree(size_type root, tree_initializer<node_weight_type> tree, tree_link_direction_constant<dir> tdc)
       {
         if(root >= Connectivity::order()) root = add_node();
