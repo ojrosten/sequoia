@@ -13,7 +13,7 @@
 #include "Components/Nodes/NodeStorageTestingUtilities.hpp"
 
 #include "sequoia/Core/DataStructures/PartitionedData.hpp"
-#include "sequoia/Maths/Graph/GraphImpl.hpp"
+#include "sequoia/Maths/Graph/GraphPrimitive.hpp"
 #include "sequoia/Maths/Graph/GraphTraits.hpp"
 
 namespace sequoia::testing

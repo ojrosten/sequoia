@@ -13,7 +13,7 @@
  */
 
 #include "sequoia/Core/DataStructures/PartitionedData.hpp"
-#include "sequoia/Maths/Graph/GraphImpl.hpp"
+#include "sequoia/Maths/Graph/GraphPrimitive.hpp"
 #include "sequoia/Maths/Graph/StaticGraphImpl.hpp"
 #include "sequoia/Maths/Graph/StaticNodeStorage.hpp"
 
