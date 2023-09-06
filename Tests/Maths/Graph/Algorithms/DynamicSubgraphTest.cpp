@@ -43,9 +43,8 @@ namespace sequoia::testing
   {
     using std::complex;
     using namespace maths;
-    using ESTraits = EdgeStorageConfig;
-    using NSTraits = NodeWeightStorage;
-    using graph_type = graph_type_generator_t<GraphFlavour, EdgeWeight, NodeWeight, ESTraits, NSTraits>;
+
+    using graph_type = graph_type_generator_t<GraphFlavour, EdgeWeight, NodeWeight, EdgeStorageConfig, NodeWeightStorage>;
     using edge_init_t = typename graph_type::edge_init_type;
     using edge_init_list_t = std::initializer_list<std::initializer_list<edge_init_t>>;
 

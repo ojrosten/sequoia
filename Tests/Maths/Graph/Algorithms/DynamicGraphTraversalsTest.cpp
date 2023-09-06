@@ -240,9 +240,7 @@ namespace sequoia::testing
    >
   void test_graph_traversals::execute_operations()
   {
-    using ESTraits = EdgeStorageConfig;
-    using NSTraits = NodeWeightStorage;
-    using graph_type = graph_type_generator_t<GraphFlavour, EdgeWeight, NodeWeight, ESTraits, NSTraits>;
+    using graph_type = graph_type_generator_t<GraphFlavour, EdgeWeight, NodeWeight, EdgeStorageConfig, NodeWeightStorage>;
 
     tracker_test<graph_type, Traverser<maths::traversal_flavour::breadth_first>>();
     tracker_test<graph_type, Traverser<maths::traversal_flavour::depth_first>>();
