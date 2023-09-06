@@ -8,7 +8,7 @@
 #pragma once
 
 /*! \file
-    \brief Edge traits for static homogeneous graphs.
+    \brief Implementatoin details for static graphs.
  */
 
 #include "sequoia/Maths/Graph/GraphDetails.hpp"
@@ -63,23 +63,5 @@ namespace sequoia::maths::graph_impl
   struct static_edge_index_type_generator<Size, Order, Embedded, index_type_tag::u_short>
   {
     using index_type = unsigned short;
-  };
-}
-
-namespace sequoia::maths
-{
-  template<graph_flavour Flavour, std::size_t Size, std::size_t Order>
-  struct static_edge_storage_config
-  {
-    using index_type = typename graph_impl::static_edge_index_type_generator<Size, Order, is_embedded(Flavour)>::index_type;
-
-    template <class T> using storage_type
-      = data_structures::static_partitioned_sequence<
-          T,
-          Order,
-          graph_impl::num_static_edges(Flavour, Size),
-          maths::static_monotonic_sequence<index_type, Order, std::ranges::greater>>;
-
-    constexpr static edge_sharing_preference edge_sharing{edge_sharing_preference::independent};
   };
 }

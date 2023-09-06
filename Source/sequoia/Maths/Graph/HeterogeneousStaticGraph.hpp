@@ -13,7 +13,7 @@
  */
 
 #include "sequoia/Maths/Graph/GraphPrimitive.hpp"
-#include "sequoia/Maths/Graph/StaticGraphImpl.hpp"
+#include "sequoia/Maths/Graph/StaticGraphConfig.hpp"
 #include "sequoia/Maths/Graph/HeterogeneousNodeStorage.hpp"
 
 #include <tuple>
