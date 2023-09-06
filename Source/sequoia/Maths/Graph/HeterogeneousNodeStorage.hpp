@@ -32,6 +32,7 @@ namespace sequoia::maths
     heterogeneous_node_storage() = default;
 
     template<class... Args>
+      requires (!resolve_to_copy_v<heterogeneous_node_storage, Args...>)
     constexpr explicit(sizeof...(Args) == 1) heterogeneous_node_storage(Args&&... args) : m_Weights{std::forward<Args>(args)...}
     {}
 
@@ -75,15 +76,15 @@ namespace sequoia::maths
     }
 
     template<std::size_t I, class Fn>
-    constexpr void mutate_node_weight(Fn fn)
+    constexpr decltype(auto) mutate_node_weight(Fn fn)
     {
-      fn(std::get<I>(m_Weights));
+      return fn(std::get<I>(m_Weights));
     }
 
     template<class T, class Fn>
-    constexpr void mutate_node_weight(Fn fn)
+    constexpr decltype(auto) mutate_node_weight(Fn fn)
     {
-      fn(std::get<T>(m_Weights));
+      return fn(std::get<T>(m_Weights));
     }
 
     [[nodiscard]]
