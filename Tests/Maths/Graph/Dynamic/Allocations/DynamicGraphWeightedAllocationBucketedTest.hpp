@@ -9,12 +9,11 @@
 
 /*! \file */
 
-#include "sequoia/TestFramework/RegularAllocationTestCore.hpp"
-#include "sequoia/Maths/Graph/GraphDetails.hpp"
+#include "DynamicGraphAllocationTestingUtilities.hpp"
 
 namespace sequoia::testing
 {
-  class weighted_graph_allocation_test final : public regular_allocation_test
+  class weighted_graph_allocation_bucketed_test final : public regular_allocation_test
   {
   public:
     using regular_allocation_test::regular_allocation_test;
@@ -38,7 +37,7 @@ namespace sequoia::testing
     >
     void execute_operations();
 
-    template<class Graph>
+    template<maths::dynamic_network Graph>
     void bucketed_memory();
   };
 }

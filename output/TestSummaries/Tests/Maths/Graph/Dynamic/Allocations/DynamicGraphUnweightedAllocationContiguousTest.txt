@@ -1,0 +1,2 @@
+Unweighted Graph Allocation Contiguous Test
+Standard Top Level Checks:                24;  Failures:  0  [Deep checks: 627]

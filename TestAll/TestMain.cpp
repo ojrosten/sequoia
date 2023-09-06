@@ -323,9 +323,10 @@ int main(int argc, char** argv)
       },
       suite{
         "Allocations",
-        weighted_graph_allocation_test{"Weighted Graph Allocation Test"},
+        weighted_graph_allocation_bucketed_test{"Weighted Graph Allocation Bucketed Test"},
         weighted_graph_allocation_contiguous_test{"Weighted Graph Allocation Contiguous Test"},
-        unweighted_graph_allocation_test{"Unweighted Graph Allocation Test"},
+        unweighted_graph_allocation_bucketed_test{"Unweighted Graph Allocation Bucketed Test"},
+        unweighted_graph_allocation_contiguous_test{"Unweighted Graph Allocation Contiguous Test"}
       }
     );
 

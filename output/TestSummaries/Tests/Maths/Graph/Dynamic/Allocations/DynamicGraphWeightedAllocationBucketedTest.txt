@@ -1,2 +1,2 @@
-Weighted Graph Allocation Test
+Weighted Graph Allocation Bucketed Test
 Standard Top Level Checks:               108;  Failures:  0  [Deep checks: 4163]

@@ -66,7 +66,7 @@ namespace sequoia::testing
     contiguous_memory<graph_type>();
   }
 
-  template<class Graph>
+  template<maths::dynamic_network Graph>
   void weighted_graph_allocation_contiguous_test::contiguous_memory()
   {
     using namespace maths;

@@ -13,7 +13,7 @@
 
 namespace sequoia::testing
 {
-  class weighted_graph_allocation_contiguous_test final : public regular_allocation_test
+  class unweighted_graph_allocation_bucketed_test final : public regular_allocation_test
   {
   public:
     using regular_allocation_test::regular_allocation_test;
@@ -26,7 +26,6 @@ namespace sequoia::testing
     template <class, class, concrete_test>
     friend class graph_test_helper;
 
-
     template
     <
       maths::graph_flavour GraphFlavour,
@@ -38,6 +37,6 @@ namespace sequoia::testing
     void execute_operations();
 
     template<maths::dynamic_network Graph>
-    void contiguous_memory();
+    void bucketed_memory();
   };
 }
