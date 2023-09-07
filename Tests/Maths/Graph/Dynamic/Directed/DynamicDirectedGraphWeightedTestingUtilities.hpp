@@ -215,7 +215,7 @@ namespace sequoia::testing
         graph_description::empty,
         t.report_line(""),
         [&t](graph_t g) -> graph_t {
-          t.check_exception_thrown<std::out_of_range>(t.report_line("Attempt to set a node weight which does not exist"), [&g](){ g.node_weight(g.cbegin_node_weights(), 1.0); });
+          t.check_exception_thrown<std::out_of_range>(t.report_line("Attempt to set a node weight which does not exist"), [&g](){ g.set_node_weight(g.cbegin_node_weights(), 1.0); });
           return g;
         }
       );
@@ -259,7 +259,7 @@ namespace sequoia::testing
         graph_description::node,
         t.report_line(""),
         [&t](graph_t g) -> graph_t {
-          t.check_exception_thrown<std::out_of_range>(t.report_line("Attempt to set a node weight which does not exist"), [&g](){ g.node_weight(g.cend_node_weights(), 1.0); });
+          t.check_exception_thrown<std::out_of_range>(t.report_line("Attempt to set a node weight which does not exist"), [&g](){ g.set_node_weight(g.cend_node_weights(), 1.0); });
           return g;
         }
       );
@@ -279,7 +279,7 @@ namespace sequoia::testing
         weighted_graph_description::nodew,
         t.report_line("Change node weight"),
         [](graph_t g) -> graph_t {
-          g.node_weight(g.cbegin_node_weights(), 1.0);
+          g.set_node_weight(g.cbegin_node_weights(), 1.0);
           return g;
         }
       );

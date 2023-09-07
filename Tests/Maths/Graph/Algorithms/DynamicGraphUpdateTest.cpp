@@ -794,13 +794,13 @@ namespace sequoia::testing
     }
 
     using namespace maths;
-    auto nodeFn1 = [&graph](const std::size_t index) { graph.node_weight(graph.cbegin_node_weights() + index, std::vector<int>{static_cast<int>(index)}); };
+    auto nodeFn1 = [&graph](const std::size_t index) { graph.set_node_weight(graph.cbegin_node_weights() + index, std::vector<int>{static_cast<int>(index)}); };
     traverse(breadth_first, graph, find_disconnected_t{}, nodeFn1);
 
     std::vector<std::vector<int>> expectedNodeWeights{{0}, {1}, {2}};
     check(equality, report_line(""), graph.cbegin_node_weights(), graph.cend_node_weights(), expectedNodeWeights.cbegin(), expectedNodeWeights.cend());
 
-    auto nodeFn2 = [&graph](const std::size_t index) { graph.node_weight(graph.cbegin_node_weights() + index, std::vector<int>{3 - static_cast<int>(index)}); };
+    auto nodeFn2 = [&graph](const std::size_t index) { graph.set_node_weight(graph.cbegin_node_weights() + index, std::vector<int>{3 - static_cast<int>(index)}); };
     maths::traverse(breadth_first, graph, find_disconnected_t{}, null_func_obj{}, nodeFn2);
 
     expectedNodeWeights = std::vector<std::vector<int>>{{3}, {2}, {1}};

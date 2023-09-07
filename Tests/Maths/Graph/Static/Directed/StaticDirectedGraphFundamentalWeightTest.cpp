@@ -133,7 +133,7 @@ namespace sequoia::testing
             graph_description::nodew,
             report_line(""),
             [this](graph_t g) -> graph_t {
-              g.node_weight(g.cbegin_node_weights(), 2.1);
+              g.set_node_weight(g.cbegin_node_weights(), 2.1);
               return g;
             }
           }
@@ -265,7 +265,7 @@ namespace sequoia::testing
         graph_description::nodew_0,
         report_line(""),
         [this](graph_t g) -> graph_t {
-          g.node_weight(g.cbegin_node_weights(), 2.1);
+          g.set_node_weight(g.cbegin_node_weights(), 2.1);
           return g;
         }
       );
@@ -416,7 +416,7 @@ namespace sequoia::testing
             graph_description::nodew_node,
             report_line(""),
             [this](graph_t g) -> graph_t {
-              g.node_weight(g.cbegin_node_weights(), 2.1);
+              g.set_node_weight(g.cbegin_node_weights(), 2.1);
               return g;
             }
           }

@@ -207,7 +207,7 @@ Attempt to set a node weight which does not exist
 
 Expected Exception Type:
 [std::out_of_range]
-node_storage::node_weight - index out of range!
+node_storage::set_node_weight - index out of range!
 
 =======================================
 
@@ -216,7 +216,7 @@ Attempt to mutate a node weight which does not exist
 
 Expected Exception Type:
 [std::out_of_range]
-node_storage::node_weight - index out of range!
+node_storage::mutate_node_weight - index out of range!
 
 =======================================
 
@@ -306,7 +306,7 @@ Attempt to set a node weight which does not exist
 
 Expected Exception Type:
 [std::out_of_range]
-node_storage::node_weight - index out of range!
+node_storage::set_node_weight - index out of range!
 
 =======================================
 
@@ -315,7 +315,7 @@ Attempt to mutate a node weight which does not exist
 
 Expected Exception Type:
 [std::out_of_range]
-node_storage::node_weight - index out of range!
+node_storage::mutate_node_weight - index out of range!
 
 =======================================
 

@@ -122,22 +122,22 @@ namespace sequoia::maths
       return node_weights();
     }
 
-    template<class... Args>
-    constexpr void node_weight(const_iterator pos, Args&&... args)
+    template<class W>
+    constexpr void set_node_weight(const_iterator pos, W w)
     {
-      if(pos == cend_node_weights()) throw std::out_of_range("node_storage::node_weight - index out of range!\n");
+      if(pos == cend_node_weights()) throw std::out_of_range("node_storage::set_node_weight - index out of range!\n");
 
       const auto index{std::ranges::distance(cbegin_node_weights(), pos)};
-      m_NodeWeights[index] = weight_type{std::forward<Args>(args)...};
+      m_NodeWeights[index] = std::move(w);
     }
 
     template<class Fn>
-    constexpr decltype(auto) mutate_node_weight(const_iterator pos, Fn&& fn)
+    constexpr decltype(auto) mutate_node_weight(const_iterator pos, Fn fn)
     {
-      if(pos == cend_node_weights()) throw std::out_of_range("node_storage::node_weight - index out of range!\n");
+      if(pos == cend_node_weights()) throw std::out_of_range("node_storage::mutate_node_weight - index out of range!\n");
 
       const auto index{std::ranges::distance(cbegin_node_weights(), pos)};
-      return std::forward<Fn>(fn)(m_NodeWeights[index]);
+      return fn(m_NodeWeights[index]);
     }
 
     [[nodiscard]]

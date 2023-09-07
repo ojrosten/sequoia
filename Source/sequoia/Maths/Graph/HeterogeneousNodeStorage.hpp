@@ -20,6 +20,8 @@ namespace sequoia::maths
       \brief Storage for heterogeneous node weights.
    */
 
+  struct heterogeneous_node_weights_t{};
+
   template<class... Ts>
   class heterogeneous_node_storage
   {
@@ -43,35 +45,28 @@ namespace sequoia::maths
 
     template<std::size_t I>
     [[nodiscard]]
-    constexpr const auto& node_weight() const noexcept
+    constexpr const auto& get_node_weight() const noexcept
     {
       return std::get<I>(m_Weights);
     }
 
     template<class T>
     [[nodiscard]]
-    constexpr const auto& node_weight() const noexcept
+    constexpr const auto& get_node_weight() const noexcept
     {
       return std::get<T>(m_Weights);
     }
 
-    [[nodiscard]]
-    constexpr const auto& all_node_weights() const noexcept
+    template<std::size_t I, class W>
+    constexpr void set_node_weight(W w)
     {
-      return m_Weights;
+      std::get<I>(m_Weights) = std::move(w);
     }
 
-    template<std::size_t I, class Arg, class... Args>
-    constexpr void node_weight(Arg&& arg, Args&&... args)
+    template<class T, class W>
+    constexpr void set_node_weight(W w)
     {
-      using T = typename std::tuple_element<I, std::tuple<Ts...> >::type ;
-      std::get<I>(m_Weights) = T{std::forward<Arg>(arg), std::forward<Args>(args)...};
-    }
-
-    template<class T, class Arg, class... Args>
-    constexpr void node_weight(Arg&& arg, Args&&... args)
-    {
-      std::get<T>(m_Weights) = T{std::forward<Arg>(arg), std::forward<Args>(args)...};
+      std::get<T>(m_Weights) = std::move(w);
     }
 
     template<std::size_t I, class Fn>
@@ -90,8 +85,7 @@ namespace sequoia::maths
     friend constexpr bool operator==(const heterogeneous_node_storage&, const heterogeneous_node_storage&) noexcept = default;
 
   protected:
-    struct dummy_weight{};
-    using weight_type = dummy_weight;
+    using weight_type = heterogeneous_node_weights_t;
 
     constexpr heterogeneous_node_storage(const heterogeneous_node_storage&) = default;
 

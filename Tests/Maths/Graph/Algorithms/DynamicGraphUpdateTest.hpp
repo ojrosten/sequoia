@@ -85,7 +85,7 @@ namespace sequoia::testing
     {
       auto iter = m_Graph.cbegin_node_weights() + index;
       const auto newWeight = (2 + m_NodeTraversalIndex) * *iter;
-      m_Graph.node_weight(iter, newWeight);
+      m_Graph.set_node_weight(iter, newWeight);
 
       ++m_NodeTraversalIndex;
     }
@@ -95,7 +95,7 @@ namespace sequoia::testing
       --m_NodeTraversalIndex;
       auto iter = m_Graph.cbegin_node_weights() + index;
       const auto newWeight =  *iter / (5 - m_NodeTraversalIndex);
-      m_Graph.node_weight(iter, newWeight);
+      m_Graph.set_node_weight(iter, newWeight);
     }
 
     template<std::input_or_output_iterator Iter>

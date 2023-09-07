@@ -36,9 +36,9 @@ namespace sequoia::testing
 
     graph_t g{{{edge{1, 0.5f}}, {edge{0, 0.5f}}, {}}, 6.6f, -5, 10.2};
 
-    g.node_weight<float>(9.9f);
+    g.set_node_weight<float>(9.9f);
     g.mutate_node_weight<double>([](double& d) { d += 1.0; });
-    g.node_weight<1>(-6);
+    g.set_node_weight<1>(-6);
 
     g.set_edge_weight(g.cbegin_edges(0), -0.3f);
 
@@ -54,9 +54,9 @@ namespace sequoia::testing
 
     graph_t g{{{edge{1, 0, 0.5f}}, {edge{0, 0, 0.5f}}, {}}, 6.6f, -5, 10.2};
 
-    g.node_weight<float>(9.9f);
+    g.set_node_weight<float>(9.9f);
     g.mutate_node_weight<double>([](double& d) { d += 1.0; });
-    g.node_weight<1>(-6);
+    g.set_node_weight<1>(-6);
 
     g.set_edge_weight(g.cbegin_edges(0), -0.3f);
 
@@ -72,9 +72,9 @@ namespace sequoia::testing
 
     graph_t g{{{edge{1, 0.5f}}, {}, {}}, 6.6f, -5, 10.2};
 
-    g.node_weight<float>(9.9f);
+    g.set_node_weight<float>(9.9f);
     g.mutate_node_weight<double>([](double& d) { d += 1.0; });
-    g.node_weight<1>(-6);
+    g.set_node_weight<1>(-6);
 
     g.set_edge_weight(g.cbegin_edges(0), -0.3f);
 
@@ -106,7 +106,7 @@ namespace sequoia::testing
       using edge = typename graph_t::edge_init_type;
 
       constexpr graph_t g{ {{edge{0, 0.2f}, edge{0, 0.2f}}}, function_object{}};
-      check(equality, report_line(""), 4, g.node_weight<0>()(2));
+      check(equality, report_line(""), 4, g.get_node_weight<0>()(2));
     }
   }
 

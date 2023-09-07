@@ -44,7 +44,7 @@ namespace sequoia:: testing
     check(equality, report_line(""), store, storage{2.4});
     check_semantics(report_line("Regular semantics"), store, storage{});
 
-    store.node_weight(store.cbegin_node_weights(), 1.3);
+    store.set_node_weight(store.cbegin_node_weights(), 1.3);
     // 1.3
 
     check(equality, report_line(""), store, storage{1.3});

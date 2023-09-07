@@ -180,7 +180,7 @@ namespace sequoia::testing
       {[](){ return foo_t{}; }, [](){ return foo_t{1.1}; }}
     };
 
-    g.node_weight(g.cbegin_node_weights()+1, [](){ return foo_t{1.1}; });
+    g.set_node_weight(g.cbegin_node_weights()+1, [](){ return foo_t{1.1}; });
 
     auto checker{
         [this](std::string_view description, const foo_t& obtained, const foo_t& prediction) {
