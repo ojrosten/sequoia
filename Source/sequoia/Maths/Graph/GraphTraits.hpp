@@ -14,23 +14,6 @@
 
 namespace sequoia::maths
 {
-  struct is_simple_graph{};
-
-  template<class Traits>
-  struct defines_simple_graph : std::false_type
-  {};
-
-  template<class Traits>
-    requires requires { Traits::is_simple_graph; }
-  struct defines_simple_graph<Traits> : std::true_type
-  {};
-
-  template<class Traits>
-  using defines_simple_graph_t = typename defines_simple_graph<Traits>::type;
-
-  template<class Traits>
-  inline constexpr bool defines_simple_graph_v{defines_simple_graph<Traits>::value};
-
   template<class N>
   concept network = requires(const N& n) {
     typename N::edge_type;

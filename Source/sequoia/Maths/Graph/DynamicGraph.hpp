@@ -398,6 +398,62 @@ namespace sequoia::maths
   <
     class EdgeWeight,
     class NodeWeight,
+    class EdgeMetaData,
+    class EdgeStorageConfig,
+    class NodeWeightStorage
+  >
+    requires (!std::is_empty_v<EdgeMetaData>)
+  class undirected_graph<EdgeWeight, NodeWeight, EdgeMetaData, EdgeStorageConfig, NodeWeightStorage> final : public
+    graph_base
+    <
+    graph_flavour::undirected,
+    EdgeWeight,
+    NodeWeight,
+    EdgeMetaData,
+    EdgeStorageConfig,
+    NodeWeightStorage
+    >
+  {
+  public:
+    using node_weight_type = NodeWeight;
+
+    using
+      graph_base
+      <
+      graph_flavour::undirected,
+      EdgeWeight,
+      NodeWeight,
+      EdgeMetaData,
+      EdgeStorageConfig,
+      NodeWeightStorage
+      >::graph_base;
+
+    using base_type =
+      graph_base
+      <
+      graph_flavour::undirected,
+      EdgeWeight,
+      NodeWeight,
+      EdgeMetaData,
+      EdgeStorageConfig,
+      NodeWeightStorage
+      >;
+
+    using base_type::swap_nodes;
+    using base_type::add_node;
+    using base_type::insert_node;
+    using base_type::erase_node;
+
+    using base_type::join;
+
+    // TO DO: reinstate this, but implementation needs to be changed
+    // using base_type::erase_edge;
+  };
+
+  template
+  <
+    class EdgeWeight,
+    class NodeWeight,
     class EdgeMetaData      = null_meta_data,
     class EdgeStorageConfig = bucketed_edge_storage_config,
     class NodeWeightStorage = node_storage<NodeWeight>
