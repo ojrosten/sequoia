@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.6"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: sequoia::testing::dynamic_undirected_embedded_graph_operations&lt; EdgeWeight, NodeWeight, EdgeStorageTraits, NodeWeightStorageTraits &gt; Class Template Reference</title>
+<title>Sequoia: sequoia::testing::dynamic_undirected_embedded_graph_operations&lt; EdgeWeight, NodeWeight, EdgeStorageConfig, NodeWeightStorage &gt; Class Template Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -76,51 +76,43 @@ $(function() {
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
-<a href="#friends">Friends</a> &#124;
 <a href="../../d0/de1/classsequoia_1_1testing_1_1dynamic__undirected__embedded__graph__operations-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">sequoia::testing::dynamic_undirected_embedded_graph_operations&lt; EdgeWeight, NodeWeight, EdgeStorageTraits, NodeWeightStorageTraits &gt; Class Template Reference</div></div>
+  <div class="headertitle"><div class="title">sequoia::testing::dynamic_undirected_embedded_graph_operations&lt; EdgeWeight, NodeWeight, EdgeStorageConfig, NodeWeightStorage &gt; Class Template Reference</div></div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:ab4ac742b899b9ca51653db58610312ed"><td class="memItemLeft" align="right" valign="top"><a id="ab4ac742b899b9ca51653db58610312ed" name="ab4ac742b899b9ca51653db58610312ed"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>graph_t</b> = <a class="el" href="../../de/d31/classsequoia_1_1maths_1_1embedded__graph.html">maths::embedded_graph</a>&lt; EdgeWeight, NodeWeight, <a class="el" href="../../d8/d64/structsequoia_1_1maths_1_1null__meta__data.html">maths::null_meta_data</a>, EdgeStorageTraits, NodeWeightStorageTraits &gt;</td></tr>
-<tr class="separator:ab4ac742b899b9ca51653db58610312ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac76496cbdddefecc30d2f6ae60996737"><td class="memItemLeft" align="right" valign="top"><a id="ac76496cbdddefecc30d2f6ae60996737" name="ac76496cbdddefecc30d2f6ae60996737"></a>
+<tr class="memitem:abe2696f315b95ede9af020a7cc926838"><td class="memItemLeft" align="right" valign="top"><a id="abe2696f315b95ede9af020a7cc926838" name="abe2696f315b95ede9af020a7cc926838"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>graph_t</b> = <a class="el" href="../../de/d31/classsequoia_1_1maths_1_1embedded__graph.html">maths::embedded_graph</a>&lt; EdgeWeight, NodeWeight, <a class="el" href="../../d8/d64/structsequoia_1_1maths_1_1null__meta__data.html">maths::null_meta_data</a>, EdgeStorageConfig, NodeWeightStorage &gt;</td></tr>
+<tr class="separator:abe2696f315b95ede9af020a7cc926838"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa8d736a577bfdf073d9ab53cb46dbd62"><td class="memItemLeft" align="right" valign="top"><a id="aa8d736a577bfdf073d9ab53cb46dbd62" name="aa8d736a577bfdf073d9ab53cb46dbd62"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_t</b> = typename graph_t::edge_init_type</td></tr>
-<tr class="separator:ac76496cbdddefecc30d2f6ae60996737"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8ace3608f0a7951d67c6881aaa33a1cc"><td class="memItemLeft" align="right" valign="top"><a id="a8ace3608f0a7951d67c6881aaa33a1cc" name="a8ace3608f0a7951d67c6881aaa33a1cc"></a>
+<tr class="separator:aa8d736a577bfdf073d9ab53cb46dbd62"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac04f6eba1e3f940f5df9fb60fd978367"><td class="memItemLeft" align="right" valign="top"><a id="ac04f6eba1e3f940f5df9fb60fd978367" name="ac04f6eba1e3f940f5df9fb60fd978367"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>edges_equivalent_t</b> = std::initializer_list&lt; std::initializer_list&lt; edge_t &gt; &gt;</td></tr>
-<tr class="separator:a8ace3608f0a7951d67c6881aaa33a1cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adda86bd0efe11c664bbd6deaf2698a12"><td class="memItemLeft" align="right" valign="top"><a id="adda86bd0efe11c664bbd6deaf2698a12" name="adda86bd0efe11c664bbd6deaf2698a12"></a>
+<tr class="separator:ac04f6eba1e3f940f5df9fb60fd978367"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a35f8bf7f4884c3dc0719c17ef2561665"><td class="memItemLeft" align="right" valign="top"><a id="a35f8bf7f4884c3dc0719c17ef2561665" name="a35f8bf7f4884c3dc0719c17ef2561665"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>transition_graph</b> = typename <a class="el" href="../../da/d5a/structsequoia_1_1testing_1_1transition__checker.html">transition_checker</a>&lt; <a class="el" href="../../de/d31/classsequoia_1_1maths_1_1embedded__graph.html">graph_t</a> &gt;::transition_graph</td></tr>
-<tr class="separator:adda86bd0efe11c664bbd6deaf2698a12"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a35f8bf7f4884c3dc0719c17ef2561665"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a1e2f187c9d533b0eef2c2aaf895264af"><td class="memItemLeft" align="right" valign="top"><a id="a1e2f187c9d533b0eef2c2aaf895264af" name="a1e2f187c9d533b0eef2c2aaf895264af"></a>
+<tr class="memitem:ad6fc6ff369b2519c05dc06f6763fced4"><td class="memItemLeft" align="right" valign="top"><a id="ad6fc6ff369b2519c05dc06f6763fced4" name="ad6fc6ff369b2519c05dc06f6763fced4"></a>
 static void&#160;</td><td class="memItemRight" valign="bottom"><b>execute_operations</b> (<a class="el" href="../../d9/daf/RegularTestCore_8hpp.html#aef38d8778074b365d465f7775bb74dab">regular_test</a> &amp;t)</td></tr>
-<tr class="separator:a1e2f187c9d533b0eef2c2aaf895264af"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4fdf44f3b858f84f4eb683e694fb32b1"><td class="memItemLeft" align="right" valign="top"><a id="a4fdf44f3b858f84f4eb683e694fb32b1" name="a4fdf44f3b858f84f4eb683e694fb32b1"></a>
+<tr class="separator:ad6fc6ff369b2519c05dc06f6763fced4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a48f56bb053e1d47e9d100e7e9bf66b83"><td class="memItemLeft" align="right" valign="top"><a id="a48f56bb053e1d47e9d100e7e9bf66b83" name="a48f56bb053e1d47e9d100e7e9bf66b83"></a>
 static <a class="el" href="../../de/d31/classsequoia_1_1maths_1_1embedded__graph.html">graph_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>make_and_check</b> (<a class="el" href="../../d9/daf/RegularTestCore_8hpp.html#aef38d8778074b365d465f7775bb74dab">regular_test</a> &amp;t, std::string_view description, edges_equivalent_t init)</td></tr>
-<tr class="separator:a4fdf44f3b858f84f4eb683e694fb32b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a01f19f5f5187a41a39150983162a2569"><td class="memItemLeft" align="right" valign="top"><a id="a01f19f5f5187a41a39150983162a2569" name="a01f19f5f5187a41a39150983162a2569"></a>
+<tr class="separator:a48f56bb053e1d47e9d100e7e9bf66b83"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab02a7b370966e1c85fd044d0b896b9dc"><td class="memItemLeft" align="right" valign="top"><a id="ab02a7b370966e1c85fd044d0b896b9dc" name="ab02a7b370966e1c85fd044d0b896b9dc"></a>
 static void&#160;</td><td class="memItemRight" valign="bottom"><b>check_initialization_exceptions</b> (<a class="el" href="../../d9/daf/RegularTestCore_8hpp.html#aef38d8778074b365d465f7775bb74dab">regular_test</a> &amp;t)</td></tr>
-<tr class="separator:a01f19f5f5187a41a39150983162a2569"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4e149e392fff23663597aab66fd43e57"><td class="memItemLeft" align="right" valign="top"><a id="a4e149e392fff23663597aab66fd43e57" name="a4e149e392fff23663597aab66fd43e57"></a>
+<tr class="separator:ab02a7b370966e1c85fd044d0b896b9dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a853fe7ad4154250048fea07456dd2373"><td class="memItemLeft" align="right" valign="top"><a id="a853fe7ad4154250048fea07456dd2373" name="a853fe7ad4154250048fea07456dd2373"></a>
 static transition_graph&#160;</td><td class="memItemRight" valign="bottom"><b>make_transition_graph</b> (<a class="el" href="../../d9/daf/RegularTestCore_8hpp.html#aef38d8778074b365d465f7775bb74dab">regular_test</a> &amp;t)</td></tr>
-<tr class="separator:a4e149e392fff23663597aab66fd43e57"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="friends" name="friends"></a>
-Friends</h2></td></tr>
-<tr class="memitem:a646028f8a8c40fde41007bc82ba64db4"><td class="memTemplParams" colspan="2"><a id="a646028f8a8c40fde41007bc82ba64db4" name="a646028f8a8c40fde41007bc82ba64db4"></a>
-template&lt;maths::network &gt; </td></tr>
-<tr class="memitem:a646028f8a8c40fde41007bc82ba64db4"><td class="memTemplItemLeft" align="right" valign="top">struct&#160;</td><td class="memTemplItemRight" valign="bottom"><b>graph_initialization_checker</b></td></tr>
-<tr class="separator:a646028f8a8c40fde41007bc82ba64db4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a853fe7ad4154250048fea07456dd2373"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>C:/Users/olive/sequoia/Tests/Maths/Graph/UndirectedEmbedded/<a class="el" href="../../dc/dd5/DynamicUndirectedEmbeddedGraphTestingUtilities_8hpp_source.html">DynamicUndirectedEmbeddedGraphTestingUtilities.hpp</a></li>
+<li>C:/Users/olive/sequoia/Tests/Maths/Graph/Dynamic/UndirectedEmbedded/<a class="el" href="../../dc/dd5/DynamicUndirectedEmbeddedGraphTestingUtilities_8hpp_source.html">DynamicUndirectedEmbeddedGraphTestingUtilities.hpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

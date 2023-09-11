@@ -37,13 +37,15 @@ var searchData=
   ['broken_5fserialization_34',['broken_serialization',['../d4/d59/structsequoia_1_1testing_1_1broken__serialization.html',1,'sequoia::testing']]],
   ['broken_5fswap_35',['broken_swap',['../dd/de2/structsequoia_1_1testing_1_1broken__swap.html',1,'sequoia::testing']]],
   ['bucket_5falloc_5fgetter_36',['bucket_alloc_getter',['../db/d0a/structsequoia_1_1testing_1_1bucket__alloc__getter.html',1,'sequoia::testing']]],
-  ['bucketed_5fedge_5fstorage_5ftraits_37',['bucketed_edge_storage_traits',['../dc/d63/structsequoia_1_1maths_1_1bucketed__edge__storage__traits.html',1,'sequoia::maths']]],
+  ['bucketed_5fedge_5fstorage_5fconfig_37',['bucketed_edge_storage_config',['../d5/de5/structsequoia_1_1maths_1_1bucketed__edge__storage__config.html',1,'sequoia::maths']]],
   ['bucketed_5fsequence_38',['bucketed_sequence',['../d4/db3/classsequoia_1_1data__structures_1_1bucketed__sequence.html',1,'sequoia::data_structures']]],
-  ['bucketed_5fsequence_5fregular_5ftest_39',['bucketed_sequence_regular_test',['../dc/dea/classsequoia_1_1testing_1_1bucketed__sequence__regular__test.html',1,'sequoia::testing']]],
-  ['bucketed_5fsequence_5ftraits_40',['bucketed_sequence_traits',['../db/d6e/structsequoia_1_1data__structures_1_1bucketed__sequence__traits.html',1,'sequoia::data_structures']]],
-  ['bucketedsequenceregulartest_2ecpp_41',['BucketedSequenceRegularTest.cpp',['../d2/da4/BucketedSequenceRegularTest_8cpp.html',1,'']]],
-  ['bucketedsequenceregulartest_2ehpp_42',['BucketedSequenceRegularTest.hpp',['../d9/df0/BucketedSequenceRegularTest_8hpp.html',1,'']]],
-  ['build_5fpaths_43',['build_paths',['../d2/d9f/classsequoia_1_1testing_1_1build__paths.html',1,'sequoia::testing']]],
-  ['build_5fsystem_5fpaths_44',['build_system_paths',['../dd/d31/classsequoia_1_1testing_1_1build__system__paths.html',1,'sequoia::testing']]],
-  ['by_5fvalue_45',['by_value',['../da/de1/structsequoia_1_1object_1_1by__value.html',1,'sequoia::object']]]
+  ['bucketed_5fsequence_5fallocation_5ftest_39',['bucketed_sequence_allocation_test',['../d3/d89/classsequoia_1_1testing_1_1bucketed__sequence__allocation__test.html',1,'sequoia::testing']]],
+  ['bucketed_5fsequence_5fregular_5ftest_40',['bucketed_sequence_regular_test',['../dc/dea/classsequoia_1_1testing_1_1bucketed__sequence__regular__test.html',1,'sequoia::testing']]],
+  ['bucketedsequenceallocationtest_2ecpp_41',['BucketedSequenceAllocationTest.cpp',['../dd/d2d/BucketedSequenceAllocationTest_8cpp.html',1,'']]],
+  ['bucketedsequenceallocationtest_2ehpp_42',['BucketedSequenceAllocationTest.hpp',['../d5/dce/BucketedSequenceAllocationTest_8hpp.html',1,'']]],
+  ['bucketedsequenceregulartest_2ecpp_43',['BucketedSequenceRegularTest.cpp',['../d2/da4/BucketedSequenceRegularTest_8cpp.html',1,'']]],
+  ['bucketedsequenceregulartest_2ehpp_44',['BucketedSequenceRegularTest.hpp',['../d9/df0/BucketedSequenceRegularTest_8hpp.html',1,'']]],
+  ['build_5fpaths_45',['build_paths',['../d2/d9f/classsequoia_1_1testing_1_1build__paths.html',1,'sequoia::testing']]],
+  ['build_5fsystem_5fpaths_46',['build_system_paths',['../dd/d31/classsequoia_1_1testing_1_1build__system__paths.html',1,'sequoia::testing']]],
+  ['by_5fvalue_47',['by_value',['../da/de1/structsequoia_1_1object_1_1by__value.html',1,'sequoia::object']]]
 ];

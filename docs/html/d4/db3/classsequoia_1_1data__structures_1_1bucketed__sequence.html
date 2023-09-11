@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.6"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: sequoia::data_structures::bucketed_sequence&lt; T, Traits &gt; Class Template Reference</title>
+<title>Sequoia: sequoia::data_structures::bucketed_sequence&lt; T, Container &gt; Class Template Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -79,7 +79,7 @@ $(function() {
 <a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="#friends">Friends</a> &#124;
 <a href="../../df/d28/classsequoia_1_1data__structures_1_1bucketed__sequence-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">sequoia::data_structures::bucketed_sequence&lt; T, Traits &gt; Class Template Reference</div></div>
+  <div class="headertitle"><div class="title">sequoia::data_structures::bucketed_sequence&lt; T, Container &gt; Class Template Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
@@ -90,198 +90,204 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a72646c3bbc6197eb6189bee7acb94521"><td class="memItemLeft" align="right" valign="top"><a id="a72646c3bbc6197eb6189bee7acb94521" name="a72646c3bbc6197eb6189bee7acb94521"></a>
+<tr class="memitem:a1db14611a165a30b0b56f4be9e487c13"><td class="memItemLeft" align="right" valign="top"><a id="a1db14611a165a30b0b56f4be9e487c13" name="a1db14611a165a30b0b56f4be9e487c13"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>value_type</b> = T</td></tr>
-<tr class="separator:a72646c3bbc6197eb6189bee7acb94521"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae496638637f0424e40c38801ffea2b88"><td class="memItemLeft" align="right" valign="top"><a id="ae496638637f0424e40c38801ffea2b88" name="ae496638637f0424e40c38801ffea2b88"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>size_type</b> = typename storage_type::size_type</td></tr>
-<tr class="separator:ae496638637f0424e40c38801ffea2b88"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4d73365712394fb3495becc8d60a2f08"><td class="memItemLeft" align="right" valign="top"><a id="a4d73365712394fb3495becc8d60a2f08" name="a4d73365712394fb3495becc8d60a2f08"></a>
+<tr class="separator:a1db14611a165a30b0b56f4be9e487c13"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa8cdc463e4f8fcc9db43c8b2a97c6875"><td class="memItemLeft" align="right" valign="top"><a id="aa8cdc463e4f8fcc9db43c8b2a97c6875" name="aa8cdc463e4f8fcc9db43c8b2a97c6875"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>container_type</b> = Container</td></tr>
+<tr class="separator:aa8cdc463e4f8fcc9db43c8b2a97c6875"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a493ece6b4b7af33eb09986ccf2665828"><td class="memItemLeft" align="right" valign="top"><a id="a493ece6b4b7af33eb09986ccf2665828" name="a493ece6b4b7af33eb09986ccf2665828"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>bucket_type</b> = typename container_type::value_type</td></tr>
+<tr class="separator:a493ece6b4b7af33eb09986ccf2665828"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae0949194e54508acef426f68cb9cdb7f"><td class="memItemLeft" align="right" valign="top"><a id="ae0949194e54508acef426f68cb9cdb7f" name="ae0949194e54508acef426f68cb9cdb7f"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>size_type</b> = typename container_type::size_type</td></tr>
+<tr class="separator:ae0949194e54508acef426f68cb9cdb7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae687df3c4d59d3f136ff7469de934dd3"><td class="memItemLeft" align="right" valign="top"><a id="ae687df3c4d59d3f136ff7469de934dd3" name="ae687df3c4d59d3f136ff7469de934dd3"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>index_type</b> = size_type</td></tr>
-<tr class="separator:a4d73365712394fb3495becc8d60a2f08"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4e3712466b43e0c9d69146023fea4df9"><td class="memItemLeft" align="right" valign="top"><a id="a4e3712466b43e0c9d69146023fea4df9" name="a4e3712466b43e0c9d69146023fea4df9"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>allocator_type</b> = typename storage_type::allocator_type</td></tr>
-<tr class="separator:a4e3712466b43e0c9d69146023fea4df9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aba63c0788fa29647aa6d0ca5dd9f37fd"><td class="memItemLeft" align="right" valign="top"><a id="aba63c0788fa29647aa6d0ca5dd9f37fd" name="aba63c0788fa29647aa6d0ca5dd9f37fd"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>partition_iterator</b> = <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">data_structures::partition_iterator</a>&lt; Traits, size_type &gt;</td></tr>
-<tr class="separator:aba63c0788fa29647aa6d0ca5dd9f37fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6a2180feb4a12df3891631e7c46aba54"><td class="memItemLeft" align="right" valign="top"><a id="a6a2180feb4a12df3891631e7c46aba54" name="a6a2180feb4a12df3891631e7c46aba54"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>const_partition_iterator</b> = <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">data_structures::const_partition_iterator</a>&lt; Traits, size_type &gt;</td></tr>
-<tr class="separator:a6a2180feb4a12df3891631e7c46aba54"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab88cec3fe8886fdd4a43ad395d93bf37"><td class="memItemLeft" align="right" valign="top"><a id="ab88cec3fe8886fdd4a43ad395d93bf37" name="ab88cec3fe8886fdd4a43ad395d93bf37"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>reverse_partition_iterator</b> = <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">data_structures::reverse_partition_iterator</a>&lt; Traits, size_type &gt;</td></tr>
-<tr class="separator:ab88cec3fe8886fdd4a43ad395d93bf37"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a31933f9a3effa0badd31dc02fefed891"><td class="memItemLeft" align="right" valign="top"><a id="a31933f9a3effa0badd31dc02fefed891" name="a31933f9a3effa0badd31dc02fefed891"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>const_reverse_partition_iterator</b> = <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">data_structures::const_reverse_partition_iterator</a>&lt; Traits, size_type &gt;</td></tr>
-<tr class="separator:a31933f9a3effa0badd31dc02fefed891"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a86995f04e44edd9bac6494669676dff1"><td class="memItemLeft" align="right" valign="top"><a id="a86995f04e44edd9bac6494669676dff1" name="a86995f04e44edd9bac6494669676dff1"></a>
+<tr class="separator:ae687df3c4d59d3f136ff7469de934dd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a842c9ac528572eb9bc4080a1b689f71f"><td class="memItemLeft" align="right" valign="top"><a id="a842c9ac528572eb9bc4080a1b689f71f" name="a842c9ac528572eb9bc4080a1b689f71f"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>allocator_type</b> = typename container_type::allocator_type</td></tr>
+<tr class="separator:a842c9ac528572eb9bc4080a1b689f71f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3a37f094601caf7a36bf89bc9fecc3c1"><td class="memItemLeft" align="right" valign="top"><a id="a3a37f094601caf7a36bf89bc9fecc3c1" name="a3a37f094601caf7a36bf89bc9fecc3c1"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>partition_iterator</b> = <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">data_structures::partition_iterator</a>&lt; bucket_type, size_type &gt;</td></tr>
+<tr class="separator:a3a37f094601caf7a36bf89bc9fecc3c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a994d1f98d00b4e3387b2c829d9f4a491"><td class="memItemLeft" align="right" valign="top"><a id="a994d1f98d00b4e3387b2c829d9f4a491" name="a994d1f98d00b4e3387b2c829d9f4a491"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>const_partition_iterator</b> = <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">data_structures::const_partition_iterator</a>&lt; bucket_type, size_type &gt;</td></tr>
+<tr class="separator:a994d1f98d00b4e3387b2c829d9f4a491"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a97ca501549e2c931595b0e7116eff2dc"><td class="memItemLeft" align="right" valign="top"><a id="a97ca501549e2c931595b0e7116eff2dc" name="a97ca501549e2c931595b0e7116eff2dc"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>reverse_partition_iterator</b> = <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">data_structures::reverse_partition_iterator</a>&lt; bucket_type, size_type &gt;</td></tr>
+<tr class="separator:a97ca501549e2c931595b0e7116eff2dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4be0510fc9d7d0a20f88ab000523e6cc"><td class="memItemLeft" align="right" valign="top"><a id="a4be0510fc9d7d0a20f88ab000523e6cc" name="a4be0510fc9d7d0a20f88ab000523e6cc"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>const_reverse_partition_iterator</b> = <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">data_structures::const_reverse_partition_iterator</a>&lt; bucket_type, size_type &gt;</td></tr>
+<tr class="separator:a4be0510fc9d7d0a20f88ab000523e6cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac7d9dc00d91bdfabfa0c9a7045297c07"><td class="memItemLeft" align="right" valign="top"><a id="ac7d9dc00d91bdfabfa0c9a7045297c07" name="ac7d9dc00d91bdfabfa0c9a7045297c07"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>partition_range</b> = std::ranges::subrange&lt; <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">partition_iterator</a> &gt;</td></tr>
-<tr class="separator:a86995f04e44edd9bac6494669676dff1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa6f3e38aa3bdb0ee64d0f3754856b7a8"><td class="memItemLeft" align="right" valign="top"><a id="aa6f3e38aa3bdb0ee64d0f3754856b7a8" name="aa6f3e38aa3bdb0ee64d0f3754856b7a8"></a>
+<tr class="separator:ac7d9dc00d91bdfabfa0c9a7045297c07"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a714ca9195c6e65646b7060c3f4515d09"><td class="memItemLeft" align="right" valign="top"><a id="a714ca9195c6e65646b7060c3f4515d09" name="a714ca9195c6e65646b7060c3f4515d09"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>const_partition_range</b> = std::ranges::subrange&lt; <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_partition_iterator</a> &gt;</td></tr>
-<tr class="separator:aa6f3e38aa3bdb0ee64d0f3754856b7a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a714ca9195c6e65646b7060c3f4515d09"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:abf08b081c6729994b3a8d10ffc6bb2db"><td class="memItemLeft" align="right" valign="top"><a id="abf08b081c6729994b3a8d10ffc6bb2db" name="abf08b081c6729994b3a8d10ffc6bb2db"></a>
+<tr class="memitem:ad260e2656533d9ecd9b325e914a29a7f"><td class="memItemLeft" align="right" valign="top"><a id="ad260e2656533d9ecd9b325e914a29a7f" name="ad260e2656533d9ecd9b325e914a29a7f"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>bucketed_sequence</b> (const allocator_type &amp;allocator) noexcept</td></tr>
-<tr class="separator:abf08b081c6729994b3a8d10ffc6bb2db"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abcb065070a426e17ab5a386abcbe6c30"><td class="memItemLeft" align="right" valign="top"><a id="abcb065070a426e17ab5a386abcbe6c30" name="abcb065070a426e17ab5a386abcbe6c30"></a>
+<tr class="separator:ad260e2656533d9ecd9b325e914a29a7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a149cbf6470348af3ccec498f8f610179"><td class="memItemLeft" align="right" valign="top"><a id="a149cbf6470348af3ccec498f8f610179" name="a149cbf6470348af3ccec498f8f610179"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>bucketed_sequence</b> (std::initializer_list&lt; std::initializer_list&lt; T &gt; &gt; list, const allocator_type &amp;allocator=allocator_type{})</td></tr>
-<tr class="separator:abcb065070a426e17ab5a386abcbe6c30"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a65e46016dfc941cd282d27a4c5832064"><td class="memItemLeft" align="right" valign="top"><a id="a65e46016dfc941cd282d27a4c5832064" name="a65e46016dfc941cd282d27a4c5832064"></a>
+<tr class="separator:a149cbf6470348af3ccec498f8f610179"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afebc1034ac7443880ec5db6ee53f275d"><td class="memItemLeft" align="right" valign="top"><a id="afebc1034ac7443880ec5db6ee53f275d" name="afebc1034ac7443880ec5db6ee53f275d"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>bucketed_sequence</b> (const <a class="el" href="../../d4/db3/classsequoia_1_1data__structures_1_1bucketed__sequence.html">bucketed_sequence</a> &amp;)=default</td></tr>
-<tr class="separator:a65e46016dfc941cd282d27a4c5832064"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a50a87a5e313251428e6dfa41097e627e"><td class="memItemLeft" align="right" valign="top"><a id="a50a87a5e313251428e6dfa41097e627e" name="a50a87a5e313251428e6dfa41097e627e"></a>
+<tr class="separator:afebc1034ac7443880ec5db6ee53f275d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a731490e059c68575442655ba97436db1"><td class="memItemLeft" align="right" valign="top"><a id="a731490e059c68575442655ba97436db1" name="a731490e059c68575442655ba97436db1"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>bucketed_sequence</b> (const <a class="el" href="../../d4/db3/classsequoia_1_1data__structures_1_1bucketed__sequence.html">bucketed_sequence</a> &amp;other, const allocator_type &amp;allocator)</td></tr>
-<tr class="separator:a50a87a5e313251428e6dfa41097e627e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5136f44178901b4acb8c0ede7aede2d1"><td class="memItemLeft" align="right" valign="top"><a id="a5136f44178901b4acb8c0ede7aede2d1" name="a5136f44178901b4acb8c0ede7aede2d1"></a>
+<tr class="separator:a731490e059c68575442655ba97436db1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a613ad387cb54742a92e4a8030d3fff22"><td class="memItemLeft" align="right" valign="top"><a id="a613ad387cb54742a92e4a8030d3fff22" name="a613ad387cb54742a92e4a8030d3fff22"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>bucketed_sequence</b> (<a class="el" href="../../d4/db3/classsequoia_1_1data__structures_1_1bucketed__sequence.html">bucketed_sequence</a> &amp;&amp;) noexcept=default</td></tr>
-<tr class="separator:a5136f44178901b4acb8c0ede7aede2d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a42aed37f26aaed8d1c6e7abcbadf602e"><td class="memItemLeft" align="right" valign="top"><a id="a42aed37f26aaed8d1c6e7abcbadf602e" name="a42aed37f26aaed8d1c6e7abcbadf602e"></a>
+<tr class="separator:a613ad387cb54742a92e4a8030d3fff22"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4f8ca0eff619dff32f6b64bbc185889b"><td class="memItemLeft" align="right" valign="top"><a id="a4f8ca0eff619dff32f6b64bbc185889b" name="a4f8ca0eff619dff32f6b64bbc185889b"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>bucketed_sequence</b> (<a class="el" href="../../d4/db3/classsequoia_1_1data__structures_1_1bucketed__sequence.html">bucketed_sequence</a> &amp;&amp;other, const allocator_type &amp;allocator)</td></tr>
-<tr class="separator:a42aed37f26aaed8d1c6e7abcbadf602e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a31dd790f45ad7b69b0a7ace71c58ea2a"><td class="memItemLeft" align="right" valign="top"><a id="a31dd790f45ad7b69b0a7ace71c58ea2a" name="a31dd790f45ad7b69b0a7ace71c58ea2a"></a>
+<tr class="separator:a4f8ca0eff619dff32f6b64bbc185889b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a021bbad676998e438b03091d6a077873"><td class="memItemLeft" align="right" valign="top"><a id="a021bbad676998e438b03091d6a077873" name="a021bbad676998e438b03091d6a077873"></a>
 <a class="el" href="../../d4/db3/classsequoia_1_1data__structures_1_1bucketed__sequence.html">bucketed_sequence</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="../../d4/db3/classsequoia_1_1data__structures_1_1bucketed__sequence.html">bucketed_sequence</a> &amp;&amp;) noexcept=default</td></tr>
-<tr class="separator:a31dd790f45ad7b69b0a7ace71c58ea2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6b5f4bfc16489c65924d34c96f34febc"><td class="memItemLeft" align="right" valign="top"><a id="a6b5f4bfc16489c65924d34c96f34febc" name="a6b5f4bfc16489c65924d34c96f34febc"></a>
+<tr class="separator:a021bbad676998e438b03091d6a077873"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab10dec0c78c3cd6f1c280818e7c52389"><td class="memItemLeft" align="right" valign="top"><a id="ab10dec0c78c3cd6f1c280818e7c52389" name="ab10dec0c78c3cd6f1c280818e7c52389"></a>
 <a class="el" href="../../d4/db3/classsequoia_1_1data__structures_1_1bucketed__sequence.html">bucketed_sequence</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="../../d4/db3/classsequoia_1_1data__structures_1_1bucketed__sequence.html">bucketed_sequence</a> &amp;)=default</td></tr>
-<tr class="separator:a6b5f4bfc16489c65924d34c96f34febc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3439fbccdaf0ec5e15742a03dfd98ae9"><td class="memItemLeft" align="right" valign="top"><a id="a3439fbccdaf0ec5e15742a03dfd98ae9" name="a3439fbccdaf0ec5e15742a03dfd98ae9"></a>
+<tr class="separator:ab10dec0c78c3cd6f1c280818e7c52389"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6f1ff5cd7dd3195eee98f217e4ba9fac"><td class="memItemLeft" align="right" valign="top"><a id="a6f1ff5cd7dd3195eee98f217e4ba9fac" name="a6f1ff5cd7dd3195eee98f217e4ba9fac"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>swap</b> (<a class="el" href="../../d4/db3/classsequoia_1_1data__structures_1_1bucketed__sequence.html">bucketed_sequence</a> &amp;other) noexcept(noexcept(std::ranges::swap(this-&gt;m_Buckets, other.m_Buckets)))</td></tr>
-<tr class="separator:a3439fbccdaf0ec5e15742a03dfd98ae9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0e3de8155e73a5b117c425a06ef01653"><td class="memItemLeft" align="right" valign="top"><a id="a0e3de8155e73a5b117c425a06ef01653" name="a0e3de8155e73a5b117c425a06ef01653"></a>
+<tr class="separator:a6f1ff5cd7dd3195eee98f217e4ba9fac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9ee6c33f6d7dc5a44d91d26f690a4908"><td class="memItemLeft" align="right" valign="top"><a id="a9ee6c33f6d7dc5a44d91d26f690a4908" name="a9ee6c33f6d7dc5a44d91d26f690a4908"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>empty</b> () const noexcept</td></tr>
-<tr class="separator:a0e3de8155e73a5b117c425a06ef01653"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a13c66dbb773f3481c7a53edaf68f35a7"><td class="memItemLeft" align="right" valign="top"><a id="a13c66dbb773f3481c7a53edaf68f35a7" name="a13c66dbb773f3481c7a53edaf68f35a7"></a>
+<tr class="separator:a9ee6c33f6d7dc5a44d91d26f690a4908"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7321548973c12b36a028d72fa9a61ec6"><td class="memItemLeft" align="right" valign="top"><a id="a7321548973c12b36a028d72fa9a61ec6" name="a7321548973c12b36a028d72fa9a61ec6"></a>
 size_type&#160;</td><td class="memItemRight" valign="bottom"><b>size</b> () const</td></tr>
-<tr class="separator:a13c66dbb773f3481c7a53edaf68f35a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a27fda1360d76509dba014880b113d219"><td class="memItemLeft" align="right" valign="top"><a id="a27fda1360d76509dba014880b113d219" name="a27fda1360d76509dba014880b113d219"></a>
+<tr class="separator:a7321548973c12b36a028d72fa9a61ec6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e5499d0bc7ac3ac5ff3b63953b1898c"><td class="memItemLeft" align="right" valign="top"><a id="a2e5499d0bc7ac3ac5ff3b63953b1898c" name="a2e5499d0bc7ac3ac5ff3b63953b1898c"></a>
 size_type&#160;</td><td class="memItemRight" valign="bottom"><b>size_of_partition</b> (size_type i) const</td></tr>
-<tr class="separator:a27fda1360d76509dba014880b113d219"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adb9f9275ce8f6f11a468d8026b9ddb74"><td class="memItemLeft" align="right" valign="top"><a id="adb9f9275ce8f6f11a468d8026b9ddb74" name="adb9f9275ce8f6f11a468d8026b9ddb74"></a>
+<tr class="separator:a2e5499d0bc7ac3ac5ff3b63953b1898c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab29fb26479969f1c62ef1160776a6e0c"><td class="memItemLeft" align="right" valign="top"><a id="ab29fb26479969f1c62ef1160776a6e0c" name="ab29fb26479969f1c62ef1160776a6e0c"></a>
 size_type&#160;</td><td class="memItemRight" valign="bottom"><b>num_partitions</b> () const noexcept</td></tr>
-<tr class="separator:adb9f9275ce8f6f11a468d8026b9ddb74"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae614510b4b1a80235eedc2cbe9d2c805"><td class="memItemLeft" align="right" valign="top"><a id="ae614510b4b1a80235eedc2cbe9d2c805" name="ae614510b4b1a80235eedc2cbe9d2c805"></a>
+<tr class="separator:ab29fb26479969f1c62ef1160776a6e0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a06382783ca21b660d8931803ae5a0263"><td class="memItemLeft" align="right" valign="top"><a id="a06382783ca21b660d8931803ae5a0263" name="a06382783ca21b660d8931803ae5a0263"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>swap_partitions</b> (const size_type i, const size_type j)</td></tr>
-<tr class="separator:ae614510b4b1a80235eedc2cbe9d2c805"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1cd90bc530ba524e5ba99933cd973f1e"><td class="memItemLeft" align="right" valign="top"><a id="a1cd90bc530ba524e5ba99933cd973f1e" name="a1cd90bc530ba524e5ba99933cd973f1e"></a>
+<tr class="separator:a06382783ca21b660d8931803ae5a0263"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a57aa0fea9930239cb85fb5ecd7a409af"><td class="memItemLeft" align="right" valign="top"><a id="a57aa0fea9930239cb85fb5ecd7a409af" name="a57aa0fea9930239cb85fb5ecd7a409af"></a>
 allocator_type&#160;</td><td class="memItemRight" valign="bottom"><b>get_allocator</b> () const</td></tr>
-<tr class="separator:a1cd90bc530ba524e5ba99933cd973f1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af405d5742e2d80a5df3d41e3c8a27f29"><td class="memItemLeft" align="right" valign="top"><a id="af405d5742e2d80a5df3d41e3c8a27f29" name="af405d5742e2d80a5df3d41e3c8a27f29"></a>
+<tr class="separator:a57aa0fea9930239cb85fb5ecd7a409af"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3626522194659dddd397e09f29f851f3"><td class="memItemLeft" align="right" valign="top"><a id="a3626522194659dddd397e09f29f851f3" name="a3626522194659dddd397e09f29f851f3"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>add_slot</b> ()</td></tr>
-<tr class="separator:af405d5742e2d80a5df3d41e3c8a27f29"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaeb49cc31c1eced779d646fab9f90d39"><td class="memItemLeft" align="right" valign="top"><a id="aaeb49cc31c1eced779d646fab9f90d39" name="aaeb49cc31c1eced779d646fab9f90d39"></a>
+<tr class="separator:a3626522194659dddd397e09f29f851f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af66098d6f685a058cfe9f031a3263a3b"><td class="memItemLeft" align="right" valign="top"><a id="af66098d6f685a058cfe9f031a3263a3b" name="af66098d6f685a058cfe9f031a3263a3b"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>insert_slot</b> (const size_type pos)</td></tr>
-<tr class="separator:aaeb49cc31c1eced779d646fab9f90d39"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae6464931750ce0f6b480ebe407529f89"><td class="memItemLeft" align="right" valign="top"><a id="ae6464931750ce0f6b480ebe407529f89" name="ae6464931750ce0f6b480ebe407529f89"></a>
+<tr class="separator:af66098d6f685a058cfe9f031a3263a3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a25d7f4f4d4ab65d39a1c387ee4ef577c"><td class="memItemLeft" align="right" valign="top"><a id="a25d7f4f4d4ab65d39a1c387ee4ef577c" name="a25d7f4f4d4ab65d39a1c387ee4ef577c"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>erase_slot</b> (const size_type n)</td></tr>
-<tr class="separator:ae6464931750ce0f6b480ebe407529f89"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a39b0c4ba0061a6f5a1a919d7ddf75ebf"><td class="memItemLeft" align="right" valign="top"><a id="a39b0c4ba0061a6f5a1a919d7ddf75ebf" name="a39b0c4ba0061a6f5a1a919d7ddf75ebf"></a>
+<tr class="separator:a25d7f4f4d4ab65d39a1c387ee4ef577c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a020907f57d00993d5fef43dbf195fd23"><td class="memItemLeft" align="right" valign="top"><a id="a020907f57d00993d5fef43dbf195fd23" name="a020907f57d00993d5fef43dbf195fd23"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>reserve_partition</b> (const size_type partition, const size_type size)</td></tr>
-<tr class="separator:a39b0c4ba0061a6f5a1a919d7ddf75ebf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aec513e484540eb68fd1bf0f7711ec7a7"><td class="memItemLeft" align="right" valign="top"><a id="aec513e484540eb68fd1bf0f7711ec7a7" name="aec513e484540eb68fd1bf0f7711ec7a7"></a>
+<tr class="separator:a020907f57d00993d5fef43dbf195fd23"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4f0f8f1a76d8f1c7017eea11b892e348"><td class="memItemLeft" align="right" valign="top"><a id="a4f0f8f1a76d8f1c7017eea11b892e348" name="a4f0f8f1a76d8f1c7017eea11b892e348"></a>
 size_type&#160;</td><td class="memItemRight" valign="bottom"><b>partition_capacity</b> (const size_type partition) const</td></tr>
-<tr class="separator:aec513e484540eb68fd1bf0f7711ec7a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a22c3146b0f69c4d3195ca2031ce4ad79"><td class="memItemLeft" align="right" valign="top"><a id="a22c3146b0f69c4d3195ca2031ce4ad79" name="a22c3146b0f69c4d3195ca2031ce4ad79"></a>
+<tr class="separator:a4f0f8f1a76d8f1c7017eea11b892e348"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae54f5134124460914403e42db912a354"><td class="memItemLeft" align="right" valign="top"><a id="ae54f5134124460914403e42db912a354" name="ae54f5134124460914403e42db912a354"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>reserve_partitions</b> (const size_type numPartitions)</td></tr>
-<tr class="separator:a22c3146b0f69c4d3195ca2031ce4ad79"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8403ae942db32ba3fec230f4ace16f8e"><td class="memItemLeft" align="right" valign="top"><a id="a8403ae942db32ba3fec230f4ace16f8e" name="a8403ae942db32ba3fec230f4ace16f8e"></a>
+<tr class="separator:ae54f5134124460914403e42db912a354"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a43edadc56a3bf86b961dca6582f2934c"><td class="memItemLeft" align="right" valign="top"><a id="a43edadc56a3bf86b961dca6582f2934c" name="a43edadc56a3bf86b961dca6582f2934c"></a>
 size_type&#160;</td><td class="memItemRight" valign="bottom"><b>num_partitions_capacity</b> () const noexcept</td></tr>
-<tr class="separator:a8403ae942db32ba3fec230f4ace16f8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3780b0187af97bf25ef11a5f34510ec7"><td class="memItemLeft" align="right" valign="top"><a id="a3780b0187af97bf25ef11a5f34510ec7" name="a3780b0187af97bf25ef11a5f34510ec7"></a>
+<tr class="separator:a43edadc56a3bf86b961dca6582f2934c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af176843919865e299cc4f5d1edb3d535"><td class="memItemLeft" align="right" valign="top"><a id="af176843919865e299cc4f5d1edb3d535" name="af176843919865e299cc4f5d1edb3d535"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>shrink_num_partitions_to_fit</b> ()</td></tr>
-<tr class="separator:a3780b0187af97bf25ef11a5f34510ec7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa8f633170777c51751b3b293d2506800"><td class="memItemLeft" align="right" valign="top"><a id="aa8f633170777c51751b3b293d2506800" name="aa8f633170777c51751b3b293d2506800"></a>
+<tr class="separator:af176843919865e299cc4f5d1edb3d535"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a290a460e03505ad335e3e70f5c05ef8b"><td class="memItemLeft" align="right" valign="top"><a id="a290a460e03505ad335e3e70f5c05ef8b" name="a290a460e03505ad335e3e70f5c05ef8b"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>shrink_to_fit</b> (const size_type partition)</td></tr>
-<tr class="separator:aa8f633170777c51751b3b293d2506800"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a31e2be75e50a43a8fc22cbc7587894c5"><td class="memItemLeft" align="right" valign="top"><a id="a31e2be75e50a43a8fc22cbc7587894c5" name="a31e2be75e50a43a8fc22cbc7587894c5"></a>
+<tr class="separator:a290a460e03505ad335e3e70f5c05ef8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab97aac8c40eb64d4141c052898c424d4"><td class="memItemLeft" align="right" valign="top"><a id="ab97aac8c40eb64d4141c052898c424d4" name="ab97aac8c40eb64d4141c052898c424d4"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>shrink_to_fit</b> ()</td></tr>
-<tr class="separator:a31e2be75e50a43a8fc22cbc7587894c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a75f6a64697b87bf5bfdb84274942c04e"><td class="memItemLeft" align="right" valign="top"><a id="a75f6a64697b87bf5bfdb84274942c04e" name="a75f6a64697b87bf5bfdb84274942c04e"></a>
+<tr class="separator:ab97aac8c40eb64d4141c052898c424d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a12df7bd1e7633706fe05539e17d84d36"><td class="memItemLeft" align="right" valign="top"><a id="a12df7bd1e7633706fe05539e17d84d36" name="a12df7bd1e7633706fe05539e17d84d36"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>clear</b> () noexcept</td></tr>
-<tr class="separator:a75f6a64697b87bf5bfdb84274942c04e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a931ccc649132c2653b00a3b7d0dc4795"><td class="memTemplParams" colspan="2"><a id="a931ccc649132c2653b00a3b7d0dc4795" name="a931ccc649132c2653b00a3b7d0dc4795"></a>
+<tr class="separator:a12df7bd1e7633706fe05539e17d84d36"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a49dbb2c52b8fa79adc7a419671c8f4c8"><td class="memTemplParams" colspan="2"><a id="a49dbb2c52b8fa79adc7a419671c8f4c8" name="a49dbb2c52b8fa79adc7a419671c8f4c8"></a>
 template&lt;class... Args&gt; </td></tr>
-<tr class="memitem:a931ccc649132c2653b00a3b7d0dc4795"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>push_back_to_partition</b> (const size_type index, Args &amp;&amp;... args)</td></tr>
-<tr class="separator:a931ccc649132c2653b00a3b7d0dc4795"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a19488258dcba1113c4783b0e9d2756f2"><td class="memTemplParams" colspan="2"><a id="a19488258dcba1113c4783b0e9d2756f2" name="a19488258dcba1113c4783b0e9d2756f2"></a>
+<tr class="memitem:a49dbb2c52b8fa79adc7a419671c8f4c8"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>push_back_to_partition</b> (const size_type index, Args &amp;&amp;... args)</td></tr>
+<tr class="separator:a49dbb2c52b8fa79adc7a419671c8f4c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3b9af6f58b2c14421e2aeb09940c5da7"><td class="memTemplParams" colspan="2"><a id="a3b9af6f58b2c14421e2aeb09940c5da7" name="a3b9af6f58b2c14421e2aeb09940c5da7"></a>
 template&lt;class... Args&gt; </td></tr>
-<tr class="memitem:a19488258dcba1113c4783b0e9d2756f2"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">partition_iterator</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>insert_to_partition</b> (<a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_partition_iterator</a> pos, Args &amp;&amp;... args)</td></tr>
-<tr class="separator:a19488258dcba1113c4783b0e9d2756f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af9c5560420c503517e11e865f42caefc"><td class="memTemplParams" colspan="2"><a id="af9c5560420c503517e11e865f42caefc" name="af9c5560420c503517e11e865f42caefc"></a>
+<tr class="memitem:a3b9af6f58b2c14421e2aeb09940c5da7"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">partition_iterator</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>insert_to_partition</b> (<a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_partition_iterator</a> pos, Args &amp;&amp;... args)</td></tr>
+<tr class="separator:a3b9af6f58b2c14421e2aeb09940c5da7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af6b1c68570e76a14ccb53aea32e1c0b2"><td class="memTemplParams" colspan="2"><a id="af6b1c68570e76a14ccb53aea32e1c0b2" name="af6b1c68570e76a14ccb53aea32e1c0b2"></a>
 template&lt;class... Args&gt; </td></tr>
-<tr class="memitem:af9c5560420c503517e11e865f42caefc"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">partition_iterator</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>insert_to_partition</b> (const size_type index, const size_type pos, Args &amp;&amp;... args)</td></tr>
-<tr class="separator:af9c5560420c503517e11e865f42caefc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad6392ee460282649ae719cd184b2139a"><td class="memItemLeft" align="right" valign="top"><a id="ad6392ee460282649ae719cd184b2139a" name="ad6392ee460282649ae719cd184b2139a"></a>
+<tr class="memitem:af6b1c68570e76a14ccb53aea32e1c0b2"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">partition_iterator</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>insert_to_partition</b> (const size_type index, const size_type pos, Args &amp;&amp;... args)</td></tr>
+<tr class="separator:af6b1c68570e76a14ccb53aea32e1c0b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a473b27cceb24f2403412510c68cbeb40"><td class="memItemLeft" align="right" valign="top"><a id="a473b27cceb24f2403412510c68cbeb40" name="a473b27cceb24f2403412510c68cbeb40"></a>
 <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">partition_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>erase_from_partition</b> (<a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_partition_iterator</a> iter)</td></tr>
-<tr class="separator:ad6392ee460282649ae719cd184b2139a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a705cc2b7f6f8ce320861c4ce226eeb95"><td class="memItemLeft" align="right" valign="top"><a id="a705cc2b7f6f8ce320861c4ce226eeb95" name="a705cc2b7f6f8ce320861c4ce226eeb95"></a>
+<tr class="separator:a473b27cceb24f2403412510c68cbeb40"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a83d4738d82e9dd7d3059c21e1265feb9"><td class="memItemLeft" align="right" valign="top"><a id="a83d4738d82e9dd7d3059c21e1265feb9" name="a83d4738d82e9dd7d3059c21e1265feb9"></a>
+<a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">partition_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>erase_from_partition</b> (<a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_partition_iterator</a> first, <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_partition_iterator</a> last)</td></tr>
+<tr class="separator:a83d4738d82e9dd7d3059c21e1265feb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aae718966a866dc184b40aa9d631601b8"><td class="memItemLeft" align="right" valign="top"><a id="aae718966a866dc184b40aa9d631601b8" name="aae718966a866dc184b40aa9d631601b8"></a>
 <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">partition_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>erase_from_partition</b> (const size_type index, const size_type pos)</td></tr>
-<tr class="separator:a705cc2b7f6f8ce320861c4ce226eeb95"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9ed74e1cf6ca226e092d848b70112ac7"><td class="memItemLeft" align="right" valign="top"><a id="a9ed74e1cf6ca226e092d848b70112ac7" name="a9ed74e1cf6ca226e092d848b70112ac7"></a>
+<tr class="separator:aae718966a866dc184b40aa9d631601b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a650c5da35a3a55bc969c5bbb3367e7d8"><td class="memItemLeft" align="right" valign="top"><a id="a650c5da35a3a55bc969c5bbb3367e7d8" name="a650c5da35a3a55bc969c5bbb3367e7d8"></a>
 <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">partition_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>begin_partition</b> (const size_type i)</td></tr>
-<tr class="separator:a9ed74e1cf6ca226e092d848b70112ac7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a23ae58729cf8b568ee458f751cae8b66"><td class="memItemLeft" align="right" valign="top"><a id="a23ae58729cf8b568ee458f751cae8b66" name="a23ae58729cf8b568ee458f751cae8b66"></a>
+<tr class="separator:a650c5da35a3a55bc969c5bbb3367e7d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e374df786d0193ef78a3afd577667f9"><td class="memItemLeft" align="right" valign="top"><a id="a2e374df786d0193ef78a3afd577667f9" name="a2e374df786d0193ef78a3afd577667f9"></a>
 <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">partition_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>end_partition</b> (const size_type i)</td></tr>
-<tr class="separator:a23ae58729cf8b568ee458f751cae8b66"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a83ca8617e4e40224992a6503c236a521"><td class="memItemLeft" align="right" valign="top"><a id="a83ca8617e4e40224992a6503c236a521" name="a83ca8617e4e40224992a6503c236a521"></a>
+<tr class="separator:a2e374df786d0193ef78a3afd577667f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4b2b3dcb39ae6c6bfd949f00a67d764f"><td class="memItemLeft" align="right" valign="top"><a id="a4b2b3dcb39ae6c6bfd949f00a67d764f" name="a4b2b3dcb39ae6c6bfd949f00a67d764f"></a>
 <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_partition_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>begin_partition</b> (const size_type i) const</td></tr>
-<tr class="separator:a83ca8617e4e40224992a6503c236a521"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad188e82755315163ce0f52e445ac9a05"><td class="memItemLeft" align="right" valign="top"><a id="ad188e82755315163ce0f52e445ac9a05" name="ad188e82755315163ce0f52e445ac9a05"></a>
+<tr class="separator:a4b2b3dcb39ae6c6bfd949f00a67d764f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a34c2d0782b950a360c30aaa2f7f12c1e"><td class="memItemLeft" align="right" valign="top"><a id="a34c2d0782b950a360c30aaa2f7f12c1e" name="a34c2d0782b950a360c30aaa2f7f12c1e"></a>
 <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_partition_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>end_partition</b> (const size_type i) const</td></tr>
-<tr class="separator:ad188e82755315163ce0f52e445ac9a05"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a334435ff2bd2e46037968dfc3476f5f2"><td class="memItemLeft" align="right" valign="top"><a id="a334435ff2bd2e46037968dfc3476f5f2" name="a334435ff2bd2e46037968dfc3476f5f2"></a>
+<tr class="separator:a34c2d0782b950a360c30aaa2f7f12c1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ace652e06268f184b61007ccacd926977"><td class="memItemLeft" align="right" valign="top"><a id="ace652e06268f184b61007ccacd926977" name="ace652e06268f184b61007ccacd926977"></a>
 <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">reverse_partition_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>rbegin_partition</b> (const size_type i)</td></tr>
-<tr class="separator:a334435ff2bd2e46037968dfc3476f5f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a77c478ac5c9e0cf9d0b42659bd7bc2e0"><td class="memItemLeft" align="right" valign="top"><a id="a77c478ac5c9e0cf9d0b42659bd7bc2e0" name="a77c478ac5c9e0cf9d0b42659bd7bc2e0"></a>
+<tr class="separator:ace652e06268f184b61007ccacd926977"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a45ea1579cc73dd276291f3406877d41b"><td class="memItemLeft" align="right" valign="top"><a id="a45ea1579cc73dd276291f3406877d41b" name="a45ea1579cc73dd276291f3406877d41b"></a>
 <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">reverse_partition_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>rend_partition</b> (const size_type i)</td></tr>
-<tr class="separator:a77c478ac5c9e0cf9d0b42659bd7bc2e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2af0f3a6e480b14bdd3efac81811d698"><td class="memItemLeft" align="right" valign="top"><a id="a2af0f3a6e480b14bdd3efac81811d698" name="a2af0f3a6e480b14bdd3efac81811d698"></a>
+<tr class="separator:a45ea1579cc73dd276291f3406877d41b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5dad62caad38308afde44e9f046b264c"><td class="memItemLeft" align="right" valign="top"><a id="a5dad62caad38308afde44e9f046b264c" name="a5dad62caad38308afde44e9f046b264c"></a>
 <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_reverse_partition_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>rbegin_partition</b> (const size_type i) const</td></tr>
-<tr class="separator:a2af0f3a6e480b14bdd3efac81811d698"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abbc1f5c782b0edb93affe639bc180a70"><td class="memItemLeft" align="right" valign="top"><a id="abbc1f5c782b0edb93affe639bc180a70" name="abbc1f5c782b0edb93affe639bc180a70"></a>
+<tr class="separator:a5dad62caad38308afde44e9f046b264c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a098b9ec35d8f977424171dd13a971b89"><td class="memItemLeft" align="right" valign="top"><a id="a098b9ec35d8f977424171dd13a971b89" name="a098b9ec35d8f977424171dd13a971b89"></a>
 <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_reverse_partition_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>rend_partition</b> (const size_type i) const</td></tr>
-<tr class="separator:abbc1f5c782b0edb93affe639bc180a70"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6b33c260476943292eee98719b3b63ad"><td class="memItemLeft" align="right" valign="top"><a id="a6b33c260476943292eee98719b3b63ad" name="a6b33c260476943292eee98719b3b63ad"></a>
+<tr class="separator:a098b9ec35d8f977424171dd13a971b89"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6272fd226c4d8c39553c71962b517361"><td class="memItemLeft" align="right" valign="top"><a id="a6272fd226c4d8c39553c71962b517361" name="a6272fd226c4d8c39553c71962b517361"></a>
 <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_partition_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>cbegin_partition</b> (const size_type i) const</td></tr>
-<tr class="separator:a6b33c260476943292eee98719b3b63ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a031a1fdf2d5443324821401869816129"><td class="memItemLeft" align="right" valign="top"><a id="a031a1fdf2d5443324821401869816129" name="a031a1fdf2d5443324821401869816129"></a>
+<tr class="separator:a6272fd226c4d8c39553c71962b517361"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac3144b71b80e796ce426a6a937555f7d"><td class="memItemLeft" align="right" valign="top"><a id="ac3144b71b80e796ce426a6a937555f7d" name="ac3144b71b80e796ce426a6a937555f7d"></a>
 <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_partition_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>cend_partition</b> (const size_type i) const</td></tr>
-<tr class="separator:a031a1fdf2d5443324821401869816129"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abf50313146a8f5e88be9255ca35016fa"><td class="memItemLeft" align="right" valign="top"><a id="abf50313146a8f5e88be9255ca35016fa" name="abf50313146a8f5e88be9255ca35016fa"></a>
+<tr class="separator:ac3144b71b80e796ce426a6a937555f7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a429de778d223ff4d4e18201223caca70"><td class="memItemLeft" align="right" valign="top"><a id="a429de778d223ff4d4e18201223caca70" name="a429de778d223ff4d4e18201223caca70"></a>
 <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_reverse_partition_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>crbegin_partition</b> (const size_type i) const</td></tr>
-<tr class="separator:abf50313146a8f5e88be9255ca35016fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a95187a01f9b643e41c758192f25a2bd7"><td class="memItemLeft" align="right" valign="top"><a id="a95187a01f9b643e41c758192f25a2bd7" name="a95187a01f9b643e41c758192f25a2bd7"></a>
+<tr class="separator:a429de778d223ff4d4e18201223caca70"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1a0eb0b3ab2aaeb107cdde863a50a0b4"><td class="memItemLeft" align="right" valign="top"><a id="a1a0eb0b3ab2aaeb107cdde863a50a0b4" name="a1a0eb0b3ab2aaeb107cdde863a50a0b4"></a>
 <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_reverse_partition_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>crend_partition</b> (const size_type i) const</td></tr>
-<tr class="separator:a95187a01f9b643e41c758192f25a2bd7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab55a4211030c20d641dc275fc5a303ef"><td class="memItemLeft" align="right" valign="top"><a id="ab55a4211030c20d641dc275fc5a303ef" name="ab55a4211030c20d641dc275fc5a303ef"></a>
+<tr class="separator:a1a0eb0b3ab2aaeb107cdde863a50a0b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a79b4b90bcbf249b19ced6ca5e4a9db73"><td class="memItemLeft" align="right" valign="top"><a id="a79b4b90bcbf249b19ced6ca5e4a9db73" name="a79b4b90bcbf249b19ced6ca5e4a9db73"></a>
 partition_range&#160;</td><td class="memItemRight" valign="bottom"><b>partition</b> (const size_type i)</td></tr>
-<tr class="separator:ab55a4211030c20d641dc275fc5a303ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a952d9496c71f1dc3cdbd884fecc9433d"><td class="memItemLeft" align="right" valign="top"><a id="a952d9496c71f1dc3cdbd884fecc9433d" name="a952d9496c71f1dc3cdbd884fecc9433d"></a>
+<tr class="separator:a79b4b90bcbf249b19ced6ca5e4a9db73"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aceb8417f424fd390b5e0dc7d7dbb0472"><td class="memItemLeft" align="right" valign="top"><a id="aceb8417f424fd390b5e0dc7d7dbb0472" name="aceb8417f424fd390b5e0dc7d7dbb0472"></a>
 const_partition_range&#160;</td><td class="memItemRight" valign="bottom"><b>partition</b> (const size_type i) const</td></tr>
-<tr class="separator:a952d9496c71f1dc3cdbd884fecc9433d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a421690084a7c146214630f13f427d72f"><td class="memItemLeft" align="right" valign="top"><a id="a421690084a7c146214630f13f427d72f" name="a421690084a7c146214630f13f427d72f"></a>
+<tr class="separator:aceb8417f424fd390b5e0dc7d7dbb0472"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a76f876233e23478b44e48eac7d1568f5"><td class="memItemLeft" align="right" valign="top"><a id="a76f876233e23478b44e48eac7d1568f5" name="a76f876233e23478b44e48eac7d1568f5"></a>
 const_partition_range&#160;</td><td class="memItemRight" valign="bottom"><b>cpartition</b> (const size_type i) const</td></tr>
-<tr class="separator:a421690084a7c146214630f13f427d72f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8871c600f65d5df7d3cebdf4dd6ea18c"><td class="memItemLeft" align="right" valign="top"><a id="a8871c600f65d5df7d3cebdf4dd6ea18c" name="a8871c600f65d5df7d3cebdf4dd6ea18c"></a>
+<tr class="separator:a76f876233e23478b44e48eac7d1568f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aba798474c2340419f347bc63ab5d9617"><td class="memItemLeft" align="right" valign="top"><a id="aba798474c2340419f347bc63ab5d9617" name="aba798474c2340419f347bc63ab5d9617"></a>
 <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_partition_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>operator[]</b> (const size_type i) const</td></tr>
-<tr class="separator:a8871c600f65d5df7d3cebdf4dd6ea18c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac2a324605804a374a8fb560ae71878d1"><td class="memItemLeft" align="right" valign="top"><a id="ac2a324605804a374a8fb560ae71878d1" name="ac2a324605804a374a8fb560ae71878d1"></a>
+<tr class="separator:aba798474c2340419f347bc63ab5d9617"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aedc97e77f731c3d11f74723fa503437d"><td class="memItemLeft" align="right" valign="top"><a id="aedc97e77f731c3d11f74723fa503437d" name="aedc97e77f731c3d11f74723fa503437d"></a>
 <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">partition_iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>operator[]</b> (const size_type i)</td></tr>
-<tr class="separator:ac2a324605804a374a8fb560ae71878d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a437b5636160e947b5af78e342dff1e79"><td class="memItemLeft" align="right" valign="top"><a id="a437b5636160e947b5af78e342dff1e79" name="a437b5636160e947b5af78e342dff1e79"></a>
+<tr class="separator:aedc97e77f731c3d11f74723fa503437d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeccbd3826e496ff2f7884db1c0478d41"><td class="memItemLeft" align="right" valign="top"><a id="aeccbd3826e496ff2f7884db1c0478d41" name="aeccbd3826e496ff2f7884db1c0478d41"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>reset</b> (const allocator_type &amp;allocator) noexcept</td></tr>
-<tr class="separator:a437b5636160e947b5af78e342dff1e79"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:aeccbd3826e496ff2f7884db1c0478d41"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
-<tr class="memitem:ab534a2e2cbd3e7665a05ec17aad84ef4"><td class="memItemLeft" align="right" valign="top"><a id="ab534a2e2cbd3e7665a05ec17aad84ef4" name="ab534a2e2cbd3e7665a05ec17aad84ef4"></a>
-static constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>throw_on_range_error</b> {Traits::throw_on_range_error}</td></tr>
-<tr class="separator:ab534a2e2cbd3e7665a05ec17aad84ef4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad242a8f8f094377bc8407c8f3533960e"><td class="memItemLeft" align="right" valign="top"><a id="ad242a8f8f094377bc8407c8f3533960e" name="ad242a8f8f094377bc8407c8f3533960e"></a>
+<tr class="memitem:a22af392d11ab995e3c46107ce2e0e45f"><td class="memItemLeft" align="right" valign="top"><a id="a22af392d11ab995e3c46107ce2e0e45f" name="a22af392d11ab995e3c46107ce2e0e45f"></a>
 static constexpr auto&#160;</td><td class="memItemRight" valign="bottom"><b>npos</b> {partition_iterator::npos}</td></tr>
-<tr class="separator:ad242a8f8f094377bc8407c8f3533960e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a22af392d11ab995e3c46107ce2e0e45f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="friends" name="friends"></a>
 Friends</h2></td></tr>
@@ -293,8 +299,8 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const
 <tr class="separator:a97221db296df059ceba3e56af422bfbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><div class="compoundTemplParams">template&lt;class T, class Traits = bucketed_sequence_traits&lt;T&gt;&gt;<br />
-class sequoia::data_structures::bucketed_sequence&lt; T, Traits &gt;</div><p>Storage for partitioned data such that data within each partition is contiguous. </p>
+<div class="textblock"><div class="compoundTemplParams">template&lt;class T, class Container = std::vector&lt;std::vector&lt;T&gt;&gt;&gt;<br />
+class sequoia::data_structures::bucketed_sequence&lt; T, Container &gt;</div><p>Storage for partitioned data such that data within each partition is contiguous. </p>
 </div><hr/>The documentation for this class was generated from the following file:<ul>
 <li>C:/Users/olive/sequoia/Source/sequoia/Core/DataStructures/<a class="el" href="../../d3/d6e/PartitionedData_8hpp_source.html">PartitionedData.hpp</a></li>
 </ul>

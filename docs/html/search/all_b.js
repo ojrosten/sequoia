@@ -66,6 +66,5 @@ var searchData=
   ['moveonlytestcore_2ehpp_63',['MoveOnlyTestCore.hpp',['../de/d25/MoveOnlyTestCore_8hpp.html',1,'']]],
   ['moveonlytestdiagnostics_2ecpp_64',['MoveOnlyTestDiagnostics.cpp',['../dd/d34/MoveOnlyTestDiagnostics_8cpp.html',1,'']]],
   ['moveonlytestdiagnostics_2ehpp_65',['MoveOnlyTestDiagnostics.hpp',['../d3/d25/MoveOnlyTestDiagnostics_8hpp.html',1,'']]],
-  ['moveonlytestdiagnosticsutilities_2ehpp_66',['MoveOnlyTestDiagnosticsUtilities.hpp',['../da/d38/MoveOnlyTestDiagnosticsUtilities_8hpp.html',1,'']]],
-  ['mutable_5freference_67',['mutable_reference',['../da/d63/structsequoia_1_1data__structures_1_1partition__impl_1_1mutable__reference.html',1,'sequoia::data_structures::partition_impl']]]
+  ['moveonlytestdiagnosticsutilities_2ehpp_66',['MoveOnlyTestDiagnosticsUtilities.hpp',['../da/d38/MoveOnlyTestDiagnosticsUtilities_8hpp.html',1,'']]]
 ];

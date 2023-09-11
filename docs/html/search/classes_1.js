@@ -32,10 +32,10 @@ var searchData=
   ['broken_5fserialization_29',['broken_serialization',['../d4/d59/structsequoia_1_1testing_1_1broken__serialization.html',1,'sequoia::testing']]],
   ['broken_5fswap_30',['broken_swap',['../dd/de2/structsequoia_1_1testing_1_1broken__swap.html',1,'sequoia::testing']]],
   ['bucket_5falloc_5fgetter_31',['bucket_alloc_getter',['../db/d0a/structsequoia_1_1testing_1_1bucket__alloc__getter.html',1,'sequoia::testing']]],
-  ['bucketed_5fedge_5fstorage_5ftraits_32',['bucketed_edge_storage_traits',['../dc/d63/structsequoia_1_1maths_1_1bucketed__edge__storage__traits.html',1,'sequoia::maths']]],
+  ['bucketed_5fedge_5fstorage_5fconfig_32',['bucketed_edge_storage_config',['../d5/de5/structsequoia_1_1maths_1_1bucketed__edge__storage__config.html',1,'sequoia::maths']]],
   ['bucketed_5fsequence_33',['bucketed_sequence',['../d4/db3/classsequoia_1_1data__structures_1_1bucketed__sequence.html',1,'sequoia::data_structures']]],
-  ['bucketed_5fsequence_5fregular_5ftest_34',['bucketed_sequence_regular_test',['../dc/dea/classsequoia_1_1testing_1_1bucketed__sequence__regular__test.html',1,'sequoia::testing']]],
-  ['bucketed_5fsequence_5ftraits_35',['bucketed_sequence_traits',['../db/d6e/structsequoia_1_1data__structures_1_1bucketed__sequence__traits.html',1,'sequoia::data_structures']]],
+  ['bucketed_5fsequence_5fallocation_5ftest_34',['bucketed_sequence_allocation_test',['../d3/d89/classsequoia_1_1testing_1_1bucketed__sequence__allocation__test.html',1,'sequoia::testing']]],
+  ['bucketed_5fsequence_5fregular_5ftest_35',['bucketed_sequence_regular_test',['../dc/dea/classsequoia_1_1testing_1_1bucketed__sequence__regular__test.html',1,'sequoia::testing']]],
   ['build_5fpaths_36',['build_paths',['../d2/d9f/classsequoia_1_1testing_1_1build__paths.html',1,'sequoia::testing']]],
   ['build_5fsystem_5fpaths_37',['build_system_paths',['../dd/d31/classsequoia_1_1testing_1_1build__system__paths.html',1,'sequoia::testing']]],
   ['by_5fvalue_38',['by_value',['../da/de1/structsequoia_1_1object_1_1by__value.html',1,'sequoia::object']]]

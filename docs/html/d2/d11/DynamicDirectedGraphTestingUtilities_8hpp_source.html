@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.6"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: C:/Users/olive/sequoia/Tests/Maths/Graph/Directed/DynamicDirectedGraphTestingUtilities.hpp Source File</title>
+<title>Sequoia: C:/Users/olive/sequoia/Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphTestingUtilities.hpp Source File</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -69,7 +69,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="../../dir_33c78a012c8d08979f57a54a07694c46.html">Tests</a></li><li class="navelem"><a class="el" href="../../dir_aa96cc0de0b0796cd1dd387f7c4ac6b1.html">Maths</a></li><li class="navelem"><a class="el" href="../../dir_ee202ea33b06be445714f131deecef64.html">Graph</a></li><li class="navelem"><a class="el" href="../../dir_7f9d75d93ee8ffe3527d0365aceec645.html">Directed</a></li>  </ul>
+<li class="navelem"><a class="el" href="../../dir_33c78a012c8d08979f57a54a07694c46.html">Tests</a></li><li class="navelem"><a class="el" href="../../dir_aa96cc0de0b0796cd1dd387f7c4ac6b1.html">Maths</a></li><li class="navelem"><a class="el" href="../../dir_ee202ea33b06be445714f131deecef64.html">Graph</a></li><li class="navelem"><a class="el" href="../../dir_70b83359d4298e528e99141429e8df7b.html">Dynamic</a></li><li class="navelem"><a class="el" href="../../dir_ca4a9918515eb12e5b612a981a07ba2f.html">Directed</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -84,7 +84,7 @@ $(function() {
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment"></span> </div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &quot;../DynamicGraphTestingUtilities.hpp&quot;</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &quot;<a class="code" href="../../db/daa/DynamicGraphTestingUtilities_8hpp.html">Maths/Graph/Dynamic/DynamicGraphTestingUtilities.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &quot;<a class="code" href="../../d9/daf/RegularTestCore_8hpp.html">sequoia/TestFramework/RegularTestCore.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &quot;<a class="code" href="../../d8/d43/StateTransitionUtilities_8hpp.html">sequoia/TestFramework/StateTransitionUtilities.hpp</a>&quot;</span></div>
@@ -239,13 +239,13 @@ $(function() {
 <div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>  &lt;</div>
 <div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>    <span class="keyword">class </span>EdgeWeight,</div>
 <div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>    <span class="keyword">class </span>NodeWeight,</div>
-<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>    <span class="keyword">class </span>EdgeStorageTraits,</div>
-<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>    <span class="keyword">class </span>NodeWeightStorageTraits</div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>    <span class="keyword">class </span>EdgeStorageConfig,</div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>    <span class="keyword">class </span>NodeWeightStorage</div>
 <div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>  &gt;</div>
 <div class="line"><a id="l00171" name="l00171"></a><span class="lineno"><a class="line" href="../../da/dae/classsequoia_1_1testing_1_1dynamic__directed__graph__operations.html">  171</a></span>  <span class="keyword">class </span><a class="code hl_class" href="../../da/dae/classsequoia_1_1testing_1_1dynamic__directed__graph__operations.html">dynamic_directed_graph_operations</a></div>
 <div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>  {</div>
 <div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>  <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>    <span class="keyword">using </span><a class="code hl_class" href="../../d6/dc1/classsequoia_1_1maths_1_1directed__graph.html">graph_t</a>            = <a class="code hl_class" href="../../d6/dc1/classsequoia_1_1maths_1_1directed__graph.html">maths::directed_graph&lt;EdgeWeight, NodeWeight,EdgeStorageTraits, NodeWeightStorageTraits&gt;</a>;</div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>    <span class="keyword">using </span><a class="code hl_class" href="../../d6/dc1/classsequoia_1_1maths_1_1directed__graph.html">graph_t</a>            = <a class="code hl_class" href="../../d6/dc1/classsequoia_1_1maths_1_1directed__graph.html">maths::directed_graph&lt;EdgeWeight, NodeWeight,EdgeStorageConfig, NodeWeightStorage&gt;</a>;</div>
 <div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>    <span class="keyword">using </span>edge_t             = <span class="keyword">typename</span> graph_t::edge_init_type;</div>
 <div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>    <span class="keyword">using </span>edges_equivalent_t = std::initializer_list&lt;std::initializer_list&lt;edge_t&gt;&gt;;</div>
 <div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>    <span class="keyword">using </span>transition_graph   = <span class="keyword">typename</span> <a class="code hl_class" href="../../d6/dc1/classsequoia_1_1maths_1_1directed__graph.html">transition_checker&lt;graph_t&gt;::transition_graph</a>;</div>
@@ -1753,13 +1753,14 @@ $(function() {
 <div class="line"><a id="l01679" name="l01679"></a><span class="lineno"> 1679</span>  };</div>
 <div class="line"><a id="l01680" name="l01680"></a><span class="lineno"> 1680</span>}</div>
 <div class="ttc" id="aDynamicDirectedGraphTestingUtilities_8hpp_html_a67f77778a2202ee88cd737df08d6f73d"><div class="ttname"><a href="../../d2/d11/DynamicDirectedGraphTestingUtilities_8hpp.html#a67f77778a2202ee88cd737df08d6f73d">sequoia::testing::directed_graph::graph_description</a></div><div class="ttdeci">graph_description</div><div class="ttdoc">Convention: the indices following 'node' - separated by underscores - give the target node of the ass...</div><div class="ttdef"><b>Definition:</b> DynamicDirectedGraphTestingUtilities.hpp:21</div></div>
+<div class="ttc" id="aDynamicGraphTestingUtilities_8hpp_html"><div class="ttname"><a href="../../db/daa/DynamicGraphTestingUtilities_8hpp.html">DynamicGraphTestingUtilities.hpp</a></div></div>
 <div class="ttc" id="aRegularTestCore_8hpp_html"><div class="ttname"><a href="../../d9/daf/RegularTestCore_8hpp.html">RegularTestCore.hpp</a></div><div class="ttdoc">Utilities for checking regular semantics.</div></div>
 <div class="ttc" id="aStateTransitionUtilities_8hpp_html"><div class="ttname"><a href="../../d8/d43/StateTransitionUtilities_8hpp.html">StateTransitionUtilities.hpp</a></div><div class="ttdoc">Facility to define tests via a graph comprising states of an object and transitions between them.</div></div>
-<div class="ttc" id="aclasssequoia_1_1maths_1_1directed__graph_html"><div class="ttname"><a href="../../d6/dc1/classsequoia_1_1maths_1_1directed__graph.html">sequoia::maths::directed_graph</a></div><div class="ttdef"><b>Definition:</b> DynamicGraph.hpp:320</div></div>
+<div class="ttc" id="aclasssequoia_1_1maths_1_1directed__graph_html"><div class="ttname"><a href="../../d6/dc1/classsequoia_1_1maths_1_1directed__graph.html">sequoia::maths::directed_graph</a></div><div class="ttdef"><b>Definition:</b> DynamicGraph.hpp:303</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1basic__test_html"><div class="ttname"><a href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">sequoia::testing::basic_test</a></div><div class="ttdoc">class template from which all concrete tests should derive.</div><div class="ttdef"><b>Definition:</b> FreeTestCore.hpp:140</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1checker_html"><div class="ttname"><a href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">sequoia::testing::checker</a></div><div class="ttdef"><b>Definition:</b> FreeCheckers.hpp:669</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1dynamic__directed__graph__operations_html"><div class="ttname"><a href="../../da/dae/classsequoia_1_1testing_1_1dynamic__directed__graph__operations.html">sequoia::testing::dynamic_directed_graph_operations</a></div><div class="ttdef"><b>Definition:</b> DynamicDirectedGraphTestingUtilities.hpp:172</div></div>
-<div class="ttc" id="astructsequoia_1_1testing_1_1graph__initialization__checker_html"><div class="ttname"><a href="../../d2/d1d/structsequoia_1_1testing_1_1graph__initialization__checker.html">sequoia::testing::graph_initialization_checker</a></div><div class="ttdef"><b>Definition:</b> DynamicGraphTestingUtilities.hpp:180</div></div>
+<div class="ttc" id="astructsequoia_1_1testing_1_1graph__initialization__checker_html"><div class="ttname"><a href="../../d2/d1d/structsequoia_1_1testing_1_1graph__initialization__checker.html">sequoia::testing::graph_initialization_checker</a></div><div class="ttdef"><b>Definition:</b> DynamicGraphTestingUtilities.hpp:173</div></div>
 <div class="ttc" id="astructsequoia_1_1testing_1_1transition__checker_html"><div class="ttname"><a href="../../da/d5a/structsequoia_1_1testing_1_1transition__checker.html">sequoia::testing::transition_checker</a></div><div class="ttdef"><b>Definition:</b> StateTransitionUtilities.hpp:75</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->

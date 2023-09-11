@@ -35,6 +35,5 @@ var searchData=
   ['move_5fonly_5fscoped_5fallocation_5ffalse_5fnegative_5fdiagnostics_32',['move_only_scoped_allocation_false_negative_diagnostics',['../d9/d28/classsequoia_1_1testing_1_1move__only__scoped__allocation__false__negative__diagnostics.html',1,'sequoia::testing']]],
   ['move_5fonly_5fscoped_5fallocation_5ffalse_5fpositive_5fdiagnostics_33',['move_only_scoped_allocation_false_positive_diagnostics',['../d7/da3/classsequoia_1_1testing_1_1move__only__scoped__allocation__false__positive__diagnostics.html',1,'sequoia::testing']]],
   ['move_5fonly_5fstate_5ftransition_5ffalse_5fnegative_5fdiagnostics_34',['move_only_state_transition_false_negative_diagnostics',['../d4/dda/classsequoia_1_1testing_1_1move__only__state__transition__false__negative__diagnostics.html',1,'sequoia::testing']]],
-  ['move_5fonly_5fstate_5ftransition_5ffalse_5fpositive_5fdiagnostics_35',['move_only_state_transition_false_positive_diagnostics',['../dd/da8/classsequoia_1_1testing_1_1move__only__state__transition__false__positive__diagnostics.html',1,'sequoia::testing']]],
-  ['mutable_5freference_36',['mutable_reference',['../da/d63/structsequoia_1_1data__structures_1_1partition__impl_1_1mutable__reference.html',1,'sequoia::data_structures::partition_impl']]]
+  ['move_5fonly_5fstate_5ftransition_5ffalse_5fpositive_5fdiagnostics_35',['move_only_state_transition_false_positive_diagnostics',['../dd/da8/classsequoia_1_1testing_1_1move__only__state__transition__false__positive__diagnostics.html',1,'sequoia::testing']]]
 ];

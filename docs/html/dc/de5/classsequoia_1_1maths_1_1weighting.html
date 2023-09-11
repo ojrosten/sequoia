@@ -90,20 +90,26 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
+<tr class="memitem:a372798b178d0b0e2e7f7f6fd2bdf8a90"><td class="memItemLeft" align="right" valign="top"><a id="a372798b178d0b0e2e7f7f6fd2bdf8a90" name="a372798b178d0b0e2e7f7f6fd2bdf8a90"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>weight_handler_type</b> = WeightHandler</td></tr>
+<tr class="separator:a372798b178d0b0e2e7f7f6fd2bdf8a90"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acca0d0df445f424ccc0d70f3c1fcd129"><td class="memItemLeft" align="right" valign="top"><a id="acca0d0df445f424ccc0d70f3c1fcd129" name="acca0d0df445f424ccc0d70f3c1fcd129"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>weight_type</b> = typename WeightHandler::value_type</td></tr>
 <tr class="separator:acca0d0df445f424ccc0d70f3c1fcd129"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a14dbbd6529a05f42ad0fe14dd9cccca3"><td class="memTemplParams" colspan="2"><a id="a14dbbd6529a05f42ad0fe14dd9cccca3" name="a14dbbd6529a05f42ad0fe14dd9cccca3"></a>
-template&lt;class... Args&gt; <br />
-requires (sizeof...(Args) &gt; 0)</td></tr>
-<tr class="memitem:a14dbbd6529a05f42ad0fe14dd9cccca3"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>weight</b> (Args &amp;&amp;... args)</td></tr>
-<tr class="separator:a14dbbd6529a05f42ad0fe14dd9cccca3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a81ffe8379c5db2fa20d27eb218e6efaf"><td class="memItemLeft" align="right" valign="top"><a id="a81ffe8379c5db2fa20d27eb218e6efaf" name="a81ffe8379c5db2fa20d27eb218e6efaf"></a>
 constexpr const weight_type &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>weight</b> () const noexcept</td></tr>
 <tr class="separator:a81ffe8379c5db2fa20d27eb218e6efaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a72cf0d06e65b8132c100447708872d79"><td class="memItemLeft" align="right" valign="top"><a id="a72cf0d06e65b8132c100447708872d79" name="a72cf0d06e65b8132c100447708872d79"></a>
+constexpr void&#160;</td><td class="memItemRight" valign="bottom"><b>weight</b> (weight_type w)</td></tr>
+<tr class="separator:a72cf0d06e65b8132c100447708872d79"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0bf9396d956c3fb4968a178f4f4684c5"><td class="memTemplParams" colspan="2"><a id="a0bf9396d956c3fb4968a178f4f4684c5" name="a0bf9396d956c3fb4968a178f4f4684c5"></a>
+template&lt;class... Args&gt; <br />
+requires ((sizeof...(Args) &gt; 0) &amp;&amp; is_initializable_v&lt;weight_type, Args...&gt;)</td></tr>
+<tr class="memitem:a0bf9396d956c3fb4968a178f4f4684c5"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>weight</b> (Args &amp;&amp;... args)</td></tr>
+<tr class="separator:a0bf9396d956c3fb4968a178f4f4684c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a264fd14d645131c33c7619c47b5f9737"><td class="memTemplParams" colspan="2"><a id="a264fd14d645131c33c7619c47b5f9737" name="a264fd14d645131c33c7619c47b5f9737"></a>
 template&lt;std::invocable&lt; weight_type &amp; &gt; Fn&gt; </td></tr>
 <tr class="memitem:a264fd14d645131c33c7619c47b5f9737"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::invoke_result_t&lt; Fn, weight_type &amp; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>mutate_weight</b> (Fn fn)</td></tr>
