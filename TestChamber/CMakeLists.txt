@@ -13,14 +13,6 @@ set(TestDir ../Tests)
 
 target_sources(TestChamber PRIVATE 
                ${TestDir}/Experimental/ExperimentalTest.cpp
-               ${TestDir}/Core/DataStructures/BucketedSequenceRegularTest.cpp
-               ${TestDir}/Core/DataStructures/PartitionedDataAllocationTest.cpp
-               ${TestDir}/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp
-               ${TestDir}/Core/DataStructures/StaticPartitionedSequenceTest.cpp
-               ${TestDir}/Core/DataStructures/PartitionIteratorTest.cpp
-               ${TestDir}/Core/DataStructures/PartitionedSequenceRegularTest.cpp
-               ${TestDir}/Core/DataStructures/StaticLinearlyPartitionedSequenceTest.cpp
-               ${TestDir}/Core/DataStructures/StaticLinearlyPartitionedSequenceTestingDiagnostics.cpp
 )
 
 sequoia_finalize_self(TestChamber ${TestDir}/Experimental)
