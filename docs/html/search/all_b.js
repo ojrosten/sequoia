@@ -66,5 +66,6 @@ var searchData=
   ['moveonlytestcore_2ehpp_63',['MoveOnlyTestCore.hpp',['../de/d25/MoveOnlyTestCore_8hpp.html',1,'']]],
   ['moveonlytestdiagnostics_2ecpp_64',['MoveOnlyTestDiagnostics.cpp',['../dd/d34/MoveOnlyTestDiagnostics_8cpp.html',1,'']]],
   ['moveonlytestdiagnostics_2ehpp_65',['MoveOnlyTestDiagnostics.hpp',['../d3/d25/MoveOnlyTestDiagnostics_8hpp.html',1,'']]],
-  ['moveonlytestdiagnosticsutilities_2ehpp_66',['MoveOnlyTestDiagnosticsUtilities.hpp',['../da/d38/MoveOnlyTestDiagnosticsUtilities_8hpp.html',1,'']]]
+  ['moveonlytestdiagnosticsutilities_2ehpp_66',['MoveOnlyTestDiagnosticsUtilities.hpp',['../da/d38/MoveOnlyTestDiagnosticsUtilities_8hpp.html',1,'']]],
+  ['msvc_5fworkarounds_2ehpp_67',['MSVC_Workarounds.hpp',['../dd/d9f/MSVC__Workarounds_8hpp.html',1,'']]]
 ];
