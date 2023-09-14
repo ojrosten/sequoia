@@ -13,12 +13,7 @@
 #include "sequoia/Maths/Graph/StaticGraph.hpp"
 #include "sequoia/TestFramework/StateTransitionUtilities.hpp"
 
-#ifdef _MSC_VER
-#define DODGY_MSVC_CONSTEXPR const
-#else
-#define DODGY_MSVC_CONSTEXPR constexpr
-#endif
-
+#include "../MSVC_Workarounds.hpp"
 
 namespace sequoia::testing
 {

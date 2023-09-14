@@ -15,17 +15,7 @@
 
 #include <complex>
 
-#ifdef _MSC_VER
-#define DODGY_MSVC_CONSTEXPR const
-#else
-#define DODGY_MSVC_CONSTEXPR constexpr
-#endif
-
-#ifdef _MSC_VER
-#define ANOTHER_DODGY_MSVC_CONSTEXPR const
-#else
-#define ANOTHER_DODGY_MSVC_CONSTEXPR constexpr
-#endif
+#include "../MSVC_Workarounds.hpp"
 
 namespace sequoia::testing
 {
