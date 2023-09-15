@@ -63,7 +63,17 @@ namespace sequoia::testing
       }});
 
     check(equality, report_line("Double check"), 6.5, 5.6);
+    check(equality, report_line("Double check with small difference"), 2.1, static_cast<double>(2.1f));
+    check(equality, report_line("Double check with small difference"), -2.1, -static_cast<double>(2.1f));
+    check(equality, report_line("Double check with small difference between absolute value"), 2.1, -static_cast<double>(2.1f));
+    check(equality, report_line("Double check with tiny difference"), 1.0, 1.0 + std::numeric_limits<double>::epsilon());
+    check(equality, report_line("Double check with tiny difference"), -1.0, -1.0 - std::numeric_limits<double>::epsilon());
+    check(equality, report_line("Double check with tiny difference between absolute values"), -1.0, 1.0 + std::numeric_limits<double>::epsilon());
+
     check(equality, report_line("Double check with advice"), 6.5, 5.6, tutor{[](double, double){
+        return "Double, double, toil and trouble";
+      }});
+    check(equality, report_line("Double check with tiny difference and advice"), 1.0, 1.0 + std::numeric_limits<double>::epsilon(), tutor{[](double, double){
         return "Double, double, toil and trouble";
       }});
     check(equality, report_line("Double check with advice for ints ignored"), 6.5, 5.6, tutor{[](int, int) {
@@ -74,6 +84,7 @@ namespace sequoia::testing
      }});
 
     check(equality, report_line("Float check"), 4.2f, -1.7f);
+    check(equality, report_line("Float check with tiny difference"), 1.0f, 1.0f + std::numeric_limits<float>::epsilon());
     check(equality, report_line("Float check with advice"), 4.2f, -1.7f, tutor{[](float, float) {
         return "Float, float, hmmm... doesn't quite work";
       }});

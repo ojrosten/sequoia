@@ -15,6 +15,7 @@
 #include "sequoia/TextProcessing/Indent.hpp"
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
 
+#include <cmath>
 #include <filesystem>
 #include <source_location>
 
@@ -119,10 +120,34 @@ namespace sequoia::testing
   }
 
   template<serializable T>
-    requires (!is_character_v<T> && !std::is_pointer_v<T> && !is_const_pointer_v<T>)
+    requires (!std::is_floating_point_v<T> && !is_character_v<T> && !std::is_pointer_v<T> && !is_const_pointer_v<T>)
   [[nodiscard]]
   std::string prediction_message(const T& obtained, const T& prediction)
   {
+    return default_prediction_message(to_string(obtained), to_string(prediction));
+  }
+
+  template<std::floating_point T>
+  [[nodiscard]]
+  std::string prediction_message(T obtained, T prediction)
+  {
+    if((obtained > T{}) && (prediction > T{}) || ((obtained < T{}) && (prediction < T{})))
+    {
+      if(auto diff{std::abs(obtained - prediction)}; diff < T(1))
+      {
+        const auto precision{1 + static_cast<int>(std::ceil(std::abs(std::log10(diff))))};
+        auto toString{
+          [precision](T val){
+            std::ostringstream os{};
+            os << std::setprecision(precision) << val;
+            return os.str();
+          }
+        };
+
+        return default_prediction_message(toString(obtained), toString(prediction));
+      }
+    }
+
     return default_prediction_message(to_string(obtained), to_string(prediction));
   }
 
