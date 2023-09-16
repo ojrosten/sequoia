@@ -880,7 +880,10 @@ namespace sequoia::testing
           g.set_edge_weight(g.cbegin_edges(0), 1.0);
           g.set_edge_weight(g.cbegin_edges(0) + 1, 2.0);
           g.set_edge_weight(g.cbegin_edges(0) + 2 , 0.0);
-          g.sort_edges(g.cbegin_edges(0), g.cend_edges(1), [](const auto& lhs, const auto& rhs) { return lhs.weight() < rhs.weight(); });
+
+          for(auto i : std::views::iota(0_sz, 2_sz))
+            g.sort_edges(g.cbegin_edges(i), g.cend_edges(i), [](const auto& lhs, const auto& rhs) { return lhs.weight() < rhs.weight(); });
+
           return g;
         }
       );
@@ -893,7 +896,10 @@ namespace sequoia::testing
           g.mutate_edge_weight(g.cbegin_edges(0),     [](double& x){ x += 1.0; });
           g.mutate_edge_weight(g.cbegin_edges(0) + 1, [](double& x){ x += 1.0; });
           g.mutate_edge_weight(g.cbegin_edges(0) + 2, [](double& x){ x -= 2.0; });
-          g.sort_edges(g.cbegin_edges(0), g.cend_edges(1), [](const auto& lhs, const auto& rhs) { return lhs.weight() < rhs.weight(); });
+
+          for(auto i : std::views::iota(0_sz, 2_sz))
+            g.sort_edges(g.cbegin_edges(i), g.cend_edges(i), [](const auto& lhs, const auto& rhs) { return lhs.weight() < rhs.weight(); });
+
           return g;
         }
       );
