@@ -139,7 +139,13 @@ Inconsistent Self Swap
 [double]
 
 
-Tests/Stuff/FooTest.cpp, Line 41
+Tests/Stuff/FooTest.cpp, Line 23
+
+Expected Exception Type:
+[std::runtime_error]
+
+
+Tests/Stuff/FooTest.cpp, Line 43
 
 Comparison performed using:
 [sequoia::testing::value_tester<std::filesystem::path>]

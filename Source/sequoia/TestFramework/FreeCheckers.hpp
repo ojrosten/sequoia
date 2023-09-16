@@ -671,9 +671,7 @@ namespace sequoia::testing
     constexpr static test_mode mode{Mode};
     using logger_type = test_logger<Mode>;
 
-    checker()
-      : Extenders{logger()}...
-    {}
+    checker() : Extenders{logger()}... {}
 
     checker(const checker&)            = delete;
     checker& operator=(const checker&) = delete;
@@ -780,6 +778,12 @@ namespace sequoia::testing
     }
 
     void reset_results() noexcept { logger().reset_results(); }
+
+    [[nodiscard]]
+    bool has_critical_failures() const noexcept
+    {
+      return logger().results().critical_failures > 0;
+    }
   protected:
     checker(checker&& other) noexcept
       : logger_type{static_cast<logger_type&&>(other)}

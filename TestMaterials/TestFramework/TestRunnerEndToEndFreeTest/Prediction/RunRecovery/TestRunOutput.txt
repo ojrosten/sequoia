@@ -2,9 +2,9 @@
 Running tests, synchronously...
 
 Utilities:
-[Execution Time: 31.6us]
+[Execution Time: 21.4us]
 Useful Things:
-[Execution Time: 1.31ms]
+[Execution Time: 1.35ms]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
 	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 21
@@ -17,23 +17,23 @@ Useful Things:
 	=======================================
 
 Bar:
-[Execution Time: 36.4us]
+[Execution Time: 24us]
 Unstable:
-[Execution Time: 8.27ms]
+[Execution Time: 732us]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 Maybe:
-[Execution Time: 44.6us]
+[Execution Time: 44.7us]
 Oldschool:
-[Execution Time: 91.2us]
+[Execution Time: 44.1us]
 Probability:
-[Execution Time: 11.3ms]
+[Execution Time: 12.2ms]
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 39]
 	False Positive Checks:                     2;  Failures:  0
 Foo:
-[Execution Time: 7.67ms]
-	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
+[Execution Time: 7.33ms]
+	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
-	Tests/Stuff/FooTest.cpp, Line 41
+	Tests/Stuff/FooTest.cpp, Line 43
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<std::filesystem::path>]
@@ -53,18 +53,18 @@ Foo:
 	=======================================
 
 Unique Thing:
-[Execution Time: 16.2ms]
+[Execution Time: 14.9ms]
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 35]
 	False Positive Checks:                     2;  Failures:  0
 Container:
-[Execution Time: 51us]
+[Execution Time: 45.1us]
 House:
-[Execution Time: 28.6us]
+[Execution Time: 21.7us]
 
 -----------Grand Totals-----------
-[Total Run Time: 64ms]
-[Execution Time: 45ms]
-	Standard Top Level Checks:                11;  Failures:  2  [Deep checks: 79]
+[Total Run Time: 52.3ms]
+[Execution Time: 36.7ms]
+	Standard Top Level Checks:                12;  Failures:  2  [Deep checks: 80]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
 	False Negative Performance Checks:         0;  Failures:  0

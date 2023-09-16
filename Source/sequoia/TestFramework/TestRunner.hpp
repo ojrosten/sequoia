@@ -194,8 +194,11 @@ namespace sequoia::testing
       {
         auto summary{m_Test.summarize(t.time_elapsed())};
 
-        versioned_write(m_Test.diagnostics_output_filename(), summary.diagnostics_output());
-        versioned_write(m_Test.caught_exceptions_output_filename(), summary.caught_exceptions_output());
+        if(!m_Test.has_critical_failures())
+        {
+          versioned_write(m_Test.diagnostics_output_filename(),       summary.diagnostics_output());
+          versioned_write(m_Test.caught_exceptions_output_filename(), summary.caught_exceptions_output());
+        }
 
         return summary;
       }

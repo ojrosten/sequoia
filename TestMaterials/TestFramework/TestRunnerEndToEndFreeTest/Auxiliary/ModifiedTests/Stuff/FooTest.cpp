@@ -20,6 +20,8 @@ namespace sequoia::testing
 
   void foo_test::run_tests()
   {
+    check_exception_thrown<std::runtime_error>(report_line(""), [](){ throw std::runtime_error{"A happy runtime error!"}; });
+
     namespace fs = std::filesystem;
     for(auto& e : fs::recursive_directory_iterator(working_materials()))
     {
