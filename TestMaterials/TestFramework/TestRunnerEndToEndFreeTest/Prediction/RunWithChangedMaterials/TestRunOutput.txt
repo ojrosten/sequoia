@@ -1,6 +1,6 @@
 
 Analyzing dependencies...
-[24.2ms]
+[29ms]
 
 
 Running tests...
@@ -8,7 +8,7 @@ Running tests...
 Foo:
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 43]
 
-	Tests/Stuff/FooTest.cpp, Line 43
+	Tests/Stuff/FooTest.cpp, Line 41
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<std::filesystem::path>]
@@ -109,8 +109,8 @@ Foo:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 8.23ms]
-[Execution Time: 6.7ms]
+[Total Run Time: 9.14ms]
+[Execution Time: 7.36ms]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 43]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

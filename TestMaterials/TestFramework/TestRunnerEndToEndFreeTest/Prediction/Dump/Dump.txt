@@ -139,13 +139,7 @@ Inconsistent Self Swap
 [double]
 
 
-Tests/Stuff/FooTest.cpp, Line 23
-
-Expected Exception Type:
-[std::runtime_error]
-
-
-Tests/Stuff/FooTest.cpp, Line 43
+Tests/Stuff/FooTest.cpp, Line 41
 
 Comparison performed using:
 [sequoia::testing::value_tester<std::filesystem::path>]
@@ -292,6 +286,12 @@ vs
 C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/RetainedSeqpat/foo2.txt
 
 [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+
+
+Tests/Stuff/FooTest.cpp, Line 42
+
+Expected Exception Type:
+[std::runtime_error]
 
 
 Tests/Utilities/Thing/UniqueThingTestingDiagnostics.cpp, Line 23

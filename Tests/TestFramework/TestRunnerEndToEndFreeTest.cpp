@@ -342,7 +342,9 @@ namespace sequoia::testing
     check(equivalence, report_line(""), working_materials() /= "TestSummaries_1", predictive_materials() /= "TestSummaries_1");
 
     fs::create_directories(working_materials() /= "DiagnosticsOutput_0/Useful_Things");
+    fs::create_directories(working_materials() /= "DiagnosticsOutput_0/Foo");
     fs::copy(generated_project() /= "output/DiagnosticsOutput/Useful_Things", working_materials() /= "DiagnosticsOutput_0/Useful_Things", fs::copy_options::recursive);
+    fs::copy(generated_project() /= "output/DiagnosticsOutput/Foo", working_materials() /= "DiagnosticsOutput_0/Foo", fs::copy_options::recursive);
     check(equivalence, report_line("Diagnostics Output"), working_materials() /= "DiagnosticsOutput_0", predictive_materials() /= "DiagnosticsOutput_0");
 
     //=================== Rerun with prune ===================//
@@ -377,7 +379,7 @@ namespace sequoia::testing
     //=================== Rerun in the presence of an exception ===================//
     // Rename generated_project() / TestMaterials / Stuff / FooTest / WorkingCopy / RepresentativeCases,
     // in order to cause the check in FooTest.cpp to throw, thereby allowing the recovery
-    // mode to be tested.
+    // mode to be tested. Also test that the Exceptions file is not overwritten.
 
     const auto generatedWorkingCopy{generated_project() /= "TestMaterials/Stuff/FooTest/WorkingCopy"};
     fs::copy(generatedWorkingCopy / "RepresentativeCases", generatedWorkingCopy / "RepresentativeCasesTemp", fs::copy_options::recursive);
@@ -388,6 +390,10 @@ namespace sequoia::testing
     fs::create_directory(working_materials() /= "Recovery");
     fs::copy(generated_project() /= "output/Recovery/Recovery.txt", working_materials() /= "Recovery");
     check(equivalence, report_line("Recovery File"), working_materials() /= "Recovery", predictive_materials() /= "Recovery");
+
+    fs::create_directories(working_materials() /= "DiagnosticsOutput_1/Foo");
+    fs::copy(generated_project() /= "output/DiagnosticsOutput/Foo", working_materials() /= "DiagnosticsOutput_1/Foo", fs::copy_options::recursive);
+    check(equivalence, report_line("Diagnostics Output"), working_materials() /= "DiagnosticsOutput_1", predictive_materials() /= "DiagnosticsOutput_1");
 
     //=================== Rerun in the presence of an exception mid-check ===================//
     // Rename generated_project() / TestMaterials / Stuff / FooTest / Prediction / RepresentativeCases,

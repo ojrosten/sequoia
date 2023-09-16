@@ -2,9 +2,9 @@
 Running tests, synchronously...
 
 Utilities:
-[Execution Time: 21.5us]
+[Execution Time: 21.2us]
 Useful Things:
-[Execution Time: 1.32ms]
+[Execution Time: 1.72ms]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
 	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 21
@@ -17,21 +17,21 @@ Useful Things:
 	=======================================
 
 Bar:
-[Execution Time: 26.1us]
+[Execution Time: 38.4us]
 Unstable:
-[Execution Time: 1.02ms]
+[Execution Time: 1.23ms]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 Maybe:
-[Execution Time: 46.3us]
+[Execution Time: 55us]
 Oldschool:
-[Execution Time: 45.5us]
+[Execution Time: 44.7us]
 Probability:
-[Execution Time: 12.4ms]
+[Execution Time: 6.65ms]
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 39]
 	False Positive Checks:                     2;  Failures:  0
 Foo:
-[Execution Time: 3.06ms]
-	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 3]
+[Execution Time: 2.65ms]
+	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 
 ******  Critical Failures:  1  ******
 
@@ -42,7 +42,7 @@ Foo:
 	Exception thrown during last check
 	Last Recorded Message:
 
-	Tests/Stuff/FooTest.cpp, Line 43
+	Tests/Stuff/FooTest.cpp, Line 41
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<std::filesystem::path>]
@@ -52,18 +52,18 @@ Foo:
 	=======================================
 
 Unique Thing:
-[Execution Time: 8.34ms]
+[Execution Time: 3.5ms]
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 35]
 	False Positive Checks:                     2;  Failures:  0
 Container:
-[Execution Time: 44.2us]
+[Execution Time: 69.1us]
 House:
-[Execution Time: 21.6us]
+[Execution Time: 34.7us]
 
 -----------Grand Totals-----------
-[Total Run Time: 41ms]
-[Execution Time: 26.3ms]
-	Standard Top Level Checks:                13;  Failures:  1  [Deep checks: 81]
+[Total Run Time: 33.2ms]
+[Execution Time: 16ms]
+	Standard Top Level Checks:                12;  Failures:  1  [Deep checks: 80]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
 	False Negative Performance Checks:         0;  Failures:  0

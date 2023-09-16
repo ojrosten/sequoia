@@ -2,9 +2,9 @@
 Running tests, synchronously...
 
 Utilities:
-[Execution Time: 21.4us]
+[Execution Time: 26.3us]
 Useful Things:
-[Execution Time: 1.35ms]
+[Execution Time: 1.05ms]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
 	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 21
@@ -17,23 +17,23 @@ Useful Things:
 	=======================================
 
 Bar:
-[Execution Time: 24us]
+[Execution Time: 23.3us]
 Unstable:
-[Execution Time: 732us]
+[Execution Time: 7.31ms]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 Maybe:
-[Execution Time: 44.7us]
+[Execution Time: 45.5us]
 Oldschool:
-[Execution Time: 44.1us]
+[Execution Time: 44.5us]
 Probability:
-[Execution Time: 12.2ms]
+[Execution Time: 3.24ms]
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 39]
 	False Positive Checks:                     2;  Failures:  0
 Foo:
-[Execution Time: 7.33ms]
+[Execution Time: 3.22ms]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
-	Tests/Stuff/FooTest.cpp, Line 43
+	Tests/Stuff/FooTest.cpp, Line 41
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<std::filesystem::path>]
@@ -53,17 +53,17 @@ Foo:
 	=======================================
 
 Unique Thing:
-[Execution Time: 14.9ms]
+[Execution Time: 7.67ms]
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 35]
 	False Positive Checks:                     2;  Failures:  0
 Container:
-[Execution Time: 45.1us]
+[Execution Time: 48.5us]
 House:
-[Execution Time: 21.7us]
+[Execution Time: 33.4us]
 
 -----------Grand Totals-----------
-[Total Run Time: 52.3ms]
-[Execution Time: 36.7ms]
+[Total Run Time: 39.3ms]
+[Execution Time: 22.7ms]
 	Standard Top Level Checks:                12;  Failures:  2  [Deep checks: 80]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
