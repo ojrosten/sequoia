@@ -133,9 +133,10 @@ namespace sequoia::testing
   {
     if((obtained > T{}) && (prediction > T{}) || ((obtained < T{}) && (prediction < T{})))
     {
-      if(auto diff{std::abs(obtained - prediction)}; diff < T(1))
+      const auto diff{std::abs(obtained - prediction)};
+      const auto logDiff{std::log10(diff)}, logScale{std::log10(std::abs(prediction))};
+      if(const auto precision{1 + static_cast<int>(std::ceil(std::abs(logDiff - logScale)))}; precision > 1)
       {
-        const auto precision{1 + static_cast<int>(std::ceil(std::abs(std::log10(diff))))};
         auto toString{
           [precision](T val){
             std::ostringstream os{};

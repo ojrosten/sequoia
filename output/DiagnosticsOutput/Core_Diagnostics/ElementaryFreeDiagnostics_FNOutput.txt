@@ -1,5 +1,5 @@
 False Positive Failure:
-Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 309
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 313
 Boolean test
 
 [bool]
@@ -7,7 +7,7 @@ Boolean test
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 311
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 315
 Integer test
 
 [int]
@@ -15,7 +15,7 @@ Integer test
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 312
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 316
 Double test
 
 [double]
@@ -23,7 +23,7 @@ Double test
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 318
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 322
 Equality of null pointer with itself
 
 [int*]
@@ -31,7 +31,7 @@ Equality of null pointer with itself
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 319
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 323
 Equality of non-null pointer with itself
 
 [int*]
@@ -39,7 +39,7 @@ Equality of non-null pointer with itself
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 320
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 324
 Different pointers pointing to the same values
 
 Comparison performed using:
@@ -50,7 +50,7 @@ Checking for equivalence with:
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 325
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 329
 Built-in arrays of the same length
 
 [int [1]]
@@ -58,7 +58,7 @@ Built-in arrays of the same length
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 366
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 370
 Equality checking
 
 [sequoia::testing::perfectly_normal_type]
@@ -66,7 +66,7 @@ Equality checking
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 331
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 335
 Equivalence checking
 
 Comparison performed using:
@@ -77,7 +77,7 @@ Checking for equivalence with:
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 332
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 336
 Eequivalence checking with advice
 
 Comparison performed using:
@@ -88,7 +88,7 @@ Checking for equivalence with:
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 338
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 342
 Weak equivalence checking
 
 Comparison performed using:
@@ -99,7 +99,7 @@ Checking for weak equivalence with:
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 343
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 347
 Weak equivalence checking with advice
 
 Comparison performed using:
@@ -110,7 +110,7 @@ Checking for weak equivalence with:
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 351
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 355
 Best available for int
 
 [int]
@@ -118,7 +118,7 @@ Best available for int
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 354
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 358
 Best available for only_weakly_checkable
 
 [sequoia::testing::only_weakly_checkable]
@@ -126,7 +126,7 @@ Best available for only_weakly_checkable
 =======================================
 
 False Positive Failure:
-Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 359
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 363
 Best available for only_weakly_checkable
 
 [sequoia::testing::only_weakly_checkable]
