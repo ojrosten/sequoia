@@ -40,12 +40,12 @@ namespace sequoia::maths
     using node_weight_container_type = Container;
     using size_type                  = typename node_weight_container_type::size_type;
 
-    using iterator           = utilities::iterator<typename node_weight_container_type::iterator, utilities::identity_dereference_policy<typename node_weight_container_type::iterator>>;
-    using reverse_iterator   = utilities::iterator<typename node_weight_container_type::reverse_iterator, utilities::identity_dereference_policy<typename node_weight_container_type::reverse_iterator>>;
+    using iterator           = typename node_weight_container_type::iterator;
+    using reverse_iterator   = typename node_weight_container_type::reverse_iterator;
     using node_weights_range = std::ranges::subrange<iterator>;
 
-    using const_iterator           = utilities::iterator<typename node_weight_container_type::const_iterator, utilities::identity_dereference_policy<typename node_weight_container_type::const_iterator>>;
-    using const_reverse_iterator   = utilities::iterator<typename node_weight_container_type::const_reverse_iterator, utilities::identity_dereference_policy<typename node_weight_container_type::const_reverse_iterator>>;
+    using const_iterator           = typename node_weight_container_type::const_iterator;
+    using const_reverse_iterator   = typename node_weight_container_type::const_reverse_iterator;
     using const_node_weights_range = std::ranges::subrange<const_iterator>;
 
     [[nodiscard]]
@@ -239,7 +239,7 @@ namespace sequoia::maths
     template<class... Args>
     const_iterator insert_node(const_iterator pos, Args&&... args)
     {
-      auto iter = m_NodeWeights.emplace(pos.base_iterator(), std::forward<Args>(args)...);
+      auto iter = m_NodeWeights.emplace(pos, std::forward<Args>(args)...);
 
       return cbegin_node_weights() + std::ranges::distance(m_NodeWeights.begin(), iter);
     }
@@ -248,14 +248,14 @@ namespace sequoia::maths
     {
       if(pos == cend_node_weights()) throw std::out_of_range("Attempting to erase a node which does not exist");
 
-      return const_iterator{m_NodeWeights.erase(pos.base_iterator())};
+      return const_iterator{m_NodeWeights.erase(pos)};
     }
 
     const_iterator erase_nodes(const_iterator first, const_iterator last)
     {
       if(first > last) throw std::out_of_range("Attempting to erase a range of nodes with first > last");
 
-      return const_iterator{m_NodeWeights.erase(first.base_iterator(), last.base_iterator())};
+      return const_iterator{m_NodeWeights.erase(first, last)};
     }
 
     void clear() noexcept
