@@ -131,7 +131,7 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string prediction_message(T obtained, T prediction)
   {
-    if((obtained > T{}) && (prediction > T{}) || ((obtained < T{}) && (prediction < T{})))
+    if(((obtained > T{}) && (prediction > T{})) || ((obtained < T{}) && (prediction < T{})))
     {
       const auto diff{std::abs(obtained - prediction)};
       const auto logDiff{std::log10(diff)}, logScale{std::log10(std::abs(prediction))};
