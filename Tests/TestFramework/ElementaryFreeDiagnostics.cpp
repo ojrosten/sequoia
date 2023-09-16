@@ -89,6 +89,7 @@ namespace sequoia::testing
     check(equality, report_line("Float check with tiny difference"), 1.0f, 1.0f + std::numeric_limits<float>::epsilon());
     check(equality, report_line("Float check; small difference, big numbers"), 1000.0f, 1000.1f);
     check(equality, report_line("Float check; small difference, big numbers"), 1000000.f, 1000001.f);
+    check(equality, report_line("Float check; small difference, small numbers"), 1e-3f, 1e-3f+1e-6f);
     check(equality, report_line("Float check with advice"), 4.2f, -1.7f, tutor{[](float, float) {
         return "Float, float, hmmm... doesn't quite work";
       }});
