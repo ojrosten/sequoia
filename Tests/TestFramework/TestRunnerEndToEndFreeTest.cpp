@@ -378,8 +378,8 @@ namespace sequoia::testing
 
     //=================== Rerun in the presence of an exception ===================//
     // Rename generated_project() / TestMaterials / Stuff / FooTest / WorkingCopy / RepresentativeCases,
-    // in order to cause the check in FooTest.cpp to throw, thereby allowing the recovery
-    // mode to be tested. Also test that the Exceptions file is not overwritten.
+    // in order to induce a failure in FooTest.cpp. Recovery mode will cause the final executed check
+    // to be recorded.
 
     const auto generatedWorkingCopy{generated_project() /= "TestMaterials/Stuff/FooTest/WorkingCopy"};
     fs::copy(generatedWorkingCopy / "RepresentativeCases", generatedWorkingCopy / "RepresentativeCasesTemp", fs::copy_options::recursive);
@@ -391,14 +391,10 @@ namespace sequoia::testing
     fs::copy(generated_project() /= "output/Recovery/Recovery.txt", working_materials() /= "Recovery");
     check(equivalence, report_line("Recovery File"), working_materials() /= "Recovery", predictive_materials() /= "Recovery");
 
-    fs::create_directories(working_materials() /= "DiagnosticsOutput_1/Foo");
-    fs::copy(generated_project() /= "output/DiagnosticsOutput/Foo", working_materials() /= "DiagnosticsOutput_1/Foo", fs::copy_options::recursive);
-    check(equivalence, report_line("Diagnostics Output"), working_materials() /= "DiagnosticsOutput_1", predictive_materials() /= "DiagnosticsOutput_1");
-
     //=================== Rerun in the presence of an exception mid-check ===================//
     // Rename generated_project() / TestMaterials / Stuff / FooTest / Prediction / RepresentativeCases,
     // in order to cause the check in FooTest.cpp to throw mid-check, thereby allowing the recovery
-    // mode to be tested.
+    // mode to be tested. Also test that the Exceptions file is not overwritten.
 
     const auto generatedPredictive{generated_project() /= "TestMaterials/Stuff/FooTest/Prediction"};
     fs::copy(generatedPredictive / "RepresentativeCases", generatedPredictive / "RepresentativeCasesTemp", fs::copy_options::recursive);
@@ -409,6 +405,10 @@ namespace sequoia::testing
     fs::create_directory(working_materials() /= "RecoveryMidCheck");
     fs::copy(generated_project() /= "output/Recovery/Recovery.txt", working_materials() /= "RecoveryMidCheck");
     check(equivalence, report_line("Recovery File"), working_materials() /= "RecoveryMidCheck", predictive_materials() /= "RecoveryMidCheck");
+
+    fs::create_directories(working_materials() /= "DiagnosticsOutput_1/Foo");
+    fs::copy(generated_project() /= "output/DiagnosticsOutput/Foo", working_materials() /= "DiagnosticsOutput_1/Foo", fs::copy_options::recursive);
+    check(equivalence, report_line("Diagnostics Output"), working_materials() /= "DiagnosticsOutput_1", predictive_materials() /= "DiagnosticsOutput_1");
 
     //=================== Change one of the failing tests, and 'select' it at the same time as breaking a different test ===================//
 
