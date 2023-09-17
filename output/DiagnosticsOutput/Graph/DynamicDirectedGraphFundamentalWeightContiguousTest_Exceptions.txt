@@ -202,7 +202,7 @@ connectivity::join: at least one node index [0, 0] out of range - graph order is
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 236
+Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 252
 Attempt to set a node weight which does not exist
 
 Expected Exception Type:
@@ -211,7 +211,7 @@ node_storage::set_node_weight - index out of range!
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 246
+Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 262
 Attempt to mutate a node weight which does not exist
 
 Expected Exception Type:
@@ -301,7 +301,7 @@ connectivity::join: at least one node index [0, 1] out of range - graph order is
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 280
+Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 296
 Attempt to set a node weight which does not exist
 
 Expected Exception Type:
@@ -310,7 +310,7 @@ node_storage::set_node_weight - index out of range!
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 290
+Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphWeightedTestingUtilities.hpp, Line 306
 Attempt to mutate a node weight which does not exist
 
 Expected Exception Type:
