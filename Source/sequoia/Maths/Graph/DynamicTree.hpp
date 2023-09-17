@@ -83,6 +83,7 @@ namespace sequoia::maths
 
     using base_type::swap_edges;
     using base_type::sort_edges;
+    using base_type::stable_sort_edges;
     using base_type::swap_nodes;
     using base_type::sort_nodes;
   protected:

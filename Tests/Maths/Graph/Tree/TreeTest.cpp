@@ -71,6 +71,12 @@ namespace sequoia::testing
               t.sort_edges(t.cbegin_edges(0), t.cend_edges(0), [](const auto& l, const auto& r) { return l.target_node() < r.target_node(); });
               return t;
             }
+          },
+          edge_t{4, report_line("Insert node"), [](tree_type t) {
+              t.insert_node(1, 0, -7);
+              t.stable_sort_edges(t.cbegin_edges(0), t.cend_edges(0), [](const auto& l, const auto& r) { return l.target_node() < r.target_node(); });
+              return t;
+            }
           }
         }, // end node 3 edges
         {

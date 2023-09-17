@@ -1406,6 +1406,15 @@ namespace sequoia::testing
               g.sort_edges(g.cbegin_edges(0), g.cend_edges(0), [](const auto& lhs, const auto& rhs) { return lhs.target_node() < rhs.target_node(); });
               return g;
             }
+          },
+          {
+            graph_description::node_1_1_2_2_node_0_0_2_node_0_0_1,
+            t.report_line("Swap nodes {2, 1}"),
+            [](graph_t g) -> graph_t {
+              g.swap_nodes(2,1);
+              g.stable_sort_edges(g.cbegin_edges(0), g.cend_edges(0), [](const auto& lhs, const auto& rhs) { return lhs.target_node() < rhs.target_node(); });
+              return g;
+            }
           }
         }, // end 'node_1_1_2_2_node_0_0_2_node_0_0_1'
         {  // begin 'node_3_1_node_0_2_node_1_node_0'

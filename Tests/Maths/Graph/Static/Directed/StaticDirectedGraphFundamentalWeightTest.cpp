@@ -319,6 +319,14 @@ namespace sequoia::testing
               g.sort_edges(g.cbegin_edges(0), g.cend_edges(0), [](const auto& lhs, const auto& rhs){ return lhs.weight() > rhs.weight(); });
               return g;
             }
+          },
+          {
+            graph_description::node_0y_0x,
+            report_line(""),
+            [this](graph_t g) -> graph_t {
+              g.stable_sort_edges(g.cbegin_edges(0), g.cend_edges(0), [](const auto& lhs, const auto& rhs){ return lhs.weight() > rhs.weight(); });
+              return g;
+            }
           }
         }, // end 'graph_description::nodew_0x_0y'
         {  // begin 'graph_description::nodew_0y_0x'

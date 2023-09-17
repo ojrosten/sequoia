@@ -807,7 +807,7 @@ namespace sequoia
       constexpr void stable_sort_edges(const_edge_iterator begin, const_edge_iterator end, Comparer comp)
         requires ((edge_type::flavour == edge_flavour::partial) && merge_sortable<edge_iterator>)
       {
-        if(begin.partition_index() != end.partition_index())
+        if(begin.partition_index() != end.partition_index()) return;
 
         sequoia::stable_sort(to_edge_iterator(begin), to_edge_iterator(end), comp);
       }

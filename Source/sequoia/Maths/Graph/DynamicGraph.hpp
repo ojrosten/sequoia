@@ -335,6 +335,7 @@ namespace sequoia::maths
     using base_type::erase_edge;
 
     using base_type::sort_edges;
+    using base_type::stable_sort_edges;
     using base_type::swap_edges;
   };
 
@@ -391,6 +392,7 @@ namespace sequoia::maths
     using base_type::erase_edge;
 
     using base_type::sort_edges;
+    using base_type::stable_sort_edges;
     using base_type::swap_edges;
   };
 
