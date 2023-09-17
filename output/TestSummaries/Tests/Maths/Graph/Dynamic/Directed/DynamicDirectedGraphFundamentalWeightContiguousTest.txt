@@ -1,2 +1,2 @@
 Directed Graph Fundamental Weight Contiguous Test
-Standard Top Level Checks:               485;  Failures:  0  [Deep checks: 28435]
+Standard Top Level Checks:               489;  Failures:  0  [Deep checks: 28975]
