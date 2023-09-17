@@ -89,17 +89,17 @@ namespace sequoia::testing
       //    --->
       node_0y_1x_1w_1_node,
 
-      // 5 loops
+      // 18 loops
       // />\
       // \ /
-      //  x  5 edges -> x
-      node_0v_1v_0w_1w_0x_1x_0y_1y_0z_1z_node,
+      //  x  18 edges -> x
+      node_0uuu_1uuu_0vvv_1vvv_0www_1www_0xxx_1xxx_0yyy_1yyy_0zzz_1zzz_node,
 
-      // 5 loops
+      // 18 loops
       // />\
       // \ /
-      //  x  5 edges -> x
-      node_0z_1z_0y_1y_0x_1x_0w_1w_0v_1v_node
+      //  x  18 edges -> x
+      node_0zzz_1zzz_0yyy_1yyy_0xxx_1xxx_0www_1www_0vvv_1vvv_0uuu_1uuu_node
     };
   }
 
@@ -220,11 +220,27 @@ namespace sequoia::testing
       // 'weighted_graph_description::node_0y_1x_1w_1_node'
       trg.add_node(make_and_check(t, t.report_line(""), {{{0, 3.0}, {1, 2.0}, {1, 1.0}, {1, 0.0}}, {}}, {0.0, 0.0}));
 
-      // 'weighted_graph_description::node_0v_1v_0w_1w_0x_1x_0y_1y_0z_1z_node'
-      trg.add_node(make_and_check(t, t.report_line(""), {{{0, -1.0}, {1, -1.0}, {0, 0.0}, {1, 0.0}, {0, 1.0}, {1, 1.0}, {0, 2.0}, {1, 2.0}, {0, 3.0}, {1, 3.0}}, {}}, {0.0, 0.0}));
+      // 'weighted_graph_description::node_0uuu_1uuu_0vvv_1vvv_0www_1www_0xxx_1xxx_0yyy_1yyy_0zzz_1zzz_node'
+      trg.add_node(make_and_check(t, t.report_line(""), {{
+                                                           {0, -2.0}, {0, -2.0}, {0, -2.0}, {1, -2.0}, {1, -2.0}, {1, -2.0},
+                                                           {0, -1.0}, {0, -1.0}, {0, -1.0}, {1, -1.0}, {1, -1.0}, {1, -1.0},
+                                                           {0, 0.0},  {0, 0.0},  {0, 0.0},  {1, 0.0},  {1, 0.0},  {1, 0.0},
+                                                           {0, 1.0},  {0, 1.0},  {0, 1.0},  {1, 1.0},  {1, 1.0},  {1, 1.0},
+                                                           {0, 2.0},  {0, 2.0},  {0, 2.0},  {1, 2.0},  {1, 2.0},  {1, 2.0},
+                                                           {0, 3.0},  {0, 3.0},  {0, 3.0},  {1, 3.0},  {1, 3.0},  {1, 3.0}
+                                                         },
+                                                         {}}, {0.0, 0.0}));
 
-      // 'weighted_graph_description::node_0z_1z_0y_1y_0x_1x_0w_1w_0v_1v_node'
-      trg.add_node(make_and_check(t, t.report_line(""), {{{0, 3.0}, {1, 3.0}, {0, 2.0}, {1, 2.0}, {0, 1.0}, {1, 1.0}, {0, 0.0}, {1, 0.0}, {0, -1.0}, {1, -1.0}}, {}}, {0.0, 0.0}));
+      // 'weighted_graph_description::node_0zzz_1zzz_0yyy_1yyy_0xxx_1xxx_0www_1www_0vvv_1vvv_0uuu_1uuu_node'
+      trg.add_node(make_and_check(t, t.report_line(""), {{
+                                                           {0, 3.0},  {0, 3.0},  {0, 3.0},  {1, 3.0},  {1, 3.0},  {1, 3.0},
+                                                           {0, 2.0},  {0, 2.0},  {0, 2.0},  {1, 2.0},  {1, 2.0},  {1, 2.0},
+                                                           {0, 1.0},  {0, 1.0},  {0, 1.0},  {1, 1.0},  {1, 1.0},  {1, 1.0},
+                                                           {0, 0.0},  {0, 0.0},  {0, 0.0},  {1, 0.0},  {1, 0.0},  {1, 0.0},
+                                                           {0, -1.0}, {0, -1.0}, {0, -1.0}, {1, -1.0}, {1, -1.0}, {1, -1.0},
+                                                           {0, -2.0}, {0, -2.0}, {0, -2.0}, {1, -2.0}, {1, -2.0}, {1, -2.0}
+                                                         },
+                                                         {}}, {0.0, 0.0}));
 
       // begin 'graph_description::empty'
 
@@ -802,8 +818,8 @@ namespace sequoia::testing
       // begin 'weighted_graph_description::node_0z_1z_0y_1y_0x_1x_0w_1w_0v_1v_node'
 
       trg.join(
-        weighted_graph_description::node_0z_1z_0y_1y_0x_1x_0w_1w_0v_1v_node,
-        weighted_graph_description::node_0v_1v_0w_1w_0x_1x_0y_1y_0z_1z_node,
+        weighted_graph_description::node_0zzz_1zzz_0yyy_1yyy_0xxx_1xxx_0www_1www_0vvv_1vvv_0uuu_1uuu_node,
+        weighted_graph_description::node_0uuu_1uuu_0vvv_1vvv_0www_1www_0xxx_1xxx_0yyy_1yyy_0zzz_1zzz_node,
         t.report_line("Sort edges"),
         [](graph_t g) -> graph_t {
           g.stable_sort_edges(g.cbegin_edges(0), g.cend_edges(0), [](const auto& lhs, const auto& rhs) { return lhs.weight() < rhs.weight(); });
