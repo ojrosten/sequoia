@@ -794,22 +794,22 @@ namespace sequoia
         m_Edges.clear();
       }
 
-      template<class Comparer>
-      constexpr void sort_edges(const_edge_iterator begin, const_edge_iterator end, Comparer comp)
-        requires ((edge_type::flavour == edge_flavour::partial) && std::random_access_iterator<edge_iterator>)
+      template<class Comp, class Proj = std::identity>
+      constexpr void sort_edges(const_edge_iterator begin, const_edge_iterator end, Comp comp, Proj proj = {})
+        requires ((edge_type::flavour == edge_flavour::partial) && std::sortable<edge_iterator, Comp, Proj>)
       {
         if(begin.partition_index() != end.partition_index()) return;
 
-        std::ranges::sort(to_edge_iterator(begin), to_edge_iterator(end), comp);
+        std::ranges::sort(to_edge_iterator(begin), to_edge_iterator(end), std::move(comp), std::move(proj));
       }
 
-      template<class Comparer>
-      constexpr void stable_sort_edges(const_edge_iterator begin, const_edge_iterator end, Comparer comp)
+      template<class Comp, class Proj = std::identity>
+      constexpr void stable_sort_edges(const_edge_iterator begin, const_edge_iterator end, Comp comp, Proj proj = {})
         requires ((edge_type::flavour == edge_flavour::partial) && merge_sortable<edge_iterator>)
       {
         if(begin.partition_index() != end.partition_index()) return;
 
-        sequoia::stable_sort(to_edge_iterator(begin), to_edge_iterator(end), comp);
+        sequoia::stable_sort(to_edge_iterator(begin), to_edge_iterator(end), std::move(comp), std::move(proj));
       }
 
     private:

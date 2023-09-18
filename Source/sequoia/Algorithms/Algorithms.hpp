@@ -99,23 +99,23 @@ namespace sequoia
        }
   };
 
-  template<std::input_iterator Iter, std::weakly_incrementable OutIter, class Compare=std::ranges::less>
+  template<std::input_iterator Iter, std::weakly_incrementable OutIter, class Compare = std::ranges::less, class Proj = std::identity>
     requires merge_sortable<Iter>
-  constexpr void stable_sort(Iter first, Iter last, OutIter out, Compare compare= {})
+  constexpr void stable_sort(Iter first, Iter last, OutIter out, Compare compare = {}, Proj proj = {})
   {
     const auto dist{std::ranges::distance(first, last)};
     if(dist < 2) return;
 
     const auto partition{std::ranges::next(first, dist / 2)};
-    stable_sort(first, partition, out, compare);
-    stable_sort(partition, last, std::ranges::next(out, dist / 2), compare);
-    std::ranges::merge(first, partition, partition, last, out, compare);
+    stable_sort(first, partition, out, compare, proj);
+    stable_sort(partition, last, std::ranges::next(out, dist / 2), compare, proj);
+    std::ranges::merge(first, partition, partition, last, out, compare, proj, proj);
     std::ranges::copy(out, std::ranges::next(out, dist), first);
   }
 
-  template<std::input_iterator Iter, class Compare = std::ranges::less>
+  template<std::input_iterator Iter, class Compare = std::ranges::less, class Proj = std::identity>
     requires merge_sortable<Iter>
-  constexpr void stable_sort(Iter first, Iter last, Compare compare = {})
+  constexpr void stable_sort(Iter first, Iter last, Compare compare = {}, Proj proj = {})
   {
     using T = typename std::iterator_traits<Iter>::value_type;
     auto v{
@@ -125,7 +125,7 @@ namespace sequoia
       }()
     };
 
-    stable_sort(first, last, v.begin(), compare);
+    stable_sort(first, last, v.begin(), std::move(compare), std::move(proj));
   }
 
   /// \brief An algorithm which clusters together elements which compare equal.
