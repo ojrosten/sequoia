@@ -9,6 +9,7 @@
 
 
 #include "AlgorithmsTest.hpp"
+#include "../Maths/Graph/Components/Edges/EdgeTestingUtilities.hpp"
 
 #include "sequoia/Algorithms/Algorithms.hpp"
 #include "sequoia/Maths/Graph/Edge.hpp"
@@ -23,24 +24,24 @@ namespace sequoia::testing
     struct unstable{};
     struct stable{};
 
-    template<class T, std::size_t N, class Comparer = std::ranges::less>
-    constexpr std::array<T, N> sort(unstable, std::array<T, N> a, Comparer comp = Comparer{})
+    template<class T, std::size_t N, class Comparer = std::ranges::less, class Proj = std::identity>
+    constexpr std::array<T, N> sort(unstable, std::array<T, N> a, Comparer comp = {}, Proj proj = {})
     {
-      sequoia::sort(std::begin(a), std::end(a), comp);
+      sequoia::sort(std::begin(a), std::end(a), comp, proj);
       return a;
     }
 
-    template<class T, std::size_t N, class Comparer = std::ranges::less>
-    constexpr std::array<T, N> sort(stable, std::array<T, N> a, Comparer comp = Comparer{})
+    template<class T, std::size_t N, class Comparer = std::ranges::less, class Proj = std::identity>
+    constexpr std::array<T, N> sort(stable, std::array<T, N> a, Comparer comp = {}, Proj proj = {})
     {
-      sequoia::stable_sort(std::begin(a), std::end(a), comp);
+      sequoia::stable_sort(std::begin(a), std::end(a), comp, proj);
       return a;
     }
 
-    template<class T, std::size_t N, class Comparer = std::ranges::equal_to>
-    constexpr std::array<T, N> cluster(std::array<T, N> a, Comparer comp = Comparer{})
+    template<class T, std::size_t N, class Comparer = std::ranges::equal_to, class Proj = std::identity>
+    constexpr std::array<T, N> cluster(std::array<T, N> a, Comparer comp = {}, Proj proj = {})
     {
-      sequoia::cluster(std::begin(a), std::end(a), comp);
+      sequoia::cluster(std::begin(a), std::end(a), comp, proj);
       return a;
     }
   }
@@ -61,6 +62,7 @@ namespace sequoia::testing
     stable_sort_stability();
 
     cluster_basic_type();
+    cluster_partial_edge();
   }
    
   template<class Stability>
@@ -116,19 +118,35 @@ namespace sequoia::testing
   {
     struct null_type{};
     using edge = maths::partial_edge<object::by_value<null_type>, maths::null_meta_data>;
-    constexpr std::array<edge, 3> a{edge{1}, edge{2}, edge{0}};
-    constexpr auto b = sort(stability, a, [](const edge& lhs, const edge& rhs) { return lhs.target_node() < rhs.target_node(); });
+    constexpr std::array<edge, 3> a{edge{1}, edge{2}, edge{0}}, prediction{edge{0}, edge{1}, edge{2}};
 
-    for(std::size_t i{}; i < 3; ++i)
-      check(equality, report_line("Check array of partial edges, element " + std::to_string(i)), b[i].target_node(), i);
+    {
+      constexpr auto b = sort(stability, a, [](const edge& lhs, const edge& rhs) { return lhs.target_node() < rhs.target_node(); });
+      check(equality, report_line(""), b, prediction);
+    }
+
+    {
+      constexpr auto b = sort(stability, a, std::ranges::less{}, [](const edge& e) { return e.target_node(); });
+      check(equality, report_line(""), b, prediction);
+    }
   }
 
   void algorithms_test::stable_sort_stability()
   {
     using pair_t = std::pair<int, int>;
-    constexpr std::array<pair_t, 10> a{pair_t{5,1}, {5,2}, {4,1}, {4,0}, {6, -1}, {6,-2}, {6, 0}, {2,0}, {2,-1}, {2,2}};
-    constexpr auto b = sort(stable{}, a, [](const pair_t& lhs, const pair_t& rhs){ return lhs.first < rhs.first; });
-    check(equality, report_line("Stable sort"), b, {pair_t{2,0}, {2,-1}, {2,2}, {4,1}, {4,0}, {5,1}, {5,2}, {6, -1}, {6,-2},{6, 0}});
+    constexpr std::array<pair_t, 10>
+      a{pair_t{5,1}, {5,2}, {4,1}, {4,0}, {6, -1}, {6,-2}, {6, 0}, {2,0}, {2,-1}, {2,2}},
+      prediction{pair_t{2,0}, {2,-1}, {2,2}, {4,1}, {4,0}, {5,1}, {5,2}, {6, -1}, {6,-2},{6, 0}};
+
+    {
+      constexpr auto b = sort(stable{}, a, [](const pair_t& lhs, const pair_t& rhs){ return lhs.first < rhs.first; });
+      check(equality, report_line("Stable sort"), b, prediction);
+    }
+
+    {
+      constexpr auto b = sort(stable{}, a, std::ranges::less{}, [](const pair_t& p){ return p.first; });
+      check(equality, report_line("Stable sort"), b, prediction);
+    }
   }
 
   void algorithms_test::cluster_basic_type()
@@ -137,6 +155,25 @@ namespace sequoia::testing
       constexpr std::array<int, 9> a{1,2,2,1,3,1,2,2,1};
       constexpr auto b = cluster(a);
       check(equality, report_line("Cluster 9 digits"), b, {1,1,1,1,3,2,2,2,2});
+    }
+  }
+
+  void algorithms_test::cluster_partial_edge()
+  {
+    struct null_type{};
+    using edge = maths::partial_edge<object::by_value<null_type>, maths::null_meta_data>;
+    constexpr std::array<edge, 6>
+      a{edge{1}, edge{2}, edge{2}, edge{0}, edge{1}, edge{0}},
+      prediction{edge{1}, edge{1}, edge{2}, edge{2}, edge{0}, edge{0}};
+
+    {
+      constexpr auto b = cluster(a, [](const edge& lhs, const edge& rhs) { return lhs.target_node() == rhs.target_node(); });
+      check(equality, report_line(""), b, prediction);
+    }
+
+    {
+      constexpr auto b = cluster(a, std::ranges::equal_to{}, [](const edge& e) { return e.target_node(); });
+      check(equality, report_line(""), b, prediction);
     }
   }
 }

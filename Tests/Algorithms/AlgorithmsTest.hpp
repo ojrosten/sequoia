@@ -33,5 +33,7 @@ namespace sequoia::testing
     void stable_sort_stability();
 
     void cluster_basic_type();
+
+    void cluster_partial_edge();
   };
 }
