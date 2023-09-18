@@ -815,7 +815,21 @@ namespace sequoia::testing
 
       // end'weighted_graph_description::node_0y_1x_1w_1_node'
 
-      // begin 'weighted_graph_description::node_0z_1z_0y_1y_0x_1x_0w_1w_0v_1v_node'
+      // begin 'weighted_graph_description::node_0uuu_1uuu_0vvv_1vvv_0www_1www_0xxx_1xxx_0yyy_1yyy_0zzz_1zzz_node'
+
+      trg.join(
+        weighted_graph_description::node_0uuu_1uuu_0vvv_1vvv_0www_1www_0xxx_1xxx_0yyy_1yyy_0zzz_1zzz_node,
+        weighted_graph_description::node_0zzz_1zzz_0yyy_1yyy_0xxx_1xxx_0www_1www_0vvv_1vvv_0uuu_1uuu_node,
+        t.report_line("Sort edges"),
+        [](graph_t g) -> graph_t {
+          g.stable_sort_edges(g.cedges(0), std::ranges::greater{}, [](const auto& e) { return e.weight(); });
+          return g;
+        }
+      );
+
+      // end'weighted_graph_description::node_0uuu_1uuu_0vvv_1vvv_0www_1www_0xxx_1xxx_0yyy_1yyy_0zzz_1zzz_node'
+
+      // begin 'weighted_graph_description::node_0zzz_1zzz_0yyy_1yyy_0xxx_1xxx_0www_1www_0vvv_1vvv_0uuu_1uuu_node'
 
       trg.join(
         weighted_graph_description::node_0zzz_1zzz_0yyy_1yyy_0xxx_1xxx_0www_1www_0vvv_1vvv_0uuu_1uuu_node,
@@ -827,7 +841,7 @@ namespace sequoia::testing
         }
       );
 
-      // end'weighted_graph_description::node_0z_1z_0y_1y_0x_1x_0w_1w_0v_1v_node'
+      // end'weighted_graph_description::node_0zzz_1zzz_0yyy_1yyy_0xxx_1xxx_0www_1www_0vvv_1vvv_0uuu_1uuu_node'
 
       return trg;
     }
