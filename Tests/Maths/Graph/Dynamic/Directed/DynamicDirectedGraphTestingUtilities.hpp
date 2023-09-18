@@ -1530,7 +1530,23 @@ namespace sequoia::testing
               graph_description::node_1_1_2_2_node_2_node_1,
               t.report_line("Sort Edges for node 0"),
               [](graph_t g) -> graph_t {
+                g.sort_edges(g.cedges(0), std::ranges::less{}, [](const auto& lhs) { return lhs.target_node(); });
+                return g;
+              }
+            },
+            {
+              graph_description::node_1_1_2_2_node_2_node_1,
+              t.report_line("Sort Edges for node 0"),
+              [](graph_t g) -> graph_t {
                 g.stable_sort_edges(g.cbegin_edges(0), g.cend_edges(0), std::ranges::less{}, [](const auto& lhs) { return lhs.target_node(); });
+                return g;
+              }
+            },
+            {
+              graph_description::node_1_1_2_2_node_2_node_1,
+              t.report_line("Sort Edges for node 0"),
+              [](graph_t g) -> graph_t {
+                g.stable_sort_edges(g.cedges(0), std::ranges::less{}, [](const auto& lhs) { return lhs.target_node(); });
                 return g;
               }
             },

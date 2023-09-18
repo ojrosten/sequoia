@@ -804,12 +804,26 @@ namespace sequoia
       }
 
       template<class Comp, class Proj = std::identity>
+      constexpr void sort_edges(const_edges_range r, Comp comp, Proj proj = {})
+        requires ((edge_type::flavour == edge_flavour::partial) && std::sortable<edge_iterator, Comp, Proj>)
+      {
+        sort_edges(r.begin(), r.end(), std::move(comp), std::move(proj));
+      }
+
+      template<class Comp, class Proj = std::identity>
       constexpr void stable_sort_edges(const_edge_iterator begin, const_edge_iterator end, Comp comp, Proj proj = {})
         requires ((edge_type::flavour == edge_flavour::partial) && merge_sortable<edge_iterator, Comp, Proj>)
       {
         if(begin.partition_index() != end.partition_index()) return;
 
         sequoia::stable_sort(to_edge_iterator(begin), to_edge_iterator(end), std::move(comp), std::move(proj));
+      }
+
+      template<class Comp, class Proj = std::identity>
+      constexpr void stable_sort_edges(const_edges_range r, Comp comp, Proj proj = {})
+        requires ((edge_type::flavour == edge_flavour::partial) && merge_sortable<edge_iterator, Comp, Proj>)
+      {
+        stable_sort_edges(r.begin(), r.end(), std::move(comp), std::move(proj));
       }
 
     private:
