@@ -131,19 +131,19 @@ namespace sequoia
   /// \brief An algorithm which clusters together elements which compare equal.
   ///
   /// This is best used in situations where operator< is not defined.
-  template<std::forward_iterator Iter, class Comparer=std::ranges::equal_to>
-  constexpr void cluster(Iter begin, Iter end, Comparer comp = Comparer{})
+  template<std::forward_iterator Iter, class Comparer=std::ranges::equal_to, class Proj = std::identity>
+  constexpr void cluster(Iter begin, Iter end, Comparer comp = {}, Proj proj = {})
   {
     if(begin == end) return;
 
     auto current{begin};
-    while((current != end) && comp(*current, *begin)) std::ranges::advance(current, 1);
+    while((current != end) && comp(proj(*current), proj(*begin))) std::ranges::advance(current, 1);
 
     auto endOfCluster{current};
 
     while(current != end)
     {
-      if(comp(*current, *begin))
+      if(comp(proj(*current), proj(*begin)))
       {
         std::ranges::iter_swap(endOfCluster, current);
         std::ranges::advance(endOfCluster, 1);
@@ -152,6 +152,6 @@ namespace sequoia
       std::ranges::advance(current, 1);
     }
 
-    cluster(endOfCluster, end, comp);
+    cluster(endOfCluster, end, comp, proj);
   }
 }
