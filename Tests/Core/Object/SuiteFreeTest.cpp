@@ -377,7 +377,7 @@ namespace sequoia::testing
 
         using suites_map_t = std::optional<filter_t::suites_map_type>;
         using items_map_t = std::optional<filter_t::items_map_type>;
-        check(equivalence, report_line(""), filter, suites_map_t{{}}, items_map_t{});
+        check(equivalence, report_line(""), filter, suites_map_t{filter_t::suites_map_type{}}, items_map_t{});
       }
 
       {
@@ -388,7 +388,7 @@ namespace sequoia::testing
 
         using suites_map_t = std::optional<filter_t::suites_map_type>;
         using items_map_t = std::optional<filter_t::items_map_type>;
-        check(equivalence, report_line(""), filter, suites_map_t{}, items_map_t{{}});
+        check(equivalence, report_line(""), filter, suites_map_t{}, items_map_t{filter_t::items_map_type{}});
       }
 
       {
