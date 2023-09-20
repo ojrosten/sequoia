@@ -330,13 +330,15 @@ namespace sequoia::object
     using items_map_type  = std::vector<std::pair<ItemKeyType, bool>>;
     using selected_suites_iterator = typename suites_map_type::const_iterator;
     using selected_items_iterator  = typename items_map_type::const_iterator;
+    using optional_suite_selection = std::optional<std::vector<std::string>>;
+    using optional_item_selection  = std::optional<std::vector<items_key_type>>;
 
     filter_by_names(ItemProjector proj = {}, Compare compare = {})
       : m_Proj{std::move(proj)}
       , m_Compare{std::move(compare)}
     {}
 
-    filter_by_names(std::vector<std::string> selectedSuites, std::vector<items_key_type> selectedItems, ItemProjector proj = {}, Compare compare = {})
+    filter_by_names(optional_suite_selection selectedSuites, optional_item_selection selectedItems, ItemProjector proj = {}, Compare compare = {})
       : m_Proj{std::move(proj)}
       , m_Compare{std::move(compare)}
       , m_SelectedSuites{make(std::move(selectedSuites))}
@@ -345,22 +347,21 @@ namespace sequoia::object
 
     void add_selected_suite(std::string name)
     {
-      m_SelectedSuites.emplace_back(std::move(name), false);
+      add(m_SelectedSuites, std::move(name));
     }
 
     void add_selected_item(items_key_type key)
     {
-      m_SelectedItems.emplace_back(std::move(key), false);
+      add(m_SelectedItems, std::move(key));
     }
-
-    [[nodiscard]]
-    bool empty() const noexcept { return m_SelectedSuites.empty() && m_SelectedItems.empty(); }
 
     template<class T, class... Suites>
       requires (is_suite_v<Suites> && ...)
     [[nodiscard]]
     bool operator()(const T& val, const Suites&... suites)
     {
+      if(!m_SelectedSuites && !m_SelectedItems) return true;
+
       // Don't use logical short-circuit, otherwise the maps may not accurately update
       std::array<bool, sizeof...(Suites) + 1> isFound{ find(m_SelectedItems, val, m_Proj, m_Compare), find(m_SelectedSuites, suites, item_to_name{}, std::ranges::equal_to{}) ... };
 
@@ -368,45 +369,68 @@ namespace sequoia::object
     }
 
     [[nodiscard]]
-    selected_suites_iterator begin_selected_suites() const noexcept { return m_SelectedSuites.begin(); }
+    std::optional<std::ranges::subrange<selected_suites_iterator>> selected_suites() const noexcept
+    {
+      return m_SelectedSuites ? std::optional<std::ranges::subrange<selected_suites_iterator>>{{m_SelectedSuites->begin(), m_SelectedSuites->end()}} : std::nullopt;
+    }
 
     [[nodiscard]]
-    selected_suites_iterator end_selected_suites() const noexcept { return m_SelectedSuites.end(); }
-
-    [[nodiscard]]
-    selected_items_iterator begin_selected_items() const noexcept { return m_SelectedItems.begin(); }
-
-    [[nodiscard]]
-    selected_items_iterator end_selected_items() const noexcept { return m_SelectedItems.end(); }
+    std::optional<std::ranges::subrange<selected_items_iterator>> selected_items() const noexcept
+    {
+      return m_SelectedItems ? std::optional<std::ranges::subrange<selected_items_iterator>>{{m_SelectedItems->begin(), m_SelectedItems->end()}} : std::nullopt;
+    }
 
     [[nodiscard]]
     friend bool operator==(const filter_by_names&, const filter_by_names&) noexcept = default;
+
+    [[nodiscard]]
+    operator bool() const noexcept
+    {
+      return m_SelectedSuites || m_SelectedItems;
+    }
   private:
     [[no_unique_address]] ItemProjector m_Proj{};
     [[no_unique_address]] Compare m_Compare{};
-    suites_map_type m_SelectedSuites{};
-    items_map_type m_SelectedItems{};
+    std::optional<suites_map_type> m_SelectedSuites{};
+    std::optional<items_map_type>  m_SelectedItems{};
 
-    template<class KeyType>
-    [[nodiscard]]
-    static std::vector<std::pair<KeyType, bool>> make(std::vector<KeyType> selected)
+    template<class Key>
+    using opt_map_type = std::optional<std::vector<std::pair<Key, bool>>>;
+
+    template<class Key>
+    static void add(opt_map_type<Key>& map, Key k)
     {
-      std::vector<std::pair<KeyType, bool>> selection{};
-      for (auto& e : selected)
+      using map_type = typename opt_map_type<Key>::value_type;
+      if(!map) map = map_type{};
+
+      map->emplace_back(std::move(k), false);
+    }
+
+    template<class Key>
+    [[nodiscard]]
+    static opt_map_type<Key> make(std::optional<std::vector<Key>> selected)
+    {
+      if(!selected) return std::nullopt;
+
+      std::vector<std::pair<Key, bool>> selection{};
+      for (auto& e : *selected)
         selection.emplace_back(std::move(e), false);
 
       return selection;
     }
 
     template<class Key, class U, class Projector, class Comp>
-    static bool find(std::vector<std::pair<Key, bool>>& selected, const U& u, Projector proj, Comp compare)
+    static bool find(opt_map_type<Key>& selected, const U& u, Projector proj, Comp compare)
     {
-      auto found{std::ranges::find_if(selected, [&proj, &compare, &u](const std::pair<Key, bool>& e) { return compare(e.first, proj(u)); })};
-
-      if(found != selected.end())
+      if(selected)
       {
-        found->second = true;
-        return true;
+        auto found{std::ranges::find_if(*selected, [&proj, &compare, &u](const std::pair<Key, bool>& e) { return compare(e.first, proj(u)); })};
+
+        if(found != selected->end())
+        {
+          found->second = true;
+          return true;
+        }
       }
 
       return false;

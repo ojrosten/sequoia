@@ -245,14 +245,10 @@ namespace sequoia::testing
     void add_test_suite(std::string_view name, Tests&&... tests)
     {
       using namespace object;
-      using namespace maths;
 
       check_for_duplicates(name, tests...);
 
-      if(m_Filter)
-        extract_suite_tree(name, *m_Filter, std::forward<Tests>(tests)...);
-      else
-        extract_suite_tree(name, [](auto&&...) { return true; }, std::forward<Tests>(tests)...);
+      extract_suite_tree(name, m_Filter, std::forward<Tests>(tests)...);
     }
 
     template<class... Suites>
@@ -261,10 +257,7 @@ namespace sequoia::testing
     {
       using namespace object;
 
-      if(m_Filter)
-        extract_suite_tree(*m_Filter, suite{std::string{name}, std::move(s)...});
-      else
-        extract_suite_tree([](auto&&...) { return true; }, suite{std::string{name}, std::move(s)...});
+      extract_suite_tree(m_Filter, suite{std::string{name}, std::move(s)...});
     }
 
     void execute([[maybe_unused]] timer_resolution r={});
@@ -323,7 +316,7 @@ namespace sequoia::testing
     std::ostream*    m_Stream;
 
     suite_type m_Suites{};
-    std::optional<filter_type> m_Filter;
+    filter_type m_Filter{test_to_path{}, path_equivalence{proj_paths().tests().repo()}};
     prune_info m_PruneInfo{};
 
     runner_mode      m_RunnerMode{runner_mode::none};

@@ -514,19 +514,15 @@ namespace sequoia::testing
                 { {{{"test", {"t"}, {"test suite name"},
                     [this](const arg_list& args) {
                       m_RunnerMode |= runner_mode::test;
-                      if(!m_Filter)
-                        m_Filter = filter_type{test_to_path{}, path_equivalence{proj_paths().tests().repo()}};
 
-                      m_Filter->add_selected_suite(args.front());
+                      m_Filter.add_selected_suite(args.front());
                     }}
                   }},
                   {{{"select", {"s"}, {"source file name"},
                     [this](const arg_list& args) {
                       m_RunnerMode |= runner_mode::test;
-                      if(!m_Filter)
-                        m_Filter = filter_type{test_to_path{}, path_equivalence{proj_paths().tests().repo()}};
 
-                      m_Filter->add_selected_item(fs::path{args.front()});
+                      m_Filter.add_selected_item(fs::path{args.front()});
                     }}
                   }},
                   {{{"prune", {"p"}, {},
@@ -736,10 +732,11 @@ namespace sequoia::testing
     if(m_PruneInfo.mode == prune_mode::active) return;
 
     auto check{
-      [this](auto first, auto last, std::string_view type, auto fn) {
-        for(; first != last; ++first)
+      [this](auto&& r, std::string_view type, auto fn) {
+        if(!r) return;
+
+        for(const auto [id, found] : *r)
         {
-          const auto [id, found]{*first};
           if(!found)
           {
             using namespace parsing::commandline;
@@ -753,28 +750,25 @@ namespace sequoia::testing
       }
     };
 
-    if(m_Filter)
-    {
-      check(m_Filter->begin_selected_suites(), m_Filter->end_selected_suites(), "Suite", [](const std::string& name) -> std::string {
-        if(auto pos{name.rfind('.')}; pos < std::string::npos)
-        {
-          return "    If trying to select a source file use 'select' rather than 'test'\n";
-        }
+    check(m_Filter.selected_suites(), "Suite", [](const std::string& name) -> std::string {
+      if(auto pos{name.rfind('.')}; pos < std::string::npos)
+      {
+        return "    If trying to select a source file use 'select' rather than 'test'\n";
+      }
 
-        return "";
-        }
-      );
+      return "";
+      }
+    );
 
-      check(m_Filter->begin_selected_items(), m_Filter->end_selected_items(), "File", [](const std::filesystem::path& p) -> std::string {
-        if(!p.has_extension())
-        {
-          return "    If trying to test a suite use 'test' rather than 'select'\n";
-        }
+    check(m_Filter.selected_items(), "File", [](const std::filesystem::path& p) -> std::string {
+      if(!p.has_extension())
+      {
+        return "    If trying to test a suite use 'test' rather than 'select'\n";
+      }
 
-        return "";
-        }
-      );
-    }
+      return "";
+      }
+    );
   }
 
   void test_runner::execute([[maybe_unused]] timer_resolution r)
@@ -800,16 +794,20 @@ namespace sequoia::testing
       const auto specified{
         [&filter=m_Filter] () -> std::string {
           std::string srcs{};
-          if(filter)
-          {
-            for(auto i{filter->begin_selected_items()}; i != filter->end_selected_items(); ++i)
-            {
-              if(i->second) srcs.append(" select " + i->first.path().generic_string());
-            }
 
-            for(auto i{filter->begin_selected_suites()}; i != filter->end_selected_suites(); ++i)
+          if(auto items{filter.selected_items()})
+          {
+            for(const auto&[file, found] : *items)
             {
-              if(i->second) srcs.append(" test " + i->first);
+              if(found) srcs.append(" select " + file.path().generic_string());
+            }
+          }
+
+          if(auto suites{filter.selected_suites()})
+          {
+            for(const auto&[name, found] : *suites)
+            {
+              if(found) srcs.append(" test " + name);
             }
           }
 
@@ -1083,11 +1081,13 @@ namespace sequoia::testing
 
     if(auto maybeToRun{tests_to_run(proj_paths(), m_PruneInfo.include_cutoff)})
     {
-      m_Filter = filter_type{test_to_path{}, path_equivalence{proj_paths().tests().repo()}};
       for(const auto& src : maybeToRun.value())
       {
-        m_Filter->add_selected_item(src);
+        m_Filter.add_selected_item(src);
       }
+
+      if(!m_Filter)
+        m_Filter = filter_type{{{}}, {{}}, test_to_path{}, path_equivalence{proj_paths().tests().repo()}};
 
       return prune_outcome::success;
     }
