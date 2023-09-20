@@ -1088,8 +1088,8 @@ namespace sequoia::testing
 
       if(!m_Filter)
       {
-	using suite_t = filter_type::optional_suite_selection;
-	using items_t = filter_type::optional_item_selection;
+        using suite_t = filter_type::optional_suite_selection::value_type;
+        using items_t = filter_type::optional_item_selection::value_type;
         m_Filter = filter_type{{suite_t{}}, {items_t{}}, test_to_path{}, path_equivalence{proj_paths().tests().repo()}};
       }
 
