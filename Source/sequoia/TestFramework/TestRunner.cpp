@@ -9,6 +9,12 @@
     \brief Definitions for TestRunner.hpp
 */
 
+// GCC seems to object to cbegin_node_weights()[i]
+#ifdef __GNUG__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdangling-reference"
+#endif
+
 #include "sequoia/TestFramework/TestRunner.hpp"
 
 #include "sequoia/TestFramework/DependencyAnalyzer.hpp"
@@ -24,12 +30,6 @@
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
 #include <fstream>
-
-// GCC seems to object to cbegin_node_weights()[i]
-#ifdef __GNUG__
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdangling-reference"
-#endif
 
 namespace sequoia::testing
 {
