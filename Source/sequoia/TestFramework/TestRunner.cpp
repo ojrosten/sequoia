@@ -25,6 +25,12 @@
 
 #include <fstream>
 
+// GCC seems to object to cbegin_node_weights()[i]
+#ifdef __GNUG__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdangling-reference"
+#endif
+
 namespace sequoia::testing
 {
   namespace fs = std::filesystem;
@@ -851,12 +857,6 @@ namespace sequoia::testing
     }
   }
 
-// GCC seems to object to cbegin_node_weights()[i]
-#ifdef __GNUG__
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdangling-reference"
-#endif
-
   void test_runner::sort_tests()
   {
     // TO DO: replace this with a stable_sort
@@ -1051,10 +1051,6 @@ namespace sequoia::testing
     traverse(depth_first, m_Suites, find_disconnected_t{}, resetFn, null_func_obj{}, null_func_obj{});
   }
 
-#ifdef __GNUG__
-#pragma GCC diagnostic pop
-#endif
-
   void test_runner::prune()
   {
     if(m_PruneInfo.mode == prune_mode::passive) return;
@@ -1137,3 +1133,7 @@ namespace sequoia::testing
     return paths;
   }
 }
+
+#ifdef __GNUG__
+#pragma GCC diagnostic pop
+#endif
