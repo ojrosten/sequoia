@@ -370,7 +370,8 @@ namespace sequoia::testing
       }
 
       {
-        auto filter{filter_by_names{filter_t::optional_suite_selection{{}}, filter_t::optional_item_selection{}}};
+        using suite_t = filter_t::optional_suite_selection::value_type;
+        auto filter{filter_by_names{{suite_t{}}, filter_t::optional_item_selection{}}};
 
         check(equality, report_line(""), extract_leaves(make_test_suite(), filter), std::vector<variant_t>{});
 
@@ -380,7 +381,8 @@ namespace sequoia::testing
       }
 
       {
-        auto filter{filter_by_names{filter_t::optional_suite_selection{}, filter_t::optional_item_selection{{}}}};
+        using items_t = filter_t::optional_item_selection::value_type;
+        auto filter{filter_by_names{filter_t::optional_suite_selection{}, {items_t{}}}};
 
         check(equality, report_line(""), extract_leaves(make_test_suite(), filter), std::vector<variant_t>{});
 
