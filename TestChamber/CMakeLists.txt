@@ -13,7 +13,6 @@ set(TestDir ../Tests)
 
 target_sources(TestChamber PRIVATE 
                ${TestDir}/Experimental/ExperimentalTest.cpp
-               ${TestDir}/Core/Object/SuiteFreeTest.cpp
 )
 
 sequoia_finalize_self(TestChamber ${TestDir}/Experimental)

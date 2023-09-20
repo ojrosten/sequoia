@@ -55,52 +55,52 @@ namespace sequoia::maths
     constexpr iterator begin_node_weights() noexcept
       requires std::indirectly_writable<iterator, std::iter_value_t<iterator>>
     {
-      return iterator{m_NodeWeights.begin()};
+      return m_NodeWeights.begin();
     }
 
     [[nodiscard]]
     constexpr reverse_iterator rbegin_node_weights() noexcept
       requires std::indirectly_writable<iterator, std::iter_value_t<iterator>>
     {
-      return reverse_iterator{m_NodeWeights.rbegin()};
+      return m_NodeWeights.rbegin();
     }
 
     [[nodiscard]]
     constexpr const_iterator cbegin_node_weights() const noexcept
     {
-      return const_iterator{m_NodeWeights.cbegin()};
+      return m_NodeWeights.cbegin();
     }
 
     [[nodiscard]]
     constexpr const_reverse_iterator crbegin_node_weights() const noexcept
     {
-      return const_reverse_iterator{m_NodeWeights.crbegin()};
+      return m_NodeWeights.crbegin();
     }
 
     [[nodiscard]]
     constexpr iterator end_node_weights() noexcept
       requires std::indirectly_writable<iterator, std::iter_value_t<iterator>>
     {
-      return iterator{m_NodeWeights.end()};
+      return m_NodeWeights.end();
     }
 
     [[nodiscard]]
     constexpr reverse_iterator rend_node_weights() noexcept
       requires std::indirectly_writable<iterator, std::iter_value_t<iterator>>
     {
-      return reverse_iterator{m_NodeWeights.rend()};
+      return m_NodeWeights.rend();
     }
 
     [[nodiscard]]
     constexpr const_iterator cend_node_weights() const noexcept
     {
-      return const_iterator{m_NodeWeights.cend()};
+      return m_NodeWeights.cend();
     }
 
     [[nodiscard]]
     constexpr const_reverse_iterator crend_node_weights() const noexcept
     {
-      return const_reverse_iterator{m_NodeWeights.crend()};
+      return m_NodeWeights.crend();
     }
 
     [[nodiscard]]
