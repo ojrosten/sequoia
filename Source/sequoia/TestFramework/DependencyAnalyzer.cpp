@@ -85,8 +85,10 @@ namespace sequoia::testing
       return (ext == ".hpp") || (ext == ".h") || (ext == ".hxx");
     }
 
+    template<class... Delimeters>
+      requires (std::is_same_v<Delimeters, char> && ...)
     [[nodiscard]]
-    std::string from_stream(std::istream& istr, char delimiter)
+    std::string from_stream(std::istream& istr, Delimeters... delimiters)
     {
       constexpr auto eof{std::ifstream::traits_type::eof()};
       using int_type = std::ifstream::int_type;
@@ -96,7 +98,7 @@ namespace sequoia::testing
       int_type c{};
       while((c = istr.get()) != eof)
       {
-        if(c == delimiter) break;
+        if(((c == delimiters) || ...)) break;
 
         str.push_back(static_cast<char>(c));
       }
@@ -148,7 +150,8 @@ namespace sequoia::testing
           }
           else if(c == '#')
           {
-            const auto followsHash{from_stream(ifile, ' ')};
+            // Bug here with #endif
+            const auto followsHash{from_stream(ifile, ' ', '\n')};
             if(followsHash == "include")
             {
               int_type ch{};

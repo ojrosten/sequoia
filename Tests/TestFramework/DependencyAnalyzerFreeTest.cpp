@@ -196,14 +196,14 @@ namespace sequoia::testing
     check_tests_to_run(report_line("Test hpp stale (no cutoff)"),
                        projPaths,
                        "",
-                       {.stale{{{testRepo / "HouseAllocationTest.cpp"}, modification_time::early}}, .to_run{{"HouseAllocationTest.cpp"}}},
+                       {.stale{{{testRepo / "HouseAllocationTest.hpp"}, modification_time::early}}, .to_run{{"HouseAllocationTest.cpp"}}},
                        {},
                        {});
 
     check_tests_to_run(report_line("Test hpp stale"),
                        projPaths,
                        "namespace",
-                       {.stale{{{testRepo / "HouseAllocationTest.cpp"}, modification_time::early}}, .to_run{{"HouseAllocationTest.cpp"}}},
+                       {.stale{{{testRepo / "HouseAllocationTest.hpp"}, modification_time::early}}, .to_run{{"HouseAllocationTest.cpp"}}},
                        {},
                        {});
 
