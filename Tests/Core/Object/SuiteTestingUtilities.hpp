@@ -16,9 +16,9 @@
 namespace sequoia::testing
 {
   template<class ItemsKeyType, class ItemProjector, class Compare>
-  struct value_tester<object::filter_by_names<ItemsKeyType, ItemProjector, Compare>>
+  struct value_tester<object::granular_filter<ItemsKeyType, ItemProjector, Compare>>
   {
-    using type                   = object::filter_by_names<ItemsKeyType, ItemProjector, Compare>;
+    using type                   = object::granular_filter<ItemsKeyType, ItemProjector, Compare>;
     using equivalent_suites_type = std::optional<typename type::suites_map_type>;
     using equivalent_items_type  = std::optional<typename type::items_map_type>;
 

@@ -307,8 +307,8 @@ namespace sequoia::testing
       std::optional<test_vessel> optTest{};
     };
 
-    using suite_type = maths::directed_tree<maths::tree_link_direction::forward, maths::null_weight, suite_node>;
-    using filter_type = object::filter_by_names<normal_path, test_to_path, path_equivalence>;
+    using suite_type  = maths::directed_tree<maths::tree_link_direction::forward, maths::null_weight, suite_node>;
+    using filter_type = object::granular_filter<normal_path, test_to_path, path_equivalence>;
 
     std::string      m_Copyright{};
     project_paths    m_ProjPaths;

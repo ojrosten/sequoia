@@ -318,11 +318,11 @@ namespace sequoia::object
 
   template
   <
-    class ItemKeyType   = std::string,
-    class ItemProjector = item_to_name,
-    class Compare       = std::ranges::equal_to
+    class ItemKeyType,
+    class ItemProjector,
+    class Compare
   >
-  class filter_by_names
+  class granular_filter
   {
   public:
     using items_key_type  = ItemKeyType;
@@ -333,12 +333,12 @@ namespace sequoia::object
     using optional_suite_selection = std::optional<std::vector<std::string>>;
     using optional_item_selection  = std::optional<std::vector<items_key_type>>;
 
-    filter_by_names(ItemProjector proj = {}, Compare compare = {})
+    granular_filter(ItemProjector proj = {}, Compare compare = {})
       : m_Proj{std::move(proj)}
       , m_Compare{std::move(compare)}
     {}
 
-    filter_by_names(optional_suite_selection selectedSuites, optional_item_selection selectedItems, ItemProjector proj = {}, Compare compare = {})
+    granular_filter(optional_suite_selection selectedSuites, optional_item_selection selectedItems, ItemProjector proj = {}, Compare compare = {})
       : m_Proj{std::move(proj)}
       , m_Compare{std::move(compare)}
       , m_SelectedSuites{make(std::move(selectedSuites))}
@@ -381,7 +381,7 @@ namespace sequoia::object
     }
 
     [[nodiscard]]
-    friend bool operator==(const filter_by_names&, const filter_by_names&) noexcept = default;
+    friend bool operator==(const granular_filter&, const granular_filter&) noexcept = default;
 
     [[nodiscard]]
     operator bool() const noexcept
