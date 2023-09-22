@@ -308,7 +308,7 @@ namespace sequoia::testing
     };
 
     using suite_type  = maths::directed_tree<maths::tree_link_direction::forward, maths::null_weight, suite_node>;
-    using filter_type = object::granular_filter<normal_path, test_to_path, path_equivalence>;
+    using filter_type = object::granular_filter<normal_path, path_equivalence, test_to_path>;
 
     std::string      m_Copyright{};
     project_paths    m_ProjPaths;
@@ -316,7 +316,7 @@ namespace sequoia::testing
     std::ostream*    m_Stream;
 
     suite_type m_Suites{};
-    filter_type m_Filter{test_to_path{}, path_equivalence{proj_paths().tests().repo()}};
+    filter_type m_Filter{path_equivalence{proj_paths().tests().repo()}, test_to_path{}};
     prune_info m_PruneInfo{};
 
     runner_mode      m_RunnerMode{runner_mode::none};

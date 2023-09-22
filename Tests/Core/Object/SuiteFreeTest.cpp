@@ -155,8 +155,8 @@ namespace sequoia::testing
       std::string operator()(T t) const { return std::to_string(t);}
     };
 
-    using filter_by_names = granular_filter<std::string, item_to_name, std::ranges::equal_to>;
-    using filter_by_paths = granular_filter<fs::path, to_path, path_equivalence>;
+    using filter_by_names = granular_filter<std::string, std::ranges::equal_to, item_to_name>;
+    using filter_by_paths = granular_filter<fs::path, path_equivalence, to_path>;
   }
 
   [[nodiscard]]
@@ -434,7 +434,7 @@ namespace sequoia::testing
       using variant_t = std::variant<foo<0>, bar<0>, baz<0>, foo<1>, bar<1>>;
       variant_t init[]{bar<1>{"bar1"}};
 
-      using filter_t = granular_filter<fs::path, to_path, std::ranges::equal_to>;
+      using filter_t = granular_filter<fs::path, std::ranges::equal_to, to_path>;
       filter_t filter{{}, {{"bar1"s}}};
 
       check(equality,

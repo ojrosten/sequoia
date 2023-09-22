@@ -319,8 +319,21 @@ namespace sequoia::object
   template
   <
     class ItemKeyType,
+    class ItemCompare,
     class ItemProjector,
-    class Compare
+    class T
+  >
+  inline constexpr bool granular_filter_for{
+    requires (const ItemKeyType& val, ItemCompare comp, ItemProjector proj, const T& t) {
+      { comp(val, proj(t)) } -> std::same_as<bool>;
+    }
+  };
+
+  template
+  <
+    class ItemKeyType,
+    class ItemCompare,
+    class ItemProjector
   >
   class granular_filter
   {
@@ -333,14 +346,14 @@ namespace sequoia::object
     using optional_suite_selection = std::optional<std::vector<std::string>>;
     using optional_item_selection  = std::optional<std::vector<items_key_type>>;
 
-    granular_filter(ItemProjector proj = {}, Compare compare = {})
-      : m_Proj{std::move(proj)}
-      , m_Compare{std::move(compare)}
+    granular_filter(ItemCompare compare = {}, ItemProjector proj = {})
+      : m_Compare{std::move(compare)}
+      , m_Proj{std::move(proj)}
     {}
 
-    granular_filter(optional_suite_selection selectedSuites, optional_item_selection selectedItems, ItemProjector proj = {}, Compare compare = {})
-      : m_Proj{std::move(proj)}
-      , m_Compare{std::move(compare)}
+    granular_filter(optional_suite_selection selectedSuites, optional_item_selection selectedItems, ItemCompare compare = {}, ItemProjector proj = {})
+      : m_Compare{std::move(compare)}
+      , m_Proj{std::move(proj)}
       , m_SelectedSuites{make(std::move(selectedSuites))}
       , m_SelectedItems{make(std::move(selectedItems))}
     {}
@@ -356,7 +369,7 @@ namespace sequoia::object
     }
 
     template<class T, class... Suites>
-      requires (is_suite_v<Suites> && ...)
+      requires (is_suite_v<Suites> && ...) && granular_filter_for<ItemKeyType, ItemCompare, ItemProjector, T>
     [[nodiscard]]
     bool operator()(const T& val, const Suites&... suites)
     {
@@ -389,8 +402,8 @@ namespace sequoia::object
       return m_SelectedSuites || m_SelectedItems;
     }
   private:
+    [[no_unique_address]] ItemCompare m_Compare{};
     [[no_unique_address]] ItemProjector m_Proj{};
-    [[no_unique_address]] Compare m_Compare{};
     std::optional<suites_map_type> m_SelectedSuites{};
     std::optional<items_map_type>  m_SelectedItems{};
 

@@ -1096,7 +1096,7 @@ namespace sequoia::testing
       {
         using suite_t = filter_type::optional_suite_selection::value_type;
         using items_t = filter_type::optional_item_selection::value_type;
-        m_Filter = filter_type{{suite_t{}}, {items_t{}}, test_to_path{}, path_equivalence{proj_paths().tests().repo()}};
+        m_Filter = filter_type{{suite_t{}}, {items_t{}}, path_equivalence{proj_paths().tests().repo()}, test_to_path{}};
       }
 
       return prune_outcome::success;
