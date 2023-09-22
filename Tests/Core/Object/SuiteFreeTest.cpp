@@ -371,23 +371,23 @@ namespace sequoia::testing
       }
 
       {
-        filter_by_names filter{{{}}, std::nullopt};
+        filter_by_names filter{{std::vector<std::string>{}}, std::nullopt};
 
         check(equality, report_line(""), extract_leaves(make_test_suite(), filter), std::vector<variant_t>{});
 
         using opt_suites_map_t = std::optional<filter_by_names::suites_map_type>;
         using opt_items_map_t = std::optional<filter_by_names::items_map_type>;
-        check(equivalence, report_line(""), filter, opt_suites_map_t{{}}, opt_items_map_t{});
+        check(equivalence, report_line(""), filter, opt_suites_map_t{opt_suites_map_t::value_type{}}, opt_items_map_t{});
       }
 
       {
-        filter_by_names filter{std::nullopt, {{}}};
+        filter_by_names filter{std::nullopt, {std::vector<std::string>{}}};
 
         check(equality, report_line(""), extract_leaves(make_test_suite(), filter), std::vector<variant_t>{});
 
         using opt_suites_map_t = std::optional<filter_by_names::suites_map_type>;
         using opt_items_map_t  = std::optional<filter_by_names::items_map_type>;
-        check(equivalence, report_line(""), filter, opt_suites_map_t{}, opt_items_map_t{{}});
+        check(equivalence, report_line(""), filter, opt_suites_map_t{}, opt_items_map_t{opt_items_map_t::value_type{}});
       }
 
       {
