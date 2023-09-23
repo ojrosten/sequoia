@@ -56,6 +56,9 @@ namespace sequoia
       [[nodiscard]]
       constexpr const weight_type& weight() const noexcept { return WeightHandler::get(m_Weight); }
 
+      [[nodiscard]]
+      constexpr weight_type& weight() noexcept { return WeightHandler::get(m_Weight); }
+
       constexpr void weight(weight_type w)
       {
         WeightHandler::get(m_Weight) = std::move(w);
