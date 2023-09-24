@@ -38,34 +38,6 @@ namespace sequoia::maths
     typename Storage::partitions_allocator_type;
   };
 
-
-  template<std::input_or_output_iterator Iterator>
-  class edge_weight_dereference_policy
-  {
-  public:
-    using value_type = typename std::iterator_traits<Iterator>::value_type::weight_type;
-    using reference = std::add_lvalue_reference_t<value_type>;
-
-    constexpr edge_weight_dereference_policy() = default;
-    constexpr edge_weight_dereference_policy(const edge_weight_dereference_policy&) = default;
-
-    [[nodiscard]]
-    friend constexpr bool operator==(const edge_weight_dereference_policy&, const edge_weight_dereference_policy&) noexcept = default;
-
-    [[nodiscard]]
-    static reference get(Iterator i)
-    {
-      return i->weight();
-    }
-  protected:
-    constexpr edge_weight_dereference_policy(edge_weight_dereference_policy&&) noexcept = default;
-
-    ~edge_weight_dereference_policy() = default;
-
-    constexpr edge_weight_dereference_policy& operator=(const edge_weight_dereference_policy&) = default;
-    constexpr edge_weight_dereference_policy& operator=(edge_weight_dereference_policy&&) noexcept = default;
-  };
-
   template
   <
     graph_flavour GraphFlavour,
@@ -365,83 +337,6 @@ namespace sequoia::maths
     using base_type::sort_edges;
     using base_type::stable_sort_edges;
     using base_type::swap_edges;
-  };
-
-  template
-  <
-    class EdgeWeight,
-    class NodeWeight,
-    class EdgeStorageConfig,
-    class NodeWeightStorage
-  >
-    requires (!std::is_empty_v<EdgeWeight>)
-  class directed_graph<EdgeWeight, NodeWeight, EdgeStorageConfig, NodeWeightStorage> final : public
-    graph_base
-    <
-      graph_flavour::directed,
-      EdgeWeight,
-      NodeWeight,
-      null_meta_data,
-      EdgeStorageConfig,
-      NodeWeightStorage
-    >
-  {
-  public:
-    using node_weight_type = NodeWeight;
-
-    using
-      graph_base
-      <
-        graph_flavour::directed,
-        EdgeWeight,
-        NodeWeight,
-        null_meta_data,
-        EdgeStorageConfig,
-        NodeWeightStorage
-      >::graph_base;
-
-    using base_type =
-      graph_base
-      <
-        graph_flavour::directed,
-        EdgeWeight,
-        NodeWeight,
-        null_meta_data,
-        EdgeStorageConfig,
-        NodeWeightStorage
-      >;
-
-    using edge_weight_iterator = utilities::iterator<typename base_type::connectivity::edge_iterator, edge_weight_dereference_policy<typename base_type::connectivity::edge_iterator>>;
-    using edge_index_type = typename base_type::connectivity_type::edge_index_type;
-
-    using base_type::swap_nodes;
-    using base_type::add_node;
-    using base_type::insert_node;
-    using base_type::erase_node;
-
-    using base_type::join;
-    using base_type::erase_edge;
-
-    using base_type::sort_edges;
-    using base_type::stable_sort_edges;
-    using base_type::swap_edges;
-
-
-    [[nodiscard]]
-    constexpr edge_weight_iterator begin_edge_weights(const edge_index_type node)
-    {
-      graph_errors::check_node_index_range("begin_edge_weights", this->order(), node);
-
-      return edge_weight_iterator{this->begin_edges(node)};
-    }
-
-    [[nodiscard]]
-    constexpr edge_weight_iterator end_edge_weights(const edge_index_type node)
-    {
-      graph_errors::check_node_index_range("end_edge_weights", this->order(), node);
-
-      return edge_weight_iterator{this->end_edges(node)};
-    }
   };
 
   template

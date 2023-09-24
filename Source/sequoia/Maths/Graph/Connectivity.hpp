@@ -171,16 +171,16 @@ namespace sequoia
 
     struct partitions_allocator_tag{};
 
-    /*! \brief Graph connectivity, used as a building block for concrete graphs.
+    /*! \brief Graph connectivity_base, used as a building block for concrete graphs.
     
         This class is flexible, allowing for representations of many different flavours
         of connectivity. It is designed for inheritance by concrete graphs; therefore
         various methods, including the destructor, are protected. Both static and
         dynamic graphs are supported; for the purposes of the latter, the relevant
-        protected methods of `connectivity` are allocator-aware.
+        protected methods of `connectivity_base` are allocator-aware.
      */
     template<graph_flavour Flavour, class EdgeStorage>
-    class connectivity
+    class connectivity_base
     {
       friend struct sequoia::assignment_helper;
     public:
@@ -203,13 +203,13 @@ namespace sequoia
       constexpr static auto npos{std::numeric_limits<edge_index_type>::max()};
       constexpr static graph_flavour flavour{Flavour};
 
-      constexpr connectivity() = default;
+      constexpr connectivity_base() = default;
 
-      constexpr connectivity(std::initializer_list<std::initializer_list<edge_init_type>> edges)
+      constexpr connectivity_base(std::initializer_list<std::initializer_list<edge_init_type>> edges)
         : m_Edges{make_edges(edges)}
       {}
 
-      constexpr connectivity(const connectivity& other)
+      constexpr connectivity_base(const connectivity_base& other)
         : m_Edges{copy_edges(other)}
       {}
 
@@ -347,7 +347,7 @@ namespace sequoia
       //===============================equality (not isomorphism) operators================================//
 
       [[nodiscard]]
-      friend constexpr bool operator==(const connectivity& lhs, const connectivity& rhs) noexcept
+      friend constexpr bool operator==(const connectivity_base& lhs, const connectivity_base& rhs) noexcept
         requires deep_equality_comparable<edge_type>
       {
         return lhs.m_Edges == rhs.m_Edges;
@@ -358,39 +358,39 @@ namespace sequoia
 
       template<alloc... Allocators>
         requires (sizeof...(Allocators) > 0)
-      constexpr connectivity(const Allocators&... as)
+      constexpr connectivity_base(const Allocators&... as)
         : m_Edges(as...)
       {}
 
       template<alloc... Allocators>
         requires (sizeof...(Allocators) > 0)
-      constexpr connectivity(edges_initializer edges, const Allocators&... as)
+      constexpr connectivity_base(edges_initializer edges, const Allocators&... as)
         : m_Edges{make_edges(edges, as...)}
       {}
 
       template<alloc... Allocators>
         requires (sizeof...(Allocators) > 0)
-      constexpr connectivity(const connectivity& c, const Allocators&... as)
+      constexpr connectivity_base(const connectivity_base& c, const Allocators&... as)
         : m_Edges{copy_edges(c, as...)}
       {}
 
-      constexpr connectivity(connectivity&&) noexcept = default;
+      constexpr connectivity_base(connectivity_base&&) noexcept = default;
 
       template<alloc... Allocators>
-      constexpr connectivity(connectivity&& c, const Allocators&... as)
+      constexpr connectivity_base(connectivity_base&& c, const Allocators&... as)
         : m_Edges{std::move(c.m_Edges), as...}
       {}
 
-      ~connectivity() = default;
+      ~connectivity_base() = default;
 
-      constexpr connectivity& operator=(connectivity&&) = default;
+      constexpr connectivity_base& operator=(connectivity_base&&) = default;
 
-      constexpr connectivity& operator=(const connectivity& in)
+      constexpr connectivity_base& operator=(const connectivity_base& in)
       {
         if(&in != this)
         {
           auto allocGetter{
-            []([[maybe_unused]] const connectivity& in){
+            []([[maybe_unused]] const connectivity_base& in){
               if constexpr(has_allocator_type_v<edge_storage_type>)
               {
                 return in.m_Edges.get_allocator();
@@ -399,7 +399,7 @@ namespace sequoia
           };
 
           auto partitionsAllocGetter{
-            []([[maybe_unused]] const connectivity& in){
+            []([[maybe_unused]] const connectivity_base& in){
               if constexpr(has_partitions_allocator<edge_storage_type>)
               {
                 return in.m_Edges.get_partitions_allocator();
@@ -421,7 +421,7 @@ namespace sequoia
         m_Edges.reset(allocs...);
       }
 
-      void swap(connectivity& rhs)
+      void swap(connectivity_base& rhs)
         noexcept(noexcept(std::ranges::swap(this->m_Edges, rhs.m_Edges)))
       {
         std::ranges::swap(m_Edges, rhs.m_Edges);
@@ -1024,7 +1024,7 @@ namespace sequoia
           edges,
           []() {},
           [](edge_index_type i, range_t hostRange) {
-            if(std::ranges::distance(hostRange) % 2) throw std::logic_error{odd_num_loops_error("connectivity", i)};
+            if(std::ranges::distance(hostRange) % 2) throw std::logic_error{odd_num_loops_error("connectivity_base", i)};
           },
           [&](edge_index_type i, edge_index_type target, range_t hostRange, range_t targetRange) {
             const auto brokenEdge{
@@ -1047,7 +1047,7 @@ namespace sequoia
             };
 
             if(brokenEdge)
-              throw std::logic_error{absent_reciprocated_partial_edge_message("connectivity", brokenEdge.value())};
+              throw std::logic_error{absent_reciprocated_partial_edge_message("connectivity_base", brokenEdge.value())};
           }
         );
 
@@ -1211,14 +1211,14 @@ namespace sequoia
 
       template<alloc... Allocators>
       [[nodiscard]]
-      edge_storage_type copy_edges(const connectivity& in, const Allocators&... as)
+      edge_storage_type copy_edges(const connectivity_base& in, const Allocators&... as)
         requires direct_copy_v
       {
         return edge_storage_type{in.m_Edges, as...};
       }
 
       [[nodiscard]]
-      edge_storage_type copy_edges(const connectivity& in)
+      edge_storage_type copy_edges(const connectivity_base& in)
         requires (!direct_copy_v)
       {
         if constexpr(has_partitions_allocator<edge_storage_type>)
@@ -1233,7 +1233,7 @@ namespace sequoia
 
       template<alloc... Allocators>
       [[nodiscard]]
-      edge_storage_type copy_edges(const connectivity& in, const Allocators&... as)
+      edge_storage_type copy_edges(const connectivity_base& in, const Allocators&... as)
         requires (!direct_copy_v && (sizeof...(Allocators) > 0))
       {        
         edge_storage_type storage({std::allocator_traits<Allocators>::select_on_container_copy_construction(as)}...);
@@ -1269,7 +1269,7 @@ namespace sequoia
       }
 
       template<std::invocable<size_type, const_edge_iterator, const_edge_iterator> Processor>
-      void copy_edges(const connectivity& in, edge_storage_type& storage, Processor processor)
+      void copy_edges(const connectivity_base& in, edge_storage_type& storage, Processor processor)
       {
         reserve_nodes(in.m_Edges.num_partitions());
         if constexpr(!graph_impl::has_reservable_partitions<edge_storage_type>)
@@ -1533,6 +1533,65 @@ namespace sequoia
           }
         }
       }
+    };
+
+    template<std::input_or_output_iterator Iterator>
+    class edge_weight_dereference_policy
+    {
+    public:
+      using value_type = typename std::iterator_traits<Iterator>::value_type::weight_type;
+      using reference = std::add_lvalue_reference_t<value_type>;
+
+      constexpr edge_weight_dereference_policy() = default;
+      constexpr edge_weight_dereference_policy(const edge_weight_dereference_policy&) = default;
+
+      [[nodiscard]]
+      friend constexpr bool operator==(const edge_weight_dereference_policy&, const edge_weight_dereference_policy&) noexcept = default;
+
+      [[nodiscard]]
+      static reference get(Iterator i)
+      {
+        return i->weight();
+      }
+    protected:
+      constexpr edge_weight_dereference_policy(edge_weight_dereference_policy&&) noexcept = default;
+
+      ~edge_weight_dereference_policy() = default;
+
+      constexpr edge_weight_dereference_policy& operator=(const edge_weight_dereference_policy&) = default;
+      constexpr edge_weight_dereference_policy& operator=(edge_weight_dereference_policy&&) noexcept = default;
+    };
+
+    template<graph_flavour Flavour, class EdgeStorage>
+    class connectivity : public connectivity_base<Flavour, EdgeStorage>
+    {
+    protected:
+      using connectivity_base<Flavour, EdgeStorage>::connectivity_base;
+    };
+
+    template<class EdgeStorage>
+      requires (!std::is_empty_v<typename EdgeStorage::value_type::weight_type>)
+    class connectivity<graph_flavour::directed, EdgeStorage> : public connectivity_base<graph_flavour::directed, EdgeStorage>
+    {
+    public:
+      using base_type = connectivity_base<graph_flavour::directed, EdgeStorage>;
+      using edge_weight_iterator = utilities::iterator<typename base_type::edge_iterator, edge_weight_dereference_policy<typename base_type::edge_iterator>>;
+
+      using edge_index_type = typename base_type::edge_index_type;
+
+      [[nodiscard]]
+      constexpr edge_weight_iterator begin_edge_weights(const edge_index_type node)
+      {
+        return edge_weight_iterator{this->begin_edges(node)};
+      }
+
+      [[nodiscard]]
+      constexpr edge_weight_iterator end_edge_weights(const edge_index_type node)
+      {
+        return edge_weight_iterator{this->end_edges(node)};
+      }
+    protected:
+      using connectivity_base<graph_flavour::directed, EdgeStorage>::connectivity_base;
     };
   }
 }

@@ -26,7 +26,7 @@ Tests/Maths/Graph/Static/Undirected/StaticUndirectedGraphUnsortableWeightTest.cp
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::connectivity: Odd number of loop edges for node 0
+connectivity::connectivity_base: Odd number of loop edges for node 0
 
 =======================================
 
@@ -34,7 +34,7 @@ Tests/Maths/Graph/Static/Undirected/StaticUndirectedGraphUnsortableWeightTest.cp
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::connectivity: Odd number of loop edges for node 0
+connectivity::connectivity_base: Odd number of loop edges for node 0
 
 =======================================
 

@@ -12,7 +12,7 @@ Mismatched loop
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::connectivity: Odd number of loop edges for node 0
+connectivity::connectivity_base: Odd number of loop edges for node 0
 
 =======================================
 
@@ -21,7 +21,7 @@ Mismatched partial edges
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::connectivity [node: 0, edge: 0]: Reciprocated partial edge does not exist
+connectivity::connectivity_base [node: 0, edge: 0]: Reciprocated partial edge does not exist
 
 =======================================
 
@@ -30,7 +30,7 @@ Mismatched loop
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::connectivity: Odd number of loop edges for node 1
+connectivity::connectivity_base: Odd number of loop edges for node 1
 
 =======================================
 
