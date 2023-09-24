@@ -353,7 +353,8 @@ namespace sequoia
         return lhs.m_Edges == rhs.m_Edges;
       }
     protected:
-      using edge_iterator = typename edge_storage_type::partition_iterator;
+      using edge_iterator         = typename edge_storage_type::partition_iterator;
+      using reverse_edge_iterator = typename edge_storage_type::reverse_partition_iterator;
       using edges_range = std::ranges::subrange<edge_iterator>;
 
       template<alloc... Allocators>
@@ -444,7 +445,7 @@ namespace sequoia
 
         for(edge_index_type n{}; n < static_cast<edge_index_type>(order()); ++n)
         {
-          for(auto& e : mut_edges(n))
+          for(auto& e : edges(n))
           {
             if(e.target_node() == i) e.target_node(j);
             else if(e.target_node() == j) e.target_node(i);
@@ -527,7 +528,23 @@ namespace sequoia
       }
 
       [[nodiscard]]
-      constexpr edges_range mut_edges(const edge_index_type node) { return {begin_edges(node), end_edges(node)}; }
+      constexpr reverse_edge_iterator rbegin_edges(const edge_index_type node)
+      {
+        graph_errors::check_node_index_range("rbegin_edges", order(), node);
+
+        return m_Edges.rbegin_partition(node);
+      }
+
+      [[nodiscard]]
+      constexpr reverse_edge_iterator rend_edges(const edge_index_type node)
+      {
+        graph_errors::check_node_index_range("rend_edges", order(), node);
+
+        return m_Edges.rend_partition(node);
+      }
+
+      [[nodiscard]]
+      constexpr edges_range edges(const edge_index_type node) { return {begin_edges(node), end_edges(node)}; }
 
       void add_node()
       {
@@ -1539,8 +1556,10 @@ namespace sequoia
     class edge_weight_dereference_policy
     {
     public:
+      constexpr static bool is_const{is_const_reference_v<typename std::iterator_traits<Iterator>::reference>};
+
       using value_type = typename std::iterator_traits<Iterator>::value_type::weight_type;
-      using reference = std::add_lvalue_reference_t<value_type>;
+      using reference  = std::conditional_t<is_const, const value_type&, value_type&>;
 
       constexpr edge_weight_dereference_policy() = default;
       constexpr edge_weight_dereference_policy(const edge_weight_dereference_policy&) = default;
@@ -1575,7 +1594,13 @@ namespace sequoia
     {
     public:
       using base_type = connectivity_base<graph_flavour::directed, EdgeStorage>;
-      using edge_weight_iterator = utilities::iterator<typename base_type::edge_iterator, edge_weight_dereference_policy<typename base_type::edge_iterator>>;
+
+      using edge_weight_iterator               = utilities::iterator<typename base_type::edge_iterator,               edge_weight_dereference_policy<typename base_type::edge_iterator>>;
+      using const_edge_weight_iterator         = utilities::iterator<typename base_type::const_edge_iterator,         edge_weight_dereference_policy<typename base_type::const_edge_iterator>>;
+      using reverse_edge_weight_iterator       = utilities::iterator<typename base_type::reverse_edge_iterator,       edge_weight_dereference_policy<typename base_type::reverse_edge_iterator>>;
+      using const_reverse_edge_weight_iterator = utilities::iterator<typename base_type::const_reverse_edge_iterator, edge_weight_dereference_policy<typename base_type::const_reverse_edge_iterator>>;
+      using edge_weights_range                 = std::ranges::subrange<edge_weight_iterator>;
+      using const_edge_weights_range           = std::ranges::subrange<const_edge_weight_iterator>;
 
       using edge_index_type = typename base_type::edge_index_type;
 
@@ -1590,6 +1615,75 @@ namespace sequoia
       {
         return edge_weight_iterator{this->end_edges(node)};
       }
+
+      [[nodiscard]]
+      constexpr const_edge_weight_iterator begin_edge_weights(const edge_index_type node) const
+      {
+        return const_edge_weight_iterator{this->begin_edges(node)};
+      }
+
+      [[nodiscard]]
+      constexpr const_edge_weight_iterator end_edge_weights(const edge_index_type node) const
+      {
+        return const_edge_weight_iterator{this->end_edges(node)};
+      }
+
+      [[nodiscard]]
+      constexpr const_edge_weight_iterator cbegin_edge_weights(const edge_index_type node) const
+      {
+        return const_edge_weight_iterator{this->begin_edges(node)};
+      }
+
+      [[nodiscard]]
+      constexpr const_edge_weight_iterator cend_edge_weights(const edge_index_type node) const
+      {
+        return const_edge_weight_iterator{this->end_edges(node)};
+      }
+
+      [[nodiscard]]
+      constexpr reverse_edge_weight_iterator rbegin_edge_weights(const edge_index_type node)
+      {
+        return reverse_edge_weight_iterator{this->rbegin_edges(node)};
+      }
+
+      [[nodiscard]]
+      constexpr reverse_edge_weight_iterator rend_edge_weights(const edge_index_type node)
+      {
+        return reverse_edge_weight_iterator{this->rend_edges(node)};
+      }
+
+      [[nodiscard]]
+      constexpr const_reverse_edge_weight_iterator rbegin_edge_weights(const edge_index_type node) const
+      {
+        return const_reverse_edge_weight_iterator{this->rbegin_edges(node)};
+      }
+
+      [[nodiscard]]
+      constexpr const_reverse_edge_weight_iterator rend_edge_weights(const edge_index_type node) const
+      {
+        return const_reverse_edge_weight_iterator{this->rend_edges(node)};
+      }
+
+      [[nodiscard]]
+      constexpr const_reverse_edge_weight_iterator crbegin_edge_weights(const edge_index_type node) const
+      {
+        return const_reverse_edge_weight_iterator{this->rbegin_edges(node)};
+      }
+
+      [[nodiscard]]
+      constexpr const_reverse_edge_weight_iterator crend_edge_weights(const edge_index_type node) const
+      {
+        return const_reverse_edge_weight_iterator{this->rend_edges(node)};
+      }
+
+      [[nodiscard]]
+      constexpr edge_weights_range edge_weights(const edge_index_type node) { return {begin_edge_weights(node), end_edge_weights(node)}; }
+
+      [[nodiscard]]
+      constexpr const_edge_weights_range edge_weights(const edge_index_type node) const { return {begin_edge_weights(node), end_edge_weights(node)}; }
+
+      [[nodiscard]]
+      constexpr const_edge_weights_range cedge_weights(const edge_index_type node) const { return {begin_edge_weights(node), end_edge_weights(node)}; }
     protected:
       using connectivity_base<graph_flavour::directed, EdgeStorage>::connectivity_base;
     };
