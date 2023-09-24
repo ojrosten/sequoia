@@ -1323,9 +1323,9 @@ namespace sequoia
       }
 
       template<std::invocable<edge_weight_type&> Fn>
-      constexpr std::invoke_result_t<Fn, edge_weight_type&> mutate_source_edge_weight(const_edge_iterator citer, Fn&& fn)
+      constexpr std::invoke_result_t<Fn, edge_weight_type&> mutate_source_edge_weight(const_edge_iterator citer, Fn fn)
       {
-        return to_edge_iterator(citer)->mutate_weight(std::forward<Fn>(fn));
+        return fn(to_edge_iterator(citer)->weight());
       }
 
       template<class... Args>
@@ -1391,7 +1391,7 @@ namespace sequoia
       template<std::invocable<edge_weight_type&> Fn>
       constexpr void mutate_partner_edge_weight(const_edge_iterator citer, Fn fn)
       {
-        manipulate_partner_edge_weight(citer, [fn](edge_iterator iter) -> edge_iterator { iter->mutate_weight(fn); return iter; });
+        manipulate_partner_edge_weight(citer, [fn](edge_iterator iter) -> edge_iterator { fn(iter->weight()); return iter; });
       }
 
       template<class... Args>
