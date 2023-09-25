@@ -528,6 +528,22 @@ namespace sequoia
       }
 
       [[nodiscard]]
+      constexpr const_edge_iterator begin_edges(const edge_index_type node) const
+      {
+          graph_errors::check_node_index_range("begin_edges", order(), node);
+
+          return m_Edges.begin_partition(node);
+      }
+
+      [[nodiscard]]
+      constexpr const_edge_iterator end_edges(const edge_index_type node) const
+      {
+          graph_errors::check_node_index_range("end_edges", order(), node);
+
+          return m_Edges.end_partition(node);
+      }
+
+      [[nodiscard]]
       constexpr reverse_edge_iterator rbegin_edges(const edge_index_type node)
       {
         graph_errors::check_node_index_range("rbegin_edges", order(), node);
@@ -541,6 +557,22 @@ namespace sequoia
         graph_errors::check_node_index_range("rend_edges", order(), node);
 
         return m_Edges.rend_partition(node);
+      }
+
+      [[nodiscard]]
+      constexpr const_reverse_edge_iterator rbegin_edges(const edge_index_type node) const
+      {
+          graph_errors::check_node_index_range("rbegin_edges", order(), node);
+
+          return m_Edges.rbegin_partition(node);
+      }
+
+      [[nodiscard]]
+      constexpr const_reverse_edge_iterator rend_edges(const edge_index_type node) const
+      {
+          graph_errors::check_node_index_range("rend_edges", order(), node);
+
+          return m_Edges.rend_partition(node);
       }
 
       [[nodiscard]]
