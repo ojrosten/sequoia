@@ -385,6 +385,26 @@ namespace sequoia::testing
 
       trg.join(
         graph_description::node_0,
+        weighted_graph_description::node_0w,
+        t.report_line("Mutate edge weight"),
+        [](graph_t g) -> graph_t {
+          *g.rbegin_edge_weights(0) += 1.0;;
+          return g;
+        }
+      );
+
+      trg.join(
+        graph_description::node_0,
+        weighted_graph_description::node_0w,
+        t.report_line("Mutate edge weight"),
+        [](graph_t g) -> graph_t {
+          *g.edge_weights(0).begin() += 1.0;;
+          return g;
+        }
+      );
+
+      trg.join(
+        graph_description::node_0,
         weighted_graph_description::node_0_0w,
         t.report_line("Join {0,0}"),
         [](graph_t g) -> graph_t {
