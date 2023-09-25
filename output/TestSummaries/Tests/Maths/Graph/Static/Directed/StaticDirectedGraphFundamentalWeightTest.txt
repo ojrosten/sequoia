@@ -1,2 +1,2 @@
 Static Directed Graph Fundamental Weight Test
-Standard Top Level Checks:               323;  Failures:  0  [Deep checks: 7591]
+Standard Top Level Checks:               323;  Failures:  0  [Deep checks: 9229]
