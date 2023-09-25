@@ -62,17 +62,22 @@ namespace sequoia::testing
 
           if constexpr((type::flavour == maths::graph_flavour::directed) && !std::is_empty_v<typename E::weight_type>)
           {
-            using init_iterator   = typename std::initializer_list<E>::iterator;
-            using weight_iterator = utilities::iterator<init_iterator, maths::edge_weight_dereference_policy<init_iterator>>;
-            using reverse_init_iterator   = std::reverse_iterator<init_iterator>;
-            using reverse_weight_iterator = utilities::iterator<reverse_init_iterator, maths::edge_weight_dereference_policy<reverse_init_iterator>>;
+            using init_iterator    = typename std::initializer_list<E>::iterator;
+            using weight_iterator  = utilities::iterator<init_iterator, maths::edge_weight_dereference_policy<init_iterator>>;
+            using rinit_iterator   = std::reverse_iterator<init_iterator>;
+            using rweight_iterator = utilities::iterator<rinit_iterator, maths::edge_weight_dereference_policy<rinit_iterator>>;
 
-            check(flavour, append_lines(message, "edge_weight_iterator"),   logger, connectivity.begin_edge_weights(i),  connectivity.end_edge_weights(i),    weight_iterator{std::begin(*(prediction.begin() + i))},  weight_iterator{std::end(*(prediction.begin() + i))});
-            check(flavour, append_lines(message, "cedge_weight_iterator"),  logger, connectivity.cbegin_edge_weights(i),  connectivity.cend_edge_weights(i),  weight_iterator{std::begin(*(prediction.begin() + i))},  weight_iterator{std::end(*(prediction.begin() + i))});
-            check(flavour, append_lines(message, "redge_weight_iterator"),  logger, connectivity.rbegin_edge_weights(i),  connectivity.rend_edge_weights(i),  reverse_weight_iterator{std::rbegin(*(prediction.begin() + i))}, reverse_weight_iterator{std::rend(*(prediction.begin() + i))});
-            check(flavour, append_lines(message, "credge_weight_iterator"), logger, connectivity.crbegin_edge_weights(i), connectivity.crend_edge_weights(i), reverse_weight_iterator{std::rbegin(*(prediction.begin() + i))}, reverse_weight_iterator{std::rend(*(prediction.begin() + i))});
-            check(flavour, append_lines(message, "edge_weights"),           logger, connectivity.edge_weights(i).begin(), connectivity.edge_weights(i).end(), weight_iterator{std::begin(*(prediction.begin() + i))},  weight_iterator{std::end(*(prediction.begin() + i))});
-            check(flavour, append_lines(message, "cedge_weights"),          logger, connectivity.edge_weights(i).begin(), connectivity.edge_weights(i).end(), weight_iterator{std::begin(*(prediction.begin() + i))},  weight_iterator{std::end(*(prediction.begin() + i))});
+            auto& mutConn{const_cast<type&>(connectivity)};
+
+            check(flavour, append_lines(message, "edge_weight_iterator (const)"),  logger, connectivity.begin_edge_weights(i),    connectivity.end_edge_weights(i),    weight_iterator{std::begin(*(prediction.begin() + i))},   weight_iterator{std::end(*(prediction.begin() + i))});
+            check(flavour, append_lines(message, "edge_weight_iterator"),          logger, mutConn.begin_edge_weights(i),         mutConn.end_edge_weights(i),         weight_iterator{std::begin(*(prediction.begin() + i))},   weight_iterator{std::end(*(prediction.begin() + i))});
+            check(flavour, append_lines(message, "cedge_weight_iterator"),         logger, connectivity.cbegin_edge_weights(i),   connectivity.cend_edge_weights(i),   weight_iterator{std::begin(*(prediction.begin() + i))},   weight_iterator{std::end(*(prediction.begin() + i))});
+            check(flavour, append_lines(message, "redge_weight_iterator (const)"), logger, connectivity.rbegin_edge_weights(i),   connectivity.rend_edge_weights(i),   rweight_iterator{std::rbegin(*(prediction.begin() + i))}, rweight_iterator{std::rend(*(prediction.begin() + i))});
+            check(flavour, append_lines(message, "redge_weight_iterator"),         logger, mutConn.rbegin_edge_weights(i),        mutConn.rend_edge_weights(i),        rweight_iterator{std::rbegin(*(prediction.begin() + i))}, rweight_iterator{std::rend(*(prediction.begin() + i))});
+            check(flavour, append_lines(message, "credge_weight_iterator"),        logger, connectivity.crbegin_edge_weights(i),  connectivity.crend_edge_weights(i),  rweight_iterator{std::rbegin(*(prediction.begin() + i))}, rweight_iterator{std::rend(*(prediction.begin() + i))});
+            check(flavour, append_lines(message, "edge_weights (const)"),          logger, connectivity.edge_weights(i).begin(),  connectivity.edge_weights(i).end(),  weight_iterator{std::begin(*(prediction.begin() + i))},   weight_iterator{std::end(*(prediction.begin() + i))});
+            check(flavour, append_lines(message, "edge_weights"),                  logger, mutConn.edge_weights(i).begin(),       mutConn.edge_weights(i).end(),       weight_iterator{std::begin(*(prediction.begin() + i))},   weight_iterator{std::end(*(prediction.begin() + i))});
+            check(flavour, append_lines(message, "cedge_weights"),                 logger, connectivity.cedge_weights(i).begin(), connectivity.cedge_weights(i).end(), weight_iterator{std::begin(*(prediction.begin() + i))},   weight_iterator{std::end(*(prediction.begin() + i))});
 
           }
         }
