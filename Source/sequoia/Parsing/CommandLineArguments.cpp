@@ -10,7 +10,8 @@
 */
 
 // GCC seems to object to cbegin_node_weights()[i]
-#ifdef __GNUG__
+#if defined(__clang__)
+#elif defined(__GNUG__)
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdangling-reference"
 #endif
@@ -312,6 +313,7 @@ namespace sequoia::parsing::commandline
   }
 }
 
-#ifdef __GNUG__
+#if defined(__clang__)
+#elif defined(__GNUG__)
 #pragma GCC diagnostic pop
 #endif

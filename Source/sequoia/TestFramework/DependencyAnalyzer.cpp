@@ -10,7 +10,8 @@
  */
 
 // GCC seems to object to cbegin_node_weights()[i]
-#ifdef __GNUG__
+#if defined(__clang__)
+#elif defined(__GNUG__)
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdangling-reference"
 #endif
@@ -85,10 +86,8 @@ namespace sequoia::testing
       return (ext == ".hpp") || (ext == ".h") || (ext == ".hxx");
     }
 
-    template<class... Delimeters>
-      requires (std::is_same_v<Delimeters, char> && ...)
     [[nodiscard]]
-    std::string from_stream(std::istream& istr, Delimeters... delimiters)
+    std::string from_stream(std::istream& istr, std::string_view delimiters)
     {
       constexpr auto eof{std::ifstream::traits_type::eof()};
       using int_type = std::ifstream::int_type;
@@ -98,7 +97,7 @@ namespace sequoia::testing
       int_type c{};
       while((c = istr.get()) != eof)
       {
-        if(((c == delimiters) || ...)) break;
+        if(auto found{std::ranges::find(delimiters, c)}; found != delimiters.end()) break;
 
         str.push_back(static_cast<char>(c));
       }
@@ -151,7 +150,7 @@ namespace sequoia::testing
           else if(c == '#')
           {
             // Bug here with #endif
-            const auto followsHash{from_stream(ifile, ' ', '\n')};
+            const auto followsHash{from_stream(ifile, " \n")};
             if(followsHash == "include")
             {
               int_type ch{};
@@ -163,11 +162,11 @@ namespace sequoia::testing
                   [&ifile, ch]() -> fs::path {
                     if(ch == '\"')
                     {
-                      return from_stream(ifile, '\"');
+                      return from_stream(ifile, "\"");
                     }
                     else if(ch == '<')
                     {
-                      return from_stream(ifile, '>');
+                      return from_stream(ifile, ">");
                     }
 
                     return "";
@@ -191,7 +190,7 @@ namespace sequoia::testing
           else if(!cutoff.empty() && (c == cutoff.front()))
           {
             ifile.unget();
-            const auto pattern{from_stream(ifile, '\n')};
+            const auto pattern{from_stream(ifile, "\n")};
             if(const auto pos{pattern.find(cutoff)}; pos != std::string::npos)
             {
               break;
@@ -637,6 +636,7 @@ namespace sequoia::testing
   }
 }
 
-#ifdef __GNUG__
+#if defined(__clang__)
+#elif defined(__GNUG__)
 #pragma GCC diagnostic pop
 #endif
