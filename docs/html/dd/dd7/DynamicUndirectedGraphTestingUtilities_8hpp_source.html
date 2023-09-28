@@ -1480,160 +1480,169 @@ $(function() {
 <div class="line"><a id="l01406" name="l01406"></a><span class="lineno"> 1406</span>              g.sort_edges(g.cbegin_edges(0), g.cend_edges(0), [](<span class="keyword">const</span> <span class="keyword">auto</span>&amp; lhs, <span class="keyword">const</span> <span class="keyword">auto</span>&amp; rhs) { <span class="keywordflow">return</span> lhs.target_node() &lt; rhs.target_node(); });</div>
 <div class="line"><a id="l01407" name="l01407"></a><span class="lineno"> 1407</span>              <span class="keywordflow">return</span> g;</div>
 <div class="line"><a id="l01408" name="l01408"></a><span class="lineno"> 1408</span>            }</div>
-<div class="line"><a id="l01409" name="l01409"></a><span class="lineno"> 1409</span>          }</div>
-<div class="line"><a id="l01410" name="l01410"></a><span class="lineno"> 1410</span>        }, <span class="comment">// end &#39;node_1_1_2_2_node_0_0_2_node_0_0_1&#39;</span></div>
-<div class="line"><a id="l01411" name="l01411"></a><span class="lineno"> 1411</span>        {  <span class="comment">// begin &#39;node_3_1_node_0_2_node_1_node_0&#39;</span></div>
-<div class="line"><a id="l01412" name="l01412"></a><span class="lineno"> 1412</span>          {</div>
-<div class="line"><a id="l01413" name="l01413"></a><span class="lineno"> 1413</span>             graph_description::node_1_node_0_node,</div>
-<div class="line"><a id="l01414" name="l01414"></a><span class="lineno"> 1414</span>             t.report_line(<span class="stringliteral">&quot;Erase node 0&quot;</span>),</div>
-<div class="line"><a id="l01415" name="l01415"></a><span class="lineno"> 1415</span>             [](<a class="code hl_class" href="../../d0/d23/classsequoia_1_1maths_1_1undirected__graph_3_01EdgeWeight_00_01NodeWeight_00_01EdgeMetaData_00_08edd14e6a6521268e6d9e133fa863d1f.html">graph_t</a> g) -&gt; <a class="code hl_class" href="../../d0/d23/classsequoia_1_1maths_1_1undirected__graph_3_01EdgeWeight_00_01NodeWeight_00_01EdgeMetaData_00_08edd14e6a6521268e6d9e133fa863d1f.html">graph_t</a> {</div>
-<div class="line"><a id="l01416" name="l01416"></a><span class="lineno"> 1416</span>               g.erase_node(0);</div>
-<div class="line"><a id="l01417" name="l01417"></a><span class="lineno"> 1417</span>               <span class="keywordflow">return</span> g;</div>
-<div class="line"><a id="l01418" name="l01418"></a><span class="lineno"> 1418</span>             }</div>
-<div class="line"><a id="l01419" name="l01419"></a><span class="lineno"> 1419</span>          }</div>
-<div class="line"><a id="l01420" name="l01420"></a><span class="lineno"> 1420</span>        }, <span class="comment">// end &#39;node_3_1_node_0_2_node_1_node_0&#39;</span></div>
-<div class="line"><a id="l01421" name="l01421"></a><span class="lineno"> 1421</span>        {  <span class="comment">// begin &#39;node_1_node_0_node_3_node_2&#39;</span></div>
-<div class="line"><a id="l01422" name="l01422"></a><span class="lineno"> 1422</span>          {</div>
-<div class="line"><a id="l01423" name="l01423"></a><span class="lineno"> 1423</span>            graph_description::node_1_node_0_node,</div>
-<div class="line"><a id="l01424" name="l01424"></a><span class="lineno"> 1424</span>            t.report_line(<span class="stringliteral">&quot;Erase node 2&quot;</span>),</div>
-<div class="line"><a id="l01425" name="l01425"></a><span class="lineno"> 1425</span>            [](<a class="code hl_class" href="../../d0/d23/classsequoia_1_1maths_1_1undirected__graph_3_01EdgeWeight_00_01NodeWeight_00_01EdgeMetaData_00_08edd14e6a6521268e6d9e133fa863d1f.html">graph_t</a> g) -&gt; <a class="code hl_class" href="../../d0/d23/classsequoia_1_1maths_1_1undirected__graph_3_01EdgeWeight_00_01NodeWeight_00_01EdgeMetaData_00_08edd14e6a6521268e6d9e133fa863d1f.html">graph_t</a> {</div>
-<div class="line"><a id="l01426" name="l01426"></a><span class="lineno"> 1426</span>              g.erase_node(2);</div>
-<div class="line"><a id="l01427" name="l01427"></a><span class="lineno"> 1427</span>              <span class="keywordflow">return</span> g;</div>
-<div class="line"><a id="l01428" name="l01428"></a><span class="lineno"> 1428</span>            }</div>
-<div class="line"><a id="l01429" name="l01429"></a><span class="lineno"> 1429</span>          },</div>
-<div class="line"><a id="l01430" name="l01430"></a><span class="lineno"> 1430</span>          {</div>
-<div class="line"><a id="l01431" name="l01431"></a><span class="lineno"> 1431</span>            graph_description::node_2_node_3_node_0_node_1,</div>
-<div class="line"><a id="l01432" name="l01432"></a><span class="lineno"> 1432</span>            t.report_line(<span class="stringliteral">&quot;Swap {2,1}&quot;</span>),</div>
-<div class="line"><a id="l01433" name="l01433"></a><span class="lineno"> 1433</span>            [](<a class="code hl_class" href="../../d0/d23/classsequoia_1_1maths_1_1undirected__graph_3_01EdgeWeight_00_01NodeWeight_00_01EdgeMetaData_00_08edd14e6a6521268e6d9e133fa863d1f.html">graph_t</a> g) -&gt; <a class="code hl_class" href="../../d0/d23/classsequoia_1_1maths_1_1undirected__graph_3_01EdgeWeight_00_01NodeWeight_00_01EdgeMetaData_00_08edd14e6a6521268e6d9e133fa863d1f.html">graph_t</a> {</div>
-<div class="line"><a id="l01434" name="l01434"></a><span class="lineno"> 1434</span>              g.swap_nodes(2,1);</div>
-<div class="line"><a id="l01435" name="l01435"></a><span class="lineno"> 1435</span>              <span class="keywordflow">return</span> g;</div>
-<div class="line"><a id="l01436" name="l01436"></a><span class="lineno"> 1436</span>            }</div>
-<div class="line"><a id="l01437" name="l01437"></a><span class="lineno"> 1437</span>          },</div>
-<div class="line"><a id="l01438" name="l01438"></a><span class="lineno"> 1438</span>          {</div>
-<div class="line"><a id="l01439" name="l01439"></a><span class="lineno"> 1439</span>            graph_description::node_2_node_3_node_0_node_1,</div>
-<div class="line"><a id="l01440" name="l01440"></a><span class="lineno"> 1440</span>            t.report_line(<span class="stringliteral">&quot;Swap {0,3}&quot;</span>),</div>
-<div class="line"><a id="l01441" name="l01441"></a><span class="lineno"> 1441</span>            [](<a class="code hl_class" href="../../d0/d23/classsequoia_1_1maths_1_1undirected__graph_3_01EdgeWeight_00_01NodeWeight_00_01EdgeMetaData_00_08edd14e6a6521268e6d9e133fa863d1f.html">graph_t</a> g) -&gt; <a class="code hl_class" href="../../d0/d23/classsequoia_1_1maths_1_1undirected__graph_3_01EdgeWeight_00_01NodeWeight_00_01EdgeMetaData_00_08edd14e6a6521268e6d9e133fa863d1f.html">graph_t</a> {</div>
-<div class="line"><a id="l01442" name="l01442"></a><span class="lineno"> 1442</span>              g.swap_nodes(0,3);</div>
-<div class="line"><a id="l01443" name="l01443"></a><span class="lineno"> 1443</span>              <span class="keywordflow">return</span> g;</div>
-<div class="line"><a id="l01444" name="l01444"></a><span class="lineno"> 1444</span>            }</div>
-<div class="line"><a id="l01445" name="l01445"></a><span class="lineno"> 1445</span>          }</div>
-<div class="line"><a id="l01446" name="l01446"></a><span class="lineno"> 1446</span>        }, <span class="comment">// end &#39;node_1_node_0_node_3_node_2&#39;</span></div>
-<div class="line"><a id="l01447" name="l01447"></a><span class="lineno"> 1447</span>        {  <span class="comment">// begin &#39;node_2_node_3_node_0_node_1&#39;</span></div>
-<div class="line"><a id="l01448" name="l01448"></a><span class="lineno"> 1448</span>          {</div>
-<div class="line"><a id="l01449" name="l01449"></a><span class="lineno"> 1449</span>            graph_description::node_1_node_0_node_3_node_2,</div>
-<div class="line"><a id="l01450" name="l01450"></a><span class="lineno"> 1450</span>            t.report_line(<span class="stringliteral">&quot;Swap {2,1}&quot;</span>),</div>
-<div class="line"><a id="l01451" name="l01451"></a><span class="lineno"> 1451</span>            [](<a class="code hl_class" href="../../d0/d23/classsequoia_1_1maths_1_1undirected__graph_3_01EdgeWeight_00_01NodeWeight_00_01EdgeMetaData_00_08edd14e6a6521268e6d9e133fa863d1f.html">graph_t</a> g) -&gt; <a class="code hl_class" href="../../d0/d23/classsequoia_1_1maths_1_1undirected__graph_3_01EdgeWeight_00_01NodeWeight_00_01EdgeMetaData_00_08edd14e6a6521268e6d9e133fa863d1f.html">graph_t</a> {</div>
-<div class="line"><a id="l01452" name="l01452"></a><span class="lineno"> 1452</span>              g.swap_nodes(2,1);</div>
-<div class="line"><a id="l01453" name="l01453"></a><span class="lineno"> 1453</span>              <span class="keywordflow">return</span> g;</div>
-<div class="line"><a id="l01454" name="l01454"></a><span class="lineno"> 1454</span>            }</div>
-<div class="line"><a id="l01455" name="l01455"></a><span class="lineno"> 1455</span>          },</div>
-<div class="line"><a id="l01456" name="l01456"></a><span class="lineno"> 1456</span>          {</div>
-<div class="line"><a id="l01457" name="l01457"></a><span class="lineno"> 1457</span>            graph_description::node_1_node_0_node_3_node_2,</div>
-<div class="line"><a id="l01458" name="l01458"></a><span class="lineno"> 1458</span>            t.report_line(<span class="stringliteral">&quot;Swap {0,3}&quot;</span>),</div>
-<div class="line"><a id="l01459" name="l01459"></a><span class="lineno"> 1459</span>            [](<a class="code hl_class" href="../../d0/d23/classsequoia_1_1maths_1_1undirected__graph_3_01EdgeWeight_00_01NodeWeight_00_01EdgeMetaData_00_08edd14e6a6521268e6d9e133fa863d1f.html">graph_t</a> g) -&gt; <a class="code hl_class" href="../../d0/d23/classsequoia_1_1maths_1_1undirected__graph_3_01EdgeWeight_00_01NodeWeight_00_01EdgeMetaData_00_08edd14e6a6521268e6d9e133fa863d1f.html">graph_t</a> {</div>
-<div class="line"><a id="l01460" name="l01460"></a><span class="lineno"> 1460</span>              g.swap_nodes(0,3);</div>
-<div class="line"><a id="l01461" name="l01461"></a><span class="lineno"> 1461</span>              <span class="keywordflow">return</span> g;</div>
-<div class="line"><a id="l01462" name="l01462"></a><span class="lineno"> 1462</span>            }</div>
-<div class="line"><a id="l01463" name="l01463"></a><span class="lineno"> 1463</span>          }</div>
-<div class="line"><a id="l01464" name="l01464"></a><span class="lineno"> 1464</span>        }, <span class="comment">// end &#39;node_2_node_3_node_0_node_1&#39;</span></div>
-<div class="line"><a id="l01465" name="l01465"></a><span class="lineno"> 1465</span>      },</div>
-<div class="line"><a id="l01466" name="l01466"></a><span class="lineno"> 1466</span>      {</div>
-<div class="line"><a id="l01467" name="l01467"></a><span class="lineno"> 1467</span>        <span class="comment">//  &#39;empty&#39;</span></div>
-<div class="line"><a id="l01468" name="l01468"></a><span class="lineno"> 1468</span>        make_and_check(t, t.report_line(<span class="stringliteral">&quot;&quot;</span>), {}),</div>
-<div class="line"><a id="l01469" name="l01469"></a><span class="lineno"> 1469</span> </div>
-<div class="line"><a id="l01470" name="l01470"></a><span class="lineno"> 1470</span>        <span class="comment">//  &#39;node&#39;</span></div>
-<div class="line"><a id="l01471" name="l01471"></a><span class="lineno"> 1471</span>        make_and_check(t, t.report_line(<span class="stringliteral">&quot;&quot;</span>), {{}}),</div>
-<div class="line"><a id="l01472" name="l01472"></a><span class="lineno"> 1472</span> </div>
-<div class="line"><a id="l01473" name="l01473"></a><span class="lineno"> 1473</span>        <span class="comment">//  &#39;node_0&#39;</span></div>
-<div class="line"><a id="l01474" name="l01474"></a><span class="lineno"> 1474</span>        make_and_check(t, t.report_line(<span class="stringliteral">&quot;&quot;</span>), {{edge_t{0}, edge_t{0}}}),</div>
-<div class="line"><a id="l01475" name="l01475"></a><span class="lineno"> 1475</span> </div>
-<div class="line"><a id="l01476" name="l01476"></a><span class="lineno"> 1476</span>        <span class="comment">//  &#39;node_0_0&#39;</span></div>
-<div class="line"><a id="l01477" name="l01477"></a><span class="lineno"> 1477</span>        make_and_check(t, t.report_line(<span class="stringliteral">&quot;&quot;</span>), {{edge_t{0}, edge_t{0}, edge_t{0}, edge_t{0}}}),</div>
+<div class="line"><a id="l01409" name="l01409"></a><span class="lineno"> 1409</span>          },</div>
+<div class="line"><a id="l01410" name="l01410"></a><span class="lineno"> 1410</span>          {</div>
+<div class="line"><a id="l01411" name="l01411"></a><span class="lineno"> 1411</span>            graph_description::node_1_1_2_2_node_0_0_2_node_0_0_1,</div>
+<div class="line"><a id="l01412" name="l01412"></a><span class="lineno"> 1412</span>            t.report_line(<span class="stringliteral">&quot;Swap nodes {2, 1}&quot;</span>),</div>
+<div class="line"><a id="l01413" name="l01413"></a><span class="lineno"> 1413</span>            [](<a class="code hl_class" href="../../d0/d23/classsequoia_1_1maths_1_1undirected__graph_3_01EdgeWeight_00_01NodeWeight_00_01EdgeMetaData_00_08edd14e6a6521268e6d9e133fa863d1f.html">graph_t</a> g) -&gt; <a class="code hl_class" href="../../d0/d23/classsequoia_1_1maths_1_1undirected__graph_3_01EdgeWeight_00_01NodeWeight_00_01EdgeMetaData_00_08edd14e6a6521268e6d9e133fa863d1f.html">graph_t</a> {</div>
+<div class="line"><a id="l01414" name="l01414"></a><span class="lineno"> 1414</span>              g.swap_nodes(2,1);</div>
+<div class="line"><a id="l01415" name="l01415"></a><span class="lineno"> 1415</span>              g.stable_sort_edges(g.cbegin_edges(0), g.cend_edges(0), [](<span class="keyword">const</span> <span class="keyword">auto</span>&amp; lhs, <span class="keyword">const</span> <span class="keyword">auto</span>&amp; rhs) { <span class="keywordflow">return</span> lhs.target_node() &lt; rhs.target_node(); });</div>
+<div class="line"><a id="l01416" name="l01416"></a><span class="lineno"> 1416</span>              <span class="keywordflow">return</span> g;</div>
+<div class="line"><a id="l01417" name="l01417"></a><span class="lineno"> 1417</span>            }</div>
+<div class="line"><a id="l01418" name="l01418"></a><span class="lineno"> 1418</span>          }</div>
+<div class="line"><a id="l01419" name="l01419"></a><span class="lineno"> 1419</span>        }, <span class="comment">// end &#39;node_1_1_2_2_node_0_0_2_node_0_0_1&#39;</span></div>
+<div class="line"><a id="l01420" name="l01420"></a><span class="lineno"> 1420</span>        {  <span class="comment">// begin &#39;node_3_1_node_0_2_node_1_node_0&#39;</span></div>
+<div class="line"><a id="l01421" name="l01421"></a><span class="lineno"> 1421</span>          {</div>
+<div class="line"><a id="l01422" name="l01422"></a><span class="lineno"> 1422</span>             graph_description::node_1_node_0_node,</div>
+<div class="line"><a id="l01423" name="l01423"></a><span class="lineno"> 1423</span>             t.report_line(<span class="stringliteral">&quot;Erase node 0&quot;</span>),</div>
+<div class="line"><a id="l01424" name="l01424"></a><span class="lineno"> 1424</span>             [](<a class="code hl_class" href="../../d0/d23/classsequoia_1_1maths_1_1undirected__graph_3_01EdgeWeight_00_01NodeWeight_00_01EdgeMetaData_00_08edd14e6a6521268e6d9e133fa863d1f.html">graph_t</a> g) -&gt; <a class="code hl_class" href="../../d0/d23/classsequoia_1_1maths_1_1undirected__graph_3_01EdgeWeight_00_01NodeWeight_00_01EdgeMetaData_00_08edd14e6a6521268e6d9e133fa863d1f.html">graph_t</a> {</div>
+<div class="line"><a id="l01425" name="l01425"></a><span class="lineno"> 1425</span>               g.erase_node(0);</div>
+<div class="line"><a id="l01426" name="l01426"></a><span class="lineno"> 1426</span>               <span class="keywordflow">return</span> g;</div>
+<div class="line"><a id="l01427" name="l01427"></a><span class="lineno"> 1427</span>             }</div>
+<div class="line"><a id="l01428" name="l01428"></a><span class="lineno"> 1428</span>          }</div>
+<div class="line"><a id="l01429" name="l01429"></a><span class="lineno"> 1429</span>        }, <span class="comment">// end &#39;node_3_1_node_0_2_node_1_node_0&#39;</span></div>
+<div class="line"><a id="l01430" name="l01430"></a><span class="lineno"> 1430</span>        {  <span class="comment">// begin &#39;node_1_node_0_node_3_node_2&#39;</span></div>
+<div class="line"><a id="l01431" name="l01431"></a><span class="lineno"> 1431</span>          {</div>
+<div class="line"><a id="l01432" name="l01432"></a><span class="lineno"> 1432</span>            graph_description::node_1_node_0_node,</div>
+<div class="line"><a id="l01433" name="l01433"></a><span class="lineno"> 1433</span>            t.report_line(<span class="stringliteral">&quot;Erase node 2&quot;</span>),</div>
+<div class="line"><a id="l01434" name="l01434"></a><span class="lineno"> 1434</span>            [](<a class="code hl_class" href="../../d0/d23/classsequoia_1_1maths_1_1undirected__graph_3_01EdgeWeight_00_01NodeWeight_00_01EdgeMetaData_00_08edd14e6a6521268e6d9e133fa863d1f.html">graph_t</a> g) -&gt; <a class="code hl_class" href="../../d0/d23/classsequoia_1_1maths_1_1undirected__graph_3_01EdgeWeight_00_01NodeWeight_00_01EdgeMetaData_00_08edd14e6a6521268e6d9e133fa863d1f.html">graph_t</a> {</div>
+<div class="line"><a id="l01435" name="l01435"></a><span class="lineno"> 1435</span>              g.erase_node(2);</div>
+<div class="line"><a id="l01436" name="l01436"></a><span class="lineno"> 1436</span>              <span class="keywordflow">return</span> g;</div>
+<div class="line"><a id="l01437" name="l01437"></a><span class="lineno"> 1437</span>            }</div>
+<div class="line"><a id="l01438" name="l01438"></a><span class="lineno"> 1438</span>          },</div>
+<div class="line"><a id="l01439" name="l01439"></a><span class="lineno"> 1439</span>          {</div>
+<div class="line"><a id="l01440" name="l01440"></a><span class="lineno"> 1440</span>            graph_description::node_2_node_3_node_0_node_1,</div>
+<div class="line"><a id="l01441" name="l01441"></a><span class="lineno"> 1441</span>            t.report_line(<span class="stringliteral">&quot;Swap {2,1}&quot;</span>),</div>
+<div class="line"><a id="l01442" name="l01442"></a><span class="lineno"> 1442</span>            [](<a class="code hl_class" href="../../d0/d23/classsequoia_1_1maths_1_1undirected__graph_3_01EdgeWeight_00_01NodeWeight_00_01EdgeMetaData_00_08edd14e6a6521268e6d9e133fa863d1f.html">graph_t</a> g) -&gt; <a class="code hl_class" href="../../d0/d23/classsequoia_1_1maths_1_1undirected__graph_3_01EdgeWeight_00_01NodeWeight_00_01EdgeMetaData_00_08edd14e6a6521268e6d9e133fa863d1f.html">graph_t</a> {</div>
+<div class="line"><a id="l01443" name="l01443"></a><span class="lineno"> 1443</span>              g.swap_nodes(2,1);</div>
+<div class="line"><a id="l01444" name="l01444"></a><span class="lineno"> 1444</span>              <span class="keywordflow">return</span> g;</div>
+<div class="line"><a id="l01445" name="l01445"></a><span class="lineno"> 1445</span>            }</div>
+<div class="line"><a id="l01446" name="l01446"></a><span class="lineno"> 1446</span>          },</div>
+<div class="line"><a id="l01447" name="l01447"></a><span class="lineno"> 1447</span>          {</div>
+<div class="line"><a id="l01448" name="l01448"></a><span class="lineno"> 1448</span>            graph_description::node_2_node_3_node_0_node_1,</div>
+<div class="line"><a id="l01449" name="l01449"></a><span class="lineno"> 1449</span>            t.report_line(<span class="stringliteral">&quot;Swap {0,3}&quot;</span>),</div>
+<div class="line"><a id="l01450" name="l01450"></a><span class="lineno"> 1450</span>            [](<a class="code hl_class" href="../../d0/d23/classsequoia_1_1maths_1_1undirected__graph_3_01EdgeWeight_00_01NodeWeight_00_01EdgeMetaData_00_08edd14e6a6521268e6d9e133fa863d1f.html">graph_t</a> g) -&gt; <a class="code hl_class" href="../../d0/d23/classsequoia_1_1maths_1_1undirected__graph_3_01EdgeWeight_00_01NodeWeight_00_01EdgeMetaData_00_08edd14e6a6521268e6d9e133fa863d1f.html">graph_t</a> {</div>
+<div class="line"><a id="l01451" name="l01451"></a><span class="lineno"> 1451</span>              g.swap_nodes(0,3);</div>
+<div class="line"><a id="l01452" name="l01452"></a><span class="lineno"> 1452</span>              <span class="keywordflow">return</span> g;</div>
+<div class="line"><a id="l01453" name="l01453"></a><span class="lineno"> 1453</span>            }</div>
+<div class="line"><a id="l01454" name="l01454"></a><span class="lineno"> 1454</span>          }</div>
+<div class="line"><a id="l01455" name="l01455"></a><span class="lineno"> 1455</span>        }, <span class="comment">// end &#39;node_1_node_0_node_3_node_2&#39;</span></div>
+<div class="line"><a id="l01456" name="l01456"></a><span class="lineno"> 1456</span>        {  <span class="comment">// begin &#39;node_2_node_3_node_0_node_1&#39;</span></div>
+<div class="line"><a id="l01457" name="l01457"></a><span class="lineno"> 1457</span>          {</div>
+<div class="line"><a id="l01458" name="l01458"></a><span class="lineno"> 1458</span>            graph_description::node_1_node_0_node_3_node_2,</div>
+<div class="line"><a id="l01459" name="l01459"></a><span class="lineno"> 1459</span>            t.report_line(<span class="stringliteral">&quot;Swap {2,1}&quot;</span>),</div>
+<div class="line"><a id="l01460" name="l01460"></a><span class="lineno"> 1460</span>            [](<a class="code hl_class" href="../../d0/d23/classsequoia_1_1maths_1_1undirected__graph_3_01EdgeWeight_00_01NodeWeight_00_01EdgeMetaData_00_08edd14e6a6521268e6d9e133fa863d1f.html">graph_t</a> g) -&gt; <a class="code hl_class" href="../../d0/d23/classsequoia_1_1maths_1_1undirected__graph_3_01EdgeWeight_00_01NodeWeight_00_01EdgeMetaData_00_08edd14e6a6521268e6d9e133fa863d1f.html">graph_t</a> {</div>
+<div class="line"><a id="l01461" name="l01461"></a><span class="lineno"> 1461</span>              g.swap_nodes(2,1);</div>
+<div class="line"><a id="l01462" name="l01462"></a><span class="lineno"> 1462</span>              <span class="keywordflow">return</span> g;</div>
+<div class="line"><a id="l01463" name="l01463"></a><span class="lineno"> 1463</span>            }</div>
+<div class="line"><a id="l01464" name="l01464"></a><span class="lineno"> 1464</span>          },</div>
+<div class="line"><a id="l01465" name="l01465"></a><span class="lineno"> 1465</span>          {</div>
+<div class="line"><a id="l01466" name="l01466"></a><span class="lineno"> 1466</span>            graph_description::node_1_node_0_node_3_node_2,</div>
+<div class="line"><a id="l01467" name="l01467"></a><span class="lineno"> 1467</span>            t.report_line(<span class="stringliteral">&quot;Swap {0,3}&quot;</span>),</div>
+<div class="line"><a id="l01468" name="l01468"></a><span class="lineno"> 1468</span>            [](<a class="code hl_class" href="../../d0/d23/classsequoia_1_1maths_1_1undirected__graph_3_01EdgeWeight_00_01NodeWeight_00_01EdgeMetaData_00_08edd14e6a6521268e6d9e133fa863d1f.html">graph_t</a> g) -&gt; <a class="code hl_class" href="../../d0/d23/classsequoia_1_1maths_1_1undirected__graph_3_01EdgeWeight_00_01NodeWeight_00_01EdgeMetaData_00_08edd14e6a6521268e6d9e133fa863d1f.html">graph_t</a> {</div>
+<div class="line"><a id="l01469" name="l01469"></a><span class="lineno"> 1469</span>              g.swap_nodes(0,3);</div>
+<div class="line"><a id="l01470" name="l01470"></a><span class="lineno"> 1470</span>              <span class="keywordflow">return</span> g;</div>
+<div class="line"><a id="l01471" name="l01471"></a><span class="lineno"> 1471</span>            }</div>
+<div class="line"><a id="l01472" name="l01472"></a><span class="lineno"> 1472</span>          }</div>
+<div class="line"><a id="l01473" name="l01473"></a><span class="lineno"> 1473</span>        }, <span class="comment">// end &#39;node_2_node_3_node_0_node_1&#39;</span></div>
+<div class="line"><a id="l01474" name="l01474"></a><span class="lineno"> 1474</span>      },</div>
+<div class="line"><a id="l01475" name="l01475"></a><span class="lineno"> 1475</span>      {</div>
+<div class="line"><a id="l01476" name="l01476"></a><span class="lineno"> 1476</span>        <span class="comment">//  &#39;empty&#39;</span></div>
+<div class="line"><a id="l01477" name="l01477"></a><span class="lineno"> 1477</span>        make_and_check(t, t.report_line(<span class="stringliteral">&quot;&quot;</span>), {}),</div>
 <div class="line"><a id="l01478" name="l01478"></a><span class="lineno"> 1478</span> </div>
-<div class="line"><a id="l01479" name="l01479"></a><span class="lineno"> 1479</span>        <span class="comment">//  &#39;node_node&#39;</span></div>
-<div class="line"><a id="l01480" name="l01480"></a><span class="lineno"> 1480</span>        make_and_check(t, t.report_line(<span class="stringliteral">&quot;&quot;</span>), {{}, {}}),</div>
+<div class="line"><a id="l01479" name="l01479"></a><span class="lineno"> 1479</span>        <span class="comment">//  &#39;node&#39;</span></div>
+<div class="line"><a id="l01480" name="l01480"></a><span class="lineno"> 1480</span>        make_and_check(t, t.report_line(<span class="stringliteral">&quot;&quot;</span>), {{}}),</div>
 <div class="line"><a id="l01481" name="l01481"></a><span class="lineno"> 1481</span> </div>
-<div class="line"><a id="l01482" name="l01482"></a><span class="lineno"> 1482</span>        <span class="comment">//  &#39;node_1_node_0&#39;</span></div>
-<div class="line"><a id="l01483" name="l01483"></a><span class="lineno"> 1483</span>        make_and_check(t, t.report_line(<span class="stringliteral">&quot;&quot;</span>), {{edge_t{1}}, {edge_t{0}}}),</div>
+<div class="line"><a id="l01482" name="l01482"></a><span class="lineno"> 1482</span>        <span class="comment">//  &#39;node_0&#39;</span></div>
+<div class="line"><a id="l01483" name="l01483"></a><span class="lineno"> 1483</span>        make_and_check(t, t.report_line(<span class="stringliteral">&quot;&quot;</span>), {{edge_t{0}, edge_t{0}}}),</div>
 <div class="line"><a id="l01484" name="l01484"></a><span class="lineno"> 1484</span> </div>
-<div class="line"><a id="l01485" name="l01485"></a><span class="lineno"> 1485</span>        <span class="comment">//  &#39;node_0_1_node_0&#39;</span></div>
-<div class="line"><a id="l01486" name="l01486"></a><span class="lineno"> 1486</span>        make_and_check(t, t.report_line(<span class="stringliteral">&quot;&quot;</span>), {{edge_t{0}, edge_t{0}, edge_t{1}}, {edge_t{0}}}),</div>
+<div class="line"><a id="l01485" name="l01485"></a><span class="lineno"> 1485</span>        <span class="comment">//  &#39;node_0_0&#39;</span></div>
+<div class="line"><a id="l01486" name="l01486"></a><span class="lineno"> 1486</span>        make_and_check(t, t.report_line(<span class="stringliteral">&quot;&quot;</span>), {{edge_t{0}, edge_t{0}, edge_t{0}, edge_t{0}}}),</div>
 <div class="line"><a id="l01487" name="l01487"></a><span class="lineno"> 1487</span> </div>
-<div class="line"><a id="l01488" name="l01488"></a><span class="lineno"> 1488</span>        <span class="comment">// &#39;node_1_node_0_1&#39;</span></div>
-<div class="line"><a id="l01489" name="l01489"></a><span class="lineno"> 1489</span>        make_and_check(t, t.report_line(<span class="stringliteral">&quot;&quot;</span>), {{edge_t{1}}, {edge_t{0}, edge_t{1}, edge_t{1}}}),</div>
+<div class="line"><a id="l01488" name="l01488"></a><span class="lineno"> 1488</span>        <span class="comment">//  &#39;node_node&#39;</span></div>
+<div class="line"><a id="l01489" name="l01489"></a><span class="lineno"> 1489</span>        make_and_check(t, t.report_line(<span class="stringliteral">&quot;&quot;</span>), {{}, {}}),</div>
 <div class="line"><a id="l01490" name="l01490"></a><span class="lineno"> 1490</span> </div>
-<div class="line"><a id="l01491" name="l01491"></a><span class="lineno"> 1491</span>        <span class="comment">//  &#39;node_0_node&#39;</span></div>
-<div class="line"><a id="l01492" name="l01492"></a><span class="lineno"> 1492</span>        make_and_check(t, t.report_line(<span class="stringliteral">&quot;&quot;</span>), {{edge_t{0}, edge_t{0}}, {}}),</div>
+<div class="line"><a id="l01491" name="l01491"></a><span class="lineno"> 1491</span>        <span class="comment">//  &#39;node_1_node_0&#39;</span></div>
+<div class="line"><a id="l01492" name="l01492"></a><span class="lineno"> 1492</span>        make_and_check(t, t.report_line(<span class="stringliteral">&quot;&quot;</span>), {{edge_t{1}}, {edge_t{0}}}),</div>
 <div class="line"><a id="l01493" name="l01493"></a><span class="lineno"> 1493</span> </div>
-<div class="line"><a id="l01494" name="l01494"></a><span class="lineno"> 1494</span>        <span class="comment">//  &#39;node_node_1&#39;</span></div>
-<div class="line"><a id="l01495" name="l01495"></a><span class="lineno"> 1495</span>        make_and_check(t, t.report_line(<span class="stringliteral">&quot;&quot;</span>), {{}, {edge_t{1}, edge_t{1}}}),</div>
+<div class="line"><a id="l01494" name="l01494"></a><span class="lineno"> 1494</span>        <span class="comment">//  &#39;node_0_1_node_0&#39;</span></div>
+<div class="line"><a id="l01495" name="l01495"></a><span class="lineno"> 1495</span>        make_and_check(t, t.report_line(<span class="stringliteral">&quot;&quot;</span>), {{edge_t{0}, edge_t{0}, edge_t{1}}, {edge_t{0}}}),</div>
 <div class="line"><a id="l01496" name="l01496"></a><span class="lineno"> 1496</span> </div>
-<div class="line"><a id="l01497" name="l01497"></a><span class="lineno"> 1497</span>        <span class="comment">// &#39;node_1_1_node_0_0&#39;</span></div>
-<div class="line"><a id="l01498" name="l01498"></a><span class="lineno"> 1498</span>        make_and_check(t, t.report_line(<span class="stringliteral">&quot;&quot;</span>), {{edge_t{1}, edge_t{1}}, {edge_t{0}, edge_t{0}}}),</div>
+<div class="line"><a id="l01497" name="l01497"></a><span class="lineno"> 1497</span>        <span class="comment">// &#39;node_1_node_0_1&#39;</span></div>
+<div class="line"><a id="l01498" name="l01498"></a><span class="lineno"> 1498</span>        make_and_check(t, t.report_line(<span class="stringliteral">&quot;&quot;</span>), {{edge_t{1}}, {edge_t{0}, edge_t{1}, edge_t{1}}}),</div>
 <div class="line"><a id="l01499" name="l01499"></a><span class="lineno"> 1499</span> </div>
-<div class="line"><a id="l01500" name="l01500"></a><span class="lineno"> 1500</span>        <span class="comment">//  &#39;node_node_node&#39;</span></div>
-<div class="line"><a id="l01501" name="l01501"></a><span class="lineno"> 1501</span>        make_and_check(t, t.report_line(<span class="stringliteral">&quot;&quot;</span>), {{}, {}, {}}),</div>
+<div class="line"><a id="l01500" name="l01500"></a><span class="lineno"> 1500</span>        <span class="comment">//  &#39;node_0_node&#39;</span></div>
+<div class="line"><a id="l01501" name="l01501"></a><span class="lineno"> 1501</span>        make_and_check(t, t.report_line(<span class="stringliteral">&quot;&quot;</span>), {{edge_t{0}, edge_t{0}}, {}}),</div>
 <div class="line"><a id="l01502" name="l01502"></a><span class="lineno"> 1502</span> </div>
-<div class="line"><a id="l01503" name="l01503"></a><span class="lineno"> 1503</span>        <span class="comment">//  &#39;node_1_node_0_node&#39;</span></div>
-<div class="line"><a id="l01504" name="l01504"></a><span class="lineno"> 1504</span>        make_and_check(t, t.report_line(<span class="stringliteral">&quot;&quot;</span>), {{edge_t{1}}, {edge_t{0}}, {}}),</div>
+<div class="line"><a id="l01503" name="l01503"></a><span class="lineno"> 1503</span>        <span class="comment">//  &#39;node_node_1&#39;</span></div>
+<div class="line"><a id="l01504" name="l01504"></a><span class="lineno"> 1504</span>        make_and_check(t, t.report_line(<span class="stringliteral">&quot;&quot;</span>), {{}, {edge_t{1}, edge_t{1}}}),</div>
 <div class="line"><a id="l01505" name="l01505"></a><span class="lineno"> 1505</span> </div>
-<div class="line"><a id="l01506" name="l01506"></a><span class="lineno"> 1506</span>        <span class="comment">//  &#39;node_node_2_node_1&#39;</span></div>
-<div class="line"><a id="l01507" name="l01507"></a><span class="lineno"> 1507</span>        make_and_check(t, t.report_line(<span class="stringliteral">&quot;&quot;</span>), {{}, {edge_t{2}}, {edge_t{1}}}),</div>
+<div class="line"><a id="l01506" name="l01506"></a><span class="lineno"> 1506</span>        <span class="comment">// &#39;node_1_1_node_0_0&#39;</span></div>
+<div class="line"><a id="l01507" name="l01507"></a><span class="lineno"> 1507</span>        make_and_check(t, t.report_line(<span class="stringliteral">&quot;&quot;</span>), {{edge_t{1}, edge_t{1}}, {edge_t{0}, edge_t{0}}}),</div>
 <div class="line"><a id="l01508" name="l01508"></a><span class="lineno"> 1508</span> </div>
-<div class="line"><a id="l01509" name="l01509"></a><span class="lineno"> 1509</span>        <span class="comment">// &#39;node_1_node_0_2_node_1&#39;</span></div>
-<div class="line"><a id="l01510" name="l01510"></a><span class="lineno"> 1510</span>        make_and_check(t, t.report_line(<span class="stringliteral">&quot;&quot;</span>), {{edge_t{1}}, {edge_t{0}, edge_t{2}}, {edge_t{1}}}),</div>
+<div class="line"><a id="l01509" name="l01509"></a><span class="lineno"> 1509</span>        <span class="comment">//  &#39;node_node_node&#39;</span></div>
+<div class="line"><a id="l01510" name="l01510"></a><span class="lineno"> 1510</span>        make_and_check(t, t.report_line(<span class="stringliteral">&quot;&quot;</span>), {{}, {}, {}}),</div>
 <div class="line"><a id="l01511" name="l01511"></a><span class="lineno"> 1511</span> </div>
-<div class="line"><a id="l01512" name="l01512"></a><span class="lineno"> 1512</span>        <span class="comment">// &#39;node_1_2_node_0_2_node_0_1&#39;</span></div>
-<div class="line"><a id="l01513" name="l01513"></a><span class="lineno"> 1513</span>        [&amp;t](){</div>
-<div class="line"><a id="l01514" name="l01514"></a><span class="lineno"> 1514</span>          <span class="keyword">auto</span> g{make_and_check(t, t.report_line(<span class="stringliteral">&quot;&quot;</span>), {{edge_t{1}, edge_t{2}}, {edge_t{0}, edge_t{2}}, {edge_t{0}, edge_t{1}}})};</div>
-<div class="line"><a id="l01515" name="l01515"></a><span class="lineno"> 1515</span>          t.check(equality, t.report_line(<span class="stringliteral">&quot;Check sorting of edges on construction&quot;</span>), graph_t{{edge_t{2}, edge_t{1}}, {edge_t{2}, edge_t{0}}, {edge_t{1}, edge_t{0}}}, g);</div>
-<div class="line"><a id="l01516" name="l01516"></a><span class="lineno"> 1516</span> </div>
-<div class="line"><a id="l01517" name="l01517"></a><span class="lineno"> 1517</span>          <span class="keywordflow">return</span> g;</div>
-<div class="line"><a id="l01518" name="l01518"></a><span class="lineno"> 1518</span>        }(),</div>
-<div class="line"><a id="l01519" name="l01519"></a><span class="lineno"> 1519</span> </div>
-<div class="line"><a id="l01520" name="l01520"></a><span class="lineno"> 1520</span>        <span class="comment">// &#39;node_node_1_node&#39;</span></div>
-<div class="line"><a id="l01521" name="l01521"></a><span class="lineno"> 1521</span>        make_and_check(t, t.report_line(<span class="stringliteral">&quot;&quot;</span>), {{}, {edge_t{1}, edge_t{1}}, {}}),</div>
-<div class="line"><a id="l01522" name="l01522"></a><span class="lineno"> 1522</span> </div>
-<div class="line"><a id="l01523" name="l01523"></a><span class="lineno"> 1523</span>        <span class="comment">// &#39;node_1_node_0_1_node&#39;</span></div>
-<div class="line"><a id="l01524" name="l01524"></a><span class="lineno"> 1524</span>        make_and_check(t, t.report_line(<span class="stringliteral">&quot;&quot;</span>), {{edge_t{1}}, {edge_t{0}, edge_t{1}, edge_t{1}}, {}}),</div>
+<div class="line"><a id="l01512" name="l01512"></a><span class="lineno"> 1512</span>        <span class="comment">//  &#39;node_1_node_0_node&#39;</span></div>
+<div class="line"><a id="l01513" name="l01513"></a><span class="lineno"> 1513</span>        make_and_check(t, t.report_line(<span class="stringliteral">&quot;&quot;</span>), {{edge_t{1}}, {edge_t{0}}, {}}),</div>
+<div class="line"><a id="l01514" name="l01514"></a><span class="lineno"> 1514</span> </div>
+<div class="line"><a id="l01515" name="l01515"></a><span class="lineno"> 1515</span>        <span class="comment">//  &#39;node_node_2_node_1&#39;</span></div>
+<div class="line"><a id="l01516" name="l01516"></a><span class="lineno"> 1516</span>        make_and_check(t, t.report_line(<span class="stringliteral">&quot;&quot;</span>), {{}, {edge_t{2}}, {edge_t{1}}}),</div>
+<div class="line"><a id="l01517" name="l01517"></a><span class="lineno"> 1517</span> </div>
+<div class="line"><a id="l01518" name="l01518"></a><span class="lineno"> 1518</span>        <span class="comment">// &#39;node_1_node_0_2_node_1&#39;</span></div>
+<div class="line"><a id="l01519" name="l01519"></a><span class="lineno"> 1519</span>        make_and_check(t, t.report_line(<span class="stringliteral">&quot;&quot;</span>), {{edge_t{1}}, {edge_t{0}, edge_t{2}}, {edge_t{1}}}),</div>
+<div class="line"><a id="l01520" name="l01520"></a><span class="lineno"> 1520</span> </div>
+<div class="line"><a id="l01521" name="l01521"></a><span class="lineno"> 1521</span>        <span class="comment">// &#39;node_1_2_node_0_2_node_0_1&#39;</span></div>
+<div class="line"><a id="l01522" name="l01522"></a><span class="lineno"> 1522</span>        [&amp;t](){</div>
+<div class="line"><a id="l01523" name="l01523"></a><span class="lineno"> 1523</span>          <span class="keyword">auto</span> g{make_and_check(t, t.report_line(<span class="stringliteral">&quot;&quot;</span>), {{edge_t{1}, edge_t{2}}, {edge_t{0}, edge_t{2}}, {edge_t{0}, edge_t{1}}})};</div>
+<div class="line"><a id="l01524" name="l01524"></a><span class="lineno"> 1524</span>          t.check(equality, t.report_line(<span class="stringliteral">&quot;Check sorting of edges on construction&quot;</span>), graph_t{{edge_t{2}, edge_t{1}}, {edge_t{2}, edge_t{0}}, {edge_t{1}, edge_t{0}}}, g);</div>
 <div class="line"><a id="l01525" name="l01525"></a><span class="lineno"> 1525</span> </div>
-<div class="line"><a id="l01526" name="l01526"></a><span class="lineno"> 1526</span>        <span class="comment">// &#39;node_1_node_0_1_2_node_1&#39;</span></div>
-<div class="line"><a id="l01527" name="l01527"></a><span class="lineno"> 1527</span>        make_and_check(t, t.report_line(<span class="stringliteral">&quot;&quot;</span>), {{edge_t{1}}, {edge_t{0}, edge_t{1}, edge_t{1}, edge_t{2}}, {edge_t{1}}}),</div>
+<div class="line"><a id="l01526" name="l01526"></a><span class="lineno"> 1526</span>          <span class="keywordflow">return</span> g;</div>
+<div class="line"><a id="l01527" name="l01527"></a><span class="lineno"> 1527</span>        }(),</div>
 <div class="line"><a id="l01528" name="l01528"></a><span class="lineno"> 1528</span> </div>
-<div class="line"><a id="l01529" name="l01529"></a><span class="lineno"> 1529</span>        <span class="comment">// &#39;node_2_node_node_0_2&#39;</span></div>
-<div class="line"><a id="l01530" name="l01530"></a><span class="lineno"> 1530</span>        make_and_check(t, t.report_line(<span class="stringliteral">&quot;&quot;</span>), {{edge_t{2}}, {}, {edge_t{0}, edge_t{2}, edge_t{2}}}),</div>
+<div class="line"><a id="l01529" name="l01529"></a><span class="lineno"> 1529</span>        <span class="comment">// &#39;node_node_1_node&#39;</span></div>
+<div class="line"><a id="l01530" name="l01530"></a><span class="lineno"> 1530</span>        make_and_check(t, t.report_line(<span class="stringliteral">&quot;&quot;</span>), {{}, {edge_t{1}, edge_t{1}}, {}}),</div>
 <div class="line"><a id="l01531" name="l01531"></a><span class="lineno"> 1531</span> </div>
-<div class="line"><a id="l01532" name="l01532"></a><span class="lineno"> 1532</span>        <span class="comment">// &#39;node_1_1_2_2_node_0_0_2_node_0_0_1&#39;</span></div>
-<div class="line"><a id="l01533" name="l01533"></a><span class="lineno"> 1533</span>        [&amp;t](){</div>
-<div class="line"><a id="l01534" name="l01534"></a><span class="lineno"> 1534</span>          <span class="keyword">auto</span> g{make_and_check(t, t.report_line(<span class="stringliteral">&quot;&quot;</span>), {{edge_t{1}, edge_t{1}, edge_t{2}, edge_t{2}}, {edge_t{0}, edge_t{0}, edge_t{2}}, {edge_t{0}, edge_t{0}, edge_t{1}}})};</div>
-<div class="line"><a id="l01535" name="l01535"></a><span class="lineno"> 1535</span>          t.check(equality,</div>
-<div class="line"><a id="l01536" name="l01536"></a><span class="lineno"> 1536</span>                t.report_line(<span class="stringliteral">&quot;Check sorting of edges on construction&quot;</span>),</div>
-<div class="line"><a id="l01537" name="l01537"></a><span class="lineno"> 1537</span>                graph_t{{edge_t{2}, edge_t{1}, edge_t{2}, edge_t{1}}, {edge_t{0}, edge_t{2}, edge_t{0}}, {edge_t{1}, edge_t{0}, edge_t{0}}},</div>
-<div class="line"><a id="l01538" name="l01538"></a><span class="lineno"> 1538</span>                g);</div>
-<div class="line"><a id="l01539" name="l01539"></a><span class="lineno"> 1539</span> </div>
-<div class="line"><a id="l01540" name="l01540"></a><span class="lineno"> 1540</span>          <span class="keywordflow">return</span> g;</div>
-<div class="line"><a id="l01541" name="l01541"></a><span class="lineno"> 1541</span>        }(),</div>
-<div class="line"><a id="l01542" name="l01542"></a><span class="lineno"> 1542</span> </div>
-<div class="line"><a id="l01543" name="l01543"></a><span class="lineno"> 1543</span>        <span class="comment">// &#39;node_3_1_node_0_2_node_1_node_0&#39;</span></div>
-<div class="line"><a id="l01544" name="l01544"></a><span class="lineno"> 1544</span>        make_and_check(t, t.report_line(<span class="stringliteral">&quot;&quot;</span>), {{edge_t{1}, edge_t{3}}, {edge_t{0}, edge_t{2}}, {edge_t{1}}, {edge_t{0}}}),</div>
-<div class="line"><a id="l01545" name="l01545"></a><span class="lineno"> 1545</span> </div>
-<div class="line"><a id="l01546" name="l01546"></a><span class="lineno"> 1546</span>        <span class="comment">// &#39;node_1_node_0_node_3_node_2&#39;</span></div>
-<div class="line"><a id="l01547" name="l01547"></a><span class="lineno"> 1547</span>        make_and_check(t, t.report_line(<span class="stringliteral">&quot;&quot;</span>), {{edge_t{1}}, {edge_t{0}}, {edge_t{3}}, {edge_t{2}}}),</div>
+<div class="line"><a id="l01532" name="l01532"></a><span class="lineno"> 1532</span>        <span class="comment">// &#39;node_1_node_0_1_node&#39;</span></div>
+<div class="line"><a id="l01533" name="l01533"></a><span class="lineno"> 1533</span>        make_and_check(t, t.report_line(<span class="stringliteral">&quot;&quot;</span>), {{edge_t{1}}, {edge_t{0}, edge_t{1}, edge_t{1}}, {}}),</div>
+<div class="line"><a id="l01534" name="l01534"></a><span class="lineno"> 1534</span> </div>
+<div class="line"><a id="l01535" name="l01535"></a><span class="lineno"> 1535</span>        <span class="comment">// &#39;node_1_node_0_1_2_node_1&#39;</span></div>
+<div class="line"><a id="l01536" name="l01536"></a><span class="lineno"> 1536</span>        make_and_check(t, t.report_line(<span class="stringliteral">&quot;&quot;</span>), {{edge_t{1}}, {edge_t{0}, edge_t{1}, edge_t{1}, edge_t{2}}, {edge_t{1}}}),</div>
+<div class="line"><a id="l01537" name="l01537"></a><span class="lineno"> 1537</span> </div>
+<div class="line"><a id="l01538" name="l01538"></a><span class="lineno"> 1538</span>        <span class="comment">// &#39;node_2_node_node_0_2&#39;</span></div>
+<div class="line"><a id="l01539" name="l01539"></a><span class="lineno"> 1539</span>        make_and_check(t, t.report_line(<span class="stringliteral">&quot;&quot;</span>), {{edge_t{2}}, {}, {edge_t{0}, edge_t{2}, edge_t{2}}}),</div>
+<div class="line"><a id="l01540" name="l01540"></a><span class="lineno"> 1540</span> </div>
+<div class="line"><a id="l01541" name="l01541"></a><span class="lineno"> 1541</span>        <span class="comment">// &#39;node_1_1_2_2_node_0_0_2_node_0_0_1&#39;</span></div>
+<div class="line"><a id="l01542" name="l01542"></a><span class="lineno"> 1542</span>        [&amp;t](){</div>
+<div class="line"><a id="l01543" name="l01543"></a><span class="lineno"> 1543</span>          <span class="keyword">auto</span> g{make_and_check(t, t.report_line(<span class="stringliteral">&quot;&quot;</span>), {{edge_t{1}, edge_t{1}, edge_t{2}, edge_t{2}}, {edge_t{0}, edge_t{0}, edge_t{2}}, {edge_t{0}, edge_t{0}, edge_t{1}}})};</div>
+<div class="line"><a id="l01544" name="l01544"></a><span class="lineno"> 1544</span>          t.check(equality,</div>
+<div class="line"><a id="l01545" name="l01545"></a><span class="lineno"> 1545</span>                t.report_line(<span class="stringliteral">&quot;Check sorting of edges on construction&quot;</span>),</div>
+<div class="line"><a id="l01546" name="l01546"></a><span class="lineno"> 1546</span>                graph_t{{edge_t{2}, edge_t{1}, edge_t{2}, edge_t{1}}, {edge_t{0}, edge_t{2}, edge_t{0}}, {edge_t{1}, edge_t{0}, edge_t{0}}},</div>
+<div class="line"><a id="l01547" name="l01547"></a><span class="lineno"> 1547</span>                g);</div>
 <div class="line"><a id="l01548" name="l01548"></a><span class="lineno"> 1548</span> </div>
-<div class="line"><a id="l01549" name="l01549"></a><span class="lineno"> 1549</span>        <span class="comment">// &#39;node_2_node_3_node_0_node_1&#39;</span></div>
-<div class="line"><a id="l01550" name="l01550"></a><span class="lineno"> 1550</span>        make_and_check(t, t.report_line(<span class="stringliteral">&quot;&quot;</span>), {{edge_t{2}}, {edge_t{3}}, {edge_t{0}}, {edge_t{1}}}),</div>
-<div class="line"><a id="l01551" name="l01551"></a><span class="lineno"> 1551</span>      }</div>
-<div class="line"><a id="l01552" name="l01552"></a><span class="lineno"> 1552</span>      };</div>
-<div class="line"><a id="l01553" name="l01553"></a><span class="lineno"> 1553</span>    }</div>
-<div class="line"><a id="l01554" name="l01554"></a><span class="lineno"> 1554</span>  };</div>
-<div class="line"><a id="l01555" name="l01555"></a><span class="lineno"> 1555</span>}</div>
+<div class="line"><a id="l01549" name="l01549"></a><span class="lineno"> 1549</span>          <span class="keywordflow">return</span> g;</div>
+<div class="line"><a id="l01550" name="l01550"></a><span class="lineno"> 1550</span>        }(),</div>
+<div class="line"><a id="l01551" name="l01551"></a><span class="lineno"> 1551</span> </div>
+<div class="line"><a id="l01552" name="l01552"></a><span class="lineno"> 1552</span>        <span class="comment">// &#39;node_3_1_node_0_2_node_1_node_0&#39;</span></div>
+<div class="line"><a id="l01553" name="l01553"></a><span class="lineno"> 1553</span>        make_and_check(t, t.report_line(<span class="stringliteral">&quot;&quot;</span>), {{edge_t{1}, edge_t{3}}, {edge_t{0}, edge_t{2}}, {edge_t{1}}, {edge_t{0}}}),</div>
+<div class="line"><a id="l01554" name="l01554"></a><span class="lineno"> 1554</span> </div>
+<div class="line"><a id="l01555" name="l01555"></a><span class="lineno"> 1555</span>        <span class="comment">// &#39;node_1_node_0_node_3_node_2&#39;</span></div>
+<div class="line"><a id="l01556" name="l01556"></a><span class="lineno"> 1556</span>        make_and_check(t, t.report_line(<span class="stringliteral">&quot;&quot;</span>), {{edge_t{1}}, {edge_t{0}}, {edge_t{3}}, {edge_t{2}}}),</div>
+<div class="line"><a id="l01557" name="l01557"></a><span class="lineno"> 1557</span> </div>
+<div class="line"><a id="l01558" name="l01558"></a><span class="lineno"> 1558</span>        <span class="comment">// &#39;node_2_node_3_node_0_node_1&#39;</span></div>
+<div class="line"><a id="l01559" name="l01559"></a><span class="lineno"> 1559</span>        make_and_check(t, t.report_line(<span class="stringliteral">&quot;&quot;</span>), {{edge_t{2}}, {edge_t{3}}, {edge_t{0}}, {edge_t{1}}}),</div>
+<div class="line"><a id="l01560" name="l01560"></a><span class="lineno"> 1560</span>      }</div>
+<div class="line"><a id="l01561" name="l01561"></a><span class="lineno"> 1561</span>      };</div>
+<div class="line"><a id="l01562" name="l01562"></a><span class="lineno"> 1562</span>    }</div>
+<div class="line"><a id="l01563" name="l01563"></a><span class="lineno"> 1563</span>  };</div>
+<div class="line"><a id="l01564" name="l01564"></a><span class="lineno"> 1564</span>}</div>
 <div class="ttc" id="aDynamicGraphTestingUtilities_8hpp_html"><div class="ttname"><a href="../../db/daa/DynamicGraphTestingUtilities_8hpp.html">DynamicGraphTestingUtilities.hpp</a></div></div>
 <div class="ttc" id="aDynamicUndirectedGraphTestingUtilities_8hpp_html_a97da0a8abd8dded36d9ce66c7f246f8c"><div class="ttname"><a href="../../dd/dd7/DynamicUndirectedGraphTestingUtilities_8hpp.html#a97da0a8abd8dded36d9ce66c7f246f8c">sequoia::testing::undirected_graph::graph_description</a></div><div class="ttdeci">graph_description</div><div class="ttdoc">Convention: the indices following 'node' - separated by underscores - give the target node of the ass...</div><div class="ttdef"><b>Definition:</b> DynamicUndirectedGraphTestingUtilities.hpp:21</div></div>
 <div class="ttc" id="aRegularTestCore_8hpp_html"><div class="ttname"><a href="../../d9/daf/RegularTestCore_8hpp.html">RegularTestCore.hpp</a></div><div class="ttdoc">Utilities for checking regular semantics.</div></div>
 <div class="ttc" id="aStateTransitionUtilities_8hpp_html"><div class="ttname"><a href="../../d8/d43/StateTransitionUtilities_8hpp.html">StateTransitionUtilities.hpp</a></div><div class="ttdoc">Facility to define tests via a graph comprising states of an object and transitions between them.</div></div>
 <div class="ttc" id="aclasssequoia_1_1maths_1_1directed__graph_html"><div class="ttname"><a href="../../d6/dc1/classsequoia_1_1maths_1_1directed__graph.html">sequoia::maths::directed_graph</a></div><div class="ttdef"><b>Definition:</b> DynamicGraph.hpp:303</div></div>
-<div class="ttc" id="aclasssequoia_1_1maths_1_1undirected__graph_3_01EdgeWeight_00_01NodeWeight_00_01EdgeMetaData_00_08edd14e6a6521268e6d9e133fa863d1f_html"><div class="ttname"><a href="../../d0/d23/classsequoia_1_1maths_1_1undirected__graph_3_01EdgeWeight_00_01NodeWeight_00_01EdgeMetaData_00_08edd14e6a6521268e6d9e133fa863d1f.html">sequoia::maths::undirected_graph&lt; EdgeWeight, NodeWeight, EdgeMetaData, EdgeStorageConfig, NodeWeightStorage &gt;</a></div><div class="ttdef"><b>Definition:</b> DynamicGraph.hpp:416</div></div>
-<div class="ttc" id="aclasssequoia_1_1maths_1_1undirected__graph_html"><div class="ttname"><a href="../../da/d44/classsequoia_1_1maths_1_1undirected__graph.html">sequoia::maths::undirected_graph</a></div><div class="ttdef"><b>Definition:</b> DynamicGraph.hpp:359</div></div>
+<div class="ttc" id="aclasssequoia_1_1maths_1_1undirected__graph_3_01EdgeWeight_00_01NodeWeight_00_01EdgeMetaData_00_08edd14e6a6521268e6d9e133fa863d1f_html"><div class="ttname"><a href="../../d0/d23/classsequoia_1_1maths_1_1undirected__graph_3_01EdgeWeight_00_01NodeWeight_00_01EdgeMetaData_00_08edd14e6a6521268e6d9e133fa863d1f.html">sequoia::maths::undirected_graph&lt; EdgeWeight, NodeWeight, EdgeMetaData, EdgeStorageConfig, NodeWeightStorage &gt;</a></div><div class="ttdef"><b>Definition:</b> DynamicGraph.hpp:418</div></div>
+<div class="ttc" id="aclasssequoia_1_1maths_1_1undirected__graph_html"><div class="ttname"><a href="../../da/d44/classsequoia_1_1maths_1_1undirected__graph.html">sequoia::maths::undirected_graph</a></div><div class="ttdef"><b>Definition:</b> DynamicGraph.hpp:360</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1basic__test_html"><div class="ttname"><a href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">sequoia::testing::basic_test</a></div><div class="ttdoc">class template from which all concrete tests should derive.</div><div class="ttdef"><b>Definition:</b> FreeTestCore.hpp:140</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1checker_html"><div class="ttname"><a href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">sequoia::testing::checker</a></div><div class="ttdef"><b>Definition:</b> FreeCheckers.hpp:669</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1dynamic__undirected__graph__operations_html"><div class="ttname"><a href="../../d5/d6a/classsequoia_1_1testing_1_1dynamic__undirected__graph__operations.html">sequoia::testing::dynamic_undirected_graph_operations</a></div><div class="ttdef"><b>Definition:</b> DynamicUndirectedGraphTestingUtilities.hpp:138</div></div>

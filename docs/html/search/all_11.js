@@ -79,7 +79,7 @@ var searchData=
   ['smart_5fpointer_5ftester_3c_20std_3a_3aunique_5fptr_3c_20t_20_3e_20_3e_76',['smart_pointer_tester&lt; std::unique_ptr&lt; T &gt; &gt;',['../db/d16/structsequoia_1_1testing_1_1smart__pointer__tester.html',1,'sequoia::testing']]],
   ['smartpointerfreediagnostics_2ecpp_77',['SmartPointerFreeDiagnostics.cpp',['../da/d70/SmartPointerFreeDiagnostics_8cpp.html',1,'']]],
   ['smartpointerfreediagnostics_2ehpp_78',['SmartPointerFreeDiagnostics.hpp',['../db/df7/SmartPointerFreeDiagnostics_8hpp.html',1,'']]],
-  ['sort_79',['sort',['../d6/d07/Algorithms_8hpp.html#acea3d5784387d9a7cf99326563ed0a5c',1,'sequoia']]],
+  ['sort_79',['sort',['../d6/d07/Algorithms_8hpp.html#adcf20a5fa256d8bee9b171e918fcb648',1,'sequoia']]],
   ['source_5fpaths_80',['source_paths',['../dc/d3c/classsequoia_1_1testing_1_1source__paths.html',1,'sequoia::testing']]],
   ['specified_5fmoved_5ffrom_5fbeast_81',['specified_moved_from_beast',['../d0/dad/structsequoia_1_1testing_1_1specified__moved__from__beast.html',1,'sequoia::testing']]],
   ['statetransitionutilities_2ehpp_82',['StateTransitionUtilities.hpp',['../d8/d43/StateTransitionUtilities_8hpp.html',1,'']]],

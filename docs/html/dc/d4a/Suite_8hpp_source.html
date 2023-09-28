@@ -391,105 +391,142 @@ $(function() {
 <div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span> </div>
 <div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span>  <span class="keyword">template</span></div>
 <div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span>  &lt;</div>
-<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span>    <span class="keyword">class </span>ItemKeyType   = std::string,</div>
-<div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span>    <span class="keyword">class </span>ItemProjector = <a class="code hl_struct" href="../../d1/d0c/structsequoia_1_1object_1_1item__to__name.html">item_to_name</a>,</div>
-<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span>    <span class="keyword">class </span>Compare       = std::ranges::equal_to</div>
-<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span>  &gt;</div>
-<div class="line"><a id="l00325" name="l00325"></a><span class="lineno"><a class="line" href="../../d0/d41/classsequoia_1_1object_1_1filter__by__names.html">  325</a></span>  <span class="keyword">class </span><a class="code hl_class" href="../../d0/d41/classsequoia_1_1object_1_1filter__by__names.html">filter_by_names</a></div>
-<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>  {</div>
-<div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span>  <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>    <span class="keyword">using </span>items_key_type  = ItemKeyType;</div>
-<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>    <span class="keyword">using </span>suites_map_type = std::vector&lt;std::pair&lt;std::string, bool&gt;&gt;;</div>
-<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>    <span class="keyword">using </span>items_map_type  = std::vector&lt;std::pair&lt;ItemKeyType, bool&gt;&gt;;</div>
-<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>    <span class="keyword">using </span>selected_suites_iterator = <span class="keyword">typename</span> suites_map_type::const_iterator;</div>
-<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>    <span class="keyword">using </span>selected_items_iterator  = <span class="keyword">typename</span> items_map_type::const_iterator;</div>
-<div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span> </div>
-<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>    <a class="code hl_class" href="../../d0/d41/classsequoia_1_1object_1_1filter__by__names.html">filter_by_names</a>(ItemProjector proj = {}, Compare compare = {})</div>
-<div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>      : m_Proj{std::move(proj)}</div>
-<div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span>      , m_Compare{std::move(compare)}</div>
-<div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>    {}</div>
-<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span> </div>
-<div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>    <a class="code hl_class" href="../../d0/d41/classsequoia_1_1object_1_1filter__by__names.html">filter_by_names</a>(std::vector&lt;std::string&gt; selectedSuites, std::vector&lt;items_key_type&gt; selectedItems, ItemProjector proj = {}, Compare compare = {})</div>
-<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>      : m_Proj{std::move(proj)}</div>
-<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>      , m_Compare{std::move(compare)}</div>
-<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span>      , m_SelectedSuites{make(std::move(selectedSuites))}</div>
-<div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span>      , m_SelectedItems{make(std::move(selectedItems))}</div>
-<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>    {}</div>
-<div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span> </div>
-<div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span>    <span class="keywordtype">void</span> add_selected_suite(std::string name)</div>
-<div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span>    {</div>
-<div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span>      m_SelectedSuites.emplace_back(std::move(name), <span class="keyword">false</span>);</div>
-<div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span>    }</div>
-<div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span> </div>
-<div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span>    <span class="keywordtype">void</span> add_selected_item(items_key_type key)</div>
-<div class="line"><a id="l00352" name="l00352"></a><span class="lineno">  352</span>    {</div>
-<div class="line"><a id="l00353" name="l00353"></a><span class="lineno">  353</span>      m_SelectedItems.emplace_back(std::move(key), <span class="keyword">false</span>);</div>
-<div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span>    }</div>
-<div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span> </div>
-<div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span>    <span class="keywordtype">bool</span> empty() <span class="keyword">const</span> <span class="keyword">noexcept</span> { <span class="keywordflow">return</span> m_SelectedSuites.empty() &amp;&amp; m_SelectedItems.empty(); }</div>
-<div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span> </div>
-<div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span>    <span class="keyword">template</span>&lt;<span class="keyword">class </span>T, <span class="keyword">class</span>... Suites&gt;</div>
-<div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span>      <span class="keyword">requires</span> (is_suite_v&lt;Suites&gt; &amp;&amp; ...)</div>
-<div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span>    <span class="keywordtype">bool</span> operator()(<span class="keyword">const</span> T&amp; val, <span class="keyword">const</span> Suites&amp;... suites)</div>
-<div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span>    {</div>
-<div class="line"><a id="l00364" name="l00364"></a><span class="lineno">  364</span>      <span class="comment">// Don&#39;t use logical short-circuit, otherwise the maps may not accurately update</span></div>
-<div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span>      std::array&lt;bool, <span class="keyword">sizeof</span>...(Suites) + 1&gt; isFound{ find(m_SelectedItems, val, m_Proj, m_Compare), find(m_SelectedSuites, suites, <a class="code hl_struct" href="../../d1/d0c/structsequoia_1_1object_1_1item__to__name.html">item_to_name</a>{}, std::ranges::equal_to{}) ... };</div>
-<div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span> </div>
-<div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span>      <span class="keywordflow">return</span> std::ranges::any_of(isFound, [](<span class="keywordtype">bool</span> b) { <span class="keywordflow">return</span> b; });</div>
-<div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span>    }</div>
-<div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span> </div>
-<div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span>    selected_suites_iterator begin_selected_suites() <span class="keyword">const</span> <span class="keyword">noexcept</span> { <span class="keywordflow">return</span> m_SelectedSuites.begin(); }</div>
-<div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span> </div>
+<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span>    <span class="keyword">class </span>ItemKeyType,</div>
+<div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span>    <span class="keyword">class </span>ItemCompare,</div>
+<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span>    <span class="keyword">class </span>ItemProjector,</div>
+<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span>    <span class="keyword">class </span>T</div>
+<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>  &gt;</div>
+<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>  <span class="keyword">inline</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> granular_filter_for{</div>
+<div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span>    <span class="keyword">requires</span> (<span class="keyword">const</span> ItemKeyType&amp; val, ItemCompare comp, ItemProjector proj, <span class="keyword">const</span> T&amp; t) {</div>
+<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>      { comp(val, proj(t)) } -&gt; std::same_as&lt;bool&gt;;</div>
+<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>    }</div>
+<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>  };</div>
+<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span> </div>
+<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>  <span class="keyword">template</span></div>
+<div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span>  &lt;</div>
+<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>    <span class="keyword">class </span>ItemKeyType,</div>
+<div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>    <span class="keyword">class </span>ItemCompare,</div>
+<div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span>    <span class="keyword">class </span>ItemProjector</div>
+<div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>  &gt;</div>
+<div class="line"><a id="l00338" name="l00338"></a><span class="lineno"><a class="line" href="../../d6/d02/classsequoia_1_1object_1_1granular__filter.html">  338</a></span>  <span class="keyword">class </span><a class="code hl_class" href="../../d6/d02/classsequoia_1_1object_1_1granular__filter.html">granular_filter</a></div>
+<div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>  {</div>
+<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>    <span class="keyword">using </span>items_key_type  = ItemKeyType;</div>
+<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span>    <span class="keyword">using </span>suites_map_type = std::vector&lt;std::pair&lt;std::string, bool&gt;&gt;;</div>
+<div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span>    <span class="keyword">using </span>items_map_type  = std::vector&lt;std::pair&lt;ItemKeyType, bool&gt;&gt;;</div>
+<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>    <span class="keyword">using </span>selected_suites_iterator = <span class="keyword">typename</span> suites_map_type::const_iterator;</div>
+<div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span>    <span class="keyword">using </span>selected_items_iterator  = <span class="keyword">typename</span> items_map_type::const_iterator;</div>
+<div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span>    <span class="keyword">using </span>optional_suite_selection = std::optional&lt;std::vector&lt;std::string&gt;&gt;;</div>
+<div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span>    <span class="keyword">using </span>optional_item_selection  = std::optional&lt;std::vector&lt;items_key_type&gt;&gt;;</div>
+<div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span> </div>
+<div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span>    <a class="code hl_class" href="../../d6/d02/classsequoia_1_1object_1_1granular__filter.html">granular_filter</a>(ItemCompare compare = {}, ItemProjector proj = {})</div>
+<div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span>      : m_Compare{std::move(compare)}</div>
+<div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span>      , m_Proj{std::move(proj)}</div>
+<div class="line"><a id="l00352" name="l00352"></a><span class="lineno">  352</span>    {}</div>
+<div class="line"><a id="l00353" name="l00353"></a><span class="lineno">  353</span> </div>
+<div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span>    <a class="code hl_class" href="../../d6/d02/classsequoia_1_1object_1_1granular__filter.html">granular_filter</a>(optional_suite_selection selectedSuites, optional_item_selection selectedItems, ItemCompare compare = {}, ItemProjector proj = {})</div>
+<div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span>      : m_Compare{std::move(compare)}</div>
+<div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span>      , m_Proj{std::move(proj)}</div>
+<div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span>      , m_SelectedSuites{make(std::move(selectedSuites))}</div>
+<div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span>      , m_SelectedItems{make(std::move(selectedItems))}</div>
+<div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span>    {}</div>
+<div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span> </div>
+<div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span>    <span class="keywordtype">void</span> add_selected_suite(std::string name)</div>
+<div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span>    {</div>
+<div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span>      add(m_SelectedSuites, std::move(name));</div>
+<div class="line"><a id="l00364" name="l00364"></a><span class="lineno">  364</span>    }</div>
+<div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span> </div>
+<div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span>    <span class="keywordtype">void</span> add_selected_item(items_key_type key)</div>
+<div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span>    {</div>
+<div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span>      add(m_SelectedItems, std::move(key));</div>
+<div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span>    }</div>
+<div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span> </div>
+<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span>    <span class="keyword">template</span>&lt;<span class="keyword">class </span>T, <span class="keyword">class</span>... Suites&gt;</div>
+<div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span>      <span class="keyword">requires</span> (is_suite_v&lt;Suites&gt; &amp;&amp; ...) &amp;&amp; granular_filter_for&lt;ItemKeyType, ItemCompare, ItemProjector, T&gt;</div>
 <div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span>    selected_suites_iterator end_selected_suites() <span class="keyword">const</span> <span class="keyword">noexcept</span> { <span class="keywordflow">return</span> m_SelectedSuites.end(); }</div>
-<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span> </div>
-<div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span>    selected_items_iterator begin_selected_items() <span class="keyword">const</span> <span class="keyword">noexcept</span> { <span class="keywordflow">return</span> m_SelectedItems.begin(); }</div>
-<div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span> </div>
-<div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span>    selected_items_iterator end_selected_items() <span class="keyword">const</span> <span class="keyword">noexcept</span> { <span class="keywordflow">return</span> m_SelectedItems.end(); }</div>
-<div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span> </div>
-<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span>    <span class="keyword">friend</span> <span class="keywordtype">bool</span> operator==(<span class="keyword">const</span> <a class="code hl_class" href="../../d0/d41/classsequoia_1_1object_1_1filter__by__names.html">filter_by_names</a>&amp;, <span class="keyword">const</span> <a class="code hl_class" href="../../d0/d41/classsequoia_1_1object_1_1filter__by__names.html">filter_by_names</a>&amp;) <span class="keyword">noexcept</span> = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>  <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span>    [[no_unique_address]] ItemProjector m_Proj{};</div>
-<div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span>    [[no_unique_address]] Compare m_Compare{};</div>
-<div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span>    suites_map_type m_SelectedSuites{};</div>
-<div class="line"><a id="l00388" name="l00388"></a><span class="lineno">  388</span>    items_map_type m_SelectedItems{};</div>
+<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span>    <span class="keywordtype">bool</span> operator()(<span class="keyword">const</span> T&amp; val, <span class="keyword">const</span> Suites&amp;... suites)</div>
+<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span>    {</div>
+<div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span>      <span class="keywordflow">if</span>(!m_SelectedSuites &amp;&amp; !m_SelectedItems) <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span> </div>
+<div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span>      <span class="comment">// Don&#39;t use logical short-circuit, otherwise the maps may not accurately update</span></div>
+<div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span>      std::array&lt;bool, <span class="keyword">sizeof</span>...(Suites) + 1&gt; isFound{ find(m_SelectedItems, val, m_Proj, m_Compare), find(m_SelectedSuites, suites, <a class="code hl_struct" href="../../d1/d0c/structsequoia_1_1object_1_1item__to__name.html">item_to_name</a>{}, std::ranges::equal_to{}) ... };</div>
+<div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span> </div>
+<div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span>      <span class="keywordflow">return</span> std::ranges::any_of(isFound, [](<span class="keywordtype">bool</span> b) { <span class="keywordflow">return</span> b; });</div>
+<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span>    }</div>
+<div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span> </div>
+<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>    [[nodiscard]]</div>
+<div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span>    std::optional&lt;std::ranges::subrange&lt;selected_suites_iterator&gt;&gt; selected_suites() <span class="keyword">const</span> <span class="keyword">noexcept</span></div>
+<div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span>    {</div>
+<div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span>      <span class="keywordflow">return</span> m_SelectedSuites ? std::optional&lt;std::ranges::subrange&lt;selected_suites_iterator&gt;&gt;{{m_SelectedSuites-&gt;begin(), m_SelectedSuites-&gt;end()}} : std::nullopt;</div>
+<div class="line"><a id="l00388" name="l00388"></a><span class="lineno">  388</span>    }</div>
 <div class="line"><a id="l00389" name="l00389"></a><span class="lineno">  389</span> </div>
-<div class="line"><a id="l00390" name="l00390"></a><span class="lineno">  390</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> KeyType&gt;</div>
-<div class="line"><a id="l00391" name="l00391"></a><span class="lineno">  391</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00392" name="l00392"></a><span class="lineno">  392</span>    <span class="keyword">static</span> std::vector&lt;std::pair&lt;KeyType, bool&gt;&gt; make(std::vector&lt;KeyType&gt; selected)</div>
-<div class="line"><a id="l00393" name="l00393"></a><span class="lineno">  393</span>    {</div>
-<div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span>      std::vector&lt;std::pair&lt;KeyType, bool&gt;&gt; selection{};</div>
-<div class="line"><a id="l00395" name="l00395"></a><span class="lineno">  395</span>      <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp; e : selected)</div>
-<div class="line"><a id="l00396" name="l00396"></a><span class="lineno">  396</span>        selection.emplace_back(std::move(e), <span class="keyword">false</span>);</div>
-<div class="line"><a id="l00397" name="l00397"></a><span class="lineno">  397</span> </div>
-<div class="line"><a id="l00398" name="l00398"></a><span class="lineno">  398</span>      <span class="keywordflow">return</span> selection;</div>
-<div class="line"><a id="l00399" name="l00399"></a><span class="lineno">  399</span>    }</div>
-<div class="line"><a id="l00400" name="l00400"></a><span class="lineno">  400</span> </div>
-<div class="line"><a id="l00401" name="l00401"></a><span class="lineno">  401</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> Key, <span class="keyword">class</span> U, <span class="keyword">class</span> Projector, <span class="keyword">class</span> Comp&gt;</div>
-<div class="line"><a id="l00402" name="l00402"></a><span class="lineno">  402</span>    <span class="keyword">static</span> <span class="keywordtype">bool</span> find(std::vector&lt;std::pair&lt;Key, bool&gt;&gt;&amp; selected, <span class="keyword">const</span> U&amp; u, Projector proj, Comp compare)</div>
-<div class="line"><a id="l00403" name="l00403"></a><span class="lineno">  403</span>    {</div>
-<div class="line"><a id="l00404" name="l00404"></a><span class="lineno">  404</span>      <span class="keyword">auto</span> found{std::ranges::find_if(selected, [&amp;proj, &amp;compare, &amp;u](<span class="keyword">const</span> std::pair&lt;Key, bool&gt;&amp; e) { <span class="keywordflow">return</span> compare(e.first, proj(u)); })};</div>
-<div class="line"><a id="l00405" name="l00405"></a><span class="lineno">  405</span> </div>
-<div class="line"><a id="l00406" name="l00406"></a><span class="lineno">  406</span>      <span class="keywordflow">if</span>(found != selected.end())</div>
-<div class="line"><a id="l00407" name="l00407"></a><span class="lineno">  407</span>      {</div>
-<div class="line"><a id="l00408" name="l00408"></a><span class="lineno">  408</span>        found-&gt;second = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00409" name="l00409"></a><span class="lineno">  409</span>        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00410" name="l00410"></a><span class="lineno">  410</span>      }</div>
-<div class="line"><a id="l00411" name="l00411"></a><span class="lineno">  411</span> </div>
-<div class="line"><a id="l00412" name="l00412"></a><span class="lineno">  412</span>      <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00413" name="l00413"></a><span class="lineno">  413</span>    }</div>
-<div class="line"><a id="l00414" name="l00414"></a><span class="lineno">  414</span>  };</div>
-<div class="line"><a id="l00415" name="l00415"></a><span class="lineno">  415</span>}</div>
+<div class="line"><a id="l00390" name="l00390"></a><span class="lineno">  390</span>    [[nodiscard]]</div>
+<div class="line"><a id="l00391" name="l00391"></a><span class="lineno">  391</span>    std::optional&lt;std::ranges::subrange&lt;selected_items_iterator&gt;&gt; selected_items() <span class="keyword">const</span> <span class="keyword">noexcept</span></div>
+<div class="line"><a id="l00392" name="l00392"></a><span class="lineno">  392</span>    {</div>
+<div class="line"><a id="l00393" name="l00393"></a><span class="lineno">  393</span>      <span class="keywordflow">return</span> m_SelectedItems ? std::optional&lt;std::ranges::subrange&lt;selected_items_iterator&gt;&gt;{{m_SelectedItems-&gt;begin(), m_SelectedItems-&gt;end()}} : std::nullopt;</div>
+<div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span>    }</div>
+<div class="line"><a id="l00395" name="l00395"></a><span class="lineno">  395</span> </div>
+<div class="line"><a id="l00396" name="l00396"></a><span class="lineno">  396</span>    [[nodiscard]]</div>
+<div class="line"><a id="l00397" name="l00397"></a><span class="lineno">  397</span>    <span class="keyword">friend</span> <span class="keywordtype">bool</span> operator==(<span class="keyword">const</span> <a class="code hl_class" href="../../d6/d02/classsequoia_1_1object_1_1granular__filter.html">granular_filter</a>&amp;, <span class="keyword">const</span> <a class="code hl_class" href="../../d6/d02/classsequoia_1_1object_1_1granular__filter.html">granular_filter</a>&amp;) <span class="keyword">noexcept</span> = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00398" name="l00398"></a><span class="lineno">  398</span> </div>
+<div class="line"><a id="l00399" name="l00399"></a><span class="lineno">  399</span>    [[nodiscard]]</div>
+<div class="line"><a id="l00400" name="l00400"></a><span class="lineno">  400</span>    <span class="keyword">operator</span> bool() <span class="keyword">const</span> <span class="keyword">noexcept</span></div>
+<div class="line"><a id="l00401" name="l00401"></a><span class="lineno">  401</span>    {</div>
+<div class="line"><a id="l00402" name="l00402"></a><span class="lineno">  402</span>      <span class="keywordflow">return</span> m_SelectedSuites || m_SelectedItems;</div>
+<div class="line"><a id="l00403" name="l00403"></a><span class="lineno">  403</span>    }</div>
+<div class="line"><a id="l00404" name="l00404"></a><span class="lineno">  404</span>  <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00405" name="l00405"></a><span class="lineno">  405</span>    [[no_unique_address]] ItemCompare m_Compare{};</div>
+<div class="line"><a id="l00406" name="l00406"></a><span class="lineno">  406</span>    [[no_unique_address]] ItemProjector m_Proj{};</div>
+<div class="line"><a id="l00407" name="l00407"></a><span class="lineno">  407</span>    std::optional&lt;suites_map_type&gt; m_SelectedSuites{};</div>
+<div class="line"><a id="l00408" name="l00408"></a><span class="lineno">  408</span>    std::optional&lt;items_map_type&gt;  m_SelectedItems{};</div>
+<div class="line"><a id="l00409" name="l00409"></a><span class="lineno">  409</span> </div>
+<div class="line"><a id="l00410" name="l00410"></a><span class="lineno">  410</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> Key&gt;</div>
+<div class="line"><a id="l00411" name="l00411"></a><span class="lineno">  411</span>    <span class="keyword">using </span>opt_map_type = std::optional&lt;std::vector&lt;std::pair&lt;Key, bool&gt;&gt;&gt;;</div>
+<div class="line"><a id="l00412" name="l00412"></a><span class="lineno">  412</span> </div>
+<div class="line"><a id="l00413" name="l00413"></a><span class="lineno">  413</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> Key&gt;</div>
+<div class="line"><a id="l00414" name="l00414"></a><span class="lineno">  414</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> add(opt_map_type&lt;Key&gt;&amp; map, Key k)</div>
+<div class="line"><a id="l00415" name="l00415"></a><span class="lineno">  415</span>    {</div>
+<div class="line"><a id="l00416" name="l00416"></a><span class="lineno">  416</span>      <span class="keyword">using </span>map_type = <span class="keyword">typename</span> opt_map_type&lt;Key&gt;::value_type;</div>
+<div class="line"><a id="l00417" name="l00417"></a><span class="lineno">  417</span>      <span class="keywordflow">if</span>(!map) map = map_type{};</div>
+<div class="line"><a id="l00418" name="l00418"></a><span class="lineno">  418</span> </div>
+<div class="line"><a id="l00419" name="l00419"></a><span class="lineno">  419</span>      map-&gt;emplace_back(std::move(k), <span class="keyword">false</span>);</div>
+<div class="line"><a id="l00420" name="l00420"></a><span class="lineno">  420</span>    }</div>
+<div class="line"><a id="l00421" name="l00421"></a><span class="lineno">  421</span> </div>
+<div class="line"><a id="l00422" name="l00422"></a><span class="lineno">  422</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> Key&gt;</div>
+<div class="line"><a id="l00423" name="l00423"></a><span class="lineno">  423</span>    [[nodiscard]]</div>
+<div class="line"><a id="l00424" name="l00424"></a><span class="lineno">  424</span>    <span class="keyword">static</span> opt_map_type&lt;Key&gt; make(std::optional&lt;std::vector&lt;Key&gt;&gt; selected)</div>
+<div class="line"><a id="l00425" name="l00425"></a><span class="lineno">  425</span>    {</div>
+<div class="line"><a id="l00426" name="l00426"></a><span class="lineno">  426</span>      <span class="keywordflow">if</span>(!selected) <span class="keywordflow">return</span> std::nullopt;</div>
+<div class="line"><a id="l00427" name="l00427"></a><span class="lineno">  427</span> </div>
+<div class="line"><a id="l00428" name="l00428"></a><span class="lineno">  428</span>      std::vector&lt;std::pair&lt;Key, bool&gt;&gt; selection{};</div>
+<div class="line"><a id="l00429" name="l00429"></a><span class="lineno">  429</span>      <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp; e : *selected)</div>
+<div class="line"><a id="l00430" name="l00430"></a><span class="lineno">  430</span>        selection.emplace_back(std::move(e), <span class="keyword">false</span>);</div>
+<div class="line"><a id="l00431" name="l00431"></a><span class="lineno">  431</span> </div>
+<div class="line"><a id="l00432" name="l00432"></a><span class="lineno">  432</span>      <span class="keywordflow">return</span> selection;</div>
+<div class="line"><a id="l00433" name="l00433"></a><span class="lineno">  433</span>    }</div>
+<div class="line"><a id="l00434" name="l00434"></a><span class="lineno">  434</span> </div>
+<div class="line"><a id="l00435" name="l00435"></a><span class="lineno">  435</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> Key, <span class="keyword">class</span> U, <span class="keyword">class</span> Projector, <span class="keyword">class</span> Comp&gt;</div>
+<div class="line"><a id="l00436" name="l00436"></a><span class="lineno">  436</span>    <span class="keyword">static</span> <span class="keywordtype">bool</span> find(opt_map_type&lt;Key&gt;&amp; selected, <span class="keyword">const</span> U&amp; u, Projector proj, Comp compare)</div>
+<div class="line"><a id="l00437" name="l00437"></a><span class="lineno">  437</span>    {</div>
+<div class="line"><a id="l00438" name="l00438"></a><span class="lineno">  438</span>      <span class="keywordflow">if</span>(selected)</div>
+<div class="line"><a id="l00439" name="l00439"></a><span class="lineno">  439</span>      {</div>
+<div class="line"><a id="l00440" name="l00440"></a><span class="lineno">  440</span>        <span class="keyword">auto</span> found{std::ranges::find_if(*selected, [&amp;proj, &amp;compare, &amp;u](<span class="keyword">const</span> std::pair&lt;Key, bool&gt;&amp; e) { <span class="keywordflow">return</span> compare(e.first, proj(u)); })};</div>
+<div class="line"><a id="l00441" name="l00441"></a><span class="lineno">  441</span> </div>
+<div class="line"><a id="l00442" name="l00442"></a><span class="lineno">  442</span>        <span class="keywordflow">if</span>(found != selected-&gt;end())</div>
+<div class="line"><a id="l00443" name="l00443"></a><span class="lineno">  443</span>        {</div>
+<div class="line"><a id="l00444" name="l00444"></a><span class="lineno">  444</span>          found-&gt;second = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00445" name="l00445"></a><span class="lineno">  445</span>          <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00446" name="l00446"></a><span class="lineno">  446</span>        }</div>
+<div class="line"><a id="l00447" name="l00447"></a><span class="lineno">  447</span>      }</div>
+<div class="line"><a id="l00448" name="l00448"></a><span class="lineno">  448</span> </div>
+<div class="line"><a id="l00449" name="l00449"></a><span class="lineno">  449</span>      <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00450" name="l00450"></a><span class="lineno">  450</span>    }</div>
+<div class="line"><a id="l00451" name="l00451"></a><span class="lineno">  451</span>  };</div>
+<div class="line"><a id="l00452" name="l00452"></a><span class="lineno">  452</span>}</div>
 <div class="ttc" id="aDynamicTree_8hpp_html"><div class="ttname"><a href="../../db/dec/DynamicTree_8hpp.html">DynamicTree.hpp</a></div><div class="ttdoc">Restriction of Dynamic Graphs to Trees.</div></div>
 <div class="ttc" id="aGraphTraits_8hpp_html"><div class="ttname"><a href="../../d9/d96/GraphTraits_8hpp.html">GraphTraits.hpp</a></div><div class="ttdoc">Traits and Concepts for graphs.</div></div>
 <div class="ttc" id="aNomenclator_8hpp_html"><div class="ttname"><a href="../../d5/dad/Nomenclator_8hpp.html">Nomenclator.hpp</a></div><div class="ttdoc">Utilities for associating types with names.</div></div>
-<div class="ttc" id="aclasssequoia_1_1object_1_1filter__by__names_html"><div class="ttname"><a href="../../d0/d41/classsequoia_1_1object_1_1filter__by__names.html">sequoia::object::filter_by_names</a></div><div class="ttdef"><b>Definition:</b> Suite.hpp:326</div></div>
+<div class="ttc" id="aclasssequoia_1_1object_1_1granular__filter_html"><div class="ttname"><a href="../../d6/d02/classsequoia_1_1object_1_1granular__filter.html">sequoia::object::granular_filter</a></div><div class="ttdef"><b>Definition:</b> Suite.hpp:339</div></div>
 <div class="ttc" id="aclasssequoia_1_1object_1_1suite_html"><div class="ttname"><a href="../../dd/d01/classsequoia_1_1object_1_1suite.html">sequoia::object::suite</a></div><div class="ttdef"><b>Definition:</b> Suite.hpp:46</div></div>
 <div class="ttc" id="astructsequoia_1_1object_1_1faithful__variant_html"><div class="ttname"><a href="../../d2/d58/structsequoia_1_1object_1_1faithful__variant.html">sequoia::object::faithful_variant</a></div><div class="ttdef"><b>Definition:</b> Suite.hpp:134</div></div>
 <div class="ttc" id="astructsequoia_1_1object_1_1is__suite_html"><div class="ttname"><a href="../../dd/d61/structsequoia_1_1object_1_1is__suite.html">sequoia::object::is_suite</a></div><div class="ttdef"><b>Definition:</b> Suite.hpp:28</div></div>

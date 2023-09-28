@@ -952,60 +952,66 @@ $(function() {
 <div class="line"><a id="l00880" name="l00880"></a><span class="lineno">  880</span>          g.set_edge_weight(g.cbegin_edges(0), 1.0);</div>
 <div class="line"><a id="l00881" name="l00881"></a><span class="lineno">  881</span>          g.set_edge_weight(g.cbegin_edges(0) + 1, 2.0);</div>
 <div class="line"><a id="l00882" name="l00882"></a><span class="lineno">  882</span>          g.set_edge_weight(g.cbegin_edges(0) + 2 , 0.0);</div>
-<div class="line"><a id="l00883" name="l00883"></a><span class="lineno">  883</span>          g.sort_edges(g.cbegin_edges(0), g.cend_edges(1), [](<span class="keyword">const</span> <span class="keyword">auto</span>&amp; lhs, <span class="keyword">const</span> <span class="keyword">auto</span>&amp; rhs) { <span class="keywordflow">return</span> lhs.weight() &lt; rhs.weight(); });</div>
-<div class="line"><a id="l00884" name="l00884"></a><span class="lineno">  884</span>          <span class="keywordflow">return</span> g;</div>
-<div class="line"><a id="l00885" name="l00885"></a><span class="lineno">  885</span>        }</div>
-<div class="line"><a id="l00886" name="l00886"></a><span class="lineno">  886</span>      );</div>
-<div class="line"><a id="l00887" name="l00887"></a><span class="lineno">  887</span> </div>
-<div class="line"><a id="l00888" name="l00888"></a><span class="lineno">  888</span>      trg.join(</div>
-<div class="line"><a id="l00889" name="l00889"></a><span class="lineno">  889</span>        weighted_graph_description::node_1_1w_1x_node_0_0w_0x,</div>
-<div class="line"><a id="l00890" name="l00890"></a><span class="lineno">  890</span>        weighted_graph_description::node_1_1w_1x_node_0_0w_0x,</div>
-<div class="line"><a id="l00891" name="l00891"></a><span class="lineno">  891</span>        t.report_line(<span class="stringliteral">&quot;Mutate mutliple edge weights and sort&quot;</span>),</div>
-<div class="line"><a id="l00892" name="l00892"></a><span class="lineno">  892</span>        [](graph_t g) -&gt; graph_t {</div>
-<div class="line"><a id="l00893" name="l00893"></a><span class="lineno">  893</span>          g.mutate_edge_weight(g.cbegin_edges(0),     [](<span class="keywordtype">double</span>&amp; x){ x += 1.0; });</div>
-<div class="line"><a id="l00894" name="l00894"></a><span class="lineno">  894</span>          g.mutate_edge_weight(g.cbegin_edges(0) + 1, [](<span class="keywordtype">double</span>&amp; x){ x += 1.0; });</div>
-<div class="line"><a id="l00895" name="l00895"></a><span class="lineno">  895</span>          g.mutate_edge_weight(g.cbegin_edges(0) + 2, [](<span class="keywordtype">double</span>&amp; x){ x -= 2.0; });</div>
-<div class="line"><a id="l00896" name="l00896"></a><span class="lineno">  896</span>          g.sort_edges(g.cbegin_edges(0), g.cend_edges(1), [](<span class="keyword">const</span> <span class="keyword">auto</span>&amp; lhs, <span class="keyword">const</span> <span class="keyword">auto</span>&amp; rhs) { <span class="keywordflow">return</span> lhs.weight() &lt; rhs.weight(); });</div>
-<div class="line"><a id="l00897" name="l00897"></a><span class="lineno">  897</span>          <span class="keywordflow">return</span> g;</div>
-<div class="line"><a id="l00898" name="l00898"></a><span class="lineno">  898</span>        }</div>
-<div class="line"><a id="l00899" name="l00899"></a><span class="lineno">  899</span>      );</div>
-<div class="line"><a id="l00900" name="l00900"></a><span class="lineno">  900</span> </div>
-<div class="line"><a id="l00901" name="l00901"></a><span class="lineno">  901</span>      <span class="comment">// end &#39;weighted_graph_description::node_1_1w_1x_node_0_0w_0x&#39;</span></div>
+<div class="line"><a id="l00883" name="l00883"></a><span class="lineno">  883</span> </div>
+<div class="line"><a id="l00884" name="l00884"></a><span class="lineno">  884</span>          <span class="keywordflow">for</span>(<span class="keyword">auto</span> i : std::views::iota(0_sz, 2_sz))</div>
+<div class="line"><a id="l00885" name="l00885"></a><span class="lineno">  885</span>            g.sort_edges(g.cbegin_edges(i), g.cend_edges(i), [](<span class="keyword">const</span> <span class="keyword">auto</span>&amp; lhs, <span class="keyword">const</span> <span class="keyword">auto</span>&amp; rhs) { <span class="keywordflow">return</span> lhs.weight() &lt; rhs.weight(); });</div>
+<div class="line"><a id="l00886" name="l00886"></a><span class="lineno">  886</span> </div>
+<div class="line"><a id="l00887" name="l00887"></a><span class="lineno">  887</span>          <span class="keywordflow">return</span> g;</div>
+<div class="line"><a id="l00888" name="l00888"></a><span class="lineno">  888</span>        }</div>
+<div class="line"><a id="l00889" name="l00889"></a><span class="lineno">  889</span>      );</div>
+<div class="line"><a id="l00890" name="l00890"></a><span class="lineno">  890</span> </div>
+<div class="line"><a id="l00891" name="l00891"></a><span class="lineno">  891</span>      trg.join(</div>
+<div class="line"><a id="l00892" name="l00892"></a><span class="lineno">  892</span>        weighted_graph_description::node_1_1w_1x_node_0_0w_0x,</div>
+<div class="line"><a id="l00893" name="l00893"></a><span class="lineno">  893</span>        weighted_graph_description::node_1_1w_1x_node_0_0w_0x,</div>
+<div class="line"><a id="l00894" name="l00894"></a><span class="lineno">  894</span>        t.report_line(<span class="stringliteral">&quot;Mutate mutliple edge weights and sort&quot;</span>),</div>
+<div class="line"><a id="l00895" name="l00895"></a><span class="lineno">  895</span>        [](graph_t g) -&gt; graph_t {</div>
+<div class="line"><a id="l00896" name="l00896"></a><span class="lineno">  896</span>          g.mutate_edge_weight(g.cbegin_edges(0),     [](<span class="keywordtype">double</span>&amp; x){ x += 1.0; });</div>
+<div class="line"><a id="l00897" name="l00897"></a><span class="lineno">  897</span>          g.mutate_edge_weight(g.cbegin_edges(0) + 1, [](<span class="keywordtype">double</span>&amp; x){ x += 1.0; });</div>
+<div class="line"><a id="l00898" name="l00898"></a><span class="lineno">  898</span>          g.mutate_edge_weight(g.cbegin_edges(0) + 2, [](<span class="keywordtype">double</span>&amp; x){ x -= 2.0; });</div>
+<div class="line"><a id="l00899" name="l00899"></a><span class="lineno">  899</span> </div>
+<div class="line"><a id="l00900" name="l00900"></a><span class="lineno">  900</span>          <span class="keywordflow">for</span>(<span class="keyword">auto</span> i : std::views::iota(0_sz, 2_sz))</div>
+<div class="line"><a id="l00901" name="l00901"></a><span class="lineno">  901</span>            g.sort_edges(g.cbegin_edges(i), g.cend_edges(i), [](<span class="keyword">const</span> <span class="keyword">auto</span>&amp; lhs, <span class="keyword">const</span> <span class="keyword">auto</span>&amp; rhs) { <span class="keywordflow">return</span> lhs.weight() &lt; rhs.weight(); });</div>
 <div class="line"><a id="l00902" name="l00902"></a><span class="lineno">  902</span> </div>
-<div class="line"><a id="l00903" name="l00903"></a><span class="lineno">  903</span>      <span class="comment">// begin &#39;weighted_graph_description::node_0y_1_1w_1x_node_0_0w_0x&#39;</span></div>
-<div class="line"><a id="l00904" name="l00904"></a><span class="lineno">  904</span> </div>
-<div class="line"><a id="l00905" name="l00905"></a><span class="lineno">  905</span>      trg.join(</div>
-<div class="line"><a id="l00906" name="l00906"></a><span class="lineno">  906</span>        weighted_graph_description::node_0y_1_1w_1x_node_0_0w_0x,</div>
-<div class="line"><a id="l00907" name="l00907"></a><span class="lineno">  907</span>        weighted_graph_description::node_1_1w_1x_node_0_0w_0x,</div>
-<div class="line"><a id="l00908" name="l00908"></a><span class="lineno">  908</span>        t.report_line(<span class="stringliteral">&quot;Remove zeroth partial edge&quot;</span>),</div>
-<div class="line"><a id="l00909" name="l00909"></a><span class="lineno">  909</span>        [](graph_t g) -&gt; graph_t {</div>
-<div class="line"><a id="l00910" name="l00910"></a><span class="lineno">  910</span>          g.erase_edge(g.cbegin_edges(0));</div>
-<div class="line"><a id="l00911" name="l00911"></a><span class="lineno">  911</span>          <span class="keywordflow">return</span> g;</div>
-<div class="line"><a id="l00912" name="l00912"></a><span class="lineno">  912</span>        }</div>
-<div class="line"><a id="l00913" name="l00913"></a><span class="lineno">  913</span>      );</div>
-<div class="line"><a id="l00914" name="l00914"></a><span class="lineno">  914</span> </div>
-<div class="line"><a id="l00915" name="l00915"></a><span class="lineno">  915</span>      trg.join(</div>
-<div class="line"><a id="l00916" name="l00916"></a><span class="lineno">  916</span>        weighted_graph_description::node_0y_1_1w_1x_node_0_0w_0x,</div>
-<div class="line"><a id="l00917" name="l00917"></a><span class="lineno">  917</span>        weighted_graph_description::node_1_1w_1x_node_0_0w_0x,</div>
-<div class="line"><a id="l00918" name="l00918"></a><span class="lineno">  918</span>        t.report_line(<span class="stringliteral">&quot;Remove first partial edge&quot;</span>),</div>
-<div class="line"><a id="l00919" name="l00919"></a><span class="lineno">  919</span>        [](graph_t g) -&gt; graph_t {</div>
-<div class="line"><a id="l00920" name="l00920"></a><span class="lineno">  920</span>          g.erase_edge(++g.cbegin_edges(0));</div>
-<div class="line"><a id="l00921" name="l00921"></a><span class="lineno">  921</span>          <span class="keywordflow">return</span> g;</div>
-<div class="line"><a id="l00922" name="l00922"></a><span class="lineno">  922</span>        }</div>
-<div class="line"><a id="l00923" name="l00923"></a><span class="lineno">  923</span>      );</div>
-<div class="line"><a id="l00924" name="l00924"></a><span class="lineno">  924</span> </div>
-<div class="line"><a id="l00925" name="l00925"></a><span class="lineno">  925</span>      <span class="comment">// end&#39;weighted_graph_description::node_0y_1_1w_1x_node_0_0w_0x&#39;</span></div>
-<div class="line"><a id="l00926" name="l00926"></a><span class="lineno">  926</span> </div>
-<div class="line"><a id="l00927" name="l00927"></a><span class="lineno">  927</span>      <span class="keywordflow">return</span> trg;</div>
-<div class="line"><a id="l00928" name="l00928"></a><span class="lineno">  928</span>    }</div>
-<div class="line"><a id="l00929" name="l00929"></a><span class="lineno">  929</span>  };</div>
+<div class="line"><a id="l00903" name="l00903"></a><span class="lineno">  903</span>          <span class="keywordflow">return</span> g;</div>
+<div class="line"><a id="l00904" name="l00904"></a><span class="lineno">  904</span>        }</div>
+<div class="line"><a id="l00905" name="l00905"></a><span class="lineno">  905</span>      );</div>
+<div class="line"><a id="l00906" name="l00906"></a><span class="lineno">  906</span> </div>
+<div class="line"><a id="l00907" name="l00907"></a><span class="lineno">  907</span>      <span class="comment">// end &#39;weighted_graph_description::node_1_1w_1x_node_0_0w_0x&#39;</span></div>
+<div class="line"><a id="l00908" name="l00908"></a><span class="lineno">  908</span> </div>
+<div class="line"><a id="l00909" name="l00909"></a><span class="lineno">  909</span>      <span class="comment">// begin &#39;weighted_graph_description::node_0y_1_1w_1x_node_0_0w_0x&#39;</span></div>
+<div class="line"><a id="l00910" name="l00910"></a><span class="lineno">  910</span> </div>
+<div class="line"><a id="l00911" name="l00911"></a><span class="lineno">  911</span>      trg.join(</div>
+<div class="line"><a id="l00912" name="l00912"></a><span class="lineno">  912</span>        weighted_graph_description::node_0y_1_1w_1x_node_0_0w_0x,</div>
+<div class="line"><a id="l00913" name="l00913"></a><span class="lineno">  913</span>        weighted_graph_description::node_1_1w_1x_node_0_0w_0x,</div>
+<div class="line"><a id="l00914" name="l00914"></a><span class="lineno">  914</span>        t.report_line(<span class="stringliteral">&quot;Remove zeroth partial edge&quot;</span>),</div>
+<div class="line"><a id="l00915" name="l00915"></a><span class="lineno">  915</span>        [](graph_t g) -&gt; graph_t {</div>
+<div class="line"><a id="l00916" name="l00916"></a><span class="lineno">  916</span>          g.erase_edge(g.cbegin_edges(0));</div>
+<div class="line"><a id="l00917" name="l00917"></a><span class="lineno">  917</span>          <span class="keywordflow">return</span> g;</div>
+<div class="line"><a id="l00918" name="l00918"></a><span class="lineno">  918</span>        }</div>
+<div class="line"><a id="l00919" name="l00919"></a><span class="lineno">  919</span>      );</div>
+<div class="line"><a id="l00920" name="l00920"></a><span class="lineno">  920</span> </div>
+<div class="line"><a id="l00921" name="l00921"></a><span class="lineno">  921</span>      trg.join(</div>
+<div class="line"><a id="l00922" name="l00922"></a><span class="lineno">  922</span>        weighted_graph_description::node_0y_1_1w_1x_node_0_0w_0x,</div>
+<div class="line"><a id="l00923" name="l00923"></a><span class="lineno">  923</span>        weighted_graph_description::node_1_1w_1x_node_0_0w_0x,</div>
+<div class="line"><a id="l00924" name="l00924"></a><span class="lineno">  924</span>        t.report_line(<span class="stringliteral">&quot;Remove first partial edge&quot;</span>),</div>
+<div class="line"><a id="l00925" name="l00925"></a><span class="lineno">  925</span>        [](graph_t g) -&gt; graph_t {</div>
+<div class="line"><a id="l00926" name="l00926"></a><span class="lineno">  926</span>          g.erase_edge(++g.cbegin_edges(0));</div>
+<div class="line"><a id="l00927" name="l00927"></a><span class="lineno">  927</span>          <span class="keywordflow">return</span> g;</div>
+<div class="line"><a id="l00928" name="l00928"></a><span class="lineno">  928</span>        }</div>
+<div class="line"><a id="l00929" name="l00929"></a><span class="lineno">  929</span>      );</div>
 <div class="line"><a id="l00930" name="l00930"></a><span class="lineno">  930</span> </div>
-<div class="line"><a id="l00931" name="l00931"></a><span class="lineno">  931</span> </div>
-<div class="line"><a id="l00932" name="l00932"></a><span class="lineno">  932</span>}</div>
+<div class="line"><a id="l00931" name="l00931"></a><span class="lineno">  931</span>      <span class="comment">// end&#39;weighted_graph_description::node_0y_1_1w_1x_node_0_0w_0x&#39;</span></div>
+<div class="line"><a id="l00932" name="l00932"></a><span class="lineno">  932</span> </div>
+<div class="line"><a id="l00933" name="l00933"></a><span class="lineno">  933</span>      <span class="keywordflow">return</span> trg;</div>
+<div class="line"><a id="l00934" name="l00934"></a><span class="lineno">  934</span>    }</div>
+<div class="line"><a id="l00935" name="l00935"></a><span class="lineno">  935</span>  };</div>
+<div class="line"><a id="l00936" name="l00936"></a><span class="lineno">  936</span> </div>
+<div class="line"><a id="l00937" name="l00937"></a><span class="lineno">  937</span> </div>
+<div class="line"><a id="l00938" name="l00938"></a><span class="lineno">  938</span>}</div>
 <div class="ttc" id="aDynamicUndirectedGraphTestingUtilities_8hpp_html"><div class="ttname"><a href="../../dd/dd7/DynamicUndirectedGraphTestingUtilities_8hpp.html">DynamicUndirectedGraphTestingUtilities.hpp</a></div></div>
 <div class="ttc" id="aDynamicUndirectedGraphWeightedTestingUtilities_8hpp_html_a8b6c053dee7e3ffe17424c074a43bcfa"><div class="ttname"><a href="../../db/dc6/DynamicUndirectedGraphWeightedTestingUtilities_8hpp.html#a8b6c053dee7e3ffe17424c074a43bcfa">sequoia::testing::undirected_graph::weighted_graph_description</a></div><div class="ttdeci">weighted_graph_description</div><div class="ttdoc">Convention: the indices following 'node' - separated by underscores - give the target node of the ass...</div><div class="ttdef"><b>Definition:</b> DynamicUndirectedGraphWeightedTestingUtilities.hpp:18</div></div>
 <div class="ttc" id="aclasssequoia_1_1maths_1_1directed__graph_html"><div class="ttname"><a href="../../d6/dc1/classsequoia_1_1maths_1_1directed__graph.html">sequoia::maths::directed_graph</a></div><div class="ttdef"><b>Definition:</b> DynamicGraph.hpp:303</div></div>
-<div class="ttc" id="aclasssequoia_1_1maths_1_1undirected__graph_html"><div class="ttname"><a href="../../da/d44/classsequoia_1_1maths_1_1undirected__graph.html">sequoia::maths::undirected_graph</a></div><div class="ttdef"><b>Definition:</b> DynamicGraph.hpp:359</div></div>
+<div class="ttc" id="aclasssequoia_1_1maths_1_1undirected__graph_html"><div class="ttname"><a href="../../da/d44/classsequoia_1_1maths_1_1undirected__graph.html">sequoia::maths::undirected_graph</a></div><div class="ttdef"><b>Definition:</b> DynamicGraph.hpp:360</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1basic__test_html"><div class="ttname"><a href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">sequoia::testing::basic_test</a></div><div class="ttdoc">class template from which all concrete tests should derive.</div><div class="ttdef"><b>Definition:</b> FreeTestCore.hpp:140</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1checker_html"><div class="ttname"><a href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">sequoia::testing::checker</a></div><div class="ttdef"><b>Definition:</b> FreeCheckers.hpp:669</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1dynamic__undirected__graph__operations_html"><div class="ttname"><a href="../../d5/d6a/classsequoia_1_1testing_1_1dynamic__undirected__graph__operations.html">sequoia::testing::dynamic_undirected_graph_operations</a></div><div class="ttdef"><b>Definition:</b> DynamicUndirectedGraphTestingUtilities.hpp:138</div></div>

@@ -135,108 +135,110 @@ $(function() {
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <span class="keyword">using </span>primitive_type::set_edge_weight;</div>
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    <span class="keyword">using </span>primitive_type::mutate_edge_weight;</div>
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    <span class="keyword">using </span>primitive_type::sort_edges;</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <span class="keyword">using </span>primitive_type::swap_edges;</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>  };</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span> </div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>  <span class="keyword">template</span></div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>  &lt;</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    std::size_t Size,</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    std::size_t Order,</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    <span class="keyword">class </span>EdgeWeight,</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    <span class="keyword">class </span>EdgeMetaData,</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    <span class="keyword">class</span>... NodeWeights</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>  &gt;</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno"><a class="line" href="../../d9/dd4/classsequoia_1_1maths_1_1heterogeneous__undirected__graph.html">   77</a></span>  <span class="keyword">class </span><a class="code hl_class" href="../../d9/dd4/classsequoia_1_1maths_1_1heterogeneous__undirected__graph.html">heterogeneous_undirected_graph</a> final : <span class="keyword">public</span></div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    <a class="code hl_class" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a></div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    &lt;</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>      connectivity&lt;graph_flavour::undirected, graph_impl::edge_storage_generator_t&lt;graph_flavour::undirected, EdgeWeight, EdgeMetaData, typename static_edge_storage_config&lt;graph_flavour::undirected, Size, Order&gt;::index_type, static_edge_storage_config&lt;graph_flavour::undirected, Size, Order&gt;&gt;&gt;,</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>      heterogeneous_node_storage&lt;NodeWeights...&gt;</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    &gt;</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>  {</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>  <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    <span class="keyword">using </span><a class="code hl_class" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">primitive_type</a> =</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>      <a class="code hl_class" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a></div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>      &lt;</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>        <a class="code hl_class" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity&lt;graph_flavour::undirected, graph_impl::edge_storage_generator_t&lt;graph_flavour::undirected, EdgeWeight, EdgeMetaData, typename static_edge_storage_config&lt;graph_flavour::undirected, Size, Order&gt;::index_type</a>, <a class="code hl_struct" href="../../d3/da8/structsequoia_1_1maths_1_1static__edge__storage__config.html">static_edge_storage_config&lt;graph_flavour::undirected, Size, Order&gt;</a>&gt;&gt;,</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>        <a class="code hl_class" href="../../d6/df7/classsequoia_1_1maths_1_1heterogeneous__node__storage.html">heterogeneous_node_storage</a>&lt;NodeWeights...&gt;</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>      &gt;;</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span> </div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>  <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    <span class="keyword">static_assert</span>(<span class="keyword">sizeof</span>...(NodeWeights) == Order);</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span> </div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    <span class="keyword">constexpr</span> <span class="keyword">static</span> graph_flavour flavour{graph_flavour::undirected};</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span> </div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    <span class="keyword">constexpr</span> <span class="keyword">static</span> std::size_t order() <span class="keyword">noexcept</span> { <span class="keywordflow">return</span> Order; }</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span> </div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    <span class="keyword">constexpr</span> <span class="keyword">static</span> std::size_t size() <span class="keyword">noexcept</span> { <span class="keywordflow">return</span> Size; }</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span> </div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    <span class="keyword">using</span></div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span><span class="keyword">      </span><a class="code hl_class" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a></div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>      &lt;</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>        <a class="code hl_class" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity&lt;graph_flavour::undirected, graph_impl::edge_storage_generator_t&lt;graph_flavour::undirected, EdgeWeight, EdgeMetaData, typename static_edge_storage_config&lt;graph_flavour::undirected, Size, Order&gt;::index_type</a>, <a class="code hl_struct" href="../../d3/da8/structsequoia_1_1maths_1_1static__edge__storage__config.html">static_edge_storage_config&lt;graph_flavour::undirected, Size, Order&gt;</a>&gt;&gt;,</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>        <a class="code hl_class" href="../../d6/df7/classsequoia_1_1maths_1_1heterogeneous__node__storage.html">heterogeneous_node_storage</a>&lt;NodeWeights...&gt;</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>      &gt;::graph_primitive;</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span> </div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    <span class="keyword">using </span>primitive_type::set_edge_weight;</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    <span class="keyword">using </span>primitive_type::mutate_edge_weight;</div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    <span class="keyword">using </span>primitive_type::sort_edges;</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    <span class="keyword">using </span>primitive_type::swap_edges;</div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>  };</div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span> </div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>  <span class="keyword">template</span></div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>  &lt;</div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>    std::size_t Size,</div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>    std::size_t Order,</div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    <span class="keyword">class </span>EdgeWeight,</div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    <span class="keyword">class </span>EdgeMetaData,</div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>    <span class="keyword">class</span>... NodeWeights</div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>  &gt;</div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno"><a class="line" href="../../dd/d76/classsequoia_1_1maths_1_1heterogeneous__embedded__graph.html">  124</a></span>  <span class="keyword">class </span><a class="code hl_class" href="../../dd/d76/classsequoia_1_1maths_1_1heterogeneous__embedded__graph.html">heterogeneous_embedded_graph</a> final : <span class="keyword">public</span></div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>    <a class="code hl_class" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a></div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>    &lt;</div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>      connectivity&lt;graph_flavour::undirected_embedded, graph_impl::edge_storage_generator_t&lt;graph_flavour::undirected_embedded, EdgeWeight, EdgeMetaData, typename static_edge_storage_config&lt;graph_flavour::undirected_embedded, Size, Order&gt;::index_type, static_edge_storage_config&lt;graph_flavour::undirected_embedded, Size, Order&gt;&gt;&gt;,</div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>      heterogeneous_node_storage&lt;NodeWeights...&gt;</div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>    &gt;</div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>  {</div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>  <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>    <span class="keyword">using </span><a class="code hl_class" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">primitive_type</a> =</div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>      <a class="code hl_class" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a></div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>      &lt;</div>
-<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>        <a class="code hl_class" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity&lt;graph_flavour::undirected_embedded, graph_impl::edge_storage_generator_t&lt;graph_flavour::undirected_embedded, EdgeWeight, EdgeMetaData, typename static_edge_storage_config&lt;graph_flavour::undirected_embedded, Size, Order&gt;::index_type</a>, <a class="code hl_struct" href="../../d3/da8/structsequoia_1_1maths_1_1static__edge__storage__config.html">static_edge_storage_config&lt;graph_flavour::undirected_embedded, Size, Order&gt;</a>&gt;&gt;,</div>
-<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>        <a class="code hl_class" href="../../d6/df7/classsequoia_1_1maths_1_1heterogeneous__node__storage.html">heterogeneous_node_storage</a>&lt;NodeWeights...&gt;</div>
-<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>      &gt;;</div>
-<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span> </div>
-<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>  <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>    <span class="keyword">static_assert</span>(<span class="keyword">sizeof</span>...(NodeWeights) == Order);</div>
-<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span> </div>
-<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>    <span class="keyword">constexpr</span> <span class="keyword">static</span> graph_flavour flavour{graph_flavour::undirected_embedded};</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <span class="keyword">using </span>primitive_type::stable_sort_edges;</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    <span class="keyword">using </span>primitive_type::swap_edges;</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>  };</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>  <span class="keyword">template</span></div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>  &lt;</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    std::size_t Size,</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    std::size_t Order,</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    <span class="keyword">class </span>EdgeWeight,</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    <span class="keyword">class </span>EdgeMetaData,</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    <span class="keyword">class</span>... NodeWeights</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>  &gt;</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno"><a class="line" href="../../d9/dd4/classsequoia_1_1maths_1_1heterogeneous__undirected__graph.html">   78</a></span>  <span class="keyword">class </span><a class="code hl_class" href="../../d9/dd4/classsequoia_1_1maths_1_1heterogeneous__undirected__graph.html">heterogeneous_undirected_graph</a> final : <span class="keyword">public</span></div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    <a class="code hl_class" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a></div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    &lt;</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>      connectivity&lt;graph_flavour::undirected, graph_impl::edge_storage_generator_t&lt;graph_flavour::undirected, EdgeWeight, EdgeMetaData, typename static_edge_storage_config&lt;graph_flavour::undirected, Size, Order&gt;::index_type, static_edge_storage_config&lt;graph_flavour::undirected, Size, Order&gt;&gt;&gt;,</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>      heterogeneous_node_storage&lt;NodeWeights...&gt;</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    &gt;</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>  {</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>  <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    <span class="keyword">using </span><a class="code hl_class" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">primitive_type</a> =</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>      <a class="code hl_class" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a></div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>      &lt;</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>        <a class="code hl_class" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity&lt;graph_flavour::undirected, graph_impl::edge_storage_generator_t&lt;graph_flavour::undirected, EdgeWeight, EdgeMetaData, typename static_edge_storage_config&lt;graph_flavour::undirected, Size, Order&gt;::index_type</a>, <a class="code hl_struct" href="../../d3/da8/structsequoia_1_1maths_1_1static__edge__storage__config.html">static_edge_storage_config&lt;graph_flavour::undirected, Size, Order&gt;</a>&gt;&gt;,</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>        <a class="code hl_class" href="../../d6/df7/classsequoia_1_1maths_1_1heterogeneous__node__storage.html">heterogeneous_node_storage</a>&lt;NodeWeights...&gt;</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>      &gt;;</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span> </div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    <span class="keyword">static_assert</span>(<span class="keyword">sizeof</span>...(NodeWeights) == Order);</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span> </div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    <span class="keyword">constexpr</span> <span class="keyword">static</span> graph_flavour flavour{graph_flavour::undirected};</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span> </div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    [[nodiscard]]</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>    <span class="keyword">constexpr</span> <span class="keyword">static</span> std::size_t order() <span class="keyword">noexcept</span> { <span class="keywordflow">return</span> Order; }</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span> </div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    [[nodiscard]]</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>    <span class="keyword">constexpr</span> <span class="keyword">static</span> std::size_t size() <span class="keyword">noexcept</span> { <span class="keywordflow">return</span> Size; }</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span> </div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    <span class="keyword">using</span></div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span><span class="keyword">      </span><a class="code hl_class" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a></div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>      &lt;</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>        <a class="code hl_class" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity&lt;graph_flavour::undirected, graph_impl::edge_storage_generator_t&lt;graph_flavour::undirected, EdgeWeight, EdgeMetaData, typename static_edge_storage_config&lt;graph_flavour::undirected, Size, Order&gt;::index_type</a>, <a class="code hl_struct" href="../../d3/da8/structsequoia_1_1maths_1_1static__edge__storage__config.html">static_edge_storage_config&lt;graph_flavour::undirected, Size, Order&gt;</a>&gt;&gt;,</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>        <a class="code hl_class" href="../../d6/df7/classsequoia_1_1maths_1_1heterogeneous__node__storage.html">heterogeneous_node_storage</a>&lt;NodeWeights...&gt;</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>      &gt;::graph_primitive;</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span> </div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    <span class="keyword">using </span>primitive_type::set_edge_weight;</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    <span class="keyword">using </span>primitive_type::mutate_edge_weight;</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    <span class="keyword">using </span>primitive_type::sort_edges;</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    <span class="keyword">using </span>primitive_type::stable_sort_edges;</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    <span class="keyword">using </span>primitive_type::swap_edges;</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>  };</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span> </div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>  <span class="keyword">template</span></div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>  &lt;</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    std::size_t Size,</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    std::size_t Order,</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>    <span class="keyword">class </span>EdgeWeight,</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    <span class="keyword">class </span>EdgeMetaData,</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>    <span class="keyword">class</span>... NodeWeights</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>  &gt;</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno"><a class="line" href="../../dd/d76/classsequoia_1_1maths_1_1heterogeneous__embedded__graph.html">  126</a></span>  <span class="keyword">class </span><a class="code hl_class" href="../../dd/d76/classsequoia_1_1maths_1_1heterogeneous__embedded__graph.html">heterogeneous_embedded_graph</a> final : <span class="keyword">public</span></div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>    <a class="code hl_class" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a></div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>    &lt;</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>      connectivity&lt;graph_flavour::undirected_embedded, graph_impl::edge_storage_generator_t&lt;graph_flavour::undirected_embedded, EdgeWeight, EdgeMetaData, typename static_edge_storage_config&lt;graph_flavour::undirected_embedded, Size, Order&gt;::index_type, static_edge_storage_config&lt;graph_flavour::undirected_embedded, Size, Order&gt;&gt;&gt;,</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>      heterogeneous_node_storage&lt;NodeWeights...&gt;</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>    &gt;</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>  {</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>  <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>    <span class="keyword">using </span><a class="code hl_class" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">primitive_type</a> =</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>      <a class="code hl_class" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a></div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>      &lt;</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>        <a class="code hl_class" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity&lt;graph_flavour::undirected_embedded, graph_impl::edge_storage_generator_t&lt;graph_flavour::undirected_embedded, EdgeWeight, EdgeMetaData, typename static_edge_storage_config&lt;graph_flavour::undirected_embedded, Size, Order&gt;::index_type</a>, <a class="code hl_struct" href="../../d3/da8/structsequoia_1_1maths_1_1static__edge__storage__config.html">static_edge_storage_config&lt;graph_flavour::undirected_embedded, Size, Order&gt;</a>&gt;&gt;,</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>        <a class="code hl_class" href="../../d6/df7/classsequoia_1_1maths_1_1heterogeneous__node__storage.html">heterogeneous_node_storage</a>&lt;NodeWeights...&gt;</div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>      &gt;;</div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span> </div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>    <span class="keyword">static_assert</span>(<span class="keyword">sizeof</span>...(NodeWeights) == Order);</div>
 <div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span> </div>
-<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>    <span class="keyword">constexpr</span> <span class="keyword">static</span> std::size_t order() <span class="keyword">noexcept</span> { <span class="keywordflow">return</span> Order; }</div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>    <span class="keyword">constexpr</span> <span class="keyword">static</span> graph_flavour flavour{graph_flavour::undirected_embedded};</div>
 <div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span> </div>
-<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>    <span class="keyword">constexpr</span> <span class="keyword">static</span> std::size_t size() <span class="keyword">noexcept</span> { <span class="keywordflow">return</span> Size; }</div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>    <span class="keyword">constexpr</span> <span class="keyword">static</span> std::size_t order() <span class="keyword">noexcept</span> { <span class="keywordflow">return</span> Order; }</div>
 <div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span> </div>
-<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>    <span class="keyword">using</span></div>
-<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span><span class="keyword">      </span><a class="code hl_class" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a></div>
-<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>      &lt;</div>
-<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>        <a class="code hl_class" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity&lt;graph_flavour::undirected_embedded, graph_impl::edge_storage_generator_t&lt;graph_flavour::undirected_embedded, EdgeWeight, EdgeMetaData, typename static_edge_storage_config&lt;graph_flavour::undirected_embedded, Size, Order&gt;::index_type</a>, <a class="code hl_struct" href="../../d3/da8/structsequoia_1_1maths_1_1static__edge__storage__config.html">static_edge_storage_config&lt;graph_flavour::undirected_embedded, Size, Order&gt;</a>&gt;&gt;,</div>
-<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>        <a class="code hl_class" href="../../d6/df7/classsequoia_1_1maths_1_1heterogeneous__node__storage.html">heterogeneous_node_storage</a>&lt;NodeWeights...&gt;</div>
-<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>      &gt;::graph_primitive;</div>
-<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span> </div>
-<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>    <span class="keyword">using </span>primitive_type::set_edge_weight;</div>
-<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>    <span class="keyword">using </span>primitive_type::mutate_edge_weight;</div>
-<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>  };</div>
-<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>}</div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>    <span class="keyword">constexpr</span> <span class="keyword">static</span> std::size_t size() <span class="keyword">noexcept</span> { <span class="keywordflow">return</span> Size; }</div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span> </div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>    <span class="keyword">using</span></div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span><span class="keyword">      </span><a class="code hl_class" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a></div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>      &lt;</div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>        <a class="code hl_class" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity&lt;graph_flavour::undirected_embedded, graph_impl::edge_storage_generator_t&lt;graph_flavour::undirected_embedded, EdgeWeight, EdgeMetaData, typename static_edge_storage_config&lt;graph_flavour::undirected_embedded, Size, Order&gt;::index_type</a>, <a class="code hl_struct" href="../../d3/da8/structsequoia_1_1maths_1_1static__edge__storage__config.html">static_edge_storage_config&lt;graph_flavour::undirected_embedded, Size, Order&gt;</a>&gt;&gt;,</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>        <a class="code hl_class" href="../../d6/df7/classsequoia_1_1maths_1_1heterogeneous__node__storage.html">heterogeneous_node_storage</a>&lt;NodeWeights...&gt;</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>      &gt;::graph_primitive;</div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span> </div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>    <span class="keyword">using </span>primitive_type::set_edge_weight;</div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>    <span class="keyword">using </span>primitive_type::mutate_edge_weight;</div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>  };</div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>}</div>
 <div class="ttc" id="aGraphPrimitive_8hpp_html"><div class="ttname"><a href="../../d3/d7a/GraphPrimitive_8hpp.html">GraphPrimitive.hpp</a></div><div class="ttdoc">Underlying class for the various different graph flavour.</div></div>
 <div class="ttc" id="aHeterogeneousNodeStorage_8hpp_html"><div class="ttname"><a href="../../d5/dea/HeterogeneousNodeStorage_8hpp.html">HeterogeneousNodeStorage.hpp</a></div><div class="ttdoc">Node storage for graphs with heterogeneous node weights.</div></div>
 <div class="ttc" id="aStaticGraphConfig_8hpp_html"><div class="ttname"><a href="../../d9/d06/StaticGraphConfig_8hpp.html">StaticGraphConfig.hpp</a></div><div class="ttdoc">Edge configuration for static graphs.</div></div>
-<div class="ttc" id="aclasssequoia_1_1maths_1_1connectivity_html"><div class="ttname"><a href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">sequoia::maths::connectivity</a></div><div class="ttdoc">Graph connectivity, used as a building block for concrete graphs.</div><div class="ttdef"><b>Definition:</b> Connectivity.hpp:184</div></div>
+<div class="ttc" id="aclasssequoia_1_1maths_1_1connectivity_html"><div class="ttname"><a href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">sequoia::maths::connectivity</a></div><div class="ttdef"><b>Definition:</b> Connectivity.hpp:1618</div></div>
 <div class="ttc" id="aclasssequoia_1_1maths_1_1graph__primitive_html"><div class="ttname"><a href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">sequoia::maths::graph_primitive</a></div><div class="ttdef"><b>Definition:</b> GraphPrimitive.hpp:107</div></div>
 <div class="ttc" id="aclasssequoia_1_1maths_1_1heterogeneous__directed__graph_html"><div class="ttname"><a href="../../dc/da5/classsequoia_1_1maths_1_1heterogeneous__directed__graph.html">sequoia::maths::heterogeneous_directed_graph</a></div><div class="ttdef"><b>Definition:</b> HeterogeneousStaticGraph.hpp:36</div></div>
-<div class="ttc" id="aclasssequoia_1_1maths_1_1heterogeneous__embedded__graph_html"><div class="ttname"><a href="../../dd/d76/classsequoia_1_1maths_1_1heterogeneous__embedded__graph.html">sequoia::maths::heterogeneous_embedded_graph</a></div><div class="ttdef"><b>Definition:</b> HeterogeneousStaticGraph.hpp:130</div></div>
+<div class="ttc" id="aclasssequoia_1_1maths_1_1heterogeneous__embedded__graph_html"><div class="ttname"><a href="../../dd/d76/classsequoia_1_1maths_1_1heterogeneous__embedded__graph.html">sequoia::maths::heterogeneous_embedded_graph</a></div><div class="ttdef"><b>Definition:</b> HeterogeneousStaticGraph.hpp:132</div></div>
 <div class="ttc" id="aclasssequoia_1_1maths_1_1heterogeneous__node__storage_html"><div class="ttname"><a href="../../d6/df7/classsequoia_1_1maths_1_1heterogeneous__node__storage.html">sequoia::maths::heterogeneous_node_storage</a></div><div class="ttdef"><b>Definition:</b> HeterogeneousNodeStorage.hpp:27</div></div>
-<div class="ttc" id="aclasssequoia_1_1maths_1_1heterogeneous__undirected__graph_html"><div class="ttname"><a href="../../d9/dd4/classsequoia_1_1maths_1_1heterogeneous__undirected__graph.html">sequoia::maths::heterogeneous_undirected_graph</a></div><div class="ttdef"><b>Definition:</b> HeterogeneousStaticGraph.hpp:83</div></div>
+<div class="ttc" id="aclasssequoia_1_1maths_1_1heterogeneous__undirected__graph_html"><div class="ttname"><a href="../../d9/dd4/classsequoia_1_1maths_1_1heterogeneous__undirected__graph.html">sequoia::maths::heterogeneous_undirected_graph</a></div><div class="ttdef"><b>Definition:</b> HeterogeneousStaticGraph.hpp:84</div></div>
 <div class="ttc" id="astructsequoia_1_1maths_1_1static__edge__storage__config_html"><div class="ttname"><a href="../../d3/da8/structsequoia_1_1maths_1_1static__edge__storage__config.html">sequoia::maths::static_edge_storage_config</a></div><div class="ttdef"><b>Definition:</b> StaticGraphConfig.hpp:20</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->

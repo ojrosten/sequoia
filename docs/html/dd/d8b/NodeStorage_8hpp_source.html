@@ -107,67 +107,67 @@ $(function() {
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="keyword">using </span>node_weight_container_type = Container;</div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="keyword">using </span>size_type                  = <span class="keyword">typename</span> node_weight_container_type::size_type;</div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="keyword">using </span><a class="code hl_class" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">iterator</a>           = <a class="code hl_class" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">utilities::iterator&lt;typename node_weight_container_type::iterator, utilities::identity_dereference_policy&lt;typename node_weight_container_type::iterator&gt;</a>&gt;;</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    <span class="keyword">using </span><a class="code hl_class" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">reverse_iterator</a>   = <a class="code hl_class" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">utilities::iterator&lt;typename node_weight_container_type::reverse_iterator, utilities::identity_dereference_policy&lt;typename node_weight_container_type::reverse_iterator&gt;</a>&gt;;</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="keyword">using </span>iterator           = <span class="keyword">typename</span> node_weight_container_type::iterator;</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    <span class="keyword">using </span>reverse_iterator   = <span class="keyword">typename</span> node_weight_container_type::reverse_iterator;</div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <span class="keyword">using </span>node_weights_range = std::ranges::subrange&lt;iterator&gt;;</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="keyword">using </span><a class="code hl_class" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_iterator</a>           = <a class="code hl_class" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">utilities::iterator&lt;typename node_weight_container_type::const_iterator, utilities::identity_dereference_policy&lt;typename node_weight_container_type::const_iterator&gt;</a>&gt;;</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="keyword">using </span><a class="code hl_class" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_reverse_iterator</a>   = <a class="code hl_class" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">utilities::iterator&lt;typename node_weight_container_type::const_reverse_iterator, utilities::identity_dereference_policy&lt;typename node_weight_container_type::const_reverse_iterator&gt;</a>&gt;;</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="keyword">using </span>const_iterator           = <span class="keyword">typename</span> node_weight_container_type::const_iterator;</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="keyword">using </span>const_reverse_iterator   = <span class="keyword">typename</span> node_weight_container_type::const_reverse_iterator;</div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <span class="keyword">using </span>const_node_weights_range = std::ranges::subrange&lt;const_iterator&gt;;</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    [[nodiscard]]</div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> size() <span class="keyword">const</span> <span class="keyword">noexcept</span> { <span class="keywordflow">return</span> m_NodeWeights.size(); }</div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="keyword">constexpr</span> <a class="code hl_class" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">iterator</a> begin_node_weights() <span class="keyword">noexcept</span></div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="keyword">constexpr</span> iterator begin_node_weights() <span class="keyword">noexcept</span></div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>      <span class="keyword">requires</span> std::indirectly_writable&lt;iterator, std::iter_value_t&lt;iterator&gt;&gt;</div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    {</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>      <span class="keywordflow">return</span> <a class="code hl_class" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">iterator</a>{m_NodeWeights.begin()};</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>      <span class="keywordflow">return</span> m_NodeWeights.begin();</div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    }</div>
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    <span class="keyword">constexpr</span> <a class="code hl_class" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">reverse_iterator</a> rbegin_node_weights() <span class="keyword">noexcept</span></div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    <span class="keyword">constexpr</span> reverse_iterator rbegin_node_weights() <span class="keyword">noexcept</span></div>
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>      <span class="keyword">requires</span> std::indirectly_writable&lt;iterator, std::iter_value_t&lt;iterator&gt;&gt;</div>
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    {</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>      <span class="keywordflow">return</span> <a class="code hl_class" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">reverse_iterator</a>{m_NodeWeights.rbegin()};</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>      <span class="keywordflow">return</span> m_NodeWeights.rbegin();</div>
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    }</div>
 <div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> </div>
 <div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    <span class="keyword">constexpr</span> <a class="code hl_class" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_iterator</a> cbegin_node_weights() <span class="keyword">const</span> <span class="keyword">noexcept</span></div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    <span class="keyword">constexpr</span> const_iterator cbegin_node_weights() <span class="keyword">const</span> <span class="keyword">noexcept</span></div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    {</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>      <span class="keywordflow">return</span> <a class="code hl_class" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_iterator</a>{m_NodeWeights.cbegin()};</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>      <span class="keywordflow">return</span> m_NodeWeights.cbegin();</div>
 <div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    }</div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> </div>
 <div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    <span class="keyword">constexpr</span> <a class="code hl_class" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_reverse_iterator</a> crbegin_node_weights() <span class="keyword">const</span> <span class="keyword">noexcept</span></div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    <span class="keyword">constexpr</span> const_reverse_iterator crbegin_node_weights() <span class="keyword">const</span> <span class="keyword">noexcept</span></div>
 <div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    {</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>      <span class="keywordflow">return</span> <a class="code hl_class" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_reverse_iterator</a>{m_NodeWeights.crbegin()};</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>      <span class="keywordflow">return</span> m_NodeWeights.crbegin();</div>
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    }</div>
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span> </div>
 <div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    <span class="keyword">constexpr</span> <a class="code hl_class" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">iterator</a> end_node_weights() <span class="keyword">noexcept</span></div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    <span class="keyword">constexpr</span> iterator end_node_weights() <span class="keyword">noexcept</span></div>
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>      <span class="keyword">requires</span> std::indirectly_writable&lt;iterator, std::iter_value_t&lt;iterator&gt;&gt;</div>
 <div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    {</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>      <span class="keywordflow">return</span> <a class="code hl_class" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">iterator</a>{m_NodeWeights.end()};</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>      <span class="keywordflow">return</span> m_NodeWeights.end();</div>
 <div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    }</div>
 <div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span> </div>
 <div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    <span class="keyword">constexpr</span> <a class="code hl_class" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">reverse_iterator</a> rend_node_weights() <span class="keyword">noexcept</span></div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    <span class="keyword">constexpr</span> reverse_iterator rend_node_weights() <span class="keyword">noexcept</span></div>
 <div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>      <span class="keyword">requires</span> std::indirectly_writable&lt;iterator, std::iter_value_t&lt;iterator&gt;&gt;</div>
 <div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    {</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>      <span class="keywordflow">return</span> <a class="code hl_class" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">reverse_iterator</a>{m_NodeWeights.rend()};</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>      <span class="keywordflow">return</span> m_NodeWeights.rend();</div>
 <div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    }</div>
 <div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span> </div>
 <div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    <span class="keyword">constexpr</span> <a class="code hl_class" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_iterator</a> cend_node_weights() <span class="keyword">const</span> <span class="keyword">noexcept</span></div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    <span class="keyword">constexpr</span> const_iterator cend_node_weights() <span class="keyword">const</span> <span class="keyword">noexcept</span></div>
 <div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    {</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>      <span class="keywordflow">return</span> <a class="code hl_class" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_iterator</a>{m_NodeWeights.cend()};</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>      <span class="keywordflow">return</span> m_NodeWeights.cend();</div>
 <div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    }</div>
 <div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span> </div>
 <div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    <span class="keyword">constexpr</span> <a class="code hl_class" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_reverse_iterator</a> crend_node_weights() <span class="keyword">const</span> <span class="keyword">noexcept</span></div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    <span class="keyword">constexpr</span> const_reverse_iterator crend_node_weights() <span class="keyword">const</span> <span class="keyword">noexcept</span></div>
 <div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>    {</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>      <span class="keywordflow">return</span> <a class="code hl_class" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_reverse_iterator</a>{m_NodeWeights.crend()};</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>      <span class="keywordflow">return</span> m_NodeWeights.crend();</div>
 <div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    }</div>
 <div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span> </div>
 <div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    [[nodiscard]]</div>
@@ -190,7 +190,7 @@ $(function() {
 <div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    }</div>
 <div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span> </div>
 <div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> W&gt;</div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>    <span class="keyword">constexpr</span> <span class="keywordtype">void</span> set_node_weight(<a class="code hl_class" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_iterator</a> pos, W w)</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>    <span class="keyword">constexpr</span> <span class="keywordtype">void</span> set_node_weight(const_iterator pos, W w)</div>
 <div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>    {</div>
 <div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>      <span class="keywordflow">if</span>(pos == cend_node_weights()) <span class="keywordflow">throw</span> std::out_of_range(<span class="stringliteral">&quot;node_storage::set_node_weight - index out of range!\n&quot;</span>);</div>
 <div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span> </div>
@@ -199,7 +199,7 @@ $(function() {
 <div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>    }</div>
 <div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span> </div>
 <div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> Fn&gt;</div>
-<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>    <span class="keyword">constexpr</span> <span class="keyword">decltype</span>(<span class="keyword">auto</span>) mutate_node_weight(<a class="code hl_class" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_iterator</a> pos, Fn fn)</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>    <span class="keyword">constexpr</span> <span class="keyword">decltype</span>(<span class="keyword">auto</span>) mutate_node_weight(const_iterator pos, Fn fn)</div>
 <div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>    {</div>
 <div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>      <span class="keywordflow">if</span>(pos == cend_node_weights()) <span class="keywordflow">throw</span> std::out_of_range(<span class="stringliteral">&quot;node_storage::mutate_node_weight - index out of range!\n&quot;</span>);</div>
 <div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span> </div>
@@ -304,25 +304,25 @@ $(function() {
 <div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>    }</div>
 <div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span> </div>
 <div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span>... Args&gt;</div>
-<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>    <a class="code hl_class" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_iterator</a> insert_node(<a class="code hl_class" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_iterator</a> pos, Args&amp;&amp;... args)</div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>    const_iterator insert_node(const_iterator pos, Args&amp;&amp;... args)</div>
 <div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>    {</div>
-<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>      <span class="keyword">auto</span> iter = m_NodeWeights.emplace(pos.base_iterator(), std::forward&lt;Args&gt;(args)...);</div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>      <span class="keyword">auto</span> iter = m_NodeWeights.emplace(pos, std::forward&lt;Args&gt;(args)...);</div>
 <div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span> </div>
 <div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>      <span class="keywordflow">return</span> cbegin_node_weights() + std::ranges::distance(m_NodeWeights.begin(), iter);</div>
 <div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>    }</div>
 <div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span> </div>
-<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>    <a class="code hl_class" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_iterator</a> erase_node(<a class="code hl_class" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_iterator</a> pos)</div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>    const_iterator erase_node(const_iterator pos)</div>
 <div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>    {</div>
 <div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>      <span class="keywordflow">if</span>(pos == cend_node_weights()) <span class="keywordflow">throw</span> std::out_of_range(<span class="stringliteral">&quot;Attempting to erase a node which does not exist&quot;</span>);</div>
 <div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span> </div>
-<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>      <span class="keywordflow">return</span> <a class="code hl_class" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_iterator</a>{m_NodeWeights.erase(pos.base_iterator())};</div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>      <span class="keywordflow">return</span> const_iterator{m_NodeWeights.erase(pos)};</div>
 <div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>    }</div>
 <div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span> </div>
-<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>    <a class="code hl_class" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_iterator</a> erase_nodes(<a class="code hl_class" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_iterator</a> first, <a class="code hl_class" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_iterator</a> last)</div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>    const_iterator erase_nodes(const_iterator first, const_iterator last)</div>
 <div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>    {</div>
 <div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>      <span class="keywordflow">if</span>(first &gt; last) <span class="keywordflow">throw</span> std::out_of_range(<span class="stringliteral">&quot;Attempting to erase a range of nodes with first &gt; last&quot;</span>);</div>
 <div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span> </div>
-<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>      <span class="keywordflow">return</span> <a class="code hl_class" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_iterator</a>{m_NodeWeights.erase(first.base_iterator(), last.base_iterator())};</div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>      <span class="keywordflow">return</span> const_iterator{m_NodeWeights.erase(first, last)};</div>
 <div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>    }</div>
 <div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span> </div>
 <div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>    <span class="keywordtype">void</span> clear() <span class="keyword">noexcept</span></div>
@@ -390,7 +390,6 @@ $(function() {
 <div class="ttc" id="aIterator_8hpp_html"><div class="ttname"><a href="../../d7/de4/Iterator_8hpp.html">Iterator.hpp</a></div><div class="ttdoc">Implementation for an iterator with policies controlling dereferencing and auxiliary data.</div></div>
 <div class="ttc" id="aclasssequoia_1_1maths_1_1node__storage__base_html"><div class="ttname"><a href="../../df/d9d/classsequoia_1_1maths_1_1node__storage__base.html">sequoia::maths::node_storage_base</a></div><div class="ttdef"><b>Definition:</b> NodeStorage.hpp:37</div></div>
 <div class="ttc" id="aclasssequoia_1_1maths_1_1node__storage_html"><div class="ttname"><a href="../../d1/da5/classsequoia_1_1maths_1_1node__storage.html">sequoia::maths::node_storage</a></div><div class="ttdef"><b>Definition:</b> NodeStorage.hpp:272</div></div>
-<div class="ttc" id="aclasssequoia_1_1utilities_1_1iterator_html"><div class="ttname"><a href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">sequoia::utilities::iterator</a></div><div class="ttdoc">An iterator with policies controlling dereferencing and auxiliary data.</div><div class="ttdef"><b>Definition:</b> Iterator.hpp:237</div></div>
 <div class="ttc" id="aconceptsequoia_1_1deep__equality__comparable_html"><div class="ttname"><a href="../../da/d5f/conceptsequoia_1_1deep__equality__comparable.html">sequoia::deep_equality_comparable</a></div><div class="ttdoc">Concept to work around the fact that currently the stl typically underconstrains operator==.</div><div class="ttdef"><b>Definition:</b> Concepts.hpp:105</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
