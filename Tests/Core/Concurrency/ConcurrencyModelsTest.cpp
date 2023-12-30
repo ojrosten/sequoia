@@ -12,6 +12,8 @@
 
 namespace sequoia::testing
 {
+  using namespace concurrency;
+
   [[nodiscard]]
   std::filesystem::path threading_models_test::source_file() const
   {
@@ -20,31 +22,26 @@ namespace sequoia::testing
 
   void threading_models_test::run_tests()
   {
-    using namespace concurrency;
-
     test_task_queue();
 
-    test_exceptions<thread_pool<void>, std::runtime_error>(report_line("pool_2"), 2u);
-    test_exceptions<thread_pool<void, false>, std::runtime_error>(report_line("pool_2M"), 2u);
-    test_exceptions<asynchronous<void>, std::runtime_error>(report_line("async"));
+    test_exceptions<thread_pool<void>>("pool_2M", 2u);
+    test_exceptions<thread_pool<void, false>>("pool_2", 2u);
+    test_exceptions<asynchronous<void>>("async");
 
-    test_exceptions<thread_pool<int>, std::runtime_error>(report_line("pool_2"), 2u);
-    test_exceptions<thread_pool<int, false>, std::runtime_error>(report_line("pool_2M"), 2u);
-    test_exceptions<asynchronous<int>, std::runtime_error>(report_line("async"));
+    test_exceptions<thread_pool<int>>("pool_2M", 2u);
+    test_exceptions<thread_pool<int, false>>("pool_2", 2u);
+    test_exceptions<asynchronous<int>>("async");
 
-    // Both the thread pool and asynchronous processing models
-    // ultimately take copies of the functor, so ony for
-    // serial does a modifiable functor make sense
-    //update_vector_tests<thread_pool<void, std::deque>>();
-    //update_vector_tests<asynchronous<void>>();
+    test_execution<thread_pool<int>>("pool_2M", 2u);
+    test_execution<thread_pool<int, false>>("pool_2", 2u);
+    test_execution<asynchronous<int>>("async");
 
-    test_functor_update<serial<void>>();
+    test_serial_exceptions();
+    test_serial_execution();
   }
 
   void threading_models_test::test_task_queue()
   {
-    using namespace concurrency;
-
     {
       using q_t = task_queue<void>;
       using task_t = q_t::task_t;
@@ -93,28 +90,56 @@ namespace sequoia::testing
     }
   }
 
-  template<class ThreadModel, class Exception, class... Args>
+  template<class ThreadModel, class... Args>
   void threading_models_test::test_exceptions(std::string_view message, Args&&... args)
   {
-    ThreadModel threadModel{std::forward<Args>(args)...};;
+    ThreadModel model{std::forward<Args>(args)...};
     using R = typename ThreadModel::return_type;
 
-    threadModel.push([]() -> R { throw Exception{"Error!"}; });
+    auto fut{model.push([]() -> R { throw std::runtime_error{"Error!"}; })};
 
-    check_exception_thrown<Exception>(std::string{message}, [&threadModel]() { return threadModel.get(); });
+    check_exception_thrown<std::runtime_error>(report_line(message), [&fut]() { return fut.get(); });
   }
 
-  template<class Model>
-  void threading_models_test::test_functor_update()
+  template<class ThreadModel, class... Args>
+  void threading_models_test::test_execution(std::string_view message, Args&&... args)
   {
-    Model threadModel;
+    using R = typename ThreadModel::return_type;
+    ThreadModel model{std::forward<Args>(args)...};
 
-    updatable u;
-
-    threadModel.push(u, 0);
-
-    threadModel.get();
-	
-    check(equality, report_line(""), u.get_data(), std::vector<int>{0});
+    if constexpr(std::is_void_v<R>)
+    {
+      int x{};
+      auto fut{model.push([&x](){ return ++x; })};
+      check(equality, report_line(message), fut.get(), 1);
+    }
+    else
+    {
+      auto fut{model.push([](){ return 42; })};
+      check(equality, report_line(message), fut.get(), 42);
+    }
   }
+
+  void threading_models_test::test_serial_exceptions()
+  {
+    check_exception_thrown<std::runtime_error>(report_line(""), [](){ serial<void>{}.push([]() { throw std::runtime_error{"Error!"}; }); });
+    check_exception_thrown<std::runtime_error>(report_line(""), [](){ return serial<int>{}.push([]() -> int { throw std::runtime_error{"Error!"}; }); });
+  }
+
+  void threading_models_test::test_serial_execution()
+  {
+    {
+      serial<int> model{};
+      check(equality, report_line(""), model.push([](){ return 42; }), 42);
+      check(equality, report_line(""), model.push([](){ return 43; }), 43);
+    }
+
+    {
+      serial<void> model{};
+      int x{};
+      model.push([&x]() { ++x; });
+      check(equality, report_line(""), x, 1);
+    }
+  }
+
 }

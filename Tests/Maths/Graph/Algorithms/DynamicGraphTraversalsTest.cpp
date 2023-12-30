@@ -16,6 +16,31 @@ namespace sequoia::testing
 {
   namespace
   {
+    template<class R>
+    [[nodiscard]]
+    std::vector<R> get_results(std::vector<std::future<R>>&& futures)
+    {
+      std::vector<R> values;
+      values.reserve(futures.size());
+      std::ranges::transform(futures, std::back_inserter(values), [](std::future<R>& fut) { return fut.get(); });
+      futures.clear();
+
+      return values;
+    }
+
+    [[nodiscard]]
+    void get_results(std::vector<std::future<void>>&& futures)
+    {
+      std::ranges::for_each(futures, [](std::future<void>& fut) { fut.get(); });
+    }
+
+    template<class R>
+    [[nodiscard]]
+    std::vector<R>&& get_results(std::vector<R>&& futures)
+    {
+      return std::forward<decltype(futures)>(futures);
+    }
+
     template<maths::dynamic_network G, maths::traversal_flavour Flavour>
     struct trackers
     {
@@ -132,15 +157,21 @@ namespace sequoia::testing
       using namespace maths;
       if constexpr(is_directed(Graph::flavour))
       {
-        return early
-          ? traverse(breadth_first, graph, ignore_disconnected_t{}, fn, null_func_obj{}, null_func_obj{}, ProcessingModel{std::forward<Args>(args)...})
-          : traverse(breadth_first, graph, ignore_disconnected_t{}, null_func_obj{}, fn, null_func_obj{}, ProcessingModel{std::forward<Args>(args)...});
+        return
+          get_results(
+              early
+            ? traverse(breadth_first, graph, ignore_disconnected_t{}, fn, null_func_obj{}, null_func_obj{}, ProcessingModel{std::forward<Args>(args)...})
+            : traverse(breadth_first, graph, ignore_disconnected_t{}, null_func_obj{}, fn, null_func_obj{}, ProcessingModel{std::forward<Args>(args)...})
+          );
       }
       else
       {
-        return early
-          ? traverse(breadth_first, graph, ignore_disconnected_t{}, fn, null_func_obj{}, null_func_obj{}, null_func_obj{}, ProcessingModel{std::forward<Args>(args)...})
-          : traverse(breadth_first, graph, ignore_disconnected_t{}, null_func_obj{}, fn, null_func_obj{}, null_func_obj{}, ProcessingModel{std::forward<Args>(args)...});
+        return 
+          get_results(
+               early
+            ? traverse(breadth_first, graph, ignore_disconnected_t{}, fn, null_func_obj{}, null_func_obj{}, null_func_obj{}, ProcessingModel{std::forward<Args>(args)...})
+            : traverse(breadth_first, graph, ignore_disconnected_t{}, null_func_obj{}, fn, null_func_obj{}, null_func_obj{}, ProcessingModel{std::forward<Args>(args)...})
+          );
       }
     }
 
@@ -156,11 +187,11 @@ namespace sequoia::testing
       using namespace maths;
       if constexpr(is_directed(Graph::flavour))
       {
-        return traverse(breadth_first, graph, ignore_disconnected_t{}, null_func_obj{}, null_func_obj{}, fn, ProcessingModel{std::forward<Args>(args)...});
+        return get_results(traverse(breadth_first, graph, ignore_disconnected_t{}, null_func_obj{}, null_func_obj{}, fn, ProcessingModel{std::forward<Args>(args)...}));
       }
       else
       {
-        return traverse(breadth_first, graph, ignore_disconnected_t{}, null_func_obj{}, null_func_obj{}, fn, null_func_obj{}, ProcessingModel{std::forward<Args>(args)...});
+        return get_results(traverse(breadth_first, graph, ignore_disconnected_t{}, null_func_obj{}, null_func_obj{}, fn, null_func_obj{}, ProcessingModel{std::forward<Args>(args)...}));
       }
     }
 
@@ -174,7 +205,7 @@ namespace sequoia::testing
       };
 
       using namespace maths;
-      return traverse(breadth_first, graph, ignore_disconnected_t{}, null_func_obj{}, null_func_obj{}, null_func_obj{}, fn, ProcessingModel{std::forward<Args>(args)...});
+      return get_results(traverse(breadth_first, graph, ignore_disconnected_t{}, null_func_obj{}, null_func_obj{}, null_func_obj{}, fn, ProcessingModel{std::forward<Args>(args)...}));
     }
 
     [[nodiscard]]

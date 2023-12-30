@@ -55,17 +55,19 @@ namespace sequoia::testing
     };
 
     template<class ForwardIt, class UnaryFn>
-    void accelerate(thread_pool_policy p, ForwardIt first, ForwardIt last, UnaryFn f)
+    void accelerate(thread_pool_policy p, ForwardIt first, ForwardIt last, UnaryFn fn)
     {
       if(const auto dist{static_cast<std::size_t>(std::ranges::distance(first, last))}; dist > 0)
       {
         concurrency::thread_pool<void> pool{std::ranges::min(dist, p.num)};
+        std::vector<std::future<void>> futures{};
+        futures.reserve(dist);
         while(first != last)
         {
-          pool.push([f, &wt{*(first++)}](){ f(wt); });
+          futures.emplace_back(pool.push([fn, &wt{*(first++)}](){ fn(wt); }));
         }
 
-        pool.get();
+        for(auto& f : futures) f.get();
       }
     }
 

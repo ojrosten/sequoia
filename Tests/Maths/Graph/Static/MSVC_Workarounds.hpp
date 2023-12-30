@@ -22,3 +22,9 @@
 #else
 #define ANOTHER_DODGY_MSVC_CONSTEXPR constexpr
 #endif
+
+#ifdef _MSC_VER
+#define YET_ANOTHER_DODGY_MSVC_CONSTEXPR const
+#else
+#define YET_ANOTHER_DODGY_MSVC_CONSTEXPR constexpr
+#endif

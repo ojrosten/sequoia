@@ -14,6 +14,7 @@
 
 #include "sequoia/Maths/Graph/GraphTraits.hpp"
 #include "sequoia/Maths/Graph/GraphDetails.hpp"
+#include "sequoia/Core/Concurrency/ConcurrencyModels.hpp"
 
 #include <vector>
 
@@ -140,6 +141,70 @@ namespace sequoia::maths
   using find_disconnected_t = traversal_conditions<disconnected_discovery_mode::on>;
 
   using ignore_disconnected_t = traversal_conditions<disconnected_discovery_mode::off>;
+
+  template<class ConcurrencyModel>
+  class results_accumulator
+  {
+  public:
+    using model_type = ConcurrencyModel;
+    using return_type = typename model_type::return_type;
+
+    explicit results_accumulator(ConcurrencyModel& model)
+      : m_Model{&model}
+    {}
+
+    template<class Fn, class... Args>
+      requires std::invocable<Fn, Args...>&& std::is_convertible_v<std::invoke_result_t<Fn, Args...>, return_type>
+    void push(Fn fn, Args&&... args)
+    {
+      m_Futures.emplace_back(m_Model->push(std::move(fn), std::forward<Args>(args)...));
+    }
+
+    [[nodiscard]]
+    std::vector<std::future<return_type>> extract_results() noexcept(noexcept(std::is_nothrow_move_constructible_v<return_type>)) { return std::move(m_Futures); }
+  private:
+    std::vector<std::future<return_type>> m_Futures;
+    ConcurrencyModel* m_Model;
+  };
+
+  template<>
+  class results_accumulator<concurrency::serial<void>>
+  {
+  public:
+    using return_type = void;
+
+    constexpr explicit results_accumulator(const concurrency::serial<void>&) {}
+
+    template<class Fn, class... Args>
+      requires std::invocable<Fn, Args...>
+    constexpr void push(Fn&& fn, Args&&... args)
+    {
+      concurrency::serial<void>{}.push(std::forward<Fn>(fn), std::forward<Args>(args)...);
+    }
+
+    constexpr void extract_results() const noexcept {}
+  };
+
+  template<class R>
+  class results_accumulator<concurrency::serial<R>>
+  {
+  public:
+    using return_type = R;
+
+    explicit results_accumulator(const concurrency::serial<R>&) {}
+
+    template<class Fn, class... Args>
+      requires std::invocable<Fn, Args...>&& std::is_convertible_v<std::invoke_result_t<Fn, Args...>, R>
+    void push(Fn fn, Args&&... args)
+    {
+      m_Results.emplace_back(concurrency::serial<R>{}.push(std::forward<Fn>(fn), std::forward<Args>(args)...));
+    }
+
+    [[nodiscard]]
+    std::vector<R> extract_results() noexcept(noexcept(std::is_nothrow_move_constructible_v<R>)) { return std::move(m_Results); }
+  private:
+    std::vector<R> m_Results;
+  };
 }
 
 namespace sequoia::maths::graph_impl
@@ -304,6 +369,7 @@ namespace sequoia::maths::graph_impl
       static_assert(!is_directed(G::flavour) || !hasEdgeSecondFn,
                     "For a directed graph, edges are traversed only once: the edgeSecondTraversalFn is ignored and so should be the null_func_obj");
 
+      results_accumulator resultsAccumulator{taskProcessingModel};
       if(conditions.starting_index() < graph.order())
       {
         auto discovered{traversal_tracking_traits<G>::make_bitset(graph)};
@@ -337,12 +403,12 @@ namespace sequoia::maths::graph_impl
                        nodeAfterEdgesFn,
                        edgeFirstTraversalFn,
                        edgeSecondTraversalFn,
-                       taskProcessingModel);
+                       resultsAccumulator);
           }
         } while(!conditions.terminate(graph.order()));
       }
 
-      return taskProcessingModel.get();
+      return resultsAccumulator.extract_results();
     }
 
     template
@@ -368,6 +434,7 @@ namespace sequoia::maths::graph_impl
       // However, the Fns should not be captured by value as they may have mutable state with
       // external visibility.
 
+      results_accumulator resultsAccumulator{taskProcessingModel};
       if(conditions.starting_index() < graph.order())
       {
         auto discovered{traversal_tracking_traits<G>::make_bitset(graph)};
@@ -390,12 +457,12 @@ namespace sequoia::maths::graph_impl
                      nodeAfterEdgesFn,
                      edgeToUndiscoveredNodeFn,
                      null_func_obj{},
-                     taskProcessingModel);
+                     resultsAccumulator);
 
         } while(!conditions.terminate(graph.order()));
       }
 
-      return taskProcessingModel.get();
+      return resultsAccumulator.extract_results();
     }
   private:
     struct recurse {};
@@ -436,12 +503,12 @@ namespace sequoia::maths::graph_impl
                                 NAEF&& nodeAfterEdgesFn,
                                 EFTF&& edgeFirstTraversalFn,
                                 ESTF&& edgeSecondTraversalFn,
-                                TaskProcessingModel&& taskProcessingModel)
+                                results_accumulator<TaskProcessingModel>& resultsAccumulator)
     {
       constexpr bool hasNodeBeforeFn{!std::same_as<std::remove_cvref_t<NBEF>, null_func_obj>};
       if constexpr(hasNodeBeforeFn)
       {
-        taskProcessingModel.push(nodeBeforeEdgesFn, nodeIndex);
+        resultsAccumulator.push(nodeBeforeEdgesFn, nodeIndex);
       }
 
       [[maybe_unused]] loop_processor<G> loops{};
@@ -455,7 +522,7 @@ namespace sequoia::maths::graph_impl
         {
           if constexpr(hasEdgeFirstFn)
           {
-            if(!discovered[nextNode]) taskProcessingModel.push(edgeFirstTraversalFn, iter);
+            if(!discovered[nextNode]) resultsAccumulator.push(edgeFirstTraversalFn, iter);
           }
         }
         else if constexpr(G::flavour != graph_flavour::directed)
@@ -469,21 +536,21 @@ namespace sequoia::maths::graph_impl
             {
               if constexpr(hasEdgeSecondFn)
               {
-                taskProcessingModel.push(edgeSecondTraversalFn, iter);
+                resultsAccumulator.push(edgeSecondTraversalFn, iter);
               }
             }
             else
             {
               if constexpr(hasEdgeFirstFn)
               {
-                taskProcessingModel.push(edgeFirstTraversalFn, iter);
+                resultsAccumulator.push(edgeFirstTraversalFn, iter);
               }
             }
           }
         }
         else if constexpr(hasEdgeFirstFn)
         {
-          taskProcessingModel.push(edgeFirstTraversalFn, iter);
+          resultsAccumulator.push(edgeFirstTraversalFn, iter);
         }
 
         if(!discovered[nextNode])
@@ -503,7 +570,7 @@ namespace sequoia::maths::graph_impl
                        nodeAfterEdgesFn,
                        edgeFirstTraversalFn,
                        edgeSecondTraversalFn,
-                       taskProcessingModel);
+                       resultsAccumulator);
           }
           else
           {
@@ -514,7 +581,7 @@ namespace sequoia::maths::graph_impl
 
       if constexpr(!std::same_as<std::remove_cvref_t<NAEF>, null_func_obj>)
       {
-        taskProcessingModel.push(nodeAfterEdgesFn, nodeIndex);
+        resultsAccumulator.push(nodeAfterEdgesFn, nodeIndex);
       }
 
       processed[nodeIndex] = true;
