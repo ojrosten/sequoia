@@ -28,11 +28,10 @@ namespace sequoia::testing
       return values;
     }
 
-    [[nodiscard]]
-    void get_results(std::vector<std::future<void>>&& futures)
+    /*void get_results(std::vector<std::future<void>>&& futures)
     {
       std::ranges::for_each(futures, [](std::future<void>& fut) { fut.get(); });
-    }
+    }*/
 
     template<class R>
     [[nodiscard]]
