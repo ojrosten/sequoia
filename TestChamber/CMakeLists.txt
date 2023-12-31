@@ -11,8 +11,8 @@ add_executable(TestChamber TestChamberMain.cpp)
 
 set(TestDir ../Tests)
 
-target_sources(TestChamber PRIVATE 
-               ${TestDir}/Experimental/ExperimentalTest.cpp
+target_sources(TestChamber PRIVATE
+               ${TestDir}/Algorithms/AlgorithmsTest.cpp
 )
 
 sequoia_finalize_self(TestChamber ${TestDir}/Experimental)
