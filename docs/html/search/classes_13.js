@@ -7,6 +7,5 @@ var searchData=
   ['unsafe_5ft_4',['unsafe_t',['../db/d6f/structsequoia_1_1maths_1_1unsafe__t.html',1,'sequoia::maths']]],
   ['unweighted_5fgraph_5fallocation_5fbucketed_5ftest_5',['unweighted_graph_allocation_bucketed_test',['../d3/d8a/classsequoia_1_1testing_1_1unweighted__graph__allocation__bucketed__test.html',1,'sequoia::testing']]],
   ['unweighted_5fgraph_5fallocation_5fcontiguous_5ftest_6',['unweighted_graph_allocation_contiguous_test',['../d2/d94/classsequoia_1_1testing_1_1unweighted__graph__allocation__contiguous__test.html',1,'sequoia::testing']]],
-  ['updatable_7',['updatable',['../d9/d74/classsequoia_1_1testing_1_1updatable.html',1,'sequoia::testing']]],
-  ['utilities_5ftest_8',['utilities_test',['../de/d71/classsequoia_1_1testing_1_1utilities__test.html',1,'sequoia::testing']]]
+  ['utilities_5ftest_7',['utilities_test',['../de/d71/classsequoia_1_1testing_1_1utilities__test.html',1,'sequoia::testing']]]
 ];

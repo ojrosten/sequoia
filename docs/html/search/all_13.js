@@ -9,9 +9,8 @@ var searchData=
   ['unsortable_5fweight_5fgraph_5fdescription_6',['unsortable_weight_graph_description',['../dd/dee/DynamicUndirectedGraphUnsortableWeightTestingUtilities_8hpp.html#a85c3671ec59c37ded8c0936223e2c76e',1,'sequoia::testing::undirected_graph']]],
   ['unweighted_5fgraph_5fallocation_5fbucketed_5ftest_7',['unweighted_graph_allocation_bucketed_test',['../d3/d8a/classsequoia_1_1testing_1_1unweighted__graph__allocation__bucketed__test.html',1,'sequoia::testing']]],
   ['unweighted_5fgraph_5fallocation_5fcontiguous_5ftest_8',['unweighted_graph_allocation_contiguous_test',['../d2/d94/classsequoia_1_1testing_1_1unweighted__graph__allocation__contiguous__test.html',1,'sequoia::testing']]],
-  ['updatable_9',['updatable',['../d9/d74/classsequoia_1_1testing_1_1updatable.html',1,'sequoia::testing']]],
-  ['utilities_2ehpp_10',['Utilities.hpp',['../db/d8f/Utilities_8hpp.html',1,'']]],
-  ['utilities_5ftest_11',['utilities_test',['../de/d71/classsequoia_1_1testing_1_1utilities__test.html',1,'sequoia::testing']]],
-  ['utilitiestest_2ecpp_12',['UtilitiesTest.cpp',['../d2/ddc/UtilitiesTest_8cpp.html',1,'']]],
-  ['utilitiestest_2ehpp_13',['UtilitiesTest.hpp',['../d5/d9d/UtilitiesTest_8hpp.html',1,'']]]
+  ['utilities_2ehpp_9',['Utilities.hpp',['../db/d8f/Utilities_8hpp.html',1,'']]],
+  ['utilities_5ftest_10',['utilities_test',['../de/d71/classsequoia_1_1testing_1_1utilities__test.html',1,'sequoia::testing']]],
+  ['utilitiestest_2ecpp_11',['UtilitiesTest.cpp',['../d2/ddc/UtilitiesTest_8cpp.html',1,'']]],
+  ['utilitiestest_2ehpp_12',['UtilitiesTest.hpp',['../d5/d9d/UtilitiesTest_8hpp.html',1,'']]]
 ];

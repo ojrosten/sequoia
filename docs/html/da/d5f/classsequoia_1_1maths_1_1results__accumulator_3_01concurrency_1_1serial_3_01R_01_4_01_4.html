@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.6"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: sequoia::concurrency::serial&lt; R &gt; Class Template Reference</title>
+<title>Sequoia: sequoia::maths::results_accumulator&lt; concurrency::serial&lt; R &gt; &gt; Class Template Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -69,42 +69,40 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><b>sequoia</b></li><li class="navelem"><b>concurrency</b></li><li class="navelem"><a class="el" href="../../dc/d7a/classsequoia_1_1concurrency_1_1serial.html">serial</a></li>  </ul>
+<li class="navelem"><b>sequoia</b></li><li class="navelem"><b>maths</b></li><li class="navelem"><a class="el" href="../../da/d5f/classsequoia_1_1maths_1_1results__accumulator_3_01concurrency_1_1serial_3_01R_01_4_01_4.html">results_accumulator&lt; concurrency::serial&lt; R &gt; &gt;</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="../../db/d7f/classsequoia_1_1concurrency_1_1serial-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">sequoia::concurrency::serial&lt; R &gt; Class Template Reference</div></div>
+<a href="../../df/d7d/classsequoia_1_1maths_1_1results__accumulator_3_01concurrency_1_1serial_3_01R_01_4_01_4-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">sequoia::maths::results_accumulator&lt; concurrency::serial&lt; R &gt; &gt; Class Template Reference</div></div>
 </div><!--header-->
 <div class="contents">
-
-<p>Tasks may be <code>push</code>ed, upon which they are immediately invoked.  
- <a href="../../dc/d7a/classsequoia_1_1concurrency_1_1serial.html#details">More...</a></p>
-
-<p><code>#include &lt;<a class="el" href="../../d9/d70/ConcurrencyModels_8hpp_source.html">ConcurrencyModels.hpp</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a4780c75d1acc4dd892be0d72888e394e"><td class="memItemLeft" align="right" valign="top"><a id="a4780c75d1acc4dd892be0d72888e394e" name="a4780c75d1acc4dd892be0d72888e394e"></a>
+<tr class="memitem:aaf912e944ac81a61f67fad8c0b43f55c"><td class="memItemLeft" align="right" valign="top"><a id="aaf912e944ac81a61f67fad8c0b43f55c" name="aaf912e944ac81a61f67fad8c0b43f55c"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>return_type</b> = R</td></tr>
-<tr class="separator:a4780c75d1acc4dd892be0d72888e394e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:aaf912e944ac81a61f67fad8c0b43f55c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a364900484ae04e84233a88c8d17d181c"><td class="memTemplParams" colspan="2"><a id="a364900484ae04e84233a88c8d17d181c" name="a364900484ae04e84233a88c8d17d181c"></a>
+<tr class="memitem:a48c0c206aea233abd637ef4161c5e99c"><td class="memItemLeft" align="right" valign="top"><a id="a48c0c206aea233abd637ef4161c5e99c" name="a48c0c206aea233abd637ef4161c5e99c"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>results_accumulator</b> (const <a class="el" href="../../dc/d7a/classsequoia_1_1concurrency_1_1serial.html">concurrency::serial</a>&lt; R &gt; &amp;)</td></tr>
+<tr class="separator:a48c0c206aea233abd637ef4161c5e99c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a803a700177f4f5de1c2e2f0dda6c2d7a"><td class="memTemplParams" colspan="2"><a id="a803a700177f4f5de1c2e2f0dda6c2d7a" name="a803a700177f4f5de1c2e2f0dda6c2d7a"></a>
 template&lt;class Fn , class... Args&gt; <br />
-requires std::invocable&lt;Fn, Args...&gt; &amp;&amp; std::is_convertible_v&lt;R, std::invoke_result_t&lt;Fn, Args...&gt;&gt;</td></tr>
-<tr class="memitem:a364900484ae04e84233a88c8d17d181c"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::invoke_result_t&lt; Fn, Args... &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>push</b> (Fn &amp;&amp;fn, Args &amp;&amp;... args)</td></tr>
-<tr class="separator:a364900484ae04e84233a88c8d17d181c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+requires std::invocable&lt;Fn, Args...&gt;&amp;&amp; std::is_convertible_v&lt;std::invoke_result_t&lt;Fn, Args...&gt;, R&gt;</td></tr>
+<tr class="memitem:a803a700177f4f5de1c2e2f0dda6c2d7a"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>push</b> (Fn fn, Args &amp;&amp;... args)</td></tr>
+<tr class="separator:a803a700177f4f5de1c2e2f0dda6c2d7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae63e941c72143d3cd8f99b0aab66368e"><td class="memItemLeft" align="right" valign="top"><a id="ae63e941c72143d3cd8f99b0aab66368e" name="ae63e941c72143d3cd8f99b0aab66368e"></a>
+std::vector&lt; R &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>extract_results</b> () noexcept(noexcept(std::is_nothrow_move_constructible_v&lt; R &gt;))</td></tr>
+<tr class="separator:ae63e941c72143d3cd8f99b0aab66368e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><div class="compoundTemplParams">template&lt;class R&gt;<br />
-class sequoia::concurrency::serial&lt; R &gt;</div><p>Tasks may be <code>push</code>ed, upon which they are immediately invoked. </p>
-</div><hr/>The documentation for this class was generated from the following file:<ul>
-<li>C:/Users/olive/sequoia/Source/sequoia/Core/Concurrency/<a class="el" href="../../d9/d70/ConcurrencyModels_8hpp_source.html">ConcurrencyModels.hpp</a></li>
+<hr/>The documentation for this class was generated from the following file:<ul>
+<li>C:/Users/olive/sequoia/Source/sequoia/Maths/Graph/<a class="el" href="../../d1/d4d/GraphTraversalDetails_8hpp_source.html">GraphTraversalDetails.hpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

@@ -48,5 +48,8 @@ var searchData=
   ['relationaltestdiagnostics_2ehpp_45',['RelationalTestDiagnostics.hpp',['../dd/d62/RelationalTestDiagnostics_8hpp.html',1,'']]],
   ['replacement_46',['replacement',['../da/dd8/structsequoia_1_1replacement.html',1,'sequoia']]],
   ['resolve_5fto_5fcopy_47',['resolve_to_copy',['../dc/d48/structsequoia_1_1resolve__to__copy.html',1,'sequoia']]],
-  ['resource_5fbinder_48',['resource_binder',['../de/d91/classsequoia_1_1testing_1_1resource__binder.html',1,'sequoia::testing']]]
+  ['resource_5fbinder_48',['resource_binder',['../de/d91/classsequoia_1_1testing_1_1resource__binder.html',1,'sequoia::testing']]],
+  ['results_5faccumulator_49',['results_accumulator',['../d4/da8/classsequoia_1_1maths_1_1results__accumulator.html',1,'sequoia::maths']]],
+  ['results_5faccumulator_3c_20concurrency_3a_3aserial_3c_20r_20_3e_20_3e_50',['results_accumulator&lt; concurrency::serial&lt; R &gt; &gt;',['../da/d5f/classsequoia_1_1maths_1_1results__accumulator_3_01concurrency_1_1serial_3_01R_01_4_01_4.html',1,'sequoia::maths']]],
+  ['results_5faccumulator_3c_20concurrency_3a_3aserial_3c_20void_20_3e_20_3e_51',['results_accumulator&lt; concurrency::serial&lt; void &gt; &gt;',['../df/d13/classsequoia_1_1maths_1_1results__accumulator_3_01concurrency_1_1serial_3_01void_01_4_01_4.html',1,'sequoia::maths']]]
 ];
