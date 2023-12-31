@@ -54,81 +54,15 @@ namespace sequoia::testing
 
   void algorithms_test::run_tests()
   {
-    sort_basic_type(unstable{});
     sort_basic_type(stable{});
-    sort_partial_edge(unstable{});
-    sort_partial_edge(stable{});
-
-    stable_sort_stability();
-
-    cluster_basic_type();
-    cluster_partial_edge();
   }
    
   template<class Stability>
   void algorithms_test::sort_basic_type(Stability stability)
   {
-    {
-      constexpr std::array<int, 0> a{};
-      constexpr auto b = sort(stability, a);
-      check(equality, report_line("Sort an empty array"), b, a);
-    }
-
-    {
-      constexpr std::array<int, 1> a{1};
-      constexpr auto b = sort(stability, a);
-      check(equality, report_line("Sort an array of one element"), b, a);
-    }
-
-    {
-      constexpr std::array<int, 2> s{1,2};
-      constexpr auto b = sort(stability, s);
-      check(equality, report_line("Sort a sorted array of two elements"), b, s);
-
-      constexpr std::array<int, 2> u{2,1};
-      constexpr auto c = sort(stability, u);
-      check(equality, report_line("Sort an unsorted array of two elements"), c, s);
-
-      constexpr std::array<int, 2> t{1,1};
-      constexpr auto d = sort(stability, t);
-      check(equality, report_line("Sort an array of two identical elements"), d, t);
-    }
-
-    {
-      constexpr std::array<int, 10> a{5,4,7,8,6,1,2,0,9,3};
-      constexpr auto b = sort(stability, a);
-      check(equality, report_line("Sort digits from 0--9"), b, {0,1,2,3,4,5,6,7,8,9});
-
-      constexpr auto c = sort(stability, a, std::greater<int>{});
-      check(equality, report_line("Reverse sort digits from 0--9"), c, {9,8,7,6,5,4,3,2,1,0});
-    }
-
-    {
-      constexpr std::array<int, 11> a{5,4,7,8,6,1,10,2,0,9,3};
-      constexpr auto b = sort(stability, a);
-      check(equality, report_line("Sort digits from 0--10"), b, {0,1,2,3,4,5,6,7,8,9,10});
-
-      constexpr auto c = sort(stability, a, std::greater<int>{});
-      check(equality, report_line("Reverse sort digits from 0--10"), c, {10,9,8,7,6,5,4,3,2,1,0});
-    }
-  }
-
-  template<class Stability>
-  void algorithms_test::sort_partial_edge(Stability stability)
-  {
-    struct null_type{};
-    using edge = maths::partial_edge<object::by_value<null_type>, maths::null_meta_data>;
-    constexpr std::array<edge, 3> a{edge{1}, edge{2}, edge{0}}, prediction{edge{0}, edge{1}, edge{2}};
-
-    {
-      constexpr auto b = sort(stability, a, [](const edge& lhs, const edge& rhs) { return lhs.target_node() < rhs.target_node(); });
-      check(equality, report_line(""), b, prediction);
-    }
-
-    {
-      constexpr auto b = sort(stability, a, std::ranges::less{}, [](const edge& e) { return e.target_node(); });
-      check(equality, report_line(""), b, prediction);
-    }
+    constexpr std::array<int, 10> a{5,4,7,8,6,1,2,0,9,3};
+    // Bug appears to occur in here; commenting this line out fixes the problem
+    constexpr auto b = sort(stability, a);
   }
 
   void algorithms_test::stable_sort_stability()
@@ -140,40 +74,22 @@ namespace sequoia::testing
 
     {
       constexpr auto b = sort(stable{}, a, [](const pair_t& lhs, const pair_t& rhs){ return lhs.first < rhs.first; });
+      // But commenting out this line...
       check(equality, report_line("Stable sort"), b, prediction);
     }
 
     {
       constexpr auto b = sort(stable{}, a, std::ranges::less{}, [](const pair_t& p){ return p.first; });
+      // And this line stops the crash
       check(equality, report_line("Stable sort"), b, prediction);
     }
   }
 
+  // Alternatively, commenting out this method stops the crash
   void algorithms_test::cluster_basic_type()
   {
-    {
-      constexpr std::array<int, 9> a{1,2,2,1,3,1,2,2,1};
-      constexpr auto b = cluster(a);
-      check(equality, report_line("Cluster 9 digits"), b, {1,1,1,1,3,2,2,2,2});
-    }
-  }
-
-  void algorithms_test::cluster_partial_edge()
-  {
-    struct null_type{};
-    using edge = maths::partial_edge<object::by_value<null_type>, maths::null_meta_data>;
-    constexpr std::array<edge, 6>
-      a{edge{1}, edge{2}, edge{2}, edge{0}, edge{1}, edge{0}},
-      prediction{edge{1}, edge{1}, edge{2}, edge{2}, edge{0}, edge{0}};
-
-    {
-      constexpr auto b = cluster(a, [](const edge& lhs, const edge& rhs) { return lhs.target_node() == rhs.target_node(); });
-      check(equality, report_line(""), b, prediction);
-    }
-
-    {
-      constexpr auto b = cluster(a, std::ranges::equal_to{}, [](const edge& e) { return e.target_node(); });
-      check(equality, report_line(""), b, prediction);
-    }
+    constexpr std::array<int, 9> a{1,2,2,1,3,1,2,2,1};
+    constexpr auto b = cluster(a);
+    check(equality, report_line("Cluster 9 digits"), b, {1,1,1,1,3,2,2,2,2});
   }
 }
