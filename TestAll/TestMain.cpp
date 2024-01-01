@@ -156,6 +156,7 @@ int main(int argc, char** argv)
 
     runner.add_test_suite(
       "Meta",
+      type_list_free_test{"Type List Free Test"},
       type_traits_test{"Type Traits"},
       concepts_test{"Concepts"},
       utilities_test{"Utilities"}
@@ -341,7 +342,7 @@ int main(int argc, char** argv)
     runner.add_test_suite(
       "Experimental",
       experimental_test{"Unit Test"},
-      type_list_free_test{"Free Test"}
+      flatten_type_list_free_test{"Free Test"}
     );
 
     runner.add_test_suite(

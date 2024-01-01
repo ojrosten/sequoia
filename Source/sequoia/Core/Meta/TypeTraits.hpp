@@ -26,11 +26,6 @@ namespace sequoia
   template<class T>
   struct dependent_false : std::false_type {};
 
-  /*! @defgroup type_list The type_list Group
-      This group provides mechanisms for extracting the head and tail from a parameter pack.
-      @{
-   */
-
   /*! \brief class template for determining whether a constructor template should resolve to the copy constructor */
   template<class T, class... Args>
   struct resolve_to_copy

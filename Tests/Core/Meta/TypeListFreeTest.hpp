@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////
-//                Copyright Oliver J. Rosten 2023.                //
+//                Copyright Oliver J. Rosten 2024.                //
 // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
 //    (See accompanying file LICENSE.md or copy at                //
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
@@ -23,8 +23,8 @@ namespace sequoia::testing
 
     void run_tests();
   private:
+      void test_type_list();
 
-    void test_type_list();
-    void test_flatten();
+      void test_type_list_union();
   };
 }
