@@ -141,7 +141,7 @@ namespace sequoia::testing
 
         // 'graph_description::nodew'
         [this]() -> graph_t {
-          DODGY_MSVC_CONSTEXPR graph_t g{edges_init_t{{}},  nodes_init_t{{2.1, 1.1}}};
+          constexpr graph_t g{edges_init_t{{}},  nodes_init_t{{2.1, 1.1}}};
 
           check(equivalence, report_line(""), g, edges_init_t{{}}, nodes_init_t{{2.1, 1.1}});
           check(equality, report_line(""), g, graph_t{edges_init_t{{}},  nodes_init_t{{2.1, 1.1}}});
@@ -257,7 +257,7 @@ namespace sequoia::testing
 
         // 'graph_description::nodew_0'
         [this]() -> graph_t {
-          DODGY_MSVC_CONSTEXPR graph_t g{edges_init_t{{edge_t{0}, edge_t{0}}},  nodes_init_t{{2.1, 1.1}}};
+          constexpr graph_t g{edges_init_t{{edge_t{0}, edge_t{0}}},  nodes_init_t{{2.1, 1.1}}};
 
           check(equivalence, report_line(""), g, edges_init_t{{edge_t{0}, edge_t{0}}}, nodes_init_t{{2.1, 1.1}});
           check(equality, report_line(""), g, graph_t{edges_init_t{{edge_t{0}, edge_t{0}}},  nodes_init_t{{2.1, 1.1}}});
@@ -347,7 +347,7 @@ namespace sequoia::testing
 
         // 'graph_description::nodew_0_0'
         [this]() -> graph_t {
-          DODGY_MSVC_CONSTEXPR graph_t g{edges_init_t{{edge_t{0}, edge_t{0}, edge_t{0}, edge_t{0}}}, nodes_init_t{{2.1, 1.1}}};
+          constexpr graph_t g{edges_init_t{{edge_t{0}, edge_t{0}, edge_t{0}, edge_t{0}}}, nodes_init_t{{2.1, 1.1}}};
 
           check(equivalence, report_line(""), g, edges_init_t{{edge_t{0}, edge_t{0}, edge_t{0}, edge_t{0}}}, nodes_init_t{{2.1, 1.1}});
           check(equality, report_line(""), g, graph_t{edges_init_t{{edge_t{0}, edge_t{0}, edge_t{0}, edge_t{0}}}, nodes_init_t{{2.1, 1.1}}});
@@ -457,7 +457,7 @@ namespace sequoia::testing
 
         // 'graph_description::nodew_node'
         [this]() -> graph_t {
-          DODGY_MSVC_CONSTEXPR graph_t g{edges_init_t{{}, {}},  nodes_init_t{{2.1, 1.1}, {}}};
+          constexpr graph_t g{edges_init_t{{}, {}},  nodes_init_t{{2.1, 1.1}, {}}};
 
           check(equivalence, report_line(""), g, edges_init_t{{}, {}}, nodes_init_t{{2.1, 1.1}, {}});
           check(equality, report_line(""), g, graph_t{edges_init_t{{}, {}},  nodes_init_t{{2.1, 1.1}, {}}});
@@ -467,7 +467,7 @@ namespace sequoia::testing
 
         // 'graph_description::nodew_nodex'
         [this]() -> graph_t {
-          DODGY_MSVC_CONSTEXPR graph_t g{edges_init_t{{}, {}},  nodes_init_t{{2.1, 1.1}, {-0.7}}};
+          constexpr graph_t g{edges_init_t{{}, {}},  nodes_init_t{{2.1, 1.1}, {-0.7}}};
 
           check(equivalence, report_line(""), g, edges_init_t{{}, {}}, nodes_init_t{{2.1, 1.1}, {-0.7}});
           check(equality, report_line(""), g, graph_t{edges_init_t{{}, {}},  nodes_init_t{{2.1, 1.1}, {-0.7}}});
@@ -477,7 +477,7 @@ namespace sequoia::testing
 
         // 'graph_description::nodex_nodew'
         [this]() -> graph_t {
-          DODGY_MSVC_CONSTEXPR graph_t g{edges_init_t{{}, {}},  nodes_init_t{{-0.7}, {2.1, 1.1}}};
+          constexpr graph_t g{edges_init_t{{}, {}},  nodes_init_t{{-0.7}, {2.1, 1.1}}};
 
           check(equivalence, report_line(""), g, edges_init_t{{}, {}}, nodes_init_t{{-0.7}, {2.1, 1.1}});
           check(equality, report_line(""), g, graph_t{edges_init_t{{}, {}},  nodes_init_t{{-0.7}, {2.1, 1.1}}});
@@ -580,7 +580,7 @@ namespace sequoia::testing
 
         // 'graph_description::nodew_1u_node_0u'
         [this]() -> graph_t {
-          DODGY_MSVC_CONSTEXPR graph_t g{edges_init_t{{edge_t{1, -0.2f, 0.1f}}, {edge_t{0, -0.2f, 0.1f}}}, nodes_init_t{{2.1, 1.1}, {}}};
+          constexpr graph_t g{edges_init_t{{edge_t{1, -0.2f, 0.1f}}, {edge_t{0, -0.2f, 0.1f}}}, nodes_init_t{{2.1, 1.1}, {}}};
           check(equivalence, report_line(""), g, edges_init_t{{edge_t{1, -0.2f, 0.1f}}, {edge_t{0, -0.2f, 0.1f}}}, nodes_init_t{{2.1, 1.1}, {}});
           check(equality, report_line(""), g, graph_t{edges_init_t{{edge_t{1, -0.2f, 0.1f}}, {edge_t{0, -0.2f, 0.1f}}}, nodes_init_t{{2.1, 1.1}, {}}});
 
@@ -589,7 +589,7 @@ namespace sequoia::testing
 
         // 'graph_description::node_1u_nodew_0'
         [this]() -> graph_t {
-          DODGY_MSVC_CONSTEXPR graph_t g{edges_init_t{{edge_t{1, -0.2f, 0.1f}}, {edge_t{0, -0.2f, 0.1f}}}, nodes_init_t{{}, {2.1, 1.1}}};
+          constexpr graph_t g{edges_init_t{{edge_t{1, -0.2f, 0.1f}}, {edge_t{0, -0.2f, 0.1f}}}, nodes_init_t{{}, {2.1, 1.1}}};
           check(equivalence, report_line(""), g, edges_init_t{{edge_t{1, -0.2f, 0.1f}}, {edge_t{0, -0.2f, 0.1f}}}, nodes_init_t{{}, {2.1, 1.1}});
           check(equality, report_line(""), g, graph_t{edges_init_t{{edge_t{1, -0.2f, 0.1f}}, {edge_t{0, -0.2f, 0.1f}}}, nodes_init_t{{}, {2.1, 1.1}}});
 
@@ -778,7 +778,7 @@ namespace sequoia::testing
       {
          // 'graph_description::nodew_1_2v_nodex_0_2u_node_0v_1u'
          [this]() -> graph_t {
-           DODGY_MSVC_CONSTEXPR graph_t g{edges_init_t{{edge_t{1}, edge_t{2, 0.5f}}, {edge_t{0}, edge_t{2, -0.2f, 0.1f}}, {edge_t{0, 0.5f}, edge_t{1, -0.2f, 0.1f}}}, nodes_init_t{{2.1, 1.1}, {0.7}, {}}};
+           constexpr graph_t g{edges_init_t{{edge_t{1}, edge_t{2, 0.5f}}, {edge_t{0}, edge_t{2, -0.2f, 0.1f}}, {edge_t{0, 0.5f}, edge_t{1, -0.2f, 0.1f}}}, nodes_init_t{{2.1, 1.1}, {0.7}, {}}};
            check(equivalence, report_line(""), g, edges_init_t{{edge_t{1}, edge_t{2, 0.5f}}, {edge_t{0}, edge_t{2, -0.2f, 0.1f}}, {edge_t{0, 0.5f}, edge_t{1, -0.2f, 0.1f}}}, nodes_init_t{{2.1, 1.1}, {0.7}, {}});
            check(equality, report_line(""), g, graph_t{edges_init_t{{edge_t{1}, edge_t{2, 0.5f}}, {edge_t{0}, edge_t{2, -0.2f, 0.1f}}, {edge_t{0, 0.5f}, edge_t{1, -0.2f, 0.1f}}}, nodes_init_t{{2.1, 1.1}, {0.7}, {}}});
 
@@ -787,7 +787,7 @@ namespace sequoia::testing
 
          // 'graph_description::node_2v_1u_nodex_2_0u_nodew_1_0v'
          [this]() -> graph_t {
-           DODGY_MSVC_CONSTEXPR auto g{[](){
+           constexpr auto g{[](){
               graph_t g{edges_init_t{{edge_t{1, -0.2f, 0.1f}, edge_t{2, 0.5f}}, {edge_t{0, -0.2f, 0.1f}, edge_t{2}}, {edge_t{0, 0.5f}, edge_t{1}}}, nodes_init_t{{}, {0.7}, {2.1, 1.1}}};
               for(auto i : std::views::iota(0_sz, g.order())) g.swap_edges(static_cast<index_type>(i), 0, 1);
               return g;
