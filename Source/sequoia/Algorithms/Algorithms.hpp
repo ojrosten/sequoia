@@ -109,10 +109,7 @@ namespace sequoia
     stable_sort(first, partition, out, compare, proj);
     stable_sort(partition, last, std::ranges::next(out, dist / 2), compare, proj);
     std::ranges::merge(first, partition, partition, last, out, compare, proj, proj);
-    // TO DO: report MSVC bug
-    //std::ranges::copy(out, std::ranges::next(out, dist), first);
-    auto end{std::ranges::next(out, dist)};
-    while(out != end) *first++ = *out++;
+    std::ranges::copy(out, std::ranges::next(out, dist), first);
   }
 
   template<std::input_iterator Iter, class Comp = std::ranges::less, class Proj = std::identity>
