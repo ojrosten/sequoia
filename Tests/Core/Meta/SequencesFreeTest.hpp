@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////
-//                Copyright Oliver J. Rosten 2019.                //
+//                Copyright Oliver J. Rosten 2024.                //
 // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
 //    (See accompanying file LICENSE.md or copy at                //
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
@@ -9,11 +9,11 @@
 
 /*! \file */
 
-#include "sequoia/TestFramework/RegularTestCore.hpp"
+#include "sequoia/TestFramework/FreeTestCore.hpp"
 
 namespace sequoia::testing
 {
-  class utilities_test final : public free_test
+  class sequences_free_test final : public free_test
   {
   public:
     using free_test::free_test;
@@ -22,7 +22,7 @@ namespace sequoia::testing
     std::filesystem::path source_file() const;
 
     void run_tests();
-  private:
-    void test_function_signature();
+
+    void test_filtered_sequence();
   };
 }

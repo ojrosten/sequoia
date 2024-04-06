@@ -16,11 +16,11 @@ set(SourceList
     sequoia/TestFramework/Commands.cpp
     sequoia/TestFramework/ConcreteTypeCheckers.cpp
     sequoia/TestFramework/DependencyAnalyzer.cpp
-    sequoia/TestFramework/IndividualTestPaths.cpp
     sequoia/TestFramework/FailureInfo.cpp
     sequoia/TestFramework/FileEditors.cpp
     sequoia/TestFramework/FileSystemUtilities.cpp
     sequoia/TestFramework/FreeTestCore.cpp
+    sequoia/TestFramework/IndividualTestPaths.cpp
     sequoia/TestFramework/MaterialsUpdater.cpp
     sequoia/TestFramework/MoveOnlyTestCore.cpp
     sequoia/TestFramework/Output.cpp

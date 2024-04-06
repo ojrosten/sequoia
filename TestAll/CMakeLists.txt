@@ -34,6 +34,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Core/DataStructures/StaticStackTestingDiagnostics.cpp
                ${TestDir}/Core/Logic/BitmaskFreeTest.cpp
                ${TestDir}/Core/Meta/ConceptsTest.cpp
+               ${TestDir}/Core/Meta/SequencesFreeTest.cpp
                ${TestDir}/Core/Meta/TypeListFreeTest.cpp
                ${TestDir}/Core/Meta/TypeTraitsTest.cpp
                ${TestDir}/Core/Meta/UtilitiesTest.cpp
