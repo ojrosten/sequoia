@@ -86,6 +86,12 @@ namespace sequoia
 
   template<class> struct rotate_sequence;
 
+  template<>
+  struct rotate_sequence<std::index_sequence<>>
+  {
+    using type = std::index_sequence<>;
+  };
+
   template<std::size_t I, std::size_t... Is>
   struct rotate_sequence<std::index_sequence<I, Is...>>
   {
@@ -102,6 +108,12 @@ namespace sequoia
 
   template<class T>
   using reverse_sequence_t = typename reverse_sequence<T>::type;
+
+  template<>
+  struct reverse_sequence<std::index_sequence<>>
+  {
+    using type = std::index_sequence<>;
+  };
 
   template<std::size_t I>
   struct reverse_sequence<std::index_sequence<I>>
@@ -138,12 +150,21 @@ namespace sequoia
     };
   }
 
+  template<class>
+  struct sequence_partial_sum;
+
+  template<>
+  struct sequence_partial_sum<std::index_sequence<>>
+  {
+    using type = std::index_sequence<>;
+  };
+
   template<std::size_t I, std::size_t... Is>
-  struct sequence_partial_sum
+  struct sequence_partial_sum<std::index_sequence<I, Is...>>
   {
     using type = reverse_sequence_t<impl::sequence_partial_sum_t<std::index_sequence<I>, Is...>>;
   };
 
-  template<std::size_t... Is>
-  using sequence_partial_sum_t = typename sequence_partial_sum<Is...>::type;
+  template<class T>
+  using sequence_partial_sum_t = typename sequence_partial_sum<T>::type;
 }

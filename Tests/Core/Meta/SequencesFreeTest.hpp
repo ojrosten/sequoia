@@ -23,6 +23,14 @@ namespace sequoia::testing
 
     void run_tests();
 
+    void test_concat_sequences();
+
     void test_filtered_sequence();
+
+    void test_rotate_sequence();
+
+    void test_reverse_sequence();
+
+    void test_sequence_partial_sum();
   };
 }
