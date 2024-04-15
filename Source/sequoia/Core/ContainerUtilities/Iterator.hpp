@@ -107,9 +107,6 @@ namespace sequoia::utilities
   /*! \brief Detects value_type */
 
   template<class T>
-  inline constexpr bool has_value_type{requires { typename T::value_type; }};
-
-  template<class T>
   struct value_type
   {
     using type = void;
