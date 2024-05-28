@@ -42,13 +42,13 @@ namespace sequoia::testing
   };
 }
 
-namespace sequoia
+NAMESPACE_SEQUOIA_AS_BITMASK
 {
   template<>
-  struct as_bitmask<testing::runner_mode> : std::true_type {};
+  struct as_bitmask<sequoia::testing::runner_mode> : std::true_type {};
 
   template<>
-  struct as_bitmask<testing::recovery_mode> : std::true_type {};
+  struct as_bitmask<sequoia::testing::recovery_mode> : std::true_type {};
 }
 
 namespace sequoia::testing

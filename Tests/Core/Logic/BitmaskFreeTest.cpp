@@ -30,10 +30,10 @@ namespace sequoia::testing
   {};
 }
 
-namespace sequoia
+NAMESPACE_SEQUOIA_AS_BITMASK
 {
   template<>
-  struct as_bitmask<testing::mask> : std::true_type {};
+  struct as_bitmask<sequoia::testing::mask> : std::true_type {};
 }
 
 namespace sequoia::testing
