@@ -42,15 +42,15 @@ ENDFUNCTION()
 FUNCTION(sequoia_finalize target headerDirForIDE) 
 	sequoia_compile_features(${target})
 
-    add_subdirectory(${CMAKE_CURRENT_FUNCTION_LIST_DIR}/../Source TestFramework)
-    target_link_libraries(${target} PUBLIC TestFramework)
-	
-	if (MSVC)    
+    add_subdirectory(${CMAKE_CURRENT_FUNCTION_LIST_DIR}/../Source Sequoia)
+    target_link_libraries(${target} PUBLIC Sequoia)
+
+    if (MSVC)
         set_target_properties(${target} PROPERTIES LINK_FLAGS "/INCREMENTAL:NO")
-		set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${target})
-	endif()
-	
-	set_headers_for_ide(${target} ${headerDirForIDE})
+        set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${target})
+    endif()
+
+    set_headers_for_ide(${target} ${headerDirForIDE})
 ENDFUNCTION()
 
 FUNCTION(sequoia_finalize_self target headersForIDE)
