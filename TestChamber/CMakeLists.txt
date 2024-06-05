@@ -15,4 +15,4 @@ target_sources(TestChamber PRIVATE
                ${TestDir}/Experimental/ExperimentalTest.cpp
 )
 
-sequoia_finalize_self(TestChamber ${TestDir}/Experimental)
+sequoia_finalize_self(TestChamber ${TestDir}/Experimental Experimental)

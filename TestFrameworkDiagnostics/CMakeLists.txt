@@ -20,7 +20,7 @@ target_sources(TestFrameworkDiagnostics PRIVATE
                ${TestDir}/Runtime/ShellCommandsTest.cpp
                ${TestDir}/Runtime/ShellCommandsTestingDiagnostics.cpp
                ${TestDir}/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp
-               ${TestDir}/TestFramework/AllocationTesting/MoveOnlyScopedAllocationTestDiagnostics.cpp               
+               ${TestDir}/TestFramework/AllocationTesting/MoveOnlyScopedAllocationTestDiagnostics.cpp
                ${TestDir}/TestFramework/AllocationTesting/OrderableMoveOnlyAllocationTestDiagnostics.cpp
                ${TestDir}/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp
                ${TestDir}/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp
@@ -67,5 +67,5 @@ target_sources(TestFrameworkDiagnostics PRIVATE
                ${TestDir}/TextProcessing/PatternsFreeTest.cpp
                ${TestDir}/TextProcessing/SubstitutionsFreeTest.cpp)
 
-sequoia_finalize_self(TestFrameworkDiagnostics ${TestDir}/TestFramework)
+sequoia_finalize_self(TestFrameworkDiagnostics ${TestDir} Tests)
 

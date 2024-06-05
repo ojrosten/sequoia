@@ -58,5 +58,5 @@ target_sources(TestAll PRIVATE
 target_include_directories(TestAll PRIVATE ${SourceDir})
 target_include_directories(TestAll PRIVATE ${TestDir})
 
-sequoia_finalize(TestAll ${TestDir})
+sequoia_finalize(TestAll ${TestDir} Tests)
 

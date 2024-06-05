@@ -151,5 +151,5 @@ target_sources(TestAll PRIVATE
                ${TestDir}/TextProcessing/PatternsFreeTest.cpp
                ${TestDir}/TextProcessing/SubstitutionsFreeTest.cpp)
 
-sequoia_finalize_self(TestAll ${TestDir})
+sequoia_finalize_self(TestAll ${TestDir} Tests)
 
