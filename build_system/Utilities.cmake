@@ -85,7 +85,10 @@ FUNCTION(sequoia_finalize_library target)
 ENDFUNCTION()
 
 FUNCTION(sequoia_finalize_executable target)
-    sequoia_finalize_library(${target})
+    sequoia_compile_features(${target})
+    sequoia_link_libraries(${target})
+
+    sequoia_set_ide_source_groups(${target} ${CMAKE_CURRENT_LIST_DIR})
 
     if (MSVC)
         set_property(DIRECTORY ${CMAKE_CURRENT_LIST_DIR} PROPERTY VS_STARTUP_PROJECT ${target})
