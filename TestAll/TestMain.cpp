@@ -367,6 +367,12 @@ int main(int argc, char** argv)
       suite_free_test{"Suite Free Test"}
     );
 
+    runner.add_test_suite(
+      "Angle",
+      angle_false_positive_test{"False Positive Test"},
+      angle_test{"Unit Test"}
+    );
+
     runner.execute(timer_resolution{1ms});
   }
   catch(const std::exception& e)
