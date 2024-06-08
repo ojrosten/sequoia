@@ -11,6 +11,8 @@
 
 namespace sequoia::testing
 {
+  using namespace maths;
+
   [[nodiscard]]
   std::filesystem::path angle_test::source_file() const
   {
@@ -19,14 +21,19 @@ namespace sequoia::testing
 
   void angle_test::run_tests()
   {
-    // For example:
+    test_angle<float, 360.f>();
+    test_angle<double, 360.0>();
 
-    // sequoia::maths::angle<T> x{args}, y{different args};
-    // check(equivalence, report_line("Useful Description"), x, something equivalent);
-    // check(equivalence,report_line("Useful Description"), y, something equivalent);
-    // For orderable type, with x < y:
-    // check_semantics(report_line("Useful Description"), x, y, std::weak_ordering::less);
-    // For equality comparable but not orderable:
-    // check_semantics(report_line("Useful Description"), x, y);
+    test_angle<float, std::numbers::pi_v<float>>();
+    test_angle<double, std::numbers::pi_v<double>>();
+  }
+
+  template<std::floating_point T, T Period>
+  void angle_test::test_angle()
+  {
+    angle<T, Period> theta{}, phi{1};
+    check(equivalence, report_line(""), theta, T{});
+    check(equivalence, report_line(""), phi, T{1});
+    check_semantics(report_line(""), theta, phi, std::weak_ordering::less);
   }
 }

@@ -11,6 +11,8 @@
 
 namespace sequoia::testing
 {
+  using namespace maths;
+
   [[nodiscard]]
   std::filesystem::path angle_false_positive_test::source_file() const
   {
@@ -19,10 +21,19 @@ namespace sequoia::testing
 
   void angle_false_positive_test::run_tests()
   {
-    // For example:
+    test_angle<float, 360.f>();
+    test_angle<double, 360.0>();
 
-    // sequoia::maths::angle<T> x{args}, y{different args};
-    // check(equivalence, report_line("Useful Description"), x, something inequivalent - ordinarily this would fail);
-    // check(equality, report_line("Useful Description"), x, y);
+    test_angle<float, std::numbers::pi_v<float>>();
+    test_angle<double, std::numbers::pi_v<double>>();
+  }
+
+  template<std::floating_point T, T Period>
+  void angle_false_positive_test::test_angle()
+  {
+    angle<T, Period> theta{}, phi{1};
+    check(equivalence, report_line(""), theta, T{1});
+    check(equivalence, report_line(""), phi, T{});
+    check(equality, report_line(""), theta, phi);
   }
 }

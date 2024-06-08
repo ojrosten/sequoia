@@ -22,5 +22,8 @@ namespace sequoia::testing
     std::filesystem::path source_file() const;
 
     void run_tests();
+
+    template<std::floating_point T, T Period>
+    void test_angle();
   };
 }
