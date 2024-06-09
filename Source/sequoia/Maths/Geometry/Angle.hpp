@@ -16,17 +16,8 @@ namespace sequoia::maths
 {
   template<std::floating_point T, class Scalar>
   inline constexpr bool is_compatible_scalar{
-      requires {
-          requires ((std::floating_point<Scalar> && is_initializable_v<T, Scalar>) || std::is_arithmetic_v<Scalar>);
-      }
+    ((std::floating_point<Scalar> && is_initializable_v<T, Scalar>) || std::is_arithmetic_v<Scalar>)
   };
-
-  template<std::floating_point T, std::floating_point U>
-  struct common_fp_type : std::common_type<std::remove_cvref_t<T>, std::remove_cvref_t<U>>
-  {};
-
-  template<std::floating_point T, std::floating_point U>
-  using common_fp_type_t = typename common_fp_type<T, U>::type;
 
   template<std::floating_point T, T Period>
   class angle
@@ -75,17 +66,17 @@ namespace sequoia::maths
 
       template<std::floating_point U>
       [[nodiscard]]
-      friend constexpr angle<common_fp_type_t<T, U>, Period> operator+(angle<T, Period> lhs, angle<U, Period> rhs) noexcept
+      friend constexpr angle<std::common_type_t<T, U>, Period> operator+(angle<T, Period> lhs, angle<U, Period> rhs) noexcept
       {
-          using common_t = common_fp_type_t<T, U>;
+          using common_t = std::common_type_t<T, U>;
           return angle<common_t, Period>{lhs.value() + rhs.value()};
       }
 
       template<std::floating_point U>
       [[nodiscard]]
-      friend constexpr angle<common_fp_type_t<T, U>, Period> operator-(angle<T, Period> lhs, angle<U, Period> rhs) noexcept
+      friend constexpr angle<std::common_type_t<T, U>, Period> operator-(angle<T, Period> lhs, angle<U, Period> rhs) noexcept
       {
-          using common_t = common_fp_type_t<T, U>;
+          using common_t = std::common_type_t<T, U>;
           return angle<common_t, Period>{lhs.value() - rhs.value()};
       }
 
