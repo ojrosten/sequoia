@@ -33,6 +33,9 @@ namespace sequoia::testing
 
     test_angle<float, std::numbers::pi_v<float>>();
     test_angle<double, std::numbers::pi_v<double>>();
+
+    test_conversions<float>();
+    test_conversions<double>();
   }
 
   template<std::floating_point T, T Period>
@@ -84,5 +87,19 @@ namespace sequoia::testing
     };
 
     transition_checker<angle_t>::check(report_line(""), g, checker);
+  }
+
+  template<std::floating_point T>
+  void angle_test::test_conversions()
+  {
+    constexpr auto pi{std::numbers::pi_v<T>};
+
+    check(equality, report_line(""), to_degrees(radians<T>{}),    degrees<T>{});
+    check(equality, report_line(""), to_degrees(radians<T>{pi}),  degrees<T>{180});
+    check(equality, report_line(""), to_degrees(radians<T>{-pi}), degrees<T>{-180});
+
+    check(equality, report_line(""), to_radians(degrees<T>{}),     radians<T>{});
+    check(equality, report_line(""), to_radians(degrees<T>{180}),  radians<T>{pi});
+    check(equality, report_line(""), to_radians(degrees<T>{-180}), radians<T>{-pi});
   }
 }

@@ -25,5 +25,8 @@ namespace sequoia::testing
 
     template<std::floating_point T, T Period>
     void test_angle();
+
+    template<std::floating_point T>
+    void test_conversions();
   };
 }

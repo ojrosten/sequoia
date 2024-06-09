@@ -135,15 +135,30 @@ namespace sequoia::maths
   };
 
   template<std::floating_point T>
-  using radians = angle<T, T(2)* std::numbers::pi_v<T>>;
+  using radians = angle<T, 2 * std::numbers::pi_v<T>>;
 
   template<std::floating_point T>
   using degrees = angle<T, T(360)>;
+
+  template<auto ToPeriod, std::floating_point T, T FromPeriod>
+    requires std::is_same_v<decltype(ToPeriod), T>
+  [[nodiscard]]
+  constexpr angle<T, ToPeriod> convert(angle<T, FromPeriod> theta) noexcept
+  {
+    return angle<T, ToPeriod>{theta.value() * ToPeriod / FromPeriod};
+  }
 
   template<std::floating_point T>
   [[nodiscard]]
   constexpr radians<T> to_radians(degrees<T> theta) noexcept
   {
-    return radians<T>{theta.value()* radians<T>::period / degrees<T>::period};
+    return convert<radians<T>::period>(theta);
+  }
+
+  template<std::floating_point T>
+  [[nodiscard]]
+  constexpr degrees<T> to_degrees(radians<T> theta) noexcept
+  {
+    return convert<degrees<T>::period>(theta);
   }
 }
