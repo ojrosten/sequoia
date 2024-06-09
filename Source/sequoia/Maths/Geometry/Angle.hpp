@@ -97,17 +97,19 @@ namespace sequoia::maths
           return *this;
       }
 
-      template<std::floating_point U>
+      template<class U>
+        requires is_compatible_scalar<T, U>
       [[nodiscard]]
-      friend constexpr angle<common_fp_type_t<T, U>, Period> operator*(angle<T, Period> lhs, U rhs) noexcept
+      friend constexpr angle<std::common_type_t<T, U>, Period> operator*(angle<T, Period> lhs, U rhs) noexcept
       {
-          using common_t = common_fp_type_t<T, U>;
+          using common_t = std::common_type_t<T, U>;
           return angle<common_t, Period>{lhs.value()* rhs};
       }
 
-      template<std::floating_point U>
+      template<class U>
+        requires is_compatible_scalar<T, U>
       [[nodiscard]]
-      friend constexpr angle<common_fp_type_t<T, U>, Period> operator*(U lhs, angle<T, Period> rhs) noexcept
+      friend constexpr angle<std::common_type_t<T, U>, Period> operator*(U lhs, angle<T, Period> rhs) noexcept
       {
           return rhs * lhs;
       }
@@ -120,11 +122,12 @@ namespace sequoia::maths
           return *this;
       }
 
-      template<std::floating_point U>
+      template<class U>
+        requires is_compatible_scalar<T, U>
       [[nodiscard]]
-      friend constexpr angle<common_fp_type_t<T, U>, Period> operator/(angle<T, Period> lhs, U rhs)
+      friend constexpr angle<std::common_type_t<T, U>, Period> operator/(angle<T, Period> lhs, U rhs)
       {
-          using common_t = common_fp_type_t<T, U>;
+          using common_t = std::common_type_t<T, U>;
           return angle<common_t, Period>{lhs.value() / rhs};
       }
 
