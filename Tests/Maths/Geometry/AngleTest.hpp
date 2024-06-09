@@ -27,8 +27,12 @@ namespace sequoia::testing
     void test_angle();
 
     template<std::floating_point T>
+    void test_principal_angle();
+
+    template<std::floating_point T>
     void test_conversions();
 
     void test_fp_conversions();
+
   };
 }

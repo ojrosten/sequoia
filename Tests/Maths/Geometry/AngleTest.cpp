@@ -34,6 +34,9 @@ namespace sequoia::testing
     test_angle<float, std::numbers::pi_v<float>>();
     test_angle<double, std::numbers::pi_v<double>>();
 
+    test_principal_angle<float>();
+    test_principal_angle<double>();
+
     test_conversions<float>();
     test_conversions<double>();
 
@@ -89,6 +92,24 @@ namespace sequoia::testing
     };
 
     transition_checker<angle_t>::check(report_line(""), g, checker);
+  }
+
+  template<std::floating_point T>
+  void angle_test::test_principal_angle()
+  {
+    constexpr auto pi{std::numbers::pi_v<T>};
+    check(equality, report_line(""), radians{ pi / 2}.principal_angle(), radians<T>{ pi/2});
+    check(equality, report_line(""), radians{-pi / 2}.principal_angle(), radians<T>{-pi/2});
+    check(equality, report_line(""), radians{ 2 * pi}.principal_angle(), radians<T>{});
+    check(equality, report_line(""), radians{-2 * pi}.principal_angle(), radians<T>{});
+    // check(equality, report_line(""), radians{5 * pi / 2}.principal_angle(), radians<T>{pi/2});
+
+    check(equality, report_line(""), degrees<T>{ 180}.principal_angle(), degrees<T>{ 180});
+    check(equality, report_line(""), degrees<T>{-180}.principal_angle(), degrees<T>{-180});
+    check(equality, report_line(""), degrees<T>{ 360}.principal_angle(), degrees<T>{});
+    check(equality, report_line(""), degrees<T>{-360}.principal_angle(), degrees<T>{});
+    check(equality, report_line(""), degrees<T>{ 540}.principal_angle(), degrees<T>{ 180});
+    check(equality, report_line(""), degrees<T>{-540}.principal_angle(), degrees<T>{-180});
   }
 
   template<std::floating_point T>
