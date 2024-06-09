@@ -48,21 +48,24 @@ namespace sequoia::testing
           edge_t{1, "0 += 1", [](angle_t theta) -> angle_t { return theta += angle_t{1}; }, std::weak_ordering::greater}
         }, // 0: zero
         {
-          edge_t{0, "1 - 1",  [](angle_t theta) -> angle_t { return theta - angle_t{1};  }, std::weak_ordering::less},
-          edge_t{0, "1 -= 1", [](angle_t theta) -> angle_t { return theta -= angle_t{1}; }, std::weak_ordering::less},
-          edge_t{0, "1 * 0",  [](angle_t theta) -> angle_t { return theta * T{};         }, std::weak_ordering::less},
-          edge_t{0, "0 * 1",  [](angle_t theta) -> angle_t { return T{} * theta;         }, std::weak_ordering::less},
-          edge_t{0, "1 *= 0", [](angle_t theta) -> angle_t { return theta *= T{};        }, std::weak_ordering::less},
-          edge_t{2, "1 + 1",  [](angle_t theta) -> angle_t { return theta + theta;       }, std::weak_ordering::greater},
-          edge_t{2, "1 += 1", [](angle_t theta) -> angle_t { return theta += theta;      }, std::weak_ordering::greater},
-          edge_t{2, "1 * 2",  [](angle_t theta) -> angle_t { return theta * T(2);        }, std::weak_ordering::greater},
-          edge_t{2, "1 *= 2", [](angle_t theta) -> angle_t { return theta *= T(2);       }, std::weak_ordering::greater},
-          edge_t{2, "2 * 1",  [](angle_t theta) -> angle_t { return T(2) * theta;        }, std::weak_ordering::greater}
+          edge_t{0, "1 - 1",     [](angle_t theta) -> angle_t { return theta - angle_t{1};  }, std::weak_ordering::less},
+          edge_t{0, "1 -= 1",    [](angle_t theta) -> angle_t { return theta -= angle_t{1}; }, std::weak_ordering::less},
+          edge_t{0, "1 * 0",     [](angle_t theta) -> angle_t { return theta * T{};         }, std::weak_ordering::less},
+          edge_t{0, "0 * 1",     [](angle_t theta) -> angle_t { return T{} * theta;         }, std::weak_ordering::less},
+          edge_t{0, "1 *= T(0)", [](angle_t theta) -> angle_t { return theta *= T{};        }, std::weak_ordering::less},
+          edge_t{0, "1 *= 0",    [](angle_t theta) -> angle_t { return theta *= 0;          }, std::weak_ordering::less},
+          edge_t{2, "1 + 1",     [](angle_t theta) -> angle_t { return theta + theta;       }, std::weak_ordering::greater},
+          edge_t{2, "1 += 1",    [](angle_t theta) -> angle_t { return theta += theta;      }, std::weak_ordering::greater},
+          edge_t{2, "1 * 2",     [](angle_t theta) -> angle_t { return theta * T(2);        }, std::weak_ordering::greater},
+          edge_t{2, "1 *= T(2)", [](angle_t theta) -> angle_t { return theta *= T(2);       }, std::weak_ordering::greater},
+          edge_t{2, "1 *= 2",    [](angle_t theta) -> angle_t { return theta *= 2;          }, std::weak_ordering::greater},
+          edge_t{2, "2 * 1",     [](angle_t theta) -> angle_t { return T(2) * theta;        }, std::weak_ordering::greater}
         }, // 1: one
         { 
-          edge_t{1, "2 / 2",  [](angle_t theta) -> angle_t { return theta  / T(2);      }, std::weak_ordering::less},
-          edge_t{1, "2 /= 2", [](angle_t theta) -> angle_t { return theta /= T(2);      }, std::weak_ordering::less},
-          edge_t{1, "2 - 1",  [](angle_t theta) -> angle_t { return theta - angle_t{1}; }, std::weak_ordering::less},
+          edge_t{1, "2 / T(2)",  [](angle_t theta) -> angle_t { return theta  / T(2);      }, std::weak_ordering::less},
+          edge_t{1, "2 /= T(2)", [](angle_t theta) -> angle_t { return theta /= T(2);      }, std::weak_ordering::less},
+          edge_t{1, "2 /= 2",    [](angle_t theta) -> angle_t { return theta /= 2;         }, std::weak_ordering::less},
+          edge_t{1, "2 - 1",     [](angle_t theta) -> angle_t { return theta - angle_t{1}; }, std::weak_ordering::less},
         }, // 1: two
       },
       {angle_t{}, angle_t{1}, angle_t{2}}
