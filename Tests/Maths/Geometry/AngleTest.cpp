@@ -36,6 +36,8 @@ namespace sequoia::testing
 
     test_conversions<float>();
     test_conversions<double>();
+
+    test_fp_conversions();
   }
 
   template<std::floating_point T, T Period>
@@ -101,5 +103,10 @@ namespace sequoia::testing
     check(equality, report_line(""), to_radians(degrees<T>{}),     radians<T>{});
     check(equality, report_line(""), to_radians(degrees<T>{180}),  radians<T>{pi});
     check(equality, report_line(""), to_radians(degrees<T>{-180}), radians<T>{-pi});
+  }
+
+  void angle_test::test_fp_conversions()
+  {
+    check(equality, report_line(""), convert<float(360)>(degrees<double>{20.3}), degrees<float>{20.3f});
   }
 }

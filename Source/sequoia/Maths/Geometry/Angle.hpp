@@ -141,11 +141,12 @@ namespace sequoia::maths
   using degrees = angle<T, T(360)>;
 
   template<auto ToPeriod, std::floating_point T, T FromPeriod>
-    requires std::is_same_v<decltype(ToPeriod), T>
+    requires std::is_floating_point_v<decltype(ToPeriod)>
   [[nodiscard]]
-  constexpr angle<T, ToPeriod> convert(angle<T, FromPeriod> theta) noexcept
+  constexpr angle<decltype(ToPeriod), ToPeriod> convert(angle<T, FromPeriod> theta) noexcept
   {
-    return angle<T, ToPeriod>{theta.value() * ToPeriod / FromPeriod};
+    using U = decltype(ToPeriod);
+    return angle<U, ToPeriod>{static_cast<U>(theta.value() * ToPeriod / FromPeriod)};
   }
 
   template<std::floating_point T>

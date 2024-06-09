@@ -28,5 +28,7 @@ namespace sequoia::testing
 
     template<std::floating_point T>
     void test_conversions();
+
+    void test_fp_conversions();
   };
 }
