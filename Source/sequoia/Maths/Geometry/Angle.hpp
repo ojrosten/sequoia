@@ -78,7 +78,7 @@ namespace sequoia::maths
       friend constexpr angle<common_fp_type_t<T, U>, Period> operator+(angle<T, Period> lhs, angle<U, Period> rhs) noexcept
       {
           using common_t = common_fp_type_t<T, U>;
-          return angle<common_t>{lhs.value() + rhs.value()};
+          return angle<common_t, Period>{lhs.value() + rhs.value()};
       }
 
       template<std::floating_point U>
