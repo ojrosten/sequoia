@@ -70,6 +70,7 @@ namespace sequoia::testing
           edge_t{angle_label::zero,    "0 * 1",     [](angle_t theta) -> angle_t { return 0  * theta;          }, std::weak_ordering::less},
           edge_t{angle_label::zero,    "1 *= T(0)", [](angle_t theta) -> angle_t { return theta *= T{};        }, std::weak_ordering::less},
           edge_t{angle_label::zero,    "1 *= 0",    [](angle_t theta) -> angle_t { return theta *= 0;          }, std::weak_ordering::less},
+          edge_t{angle_label::one,     "-1",        [](angle_t theta) -> angle_t { return +theta;              }, std::weak_ordering::equivalent},
           edge_t{angle_label::two,     "1 + 1",     [](angle_t theta) -> angle_t { return theta + theta;       }, std::weak_ordering::greater},
           edge_t{angle_label::two,     "1 += 1",    [](angle_t theta) -> angle_t { return theta += theta;      }, std::weak_ordering::greater},
           edge_t{angle_label::two,     "1 * T(2)",  [](angle_t theta) -> angle_t { return theta * T(2);        }, std::weak_ordering::greater},
