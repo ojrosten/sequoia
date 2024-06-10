@@ -47,6 +47,12 @@ namespace sequoia::maths
       }
 
       [[nodiscard]]
+      constexpr angle operator+() const noexcept
+      {
+        return *this;
+      }
+
+      [[nodiscard]]
       constexpr angle operator-() const noexcept
       {
           return angle{-value()};

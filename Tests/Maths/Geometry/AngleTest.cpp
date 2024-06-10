@@ -53,7 +53,8 @@ namespace sequoia::testing
     angle_graph g{
       { 
         {
-          edge_t{angle_label::one, "- -1",  [](angle_t theta) -> angle_t { return -theta;  }, std::weak_ordering::greater}
+          edge_t{angle_label::one,     "- -1",  [](angle_t theta) -> angle_t { return -theta;  }, std::weak_ordering::greater},
+          edge_t{angle_label::neg_one, "+ -1",  [](angle_t theta) -> angle_t { return +theta;  }, std::weak_ordering::equivalent}
         }, // neg_one
         {
           edge_t{angle_label::one, "0 + 1",  [](angle_t theta) -> angle_t { return theta + angle_t{1};  }, std::weak_ordering::greater},
@@ -92,7 +93,8 @@ namespace sequoia::testing
     auto checker{
         [this](std::string_view description, angle_t obtained, angle_t prediction, angle_t parent, std::weak_ordering ordering) {
           check(equality, description, obtained, prediction);
-          check_semantics(description, prediction, parent, ordering);
+          if(ordering != std::weak_ordering::equivalent)
+            check_semantics(description, prediction, parent, ordering);
         }
     };
 
