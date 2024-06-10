@@ -32,18 +32,6 @@ namespace sequoia::maths
 
       template<class U>
           requires is_initializable_v<T, U>
-      constexpr angle(angle<U, Period> other) noexcept : m_Angle{other.value()} {}
-
-      template<class U>
-          requires is_initializable_v<T, U>
-      constexpr angle& operator=(const angle<U, Period>& other) noexcept
-      {
-          m_Angle = other.value();
-          return *this;
-      }
-
-      template<class U>
-          requires is_initializable_v<T, U>
       constexpr angle& operator+=(angle<U, Period> rhs) noexcept
       {
           m_Angle += rhs.value();
