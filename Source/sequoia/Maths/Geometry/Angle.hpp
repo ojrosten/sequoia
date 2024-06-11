@@ -168,4 +168,13 @@ namespace sequoia::maths
   template<std::floating_point T, T Period>
   [[nodiscard]]
   constexpr T tan(angle<T, Period> theta) { return std::tan(convert<radians<T>::period>(theta).value()); }
+
+  template<std::floating_point T>
+  radians<T> asin(T x) { return radians<T>{std::asin(x)}; }
+
+  template<std::floating_point T>
+  radians<T> acos(T x) { return radians<T>{std::acos(x)}; }
+
+  template<std::floating_point T>
+  radians<T> atan(T x) { return radians<T>{std::atan(x)}; }
 }

@@ -167,5 +167,14 @@ namespace sequoia::testing
     check(equality, report_line(""), tan(degrees<T>{-90}), std::tan(-pi / 2));
     check(equality, report_line(""), tan(degrees<T>{}), T{});
     check(equality, report_line(""), tan(degrees<T>{90}), std::tan(pi / 2));
+
+    check(equality, report_line(""), asin(T{}), radians<T>{});
+    check(equality, report_line(""), asin(T{1}), radians<T>{pi/2});
+
+    check(equality, report_line(""), acos(T{}), radians<T>{pi / 2});
+    check(equality, report_line(""), acos(T{1}), radians<T>{});
+
+    check(equality, report_line(""), atan(T{}), radians<T>{});
+    check(equality, report_line(""), atan(T{1}), radians<T>{pi / 4});
   }
 }
