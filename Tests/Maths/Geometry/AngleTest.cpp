@@ -150,13 +150,22 @@ namespace sequoia::testing
     check(equality, report_line(""), sin(radians<T>{-pi / 2}), -T(1));
     check(equality, report_line(""), sin(radians<T>{}), T{});
     check(equality, report_line(""), sin(radians<T>{pi/2}), T(1));
+    check(equality, report_line(""), sin(degrees<T>{-90}), -T(1));
+    check(equality, report_line(""), sin(degrees<T>{}), T{});
+    check(equality, report_line(""), sin(degrees<T>{90}), T(1));
 
     check(equality, report_line(""), cos(radians<T>{-pi / 2}), std::cos(-pi/2));
     check(equality, report_line(""), cos(radians<T>{}), T{1});
     check(equality, report_line(""), cos(radians<T>{pi / 2}), std::cos(pi / 2));
+    check(equality, report_line(""), cos(degrees<T>{-90}), std::cos(-pi / 2));
+    check(equality, report_line(""), cos(degrees<T>{}), T{1});
+    check(equality, report_line(""), cos(degrees<T>{90}), std::cos(pi / 2));
 
     check(equality, report_line(""), tan(radians<T>{-pi / 2}), std::tan(-pi / 2));
     check(equality, report_line(""), tan(radians<T>{}), T{});
     check(equality, report_line(""), tan(radians<T>{pi / 2}), std::tan(pi / 2));
+    check(equality, report_line(""), tan(degrees<T>{-90}), std::tan(-pi / 2));
+    check(equality, report_line(""), tan(degrees<T>{}), T{});
+    check(equality, report_line(""), tan(degrees<T>{90}), std::tan(pi / 2));
   }
 }
