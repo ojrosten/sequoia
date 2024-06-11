@@ -156,4 +156,16 @@ namespace sequoia::maths
   {
     return convert<degrees<T>::period>(theta);
   }
+
+  template<std::floating_point T, T Period>
+  [[nodiscard]]
+  T sin(angle<T, Period> theta) { return std::sin(convert<radians<T>::period>(theta).value()); }
+
+  template<std::floating_point T, T Period>
+  [[nodiscard]]
+  T cos(angle<T, Period> theta) { return std::cos(convert<radians<T>::period>(theta).value()); }
+
+  template<std::floating_point T, T Period>
+  [[nodiscard]]
+  T tan(angle<T, Period> theta) { return std::tan(convert<radians<T>::period>(theta).value()); }
 }

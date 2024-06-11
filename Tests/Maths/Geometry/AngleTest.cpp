@@ -41,6 +41,9 @@ namespace sequoia::testing
     test_conversions<double>();
 
     test_fp_conversions();
+
+    test_trig<float>();
+    test_trig<double>();
   }
 
   template<std::floating_point T, T Period>
@@ -137,5 +140,23 @@ namespace sequoia::testing
   void angle_test::test_fp_conversions()
   {
     check(equality, report_line(""), convert<float(360)>(degrees<double>{20.3}), degrees<float>{20.3f});
+  }
+
+  template<std::floating_point T>
+  void angle_test::test_trig()
+  {
+    constexpr auto pi{std::numbers::pi_v<T>};
+
+    check(equality, report_line(""), sin(radians<T>{-pi / 2}), -T(1));
+    check(equality, report_line(""), sin(radians<T>{}), T{});
+    check(equality, report_line(""), sin(radians<T>{pi/2}), T(1));
+
+    check(equality, report_line(""), cos(radians<T>{-pi / 2}), std::cos(-pi/2));
+    check(equality, report_line(""), cos(radians<T>{}), T{1});
+    check(equality, report_line(""), cos(radians<T>{pi / 2}), std::cos(pi / 2));
+
+    check(equality, report_line(""), tan(radians<T>{-pi / 2}), std::tan(-pi / 2));
+    check(equality, report_line(""), tan(radians<T>{}), T{});
+    check(equality, report_line(""), tan(radians<T>{pi / 2}), std::tan(pi / 2));
   }
 }

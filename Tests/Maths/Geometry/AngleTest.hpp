@@ -34,5 +34,8 @@ namespace sequoia::testing
 
     void test_fp_conversions();
 
+    template<std::floating_point T>
+    void test_trig();
+
   };
 }
