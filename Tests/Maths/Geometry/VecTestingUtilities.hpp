@@ -17,18 +17,21 @@ namespace sequoia::testing
   template<class VectorSpace>
   struct value_tester<maths::vec<VectorSpace>>
   {
-    using type = maths::vec<VectorSpace>;
+    using type       = maths::vec<VectorSpace>;
+    using value_type = typename VectorSpace::value_type;
+
+    constexpr static std::size_t D{VectorSpace::cardinality};
 
     template<test_mode Mode>
     static void test(equality_check_t, test_logger<Mode>& logger, const type& actual, const type& prediction)
     {
-      // e.g. check(equality, "Description", logger, actual.some_method(), prediction.some_method());
+      check(equality, "Wrapped values", logger, actual.values(), prediction.values());
     }
-    
+
     template<test_mode Mode>
-    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& actual, const std::array<typename VectorSpace::value_type, VectorSpace::cardinality>& prediction)
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& actual, const std::array<value_type, D>& prediction)
     {
-      // e.g. check(equality, "Description", logger, actual.some_method(), prediction);
+      check(equality, "Wrapped values", logger, actual.values(), std::span<const value_type, D>{prediction});
     }
   };
 }

@@ -1,0 +1,30 @@
+Tests/Maths/Geometry/VecTestingDiagnostics.cpp, Line 43
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::maths::vec<sequoia::testing::(anonymous namespace)::my_vec_space<float, 1> > >]
+Checking for equivalence with:
+[std::array<float, 1>]
+
+  Wrapped values
+  [std::span<float const , 1>]
+    Element 0 of range incorrect
+    [float]
+    operator== returned false
+    Obtained : 0
+    Predicted: 1
+
+=======================================
+
+Tests/Maths/Geometry/VecTestingDiagnostics.cpp, Line 44
+
+[sequoia::maths::vec<sequoia::testing::(anonymous namespace)::my_vec_space<float, 1> >]
+  Wrapped values
+  [std::span<float const , 1>]
+    Element 0 of range incorrect
+    [float]
+    operator== returned false
+    Obtained : 0
+    Predicted: 1
+
+=======================================
+

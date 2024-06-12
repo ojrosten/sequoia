@@ -11,6 +11,18 @@
 
 namespace sequoia::testing
 {
+  using namespace maths;
+
+  namespace
+  {
+    template<std::floating_point T, std::size_t D>
+    struct my_vec_space
+    {
+      using value_type = T;
+      constexpr static std::size_t cardinality{D};
+    };
+  }
+
   [[nodiscard]]
   std::filesystem::path vec_false_positive_test::source_file() const
   {
@@ -19,10 +31,16 @@ namespace sequoia::testing
 
   void vec_false_positive_test::run_tests()
   {
-    // For example:
+    test_vec_1<float>();
+  }
 
-    // maths::vec<VectorSpace> x{args}, y{different args};
-    // check(equivalence, report_line("Useful Description"), x, something inequivalent - ordinarily this would fail);
-    // check(equality, report_line("Useful Description"), x, y);
+  template<std::floating_point T>
+  void vec_false_positive_test::test_vec_1()
+  {
+    using array_t = std::array<T, 1>;
+
+    maths::vec<my_vec_space<T, 1>> x{}, y{T(1)};
+    check(equivalence, report_line(""), x, array_t{1});
+    check(equality, report_line(""), x, y);
   }
 }
