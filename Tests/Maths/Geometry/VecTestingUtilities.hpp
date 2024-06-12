@@ -26,6 +26,13 @@ namespace sequoia::testing
     static void test(equality_check_t, test_logger<Mode>& logger, const type& actual, const type& prediction)
     {
       check(equality, "Wrapped values", logger, actual.values(), prediction.values());
+      if constexpr(D == 1)
+        check(equality, "Wrapped value", logger, actual.value(), prediction.value());
+
+      for(auto i : std::views::iota(0_sz, D))
+      {
+        check(equality, std::format("Value at index {}", i), logger, actual[i], prediction[i]);
+      }
     }
 
     template<test_mode Mode>

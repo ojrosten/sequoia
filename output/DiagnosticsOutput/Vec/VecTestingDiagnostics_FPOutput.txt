@@ -26,5 +26,17 @@ Tests/Maths/Geometry/VecTestingDiagnostics.cpp, Line 44
     Obtained : 0
     Predicted: 1
 
+  Wrapped value
+  [float]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
+
+  Value at index 0
+  [float]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
+
 =======================================
 
