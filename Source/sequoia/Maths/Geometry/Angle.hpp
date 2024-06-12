@@ -8,7 +8,7 @@
 #pragma once
 
 /*! \file
-    \brief A class template representation angles, plus trigonometric functions
+    \brief Utilities for angles and type-safe trigonometric functions
  */
 
 #include "sequoia/Core/Meta/TypeTraits.hpp"
