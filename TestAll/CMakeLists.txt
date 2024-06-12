@@ -44,6 +44,8 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Experimental/FlattenTypeListFreeTest.cpp
                ${TestDir}/Maths/Geometry/AngleTest.cpp
                ${TestDir}/Maths/Geometry/AngleTestingDiagnostics.cpp
+               ${TestDir}/Maths/Geometry/VecTest.cpp
+               ${TestDir}/Maths/Geometry/VecTestingDiagnostics.cpp
                ${TestDir}/Maths/Graph/Algorithms/DynamicGraphTraversalsTest.cpp
                ${TestDir}/Maths/Graph/Algorithms/DynamicGraphUpdateTest.cpp
                ${TestDir}/Maths/Graph/Algorithms/DynamicSubgraphTest.cpp

@@ -37,6 +37,8 @@
 #include "Experimental/FlattenTypeListFreeTest.hpp"
 #include "Maths/Geometry/AngleTest.hpp"
 #include "Maths/Geometry/AngleTestingDiagnostics.hpp"
+#include "Maths/Geometry/VecTest.hpp"
+#include "Maths/Geometry/VecTestingDiagnostics.hpp"
 #include "Maths/Graph/Algorithms/DynamicGraphTraversalsTest.hpp"
 #include "Maths/Graph/Algorithms/DynamicGraphUpdateTest.hpp"
 #include "Maths/Graph/Algorithms/DynamicSubgraphTest.hpp"

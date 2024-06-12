@@ -373,6 +373,12 @@ int main(int argc, char** argv)
       angle_test{"Unit Test"}
     );
 
+    runner.add_test_suite(
+      "Vec",
+      vec_false_positive_test{"False Positive Test"},
+      vec_test{"Unit Test"}
+    );
+
     runner.execute(timer_resolution{1ms});
   }
   catch(const std::exception& e)
