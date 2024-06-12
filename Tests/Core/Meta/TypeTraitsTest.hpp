@@ -35,5 +35,7 @@ namespace sequoia::testing
     void test_is_initializable();
 
     void test_has_allocator_type();
+
+    void test_is_compatible();
   };
 }

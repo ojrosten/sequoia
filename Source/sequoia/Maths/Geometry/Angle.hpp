@@ -7,18 +7,16 @@
 
 #pragma once
 
-/*! \file */
+/*! \file
+    \brief A class template representation angles, plus trigonometric functions
+ */
 
-#include <compare>
+#include "sequoia/Core/Meta/TypeTraits.hpp"
+
 #include <numbers>
 
 namespace sequoia::maths
 {
-  template<std::floating_point T, class Scalar>
-  inline constexpr bool is_compatible_scalar{
-    ((std::floating_point<Scalar> && is_initializable_v<T, Scalar>) || std::is_arithmetic_v<Scalar>)
-  };
-
   template<std::floating_point T, T Period>
   class angle
   {
@@ -75,7 +73,7 @@ namespace sequoia::maths
       }
 
       template<class U>
-          requires is_compatible_scalar<T, U>
+          requires is_compatible_v<T, U>
       constexpr angle& operator*=(U rhs) noexcept
       {
           m_Angle *= rhs;
@@ -83,7 +81,7 @@ namespace sequoia::maths
       }
 
       template<class U>
-        requires is_compatible_scalar<T, U>
+        requires is_compatible_v<T, U>
       [[nodiscard]]
       friend constexpr angle<std::common_type_t<T, U>, Period> operator*(angle<T, Period> lhs, U rhs) noexcept
       {
@@ -92,7 +90,7 @@ namespace sequoia::maths
       }
 
       template<class U>
-        requires is_compatible_scalar<T, U>
+        requires is_compatible_v<T, U>
       [[nodiscard]]
       friend constexpr angle<std::common_type_t<T, U>, Period> operator*(U lhs, angle<T, Period> rhs) noexcept
       {
@@ -100,7 +98,7 @@ namespace sequoia::maths
       }
 
       template<class U>
-          requires is_compatible_scalar<T, U>
+          requires is_compatible_v<T, U>
       constexpr angle& operator/=(U rhs)
       {
           m_Angle /= rhs;
@@ -108,7 +106,7 @@ namespace sequoia::maths
       }
 
       template<class U>
-        requires is_compatible_scalar<T, U>
+        requires is_compatible_v<T, U>
       [[nodiscard]]
       friend constexpr angle<std::common_type_t<T, U>, Period> operator/(angle<T, Period> lhs, U rhs)
       {
