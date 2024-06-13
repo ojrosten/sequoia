@@ -14,6 +14,13 @@
 
 namespace sequoia::testing
 {
+  template<class T, std::size_t D>
+  struct my_vec_space
+  {
+    using value_type = T;
+    constexpr static std::size_t cardinality{D};
+  };
+
   template<class VectorSpace>
   struct value_tester<maths::vec<VectorSpace>>
   {

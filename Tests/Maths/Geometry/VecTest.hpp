@@ -22,5 +22,8 @@ namespace sequoia::testing
     std::filesystem::path source_file() const;
 
     void run_tests();
+
+    template<class T>
+    void test_vec_1();
   };
 }

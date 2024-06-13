@@ -17,15 +17,43 @@
 
 namespace sequoia::maths
 {
-  template<class value_type>
+  template<class T>
   inline constexpr bool has_cardinality{
     requires {
-      { value_type::cardinality } -> std::convertible_to<std::size_t>;
+      { T::cardinality } -> std::convertible_to<std::size_t>;
     }
   };
 
-  template<class value_type>
-  concept vector_space = has_value_type<value_type> && has_cardinality<value_type>;
+  template<class T>
+  concept vector_space = has_value_type<T> && has_cardinality<T>; // && T models a field?
+
+  template<class T, std::size_t D, class Fn>
+      requires std::invocable<Fn, T&, T>
+  constexpr void apply_to_each_element(std::array<T, D>& lhs, std::span<const T, D> rhs, Fn f)
+  {
+      [&] <std::size_t... Is> (std::index_sequence<Is...>){
+          (f(lhs[Is], rhs[Is]), ...);
+      }(std::make_index_sequence<D>{});
+  }
+
+  template<class T, std::size_t D, class Fn>
+      requires std::is_invocable_r_v<T, Fn, T>
+  [[nodiscard]]
+  constexpr std::array<T, D> make_from(std::span<T, D> a, Fn f)
+  {
+      return[&] <std::size_t... Is> (std::index_sequence<Is...>){
+          return std::array<T, D>{f(a[Is])...};
+      }(std::make_index_sequence<D>{});
+  }
+
+  template<class T, std::size_t D>
+  [[nodiscard]]
+  constexpr std::array<std::remove_cvref_t<T>, D> to_array(std::span<T, D> s)
+  {
+      return[&] <std::size_t... Is> (std::index_sequence<Is...>){
+          return std::array<std::remove_cvref_t<T>, D>{s[Is]...};
+      }(std::make_index_sequence<D>{});
+  }
 
   template<vector_space VectorSpace>
   class vec
@@ -37,7 +65,7 @@ namespace sequoia::maths
     constexpr static std::size_t cardinality{VectorSpace::cardinality};
     constexpr static std::size_t D{cardinality};
 
-    constexpr vec() noexcept = default;
+    constexpr vec() = default;
 
     constexpr explicit vec(std::span<const value_type, D> d) noexcept
       : m_Values{to_array(d)}
@@ -53,10 +81,6 @@ namespace sequoia::maths
       : m_Values{ts...}
     {}
 
-    constexpr vec(const vec&) = default;
-
-    constexpr vec& operator=(const vec&) = default;
-
     constexpr vec& operator+=(const vec& t) noexcept
     {
       apply_to_each_element(m_Values, t.values(), [](value_type& lhs, value_type rhs){ lhs += rhs; });
@@ -69,17 +93,13 @@ namespace sequoia::maths
       return *this;
     }
 
-    template<class U>
-      requires is_compatible_scalar<value_type, U>
-    constexpr vec& operator*=(U u) noexcept
+    constexpr vec& operator*=(value_type u) noexcept
     {
       std::ranges::for_each(m_Values, [u](value_type& x) { return x *= u; });
       return *this;
     }
 
-    template<class U>
-      requires is_compatible_scalar<value_type, U>
-    constexpr vec& operator/=(U u)
+    constexpr vec& operator/=(value_type u)
     {
       std::ranges::for_each(m_Values, [u](value_type& x) { return x /= u; });
       return *this;
@@ -88,13 +108,19 @@ namespace sequoia::maths
     [[nodiscard]]
     friend constexpr vec operator+(const vec& lhs, const vec& rhs) noexcept
     {
-      return lhs += rhs;
+      return vec{lhs} += rhs;
     }
 
     [[nodiscard]]
     friend constexpr vec operator-(const vec& lhs, const vec& rhs) noexcept
     {
-      return lhs -= rhs;
+      return vec{lhs} -= rhs;
+    }
+
+    [[nodiscard]]
+    constexpr vec operator+() const noexcept
+    {
+      return vec{values()};
     }
 
     [[nodiscard]]
@@ -103,26 +129,20 @@ namespace sequoia::maths
       return vec{make_from(values(), [](value_type t) { return -t; })};
     }
 
-    template<class U>
-      requires is_compatible_scalar<value_type, U>
     [[nodiscard]]
-    friend constexpr vec operator*(vec v, U u) noexcept
+    friend constexpr vec operator*(vec v, value_type u) noexcept
     {
       return v *= u;
     }
 
-    template<class U>
-      requires is_compatible_scalar<value_type, U>
     [[nodiscard]]
-    friend constexpr vec operator*(U u, vec v) noexcept
+    friend constexpr vec operator*(value_type u, vec v) noexcept
     {
       return v * u;
     }
 
-    template<class U>
-      requires is_compatible_scalar<value_type, U>
     [[nodiscard]]
-    friend constexpr vec operator/(vec v, U u)
+    friend constexpr vec operator/(vec v, value_type u)
     {
       return v /= u;
     }
@@ -150,10 +170,13 @@ namespace sequoia::maths
     constexpr value_type& operator[](std::size_t i) { return m_Values[i]; }
 
     [[nodiscard]]
-    friend constexpr bool operator==(const vec&, const vec&) noexcept requires (D>1) = default;
+    friend constexpr bool operator==(const vec&, const vec&) noexcept = default;
 
     [[nodiscard]]
-    friend constexpr auto operator<=>(const vec&, const vec&) noexcept requires (D == 1) = default;
+    friend constexpr auto operator<=>(const vec& lhs, const vec& rhs) noexcept requires (D == 1)
+    {
+      return lhs.value() <=> rhs.value();
+    }
   private:
     std::array<value_type, D> m_Values{};
   };

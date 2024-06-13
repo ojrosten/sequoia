@@ -13,16 +13,6 @@ namespace sequoia::testing
 {
   using namespace maths;
 
-  namespace
-  {
-    template<std::floating_point T, std::size_t D>
-    struct my_vec_space
-    {
-      using value_type = T;
-      constexpr static std::size_t cardinality{D};
-    };
-  }
-
   [[nodiscard]]
   std::filesystem::path vec_false_positive_test::source_file() const
   {
