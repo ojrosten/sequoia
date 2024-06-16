@@ -30,12 +30,13 @@ namespace sequoia::testing
 
   void vec_test::run_tests()
   {
-    test_vec_1<float>();
-    //test_vec_1<std::complex<double>>();
+    test_vec_1_orderable<float>();
+    test_vec_1_orderable<double>();
+    test_vec_1_unorderable<std::complex<float>>();
   }
 
   template<class T>
-  void vec_test::test_vec_1()
+  void vec_test::test_vec_1_orderable()
   {
       using vec_t       = vec<my_vec_space<T, 1>>;
       using angle_graph = transition_checker<vec_t>::transition_graph;
@@ -83,7 +84,7 @@ namespace sequoia::testing
       };
 
       auto checker{
-          [this](std::string_view description, vec_t obtained, vec_t prediction, vec_t parent, std::weak_ordering ordering) {
+          [this](std::string_view description, const vec_t& obtained, const vec_t& prediction, const vec_t& parent, std::weak_ordering ordering) {
             check(equality, description, obtained, prediction);
             if(ordering != std::weak_ordering::equivalent)
               check_semantics(description, prediction, parent, ordering);
@@ -91,5 +92,63 @@ namespace sequoia::testing
       };
 
       transition_checker<vec_t>::check(report_line(""), g, checker);
+  }
+
+  template<class T>
+  void vec_test::test_vec_1_unorderable()
+  {
+    using vec_t = vec<my_vec_space<T, 1>>;
+    using angle_graph = transition_checker<vec_t>::transition_graph;
+    using edge_t = transition_checker<vec_t>::edge;
+
+    angle_graph g{
+      {
+        {
+          edge_t{vec_1_label::one,     "- -1",  [](vec_t v) -> vec_t { return -v;  }},
+          edge_t{vec_1_label::neg_one, "+ -1",  [](vec_t v) -> vec_t { return +v;  }}
+        }, // neg_one
+        {
+          edge_t{vec_1_label::one, "0 + 1",  [](vec_t v) -> vec_t { return v + vec_t{T(1)};  }},
+          edge_t{vec_1_label::one, "0 += 1", [](vec_t v) -> vec_t { return v += vec_t{T(1)}; }}
+        }, // zero
+        {
+          edge_t{vec_1_label::neg_one, "-1",        [](vec_t v) -> vec_t { return -v;               }},
+          edge_t{vec_1_label::zero,    "1 - 1",     [](vec_t v) -> vec_t { return v - vec_t{T(1)};  }},
+          edge_t{vec_1_label::zero,    "1 -= 1",    [](vec_t v) -> vec_t { return v -= vec_t{T(1)}; }},
+          edge_t{vec_1_label::zero,    "1 * T{}",   [](vec_t v) -> vec_t { return v * T{};          }},
+          //edge_t{vec_1_label::zero,    "1 * 0",     [](vec_t v) -> vec_t { return v * 0;           }},
+          edge_t{vec_1_label::zero,    "T{} * 1",   [](vec_t v) -> vec_t { return T{} *v;           }},
+          //edge_t{vec_1_label::zero,    "0 * 1",     [](vec_t v) -> vec_t { return 0 * v;          }},
+          edge_t{vec_1_label::zero,    "1 *= T(0)", [](vec_t v) -> vec_t { return v *= T{};         }},
+          //edge_t{vec_1_label::zero,    "1 *= 0",    [](vec_t v) -> vec_t { return v *= 0;          }},
+          //edge_t{vec_1_label::one,     "-1",        [](vec_t v) -> vec_t { return +v;               }},
+          edge_t{vec_1_label::two,     "1 + 1",     [](vec_t v) -> vec_t { return v + v;            }},
+          edge_t{vec_1_label::two,     "1 += 1",    [](vec_t v) -> vec_t { return v += v;           }},
+          edge_t{vec_1_label::two,     "1 * T(2)",  [](vec_t v) -> vec_t { return v * T(2);         }},
+          //edge_t{vec_1_label::two,     "1 * 2",     [](vec_t v) -> vec_t { return v * 2;           }},
+          edge_t{vec_1_label::two,     "1 *= T(2)", [](vec_t v) -> vec_t { return v *= T(2);        }},
+          //edge_t{vec_1_label::two,     "1 *= 2",    [](vec_t v) -> vec_t { return v *= 2;          }},
+          edge_t{vec_1_label::two,     "T(2) * 1",  [](vec_t v) -> vec_t { return T(2) * v;         }},
+          //edge_t{vec_1_label::two,     "2 * 1",     [](vec_t v) -> vec_t { return 2 * v;           }}
+        }, // one
+        {
+          edge_t{vec_1_label::one, "2 / T(2)",  [](vec_t v) -> vec_t { return v / T(2);        }},
+          //edge_t{vec_1_label::one, "2 / 2",     [](vec_t v) -> vec_t { return v / 2;          }},
+          edge_t{vec_1_label::one, "2 /= T(2)", [](vec_t v) -> vec_t { return v /= T(2);       }},
+          //edge_t{vec_1_label::one, "2 /= 2",    [](vec_t v) -> vec_t { return v /= 2;         }},
+          edge_t{vec_1_label::one, "2 - 1",     [](vec_t v) -> vec_t { return v - vec_t{T(1)}; }},
+        }, // two
+      },
+      {vec_t{T(-1)}, vec_t{}, vec_t{T(1)}, vec_t{T(2)}}
+    };
+
+    auto checker{
+        [this](std::string_view description, const vec_t& obtained, const vec_t& prediction, const vec_t& parent, std::size_t host, std::size_t target) {
+          check(equality, description, obtained, prediction);
+          if(host!= target) check_semantics(description, prediction, parent);
+        }
+    };
+
+    transition_checker<vec_t>::check(report_line(""), g, checker);
   }
 }

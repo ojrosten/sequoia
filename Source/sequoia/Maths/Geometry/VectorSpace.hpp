@@ -173,7 +173,7 @@ namespace sequoia::maths
     friend constexpr bool operator==(const vec&, const vec&) noexcept = default;
 
     [[nodiscard]]
-    friend constexpr auto operator<=>(const vec& lhs, const vec& rhs) noexcept requires (D == 1)
+    friend constexpr auto operator<=>(const vec& lhs, const vec& rhs) noexcept requires (D == 1) && std::totally_ordered<value_type>
     {
       return lhs.value() <=> rhs.value();
     }
