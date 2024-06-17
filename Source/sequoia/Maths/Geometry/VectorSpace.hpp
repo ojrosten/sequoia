@@ -25,7 +25,21 @@ namespace sequoia::maths
   };
 
   template<class T>
-  concept vector_space = has_value_type<T> && has_cardinality<T>; // && T models a field?
+  concept field = std::regular<T> &&
+    requires(T& t) {
+      { t += t } -> std::convertible_to<T>;
+      { t -= t } -> std::convertible_to<T>;
+      { t *= t } -> std::convertible_to<T>;
+      { t /= t } -> std::convertible_to<T>;
+
+      { t + t } -> std::convertible_to<T>;
+      { t - t } -> std::convertible_to<T>;
+      { t * t } -> std::convertible_to<T>;
+      { t / t } -> std::convertible_to<T>;
+    };
+
+  template<class T>
+  concept vector_space = has_value_type<T> && has_cardinality<T> && field<typename T::value_type>;
 
   template<class T, std::size_t D, class Fn>
       requires std::invocable<Fn, T&, T>
