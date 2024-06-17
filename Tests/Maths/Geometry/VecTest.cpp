@@ -20,6 +20,7 @@ namespace sequoia::testing
   namespace
   {
     enum vec_1_label{ neg_one, zero, one, two };
+    enum vec_2_label{ neg_one_neg_one, neg_one_zero, zero_neg_one, zero_zero, zero_one, one_zero, one_one};
   }
 
   [[nodiscard]]
@@ -33,6 +34,8 @@ namespace sequoia::testing
     test_vec_1_orderable<float>();
     test_vec_1_orderable<double>();
     test_vec_1_unorderable<std::complex<float>>();
+
+    test_vec_2<float>();
   }
 
   template<class T>
@@ -130,6 +133,51 @@ namespace sequoia::testing
         [this](std::string_view description, const vec_t& obtained, const vec_t& prediction, const vec_t& parent, std::size_t host, std::size_t target) {
           check(equality, description, obtained, prediction);
           if(host!= target) check_semantics(description, prediction, parent);
+        }
+    };
+
+    transition_checker<vec_t>::check(report_line(""), g, checker);
+  }
+
+  template<class T>
+  void vec_test::test_vec_2()
+  {
+    using vec_t = vec<my_vec_space<T, 2>>;
+    using vec_graph = transition_checker<vec_t>::transition_graph;
+    using edge_t = transition_checker<vec_t>::edge;
+
+    vec_graph g{
+      {
+        {
+          edge_t{vec_2_label::one_one,         "- (-1, -1)",  [](vec_t v) -> vec_t { return -v;  }},
+          edge_t{vec_2_label::neg_one_neg_one, "+ (-1, -1)",  [](vec_t v) -> vec_t { return +v;  }}
+        }, // neg_one_neg_one
+        {
+
+        }, // neg_one_zero
+        {
+
+        }, // zero_neg_one
+        {
+          
+        }, // zero_zero
+        {
+
+        }, // zero_one
+        {
+          
+        }, // one_zero
+        {
+          
+        }, // one_one
+      },
+      {vec_t{T(-1), T(-1)}, vec_t{T(-1), T{}}, vec_t{T{}, T(-1)}, vec_t{T{}, T{}}, vec_t{T{}, T(1)}, vec_t{T(1), T{}}, vec_t{T(1), T(1)}}
+    };
+
+    auto checker{
+        [this](std::string_view description, const vec_t& obtained, const vec_t& prediction, const vec_t& parent, std::size_t host, std::size_t target) {
+          check(equality, description, obtained, prediction);
+          if(host != target) check_semantics(description, prediction, parent);
         }
     };
 

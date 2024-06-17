@@ -28,5 +28,8 @@ namespace sequoia::testing
 
     template<class T>
     void test_vec_1_unorderable();
+
+    template<class T>
+    void test_vec_2();
   };
 }
