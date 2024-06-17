@@ -172,7 +172,7 @@ namespace sequoia::maths
 
     // Make this explicit since otherwise, given two vectors a,b, a/b is well-formed due to implicit boolean conversion
     [[nodiscard]]
-    constexpr explicit operator bool() const noexcept requires (D == 1)
+    constexpr explicit operator bool() const noexcept requires (D == 1) && std::convertible_to<value_type, bool>
     {
       return m_Values[0];
     }

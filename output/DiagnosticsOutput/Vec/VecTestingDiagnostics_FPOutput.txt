@@ -34,6 +34,10 @@ operator== returned false
   Obtained : 0
   Predicted: 1
 
+  Conversion to bool
+  [bool]
+  check failed
+
   Value at index 0
   [float]
   operator== returned false

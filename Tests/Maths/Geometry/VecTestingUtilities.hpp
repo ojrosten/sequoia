@@ -34,7 +34,11 @@ namespace sequoia::testing
     {
       check(equality, "Wrapped values", logger, actual.values(), prediction.values());
       if constexpr(D == 1)
+      {
         check(equality, "Wrapped value", logger, actual.value(), prediction.value());
+        if constexpr(std::convertible_to<value_type, bool>)
+          check(equality, "Conversion to bool", logger, static_cast<bool>(actual), static_cast<bool>(prediction));
+      }
 
       for(auto i : std::views::iota(0_sz, D))
       {
