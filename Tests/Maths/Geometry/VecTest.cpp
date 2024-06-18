@@ -150,12 +150,16 @@ namespace sequoia::testing
     vec_graph g{
       {
         {
-          edge_t{vec_2_label::one_one,         "- (-1, -1)",          [](vec_t v) -> vec_t { return -v;  }},
-          edge_t{vec_2_label::neg_one_neg_one, "+ (-1, -1)",          [](vec_t v) -> vec_t { return +v;  }},
+          edge_t{vec_2_label::one_one,         "- (-1, -1)",          [](vec_t v) -> vec_t { return -v; }},
+          edge_t{vec_2_label::neg_one_neg_one, "+ (-1, -1)",          [](vec_t v) -> vec_t { return +v; }},
           edge_t{vec_2_label::neg_one_zero,    "(-1, -1) += (0, 1)",  [](vec_t v) -> vec_t { return v += vec_t{T{}, T(1)}; }},
           edge_t{vec_2_label::neg_one_zero,    "(-1, -1) +  (0, 1)",  [](vec_t v) -> vec_t { return v +  vec_t{T{}, T(1)}; }},
           edge_t{vec_2_label::zero_neg_one,    "(-1, -1) += (1, 0)",  [](vec_t v) -> vec_t { return v += vec_t{T(1), T{}}; }},
-          edge_t{vec_2_label::zero_neg_one,    "(-1, -1) +  (1, 0)",  [](vec_t v) -> vec_t { return v +  vec_t{T(1), T{}}; }}
+          edge_t{vec_2_label::zero_neg_one,    "(-1, -1) +  (1, 0)",  [](vec_t v) -> vec_t { return v +  vec_t{T(1), T{}}; }},
+          edge_t{vec_2_label::one_one,         "(-1, -1) *= -1",      [](vec_t v) -> vec_t { return v *= T(-1);  }},
+          edge_t{vec_2_label::one_one,         "(-1, -1) *  -1",      [](vec_t v) -> vec_t { return v *  T(-1);  }},
+          edge_t{vec_2_label::one_one,         "(-1, -1) /= -1",      [](vec_t v) -> vec_t { return v /= T(-1);  }},
+          edge_t{vec_2_label::one_one,         "(-1, -1) /  -1",      [](vec_t v) -> vec_t { return v /  T(-1);  }},
         }, // neg_one_neg_one
         {
 
