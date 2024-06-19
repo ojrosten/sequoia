@@ -26,7 +26,7 @@ namespace sequoia::testing
     using vertex_range_t = std::invoke_result_t<decltype(vertices<G>), G>;
 
     template<class G>
-    using vertex_iterator_t = std::ranges::iterator_t<vertex_range_t<G>>;
+    using vertex_iterator_t = std::ranges::iterator_t<vertex_range_t<G>>; // paper missing ranges::
 
     // Overload for my graph
     template<network G>
@@ -47,6 +47,7 @@ namespace sequoia::testing
 
     template <class G, class E> // Problem: E is not used!
     concept basic_targeted_edge = requires(G&& g, edge_reference_t<G> uv) { target_id(g, uv); }; // -> std::size_t ??
+    // Does paper mean to std::forward<G>(g)? 
   }
 
   [[nodiscard]]
