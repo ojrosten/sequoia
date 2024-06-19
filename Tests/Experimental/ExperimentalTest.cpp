@@ -45,8 +45,8 @@ namespace sequoia::testing
     template<class G>
     using edge_reference_t = std::ranges::range_reference_t<vertex_edge_range_t<G>>; // paper missing ranges::
 
-    template <class G, class E>
-    concept basic_targeted_edge = requires(G && g, edge_reference_t<G> uv) { target_id(g, uv); }; // -> std::size_t ??
+    template <class G, class E> // Problem: E is not used!
+    concept basic_targeted_edge = requires(G&& g, edge_reference_t<G> uv) { target_id(g, uv); }; // -> std::size_t ??
   }
 
   [[nodiscard]]
