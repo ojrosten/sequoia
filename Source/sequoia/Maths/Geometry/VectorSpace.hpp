@@ -77,7 +77,7 @@ namespace sequoia::maths
   }
 
   template<vector_space VectorSpace>
-  class vector_components
+  class vector_representation
   {
   public:
     using vector_space_type = VectorSpace;
@@ -86,84 +86,84 @@ namespace sequoia::maths
     constexpr static std::size_t dimension{VectorSpace::dimension};
     constexpr static std::size_t D{dimension};
 
-    constexpr vector_components() = default;
+    constexpr vector_representation() = default;
 
-    constexpr explicit vector_components(std::span<const value_type, D> d) noexcept
+    constexpr explicit vector_representation(std::span<const value_type, D> d) noexcept
       : m_Values{to_array(d)}
     {}
 
-    constexpr explicit vector_components(std::span<value_type, D> d) noexcept
+    constexpr explicit vector_representation(std::span<value_type, D> d) noexcept
       : m_Values{to_array(d)}
     {}
 
     template<class... Ts>
       requires (sizeof...(Ts) == D) && (is_initializable_v<value_type, Ts> && ...)
-    constexpr vector_components(Ts... ts) noexcept
+    constexpr vector_representation(Ts... ts) noexcept
       : m_Values{ts...}
     {}
 
-    constexpr vector_components& operator+=(const vector_components& t) noexcept
+    constexpr vector_representation& operator+=(const vector_representation& t) noexcept
     {
       apply_to_each_element(m_Values, t.values(), [](value_type& lhs, value_type rhs){ lhs += rhs; });
       return *this;
     }
 
-    constexpr vector_components& operator-=(const vector_components& t) noexcept
+    constexpr vector_representation& operator-=(const vector_representation& t) noexcept
     {
       apply_to_each_element(m_Values, t.values(), [](value_type& lhs, value_type rhs){ lhs -= rhs; });
       return *this;
     }
 
-    constexpr vector_components& operator*=(value_type u) noexcept
+    constexpr vector_representation& operator*=(value_type u) noexcept
     {
       std::ranges::for_each(m_Values, [u](value_type& x) { return x *= u; });
       return *this;
     }
 
-    constexpr vector_components& operator/=(value_type u)
+    constexpr vector_representation& operator/=(value_type u)
     {
       std::ranges::for_each(m_Values, [u](value_type& x) { return x /= u; });
       return *this;
     }
 
     [[nodiscard]]
-    friend constexpr vector_components operator+(const vector_components& lhs, const vector_components& rhs) noexcept
+    friend constexpr vector_representation operator+(const vector_representation& lhs, const vector_representation& rhs) noexcept
     {
-      return vector_components{lhs} += rhs;
+      return vector_representation{lhs} += rhs;
     }
 
     [[nodiscard]]
-    friend constexpr vector_components operator-(const vector_components& lhs, const vector_components& rhs) noexcept
+    friend constexpr vector_representation operator-(const vector_representation& lhs, const vector_representation& rhs) noexcept
     {
-      return vector_components{lhs} -= rhs;
+      return vector_representation{lhs} -= rhs;
     }
 
     [[nodiscard]]
-    constexpr vector_components operator+() const noexcept
+    constexpr vector_representation operator+() const noexcept
     {
-      return vector_components{values()};
+      return vector_representation{values()};
     }
 
     [[nodiscard]]
-    constexpr vector_components operator-() const noexcept
+    constexpr vector_representation operator-() const noexcept
     {
-      return vector_components{make_from(values(), [](value_type t) { return -t; })};
+      return vector_representation{make_from(values(), [](value_type t) { return -t; })};
     }
 
     [[nodiscard]]
-    friend constexpr vector_components operator*(vector_components v, value_type u) noexcept
+    friend constexpr vector_representation operator*(vector_representation v, value_type u) noexcept
     {
       return v *= u;
     }
 
     [[nodiscard]]
-    friend constexpr vector_components operator*(value_type u, vector_components v) noexcept
+    friend constexpr vector_representation operator*(value_type u, vector_representation v) noexcept
     {
       return v * u;
     }
 
     [[nodiscard]]
-    friend constexpr vector_components operator/(vector_components v, value_type u)
+    friend constexpr vector_representation operator/(vector_representation v, value_type u)
     {
       return v /= u;
     }
@@ -191,10 +191,10 @@ namespace sequoia::maths
     constexpr value_type& operator[](std::size_t i) { return m_Values[i]; }
 
     [[nodiscard]]
-    friend constexpr bool operator==(const vector_components&, const vector_components&) noexcept = default;
+    friend constexpr bool operator==(const vector_representation&, const vector_representation&) noexcept = default;
 
     [[nodiscard]]
-    friend constexpr auto operator<=>(const vector_components& lhs, const vector_components& rhs) noexcept requires (D == 1) && std::totally_ordered<value_type>
+    friend constexpr auto operator<=>(const vector_representation& lhs, const vector_representation& rhs) noexcept requires (D == 1) && std::totally_ordered<value_type>
     {
       return lhs.value() <=> rhs.value();
     }
