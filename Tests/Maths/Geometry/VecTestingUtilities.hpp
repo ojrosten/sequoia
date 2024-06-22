@@ -14,20 +14,20 @@
 
 namespace sequoia::testing
 {
-  template<class T, std::size_t D>
+  template<maths::field F, std::size_t D>
   struct my_vec_space
   {
-    using value_type = T;
-    constexpr static std::size_t cardinality{D};
+    using field_type = F;
+    constexpr static std::size_t dimension{D};
   };
 
-  template<class VectorSpace>
-  struct value_tester<maths::vec<VectorSpace>>
+  template<maths::vector_space VectorSpace>
+  struct value_tester<maths::vector_components<VectorSpace>>
   {
-    using type       = maths::vec<VectorSpace>;
-    using value_type = typename VectorSpace::value_type;
+    using type       = maths::vector_components<VectorSpace>;
+    using field_type = typename VectorSpace::field_type;
 
-    constexpr static std::size_t D{VectorSpace::cardinality};
+    constexpr static std::size_t D{VectorSpace::dimension};
 
     template<test_mode Mode>
     static void test(equality_check_t, test_logger<Mode>& logger, const type& actual, const type& prediction)
@@ -36,7 +36,7 @@ namespace sequoia::testing
       if constexpr(D == 1)
       {
         check(equality, "Wrapped value", logger, actual.value(), prediction.value());
-        if constexpr(std::convertible_to<value_type, bool>)
+        if constexpr(std::convertible_to<field_type, bool>)
           check(equality, "Conversion to bool", logger, static_cast<bool>(actual), static_cast<bool>(prediction));
       }
 
@@ -47,9 +47,9 @@ namespace sequoia::testing
     }
 
     template<test_mode Mode>
-    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& actual, const std::array<value_type, D>& prediction)
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& actual, const std::array<field_type, D>& prediction)
     {
-      check(equality, "Wrapped values", logger, actual.values(), std::span<const value_type, D>{prediction});
+      check(equality, "Wrapped values", logger, actual.values(), std::span<const field_type, D>{prediction});
     }
   };
 }

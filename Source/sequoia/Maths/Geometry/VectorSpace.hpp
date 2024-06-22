@@ -18,13 +18,6 @@
 namespace sequoia::maths
 {
   template<class T>
-  inline constexpr bool has_cardinality{
-    requires {
-      { T::cardinality } -> std::convertible_to<std::size_t>;
-    }
-  };
-
-  template<class T>
   concept field = std::regular<T> &&
     requires(T& t) {
       { t += t } -> std::convertible_to<T>;
@@ -36,10 +29,24 @@ namespace sequoia::maths
       { t - t } -> std::convertible_to<T>;
       { t * t } -> std::convertible_to<T>;
       { t / t } -> std::convertible_to<T>;
-    };
+  };
 
   template<class T>
-  concept vector_space = has_value_type<T> && has_cardinality<T> && field<typename T::value_type>;
+  inline constexpr bool has_dimension{
+    requires { { T::dimension } -> std::convertible_to<std::size_t>; }
+  };
+
+  template<class T>
+  inline constexpr bool has_field_type{
+    requires { 
+      typename T::field_type;
+      requires field<typename T::field_type>;
+    }
+  };
+
+
+  template<class T>
+  concept vector_space = has_field_type<T> && has_dimension<T>;
 
   template<class T, std::size_t D, class Fn>
       requires std::invocable<Fn, T&, T>
@@ -70,93 +77,93 @@ namespace sequoia::maths
   }
 
   template<vector_space VectorSpace>
-  class vec
+  class vector_components
   {
   public:
     using vector_space_type = VectorSpace;
-    using value_type        = typename VectorSpace::value_type;
+    using value_type        = typename VectorSpace::field_type;
 
-    constexpr static std::size_t cardinality{VectorSpace::cardinality};
-    constexpr static std::size_t D{cardinality};
+    constexpr static std::size_t dimension{VectorSpace::dimension};
+    constexpr static std::size_t D{dimension};
 
-    constexpr vec() = default;
+    constexpr vector_components() = default;
 
-    constexpr explicit vec(std::span<const value_type, D> d) noexcept
+    constexpr explicit vector_components(std::span<const value_type, D> d) noexcept
       : m_Values{to_array(d)}
     {}
 
-    constexpr explicit vec(std::span<value_type, D> d) noexcept
+    constexpr explicit vector_components(std::span<value_type, D> d) noexcept
       : m_Values{to_array(d)}
     {}
 
     template<class... Ts>
       requires (sizeof...(Ts) == D) && (is_initializable_v<value_type, Ts> && ...)
-    constexpr vec(Ts... ts) noexcept
+    constexpr vector_components(Ts... ts) noexcept
       : m_Values{ts...}
     {}
 
-    constexpr vec& operator+=(const vec& t) noexcept
+    constexpr vector_components& operator+=(const vector_components& t) noexcept
     {
       apply_to_each_element(m_Values, t.values(), [](value_type& lhs, value_type rhs){ lhs += rhs; });
       return *this;
     }
 
-    constexpr vec& operator-=(const vec& t) noexcept
+    constexpr vector_components& operator-=(const vector_components& t) noexcept
     {
       apply_to_each_element(m_Values, t.values(), [](value_type& lhs, value_type rhs){ lhs -= rhs; });
       return *this;
     }
 
-    constexpr vec& operator*=(value_type u) noexcept
+    constexpr vector_components& operator*=(value_type u) noexcept
     {
       std::ranges::for_each(m_Values, [u](value_type& x) { return x *= u; });
       return *this;
     }
 
-    constexpr vec& operator/=(value_type u)
+    constexpr vector_components& operator/=(value_type u)
     {
       std::ranges::for_each(m_Values, [u](value_type& x) { return x /= u; });
       return *this;
     }
 
     [[nodiscard]]
-    friend constexpr vec operator+(const vec& lhs, const vec& rhs) noexcept
+    friend constexpr vector_components operator+(const vector_components& lhs, const vector_components& rhs) noexcept
     {
-      return vec{lhs} += rhs;
+      return vector_components{lhs} += rhs;
     }
 
     [[nodiscard]]
-    friend constexpr vec operator-(const vec& lhs, const vec& rhs) noexcept
+    friend constexpr vector_components operator-(const vector_components& lhs, const vector_components& rhs) noexcept
     {
-      return vec{lhs} -= rhs;
+      return vector_components{lhs} -= rhs;
     }
 
     [[nodiscard]]
-    constexpr vec operator+() const noexcept
+    constexpr vector_components operator+() const noexcept
     {
-      return vec{values()};
+      return vector_components{values()};
     }
 
     [[nodiscard]]
-    constexpr vec operator-() const noexcept
+    constexpr vector_components operator-() const noexcept
     {
-      return vec{make_from(values(), [](value_type t) { return -t; })};
+      return vector_components{make_from(values(), [](value_type t) { return -t; })};
     }
 
     [[nodiscard]]
-    friend constexpr vec operator*(vec v, value_type u) noexcept
+    friend constexpr vector_components operator*(vector_components v, value_type u) noexcept
     {
       return v *= u;
     }
 
     [[nodiscard]]
-    friend constexpr vec operator*(value_type u, vec v) noexcept
+    friend constexpr vector_components operator*(value_type u, vector_components v) noexcept
     {
       return v * u;
     }
 
     [[nodiscard]]
-    friend constexpr vec operator/(vec v, value_type u)
+    friend constexpr vector_components operator/(vector_components v, value_type u)
     {
       return v /= u;
     }
@@ -184,10 +191,10 @@ namespace sequoia::maths
     constexpr value_type& operator[](std::size_t i) { return m_Values[i]; }
 
     [[nodiscard]]
-    friend constexpr bool operator==(const vec&, const vec&) noexcept = default;
+    friend constexpr bool operator==(const vector_components&, const vector_components&) noexcept = default;
 
     [[nodiscard]]
-    friend constexpr auto operator<=>(const vec& lhs, const vec& rhs) noexcept requires (D == 1) && std::totally_ordered<value_type>
+    friend constexpr auto operator<=>(const vector_components& lhs, const vector_components& rhs) noexcept requires (D == 1) && std::totally_ordered<value_type>
     {
       return lhs.value() <=> rhs.value();
     }
