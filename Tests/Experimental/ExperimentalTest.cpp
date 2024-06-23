@@ -21,16 +21,10 @@ namespace graph_proposal
     struct cpo
     {
       template<class G>
+        requires has_vertices_adl<G>
       auto operator()(const G& g) const
       {
-        if constexpr(has_vertices_adl<G>)
-        {
-          return vertices(g);
-        }
-        else
-        {
-          static_assert(sequoia::dependent_false<G>::value);
-        }
+        return vertices(g);
       }
     };
   }
@@ -51,16 +45,10 @@ namespace graph_proposal
     struct cpo
     {
       template<class G>
+        requires has_vertex_id_adl<G>
       auto operator()(const G& g, vertex_iterator_t<G> ui) const
       {
-        if constexpr(has_vertex_id_adl<G>)
-        {
-          return vertex_id(g, ui);
-        }
-        else
-        {
-          static_assert(sequoia::dependent_false<G>::value);
-        }
+        return vertex_id(g, ui);
       }
     };
   }
@@ -78,16 +66,10 @@ namespace graph_proposal
     struct cpo
     {
       template<class G>
+        requires has_edges_adl<G>
       auto operator()(const G& g, vertex_id_t<G> uid) const
       {
-        if constexpr(has_edges_adl<G>)
-        {
-          return edges(g, uid);
-        }
-        else
-        {
-          static_assert(sequoia::dependent_false<G>::value);
-        }
+        return edges(g, uid);
       }
     };
   }
@@ -108,16 +90,10 @@ namespace graph_proposal
     struct cpo
     {
       template<class G>
+        requires has_target_id_adl<G>
       auto operator()(const G& g, edge_reference_t<G> uv) const
       {
-        if constexpr(has_target_id_adl<G>)
-        {
-          return target_id(g, uv);
-        }
-        else
-        {
-          static_assert(sequoia::dependent_false<G>::value);
-        }
+        return target_id(g, uv);
       }
     };
   }
@@ -126,6 +102,28 @@ namespace graph_proposal
 
   template <class G>
   concept basic_targeted_edge = requires(G&& g, edge_reference_t<G> uv) { target_id(g, uv); }; // -> std::size_t ??
+  // Does paper mean to std::forward<G>(g)? 
+
+  namespace source_id_impl
+  {
+    template<class G>
+    inline constexpr bool has_source_id_adl{requires(const G & g, edge_reference_t<G> uv) { source_id(g, uv); }};
+
+    struct cpo
+    {
+      template<class G>
+        requires has_source_id_adl<G>
+      auto operator()(const G& g, edge_reference_t<G> uv) const
+      {
+        return source_id(g, uv);
+      }
+    };
+  }
+
+  inline constexpr source_id_impl::cpo source_id{};
+
+  template <class G>
+  concept basic_sourced_edge = requires(G&& g, edge_reference_t<G> uv) { source_id(g, uv); };
   // Does paper mean to std::forward<G>(g)? 
 }
 
@@ -212,6 +210,19 @@ namespace sequoia::maths
   {
     return e.target_node();
   }
+
+  template<network G>
+    requires has_nodes_type<G> && (is_embedded(G::flavour))
+  [[nodiscard]]
+  typename G::edge_index_type source_id(const G& g, typename G::edge_type const& e)
+  {
+    auto targetNodeEdges{g.cedges(e.target_node())};
+    auto returnEdgeIter{std::ranges::next(targetNodeEdges.begin(), e.complementary_index(), targetNodeEdges.end())};
+    if(returnEdgeIter == targetNodeEdges.end())
+      throw std::logic_error{"Return edge not found"};
+
+    return returnEdgeIter->target_node();
+  }
 }
 
 namespace sequoia::testing
@@ -224,22 +235,35 @@ namespace sequoia::testing
 
   void experimental_test::run_tests()
   {
-    using graph_t     = maths::directed_graph<int, maths::null_weight>;
-    using node_iter_t = maths::const_pseudo_iterator<graph_t::connectivity_type, graph_t::nodes_type>;
+    {
+      using graph_t = maths::directed_graph<int, maths::null_weight>;
+      using node_iter_t = maths::const_pseudo_iterator<graph_t::connectivity_type, graph_t::nodes_type>;
 
-    graph_t g{{{0, 42}}};
+      graph_t g{{{0, 42}}};
 
-    auto v{graph_proposal::vertices(g)};
+      auto v{graph_proposal::vertices(g)};
 
-    auto vid{graph_proposal::vertex_id(g, node_iter_t{})};
-    check(equality, report_line(""), vid, std::size_t{});
+      auto vid{graph_proposal::vertex_id(g, node_iter_t{})};
+      check(equality, report_line(""), vid, std::size_t{});
 
-    static_assert(std::is_same_v<graph_proposal::vertex_id_t<graph_t>, std::size_t>);
+      static_assert(std::is_same_v<graph_proposal::vertex_id_t<graph_t>, std::size_t>);
 
-    auto es{graph_proposal::edges(g, std::size_t{})};
-    auto target{graph_proposal::target_id(g, es.front())};
-    check(equality, report_line(""), target, std::size_t{});
-    
-    static_assert(graph_proposal::basic_targeted_edge<graph_t>);
+      auto es{graph_proposal::edges(g, 0_sz)};
+      auto target{graph_proposal::target_id(g, es.front())};
+      check(equality, report_line(""), target, std::size_t{});
+
+      static_assert(graph_proposal::basic_targeted_edge<graph_t>);
+      static_assert(!graph_proposal::basic_sourced_edge<graph_t>);
+    }
+
+    {
+      using graph_t = maths::embedded_graph<double, maths::null_weight>;
+      graph_t g{{{1, 0, 3.14}}, {{0, 0, 3.14}}};
+
+      auto es{graph_proposal::edges(g, 1_sz)};
+      check(equality, report_line(""), graph_proposal::source_id(g, es.front()), 1_sz);
+
+      static_assert(graph_proposal::basic_sourced_edge<graph_t>);
+    }
   }
 }
