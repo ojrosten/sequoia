@@ -44,9 +44,16 @@ namespace sequoia::maths
     }
   };
 
+  template<class T>
+  inline constexpr bool has_element_type{
+    requires { typename T::element_type; }
+  };
 
   template<class T>
-  concept vector_space = has_field_type<T> && has_dimension<T>;
+  concept vector_space = has_element_type<T> && has_field_type<T> && has_dimension<T>;
+
+  template<class B, class VectorSpace>
+  concept basis = vector_space<VectorSpace>; // TO DO
 
   template<class T, std::size_t D, class Fn>
       requires std::invocable<Fn, T&, T>
@@ -76,12 +83,13 @@ namespace sequoia::maths
       }(std::make_index_sequence<D>{});
   }
 
-  template<vector_space VectorSpace>
+  template<vector_space VectorSpace, basis<VectorSpace> Basis>
   class vector_representation
   {
   public:
     using vector_space_type = VectorSpace;
     using value_type        = typename VectorSpace::field_type;
+    using basis_type        = Basis;
 
     constexpr static std::size_t dimension{VectorSpace::dimension};
     constexpr static std::size_t D{dimension};

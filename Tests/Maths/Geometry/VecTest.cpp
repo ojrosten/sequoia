@@ -42,7 +42,7 @@ namespace sequoia::testing
   template<class T>
   void vec_test::test_vec_1_orderable()
   {
-      using vec_t     = vector_representation<my_vec_space<T, 1>>;
+      using vec_t     = vector_representation<my_vec_space<T, T, 1>, canonical_basis<T, T, 1>>;
       using vec_graph = transition_checker<vec_t>::transition_graph;
       using edge_t    = transition_checker<vec_t>::edge;
 
@@ -93,7 +93,7 @@ namespace sequoia::testing
   template<class T>
   void vec_test::test_vec_1_unorderable()
   {
-    using vec_t     = vector_representation<my_vec_space<T, 1>>;
+    using vec_t     = vector_representation<my_vec_space<T, T, 1>, canonical_basis<T, T, 1>>;
     using vec_graph = transition_checker<vec_t>::transition_graph;
     using edge_t    = transition_checker<vec_t>::edge;
 
@@ -143,7 +143,7 @@ namespace sequoia::testing
   template<class T>
   void vec_test::test_vec_2()
   {
-    using vec_t = vector_representation<my_vec_space<T, 2>>;
+    using vec_t = vector_representation<my_vec_space<std::array<T, 2>, T, 2>, canonical_basis<std::array<T, 2>, T, 2>>;
     using vec_graph = transition_checker<vec_t>::transition_graph;
     using edge_t = transition_checker<vec_t>::edge;
 

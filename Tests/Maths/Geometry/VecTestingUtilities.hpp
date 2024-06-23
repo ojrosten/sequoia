@@ -14,17 +14,35 @@
 
 namespace sequoia::testing
 {
-  template<maths::field F, std::size_t D>
+  template<class Element, maths::field Field, std::size_t D>
   struct my_vec_space
   {
-    using field_type = F;
+    using element_type = Element;
+    using field_type   = Field;
     constexpr static std::size_t dimension{D};
   };
 
-  template<maths::vector_space VectorSpace>
-  struct value_tester<maths::vector_representation<VectorSpace>>
+  template<class Element, maths::field Field, std::size_t D>
+  struct canonical_basis;
+
+  template<std::floating_point Element, maths::field Field>
+    requires std::is_same_v<Element, Field>
+  struct canonical_basis<Element, Field, 1>
   {
-    using type       = maths::vector_representation<VectorSpace>;
+    constexpr static std::array<std::array<Element, 1>, 1> basis_vectors{{1}};
+  };
+
+  template<std::floating_point T, maths::field Field>
+    requires std::is_same_v<T, Field>
+  struct canonical_basis<std::array<T, 2>, Field, 2>
+  {
+    constexpr static std::array<std::array<T, 2>, 2> basis_vectors{std::array<T, 2>{1, 0}, std::array<T, 2>{0, 1}};
+  };
+
+  template<maths::vector_space VectorSpace, maths::basis<VectorSpace> Basis>
+  struct value_tester<maths::vector_representation<VectorSpace, Basis>>
+  {
+    using type       = maths::vector_representation<VectorSpace, Basis>;
     using field_type = typename VectorSpace::field_type;
 
     constexpr static std::size_t D{VectorSpace::dimension};
