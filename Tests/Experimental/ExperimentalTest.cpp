@@ -22,7 +22,7 @@ namespace graph_proposal
     {
       template<class G>
         requires has_vertices_adl<G>
-      auto operator()(const G& g) const
+      constexpr auto operator()(const G& g) const
       {
         return vertices(g);
       }
@@ -46,7 +46,7 @@ namespace graph_proposal
     {
       template<class G>
         requires has_vertex_id_adl<G>
-      auto operator()(const G& g, vertex_iterator_t<G> ui) const
+      constexpr auto operator()(const G& g, vertex_iterator_t<G> ui) const
       {
         return vertex_id(g, ui);
       }
@@ -67,7 +67,7 @@ namespace graph_proposal
     {
       template<class G>
         requires has_edges_adl<G>
-      auto operator()(const G& g, vertex_id_t<G> uid) const
+      constexpr auto operator()(const G& g, vertex_id_t<G> uid) const
       {
         return edges(g, uid);
       }
@@ -91,7 +91,7 @@ namespace graph_proposal
     {
       template<class G>
         requires has_target_id_adl<G>
-      auto operator()(const G& g, edge_reference_t<G> uv) const
+      constexpr auto operator()(const G& g, edge_reference_t<G> uv) const
       {
         return target_id(g, uv);
       }
@@ -113,7 +113,7 @@ namespace graph_proposal
     {
       template<class G>
         requires has_source_id_adl<G>
-      auto operator()(const G& g, edge_reference_t<G> uv) const
+      constexpr auto operator()(const G& g, edge_reference_t<G> uv) const
       {
         return source_id(g, uv);
       }
@@ -171,12 +171,18 @@ namespace sequoia::maths
   template<network G>
   constexpr bool has_nodes_type{requires { typename G::nodes_type; }};
 
+  template<network G>
+  using edge_index_t = typename G::edge_index_type;
+
+  template<network G>
+  using const_edges_t = typename G::const_edges_range;
+
   // Overload for my graph
   // Problem: for graphs with a null edge weight, I don't define vertices
   template<network G>
     requires has_nodes_type<G>
   [[nodiscard]]
-  auto vertices(const G& g)
+  constexpr auto vertices(const G& g)
   {
     using connectivity_t = typename G::connectivity_type;
     using nodes_t = typename G::nodes_type;
@@ -189,7 +195,7 @@ namespace sequoia::maths
   template<network G>
     requires has_nodes_type<G>
   [[nodiscard]]
-  typename G::edge_index_type vertex_id(const G&, graph_proposal::vertex_iterator_t<G> ui)
+  constexpr edge_index_t<G> vertex_id(const G&, graph_proposal::vertex_iterator_t<G> ui)
   {
     return ui.base_iterator();
   }
@@ -199,14 +205,14 @@ namespace sequoia::maths
   template<network G>
     requires has_nodes_type<G>
   [[nodiscard]]
-  typename G::const_edges_range edges(const G& g, graph_proposal::vertex_id_t<G> uid) { return g.cedges(uid); }
+  constexpr const_edges_t<G> edges(const G& g, graph_proposal::vertex_id_t<G> uid) { return g.cedges(uid); }
 
 
   // Overload for my graph
   template<network G>
     requires has_nodes_type<G>
   [[nodiscard]]
-  typename G::edge_index_type target_id(const G&, typename G::edge_type const& e)
+  constexpr edge_index_t<G> target_id(const G&, typename G::edge_type const& e)
   {
     return e.target_node();
   }
@@ -214,7 +220,7 @@ namespace sequoia::maths
   template<network G>
     requires has_nodes_type<G> && (is_embedded(G::flavour))
   [[nodiscard]]
-  typename G::edge_index_type source_id(const G& g, typename G::edge_type const& e)
+  constexpr edge_index_t<G> source_id(const G& g, typename G::edge_type const& e)
   {
     auto targetNodeEdges{g.cedges(e.target_node())};
     auto returnEdgeIter{std::ranges::next(targetNodeEdges.begin(), e.complementary_index(), targetNodeEdges.end())};
