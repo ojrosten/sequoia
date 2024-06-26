@@ -180,10 +180,15 @@ namespace sequoia::maths
   template<network G>
   using const_edges_t = typename G::const_edges_range;
 
+  template<network G>
+  inline constexpr bool has_iterable_node_weights{
+    requires(const G& g) { { g.node_weights() } -> std::ranges::range; }
+  };
+
   // Overload for my graph
   // Problem: for graphs with a null edge weight, I don't define vertices
   template<network G>
-    requires has_nodes_type<G>
+    requires has_nodes_type<G> && (!has_iterable_node_weights<G>)
   [[nodiscard]]
   constexpr auto vertices(const G& g)
   {
@@ -194,15 +199,31 @@ namespace sequoia::maths
     return std::ranges::subrange{iter_t{index_t{}, g}, iter_t{g.order(), g}};
   }
 
+  template<network G>
+    requires has_nodes_type<G> && has_iterable_node_weights<G>
+  [[nodiscard]]
+  constexpr auto vertices(const G& g)
+  {
+    return g.node_weights();
+  }
+
   // Overload for my graph
   template<network G>
-    requires has_nodes_type<G>
+    requires has_nodes_type<G> && (!has_iterable_node_weights<G>)
   [[nodiscard]]
   constexpr edge_index_t<G> vertex_id(const G&, graph_proposal::vertex_iterator_t<G> ui)
   {
     return ui.base_iterator();
   }
 
+  template<network G>
+    requires has_nodes_type<G> && has_iterable_node_weights<G>
+  [[nodiscard]]
+  constexpr edge_index_t<G> vertex_id(const G& g, graph_proposal::vertex_iterator_t<G> ui)
+  {
+    using index_t = edge_index_t<G>;
+    return static_cast<index_t>(std::ranges::distance(g.cbegin_node_weights(), ui));
+  }
 
   // Overload for my graph
   template<network G>
@@ -265,6 +286,27 @@ namespace sequoia::testing
       static_assert(!graph_proposal::basic_sourced_edge<graph_t>);
       static_assert(!graph_proposal::basic_sourced_targeted_edge<graph_t>);
 
+    }
+
+    {
+      using graph_t = maths::directed_graph<int, double>;
+
+      graph_t g{{{{0, 42}}}, {3.14}};
+
+      auto v{graph_proposal::vertices(g)};
+
+      auto vid{graph_proposal::vertex_id(g, g.cbegin_node_weights())};
+      check(equality, report_line(""), vid, std::size_t{});
+
+      static_assert(std::is_same_v<graph_proposal::vertex_id_t<graph_t>, std::size_t>);
+
+      auto es{graph_proposal::edges(g, 0_sz)};
+      auto target{graph_proposal::target_id(g, es.front())};
+      check(equality, report_line(""), target, std::size_t{});
+
+      static_assert(graph_proposal::basic_targeted_edge<graph_t>);
+      static_assert(!graph_proposal::basic_sourced_edge<graph_t>);
+      static_assert(!graph_proposal::basic_sourced_targeted_edge<graph_t>);
     }
 
     {
