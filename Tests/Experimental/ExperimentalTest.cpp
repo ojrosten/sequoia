@@ -125,6 +125,9 @@ namespace graph_proposal
   template <class G>
   concept basic_sourced_edge = requires(G&& g, edge_reference_t<G> uv) { source_id(g, uv); };
   // Does paper mean to std::forward<G>(g)? 
+
+  template <class G>
+  concept basic_sourced_targeted_edge = basic_targeted_edge<G> && basic_sourced_edge<G>;
 }
 
 namespace sequoia::maths
@@ -260,6 +263,8 @@ namespace sequoia::testing
 
       static_assert(graph_proposal::basic_targeted_edge<graph_t>);
       static_assert(!graph_proposal::basic_sourced_edge<graph_t>);
+      static_assert(!graph_proposal::basic_sourced_targeted_edge<graph_t>);
+
     }
 
     {
@@ -270,6 +275,7 @@ namespace sequoia::testing
       check(equality, report_line(""), graph_proposal::source_id(g, es.front()), 1_sz);
 
       static_assert(graph_proposal::basic_sourced_edge<graph_t>);
+      static_assert(graph_proposal::basic_sourced_targeted_edge<graph_t>);
     }
   }
 }
