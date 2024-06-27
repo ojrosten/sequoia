@@ -23,7 +23,7 @@ namespace sequoia::testing
 
     void run_tests();
 
-    template<std::floating_point T>
+    template<class Element, maths::field Field>
     void test_vec_1();
   };
 }

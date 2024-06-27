@@ -1,4 +1,4 @@
-Tests/Maths/Geometry/VecTestingDiagnostics.cpp, Line 33
+Tests/Maths/Geometry/VecTestingDiagnostics.cpp, Line 31
 
 Comparison performed using:
 [sequoia::testing::value_tester<sequoia::maths::vector_representation<sequoia::testing::my_vec_space<float, float, 1>, sequoia::testing::canonical_basis<float, float, 1> > >]
@@ -15,7 +15,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Geometry/VecTestingDiagnostics.cpp, Line 34
+Tests/Maths/Geometry/VecTestingDiagnostics.cpp, Line 32
 
 [sequoia::maths::vector_representation<sequoia::testing::my_vec_space<float, float, 1>, sequoia::testing::canonical_basis<float, float, 1> >]
 operator== returned false

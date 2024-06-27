@@ -42,8 +42,9 @@ namespace sequoia::testing
   template<maths::vector_space VectorSpace, maths::basis<VectorSpace> Basis>
   struct value_tester<maths::vector_representation<VectorSpace, Basis>>
   {
-    using type       = maths::vector_representation<VectorSpace, Basis>;
-    using field_type = typename VectorSpace::field_type;
+    using type         = maths::vector_representation<VectorSpace, Basis>;
+    using field_type   = typename VectorSpace::field_type;
+    using element_type = typename VectorSpace::element_type;
 
     constexpr static std::size_t D{VectorSpace::dimension};
 

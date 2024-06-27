@@ -88,7 +88,9 @@ namespace sequoia::maths
   {
   public:
     using vector_space_type = VectorSpace;
-    using value_type        = typename VectorSpace::field_type;
+    using element_type      = typename VectorSpace::element_type;
+    using field_type        = typename VectorSpace::field_type;
+    using value_type        = field_type;
     using basis_type        = Basis;
 
     constexpr static std::size_t dimension{VectorSpace::dimension};

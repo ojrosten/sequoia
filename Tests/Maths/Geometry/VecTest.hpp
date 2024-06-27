@@ -23,13 +23,13 @@ namespace sequoia::testing
 
     void run_tests();
 
-    template<class T>
+    template<class Element, maths::field Field>
     void test_vec_1_orderable();
 
-    template<class T>
+    template<class Element, maths::field Field>
     void test_vec_1_unorderable();
 
-    template<class T>
+    template<class Element, maths::field Field>
     void test_vec_2();
   };
 }
