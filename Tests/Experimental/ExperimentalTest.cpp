@@ -79,6 +79,13 @@ namespace graph_proposal
       {
         return vertex_id(g, ui);
       }
+
+      template<class G>
+        requires (!has_vertex_id_adl<G>) && has_vertex_id_type<G>
+      constexpr auto operator()(const G&, vertex_discriminator_t<G> ui) const
+      {
+        return ui;
+      }
     };
   }
 
@@ -243,14 +250,6 @@ namespace sequoia::maths
   constexpr edge_index_t<G> vertex_id(const G&, graph_proposal::vertex_discriminator_t<G> ui)
   {
     return ui.base_iterator();
-  }
-
-  template<network G>
-    requires graph_proposal::has_vertex_id_type<G>
-  [[nodiscard]]
-  constexpr edge_index_t<G> vertex_id(const G&, graph_proposal::vertex_discriminator_t<G> ui)
-  {
-    return ui;
   }
 
   template<network G>
