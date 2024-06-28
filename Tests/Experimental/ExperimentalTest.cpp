@@ -13,6 +13,18 @@
 
 namespace graph_proposal
 {
+  template<class G>
+  struct graph_traits;
+
+  template<class G>
+  constexpr inline bool has_vertex_id_type{
+    requires { typename graph_traits<G>::vertex_id_type; }
+  };
+
+  template<class G>
+    requires has_vertex_id_type<G>
+  using vertex_id_type = typename graph_traits<G>::vertex_id_type;
+
   namespace vertices_impl
   {
     template<class G>
@@ -35,18 +47,35 @@ namespace graph_proposal
   using vertex_range_t = decltype(vertices(std::declval<G>()));
 
   template<class G>
-  using vertex_iterator_t = std::ranges::iterator_t<vertex_range_t<G>>; // paper missing ranges::
+  struct vertex_discriminator
+  {
+    using type = std::ranges::iterator_t<vertex_range_t<G>>; // paper missing ranges::
+  };
+
+  template<class G>
+    requires has_vertex_id_type<G>
+  struct vertex_discriminator<G>
+  {
+    using type = vertex_id_type<G>;
+  };
+
+  template<class G>
+  using vertex_discriminator_t = typename vertex_discriminator<G>::type; 
 
   namespace vertex_id_impl
   {
+    // This is where we may want to severe the link?
+    // I want to decouple the vertex_id from the vertex_iterator.
+    // Perhaps if vertices don't exist, extract the vertex_id_t via traits
+
     template<class G>
-    inline constexpr bool has_vertex_id_adl{ requires(const G& g, vertex_iterator_t<G> ui) { vertex_id(g, ui); } };
+    inline constexpr bool has_vertex_id_adl{ requires(const G& g, vertex_discriminator_t<G> ui) { vertex_id(g, ui); } };
 
     struct cpo
     {
       template<class G>
         requires has_vertex_id_adl<G>
-      constexpr auto operator()(const G& g, vertex_iterator_t<G> ui) const
+      constexpr auto operator()(const G& g, vertex_discriminator_t<G> ui) const
       {
         return vertex_id(g, ui);
       }
@@ -56,7 +85,7 @@ namespace graph_proposal
   inline constexpr vertex_id_impl::cpo vertex_id{};
 
   template<class G>
-  using vertex_id_t = decltype(vertex_id(std::declval<G>(), std::declval<vertex_iterator_t<G>>()));
+  using vertex_id_t = decltype(vertex_id(std::declval<G>(), std::declval<vertex_discriminator_t<G>>()));
 
   namespace edges_impl
   {
@@ -200,7 +229,7 @@ namespace sequoia::maths
   }
 
   template<network G>
-    requires has_nodes_type<G> && has_iterable_node_weights<G>
+    requires (!graph_proposal::has_vertex_id_type<G>) && has_nodes_type<G>&& has_iterable_node_weights<G>
   [[nodiscard]]
   constexpr auto vertices(const G& g)
   {
@@ -209,17 +238,25 @@ namespace sequoia::maths
 
   // Overload for my graph
   template<network G>
-    requires has_nodes_type<G> && (!has_iterable_node_weights<G>)
+    requires (!graph_proposal::has_vertex_id_type<G>) && has_nodes_type<G> && (!has_iterable_node_weights<G>)
   [[nodiscard]]
-  constexpr edge_index_t<G> vertex_id(const G&, graph_proposal::vertex_iterator_t<G> ui)
+  constexpr edge_index_t<G> vertex_id(const G&, graph_proposal::vertex_discriminator_t<G> ui)
   {
     return ui.base_iterator();
   }
 
   template<network G>
+    requires graph_proposal::has_vertex_id_type<G>
+  [[nodiscard]]
+  constexpr edge_index_t<G> vertex_id(const G&, graph_proposal::vertex_discriminator_t<G> ui)
+  {
+    return ui;
+  }
+
+  template<network G>
     requires has_nodes_type<G> && has_iterable_node_weights<G>
   [[nodiscard]]
-  constexpr edge_index_t<G> vertex_id(const G& g, graph_proposal::vertex_iterator_t<G> ui)
+  constexpr edge_index_t<G> vertex_id(const G& g, graph_proposal::vertex_discriminator_t<G> ui)
   {
     using index_t = edge_index_t<G>;
     return static_cast<index_t>(std::ranges::distance(g.cbegin_node_weights(), ui));
@@ -255,6 +292,16 @@ namespace sequoia::maths
   }
 }
 
+namespace graph_proposal
+{
+  using namespace sequoia::maths;
+  template<>
+  struct graph_traits<directed_graph<float, null_weight>>
+  {
+    using vertex_id_type = directed_graph<float, null_weight>::edge_index_type;
+  };
+}
+
 namespace sequoia::testing
 {
   [[nodiscard]]
@@ -274,13 +321,33 @@ namespace sequoia::testing
       auto v{graph_proposal::vertices(g)};
 
       auto vid{graph_proposal::vertex_id(g, node_iter_t{})};
-      check(equality, report_line(""), vid, std::size_t{});
+      check(equality, report_line(""), vid, 0_sz);
 
       static_assert(std::is_same_v<graph_proposal::vertex_id_t<graph_t>, std::size_t>);
 
       auto es{graph_proposal::edges(g, 0_sz)};
       auto target{graph_proposal::target_id(g, es.front())};
-      check(equality, report_line(""), target, std::size_t{});
+      check(equality, report_line(""), target, 0_sz);
+
+      static_assert(graph_proposal::basic_targeted_edge<graph_t>);
+      static_assert(!graph_proposal::basic_sourced_edge<graph_t>);
+      static_assert(!graph_proposal::basic_sourced_targeted_edge<graph_t>);
+
+    }
+
+    {
+      using graph_t = maths::directed_graph<float, maths::null_weight>;
+
+      graph_t g{{{0, 3.14f}}};
+
+      auto vid{graph_proposal::vertex_id(g, 0_sz)};
+      check(equality, report_line(""), vid, 0_sz);
+
+      static_assert(std::is_same_v<graph_proposal::vertex_id_t<graph_t>, std::size_t>);
+
+      auto es{graph_proposal::edges(g, 0_sz)};
+      auto target{graph_proposal::target_id(g, es.front())};
+      check(equality, report_line(""), target, 0_sz);
 
       static_assert(graph_proposal::basic_targeted_edge<graph_t>);
       static_assert(!graph_proposal::basic_sourced_edge<graph_t>);
@@ -296,13 +363,13 @@ namespace sequoia::testing
       auto v{graph_proposal::vertices(g)};
 
       auto vid{graph_proposal::vertex_id(g, g.cbegin_node_weights())};
-      check(equality, report_line(""), vid, std::size_t{});
+      check(equality, report_line(""), vid, 0_sz);
 
       static_assert(std::is_same_v<graph_proposal::vertex_id_t<graph_t>, std::size_t>);
 
       auto es{graph_proposal::edges(g, 0_sz)};
       auto target{graph_proposal::target_id(g, es.front())};
-      check(equality, report_line(""), target, std::size_t{});
+      check(equality, report_line(""), target, 0_sz);
 
       static_assert(graph_proposal::basic_targeted_edge<graph_t>);
       static_assert(!graph_proposal::basic_sourced_edge<graph_t>);
