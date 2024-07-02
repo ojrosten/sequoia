@@ -28,6 +28,14 @@ namespace sequoia::testing
   template<class T>
   using is_complex_t = typename is_complex<T>::type;
 
+  template<class B>
+  inline constexpr bool is_orthonormal_basis_v{
+    requires {
+      typename B::orthonormal;
+      requires std::same_as<typename B::orthonormal, std::true_type>;
+    }
+  };
+
   template<class Element, maths::field Field, std::size_t D>
   struct my_vec_space
   {
@@ -36,7 +44,7 @@ namespace sequoia::testing
     constexpr static std::size_t dimension{D};
 
     template<class Basis>
-      requires std::floating_point<Field> // && orthonormal
+      requires std::floating_point<Field> && is_orthonormal_basis_v<Basis>
     [[nodiscard]]
     friend constexpr Field inner_product(const maths::vector_representation<my_vec_space, Basis>& lhs, const maths::vector_representation<my_vec_space, Basis>& rhs)
     {
@@ -44,7 +52,7 @@ namespace sequoia::testing
     }
 
     template<class Basis>
-      requires is_complex_v<Field> // && orthonormal
+      requires is_complex_v<Field> && is_orthonormal_basis_v<Basis>
     [[nodiscard]]
     friend constexpr Field inner_product(const maths::vector_representation<my_vec_space, Basis>& lhs, const maths::vector_representation<my_vec_space, Basis>& rhs)
     {
@@ -55,7 +63,10 @@ namespace sequoia::testing
 
 
   template<class Element, maths::field Field, std::size_t D>
-  struct canonical_basis;
+  struct canonical_basis
+  {
+    using orthonormal = std::true_type;
+  };
 
   /*template<std::floating_point Element, maths::field Field>
     requires std::is_same_v<Element, Field>

@@ -217,5 +217,6 @@ namespace sequoia::testing
     using vec_t = vector_representation<my_vec_space<Element, Field, 1>, canonical_basis<Element, Field, 1>>;
 
     check(equality, report_line(""), inner_product(vec_t{Field(1, 1)}, vec_t{Field(1, 1)}), Field{2});
+    check(equality, report_line(""), inner_product(vec_t{Field(1, -1)}, vec_t{Field(1, 1)}), Field{0, 2});
   }
 }
