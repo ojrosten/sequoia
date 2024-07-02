@@ -38,6 +38,9 @@ namespace sequoia::testing
     test_vec_2<std::array<float, 2>, float>();
     test_vec_2<std::array<std::complex<double>, 2>, std::complex<double>>();
     test_vec_2<std::complex<double>, double>(); // Complex numbers over the reals
+
+    test_real_vec_1_inner_prod<float, float>();
+    test_complex_vec_1_inner_prod<std::complex<double>, std::complex<double>>();
   }
 
   template<class Element, maths::field Field>
@@ -192,5 +195,27 @@ namespace sequoia::testing
     };
 
     transition_checker<vec_t>::check(report_line(""), g, checker);
+  }
+
+  template<class Element, std::floating_point Field>
+  void vec_test::test_real_vec_1_inner_prod()
+  {
+    using vec_t = vector_representation<my_vec_space<Element, Field, 1>, canonical_basis<Element, Field, 1>>;
+
+    check(equality, report_line(""), inner_product(vec_t{}, vec_t{Field(1)}), Field{});
+    check(equality, report_line(""), inner_product(vec_t{Field(1)}, vec_t{}), Field{});
+    check(equality, report_line(""), inner_product(vec_t{Field(-1)}, vec_t{Field(1)}), Field{-1});
+    check(equality, report_line(""), inner_product(vec_t{Field(1)}, vec_t{Field(-1)}), Field{-1});
+    check(equality, report_line(""), inner_product(vec_t{Field(1)}, vec_t{Field(1)}), Field{1});
+    check(equality, report_line(""), inner_product(vec_t{Field(-7)}, vec_t{Field(42)}), Field{-294});
+  }
+
+  template<class Element, class Field>
+    requires is_complex_v<Field>
+  void vec_test::test_complex_vec_1_inner_prod()
+  {
+    using vec_t = vector_representation<my_vec_space<Element, Field, 1>, canonical_basis<Element, Field, 1>>;
+
+    check(equality, report_line(""), inner_product(vec_t{Field(1, 1)}, vec_t{Field(1, 1)}), Field{2});
   }
 }

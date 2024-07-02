@@ -31,5 +31,12 @@ namespace sequoia::testing
 
     template<class Element, maths::field Field>
     void test_vec_2();
+
+    template<class Element, std::floating_point Field>
+    void test_real_vec_1_inner_prod();
+
+    template<class Element, class Field>
+      requires is_complex_v<Field>
+    void test_complex_vec_1_inner_prod();
   };
 }

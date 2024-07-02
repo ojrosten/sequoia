@@ -12,20 +12,52 @@
 #include "sequoia/TestFramework/RegularTestCore.hpp"
 #include "sequoia/Maths/Geometry/VectorSpace.hpp"
 
+#include <complex>
+
 namespace sequoia::testing
 {
+  template<class T>
+  struct is_complex : std::false_type {};
+
+  template<std::floating_point T>
+  struct is_complex<std::complex<T>> : std::true_type {};
+
+  template<class T>
+  inline constexpr bool is_complex_v{is_complex<T>::value};
+
+  template<class T>
+  using is_complex_t = typename is_complex<T>::type;
+
   template<class Element, maths::field Field, std::size_t D>
   struct my_vec_space
   {
     using element_type = Element;
     using field_type   = Field;
     constexpr static std::size_t dimension{D};
+
+    template<class Basis>
+      requires std::floating_point<Field> // && orthonormal
+    [[nodiscard]]
+    friend constexpr Field inner_product(const maths::vector_representation<my_vec_space, Basis>& lhs, const maths::vector_representation<my_vec_space, Basis>& rhs)
+    {
+      return std::ranges::fold_left(std::views::zip(lhs.values(), rhs.values()) , Field{}, [](Field f, const auto& z){ return f + std::get<0>(z) * std::get<1>(z); });
+    }
+
+    template<class Basis>
+      requires is_complex_v<Field> // && orthonormal
+    [[nodiscard]]
+    friend constexpr Field inner_product(const maths::vector_representation<my_vec_space, Basis>& lhs, const maths::vector_representation<my_vec_space, Basis>& rhs)
+    {
+      return std::ranges::fold_left(std::views::zip(lhs.values(), rhs.values()), Field{}, [](Field f, const auto& z){ return f + conj(std::get<0>(z)) * std::get<1>(z); });
+    }
   };
+
+
 
   template<class Element, maths::field Field, std::size_t D>
   struct canonical_basis;
 
-  template<std::floating_point Element, maths::field Field>
+  /*template<std::floating_point Element, maths::field Field>
     requires std::is_same_v<Element, Field>
   struct canonical_basis<Element, Field, 1>
   {
@@ -37,7 +69,7 @@ namespace sequoia::testing
   struct canonical_basis<std::array<T, 2>, Field, 2>
   {
     constexpr static std::array<std::array<T, 2>, 2> basis_vectors{std::array<T, 2>{1, 0}, std::array<T, 2>{0, 1}};
-  };
+  };*/
 
   template<maths::vector_space VectorSpace, maths::basis<VectorSpace> Basis>
   struct value_tester<maths::vector_representation<VectorSpace, Basis>>
