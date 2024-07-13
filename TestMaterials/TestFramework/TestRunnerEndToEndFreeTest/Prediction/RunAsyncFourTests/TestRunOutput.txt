@@ -7,8 +7,8 @@ Foo:
 House:
 
 -----------Grand Totals-----------
-[Total Run Time: 10.5ms]
-[Execution Time: 222us]
+[Total Run Time: 4.98ms]
+[Execution Time: 234us]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

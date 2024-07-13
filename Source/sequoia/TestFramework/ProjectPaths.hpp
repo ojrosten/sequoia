@@ -243,7 +243,7 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    static std::filesystem::path repo(std::filesystem::path projectRoot);
+    static std::filesystem::path repo(const std::filesystem::path& projectRoot);
 
     [[nodiscard]]
     const std::filesystem::path& test_templates() const noexcept
@@ -252,7 +252,7 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    static std::filesystem::path test_templates(std::filesystem::path projectRoot);
+    static std::filesystem::path test_templates(const std::filesystem::path& projectRoot);
 
     [[nodiscard]]
     const std::filesystem::path& source_templates() const noexcept
@@ -261,7 +261,7 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    static std::filesystem::path source_templates(std::filesystem::path projectRoot);
+    static std::filesystem::path source_templates(const std::filesystem::path& projectRoot);
 
     [[nodiscard]]
     const std::filesystem::path& project_template() const noexcept
@@ -270,7 +270,7 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    static std::filesystem::path project_template(std::filesystem::path projectRoot);
+    static std::filesystem::path project_template(const std::filesystem::path& projectRoot);
 
     [[nodiscard]]
     friend bool operator==(const auxiliary_paths&, const auxiliary_paths&) noexcept = default;

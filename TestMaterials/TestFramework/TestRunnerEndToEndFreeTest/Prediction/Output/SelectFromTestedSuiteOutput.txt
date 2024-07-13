@@ -3,13 +3,13 @@ Running tests...
 
 Foo:
 	False Positive Test
-	[Execution Time: 400ns]
+	[Execution Time: 19.3us]
 	Unit Test
-	[Execution Time: 1.9us]
+	[Execution Time: 12.2us]
 
 -----------Grand Totals-----------
-[Total Run Time: 6.13ms]
-[Execution Time: 132us]
+[Total Run Time: 2.69ms]
+[Execution Time: 136us]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

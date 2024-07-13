@@ -1,0 +1,3 @@
+[submodule "dependencies/sequoia"]
+	path = dependencies/sequoia
+	url = https://github.com/ojrosten/sequoia

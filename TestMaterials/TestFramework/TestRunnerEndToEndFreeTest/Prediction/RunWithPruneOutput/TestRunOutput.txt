@@ -1,6 +1,6 @@
 
 Analyzing dependencies...
-[24.2ms]
+[30.3ms]
 
 
 Running tests...
@@ -9,8 +9,8 @@ Foo:
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 38]
 
 -----------Grand Totals-----------
-[Total Run Time: 9.97ms]
-[Execution Time: 8.44ms]
+[Total Run Time: 15.3ms]
+[Execution Time: 13.1ms]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 38]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

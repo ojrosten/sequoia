@@ -72,7 +72,7 @@ Creating files for new test:
 
 Running CMake...
 
--- Selecting Windows SDK version 10.0.19041.0 to target Windows 10.0.19042.
--- Configuring done
--- Generating done
+-- Selecting Windows SDK version 10.0.22000.0 to target Windows 10.0.22631.
+-- Configuring done (0.0s)
+-- Generating done (0.1s)
 -- Build files have been written to: C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/build/CMade/win/TestAll

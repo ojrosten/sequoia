@@ -22,11 +22,8 @@ namespace sequoia::testing
 {
   void report(std::ostream& stream, std::string_view prefix, std::string_view message)
   {
-    if(!message.empty())
-    {
-      stream << prefix << '\n';
-      stream << message << "\n\n";
-    }
+    if(!prefix.empty()) stream << prefix << '\n';
+    if(!message.empty()) stream << message << "\n\n";
   }
 
   void set_top_copyright(std::string& text, std::string_view copyright)

@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
 
-set(BuildSystem ../build_system)
+set(BuildSystem ../dependencies/sequoia/build_system)
 include(${BuildSystem}/Utilities.cmake)
 
 sequoia_init()

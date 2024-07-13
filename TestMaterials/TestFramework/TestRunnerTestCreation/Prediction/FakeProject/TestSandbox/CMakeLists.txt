@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.20)
 
 project(MyProjectTests LANGUAGES CXX)
 
-set(BuildSystem ../build_system)
+set(BuildSystem ../dependencies/sequoia/build_system)
 set(TestDir ../Tests)
 set(SourceDir ../Source)
 

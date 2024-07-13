@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.20)
 
 project(AnotherGeneratedProjectTests LANGUAGES CXX)
 
-set(BuildSystem ../../FakeProject/build_system)
+set(BuildSystem ../dependencies/sequoia/build_system)
 set(TestDir ../Tests)
 set(SourceDir ../Source)
 

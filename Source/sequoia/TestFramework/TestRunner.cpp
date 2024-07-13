@@ -593,7 +593,9 @@ namespace sequoia::testing
                     {}},
                     { {{"--no-build", {}, {},
                         [&nascentProjects](const arg_list&) { nascentProjects.back().do_build = build_invocation::no; }}},
-                      {{"--to-files",  {}, {"filename (A file of this name will appear in multiple directories)"},
+                      {{"--no-git", {}, {},
+                        [&nascentProjects](const arg_list&) { nascentProjects.back().use_git = git_invocation::no; }}},
+                      {{"--to-files",  {}, {"output filename"},
                         [&nascentProjects](const arg_list& args) { nascentProjects.back().output = args[0]; }}},
                       {{"--no-ide", {}, {},
                         [&nascentProjects](const arg_list&) {

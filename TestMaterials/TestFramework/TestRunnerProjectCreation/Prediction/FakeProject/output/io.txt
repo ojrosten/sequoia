@@ -3,3 +3,6 @@ Initializing Project(s)....
 Creating new project at location:
 C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerProjectCreation/WorkingCopy/GeneratedProject
 
+
+Copying across sequoia...
+

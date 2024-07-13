@@ -20,6 +20,7 @@
 namespace sequoia::testing
 {
   enum class build_invocation { no = 0, yes, launch_ide };
+  enum class git_invocation : bool { no = 0, yes};
 
   struct project_data
   {
@@ -27,6 +28,7 @@ namespace sequoia::testing
     std::filesystem::path project_root{};
     indentation code_indent{"\t"};
     build_invocation do_build{build_invocation::launch_ide};
+    git_invocation use_git{git_invocation::yes};
     std::filesystem::path output{};
   };
 

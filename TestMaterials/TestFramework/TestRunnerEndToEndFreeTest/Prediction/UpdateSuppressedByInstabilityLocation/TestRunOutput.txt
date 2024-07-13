@@ -1,7 +1,7 @@
   Warning: Update of materials suppressed when checking for instabilities
 
 Analyzing dependencies...
-[22.9ms]
+[29ms]
 
 
 Running tests...
@@ -110,8 +110,8 @@ Foo:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 11.7ms]
-[Execution Time: 9.78ms]
+[Total Run Time: 12.5ms]
+[Execution Time: 9.9ms]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 43]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -225,8 +225,8 @@ Foo:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 10.6ms]
-[Execution Time: 7.2ms]
+[Total Run Time: 13ms]
+[Execution Time: 10.3ms]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 43]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

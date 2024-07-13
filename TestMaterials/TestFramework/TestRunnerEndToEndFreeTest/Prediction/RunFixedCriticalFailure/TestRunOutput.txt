@@ -5,8 +5,8 @@ Foo:
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 38]
 
 -----------Grand Totals-----------
-[Total Run Time: 10.6ms]
-[Execution Time: 8.79ms]
+[Total Run Time: 14.9ms]
+[Execution Time: 12.6ms]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 38]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
