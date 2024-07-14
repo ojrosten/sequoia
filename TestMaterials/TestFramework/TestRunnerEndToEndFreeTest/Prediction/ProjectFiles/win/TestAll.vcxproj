@@ -129,6 +129,9 @@
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
     </ProjectReference>
+    <Manifest>
+      <AdditionalManifestFiles>C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\dependencies\sequoia\resources\win\longpaths.manifest;</AdditionalManifestFiles>
+    </Manifest>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -175,6 +178,9 @@
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
     </ProjectReference>
+    <Manifest>
+      <AdditionalManifestFiles>C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\dependencies\sequoia\resources\win\longpaths.manifest;</AdditionalManifestFiles>
+    </Manifest>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
     <ClCompile>
@@ -221,6 +227,9 @@
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
     </ProjectReference>
+    <Manifest>
+      <AdditionalManifestFiles>C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\dependencies\sequoia\resources\win\longpaths.manifest;</AdditionalManifestFiles>
+    </Manifest>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
     <ClCompile>
@@ -266,6 +275,9 @@
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
     </ProjectReference>
+    <Manifest>
+      <AdditionalManifestFiles>C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\dependencies\sequoia\resources\win\longpaths.manifest;</AdditionalManifestFiles>
+    </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
     <CustomBuild Include="C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\TestAll\CMakeLists.txt">
