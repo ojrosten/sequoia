@@ -52,7 +52,7 @@ namespace sequoia::testing
       replace_all(text, myProj, projName);
     }
 
-    void copy_sequoia(const project_paths& parentProjectPaths, const project_data& data)
+    void copy_sequoia(std::ostream& stream, const project_paths& parentProjectPaths, const project_data& data)
     {
         const std::filesystem::path seqLocation{data.project_root / "dependencies" / "sequoia"};
         for(auto& entry : fs::directory_iterator{parentProjectPaths.project_root()})
@@ -60,8 +60,12 @@ namespace sequoia::testing
             if(fs::is_directory(entry))
             {
                 const auto entryName{back(entry.path())};
-                if((entryName == "build") || (entryName == "output") || (entryName == "TestMaterials") || (entryName == "docs")) continue;
-                fs::copy(entry, seqLocation / entryName, fs::copy_options::recursive);
+                if((entryName == "build") || (entryName == "output")) continue;
+
+                std::error_code ec{};
+                fs::copy(entry, seqLocation / entryName, fs::copy_options::recursive, ec);
+                if(ec)
+                  stream << ec.message() << '\n';
             }
             else
             {
@@ -180,7 +184,7 @@ namespace sequoia::testing
         invoke(cd_cmd(data.project_root) && git_first_cmd(data.project_root, data.output));
 
       report(stream, "", "\nCopying across sequoia...");
-      copy_sequoia(parentProjectPaths, data);
+      copy_sequoia(stream, parentProjectPaths, data);
 
       if(data.use_git == git_invocation::yes)
       {
