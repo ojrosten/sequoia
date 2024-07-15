@@ -119,9 +119,6 @@ namespace sequoia::testing
     std::filesystem::path cmake_lists() const;
 
     [[nodiscard]]
-    static std::filesystem::path cmake_lists(std::filesystem::path projectRoot);
-
-    [[nodiscard]]
     friend bool operator==(const source_paths&, const source_paths&) noexcept = default;
   private:
     std::filesystem::path m_Repo, m_Project;

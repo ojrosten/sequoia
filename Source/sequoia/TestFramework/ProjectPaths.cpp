@@ -139,13 +139,7 @@ namespace sequoia::testing
   [[nodiscard]]
   fs::path source_paths::cmake_lists() const
   {
-    return repo() / "CMakeLists.txt";
-  }
-
-  [[nodiscard]]
-  fs::path source_paths::cmake_lists(std::filesystem::path projectRoot)
-  {
-    return repo(projectRoot) /= "CMakeLists.txt";
+    return m_Project / "CMakeLists.txt";
   }
 
   [[nodiscard]]

@@ -86,7 +86,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\TestAll\..\Source;C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\TestAll\..\Tests;C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\dependencies\sequoia\Source\.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\TestAll\..\Source;C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\TestAll\..\Tests;C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\dependencies\sequoia\Source\sequoia\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>%(AdditionalOptions) /bigobj</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -106,10 +106,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\TestAll\..\Source;C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\TestAll\..\Tests;C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\dependencies\sequoia\Source\.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\TestAll\..\Source;C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\TestAll\..\Tests;C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\dependencies\sequoia\Source\sequoia\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\TestAll\..\Source;C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\TestAll\..\Tests;C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\dependencies\sequoia\Source\.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\TestAll\..\Source;C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\TestAll\..\Tests;C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\dependencies\sequoia\Source\sequoia\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -135,7 +135,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\TestAll\..\Source;C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\TestAll\..\Tests;C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\dependencies\sequoia\Source\.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\TestAll\..\Source;C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\TestAll\..\Tests;C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\dependencies\sequoia\Source\sequoia\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>%(AdditionalOptions) /bigobj</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <ExceptionHandling>Sync</ExceptionHandling>
@@ -155,10 +155,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\TestAll\..\Source;C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\TestAll\..\Tests;C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\dependencies\sequoia\Source\.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\TestAll\..\Source;C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\TestAll\..\Tests;C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\dependencies\sequoia\Source\sequoia\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\TestAll\..\Source;C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\TestAll\..\Tests;C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\dependencies\sequoia\Source\.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\TestAll\..\Source;C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\TestAll\..\Tests;C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\dependencies\sequoia\Source\sequoia\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -184,7 +184,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\TestAll\..\Source;C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\TestAll\..\Tests;C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\dependencies\sequoia\Source\.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\TestAll\..\Source;C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\TestAll\..\Tests;C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\dependencies\sequoia\Source\sequoia\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>%(AdditionalOptions) /bigobj</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <ExceptionHandling>Sync</ExceptionHandling>
@@ -204,10 +204,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR=\"MinSizeRel\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\TestAll\..\Source;C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\TestAll\..\Tests;C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\dependencies\sequoia\Source\.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\TestAll\..\Source;C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\TestAll\..\Tests;C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\dependencies\sequoia\Source\sequoia\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\TestAll\..\Source;C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\TestAll\..\Tests;C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\dependencies\sequoia\Source\.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\TestAll\..\Source;C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\TestAll\..\Tests;C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\dependencies\sequoia\Source\sequoia\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -233,7 +233,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\TestAll\..\Source;C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\TestAll\..\Tests;C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\dependencies\sequoia\Source\.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\TestAll\..\Source;C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\TestAll\..\Tests;C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\dependencies\sequoia\Source\sequoia\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>%(AdditionalOptions) /bigobj</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -252,10 +252,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR=\"RelWithDebInfo\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\TestAll\..\Source;C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\TestAll\..\Tests;C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\dependencies\sequoia\Source\.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\TestAll\..\Source;C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\TestAll\..\Tests;C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\dependencies\sequoia\Source\sequoia\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\TestAll\..\Source;C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\TestAll\..\Tests;C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\dependencies\sequoia\Source\.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\TestAll\..\Source;C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\TestAll\..\Tests;C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerEndToEndFreeTest\GeneratedProject\dependencies\sequoia\Source\sequoia\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>

@@ -12,7 +12,7 @@ sequoia_init()
 
 add_executable(TestAll TestAllMain.cpp)
 
-add_subdirectory(${SourceDir} GeneratedProject)
+add_subdirectory(${SourceDir}/generatedProject GeneratedProject)
 target_link_libraries(TestAll PUBLIC GeneratedProject)
 
 target_sources(TestAll PRIVATE

@@ -47,9 +47,10 @@ namespace sequoia::testing
     {
       if(projRoot.empty()) return;
 
-      const auto name{(--projRoot.end())->generic_string()};
-      const std::string myProj{"MyProject"}, projName{replace_all(name, " ", "_")};
-      replace_all(text, myProj, projName);
+      const auto name{back(projRoot).generic_string()};
+      const std::string projName{replace_all(name, " ", "_")};
+      replace_all(text, "MyProject", projName);
+      replace_all(text, "myProject", uncapitalize(projName));
     }
 
     void copy_sequoia(std::ostream& stream, const project_paths& parentProjectPaths, const project_data& data)
@@ -123,7 +124,7 @@ namespace sequoia::testing
       }
     );
 
-    read_modify_write(source_paths::cmake_lists(newProjRoot), [&newProjRoot](std::string& text) {
+    read_modify_write(source_paths{newProjRoot}.cmake_lists(), [&newProjRoot](std::string& text) {
         set_proj_name(text, newProjRoot);
       }
     );
@@ -175,7 +176,7 @@ namespace sequoia::testing
 
       fs::create_directories(data.project_root);
       fs::copy(parentProjectPaths.aux_paths().project_template(), data.project_root, fs::copy_options::recursive | fs::copy_options::skip_existing);
-      fs::create_directory(source_paths(data.project_root).project());
+      fs::rename(source_paths(data.project_root).repo() / "projectTemplate", source_paths(data.project_root).project());
 
       generate_test_main(data.copyright, data.project_root, data.code_indent);
       generate_build_system_files(data.project_root);
