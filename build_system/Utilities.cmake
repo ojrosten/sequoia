@@ -56,18 +56,21 @@ FUNCTION(sequoia_compile_features target)
     target_compile_features(${target} PUBLIC cxx_std_23)
 ENDFUNCTION()
 
+FUNCTION(sequoia_set_properties target)
+    if (MSVC)
+        set_target_properties(${target} PROPERTIES LINK_FLAGS "/INCREMENTAL:NO")
+        set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${target})
+        target_sources(${target} PRIVATE ${CMAKE_CURRENT_FUNCTION_LIST_DIR}/../resources/win/longpaths.manifest)
+    endif()
+ENDFUNCTION()
+
 FUNCTION(sequoia_finalize target sourceGroupRoot sourceGroupPrefix)
     sequoia_compile_features(${target})
 
     add_subdirectory(${CMAKE_CURRENT_FUNCTION_LIST_DIR}/../Source Sequoia)
     target_link_libraries(${target} PUBLIC Sequoia)
 
-    if (MSVC)
-        set_target_properties(${target} PROPERTIES LINK_FLAGS "/INCREMENTAL:NO")
-        set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${target})
-        target_sources(${target} PRIVATE ${CMAKE_CURRENT_FUNCTION_LIST_DIR}/../resources/win/longpaths.manifest)
-    endif()
-
+    sequoia_set_properties(${target})
     sequoia_set_ide_source_groups_with_prefix(${target} ${sourceGroupRoot} ${sourceGroupPrefix})
 ENDFUNCTION()
 
@@ -81,17 +84,12 @@ ENDFUNCTION()
 FUNCTION(sequoia_finalize_library target)
     sequoia_compile_features(${target})
     sequoia_link_libraries(${target})
-
     sequoia_set_ide_source_groups(${target} ${CMAKE_CURRENT_LIST_DIR}/${target})
 ENDFUNCTION()
 
 FUNCTION(sequoia_finalize_executable target)
     sequoia_compile_features(${target})
     sequoia_link_libraries(${target})
-
+    sequoia_set_properties(${target})
     sequoia_set_ide_source_groups(${target} ${CMAKE_CURRENT_LIST_DIR})
-
-    if (MSVC)
-        set_property(DIRECTORY ${CMAKE_CURRENT_LIST_DIR} PROPERTY VS_STARTUP_PROJECT ${target})
-    endif()
 endfunction()
