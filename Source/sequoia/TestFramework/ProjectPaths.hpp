@@ -289,7 +289,7 @@ namespace sequoia::testing
   public:
     recovery_paths() = default;
 
-    recovery_paths(const std::filesystem::path& outputDir);
+    explicit recovery_paths(const std::filesystem::path& outputDir);
 
     [[nodiscard]]
     const std::filesystem::path& dir() const noexcept
@@ -362,7 +362,7 @@ namespace sequoia::testing
   public:
     output_paths() = default;
 
-    output_paths(const std::filesystem::path& projectRoot);
+    explicit output_paths(const std::filesystem::path& projectRoot);
 
     [[nodiscard]]
     const std::filesystem::path& dir() const noexcept
@@ -415,7 +415,7 @@ namespace sequoia::testing
     [[nodiscard]]
     recovery_paths recovery() const
     {
-      return {dir()};
+      return recovery_paths{dir()};
     }
 
     [[nodiscard]]

@@ -53,26 +53,55 @@ namespace sequoia::testing
       replace_all(text, "myProject", uncapitalize(projName));
     }
 
+    void copy_sequoia_subdir(std::ostream& stream, const fs::path& target, const fs::directory_entry& dir)
+    {
+      const auto entryName{back(dir.path())};
+      std::error_code ec{};
+      fs::copy(dir, target / entryName, fs::copy_options::recursive, ec);
+      if(ec)
+        stream << ec.message() << '\n';
+    }
+
+    void copy_sequoia_output(std::ostream& stream, const project_paths& parentProjectPaths, const output_paths& output, const fs::directory_entry& dir)
+    {
+      if(!fs::exists(output.dir()))
+        fs::create_directory(output.dir());
+
+      for(auto& entry : fs::directory_iterator{dir})
+      {
+        if(fs::is_directory(entry))
+        {
+          if((entry.path() == parentProjectPaths.output().diagnostics()) || (entry.path() == parentProjectPaths.output().test_summaries()))
+          {
+            copy_sequoia_subdir(stream, output.dir(), entry);
+          }
+        }
+      }
+    }
+
     void copy_sequoia(std::ostream& stream, const project_paths& parentProjectPaths, const project_data& data)
     {
-        const std::filesystem::path seqLocation{data.project_root / "dependencies" / "sequoia"};
-        for(auto& entry : fs::directory_iterator{parentProjectPaths.project_root()})
+      const std::filesystem::path seqLocation{data.project_root / "dependencies" / "sequoia"};
+      for(auto& entry : fs::directory_iterator{parentProjectPaths.project_root()})
+      {
+        if(fs::is_directory(entry))
         {
-            if(fs::is_directory(entry))
-            {
-                const auto entryName{back(entry.path())};
-                if((entryName == "build") || (entryName == "output")) continue;
-
-                std::error_code ec{};
-                fs::copy(entry, seqLocation / entryName, fs::copy_options::recursive, ec);
-                if(ec)
-                  stream << ec.message() << '\n';
-            }
-            else
-            {
-                fs::copy(entry, seqLocation);
-            }
+          if(entry.path() == parentProjectPaths.output().dir())
+          {
+            copy_sequoia_output(stream, parentProjectPaths, output_paths{seqLocation}, entry);
+          }
+          else if(entry.path() != parentProjectPaths.build().dir())
+          {
+            copy_sequoia_subdir(stream, seqLocation, entry);
+          }
         }
+        else
+        {
+          fs::copy(entry, seqLocation);
+        }
+      }
+
+      fs::remove(seqLocation / ".keep");
     }
   }
 
