@@ -31,25 +31,21 @@ FUNCTION(sequoia_link_libraries target)
 ENDFUNCTION()
 
 FUNCTION(sequoia_set_ide_source_groups target directory)
-    if (MSVC)
         file(GLOB_RECURSE HeaderFiles ${directory}/*.h*)
         source_group(TREE ${directory} FILES ${HeaderFiles})
         target_sources(${target} PRIVATE ${HeaderFiles})
 
         file(GLOB_RECURSE SourceFiles ${directory}/*.c*)
         source_group(TREE ${directory} FILES ${SourceFiles})
-    endif()
 ENDFUNCTION()
 
 FUNCTION(sequoia_set_ide_source_groups_with_prefix target directory sourceGroupPrefix)
-    if (MSVC)
         file(GLOB_RECURSE HeaderFiles ${directory}/*.h*)
         source_group(TREE ${directory} PREFIX ${sourceGroupPrefix} FILES ${HeaderFiles})
         target_sources(${target} PRIVATE ${HeaderFiles})
 
         file(GLOB_RECURSE SourceFiles ${directory}/*.c*)
         source_group(TREE ${directory} PREFIX ${sourceGroupPrefix} FILES ${SourceFiles})
-    endif()
 ENDFUNCTION()
 
 FUNCTION(sequoia_compile_features target)
