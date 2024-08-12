@@ -62,22 +62,13 @@ namespace sequoia::maths
     std::ranges::for_each(std::views::zip(lhs, rhs), [&f](auto&& z){ f(std::get<0>(z), std::get<1>(z)); });
   }
 
-  template<class T, std::size_t D, class Fn>
+  template<class T, std::size_t D, class Fn=std::identity>
       requires std::is_invocable_r_v<T, Fn, T>
   [[nodiscard]]
-  constexpr std::array<T, D> make_from(std::span<T, D> a, Fn f)
+  constexpr std::array<T, D> to_array(std::span<const T, D> a, Fn f = {})
   {
       return[&] <std::size_t... Is> (std::index_sequence<Is...>){
           return std::array<T, D>{f(a[Is])...};
-      }(std::make_index_sequence<D>{});
-  }
-
-  template<class T, std::size_t D>
-  [[nodiscard]]
-  constexpr std::array<std::remove_cvref_t<T>, D> to_array(std::span<T, D> s)
-  {
-      return[&] <std::size_t... Is> (std::index_sequence<Is...>){
-          return std::array<std::remove_cvref_t<T>, D>{s[Is]...};
       }(std::make_index_sequence<D>{});
   }
 
@@ -155,7 +146,7 @@ namespace sequoia::maths
     [[nodiscard]]
     constexpr vector_representation operator-() const noexcept
     {
-      return vector_representation{make_from(values(), [](value_type t) { return -t; })};
+      return vector_representation{to_array(values(), [](value_type t) { return -t; })};
     }
 
     [[nodiscard]]
