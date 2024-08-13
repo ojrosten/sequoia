@@ -35,6 +35,8 @@
 #include "Core/Object/SuiteFreeTest.hpp"
 #include "Experimental/ExperimentalTest.hpp"
 #include "Experimental/FlattenTypeListFreeTest.hpp"
+#include "Maths/Geometry/AffineCoordinatesTest.hpp"
+#include "Maths/Geometry/AffineCoordinatesTestingDiagnostics.hpp"
 #include "Maths/Geometry/AngleTest.hpp"
 #include "Maths/Geometry/AngleTestingDiagnostics.hpp"
 #include "Maths/Geometry/VecTest.hpp"

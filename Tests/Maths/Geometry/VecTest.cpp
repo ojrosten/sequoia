@@ -46,7 +46,7 @@ namespace sequoia::testing
   template<class Element, maths::field Field>
   void vec_test::test_vec_1_orderable()
   {
-      using vec_t     = vector_representation<my_vec_space<Element, Field, 1>, canonical_basis<Element, Field, 1>>;
+      using vec_t     = vector_coordinates<my_vec_space<Element, Field, 1>, canonical_basis<Element, Field, 1>>;
       using vec_graph = transition_checker<vec_t>::transition_graph;
       using edge_t    = transition_checker<vec_t>::edge;
 
@@ -97,7 +97,7 @@ namespace sequoia::testing
   template<class Element, maths::field Field>
   void vec_test::test_vec_1_unorderable()
   {
-    using vec_t     = vector_representation<my_vec_space<Element, Field, 1>, canonical_basis<Element, Field, 1>>;
+    using vec_t     = vector_coordinates<my_vec_space<Element, Field, 1>, canonical_basis<Element, Field, 1>>;
     using vec_graph = transition_checker<vec_t>::transition_graph;
     using edge_t    = transition_checker<vec_t>::edge;
 
@@ -147,7 +147,7 @@ namespace sequoia::testing
   template<class Element, maths::field Field>
   void vec_test::test_vec_2()
   {
-    using vec_t = vector_representation<my_vec_space<Element, Field, 2>, canonical_basis<Element, Field, 2>>;
+    using vec_t = vector_coordinates<my_vec_space<Element, Field, 2>, canonical_basis<Element, Field, 2>>;
     using vec_graph = transition_checker<vec_t>::transition_graph;
     using edge_t = transition_checker<vec_t>::edge;
 
@@ -200,7 +200,7 @@ namespace sequoia::testing
   template<class Element, std::floating_point Field>
   void vec_test::test_real_vec_1_inner_prod()
   {
-    using vec_t = vector_representation<my_vec_space<Element, Field, 1>, canonical_basis<Element, Field, 1>>;
+    using vec_t = vector_coordinates<my_vec_space<Element, Field, 1>, canonical_basis<Element, Field, 1>>;
 
     check(equality, report_line(""), inner_product(vec_t{}, vec_t{Field(1)}), Field{});
     check(equality, report_line(""), inner_product(vec_t{Field(1)}, vec_t{}), Field{});
@@ -214,7 +214,7 @@ namespace sequoia::testing
     requires is_complex_v<Field>
   void vec_test::test_complex_vec_1_inner_prod()
   {
-    using vec_t = vector_representation<my_vec_space<Element, Field, 1>, canonical_basis<Element, Field, 1>>;
+    using vec_t = vector_coordinates<my_vec_space<Element, Field, 1>, canonical_basis<Element, Field, 1>>;
 
     check(equality, report_line(""), inner_product(vec_t{Field(1, 1)}, vec_t{Field(1, 1)}), Field{2});
     check(equality, report_line(""), inner_product(vec_t{Field(1, -1)}, vec_t{Field(1, 1)}), Field{0, 2});

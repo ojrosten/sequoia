@@ -73,96 +73,99 @@ namespace sequoia::maths
   }
 
   template<vector_space VectorSpace, basis<VectorSpace> Basis>
-  class vector_representation
+  class vector_coordinates
   {
   public:
     using vector_space_type = VectorSpace;
+    using basis_type        = Basis;
     using element_type      = typename VectorSpace::element_type;
     using field_type        = typename VectorSpace::field_type;
     using value_type        = field_type;
-    using basis_type        = Basis;
 
     constexpr static std::size_t dimension{VectorSpace::dimension};
     constexpr static std::size_t D{dimension};
 
-    constexpr vector_representation() = default;
+    [[nodiscard]]
+    constexpr static vector_coordinates zero() { return {}; }
 
-    constexpr explicit vector_representation(std::span<const value_type, D> d) noexcept
+    constexpr vector_coordinates() noexcept  = default;
+
+    constexpr explicit vector_coordinates(std::span<const value_type, D> d) noexcept
       : m_Values{to_array(d)}
     {}
 
-    constexpr explicit vector_representation(std::span<value_type, D> d) noexcept
+    constexpr explicit vector_coordinates(std::span<value_type, D> d) noexcept
       : m_Values{to_array(d)}
     {}
 
     template<class... Ts>
       requires (sizeof...(Ts) == D) && (is_initializable_v<value_type, Ts> && ...)
-    constexpr vector_representation(Ts... ts) noexcept
+    constexpr vector_coordinates(Ts... ts) noexcept
       : m_Values{ts...}
     {}
 
-    constexpr vector_representation& operator+=(const vector_representation& t) noexcept
+    constexpr vector_coordinates& operator+=(const vector_coordinates& t) noexcept
     {
       apply_to_each_element(m_Values, t.values(), [](value_type& lhs, value_type rhs){ lhs += rhs; });
       return *this;
     }
 
-    constexpr vector_representation& operator-=(const vector_representation& t) noexcept
+    constexpr vector_coordinates& operator-=(const vector_coordinates& t) noexcept
     {
       apply_to_each_element(m_Values, t.values(), [](value_type& lhs, value_type rhs){ lhs -= rhs; });
       return *this;
     }
 
-    constexpr vector_representation& operator*=(value_type u) noexcept
+    constexpr vector_coordinates& operator*=(value_type u) noexcept
     {
       std::ranges::for_each(m_Values, [u](value_type& x) { return x *= u; });
       return *this;
     }
 
-    constexpr vector_representation& operator/=(value_type u)
+    constexpr vector_coordinates& operator/=(value_type u)
     {
       std::ranges::for_each(m_Values, [u](value_type& x) { return x /= u; });
       return *this;
     }
 
     [[nodiscard]]
-    friend constexpr vector_representation operator+(const vector_representation& lhs, const vector_representation& rhs) noexcept
+    friend constexpr vector_coordinates operator+(const vector_coordinates& lhs, const vector_coordinates& rhs) noexcept
     {
-      return vector_representation{lhs} += rhs;
+      return vector_coordinates{lhs} += rhs;
     }
 
     [[nodiscard]]
-    friend constexpr vector_representation operator-(const vector_representation& lhs, const vector_representation& rhs) noexcept
+    friend constexpr vector_coordinates operator-(const vector_coordinates& lhs, const vector_coordinates& rhs) noexcept
     {
-      return vector_representation{lhs} -= rhs;
+      return vector_coordinates{lhs} -= rhs;
     }
 
     [[nodiscard]]
-    constexpr vector_representation operator+() const noexcept
+    constexpr vector_coordinates operator+() const noexcept
     {
-      return vector_representation{values()};
+      return vector_coordinates{values()};
     }
 
     [[nodiscard]]
-    constexpr vector_representation operator-() const noexcept
+    constexpr vector_coordinates operator-() const noexcept
     {
-      return vector_representation{to_array(values(), [](value_type t) { return -t; })};
+      return vector_coordinates{to_array(values(), [](value_type t) { return -t; })};
     }
 
     [[nodiscard]]
-    friend constexpr vector_representation operator*(vector_representation v, value_type u) noexcept
+    friend constexpr vector_coordinates operator*(vector_coordinates v, value_type u) noexcept
     {
       return v *= u;
     }
 
     [[nodiscard]]
-    friend constexpr vector_representation operator*(value_type u, vector_representation v) noexcept
+    friend constexpr vector_coordinates operator*(value_type u, vector_coordinates v) noexcept
     {
       return v * u;
     }
 
     [[nodiscard]]
-    friend constexpr vector_representation operator/(vector_representation v, value_type u)
+    friend constexpr vector_coordinates operator/(vector_coordinates v, value_type u)
     {
       return v /= u;
     }
@@ -190,10 +193,114 @@ namespace sequoia::maths
     constexpr value_type& operator[](std::size_t i) { return m_Values[i]; }
 
     [[nodiscard]]
-    friend constexpr bool operator==(const vector_representation&, const vector_representation&) noexcept = default;
+    friend constexpr bool operator==(const vector_coordinates&, const vector_coordinates&) noexcept = default;
 
     [[nodiscard]]
-    friend constexpr auto operator<=>(const vector_representation& lhs, const vector_representation& rhs) noexcept requires (D == 1) && std::totally_ordered<value_type>
+    friend constexpr auto operator<=>(const vector_coordinates& lhs, const vector_coordinates& rhs) noexcept requires (D == 1) && std::totally_ordered<value_type>
+    {
+      return lhs.value() <=> rhs.value();
+    }
+  private:
+    std::array<value_type, D> m_Values{};
+  };
+
+  template<class Origin, vector_space VectorSpace, basis<VectorSpace> Basis>
+  class affine_coordinates
+  {
+  public:
+    using vector_space_type = VectorSpace;
+    using basis_type        = Basis;
+    using field_type        = typename VectorSpace::field_type;
+    using value_type        = field_type;
+
+    constexpr static std::size_t dimension{VectorSpace::dimension};
+    constexpr static std::size_t D{dimension};
+
+    constexpr affine_coordinates() noexcept = default;
+
+    constexpr explicit affine_coordinates(std::span<const value_type, D> d) noexcept
+      : m_Values{to_array(d)}
+    {}
+
+    constexpr explicit affine_coordinates(std::span<value_type, D> d) noexcept
+      : m_Values{to_array(d)}
+    {}
+
+    template<class... Ts>
+      requires (sizeof...(Ts) == D) && (is_initializable_v<value_type, Ts> && ...)
+    constexpr affine_coordinates(Ts... ts) noexcept
+      : m_Values{ts...}
+    {}
+
+    constexpr affine_coordinates& operator+=(const vector_coordinates<VectorSpace, Basis>& v) noexcept {
+      apply_to_each_element(m_Values, v.values(), [](value_type& lhs, value_type rhs){ lhs += rhs; });
+      return *this;
+    }
+
+    constexpr affine_coordinates& operator-=(const vector_coordinates<VectorSpace, Basis>& v) noexcept {
+      apply_to_each_element(m_Values, v.values(), [](value_type& lhs, value_type rhs){ lhs -= rhs; });
+      return *this;
+    }
+
+    [[nodiscard]]
+    friend constexpr affine_coordinates operator+(affine_coordinates c, const vector_coordinates<VectorSpace, Basis>& v) noexcept { return c += v; }
+
+    [[nodiscard]]
+    friend constexpr affine_coordinates operator+(const vector_coordinates<VectorSpace, Basis>& v, affine_coordinates c) noexcept { return c += v; }
+
+    [[nodiscard]]
+    friend constexpr affine_coordinates operator-(affine_coordinates c, const vector_coordinates<VectorSpace, Basis>& v) noexcept { return c -= v; }
+
+    [[nodiscard]]
+    friend constexpr affine_coordinates operator-(const vector_coordinates<VectorSpace, Basis>& v, affine_coordinates c) noexcept { return c -= v; }
+
+    [[nodiscard]]
+    friend constexpr vector_coordinates<VectorSpace, Basis> operator-(const affine_coordinates& lhs, const affine_coordinates& rhs) noexcept
+    {
+      return[&] <std::size_t... Is>(std::index_sequence<Is...>) {
+        return vector_coordinates<VectorSpace, Basis>{(lhs.values()[Is] - rhs.values()[Is])...};
+      }(std::make_index_sequence<D>{});
+    }
+
+    [[nodiscard]]
+    constexpr affine_coordinates operator+() const noexcept
+    {
+      return affine_coordinates{values()};
+    }
+
+    [[nodiscard]]
+    constexpr affine_coordinates operator-() const noexcept
+    {
+      return affine_coordinates{to_array(values(), [](value_type t) { return -t; })};
+    }
+
+    [[nodiscard]]
+    constexpr std::span<const value_type, D> values() const noexcept { return m_Values; }
+
+    [[nodiscard]]
+    constexpr std::span<value_type, D> values() noexcept { return m_Values; }
+
+    [[nodiscard]]
+    constexpr value_type value() const noexcept requires (D == 1) { return m_Values[0]; }
+
+    // Make this explicit since otherwise, given two vectors a,b, a/b is well-formed due to implicit boolean conversion
+    [[nodiscard]]
+    constexpr explicit operator bool() const noexcept requires (D == 1) && std::convertible_to<value_type, bool>
+    {
+      return m_Values[0];
+    }
+
+    [[nodiscard]]
+    constexpr value_type operator[](std::size_t i) const { return m_Values[i]; }
+
+    [[nodiscard]]
+    constexpr value_type& operator[](std::size_t i) { return m_Values[i]; }
+
+    [[nodiscard]]
+    friend constexpr bool operator==(const affine_coordinates&, const affine_coordinates&) noexcept = default;
+
+    [[nodiscard]]
+    friend constexpr auto operator<=>(const affine_coordinates& lhs, const affine_coordinates& rhs) noexcept requires (D == 1) && std::totally_ordered<value_type>
     {
       return lhs.value() <=> rhs.value();
     }

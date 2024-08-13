@@ -7,27 +7,32 @@
 
 /*! \file */
 
-#include "VecTestingDiagnostics.hpp"
+#include "AffineCoordinatesTestingDiagnostics.hpp"
+
+namespace
+{
+  struct alice {};
+}
 
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::filesystem::path vec_false_positive_test::source_file() const
+  std::filesystem::path affine_coordinates_false_positive_test::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void vec_false_positive_test::run_tests()
+  void affine_coordinates_false_positive_test::run_tests()
   {
-    test_vec_1<float, float>();
+    test_affine_1<float, float>();
   }
 
   template<class Element, maths::field Field>
-  void vec_false_positive_test::test_vec_1()
+  void affine_coordinates_false_positive_test::test_affine_1()
   {
     using array_t = std::array<Field, 1>;
 
-    maths::vector_coordinates<my_vec_space<Element, Field, 1>, canonical_basis<Element, Field, 1>> x{}, y{Field(1)};
+    maths::affine_coordinates<alice, my_vec_space<Element, Field, 1>, canonical_basis<Element, Field, 1>> x{}, y{Field(1)};
     check(equivalence, report_line(""), x, array_t{1});
     check(equality, report_line(""), x, y);
   }

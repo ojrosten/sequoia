@@ -374,9 +374,17 @@ int main(int argc, char** argv)
     );
 
     runner.add_test_suite(
-      "Vec",
-      vec_false_positive_test{"False Positive Test"},
-      vec_test{"Unit Test"}
+      "Geometry",
+      suite{
+        "Vec",
+        vec_false_positive_test{"False Positive Test"},
+        vec_test{"Unit Test"}
+      },
+      suite{
+        "Affine Coordinates",
+        affine_coordinates_false_positive_test{"False Positive Test"},
+        affine_coordinates_test{"Unit Test"}
+      }
     );
 
     runner.execute(timer_resolution{1ms});

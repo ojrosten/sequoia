@@ -42,6 +42,8 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Core/Object/SuiteFreeTest.cpp
                ${TestDir}/Experimental/ExperimentalTest.cpp
                ${TestDir}/Experimental/FlattenTypeListFreeTest.cpp
+               ${TestDir}/Maths/Geometry/AffineCoordinatesTest.cpp
+               ${TestDir}/Maths/Geometry/AffineCoordinatesTestingDiagnostics.cpp
                ${TestDir}/Maths/Geometry/AngleTest.cpp
                ${TestDir}/Maths/Geometry/AngleTestingDiagnostics.cpp
                ${TestDir}/Maths/Geometry/VecTest.cpp
