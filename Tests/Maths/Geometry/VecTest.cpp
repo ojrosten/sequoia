@@ -19,9 +19,6 @@ namespace sequoia::testing
 
   namespace
   {
-    enum vec_1_label{ neg_one, zero, one, two };
-    enum vec_2_label{ neg_one_neg_one, neg_one_zero, zero_neg_one, zero_zero, zero_one, one_zero, one_one};
-
     [[nodiscard]]
     std::weak_ordering to_ordering(coordinates_operations::dim_1_label From, coordinates_operations::dim_1_label To)
     {
@@ -58,10 +55,17 @@ namespace sequoia::testing
       }
     }
 
-    template<class VecCoords, maths::network Graph>
-    void add_transitions(Graph& g)
+    template<class VecCoords, maths::network Graph, class Fn>
+      requires std::is_invocable_r_v<VecCoords, Fn, VecCoords>
+    void add_transition(Graph& g, coordinates_operations::dim_2_label From, coordinates_operations::dim_2_label To, std::string_view message, Fn f)
     {
-      using vec_t = VecCoords;
+      g.join(From, To, std::string{message}, f);
+    }
+
+    template<class VecCoords, maths::network Graph>
+    void add_dim_1_transitions(Graph& g)
+    {
+      using vec_t   = VecCoords;
       using field_t = vec_t::field_type;
 
       // (1) --> (0)
@@ -133,7 +137,47 @@ namespace sequoia::testing
         report_line("(2) /= field_t{2}"),
         [](vec_t v) -> vec_t { return v /= field_t{2}; }
       );
+    }
 
+    template<class VecCoords, maths::network Graph>
+    void add_dim_2_transitions(Graph& g)
+    {
+      using vec_t = VecCoords;
+      using field_t = vec_t::field_type;
+
+      // (-1, -1) --> (1, 1)
+
+      add_transition<vec_t>(
+        g,
+        coordinates_operations::dim_2_label::neg_one_neg_one,
+        coordinates_operations::dim_2_label::one_one,
+        report_line("(-1, -1) *= -1"),
+        [](vec_t v) -> vec_t { return v *= field_t{-1}; }
+      );
+
+      add_transition<vec_t>(
+        g,
+        coordinates_operations::dim_2_label::neg_one_neg_one,
+        coordinates_operations::dim_2_label::one_one,
+        report_line("(-1, -1) * -1"),
+        [](vec_t v) -> vec_t { return v * field_t{-1}; }
+      );
+
+      add_transition<vec_t>(
+        g,
+        coordinates_operations::dim_2_label::neg_one_neg_one,
+        coordinates_operations::dim_2_label::one_one,
+        report_line("(-1, -1) /= -1"),
+        [](vec_t v) -> vec_t { return v /= field_t{-1}; }
+      );
+
+      add_transition<vec_t>(
+        g,
+        coordinates_operations::dim_2_label::neg_one_neg_one,
+        coordinates_operations::dim_2_label::one_one,
+        report_line("(-1, -1) / -1"),
+        [](vec_t v) -> vec_t { return v / field_t{-1}; }
+      );
     }
   }
 
@@ -163,7 +207,7 @@ namespace sequoia::testing
     using vec_t = vector_coordinates<my_vec_space<Element, Field, 1>, canonical_basis<Element, Field, 1>>;
     auto g{coordinates_operations::make_dim_1_orderable_transition_graph<vec_t>()};
 
-    add_transitions<vec_t>(g);
+    add_dim_1_transitions<vec_t>(g);
 
     auto checker{
       [this](std::string_view description, const vec_t& obtained, const vec_t& prediction, const vec_t& parent, std::weak_ordering ordering) {
@@ -182,7 +226,7 @@ namespace sequoia::testing
     using vec_t = vector_coordinates<my_vec_space<Element, Field, 1>, canonical_basis<Element, Field, 1>>;
     auto g{coordinates_operations::make_dim_1_unorderable_transition_graph<vec_t>()};
 
-    add_transitions<vec_t>(g);
+    add_dim_1_transitions<vec_t>(g);
 
     auto checker{
         [this](std::string_view description, const vec_t& obtained, const vec_t& prediction, const vec_t& parent, std::size_t host, std::size_t target) {
@@ -198,44 +242,9 @@ namespace sequoia::testing
   void vec_test::test_vec_2()
   {
     using vec_t = vector_coordinates<my_vec_space<Element, Field, 2>, canonical_basis<Element, Field, 2>>;
-    using vec_graph = transition_checker<vec_t>::transition_graph;
-    using edge_t = transition_checker<vec_t>::edge;
+    auto g{coordinates_operations::make_dim_2_transition_graph<vec_t>()};
 
-    vec_graph g{
-      {
-        {
-          edge_t{vec_2_label::one_one,         "- (-1, -1)",          [](vec_t v) -> vec_t { return -v; }},
-          edge_t{vec_2_label::neg_one_neg_one, "+ (-1, -1)",          [](vec_t v) -> vec_t { return +v; }},
-          edge_t{vec_2_label::neg_one_zero,    "(-1, -1) += (0, 1)",  [](vec_t v) -> vec_t { return v += vec_t{Field{}, Field(1)}; }},
-          edge_t{vec_2_label::neg_one_zero,    "(-1, -1) +  (0, 1)",  [](vec_t v) -> vec_t { return v +  vec_t{Field{}, Field(1)}; }},
-          edge_t{vec_2_label::zero_neg_one,    "(-1, -1) += (1, 0)",  [](vec_t v) -> vec_t { return v += vec_t{Field(1), Field{}}; }},
-          edge_t{vec_2_label::zero_neg_one,    "(-1, -1) +  (1, 0)",  [](vec_t v) -> vec_t { return v +  vec_t{Field(1), Field{}}; }},
-          edge_t{vec_2_label::one_one,         "(-1, -1) *= -1",      [](vec_t v) -> vec_t { return v *= Field(-1);  }},
-          edge_t{vec_2_label::one_one,         "(-1, -1) *  -1",      [](vec_t v) -> vec_t { return v *  Field(-1);  }},
-          edge_t{vec_2_label::one_one,         "(-1, -1) /= -1",      [](vec_t v) -> vec_t { return v /= Field(-1);  }},
-          edge_t{vec_2_label::one_one,         "(-1, -1) /  -1",      [](vec_t v) -> vec_t { return v /  Field(-1);  }},
-        }, // neg_one_neg_one
-        {
-
-        }, // neg_one_zero
-        {
-
-        }, // zero_neg_one
-        {
-          
-        }, // zero_zero
-        {
-
-        }, // zero_one
-        {
-          
-        }, // one_zero
-        {
-          
-        }, // one_one
-      },
-      {vec_t{Field(-1), Field(-1)}, vec_t{Field(-1), Field{}}, vec_t{Field{}, Field(-1)}, vec_t{Field{}, Field{}}, vec_t{Field{}, Field(1)}, vec_t{Field(1), Field{}}, vec_t{Field(1), Field(1)}}
-    };
+    add_dim_2_transitions<vec_t>(g);
 
     auto checker{
         [this](std::string_view description, const vec_t& obtained, const vec_t& prediction, const vec_t& parent, std::size_t host, std::size_t target) {

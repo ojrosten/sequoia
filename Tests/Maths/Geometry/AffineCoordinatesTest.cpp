@@ -15,9 +15,6 @@ namespace sequoia::testing
 
   namespace
   {
-    enum affine_1_label{ neg_one, zero, one, two };
-    enum affine_2_label{ neg_one_neg_one, neg_one_zero, zero_neg_one, zero_zero, zero_one, one_zero, one_one };
-
     struct alice {};
   }
 
