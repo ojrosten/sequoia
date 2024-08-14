@@ -133,42 +133,70 @@ namespace sequoia::testing
   template<class Element, maths::field Field>
   void vec_test::test_vec_1_unorderable()
   {
-    using vec_t     = vector_coordinates<my_vec_space<Element, Field, 1>, canonical_basis<Element, Field, 1>>;
-    using vec_graph = transition_checker<vec_t>::transition_graph;
-    using edge_t    = transition_checker<vec_t>::edge;
+    using vec_t = vector_coordinates<my_vec_space<Element, Field, 1>, canonical_basis<Element, Field, 1>>;
+    auto g{coordinates_operations::make_dim_1_unorderable_transition_graph<vec_t>()};
 
-    vec_graph g{
-      {
-        {
-          edge_t{vec_1_label::one,     "- (-1)",  [](vec_t v) -> vec_t { return -v;  }},
-          edge_t{vec_1_label::neg_one, "+ (-1)",  [](vec_t v) -> vec_t { return +v;  }}
-        }, // neg_one
-        {
-          edge_t{vec_1_label::one, "(0) + (1)",  [](vec_t v) -> vec_t { return v + vec_t{Field(1)};  }},
-          edge_t{vec_1_label::one, "(0) += (1)", [](vec_t v) -> vec_t { return v += vec_t{Field(1)}; }}
-        }, // zero
-        {
-          edge_t{vec_1_label::neg_one, "-(1)",            [](vec_t v) -> vec_t { return -v;                   }},
-          edge_t{vec_1_label::zero,    "(1) - (1)",       [](vec_t v) -> vec_t { return v -  vec_t{Field(1)}; }},
-          edge_t{vec_1_label::zero,    "(1) -= (1)",      [](vec_t v) -> vec_t { return v -= vec_t{Field(1)}; }},
-          edge_t{vec_1_label::zero,    "(1) * Field{}",   [](vec_t v) -> vec_t { return v * Field{};          }},
-          edge_t{vec_1_label::zero,    "Field{} * (1)",   [](vec_t v) -> vec_t { return Field{} *v;           }},
-          edge_t{vec_1_label::zero,    "(1) *= Field{}",  [](vec_t v) -> vec_t { return v *= Field{};         }},
-          edge_t{vec_1_label::one,     "+(1)",            [](vec_t v) -> vec_t { return +v;                   }},
-          edge_t{vec_1_label::two,     "(1) + (1)",       [](vec_t v) -> vec_t { return v + v;                }},
-          edge_t{vec_1_label::two,     "(1) += (1)",      [](vec_t v) -> vec_t { return v += v;               }},
-          edge_t{vec_1_label::two,     "(1) * Field(2)",  [](vec_t v) -> vec_t { return v *  Field(2);        }},
-          edge_t{vec_1_label::two,     "(1) *= Field(2)", [](vec_t v) -> vec_t { return v *= Field(2);        }},
-          edge_t{vec_1_label::two,     "Field(2) * (1)",  [](vec_t v) -> vec_t { return Field(2) * v;         }}
-        }, // one
-        {
-          edge_t{vec_1_label::one, "(2) / Field(2)",  [](vec_t v) -> vec_t { return v / Field(2);        }},
-          edge_t{vec_1_label::one, "(2) /= Field(2)", [](vec_t v) -> vec_t { return v /= Field(2);       }},
-          edge_t{vec_1_label::one, "(2) - (1)",       [](vec_t v) -> vec_t { return v - vec_t{Field(1)}; }}
-        }, // two
-      },
-      {vec_t{Field(-1)}, vec_t{}, vec_t{Field(1)}, vec_t{Field(2)}}
-    };
+    // (1) --> (0)
+
+    g.join(
+      coordinates_operations::dim_1_label::one,
+      coordinates_operations::dim_1_label::zero,
+      report_line("(1) * Field{}"),
+      [](vec_t v) -> vec_t { return v * Field{}; }
+    );
+
+    g.join(
+      coordinates_operations::dim_1_label::one,
+      coordinates_operations::dim_1_label::zero,
+      report_line("Field{} * (1)"),
+      [](vec_t v) -> vec_t { return Field{} *v; }
+    );
+
+    g.join(
+      coordinates_operations::dim_1_label::one,
+      coordinates_operations::dim_1_label::zero,
+      report_line("(1) *= Field{}"),
+      [](vec_t v) -> vec_t { return v *= Field{}; }
+    );
+
+    // (1) --> (2)
+
+    g.join(
+      coordinates_operations::dim_1_label::one,
+      coordinates_operations::dim_1_label::two,
+      report_line("(1) * Field{2}"),
+      [](vec_t v) -> vec_t { return v * Field{2}; }
+    );
+
+    g.join(
+      coordinates_operations::dim_1_label::one,
+      coordinates_operations::dim_1_label::two,
+      report_line("Field{2} * (1)"),
+      [](vec_t v) -> vec_t { return Field{2} *v; }
+    );
+
+    g.join(
+      coordinates_operations::dim_1_label::one,
+      coordinates_operations::dim_1_label::two,
+      report_line("(1) *= Field{2}"),
+      [](vec_t v) -> vec_t { return v *= Field{2}; }
+    );
+
+    // (2) --> (1)
+
+    g.join(
+      coordinates_operations::dim_1_label::two,
+      coordinates_operations::dim_1_label::one,
+      report_line("(2) / Field{2}"),
+      [](vec_t v) -> vec_t { return v / Field{2}; }
+    );
+
+    g.join(
+      coordinates_operations::dim_1_label::two,
+      coordinates_operations::dim_1_label::one,
+      report_line("(2) /= Field{2}"),
+      [](vec_t v) -> vec_t { return v /= Field{2}; }
+    );
 
     auto checker{
         [this](std::string_view description, const vec_t& obtained, const vec_t& prediction, const vec_t& parent, std::size_t host, std::size_t target) {
