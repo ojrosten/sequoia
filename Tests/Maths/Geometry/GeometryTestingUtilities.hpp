@@ -210,10 +210,12 @@ namespace sequoia::testing
             edge_t{dim_2_label::zero_neg_one,    "(-1, -1) += (1, 0)",  [](coords_t v) -> coords_t { return v += coords_t{field_t(1), field_t{}}; }}
           }, // neg_one_neg_one
           {
-        
+            edge_t{dim_2_label::neg_one_neg_one, "(-1, 0) -  (0, 1)",  [](coords_t v) -> coords_t { return v -  coords_t{field_t{}, field_t(1)}; }},
+            edge_t{dim_2_label::neg_one_neg_one, "(-1, 0) -= (0, 1)",  [](coords_t v) -> coords_t { return v -= coords_t{field_t{}, field_t(1)}; }}
           }, // neg_one_zero
           {
-        
+            edge_t{dim_2_label::neg_one_neg_one, "(0, -1) -  (1, 0)",  [](coords_t v) -> coords_t { return v - coords_t{field_t{1}, field_t(0)}; }},
+            edge_t{dim_2_label::neg_one_neg_one, "(0, -1) -= (1, 0)",  [](coords_t v) -> coords_t { return v -= coords_t{field_t{1}, field_t(0)}; }}
           }, // zero_neg_one
           {
         
