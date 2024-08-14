@@ -47,32 +47,32 @@ namespace sequoia::testing
   };
 
 
-  template<class Element, maths::field Field, std::size_t D>
+  template<class Element, maths::field field_t, std::size_t D>
   struct my_vec_space
   {
     using element_type = Element;
-    using field_type = Field;
+    using field_type = field_t;
     constexpr static std::size_t dimension{D};
 
     template<class Basis>
-      requires std::floating_point<Field>&& is_orthonormal_basis_v<Basis>
+      requires std::floating_point<field_t>&& is_orthonormal_basis_v<Basis>
     [[nodiscard]]
-    friend constexpr Field inner_product(const maths::vector_coordinates<my_vec_space, Basis>& lhs, const maths::vector_coordinates<my_vec_space, Basis>& rhs)
+    friend constexpr field_t inner_product(const maths::vector_coordinates<my_vec_space, Basis>& lhs, const maths::vector_coordinates<my_vec_space, Basis>& rhs)
     {
-      return std::ranges::fold_left(std::views::zip(lhs.values(), rhs.values()), Field{}, [](Field f, const auto& z){ return f + std::get<0>(z) * std::get<1>(z); });
+      return std::ranges::fold_left(std::views::zip(lhs.values(), rhs.values()), field_t{}, [](field_t f, const auto& z){ return f + std::get<0>(z) * std::get<1>(z); });
     }
 
     template<class Basis>
-      requires is_complex_v<Field>&& is_orthonormal_basis_v<Basis>
+      requires is_complex_v<field_t>&& is_orthonormal_basis_v<Basis>
     [[nodiscard]]
-    friend constexpr Field inner_product(const maths::vector_coordinates<my_vec_space, Basis>& lhs, const maths::vector_coordinates<my_vec_space, Basis>& rhs)
+    friend constexpr field_t inner_product(const maths::vector_coordinates<my_vec_space, Basis>& lhs, const maths::vector_coordinates<my_vec_space, Basis>& rhs)
     {
-      return std::ranges::fold_left(std::views::zip(lhs.values(), rhs.values()), Field{}, [](Field f, const auto& z){ return f + conj(std::get<0>(z)) * std::get<1>(z); });
+      return std::ranges::fold_left(std::views::zip(lhs.values(), rhs.values()), field_t{}, [](field_t f, const auto& z){ return f + conj(std::get<0>(z)) * std::get<1>(z); });
     }
   };
 
 
-  template<class Element, maths::field Field, std::size_t D>
+  template<class Element, maths::field field_t, std::size_t D>
   struct canonical_basis
   {
     using orthonormal = std::true_type;
@@ -119,11 +119,11 @@ namespace sequoia::testing
     template<class Coordinates>
     static typename transition_checker<Coordinates>::transition_graph make_dim_1_orderable_transition_graph()
     {
-      using coords_t = Coordinates;
+      using coords_t     = Coordinates;
       using coords_graph = transition_checker<coords_t>::transition_graph;
-      using edge_t = transition_checker<coords_t>::edge;
-      using vec_t = maths::vector_coordinates<typename coords_t::vector_space_type, typename coords_t::basis_type>;
-      using field_t = vec_t::field_type;
+      using edge_t       = transition_checker<coords_t>::edge;
+      using vec_t        = maths::vector_coordinates<typename coords_t::vector_space_type, typename coords_t::basis_type>;
+      using field_t      = vec_t::field_type;
 
       coords_graph g{
         {
@@ -185,6 +185,50 @@ namespace sequoia::testing
           }, // two
         },
         {coords_t{field_t(-1)}, coords_t{}, coords_t{field_t(1)}, coords_t{field_t(2)}}
+      };
+
+      return g;
+    }
+
+    template<class Coordinates>
+    static typename transition_checker<Coordinates>::transition_graph make_dim_2_transition_graph()
+    {
+      using coords_t     = Coordinates;
+      using coords_graph = transition_checker<coords_t>::transition_graph;
+      using edge_t       = transition_checker<coords_t>::edge;
+      using vec_t        = maths::vector_coordinates<typename coords_t::vector_space_type, typename coords_t::basis_type>;
+      using field_t      = vec_t::field_type;
+
+      coords_graph g{
+        {
+          {
+            edge_t{dim_2_label::one_one,         "- (-1, -1)",          [](coords_t v) -> coords_t { return -v; }},
+            edge_t{dim_2_label::neg_one_neg_one, "+ (-1, -1)",          [](coords_t v) -> coords_t { return +v; }},
+            edge_t{dim_2_label::neg_one_zero,    "(-1, -1) +  (0, 1)",  [](coords_t v) -> coords_t { return v +  coords_t{field_t{}, field_t(1)}; }},
+            edge_t{dim_2_label::neg_one_zero,    "(-1, -1) += (0, 1)",  [](coords_t v) -> coords_t { return v += coords_t{field_t{}, field_t(1)}; }},
+            edge_t{dim_2_label::zero_neg_one,    "(-1, -1) +  (1, 0)",  [](coords_t v) -> coords_t { return v +  coords_t{field_t(1), field_t{}}; }},
+            edge_t{dim_2_label::zero_neg_one,    "(-1, -1) += (1, 0)",  [](coords_t v) -> coords_t { return v += coords_t{field_t(1), field_t{}}; }}
+          }, // neg_one_neg_one
+          {
+        
+          }, // neg_one_zero
+          {
+        
+          }, // zero_neg_one
+          {
+        
+          }, // zero_zero
+          {
+        
+          }, // zero_one
+          {
+        
+          }, // one_zero
+          {
+        
+          }, // one_one
+        },
+        {coords_t{field_t(-1), field_t(-1)}, coords_t{field_t(-1), field_t{}}, coords_t{field_t{}, field_t(-1)}, coords_t{field_t{}, field_t{}}, coords_t{field_t{}, field_t(1)}, coords_t{field_t(1), field_t{}}, coords_t{field_t(1), field_t(1)}}
       };
 
       return g;
