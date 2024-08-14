@@ -13,6 +13,8 @@
 
 #include "sequoia/Core/Meta/TypeTraits.hpp"
 
+#include <algorithm>
+#include <ranges>
 #include <span>
 
 namespace sequoia::maths

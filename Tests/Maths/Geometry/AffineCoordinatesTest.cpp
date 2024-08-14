@@ -9,8 +9,6 @@
 
 #include "AffineCoordinatesTest.hpp"
 
-#include "sequoia/TestFramework/StateTransitionUtilities.hpp"
-
 namespace sequoia::testing
 {
   using namespace maths;
@@ -40,34 +38,7 @@ namespace sequoia::testing
   void affine_coordinates_test::test_affine_1_orderable()
   {
     using affine_t     = affine_coordinates<alice, my_vec_space<Element, Field, 1>, canonical_basis<Element, Field, 1>>;
-    using affine_graph = transition_checker<affine_t>::transition_graph;
-    using edge_t       = transition_checker<affine_t>::edge;
-    using vec_t        = vector_coordinates<my_vec_space<Element, Field, 1>, canonical_basis<Element, Field, 1>>;
-
-    affine_graph g{
-      {
-        {
-          edge_t{affine_1_label::one,     "- (-1)", [](affine_t p) -> affine_t { return -p;  }, std::weak_ordering::greater},
-          edge_t{affine_1_label::neg_one, "+ (-1)", [](affine_t p) -> affine_t { return +p;  }, std::weak_ordering::equivalent}
-        }, // neg_one
-        {
-          edge_t{affine_1_label::one, "(0) +  (1)", [](affine_t p) -> affine_t { return p +  vec_t{Field(1)}; }, std::weak_ordering::greater},
-          edge_t{affine_1_label::one, "(0) += (1)", [](affine_t p) -> affine_t { return p += vec_t{Field(1)}; }, std::weak_ordering::greater}
-        }, // zero
-        {
-          edge_t{affine_1_label::neg_one, "-(1)",       [](affine_t p) -> affine_t { return -p;                   }, std::weak_ordering::less},
-          edge_t{affine_1_label::zero,    "(1)  - (1)", [](affine_t p) -> affine_t { return p -  vec_t{Field(1)}; }, std::weak_ordering::less},
-          edge_t{affine_1_label::zero,    "(1) -= (1)", [](affine_t p) -> affine_t { return p -= vec_t{Field(1)}; }, std::weak_ordering::less},
-          edge_t{affine_1_label::one,     "+(1)",       [](affine_t p) -> affine_t { return +p;                   }, std::weak_ordering::equivalent},
-          edge_t{affine_1_label::two,     "(1)  + (1)", [](affine_t p) -> affine_t { return p +  vec_t{Field(1)}; }, std::weak_ordering::greater},
-          edge_t{affine_1_label::two,     "(1) += (1)", [](affine_t p) -> affine_t { return p += vec_t{Field(1)}; }, std::weak_ordering::greater},
-        }, // one
-        {
-          edge_t{affine_1_label::one, "(2) - (1)", [](affine_t p) -> affine_t { return p - vec_t{Field(1)}; }, std::weak_ordering::less}
-        }, // two
-      },
-      {affine_t{Field(-1)}, affine_t{}, affine_t{Field(1)}, affine_t{Field(2)}}
-    };
+    auto g{coordinates_operations::make_dim_1_orderable_transition_graph<affine_t>()};
 
     auto checker{
         [this](std::string_view description, const affine_t& obtained, const affine_t& prediction, const affine_t& parent, std::weak_ordering ordering) {
@@ -83,35 +54,8 @@ namespace sequoia::testing
   template<class Element, maths::field Field>
   void affine_coordinates_test::test_affine_1_unorderable()
   {
-    using affine_t     = affine_coordinates<alice, my_vec_space<Element, Field, 1>, canonical_basis<Element, Field, 1>>;
-    using affine_graph = transition_checker<affine_t>::transition_graph;
-    using edge_t       = transition_checker<affine_t>::edge;
-    using vec_t        = vector_coordinates<my_vec_space<Element, Field, 1>, canonical_basis<Element, Field, 1>>;
-
-    affine_graph g{
-      {
-        {
-          edge_t{affine_1_label::one,     "- (-1)",  [](affine_t v) -> affine_t { return -v;  }},
-          edge_t{affine_1_label::neg_one, "+ (-1)",  [](affine_t v) -> affine_t { return +v;  }}
-        }, // neg_one
-        {
-          edge_t{affine_1_label::one, "(0) + (1)",  [](affine_t v) -> affine_t { return v + vec_t{Field(1)};  }},
-          edge_t{affine_1_label::one, "(0) += (1)", [](affine_t v) -> affine_t { return v += vec_t{Field(1)}; }}
-        }, // zero
-        {
-          edge_t{affine_1_label::neg_one, "-(1)",       [](affine_t v) -> affine_t { return -v;                   }},
-          edge_t{affine_1_label::zero,    "(1)  - (1)", [](affine_t v) -> affine_t { return v  - vec_t{Field(1)}; }},
-          edge_t{affine_1_label::zero,    "(1) -= (1)", [](affine_t v) -> affine_t { return v -= vec_t{Field(1)}; }},
-          edge_t{affine_1_label::one,     "+(1)",       [](affine_t v) -> affine_t { return +v;                   }},
-          edge_t{affine_1_label::two,     "(1)  + (1)", [](affine_t v) -> affine_t { return v  + vec_t{Field(1)}; }},
-          edge_t{affine_1_label::two,     "(1) += (1)", [](affine_t v) -> affine_t { return v += vec_t{Field(1)}; }}
-        }, // one
-        {
-          edge_t{affine_1_label::one, "(2) - (1)", [](affine_t v) -> affine_t { return v - vec_t{Field(1)}; }}
-        }, // two
-      },
-      {affine_t{Field(-1)}, affine_t{}, affine_t{Field(1)}, affine_t{Field(2)}}
-    };
+    using affine_t = affine_coordinates<alice, my_vec_space<Element, Field, 1>, canonical_basis<Element, Field, 1>>;
+    auto g{coordinates_operations::make_dim_1_unorderable_transition_graph<affine_t>()};
 
     auto checker{
         [this](std::string_view description, const affine_t& obtained, const affine_t& prediction, const affine_t& parent, std::size_t host, std::size_t target) {
@@ -129,7 +73,7 @@ namespace sequoia::testing
     using affine_t     = affine_coordinates<alice, my_vec_space<Element, Field, 1>, canonical_basis<Element, Field, 1>>;
     using affine_graph = transition_checker<affine_t>::transition_graph;
     using edge_t       = transition_checker<affine_t>::edge;
-    using vec_t        = vector_coordinates<my_vec_space<Element, Field, 2>, canonical_basis<Element, Field, 2>>;
+    using vec_t        = vector_coordinates<typename affine_t::vector_space_type, typename affine_t::basis_type>;
 
     affine_graph g{
       {
