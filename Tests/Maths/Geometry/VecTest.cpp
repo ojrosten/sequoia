@@ -21,6 +21,120 @@ namespace sequoia::testing
   {
     enum vec_1_label{ neg_one, zero, one, two };
     enum vec_2_label{ neg_one_neg_one, neg_one_zero, zero_neg_one, zero_zero, zero_one, one_zero, one_one};
+
+    [[nodiscard]]
+    std::weak_ordering to_ordering(coordinates_operations::dim_1_label From, coordinates_operations::dim_1_label To)
+    {
+      return From > To ? std::weak_ordering::less
+           : From < To ? std::weak_ordering::greater
+                       : std::weak_ordering::equivalent;
+    }
+
+    template<maths::network Graph, class Fn>
+    void add_transition(Graph& g, coordinates_operations::dim_1_label From, coordinates_operations::dim_1_label To, std::string_view message, Fn f, std::weak_ordering ordering)
+    {
+      g.join(From, To, std::string{message}, f, ordering);
+    }
+
+    template<maths::network Graph, class Fn>
+    void add_transition(Graph& g, coordinates_operations::dim_1_label From, coordinates_operations::dim_1_label To, std::string_view message, Fn f)
+    {
+      g.join(From, To, std::string{message}, f);
+    }
+
+    template<class VecCoords, maths::network Graph, class Fn>
+      requires std::is_invocable_r_v<VecCoords, Fn, VecCoords>
+    void add_transition(Graph& g, coordinates_operations::dim_1_label From, coordinates_operations::dim_1_label To, std::string_view message, Fn f)
+    {
+      using field_t = VecCoords::field_type;
+
+      if constexpr(std::totally_ordered<field_t>)
+      {
+        add_transition(g, From, To, message, f, to_ordering(From, To));
+      }
+      else
+      {
+        add_transition(g, From, To, message, f);
+      }
+    }
+
+    template<class VecCoords, maths::network Graph>
+    void add_transitions(Graph& g)
+    {
+      using vec_t = VecCoords;
+      using field_t = vec_t::field_type;
+
+      // (1) --> (0)
+
+      add_transition<vec_t>(
+        g,
+        coordinates_operations::dim_1_label::one,
+        coordinates_operations::dim_1_label::zero,
+        report_line("(1) * field_t{}"),
+        [](vec_t v) -> vec_t { return v * field_t{}; }
+      );
+
+      add_transition<vec_t>(
+        g,
+        coordinates_operations::dim_1_label::one,
+        coordinates_operations::dim_1_label::zero,
+        report_line("field_t{} * (1)"),
+        [](vec_t v) -> vec_t { return field_t{} *v; }
+      );
+
+      add_transition<vec_t>(
+        g,
+        coordinates_operations::dim_1_label::one,
+        coordinates_operations::dim_1_label::zero,
+        report_line("(1) *= field_t{}"),
+        [](vec_t v) -> vec_t { return v *= field_t{}; }
+      );
+
+      // (1) --> (2)
+
+      add_transition<vec_t>(
+        g,
+        coordinates_operations::dim_1_label::one,
+        coordinates_operations::dim_1_label::two,
+        report_line("(1) * field_t{2}"),
+        [](vec_t v) -> vec_t { return v * field_t{2}; }
+      );
+
+      add_transition<vec_t>(
+        g,
+        coordinates_operations::dim_1_label::one,
+        coordinates_operations::dim_1_label::two,
+        report_line("field_t{2} * (1)"),
+        [](vec_t v) -> vec_t { return field_t{2} *v; }
+      );
+
+      add_transition<vec_t>(
+        g,
+        coordinates_operations::dim_1_label::one,
+        coordinates_operations::dim_1_label::two,
+        report_line("(1) *= field_t{2}"),
+        [](vec_t v) -> vec_t { return v *= field_t{2}; }
+      );
+
+      // (2) --> (1)
+
+      add_transition<vec_t>(
+        g,
+        coordinates_operations::dim_1_label::two,
+        coordinates_operations::dim_1_label::one,
+        report_line("(2) / field_t{2}"),
+        [](vec_t v) -> vec_t { return v / field_t{2}; }
+      );
+
+      add_transition<vec_t>(
+        g,
+        coordinates_operations::dim_1_label::two,
+        coordinates_operations::dim_1_label::one,
+        report_line("(2) /= field_t{2}"),
+        [](vec_t v) -> vec_t { return v /= field_t{2}; }
+      );
+
+    }
   }
 
   [[nodiscard]]
@@ -49,75 +163,7 @@ namespace sequoia::testing
     using vec_t = vector_coordinates<my_vec_space<Element, Field, 1>, canonical_basis<Element, Field, 1>>;
     auto g{coordinates_operations::make_dim_1_orderable_transition_graph<vec_t>()};
 
-    // (1) --> (0)
-
-    g.join(
-      coordinates_operations::dim_1_label::one,
-      coordinates_operations::dim_1_label::zero,
-      report_line("(1) * Field{}"),
-      [](vec_t v) -> vec_t { return v * Field{};}, 
-      std::weak_ordering::less
-    );
-
-    g.join(
-      coordinates_operations::dim_1_label::one,
-      coordinates_operations::dim_1_label::zero,
-      report_line("Field{} * (1)"),
-      [](vec_t v) -> vec_t { return Field{} * v; },
-      std::weak_ordering::less
-    );
-
-    g.join(
-      coordinates_operations::dim_1_label::one,
-      coordinates_operations::dim_1_label::zero,
-      report_line("(1) *= Field{}"),
-      [](vec_t v) -> vec_t { return v *= Field{}; },
-      std::weak_ordering::less
-    );
-
-    // (1) --> (2)
-
-    g.join(
-      coordinates_operations::dim_1_label::one,
-      coordinates_operations::dim_1_label::two,
-      report_line("(1) * Field{2}"),
-      [](vec_t v) -> vec_t { return v * Field{2}; },
-      std::weak_ordering::greater
-    );
-
-    g.join(
-      coordinates_operations::dim_1_label::one,
-      coordinates_operations::dim_1_label::two,
-      report_line("Field{2} * (1)"),
-      [](vec_t v) -> vec_t { return Field{2} * v; },
-      std::weak_ordering::greater
-    );
-
-    g.join(
-      coordinates_operations::dim_1_label::one,
-      coordinates_operations::dim_1_label::two,
-      report_line("(1) *= Field{2}"),
-      [](vec_t v) -> vec_t { return v *= Field{2}; },
-      std::weak_ordering::greater
-    );
-
-    // (2) --> (1)
-
-    g.join(
-      coordinates_operations::dim_1_label::two,
-      coordinates_operations::dim_1_label::one,
-      report_line("(2) / Field{2}"),
-      [](vec_t v) -> vec_t { return v / Field{2}; },
-      std::weak_ordering::less
-    );
-
-    g.join(
-      coordinates_operations::dim_1_label::two,
-      coordinates_operations::dim_1_label::one,
-      report_line("(2) /= Field{2}"),
-      [](vec_t v) -> vec_t { return v /= Field{2}; },
-      std::weak_ordering::less
-    );
+    add_transitions<vec_t>(g);
 
     auto checker{
       [this](std::string_view description, const vec_t& obtained, const vec_t& prediction, const vec_t& parent, std::weak_ordering ordering) {
@@ -136,67 +182,7 @@ namespace sequoia::testing
     using vec_t = vector_coordinates<my_vec_space<Element, Field, 1>, canonical_basis<Element, Field, 1>>;
     auto g{coordinates_operations::make_dim_1_unorderable_transition_graph<vec_t>()};
 
-    // (1) --> (0)
-
-    g.join(
-      coordinates_operations::dim_1_label::one,
-      coordinates_operations::dim_1_label::zero,
-      report_line("(1) * Field{}"),
-      [](vec_t v) -> vec_t { return v * Field{}; }
-    );
-
-    g.join(
-      coordinates_operations::dim_1_label::one,
-      coordinates_operations::dim_1_label::zero,
-      report_line("Field{} * (1)"),
-      [](vec_t v) -> vec_t { return Field{} *v; }
-    );
-
-    g.join(
-      coordinates_operations::dim_1_label::one,
-      coordinates_operations::dim_1_label::zero,
-      report_line("(1) *= Field{}"),
-      [](vec_t v) -> vec_t { return v *= Field{}; }
-    );
-
-    // (1) --> (2)
-
-    g.join(
-      coordinates_operations::dim_1_label::one,
-      coordinates_operations::dim_1_label::two,
-      report_line("(1) * Field{2}"),
-      [](vec_t v) -> vec_t { return v * Field{2}; }
-    );
-
-    g.join(
-      coordinates_operations::dim_1_label::one,
-      coordinates_operations::dim_1_label::two,
-      report_line("Field{2} * (1)"),
-      [](vec_t v) -> vec_t { return Field{2} *v; }
-    );
-
-    g.join(
-      coordinates_operations::dim_1_label::one,
-      coordinates_operations::dim_1_label::two,
-      report_line("(1) *= Field{2}"),
-      [](vec_t v) -> vec_t { return v *= Field{2}; }
-    );
-
-    // (2) --> (1)
-
-    g.join(
-      coordinates_operations::dim_1_label::two,
-      coordinates_operations::dim_1_label::one,
-      report_line("(2) / Field{2}"),
-      [](vec_t v) -> vec_t { return v / Field{2}; }
-    );
-
-    g.join(
-      coordinates_operations::dim_1_label::two,
-      coordinates_operations::dim_1_label::one,
-      report_line("(2) /= Field{2}"),
-      [](vec_t v) -> vec_t { return v /= Field{2}; }
-    );
+    add_transitions<vec_t>(g);
 
     auto checker{
         [this](std::string_view description, const vec_t& obtained, const vec_t& prediction, const vec_t& parent, std::size_t host, std::size_t target) {
