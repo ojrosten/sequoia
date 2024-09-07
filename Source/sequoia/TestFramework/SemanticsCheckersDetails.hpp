@@ -118,7 +118,7 @@ namespace sequoia::testing::impl
   template<std::totally_ordered T>
   struct auxiliary_data_policy<T>
   {
-    constexpr explicit auxiliary_data_policy<T>(std::weak_ordering order)
+    constexpr explicit auxiliary_data_policy(std::weak_ordering order)
       : m_Order{order}
     {}
 
