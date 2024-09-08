@@ -87,9 +87,6 @@ namespace sequoia::maths
     constexpr static std::size_t dimension{VectorSpace::dimension};
     constexpr static std::size_t D{dimension};
 
-    [[nodiscard]]
-    constexpr static vector_coordinates zero() { return {}; }
-
     constexpr vector_coordinates() noexcept  = default;
 
     constexpr explicit vector_coordinates(std::span<const value_type, D> d) noexcept
