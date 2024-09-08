@@ -143,7 +143,7 @@ namespace sequoia::testing
         [this] () { return working_materials() /= "GeneratedProject"; }
       };
 
-      commandline_arguments args{zeroth_arg(), "init", "Oliver Jacob Rosten", generated().string(), "  ", "--no-build"};
+      commandline_arguments args{zeroth_arg(), "init", "Oliver Jacob Rosten", generated().string(), "  ", "--no-git", "--no-build"};
 
       std::stringstream outputStream{};
       test_runner tr{args.size(), args.get(), "Oliver J. Rosten", make_project_paths(), "\t", outputStream};
@@ -161,7 +161,7 @@ namespace sequoia::testing
 
     {
       const auto hostDir{working_materials() /= "AnotherGeneratedProject"};
-      commandline_arguments args{zeroth_arg(), "init", "Oliver Jacob Rosten", hostDir.generic_string(), "  ", "--no-build"};
+      commandline_arguments args{zeroth_arg(), "init", "Oliver Jacob Rosten", hostDir.generic_string(), "  ", "--no-git", "--no-build"};
 
       std::stringstream outputStream{};
       test_runner tr{args.size(), args.get(), "Oliver J. Rosten", make_project_paths(), "\t", outputStream};

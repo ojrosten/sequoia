@@ -119,9 +119,6 @@ namespace sequoia::testing
     std::filesystem::path cmake_lists() const;
 
     [[nodiscard]]
-    static std::filesystem::path cmake_lists(std::filesystem::path projectRoot);
-
-    [[nodiscard]]
     friend bool operator==(const source_paths&, const source_paths&) noexcept = default;
   private:
     std::filesystem::path m_Repo, m_Project;
@@ -243,7 +240,7 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    static std::filesystem::path repo(std::filesystem::path projectRoot);
+    static std::filesystem::path repo(const std::filesystem::path& projectRoot);
 
     [[nodiscard]]
     const std::filesystem::path& test_templates() const noexcept
@@ -252,7 +249,7 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    static std::filesystem::path test_templates(std::filesystem::path projectRoot);
+    static std::filesystem::path test_templates(const std::filesystem::path& projectRoot);
 
     [[nodiscard]]
     const std::filesystem::path& source_templates() const noexcept
@@ -261,7 +258,7 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    static std::filesystem::path source_templates(std::filesystem::path projectRoot);
+    static std::filesystem::path source_templates(const std::filesystem::path& projectRoot);
 
     [[nodiscard]]
     const std::filesystem::path& project_template() const noexcept
@@ -270,7 +267,7 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    static std::filesystem::path project_template(std::filesystem::path projectRoot);
+    static std::filesystem::path project_template(const std::filesystem::path& projectRoot);
 
     [[nodiscard]]
     friend bool operator==(const auxiliary_paths&, const auxiliary_paths&) noexcept = default;
@@ -292,7 +289,7 @@ namespace sequoia::testing
   public:
     recovery_paths() = default;
 
-    recovery_paths(const std::filesystem::path& outputDir);
+    explicit recovery_paths(const std::filesystem::path& outputDir);
 
     [[nodiscard]]
     const std::filesystem::path& dir() const noexcept
@@ -365,7 +362,7 @@ namespace sequoia::testing
   public:
     output_paths() = default;
 
-    output_paths(const std::filesystem::path& projectRoot);
+    explicit output_paths(const std::filesystem::path& projectRoot);
 
     [[nodiscard]]
     const std::filesystem::path& dir() const noexcept
@@ -418,7 +415,7 @@ namespace sequoia::testing
     [[nodiscard]]
     recovery_paths recovery() const
     {
-      return {dir()};
+      return recovery_paths{dir()};
     }
 
     [[nodiscard]]

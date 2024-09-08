@@ -1,37 +1,3 @@
 
-Placing under version control...
+git: committing...
 
-Initialized empty Git repository in C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/.git/
-[trunk (root-commit) a623b9b] First commit
- 31 files changed, 1955 insertions(+)
- create mode 100644 .gitignore
- create mode 100644 LICENSE.md
- create mode 100644 Source/CMakeLists.txt
- create mode 100644 TestAll/CMakeLists.txt
- create mode 100644 TestAll/TestAllMain.cpp
- create mode 100644 TestMaterials/.keep
- create mode 100644 Tests/.keep
- create mode 100644 aux_files/ProjectTemplate/.gitignore
- create mode 100644 aux_files/ProjectTemplate/LICENSE.md
- create mode 100644 aux_files/ProjectTemplate/Source/CMakeLists.txt
- create mode 100644 aux_files/ProjectTemplate/TestAll/CMakeLists.txt
- create mode 100644 aux_files/ProjectTemplate/TestAll/TestAllMain.cpp
- create mode 100644 aux_files/ProjectTemplate/TestMaterials/.keep
- create mode 100644 aux_files/ProjectTemplate/Tests/.keep
- create mode 100644 aux_files/ProjectTemplate/output/.keep
- create mode 100644 aux_files/SourceTemplates/MyCpp.cpp
- create mode 100644 aux_files/SourceTemplates/MyFreeFunctions.hpp
- create mode 100644 aux_files/SourceTemplates/MyMoveOnlyClass.hpp
- create mode 100644 aux_files/SourceTemplates/MyRegularClass.hpp
- create mode 100644 aux_files/TestTemplates/MyBehaviouralDiagnostics.cpp
- create mode 100644 aux_files/TestTemplates/MyBehaviouralDiagnostics.hpp
- create mode 100644 aux_files/TestTemplates/MyBehaviouralTest.cpp
- create mode 100644 aux_files/TestTemplates/MyBehaviouralTest.hpp
- create mode 100644 aux_files/TestTemplates/MyClassAllocationTest.cpp
- create mode 100644 aux_files/TestTemplates/MyClassAllocationTest.hpp
- create mode 100644 aux_files/TestTemplates/MyClassTest.cpp
- create mode 100644 aux_files/TestTemplates/MyClassTest.hpp
- create mode 100644 aux_files/TestTemplates/MyClassTestingDiagnostics.cpp
- create mode 100644 aux_files/TestTemplates/MyClassTestingDiagnostics.hpp
- create mode 100644 aux_files/TestTemplates/MyClassTestingUtilities.hpp
- create mode 100644 output/.keep

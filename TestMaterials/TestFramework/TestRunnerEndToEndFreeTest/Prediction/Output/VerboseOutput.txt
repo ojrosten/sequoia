@@ -3,53 +3,53 @@ Running tests...
 
 Utilities:
 	Utilities Free Test
-	[Execution Time: 400ns]
+	[Execution Time: 14.4us]
 Useful Things:
 	Useful Things Free Test
-	[Execution Time: 400ns]
+	[Execution Time: 37.6us]
 Bar:
 	Bar Free Test
-	[Execution Time: 100ns]
+	[Execution Time: 10.1us]
 Unstable:
 	Flipper Free Test
-	[Execution Time: 100ns]
+	[Execution Time: 10.2us]
 Maybe:
 	False Positive Test
-	[Execution Time: 500ns]
+	[Execution Time: 11.3us]
 	Unit Test
-	[Execution Time: 100ns]
+	[Execution Time: 10.4us]
 Oldschool:
 	False Positive Test
-	[Execution Time: 200ns]
+	[Execution Time: 15.5us]
 	Unit Test
-	[Execution Time: 300ns]
+	[Execution Time: 10.9us]
 Probability:
 	False Positive Test
-	[Execution Time: 200ns]
+	[Execution Time: 10.1us]
 	Unit Test
-	[Execution Time: 100ns]
+	[Execution Time: 9.9us]
 Foo:
 	False Positive Test
-	[Execution Time: 400ns]
+	[Execution Time: 15.3us]
 	Unit Test
-	[Execution Time: 400ns]
+	[Execution Time: 13.5us]
 Unique Thing:
 	False Positive Test
-	[Execution Time: 100ns]
+	[Execution Time: 11.4us]
 	Unit Test
-	[Execution Time: 100ns]
+	[Execution Time: 10.7us]
 Container:
 	Container Performance Test
-	[Execution Time: 1.2us]
+	[Execution Time: 15.6us]
 	Allocation Test
-	[Execution Time: 600ns]
+	[Execution Time: 21.9us]
 House:
 	Allocation Test
-	[Execution Time: 400ns]
+	[Execution Time: 12.1us]
 
 -----------Grand Totals-----------
-[Total Run Time: 41.7ms]
-[Execution Time: 626us]
+[Total Run Time: 15.6ms]
+[Execution Time: 932us]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

@@ -228,10 +228,6 @@ namespace sequoia::testing
     };
 
     cmake(projPaths.main(), projPaths.build());
-    /*for(const auto& main : projPaths.ancillary_main_cpps())
-    {
-      cmake(main, build_paths{projPaths.build().dir(), ???????});
-    }*/
   }
 
 
@@ -398,7 +394,6 @@ namespace sequoia::testing
   {
     const auto srcPath{fs::path{headerPath}.replace_extension("cpp")};
 
-    const auto sourceRoot{paths().source().repo()};
     stream() << std::quoted(fs::relative(srcPath, paths().project_root()) .generic_string()) << '\n';
     fs::copy_file(paths().aux_paths().source_templates() / "MyCpp.cpp", srcPath);
 
@@ -406,14 +401,14 @@ namespace sequoia::testing
         [&](std::string& text) {
           set_top_copyright(text, copyright);
           process_namespace(text, nameSpace);
-          replace_all(text, "?.hpp", rebase_from(headerPath, sourceRoot).generic_string());
+          replace_all(text, "?.hpp", rebase_from(headerPath, paths().source().repo()).generic_string());
           tabs_to_spacing(text, code_indent());
         }
     };
 
     read_modify_write(srcPath, setCppText);
 
-    add_to_cmake(paths().source().cmake_lists(), sourceRoot, srcPath, "set(SourceList", ")\n", "");
+    add_to_cmake(paths().source().cmake_lists(), paths().source().project(), srcPath, "set(SourceList", ")\n", "");
 
     read_modify_write(paths().main().cmake_lists(), [&root = paths().project_root()](std::string& text) {
         replace_all(text, "#!", "");

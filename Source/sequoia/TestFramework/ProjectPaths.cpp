@@ -139,13 +139,7 @@ namespace sequoia::testing
   [[nodiscard]]
   fs::path source_paths::cmake_lists() const
   {
-    return repo() / "CMakeLists.txt";
-  }
-
-  [[nodiscard]]
-  fs::path source_paths::cmake_lists(std::filesystem::path projectRoot)
-  {
-    return repo(projectRoot) /= "CMakeLists.txt";
+    return m_Project / "CMakeLists.txt";
   }
 
   [[nodiscard]]
@@ -199,25 +193,26 @@ namespace sequoia::testing
   {}
 
   [[nodiscard]]
-  fs::path auxiliary_paths::repo(fs::path projectRoot)
+  fs::path auxiliary_paths::repo(const fs::path& projectRoot)
   {
-    return projectRoot /= "aux_files";
+    const auto trialPath{projectRoot / "aux_files"};
+    return fs::exists(trialPath) ? trialPath : projectRoot / "dependencies" / "sequoia" / "aux_files";
   }
 
   [[nodiscard]]
-  fs::path auxiliary_paths::test_templates(fs::path projectRoot)
+  fs::path auxiliary_paths::test_templates(const fs::path& projectRoot)
   {
     return repo(projectRoot) /= "TestTemplates";
   }
 
   [[nodiscard]]
-  fs::path auxiliary_paths::source_templates(fs::path projectRoot)
+  fs::path auxiliary_paths::source_templates(const fs::path& projectRoot)
   {
     return repo(projectRoot) /= "SourceTemplates";
   }
 
   [[nodiscard]]
-  fs::path auxiliary_paths::project_template(fs::path projectRoot)
+  fs::path auxiliary_paths::project_template(const fs::path& projectRoot)
   {
     return repo(projectRoot) /= "ProjectTemplate";
   }

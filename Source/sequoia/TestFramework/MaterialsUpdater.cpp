@@ -144,7 +144,7 @@ namespace sequoia::testing
 
         if(iters.in2 != toEnd)
         {
-          while(compare{}(*iters.in2, *iters.in1))
+          while((iters.in2 != toEnd) && compare{}(*iters.in2, *iters.in1))
           {
             fs::remove_all(iters.in2->full);
             ++iters.in2;

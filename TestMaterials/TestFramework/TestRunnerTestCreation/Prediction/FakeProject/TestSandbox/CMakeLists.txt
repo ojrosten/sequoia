@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.20)
 
 project(MyProjectTests LANGUAGES CXX)
 
-set(BuildSystem ../build_system)
+set(BuildSystem ../dependencies/sequoia/build_system)
 set(TestDir ../Tests)
 set(SourceDir ../Source)
 
@@ -12,7 +12,7 @@ sequoia_init()
 
 add_executable(TestAll TestSandbox.cpp)
 
-add_subdirectory(${SourceDir} MyProject)
+add_subdirectory(${SourceDir}/myProject MyProject)
 target_link_libraries(TestAll PUBLIC MyProject)
 
 target_sources(TestAll PRIVATE

@@ -47,9 +47,61 @@ namespace sequoia::testing
     {
       if(projRoot.empty()) return;
 
-      const auto name{(--projRoot.end())->generic_string()};
-      const std::string myProj{"MyProject"}, projName{replace_all(name, " ", "_")};
-      replace_all(text, myProj, projName);
+      const auto name{back(projRoot).generic_string()};
+      const std::string projName{replace_all(name, " ", "_")};
+      replace_all(text, "MyProject", projName);
+      replace_all(text, "myProject", uncapitalize(projName));
+    }
+
+    void copy_sequoia_subdir(std::ostream& stream, const fs::path& target, const fs::directory_entry& dir)
+    {
+      const auto entryName{back(dir.path())};
+      std::error_code ec{};
+      fs::copy(dir, target / entryName, fs::copy_options::recursive, ec);
+      if(ec)
+        stream << ec.message() << '\n';
+    }
+
+    void copy_sequoia_output(std::ostream& stream, const project_paths& parentProjectPaths, const output_paths& output, const fs::directory_entry& dir)
+    {
+      if(!fs::exists(output.dir()))
+        fs::create_directory(output.dir());
+
+      for(auto& entry : fs::directory_iterator{dir})
+      {
+        if(fs::is_directory(entry))
+        {
+          if((entry.path() == parentProjectPaths.output().diagnostics()) || (entry.path() == parentProjectPaths.output().test_summaries()))
+          {
+            copy_sequoia_subdir(stream, output.dir(), entry);
+          }
+        }
+      }
+    }
+
+    void copy_sequoia(std::ostream& stream, const project_paths& parentProjectPaths, const project_data& data)
+    {
+      const std::filesystem::path seqLocation{data.project_root / "dependencies" / "sequoia"};
+      for(auto& entry : fs::directory_iterator{parentProjectPaths.project_root()})
+      {
+        if(fs::is_directory(entry))
+        {
+          if(entry.path() == parentProjectPaths.output().dir())
+          {
+            copy_sequoia_output(stream, parentProjectPaths, output_paths{seqLocation}, entry);
+          }
+          else if(entry.path() != parentProjectPaths.build().dir())
+          {
+            copy_sequoia_subdir(stream, seqLocation, entry);
+          }
+        }
+        else
+        {
+          fs::copy(entry, seqLocation);
+        }
+      }
+
+      fs::remove(seqLocation / ".keep");
     }
   }
 
@@ -89,47 +141,20 @@ namespace sequoia::testing
     read_modify_write(newProjRoot / main_paths::default_main_cpp_from_root(), modifier);
   }
 
-  void generate_build_system_files(const fs::path& parentProjRoot, const fs::path& newProjRoot)
+  void generate_build_system_files(const fs::path& newProjRoot)
   {
     if(newProjRoot.empty())
       throw std::logic_error{"Pre-condition violated: path should not be empty"};
 
     const fs::path relCmakeLocation{main_paths::default_cmake_from_root()};
 
-    auto setBuildSysPath{
-      [&parentProjRoot,&newProjRoot](std::string& text) {
-        std::string_view token{"/build_system"};
-        if(const auto pos{text.find(token)}; pos != npos)
-        {
-          std::string_view pattern{"BuildSystem "};
-          if(auto left{text.rfind(pattern)}; left != npos)
-          {
-            left += pattern.size();
-            if(pos >= left)
-            {
-              const auto count{pos - left + token.size()};
-              const auto relPath{fs::relative(parentProjRoot / "TestAll" / text.substr(left, count), newProjRoot / "TestAll")};
-              text.replace(left, count, relPath.generic_string());
-            }
-          }
-        }
-      }
-    };
-
-    read_modify_write(newProjRoot / relCmakeLocation, [setBuildSysPath, &newProjRoot](std::string& text) {
-        setBuildSysPath(text);
+    read_modify_write(newProjRoot / relCmakeLocation, [&newProjRoot](std::string& text) {
         set_proj_name(text, newProjRoot);
       }
     );
 
-    read_modify_write(source_paths::cmake_lists(newProjRoot), [setBuildSysPath, &newProjRoot](std::string& text) {
-        setBuildSysPath(text);
+    read_modify_write(source_paths{newProjRoot}.cmake_lists(), [&newProjRoot](std::string& text) {
         set_proj_name(text, newProjRoot);
-      }
-    );
-
-    read_modify_write(auxiliary_paths::project_template(newProjRoot) / relCmakeLocation, [setBuildSysPath](std::string& text) {
-        setBuildSysPath(text);
       }
     );
   }
@@ -163,7 +188,7 @@ namespace sequoia::testing
       if(!is_appropriate_root(data.project_root))
         throw std::runtime_error{std::string{"Project location '"}.append(data.project_root.generic_string()).append("' is in use\n")};
 
-      const auto name{(--data.project_root.end())->generic_string()};
+      const auto name{back(data.project_root).generic_string()};
       if(name.empty())
         throw std::runtime_error{"Project name, deduced as the last token of path, is empty\n"};
 
@@ -178,24 +203,34 @@ namespace sequoia::testing
 
       report(stream, "Creating new project at location:", data.project_root.generic_string());
 
-      const auto& parentProjRoot{parentProjectPaths.project_root()};
       fs::create_directories(data.project_root);
       fs::copy(parentProjectPaths.aux_paths().project_template(), data.project_root, fs::copy_options::recursive | fs::copy_options::skip_existing);
-      fs::create_directory(source_paths(data.project_root).project());
-      fs::copy(parentProjectPaths.aux_paths().repo(), auxiliary_paths::repo(data.project_root), fs::copy_options::recursive | fs::copy_options::skip_existing);
+      fs::rename(source_paths(data.project_root).repo() / "projectTemplate", source_paths(data.project_root).project());
 
       generate_test_main(data.copyright, data.project_root, data.code_indent);
-      generate_build_system_files(parentProjRoot, data.project_root);
+      generate_build_system_files(data.project_root);
+
+      if(data.use_git == git_invocation::yes)
+        invoke(cd_cmd(data.project_root) && git_first_cmd(data.project_root, data.output));
+
+      report(stream, "", "\nCopying across sequoia...");
+      copy_sequoia(stream, parentProjectPaths, data);
+
+      if(data.use_git == git_invocation::yes)
+      {
+        invoke(cd_cmd(data.project_root)
+            && shell_command{"git: adding sequoia dependency...", "git add .", data.output }
+            && shell_command{"git: committing...", "git commit -m \"Add sequoia dependency\" --quiet", data.output});
+      }
 
       if(data.do_build != build_invocation::no)
       {
-        const main_paths main{data.project_root / main_paths::default_main_cpp_from_root()};
         const auto build{make_new_build_paths(data.project_root, parentProjectPaths.build())};
+        const main_paths main{data.project_root / main_paths::default_main_cpp_from_root()};
 
         invoke(cd_cmd(main.dir())
             && cmake_cmd(parentProjectPaths.build(), build, data.output)
             && build_cmd(build, data.output)
-            && git_first_cmd(data.project_root, data.output)
             && ((data.do_build == build_invocation::launch_ide) && build.cmake_cache() ? launch_cmd(parentProjectPaths, data.project_root, build.cmake_cache()->parent_path()) : shell_command{})
         );
       }
