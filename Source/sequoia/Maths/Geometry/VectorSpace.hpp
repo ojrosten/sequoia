@@ -61,7 +61,10 @@ namespace sequoia::maths
       requires std::invocable<Fn, T&, T>
   constexpr void apply_to_each_element(std::array<T, D>& lhs, std::span<const T, D> rhs, Fn f)
   {
-    std::ranges::for_each(std::views::zip(lhs, rhs), [&f](auto&& z){ f(std::get<0>(z), std::get<1>(z)); });
+    //std::ranges::for_each(std::views::zip(lhs, rhs), [&f](auto&& z){ f(std::get<0>(z), std::get<1>(z)); });
+    [&]<std::size_t... Is>(std::index_sequence<Is...>){
+      (f(lhs[Is], rhs[Is]), ...);
+     }(std::make_index_sequence<D>{});
   }
 
   template<class T, std::size_t D, class Fn=std::identity>

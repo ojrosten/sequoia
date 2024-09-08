@@ -34,7 +34,7 @@ namespace sequoia::testing
   template<class Element, maths::field Field>
   void affine_coordinates_test::test_affine_1_orderable()
   {
-    using affine_t     = affine_coordinates<alice, my_vec_space<Element, Field, 1>, canonical_basis<Element, Field, 1>>;
+    using affine_t = affine_coordinates<alice, my_vec_space<Element, Field, 1>, canonical_basis<Element, Field, 1>>;
     auto g{coordinates_operations::make_dim_1_orderable_transition_graph<affine_t>()};
 
     auto checker{
