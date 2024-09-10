@@ -47,30 +47,36 @@ namespace sequoia::testing
   };
 
 
-  template<class Element, maths::field field_t, std::size_t D>
+  template<class Element, maths::field Field, std::size_t D>
   struct my_vec_space
   {
     using element_type = Element;
-    using field_type = field_t;
+    using field_type   = Field;
     constexpr static std::size_t dimension{D};
 
     template<class Basis>
-      requires std::floating_point<field_t>&& is_orthonormal_basis_v<Basis>
+      requires std::floating_point<field_type>&& is_orthonormal_basis_v<Basis>
     [[nodiscard]]
-    friend constexpr field_t inner_product(const maths::vector_coordinates<my_vec_space, Basis>& lhs, const maths::vector_coordinates<my_vec_space, Basis>& rhs)
+    friend constexpr field_type inner_product(const maths::vector_coordinates<my_vec_space, Basis>& lhs, const maths::vector_coordinates<my_vec_space, Basis>& rhs)
     {
-      return std::ranges::fold_left(std::views::zip(lhs.values(), rhs.values()), field_t{}, [](field_t f, const auto& z){ return f + std::get<0>(z) * std::get<1>(z); });
+      return std::ranges::fold_left(std::views::zip(lhs.values(), rhs.values()), field_type{}, [](field_type f, const auto& z){ return f + std::get<0>(z) * std::get<1>(z); });
     }
 
     template<class Basis>
-      requires is_complex_v<field_t>&& is_orthonormal_basis_v<Basis>
+      requires is_complex_v<field_type>&& is_orthonormal_basis_v<Basis>
     [[nodiscard]]
-    friend constexpr field_t inner_product(const maths::vector_coordinates<my_vec_space, Basis>& lhs, const maths::vector_coordinates<my_vec_space, Basis>& rhs)
+    friend constexpr field_type inner_product(const maths::vector_coordinates<my_vec_space, Basis>& lhs, const maths::vector_coordinates<my_vec_space, Basis>& rhs)
     {
-      return std::ranges::fold_left(std::views::zip(lhs.values(), rhs.values()), field_t{}, [](field_t f, const auto& z){ return f + conj(std::get<0>(z)) * std::get<1>(z); });
+      return std::ranges::fold_left(std::views::zip(lhs.values(), rhs.values()), field_type{}, [](field_type f, const auto& z){ return f + conj(std::get<0>(z)) * std::get<1>(z); });
     }
   };
 
+  template<class Element, maths::field Field, std::size_t D>
+  struct my_affine_space
+  {
+    using set_type          = std::array<Field, D>;
+    using vector_space_type = my_vec_space<Element, Field, D>;
+  };
 
   template<class Element, maths::field field_t, std::size_t D>
   struct canonical_basis

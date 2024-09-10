@@ -34,7 +34,7 @@ namespace sequoia::testing
   template<class Element, maths::field Field>
   void affine_coordinates_test::test_affine_1_orderable()
   {
-    using affine_t = affine_coordinates<alice, my_vec_space<Element, Field, 1>, canonical_basis<Element, Field, 1>>;
+    using affine_t = affine_coordinates<my_vec_space<Element, Field, 1>, canonical_basis<Element, Field, 1>, alice>;
     auto g{coordinates_operations::make_dim_1_orderable_transition_graph<affine_t>()};
 
     auto checker{
@@ -51,7 +51,7 @@ namespace sequoia::testing
   template<class Element, maths::field Field>
   void affine_coordinates_test::test_affine_1_unorderable()
   {
-    using affine_t = affine_coordinates<alice, my_vec_space<Element, Field, 1>, canonical_basis<Element, Field, 1>>;
+    using affine_t = affine_coordinates<my_vec_space<Element, Field, 1>, canonical_basis<Element, Field, 1>, alice>;
     auto g{coordinates_operations::make_dim_1_unorderable_transition_graph<affine_t>()};
 
     auto checker{
@@ -67,7 +67,7 @@ namespace sequoia::testing
   template<class Element, maths::field Field>
   void affine_coordinates_test::test_affine_2()
   {
-    using affine_t = affine_coordinates<alice, my_vec_space<Element, Field, 2>, canonical_basis<Element, Field, 2>>;
+    using affine_t = affine_coordinates<my_vec_space<Element, Field, 2>, canonical_basis<Element, Field, 2>, alice>;
     auto g{coordinates_operations::make_dim_2_transition_graph<affine_t>()};
 
     auto checker{

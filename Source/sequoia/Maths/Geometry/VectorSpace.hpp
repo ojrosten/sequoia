@@ -206,7 +206,25 @@ namespace sequoia::maths
     std::array<value_type, D> m_Values{};
   };
 
-  template<class Origin, vector_space VectorSpace, basis<VectorSpace> Basis>
+  template<class T>
+  inline constexpr bool has_set_type{
+    requires { typename T::set_type; }
+  };
+
+  template<class T>
+  inline constexpr bool has_vector_space_type{
+    requires { typename T::vector_space_type; }
+  };
+
+  template<class T>
+  concept affine_space = requires {
+    typename T::set_type;
+    typename T::vector_space_type;
+    requires vector_space<typename T::vector_space_type>;
+  };
+
+
+  template<vector_space VectorSpace, basis<VectorSpace> Basis, class Origin>
   class affine_coordinates
   {
   public:
