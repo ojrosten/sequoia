@@ -38,15 +38,6 @@ namespace sequoia::testing
     }
   };
 
-  template<class Space>
-  inline constexpr bool is_space_v{
-    requires {
-      typename Space::field_type;
-      { Space::dimension } -> std::convertible_to<std::size_t>;
-    }
-  };
-
-
   template<class Element, maths::field Field, std::size_t D>
   struct my_vec_space
   {
@@ -57,7 +48,7 @@ namespace sequoia::testing
     template<class Basis>
       requires std::floating_point<field_type>&& is_orthonormal_basis_v<Basis>
     [[nodiscard]]
-    friend constexpr static field_type inner_product(const maths::vector_coordinates<my_vec_space, Basis>& lhs, const maths::vector_coordinates<my_vec_space, Basis>& rhs)
+    friend constexpr field_type inner_product(const maths::vector_coordinates<my_vec_space, Basis>& lhs, const maths::vector_coordinates<my_vec_space, Basis>& rhs)
     {
       return std::ranges::fold_left(std::views::zip(lhs.values(), rhs.values()), field_type{}, [](field_type f, const auto& z){ return f + std::get<0>(z) * std::get<1>(z); });
     }
@@ -65,7 +56,7 @@ namespace sequoia::testing
     template<class Basis>
       requires is_complex_v<field_type>&& is_orthonormal_basis_v<Basis>
     [[nodiscard]]
-    friend constexpr static field_type inner_product(const maths::vector_coordinates<my_vec_space, Basis>& lhs, const maths::vector_coordinates<my_vec_space, Basis>& rhs)
+    friend constexpr field_type inner_product(const maths::vector_coordinates<my_vec_space, Basis>& lhs, const maths::vector_coordinates<my_vec_space, Basis>& rhs)
     {
       return std::ranges::fold_left(std::views::zip(lhs.values(), rhs.values()), field_type{}, [](field_type f, const auto& z){ return f + conj(std::get<0>(z)) * std::get<1>(z); });
     }
@@ -84,17 +75,16 @@ namespace sequoia::testing
     using orthonormal = std::true_type;
   };
 
-  template<class Space>
-    requires is_space_v<Space>
-  struct geometrical_space_tester
-  {
-    using type         = Space;
-    using field_type   = typename Space::field_type;
 
-    constexpr static std::size_t D{Space::dimension};
+  template<maths::affine_space AffineSpace, maths::basis<typename AffineSpace::vector_space_type> Basis, class Origin>
+  struct value_tester<maths::affine_coordinates<AffineSpace, Basis, Origin>>
+  {
+    using coord_type = maths::affine_coordinates<AffineSpace, Basis, Origin>;
+    using field_type = typename coord_type::field_type;
+    constexpr static std::size_t D{coord_type::dimension};
 
     template<test_mode Mode>
-    static void test(equality_check_t, test_logger<Mode>& logger, const type& actual, const type& prediction)
+    static void test(equality_check_t, test_logger<Mode>& logger, const coord_type& actual, const coord_type& prediction)
     {
       check(equality, "Wrapped values", logger, actual.values(), prediction.values());
       if constexpr(D == 1)
@@ -111,15 +101,11 @@ namespace sequoia::testing
     }
 
     template<test_mode Mode>
-    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& actual, const std::array<field_type, D>& prediction)
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const coord_type& actual, const std::array<field_type, D>& prediction)
     {
       check(equality, "Wrapped values", logger, actual.values(), std::span<const field_type, D>{prediction});
     }
   };
-
-  template<maths::affine_space AffineSpace, maths::basis<typename AffineSpace::vector_space_type> Basis, class Origin>
-  struct value_tester<maths::affine_coordinates<AffineSpace, Basis, Origin>> : geometrical_space_tester<maths::affine_coordinates<AffineSpace, Basis, Origin>>
-  {};
 
   struct coordinates_operations
   {

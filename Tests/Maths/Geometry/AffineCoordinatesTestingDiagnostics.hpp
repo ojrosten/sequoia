@@ -9,7 +9,7 @@
 
 /*! \file */
 
-#include "AffineCoordinatesTestingUtilities.hpp"
+#include "GeometryTestingUtilities.hpp"
 
 namespace sequoia::testing
 {

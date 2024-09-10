@@ -9,7 +9,7 @@
 
 /*! \file */
 
-#include "VecTestingUtilities.hpp"
+#include "GeometryTestingUtilities.hpp"
 
 namespace sequoia::testing
 {
