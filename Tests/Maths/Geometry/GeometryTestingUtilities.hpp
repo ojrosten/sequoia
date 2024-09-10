@@ -57,7 +57,7 @@ namespace sequoia::testing
     template<class Basis>
       requires std::floating_point<field_type>&& is_orthonormal_basis_v<Basis>
     [[nodiscard]]
-    friend constexpr field_type inner_product(const maths::vector_coordinates<my_vec_space, Basis>& lhs, const maths::vector_coordinates<my_vec_space, Basis>& rhs)
+    friend constexpr static field_type inner_product(const maths::vector_coordinates<my_vec_space, Basis>& lhs, const maths::vector_coordinates<my_vec_space, Basis>& rhs)
     {
       return std::ranges::fold_left(std::views::zip(lhs.values(), rhs.values()), field_type{}, [](field_type f, const auto& z){ return f + std::get<0>(z) * std::get<1>(z); });
     }
@@ -65,7 +65,7 @@ namespace sequoia::testing
     template<class Basis>
       requires is_complex_v<field_type>&& is_orthonormal_basis_v<Basis>
     [[nodiscard]]
-    friend constexpr field_type inner_product(const maths::vector_coordinates<my_vec_space, Basis>& lhs, const maths::vector_coordinates<my_vec_space, Basis>& rhs)
+    friend constexpr static field_type inner_product(const maths::vector_coordinates<my_vec_space, Basis>& lhs, const maths::vector_coordinates<my_vec_space, Basis>& rhs)
     {
       return std::ranges::fold_left(std::views::zip(lhs.values(), rhs.values()), field_type{}, [](field_type f, const auto& z){ return f + conj(std::get<0>(z)) * std::get<1>(z); });
     }
@@ -116,6 +116,10 @@ namespace sequoia::testing
       check(equality, "Wrapped values", logger, actual.values(), std::span<const field_type, D>{prediction});
     }
   };
+
+  template<maths::affine_space AffineSpace, maths::basis<typename AffineSpace::vector_space_type> Basis, class Origin>
+  struct value_tester<maths::affine_coordinates<AffineSpace, Basis, Origin>> : geometrical_space_tester<maths::affine_coordinates<AffineSpace, Basis, Origin>>
+  {};
 
   struct coordinates_operations
   {

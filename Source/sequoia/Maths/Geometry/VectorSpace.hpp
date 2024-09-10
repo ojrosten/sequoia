@@ -77,135 +77,6 @@ namespace sequoia::maths
       }(std::make_index_sequence<D>{});
   }
 
-  template<vector_space VectorSpace, basis<VectorSpace> Basis>
-  class vector_coordinates
-  {
-  public:
-    using vector_space_type = VectorSpace;
-    using basis_type        = Basis;
-    using element_type      = typename VectorSpace::element_type;
-    using field_type        = typename VectorSpace::field_type;
-    using value_type        = field_type;
-
-    constexpr static std::size_t dimension{VectorSpace::dimension};
-    constexpr static std::size_t D{dimension};
-
-    constexpr vector_coordinates() noexcept  = default;
-
-    constexpr explicit vector_coordinates(std::span<const value_type, D> d) noexcept
-      : m_Values{to_array(d)}
-    {}
-
-    constexpr explicit vector_coordinates(std::span<value_type, D> d) noexcept
-      : m_Values{to_array(d)}
-    {}
-
-    template<class... Ts>
-      requires (sizeof...(Ts) == D) && (is_initializable_v<value_type, Ts> && ...)
-    constexpr vector_coordinates(Ts... ts) noexcept
-      : m_Values{ts...}
-    {}
-
-    constexpr vector_coordinates& operator+=(const vector_coordinates& t) noexcept
-    {
-      apply_to_each_element(m_Values, t.values(), [](value_type& lhs, value_type rhs){ lhs += rhs; });
-      return *this;
-    }
-
-    constexpr vector_coordinates& operator-=(const vector_coordinates& t) noexcept
-    {
-      apply_to_each_element(m_Values, t.values(), [](value_type& lhs, value_type rhs){ lhs -= rhs; });
-      return *this;
-    }
-
-    constexpr vector_coordinates& operator*=(value_type u) noexcept
-    {
-      std::ranges::for_each(m_Values, [u](value_type& x) { return x *= u; });
-      return *this;
-    }
-
-    constexpr vector_coordinates& operator/=(value_type u)
-    {
-      std::ranges::for_each(m_Values, [u](value_type& x) { return x /= u; });
-      return *this;
-    }
-
-    [[nodiscard]]
-    friend constexpr vector_coordinates operator+(const vector_coordinates& lhs, const vector_coordinates& rhs) noexcept
-    {
-      return vector_coordinates{lhs} += rhs;
-    }
-
-    [[nodiscard]]
-    friend constexpr vector_coordinates operator-(const vector_coordinates& lhs, const vector_coordinates& rhs) noexcept
-    {
-      return vector_coordinates{lhs} -= rhs;
-    }
-
-    [[nodiscard]]
-    constexpr vector_coordinates operator+() const noexcept
-    {
-      return vector_coordinates{values()};
-    }
-
-    [[nodiscard]]
-    constexpr vector_coordinates operator-() const noexcept
-    {
-      return vector_coordinates{to_array(values(), [](value_type t) { return -t; })};
-    }
-
-    [[nodiscard]]
-    friend constexpr vector_coordinates operator*(vector_coordinates v, value_type u) noexcept
-    {
-      return v *= u;
-    }
-
-    [[nodiscard]]
-    friend constexpr vector_coordinates operator*(value_type u, vector_coordinates v) noexcept
-    {
-      return v * u;
-    }
-
-    [[nodiscard]]
-    friend constexpr vector_coordinates operator/(vector_coordinates v, value_type u)
-    {
-      return v /= u;
-    }
-
-    [[nodiscard]]
-    constexpr std::span<const value_type, D> values() const noexcept { return m_Values; }
-
-    [[nodiscard]]
-    constexpr std::span<value_type, D> values() noexcept { return m_Values; }
-
-    [[nodiscard]]
-    constexpr value_type value() const noexcept requires (D == 1) { return m_Values[0]; }
-
-    // Make this explicit since otherwise, given two vectors a,b, a/b is well-formed due to implicit boolean conversion
-    [[nodiscard]]
-    constexpr explicit operator bool() const noexcept requires (D == 1) && std::convertible_to<value_type, bool>
-    {
-      return m_Values[0];
-    }
-
-    [[nodiscard]]
-    constexpr value_type operator[](std::size_t i) const { return m_Values[i]; }
-
-    [[nodiscard]]
-    constexpr value_type& operator[](std::size_t i) { return m_Values[i]; }
-
-    [[nodiscard]]
-    friend constexpr bool operator==(const vector_coordinates&, const vector_coordinates&) noexcept = default;
-
-    [[nodiscard]]
-    friend constexpr auto operator<=>(const vector_coordinates& lhs, const vector_coordinates& rhs) noexcept requires (D == 1) && std::totally_ordered<value_type>
-    {
-      return lhs.value() <=> rhs.value();
-    }
-  private:
-    std::array<value_type, D> m_Values{};
-  };
-
   template<class T>
   inline constexpr bool has_set_type{
     requires { typename T::set_type; }
@@ -223,17 +94,34 @@ namespace sequoia::maths
     requires vector_space<typename T::vector_space_type>;
   };
 
+  struct intrinsic_origin {};
+
+  template</*vector_space*/ class VectorSpace>
+  struct vector_space_as_affine_space
+  {
+    using set_type = VectorSpace;
+    using vector_space_type = VectorSpace;
+  };
+
+  template<affine_space AffineSpace, basis<typename AffineSpace::vector_space_type> Basis, class Origin>
+  class affine_coordinates;
+
+  template<vector_space VectorSpace, basis<VectorSpace> Basis>
+  using vector_coordinates = affine_coordinates<vector_space_as_affine_space<VectorSpace>, Basis, intrinsic_origin>;
+
 
   template<affine_space AffineSpace, basis<typename AffineSpace::vector_space_type> Basis, class Origin>
   class affine_coordinates
   {
   public:
     using affine_space_type = AffineSpace;
+    using set_type          = typename AffineSpace::set_type;
     using vector_space_type = typename AffineSpace::vector_space_type;
     using basis_type        = Basis;
     using field_type        = typename vector_space_type::field_type;
     using value_type        = field_type;
 
+    constexpr static bool is_vector_space{std::is_same_v<set_type, vector_space_type> && std::is_same_v<Origin, intrinsic_origin>};
     constexpr static std::size_t dimension{vector_space_type::dimension};
     constexpr static std::size_t D{dimension};
 
@@ -263,17 +151,43 @@ namespace sequoia::maths
       return *this;
     }
 
+    constexpr affine_coordinates& operator*=(value_type u) noexcept
+      requires is_vector_space
+    {
+      std::ranges::for_each(m_Values, [u](value_type& x) { return x *= u; });
+      return *this;
+    }
+
+    constexpr affine_coordinates& operator/=(value_type u)
+      requires is_vector_space
+    {
+      std::ranges::for_each(m_Values, [u](value_type& x) { return x /= u; });
+      return *this;
+    }
+
     [[nodiscard]]
     friend constexpr affine_coordinates operator+(affine_coordinates c, const vector_coordinates<vector_space_type, Basis>& v) noexcept { return c += v; }
 
     [[nodiscard]]
-    friend constexpr affine_coordinates operator+(const vector_coordinates<vector_space_type, Basis>& v, affine_coordinates c) noexcept { return c += v; }
+    friend constexpr affine_coordinates operator+(const vector_coordinates<vector_space_type, Basis>& v, affine_coordinates c) noexcept
+      requires (!is_vector_space)
+    {
+      return c += v;
+    }
 
     [[nodiscard]]
-    friend constexpr affine_coordinates operator-(affine_coordinates c, const vector_coordinates<vector_space_type, Basis>& v) noexcept { return c -= v; }
+    friend constexpr affine_coordinates operator-(affine_coordinates c, const vector_coordinates<vector_space_type, Basis>& v) noexcept
+      requires (!is_vector_space)
+    {
+      return c -= v;
+    }
 
     [[nodiscard]]
-    friend constexpr affine_coordinates operator-(const vector_coordinates<vector_space_type, Basis>& v, affine_coordinates c) noexcept { return c -= v; }
+    friend constexpr affine_coordinates operator-(const vector_coordinates<vector_space_type, Basis>& v, affine_coordinates c) noexcept
+      requires (!is_vector_space)
+    {
+      return c -= v;
+    }
 
     [[nodiscard]]
     friend constexpr vector_coordinates<vector_space_type, Basis> operator-(const affine_coordinates& lhs, const affine_coordinates& rhs) noexcept
@@ -296,13 +210,37 @@ namespace sequoia::maths
     }
 
     [[nodiscard]]
+    friend constexpr affine_coordinates operator*(affine_coordinates v, value_type u) noexcept
+      requires is_vector_space
+    {
+      return v *= u;
+    }
+
+    [[nodiscard]]
+    friend constexpr affine_coordinates operator*(value_type u, affine_coordinates v) noexcept
+      requires is_vector_space
+    {
+      return v * u;
+    }
+
+    [[nodiscard]]
+    friend constexpr affine_coordinates operator/(affine_coordinates v, value_type u)
+      requires is_vector_space
+    {
+      return v /= u;
+    }
+
+    [[nodiscard]]
     constexpr std::span<const value_type, D> values() const noexcept { return m_Values; }
 
     [[nodiscard]]
     constexpr std::span<value_type, D> values() noexcept { return m_Values; }
 
     [[nodiscard]]
-    constexpr value_type value() const noexcept requires (D == 1) { return m_Values[0]; }
+    constexpr const value_type& value() const noexcept requires (D == 1) { return m_Values[0]; }
+
+    [[nodiscard]]
+    constexpr value_type& value() noexcept requires (D == 1) { return m_Values[0]; }
 
     // Make this explicit since otherwise, given two vectors a,b, a/b is well-formed due to implicit boolean conversion
     [[nodiscard]]

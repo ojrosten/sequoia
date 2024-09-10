@@ -29,7 +29,8 @@ namespace sequoia::testing
     constexpr static std::array<std::array<T, 2>, 2> basis_vectors{std::array<T, 2>{1, 0}, std::array<T, 2>{0, 1}};
   };*/
 
-  template<maths::vector_space VectorSpace, maths::basis<VectorSpace> Basis>
-  struct value_tester<maths::vector_coordinates<VectorSpace, Basis>> : geometrical_space_tester<maths::vector_coordinates<VectorSpace, Basis>>
-  {};
+ /* template<maths::vector_space VectorSpace, maths::basis<VectorSpace> Basis>
+  struct value_tester<maths::affine_coordinates<maths::vector_space_as_affine_space<VectorSpace>, Basis, maths::intrinsic_origin>>
+    : geometrical_space_tester<maths::affine_coordinates<maths::vector_space_as_affine_space<VectorSpace>, Basis, maths::intrinsic_origin>>>
+  {};*/
 }
