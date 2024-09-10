@@ -224,16 +224,17 @@ namespace sequoia::maths
   };
 
 
-  template<vector_space VectorSpace, basis<VectorSpace> Basis, class Origin>
+  template<affine_space AffineSpace, basis<typename AffineSpace::vector_space_type> Basis, class Origin>
   class affine_coordinates
   {
   public:
-    using vector_space_type = VectorSpace;
+    using affine_space_type = AffineSpace;
+    using vector_space_type = typename AffineSpace::vector_space_type;
     using basis_type        = Basis;
-    using field_type        = typename VectorSpace::field_type;
+    using field_type        = typename vector_space_type::field_type;
     using value_type        = field_type;
 
-    constexpr static std::size_t dimension{VectorSpace::dimension};
+    constexpr static std::size_t dimension{vector_space_type::dimension};
     constexpr static std::size_t D{dimension};
 
     constexpr affine_coordinates() noexcept = default;
@@ -252,33 +253,33 @@ namespace sequoia::maths
       : m_Values{ts...}
     {}
 
-    constexpr affine_coordinates& operator+=(const vector_coordinates<VectorSpace, Basis>& v) noexcept {
+    constexpr affine_coordinates& operator+=(const vector_coordinates<vector_space_type, Basis>& v) noexcept {
       apply_to_each_element(m_Values, v.values(), [](value_type& lhs, value_type rhs){ lhs += rhs; });
       return *this;
     }
 
-    constexpr affine_coordinates& operator-=(const vector_coordinates<VectorSpace, Basis>& v) noexcept {
+    constexpr affine_coordinates& operator-=(const vector_coordinates<vector_space_type, Basis>& v) noexcept {
       apply_to_each_element(m_Values, v.values(), [](value_type& lhs, value_type rhs){ lhs -= rhs; });
       return *this;
     }
 
     [[nodiscard]]
-    friend constexpr affine_coordinates operator+(affine_coordinates c, const vector_coordinates<VectorSpace, Basis>& v) noexcept { return c += v; }
+    friend constexpr affine_coordinates operator+(affine_coordinates c, const vector_coordinates<vector_space_type, Basis>& v) noexcept { return c += v; }
 
     [[nodiscard]]
-    friend constexpr affine_coordinates operator+(const vector_coordinates<VectorSpace, Basis>& v, affine_coordinates c) noexcept { return c += v; }
+    friend constexpr affine_coordinates operator+(const vector_coordinates<vector_space_type, Basis>& v, affine_coordinates c) noexcept { return c += v; }
 
     [[nodiscard]]
-    friend constexpr affine_coordinates operator-(affine_coordinates c, const vector_coordinates<VectorSpace, Basis>& v) noexcept { return c -= v; }
+    friend constexpr affine_coordinates operator-(affine_coordinates c, const vector_coordinates<vector_space_type, Basis>& v) noexcept { return c -= v; }
 
     [[nodiscard]]
-    friend constexpr affine_coordinates operator-(const vector_coordinates<VectorSpace, Basis>& v, affine_coordinates c) noexcept { return c -= v; }
+    friend constexpr affine_coordinates operator-(const vector_coordinates<vector_space_type, Basis>& v, affine_coordinates c) noexcept { return c -= v; }
 
     [[nodiscard]]
-    friend constexpr vector_coordinates<VectorSpace, Basis> operator-(const affine_coordinates& lhs, const affine_coordinates& rhs) noexcept
+    friend constexpr vector_coordinates<vector_space_type, Basis> operator-(const affine_coordinates& lhs, const affine_coordinates& rhs) noexcept
     {
       return[&] <std::size_t... Is>(std::index_sequence<Is...>) {
-        return vector_coordinates<VectorSpace, Basis>{(lhs.values()[Is] - rhs.values()[Is])...};
+        return vector_coordinates<vector_space_type, Basis>{(lhs.values()[Is] - rhs.values()[Is])...};
       }(std::make_index_sequence<D>{});
     }
 

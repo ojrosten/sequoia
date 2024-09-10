@@ -1,7 +1,7 @@
 Tests/Maths/Geometry/AffineCoordinatesTestingDiagnostics.cpp, Line 36
 
 Comparison performed using:
-[sequoia::testing::value_tester<sequoia::maths::affine_coordinates<sequoia::testing::my_vec_space<float, float, 1>, sequoia::testing::canonical_basis<float, float, 1>, (anonymous namespace)::alice> >]
+[sequoia::testing::value_tester<sequoia::maths::affine_coordinates<sequoia::testing::my_affine_space<float, float, 1>, sequoia::testing::canonical_basis<float, float, 1>, (anonymous namespace)::alice> >]
 Checking for equivalence with:
 [std::array<float, 1>]
 
@@ -17,7 +17,7 @@ Checking for equivalence with:
 
 Tests/Maths/Geometry/AffineCoordinatesTestingDiagnostics.cpp, Line 37
 
-[sequoia::maths::affine_coordinates<sequoia::testing::my_vec_space<float, float, 1>, sequoia::testing::canonical_basis<float, float, 1>, (anonymous namespace)::alice>]
+[sequoia::maths::affine_coordinates<sequoia::testing::my_affine_space<float, float, 1>, sequoia::testing::canonical_basis<float, float, 1>, (anonymous namespace)::alice>]
 operator== returned false
 
   Wrapped values

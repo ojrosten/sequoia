@@ -13,7 +13,7 @@
 
 namespace sequoia::testing
 {
-  template<maths::vector_space VectorSpace, maths::basis<VectorSpace> Basis, class Origin>
-  struct value_tester<maths::affine_coordinates<VectorSpace, Basis, Origin>> : geometrical_space_tester<maths::affine_coordinates<VectorSpace, Basis, Origin>>
+  template<maths::affine_space AffineSpace, maths::basis<typename AffineSpace::vector_space_type> Basis, class Origin>
+  struct value_tester<maths::affine_coordinates<AffineSpace, Basis, Origin>> : geometrical_space_tester<maths::affine_coordinates<AffineSpace, Basis, Origin>>
   {};
 }

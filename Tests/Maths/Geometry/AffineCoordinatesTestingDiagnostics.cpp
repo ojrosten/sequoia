@@ -32,7 +32,7 @@ namespace sequoia::testing
   {
     using array_t = std::array<Field, 1>;
 
-    maths::affine_coordinates<my_vec_space<Element, Field, 1>, canonical_basis<Element, Field, 1>, alice> x{}, y{Field(1)};
+    maths::affine_coordinates<my_affine_space<Element, Field, 1>, canonical_basis<Element, Field, 1>, alice> x{}, y{Field(1)};
     check(equivalence, report_line(""), x, array_t{1});
     check(equality, report_line(""), x, y);
   }
