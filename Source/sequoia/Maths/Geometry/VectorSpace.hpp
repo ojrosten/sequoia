@@ -19,6 +19,26 @@
 
 namespace sequoia::maths
 {
+  template<class T, std::size_t D, class Fn>
+    requires std::invocable<Fn, T&, T>
+  constexpr void apply_to_each_element(std::array<T, D>& lhs, std::span<const T, D> rhs, Fn f)
+  {
+    //std::ranges::for_each(std::views::zip(lhs, rhs), [&f](auto&& z){ f(std::get<0>(z), std::get<1>(z)); });
+    [&] <std::size_t... Is>(std::index_sequence<Is...>){
+      (f(lhs[Is], rhs[Is]), ...);
+    }(std::make_index_sequence<D>{});
+  }
+
+  template<class T, std::size_t D, class Fn = std::identity>
+    requires std::is_invocable_r_v<T, Fn, T>
+  [[nodiscard]]
+  constexpr std::array<T, D> to_array(std::span<const T, D> a, Fn f = {})
+  {
+    return[&] <std::size_t... Is> (std::index_sequence<Is...>){
+      return std::array<T, D>{f(a[Is])...};
+    }(std::make_index_sequence<D>{});
+  }
+
   template<class T>
   concept field = std::regular<T> &&
     requires(T& t) {
@@ -55,27 +75,7 @@ namespace sequoia::maths
   concept vector_space = has_element_type<T> && has_field_type<T> && has_dimension<T>;
 
   template<class B, class VectorSpace>
-  concept basis = vector_space<VectorSpace>; // TO DO
-
-  template<class T, std::size_t D, class Fn>
-      requires std::invocable<Fn, T&, T>
-  constexpr void apply_to_each_element(std::array<T, D>& lhs, std::span<const T, D> rhs, Fn f)
-  {
-    //std::ranges::for_each(std::views::zip(lhs, rhs), [&f](auto&& z){ f(std::get<0>(z), std::get<1>(z)); });
-    [&]<std::size_t... Is>(std::index_sequence<Is...>){
-      (f(lhs[Is], rhs[Is]), ...);
-     }(std::make_index_sequence<D>{});
-  }
-
-  template<class T, std::size_t D, class Fn=std::identity>
-      requires std::is_invocable_r_v<T, Fn, T>
-  [[nodiscard]]
-  constexpr std::array<T, D> to_array(std::span<const T, D> a, Fn f = {})
-  {
-      return[&] <std::size_t... Is> (std::index_sequence<Is...>){
-          return std::array<T, D>{f(a[Is])...};
-      }(std::make_index_sequence<D>{});
-  }
+  concept basis = vector_space<VectorSpace>; // TO DO; does it even make sense to have a basis concept?
 
   template<class T>
   inline constexpr bool has_set_type{
@@ -94,8 +94,6 @@ namespace sequoia::maths
     requires vector_space<typename T::vector_space_type>;
   };
 
-  struct intrinsic_origin {};
-
   template</*vector_space*/ class VectorSpace>
   struct vector_space_as_affine_space
   {
@@ -105,6 +103,8 @@ namespace sequoia::maths
 
   template<affine_space AffineSpace, basis<typename AffineSpace::vector_space_type> Basis, class Origin>
   class affine_coordinates;
+
+  struct intrinsic_origin {};
 
   template<vector_space VectorSpace, basis<VectorSpace> Basis>
   using vector_coordinates = affine_coordinates<vector_space_as_affine_space<VectorSpace>, Basis, intrinsic_origin>;
