@@ -45,7 +45,7 @@ namespace sequoia::testing
     using field_type   = Field;
     constexpr static std::size_t dimension{D};
 
-    template<class Basis>
+    template<maths::basis<my_vec_space> Basis>
       requires std::floating_point<field_type>&& is_orthonormal_basis_v<Basis>
     [[nodiscard]]
     friend constexpr field_type inner_product(const maths::vector_coordinates<my_vec_space, Basis>& lhs, const maths::vector_coordinates<my_vec_space, Basis>& rhs)
@@ -53,7 +53,7 @@ namespace sequoia::testing
       return std::ranges::fold_left(std::views::zip(lhs.values(), rhs.values()), field_type{}, [](field_type f, const auto& z){ return f + std::get<0>(z) * std::get<1>(z); });
     }
 
-    template<class Basis>
+    template<maths::basis<my_vec_space> Basis>
       requires is_complex_v<field_type>&& is_orthonormal_basis_v<Basis>
     [[nodiscard]]
     friend constexpr field_type inner_product(const maths::vector_coordinates<my_vec_space, Basis>& lhs, const maths::vector_coordinates<my_vec_space, Basis>& rhs)

@@ -94,8 +94,12 @@ namespace sequoia::maths
     requires vector_space<typename T::vector_space_type>;
   };
 
-  template</*vector_space*/ class VectorSpace>
-  struct vector_space_as_affine_space
+  // Primary class template with a specialization is to evade a recursive concept check
+  template<class VectorSpace>
+  struct vector_space_as_affine_space;
+
+  template<vector_space VectorSpace>
+  struct vector_space_as_affine_space<VectorSpace>
   {
     using set_type          = VectorSpace;
     using vector_space_type = VectorSpace;
