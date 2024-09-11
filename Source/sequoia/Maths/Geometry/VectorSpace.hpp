@@ -99,7 +99,7 @@ namespace sequoia::maths
   template</*vector_space*/ class VectorSpace>
   struct vector_space_as_affine_space
   {
-    using set_type = VectorSpace;
+    using set_type          = VectorSpace;
     using vector_space_type = VectorSpace;
   };
 
@@ -108,7 +108,6 @@ namespace sequoia::maths
 
   template<vector_space VectorSpace, basis<VectorSpace> Basis>
   using vector_coordinates = affine_coordinates<vector_space_as_affine_space<VectorSpace>, Basis, intrinsic_origin>;
-
 
   template<affine_space AffineSpace, basis<typename AffineSpace::vector_space_type> Basis, class Origin>
   class affine_coordinates
