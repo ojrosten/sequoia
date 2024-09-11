@@ -78,16 +78,6 @@ namespace sequoia::maths
   concept basis = vector_space<VectorSpace>; // TO DO; does it even make sense to have a basis concept?
 
   template<class T>
-  inline constexpr bool has_set_type{
-    requires { typename T::set_type; }
-  };
-
-  template<class T>
-  inline constexpr bool has_vector_space_type{
-    requires { typename T::vector_space_type; }
-  };
-
-  template<class T>
   concept affine_space = requires {
     typename T::set_type;
     typename T::vector_space_type;
