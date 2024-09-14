@@ -14,6 +14,7 @@
 #include "sequoia/Core/Meta/TypeTraits.hpp"
 
 #include <algorithm>
+#include <complex>
 #include <ranges>
 #include <span>
 
@@ -72,7 +73,12 @@ namespace sequoia::maths
   };
 
   template<class T>
-  concept vector_space = has_element_type<T> && has_field_type<T> && has_dimension<T>;
+  inline constexpr bool has_set_type{
+    requires { typename T::set_type; }
+  };
+
+  template<class T>
+  concept vector_space = has_set_type<T> && has_field_type<T> && has_dimension<T>;
 
   template<class B, class VectorSpace>
   concept basis = vector_space<VectorSpace>; // TO DO; does it even make sense to have a basis concept?
@@ -83,6 +89,26 @@ namespace sequoia::maths
     typename T::vector_space_type;
     requires vector_space<typename T::vector_space_type>;
   };
+
+  namespace spaces
+  {
+    template<std::size_t N, std::floating_point T>
+    struct R
+    {
+      constexpr static std::size_t dimension{N};
+      using element_type = T;
+    };
+
+    template<std::size_t N, class T>
+    struct C;
+
+    template<std::size_t N, std::floating_point T>
+    struct C<N, std::complex<T>>
+    {
+      constexpr static std::size_t dimension{N};
+      using element_type = std::complex<T>;
+    };
+  }
 
   // Primary class template with a specialization is to evade a recursive concept check
   template<class VectorSpace>

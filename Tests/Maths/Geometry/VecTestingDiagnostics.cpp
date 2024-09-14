@@ -11,6 +11,8 @@
 
 namespace sequoia::testing
 {
+  using namespace maths;
+
   [[nodiscard]]
   std::filesystem::path vec_false_positive_test::source_file() const
   {
@@ -19,15 +21,15 @@ namespace sequoia::testing
 
   void vec_false_positive_test::run_tests()
   {
-    test_vec_1<float, float>();
+    test_vec_1<spaces::R<1, float>, float>();
   }
 
-  template<class Element, maths::field Field>
+  template<class Set, maths::field Field>
   void vec_false_positive_test::test_vec_1()
   {
     using array_t = std::array<Field, 1>;
 
-    maths::vector_coordinates<my_vec_space<Element, Field, 1>, canonical_basis<Element, Field, 1>> x{}, y{Field(1)};
+    vector_coordinates<my_vec_space<Set, Field, 1>, canonical_basis<Set, Field, 1>> x{}, y{Field(1)};
     check(equivalence, report_line(""), x, array_t{1});
     check(equality, report_line(""), x, y);
   }

@@ -38,10 +38,10 @@ namespace sequoia::testing
     }
   };
 
-  template<class Element, maths::field Field, std::size_t D>
+  template<class Set, maths::field Field, std::size_t D>
   struct my_vec_space
   {
-    using element_type = Element;
+    using set_type = Set;
     using field_type   = Field;
     constexpr static std::size_t dimension{D};
 
@@ -62,14 +62,15 @@ namespace sequoia::testing
     }
   };
 
-  template<class Element, maths::field Field, std::size_t D>
+  template<class Set, maths::field Field, std::size_t D>
   struct my_affine_space
   {
-    using set_type          = std::array<Field, D>;
-    using vector_space_type = my_vec_space<Element, Field, D>;
+    using set_type          = Set;
+    using vector_space_type = my_vec_space<Set, Field, D>;
   };
 
-  template<class Element, maths::field field_t, std::size_t D>
+  // TO DO: change this
+  template<class Set, maths::field field_t, std::size_t D>
   struct canonical_basis
   {
     using orthonormal = std::true_type;

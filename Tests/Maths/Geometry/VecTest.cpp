@@ -189,22 +189,22 @@ namespace sequoia::testing
 
   void vec_test::run_tests()
   {
-    test_vec_1_orderable<float, float>();
-    test_vec_1_orderable<double, double>();
-    test_vec_1_unorderable<std::complex<float>, std::complex<float>>();
+    test_vec_1_orderable<spaces::R<1, float>, float>();
+    test_vec_1_orderable<spaces::R<1,double>, double>();
+    test_vec_1_unorderable<spaces::C<1, float>, std::complex<float>>();
 
-    test_vec_2<std::array<float, 2>, float>();
-    test_vec_2<std::array<std::complex<double>, 2>, std::complex<double>>();
-    test_vec_2<std::complex<double>, double>(); // Complex numbers over the reals
+    test_vec_2<spaces::R<1, float>, float>();
+    test_vec_2<spaces::C<2, double>, std::complex<double>>();
+    test_vec_2<spaces::C<1, double>, double>(); // Complex numbers over the reals
 
-    test_real_vec_1_inner_prod<float, float>();
-    test_complex_vec_1_inner_prod<std::complex<double>, std::complex<double>>();
+    test_real_vec_1_inner_prod<spaces::R<1, float>, float>();
+    test_complex_vec_1_inner_prod<spaces::C<1, double>, std::complex<double>>();
   }
 
-  template<class Element, maths::field Field>
+  template<class Set, maths::field Field>
   void vec_test::test_vec_1_orderable()
   {
-    using vec_t = vector_coordinates<my_vec_space<Element, Field, 1>, canonical_basis<Element, Field, 1>>;
+    using vec_t = vector_coordinates<my_vec_space<Set, Field, 1>, canonical_basis<Set, Field, 1>>;
     auto g{coordinates_operations::make_dim_1_orderable_transition_graph<vec_t>()};
 
     add_dim_1_transitions<vec_t>(g);
@@ -220,10 +220,10 @@ namespace sequoia::testing
     transition_checker<vec_t>::check(report_line(""), g, checker);
   }
 
-  template<class Element, maths::field Field>
+  template<class Set, maths::field Field>
   void vec_test::test_vec_1_unorderable()
   {
-    using vec_t = vector_coordinates<my_vec_space<Element, Field, 1>, canonical_basis<Element, Field, 1>>;
+    using vec_t = vector_coordinates<my_vec_space<Set, Field, 1>, canonical_basis<Set, Field, 1>>;
     auto g{coordinates_operations::make_dim_1_unorderable_transition_graph<vec_t>()};
 
     add_dim_1_transitions<vec_t>(g);
@@ -238,10 +238,10 @@ namespace sequoia::testing
     transition_checker<vec_t>::check(report_line(""), g, checker);
   }
 
-  template<class Element, maths::field Field>
+  template<class Set, maths::field Field>
   void vec_test::test_vec_2()
   {
-    using vec_t = vector_coordinates<my_vec_space<Element, Field, 2>, canonical_basis<Element, Field, 2>>;
+    using vec_t = vector_coordinates<my_vec_space<Set, Field, 2>, canonical_basis<Set, Field, 2>>;
     auto g{coordinates_operations::make_dim_2_transition_graph<vec_t>()};
 
     add_dim_2_transitions<vec_t>(g);
@@ -256,10 +256,10 @@ namespace sequoia::testing
     transition_checker<vec_t>::check(report_line(""), g, checker);
   }
 
-  template<class Element, std::floating_point Field>
+  template<class Set, std::floating_point Field>
   void vec_test::test_real_vec_1_inner_prod()
   {
-    using vec_t = vector_coordinates<my_vec_space<Element, Field, 1>, canonical_basis<Element, Field, 1>>;
+    using vec_t = vector_coordinates<my_vec_space<Set, Field, 1>, canonical_basis<Set, Field, 1>>;
 
     check(equality, report_line(""), inner_product(vec_t{}, vec_t{Field(1)}), Field{});
     check(equality, report_line(""), inner_product(vec_t{Field(1)}, vec_t{}), Field{});
@@ -269,11 +269,11 @@ namespace sequoia::testing
     check(equality, report_line(""), inner_product(vec_t{Field(-7)}, vec_t{Field(42)}), Field{-294});
   }
 
-  template<class Element, class Field>
+  template<class Set, class Field>
     requires is_complex_v<Field>
   void vec_test::test_complex_vec_1_inner_prod()
   {
-    using vec_t = vector_coordinates<my_vec_space<Element, Field, 1>, canonical_basis<Element, Field, 1>>;
+    using vec_t = vector_coordinates<my_vec_space<Set, Field, 1>, canonical_basis<Set, Field, 1>>;
 
     check(equality, report_line(""), inner_product(vec_t{Field(1, 1)}, vec_t{Field(1, 1)}), Field{2});
     check(equality, report_line(""), inner_product(vec_t{Field(1, -1)}, vec_t{Field(1, 1)}), Field{0, 2});
