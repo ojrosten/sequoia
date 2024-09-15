@@ -189,16 +189,16 @@ namespace sequoia::testing
 
   void vec_test::run_tests()
   {
-    test_vec_1_orderable<spaces::R<1, float>, float>();
-    test_vec_1_orderable<spaces::R<1,double>, double>();
-    test_vec_1_unorderable<spaces::C<1, float>, std::complex<float>>();
+    test_vec_1_orderable<sets::R<1, float>, float>();
+    test_vec_1_orderable<sets::R<1,double>, double>();
+    test_vec_1_unorderable<sets::C<1, float>, std::complex<float>>();
 
-    test_vec_2<spaces::R<1, float>, float>();
-    test_vec_2<spaces::C<2, double>, std::complex<double>>();
-    test_vec_2<spaces::C<1, double>, double>(); // Complex numbers over the reals
+    test_vec_2<sets::R<1, float>, float>();
+    test_vec_2<sets::C<2, double>, std::complex<double>>();
+    test_vec_2<sets::C<1, double>, double>(); // Complex numbers over the reals
 
-    test_real_vec_1_inner_prod<spaces::R<1, float>, float>();
-    test_complex_vec_1_inner_prod<spaces::C<1, double>, std::complex<double>>();
+    test_real_vec_1_inner_prod<sets::R<1, float>, float>();
+    test_complex_vec_1_inner_prod<sets::C<1, double>, std::complex<double>>();
   }
 
   template<class Set, maths::field Field>

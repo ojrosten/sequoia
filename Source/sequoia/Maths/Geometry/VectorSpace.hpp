@@ -8,7 +8,7 @@
 #pragma once
 
 /*! \file
-    \brief Utilities relating to vector spaces
+    \brief Utilities relating to vector sets
  */
 
 #include "sequoia/Core/Meta/TypeTraits.hpp"
@@ -81,7 +81,7 @@ namespace sequoia::maths
   concept vector_space = has_set_type<T> && has_field_type<T> && has_dimension<T>;
 
   template<class B, class VectorSpace>
-  concept basis = vector_space<VectorSpace>; // TO DO; does it even make sense to have a basis concept?
+  concept basis = vector_space<VectorSpace>;
 
   template<class T>
   concept affine_space = requires {
@@ -89,26 +89,6 @@ namespace sequoia::maths
     typename T::vector_space_type;
     requires vector_space<typename T::vector_space_type>;
   };
-
-  namespace spaces
-  {
-    template<std::size_t N, std::floating_point T>
-    struct R
-    {
-      constexpr static std::size_t dimension{N};
-      using element_type = T;
-    };
-
-    template<std::size_t N, class T>
-    struct C;
-
-    template<std::size_t N, std::floating_point T>
-    struct C<N, std::complex<T>>
-    {
-      constexpr static std::size_t dimension{N};
-      using element_type = std::complex<T>;
-    };
-  }
 
   // Primary class template with a specialization is to evade a recursive concept check
   template<class VectorSpace>
@@ -285,4 +265,45 @@ namespace sequoia::maths
   private:
     std::array<value_type, D> m_Values{};
   };
+
+  namespace sets
+  {
+    template<std::size_t N, std::floating_point T>
+    struct R
+    {
+      constexpr static std::size_t dimension{N};
+      using element_type = T;
+    };
+
+    template<std::size_t N, class T>
+    struct C;
+
+    template<std::size_t N, std::floating_point T>
+    struct C<N, std::complex<T>>
+    {
+      constexpr static std::size_t dimension{N};
+      using element_type = std::complex<T>;
+    };
+  }
+
+  template<std::size_t D, std::floating_point T>
+  struct euclidean_vector_space
+  {
+    using set_type   = sets::R<D, T>;
+    using field_type = T;
+    constexpr static std::size_t dimension{D};
+  };
+
+  template<std::size_t D, std::floating_point T>
+  struct euclidean_affine_space
+  {
+    using set_type          = sets::R<D, T>;
+    using vector_space_type = euclidean_vector_space<D, T>;
+  };
+
+  template<std::size_t D, std::floating_point T, basis<euclidean_vector_space<D, T>> Basis, class Origin>
+  using euclidean_coordinates = affine_coordinates<euclidean_affine_space<D, T>, Basis, Origin>;
+
+  template<std::size_t D, std::floating_point T, basis<euclidean_vector_space<D, T>> Basis>
+  using euclidean_vector_coordinates = vector_coordinates<euclidean_vector_space<D, T>, Basis>;
 }

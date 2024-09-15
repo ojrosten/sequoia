@@ -21,7 +21,7 @@ namespace sequoia::testing
 
   void vec_false_positive_test::run_tests()
   {
-    test_vec_1<spaces::R<1, float>, float>();
+    test_vec_1<sets::R<1, float>, float>();
   }
 
   template<class Set, maths::field Field>
