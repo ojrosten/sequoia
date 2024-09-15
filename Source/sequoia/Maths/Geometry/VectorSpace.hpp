@@ -14,6 +14,7 @@
 #include "sequoia/Core/Meta/TypeTraits.hpp"
 
 #include <algorithm>
+#include <cmath>
 #include <complex>
 #include <ranges>
 #include <span>
@@ -80,6 +81,7 @@ namespace sequoia::maths
   template<class T>
   concept vector_space = has_set_type<T> && has_field_type<T> && has_dimension<T>;
 
+  // TO DO: not clear if this is a useful concept; should come out in the wash...
   template<class B, class VectorSpace>
   concept basis = vector_space<VectorSpace>;
 
@@ -286,12 +288,66 @@ namespace sequoia::maths
     };
   }
 
+  template<class B>
+  inline constexpr bool is_orthonormal_basis_v{
+    requires {
+      typename B::orthonormal;
+      requires std::same_as<typename B::orthonormal, std::true_type>;
+    }
+  };
+
+  template<vector_space V>
+  struct arbitary_basis {};
+
+  template<vector_space V>
+  inline constexpr bool has_norm_v{
+    requires (const vector_coordinates<vector_space, arbitary_basis<V>>& v) {
+      { norm(v) } -> std::convertible_to<typename V::field_type>;
+    }
+  };
+
+  template<vector_space V>
+  inline constexpr bool has_inner_product_v{
+    requires (const vector_coordinates<vector_space, arbitary_basis<V>>& v) {
+      { inner_product(v, v) } -> std::convertible_to<typename V::field_type>;
+    }
+  };
+
+  template<class V>
+  concept normed_vector_space = vector_space<V> && has_norm_v<V>;
+
+  template<class V>
+  concept inner_product_space = vector_space<V> && has_inner_product_v<V>;
+
   template<std::size_t D, std::floating_point T>
   struct euclidean_vector_space
   {
     using set_type   = sets::R<D, T>;
     using field_type = T;
     constexpr static std::size_t dimension{D};
+
+    template<basis<euclidean_vector_space> Basis>
+      requires is_orthonormal_basis_v<Basis>
+    [[nodiscard]]
+    friend constexpr field_type inner_product(const vector_coordinates<euclidean_vector_space, Basis>& v, const vector_coordinates<euclidean_vector_space, Basis>& w)
+    {
+      return std::ranges::fold_left(std::views::zip(v.values(), w.values()), field_type{}, [](field_type f, const auto& z){ return f + std::get<0>(z) * std::get<1>(z); });
+    }
+
+    template<basis<euclidean_vector_space> Basis>
+      requires is_orthonormal_basis_v<Basis>
+    [[nodiscard]]
+    friend constexpr field_type norm(const vector_coordinates<euclidean_vector_space, Basis>& v)
+    {
+      if constexpr(D == 1)
+      {
+        return std::abs(v.value());
+      }
+      else
+      {
+        return std::sqrt(inner_product(v, v));
+      }
+    }
   };
 
   template<std::size_t D, std::floating_point T>
@@ -306,4 +362,10 @@ namespace sequoia::maths
 
   template<std::size_t D, std::floating_point T, basis<euclidean_vector_space<D, T>> Basis>
   using euclidean_vector_coordinates = vector_coordinates<euclidean_vector_space<D, T>, Basis>;
+
+  template<std::size_t D, std::floating_point T>
+  struct standard_basis
+  {
+    using orthonormal = std::true_type;
+  };
 }
