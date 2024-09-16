@@ -92,24 +92,13 @@ namespace sequoia::maths
     requires vector_space<typename T::vector_space_type>;
   };
 
-  // Primary class template with a specialization is to evade a recursive concept check
-  template<class VectorSpace>
-  struct vector_space_as_affine_space;
-
-  template<vector_space VectorSpace>
-  struct vector_space_as_affine_space<VectorSpace>
-  {
-    using set_type          = VectorSpace;
-    using vector_space_type = VectorSpace;
-  };
-
   template<affine_space AffineSpace, basis<typename AffineSpace::vector_space_type> Basis, class Origin>
   class affine_coordinates;
 
   struct intrinsic_origin {};
 
   template<vector_space VectorSpace, basis<VectorSpace> Basis>
-  using vector_coordinates = affine_coordinates<vector_space_as_affine_space<VectorSpace>, Basis, intrinsic_origin>;
+  using vector_coordinates = affine_coordinates<VectorSpace, Basis, intrinsic_origin>;
 
   template<affine_space AffineSpace, basis<typename AffineSpace::vector_space_type> Basis, class Origin>
   class affine_coordinates
@@ -122,7 +111,7 @@ namespace sequoia::maths
     using field_type        = typename vector_space_type::field_type;
     using value_type        = field_type;
 
-    constexpr static bool is_vector_space{std::is_same_v<set_type, vector_space_type> && std::is_same_v<Origin, intrinsic_origin>};
+    constexpr static bool is_vector_space{vector_space<AffineSpace> && std::is_same_v<Origin, intrinsic_origin>};
     constexpr static std::size_t dimension{vector_space_type::dimension};
     constexpr static std::size_t D{dimension};
 
@@ -322,8 +311,9 @@ namespace sequoia::maths
   template<std::size_t D, std::floating_point T>
   struct euclidean_vector_space
   {
-    using set_type   = sets::R<D, T>;
-    using field_type = T;
+    using set_type          = sets::R<D, T>;
+    using field_type        = T;
+    using vector_space_type = euclidean_vector_space;
     constexpr static std::size_t dimension{D};
 
     template<basis<euclidean_vector_space> Basis>
@@ -368,4 +358,7 @@ namespace sequoia::maths
   {
     using orthonormal = std::true_type;
   };
+
+  template<std::size_t D, std::floating_point T>
+  using vec_coords = euclidean_vector_coordinates<D, T, standard_basis<D, T>>;
 }

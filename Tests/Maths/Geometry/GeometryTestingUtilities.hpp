@@ -41,8 +41,9 @@ namespace sequoia::testing
   template<class Set, maths::field Field, std::size_t D>
   struct my_vec_space
   {
-    using set_type = Set;
-    using field_type   = Field;
+    using set_type          = Set;
+    using field_type        = Field;
+    using vector_space_type = my_vec_space;
     constexpr static std::size_t dimension{D};
 
     template<maths::basis<my_vec_space> Basis>
