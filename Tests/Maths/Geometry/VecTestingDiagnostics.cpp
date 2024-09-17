@@ -21,15 +21,24 @@ namespace sequoia::testing
 
   void vec_false_positive_test::run_tests()
   {
-    test_vec_1<sets::R<1, float>, float>();
+    {
+      using coords = vector_coordinates<my_vec_space<sets::R<1, float>, float, 1>, canonical_basis<sets::R<1, float>, float, 1>>;
+      test_vec_1<coords>();
+    }
+
+    {
+      using coords = euclidean_vector_coordinates<1, float, standard_basis<1, float>>;
+      test_vec_1<coords>();
+    }
   }
 
-  template<class Set, maths::field Field>
+  template<class VecCoords>
   void vec_false_positive_test::test_vec_1()
   {
-    using array_t = std::array<Field, 1>;
+    using field_t = VecCoords::field_type;
+    using array_t = std::array<field_t, 1>;
 
-    vector_coordinates<my_vec_space<Set, Field, 1>, canonical_basis<Set, Field, 1>> x{}, y{Field(1)};
+    VecCoords x{}, y{field_t(1)};
     check(equivalence, report_line(""), x, array_t{1});
     check(equality, report_line(""), x, y);
   }

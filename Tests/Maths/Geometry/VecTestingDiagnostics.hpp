@@ -23,7 +23,7 @@ namespace sequoia::testing
 
     void run_tests();
 
-    template<class Set, maths::field Field>
+    template<class VecCoords>
     void test_vec_1();
   };
 }
