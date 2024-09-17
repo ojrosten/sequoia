@@ -327,6 +327,14 @@ namespace sequoia::maths
     template<basis<euclidean_vector_space> Basis>
       requires is_orthonormal_basis_v<Basis>
     [[nodiscard]]
+    friend constexpr field_type dot(const vector_coordinates<euclidean_vector_space, Basis>& v, const vector_coordinates<euclidean_vector_space, Basis>& w)
+    {
+      return inner_product(v, w);
+    }
+
+    template<basis<euclidean_vector_space> Basis>
+      requires is_orthonormal_basis_v<Basis>
+    [[nodiscard]]
     friend constexpr field_type norm(const vector_coordinates<euclidean_vector_space, Basis>& v)
     {
       if constexpr(D == 1)
