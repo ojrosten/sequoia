@@ -23,7 +23,7 @@ namespace sequoia::testing
 
     void run_tests();
 
-    template<class Element, maths::field Field>
+    template<class AffineCoords>
     void test_affine_1();
   };
 }

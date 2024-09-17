@@ -16,6 +16,8 @@ namespace
 
 namespace sequoia::testing
 {
+  using namespace maths;
+
   [[nodiscard]]
   std::filesystem::path affine_coordinates_false_positive_test::source_file() const
   {
@@ -24,15 +26,24 @@ namespace sequoia::testing
 
   void affine_coordinates_false_positive_test::run_tests()
   {
-    test_affine_1<float, float>();
+    {
+      using coords = affine_coordinates<my_affine_space<float, float, 1>, canonical_basis<float, float, 1>, alice>;
+      test_affine_1<coords>();
+    }
+
+    {
+      using coords = euclidean_coordinates<1, float, standard_basis<1, float>, alice>;
+      test_affine_1<coords>();
+    }
   }
 
-  template<class Element, maths::field Field>
+  template<class AffineCoords>
   void affine_coordinates_false_positive_test::test_affine_1()
   {
-    using array_t = std::array<Field, 1>;
+    using field_t = AffineCoords::field_type;
+    using array_t = std::array<field_t, 1>;
 
-    maths::affine_coordinates<my_affine_space<Element, Field, 1>, canonical_basis<Element, Field, 1>, alice> x{}, y{Field(1)};
+    AffineCoords x{}, y{field_t(1)};
     check(equivalence, report_line(""), x, array_t{1});
     check(equality, report_line(""), x, y);
   }
