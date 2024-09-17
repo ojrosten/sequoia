@@ -356,7 +356,7 @@ namespace sequoia::maths
   };
 
   template<std::size_t D, std::floating_point T, basis<euclidean_vector_space<D, T>> Basis, class Origin>
-  using euclidean_coordinates = affine_coordinates<euclidean_affine_space<D, T>, Basis, Origin>;
+  using euclidean_affine_coordinates = affine_coordinates<euclidean_affine_space<D, T>, Basis, Origin>;
 
   template<std::size_t D, std::floating_point T, basis<euclidean_vector_space<D, T>> Basis>
   using euclidean_vector_coordinates = vector_coordinates<euclidean_vector_space<D, T>, Basis>;

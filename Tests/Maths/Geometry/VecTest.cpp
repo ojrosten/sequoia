@@ -19,6 +19,32 @@ namespace sequoia::testing
 
   namespace
   {
+    template<std::size_t D, std::floating_point T>
+    struct world_points {};
+
+    template<std::size_t D, std::floating_point T, class Units>
+    struct world_vector_space
+    {
+      using set_type = world_points<D, T>;
+      using field_type = T;
+      using unit_type = Units;
+      using vector_space_type = world_vector_space;
+      constexpr static std::size_t dimension{D};
+    };
+
+    template<std::size_t D, std::floating_point T, class Units>
+    struct world_affine_space
+    {
+      using set_type = sets::R<D, T>;
+      using vector_space_type = world_vector_space<D, T, Units>;
+    };
+
+    template<std::size_t D, std::floating_point T, class Units, basis<world_vector_space<D, T, Units>> Basis, class Origin>
+    using world_affine_coordinates = affine_coordinates<world_affine_space<D, T, Units>, Basis, Origin>;
+
+    template<std::size_t D, std::floating_point T, class Units, basis<world_vector_space<D, T, Units>> Basis>
+    using world_vector_coordinates = vector_coordinates<world_vector_space<D, T, Units>, Basis>;
+
     [[nodiscard]]
     std::weak_ordering to_ordering(coordinates_operations::dim_1_label From, coordinates_operations::dim_1_label To)
     {
