@@ -19,17 +19,80 @@ namespace sequoia::testing
 
   namespace
   {
-    template<std::size_t D, std::floating_point T>
-    struct world_points {};
+    template<class T>
+    concept atlas = true;
 
-    template<std::size_t D, std::floating_point T, class Units>
+    template<class T>
+    concept quantity_space = requires {
+      typename T::set_type;
+      typename T::vector_space_type;
+      typename T::atlas_type;
+      requires vector_space<typename T::vector_space_type>;
+      requires atlas<typename T::atlas_type>;
+    };
+
+    template<class T>
+    concept quantity_displacecment_space = vector_space<T> 
+      && requires { 
+           typename T::atlas_type;
+           requires atlas<typename T::atlas_type>;
+         };
+
+    struct unchecked_t {};
+
+    template<quantity_space QuantitySpace, quantity_displacecment_space QuantityDisplacementSpace>
+    class quantity
+    {
+    public:
+      using quantity_space_type               = QuantitySpace;
+      using quantity_displacecment_space_type = QuantityDisplacementSpace;
+      using atlas_type                        = QuantitySpace::atlas_type;
+      using value_type                        = typename atlas_type::value_type;
+
+      explicit quantity(value_type val) : m_Value{m_Atlas.validate(val)} {}
+
+      quantity(unchecked_t, value_type val)
+        : m_Value{val}
+      {}
+
+
+      [[nodiscard]]
+      const value_type& value() const noexcept { return m_Value; }
+
+      [[nodiscard]]
+      const atlas_type& atlas() const noexcept { return m_Atlas; }
+
+      [[nodiscard]]
+      friend bool operator==(const quantity& lhs, const quantity& rhs) noexcept { return lhs.value() == rhs.value(); }
+
+      [[nodiscard]]
+      friend auto operator<=>(const quantity& lhs, const quantity& rhs) noexcept { return lhs.value() <=> rhs.value(); }
+    private:
+      value_type m_Value;
+      SEQUOIA_NO_UNIQUE_ADDRESS atlas_type m_Atlas;
+    };
+
+
+    template<std::size_t D, std::floating_point T>
+    struct world_displacements {};
+
+    template<std::size_t D, std::floating_point T, class Atlas>
     struct world_vector_space
     {
-      using set_type = world_points<D, T>;
-      using field_type = T;
-      using unit_type = Units;
+      using set_type          = world_displacements<D, T>;
+      using field_type        = T;
+      using atlas_type        = Atlas;
       using vector_space_type = world_vector_space;
       constexpr static std::size_t dimension{D};
+
+      template<maths::basis<world_vector_space> Basis>
+        requires is_orthonormal_basis_v<Basis>
+      [[nodiscard]]
+      // We want Units^2
+      friend constexpr field_type inner_product(const maths::vector_coordinates<world_vector_space, Basis>& lhs, const maths::vector_coordinates<world_vector_space, Basis>& rhs)
+      {
+        return std::ranges::fold_left(std::views::zip(lhs.values(), rhs.values()), field_type{}, [](field_type f, const auto& z){ return f + std::get<0>(z) * std::get<1>(z); });
+      }
     };
 
     template<std::size_t D, std::floating_point T, class Units>
