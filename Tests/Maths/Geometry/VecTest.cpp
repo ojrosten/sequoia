@@ -38,7 +38,8 @@ namespace sequoia::testing
     struct absolute_validator
     {
       template<std::floating_point T>
-      T operator()(const T val)
+      [[nodiscard]]
+      T operator()(const T val) const
       {
         if(val < T{}) throw std::domain_error{std::format("Value {} less than zero", val)};
       }
