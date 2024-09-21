@@ -19,36 +19,59 @@ namespace sequoia::testing
 
   namespace
   {
+
+    namespace sets2 
+    {
+      struct masses
+      {
+        using topological_space_type = std::true_type;
+      };
+    }
+
+    namespace units
+    {
+      struct metre
+      {
+      };
+    }
+
+    template<class TopologicalSpace, class Unit>
+    struct scalar_atlas
+    {
+      using topological_space_type = TopologicalSpace;
+      using unit_type              = Unit;
+      constexpr static std::size_t dimension{1};
+    };
+
     template<class T>
-    concept atlas = true;
+    concept atlas = requires {
+      typename T::topological_space_type;
+      typename T::unit_type;
+      { T::dimension } -> std::convertible_to<std::size_t>;
+    };
+
+    static_assert(atlas<scalar_atlas<sets2::masses, units::metre>>);
 
     template<class T>
     concept quantity_space = requires {
       typename T::set_type;
       typename T::vector_space_type;
-      typename T::atlas_type;
       requires vector_space<typename T::vector_space_type>;
-      requires atlas<typename T::atlas_type>;
     };
-
-    template<class T>
-    concept quantity_displacecment_space = vector_space<T> 
-      && requires { 
-           typename T::atlas_type;
-           requires atlas<typename T::atlas_type>;
-         };
 
     struct unchecked_t {};
 
-    template<quantity_space QuantitySpace, quantity_displacecment_space QuantityDisplacementSpace>
+    template<quantity_space QuantitySpace, atlas Atlas>
     class quantity
     {
     public:
-      using quantity_space_type               = QuantitySpace;
-      using quantity_displacecment_space_type = QuantityDisplacementSpace;
-      using atlas_type                        = QuantitySpace::atlas_type;
-      using value_type                        = typename atlas_type::value_type;
+      using quantity_space_type     = QuantitySpace;
+      using displacement_space_type = typename QuantitySpace::vector_space_type;
+      using atlas_type              = Atlas;
+      using field_type              = typename displacement_space_type::field_type;
+      using value_type              = field_type;
 
+      // TO DO: unit should be specified
       explicit quantity(value_type val) : m_Value{m_Atlas.validate(val)} {}
 
       quantity(unchecked_t, value_type val)
