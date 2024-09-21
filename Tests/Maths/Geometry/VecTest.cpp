@@ -35,11 +35,21 @@ namespace sequoia::testing
       };
     }
 
-    template<class TopologicalSpace, class Unit>
+    struct absolute_validator
+    {
+      template<std::floating_point T>
+      T operator()(const T val)
+      {
+        if(val < T{}) throw std::domain_error{std::format("Value {} less than zero", val)};
+      }
+    };
+
+    template<class TopologicalSpace, class Unit, class Validator>
     struct scalar_atlas
     {
       using topological_space_type = TopologicalSpace;
       using unit_type              = Unit;
+      using validator_type         = Validator;
       constexpr static std::size_t dimension{1};
     };
 
@@ -50,7 +60,7 @@ namespace sequoia::testing
       { T::dimension } -> std::convertible_to<std::size_t>;
     };
 
-    static_assert(atlas<scalar_atlas<sets2::masses, units::metre>>);
+    static_assert(atlas<scalar_atlas<sets2::masses, units::metre, absolute_validator>>);
 
     template<class T>
     concept quantity_space = requires {
@@ -68,13 +78,14 @@ namespace sequoia::testing
       using quantity_space_type     = QuantitySpace;
       using displacement_space_type = typename QuantitySpace::vector_space_type;
       using atlas_type              = Atlas;
+      using validator_type          = typename Atlas::validator_type;
+      using unit_type               = typename Atlas::unit_type;
       using field_type              = typename displacement_space_type::field_type;
       using value_type              = field_type;
 
-      // TO DO: unit should be specified
-      explicit quantity(value_type val) : m_Value{m_Atlas.validate(val)} {}
+      quantity(value_type val, unit_type) : m_Value{validator_type{}(val)} {}
 
-      quantity(unchecked_t, value_type val)
+      quantity(unchecked_t, value_type val, unit_type)
         : m_Value{val}
       {}
 
