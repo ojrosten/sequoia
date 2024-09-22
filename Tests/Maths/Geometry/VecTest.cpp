@@ -52,6 +52,15 @@ namespace sequoia::testing
       using unit_type              = Unit;
       using validator_type         = Validator;
       constexpr static std::size_t dimension{1};
+
+      template<std::floating_point T>
+      [[nodiscard]]
+      T validate(const T val) const
+      {
+        return validator(val);
+      }
+
+      Validator validator{};
     };
 
     template<class T>
@@ -84,7 +93,7 @@ namespace sequoia::testing
       using field_type              = typename displacement_space_type::field_type;
       using value_type              = field_type;
 
-      quantity(value_type val, unit_type) : m_Value{validator_type{}(val)} {}
+      quantity(value_type val, unit_type) : m_Value{m_Atlas.validate(val)} {}
 
       quantity(unchecked_t, value_type val, unit_type)
         : m_Value{val}
@@ -103,8 +112,8 @@ namespace sequoia::testing
       [[nodiscard]]
       friend auto operator<=>(const quantity& lhs, const quantity& rhs) noexcept { return lhs.value() <=> rhs.value(); }
     private:
-      value_type m_Value;
       SEQUOIA_NO_UNIQUE_ADDRESS atlas_type m_Atlas;
+      value_type m_Value;
     };
 
 
