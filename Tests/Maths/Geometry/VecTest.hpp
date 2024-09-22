@@ -38,5 +38,7 @@ namespace sequoia::testing
     template<class Set, class Field>
       requires is_complex_v<Field>
     void test_complex_vec_1_inner_prod();
+
+    void test_masses();
   };
 }

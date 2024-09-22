@@ -32,9 +32,11 @@ namespace sequoia::testing
 
     namespace units
     {
-      struct metre
+      struct metre_t
       {
       };
+
+      inline constexpr metre_t metre{};
     }
 
     struct absolute_validator
@@ -44,6 +46,8 @@ namespace sequoia::testing
       T operator()(const T val) const
       {
         if(val < T{}) throw std::domain_error{std::format("Value {} less than zero", val)};
+
+        return val;
       }
     };
 
@@ -89,7 +93,7 @@ namespace sequoia::testing
       { T::dimension } -> std::convertible_to<std::size_t>;
     };
 
-    static_assert(atlas<scalar_atlas<sets2::masses, units::metre, absolute_validator>>);
+    static_assert(atlas<scalar_atlas<sets2::masses, units::metre_t, absolute_validator>>);
 
     template<class T>
     concept quantity_space = requires {
@@ -353,6 +357,8 @@ namespace sequoia::testing
 
     test_real_vec_1_inner_prod<sets::R<1, float>, float>();
     test_complex_vec_1_inner_prod<sets::C<1, double>, std::complex<double>>();
+
+    test_masses();
   }
 
   template<class Set, maths::field Field>
@@ -431,5 +437,12 @@ namespace sequoia::testing
 
     check(equality, report_line(""), inner_product(vec_t{Field(1, 1)}, vec_t{Field(1, 1)}), Field{2});
     check(equality, report_line(""), inner_product(vec_t{Field(1, -1)}, vec_t{Field(1, 1)}), Field{0, 2});
+  }
+
+  void vec_test::test_masses()
+  {
+    using mass_t = quantity<mass_space<float>, scalar_atlas<sets2::masses, units::metre_t, absolute_validator>>;
+
+    mass_t m{2.0, units::metre};
   }
 }
