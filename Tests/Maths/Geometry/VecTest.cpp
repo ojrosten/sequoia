@@ -85,6 +85,12 @@ namespace sequoia::testing
       using vector_space_type = mass_displacement_space<T>;
     };
 
+    template<std::floating_point T>
+    struct mass_displacement_basis
+    {
+      using vector_space_type = mass_displacement_space<T>;
+    };
+
 
     template<class T>
     concept atlas = requires {
@@ -106,7 +112,8 @@ namespace sequoia::testing
 
     struct unchecked_t {};
 
-    template<quantity_space QuantitySpace, atlas Atlas>
+    template<quantity_space QuantitySpace, atlas Atlas, basis Basis>
+      requires basis_for<Basis, typename QuantitySpace::vector_space_type>
     class quantity
     {
     public:
@@ -171,10 +178,10 @@ namespace sequoia::testing
       using vector_space_type = world_vector_space<D, T, Units>;
     };
 
-    template<std::size_t D, std::floating_point T, class Units, basis<world_vector_space<D, T, Units>> Basis, class Origin>
+    template<std::size_t D, std::floating_point T, class Units, basis Basis, class Origin>
     using world_affine_coordinates = affine_coordinates<world_affine_space<D, T, Units>, Basis, Origin>;
 
-    template<std::size_t D, std::floating_point T, class Units, basis<world_vector_space<D, T, Units>> Basis>
+    template<std::size_t D, std::floating_point T, class Units, basis Basis>
     using world_vector_coordinates = vector_coordinates<world_vector_space<D, T, Units>, Basis>;
 
     [[nodiscard]]
@@ -421,6 +428,8 @@ namespace sequoia::testing
   {
     using vec_t = vector_coordinates<my_vec_space<Set, Field, 1>, canonical_basis<Set, Field, 1>>;
 
+    static_assert(basis_for<canonical_basis<Set, Field, 1>, my_vec_space<Set, Field, 1>>);
+
     check(equality, report_line(""), inner_product(vec_t{}, vec_t{Field(1)}), Field{});
     check(equality, report_line(""), inner_product(vec_t{Field(1)}, vec_t{}), Field{});
     check(equality, report_line(""), inner_product(vec_t{Field(-1)}, vec_t{Field(1)}), Field{-1});
@@ -441,7 +450,7 @@ namespace sequoia::testing
 
   void vec_test::test_masses()
   {
-    using mass_t = quantity<mass_space<float>, scalar_atlas<sets2::masses, units::metre_t, absolute_validator>>;
+    using mass_t = quantity<mass_space<float>, scalar_atlas<sets2::masses, units::metre_t, absolute_validator>, mass_displacement_basis<float>>;
 
     mass_t m{2.0, units::metre};
   }

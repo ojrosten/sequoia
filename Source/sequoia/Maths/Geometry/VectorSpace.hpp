@@ -81,9 +81,14 @@ namespace sequoia::maths
   template<class T>
   concept vector_space = has_set_type<T> && has_field_type<T> && has_dimension<T>;
 
-  // TO DO: not clear if this is a useful concept; should come out in the wash...
-  template<class B, class VectorSpace>
-  concept basis = vector_space<VectorSpace>;
+  template<class B>
+  concept basis = requires { 
+    typename B::vector_space_type;
+    requires vector_space< typename B::vector_space_type>;
+  };
+
+  template<basis B, vector_space V>
+  inline constexpr bool basis_for{std::is_same_v<typename B::vector_space_type, V>};
 
   template<class T>
   concept affine_space = requires {
@@ -92,15 +97,18 @@ namespace sequoia::maths
     requires vector_space<typename T::vector_space_type>;
   };
 
-  template<affine_space AffineSpace, basis<typename AffineSpace::vector_space_type> Basis, class Origin>
+  template<affine_space AffineSpace, basis Basis, class Origin>
+    requires basis_for<Basis, typename AffineSpace::vector_space_type>
   class affine_coordinates;
 
   struct intrinsic_origin {};
 
-  template<vector_space VectorSpace, basis<VectorSpace> Basis>
+  template<vector_space VectorSpace, basis Basis>
+    requires basis_for<Basis, typename VectorSpace::vector_space_type>
   using vector_coordinates = affine_coordinates<VectorSpace, Basis, intrinsic_origin>;
 
-  template<affine_space AffineSpace, basis<typename AffineSpace::vector_space_type> Basis, class Origin>
+  template<affine_space AffineSpace, basis Basis, class Origin>
+    requires basis_for<Basis, typename AffineSpace::vector_space_type>
   class affine_coordinates
   {
   public:
@@ -316,7 +324,7 @@ namespace sequoia::maths
     using vector_space_type = euclidean_vector_space;
     constexpr static std::size_t dimension{D};
 
-    template<basis<euclidean_vector_space> Basis>
+    template<basis Basis>
       requires is_orthonormal_basis_v<Basis>
     [[nodiscard]]
     friend constexpr field_type inner_product(const vector_coordinates<euclidean_vector_space, Basis>& v, const vector_coordinates<euclidean_vector_space, Basis>& w)
@@ -324,7 +332,7 @@ namespace sequoia::maths
       return std::ranges::fold_left(std::views::zip(v.values(), w.values()), field_type{}, [](field_type f, const auto& z){ return f + std::get<0>(z) * std::get<1>(z); });
     }
 
-    template<basis<euclidean_vector_space> Basis>
+    template<basis Basis>
       requires is_orthonormal_basis_v<Basis>
     [[nodiscard]]
     friend constexpr field_type dot(const vector_coordinates<euclidean_vector_space, Basis>& v, const vector_coordinates<euclidean_vector_space, Basis>& w)
@@ -332,7 +340,7 @@ namespace sequoia::maths
       return inner_product(v, w);
     }
 
-    template<basis<euclidean_vector_space> Basis>
+    template<basis Basis>
       requires is_orthonormal_basis_v<Basis>
     [[nodiscard]]
     friend constexpr field_type norm(const vector_coordinates<euclidean_vector_space, Basis>& v)
@@ -355,15 +363,16 @@ namespace sequoia::maths
     using vector_space_type = euclidean_vector_space<D, T>;
   };
 
-  template<std::size_t D, std::floating_point T, basis<euclidean_vector_space<D, T>> Basis, class Origin>
+  template<std::size_t D, std::floating_point T, basis Basis, class Origin>
   using euclidean_affine_coordinates = affine_coordinates<euclidean_affine_space<D, T>, Basis, Origin>;
 
-  template<std::size_t D, std::floating_point T, basis<euclidean_vector_space<D, T>> Basis>
+  template<std::size_t D, std::floating_point T, basis Basis>
   using euclidean_vector_coordinates = vector_coordinates<euclidean_vector_space<D, T>, Basis>;
 
   template<std::size_t D, std::floating_point T>
   struct standard_basis
   {
+    using vector_space_type = euclidean_vector_space<D, T>;
     using orthonormal = std::true_type;
   };
 

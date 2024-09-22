@@ -46,7 +46,7 @@ namespace sequoia::testing
     using vector_space_type = my_vec_space;
     constexpr static std::size_t dimension{D};
 
-    template<maths::basis<my_vec_space> Basis>
+    template<maths::basis Basis>
       requires std::floating_point<field_type>&& is_orthonormal_basis_v<Basis>
     [[nodiscard]]
     friend constexpr field_type inner_product(const maths::vector_coordinates<my_vec_space, Basis>& lhs, const maths::vector_coordinates<my_vec_space, Basis>& rhs)
@@ -54,7 +54,7 @@ namespace sequoia::testing
       return std::ranges::fold_left(std::views::zip(lhs.values(), rhs.values()), field_type{}, [](field_type f, const auto& z){ return f + std::get<0>(z) * std::get<1>(z); });
     }
 
-    template<maths::basis<my_vec_space> Basis>
+    template<maths::basis Basis>
       requires is_complex_v<field_type>&& is_orthonormal_basis_v<Basis>
     [[nodiscard]]
     friend constexpr field_type inner_product(const maths::vector_coordinates<my_vec_space, Basis>& lhs, const maths::vector_coordinates<my_vec_space, Basis>& rhs)
@@ -70,15 +70,15 @@ namespace sequoia::testing
     using vector_space_type = my_vec_space<Set, Field, D>;
   };
 
-  // TO DO: change this
-  template<class Set, maths::field field_t, std::size_t D>
+  template<class Set, maths::field Field, std::size_t D>
   struct canonical_basis
   {
+    using vector_space_type = my_vec_space<Set, Field, D>;
     using orthonormal = std::true_type;
   };
 
-
-  template<maths::affine_space AffineSpace, maths::basis<typename AffineSpace::vector_space_type> Basis, class Origin>
+  template<maths::affine_space AffineSpace, maths::basis Basis, class Origin>
+    requires basis_for<Basis, typename AffineSpace::vector_space_type>
   struct value_tester<maths::affine_coordinates<AffineSpace, Basis, Origin>>
   {
     using coord_type = maths::affine_coordinates<AffineSpace, Basis, Origin>;
