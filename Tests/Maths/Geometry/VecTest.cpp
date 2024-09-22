@@ -55,8 +55,8 @@ namespace sequoia::testing
     struct scalar_atlas
     {
       using topological_space_type = TopologicalSpace;
-      using unit_type = Unit;
-      using validator_type = Validator;
+      using unit_type              = Unit;
+      using validator_type         = Validator;
       constexpr static std::size_t dimension{1};
 
       template<std::floating_point T>
@@ -85,11 +85,15 @@ namespace sequoia::testing
       using vector_space_type = mass_displacement_space<T>;
     };
 
-    template<std::floating_point T>
+    template<class Unit, std::floating_point T>
     struct mass_displacement_basis
     {
+      using unit_type         = Unit;
       using vector_space_type = mass_displacement_space<T>;
     };
+
+    template<class T>
+    inline constexpr bool has_unit_type_v{requires { typename T::unit_type; }};
 
 
     template<class T>
@@ -118,7 +122,10 @@ namespace sequoia::testing
     struct unchecked_t {};
 
     template<quantity_space QuantitySpace, atlas Atlas, basis Basis>
-      requires atlas_for<Atlas, typename QuantitySpace::set_type> && basis_for<Basis, typename QuantitySpace::vector_space_type>
+      requires  atlas_for<Atlas, typename QuantitySpace::set_type> 
+             && basis_for<Basis, typename QuantitySpace::vector_space_type>
+             && has_unit_type_v<Basis>
+             && std::is_same_v<typename Atlas::unit_type, typename Basis::unit_type> // this could be relazxed to allow e.g. m + cm
     class quantity
     {
     public:
@@ -455,7 +462,7 @@ namespace sequoia::testing
 
   void vec_test::test_masses()
   {
-    using mass_t = quantity<mass_space<float>, scalar_atlas<sets2::masses, units::metre_t, absolute_validator>, mass_displacement_basis<float>>;
+    using mass_t = quantity<mass_space<float>, scalar_atlas<sets2::masses, units::metre_t, absolute_validator>, mass_displacement_basis<units::metre_t, float>>;
 
     mass_t m{2.0, units::metre};
   }
