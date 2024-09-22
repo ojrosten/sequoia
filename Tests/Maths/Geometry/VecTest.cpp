@@ -99,7 +99,12 @@ namespace sequoia::testing
       { T::dimension } -> std::convertible_to<std::size_t>;
     };
 
+
+    template<atlas A, class S>
+    inline constexpr bool atlas_for{std::is_same_v<typename A::topological_space_type, S>};
+    
     static_assert(atlas<scalar_atlas<sets2::masses, units::metre_t, absolute_validator>>);
+    static_assert(atlas_for<scalar_atlas<sets2::masses, units::metre_t, absolute_validator>, sets2::masses>);
 
     template<class T>
     concept quantity_space = requires {
@@ -113,7 +118,7 @@ namespace sequoia::testing
     struct unchecked_t {};
 
     template<quantity_space QuantitySpace, atlas Atlas, basis Basis>
-      requires basis_for<Basis, typename QuantitySpace::vector_space_type>
+      requires atlas_for<Atlas, typename QuantitySpace::set_type> && basis_for<Basis, typename QuantitySpace::vector_space_type>
     class quantity
     {
     public:
