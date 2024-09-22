@@ -20,12 +20,14 @@ namespace sequoia::testing
   namespace
   {
 
-    namespace sets2 
+    namespace sets2
     {
       struct masses
       {
         using topological_space_type = std::true_type;
       };
+
+      struct mass_differences {};
     }
 
     namespace units
@@ -49,8 +51,8 @@ namespace sequoia::testing
     struct scalar_atlas
     {
       using topological_space_type = TopologicalSpace;
-      using unit_type              = Unit;
-      using validator_type         = Validator;
+      using unit_type = Unit;
+      using validator_type = Validator;
       constexpr static std::size_t dimension{1};
 
       template<std::floating_point T>
@@ -62,6 +64,23 @@ namespace sequoia::testing
 
       Validator validator{};
     };
+
+    template<std::floating_point T>
+    struct mass_displacement_space
+    {
+      using set_type          = sets2::mass_differences;
+      using field_type        = T;
+      using vector_space_type = mass_displacement_space;
+      constexpr static std::size_t dimension{1};
+    };
+
+    template<std::floating_point T>
+    struct mass_space
+    {
+      using set_type          = sets2::masses;
+      using vector_space_type = mass_displacement_space<T>;
+    };
+
 
     template<class T>
     concept atlas = requires {
@@ -78,6 +97,8 @@ namespace sequoia::testing
       typename T::vector_space_type;
       requires vector_space<typename T::vector_space_type>;
     };
+
+    static_assert(quantity_space<mass_space<float>>);
 
     struct unchecked_t {};
 
