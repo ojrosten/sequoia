@@ -19,6 +19,11 @@ namespace sequoia::testing
 
   namespace
   {
+    template<class T>
+    struct difference_space
+    {
+    };
+
 
     namespace sets2
     {
@@ -32,9 +37,7 @@ namespace sequoia::testing
 
     namespace units
     {
-      struct kilogram_t
-      {
-      };
+      struct kilogram_t{};
 
       inline constexpr kilogram_t kilogram{};
     }
@@ -51,6 +54,7 @@ namespace sequoia::testing
       }
     };
 
+    // Maybe drop topological space and trade atlas for coordinate system?
     template<class TopologicalSpace, class Unit, class Validator>
     struct scalar_atlas
     {
@@ -69,10 +73,37 @@ namespace sequoia::testing
       Validator validator{};
     };
 
+    template<class Set, std::floating_point T>
+    struct displacement_space
+    {
+      using set_type = Set;
+      using field_type = T;
+      using vector_space_type = displacement_space;
+      constexpr static std::size_t dimension{1};
+    };
+
+    template<class Set, std::floating_point T>
+    struct space
+    {
+      using set_type          = Set;
+      using vector_space_type = displacement_space<difference_space<Set>, T>;
+    };
+
+    struct coordinate_basis_type{};
+
+    template<class VectorSpace, class Unit, std::floating_point T>
+    struct quantity_displacement_basis
+    {
+      using vector_space_type    = VectorSpace;
+      using unit_type            = Unit;
+      using basis_alignment_type = coordinate_basis_type;
+    };
+
+
     template<std::floating_point T>
     struct mass_displacement_space
     {
-      using set_type          = sets2::mass_differences;
+      using set_type          = difference_space<sets2::masses>;
       using field_type        = T;
       using vector_space_type = mass_displacement_space;
       constexpr static std::size_t dimension{1};
@@ -84,8 +115,6 @@ namespace sequoia::testing
       using set_type          = sets2::masses;
       using vector_space_type = mass_displacement_space<T>;
     };
-
-    struct coordinate_basis_type{};
 
     template<class Unit, std::floating_point T>
     struct mass_displacement_basis
@@ -124,7 +153,7 @@ namespace sequoia::testing
 
     struct unchecked_t {};
 
-    template<quantity_space QuantitySpace, atlas Atlas, basis Basis>
+    template<quantity_space QuantitySpace, atlas Atlas, basis Basis=quantity_displacement_basis<typename QuantitySpace::vector_space_type, typename Atlas::unit_type, typename QuantitySpace::vector_space_type::field_type>>
       requires  atlas_for<Atlas, typename QuantitySpace::set_type> 
              && basis_for<Basis, typename QuantitySpace::vector_space_type>
              && has_unit_type_v<Basis>
@@ -162,7 +191,6 @@ namespace sequoia::testing
       SEQUOIA_NO_UNIQUE_ADDRESS atlas_type m_Atlas;
       value_type m_Value;
     };
-
 
     template<std::size_t D, std::floating_point T>
     struct world_displacements {};
@@ -465,7 +493,12 @@ namespace sequoia::testing
 
   void vec_test::test_masses()
   {
-    using mass_t = quantity<mass_space<float>, scalar_atlas<sets2::masses, units::kilogram_t, absolute_validator>, mass_displacement_basis<units::kilogram_t, float>>;
+    using mass_t = quantity<mass_space<float>, scalar_atlas<sets2::masses, units::kilogram_t, absolute_validator>>;
+    // Independent info:
+    // set2s::masses
+    // sets2::mass_differences, but this could be derived from masses
+    // unit
+    // validator
 
     mass_t m{2.0, units::kilogram};
   }
