@@ -32,7 +32,7 @@ namespace sequoia::testing
         using topological_space_type = std::true_type;
       };
 
-      struct mass_differences {};
+      //struct mass_differences {};
     }
 
     namespace units
@@ -73,7 +73,7 @@ namespace sequoia::testing
       Validator validator{};
     };
 
-    template<class Set, std::floating_point T>
+    /*template<class Set, std::floating_point T>
     struct displacement_space
     {
       using set_type = Set;
@@ -87,7 +87,7 @@ namespace sequoia::testing
     {
       using set_type          = Set;
       using vector_space_type = displacement_space<difference_space<Set>, T>;
-    };
+    };*/
 
     struct coordinate_basis_type{};
 
@@ -116,13 +116,14 @@ namespace sequoia::testing
       using vector_space_type = mass_displacement_space<T>;
     };
 
+    /*
     template<class Unit, std::floating_point T>
     struct mass_displacement_basis
     {
       using unit_type            = Unit;
       using vector_space_type    = mass_displacement_space<T>;
       using basis_alignment_type = coordinate_basis_type;
-    };
+    };*/
 
     template<class T>
     inline constexpr bool has_unit_type_v{requires { typename T::unit_type; }};
