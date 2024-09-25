@@ -160,7 +160,7 @@ namespace sequoia::testing
     }
 
     {
-      const auto hostDir{working_materials() /= "AnotherGeneratedProject"};
+      const auto hostDir{working_materials() /= "Another_Generated-Project"};
       commandline_arguments args{zeroth_arg(), "init", "Oliver Jacob Rosten", hostDir.generic_string(), "  ", "--no-git", "--no-build"};
 
       std::stringstream outputStream{};
@@ -168,7 +168,7 @@ namespace sequoia::testing
 
       tr.execute();
 
-      check(equivalence, report_line(""), hostDir, predictive_materials() /= "AnotherGeneratedProject");
+      check(equivalence, report_line(""), hostDir, predictive_materials() /= "Another_Generated-Project");
     }
   }
 }

@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
 
-project(AnotherGeneratedProjectTests LANGUAGES CXX)
+project(Another_Generated-ProjectTests LANGUAGES CXX)
 
 set(BuildSystem ../dependencies/sequoia/build_system)
 set(TestDir ../Tests)
@@ -12,8 +12,8 @@ sequoia_init()
 
 add_executable(TestAll TestAllMain.cpp)
 
-#!add_subdirectory(${SourceDir}/anotherGeneratedProject AnotherGeneratedProject)
-#!target_link_libraries(TestAll PUBLIC AnotherGeneratedProject)
+#!add_subdirectory(${SourceDir}/another_Generated-Project Another_Generated-Project)
+#!target_link_libraries(TestAll PUBLIC Another_Generated-Project)
 
 target_sources(TestAll PRIVATE)
 
