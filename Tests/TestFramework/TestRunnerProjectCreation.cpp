@@ -139,11 +139,8 @@ namespace sequoia::testing
     fs::copy(auxiliary_paths::repo(project_root()), auxiliary_paths::repo(fake_project()), fs::copy_options::recursive);
 
     {
-      auto generated{
-        [this] () { return working_materials() /= "GeneratedProject"; }
-      };
-
-      commandline_arguments args{zeroth_arg(), "init", "Oliver Jacob Rosten", generated().string(), "  ", "--no-git", "--no-build"};
+      const auto hostDir{working_materials() /= "GeneratedProject"};
+      commandline_arguments args{zeroth_arg(), "init", "Oliver Jacob Rosten", hostDir.string(), "  ", "--no-git", "--no-build"};
 
       std::stringstream outputStream{};
       test_runner tr{args.size(), args.get(), "Oliver J. Rosten", make_project_paths(), "\t", outputStream};
@@ -155,7 +152,7 @@ namespace sequoia::testing
         file << outputStream.rdbuf();
       }
 
-      check(equivalence, report_line(""), generated(), predictive_materials() /= "GeneratedProject");
+      check(equivalence, report_line(""), hostDir, predictive_materials() /= "GeneratedProject");
       check(equivalence, report_line(""), fake_project(), predictive_materials() /= "FakeProject");
     }
 
