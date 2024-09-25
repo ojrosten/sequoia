@@ -154,7 +154,16 @@ namespace sequoia::testing
 
     struct unchecked_t {};
 
-    template<quantity_space QuantitySpace, atlas Atlas, basis Basis=quantity_displacement_basis<typename QuantitySpace::vector_space_type, typename Atlas::unit_type, typename QuantitySpace::vector_space_type::field_type>>
+    template<quantity_space QuantitySpace, atlas Atlas>
+    struct to_default_basis 
+    {
+        using type = quantity_displacement_basis<typename QuantitySpace::vector_space_type, typename Atlas::unit_type, typename QuantitySpace::vector_space_type::field_type>;
+    };
+
+    template<quantity_space QuantitySpace, atlas Atlas>
+    using to_default_basis_t = typename to_default_basis<QuantitySpace, Atlas>::type;
+
+    template<quantity_space QuantitySpace, atlas Atlas, basis Basis=to_default_basis_t<QuantitySpace, Atlas>>
       requires  atlas_for<Atlas, typename QuantitySpace::set_type> 
              && basis_for<Basis, typename QuantitySpace::vector_space_type>
              && has_unit_type_v<Basis>
