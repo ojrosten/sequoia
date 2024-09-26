@@ -81,10 +81,10 @@ namespace sequoia::testing
 
     void copy_sequoia(std::ostream& stream, const project_paths& parentProjectPaths, const project_data& data)
     {
-      const std::filesystem::path seqLocation{data.project_root / "dependencies" / "sequoia"};
+      const std::filesystem::path seqLocation{dependencies_paths{data.project_root}.sequoia_root()};
       const auto parentSequoiaRoot{
           [&parentProjectPaths](){
-            const auto sequoiaAsDependency{parentProjectPaths.project_root() / "dependencies" / "sequoia"};
+            const auto sequoiaAsDependency{parentProjectPaths.dependencies().sequoia_root()};
             return fs::exists(sequoiaAsDependency) ? sequoiaAsDependency : parentProjectPaths.project_root();
           }()
       };

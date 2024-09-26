@@ -163,6 +163,24 @@ namespace sequoia::testing
     return m_Repo.parent_path();
   }
 
+  //===================================== tests_paths =====================================//
+
+  dependencies_paths::dependencies_paths(fs::path projectRoot)
+    : m_Repo{std::move(projectRoot /= "dependencies")}
+  {}
+
+  [[nodiscard]]
+  std::filesystem::path dependencies_paths::project_root() const
+  {
+    return m_Repo.parent_path();
+  }
+
+  [[nodiscard]]
+  std::filesystem::path dependencies_paths::sequoia_root() const
+  {
+    return m_Repo / "sequoia";
+  }
+
   //===================================== test_materials_paths =====================================//
 
   test_materials_paths::test_materials_paths(fs::path projectRoot)
@@ -196,7 +214,7 @@ namespace sequoia::testing
   fs::path auxiliary_paths::repo(const fs::path& projectRoot)
   {
     const auto trialPath{projectRoot / "aux_files"};
-    return fs::exists(trialPath) ? trialPath : projectRoot / "dependencies" / "sequoia" / "aux_files";
+    return fs::exists(trialPath) ? trialPath : dependencies_paths{projectRoot}.sequoia_root() / "aux_files";
   }
 
   [[nodiscard]]
@@ -355,6 +373,7 @@ namespace sequoia::testing
     , m_Build{project_root(), m_Discovered.executable().parent_path(), m_Discovered.cmake_cache()}
     , m_Auxiliary{project_root()}
     , m_Output{project_root()}
+    , m_Dependencies{project_root()}
     , m_Tests{project_root()}
     , m_Materials{project_root()}
     , m_BuildSystem{project_root()}

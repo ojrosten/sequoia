@@ -151,6 +151,33 @@ namespace sequoia::testing
     std::filesystem::path m_Repo;
   };
 
+  /*! \brief Paths relating to the dependencies directory */
+
+  class dependencies_paths
+  {
+  public:
+    dependencies_paths() = default;
+
+    explicit dependencies_paths(std::filesystem::path projectRoot);
+
+    [[nodiscard]]
+    const std::filesystem::path& repo() const noexcept
+    {
+      return m_Repo;
+    }
+
+    [[nodiscard]]
+    std::filesystem::path project_root() const;
+
+    [[nodiscard]]
+    std::filesystem::path sequoia_root() const;
+
+    [[nodiscard]]
+    friend bool operator==(const tests_paths&, const tests_paths&) noexcept = default;
+  private:
+    std::filesystem::path m_Repo;
+  };
+
   /*! \brief Paths relating to the TestMaterials directory */
 
   class test_materials_paths
@@ -472,6 +499,12 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
+    const dependencies_paths& dependencies() const noexcept
+    {
+      return m_Dependencies;
+    }
+
+    [[nodiscard]]
     const tests_paths& tests() const noexcept
     {
       return m_Tests;
@@ -541,6 +574,7 @@ namespace sequoia::testing
     build_paths          m_Build;
     auxiliary_paths      m_Auxiliary;
     output_paths         m_Output;
+    dependencies_paths   m_Dependencies;
     tests_paths          m_Tests;
     test_materials_paths m_Materials;
     build_system_paths   m_BuildSystem;
