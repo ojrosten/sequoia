@@ -63,7 +63,7 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    std::filesystem::path project_root() const
+    const std::filesystem::path& project_root() const
     {
       return m_ProjectPaths.project_root();
     }
@@ -102,6 +102,12 @@ namespace sequoia::testing
     std::string report_line(std::string_view message, const std::source_location loc = std::source_location::current())
     {
       return testing::report_line(message, loc, m_ProjectPaths.tests().repo());
+    }
+
+    [[nodiscard]]
+    std::string report_line(const report& rep) const
+    {
+        return testing::report_line(rep.message(), rep.location(), m_ProjectPaths.tests().repo());
     }
   protected:
     ~test_base() = default;

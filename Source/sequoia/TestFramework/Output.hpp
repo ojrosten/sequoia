@@ -201,6 +201,25 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string report_line(std::string_view message, const std::source_location loc = std::source_location::current(), const std::filesystem::path& repository = {});
 
+  class report
+  {
+  public:
+      /* TO DO: temporary */ explicit
+      report(std::string_view message, const std::source_location loc = std::source_location::current())
+          : m_Message{message}
+          , m_Loc{loc}
+      {}
+
+      [[nodiscard]]
+      const std::string& message() const noexcept { return m_Message; }
+
+      [[nodiscard]]
+      const std::source_location& location() const noexcept { return m_Loc; }
+  private:
+      std::string m_Message{};
+      std::source_location m_Loc;
+  };
+
   [[nodiscard]]
   std::string tidy_name(std::string name, clang_type);
 

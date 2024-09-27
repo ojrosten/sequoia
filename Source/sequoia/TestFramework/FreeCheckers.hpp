@@ -682,6 +682,12 @@ namespace sequoia::testing
       return testing::check(equality, description, logger(), obtained, prediction, std::move(advisor));
     }
 
+    template<class Self, class T, class Advisor = null_advisor>
+    bool check(this Self&& self, equality_check_t, const report& description, const T& obtained, const T& prediction, tutor<Advisor> advisor = {})
+    {
+        return testing::check(equality, self.report_line(description), self.logger(), obtained, prediction, std::move(advisor));
+    }
+
     template<class T, class Advisor = null_advisor>
     bool check(with_best_available_check_t, std::string_view description, const T& obtained, const T& prediction, tutor<Advisor> advisor = {})
     {
