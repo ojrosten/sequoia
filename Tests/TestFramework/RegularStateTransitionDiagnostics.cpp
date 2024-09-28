@@ -69,9 +69,9 @@ namespace sequoia::testing
     {
       auto checker{
         [this](std::string_view description, double obtained, double prediction, double parent, std::weak_ordering ordering) {
-          check(equality, description, obtained, prediction);
-          check(within_tolerance{0.1}, description, obtained, prediction);
-          check_semantics(description, prediction, parent, ordering);
+          check(equality, {description, no_source_location}, obtained, prediction);
+          check(within_tolerance{0.1}, {description, no_source_location}, obtained, prediction);
+          check_semantics({description, no_source_location}, prediction, parent, ordering);
         }
       };
 
@@ -81,9 +81,9 @@ namespace sequoia::testing
     {
       auto checker{
         [this](std::string_view description, std::function<double()> obtained, std::function<double()> prediction, std::function<double()> parent, std::weak_ordering ordering) {
-          check(equality, description, obtained(), prediction());
-          check(within_tolerance{0.1}, description, obtained(), prediction());
-          check_semantics(description, prediction(), parent(), ordering);
+          check(equality, {description, no_source_location}, obtained(), prediction());
+          check(within_tolerance{0.1}, {description, no_source_location}, obtained(), prediction());
+          check_semantics({description, no_source_location}, prediction(), parent(), ordering);
         }
       };
 
@@ -93,8 +93,8 @@ namespace sequoia::testing
     {
       auto checker{
         [this](std::string_view description, double obtained, double prediction) {
-          check(equality, description, obtained, prediction);
-          check(within_tolerance{0.1}, description, obtained, prediction);
+          check(equality, {description, no_source_location}, obtained, prediction);
+          check(within_tolerance{0.1}, {description, no_source_location}, obtained, prediction);
         }
       };
 
@@ -123,9 +123,9 @@ namespace sequoia::testing
     {
       auto checker{
         [this](std::string_view description, cmplx obtained, cmplx prediction, cmplx parent) {
-          check(equality, description, obtained, prediction);
-          check(within_tolerance{0.1}, description, obtained, prediction);
-          check_semantics(description, prediction, parent);
+          check(equality, {description, no_source_location}, obtained, prediction);
+          check(within_tolerance{0.1}, {description, no_source_location}, obtained, prediction);
+          check_semantics({description, no_source_location}, prediction, parent);
         }
       };
 
@@ -135,9 +135,9 @@ namespace sequoia::testing
     {
       auto checker{
         [this](std::string_view description, std::function<cmplx()> obtained, std::function<cmplx()> prediction, std::function<cmplx()> parent) {
-          check(equality, description, obtained(), prediction());
-          check(within_tolerance{0.1}, description, obtained(), prediction());
-          check_semantics(description, prediction(), parent());
+          check(equality, {description, no_source_location}, obtained(), prediction());
+          check(within_tolerance{0.1}, {description, no_source_location}, obtained(), prediction());
+          check_semantics({description, no_source_location}, prediction(), parent());
         }
       };
 
@@ -147,8 +147,8 @@ namespace sequoia::testing
     {
       auto checker{
         [this](std::string_view description, cmplx obtained, cmplx prediction) {
-          check(equality, description, obtained, prediction);
-          check(within_tolerance{0.1}, description, obtained, prediction);
+          check(equality, {description, no_source_location}, obtained, prediction);
+          check(within_tolerance{0.1}, {description, no_source_location}, obtained, prediction);
         }
       };
 
@@ -185,7 +185,7 @@ namespace sequoia::testing
 
     auto checker{
         [this](std::string_view description, double obtained, double prediction) {
-          check(equality, description, obtained, prediction);
+          check(equality, {description, no_source_location}, obtained, prediction);
         }
     };
 
@@ -208,7 +208,7 @@ namespace sequoia::testing
 
     auto checker{
         [this](std::string_view description, cmplx obtained, cmplx prediction) {
-          check(equality, description, obtained, prediction);
+          check(equality, {description, no_source_location}, obtained, prediction);
         }
     };
 
@@ -221,8 +221,8 @@ namespace sequoia::testing
     using broken_constructor_graph = transition_checker_type::transition_graph;
 
     auto initCheckFn{
-      [this](std::string_view message, const broken_constructor& bc, int i) {
-        check(equivalence, message, bc, i);
+      [this](std::string_view description, const broken_constructor& bc, int i) {
+        check(equivalence, {description, no_source_location}, bc, i);
       }
     };
 

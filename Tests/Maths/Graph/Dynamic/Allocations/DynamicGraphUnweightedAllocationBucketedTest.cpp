@@ -49,27 +49,27 @@ namespace sequoia::testing
 
     Graph g{edge_allocator{}};
 
-    //this->template check_exception_thrown<std::out_of_range>(report_line(""), [&g](){ g.reserve_edges(0, 4);});
-    //this->template check_exception_thrown<std::out_of_range>(report_line(""), [&g](){ return g.edges_capacity(0);});
-    check(equality, report_line(""), g.node_capacity(), 0_sz);
+    //this->template check_exception_thrown<std::out_of_range>(report(""), [&g](){ g.reserve_edges(0, 4);});
+    //this->template check_exception_thrown<std::out_of_range>(report(""), [&g](){ return g.edges_capacity(0);});
+    check(equality, report(""), g.node_capacity(), 0_sz);
 
     g.add_node();
-    check(equality, report_line(""), g, Graph{{{}}, edge_allocator{}});
+    check(equality, report(""), g, Graph{{{}}, edge_allocator{}});
 
-    check(equality, report_line(""), g.edges_capacity(0), 0_sz);
-    check(equality, report_line(""), g.node_capacity(), 1_sz);
+    check(equality, report(""), g.edges_capacity(0), 0_sz);
+    check(equality, report(""), g.node_capacity(), 1_sz);
     g.reserve_edges(0, 4);
-    check(equality, report_line(""), g.edges_capacity(0), 4_sz);
+    check(equality, report(""), g.edges_capacity(0), 4_sz);
 
     g.reserve_nodes(4);
-    check(equality, report_line(""), g.node_capacity(), 4_sz);
+    check(equality, report(""), g.node_capacity(), 4_sz);
 
     g.shrink_to_fit();
-    check(equality, report_line("May fail if stl implementation doesn't actually shrink to fit!"), g.edges_capacity(0), 0_sz);
-    check(equality, report_line("May fail if stl implementation doesn't actually shrink to fit!"), g.node_capacity(), 1_sz);
+    check(equality, report("May fail if stl implementation doesn't actually shrink to fit!"), g.edges_capacity(0), 0_sz);
+    check(equality, report("May fail if stl implementation doesn't actually shrink to fit!"), g.node_capacity(), 1_sz);
 
     g.insert_node(0u);
-    check(equality, report_line(""), g, Graph{{{}, {}}, edge_allocator{}});
+    check(equality, report(""), g, Graph{{{}, {}}, edge_allocator{}});
 
     using edge_init_t = typename Graph::edge_init_type;
     using edge_allocator = typename Graph::edge_allocator_type;
@@ -80,7 +80,7 @@ namespace sequoia::testing
 
     Graph g2{};
 
-    check_semantics(report_line(""),
+    check_semantics(report(""),
                     g2,
                     Graph{{{}}, edge_allocator{}},
                     nodeMaker,
@@ -91,7 +91,7 @@ namespace sequoia::testing
 
     if constexpr (GraphFlavour == graph_flavour::directed)
     {
-      check_semantics(report_line(""),
+      check_semantics(report(""),
                       g2,
                       Graph{{edge_init_t{1}}, {}},
                       nodeMaker,
@@ -102,7 +102,7 @@ namespace sequoia::testing
     }
     else if constexpr(GraphFlavour == graph_flavour::undirected)
     {
-      check_semantics(report_line(""),
+      check_semantics(report(""),
                       g2,
                       Graph{{edge_init_t{1}}, {edge_init_t{0}}},
                       nodeMaker,

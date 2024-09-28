@@ -49,17 +49,17 @@ namespace sequoia::testing
       q_t q{};
 
       int a{};
-      check(report_line(""), q.push(task_t{[&a](){ a+= 1; }}, std::try_to_lock));
+      check(report(""), q.push(task_t{[&a](){ a+= 1; }}, std::try_to_lock));
       auto t{q.pop(std::try_to_lock)};
 
       t();
-      check(equality, report_line(""), a, 1);
+      check(equality, report(""), a, 1);
 
       q.push(task_t{[&a](){ a+= 2; }});
       t = q.pop();
 
       t();
-      check(equality, report_line(""), a, 3);
+      check(equality, report(""), a, 3);
 
       q.finish();
     }
@@ -70,13 +70,13 @@ namespace sequoia::testing
 
       q_t q{};
 
-      check(report_line(""), q.push(task_t{[](){ return 1;}}, std::try_to_lock));
+      check(report(""), q.push(task_t{[](){ return 1;}}, std::try_to_lock));
       auto t{q.pop(std::try_to_lock)};
 
       auto fut{t.get_future()};
       t();
 
-      check(equality, report_line(""), fut.get(), 1);
+      check(equality, report(""), fut.get(), 1);
 
       q.push(task_t{[](){ return 2;}});
       t = q.pop();
@@ -84,7 +84,7 @@ namespace sequoia::testing
       fut = t.get_future();
       t();
 
-      check(equality, report_line(""), fut.get(), 2);
+      check(equality, report(""), fut.get(), 2);
 
       q.finish();
     }
@@ -98,7 +98,7 @@ namespace sequoia::testing
 
     auto fut{model.push([]() -> R { throw std::runtime_error{"Error!"}; })};
 
-    check_exception_thrown<std::runtime_error>(report_line(message), [&fut]() { return fut.get(); });
+    check_exception_thrown<std::runtime_error>(report(message), [&fut]() { return fut.get(); });
   }
 
   template<class ThreadModel, class... Args>
@@ -111,34 +111,34 @@ namespace sequoia::testing
     {
       int x{};
       auto fut{model.push([&x](){ return ++x; })};
-      check(equality, report_line(message), fut.get(), 1);
+      check(equality, report(message), fut.get(), 1);
     }
     else
     {
       auto fut{model.push([](){ return 42; })};
-      check(equality, report_line(message), fut.get(), 42);
+      check(equality, report(message), fut.get(), 42);
     }
   }
 
   void threading_models_test::test_serial_exceptions()
   {
-    check_exception_thrown<std::runtime_error>(report_line(""), [](){ serial<void>{}.push([]() { throw std::runtime_error{"Error!"}; }); });
-    check_exception_thrown<std::runtime_error>(report_line(""), [](){ return serial<int>{}.push([]() -> int { throw std::runtime_error{"Error!"}; }); });
+    check_exception_thrown<std::runtime_error>(report(""), [](){ serial<void>{}.push([]() { throw std::runtime_error{"Error!"}; }); });
+    check_exception_thrown<std::runtime_error>(report(""), [](){ return serial<int>{}.push([]() -> int { throw std::runtime_error{"Error!"}; }); });
   }
 
   void threading_models_test::test_serial_execution()
   {
     {
       serial<int> model{};
-      check(equality, report_line(""), model.push([](){ return 42; }), 42);
-      check(equality, report_line(""), model.push([](){ return 43; }), 43);
+      check(equality, report(""), model.push([](){ return 42; }), 42);
+      check(equality, report(""), model.push([](){ return 43; }), 43);
     }
 
     {
       serial<void> model{};
       int x{};
       model.push([&x]() { ++x; });
-      check(equality, report_line(""), x, 1);
+      check(equality, report(""), x, 1);
     }
   }
 

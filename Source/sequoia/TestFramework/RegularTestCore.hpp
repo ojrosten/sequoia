@@ -42,41 +42,41 @@ namespace sequoia::testing
     regular_extender& operator=(regular_extender&&)      = delete;
 
     /// Precondition: x!=y
-    template<pseudoregular T>
+    template<class Self, pseudoregular T>
       requires (!std::totally_ordered<T>)
-    void check_semantics(std::string_view description, const T& x, const T& y)
+    void check_semantics(this Self&& self, const report& description, const T& x, const T& y)
     {
-      testing::check_semantics(regular_message(description), logger(), x, y);
+      testing::check_semantics(regular_message(self.report_line(description)), self.get_logger(), x, y);
     }
 
     /// Precondition: x!=y, with values consistent with order
-    template<pseudoregular T>
+    template<class Self, pseudoregular T>
       requires std::totally_ordered<T>
-    void check_semantics(std::string_view description, const T& x, const T& y, std::weak_ordering order)
+    void check_semantics(this Self&& self, const report& description, const T& x, const T& y, std::weak_ordering order)
     {
-      testing::check_semantics(regular_message(description), logger(), x, y, order);
+      testing::check_semantics(regular_message(self.report_line(description)), self.get_logger(), x, y, order);
     }
 
     /// Precondition: x!=y
-    template<pseudoregular T, std::invocable<T&> Mutator>
-    void check_semantics(std::string_view description, const T& x, const T& y, Mutator m)
+    template<class Self, pseudoregular T, std::invocable<T&> Mutator>
+    void check_semantics(this Self&& self, const report& description, const T& x, const T& y, Mutator m)
     {
-      testing::check_semantics(regular_message(description), logger(), x, y, std::move(m));
+      testing::check_semantics(regular_message(self.report_line(description)), self.get_logger(), x, y, std::move(m));
     }
 
     /// Precondition: x!=y, with values consistent with order
-    template<pseudoregular T, std::invocable<T&> Mutator>
+    template<class Self, pseudoregular T, std::invocable<T&> Mutator>
       requires std::totally_ordered<T>
-    void check_semantics(std::string_view description, const T& x, const T& y, std::weak_ordering order, Mutator m)
+    void check_semantics(this Self&& self, const report& description, const T& x, const T& y, std::weak_ordering order, Mutator m)
     {
-      testing::check_semantics(regular_message(description), logger(), x, y, order, std::move(m));
+      testing::check_semantics(regular_message(self.report_line(description)), self.get_logger(), x, y, order, std::move(m));
     }
   protected:
     ~regular_extender() = default;
-  private:
-    [[nodiscard]]
-    test_logger<Mode>& logger() noexcept { return *m_pLogger; }
 
+    [[nodiscard]]
+    test_logger<Mode>& get_logger() noexcept { return *m_pLogger; }
+  private:
     test_logger<Mode>* m_pLogger;
   };
 

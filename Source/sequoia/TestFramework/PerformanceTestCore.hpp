@@ -244,17 +244,17 @@ namespace sequoia::testing
     performance_extender& operator=(const performance_extender&) = delete;
     performance_extender& operator=(performance_extender&&)      = delete;
 
-    template<std::invocable F, std::invocable S>
-    bool check_relative_performance(std::string_view description, F fast, S slow, const double minSpeedUp, const double maxSpeedUp, const std::size_t trials=5, const double num_sds=4)
+    template<class Self, std::invocable F, std::invocable S>
+    bool check_relative_performance(this Self&& self, const report& description, F fast, S slow, const double minSpeedUp, const double maxSpeedUp, const std::size_t trials=5, const double num_sds=4)
     {
-      return testing::check_relative_performance(description, logger(), fast, slow, minSpeedUp, maxSpeedUp, trials, num_sds, 3);
+      return testing::check_relative_performance(self.report_line(description), self.get_logger(), fast, slow, minSpeedUp, maxSpeedUp, trials, num_sds, 3);
     }
   protected:
     ~performance_extender() = default;
-  private:
-    [[nodiscard]]
-    test_logger<Mode>& logger() noexcept { return *m_pLogger; }
 
+    [[nodiscard]]
+    test_logger<Mode>& get_logger() noexcept { return *m_pLogger; }
+  private:
     test_logger<Mode>* m_pLogger;
   };
 

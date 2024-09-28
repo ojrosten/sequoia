@@ -138,9 +138,9 @@ namespace sequoia::testing
 
       auto asyncFn{[millisecs]() { waiting_task<wait, asynchronous<void>>{2u, wait{millisecs}}(); }};
 
-      check_relative_performance(report_line("Two Waiting tasks; pool_2/null"), threadPoolFn, nullThreadFn, 1.9, 2.1);
-      check_relative_performance(report_line("Two Waiting tasks; pool_2M/null"), threadPoolMonoFn, nullThreadFn, 1.9, 2.1);
-      check_relative_performance(report_line("Two Waiting tasks; async/null"), asyncFn, nullThreadFn, 1.9, 2.1);
+      check_relative_performance(report("Two Waiting tasks; pool_2/null"), threadPoolFn, nullThreadFn, 1.9, 2.1);
+      check_relative_performance(report("Two Waiting tasks; pool_2M/null"), threadPoolMonoFn, nullThreadFn, 1.9, 2.1);
+      check_relative_performance(report("Two Waiting tasks; async/null"), asyncFn, nullThreadFn, 1.9, 2.1);
     }
 
     {
@@ -150,8 +150,8 @@ namespace sequoia::testing
 
       auto nullThreadFn{[millisecs]() { waiting_task<wait, serial<void>>{4u, wait{millisecs}}(); }};
 
-      check_relative_performance(report_line("Four Waiting tasks; pool_2/null"), threadPoolFn, nullThreadFn, 1.9, 2.1);
-      check_relative_performance(report_line("Four Waiting tasks; pool_2M/null"), threadPoolMonoFn, nullThreadFn, 1.9, 2.1);
+      check_relative_performance(report("Four Waiting tasks; pool_2/null"), threadPoolFn, nullThreadFn, 1.9, 2.1);
+      check_relative_performance(report("Four Waiting tasks; pool_2M/null"), threadPoolMonoFn, nullThreadFn, 1.9, 2.1);
     }
 
     {
@@ -161,8 +161,8 @@ namespace sequoia::testing
 
       auto nullThreadFn{[millisecs]() { waiting_task<wait, serial<void>>{4u, wait{millisecs}}(); }};
 
-      check_relative_performance(report_line("Four Waiting tasks; pool_4/null"), threadPoolFn, nullThreadFn, 3.9, 4.1);
-      check_relative_performance(report_line("Four Waiting tasks; pool_4M/null"), threadPoolMonoFn, nullThreadFn, 3.9, 4.1);
+      check_relative_performance(report("Four Waiting tasks; pool_4/null"), threadPoolFn, nullThreadFn, 3.9, 4.1);
+      check_relative_performance(report("Four Waiting tasks; pool_4M/null"), threadPoolMonoFn, nullThreadFn, 3.9, 4.1);
     }
   }
 
@@ -180,9 +180,9 @@ namespace sequoia::testing
 
       auto asyncFn{[waitReturnVal]() { return waiting_task<wait_return, asynchronous<int>>{2u, waitReturnVal}(); }};
 
-      check_relative_performance(report_line("Two Waiting tasks; pool_2/null"), threadPoolFn, nullThreadFn, 1.9, 2.1);
-      check_relative_performance(report_line("Two Waiting tasks; pool_2M/null"), threadPoolMonoFn, nullThreadFn, 1.9, 2.1);
-      check_relative_performance(report_line("Two Waiting tasks; async/null"), asyncFn, nullThreadFn, 1.9, 2.1);
+      check_relative_performance(report("Two Waiting tasks; pool_2/null"), threadPoolFn, nullThreadFn, 1.9, 2.1);
+      check_relative_performance(report("Two Waiting tasks; pool_2M/null"), threadPoolMonoFn, nullThreadFn, 1.9, 2.1);
+      check_relative_performance(report("Two Waiting tasks; async/null"), asyncFn, nullThreadFn, 1.9, 2.1);
     }
   }
 }

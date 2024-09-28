@@ -51,20 +51,20 @@ namespace sequoia::testing
         }
       };
 
-      check_semantics(report_line(""), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {1_anp,1_awp}}});
-      check_semantics(report_line(""), beast{{1,2}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {0_anp,1_awp}}});
-      check_semantics(report_line(""), beast(allocator{}), beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {0_c, {1_c,1_mu}, {1_anp,1_awp}}});
-      check_semantics(report_line(""), beast{{1,2}}, beast(allocator{}), mutator, allocation_info{allocGetter, {1_c, {0_c,1_mu}, {0_anp,0_awp}}});
-      check_semantics(report_line(""), beast{{1,2}}, beast{{5}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {0_anp,1_awp}}});
+      check_semantics(report(""), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {1_anp,1_awp}}});
+      check_semantics(report(""), beast{{1,2}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {0_anp,1_awp}}});
+      check_semantics(report(""), beast(allocator{}), beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {0_c, {1_c,1_mu}, {1_anp,1_awp}}});
+      check_semantics(report(""), beast{{1,2}}, beast(allocator{}), mutator, allocation_info{allocGetter, {1_c, {0_c,1_mu}, {0_anp,0_awp}}});
+      check_semantics(report(""), beast{{1,2}}, beast{{5}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {0_anp,1_awp}}});
 
-      auto[x,y]{check_semantics(report_line(""),
+      auto[x,y]{check_semantics(report(""),
                       [](){ return beast{{1,2}}; },
                       [](){ return beast{{5}, allocator{}}; },
                       mutator,
                       allocation_info{allocGetter, {1_c, {1_c,1_mu}, {0_anp,1_awp}}})};
 
-      check(equality, report_line("check_semantics return value (x)"), x, beast{{1,2}});
-      check(equality, report_line("check_semantics return value (y)"), y, beast{{5}});
+      check(equality, report("check_semantics return value (x)"), x, beast{{1,2}});
+      check(equality, report("check_semantics return value (y)"), y, beast{{5}});
     }
 
     {
@@ -80,11 +80,11 @@ namespace sequoia::testing
         }
       };
 
-      check_semantics(report_line(""), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{getter{}, {1_c, {1_c,0_mu}, {1_anp, 1_awp}}});
-      check_semantics(report_line(""), beast{{1,2}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{getter{}, {1_c, {1_c,0_mu}, {1_anp,1_awp,0_manp,0_ma}}});
-      check_semantics(report_line(""), beast(allocator{}), beast{{5,6}, allocator{}}, mutator, allocation_info{getter{}, {0_c, {1_c,0_mu}, {1_anp, 1_awp}}});
-      check_semantics(report_line(""), beast{{1,2}}, beast(allocator{}), mutator, allocation_info{getter{}, {1_c, {0_c,1_mu}, {0_anp,0_awp}}});
-      check_semantics(report_line(""), beast{{1,2}}, beast{{5}, allocator{}}, mutator, allocation_info{getter{}, {1_c, {1_c,0_mu}, {1_anp,1_awp,0_manp,0_ma}}});
+      check_semantics(report(""), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{getter{}, {1_c, {1_c,0_mu}, {1_anp, 1_awp}}});
+      check_semantics(report(""), beast{{1,2}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{getter{}, {1_c, {1_c,0_mu}, {1_anp,1_awp,0_manp,0_ma}}});
+      check_semantics(report(""), beast(allocator{}), beast{{5,6}, allocator{}}, mutator, allocation_info{getter{}, {0_c, {1_c,0_mu}, {1_anp, 1_awp}}});
+      check_semantics(report(""), beast{{1,2}}, beast(allocator{}), mutator, allocation_info{getter{}, {1_c, {0_c,1_mu}, {0_anp,0_awp}}});
+      check_semantics(report(""), beast{{1,2}}, beast{{5}, allocator{}}, mutator, allocation_info{getter{}, {1_c, {1_c,0_mu}, {1_anp,1_awp,0_manp,0_ma}}});
     }
 
     /* TO DO: enable test once there's a fix for this libc++ bug https://bugs.llvm.org/show_bug.cgi?id=48439 {
@@ -100,7 +100,7 @@ namespace sequoia::testing
         }
       };
 
-      check_semantics(report_line(""),
+      check_semantics(report(""),
                       beast{},
                       beast{"A string which is clearly long enough to evade the small string optimisation"},
                       mutator, allocation_info{allocGetter, {0_c, {1_c,1_mu}, {1_anp,1_awp}}});
@@ -122,7 +122,7 @@ namespace sequoia::testing
       };
 
 
-      check_semantics(report_line(""), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {2_c, {2_c,1_mu,1_pc,1_pm}, {1_anp,1_awp}}});
+      check_semantics(report(""), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {2_c, {2_c,1_mu,1_pc,1_pm}, {1_anp,1_awp}}});
     }
 
     {
@@ -141,7 +141,7 @@ namespace sequoia::testing
         }
       };
 
-      check_semantics(report_line(""), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu,2_pc,1_pm}, {1_anp,1_awp}}});
+      check_semantics(report(""), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu,2_pc,1_pm}, {1_anp,1_awp}}});
     }
 
     {
@@ -160,7 +160,7 @@ namespace sequoia::testing
       };
 
 
-      check_semantics(report_line(""), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu,1_pc,2_pm}, {1_anp,1_awp}}});
+      check_semantics(report(""), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu,1_pc,2_pm}, {1_anp,1_awp}}});
     }
 
 
@@ -186,7 +186,7 @@ namespace sequoia::testing
         }
       };
 
-      check_semantics(report_line(""),
+      check_semantics(report(""),
                       beast{{1}, {1}, xAllocator{}, yAllocator{}},
                       beast{{5,6}, {5,6}, xAllocator{}, yAllocator{}},
                       mutator,

@@ -244,14 +244,14 @@ namespace sequoia::testing
       using namespace maths;
 
       // One node
-      t.check_exception_thrown<std::out_of_range>(t.report_line("Target index of edge out of range"), [](){ return graph_t{{{1, 0}}}; });
-      t.check_exception_thrown<std::out_of_range>(t.report_line("Complimentary index of edge out of range"), [](){ return graph_t{{{0, 1}}}; });
-      t.check_exception_thrown<std::logic_error>(t.report_line("Self-referential complimentary index"), [](){ return graph_t{{{0, 0}}}; });
-      t.check_exception_thrown<std::logic_error>(t.report_line("Mismatched complimentary indices"), [](){ return graph_t{{{0, 1}, {0, 1}}}; });
-      t.check_exception_thrown<std::logic_error>(t.report_line("Mismatched complimentary indices"), [](){ return graph_t{{{0, 1}, {0, 2}, {0, 0}}}; });
+      t.check_exception_thrown<std::out_of_range>("Target index of edge out of range", [](){ return graph_t{{{1, 0}}}; });
+      t.check_exception_thrown<std::out_of_range>("Complimentary index of edge out of range", [](){ return graph_t{{{0, 1}}}; });
+      t.check_exception_thrown<std::logic_error>("Self-referential complimentary index", [](){ return graph_t{{{0, 0}}}; });
+      t.check_exception_thrown<std::logic_error>("Mismatched complimentary indices", [](){ return graph_t{{{0, 1}, {0, 1}}}; });
+      t.check_exception_thrown<std::logic_error>("Mismatched complimentary indices", [](){ return graph_t{{{0, 1}, {0, 2}, {0, 0}}}; });
 
       // Two nodes
-      t.check_exception_thrown<std::logic_error>(t.report_line("Mismatched complimentary indices"), [](){ return graph_t{{{1, 0}, {0, 2}, {0, 1}}, {{0, 1}}}; });
+      t.check_exception_thrown<std::logic_error>("Mismatched complimentary indices", [](){ return graph_t{{{1, 0}, {0, 2}, {0, 1}}, {{0, 1}}}; });
     }
 
     [[nodiscard]]
@@ -268,7 +268,7 @@ namespace sequoia::testing
             graph_description::empty,
             t.report_line(""),
             [&t](const graph_t& g) -> const graph_t& {
-              t.check_exception_thrown<std::out_of_range>(t.report_line("cbegin_edges throws for empty graph"), [&g]() { return g.cbegin_edges(0); });
+              t.check_exception_thrown<std::out_of_range>("cbegin_edges throws for empty graph", [&g]() { return g.cbegin_edges(0); });
               return g;
             }
           },
@@ -276,7 +276,7 @@ namespace sequoia::testing
             graph_description::empty,
             t.report_line(t.report_line("")),
             [&t](const graph_t& g) -> const graph_t& {
-              t.check_exception_thrown<std::out_of_range>(t.report_line("cend_edges throws for empty graph"), [&g]() { return g.cend_edges(0); });
+              t.check_exception_thrown<std::out_of_range>("cend_edges throws for empty graph", [&g]() { return g.cend_edges(0); });
               return g;
             }
           },
@@ -284,7 +284,7 @@ namespace sequoia::testing
             graph_description::empty,
             t.report_line(""),
             [&t](const graph_t& g) -> const graph_t& {
-              t.check_exception_thrown<std::out_of_range>(t.report_line("crbegin_edges throws for empty graph"), [&g]() { return g.crbegin_edges(0); });
+              t.check_exception_thrown<std::out_of_range>("crbegin_edges throws for empty graph", [&g]() { return g.crbegin_edges(0); });
               return g;
             }
           },
@@ -292,7 +292,7 @@ namespace sequoia::testing
             graph_description::empty,
             t.report_line(""),
             [&t](const graph_t& g) -> const graph_t& {
-              t.check_exception_thrown<std::out_of_range>(t.report_line("crend_edges throws for empty graph"), [&g]() { return g.crend_edges(0); });
+              t.check_exception_thrown<std::out_of_range>("crend_edges throws for empty graph", [&g]() { return g.crend_edges(0); });
               return g;
             }
           },
@@ -300,7 +300,7 @@ namespace sequoia::testing
             graph_description::empty,
             t.report_line(""),
             [&t](const graph_t& g) -> const graph_t& {
-              t.check_exception_thrown<std::out_of_range>(t.report_line("cedges throws for empty graph"), [&g]() { return g.cedges(0); });
+              t.check_exception_thrown<std::out_of_range>("cedges throws for empty graph", [&g]() { return g.cedges(0); });
               return g;
             }
           },
@@ -308,7 +308,7 @@ namespace sequoia::testing
             graph_description::empty,
             t.report_line(""),
             [&t](const graph_t& g) -> const graph_t& {
-              t.check_exception_thrown<std::out_of_range>(t.report_line("swapping nodes throws for empty graph"), [g{g}]() mutable { g.swap_nodes(0, 0); });
+              t.check_exception_thrown<std::out_of_range>("swapping nodes throws for empty graph", [g{g}]() mutable { g.swap_nodes(0, 0); });
               return g;
             }
           },
@@ -316,7 +316,7 @@ namespace sequoia::testing
             graph_description::empty,
             t.report_line(""),
             [&t](const graph_t& g) -> const graph_t& {
-              t.check_exception_thrown<std::out_of_range>(t.report_line("joining nodes throws for empty graph"), [g{g}]() mutable { g.join(0, 0); });
+              t.check_exception_thrown<std::out_of_range>("joining nodes throws for empty graph", [g{g}]() mutable { g.join(0, 0); });
               return g;
             }
           },
@@ -350,7 +350,7 @@ namespace sequoia::testing
             graph_description::node,
             t.report_line(""),
             [&t](const graph_t& g) -> const graph_t& {
-              t.check_exception_thrown<std::out_of_range>(t.report_line("cbegin_edges throws when index is out of range"), [&g]() { return g.cbegin_edges(1); });
+              t.check_exception_thrown<std::out_of_range>("cbegin_edges throws when index is out of range", [&g]() { return g.cbegin_edges(1); });
               return g;
             }
           },
@@ -358,7 +358,7 @@ namespace sequoia::testing
             graph_description::node,
             t.report_line(""),
             [&t](const graph_t& g) -> const graph_t& {
-              t.check_exception_thrown<std::out_of_range>(t.report_line("cend_edges throws when index is out of range"), [&g]() { return g.cend_edges(1); });
+              t.check_exception_thrown<std::out_of_range>("cend_edges throws when index is out of range", [&g]() { return g.cend_edges(1); });
               return g;
             }
           },
@@ -366,7 +366,7 @@ namespace sequoia::testing
             graph_description::node,
             t.report_line(""),
             [&t](const graph_t& g) -> const graph_t& {
-              t.check_exception_thrown<std::out_of_range>(t.report_line("crbegin_edges throws when index is out of range"), [&g]() { return g.crbegin_edges(1); });
+              t.check_exception_thrown<std::out_of_range>("crbegin_edges throws when index is out of range", [&g]() { return g.crbegin_edges(1); });
               return g;
             }
           },
@@ -374,7 +374,7 @@ namespace sequoia::testing
             graph_description::node,
             t.report_line(""),
             [&t](const graph_t& g) -> const graph_t& {
-              t.check_exception_thrown<std::out_of_range>(t.report_line("crend_edges throws when index is out of range"), [&g]() { return g.crend_edges(1); });
+              t.check_exception_thrown<std::out_of_range>("crend_edges throws when index is out of range", [&g]() { return g.crend_edges(1); });
               return g;
             }
           },
@@ -382,7 +382,7 @@ namespace sequoia::testing
             graph_description::node,
             t.report_line(""),
             [&t](const graph_t& g) -> const graph_t& {
-              t.check_exception_thrown<std::out_of_range>(t.report_line("cedges throws when index is out of range"), [&g]() { return g.cedges(1); });
+              t.check_exception_thrown<std::out_of_range>("cedges throws when index is out of range", [&g]() { return g.cedges(1); });
               return g;
             }
           },
@@ -390,7 +390,7 @@ namespace sequoia::testing
             graph_description::node,
             t.report_line(""),
             [&t](const graph_t& g) -> const graph_t& {
-              t.check_exception_thrown<std::out_of_range>(t.report_line("swapping nodes throws if first index out of range"), [g{g}]() mutable { g.swap_nodes(1, 0); });
+              t.check_exception_thrown<std::out_of_range>("swapping nodes throws if first index out of range", [g{g}]() mutable { g.swap_nodes(1, 0); });
               return g;
             }
           },
@@ -398,7 +398,7 @@ namespace sequoia::testing
             graph_description::node,
             t.report_line(""),
             [&t](const graph_t& g) -> const graph_t& {
-              t.check_exception_thrown<std::out_of_range>(t.report_line("swapping nodes throws if second index out of range"), [g{g}]() mutable { g.swap_nodes(0, 1); });
+              t.check_exception_thrown<std::out_of_range>("swapping nodes throws if second index out of range", [g{g}]() mutable { g.swap_nodes(0, 1); });
               return g;
             }
           },
@@ -406,7 +406,7 @@ namespace sequoia::testing
             graph_description::node,
             t.report_line(""),
             [&t](const graph_t& g) -> const graph_t& {
-              t.check_exception_thrown<std::out_of_range>(t.report_line("joining nodes throws if first index out of range"), [g{g}]() mutable { g.join(1, 0); });
+              t.check_exception_thrown<std::out_of_range>("joining nodes throws if first index out of range", [g{g}]() mutable { g.join(1, 0); });
               return g;
             }
           },
@@ -414,7 +414,7 @@ namespace sequoia::testing
             graph_description::node,
             t.report_line(""),
             [&t](const graph_t& g) -> const graph_t& {
-              t.check_exception_thrown<std::out_of_range>(t.report_line("joining nodes throws if second index out of range"), [g{g}]() mutable { g.join(0, 1); });
+              t.check_exception_thrown<std::out_of_range>("joining nodes throws if second index out of range", [g{g}]() mutable { g.join(0, 1); });
               return g;
             }
           },
@@ -422,7 +422,7 @@ namespace sequoia::testing
             graph_description::node,
             t.report_line(""),
             [&t](const graph_t& g) -> const graph_t& {
-              t.check_exception_thrown<std::out_of_range>(t.report_line("inserting join throws if second index out of range"), [g{g}]() mutable { g.insert_join(g.cbegin_edges(0), 2); });
+              t.check_exception_thrown<std::out_of_range>("inserting join throws if second index out of range", [g{g}]() mutable { g.insert_join(g.cbegin_edges(0), 2); });
               return g;
             }
           },

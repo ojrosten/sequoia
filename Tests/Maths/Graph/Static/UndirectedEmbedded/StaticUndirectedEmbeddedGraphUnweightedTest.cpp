@@ -42,11 +42,11 @@ namespace sequoia::testing
     using edge_t = typename graph_t::edge_init_type;
     using edges_equivalent_t = std::initializer_list<std::initializer_list<edge_t>>;
 
-    check_exception_thrown<std::logic_error>(report_line(""), [](){ graph_t{{}}; });
+    check_exception_thrown<std::logic_error>(report(""), [](){ graph_t{{}}; });
 
     constexpr graph_t g{};
-    check(equivalence, report_line(""), g, edges_equivalent_t{});
-    check(equality, report_line(""), g, graph_t{});
+    check(equivalence, report(""), g, edges_equivalent_t{});
+    check(equality, report(""), g, graph_t{});
   }
 
   void static_undirected_embedded_graph_unweighted_test::test_node()
@@ -55,11 +55,11 @@ namespace sequoia::testing
     using edge_t = typename graph_t::edge_init_type;
     using edges_equivalent_t = std::initializer_list<std::initializer_list<edge_t>>;
 
-    check_exception_thrown<std::logic_error>(report_line(""), [](){ graph_t{{edge_t{0, 1}}}; });
+    check_exception_thrown<std::logic_error>(report(""), [](){ graph_t{{edge_t{0, 1}}}; });
 
     constexpr graph_t g{{}};
-    check(equivalence, report_line(""), g, edges_equivalent_t{{}});
-    check(equality, report_line(""), g, graph_t{{}});
+    check(equivalence, report(""), g, edges_equivalent_t{{}});
+    check(equality, report(""), g, graph_t{{}});
   }
 
   void static_undirected_embedded_graph_unweighted_test::test_node_0()
@@ -68,11 +68,11 @@ namespace sequoia::testing
     using edge_t = typename graph_t::edge_init_type;
     using edges_equivalent_t = std::initializer_list<std::initializer_list<edge_t>>;
 
-    check_exception_thrown<std::logic_error>(report_line(""), [](){ graph_t{{edge_t{0, 0}, edge_t{0, 1}}}; });
+    check_exception_thrown<std::logic_error>(report(""), [](){ graph_t{{edge_t{0, 0}, edge_t{0, 1}}}; });
 
     constexpr graph_t g{{edge_t{0, 1}, edge_t{0, 0}}};
-    check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{0, 1}, edge_t{0, 0}}});
-    check(equality, report_line(""), g, graph_t{{edge_t{0, 1}, edge_t{0, 0}}});
+    check(equivalence, report(""), g, edges_equivalent_t{{edge_t{0, 1}, edge_t{0, 0}}});
+    check(equality, report(""), g, graph_t{{edge_t{0, 1}, edge_t{0, 0}}});
   }
 
   void static_undirected_embedded_graph_unweighted_test::test_node_0_0()
@@ -82,8 +82,8 @@ namespace sequoia::testing
     using edges_equivalent_t = std::initializer_list<std::initializer_list<edge_t>>;
 
     constexpr graph_t g{{edge_t{0, 1}, edge_t{0, 0}, edge_t{0, 3}, edge_t{0, 2}}};
-    check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{0, 1}, edge_t{0, 0}, edge_t{0, 3}, edge_t{0, 2}}});
-    check(equality, report_line(""), g, graph_t{{edge_t{0, 1}, edge_t{0, 0}, edge_t{0, 3}, edge_t{0, 2}}});
+    check(equivalence, report(""), g, edges_equivalent_t{{edge_t{0, 1}, edge_t{0, 0}, edge_t{0, 3}, edge_t{0, 2}}});
+    check(equality, report(""), g, graph_t{{edge_t{0, 1}, edge_t{0, 0}, edge_t{0, 3}, edge_t{0, 2}}});
   }
 
   void static_undirected_embedded_graph_unweighted_test::test_node_0_0interleaved()
@@ -93,8 +93,8 @@ namespace sequoia::testing
     using edges_equivalent_t = std::initializer_list<std::initializer_list<edge_t>>;
 
     constexpr graph_t g{{edge_t{0, 2}, edge_t{0, 3}, edge_t{0, 0}, edge_t{0, 1}}};
-    check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{0, 2}, edge_t{0, 3}, edge_t{0, 0}, edge_t{0, 1}}});
-    check(equality, report_line(""), g, graph_t{{edge_t{0, 2}, edge_t{0, 3}, edge_t{0, 0}, edge_t{0, 1}}});
+    check(equivalence, report(""), g, edges_equivalent_t{{edge_t{0, 2}, edge_t{0, 3}, edge_t{0, 0}, edge_t{0, 1}}});
+    check(equality, report(""), g, graph_t{{edge_t{0, 2}, edge_t{0, 3}, edge_t{0, 0}, edge_t{0, 1}}});
   }
 
   void static_undirected_embedded_graph_unweighted_test::test_node_node()
@@ -103,11 +103,11 @@ namespace sequoia::testing
     using edge_t = typename graph_t::edge_init_type;
     using edges_equivalent_t = std::initializer_list<std::initializer_list<edge_t>>;
 
-    check_exception_thrown<std::logic_error>(report_line(""), [](){ graph_t{{}}; });
+    check_exception_thrown<std::logic_error>(report(""), [](){ graph_t{{}}; });
 
     constexpr graph_t g{{}, {}};
-    check(equivalence, report_line(""), g, edges_equivalent_t{{}, {}});
-    check(equality, report_line(""), g, graph_t{{}, {}});
+    check(equivalence, report(""), g, edges_equivalent_t{{}, {}});
+    check(equality, report(""), g, graph_t{{}, {}});
   }
 
   void static_undirected_embedded_graph_unweighted_test::test_node_1_node_0()
@@ -117,8 +117,8 @@ namespace sequoia::testing
     using edges_equivalent_t = std::initializer_list<std::initializer_list<edge_t>>;
 
     constexpr graph_t g{{edge_t{1, 0}}, {edge_t{0, 0}}};
-    check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{1, 0}}, {edge_t{0, 0}}});
-    check(equality, report_line(""), g, graph_t{{edge_t{1, 0}}, {edge_t{0, 0}}});
+    check(equivalence, report(""), g, edges_equivalent_t{{edge_t{1, 0}}, {edge_t{0, 0}}});
+    check(equality, report(""), g, graph_t{{edge_t{1, 0}}, {edge_t{0, 0}}});
   }
 
   void static_undirected_embedded_graph_unweighted_test::test_node_1_1_node_0_0()
@@ -128,8 +128,8 @@ namespace sequoia::testing
     using edges_equivalent_t = std::initializer_list<std::initializer_list<edge_t>>;
 
     constexpr graph_t g{{edge_t{1, 0}, edge_t{1, 1}}, {edge_t{0, 0}, edge_t{0, 1}}};
-    check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{1, 0}, edge_t{1, 1}}, {edge_t{0, 0}, edge_t{0, 1}}});
-    check(equality, report_line(""), g, graph_t{{edge_t{1, 0}, edge_t{1, 1}}, {edge_t{0, 0}, edge_t{0, 1}}});
+    check(equivalence, report(""), g, edges_equivalent_t{{edge_t{1, 0}, edge_t{1, 1}}, {edge_t{0, 0}, edge_t{0, 1}}});
+    check(equality, report(""), g, graph_t{{edge_t{1, 0}, edge_t{1, 1}}, {edge_t{0, 0}, edge_t{0, 1}}});
   }
 
   void static_undirected_embedded_graph_unweighted_test::test_node_1_1_node_0_0interleaved()
@@ -139,7 +139,7 @@ namespace sequoia::testing
     using edges_equivalent_t = std::initializer_list<std::initializer_list<edge_t>>;
 
     constexpr graph_t g{{edge_t{1, 1}, edge_t{1, 0}}, {edge_t{0, 1}, edge_t{0, 0}}};
-    check(equivalence, report_line(""), g, edges_equivalent_t{{edge_t{1, 1}, edge_t{1, 0}}, {edge_t{0, 1}, edge_t{0, 0}}});
-    check(equality, report_line(""), g, graph_t{{edge_t{1, 1}, edge_t{1, 0}}, {edge_t{0, 1}, edge_t{0, 0}}});
+    check(equivalence, report(""), g, edges_equivalent_t{{edge_t{1, 1}, edge_t{1, 0}}, {edge_t{0, 1}, edge_t{0, 0}}});
+    check(equality, report(""), g, graph_t{{edge_t{1, 1}, edge_t{1, 0}}, {edge_t{0, 1}, edge_t{0, 0}}});
   }
 }

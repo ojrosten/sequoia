@@ -2,12 +2,12 @@
 Running tests, synchronously...
 
 Suite:
-[Execution Time: 2.78ms]
+[Execution Time: 1.32ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 
 -----------Grand Totals-----------
-[Total Run Time: 6.86ms]
-[Execution Time: 2.78ms]
+[Total Run Time: 2.94ms]
+[Execution Time: 1.32ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -18,10 +18,12 @@ Suite:
 Running tests, synchronously...
 
 Suite:
-[Execution Time: 2.58ms]
+[Execution Time: 845us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 157
 	Period 4
+
 	[int]
 	operator== returned false
 	Obtained : 2
@@ -31,8 +33,8 @@ Suite:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 6.9ms]
-[Execution Time: 2.58ms]
+[Total Run Time: 2.64ms]
+[Execution Time: 845us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -43,10 +45,12 @@ Suite:
 Running tests, synchronously...
 
 Suite:
-[Execution Time: 2.26ms]
+[Execution Time: 847us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 157
 	Period 4
+
 	[int]
 	operator== returned false
 	Obtained : 3
@@ -56,8 +60,8 @@ Suite:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 6.56ms]
-[Execution Time: 2.26ms]
+[Total Run Time: 8.67ms]
+[Execution Time: 847us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -68,10 +72,12 @@ Suite:
 Running tests, synchronously...
 
 Suite:
-[Execution Time: 2.04ms]
+[Execution Time: 942us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 157
 	Period 4
+
 	[int]
 	operator== returned false
 	Obtained : 0
@@ -81,8 +87,8 @@ Suite:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 6.01ms]
-[Execution Time: 2.04ms]
+[Total Run Time: 6.81ms]
+[Execution Time: 942us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -98,7 +104,9 @@ Outcome frequencies:
 
 vs.
 
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 157
 	Period 4
+
 	[int]
 	operator== returned false
 	Obtained : 0
@@ -108,7 +116,9 @@ vs.
 
 vs.
 
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 157
 	Period 4
+
 	[int]
 	operator== returned false
 	Obtained : 2
@@ -118,7 +128,9 @@ vs.
 
 vs.
 
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 157
 	Period 4
+
 	[int]
 	operator== returned false
 	Obtained : 3

@@ -22,7 +22,7 @@
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::string move_only_message(std::string_view description);
+  std::string move_only_message(std::string description);
 
   /*! \brief class template for plugging into the \ref checker_primary "checker"
       class template to provide allocation checks for move-only types,
@@ -45,85 +45,89 @@ namespace sequoia::testing
     move_only_extender& operator=(move_only_extender&&)      = delete;
 
     /// Preconditions: x!=y; x==xClone, y==yClone
-    template<moveonly T>
-    void check_semantics(std::string_view description, T&& x, T&& y, const T& xClone, const T& yClone, const T& movedFrom)
+    template<class Self, moveonly T>
+    void check_semantics(this Self&& self, const report& description, T&& x, T&& y, const T& xClone, const T& yClone, const T& movedFrom)
     {
-      testing::check_semantics(move_only_message(description), logger(), std::move(x), std::move(y), xClone, yClone, opt_moved_from_ref<T>{movedFrom});
+      testing::check_semantics(move_only_message(self.report_line(description)), self.get_logger(), std::move(x), std::move(y), xClone, yClone, opt_moved_from_ref<T>{movedFrom});
     }
 
-    template<moveonly T>
-    void check_semantics(std::string_view description, T&& x, T&& y, const T& xClone, const T& yClone)
+    template<class Self, moveonly T>
+    void check_semantics(this Self&& self, const report& description, T&& x, T&& y, const T& xClone, const T& yClone)
     {
-      testing::check_semantics(move_only_message(description), logger(), std::move(x), std::move(y), xClone, yClone, opt_moved_from_ref<T>{});
+      testing::check_semantics(move_only_message(self.report_line(description)), self.get_logger(), std::move(x), std::move(y), xClone, yClone, opt_moved_from_ref<T>{});
     }
 
     template
     <
+      class Self,
       std::invocable xMaker,
       moveonly T=std::invoke_result_t<xMaker>,
       invocable_r<T> yMaker
     >
-    void check_semantics(std::string_view description, xMaker xFn, yMaker yFn, const T& movedFrom)
+    void check_semantics(this Self&& self, const report& description, xMaker xFn, yMaker yFn, const T& movedFrom)
     {
-      check_semantics(description, xFn(), yFn(), xFn(), yFn(), movedFrom);
+      self.check_semantics(description, xFn(), yFn(), xFn(), yFn(), movedFrom);
     }
 
     template
     <
+      class Self,
       std::invocable xMaker,
       moveonly T = std::invoke_result_t<xMaker>,
       invocable_r<T> yMaker
     >
-      void check_semantics(std::string_view description, xMaker xFn, yMaker yFn)
+      void check_semantics(this Self&& self,const report& description, xMaker xFn, yMaker yFn)
     {
-      check_semantics(description, xFn(), yFn(), xFn(), yFn());
+      self.check_semantics(description, xFn(), yFn(), xFn(), yFn());
     }
 
      /// Preconditions: x!=y, with values consistent with order; x==xClone, y==yClone
-    template<moveonly T>
+    template<class Self, moveonly T>
       requires std::totally_ordered<T>
-    void check_semantics(std::string_view description, T&& x, T&& y, const T& xClone, const T& yClone, const T& movedFrom, std::weak_ordering order)
+    void check_semantics(this Self&& self, const report& description, T&& x, T&& y, const T& xClone, const T& yClone, const T& movedFrom, std::weak_ordering order)
     {
-      testing::check_semantics(move_only_message(description), logger(), std::move(x), std::move(y), xClone, yClone, opt_moved_from_ref<T>{movedFrom}, order);
+      testing::check_semantics(move_only_message(self.report_line(description)), self.get_logger(), std::move(x), std::move(y), xClone, yClone, opt_moved_from_ref<T>{movedFrom}, order);
     }
 
-    template<moveonly T>
+    template<class Self, moveonly T>
       requires std::totally_ordered<T>
-    void check_semantics(std::string_view description, T&& x, T&& y, const T& xClone, const T& yClone, std::weak_ordering order)
+    void check_semantics(this Self&& self, const report& description, T&& x, T&& y, const T& xClone, const T& yClone, std::weak_ordering order)
     {
-      testing::check_semantics(move_only_message(description), logger(), std::move(x), std::move(y), xClone, yClone, opt_moved_from_ref<T>{}, order);
+      testing::check_semantics(move_only_message(self.report_line(description)), self.get_logger(), std::move(x), std::move(y), xClone, yClone, opt_moved_from_ref<T>{}, order);
     }
 
     template
     <
+      class Self,
       std::invocable<> xMaker,
       moveonly T = std::invoke_result_t<xMaker>,
       invocable_r<T> yMaker
     >
       requires std::totally_ordered<T>
-    void check_semantics(std::string_view description, xMaker xFn, yMaker yFn, const T& movedFrom, std::weak_ordering order)
+    void check_semantics(this Self&& self, const report& description, xMaker xFn, yMaker yFn, const T& movedFrom, std::weak_ordering order)
     {
-      check_semantics(description, xFn(), yFn(), xFn(), yFn(), movedFrom, order);
+      self.check_semantics(description, xFn(), yFn(), xFn(), yFn(), movedFrom, order);
     }
 
     template
     <
+      class Self,
       std::invocable<> xMaker,
       moveonly T=std::invoke_result_t<xMaker>,
       invocable_r<T> yMaker
     >
       requires std::totally_ordered<T>
-    void check_semantics(std::string_view description, xMaker xFn, yMaker yFn, std::weak_ordering order)
+    void check_semantics(this Self&& self, const report& description, xMaker xFn, yMaker yFn, std::weak_ordering order)
     {
-      check_semantics(description, xFn(), yFn(), xFn(), yFn(), order);
+      self.check_semantics(description, xFn(), yFn(), xFn(), yFn(), order);
     }
 
   protected:
     ~move_only_extender() = default;
-  private:
-    [[nodiscard]]
-    test_logger<Mode>& logger() noexcept { return *m_pLogger; }
 
+    [[nodiscard]]
+    test_logger<Mode>& get_logger() noexcept { return *m_pLogger; }
+  private:
     test_logger<Mode>* m_pLogger;
   };
 

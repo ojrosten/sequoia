@@ -201,23 +201,41 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string report_line(std::string_view message, const std::source_location loc = std::source_location::current(), const std::filesystem::path& repository = {});
 
+  struct no_source_location_t{};
+  inline constexpr no_source_location_t no_source_location{};
+
   class report
   {
   public:
-      /* TO DO: temporary */ explicit
-      report(std::string_view message, const std::source_location loc = std::source_location::current())
-          : m_Message{message}
-          , m_Loc{loc}
-      {}
+    report(const char* message, const std::source_location loc = std::source_location::current())
+      : report{std::string{message},loc}
+    {}
 
-      [[nodiscard]]
-      const std::string& message() const noexcept { return m_Message; }
+    report(std::string_view message, const std::source_location loc = std::source_location::current())
+      : report{std::string{message},loc}
+    {}
 
-      [[nodiscard]]
-      const std::source_location& location() const noexcept { return m_Loc; }
+    report(std::string message, const std::source_location loc = std::source_location::current())
+      : m_Message{std::move(message)}
+      , m_Loc{loc}
+    {}
+
+    report(std::string message, no_source_location_t)
+      : m_Message{std::move(message)}
+    {}
+
+    report(std::string_view message, no_source_location_t)
+      : report{std::string{message}, no_source_location}
+    {}
+
+    [[nodiscard]]
+    const std::string& message() const noexcept { return m_Message; }
+
+    [[nodiscard]]
+    const std::optional<std::source_location>& location() const noexcept { return m_Loc; }
   private:
-      std::string m_Message{};
-      std::source_location m_Loc;
+    std::string m_Message{};
+    std::optional<std::source_location> m_Loc{};
   };
 
   [[nodiscard]]

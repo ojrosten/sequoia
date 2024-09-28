@@ -23,7 +23,7 @@ namespace sequoia::testing
   void shell_commands_false_positive_test::run_tests()
   {
     shell_command x{}, y{"foo"};
-    check(equivalence, report_line(""), x, "cmd"s);
-    check(equality, report_line(""), x, y);
+    check(equivalence, report(""), x, "cmd"s);
+    check(equality, report(""), x, y);
   }
 }

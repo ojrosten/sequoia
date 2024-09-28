@@ -37,15 +37,16 @@ namespace sequoia::testing
     regular_allocation_extender& operator=(const regular_allocation_extender&) = delete;
     regular_allocation_extender& operator=(regular_allocation_extender&&)      = delete;
 
-    template<pseudoregular T, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
+    template<class Self, pseudoregular T, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
       requires (!std::totally_ordered<T> && (sizeof...(Getters) > 0))
-    void check_semantics(std::string_view description, const T& x, const T& y, Mutator m, allocation_info<T, Getters>... info)
+    void check_semantics(this Self&& self, const report& description, const T& x, const T& y, Mutator m, allocation_info<T, Getters>... info)
     {
-      testing::check_semantics(append_lines(description, emphasise("Regular Semantics")), logger(), x, y, m, info...);
+      testing::check_semantics(append_lines(self.report_line(description), emphasise("Regular Semantics")), self.get_logger(), x, y, m, info...);
     }
 
     template
     <
+      class Self,
       pseudoregular T,
       invocable_r<T> xMaker,
       invocable_r<T> yMaker,
@@ -53,20 +54,21 @@ namespace sequoia::testing
       alloc_getter<T>... Getters
     >
       requires (!std::totally_ordered<T> && (sizeof...(Getters) > 0))
-    std::pair<T, T> check_semantics(std::string_view description, xMaker xFn, yMaker yFn, Mutator m, allocation_info<T, Getters>... info)
+    std::pair<T, T> check_semantics(this Self&& self, const report& description, xMaker xFn, yMaker yFn, Mutator m, allocation_info<T, Getters>... info)
     {
-      return testing::check_semantics(append_lines(description, emphasise("Regular Semantics")), logger(), std::move(xFn), std::move(yFn), m, info...);
+      return testing::check_semantics(append_lines(self.report_line(description), emphasise("Regular Semantics")), self.get_logger(), std::move(xFn), std::move(yFn), m, info...);
     }
 
-    template<pseudoregular T, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
+    template<class Self, pseudoregular T, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
       requires (std::totally_ordered<T> && (sizeof...(Getters) > 0))
-    void check_semantics(std::string_view description, const T& x, const T& y, std::weak_ordering order, Mutator m, allocation_info<T, Getters>... info)
+    void check_semantics(this Self&& self, const report& description, const T& x, const T& y, std::weak_ordering order, Mutator m, allocation_info<T, Getters>... info)
     {
-      testing::check_semantics(append_lines(description, emphasise("Ordered Semantics")), logger(), x, y, order, m, info...);
+      testing::check_semantics(append_lines(self.report_line(description), emphasise("Ordered Semantics")), self.get_logger(), x, y, order, m, info...);
     }
 
     template
     <
+      class Self,
       pseudoregular T,
       invocable_r<T> xMaker,
       invocable_r<T> yMaker,
@@ -74,16 +76,16 @@ namespace sequoia::testing
       alloc_getter<T>... Getters
     >
       requires (std::totally_ordered<T> && (sizeof...(Getters) > 0))
-    std::pair<T, T> check_semantics(std::string_view description, xMaker xFn, yMaker yFn, std::weak_ordering order, Mutator m, allocation_info<T, Getters>... info)
+    std::pair<T, T> check_semantics(this Self&& self, const report& description, xMaker xFn, yMaker yFn, std::weak_ordering order, Mutator m, allocation_info<T, Getters>... info)
     {
-      return testing::check_semantics(append_lines(description, emphasise("Ordered Semantics")), logger(), std::move(xFn), std::move(yFn), order, m, info...);
+      return testing::check_semantics(append_lines(self.report_line(description), emphasise("Ordered Semantics")), self.get_logger(), std::move(xFn), std::move(yFn), order, m, info...);
     }
   protected:
     ~regular_allocation_extender() = default;
-  private:
-    [[nodiscard]]
-    test_logger<Mode>& logger() noexcept { return *m_pLogger; }
 
+    [[nodiscard]]
+    test_logger<Mode>& get_logger() noexcept { return *m_pLogger; }
+  private:
     test_logger<Mode>* m_pLogger;
   };
 

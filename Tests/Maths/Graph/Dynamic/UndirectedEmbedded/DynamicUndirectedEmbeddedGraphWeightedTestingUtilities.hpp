@@ -141,16 +141,16 @@ namespace sequoia::testing
       using nodes = std::initializer_list<node_weight_type>;
 
       // One node
-      t.check_exception_thrown<std::logic_error>(t.report_line("Mismatched weights"), [](){ return graph_t{{{0, 1, 1.0}, {0, 0, 0.0}}}; });
+      t.check_exception_thrown<std::logic_error>("Mismatched weights", [](){ return graph_t{{{0, 1, 1.0}, {0, 0, 0.0}}}; });
  
       // Two nodes
-      t.check_exception_thrown<std::logic_error>(t.report_line("IMismatched weights"), [](){ return graph_t{{{1, 0, 1.0}}, {{0, 0, 2.0}}}; });
+      t.check_exception_thrown<std::logic_error>("IMismatched weights", [](){ return graph_t{{{1, 0, 1.0}}, {{0, 0, 2.0}}}; });
 
-      t.check_exception_thrown<std::logic_error>(t.report_line("Mismatched edge/node initialization"), [](){ return graph_t{{}, nodes{1.0}}; });
-      t.check_exception_thrown<std::logic_error>(t.report_line("Mismatched edge/node initialization"), [](){ return graph_t{{{}}, nodes{1.0, 2.0}}; });
-      t.check_exception_thrown<std::logic_error>(t.report_line("Mismatched edge/node initialization"), [](){ return graph_t{{{edge_t{0, 1, 1.0}, edge_t{0, 0, 1.0}}}, nodes{1.0, 2.0}}; });
-      t.check_exception_thrown<std::logic_error>(t.report_line("Mismatched edge/node initialization"), [](){ return graph_t{{{}, {}}, nodes{1.0}}; });
-      t.check_exception_thrown<std::logic_error>(t.report_line("Mismatched edge/node initialization"), [](){ return graph_t{{{edge_t{1, 0}}, {edge_t{0, 0}}}, nodes{1.0}}; });
+      t.check_exception_thrown<std::logic_error>("Mismatched edge/node initialization", [](){ return graph_t{{}, nodes{1.0}}; });
+      t.check_exception_thrown<std::logic_error>("Mismatched edge/node initialization", [](){ return graph_t{{{}}, nodes{1.0, 2.0}}; });
+      t.check_exception_thrown<std::logic_error>("Mismatched edge/node initialization", [](){ return graph_t{{{edge_t{0, 1, 1.0}, edge_t{0, 0, 1.0}}}, nodes{1.0, 2.0}}; });
+      t.check_exception_thrown<std::logic_error>("Mismatched edge/node initialization", [](){ return graph_t{{{}, {}}, nodes{1.0}}; });
+      t.check_exception_thrown<std::logic_error>("Mismatched edge/node initialization", [](){ return graph_t{{{edge_t{1, 0}}, {edge_t{0, 0}}}, nodes{1.0}}; });
     }
     
 
@@ -228,7 +228,7 @@ namespace sequoia::testing
         graph_description::empty,
         t.report_line(""),
         [&t](graph_t g) -> graph_t {
-          t.check_exception_thrown<std::out_of_range>(t.report_line("Attempt to set a node weight which does not exist"), [&g](){ g.set_node_weight(g.cbegin_node_weights(), 1.0); });
+          t.check_exception_thrown<std::out_of_range>("Attempt to set a node weight which does not exist", [&g](){ g.set_node_weight(g.cbegin_node_weights(), 1.0); });
           return g;
         }
       );
@@ -238,7 +238,7 @@ namespace sequoia::testing
         graph_description::empty,
         t.report_line("Attempt to mutate a node weight which does not exist"),
         [&t](graph_t g) -> graph_t {
-          t.check_exception_thrown<std::out_of_range>(t.report_line("Attempt to mutate a node weight which does not exist"), [&g](){ g.mutate_node_weight(g.cbegin_node_weights(), [](double&){}); });
+          t.check_exception_thrown<std::out_of_range>("Attempt to mutate a node weight which does not exist", [&g](){ g.mutate_node_weight(g.cbegin_node_weights(), [](double&){}); });
           return g;
         }
       );
@@ -272,7 +272,7 @@ namespace sequoia::testing
         graph_description::node,
         t.report_line(""),
         [&t](graph_t g) -> graph_t {
-          t.check_exception_thrown<std::out_of_range>(t.report_line("Attempt to set a node weight which does not exist"), [&g](){ g.set_node_weight(g.cend_node_weights(), 1.0); });
+          t.check_exception_thrown<std::out_of_range>("Attempt to set a node weight which does not exist", [&g](){ g.set_node_weight(g.cend_node_weights(), 1.0); });
           return g;
         }
       );
@@ -282,7 +282,7 @@ namespace sequoia::testing
         graph_description::node,
         t.report_line("Attempt to mutate a node weight which does not exist"),
         [&t](graph_t g) -> graph_t {
-          t.check_exception_thrown<std::out_of_range>(t.report_line("Attempt to mutate a node weight which does not exist"), [&g](){ g.mutate_node_weight(g.cend_node_weights(), [](double&){}); });
+          t.check_exception_thrown<std::out_of_range>("Attempt to mutate a node weight which does not exist", [&g](){ g.mutate_node_weight(g.cend_node_weights(), [](double&){}); });
           return g;
         }
       );

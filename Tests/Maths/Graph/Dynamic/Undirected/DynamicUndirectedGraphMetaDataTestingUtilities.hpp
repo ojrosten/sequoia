@@ -85,12 +85,12 @@ namespace sequoia::testing
       using namespace maths;
 
       // One node
-      t.check_exception_thrown<std::out_of_range>(t.report_line("Target index of edge out of range"), [](){ return graph_t{{edge_t{1, 0.5f}}}; });
-      t.check_exception_thrown<std::logic_error>(t.report_line("Mismatched loop"), [](){ return graph_t{{edge_t{0, 0.5f}}}; });
+      t.check_exception_thrown<std::out_of_range>("Target index of edge out of range", [](){ return graph_t{{edge_t{1, 0.5f}}}; });
+      t.check_exception_thrown<std::logic_error>("Mismatched loop", [](){ return graph_t{{edge_t{0, 0.5f}}}; });
 
       // Two nodes
-      t.check_exception_thrown<std::logic_error>(t.report_line("Mismatched partial edges"), [](){ return graph_t{{edge_t{1, 0.5f}}, {edge_t{1, -0.5f}}}; });
-      t.check_exception_thrown<std::logic_error>(t.report_line("Mismatched loop"), [](){ return graph_t{{edge_t{1, 0.5f}}, {edge_t{0, 0.6f}, edge_t{1, -0.5f}}}; });
+      t.check_exception_thrown<std::logic_error>("Mismatched partial edges", [](){ return graph_t{{edge_t{1, 0.5f}}, {edge_t{1, -0.5f}}}; });
+      t.check_exception_thrown<std::logic_error>("Mismatched loop", [](){ return graph_t{{edge_t{1, 0.5f}}, {edge_t{0, 0.6f}, edge_t{1, -0.5f}}}; });
     }
 
     [[nodiscard]]

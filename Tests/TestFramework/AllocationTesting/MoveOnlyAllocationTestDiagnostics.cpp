@@ -50,26 +50,26 @@ namespace sequoia::testing
         }
       };
 
-      check_semantics(report_line("Incorrect para-move allocs"), beast{}, beast{2}, beast{}, beast{2}, mutator,
+      check_semantics("Incorrect para-move allocs", beast{}, beast{2}, beast{}, beast{2}, mutator,
                       allocation_info{allocGetter, {0_pm, {0_pm, 1_mu}, {1_manp}}});
 
-      check_semantics(report_line("Incorrect mutation allocs"), beast{}, beast{2}, beast{}, beast{2}, mutator,
+      check_semantics(report("Incorrect mutation allocs"), beast{}, beast{2}, beast{}, beast{2}, mutator,
                       allocation_info{allocGetter, {0_pm, {1_pm, 0_mu}, {1_manp}}});
 
       if constexpr(!PropagateMove)
       {
-        check_semantics(report_line("Incorrect assignment allocs"), beast{}, beast{2}, beast{}, beast{2}, mutator,
+        check_semantics(report("Incorrect assignment allocs"), beast{}, beast{2}, beast{}, beast{2}, mutator,
                         allocation_info{allocGetter, {0_pm, {1_pm, 1_mu}, {0_manp}}});
       }
 
-      const auto[x,y]{check_semantics(report_line("Move-only beast"),
+      const auto[x,y]{check_semantics(report("Move-only beast"),
                                       []() { return beast{}; },
                                       []() { return beast{2}; },
                                       mutator,
                                       allocation_info{allocGetter, {0_pm, {2_pm, 1_mu}, {1_manp}}})};
 
-      check(equality, report_line("check_semantics return value (x)"), x, beast{2});
-      check(equality, report_line("check_semantics return value (y)"), y, beast{});
+      check(equality, report("check_semantics return value (x)"), x, beast{2});
+      check(equality, report("check_semantics return value (y)"), y, beast{});
     }
 
     {
@@ -80,7 +80,7 @@ namespace sequoia::testing
         }
       };
 
-      check_semantics(report_line("Broken move"), beast{1}, beast{2}, beast{1}, beast{2}, mutator,
+      check_semantics(report("Broken move"), beast{1}, beast{2}, beast{1}, beast{2}, mutator,
                       allocation_info{allocGetter, {1_pm, {1_pm, 1_mu}, {0_manp}}});
     }
 
@@ -92,7 +92,7 @@ namespace sequoia::testing
         }
       };
 
-      check_semantics(report_line("Broken move assignment"), beast{1}, beast{2}, beast{1}, beast{2}, mutator,
+      check_semantics(report("Broken move assignment"), beast{1}, beast{2}, beast{1}, beast{2}, mutator,
                       allocation_info{allocGetter, {1_pm, {1_pm, 1_mu}, {0_manp}}});
     }
 
@@ -106,7 +106,7 @@ namespace sequoia::testing
         }
       };
 
-      check_semantics(report_line("Broken swap"), beast{1}, beast{2}, beast{1}, beast{2}, mutator,
+      check_semantics(report("Broken swap"), beast{1}, beast{2}, beast{1}, beast{2}, mutator,
                       allocation_info{allocGetter, {1_pm, {1_pm, 1_mu}, {0_manp}}});
     }
 
@@ -118,7 +118,7 @@ namespace sequoia::testing
         }
       };
 
-      check_semantics(report_line("Inefficient move"), beast{1}, beast{2}, beast{1}, beast{2}, mutator,
+      check_semantics(report("Inefficient move"), beast{1}, beast{2}, beast{1}, beast{2}, mutator,
                       allocation_info{allocGetter, {1_pm, {1_pm, 1_mu}, {0_manp}}});
     }
 
@@ -130,7 +130,7 @@ namespace sequoia::testing
         }
       };
 
-      check_semantics(report_line("Inefficient move assignment"), beast{1}, beast{2}, beast{1}, beast{2}, mutator,
+      check_semantics(report("Inefficient move assignment"), beast{1}, beast{2}, beast{1}, beast{2}, mutator,
                       allocation_info{allocGetter, {1_pm, {1_pm, 1_mu}, {0_manp}}});
     }
 
@@ -143,13 +143,13 @@ namespace sequoia::testing
         }
       };
 
-      check_semantics(report_line("Invariant violated: x != xClone"), beast{1}, beast{2}, beast{3}, beast{2}, mutator,
+      check_semantics(report("Invariant violated: x != xClone"), beast{1}, beast{2}, beast{3}, beast{2}, mutator,
                       allocation_info{allocGetter, {1_pm, {1_pm, 1_mu}, {0_manp}}});
 
-      check_semantics(report_line("Invariant violated: y != YClone"), beast{1}, beast{2}, beast{1}, beast{3}, mutator,
+      check_semantics(report("Invariant violated: y != YClone"), beast{1}, beast{2}, beast{1}, beast{3}, mutator,
                       allocation_info{allocGetter, {1_pm, {1_pm, 1_mu}, {0_manp}}});
 
-      check_semantics(report_line("Invariant violated: x == y"), beast{1}, beast{1}, beast{1}, beast{1}, mutator,
+      check_semantics(report("Invariant violated: x == y"), beast{1}, beast{1}, beast{1}, beast{1}, mutator,
                       allocation_info{allocGetter, {1_pm, {1_pm, 1_mu}, {0_manp}}});
     }
 
@@ -162,10 +162,10 @@ namespace sequoia::testing
         }
       };
 
-      check_semantics(report_line("Incorrect moved-from state"), beast{1}, beast{2}, beast{1}, beast{2}, beast{3}, mutator,
+      check_semantics(report("Incorrect moved-from state"), beast{1}, beast{2}, beast{1}, beast{2}, beast{3}, mutator,
         allocation_info{allocGetter, {1_pm, {1_pm, 1_mu}, {0_manp}}});
 
-      check_semantics(report_line("Incorrect moved-from state"), []() { return beast{1}; }, []() { return beast{2}; }, beast{3}, mutator,
+      check_semantics(report("Incorrect moved-from state"), []() { return beast{1}; }, []() { return beast{2}; }, beast{3}, mutator,
         allocation_info{allocGetter, {1_pm, {1_pm, 1_mu}, {0_manp}}});
     }
   }
@@ -205,20 +205,20 @@ namespace sequoia::testing
         }
       };
 
-      check_semantics(report_line("Move-only beast"), beast{1}, beast{2}, beast{1}, beast{2}, mutator,
+      check_semantics(report("Move-only beast"), beast{1}, beast{2}, beast{1}, beast{2}, mutator,
                       allocation_info{allocGetter, {1_pm, {1_pm, 1_mu}, {0_manp}}});
 
-      check_semantics(report_line("Move-only beast"), beast{}, beast{2}, beast{}, beast{2}, mutator,
+      check_semantics(report("Move-only beast"), beast{}, beast{2}, beast{}, beast{2}, mutator,
                       allocation_info{allocGetter, {0_pm, {1_pm, 1_mu}, {1_manp}}});
 
-      const auto[x,y]{check_semantics(report_line("Move-only beast"),
+      const auto[x,y]{check_semantics(report("Move-only beast"),
                                       []() { return beast{}; },
                                       []() { return beast{2}; },
                                       mutator,
                                       allocation_info{allocGetter, {0_pm, {1_pm, 1_mu}, {1_manp}}})};
 
-      check(equality, report_line("check_semantics return value (x)"), x, beast{});
-      check(equality, report_line("check_semantics return value (y)"), y, beast{2});
+      check(equality, report("check_semantics return value (x)"), x, beast{});
+      check(equality, report("check_semantics return value (y)"), y, beast{2});
     }
 
     {
@@ -229,10 +229,10 @@ namespace sequoia::testing
         }
       };
 
-      check_semantics(report_line("Check moved-from state"), beast{1}, beast{2}, beast{1}, beast{2}, beast{}, mutator,
+      check_semantics(report("Check moved-from state"), beast{1}, beast{2}, beast{1}, beast{2}, beast{}, mutator,
         allocation_info{allocGetter, {1_pm, {1_pm, 1_mu}, {0_manp}}});
 
-      check_semantics(report_line("Check moved-from state"), []() { return beast{1}; }, []() { return beast{2}; }, beast{}, mutator,
+      check_semantics(report("Check moved-from state"), []() { return beast{1}; }, []() { return beast{2}; }, beast{}, mutator,
         allocation_info{allocGetter, {1_pm, {1_pm, 1_mu}, {0_manp}}});
     }
   }

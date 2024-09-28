@@ -3,6 +3,8 @@ Tests/Utilities/UsefulThingsFreeTest.cpp, Line 21
 [int]
 
 
+Tests/Utilities/UsefulThingsFreeTest.cpp, Line 22
+
 Expected Exception Type:
 [std::runtime_error]
 

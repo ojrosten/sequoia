@@ -24,14 +24,14 @@ namespace sequoia::testing
     {
       using prediction_type = std::array<std::pair<std::string, std::variant<int>>, 1>;
       factory<int> f{{"int"}};
-      check(equivalence, report_line(""), f, prediction_type{{{"int", 5}}});
-      check(equivalence, report_line(""), f, prediction_type{{{"int", 5}}}, 4);
+      check(equivalence, report(""), f, prediction_type{{{"int", 5}}});
+      check(equivalence, report(""), f, prediction_type{{{"int", 5}}}, 4);
     }
 
     {
       using prediction_type = std::array<std::pair<std::string, std::variant<int, double>>, 2>;
       factory<int, double> f{{"int", "double"}};
-      check(equivalence, report_line(""), f, prediction_type{{{"int", 0}, {"double", 5.0}}});
+      check(equivalence, report(""), f, prediction_type{{{"int", 0}, {"double", 5.0}}});
     }
   }
 }

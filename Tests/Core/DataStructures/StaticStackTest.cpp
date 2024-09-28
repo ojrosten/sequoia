@@ -34,10 +34,10 @@ namespace sequoia::testing
     constexpr static_stack<int, 0> s{};
     static_stack<int, 0> t{};
 
-    check(equality, report_line("Equality of null queues"), t, s);
+    check(equality, report("Equality of null queues"), t, s);
 
-    check_exception_thrown<std::logic_error>(report_line("Can't push to null stack"), [&t]() { t.push(1); });
-    check_exception_thrown<std::logic_error>(report_line("Can't construct non-null null stack"), []() { static_stack<int, 0>{1}; });
+    check_exception_thrown<std::logic_error>(report("Can't push to null stack"), [&t]() { t.push(1); });
+    check_exception_thrown<std::logic_error>(report("Can't construct non-null null stack"), []() { static_stack<int, 0>{1}; });
   }
 
   void test_static_stack::check_depth_1()
@@ -49,16 +49,16 @@ namespace sequoia::testing
     stack_t t{};
     t.push(2);
 
-    check_semantics(report_line("Standard Semantics"), s, t);
+    check_semantics(report("Standard Semantics"), s, t);
 
-    check_exception_thrown<std::logic_error>(report_line("Trying to push two elements to stack of depth 1"), [&t]() { t.push(1); });
-    check_exception_thrown<std::logic_error>(report_line("Can't construct stack of depth 1 with 2 elements"), []() { static_stack<int, 1>{1, 2}; });
+    check_exception_thrown<std::logic_error>(report("Trying to push two elements to stack of depth 1"), [&t]() { t.push(1); });
+    check_exception_thrown<std::logic_error>(report("Can't construct stack of depth 1 with 2 elements"), []() { static_stack<int, 1>{1, 2}; });
 
     t.pop();
-    check(equality, report_line(""), t, stack_t{});
+    check(equality, report(""), t, stack_t{});
 
     t.push(1);
-    check(equality, report_line(""), t, stack_t{1});
+    check(equality, report(""), t, stack_t{1});
   }
 
   constexpr auto test_static_stack::make_static_stack_2()
@@ -83,12 +83,12 @@ namespace sequoia::testing
     constexpr stack_t s{make_static_stack_2()};
     auto t{s};
 
-    check(equality, report_line(""), t, stack_t{11, 12});
+    check(equality, report(""), t, stack_t{11, 12});
 
     t.pop();
-    check(equality, report_line(""), t, stack_t{11});
+    check(equality, report(""), t, stack_t{11});
 
     t.pop();
-    check(equality, report_line(""), t, stack_t{});
+    check(equality, report(""), t, stack_t{});
   }
 }

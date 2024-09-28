@@ -99,15 +99,9 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    std::string report_line(std::string_view message, const std::source_location loc = std::source_location::current())
-    {
-      return testing::report_line(message, loc, m_ProjectPaths.tests().repo());
-    }
-
-    [[nodiscard]]
     std::string report_line(const report& rep) const
     {
-        return testing::report_line(rep.message(), rep.location(), m_ProjectPaths.tests().repo());
+        return rep.location() ? testing::report_line(rep.message(), rep.location().value(), m_ProjectPaths.tests().repo()) : rep.message();
     }
   protected:
     ~test_base() = default;

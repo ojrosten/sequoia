@@ -24,9 +24,9 @@ namespace sequoia::testing
   {
     using complex = std::complex<double>;
 
-    check(equality, report_line(""), complex{}, complex{1.0});
-    check(equality, report_line(""), complex{}, complex{1.0, 2.0});
-    check(equality, report_line(""), complex{}, complex{1.0, 2.0}, tutor{[](complex, complex) { return "complex advice, no pun intended"; }});
+    check(equality, report(""), complex{}, complex{1.0});
+    check(equality, report(""), complex{}, complex{1.0, 2.0});
+    check(equality, report(""), complex{}, complex{1.0, 2.0}, tutor{[](complex, complex) { return "complex advice, no pun intended"; }});
   }
   
   [[nodiscard]]
@@ -39,6 +39,6 @@ namespace sequoia::testing
   {
     using complex = std::complex<double>;
 
-    check(equality, report_line(""), complex{1.0}, complex{1.0});
+    check(equality, report(""), complex{1.0}, complex{1.0});
   }
 }

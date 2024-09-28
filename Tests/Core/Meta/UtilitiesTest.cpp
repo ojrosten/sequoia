@@ -32,7 +32,7 @@ namespace sequoia::testing
 
   void utilities_test::test_function_signature()
   {
-    check(report_line("Signature of lambda operator()"), []() {
+    check(report("Signature of lambda operator()"), []() {
         auto l{[](int) -> double { return 1.0; }};
         using clo = decltype(l);
         using sig = function_signature<decltype(&clo::operator())>;
@@ -43,7 +43,7 @@ namespace sequoia::testing
       }()
     );
 
-    check(report_line("Signature of struct operator() noexcept"), []() {
+    check(report("Signature of struct operator() noexcept"), []() {
         struct foo
         {
           double operator()(int) { return 1.0; }
@@ -57,7 +57,7 @@ namespace sequoia::testing
       }()
     );
 
-    check(report_line("Signature of struct operator() noexcept"), []() {
+    check(report("Signature of struct operator() noexcept"), []() {
         struct foo
         {
           double operator()(int) noexcept { return 1.0; }
@@ -71,7 +71,7 @@ namespace sequoia::testing
       }()
     );
 
-    check(report_line("Signature of struct operator() const noexcept"), []() {
+    check(report("Signature of struct operator() const noexcept"), []() {
         struct foo
         {
           double operator()(int) const noexcept { return 1.0; }
@@ -85,7 +85,7 @@ namespace sequoia::testing
       }()
     );
 
-    check(report_line("Signature of struct static function noexcept"), []() {
+    check(report("Signature of struct static function noexcept"), []() {
         struct foo
         {
           static double bar(int) noexcept { return 1.0; }
@@ -99,7 +99,7 @@ namespace sequoia::testing
       }()
     );
 
-    check(report_line("Signature of function"), []() {
+    check(report("Signature of function"), []() {
         using sig = function_signature<decltype(&f)>;
         static_assert(std::is_same_v<sig::arg, int>);
         static_assert(std::is_same_v<sig::ret, double>);
@@ -108,7 +108,7 @@ namespace sequoia::testing
       }()
     );
 
-    check(report_line("Signature of noexcept function"), []() {
+    check(report("Signature of noexcept function"), []() {
         using sig = function_signature<decltype(&g)>;
         static_assert(std::is_same_v<sig::arg, int>);
         static_assert(std::is_same_v<sig::ret, double>);

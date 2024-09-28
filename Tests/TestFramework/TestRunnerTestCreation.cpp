@@ -47,57 +47,57 @@ namespace sequoia::testing
 
   void test_runner_test_creation::test_type_handling()
   {
-    check_exception_thrown<std::logic_error>(report_line("Empty string"), []() { return handle_as_ref(""); });
-    check_exception_thrown<std::logic_error>(report_line("Just spaces"), []() { return handle_as_ref(" "); });
-    check(report_line("Letter"),        handle_as_ref("a"));
-    check(report_line("int"),          !handle_as_ref("int"));
-    check(report_line(" int"),         !handle_as_ref(" int"));
-    check(report_line("  int"),        !handle_as_ref("  int"));
-    check(report_line("int*"),         !handle_as_ref("int*"));
-    check(report_line("int&"),         !handle_as_ref("int&"));
-    check(report_line("int *"),        !handle_as_ref("int *"));
-    check(report_line(" int "),        !handle_as_ref(" int "));
-    check(report_line("long"),         !handle_as_ref("long"));
-    check(report_line("longint"),      handle_as_ref("longint"));
-    check(report_line("long int"),     !handle_as_ref("long int"));
-    check(report_line("double"),       !handle_as_ref("double"));
-    check(report_line("std::size_t"),  !handle_as_ref("std::size_t"));
-    check(report_line("tuple<int>"),    handle_as_ref("tuple<int>"));
-    check(report_line("tuple<int >"),   handle_as_ref("tuple<int >"));
-    check(report_line("tuple< int >"),  handle_as_ref("tuple< int >"));
+    check_exception_thrown<std::logic_error>(report("Empty string"), []() { return handle_as_ref(""); });
+    check_exception_thrown<std::logic_error>(report("Just spaces"), []() { return handle_as_ref(" "); });
+    check(report("Letter"),        handle_as_ref("a"));
+    check(report("int"),          !handle_as_ref("int"));
+    check(report(" int"),         !handle_as_ref(" int"));
+    check(report("  int"),        !handle_as_ref("  int"));
+    check(report("int*"),         !handle_as_ref("int*"));
+    check(report("int&"),         !handle_as_ref("int&"));
+    check(report("int *"),        !handle_as_ref("int *"));
+    check(report(" int "),        !handle_as_ref(" int "));
+    check(report("long"),         !handle_as_ref("long"));
+    check(report("longint"),      handle_as_ref("longint"));
+    check(report("long int"),     !handle_as_ref("long int"));
+    check(report("double"),       !handle_as_ref("double"));
+    check(report("std::size_t"),  !handle_as_ref("std::size_t"));
+    check(report("tuple<int>"),    handle_as_ref("tuple<int>"));
+    check(report("tuple<int >"),   handle_as_ref("tuple<int >"));
+    check(report("tuple< int >"),  handle_as_ref("tuple< int >"));
   }
 
   void test_runner_test_creation::test_template_data_generation()
   {
-    check(report_line(""), generate_template_data("").empty());
-    check_exception_thrown<std::runtime_error>(report_line("Unmatched <"),
+    check(report(""), generate_template_data("").empty());
+    check_exception_thrown<std::runtime_error>(report("Unmatched <"),
                                                [](){ return generate_template_data("<"); });
-    check_exception_thrown<std::runtime_error>(report_line("Backwards delimiters"),
+    check_exception_thrown<std::runtime_error>(report("Backwards delimiters"),
                                                [](){ return generate_template_data("><"); });
-    check_exception_thrown<std::runtime_error>(report_line("Missing symbol"),
+    check_exception_thrown<std::runtime_error>(report("Missing symbol"),
                                                [](){ return generate_template_data("<class>"); });
-    check_exception_thrown<std::runtime_error>(report_line("Missing symbol"),
+    check_exception_thrown<std::runtime_error>(report("Missing symbol"),
                                                [](){ return generate_template_data("< class>"); });
 
-    check(equality, report_line("Specialization"), generate_template_data("<>"), template_data{{}});
-    check(equality, report_line("Class template parameter"),
+    check(equality, report("Specialization"), generate_template_data("<>"), template_data{{}});
+    check(equality, report("Class template parameter"),
                    generate_template_data("<class T>"), template_data{{"class", "T"}});
-    check(equality, report_line("Class template parameter"),
+    check(equality, report("Class template parameter"),
                    generate_template_data("<class T >"), template_data{{"class", "T"}});
-    check(equality, report_line("Class template parameter"),
+    check(equality, report("Class template parameter"),
                    generate_template_data("< class T>"), template_data{{"class", "T"}});
 
-    check(equality, report_line("Two template parameters"),
+    check(equality, report("Two template parameters"),
                    generate_template_data("<class T, typename S>"),
                    template_data{{"class", "T"}, {"typename", "S"}});
-    check(equality, report_line("Two template parameters"),
+    check(equality, report("Two template parameters"),
                    generate_template_data("< class  T,  typename S >"),
                    template_data{{"class", "T"}, {"typename", "S"}});
 
-    check(equality, report_line("Variadic template"),
+    check(equality, report("Variadic template"),
                    generate_template_data("<class... T>"), template_data{{"class...", "T"}});
 
-    check(equality, report_line("Variadic template"),
+    check(equality, report("Variadic template"),
                    generate_template_data("<class ... T>"), template_data{{"class ...", "T"}});
   }
 
@@ -156,13 +156,13 @@ namespace sequoia::testing
       file << outputStream.str();
     }
 
-    check(equivalence, report_line(""), fake_project(), predictive_materials() /= "FakeProject");
+    check(equivalence, report(""), fake_project(), predictive_materials() /= "FakeProject");
   }
 
   void test_runner_test_creation::test_creation_failure()
   {
       check_exception_thrown<std::runtime_error>(
-        report_line("Plurgh.h does not exist"),
+        report("Plurgh.h does not exist"),
         [this]() {
           std::stringstream outputStream{};
           commandline_arguments args{zeroth_arg(), "create", "free", "Plurgh.h"};
@@ -171,7 +171,7 @@ namespace sequoia::testing
         });
 
       check_exception_thrown<std::runtime_error>(
-        report_line("Typo in specified class header"),
+        report("Typo in specified class header"),
         [this]() {
           std::stringstream outputStream{};
           commandline_arguments args{zeroth_arg(), "create", "regular_test", "bar::things", "double", "-h", "fakeProject/Stuff/Thingz.hpp"};

@@ -44,7 +44,7 @@ namespace sequoia::testing
 
     auto getter{[](const beast& b) { return b.x.get_allocator(); }};
 
-    check_semantics(report_line(""),
+    check_semantics(report(""),
       beast{},
       beast{{{1}}},
       [](beast& b) { b.x.push_back({{2}}); },

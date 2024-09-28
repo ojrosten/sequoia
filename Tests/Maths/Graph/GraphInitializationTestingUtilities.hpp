@@ -17,39 +17,29 @@ namespace sequoia::testing
   class graph_init_checker : public checker<Mode, Extenders...>
   {
   public:
-    using checker_t = checker<Mode, Extenders...>;
-
     using checker<Mode, Extenders...>::checker;
 
     graph_init_checker(const graph_init_checker&) = delete;
     graph_init_checker& operator=(const graph_init_checker&) = delete;
 
-    template<class G, class... NodeWeights, class E=typename G::edge_init_type>
-    void check_graph(std::string_view description, const G& graph, std::initializer_list<std::initializer_list<E>> edges, const std::tuple<NodeWeights...>& nodeWeights)
+    template<class G, class... NodeWeights, class E=typename G::edge_init_type, class Self>
+    void check_graph(this Self&& self, const report& description, const G& graph, std::initializer_list<std::initializer_list<E>> edges, const std::tuple<NodeWeights...>& nodeWeights)
     {
-      checker_t::check(weak_equivalence, description, graph, edges, nodeWeights);
+      self.check(weak_equivalence, description, graph, edges, nodeWeights);
     }
 
-    template
-    <
-      class G,
-      class E=typename G::edge_init_type
-    >
+    template<class G, class E=typename G::edge_init_typ, class Self>
       requires (!std::is_empty_v<typename G::node_weight_type>)
-    void check_graph(std::string_view description, const G& graph, std::initializer_list<std::initializer_list<E>> edges, std::initializer_list<typename G::node_weight_type> nodeWeights)
+    void check_graph(this Self&& self, const report& description, const G& graph, std::initializer_list<std::initializer_list<E>> edges, std::initializer_list<typename G::node_weight_type> nodeWeights)
     {
-      checker_t::check(weak_equivalence, description, graph, edges, nodeWeights);
+      self.heck(weak_equivalence, description, graph, edges, nodeWeights);
     }
 
-    template
-    <
-      class G,
-      class E=typename G::edge_init_type
-    >
+    template<class G, class E=typename G::edge_init_type, class Self>
       requires std::is_empty_v<typename G::node_weight_type>
-    void check_graph(std::string_view description, const G& graph, std::initializer_list<std::initializer_list<E>> edges)
+    void check_graph(this Self&& self, const report& description, const G& graph, std::initializer_list<std::initializer_list<E>> edges)
     {
-      checker_t::check(weak_equivalence, description, graph, edges);
+      self.check(weak_equivalence, description, graph, edges);
     }
   protected:
     graph_init_checker(graph_init_checker&&)            noexcept = default;

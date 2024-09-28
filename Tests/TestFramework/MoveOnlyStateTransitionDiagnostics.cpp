@@ -91,9 +91,9 @@ namespace sequoia::testing
     {
       auto checker{
         [this](std::string_view description, std::function<foo_t()> obtained, std::function<foo_t()> prediction, std::function<foo_t()> parent, std::weak_ordering ordering) {
-          check(equality, description, obtained(), prediction());
-          check(within_tolerance{0.1}, description, obtained(), prediction());
-          check_semantics(description, prediction, parent, ordering);
+          check(equality, {description, no_source_location}, obtained(), prediction());
+          check(within_tolerance{0.1}, {description, no_source_location}, obtained(), prediction());
+          check_semantics({description, no_source_location}, prediction, parent, ordering);
         }
       };
 
@@ -103,8 +103,8 @@ namespace sequoia::testing
     {
       auto checker{
         [this](std::string_view description, const foo_t& obtained, const foo_t& prediction) {
-          check(equality, description, obtained, prediction);
-          check(within_tolerance{0.1}, description, obtained, prediction);
+          check(equality, {description, no_source_location}, obtained, prediction);
+          check(within_tolerance{0.1}, {description, no_source_location}, obtained, prediction);
         }
       };
 
@@ -134,9 +134,9 @@ namespace sequoia::testing
     {
       auto checker{
         [this](std::string_view description, std::function<foo_t()> obtained, std::function<foo_t()> prediction, std::function<foo_t()> parent) {
-          check(equality, description, obtained(), prediction());
-          check(within_tolerance{0.1}, description, obtained(), prediction());
-          check_semantics(description, prediction, parent);
+          check(equality, {description, no_source_location}, obtained(), prediction());
+          check(within_tolerance{0.1}, {description, no_source_location}, obtained(), prediction());
+          check_semantics({description, no_source_location}, prediction, parent);
         }
       };
 
@@ -146,8 +146,8 @@ namespace sequoia::testing
     {
       auto checker{
         [this](std::string_view description, const foo_t& obtained, const foo_t& prediction) {
-          check(equality, description, obtained, prediction);
-          check(within_tolerance{0.1}, description, obtained, prediction);
+          check(equality, {description, no_source_location}, obtained, prediction);
+          check(within_tolerance{0.1}, {description, no_source_location}, obtained, prediction);
         }
       };
 
@@ -184,7 +184,7 @@ namespace sequoia::testing
 
     auto checker{
         [this](std::string_view description, const foo_t& obtained, const foo_t& prediction) {
-          check(equality, description, obtained, prediction);
+          check(equality, {description, no_source_location}, obtained, prediction);
         }
     };
 
@@ -208,7 +208,7 @@ namespace sequoia::testing
 
     auto checker{
         [this](std::string_view description, const foo_t& obtained, const foo_t& prediction) {
-          check(equality, description, obtained, prediction);
+          check(equality, {description, no_source_location}, obtained, prediction);
         }
     };
 

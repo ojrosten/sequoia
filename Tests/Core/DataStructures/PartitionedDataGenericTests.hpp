@@ -114,7 +114,7 @@ namespace sequoia::testing
               data_description::empty,
               t.report_line(""),
               [&t](data_t d) -> data_t {
-                t.check_exception_thrown<std::out_of_range>(t.report_line("Pushing back to non-existent partition throws"), [&d]() { return d.push_back_to_partition(0, 8); });
+                t.check_exception_thrown<std::out_of_range>("Pushing back to non-existent partition throws", [&d]() { return d.push_back_to_partition(0, 8); });
                 return d;
               }
             },
@@ -122,7 +122,7 @@ namespace sequoia::testing
               data_description::empty,
               t.report_line(""),
               [&t](data_t d) -> data_t {
-                t.check_exception_thrown<std::out_of_range>(t.report_line("Inserting to non-existent partition throws"), [&d]() { return d.insert_to_partition(d.cbegin_partition(0), 8); });
+                t.check_exception_thrown<std::out_of_range>("Inserting to non-existent partition throws", [&d]() { return d.insert_to_partition(d.cbegin_partition(0), 8); });
                 return d;
               }
             },
@@ -130,7 +130,7 @@ namespace sequoia::testing
               data_description::empty,
               t.report_line(""),
               [&t](data_t d) -> data_t {
-                t.check_exception_thrown<std::out_of_range>(t.report_line("Inserting to non-existent partition throws"), [&d]() { return d.insert_to_partition(0, 0, 8); });
+                t.check_exception_thrown<std::out_of_range>("Inserting to non-existent partition throws", [&d]() { return d.insert_to_partition(0, 0, 8); });
                 return d;
               }
             },
@@ -172,7 +172,7 @@ namespace sequoia::testing
               data_description::empty_partition,
               t.report_line(""),
               [&t](data_t d) -> data_t {
-                t.check_exception_thrown<std::out_of_range>(t.report_line("Pushing back to non-existent partition throws"), [&d]() { return d.push_back_to_partition(1, 8); });
+                t.check_exception_thrown<std::out_of_range>("Pushing back to non-existent partition throws", [&d]() { return d.push_back_to_partition(1, 8); });
                 return d;
               }
             },
@@ -180,7 +180,7 @@ namespace sequoia::testing
               data_description::empty_partition,
               t.report_line(""),
               [&t](data_t d) -> data_t {
-                t.check_exception_thrown<std::out_of_range>(t.report_line("Inserting to non-existent partition throws"), [&d]() { return d.insert_to_partition(d.cbegin_partition(1), 8); });
+                t.check_exception_thrown<std::out_of_range>("Inserting to non-existent partition throws", [&d]() { return d.insert_to_partition(d.cbegin_partition(1), 8); });
                 return d;
               }
             },
@@ -188,7 +188,7 @@ namespace sequoia::testing
               data_description::empty_partition,
               t.report_line(""),
               [&t](data_t d) -> data_t {
-                t.check_exception_thrown<std::out_of_range>(t.report_line("Inserting to non-existent partition throws"), [&d]() { return d.insert_to_partition(1, 0, 8); });
+                t.check_exception_thrown<std::out_of_range>("Inserting to non-existent partition throws", [&d]() { return d.insert_to_partition(1, 0, 8); });
                 return d;
               }
             },
@@ -248,7 +248,7 @@ namespace sequoia::testing
               data_description::empty_partition,
               t.report_line(""),
               [&t](data_t d) -> data_t {
-                t.check_exception_thrown<std::domain_error>(t.report_line(""), [&d](){ d.erase_from_partition(d.cbegin_partition(0), d.cend_partition(1)); });
+                t.check_exception_thrown<std::domain_error>("", [&d](){ d.erase_from_partition(d.cbegin_partition(0), d.cend_partition(1)); });
                 return d;
               }
             },
@@ -256,7 +256,7 @@ namespace sequoia::testing
               data_description::empty_partition,
               t.report_line(""),
               [&t](data_t d) -> data_t {
-                t.check_exception_thrown<std::domain_error>(t.report_line(""), [&d](){ d.erase_from_partition(d.cbegin_partition(1), d.cend_partition(0)); });
+                t.check_exception_thrown<std::domain_error>("", [&d](){ d.erase_from_partition(d.cbegin_partition(1), d.cend_partition(0)); });
                 return d;
               }
             },
@@ -613,7 +613,7 @@ namespace sequoia::testing
               data_description::two_empty_partitions,
               t.report_line(""),
               [&t](data_t d) -> data_t {
-                t.check_exception_thrown<std::domain_error>(t.report_line(""), [&d](){ d.erase_from_partition(d.cbegin_partition(0), d.cend_partition(1)); });
+                t.check_exception_thrown<std::domain_error>("", [&d](){ d.erase_from_partition(d.cbegin_partition(0), d.cend_partition(1)); });
                 return d;
               }
             },
