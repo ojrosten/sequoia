@@ -245,7 +245,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string report_line(std::string_view message, const std::source_location loc, const fs::path& repository)
+  std::string report_line(std::string_view message, const fs::path& repository, const std::source_location loc)
   {
     return append_lines(path_for_reporting(loc.file_name(), repository).generic_string().append(", Line ").append(std::to_string(loc.line())), message).append("\n");
   }

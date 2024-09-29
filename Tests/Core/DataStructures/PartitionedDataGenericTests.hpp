@@ -87,12 +87,12 @@ namespace sequoia::testing
 
       auto checker{
           [&t](std::string_view description, const data_t& obtained, const data_t& prediction, const data_t& parent, std::size_t host, std::size_t target) {
-            t.check(equality, description, obtained, prediction);
-            if(host != target) t.check_semantics(description, prediction, parent);
+            t.check(equality, {description, no_source_location}, obtained, prediction);
+            if(host != target) t.check_semantics({description, no_source_location}, prediction, parent);
           }
       };
 
-      transition_checker<data_t>::check(report_line(""), trg, checker);
+      transition_checker<data_t>::check(t.report_line(""), trg, checker);
     }
 
     [[nodiscard]]

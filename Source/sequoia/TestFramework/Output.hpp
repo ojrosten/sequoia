@@ -199,7 +199,7 @@ namespace sequoia::testing
   std::string instability_footer();
 
   [[nodiscard]]
-  std::string report_line(std::string_view message, const std::source_location loc = std::source_location::current(), const std::filesystem::path& repository = {});
+  std::string report_line(std::string_view message, const std::filesystem::path& repository, const std::source_location loc);
 
   [[nodiscard]]
   std::filesystem::path path_for_reporting(const std::filesystem::path& file, const std::filesystem::path& repository);

@@ -72,12 +72,12 @@ namespace sequoia::testing
 
       auto checker{
           [&t](std::string_view description, const graph_t& obtained, const graph_t& prediction, const graph_t& parent, std::size_t host, std::size_t target) {
-            t.check(equality, description, obtained, prediction);
-            if(host != target) t.check_semantics(description, prediction, parent);
+            t.check(equality, {description, no_source_location}, obtained, prediction);
+            if(host != target) t.check_semantics({description, no_source_location}, prediction, parent);
           }
       };
 
-      transition_checker<graph_t>::check(report_line(""), trg, checker);
+      transition_checker<graph_t>::check(t.report_line(""), trg, checker);
     }
 
     [[nodiscard]]
@@ -168,7 +168,7 @@ namespace sequoia::testing
               meta_data_graph_description::node_0b_0a,
               t.report_line("Mutate edge meta data"),
               [&t](graph_t g) -> graph_t {
-                t.check(equality, report_line("Mutate return value"), g.mutate_edge_meta_data(g.cbegin_edges(0), [](meta_data_t& m) { m += 0.5f; return 42; }), 42);
+                t.check(equality, "Mutate return value", g.mutate_edge_meta_data(g.cbegin_edges(0), [](meta_data_t& m) { m += 0.5f; return 42; }), 42);
                 return g;
               }
             },
@@ -184,7 +184,7 @@ namespace sequoia::testing
               meta_data_graph_description::node_0a_0b,
               t.report_line("Mutate edge meta data via reverse iterator"),
               [&t](graph_t g) -> graph_t {
-                t.check(equality, report_line("Mutate return value"), g.mutate_edge_meta_data(g.crbegin_edges(0), [](meta_data_t& m) { m += 0.5f; return 42; }), 42);
+                t.check(equality, "Mutate return value", g.mutate_edge_meta_data(g.crbegin_edges(0), [](meta_data_t& m) { m += 0.5f; return 42; }), 42);
                 return g;
               }
             }
