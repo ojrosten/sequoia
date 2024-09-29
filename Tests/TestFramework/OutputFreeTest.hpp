@@ -28,5 +28,9 @@ namespace sequoia::testing
     void test_display_character();
 
     void test_tidy_name();
+
+    void test_relative_reporting_path();
+
+    void test_absolute_reporting_path();
   };
 }

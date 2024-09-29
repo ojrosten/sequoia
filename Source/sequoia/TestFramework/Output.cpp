@@ -228,54 +228,26 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
+  fs::path path_for_reporting(const fs::path& file, const fs::path& repository)
+  {
+    if(file.is_relative())
+    {
+      auto it{std::ranges::find_if_not(file, [](const fs::path& p) { return p == ".."; })};
+      return std::accumulate(it, file.end(), fs::path{}, [](fs::path lhs, const fs::path& rhs){ return lhs /= rhs; });
+    }
+    else if(!repository.empty())
+    {
+      auto [filepathIter, repoIter]{std::ranges::mismatch(file, repository)};
+      return std::accumulate(filepathIter, file.end(), back(repository), [](fs::path lhs, const fs::path& rhs){ return lhs /= rhs; });
+    }
+
+    return file;
+  }
+
+  [[nodiscard]]
   std::string report_line(std::string_view message, const std::source_location loc, const fs::path& repository)
   {
-    fs::path file{loc.file_name()};
-
-    auto pathToString{
-      [&file,&repository](){
-        if(file.is_relative())
-        {
-          auto it{file.begin()};
-          while(it != file.end() && (*it == ".."))
-          {
-            ++it;
-          }
-
-          fs::path p{};
-          for(; it != file.end(); ++it)
-          {
-            p /= *it;
-          }
-
-          return p.generic_string();
-        }
-        else if(!repository.empty())
-        {
-          auto filepathIter{file.begin()}, repoIter{repository.begin()};
-          while((repoIter != repository.end()) && (filepathIter != file.end()))
-          {
-            if(*repoIter != *filepathIter) break;
-
-            ++repoIter;
-            ++filepathIter;
-          }
-
-          fs::path p{back(repository)};
-          for(; filepathIter != file.end(); ++filepathIter)
-          {
-            p /= *filepathIter;
-          }
-
-          return p.generic_string();
-        }
-
-        return file.generic_string();
-      }
-
-    };
-
-    return append_lines(pathToString().append(", Line ").append(std::to_string(loc.line())), message).append("\n");
+    return append_lines(path_for_reporting(loc.file_name(), repository).generic_string().append(", Line ").append(std::to_string(loc.line())), message).append("\n");
   }
 
   [[nodiscard]]

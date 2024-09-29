@@ -201,6 +201,9 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string report_line(std::string_view message, const std::source_location loc = std::source_location::current(), const std::filesystem::path& repository = {});
 
+  [[nodiscard]]
+  std::filesystem::path path_for_reporting(const std::filesystem::path& file, const std::filesystem::path& repository);
+
   struct no_source_location_t{};
   inline constexpr no_source_location_t no_source_location{};
 

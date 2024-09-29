@@ -12,6 +12,9 @@
 
 namespace sequoia::testing
 {
+  using namespace std::string_literals;
+  namespace fs = std::filesystem;
+
   [[nodiscard]]
   std::filesystem::path output_free_test::source_file() const
   {
@@ -23,18 +26,18 @@ namespace sequoia::testing
     test_emphasise();
     test_display_character();
     test_tidy_name();
+    test_relative_reporting_path();
+    test_absolute_reporting_path();
   }
 
   void output_free_test::test_emphasise()
   {
-    using namespace std::string_literals;
     check(equality, report("Emphasis"), emphasise("foo"), "--foo--"s);
     check(equality, report("Nothing to emphasise"), emphasise(""), ""s);
   }
 
   void output_free_test::test_display_character()
   {
-    using namespace std::string_literals;
     check(equality, report(""), display_character('\n'), "'\\n'"s);
     check(equality, report(""), display_character('\t'), "'\\t'"s);
     check(equality, report(""), display_character('\0'), "'\\0'"s);
@@ -43,8 +46,22 @@ namespace sequoia::testing
 
   void output_free_test::test_tidy_name()
   {
-    using namespace std::string_literals;
     check(equality, report(""), tidy_name("(some enum)0", clang_type{}), "0"s);
     check(equality, report(""), tidy_name("struct foo", msvc_type{}), "foo"s);
+  }
+
+  void output_free_test::test_relative_reporting_path()
+  {
+    check(equality, "No ..",     path_for_reporting(      "Tests/foo.cpp", ""), fs::path{"Tests/foo.cpp"});
+    check(equality, "Single ..", path_for_reporting(   "../Tests/foo.cpp", ""), fs::path{"Tests/foo.cpp"});
+    check(equality, "Double ..", path_for_reporting("../../Tests/foo.cpp", ""), fs::path{"Tests/foo.cpp"});
+  }
+
+  void output_free_test::test_absolute_reporting_path()
+  {
+    const auto root{fs::current_path().root_path()};
+    const auto testRepo{root / "Tests"}, file{testRepo / "foo.cpp"};
+
+    check(equality, "File in repo", path_for_reporting(file, testRepo), fs::path{"Tests/foo.cpp"});
   }
 }
