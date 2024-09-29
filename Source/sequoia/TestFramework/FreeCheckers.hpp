@@ -276,22 +276,23 @@ namespace sequoia::testing
 
   template<class CheckType, test_mode Mode, class T, class S, class... U>
     requires implements_general_equivalence_check<Mode, CheckType, T, S, U...>
-  bool general_equivalence_check(CheckType flavour, std::string_view description, test_logger<Mode>& logger, const T& obtained, const S& s, const U&... u)
+  bool general_equivalence_check(CheckType flavour, std::string description, test_logger<Mode>& logger, const T& obtained, const S& s, const U&... u)
   {
     using processor = equivalent_type_processor<S, U...>;
 
     const auto msg{
-      [flavour, description, types{processor::info()}] (){
-        return append_lines(description,
-                            "Comparison performed using:",
-                            make_type_info<value_tester<T>>(),
-                            std::string{"Checking for "}.append(to_string(flavour)).append(" with:"),
-                            types)
-               .append("\n");
-      }()
+      [flavour, &description, types{processor::info()}] () -> std::string&& {
+        return std::move(
+                append_lines(description,
+                             "Comparison performed using:",
+                             make_type_info<value_tester<T>>(),
+                             std::string{"Checking for "}.append(to_string(flavour)).append(" with:"),
+                             types).append("\n")
+                );
+      }
     };
 
-    sentinel<Mode> sentry{logger, msg};
+    sentinel<Mode> sentry{logger, msg()};
 
     if constexpr(tester_for<CheckType, Mode, T, T, S, U...>)
     {
@@ -388,11 +389,11 @@ namespace sequoia::testing
     class Fn,
     invocable_r<std::string, std::string> Postprocessor=default_exception_message_postprocessor
   >
-  bool check_exception_thrown(std::string_view description, test_logger<Mode>& logger, Fn&& function, Postprocessor postprocessor={})
+  bool check_exception_thrown(std::string description, test_logger<Mode>& logger, Fn&& function, Postprocessor postprocessor={})
   {
     auto message{
-      [description](){
-        return append_lines(description, "Expected Exception Type:", make_type_info<E>());
+      [&description]() -> std::string&& {
+        return std::move(append_lines(description, "Expected Exception Type:", make_type_info<E>()));
       }()
     };
 
@@ -440,7 +441,7 @@ namespace sequoia::testing
     class Advisor = null_advisor
   >
   bool check(CheckType flavour,
-             std::string_view description,
+             std::string description,
              test_logger<Mode>& logger,
              Iter first,
              Sentinel last,
@@ -449,9 +450,8 @@ namespace sequoia::testing
              tutor<Advisor> advisor = {})
   {
     auto info{
-      [description]() {
-        return description.empty() || description.back() == '\n'
-          ? std::string{description} : std::string{description}.append("\n");
+      [&description]() -> std::string&& {
+        return description.empty() || description.back() == '\n' ? std::move(description) : std::move(description.append("\n"));
       }
     };
 
@@ -487,13 +487,13 @@ namespace sequoia::testing
   template<class Compare, test_mode Mode, class T, class Advisor=null_advisor>
     requires maybe_comparison_type<Compare, T>
   bool check(Compare compare,
-             std::string_view description,
+             std::string description,
              test_logger<Mode>& logger,
              const T& obtained,
              const T& prediction,
              tutor<Advisor> advisor={})
   {
-    sentinel<Mode> sentry{logger, add_type_info<T>(description)};
+    sentinel<Mode> sentry{logger, add_type_info<T>(std::move(description))};
 
     if constexpr(std::invocable<Compare, T, T>)
     {
@@ -531,13 +531,13 @@ namespace sequoia::testing
                || binary_tester_for<equality_check_t, Mode, T, tutor<Advisor>>
                || faithful_range<T>)
   bool check(equality_check_t,
-             std::string_view description,
+             std::string description,
              test_logger<Mode>& logger,
              const T& obtained,
              const T& prediction,
              tutor<Advisor> advisor={})
   {
-    sentinel<Mode> sentry{logger, add_type_info<T>(description)};
+    sentinel<Mode> sentry{logger, add_type_info<T>(std::move(description))};
 
     if constexpr(deep_equality_comparable<T>)
     {
@@ -571,20 +571,20 @@ namespace sequoia::testing
 
   template<class CheckType, test_mode Mode, class T, class S, class... U>
     requires has_generalized_equivalence_check<CheckType, Mode, T, S, U...>
-  bool check(CheckType flavour, std::string_view description, test_logger<Mode>& logger, const T& obtained, S&& s, U&&... u)
+  bool check(CheckType flavour, std::string description, test_logger<Mode>& logger, const T& obtained, S&& s, U&&... u)
   {
     if constexpr(implements_general_equivalence_check<Mode, CheckType, T, S, U...>)
     {
-      return general_equivalence_check(flavour, description, logger, obtained, std::forward<S>(s), std::forward<U>(u)...);
+      return general_equivalence_check(flavour, std::move(description), logger, obtained, std::forward<S>(s), std::forward<U>(u)...);
     }
     else if constexpr(faithful_range<T>)
     {
-      return check(flavour, add_type_info<T>(description), logger, std::begin(obtained), std::end(obtained), std::begin(std::forward<S>(s)), std::end(std::forward<S>(s)), std::forward<U>(u)...);
+      return check(flavour, add_type_info<T>(std::move(description)), logger, std::begin(obtained), std::end(obtained), std::begin(std::forward<S>(s)), std::end(std::forward<S>(s)), std::forward<U>(u)...);
     }
     else if constexpr(has_fallback<CheckType>)
     {
       using fallback = typename CheckType::fallback;
-      return check(fallback{}, description, logger, obtained, std::forward<S>(s), std::forward<U>(u)...);
+      return check(fallback{}, std::move(description), logger, obtained, std::forward<S>(s), std::forward<U>(u)...);
     }
     else
     {
@@ -599,13 +599,13 @@ namespace sequoia::testing
   template<test_mode Mode, class T, class Advisor=null_advisor>
     requires (deep_equality_comparable<T> || has_detailed_agnostic_check<Mode, T, Advisor> || faithful_range<T>)
   bool check(with_best_available_check_t,
-             std::string_view description,
+             std::string description,
              test_logger<Mode>& logger,
              const T& obtained,
              const T& prediction,
              tutor<Advisor> advisor={})
   {
-    sentinel<Mode> sentry{logger, add_type_info<T>(description)};
+    sentinel<Mode> sentry{logger, add_type_info<T>(std::move(description))};
 
     if constexpr(deep_equality_comparable<T>)
     {
@@ -638,9 +638,9 @@ namespace sequoia::testing
   }
 
   template<test_mode Mode, class Advisor=null_advisor>
-  bool check(std::string_view description, test_logger<Mode>& logger, const bool obtained, tutor<Advisor> advisor={})
+  bool check(std::string description, test_logger<Mode>& logger, const bool obtained, tutor<Advisor> advisor={})
   {
-    return check(equality, description, logger, obtained, true, std::move(advisor));
+    return check(equality, std::move(description), logger, obtained, true, std::move(advisor));
   }
 
   /*! \brief Exposes elementary check methods, with the option to plug in arbitrary Extenders to compose functionality.
@@ -823,9 +823,9 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    sentinel<Mode> make_sentinel(std::string_view message)
+    sentinel<Mode> make_sentinel(std::string message)
     {
-      return {logger(), message};
+      return {logger(), std::move(message)};
     }
 
     [[nodiscard]]

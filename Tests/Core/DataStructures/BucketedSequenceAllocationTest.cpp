@@ -53,16 +53,11 @@ namespace sequoia::testing
     using allocator  = typename storage::allocator_type;
     using prediction = std::initializer_list<std::initializer_list<int>>;
 
-    auto makeMessage{
-      [](std::string_view message) {
-        return add_type_info<storage>(message);
-      }
-    };
-
     auto partitionMaker{ [](storage& s) { s.add_slot(); } };
 
     // null; [0,2][1]
-    auto[s,t]{check_semantics("",
+    auto[s,t]{check_semantics(
+                    add_type_info<storage>(""),
                     [](){ return storage(allocator{}); },
                     [](){ return storage{{{0,2}, {1}}, allocator{}}; },
                     partitionMaker,
@@ -71,13 +66,13 @@ namespace sequoia::testing
                                     { {0_c, {2_c,0_mu}, {2_anp,2_awp}, {0_containers, 2_containers, 3_postmutation}} }
                     })};
 
-    check(equivalence, report(makeMessage("")), s, prediction{});
-    check(equivalence, report(makeMessage("")), t, prediction{{0,2}, {1}});
+    check(equivalence, add_type_info<storage>(""), s, prediction{});
+    check(equivalence, add_type_info<storage>(""), t, prediction{{0,2}, {1}});
 
     s.add_slot();
     // []
 
-    check(equality, report(makeMessage("")), s, storage{{{}}, allocator{}});
+    check(equality, add_type_info<storage>(""), s, storage{{{}}, allocator{}});
 
     auto mutator{
       [](storage& s) {
@@ -86,7 +81,7 @@ namespace sequoia::testing
       }
     };
 
-    check_semantics("",
+    check_semantics(add_type_info<storage>(""),
                     s,
                     t,
                     mutator,

@@ -78,9 +78,9 @@ namespace sequoia::testing
 
   //================================== sentinel_base ==================================//
 
-  sentinel_base::sentinel_base(test_logger_base& logger, std::string_view message)
+  sentinel_base::sentinel_base(test_logger_base& logger, std::string message)
     : m_pLogger{&logger}
-    , m_Message{message}
+    , m_Message{std::move(message)}
     , m_PriorFailures{logger.results().failures}
     , m_PriorCriticalFailures{logger.results().critical_failures}
     , m_PriorDeepChecks{logger.results().deep_checks}
@@ -88,11 +88,11 @@ namespace sequoia::testing
     if(!logger.depth())
     {
       logger.log_top_level_check();
-      record_check_started(get().recovery().recovery_file, message);
+      record_check_started(get().recovery().recovery_file, m_Message);
     }
 
-    recored_dump_started(get().recovery().dump_file, message);
-    logger.increment_depth(message);
+    recored_dump_started(get().recovery().dump_file, m_Message);
+    logger.increment_depth(m_Message);
   }
 
   sentinel_base::~sentinel_base()

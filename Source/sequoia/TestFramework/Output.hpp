@@ -314,8 +314,8 @@ namespace sequoia::testing
 
   template<class T, class... U>
   [[nodiscard]]
-  std::string add_type_info(std::string_view description)
+  std::string add_type_info(std::string description)
   {
-    return append_lines(description, make_type_info<T, U...>());
+    return append_lines(std::move(description), make_type_info<T, U...>());
   }
 }
