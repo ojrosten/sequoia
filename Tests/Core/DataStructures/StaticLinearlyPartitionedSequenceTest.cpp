@@ -27,10 +27,10 @@ namespace sequoia::testing
 
       constexpr sequence a{};
       sequence b{{1}};
-      check_semantics(report(""), a, b);
+      check_semantics("", a, b);
 
       b[0][0] = 2;
-      check(equality, report(""), b, sequence{{2}});
+      check(equality, "", b, sequence{{2}});
     }
 
     {
@@ -40,10 +40,10 @@ namespace sequoia::testing
       constexpr sequence a{{1,2,-1}, {3,-2,1}};
       sequence b{};
 
-      check_semantics(report(""), a, b);
+      check_semantics("", a, b);
 
       b[1][2] = 1;
-      check(equality, report(""), b, {{0, 0, 0}, {0, 0, 1}});
+      check(equality, "", b, {{0, 0, 0}, {0, 0, 1}});
     }
   }
 }

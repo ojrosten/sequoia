@@ -46,7 +46,7 @@ namespace sequoia::testing
           [](const beast& b){ return b.x.get_allocator(); }
         };
 
-        check_semantics(report("Broken equality"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {1_anp,1_awp}}});
+        check_semantics("Broken equality", beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {1_anp,1_awp}}});
       }
 
       {
@@ -57,7 +57,7 @@ namespace sequoia::testing
           [](const beast& b){ return b.x.get_allocator(); }
         };
 
-        check_semantics(report("Broken inequality"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {1_anp,1_awp}}});
+        check_semantics("Broken inequality", beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {1_anp,1_awp}}});
       }
 
       {
@@ -68,7 +68,7 @@ namespace sequoia::testing
          [](const beast& b){ return b.x.get_allocator(); }
         };
 
-        check_semantics(report("Broken copy"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {1_anp,1_awp}}});
+        check_semantics("Broken copy", beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {1_anp,1_awp}}});
       }
 
       {
@@ -79,7 +79,7 @@ namespace sequoia::testing
           [](const beast& b){ return b.x.get_allocator(); }
         };
 
-        check_semantics(report("Broken para-copy"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {1_anp,1_awp}}});
+        check_semantics("Broken para-copy", beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {1_anp,1_awp}}});
       }
 
       {
@@ -90,7 +90,7 @@ namespace sequoia::testing
           [](const beast& b){ return b.x.get_allocator(); }
         };
 
-        check_semantics(report("Broken move"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {1_anp,1_awp}}});
+        check_semantics("Broken move", beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {1_anp,1_awp}}});
       }
 
       {
@@ -101,7 +101,7 @@ namespace sequoia::testing
           [](const beast& b){ return b.x.get_allocator(); }
         };
 
-        check_semantics(report("Broken para-move"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {1_anp,1_awp}}});
+        check_semantics("Broken para-move", beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {1_anp,1_awp}}});
       }
 
       {
@@ -112,7 +112,7 @@ namespace sequoia::testing
           [](const beast& b){ return b.x.get_allocator(); }
         };
 
-        check_semantics(report("Broken copy assignment"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {1_anp,1_awp}}});
+        check_semantics("Broken copy assignment", beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {1_anp,1_awp}}});
       }
 
       {
@@ -123,7 +123,7 @@ namespace sequoia::testing
           [](const beast& b){ return b.x.get_allocator(); }
         };
 
-        check_semantics(report("Broken move assignment"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {1_anp,1_awp}}});
+        check_semantics("Broken move assignment", beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {1_anp,1_awp}}});
       }
   }
 }

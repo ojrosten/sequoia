@@ -198,8 +198,8 @@ namespace sequoia::testing
             t.check(equality, t.report_line(""), d.partition_capacity(0), 0_sz);
 
             d.shrink_num_partitions_to_fit();
-            t.check(equality, report("May fail if shrink to fit impl does not reduce capacity"), d.num_partitions_capacity(), 0_sz);
-            t.check(equality, report(""), d.partition_capacity(0), 0_sz);
+            t.check(equality, "May fail if shrink to fit impl does not reduce capacity", d.num_partitions_capacity(), 0_sz);
+            t.check(equality, "", d.partition_capacity(0), 0_sz);
 
             return d;
           }
@@ -213,7 +213,7 @@ namespace sequoia::testing
                  t.report_line(""),
                  [&t](data_t d) -> data_t {
                    auto i{d.begin_partition(1)};
-                   t.check(equality, report(""), i, {d.end_partition(0).base_iterator(), PartitionedData::npos});
+                   t.check(equality, "", i, {d.end_partition(0).base_iterator(), PartitionedData::npos});
                    return d;
                  }
           );
@@ -223,7 +223,7 @@ namespace sequoia::testing
                  t.report_line(""),
                  [&t](data_t d) -> data_t {
                    auto i{d.erase_from_partition(d.cbegin_partition(1))};
-                   t.check(equality, report(""), i, {d.end_partition(0).base_iterator(), PartitionedData::npos});
+                   t.check(equality, "", i, {d.end_partition(0).base_iterator(), PartitionedData::npos});
                    return d;
                  }
           );

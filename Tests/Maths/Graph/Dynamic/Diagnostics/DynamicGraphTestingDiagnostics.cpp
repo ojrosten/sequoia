@@ -42,7 +42,7 @@ namespace sequoia::testing
 
     graph_type g{};
 
-    check(equality, report("Check false positive: empty graph versus single node"), g, graph_type{{}});
+    check(equality, "Check false positive: empty graph versus single node", g, graph_type{{}});
 
     std::string message{"Check false positive: empty graph versus single node with loop"};
     if constexpr (GraphFlavour == graph_flavour::directed)

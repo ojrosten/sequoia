@@ -50,15 +50,15 @@ namespace sequoia::testing
   void commands_free_test::test_exceptions()
   {
     const auto root{working_materials()}, buildSubdir{root / "build/CMade"};
-    check_exception_thrown<std::runtime_error>(report("No cache file"),
+    check_exception_thrown<std::runtime_error>("No cache file",
       [&]() { return cmake_cmd(std::nullopt, build_paths{root, "", buildSubdir / "NoCacheFile/CMakeCache.txt"}, ""); },
       postprocessor{" in "});
 
-    check_exception_thrown<std::runtime_error>(report("Empty cache file"),
+    check_exception_thrown<std::runtime_error>("Empty cache file",
       [&]() { return cmake_cmd(std::nullopt, build_paths{root, "", buildSubdir / "EmptyCacheFile/CMakeCache.txt"}, ""); },
       postprocessor{" from "});
 
-    check_exception_thrown<std::runtime_error>(report("No CXX compiler when Unix Makefiles specified"),
+    check_exception_thrown<std::runtime_error>("No CXX compiler when Unix Makefiles specified",
       [&]() { return cmake_cmd(std::nullopt, build_paths{root, "", buildSubdir / "NoCXXCompiler/CMakeCache.txt"}, ""); },
       postprocessor{" from "});
   }

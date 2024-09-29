@@ -52,7 +52,7 @@ namespace sequoia::testing
           }
         };
 
-        check_semantics(report("Broken copy value semantics"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, m, allocation_info{getter{}, {1_c, {1_c,0_mu}, {1_anp,1_awp}}});
+        check_semantics("Broken copy value semantics", beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, m, allocation_info{getter{}, {1_c, {1_c,0_mu}, {1_anp,1_awp}}});
       }
 
       {
@@ -70,7 +70,7 @@ namespace sequoia::testing
           }
         };
 
-        check_semantics(report("Broken copy assignment value semantics"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, m, allocation_info{allocGetter, {1_c, {1_c,0_mu}, {1_anp,1_awp}}});
+        check_semantics("Broken copy assignment value semantics", beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, m, allocation_info{allocGetter, {1_c, {1_c,0_mu}, {1_anp,1_awp}}});
       }
 
       {
@@ -81,8 +81,8 @@ namespace sequoia::testing
 
           auto allocGetter{[](const beast& b) { return b.x.get_allocator(); }};
 
-          check_semantics(report("Broken copy assignment propagation"), beast{{1,2}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {0_anp,1_awp}}});
-          check_semantics(report("Broken copy assignment propagation; 'negative' allocation counts"),
+          check_semantics("Broken copy assignment propagation", beast{{1,2}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {0_anp,1_awp}}});
+          check_semantics("Broken copy assignment propagation; 'negative' allocation counts",
                           beast{{1,2}, allocator{}}, beast{}, mutator, allocation_info{allocGetter, {1_c, {0_c,1_mu}, {0_anp,0_awp}}});
         }
       }

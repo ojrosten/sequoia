@@ -47,57 +47,57 @@ namespace sequoia::testing
 
   void test_runner_test_creation::test_type_handling()
   {
-    check_exception_thrown<std::logic_error>(report("Empty string"), []() { return handle_as_ref(""); });
-    check_exception_thrown<std::logic_error>(report("Just spaces"), []() { return handle_as_ref(" "); });
-    check(report("Letter"),        handle_as_ref("a"));
-    check(report("int"),          !handle_as_ref("int"));
-    check(report(" int"),         !handle_as_ref(" int"));
-    check(report("  int"),        !handle_as_ref("  int"));
-    check(report("int*"),         !handle_as_ref("int*"));
-    check(report("int&"),         !handle_as_ref("int&"));
-    check(report("int *"),        !handle_as_ref("int *"));
-    check(report(" int "),        !handle_as_ref(" int "));
-    check(report("long"),         !handle_as_ref("long"));
-    check(report("longint"),      handle_as_ref("longint"));
-    check(report("long int"),     !handle_as_ref("long int"));
-    check(report("double"),       !handle_as_ref("double"));
-    check(report("std::size_t"),  !handle_as_ref("std::size_t"));
-    check(report("tuple<int>"),    handle_as_ref("tuple<int>"));
-    check(report("tuple<int >"),   handle_as_ref("tuple<int >"));
-    check(report("tuple< int >"),  handle_as_ref("tuple< int >"));
+    check_exception_thrown<std::logic_error>("Empty string", []() { return handle_as_ref(""); });
+    check_exception_thrown<std::logic_error>("Just spaces", []() { return handle_as_ref(" "); });
+    check("Letter",        handle_as_ref("a"));
+    check("int",          !handle_as_ref("int"));
+    check(" int",         !handle_as_ref(" int"));
+    check("  int",        !handle_as_ref("  int"));
+    check("int*",         !handle_as_ref("int*"));
+    check("int&",         !handle_as_ref("int&"));
+    check("int *",        !handle_as_ref("int *"));
+    check(" int ",        !handle_as_ref(" int "));
+    check("long",         !handle_as_ref("long"));
+    check("longint",      handle_as_ref("longint"));
+    check("long int",     !handle_as_ref("long int"));
+    check("double",       !handle_as_ref("double"));
+    check("std::size_t",  !handle_as_ref("std::size_t"));
+    check("tuple<int>",    handle_as_ref("tuple<int>"));
+    check("tuple<int >",   handle_as_ref("tuple<int >"));
+    check("tuple< int >",  handle_as_ref("tuple< int >"));
   }
 
   void test_runner_test_creation::test_template_data_generation()
   {
-    check(report(""), generate_template_data("").empty());
-    check_exception_thrown<std::runtime_error>(report("Unmatched <"),
+    check("", generate_template_data("").empty());
+    check_exception_thrown<std::runtime_error>("Unmatched <",
                                                [](){ return generate_template_data("<"); });
-    check_exception_thrown<std::runtime_error>(report("Backwards delimiters"),
+    check_exception_thrown<std::runtime_error>("Backwards delimiters",
                                                [](){ return generate_template_data("><"); });
-    check_exception_thrown<std::runtime_error>(report("Missing symbol"),
+    check_exception_thrown<std::runtime_error>("Missing symbol",
                                                [](){ return generate_template_data("<class>"); });
-    check_exception_thrown<std::runtime_error>(report("Missing symbol"),
+    check_exception_thrown<std::runtime_error>("Missing symbol",
                                                [](){ return generate_template_data("< class>"); });
 
-    check(equality, report("Specialization"), generate_template_data("<>"), template_data{{}});
-    check(equality, report("Class template parameter"),
+    check(equality, "Specialization", generate_template_data("<>"), template_data{{}});
+    check(equality, "Class template parameter",
                    generate_template_data("<class T>"), template_data{{"class", "T"}});
-    check(equality, report("Class template parameter"),
+    check(equality, "Class template parameter",
                    generate_template_data("<class T >"), template_data{{"class", "T"}});
-    check(equality, report("Class template parameter"),
+    check(equality, "Class template parameter",
                    generate_template_data("< class T>"), template_data{{"class", "T"}});
 
-    check(equality, report("Two template parameters"),
+    check(equality, "Two template parameters",
                    generate_template_data("<class T, typename S>"),
                    template_data{{"class", "T"}, {"typename", "S"}});
-    check(equality, report("Two template parameters"),
+    check(equality, "Two template parameters",
                    generate_template_data("< class  T,  typename S >"),
                    template_data{{"class", "T"}, {"typename", "S"}});
 
-    check(equality, report("Variadic template"),
+    check(equality, "Variadic template",
                    generate_template_data("<class... T>"), template_data{{"class...", "T"}});
 
-    check(equality, report("Variadic template"),
+    check(equality, "Variadic template",
                    generate_template_data("<class ... T>"), template_data{{"class ...", "T"}});
   }
 
@@ -156,13 +156,13 @@ namespace sequoia::testing
       file << outputStream.str();
     }
 
-    check(equivalence, report(""), fake_project(), predictive_materials() /= "FakeProject");
+    check(equivalence, "", fake_project(), predictive_materials() /= "FakeProject");
   }
 
   void test_runner_test_creation::test_creation_failure()
   {
       check_exception_thrown<std::runtime_error>(
-        report("Plurgh.h does not exist"),
+        "Plurgh.h does not exist",
         [this]() {
           std::stringstream outputStream{};
           commandline_arguments args{zeroth_arg(), "create", "free", "Plurgh.h"};
@@ -171,7 +171,7 @@ namespace sequoia::testing
         });
 
       check_exception_thrown<std::runtime_error>(
-        report("Typo in specified class header"),
+        "Typo in specified class header",
         [this]() {
           std::stringstream outputStream{};
           commandline_arguments args{zeroth_arg(), "create", "regular_test", "bar::things", "double", "-h", "fakeProject/Stuff/Thingz.hpp"};

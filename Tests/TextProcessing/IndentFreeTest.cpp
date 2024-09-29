@@ -27,21 +27,21 @@ namespace sequoia::testing
   void indent_free_test::test_indent()
   {
     using namespace std::string_literals;
-    check(equality, report("Null indent of empty string"), indent("", indentation{"  "}), ""s);
-    check(equality, report("Indent a letter"), indent("a", indentation{"  "}), "  a"s);
-    check(equality, report("Indent a sententce"), indent("The quick brown fox...", indentation{"  "}), "  The quick brown fox..."s);
+    check(equality, "Null indent of empty string", indent("", indentation{"  "}), ""s);
+    check(equality, "Indent a letter", indent("a", indentation{"  "}), "  a"s);
+    check(equality, "Indent a sententce", indent("The quick brown fox...", indentation{"  "}), "  The quick brown fox..."s);
 
-    check(equality, report("Indent multiple strings"), indent("a", "b", indentation{"  "}), "  a\n  b"s);
+    check(equality, "Indent multiple strings", indent("a", "b", indentation{"  "}), "  a\n  b"s);
   }
 
   void indent_free_test::test_append_indented()
   {
     using namespace std::string_literals;
-    check(equality, report("Append empty to empty"), append_indented("", "", indentation{" "}), ""s);
-    check(equality, report("Append empty to non-empty"), append_indented("", "a", indentation{" "}), "a"s);
-    check(equality, report("Append non-empty to empty"), append_indented("", "a", indentation{" "}), "a"s);
-    check(equality, report("Append non-empty to non-empty"), append_indented("a", "b", indentation{" "}), "a\n b"s);
+    check(equality, "Append empty to empty", append_indented("", "", indentation{" "}), ""s);
+    check(equality, "Append empty to non-empty", append_indented("", "a", indentation{" "}), "a"s);
+    check(equality, "Append non-empty to empty", append_indented("", "a", indentation{" "}), "a"s);
+    check(equality, "Append non-empty to non-empty", append_indented("a", "b", indentation{" "}), "a\n b"s);
 
-    check(equality, report("Append lines"), append_lines("a", "b"), "a\nb"s);
+    check(equality, "Append lines", append_lines("a", "b"), "a\nb"s);
   }
 }

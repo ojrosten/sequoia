@@ -23,6 +23,6 @@ namespace sequoia::testing
   {
     read_modify_write(working_materials() /= "Foo.txt", [](std::string& s) { capitalize(s);  });
 
-    check(equivalence, report(""), working_materials() /= "Foo.txt", predictive_materials() /= "Foo.txt");
+    check(equivalence, "", working_materials() /= "Foo.txt", predictive_materials() /= "Foo.txt");
   }
 }

@@ -30,27 +30,27 @@ namespace sequoia::testing
     //
 
     auto m{mean(data.begin(), data.end())};
-    check(report(""), !m.has_value());
+    check("", !m.has_value());
 
     auto sq{cummulative_square_diffs(data.begin(), data.end())};
-    check(report(""), !sq.first.has_value());
-    check(report(""), !sq.second.has_value());
+    check("", !sq.first.has_value());
+    check("", !sq.second.has_value());
 
     auto var{variance(data.begin(), data.end())};
-    check(report(""), !var.first.has_value());
-    check(report(""), !var.second.has_value());
+    check("", !var.first.has_value());
+    check("", !var.second.has_value());
 
     auto uvar{sample_variance(data.begin(), data.end())};
-    check(report(""), !uvar.first.has_value());
-    check(report(""), !uvar.second.has_value());
+    check("", !uvar.first.has_value());
+    check("", !uvar.second.has_value());
 
     auto sd{standard_deviation(data.begin(), data.end())};
-    check(report(""), !sd.first.has_value());
-    check(report(""), !sd.second.has_value());
+    check("", !sd.first.has_value());
+    check("", !sd.second.has_value());
 
     auto ssd{sample_standard_deviation(data.begin(), data.end())};
-    check(report(""), !ssd.first.has_value());
-    check(report(""), !ssd.second.has_value());
+    check("", !ssd.first.has_value());
+    check("", !ssd.second.has_value());
 
     // [2]
     data.push_back(2);
@@ -62,22 +62,22 @@ namespace sequoia::testing
     sd = standard_deviation(data.begin(), data.end());
     ssd = sample_standard_deviation(data.begin(), data.end());
 
-    check(equality, report(""), m.value(), 2.0);
+    check(equality, "", m.value(), 2.0);
 
-    check(equality, report(""), sq.first.value(), 0.0);
-    check(equality, report(""), sq.second.value(), 2.0);
+    check(equality, "", sq.first.value(), 0.0);
+    check(equality, "", sq.second.value(), 2.0);
 
-    check(equality, report(""), var.first.value(), 0.0);
-    check(equality, report(""), var.second.value(), 2.0);
+    check(equality, "", var.first.value(), 0.0);
+    check(equality, "", var.second.value(), 2.0);
 
-    check(report(""), !uvar.first.has_value());
-    check(equality, report(""), uvar.second.value(), 2.0);
+    check("", !uvar.first.has_value());
+    check(equality, "", uvar.second.value(), 2.0);
 
-    check(equality, report(""), sd.first.value(), 0.0);
-    check(equality, report(""), sd.second.value(), 2.0);
+    check(equality, "", sd.first.value(), 0.0);
+    check(equality, "", sd.second.value(), 2.0);
 
-    check(report(""), !ssd.first.has_value());
-    check(equality, report(""), ssd.second.value(), 2.0);
+    check("", !ssd.first.has_value());
+    check(equality, "", ssd.second.value(), 2.0);
 
     // [2][4]
     data.push_back(4);
@@ -89,22 +89,22 @@ namespace sequoia::testing
     sd = standard_deviation(data.begin(), data.end());
     ssd = sample_standard_deviation(data.begin(), data.end());
 
-    check(equality, report(""), m.value(), 3.0);
+    check(equality, "", m.value(), 3.0);
 
-    check(equality, report(""), sq.first.value(), 2.0);
-    check(equality, report(""), sq.second.value(), 3.0);
+    check(equality, "", sq.first.value(), 2.0);
+    check(equality, "", sq.second.value(), 3.0);
 
-    check(equality, report(""), var.first.value(), 1.0);
-    check(equality, report(""), var.second.value(), 3.0);
+    check(equality, "", var.first.value(), 1.0);
+    check(equality, "", var.second.value(), 3.0);
 
-    check(equality, report(""), uvar.first.value(), 2.0);
-    check(equality, report(""), uvar.second.value(), 3.0);
+    check(equality, "", uvar.first.value(), 2.0);
+    check(equality, "", uvar.second.value(), 3.0);
 
-    check(equality, report(""), sd.first.value(), 1.0);
-    check(equality, report(""), sd.second.value(), 3.0);
+    check(equality, "", sd.first.value(), 1.0);
+    check(equality, "", sd.second.value(), 3.0);
 
-    check(equality, report(""), ssd.first.value(), 2.0);
-    check(equality, report(""), ssd.second.value(), 3.0);
+    check(equality, "", ssd.first.value(), 2.0);
+    check(equality, "", ssd.second.value(), 3.0);
 
     // [2][4][9]
     data.push_back(9);
@@ -116,21 +116,21 @@ namespace sequoia::testing
     sd = standard_deviation(data.begin(), data.end());
     ssd = sample_standard_deviation(data.begin(), data.end());
 
-    check(equality, report(""), m.value(), 5.0);
+    check(equality, "", m.value(), 5.0);
 
-    check(equality, report(""), sq.first.value(), 26.0);
-    check(equality, report(""), sq.second.value(), 5.0);
+    check(equality, "", sq.first.value(), 26.0);
+    check(equality, "", sq.second.value(), 5.0);
 
-    check(equality, report(""), var.first.value(), 26.0/3);
-    check(equality, report(""), var.second.value(), 5.0);
+    check(equality, "", var.first.value(), 26.0/3);
+    check(equality, "", var.second.value(), 5.0);
 
-    check(equality, report(""), uvar.first.value(), 13.0);
-    check(equality, report(""), uvar.second.value(), 5.0);
+    check(equality, "", uvar.first.value(), 13.0);
+    check(equality, "", uvar.second.value(), 5.0);
 
-    check(equality, report(""), sd.first.value(), std::sqrt(26.0/3.0));
-    check(equality, report(""), sd.second.value(), 5.0);
+    check(equality, "", sd.first.value(), std::sqrt(26.0/3.0));
+    check(equality, "", sd.second.value(), 5.0);
 
-    check(equality, report(""), ssd.first.value(), std::sqrt(26.0/1.5));
-    check(equality, report(""), ssd.second.value(), 5.0);
+    check(equality, "", ssd.first.value(), std::sqrt(26.0/1.5));
+    check(equality, "", ssd.second.value(), 5.0);
   }
 }

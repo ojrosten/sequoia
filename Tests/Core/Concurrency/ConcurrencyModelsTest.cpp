@@ -49,17 +49,17 @@ namespace sequoia::testing
       q_t q{};
 
       int a{};
-      check(report(""), q.push(task_t{[&a](){ a+= 1; }}, std::try_to_lock));
+      check("", q.push(task_t{[&a](){ a+= 1; }}, std::try_to_lock));
       auto t{q.pop(std::try_to_lock)};
 
       t();
-      check(equality, report(""), a, 1);
+      check(equality, "", a, 1);
 
       q.push(task_t{[&a](){ a+= 2; }});
       t = q.pop();
 
       t();
-      check(equality, report(""), a, 3);
+      check(equality, "", a, 3);
 
       q.finish();
     }
@@ -70,13 +70,13 @@ namespace sequoia::testing
 
       q_t q{};
 
-      check(report(""), q.push(task_t{[](){ return 1;}}, std::try_to_lock));
+      check("", q.push(task_t{[](){ return 1;}}, std::try_to_lock));
       auto t{q.pop(std::try_to_lock)};
 
       auto fut{t.get_future()};
       t();
 
-      check(equality, report(""), fut.get(), 1);
+      check(equality, "", fut.get(), 1);
 
       q.push(task_t{[](){ return 2;}});
       t = q.pop();
@@ -84,7 +84,7 @@ namespace sequoia::testing
       fut = t.get_future();
       t();
 
-      check(equality, report(""), fut.get(), 2);
+      check(equality, "", fut.get(), 2);
 
       q.finish();
     }
@@ -122,23 +122,23 @@ namespace sequoia::testing
 
   void threading_models_test::test_serial_exceptions()
   {
-    check_exception_thrown<std::runtime_error>(report(""), [](){ serial<void>{}.push([]() { throw std::runtime_error{"Error!"}; }); });
-    check_exception_thrown<std::runtime_error>(report(""), [](){ return serial<int>{}.push([]() -> int { throw std::runtime_error{"Error!"}; }); });
+    check_exception_thrown<std::runtime_error>("", [](){ serial<void>{}.push([]() { throw std::runtime_error{"Error!"}; }); });
+    check_exception_thrown<std::runtime_error>("", [](){ return serial<int>{}.push([]() -> int { throw std::runtime_error{"Error!"}; }); });
   }
 
   void threading_models_test::test_serial_execution()
   {
     {
       serial<int> model{};
-      check(equality, report(""), model.push([](){ return 42; }), 42);
-      check(equality, report(""), model.push([](){ return 43; }), 43);
+      check(equality, "", model.push([](){ return 42; }), 42);
+      check(equality, "", model.push([](){ return 43; }), 43);
     }
 
     {
       serial<void> model{};
       int x{};
       model.push([&x]() { ++x; });
-      check(equality, report(""), x, 1);
+      check(equality, "", x, 1);
     }
   }
 

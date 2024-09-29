@@ -62,7 +62,7 @@ namespace sequoia::testing
     auto partitionMaker{ [](storage& s) { s.add_slot(); } };
 
     // null; [0,2][1]
-    auto[s,t]{check_semantics(report(""),
+    auto[s,t]{check_semantics("",
                     [](){ return storage(allocator{}); },
                     [](){ return storage{{{0,2}, {1}}, allocator{}}; },
                     partitionMaker,
@@ -86,7 +86,7 @@ namespace sequoia::testing
       }
     };
 
-    check_semantics(report(""),
+    check_semantics("",
                     s,
                     t,
                     mutator,

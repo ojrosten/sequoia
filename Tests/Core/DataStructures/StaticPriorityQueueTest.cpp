@@ -35,10 +35,10 @@ namespace sequoia::testing
     constexpr static_priority_queue<int, 0> s{};
     static_priority_queue<int, 0> t{};
 
-    check(equality, report("Equality of null queues"), t, s);
+    check(equality, "Equality of null queues", t, s);
 
-    check_exception_thrown<std::logic_error>(report("Can't push to null queue"), [&t]() { t.push(1); });
-    check_exception_thrown<std::logic_error>(report("Can't construct non-null null queue"), []() { static_priority_queue<int, 0>{1}; });
+    check_exception_thrown<std::logic_error>("Can't push to null queue", [&t]() { t.push(1); });
+    check_exception_thrown<std::logic_error>("Can't construct non-null null queue", []() { static_priority_queue<int, 0>{1}; });
 
   }
 
@@ -51,16 +51,16 @@ namespace sequoia::testing
     queue_t t{};
     t.push(2);
 
-    check_semantics(report("Standard Semantics"), s, t);
+    check_semantics("Standard Semantics", s, t);
 
-    check_exception_thrown<std::logic_error>(report("Trying to push two elements to queue of depth 1"), [&t]() { t.push(1); });
-    check_exception_thrown<std::logic_error>(report("Can't construct queue of depth 1 with 2 elements"), []() { queue_t{1, 2}; });
+    check_exception_thrown<std::logic_error>("Trying to push two elements to queue of depth 1", [&t]() { t.push(1); });
+    check_exception_thrown<std::logic_error>("Can't construct queue of depth 1 with 2 elements", []() { queue_t{1, 2}; });
 
     t.pop();
-    check(equality, report(""), t, queue_t{});
+    check(equality, "", t, queue_t{});
 
     t.push(1);
-    check(equality, report(""), t, queue_t{1});
+    check(equality, "", t, queue_t{1});
   }
 
   void test_static_priority_queue::check_depth_2()
@@ -72,19 +72,19 @@ namespace sequoia::testing
       constexpr queue_t s{1, 2};
       queue_t t{4, 3};
 
-      check(equality, report(""), s.top(), 2);
-      check(equality, report(""), t.top(), 4);
+      check(equality, "", s.top(), 2);
+      check(equality, "", t.top(), 4);
 
-      check_semantics(report("Standard Semantics"), s, t);
+      check_semantics("Standard Semantics", s, t);
 
-      check_exception_thrown<std::logic_error>(report("Trying to push three elements to queue of depth 2"), [&t]() { t.push(1); });
-      check_exception_thrown<std::logic_error>(report("Can't construct queue of depth 2 with 3 elements"), []() { queue_t{1, 2, 3}; });
+      check_exception_thrown<std::logic_error>("Trying to push three elements to queue of depth 2", [&t]() { t.push(1); });
+      check_exception_thrown<std::logic_error>("Can't construct queue of depth 2 with 3 elements", []() { queue_t{1, 2, 3}; });
 
       t.pop();
-      check(equality, report(""), t, queue_t{3});
+      check(equality, "", t, queue_t{3});
 
       t.push(5);
-      check(equality, report(""), t, queue_t{5, 3});
+      check(equality, "", t, queue_t{5, 3});
 
     }
 
@@ -102,9 +102,9 @@ namespace sequoia::testing
       };
 
       constexpr static_priority_queue<int, 2, comp> s{{3, 2}, comp{3}}, t{{4, 6}, comp{2}};
-      check(equality, report(""), s.top(), 2);
+      check(equality, "", s.top(), 2);
 
-      check_semantics(report("Standard semantics"), s, t);
+      check_semantics("Standard semantics", s, t);
     }
   }
 
@@ -129,20 +129,20 @@ namespace sequoia::testing
     using queue_t = static_priority_queue<int, 3>;
 
     constexpr queue_t s{make_static_priority_queue_3()};
-    check(equality, report(""), s, queue_t{8, 2, 6});
+    check(equality, "", s, queue_t{8, 2, 6});
 
     auto t{s};
-    check(equality, report(""), t, queue_t{8, 2, 6});
+    check(equality, "", t, queue_t{8, 2, 6});
 
     t.pop();
-    check(equality, report(""), t, queue_t{6, 2});
+    check(equality, "", t, queue_t{6, 2});
 
-    check_semantics(report("Standard semantics"), s, t);
-
-    t.pop();
-    check(equality, report(""), t, queue_t{2});
+    check_semantics("Standard semantics", s, t);
 
     t.pop();
-    check(equality, report(""), t, queue_t{});
+    check(equality, "", t, queue_t{2});
+
+    t.pop();
+    check(equality, "", t, queue_t{});
   }
 }

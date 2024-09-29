@@ -71,45 +71,45 @@ namespace sequoia::testing
     {
       constexpr std::array<int, 0> a{};
       constexpr auto b = sort(stability, a);
-      check(equality, report("Sort an empty array"), b, a);
+      check(equality, "Sort an empty array", b, a);
     }
 
     {
       constexpr std::array<int, 1> a{1};
       constexpr auto b = sort(stability, a);
-      check(equality, report("Sort an array of one element"), b, a);
+      check(equality, "Sort an array of one element", b, a);
     }
 
     {
       constexpr std::array<int, 2> s{1,2};
       constexpr auto b = sort(stability, s);
-      check(equality, report("Sort a sorted array of two elements"), b, s);
+      check(equality, "Sort a sorted array of two elements", b, s);
 
       constexpr std::array<int, 2> u{2,1};
       constexpr auto c = sort(stability, u);
-      check(equality, report("Sort an unsorted array of two elements"), c, s);
+      check(equality, "Sort an unsorted array of two elements", c, s);
 
       constexpr std::array<int, 2> t{1,1};
       constexpr auto d = sort(stability, t);
-      check(equality, report("Sort an array of two identical elements"), d, t);
+      check(equality, "Sort an array of two identical elements", d, t);
     }
 
     {
       constexpr std::array<int, 10> a{5,4,7,8,6,1,2,0,9,3};
       constexpr auto b = sort(stability, a);
-      check(equality, report("Sort digits from 0--9"), b, {0,1,2,3,4,5,6,7,8,9});
+      check(equality, "Sort digits from 0--9", b, {0,1,2,3,4,5,6,7,8,9});
 
       constexpr auto c = sort(stability, a, std::greater<int>{});
-      check(equality, report("Reverse sort digits from 0--9"), c, {9,8,7,6,5,4,3,2,1,0});
+      check(equality, "Reverse sort digits from 0--9", c, {9,8,7,6,5,4,3,2,1,0});
     }
 
     {
       constexpr std::array<int, 11> a{5,4,7,8,6,1,10,2,0,9,3};
       constexpr auto b = sort(stability, a);
-      check(equality, report("Sort digits from 0--10"), b, {0,1,2,3,4,5,6,7,8,9,10});
+      check(equality, "Sort digits from 0--10", b, {0,1,2,3,4,5,6,7,8,9,10});
 
       constexpr auto c = sort(stability, a, std::greater<int>{});
-      check(equality, report("Reverse sort digits from 0--10"), c, {10,9,8,7,6,5,4,3,2,1,0});
+      check(equality, "Reverse sort digits from 0--10", c, {10,9,8,7,6,5,4,3,2,1,0});
     }
   }
 
@@ -122,12 +122,12 @@ namespace sequoia::testing
 
     {
       constexpr auto b = sort(stability, a, [](const edge& lhs, const edge& rhs) { return lhs.target_node() < rhs.target_node(); });
-      check(equality, report(""), b, prediction);
+      check(equality, "", b, prediction);
     }
 
     {
       constexpr auto b = sort(stability, a, std::ranges::less{}, [](const edge& e) { return e.target_node(); });
-      check(equality, report(""), b, prediction);
+      check(equality, "", b, prediction);
     }
   }
 
@@ -140,12 +140,12 @@ namespace sequoia::testing
 
     {
       constexpr auto b = sort(stable{}, a, [](const pair_t& lhs, const pair_t& rhs){ return lhs.first < rhs.first; });
-      check(equality, report("Stable sort"), b, prediction);
+      check(equality, "Stable sort", b, prediction);
     }
 
     {
       constexpr auto b = sort(stable{}, a, std::ranges::less{}, [](const pair_t& p){ return p.first; });
-      check(equality, report("Stable sort"), b, prediction);
+      check(equality, "Stable sort", b, prediction);
     }
   }
 
@@ -154,7 +154,7 @@ namespace sequoia::testing
     {
       constexpr std::array<int, 9> a{1,2,2,1,3,1,2,2,1};
       constexpr auto b = cluster(a);
-      check(equality, report("Cluster 9 digits"), b, {1,1,1,1,3,2,2,2,2});
+      check(equality, "Cluster 9 digits", b, {1,1,1,1,3,2,2,2,2});
     }
   }
 
@@ -168,12 +168,12 @@ namespace sequoia::testing
 
     {
       constexpr auto b = cluster(a, [](const edge& lhs, const edge& rhs) { return lhs.target_node() == rhs.target_node(); });
-      check(equality, report(""), b, prediction);
+      check(equality, "", b, prediction);
     }
 
     {
       constexpr auto b = cluster(a, std::ranges::equal_to{}, [](const edge& e) { return e.target_node(); });
-      check(equality, report(""), b, prediction);
+      check(equality, "", b, prediction);
     }
   }
 }

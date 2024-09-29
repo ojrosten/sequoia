@@ -64,72 +64,72 @@ namespace sequoia::testing
   void path_false_positive_free_diagnostics::test_paths()
   {
     check(equivalence,
-          report("Inequivalence of two different paths, neither of which exists"),
+          "Inequivalence of two different paths, neither of which exists",
           working_materials().append("Stuff/Blah"),
           working_materials().append("Stuff/Blurg"));
 
     check(equivalence,
-          report("Inequivalence of two different paths, one of which exists"),
+          "Inequivalence of two different paths, one of which exists",
           working_materials().append("Stuff/Blah"),
           working_materials().append("Stuff/A"));
 
     check(equivalence,
-          report("Inequivalence of directory/file"),
+          "Inequivalence of directory/file",
           working_materials().append("Stuff/A"),
           working_materials().append("Stuff/A/foo.txt"));
 
     check(equivalence,
-          report("Inequivalence of differently named files"),
+          "Inequivalence of differently named files",
           working_materials().append("Stuff/B/foo.txt"),
           working_materials().append("Stuff/B/bar.txt"));
 
     check(equivalence,
-          report("Inequivalence of file contents"),
+          "Inequivalence of file contents",
           working_materials().append("Stuff/A/foo.txt"),
           working_materials().append("Stuff/B/foo.txt"));
 
     check(equivalence,
-          report("Inequivalence of differently named directories with the same contents"),
+          "Inequivalence of differently named directories with the same contents",
           working_materials().append("Stuff/A"),
           working_materials().append("Stuff/C"));
 
     check(equivalence,
-          report("Inequivalence of directories with the same files but different contents"),
+          "Inequivalence of directories with the same files but different contents",
           working_materials().append("Stuff/A"),
           working_materials().append("MoreStuff/A"));
 
     check(equivalence,
-          report("Inequivalence of directories with some common files"),
+          "Inequivalence of directories with some common files",
           working_materials().append("Stuff/B"),
           working_materials().append("MoreStuff/B"));
 
     check(equivalence,
-          report("Inequivalence of directories with some common files"),
+          "Inequivalence of directories with some common files",
           working_materials().append("MoreStuff/B"),
           working_materials().append("Stuff/B"));
 
     check(equivalence,
-          report("File inequivalence when default file checking is used"),
+          "File inequivalence when default file checking is used",
           working_materials().append("CustomComparison/A/DifferingContent.ignore"),
           working_materials().append("CustomComparison/B/DifferingContent.ignore"));
 
     check(equivalence,
-          report("Range inequivalence when default file checking us used"),
+          "Range inequivalence when default file checking us used",
           std::vector<fs::path>{working_materials().append("CustomComparison/A/DifferingContent.ignore")},
           std::vector<fs::path>{working_materials().append("CustomComparison/B/DifferingContent.ignore")});
 
     check(weak_equivalence,
-          report("Weak inequivalence of directories with some common files"),
+          "Weak inequivalence of directories with some common files",
           working_materials().append("MoreStuff/B"),
           working_materials().append("Stuff/B"));
 
     check(weak_equivalence,
-          report("Directory weak inequivalence when default file checking is used"),
+          "Directory weak inequivalence when default file checking is used",
           working_materials().append("CustomComparison/A"),
           working_materials().append("CustomComparison/B"));
 
     check(weak_equivalence,
-          report("Weak inequivalence of range when default file checking is used"),
+          "Weak inequivalence of range when default file checking is used",
           std::vector<fs::path>{{working_materials().append("CustomComparison/A")}},
           std::vector<fs::path>{{working_materials().append("CustomComparison/B")}});
   }
@@ -156,47 +156,47 @@ namespace sequoia::testing
   void path_false_negative_free_diagnostics::test_paths()
   {
     check(equivalence,
-          report("Equivalence of a file to itself"),
+          "Equivalence of a file to itself",
           working_materials().append("Stuff/A/foo.txt"),
           working_materials().append("Stuff/A/foo.txt"));
 
     check(equivalence,
-          report("Equivalence of a directory to itself"),
+          "Equivalence of a directory to itself",
           working_materials().append("Stuff/A"),
           working_materials().append("Stuff/A"));
 
     check(equivalence,
-          report("Equivalence of a directory, with sub-directories to itself"),
+          "Equivalence of a directory, with sub-directories to itself",
           working_materials().append("Stuff"),
           working_materials().append("Stuff"));
 
     check(equivalence,
-          report("Equivalence of identical directories in different locations"),
+          "Equivalence of identical directories in different locations",
           working_materials().append("Stuff/C"),
           working_materials().append("SameStuff/C"));
 
     check(bespoke_path_equivalence,
-          report("File equivalence when .ignore is ignored"),
+          "File equivalence when .ignore is ignored",
           working_materials().append("CustomComparison/A/DifferingContent.ignore"),
           working_materials().append("CustomComparison/B/DifferingContent.ignore"));
 
     check(bespoke_path_equivalence,
-          report("Range equivalence when .ignore is ignored"),
+          "Range equivalence when .ignore is ignored",
           std::vector<fs::path>{working_materials().append("CustomComparison/A/DifferingContent.ignore")},
           std::vector<fs::path>{working_materials().append("CustomComparison/B/DifferingContent.ignore")});
 
     check(weak_equivalence,
-         report("Weak equivalence of directories in with the same contents but different names"),
+         "Weak equivalence of directories in with the same contents but different names",
          working_materials().append("Stuff"),
          working_materials().append("SameStuff"));
 
     check(bespoke_path_weak_equivalence,
-          report("Weak equivalence when .ignore is ignored"),
+          "Weak equivalence when .ignore is ignored",
           working_materials().append("CustomComparison/A"),
           working_materials().append("CustomComparison/B"));
 
     check(bespoke_path_weak_equivalence,
-          report("Weak equivalence of range when .ignore is ignored"),
+          "Weak equivalence of range when .ignore is ignored",
           std::vector<fs::path>{{working_materials().append("CustomComparison/A")}},
           std::vector<fs::path>{{working_materials().append("CustomComparison/B")}});
   }

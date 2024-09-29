@@ -96,30 +96,30 @@ namespace sequoia::testing
     *i = 5;
     // 3 5 1
 
-    check(equality, report("Check changing pointee"), a, {3, 5, 1});
-    check(equality, report(""), *i, 5);
-    check(equality, report(""), i[-1], 3);
-    check(equality, report(""), i[0], 5);
-    check(equality, report(""), i[1], 1);
+    check(equality, "Check changing pointee", a, {3, 5, 1});
+    check(equality, "", *i, 5);
+    check(equality, "", i[-1], 3);
+    check(equality, "", i[0], 5);
+    check(equality, "", i[1], 1);
 
     i[-1] = 7;
     // 7 5 1
 
-    check(equality, report("Check changing pointee via []"), a, {7, 5, 1});
-    check(equality, report(""), *i, 5);
-    check(equality, report(""), i[-1], 7);
-    check(equality, report(""), i[0], 5);
-    check(equality, report(""), i[1], 1);
+    check(equality, "Check changing pointee via []", a, {7, 5, 1});
+    check(equality, "", *i, 5);
+    check(equality, "", i[-1], 7);
+    check(equality, "", i[0], 5);
+    check(equality, "", i[1], 1);
 
     std::ranges::sort(custom_iter_t{a.begin()}, custom_iter_t{a.end()});
     // 1 5 7
 
-    check(equality, report(""), i[-1], 1);
-    check(equality, report(""), i[0], 5);
-    check(equality, report(""), i[1], 7);
+    check(equality, "", i[-1], 1);
+    check(equality, "", i[0], 5);
+    check(equality, "", i[1], 7);
 
     i = 1 + i;
-    check(equality, report(""), *i, 7);
+    check(equality, "", *i, 7);
   }
 
   void iterator_test::test_const_iterator()
@@ -168,20 +168,20 @@ namespace sequoia::testing
     *i = 5;
     // 3 0 5
 
-    check(equality, report("Check changing pointee"), a, {3, 0, 5});
-    check(equality, report(""), *i, 5);
-    check(equality, report(""), i[0], 5);
-    check(equality, report(""), i[1], 0);
-    check(equality, report(""), i[2], 3);
+    check(equality, "Check changing pointee", a, {3, 0, 5});
+    check(equality, "", *i, 5);
+    check(equality, "", i[0], 5);
+    check(equality, "", i[1], 0);
+    check(equality, "", i[2], 3);
 
     i[2] = 7;
     // 7 0 5
 
-    check(equality, report("Check changing pointee via []"), a, {7, 0, 5});
-    check(equality, report(""), *i, 5);
-    check(equality, report(""), i[0], 5);
-    check(equality, report(""), i[1], 0);
-    check(equality, report(""), i[2], 7);
+    check(equality, "Check changing pointee via []", a, {7, 0, 5});
+    check(equality, "", *i, 5);
+    check(equality, "", i[0], 5);
+    check(equality, "", i[1], 0);
+    check(equality, "", i[2], 7);
   }
 
   void iterator_test::test_const_reverse_iterator()
@@ -227,7 +227,7 @@ namespace sequoia::testing
     basic_checks<custom_citer_t>(a.begin(), a.end(), &*a.cbegin(), "Custom scaling iterator from iterator", -1);
 
     custom_citer_t i{a.cend(), 1}, j{a.cend(), 2};
-    check(report("Custom iterators should compare equal if they point to the same thing, irrespective of any other state"), i == j);
+    check("Custom iterators should compare equal if they point to the same thing, irrespective of any other state", i == j);
   }
 
   void iterator_test::test_const_reverse_scaling_iterator()
@@ -249,7 +249,7 @@ namespace sequoia::testing
     basic_checks<custom_criter_t>(a.rbegin(), a.rend(), &*a.crbegin(), "Custom reverse scaling iterator from reverse_iterator", 3);
 
     custom_criter_t i{a.crend(), 1}, j{a.crend(), 2};
-    check(report("Custom reverse iterators should compare equal if they point to the same thing, irrespective of any other state"), i == j);
+    check("Custom reverse iterators should compare equal if they point to the same thing, irrespective of any other state", i == j);
   }
 
   template<

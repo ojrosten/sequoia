@@ -32,7 +32,7 @@ namespace sequoia::testing
                  t.report_line(""),
                  [&t](data_t d) -> data_t {
                    auto i{d.erase_from_partition(d.cbegin_partition(0))};
-                   t.check(equality, report("Erase from non-existent partition"), i, d.begin_partition(0));
+                   t.check(equality, "Erase from non-existent partition", i, d.begin_partition(0));
                    return d;
                  }
           );
@@ -42,7 +42,7 @@ namespace sequoia::testing
           t.report_line(""),
           [&t](data_t d) -> data_t {
             auto i{d.erase_from_partition(d.cbegin_partition(0), d.cend_partition(0))};
-            t.check(equality, report("Erase range from non-existent partition"), i, d.begin_partition(0));
+            t.check(equality, "Erase range from non-existent partition", i, d.begin_partition(0));
             return d;
           }
         );
@@ -52,7 +52,7 @@ namespace sequoia::testing
                  t.report_line(""),
                  [&t](data_t d) -> data_t {
                    auto i{d.erase_from_partition(0, 0)};
-                   t.check(equality, report("Erase from non-existent partition"), i, d.begin_partition(0));
+                   t.check(equality, "Erase from non-existent partition", i, d.begin_partition(0));
                    return d;
                  }
           );
@@ -62,7 +62,7 @@ namespace sequoia::testing
                  t.report_line(""),
                  [&t](data_t d) -> data_t {
                    auto i{d.erase_from_partition(1, 0)};
-                   t.check(equality, report(""), i, d.begin_partition(0));
+                   t.check(equality, "", i, d.begin_partition(0));
                    return d;
                  }
           );
@@ -72,7 +72,7 @@ namespace sequoia::testing
                  t.report_line(""),
                  [&t](data_t d) -> data_t {
                    auto i{d.erase_from_partition(0, 1)};
-                   t.check(equality, report(""), i, d.begin_partition(0));
+                   t.check(equality, "", i, d.begin_partition(0));
                    return d;
                  }
           );
@@ -82,7 +82,7 @@ namespace sequoia::testing
                  t.report_line(""),
                  [&t](data_t d) -> data_t {
                    auto i{d.erase_from_partition(1, 1)};
-                   t.check(equality, report(""), i, d.begin_partition(0));
+                   t.check(equality, "", i, d.begin_partition(0));
                    return d;
                  }
           );
@@ -118,7 +118,7 @@ namespace sequoia::testing
                  t.report_line(""),
                  [&t](data_t d) -> data_t {
                    auto i{d.erase_from_partition(d.cbegin_partition(1))};
-                   t.check(equality, report("Erase from non-existent partition"), i, d.begin_partition(1));
+                   t.check(equality, "Erase from non-existent partition", i, d.begin_partition(1));
                    return d;
                  }
           );

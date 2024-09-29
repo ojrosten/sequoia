@@ -55,7 +55,7 @@ namespace sequoia::testing
       }
     };
 
-    check_semantics(report(""),
+    check_semantics("",
                     beast{},
                     beast{ {"something too long for small string optimization"},
                            {"something else too long for small string optimization"}
@@ -68,7 +68,7 @@ namespace sequoia::testing
                     }
     );
 
-    auto[s,t]{check_semantics(report(""),
+    auto[s,t]{check_semantics("",
                     [](){ return beast{}; },
                     [](){ return beast{ {"something too long for small string optimization"},
                                          {"something else too long for small string optimization"}};
@@ -81,8 +81,8 @@ namespace sequoia::testing
                     }
     )};
 
-    check(equality, report("check_semantics return value (x)"), s, beast{});
-    check(equality, report("check_semantics return value (y)"),
+    check(equality, "check_semantics return value (x)", s, beast{});
+    check(equality, "check_semantics return value (y)",
                    t,
                    beast{{"something too long for small string optimization"},
                                          {"something else too long for small string optimization"}});
@@ -107,7 +107,7 @@ namespace sequoia::testing
       }
     };
 
-    check_semantics(report(""),
+    check_semantics("",
       beast{},
       beast{{{1}, {2}}},
       mutator,

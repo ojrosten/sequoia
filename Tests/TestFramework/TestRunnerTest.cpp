@@ -362,7 +362,7 @@ namespace sequoia::testing
     };
 
     check_exception_thrown<std::runtime_error>(
-      report("Test Main has empty path"),
+      "Test Main has empty path",
       [this]() {
         std::stringstream outputStream{};
         commandline_arguments args{zeroth_arg()};
@@ -371,7 +371,7 @@ namespace sequoia::testing
       pathTrimmer);
 
     check_exception_thrown<std::runtime_error>(
-      report("Test Main does not exist"),
+      "Test Main does not exist",
       [this]() {
         std::stringstream outputStream{};
         commandline_arguments args{zeroth_arg()};
@@ -380,7 +380,7 @@ namespace sequoia::testing
       pathTrimmer);
 
     check_exception_thrown<std::runtime_error>(
-      report("Include Target has empty path"),
+      "Include Target has empty path",
       [this]() {
         std::stringstream outputStream{};
         commandline_arguments args{zeroth_arg()};
@@ -389,7 +389,7 @@ namespace sequoia::testing
       pathTrimmer);
 
     check_exception_thrown<std::runtime_error>(
-      report("Include Target does not exist"),
+      "Include Target does not exist",
       [this]() {
         std::stringstream outputStream{};
         commandline_arguments args{zeroth_arg()};
@@ -398,7 +398,7 @@ namespace sequoia::testing
       pathTrimmer);
 
     check_exception_thrown<std::runtime_error>(
-      report("Project root is empty"),
+      "Project root is empty",
       [this]() {
         std::stringstream outputStream{};
         commandline_arguments args{""};
@@ -406,7 +406,7 @@ namespace sequoia::testing
       });
 
     check_exception_thrown<std::runtime_error>(
-      report("Project root does not exist"),
+      "Project root does not exist",
       [this]() {
         std::stringstream outputStream{};
         commandline_arguments args{(fake_project() / "FooRepo").generic_string()};
@@ -415,7 +415,7 @@ namespace sequoia::testing
       pathTrimmer);
 
     check_exception_thrown<std::runtime_error>(
-      report("Project root not findable"),
+      "Project root not findable",
       [this]() {
         const auto zerothArg{fake_project().append("TestShared").generic_string()};
         std::stringstream outputStream{};
@@ -425,7 +425,7 @@ namespace sequoia::testing
       pathTrimmer);
 
     check_exception_thrown<std::runtime_error>(
-      report("Neither name nor source unique"),
+      "Neither name nor source unique",
       [this](){
         commandline_arguments args{zeroth_arg()};
         std::stringstream outputStream{};
@@ -459,14 +459,14 @@ namespace sequoia::testing
     );
 
     check_exception_thrown<std::runtime_error>(
-      report("Invalid repetitions for instability analysis"),
+      "Invalid repetitions for instability analysis",
       [this](){
         test_instability_analysis("", "", "foo", critical_free_test{"Free Test"});
       }
     );
 
     check_exception_thrown<std::runtime_error>(
-      report("Insufficient repetitions for instability analysis"),
+      "Insufficient repetitions for instability analysis",
       [this](){
         test_instability_analysis("", "",  "1", critical_free_test{"Free Test"});
       }
@@ -523,7 +523,7 @@ namespace sequoia::testing
              working_materials() /= "RecoveryAndDumpOutput/TestSummaries",
              fs::copy_options::recursive);
 
-    check(equivalence, report("Recovery and Dump"),
+    check(equivalence, "Recovery and Dump",
                       working_materials() /= "RecoveryAndDumpOutput",
                       predictive_materials() /= "RecoveryAndDumpOutput");
   }

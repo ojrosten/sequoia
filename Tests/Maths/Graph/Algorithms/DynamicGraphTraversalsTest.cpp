@@ -296,21 +296,21 @@ namespace sequoia::testing
     using node_comparer = graph_impl::node_comparer<graph_type, std::ranges::less>;
     node_comparer compare(graph);
 
-    check(report("node_comparer sees that weight_0 > weight_1 and so returns false"), !compare(0, 1));
+    check("node_comparer sees that weight_0 > weight_1 and so returns false", !compare(0, 1));
 
     auto stack = graph_impl::traversal_traits<graph_type, traversal_flavour::pseudo_depth_first>::make();
     stack.push(0);
     stack.push(1);
-    check(equality, report(""), stack.top(), 1_sz);
+    check(equality, "", stack.top(), 1_sz);
     stack.pop();
-    check(equality, report(""), stack.top(), 0_sz);
+    check(equality, "", stack.top(), 0_sz);
 
     using compare_t = graph_impl::node_comparer<graph_type, std::ranges::less>;
     auto pqueue = graph_impl::traversal_traits<graph_type, traversal_flavour::priority, compare_t>::make(compare_t{graph});
     pqueue.push(0);
     pqueue.push(1);
 
-    check(equality, report(""), pqueue.top(), 0_sz);
+    check(equality, "", pqueue.top(), 0_sz);
   }
 
   //=============================== Tracker Test ===============================//
@@ -631,7 +631,7 @@ namespace sequoia::testing
     node_tracker tracker;
     traverse(maths::priority_first, graph, maths::ignore_disconnected_t{}, tracker);
 
-    check(equivalence, report(""), tracker, std::vector<std::size_t>{0,2,4,3,6,1,5});
+    check(equivalence, "", tracker, std::vector<std::size_t>{0,2,4,3,6,1,5});
   }
 
   //=============================== Weighted breadth_first  ===============================//
@@ -686,9 +686,9 @@ namespace sequoia::testing
       poolResults = poolFn(),
       expected = answers(upper);
 
-    check(equality, report("Null edge first task expected"), serialResults, expected);
-    check(equality, report("Async edge first task expected"), asyncResults, expected);
-    check(equality, report("Pool edge first task expected"), poolResults, expected);
+    check(equality, "Null edge first task expected", serialResults, expected);
+    check(equality, "Async edge first task expected", asyncResults, expected);
+    check(equality, "Pool edge first task expected", poolResults, expected);
   }
 
   template<maths::dynamic_network Graph>
@@ -712,9 +712,9 @@ namespace sequoia::testing
         poolResults = poolFn(),
         expected = node_task_answers(upper);
 
-      check(equality, report("Null node task expected"), serialResults, expected);
-      check(equality, report("Async node task expected"), asyncResults, expected);
-      check(equality, report("Pool node task expected"), poolResults, expected);
+      check(equality, "Null node task expected", serialResults, expected);
+      check(equality, "Async node task expected", asyncResults, expected);
+      check(equality, "Pool node task expected", poolResults, expected);
     }
 
     //================================ Edge First Traversal functors =========================//
@@ -740,9 +740,9 @@ namespace sequoia::testing
         poolResults = poolFn(),
         expected = edge_task_answers(upper);
 
-      check(equality, report("Null edge first task expected"), serialResults, expected);
-      check(equality, report("Async edge first task expected"), asyncResults, expected);
-      check(equality, report("Pool edge first task expected"), poolResults, expected);
+      check(equality, "Null edge first task expected", serialResults, expected);
+      check(equality, "Async edge first task expected", asyncResults, expected);
+      check(equality, "Pool edge first task expected", poolResults, expected);
 
     }
 
@@ -772,8 +772,8 @@ namespace sequoia::testing
         }
       };
 
-      check_relative_performance(report("Null versus async check"), asyncFn, serialFn, 2.0, 5.0);
-      check_relative_performance(report("Null versus pool check"), poolFn, serialFn, 2.0, 5.0);
+      check_relative_performance("Null versus async check", asyncFn, serialFn, 2.0, 5.0);
+      check_relative_performance("Null versus pool check", poolFn, serialFn, 2.0, 5.0);
     }
   }
 }

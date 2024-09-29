@@ -29,37 +29,37 @@ namespace sequoia::testing
 
   void sequences_free_test::test_concat_sequences()
   {
-    check(report("Concat two empty sequences"), [](){
+    check("Concat two empty sequences", [](){
         static_assert(std::is_same_v<concat_sequences_t<std::index_sequence<>, std::index_sequence<>>, std::index_sequence<>>);
         return true;
       }()
     );
 
-    check(report("Concat empty left-hand sequence"), [](){
+    check("Concat empty left-hand sequence", [](){
         static_assert(std::is_same_v<concat_sequences_t<std::index_sequence<42>, std::index_sequence<>>, std::index_sequence<42>>);
         return true;
       }()
     );
 
-    check(report("Concat empty right-hand sequence"), [](){
+    check("Concat empty right-hand sequence", [](){
         static_assert(std::is_same_v<concat_sequences_t<std::index_sequence<>, std::index_sequence<42>>, std::index_sequence<42>>);
         return true;
       }()
     );
 
-    check(report("Concat {0}, {0}"), [](){
+    check("Concat {0}, {0}", [](){
         static_assert(std::is_same_v<concat_sequences_t<std::index_sequence<0>, std::index_sequence<0>>, std::index_sequence<0, 0>>);
         return true;
       }()
     );
 
-    check(report("Concat {0, 2}, {1}"), [](){
+    check("Concat {0, 2}, {1}", [](){
         static_assert(std::is_same_v<concat_sequences_t<std::index_sequence<0, 2>, std::index_sequence<1>>, std::index_sequence<0, 2, 1>>);
         return true;
       }()
     );
 
-    check(report("Concat {0, 1}, {2, 3}"), [](){
+    check("Concat {0, 1}, {2, 3}", [](){
         static_assert(std::is_same_v<concat_sequences_t<std::index_sequence<0, 1>, std::index_sequence<2, 3>>, std::index_sequence<0, 1, 2, 3>>);
         return true;
       }()
@@ -68,37 +68,37 @@ namespace sequoia::testing
 
   void sequences_free_test::test_filtered_sequence()
   {
-    check(report("One element which survives"), []() {
+    check("One element which survives", []() {
         static_assert(std::is_same_v<make_filtered_sequence<void, std::type_identity, int>, std::index_sequence<0>>);
         return true;
       }()
     );
 
-    check(report("One element which is filtered"), []() {
+    check("One element which is filtered", []() {
         static_assert(std::is_same_v<make_filtered_sequence<int, std::type_identity, int>, std::index_sequence<>>);
         return true;
       }()
      );
 
-    check(report("Two elements, both of which survive"), []() {
+    check("Two elements, both of which survive", []() {
         static_assert(std::is_same_v<make_filtered_sequence<void, std::type_identity, int, double>, std::index_sequence<0, 1>>);
         return true;
       }()
     );
 
-    check(report("Two elements, the zeroth of which survives"), []() {
+    check("Two elements, the zeroth of which survives", []() {
         static_assert(std::is_same_v<make_filtered_sequence<double, std::type_identity, int, double>, std::index_sequence<0>>);
         return true;
       }()
     );
 
-    check(report("Two elements, the first of which survives"), []() {
+    check("Two elements, the first of which survives", []() {
         static_assert(std::is_same_v<make_filtered_sequence<int, std::type_identity, int, double>, std::index_sequence<1>>);
         return true;
       }()
     );
 
-    check(report("Two elements, both of which are filtered"), []() {
+    check("Two elements, both of which are filtered", []() {
         static_assert(std::is_same_v<make_filtered_sequence<int, std::type_identity, int, int>, std::index_sequence<>>);
         return true;
       }()
@@ -107,25 +107,25 @@ namespace sequoia::testing
 
   void sequences_free_test::test_rotate_sequence()
   {
-    check(report("Rotate empty sequence"), [](){
+    check("Rotate empty sequence", [](){
         static_assert(std::is_same_v<rotate_sequence_t<std::index_sequence<>>, std::index_sequence<>>);
         return true;
       }()
     );
 
-    check(report("Rotate one element sequence"), [](){
+    check("Rotate one element sequence", [](){
         static_assert(std::is_same_v<rotate_sequence_t<std::index_sequence<42>>, std::index_sequence<42>>);
         return true;
       }()
     );
 
-    check(report("Rotate two element sequence"), [](){
+    check("Rotate two element sequence", [](){
         static_assert(std::is_same_v<rotate_sequence_t<std::index_sequence<0, 1>>, std::index_sequence<1, 0>>);
         return true;
       }()
     );
 
-    check(report("Rotate three element sequence"), [](){
+    check("Rotate three element sequence", [](){
         static_assert(std::is_same_v<rotate_sequence_t<std::index_sequence<0, 1, 2>>, std::index_sequence<1, 2, 0>>);
         return true;
       }()
@@ -134,25 +134,25 @@ namespace sequoia::testing
 
   void sequences_free_test::test_reverse_sequence()
   {
-    check(report("Reverse empty sequence"), [](){
+    check("Reverse empty sequence", [](){
         static_assert(std::is_same_v<reverse_sequence_t<std::index_sequence<>>, std::index_sequence<>>);
         return true;
       }()
     );
 
-    check(report("Reverse one element sequence"), [](){
+    check("Reverse one element sequence", [](){
         static_assert(std::is_same_v<reverse_sequence_t<std::index_sequence<42>>, std::index_sequence<42>>);
         return true;
       }()
     );
 
-    check(report("Reverse two element sequence"), [](){
+    check("Reverse two element sequence", [](){
         static_assert(std::is_same_v<reverse_sequence_t<std::index_sequence<42, 7>>, std::index_sequence<7, 42>>);
         return true;
       }()
     );
 
-    check(report("Reverse three element sequence"), [](){
+    check("Reverse three element sequence", [](){
         static_assert(std::is_same_v<reverse_sequence_t<std::index_sequence<0, 1, 2>>, std::index_sequence<2, 1, 0>>);
         return true;
       }()
@@ -161,25 +161,25 @@ namespace sequoia::testing
 
   void sequences_free_test::test_sequence_partial_sum()
   {
-    check(report("Partial sum of empty sequence"), [](){
+    check("Partial sum of empty sequence", [](){
         static_assert(std::is_same_v<sequence_partial_sum_t<std::index_sequence<>>, std::index_sequence<>>);
         return true;
       }()
     );
 
-    check(report("Partial sum of one element sequence"), [](){
+    check("Partial sum of one element sequence", [](){
         static_assert(std::is_same_v<sequence_partial_sum_t<std::index_sequence<42>>, std::index_sequence<42>>);
         return true;
       }()
     );
 
-    check(report("Partial sum of two element sequence"), [](){
+    check("Partial sum of two element sequence", [](){
         static_assert(std::is_same_v<sequence_partial_sum_t<std::index_sequence<42, 7>>, std::index_sequence<42, 49>>);
         return true;
       }()
     );
 
-    check(report("Partial sum of three element sequence"), [](){
+    check("Partial sum of three element sequence", [](){
         static_assert(std::is_same_v<sequence_partial_sum_t<std::index_sequence<42, 7, 12>>, std::index_sequence<42, 49, 61>>);
         return true;
       }()

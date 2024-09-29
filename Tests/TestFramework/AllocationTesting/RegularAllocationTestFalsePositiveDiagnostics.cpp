@@ -43,9 +43,9 @@ namespace sequoia::testing
       auto allocGetter{ [](const beast& b){ return b.x.get_allocator(); } };
       auto mutator{[](auto& b) { b.x.push_back(1); }};
 
-      check_semantics(report("Broken check invariant"), beast{{1}, allocator{}}, beast{{1}, allocator{}}, mutator, allocation_info{allocGetter, {0_c, {0_c,1_mu}, {0_anp,0_awp}}});
+      check_semantics("Broken check invariant", beast{{1}, allocator{}}, beast{{1}, allocator{}}, mutator, allocation_info{allocGetter, {0_c, {0_c,1_mu}, {0_anp,0_awp}}});
 
-      check_semantics(report("Incorrect init allocs"),
+      check_semantics("Incorrect init allocs",
                     [](){ return beast{{1,2}}; },
                     [](){ return beast{{5}, allocator{}}; },
                     mutator,
@@ -59,11 +59,11 @@ namespace sequoia::testing
       auto allocGetter{ [](const beast& b){ return b.x.get_allocator(); } };
       auto mutator{[](auto& b) { b.x.push_back(1); }};
 
-      check_semantics(report("Incorrect copy x allocs"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {0_c, {1_c,1_mu}, {1_anp,1_awp}}});
+      check_semantics("Incorrect copy x allocs", beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {0_c, {1_c,1_mu}, {1_anp,1_awp}}});
 
-      check_semantics(report("Incorrect copy y allocs"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {0_c,1_mu}, {1_anp,1_awp}}});
+      check_semantics("Incorrect copy y allocs", beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {0_c,1_mu}, {1_anp,1_awp}}});
 
-      check_semantics(report("Incorrect mutation allocs"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,0_mu}, {1_anp,1_awp}}});
+      check_semantics("Incorrect mutation allocs", beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,0_mu}, {1_anp,1_awp}}});
 
       auto predictions{
         []() -> allocation_predictions {
@@ -78,7 +78,7 @@ namespace sequoia::testing
         }
       };
 
-      check_semantics(report("Incorrect copy assign y to x allocs"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, predictions()});
+      check_semantics("Incorrect copy assign y to x allocs", beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, predictions()});
     }
 
     {
@@ -89,11 +89,11 @@ namespace sequoia::testing
 
       auto m{ [](beast& b) { *b.x.front() = 9; } };
 
-      check_semantics(report("Incorrect copy x allocs"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, m, allocation_info{getter{}, {0_c, {1_c,0_mu}, {1_anp,1_awp}}});
+      check_semantics("Incorrect copy x allocs", beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, m, allocation_info{getter{}, {0_c, {1_c,0_mu}, {1_anp,1_awp}}});
 
-      check_semantics(report("Incorrect copy y allocs"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, m, allocation_info{getter{}, {1_c, {0_c,0_mu}, {1_anp,1_awp}}});
+      check_semantics("Incorrect copy y allocs", beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, m, allocation_info{getter{}, {1_c, {0_c,0_mu}, {1_anp,1_awp}}});
 
-      check_semantics(report("Incorrect mutation allocs"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, m, allocation_info{getter{}, {1_c, {1_c,1_mu}, {1_anp,1_awp}}});
+      check_semantics("Incorrect mutation allocs", beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, m, allocation_info{getter{}, {1_c, {1_c,1_mu}, {1_anp,1_awp}}});
 
       auto predictions{
         []() -> allocation_predictions {
@@ -108,7 +108,7 @@ namespace sequoia::testing
         }
       };
 
-      check_semantics(report("Incorrect copy assign y to x allocs"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, m, allocation_info{getter{}, predictions()});
+      check_semantics("Incorrect copy assign y to x allocs", beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, m, allocation_info{getter{}, predictions()});
     }
   }
 }
