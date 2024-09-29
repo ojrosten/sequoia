@@ -166,36 +166,36 @@ namespace sequoia::testing
   {
     check(equality, "Equality checking", perfectly_normal_type{42}, perfectly_normal_type{43});
     check(equality,
-          "Equality checking with advice requiring implicit conversion",
+          report{"Equality checking with advice requiring implicit conversion"},
           perfectly_normal_type{42},
           perfectly_normal_type{43},
           tutor{[](perfectly_normal_type, perfectly_normal_type) { return "perfectly_normal_type advice"; }});
     check(equality,
-          "Equality checking with advice",
+          report{"Equality checking with advice"},
           perfectly_normal_type{42},
           perfectly_normal_type{43},
           tutor{[](int, int) { return "int advice"; }});
 
     check(equivalence, "Equality checking via fallback", perfectly_normal_type{42}, perfectly_normal_type{43});
     check(equivalence,
-          "Equality checking via fallback with advice requiring implicit conversion",
+          report{"Equality checking via fallback with advice requiring implicit conversion"},
           perfectly_normal_type{42},
           perfectly_normal_type{43},
           tutor{[](perfectly_normal_type, perfectly_normal_type) { return "perfectly_normal_type advice"; }});
     check(equivalence,
-          "Equality checking via fallback with advice",
+          report{"Equality checking via fallback with advice"},
           perfectly_normal_type{42},
           perfectly_normal_type{43},
           tutor{[](int, int) { return "int advice"; }});
 
     check(weak_equivalence, "Equality checking via two fallbacks", perfectly_normal_type{42}, perfectly_normal_type{43});
     check(weak_equivalence,
-          "Equality checking via two fallbacks with advice requiring implicit conversion",
+          report{"Equality checking via two fallbacks with advice requiring implicit conversion"},
           perfectly_normal_type{42},
           perfectly_normal_type{43},
           tutor{[](perfectly_normal_type, perfectly_normal_type) { return "perfectly_normal_type advice"; }});
     check(weak_equivalence,
-          "Equality checking via two fallbacks with advice",
+          report{"Equality checking via two fallbacks with advice"},
           perfectly_normal_type{42},
           perfectly_normal_type{43},
           tutor{[](int, int) { return "int advice"; }});
@@ -205,38 +205,38 @@ namespace sequoia::testing
   {
     check(equivalence, "Equivalence checking", only_equivalence_checkable{42}, 41);
     check(equivalence,
-          "Equivalence checking with advice",
+          report{"Equivalence checking with advice"},
           only_equivalence_checkable{42},
           41,
           tutor{[](double, double) { return "double advice"; }});
 
     check(equivalence, "Self-equivalence checking", only_equivalence_checkable{42}, only_equivalence_checkable{41});
     check(equivalence,
-          "Self-equivalence checking with advice requiring implicit conversion",
+          report{"Self-equivalence checking with advice requiring implicit conversion"},
           only_equivalence_checkable{42},
           only_equivalence_checkable{41},
           tutor{[](only_equivalence_checkable, only_equivalence_checkable) { return "only_equivalence_checkable advice"; }});
     check(equivalence,
-          "Self-equivalence checking with advice",
+          report{"Self-equivalence checking with advice"},
           only_equivalence_checkable{42},
           only_equivalence_checkable{41},
           tutor{[](double, double) { return "double advice"; }});
 
     check(weak_equivalence, "Equivalence checking via fallback", only_equivalence_checkable{42}, 41);
     check(weak_equivalence,
-          "Equivalence checking via fallback with advice",
+          report{"Equivalence checking via fallback with advice"},
           only_equivalence_checkable{42},
           41,
           tutor{[](double, double) { return "double advice"; }});
 
     check(weak_equivalence, "Self-equivalence checking via fallback", only_equivalence_checkable{42}, only_equivalence_checkable{41});
     check(weak_equivalence,
-          "Self-equivalence checking via fallback with advice requiring implicit conversion",
+          report{"Self-equivalence checking via fallback with advice requiring implicit conversion"},
           only_equivalence_checkable{42},
           only_equivalence_checkable{41},
           tutor{[](only_equivalence_checkable, only_equivalence_checkable) { return "only_equivalence_checkable advice"; }});
     check(weak_equivalence,
-          "Self-equivalence checking via fallback with advice",
+          report{"Self-equivalence checking via fallback with advice"},
           only_equivalence_checkable{42},
           only_equivalence_checkable{41},
           tutor{[](double, double) { return "double advice"; }});
@@ -245,23 +245,23 @@ namespace sequoia::testing
   void elementary_false_positive_free_diagnostics::test_weak_equivalence_checks()
   {
     check(weak_equivalence,
-          "Weak equivalence checking",
+          report{"Weak equivalence checking"},
           only_weakly_checkable{42, 3.14},
           std::pair<int, double>{41, 3.13});
     check(weak_equivalence,
-          "Weak equivalence checking with advice",
+          report{"Weak equivalence checking with advice"},
           only_weakly_checkable{42, 3.14},
           std::pair<int, double>{41, 3.13},
           tutor{bland{}});
 
     check(weak_equivalence, "Self-weak-equivalence checking", only_weakly_checkable{42, 3.14}, only_weakly_checkable{41, 3.13});
     check(weak_equivalence,
-          "Self-weak-equivalence checking with advice ignored because implicit conversions from either int or double to only_weakly_checkable don't exist",
+          report{"Self-weak-equivalence checking with advice ignored because implicit conversions from either int or double to only_weakly_checkable don't exist"},
           only_weakly_checkable{42, 3.14},
           only_weakly_checkable{41, 3.13},
           tutor{[](only_weakly_checkable, only_weakly_checkable) { return "only_weakly_checkable advice"; }});
     check(weak_equivalence,
-          "Self-weak-equivalence checking with advice",
+          report{"Self-weak-equivalence checking with advice"},
           only_weakly_checkable{42, 3.14},
           only_weakly_checkable{41, 3.13},
           tutor{bland{}});
@@ -274,21 +274,21 @@ namespace sequoia::testing
     check(with_best_available, "Advice for best available for int", 1, 2, tutor{[](int, int) { return "int advice"; }});
 
     check(with_best_available,
-          "Best available for only_equivalence_checkable",
+          report{"Best available for only_equivalence_checkable"},
           only_equivalence_checkable{1},
           only_equivalence_checkable{2});
     check(with_best_available,
-          "Best available for only_equivalence_checkable with advice requiring implicit conversion",
+          report{"Best available for only_equivalence_checkable with advice requiring implicit conversion"},
           only_equivalence_checkable{1},
           only_equivalence_checkable{2},
           tutor{[](only_equivalence_checkable, only_equivalence_checkable) { return "only_equivalence_checkable advice"; }});
 
     check(with_best_available,
-          "Best available for only_weakly_checkable",
+          report{"Best available for only_weakly_checkable"},
           only_weakly_checkable{1, -1.4},
           only_weakly_checkable{2, 6.7});
     check(with_best_available,
-          "Best available for only_weakly_checkable with advice",
+          report{"Best available for only_weakly_checkable with advice"},
           only_weakly_checkable{1, -1.4},
           only_weakly_checkable{2, 6.7},
           tutor{bland{}});
@@ -340,12 +340,12 @@ namespace sequoia::testing
   void elementary_false_negative_free_diagnostics::test_weak_equivalence_checks()
   {
     check(weak_equivalence,
-          "Weak equivalence checking",
+          report{"Weak equivalence checking"},
           only_weakly_checkable{42, 3.14},
           std::pair<int, double>{42, 3.14});
 
     check(weak_equivalence,
-          "Weak equivalence checking with advice",
+          report{"Weak equivalence checking with advice"},
           only_weakly_checkable{42, 3.14},
           std::pair<int, double>{42, 3.14},
           tutor{bland{}});
@@ -356,12 +356,12 @@ namespace sequoia::testing
     check(with_best_available, "Best available for int", 1, 1);
 
     check(with_best_available,
-          "Best available for only_weakly_checkable",
+          report{"Best available for only_weakly_checkable"},
           only_weakly_checkable{2, -1.4},
           only_weakly_checkable{2, -1.4});
 
     check(with_best_available,
-          "Best available for only_weakly_checkable",
+          report{"Best available for only_weakly_checkable"},
           only_weakly_checkable{1, 6.7},
           only_weakly_checkable{1, 6.7});
   }

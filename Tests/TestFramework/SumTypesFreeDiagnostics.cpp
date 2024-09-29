@@ -38,19 +38,19 @@ namespace sequoia::testing
       check(equality, "std::variant holding the first type, but with different values", var{-0.1}, var{0.0});
 
       check(equality,
-            "std::variant proffering advice for different values of the zeroth type",
+            report{"std::variant proffering advice for different values of the zeroth type"},
             var{-1},
             var{0},
             tutor{[](int, int) { return std::string{"int advice"}; }});
 
       check(equality,
-            "std::variant proffering advice for different values of the first type",
+            report{"std::variant proffering advice for different values of the first type"},
             var{-0.1},
             var{0.0},
             tutor{[](double, double) { return std::string{"double advice"}; }});
 
       check(equality,
-            "std::variant advice ignored due to type mismatch",
+            report{"std::variant advice ignored due to type mismatch"},
             var{-1.0},
             var{0.0},
             tutor{[](int, int) { return std::string{"Ignored advice, since double to int is a narrowing conversion"}; }});
@@ -77,7 +77,7 @@ namespace sequoia::testing
       check(equality, "Two std::optionals holdings different values", opt{2}, opt{0});
 
       check(equality,
-            "Advice for two std::optionals holdings different values",
+            report{"Advice for two std::optionals holdings different values"},
             opt{2},
             opt{0},
             tutor{[](int, int) { return "int advice"; }});
@@ -110,7 +110,7 @@ namespace sequoia::testing
     check(equivalence, "", std::any{only_weakly_checkable{1, 1.0}}, only_weakly_checkable{2, 2.0});
 
     check(equivalence,
-          "Advice for std::any holding the wrong value",
+          report{"Advice for std::any holding the wrong value"},
           std::any{1},
           2,
           tutor{[](int, int) { return "int advice";}});

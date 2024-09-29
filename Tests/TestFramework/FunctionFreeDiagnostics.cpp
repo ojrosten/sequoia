@@ -23,40 +23,40 @@ namespace sequoia::testing
     {
       using function = std::function<void()>;
       check(weak_equivalence,
-        "Obtained bound but prediction not",
-        function{[]() {}},
-        function{});
+            report{"Obtained bound but prediction not"},
+            function{[]() {}},
+            function{});
 
       check(weak_equivalence,
-        "Prediction bound but obtained not",
-        function{},
-        function{[]() {}});
+            report{"Prediction bound but obtained not"},
+            function{},
+            function{[]() {}});
     }
 
     {
       using function = std::function<int()>;
       check(weak_equivalence,
-        "Obtained bound but prediction not",
-        function{[]() { return 42; }},
-        function{});
+            report{"Obtained bound but prediction not"},
+            function{[]() { return 42; }},
+            function{});
 
       check(weak_equivalence,
-        "Prediction bound but obtained not",
-        function{},
-        function{[]() { return 42; }});
+            report{"Prediction bound but obtained not"},
+            function{},
+            function{[]() { return 42; }});
     }
 
     {
       using function = std::function<void(int)>;
       check(weak_equivalence,
-        "Obtained bound but prediction not",
-        function{[](int) {}},
-        function{});
+            report{"Obtained bound but prediction not"},
+            function{[](int) {}},
+            function{});
 
       check(weak_equivalence,
-        "Prediction bound but obtained not",
-        function{},
-        function{[](int) {}});
+            report{"Prediction bound but obtained not"},
+            function{},
+            function{[](int) {}});
     }
   }
 

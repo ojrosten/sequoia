@@ -39,7 +39,7 @@ namespace sequoia::testing
       check(equivalence, "Different pointers pointing to different values", std::make_unique<int>(42), std::make_unique<int>(43));
 
       check(equivalence,
-            "Advice for different pointers pointing to different values",
+            report{"Advice for different pointers pointing to different values"},
             std::make_unique<int>(42),
             std::make_unique<int>(43),
             tutor{[](int, int) { return "int advice"; }});
@@ -47,14 +47,14 @@ namespace sequoia::testing
 
     {
       check(equivalence,
-            "Different pointers pointing to different values",
+            report{"Different pointers pointing to different values"},
             std::make_unique<only_equivalence_checkable>(1.0),
             std::make_unique<only_equivalence_checkable>(2.0));
     }
 
     {
       check(equivalence,
-            "Different pointers pointing to different values",
+            report{"Different pointers pointing to different values"},
             std::make_unique<only_weakly_checkable>(42, 1.0),
             std::make_unique<only_weakly_checkable>(43, -2.0));
     }
@@ -62,7 +62,7 @@ namespace sequoia::testing
     {
       using type = std::tuple<int, only_equivalence_checkable, only_weakly_checkable>;
       check(equivalence,
-            "Different pointers pointing to different values",
+            report{"Different pointers pointing to different values"},
             std::make_unique<type>(1, only_equivalence_checkable{2.0}, only_weakly_checkable{42, 1.0}),
             std::make_unique<type>(-1, only_equivalence_checkable{3.0}, only_weakly_checkable{43, -2.0}));
     }
@@ -80,7 +80,7 @@ namespace sequoia::testing
       check(equivalence, "Different pointers pointing to different values", std::make_shared<int>(42), std::make_shared<int>(43));
 
       check(equivalence,
-            "Advice for different pointers pointing to different values",
+            report{"Advice for different pointers pointing to different values"},
             std::make_shared<int>(42),
             std::make_shared<int>(43),
             tutor{[](int, int) { return "int advice"; }});
@@ -89,7 +89,7 @@ namespace sequoia::testing
     {
       using type = std::tuple<int, only_equivalence_checkable, only_weakly_checkable>;
       check(equivalence,
-            "Different pointers pointing to different values",
+            report{"Different pointers pointing to different values"},
             std::make_shared<type>(1, only_equivalence_checkable{2.0}, only_weakly_checkable{42, 1.0}),
             std::make_shared<type>(-1, only_equivalence_checkable{3.0}, only_weakly_checkable{43, -2.0}));
     }
@@ -138,14 +138,14 @@ namespace sequoia::testing
 
     {
       check(equivalence,
-            "Different pointers pointing to identical values",
+            report{"Different pointers pointing to identical values"},
             std::make_unique<only_equivalence_checkable>(1.0),
             std::make_unique<only_equivalence_checkable>(1.0));
     }
 
     {
       check(equivalence,
-            "Different pointers pointing to identical values",
+            report{"Different pointers pointing to identical values"},
             std::make_unique<only_weakly_checkable>(42, -2.0),
             std::make_unique<only_weakly_checkable>(42, -2.0));
     }
@@ -153,7 +153,7 @@ namespace sequoia::testing
     {
       using type = std::tuple<int, only_equivalence_checkable, only_weakly_checkable>;
       check(equivalence,
-            "Different pointers pointing to identical values",
+            report{"Different pointers pointing to identical values"},
             std::make_unique<type>(-1, only_equivalence_checkable{2.0}, only_weakly_checkable{42, 1.0}),
             std::make_unique<type>(-1, only_equivalence_checkable{2.0}, only_weakly_checkable{42, 1.0}));
     }
@@ -172,7 +172,7 @@ namespace sequoia::testing
     {
       using type = std::tuple<int, only_equivalence_checkable, only_weakly_checkable>;
       check(equivalence,
-            "Different pointers pointing to identical values",
+            report{"Different pointers pointing to identical values"},
             std::make_shared<type>(-1, only_equivalence_checkable{2.0}, only_weakly_checkable{42, 1.0}),
             std::make_shared<type>(-1, only_equivalence_checkable{2.0}, only_weakly_checkable{42, 1.0}));
     }

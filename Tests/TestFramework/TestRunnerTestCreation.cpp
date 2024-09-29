@@ -162,7 +162,7 @@ namespace sequoia::testing
   void test_runner_test_creation::test_creation_failure()
   {
       check_exception_thrown<std::runtime_error>(
-        "Plurgh.h does not exist",
+        report{"Plurgh.h does not exist"},
         [this]() {
           std::stringstream outputStream{};
           commandline_arguments args{zeroth_arg(), "create", "free", "Plurgh.h"};
@@ -171,7 +171,7 @@ namespace sequoia::testing
         });
 
       check_exception_thrown<std::runtime_error>(
-        "Typo in specified class header",
+        report{"Typo in specified class header"},
         [this]() {
           std::stringstream outputStream{};
           commandline_arguments args{zeroth_arg(), "create", "regular_test", "bar::things", "double", "-h", "fakeProject/Stuff/Thingz.hpp"};
