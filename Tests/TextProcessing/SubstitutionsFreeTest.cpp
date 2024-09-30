@@ -12,6 +12,8 @@
 
 namespace sequoia::testing
 {
+  using namespace std::string_literals;
+
   [[nodiscard]]
   std::filesystem::path substitutions_free_test::source_file() const
   {
@@ -27,11 +29,11 @@ namespace sequoia::testing
     test_uncapitalize();
     test_replace();
     test_replace_all();
+    test_replace_all_recursive();
   }
 
   void substitutions_free_test::test_camel_case()
   {
-    using namespace std::string_literals;
     check(equality, "Camel from empty string", to_camel_case(""), ""s);
     check(equality, "Camel from letter", to_camel_case("a"), "A"s);
     check(equality, "Camel from minimal snake", to_camel_case("a_b"), "AB"s);
@@ -45,7 +47,6 @@ namespace sequoia::testing
 
   void substitutions_free_test::test_camel_to_words()
   {
-    using namespace std::string_literals;
     check(equality, "Camel to words from empty string", camel_to_words(""), ""s);
     check(equality, "Camel to words from letter", camel_to_words("a"), "a"s);
     check(equality, "Camel to words from captial letter", camel_to_words("A"), "A"s);
@@ -56,7 +57,6 @@ namespace sequoia::testing
 
   void substitutions_free_test::test_snake_case()
   {
-    using namespace std::string_literals;
     check(equality, "Snake from empty string", to_snake_case(""), ""s);
     check(equality, "Snake from letter", to_snake_case("A"), "a"s);
     check(equality, "Snake from minimal camel", to_snake_case("AB"), "a_b"s);
@@ -65,7 +65,6 @@ namespace sequoia::testing
 
   void substitutions_free_test::test_capitalize()
   {
-    using namespace std::string_literals;
     check(equality, "Capitalize empty string", capitalize(""), ""s);
     check(equality, "Capitalize letter", capitalize("a"), "A"s);
     check(equality, "Capitalize word", capitalize("foo"), "Foo"s);
@@ -73,7 +72,6 @@ namespace sequoia::testing
 
   void substitutions_free_test::test_uncapitalize()
   {
-    using namespace std::string_literals;
     check(equality, "Uncapitalize empty string", uncapitalize(""), ""s);
     check(equality, "Uncapitalize letter", uncapitalize("A"), "a"s);
     check(equality, "Uncapitalize word", uncapitalize("Foo"), "foo"s);
@@ -81,7 +79,6 @@ namespace sequoia::testing
 
   void substitutions_free_test::test_replace()
   {
-    using namespace std::string_literals;
     check(equality, "Replace in empty string", replace("", "foo", "bar"), ""s);
     check(equality, "Single replacement", replace("foo", "foo", "bar"), "bar"s);
     check(equality, "Single replacement; multiple instances", replace("foofoo", "foo", "bar"), "barfoo"s);
@@ -90,7 +87,6 @@ namespace sequoia::testing
 
   void substitutions_free_test::test_replace_all()
   {
-    using namespace std::string_literals;
     check(equality, "Replace in empty string", replace_all("", "foo", "bar"), ""s);
     check(equality, "Single replacement", replace_all("foo", "foo", "bar"), "bar"s);
     check(equality, "Multiple adjacent replacement", replace_all("foofoo", "foo", "bar"), "barbar"s);
@@ -110,5 +106,12 @@ namespace sequoia::testing
     check(equality, "LR multiple replacement", replace_all(",foo,foo,", ",<", "foo", ",>", "bar"), ",bar,bar,"s);
     check(equality, "L single replacement", replace_all(",foo", ",<", "foo", "", "baz"), ",baz"s);
     check(equality, "R single replacement", replace_all("foo,", "", "foo", ",", "baz"), "baz,"s);
+  }
+
+  void substitutions_free_test::test_replace_all_recursive()
+  {
+    check(equality, "Expand 2 chevrons", replace_all_recursive(">>", ">>", "> >"), "> >"s);
+    check(equality, "Expand 3 chevrons", replace_all_recursive(">>>", ">>", "> >"), "> > >"s);
+    check(equality, "Expand 3 chevrons", replace_all_recursive(">>>>", ">>", "> >"), "> > > >"s);
   }
 }
