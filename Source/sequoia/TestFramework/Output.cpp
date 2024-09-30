@@ -15,6 +15,8 @@
 #include "sequoia/TextProcessing/Patterns.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
+#include <numeric>
+
 #ifndef _MSC_VER
   #include <cxxabi.h>
 #endif
@@ -255,6 +257,7 @@ namespace sequoia::testing
   {
     replace_all(name, "::__1::", "::");
     replace_all(name, "::__fs::", "::");
+    replace_all_recursive(name, ">>", "> >");
     return tidy_name(name);
   }
 
