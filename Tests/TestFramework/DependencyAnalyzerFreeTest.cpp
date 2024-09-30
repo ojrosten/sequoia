@@ -572,7 +572,7 @@ namespace sequoia::testing
         {
           edge_t{2,
                  "Nothing executed, with select",
-                 [update_with_select](const test_outcomes& d) { return update_with_select(d, {{}}, {{}}); }
+                 [update_with_select](const test_outcomes& d) { return update_with_select(d, {}, {{}}); }
           },
           edge_t{3,
                  "A single failure in only the first of two instances, with prune",
