@@ -62,7 +62,7 @@ namespace sequoia::testing
       return "int advice";
       }});
 
-    check(equality, report{"Double check"}, 6.5, 5.6);
+    check(equality, "Double check", 6.5, 5.6);
     check(equality, "Double check with small difference", 2.1, static_cast<double>(2.1f));
     check(equality, "Double check with small difference", -2.1, -static_cast<double>(2.1f));
     check(equality, "Double check with small difference between absolute value", 2.1, -static_cast<double>(2.1f));

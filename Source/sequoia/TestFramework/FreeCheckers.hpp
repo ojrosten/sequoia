@@ -72,6 +72,8 @@
 #include "sequoia/TestFramework/TestLogger.hpp"
 #include "sequoia/Core/Meta/Utilities.hpp"
 
+#include <format>
+
 namespace sequoia::testing
 {
 
@@ -286,7 +288,7 @@ namespace sequoia::testing
                 append_lines(description,
                              "Comparison performed using:",
                              make_type_info<value_tester<T>>(),
-                             std::string{"Checking for "}.append(to_string(flavour)).append(" with:"),
+                             std::format("Checking for {} with:", to_string(flavour)),
                              types).append("\n")
                 );
       }
@@ -467,7 +469,7 @@ namespace sequoia::testing
       for(; predictionIter != predictionLast; std::ranges::advance(predictionIter, 1), std::ranges::advance(iter, 1))
       {
         const auto dist{std::ranges::distance(predictionFirst, predictionIter)};
-        auto mess{("Element " + std::to_string(dist)).append(" of range incorrect")};
+        auto mess{std::format("Element {} of range incorrect", dist)};
         if(!check(flavour, std::move(mess), logger, *iter, *predictionIter, advisor)) equal = false;
       }
     }
