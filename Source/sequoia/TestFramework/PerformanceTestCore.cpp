@@ -74,7 +74,7 @@ namespace sequoia::testing
   [[nodiscard]]
   log_summary basic_performance_test<Mode>::summarize(duration delta) const
   {
-    auto summary{base_t::summarize(delta)};
+    auto summary{base_type::summarize(delta)};
 
     if constexpr(Mode != test_mode::standard)
     {

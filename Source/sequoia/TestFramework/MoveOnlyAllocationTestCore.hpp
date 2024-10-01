@@ -137,7 +137,7 @@ namespace sequoia::testing
 
   template<class Test, test_mode Mode>
   concept move_only_alloc_test =
-       std::derived_from<Test, basic_test<checker<Mode, move_only_allocation_extender<Mode>>>>
+       std::derived_from<Test, basic_test<Mode, move_only_allocation_extender<Mode>>>
     && !std::is_abstract_v<Test>
     && requires{
          std::declval<Test>().template test_allocation<true, true>();
@@ -164,10 +164,10 @@ namespace sequoia::testing
    */
 
   template<test_mode Mode>
-  class basic_move_only_allocation_test : public basic_test<checker<Mode, move_only_allocation_extender<Mode>>>
+  class basic_move_only_allocation_test : public basic_test<Mode, move_only_allocation_extender<Mode>>
   {
   public:
-    using basic_test<checker<Mode, move_only_allocation_extender<Mode>>>::basic_test;
+    using basic_test<Mode, move_only_allocation_extender<Mode>>::basic_test;
 
     basic_move_only_allocation_test(const basic_move_only_allocation_test&) = delete;
     basic_move_only_allocation_test& operator=(const basic_move_only_allocation_test&) = delete;

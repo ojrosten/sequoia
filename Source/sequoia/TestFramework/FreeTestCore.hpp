@@ -134,12 +134,12 @@ namespace sequoia::testing
       \anchor basic_test_primary
    */
 
-  template<class Checker>
-    requires std::is_same_v<decltype(Checker::mode), const test_mode>
-  class basic_test : public test_base, public Checker
+  template<test_mode Mode, extender<Mode>... Extenders>
+  class basic_test : public test_base, public checker<Mode, Extenders...>
   {
   public:
-    constexpr static test_mode mode{Checker::mode};
+    using checker_type = checker<Mode, Extenders...>;
+    constexpr static test_mode mode{Mode};
 
     using test_base::test_base;
 
@@ -149,10 +149,10 @@ namespace sequoia::testing
     void initialize(std::string_view suiteName, const normal_path& srcFile, const project_paths& projPaths, individual_materials_paths materials, active_recovery_files files)
     {
       test_base::initialize(mode, suiteName, srcFile, projPaths, std::move(materials));
-      Checker::recovery(std::move(files));
+      checker_type::recovery(std::move(files));
     }
 
-    using Checker::reset_results;
+    using checker_type::reset_results;
   protected:
     using duration = std::chrono::steady_clock::duration;
 
@@ -164,20 +164,20 @@ namespace sequoia::testing
     [[nodiscard]]
     log_summary summarize(duration delta) const
     {
-      return Checker::summary(name(), delta);
+      return checker_type::summary(name(), delta);
     }
   private:
     friend class test_vessel;
 
     void log_critical_failure(const normal_path& srcFile, std::string_view tag, std::string_view what)
     {
-      auto sentry{Checker::make_sentinel("")};
-      sentry.log_critical_failure(exception_message(tag, srcFile, Checker::exceptions_detected_by_sentinel(), what));
+      auto sentry{checker_type::make_sentinel("")};
+      sentry.log_critical_failure(exception_message(tag, srcFile, checker_type::exceptions_detected_by_sentinel(), what));
     }
 
     void write_instability_analysis_output(const normal_path& srcFile, std::optional<std::size_t> index) const
     {
-      test_base::write_instability_analysis_output(srcFile, index, Checker::failure_messages());
+      test_base::write_instability_analysis_output(srcFile, index, checker_type::failure_messages());
     }
   };
 
@@ -191,7 +191,7 @@ namespace sequoia::testing
     && std::derived_from<T, test_base> && !std::is_abstract_v<T> && std::movable<T>;
 
   template<test_mode Mode>
-  using basic_free_test = basic_test<checker<Mode>>;
+  using basic_free_test = basic_test<Mode>;
 
   /*! \anchor free_test_alias */
   using free_test                = basic_free_test<test_mode::standard>;

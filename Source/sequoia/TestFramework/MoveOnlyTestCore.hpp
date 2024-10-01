@@ -132,10 +132,7 @@ namespace sequoia::testing
   };
 
   template<test_mode mode>
-  using move_only_checker = checker<mode, move_only_extender<mode>>;
-
-  template<test_mode mode>
-  using canonical_move_only_test = basic_test<move_only_checker<mode>>;
+  using canonical_move_only_test = basic_test<mode, move_only_extender<mode>>;
 
   /*! \anchor move_only_test_alias */
   using move_only_test                = canonical_move_only_test<test_mode::standard>;

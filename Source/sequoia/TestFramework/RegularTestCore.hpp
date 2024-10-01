@@ -81,10 +81,7 @@ namespace sequoia::testing
   };
 
   template<test_mode mode>
-  using regular_checker = checker<mode, regular_extender<mode>>;
-
-  template<test_mode mode>
-  using canonical_regular_test = basic_test<regular_checker<mode>>;
+  using canonical_regular_test = basic_test<mode, regular_extender<mode>>;
 
   /*! \anchor regular_test_alias */
   using regular_test                = canonical_regular_test<test_mode::standard>;

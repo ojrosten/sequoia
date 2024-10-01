@@ -91,7 +91,7 @@ namespace sequoia::testing
 
   template<class Test, test_mode Mode>
   concept reg_alloc_test =
-       std::derived_from<Test, basic_test<checker<Mode, regular_allocation_extender<Mode>>>>
+       std::derived_from<Test, basic_test<Mode, regular_allocation_extender<Mode>>>
     && !std::is_abstract_v<Test>
     && requires{
          std::declval<Test>().template test_allocation<true, true, true>();
@@ -116,10 +116,10 @@ namespace sequoia::testing
        \anchor basic_regular_allocation_test_primary
    */
   template<test_mode Mode>
-  class basic_regular_allocation_test : public basic_test<checker<Mode, regular_allocation_extender<Mode>>>
+  class basic_regular_allocation_test : public basic_test<Mode, regular_allocation_extender<Mode>>
   {
   public:
-    using basic_test<checker<Mode, regular_allocation_extender<Mode>>>::basic_test;
+    using basic_test<Mode, regular_allocation_extender<Mode>>::basic_test;
 
     basic_regular_allocation_test(const basic_regular_allocation_test&) = delete;
     basic_regular_allocation_test& operator=(const basic_regular_allocation_test&) = delete;

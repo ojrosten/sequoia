@@ -258,20 +258,17 @@ namespace sequoia::testing
     test_logger<Mode>* m_pLogger;
   };
 
-  template<test_mode Mode>
-  using performance_checker = checker<Mode, performance_extender<Mode>>;
-
   [[nodiscard]]
   std::string_view postprocess(std::string_view testOutput, std::string_view referenceOutput);
 
   template<test_mode Mode>
-  class basic_performance_test : public basic_test<performance_checker<Mode>>
+  class basic_performance_test : public basic_test<Mode, performance_extender<Mode>>
   {
   public:
-    using base_t   = basic_test<performance_checker<Mode>>;
-    using duration = typename base_t::duration;
+    using base_type = basic_test<Mode, performance_extender<Mode>>;
+    using duration  = typename base_type::duration;
 
-    using basic_test<performance_checker<Mode>>::basic_test;
+    using base_type::basic_test;
 
     [[nodiscard]]
     log_summary summarize(duration delta) const;
