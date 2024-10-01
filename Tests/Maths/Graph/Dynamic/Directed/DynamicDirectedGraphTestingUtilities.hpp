@@ -290,7 +290,7 @@ namespace sequoia::testing
               graph_description::node,
               t.report_line("Add node to empty graph"),
               [&t](graph_t g) -> graph_t {
-                t.check(equality, t.report_line("Index of added node is 0"), g.add_node(), 0_sz);
+                t.check(equality, "Index of added node is 0", g.add_node(), 0_sz);
                 return g;
               }
             },
@@ -298,7 +298,7 @@ namespace sequoia::testing
               graph_description::node,
               t.report_line("insert node into empty graph"),
               [&t](graph_t g) -> graph_t {
-                t.check(equality, t.report_line("Index of added node is 0"), g.insert_node(0), 0_sz);
+                t.check(equality, "Index of added node is 0", g.insert_node(0), 0_sz);
                 return g;
               }
             }
@@ -412,7 +412,7 @@ namespace sequoia::testing
               graph_description::node_node,
               t.report_line("Add second node"),
               [&t](graph_t g) -> graph_t {
-                t.check(equality, t.report_line("Index of added node is 1"), g.add_node(), 1_sz);
+                t.check(equality, "Index of added node is 1", g.add_node(), 1_sz);
                 return g;
               }
             },
@@ -420,7 +420,7 @@ namespace sequoia::testing
               graph_description::node_node,
               t.report_line("Insert second node"),
               [&t](graph_t g) -> graph_t {
-                t.check(equality, t.report_line("Index of added node is 0"), g.insert_node(0), 0_sz);
+                t.check(equality, "Index of added node is 0", g.insert_node(0), 0_sz);
                 return g;
               }
             },
@@ -428,7 +428,7 @@ namespace sequoia::testing
               graph_description::node_node,
               t.report_line("Insert second node at end"),
               [&t](graph_t g) -> graph_t {
-                t.check(equality, t.report_line("Index of added node is 1"), g.insert_node(1), 1_sz);
+                t.check(equality, "Index of added node is 1", g.insert_node(1), 1_sz);
                 return g;
               }
             },
@@ -470,7 +470,7 @@ namespace sequoia::testing
               graph_description::node_node_1,
               t.report_line("Insert node"),
               [&t](graph_t g) -> graph_t {
-                t.check(equality, t.report_line("Index of added node is 0"), g.insert_node(0), 0_sz);
+                t.check(equality, "Index of added node is 0", g.insert_node(0), 0_sz);
                 return g;
               }
             },
@@ -478,7 +478,7 @@ namespace sequoia::testing
               graph_description::node_0_node,
               t.report_line("Insert node at end"),
               [&t](graph_t g) -> graph_t {
-                t.check(equality, t.report_line("Index of added node is 1"), g.insert_node(1), 1_sz);
+                t.check(equality, "Index of added node is 1", g.insert_node(1), 1_sz);
                 return g;
               }
             },
@@ -771,7 +771,7 @@ namespace sequoia::testing
               graph_description::node_node_1_node,
               t.report_line("Insert node"),
               [&t](graph_t g) -> graph_t {
-                t.check(equality, t.report_line("Index of added node is 0"), g.insert_node(0), 0_sz);
+                t.check(equality, "Index of added node is 0", g.insert_node(0), 0_sz);
                 return g;
               }
             },

@@ -148,7 +148,7 @@ namespace sequoia::testing
       trg.add_node(
         [&t](){
           auto g{make_and_check(t, t.report_line(""), {{{0, 0.0, 0.0}, {0, 0.0, 0.0}, {0, 1.0, -1.0}, {0, 1.0, -1.0}}}, {{0.0}})};
-          t.check(equality, t.report_line("Canonical ordering of weighted edges"), graph_t{{{{0, 0.0, 0.0}, {0, 1.0, -1.0}, {0, 0.0, 0.0}, {0, 1.0, -1.0}}}, {{0.0}}}, g);
+          t.check(equality, "Canonical ordering of weighted edges", graph_t{{{{0, 0.0, 0.0}, {0, 1.0, -1.0}, {0, 0.0, 0.0}, {0, 1.0, -1.0}}}, {{0.0}}}, g);
           return g;
         }());
       
@@ -156,7 +156,7 @@ namespace sequoia::testing
       trg.add_node(
         [&t](){
           auto g{make_and_check(t, t.report_line(""), {{{0, 1.0, -1.0}, {0, 1.0, -1.0}, {0, 0.0, 0.0}, {0, 0.0, 0.0}}}, {{0.0}})};
-          t.check(equality, t.report_line("Canonical ordering of weighted edges"), graph_t{{{{0, 1.0, -1.0}, {0, 0.0, 0.0}, {0, 0.0, 0.0}, {0, 1.0, -1.0}}}, {{0.0}}}, g);
+          t.check(equality, "Canonical ordering of weighted edges", graph_t{{{{0, 1.0, -1.0}, {0, 0.0, 0.0}, {0, 0.0, 0.0}, {0, 1.0, -1.0}}}, {{0.0}}}, g);
           return g;
         }());
 
@@ -167,7 +167,7 @@ namespace sequoia::testing
       trg.add_node(
         [&t](){
           auto g{make_and_check(t, t.report_line(""), {{{0, 1.0, -1.0}, {0, 1.0, -1.0}, {1, 0.0, 0.0}}, {{0, 0.0, 0.0}}}, {{}, {}})};
-          t.check(equality, t.report_line("Canonical ordering of weighted edges"), graph_t{{{{0, 1.0, -1.0}, {1, 0.0, 0.0}, {0, 1.0, -1.0}}, {{0, 0.0, 0.0}}}, {{}, {}}}, g);
+          t.check(equality, "Canonical ordering of weighted edges", graph_t{{{{0, 1.0, -1.0}, {1, 0.0, 0.0}, {0, 1.0, -1.0}}, {{0, 0.0, 0.0}}}, {{}, {}}}, g);
           return g;
         }());
 
@@ -175,7 +175,7 @@ namespace sequoia::testing
       trg.add_node(
         [&t](){
           auto g{make_and_check(t, t.report_line(""), {{{1, 0.0, 0.0}}, {{0, 0.0, 0.0}, {1, 1.0, -1.0}, {1, 1.0, -1.0}}}, {{}, {}})};
-          t.check(equality, t.report_line("Canonical ordering of weighted edges"), graph_t{{{{1, 0.0, 0.0}}, {{1, 1.0, -1.0}, {0, 0.0, 0.0}, {1, 1.0, -1.0}}}, {{}, {}}}, g);
+          t.check(equality, "Canonical ordering of weighted edges", graph_t{{{{1, 0.0, 0.0}}, {{1, 1.0, -1.0}, {0, 0.0, 0.0}, {1, 1.0, -1.0}}}, {{}, {}}}, g);
           return g;
         }());
 
