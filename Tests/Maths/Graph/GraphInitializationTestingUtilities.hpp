@@ -56,14 +56,8 @@ namespace sequoia::testing
   };
 
   template<test_mode Mode>
-  class graph_init_basic_test : public basic_test<Mode, graph_init_extender<Mode>>
-  {
-  public:
-    using base_type = basic_test<Mode, graph_init_extender<Mode>>;
+  using basic_graph_init_test = basic_test<Mode, graph_init_extender<Mode>>;
 
-    using base_type::base_type;
-  };
-
-  using graph_init_test                = graph_init_basic_test<test_mode::standard>;
-  using graph_init_false_positive_test = graph_init_basic_test<test_mode::false_positive>;
+  using graph_init_test                = basic_graph_init_test<test_mode::standard>;
+  using graph_init_false_positive_test = basic_graph_init_test<test_mode::false_positive>;
 }

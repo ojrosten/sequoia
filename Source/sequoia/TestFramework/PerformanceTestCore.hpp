@@ -272,12 +272,7 @@ namespace sequoia::testing
 
     [[nodiscard]]
     log_summary summarize(duration delta) const;
-  protected:
   };
-
-  extern template class basic_performance_test<test_mode::standard>;
-  extern template class basic_performance_test<test_mode::false_positive>;
-  extern template class basic_performance_test<test_mode::false_negative>;
 
   /*! \anchor performance_test_alias */
   using performance_test                = basic_performance_test<test_mode::standard>;
