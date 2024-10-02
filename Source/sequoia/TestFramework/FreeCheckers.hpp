@@ -647,7 +647,8 @@ namespace sequoia::testing
 
   /*! \brief Exposes elementary check methods, with the option to plug in arbitrary Extenders to compose functionality.
 
-      This class template is templated on the enum class test_mode, together with a variadic set of Extenders.
+      This class template is templated on the enum class test_mode, with an Extender which will become
+      variadic as soon as variadic friends are available.
 
       In its unextended form, the class is appropriate for plugging into basic_test to generate a base class
       appropriate for testing free functions. Within the unit test framework various Extenders are defined.
@@ -655,65 +656,57 @@ namespace sequoia::testing
       performance tests, and more, besides. The template design allows extenders to be conveniently mixed and
       matched via using declarations.
 
-      Each extender must be initialized with a reference to the test_logger held by the checker.
-      To ensure the correct order of initialization, the test_logger is inherited privately.
-
       \anchor checker_primary
    */
 
-  template<class T, test_mode Mode>
-  concept extender = (sizeof(T) == sizeof(void*)) && requires(test_logger<Mode>& logger) {
-    new T{logger};
-  };
-
-  template<test_mode Mode, extender<Mode>... Extenders>
-  class checker : private test_logger<Mode>, public Extenders...
+  template<test_mode Mode, class Extender>
+  class checker : public Extender
   {
+    friend Extender;
   public:
     constexpr static test_mode mode{Mode};
     using logger_type = test_logger<Mode>;
 
-    checker() : Extenders{logger()}... {}
+    checker() = default;
 
     checker(const checker&)            = delete;
     checker& operator=(const checker&) = delete;
 
-
     template<class T, class Advisor = null_advisor, class Self>
     bool check(this Self&& self, equality_check_t, const report& description, const T& obtained, const T& prediction, tutor<Advisor> advisor = {})
     {
-        return testing::check(equality, self.report_line(description), self.logger(), obtained, prediction, std::move(advisor));
+        return testing::check(equality, self.report_line(description), self.m_Logger, obtained, prediction, std::move(advisor));
     }
 
     template<class T, class Advisor = null_advisor, class Self>
     bool check(this Self&& self, with_best_available_check_t, const report& description, const T& obtained, const T& prediction, tutor<Advisor> advisor = {})
     {
-      return testing::check(with_best_available, self.report_line(description), self.logger(), obtained, prediction, std::move(advisor));
+      return testing::check(with_best_available, self.report_line(description), self.m_Logger, obtained, prediction, std::move(advisor));
     }
 
     template<class ValueBasedCustomizer, class T, class S, class... U, class Self>
     bool check(this Self&& self, general_equivalence_check_t<ValueBasedCustomizer> checker, const report& description, const T& obtained, S&& s, U&&... u)
     {
-      return testing::check(checker, self.report_line(description), self.logger(), obtained, std::forward<S>(s), std::forward<U>(u)...);
+      return testing::check(checker, self.report_line(description), self.m_Logger, obtained, std::forward<S>(s), std::forward<U>(u)...);
     }
 
     template<class ValueBasedCustomizer, class T, class S, class... U, class Self>
     bool check(this Self&& self, general_weak_equivalence_check_t<ValueBasedCustomizer> checker, const report& description, const T& obtained, S&& s, U&&... u)
     {
-      return testing::check(checker, self.report_line(description), self.logger(), obtained, std::forward<S>(s), std::forward<U>(u)...);
+      return testing::check(checker, self.report_line(description), self.m_Logger, obtained, std::forward<S>(s), std::forward<U>(u)...);
     }
 
     template<class Compare, class T, class Advisor = null_advisor, class Self>
       requires maybe_comparison_type<Compare, T>
     bool check(this Self&& self, Compare compare, const report& description, const T& obtained, const T& prediction, tutor<Advisor> advisor = {})
     {
-      return testing::check(std::move(compare), self.report_line(description), self.logger(), obtained, prediction, std::move(advisor));
+      return testing::check(std::move(compare), self.report_line(description), self.m_Logger, obtained, prediction, std::move(advisor));
     }
 
     template<class Advisor=null_advisor, class Self>
     bool check(this Self&& self, const report& description, const bool obtained, tutor<Advisor> advisor={})
     {
-      return testing::check(self.report_line(description), self.logger(), obtained, std::move(advisor));
+      return testing::check(self.report_line(description), self.m_Logger, obtained, std::move(advisor));
     }
 
     template
@@ -725,7 +718,7 @@ namespace sequoia::testing
     >
     bool check_exception_thrown(this Self&& self, const report& description, Fn&& function, Postprocessor postprocessor={})
     {
-      return testing::check_exception_thrown<E>(self.report_line(description), self.logger(), std::forward<Fn>(function), std::move(postprocessor));
+      return testing::check_exception_thrown<E>(self.report_line(description), self.m_Logger, std::forward<Fn>(function), std::move(postprocessor));
     }
 
     template
@@ -746,7 +739,7 @@ namespace sequoia::testing
                PredictionSentinel predictionLast,
                tutor<Advisor> advisor={})
     {
-      return testing::check(equality, self.report_line(description), self.logger(), first, last, predictionFirst, predictionLast, std::move(advisor));
+      return testing::check(equality, self.report_line(description), self.m_Logger, first, last, predictionFirst, predictionLast, std::move(advisor));
     }
 
     template
@@ -769,94 +762,71 @@ namespace sequoia::testing
                PredictionSentinel predictionLast,
                tutor<Advisor> advisor={})
     {
-      return testing::check(std::move(compare), self.report_line(description), self.logger(), first, last, predictionFirst, predictionLast, std::move(advisor));
+      return testing::check(std::move(compare), self.report_line(description), self.m_Logger, first, last, predictionFirst, predictionLast, std::move(advisor));
     }
 
     template<class Stream>
     friend Stream& operator<<(Stream& os, const checker& c)
     {
-      os << c.logger();
+      os << c.m_Logger;
       return os;
     }
 
     [[nodiscard]]
     log_summary summary(std::string_view prefix, const log_summary::duration delta) const
     {
-      return log_summary{prefix, logger(), delta};
+      return log_summary{prefix, m_Logger, delta};
     }
 
-    void reset_results() noexcept { logger().reset_results(); }
+    void reset_results() noexcept { m_Logger.reset_results(); }
 
     [[nodiscard]]
     bool has_critical_failures() const noexcept
     {
-      return logger().results().critical_failures > 0;
+      return m_Logger.results().critical_failures > 0;
     }
   protected:
-    checker(checker&& other) noexcept
-      : logger_type{static_cast<logger_type&&>(other)}
-      , Extenders{logger()}...
-    {}
+    checker(checker&& other) noexcept = default;
 
-    checker& operator=(checker&& other) noexcept
-    {
-      if(&other != this)
-      {
-        static_cast<logger_type&>(*this) = static_cast<logger_type&&>(other);
-        // The only state the Extenders possess is a handle to the logger,
-        // which should not be reset.
-      }
-
-      return *this;
-    }
+    checker& operator=(checker&& other) noexcept = default;
 
     ~checker() = default;
 
     [[nodiscard]]
-    std::size_t checks() const noexcept { return logger().checks(); }
+    std::size_t checks() const noexcept { return m_Logger.checks(); }
 
     [[nodiscard]]
-    std::size_t failures() const noexcept { return logger().failures(); }
+    std::size_t failures() const noexcept { return m_Logger.failures(); }
 
     [[nodiscard]]
     const uncaught_exception_info& exceptions_detected_by_sentinel() const noexcept
     {
-      return logger().exceptions_detected_by_sentinel();
+      return m_Logger.exceptions_detected_by_sentinel();
     }
 
     [[nodiscard]]
     sentinel<Mode> make_sentinel(std::string message)
     {
-      return {logger(), std::move(message)};
+      return {m_Logger, std::move(message)};
     }
 
     [[nodiscard]]
     std::string_view top_level_message() const
     {
-      return logger().top_level_message();
+      return m_Logger.top_level_message();
     }
 
     [[nodiscard]]
     const failure_output& failure_messages() const noexcept
     {
-      return logger().results().failure_messages;
+      return m_Logger.results().failure_messages;
     }
 
     void recovery(active_recovery_files files)
     {
-      test_logger<Mode>::recovery(std::move(files));
+      m_Logger.recovery(std::move(files));
     }
   private:
-    [[nodiscard]]
-    test_logger<Mode>& logger() noexcept
-    {
-      return *this;
-    }
-
-    [[nodiscard]]
-    const test_logger<Mode>& logger() const noexcept
-    {
-      return *this;
-    }
+    test_logger<Mode> m_Logger;
   };
 }

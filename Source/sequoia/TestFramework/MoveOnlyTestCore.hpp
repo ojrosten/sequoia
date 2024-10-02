@@ -36,25 +36,19 @@ namespace sequoia::testing
   public:
     constexpr static test_mode mode{Mode};
 
-    explicit move_only_extender(test_logger<Mode>& logger) : m_pLogger{&logger} {}
-
-    move_only_extender(const move_only_extender&) = delete;
-    move_only_extender(move_only_extender&&)      = delete;
-
-    move_only_extender& operator=(const move_only_extender&) = delete;
-    move_only_extender& operator=(move_only_extender&&)      = delete;
+    move_only_extender() = default;
 
     /// Preconditions: x!=y; x==xClone, y==yClone
     template<class Self, moveonly T>
     void check_semantics(this Self&& self, const report& description, T&& x, T&& y, const T& xClone, const T& yClone, const T& movedFrom)
     {
-      testing::check_semantics(move_only_message(self.report_line(description)), self.get_logger(), std::move(x), std::move(y), xClone, yClone, opt_moved_from_ref<T>{movedFrom});
+      testing::check_semantics(move_only_message(self.report_line(description)), self.m_Logger, std::move(x), std::move(y), xClone, yClone, opt_moved_from_ref<T>{movedFrom});
     }
 
     template<class Self, moveonly T>
     void check_semantics(this Self&& self, const report& description, T&& x, T&& y, const T& xClone, const T& yClone)
     {
-      testing::check_semantics(move_only_message(self.report_line(description)), self.get_logger(), std::move(x), std::move(y), xClone, yClone, opt_moved_from_ref<T>{});
+      testing::check_semantics(move_only_message(self.report_line(description)), self.m_Logger, std::move(x), std::move(y), xClone, yClone, opt_moved_from_ref<T>{});
     }
 
     template
@@ -86,14 +80,14 @@ namespace sequoia::testing
       requires std::totally_ordered<T>
     void check_semantics(this Self&& self, const report& description, T&& x, T&& y, const T& xClone, const T& yClone, const T& movedFrom, std::weak_ordering order)
     {
-      testing::check_semantics(move_only_message(self.report_line(description)), self.get_logger(), std::move(x), std::move(y), xClone, yClone, opt_moved_from_ref<T>{movedFrom}, order);
+      testing::check_semantics(move_only_message(self.report_line(description)), self.m_Logger, std::move(x), std::move(y), xClone, yClone, opt_moved_from_ref<T>{movedFrom}, order);
     }
 
     template<class Self, moveonly T>
       requires std::totally_ordered<T>
     void check_semantics(this Self&& self, const report& description, T&& x, T&& y, const T& xClone, const T& yClone, std::weak_ordering order)
     {
-      testing::check_semantics(move_only_message(self.report_line(description)), self.get_logger(), std::move(x), std::move(y), xClone, yClone, opt_moved_from_ref<T>{}, order);
+      testing::check_semantics(move_only_message(self.report_line(description)), self.m_Logger, std::move(x), std::move(y), xClone, yClone, opt_moved_from_ref<T>{}, order);
     }
 
     template
@@ -124,11 +118,6 @@ namespace sequoia::testing
 
   protected:
     ~move_only_extender() = default;
-
-    [[nodiscard]]
-    test_logger<Mode>& get_logger() noexcept { return *m_pLogger; }
-  private:
-    test_logger<Mode>* m_pLogger;
   };
 
   template<test_mode mode>

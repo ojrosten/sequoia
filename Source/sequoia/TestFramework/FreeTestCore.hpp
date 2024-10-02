@@ -134,11 +134,11 @@ namespace sequoia::testing
       \anchor basic_test_primary
    */
 
-  template<test_mode Mode, extender<Mode>... Extenders>
-  class basic_test : public test_base, public checker<Mode, Extenders...>
+  template<test_mode Mode, class Extender>
+  class basic_test : public test_base, public checker<Mode, Extender>
   {
   public:
-    using checker_type = checker<Mode, Extenders...>;
+    using checker_type = checker<Mode, Extender>;
     constexpr static test_mode mode{Mode};
 
     using test_base::test_base;
@@ -190,8 +190,18 @@ namespace sequoia::testing
         }
     && std::derived_from<T, test_base> && !std::is_abstract_v<T> && std::movable<T>;
 
+
+  /*! \brief Temporary workaround while waiting for variadic friends */
+  class trivial_extender
+  {
+  public:
+    trivial_extender() = default;
+  protected:
+    ~trivial_extender() = default;
+  };
+
   template<test_mode Mode>
-  using basic_free_test = basic_test<Mode>;
+  using basic_free_test = basic_test<Mode, trivial_extender>;
 
   /*! \anchor free_test_alias */
   using free_test                = basic_free_test<test_mode::standard>;

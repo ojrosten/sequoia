@@ -29,19 +29,13 @@ namespace sequoia::testing
   public:
     constexpr static test_mode mode{Mode};
 
-    explicit regular_allocation_extender(test_logger<Mode>& logger) : m_pLogger{&logger} {}
-
-    regular_allocation_extender(const regular_allocation_extender&) = delete;
-    regular_allocation_extender(regular_allocation_extender&&)      = delete;
-
-    regular_allocation_extender& operator=(const regular_allocation_extender&) = delete;
-    regular_allocation_extender& operator=(regular_allocation_extender&&)      = delete;
+    regular_allocation_extender() = default;
 
     template<class Self, pseudoregular T, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
       requires (!std::totally_ordered<T> && (sizeof...(Getters) > 0))
     void check_semantics(this Self&& self, const report& description, const T& x, const T& y, Mutator m, allocation_info<T, Getters>... info)
     {
-      testing::check_semantics(append_lines(self.report_line(description), emphasise("Regular Semantics")), self.get_logger(), x, y, m, info...);
+      testing::check_semantics(append_lines(self.report_line(description), emphasise("Regular Semantics")), self.m_Logger, x, y, m, info...);
     }
 
     template
@@ -56,14 +50,14 @@ namespace sequoia::testing
       requires (!std::totally_ordered<T> && (sizeof...(Getters) > 0))
     std::pair<T, T> check_semantics(this Self&& self, const report& description, xMaker xFn, yMaker yFn, Mutator m, allocation_info<T, Getters>... info)
     {
-      return testing::check_semantics(append_lines(self.report_line(description), emphasise("Regular Semantics")), self.get_logger(), std::move(xFn), std::move(yFn), m, info...);
+      return testing::check_semantics(append_lines(self.report_line(description), emphasise("Regular Semantics")), self.m_Logger, std::move(xFn), std::move(yFn), m, info...);
     }
 
     template<class Self, pseudoregular T, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
       requires (std::totally_ordered<T> && (sizeof...(Getters) > 0))
     void check_semantics(this Self&& self, const report& description, const T& x, const T& y, std::weak_ordering order, Mutator m, allocation_info<T, Getters>... info)
     {
-      testing::check_semantics(append_lines(self.report_line(description), emphasise("Ordered Semantics")), self.get_logger(), x, y, order, m, info...);
+      testing::check_semantics(append_lines(self.report_line(description), emphasise("Ordered Semantics")), self.m_Logger, x, y, order, m, info...);
     }
 
     template
@@ -78,15 +72,10 @@ namespace sequoia::testing
       requires (std::totally_ordered<T> && (sizeof...(Getters) > 0))
     std::pair<T, T> check_semantics(this Self&& self, const report& description, xMaker xFn, yMaker yFn, std::weak_ordering order, Mutator m, allocation_info<T, Getters>... info)
     {
-      return testing::check_semantics(append_lines(self.report_line(description), emphasise("Ordered Semantics")), self.get_logger(), std::move(xFn), std::move(yFn), order, m, info...);
+      return testing::check_semantics(append_lines(self.report_line(description), emphasise("Ordered Semantics")), self.m_Logger, std::move(xFn), std::move(yFn), order, m, info...);
     }
   protected:
     ~regular_allocation_extender() = default;
-
-    [[nodiscard]]
-    test_logger<Mode>& get_logger() noexcept { return *m_pLogger; }
-  private:
-    test_logger<Mode>* m_pLogger;
   };
 
   template<class Test, test_mode Mode>

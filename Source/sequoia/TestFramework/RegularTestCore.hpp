@@ -33,20 +33,14 @@ namespace sequoia::testing
   public:
     constexpr static test_mode mode{Mode};
 
-    explicit regular_extender(test_logger<Mode>& logger) : m_pLogger{&logger} {}
-
-    regular_extender(const regular_extender&) = delete;
-    regular_extender(regular_extender&&)      = delete;
-
-    regular_extender& operator=(const regular_extender&) = delete;
-    regular_extender& operator=(regular_extender&&)      = delete;
+    regular_extender() = default;
 
     /// Precondition: x!=y
     template<class Self, pseudoregular T>
       requires (!std::totally_ordered<T>)
     void check_semantics(this Self&& self, const report& description, const T& x, const T& y)
     {
-      testing::check_semantics(regular_message(self.report_line(description)), self.get_logger(), x, y);
+      testing::check_semantics(regular_message(self.report_line(description)), self.m_Logger, x, y);
     }
 
     /// Precondition: x!=y, with values consistent with order
@@ -54,14 +48,14 @@ namespace sequoia::testing
       requires std::totally_ordered<T>
     void check_semantics(this Self&& self, const report& description, const T& x, const T& y, std::weak_ordering order)
     {
-      testing::check_semantics(regular_message(self.report_line(description)), self.get_logger(), x, y, order);
+      testing::check_semantics(regular_message(self.report_line(description)), self.m_Logger, x, y, order);
     }
 
     /// Precondition: x!=y
     template<class Self, pseudoregular T, std::invocable<T&> Mutator>
     void check_semantics(this Self&& self, const report& description, const T& x, const T& y, Mutator m)
     {
-      testing::check_semantics(regular_message(self.report_line(description)), self.get_logger(), x, y, std::move(m));
+      testing::check_semantics(regular_message(self.report_line(description)), self.m_Logger, x, y, std::move(m));
     }
 
     /// Precondition: x!=y, with values consistent with order
@@ -69,15 +63,10 @@ namespace sequoia::testing
       requires std::totally_ordered<T>
     void check_semantics(this Self&& self, const report& description, const T& x, const T& y, std::weak_ordering order, Mutator m)
     {
-      testing::check_semantics(regular_message(self.report_line(description)), self.get_logger(), x, y, order, std::move(m));
+      testing::check_semantics(regular_message(self.report_line(description)), self.m_Logger, x, y, order, std::move(m));
     }
   protected:
     ~regular_extender() = default;
-
-    [[nodiscard]]
-    test_logger<Mode>& get_logger() noexcept { return *m_pLogger; }
-  private:
-    test_logger<Mode>* m_pLogger;
   };
 
   template<test_mode mode>
