@@ -34,7 +34,7 @@ namespace sequoia::testing
 
   void bucketed_sequence_allocation_test::run_tests()
   {
-    do_allocation_tests(*this);
+    do_allocation_tests();
   }
 
 

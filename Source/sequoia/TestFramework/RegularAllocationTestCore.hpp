@@ -76,14 +76,9 @@ namespace sequoia::testing
     }
   protected:
     ~regular_allocation_extender() = default;
-  };
 
-  template<class Test, test_mode Mode>
-  concept reg_alloc_test =
-       std::derived_from<Test, basic_test<Mode, regular_allocation_extender<Mode>>>
-    && !std::is_abstract_v<Test>
-    && requires{
-         std::declval<Test>().template test_allocation<true, true, true>();
+    regular_allocation_extender(regular_allocation_extender&&)            noexcept = default;
+    regular_allocation_extender& operator=(regular_allocation_extender&&) noexcept = default;
   };
 
   /*!  \brief Templated on the test_mode, this forms the basis of all allocation tests for regular types.
@@ -97,7 +92,7 @@ namespace sequoia::testing
 
        Within the derived class, a call
 
-       do_allocation_tests(*this);
+       do_allocation_tests();
 
        will ensure that all checks defined in the test_allocation function template are executed
        for each combination of the allocation propagation flags.
@@ -110,23 +105,23 @@ namespace sequoia::testing
   public:
     using basic_test<Mode, regular_allocation_extender<Mode>>::basic_test;
 
-    basic_regular_allocation_test(const basic_regular_allocation_test&) = delete;
-    basic_regular_allocation_test& operator=(const basic_regular_allocation_test&) = delete;
   protected:
+    ~basic_regular_allocation_test() = default;
+
     basic_regular_allocation_test(basic_regular_allocation_test&&)            noexcept = default;
     basic_regular_allocation_test& operator=(basic_regular_allocation_test&&) noexcept = default;
 
-    template<reg_alloc_test<Mode> Test>
-    static void do_allocation_tests(Test& test)
+    template<class Self>
+    void do_allocation_tests(this Self&& self)
     {
-      test.template test_allocation<false, false, false>();
-      test.template test_allocation<false, false, true>();
-      test.template test_allocation<false, true, false>();
-      test.template test_allocation<false, true, true>();
-      test.template test_allocation<true, false, false>();
-      test.template test_allocation<true, false, true>();
-      test.template test_allocation<true, true, false>();
-      test.template test_allocation<true, true, true>();
+      self.template test_allocation<false, false, false>();
+      self.template test_allocation<false, false, true>();
+      self.template test_allocation<false, true, false>();
+      self.template test_allocation<false, true, true>();
+      self.template test_allocation<true, false, false>();
+      self.template test_allocation<true, false, true>();
+      self.template test_allocation<true, true, false>();
+      self.template test_allocation<true, true, true>();
     }
   };
 

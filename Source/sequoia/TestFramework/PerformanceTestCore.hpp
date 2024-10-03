@@ -245,6 +245,9 @@ namespace sequoia::testing
     }
   protected:
     ~performance_extender() = default;
+
+    performance_extender(performance_extender&&)            noexcept = default;
+    performance_extender& operator=(performance_extender&&) noexcept = default;
   };
 
   [[nodiscard]]
@@ -261,6 +264,11 @@ namespace sequoia::testing
 
     [[nodiscard]]
     log_summary summarize(duration delta) const;
+  protected:
+    ~basic_performance_test() = default;
+
+    basic_performance_test(basic_performance_test&&)            noexcept = default;
+    basic_performance_test& operator=(basic_performance_test&&) noexcept = default;
   };
 
   /*! \anchor performance_test_alias */

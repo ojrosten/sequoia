@@ -22,7 +22,7 @@ namespace sequoia::testing
 
   void move_only_allocation_false_positive_diagnostics::run_tests()
   {
-    do_allocation_tests(*this);
+    do_allocation_tests();
   }
 
   template<bool PropagateMove, bool PropagateSwap>
@@ -178,7 +178,7 @@ namespace sequoia::testing
 
   void move_only_allocation_false_negative_diagnostics::run_tests()
   {
-    do_allocation_tests(*this);
+    do_allocation_tests();
   }
 
   template<bool PropagateMove, bool PropagateSwap>

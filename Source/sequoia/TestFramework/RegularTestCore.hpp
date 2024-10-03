@@ -67,6 +67,9 @@ namespace sequoia::testing
     }
   protected:
     ~regular_extender() = default;
+
+    regular_extender(regular_extender&&)            noexcept = default;
+    regular_extender& operator=(regular_extender&&) noexcept = default;
   };
 
   template<test_mode mode>

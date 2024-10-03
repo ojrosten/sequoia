@@ -42,6 +42,9 @@ namespace sequoia::testing
     }
   protected:
     ~graph_init_extender() = default;
+
+    graph_init_extender(graph_init_extender&&)            noexcept = default;
+    graph_init_extender& operator=(graph_init_extender&&) noexcept = default;
   };
 
   template<test_mode Mode>

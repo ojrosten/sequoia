@@ -188,7 +188,7 @@ namespace sequoia::testing
           { test.source_file() } -> std::convertible_to<std::filesystem::path>;
           { test.reset_results() };
         }
-    && std::derived_from<T, test_base> && !std::is_abstract_v<T> && std::movable<T>;
+    && std::derived_from<T, test_base> && std::movable<T> && std::destructible<T>;
 
 
   /*! \brief Temporary workaround while waiting for variadic friends */
@@ -198,6 +198,9 @@ namespace sequoia::testing
     trivial_extender() = default;
   protected:
     ~trivial_extender() = default;
+
+    trivial_extender(trivial_extender&&)            noexcept = default;
+    trivial_extender& operator=(trivial_extender&&) noexcept = default;
   };
 
   template<test_mode Mode>

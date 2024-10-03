@@ -32,7 +32,7 @@ namespace sequoia::testing
 
   void scoped_allocation_false_negative_diagnostics_mixed::run_tests()
   {
-    do_allocation_tests(*this);
+    do_allocation_tests();
   }
 
   template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>

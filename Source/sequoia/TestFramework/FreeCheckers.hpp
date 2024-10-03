@@ -786,9 +786,8 @@ namespace sequoia::testing
       return m_Logger.results().critical_failures > 0;
     }
   protected:
-    checker(checker&& other) noexcept = default;
-
-    checker& operator=(checker&& other) noexcept = default;
+    checker(checker&&)            noexcept = default;
+    checker& operator=(checker&&) noexcept = default;
 
     ~checker() = default;
 

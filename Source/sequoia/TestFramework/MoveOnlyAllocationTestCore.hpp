@@ -121,16 +121,10 @@ namespace sequoia::testing
     }
   protected:
     ~move_only_allocation_extender() = default;
-  };
 
-  template<class Test, test_mode Mode>
-  concept move_only_alloc_test =
-       std::derived_from<Test, basic_test<Mode, move_only_allocation_extender<Mode>>>
-    && !std::is_abstract_v<Test>
-    && requires{
-         std::declval<Test>().template test_allocation<true, true>();
+    move_only_allocation_extender(move_only_allocation_extender&&)            noexcept = default;
+    move_only_allocation_extender& operator=(move_only_allocation_extender&&) noexcept = default;
   };
-
 
   /*!  \brief Templated on the test_mode, this forms the basis of all allocation tests for move-only types.
 
@@ -143,7 +137,7 @@ namespace sequoia::testing
 
        Within the derived class, a call
 
-       do_allocation_tests(*this);
+       do_allocation_tests();
 
        will ensure that all checks defined in the test_allocation function template are executed
        for each combination of the allocation propagation flags.
@@ -157,19 +151,21 @@ namespace sequoia::testing
   public:
     using basic_test<Mode, move_only_allocation_extender<Mode>>::basic_test;
 
-    basic_move_only_allocation_test(const basic_move_only_allocation_test&) = delete;
+    basic_move_only_allocation_test(const basic_move_only_allocation_test&)            = delete;
     basic_move_only_allocation_test& operator=(const basic_move_only_allocation_test&) = delete;
   protected:
-    basic_move_only_allocation_test(basic_move_only_allocation_test&&)           noexcept = default;
+    basic_move_only_allocation_test(basic_move_only_allocation_test&&)            noexcept = default;
     basic_move_only_allocation_test& operator=(basic_move_only_allocation_test&&) noexcept = default;
 
-    template<move_only_alloc_test<Mode> Test>
-    static void do_allocation_tests(Test& test)
+    ~basic_move_only_allocation_test() = default;
+
+    template<class Self>
+    void do_allocation_tests(this Self&& self)
     {
-      test.template test_allocation<false, false>();
-      test.template test_allocation<false, true>();
-      test.template test_allocation<true, false>();
-      test.template test_allocation<true, true>();
+      self.template test_allocation<false, false>();
+      self.template test_allocation<false, true>();
+      self.template test_allocation<true, false>();
+      self.template test_allocation<true, true>();
     }
   };
 

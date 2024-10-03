@@ -22,7 +22,7 @@ namespace sequoia::testing
 
   void node_storage_allocation_test::run_tests()
   {
-    do_allocation_tests(*this);
+    do_allocation_tests();
   }
 
   template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>

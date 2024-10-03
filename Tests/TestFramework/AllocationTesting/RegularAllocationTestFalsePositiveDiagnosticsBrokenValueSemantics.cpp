@@ -24,7 +24,7 @@ namespace sequoia::testing
 
   void allocation_false_positive_diagnostics_broken_value_semantics::run_tests()
   {
-    do_allocation_tests(*this);
+    do_allocation_tests();
   }
 
   template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>

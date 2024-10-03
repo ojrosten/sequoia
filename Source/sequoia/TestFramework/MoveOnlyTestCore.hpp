@@ -118,6 +118,9 @@ namespace sequoia::testing
 
   protected:
     ~move_only_extender() = default;
+
+    move_only_extender(move_only_extender&&)            noexcept = default;
+    move_only_extender& operator=(move_only_extender&&) noexcept = default;
   };
 
   template<test_mode mode>
