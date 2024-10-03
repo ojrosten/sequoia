@@ -257,7 +257,7 @@ namespace sequoia::testing
     using base_type = basic_test<Mode, performance_extender<Mode>>;
     using duration  = typename base_type::duration;
 
-    using base_type::basic_test;
+    using base_type::base_type;
 
     [[nodiscard]]
     log_summary summarize(duration delta) const;
