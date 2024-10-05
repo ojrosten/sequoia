@@ -74,7 +74,8 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a>  </div>
+<a href="#nested-classes">Classes</a> &#124;
+<a href="#enum-members">Enumerations</a>  </div>
   <div class="headertitle"><div class="title">StateTransitionUtilities.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
@@ -92,14 +93,21 @@ $(function() {
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/da2/structsequoia_1_1testing_1_1transition__info__base.html">sequoia::testing::transition_info_base&lt; T, TransitionFn &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d8e/structsequoia_1_1testing_1_1transition__info.html">sequoia::testing::transition_info&lt; T, TransitionFn &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d8e/structsequoia_1_1testing_1_1transition__info.html">sequoia::testing::transition_info&lt; T, TransitionFn, check_ordering &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/db8/structsequoia_1_1testing_1_1transition__info_3_01T_00_01TransitionFn_01_4.html">sequoia::testing::transition_info&lt; T, TransitionFn &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d06/structsequoia_1_1testing_1_1transition__info_3_01T_00_01TransitionFn_00_01check__ordering_1_1yes_01_4.html">sequoia::testing::transition_info&lt; T, TransitionFn, check_ordering::yes &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/dcf/classsequoia_1_1testing_1_1object__generator.html">sequoia::testing::object_generator&lt; T &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d5a/structsequoia_1_1testing_1_1transition__checker.html">sequoia::testing::transition_checker&lt; T &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d5a/structsequoia_1_1testing_1_1transition__checker.html">sequoia::testing::transition_checker&lt; T, CheckOrdering &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:a9668603a132adf56a4685d3fdc709b4a"><td class="memItemLeft" align="right" valign="top"><a id="a9668603a132adf56a4685d3fdc709b4a" name="a9668603a132adf56a4685d3fdc709b4a"></a>enum class &#160;</td><td class="memItemRight" valign="bottom"><b>check_ordering</b> : bool { <b>no</b>
+, <b>yes</b>
+ }</td></tr>
+<tr class="separator:a9668603a132adf56a4685d3fdc709b4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Facility to define tests via a graph comprising states of an object and transitions between them. </p>

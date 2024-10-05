@@ -253,6 +253,8 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string_view postprocess(std::string_view testOutput, std::string_view referenceOutput);
 
+  /*!\brief class template from which all concrete tests should derive */
+
   template<test_mode Mode>
   class basic_performance_test : public basic_test<Mode, performance_extender<Mode>>
   {

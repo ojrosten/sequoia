@@ -22,9 +22,17 @@ var searchData=
   ['relational_5ffalse_5fnegative_5fdiagnostics_19',['relational_false_negative_diagnostics',['../dd/d50/classsequoia_1_1testing_1_1relational__false__negative__diagnostics.html',1,'sequoia::testing']]],
   ['relational_5ffalse_5fpositive_5fdiagnostics_20',['relational_false_positive_diagnostics',['../da/d4f/classsequoia_1_1testing_1_1relational__false__positive__diagnostics.html',1,'sequoia::testing']]],
   ['replacement_21',['replacement',['../da/dd8/structsequoia_1_1replacement.html',1,'sequoia']]],
-  ['resolve_5fto_5fcopy_22',['resolve_to_copy',['../dc/d48/structsequoia_1_1resolve__to__copy.html',1,'sequoia']]],
-  ['resource_5fbinder_23',['resource_binder',['../de/d91/classsequoia_1_1testing_1_1resource__binder.html',1,'sequoia::testing']]],
-  ['results_5faccumulator_24',['results_accumulator',['../d4/da8/classsequoia_1_1maths_1_1results__accumulator.html',1,'sequoia::maths']]],
-  ['results_5faccumulator_3c_20concurrency_3a_3aserial_3c_20r_20_3e_20_3e_25',['results_accumulator&lt; concurrency::serial&lt; R &gt; &gt;',['../da/d5f/classsequoia_1_1maths_1_1results__accumulator_3_01concurrency_1_1serial_3_01R_01_4_01_4.html',1,'sequoia::maths']]],
-  ['results_5faccumulator_3c_20concurrency_3a_3aserial_3c_20void_20_3e_20_3e_26',['results_accumulator&lt; concurrency::serial&lt; void &gt; &gt;',['../df/d13/classsequoia_1_1maths_1_1results__accumulator_3_01concurrency_1_1serial_3_01void_01_4_01_4.html',1,'sequoia::maths']]]
+  ['report_22',['report',['../de/d58/classsequoia_1_1testing_1_1report.html',1,'sequoia::testing']]],
+  ['resolve_5fto_5fcopy_23',['resolve_to_copy',['../dc/d48/structsequoia_1_1resolve__to__copy.html',1,'sequoia']]],
+  ['resource_5fbinder_24',['resource_binder',['../de/d91/classsequoia_1_1testing_1_1resource__binder.html',1,'sequoia::testing']]],
+  ['results_5faccumulator_25',['results_accumulator',['../d4/da8/classsequoia_1_1maths_1_1results__accumulator.html',1,'sequoia::maths']]],
+  ['results_5faccumulator_3c_20concurrency_3a_3aserial_3c_20r_20_3e_20_3e_26',['results_accumulator&lt; concurrency::serial&lt; R &gt; &gt;',['../da/d5f/classsequoia_1_1maths_1_1results__accumulator_3_01concurrency_1_1serial_3_01R_01_4_01_4.html',1,'sequoia::maths']]],
+  ['results_5faccumulator_3c_20concurrency_3a_3aserial_3c_20void_20_3e_20_3e_27',['results_accumulator&lt; concurrency::serial&lt; void &gt; &gt;',['../df/d13/classsequoia_1_1maths_1_1results__accumulator_3_01concurrency_1_1serial_3_01void_01_4_01_4.html',1,'sequoia::maths']]],
+  ['reverse_5fsequence_28',['reverse_sequence',['../df/dc4/structsequoia_1_1reverse__sequence.html',1,'sequoia']]],
+  ['reverse_5fsequence_3c_20std_3a_3aindex_5fsequence_3c_20i_20_3e_20_3e_29',['reverse_sequence&lt; std::index_sequence&lt; I &gt; &gt;',['../d0/d3b/structsequoia_1_1reverse__sequence_3_01std_1_1index__sequence_3_01I_01_4_01_4.html',1,'sequoia']]],
+  ['reverse_5fsequence_3c_20std_3a_3aindex_5fsequence_3c_20i_2c_20is_2e_2e_2e_20_3e_20_3e_30',['reverse_sequence&lt; std::index_sequence&lt; I, Is... &gt; &gt;',['../dc/ddc/structsequoia_1_1reverse__sequence_3_01std_1_1index__sequence_3_01I_00_01Is_8_8_8_01_4_01_4.html',1,'sequoia']]],
+  ['reverse_5fsequence_3c_20std_3a_3aindex_5fsequence_3c_3e_20_3e_31',['reverse_sequence&lt; std::index_sequence&lt;&gt; &gt;',['../d8/dd1/structsequoia_1_1reverse__sequence_3_01std_1_1index__sequence_3_4_01_4.html',1,'sequoia']]],
+  ['rotate_5fsequence_32',['rotate_sequence',['../d9/d23/structsequoia_1_1rotate__sequence.html',1,'sequoia']]],
+  ['rotate_5fsequence_3c_20std_3a_3aindex_5fsequence_3c_20i_2c_20is_2e_2e_2e_20_3e_20_3e_33',['rotate_sequence&lt; std::index_sequence&lt; I, Is... &gt; &gt;',['../d3/d75/structsequoia_1_1rotate__sequence_3_01std_1_1index__sequence_3_01I_00_01Is_8_8_8_01_4_01_4.html',1,'sequoia']]],
+  ['rotate_5fsequence_3c_20std_3a_3aindex_5fsequence_3c_3e_20_3e_34',['rotate_sequence&lt; std::index_sequence&lt;&gt; &gt;',['../d3/d08/structsequoia_1_1rotate__sequence_3_01std_1_1index__sequence_3_4_01_4.html',1,'sequoia']]]
 ];

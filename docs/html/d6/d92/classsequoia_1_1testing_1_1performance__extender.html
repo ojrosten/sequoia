@@ -76,6 +76,7 @@ $(function() {
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-attribs">Static Public Attributes</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="../../de/d47/classsequoia_1_1testing_1_1performance__extender-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">sequoia::testing::performance_extender&lt; Mode &gt; Class Template Reference</div></div>
 </div><!--header-->
@@ -85,34 +86,37 @@ $(function() {
  <a href="../../d6/d92/classsequoia_1_1testing_1_1performance__extender.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="../../d9/d44/PerformanceTestCore_8hpp_source.html">PerformanceTestCore.hpp</a>&gt;</code></p>
+<div class="dynheader">
+Inheritance diagram for sequoia::testing::performance_extender&lt; Mode &gt;:</div>
+<div class="dyncontent">
+ <div class="center">
+  <img src="../../d6/d92/classsequoia_1_1testing_1_1performance__extender.png" usemap="#sequoia::testing::performance_5Fextender_3C_20Mode_20_3E_map" alt=""/>
+  <map id="sequoia::testing::performance_5Fextender_3C_20Mode_20_3E_map" name="sequoia::testing::performance_5Fextender_3C_20Mode_20_3E_map">
+<area href="../../d7/de5/classsequoia_1_1testing_1_1checker.html" alt="sequoia::testing::checker&lt; Mode, performance_extender&lt; Mode &gt; &gt;" shape="rect" coords="0,56,398,80"/>
+  </map>
+</div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a0a24e812c58bfdc07feabfcc469f3dd0"><td class="memItemLeft" align="right" valign="top"><a id="a0a24e812c58bfdc07feabfcc469f3dd0" name="a0a24e812c58bfdc07feabfcc469f3dd0"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>performance_extender</b> (<a class="el" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger</a>&lt; Mode &gt; &amp;logger)</td></tr>
-<tr class="separator:a0a24e812c58bfdc07feabfcc469f3dd0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaefbf5288796399096138fdc897f11e1"><td class="memItemLeft" align="right" valign="top"><a id="aaefbf5288796399096138fdc897f11e1" name="aaefbf5288796399096138fdc897f11e1"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>performance_extender</b> (const <a class="el" href="../../d6/d92/classsequoia_1_1testing_1_1performance__extender.html">performance_extender</a> &amp;)=delete</td></tr>
-<tr class="separator:aaefbf5288796399096138fdc897f11e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1efeb1c77f6021b85e15ba5145c604b0"><td class="memItemLeft" align="right" valign="top"><a id="a1efeb1c77f6021b85e15ba5145c604b0" name="a1efeb1c77f6021b85e15ba5145c604b0"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>performance_extender</b> (<a class="el" href="../../d6/d92/classsequoia_1_1testing_1_1performance__extender.html">performance_extender</a> &amp;&amp;)=delete</td></tr>
-<tr class="separator:a1efeb1c77f6021b85e15ba5145c604b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a498c30465bbe37088624c0fdc7aaafd9"><td class="memItemLeft" align="right" valign="top"><a id="a498c30465bbe37088624c0fdc7aaafd9" name="a498c30465bbe37088624c0fdc7aaafd9"></a>
-<a class="el" href="../../d6/d92/classsequoia_1_1testing_1_1performance__extender.html">performance_extender</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="../../d6/d92/classsequoia_1_1testing_1_1performance__extender.html">performance_extender</a> &amp;)=delete</td></tr>
-<tr class="separator:a498c30465bbe37088624c0fdc7aaafd9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaebc021408d3e9a7f5c9fed1538ab2a5"><td class="memItemLeft" align="right" valign="top"><a id="aaebc021408d3e9a7f5c9fed1538ab2a5" name="aaebc021408d3e9a7f5c9fed1538ab2a5"></a>
-<a class="el" href="../../d6/d92/classsequoia_1_1testing_1_1performance__extender.html">performance_extender</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="../../d6/d92/classsequoia_1_1testing_1_1performance__extender.html">performance_extender</a> &amp;&amp;)=delete</td></tr>
-<tr class="separator:aaebc021408d3e9a7f5c9fed1538ab2a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a35d6888f2ebb16b27cce488d357b946a"><td class="memTemplParams" colspan="2"><a id="a35d6888f2ebb16b27cce488d357b946a" name="a35d6888f2ebb16b27cce488d357b946a"></a>
-template&lt;std::invocable F, std::invocable S&gt; </td></tr>
-<tr class="memitem:a35d6888f2ebb16b27cce488d357b946a"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_relative_performance</b> (std::string_view description, F fast, S slow, const double minSpeedUp, const double maxSpeedUp, const std::size_t trials=5, const double num_sds=4)</td></tr>
-<tr class="separator:a35d6888f2ebb16b27cce488d357b946a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2418b5bdf8bf5b8903548d855bed54d0"><td class="memTemplParams" colspan="2"><a id="a2418b5bdf8bf5b8903548d855bed54d0" name="a2418b5bdf8bf5b8903548d855bed54d0"></a>
+template&lt;class Self , std::invocable F, std::invocable S&gt; </td></tr>
+<tr class="memitem:a2418b5bdf8bf5b8903548d855bed54d0"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_relative_performance</b> (this Self &amp;&amp;self, const <a class="el" href="../../de/d58/classsequoia_1_1testing_1_1report.html">report</a> &amp;description, F fast, S slow, const double minSpeedUp, const double maxSpeedUp, const std::size_t trials=5, const double num_sds=4)</td></tr>
+<tr class="separator:a2418b5bdf8bf5b8903548d855bed54d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
 <tr class="memitem:aa6dcc8a6a771b2e28881adb7cb053e23"><td class="memItemLeft" align="right" valign="top"><a id="aa6dcc8a6a771b2e28881adb7cb053e23" name="aa6dcc8a6a771b2e28881adb7cb053e23"></a>
 static constexpr <a class="el" href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a>&#160;</td><td class="memItemRight" valign="bottom"><b>mode</b> {Mode}</td></tr>
 <tr class="separator:aa6dcc8a6a771b2e28881adb7cb053e23"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr class="memitem:afe0745c445a50963788ee8f1fd7c2bc0"><td class="memItemLeft" align="right" valign="top"><a id="afe0745c445a50963788ee8f1fd7c2bc0" name="afe0745c445a50963788ee8f1fd7c2bc0"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>performance_extender</b> (<a class="el" href="../../d6/d92/classsequoia_1_1testing_1_1performance__extender.html">performance_extender</a> &amp;&amp;) noexcept=default</td></tr>
+<tr class="separator:afe0745c445a50963788ee8f1fd7c2bc0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa5dd1f70e4d2f38e1f01c539baad9dcf"><td class="memItemLeft" align="right" valign="top"><a id="aa5dd1f70e4d2f38e1f01c539baad9dcf" name="aa5dd1f70e4d2f38e1f01c539baad9dcf"></a>
+<a class="el" href="../../d6/d92/classsequoia_1_1testing_1_1performance__extender.html">performance_extender</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="../../d6/d92/classsequoia_1_1testing_1_1performance__extender.html">performance_extender</a> &amp;&amp;) noexcept=default</td></tr>
+<tr class="separator:aa5dd1f70e4d2f38e1f01c539baad9dcf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;<a class="el" href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> Mode&gt;<br />

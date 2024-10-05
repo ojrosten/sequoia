@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.6"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: C:/Users/olive/sequoia/Tests/Experimental/TypeList.hpp File Reference</title>
+<title>Sequoia: C:/Users/olive/sequoia/Source/sequoia/Core/Meta/TypeList.hpp File Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -69,48 +69,87 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="../../dir_33c78a012c8d08979f57a54a07694c46.html">Tests</a></li><li class="navelem"><a class="el" href="../../dir_218ff280d376658f7cb25519f84214f0.html">Experimental</a></li>  </ul>
+<li class="navelem"><a class="el" href="../../dir_74389ed8173ad57b461b9d623a1f3867.html">Source</a></li><li class="navelem"><a class="el" href="../../dir_2cc7e707cf7d8b577b4d17c7cb9b6739.html">sequoia</a></li><li class="navelem"><a class="el" href="../../dir_af73bbb9d00c4493f0602a21eb50c280.html">Core</a></li><li class="navelem"><a class="el" href="../../dir_d242eded1b34242407d7a75872b82979.html">Meta</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#typedef-members">Typedefs</a>  </div>
+<a href="#typedef-members">Typedefs</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle"><div class="title">TypeList.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
+<p>type_list and various associated operations  
+<a href="#details">More...</a></p>
+<div class="textblock"><code>#include &lt;tuple&gt;</code><br />
+<code>#include &lt;variant&gt;</code><br />
+</div>
 <p><a href="../../dd/d90/TypeList_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d3c/structsequoia_1_1testing_1_1type__list_3_01T_00_01Ts_8_8_8_01_4.html">sequoia::testing::type_list&lt; T, Ts... &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/de8/structsequoia_1_1type__list.html">sequoia::type_list&lt; Ts &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d34/structsequoia_1_1testing_1_1type__list_3_4.html">sequoia::testing::type_list&lt;&gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/db2/structsequoia_1_1is__type__list.html">sequoia::is_type_list&lt; T &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/da6/structsequoia_1_1testing_1_1head__of.html">sequoia::testing::head_of&lt; Ts &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Primary template for finding the head of either a variadic list of a <a class="el" href="../../dc/d4e/structsequoia_1_1testing_1_1type__list.html" title="Primary template for mapping a parameter pack to a type.">type_list</a>.  <a href="../../d0/da6/structsequoia_1_1testing_1_1head__of.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d11/structsequoia_1_1is__type__list_3_01type__list_3_01Ts_8_8_8_01_4_01_4.html">sequoia::is_type_list&lt; type_list&lt; Ts... &gt; &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d55/structsequoia_1_1testing_1_1head__of_3_01type__list_3_01Ts_8_8_8_01_4_01_4.html">sequoia::testing::head_of&lt; type_list&lt; Ts... &gt; &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/dee/structsequoia_1_1build__faithful__type__list_3_4.html">sequoia::build_faithful_type_list&lt;&gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/dcc/structsequoia_1_1testing_1_1tail__of.html">sequoia::testing::tail_of&lt; Ts &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Primary template for finding the tail of either a variadic list of a <a class="el" href="../../dc/d4e/structsequoia_1_1testing_1_1type__list.html" title="Primary template for mapping a parameter pack to a type.">type_list</a>.  <a href="../../d5/dcc/structsequoia_1_1testing_1_1tail__of.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d35/structsequoia_1_1build__faithful__type__list_3_01T_01_4.html">sequoia::build_faithful_type_list&lt; T &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d80/structsequoia_1_1testing_1_1tail__of_3_01type__list_3_01Ts_8_8_8_01_4_01_4.html">sequoia::testing::tail_of&lt; type_list&lt; Ts... &gt; &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/dfa/structsequoia_1_1build__faithful__type__list_3_01type__list_3_01Ts_8_8_8_01_4_00_01T_01_4.html">sequoia::build_faithful_type_list&lt; type_list&lt; Ts... &gt;, T &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d2c/structsequoia_1_1build__faithful__type__list_3_01type__list_3_01Ts_8_8_8_01_4_00_01T_00_01Us_8_8_8_01_4.html">sequoia::build_faithful_type_list&lt; type_list&lt; Ts... &gt;, T, Us... &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d01/structsequoia_1_1build__faithful__type__list_3_01T_00_01Ts_8_8_8_01_4.html">sequoia::build_faithful_type_list&lt; T, Ts... &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/de0/structsequoia_1_1type__list__union_3_01type__list_3_01Ts_8_8_8_01_4_01_4.html">sequoia::type_list_union&lt; type_list&lt; Ts... &gt; &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d34/structsequoia_1_1type__list__union_3_01type__list_3_01Ts_8_8_8_01_4_00_01type__list_3_01Us_8_8_8_01_4_01_4.html">sequoia::type_list_union&lt; type_list&lt; Ts... &gt;, type_list&lt; Us... &gt; &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d4d/structsequoia_1_1type__list__union_3_01type__list_3_01Ts_8_8_8_01_4_00_01type__list_3_01Us_8_8_8_01_4_00_01Vs_8_8_8_01_4.html">sequoia::type_list_union&lt; type_list&lt; Ts... &gt;, type_list&lt; Us... &gt;, Vs... &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d79/structsequoia_1_1to__variant_3_01type__list_3_01Ts_8_8_8_01_4_01_4.html">sequoia::to_variant&lt; type_list&lt; Ts... &gt; &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d45/structsequoia_1_1to__tuple_3_01type__list_3_01Ts_8_8_8_01_4_01_4.html">sequoia::to_tuple&lt; type_list&lt; Ts... &gt; &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:af26ed30b13467e84e51aa7f94a876a8c"><td class="memTemplParams" colspan="2"><a id="af26ed30b13467e84e51aa7f94a876a8c" name="af26ed30b13467e84e51aa7f94a876a8c"></a>
+<tr class="memitem:ga717b30963a22a358305c0e556e984000"><td class="memTemplParams" colspan="2">
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:ga717b30963a22a358305c0e556e984000"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::is_type_list_t</b> = typename is_type_list&lt; T &gt;::type</td></tr>
+<tr class="separator:ga717b30963a22a358305c0e556e984000"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga20b2bdc2571a4e2105269afa55788ace"><td class="memTemplParams" colspan="2">
 template&lt;class... Ts&gt; </td></tr>
-<tr class="memitem:af26ed30b13467e84e51aa7f94a876a8c"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::head_of_t</b> = typename head_of&lt; Ts... &gt;::type</td></tr>
-<tr class="separator:af26ed30b13467e84e51aa7f94a876a8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a08fcf745b0131ecbfda8f75467ae4f02"><td class="memTemplParams" colspan="2"><a id="a08fcf745b0131ecbfda8f75467ae4f02" name="a08fcf745b0131ecbfda8f75467ae4f02"></a>
+<tr class="memitem:ga20b2bdc2571a4e2105269afa55788ace"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::faithful_type_list</b> = typename build_faithful_type_list&lt; Ts... &gt;::type</td></tr>
+<tr class="separator:ga20b2bdc2571a4e2105269afa55788ace"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9247a27296febcd71d6d0887bbb2caaa"><td class="memTemplParams" colspan="2">
 template&lt;class... Ts&gt; </td></tr>
-<tr class="memitem:a08fcf745b0131ecbfda8f75467ae4f02"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::tail_of_t</b> = typename tail_of&lt; Ts... &gt;::type</td></tr>
-<tr class="separator:a08fcf745b0131ecbfda8f75467ae4f02"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9247a27296febcd71d6d0887bbb2caaa"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::type_list_union_t</b> = typename type_list_union&lt; Ts... &gt;::type</td></tr>
+<tr class="separator:ga9247a27296febcd71d6d0887bbb2caaa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga95b4bb30fa39e127c59ea228bf596f25"><td class="memTemplParams" colspan="2">
+template&lt;class... Ts&gt; </td></tr>
+<tr class="memitem:ga95b4bb30fa39e127c59ea228bf596f25"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::to_variant_t</b> = typename to_variant&lt; Ts... &gt;::type</td></tr>
+<tr class="separator:ga95b4bb30fa39e127c59ea228bf596f25"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga137e33de247377539eabadaa62f4e4b4"><td class="memTemplParams" colspan="2">
+template&lt;class... Ts&gt; </td></tr>
+<tr class="memitem:ga137e33de247377539eabadaa62f4e4b4"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::to_tuple_t</b> = typename to_tuple&lt; Ts... &gt;::type</td></tr>
+<tr class="separator:ga137e33de247377539eabadaa62f4e4b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:ga5a6d87b32693cb253cb5b64ac275aa78"><td class="memTemplParams" colspan="2">
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:ga5a6d87b32693cb253cb5b64ac275aa78"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::is_type_list_v</b> = is_type_list&lt;T&gt;::value</td></tr>
+<tr class="separator:ga5a6d87b32693cb253cb5b64ac275aa78"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-</div><!-- contents -->
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>type_list and various associated operations </p>
+</div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.6
