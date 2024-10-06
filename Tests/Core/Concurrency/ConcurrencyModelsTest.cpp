@@ -98,7 +98,7 @@ namespace sequoia::testing
 
     auto fut{model.push([]() -> R { throw std::runtime_error{"Error!"}; })};
 
-    check_exception_thrown<std::runtime_error>(report(message), [&fut]() { return fut.get(); });
+    check_exception_thrown<std::runtime_error>(message, [&fut]() { return fut.get(); });
   }
 
   template<class ThreadModel, class... Args>
@@ -111,12 +111,12 @@ namespace sequoia::testing
     {
       int x{};
       auto fut{model.push([&x](){ return ++x; })};
-      check(equality, report(message), fut.get(), 1);
+      check(equality, message, fut.get(), 1);
     }
     else
     {
       auto fut{model.push([](){ return 42; })};
-      check(equality, report(message), fut.get(), 42);
+      check(equality, message, fut.get(), 42);
     }
   }
 

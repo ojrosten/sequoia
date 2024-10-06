@@ -266,7 +266,7 @@ namespace sequoia::testing
     using value_type = typename std::iterator_traits<Iter>::value_type;
     using deref_pol = typename CustomIter::dereference_policy_type;
 
-    if(!check(equality, report(append_lines(message, "Contract violated")), distance(begin, end), ptrdiff_t{3}))
+    if(!check(equality, append_lines(message, "Contract violated"), distance(begin, end), ptrdiff_t{3}))
       return;
 
     CustomIter i{begin, args...};
@@ -286,51 +286,51 @@ namespace sequoia::testing
       }(i)
     };
 
-    check(equality, report(message), *i, *begin * scale);
-    check(equality, report(message), i[0], begin[0] * scale);
-    check(equality, report(message), i[1], begin[1] * scale);
-    check(equality, report(message), i[2], begin[2] * scale);
+    check(equality, message, *i, *begin * scale);
+    check(equality, message, i[0], begin[0] * scale);
+    check(equality, message, i[1], begin[1] * scale);
+    check(equality, message, i[2], begin[2] * scale);
 
     if constexpr(requires (CustomIter i) { i.operator->(); })
     {
-      check(equality, report(append_lines(message, "Operator ->")), i.operator->(), pBegin);
+      check(equality, append_lines(message, "Operator ->"), i.operator->(), pBegin);
     }
 
     CustomIter j{end, args...};
-    check_semantics(report(append_lines(message, "Regular semantics; one iterator at end")), i, j, std::weak_ordering::less);
+    check_semantics(append_lines(message, "Regular semantics; one iterator at end"), i, j, std::weak_ordering::less);
 
-    check(report(message), i < j);
-    check(report(message), j > i);
-    check(report(message), i <= j);
-    check(report(message), j >= i);
-    check(equality, report(append_lines(message, "Check non-zero distance")), distance(i, j), distance(begin, end));
+    check(message, i < j);
+    check(message, j > i);
+    check(message, i <= j);
+    check(message, j >= i);
+    check(equality, append_lines(message, "Check non-zero distance"), distance(i, j), distance(begin, end));
 
-    check(equality, report(message), *++i, begin[1] * scale);
-    check(equality, report(message), *i++, begin[1] * scale);
-    check(equality, report(message), *i, begin[2] * scale);
-    check(report(message), ++i == j);
-    check(report(message), i <= j);
-    check(report(message), j >= i);
+    check(equality, message, *++i, begin[1] * scale);
+    check(equality, message, *i++, begin[1] * scale);
+    check(equality, message, *i, begin[2] * scale);
+    check(message, ++i == j);
+    check(message, i <= j);
+    check(message, j >= i);
 
-    check(equality, report(message), *--i, begin[2] * scale);
-    check(equality, report(message), *i--, begin[2] * scale);
-    check(equality, report(message), *i, begin[1] * scale);
+    check(equality, message, *--i, begin[2] * scale);
+    check(equality, message, *i--, begin[2] * scale);
+    check(equality, message, *i, begin[1] * scale);
 
     j = i - 1;
-    check(equality, report(message), *i, begin[1] * scale);
-    check(equality, report(message), *j, begin[0] * scale);
-    check_semantics(report(append_lines(message, "Regular semantics")), i, j, std::weak_ordering::greater);
+    check(equality, message, *i, begin[1] * scale);
+    check(equality, message, *j, begin[0] * scale);
+    check_semantics(append_lines(message, "Regular semantics"), i, j, std::weak_ordering::greater);
 
     i = j + 2;
-    check(equality, report(message), *i, begin[2] * scale);
+    check(equality, message, *i, begin[2] * scale);
 
     i -= 1;
-    check(equality, report(message), *i, begin[1] * scale);
+    check(equality, message, *i, begin[1] * scale);
 
     j += 1;
-    check(equality, report(message), *j, begin[1] * scale);
+    check(equality, message, *j, begin[1] * scale);
 
-    check(report(message), i == j);
-    check<int64_t>(equality, report(append_lines(message, "Check for distance of zero")), distance(i, j), 0);
+    check(message, i == j);
+    check<int64_t>(equality, append_lines(message, "Check for distance of zero"), distance(i, j), 0);
   }
 }

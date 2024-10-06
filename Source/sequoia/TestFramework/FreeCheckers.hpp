@@ -332,7 +332,7 @@ namespace sequoia::testing
     sentry.log_check();
     if(!compare(obtained, prediction))
     {
-      std::string message{failure_reporter<Compare>::report(final_message_constant<IsFinalMessage>{}, compare, obtained, prediction)};
+      std::string message{failure_reporter<Compare>::reporter(final_message_constant<IsFinalMessage>{}, compare, obtained, prediction)};
       append_advice(message, {advisor, obtained, prediction});
 
       sentry.log_failure(message);
@@ -673,38 +673,38 @@ namespace sequoia::testing
     checker& operator=(const checker&) = delete;
 
     template<class T, class Advisor = null_advisor, class Self>
-    bool check(this Self&& self, equality_check_t, const report& description, const T& obtained, const T& prediction, tutor<Advisor> advisor = {})
+    bool check(this Self&& self, equality_check_t, const reporter& description, const T& obtained, const T& prediction, tutor<Advisor> advisor = {})
     {
         return testing::check(equality, self.report_line(description), self.m_Logger, obtained, prediction, std::move(advisor));
     }
 
     template<class T, class Advisor = null_advisor, class Self>
-    bool check(this Self&& self, with_best_available_check_t, const report& description, const T& obtained, const T& prediction, tutor<Advisor> advisor = {})
+    bool check(this Self&& self, with_best_available_check_t, const reporter& description, const T& obtained, const T& prediction, tutor<Advisor> advisor = {})
     {
       return testing::check(with_best_available, self.report_line(description), self.m_Logger, obtained, prediction, std::move(advisor));
     }
 
     template<class ValueBasedCustomizer, class T, class S, class... U, class Self>
-    bool check(this Self&& self, general_equivalence_check_t<ValueBasedCustomizer> checker, const report& description, const T& obtained, S&& s, U&&... u)
+    bool check(this Self&& self, general_equivalence_check_t<ValueBasedCustomizer> checker, const reporter& description, const T& obtained, S&& s, U&&... u)
     {
       return testing::check(checker, self.report_line(description), self.m_Logger, obtained, std::forward<S>(s), std::forward<U>(u)...);
     }
 
     template<class ValueBasedCustomizer, class T, class S, class... U, class Self>
-    bool check(this Self&& self, general_weak_equivalence_check_t<ValueBasedCustomizer> checker, const report& description, const T& obtained, S&& s, U&&... u)
+    bool check(this Self&& self, general_weak_equivalence_check_t<ValueBasedCustomizer> checker, const reporter& description, const T& obtained, S&& s, U&&... u)
     {
       return testing::check(checker, self.report_line(description), self.m_Logger, obtained, std::forward<S>(s), std::forward<U>(u)...);
     }
 
     template<class Compare, class T, class Advisor = null_advisor, class Self>
       requires maybe_comparison_type<Compare, T>
-    bool check(this Self&& self, Compare compare, const report& description, const T& obtained, const T& prediction, tutor<Advisor> advisor = {})
+    bool check(this Self&& self, Compare compare, const reporter& description, const T& obtained, const T& prediction, tutor<Advisor> advisor = {})
     {
       return testing::check(std::move(compare), self.report_line(description), self.m_Logger, obtained, prediction, std::move(advisor));
     }
 
     template<class Advisor=null_advisor, class Self>
-    bool check(this Self&& self, const report& description, const bool obtained, tutor<Advisor> advisor={})
+    bool check(this Self&& self, const reporter& description, const bool obtained, tutor<Advisor> advisor={})
     {
       return testing::check(self.report_line(description), self.m_Logger, obtained, std::move(advisor));
     }
@@ -716,7 +716,7 @@ namespace sequoia::testing
       invocable_r<std::string, std::string> Postprocessor=default_exception_message_postprocessor,
       class Self
     >
-    bool check_exception_thrown(this Self&& self, const report& description, Fn&& function, Postprocessor postprocessor={})
+    bool check_exception_thrown(this Self&& self, const reporter& description, Fn&& function, Postprocessor postprocessor={})
     {
       return testing::check_exception_thrown<E>(self.report_line(description), self.m_Logger, std::forward<Fn>(function), std::move(postprocessor));
     }
@@ -732,7 +732,7 @@ namespace sequoia::testing
     >
     bool check(this Self&& self,
                equality_check_t,
-               const report& description,
+               const reporter& description,
                Iter first,
                Sentinel last,
                PredictionIter predictionFirst,
@@ -755,7 +755,7 @@ namespace sequoia::testing
       requires maybe_comparison_type<Compare, typename Iter::value_type>
     bool check(this Self&& self,
                Compare compare,
-               const report& description,
+               const reporter& description,
                Iter first,
                Sentinel last,
                PredictionIter predictionFirst,

@@ -99,7 +99,7 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    std::string report_line(const report& rep) const
+    std::string report_line(const reporter& rep) const
     {
         return rep.location() ? testing::report_line(rep.message(), m_ProjectPaths.tests().repo(), rep.location().value()) : rep.message();
     }

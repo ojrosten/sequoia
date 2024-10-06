@@ -83,7 +83,7 @@ namespace sequoia::testing
     return std::source_location::current().file_name();
   }
 
-  void dependency_analyzer_free_test::check_tests_to_run(const report& description,
+  void dependency_analyzer_free_test::check_tests_to_run(const reporter& description,
                                                          const project_paths& projPaths,
                                                          std::string_view cutoff,
                                                          const file_states& fileStates,
@@ -121,7 +121,7 @@ namespace sequoia::testing
     fs::remove(failureFile);
     fs::remove(passesFile);
 
-    check(equality, report{append_lines(description.message(), "Nothing Stale")}, tests_to_run(projPaths, cutoff), opt_test_list{test_list{}});
+    check(equality, append_lines(description.message(), "Nothing Stale"), tests_to_run(projPaths, cutoff), opt_test_list{test_list{}});
   }
 
   void dependency_analyzer_free_test::run_tests()
@@ -646,8 +646,8 @@ namespace sequoia::testing
 
   void dependency_analyzer_free_test::check_data(std::string_view description, const test_outcomes& obtained, const test_outcomes& prediction)
   {
-    check(equality, report{std::string{description}.append(": failures")}, obtained.failures, prediction.failures);
-    check(equality, report{std::string{description}.append(": passes")}, obtained.passes, prediction.passes);
+    check(equality, std::string{description}.append(": failures"), obtained.failures, prediction.failures);
+    check(equality, std::string{description}.append(": passes"), obtained.passes, prediction.passes);
   }
 
 }

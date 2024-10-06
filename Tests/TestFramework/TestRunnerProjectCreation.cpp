@@ -31,7 +31,7 @@ namespace sequoia::testing
   void test_runner_project_creation::test_exceptions()
   {
     check_exception_thrown<std::runtime_error>(
-      report{"Project name with space"},
+      reporter{"Project name with space"},
       [this]() {
         commandline_arguments args{zeroth_arg(), "init", "Oliver Jacob Rosten", (working_materials() /= "Generated Project").string(), "  "};
 
@@ -42,7 +42,7 @@ namespace sequoia::testing
       });
 
     check_exception_thrown<std::runtime_error>(
-      report{"Project name with $"},
+      reporter{"Project name with $"},
       [this]() {
         commandline_arguments args{zeroth_arg(), "init", "Oliver Jacob Rosten", (working_materials() /= "Generated$Project").string(), "  "};
 
@@ -53,7 +53,7 @@ namespace sequoia::testing
       });
 
     check_exception_thrown<std::runtime_error>(
-      report{"Project path that is not absolute"},
+      reporter{"Project path that is not absolute"},
       [this]() {
         commandline_arguments args{zeroth_arg(), "init", "Oliver Jacob Rosten", "Generated_Project", "  "};
 
@@ -64,7 +64,7 @@ namespace sequoia::testing
       });
 
     check_exception_thrown<std::runtime_error>(
-      report{"Empty project path"},
+      reporter{"Empty project path"},
       [this]() {
         commandline_arguments args{zeroth_arg(), "init", "Oliver Jacob Rosten", "", "  "};
 
@@ -75,7 +75,7 @@ namespace sequoia::testing
       });
 
     check_exception_thrown<std::runtime_error>(
-      report{"Project name clash"},
+      reporter{"Project name clash"},
       [this]() {
         commandline_arguments args{zeroth_arg(), "init", "Oliver Jacob Rosten", working_materials().string(), "  "};
 
@@ -93,7 +93,7 @@ namespace sequoia::testing
       });
 
     check_exception_thrown<std::runtime_error>(
-      report{"Illegal indent"},
+      reporter{"Illegal indent"},
       [this]() {
         commandline_arguments args{zeroth_arg(), "init", "Oliver Jacob Rosten", (working_materials() /= "GeneratedProject").string(), "  "};
 
@@ -104,7 +104,7 @@ namespace sequoia::testing
       });
 
     check_exception_thrown<std::runtime_error>(
-      report{"Illegal init indent"},
+      reporter{"Illegal init indent"},
       [this]() {
         commandline_arguments args{zeroth_arg(), "init", "Oliver Jacob Rosten", (working_materials() /= "GeneratedProject").string(), "\n"};
 

@@ -47,15 +47,15 @@ namespace sequoia::testing
     std::string message{"Check false positive: empty graph versus single node with loop"};
     if constexpr (GraphFlavour == graph_flavour::directed)
     {
-      check(equality, report(message), g, graph_type{{edge_init_t{0}}});
+      check(equality, message, g, graph_type{{edge_init_t{0}}});
     }
     else if constexpr(GraphFlavour == graph_flavour::undirected)
     {
-      check(equality, report(message), g, graph_type{{edge_init_t{0}, edge_init_t{0}}});
+      check(equality, message, g, graph_type{{edge_init_t{0}, edge_init_t{0}}});
     }
     else
     {
-      check(equality, report(message), g, graph_type{{edge_init_t{0,1}, edge_init_t{0,0}}});
+      check(equality, message, g, graph_type{{edge_init_t{0,1}, edge_init_t{0,0}}});
     }
   }
 }

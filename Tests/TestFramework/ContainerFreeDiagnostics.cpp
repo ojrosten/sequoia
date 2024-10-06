@@ -81,7 +81,7 @@ namespace sequoia::testing
     check(equality, "Empty vector check which should fail", std::vector<double>{}, std::vector<double>{1});
     check(equality, "One element vector check which should fail due to wrong value", std::vector<double>{1}, std::vector<double>{2});
     check(equality,
-         report{"Advice for one element vector check which should fail due to wrong value"},
+         reporter{"Advice for one element vector check which should fail due to wrong value"},
          std::vector<double>{1},
          std::vector<double>{2},
          tutor{[](double, double) { return "Vector element advice"; }});
@@ -97,45 +97,45 @@ namespace sequoia::testing
     check(equality, "Iterators demarcate differing elements", refs.cbegin(), refs.cend(), ans.cbegin(), ans.cbegin() + 4);
 
     check(equivalence,
-          report{"Range equivalence, where the containerized form is explicitly specialized"},
+          reporter{"Range equivalence, where the containerized form is explicitly specialized"},
           std::vector<foo>{{42}},
           std::vector<int>{41});
 
     check(equivalence,
-          report{"Advice for range equivalence, where the containerized form is explicitly specialized"},
+          reporter{"Advice for range equivalence, where the containerized form is explicitly specialized"},
           std::vector<foo>{{42}},
           std::vector<int>{41},
           tutor{bland{}});
 
     check(equivalence,
-          report{"Range equivalence, where the containerized form is not explicitly specialized"},
+          reporter{"Range equivalence, where the containerized form is not explicitly specialized"},
           std::set<foo>{{42}},
           std::set<int>{41});
 
     check(equivalence,
-          report{"Advice for range equivalence, where the containerized form is not explicitly specialized"},
+          reporter{"Advice for range equivalence, where the containerized form is not explicitly specialized"},
           std::set<foo>{{42}},
           std::set<int>{41},
           tutor{bland{}});
 
     check(weak_equivalence,
-          report{"Range weak equivalence, where the containerized form is explicitly specialized"},
+          reporter{"Range weak equivalence, where the containerized form is explicitly specialized"},
           std::vector<foo>{{42}},
           std::list<int>{41});
 
     check(weak_equivalence,
-          report{"Advice for range weak equivalence, where the containerized form is explicitly specialized"},
+          reporter{"Advice for range weak equivalence, where the containerized form is explicitly specialized"},
           std::vector<foo>{{42}},
           std::list<int>{41},
           tutor{bland{}});
 
     check(weak_equivalence,
-          report{"Range weak equivalence, where the containerized form is not explicitly specialized"},
+          reporter{"Range weak equivalence, where the containerized form is not explicitly specialized"},
           std::list<foo>{{42}},
           std::array<double, 1>{41});
 
     check(weak_equivalence,
-          report{"Advice for range weak equivalence, where the containerized form is not explicitly specialized"},
+          reporter{"Advice for range weak equivalence, where the containerized form is not explicitly specialized"},
           std::list<foo>{ {42}},
           std::array<double, 1>{41},
           tutor{bland{}});
@@ -151,7 +151,7 @@ namespace sequoia::testing
     check(weak_equivalence, "", std::vector<beast>{ {1, 2}, {3, 4}}, prediction{{1, 2}, {3, 5}});
 
     check(weak_equivalence,
-          report{""},
+          reporter{""},
           std::vector<beast>{ {1, 2}, {3, 4}},
           prediction{{1, 2}, {3, 5}},
           tutor{[](int, int) {
@@ -170,21 +170,21 @@ namespace sequoia::testing
       check(equality, "Pair for which both elements differs with advice", type{5, 7.8}, type{-5, 6.8}, tutor{bland{}});
 
       check(equivalence,
-            report{"Pair for which both elements differs via fallback"},
+            reporter{"Pair for which both elements differs via fallback"},
             type{5, 7.8},
             type{-5, 6.8});
       check(equivalence,
-           report{"Pair for which both elements differs via fallback with advice"},
+           reporter{"Pair for which both elements differs via fallback with advice"},
            type{5, 7.8},
            type{-5, 6.8},
            tutor{bland{}});
 
       check(weak_equivalence,
-            report{"Pair for which both elements differs via two fallbacks"},
+            reporter{"Pair for which both elements differs via two fallbacks"},
             type{5, 7.8},
             type{-5, 6.8});
       check(weak_equivalence,
-            report{"Pair for which both elements differs via two fallbacks with advice"},
+            reporter{"Pair for which both elements differs via two fallbacks with advice"},
             type{5, 7.8},
             type{-5, 6.8},
             tutor{bland{}});
@@ -280,13 +280,13 @@ namespace sequoia::testing
     check(equality, "Iterators demarcate identical elements", refs.cbegin(), refs.cbegin() + 3, ans.cbegin() + 1, ans.cbegin() + 4);
 
     check(equivalence,
-          report{"Advice for range equivalence, where the containerized form is explicitly specialized"},
+          reporter{"Advice for range equivalence, where the containerized form is explicitly specialized"},
           std::vector<foo>{ {42}},
           std::vector<int>{42},
           tutor{bland{}});
 
     check(equivalence,
-          report{"Advice for range equivalence, where the containerized form is not explicitly specialized"},
+          reporter{"Advice for range equivalence, where the containerized form is not explicitly specialized"},
           std::set<foo>{{42}},
           std::set<int>{42},
           tutor{bland{}});

@@ -342,39 +342,39 @@ namespace sequoia::testing
     {
       const auto[nodeDiscovery1, nodeDiscovery2, edgeDiscovery1, edgeDiscovery2]{traverse_graph<Traverser>(g, find_disconnected_t{})};
 
-      check(equivalence, report(make_message("No nodes to discover")), nodeDiscovery1, node_order{});
-      check(equivalence, report(make_message("No nodes to discover")), nodeDiscovery2, node_order{});
-      check(equivalence, report(make_message("No edges to discover")), edgeDiscovery1, edge_order{});
+      check(equivalence, make_message("No nodes to discover"), nodeDiscovery1, node_order{});
+      check(equivalence, make_message("No nodes to discover"), nodeDiscovery2, node_order{});
+      check(equivalence, make_message("No edges to discover"), edgeDiscovery1, edge_order{});
       if constexpr(undirected && !isDFS)
       {
-        check(equivalence, report(make_message("No edges to discover")), edgeDiscovery2, edge_order{});
+        check(equivalence, make_message("No edges to discover"), edgeDiscovery2, edge_order{});
       }
     }
 
-    check(equality, report(make_message("First node added")), g.add_node(), 0_sz);
+    check(equality, make_message("First node added"), g.add_node(), 0_sz);
     // 0
 
     {
       const auto[nodeDiscovery1, nodeDiscovery2, edgeDiscovery1, edgeDiscovery2]{traverse_graph<Traverser>(g, find_disconnected_t{})};
 
-      check(equivalence, report(make_message("One nodes to discover")), nodeDiscovery1, node_order{0});
-      check(equivalence, report(make_message("One nodes to discover")), nodeDiscovery2, node_order{0});
-      check(equivalence, report(make_message("No edges to discover")), edgeDiscovery1, edge_order{});
+      check(equivalence, make_message("One nodes to discover"), nodeDiscovery1, node_order{0});
+      check(equivalence, make_message("One nodes to discover"), nodeDiscovery2, node_order{0});
+      check(equivalence, make_message("No edges to discover"), edgeDiscovery1, edge_order{});
       if constexpr(undirected && !isDFS)
       {
-        check(equivalence, report(make_message("No edges to discover")), edgeDiscovery2, edge_order{});
+        check(equivalence, make_message("No edges to discover"), edgeDiscovery2, edge_order{});
       }
     }
 
-    check(equality, report(make_message("Second node added")), g.add_node(), 1_sz);
+    check(equality, "Second node added", g.add_node(), 1_sz);
     // 0 0
 
     {
       const auto[nodeDiscovery1, nodeDiscovery2, edgeDiscovery1, edgeDiscovery2]{traverse_graph<Traverser>(g, find_disconnected_t{})};
 
-      check(equivalence, report(make_message("Two nodes to discover")), nodeDiscovery1, node_order{0, 1});
-      check(equivalence, report(make_message("Two nodes to discover")), nodeDiscovery2, node_order{0, 1});
-      check(equivalence, report(make_message("No edges to discover")), edgeDiscovery1, edge_order{});
+      check(equivalence, make_message("Two nodes to discover"), nodeDiscovery1, node_order{0, 1});
+      check(equivalence, make_message("Two nodes to discover"), nodeDiscovery2, node_order{0, 1});
+      check(equivalence, make_message("No edges to discover"), edgeDiscovery1, edge_order{});
       if constexpr(undirected && !isDFS)
       {
         check(equivalence, make_message("No edges to discover"), edgeDiscovery2, edge_order{});
@@ -384,28 +384,28 @@ namespace sequoia::testing
     {
       const auto[nodeDiscovery1, nodeDiscovery2, edgeDiscovery1, edgeDiscovery2]{traverse_graph<Traverser>(g, find_disconnected_t{1})};
 
-      check(equivalence, report(make_message("Two nodes to discover in reverse")), nodeDiscovery1, node_order{1, 0});
-      check(equivalence, report(make_message("Two nodes to discover in reverse")), nodeDiscovery2, node_order{1, 0});
-      check(equivalence, report(make_message("No edges to discover")), edgeDiscovery1, edge_order{});
+      check(equivalence, make_message("Two nodes to discover in reverse"), nodeDiscovery1, node_order{1, 0});
+      check(equivalence, make_message("Two nodes to discover in reverse"), nodeDiscovery2, node_order{1, 0});
+      check(equivalence, make_message("No edges to discover"), edgeDiscovery1, edge_order{});
       if constexpr(undirected && !isDFS)
       {
-        check(equivalence, report(make_message("No edges to discover")), edgeDiscovery2, edge_order{});
+        check(equivalence, make_message("No edges to discover"), edgeDiscovery2, edge_order{});
       }
     }
 
     {
       const auto[nodeDiscovery1, nodeDiscovery2, edgeDiscovery1, edgeDiscovery2]{traverse_graph<Traverser>(g, ignore_disconnected_t{})};
 
-      check(equivalence, report(make_message("Two nodes; one to discover")), nodeDiscovery1, node_order{0});
-      check(equivalence, report(make_message("Two nodes; one to discover")), nodeDiscovery2, node_order{0});
-      check(equivalence, report(make_message("No edges to discover")), edgeDiscovery1, edge_order{});
+      check(equivalence, make_message("Two nodes; one to discover"), nodeDiscovery1, node_order{0});
+      check(equivalence, make_message("Two nodes; one to discover"), nodeDiscovery2, node_order{0});
+      check(equivalence, make_message("No edges to discover"), edgeDiscovery1, edge_order{});
       if constexpr(undirected && !isDFS)
       {
-        check(equivalence, report(make_message("No edges to discover")), edgeDiscovery2, edge_order{});
+        check(equivalence, make_message("No edges to discover"), edgeDiscovery2, edge_order{});
       }
     }
 
-    check(equality, report(make_message("Third node added")), g.add_node(), 2_sz);
+    check(equality, make_message("Third node added"), g.add_node(), 2_sz);
     g.join(0, 1);
     g.join(1, 2);
     // 0----0----0
@@ -413,12 +413,12 @@ namespace sequoia::testing
     {
       const auto[nodeDiscovery1, nodeDiscovery2, edgeDiscovery1, edgeDiscovery2]{traverse_graph<Traverser>(g, find_disconnected_t{})};
 
-      check(equivalence, report(make_message("Three nodes to discover")), nodeDiscovery1, node_order{0, 1, 2});
-      check(equivalence, report(make_message("Three nodes to discover")), nodeDiscovery2, isDFS ? node_order{2, 1, 0} : node_order{0, 1, 2});
-      check(equivalence, report(make_message("Two edges to discover")), edgeDiscovery1, edge_order{{0,0}, {1, mutualInfo && forwardIter ? 1 : 0}});
+      check(equivalence, make_message("Three nodes to discover"), nodeDiscovery1, node_order{0, 1, 2});
+      check(equivalence, make_message("Three nodes to discover"), nodeDiscovery2, isDFS ? node_order{2, 1, 0} : node_order{0, 1, 2});
+      check(equivalence, make_message("Two edges to discover"), edgeDiscovery1, edge_order{{0,0}, {1, mutualInfo && forwardIter ? 1 : 0}});
       if constexpr(undirected && !isDFS)
       {
-        check(equivalence, report(make_message("Two edges to discover")), edgeDiscovery2, isBFS  ? edge_order{{1,0}, {2,0}} : edge_order{{1, 1}, {2, 0}});
+        check(equivalence, make_message("Two edges to discover"), edgeDiscovery2, isBFS  ? edge_order{{1,0}, {2,0}} : edge_order{{1, 1}, {2, 0}});
       }
     }
 
@@ -429,19 +429,19 @@ namespace sequoia::testing
 
       if constexpr(undirected)
       {
-        check(equivalence, report(make_message("Three nodes to discover")), nodeDiscovery1, node_order{1, 0, 2});
-        check(equivalence, report(make_message("Three nodes to discover")), nodeDiscovery2, isDFS ? node_order{0, 2, 1} : node_order{1, 0, 2});
-        check(equivalence, report(make_message("Two edges to discover")), edgeDiscovery1, edge_order{{1,0}, {1, 1}});
+        check(equivalence, make_message("Three nodes to discover"), nodeDiscovery1, node_order{1, 0, 2});
+        check(equivalence, make_message("Three nodes to discover"), nodeDiscovery2, isDFS ? node_order{0, 2, 1} : node_order{1, 0, 2});
+        check(equivalence, make_message("Two edges to discover"), edgeDiscovery1, edge_order{{1,0}, {1, 1}});
         if constexpr(!isDFS)
         {
-          check(equivalence, report(make_message("Two edges to discover")), edgeDiscovery2, edge_order{{0, 0}, {2, 0}});
+          check(equivalence, make_message("Two edges to discover"), edgeDiscovery2, edge_order{{0, 0}, {2, 0}});
         }
       }
       else
       {
-        check(equivalence, report(make_message("Two nodes to discover")), nodeDiscovery1, node_order{1, 2});
-        check(equivalence, report(make_message("Two nodes to discover")), nodeDiscovery2, isDFS ? node_order{2, 1} : node_order{1, 2});
-        check(equivalence, report(make_message("One edge to discover")), edgeDiscovery1, edge_order{{1, mutualInfo && forwardIter ? 1 : 0}});
+        check(equivalence, make_message("Two nodes to discover"), nodeDiscovery1, node_order{1, 2});
+        check(equivalence, make_message("Two nodes to discover"), nodeDiscovery2, isDFS ? node_order{2, 1} : node_order{1, 2});
+        check(equivalence, make_message("One edge to discover"), edgeDiscovery1, edge_order{{1, mutualInfo && forwardIter ? 1 : 0}});
       }
     }
 
@@ -452,24 +452,24 @@ namespace sequoia::testing
 
       if constexpr(undirected)
       {
-        check(equivalence, report(make_message("Three nodes to discover")), nodeDiscovery1, node_order{2, 1, 0});
-        check(equivalence, report(make_message("Three nodes to discover")), nodeDiscovery2, isDFS ? node_order{0, 1, 2} : node_order{2, 1, 0});
-        check(equivalence, report(make_message("Two edges to discover")), edgeDiscovery1, edge_order{{2,0}, {1, forwardIter ? 0 : 1}});
+        check(equivalence, make_message("Three nodes to discover"), nodeDiscovery1, node_order{2, 1, 0});
+        check(equivalence, make_message("Three nodes to discover"), nodeDiscovery2, isDFS ? node_order{0, 1, 2} : node_order{2, 1, 0});
+        check(equivalence, make_message("Two edges to discover"), edgeDiscovery1, edge_order{{2,0}, {1, forwardIter ? 0 : 1}});
         if constexpr(!isDFS)
         {
-          check(equivalence, report(make_message("Two edges to discover")), edgeDiscovery2,
+          check(equivalence, make_message("Two edges to discover"), edgeDiscovery2,
             isBFS ? edge_order{{1, 1}, {0, 0}} : edge_order{{1, 0}, {0, 0}});
         }
       }
       else
       {
-        check(equivalence, report(make_message("One node to discover")), nodeDiscovery1, node_order{2});
-        check(equivalence, report(make_message("One node to discover")), nodeDiscovery2, node_order{2});
-        check(equivalence, report(make_message("No edges to discover")), edgeDiscovery1, edge_order{});
+        check(equivalence, make_message("One node to discover"), nodeDiscovery1, node_order{2});
+        check(equivalence, make_message("One node to discover"), nodeDiscovery2, node_order{2});
+        check(equivalence, make_message("No edges to discover"), edgeDiscovery1, edge_order{});
       }
     }
 
-    check(equality, report(make_message("Fourth node added")), g.add_node(), 3_sz);
+    check(equality, make_message("Fourth node added"), g.add_node(), 3_sz);
     g.join(2, 3);
     g.join(3, 0);
     //  0----0
@@ -506,7 +506,7 @@ namespace sequoia::testing
         edgeAnswers2 = edge_order{{1, 1}, {3, 0}, {0, 0}, {0, 1}};
       }
 
-      check(equivalence, report(messageMaker("Second edge traversal, start = " + std::to_string(start) + " ")), edgeDiscovery2, edgeAnswers2);
+      check(equivalence, messageMaker("Second edge traversal, start = " + std::to_string(start) + " "), edgeDiscovery2, edgeAnswers2);
     }
     else
     {
@@ -523,9 +523,9 @@ namespace sequoia::testing
       }
     }
 
-    check(equivalence, report(messageMaker("start = " + std::to_string(start) + " ")), nodeDiscovery1, nodeAnswers);
-    check(equivalence, report(messageMaker("start = " + std::to_string(start) + " ")), nodeDiscovery2, nodeAnswers);
-    check(equivalence, report(messageMaker("First edge traversal, start = " + std::to_string(start) + " ")), edgeDiscovery1, edgeAnswers);
+    check(equivalence, messageMaker("start = " + std::to_string(start) + " "), nodeDiscovery1, nodeAnswers);
+    check(equivalence, messageMaker("start = " + std::to_string(start) + " "), nodeDiscovery2, nodeAnswers);
+    check(equivalence, messageMaker("First edge traversal, start = " + std::to_string(start) + " "), edgeDiscovery1, edgeAnswers);
   }
 
   template<maths::dynamic_network G, class MessageMaker>
@@ -569,9 +569,9 @@ namespace sequoia::testing
       }
     }
 
-    check(equivalence, report(messageMaker("start = " + std::to_string(start) + " ")), nodeDiscovery1, nodeAnswers);
-    check(equivalence, report(messageMaker("start = " + std::to_string(start) + " ")), nodeDiscovery2, nodeAnswers2);
-    check(equivalence, report(messageMaker("Edge traversal to undiscovered node, start = " + std::to_string(start) + " ")), edgeDiscovery1, edgeAnswers);
+    check(equivalence, messageMaker("start = " + std::to_string(start) + " "), nodeDiscovery1, nodeAnswers);
+    check(equivalence, messageMaker("start = " + std::to_string(start) + " "), nodeDiscovery2, nodeAnswers2);
+    check(equivalence, messageMaker("Edge traversal to undiscovered node, start = " + std::to_string(start) + " "), edgeDiscovery1, edgeAnswers);
   }
 
   template<maths::dynamic_network G, class MessageMaker>
@@ -599,7 +599,7 @@ namespace sequoia::testing
         edgeAnswers2 = edge_order{{1, 0}, {0, 1}, {3, 0}, {3, 1}};
       }
 
-      check(equivalence, report(messageMaker("Second edge traversal, start = " + std::to_string(start) + " ")), edgeDiscovery2, edgeAnswers2);
+      check(equivalence, messageMaker("Second edge traversal, start = " + std::to_string(start) + " "), edgeDiscovery2, edgeAnswers2);
     }
     else
     {
@@ -616,9 +616,9 @@ namespace sequoia::testing
       }
     }
 
-    check(equivalence, report(messageMaker("start = " + std::to_string(start) + " ")), nodeDiscovery1, nodeAnswers);
-    check(equivalence, report(messageMaker("start = " + std::to_string(start) + " ")), nodeDiscovery2, nodeAnswers);
-    check(equivalence, report(messageMaker("First edge traversal, start = " + std::to_string(start) + " ")), edgeDiscovery1, edgeAnswers);
+    check(equivalence, messageMaker("start = " + std::to_string(start) + " "), nodeDiscovery1, nodeAnswers);
+    check(equivalence, messageMaker("start = " + std::to_string(start) + " "), nodeDiscovery2, nodeAnswers);
+    check(equivalence, messageMaker("First edge traversal, start = " + std::to_string(start) + " "), edgeDiscovery1, edgeAnswers);
   }
 
   //=============================== Priority Search  ===============================//

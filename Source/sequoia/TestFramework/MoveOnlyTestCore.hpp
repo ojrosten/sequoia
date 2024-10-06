@@ -40,13 +40,13 @@ namespace sequoia::testing
 
     /// Preconditions: x!=y; x==xClone, y==yClone
     template<class Self, moveonly T>
-    void check_semantics(this Self&& self, const report& description, T&& x, T&& y, const T& xClone, const T& yClone, const T& movedFrom)
+    void check_semantics(this Self&& self, const reporter& description, T&& x, T&& y, const T& xClone, const T& yClone, const T& movedFrom)
     {
       testing::check_semantics(move_only_message(self.report_line(description)), self.m_Logger, std::move(x), std::move(y), xClone, yClone, opt_moved_from_ref<T>{movedFrom});
     }
 
     template<class Self, moveonly T>
-    void check_semantics(this Self&& self, const report& description, T&& x, T&& y, const T& xClone, const T& yClone)
+    void check_semantics(this Self&& self, const reporter& description, T&& x, T&& y, const T& xClone, const T& yClone)
     {
       testing::check_semantics(move_only_message(self.report_line(description)), self.m_Logger, std::move(x), std::move(y), xClone, yClone, opt_moved_from_ref<T>{});
     }
@@ -58,7 +58,7 @@ namespace sequoia::testing
       moveonly T=std::invoke_result_t<xMaker>,
       invocable_r<T> yMaker
     >
-    void check_semantics(this Self&& self, const report& description, xMaker xFn, yMaker yFn, const T& movedFrom)
+    void check_semantics(this Self&& self, const reporter& description, xMaker xFn, yMaker yFn, const T& movedFrom)
     {
       self.check_semantics(description, xFn(), yFn(), xFn(), yFn(), movedFrom);
     }
@@ -70,7 +70,7 @@ namespace sequoia::testing
       moveonly T = std::invoke_result_t<xMaker>,
       invocable_r<T> yMaker
     >
-      void check_semantics(this Self&& self,const report& description, xMaker xFn, yMaker yFn)
+      void check_semantics(this Self&& self,const reporter& description, xMaker xFn, yMaker yFn)
     {
       self.check_semantics(description, xFn(), yFn(), xFn(), yFn());
     }
@@ -78,14 +78,14 @@ namespace sequoia::testing
      /// Preconditions: x!=y, with values consistent with order; x==xClone, y==yClone
     template<class Self, moveonly T>
       requires std::totally_ordered<T>
-    void check_semantics(this Self&& self, const report& description, T&& x, T&& y, const T& xClone, const T& yClone, const T& movedFrom, std::weak_ordering order)
+    void check_semantics(this Self&& self, const reporter& description, T&& x, T&& y, const T& xClone, const T& yClone, const T& movedFrom, std::weak_ordering order)
     {
       testing::check_semantics(move_only_message(self.report_line(description)), self.m_Logger, std::move(x), std::move(y), xClone, yClone, opt_moved_from_ref<T>{movedFrom}, order);
     }
 
     template<class Self, moveonly T>
       requires std::totally_ordered<T>
-    void check_semantics(this Self&& self, const report& description, T&& x, T&& y, const T& xClone, const T& yClone, std::weak_ordering order)
+    void check_semantics(this Self&& self, const reporter& description, T&& x, T&& y, const T& xClone, const T& yClone, std::weak_ordering order)
     {
       testing::check_semantics(move_only_message(self.report_line(description)), self.m_Logger, std::move(x), std::move(y), xClone, yClone, opt_moved_from_ref<T>{}, order);
     }
@@ -98,7 +98,7 @@ namespace sequoia::testing
       invocable_r<T> yMaker
     >
       requires std::totally_ordered<T>
-    void check_semantics(this Self&& self, const report& description, xMaker xFn, yMaker yFn, const T& movedFrom, std::weak_ordering order)
+    void check_semantics(this Self&& self, const reporter& description, xMaker xFn, yMaker yFn, const T& movedFrom, std::weak_ordering order)
     {
       self.check_semantics(description, xFn(), yFn(), xFn(), yFn(), movedFrom, order);
     }
@@ -111,7 +111,7 @@ namespace sequoia::testing
       invocable_r<T> yMaker
     >
       requires std::totally_ordered<T>
-    void check_semantics(this Self&& self, const report& description, xMaker xFn, yMaker yFn, std::weak_ordering order)
+    void check_semantics(this Self&& self, const reporter& description, xMaker xFn, yMaker yFn, std::weak_ordering order)
     {
       self.check_semantics(description, xFn(), yFn(), xFn(), yFn(), order);
     }

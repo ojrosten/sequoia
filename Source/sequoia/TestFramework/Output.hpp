@@ -207,28 +207,28 @@ namespace sequoia::testing
   struct no_source_location_t{};
   inline constexpr no_source_location_t no_source_location{};
 
-  class report
+  class reporter
   {
   public:
-    report(const char* message, const std::source_location loc = std::source_location::current())
-      : report{std::string{message},loc}
+    reporter(const char* message, const std::source_location loc = std::source_location::current())
+      : reporter{std::string{message},loc}
     {}
 
-    report(std::string_view message, const std::source_location loc = std::source_location::current())
-      : report{std::string{message},loc}
+    reporter(std::string_view message, const std::source_location loc = std::source_location::current())
+      : reporter{std::string{message},loc}
     {}
 
-    report(std::string message, const std::source_location loc = std::source_location::current())
+    reporter(std::string message, const std::source_location loc = std::source_location::current())
       : m_Message{std::move(message)}
       , m_Loc{loc}
     {}
 
-    report(std::string message, no_source_location_t)
+    reporter(std::string message, no_source_location_t)
       : m_Message{std::move(message)}
     {}
 
-    report(std::string_view message, no_source_location_t)
-      : report{std::string{message}, no_source_location}
+    reporter(std::string_view message, no_source_location_t)
+      : reporter{std::string{message}, no_source_location}
     {}
 
     [[nodiscard]]

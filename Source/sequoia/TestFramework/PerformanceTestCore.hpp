@@ -239,7 +239,7 @@ namespace sequoia::testing
     performance_extender() = default;
 
     template<class Self, std::invocable F, std::invocable S>
-    bool check_relative_performance(this Self&& self, const report& description, F fast, S slow, const double minSpeedUp, const double maxSpeedUp, const std::size_t trials=5, const double num_sds=4)
+    bool check_relative_performance(this Self&& self, const reporter& description, F fast, S slow, const double minSpeedUp, const double maxSpeedUp, const std::size_t trials=5, const double num_sds=4)
     {
       return testing::check_relative_performance(self.report_line(description), self.m_Logger, fast, slow, minSpeedUp, maxSpeedUp, trials, num_sds, 3);
     }
