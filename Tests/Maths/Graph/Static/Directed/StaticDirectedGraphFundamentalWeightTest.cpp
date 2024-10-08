@@ -92,7 +92,7 @@ namespace sequoia::testing
         { // begin 'graph_description::node'
           {
             graph_description::node,
-            report_line(""),
+            report(""),
             [this](graph_t g) -> graph_t {
               g.swap_nodes(0, 0);
               return g;
@@ -100,7 +100,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node,
-            report_line(""),
+            report(""),
             [this](graph_t g) -> graph_t {
               g.sort_nodes(0, 0, [](auto i, auto j){ return i < j; });
               return g;
@@ -108,7 +108,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node,
-            report_line(""),
+            report(""),
             [this](graph_t g) -> graph_t {
               g.sort_nodes(0, 1, [](auto i, auto j){ return i < j; });
               return g;
@@ -116,7 +116,7 @@ namespace sequoia::testing
           },
           {
             graph_description::nodew,
-            report_line(""),
+            report(""),
             [this](graph_t g) -> graph_t {
               check(equality, "", g.mutate_node_weight(g.cbegin_node_weights(), [](auto& w) { w += 2.1; return 42; }), 42);
               return g;
@@ -124,7 +124,7 @@ namespace sequoia::testing
           },
           {
             graph_description::nodew,
-            report_line(""),
+            report(""),
             [this](graph_t g) -> graph_t {
               g.set_node_weight(g.cbegin_node_weights(), 2.1);
               return g;
@@ -156,7 +156,7 @@ namespace sequoia::testing
       }
     };
 
-    transition_checker<graph_t>::check(report_line(""), trg, compare{*this});
+    transition_checker<graph_t>::check(report(""), trg, compare{*this});
   }
 
   template<class EdgeWeight, class NodeWeight>
@@ -176,7 +176,7 @@ namespace sequoia::testing
         { // begin 'graph_description::node_0'
           {
             graph_description::node_0x,
-            report_line(""),
+            report(""),
             [this](graph_t g) -> graph_t {
               check(equality, "", g.mutate_edge_weight(g.cbegin_edges(0), [](auto& w) { w += 0.2f; return 42; }), 42);
               return g;
@@ -184,7 +184,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_0x,
-            report_line(""),
+            report(""),
             [this](graph_t g) -> graph_t {
               g.set_edge_weight(g.cbegin_edges(0), 0.2f);
               return g;
@@ -246,7 +246,7 @@ namespace sequoia::testing
       trg.join(
         graph_description::node_0,
         graph_description::nodew_0,
-        report_line(""),
+        report(""),
         [this](graph_t g) -> graph_t {
           check(equality, "", g.mutate_node_weight(g.cbegin_node_weights(), [](auto& w) { w += 2.1; return 42; }), 42);
           return g;
@@ -256,7 +256,7 @@ namespace sequoia::testing
       trg.join(
         graph_description::node_0,
         graph_description::nodew_0,
-        report_line(""),
+        report(""),
         [this](graph_t g) -> graph_t {
           g.set_node_weight(g.cbegin_node_weights(), 2.1);
           return g;
@@ -264,7 +264,7 @@ namespace sequoia::testing
       );
     }
 
-    transition_checker<graph_t>::check(report_line(""), trg, compare{*this});
+    transition_checker<graph_t>::check(report(""), trg, compare{*this});
   }
 
   void static_directed_graph_fundamental_weight_test::test_node_0_0()
@@ -282,7 +282,7 @@ namespace sequoia::testing
         { // begin 'graph_description::node_0_0'
           {
             graph_description::nodew_0_0,
-            report_line(""),
+            report(""),
             [this](graph_t g) -> graph_t {
               check(equality, "", g.mutate_node_weight(g.cbegin_node_weights(), [](auto& w) { w += 2.1; return 42; }), 42);
               return g;
@@ -290,7 +290,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_0x_0,
-            report_line(""),
+            report(""),
             [this](graph_t g) -> graph_t {
               check(equality, "", g.mutate_edge_weight(g.cbegin_edges(0), [](auto& w) { w += 0.2f; return 42; }), 42);
               return g;
@@ -304,7 +304,7 @@ namespace sequoia::testing
         {  // begin 'graph_description::nodew_0x_0y'
           {
             graph_description::node_0y_0x,
-            report_line(""),
+            report(""),
             [this](graph_t g) -> graph_t {
               g.swap_edges(0, 0, 1);
               return g;
@@ -312,7 +312,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_0y_0x,
-            report_line(""),
+            report(""),
             [this](graph_t g) -> graph_t {
               g.sort_edges(g.cbegin_edges(0), g.cend_edges(0), [](const auto& lhs, const auto& rhs){ return lhs.weight() > rhs.weight(); });
               return g;
@@ -320,7 +320,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_0y_0x,
-            report_line(""),
+            report(""),
             [this](graph_t g) -> graph_t {
               g.stable_sort_edges(g.cbegin_edges(0), g.cend_edges(0), [](const auto& lhs, const auto& rhs){ return lhs.weight() > rhs.weight(); });
               return g;
@@ -330,7 +330,7 @@ namespace sequoia::testing
         {  // begin 'graph_description::nodew_0y_0x'
           {
             graph_description::node_0x_0y,
-            report_line(""),
+            report(""),
             [this](graph_t g) -> graph_t {
               g.swap_edges(0, 1, 0);
               return g;
@@ -387,7 +387,7 @@ namespace sequoia::testing
       }
     };
 
-    transition_checker<graph_t>::check(report_line(""), trg, compare{*this});
+    transition_checker<graph_t>::check(report(""), trg, compare{*this});
   }
 
   void static_directed_graph_fundamental_weight_test::test_node_node()
@@ -407,7 +407,7 @@ namespace sequoia::testing
         { // begin 'graph_description::node_node'
           {
             graph_description::nodew_node,
-            report_line(""),
+            report(""),
             [this](graph_t g) -> graph_t {
               check(equality, "", g.mutate_node_weight(g.cbegin_node_weights(), [](auto& w) { w += 2.1; return 42; }), 42);
               return g;
@@ -415,7 +415,7 @@ namespace sequoia::testing
           },
           {
             graph_description::nodew_node,
-            report_line(""),
+            report(""),
             [this](graph_t g) -> graph_t {
               g.set_node_weight(g.cbegin_node_weights(), 2.1);
               return g;
@@ -427,7 +427,7 @@ namespace sequoia::testing
         {  // begin 'graph_description::nodew_nodex'
           {
             graph_description::nodex_nodew,
-            report_line(""),
+            report(""),
             [this](graph_t g) -> graph_t {
               g.swap_nodes(0, 1);
               return g;
@@ -435,7 +435,7 @@ namespace sequoia::testing
           },
           {
             graph_description::nodex_nodew,
-            report_line(""),
+            report(""),
             [this](graph_t g) -> graph_t {
               g.sort_nodes(0, 2, [&g](auto i, auto j){ return g.begin_node_weights()[i] < g.begin_node_weights()[j]; });
               return g;
@@ -487,7 +487,7 @@ namespace sequoia::testing
       }
     };
 
-    transition_checker<graph_t>::check(report_line(""), trg, compare{*this});
+    transition_checker<graph_t>::check(report(""), trg, compare{*this});
   }
 
   void static_directed_graph_fundamental_weight_test::test_node_1_node()
@@ -509,7 +509,7 @@ namespace sequoia::testing
         { // begin 'graph_description::node_1_node'
           {
             graph_description::node_1u_node,
-            report_line(""),
+            report(""),
             [this](graph_t g) -> graph_t {
               g.set_edge_weight(g.cbegin_edges(0), 0.2f);
               return g;
@@ -519,7 +519,7 @@ namespace sequoia::testing
         {  // begin 'graph_description::node_1u_node'
           {
             graph_description::node_node_0u,
-            report_line(""),
+            report(""),
             [this](graph_t g) -> graph_t {
               g.swap_nodes(0, 1);
               return g;
@@ -529,7 +529,7 @@ namespace sequoia::testing
         {  // begin 'graph_description::node_node_0u'
           {
             graph_description::node_1u_node,
-            report_line(""),
+            report(""),
             [this](graph_t g) -> graph_t {
               g.swap_nodes(1, 0);
               return g;
@@ -537,7 +537,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_1u_node,
-            report_line(""),
+            report(""),
             [this](graph_t g) -> graph_t {
               g.sort_nodes(0, 2, [&g](auto i, auto j){ return i > j; });
               return g;
@@ -597,7 +597,7 @@ namespace sequoia::testing
       }
     };
 
-    transition_checker<graph_t>::check(report_line(""), trg, compare{*this});
+    transition_checker<graph_t>::check(report(""), trg, compare{*this});
   }
 
   void static_directed_graph_fundamental_weight_test::test_node_1_node_0()
@@ -615,7 +615,7 @@ namespace sequoia::testing
         { // begin 'graph_description::node_1_node'
           {
             graph_description::node_1u_node_0,
-            report_line(""),
+            report(""),
             [this](graph_t g) -> graph_t {
               g.set_edge_weight(g.cbegin_edges(0), 0.2f);
               return g;
@@ -623,7 +623,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_1_node_0u,
-            report_line(""),
+            report(""),
             [this](graph_t g) -> graph_t {
               g.set_edge_weight(g.cbegin_edges(1), 0.2f);
               return g;
@@ -633,7 +633,7 @@ namespace sequoia::testing
         {  // begin 'graph_description::node_1_node_0u'
           {
             graph_description::node_1u_node_0,
-            report_line(""),
+            report(""),
             [this](graph_t g) -> graph_t {
               g.swap_nodes(0, 1);
               return g;
@@ -643,7 +643,7 @@ namespace sequoia::testing
         {  // begin 'graph_description::node_1u_node_0'
           {
             graph_description::node_1_node_0u,
-            report_line(""),
+            report(""),
             [this](graph_t g) -> graph_t {
               g.swap_nodes(1, 0);
               return g;
@@ -651,7 +651,7 @@ namespace sequoia::testing
           },
           {
             graph_description::node_1_node_0u,
-            report_line(""),
+            report(""),
             [this](graph_t g) -> graph_t {
               g.sort_nodes(0, 2, [&g](auto i, auto j){ return i > j; });
               return g;
@@ -661,7 +661,7 @@ namespace sequoia::testing
         {  // begin 'graph_description::nodew_1_node_0u'
            {
             graph_description::node_1u_nodew_0,
-            report_line(""),
+            report(""),
             [this](graph_t g) -> graph_t {
               g.swap_nodes(1, 0);
               return g;
@@ -719,7 +719,7 @@ namespace sequoia::testing
       }
     };
 
-    transition_checker<graph_t>::check(report_line(""), trg, compare{*this});
+    transition_checker<graph_t>::check(report(""), trg, compare{*this});
   }
 
   void static_directed_graph_fundamental_weight_test::test_node_1_node_2_node_0()
@@ -737,7 +737,7 @@ namespace sequoia::testing
         {  // begin 'graph_description::nodew_1_nodex_2u_node_0v'
           {
             graph_description::node_2v_nodex_0u_nodew_1,
-            report_line(""),
+            report(""),
             [this](graph_t g) -> graph_t {
               g.sort_nodes(0, 3, [&g](auto i, auto j){ return g.cbegin_node_weights()[i] < g.cbegin_node_weights()[j]; });
               return g;
@@ -747,7 +747,7 @@ namespace sequoia::testing
         {  // begin 'graph_description::node_2v_nodex_0u_nodew_1'
           {
             graph_description::nodew_1_nodex_2u_node_0v,
-            report_line(""),
+            report(""),
             [this](graph_t g) -> graph_t {
               g.sort_nodes(0, 3, [&g](auto i, auto j){ return g.cbegin_node_weights()[i] > g.cbegin_node_weights()[j]; });
               return g;
@@ -776,6 +776,6 @@ namespace sequoia::testing
       }
     };
 
-    transition_checker<graph_t>::check(report_line(""), trg, compare{*this});
+    transition_checker<graph_t>::check(report(""), trg, compare{*this});
   }
 }

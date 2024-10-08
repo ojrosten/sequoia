@@ -162,7 +162,7 @@ namespace sequoia::testing
     auto runner{make_slow_suite({(minimal_fake_path()).generic_string()}, outputStream)};
     runner.execute();
 
-    auto outputFile{check_output(report_line({"Parallel Acceleration Output"}), "ParallelAccelerationOutput", outputStream)};
+    auto outputFile{check_output(report({"Parallel Acceleration Output"}), "ParallelAccelerationOutput", outputStream)};
     check(within_tolerance{35.0}, "", get_timing(outputFile), 60.0);
   }
 
@@ -173,7 +173,7 @@ namespace sequoia::testing
       auto runner{make_slow_suite({(minimal_fake_path()).generic_string(), "--thread-pool", "8"}, outputStream)};
       runner.execute();
 
-      auto outputFile{check_output(report_line({"Thread Pool (8) Acceleration Output"}), "ThreadPool8AccelerationOutput", outputStream)};
+      auto outputFile{check_output(report({"Thread Pool (8) Acceleration Output"}), "ThreadPool8AccelerationOutput", outputStream)};
       check(within_tolerance{15.0}, "", get_timing(outputFile), 40.0);
     }
 
@@ -182,7 +182,7 @@ namespace sequoia::testing
       auto runner{make_slow_suite({(minimal_fake_path()).generic_string(), "--thread-pool", "2"}, outputStream)};
       runner.execute();
 
-      auto outputFile{check_output(report_line({"Thread Pool (2) Acceleration Output"}), "ThreadPool2AccelerationOutput", outputStream)};
+      auto outputFile{check_output(report({"Thread Pool (2) Acceleration Output"}), "ThreadPool2AccelerationOutput", outputStream)};
       check(within_tolerance{25.0}, "", get_timing(outputFile), 125.0);
     }
   }
@@ -193,7 +193,7 @@ namespace sequoia::testing
     auto runner{make_slow_suite({(minimal_fake_path()).generic_string(), "--serial"}, outputStream)};
     runner.execute();
 
-    auto outputFile{check_output(report_line({"Serial Output"}), "Serial Output", outputStream)};
+    auto outputFile{check_output(report({"Serial Output"}), "Serial Output", outputStream)};
     check(within_tolerance{20.0}, "", get_timing(outputFile), 220.0);
   }
 }

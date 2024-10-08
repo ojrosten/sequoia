@@ -29,7 +29,7 @@ namespace sequoia::testing
         // begin 'empty'
         trg.join(data_description::empty,
                  data_description::empty,
-                 t.report_line(""),
+                 t.report(""),
                  [&t](data_t d) -> data_t {
                    auto i{d.erase_from_partition(d.cbegin_partition(0))};
                    t.check(equality, "Erase from non-existent partition", i, d.begin_partition(0));
@@ -39,7 +39,7 @@ namespace sequoia::testing
 
         trg.join(data_description::empty,
           data_description::empty,
-          t.report_line(""),
+          t.report(""),
           [&t](data_t d) -> data_t {
             auto i{d.erase_from_partition(d.cbegin_partition(0), d.cend_partition(0))};
             t.check(equality, "Erase range from non-existent partition", i, d.begin_partition(0));
@@ -49,7 +49,7 @@ namespace sequoia::testing
 
         trg.join(data_description::empty,
                  data_description::empty,
-                 t.report_line(""),
+                 t.report(""),
                  [&t](data_t d) -> data_t {
                    auto i{d.erase_from_partition(0, 0)};
                    t.check(equality, "Erase from non-existent partition", i, d.begin_partition(0));
@@ -59,7 +59,7 @@ namespace sequoia::testing
 
         trg.join(data_description::empty,
                  data_description::empty,
-                 t.report_line(""),
+                 t.report(""),
                  [&t](data_t d) -> data_t {
                    auto i{d.erase_from_partition(1, 0)};
                    t.check(equality, "", i, d.begin_partition(0));
@@ -69,7 +69,7 @@ namespace sequoia::testing
 
         trg.join(data_description::empty,
                  data_description::empty,
-                 t.report_line(""),
+                 t.report(""),
                  [&t](data_t d) -> data_t {
                    auto i{d.erase_from_partition(0, 1)};
                    t.check(equality, "", i, d.begin_partition(0));
@@ -79,7 +79,7 @@ namespace sequoia::testing
 
         trg.join(data_description::empty,
                  data_description::empty,
-                 t.report_line(""),
+                 t.report(""),
                  [&t](data_t d) -> data_t {
                    auto i{d.erase_from_partition(1, 1)};
                    t.check(equality, "", i, d.begin_partition(0));
@@ -89,7 +89,7 @@ namespace sequoia::testing
 
         trg.join(data_description::empty,
           data_description::empty,
-          t.report_line(""),
+          t.report(""),
           [&t](data_t d) -> data_t {
             t.check(equality, "", d.capacity(), 0_sz);
             t.check(equality, "", d.num_partitions_capacity(), 0_sz);
@@ -115,7 +115,7 @@ namespace sequoia::testing
 
         trg.join(data_description::empty_partition,
                  data_description::empty_partition,
-                 t.report_line(""),
+                 t.report(""),
                  [&t](data_t d) -> data_t {
                    auto i{d.erase_from_partition(d.cbegin_partition(1))};
                    t.check(equality, "Erase from non-existent partition", i, d.begin_partition(1));
@@ -132,7 +132,7 @@ namespace sequoia::testing
             }
         };
 
-        transition_checker<data_t>::check(t.report_line(""), trg, checker);
+        transition_checker<data_t>::check(t.report(""), trg, checker);
       }
     };
   }

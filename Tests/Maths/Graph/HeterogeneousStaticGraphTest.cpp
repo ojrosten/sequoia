@@ -120,13 +120,13 @@ namespace sequoia::testing
 
       constexpr graph_t g{{edge{1, 0, 0.5f}}, {edge{0, 0, 0.5f}}};
 
-      check_graph(report_line(""), g, {{edge{1, 0, 0.5f}}, {edge{0, 0, 0.5f}}}, std::tuple<int, double>{0, 0.0});
+      check_graph(report(""), g, {{edge{1, 0, 0.5f}}, {edge{0, 0, 0.5f}}}, std::tuple<int, double>{0, 0.0});
     }
 
     {
       constexpr auto g{make_undirected_embedded_graph()};
       using edge = typename decltype(g)::edge_init_type;
-      check_graph(report_line(""), g, {{edge{1, 0, -0.3f}}, {edge{0, 0, -0.3f}}, {}}, std::tuple<float, int, double>{9.9f, -6, 11.2});
+      check_graph(report(""), g, {{edge{1, 0, -0.3f}}, {edge{0, 0, -0.3f}}, {}}, std::tuple<float, int, double>{9.9f, -6, 11.2});
     }
   }
 
@@ -140,13 +140,13 @@ namespace sequoia::testing
 
       constexpr graph_t g{{edge{1, 0.5f}}, {}};
 
-      check_graph(report_line(""), g, {{edge{1, 0.5f}}, {}}, std::tuple<int, double>{0, 0.0});
+      check_graph(report(""), g, {{edge{1, 0.5f}}, {}}, std::tuple<int, double>{0, 0.0});
     }
 
     {
       constexpr auto g{make_directed_graph()};
       using edge = typename decltype(g)::edge_init_type;
-      check_graph(report_line(""), g, {{edge{1, -0.3f}}, {}, {}}, std::tuple<float, int, double>{9.9f, -6, 11.2});
+      check_graph(report(""), g, {{edge{1, -0.3f}}, {}, {}}, std::tuple<float, int, double>{9.9f, -6, 11.2});
     }
   }
 }

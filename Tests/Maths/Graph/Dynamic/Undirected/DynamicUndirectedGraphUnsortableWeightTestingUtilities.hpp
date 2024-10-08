@@ -99,7 +99,7 @@ namespace sequoia::testing
           }
       };
 
-      transition_checker<graph_t>::check(t.report_line(""), trg, checker);
+      transition_checker<graph_t>::check(t.report(""), trg, checker);
     }
 
     [[nodiscard]]
@@ -136,18 +136,18 @@ namespace sequoia::testing
       check_initialization_exceptions(t);
 
       // 'unsortable_weight_graph_description::nodew'
-      trg.add_node(make_and_check(t, t.report_line(""), {{}}, {{1.0, -1.0}}));
+      trg.add_node(make_and_check(t, t.report(""), {{}}, {{1.0, -1.0}}));
 
       // 'unsortable_weight_graph_description::node_0w'
-      trg.add_node(make_and_check(t, t.report_line(""), {{{0, 1.0, -1.0}, {0, 1.0, -1.0}}}, {{0.0}}));
+      trg.add_node(make_and_check(t, t.report(""), {{{0, 1.0, -1.0}, {0, 1.0, -1.0}}}, {{0.0}}));
 
       // 'unsortable_weight_graph_description::node_0w_0w'
-      trg.add_node(make_and_check(t, t.report_line(""), {{{0, 1.0, -1.0}, {0, 1.0, -1.0}, {0, 1.0, -1.0}, {0, 1.0, -1.0}}}, {{0.0}}));
+      trg.add_node(make_and_check(t, t.report(""), {{{0, 1.0, -1.0}, {0, 1.0, -1.0}, {0, 1.0, -1.0}, {0, 1.0, -1.0}}}, {{0.0}}));
 
       // 'unsortable_weight_graph_description::node_0_0w'
       trg.add_node(
         [&t](){
-          auto g{make_and_check(t, t.report_line(""), {{{0, 0.0, 0.0}, {0, 0.0, 0.0}, {0, 1.0, -1.0}, {0, 1.0, -1.0}}}, {{0.0}})};
+          auto g{make_and_check(t, t.report(""), {{{0, 0.0, 0.0}, {0, 0.0, 0.0}, {0, 1.0, -1.0}, {0, 1.0, -1.0}}}, {{0.0}})};
           t.check(equality, "Canonical ordering of weighted edges", graph_t{{{{0, 0.0, 0.0}, {0, 1.0, -1.0}, {0, 0.0, 0.0}, {0, 1.0, -1.0}}}, {{0.0}}}, g);
           return g;
         }());
@@ -155,18 +155,18 @@ namespace sequoia::testing
       // 'unsortable_weight_graph_description::node_0w_0'
       trg.add_node(
         [&t](){
-          auto g{make_and_check(t, t.report_line(""), {{{0, 1.0, -1.0}, {0, 1.0, -1.0}, {0, 0.0, 0.0}, {0, 0.0, 0.0}}}, {{0.0}})};
+          auto g{make_and_check(t, t.report(""), {{{0, 1.0, -1.0}, {0, 1.0, -1.0}, {0, 0.0, 0.0}, {0, 0.0, 0.0}}}, {{0.0}})};
           t.check(equality, "Canonical ordering of weighted edges", graph_t{{{{0, 1.0, -1.0}, {0, 0.0, 0.0}, {0, 0.0, 0.0}, {0, 1.0, -1.0}}}, {{0.0}}}, g);
           return g;
         }());
 
       // 'unsortable_weight_graph_description::node_0w_1_node_0'
-      trg.add_node(make_and_check(t, t.report_line(""), {{{0, 1.0, -1.0}, {0, 1.0, -1.0}, {1, 0.0, 0.0}}, {{0, 0.0, 0.0}}}, {{}, {}}));
+      trg.add_node(make_and_check(t, t.report(""), {{{0, 1.0, -1.0}, {0, 1.0, -1.0}, {1, 0.0, 0.0}}, {{0, 0.0, 0.0}}}, {{}, {}}));
 
       // 'unsortable_weight_graph_description::node_0_1w_node_0w'
       trg.add_node(
         [&t](){
-          auto g{make_and_check(t, t.report_line(""), {{{0, 1.0, -1.0}, {0, 1.0, -1.0}, {1, 0.0, 0.0}}, {{0, 0.0, 0.0}}}, {{}, {}})};
+          auto g{make_and_check(t, t.report(""), {{{0, 1.0, -1.0}, {0, 1.0, -1.0}, {1, 0.0, 0.0}}, {{0, 0.0, 0.0}}}, {{}, {}})};
           t.check(equality, "Canonical ordering of weighted edges", graph_t{{{{0, 1.0, -1.0}, {1, 0.0, 0.0}, {0, 1.0, -1.0}}, {{0, 0.0, 0.0}}}, {{}, {}}}, g);
           return g;
         }());
@@ -174,23 +174,23 @@ namespace sequoia::testing
       // 'unsortable_weight_graph_description::node_1_node_1w_0,'
       trg.add_node(
         [&t](){
-          auto g{make_and_check(t, t.report_line(""), {{{1, 0.0, 0.0}}, {{0, 0.0, 0.0}, {1, 1.0, -1.0}, {1, 1.0, -1.0}}}, {{}, {}})};
+          auto g{make_and_check(t, t.report(""), {{{1, 0.0, 0.0}}, {{0, 0.0, 0.0}, {1, 1.0, -1.0}, {1, 1.0, -1.0}}}, {{}, {}})};
           t.check(equality, "Canonical ordering of weighted edges", graph_t{{{{1, 0.0, 0.0}}, {{1, 1.0, -1.0}, {0, 0.0, 0.0}, {1, 1.0, -1.0}}}, {{}, {}}}, g);
           return g;
         }());
 
       // 'unsortable_weight_graph_description::node_1_1w_node_0_0w'
-      trg.add_node(make_and_check(t, t.report_line(""), {{{1, 0.0, 0.0}, {1, 1.0, -1.0}}, {{0, 0.0, 0.0}, {0, 1.0, -1.0}}}, {{}, {}}));
+      trg.add_node(make_and_check(t, t.report(""), {{{1, 0.0, 0.0}, {1, 1.0, -1.0}}, {{0, 0.0, 0.0}, {0, 1.0, -1.0}}}, {{}, {}}));
 
       // 'unsortable_weight_graph_description::node_1w_1_node_0_0w'
-      trg.add_node(make_and_check(t, t.report_line(""), {{{1, 1.0, -1.0}, {1, 0.0, 0.0}}, {{0, 0.0, 0.0}, {0, 1.0, -1.0}}}, {{}, {}}));
+      trg.add_node(make_and_check(t, t.report(""), {{{1, 1.0, -1.0}, {1, 0.0, 0.0}}, {{0, 0.0, 0.0}, {0, 1.0, -1.0}}}, {{}, {}}));
 
       // 'unsortable_weight_graph_description::node_1_1_1w_1w_node_0w_0w_0_0,'
       trg.add_node(
         [&t](){
-          auto g{make_and_check(t, t.report_line(""), {{{1, 0.0, 0.0}, {1, 0.0, 0.0}, {1, 1.0, -1.0}, {1, 1.0, -1.0}}, {{0, 1.0, -1.0}, {0, 1.0, -1.0}, {0, 0.0, 0.0}, {0, 0.0, 0.0}}}, {{}, {}})};
+          auto g{make_and_check(t, t.report(""), {{{1, 0.0, 0.0}, {1, 0.0, 0.0}, {1, 1.0, -1.0}, {1, 1.0, -1.0}}, {{0, 1.0, -1.0}, {0, 1.0, -1.0}, {0, 0.0, 0.0}, {0, 0.0, 0.0}}}, {{}, {}})};
           t.check(equality,
-                  t.report_line("Canonical ordering of weighted edges"),
+                  t.report("Canonical ordering of weighted edges"),
                   graph_t{{{{1, 0.0, 0.0}, {1, 1.0, -1.0}, {1, 1.0, -1.0}, {1, 0.0, 0.0}}, 
                            {{0, 1.0, -1.0}, {0, 0.0, 0.0}, {0, 1.0, -1.0}, {0, 0.0, 0.0}}}, {{}, {}}},
                   g);
@@ -202,12 +202,12 @@ namespace sequoia::testing
       trg.add_node(
         [&t](){
           auto g{make_and_check(t,
-                                t.report_line(""),
+                                t.report(""),
                                 {{{0, 1.0, -1.0}, {0, 1.0, -1.0}, {1, 0.0, 0.0}, {1, 0.0, 0.0}, {1, 1.0, -1.0}, {1, 1.0, -1.0}},
                                  {{0, 1.0, -1.0}, {0, 1.0, -1.0}, {0, 0.0, 0.0}, {0, 0.0, 0.0}}},
                                 {{}, {}})};
           t.check(equality,
-            t.report_line("Canonical ordering of weighted edges"),
+            t.report("Canonical ordering of weighted edges"),
             graph_t{{{{1, 0.0, 0.0}, {0, 1.0, -1.0}, {1, 1.0, -1.0}, {1, 1.0, -1.0}, {1, 0.0, 0.0}, {0, 1.0, -1.0}},
                      {{0, 1.0, -1.0}, {0, 0.0, 0.0}, {0, 1.0, -1.0}, {0, 0.0, 0.0}}}, {{}, {}}},
             g);

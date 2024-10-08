@@ -541,7 +541,7 @@ namespace sequoia::testing
                        outputStream};
 
     runner.execute();
-    check_output(report_line({"No Tests"}), "NoTests", outputStream);
+    check_output(report({"No Tests"}), "NoTests", outputStream);
 
     runner.add_test_suite(
       "Failing Suite",
@@ -551,7 +551,7 @@ namespace sequoia::testing
     );
 
     runner.execute();
-    check_output(report_line({"Basic Output"}), "BasicOutput", outputStream);
+    check_output(report({"Basic Output"}), "BasicOutput", outputStream);
   }
 
   void test_runner_test::test_verbose_output()
@@ -560,7 +560,7 @@ namespace sequoia::testing
     auto runner{make_failing_suite({(minimal_fake_path()).generic_string(), "-v"}, outputStream)};
 
     runner.execute();
-    check_output(report_line({"Basic Verbose Output"}), "BasicVerboseOutput", outputStream);
+    check_output(report({"Basic Verbose Output"}), "BasicVerboseOutput", outputStream);
   }
 
   void test_runner_test::test_serial_verbose_output()
@@ -569,7 +569,7 @@ namespace sequoia::testing
     auto runner{make_failing_suite({(minimal_fake_path()).generic_string(), "-v", "--serial"}, outputStream)};
 
     runner.execute();
-    check_output(report_line({"Basic Serial Verbose Output"}), "BasicSerialVerboseOutput", outputStream);
+    check_output(report({"Basic Serial Verbose Output"}), "BasicSerialVerboseOutput", outputStream);
   }
 
   void test_runner_test::test_filtered_suites()
@@ -597,7 +597,7 @@ namespace sequoia::testing
     );
 
     runner.execute();
-    check_output(report_line({"Filtered Suite Output"}), "FilteredSuiteOutput", outputStream);
+    check_output(report({"Filtered Suite Output"}), "FilteredSuiteOutput", outputStream);
   }
 
   void test_runner_test::test_prune_basic_output()
@@ -615,10 +615,10 @@ namespace sequoia::testing
                        outputStream};
 
     runner.execute();
-    check_output(report_line({"Prune with no stamp"}), "PruneWithNoStamp", outputStream);
+    check_output(report({"Prune with no stamp"}), "PruneWithNoStamp", outputStream);
 
     runner.execute();
-    check_output(report_line({"Prune with no tests"}), "PruneWithNoTests", outputStream);
+    check_output(report({"Prune with no tests"}), "PruneWithNoTests", outputStream);
   }
 
   void test_runner_test::test_nested_suite()
@@ -647,7 +647,7 @@ namespace sequoia::testing
       );
 
       runner.execute();
-      check_output(report_line({"Basic Nested Output"}), "BasicNestedOutput", outputStream);
+      check_output(report({"Basic Nested Output"}), "BasicNestedOutput", outputStream);
   }
 
   void test_runner_test::test_nested_suite_verbose()
@@ -676,7 +676,7 @@ namespace sequoia::testing
     );
 
     runner.execute();
-    check_output(report_line({"Verbose Nested Output"}), "VerboseNestedOutput", outputStream);
+    check_output(report({"Verbose Nested Output"}), "VerboseNestedOutput", outputStream);
   }
 
   void test_runner_test::test_instability_analysis()

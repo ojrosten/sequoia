@@ -97,7 +97,7 @@ namespace sequoia::testing
         }
       };
 
-      transition_checker<foo_t>::check(report_line(""), g, checker);
+      transition_checker<foo_t>::check(report(""), g, checker);
     }
 
     {
@@ -108,7 +108,7 @@ namespace sequoia::testing
         }
       };
 
-      transition_checker<foo_t>::check(report_line(""), g, checker);
+      transition_checker<foo_t>::check(report(""), g, checker);
     }
   }
 
@@ -140,7 +140,7 @@ namespace sequoia::testing
         }
       };
 
-      transition_checker<foo_t>::check(report_line(""), g, checker);
+      transition_checker<foo_t>::check(report(""), g, checker);
     }
 
     {
@@ -151,7 +151,7 @@ namespace sequoia::testing
         }
       };
 
-      transition_checker<foo_t>::check(report_line(""), g, checker);
+      transition_checker<foo_t>::check(report(""), g, checker);
     }
   }
 
@@ -188,7 +188,7 @@ namespace sequoia::testing
         }
     };
 
-    transition_checker<foo_t>::check(report_line("Mistake in transition functions"), g, checker);
+    transition_checker<foo_t>::check(report("Mistake in transition functions"), g, checker);
   }
 
   void move_only_state_transition_false_positive_diagnostics::test_equality_comparable()
@@ -212,6 +212,6 @@ namespace sequoia::testing
         }
     };
 
-    transition_checker<foo_t>::check(report_line("Mistake in transition functions"), g, checker);
+    transition_checker<foo_t>::check(report("Mistake in transition functions"), g, checker);
   }
 }

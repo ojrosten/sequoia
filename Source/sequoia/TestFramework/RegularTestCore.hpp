@@ -40,7 +40,7 @@ namespace sequoia::testing
       requires (!std::totally_ordered<T>)
     void check_semantics(this Self&& self, const reporter& description, const T& x, const T& y)
     {
-      testing::check_semantics(regular_message(self.report_line(description)), self.m_Logger, x, y);
+      testing::check_semantics(regular_message(self.report(description)), self.m_Logger, x, y);
     }
 
     /// Precondition: x!=y, with values consistent with order
@@ -48,14 +48,14 @@ namespace sequoia::testing
       requires std::totally_ordered<T>
     void check_semantics(this Self&& self, const reporter& description, const T& x, const T& y, std::weak_ordering order)
     {
-      testing::check_semantics(regular_message(self.report_line(description)), self.m_Logger, x, y, order);
+      testing::check_semantics(regular_message(self.report(description)), self.m_Logger, x, y, order);
     }
 
     /// Precondition: x!=y
     template<class Self, pseudoregular T, std::invocable<T&> Mutator>
     void check_semantics(this Self&& self, const reporter& description, const T& x, const T& y, Mutator m)
     {
-      testing::check_semantics(regular_message(self.report_line(description)), self.m_Logger, x, y, std::move(m));
+      testing::check_semantics(regular_message(self.report(description)), self.m_Logger, x, y, std::move(m));
     }
 
     /// Precondition: x!=y, with values consistent with order
@@ -63,7 +63,7 @@ namespace sequoia::testing
       requires std::totally_ordered<T>
     void check_semantics(this Self&& self, const reporter& description, const T& x, const T& y, std::weak_ordering order, Mutator m)
     {
-      testing::check_semantics(regular_message(self.report_line(description)), self.m_Logger, x, y, order, std::move(m));
+      testing::check_semantics(regular_message(self.report(description)), self.m_Logger, x, y, order, std::move(m));
     }
   protected:
     ~regular_extender() = default;

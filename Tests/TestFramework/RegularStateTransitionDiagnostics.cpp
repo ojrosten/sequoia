@@ -75,7 +75,7 @@ namespace sequoia::testing
         }
       };
 
-      transition_checker<double>::check(report_line(""), g, checker);
+      transition_checker<double>::check(report(""), g, checker);
     }
 
     {
@@ -87,7 +87,7 @@ namespace sequoia::testing
         }
       };
 
-      transition_checker<double>::check(report_line(""), g, checker);
+      transition_checker<double>::check(report(""), g, checker);
     }
 
     {
@@ -98,7 +98,7 @@ namespace sequoia::testing
         }
       };
 
-      transition_checker<double>::check(report_line(""), g, checker);
+      transition_checker<double>::check(report(""), g, checker);
     }
   }
 
@@ -129,7 +129,7 @@ namespace sequoia::testing
         }
       };
 
-      transition_checker<cmplx>::check(report_line(""), g, checker);
+      transition_checker<cmplx>::check(report(""), g, checker);
     }
 
     {
@@ -141,7 +141,7 @@ namespace sequoia::testing
         }
       };
 
-      transition_checker<cmplx>::check(report_line(""), g, checker);
+      transition_checker<cmplx>::check(report(""), g, checker);
     }
 
     {
@@ -152,7 +152,7 @@ namespace sequoia::testing
         }
       };
 
-      transition_checker<cmplx>::check(report_line(""), g, checker);
+      transition_checker<cmplx>::check(report(""), g, checker);
     }
   }
 
@@ -189,7 +189,7 @@ namespace sequoia::testing
         }
     };
 
-    transition_checker<double>::check(report_line("Mistake in transition functions"), g, checker);
+    transition_checker<double>::check(report("Mistake in transition functions"), g, checker);
   }
 
   void regular_state_transition_false_positive_diagnostics::test_equality_comparable()
@@ -212,7 +212,7 @@ namespace sequoia::testing
         }
     };
 
-    transition_checker<cmplx>::check(report_line("Mistake in transition functions"), g, checker);
+    transition_checker<cmplx>::check(report("Mistake in transition functions"), g, checker);
   }
 
   void regular_state_transition_false_positive_diagnostics::test_broken_constructor()
@@ -228,7 +228,7 @@ namespace sequoia::testing
 
     broken_constructor_graph g{
       {{}},
-      {{report_line(""), initCheckFn, 42}}
+      {{report(""), initCheckFn, 42}}
     };
   }
 }

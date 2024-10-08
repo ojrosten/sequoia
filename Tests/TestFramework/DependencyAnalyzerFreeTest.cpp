@@ -516,7 +516,7 @@ namespace sequoia::testing
         }
     };
 
-    transition_checker<test_outcomes>::check(report_line(""), g, checker);
+    transition_checker<test_outcomes>::check(report(""), g, checker);
   }
 
   void dependency_analyzer_free_test::test_instability_analysis_prune_upate(const project_paths& projPaths)
@@ -641,7 +641,7 @@ namespace sequoia::testing
         }
     };
 
-    transition_checker<test_outcomes>::check(report_line(""), g, checker);
+    transition_checker<test_outcomes>::check(report(""), g, checker);
   }
 
   void dependency_analyzer_free_test::check_data(std::string_view description, const test_outcomes& obtained, const test_outcomes& prediction)

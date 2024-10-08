@@ -71,7 +71,7 @@ namespace sequoia::testing
           }
       };
 
-      transition_checker<graph_t>::check(t.report_line(""), trg, checker);
+      transition_checker<graph_t>::check(t.report(""), trg, checker);
     }
 
     [[nodiscard]]
@@ -108,7 +108,7 @@ namespace sequoia::testing
           {  // begin 'meta_data_graph_description::node'
             {
               meta_data_graph_description::node_0a_0b,
-              t.report_line("Add loop"),
+              t.report("Add loop"),
               [](graph_t g) -> graph_t {
                 g.join(0, 0, 0.0f, 0.5f);
                 return g;
@@ -116,7 +116,7 @@ namespace sequoia::testing
             },
             {
               meta_data_graph_description::node_0b_0a,
-              t.report_line("Add loop"),
+              t.report("Add loop"),
               [](graph_t g) -> graph_t {
                 g.join(0, 0, 0.5f, 0.0f);
                 return g;
@@ -126,7 +126,7 @@ namespace sequoia::testing
           {  // begin 'meta_data_graph_description::node_0a_0a'
             {
               meta_data_graph_description::node_0b_0a,
-              t.report_line("Set edge meta data"),
+              t.report("Set edge meta data"),
               [](graph_t g) -> graph_t {
                 g.set_edge_meta_data(g.cbegin_edges(0), 0.5f);
                 return g;
@@ -134,7 +134,7 @@ namespace sequoia::testing
             },
             {
               meta_data_graph_description::node_0b_0a,
-              t.report_line("Set edge meta data"),
+              t.report("Set edge meta data"),
               [](graph_t g) -> graph_t {
                 g.set_edge_meta_data(g.cbegin_edges(0), meta_data_t{0.5f});
                 return g;
@@ -142,7 +142,7 @@ namespace sequoia::testing
             },
             {
               meta_data_graph_description::node_0b_0a,
-              t.report_line("Mutate edge meta data"),
+              t.report("Mutate edge meta data"),
               [&t](graph_t g) -> graph_t {
                 t.check(equality, "Mutate return value", g.mutate_edge_meta_data(g.cbegin_edges(0), [](meta_data_t& m) { m += 0.5f; return 42; }), 42);
                 return g;
@@ -150,7 +150,7 @@ namespace sequoia::testing
             },
             {
               meta_data_graph_description::node_0a_0b,
-              t.report_line("Set meta data via reverse iterator"),
+              t.report("Set meta data via reverse iterator"),
               [](graph_t g) -> graph_t {
                 g.set_edge_meta_data(g.crbegin_edges(0), 0.5f);
                 return g;
@@ -158,7 +158,7 @@ namespace sequoia::testing
             },
             {
               meta_data_graph_description::node_0a_0b,
-              t.report_line("Mutate edge meta data via reverse iterator"),
+              t.report("Mutate edge meta data via reverse iterator"),
               [&t](graph_t g) -> graph_t {
                 t.check(equality, "Mutate return value", g.mutate_edge_meta_data(g.crbegin_edges(0), [](meta_data_t& m) { m += 0.5f; return 42; }), 42);
                 return g;
@@ -172,19 +172,19 @@ namespace sequoia::testing
         },
         {
           //  'empty'
-          make_and_check(t, t.report_line(""), {}),
+          make_and_check(t, t.report(""), {}),
 
           //  'node'
-          make_and_check(t, t.report_line(""), {{}}),
+          make_and_check(t, t.report(""), {{}}),
 
           // 'node_0a_0a
-          make_and_check(t, t.report_line(""), {{{0, 0.0f}, {0, 0.0f}}}),
+          make_and_check(t, t.report(""), {{{0, 0.0f}, {0, 0.0f}}}),
 
           // 'node_0a_0b
-          make_and_check(t, t.report_line(""), {{{0, 0.0f}, {0, 0.5f}}}),
+          make_and_check(t, t.report(""), {{{0, 0.0f}, {0, 0.5f}}}),
 
           // 'node_0b_0a
-          make_and_check(t, t.report_line(""), {{{0, 0.5f}, {0, 0.0f}}}),
+          make_and_check(t, t.report(""), {{{0, 0.5f}, {0, 0.0f}}}),
         }
       };
     }
