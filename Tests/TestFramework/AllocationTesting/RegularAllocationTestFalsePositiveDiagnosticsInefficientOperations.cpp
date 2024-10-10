@@ -24,7 +24,7 @@ namespace sequoia::testing
 
   void allocation_false_positive_diagnostics_inefficient_operations::run_tests()
   {
-    do_allocation_tests(*this);
+    do_allocation_tests();
   }
 
   template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
@@ -46,7 +46,7 @@ namespace sequoia::testing
           [](const beast& b){ return b.x.get_allocator(); }
         };
 
-        check_semantics(report_line("Inefficient equality"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {1_anp,1_awp}}});
+        check_semantics("Inefficient equality", beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {1_anp,1_awp}}});
       }
 
       {
@@ -57,7 +57,7 @@ namespace sequoia::testing
           [](const beast& b){ return b.x.get_allocator(); }
         };
 
-        check_semantics(report_line("Inefficient inequality"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {1_anp,1_awp}}});
+        check_semantics("Inefficient inequality", beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {1_anp,1_awp}}});
       }
 
       {
@@ -75,8 +75,8 @@ namespace sequoia::testing
           }
         };
 
-        check_semantics(report_line("Inefficient copy"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator2, allocation_info{allocGetter, {2_c, {3_c,1_mu,1_pc,1_pm}, {1_anp,1_awp}}});
-        check_semantics(report_line("Inefficient copy"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator2, allocation_info{allocGetter, {3_c, {2_c,1_mu,1_pc,1_pm}, {1_anp,1_awp}}});
+        check_semantics("Inefficient copy", beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator2, allocation_info{allocGetter, {2_c, {3_c,1_mu,1_pc,1_pm}, {1_anp,1_awp}}});
+        check_semantics("Inefficient copy", beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator2, allocation_info{allocGetter, {3_c, {2_c,1_mu,1_pc,1_pm}, {1_anp,1_awp}}});
       }
 
       {
@@ -87,7 +87,7 @@ namespace sequoia::testing
           [](const beast& b){ return b.x.get_allocator(); }
         };
 
-        check_semantics(report_line("Inefficient move"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {1_anp,1_awp}}});
+        check_semantics("Inefficient move", beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {1_anp,1_awp}}});
       }
 
       {
@@ -105,7 +105,7 @@ namespace sequoia::testing
           }
         };
 
-        check_semantics(report_line("Inefficient para-copy"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator2, allocation_info{allocGetter, {1_c, {1_c,1_mu,3_pc,1_pm}, {1_anp,1_awp}}});
+        check_semantics("Inefficient para-copy", beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator2, allocation_info{allocGetter, {1_c, {1_c,1_mu,3_pc,1_pm}, {1_anp,1_awp}}});
       }
 
       {
@@ -123,7 +123,7 @@ namespace sequoia::testing
           }
         };
 
-        check_semantics(report_line("Inefficient para-move"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator2, allocation_info{allocGetter, {1_c, {1_c,1_mu,1_pc,3_pm}, {1_anp,1_awp}}});
+        check_semantics("Inefficient para-move", beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator2, allocation_info{allocGetter, {1_c, {1_c,1_mu,1_pc,3_pm}, {1_anp,1_awp}}});
       }
 
       {
@@ -132,7 +132,7 @@ namespace sequoia::testing
 
         auto allocGetter{ [](const beast& b){ return b.x.get_allocator(); } };
 
-        check_semantics(report_line("Inefficient serialization"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {1_anp,1_awp}}});
+        check_semantics("Inefficient serialization", beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {1_anp,1_awp}}});
       }
   }
 }

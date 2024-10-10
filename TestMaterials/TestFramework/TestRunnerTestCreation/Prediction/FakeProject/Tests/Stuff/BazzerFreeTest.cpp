@@ -20,6 +20,6 @@ namespace sequoia::testing
 
     void bazzer_free_test::run_tests()
     {
-        // e.g. check(equality, report_line("Useful description"), some_function(), 42);
+        // e.g. check(equality, "Useful description", some_function(), 42);
     }
 }

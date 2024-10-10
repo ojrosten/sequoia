@@ -36,7 +36,7 @@ namespace sequoia::testing
 
     void run_tests()
     {
-      check(equality, "Phoney equality check", 1, 1);
+      check(equality, {"Phoney equality check"}, 1, 1);
       throw std::runtime_error{"Throw after check"};
     }
   };

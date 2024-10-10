@@ -91,24 +91,24 @@ namespace sequoia::testing
     {
       auto checker{
         [this](std::string_view description, std::function<foo_t()> obtained, std::function<foo_t()> prediction, std::function<foo_t()> parent, std::weak_ordering ordering) {
-          check(equality, description, obtained(), prediction());
-          check(within_tolerance{0.1}, description, obtained(), prediction());
-          check_semantics(description, prediction, parent, ordering);
+          check(equality, {description, no_source_location}, obtained(), prediction());
+          check(within_tolerance{0.1}, {description, no_source_location}, obtained(), prediction());
+          check_semantics({description, no_source_location}, prediction, parent, ordering);
         }
       };
 
-      transition_checker<foo_t>::check(report_line(""), g, checker);
+      transition_checker<foo_t>::check(report(""), g, checker);
     }
 
     {
       auto checker{
         [this](std::string_view description, const foo_t& obtained, const foo_t& prediction) {
-          check(equality, description, obtained, prediction);
-          check(within_tolerance{0.1}, description, obtained, prediction);
+          check(equality, {description, no_source_location}, obtained, prediction);
+          check(within_tolerance{0.1}, {description, no_source_location}, obtained, prediction);
         }
       };
 
-      transition_checker<foo_t>::check(report_line(""), g, checker);
+      transition_checker<foo_t>::check(report(""), g, checker);
     }
   }
 
@@ -134,24 +134,24 @@ namespace sequoia::testing
     {
       auto checker{
         [this](std::string_view description, std::function<foo_t()> obtained, std::function<foo_t()> prediction, std::function<foo_t()> parent) {
-          check(equality, description, obtained(), prediction());
-          check(within_tolerance{0.1}, description, obtained(), prediction());
-          check_semantics(description, prediction, parent);
+          check(equality, {description, no_source_location}, obtained(), prediction());
+          check(within_tolerance{0.1}, {description, no_source_location}, obtained(), prediction());
+          check_semantics({description, no_source_location}, prediction, parent);
         }
       };
 
-      transition_checker<foo_t>::check(report_line(""), g, checker);
+      transition_checker<foo_t>::check(report(""), g, checker);
     }
 
     {
       auto checker{
         [this](std::string_view description, const foo_t& obtained, const foo_t& prediction) {
-          check(equality, description, obtained, prediction);
-          check(within_tolerance{0.1}, description, obtained, prediction);
+          check(equality, {description, no_source_location}, obtained, prediction);
+          check(within_tolerance{0.1}, {description, no_source_location}, obtained, prediction);
         }
       };
 
-      transition_checker<foo_t>::check(report_line(""), g, checker);
+      transition_checker<foo_t>::check(report(""), g, checker);
     }
   }
 
@@ -184,11 +184,11 @@ namespace sequoia::testing
 
     auto checker{
         [this](std::string_view description, const foo_t& obtained, const foo_t& prediction) {
-          check(equality, description, obtained, prediction);
+          check(equality, {description, no_source_location}, obtained, prediction);
         }
     };
 
-    transition_checker<foo_t>::check(report_line("Mistake in transition functions"), g, checker);
+    transition_checker<foo_t>::check(report("Mistake in transition functions"), g, checker);
   }
 
   void move_only_state_transition_false_positive_diagnostics::test_equality_comparable()
@@ -208,10 +208,10 @@ namespace sequoia::testing
 
     auto checker{
         [this](std::string_view description, const foo_t& obtained, const foo_t& prediction) {
-          check(equality, description, obtained, prediction);
+          check(equality, {description, no_source_location}, obtained, prediction);
         }
     };
 
-    transition_checker<foo_t>::check(report_line("Mistake in transition functions"), g, checker);
+    transition_checker<foo_t>::check(report("Mistake in transition functions"), g, checker);
   }
 }

@@ -153,15 +153,15 @@ $(function() {
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span> </div>
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>  <span class="keyword">constexpr</span> <span class="keywordtype">void</span> check_edge_swap_indices(std::size_t node, std::size_t i, std::size_t j, std::size_t numEdges)</div>
 <div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>  {</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    <span class="keyword">auto</span> <a class="code hl_function" href="../../d2/d0d/FreeCheckers_8hpp.html#a75993733a577e6b76bb93628fe2b722b">check</a>{</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    <span class="keyword">auto</span> <a class="code hl_function" href="../../d2/d0d/FreeCheckers_8hpp.html#a35227633982a6b83bb54bc54c6236753">check</a>{</div>
 <div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>      [node, numEdges](std::size_t index){</div>
 <div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>        <span class="keywordflow">if</span>(index &gt;= numEdges)</div>
 <div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>          <span class="keywordflow">throw</span> std::out_of_range{edge_swap_indices_message(node, index, numEdges)};</div>
 <div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>      }</div>
 <div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    };</div>
 <div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span> </div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    <a class="code hl_function" href="../../d2/d0d/FreeCheckers_8hpp.html#a75993733a577e6b76bb93628fe2b722b">check</a>(i);</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    <a class="code hl_function" href="../../d2/d0d/FreeCheckers_8hpp.html#a75993733a577e6b76bb93628fe2b722b">check</a>(j);</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    <a class="code hl_function" href="../../d2/d0d/FreeCheckers_8hpp.html#a35227633982a6b83bb54bc54c6236753">check</a>(i);</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    <a class="code hl_function" href="../../d2/d0d/FreeCheckers_8hpp.html#a35227633982a6b83bb54bc54c6236753">check</a>(j);</div>
 <div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>  }</div>
 <div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span> </div>
 <div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>  <span class="keyword">constexpr</span> <span class="keywordtype">void</span> check_reciprocated_index(<span class="keyword">const</span> edge_indices edgeIndices, std::string_view indexName, <span class="keyword">const</span> std::size_t reciprocatedIndex, <span class="keyword">const</span> std::size_t index)</div>
@@ -200,7 +200,7 @@ $(function() {
 <div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>  [[nodiscard]]</div>
 <div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>  std::string absent_partner_weight_message(std::string_view method, edge_indices edgeIndices);</div>
 <div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>}</div>
-<div class="ttc" id="aFreeCheckers_8hpp_html_a75993733a577e6b76bb93628fe2b722b"><div class="ttname"><a href="../../d2/d0d/FreeCheckers_8hpp.html#a75993733a577e6b76bb93628fe2b722b">sequoia::testing::check</a></div><div class="ttdeci">bool check(CheckType flavour, std::string_view description, test_logger&lt; Mode &gt; &amp;logger, Iter first, Sentinel last, PredictionIter predictionFirst, PredictionSentinel predictionLast, tutor&lt; Advisor &gt; advisor={})</div><div class="ttdoc">The workhorse for comparing the contents of ranges.</div><div class="ttdef"><b>Definition:</b> FreeCheckers.hpp:442</div></div>
+<div class="ttc" id="aFreeCheckers_8hpp_html_a35227633982a6b83bb54bc54c6236753"><div class="ttname"><a href="../../d2/d0d/FreeCheckers_8hpp.html#a35227633982a6b83bb54bc54c6236753">sequoia::testing::check</a></div><div class="ttdeci">bool check(CheckType flavour, std::string description, test_logger&lt; Mode &gt; &amp;logger, Iter first, Sentinel last, PredictionIter predictionFirst, PredictionSentinel predictionLast, tutor&lt; Advisor &gt; advisor={})</div><div class="ttdoc">The workhorse for comparing the contents of ranges.</div><div class="ttdef"><b>Definition:</b> FreeCheckers.hpp:445</div></div>
 <div class="ttc" id="astructsequoia_1_1maths_1_1graph__errors_1_1edge__indices_html"><div class="ttname"><a href="../../d1/d7a/structsequoia_1_1maths_1_1graph__errors_1_1edge__indices.html">sequoia::maths::graph_errors::edge_indices</a></div><div class="ttdef"><b>Definition:</b> GraphErrors.hpp:21</div></div>
 <div class="ttc" id="astructsequoia_1_1maths_1_1graph__errors_1_1edge__inversion__info_html"><div class="ttname"><a href="../../d0/dda/structsequoia_1_1maths_1_1graph__errors_1_1edge__inversion__info.html">sequoia::maths::graph_errors::edge_inversion_info</a></div><div class="ttdef"><b>Definition:</b> GraphErrors.hpp:26</div></div>
 </div><!-- fragment --></div><!-- contents -->

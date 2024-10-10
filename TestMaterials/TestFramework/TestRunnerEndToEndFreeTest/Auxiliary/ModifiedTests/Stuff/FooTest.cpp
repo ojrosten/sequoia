@@ -38,7 +38,7 @@ namespace sequoia::testing
     }
 
     const fs::path folder{"RepresentativeCases"};
-    check(equivalence, report_line(""), working_materials() / folder, predictive_materials() / folder);
-    check_exception_thrown<std::runtime_error>(report_line(""), [](){ throw std::runtime_error{"A happy runtime error!"}; });
+    check(equivalence, "", working_materials() / folder, predictive_materials() / folder);
+    check_exception_thrown<std::runtime_error>("", [](){ throw std::runtime_error{"A happy runtime error!"}; });
   }
 }

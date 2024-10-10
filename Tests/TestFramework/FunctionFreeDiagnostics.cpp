@@ -23,40 +23,40 @@ namespace sequoia::testing
     {
       using function = std::function<void()>;
       check(weak_equivalence,
-        report_line("Obtained bound but prediction not"),
-        function{[]() {}},
-        function{});
+            reporter{"Obtained bound but prediction not"},
+            function{[]() {}},
+            function{});
 
       check(weak_equivalence,
-        report_line("Prediction bound but obtained not"),
-        function{},
-        function{[]() {}});
+            reporter{"Prediction bound but obtained not"},
+            function{},
+            function{[]() {}});
     }
 
     {
       using function = std::function<int()>;
       check(weak_equivalence,
-        report_line("Obtained bound but prediction not"),
-        function{[]() { return 42; }},
-        function{});
+            reporter{"Obtained bound but prediction not"},
+            function{[]() { return 42; }},
+            function{});
 
       check(weak_equivalence,
-        report_line("Prediction bound but obtained not"),
-        function{},
-        function{[]() { return 42; }});
+            reporter{"Prediction bound but obtained not"},
+            function{},
+            function{[]() { return 42; }});
     }
 
     {
       using function = std::function<void(int)>;
       check(weak_equivalence,
-        report_line("Obtained bound but prediction not"),
-        function{[](int) {}},
-        function{});
+            reporter{"Obtained bound but prediction not"},
+            function{[](int) {}},
+            function{});
 
       check(weak_equivalence,
-        report_line("Prediction bound but obtained not"),
-        function{},
-        function{[](int) {}});
+            reporter{"Prediction bound but obtained not"},
+            function{},
+            function{[](int) {}});
     }
   }
 
@@ -70,20 +70,20 @@ namespace sequoia::testing
   {
     {
       using function = std::function<void()>;
-      check(weak_equivalence, report_line("Both bound"), function{[]() {}}, function{[]() {}});
-      check(weak_equivalence, report_line("Neither bound"), function{}, function{});
+      check(weak_equivalence, "Both bound", function{[]() {}}, function{[]() {}});
+      check(weak_equivalence, "Neither bound", function{}, function{});
     }
 
     {
       using function = std::function<int()>;
-      check(weak_equivalence, report_line("Both bound"), function{[]() { return 42; }}, function{[]() { return 42; }});
-      check(weak_equivalence, report_line("Neither bound"), function{}, function{});
+      check(weak_equivalence, "Both bound", function{[]() { return 42; }}, function{[]() { return 42; }});
+      check(weak_equivalence, "Neither bound", function{}, function{});
     }
 
     {
       using function = std::function<void(int)>;
-      check(weak_equivalence, report_line("Both bound"), function{[](int) {}}, function{[](int) {}});
-      check(weak_equivalence, report_line("Neither bound"), function{}, function{});
+      check(weak_equivalence, "Both bound", function{[](int) {}}, function{[](int) {}});
+      check(weak_equivalence, "Neither bound", function{}, function{});
     }
   }
 }

@@ -22,7 +22,7 @@ namespace sequoia::testing
         // For example:
 
         // human x{args}, y{different args};
-        // check(equivalence, report_line("Useful Description"), x, something inequivalent - ordinarily this would fail);
-        // check(equality, report_line("Useful Description"), x, y);
+        // check(equivalence, "Useful Description", x, something inequivalent - ordinarily this would fail);
+        // check(equality, "Useful Description", x, y);
     }
 }

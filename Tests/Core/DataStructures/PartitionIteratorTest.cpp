@@ -44,60 +44,60 @@ namespace sequoia::testing
 
     if constexpr(std::is_same_v<I, typename Container::iterator>)
     {
-      check(equality, report_line(""), iter.operator->(), &(*vec.begin()));
+      check(equality, "", iter.operator->(), &(*vec.begin()));
     }
     else
     {
-      check(equality, report_line(""), iter.operator->(), &(*vec.cbegin()));
+      check(equality, "", iter.operator->(), &(*vec.cbegin()));
     }
 
-    check(equality, report_line(""), vec[0], *iter);
-    check(equality, report_line(""), iter.partition_index(), 4_sz);
+    check(equality, "", vec[0], *iter);
+    check(equality, "", iter.partition_index(), 4_sz);
 
     ++iter;
-    check(equality, report_line(""), *iter, vec[1]);
-    check(equality, report_line(""), iter.partition_index(), 4_sz);
+    check(equality, "", *iter, vec[1]);
+    check(equality, "", iter.partition_index(), 4_sz);
 
     iter++;
-    check(equality, report_line(""), *iter, vec[2]);
+    check(equality, "", *iter, vec[2]);
 
     --iter;
-    check(equality, report_line(""), *iter, vec[1]);
-    check(equality, report_line(""), iter.partition_index(), 4_sz);
+    check(equality, "", *iter, vec[1]);
+    check(equality, "", iter.partition_index(), 4_sz);
 
     iter--;
-    check(equality, report_line(""), *iter, vec[0]);
+    check(equality, "", *iter, vec[0]);
 
-    check(equality, report_line(""), iter[0], vec[0]);
-    check(equality, report_line(""), iter[1], vec[1]);
-    check(equality, report_line(""), iter[2], vec[2]);
+    check(equality, "", iter[0], vec[0]);
+    check(equality, "", iter[1], vec[1]);
+    check(equality, "", iter[2], vec[2]);
 
     iter += 1;
-    check(equality, report_line(""), iter[0], vec[1]);
+    check(equality, "", iter[0], vec[1]);
 
     iter -= 1;
-    check(equality, report_line(""), iter[0], vec[0]);
+    check(equality, "", iter[0], vec[0]);
 
     auto iter2 = iter + 2;
-    check(equality, report_line(""), iter[0], vec[0]);
-    check(equality, report_line(""), iter2[0], vec[2]);
+    check(equality, "", iter[0], vec[0]);
+    check(equality, "", iter2[0], vec[2]);
 
     auto iter3 = iter2 - 2;
-    check(equality, report_line(""), iter3[0], vec[0]);
+    check(equality, "", iter3[0], vec[0]);
 
-    check(report_line(""), iter == iter3);
-    check(report_line(""), iter2 != iter3);
+    check("", iter == iter3);
+    check("", iter2 != iter3);
 
-    check(report_line(""), iter2 > iter);
-    check(report_line(""), iter < iter2);
-    check(report_line(""), iter >= iter3);
-    check(report_line(""), iter <= iter3);
+    check("", iter2 > iter);
+    check("", iter < iter2);
+    check("", iter >= iter3);
+    check("", iter <= iter3);
 
-    check(equality, report_line(""), std::ptrdiff_t{-2}, std::ranges::distance(iter2, iter3));
-    check(equality, report_line(""), std::ptrdiff_t{2}, std::ranges::distance(iter, iter2));
+    check(equality, "", std::ptrdiff_t{-2}, std::ranges::distance(iter2, iter3));
+    check(equality, "", std::ptrdiff_t{2}, std::ranges::distance(iter, iter2));
 
     auto std_iter = iter.base_iterator();
 
-    check(equality, report_line(""), *std_iter, 1);
+    check(equality, "", *std_iter, 1);
   }
 }

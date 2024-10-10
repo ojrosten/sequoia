@@ -20,7 +20,7 @@ namespace sequoia::testing
 
     void angle_false_positive_free_diagnostics::run_tests()
     {
-        // e.g. check(equality, report_line("Useful description"), some_function(), 42);
+        // e.g. check(equality, "Useful description", some_function(), 42);
     }
 
     [[nodiscard]]
@@ -31,6 +31,6 @@ namespace sequoia::testing
 
     void angle_false_negative_free_diagnostics::run_tests()
     {
-        // e.g. check(equality, report_line("Useful description"), some_function(), 42);
+        // e.g. check(equality, "Useful description", some_function(), 42);
     }
 }

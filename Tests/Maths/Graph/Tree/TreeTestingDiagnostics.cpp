@@ -38,17 +38,17 @@ namespace sequoia::testing
 
     tree_type x{}, y{{1}}, z{{1, {{2}}}}, w{{1, {{2, {{4}, {5}}}, {3}}}};
 
-    check(equivalence, report_line("Empty vs non-empty"), x, initializer{1, {}});
-    check(equivalence, report_line("Incorrect weight"), y, initializer{0, {}});
-    check(equivalence, report_line("Too many children"), z, initializer{1, {}});
-    check(equivalence, report_line("Incorrect child weight"), z, initializer{1, {{3}}});
-    check(equivalence, report_line("Too few children"), z, initializer{1, {{2}, {3}}});
+    check(equivalence, "Empty vs non-empty", x, initializer{1, {}});
+    check(equivalence, "Incorrect weight", y, initializer{0, {}});
+    check(equivalence, "Too many children", z, initializer{1, {}});
+    check(equivalence, "Incorrect child weight", z, initializer{1, {{3}}});
+    check(equivalence, "Too few children", z, initializer{1, {{2}, {3}}});
 
-    check(equivalence, report_line("Too many grand children"), w, initializer{1, {{2, {{4}}}, {3}}});
-    check(equivalence, report_line("Incorrect grand child weight"), w, initializer{1, {{2, {{3}, {4}}}, {3}}});
-    check(equivalence, report_line("Too few grand children"), w, initializer{1, {{2, {{4}, {5}, {6}}}, {3}}});
+    check(equivalence, "Too many grand children", w, initializer{1, {{2, {{4}}}, {3}}});
+    check(equivalence, "Incorrect grand child weight", w, initializer{1, {{2, {{3}, {4}}}, {3}}});
+    check(equivalence, "Too few grand children", w, initializer{1, {{2, {{4}, {5}, {6}}}, {3}}});
 
-    check(equality, report_line(""), x, y);
-    check(equality, report_line(""), y, z);
+    check(equality, "", x, y);
+    check(equality, "", y, z);
   }
 }

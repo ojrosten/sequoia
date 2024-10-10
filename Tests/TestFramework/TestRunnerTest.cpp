@@ -37,7 +37,7 @@ namespace sequoia::testing
 
       void run_tests()
       {
-        check(equality, "Throw during check", foo{}, foo{});
+        check(equality, reporter{"Throw during check"}, foo{}, foo{});
       }
     };
 
@@ -54,7 +54,7 @@ namespace sequoia::testing
 
       void run_tests()
       {
-        check(equality, "Integer equality", 42, 42);
+        check(equality, reporter{"Integer equality"}, 42, 42);
       }
     };
 
@@ -71,7 +71,7 @@ namespace sequoia::testing
 
       void run_tests()
       {
-        check(equality, "Standard Failure", 43, 42);
+        check(equality, {"Standard Failure"}, 43, 42);
       }
     };
 
@@ -88,7 +88,7 @@ namespace sequoia::testing
 
       void run_tests()
       {
-        check(equality, "False positive failure", 42, 42);
+        check(equality, {"False positive failure"}, 42, 42);
       }
     };
 
@@ -105,7 +105,7 @@ namespace sequoia::testing
 
       void run_tests()
       {
-        check(equality, "False negative failure", 43, 42);
+        check(equality, {"False negative failure"}, 43, 42);
       }
     };
 
@@ -129,7 +129,7 @@ namespace sequoia::testing
 
       void run_tests()
       {
-        check(equality, "Flipper", flipper{}.x, true);
+        check(equality, {"Flipper"}, flipper{}.x, true);
       }
     };
 
@@ -154,7 +154,7 @@ namespace sequoia::testing
 
       void run_tests()
       {
-        check(equality, "Period 4", periodic<4>{}.x, 1);
+        check(equality, {"Period 4"}, periodic<4>{}.x, 1);
       }
     };
 
@@ -172,8 +172,8 @@ namespace sequoia::testing
 
       void run_tests()
       {
-        check(equality, "Period 2: Pass/Fail/Pass", periodic<2>{}.x, 1);
-        check("Period 3: Pass/Pass/Fail", periodic<3>{}.x > 0);
+        check(equality, {"Period 2: Pass/Fail/Pass"}, periodic<2>{}.x, 1);
+        check({"Period 3: Pass/Pass/Fail"}, periodic<3>{}.x > 0);
       }
     };
 
@@ -190,9 +190,9 @@ namespace sequoia::testing
 
       void run_tests()
       {
-        check("Always fails", false);
+        check({"Always fails"}, false);
 
-        check(equality, "Flipper", flipper{}.x, true);
+        check(equality, {"Flipper"}, flipper{}.x, true);
       }
     };
 
@@ -209,7 +209,7 @@ namespace sequoia::testing
 
       void run_tests()
       {
-        check("Always fails", false);
+        check({"Always fails"}, false);
       }
     };
 
@@ -227,7 +227,7 @@ namespace sequoia::testing
 
       void run_tests()
       {
-        check("Always passes", true);
+        check({"Always passes"}, true);
       }
     };
 
@@ -362,7 +362,7 @@ namespace sequoia::testing
     };
 
     check_exception_thrown<std::runtime_error>(
-      report_line("Test Main has empty path"),
+      reporter{"Test Main has empty path"},
       [this]() {
         std::stringstream outputStream{};
         commandline_arguments args{zeroth_arg()};
@@ -371,7 +371,7 @@ namespace sequoia::testing
       pathTrimmer);
 
     check_exception_thrown<std::runtime_error>(
-      report_line("Test Main does not exist"),
+      reporter{"Test Main does not exist"},
       [this]() {
         std::stringstream outputStream{};
         commandline_arguments args{zeroth_arg()};
@@ -380,7 +380,7 @@ namespace sequoia::testing
       pathTrimmer);
 
     check_exception_thrown<std::runtime_error>(
-      report_line("Include Target has empty path"),
+      reporter{"Include Target has empty path"},
       [this]() {
         std::stringstream outputStream{};
         commandline_arguments args{zeroth_arg()};
@@ -389,7 +389,7 @@ namespace sequoia::testing
       pathTrimmer);
 
     check_exception_thrown<std::runtime_error>(
-      report_line("Include Target does not exist"),
+      reporter{"Include Target does not exist"},
       [this]() {
         std::stringstream outputStream{};
         commandline_arguments args{zeroth_arg()};
@@ -398,7 +398,7 @@ namespace sequoia::testing
       pathTrimmer);
 
     check_exception_thrown<std::runtime_error>(
-      report_line("Project root is empty"),
+      reporter{"Project root is empty"},
       [this]() {
         std::stringstream outputStream{};
         commandline_arguments args{""};
@@ -406,7 +406,7 @@ namespace sequoia::testing
       });
 
     check_exception_thrown<std::runtime_error>(
-      report_line("Project root does not exist"),
+      reporter{"Project root does not exist"},
       [this]() {
         std::stringstream outputStream{};
         commandline_arguments args{(fake_project() / "FooRepo").generic_string()};
@@ -415,7 +415,7 @@ namespace sequoia::testing
       pathTrimmer);
 
     check_exception_thrown<std::runtime_error>(
-      report_line("Project root not findable"),
+      reporter{"Project root not findable"},
       [this]() {
         const auto zerothArg{fake_project().append("TestShared").generic_string()};
         std::stringstream outputStream{};
@@ -425,7 +425,7 @@ namespace sequoia::testing
       pathTrimmer);
 
     check_exception_thrown<std::runtime_error>(
-      report_line("Neither name nor source unique"),
+      reporter{"Neither name nor source unique"},
       [this](){
         commandline_arguments args{zeroth_arg()};
         std::stringstream outputStream{};
@@ -459,14 +459,14 @@ namespace sequoia::testing
     );
 
     check_exception_thrown<std::runtime_error>(
-      report_line("Invalid repetitions for instability analysis"),
+      reporter{"Invalid repetitions for instability analysis"},
       [this](){
         test_instability_analysis("", "", "foo", critical_free_test{"Free Test"});
       }
     );
 
     check_exception_thrown<std::runtime_error>(
-      report_line("Insufficient repetitions for instability analysis"),
+      reporter{"Insufficient repetitions for instability analysis"},
       [this](){
         test_instability_analysis("", "",  "1", critical_free_test{"Free Test"});
       }
@@ -523,7 +523,7 @@ namespace sequoia::testing
              working_materials() /= "RecoveryAndDumpOutput/TestSummaries",
              fs::copy_options::recursive);
 
-    check(equivalence, report_line("Recovery and Dump"),
+    check(equivalence, "Recovery and Dump",
                       working_materials() /= "RecoveryAndDumpOutput",
                       predictive_materials() /= "RecoveryAndDumpOutput");
   }
@@ -541,7 +541,7 @@ namespace sequoia::testing
                        outputStream};
 
     runner.execute();
-    check_output(report_line("No Tests"), "NoTests", outputStream);
+    check_output(report({"No Tests"}), "NoTests", outputStream);
 
     runner.add_test_suite(
       "Failing Suite",
@@ -551,7 +551,7 @@ namespace sequoia::testing
     );
 
     runner.execute();
-    check_output(report_line("Basic Output"), "BasicOutput", outputStream);
+    check_output(report({"Basic Output"}), "BasicOutput", outputStream);
   }
 
   void test_runner_test::test_verbose_output()
@@ -560,7 +560,7 @@ namespace sequoia::testing
     auto runner{make_failing_suite({(minimal_fake_path()).generic_string(), "-v"}, outputStream)};
 
     runner.execute();
-    check_output(report_line("Basic Verbose Output"), "BasicVerboseOutput", outputStream);
+    check_output(report({"Basic Verbose Output"}), "BasicVerboseOutput", outputStream);
   }
 
   void test_runner_test::test_serial_verbose_output()
@@ -569,7 +569,7 @@ namespace sequoia::testing
     auto runner{make_failing_suite({(minimal_fake_path()).generic_string(), "-v", "--serial"}, outputStream)};
 
     runner.execute();
-    check_output(report_line("Basic Serial Verbose Output"), "BasicSerialVerboseOutput", outputStream);
+    check_output(report({"Basic Serial Verbose Output"}), "BasicSerialVerboseOutput", outputStream);
   }
 
   void test_runner_test::test_filtered_suites()
@@ -597,7 +597,7 @@ namespace sequoia::testing
     );
 
     runner.execute();
-    check_output(report_line("Filtered Suite Output"), "FilteredSuiteOutput", outputStream);
+    check_output(report({"Filtered Suite Output"}), "FilteredSuiteOutput", outputStream);
   }
 
   void test_runner_test::test_prune_basic_output()
@@ -615,10 +615,10 @@ namespace sequoia::testing
                        outputStream};
 
     runner.execute();
-    check_output(report_line("Prune with no stamp"), "PruneWithNoStamp", outputStream);
+    check_output(report({"Prune with no stamp"}), "PruneWithNoStamp", outputStream);
 
     runner.execute();
-    check_output(report_line("Prune with no tests"), "PruneWithNoTests", outputStream);
+    check_output(report({"Prune with no tests"}), "PruneWithNoTests", outputStream);
   }
 
   void test_runner_test::test_nested_suite()
@@ -647,7 +647,7 @@ namespace sequoia::testing
       );
 
       runner.execute();
-      check_output(report_line("Basic Nested Output"), "BasicNestedOutput", outputStream);
+      check_output(report({"Basic Nested Output"}), "BasicNestedOutput", outputStream);
   }
 
   void test_runner_test::test_nested_suite_verbose()
@@ -676,7 +676,7 @@ namespace sequoia::testing
     );
 
     runner.execute();
-    check_output(report_line("Verbose Nested Output"), "VerboseNestedOutput", outputStream);
+    check_output(report({"Verbose Nested Output"}), "VerboseNestedOutput", outputStream);
   }
 
   void test_runner_test::test_instability_analysis()
@@ -794,7 +794,7 @@ namespace sequoia::testing
       file << outputStream.str();
     }
 
-    check(equivalence, report_line(append_lines(message, make_type_info<Ts...>())),
+    check(equivalence, reporter(append_lines(message, make_type_info<Ts...>())),
                       outputDir,
                       predictive_materials() /= outputDirName);
   }

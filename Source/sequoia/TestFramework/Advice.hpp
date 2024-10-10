@@ -99,7 +99,7 @@ namespace sequoia::testing
       checking equality of an `int`:
 
       <pre>
-      check(equality, report_line(""), x, 41, tutor{[](int value, int prediction) {
+      check(equality, "", x, 41, tutor{[](int value, int prediction) {
           return value == 42 ? "Are you sure the universe isn't trying to tell you something?" : "";
       }});
       </pre>

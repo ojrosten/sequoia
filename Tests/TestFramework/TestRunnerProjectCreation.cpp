@@ -31,7 +31,7 @@ namespace sequoia::testing
   void test_runner_project_creation::test_exceptions()
   {
     check_exception_thrown<std::runtime_error>(
-      report_line("Project name with space"),
+      reporter{"Project name with space"},
       [this]() {
         commandline_arguments args{zeroth_arg(), "init", "Oliver Jacob Rosten", (working_materials() /= "Generated Project").string(), "  "};
 
@@ -42,7 +42,7 @@ namespace sequoia::testing
       });
 
     check_exception_thrown<std::runtime_error>(
-      report_line("Project name with $"),
+      reporter{"Project name with $"},
       [this]() {
         commandline_arguments args{zeroth_arg(), "init", "Oliver Jacob Rosten", (working_materials() /= "Generated$Project").string(), "  "};
 
@@ -53,7 +53,7 @@ namespace sequoia::testing
       });
 
     check_exception_thrown<std::runtime_error>(
-      report_line("Project path that is not absolute"),
+      reporter{"Project path that is not absolute"},
       [this]() {
         commandline_arguments args{zeroth_arg(), "init", "Oliver Jacob Rosten", "Generated_Project", "  "};
 
@@ -64,7 +64,7 @@ namespace sequoia::testing
       });
 
     check_exception_thrown<std::runtime_error>(
-      report_line("Empty project path"),
+      reporter{"Empty project path"},
       [this]() {
         commandline_arguments args{zeroth_arg(), "init", "Oliver Jacob Rosten", "", "  "};
 
@@ -75,7 +75,7 @@ namespace sequoia::testing
       });
 
     check_exception_thrown<std::runtime_error>(
-      report_line("Project name clash"),
+      reporter{"Project name clash"},
       [this]() {
         commandline_arguments args{zeroth_arg(), "init", "Oliver Jacob Rosten", working_materials().string(), "  "};
 
@@ -93,7 +93,7 @@ namespace sequoia::testing
       });
 
     check_exception_thrown<std::runtime_error>(
-      report_line("Illegal indent"),
+      reporter{"Illegal indent"},
       [this]() {
         commandline_arguments args{zeroth_arg(), "init", "Oliver Jacob Rosten", (working_materials() /= "GeneratedProject").string(), "  "};
 
@@ -104,7 +104,7 @@ namespace sequoia::testing
       });
 
     check_exception_thrown<std::runtime_error>(
-      report_line("Illegal init indent"),
+      reporter{"Illegal init indent"},
       [this]() {
         commandline_arguments args{zeroth_arg(), "init", "Oliver Jacob Rosten", (working_materials() /= "GeneratedProject").string(), "\n"};
 
@@ -139,11 +139,8 @@ namespace sequoia::testing
     fs::copy(auxiliary_paths::repo(project_root()), auxiliary_paths::repo(fake_project()), fs::copy_options::recursive);
 
     {
-      auto generated{
-        [this] () { return working_materials() /= "GeneratedProject"; }
-      };
-
-      commandline_arguments args{zeroth_arg(), "init", "Oliver Jacob Rosten", generated().string(), "  ", "--no-git", "--no-build"};
+      const auto hostDir{working_materials() /= "GeneratedProject"};
+      commandline_arguments args{zeroth_arg(), "init", "Oliver Jacob Rosten", hostDir.string(), "  ", "--no-git", "--no-build"};
 
       std::stringstream outputStream{};
       test_runner tr{args.size(), args.get(), "Oliver J. Rosten", make_project_paths(), "\t", outputStream};
@@ -155,12 +152,12 @@ namespace sequoia::testing
         file << outputStream.rdbuf();
       }
 
-      check(equivalence, report_line(""), generated(), predictive_materials() /= "GeneratedProject");
-      check(equivalence, report_line(""), fake_project(), predictive_materials() /= "FakeProject");
+      check(equivalence, "", hostDir, predictive_materials() /= "GeneratedProject");
+      check(equivalence, "", fake_project(), predictive_materials() /= "FakeProject");
     }
 
     {
-      const auto hostDir{working_materials() /= "AnotherGeneratedProject"};
+      const auto hostDir{working_materials() /= "Another_Generated-Project"};
       commandline_arguments args{zeroth_arg(), "init", "Oliver Jacob Rosten", hostDir.generic_string(), "  ", "--no-git", "--no-build"};
 
       std::stringstream outputStream{};
@@ -168,7 +165,7 @@ namespace sequoia::testing
 
       tr.execute();
 
-      check(equivalence, report_line(""), hostDir, predictive_materials() /= "AnotherGeneratedProject");
+      check(equivalence, "", hostDir, predictive_materials() /= "Another_Generated-Project");
     }
   }
 }

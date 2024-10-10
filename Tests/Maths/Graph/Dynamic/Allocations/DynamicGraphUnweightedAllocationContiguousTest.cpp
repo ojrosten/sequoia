@@ -51,24 +51,24 @@ namespace sequoia::testing
     // null
     Graph g{edge_allocator{}, edge_partitions_allocator{}};
 
-    check(equality, report_line(""), g.edges_capacity(), 0_sz);
-    check(equality, report_line(""), g.node_capacity(), 0_sz);
+    check(equality, "", g.edges_capacity(), 0_sz);
+    check(equality, "", g.node_capacity(), 0_sz);
 
     g.reserve_edges(4);
-    check(equality, report_line(""), g.edges_capacity(), 4_sz);
+    check(equality, "", g.edges_capacity(), 4_sz);
 
     g.reserve_nodes(4);
-    check(equality, report_line(""), g.node_capacity(), 4_sz);
+    check(equality, "", g.node_capacity(), 4_sz);
 
     g.shrink_to_fit();
-    check(equality, report_line("May fail if stl implementation doesn't actually shrink to fit!"), g.edges_capacity(), 0_sz);
-    check(equality, report_line("May fail if stl implementation doesn't actually shrink to fit!"), g.node_capacity(), 0_sz);
+    check(equality, "May fail if stl implementation doesn't actually shrink to fit!", g.edges_capacity(), 0_sz);
+    check(equality, "May fail if stl implementation doesn't actually shrink to fit!", g.node_capacity(), 0_sz);
 
     using edge_init_t = typename Graph::edge_init_type;
 
     auto nodeMaker{ [](Graph& g) { g.add_node(); } };
 
-    check_semantics(report_line(""),
+    check_semantics("",
                     g,
                     Graph{{{}}, edge_allocator{}, edge_partitions_allocator{}},
                     nodeMaker,
@@ -78,7 +78,7 @@ namespace sequoia::testing
 
     if constexpr (GraphFlavour == graph_flavour::directed)
     {
-      check_semantics(report_line(""),
+      check_semantics("",
                       g2,
                       Graph{{edge_init_t{1}}, {}},
                       nodeMaker,
@@ -87,7 +87,7 @@ namespace sequoia::testing
     }
     else if constexpr(GraphFlavour == graph_flavour::undirected)
     {
-      check_semantics(report_line(""),
+      check_semantics("",
                       g2,
                       Graph{{edge_init_t{1}}, {edge_init_t{0}}},
                       nodeMaker,
@@ -96,7 +96,7 @@ namespace sequoia::testing
     }
     else
     {
-      check_semantics(report_line(""),
+      check_semantics("",
                       g2, Graph{{edge_init_t{1,0}}, {edge_init_t{0,0}}},
                       nodeMaker,
                       allocation_info{edge_alloc_getter<Graph>{}, {0_c, {1_c, 0_mu}, {1_anp, 1_awp}}},

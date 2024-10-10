@@ -46,19 +46,19 @@ namespace sequoia::testing
     {
       using d = resolve_to_copy<int>;
 
-      check(report_line(""), []() {
+      check("", []() {
           static_assert(std::is_same_v<std::false_type, d::type>);
           return true;
         }()
       );
 
-      check(report_line(""), []() {
+      check("", []() {
           static_assert(std::is_same_v<std::false_type, resolve_to_copy_t<int>>);
           return true;
         }()
       );
 
-      check(report_line(""), []() {
+      check("", []() {
           static_assert(!resolve_to_copy_v<int>);
           return true;
         }()
@@ -68,19 +68,19 @@ namespace sequoia::testing
     {
       using d = resolve_to_copy<int, int>;
 
-      check(report_line(""), []() {
+      check("", []() {
           static_assert(std::is_same_v<std::true_type, d::type>);
           return true;
         }()
       );
 
-      check(report_line(""), []() {
+      check("", []() {
           static_assert(std::is_same_v<std::true_type, resolve_to_copy_t<int, int>>);
           return true;
         }()
       );
 
-      check(report_line(""), []() {
+      check("", []() {
           static_assert(resolve_to_copy_v<int, int>);
           return true;
         }()
@@ -90,19 +90,19 @@ namespace sequoia::testing
     {
       using d = resolve_to_copy<int&, int>;
 
-      check(report_line(""), []() {
+      check("", []() {
           static_assert(std::is_same_v<std::true_type, d::type>);
           return true;
         }()
       );
 
-      check(report_line(""), []() {
+      check("", []() {
           static_assert(std::is_same_v<std::true_type, resolve_to_copy_t<int&, int>>);
           return true;
         }()
       );
 
-      check(report_line(""), []() {
+      check("", []() {
           static_assert(resolve_to_copy_v<int&, int>);
           return true;
         }()
@@ -112,19 +112,19 @@ namespace sequoia::testing
     {
       using d = resolve_to_copy<int, int&>;
 
-      check(report_line(""), []() {
+      check("", []() {
           static_assert(std::is_same_v<std::true_type, d::type>);
           return true;
         }()
       );
 
-      check(report_line(""), []() {
+      check("", []() {
           static_assert(std::is_same_v<std::true_type, resolve_to_copy_t<int, int&>>);
           return true;
         }()
       );
 
-      check(report_line(""), []() {
+      check("", []() {
           static_assert(resolve_to_copy_v<int, int&>);
           return true;
         }()
@@ -134,19 +134,19 @@ namespace sequoia::testing
     {
       using d = resolve_to_copy<const int&, volatile int&>;
 
-      check(report_line(""), []() {
+      check("", []() {
           static_assert(std::is_same_v<std::true_type, d::type>);
           return true;
         }()
       );
 
-      check(report_line(""), []() {
+      check("", []() {
           static_assert(std::is_same_v<std::true_type, resolve_to_copy_t<const int&, volatile int&>>);
           return true;
         }()
       );
 
-      check(report_line(""), []() {
+      check("", []() {
           static_assert(resolve_to_copy_v<const int&, volatile int&>);
           return true;
         }()
@@ -156,19 +156,19 @@ namespace sequoia::testing
     {
       using d = resolve_to_copy<int, double>;
 
-      check(report_line(""), []() {
+      check("", []() {
           static_assert(std::is_same_v<std::false_type, d::type>);
           return true;
         }()
       );
 
-      check(report_line(""), []() {
+      check("", []() {
           static_assert(std::is_same_v<std::false_type, resolve_to_copy_t<int, double>>);
           return true;
         }()
       );
 
-      check(report_line(""), []() {
+      check("", []() {
           static_assert(!resolve_to_copy_v<int, double>);
           return true;
         }()
@@ -178,19 +178,19 @@ namespace sequoia::testing
     {
       using d = resolve_to_copy<int, int, int>;
 
-      check(report_line(""), []() {
+      check("", []() {
           static_assert(std::is_same_v<std::false_type, d::type>);
           return true;
         }()
       );
 
-      check(report_line(""), []() {
+      check("", []() {
           static_assert(std::is_same_v<std::false_type, resolve_to_copy_t<int, int, double>>);
           return true;
         }()
       );
 
-      check(report_line(""), []() {
+      check("", []() {
           static_assert(!resolve_to_copy_v<int, int, int>);
           return true;
         }()
@@ -203,49 +203,49 @@ namespace sequoia::testing
   void type_traits_test::test_is_const_pointer()
   {
 
-    check(report_line(""), []() {
+    check("", []() {
         static_assert(std::is_same_v<std::true_type, is_const_pointer_t<const int*>>);
         return true;
       }()
     );
 
-    check(report_line(""), []() {
+    check("", []() {
         static_assert(is_const_pointer_v<const int*>);
         return true;
       }()
     );
 
-    check(report_line(""), []() {
+    check("", []() {
         static_assert(std::is_same_v<std::false_type, is_const_pointer_t<int*>>);
         return true;
       }()
     );
 
-    check(report_line(""), []() {
+    check("", []() {
         static_assert(!is_const_pointer_v<int*>);
         return true;
       }()
     );
 
-    check(report_line(""), []() {
+    check("", []() {
         static_assert(std::is_same_v<std::false_type, is_const_pointer_t<int* const>>);
         return true;
       }()
     );
 
-    check(report_line(""), []() {
+    check("", []() {
         static_assert(!is_const_pointer_v<int* const>);
         return true;
       }()
     );
 
-    check(report_line(""), []() {
+    check("", []() {
         static_assert(std::is_same_v<std::true_type, is_const_pointer_t<const int* const>>);
         return true;
       }()
     );
 
-    check(report_line(""), []() {
+    check("", []() {
         static_assert(is_const_pointer_v<const int* const>);
         return true;
       }()
@@ -254,37 +254,37 @@ namespace sequoia::testing
 
   void type_traits_test::test_is_const_reference()
   {
-    check(report_line(""), []() {
+    check("", []() {
         static_assert(std::is_same_v<std::true_type, is_const_reference_t<const int&>>);
         return true;
       }()
     );
 
-    check(report_line(""), []() {
+    check("", []() {
         static_assert(is_const_reference_v<const int&>);
         return true;
       }()
     );
 
-    check(report_line(""), []() {
+    check("", []() {
         static_assert(std::is_same_v<std::true_type, is_const_reference_t<const volatile int&>>);
         return true;
       }()
     );
 
-    check(report_line(""), []() {
+    check("", []() {
         static_assert(is_const_reference_v<const volatile int&>);
         return true;
       }()
     );
 
-    check(report_line(""), []() {
+    check("", []() {
         static_assert(std::is_same_v<std::false_type, is_const_reference_t<int&>>);
         return true;
       }()
     );
 
-    check(report_line(""), []() {
+    check("", []() {
         static_assert(!is_const_reference_v<int&>);
         return true;
       }()
@@ -293,25 +293,25 @@ namespace sequoia::testing
 
   void type_traits_test::test_is_initializable()
   {
-    check(report_line(""), []() {
+    check("", []() {
         static_assert(std::is_same_v<std::false_type, is_initializable_t<foo, std::vector<int>>>);
         return true;
       }()
     );
 
-    check(report_line(""), []() {
+    check("", []() {
         static_assert(!is_initializable_v<foo, std::vector<int>>);
         return true;
       }()
     );
 
-    check(report_line(""), []() {
+    check("", []() {
         static_assert(std::is_same_v<std::true_type, is_initializable_t<foo, int>>);
         return true;
       }()
     );
 
-    check(report_line(""), []() {
+    check("", []() {
         static_assert(is_initializable_v<foo, int>);
         return true;
       }()
@@ -320,21 +320,21 @@ namespace sequoia::testing
 
   void type_traits_test::test_is_tuple()
   {
-    check(report_line(""), []() {
+    check("", []() {
         static_assert(!is_tuple_v<int>);
         static_assert(std::is_same_v<std::false_type, is_tuple_t<int>>);
         return true;
       }()
     );
 
-    check(report_line(""), []() {
+    check("", []() {
         static_assert(is_tuple_v<std::tuple<>>);
         static_assert(std::is_same_v<std::true_type, is_tuple_t<std::tuple<>>>);
         return true;
       }()
     );
 
-    check(report_line(""), []() {
+    check("", []() {
         static_assert(is_tuple_v<std::tuple<int>>);
         static_assert(std::is_same_v<std::true_type, is_tuple_t<std::tuple<int>>>);
         return true;
@@ -400,6 +400,18 @@ namespace sequoia::testing
         static_assert(is_compatible_v<float, int>);
         static_assert(std::is_same_v<std::true_type, is_compatible_t<float, int>>);
         return true;
+
+    check("", []() {
+      static_assert(has_allocator_type_v<std::vector<double>>);
+      static_assert(std::is_same_v<std::true_type, has_allocator_type_t<std::vector<double>>>);
+      return true;
+      }()
+    );
+
+    check("", []() {
+      static_assert(!has_allocator_type_v<double>);
+      static_assert(std::is_same_v<std::false_type, has_allocator_type_t<double>>);
+      return true;
       }()
     );
   }

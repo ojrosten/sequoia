@@ -32,7 +32,7 @@ namespace sequoia::testing
 
   void scoped_allocation_false_negative_diagnostics_mixed::run_tests()
   {
-    do_allocation_tests(*this);
+    do_allocation_tests();
   }
 
   template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
@@ -57,7 +57,7 @@ namespace sequoia::testing
       }
     };
 
-    check_semantics(report_line(""),
+    check_semantics("",
       beast{},
       beast{{1}},
       mutator,
@@ -68,7 +68,7 @@ namespace sequoia::testing
       }
     );
 
-    check_semantics(report_line(""),
+    check_semantics("",
       beast{},
       beast{{1}, {2, 3}},
       mutator,
@@ -79,7 +79,7 @@ namespace sequoia::testing
       }
     );
 
-    check_semantics(report_line(""),
+    check_semantics("",
       beast{{1}},
       beast{},
       mutator,
@@ -90,7 +90,7 @@ namespace sequoia::testing
       }
     );
 
-    check_semantics(report_line(""),
+    check_semantics("",
       beast{{2}},
       beast{{1}},
       mutator,
@@ -101,7 +101,7 @@ namespace sequoia::testing
       }
     );
 
-    check_semantics(report_line(""),
+    check_semantics("",
       beast{{2}},
       beast{{1}, {5,6}},
       mutator,
@@ -112,7 +112,7 @@ namespace sequoia::testing
       }
     );
 
-    check_semantics(report_line(""),
+    check_semantics("",
       beast{{2}, {7,8}},
       beast{{1}},
       mutator,
@@ -123,7 +123,7 @@ namespace sequoia::testing
       }
     );
 
-    check_semantics(report_line(""),
+    check_semantics("",
       beast{{2}, {7,8}},
       beast{{1}, {5,6}},
       mutator,
@@ -150,7 +150,7 @@ namespace sequoia::testing
       }
     };
 
-    check_semantics(report_line(""),
+    check_semantics("",
       beast{},
       beast{{1}},
       mutator,

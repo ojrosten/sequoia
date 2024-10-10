@@ -81,8 +81,15 @@ namespace sequoia::testing
 
     void copy_sequoia(std::ostream& stream, const project_paths& parentProjectPaths, const project_data& data)
     {
-      const std::filesystem::path seqLocation{data.project_root / "dependencies" / "sequoia"};
-      for(auto& entry : fs::directory_iterator{parentProjectPaths.project_root()})
+      const std::filesystem::path seqLocation{dependencies_paths{data.project_root}.sequoia_root()};
+      const auto parentSequoiaRoot{
+          [&parentProjectPaths](){
+            const auto sequoiaAsDependency{parentProjectPaths.dependencies().sequoia_root()};
+            return fs::exists(sequoiaAsDependency) ? sequoiaAsDependency : parentProjectPaths.project_root();
+          }()
+      };
+
+      for(auto& entry : fs::directory_iterator{parentSequoiaRoot})
       {
         if(fs::is_directory(entry))
         {
@@ -192,7 +199,7 @@ namespace sequoia::testing
       if(name.empty())
         throw std::runtime_error{"Project name, deduced as the last token of path, is empty\n"};
 
-      if(std::ranges::find_if(name, [](char c) { return !std::isalnum(c) || (c == '_') || (c == '-'); }) != name.cend())
+      if(std::ranges::find_if(name, [](char c) { return !(std::isalnum(c) || (c == '_') || (c == '-')); }) != name.cend())
       {
         throw std::runtime_error{std::string{"Please ensure the project name '"}
           .append(name)

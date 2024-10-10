@@ -71,6 +71,6 @@ namespace sequoia::testing
         }
     };
 
-    transition_checker_t::check(report_line(""), g, checker);
+    transition_checker_t::check(report(""), g, checker);
   }
 }

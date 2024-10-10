@@ -20,9 +20,9 @@ namespace sequoia::testing
   void failure_info_false_positive_test::run_tests()
   {
     failure_info x{}, y{4}, z{0, "foo"};
-    check(equivalence, report_line(""), x, 1, "");
-    check(equivalence, report_line(""), x, 0, "foo");
-    check(equality, report_line("check_index differs"), x, y);
-    check(equality, report_line("message differs"), x, z);
+    check(equivalence, "", x, 1, "");
+    check(equivalence, "", x, 0, "foo");
+    check(equality, "check_index differs", x, y);
+    check(equality, "message differs", x, z);
   }
 }

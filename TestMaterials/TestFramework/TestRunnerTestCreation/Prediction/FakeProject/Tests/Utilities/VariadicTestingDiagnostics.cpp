@@ -23,7 +23,7 @@ namespace sequoia::testing
 
         // auto x = []() { return variadic<T...>{args}; };
         // auto y = []() { return variadic<T...>{different args}; };
-        // check(equivalence, report_line("Useful Description"), x(), something inequivalent - ordinarily this would fail);
-        // check(equality, report_line("Useful Description"), x(), y());
+        // check(equivalence, "Useful Description", x(), something inequivalent - ordinarily this would fail);
+        // check(equality, "Useful Description", x(), y());
     }
 }

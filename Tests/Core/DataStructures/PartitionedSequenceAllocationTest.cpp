@@ -33,7 +33,7 @@ namespace sequoia::testing
 
   void partitioned_sequence_allocation_test::run_tests()
   {
-    do_allocation_tests(*this);
+    do_allocation_tests();
   }
 
 
@@ -54,27 +54,21 @@ namespace sequoia::testing
     using partitions_allocator = typename storage::partitions_allocator_type;
     using prediction = std::initializer_list<std::initializer_list<int>>;
 
-    auto makeMessage{
-      [](std::string_view message) {
-        return add_type_info<storage>(message);
-      }
-    };
-
     auto partitionMaker{ [](storage& s) { s.add_slot(); } };
     // null; [0,2][1]
-    auto[s,t]{check_semantics(report_line(add_type_info<storage>("")),
+    auto[s,t]{check_semantics(add_type_info<storage>(""),
                               [](){ return storage{allocator{}, partitions_allocator{}}; },
                               [](){ return storage{{{0,2}, {1}}, allocator{}, partitions_allocator{}}; },
                               partitionMaker,
                               allocation_info{contiguous_alloc_getter<storage>{}, {0_c, {1_c,0_mu}, {1_anp, 1_awp}}},
                               allocation_info{partitions_alloc_getter<storage>{}, {0_c, {1_c,1_mu}, {1_anp, 1_awp}}})};
 
-    check(equivalence, report_line(makeMessage("")), s, prediction{});
-    check(equivalence, report_line(makeMessage("")), t, prediction{{0,2}, {1}});
+    check(equivalence, add_type_info<storage>(""), s, prediction{});
+    check(equivalence, add_type_info<storage>(""), t, prediction{{0,2}, {1}});
 
     s.add_slot();
     // []
 
-    check(equality, report_line(makeMessage("")), s, storage{{{}}, allocator{}, partitions_allocator{}});
+    check(equality, add_type_info<storage>(""), s, storage{{{}}, allocator{}, partitions_allocator{}});
   }
 }

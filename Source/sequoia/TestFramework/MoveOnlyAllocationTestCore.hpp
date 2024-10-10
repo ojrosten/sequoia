@@ -30,30 +30,25 @@ namespace sequoia::testing
   public:
     constexpr static test_mode mode{Mode};
 
-    explicit move_only_allocation_extender(test_logger<Mode>& logger) : m_pLogger{&logger} {}
+    move_only_allocation_extender() = default;
 
-    move_only_allocation_extender(const move_only_allocation_extender&) = delete;
-    move_only_allocation_extender(move_only_allocation_extender&&)      = delete;
-
-    move_only_allocation_extender& operator=(const move_only_allocation_extender&) = delete;
-    move_only_allocation_extender& operator=(move_only_allocation_extender&&)      = delete;
-
-    template<moveonly T, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
+    template<class Self, moveonly T, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
       requires (!std::totally_ordered<T> && (sizeof...(Getters) > 0))
-    void check_semantics(std::string_view description, T&& x, T&& y, const T& xClone, const T& yClone, const T& movedFrom, Mutator yMutator, const allocation_info<T, Getters>&... info)
+    void check_semantics(this Self&& self, const reporter& description, T&& x, T&& y, const T& xClone, const T& yClone, const T& movedFrom, Mutator yMutator, const allocation_info<T, Getters>&... info)
     {
-      testing::check_semantics(move_only_message(description), logger(), std::move(x), std::move(y), xClone, yClone, opt_moved_from_ref<T>{movedFrom}, std::move(yMutator), info...);
+      testing::check_semantics(move_only_message(self.report(description)), self.m_Logger, std::move(x), std::move(y), xClone, yClone, opt_moved_from_ref<T>{movedFrom}, std::move(yMutator), info...);
     }
 
-    template<moveonly T, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
+    template<class Self, moveonly T, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
       requires (!std::totally_ordered<T>  && (sizeof...(Getters) > 0))
-    void check_semantics(std::string_view description, T&& x, T&& y, const T& xClone, const T& yClone, Mutator yMutator, const allocation_info<T, Getters>&... info)
+    void check_semantics(this Self&& self, const reporter& description, T&& x, T&& y, const T& xClone, const T& yClone, Mutator yMutator, const allocation_info<T, Getters>&... info)
     {
-      testing::check_semantics(move_only_message(description), logger(), std::move(x), std::move(y), xClone, yClone, opt_moved_from_ref<T>{}, std::move(yMutator), info...);
+      testing::check_semantics(move_only_message(self.report(description)), self.m_Logger, std::move(x), std::move(y), xClone, yClone, opt_moved_from_ref<T>{}, std::move(yMutator), info...);
     }
 
     template
     <
+      class Self,
       moveonly T,
       invocable_r<T> xMaker,
       invocable_r<T> yMaker,
@@ -61,13 +56,14 @@ namespace sequoia::testing
       alloc_getter<T>... Getters
     >
       requires (!std::totally_ordered<T>  && (sizeof...(Getters) > 0))
-    std::pair<T,T> check_semantics(std::string_view description, xMaker xFn, yMaker yFn, const T& movedFrom, Mutator yMutator, const allocation_info<T, Getters>&... info)
+    std::pair<T,T> check_semantics(this Self&& self, const reporter& description, xMaker xFn, yMaker yFn, const T& movedFrom, Mutator yMutator, const allocation_info<T, Getters>&... info)
     {
-      return testing::check_semantics(move_only_message(description), logger(), std::move(xFn), std::move(yFn), opt_moved_from_ref<T>{movedFrom}, std::move(yMutator), info...);
+      return testing::check_semantics(move_only_message(self.report(description)), self.m_Logger, std::move(xFn), std::move(yFn), opt_moved_from_ref<T>{movedFrom}, std::move(yMutator), info...);
     }
 
     template
     <
+      class Self,
       moveonly T,
       invocable_r<T> xMaker,
       invocable_r<T> yMaker,
@@ -75,27 +71,28 @@ namespace sequoia::testing
       alloc_getter<T>... Getters
     >
       requires (!std::totally_ordered<T>  && (sizeof...(Getters) > 0))
-    std::pair<T,T> check_semantics(std::string_view description, xMaker xFn, yMaker yFn, Mutator yMutator, const allocation_info<T, Getters>&... info)
+    std::pair<T,T> check_semantics(this Self&& self, const reporter& description, xMaker xFn, yMaker yFn, Mutator yMutator, const allocation_info<T, Getters>&... info)
     {
-      return testing::check_semantics(move_only_message(description), logger(), std::move(xFn), std::move(yFn), opt_moved_from_ref<T>{}, std::move(yMutator), info...);
+      return testing::check_semantics(move_only_message(self.report(description)), self.m_Logger, std::move(xFn), std::move(yFn), opt_moved_from_ref<T>{}, std::move(yMutator), info...);
     }
 
-    template<moveonly T, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
+    template<class Self, moveonly T, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
       requires (std::totally_ordered<T> && (sizeof...(Getters) > 0))
-    void check_semantics(std::string_view description, T&& x, T&& y, const T& xClone, const T& yClone, const T& movedFrom, std::weak_ordering order, Mutator yMutator, const allocation_info<T, Getters>&... info)
+    void check_semantics(this Self&& self, const reporter& description, T&& x, T&& y, const T& xClone, const T& yClone, const T& movedFrom, std::weak_ordering order, Mutator yMutator, const allocation_info<T, Getters>&... info)
     {
-      testing::check_semantics(move_only_message(description), logger(), std::move(x), std::move(y), xClone, yClone, opt_moved_from_ref<T>{movedFrom}, order, std::move(yMutator), info...);
+      testing::check_semantics(move_only_message(self.report(description)), self.m_Logger, std::move(x), std::move(y), xClone, yClone, opt_moved_from_ref<T>{movedFrom}, order, std::move(yMutator), info...);
     }
 
-    template<moveonly T, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
+    template<class Self, moveonly T, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
       requires (std::totally_ordered<T>  && (sizeof...(Getters) > 0))
-    void check_semantics(std::string_view description, T&& x, T&& y, const T& xClone, const T& yClone, std::weak_ordering order, Mutator yMutator, const allocation_info<T, Getters>&... info)
+    void check_semantics(this Self&& self, const reporter& description, T&& x, T&& y, const T& xClone, const T& yClone, std::weak_ordering order, Mutator yMutator, const allocation_info<T, Getters>&... info)
     {
-      testing::check_semantics(move_only_message(description), logger(), std::move(x), std::move(y), xClone, yClone, opt_moved_from_ref<T>{}, order, std::move(yMutator), info...);
+      testing::check_semantics(move_only_message(self.report(description)), self.m_Logger, std::move(x), std::move(y), xClone, yClone, opt_moved_from_ref<T>{}, order, std::move(yMutator), info...);
     }
 
     template
     <
+      class Self,
       moveonly T,
       invocable_r<T> xMaker,
       invocable_r<T> yMaker,
@@ -103,13 +100,14 @@ namespace sequoia::testing
       alloc_getter<T>... Getters
     >
       requires (std::totally_ordered<T> && (sizeof...(Getters) > 0))
-    std::pair<T, T> check_semantics(std::string_view description, xMaker xFn, yMaker yFn, const T& movedFrom, std::weak_ordering order, Mutator yMutator, allocation_info<T, Getters>... info)
+    std::pair<T, T> check_semantics(this Self&& self, const reporter& description, xMaker xFn, yMaker yFn, const T& movedFrom, std::weak_ordering order, Mutator yMutator, allocation_info<T, Getters>... info)
     {
-      return testing::check_semantics(move_only_message(description), logger(), std::move(xFn), std::move(yFn), opt_moved_from_ref<T>{movedFrom}, order, std::move(yMutator), info...);
+      return testing::check_semantics(move_only_message(self.report(description)), self.m_Logger, std::move(xFn), std::move(yFn), opt_moved_from_ref<T>{movedFrom}, order, std::move(yMutator), info...);
     }
 
     template
     <
+      class Self,
       moveonly T,
       invocable_r<T> xMaker,
       invocable_r<T> yMaker,
@@ -117,27 +115,16 @@ namespace sequoia::testing
       alloc_getter<T>... Getters
     >
       requires (std::totally_ordered<T>  && (sizeof...(Getters) > 0))
-    std::pair<T,T> check_semantics(std::string_view description, xMaker xFn, yMaker yFn, std::weak_ordering order, Mutator yMutator, allocation_info<T, Getters>... info)
+    std::pair<T,T> check_semantics(this Self&& self, const reporter& description, xMaker xFn, yMaker yFn, std::weak_ordering order, Mutator yMutator, allocation_info<T, Getters>... info)
     {
-      return testing::check_semantics(move_only_message(description), logger(), std::move(xFn), std::move(yFn), opt_moved_from_ref<T>{}, order, std::move(yMutator), info...);
+      return testing::check_semantics(move_only_message(self.report(description)), self.m_Logger, std::move(xFn), std::move(yFn), opt_moved_from_ref<T>{}, order, std::move(yMutator), info...);
     }
   protected:
     ~move_only_allocation_extender() = default;
-  private:
-    [[nodiscard]]
-    test_logger<Mode>& logger() noexcept { return *m_pLogger; }
 
-    test_logger<Mode>* m_pLogger;
+    move_only_allocation_extender(move_only_allocation_extender&&)            noexcept = default;
+    move_only_allocation_extender& operator=(move_only_allocation_extender&&) noexcept = default;
   };
-
-  template<class Test, test_mode Mode>
-  concept move_only_alloc_test =
-       std::derived_from<Test, basic_test<checker<Mode, move_only_allocation_extender<Mode>>>>
-    && !std::is_abstract_v<Test>
-    && requires{
-         std::declval<Test>().template test_allocation<true, true>();
-  };
-
 
   /*!  \brief Templated on the test_mode, this forms the basis of all allocation tests for move-only types.
 
@@ -150,7 +137,7 @@ namespace sequoia::testing
 
        Within the derived class, a call
 
-       do_allocation_tests(*this);
+       do_allocation_tests();
 
        will ensure that all checks defined in the test_allocation function template are executed
        for each combination of the allocation propagation flags.
@@ -159,24 +146,26 @@ namespace sequoia::testing
    */
 
   template<test_mode Mode>
-  class basic_move_only_allocation_test : public basic_test<checker<Mode, move_only_allocation_extender<Mode>>>
+  class basic_move_only_allocation_test : public basic_test<Mode, move_only_allocation_extender<Mode>>
   {
   public:
-    using basic_test<checker<Mode, move_only_allocation_extender<Mode>>>::basic_test;
+    using basic_test<Mode, move_only_allocation_extender<Mode>>::basic_test;
 
-    basic_move_only_allocation_test(const basic_move_only_allocation_test&) = delete;
+    basic_move_only_allocation_test(const basic_move_only_allocation_test&)            = delete;
     basic_move_only_allocation_test& operator=(const basic_move_only_allocation_test&) = delete;
   protected:
-    basic_move_only_allocation_test(basic_move_only_allocation_test&&)           noexcept = default;
+    basic_move_only_allocation_test(basic_move_only_allocation_test&&)            noexcept = default;
     basic_move_only_allocation_test& operator=(basic_move_only_allocation_test&&) noexcept = default;
 
-    template<move_only_alloc_test<Mode> Test>
-    static void do_allocation_tests(Test& test)
+    ~basic_move_only_allocation_test() = default;
+
+    template<class Self>
+    void do_allocation_tests(this Self&& self)
     {
-      test.template test_allocation<false, false>();
-      test.template test_allocation<false, true>();
-      test.template test_allocation<true, false>();
-      test.template test_allocation<true, true>();
+      self.template test_allocation<false, false>();
+      self.template test_allocation<false, true>();
+      self.template test_allocation<true, false>();
+      self.template test_allocation<true, true>();
     }
   };
 
