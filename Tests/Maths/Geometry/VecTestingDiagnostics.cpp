@@ -39,7 +39,7 @@ namespace sequoia::testing
     using array_t = std::array<field_t, 1>;
 
     VecCoords x{}, y{field_t(1)};
-    check(equivalence, report_line(""), x, array_t{1});
-    check(equality, report_line(""), x, y);
+    check(equivalence, "", x, array_t{1});
+    check(equality, "", x, y);
   }
 }

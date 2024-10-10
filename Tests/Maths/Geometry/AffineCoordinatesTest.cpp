@@ -45,7 +45,7 @@ namespace sequoia::testing
         }
     };
 
-    transition_checker<affine_t>::check(report_line(""), g, checker);
+    transition_checker<affine_t>::check(report(""), g, checker);
   }
 
   template<class Element, maths::field Field>
@@ -61,7 +61,7 @@ namespace sequoia::testing
         }
     };
 
-    transition_checker<affine_t>::check(report_line(""), g, checker);
+    transition_checker<affine_t>::check(report(""), g, checker);
   }
 
   template<class Element, maths::field Field>
@@ -77,7 +77,7 @@ namespace sequoia::testing
         }
     };
 
-    transition_checker<affine_t>::check(report_line(""), g, checker);
+    transition_checker<affine_t>::check(report(""), g, checker);
   }
 
 }

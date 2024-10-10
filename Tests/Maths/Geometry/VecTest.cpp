@@ -281,7 +281,7 @@ namespace sequoia::testing
     }
 
     template<class VecCoords, maths::network Graph>
-    void add_dim_1_transitions(Graph& g)
+    void add_dim_1_transitions(Graph& g, vec_test& t)
     {
       using vec_t   = VecCoords;
       using field_t = vec_t::field_type;
@@ -292,7 +292,7 @@ namespace sequoia::testing
         g,
         coordinates_operations::dim_1_label::one,
         coordinates_operations::dim_1_label::zero,
-        report_line("(1) * field_t{}"),
+        t.report("(1) * field_t{}"),
         [](vec_t v) -> vec_t { return v * field_t{}; }
       );
 
@@ -300,7 +300,7 @@ namespace sequoia::testing
         g,
         coordinates_operations::dim_1_label::one,
         coordinates_operations::dim_1_label::zero,
-        report_line("field_t{} * (1)"),
+        t.report("field_t{} * (1)"),
         [](vec_t v) -> vec_t { return field_t{} *v; }
       );
 
@@ -308,7 +308,7 @@ namespace sequoia::testing
         g,
         coordinates_operations::dim_1_label::one,
         coordinates_operations::dim_1_label::zero,
-        report_line("(1) *= field_t{}"),
+        t.report("(1) *= field_t{}"),
         [](vec_t v) -> vec_t { return v *= field_t{}; }
       );
 
@@ -318,7 +318,7 @@ namespace sequoia::testing
         g,
         coordinates_operations::dim_1_label::one,
         coordinates_operations::dim_1_label::two,
-        report_line("(1) * field_t{2}"),
+        t.report("(1) * field_t{2}"),
         [](vec_t v) -> vec_t { return v * field_t{2}; }
       );
 
@@ -326,7 +326,7 @@ namespace sequoia::testing
         g,
         coordinates_operations::dim_1_label::one,
         coordinates_operations::dim_1_label::two,
-        report_line("field_t{2} * (1)"),
+        t.report("field_t{2} * (1)"),
         [](vec_t v) -> vec_t { return field_t{2} *v; }
       );
 
@@ -334,7 +334,7 @@ namespace sequoia::testing
         g,
         coordinates_operations::dim_1_label::one,
         coordinates_operations::dim_1_label::two,
-        report_line("(1) *= field_t{2}"),
+        t.report("(1) *= field_t{2}"),
         [](vec_t v) -> vec_t { return v *= field_t{2}; }
       );
 
@@ -344,7 +344,7 @@ namespace sequoia::testing
         g,
         coordinates_operations::dim_1_label::two,
         coordinates_operations::dim_1_label::one,
-        report_line("(2) / field_t{2}"),
+        t.report("(2) / field_t{2}"),
         [](vec_t v) -> vec_t { return v / field_t{2}; }
       );
 
@@ -352,13 +352,13 @@ namespace sequoia::testing
         g,
         coordinates_operations::dim_1_label::two,
         coordinates_operations::dim_1_label::one,
-        report_line("(2) /= field_t{2}"),
+        t.report("(2) /= field_t{2}"),
         [](vec_t v) -> vec_t { return v /= field_t{2}; }
       );
     }
 
     template<class VecCoords, maths::network Graph>
-    void add_dim_2_transitions(Graph& g)
+    void add_dim_2_transitions(Graph& g, vec_test& t)
     {
       using vec_t = VecCoords;
       using field_t = vec_t::field_type;
@@ -369,7 +369,7 @@ namespace sequoia::testing
         g,
         coordinates_operations::dim_2_label::neg_one_neg_one,
         coordinates_operations::dim_2_label::one_one,
-        report_line("(-1, -1) *= -1"),
+        t.report("(-1, -1) *= -1"),
         [](vec_t v) -> vec_t { return v *= field_t{-1}; }
       );
 
@@ -377,7 +377,7 @@ namespace sequoia::testing
         g,
         coordinates_operations::dim_2_label::neg_one_neg_one,
         coordinates_operations::dim_2_label::one_one,
-        report_line("(-1, -1) * -1"),
+        t.report("(-1, -1) * -1"),
         [](vec_t v) -> vec_t { return v * field_t{-1}; }
       );
 
@@ -385,7 +385,7 @@ namespace sequoia::testing
         g,
         coordinates_operations::dim_2_label::neg_one_neg_one,
         coordinates_operations::dim_2_label::one_one,
-        report_line("(-1, -1) /= -1"),
+        t.report("(-1, -1) /= -1"),
         [](vec_t v) -> vec_t { return v /= field_t{-1}; }
       );
 
@@ -393,7 +393,7 @@ namespace sequoia::testing
         g,
         coordinates_operations::dim_2_label::neg_one_neg_one,
         coordinates_operations::dim_2_label::one_one,
-        report_line("(-1, -1) / -1"),
+        t.report("(-1, -1) / -1"),
         [](vec_t v) -> vec_t { return v / field_t{-1}; }
       );
     }
@@ -427,7 +427,7 @@ namespace sequoia::testing
     using vec_t = vector_coordinates<my_vec_space<Set, Field, 1>, canonical_basis<Set, Field, 1>>;
     auto g{coordinates_operations::make_dim_1_orderable_transition_graph<vec_t>()};
 
-    add_dim_1_transitions<vec_t>(g);
+    add_dim_1_transitions<vec_t>(g, *this);
 
     auto checker{
       [this](std::string_view description, const vec_t& obtained, const vec_t& prediction, const vec_t& parent, std::weak_ordering ordering) {
@@ -437,7 +437,7 @@ namespace sequoia::testing
       }
     };
 
-    transition_checker<vec_t>::check(report_line(""), g, checker);
+    transition_checker<vec_t>::check(report(""), g, checker);
   }
 
   template<class Set, maths::field Field>
@@ -446,7 +446,7 @@ namespace sequoia::testing
     using vec_t = vector_coordinates<my_vec_space<Set, Field, 1>, canonical_basis<Set, Field, 1>>;
     auto g{coordinates_operations::make_dim_1_unorderable_transition_graph<vec_t>()};
 
-    add_dim_1_transitions<vec_t>(g);
+    add_dim_1_transitions<vec_t>(g, *this);
 
     auto checker{
         [this](std::string_view description, const vec_t& obtained, const vec_t& prediction, const vec_t& parent, std::size_t host, std::size_t target) {
@@ -455,7 +455,7 @@ namespace sequoia::testing
         }
     };
 
-    transition_checker<vec_t>::check(report_line(""), g, checker);
+    transition_checker<vec_t>::check(report(""), g, checker);
   }
 
   template<class Set, maths::field Field>
@@ -464,7 +464,7 @@ namespace sequoia::testing
     using vec_t = vector_coordinates<my_vec_space<Set, Field, 2>, canonical_basis<Set, Field, 2>>;
     auto g{coordinates_operations::make_dim_2_transition_graph<vec_t>()};
 
-    add_dim_2_transitions<vec_t>(g);
+    add_dim_2_transitions<vec_t>(g, *this);
 
     auto checker{
         [this](std::string_view description, const vec_t& obtained, const vec_t& prediction, const vec_t& parent, std::size_t host, std::size_t target) {
@@ -473,7 +473,7 @@ namespace sequoia::testing
         }
     };
 
-    transition_checker<vec_t>::check(report_line(""), g, checker);
+    transition_checker<vec_t>::check(report(""), g, checker);
   }
 
   template<class Set, std::floating_point Field>
@@ -483,12 +483,12 @@ namespace sequoia::testing
 
     static_assert(basis_for<canonical_basis<Set, Field, 1>, my_vec_space<Set, Field, 1>>);
 
-    check(equality, report_line(""), inner_product(vec_t{}, vec_t{Field(1)}), Field{});
-    check(equality, report_line(""), inner_product(vec_t{Field(1)}, vec_t{}), Field{});
-    check(equality, report_line(""), inner_product(vec_t{Field(-1)}, vec_t{Field(1)}), Field{-1});
-    check(equality, report_line(""), inner_product(vec_t{Field(1)}, vec_t{Field(-1)}), Field{-1});
-    check(equality, report_line(""), inner_product(vec_t{Field(1)}, vec_t{Field(1)}), Field{1});
-    check(equality, report_line(""), inner_product(vec_t{Field(-7)}, vec_t{Field(42)}), Field{-294});
+    check(equality, "", inner_product(vec_t{}, vec_t{Field(1)}), Field{});
+    check(equality, "", inner_product(vec_t{Field(1)}, vec_t{}), Field{});
+    check(equality, "", inner_product(vec_t{Field(-1)}, vec_t{Field(1)}), Field{-1});
+    check(equality, "", inner_product(vec_t{Field(1)}, vec_t{Field(-1)}), Field{-1});
+    check(equality, "", inner_product(vec_t{Field(1)}, vec_t{Field(1)}), Field{1});
+    check(equality, "", inner_product(vec_t{Field(-7)}, vec_t{Field(42)}), Field{-294});
   }
 
   template<class Set, class Field>
@@ -497,8 +497,8 @@ namespace sequoia::testing
   {
     using vec_t = vector_coordinates<my_vec_space<Set, Field, 1>, canonical_basis<Set, Field, 1>>;
 
-    check(equality, report_line(""), inner_product(vec_t{Field(1, 1)}, vec_t{Field(1, 1)}), Field{2});
-    check(equality, report_line(""), inner_product(vec_t{Field(1, -1)}, vec_t{Field(1, 1)}), Field{0, 2});
+    check(equality, "", inner_product(vec_t{Field(1, 1)}, vec_t{Field(1, 1)}), Field{2});
+    check(equality, "", inner_product(vec_t{Field(1, -1)}, vec_t{Field(1, 1)}), Field{0, 2});
   }
 
   void vec_test::test_masses()
