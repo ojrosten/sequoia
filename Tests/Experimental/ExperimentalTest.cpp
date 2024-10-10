@@ -320,13 +320,13 @@ namespace sequoia::testing
       auto v{graph_proposal::vertices(g)};
 
       auto vid{graph_proposal::vertex_id(g, node_iter_t{})};
-      check(equality, report_line(""), vid, 0_sz);
+      check(equality, "", vid, 0_sz);
 
       static_assert(std::is_same_v<graph_proposal::vertex_id_t<graph_t>, std::size_t>);
 
       auto es{graph_proposal::edges(g, 0_sz)};
       auto target{graph_proposal::target_id(g, es.front())};
-      check(equality, report_line(""), target, 0_sz);
+      check(equality, "", target, 0_sz);
 
       static_assert(graph_proposal::basic_targeted_edge<graph_t>);
       static_assert(!graph_proposal::basic_sourced_edge<graph_t>);
@@ -340,13 +340,13 @@ namespace sequoia::testing
       graph_t g{{{0, 3.14f}}};
 
       auto vid{graph_proposal::vertex_id(g, 0_sz)};
-      check(equality, report_line(""), vid, 0_sz);
+      check(equality, "", vid, 0_sz);
 
       static_assert(std::is_same_v<graph_proposal::vertex_id_t<graph_t>, std::size_t>);
 
       auto es{graph_proposal::edges(g, 0_sz)};
       auto target{graph_proposal::target_id(g, es.front())};
-      check(equality, report_line(""), target, 0_sz);
+      check(equality, "", target, 0_sz);
 
       static_assert(graph_proposal::basic_targeted_edge<graph_t>);
       static_assert(!graph_proposal::basic_sourced_edge<graph_t>);
@@ -362,13 +362,13 @@ namespace sequoia::testing
       auto v{graph_proposal::vertices(g)};
 
       auto vid{graph_proposal::vertex_id(g, g.cbegin_node_weights())};
-      check(equality, report_line(""), vid, 0_sz);
+      check(equality, "", vid, 0_sz);
 
       static_assert(std::is_same_v<graph_proposal::vertex_id_t<graph_t>, std::size_t>);
 
       auto es{graph_proposal::edges(g, 0_sz)};
       auto target{graph_proposal::target_id(g, es.front())};
-      check(equality, report_line(""), target, 0_sz);
+      check(equality, "", target, 0_sz);
 
       static_assert(graph_proposal::basic_targeted_edge<graph_t>);
       static_assert(!graph_proposal::basic_sourced_edge<graph_t>);
@@ -380,7 +380,7 @@ namespace sequoia::testing
       graph_t g{{{1, 0, 3.14}}, {{0, 0, 3.14}}};
 
       auto es{graph_proposal::edges(g, 1_sz)};
-      check(equality, report_line(""), graph_proposal::source_id(g, es.front()), 1_sz);
+      check(equality, "", graph_proposal::source_id(g, es.front()), 1_sz);
 
       static_assert(graph_proposal::basic_sourced_edge<graph_t>);
       static_assert(graph_proposal::basic_sourced_targeted_edge<graph_t>);

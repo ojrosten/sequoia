@@ -32,8 +32,8 @@ namespace sequoia::testing
   void angle_false_positive_test::test_angle()
   {
     angle<T, Period> theta{}, phi{1};
-    check(equivalence, report_line(""), theta, T{1});
-    check(equivalence, report_line(""), phi, T{});
-    check(equality, report_line(""), theta, phi);
+    check(equivalence, "", theta, T{1});
+    check(equivalence, "", phi, T{});
+    check(equality, "", theta, phi);
   }
 }

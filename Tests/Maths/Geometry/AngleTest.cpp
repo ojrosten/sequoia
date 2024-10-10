@@ -102,25 +102,25 @@ namespace sequoia::testing
         }
     };
 
-    transition_checker<angle_t>::check(report_line(""), g, checker);
+    transition_checker<angle_t>::check(report(""), g, checker);
   }
 
   template<std::floating_point T>
   void angle_test::test_principal_angle()
   {
     constexpr auto pi{std::numbers::pi_v<T>};
-    check(equality, report_line(""), radians{ pi / 2}.principal_angle(), radians<T>{ pi/2});
-    check(equality, report_line(""), radians{-pi / 2}.principal_angle(), radians<T>{-pi/2});
-    check(equality, report_line(""), radians{ 2 * pi}.principal_angle(), radians<T>{});
-    check(equality, report_line(""), radians{-2 * pi}.principal_angle(), radians<T>{});
-    // check(equality, report_line(""), radians{5 * pi / 2}.principal_angle(), radians<T>{pi/2});
+    check(equality, "", radians{ pi / 2}.principal_angle(), radians<T>{ pi/2});
+    check(equality, "", radians{-pi / 2}.principal_angle(), radians<T>{-pi/2});
+    check(equality, "", radians{ 2 * pi}.principal_angle(), radians<T>{});
+    check(equality, "", radians{-2 * pi}.principal_angle(), radians<T>{});
+    // check(equality, "", radians{5 * pi / 2}.principal_angle(), radians<T>{pi/2});
 
-    check(equality, report_line(""), degrees<T>{ 180}.principal_angle(), degrees<T>{ 180});
-    check(equality, report_line(""), degrees<T>{-180}.principal_angle(), degrees<T>{-180});
-    check(equality, report_line(""), degrees<T>{ 360}.principal_angle(), degrees<T>{});
-    check(equality, report_line(""), degrees<T>{-360}.principal_angle(), degrees<T>{});
-    check(equality, report_line(""), degrees<T>{ 540}.principal_angle(), degrees<T>{ 180});
-    check(equality, report_line(""), degrees<T>{-540}.principal_angle(), degrees<T>{-180});
+    check(equality, "", degrees<T>{ 180}.principal_angle(), degrees<T>{ 180});
+    check(equality, "", degrees<T>{-180}.principal_angle(), degrees<T>{-180});
+    check(equality, "", degrees<T>{ 360}.principal_angle(), degrees<T>{});
+    check(equality, "", degrees<T>{-360}.principal_angle(), degrees<T>{});
+    check(equality, "", degrees<T>{ 540}.principal_angle(), degrees<T>{ 180});
+    check(equality, "", degrees<T>{-540}.principal_angle(), degrees<T>{-180});
   }
 
   template<std::floating_point T>
@@ -128,18 +128,18 @@ namespace sequoia::testing
   {
     constexpr auto pi{std::numbers::pi_v<T>};
 
-    check(equality, report_line(""), to_degrees(radians<T>{}),    degrees<T>{});
-    check(equality, report_line(""), to_degrees(radians<T>{pi}),  degrees<T>{180});
-    check(equality, report_line(""), to_degrees(radians<T>{-pi}), degrees<T>{-180});
+    check(equality, "", to_degrees(radians<T>{}),    degrees<T>{});
+    check(equality, "", to_degrees(radians<T>{pi}),  degrees<T>{180});
+    check(equality, "", to_degrees(radians<T>{-pi}), degrees<T>{-180});
 
-    check(equality, report_line(""), to_radians(degrees<T>{}),     radians<T>{});
-    check(equality, report_line(""), to_radians(degrees<T>{180}),  radians<T>{pi});
-    check(equality, report_line(""), to_radians(degrees<T>{-180}), radians<T>{-pi});
+    check(equality, "", to_radians(degrees<T>{}),     radians<T>{});
+    check(equality, "", to_radians(degrees<T>{180}),  radians<T>{pi});
+    check(equality, "", to_radians(degrees<T>{-180}), radians<T>{-pi});
   }
 
   void angle_test::test_fp_conversions()
   {
-    check(equality, report_line(""), convert<float(360)>(degrees<double>{20.3}), degrees<float>{20.3f});
+    check(equality, "", convert<float(360)>(degrees<double>{20.3}), degrees<float>{20.3f});
   }
 
   template<std::floating_point T>
@@ -147,34 +147,34 @@ namespace sequoia::testing
   {
     constexpr auto pi{std::numbers::pi_v<T>};
 
-    check(equality, report_line(""), sin(radians<T>{-pi / 2}), -T(1));
-    check(equality, report_line(""), sin(radians<T>{}), T{});
-    check(equality, report_line(""), sin(radians<T>{pi/2}), T(1));
-    check(equality, report_line(""), sin(degrees<T>{-90}), -T(1));
-    check(equality, report_line(""), sin(degrees<T>{}), T{});
-    check(equality, report_line(""), sin(degrees<T>{90}), T(1));
+    check(equality, "", sin(radians<T>{-pi / 2}), -T(1));
+    check(equality, "", sin(radians<T>{}), T{});
+    check(equality, "", sin(radians<T>{pi/2}), T(1));
+    check(equality, "", sin(degrees<T>{-90}), -T(1));
+    check(equality, "", sin(degrees<T>{}), T{});
+    check(equality, "", sin(degrees<T>{90}), T(1));
 
-    check(equality, report_line(""), cos(radians<T>{-pi / 2}), std::cos(-pi/2));
-    check(equality, report_line(""), cos(radians<T>{}), T{1});
-    check(equality, report_line(""), cos(radians<T>{pi / 2}), std::cos(pi / 2));
-    check(equality, report_line(""), cos(degrees<T>{-90}), std::cos(-pi / 2));
-    check(equality, report_line(""), cos(degrees<T>{}), T{1});
-    check(equality, report_line(""), cos(degrees<T>{90}), std::cos(pi / 2));
+    check(equality, "", cos(radians<T>{-pi / 2}), std::cos(-pi/2));
+    check(equality, "", cos(radians<T>{}), T{1});
+    check(equality, "", cos(radians<T>{pi / 2}), std::cos(pi / 2));
+    check(equality, "", cos(degrees<T>{-90}), std::cos(-pi / 2));
+    check(equality, "", cos(degrees<T>{}), T{1});
+    check(equality, "", cos(degrees<T>{90}), std::cos(pi / 2));
 
-    check(equality, report_line(""), tan(radians<T>{-pi / 2}), std::tan(-pi / 2));
-    check(equality, report_line(""), tan(radians<T>{}), T{});
-    check(equality, report_line(""), tan(radians<T>{pi / 2}), std::tan(pi / 2));
-    check(equality, report_line(""), tan(degrees<T>{-90}), std::tan(-pi / 2));
-    check(equality, report_line(""), tan(degrees<T>{}), T{});
-    check(equality, report_line(""), tan(degrees<T>{90}), std::tan(pi / 2));
+    check(equality, "", tan(radians<T>{-pi / 2}), std::tan(-pi / 2));
+    check(equality, "", tan(radians<T>{}), T{});
+    check(equality, "", tan(radians<T>{pi / 2}), std::tan(pi / 2));
+    check(equality, "", tan(degrees<T>{-90}), std::tan(-pi / 2));
+    check(equality, "", tan(degrees<T>{}), T{});
+    check(equality, "", tan(degrees<T>{90}), std::tan(pi / 2));
 
-    check(equality, report_line(""), asin(T{}), radians<T>{});
-    check(equality, report_line(""), asin(T{1}), radians<T>{pi/2});
+    check(equality, "", asin(T{}), radians<T>{});
+    check(equality, "", asin(T{1}), radians<T>{pi/2});
 
-    check(equality, report_line(""), acos(T{}), radians<T>{pi / 2});
-    check(equality, report_line(""), acos(T{1}), radians<T>{});
+    check(equality, "", acos(T{}), radians<T>{pi / 2});
+    check(equality, "", acos(T{1}), radians<T>{});
 
-    check(equality, report_line(""), atan(T{}), radians<T>{});
-    check(equality, report_line(""), atan(T{1}), radians<T>{pi / 4});
+    check(equality, "", atan(T{}), radians<T>{});
+    check(equality, "", atan(T{1}), radians<T>{pi / 4});
   }
 }

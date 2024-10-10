@@ -30,7 +30,7 @@ namespace sequoia::testing
     using array_t = std::array<T, 1>;
 
     maths::vec<my_vec_space<T, 1>> x{}, y{T(1)};
-    check(equivalence, report_line(""), x, array_t{1});
-    check(equality, report_line(""), x, y);
+    check(equivalence, "", x, array_t{1});
+    check(equality, "", x, y);
   }
 }

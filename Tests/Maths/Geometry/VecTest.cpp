@@ -87,7 +87,7 @@ namespace sequoia::testing
           }
       };
 
-      transition_checker<vec_t>::check(report_line(""), g, checker);
+      transition_checker<vec_t>::check(report(""), g, checker);
   }
 
   template<class T>
@@ -137,7 +137,7 @@ namespace sequoia::testing
         }
     };
 
-    transition_checker<vec_t>::check(report_line(""), g, checker);
+    transition_checker<vec_t>::check("", g, checker);
   }
 
   template<class T>
@@ -190,6 +190,6 @@ namespace sequoia::testing
         }
     };
 
-    transition_checker<vec_t>::check(report_line(""), g, checker);
+    transition_checker<vec_t>::check("", g, checker);
   }
 }
