@@ -8,5 +8,7 @@ This is bad
 Exception thrown during last check
 Last Recorded Message:
 
+Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 40
 Throw during check
+
 [sequoia::testing::(anonymous namespace)::foo]

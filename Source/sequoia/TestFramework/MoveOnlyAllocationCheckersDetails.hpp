@@ -76,7 +76,7 @@ namespace sequoia::testing::impl
 
   template<test_mode Mode, class Actions, moveonly T, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
     requires (sizeof...(Getters) > 0)
-  void check_semantics(std::string_view description,
+  void check_semantics(std::string description,
                        test_logger<Mode>& logger,
                        const Actions& actions,
                        T&& x,
@@ -87,7 +87,7 @@ namespace sequoia::testing::impl
                        Mutator m,
                        const allocation_info<T, Getters>&... info)
   {
-    const auto message{!description.empty() ? add_type_info<T>(description).append("\n") : ""};
+    const auto message{!description.empty() ? add_type_info<T>(std::move(description)).append("\n") : ""};
     sentinel<Mode> sentry{logger, message};
 
     if(auto[optx,opty]{check_para_constructor_allocations(logger, std::forward<T>(x), std::forward<T>(y), xClone, yClone, info...)}; (optx != std::nullopt) && (opty != std::nullopt))
@@ -107,7 +107,7 @@ namespace sequoia::testing::impl
     alloc_getter<T>... Getters
   >
     requires (sizeof...(Getters) > 0)
-  std::pair<T,T> check_semantics(std::string_view description,
+  std::pair<T,T> check_semantics(std::string description,
                                  test_logger<Mode>& logger,
                                  const Actions& actions,
                                  xMaker xFn,
@@ -116,7 +116,7 @@ namespace sequoia::testing::impl
                                  Mutator m,
                                  const allocation_info<T, Getters>&... info)
   {
-    sentinel<Mode> sentry{logger, add_type_info<T>(description).append("\n")};
+    sentinel<Mode> sentry{logger, add_type_info<T>(std::move(description)).append("\n")};
 
     auto x{xFn()};
     auto y{yFn()};

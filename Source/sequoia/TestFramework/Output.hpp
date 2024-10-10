@@ -199,7 +199,47 @@ namespace sequoia::testing
   std::string instability_footer();
 
   [[nodiscard]]
-  std::string report_line(std::string_view message, const std::source_location loc = std::source_location::current(), const std::filesystem::path& repository = {});
+  std::string report_line(std::string_view message, const std::filesystem::path& repository, const std::source_location loc);
+
+  [[nodiscard]]
+  std::filesystem::path path_for_reporting(const std::filesystem::path& file, const std::filesystem::path& repository);
+
+  struct no_source_location_t{};
+  inline constexpr no_source_location_t no_source_location{};
+
+  class reporter
+  {
+  public:
+    reporter(const char* message, const std::source_location loc = std::source_location::current())
+      : reporter{std::string{message},loc}
+    {}
+
+    reporter(std::string_view message, const std::source_location loc = std::source_location::current())
+      : reporter{std::string{message},loc}
+    {}
+
+    reporter(std::string message, const std::source_location loc = std::source_location::current())
+      : m_Message{std::move(message)}
+      , m_Loc{loc}
+    {}
+
+    reporter(std::string message, no_source_location_t)
+      : m_Message{std::move(message)}
+    {}
+
+    reporter(std::string_view message, no_source_location_t)
+      : reporter{std::string{message}, no_source_location}
+    {}
+
+    [[nodiscard]]
+    const std::string& message() const noexcept { return m_Message; }
+
+    [[nodiscard]]
+    const std::optional<std::source_location>& location() const noexcept { return m_Loc; }
+  private:
+    std::string m_Message{};
+    std::optional<std::source_location> m_Loc{};
+  };
 
   [[nodiscard]]
   std::string tidy_name(std::string name, clang_type);
@@ -274,8 +314,8 @@ namespace sequoia::testing
 
   template<class T, class... U>
   [[nodiscard]]
-  std::string add_type_info(std::string_view description)
+  std::string add_type_info(std::string description)
   {
-    return append_lines(description, make_type_info<T, U...>());
+    return append_lines(std::move(description), make_type_info<T, U...>());
   }
 }

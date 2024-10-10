@@ -18,7 +18,7 @@ namespace sequoia::testing
 	void probability_false_positive_test::run_tests()
 	{
 		maths::probability x{0.5}, y{1.0};
-		check(equivalence, report_line(""), x, 0.6);
-		check(equality, report_line(""), x, y);
+		check(equivalence, "", x, 0.6);
+		check(equality, "", x, y);
 	}
 }

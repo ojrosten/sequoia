@@ -29,82 +29,82 @@ namespace sequoia::testing
         // begin 'empty'
         trg.join(data_description::empty,
                  data_description::empty,
-                 t.report_line(""),
+                 t.report(""),
                  [&t](data_t d) -> data_t {
                    auto i{d.erase_from_partition(d.cbegin_partition(0))};
-                   t.check(equality, report_line("Erase from non-existent partition"), i, d.begin_partition(0));
+                   t.check(equality, "Erase from non-existent partition", i, d.begin_partition(0));
                    return d;
                  }
           );
 
         trg.join(data_description::empty,
           data_description::empty,
-          t.report_line(""),
+          t.report(""),
           [&t](data_t d) -> data_t {
             auto i{d.erase_from_partition(d.cbegin_partition(0), d.cend_partition(0))};
-            t.check(equality, report_line("Erase range from non-existent partition"), i, d.begin_partition(0));
+            t.check(equality, "Erase range from non-existent partition", i, d.begin_partition(0));
             return d;
           }
         );
 
         trg.join(data_description::empty,
                  data_description::empty,
-                 t.report_line(""),
+                 t.report(""),
                  [&t](data_t d) -> data_t {
                    auto i{d.erase_from_partition(0, 0)};
-                   t.check(equality, report_line("Erase from non-existent partition"), i, d.begin_partition(0));
+                   t.check(equality, "Erase from non-existent partition", i, d.begin_partition(0));
                    return d;
                  }
           );
 
         trg.join(data_description::empty,
                  data_description::empty,
-                 t.report_line(""),
+                 t.report(""),
                  [&t](data_t d) -> data_t {
                    auto i{d.erase_from_partition(1, 0)};
-                   t.check(equality, report_line(""), i, d.begin_partition(0));
+                   t.check(equality, "", i, d.begin_partition(0));
                    return d;
                  }
           );
 
         trg.join(data_description::empty,
                  data_description::empty,
-                 t.report_line(""),
+                 t.report(""),
                  [&t](data_t d) -> data_t {
                    auto i{d.erase_from_partition(0, 1)};
-                   t.check(equality, report_line(""), i, d.begin_partition(0));
+                   t.check(equality, "", i, d.begin_partition(0));
                    return d;
                  }
           );
 
         trg.join(data_description::empty,
                  data_description::empty,
-                 t.report_line(""),
+                 t.report(""),
                  [&t](data_t d) -> data_t {
                    auto i{d.erase_from_partition(1, 1)};
-                   t.check(equality, report_line(""), i, d.begin_partition(0));
+                   t.check(equality, "", i, d.begin_partition(0));
                    return d;
                  }
           );
 
         trg.join(data_description::empty,
           data_description::empty,
-          t.report_line(""),
+          t.report(""),
           [&t](data_t d) -> data_t {
-            t.check(equality, t.report_line(""), d.capacity(), 0_sz);
-            t.check(equality, t.report_line(""), d.num_partitions_capacity(), 0_sz);
+            t.check(equality, "", d.capacity(), 0_sz);
+            t.check(equality, "", d.num_partitions_capacity(), 0_sz);
 
             d.reserve(4);
-            t.check(equality, t.report_line(""), d.capacity(), 4_sz);
-            t.check(equality, t.report_line(""), d.num_partitions_capacity(), 0_sz);
+            t.check(equality, "", d.capacity(), 4_sz);
+            t.check(equality, "", d.num_partitions_capacity(), 0_sz);
 
             d.reserve_partitions(8);
-            t.check(equality, t.report_line(""), d.capacity(), 4_sz);
-            t.check(equality, t.report_line(""), d.num_partitions_capacity(), 8_sz);
+            t.check(equality, "", d.capacity(), 4_sz);
+            t.check(equality, "", d.num_partitions_capacity(), 8_sz);
 
             d.shrink_to_fit();
-            t.check(equality, t.report_line("May fail if shrink to fit impl does not reduce capacity"), d.capacity(), 0_sz);
-            t.check(equality, t.report_line("May fail if shrink to fit impl does not reduce capacity"), d.num_partitions_capacity(), 0_sz);
+            t.check(equality, "May fail if shrink to fit impl does not reduce capacity", d.capacity(), 0_sz);
+            t.check(equality, "May fail if shrink to fit impl does not reduce capacity", d.num_partitions_capacity(), 0_sz);
 
             return d;
           }
@@ -115,10 +115,10 @@ namespace sequoia::testing
 
         trg.join(data_description::empty_partition,
                  data_description::empty_partition,
-                 t.report_line(""),
+                 t.report(""),
                  [&t](data_t d) -> data_t {
                    auto i{d.erase_from_partition(d.cbegin_partition(1))};
-                   t.check(equality, report_line("Erase from non-existent partition"), i, d.begin_partition(1));
+                   t.check(equality, "Erase from non-existent partition", i, d.begin_partition(1));
                    return d;
                  }
           );
@@ -127,12 +127,12 @@ namespace sequoia::testing
 
         auto checker{
             [&t](std::string_view description, const data_t& obtained, const data_t& prediction, const data_t& parent, std::size_t host, std::size_t target) {
-              t.check(equality, description, obtained, prediction);
-              if(host != target) t.check_semantics(description, prediction, parent);
+              t.check(equality, {description, no_source_location}, obtained, prediction);
+              if(host != target) t.check_semantics({description, no_source_location}, prediction, parent);
             }
         };
 
-        transition_checker<data_t>::check(report_line(""), trg, checker);
+        transition_checker<data_t>::check(t.report(""), trg, checker);
       }
     };
   }

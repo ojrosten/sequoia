@@ -94,12 +94,12 @@ namespace sequoia::testing
 
       auto checker{
           [&t](std::string_view description, const graph_t& obtained, const graph_t& prediction, const graph_t& parent, std::size_t host, std::size_t target) {
-            t.check(equality, description, obtained, prediction);
-            if(host != target) t.check_semantics(description, prediction, parent);
+            t.check(equality, {description, no_source_location}, obtained, prediction);
+            if(host != target) t.check_semantics({description, no_source_location}, prediction, parent);
           }
       };
 
-      transition_checker<graph_t>::check(report_line(""), trg, checker);
+      transition_checker<graph_t>::check(t.report(""), trg, checker);
     }
 
     [[nodiscard]]
@@ -113,16 +113,16 @@ namespace sequoia::testing
       using nodes = std::initializer_list<node_weight_type>;
 
       // One node
-      t.check_exception_thrown<std::logic_error>(t.report_line("Mismatched loop weights"), [](){ return graph_t{{edge_t{0, 1.0, 1.0}, edge_t{0, 1.0, 2.0}}}; });
+      t.check_exception_thrown<std::logic_error>("Mismatched loop weights", [](){ return graph_t{{edge_t{0, 1.0, 1.0}, edge_t{0, 1.0, 2.0}}}; });
 
       // Two nodes
-      t.check_exception_thrown<std::logic_error>(t.report_line("Mismatched weights"), [](){ return graph_t{{edge_t{1, 1.0, 2.0}}, {edge_t{0, 2.0, 1.0}}}; });
+      t.check_exception_thrown<std::logic_error>("Mismatched weights", [](){ return graph_t{{edge_t{1, 1.0, 2.0}}, {edge_t{0, 2.0, 1.0}}}; });
 
-      t.check_exception_thrown<std::logic_error>(t.report_line("Mismatched edge/node initialization"), [](){ return graph_t{{}, nodes{1.0}}; });
-      t.check_exception_thrown<std::logic_error>(t.report_line("Mismatched edge/node initialization"), [](){ return graph_t{{{}}, nodes{1.0, 2.0}}; });
-      t.check_exception_thrown<std::logic_error>(t.report_line("Mismatched edge/node initialization"), [](){ return graph_t{{{edge_t{0, 1.0, -1.2}, edge_t{0, 1.0, -1.2}}}, nodes{1.0, 2.0}}; });
-      t.check_exception_thrown<std::logic_error>(t.report_line("Mismatched edge/node initialization"), [](){ return graph_t{{{}, {}}, nodes{1.0}}; });
-      t.check_exception_thrown<std::logic_error>(t.report_line("Mismatched edge/node initialization"), [](){ return graph_t{{{edge_t{1}}, {edge_t{0}}}, nodes{1.0}}; });
+      t.check_exception_thrown<std::logic_error>("Mismatched edge/node initialization", [](){ return graph_t{{}, nodes{1.0}}; });
+      t.check_exception_thrown<std::logic_error>("Mismatched edge/node initialization", [](){ return graph_t{{{}}, nodes{1.0, 2.0}}; });
+      t.check_exception_thrown<std::logic_error>("Mismatched edge/node initialization", [](){ return graph_t{{{edge_t{0, 1.0, -1.2}, edge_t{0, 1.0, -1.2}}}, nodes{1.0, 2.0}}; });
+      t.check_exception_thrown<std::logic_error>("Mismatched edge/node initialization", [](){ return graph_t{{{}, {}}, nodes{1.0}}; });
+      t.check_exception_thrown<std::logic_error>("Mismatched edge/node initialization", [](){ return graph_t{{{edge_t{1}}, {edge_t{0}}}, nodes{1.0}}; });
     }
 
     [[nodiscard]]
@@ -136,61 +136,61 @@ namespace sequoia::testing
       check_initialization_exceptions(t);
 
       // 'unsortable_weight_graph_description::nodew'
-      trg.add_node(make_and_check(t, t.report_line(""), {{}}, {{1.0, -1.0}}));
+      trg.add_node(make_and_check(t, t.report(""), {{}}, {{1.0, -1.0}}));
 
       // 'unsortable_weight_graph_description::node_0w'
-      trg.add_node(make_and_check(t, t.report_line(""), {{{0, 1.0, -1.0}, {0, 1.0, -1.0}}}, {{0.0}}));
+      trg.add_node(make_and_check(t, t.report(""), {{{0, 1.0, -1.0}, {0, 1.0, -1.0}}}, {{0.0}}));
 
       // 'unsortable_weight_graph_description::node_0w_0w'
-      trg.add_node(make_and_check(t, t.report_line(""), {{{0, 1.0, -1.0}, {0, 1.0, -1.0}, {0, 1.0, -1.0}, {0, 1.0, -1.0}}}, {{0.0}}));
+      trg.add_node(make_and_check(t, t.report(""), {{{0, 1.0, -1.0}, {0, 1.0, -1.0}, {0, 1.0, -1.0}, {0, 1.0, -1.0}}}, {{0.0}}));
 
       // 'unsortable_weight_graph_description::node_0_0w'
       trg.add_node(
         [&t](){
-          auto g{make_and_check(t, t.report_line(""), {{{0, 0.0, 0.0}, {0, 0.0, 0.0}, {0, 1.0, -1.0}, {0, 1.0, -1.0}}}, {{0.0}})};
-          t.check(equality, t.report_line("Canonical ordering of weighted edges"), graph_t{{{{0, 0.0, 0.0}, {0, 1.0, -1.0}, {0, 0.0, 0.0}, {0, 1.0, -1.0}}}, {{0.0}}}, g);
+          auto g{make_and_check(t, t.report(""), {{{0, 0.0, 0.0}, {0, 0.0, 0.0}, {0, 1.0, -1.0}, {0, 1.0, -1.0}}}, {{0.0}})};
+          t.check(equality, "Canonical ordering of weighted edges", graph_t{{{{0, 0.0, 0.0}, {0, 1.0, -1.0}, {0, 0.0, 0.0}, {0, 1.0, -1.0}}}, {{0.0}}}, g);
           return g;
         }());
       
       // 'unsortable_weight_graph_description::node_0w_0'
       trg.add_node(
         [&t](){
-          auto g{make_and_check(t, t.report_line(""), {{{0, 1.0, -1.0}, {0, 1.0, -1.0}, {0, 0.0, 0.0}, {0, 0.0, 0.0}}}, {{0.0}})};
-          t.check(equality, t.report_line("Canonical ordering of weighted edges"), graph_t{{{{0, 1.0, -1.0}, {0, 0.0, 0.0}, {0, 0.0, 0.0}, {0, 1.0, -1.0}}}, {{0.0}}}, g);
+          auto g{make_and_check(t, t.report(""), {{{0, 1.0, -1.0}, {0, 1.0, -1.0}, {0, 0.0, 0.0}, {0, 0.0, 0.0}}}, {{0.0}})};
+          t.check(equality, "Canonical ordering of weighted edges", graph_t{{{{0, 1.0, -1.0}, {0, 0.0, 0.0}, {0, 0.0, 0.0}, {0, 1.0, -1.0}}}, {{0.0}}}, g);
           return g;
         }());
 
       // 'unsortable_weight_graph_description::node_0w_1_node_0'
-      trg.add_node(make_and_check(t, t.report_line(""), {{{0, 1.0, -1.0}, {0, 1.0, -1.0}, {1, 0.0, 0.0}}, {{0, 0.0, 0.0}}}, {{}, {}}));
+      trg.add_node(make_and_check(t, t.report(""), {{{0, 1.0, -1.0}, {0, 1.0, -1.0}, {1, 0.0, 0.0}}, {{0, 0.0, 0.0}}}, {{}, {}}));
 
       // 'unsortable_weight_graph_description::node_0_1w_node_0w'
       trg.add_node(
         [&t](){
-          auto g{make_and_check(t, t.report_line(""), {{{0, 1.0, -1.0}, {0, 1.0, -1.0}, {1, 0.0, 0.0}}, {{0, 0.0, 0.0}}}, {{}, {}})};
-          t.check(equality, t.report_line("Canonical ordering of weighted edges"), graph_t{{{{0, 1.0, -1.0}, {1, 0.0, 0.0}, {0, 1.0, -1.0}}, {{0, 0.0, 0.0}}}, {{}, {}}}, g);
+          auto g{make_and_check(t, t.report(""), {{{0, 1.0, -1.0}, {0, 1.0, -1.0}, {1, 0.0, 0.0}}, {{0, 0.0, 0.0}}}, {{}, {}})};
+          t.check(equality, "Canonical ordering of weighted edges", graph_t{{{{0, 1.0, -1.0}, {1, 0.0, 0.0}, {0, 1.0, -1.0}}, {{0, 0.0, 0.0}}}, {{}, {}}}, g);
           return g;
         }());
 
       // 'unsortable_weight_graph_description::node_1_node_1w_0,'
       trg.add_node(
         [&t](){
-          auto g{make_and_check(t, t.report_line(""), {{{1, 0.0, 0.0}}, {{0, 0.0, 0.0}, {1, 1.0, -1.0}, {1, 1.0, -1.0}}}, {{}, {}})};
-          t.check(equality, t.report_line("Canonical ordering of weighted edges"), graph_t{{{{1, 0.0, 0.0}}, {{1, 1.0, -1.0}, {0, 0.0, 0.0}, {1, 1.0, -1.0}}}, {{}, {}}}, g);
+          auto g{make_and_check(t, t.report(""), {{{1, 0.0, 0.0}}, {{0, 0.0, 0.0}, {1, 1.0, -1.0}, {1, 1.0, -1.0}}}, {{}, {}})};
+          t.check(equality, "Canonical ordering of weighted edges", graph_t{{{{1, 0.0, 0.0}}, {{1, 1.0, -1.0}, {0, 0.0, 0.0}, {1, 1.0, -1.0}}}, {{}, {}}}, g);
           return g;
         }());
 
       // 'unsortable_weight_graph_description::node_1_1w_node_0_0w'
-      trg.add_node(make_and_check(t, t.report_line(""), {{{1, 0.0, 0.0}, {1, 1.0, -1.0}}, {{0, 0.0, 0.0}, {0, 1.0, -1.0}}}, {{}, {}}));
+      trg.add_node(make_and_check(t, t.report(""), {{{1, 0.0, 0.0}, {1, 1.0, -1.0}}, {{0, 0.0, 0.0}, {0, 1.0, -1.0}}}, {{}, {}}));
 
       // 'unsortable_weight_graph_description::node_1w_1_node_0_0w'
-      trg.add_node(make_and_check(t, t.report_line(""), {{{1, 1.0, -1.0}, {1, 0.0, 0.0}}, {{0, 0.0, 0.0}, {0, 1.0, -1.0}}}, {{}, {}}));
+      trg.add_node(make_and_check(t, t.report(""), {{{1, 1.0, -1.0}, {1, 0.0, 0.0}}, {{0, 0.0, 0.0}, {0, 1.0, -1.0}}}, {{}, {}}));
 
       // 'unsortable_weight_graph_description::node_1_1_1w_1w_node_0w_0w_0_0,'
       trg.add_node(
         [&t](){
-          auto g{make_and_check(t, t.report_line(""), {{{1, 0.0, 0.0}, {1, 0.0, 0.0}, {1, 1.0, -1.0}, {1, 1.0, -1.0}}, {{0, 1.0, -1.0}, {0, 1.0, -1.0}, {0, 0.0, 0.0}, {0, 0.0, 0.0}}}, {{}, {}})};
+          auto g{make_and_check(t, t.report(""), {{{1, 0.0, 0.0}, {1, 0.0, 0.0}, {1, 1.0, -1.0}, {1, 1.0, -1.0}}, {{0, 1.0, -1.0}, {0, 1.0, -1.0}, {0, 0.0, 0.0}, {0, 0.0, 0.0}}}, {{}, {}})};
           t.check(equality,
-                  t.report_line("Canonical ordering of weighted edges"),
+                  t.report("Canonical ordering of weighted edges"),
                   graph_t{{{{1, 0.0, 0.0}, {1, 1.0, -1.0}, {1, 1.0, -1.0}, {1, 0.0, 0.0}}, 
                            {{0, 1.0, -1.0}, {0, 0.0, 0.0}, {0, 1.0, -1.0}, {0, 0.0, 0.0}}}, {{}, {}}},
                   g);
@@ -202,12 +202,12 @@ namespace sequoia::testing
       trg.add_node(
         [&t](){
           auto g{make_and_check(t,
-                                t.report_line(""),
+                                t.report(""),
                                 {{{0, 1.0, -1.0}, {0, 1.0, -1.0}, {1, 0.0, 0.0}, {1, 0.0, 0.0}, {1, 1.0, -1.0}, {1, 1.0, -1.0}},
                                  {{0, 1.0, -1.0}, {0, 1.0, -1.0}, {0, 0.0, 0.0}, {0, 0.0, 0.0}}},
                                 {{}, {}})};
           t.check(equality,
-            t.report_line("Canonical ordering of weighted edges"),
+            t.report("Canonical ordering of weighted edges"),
             graph_t{{{{1, 0.0, 0.0}, {0, 1.0, -1.0}, {1, 1.0, -1.0}, {1, 1.0, -1.0}, {1, 0.0, 0.0}, {0, 1.0, -1.0}},
                      {{0, 1.0, -1.0}, {0, 0.0, 0.0}, {0, 1.0, -1.0}, {0, 0.0, 0.0}}}, {{}, {}}},
             g);

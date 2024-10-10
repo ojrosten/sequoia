@@ -5,8 +5,8 @@ Useful Things:
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 
 -----------Grand Totals-----------
-[Total Run Time: 2.82ms]
-[Execution Time: 609us]
+[Total Run Time: 2.83ms]
+[Execution Time: 568us]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

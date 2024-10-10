@@ -22,7 +22,7 @@ namespace sequoia::testing
 
   void node_storage_allocation_test::run_tests()
   {
-    do_allocation_tests(*this);
+    do_allocation_tests();
   }
 
   template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
@@ -43,13 +43,13 @@ namespace sequoia::testing
       [](storage& s){ s.add_node(); }
     };
 
-    auto[s,t]{check_semantics(report_line(""),
+    auto[s,t]{check_semantics("",
                     [](){ return storage(allocator{}); },
                     [](){ return storage{{1, 1, 0}, allocator{}}; },
                     mutator,
                     allocation_info{node_storage_alloc_getter<storage>{}, {0_c, {1_c,1_mu}, {1_anp,1_awp}}})};
 
-    check(equivalence, report_line(""), s, std::initializer_list<int>{});
-    check(equivalence, report_line(""), t, std::initializer_list<int>{1, 1, 0});
+    check(equivalence, "", s, std::initializer_list<int>{});
+    check(equivalence, "", t, std::initializer_list<int>{1, 1, 0});
   }
 }

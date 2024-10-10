@@ -20,7 +20,7 @@ namespace sequoia::testing
 
   void orderable_move_only_allocation_false_negative_diagnostics::run_tests()
   {
-    do_allocation_tests(*this);
+    do_allocation_tests();
   }
 
   template<bool PropagateMove, bool PropagateSwap>
@@ -37,14 +37,14 @@ namespace sequoia::testing
     auto getter{[](const beast& b){ return b.x.get_allocator(); }};
     auto mutator{[](beast& b) { b.x.shrink_to_fit(); b.x.push_back(3); }};
 
-    check_semantics(report_line(""),
+    check_semantics("",
                     [](){ return beast{}; },
                     [](){ return beast{2}; },
                     std::weak_ordering::less,
                     mutator,
                     allocation_info{getter, {0_pm, {1_pm, 1_mu}, {1_manp}}});
 
-    check_semantics(report_line(""),
+    check_semantics("",
                     beast{},
                     beast{2},
                     beast{},

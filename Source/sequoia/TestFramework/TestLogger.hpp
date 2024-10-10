@@ -230,7 +230,7 @@ namespace sequoia::testing
     bool checks_registered() const noexcept { return get().results().deep_checks != m_PriorDeepChecks; }
   protected:
 
-    sentinel_base(test_logger_base& logger, std::string_view message);
+    sentinel_base(test_logger_base& logger, std::string message);
 
     ~sentinel_base();
 
@@ -278,8 +278,8 @@ namespace sequoia::testing
   class [[nodiscard]] sentinel : public sentinel_base
   {
   public:
-    sentinel(test_logger<Mode>& logger, std::string_view message)
-      : sentinel_base{logger, message}
+    sentinel(test_logger<Mode>& logger, std::string message)
+      : sentinel_base{logger, std::move(message)}
     {}
 
     sentinel(const sentinel&)     = delete;

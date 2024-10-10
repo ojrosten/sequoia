@@ -2,10 +2,12 @@
 Running tests, synchronously...
 
 Suite:
-[Execution Time: 2.56ms]
+[Execution Time: 1.14ms]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 193
 	Always fails
+
 	[bool]
 	check failed
 
@@ -13,8 +15,8 @@ Suite:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 7.25ms]
-[Execution Time: 2.56ms]
+[Total Run Time: 3.14ms]
+[Execution Time: 1.14ms]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -25,16 +27,20 @@ Suite:
 Running tests, synchronously...
 
 Suite:
-[Execution Time: 2.3ms]
+[Execution Time: 903us]
 	Standard Top Level Checks:                 2;  Failures:  2  [Deep checks: 2]
 
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 193
 	Always fails
+
 	[bool]
 	check failed
 
 	=======================================
 
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 195
 	Flipper
+
 	[bool]
 	check failed
 
@@ -42,8 +48,8 @@ Suite:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 6.48ms]
-[Execution Time: 2.3ms]
+[Total Run Time: 2.75ms]
+[Execution Time: 903us]
 	Standard Top Level Checks:                 2;  Failures:  2  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -55,7 +61,9 @@ Instability detected in file "TestRunnerTest.cpp"
 Outcome frequencies:
 [50%,50%]
 
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 193
 	Always fails
+
 	[bool]
 	check failed
 
@@ -63,13 +71,17 @@ Outcome frequencies:
 
 vs.
 
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 193
 	Always fails
+
 	[bool]
 	check failed
 
 	=======================================
 
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 195
 	Flipper
+
 	[bool]
 	check failed
 

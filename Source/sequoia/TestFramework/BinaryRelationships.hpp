@@ -44,7 +44,7 @@ namespace sequoia::testing
   {
     template<bool IsFinalMessage, class T>
     [[nodiscard]]
-    static std::string report(final_message_constant<IsFinalMessage>, const Compare&, const T&, const T&) = delete;
+    static std::string reporter(final_message_constant<IsFinalMessage>, const Compare&, const T&, const T&) = delete;
   };
 
   /*! \brief Function object for performing comparisons within an absolute tolerance
@@ -82,7 +82,7 @@ namespace sequoia::testing
     template<bool IsFinalMessage, class ComparedType>
       requires reportable<ComparedType>
     [[nodiscard]]
-    static std::string report(final_message_constant<IsFinalMessage>, const within_tolerance<T>& c, const ComparedType& obtained, const ComparedType& prediction)
+    static std::string reporter(final_message_constant<IsFinalMessage>, const within_tolerance<T>& c, const ComparedType& obtained, const ComparedType& prediction)
     {
       return prediction_message(obtained, prediction).append(" +/- ").append(to_string(c.tol()));
     }
@@ -94,7 +94,7 @@ namespace sequoia::testing
     template<bool IsFinalMessage, class T>
       requires (reportable<T> || !IsFinalMessage)
     [[nodiscard]]
-    static std::string report(final_message_constant<IsFinalMessage>, const std::ranges::equal_to&, const T& obtained, const T& prediction)
+    static std::string reporter(final_message_constant<IsFinalMessage>, const std::ranges::equal_to&, const T& obtained, const T& prediction)
     {
       return failure_message(final_message_constant<IsFinalMessage>{}, obtained, prediction);
     }
@@ -113,7 +113,7 @@ namespace sequoia::testing
     template<bool IsFinalMessage, class T>
       requires reportable<T>
     [[nodiscard]]
-    static std::string report(final_message_constant<IsFinalMessage>, const std::ranges::less&, const T& obtained, const T& prediction)
+    static std::string reporter(final_message_constant<IsFinalMessage>, const std::ranges::less&, const T& obtained, const T& prediction)
     {
       return relational_failure_message("<", obtained, prediction);
     }
@@ -125,7 +125,7 @@ namespace sequoia::testing
     template<bool IsFinalMessage, class T>
       requires reportable<T>
     [[nodiscard]]
-    static std::string report(final_message_constant<IsFinalMessage>, const std::ranges::less_equal&, const T& obtained, const T& prediction)
+    static std::string reporter(final_message_constant<IsFinalMessage>, const std::ranges::less_equal&, const T& obtained, const T& prediction)
     {
       return relational_failure_message("<=", obtained, prediction);
     }
@@ -137,7 +137,7 @@ namespace sequoia::testing
     template<bool IsFinalMessage, class T>
       requires reportable<T>
     [[nodiscard]]
-    static std::string report(final_message_constant<IsFinalMessage>, const std::ranges::greater&, const T& obtained, const T& prediction)
+    static std::string reporter(final_message_constant<IsFinalMessage>, const std::ranges::greater&, const T& obtained, const T& prediction)
     {
       return relational_failure_message(">", obtained, prediction);
     }
@@ -149,7 +149,7 @@ namespace sequoia::testing
     template<bool IsFinalMessage, class T>
       requires reportable<T>
     [[nodiscard]]
-    static std::string report(final_message_constant<IsFinalMessage>, const std::ranges::greater_equal&, const T& obtained, const T& prediction)
+    static std::string reporter(final_message_constant<IsFinalMessage>, const std::ranges::greater_equal&, const T& obtained, const T& prediction)
     {
       return relational_failure_message(">=", obtained, prediction);
     }

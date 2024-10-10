@@ -115,22 +115,22 @@ namespace sequoia::testing
   {
     {
       constexpr auto ordering{arrage()};
-      check(equality, report_line(""), ordering[0], 0_sz);
-      check(equality, report_line(""), ordering[1], 1_sz);
+      check(equality, "", ordering[0], 0_sz);
+      check(equality, "", ordering[1], 1_sz);
     }
 
     /*{
       constexpr auto data{bfs()};
-      check(equality, report_line(""), data[0], 3_sz);
-      check(equality, report_line(""), data[1], 0_sz);
+      check(equality, "", data[0], 3_sz);
+      check(equality, "", data[1], 0_sz);
     }*/
 
     {
       constexpr auto weights{priority_search()};
-      check(equality, report_line(""), weights[0], 0);
-      check(equality, report_line(""), weights[1], 8);
-      check(equality, report_line(""), weights[2], 6);
-      check(equality, report_line(""), weights[3], 2);
+      check(equality, "", weights[0], 0);
+      check(equality, "", weights[1], 8);
+      check(equality, "", weights[2], 6);
+      check(equality, "", weights[3], 2);
     }
   }
 }

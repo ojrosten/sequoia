@@ -14,7 +14,7 @@
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::string move_only_message(std::string_view description)
+  std::string move_only_message(std::string description)
   {
     return append_lines(description, emphasise("Move-only Semantics"));
   }

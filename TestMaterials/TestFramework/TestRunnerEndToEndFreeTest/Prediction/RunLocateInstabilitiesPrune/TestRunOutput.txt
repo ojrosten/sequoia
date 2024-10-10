@@ -1,6 +1,6 @@
 
 Analyzing dependencies...
-[26.6ms]
+[30.7ms]
 
 
 Running tests...
@@ -21,8 +21,8 @@ Unstable:
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 
 -----------Grand Totals-----------
-[Total Run Time: 5.43ms]
-[Execution Time: 1.91ms]
+[Total Run Time: 5.77ms]
+[Execution Time: 2.37ms]
 	Standard Top Level Checks:                 4;  Failures:  1  [Deep checks: 4]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -63,8 +63,8 @@ Unstable:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 7.03ms]
-[Execution Time: 1.8ms]
+[Total Run Time: 8.85ms]
+[Execution Time: 1.46ms]
 	Standard Top Level Checks:                 4;  Failures:  3  [Deep checks: 4]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

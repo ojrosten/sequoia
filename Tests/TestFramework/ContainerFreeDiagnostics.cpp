@@ -78,80 +78,80 @@ namespace sequoia::testing
 
   void container_false_positive_free_diagnostics::test_homogeneous()
   {
-    check(equality, report_line("Empty vector check which should fail"), std::vector<double>{}, std::vector<double>{1});
-    check(equality, report_line("One element vector check which should fail due to wrong value"), std::vector<double>{1}, std::vector<double>{2});
+    check(equality, "Empty vector check which should fail", std::vector<double>{}, std::vector<double>{1});
+    check(equality, "One element vector check which should fail due to wrong value", std::vector<double>{1}, std::vector<double>{2});
     check(equality,
-         report_line("Advice for one element vector check which should fail due to wrong value"),
+         reporter{"Advice for one element vector check which should fail due to wrong value"},
          std::vector<double>{1},
          std::vector<double>{2},
          tutor{[](double, double) { return "Vector element advice"; }});
-    check(equality, report_line("One element vector check which should fail due to differing sizes"), std::vector<double>{1}, std::vector<double>{1,2});
-    check(equality, report_line("Multi-element vector comparison which should fail due to last element"), std::vector<double>{1,5}, std::vector<double>{1,4});
-    check(equality, report_line("Multi-element vector comparison which should fail due to first element"), std::vector<double>{1,5}, std::vector<double>{0,5});
-    check(equality, report_line("Multi-element vector comparison which should fail due to middle element"), std::vector<double>{1,3.2,5}, std::vector<double>{1,3.3,5});
-    check(equality, report_line("Multi-element vector comparison which should fail due to different sizes"), std::vector<double>{1,5,3.2}, std::vector<double>{5,3.2});
+    check(equality, "One element vector check which should fail due to differing sizes", std::vector<double>{1}, std::vector<double>{1,2});
+    check(equality, "Multi-element vector comparison which should fail due to last element", std::vector<double>{1,5}, std::vector<double>{1,4});
+    check(equality, "Multi-element vector comparison which should fail due to first element", std::vector<double>{1,5}, std::vector<double>{0,5});
+    check(equality, "Multi-element vector comparison which should fail due to middle element", std::vector<double>{1,3.2,5}, std::vector<double>{1,3.3,5});
+    check(equality, "Multi-element vector comparison which should fail due to different sizes", std::vector<double>{1,5,3.2}, std::vector<double>{5,3.2});
 
     std::vector<float> refs{-4.3f, 2.8f, 6.2f, 7.3f}, ans{1.1f, -4.3f, 2.8f, 6.2f, 8.4f, 7.3f};
 
-    check(equality, report_line("Iterators demarcate differing numbers of elements"), refs.cbegin(), refs.cend(), ans.cbegin(), ans.cend());
-    check(equality, report_line("Iterators demarcate differing elements"), refs.cbegin(), refs.cend(), ans.cbegin(), ans.cbegin() + 4);
+    check(equality, "Iterators demarcate differing numbers of elements", refs.cbegin(), refs.cend(), ans.cbegin(), ans.cend());
+    check(equality, "Iterators demarcate differing elements", refs.cbegin(), refs.cend(), ans.cbegin(), ans.cbegin() + 4);
 
     check(equivalence,
-          report_line("Range equivalence, where the containerized form is explicitly specialized"),
+          reporter{"Range equivalence, where the containerized form is explicitly specialized"},
           std::vector<foo>{{42}},
           std::vector<int>{41});
 
     check(equivalence,
-          report_line("Advice for range equivalence, where the containerized form is explicitly specialized"),
+          reporter{"Advice for range equivalence, where the containerized form is explicitly specialized"},
           std::vector<foo>{{42}},
           std::vector<int>{41},
           tutor{bland{}});
 
     check(equivalence,
-          report_line("Range equivalence, where the containerized form is not explicitly specialized"),
+          reporter{"Range equivalence, where the containerized form is not explicitly specialized"},
           std::set<foo>{{42}},
           std::set<int>{41});
 
     check(equivalence,
-          report_line("Advice for range equivalence, where the containerized form is not explicitly specialized"),
+          reporter{"Advice for range equivalence, where the containerized form is not explicitly specialized"},
           std::set<foo>{{42}},
           std::set<int>{41},
           tutor{bland{}});
 
     check(weak_equivalence,
-          report_line("Range weak equivalence, where the containerized form is explicitly specialized"),
+          reporter{"Range weak equivalence, where the containerized form is explicitly specialized"},
           std::vector<foo>{{42}},
           std::list<int>{41});
 
     check(weak_equivalence,
-          report_line("Advice for range weak equivalence, where the containerized form is explicitly specialized"),
+          reporter{"Advice for range weak equivalence, where the containerized form is explicitly specialized"},
           std::vector<foo>{{42}},
           std::list<int>{41},
           tutor{bland{}});
 
     check(weak_equivalence,
-          report_line("Range weak equivalence, where the containerized form is not explicitly specialized"),
+          reporter{"Range weak equivalence, where the containerized form is not explicitly specialized"},
           std::list<foo>{{42}},
           std::array<double, 1>{41});
 
     check(weak_equivalence,
-          report_line("Advice for range weak equivalence, where the containerized form is not explicitly specialized"),
+          reporter{"Advice for range weak equivalence, where the containerized form is not explicitly specialized"},
           std::list<foo>{ {42}},
           std::array<double, 1>{41},
           tutor{bland{}});
 
 
     using beast = perfectly_normal_beast<int>;
-    check(weak_equivalence, report_line(""), beast{1, 2}, std::initializer_list<int>{1, 1});
-    check(weak_equivalence, report_line(""), beast{1, 2}, std::initializer_list<int>{1, 1}, tutor{[](int, int) {
+    check(weak_equivalence, "", beast{1, 2}, std::initializer_list<int>{1, 1});
+    check(weak_equivalence, "", beast{1, 2}, std::initializer_list<int>{1, 1}, tutor{[](int, int) {
         return "Don't mess with the beast.";
       }});
 
     using prediction = std::initializer_list<std::initializer_list<int>>;
-    check(weak_equivalence, report_line(""), std::vector<beast>{ {1, 2}, {3, 4}}, prediction{{1, 2}, {3, 5}});
+    check(weak_equivalence, "", std::vector<beast>{ {1, 2}, {3, 4}}, prediction{{1, 2}, {3, 5}});
 
     check(weak_equivalence,
-          report_line(""),
+          reporter{""},
           std::vector<beast>{ {1, 2}, {3, 4}},
           prediction{{1, 2}, {3, 5}},
           tutor{[](int, int) {
@@ -164,67 +164,67 @@ namespace sequoia::testing
     {
       using type = std::pair<int, double>;
 
-      check(equality, report_line("Pair for which the first element differs"), type{5, 7.8}, type{-5, 7.8});
-      check(equality, report_line("Pair for which the second element differs"), type{5, 7.8}, type{5, -7.8});
-      check(equality, report_line("Pair for which both elements differs"), type{5, 7.8}, type{-5, 6.8});
-      check(equality, report_line("Pair for which both elements differs with advice"), type{5, 7.8}, type{-5, 6.8}, tutor{bland{}});
+      check(equality, "Pair for which the first element differs", type{5, 7.8}, type{-5, 7.8});
+      check(equality, "Pair for which the second element differs", type{5, 7.8}, type{5, -7.8});
+      check(equality, "Pair for which both elements differs", type{5, 7.8}, type{-5, 6.8});
+      check(equality, "Pair for which both elements differs with advice", type{5, 7.8}, type{-5, 6.8}, tutor{bland{}});
 
       check(equivalence,
-            report_line("Pair for which both elements differs via fallback"),
+            reporter{"Pair for which both elements differs via fallback"},
             type{5, 7.8},
             type{-5, 6.8});
       check(equivalence,
-           report_line("Pair for which both elements differs via fallback with advice"),
+           reporter{"Pair for which both elements differs via fallback with advice"},
            type{5, 7.8},
            type{-5, 6.8},
            tutor{bland{}});
 
       check(weak_equivalence,
-            report_line("Pair for which both elements differs via two fallbacks"),
+            reporter{"Pair for which both elements differs via two fallbacks"},
             type{5, 7.8},
             type{-5, 6.8});
       check(weak_equivalence,
-            report_line("Pair for which both elements differs via two fallbacks with advice"),
+            reporter{"Pair for which both elements differs via two fallbacks with advice"},
             type{5, 7.8},
             type{-5, 6.8},
             tutor{bland{}});
 
-      check(with_best_available, report_line("Best available"), type{5, 7.8}, type{5, -7.8});
-      check(with_best_available, report_line("Best available with advice"), type{5, 7.8}, type{5, -7.8}, tutor{bland{}});
+      check(with_best_available, "Best available", type{5, 7.8}, type{5, -7.8});
+      check(with_best_available, "Best available with advice", type{5, 7.8}, type{5, -7.8}, tutor{bland{}});
     }
 
     {
       using type0 = std::pair<const int&, double>;
       using type1 = std::pair<int, const double&>;
 
-      check(equivalence, report_line(""), type0{5, 7.8}, type1{-5, 6.8});
-      check(weak_equivalence, report_line(""), type0{5, 7.8}, type1{-5, 6.8});
+      check(equivalence, "", type0{5, 7.8}, type1{-5, 6.8});
+      check(weak_equivalence, "", type0{5, 7.8}, type1{-5, 6.8});
     }
 
     {
       using type = std::tuple<int, double, float>;
 
-      check(equality, report_line(""), type{4, 3.4, -9.2f}, type{0, 3.4, -9.2f});
-      check(equality, report_line(""), type{4, 3.4, -9.2f}, type{4, 0.0, -9.2f}, tutor{bland{}});
-      check(equality, report_line(""), type{4, 3.4, -9.2f}, type{4, 3.4, -0.0f});
+      check(equality, "", type{4, 3.4, -9.2f}, type{0, 3.4, -9.2f});
+      check(equality, "", type{4, 3.4, -9.2f}, type{4, 0.0, -9.2f}, tutor{bland{}});
+      check(equality, "", type{4, 3.4, -9.2f}, type{4, 3.4, -0.0f});
     }
 
     {
       using type = std::pair<int, only_weakly_checkable>;
 
-      check(with_best_available, report_line(""), type{1, {0, 2.0}}, type{0, {0, 2.0}});
-      check(with_best_available, report_line(""), type{1, {0, 2.0}}, type{1, {0, 2.1}});
-      check(with_best_available, report_line(""), type{1, {0, 2.0}}, type{0, {0, 2.1}});
-      check(with_best_available, report_line(""), type{1, {0, 2.0}}, type{1, {0, 2.1}}, tutor{bland{}});
+      check(with_best_available, "", type{1, {0, 2.0}}, type{0, {0, 2.0}});
+      check(with_best_available, "", type{1, {0, 2.0}}, type{1, {0, 2.1}});
+      check(with_best_available, "", type{1, {0, 2.0}}, type{0, {0, 2.1}});
+      check(with_best_available, "", type{1, {0, 2.0}}, type{1, {0, 2.1}}, tutor{bland{}});
     }
 
     {
       using type = std::pair<int, only_equivalence_checkable>;
 
-      check(with_best_available, report_line(""), type{1, {1.5}}, type{0, {1.5}});
-      check(with_best_available, report_line(""), type{1, {1.5}}, type{1, {1.4}});
-      check(with_best_available, report_line(""), type{0, {1.5}}, type{1, {1.4}});
-      check(with_best_available, report_line(""), type{1, {1.4}}, type{0, {1.4}}, tutor{bland{}});
+      check(with_best_available, "", type{1, {1.5}}, type{0, {1.5}});
+      check(with_best_available, "", type{1, {1.5}}, type{1, {1.4}});
+      check(with_best_available, "", type{0, {1.5}}, type{1, {1.4}});
+      check(with_best_available, "", type{1, {1.4}}, type{0, {1.4}}, tutor{bland{}});
     }
   }
 
@@ -239,19 +239,19 @@ namespace sequoia::testing
 
     {
       type b{t_0{{2, 2.1f}, {2, 2.8f}}, {3.3, -9.6, 3.2}, {1.1, 0.2}};
-      check(equality, report_line(""), a, b, tutor{[](int, int){ return "Nested int advice"; }});
+      check(equality, "", a, b, tutor{[](int, int){ return "Nested int advice"; }});
     }
 
     {
       type b{t_0{{1, 2.1f}, {2, 2.8f}}, {3.4, -9.6, 3.2}, {1.1, 0.2}};
-      check(equality, report_line(""), a, b, tutor{[](const std::set<double>&, const std::set<double>&){
+      check(equality, "", a, b, tutor{[](const std::set<double>&, const std::set<double>&){
                                        return "Note reordering of elements upon set construction";
                                      }});
     }
 
-    check(equivalence, report_line(""), std::vector<std::string>{ {"a"}, {"b"}}, std::initializer_list<std::string_view>{"a", "c"});
+    check(equivalence, "", std::vector<std::string>{ {"a"}, {"b"}}, std::initializer_list<std::string_view>{"a", "c"});
 
-    check(equivalence, report_line(""), std::vector<std::string>{ {"a"}, {"b"}}, std::initializer_list<std::string_view>{"a", "c"}, tutor{[](char, char) {
+    check(equivalence, "", std::vector<std::string>{ {"a"}, {"b"}}, std::initializer_list<std::string_view>{"a", "c"}, tutor{[](char, char) {
         return "Ah, chars. So easy to get wrong.";
     }});
   }
@@ -271,58 +271,58 @@ namespace sequoia::testing
 
   void container_false_negative_free_diagnostics::test_homogeneous()
   {
-    check(equality, report_line("Empty vector check which should pass"), std::vector<double>{}, std::vector<double>{});
-    check(equality, report_line("One element vector check which should pass"), std::vector<double>{2}, std::vector<double>{2});
-    check(equality, report_line("Multi-element vector comparison which should pass"), std::vector<double>{1, 5}, std::vector<double>{1, 5});
+    check(equality, "Empty vector check which should pass", std::vector<double>{}, std::vector<double>{});
+    check(equality, "One element vector check which should pass", std::vector<double>{2}, std::vector<double>{2});
+    check(equality, "Multi-element vector comparison which should pass", std::vector<double>{1, 5}, std::vector<double>{1, 5});
 
     std::vector<float> refs{-4.3f, 2.8f, 6.2f, 7.3f}, ans{1.1f, -4.3f, 2.8f, 6.2f, 8.4f, 7.3f};
 
-    check(equality, report_line("Iterators demarcate identical elements"), refs.cbegin(), refs.cbegin() + 3, ans.cbegin() + 1, ans.cbegin() + 4);
+    check(equality, "Iterators demarcate identical elements", refs.cbegin(), refs.cbegin() + 3, ans.cbegin() + 1, ans.cbegin() + 4);
 
     check(equivalence,
-          report_line("Advice for range equivalence, where the containerized form is explicitly specialized"),
+          reporter{"Advice for range equivalence, where the containerized form is explicitly specialized"},
           std::vector<foo>{ {42}},
           std::vector<int>{42},
           tutor{bland{}});
 
     check(equivalence,
-          report_line("Advice for range equivalence, where the containerized form is not explicitly specialized"),
+          reporter{"Advice for range equivalence, where the containerized form is not explicitly specialized"},
           std::set<foo>{{42}},
           std::set<int>{42},
           tutor{bland{}});
 
     using beast = perfectly_normal_beast<int>;
-    check(weak_equivalence, report_line(""), beast{1, 2}, std::initializer_list<int>{1, 2});
+    check(weak_equivalence, "", beast{1, 2}, std::initializer_list<int>{1, 2});
 
     using prediction = std::initializer_list<std::initializer_list<int>>;
-    check(weak_equivalence, report_line(""), std::vector<beast>{ {1, 2}, {3, 4}}, prediction{{1, 2}, {3, 4}});
+    check(weak_equivalence, "", std::vector<beast>{ {1, 2}, {3, 4}}, prediction{{1, 2}, {3, 4}});
 
-    check(weak_equivalence, report_line("Advice for weak equivalence checking"), only_weakly_checkable{42, 3.14}, std::pair<int, double>{42, 3.14}, tutor{bland{}});
+    check(weak_equivalence, "Advice for weak equivalence checking", only_weakly_checkable{42, 3.14}, std::pair<int, double>{42, 3.14}, tutor{bland{}});
   }
 
   void container_false_negative_free_diagnostics::test_heterogeneous()
   {
-    check(equality, report_line(""), std::pair<int, double>{5, 7.8}, std::pair<int, double>{5, 7.8});
+    check(equality, "", std::pair<int, double>{5, 7.8}, std::pair<int, double>{5, 7.8});
 
-    check(equality, report_line(""), std::tuple<int, double, float>{4, 3.4, -9.2f}, std::tuple<int, double, float>{4, 3.4, -9.2f});
+    check(equality, "", std::tuple<int, double, float>{4, 3.4, -9.2f}, std::tuple<int, double, float>{4, 3.4, -9.2f});
 
     {
       using type = std::pair<int, double>;
 
-      check(with_best_available, report_line(""), type{1, 0.0}, type{1, 0.0});
+      check(with_best_available, "", type{1, 0.0}, type{1, 0.0});
     }
 
     {
       using type = std::pair<int, only_weakly_checkable>;
 
-      check(with_best_available, report_line(""), type{1, {0, 2.0}}, type{1, {0, 2.0}});
+      check(with_best_available, "", type{1, {0, 2.0}}, type{1, {0, 2.0}});
     }
 
     {
       using type = std::pair<int, only_equivalence_checkable>;
 
-      check(with_best_available, report_line(""), type{1, {1.4}}, type{1, {1.4}});
-      check(with_best_available, report_line(""), type{1, {1.4}}, type{1, {1.4}}, tutor{bland{}});
+      check(with_best_available, "", type{1, {1.4}}, type{1, {1.4}});
+      check(with_best_available, "", type{1, {1.4}}, type{1, {1.4}}, tutor{bland{}});
     }
   }
 
@@ -336,8 +336,8 @@ namespace sequoia::testing
     type a{t_0{{1, 2.1f}, {2, 2.8f}}, {3.3, -9.6, 3.2}, {1.1, 0.2}};
     type b{t_0{{1, 2.1f}, {2, 2.8f}}, {3.3, -9.6, 3.2}, {1.1, 0.2}};
 
-    check(equality, report_line(""), a, b);
+    check(equality, "", a, b);
 
-    check(equivalence, report_line(""), std::vector<std::string>{ {"a"}, {"b"}}, std::initializer_list<std::string_view>{"a", "b"});
+    check(equivalence, "", std::vector<std::string>{ {"a"}, {"b"}}, std::initializer_list<std::string_view>{"a", "b"});
   }
 }

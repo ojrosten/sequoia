@@ -42,34 +42,34 @@ namespace sequoia::testing
       }
     };
 
-    check_exception_thrown<std::runtime_error>(report_line(""),
+    check_exception_thrown<std::runtime_error>("",
                                                [&fooPath](){ return find_in_tree(fooPath / "Bar" / "baz.txt", "baz.txt"); },
                                                postprocessor);
-    check_exception_thrown<std::runtime_error>(report_line(""),
+    check_exception_thrown<std::runtime_error>("",
                                                [&fooPath](){ return find_in_tree(fooPath / "Stuff", "baz.txt"); },
                                                postprocessor);
 
-    check(equality, report_line("Not found"), find_in_tree(root, "thing.txt"), fs::path{});
-    check(equality, report_line("Not found - empty"), find_in_tree(root, ""), fs::path{});
-    check(equality, report_line("Unique file"), find_in_tree(root, "plurgh.txt"), fooPath / "Bar" / "plurgh.txt");
-    check(equality, report_line("Unique directory"), find_in_tree(root, "Bar"), fooPath / "Bar");
-    check(equality, report_line("Partial path"), find_in_tree(root, "Bar/plurgh.txt"), fooPath / "Bar" / "plurgh.txt");
-    check(equality, report_line("Absolute path"), find_in_tree(root, fooPath), fooPath);
-    check(equality, report_line("Absolute path: not found"), find_in_tree(root, fooPath / "Baz"), fs::path{});
+    check(equality, "Not found", find_in_tree(root, "thing.txt"), fs::path{});
+    check(equality, "Not found - empty", find_in_tree(root, ""), fs::path{});
+    check(equality, "Unique file", find_in_tree(root, "plurgh.txt"), fooPath / "Bar" / "plurgh.txt");
+    check(equality, "Unique directory", find_in_tree(root, "Bar"), fooPath / "Bar");
+    check(equality, "Partial path", find_in_tree(root, "Bar/plurgh.txt"), fooPath / "Bar" / "plurgh.txt");
+    check(equality, "Absolute path", find_in_tree(root, fooPath), fooPath);
+    check(equality, "Absolute path: not found", find_in_tree(root, fooPath / "Baz"), fs::path{});
   }
 
   void file_system_utilities_free_test::test_rebase_from()
   {
     namespace fs = std::filesystem;
 
-    check_exception_thrown<std::logic_error>(report_line("Attempt to rebase from file"),
+    check_exception_thrown<std::logic_error>("Attempt to rebase from file",
                     [this]() { return rebase_from("Foo/Bar", working_materials() /= "Foo/baz.txt"); });
 
-    check(equality, report_line("Non-existant path"), rebase_from("Foo/Bar", "Baz"), fs::path{"Foo/Bar"});
-    check(equality, report_line("Rebase absolute"), rebase_from(working_materials() /= "Foo", working_materials()), fs::path{"Foo"});
-    check(equality, report_line("No overlap"), rebase_from(fs::path{"Things/Stuff.txt"}, working_materials()), fs::path{"Things/Stuff.txt"});
-    check(equality, report_line("Overlap"), rebase_from(fs::path{"Foo/Stuff.txt"}, working_materials() /= "Foo"), fs::path{"Stuff.txt"});
-    check(equality, report_line("Relative"), rebase_from(fs::path{"../Stuff.txt"}, working_materials()), fs::path{"Stuff.txt"});
-    check(equality, report_line("Double overlap"), rebase_from(fs::path{"Foo/Bar/Stuff.txt"}, working_materials() /= "Foo/Bar"), fs::path{"Stuff.txt"});
+    check(equality, "Non-existant path", rebase_from("Foo/Bar", "Baz"), fs::path{"Foo/Bar"});
+    check(equality, "Rebase absolute", rebase_from(working_materials() /= "Foo", working_materials()), fs::path{"Foo"});
+    check(equality, "No overlap", rebase_from(fs::path{"Things/Stuff.txt"}, working_materials()), fs::path{"Things/Stuff.txt"});
+    check(equality, "Overlap", rebase_from(fs::path{"Foo/Stuff.txt"}, working_materials() /= "Foo"), fs::path{"Stuff.txt"});
+    check(equality, "Relative", rebase_from(fs::path{"../Stuff.txt"}, working_materials()), fs::path{"Stuff.txt"});
+    check(equality, "Double overlap", rebase_from(fs::path{"Foo/Bar/Stuff.txt"}, working_materials() /= "Foo/Bar"), fs::path{"Stuff.txt"});
   }
 }

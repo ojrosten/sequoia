@@ -119,9 +119,6 @@ namespace sequoia::testing
     std::filesystem::path cmake_lists() const;
 
     [[nodiscard]]
-    static std::filesystem::path cmake_lists(std::filesystem::path projectRoot);
-
-    [[nodiscard]]
     friend bool operator==(const source_paths&, const source_paths&) noexcept = default;
   private:
     std::filesystem::path m_Repo, m_Project;
@@ -150,6 +147,33 @@ namespace sequoia::testing
 
     [[nodiscard]]
     friend bool operator==(const tests_paths&, const tests_paths&) noexcept = default;
+  private:
+    std::filesystem::path m_Repo;
+  };
+
+  /*! \brief Paths relating to the dependencies directory */
+
+  class dependencies_paths
+  {
+  public:
+    dependencies_paths() = default;
+
+    explicit dependencies_paths(std::filesystem::path projectRoot);
+
+    [[nodiscard]]
+    const std::filesystem::path& repo() const noexcept
+    {
+      return m_Repo;
+    }
+
+    [[nodiscard]]
+    std::filesystem::path project_root() const;
+
+    [[nodiscard]]
+    std::filesystem::path sequoia_root() const;
+
+    [[nodiscard]]
+    friend bool operator==(const dependencies_paths&, const dependencies_paths&) noexcept = default;
   private:
     std::filesystem::path m_Repo;
   };
@@ -243,7 +267,7 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    static std::filesystem::path repo(std::filesystem::path projectRoot);
+    static std::filesystem::path repo(const std::filesystem::path& projectRoot);
 
     [[nodiscard]]
     const std::filesystem::path& test_templates() const noexcept
@@ -252,7 +276,7 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    static std::filesystem::path test_templates(std::filesystem::path projectRoot);
+    static std::filesystem::path test_templates(const std::filesystem::path& projectRoot);
 
     [[nodiscard]]
     const std::filesystem::path& source_templates() const noexcept
@@ -261,7 +285,7 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    static std::filesystem::path source_templates(std::filesystem::path projectRoot);
+    static std::filesystem::path source_templates(const std::filesystem::path& projectRoot);
 
     [[nodiscard]]
     const std::filesystem::path& project_template() const noexcept
@@ -270,7 +294,7 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    static std::filesystem::path project_template(std::filesystem::path projectRoot);
+    static std::filesystem::path project_template(const std::filesystem::path& projectRoot);
 
     [[nodiscard]]
     friend bool operator==(const auxiliary_paths&, const auxiliary_paths&) noexcept = default;
@@ -292,7 +316,7 @@ namespace sequoia::testing
   public:
     recovery_paths() = default;
 
-    recovery_paths(const std::filesystem::path& outputDir);
+    explicit recovery_paths(const std::filesystem::path& outputDir);
 
     [[nodiscard]]
     const std::filesystem::path& dir() const noexcept
@@ -365,7 +389,7 @@ namespace sequoia::testing
   public:
     output_paths() = default;
 
-    output_paths(const std::filesystem::path& projectRoot);
+    explicit output_paths(const std::filesystem::path& projectRoot);
 
     [[nodiscard]]
     const std::filesystem::path& dir() const noexcept
@@ -418,7 +442,7 @@ namespace sequoia::testing
     [[nodiscard]]
     recovery_paths recovery() const
     {
-      return {dir()};
+      return recovery_paths{dir()};
     }
 
     [[nodiscard]]
@@ -472,6 +496,12 @@ namespace sequoia::testing
     const source_paths& source() const noexcept
     {
       return m_Source;
+    }
+
+    [[nodiscard]]
+    const dependencies_paths& dependencies() const noexcept
+    {
+      return m_Dependencies;
     }
 
     [[nodiscard]]
@@ -544,6 +574,7 @@ namespace sequoia::testing
     build_paths          m_Build;
     auxiliary_paths      m_Auxiliary;
     output_paths         m_Output;
+    dependencies_paths   m_Dependencies;
     tests_paths          m_Tests;
     test_materials_paths m_Materials;
     build_system_paths   m_BuildSystem;

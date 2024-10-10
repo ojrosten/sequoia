@@ -30,76 +30,76 @@ namespace sequoia:: testing
     using storage = node_storage_tester<double>;
 
     storage store{};
-    check(equivalence, report_line(""), store, std::initializer_list<double>{});
+    check(equivalence, "", store, std::initializer_list<double>{});
 
-    check(equality, report_line(""), store.capacity(), 0_sz);
+    check(equality, "", store.capacity(), 0_sz);
     store.reserve(4_sz);
-    check(equality, report_line(""), store.capacity(), 4_sz);
+    check(equality, "", store.capacity(), 4_sz);
     store.shrink_to_fit();
-    check(equality, report_line("Check may fail if stl implementation doesn't shrink to fit!"), store.capacity(), 0_sz);
+    check(equality, "Check may fail if stl implementation doesn't shrink to fit!", store.capacity(), 0_sz);
 
     store.add_node(2.4);
     // 2.4
 
-    check(equality, report_line(""), store, storage{2.4});
-    check_semantics(report_line("Regular semantics"), store, storage{});
+    check(equality, "", store, storage{2.4});
+    check_semantics("Regular semantics", store, storage{});
 
     store.set_node_weight(store.cbegin_node_weights(), 1.3);
     // 1.3
 
-    check(equality, report_line(""), store, storage{1.3});
+    check(equality, "", store, storage{1.3});
 
     store.erase_node(store.cbegin_node_weights());
     //
 
-    check(equality, report_line(""), store, storage{});
+    check(equality, "", store, storage{});
 
     store.add_node(-0.4);
     store.add_node(5.6);
     // -0.4, 5.6
 
-    check(equality, report_line(""), store, storage{-0.4, 5.6});
-    check_semantics(report_line("Regular semantics"), store, storage{-0.4});
+    check(equality, "", store, storage{-0.4, 5.6});
+    check_semantics("Regular semantics", store, storage{-0.4});
 
     store.erase_node(store.cbegin_node_weights());
     // 5.6
 
-    check(equality, report_line(""), store, storage{5.6});
+    check(equality, "", store, storage{5.6});
 
     store.add_node(6.4);
     store.add_node(-7.66);
     // 5.6, 6.4, -7.66
 
-    check(equality, report_line(""), store, storage{5.6, 6.4, -7.66});
+    check(equality, "", store, storage{5.6, 6.4, -7.66});
 
     store.erase_node(store.cbegin_node_weights()+1);
     // 5.6, -7.66
 
-    check(equality, report_line(""), store, storage{5.6, -7.66});
+    check(equality, "", store, storage{5.6, -7.66});
 
     auto citer = store.insert_node(store.cbegin_node_weights()+1, 3.0);
     // 5.6, 3.0, -7.66
 
-    check(equality, report_line(""), store, storage{5.6, 3.0, -7.66});
-    check(equality, report_line(""), *citer, 3.0);
+    check(equality, "", store, storage{5.6, 3.0, -7.66});
+    check(equality, "", *citer, 3.0);
 
     store.insert_node(store.cend_node_weights(), 2.2);
     // 5.6, 3.0, -7.66 2.2
 
-    check(equality, report_line(""), store, storage{5.6, 3.0, -7.66, 2.2});
+    check(equality, "", store, storage{5.6, 3.0, -7.66, 2.2});
 
     store.erase_nodes(store.cbegin_node_weights()+1, store.cbegin_node_weights()+3);
     // 5.6, 2.2
 
-    check(equality, report_line(""), store, storage{5.6, 2.2});
+    check(equality, "", store, storage{5.6, 2.2});
 
     store.erase_nodes(store.cend_node_weights(), store.cend_node_weights());
     // 5.6, 2.2
 
-    check(equality, report_line(""), store, storage{5.6, 2.2});
+    check(equality, "", store, storage{5.6, 2.2});
 
-    check_exception_thrown<std::out_of_range>(report_line(""), [&store]() { store.erase_nodes(store.cend_node_weights(), store.cbegin_node_weights()); });
-    check_exception_thrown<std::out_of_range>(report_line(""), [&store]() { store.erase_node(store.cend_node_weights()); });
+    check_exception_thrown<std::out_of_range>("", [&store]() { store.erase_nodes(store.cend_node_weights(), store.cbegin_node_weights()); });
+    check_exception_thrown<std::out_of_range>("", [&store]() { store.erase_node(store.cend_node_weights()); });
   }
 
   void node_storage_test::test_static_node_storage()
@@ -108,7 +108,7 @@ namespace sequoia:: testing
 
     constexpr storage store{4, 4, 7, 9};
 
-    check(equivalence, report_line(""), store, std::initializer_list<int>{4, 4, 7, 9});
-    check_semantics(report_line("Regular semantics"), store, {4, 4, 9, 7});
+    check(equivalence, "", store, std::initializer_list<int>{4, 4, 7, 9});
+    check_semantics("Regular semantics", store, {4, 4, 9, 7});
   }
 }

@@ -72,12 +72,12 @@ namespace sequoia::testing
 
       auto checker{
           [&t](std::string_view description, const graph_t& obtained, const graph_t& prediction, const graph_t& parent, std::size_t host, std::size_t target) {
-            t.check(equality, description, obtained, prediction);
-            if(host != target) t.check_semantics(description, prediction, parent);
+            t.check(equality, {description, no_source_location}, obtained, prediction);
+            if(host != target) t.check_semantics({description, no_source_location}, prediction, parent);
           }
       };
 
-      transition_checker<graph_t>::check(report_line(""), trg, checker);
+      transition_checker<graph_t>::check(t.report(""), trg, checker);
     }
 
     [[nodiscard]]
@@ -91,14 +91,14 @@ namespace sequoia::testing
       using namespace maths;
 
       // One node
-      t.check_exception_thrown<std::out_of_range>(t.report_line("Target index of edge out of range"), [](){ return graph_t{{{1, 0, 0.5f}}}; });
-      t.check_exception_thrown<std::out_of_range>(t.report_line("Complimentary index of edge out of range"), [](){ return graph_t{{{0, 1, 0.5f}}}; });
-      t.check_exception_thrown<std::logic_error>(t.report_line("Self-referential complimentary index"), [](){ return graph_t{{{0, 0, 0.5f}}}; });
-      t.check_exception_thrown<std::logic_error>(t.report_line("Mismatched complimentary indices"), [](){ return graph_t{{{0, 1, 0.5f}, {0, 1, 0.5f}}}; });
-      t.check_exception_thrown<std::logic_error>(t.report_line("Mismatched complimentary indices"), [](){ return graph_t{{{0, 1, 0.5f}, {0, 2, 0.5f}, {0, 0, 0.5f}}}; });
+      t.check_exception_thrown<std::out_of_range>("Target index of edge out of range", [](){ return graph_t{{{1, 0, 0.5f}}}; });
+      t.check_exception_thrown<std::out_of_range>("Complimentary index of edge out of range", [](){ return graph_t{{{0, 1, 0.5f}}}; });
+      t.check_exception_thrown<std::logic_error>("Self-referential complimentary index", [](){ return graph_t{{{0, 0, 0.5f}}}; });
+      t.check_exception_thrown<std::logic_error>("Mismatched complimentary indices", [](){ return graph_t{{{0, 1, 0.5f}, {0, 1, 0.5f}}}; });
+      t.check_exception_thrown<std::logic_error>("Mismatched complimentary indices", [](){ return graph_t{{{0, 1, 0.5f}, {0, 2, 0.5f}, {0, 0, 0.5f}}}; });
 
       // Two nodes
-      t.check_exception_thrown<std::logic_error>(t.report_line("Mismatched complimentary indices"), [](){ return graph_t{{{1, 0, 0.5f}, {0, 2, 0.5f}, {0, 1, 0.5f}}, {{0, 1, 0.5f}}}; });
+      t.check_exception_thrown<std::logic_error>("Mismatched complimentary indices", [](){ return graph_t{{{1, 0, 0.5f}, {0, 2, 0.5f}, {0, 1, 0.5f}}, {{0, 1, 0.5f}}}; });
     }
 
     [[nodiscard]]
@@ -116,7 +116,7 @@ namespace sequoia::testing
           {  // begin 'meta_data_graph_description::node'
             {
               meta_data_graph_description::node_0a_0b,
-              t.report_line("Add loop"),
+              t.report("Add loop"),
               [](graph_t g) -> graph_t {
                 g.join(0, 0, 0.0f, 0.5f);
                 return g;
@@ -124,7 +124,7 @@ namespace sequoia::testing
             },
             {
               meta_data_graph_description::node_0b_0a,
-              t.report_line("Add loop"),
+              t.report("Add loop"),
               [](graph_t g) -> graph_t {
                 g.join(0, 0, 0.5f, 0.0f);
                 return g;
@@ -132,7 +132,7 @@ namespace sequoia::testing
             },
             {
               meta_data_graph_description::node_0a_0b,
-              t.report_line("Insert loop"),
+              t.report("Insert loop"),
               [](graph_t g) -> graph_t {
                 g.insert_join(g.cbegin_edges(0), 1, 0.0f, 0.5f);
                 return g;
@@ -140,7 +140,7 @@ namespace sequoia::testing
             },
             {
               meta_data_graph_description::node_0b_0a,
-              t.report_line("Insert loop"),
+              t.report("Insert loop"),
               [](graph_t g) -> graph_t {
                 g.insert_join(g.cbegin_edges(0), g.cbegin_edges(0), 0.0f, 0.5f);
                 return g;
@@ -150,7 +150,7 @@ namespace sequoia::testing
           {  // begin 'meta_data_graph_description::node_0a_0a'
             {
               meta_data_graph_description::node_0b_0a,
-              t.report_line("Set edge meta data"),
+              t.report("Set edge meta data"),
               [](graph_t g) -> graph_t {
                 g.set_edge_meta_data(g.cbegin_edges(0), 0.5f);
                 return g;
@@ -158,7 +158,7 @@ namespace sequoia::testing
             },
             {
               meta_data_graph_description::node_0b_0a,
-              t.report_line("Set edge meta data"),
+              t.report("Set edge meta data"),
               [](graph_t g) -> graph_t {
                 g.set_edge_meta_data(g.cbegin_edges(0), meta_data_t{0.5f});
                 return g;
@@ -166,15 +166,15 @@ namespace sequoia::testing
             },
             {
               meta_data_graph_description::node_0b_0a,
-              t.report_line("Mutate edge meta data"),
+              t.report("Mutate edge meta data"),
               [&t](graph_t g) -> graph_t {
-                t.check(equality, report_line("Mutate return value"), g.mutate_edge_meta_data(g.cbegin_edges(0), [](meta_data_t& m) { m += 0.5f; return 42; }), 42);
+                t.check(equality, "Mutate return value", g.mutate_edge_meta_data(g.cbegin_edges(0), [](meta_data_t& m) { m += 0.5f; return 42; }), 42);
                 return g;
               }
             },
             {
               meta_data_graph_description::node_0a_0b,
-              t.report_line("Set meta data via reverse iterator"),
+              t.report("Set meta data via reverse iterator"),
               [](graph_t g) -> graph_t {
                 g.set_edge_meta_data(g.crbegin_edges(0), 0.5f);
                 return g;
@@ -182,9 +182,9 @@ namespace sequoia::testing
             },
             {
               meta_data_graph_description::node_0a_0b,
-              t.report_line("Mutate edge meta data via reverse iterator"),
+              t.report("Mutate edge meta data via reverse iterator"),
               [&t](graph_t g) -> graph_t {
-                t.check(equality, report_line("Mutate return value"), g.mutate_edge_meta_data(g.crbegin_edges(0), [](meta_data_t& m) { m += 0.5f; return 42; }), 42);
+                t.check(equality, "Mutate return value", g.mutate_edge_meta_data(g.crbegin_edges(0), [](meta_data_t& m) { m += 0.5f; return 42; }), 42);
                 return g;
               }
             }
@@ -196,7 +196,7 @@ namespace sequoia::testing
           {  // begin 'meta_data_graph_description::node_node'
             {
               meta_data_graph_description::node_1b_node_0a,
-              t.report_line("Join {0,1}"),
+              t.report("Join {0,1}"),
               [](graph_t g) -> graph_t {
                 g.join(0, 1, 0.5f, 0.0f);
                 return g;
@@ -204,7 +204,7 @@ namespace sequoia::testing
             },
             {
               meta_data_graph_description::node_1b_node_0a,
-              t.report_line("Join {0,1}"),
+              t.report("Join {0,1}"),
               [](graph_t g) -> graph_t {
                 g.insert_join(g.cbegin_edges(0), g.cbegin_edges(1), 0.5f, 0.0f);
                 return g;
@@ -212,7 +212,7 @@ namespace sequoia::testing
             },
             {
               meta_data_graph_description::node_1b_node_0a,
-              t.report_line("Join {0,1}"),
+              t.report("Join {0,1}"),
               [](graph_t g) -> graph_t {
                 g.insert_join(g.cbegin_edges(1), g.cbegin_edges(0), 0.0f, 0.5f);
                 return g;
@@ -224,25 +224,25 @@ namespace sequoia::testing
         },
         {
           //  'empty'
-          make_and_check(t, t.report_line(""), {}),
+          make_and_check(t, t.report(""), {}),
 
           //  'node'
-          make_and_check(t, t.report_line(""), {{}}),
+          make_and_check(t, t.report(""), {{}}),
 
           // 'node_0a_0a
-          make_and_check(t, t.report_line(""), {{{0, 1, 0.0f}, {0, 0, 0.0f}}}),
+          make_and_check(t, t.report(""), {{{0, 1, 0.0f}, {0, 0, 0.0f}}}),
 
           // 'node_0a_0b
-          make_and_check(t, t.report_line(""), {{{0, 1, 0.0f}, {0, 0, 0.5f}}}),
+          make_and_check(t, t.report(""), {{{0, 1, 0.0f}, {0, 0, 0.5f}}}),
 
           // 'node_0b_0a
-          make_and_check(t, t.report_line(""), {{{0, 1, 0.5f}, {0, 0, 0.0f}}}),
+          make_and_check(t, t.report(""), {{{0, 1, 0.5f}, {0, 0, 0.0f}}}),
 
           //  'node_node'
-          make_and_check(t, t.report_line(""), {{}, {}}),
+          make_and_check(t, t.report(""), {{}, {}}),
 
           //  'node_1b_node_0a'
-          make_and_check(t, t.report_line(""), {{{1, 0, 0.5f}}, {{0, 0, 0.0f}}})
+          make_and_check(t, t.report(""), {{{1, 0, 0.5f}}, {{0, 0, 0.0f}}})
         }
       };
     }

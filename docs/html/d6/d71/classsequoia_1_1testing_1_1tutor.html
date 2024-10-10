@@ -111,7 +111,7 @@ const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>pr
 class sequoia::testing::tutor&lt; Advisor &gt;</div><p>class template used to wrap function objects which proffer advice. </p>
 <p>An appropriate instantiation of this class template may be supplied as the final argument of many of the check methods. For example, consider checking equality of an <code>int</code>:</p>
 <pre>
-check(equality, report_line(""), x, 41, tutor{[](int value, int prediction) {
+check(equality, "", x, 41, tutor{[](int value, int prediction) {
     return value == 42 ? "Are you sure the universe isn't trying to tell you something?" : "";
 }});
 </pre><p>In the case the <code>x != 41</code>, not only will failure be reported in the usual manner but, if <code>x == 42</code>, some spectacularly useful advice will be proffered.</p>

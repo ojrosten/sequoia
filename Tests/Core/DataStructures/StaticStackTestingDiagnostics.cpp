@@ -29,8 +29,8 @@ namespace sequoia::testing
     using namespace data_structures;
 
     constexpr static_stack<int, 0> s{};
-    check(report_line("Empty stack"), !s.empty());
-    check(equality, report_line(""), s.size(), 1_sz);
+    check("Empty stack", !s.empty());
+    check(equality, "", s.size(), 1_sz);
   }
 
   void test_static_stack_false_positives::check_depth_1()
@@ -44,15 +44,15 @@ namespace sequoia::testing
     // sensitive to empty and size, so one of these needs
     // to be explicitly checked!
 
-    check(report_line("Empty stack"), !s.empty());
-    check(report_line("Non-empty stack"), t.empty());
+    check("Empty stack", !s.empty());
+    check("Non-empty stack", t.empty());
 
-    check(equality, report_line("Empty stack versus populated stack"), s, t);
+    check(equality, "Empty stack versus populated stack", s, t);
 
     s.push(2);
-    check(equality, report_line("Differing elements"), s, t);
+    check(equality, "Differing elements", s, t);
 
     s.pop();
-    check(equality, report_line("Empty stack versus populated stack"), s, t);
+    check(equality, "Empty stack versus populated stack", s, t);
   }
 }

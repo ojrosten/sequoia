@@ -1,6 +1,6 @@
 
 Analyzing dependencies...
-[57.4ms]
+[123ms]
 
 
 Running tests...
@@ -29,8 +29,8 @@ Unique Thing:
 Container:
 
 -----------Grand Totals-----------
-[Total Run Time: 12.2ms]
-[Execution Time: 2.38ms]
+[Total Run Time: 17.5ms]
+[Execution Time: 3.13ms]
 	Standard Top Level Checks:                10;  Failures:  1  [Deep checks: 78]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

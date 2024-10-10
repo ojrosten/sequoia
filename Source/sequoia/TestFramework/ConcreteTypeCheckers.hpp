@@ -55,6 +55,7 @@
 
 #include <any>
 #include <array>
+#include <format>
 #include <functional>
 #include <memory>
 #include <optional>
@@ -295,8 +296,7 @@ namespace sequoia::testing
       requires (I < sizeof...(T))
     static void check_tuple_elements(CheckType flavour, test_logger<Mode>& logger, const std::tuple<T...>& value, const std::tuple<U...>& prediction, const tutor<Advisor>& advisor)
     {
-      const std::string message{"Element " + std::to_string(I) + " of tuple incorrect"};
-      check(flavour, message, logger, std::get<I>(value), std::get<I>(prediction), advisor);
+      check(flavour, std::format("Element {} of tuple incorrect", I), logger, std::get<I>(value), std::get<I>(prediction), advisor);
       check_tuple_elements<I+1>(flavour, logger, value, prediction, advisor);
     }
 

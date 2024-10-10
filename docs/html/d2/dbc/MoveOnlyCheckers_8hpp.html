@@ -88,13 +88,13 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a7ea32263addad02893d045620bd91446"><td class="memTemplParams" colspan="2">template&lt;test_mode Mode, moveonly T&gt; </td></tr>
-<tr class="memitem:a7ea32263addad02893d045620bd91446"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/dbc/MoveOnlyCheckers_8hpp.html#a7ea32263addad02893d045620bd91446">sequoia::testing::check_semantics</a> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, T &amp;&amp;x, T &amp;&amp;y, const T &amp;xClone, const T &amp;yClone, opt_moved_from_ref&lt; T &gt; movedFrom)</td></tr>
-<tr class="separator:a7ea32263addad02893d045620bd91446"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab5eb351c1017ed553bbf6193722b7303"><td class="memTemplParams" colspan="2">template&lt;test_mode Mode, moveonly T&gt; <br />
+<tr class="memitem:a5ba96e8b906052acea47432d918c30df"><td class="memTemplParams" colspan="2">template&lt;test_mode Mode, moveonly T&gt; </td></tr>
+<tr class="memitem:a5ba96e8b906052acea47432d918c30df"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/dbc/MoveOnlyCheckers_8hpp.html#a5ba96e8b906052acea47432d918c30df">sequoia::testing::check_semantics</a> (std::string description, test_logger&lt; Mode &gt; &amp;logger, T &amp;&amp;x, T &amp;&amp;y, const T &amp;xClone, const T &amp;yClone, opt_moved_from_ref&lt; T &gt; movedFrom)</td></tr>
+<tr class="separator:a5ba96e8b906052acea47432d918c30df"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa8494f82a786771aaee536a32d9a7d60"><td class="memTemplParams" colspan="2">template&lt;test_mode Mode, moveonly T&gt; <br />
 requires std::totally_ordered&lt;T&gt;</td></tr>
-<tr class="memitem:ab5eb351c1017ed553bbf6193722b7303"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/dbc/MoveOnlyCheckers_8hpp.html#ab5eb351c1017ed553bbf6193722b7303">sequoia::testing::check_semantics</a> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, T &amp;&amp;x, T &amp;&amp;y, const T &amp;xClone, const T &amp;yClone, opt_moved_from_ref&lt; T &gt; movedFrom, std::weak_ordering order)</td></tr>
-<tr class="separator:ab5eb351c1017ed553bbf6193722b7303"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa8494f82a786771aaee536a32d9a7d60"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/dbc/MoveOnlyCheckers_8hpp.html#aa8494f82a786771aaee536a32d9a7d60">sequoia::testing::check_semantics</a> (std::string description, test_logger&lt; Mode &gt; &amp;logger, T &amp;&amp;x, T &amp;&amp;y, const T &amp;xClone, const T &amp;yClone, opt_moved_from_ref&lt; T &gt; movedFrom, std::weak_ordering order)</td></tr>
+<tr class="separator:aa8494f82a786771aaee536a32d9a7d60"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Functions for checking semantics of types lacking copy semantics but which are otherwise regular. </p>
@@ -106,8 +106,8 @@ requires std::totally_ordered&lt;T&gt;</td></tr>
 <p>This file adds one function to the check_semantics overload set, inside which consistency of the first list of operators above will be checked. There is an important difference compared to the corresponding overloads for regular semantics. Whereas the latter takes just two instance of T, x and y, in the move-only case 4 are taken. This is because, by definition, we cannot copy x and y and so, to be able to compare to the original values (essential for the mechanics of testing), immutable clones must be supplied.</p>
 <p><a class="anchor" id="move_only_definition"></a></p>
 </div><h2 class="groupheader">Function Documentation</h2>
-<a id="a7ea32263addad02893d045620bd91446" name="a7ea32263addad02893d045620bd91446"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7ea32263addad02893d045620bd91446">&#9670;&#160;</a></span>check_semantics() <span class="overload">[1/2]</span></h2>
+<a id="a5ba96e8b906052acea47432d918c30df" name="a5ba96e8b906052acea47432d918c30df"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5ba96e8b906052acea47432d918c30df">&#9670;&#160;</a></span>check_semantics() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -117,7 +117,7 @@ template&lt;test_mode Mode, moveonly T&gt; </div>
         <tr>
           <td class="memname">void sequoia::testing::check_semantics </td>
           <td>(</td>
-          <td class="paramtype">std::string_view&#160;</td>
+          <td class="paramtype">std::string&#160;</td>
           <td class="paramname"><em>description</em>, </td>
         </tr>
         <tr>
@@ -168,8 +168,8 @@ template&lt;test_mode Mode, moveonly T&gt; </div>
 
 </div>
 </div>
-<a id="ab5eb351c1017ed553bbf6193722b7303" name="ab5eb351c1017ed553bbf6193722b7303"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab5eb351c1017ed553bbf6193722b7303">&#9670;&#160;</a></span>check_semantics() <span class="overload">[2/2]</span></h2>
+<a id="aa8494f82a786771aaee536a32d9a7d60" name="aa8494f82a786771aaee536a32d9a7d60"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa8494f82a786771aaee536a32d9a7d60">&#9670;&#160;</a></span>check_semantics() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -180,7 +180,7 @@ requires std::totally_ordered&lt;T&gt;</div>
         <tr>
           <td class="memname">void sequoia::testing::check_semantics </td>
           <td>(</td>
-          <td class="paramtype">std::string_view&#160;</td>
+          <td class="paramtype">std::string&#160;</td>
           <td class="paramname"><em>description</em>, </td>
         </tr>
         <tr>

@@ -139,13 +139,7 @@ namespace sequoia::testing
   [[nodiscard]]
   fs::path source_paths::cmake_lists() const
   {
-    return repo() / "CMakeLists.txt";
-  }
-
-  [[nodiscard]]
-  fs::path source_paths::cmake_lists(std::filesystem::path projectRoot)
-  {
-    return repo(projectRoot) /= "CMakeLists.txt";
+    return m_Project / "CMakeLists.txt";
   }
 
   [[nodiscard]]
@@ -167,6 +161,24 @@ namespace sequoia::testing
   std::filesystem::path tests_paths::project_root() const
   {
     return m_Repo.parent_path();
+  }
+
+  //===================================== tests_paths =====================================//
+
+  dependencies_paths::dependencies_paths(fs::path projectRoot)
+    : m_Repo{std::move(projectRoot /= "dependencies")}
+  {}
+
+  [[nodiscard]]
+  std::filesystem::path dependencies_paths::project_root() const
+  {
+    return m_Repo.parent_path();
+  }
+
+  [[nodiscard]]
+  std::filesystem::path dependencies_paths::sequoia_root() const
+  {
+    return m_Repo / "sequoia";
   }
 
   //===================================== test_materials_paths =====================================//
@@ -199,25 +211,26 @@ namespace sequoia::testing
   {}
 
   [[nodiscard]]
-  fs::path auxiliary_paths::repo(fs::path projectRoot)
+  fs::path auxiliary_paths::repo(const fs::path& projectRoot)
   {
-    return projectRoot /= "aux_files";
+    const auto trialPath{projectRoot / "aux_files"};
+    return fs::exists(trialPath) ? trialPath : dependencies_paths{projectRoot}.sequoia_root() / "aux_files";
   }
 
   [[nodiscard]]
-  fs::path auxiliary_paths::test_templates(fs::path projectRoot)
+  fs::path auxiliary_paths::test_templates(const fs::path& projectRoot)
   {
     return repo(projectRoot) /= "TestTemplates";
   }
 
   [[nodiscard]]
-  fs::path auxiliary_paths::source_templates(fs::path projectRoot)
+  fs::path auxiliary_paths::source_templates(const fs::path& projectRoot)
   {
     return repo(projectRoot) /= "SourceTemplates";
   }
 
   [[nodiscard]]
-  fs::path auxiliary_paths::project_template(fs::path projectRoot)
+  fs::path auxiliary_paths::project_template(const fs::path& projectRoot)
   {
     return repo(projectRoot) /= "ProjectTemplate";
   }
@@ -360,6 +373,7 @@ namespace sequoia::testing
     , m_Build{project_root(), m_Discovered.executable().parent_path(), m_Discovered.cmake_cache()}
     , m_Auxiliary{project_root()}
     , m_Output{project_root()}
+    , m_Dependencies{project_root()}
     , m_Tests{project_root()}
     , m_Materials{project_root()}
     , m_BuildSystem{project_root()}

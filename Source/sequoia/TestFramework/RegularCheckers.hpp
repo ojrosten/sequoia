@@ -46,35 +46,35 @@ namespace sequoia::testing
 {
   /// Precondition: x!=y
   template<test_mode Mode, pseudoregular T>
-  void check_semantics(std::string_view description, test_logger<Mode>& logger, const T& x, const T& y)
+  void check_semantics(std::string description, test_logger<Mode>& logger, const T& x, const T& y)
   {
-    sentinel<Mode> sentry{logger, add_type_info<T>(description).append("\n")};
+    sentinel<Mode> sentry{logger, add_type_info<T>(std::move(description)).append("\n")};
     impl::check_semantics(logger, impl::auxiliary_data<T>{}, x, y, impl::null_mutator{});
   }
 
   /// Precondition: x!=y with values consistent with order
   template<test_mode Mode, pseudoregular T>
     requires std::totally_ordered<T>
-  void check_semantics(std::string_view description, test_logger<Mode>& logger, const T& x, const T& y, std::weak_ordering order)
+  void check_semantics(std::string description, test_logger<Mode>& logger, const T& x, const T& y, std::weak_ordering order)
   {
-    sentinel<Mode> sentry{logger, add_type_info<T>(description).append("\n")};
+    sentinel<Mode> sentry{logger, add_type_info<T>(std::move(description)).append("\n")};
     impl::check_semantics(logger, impl::auxiliary_data<T>{order}, x, y, impl::null_mutator{});
   }
 
   /// Precondition: x!=y
   template<test_mode Mode, pseudoregular T, std::invocable<T&> Mutator>
-  void check_semantics(std::string_view description, test_logger<Mode>& logger, const T& x, const T& y, Mutator yMutator)
+  void check_semantics(std::string description, test_logger<Mode>& logger, const T& x, const T& y, Mutator yMutator)
   {
-    sentinel<Mode> sentry{logger, add_type_info<T>(description).append("\n")};
+    sentinel<Mode> sentry{logger, add_type_info<T>(std::move(description)).append("\n")};
     impl::check_semantics(logger, impl::auxiliary_data<T>{}, x, y, yMutator);
   }
 
   /// Precondition: x!=y, with values consistent with order
   template<test_mode Mode, pseudoregular T, std::invocable<T&> Mutator>
     requires std::totally_ordered<T>
-  void check_semantics(std::string_view description, test_logger<Mode>& logger, const T& x, const T& y, std::weak_ordering order, Mutator yMutator)
+  void check_semantics(std::string description, test_logger<Mode>& logger, const T& x, const T& y, std::weak_ordering order, Mutator yMutator)
   {
-    sentinel<Mode> sentry{logger, add_type_info<T>(description).append("\n")};
+    sentinel<Mode> sentry{logger, add_type_info<T>(std::move(description)).append("\n")};
     impl::check_semantics(logger, impl::auxiliary_data<T>{order}, x, y, order, yMutator);
   }
 }

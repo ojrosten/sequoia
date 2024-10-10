@@ -21,7 +21,7 @@ namespace sequoia::testing
 
   void scoped_allocation_false_negative_diagnostics_three_level::run_tests()
   {
-    do_allocation_tests(*this);
+    do_allocation_tests();
   }
 
   template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
@@ -44,7 +44,7 @@ namespace sequoia::testing
 
     auto getter{[](const beast& b) { return b.x.get_allocator(); }};
 
-    check_semantics(report_line(""),
+    check_semantics("",
       beast{},
       beast{{{1}}},
       [](beast& b) { b.x.push_back({{2}}); },

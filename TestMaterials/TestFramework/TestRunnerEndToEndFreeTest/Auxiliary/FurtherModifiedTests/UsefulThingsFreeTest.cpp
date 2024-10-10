@@ -18,7 +18,7 @@ namespace sequoia::testing
 
   void useful_things_free_test::run_tests()
   {
-    check(equality, report_line(""), utils::foo(), 43);
-	check_exception_thrown<std::runtime_error>("", [](){ throw std::runtime_error{"Uh-oh"};  });
+    check(equality, "", utils::foo(), 43);
+   	check_exception_thrown<std::runtime_error>("", [](){ throw std::runtime_error{"Uh-oh"};  });
   }
 }

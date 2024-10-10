@@ -6,7 +6,9 @@ Failing Suite:
 	False Negative Checks:                     1;  Failures:  1
 	False Positive Checks:                     1;  Failures:  1
 
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 74
 	Standard Failure
+
 	[int]
 	operator== returned false
 	Obtained : 43
@@ -15,12 +17,16 @@ Failing Suite:
 	=======================================
 
 	False Positive Failure:
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 91
 	False positive failure
+
 	[int]
 
 	=======================================
 
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 108
 	False negative failure
+
 	[int]
 	operator== returned false
 	Obtained : 43
@@ -30,8 +36,8 @@ Failing Suite:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 10.4ms]
-[Execution Time: 285us]
+[Total Run Time: 4.28ms]
+[Execution Time: 341us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     1;  Failures:  1
