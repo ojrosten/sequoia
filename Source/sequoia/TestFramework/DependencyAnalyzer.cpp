@@ -364,7 +364,7 @@ namespace sequoia::testing
       tests_dependency_graph g{};
 
       const auto exeTimeStamp{get_stamp(projPaths.executable())};
-      add_files(g, projPaths.source().project(), pruneTimeStamp, exeTimeStamp);
+      add_files(g, projPaths.source().repo(), pruneTimeStamp, exeTimeStamp);
       add_files(g, projPaths.tests().repo(), pruneTimeStamp, exeTimeStamp);
       g.sort_nodes([&g](auto i, auto j) {
         const fs::path&

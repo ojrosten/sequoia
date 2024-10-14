@@ -247,7 +247,7 @@ namespace sequoia::testing
     if(filename.empty())
       throw std::runtime_error{"Header name is empty"};
 
-    if(const auto path{find_in_tree(m_Paths.source().project(), filename)}; !path.empty())
+    if(const auto path{find_in_tree(m_Paths.source().repo(), filename)}; !path.empty())
       return path;
 
     for(auto e : st_HeaderExtensions)
@@ -255,7 +255,7 @@ namespace sequoia::testing
       if(e != filename.extension())
       {
         const auto alternative{std::filesystem::path{filename}.replace_extension(e)};
-        if(const auto path{find_in_tree(m_Paths.source().project(), alternative)}; !path.empty())
+        if(const auto path{find_in_tree(m_Paths.source().repo(), alternative)}; !path.empty())
           return path;
       }
     }
@@ -385,7 +385,7 @@ namespace sequoia::testing
       }
     }
 
-    mess.append(" in the source repository\n").append(fs::relative(m_Paths.source().project(), m_Paths.tests().repo()).generic_string());
+    mess.append(" in the source repository\n").append(fs::relative(m_Paths.source().repo(), m_Paths.tests().repo()).generic_string());
 
     throw std::runtime_error{mess};
   }
