@@ -101,7 +101,7 @@ namespace sequoia::testing
   public:
     source_paths() = default;
 
-    explicit source_paths(const std::filesystem::path& projectRoot);
+    explicit source_paths(const std::filesystem::path& projectRoot, const std::optional<std::filesystem::path>& folderName = {});
 
     [[nodiscard]]
     const std::filesystem::path& project() const noexcept
@@ -469,16 +469,18 @@ namespace sequoia::testing
   public:
     struct initializer
     {
-      std::filesystem::path mainCpp;
+      std::filesystem::path mainCpp{main_paths::default_main_cpp_from_root()};
 
-      std::vector<std::string> ancillaryMainCpps{};
+      std::vector<std::filesystem::path> ancillaryMainCpps{};
 
-      std::filesystem::path commonIncludes{};
+      std::filesystem::path commonIncludes{main_paths::default_main_cpp_from_root()};
+
+      std::optional<std::filesystem::path> sourceFolder;
     };
 
     project_paths() = default;
 
-    project_paths(int argc, char** argv, const initializer& pathsFromRoot);
+    project_paths(int argc, char** argv, const initializer& bespokePaths);
 
     [[nodiscard]]
     const std::filesystem::path& project_root() const noexcept

@@ -387,7 +387,7 @@ namespace sequoia::testing
     : test_runner{argc,
                   argv,
                   std::move(copyright),
-                    {main_paths::default_main_cpp_from_root(), {}, main_paths::default_main_cpp_from_root()},
+                  {},
                   std::move(codeIndent),
                   stream}
   {}
