@@ -13,6 +13,7 @@
 
 #include <filesystem>
 #include <optional>
+#include <span>
 #include <string>
 #include <vector>
 
@@ -476,6 +477,8 @@ namespace sequoia::testing
       std::filesystem::path commonIncludes{main_paths::default_main_cpp_from_root()};
 
       std::optional<std::filesystem::path> sourceFolder;
+
+      std::vector<std::filesystem::path> additionalDependencyAnalysisPaths;
     };
 
     project_paths() = default;
@@ -560,15 +563,14 @@ namespace sequoia::testing
       return m_Discovered;
     }
 
+    [[nodiscard]]
+    std::span<const std::filesystem::path> additional_dependency_analysis_paths() const noexcept { return m_AdditionalDependencyAnalysisPaths; }
 
     [[nodiscard]]
     prune_paths prune() const;
 
     [[nodiscard]]
     friend bool operator==(const project_paths&, const project_paths&) noexcept = default;
-
-    [[nodiscard]]
-    friend bool operator!=(const project_paths&, const project_paths&) noexcept = default;
   private:
     discoverable_paths   m_Discovered;
     main_paths           m_Main;
@@ -582,5 +584,6 @@ namespace sequoia::testing
     build_system_paths   m_BuildSystem;
 
     std::vector<main_paths> m_AncillaryMainCpps{};
+    std::vector<std::filesystem::path> m_AdditionalDependencyAnalysisPaths{};
   };
 }

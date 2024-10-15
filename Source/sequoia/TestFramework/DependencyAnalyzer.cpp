@@ -240,7 +240,10 @@ namespace sequoia::testing
                   }
                   else
                   {
-                    if((wt.file == (projPaths.source().repo() / includedFile)) || (wt.file == (projPaths.tests().repo() / includedFile)))
+                    if(    (wt.file == (projPaths.source().repo() / includedFile))
+                        || (wt.file == (projPaths.tests().repo() / includedFile))
+                        || std::ranges::contains(projPaths.additional_dependency_analysis_paths(), wt.file, [&includedFile](const fs::path& p) {  return  p / includedFile; })
+                      )
                       return true;
 
                     if(const auto trial{file.parent_path() / includedFile}; fs::exists(trial) && (wt.file == fs::canonical(trial)))
@@ -366,6 +369,11 @@ namespace sequoia::testing
       const auto exeTimeStamp{get_stamp(projPaths.executable())};
       add_files(g, projPaths.source().repo(), pruneTimeStamp, exeTimeStamp);
       add_files(g, projPaths.tests().repo(), pruneTimeStamp, exeTimeStamp);
+      for(const auto& p : projPaths.additional_dependency_analysis_paths())
+      {
+        add_files(g, p, pruneTimeStamp, exeTimeStamp);
+      }
+
       g.sort_nodes([&g](auto i, auto j) {
         const fs::path&
           lfile{(g.cbegin_node_weights() + i)->file},

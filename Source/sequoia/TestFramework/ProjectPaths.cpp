@@ -378,6 +378,7 @@ namespace sequoia::testing
     , m_Materials{project_root()}
     , m_BuildSystem{project_root()}
     , m_AncillaryMainCpps{make_ancillary_info(project_root(), main().common_includes(), bespokePaths)}
+    , m_AdditionalDependencyAnalysisPaths{bespokePaths.additionalDependencyAnalysisPaths}
   {
     throw_unless_directory(project_root(), "\nRepository root not found");
     throw_unless_regular_file(main().file(), "\nTry ensuring that the application is run from the appropriate directory");
