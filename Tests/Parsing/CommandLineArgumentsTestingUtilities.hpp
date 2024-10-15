@@ -97,7 +97,7 @@ namespace sequoia::testing
       return static_cast<int>(m_Args.size());
     }
 
-    commandline_arguments(std::initializer_list<std::string_view> args);
+    commandline_arguments(std::initializer_list<std::string> args);
     commandline_arguments(std::vector<std::string> args);
 
     [[nodiscard]]

@@ -1,0 +1,17 @@
+#ignore emacs temporary files
+*~
+
+#ignore Desktop Services Store
+*.DS_Store
+
+#ignore the build directory
+/build
+
+#ignore test recovery file
+output/Recovery
+
+#ignore temporary data from tests
+output/TestsTemporaryData
+
+#ignore file recording prune info
+output/Prune
