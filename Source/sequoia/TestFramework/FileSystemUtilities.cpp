@@ -142,14 +142,7 @@ namespace sequoia::testing
     if((i == p.end()) || (i->empty()))
       throw std::runtime_error{"Path comprises nothing but ../"};
 
-    auto dirIter{dir.end()};
-    while(dirIter != dir.begin())
-    {
-      --dirIter;
-      if(*dirIter == *i) break;
-    }
-
-    auto[rebasedPathIter, lastCommonDirIter]{std::ranges::mismatch(i, p.end(), dirIter, dir.end())};
+    auto[rebasedPathIter, lastCommonDirIter]{std::ranges::mismatch(i, p.end(), rfind(dir, *i), dir.end())};
 
     return std::accumulate(rebasedPathIter, p.end(), fs::path{}, [](fs::path lhs, const fs::path& rhs){ return lhs /= rhs; });
   }
