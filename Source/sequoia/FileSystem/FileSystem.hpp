@@ -44,10 +44,12 @@ namespace sequoia
     std::filesystem::path m_Path;
   };
 
-  /// precondition: a non-empty path; return value: the last element of the path
   [[nodiscard]]
   inline std::filesystem::path back(const std::filesystem::path& p)
   {
+    if(p.empty())
+      throw std::runtime_error{"Cannot extract final element from an empty path"};
+
     return *--p.end();
   }
 
