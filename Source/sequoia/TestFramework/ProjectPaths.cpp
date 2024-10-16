@@ -19,6 +19,7 @@
 
 #include <algorithm>
 #include <numeric>
+#include <ranges>
 
 namespace sequoia::testing
 {
@@ -133,7 +134,7 @@ namespace sequoia::testing
 
   source_paths::source_paths(const fs::path& projectRoot, const std::optional<fs::path>& folderName)
     : m_Repo{repo(projectRoot)}
-    , m_Project{repo() / (folderName ? rebase_from(folderName.value(), repo()) : uncapitalize(back(projectRoot).generic_string()))}
+    , m_Project{folderName ? repo() / rebase_from(folderName.value(), repo()) : repo() / uncapitalize(back(projectRoot).generic_string())}
   {}
 
   [[nodiscard]]
