@@ -133,7 +133,7 @@ namespace sequoia::testing
 
   source_paths::source_paths(const fs::path& projectRoot, const std::optional<fs::path>& folderName)
     : m_Repo{repo(projectRoot)}
-    , m_Project{repo() / (folderName ? folderName.value() : uncapitalize(back(projectRoot).generic_string()))}
+    , m_Project{repo() / (folderName ? rebase_from(folderName.value(), repo()) : uncapitalize(back(projectRoot).generic_string()))}
   {}
 
   [[nodiscard]]
@@ -368,7 +368,7 @@ namespace sequoia::testing
 
   project_paths::project_paths(int argc, char** argv, const initializer& bespokePaths)
     : m_Discovered{argc, argv}
-    , m_Main{project_root() / bespokePaths.mainCpp, project_root() / bespokePaths.commonIncludes}
+    , m_Main{project_root() / rebase_from(bespokePaths.mainCpp, project_root()), project_root() / rebase_from(bespokePaths.commonIncludes, project_root())}
     , m_Source{project_root(), bespokePaths.sourceFolder}
     , m_Build{project_root(), m_Discovered.executable().parent_path(), m_Discovered.cmake_cache()}
     , m_Auxiliary{project_root()}

@@ -12,6 +12,8 @@
 
 namespace sequoia::testing
 {
+  namespace fs = std::filesystem;
+
   [[nodiscard]]
   std::filesystem::path file_system_utilities_free_test::source_file() const
   {
@@ -26,8 +28,6 @@ namespace sequoia::testing
 
   void file_system_utilities_free_test::test_find_in_tree()
   {
-    namespace fs = std::filesystem;
-
     const auto root{working_materials()}, fooPath{root / "Foo"};
 
     auto postprocessor{
@@ -60,11 +60,20 @@ namespace sequoia::testing
 
   void file_system_utilities_free_test::test_rebase_from()
   {
-    namespace fs = std::filesystem;
+    check_exception_thrown<std::runtime_error>("Attempt to rebase from file",
+                                             [this]() { return rebase_from("Foo/Bar", working_materials() /= "Foo/baz.txt"); });
 
-    check_exception_thrown<std::logic_error>("Attempt to rebase from file",
-                    [this]() { return rebase_from("Foo/Bar", working_materials() /= "Foo/baz.txt"); });
+    check_exception_thrown<std::runtime_error>("Attempt to rebase non-empty path from empty path",
+                                             [this]() { return rebase_from("Foo/Bar", ""); });
 
+    check_exception_thrown<std::runtime_error>("Attempt to rebase ../",
+                                             [this]() { return rebase_from("../", "Foo"); });
+
+    check_exception_thrown<std::runtime_error>("Attempt to rebase ../../",
+                                             [this]() { return rebase_from("../../", "Foo"); });
+
+    check(equality, "Empty path", rebase_from("", "Baz"), fs::path{""});
+    check(equality, "Empty path from empty path", rebase_from("", ""), fs::path{""});
     check(equality, "Non-existant path", rebase_from("Foo/Bar", "Baz"), fs::path{"Foo/Bar"});
     check(equality, "Rebase absolute", rebase_from(working_materials() /= "Foo", working_materials()), fs::path{"Foo"});
     check(equality, "No overlap", rebase_from(fs::path{"Things/Stuff.txt"}, working_materials()), fs::path{"Things/Stuff.txt"});
