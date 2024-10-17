@@ -11,8 +11,8 @@
 
 namespace sequoia::testing
 {
-  commandline_arguments::commandline_arguments(std::initializer_list<std::string> args)
-    : commandline_arguments{std::ranges::to<std::vector>(args)}
+  commandline_arguments::commandline_arguments(std::initializer_list<std::string_view> args)
+    : commandline_arguments{std::views::transform(args, [](auto sv){ return std::string{sv}; }) | std::ranges::to<std::vector>()}
   {}
 
   commandline_arguments::commandline_arguments(std::vector<std::string> args)
