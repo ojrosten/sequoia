@@ -365,7 +365,7 @@ namespace sequoia::testing
       reporter{"Test Main has empty path"},
       [this]() {
         std::stringstream outputStream{};
-        commandline_arguments args{zeroth_arg()};
+        commandline_arguments args{{zeroth_arg()}};
         test_runner tr{args.size(), args.get(), "Oliver J. Rosten",{"", {}, "TestShared/SharedIncludes.hpp"}, "  ", outputStream};
       },
       pathTrimmer);
@@ -374,7 +374,7 @@ namespace sequoia::testing
       reporter{"Test Main does not exist"},
       [this]() {
         std::stringstream outputStream{};
-        commandline_arguments args{zeroth_arg()};
+        commandline_arguments args{{zeroth_arg()}};
         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", {"FooMain.cpp", {}, "TestShared/SharedIncludes.hpp"}, "  ", outputStream};
       },
       pathTrimmer);
@@ -383,7 +383,7 @@ namespace sequoia::testing
       reporter{"Include Target has empty path"},
       [this]() {
         std::stringstream outputStream{};
-        commandline_arguments args{zeroth_arg()};
+        commandline_arguments args{{zeroth_arg()}};
         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", {"TestSandbox/TestSandbox.cpp", {}, ""}, "  ", outputStream};
       },
       pathTrimmer);
@@ -392,7 +392,7 @@ namespace sequoia::testing
       reporter{"Include Target does not exist"},
       [this]() {
         std::stringstream outputStream{};
-        commandline_arguments args{zeroth_arg()};
+        commandline_arguments args{{zeroth_arg()}};
         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", {"TestSandbox/TestSandbox.cpp", {}, "FooPath.hpp"}, "  ", outputStream};
       },
       pathTrimmer);
@@ -401,7 +401,7 @@ namespace sequoia::testing
       reporter{"Project root is empty"},
       [this]() {
         std::stringstream outputStream{};
-        commandline_arguments args{""};
+        commandline_arguments args{{""}};
         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", {"TestSandbox/TestSandbox.cpp", {}, "TestShared/SharedIncludes.hpp"}, "  ", outputStream};
       });
 
@@ -409,7 +409,7 @@ namespace sequoia::testing
       reporter{"Project root does not exist"},
       [this]() {
         std::stringstream outputStream{};
-        commandline_arguments args{(fake_project() / "FooRepo").generic_string()};
+        commandline_arguments args{{(fake_project() / "FooRepo").generic_string()}};
         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", {"TestSandbox/TestSandbox.cpp", {}, "TestShared/SharedIncludes.hpp"}, "  ", outputStream};
       },
       pathTrimmer);
@@ -419,7 +419,7 @@ namespace sequoia::testing
       [this]() {
         const auto zerothArg{fake_project().append("TestShared").generic_string()};
         std::stringstream outputStream{};
-        commandline_arguments args{zerothArg};
+        commandline_arguments args{{zerothArg}};
         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", {"TestSandbox/TestSandbox.cpp", {}, "TestShared/SharedIncludes.hpp"}, "  ", outputStream};
       },
       pathTrimmer);
@@ -427,7 +427,7 @@ namespace sequoia::testing
     check_exception_thrown<std::runtime_error>(
       reporter{"Neither name nor source unique"},
       [this](){
-        commandline_arguments args{zeroth_arg()};
+        commandline_arguments args{{zeroth_arg()}};
         std::stringstream outputStream{};
   
         test_runner runner{args.size(),
@@ -480,9 +480,9 @@ namespace sequoia::testing
     // This is scoped to ensure destruction of the runner - and therefore loggers -
     // before dumping output to a file. The destructors are not trivial in recovery mode.
     {
-      commandline_arguments args{(minimal_fake_path()).generic_string(), "-v", "recover", "dump",
+      commandline_arguments args{{(minimal_fake_path()).generic_string(), "-v", "recover", "dump",
                                  "test", "Bar",
-                                 "test", "Foo"};
+                                 "test", "Foo"}};
   
       test_runner runner{args.size(),
                          args.get(),
@@ -531,7 +531,7 @@ namespace sequoia::testing
   void test_runner_test::test_basic_output()
   {
     std::stringstream outputStream{};
-    commandline_arguments args{(minimal_fake_path()).generic_string()};
+    commandline_arguments args{{(minimal_fake_path()).generic_string()}};
 
     test_runner runner{args.size(),
                        args.get(),
@@ -557,7 +557,7 @@ namespace sequoia::testing
   void test_runner_test::test_verbose_output()
   {
     std::stringstream outputStream{};
-    auto runner{make_failing_suite({(minimal_fake_path()).generic_string(), "-v"}, outputStream)};
+    auto runner{make_failing_suite({{(minimal_fake_path()).generic_string(), "-v"}}, outputStream)};
 
     runner.execute();
     check_output(report({"Basic Verbose Output"}), "BasicVerboseOutput", outputStream);
@@ -566,7 +566,7 @@ namespace sequoia::testing
   void test_runner_test::test_serial_verbose_output()
   {
     std::stringstream outputStream{};
-    auto runner{make_failing_suite({(minimal_fake_path()).generic_string(), "-v", "--serial"}, outputStream)};
+    auto runner{make_failing_suite({{(minimal_fake_path()).generic_string(), "-v", "--serial"}}, outputStream)};
 
     runner.execute();
     check_output(report({"Basic Serial Verbose Output"}), "BasicSerialVerboseOutput", outputStream);
@@ -575,7 +575,7 @@ namespace sequoia::testing
   void test_runner_test::test_filtered_suites()
   {
     std::stringstream outputStream{};
-    commandline_arguments args{(minimal_fake_path()).generic_string(), "test", "Failing Suite"};
+    commandline_arguments args{{(minimal_fake_path()).generic_string(), "test", "Failing Suite"}};
 
     test_runner runner{args.size(),
                        args.get(),
@@ -605,7 +605,7 @@ namespace sequoia::testing
     fs::remove_all(output_paths{fake_project()}.dir());
 
     std::stringstream outputStream{};
-    commandline_arguments args{(minimal_fake_path()).generic_string(), "prune"};
+    commandline_arguments args{{(minimal_fake_path()).generic_string(), "prune"}};
 
     test_runner runner{args.size(),
                        args.get(),
@@ -624,7 +624,7 @@ namespace sequoia::testing
   void test_runner_test::test_nested_suite()
   {
       std::stringstream outputStream{};
-      commandline_arguments args{(minimal_fake_path()).generic_string()};
+      commandline_arguments args{{(minimal_fake_path()).generic_string()}};
 
       test_runner runner{args.size(),
                          args.get(),
@@ -653,7 +653,7 @@ namespace sequoia::testing
   void test_runner_test::test_nested_suite_verbose()
   {
     std::stringstream outputStream{};
-    commandline_arguments args{(minimal_fake_path()).generic_string(), "-v"};
+    commandline_arguments args{{(minimal_fake_path()).generic_string(), "-v"}};
 
     test_runner runner{args.size(),
                        args.get(),

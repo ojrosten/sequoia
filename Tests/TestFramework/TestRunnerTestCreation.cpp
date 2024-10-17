@@ -117,7 +117,7 @@ namespace sequoia::testing
     fs::copy(templateMain.cmake_lists(), fakeMain.cmake_lists());
     read_modify_write(fakeMain.cmake_lists(), [](std::string& text) { replace_all(text, "TestAllMain.cpp", "TestSandbox.cpp"); } );
 
-    commandline_arguments args{  zeroth_arg(projectName)
+    commandline_arguments args{{zeroth_arg(projectName)
                                , "create", "regular_test", "other::functional::maybe<class T>", "std::optional<T>"
                                , "create", "regular", "utilities::iterator", "int*"
                                , "create", "regular_test", "stuff::widget", "std::vector<int>", "gen-source", "Stuff"
@@ -143,7 +143,7 @@ namespace sequoia::testing
                                , "create", "regular_allocation_test", "container"
                                , "create", "move_only_allocation_test", "foo", "--suite", "Iterator"
                                , "create", "performance_test", "Container.hpp"
-                               , "create", "performance_test", "Container.hpp"
+                               , "create", "performance_test", "Container.hpp"}
     };
 
     std::stringstream outputStream{};
@@ -165,7 +165,7 @@ namespace sequoia::testing
         reporter{"Plurgh.h does not exist"},
         [this]() {
           std::stringstream outputStream{};
-          commandline_arguments args{zeroth_arg("FakeProject"), "create", "free", "Plurgh.h"};
+          commandline_arguments args{{zeroth_arg("FakeProject"), "create", "free", "Plurgh.h"}};
           test_runner tr{args.size(), args.get(), "Oliver J. Rosten", {"TestSandbox/TestSandbox.cpp", {}, "TestShared/SharedIncludes.hpp"}, "  ", outputStream};
           tr.execute();
         });
@@ -174,7 +174,7 @@ namespace sequoia::testing
         reporter{"Typo in specified class header"},
         [this]() {
           std::stringstream outputStream{};
-          commandline_arguments args{zeroth_arg("FakeProject"), "create", "regular_test", "bar::things", "double", "-h", "fakeProject/Stuff/Thingz.hpp"};
+          commandline_arguments args{{zeroth_arg("FakeProject"), "create", "regular_test", "bar::things", "double", "-h", "fakeProject/Stuff/Thingz.hpp"}};
           test_runner tr{args.size(), args.get(), "Oliver J. Rosten", {"TestSandbox/TestSandbox.cpp", {}, "TestShared/SharedIncludes.hpp"}, "  ", outputStream};
         });
   }

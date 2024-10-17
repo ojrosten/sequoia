@@ -197,13 +197,13 @@ namespace sequoia::testing
   {
     check("Command processor existance", std::system(nullptr) > 0);
 
-    commandline_arguments args{get_project_paths().discovered().executable().generic_string(),
+    commandline_arguments args{{get_project_paths().discovered().executable().generic_string(),
                                "init",
                                "Oliver Jacob Rosten",
                                generated_project().string(),
                                "\t",
                                "--to-files", "GenerationOutput.txt",
-                               "--no-ide"};
+                               "--no-ide"}};
 
     std::stringstream outputStream{};
 

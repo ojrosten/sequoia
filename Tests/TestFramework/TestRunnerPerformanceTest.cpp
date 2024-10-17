@@ -159,7 +159,7 @@ namespace sequoia::testing
   void test_runner_performance_test::test_parallel_acceleration()
   {
     std::stringstream outputStream{};
-    auto runner{make_slow_suite({(minimal_fake_path()).generic_string()}, outputStream)};
+    auto runner{make_slow_suite({{(minimal_fake_path()).generic_string()}}, outputStream)};
     runner.execute();
 
     auto outputFile{check_output(report({"Parallel Acceleration Output"}), "ParallelAccelerationOutput", outputStream)};
@@ -170,7 +170,7 @@ namespace sequoia::testing
   {
     {
       std::stringstream outputStream{};
-      auto runner{make_slow_suite({(minimal_fake_path()).generic_string(), "--thread-pool", "8"}, outputStream)};
+      auto runner{make_slow_suite({{(minimal_fake_path()).generic_string(), "--thread-pool", "8"}}, outputStream)};
       runner.execute();
 
       auto outputFile{check_output(report({"Thread Pool (8) Acceleration Output"}), "ThreadPool8AccelerationOutput", outputStream)};
@@ -179,7 +179,7 @@ namespace sequoia::testing
 
     {
       std::stringstream outputStream{};
-      auto runner{make_slow_suite({(minimal_fake_path()).generic_string(), "--thread-pool", "2"}, outputStream)};
+      auto runner{make_slow_suite({{(minimal_fake_path()).generic_string(), "--thread-pool", "2"}}, outputStream)};
       runner.execute();
 
       auto outputFile{check_output(report({"Thread Pool (2) Acceleration Output"}), "ThreadPool2AccelerationOutput", outputStream)};
@@ -190,7 +190,7 @@ namespace sequoia::testing
   void test_runner_performance_test::test_serial_execution()
   {
     std::stringstream outputStream{};
-    auto runner{make_slow_suite({(minimal_fake_path()).generic_string(), "--serial"}, outputStream)};
+    auto runner{make_slow_suite({{(minimal_fake_path()).generic_string(), "--serial"}}, outputStream)};
     runner.execute();
 
     auto outputFile{check_output(report({"Serial Output"}), "Serial Output", outputStream)};

@@ -476,9 +476,9 @@ namespace sequoia::testing
 
       std::filesystem::path commonIncludes{main_paths::default_main_cpp_from_root()};
 
-      std::optional<std::filesystem::path> sourceFolder;
+      std::optional<std::filesystem::path> sourceFolder{};
 
-      std::vector<std::filesystem::path> additionalDependencyAnalysisPaths;
+      std::vector<std::filesystem::path> additionalDependencyAnalysisPaths{};
     };
 
     project_paths() = default;
