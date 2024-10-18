@@ -87,8 +87,8 @@ namespace sequoia::testing
       test_runner runner{args.size(),
                          args.get(),
                          "Oliver J. Rosten",
-                         {"TestSandbox/TestSandbox.cpp", {}, "TestShared/SharedIncludes.hpp"},
                          "  ",
+                         {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
                          outputStream};
 
       runner.add_test_suite(

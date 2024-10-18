@@ -225,13 +225,7 @@ namespace sequoia::testing
                 char** argv,
                 std::string copyright,
                 std::string codeIndent="  ",
-                std::ostream& stream=std::cout);
-
-    test_runner(int argc,
-                char** argv,
-                std::string copyright,
-                const project_paths::initializer& pathsFromProjectRoot,
-                std::string codeIndent="  ",
+                const project_paths::customizer& projectPathsCustomization = {},
                 std::ostream& stream=std::cout);
 
     test_runner(const test_runner&)     = delete;

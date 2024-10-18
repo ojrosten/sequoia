@@ -20,7 +20,8 @@ int main(int argc, char** argv)
     test_runner runner{argc,
                        argv,
                        "Oliver J. Rosten",
-                       {"TestFrameworkDiagnostics/TestFrameworkDiagnosticsMain.cpp", {"TestAll/TestMain.cpp"}, "TestCommon/TestIncludes.hpp"}};
+                       "  ",
+                       {.main_cpp{"TestFrameworkDiagnostics/TestFrameworkDiagnosticsMain.cpp"}, .ancillary_main_cpps{{"TestAll/TestMain.cpp"}}, .common_includes{"TestCommon/TestIncludes.hpp"}}};
 
     runner.add_test_suite(
       "Test Runner",

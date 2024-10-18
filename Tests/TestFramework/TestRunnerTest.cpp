@@ -254,8 +254,8 @@ namespace sequoia::testing
       test_runner runner{args.size(),
                          args.get(),
                          "Oliver J. Rosten",
-                         {"TestSandbox/TestSandbox.cpp", {}, "TestShared/SharedIncludes.hpp"},
                          "  ",
+                         {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
                          outputStream};
 
       runner.add_test_suite(
@@ -366,7 +366,7 @@ namespace sequoia::testing
       [this]() {
         std::stringstream outputStream{};
         commandline_arguments args{{zeroth_arg()}};
-        test_runner tr{args.size(), args.get(), "Oliver J. Rosten",{"", {}, "TestShared/SharedIncludes.hpp"}, "  ", outputStream};
+        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ",  {.main_cpp{""}, .common_includes{"TestShared/SharedIncludes.hpp"}}, outputStream};
       },
       pathTrimmer);
 
@@ -375,7 +375,7 @@ namespace sequoia::testing
       [this]() {
         std::stringstream outputStream{};
         commandline_arguments args{{zeroth_arg()}};
-        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", {"FooMain.cpp", {}, "TestShared/SharedIncludes.hpp"}, "  ", outputStream};
+        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ",  {.main_cpp{"FooMain.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}}, outputStream};
       },
       pathTrimmer);
 
@@ -384,7 +384,7 @@ namespace sequoia::testing
       [this]() {
         std::stringstream outputStream{};
         commandline_arguments args{{zeroth_arg()}};
-        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", {"TestSandbox/TestSandbox.cpp", {}, ""}, "  ", outputStream};
+        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ",  {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{""}}, outputStream};
       },
       pathTrimmer);
 
@@ -393,7 +393,7 @@ namespace sequoia::testing
       [this]() {
         std::stringstream outputStream{};
         commandline_arguments args{{zeroth_arg()}};
-        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", {"TestSandbox/TestSandbox.cpp", {}, "FooPath.hpp"}, "  ", outputStream};
+        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ",  {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"FooPath.hpp"}}, outputStream};
       },
       pathTrimmer);
 
@@ -402,7 +402,7 @@ namespace sequoia::testing
       [this]() {
         std::stringstream outputStream{};
         commandline_arguments args{{""}};
-        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", {"TestSandbox/TestSandbox.cpp", {}, "TestShared/SharedIncludes.hpp"}, "  ", outputStream};
+        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ",  {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}}, outputStream};
       });
 
     check_exception_thrown<std::runtime_error>(
@@ -410,7 +410,7 @@ namespace sequoia::testing
       [this]() {
         std::stringstream outputStream{};
         commandline_arguments args{{(fake_project() / "FooRepo").generic_string()}};
-        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", {"TestSandbox/TestSandbox.cpp", {}, "TestShared/SharedIncludes.hpp"}, "  ", outputStream};
+        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ",  {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}}, outputStream};
       },
       pathTrimmer);
 
@@ -420,7 +420,7 @@ namespace sequoia::testing
         const auto zerothArg{fake_project().append("TestShared").generic_string()};
         std::stringstream outputStream{};
         commandline_arguments args{{zerothArg}};
-        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", {"TestSandbox/TestSandbox.cpp", {}, "TestShared/SharedIncludes.hpp"}, "  ", outputStream};
+        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ",  {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}}, outputStream};
       },
       pathTrimmer);
 
@@ -433,8 +433,8 @@ namespace sequoia::testing
         test_runner runner{args.size(),
                            args.get(),
                            "Oliver J. Rosten",
-                           {"TestSandbox/TestSandbox.cpp", {}, "TestShared/SharedIncludes.hpp"},
                            "  ",
+                           {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
                            outputStream};
 
         runner.add_test_suite(
@@ -487,8 +487,8 @@ namespace sequoia::testing
       test_runner runner{args.size(),
                          args.get(),
                          "Oliver J. Rosten",
-                         {"TestSandbox/TestSandbox.cpp", {}, "TestShared/SharedIncludes.hpp"},
                          "  ",
+                         {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
                          outputStream};
 
       runner.add_test_suite(
@@ -536,8 +536,8 @@ namespace sequoia::testing
     test_runner runner{args.size(),
                        args.get(),
                        "Oliver J. Rosten",
-                       {"TestSandbox/TestSandbox.cpp", {}, "TestShared/SharedIncludes.hpp"},
                        "  ",
+                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
                        outputStream};
 
     runner.execute();
@@ -580,8 +580,8 @@ namespace sequoia::testing
     test_runner runner{args.size(),
                        args.get(),
                        "Oliver J. Rosten",
-                       {"TestSandbox/TestSandbox.cpp", {}, "TestShared/SharedIncludes.hpp"},
                        "  ",
+                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
                        outputStream};
 
     runner.add_test_suite(
@@ -610,8 +610,8 @@ namespace sequoia::testing
     test_runner runner{args.size(),
                        args.get(),
                        "Oliver J. Rosten",
-                       {"TestSandbox/TestSandbox.cpp", {}, "TestShared/SharedIncludes.hpp"},
                        "  ",
+                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
                        outputStream};
 
     runner.execute();
@@ -629,8 +629,8 @@ namespace sequoia::testing
       test_runner runner{args.size(),
                          args.get(),
                          "Oliver J. Rosten",
-                         {"TestSandbox/TestSandbox.cpp", {}, "TestShared/SharedIncludes.hpp"},
                          "  ",
+                         {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
                          outputStream};
 
       using namespace object;
@@ -658,8 +658,8 @@ namespace sequoia::testing
     test_runner runner{args.size(),
                        args.get(),
                        "Oliver J. Rosten",
-                       {"TestSandbox/TestSandbox.cpp", {}, "TestShared/SharedIncludes.hpp"},
                        "  ",
+                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
                        outputStream};
 
     using namespace object;
@@ -773,8 +773,8 @@ namespace sequoia::testing
     test_runner runner{args.size(),
                        args.get(),
                        "Oliver J. Rosten",
-                       {"TestSandbox/TestSandbox.cpp", {}, "TestShared/SharedIncludes.hpp"},
                        "  ",
+                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
                        outputStream};
 
     runner.add_test_suite(

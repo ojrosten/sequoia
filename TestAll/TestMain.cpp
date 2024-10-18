@@ -21,7 +21,8 @@ int main(int argc, char** argv)
     test_runner runner{argc,
                        argv,
                        "Oliver J. Rosten",
-                       {.mainCpp{"TestAll/TestMain.cpp"}, .commonIncludes{"TestCommon/TestIncludes.hpp"}}};
+                       "  ",
+                       {.main_cpp{"TestAll/TestMain.cpp"}, .common_includes{"TestCommon/TestIncludes.hpp"}}};
 
     runner.add_test_suite(
       "Test Runner",

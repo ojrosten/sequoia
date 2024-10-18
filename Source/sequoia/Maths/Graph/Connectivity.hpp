@@ -443,12 +443,35 @@ namespace sequoia
 
         if(i == j) return;
 
-        for(edge_index_type n{}; n < static_cast<edge_index_type>(order()); ++n)
+        auto fixUp{
+          [this, i, j](edge_index_type n){
+            for(auto& e : edges(n))
+            {
+              if     (e.target_node() == i) e.target_node(j);
+              else if(e.target_node() == j) e.target_node(i);
+            }
+          }
+        };
+
+        if constexpr(!is_directed(flavour))
         {
-          for(auto& e : edges(n))
+          // TO DO: use concat_view when available
+          auto getTarget{[](const auto& e){ return e.target_node(); }};
+          auto targetEdges{std::views::transform(edges(i), getTarget) | std::ranges::to<std::vector>()};
+          std::ranges::transform(edges(j), std::back_inserter(targetEdges), getTarget);
+          std::ranges::sort(targetEdges);
+          auto duplicates{std::ranges::unique(targetEdges)};
+
+          for(auto iter{targetEdges.begin()}; iter != duplicates.begin(); ++iter)
           {
-            if(e.target_node() == i) e.target_node(j);
-            else if(e.target_node() == j) e.target_node(i);
+            fixUp(*iter);
+          }
+        }
+        else
+        {
+          for(edge_index_type n{}; n < static_cast<edge_index_type>(order()); ++n)
+          {
+            fixUp(n);
           }
         }
 

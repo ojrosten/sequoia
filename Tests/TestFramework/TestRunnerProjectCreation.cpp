@@ -36,7 +36,7 @@ namespace sequoia::testing
         commandline_arguments args{{zeroth_arg(), "init", "Oliver Jacob Rosten", (working_materials() /= "Generated Project").string(), "  "}};
 
         std::stringstream outputStream{};
-        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", make_project_paths(), "  ", outputStream};
+        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ",  make_project_paths(), outputStream};
 
         tr.execute();
       });
@@ -47,7 +47,7 @@ namespace sequoia::testing
         commandline_arguments args{{zeroth_arg(), "init", "Oliver Jacob Rosten", (working_materials() /= "Generated$Project").string(), "  "}};
 
         std::stringstream outputStream{};
-        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", make_project_paths(), "  ", outputStream};
+        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ", make_project_paths(), outputStream};
 
         tr.execute();
       });
@@ -58,7 +58,7 @@ namespace sequoia::testing
         commandline_arguments args{{zeroth_arg(), "init", "Oliver Jacob Rosten", "Generated_Project", "  "}};
 
         std::stringstream outputStream{};
-        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", make_project_paths(), "  ", outputStream};
+        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ",  make_project_paths(), outputStream};
 
         tr.execute();
       });
@@ -69,7 +69,7 @@ namespace sequoia::testing
         commandline_arguments args{{zeroth_arg(), "init", "Oliver Jacob Rosten", "", "  "}};
 
         std::stringstream outputStream{};
-        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", make_project_paths(), "  ", outputStream};
+        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ",  make_project_paths(), outputStream};
 
         tr.execute();
       });
@@ -80,7 +80,7 @@ namespace sequoia::testing
         commandline_arguments args{{zeroth_arg(), "init", "Oliver Jacob Rosten", working_materials().string(), "  "}};
 
         std::stringstream outputStream{};
-        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", make_project_paths(), "  ", outputStream};
+        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ",  make_project_paths(), outputStream};
 
         tr.execute();
       },
@@ -98,7 +98,7 @@ namespace sequoia::testing
         commandline_arguments args{{zeroth_arg(), "init", "Oliver Jacob Rosten", (working_materials() /= "GeneratedProject").string(), "  "}};
 
         std::stringstream outputStream{};
-        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", make_project_paths(), "\t  x", outputStream};
+        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "\t  x ",  make_project_paths(), outputStream};
 
         tr.execute();
       });
@@ -109,16 +109,16 @@ namespace sequoia::testing
         commandline_arguments args{{zeroth_arg(), "init", "Oliver Jacob Rosten", (working_materials() /= "GeneratedProject").string(), "\n"}};
 
         std::stringstream outputStream{};
-        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", make_project_paths(), "  ", outputStream};
+        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ",  make_project_paths(), outputStream};
 
         tr.execute();
       });
   }
 
   [[nodiscard]]
-  project_paths::initializer test_runner_project_creation::make_project_paths() const
+  project_paths::customizer test_runner_project_creation::make_project_paths() const
   {
-    return {"TestSandbox/TestSandbox.cpp", {}, "TestShared/SharedIncludes.hpp"};
+    return {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}};
   }
 
   [[nodiscard]]
@@ -143,7 +143,7 @@ namespace sequoia::testing
       commandline_arguments args{{zeroth_arg(), "init", "Oliver Jacob Rosten", hostDir.string(), "  ", "--no-git", "--no-build"}};
 
       std::stringstream outputStream{};
-      test_runner tr{args.size(), args.get(), "Oliver J. Rosten", make_project_paths(), "\t", outputStream};
+      test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "\t ",  make_project_paths(), outputStream};
 
       tr.execute();
 
@@ -161,7 +161,7 @@ namespace sequoia::testing
       commandline_arguments args{{zeroth_arg(), "init", "Oliver Jacob Rosten", hostDir.generic_string(), "  ", "--no-git", "--no-build"}};
 
       std::stringstream outputStream{};
-      test_runner tr{args.size(), args.get(), "Oliver J. Rosten", make_project_paths(), "\t", outputStream};
+      test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "\t ",  make_project_paths(), outputStream};
 
       tr.execute();
 

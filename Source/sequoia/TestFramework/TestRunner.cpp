@@ -383,23 +383,10 @@ namespace sequoia::testing
                            char** argv,
                            std::string copyright,
                            std::string codeIndent,
-                           std::ostream& stream)
-    : test_runner{argc,
-                  argv,
-                  std::move(copyright),
-                  {},
-                  std::move(codeIndent),
-                  stream}
-  {}
-
-  test_runner::test_runner(int argc,
-                           char** argv,
-                           std::string copyright,
-                           const project_paths::initializer& pathsFromProjectRoot,
-                           std::string codeIndent,
+                           const project_paths::customizer& projectPathsCustomization,
                            std::ostream& stream)
     : m_Copyright{std::move(copyright)}
-    , m_ProjPaths{project_paths{argc, argv, pathsFromProjectRoot}}
+    , m_ProjPaths{project_paths{argc, argv, projectPathsCustomization}}
     , m_CodeIndent{std::move(codeIndent)}
     , m_Stream{&stream}
   {

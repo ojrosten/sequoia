@@ -468,22 +468,22 @@ namespace sequoia::testing
   class project_paths
   {
   public:
-    struct initializer
+    struct customizer
     {
-      std::filesystem::path mainCpp{main_paths::default_main_cpp_from_root()};
+      std::optional<std::filesystem::path> source_folder{};
+      
+      std::vector<std::filesystem::path> additional_dependency_analysis_paths{};
 
-      std::vector<std::filesystem::path> ancillaryMainCpps{};
+      std::filesystem::path main_cpp{main_paths::default_main_cpp_from_root()};
 
-      std::filesystem::path commonIncludes{main_paths::default_main_cpp_from_root()};
+      std::vector<std::filesystem::path> ancillary_main_cpps{};
 
-      std::optional<std::filesystem::path> sourceFolder{};
-
-      std::vector<std::filesystem::path> additionalDependencyAnalysisPaths{};
+      std::filesystem::path common_includes{main_paths::default_main_cpp_from_root()};
     };
 
     project_paths() = default;
 
-    project_paths(int argc, char** argv, const initializer& bespokePaths);
+    project_paths(int argc, char** argv, const customizer& customization);
 
     [[nodiscard]]
     const std::filesystem::path& project_root() const noexcept

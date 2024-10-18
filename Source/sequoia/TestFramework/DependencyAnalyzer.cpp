@@ -205,14 +205,14 @@ namespace sequoia::testing
     using tests_dependency_graph = maths::directed_graph<maths::null_weight, file_info>;
     using node_iterator = tests_dependency_graph::iterator;
 
-    void add_files(tests_dependency_graph& g, const fs::path& repo, const fs::file_time_type& pruneTimeStamp, const std::optional<fs::file_time_type>& exeTimeStamp)
+    void add_files(std::vector<file_info>& info, const fs::path& repo, const fs::file_time_type& pruneTimeStamp, const std::optional<fs::file_time_type>& exeTimeStamp)
     {
       for(const auto& entry : fs::recursive_directory_iterator(repo))
       {
         const auto file{entry.path()};
         if(is_cpp(file) || is_header(file))
         {
-          g.add_node(file, pruneTimeStamp, exeTimeStamp);
+          info.emplace_back(file, pruneTimeStamp, exeTimeStamp);
         }
       }
     }
@@ -367,24 +367,32 @@ namespace sequoia::testing
       tests_dependency_graph g{};
 
       const auto exeTimeStamp{get_stamp(projPaths.executable())};
-      add_files(g, projPaths.source().repo(), pruneTimeStamp, exeTimeStamp);
-      add_files(g, projPaths.tests().repo(), pruneTimeStamp, exeTimeStamp);
+      std::vector<file_info> files{};
+
+      add_files(files, projPaths.source().repo(), pruneTimeStamp, exeTimeStamp);
+      add_files(files, projPaths.tests().repo(), pruneTimeStamp, exeTimeStamp);
       for(const auto& p : projPaths.additional_dependency_analysis_paths())
       {
-        add_files(g, p, pruneTimeStamp, exeTimeStamp);
+        add_files(files, p, pruneTimeStamp, exeTimeStamp);
       }
 
-      g.sort_nodes([&g](auto i, auto j) {
-        const fs::path&
-          lfile{(g.cbegin_node_weights() + i)->file},
-          rfile{(g.cbegin_node_weights() + j)->file};
+      std::ranges::sort(
+        files,
+        [&g](const auto& lhs, const auto& rhs) {
+          const fs::path& lfile{lhs.file}, rfile{rhs.file};
 
-        const fs::path
-          lname{lfile.filename()},
-          rname{rfile.filename()};
+          const fs::path
+            lname{lfile.filename()},
+            rname{rfile.filename()};
 
-        return lname != rname ? lname < rname : lfile < rfile;
-        });
+          return lname != rname ? lname < rname : lfile < rfile;
+        }
+      );
+
+      for(const auto& info : files)
+      {
+        g.add_node(info);
+      }
 
       build_dependencies(g, projPaths, cutoff);
 
