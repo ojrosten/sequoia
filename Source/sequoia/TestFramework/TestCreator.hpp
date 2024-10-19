@@ -151,6 +151,8 @@ namespace sequoia::testing
     std::ostream& stream() noexcept { return *m_Stream; }
 
     void finalize_suite(std::string_view fallbackIngredient);
+
+    void make_common_replacements(std::string& text) const;
   private:
     constexpr static std::array<std::string_view, 3> st_HeaderExtensions{".hpp", ".h", ".hxx"};
 

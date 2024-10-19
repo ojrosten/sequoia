@@ -416,6 +416,15 @@ namespace sequoia::testing
     );
   }
 
+  void nascent_test_base::make_common_replacements(std::string& text) const
+  {
+    
+    replace_all(text, replacement{"?::testing", std::format("{}::testing", project_namespace())},
+                      replacement{"using namespace sequoia::testing;", project_namespace() == "sequoia" ? "" : "using namespace sequoia::testing;\n\n"},
+                      replacement{"?forename", forename()},
+                      replacement{"?surname", surname()});
+  }
+
   //=========================================== nascent_semantics_test ===========================================//
 
   [[nodiscard]]
@@ -600,11 +609,9 @@ namespace sequoia::testing
       replace_all(text, "<?>", "<>");
     }
 
-    replace_all(text, replacement{"?::testing", std::format("{}::testing", project_namespace())},
-                      replacement{"using namespace sequoia::testing;", project_namespace() == "sequoia" ? "" : "using namespace sequoia::testing;\n\n"},
-                      replacement{"::?_class", m_QualifiedName},
-                      replacement{"?forename", forename()},
-                      replacement{"?surname", surname()},
+    make_common_replacements(text);
+
+    replace_all(text, replacement{"::?_class", m_QualifiedName},
                       replacement{"?Class.hpp", header_path().generic_string()},
                       replacement{"?Class", camel_name()},
                       replacement{"?Test", to_camel_case(test_type()).append("Test")},
@@ -663,11 +670,9 @@ namespace sequoia::testing
   {
     tabs_to_spacing(text, code_indent());
 
-    replace_all(text, replacement{"?::testing", std::format("{}::testing", project_namespace())},
-                      replacement{"using namespace sequoia::testing;", project_namespace() == "sequoia" ? "" : "using namespace sequoia::testing;\n\n"},
-                      replacement{"?forename", forename()},
-                      replacement{"?surname", surname()},
-                      replacement{"?Class", camel_name()},
+    make_common_replacements(text);
+
+    replace_all(text, replacement{"?Class", camel_name()},
                       replacement{"?Allocation", to_camel_case(test_type())},
                       replacement{"?_allocation", test_type()});
 
@@ -754,11 +759,9 @@ namespace sequoia::testing
   {
     tabs_to_spacing(text, code_indent());
 
-    replace_all(text, replacement{"?::testing", std::format("{}::testing", project_namespace())},
-                      replacement{"using namespace sequoia::testing;", project_namespace() == "sequoia" ? "" : "using namespace sequoia::testing;\n\n"},
-                      replacement{"?forename", forename()},
-                      replacement{"?surname", surname()},
-                      replacement{"?Behavioural", camel_name()},
+    make_common_replacements(text);
+
+    replace_all(text, replacement{"?Behavioural", camel_name()},
                       replacement{"?Test", to_camel_case(test_type()).append("Test")},
                       replacement{"?Header.hpp", header_path().generic_string()},
                       replacement{"?", test_type()});
