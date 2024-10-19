@@ -360,8 +360,10 @@ namespace sequoia::testing
       return 1 + sizeof...(Comparers);
     }
 
-    general_file_checker(const std::array<std::string_view, size()>& extensions)
-      : m_Factory{extensions}
+    template<class... Extensions>
+        requires (sizeof...(Extensions) == size()) && (std::is_constructible_v<std::string, Extensions> && ...)
+    general_file_checker(Extensions... extensions)
+      : m_Factory{std::move(extensions)...}
     {}
 
     template<test_mode Mode>

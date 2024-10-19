@@ -69,11 +69,11 @@ namespace sequoia::testing
       : m_Index{i}
     {}
 
-    resource_binder(resource_binder&& other)
+    resource_binder(resource_binder&& other) noexcept
       : m_Index{std::exchange(other.m_Index, 0)}
     {}
 
-    resource_binder& operator=(resource_binder&& other)
+    resource_binder& operator=(resource_binder&& other) noexcept
     {
       m_Index = std::exchange(other.m_Index, 0);
       return *this;

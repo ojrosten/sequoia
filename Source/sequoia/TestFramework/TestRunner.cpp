@@ -161,7 +161,7 @@ namespace sequoia::testing
 
     void nascent_test_data::operator()(const parsing::commandline::arg_list& args)
     {
-      nascent_test_factory factory{{"semantic", "allocation", "behavioural"}};
+      nascent_test_factory factory{"semantic", "allocation", "behavioural"};
       auto nascent{factory.make(genus, runner.proj_paths(), runner.copyright(), runner.code_indent(), runner.stream())};
 
       std::visit(

@@ -25,7 +25,7 @@ namespace sequoia::testing
 
     using bespoke_file_checker_t = general_file_checker<string_based_file_comparer, dummy_file_comparer>;
 
-    const bespoke_file_checker_t bespoke_file_checker{{".*", ".ignore"}};
+    const bespoke_file_checker_t bespoke_file_checker{".*", ".ignore"};
 
     const general_equivalence_check_t<bespoke_file_checker_t>      bespoke_path_equivalence{bespoke_file_checker};
     const general_weak_equivalence_check_t<bespoke_file_checker_t> bespoke_path_weak_equivalence{bespoke_file_checker};
