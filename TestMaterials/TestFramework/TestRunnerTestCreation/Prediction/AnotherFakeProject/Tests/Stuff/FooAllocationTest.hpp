@@ -11,9 +11,11 @@
 
 #include "sequoia/TestFramework/MoveOnlyAllocationTestCore.hpp"
 
-namespace sequoia::testing
+namespace curlew::testing
 {
-    class foo_allocation_test final : public move_only_allocation_test
+    using namespace sequoia::testing;
+
+class foo_allocation_test final : public move_only_allocation_test
     {
     public:
         using move_only_allocation_test::move_only_allocation_test;

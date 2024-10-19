@@ -9,7 +9,7 @@
 
 #include "WidgetTestingDiagnostics.hpp"
 
-namespace sequoia::testing
+namespace curlew::testing
 {
     [[nodiscard]]
     std::filesystem::path widget_false_positive_test::source_file() const

@@ -1,6 +1,6 @@
 
 Analyzing dependencies...
-[43.7ms]
+[23ms]
 
 
 Running tests...
@@ -35,7 +35,7 @@ Foo:
 	Exception thrown during last check
 	Last Recorded Message:
 
-	Tests/Stuff/FooTest.cpp, Line 41
+	Tests/Stuff/FooTest.cpp, Line 42
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<std::filesystem::path>]
@@ -46,8 +46,8 @@ Foo:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 7.72ms]
-[Execution Time: 3.53ms]
+[Total Run Time: 6.67ms]
+[Execution Time: 2.96ms]
 	Standard Top Level Checks:                 5;  Failures:  1  [Deep checks: 41]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

@@ -9,7 +9,7 @@
 
 #include "CoupleTest.hpp"
 
-namespace sequoia::testing
+namespace fakeProject::testing
 {
     [[nodiscard]]
     std::filesystem::path couple_test::source_file() const

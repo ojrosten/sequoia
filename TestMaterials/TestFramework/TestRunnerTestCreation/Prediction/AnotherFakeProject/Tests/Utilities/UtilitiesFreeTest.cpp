@@ -10,7 +10,7 @@
 #include "UtilitiesFreeTest.hpp"
 #include "curlew/Utilities/Utilities.h"
 
-namespace sequoia::testing
+namespace curlew::testing
 {
     [[nodiscard]]
     std::filesystem::path utilities_free_test::source_file() const

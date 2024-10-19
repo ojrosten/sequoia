@@ -1,7 +1,7 @@
   Warning: Update of materials suppressed when checking for instabilities
 
 Analyzing dependencies...
-[29ms]
+[12.5ms]
 
 
 Running tests...
@@ -9,7 +9,7 @@ Running tests...
 Foo:
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 43]
 
-	Tests/Stuff/FooTest.cpp, Line 41
+	Tests/Stuff/FooTest.cpp, Line 42
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<std::filesystem::path>]
@@ -110,8 +110,8 @@ Foo:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 12.5ms]
-[Execution Time: 9.9ms]
+[Total Run Time: 10.7ms]
+[Execution Time: 8.84ms]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 43]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
@@ -124,7 +124,7 @@ Running tests...
 Foo:
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 43]
 
-	Tests/Stuff/FooTest.cpp, Line 41
+	Tests/Stuff/FooTest.cpp, Line 42
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<std::filesystem::path>]
@@ -225,8 +225,8 @@ Foo:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 13ms]
-[Execution Time: 10.3ms]
+[Total Run Time: 9.78ms]
+[Execution Time: 7.55ms]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 43]
 	Standard Performance Checks:               0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0

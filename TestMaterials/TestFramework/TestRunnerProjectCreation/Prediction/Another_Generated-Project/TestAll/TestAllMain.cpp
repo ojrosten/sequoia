@@ -11,17 +11,18 @@
 
 #include <iostream>
 
+namespace another_Generated-Project::testing{};
+
 int main(int argc, char** argv)
 {
   try
   {
-    using namespace sequoia;
-    using namespace testing;
+    using namespace another_Generated-Project::testing;
     using namespace std::literals::chrono_literals;
 
-    test_runner runner{argc, argv, "Oliver Jacob Rosten", "  "};
+    sequoia::testing::test_runner runner{argc, argv, "Oliver Jacob Rosten", "  "};
 
-    runner.execute(timer_resolution{1ms});
+    runner.execute(sequoia::timer_resolution{1ms});
   }
   catch(const std::exception& e)
   {

@@ -7,8 +7,10 @@
 
 #include "UniqueThingTestingUtilities.hpp"
 
-namespace sequoia::testing
+namespace generatedProject::testing
 {
+	using namespace sequoia::testing;
+
 	class unique_thing_false_positive_test final : public move_only_false_positive_test
 	{
 	public:

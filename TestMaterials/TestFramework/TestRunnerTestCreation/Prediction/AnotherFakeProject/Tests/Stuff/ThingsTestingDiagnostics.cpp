@@ -9,7 +9,7 @@
 
 #include "ThingsTestingDiagnostics.hpp"
 
-namespace sequoia::testing
+namespace curlew::testing
 {
     [[nodiscard]]
     std::filesystem::path things_false_positive_test::source_file() const

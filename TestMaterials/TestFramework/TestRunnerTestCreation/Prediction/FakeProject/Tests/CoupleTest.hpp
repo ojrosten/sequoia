@@ -11,9 +11,11 @@
 
 #include "CoupleTestingUtilities.hpp"
 
-namespace sequoia::testing
+namespace fakeProject::testing
 {
-    class couple_test final : public regular_test
+    using namespace sequoia::testing;
+
+class couple_test final : public regular_test
     {
     public:
         using regular_test::regular_test;

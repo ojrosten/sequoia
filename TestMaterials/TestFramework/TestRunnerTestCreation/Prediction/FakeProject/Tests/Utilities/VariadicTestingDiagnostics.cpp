@@ -9,7 +9,7 @@
 
 #include "VariadicTestingDiagnostics.hpp"
 
-namespace sequoia::testing
+namespace fakeProject::testing
 {
     [[nodiscard]]
     std::filesystem::path variadic_false_positive_test::source_file() const

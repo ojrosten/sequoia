@@ -11,9 +11,9 @@
 
 #include "sequoia/TestFramework/?AllocationTestCore.hpp"
 
-namespace sequoia::testing
+namespace ?::testing
 {
-	class ?forename_?surname final : public ?_allocation_test
+	using namespace sequoia::testing;class ?forename_?surname final : public ?_allocation_test
 	{
 	public:
 		using ?_allocation_test::?_allocation_test;

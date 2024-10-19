@@ -99,13 +99,26 @@ namespace sequoia
 
   struct replacement
   {
-    std::string_view from, to;
+    std::string from, to;
   };
 
-  std::string& replace_all(std::string& text, std::initializer_list<replacement> data);
+  template<class... Replacement>
+    requires (std::is_same_v<Replacement, replacement> && ...)
+  std::string& replace_all(std::string& text, const Replacement&... rs)
+  {
+    (replace_all(text, rs.from, rs.to), ...);
 
+    return text;
+  }
+
+  template<class... Replacement>
+    requires (std::is_same_v<Replacement, replacement> && ...)
   [[nodiscard]]
-  std::string replace_all(std::string_view text, std::initializer_list<replacement> data);
+  std::string replace_all(std::string_view text, const Replacement&... rs)
+  {
+    std::string str{text};
+    return replace_all(str, rs...);
+  }
 
   std::string& replace_all(std::string& text, std::string_view anyOfLeft, std::string_view from, std::string_view anyOfRight, std::string_view to);
 

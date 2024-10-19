@@ -9,7 +9,7 @@
 
 #include "ThingummyTest.hpp"
 
-namespace sequoia::testing
+namespace fakeProject::testing
 {
     [[nodiscard]]
     std::filesystem::path thingummy_test::source_file() const

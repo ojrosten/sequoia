@@ -9,7 +9,7 @@
 
 #include "MaybeTest.hpp"
 
-namespace sequoia::testing
+namespace curlew::testing
 {
     [[nodiscard]]
     std::filesystem::path maybe_test::source_file() const

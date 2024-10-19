@@ -9,7 +9,7 @@
 
 #include "FooAllocationTest.hpp"
 
-namespace sequoia::testing
+namespace fakeProject::testing
 {
     [[nodiscard]]
     std::filesystem::path foo_allocation_test::source_file() const

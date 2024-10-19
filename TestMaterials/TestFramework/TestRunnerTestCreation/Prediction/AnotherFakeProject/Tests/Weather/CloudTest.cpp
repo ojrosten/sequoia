@@ -9,7 +9,7 @@
 
 #include "CloudTest.hpp"
 
-namespace sequoia::testing
+namespace curlew::testing
 {
     [[nodiscard]]
     std::filesystem::path cloud_test::source_file() const

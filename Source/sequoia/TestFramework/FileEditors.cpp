@@ -13,6 +13,7 @@
 #include "sequoia/TestFramework/FileEditors.hpp"
 #include "sequoia/TestFramework/Output.hpp"
 #include "sequoia/TestFramework/ProjectPaths.hpp"
+#include "sequoia/TextProcessing/Substitutions.hpp"
 
 #include <algorithm>
 #include <fstream>
@@ -85,12 +86,14 @@ namespace sequoia::testing
     const auto text{
       [&file, suiteName, &tests, indent]() -> std::string {
         constexpr auto npos{std::string::npos};
-        const auto pattern{std::string{"\""}.append(suiteName).append("\",")};
         auto contents{read_to_string(file)};
         if(!contents)
           throw std::runtime_error{report_failed_read(file)};
 
+
         std::string& text{contents.value()};
+        replace(text, "", "");
+        const auto pattern{std::string{"\""}.append(suiteName).append("\",")};
         if(auto pos{text.find(pattern)}; pos != npos)
         {
           if(const auto linePos{text.rfind('\n', pos)}; linePos != npos)

@@ -9,7 +9,7 @@
 
 #include "MultipleTest.hpp"
 
-namespace sequoia::testing
+namespace curlew::testing
 {
     [[nodiscard]]
     std::filesystem::path multiple_test::source_file() const

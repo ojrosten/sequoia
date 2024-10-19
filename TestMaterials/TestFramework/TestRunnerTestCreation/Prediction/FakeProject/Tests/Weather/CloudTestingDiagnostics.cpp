@@ -9,7 +9,7 @@
 
 #include "CloudTestingDiagnostics.hpp"
 
-namespace sequoia::testing
+namespace fakeProject::testing
 {
     [[nodiscard]]
     std::filesystem::path cloud_false_positive_test::source_file() const

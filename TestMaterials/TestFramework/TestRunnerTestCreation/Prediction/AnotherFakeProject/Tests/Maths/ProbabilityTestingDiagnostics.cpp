@@ -9,7 +9,7 @@
 
 #include "ProbabilityTestingDiagnostics.hpp"
 
-namespace sequoia::testing
+namespace curlew::testing
 {
     [[nodiscard]]
     std::filesystem::path probability_false_positive_test::source_file() const

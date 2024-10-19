@@ -9,7 +9,7 @@
 
 #include "AngleTestingDiagnostics.hpp"
 
-namespace sequoia::testing
+namespace fakeProject::testing
 {
     [[nodiscard]]
     std::filesystem::path angle_false_positive_test::source_file() const

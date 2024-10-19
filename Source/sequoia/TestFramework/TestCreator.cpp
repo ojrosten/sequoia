@@ -36,7 +36,7 @@ namespace sequoia::testing
     {
       if(nameSpace.empty())
       {
-        replace_all(text, {{"namespace\n", ""}, {"?{\n", ""}, {"?}\n", ""}});
+        replace_all(text, replacement{"namespace\n", ""}, replacement{"?{\n", ""}, replacement{"?}\n", ""});
         std::string::size_type endLine{};
         while((endLine = text.find('\n', endLine)) != npos)
         {
@@ -48,7 +48,7 @@ namespace sequoia::testing
       }
       else
       {
-        replace_all(text, {{"namespace", std::string{"namespace "}.append(nameSpace)}, {"?{", "{"}, {"?}", "}"}});
+        replace_all(text, replacement{"namespace", std::string{"namespace "}.append(nameSpace)}, replacement{"?{", "{"}, replacement{"?}", "}"});
       }
     }
 
@@ -600,13 +600,15 @@ namespace sequoia::testing
       replace_all(text, "<?>", "<>");
     }
 
-    replace_all(text, {{"::?_class", m_QualifiedName},
-                       {"?forename", forename()},
-                       {"?surname", surname()},
-                       {"?Class.hpp", header_path().generic_string()},
-                       {"?Class", camel_name()},
-                       {"?Test", to_camel_case(test_type()).append("Test")},
-                       {"?", test_type()}});
+    replace_all(text, replacement{"?::testing", std::format("{}::testing", project_namespace())},
+                      replacement{"using namespace sequoia::testing;", project_namespace() == "sequoia" ? "" : "using namespace sequoia::testing;\n\n"},
+                      replacement{"::?_class", m_QualifiedName},
+                      replacement{"?forename", forename()},
+                      replacement{"?surname", surname()},
+                      replacement{"?Class.hpp", header_path().generic_string()},
+                      replacement{"?Class", camel_name()},
+                      replacement{"?Test", to_camel_case(test_type()).append("Test")},
+                      replacement{"?", test_type()});
   }
 
   void nascent_semantics_test::set_header_text(std::string& text, std::string_view copyright, std::string_view nameSpace) const
@@ -661,11 +663,13 @@ namespace sequoia::testing
   {
     tabs_to_spacing(text, code_indent());
 
-    replace_all(text, {{"?forename", forename()},
-                       {"?surname", surname()},
-                       {"?Class", camel_name()},
-                       {"?Allocation", to_camel_case(test_type())},
-                       {"?_allocation", test_type()}});
+    replace_all(text, replacement{"?::testing", std::format("{}::testing", project_namespace())},
+                      replacement{"using namespace sequoia::testing;", project_namespace() == "sequoia" ? "" : "using namespace sequoia::testing;\n\n"},
+                      replacement{"?forename", forename()},
+                      replacement{"?surname", surname()},
+                      replacement{"?Class", camel_name()},
+                      replacement{"?Allocation", to_camel_case(test_type())},
+                      replacement{"?_allocation", test_type()});
 
     if (test_type() == "move_only_allocation")
     {
@@ -750,11 +754,13 @@ namespace sequoia::testing
   {
     tabs_to_spacing(text, code_indent());
 
-    replace_all(text, {{"?forename", forename()},
-                       {"?surname", surname()},
-                       {"?Behavioural", camel_name()},
-                       {"?Test", to_camel_case(test_type()).append("Test")},
-                       {"?Header.hpp", header_path().generic_string()},
-                       {"?", test_type()}});
+    replace_all(text, replacement{"?::testing", std::format("{}::testing", project_namespace())},
+                      replacement{"using namespace sequoia::testing;", project_namespace() == "sequoia" ? "" : "using namespace sequoia::testing;\n\n"},
+                      replacement{"?forename", forename()},
+                      replacement{"?surname", surname()},
+                      replacement{"?Behavioural", camel_name()},
+                      replacement{"?Test", to_camel_case(test_type()).append("Test")},
+                      replacement{"?Header.hpp", header_path().generic_string()},
+                      replacement{"?", test_type()});
   }
 }

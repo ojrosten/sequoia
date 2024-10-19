@@ -9,7 +9,7 @@
 
 #include "AngleTest.hpp"
 
-namespace sequoia::testing
+namespace curlew::testing
 {
     [[nodiscard]]
     std::filesystem::path angle_test::source_file() const

@@ -11,9 +11,11 @@
 
 #include "VariadicTestingUtilities.hpp"
 
-namespace sequoia::testing
+namespace curlew::testing
 {
-    class variadic_test final : public move_only_test
+    using namespace sequoia::testing;
+
+class variadic_test final : public move_only_test
     {
     public:
         using move_only_test::move_only_test;

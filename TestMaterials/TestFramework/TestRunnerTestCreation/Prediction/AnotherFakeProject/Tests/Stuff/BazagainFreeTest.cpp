@@ -10,7 +10,7 @@
 #include "BazagainFreeTest.hpp"
 #include "curlew/Stuff/Baz.h"
 
-namespace sequoia::testing
+namespace curlew::testing
 {
     [[nodiscard]]
     std::filesystem::path bazagain_free_test::source_file() const

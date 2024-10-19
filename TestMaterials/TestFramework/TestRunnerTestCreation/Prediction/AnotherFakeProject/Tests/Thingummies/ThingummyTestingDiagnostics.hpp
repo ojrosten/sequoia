@@ -11,9 +11,11 @@
 
 #include "ThingummyTestingUtilities.hpp"
 
-namespace sequoia::testing
+namespace curlew::testing
 {
-    class thingummy_false_positive_test final : public regular_false_positive_test
+    using namespace sequoia::testing;
+
+class thingummy_false_positive_test final : public regular_false_positive_test
     {
     public:
         using regular_false_positive_test::regular_false_positive_test;

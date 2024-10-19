@@ -10,7 +10,7 @@
 #include "BazzerFreeTest.hpp"
 #include "fakeProject/Stuff/Baz.h"
 
-namespace sequoia::testing
+namespace fakeProject::testing
 {
     [[nodiscard]]
     std::filesystem::path bazzer_free_test::source_file() const

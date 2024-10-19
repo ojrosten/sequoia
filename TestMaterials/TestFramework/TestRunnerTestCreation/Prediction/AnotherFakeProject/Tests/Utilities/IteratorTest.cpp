@@ -9,7 +9,7 @@
 
 #include "IteratorTest.hpp"
 
-namespace sequoia::testing
+namespace curlew::testing
 {
     [[nodiscard]]
     std::filesystem::path iterator_test::source_file() const

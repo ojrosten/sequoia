@@ -178,21 +178,6 @@ namespace sequoia
     return replace_all(str, fromBegin, fromEnd, to);
   }
 
-  std::string& replace_all(std::string& text, std::initializer_list<replacement> data)
-  {
-    for(const auto& r : data)
-      replace_all(text, r.from, r.to);
-
-    return text;
-  }
-
-  [[nodiscard]]
-  std::string replace_all(std::string_view text, std::initializer_list<replacement> data)
-  {
-    std::string str{text};
-    return replace_all(str, data);
-  }
-
   std::string& replace_all(std::string& text, std::string_view anyOfLeft, std::string_view from, std::string_view anyOfRight, std::string_view to)
   {
     constexpr auto npos{std::string::npos};

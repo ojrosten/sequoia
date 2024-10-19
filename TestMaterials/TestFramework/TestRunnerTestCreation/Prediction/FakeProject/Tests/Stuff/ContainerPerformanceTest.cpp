@@ -10,7 +10,7 @@
 #include "ContainerPerformanceTest.hpp"
 #include "fakeProject/Stuff/Container.hpp"
 
-namespace sequoia::testing
+namespace fakeProject::testing
 {
     [[nodiscard]]
     std::filesystem::path container_performance_test::source_file() const

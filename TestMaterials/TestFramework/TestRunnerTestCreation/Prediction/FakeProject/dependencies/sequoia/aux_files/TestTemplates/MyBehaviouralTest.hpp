@@ -11,9 +11,9 @@
 
 #include "sequoia/TestFramework/?TestCore.hpp"
 
-namespace sequoia::testing
+namespace ?::testing
 {
-	class ?forename_?surname final : public ?_test
+	using namespace sequoia::testing;class ?forename_?surname final : public ?_test
 	{
 	public:
 		using ?_test::?_test;

@@ -9,7 +9,7 @@
 
 #include "VariadicTest.hpp"
 
-namespace sequoia::testing
+namespace curlew::testing
 {
     [[nodiscard]]
     std::filesystem::path variadic_test::source_file() const

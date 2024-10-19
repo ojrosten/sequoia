@@ -10,7 +10,7 @@
 #include "DoohickyFreeTest.hpp"
 #include "curlew/Stuff/Doohicky.hpp"
 
-namespace sequoia::testing
+namespace curlew::testing
 {
     [[nodiscard]]
     std::filesystem::path doohicky_free_test::source_file() const

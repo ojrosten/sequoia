@@ -9,7 +9,7 @@
 
 #include "ContainerTest.hpp"
 
-namespace sequoia::testing
+namespace curlew::testing
 {
     [[nodiscard]]
     std::filesystem::path container_test::source_file() const

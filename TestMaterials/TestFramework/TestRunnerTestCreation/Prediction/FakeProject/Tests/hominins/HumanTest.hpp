@@ -11,9 +11,11 @@
 
 #include "HumanTestingUtilities.hpp"
 
-namespace sequoia::testing
+namespace fakeProject::testing
 {
-    class human_test final : public regular_test
+    using namespace sequoia::testing;
+
+class human_test final : public regular_test
     {
     public:
         using regular_test::regular_test;

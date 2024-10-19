@@ -9,7 +9,7 @@
 
 #include "ContainerAllocationTest.hpp"
 
-namespace sequoia::testing
+namespace curlew::testing
 {
     [[nodiscard]]
     std::filesystem::path container_allocation_test::source_file() const

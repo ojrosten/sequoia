@@ -11,9 +11,11 @@
 
 #include "ContainerTestingUtilities.hpp"
 
-namespace sequoia::testing
+namespace fakeProject::testing
 {
-    class container_false_positive_test final : public regular_false_positive_test
+    using namespace sequoia::testing;
+
+class container_false_positive_test final : public regular_false_positive_test
     {
     public:
         using regular_false_positive_test::regular_false_positive_test;

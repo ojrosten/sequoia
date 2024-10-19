@@ -9,7 +9,7 @@
 
 #include "HumanTestingDiagnostics.hpp"
 
-namespace sequoia::testing
+namespace curlew::testing
 {
     [[nodiscard]]
     std::filesystem::path human_false_positive_test::source_file() const

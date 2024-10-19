@@ -9,7 +9,7 @@
 
 #include "ProbabilityTest.hpp"
 
-namespace sequoia::testing
+namespace curlew::testing
 {
     [[nodiscard]]
     std::filesystem::path probability_test::source_file() const

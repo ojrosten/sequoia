@@ -92,7 +92,7 @@ namespace sequoia::testing
     check(equality, "Multiple adjacent replacement", replace_all("foofoo", "foo", "bar"), "barbar"s);
     check(equality, "Multiple separated replacement", replace_all("foo bar foo", "foo", "bar"), "bar bar bar"s);
 
-    check(equality, "Mutliple replacement patters", replace_all("foobarbaz", {{"foo", "zoo"}, {"bar", "bfg"}, {"baz", "bat"}}), "zoobfgbat"s);
+    check(equality, "Mutliple replacement patters", replace_all("foobarbaz", replacement{"foo", "zoo"}, replacement{"bar", "bfg"}, replacement{"baz", "bat"}), "zoobfgbat"s);
 
     check(equality, "LR Replace in empty string", replace_all("", ",<", "foo", ",>", "bar"), ""s);
     check(equality, "LR single replacement", replace_all(",foo,", ",<", "foo", ",>", "bar"), ",bar,"s);

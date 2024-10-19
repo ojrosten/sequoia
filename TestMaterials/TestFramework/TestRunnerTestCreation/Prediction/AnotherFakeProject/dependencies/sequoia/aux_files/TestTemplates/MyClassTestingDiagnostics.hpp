@@ -11,9 +11,9 @@
 
 #include "?ClassTestingUtilities.hpp"
 
-namespace sequoia::testing
+namespace ?::testing
 {
-	class ?forename_false_positive_?surname final : public ?_false_positive_test
+	using namespace sequoia::testing;class ?forename_false_positive_?surname final : public ?_false_positive_test
 	{
 	public:
 		using ?_false_positive_test::?_false_positive_test;

@@ -11,9 +11,11 @@
 
 #include "sequoia/TestFramework/FreeTestCore.hpp"
 
-namespace sequoia::testing
+namespace fakeProject::testing
 {
-    class bazzer_free_test final : public free_test
+    using namespace sequoia::testing;
+
+class bazzer_free_test final : public free_test
     {
     public:
         using free_test::free_test;

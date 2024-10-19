@@ -9,7 +9,7 @@
 
 #include "HumanTest.hpp"
 
-namespace sequoia::testing
+namespace fakeProject::testing
 {
     [[nodiscard]]
     std::filesystem::path human_test::source_file() const

@@ -9,7 +9,7 @@
 
 #include "WidgetTest.hpp"
 
-namespace sequoia::testing
+namespace fakeProject::testing
 {
     [[nodiscard]]
     std::filesystem::path widget_test::source_file() const

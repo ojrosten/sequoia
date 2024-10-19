@@ -8,7 +8,7 @@
 #include "FlipperFreeTest.hpp"
 #include "generatedProject/Unstable/Flipper.hpp"
 
-namespace sequoia::testing
+namespace generatedProject::testing
 {
 	namespace fs = std::filesystem;
 	using namespace unstable;

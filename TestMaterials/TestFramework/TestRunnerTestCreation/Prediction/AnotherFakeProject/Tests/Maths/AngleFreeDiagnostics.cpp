@@ -10,7 +10,7 @@
 #include "AngleFreeDiagnostics.hpp"
 #include "curlew/Maths/Angle.hpp"
 
-namespace sequoia::testing
+namespace curlew::testing
 {
     [[nodiscard]]
     std::filesystem::path angle_false_positive_free_diagnostics::source_file() const

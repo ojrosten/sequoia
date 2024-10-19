@@ -9,7 +9,7 @@
 
 #include "MaybeTestingDiagnostics.hpp"
 
-namespace sequoia::testing
+namespace curlew::testing
 {
     [[nodiscard]]
     std::filesystem::path maybe_false_positive_test::source_file() const

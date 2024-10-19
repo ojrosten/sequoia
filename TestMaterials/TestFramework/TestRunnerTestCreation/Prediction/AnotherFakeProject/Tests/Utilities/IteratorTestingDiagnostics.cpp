@@ -9,7 +9,7 @@
 
 #include "IteratorTestingDiagnostics.hpp"
 
-namespace sequoia::testing
+namespace curlew::testing
 {
     [[nodiscard]]
     std::filesystem::path iterator_false_positive_test::source_file() const

@@ -10,7 +10,7 @@
 #include "ContainerPerformanceTest.hpp"
 #include "curlew/Stuff/Container.hpp"
 
-namespace sequoia::testing
+namespace curlew::testing
 {
     [[nodiscard]]
     std::filesystem::path container_performance_test::source_file() const

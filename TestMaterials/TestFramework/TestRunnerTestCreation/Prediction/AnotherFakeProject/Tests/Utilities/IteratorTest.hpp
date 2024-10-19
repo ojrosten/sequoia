@@ -11,9 +11,11 @@
 
 #include "IteratorTestingUtilities.hpp"
 
-namespace sequoia::testing
+namespace curlew::testing
 {
-    class iterator_test final : public regular_test
+    using namespace sequoia::testing;
+
+class iterator_test final : public regular_test
     {
     public:
         using regular_test::regular_test;

@@ -11,9 +11,11 @@
 
 #include "FooTestingUtilities.hpp"
 
-namespace sequoia::testing
+namespace fakeProject::testing
 {
-    class foo_test final : public move_only_test
+    using namespace sequoia::testing;
+
+class foo_test final : public move_only_test
     {
     public:
         using move_only_test::move_only_test;

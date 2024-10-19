@@ -7,7 +7,7 @@
 
 #include "ProbabilityTestingDiagnostics.hpp"
 
-namespace sequoia::testing
+namespace generatedProject::testing
 {
 	[[nodiscard]]
 	std::filesystem::path probability_false_positive_test::source_file() const

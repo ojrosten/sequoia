@@ -27,15 +27,16 @@
 #include "sequoia/TestFramework/TestRunner.hpp"
 #include <iostream>
 
+namespace generatedProject::testing{};
+
 int main(int argc, char** argv)
 {
 	try
 	{
-		using namespace sequoia;
-		using namespace testing;
+		using namespace generatedProject::testing;
 		using namespace std::literals::chrono_literals;
 
-		test_runner runner{argc, argv, "Oliver Jacob Rosten", "\t"};
+		sequoia::testing::test_runner runner{argc, argv, "Oliver Jacob Rosten", "\t"};
 
 		runner.add_test_suite(
 			"Utilities",
@@ -98,7 +99,7 @@ int main(int argc, char** argv)
 			house_allocation_test{"Allocation Test"}
 		);
 
-		runner.execute(timer_resolution{1ms});
+		runner.execute(sequoia::timer_resolution{1ms});
 	}
 	catch(const std::exception& e)
 	{

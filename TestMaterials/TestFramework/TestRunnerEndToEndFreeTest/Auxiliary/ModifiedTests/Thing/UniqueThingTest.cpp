@@ -7,7 +7,7 @@
 
 #include "UniqueThingTest.hpp"
 
-namespace sequoia::testing
+namespace generatedProject::testing
 {
 	[[nodiscard]]
 	std::filesystem::path unique_thing_test::source_file() const
