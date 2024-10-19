@@ -12,6 +12,7 @@
  */
 
 #include <filesystem>
+#include <functional>
 
 namespace sequoia
 {
