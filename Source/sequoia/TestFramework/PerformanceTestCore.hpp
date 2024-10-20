@@ -278,14 +278,7 @@ namespace sequoia::testing
   using performance_false_negative_test = basic_performance_test<test_mode::false_negative>;
   using performance_false_positive_test = basic_performance_test<test_mode::false_positive>;
 
-  template<class T>
-  struct is_performance_test
-    : std::bool_constant<std::is_base_of_v<performance_test, T> || std::is_base_of_v<performance_false_negative_test, T> || std::is_base_of_v<performance_false_positive_test, T>>
-  {};
-
-  template<class T>
-  using is_performance_test_t = typename is_performance_test<T>::type;
-
-  template<class T>
-  inline constexpr bool is_performance_test_v{is_performance_test<T>::value};
+  template<concrete_test T>
+    requires std::is_base_of_v<basic_performance_test<T::mode>, T>
+  struct is_parallelizable<T> : std::false_type {};
 }

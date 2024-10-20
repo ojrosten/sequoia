@@ -215,4 +215,30 @@ namespace sequoia::testing
   using free_test                = basic_free_test<test_mode::standard>;
   using free_false_negative_test = basic_free_test<test_mode::false_negative>;
   using free_false_positive_test = basic_free_test<test_mode::false_positive>;
+
+  template<class T>
+  inline constexpr bool has_parallelizable_type{
+      requires {
+        typename T::parallelizable_type;
+        requires std::is_convertible_v<typename T::parallelizable_type, std::true_type> || std::is_convertible_v<typename T::parallelizable_type, std::false_type>;
+      }
+  };
+
+  /*! \anchor is_parallelizable primary class tempate */
+  template<class T>
+  struct is_parallelizable;
+
+  template<class T>
+  using is_parallelizable_t = typename is_parallelizable<T>::type;
+
+  template<class T>
+  inline constexpr bool is_parallelizable_v{is_parallelizable<T>::value};
+
+  template<concrete_test T>
+  struct is_parallelizable<T> : std::true_type {};
+
+  template<concrete_test T>
+    requires has_parallelizable_type<T>
+  struct is_parallelizable<T> : T::parallelizable_type {};
+
 }

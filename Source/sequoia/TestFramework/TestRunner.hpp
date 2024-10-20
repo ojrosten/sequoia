@@ -63,7 +63,7 @@ namespace sequoia::testing
     test_vessel(Test&& t)
       : m_pTest{std::make_unique<essence<Test>>(std::forward<Test>(t))}
     {
-      if constexpr(is_performance_test_v<Test>)
+      if constexpr(!is_parallelizable_v<Test>)
         m_Parallelizable = parallelizable_candidate::no;
     }
 
