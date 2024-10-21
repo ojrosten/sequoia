@@ -2,7 +2,8 @@ cmake_minimum_required(VERSION 3.20)
 
 project(MyProjectTests LANGUAGES CXX)
 
-set(BuildSystem ../dependencies/sequoia/build_system)
+set(Dependencies ../dependencies)
+set(BuildSystem ${Dependencies}/sequoia/build_system)
 set(TestDir ../Tests)
 set(SourceDir ../Source)
 
@@ -20,5 +21,8 @@ target_sources(TestAll PRIVATE)
 target_include_directories(TestAll PRIVATE ${SourceDir})
 target_include_directories(TestAll PRIVATE ${TestDir})
 
-sequoia_finalize(TestAll ${TestDir} Tests)
+add_subdirectory(${Dependencies}/sequoia/Source/sequoia Sequoia)
+target_link_libraries(TestAll PRIVATE Sequoia)
+
+sequoia_finalize_tests(TestAll ${TestDir} Tests)
 

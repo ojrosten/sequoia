@@ -60,21 +60,20 @@ FUNCTION(sequoia_set_properties target)
     endif()
 ENDFUNCTION()
 
-FUNCTION(sequoia_finalize target sourceGroupRoot sourceGroupPrefix)
+FUNCTION(sequoia_finalize_tests target sourceGroupRoot sourceGroupPrefix)
     sequoia_compile_features(${target})
-
-    add_subdirectory(${CMAKE_CURRENT_FUNCTION_LIST_DIR}/../Source/sequoia Sequoia)
-    target_link_libraries(${target} PUBLIC Sequoia)
-
     sequoia_set_properties(${target})
     sequoia_set_ide_source_groups_with_prefix(${target} ${sourceGroupRoot} ${sourceGroupPrefix})
 ENDFUNCTION()
 
 FUNCTION(sequoia_finalize_self target sourceGroupRoot sourceGroupPrefix)
+    add_subdirectory(${CMAKE_CURRENT_FUNCTION_LIST_DIR}/../Source/sequoia Sequoia)
+    target_link_libraries(${target} PUBLIC Sequoia)
+
     target_include_directories(${target} PRIVATE ${CMAKE_CURRENT_FUNCTION_LIST_DIR}/../TestCommon)
     target_include_directories(${target} PRIVATE ${CMAKE_CURRENT_FUNCTION_LIST_DIR}/../Tests)
 
-    sequoia_finalize(${target} ${sourceGroupRoot} ${sourceGroupPrefix})
+    sequoia_finalize_tests(${target} ${sourceGroupRoot} ${sourceGroupPrefix})
 ENDFUNCTION()
 
 FUNCTION(sequoia_finalize_library target)
