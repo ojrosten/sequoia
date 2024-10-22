@@ -15,7 +15,7 @@ namespace fakeProject::testing
 {
     using namespace sequoia::testing;
 
-class variadic_false_positive_test final : public move_only_false_positive_test
+    class variadic_false_positive_test final : public move_only_false_positive_test
     {
     public:
         using move_only_false_positive_test::move_only_false_positive_test;

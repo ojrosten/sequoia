@@ -15,7 +15,7 @@ namespace fakeProject::testing
 {
     using namespace sequoia::testing;
 
-class defs_free_test final : public free_test
+    class defs_free_test final : public free_test
     {
     public:
         using free_test::free_test;

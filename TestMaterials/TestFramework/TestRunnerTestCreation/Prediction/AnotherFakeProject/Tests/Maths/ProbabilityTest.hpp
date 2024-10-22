@@ -15,7 +15,7 @@ namespace curlew::testing
 {
     using namespace sequoia::testing;
 
-class probability_test final : public regular_test
+    class probability_test final : public regular_test
     {
     public:
         using regular_test::regular_test;

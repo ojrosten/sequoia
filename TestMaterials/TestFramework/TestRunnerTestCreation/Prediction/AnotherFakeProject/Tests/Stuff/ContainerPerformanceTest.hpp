@@ -15,7 +15,7 @@ namespace curlew::testing
 {
     using namespace sequoia::testing;
 
-class container_performance_test final : public performance_test
+    class container_performance_test final : public performance_test
     {
     public:
         using performance_test::performance_test;

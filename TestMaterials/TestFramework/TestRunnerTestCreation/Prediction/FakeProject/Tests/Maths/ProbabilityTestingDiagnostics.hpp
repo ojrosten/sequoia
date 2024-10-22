@@ -15,7 +15,7 @@ namespace fakeProject::testing
 {
     using namespace sequoia::testing;
 
-class probability_false_positive_test final : public regular_false_positive_test
+    class probability_false_positive_test final : public regular_false_positive_test
     {
     public:
         using regular_false_positive_test::regular_false_positive_test;

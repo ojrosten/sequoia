@@ -15,7 +15,7 @@ namespace fakeProject::testing
 {
     using namespace sequoia::testing;
 
-class iterator_test final : public regular_test
+    class iterator_test final : public regular_test
     {
     public:
         using regular_test::regular_test;

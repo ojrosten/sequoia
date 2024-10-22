@@ -15,7 +15,7 @@ namespace fakeProject::testing
 {
     using namespace sequoia::testing;
 
-class container_allocation_test final : public regular_allocation_test
+    class container_allocation_test final : public regular_allocation_test
     {
     public:
         using regular_allocation_test::regular_allocation_test;

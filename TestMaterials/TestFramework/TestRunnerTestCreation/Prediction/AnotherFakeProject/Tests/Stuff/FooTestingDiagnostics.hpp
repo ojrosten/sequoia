@@ -15,7 +15,7 @@ namespace curlew::testing
 {
     using namespace sequoia::testing;
 
-class foo_false_positive_test final : public move_only_false_positive_test
+    class foo_false_positive_test final : public move_only_false_positive_test
     {
     public:
         using move_only_false_positive_test::move_only_false_positive_test;

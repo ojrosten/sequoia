@@ -420,9 +420,11 @@ namespace sequoia::testing
   {
     
     replace_all(text, replacement{"?::testing", std::format("{}::testing", project_namespace())},
-                      replacement{"using namespace sequoia::testing;", project_namespace() == "sequoia" ? "" : "using namespace sequoia::testing;\n\n"},
+                      replacement{"using namespace sequoia::testing;", project_namespace() == "sequoia" ? "" : "using namespace sequoia::testing;\n\n\t"},
                       replacement{"?forename", forename()},
                       replacement{"?surname", surname()});
+
+    tabs_to_spacing(text, code_indent());
   }
 
   //=========================================== nascent_semantics_test ===========================================//
@@ -551,8 +553,6 @@ namespace sequoia::testing
         }
       }
     }
-
-    tabs_to_spacing(text, code_indent());
 
     if(!m_EquivalentTypes.empty())
     {
@@ -757,8 +757,6 @@ namespace sequoia::testing
 
   void nascent_behavioural_test::transform_file(std::string& text) const
   {
-    tabs_to_spacing(text, code_indent());
-
     make_common_replacements(text);
 
     replace_all(text, replacement{"?Behavioural", camel_name()},

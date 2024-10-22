@@ -15,7 +15,7 @@ namespace fakeProject::testing
 {
     using namespace sequoia::testing;
 
-class angle_false_positive_free_diagnostics final : public free_false_positive_test
+    class angle_false_positive_free_diagnostics final : public free_false_positive_test
     {
     public:
         using free_false_positive_test::free_false_positive_test;

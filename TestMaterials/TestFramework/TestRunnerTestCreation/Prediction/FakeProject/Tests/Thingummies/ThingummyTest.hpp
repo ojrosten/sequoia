@@ -15,7 +15,7 @@ namespace fakeProject::testing
 {
     using namespace sequoia::testing;
 
-class thingummy_test final : public regular_test
+    class thingummy_test final : public regular_test
     {
     public:
         using regular_test::regular_test;

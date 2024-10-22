@@ -15,7 +15,7 @@ namespace fakeProject::testing
 {
     using namespace sequoia::testing;
 
-class foo_test final : public move_only_test
+    class foo_test final : public move_only_test
     {
     public:
         using move_only_test::move_only_test;
