@@ -52,6 +52,12 @@ namespace sequoia::testing
       }
     }
 
+    void process_copyright_and_namespace(std::string& text, std::string_view copyright, std::string_view nameSpace)
+    {
+      set_top_copyright(text, copyright);
+      process_namespace(text, nameSpace);
+    }
+
     [[nodiscard]]
     std::string to_surname(nascent_test_flavour f)
     {
@@ -390,7 +396,7 @@ namespace sequoia::testing
     throw std::runtime_error{mess};
   }
 
-  void nascent_test_base::set_cpp(const std::filesystem::path& headerPath, std::string_view copyright, std::string_view nameSpace)
+  void nascent_test_base::set_cpp(const std::filesystem::path& headerPath, std::string_view nameSpace)
   {
     const auto srcPath{fs::path{headerPath}.replace_extension("cpp")};
 
@@ -398,9 +404,8 @@ namespace sequoia::testing
     fs::copy_file(paths().aux_paths().source_templates() / "MyCpp.cpp", srcPath);
 
     auto setCppText{
-        [&](std::string& text) {
-          set_top_copyright(text, copyright);
-          process_namespace(text, nameSpace);
+        [&, copyright{copyright()}](std::string& text) {
+          process_copyright_and_namespace(text, copyright, nameSpace);
           replace_all(text, "?.hpp", rebase_from(headerPath, paths().source().repo()).generic_string());
           tabs_to_spacing(text, code_indent());
         }
@@ -518,7 +523,7 @@ namespace sequoia::testing
 
     if(m_TemplateData.empty())
     {
-      set_cpp(headerPath, copyright(), nameSpace);
+      set_cpp(headerPath, nameSpace);
     }
 
     return headerPath;
@@ -620,8 +625,7 @@ namespace sequoia::testing
 
   void nascent_semantics_test::set_header_text(std::string& text, std::string_view copyright, std::string_view nameSpace) const
   {
-    set_top_copyright(text, copyright);
-    process_namespace(text, nameSpace);
+    process_copyright_and_namespace(text, copyright, nameSpace);
     replace_all(text, "?type", forename());
     if(m_TemplateData.empty())
     {
@@ -717,9 +721,12 @@ namespace sequoia::testing
     fs::create_directories(headerPath.parent_path());
     fs::copy_file(paths().aux_paths().source_templates() / "MyFreeFunctions.hpp", headerPath);
 
-    read_modify_write(headerPath, [&nameSpace = m_Namespace](std::string& text) { process_namespace(text, nameSpace); });
+    read_modify_write(headerPath, [&nameSpace = m_Namespace, copyright{copyright()}](std::string& text) {
+        process_copyright_and_namespace(text, copyright, nameSpace);
+      }
+    );
 
-    set_cpp(headerPath, copyright(), m_Namespace);
+    set_cpp(headerPath, m_Namespace);
 
     return headerPath;
   }

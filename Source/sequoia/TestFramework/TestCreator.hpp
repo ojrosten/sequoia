@@ -136,7 +136,7 @@ namespace sequoia::testing
 
     void camel_name(std::string name);
 
-    void set_cpp(const std::filesystem::path& headerPath, std::string_view copyright, std::string_view nameSpace);
+    void set_cpp(const std::filesystem::path& headerPath, std::string_view nameSpace);
 
     [[nodiscard]]
     const indentation& code_indent() const noexcept { return m_CodeIndent; }
