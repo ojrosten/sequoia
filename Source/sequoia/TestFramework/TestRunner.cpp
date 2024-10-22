@@ -54,37 +54,35 @@ namespace sequoia::testing
       std::size_t num{8};
     };
 
-    template<class ForwardIt, class UnaryFn>
-    void accelerate(thread_pool_policy p, ForwardIt first, ForwardIt last, UnaryFn fn)
+    template<class Weight, class UnaryFn>
+    void accelerate(thread_pool_policy p, std::span<Weight> weights, UnaryFn fn)
     {
-      if(const auto dist{static_cast<std::size_t>(std::ranges::distance(first, last))}; dist > 1)
+      if(const auto num{weights.size()}; num > 1)
       {
-        concurrency::thread_pool<void> pool{std::ranges::min(dist, p.num)};
-        std::vector<std::future<void>> futures{};
-        futures.reserve(dist);
-        while(first != last)
-        {
-          futures.emplace_back(pool.push([fn, &wt{*(first++)}](){ fn(wt); }));
-        }
+        concurrency::thread_pool<void> pool{std::ranges::min(num, p.num)};
+        auto futures{
+              std::views::transform(weights, [&pool, fn](auto& wt){ return pool.push([&](){ return fn(wt); }); })
+            | std::ranges::to<std::vector>()
+        };
 
         for(auto& f : futures) f.get();
       }
-      else if(dist > 0)
+      else if(num > 0)
       {
-        fn(*first);
-      }  
+        fn(weights.front());
+      }
     }
 
-    template<class ExecutionPolicy, class ForwardIt, class UnaryFn>
-    void accelerate(ExecutionPolicy&& policy, ForwardIt first, ForwardIt last, UnaryFn f)
+    template<class ExecutionPolicy, class Weight, class UnaryFn>
+    void accelerate(ExecutionPolicy&& policy, std::span<Weight> weights, UnaryFn f)
     {
       if constexpr(!with_clang_v)
       {
-        std::for_each(std::forward<ExecutionPolicy>(policy), first, last, std::move(f));
+        std::for_each(std::forward<ExecutionPolicy>(policy), weights.begin(), weights.end(), std::move(f));
       }
       else
       {
-        accelerate(thread_pool_policy{.num{8}}, first, last, std::move(f));
+        accelerate(thread_pool_policy{.num{8}}, weights, std::move(f));
       }
     }
 
@@ -893,10 +891,10 @@ namespace sequoia::testing
       {
         using enum concurrency_mode;
       case dynamic:
-        accelerate(sequoia::execution::par, next, m_Suites.end_node_weights(), executor);
+        accelerate(sequoia::execution::par, std::span{next, m_Suites.end_node_weights()}, executor);
         break;
       case fixed:
-        accelerate(thread_pool_policy{.num{m_PoolSize}}, next, m_Suites.end_node_weights(), executor);
+        accelerate(thread_pool_policy{.num{m_PoolSize}}, std::span{next, m_Suites.end_node_weights()}, executor);
         break;
       default:
         throw std::logic_error{"Unexpected concurrency_mode"};
