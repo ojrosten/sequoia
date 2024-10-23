@@ -152,12 +152,16 @@ std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia:
 <tr class="memitem:ae00c95a3f6c5d34487703dbd56b82a5b"><td class="memItemLeft" align="right" valign="top"><a id="ae00c95a3f6c5d34487703dbd56b82a5b" name="ae00c95a3f6c5d34487703dbd56b82a5b"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::replace_all</b> (std::string_view text, std::string_view fromBegin, std::string_view fromEnd, std::string_view to)</td></tr>
 <tr class="separator:ae00c95a3f6c5d34487703dbd56b82a5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a429c129be985e390bc5ed7ce7e8cca65"><td class="memItemLeft" align="right" valign="top"><a id="a429c129be985e390bc5ed7ce7e8cca65" name="a429c129be985e390bc5ed7ce7e8cca65"></a>
-std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::replace_all</b> (std::string &amp;text, std::initializer_list&lt; replacement &gt; data)</td></tr>
-<tr class="separator:a429c129be985e390bc5ed7ce7e8cca65"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2dbd8d81f466ae33eedb89e2407e72e4"><td class="memItemLeft" align="right" valign="top"><a id="a2dbd8d81f466ae33eedb89e2407e72e4" name="a2dbd8d81f466ae33eedb89e2407e72e4"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::replace_all</b> (std::string_view text, std::initializer_list&lt; replacement &gt; data)</td></tr>
-<tr class="separator:a2dbd8d81f466ae33eedb89e2407e72e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca2c4b2028bbb3aede9804fae989a97c"><td class="memTemplParams" colspan="2"><a id="aca2c4b2028bbb3aede9804fae989a97c" name="aca2c4b2028bbb3aede9804fae989a97c"></a>
+template&lt;class... Replacement&gt; <br />
+requires (std::is_same_v&lt;Replacement, replacement&gt; &amp;&amp; ...)</td></tr>
+<tr class="memitem:aca2c4b2028bbb3aede9804fae989a97c"><td class="memTemplItemLeft" align="right" valign="top">std::string &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::replace_all</b> (std::string &amp;text, const Replacement &amp;... rs)</td></tr>
+<tr class="separator:aca2c4b2028bbb3aede9804fae989a97c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abfcd0ddec1b79143c5f0ed17ec4ddd04"><td class="memTemplParams" colspan="2"><a id="abfcd0ddec1b79143c5f0ed17ec4ddd04" name="abfcd0ddec1b79143c5f0ed17ec4ddd04"></a>
+template&lt;class... Replacement&gt; <br />
+requires (std::is_same_v&lt;Replacement, replacement&gt; &amp;&amp; ...)</td></tr>
+<tr class="memitem:abfcd0ddec1b79143c5f0ed17ec4ddd04"><td class="memTemplItemLeft" align="right" valign="top">std::string&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::replace_all</b> (std::string_view text, const Replacement &amp;... rs)</td></tr>
+<tr class="separator:abfcd0ddec1b79143c5f0ed17ec4ddd04"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2009fe49dc3aa4704da6564e4de50965"><td class="memItemLeft" align="right" valign="top"><a id="a2009fe49dc3aa4704da6564e4de50965" name="a2009fe49dc3aa4704da6564e4de50965"></a>
 std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::replace_all</b> (std::string &amp;text, std::string_view anyOfLeft, std::string_view from, std::string_view anyOfRight, std::string_view to)</td></tr>
 <tr class="separator:a2009fe49dc3aa4704da6564e4de50965"><td class="memSeparator" colspan="2">&#160;</td></tr>

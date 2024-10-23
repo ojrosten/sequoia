@@ -22,7 +22,7 @@ var searchData=
   ['relational_5ffalse_5fnegative_5fdiagnostics_19',['relational_false_negative_diagnostics',['../dd/d50/classsequoia_1_1testing_1_1relational__false__negative__diagnostics.html',1,'sequoia::testing']]],
   ['relational_5ffalse_5fpositive_5fdiagnostics_20',['relational_false_positive_diagnostics',['../da/d4f/classsequoia_1_1testing_1_1relational__false__positive__diagnostics.html',1,'sequoia::testing']]],
   ['replacement_21',['replacement',['../da/dd8/structsequoia_1_1replacement.html',1,'sequoia']]],
-  ['report_22',['report',['../de/d58/classsequoia_1_1testing_1_1report.html',1,'sequoia::testing']]],
+  ['reporter_22',['reporter',['../da/dce/classsequoia_1_1testing_1_1reporter.html',1,'sequoia::testing']]],
   ['resolve_5fto_5fcopy_23',['resolve_to_copy',['../dc/d48/structsequoia_1_1resolve__to__copy.html',1,'sequoia']]],
   ['resource_5fbinder_24',['resource_binder',['../de/d91/classsequoia_1_1testing_1_1resource__binder.html',1,'sequoia::testing']]],
   ['results_5faccumulator_25',['results_accumulator',['../d4/da8/classsequoia_1_1maths_1_1results__accumulator.html',1,'sequoia::maths']]],

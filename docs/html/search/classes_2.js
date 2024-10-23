@@ -40,5 +40,6 @@ var searchData=
   ['custom_5fallocator_5fbucketed_5fedge_5fstorage_5fconfig_37',['custom_allocator_bucketed_edge_storage_config',['../df/d78/structsequoia_1_1testing_1_1custom__allocator__bucketed__edge__storage__config.html',1,'sequoia::testing']]],
   ['custom_5fallocator_5fcontiguous_5fedge_5fstorage_5fconfig_38',['custom_allocator_contiguous_edge_storage_config',['../d5/d1d/structsequoia_1_1testing_1_1custom__allocator__contiguous__edge__storage__config.html',1,'sequoia::testing']]],
   ['custom_5fbucketed_5fsequence_5fgenerator_39',['custom_bucketed_sequence_generator',['../d9/d50/structsequoia_1_1testing_1_1custom__bucketed__sequence__generator.html',1,'sequoia::testing']]],
-  ['custom_5fpartitioned_5fsequence_5fgenerator_40',['custom_partitioned_sequence_generator',['../da/d39/structsequoia_1_1testing_1_1custom__partitioned__sequence__generator.html',1,'sequoia::testing']]]
+  ['custom_5fpartitioned_5fsequence_5fgenerator_40',['custom_partitioned_sequence_generator',['../da/d39/structsequoia_1_1testing_1_1custom__partitioned__sequence__generator.html',1,'sequoia::testing']]],
+  ['customizer_41',['customizer',['../d9/d6b/structsequoia_1_1testing_1_1project__paths_1_1customizer.html',1,'sequoia::testing::project_paths']]]
 ];

@@ -47,7 +47,7 @@ var searchData=
   ['relationaltestdiagnostics_2ecpp_44',['RelationalTestDiagnostics.cpp',['../de/de4/RelationalTestDiagnostics_8cpp.html',1,'']]],
   ['relationaltestdiagnostics_2ehpp_45',['RelationalTestDiagnostics.hpp',['../dd/d62/RelationalTestDiagnostics_8hpp.html',1,'']]],
   ['replacement_46',['replacement',['../da/dd8/structsequoia_1_1replacement.html',1,'sequoia']]],
-  ['report_47',['report',['../de/d58/classsequoia_1_1testing_1_1report.html',1,'sequoia::testing']]],
+  ['reporter_47',['reporter',['../da/dce/classsequoia_1_1testing_1_1reporter.html',1,'sequoia::testing']]],
   ['resolve_5fto_5fcopy_48',['resolve_to_copy',['../dc/d48/structsequoia_1_1resolve__to__copy.html',1,'sequoia']]],
   ['resource_5fbinder_49',['resource_binder',['../de/d91/classsequoia_1_1testing_1_1resource__binder.html',1,'sequoia::testing']]],
   ['results_5faccumulator_50',['results_accumulator',['../d4/da8/classsequoia_1_1maths_1_1results__accumulator.html',1,'sequoia::maths']]],
