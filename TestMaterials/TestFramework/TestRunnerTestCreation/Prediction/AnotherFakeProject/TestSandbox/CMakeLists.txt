@@ -59,8 +59,8 @@ target_sources(TestAll PRIVATE
 target_include_directories(TestAll PRIVATE ${SourceDir})
 target_include_directories(TestAll PRIVATE ${TestDir})
 
-add_subdirectory(${Dependencies}/sequoia/Source/sequoia Sequoia)
-target_link_libraries(TestAll PRIVATE Sequoia)
+add_subdirectory(${Dependencies}/sequoia/Source/sequoia sequoia)
+target_link_libraries(TestAll PRIVATE sequoia)
 
 sequoia_finalize_tests(TestAll ${TestDir} Tests)
 

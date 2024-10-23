@@ -67,8 +67,8 @@ FUNCTION(sequoia_finalize_tests target sourceGroupRoot sourceGroupPrefix)
 ENDFUNCTION()
 
 FUNCTION(sequoia_finalize_self target sourceGroupRoot sourceGroupPrefix)
-    add_subdirectory(${CMAKE_CURRENT_FUNCTION_LIST_DIR}/../Source/sequoia Sequoia)
-    target_link_libraries(${target} PUBLIC Sequoia)
+    add_subdirectory(${CMAKE_CURRENT_FUNCTION_LIST_DIR}/../Source/sequoia sequoia)
+    target_link_libraries(${target} PUBLIC sequoia)
 
     target_include_directories(${target} PRIVATE ${CMAKE_CURRENT_FUNCTION_LIST_DIR}/../TestCommon)
     target_include_directories(${target} PRIVATE ${CMAKE_CURRENT_FUNCTION_LIST_DIR}/../Tests)

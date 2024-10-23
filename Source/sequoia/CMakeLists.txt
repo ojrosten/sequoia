@@ -38,8 +38,8 @@ set(SourceList
     TextProcessing/Patterns.cpp
     TextProcessing/Substitutions.cpp)
 
-add_library(Sequoia STATIC ${SourceList})
+add_library(sequoia STATIC ${SourceList})
 
-target_include_directories(Sequoia PUBLIC ../)
+target_include_directories(sequoia PUBLIC ../)
 
-sequoia_finalize_library(Sequoia)
+sequoia_finalize_library(sequoia)
