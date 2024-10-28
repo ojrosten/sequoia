@@ -378,9 +378,9 @@ namespace sequoia::testing
   struct default_exception_message_postprocessor
   {
     [[nodiscard]]
-    std::string operator()(std::string message) const
+    std::string operator()(std::string mess) const
     {
-      return std::move(message);
+      return mess;
     }
   };
 
