@@ -246,7 +246,7 @@ namespace sequoia::testing
                       )
                       return true;
 
-                    if(const auto trial{file.parent_path() / includedFile}; wt.file == fs::canonical(trial))
+                    if(const auto trial{file.parent_path() / includedFile}; fs::exists(trial) && (wt.file == fs::canonical(trial)))
                       return true;
                   }
 

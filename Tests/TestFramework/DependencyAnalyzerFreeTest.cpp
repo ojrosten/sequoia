@@ -131,7 +131,7 @@ namespace sequoia::testing
     const auto fake{auxiliary_materials() /= "FakeProject"};
     const main_paths main{fake / main_paths::default_main_cpp_from_root()};
     commandline_arguments args{{(fake / "build/CMade/TestAll/TestAll").generic_string()}};
-    const project_paths projPaths{args.size(), args.get(), {.additional_dependency_analysis_paths{{"TestUtilities"}}, .main_cpp{main.file()}, .common_includes{main.file()}}};
+    const project_paths projPaths{args.size(), args.get(), {.additional_dependency_analysis_paths{{"TestUtilities"}, {"dependencies/foo/Source"}}, .main_cpp{main.file()}, .common_includes{main.file()}}};
 
     check(equality, "No timestamp", tests_to_run(projPaths, ""), opt_test_list{});
 
