@@ -13,11 +13,11 @@
 
 namespace sequoia::testing
 {
-  class scoped_allocation_false_negative_diagnostics final
-    : public regular_allocation_false_negative_test
+  class scoped_allocation_false_positive_diagnostics final
+    : public regular_allocation_false_positive_test
   {
   public:
-    using regular_allocation_false_negative_test::regular_allocation_false_negative_test;
+    using regular_allocation_false_positive_test::regular_allocation_false_positive_test;
 
     [[nodiscard]]
     std::filesystem::path source_file() const;
@@ -29,6 +29,9 @@ namespace sequoia::testing
   private:
 
     template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
-    void test_regular_semantics();
+    void test_perfectly_scoped();
+
+    template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
+    void test_perfectly_branched();
   };
 }

@@ -7,7 +7,7 @@
 
 /*! \file */
 
-#include "RegularAllocationTestFalsePositiveDiagnosticsBrokenValueSemantics.hpp"
+#include "RegularAllocationTestFalseNegativeDiagnosticsBrokenValueSemantics.hpp"
 
 #include "../ContainerDiagnosticsUtilities.hpp"
 #include "AllocationTestDiagnosticsUtilities.hpp"

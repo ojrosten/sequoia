@@ -7,7 +7,7 @@
 
 /*! \file */
 
-#include "RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.hpp"
+#include "RegularAllocationTestFalseNegativeDiagnosticsInefficientOperations.hpp"
 
 #include "../ContainerDiagnosticsUtilities.hpp"
 #include "AllocationTestDiagnosticsUtilities.hpp"

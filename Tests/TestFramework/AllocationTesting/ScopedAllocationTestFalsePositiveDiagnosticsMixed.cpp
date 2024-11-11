@@ -7,7 +7,7 @@
 
 /*! \file */
 
-#include "ScopedAllocationTestFalseNegativeDiagnosticsMixed.hpp"
+#include "ScopedAllocationTestFalsePositiveDiagnosticsMixed.hpp"
 #include "ScopedAllocationTestDiagnosticsUtilities.hpp"
 #include "AllocationTestDiagnosticsUtilities.hpp"
 
