@@ -13,7 +13,7 @@ var searchData=
   ['leaves_5fto_5fvariant_5for_5funique_5ftype_3c_20suite_3c_20ts_2e_2e_2e_20_3e_2c_20transform_20_3e_10',['leaves_to_variant_or_unique_type&lt; suite&lt; Ts... &gt;, Transform &gt;',['../da/d63/structsequoia_1_1object_1_1leaves__to__variant__or__unique__type_3_01suite_3_01Ts_8_8_8_01_4_00_01Transform_01_4.html',1,'sequoia::object']]],
   ['line_5fbreaks_11',['line_breaks',['../d3/d49/classsequoia_1_1testing_1_1line__breaks.html',1,'sequoia::testing']]],
   ['linear_5fsequence_12',['linear_sequence',['../d8/d4a/classsequoia_1_1maths_1_1linear__sequence.html',1,'sequoia::maths']]],
-  ['linear_5fsequence_5ffalse_5fpositive_5ftest_13',['linear_sequence_false_positive_test',['../d5/df8/classsequoia_1_1testing_1_1linear__sequence__false__positive__test.html',1,'sequoia::testing']]],
+  ['linear_5fsequence_5ffalse_5fnegative_5ftest_13',['linear_sequence_false_negative_test',['../de/d3e/classsequoia_1_1testing_1_1linear__sequence__false__negative__test.html',1,'sequoia::testing']]],
   ['linear_5fsequence_5ftest_14',['linear_sequence_test',['../d4/d2e/classsequoia_1_1testing_1_1linear__sequence__test.html',1,'sequoia::testing']]],
   ['linearsequence_2ehpp_15',['LinearSequence.hpp',['../d7/d57/LinearSequence_8hpp.html',1,'']]],
   ['linearsequencetest_2ecpp_16',['LinearSequenceTest.cpp',['../db/d7d/LinearSequenceTest_8cpp.html',1,'']]],

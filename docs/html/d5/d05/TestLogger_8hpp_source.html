@@ -93,7 +93,7 @@ $(function() {
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="keyword">namespace </span>sequoia::testing</div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>{</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno"><a class="line" href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">   35</a></span>  <span class="keyword">enum class</span> <a class="code hl_enumeration" href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> { standard, false_positive, false_negative };</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno"><a class="line" href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">   35</a></span>  <span class="keyword">enum class</span> <a class="code hl_enumeration" href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> { standard, false_negative, false_positive };</div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno"><a class="line" href="../../d2/d70/structsequoia_1_1testing_1_1active__recovery__files.html">   40</a></span>  <span class="keyword">struct </span><a class="code hl_struct" href="../../d2/d70/structsequoia_1_1testing_1_1active__recovery__files.html">active_recovery_files</a></div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>  {</div>
@@ -329,16 +329,16 @@ $(function() {
 <div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span>    std::size_t standard_performance_checks() <span class="keyword">const</span> <span class="keyword">noexcept</span> { <span class="keywordflow">return</span> m_StandardPerformanceChecks; }</div>
 <div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span> </div>
 <div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span>    std::size_t false_negative_checks() <span class="keyword">const</span> <span class="keyword">noexcept</span> { <span class="keywordflow">return</span> m_FalseNegativeChecks; }</div>
+<div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span>    std::size_t false_positive_checks() <span class="keyword">const</span> <span class="keyword">noexcept</span> { <span class="keywordflow">return</span> m_FalsePositiveChecks; }</div>
 <div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span> </div>
 <div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span>    std::size_t false_negative_performance_checks() <span class="keyword">const</span> <span class="keyword">noexcept</span> { <span class="keywordflow">return</span> m_FalseNegativePerformanceChecks; }</div>
+<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span>    std::size_t false_positive_performance_checks() <span class="keyword">const</span> <span class="keyword">noexcept</span> { <span class="keywordflow">return</span> m_FalsePositivePerformanceChecks; }</div>
 <div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span> </div>
 <div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>    std::size_t false_positive_checks() <span class="keyword">const</span> <span class="keyword">noexcept</span> { <span class="keywordflow">return</span> m_FalsePositiveChecks; }</div>
+<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>    std::size_t false_negative_checks() <span class="keyword">const</span> <span class="keyword">noexcept</span> { <span class="keywordflow">return</span> m_FalseNegativeChecks; }</div>
 <div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span> </div>
 <div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>    std::size_t false_positive_performance_checks() <span class="keyword">const</span> <span class="keyword">noexcept</span> { <span class="keywordflow">return</span> m_FalsePositivePerformanceChecks; }</div>
+<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>    std::size_t false_negative_performance_checks() <span class="keyword">const</span> <span class="keyword">noexcept</span> { <span class="keywordflow">return</span> m_FalseNegativePerformanceChecks; }</div>
 <div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span> </div>
 <div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>    [[nodiscard]]</div>
 <div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>    std::size_t standard_deep_failures() <span class="keyword">const</span> <span class="keyword">noexcept</span> { <span class="keywordflow">return</span> m_StandardDeepFailures; }</div>
@@ -350,16 +350,16 @@ $(function() {
 <div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>    std::size_t standard_performance_failures() <span class="keyword">const</span> <span class="keyword">noexcept</span> { <span class="keywordflow">return</span> m_StandardPerformanceFailures; }</div>
 <div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span> </div>
 <div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>    std::size_t false_negative_failures() <span class="keyword">const</span> <span class="keyword">noexcept</span> { <span class="keywordflow">return</span> m_FalseNegativeFailures; }</div>
+<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>    std::size_t false_positive_failures() <span class="keyword">const</span> <span class="keyword">noexcept</span> { <span class="keywordflow">return</span> m_FalsePositiveFailures; }</div>
 <div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span> </div>
 <div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>    std::size_t false_negative_performance_failures() <span class="keyword">const</span> <span class="keyword">noexcept</span> { <span class="keywordflow">return</span> m_FalseNegativePerformanceFailures; }</div>
+<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>    std::size_t false_positive_performance_failures() <span class="keyword">const</span> <span class="keyword">noexcept</span> { <span class="keywordflow">return</span> m_FalsePositivePerformanceFailures; }</div>
 <div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span> </div>
 <div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span>    std::size_t false_positive_failures() <span class="keyword">const</span> <span class="keyword">noexcept</span> { <span class="keywordflow">return</span> m_FalsePositiveFailures; }</div>
+<div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span>    std::size_t false_negative_failures() <span class="keyword">const</span> <span class="keyword">noexcept</span> { <span class="keywordflow">return</span> m_FalseNegativeFailures; }</div>
 <div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span> </div>
 <div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span>    std::size_t false_positive_performance_failures() <span class="keyword">const</span> <span class="keyword">noexcept</span> { <span class="keywordflow">return</span> m_FalsePositivePerformanceFailures; }</div>
+<div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span>    std::size_t false_negative_performance_failures() <span class="keyword">const</span> <span class="keyword">noexcept</span> { <span class="keywordflow">return</span> m_FalseNegativePerformanceFailures; }</div>
 <div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span> </div>
 <div class="line"><a id="l00352" name="l00352"></a><span class="lineno">  352</span>    [[nodiscard]]</div>
 <div class="line"><a id="l00353" name="l00353"></a><span class="lineno">  353</span>    std::size_t critical_failures() <span class="keyword">const</span> <span class="keyword">noexcept</span> { <span class="keywordflow">return</span> m_CriticalFailures; }</div>
@@ -403,17 +403,17 @@ $(function() {
 <div class="line"><a id="l00391" name="l00391"></a><span class="lineno">  391</span>      m_StandardTopLevelChecks{},</div>
 <div class="line"><a id="l00392" name="l00392"></a><span class="lineno">  392</span>      m_StandardDeepChecks{},</div>
 <div class="line"><a id="l00393" name="l00393"></a><span class="lineno">  393</span>      m_StandardPerformanceChecks{},</div>
-<div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span>      m_FalseNegativeChecks{},</div>
-<div class="line"><a id="l00395" name="l00395"></a><span class="lineno">  395</span>      m_FalsePositiveChecks{},</div>
-<div class="line"><a id="l00396" name="l00396"></a><span class="lineno">  396</span>      m_FalseNegativePerformanceChecks{},</div>
-<div class="line"><a id="l00397" name="l00397"></a><span class="lineno">  397</span>      m_FalsePositivePerformanceChecks{},</div>
+<div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span>      m_FalsePositiveChecks{},</div>
+<div class="line"><a id="l00395" name="l00395"></a><span class="lineno">  395</span>      m_FalseNegativeChecks{},</div>
+<div class="line"><a id="l00396" name="l00396"></a><span class="lineno">  396</span>      m_FalsePositivePerformanceChecks{},</div>
+<div class="line"><a id="l00397" name="l00397"></a><span class="lineno">  397</span>      m_FalseNegativePerformanceChecks{},</div>
 <div class="line"><a id="l00398" name="l00398"></a><span class="lineno">  398</span>      m_StandardTopLevelFailures{},</div>
 <div class="line"><a id="l00399" name="l00399"></a><span class="lineno">  399</span>      m_StandardDeepFailures{},</div>
 <div class="line"><a id="l00400" name="l00400"></a><span class="lineno">  400</span>      m_StandardPerformanceFailures{},</div>
-<div class="line"><a id="l00401" name="l00401"></a><span class="lineno">  401</span>      m_FalseNegativeFailures{},</div>
-<div class="line"><a id="l00402" name="l00402"></a><span class="lineno">  402</span>      m_FalsePositiveFailures{},</div>
-<div class="line"><a id="l00403" name="l00403"></a><span class="lineno">  403</span>      m_FalseNegativePerformanceFailures{},</div>
-<div class="line"><a id="l00404" name="l00404"></a><span class="lineno">  404</span>      m_FalsePositivePerformanceFailures{},</div>
+<div class="line"><a id="l00401" name="l00401"></a><span class="lineno">  401</span>      m_FalsePositiveFailures{},</div>
+<div class="line"><a id="l00402" name="l00402"></a><span class="lineno">  402</span>      m_FalseNegativeFailures{},</div>
+<div class="line"><a id="l00403" name="l00403"></a><span class="lineno">  403</span>      m_FalsePositivePerformanceFailures{},</div>
+<div class="line"><a id="l00404" name="l00404"></a><span class="lineno">  404</span>      m_FalseNegativePerformanceFailures{},</div>
 <div class="line"><a id="l00405" name="l00405"></a><span class="lineno">  405</span>      m_CriticalFailures{};</div>
 <div class="line"><a id="l00406" name="l00406"></a><span class="lineno">  406</span> </div>
 <div class="line"><a id="l00407" name="l00407"></a><span class="lineno">  407</span>    <span class="keywordtype">int</span> m_ExceptionsInFlight{};</div>
