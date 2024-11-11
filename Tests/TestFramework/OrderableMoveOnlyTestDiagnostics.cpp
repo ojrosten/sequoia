@@ -13,17 +13,17 @@
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::filesystem::path orderable_move_only_false_positive_diagnostics::source_file() const
+  std::filesystem::path orderable_move_only_false_negative_diagnostics::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void orderable_move_only_false_positive_diagnostics::run_tests()
+  void orderable_move_only_false_negative_diagnostics::run_tests()
   {
     test_regular_semantics();
   }
 
-  void orderable_move_only_false_positive_diagnostics::test_regular_semantics()
+  void orderable_move_only_false_negative_diagnostics::test_regular_semantics()
   {
     {
       using beast = orderable_move_only_beast<int>;
@@ -78,17 +78,17 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path orderable_move_only_false_negative_diagnostics::source_file() const
+  std::filesystem::path orderable_move_only_false_positive_diagnostics::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void orderable_move_only_false_negative_diagnostics::run_tests()
+  void orderable_move_only_false_positive_diagnostics::run_tests()
   {
     test_regular_semantics();
   }
 
-  void orderable_move_only_false_negative_diagnostics::test_regular_semantics()
+  void orderable_move_only_false_positive_diagnostics::test_regular_semantics()
   {
     {
       using beast = orderable_move_only_beast<int>;

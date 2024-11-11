@@ -1,4 +1,4 @@
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 58
 
 --Regular Semantics--
@@ -6,7 +6,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 71
 
 --Regular Semantics--
@@ -14,7 +14,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 84
 check_semantics return value (x)
 
@@ -22,7 +22,7 @@ check_semantics return value (x)
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 85
 check_semantics return value (y)
 
@@ -30,7 +30,7 @@ check_semantics return value (y)
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 110
 
 --Regular Semantics--
@@ -38,7 +38,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 58
 
 --Regular Semantics--
@@ -46,7 +46,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 71
 
 --Regular Semantics--
@@ -54,7 +54,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 84
 check_semantics return value (x)
 
@@ -62,7 +62,7 @@ check_semantics return value (x)
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 85
 check_semantics return value (y)
 
@@ -70,7 +70,7 @@ check_semantics return value (y)
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 110
 
 --Regular Semantics--
@@ -78,7 +78,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 58
 
 --Regular Semantics--
@@ -86,7 +86,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 71
 
 --Regular Semantics--
@@ -94,7 +94,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 84
 check_semantics return value (x)
 
@@ -102,7 +102,7 @@ check_semantics return value (x)
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 85
 check_semantics return value (y)
 
@@ -110,7 +110,7 @@ check_semantics return value (y)
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 110
 
 --Regular Semantics--
@@ -118,7 +118,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 58
 
 --Regular Semantics--
@@ -126,7 +126,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 71
 
 --Regular Semantics--
@@ -134,7 +134,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 84
 check_semantics return value (x)
 
@@ -142,7 +142,7 @@ check_semantics return value (x)
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 85
 check_semantics return value (y)
 
@@ -150,7 +150,7 @@ check_semantics return value (y)
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 110
 
 --Regular Semantics--
@@ -158,7 +158,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 58
 
 --Regular Semantics--
@@ -166,7 +166,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 71
 
 --Regular Semantics--
@@ -174,7 +174,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 84
 check_semantics return value (x)
 
@@ -182,7 +182,7 @@ check_semantics return value (x)
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 85
 check_semantics return value (y)
 
@@ -190,7 +190,7 @@ check_semantics return value (y)
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 110
 
 --Regular Semantics--
@@ -198,7 +198,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 58
 
 --Regular Semantics--
@@ -206,7 +206,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 71
 
 --Regular Semantics--
@@ -214,7 +214,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 84
 check_semantics return value (x)
 
@@ -222,7 +222,7 @@ check_semantics return value (x)
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 85
 check_semantics return value (y)
 
@@ -230,7 +230,7 @@ check_semantics return value (y)
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 110
 
 --Regular Semantics--
@@ -238,7 +238,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 58
 
 --Regular Semantics--
@@ -246,7 +246,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 71
 
 --Regular Semantics--
@@ -254,7 +254,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 84
 check_semantics return value (x)
 
@@ -262,7 +262,7 @@ check_semantics return value (x)
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 85
 check_semantics return value (y)
 
@@ -270,7 +270,7 @@ check_semantics return value (y)
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 110
 
 --Regular Semantics--
@@ -278,7 +278,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 58
 
 --Regular Semantics--
@@ -286,7 +286,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 71
 
 --Regular Semantics--
@@ -294,7 +294,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 84
 check_semantics return value (x)
 
@@ -302,7 +302,7 @@ check_semantics return value (x)
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 85
 check_semantics return value (y)
 
@@ -310,7 +310,7 @@ check_semantics return value (y)
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp, Line 110
 
 --Regular Semantics--

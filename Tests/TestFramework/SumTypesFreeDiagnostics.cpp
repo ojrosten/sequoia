@@ -15,12 +15,12 @@
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::filesystem::path sum_types_false_positive_free_diagnostics::source_file() const
+  std::filesystem::path sum_types_false_negative_free_diagnostics::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void sum_types_false_positive_free_diagnostics::run_tests()
+  void sum_types_false_negative_free_diagnostics::run_tests()
   {
     test_variant();
     test_optional();
@@ -28,7 +28,7 @@ namespace sequoia::testing
   }
 
 
-  void sum_types_false_positive_free_diagnostics::test_variant()
+  void sum_types_false_negative_free_diagnostics::test_variant()
   {
     {
       using var = std::variant<int, double>;
@@ -67,7 +67,7 @@ namespace sequoia::testing
     }
   }
 
-  void sum_types_false_positive_free_diagnostics::test_optional()
+  void sum_types_false_negative_free_diagnostics::test_optional()
   {
     {
       using opt = std::optional<int>;
@@ -100,7 +100,7 @@ namespace sequoia::testing
     }
   }
 
-  void sum_types_false_positive_free_diagnostics::test_any()
+  void sum_types_false_negative_free_diagnostics::test_any()
   {
     check(equivalence, "Empty std::any", std::any{}, 1);
     check(equivalence, "std::any holding the wrong type", std::any{1},1.0);
@@ -117,19 +117,19 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path sum_types_false_negative_free_diagnostics::source_file() const
+  std::filesystem::path sum_types_false_positive_free_diagnostics::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void sum_types_false_negative_free_diagnostics::run_tests()
+  void sum_types_false_positive_free_diagnostics::run_tests()
   {
     test_variant();
     test_optional();
     test_any();
   }
 
-  void sum_types_false_negative_free_diagnostics::test_variant()
+  void sum_types_false_positive_free_diagnostics::test_variant()
   {
     {
       using var = std::variant<int, double>;
@@ -150,7 +150,7 @@ namespace sequoia::testing
     }
   }
 
-  void sum_types_false_negative_free_diagnostics::test_optional()
+  void sum_types_false_positive_free_diagnostics::test_optional()
   {
     {
       using opt = std::optional<int>;
@@ -176,7 +176,7 @@ namespace sequoia::testing
     }
   }
 
-  void sum_types_false_negative_free_diagnostics::test_any()
+  void sum_types_false_positive_free_diagnostics::test_any()
   {
     check(equivalence, "", std::any{1}, 1);
     check(equivalence, "", std::any{only_equivalence_checkable{1}}, only_equivalence_checkable{1});

@@ -1,11 +1,11 @@
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/ChronoFreeDiagnostics.cpp, Line 46
 
 [std::chrono::duration<long long, std::ratio<1, 1> >]
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/ChronoFreeDiagnostics.cpp, Line 49
 Time point
 

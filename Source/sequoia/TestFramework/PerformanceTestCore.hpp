@@ -182,7 +182,7 @@ namespace sequoia::testing
 
       summary = append_lines(stats("Fast", m_f, sig_f), stats("Slow", m_s, sig_s)).append(summarizer());
 
-      if((test_logger<Mode>::mode == test_mode::false_positive) ? !passed : passed)
+      if((test_logger<Mode>::mode == test_mode::false_negative) ? !passed : passed)
       {
         break;
       }
@@ -275,8 +275,8 @@ namespace sequoia::testing
 
   /*! \anchor performance_test_alias */
   using performance_test                = basic_performance_test<test_mode::standard>;
-  using performance_false_negative_test = basic_performance_test<test_mode::false_negative>;
   using performance_false_positive_test = basic_performance_test<test_mode::false_positive>;
+  using performance_false_negative_test = basic_performance_test<test_mode::false_negative>;
 
   template<concrete_test T>
     requires std::is_base_of_v<basic_performance_test<T::mode>, T>

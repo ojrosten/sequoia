@@ -1,2 +1,2 @@
-Allocation False Positive Diagnostics: Inefficient Operations
-False Positive Checks:                    64;  Failures:  0
+Allocation False Negative Diagnostics: Inefficient Operations
+False Negative Checks:                    64;  Failures:  0

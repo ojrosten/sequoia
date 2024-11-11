@@ -1,4 +1,4 @@
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 87
 
 --Regular Semantics--
@@ -6,7 +6,7 @@ Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 87
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 88
 
 --Regular Semantics--

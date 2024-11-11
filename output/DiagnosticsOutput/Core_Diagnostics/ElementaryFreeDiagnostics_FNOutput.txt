@@ -1,4 +1,4 @@
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 314
 Boolean test
 
@@ -6,7 +6,7 @@ Boolean test
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 316
 Integer test
 
@@ -14,7 +14,7 @@ Integer test
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 317
 Double test
 
@@ -22,7 +22,7 @@ Double test
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 323
 Equality of null pointer with itself
 
@@ -30,7 +30,7 @@ Equality of null pointer with itself
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 324
 Equality of non-null pointer with itself
 
@@ -38,7 +38,7 @@ Equality of non-null pointer with itself
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 325
 Different pointers pointing to the same values
 
@@ -49,7 +49,7 @@ Checking for equivalence with:
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 330
 Built-in arrays of the same length
 
@@ -57,7 +57,7 @@ Built-in arrays of the same length
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 371
 Equality checking
 
@@ -65,7 +65,7 @@ Equality checking
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 336
 Equivalence checking
 
@@ -76,7 +76,7 @@ Checking for equivalence with:
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 337
 Eequivalence checking with advice
 
@@ -87,7 +87,7 @@ Checking for equivalence with:
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 343
 Weak equivalence checking
 
@@ -98,7 +98,7 @@ Checking for weak equivalence with:
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 348
 Weak equivalence checking with advice
 
@@ -109,7 +109,7 @@ Checking for weak equivalence with:
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 356
 Best available for int
 
@@ -117,7 +117,7 @@ Best available for int
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 359
 Best available for only_weakly_checkable
 
@@ -125,7 +125,7 @@ Best available for only_weakly_checkable
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 364
 Best available for only_weakly_checkable
 

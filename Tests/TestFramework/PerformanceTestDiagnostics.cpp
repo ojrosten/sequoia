@@ -22,17 +22,17 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path performance_false_positive_diagnostics::source_file() const
+  std::filesystem::path performance_false_negative_diagnostics::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void performance_false_positive_diagnostics::run_tests()
+  void performance_false_negative_diagnostics::run_tests()
   {
     test_relative_performance();
   }
 
-  void performance_false_positive_diagnostics::test_relative_performance()
+  void performance_false_negative_diagnostics::test_relative_performance()
   {
     check_relative_performance("Performance Test for which fast task is too slow, [1, (2.0, 2.0)",
                                []() { wait(delta_t); },
@@ -48,17 +48,17 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path performance_false_negative_diagnostics::source_file() const
+  std::filesystem::path performance_false_positive_diagnostics::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void performance_false_negative_diagnostics::run_tests()
+  void performance_false_positive_diagnostics::run_tests()
   {
     test_relative_performance();
   }
 
-  void performance_false_negative_diagnostics::test_relative_performance()
+  void performance_false_positive_diagnostics::test_relative_performance()
   {
     check_relative_performance("Performance Test which should pass", []() { wait(delta_t); }, []() { wait(2 * delta_t); }, 1.8, 2.1, 5);
     check_relative_performance("Performance Test which should pass", []() { wait(delta_t); }, []() { wait(4 * delta_t); }, 3.4, 4.1, 5);

@@ -51,5 +51,5 @@ namespace sequoia::testing
   using basic_graph_init_test = basic_test<Mode, graph_init_extender<Mode>>;
 
   using graph_init_test                = basic_graph_init_test<test_mode::standard>;
-  using graph_init_false_positive_test = basic_graph_init_test<test_mode::false_positive>;
+  using graph_init_false_negative_test = basic_graph_init_test<test_mode::false_negative>;
 }

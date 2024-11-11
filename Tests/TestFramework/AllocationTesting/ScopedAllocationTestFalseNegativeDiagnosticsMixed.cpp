@@ -25,25 +25,25 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path scoped_allocation_false_negative_diagnostics_mixed::source_file() const
+  std::filesystem::path scoped_allocation_false_positive_diagnostics_mixed::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void scoped_allocation_false_negative_diagnostics_mixed::run_tests()
+  void scoped_allocation_false_positive_diagnostics_mixed::run_tests()
   {
     do_allocation_tests();
   }
 
   template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
-  void scoped_allocation_false_negative_diagnostics_mixed::test_allocation()
+  void scoped_allocation_false_positive_diagnostics_mixed::test_allocation()
   {
     test_perfectly_mixed<PropagateCopy, PropagateMove, PropagateSwap>();
     test_weirdly_mixed<PropagateCopy, PropagateMove, PropagateSwap>();
   }
 
   template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
-  void scoped_allocation_false_negative_diagnostics_mixed::test_perfectly_mixed()
+  void scoped_allocation_false_positive_diagnostics_mixed::test_perfectly_mixed()
   {
     using inner_allocator = shared_counting_allocator<std::shared_ptr<int>, PropagateCopy, PropagateMove, PropagateSwap>;
     using beast = perfectly_mixed_beast<inner_allocator>;
@@ -136,7 +136,7 @@ namespace sequoia::testing
   }
 
   template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
-  void scoped_allocation_false_negative_diagnostics_mixed::test_weirdly_mixed()
+  void scoped_allocation_false_positive_diagnostics_mixed::test_weirdly_mixed()
   {
     using inner_allocator = shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>;
     using beast = weirdly_mixed_beast<inner_allocator>;

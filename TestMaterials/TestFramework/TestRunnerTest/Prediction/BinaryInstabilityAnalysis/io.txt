@@ -2,23 +2,23 @@
 Running tests, synchronously...
 
 Suite:
-[Execution Time: 1.33ms]
+[Execution Time: 1.83ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 
 -----------Grand Totals-----------
-[Total Run Time: 2.91ms]
-[Execution Time: 1.33ms]
+[Total Run Time: 3.93ms]
+[Execution Time: 1.83ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
-	False Negative Checks:                     0;  Failures:  0
-	False Negative Performance Checks:         0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
 
 Running tests, synchronously...
 
 Suite:
-[Execution Time: 1.35ms]
+[Execution Time: 993us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 132
@@ -31,14 +31,14 @@ Suite:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 3.93ms]
-[Execution Time: 1.35ms]
+[Total Run Time: 8.98ms]
+[Execution Time: 993us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
-	False Negative Checks:                     0;  Failures:  0
-	False Negative Performance Checks:         0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
 
 Instability detected in file "TestRunnerTest.cpp"
 Outcome frequencies:

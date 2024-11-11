@@ -1,4 +1,4 @@
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/StringFreeDiagnostics.cpp, Line 117
 Differing strings
 
@@ -6,7 +6,7 @@ Differing strings
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/StringFreeDiagnostics.cpp, Line 118
 
 Comparison performed using:
@@ -16,7 +16,7 @@ Checking for equivalence with:
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/StringFreeDiagnostics.cpp, Line 125
 
 Comparison performed using:
@@ -26,7 +26,7 @@ Checking for equivalence with:
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/StringFreeDiagnostics.cpp, Line 130
 
 Comparison performed using:

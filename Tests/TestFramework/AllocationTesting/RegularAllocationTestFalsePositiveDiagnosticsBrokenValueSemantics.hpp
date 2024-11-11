@@ -13,11 +13,11 @@
 
 namespace sequoia::testing
 {
-  class allocation_false_positive_diagnostics_broken_value_semantics final
-    : public regular_allocation_false_positive_test
+  class allocation_false_negative_diagnostics_broken_value_semantics final
+    : public regular_allocation_false_negative_test
   {
   public:
-    using regular_allocation_false_positive_test::regular_allocation_false_positive_test;
+    using regular_allocation_false_negative_test::regular_allocation_false_negative_test;
 
     [[nodiscard]]
     std::filesystem::path source_file() const;

@@ -1,2 +1,2 @@
-Allocation False Positive Diagnostics: Broken Value Semantics
-False Positive Checks:                    24;  Failures:  0
+Allocation False Negative Diagnostics: Broken Value Semantics
+False Negative Checks:                    24;  Failures:  0

@@ -1,4 +1,4 @@
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/ComplexFreeDiagnostics.cpp, Line 42
 
 [std::complex<double>]

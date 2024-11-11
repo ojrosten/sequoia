@@ -1,4 +1,4 @@
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/ExceptionsFreeDiagnostics.cpp, Line 36
 
 Expected Exception Type:
@@ -6,7 +6,7 @@ Expected Exception Type:
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/ExceptionsFreeDiagnostics.cpp, Line 38
 
 Expected Exception Type:

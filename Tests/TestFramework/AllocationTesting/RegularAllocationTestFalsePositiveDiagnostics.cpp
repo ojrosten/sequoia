@@ -17,24 +17,24 @@
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::filesystem::path allocation_false_positive_diagnostics::source_file() const
+  std::filesystem::path allocation_false_negative_diagnostics::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void allocation_false_positive_diagnostics::run_tests()
+  void allocation_false_negative_diagnostics::run_tests()
   {
     do_allocation_tests();
   }
 
   template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
-  void allocation_false_positive_diagnostics::test_allocation()
+  void allocation_false_negative_diagnostics::test_allocation()
   {
     test_regular_semantics<PropagateCopy, PropagateMove, PropagateSwap>();
   }
 
   template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
-  void allocation_false_positive_diagnostics::test_regular_semantics()
+  void allocation_false_negative_diagnostics::test_regular_semantics()
   {
     {
       using beast = perfectly_normal_beast<int, shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;

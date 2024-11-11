@@ -13,12 +13,12 @@
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::filesystem::path exceptions_false_positive_free_diagnostics::source_file() const
+  std::filesystem::path exceptions_false_negative_free_diagnostics::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void exceptions_false_positive_free_diagnostics::run_tests()
+  void exceptions_false_negative_free_diagnostics::run_tests()
   {
     check_exception_thrown<std::runtime_error>("Exception expected but nothing thrown", []() {});
     check_exception_thrown<std::runtime_error>("Exception thrown but of wrong type", []() { throw std::logic_error("Error"); });
@@ -26,12 +26,12 @@ namespace sequoia::testing
   }
   
   [[nodiscard]]
-  std::filesystem::path exceptions_false_negative_free_diagnostics::source_file() const
+  std::filesystem::path exceptions_false_positive_free_diagnostics::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void exceptions_false_negative_free_diagnostics::run_tests()
+  void exceptions_false_positive_free_diagnostics::run_tests()
   {
     check_exception_thrown<std::runtime_error>("", []() { throw std::runtime_error("Error"); });
 

@@ -4,7 +4,7 @@ Running tests...
 Failing Suite:
 	Free Suite:
 		Free Test
-		[Execution Time: 97.4us]
+		[Execution Time: 222us]
 			Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
 			Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 74
@@ -19,10 +19,10 @@ Failing Suite:
 
 	Diagnostics Suite:
 		False positive Test
-		[Execution Time: 53.7us]
-			False Positive Checks:                     1;  Failures:  1
+		[Execution Time: 189us]
+			False Negative Checks:                     1;  Failures:  1
 
-			False Positive Failure:
+			False Negative Failure:
 			Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 91
 			False positive failure
 
@@ -31,8 +31,8 @@ Failing Suite:
 			=======================================
 
 		False negative Test
-		[Execution Time: 71us]
-			False Negative Checks:                     1;  Failures:  1
+		[Execution Time: 227us]
+			False Positive Checks:                     1;  Failures:  1
 
 			Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 108
 			False negative failure
@@ -46,11 +46,11 @@ Failing Suite:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 3.86ms]
-[Execution Time: 335us]
+[Total Run Time: 5.46ms]
+[Execution Time: 344us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
-	False Negative Checks:                     1;  Failures:  1
-	False Negative Performance Checks:         0;  Failures:  0
 	False Positive Checks:                     1;  Failures:  1
 	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     1;  Failures:  1
+	False Negative Performance Checks:         0;  Failures:  0

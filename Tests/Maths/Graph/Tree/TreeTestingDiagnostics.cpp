@@ -16,12 +16,12 @@ namespace sequoia::testing
   using namespace maths;
 
   [[nodiscard]]
-  std::filesystem::path tree_false_positive_test::source_file() const
+  std::filesystem::path tree_false_negative_test::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void tree_false_positive_test::run_tests()
+  void tree_false_negative_test::run_tests()
   {
     test_tree<directed_tree<tree_link_direction::forward, null_weight, int>>();
     test_tree<directed_tree<tree_link_direction::backward, null_weight, int>>();
@@ -30,7 +30,7 @@ namespace sequoia::testing
   }
 
   template<maths::dynamic_tree Tree>
-  void tree_false_positive_test::test_tree()
+  void tree_false_negative_test::test_tree()
   {
     using tree_type = Tree;
     using node_weight_type = typename  Tree::node_weight_type;

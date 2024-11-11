@@ -1,2 +1,2 @@
-Scoped Allocation False Negative Diagnostics
-False Negative Checks:                    40;  Failures:  0
+Scoped Allocation False Positive Diagnostics
+False Positive Checks:                    40;  Failures:  0

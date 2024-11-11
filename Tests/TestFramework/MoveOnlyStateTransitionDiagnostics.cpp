@@ -60,18 +60,18 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path move_only_state_transition_false_negative_diagnostics::source_file() const
+  std::filesystem::path move_only_state_transition_false_positive_diagnostics::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void move_only_state_transition_false_negative_diagnostics::run_tests()
+  void move_only_state_transition_false_positive_diagnostics::run_tests()
   {
     test_orderable();
     test_equality_comparable();
   }
 
-  void move_only_state_transition_false_negative_diagnostics::test_orderable()
+  void move_only_state_transition_false_positive_diagnostics::test_orderable()
   {
     using foo_t     = foo<double>;
     using foo_graph = transition_checker<foo_t>::transition_graph;
@@ -112,7 +112,7 @@ namespace sequoia::testing
     }
   }
 
-  void move_only_state_transition_false_negative_diagnostics::test_equality_comparable()
+  void move_only_state_transition_false_positive_diagnostics::test_equality_comparable()
   {
     using cmplx = std::complex<double>;
     using foo_t = foo<cmplx>;
@@ -156,18 +156,18 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path move_only_state_transition_false_positive_diagnostics::source_file() const
+  std::filesystem::path move_only_state_transition_false_negative_diagnostics::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void move_only_state_transition_false_positive_diagnostics::run_tests()
+  void move_only_state_transition_false_negative_diagnostics::run_tests()
   {
     test_orderable();
     test_equality_comparable();
   }
 
-  void move_only_state_transition_false_positive_diagnostics::test_orderable()
+  void move_only_state_transition_false_negative_diagnostics::test_orderable()
   {
     using foo_t     = foo<double>;
     using foo_graph = transition_checker<foo_t>::transition_graph;
@@ -191,7 +191,7 @@ namespace sequoia::testing
     transition_checker<foo_t>::check(report("Mistake in transition functions"), g, checker);
   }
 
-  void move_only_state_transition_false_positive_diagnostics::test_equality_comparable()
+  void move_only_state_transition_false_negative_diagnostics::test_equality_comparable()
   {
     using cmplx = std::complex<double>;
     using foo_t = foo<cmplx>;

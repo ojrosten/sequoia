@@ -14,12 +14,12 @@ namespace sequoia::testing
   using namespace object;
 
   [[nodiscard]]
-  std::filesystem::path factory_false_positive_test::source_file() const
+  std::filesystem::path factory_false_negative_test::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void factory_false_positive_test::run_tests()
+  void factory_false_negative_test::run_tests()
   {
     {
       using prediction_type = std::array<std::pair<std::string, std::variant<int>>, 1>;

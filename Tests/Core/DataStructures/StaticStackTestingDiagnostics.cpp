@@ -13,18 +13,18 @@
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::filesystem::path test_static_stack_false_positives::source_file() const
+  std::filesystem::path test_static_stack_false_negatives::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void test_static_stack_false_positives::run_tests()
+  void test_static_stack_false_negatives::run_tests()
   {
     check_depth_0();
     check_depth_1();
   }
 
-  void test_static_stack_false_positives::check_depth_0()
+  void test_static_stack_false_negatives::check_depth_0()
   {
     using namespace data_structures;
 
@@ -33,7 +33,7 @@ namespace sequoia::testing
     check(equality, "", s.size(), 1_sz);
   }
 
-  void test_static_stack_false_positives::check_depth_1()
+  void test_static_stack_false_negatives::check_depth_1()
   {
     using namespace data_structures;
 

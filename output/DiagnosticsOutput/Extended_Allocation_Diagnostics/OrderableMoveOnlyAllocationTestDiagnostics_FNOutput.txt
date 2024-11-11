@@ -1,4 +1,4 @@
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/OrderableMoveOnlyAllocationTestDiagnostics.cpp, Line 40
 
 --Move-only Semantics--
@@ -6,7 +6,7 @@ Tests/TestFramework/AllocationTesting/OrderableMoveOnlyAllocationTestDiagnostics
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/OrderableMoveOnlyAllocationTestDiagnostics.cpp, Line 47
 
 --Move-only Semantics--
@@ -14,7 +14,7 @@ Tests/TestFramework/AllocationTesting/OrderableMoveOnlyAllocationTestDiagnostics
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/OrderableMoveOnlyAllocationTestDiagnostics.cpp, Line 40
 
 --Move-only Semantics--
@@ -22,7 +22,7 @@ Tests/TestFramework/AllocationTesting/OrderableMoveOnlyAllocationTestDiagnostics
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/OrderableMoveOnlyAllocationTestDiagnostics.cpp, Line 47
 
 --Move-only Semantics--
@@ -30,7 +30,7 @@ Tests/TestFramework/AllocationTesting/OrderableMoveOnlyAllocationTestDiagnostics
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/OrderableMoveOnlyAllocationTestDiagnostics.cpp, Line 40
 
 --Move-only Semantics--
@@ -38,7 +38,7 @@ Tests/TestFramework/AllocationTesting/OrderableMoveOnlyAllocationTestDiagnostics
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/OrderableMoveOnlyAllocationTestDiagnostics.cpp, Line 47
 
 --Move-only Semantics--
@@ -46,7 +46,7 @@ Tests/TestFramework/AllocationTesting/OrderableMoveOnlyAllocationTestDiagnostics
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/OrderableMoveOnlyAllocationTestDiagnostics.cpp, Line 40
 
 --Move-only Semantics--
@@ -54,7 +54,7 @@ Tests/TestFramework/AllocationTesting/OrderableMoveOnlyAllocationTestDiagnostics
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/OrderableMoveOnlyAllocationTestDiagnostics.cpp, Line 47
 
 --Move-only Semantics--

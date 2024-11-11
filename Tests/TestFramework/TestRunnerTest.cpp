@@ -75,10 +75,10 @@ namespace sequoia::testing
       }
     };
 
-    class failing_fp_test final : public free_false_positive_test
+    class failing_fp_test final : public free_false_negative_test
     {
     public:
-      using free_false_positive_test::free_false_positive_test;
+      using free_false_negative_test::free_false_negative_test;
 
       [[nodiscard]]
       std::filesystem::path source_file() const
@@ -92,10 +92,10 @@ namespace sequoia::testing
       }
     };
 
-    class failing_fn_test final : public free_false_negative_test
+    class failing_fn_test final : public free_false_positive_test
     {
     public:
-      using free_false_negative_test::free_false_negative_test;
+      using free_false_positive_test::free_false_positive_test;
 
       [[nodiscard]]
       std::filesystem::path source_file() const

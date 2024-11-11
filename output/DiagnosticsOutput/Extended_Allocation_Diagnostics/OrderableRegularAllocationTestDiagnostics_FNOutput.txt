@@ -1,4 +1,4 @@
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 40
 
 --Ordered Semantics--
@@ -6,7 +6,7 @@ Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 47
 
 --Ordered Semantics--
@@ -14,7 +14,7 @@ Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 40
 
 --Ordered Semantics--
@@ -22,7 +22,7 @@ Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 47
 
 --Ordered Semantics--
@@ -30,7 +30,7 @@ Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 40
 
 --Ordered Semantics--
@@ -38,7 +38,7 @@ Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 47
 
 --Ordered Semantics--
@@ -46,7 +46,7 @@ Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 40
 
 --Ordered Semantics--
@@ -54,7 +54,7 @@ Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 47
 
 --Ordered Semantics--
@@ -62,7 +62,7 @@ Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 40
 
 --Ordered Semantics--
@@ -70,7 +70,7 @@ Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 47
 
 --Ordered Semantics--
@@ -78,7 +78,7 @@ Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 40
 
 --Ordered Semantics--
@@ -86,7 +86,7 @@ Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 47
 
 --Ordered Semantics--
@@ -94,7 +94,7 @@ Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 40
 
 --Ordered Semantics--
@@ -102,7 +102,7 @@ Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 47
 
 --Ordered Semantics--
@@ -110,7 +110,7 @@ Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 40
 
 --Ordered Semantics--
@@ -118,7 +118,7 @@ Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 47
 
 --Ordered Semantics--

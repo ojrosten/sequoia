@@ -21,25 +21,25 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path scoped_allocation_false_negative_diagnostics::source_file() const
+  std::filesystem::path scoped_allocation_false_positive_diagnostics::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void scoped_allocation_false_negative_diagnostics::run_tests()
+  void scoped_allocation_false_positive_diagnostics::run_tests()
   {
     do_allocation_tests();
   }
 
   template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
-  void scoped_allocation_false_negative_diagnostics::test_allocation()
+  void scoped_allocation_false_positive_diagnostics::test_allocation()
   {
     test_perfectly_scoped<PropagateCopy, PropagateMove, PropagateSwap>();
     test_perfectly_branched<PropagateCopy, PropagateMove, PropagateSwap>();
   }
 
   template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
-  void scoped_allocation_false_negative_diagnostics::test_perfectly_scoped()
+  void scoped_allocation_false_positive_diagnostics::test_perfectly_scoped()
   {
     using beast = perfectly_scoped_beast<shared_counting_allocator<char, PropagateCopy, PropagateMove, PropagateSwap>>;
 
@@ -89,7 +89,7 @@ namespace sequoia::testing
   }
 
   template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
-  void scoped_allocation_false_negative_diagnostics::test_perfectly_branched()
+  void scoped_allocation_false_positive_diagnostics::test_perfectly_branched()
   {
     using inner_allocator = shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>;
     using inner_beast = perfectly_normal_beast<int, inner_allocator>;

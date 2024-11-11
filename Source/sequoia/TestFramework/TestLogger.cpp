@@ -114,7 +114,7 @@ namespace sequoia::testing
         auto fpMessageMaker{
           [&logger](){
             
-            auto mess{append_lines("False Positive Failure:", logger.top_level_message())};
+            auto mess{append_lines("False Negative Failure:", logger.top_level_message())};
             end_block(mess, 2_linebreaks, footer());
 
             return mess;
@@ -122,15 +122,15 @@ namespace sequoia::testing
         };
 
         const bool modeSpecificFailure{
-             ((mode == test_mode::false_positive) && !failure_detected())
-          || ((mode != test_mode::false_positive) && failure_detected())
+             ((mode == test_mode::false_negative) && !failure_detected())
+          || ((mode != test_mode::false_negative) && failure_detected())
         };
 
         if(modeSpecificFailure)
         {
-          logger.log_top_level_failure((mode == test_mode::false_positive) ? fpMessageMaker() : "");
+          logger.log_top_level_failure((mode == test_mode::false_negative) ? fpMessageMaker() : "");
         }
-        else if (mode == test_mode::false_negative)
+        else if (mode == test_mode::false_positive)
         {
           if(!critical_failure_detected())
             logger.append_to_diagnostics_output(fpMessageMaker());
@@ -202,7 +202,7 @@ namespace sequoia::testing
       m_SentinelDepth.back().message.append(std::move(message));
     }
 
-    if(m_Mode == test_mode::false_positive)
+    if(m_Mode == test_mode::false_negative)
     {
       m_Results.failure_messages.push_back(failure_info{m_Results.top_level_checks, std::string{message}});
     }
@@ -248,7 +248,7 @@ namespace sequoia::testing
 
   failure_output& test_logger_base::output_channel(const is_critical isCritical) noexcept
   {
-    const bool toMessages{(m_Mode != test_mode::false_positive) || (isCritical == is_critical::yes)};
+    const bool toMessages{(m_Mode != test_mode::false_negative) || (isCritical == is_critical::yes)};
     return toMessages ? m_Results.failure_messages : m_Results.diagnostics_output;
   }
 
@@ -259,8 +259,8 @@ namespace sequoia::testing
   }
 
   template class test_logger<test_mode::standard>;
-  template class test_logger<test_mode::false_positive>;
   template class test_logger<test_mode::false_negative>;
+  template class test_logger<test_mode::false_positive>;
   
   //================================== log_summary ==================================//
 
@@ -284,21 +284,21 @@ namespace sequoia::testing
       m_StandardDeepChecks          = logger.results().deep_checks - logger.results().performance_checks;
       m_StandardPerformanceChecks   = logger.results().performance_checks;
       break;
-    case test_mode::false_negative:
-      m_FalseNegativeFailures            = logger.results().top_level_failures - logger.results().performance_failures;
-      m_FalseNegativePerformanceFailures = logger.results().performance_failures;
-      m_FalseNegativeChecks              = logger.results().top_level_checks - logger.results().performance_checks;
-      m_FalseNegativePerformanceChecks   = logger.results().performance_checks;
-      break;
     case test_mode::false_positive:
-      m_FalsePositivePerformanceFailures = logger.results().performance_checks - logger.results().performance_failures;
-      m_FalsePositiveFailures            = logger.results().top_level_failures - m_FalsePositivePerformanceFailures;
+      m_FalsePositiveFailures            = logger.results().top_level_failures - logger.results().performance_failures;
+      m_FalsePositivePerformanceFailures = logger.results().performance_failures;
       m_FalsePositiveChecks              = logger.results().top_level_checks - logger.results().performance_checks;
       m_FalsePositivePerformanceChecks   = logger.results().performance_checks;
       break;
+    case test_mode::false_negative:
+      m_FalseNegativePerformanceFailures = logger.results().performance_checks - logger.results().performance_failures;
+      m_FalseNegativeFailures            = logger.results().top_level_failures - m_FalseNegativePerformanceFailures;
+      m_FalseNegativeChecks              = logger.results().top_level_checks - logger.results().performance_checks;
+      m_FalseNegativePerformanceChecks   = logger.results().performance_checks;
+      break;
     }
   }
-  
+
   void log_summary::clear() noexcept
   {
     *this = log_summary{""};
@@ -308,11 +308,11 @@ namespace sequoia::testing
   std::size_t log_summary::soft_failures() const noexcept
   {
     return standard_top_level_failures()
-         + false_positive_failures()
          + false_negative_failures()
+         + false_positive_failures()
          + standard_performance_failures()
-         + false_positive_performance_failures()
-         + false_negative_performance_failures();
+         + false_negative_performance_failures()
+         + false_positive_performance_failures();
   }
 
   log_summary& log_summary::operator+=(const log_summary& rhs)
@@ -328,18 +328,18 @@ namespace sequoia::testing
     m_StandardTopLevelChecks         += rhs.m_StandardTopLevelChecks;
     m_StandardDeepChecks             += rhs.m_StandardDeepChecks;
     m_StandardPerformanceChecks      += rhs.m_StandardPerformanceChecks;
-    m_FalseNegativeChecks            += rhs.m_FalseNegativeChecks;
     m_FalsePositiveChecks            += rhs.m_FalsePositiveChecks;
-    m_FalseNegativePerformanceChecks += rhs.m_FalseNegativePerformanceChecks;
+    m_FalseNegativeChecks            += rhs.m_FalseNegativeChecks;
     m_FalsePositivePerformanceChecks += rhs.m_FalsePositivePerformanceChecks;
+    m_FalseNegativePerformanceChecks += rhs.m_FalseNegativePerformanceChecks;
 
     m_StandardTopLevelFailures         += rhs.m_StandardTopLevelFailures;
     m_StandardDeepFailures             += rhs.m_StandardDeepFailures;
     m_StandardPerformanceFailures      += rhs.m_StandardPerformanceFailures;
-    m_FalseNegativeFailures            += rhs.m_FalseNegativeFailures;
     m_FalsePositiveFailures            += rhs.m_FalsePositiveFailures;
-    m_FalseNegativePerformanceFailures += rhs.m_FalseNegativePerformanceFailures;
+    m_FalseNegativeFailures            += rhs.m_FalseNegativeFailures;
     m_FalsePositivePerformanceFailures += rhs.m_FalsePositivePerformanceFailures;
+    m_FalseNegativePerformanceFailures += rhs.m_FalseNegativePerformanceFailures;
 
     m_CriticalFailures   += rhs.m_CriticalFailures;
     m_ExceptionsInFlight += rhs.m_ExceptionsInFlight;

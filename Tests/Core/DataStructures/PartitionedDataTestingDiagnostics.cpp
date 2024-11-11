@@ -12,18 +12,18 @@
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::filesystem::path partitioned_data_false_positive_test::source_file() const
+  std::filesystem::path partitioned_data_false_negative_test::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void partitioned_data_false_positive_test::run_tests()
+  void partitioned_data_false_negative_test::run_tests()
   {
     test_set<int>();
     test_set<std::vector<double>>();
   }
 
-  template<class T> void partitioned_data_false_positive_test::test_set()
+  template<class T> void partitioned_data_false_negative_test::test_set()
   {
     using namespace data_structures;
     using namespace object;
@@ -32,7 +32,7 @@ namespace sequoia::testing
     test<partitioned_sequence<T>>();
   }
 
-  template<class PartitionedData> void partitioned_data_false_positive_test::test()
+  template<class PartitionedData> void partitioned_data_false_negative_test::test()
   {
     using value_type = typename PartitionedData::value_type;
     using expected_t = std::initializer_list<std::initializer_list<value_type>>;

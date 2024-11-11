@@ -1,4 +1,4 @@
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 274
 Empty vector check which should pass
 
@@ -6,7 +6,7 @@ Empty vector check which should pass
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 275
 One element vector check which should pass
 
@@ -14,7 +14,7 @@ One element vector check which should pass
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 276
 Multi-element vector comparison which should pass
 
@@ -22,13 +22,13 @@ Multi-element vector comparison which should pass
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 280
 Iterators demarcate identical elements
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 283
 Advice for range equivalence, where the containerized form is explicitly specialized
 
@@ -39,7 +39,7 @@ Checking for equivalence with:
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 289
 Advice for range equivalence, where the containerized form is not explicitly specialized
 
@@ -47,7 +47,7 @@ Advice for range equivalence, where the containerized form is not explicitly spe
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 295
 
 Comparison performed using:
@@ -57,14 +57,14 @@ Checking for weak equivalence with:
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 298
 
 [std::vector<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> >, std::allocator<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > > >]
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 300
 Advice for weak equivalence checking
 
@@ -75,56 +75,56 @@ Checking for weak equivalence with:
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 305
 
 [std::pair<int, double>]
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 307
 
 [std::tuple<int, double, float>]
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 312
 
 [std::pair<int, double>]
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 318
 
 [std::pair<int, sequoia::testing::only_weakly_checkable>]
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 324
 
 [std::pair<int, sequoia::testing::only_equivalence_checkable>]
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 325
 
 [std::pair<int, sequoia::testing::only_equivalence_checkable>]
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 339
 
 [std::tuple<std::vector<std::pair<int, float>, std::allocator<std::pair<int, float> > >, std::set<double, std::less<double>, std::allocator<double> >, std::complex<double> >]
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 341
 
 [std::vector<std::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::basic_string<char, std::char_traits<char>, std::allocator<char> > > >]

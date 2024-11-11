@@ -2,9 +2,9 @@
 Running tests, synchronously...
 
 Utilities:
-[Execution Time: 18.1us]
+[Execution Time: 16.6us]
 Useful Things:
-[Execution Time: 2.04ms]
+[Execution Time: 993us]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
 	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 21
@@ -17,36 +17,36 @@ Useful Things:
 	=======================================
 
 Bar:
-[Execution Time: 26.2us]
+[Execution Time: 15.4us]
 Unstable:
-[Execution Time: 1.02ms]
+[Execution Time: 668us]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 Maybe:
-[Execution Time: 50.6us]
+[Execution Time: 34.3us]
 Oldschool:
-[Execution Time: 47.9us]
+[Execution Time: 43.4us]
 Probability:
-[Execution Time: 13.3ms]
+[Execution Time: 9.61ms]
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 39]
-	False Positive Checks:                     2;  Failures:  0
+	False Negative Checks:                     2;  Failures:  0
 Foo:
-[Execution Time: 17.6ms]
+[Execution Time: 12.8ms]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 38]
 Unique Thing:
-[Execution Time: 11.8ms]
+[Execution Time: 9.43ms]
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 35]
-	False Positive Checks:                     2;  Failures:  0
+	False Negative Checks:                     2;  Failures:  0
 Container:
-[Execution Time: 43us]
+[Execution Time: 31.8us]
 House:
-[Execution Time: 17.6us]
+[Execution Time: 14.9us]
 
 -----------Grand Totals-----------
-[Total Run Time: 67ms]
-[Execution Time: 46ms]
+[Total Run Time: 49ms]
+[Execution Time: 33.7ms]
 	Standard Top Level Checks:                12;  Failures:  1  [Deep checks: 116]
 	Standard Performance Checks:               0;  Failures:  0
-	False Negative Checks:                     0;  Failures:  0
-	False Negative Performance Checks:         0;  Failures:  0
-	False Positive Checks:                     4;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     4;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0

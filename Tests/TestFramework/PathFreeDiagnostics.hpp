@@ -15,10 +15,10 @@ namespace sequoia::testing
 {
   log_summary& postprocess(log_summary& summary, const std::filesystem::path& projectPath);
 
-  class path_false_positive_free_diagnostics final : public free_false_positive_test
+  class path_false_negative_free_diagnostics final : public free_false_negative_test
   {
   public:
-    using free_false_positive_test::free_false_positive_test;
+    using free_false_negative_test::free_false_negative_test;
 
     [[nodiscard]]
     std::filesystem::path source_file() const;
@@ -31,10 +31,10 @@ namespace sequoia::testing
     void test_paths();
   };
   
-  class path_false_negative_free_diagnostics final : public free_false_negative_test
+  class path_false_positive_free_diagnostics final : public free_false_positive_test
   {
   public:
-    using free_false_negative_test::free_false_negative_test;
+    using free_false_positive_test::free_false_positive_test;
 
     [[nodiscard]]
     std::filesystem::path source_file() const;

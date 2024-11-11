@@ -60,31 +60,31 @@ int main(int argc, char** argv)
 
 		runner.add_test_suite(
 			"Maybe",
-			maybe_false_positive_test{"False Positive Test"},
+			maybe_false_negative_test{"False Negative Test"},
 			maybe_test{"Unit Test"}
 		);
 
 		runner.add_test_suite(
 			"Oldschool",
-			oldschool_false_positive_test{"False Positive Test"},
+			oldschool_false_negative_test{"False Negative Test"},
 			oldschool_test{"Unit Test"}
 		);
 
 		runner.add_test_suite(
 			"Probability",
-			probability_false_positive_test{"False Positive Test"},
+			probability_false_negative_test{"False Negative Test"},
 			probability_test{"Unit Test"}
 		);
 
 		runner.add_test_suite(
 			"Foo",
-			foo_false_positive_test{"False Positive Test"},
+			foo_false_negative_test{"False Negative Test"},
 			foo_test{"Unit Test"}
 		);
 
 		runner.add_test_suite(
 			"Unique Thing",
-			unique_thing_false_positive_test{"False Positive Test"},
+			unique_thing_false_negative_test{"False Negative Test"},
 			unique_thing_test{"Unit Test"}
 		);
 

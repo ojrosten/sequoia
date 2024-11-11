@@ -5,11 +5,11 @@ Probability:
 House:
 
 -----------Grand Totals-----------
-[Total Run Time: 3.43ms]
-[Execution Time: 245us]
+[Total Run Time: 3.11ms]
+[Execution Time: 162us]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
-	False Negative Checks:                     0;  Failures:  0
-	False Negative Performance Checks:         0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0

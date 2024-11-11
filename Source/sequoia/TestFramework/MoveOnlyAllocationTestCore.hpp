@@ -171,6 +171,6 @@ namespace sequoia::testing
 
    /*! \anchor move_only_allocation_test_alias */
   using move_only_allocation_test                = basic_move_only_allocation_test<test_mode::standard>;
-  using move_only_allocation_false_negative_test = basic_move_only_allocation_test<test_mode::false_negative>;
   using move_only_allocation_false_positive_test = basic_move_only_allocation_test<test_mode::false_positive>;
+  using move_only_allocation_false_negative_test = basic_move_only_allocation_test<test_mode::false_negative>;
 }

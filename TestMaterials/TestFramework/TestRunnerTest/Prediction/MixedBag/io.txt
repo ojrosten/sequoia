@@ -2,87 +2,11 @@
 Running tests, synchronously...
 
 Suite:
-[Execution Time: 4.02ms]
-	Standard Top Level Checks:                 5;  Failures:  1  [Deep checks: 5]
-
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 212
-	Always fails
-
-	[bool]
-	check failed
-
-	=======================================
-
-
------------Grand Totals-----------
-[Total Run Time: 8.69ms]
-[Execution Time: 4.02ms]
-	Standard Top Level Checks:                 5;  Failures:  1  [Deep checks: 5]
-	Standard Performance Checks:               0;  Failures:  0
-	False Negative Checks:                     0;  Failures:  0
-	False Negative Performance Checks:         0;  Failures:  0
-	False Positive Checks:                     0;  Failures:  0
-	False Positive Performance Checks:         0;  Failures:  0
-
-Running tests, synchronously...
-
-Suite:
-[Execution Time: 4.55ms]
-	Standard Top Level Checks:                 5;  Failures:  3  [Deep checks: 5]
-
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 212
-	Always fails
-
-	[bool]
-	check failed
-
-	=======================================
-
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 132
-	Flipper
-
-	[bool]
-	check failed
-
-	=======================================
-
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 175
-	Period 2: Pass/Fail/Pass
-
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
-
-	=======================================
-
-
------------Grand Totals-----------
-[Total Run Time: 11.2ms]
-[Execution Time: 4.55ms]
-	Standard Top Level Checks:                 5;  Failures:  3  [Deep checks: 5]
-	Standard Performance Checks:               0;  Failures:  0
-	False Negative Checks:                     0;  Failures:  0
-	False Negative Performance Checks:         0;  Failures:  0
-	False Positive Checks:                     0;  Failures:  0
-	False Positive Performance Checks:         0;  Failures:  0
-
-Running tests, synchronously...
-
-Suite:
 [Execution Time: 4.59ms]
-	Standard Top Level Checks:                 5;  Failures:  2  [Deep checks: 5]
+	Standard Top Level Checks:                 5;  Failures:  1  [Deep checks: 5]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 212
 	Always fails
-
-	[bool]
-	check failed
-
-	=======================================
-
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 176
-	Period 3: Pass/Pass/Fail
 
 	[bool]
 	check failed
@@ -93,17 +17,17 @@ Suite:
 -----------Grand Totals-----------
 [Total Run Time: 10.8ms]
 [Execution Time: 4.59ms]
-	Standard Top Level Checks:                 5;  Failures:  2  [Deep checks: 5]
+	Standard Top Level Checks:                 5;  Failures:  1  [Deep checks: 5]
 	Standard Performance Checks:               0;  Failures:  0
-	False Negative Checks:                     0;  Failures:  0
-	False Negative Performance Checks:         0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
 
 Running tests, synchronously...
 
 Suite:
-[Execution Time: 4.17ms]
+[Execution Time: 4.15ms]
 	Standard Top Level Checks:                 5;  Failures:  3  [Deep checks: 5]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 212
@@ -134,19 +58,95 @@ Suite:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 12.7ms]
-[Execution Time: 4.17ms]
+[Total Run Time: 12.3ms]
+[Execution Time: 4.15ms]
 	Standard Top Level Checks:                 5;  Failures:  3  [Deep checks: 5]
 	Standard Performance Checks:               0;  Failures:  0
-	False Negative Checks:                     0;  Failures:  0
-	False Negative Performance Checks:         0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
 
 Running tests, synchronously...
 
 Suite:
-[Execution Time: 4.26ms]
+[Execution Time: 4.29ms]
+	Standard Top Level Checks:                 5;  Failures:  2  [Deep checks: 5]
+
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 212
+	Always fails
+
+	[bool]
+	check failed
+
+	=======================================
+
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 176
+	Period 3: Pass/Pass/Fail
+
+	[bool]
+	check failed
+
+	=======================================
+
+
+-----------Grand Totals-----------
+[Total Run Time: 11.7ms]
+[Execution Time: 4.29ms]
+	Standard Top Level Checks:                 5;  Failures:  2  [Deep checks: 5]
+	Standard Performance Checks:               0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
+
+Running tests, synchronously...
+
+Suite:
+[Execution Time: 4.08ms]
+	Standard Top Level Checks:                 5;  Failures:  3  [Deep checks: 5]
+
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 212
+	Always fails
+
+	[bool]
+	check failed
+
+	=======================================
+
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 132
+	Flipper
+
+	[bool]
+	check failed
+
+	=======================================
+
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 175
+	Period 2: Pass/Fail/Pass
+
+	[int]
+	operator== returned false
+	Obtained : 0
+	Predicted: 1
+
+	=======================================
+
+
+-----------Grand Totals-----------
+[Total Run Time: 9.77ms]
+[Execution Time: 4.08ms]
+	Standard Top Level Checks:                 5;  Failures:  3  [Deep checks: 5]
+	Standard Performance Checks:               0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
+
+Running tests, synchronously...
+
+Suite:
+[Execution Time: 3.58ms]
 	Standard Top Level Checks:                 5;  Failures:  1  [Deep checks: 5]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 212
@@ -159,19 +159,19 @@ Suite:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 9.31ms]
-[Execution Time: 4.26ms]
+[Total Run Time: 9.04ms]
+[Execution Time: 3.58ms]
 	Standard Top Level Checks:                 5;  Failures:  1  [Deep checks: 5]
 	Standard Performance Checks:               0;  Failures:  0
-	False Negative Checks:                     0;  Failures:  0
-	False Negative Performance Checks:         0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
 
 Running tests, synchronously...
 
 Suite:
-[Execution Time: 4.02ms]
+[Execution Time: 4.15ms]
 	Standard Top Level Checks:                 5;  Failures:  4  [Deep checks: 5]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 212
@@ -210,14 +210,14 @@ Suite:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 9.02ms]
-[Execution Time: 4.02ms]
+[Total Run Time: 10.4ms]
+[Execution Time: 4.15ms]
 	Standard Top Level Checks:                 5;  Failures:  4  [Deep checks: 5]
 	Standard Performance Checks:               0;  Failures:  0
-	False Negative Checks:                     0;  Failures:  0
-	False Negative Performance Checks:         0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
 
 Instability detected in file "TestRunnerTest.cpp"
 Outcome frequencies:

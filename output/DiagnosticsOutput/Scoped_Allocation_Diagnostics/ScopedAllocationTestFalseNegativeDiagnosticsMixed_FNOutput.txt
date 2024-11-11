@@ -1,4 +1,4 @@
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 60
 
 --Regular Semantics--
@@ -6,7 +6,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 71
 
 --Regular Semantics--
@@ -14,7 +14,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 82
 
 --Regular Semantics--
@@ -22,7 +22,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 93
 
 --Regular Semantics--
@@ -30,7 +30,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 104
 
 --Regular Semantics--
@@ -38,7 +38,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 115
 
 --Regular Semantics--
@@ -46,7 +46,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 126
 
 --Regular Semantics--
@@ -54,7 +54,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 153
 
 --Regular Semantics--
@@ -62,7 +62,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 60
 
 --Regular Semantics--
@@ -70,7 +70,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 71
 
 --Regular Semantics--
@@ -78,7 +78,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 82
 
 --Regular Semantics--
@@ -86,7 +86,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 93
 
 --Regular Semantics--
@@ -94,7 +94,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 104
 
 --Regular Semantics--
@@ -102,7 +102,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 115
 
 --Regular Semantics--
@@ -110,7 +110,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 126
 
 --Regular Semantics--
@@ -118,7 +118,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 153
 
 --Regular Semantics--
@@ -126,7 +126,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 60
 
 --Regular Semantics--
@@ -134,7 +134,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 71
 
 --Regular Semantics--
@@ -142,7 +142,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 82
 
 --Regular Semantics--
@@ -150,7 +150,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 93
 
 --Regular Semantics--
@@ -158,7 +158,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 104
 
 --Regular Semantics--
@@ -166,7 +166,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 115
 
 --Regular Semantics--
@@ -174,7 +174,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 126
 
 --Regular Semantics--
@@ -182,7 +182,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 153
 
 --Regular Semantics--
@@ -190,7 +190,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 60
 
 --Regular Semantics--
@@ -198,7 +198,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 71
 
 --Regular Semantics--
@@ -206,7 +206,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 82
 
 --Regular Semantics--
@@ -214,7 +214,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 93
 
 --Regular Semantics--
@@ -222,7 +222,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 104
 
 --Regular Semantics--
@@ -230,7 +230,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 115
 
 --Regular Semantics--
@@ -238,7 +238,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 126
 
 --Regular Semantics--
@@ -246,7 +246,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 153
 
 --Regular Semantics--
@@ -254,7 +254,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 60
 
 --Regular Semantics--
@@ -262,7 +262,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 71
 
 --Regular Semantics--
@@ -270,7 +270,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 82
 
 --Regular Semantics--
@@ -278,7 +278,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 93
 
 --Regular Semantics--
@@ -286,7 +286,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 104
 
 --Regular Semantics--
@@ -294,7 +294,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 115
 
 --Regular Semantics--
@@ -302,7 +302,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 126
 
 --Regular Semantics--
@@ -310,7 +310,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 153
 
 --Regular Semantics--
@@ -318,7 +318,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 60
 
 --Regular Semantics--
@@ -326,7 +326,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 71
 
 --Regular Semantics--
@@ -334,7 +334,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 82
 
 --Regular Semantics--
@@ -342,7 +342,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 93
 
 --Regular Semantics--
@@ -350,7 +350,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 104
 
 --Regular Semantics--
@@ -358,7 +358,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 115
 
 --Regular Semantics--
@@ -366,7 +366,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 126
 
 --Regular Semantics--
@@ -374,7 +374,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 153
 
 --Regular Semantics--
@@ -382,7 +382,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 60
 
 --Regular Semantics--
@@ -390,7 +390,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 71
 
 --Regular Semantics--
@@ -398,7 +398,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 82
 
 --Regular Semantics--
@@ -406,7 +406,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 93
 
 --Regular Semantics--
@@ -414,7 +414,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 104
 
 --Regular Semantics--
@@ -422,7 +422,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 115
 
 --Regular Semantics--
@@ -430,7 +430,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 126
 
 --Regular Semantics--
@@ -438,7 +438,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 153
 
 --Regular Semantics--
@@ -446,7 +446,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 60
 
 --Regular Semantics--
@@ -454,7 +454,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 71
 
 --Regular Semantics--
@@ -462,7 +462,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 82
 
 --Regular Semantics--
@@ -470,7 +470,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 93
 
 --Regular Semantics--
@@ -478,7 +478,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 104
 
 --Regular Semantics--
@@ -486,7 +486,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 115
 
 --Regular Semantics--
@@ -494,7 +494,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 126
 
 --Regular Semantics--
@@ -502,7 +502,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp, Line 153
 
 --Regular Semantics--

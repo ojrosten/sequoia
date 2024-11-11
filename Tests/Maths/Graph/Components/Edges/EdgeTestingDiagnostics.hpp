@@ -6,10 +6,10 @@
 
 namespace sequoia::testing
 {
-  class test_edge_false_positives final : public regular_false_positive_test
+  class test_edge_false_negatives final : public regular_false_negative_test
   {
   public:
-    using regular_false_positive_test::regular_false_positive_test;
+    using regular_false_negative_test::regular_false_negative_test;
 
     [[nodiscard]]
     std::filesystem::path source_file() const;

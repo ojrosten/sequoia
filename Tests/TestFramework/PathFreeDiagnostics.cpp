@@ -43,25 +43,25 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path path_false_positive_free_diagnostics::source_file() const
+  std::filesystem::path path_false_negative_free_diagnostics::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
   [[nodiscard]]
-  log_summary path_false_positive_free_diagnostics::summarize(duration delta) const
+  log_summary path_false_negative_free_diagnostics::summarize(duration delta) const
   {
-    auto summary{free_false_positive_test::summarize(delta)};
+    auto summary{free_false_negative_test::summarize(delta)};
     return postprocess(summary, project_root());
   }
 
-  void path_false_positive_free_diagnostics::run_tests()
+  void path_false_negative_free_diagnostics::run_tests()
   {
     test_paths();
   }
 
   
-  void path_false_positive_free_diagnostics::test_paths()
+  void path_false_negative_free_diagnostics::test_paths()
   {
     check(equivalence,
           reporter{"Inequivalence of two different paths, neither of which exists"},
@@ -135,25 +135,25 @@ namespace sequoia::testing
   }
   
   [[nodiscard]]
-  std::filesystem::path path_false_negative_free_diagnostics::source_file() const
+  std::filesystem::path path_false_positive_free_diagnostics::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
   [[nodiscard]]
-  log_summary path_false_negative_free_diagnostics::summarize(duration delta) const
+  log_summary path_false_positive_free_diagnostics::summarize(duration delta) const
   {
-    auto summary{free_false_negative_test::summarize(delta)};
+    auto summary{free_false_positive_test::summarize(delta)};
     return postprocess(summary, project_root());
   }
 
-  void path_false_negative_free_diagnostics::run_tests()
+  void path_false_positive_free_diagnostics::run_tests()
   {
     test_paths();
   }
 
   
-  void path_false_negative_free_diagnostics::test_paths()
+  void path_false_positive_free_diagnostics::test_paths()
   {
     check(equivalence,
           reporter{"Equivalence of a file to itself"},

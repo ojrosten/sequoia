@@ -532,7 +532,7 @@ namespace sequoia::testing
   [[nodiscard]]
   std::vector<std::string> nascent_semantics_test::constructors() const
   {
-    return { {std::string{forename()}.append("_false_positive_").append(surname()).append("{\"False Positive Test\"}")},
+    return { {std::string{forename()}.append("_false_negative_").append(surname()).append("{\"False Negative Test\"}")},
              {std::string{forename()}.append("_").append(surname()).append("{\"Unit Test\"}")}};
   }
 
@@ -756,7 +756,7 @@ namespace sequoia::testing
     case nascent_test_flavour::standard:
       return { make("") };
     case nascent_test_flavour::framework_diagnostics:
-      return { make("false_negative"), make("false_positive")};
+      return { make("false_positive"), make("false_negative")};
     }
 
     throw std::logic_error{"Unrecognized option for nascent_test_flavour"};

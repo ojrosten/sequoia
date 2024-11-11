@@ -1,4 +1,4 @@
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/PathFreeDiagnostics.cpp, Line 159
 Equivalence of a file to itself
 
@@ -9,7 +9,7 @@ Checking for equivalence with:
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/PathFreeDiagnostics.cpp, Line 164
 Equivalence of a directory to itself
 
@@ -20,7 +20,7 @@ Checking for equivalence with:
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/PathFreeDiagnostics.cpp, Line 169
 Equivalence of a directory, with sub-directories to itself
 
@@ -31,7 +31,7 @@ Checking for equivalence with:
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/PathFreeDiagnostics.cpp, Line 174
 Equivalence of identical directories in different locations
 
@@ -42,7 +42,7 @@ Checking for equivalence with:
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/PathFreeDiagnostics.cpp, Line 179
 File equivalence when .ignore is ignored
 
@@ -53,7 +53,7 @@ Checking for equivalence with:
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/PathFreeDiagnostics.cpp, Line 184
 Range equivalence when .ignore is ignored
 
@@ -61,7 +61,7 @@ Range equivalence when .ignore is ignored
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/PathFreeDiagnostics.cpp, Line 189
 Weak equivalence of directories in with the same contents but different names
 
@@ -72,7 +72,7 @@ Checking for weak equivalence with:
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/PathFreeDiagnostics.cpp, Line 194
 Weak equivalence when .ignore is ignored
 
@@ -83,7 +83,7 @@ Checking for weak equivalence with:
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/PathFreeDiagnostics.cpp, Line 199
 Weak equivalence of range when .ignore is ignored
 

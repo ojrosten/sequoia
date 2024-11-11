@@ -13,10 +13,10 @@
 
 namespace sequoia:: testing
 {
-  class orderable_move_only_false_positive_diagnostics final : public move_only_false_positive_test
+  class orderable_move_only_false_negative_diagnostics final : public move_only_false_negative_test
   {
   public:
-    using move_only_false_positive_test::move_only_false_positive_test;
+    using move_only_false_negative_test::move_only_false_negative_test;
 
     [[nodiscard]]
     std::filesystem::path source_file() const;
@@ -27,10 +27,10 @@ namespace sequoia:: testing
     void test_regular_semantics();
   };
 
-  class orderable_move_only_false_negative_diagnostics final : public move_only_false_negative_test
+  class orderable_move_only_false_positive_diagnostics final : public move_only_false_positive_test
   {
   public:
-    using move_only_false_negative_test::move_only_false_negative_test;
+    using move_only_false_positive_test::move_only_false_positive_test;
 
     [[nodiscard]]
     std::filesystem::path source_file() const;

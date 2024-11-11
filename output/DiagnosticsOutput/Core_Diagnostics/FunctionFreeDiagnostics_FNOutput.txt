@@ -1,4 +1,4 @@
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 73
 Both bound
 
@@ -9,7 +9,7 @@ Checking for weak equivalence with:
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 74
 Neither bound
 
@@ -20,7 +20,7 @@ Checking for weak equivalence with:
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 79
 Both bound
 
@@ -31,7 +31,7 @@ Checking for weak equivalence with:
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 80
 Neither bound
 
@@ -42,7 +42,7 @@ Checking for weak equivalence with:
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 85
 Both bound
 
@@ -53,7 +53,7 @@ Checking for weak equivalence with:
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 86
 Neither bound
 

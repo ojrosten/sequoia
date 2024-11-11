@@ -1,32 +1,32 @@
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 84
 
 [double]
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 85
 
 [double]
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 87
 
 [double]
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 88
 
 [double]
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 90
 <
 
@@ -34,7 +34,7 @@ Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 90
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 91
 <=
 
@@ -42,7 +42,7 @@ Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 91
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 92
 >
 
@@ -50,7 +50,7 @@ Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 92
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 93
 >=
 
@@ -58,25 +58,25 @@ Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 93
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 100
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 105
 <
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 111
 
 [std::vector<double, std::allocator<double> >]
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 114
 
 [std::vector<std::vector<double, std::allocator<double> >, std::allocator<std::vector<double, std::allocator<double> > > >]

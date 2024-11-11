@@ -1,4 +1,4 @@
-Orderable Regular Allocation False Negative Diagnostics
-False Negative Checks:                    16;  Failures:  0
 Orderable Regular Allocation False Positive Diagnostics
 False Positive Checks:                    16;  Failures:  0
+Orderable Regular Allocation False Negative Diagnostics
+False Negative Checks:                    16;  Failures:  0

@@ -1,4 +1,4 @@
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 54
 
 --Regular Semantics--
@@ -6,7 +6,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 55
 
 --Regular Semantics--
@@ -14,7 +14,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 56
 
 --Regular Semantics--
@@ -22,7 +22,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 57
 
 --Regular Semantics--
@@ -30,7 +30,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 58
 
 --Regular Semantics--
@@ -38,7 +38,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 60
 
 --Regular Semantics--
@@ -46,7 +46,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 66
 check_semantics return value (x)
 
@@ -54,7 +54,7 @@ check_semantics return value (x)
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 67
 check_semantics return value (y)
 
@@ -62,7 +62,7 @@ check_semantics return value (y)
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 83
 
 --Regular Semantics--
@@ -70,7 +70,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 84
 
 --Regular Semantics--
@@ -78,7 +78,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 85
 
 --Regular Semantics--
@@ -86,7 +86,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 86
 
 --Regular Semantics--
@@ -94,7 +94,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 87
 
 --Regular Semantics--
@@ -102,7 +102,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 125
 
 --Regular Semantics--
@@ -110,7 +110,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 144
 
 --Regular Semantics--
@@ -118,7 +118,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 163
 
 --Regular Semantics--
@@ -126,7 +126,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 189
 
 --Regular Semantics--
@@ -134,7 +134,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 54
 
 --Regular Semantics--
@@ -142,7 +142,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 55
 
 --Regular Semantics--
@@ -150,7 +150,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 56
 
 --Regular Semantics--
@@ -158,7 +158,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 57
 
 --Regular Semantics--
@@ -166,7 +166,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 58
 
 --Regular Semantics--
@@ -174,7 +174,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 60
 
 --Regular Semantics--
@@ -182,7 +182,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 66
 check_semantics return value (x)
 
@@ -190,7 +190,7 @@ check_semantics return value (x)
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 67
 check_semantics return value (y)
 
@@ -198,7 +198,7 @@ check_semantics return value (y)
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 83
 
 --Regular Semantics--
@@ -206,7 +206,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 84
 
 --Regular Semantics--
@@ -214,7 +214,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 85
 
 --Regular Semantics--
@@ -222,7 +222,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 86
 
 --Regular Semantics--
@@ -230,7 +230,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 87
 
 --Regular Semantics--
@@ -238,7 +238,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 125
 
 --Regular Semantics--
@@ -246,7 +246,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 144
 
 --Regular Semantics--
@@ -254,7 +254,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 163
 
 --Regular Semantics--
@@ -262,7 +262,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 189
 
 --Regular Semantics--
@@ -270,7 +270,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 54
 
 --Regular Semantics--
@@ -278,7 +278,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 55
 
 --Regular Semantics--
@@ -286,7 +286,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 56
 
 --Regular Semantics--
@@ -294,7 +294,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 57
 
 --Regular Semantics--
@@ -302,7 +302,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 58
 
 --Regular Semantics--
@@ -310,7 +310,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 60
 
 --Regular Semantics--
@@ -318,7 +318,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 66
 check_semantics return value (x)
 
@@ -326,7 +326,7 @@ check_semantics return value (x)
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 67
 check_semantics return value (y)
 
@@ -334,7 +334,7 @@ check_semantics return value (y)
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 83
 
 --Regular Semantics--
@@ -342,7 +342,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 84
 
 --Regular Semantics--
@@ -350,7 +350,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 85
 
 --Regular Semantics--
@@ -358,7 +358,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 86
 
 --Regular Semantics--
@@ -366,7 +366,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 87
 
 --Regular Semantics--
@@ -374,7 +374,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 125
 
 --Regular Semantics--
@@ -382,7 +382,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 144
 
 --Regular Semantics--
@@ -390,7 +390,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 163
 
 --Regular Semantics--
@@ -398,7 +398,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 189
 
 --Regular Semantics--
@@ -406,7 +406,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 54
 
 --Regular Semantics--
@@ -414,7 +414,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 55
 
 --Regular Semantics--
@@ -422,7 +422,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 56
 
 --Regular Semantics--
@@ -430,7 +430,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 57
 
 --Regular Semantics--
@@ -438,7 +438,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 58
 
 --Regular Semantics--
@@ -446,7 +446,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 60
 
 --Regular Semantics--
@@ -454,7 +454,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 66
 check_semantics return value (x)
 
@@ -462,7 +462,7 @@ check_semantics return value (x)
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 67
 check_semantics return value (y)
 
@@ -470,7 +470,7 @@ check_semantics return value (y)
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 83
 
 --Regular Semantics--
@@ -478,7 +478,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 84
 
 --Regular Semantics--
@@ -486,7 +486,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 85
 
 --Regular Semantics--
@@ -494,7 +494,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 86
 
 --Regular Semantics--
@@ -502,7 +502,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 87
 
 --Regular Semantics--
@@ -510,7 +510,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 125
 
 --Regular Semantics--
@@ -518,7 +518,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 144
 
 --Regular Semantics--
@@ -526,7 +526,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 163
 
 --Regular Semantics--
@@ -534,7 +534,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 189
 
 --Regular Semantics--
@@ -542,7 +542,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 54
 
 --Regular Semantics--
@@ -550,7 +550,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 55
 
 --Regular Semantics--
@@ -558,7 +558,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 56
 
 --Regular Semantics--
@@ -566,7 +566,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 57
 
 --Regular Semantics--
@@ -574,7 +574,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 58
 
 --Regular Semantics--
@@ -582,7 +582,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 60
 
 --Regular Semantics--
@@ -590,7 +590,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 66
 check_semantics return value (x)
 
@@ -598,7 +598,7 @@ check_semantics return value (x)
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 67
 check_semantics return value (y)
 
@@ -606,7 +606,7 @@ check_semantics return value (y)
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 83
 
 --Regular Semantics--
@@ -614,7 +614,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 84
 
 --Regular Semantics--
@@ -622,7 +622,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 85
 
 --Regular Semantics--
@@ -630,7 +630,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 86
 
 --Regular Semantics--
@@ -638,7 +638,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 87
 
 --Regular Semantics--
@@ -646,7 +646,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 125
 
 --Regular Semantics--
@@ -654,7 +654,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 144
 
 --Regular Semantics--
@@ -662,7 +662,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 163
 
 --Regular Semantics--
@@ -670,7 +670,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 189
 
 --Regular Semantics--
@@ -678,7 +678,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 54
 
 --Regular Semantics--
@@ -686,7 +686,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 55
 
 --Regular Semantics--
@@ -694,7 +694,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 56
 
 --Regular Semantics--
@@ -702,7 +702,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 57
 
 --Regular Semantics--
@@ -710,7 +710,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 58
 
 --Regular Semantics--
@@ -718,7 +718,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 60
 
 --Regular Semantics--
@@ -726,7 +726,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 66
 check_semantics return value (x)
 
@@ -734,7 +734,7 @@ check_semantics return value (x)
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 67
 check_semantics return value (y)
 
@@ -742,7 +742,7 @@ check_semantics return value (y)
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 83
 
 --Regular Semantics--
@@ -750,7 +750,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 84
 
 --Regular Semantics--
@@ -758,7 +758,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 85
 
 --Regular Semantics--
@@ -766,7 +766,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 86
 
 --Regular Semantics--
@@ -774,7 +774,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 87
 
 --Regular Semantics--
@@ -782,7 +782,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 125
 
 --Regular Semantics--
@@ -790,7 +790,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 144
 
 --Regular Semantics--
@@ -798,7 +798,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 163
 
 --Regular Semantics--
@@ -806,7 +806,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 189
 
 --Regular Semantics--
@@ -814,7 +814,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 54
 
 --Regular Semantics--
@@ -822,7 +822,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 55
 
 --Regular Semantics--
@@ -830,7 +830,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 56
 
 --Regular Semantics--
@@ -838,7 +838,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 57
 
 --Regular Semantics--
@@ -846,7 +846,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 58
 
 --Regular Semantics--
@@ -854,7 +854,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 60
 
 --Regular Semantics--
@@ -862,7 +862,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 66
 check_semantics return value (x)
 
@@ -870,7 +870,7 @@ check_semantics return value (x)
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 67
 check_semantics return value (y)
 
@@ -878,7 +878,7 @@ check_semantics return value (y)
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 83
 
 --Regular Semantics--
@@ -886,7 +886,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 84
 
 --Regular Semantics--
@@ -894,7 +894,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 85
 
 --Regular Semantics--
@@ -902,7 +902,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 86
 
 --Regular Semantics--
@@ -910,7 +910,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 87
 
 --Regular Semantics--
@@ -918,7 +918,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 125
 
 --Regular Semantics--
@@ -926,7 +926,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 144
 
 --Regular Semantics--
@@ -934,7 +934,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 163
 
 --Regular Semantics--
@@ -942,7 +942,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 189
 
 --Regular Semantics--
@@ -950,7 +950,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 54
 
 --Regular Semantics--
@@ -958,7 +958,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 55
 
 --Regular Semantics--
@@ -966,7 +966,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 56
 
 --Regular Semantics--
@@ -974,7 +974,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 57
 
 --Regular Semantics--
@@ -982,7 +982,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 58
 
 --Regular Semantics--
@@ -990,7 +990,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 60
 
 --Regular Semantics--
@@ -998,7 +998,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 66
 check_semantics return value (x)
 
@@ -1006,7 +1006,7 @@ check_semantics return value (x)
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 67
 check_semantics return value (y)
 
@@ -1014,7 +1014,7 @@ check_semantics return value (y)
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 83
 
 --Regular Semantics--
@@ -1022,7 +1022,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 84
 
 --Regular Semantics--
@@ -1030,7 +1030,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 85
 
 --Regular Semantics--
@@ -1038,7 +1038,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 86
 
 --Regular Semantics--
@@ -1046,7 +1046,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 87
 
 --Regular Semantics--
@@ -1054,7 +1054,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 125
 
 --Regular Semantics--
@@ -1062,7 +1062,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 144
 
 --Regular Semantics--
@@ -1070,7 +1070,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 163
 
 --Regular Semantics--
@@ -1078,7 +1078,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp, Line 189
 
 --Regular Semantics--

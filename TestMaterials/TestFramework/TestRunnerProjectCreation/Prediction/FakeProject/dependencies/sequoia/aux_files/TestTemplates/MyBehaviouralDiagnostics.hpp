@@ -13,10 +13,10 @@
 
 namespace ?::testing
 {
-	using namespace sequoia::testing;class ?forename_false_positive_?surname final : public ?_false_positive_test
+	using namespace sequoia::testing;class ?forename_false_negative_?surname final : public ?_false_negative_test
 	{
 	public:
-		using ?_false_positive_test::?_false_positive_test;
+		using ?_false_negative_test::?_false_negative_test;
 
 		[[nodiscard]]
 		std::filesystem::path source_file() const;

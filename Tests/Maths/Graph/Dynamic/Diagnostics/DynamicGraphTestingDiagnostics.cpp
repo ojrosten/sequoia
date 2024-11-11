@@ -12,16 +12,16 @@
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::filesystem::path test_graph_false_positives::source_file() const
+  std::filesystem::path test_graph_false_negatives::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void test_graph_false_positives::run_tests()
+  void test_graph_false_negatives::run_tests()
   {
     using namespace maths;
 
-    graph_test_helper<null_weight, null_weight, test_graph_false_positives> helper{*this};
+    graph_test_helper<null_weight, null_weight, test_graph_false_negatives> helper{*this};
     helper.run_tests();
   }
 
@@ -33,7 +33,7 @@ namespace sequoia::testing
     class EdgeStorageConfig,
     class NodeWeightStorage
   >
-  void test_graph_false_positives::execute_operations()
+  void test_graph_false_negatives::execute_operations()
   {
     using namespace maths;
     using graph_type = typename graph_type_generator<GraphFlavour, EdgeWeight, NodeWeight, EdgeStorageConfig, NodeWeightStorage>::graph_type;

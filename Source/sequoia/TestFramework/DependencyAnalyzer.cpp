@@ -230,7 +230,7 @@ namespace sequoia::testing
 
         for(const auto& includedFile : get_includes(file, cutoff))
         {
-          if(auto eqrange{std::ranges::equal_range(g.begin_node_weights(), g.end_node_weights(), includedFile.filename(), std::ranges::less{}, [](const file_info& weight){ return weight.file.filename(); })}; !eqrange.empty())
+          if(auto eqrange{std::ranges::equal_range(g.node_weights(), includedFile.filename(), std::ranges::less{}, [](const file_info& weight){ return weight.file.filename(); })}; !eqrange.empty())
           {
             auto found{
               std::ranges::find_if(eqrange, [&includedFile,&projPaths,&file](const file_info& wt){

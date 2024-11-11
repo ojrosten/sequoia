@@ -5,14 +5,14 @@ Another Suite:
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 
 -----------Grand Totals-----------
-[Total Run Time: 3.24ms]
-[Execution Time: 1.05ms]
+[Total Run Time: 3.81ms]
+[Execution Time: 1.34ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
-	False Negative Checks:                     0;  Failures:  0
-	False Negative Performance Checks:         0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
 
 Running tests...
 
@@ -29,14 +29,14 @@ Another Suite:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 3.33ms]
-[Execution Time: 1.13ms]
+[Total Run Time: 6.84ms]
+[Execution Time: 1.15ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
-	False Negative Checks:                     0;  Failures:  0
-	False Negative Performance Checks:         0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
 
 Instability detected in file "TestRunnerTest.cpp"
 Outcome frequencies:

@@ -13,12 +13,12 @@
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::filesystem::path string_false_positive_free_diagnostics::source_file() const
+  std::filesystem::path string_false_negative_free_diagnostics::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void string_false_positive_free_diagnostics::run_tests()
+  void string_false_negative_free_diagnostics::run_tests()
   {
     test_strings<std::string>();
     test_strings<std::string_view>();
@@ -30,7 +30,7 @@ namespace sequoia::testing
   }
 
   template<class String>
-  void string_false_positive_free_diagnostics::test_strings()
+  void string_false_negative_free_diagnostics::test_strings()
   {
     check(equality, "Empty and non-empty strings", String{""}, String{"Hello, World!"});
     check(equality, "Empty and non-empty strings", String{"Hello, World!"}, String{""});
@@ -76,7 +76,7 @@ namespace sequoia::testing
   }
 
   template<class String>
-  void string_false_positive_free_diagnostics::test_wstrings()
+  void string_false_negative_free_diagnostics::test_wstrings()
   {
     check(equality, "Differing strings of same length", String{L"Hello, world?"}, String{L"Hello, World!"});
     check(equality, "Advice", String{L"Foo"}, String{L"Bar"}, tutor{[](const String&, const String&) { return "Foo, my old nemesis"; }});
@@ -84,7 +84,7 @@ namespace sequoia::testing
     check(equality, "Extra line", String{L"Hello, World\n\nAnd so forth"}, String{L"Hello, World\nAnd so forth"});
   }
 
-  void string_false_positive_free_diagnostics::test_string_equivalences()
+  void string_false_negative_free_diagnostics::test_string_equivalences()
   {
     using namespace std::string_literals;
     using namespace std::string_view_literals;
@@ -92,19 +92,19 @@ namespace sequoia::testing
     check(equivalence, "", "foo"sv, "fob"s);
   }
 
-  void string_false_positive_free_diagnostics::test_wstring_equivalences()
+  void string_false_negative_free_diagnostics::test_wstring_equivalences()
   {
     check(equivalence, "", std::wstring{L"foo"}, std::wstring_view{L"fob"});
     check(equivalence, "", std::wstring_view{L"foo"}, std::wstring{L"fob"});
   }
 
   [[nodiscard]]
-  std::filesystem::path string_false_negative_free_diagnostics::source_file() const
+  std::filesystem::path string_false_positive_free_diagnostics::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void string_false_negative_free_diagnostics::run_tests()
+  void string_false_positive_free_diagnostics::run_tests()
   {
     test_strings();
 
@@ -112,20 +112,20 @@ namespace sequoia::testing
     test_wstring_equivalences();
   }
 
-  void string_false_negative_free_diagnostics::test_strings()
+  void string_false_positive_free_diagnostics::test_strings()
   {
     check(equality, "Differing strings", std::string{"Hello, World!"}, std::string{"Hello, World!"});
     check(equivalence, "", std::string{"foo"}, "foo");
   }
 
-  void string_false_negative_free_diagnostics::test_string_equivalences()
+  void string_false_positive_free_diagnostics::test_string_equivalences()
   {
     using namespace std::string_literals;
     using namespace std::string_view_literals;
     check(equivalence, "", "foo"s, "foo"sv);
   }
 
-  void string_false_negative_free_diagnostics::test_wstring_equivalences()
+  void string_false_positive_free_diagnostics::test_wstring_equivalences()
   {
     check(equivalence, "", std::wstring{L"foo"}, std::wstring_view{L"foo"});
   }

@@ -12,12 +12,12 @@
 namespace fakeProject::testing
 {
     [[nodiscard]]
-    std::filesystem::path multiple_false_positive_test::source_file() const
+    std::filesystem::path multiple_false_negative_test::source_file() const
     {
         return std::source_location::current().file_name();
     }
 
-    void multiple_false_positive_test::run_tests()
+    void multiple_false_negative_test::run_tests()
     {
         // For example:
 

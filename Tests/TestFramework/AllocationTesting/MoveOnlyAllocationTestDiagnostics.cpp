@@ -15,24 +15,24 @@
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::filesystem::path move_only_allocation_false_positive_diagnostics::source_file() const
+  std::filesystem::path move_only_allocation_false_negative_diagnostics::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void move_only_allocation_false_positive_diagnostics::run_tests()
+  void move_only_allocation_false_negative_diagnostics::run_tests()
   {
     do_allocation_tests();
   }
 
   template<bool PropagateMove, bool PropagateSwap>
-  void move_only_allocation_false_positive_diagnostics::test_allocation()
+  void move_only_allocation_false_negative_diagnostics::test_allocation()
   {
     test_move_only_semantics_allocations<PropagateMove, PropagateSwap>();
   }
 
   template<bool PropagateMove, bool PropagateSwap>
-  void move_only_allocation_false_positive_diagnostics::test_move_only_semantics_allocations()
+  void move_only_allocation_false_negative_diagnostics::test_move_only_semantics_allocations()
   {
 
     auto mutator{
@@ -171,24 +171,24 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path move_only_allocation_false_negative_diagnostics::source_file() const
+  std::filesystem::path move_only_allocation_false_positive_diagnostics::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void move_only_allocation_false_negative_diagnostics::run_tests()
+  void move_only_allocation_false_positive_diagnostics::run_tests()
   {
     do_allocation_tests();
   }
 
   template<bool PropagateMove, bool PropagateSwap>
-  void move_only_allocation_false_negative_diagnostics::test_allocation()
+  void move_only_allocation_false_positive_diagnostics::test_allocation()
   {
     test_move_only_semantics_allocations<PropagateMove, PropagateSwap>();
   }
 
   template<bool PropagateMove, bool PropagateSwap>
-  void move_only_allocation_false_negative_diagnostics::test_move_only_semantics_allocations()
+  void move_only_allocation_false_positive_diagnostics::test_move_only_semantics_allocations()
   {
     auto mutator{
       [](auto& b) {

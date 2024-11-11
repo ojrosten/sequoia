@@ -12,17 +12,17 @@
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::filesystem::path commandline_arguments_false_positive_test::source_file() const
+  std::filesystem::path commandline_arguments_false_negative_test::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void commandline_arguments_false_positive_test::run_tests()
+  void commandline_arguments_false_negative_test::run_tests()
   {
     test_parser();
   }
 
-  void commandline_arguments_false_positive_test::test_parser()
+  void commandline_arguments_false_negative_test::test_parser()
   {
     using namespace sequoia::parsing::commandline;
     using fo = function_object;

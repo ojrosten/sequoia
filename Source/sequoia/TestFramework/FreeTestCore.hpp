@@ -213,8 +213,8 @@ namespace sequoia::testing
 
   /*! \anchor free_test_alias */
   using free_test                = basic_free_test<test_mode::standard>;
-  using free_false_negative_test = basic_free_test<test_mode::false_negative>;
   using free_false_positive_test = basic_free_test<test_mode::false_positive>;
+  using free_false_negative_test = basic_free_test<test_mode::false_negative>;
 
   template<class T>
   inline constexpr bool has_parallelizable_type{

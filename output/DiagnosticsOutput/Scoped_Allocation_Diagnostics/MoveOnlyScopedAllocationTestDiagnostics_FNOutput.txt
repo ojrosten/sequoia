@@ -1,4 +1,4 @@
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 54
 
 --Move-only Semantics--
@@ -6,7 +6,7 @@ Tests/TestFramework/AllocationTesting/MoveOnlyScopedAllocationTestDiagnostics.cp
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 67
 
 --Move-only Semantics--
@@ -14,7 +14,7 @@ Tests/TestFramework/AllocationTesting/MoveOnlyScopedAllocationTestDiagnostics.cp
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 80
 check_semantics return value (x)
 
@@ -22,7 +22,7 @@ check_semantics return value (x)
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 81
 check_semantics return value (y)
 
@@ -30,7 +30,7 @@ check_semantics return value (y)
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 54
 
 --Move-only Semantics--
@@ -38,7 +38,7 @@ Tests/TestFramework/AllocationTesting/MoveOnlyScopedAllocationTestDiagnostics.cp
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 67
 
 --Move-only Semantics--
@@ -46,7 +46,7 @@ Tests/TestFramework/AllocationTesting/MoveOnlyScopedAllocationTestDiagnostics.cp
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 80
 check_semantics return value (x)
 
@@ -54,7 +54,7 @@ check_semantics return value (x)
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 81
 check_semantics return value (y)
 
@@ -62,7 +62,7 @@ check_semantics return value (y)
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 54
 
 --Move-only Semantics--
@@ -70,7 +70,7 @@ Tests/TestFramework/AllocationTesting/MoveOnlyScopedAllocationTestDiagnostics.cp
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 67
 
 --Move-only Semantics--
@@ -78,7 +78,7 @@ Tests/TestFramework/AllocationTesting/MoveOnlyScopedAllocationTestDiagnostics.cp
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 80
 check_semantics return value (x)
 
@@ -86,7 +86,7 @@ check_semantics return value (x)
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 81
 check_semantics return value (y)
 
@@ -94,7 +94,7 @@ check_semantics return value (y)
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 54
 
 --Move-only Semantics--
@@ -102,7 +102,7 @@ Tests/TestFramework/AllocationTesting/MoveOnlyScopedAllocationTestDiagnostics.cp
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 67
 
 --Move-only Semantics--
@@ -110,7 +110,7 @@ Tests/TestFramework/AllocationTesting/MoveOnlyScopedAllocationTestDiagnostics.cp
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 80
 check_semantics return value (x)
 
@@ -118,7 +118,7 @@ check_semantics return value (x)
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 81
 check_semantics return value (y)
 

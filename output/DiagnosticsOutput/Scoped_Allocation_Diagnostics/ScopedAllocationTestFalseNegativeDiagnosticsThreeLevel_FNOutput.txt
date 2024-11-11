@@ -1,4 +1,4 @@
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsThreeLevel.cpp, Line 47
 
 --Regular Semantics--
@@ -6,7 +6,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsThreeLevel.cpp, Line 47
 
 --Regular Semantics--
@@ -14,7 +14,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsThreeLevel.cpp, Line 47
 
 --Regular Semantics--
@@ -22,7 +22,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsThreeLevel.cpp, Line 47
 
 --Regular Semantics--
@@ -30,7 +30,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsThreeLevel.cpp, Line 47
 
 --Regular Semantics--
@@ -38,7 +38,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsThreeLevel.cpp, Line 47
 
 --Regular Semantics--
@@ -46,7 +46,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsThreeLevel.cpp, Line 47
 
 --Regular Semantics--
@@ -54,7 +54,7 @@ Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosti
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsThreeLevel.cpp, Line 47
 
 --Regular Semantics--

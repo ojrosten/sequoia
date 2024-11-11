@@ -14,19 +14,19 @@
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::filesystem::path relational_false_positive_diagnostics::source_file() const
+  std::filesystem::path relational_false_negative_diagnostics::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void relational_false_positive_diagnostics::run_tests()
+  void relational_false_negative_diagnostics::run_tests()
   {
     basic_tests();
     range_tests();
     container_tests();
   }
 
-  void relational_false_positive_diagnostics::basic_tests()
+  void relational_false_negative_diagnostics::basic_tests()
   {
     check(within_tolerance{1.0}, "", 3.0, 5.0);
     check(within_tolerance{1.0}, "",
@@ -39,7 +39,7 @@ namespace sequoia::testing
     check(std::ranges::greater_equal{}, ">=", 4, 5);
   }
 
-  void relational_false_positive_diagnostics::range_tests()
+  void relational_false_negative_diagnostics::range_tests()
   {
     {
       std::vector<double> v{0.5, 0.6}, p{-0.1, 1.0};
@@ -58,7 +58,7 @@ namespace sequoia::testing
     }
   }
 
-  void relational_false_positive_diagnostics::container_tests()
+  void relational_false_negative_diagnostics::container_tests()
   {
     check(within_tolerance{0.5}, "", std::vector<double>{2.2, -1.0}, std::vector<double>{2.1, -1.8});
 
@@ -67,19 +67,19 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path relational_false_negative_diagnostics::source_file() const
+  std::filesystem::path relational_false_positive_diagnostics::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void relational_false_negative_diagnostics::run_tests()
+  void relational_false_positive_diagnostics::run_tests()
   {
     basic_tests();
     range_tests();
     container_tests();
   }
 
-  void relational_false_negative_diagnostics::basic_tests()
+  void relational_false_positive_diagnostics::basic_tests()
   {
     check(within_tolerance{1.0}, "", 4.5, 5.0);
     check(within_tolerance{1.0}, "", 5.5, 5.0);
@@ -93,7 +93,7 @@ namespace sequoia::testing
     check(std::ranges::greater_equal{}, ">=", 5, 4);
   }
 
-  void relational_false_negative_diagnostics::range_tests()
+  void relational_false_positive_diagnostics::range_tests()
   {
     {
       std::vector<double> v{0.5, 0.6}, p{0, 1.0};
@@ -106,7 +106,7 @@ namespace sequoia::testing
     }
   }
 
-  void relational_false_negative_diagnostics::container_tests()
+  void relational_false_positive_diagnostics::container_tests()
   {
     check(within_tolerance{0.5}, "", std::vector<double>{2.2, -1.0}, std::vector<double>{2.1, -1.1});
 

@@ -14,24 +14,24 @@
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::filesystem::path scoped_allocation_false_negative_diagnostics_three_level::source_file() const
+  std::filesystem::path scoped_allocation_false_positive_diagnostics_three_level::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void scoped_allocation_false_negative_diagnostics_three_level::run_tests()
+  void scoped_allocation_false_positive_diagnostics_three_level::run_tests()
   {
     do_allocation_tests();
   }
 
   template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
-  void scoped_allocation_false_negative_diagnostics_three_level::test_allocation()
+  void scoped_allocation_false_positive_diagnostics_three_level::test_allocation()
   {
     test_three_level_scoped<PropagateCopy, PropagateMove, PropagateSwap>();
   }
 
   template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
-  void scoped_allocation_false_negative_diagnostics_three_level::test_three_level_scoped()
+  void scoped_allocation_false_positive_diagnostics_three_level::test_three_level_scoped()
   {
     using innermost_allocator = shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>;
     using innermost_type = perfectly_normal_beast<int, innermost_allocator>;

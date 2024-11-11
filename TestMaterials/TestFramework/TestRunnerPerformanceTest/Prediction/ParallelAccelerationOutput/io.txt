@@ -5,11 +5,11 @@ Slow Suite:
 	Standard Top Level Checks:                 8;  Failures:  0  [Deep checks: 8]
 
 -----------Grand Totals-----------
-[Total Run Time: 72.9ms]
-[Execution Time: 51.7ms]
+[Total Run Time: 59.7ms]
+[Execution Time: 52ms]
 	Standard Top Level Checks:                 8;  Failures:  0  [Deep checks: 8]
 	Standard Performance Checks:               0;  Failures:  0
-	False Negative Checks:                     0;  Failures:  0
-	False Negative Performance Checks:         0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0

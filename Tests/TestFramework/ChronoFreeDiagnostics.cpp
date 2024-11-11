@@ -15,12 +15,12 @@
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::filesystem::path chrono_false_positive_free_diagnostics::source_file() const
+  std::filesystem::path chrono_false_negative_free_diagnostics::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void chrono_false_positive_free_diagnostics::run_tests()
+  void chrono_false_negative_free_diagnostics::run_tests()
   {
     using sec = std::chrono::seconds;
     using ns = std::chrono::nanoseconds;
@@ -34,12 +34,12 @@ namespace sequoia::testing
   }
   
   [[nodiscard]]
-  std::filesystem::path chrono_false_negative_free_diagnostics::source_file() const
+  std::filesystem::path chrono_false_positive_free_diagnostics::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void chrono_false_negative_free_diagnostics::run_tests()
+  void chrono_false_positive_free_diagnostics::run_tests()
   {
     using sec = std::chrono::seconds;
 

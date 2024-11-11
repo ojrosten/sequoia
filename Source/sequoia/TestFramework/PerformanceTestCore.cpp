@@ -100,6 +100,6 @@ namespace sequoia::testing
   }
 
   template class basic_performance_test<test_mode::standard>;
-  template class basic_performance_test<test_mode::false_positive>;
   template class basic_performance_test<test_mode::false_negative>;
+  template class basic_performance_test<test_mode::false_positive>;
 }

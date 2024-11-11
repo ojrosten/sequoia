@@ -32,7 +32,7 @@ namespace sequoia::testing
 
       \anchor test_mode_enum
    */
-  enum class test_mode { standard, false_positive, false_negative };
+  enum class test_mode { standard, false_negative, false_positive };
 
   /*! \brief Holds paths to files where recovery information will be written if the path is not empty
   
@@ -317,16 +317,16 @@ namespace sequoia::testing
     std::size_t standard_performance_checks() const noexcept { return m_StandardPerformanceChecks; }
 
     [[nodiscard]]
-    std::size_t false_negative_checks() const noexcept { return m_FalseNegativeChecks; }
-
-    [[nodiscard]]
-    std::size_t false_negative_performance_checks() const noexcept { return m_FalseNegativePerformanceChecks; }
-
-    [[nodiscard]]
     std::size_t false_positive_checks() const noexcept { return m_FalsePositiveChecks; }
 
     [[nodiscard]]
     std::size_t false_positive_performance_checks() const noexcept { return m_FalsePositivePerformanceChecks; }
+
+    [[nodiscard]]
+    std::size_t false_negative_checks() const noexcept { return m_FalseNegativeChecks; }
+
+    [[nodiscard]]
+    std::size_t false_negative_performance_checks() const noexcept { return m_FalseNegativePerformanceChecks; }
 
     [[nodiscard]]
     std::size_t standard_deep_failures() const noexcept { return m_StandardDeepFailures; }
@@ -338,16 +338,16 @@ namespace sequoia::testing
     std::size_t standard_performance_failures() const noexcept { return m_StandardPerformanceFailures; }
 
     [[nodiscard]]
-    std::size_t false_negative_failures() const noexcept { return m_FalseNegativeFailures; }
-
-    [[nodiscard]]
-    std::size_t false_negative_performance_failures() const noexcept { return m_FalseNegativePerformanceFailures; }
-
-    [[nodiscard]]
     std::size_t false_positive_failures() const noexcept { return m_FalsePositiveFailures; }
 
     [[nodiscard]]
     std::size_t false_positive_performance_failures() const noexcept { return m_FalsePositivePerformanceFailures; }
+
+    [[nodiscard]]
+    std::size_t false_negative_failures() const noexcept { return m_FalseNegativeFailures; }
+
+    [[nodiscard]]
+    std::size_t false_negative_performance_failures() const noexcept { return m_FalseNegativePerformanceFailures; }
 
     [[nodiscard]]
     std::size_t critical_failures() const noexcept { return m_CriticalFailures; }
@@ -391,17 +391,17 @@ namespace sequoia::testing
       m_StandardTopLevelChecks{},
       m_StandardDeepChecks{},
       m_StandardPerformanceChecks{},
-      m_FalseNegativeChecks{},
       m_FalsePositiveChecks{},
-      m_FalseNegativePerformanceChecks{},
+      m_FalseNegativeChecks{},
       m_FalsePositivePerformanceChecks{},
+      m_FalseNegativePerformanceChecks{},
       m_StandardTopLevelFailures{},
       m_StandardDeepFailures{},
       m_StandardPerformanceFailures{},
-      m_FalseNegativeFailures{},
       m_FalsePositiveFailures{},
-      m_FalseNegativePerformanceFailures{},
+      m_FalseNegativeFailures{},
       m_FalsePositivePerformanceFailures{},
+      m_FalseNegativePerformanceFailures{},
       m_CriticalFailures{};
 
     int m_ExceptionsInFlight{};

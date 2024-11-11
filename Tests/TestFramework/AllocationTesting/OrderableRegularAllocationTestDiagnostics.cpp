@@ -13,24 +13,24 @@
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::filesystem::path orderable_regular_allocation_false_negative_diagnostics::source_file() const
+  std::filesystem::path orderable_regular_allocation_false_positive_diagnostics::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void orderable_regular_allocation_false_negative_diagnostics::run_tests()
+  void orderable_regular_allocation_false_positive_diagnostics::run_tests()
   {
     do_allocation_tests();
   }
 
   template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
-  void orderable_regular_allocation_false_negative_diagnostics::test_allocation()
+  void orderable_regular_allocation_false_positive_diagnostics::test_allocation()
   {
     test_semantics_allocations<PropagateCopy, PropagateMove, PropagateSwap>();
   }
 
   template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
-  void orderable_regular_allocation_false_negative_diagnostics::test_semantics_allocations()
+  void orderable_regular_allocation_false_positive_diagnostics::test_semantics_allocations()
   {
     using beast = orderable_regular_beast<int, shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
 
@@ -54,24 +54,24 @@ namespace sequoia::testing
 
 
   [[nodiscard]]
-  std::filesystem::path orderable_regular_allocation_false_positive_diagnostics::source_file() const
+  std::filesystem::path orderable_regular_allocation_false_negative_diagnostics::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void orderable_regular_allocation_false_positive_diagnostics::run_tests()
+  void orderable_regular_allocation_false_negative_diagnostics::run_tests()
   {
     do_allocation_tests();
   }
 
   template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
-  void orderable_regular_allocation_false_positive_diagnostics::test_allocation()
+  void orderable_regular_allocation_false_negative_diagnostics::test_allocation()
   {
     test_semantics_allocations<PropagateCopy, PropagateMove, PropagateSwap>();
   }
 
   template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
-  void orderable_regular_allocation_false_positive_diagnostics::test_semantics_allocations()
+  void orderable_regular_allocation_false_negative_diagnostics::test_semantics_allocations()
   {
     using beast = orderable_regular_inefficient_comparisons<int, shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
 

@@ -1,4 +1,4 @@
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 56
 
 --Move-only Semantics--
@@ -6,7 +6,7 @@ Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 56
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 57
 Function object syntax
 
@@ -15,7 +15,7 @@ Function object syntax
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 59
 Check moved-from state
 
@@ -24,7 +24,7 @@ Check moved-from state
 
 =======================================
 
-False Positive Failure:
+False Negative Failure:
 Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 60
 Check moved-from state
 

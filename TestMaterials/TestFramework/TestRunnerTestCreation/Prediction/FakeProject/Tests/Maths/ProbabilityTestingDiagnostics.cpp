@@ -12,12 +12,12 @@
 namespace fakeProject::testing
 {
     [[nodiscard]]
-    std::filesystem::path probability_false_positive_test::source_file() const
+    std::filesystem::path probability_false_negative_test::source_file() const
     {
         return std::source_location::current().file_name();
     }
 
-    void probability_false_positive_test::run_tests()
+    void probability_false_negative_test::run_tests()
     {
         // For example:
 
