@@ -38,6 +38,8 @@ namespace sequoia::testing
 
     void test_serial_verbose_output();
 
+    void test_throwing_tests();
+
     void test_prune_basic_output();
 
     void test_nested_suite();
@@ -78,6 +80,6 @@ namespace sequoia::testing
 
     std::filesystem::path write(std::string_view dirName, std::stringstream& output) const;
 
-    std::filesystem::path check_output(std::string_view description, std::string_view dirName, std::stringstream& output);
+    std::filesystem::path check_output(reporter description, std::string_view dirName, std::stringstream& output);
   };
 }

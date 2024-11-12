@@ -364,7 +364,7 @@ namespace sequoia::testing
       std::vector<std::filesystem::path> materialsPaths{};
 
       // TO DO: may need generalizing since suites can have arbitrary depth.
-      std::string name{s.name};
+      const std::string name{s.name};
 
       extract_tree(std::forward<Suite>(s),
                    std::forward<Filter>(filter),
@@ -375,7 +375,8 @@ namespace sequoia::testing
                                        test.source_file(),
                                        proj_paths(),
                                        set_materials(test.source_file(), proj_paths(), materialsPaths),
-                                       make_active_recovery_paths(m_RecoveryMode, proj_paths()));
+                                       make_active_recovery_paths(m_RecoveryMode, proj_paths()),
+                                       std::nullopt);
                    
                        return {.summary{log_summary{test.name()}}, .optTest{std::move(test)}};
                      }

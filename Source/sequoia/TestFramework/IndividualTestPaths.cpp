@@ -37,7 +37,7 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    fs::path versioned_diagnostics(fs::path dir, std::string_view suite, const fs::path& source, test_mode mode, std::string_view suffix)
+    fs::path versioned_diagnostics(fs::path dir, std::string_view suite, const fs::path& source, test_mode mode, std::string_view suffix,const std::optional<std::string>& platform)
     {
       const auto file{
         fs::path{source}.filename()
@@ -45,6 +45,7 @@ namespace sequoia::testing
                         .concat("_")
                         .concat(to_tag(mode))
                         .concat(suffix)
+                        .concat(platform ? "_" + platform.value() : "")
                         .concat(".txt")};
 
       return (dir /= fs::path{replace_all(suite, " ", "_")}) /= file;
@@ -100,8 +101,8 @@ namespace sequoia::testing
 
   //===================================== individual_diagnostics_paths =====================================//
 
-  individual_diagnostics_paths::individual_diagnostics_paths(fs::path projectRoot, std::string_view suite, const fs::path& source, test_mode mode)
-    : m_Diagnostics{versioned_diagnostics(output_paths::diagnostics(projectRoot), suite, source, mode, "Output")}
-    , m_CaughtExceptions{versioned_diagnostics(output_paths::diagnostics(projectRoot), suite, source, mode, "Exceptions")}
+  individual_diagnostics_paths::individual_diagnostics_paths(const fs::path& projectRoot, std::string_view suite, const fs::path& source, test_mode mode, const std::optional<std::string>& platform)
+    : m_Diagnostics{versioned_diagnostics(output_paths::diagnostics(projectRoot), suite, source, mode, "Output", platform)}
+    , m_CaughtExceptions{versioned_diagnostics(output_paths::diagnostics(projectRoot), suite, source, mode, "Exceptions", platform)}
   {}
 }

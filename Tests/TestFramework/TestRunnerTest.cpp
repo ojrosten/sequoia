@@ -75,6 +75,23 @@ namespace sequoia::testing
       }
     };
 
+    class throwing_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      std::filesystem::path source_file() const
+      {
+        return std::source_location::current().file_name();
+      }
+
+      void run_tests()
+      {
+        check_exception_thrown<std::runtime_error>("Exception", [](){ throw std::runtime_error{"Oops"}; });
+      }
+    };
+
     class failing_fp_test final : public free_false_negative_test
     {
     public:
@@ -292,6 +309,7 @@ namespace sequoia::testing
     test_basic_output();
     test_verbose_output();
     test_serial_verbose_output();
+    test_throwing_tests();
     test_filtered_suites();
     test_prune_basic_output();
     test_nested_suite();
@@ -333,7 +351,7 @@ namespace sequoia::testing
     return filePath;
   }
 
-  fs::path test_runner_test::check_output(std::string_view description, std::string_view dirName, std::stringstream& output)
+  fs::path test_runner_test::check_output(reporter description, std::string_view dirName, std::stringstream& output)
   {
     fs::path filePath{write(dirName, output)};
     check(equivalence, description, working_materials() /= dirName, predictive_materials() /= dirName);
@@ -541,7 +559,7 @@ namespace sequoia::testing
                        outputStream};
 
     runner.execute();
-    check_output(report({"No Tests"}), "NoTests", outputStream);
+    check_output("No Tests", "NoTests", outputStream);
 
     runner.add_test_suite(
       "Failing Suite",
@@ -551,7 +569,7 @@ namespace sequoia::testing
     );
 
     runner.execute();
-    check_output(report({"Basic Output"}), "BasicOutput", outputStream);
+    check_output("Basic Output", "BasicOutput", outputStream);
   }
 
   void test_runner_test::test_verbose_output()
@@ -560,7 +578,7 @@ namespace sequoia::testing
     auto runner{make_failing_suite({{(minimal_fake_path()).generic_string(), "-v"}}, outputStream)};
 
     runner.execute();
-    check_output(report({"Basic Verbose Output"}), "BasicVerboseOutput", outputStream);
+    check_output("Basic Verbose Output", "BasicVerboseOutput", outputStream);
   }
 
   void test_runner_test::test_serial_verbose_output()
@@ -569,7 +587,28 @@ namespace sequoia::testing
     auto runner{make_failing_suite({{(minimal_fake_path()).generic_string(), "-v", "--serial"}}, outputStream)};
 
     runner.execute();
-    check_output(report({"Basic Serial Verbose Output"}), "BasicSerialVerboseOutput", outputStream);
+    check_output("Basic Serial Verbose Output", "BasicSerialVerboseOutput", outputStream);
+  }
+
+  void test_runner_test::test_throwing_tests()
+  {
+    std::stringstream outputStream{};
+    commandline_arguments args{{(minimal_fake_path()).generic_string()}};
+
+    test_runner runner{args.size(),
+                       args.get(),
+                       "Oliver J. Rosten",
+                       "  ",
+                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
+                       outputStream};
+
+    runner.add_test_suite(
+      "Throwing Suite",
+      throwing_test{"Free Test"}
+    );
+
+    runner.execute();
+    check_output("Throwing Output", "ThrowingOutput", outputStream);
   }
 
   void test_runner_test::test_filtered_suites()
@@ -597,7 +636,7 @@ namespace sequoia::testing
     );
 
     runner.execute();
-    check_output(report({"Filtered Suite Output"}), "FilteredSuiteOutput", outputStream);
+    check_output("Filtered Suite Output", "FilteredSuiteOutput", outputStream);
   }
 
   void test_runner_test::test_prune_basic_output()
@@ -615,10 +654,10 @@ namespace sequoia::testing
                        outputStream};
 
     runner.execute();
-    check_output(report({"Prune with no stamp"}), "PruneWithNoStamp", outputStream);
+    check_output("Prune with no stamp", "PruneWithNoStamp", outputStream);
 
     runner.execute();
-    check_output(report({"Prune with no tests"}), "PruneWithNoTests", outputStream);
+    check_output("Prune with no tests", "PruneWithNoTests", outputStream);
   }
 
   void test_runner_test::test_nested_suite()
@@ -647,7 +686,7 @@ namespace sequoia::testing
       );
 
       runner.execute();
-      check_output(report({"Basic Nested Output"}), "BasicNestedOutput", outputStream);
+      check_output("Basic Nested Output", "BasicNestedOutput", outputStream);
   }
 
   void test_runner_test::test_nested_suite_verbose()
@@ -676,7 +715,7 @@ namespace sequoia::testing
     );
 
     runner.execute();
-    check_output(report({"Verbose Nested Output"}), "VerboseNestedOutput", outputStream);
+    check_output("Verbose Nested Output", "VerboseNestedOutput", outputStream);
   }
 
   void test_runner_test::test_instability_analysis()

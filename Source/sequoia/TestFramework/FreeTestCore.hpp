@@ -106,7 +106,7 @@ namespace sequoia::testing
     test_base(test_base&&)            noexcept = default;
     test_base& operator=(test_base&&) noexcept = default;
 
-    void initialize(test_mode mode, std::string_view suiteName, const normal_path& srcFile, const project_paths& projPaths, individual_materials_paths materials);
+    void initialize(test_mode mode, std::string_view suiteName, const normal_path& srcFile, const project_paths& projPaths, individual_materials_paths materials, const std::optional<std::string>& platform);
 
     void write_instability_analysis_output(const normal_path& srcFile, std::optional<std::size_t> index, const failure_output& output) const;
 
@@ -148,9 +148,9 @@ namespace sequoia::testing
     basic_test(const basic_test&)            = delete;
     basic_test& operator=(const basic_test&) = delete;
 
-    void initialize(std::string_view suiteName, const normal_path& srcFile, const project_paths& projPaths, individual_materials_paths materials, active_recovery_files files)
+    void initialize(std::string_view suiteName, const normal_path& srcFile, const project_paths& projPaths, individual_materials_paths materials, active_recovery_files files, const std::optional<std::string>& platform)
     {
-      test_base::initialize(mode, suiteName, srcFile, projPaths, std::move(materials));
+      test_base::initialize(mode, suiteName, srcFile, projPaths, std::move(materials), platform);
       checker_type::recovery(std::move(files));
     }
 

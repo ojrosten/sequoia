@@ -65,7 +65,7 @@ namespace sequoia::testing
   public:
     individual_diagnostics_paths() = default;
 
-    individual_diagnostics_paths(std::filesystem::path projectRoot, std::string_view suite, const std::filesystem::path& source, test_mode mode);
+    individual_diagnostics_paths(const std::filesystem::path& projectRoot, std::string_view suite, const std::filesystem::path& source, test_mode mode, const std::optional<std::string>& platform);
 
     [[nodiscard]]
     const std::filesystem::path& diagnostics_file() const noexcept

@@ -1,0 +1,15 @@
+
+Running tests...
+
+Throwing Suite:
+	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
+
+-----------Grand Totals-----------
+[Total Run Time: 1.9ms]
+[Execution Time: 604us]
+	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
+	Standard Performance Checks:               0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
