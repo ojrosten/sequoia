@@ -192,6 +192,12 @@ namespace sequoia::testing
         }
     && std::derived_from<T, test_base> && std::movable<T> && std::destructible<T>;
 
+  template<concrete_test T>
+  inline constexpr bool discriminates_platforms_v{
+    requires(const T& t){
+      { t.platform() } -> std::convertible_to<std::string>;
+    }
+  };
 
   /*! \brief Temporary workaround while waiting for variadic friends */
   class trivial_extender

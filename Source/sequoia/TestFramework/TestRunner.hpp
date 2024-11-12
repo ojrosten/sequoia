@@ -212,6 +212,15 @@ namespace sequoia::testing
     parallelizable_candidate m_Parallelizable{parallelizable_candidate::yes};
   };
 
+  template<concrete_test T>
+  [[nodiscard]]
+  std::optional<std::string> get_platform(const T& test){
+    if constexpr(discriminates_platforms_v<T>)
+      return test.platform();
+    else
+      return std::nullopt;
+  }
+
   /*! \brief Consumes command-line arguments and holds all test suites.
 
       If no arguments are specified, all tests are run; run with --help
@@ -376,7 +385,7 @@ namespace sequoia::testing
                                        proj_paths(),
                                        set_materials(test.source_file(), proj_paths(), materialsPaths),
                                        make_active_recovery_paths(m_RecoveryMode, proj_paths()),
-                                       std::nullopt);
+                                       get_platform(test));
                    
                        return {.summary{log_summary{test.name()}}, .optTest{std::move(test)}};
                      }

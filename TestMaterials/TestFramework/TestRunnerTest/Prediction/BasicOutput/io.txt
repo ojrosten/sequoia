@@ -17,14 +17,14 @@ Failing Suite:
 	=======================================
 
 	False Negative Failure:
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 108
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 128
 	False positive failure
 
 	[int]
 
 	=======================================
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 125
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 145
 	False negative failure
 
 	[int]
@@ -36,8 +36,8 @@ Failing Suite:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 4.69ms]
-[Execution Time: 442us]
+[Total Run Time: 5.44ms]
+[Execution Time: 470us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     1;  Failures:  1

@@ -92,6 +92,26 @@ namespace sequoia::testing
       }
     };
 
+    class platform_specific_throwing_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      std::filesystem::path source_file() const
+      {
+        return std::source_location::current().file_name();
+      }
+
+      [[nodiscard]]
+      std::string platform() const { return "Platypus"; }
+
+      void run_tests()
+      {
+        check_exception_thrown<std::runtime_error>("Another Exception", [](){ throw std::runtime_error{"Oh Dear"}; });
+      }
+    };
+
     class failing_fp_test final : public free_false_negative_test
     {
     public:
@@ -604,13 +624,14 @@ namespace sequoia::testing
 
     runner.add_test_suite(
       "Throwing Suite",
-      throwing_test{"Free Test"}
+      throwing_test{"Free Test"},
+      platform_specific_throwing_test{"Platform Test"}
     );
 
     runner.execute();
     check_output("Throwing Output", "ThrowingOutput", outputStream);
 
-    check(equivalence, "Exception Output", predictive_materials() / "ExceptionsOutput/TestRunnerTest_Exceptions.txt", auxiliary_materials() / "FakeProject/output/DiagnosticsOutput/Throwing_Suite/TestRunnerTest_Exceptions.txt");
+    check(equivalence, "Exception Output", predictive_materials() / "Throwing_Suite", auxiliary_materials() / "FakeProject/output/DiagnosticsOutput/Throwing_Suite");
   }
 
   void test_runner_test::test_filtered_suites()
