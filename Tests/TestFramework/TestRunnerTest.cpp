@@ -609,6 +609,8 @@ namespace sequoia::testing
 
     runner.execute();
     check_output("Throwing Output", "ThrowingOutput", outputStream);
+
+    check(equivalence, "Exception Output", predictive_materials() / "ExceptionsOutput/TestRunnerTest_Exceptions.txt", auxiliary_materials() / "FakeProject/output/DiagnosticsOutput/Throwing_Suite/TestRunnerTest_Exceptions.txt");
   }
 
   void test_runner_test::test_filtered_suites()
