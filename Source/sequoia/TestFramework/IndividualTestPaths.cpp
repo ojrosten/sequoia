@@ -21,6 +21,22 @@ namespace sequoia::testing
   namespace
   {
     [[nodiscard]]
+    std::string to_tag(test_mode mode)
+    {
+      switch(mode)
+      {
+      case test_mode::false_positive:
+        return "FN";
+      case test_mode::false_negative:
+        return "FP";
+      case test_mode::standard:
+        return "";
+      }
+
+      throw std::logic_error{"Unrecognized case for test_mode"};
+    }
+
+    [[nodiscard]]
     fs::path versioned_diagnostics(fs::path dir, std::string_view suite, const fs::path& source, std::string_view mode, std::string_view suffix)
     {
       const auto file{
@@ -84,8 +100,8 @@ namespace sequoia::testing
 
   //===================================== individual_diagnostics_paths =====================================//
 
-  individual_diagnostics_paths::individual_diagnostics_paths(fs::path projectRoot, std::string_view suite, const fs::path& source, std::string_view mode)
-    : m_Diagnostics{versioned_diagnostics(output_paths::diagnostics(projectRoot), suite, source, mode, "Output")}
-    , m_CaughtExceptions{versioned_diagnostics(output_paths::diagnostics(projectRoot), suite, source, mode, "Exceptions")}
+  individual_diagnostics_paths::individual_diagnostics_paths(fs::path projectRoot, std::string_view suite, const fs::path& source, test_mode mode)
+    : m_Diagnostics{versioned_diagnostics(output_paths::diagnostics(projectRoot), suite, source, to_tag(mode), "Output")}
+    , m_CaughtExceptions{versioned_diagnostics(output_paths::diagnostics(projectRoot), suite, source, to_tag(mode), "Exceptions")}
   {}
 }

@@ -40,9 +40,6 @@ namespace sequoia::testing
     time_point m_Start;
   };
 
-  [[nodiscard]]
-  std::string to_tag(test_mode mode);
-
   /*! \brief class from which all tests ultimately derive
 
       The primary purpose of this class is to reduce code which is templated.

@@ -12,6 +12,7 @@
  */
 
 #include "sequoia/TestFramework/ProjectPaths.hpp"
+#include "sequoia/TestFramework/TestMode.hpp"
 
 namespace sequoia::testing
 {
@@ -51,9 +52,6 @@ namespace sequoia::testing
 
     [[nodiscard]]
     friend bool operator==(const individual_materials_paths&, const individual_materials_paths&) noexcept = default;
-
-    [[nodiscard]]
-    friend bool operator!=(const individual_materials_paths&, const individual_materials_paths&) noexcept = default;
   private:
     std::filesystem::path
       m_Materials,
@@ -67,7 +65,7 @@ namespace sequoia::testing
   public:
     individual_diagnostics_paths() = default;
 
-    individual_diagnostics_paths(std::filesystem::path projectRoot, std::string_view suite, const std::filesystem::path& source, std::string_view mode);
+    individual_diagnostics_paths(std::filesystem::path projectRoot, std::string_view suite, const std::filesystem::path& source, test_mode mode);
 
     [[nodiscard]]
     const std::filesystem::path& diagnostics_file() const noexcept

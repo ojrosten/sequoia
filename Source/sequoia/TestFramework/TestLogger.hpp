@@ -22,18 +22,13 @@
 #include "sequoia/Core/Meta/TypeTraits.hpp"
 #include "sequoia/TestFramework/FailureInfo.hpp"
 #include "sequoia/TestFramework/Output.hpp"
+#include "sequoia/TestFramework/TestMode.hpp"
 
 #include <chrono>
 #include <filesystem>
 
 namespace sequoia::testing
 {
-  /*! \brief Specifies whether tests are run as standard tests or in false postive/negative mode.
-
-      \anchor test_mode_enum
-   */
-  enum class test_mode { standard, false_negative, false_positive };
-
   /*! \brief Holds paths to files where recovery information will be written if the path is not empty
   
    */

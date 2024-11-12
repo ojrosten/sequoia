@@ -363,7 +363,7 @@ namespace sequoia::testing
 
       std::vector<std::filesystem::path> materialsPaths{};
 
-      // TO DO: may need generalizing
+      // TO DO: may need generalizing since suites can have arbitrary depth.
       std::string name{s.name};
 
       extract_tree(std::forward<Suite>(s),

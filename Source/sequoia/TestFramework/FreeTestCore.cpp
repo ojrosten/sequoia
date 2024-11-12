@@ -38,7 +38,7 @@ namespace sequoia::testing
   {
     m_ProjectPaths = projPaths;
     m_Materials   = std::move(materials);
-    m_Diagnostics = {project_root(), suiteName, srcFile, to_tag(mode)};
+    m_Diagnostics = {project_root(), suiteName, srcFile, mode};
     std::filesystem::create_directories(m_Diagnostics.diagnostics_file().parent_path());
   }
 
@@ -59,21 +59,5 @@ namespace sequoia::testing
   std::chrono::nanoseconds timer::time_elapsed() const
   {
     return std::chrono::steady_clock::now() - m_Start;
-  }
-
-  [[nodiscard]]
-  std::string to_tag(test_mode mode)
-  {
-    switch(mode)
-    {
-    case test_mode::false_positive:
-      return "FN";
-    case test_mode::false_negative:
-      return "FP";
-    case test_mode::standard:
-      return "";
-    }
-
-    throw std::logic_error{"Unrecognized case for test_mode"};
   }
 }
