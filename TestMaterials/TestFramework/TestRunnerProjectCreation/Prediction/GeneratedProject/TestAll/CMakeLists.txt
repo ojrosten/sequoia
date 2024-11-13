@@ -2,10 +2,10 @@ cmake_minimum_required(VERSION 3.20)
 
 project(GeneratedProjectTests LANGUAGES CXX)
 
-set(Dependencies ../dependencies)
+set(Dependencies ${CMAKE_CURRENT_LIST_DIR}/../dependencies)
 set(BuildSystem ${Dependencies}/sequoia/build_system)
-set(TestDir ../Tests)
-set(SourceDir ../Source)
+set(TestDir ${CMAKE_CURRENT_LIST_DIR}/../Tests)
+set(SourceDir ${CMAKE_CURRENT_LIST_DIR}/../Source)
 
 include(${BuildSystem}/Utilities.cmake)
 
