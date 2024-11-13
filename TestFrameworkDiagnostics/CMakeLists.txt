@@ -3,13 +3,13 @@ cmake_minimum_required(VERSION 3.20)
 project(SequoiaTestFrameworkDiagnostics DESCRIPTION "The Sequoia Library plus diagnostics for the testing framework"
                                         LANGUAGES CXX)
 
-include(../build_system/Utilities.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/../build_system/Utilities.cmake)
 
 sequoia_init()
 
 add_executable(TestFrameworkDiagnostics TestFrameworkDiagnosticsMain.cpp)
 
-set(TestDir ../Tests)
+set(TestDir ${CMAKE_CURRENT_LIST_DIR}/../Tests)
 
 target_sources(TestFrameworkDiagnostics PRIVATE
                ${TestDir}/Parsing/CommandLineArgumentsDiagnostics.cpp
