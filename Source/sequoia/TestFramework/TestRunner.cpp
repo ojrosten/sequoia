@@ -86,42 +86,15 @@ namespace sequoia::testing
       }
     }
 
-    [[nodiscard]]
-    fs::path test_summary_filename(const fs::path& sourceFile, const project_paths& projPaths)
-    {
-      const auto name{fs::path{sourceFile}.replace_extension(".txt")};
-      if(name.empty())
-        throw std::logic_error("Source files should have a non-trivial name!");
-
-      if(!name.is_absolute())
-      {
-        if(const auto testRepo{projPaths.tests().repo()}; !testRepo.empty())
-        {
-          return projPaths.output().test_summaries() / back(testRepo) / rebase_from(name, testRepo);
-        }
-      }
-      else
-      {
-        auto summaryFile{projPaths.output().test_summaries()};
-        auto iters{std::ranges::mismatch(name, summaryFile)};
-
-        while(iters.in1 != name.end())
-          summaryFile /= *iters.in1++;
-
-        return summaryFile;
-      }
-
-      return name;
-    }
-
     struct test_paths
     {
       test_paths(const std::filesystem::path& sourceFile,
+                 const std::filesystem::path& summaryFile,
                  const std::filesystem::path& workingMaterials,
                  const std::filesystem::path& predictiveMaterials,
                  const project_paths& projPaths)
         : test_file{rebase_from(sourceFile, projPaths.tests().repo())}
-        , summary{test_summary_filename(sourceFile, projPaths)}
+        , summary{summaryFile}
         , workingMaterials{workingMaterials}
         , predictions{predictiveMaterials}
       {}
@@ -930,6 +903,7 @@ namespace sequoia::testing
               auto pathsMaker{
                   [this](auto& test) -> test_paths {
                     return {test.source_file(),
+                            test.summary_file_path(),
                             test.working_materials(),
                             test.predictive_materials(),
                             proj_paths()};

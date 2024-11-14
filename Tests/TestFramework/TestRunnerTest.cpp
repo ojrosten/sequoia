@@ -104,7 +104,7 @@ namespace sequoia::testing
       }
 
       [[nodiscard]]
-      std::string platform() const { return "Platypus"; }
+      std::string output_discriminator() const { return "Platypus"; }
 
       void run_tests()
       {

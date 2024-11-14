@@ -90,6 +90,12 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
+    const std::filesystem::path& summary_file_path() const noexcept
+    {
+      return m_SummaryFile;
+    }
+
+    [[nodiscard]]
     const std::filesystem::path& caught_exceptions_output_filename() const noexcept
     {
       return m_Diagnostics.caught_exceptions_file();
@@ -106,7 +112,14 @@ namespace sequoia::testing
     test_base(test_base&&)            noexcept = default;
     test_base& operator=(test_base&&) noexcept = default;
 
-    void initialize(test_mode mode, std::string_view suiteName, const normal_path& srcFile, const project_paths& projPaths, individual_materials_paths materials, const std::optional<std::string>& platform);
+    void do_initialize(test_mode mode, std::string_view suiteName, const normal_path& srcFile, const project_paths& projPaths, individual_materials_paths materials, const std::optional<std::string>& outputDiscriminator, const std::optional<std::string>& reductionDiscriminator)
+    {
+      m_ProjectPaths = projPaths;
+      m_Materials    = std::move(materials);
+      m_Diagnostics  = {project_root(), suiteName, srcFile, mode, outputDiscriminator};
+      m_SummaryFile  = test_summary_filename(srcFile, reductionDiscriminator);
+      std::filesystem::create_directories(m_Diagnostics.diagnostics_file().parent_path());
+    }
 
     void write_instability_analysis_output(const normal_path& srcFile, std::optional<std::size_t> index, const failure_output& output) const;
 
@@ -120,6 +133,10 @@ namespace sequoia::testing
     project_paths m_ProjectPaths{};
     individual_materials_paths m_Materials{};
     individual_diagnostics_paths m_Diagnostics{};
+    std::filesystem::path m_SummaryFile{};
+
+    [[nodiscard]]
+    std::filesystem::path test_summary_filename(const std::filesystem::path& sourceFile, const std::optional<std::string>& discriminator) const;
   };
 
   /*! \brief class template from which all concrete tests should derive.
@@ -148,10 +165,11 @@ namespace sequoia::testing
     basic_test(const basic_test&)            = delete;
     basic_test& operator=(const basic_test&) = delete;
 
-    void initialize(std::string_view suiteName, const normal_path& srcFile, const project_paths& projPaths, individual_materials_paths materials, active_recovery_files files, const std::optional<std::string>& platform)
+    template<class Self>
+    void initialize(this Self& self, std::string_view suiteName, const project_paths& projPaths, individual_materials_paths materials, active_recovery_files files, const std::optional<std::string>& outputDiscriminator, const std::optional<std::string>& reductionDiscriminator)
     {
-      test_base::initialize(mode, suiteName, srcFile, projPaths, std::move(materials), platform);
-      checker_type::recovery(std::move(files));
+      self.do_initialize(mode, suiteName, self.source_file(), projPaths, std::move(materials), outputDiscriminator, reductionDiscriminator);
+      self.recovery(std::move(files));
     }
 
     using checker_type::reset_results;
@@ -193,9 +211,16 @@ namespace sequoia::testing
     && std::derived_from<T, test_base> && std::movable<T> && std::destructible<T>;
 
   template<concrete_test T>
-  inline constexpr bool discriminates_platforms_v{
+  inline constexpr bool has_discriminated_output_v{
     requires(const T& t){
-      { t.platform() } -> std::convertible_to<std::string>;
+      { t.output_discriminator() } -> std::convertible_to<std::string>;
+    }
+  };
+
+  template<concrete_test T>
+  inline constexpr bool has_reduced_output_v{
+    requires(const T & t){
+      { t.reduction_discriminator() } -> std::convertible_to<std::string>;
     }
   };
 

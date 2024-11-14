@@ -80,6 +80,12 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
+    const std::filesystem::path& summary_file_path() const noexcept
+    {
+      return m_pTest->summary_file_path();
+    }
+
+    [[nodiscard]]
     std::filesystem::path source_file() const
     {
       return m_pTest->source_file();
@@ -121,10 +127,11 @@ namespace sequoia::testing
     {
       virtual ~soul() = default;
 
-      virtual const std::string& name() const noexcept           = 0;
-      virtual std::filesystem::path source_file() const          = 0;
-      virtual std::filesystem::path working_materials() const    = 0;
-      virtual std::filesystem::path predictive_materials() const = 0;
+      virtual const std::string& name() const noexcept                        = 0;
+      virtual const std::filesystem::path& summary_file_path() const noexcept = 0;
+      virtual std::filesystem::path source_file() const                       = 0;
+      virtual std::filesystem::path working_materials() const                 = 0;
+      virtual std::filesystem::path predictive_materials() const              = 0;
 
       virtual log_summary execute(std::optional<std::size_t> index) = 0;
       virtual void reset(const project_paths& projPaths, std::vector<std::filesystem::path>& materialsPaths) = 0;
@@ -147,6 +154,12 @@ namespace sequoia::testing
       const std::string& name() const noexcept final
       {
         return m_Test.name();
+      }
+
+      [[nodiscard]]
+      const std::filesystem::path& summary_file_path() const noexcept final
+      {
+        return m_Test.summary_file_path();
       }
 
       [[nodiscard]]
@@ -214,9 +227,18 @@ namespace sequoia::testing
 
   template<concrete_test T>
   [[nodiscard]]
-  std::optional<std::string> get_platform(const T& test){
-    if constexpr(discriminates_platforms_v<T>)
-      return test.platform();
+  std::optional<std::string> get_output_discriminator(const T& test){
+    if constexpr(has_discriminated_output_v<T>)
+      return test.output_discriminator();
+    else
+      return std::nullopt;
+  }
+
+  template<concrete_test T>
+  [[nodiscard]]
+  std::optional<std::string> get_reduction_discriminator(const T& test){
+    if constexpr(has_reduced_output_v<T>)
+      return test.reduction_discriminator();
     else
       return std::nullopt;
   }
@@ -381,11 +403,11 @@ namespace sequoia::testing
                      [] <class... Ts> (const suite<Ts...>&s) -> suite_node { return {.summary{log_summary{s.name}}}; },
                      [this, &name, &materialsPaths]<concrete_test T>(T&& test) -> suite_node {
                        test.initialize(name,
-                                       test.source_file(),
                                        proj_paths(),
                                        set_materials(test.source_file(), proj_paths(), materialsPaths),
                                        make_active_recovery_paths(m_RecoveryMode, proj_paths()),
-                                       get_platform(test));
+                                       get_output_discriminator(test),
+                                       get_reduction_discriminator(test));
                    
                        return {.summary{log_summary{test.name()}}, .optTest{std::move(test)}};
                      }
