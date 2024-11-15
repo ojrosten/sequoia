@@ -2,12 +2,12 @@
 Running tests, synchronously...
 
 Failing Suite:
-[Execution Time: 307us]
+[Execution Time: 269us]
 	Free Test
-	[Execution Time: 136us]
+	[Execution Time: 99.3us]
 		Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
-		Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 74
+		Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 79
 		Standard Failure
 
 		[int]
@@ -18,11 +18,11 @@ Failing Suite:
 		=======================================
 
 	False positive Test
-	[Execution Time: 76.5us]
+	[Execution Time: 67us]
 		False Negative Checks:                     1;  Failures:  1
 
 		False Negative Failure:
-		Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 128
+		Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 136
 		False positive failure
 
 		[int]
@@ -30,10 +30,10 @@ Failing Suite:
 		=======================================
 
 	False negative Test
-	[Execution Time: 95us]
+	[Execution Time: 103us]
 		False Positive Checks:                     1;  Failures:  1
 
-		Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 145
+		Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 153
 		False negative failure
 
 		[int]
@@ -45,8 +45,8 @@ Failing Suite:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 4.3ms]
-[Execution Time: 307us]
+[Total Run Time: 4.2ms]
+[Execution Time: 269us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     1;  Failures:  1

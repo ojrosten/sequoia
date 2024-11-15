@@ -2,7 +2,7 @@
 Running tests, synchronously...
 
 Suite:
-[Execution Time: 1.56ms]
+[Execution Time: 1.2ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 0]
 
 ******  Critical Failures:  1  ******
@@ -12,14 +12,14 @@ Suite:
 	Error
 
 	Exception thrown before any checks performed in file
-	C:/Users/olive/sequoia/Tests/TestFramework/TestRunnerTest.cpp
+	C:/Users/olive/sequoia/Tests/Free_Test.cpp
 
 	=======================================
 
 
 -----------Grand Totals-----------
-[Total Run Time: 4.12ms]
-[Execution Time: 1.56ms]
+[Total Run Time: 2.95ms]
+[Execution Time: 1.2ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 0]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -33,11 +33,11 @@ Suite:
 Running tests, synchronously...
 
 Suite:
-[Execution Time: 1.05ms]
+[Execution Time: 597us]
 
 -----------Grand Totals-----------
-[Total Run Time: 3.52ms]
-[Execution Time: 1.05ms]
+[Total Run Time: 2.04ms]
+[Execution Time: 597us]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -45,7 +45,7 @@ Suite:
 	False Negative Checks:                     0;  Failures:  0
 	False Negative Performance Checks:         0;  Failures:  0
 
-Instability detected in file "TestRunnerTest.cpp"
+Instability detected in file "Free_Test.cpp"
 Outcome frequencies:
 [50%,50%]
 
@@ -57,7 +57,7 @@ vs.
 	Error
 
 	Exception thrown before any checks performed in file
-	C:/Users/olive/sequoia/Tests/TestFramework/TestRunnerTest.cpp
+	C:/Users/olive/sequoia/Tests/Free_Test.cpp
 
 	=======================================
 

@@ -45,7 +45,7 @@ namespace sequoia::testing
                         .concat("_")
                         .concat(to_tag(mode))
                         .concat(suffix)
-                        .concat(platform ? "_" + platform.value() : "")
+                        .concat((platform && !platform->empty()) ? "_" + platform.value() : "")
                         .concat(".txt")};
 
       return (dir /= fs::path{replace_all(suite, " ", "_")}) /= file;

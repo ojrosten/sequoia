@@ -49,7 +49,7 @@ namespace sequoia::testing
     const auto name{
         [&]() {
           auto summaryFile{fs::path{sourceFile}.replace_extension(".txt")};
-          if(discriminator)
+          if(discriminator && !discriminator->empty())
             summaryFile.replace_filename(summaryFile.stem().concat("_" + discriminator.value()).concat(summaryFile.extension().string()));
 
           return summaryFile;

@@ -78,8 +78,8 @@ namespace sequoia::testing
     [[nodiscard]]
     std::string zeroth_arg() const;
 
-    std::filesystem::path write(std::string_view dirName, std::stringstream& output) const;
+    void write(std::string_view dirName, std::stringstream& output) const;
 
-    std::filesystem::path check_output(reporter description, std::string_view dirName, std::stringstream& output);
+    void check_output(reporter description, std::string_view dirName, std::stringstream& output);
   };
 }

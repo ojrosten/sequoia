@@ -2,10 +2,10 @@
 Running tests, synchronously...
 
 Suite:
-[Execution Time: 4.39ms]
+[Execution Time: 4.14ms]
 	Standard Top Level Checks:                 5;  Failures:  1  [Deep checks: 5]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 249
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 257
 	Always fails
 
 	[bool]
@@ -15,8 +15,8 @@ Suite:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 9.47ms]
-[Execution Time: 4.39ms]
+[Total Run Time: 9.22ms]
+[Execution Time: 4.14ms]
 	Standard Top Level Checks:                 5;  Failures:  1  [Deep checks: 5]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -27,10 +27,10 @@ Suite:
 Running tests, synchronously...
 
 Suite:
-[Execution Time: 4.08ms]
+[Execution Time: 3.21ms]
 	Standard Top Level Checks:                 5;  Failures:  3  [Deep checks: 5]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 249
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 257
 	Always fails
 
 	[bool]
@@ -38,7 +38,7 @@ Suite:
 
 	=======================================
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 169
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 177
 	Flipper
 
 	[bool]
@@ -46,7 +46,7 @@ Suite:
 
 	=======================================
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 212
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 220
 	Period 2: Pass/Fail/Pass
 
 	[int]
@@ -58,8 +58,8 @@ Suite:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 10.1ms]
-[Execution Time: 4.08ms]
+[Total Run Time: 8.5ms]
+[Execution Time: 3.21ms]
 	Standard Top Level Checks:                 5;  Failures:  3  [Deep checks: 5]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -70,10 +70,10 @@ Suite:
 Running tests, synchronously...
 
 Suite:
-[Execution Time: 3.27ms]
+[Execution Time: 3.24ms]
 	Standard Top Level Checks:                 5;  Failures:  2  [Deep checks: 5]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 249
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 257
 	Always fails
 
 	[bool]
@@ -81,7 +81,126 @@ Suite:
 
 	=======================================
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 213
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 221
+	Period 3: Pass/Pass/Fail
+
+	[bool]
+	check failed
+
+	=======================================
+
+
+-----------Grand Totals-----------
+[Total Run Time: 8.43ms]
+[Execution Time: 3.24ms]
+	Standard Top Level Checks:                 5;  Failures:  2  [Deep checks: 5]
+	Standard Performance Checks:               0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
+
+Running tests, synchronously...
+
+Suite:
+[Execution Time: 3.24ms]
+	Standard Top Level Checks:                 5;  Failures:  3  [Deep checks: 5]
+
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 257
+	Always fails
+
+	[bool]
+	check failed
+
+	=======================================
+
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 177
+	Flipper
+
+	[bool]
+	check failed
+
+	=======================================
+
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 220
+	Period 2: Pass/Fail/Pass
+
+	[int]
+	operator== returned false
+	Obtained : 0
+	Predicted: 1
+
+	=======================================
+
+
+-----------Grand Totals-----------
+[Total Run Time: 8.45ms]
+[Execution Time: 3.24ms]
+	Standard Top Level Checks:                 5;  Failures:  3  [Deep checks: 5]
+	Standard Performance Checks:               0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
+
+Running tests, synchronously...
+
+Suite:
+[Execution Time: 3.44ms]
+	Standard Top Level Checks:                 5;  Failures:  1  [Deep checks: 5]
+
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 257
+	Always fails
+
+	[bool]
+	check failed
+
+	=======================================
+
+
+-----------Grand Totals-----------
+[Total Run Time: 8.61ms]
+[Execution Time: 3.44ms]
+	Standard Top Level Checks:                 5;  Failures:  1  [Deep checks: 5]
+	Standard Performance Checks:               0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
+
+Running tests, synchronously...
+
+Suite:
+[Execution Time: 4.08ms]
+	Standard Top Level Checks:                 5;  Failures:  4  [Deep checks: 5]
+
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 257
+	Always fails
+
+	[bool]
+	check failed
+
+	=======================================
+
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 177
+	Flipper
+
+	[bool]
+	check failed
+
+	=======================================
+
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 220
+	Period 2: Pass/Fail/Pass
+
+	[int]
+	operator== returned false
+	Obtained : 0
+	Predicted: 1
+
+	=======================================
+
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 221
 	Period 3: Pass/Pass/Fail
 
 	[bool]
@@ -92,126 +211,7 @@ Suite:
 
 -----------Grand Totals-----------
 [Total Run Time: 9.22ms]
-[Execution Time: 3.27ms]
-	Standard Top Level Checks:                 5;  Failures:  2  [Deep checks: 5]
-	Standard Performance Checks:               0;  Failures:  0
-	False Positive Checks:                     0;  Failures:  0
-	False Positive Performance Checks:         0;  Failures:  0
-	False Negative Checks:                     0;  Failures:  0
-	False Negative Performance Checks:         0;  Failures:  0
-
-Running tests, synchronously...
-
-Suite:
-[Execution Time: 3.57ms]
-	Standard Top Level Checks:                 5;  Failures:  3  [Deep checks: 5]
-
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 249
-	Always fails
-
-	[bool]
-	check failed
-
-	=======================================
-
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 169
-	Flipper
-
-	[bool]
-	check failed
-
-	=======================================
-
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 212
-	Period 2: Pass/Fail/Pass
-
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
-
-	=======================================
-
-
------------Grand Totals-----------
-[Total Run Time: 8.54ms]
-[Execution Time: 3.57ms]
-	Standard Top Level Checks:                 5;  Failures:  3  [Deep checks: 5]
-	Standard Performance Checks:               0;  Failures:  0
-	False Positive Checks:                     0;  Failures:  0
-	False Positive Performance Checks:         0;  Failures:  0
-	False Negative Checks:                     0;  Failures:  0
-	False Negative Performance Checks:         0;  Failures:  0
-
-Running tests, synchronously...
-
-Suite:
-[Execution Time: 4.19ms]
-	Standard Top Level Checks:                 5;  Failures:  1  [Deep checks: 5]
-
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 249
-	Always fails
-
-	[bool]
-	check failed
-
-	=======================================
-
-
------------Grand Totals-----------
-[Total Run Time: 9.17ms]
-[Execution Time: 4.19ms]
-	Standard Top Level Checks:                 5;  Failures:  1  [Deep checks: 5]
-	Standard Performance Checks:               0;  Failures:  0
-	False Positive Checks:                     0;  Failures:  0
-	False Positive Performance Checks:         0;  Failures:  0
-	False Negative Checks:                     0;  Failures:  0
-	False Negative Performance Checks:         0;  Failures:  0
-
-Running tests, synchronously...
-
-Suite:
-[Execution Time: 3.51ms]
-	Standard Top Level Checks:                 5;  Failures:  4  [Deep checks: 5]
-
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 249
-	Always fails
-
-	[bool]
-	check failed
-
-	=======================================
-
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 169
-	Flipper
-
-	[bool]
-	check failed
-
-	=======================================
-
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 212
-	Period 2: Pass/Fail/Pass
-
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
-
-	=======================================
-
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 213
-	Period 3: Pass/Pass/Fail
-
-	[bool]
-	check failed
-
-	=======================================
-
-
------------Grand Totals-----------
-[Total Run Time: 8.36ms]
-[Execution Time: 3.51ms]
+[Execution Time: 4.08ms]
 	Standard Top Level Checks:                 5;  Failures:  4  [Deep checks: 5]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -219,7 +219,7 @@ Suite:
 	False Negative Checks:                     0;  Failures:  0
 	False Negative Performance Checks:         0;  Failures:  0
 
-Instability detected in file "TestRunnerTest.cpp"
+Instability detected in file "Flipper_Free_Test.cpp"
 Outcome frequencies:
 [50%,50%]
 
@@ -227,7 +227,7 @@ Outcome frequencies:
 
 vs.
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 169
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 177
 	Flipper
 
 	[bool]
@@ -237,7 +237,7 @@ vs.
 
 $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
-Instability detected in file "TestRunnerTest.cpp"
+Instability detected in file "Free_Test.cpp"
 Outcome frequencies:
 [33.3%,33.3%,16.7%,16.7%]
 
@@ -245,7 +245,7 @@ Outcome frequencies:
 
 vs.
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 212
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 220
 	Period 2: Pass/Fail/Pass
 
 	[int]
@@ -257,7 +257,7 @@ vs.
 
 vs.
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 212
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 220
 	Period 2: Pass/Fail/Pass
 
 	[int]
@@ -267,7 +267,7 @@ vs.
 
 	=======================================
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 213
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 221
 	Period 3: Pass/Pass/Fail
 
 	[bool]
@@ -277,7 +277,7 @@ vs.
 
 vs.
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 213
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 221
 	Period 3: Pass/Pass/Fail
 
 	[bool]

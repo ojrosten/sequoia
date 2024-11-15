@@ -24,6 +24,11 @@ namespace sequoia::testing
       int x{};
     };
 
+    [[nodiscard]]
+    fs::path make_fake_file_path(std::string_view testName) {
+      return fs::path{std::source_location::current().file_name()}.parent_path().parent_path() / replace_all(testName, " ", "_").append(".cpp");
+    }
+
     class foo_test final : public regular_test
     {
     public:
@@ -32,7 +37,7 @@ namespace sequoia::testing
       [[nodiscard]]
       std::filesystem::path source_file() const
       {
-        return std::source_location::current().file_name();
+        return make_fake_file_path(name());
       }
 
       void run_tests()
@@ -49,7 +54,7 @@ namespace sequoia::testing
       [[nodiscard]]
       std::filesystem::path source_file() const
       {
-        return std::source_location::current().file_name();
+        return make_fake_file_path(name());
       }
 
       void run_tests()
@@ -66,7 +71,7 @@ namespace sequoia::testing
       [[nodiscard]]
       std::filesystem::path source_file() const
       {
-        return std::source_location::current().file_name();
+        return make_fake_file_path(name());
       }
 
       void run_tests()
@@ -83,7 +88,7 @@ namespace sequoia::testing
       [[nodiscard]]
       std::filesystem::path source_file() const
       {
-        return std::source_location::current().file_name();
+        return make_fake_file_path(name());
       }
 
       void run_tests()
@@ -100,11 +105,14 @@ namespace sequoia::testing
       [[nodiscard]]
       std::filesystem::path source_file() const
       {
-        return std::source_location::current().file_name();
+        return make_fake_file_path(name());
       }
 
       [[nodiscard]]
       std::string output_discriminator() const { return "Platypus"; }
+
+      [[nodiscard]]
+      std::string reduction_discriminator() const { return "Release"; }
 
       void run_tests()
       {
@@ -120,7 +128,7 @@ namespace sequoia::testing
       [[nodiscard]]
       std::filesystem::path source_file() const
       {
-        return std::source_location::current().file_name();
+        return make_fake_file_path(name());
       }
 
       void run_tests()
@@ -137,7 +145,7 @@ namespace sequoia::testing
       [[nodiscard]]
       std::filesystem::path source_file() const
       {
-        return std::source_location::current().file_name();
+        return make_fake_file_path(name());
       }
 
       void run_tests()
@@ -161,7 +169,7 @@ namespace sequoia::testing
       [[nodiscard]]
       std::filesystem::path source_file() const
       {
-        return std::source_location::current().file_name();
+        return make_fake_file_path(name());
       }
 
       void run_tests()
@@ -186,7 +194,7 @@ namespace sequoia::testing
       [[nodiscard]]
       std::filesystem::path source_file() const
       {
-        return std::source_location::current().file_name();
+        return make_fake_file_path(name());
       }
 
       void run_tests()
@@ -204,7 +212,7 @@ namespace sequoia::testing
       [[nodiscard]]
       std::filesystem::path source_file() const
       {
-        return std::source_location::current().file_name();
+        return make_fake_file_path(name());
       }
 
       void run_tests()
@@ -222,7 +230,7 @@ namespace sequoia::testing
       [[nodiscard]]
       std::filesystem::path source_file() const
       {
-        return std::source_location::current().file_name();
+        return make_fake_file_path(name());
       }
 
       void run_tests()
@@ -241,7 +249,7 @@ namespace sequoia::testing
       [[nodiscard]]
       std::filesystem::path source_file() const
       {
-        return std::source_location::current().file_name();
+        return make_fake_file_path(name());
       }
 
       void run_tests()
@@ -259,7 +267,7 @@ namespace sequoia::testing
       [[nodiscard]]
       std::filesystem::path source_file() const
       {
-        return std::source_location::current().file_name();
+        return make_fake_file_path(name());
       }
 
       void run_tests()
@@ -276,7 +284,7 @@ namespace sequoia::testing
       [[nodiscard]]
       std::filesystem::path source_file() const
       {
-        return std::source_location::current().file_name();
+        return make_fake_file_path(name());
       }
 
       void run_tests()
@@ -355,28 +363,23 @@ namespace sequoia::testing
     return (minimal_fake_path()).generic_string();
   }
 
-  fs::path test_runner_test::write(std::string_view dirName, std::stringstream& output) const
+  void test_runner_test::write(std::string_view dirName, std::stringstream& output) const
   {
     const auto outputDir{working_materials() /= dirName};
     fs::create_directory(outputDir);
 
-    const auto filePath{outputDir / "io.txt"};
-    if(std::ofstream file{filePath})
+    if(const auto filePath{outputDir / "io.txt"}; std::ofstream file{filePath})
     {
       file << output.str();
     }
 
     output.str("");
-
-    return filePath;
   }
 
-  fs::path test_runner_test::check_output(reporter description, std::string_view dirName, std::stringstream& output)
+  void test_runner_test::check_output(reporter description, std::string_view dirName, std::stringstream& output)
   {
-    fs::path filePath{write(dirName, output)};
+    write(dirName, output);
     check(equivalence, description, working_materials() /= dirName, predictive_materials() /= dirName);
-
-    return filePath;
   }
 
   void test_runner_test::test_exceptions()
@@ -624,14 +627,18 @@ namespace sequoia::testing
 
     runner.add_test_suite(
       "Throwing Suite",
-      throwing_test{"Free Test"},
-      platform_specific_throwing_test{"Platform Test"}
+      throwing_test{"Throwing Free Test"},
+      platform_specific_throwing_test{"Platform Specific Throwing Test"}
     );
 
     runner.execute();
     check_output("Throwing Output", "ThrowingOutput", outputStream);
 
-    check(equivalence, "Exception Output", predictive_materials() / "Throwing_Suite", auxiliary_materials() / "FakeProject/output/DiagnosticsOutput/Throwing_Suite");
+    const fs::path diagnosticsDir{working_materials() /= "Throwing_Suite_Diagnostics"};
+    fs::create_directory(diagnosticsDir);
+    fs::copy(fake_project() / "output/DiagnosticsOutput/Throwing_Suite", diagnosticsDir);
+
+    check(equivalence, "Exception Output", predictive_materials() / "Throwing_Suite_Diagnostics", diagnosticsDir);
   }
 
   void test_runner_test::test_filtered_suites()

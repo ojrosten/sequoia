@@ -1,4 +1,4 @@
-Tests/TestFramework/TestRunnerTest.cpp, Line 403
+Tests/TestFramework/TestRunnerTest.cpp, Line 406
 Test Main has empty path
 
 Expected Exception Type:
@@ -9,7 +9,7 @@ Try ensuring that the application is run from the appropriate directory
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 412
+Tests/TestFramework/TestRunnerTest.cpp, Line 415
 Test Main does not exist
 
 Expected Exception Type:
@@ -20,7 +20,7 @@ Try ensuring that the application is run from the appropriate directory
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 421
+Tests/TestFramework/TestRunnerTest.cpp, Line 424
 Include Target has empty path
 
 Expected Exception Type:
@@ -31,7 +31,7 @@ Common includes not found
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 430
+Tests/TestFramework/TestRunnerTest.cpp, Line 433
 Include Target does not exist
 
 Expected Exception Type:
@@ -42,7 +42,7 @@ Common includes not found
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 439
+Tests/TestFramework/TestRunnerTest.cpp, Line 442
 Project root is empty
 
 Expected Exception Type:
@@ -51,7 +51,7 @@ Unable to locate project root as no commandline arguments supplied.
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 447
+Tests/TestFramework/TestRunnerTest.cpp, Line 450
 Project root does not exist
 
 Expected Exception Type:
@@ -60,7 +60,7 @@ canonical: unable to find path
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 456
+Tests/TestFramework/TestRunnerTest.cpp, Line 459
 Project root not findable
 
 Expected Exception Type:
@@ -71,18 +71,18 @@ Please ensure that the build directory is a subdirectory of <project>/build.
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 466
+Tests/TestFramework/TestRunnerTest.cpp, Line 469
 Neither name nor source unique
 
 Expected Exception Type:
 [std::runtime_error]
   Error: Suite/Test: "Duplicates/Free Test"
-Source file: ".../Tests/TestFramework/TestRunnerTest.cpp"
+Source file: ".../Tests/Free_Test.cpp"
 Please do not include tests in the same suite which both have the same name and are defined in the same source file.
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 500
+Tests/TestFramework/TestRunnerTest.cpp, Line 503
 Invalid repetitions for instability analysis
 
 Expected Exception Type:
@@ -91,7 +91,7 @@ locate-instabilities: unable to interpret 'foo' as an integer number of repetiti
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 507
+Tests/TestFramework/TestRunnerTest.cpp, Line 510
 Insufficient repetitions for instability analysis
 
 Expected Exception Type:

@@ -2,12 +2,12 @@
 Running tests, synchronously...
 
 Suite:
-[Execution Time: 1.05ms]
+[Execution Time: 1.27ms]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 
 -----------Grand Totals-----------
-[Total Run Time: 2.78ms]
-[Execution Time: 1.05ms]
+[Total Run Time: 2.83ms]
+[Execution Time: 1.27ms]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -18,10 +18,10 @@ Suite:
 Running tests, synchronously...
 
 Suite:
-[Execution Time: 1.43ms]
+[Execution Time: 967us]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 212
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 220
 	Period 2: Pass/Fail/Pass
 
 	[int]
@@ -33,8 +33,8 @@ Suite:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 3.61ms]
-[Execution Time: 1.43ms]
+[Total Run Time: 3.38ms]
+[Execution Time: 967us]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -45,10 +45,10 @@ Suite:
 Running tests, synchronously...
 
 Suite:
-[Execution Time: 1.06ms]
+[Execution Time: 1.12ms]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 213
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 221
 	Period 3: Pass/Pass/Fail
 
 	[bool]
@@ -58,8 +58,8 @@ Suite:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 3.82ms]
-[Execution Time: 1.06ms]
+[Total Run Time: 3.55ms]
+[Execution Time: 1.12ms]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -70,10 +70,10 @@ Suite:
 Running tests, synchronously...
 
 Suite:
-[Execution Time: 1.16ms]
+[Execution Time: 815us]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 212
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 220
 	Period 2: Pass/Fail/Pass
 
 	[int]
@@ -85,8 +85,8 @@ Suite:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 3.49ms]
-[Execution Time: 1.16ms]
+[Total Run Time: 2.82ms]
+[Execution Time: 815us]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -97,12 +97,12 @@ Suite:
 Running tests, synchronously...
 
 Suite:
-[Execution Time: 963us]
+[Execution Time: 712us]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 
 -----------Grand Totals-----------
-[Total Run Time: 2.64ms]
-[Execution Time: 963us]
+[Total Run Time: 2.37ms]
+[Execution Time: 712us]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -113,10 +113,10 @@ Suite:
 Running tests, synchronously...
 
 Suite:
-[Execution Time: 1.16ms]
+[Execution Time: 1.05ms]
 	Standard Top Level Checks:                 2;  Failures:  2  [Deep checks: 2]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 212
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 220
 	Period 2: Pass/Fail/Pass
 
 	[int]
@@ -126,7 +126,7 @@ Suite:
 
 	=======================================
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 213
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 221
 	Period 3: Pass/Pass/Fail
 
 	[bool]
@@ -136,8 +136,8 @@ Suite:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 3.6ms]
-[Execution Time: 1.16ms]
+[Total Run Time: 3.66ms]
+[Execution Time: 1.05ms]
 	Standard Top Level Checks:                 2;  Failures:  2  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -145,7 +145,7 @@ Suite:
 	False Negative Checks:                     0;  Failures:  0
 	False Negative Performance Checks:         0;  Failures:  0
 
-Instability detected in file "TestRunnerTest.cpp"
+Instability detected in file "Free_Test.cpp"
 Outcome frequencies:
 [33.3%,33.3%,16.7%,16.7%]
 
@@ -153,7 +153,7 @@ Outcome frequencies:
 
 vs.
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 212
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 220
 	Period 2: Pass/Fail/Pass
 
 	[int]
@@ -165,7 +165,7 @@ vs.
 
 vs.
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 212
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 220
 	Period 2: Pass/Fail/Pass
 
 	[int]
@@ -175,7 +175,7 @@ vs.
 
 	=======================================
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 213
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 221
 	Period 3: Pass/Pass/Fail
 
 	[bool]
@@ -185,7 +185,7 @@ vs.
 
 vs.
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 213
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 221
 	Period 3: Pass/Pass/Fail
 
 	[bool]
