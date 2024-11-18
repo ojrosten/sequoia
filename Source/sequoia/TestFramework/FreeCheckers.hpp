@@ -786,6 +786,10 @@ namespace sequoia::testing
       return m_Logger.results().critical_failures > 0;
     }
   protected:
+    explicit checker(active_recovery_files recovery)
+      : m_Logger{std::move(recovery)}
+    {}
+
     checker(checker&&)            noexcept = default;
     checker& operator=(checker&&) noexcept = default;
 
@@ -819,11 +823,6 @@ namespace sequoia::testing
     const failure_output& failure_messages() const noexcept
     {
       return m_Logger.results().failure_messages;
-    }
-
-    void recovery(active_recovery_files files)
-    {
-      m_Logger.recovery(std::move(files));
     }
   private:
     test_logger<Mode> m_Logger;

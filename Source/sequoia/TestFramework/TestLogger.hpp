@@ -99,13 +99,11 @@ namespace sequoia::testing
     {
       return m_Results.exception_info;
     }
-
-    [[nodiscard]]
-    test_mode mode() const noexcept { return m_Mode; }
   protected:
+    test_logger_base() = default;
 
-    explicit test_logger_base(test_mode mode)
-      : m_Mode{mode}
+    explicit test_logger_base(active_recovery_files recovery)
+      : m_Recovery{std::move(recovery)}
     {}
 
     test_logger_base(test_logger_base&&)            noexcept = default;
@@ -113,7 +111,7 @@ namespace sequoia::testing
   private:
     struct level_message
     {
-      level_message(std::string_view m)
+      explicit level_message(std::string_view m)
         : message{m}
       {}
 
@@ -123,7 +121,6 @@ namespace sequoia::testing
 
     enum class is_critical{yes, no};
 
-    test_mode m_Mode;
     test_results m_Results;
     std::vector<level_message> m_SentinelDepth;
     active_recovery_files m_Recovery{};
@@ -141,23 +138,23 @@ namespace sequoia::testing
       ++m_Results.performance_checks;
     }
 
-    void failure_message(std::string_view message, is_critical isCritical);
+    void failure_message(test_mode mode, std::string_view message, is_critical isCritical);
     
-    void log_failure(std::string_view message)
+    void log_failure(test_mode mode, std::string_view message)
     {
       ++m_Results.failures;
-      failure_message(message, is_critical::no);
+      failure_message(mode, message, is_critical::no);
     }
 
-    void log_performance_failure(std::string_view message)
+    void log_performance_failure(test_mode mode, std::string_view message)
     {
       ++m_Results.performance_failures;
-      log_failure(message);
+      log_failure(mode, message);
     }
 
-    void log_critical_failure(std::string_view message);
+    void log_critical_failure(test_mode mode, std::string_view message);
 
-    void log_top_level_failure(std::string message);
+    void log_top_level_failure(test_mode mode, std::string message);
 
     void log_caught_exception_message(std::string_view message);
 
@@ -167,10 +164,10 @@ namespace sequoia::testing
 
     void decrement_depth();
 
-    void end_message(is_critical isCritical);
+    void end_message(test_mode mode, is_critical isCritical);
 
     [[nodiscard]]
-    failure_output& output_channel(is_critical isCritical) noexcept;
+    failure_output& output_channel(test_mode mode, is_critical isCritical) noexcept;
 
     failure_output& add_to_output(failure_output& output, std::string_view message);
   };
@@ -185,7 +182,13 @@ namespace sequoia::testing
   class test_logger : public test_logger_base
   {
   public:
-    test_logger() : test_logger_base{Mode} {}
+    constexpr static test_mode mode{Mode};
+
+    test_logger() = default;
+
+    explicit test_logger(active_recovery_files recoveryFiles)
+      : test_logger_base{recoveryFiles}
+    {}
 
     test_logger(const test_logger&)     = delete;
     test_logger(test_logger&&) noexcept = default;
@@ -193,7 +196,6 @@ namespace sequoia::testing
     test_logger& operator=(const test_logger&)     = delete;
     test_logger& operator=(test_logger&&) noexcept = default;
 
-    constexpr static test_mode mode{Mode};
   };
 
 
@@ -207,11 +209,11 @@ namespace sequoia::testing
 
     void log_check() { get().log_check(); }
 
-    void log_failure(std::string_view message) { get().log_failure(message); }
+    void log_failure(std::string_view message) { get().log_failure(m_Mode, message); }
 
-    void log_performance_failure(std::string_view message) { get().log_performance_failure(message); }
+    void log_performance_failure(std::string_view message) { get().log_performance_failure(m_Mode, message); }
 
-    void log_critical_failure(std::string_view message) { get().log_critical_failure(message); }
+    void log_critical_failure(std::string_view message) { get().log_critical_failure(m_Mode, message); }
 
     void log_caught_exception_message(std::string_view message) { get().log_caught_exception_message(message); }
 
@@ -225,7 +227,7 @@ namespace sequoia::testing
     bool checks_registered() const noexcept { return get().results().deep_checks != m_PriorDeepChecks; }
   protected:
 
-    sentinel_base(test_logger_base& logger, std::string message);
+    sentinel_base(test_logger_base& logger, test_mode mode, std::string message);
 
     ~sentinel_base();
 
@@ -239,6 +241,7 @@ namespace sequoia::testing
     const test_logger_base& get() const noexcept { return *m_pLogger; }
 
     test_logger_base* m_pLogger;
+    test_mode m_Mode;
     std::string m_Message;
     std::size_t
       m_PriorFailures{},
@@ -273,8 +276,10 @@ namespace sequoia::testing
   class [[nodiscard]] sentinel : public sentinel_base
   {
   public:
+    constexpr static test_mode mode{Mode};
+
     sentinel(test_logger<Mode>& logger, std::string message)
-      : sentinel_base{logger, std::move(message)}
+      : sentinel_base{logger, Mode, std::move(message)}
     {}
 
     sentinel(const sentinel&)     = delete;
@@ -282,6 +287,7 @@ namespace sequoia::testing
 
     sentinel& operator=(const sentinel&)     = delete;
     sentinel& operator=(sentinel&&) noexcept = default;
+
   };
 
   /*! \brief Summaries data generated by the logger, for the purposes of reporting.
@@ -298,7 +304,10 @@ namespace sequoia::testing
 
     explicit log_summary(std::string_view name);
 
-    log_summary(std::string_view name, const test_logger_base& logger, const duration delta);
+    template<test_mode Mode>
+    log_summary(std::string_view name, const test_logger<Mode>& logger, const duration delta)
+      : log_summary(name, logger, Mode, delta)
+    {}
 
     void clear() noexcept;
 
@@ -402,5 +411,7 @@ namespace sequoia::testing
     int m_ExceptionsInFlight{};
 
     duration m_Duration{};
+
+    log_summary(std::string_view name, const test_logger_base& logger, test_mode mode, const duration delta);
   };
 }

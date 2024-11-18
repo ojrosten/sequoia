@@ -78,8 +78,9 @@ namespace sequoia::testing
 
   //================================== sentinel_base ==================================//
 
-  sentinel_base::sentinel_base(test_logger_base& logger, std::string message)
+  sentinel_base::sentinel_base(test_logger_base& logger, test_mode mode, std::string message)
     : m_pLogger{&logger}
+    , m_Mode{mode}
     , m_Message{std::move(message)}
     , m_PriorFailures{logger.results().failures}
     , m_PriorCriticalFailures{logger.results().critical_failures}
@@ -103,13 +104,11 @@ namespace sequoia::testing
     {
       if(critical_failure_detected())
       {
-        logger.end_message(test_logger_base::is_critical::yes);
+        logger.end_message(m_Mode, test_logger_base::is_critical::yes);
       }
       else
       {
-        const auto mode{get().mode()};
-
-        if(failure_detected()) logger.end_message(test_logger_base::is_critical::no);
+        if(failure_detected()) logger.end_message(m_Mode, test_logger_base::is_critical::no);
 
         auto fpMessageMaker{
           [&logger](){
@@ -122,15 +121,15 @@ namespace sequoia::testing
         };
 
         const bool modeSpecificFailure{
-             ((mode == test_mode::false_negative) && !failure_detected())
-          || ((mode != test_mode::false_negative) && failure_detected())
+             ((m_Mode == test_mode::false_negative) && !failure_detected())
+          || ((m_Mode != test_mode::false_negative) && failure_detected())
         };
 
         if(modeSpecificFailure)
         {
-          logger.log_top_level_failure((mode == test_mode::false_negative) ? fpMessageMaker() : "");
+          logger.log_top_level_failure(m_Mode, (m_Mode == test_mode::false_negative) ? fpMessageMaker() : "");
         }
-        else if (mode == test_mode::false_positive)
+        else if (m_Mode == test_mode::false_positive)
         {
           if(!critical_failure_detected())
             logger.append_to_diagnostics_output(fpMessageMaker());
@@ -147,7 +146,7 @@ namespace sequoia::testing
 
   //================================== test_logger ==================================//
 
-  void test_logger_base::failure_message(std::string_view message, const is_critical isCritical)
+  void test_logger_base::failure_message(test_mode mode, std::string_view message, const is_critical isCritical)
   {
     std::string msg{};
     auto build{
@@ -179,18 +178,18 @@ namespace sequoia::testing
 
     build(message, ind);
 
-    auto& output{add_to_output(output_channel(isCritical), msg)};
+    auto& output{add_to_output(output_channel(mode, isCritical), msg)};
     end_block(output.back().message, 1_linebreaks, "");
   }
 
-  void test_logger_base::log_critical_failure(std::string_view message)
+  void test_logger_base::log_critical_failure(test_mode mode, std::string_view message)
   {
     ++m_Results.critical_failures;
-    failure_message(message, is_critical::yes);
+    failure_message(mode, message, is_critical::yes);
     recored_critical_failure(m_Recovery.recovery_file, message);
   }
 
-  void test_logger_base::log_top_level_failure(std::string message)
+  void test_logger_base::log_top_level_failure(test_mode mode, std::string message)
   {
     ++m_Results.top_level_failures;
     if(m_SentinelDepth.empty())
@@ -202,7 +201,7 @@ namespace sequoia::testing
       m_SentinelDepth.back().message.append(std::move(message));
     }
 
-    if(m_Mode == test_mode::false_negative)
+    if(mode == test_mode::false_negative)
     {
       m_Results.failure_messages.push_back(failure_info{m_Results.top_level_checks, std::string{message}});
     }
@@ -235,20 +234,20 @@ namespace sequoia::testing
     {
       m_Results.exception_info = {std::uncaught_exceptions(), std::move(m_SentinelDepth.front().message)}; 
     }
-      
+
     m_SentinelDepth.pop_back();
   }
 
-  void test_logger_base::end_message(const is_critical isCritical)
+  void test_logger_base::end_message(test_mode mode, const is_critical isCritical)
   {
-    auto& output{output_channel(isCritical)};
+    auto& output{output_channel(mode, isCritical)};
     auto& mess{output.back().message};
     end_block(mess, 2_linebreaks, footer());
-  }
+  } 
 
-  failure_output& test_logger_base::output_channel(const is_critical isCritical) noexcept
+  failure_output& test_logger_base::output_channel(test_mode mode, const is_critical isCritical) noexcept
   {
-    const bool toMessages{(m_Mode != test_mode::false_negative) || (isCritical == is_critical::yes)};
+    const bool toMessages{(mode != test_mode::false_negative) || (isCritical == is_critical::yes)};
     return toMessages ? m_Results.failure_messages : m_Results.diagnostics_output;
   }
 
@@ -266,7 +265,7 @@ namespace sequoia::testing
 
   log_summary::log_summary(std::string_view name) : m_Name{name} {}
 
-  log_summary::log_summary(std::string_view name, const test_logger_base& logger, const duration delta)
+  log_summary::log_summary(std::string_view name, const test_logger_base& logger, test_mode mode, const duration delta)
     : m_Name{name}
     , m_FailureMessages{to_reduced_string(logger.results().failure_messages)}
     , m_DiagnosticsOutput{to_reduced_string(logger.results().diagnostics_output)}
@@ -274,7 +273,7 @@ namespace sequoia::testing
     , m_CriticalFailures{logger.results().critical_failures}
     , m_Duration{delta}
   {
-    switch(logger.mode())
+    switch(mode)
     {
     case test_mode::standard:
       m_StandardTopLevelFailures    = logger.results().top_level_failures - logger.results().performance_failures;

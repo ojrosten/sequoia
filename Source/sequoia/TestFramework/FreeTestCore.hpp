@@ -50,6 +50,16 @@ namespace sequoia::testing
   public:
     explicit test_base(std::string name) : m_Name{std::move(name)} {}
 
+    test_base(std::string name, test_mode mode, std::string_view suiteName, const normal_path& srcFile, const project_paths& projPaths, individual_materials_paths materials, const std::optional<std::string>& outputDiscriminator, const std::optional<std::string>& reductionDiscriminator)
+      : m_Name{std::move(name)}
+      , m_ProjectPaths{projPaths}
+      , m_Materials{std::move(materials)}
+      , m_Diagnostics{project_root(), suiteName, srcFile, mode, outputDiscriminator}
+      , m_SummaryFile{test_summary_filename(srcFile, reductionDiscriminator)}
+    {
+      std::filesystem::create_directories(m_Diagnostics.diagnostics_file().parent_path());
+    }
+
     test_base(const test_base&)            = delete;
     test_base& operator=(const test_base&) = delete;
 
@@ -112,15 +122,6 @@ namespace sequoia::testing
     test_base(test_base&&)            noexcept = default;
     test_base& operator=(test_base&&) noexcept = default;
 
-    void do_initialize(test_mode mode, std::string_view suiteName, const normal_path& srcFile, const project_paths& projPaths, individual_materials_paths materials, const std::optional<std::string>& outputDiscriminator, const std::optional<std::string>& reductionDiscriminator)
-    {
-      m_ProjectPaths = projPaths;
-      m_Materials    = std::move(materials);
-      m_Diagnostics  = {project_root(), suiteName, srcFile, mode, outputDiscriminator};
-      m_SummaryFile  = test_summary_filename(srcFile, reductionDiscriminator);
-      std::filesystem::create_directories(m_Diagnostics.diagnostics_file().parent_path());
-    }
-
     void write_instability_analysis_output(const normal_path& srcFile, std::optional<std::size_t> index, const failure_output& output) const;
 
     [[nodiscard]]
@@ -160,17 +161,15 @@ namespace sequoia::testing
     using checker_type = checker<Mode, Extender>;
     constexpr static test_mode mode{Mode};
 
-    using test_base::test_base;
+    explicit basic_test(std::string name) : test_base{std::move(name)} {}
+
+    basic_test(std::string name, std::string_view suiteName, const normal_path& srcFile, const project_paths& projPaths, individual_materials_paths materials, active_recovery_files files, const std::optional<std::string>& outputDiscriminator, const std::optional<std::string>& reductionDiscriminator)
+      : test_base{std::move(name), Mode, suiteName, srcFile, projPaths, std::move(materials), outputDiscriminator, reductionDiscriminator}
+      , checker<Mode, Extender>{std::move(files)}
+    {}
 
     basic_test(const basic_test&)            = delete;
     basic_test& operator=(const basic_test&) = delete;
-
-    template<class Self>
-    void initialize(this Self& self, std::string_view suiteName, const project_paths& projPaths, individual_materials_paths materials, active_recovery_files files, const std::optional<std::string>& outputDiscriminator, const std::optional<std::string>& reductionDiscriminator)
-    {
-      self.do_initialize(mode, suiteName, self.source_file(), projPaths, std::move(materials), outputDiscriminator, reductionDiscriminator);
-      self.recovery(std::move(files));
-    }
 
     using checker_type::reset_results;
   protected:
