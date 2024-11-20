@@ -15,6 +15,8 @@
 #include "sequoia/FileSystem/FileSystem.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
+#include <algorithm>
+
 namespace sequoia::testing
 {
   namespace fs = std::filesystem;
