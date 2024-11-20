@@ -77,7 +77,6 @@ $(function() {
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#concepts">Concepts</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
-<a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle"><div class="title">FreeTestCore.hpp File Reference</div></div>
 </div><!--header-->
@@ -135,14 +134,14 @@ template&lt;class T &gt; </td></tr>
 <tr class="memitem:ac0d4b3372414fb710db16b529379ff41"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::is_parallelizable_t</b> = typename is_parallelizable&lt; T &gt;::type</td></tr>
 <tr class="separator:ac0d4b3372414fb710db16b529379ff41"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
-Functions</h2></td></tr>
-<tr class="memitem:a1734a3f89713697d6220ad29719b08f7"><td class="memItemLeft" align="right" valign="top"><a id="a1734a3f89713697d6220ad29719b08f7" name="a1734a3f89713697d6220ad29719b08f7"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::to_tag</b> (test_mode mode)</td></tr>
-<tr class="separator:a1734a3f89713697d6220ad29719b08f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
+<tr class="memitem:a664816729db9811ec6aca473278c5797"><td class="memTemplParams" colspan="2">template&lt;concrete_test T&gt; </td></tr>
+<tr class="memitem:a664816729db9811ec6aca473278c5797"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dd/d3e/FreeTestCore_8hpp.html#a664816729db9811ec6aca473278c5797">sequoia::testing::has_discriminated_output_v</a></td></tr>
+<tr class="separator:a664816729db9811ec6aca473278c5797"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afa7f64ed8f40a1cae0a32bb7cf335ced"><td class="memTemplParams" colspan="2">template&lt;concrete_test T&gt; </td></tr>
+<tr class="memitem:afa7f64ed8f40a1cae0a32bb7cf335ced"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dd/d3e/FreeTestCore_8hpp.html#afa7f64ed8f40a1cae0a32bb7cf335ced">sequoia::testing::has_reduced_output_v</a></td></tr>
+<tr class="separator:afa7f64ed8f40a1cae0a32bb7cf335ced"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aea8c0f32442db212fd59074cdd21ff2a"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
 <tr class="memitem:aea8c0f32442db212fd59074cdd21ff2a"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dd/d3e/FreeTestCore_8hpp.html#aea8c0f32442db212fd59074cdd21ff2a">sequoia::testing::has_parallelizable_type</a></td></tr>
 <tr class="separator:aea8c0f32442db212fd59074cdd21ff2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -172,6 +171,35 @@ template&lt;class T &gt; </td></tr>
 </div>
 </div>
 <h2 class="groupheader">Variable Documentation</h2>
+<a id="a664816729db9811ec6aca473278c5797" name="a664816729db9811ec6aca473278c5797"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a664816729db9811ec6aca473278c5797">&#9670;&#160;</a></span>has_discriminated_output_v</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;concrete_test T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr bool sequoia::testing::has_discriminated_output_v</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">{</div>
+<div class="line">    <span class="keyword">requires</span>(<span class="keyword">const</span> T&amp; t){</div>
+<div class="line">      { t.output_discriminator() } -&gt; std::convertible_to&lt;std::string&gt;;</div>
+<div class="line">    }</div>
+<div class="line">  }</div>
+</div><!-- fragment -->
+</div>
+</div>
 <a id="aea8c0f32442db212fd59074cdd21ff2a" name="aea8c0f32442db212fd59074cdd21ff2a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aea8c0f32442db212fd59074cdd21ff2a">&#9670;&#160;</a></span>has_parallelizable_type</h2>
 
@@ -198,6 +226,35 @@ template&lt;class T &gt; </div>
 <div class="line">        <span class="keyword">typename</span> T::parallelizable_type;</div>
 <div class="line">        <span class="keyword">requires</span> std::is_convertible_v&lt;typename T::parallelizable_type, std::true_type&gt; || std::is_convertible_v&lt;typename T::parallelizable_type, std::false_type&gt;;</div>
 <div class="line">      }</div>
+<div class="line">  }</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="afa7f64ed8f40a1cae0a32bb7cf335ced" name="afa7f64ed8f40a1cae0a32bb7cf335ced"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afa7f64ed8f40a1cae0a32bb7cf335ced">&#9670;&#160;</a></span>has_reduced_output_v</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;concrete_test T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr bool sequoia::testing::has_reduced_output_v</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">{</div>
+<div class="line">    <span class="keyword">requires</span>(<span class="keyword">const</span> T &amp; t){</div>
+<div class="line">      { t.reduction_discriminator() } -&gt; std::convertible_to&lt;std::string&gt;;</div>
+<div class="line">    }</div>
 <div class="line">  }</div>
 </div><!-- fragment -->
 </div>

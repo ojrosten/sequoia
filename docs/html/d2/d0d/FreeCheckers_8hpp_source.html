@@ -194,7 +194,7 @@ $(function() {
 <div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>    <span class="keyword">requires</span> { <span class="keyword">typename</span> T::fallback; }</div>
 <div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>  };</div>
 <div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span> </div>
-<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>  <span class="keyword">template</span>&lt;<span class="keyword">class </span>CheckType, <a class="code hl_enumeration" href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> Mode, <span class="keyword">class </span>T, <span class="keyword">class</span>... Args&gt;</div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>  <span class="keyword">template</span>&lt;<span class="keyword">class </span>CheckType, test_mode Mode, <span class="keyword">class </span>T, <span class="keyword">class</span>... Args&gt;</div>
 <div class="line"><a id="l00183" name="l00183"></a><span class="lineno"><a class="line" href="../../de/da4/conceptsequoia_1_1testing_1_1tester__for.html">  183</a></span>  <span class="keyword">concept </span><a class="code hl_concept" href="../../de/da4/conceptsequoia_1_1testing_1_1tester__for.html">tester_for</a> = <span class="keyword">requires</span>(test_logger&lt;Mode&gt;&amp; logger, Args&amp;&amp;... args) {</div>
 <div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>    value_tester&lt;T&gt;::test(std::declval&lt;CheckType&gt;(), logger, std::forward&lt;Args&gt;(args)...);</div>
 <div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>  };</div>
@@ -258,7 +258,7 @@ $(function() {
 <div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>  <span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt;</div>
 <div class="line"><a id="l00247" name="l00247"></a><span class="lineno"><a class="line" href="../../d5/d33/structsequoia_1_1testing_1_1equivalence__checker__delegator.html">  247</a></span>  <span class="keyword">struct </span><a class="code hl_struct" href="../../d5/d33/structsequoia_1_1testing_1_1equivalence__checker__delegator.html">equivalence_checker_delegator</a></div>
 <div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>  {</div>
-<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>    <span class="keyword">template</span>&lt;<span class="keyword">class </span>CheckType, <a class="code hl_enumeration" href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> Mode, <span class="keyword">class</span>... Args&gt;</div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>    <span class="keyword">template</span>&lt;<span class="keyword">class </span>CheckType, test_mode Mode, <span class="keyword">class</span>... Args&gt;</div>
 <div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>      <span class="keyword">requires</span> <a class="code hl_concept" href="../../de/da4/conceptsequoia_1_1testing_1_1tester__for.html">tester_for</a>&lt;CheckType, Mode, T, Args...&gt;</div>
 <div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>    <span class="keywordtype">void</span> operator()(CheckType flavour, <a class="code hl_class" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger&lt;Mode&gt;</a>&amp; logger, Args&amp;&amp;... args)<span class="keyword"> const</span></div>
 <div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span><span class="keyword">    </span>{</div>
@@ -275,7 +275,7 @@ $(function() {
 <div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>    };</div>
 <div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>  }</div>
 <div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span> </div>
-<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>  <span class="keyword">template</span>&lt;<a class="code hl_enumeration" href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> Mode, <span class="keyword">class </span>CheckType, <span class="keyword">class </span>T, <span class="keyword">class </span>S, <span class="keyword">class</span>... U&gt;</div>
+<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>  <span class="keyword">template</span>&lt;test_mode Mode, <span class="keyword">class </span>CheckType, <span class="keyword">class </span>T, <span class="keyword">class </span>S, <span class="keyword">class</span>... U&gt;</div>
 <div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>  <span class="keyword">inline</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> implements_general_equivalence_check{</div>
 <div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>            <a class="code hl_concept" href="../../de/da4/conceptsequoia_1_1testing_1_1tester__for.html">tester_for</a>&lt;CheckType, Mode, T, T, S, U...&gt;</div>
 <div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>    || (    <a class="code hl_struct" href="../../d9/d34/structsequoia_1_1testing_1_1equivalent__type__processor.html">equivalent_type_processor</a>&lt;S, U...&gt;::ends_with_tutor</div>
@@ -346,7 +346,7 @@ $(function() {
 <div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>    }</div>
 <div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>  }</div>
 <div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span> </div>
-<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span>  <span class="keyword">template</span>&lt;<span class="keyword">class </span>CheckType, <a class="code hl_enumeration" href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> Mode, <span class="keyword">class </span>T, <span class="keyword">class </span>S, <span class="keyword">class</span>... U&gt;</div>
+<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span>  <span class="keyword">template</span>&lt;<span class="keyword">class </span>CheckType, test_mode Mode, <span class="keyword">class </span>T, <span class="keyword">class </span>S, <span class="keyword">class</span>... U&gt;</div>
 <div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span>  <span class="keyword">inline</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> has_generalized_equivalence_check{</div>
 <div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>      !(   std::is_same_v&lt;CheckType, equality_check_t&gt;</div>
 <div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span>        || std::is_same_v&lt;CheckType, with_best_available_check_t&gt;)</div>
@@ -394,7 +394,7 @@ $(function() {
 <div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span>  <span class="keyword">template</span></div>
 <div class="line"><a id="l00388" name="l00388"></a><span class="lineno">  388</span>  &lt;</div>
 <div class="line"><a id="l00389" name="l00389"></a><span class="lineno">  389</span>    <span class="keyword">class </span>E,</div>
-<div class="line"><a id="l00390" name="l00390"></a><span class="lineno">  390</span>    <a class="code hl_enumeration" href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> Mode,</div>
+<div class="line"><a id="l00390" name="l00390"></a><span class="lineno">  390</span>    test_mode Mode,</div>
 <div class="line"><a id="l00391" name="l00391"></a><span class="lineno">  391</span>    <span class="keyword">class </span>Fn,</div>
 <div class="line"><a id="l00392" name="l00392"></a><span class="lineno">  392</span>    <a class="code hl_concept" href="../../d2/d46/conceptsequoia_1_1invocable__r.html">invocable_r&lt;std::string, std::string&gt;</a> Postprocessor=<a class="code hl_struct" href="../../d8/dd3/structsequoia_1_1testing_1_1default__exception__message__postprocessor.html">default_exception_message_postprocessor</a></div>
 <div class="line"><a id="l00393" name="l00393"></a><span class="lineno">  393</span>  &gt;</div>
@@ -438,7 +438,7 @@ $(function() {
 <div class="line"><a id="l00435" name="l00435"></a><span class="lineno">  435</span>  <span class="keyword">template</span></div>
 <div class="line"><a id="l00436" name="l00436"></a><span class="lineno">  436</span>  &lt;</div>
 <div class="line"><a id="l00437" name="l00437"></a><span class="lineno">  437</span>    <span class="keyword">class </span>CheckType,</div>
-<div class="line"><a id="l00438" name="l00438"></a><span class="lineno">  438</span>    <a class="code hl_enumeration" href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> Mode,</div>
+<div class="line"><a id="l00438" name="l00438"></a><span class="lineno">  438</span>    test_mode Mode,</div>
 <div class="line"><a id="l00439" name="l00439"></a><span class="lineno">  439</span>    std::input_or_output_iterator Iter,</div>
 <div class="line"><a id="l00440" name="l00440"></a><span class="lineno">  440</span>    std::sentinel_for&lt;Iter&gt; Sentinel,</div>
 <div class="line"><a id="l00441" name="l00441"></a><span class="lineno">  441</span>    std::input_or_output_iterator PredictionIter,</div>
@@ -539,7 +539,7 @@ $(function() {
 <div class="line"><a id="l00559" name="l00559"></a><span class="lineno">  559</span>    <span class="keywordflow">return</span> !sentry.failure_detected();</div>
 <div class="line"><a id="l00560" name="l00560"></a><span class="lineno">  560</span>  }</div>
 <div class="line"><a id="l00561" name="l00561"></a><span class="lineno">  561</span> </div>
-<div class="line"><a id="l00574" name="l00574"></a><span class="lineno">  574</span>  <span class="keyword">template</span>&lt;<span class="keyword">class </span>CheckType, <a class="code hl_enumeration" href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> Mode, <span class="keyword">class </span>T, <span class="keyword">class </span>S, <span class="keyword">class</span>... U&gt;</div>
+<div class="line"><a id="l00574" name="l00574"></a><span class="lineno">  574</span>  <span class="keyword">template</span>&lt;<span class="keyword">class </span>CheckType, test_mode Mode, <span class="keyword">class </span>T, <span class="keyword">class </span>S, <span class="keyword">class</span>... U&gt;</div>
 <div class="line"><a id="l00575" name="l00575"></a><span class="lineno">  575</span>    <span class="keyword">requires</span> has_generalized_equivalence_check&lt;CheckType, Mode, T, S, U...&gt;</div>
 <div class="line"><a id="l00576" name="l00576"></a><span class="lineno"><a class="line" href="../../d2/d0d/FreeCheckers_8hpp.html#a3616298df19f5cb356c4bcf0a06354ec">  576</a></span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="../../d2/d0d/FreeCheckers_8hpp.html#a35227633982a6b83bb54bc54c6236753">check</a>(CheckType flavour, std::string description, <a class="code hl_class" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger&lt;Mode&gt;</a>&amp; logger, <span class="keyword">const</span> T&amp; obtained, S&amp;&amp; s, U&amp;&amp;... u)</div>
 <div class="line"><a id="l00577" name="l00577"></a><span class="lineno">  577</span>  {</div>
@@ -614,7 +614,7 @@ $(function() {
 <div class="line"><a id="l00664" name="l00664"></a><span class="lineno">  664</span>  {</div>
 <div class="line"><a id="l00665" name="l00665"></a><span class="lineno">  665</span>    <span class="keyword">friend</span> Extender;</div>
 <div class="line"><a id="l00666" name="l00666"></a><span class="lineno">  666</span>  <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00667" name="l00667"></a><span class="lineno">  667</span>    <span class="keyword">constexpr</span> <span class="keyword">static</span> <a class="code hl_enumeration" href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> mode{Mode};</div>
+<div class="line"><a id="l00667" name="l00667"></a><span class="lineno">  667</span>    <span class="keyword">constexpr</span> <span class="keyword">static</span> test_mode mode{Mode};</div>
 <div class="line"><a id="l00668" name="l00668"></a><span class="lineno">  668</span>    <span class="keyword">using </span><a class="code hl_class" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">logger_type</a> = <a class="code hl_class" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger&lt;Mode&gt;</a>;</div>
 <div class="line"><a id="l00669" name="l00669"></a><span class="lineno">  669</span> </div>
 <div class="line"><a id="l00670" name="l00670"></a><span class="lineno">  670</span>    <a class="code hl_class" href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">checker</a>() = <span class="keywordflow">default</span>;</div>
@@ -736,62 +736,60 @@ $(function() {
 <div class="line"><a id="l00786" name="l00786"></a><span class="lineno">  786</span>      <span class="keywordflow">return</span> m_Logger.results().critical_failures &gt; 0;</div>
 <div class="line"><a id="l00787" name="l00787"></a><span class="lineno">  787</span>    }</div>
 <div class="line"><a id="l00788" name="l00788"></a><span class="lineno">  788</span>  <span class="keyword">protected</span>:</div>
-<div class="line"><a id="l00789" name="l00789"></a><span class="lineno">  789</span>    <a class="code hl_class" href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">checker</a>(<a class="code hl_class" href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">checker</a>&amp;&amp;)            <span class="keyword">noexcept</span> = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00790" name="l00790"></a><span class="lineno">  790</span>    <a class="code hl_class" href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">checker</a>&amp; operator=(<a class="code hl_class" href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">checker</a>&amp;&amp;) <span class="keyword">noexcept</span> = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00791" name="l00791"></a><span class="lineno">  791</span> </div>
-<div class="line"><a id="l00792" name="l00792"></a><span class="lineno">  792</span>    <a class="code hl_class" href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">~checker</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00793" name="l00793"></a><span class="lineno">  793</span> </div>
-<div class="line"><a id="l00794" name="l00794"></a><span class="lineno">  794</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00795" name="l00795"></a><span class="lineno">  795</span>    std::size_t checks() <span class="keyword">const</span> <span class="keyword">noexcept</span> { <span class="keywordflow">return</span> m_Logger.checks(); }</div>
-<div class="line"><a id="l00796" name="l00796"></a><span class="lineno">  796</span> </div>
-<div class="line"><a id="l00797" name="l00797"></a><span class="lineno">  797</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00798" name="l00798"></a><span class="lineno">  798</span>    std::size_t failures() <span class="keyword">const</span> <span class="keyword">noexcept</span> { <span class="keywordflow">return</span> m_Logger.failures(); }</div>
-<div class="line"><a id="l00799" name="l00799"></a><span class="lineno">  799</span> </div>
-<div class="line"><a id="l00800" name="l00800"></a><span class="lineno">  800</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00801" name="l00801"></a><span class="lineno">  801</span>    <span class="keyword">const</span> <a class="code hl_struct" href="../../db/d2c/structsequoia_1_1testing_1_1uncaught__exception__info.html">uncaught_exception_info</a>&amp; exceptions_detected_by_sentinel() <span class="keyword">const</span> <span class="keyword">noexcept</span></div>
-<div class="line"><a id="l00802" name="l00802"></a><span class="lineno">  802</span>    {</div>
-<div class="line"><a id="l00803" name="l00803"></a><span class="lineno">  803</span>      <span class="keywordflow">return</span> m_Logger.exceptions_detected_by_sentinel();</div>
-<div class="line"><a id="l00804" name="l00804"></a><span class="lineno">  804</span>    }</div>
-<div class="line"><a id="l00805" name="l00805"></a><span class="lineno">  805</span> </div>
-<div class="line"><a id="l00806" name="l00806"></a><span class="lineno">  806</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00807" name="l00807"></a><span class="lineno">  807</span>    <a class="code hl_class" href="../../d1/d8f/classsequoia_1_1testing_1_1sentinel.html">sentinel&lt;Mode&gt;</a> make_sentinel(std::string message)</div>
-<div class="line"><a id="l00808" name="l00808"></a><span class="lineno">  808</span>    {</div>
-<div class="line"><a id="l00809" name="l00809"></a><span class="lineno">  809</span>      <span class="keywordflow">return</span> {m_Logger, std::move(message)};</div>
-<div class="line"><a id="l00810" name="l00810"></a><span class="lineno">  810</span>    }</div>
-<div class="line"><a id="l00811" name="l00811"></a><span class="lineno">  811</span> </div>
-<div class="line"><a id="l00812" name="l00812"></a><span class="lineno">  812</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00813" name="l00813"></a><span class="lineno">  813</span>    std::string_view top_level_message()<span class="keyword"> const</span></div>
-<div class="line"><a id="l00814" name="l00814"></a><span class="lineno">  814</span><span class="keyword">    </span>{</div>
-<div class="line"><a id="l00815" name="l00815"></a><span class="lineno">  815</span>      <span class="keywordflow">return</span> m_Logger.top_level_message();</div>
-<div class="line"><a id="l00816" name="l00816"></a><span class="lineno">  816</span>    }</div>
-<div class="line"><a id="l00817" name="l00817"></a><span class="lineno">  817</span> </div>
-<div class="line"><a id="l00818" name="l00818"></a><span class="lineno">  818</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00819" name="l00819"></a><span class="lineno">  819</span>    <span class="keyword">const</span> failure_output&amp; failure_messages() <span class="keyword">const</span> <span class="keyword">noexcept</span></div>
-<div class="line"><a id="l00820" name="l00820"></a><span class="lineno">  820</span>    {</div>
-<div class="line"><a id="l00821" name="l00821"></a><span class="lineno">  821</span>      <span class="keywordflow">return</span> m_Logger.results().failure_messages;</div>
-<div class="line"><a id="l00822" name="l00822"></a><span class="lineno">  822</span>    }</div>
-<div class="line"><a id="l00823" name="l00823"></a><span class="lineno">  823</span> </div>
-<div class="line"><a id="l00824" name="l00824"></a><span class="lineno">  824</span>    <span class="keywordtype">void</span> recovery(<a class="code hl_struct" href="../../d2/d70/structsequoia_1_1testing_1_1active__recovery__files.html">active_recovery_files</a> files)</div>
-<div class="line"><a id="l00825" name="l00825"></a><span class="lineno">  825</span>    {</div>
-<div class="line"><a id="l00826" name="l00826"></a><span class="lineno">  826</span>      m_Logger.recovery(std::move(files));</div>
-<div class="line"><a id="l00827" name="l00827"></a><span class="lineno">  827</span>    }</div>
-<div class="line"><a id="l00828" name="l00828"></a><span class="lineno">  828</span>  <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00829" name="l00829"></a><span class="lineno">  829</span>    <a class="code hl_class" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger&lt;Mode&gt;</a> m_Logger;</div>
-<div class="line"><a id="l00830" name="l00830"></a><span class="lineno">  830</span>  };</div>
-<div class="line"><a id="l00831" name="l00831"></a><span class="lineno">  831</span>}</div>
+<div class="line"><a id="l00789" name="l00789"></a><span class="lineno">  789</span>    <span class="keyword">explicit</span> <a class="code hl_class" href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">checker</a>(<a class="code hl_struct" href="../../d2/d70/structsequoia_1_1testing_1_1active__recovery__files.html">active_recovery_files</a> recovery)</div>
+<div class="line"><a id="l00790" name="l00790"></a><span class="lineno">  790</span>      : m_Logger{std::move(recovery)}</div>
+<div class="line"><a id="l00791" name="l00791"></a><span class="lineno">  791</span>    {}</div>
+<div class="line"><a id="l00792" name="l00792"></a><span class="lineno">  792</span> </div>
+<div class="line"><a id="l00793" name="l00793"></a><span class="lineno">  793</span>    <a class="code hl_class" href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">checker</a>(<a class="code hl_class" href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">checker</a>&amp;&amp;)            <span class="keyword">noexcept</span> = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00794" name="l00794"></a><span class="lineno">  794</span>    <a class="code hl_class" href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">checker</a>&amp; operator=(<a class="code hl_class" href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">checker</a>&amp;&amp;) <span class="keyword">noexcept</span> = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00795" name="l00795"></a><span class="lineno">  795</span> </div>
+<div class="line"><a id="l00796" name="l00796"></a><span class="lineno">  796</span>    <a class="code hl_class" href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">~checker</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00797" name="l00797"></a><span class="lineno">  797</span> </div>
+<div class="line"><a id="l00798" name="l00798"></a><span class="lineno">  798</span>    [[nodiscard]]</div>
+<div class="line"><a id="l00799" name="l00799"></a><span class="lineno">  799</span>    std::size_t checks() <span class="keyword">const</span> <span class="keyword">noexcept</span> { <span class="keywordflow">return</span> m_Logger.checks(); }</div>
+<div class="line"><a id="l00800" name="l00800"></a><span class="lineno">  800</span> </div>
+<div class="line"><a id="l00801" name="l00801"></a><span class="lineno">  801</span>    [[nodiscard]]</div>
+<div class="line"><a id="l00802" name="l00802"></a><span class="lineno">  802</span>    std::size_t failures() <span class="keyword">const</span> <span class="keyword">noexcept</span> { <span class="keywordflow">return</span> m_Logger.failures(); }</div>
+<div class="line"><a id="l00803" name="l00803"></a><span class="lineno">  803</span> </div>
+<div class="line"><a id="l00804" name="l00804"></a><span class="lineno">  804</span>    [[nodiscard]]</div>
+<div class="line"><a id="l00805" name="l00805"></a><span class="lineno">  805</span>    <span class="keyword">const</span> <a class="code hl_struct" href="../../db/d2c/structsequoia_1_1testing_1_1uncaught__exception__info.html">uncaught_exception_info</a>&amp; exceptions_detected_by_sentinel() <span class="keyword">const</span> <span class="keyword">noexcept</span></div>
+<div class="line"><a id="l00806" name="l00806"></a><span class="lineno">  806</span>    {</div>
+<div class="line"><a id="l00807" name="l00807"></a><span class="lineno">  807</span>      <span class="keywordflow">return</span> m_Logger.exceptions_detected_by_sentinel();</div>
+<div class="line"><a id="l00808" name="l00808"></a><span class="lineno">  808</span>    }</div>
+<div class="line"><a id="l00809" name="l00809"></a><span class="lineno">  809</span> </div>
+<div class="line"><a id="l00810" name="l00810"></a><span class="lineno">  810</span>    [[nodiscard]]</div>
+<div class="line"><a id="l00811" name="l00811"></a><span class="lineno">  811</span>    <a class="code hl_class" href="../../d1/d8f/classsequoia_1_1testing_1_1sentinel.html">sentinel&lt;Mode&gt;</a> make_sentinel(std::string message)</div>
+<div class="line"><a id="l00812" name="l00812"></a><span class="lineno">  812</span>    {</div>
+<div class="line"><a id="l00813" name="l00813"></a><span class="lineno">  813</span>      <span class="keywordflow">return</span> {m_Logger, std::move(message)};</div>
+<div class="line"><a id="l00814" name="l00814"></a><span class="lineno">  814</span>    }</div>
+<div class="line"><a id="l00815" name="l00815"></a><span class="lineno">  815</span> </div>
+<div class="line"><a id="l00816" name="l00816"></a><span class="lineno">  816</span>    [[nodiscard]]</div>
+<div class="line"><a id="l00817" name="l00817"></a><span class="lineno">  817</span>    std::string_view top_level_message()<span class="keyword"> const</span></div>
+<div class="line"><a id="l00818" name="l00818"></a><span class="lineno">  818</span><span class="keyword">    </span>{</div>
+<div class="line"><a id="l00819" name="l00819"></a><span class="lineno">  819</span>      <span class="keywordflow">return</span> m_Logger.top_level_message();</div>
+<div class="line"><a id="l00820" name="l00820"></a><span class="lineno">  820</span>    }</div>
+<div class="line"><a id="l00821" name="l00821"></a><span class="lineno">  821</span> </div>
+<div class="line"><a id="l00822" name="l00822"></a><span class="lineno">  822</span>    [[nodiscard]]</div>
+<div class="line"><a id="l00823" name="l00823"></a><span class="lineno">  823</span>    <span class="keyword">const</span> failure_output&amp; failure_messages() <span class="keyword">const</span> <span class="keyword">noexcept</span></div>
+<div class="line"><a id="l00824" name="l00824"></a><span class="lineno">  824</span>    {</div>
+<div class="line"><a id="l00825" name="l00825"></a><span class="lineno">  825</span>      <span class="keywordflow">return</span> m_Logger.results().failure_messages;</div>
+<div class="line"><a id="l00826" name="l00826"></a><span class="lineno">  826</span>    }</div>
+<div class="line"><a id="l00827" name="l00827"></a><span class="lineno">  827</span>  <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00828" name="l00828"></a><span class="lineno">  828</span>    <a class="code hl_class" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger&lt;Mode&gt;</a> m_Logger;</div>
+<div class="line"><a id="l00829" name="l00829"></a><span class="lineno">  829</span>  };</div>
+<div class="line"><a id="l00830" name="l00830"></a><span class="lineno">  830</span>}</div>
 <div class="ttc" id="aAdvice_8hpp_html"><div class="ttname"><a href="../../da/d27/Advice_8hpp.html">Advice.hpp</a></div><div class="ttdoc">Utilities for the advice framework, which provides hints for certain failures.</div></div>
 <div class="ttc" id="aBinaryRelationships_8hpp_html"><div class="ttname"><a href="../../d1/d8b/BinaryRelationships_8hpp.html">BinaryRelationships.hpp</a></div><div class="ttdoc">Utilities for performing checks with respect to a binary operator.</div></div>
 <div class="ttc" id="aCoreInfrastructure_8hpp_html"><div class="ttname"><a href="../../d0/dae/CoreInfrastructure_8hpp.html">CoreInfrastructure.hpp</a></div><div class="ttdoc">Core declarations / definitions used in the testing framework.</div></div>
 <div class="ttc" id="aFreeCheckers_8hpp_html_a35227633982a6b83bb54bc54c6236753"><div class="ttname"><a href="../../d2/d0d/FreeCheckers_8hpp.html#a35227633982a6b83bb54bc54c6236753">sequoia::testing::check</a></div><div class="ttdeci">bool check(CheckType flavour, std::string description, test_logger&lt; Mode &gt; &amp;logger, Iter first, Sentinel last, PredictionIter predictionFirst, PredictionSentinel predictionLast, tutor&lt; Advisor &gt; advisor={})</div><div class="ttdoc">The workhorse for comparing the contents of ranges.</div><div class="ttdef"><b>Definition:</b> FreeCheckers.hpp:445</div></div>
 <div class="ttc" id="aFreeCheckers_8hpp_html_a4ec4b971693fdcad9ad8cebb2f2722ec"><div class="ttname"><a href="../../d2/d0d/FreeCheckers_8hpp.html#a4ec4b971693fdcad9ad8cebb2f2722ec">sequoia::testing::general_equivalence_check</a></div><div class="ttdeci">bool general_equivalence_check(CheckType flavour, std::string description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;obtained, const S &amp;s, const U &amp;... u)</div><div class="ttdoc">generic function that generates a check from any class providing a static check method.</div><div class="ttdef"><b>Definition:</b> FreeCheckers.hpp:281</div></div>
 <div class="ttc" id="aTestLogger_8hpp_html"><div class="ttname"><a href="../../d5/d05/TestLogger_8hpp.html">TestLogger.hpp</a></div><div class="ttdoc">Utilities for recording the outcome of tests.</div></div>
-<div class="ttc" id="aTestLogger_8hpp_html_ae4e97c9d45a89647799f0d308ba6d244"><div class="ttname"><a href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">sequoia::testing::test_mode</a></div><div class="ttdeci">test_mode</div><div class="ttdoc">Specifies whether tests are run as standard tests or in false postive/negative mode.</div><div class="ttdef"><b>Definition:</b> TestLogger.hpp:35</div></div>
 <div class="ttc" id="aUtilities_8hpp_html"><div class="ttname"><a href="../../db/d8f/Utilities_8hpp.html">Utilities.hpp</a></div><div class="ttdoc">Meta-programming utilities.</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1checker_html"><div class="ttname"><a href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">sequoia::testing::checker</a></div><div class="ttdoc">Exposes elementary check methods, with the option to plug in arbitrary Extenders to compose functiona...</div><div class="ttdef"><b>Definition:</b> FreeCheckers.hpp:664</div></div>
-<div class="ttc" id="aclasssequoia_1_1testing_1_1log__summary_html"><div class="ttname"><a href="../../d2/daa/classsequoia_1_1testing_1_1log__summary.html">sequoia::testing::log_summary</a></div><div class="ttdoc">Summaries data generated by the logger, for the purposes of reporting.</div><div class="ttdef"><b>Definition:</b> TestLogger.hpp:298</div></div>
+<div class="ttc" id="aclasssequoia_1_1testing_1_1log__summary_html"><div class="ttname"><a href="../../d2/daa/classsequoia_1_1testing_1_1log__summary.html">sequoia::testing::log_summary</a></div><div class="ttdoc">Summaries data generated by the logger, for the purposes of reporting.</div><div class="ttdef"><b>Definition:</b> TestLogger.hpp:299</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1reporter_html"><div class="ttname"><a href="../../da/dce/classsequoia_1_1testing_1_1reporter.html">sequoia::testing::reporter</a></div><div class="ttdef"><b>Definition:</b> Output.hpp:211</div></div>
-<div class="ttc" id="aclasssequoia_1_1testing_1_1sentinel_html"><div class="ttname"><a href="../../d1/d8f/classsequoia_1_1testing_1_1sentinel.html">sequoia::testing::sentinel</a></div><div class="ttdef"><b>Definition:</b> TestLogger.hpp:279</div></div>
-<div class="ttc" id="aclasssequoia_1_1testing_1_1test__logger_html"><div class="ttname"><a href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">sequoia::testing::test_logger</a></div><div class="ttdef"><b>Definition:</b> TestLogger.hpp:191</div></div>
+<div class="ttc" id="aclasssequoia_1_1testing_1_1sentinel_html"><div class="ttname"><a href="../../d1/d8f/classsequoia_1_1testing_1_1sentinel.html">sequoia::testing::sentinel</a></div><div class="ttdef"><b>Definition:</b> TestLogger.hpp:277</div></div>
+<div class="ttc" id="aclasssequoia_1_1testing_1_1test__logger_html"><div class="ttname"><a href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">sequoia::testing::test_logger</a></div><div class="ttdef"><b>Definition:</b> TestLogger.hpp:183</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1tutor_html"><div class="ttname"><a href="../../d6/d71/classsequoia_1_1testing_1_1tutor.html">sequoia::testing::tutor</a></div><div class="ttdoc">class template used to wrap function objects which proffer advice.</div><div class="ttdef"><b>Definition:</b> Advice.hpp:127</div></div>
 <div class="ttc" id="aconceptsequoia_1_1deep__equality__comparable_html"><div class="ttname"><a href="../../da/d5f/conceptsequoia_1_1deep__equality__comparable.html">sequoia::deep_equality_comparable</a></div><div class="ttdoc">Concept to work around the fact that currently the stl typically underconstrains operator==.</div><div class="ttdef"><b>Definition:</b> Concepts.hpp:105</div></div>
 <div class="ttc" id="aconceptsequoia_1_1faithful__range_html"><div class="ttname"><a href="../../dd/d51/conceptsequoia_1_1faithful__range.html">sequoia::faithful_range</a></div><div class="ttdoc">Similar to std::range but excludes the case where dereferencing yields the same type as the range.</div><div class="ttdef"><b>Definition:</b> Concepts.hpp:91</div></div>
@@ -801,7 +799,7 @@ $(function() {
 <div class="ttc" id="aconceptsequoia_1_1testing_1_1serializable_html"><div class="ttname"><a href="../../d0/da7/conceptsequoia_1_1testing_1_1serializable.html">sequoia::testing::serializable</a></div><div class="ttdef"><b>Definition:</b> CoreInfrastructure.hpp:43</div></div>
 <div class="ttc" id="aconceptsequoia_1_1testing_1_1tester__for_html"><div class="ttname"><a href="../../de/da4/conceptsequoia_1_1testing_1_1tester__for.html">sequoia::testing::tester_for</a></div><div class="ttdef"><b>Definition:</b> FreeCheckers.hpp:183</div></div>
 <div class="ttc" id="astructsequoia_1_1dependent__false_html"><div class="ttname"><a href="../../dd/ded/structsequoia_1_1dependent__false.html">sequoia::dependent_false</a></div><div class="ttdoc">Standard meta-programming utility.</div><div class="ttdef"><b>Definition:</b> TypeTraits.hpp:27</div></div>
-<div class="ttc" id="astructsequoia_1_1testing_1_1active__recovery__files_html"><div class="ttname"><a href="../../d2/d70/structsequoia_1_1testing_1_1active__recovery__files.html">sequoia::testing::active_recovery_files</a></div><div class="ttdoc">Holds paths to files where recovery information will be written if the path is not empty.</div><div class="ttdef"><b>Definition:</b> TestLogger.hpp:41</div></div>
+<div class="ttc" id="astructsequoia_1_1testing_1_1active__recovery__files_html"><div class="ttname"><a href="../../d2/d70/structsequoia_1_1testing_1_1active__recovery__files.html">sequoia::testing::active_recovery_files</a></div><div class="ttdoc">Holds paths to files where recovery information will be written if the path is not empty.</div><div class="ttdef"><b>Definition:</b> TestLogger.hpp:36</div></div>
 <div class="ttc" id="astructsequoia_1_1testing_1_1default__exception__message__postprocessor_html"><div class="ttname"><a href="../../d8/dd3/structsequoia_1_1testing_1_1default__exception__message__postprocessor.html">sequoia::testing::default_exception_message_postprocessor</a></div><div class="ttdef"><b>Definition:</b> FreeCheckers.hpp:379</div></div>
 <div class="ttc" id="astructsequoia_1_1testing_1_1ends__with__tutor_html"><div class="ttname"><a href="../../d9/db2/structsequoia_1_1testing_1_1ends__with__tutor.html">sequoia::testing::ends_with_tutor</a></div><div class="ttdef"><b>Definition:</b> Advice.hpp:168</div></div>
 <div class="ttc" id="astructsequoia_1_1testing_1_1equality__check__t_html"><div class="ttname"><a href="../../d2/d95/structsequoia_1_1testing_1_1equality__check__t.html">sequoia::testing::equality_check_t</a></div><div class="ttdef"><b>Definition:</b> FreeCheckers.hpp:87</div></div>

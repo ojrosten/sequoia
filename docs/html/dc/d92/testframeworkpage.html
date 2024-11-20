@@ -110,7 +110,7 @@ Automation</h1>
 <h1><a class="anchor" id="sec_robustness"></a>
 Robustness</h1>
 <p>The testing framework is sophisticated and sophistication brings danger, since it raises the chances that the framework itself has bugs. If this is the case, then the framework would give clients a false sense of security about the code they have written, which could be disastrous. To mitigate this risk, the testing framework has been designed to run self-diagnostics. This has been employed to give a high degree of confidence that the existing framework is correct. Used idiomatically, it should confer similar confidence in any extensions.</p>
-<p>One of the defining features of the testing framework is that it is designed to expose false-negatives. As such, each test operates in a particular <a class="el" href="../../d5/d05/TestLogger_8hpp.html#test_mode_enum">test_mode</a>, chosen at compile time: standard, false_negative and false_positive.</p>
+<p>One of the defining features of the testing framework is that it is designed to expose false-negatives. As such, each test operates in a particular <a class="el" href="../../da/d95/TestMode_8hpp.html#test_mode_enum">test_mode</a>, chosen at compile time: standard, false_negative and false_positive.</p>
 <p>In standard mode, the test framework operates as one might expect. A typical check looks as follows:</p>
 <pre>
 check(equality, "Description of test", x, 5);

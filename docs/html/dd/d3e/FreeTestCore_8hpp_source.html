@@ -109,84 +109,84 @@ $(function() {
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    time_point m_Start;</div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>  };</div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>  [[nodiscard]]</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>  std::string to_tag(<a class="code hl_enumeration" href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> mode);</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno"><a class="line" href="../../d4/d7e/classsequoia_1_1testing_1_1test__base.html">   51</a></span>  <span class="keyword">class </span><a class="code hl_class" href="../../d4/d7e/classsequoia_1_1testing_1_1test__base.html">test_base</a></div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>  {</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>  <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="keyword">explicit</span> <a class="code hl_class" href="../../d4/d7e/classsequoia_1_1testing_1_1test__base.html">test_base</a>(std::string name) : m_Name{std::move(name)} {}</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <a class="code hl_class" href="../../d4/d7e/classsequoia_1_1testing_1_1test__base.html">test_base</a>(<span class="keyword">const</span> <a class="code hl_class" href="../../d4/d7e/classsequoia_1_1testing_1_1test__base.html">test_base</a>&amp;)            = <span class="keyword">delete</span>;</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <a class="code hl_class" href="../../d4/d7e/classsequoia_1_1testing_1_1test__base.html">test_base</a>&amp; operator=(<span class="keyword">const</span> <a class="code hl_class" href="../../d4/d7e/classsequoia_1_1testing_1_1test__base.html">test_base</a>&amp;) = <span class="keyword">delete</span>;</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <span class="keyword">const</span> std::string&amp; name() <span class="keyword">const</span> <span class="keyword">noexcept</span></div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    {</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>      <span class="keywordflow">return</span> m_Name;</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    }</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <span class="keyword">const</span> std::filesystem::path&amp; project_root()<span class="keyword"> const</span></div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span><span class="keyword">    </span>{</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>      <span class="keywordflow">return</span> m_ProjectPaths.project_root();</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    }</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    std::filesystem::path working_materials()<span class="keyword"> const</span></div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span><span class="keyword">    </span>{</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>      <span class="keywordflow">return</span> m_Materials.working();</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    }</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span> </div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    std::filesystem::path predictive_materials()<span class="keyword"> const</span></div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span><span class="keyword">    </span>{</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>      <span class="keywordflow">return</span> m_Materials.prediction();</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    }</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span> </div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    std::filesystem::path auxiliary_materials()<span class="keyword"> const</span></div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span><span class="keyword">    </span>{</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>      <span class="keywordflow">return</span> m_Materials.auxiliary();</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    }</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span> </div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    <span class="keyword">const</span> std::filesystem::path&amp; diagnostics_output_filename() <span class="keyword">const</span> <span class="keyword">noexcept</span></div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    {</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>      <span class="keywordflow">return</span> m_Diagnostics.diagnostics_file();</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    }</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span> </div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    <span class="keyword">const</span> std::filesystem::path&amp; caught_exceptions_output_filename() <span class="keyword">const</span> <span class="keyword">noexcept</span></div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    {</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>      <span class="keywordflow">return</span> m_Diagnostics.caught_exceptions_file();</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>    }</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span> </div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>    std::string report(<span class="keyword">const</span> <a class="code hl_class" href="../../da/dce/classsequoia_1_1testing_1_1reporter.html">reporter</a>&amp; rep)<span class="keyword"> const</span></div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span><span class="keyword">    </span>{</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>        <span class="keywordflow">return</span> rep.location() ? testing::report_line(rep.message(), m_ProjectPaths.tests().repo(), rep.location().value()) : rep.message();</div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    }</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>  <span class="keyword">protected</span>:</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    <a class="code hl_class" href="../../d4/d7e/classsequoia_1_1testing_1_1test__base.html">~test_base</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span> </div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    <a class="code hl_class" href="../../d4/d7e/classsequoia_1_1testing_1_1test__base.html">test_base</a>(<a class="code hl_class" href="../../d4/d7e/classsequoia_1_1testing_1_1test__base.html">test_base</a>&amp;&amp;)            <span class="keyword">noexcept</span> = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    <a class="code hl_class" href="../../d4/d7e/classsequoia_1_1testing_1_1test__base.html">test_base</a>&amp; operator=(<a class="code hl_class" href="../../d4/d7e/classsequoia_1_1testing_1_1test__base.html">test_base</a>&amp;&amp;) <span class="keyword">noexcept</span> = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span> </div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    <span class="keywordtype">void</span> initialize(<a class="code hl_enumeration" href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> mode, std::string_view suiteName, <span class="keyword">const</span> <a class="code hl_class" href="../../d9/d72/classsequoia_1_1normal__path.html">normal_path</a>&amp; srcFile, <span class="keyword">const</span> <a class="code hl_class" href="../../d4/dbe/classsequoia_1_1testing_1_1project__paths.html">project_paths</a>&amp; projPaths, <a class="code hl_class" href="../../df/d98/classsequoia_1_1testing_1_1individual__materials__paths.html">individual_materials_paths</a> materials);</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span> </div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    <span class="keywordtype">void</span> write_instability_analysis_output(<span class="keyword">const</span> <a class="code hl_class" href="../../d9/d72/classsequoia_1_1normal__path.html">normal_path</a>&amp; srcFile, std::optional&lt;std::size_t&gt; index, <span class="keyword">const</span> failure_output&amp; output) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno"><a class="line" href="../../d4/d7e/classsequoia_1_1testing_1_1test__base.html">   48</a></span>  <span class="keyword">class </span><a class="code hl_class" href="../../d4/d7e/classsequoia_1_1testing_1_1test__base.html">test_base</a></div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>  {</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="keyword">explicit</span> <a class="code hl_class" href="../../d4/d7e/classsequoia_1_1testing_1_1test__base.html">test_base</a>(std::string name) : m_Name{std::move(name)} {}</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <a class="code hl_class" href="../../d4/d7e/classsequoia_1_1testing_1_1test__base.html">test_base</a>(std::string name, test_mode mode, std::string_view suiteName, <span class="keyword">const</span> <a class="code hl_class" href="../../d9/d72/classsequoia_1_1normal__path.html">normal_path</a>&amp; srcFile, <a class="code hl_class" href="../../d4/dbe/classsequoia_1_1testing_1_1project__paths.html">project_paths</a> projPaths, <a class="code hl_class" href="../../df/d98/classsequoia_1_1testing_1_1individual__materials__paths.html">individual_materials_paths</a> materials, <span class="keyword">const</span> std::optional&lt;std::string&gt;&amp; outputDiscriminator, <span class="keyword">const</span> std::optional&lt;std::string&gt;&amp; reductionDiscriminator)</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>      : m_Name{std::move(name)}</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>      , m_ProjectPaths{std::move(projPaths)}</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>      , m_Materials{std::move(materials)}</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>      , m_Diagnostics{get_project_paths().project_root(), suiteName, srcFile, mode, outputDiscriminator}</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>      , m_SummaryFile{srcFile, m_ProjectPaths, reductionDiscriminator}</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    {</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>      std::filesystem::create_directories(m_Diagnostics.false_positive_or_negative_file_path().parent_path());</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    }</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <a class="code hl_class" href="../../d4/d7e/classsequoia_1_1testing_1_1test__base.html">test_base</a>(<span class="keyword">const</span> <a class="code hl_class" href="../../d4/d7e/classsequoia_1_1testing_1_1test__base.html">test_base</a>&amp;)            = <span class="keyword">delete</span>;</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    <a class="code hl_class" href="../../d4/d7e/classsequoia_1_1testing_1_1test__base.html">test_base</a>&amp; operator=(<span class="keyword">const</span> <a class="code hl_class" href="../../d4/d7e/classsequoia_1_1testing_1_1test__base.html">test_base</a>&amp;) = <span class="keyword">delete</span>;</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    [[nodiscard]]</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    <span class="keyword">const</span> std::string&amp; name() <span class="keyword">const</span> <span class="keyword">noexcept</span></div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    {</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>      <span class="keywordflow">return</span> m_Name;</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    }</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    [[nodiscard]]</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    std::filesystem::path working_materials()<span class="keyword"> const</span></div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span><span class="keyword">    </span>{</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>      <span class="keywordflow">return</span> m_Materials.working();</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    }</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span> </div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    [[nodiscard]]</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    std::filesystem::path predictive_materials()<span class="keyword"> const</span></div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span><span class="keyword">    </span>{</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>      <span class="keywordflow">return</span> m_Materials.prediction();</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    }</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span> </div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    [[nodiscard]]</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    std::filesystem::path auxiliary_materials()<span class="keyword"> const</span></div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span><span class="keyword">    </span>{</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>      <span class="keywordflow">return</span> m_Materials.auxiliary();</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    }</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span> </div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    [[nodiscard]]</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    <span class="keyword">const</span> <a class="code hl_class" href="../../d4/dbe/classsequoia_1_1testing_1_1project__paths.html">project_paths</a>&amp; get_project_paths() <span class="keyword">const</span> <span class="keyword">noexcept</span></div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    {</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>      <span class="keywordflow">return</span> m_ProjectPaths;</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    }</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span> </div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    [[nodiscard]]</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    <span class="keyword">const</span> <a class="code hl_class" href="../../dc/d28/classsequoia_1_1testing_1_1individual__diagnostics__paths.html">individual_diagnostics_paths</a>&amp; diagnostics_file_paths() <span class="keyword">const</span> <span class="keyword">noexcept</span></div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    {</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>      <span class="keywordflow">return</span> m_Diagnostics;</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    }</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span> </div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>    [[nodiscard]]</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    <span class="keyword">const</span> <a class="code hl_class" href="../../d3/d49/classsequoia_1_1testing_1_1test__summary__path.html">test_summary_path</a>&amp; summary_file_path() <span class="keyword">const</span> <span class="keyword">noexcept</span></div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    {</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>      <span class="keywordflow">return</span> m_SummaryFile;</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    }</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span> </div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>    [[nodiscard]]</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    std::string report(<span class="keyword">const</span> <a class="code hl_class" href="../../da/dce/classsequoia_1_1testing_1_1reporter.html">reporter</a>&amp; rep)<span class="keyword"> const</span></div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span><span class="keyword">    </span>{</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>        <span class="keywordflow">return</span> rep.location() ? testing::report_line(rep.message(), m_ProjectPaths.tests().repo(), rep.location().value()) : rep.message();</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    }</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>  <span class="keyword">protected</span>:</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    <a class="code hl_class" href="../../d4/d7e/classsequoia_1_1testing_1_1test__base.html">~test_base</a>() = <span class="keywordflow">default</span>;</div>
 <div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span> </div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>    <span class="keyword">const</span> <a class="code hl_class" href="../../d4/dbe/classsequoia_1_1testing_1_1project__paths.html">project_paths</a>&amp; get_project_paths() <span class="keyword">const</span> <span class="keyword">noexcept</span></div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>    {</div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>      <span class="keywordflow">return</span> m_ProjectPaths;</div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    }</div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>  <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>    std::string m_Name{};</div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    <a class="code hl_class" href="../../d4/dbe/classsequoia_1_1testing_1_1project__paths.html">project_paths</a> m_ProjectPaths{};</div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>    <a class="code hl_class" href="../../df/d98/classsequoia_1_1testing_1_1individual__materials__paths.html">individual_materials_paths</a> m_Materials{};</div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>    <a class="code hl_class" href="../../dc/d28/classsequoia_1_1testing_1_1individual__diagnostics__paths.html">individual_diagnostics_paths</a> m_Diagnostics{};</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    <a class="code hl_class" href="../../d4/d7e/classsequoia_1_1testing_1_1test__base.html">test_base</a>(<a class="code hl_class" href="../../d4/d7e/classsequoia_1_1testing_1_1test__base.html">test_base</a>&amp;&amp;)            <span class="keyword">noexcept</span> = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>    <a class="code hl_class" href="../../d4/d7e/classsequoia_1_1testing_1_1test__base.html">test_base</a>&amp; operator=(<a class="code hl_class" href="../../d4/d7e/classsequoia_1_1testing_1_1test__base.html">test_base</a>&amp;&amp;) <span class="keyword">noexcept</span> = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span> </div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>    <span class="keywordtype">void</span> write_instability_analysis_output(<span class="keyword">const</span> <a class="code hl_class" href="../../d9/d72/classsequoia_1_1normal__path.html">normal_path</a>&amp; srcFile, std::optional&lt;std::size_t&gt; index, <span class="keyword">const</span> failure_output&amp; output) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>  <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    std::string m_Name{};</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>    <a class="code hl_class" href="../../d4/dbe/classsequoia_1_1testing_1_1project__paths.html">project_paths</a> m_ProjectPaths{};</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    <a class="code hl_class" href="../../df/d98/classsequoia_1_1testing_1_1individual__materials__paths.html">individual_materials_paths</a> m_Materials{};</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>    <a class="code hl_class" href="../../dc/d28/classsequoia_1_1testing_1_1individual__diagnostics__paths.html">individual_diagnostics_paths</a> m_Diagnostics{};</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>    <a class="code hl_class" href="../../d3/d49/classsequoia_1_1testing_1_1test__summary__path.html">test_summary_path</a> m_SummaryFile{};</div>
 <div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>  };</div>
 <div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span> </div>
 <div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>  <span class="keyword">template</span>&lt;test_mode Mode, <span class="keyword">class</span> Extender&gt;</div>
@@ -194,122 +194,134 @@ $(function() {
 <div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>  {</div>
 <div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>  <span class="keyword">public</span>:</div>
 <div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>    <span class="keyword">using </span><a class="code hl_class" href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">checker_type</a> = <a class="code hl_class" href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">checker&lt;Mode, Extender&gt;</a>;</div>
-<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>    <span class="keyword">constexpr</span> <span class="keyword">static</span> <a class="code hl_enumeration" href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> mode{Mode};</div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>    <span class="keyword">constexpr</span> <span class="keyword">static</span> test_mode mode{Mode};</div>
 <div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span> </div>
-<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>    <span class="keyword">using </span>test_base::test_base;</div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>    <span class="keyword">explicit</span> <a class="code hl_class" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">basic_test</a>(std::string name) : <a class="code hl_class" href="../../d4/d7e/classsequoia_1_1testing_1_1test__base.html">test_base</a>{std::move(name)} {}</div>
 <div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span> </div>
-<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>    <a class="code hl_class" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">basic_test</a>(<span class="keyword">const</span> <a class="code hl_class" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">basic_test</a>&amp;)            = <span class="keyword">delete</span>;</div>
-<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>    <a class="code hl_class" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">basic_test</a>&amp; operator=(<span class="keyword">const</span> <a class="code hl_class" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">basic_test</a>&amp;) = <span class="keyword">delete</span>;</div>
-<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span> </div>
-<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>    <span class="keywordtype">void</span> initialize(std::string_view suiteName, <span class="keyword">const</span> <a class="code hl_class" href="../../d9/d72/classsequoia_1_1normal__path.html">normal_path</a>&amp; srcFile, <span class="keyword">const</span> <a class="code hl_class" href="../../d4/dbe/classsequoia_1_1testing_1_1project__paths.html">project_paths</a>&amp; projPaths, <a class="code hl_class" href="../../df/d98/classsequoia_1_1testing_1_1individual__materials__paths.html">individual_materials_paths</a> materials, <a class="code hl_struct" href="../../d2/d70/structsequoia_1_1testing_1_1active__recovery__files.html">active_recovery_files</a> files)</div>
-<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>    {</div>
-<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>      test_base::initialize(mode, suiteName, srcFile, projPaths, std::move(materials));</div>
-<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>      checker_type::recovery(std::move(files));</div>
-<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>    }</div>
-<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span> </div>
-<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>    <span class="keyword">using </span>checker_type::reset_results;</div>
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>  <span class="keyword">protected</span>:</div>
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>    <span class="keyword">using </span>duration = std::chrono::steady_clock::duration;</div>
-<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span> </div>
-<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>    <a class="code hl_class" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">~basic_test</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span> </div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>    <a class="code hl_class" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">basic_test</a>(<a class="code hl_class" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">basic_test</a>&amp;&amp;)            <span class="keyword">noexcept</span> = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>    <a class="code hl_class" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">basic_test</a>&amp; operator=(<a class="code hl_class" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">basic_test</a>&amp;&amp;) <span class="keyword">noexcept</span> = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span> </div>
-<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>    <a class="code hl_class" href="../../d2/daa/classsequoia_1_1testing_1_1log__summary.html">log_summary</a> summarize(duration delta)<span class="keyword"> const</span></div>
-<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span><span class="keyword">    </span>{</div>
-<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>      <span class="keywordflow">return</span> checker_type::summary(name(), delta);</div>
-<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>    }</div>
-<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>  <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>    <span class="keyword">friend</span> <span class="keyword">class </span><a class="code hl_class" href="../../d0/dce/classsequoia_1_1testing_1_1test__vessel.html">test_vessel</a>;</div>
-<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span> </div>
-<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>    <span class="keywordtype">void</span> log_critical_failure(<span class="keyword">const</span> <a class="code hl_class" href="../../d9/d72/classsequoia_1_1normal__path.html">normal_path</a>&amp; srcFile, std::string_view tag, std::string_view what)</div>
-<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>    {</div>
-<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>      <span class="keyword">auto</span> sentry{checker_type::make_sentinel(<span class="stringliteral">&quot;&quot;</span>)};</div>
-<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>      sentry.log_critical_failure(exception_message(tag, srcFile, checker_type::exceptions_detected_by_sentinel(), what));</div>
-<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>    }</div>
-<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span> </div>
-<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>    <span class="keywordtype">void</span> write_instability_analysis_output(<span class="keyword">const</span> <a class="code hl_class" href="../../d9/d72/classsequoia_1_1normal__path.html">normal_path</a>&amp; srcFile, std::optional&lt;std::size_t&gt; index)<span class="keyword"> const</span></div>
-<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span><span class="keyword">    </span>{</div>
-<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>      test_base::write_instability_analysis_output(srcFile, index, checker_type::failure_messages());</div>
-<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>    }</div>
-<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>  };</div>
-<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span> </div>
-<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>  <span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt;</div>
-<div class="line"><a id="l00190" name="l00190"></a><span class="lineno"><a class="line" href="../../d9/dab/conceptsequoia_1_1testing_1_1concrete__test.html">  190</a></span>  <span class="keyword">concept </span><a class="code hl_concept" href="../../d9/dab/conceptsequoia_1_1testing_1_1concrete__test.html">concrete_test</a> =</div>
-<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>        <span class="keyword">requires</span> (T&amp; test){</div>
-<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>          { test.run_tests() };</div>
-<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>          { test.source_file() } -&gt; std::convertible_to&lt;std::filesystem::path&gt;;</div>
-<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>          { test.reset_results() };</div>
-<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>        }</div>
-<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>    &amp;&amp; std::derived_from&lt;T, test_base&gt; &amp;&amp; std::movable&lt;T&gt; &amp;&amp; std::destructible&lt;T&gt;;</div>
-<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span> </div>
-<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span> </div>
-<div class="line"><a id="l00200" name="l00200"></a><span class="lineno"><a class="line" href="../../d8/d8e/classsequoia_1_1testing_1_1trivial__extender.html">  200</a></span>  <span class="keyword">class </span><a class="code hl_class" href="../../d8/d8e/classsequoia_1_1testing_1_1trivial__extender.html">trivial_extender</a></div>
-<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>  {</div>
-<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>  <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>    <a class="code hl_class" href="../../d8/d8e/classsequoia_1_1testing_1_1trivial__extender.html">trivial_extender</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>  <span class="keyword">protected</span>:</div>
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>    <a class="code hl_class" href="../../d8/d8e/classsequoia_1_1testing_1_1trivial__extender.html">~trivial_extender</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span> </div>
-<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>    <a class="code hl_class" href="../../d8/d8e/classsequoia_1_1testing_1_1trivial__extender.html">trivial_extender</a>(<a class="code hl_class" href="../../d8/d8e/classsequoia_1_1testing_1_1trivial__extender.html">trivial_extender</a>&amp;&amp;)            <span class="keyword">noexcept</span> = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>    <a class="code hl_class" href="../../d8/d8e/classsequoia_1_1testing_1_1trivial__extender.html">trivial_extender</a>&amp; operator=(<a class="code hl_class" href="../../d8/d8e/classsequoia_1_1testing_1_1trivial__extender.html">trivial_extender</a>&amp;&amp;) <span class="keyword">noexcept</span> = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>    <a class="code hl_class" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">basic_test</a>(std::string name, std::string_view suiteName, <span class="keyword">const</span> <a class="code hl_class" href="../../d9/d72/classsequoia_1_1normal__path.html">normal_path</a>&amp; srcFile, <span class="keyword">const</span> <a class="code hl_class" href="../../d4/dbe/classsequoia_1_1testing_1_1project__paths.html">project_paths</a>&amp; projPaths, <a class="code hl_class" href="../../df/d98/classsequoia_1_1testing_1_1individual__materials__paths.html">individual_materials_paths</a> materials, <a class="code hl_struct" href="../../d2/d70/structsequoia_1_1testing_1_1active__recovery__files.html">active_recovery_files</a> files, <span class="keyword">const</span> std::optional&lt;std::string&gt;&amp; outputDiscriminator, <span class="keyword">const</span> std::optional&lt;std::string&gt;&amp; reductionDiscriminator)</div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>      : <a class="code hl_class" href="../../d4/d7e/classsequoia_1_1testing_1_1test__base.html">test_base</a>{std::move(name), Mode, suiteName, srcFile, projPaths, std::move(materials), outputDiscriminator, reductionDiscriminator}</div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>      , <a class="code hl_class" href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">checker&lt;Mode, Extender&gt;</a>{std::move(files)}</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>    {}</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span> </div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>    <a class="code hl_class" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">basic_test</a>(<span class="keyword">const</span> <a class="code hl_class" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">basic_test</a>&amp;)            = <span class="keyword">delete</span>;</div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>    <a class="code hl_class" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">basic_test</a>&amp; operator=(<span class="keyword">const</span> <a class="code hl_class" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">basic_test</a>&amp;) = <span class="keyword">delete</span>;</div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span> </div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>    <span class="keyword">using </span>checker_type::reset_results;</div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>  <span class="keyword">protected</span>:</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>    <span class="keyword">using </span>duration = std::chrono::steady_clock::duration;</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span> </div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>    <a class="code hl_class" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">~basic_test</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span> </div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>    <a class="code hl_class" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">basic_test</a>(<a class="code hl_class" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">basic_test</a>&amp;&amp;)            <span class="keyword">noexcept</span> = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>    <a class="code hl_class" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">basic_test</a>&amp; operator=(<a class="code hl_class" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">basic_test</a>&amp;&amp;) <span class="keyword">noexcept</span> = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span> </div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>    [[nodiscard]]</div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>    <a class="code hl_class" href="../../d2/daa/classsequoia_1_1testing_1_1log__summary.html">log_summary</a> summarize(duration delta)<span class="keyword"> const</span></div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span><span class="keyword">    </span>{</div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>      <span class="keywordflow">return</span> checker_type::summary(name(), delta);</div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>    }</div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>  <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>    <span class="keyword">friend</span> <span class="keyword">class </span><a class="code hl_class" href="../../d0/dce/classsequoia_1_1testing_1_1test__vessel.html">test_vessel</a>;</div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span> </div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>    <span class="keywordtype">void</span> log_critical_failure(<span class="keyword">const</span> <a class="code hl_class" href="../../d9/d72/classsequoia_1_1normal__path.html">normal_path</a>&amp; srcFile, std::string_view tag, std::string_view what)</div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>    {</div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>      <span class="keyword">auto</span> sentry{checker_type::make_sentinel(<span class="stringliteral">&quot;&quot;</span>)};</div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>      sentry.log_critical_failure(exception_message(tag, srcFile, checker_type::exceptions_detected_by_sentinel(), what));</div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>    }</div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span> </div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>    <span class="keywordtype">void</span> write_instability_analysis_output(<span class="keyword">const</span> <a class="code hl_class" href="../../d9/d72/classsequoia_1_1normal__path.html">normal_path</a>&amp; srcFile, std::optional&lt;std::size_t&gt; index)<span class="keyword"> const</span></div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span><span class="keyword">    </span>{</div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>      test_base::write_instability_analysis_output(srcFile, index, checker_type::failure_messages());</div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>    }</div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>  };</div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span> </div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>  <span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt;</div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno"><a class="line" href="../../d9/dab/conceptsequoia_1_1testing_1_1concrete__test.html">  189</a></span>  <span class="keyword">concept </span><a class="code hl_concept" href="../../d9/dab/conceptsequoia_1_1testing_1_1concrete__test.html">concrete_test</a> =</div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>        <span class="keyword">requires</span> (T&amp; test){</div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>          { test.run_tests() };</div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>          { test.source_file() } -&gt; std::convertible_to&lt;std::filesystem::path&gt;;</div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>          { test.reset_results() };</div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>        }</div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>    &amp;&amp; std::derived_from&lt;T, test_base&gt; &amp;&amp; std::movable&lt;T&gt; &amp;&amp; std::destructible&lt;T&gt;;</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span> </div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>  <span class="keyword">template</span>&lt;concrete_test T&gt;</div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>  <span class="keyword">inline</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> has_discriminated_output_v{</div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>    <span class="keyword">requires</span>(<span class="keyword">const</span> T&amp; t){</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>      { t.output_discriminator() } -&gt; std::convertible_to&lt;std::string&gt;;</div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>    }</div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>  };</div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span> </div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>  <span class="keyword">template</span>&lt;concrete_test T&gt;</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>  <span class="keyword">inline</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> has_reduced_output_v{</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>    <span class="keyword">requires</span>(<span class="keyword">const</span> T &amp; t){</div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>      { t.reduction_discriminator() } -&gt; std::convertible_to&lt;std::string&gt;;</div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>    }</div>
 <div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>  };</div>
 <div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span> </div>
-<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>  <span class="keyword">template</span>&lt;test_mode Mode&gt;</div>
-<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>  <span class="keyword">using </span><a class="code hl_class" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">basic_free_test</a> = <a class="code hl_class" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">basic_test&lt;Mode, trivial_extender&gt;</a>;</div>
-<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span> </div>
-<div class="line"><a id="l00215" name="l00215"></a><span class="lineno"><a class="line" href="../../dd/d3e/FreeTestCore_8hpp.html#a58ef890d97adcfe24617ac1e9b266133">  215</a></span>  <span class="keyword">using </span><a class="code hl_class" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">free_test</a>                = <a class="code hl_class" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">basic_free_test&lt;test_mode::standard&gt;</a>;</div>
-<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>  <span class="keyword">using </span><a class="code hl_class" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">free_false_positive_test</a> = <a class="code hl_class" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">basic_free_test&lt;test_mode::false_positive&gt;</a>;</div>
-<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>  <span class="keyword">using </span><a class="code hl_class" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">free_false_negative_test</a> = <a class="code hl_class" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">basic_free_test&lt;test_mode::false_negative&gt;</a>;</div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno"><a class="line" href="../../d8/d8e/classsequoia_1_1testing_1_1trivial__extender.html">  212</a></span>  <span class="keyword">class </span><a class="code hl_class" href="../../d8/d8e/classsequoia_1_1testing_1_1trivial__extender.html">trivial_extender</a></div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>  {</div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>    <a class="code hl_class" href="../../d8/d8e/classsequoia_1_1testing_1_1trivial__extender.html">trivial_extender</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>  <span class="keyword">protected</span>:</div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>    <a class="code hl_class" href="../../d8/d8e/classsequoia_1_1testing_1_1trivial__extender.html">~trivial_extender</a>() = <span class="keywordflow">default</span>;</div>
 <div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span> </div>
-<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>  <span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt;</div>
-<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>  <span class="keyword">inline</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> has_parallelizable_type{</div>
-<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>      <span class="keyword">requires</span> {</div>
-<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>        <span class="keyword">typename</span> T::parallelizable_type;</div>
-<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>        <span class="keyword">requires</span> std::is_convertible_v&lt;typename T::parallelizable_type, std::true_type&gt; || std::is_convertible_v&lt;typename T::parallelizable_type, std::false_type&gt;;</div>
-<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>      }</div>
-<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>  };</div>
-<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span> </div>
-<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>  <span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt;</div>
-<div class="line"><a id="l00229" name="l00229"></a><span class="lineno"><a class="line" href="../../d1/da5/structsequoia_1_1testing_1_1is__parallelizable.html">  229</a></span>  <span class="keyword">struct </span><a class="code hl_struct" href="../../d1/da5/structsequoia_1_1testing_1_1is__parallelizable.html">is_parallelizable</a>;</div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>    <a class="code hl_class" href="../../d8/d8e/classsequoia_1_1testing_1_1trivial__extender.html">trivial_extender</a>(<a class="code hl_class" href="../../d8/d8e/classsequoia_1_1testing_1_1trivial__extender.html">trivial_extender</a>&amp;&amp;)            <span class="keyword">noexcept</span> = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>    <a class="code hl_class" href="../../d8/d8e/classsequoia_1_1testing_1_1trivial__extender.html">trivial_extender</a>&amp; operator=(<a class="code hl_class" href="../../d8/d8e/classsequoia_1_1testing_1_1trivial__extender.html">trivial_extender</a>&amp;&amp;) <span class="keyword">noexcept</span> = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>  };</div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span> </div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>  <span class="keyword">template</span>&lt;test_mode Mode&gt;</div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>  <span class="keyword">using </span><a class="code hl_class" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">basic_free_test</a> = <a class="code hl_class" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">basic_test&lt;Mode, trivial_extender&gt;</a>;</div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span> </div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno"><a class="line" href="../../dd/d3e/FreeTestCore_8hpp.html#a58ef890d97adcfe24617ac1e9b266133">  227</a></span>  <span class="keyword">using </span><a class="code hl_class" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">free_test</a>                = <a class="code hl_class" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">basic_free_test&lt;test_mode::standard&gt;</a>;</div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>  <span class="keyword">using </span><a class="code hl_class" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">free_false_positive_test</a> = <a class="code hl_class" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">basic_free_test&lt;test_mode::false_positive&gt;</a>;</div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>  <span class="keyword">using </span><a class="code hl_class" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">free_false_negative_test</a> = <a class="code hl_class" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">basic_free_test&lt;test_mode::false_negative&gt;</a>;</div>
 <div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span> </div>
 <div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>  <span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt;</div>
-<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>  <span class="keyword">using </span>is_parallelizable_t = <span class="keyword">typename</span> <a class="code hl_struct" href="../../d1/da5/structsequoia_1_1testing_1_1is__parallelizable.html">is_parallelizable&lt;T&gt;::type</a>;</div>
-<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span> </div>
-<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>  <span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt;</div>
-<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>  <span class="keyword">inline</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> is_parallelizable_v{<a class="code hl_struct" href="../../d1/da5/structsequoia_1_1testing_1_1is__parallelizable.html">is_parallelizable&lt;T&gt;::value</a>};</div>
-<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span> </div>
-<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>  <span class="keyword">template</span>&lt;concrete_test T&gt;</div>
-<div class="line"><a id="l00238" name="l00238"></a><span class="lineno"><a class="line" href="../../d8/d46/structsequoia_1_1testing_1_1is__parallelizable_3_01T_01_4.html">  238</a></span>  <span class="keyword">struct </span><a class="code hl_struct" href="../../d1/da5/structsequoia_1_1testing_1_1is__parallelizable.html">is_parallelizable</a>&lt;T&gt; : std::true_type {};</div>
-<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span> </div>
-<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>  <span class="keyword">template</span>&lt;concrete_test T&gt;</div>
-<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>    <span class="keyword">requires</span> has_parallelizable_type&lt;T&gt;</div>
-<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>  <span class="keyword">struct </span><a class="code hl_struct" href="../../d1/da5/structsequoia_1_1testing_1_1is__parallelizable.html">is_parallelizable</a>&lt;T&gt; : T::parallelizable_type {};</div>
-<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span> </div>
-<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>}</div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>  <span class="keyword">inline</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> has_parallelizable_type{</div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>      <span class="keyword">requires</span> {</div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>        <span class="keyword">typename</span> T::parallelizable_type;</div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>        <span class="keyword">requires</span> std::is_convertible_v&lt;typename T::parallelizable_type, std::true_type&gt; || std::is_convertible_v&lt;typename T::parallelizable_type, std::false_type&gt;;</div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>      }</div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>  };</div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span> </div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>  <span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt;</div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno"><a class="line" href="../../d1/da5/structsequoia_1_1testing_1_1is__parallelizable.html">  241</a></span>  <span class="keyword">struct </span><a class="code hl_struct" href="../../d1/da5/structsequoia_1_1testing_1_1is__parallelizable.html">is_parallelizable</a>;</div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span> </div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>  <span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt;</div>
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>  <span class="keyword">using </span>is_parallelizable_t = <span class="keyword">typename</span> <a class="code hl_struct" href="../../d1/da5/structsequoia_1_1testing_1_1is__parallelizable.html">is_parallelizable&lt;T&gt;::type</a>;</div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span> </div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>  <span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt;</div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>  <span class="keyword">inline</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> is_parallelizable_v{<a class="code hl_struct" href="../../d1/da5/structsequoia_1_1testing_1_1is__parallelizable.html">is_parallelizable&lt;T&gt;::value</a>};</div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span> </div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>  <span class="keyword">template</span>&lt;concrete_test T&gt;</div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno"><a class="line" href="../../d8/d46/structsequoia_1_1testing_1_1is__parallelizable_3_01T_01_4.html">  250</a></span>  <span class="keyword">struct </span><a class="code hl_struct" href="../../d1/da5/structsequoia_1_1testing_1_1is__parallelizable.html">is_parallelizable</a>&lt;T&gt; : std::true_type {};</div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span> </div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>  <span class="keyword">template</span>&lt;concrete_test T&gt;</div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>    <span class="keyword">requires</span> has_parallelizable_type&lt;T&gt;</div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>  <span class="keyword">struct </span><a class="code hl_struct" href="../../d1/da5/structsequoia_1_1testing_1_1is__parallelizable.html">is_parallelizable</a>&lt;T&gt; : T::parallelizable_type {};</div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span> </div>
+<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>}</div>
 <div class="ttc" id="aConcepts_8hpp_html"><div class="ttname"><a href="../../d3/d84/Concepts_8hpp.html">Concepts.hpp</a></div><div class="ttdoc">Concepts which are sufficiently general to appear in the sequoia namespace.</div></div>
 <div class="ttc" id="aConcreteTypeCheckers_8hpp_html"><div class="ttname"><a href="../../dc/d9c/ConcreteTypeCheckers_8hpp.html">ConcreteTypeCheckers.hpp</a></div><div class="ttdoc">Useful specializations for the class template value_tester.</div></div>
 <div class="ttc" id="aFileSystem_8hpp_html"><div class="ttname"><a href="../../d2/dbb/FileSystem_8hpp.html">FileSystem.hpp</a></div><div class="ttdoc">Extensions to the std::filesystem library.</div></div>
 <div class="ttc" id="aIndividualTestPaths_8hpp_html"><div class="ttname"><a href="../../d7/d59/IndividualTestPaths_8hpp.html">IndividualTestPaths.hpp</a></div><div class="ttdoc">File paths pertaining to individual tests.</div></div>
 <div class="ttc" id="aSubstitutions_8hpp_html"><div class="ttname"><a href="../../d1/d50/Substitutions_8hpp.html">Substitutions.hpp</a></div><div class="ttdoc">A collection of functions for making substitutions within text.</div></div>
-<div class="ttc" id="aTestLogger_8hpp_html_ae4e97c9d45a89647799f0d308ba6d244"><div class="ttname"><a href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">sequoia::testing::test_mode</a></div><div class="ttdeci">test_mode</div><div class="ttdoc">Specifies whether tests are run as standard tests or in false postive/negative mode.</div><div class="ttdef"><b>Definition:</b> TestLogger.hpp:35</div></div>
 <div class="ttc" id="aclasssequoia_1_1normal__path_html"><div class="ttname"><a href="../../d9/d72/classsequoia_1_1normal__path.html">sequoia::normal_path</a></div><div class="ttdef"><b>Definition:</b> FileSystem.hpp:20</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1basic__test_html"><div class="ttname"><a href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">sequoia::testing::basic_test</a></div><div class="ttdoc">class template from which all concrete tests should derive.</div><div class="ttdef"><b>Definition:</b> FreeTestCore.hpp:144</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1checker_html"><div class="ttname"><a href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">sequoia::testing::checker</a></div><div class="ttdoc">Exposes elementary check methods, with the option to plug in arbitrary Extenders to compose functiona...</div><div class="ttdef"><b>Definition:</b> FreeCheckers.hpp:664</div></div>
-<div class="ttc" id="aclasssequoia_1_1testing_1_1individual__diagnostics__paths_html"><div class="ttname"><a href="../../dc/d28/classsequoia_1_1testing_1_1individual__diagnostics__paths.html">sequoia::testing::individual_diagnostics_paths</a></div><div class="ttdef"><b>Definition:</b> IndividualTestPaths.hpp:66</div></div>
-<div class="ttc" id="aclasssequoia_1_1testing_1_1individual__materials__paths_html"><div class="ttname"><a href="../../df/d98/classsequoia_1_1testing_1_1individual__materials__paths.html">sequoia::testing::individual_materials_paths</a></div><div class="ttdef"><b>Definition:</b> IndividualTestPaths.hpp:19</div></div>
-<div class="ttc" id="aclasssequoia_1_1testing_1_1log__summary_html"><div class="ttname"><a href="../../d2/daa/classsequoia_1_1testing_1_1log__summary.html">sequoia::testing::log_summary</a></div><div class="ttdoc">Summaries data generated by the logger, for the purposes of reporting.</div><div class="ttdef"><b>Definition:</b> TestLogger.hpp:298</div></div>
+<div class="ttc" id="aclasssequoia_1_1testing_1_1individual__diagnostics__paths_html"><div class="ttname"><a href="../../dc/d28/classsequoia_1_1testing_1_1individual__diagnostics__paths.html">sequoia::testing::individual_diagnostics_paths</a></div><div class="ttdef"><b>Definition:</b> IndividualTestPaths.hpp:64</div></div>
+<div class="ttc" id="aclasssequoia_1_1testing_1_1individual__materials__paths_html"><div class="ttname"><a href="../../df/d98/classsequoia_1_1testing_1_1individual__materials__paths.html">sequoia::testing::individual_materials_paths</a></div><div class="ttdef"><b>Definition:</b> IndividualTestPaths.hpp:20</div></div>
+<div class="ttc" id="aclasssequoia_1_1testing_1_1log__summary_html"><div class="ttname"><a href="../../d2/daa/classsequoia_1_1testing_1_1log__summary.html">sequoia::testing::log_summary</a></div><div class="ttdoc">Summaries data generated by the logger, for the purposes of reporting.</div><div class="ttdef"><b>Definition:</b> TestLogger.hpp:299</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1project__paths_html"><div class="ttname"><a href="../../d4/dbe/classsequoia_1_1testing_1_1project__paths.html">sequoia::testing::project_paths</a></div><div class="ttdoc">Paths used by the project.</div><div class="ttdef"><b>Definition:</b> ProjectPaths.hpp:469</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1reporter_html"><div class="ttname"><a href="../../da/dce/classsequoia_1_1testing_1_1reporter.html">sequoia::testing::reporter</a></div><div class="ttdef"><b>Definition:</b> Output.hpp:211</div></div>
-<div class="ttc" id="aclasssequoia_1_1testing_1_1test__base_html"><div class="ttname"><a href="../../d4/d7e/classsequoia_1_1testing_1_1test__base.html">sequoia::testing::test_base</a></div><div class="ttdoc">class from which all tests ultimately derive</div><div class="ttdef"><b>Definition:</b> FreeTestCore.hpp:52</div></div>
+<div class="ttc" id="aclasssequoia_1_1testing_1_1test__base_html"><div class="ttname"><a href="../../d4/d7e/classsequoia_1_1testing_1_1test__base.html">sequoia::testing::test_base</a></div><div class="ttdoc">class from which all tests ultimately derive</div><div class="ttdef"><b>Definition:</b> FreeTestCore.hpp:49</div></div>
+<div class="ttc" id="aclasssequoia_1_1testing_1_1test__summary__path_html"><div class="ttname"><a href="../../d3/d49/classsequoia_1_1testing_1_1test__summary__path.html">sequoia::testing::test_summary_path</a></div><div class="ttdef"><b>Definition:</b> IndividualTestPaths.hpp:90</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1test__vessel_html"><div class="ttname"><a href="../../d0/dce/classsequoia_1_1testing_1_1test__vessel.html">sequoia::testing::test_vessel</a></div><div class="ttdef"><b>Definition:</b> TestRunner.hpp:59</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1timer_html"><div class="ttname"><a href="../../d4/d25/classsequoia_1_1testing_1_1timer.html">sequoia::testing::timer</a></div><div class="ttdef"><b>Definition:</b> FreeTestCore.hpp:31</div></div>
-<div class="ttc" id="aclasssequoia_1_1testing_1_1trivial__extender_html"><div class="ttname"><a href="../../d8/d8e/classsequoia_1_1testing_1_1trivial__extender.html">sequoia::testing::trivial_extender</a></div><div class="ttdoc">Temporary workaround while waiting for variadic friends.</div><div class="ttdef"><b>Definition:</b> FreeTestCore.hpp:201</div></div>
-<div class="ttc" id="aconceptsequoia_1_1testing_1_1concrete__test_html"><div class="ttname"><a href="../../d9/dab/conceptsequoia_1_1testing_1_1concrete__test.html">sequoia::testing::concrete_test</a></div><div class="ttdef"><b>Definition:</b> FreeTestCore.hpp:190</div></div>
-<div class="ttc" id="astructsequoia_1_1testing_1_1active__recovery__files_html"><div class="ttname"><a href="../../d2/d70/structsequoia_1_1testing_1_1active__recovery__files.html">sequoia::testing::active_recovery_files</a></div><div class="ttdoc">Holds paths to files where recovery information will be written if the path is not empty.</div><div class="ttdef"><b>Definition:</b> TestLogger.hpp:41</div></div>
-<div class="ttc" id="astructsequoia_1_1testing_1_1is__parallelizable_html"><div class="ttname"><a href="../../d1/da5/structsequoia_1_1testing_1_1is__parallelizable.html">sequoia::testing::is_parallelizable</a></div><div class="ttdef"><b>Definition:</b> FreeTestCore.hpp:229</div></div>
+<div class="ttc" id="aclasssequoia_1_1testing_1_1trivial__extender_html"><div class="ttname"><a href="../../d8/d8e/classsequoia_1_1testing_1_1trivial__extender.html">sequoia::testing::trivial_extender</a></div><div class="ttdoc">Temporary workaround while waiting for variadic friends.</div><div class="ttdef"><b>Definition:</b> FreeTestCore.hpp:213</div></div>
+<div class="ttc" id="aconceptsequoia_1_1testing_1_1concrete__test_html"><div class="ttname"><a href="../../d9/dab/conceptsequoia_1_1testing_1_1concrete__test.html">sequoia::testing::concrete_test</a></div><div class="ttdef"><b>Definition:</b> FreeTestCore.hpp:189</div></div>
+<div class="ttc" id="astructsequoia_1_1testing_1_1active__recovery__files_html"><div class="ttname"><a href="../../d2/d70/structsequoia_1_1testing_1_1active__recovery__files.html">sequoia::testing::active_recovery_files</a></div><div class="ttdoc">Holds paths to files where recovery information will be written if the path is not empty.</div><div class="ttdef"><b>Definition:</b> TestLogger.hpp:36</div></div>
+<div class="ttc" id="astructsequoia_1_1testing_1_1is__parallelizable_html"><div class="ttname"><a href="../../d1/da5/structsequoia_1_1testing_1_1is__parallelizable.html">sequoia::testing::is_parallelizable</a></div><div class="ttdef"><b>Definition:</b> FreeTestCore.hpp:241</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

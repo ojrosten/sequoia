@@ -298,11 +298,14 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>has_critical_failures
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
 <tr class="memitem:a9e173d0509b94a8404b858db2e63f403"><td class="memItemLeft" align="right" valign="top"><a id="a9e173d0509b94a8404b858db2e63f403" name="a9e173d0509b94a8404b858db2e63f403"></a>
-static constexpr <a class="el" href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a>&#160;</td><td class="memItemRight" valign="bottom"><b>mode</b> {Mode}</td></tr>
+static constexpr test_mode&#160;</td><td class="memItemRight" valign="bottom"><b>mode</b> {Mode}</td></tr>
 <tr class="separator:a9e173d0509b94a8404b858db2e63f403"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
+<tr class="memitem:a92cf158b6ba46bc0025089a51bf72e5d"><td class="memItemLeft" align="right" valign="top"><a id="a92cf158b6ba46bc0025089a51bf72e5d" name="a92cf158b6ba46bc0025089a51bf72e5d"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>checker</b> (<a class="el" href="../../d2/d70/structsequoia_1_1testing_1_1active__recovery__files.html">active_recovery_files</a> recovery)</td></tr>
+<tr class="separator:a92cf158b6ba46bc0025089a51bf72e5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab15ed43c7feaab16b557756306f7f2e5"><td class="memItemLeft" align="right" valign="top"><a id="ab15ed43c7feaab16b557756306f7f2e5" name="ab15ed43c7feaab16b557756306f7f2e5"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>checker</b> (<a class="el" href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">checker</a> &amp;&amp;) noexcept=default</td></tr>
 <tr class="separator:ab15ed43c7feaab16b557756306f7f2e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -327,9 +330,6 @@ std::string_view&#160;</td><td class="memItemRight" valign="bottom"><b>top_level
 <tr class="memitem:a543ca8c85d0e1481096cdb6e84451ad6"><td class="memItemLeft" align="right" valign="top"><a id="a543ca8c85d0e1481096cdb6e84451ad6" name="a543ca8c85d0e1481096cdb6e84451ad6"></a>
 const failure_output &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>failure_messages</b> () const noexcept</td></tr>
 <tr class="separator:a543ca8c85d0e1481096cdb6e84451ad6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a683bd8d8bcb5243259bd039dcafc1797"><td class="memItemLeft" align="right" valign="top"><a id="a683bd8d8bcb5243259bd039dcafc1797" name="a683bd8d8bcb5243259bd039dcafc1797"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>recovery</b> (<a class="el" href="../../d2/d70/structsequoia_1_1testing_1_1active__recovery__files.html">active_recovery_files</a> files)</td></tr>
-<tr class="separator:a683bd8d8bcb5243259bd039dcafc1797"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="friends" name="friends"></a>
 Friends</h2></td></tr>
@@ -339,7 +339,7 @@ template&lt;class Stream &gt; </td></tr>
 <tr class="separator:a663d029a6d117c539ec22f0ed3c4f826"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><div class="compoundTemplParams">template&lt;<a class="el" href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> Mode, class Extender&gt;<br />
+<div class="textblock"><div class="compoundTemplParams">template&lt;test_mode Mode, class Extender&gt;<br />
 class sequoia::testing::checker&lt; Mode, Extender &gt;</div><p>Exposes elementary check methods, with the option to plug in arbitrary Extenders to compose functionality. </p>
 <p>This class template is templated on the enum class test_mode, with an Extender which will become variadic as soon as variadic friends are available.</p>
 <p>In its unextended form, the class is appropriate for plugging into <a class="el" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html" title="class template from which all concrete tests should derive.">basic_test</a> to generate a base class appropriate for testing free functions. Within the unit test framework various Extenders are defined. For example, there are extensions to test types with regular semantics, types with move-only semantics, to do performance tests, and more, besides. The template design allows extenders to be conveniently mixed and matched via using declarations.</p>

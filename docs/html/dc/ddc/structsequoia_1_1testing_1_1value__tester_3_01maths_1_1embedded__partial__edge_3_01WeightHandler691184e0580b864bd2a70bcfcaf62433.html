@@ -93,31 +93,31 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>weight_type</b> = ty
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a8d92fe564686f91cfb86bb50dbe001cd"><td class="memTemplParams" colspan="2"><a id="a8d92fe564686f91cfb86bb50dbe001cd" name="a8d92fe564686f91cfb86bb50dbe001cd"></a>
-template&lt;class CheckerType , <a class="el" href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> Mode&gt; </td></tr>
+template&lt;class CheckerType , test_mode Mode&gt; </td></tr>
 <tr class="memitem:a8d92fe564686f91cfb86bb50dbe001cd"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>test</b> (CheckerType flavour, <a class="el" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger</a>&lt; Mode &gt; &amp;logger, const <a class="el" href="../../d8/d4d/classsequoia_1_1maths_1_1embedded__partial__edge.html">type</a> &amp;edge, const <a class="el" href="../../d8/d4d/classsequoia_1_1maths_1_1embedded__partial__edge.html">type</a> &amp;prediction)</td></tr>
 <tr class="separator:a8d92fe564686f91cfb86bb50dbe001cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aac556f6f09d42f2d9d387d4c24fe2aaf"><td class="memTemplParams" colspan="2"><a id="aac556f6f09d42f2d9d387d4c24fe2aaf" name="aac556f6f09d42f2d9d387d4c24fe2aaf"></a>
-template&lt;<a class="el" href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> Mode, class OtherHandler &gt; <br />
+template&lt;test_mode Mode, class OtherHandler &gt; <br />
 requires (object::handler&lt;OtherHandler&gt; &amp;&amp; !std::is_same_v&lt;WeightHandler, OtherHandler&gt;)</td></tr>
 <tr class="memitem:aac556f6f09d42f2d9d387d4c24fe2aaf"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>test</b> (<a class="el" href="../../df/d9e/structsequoia_1_1testing_1_1general__equivalence__check__t.html">equivalence_check_t</a>, <a class="el" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger</a>&lt; Mode &gt; &amp;logger, const <a class="el" href="../../d8/d4d/classsequoia_1_1maths_1_1embedded__partial__edge.html">type</a> &amp;edge, const <a class="el" href="../../d8/d4d/classsequoia_1_1maths_1_1embedded__partial__edge.html">maths::embedded_partial_edge</a>&lt; OtherHandler, MetaData, IndexType &gt; &amp;prediction)</td></tr>
 <tr class="separator:aac556f6f09d42f2d9d387d4c24fe2aaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa66fb8fb5ec74a2dd7dfe5e02523d4f5"><td class="memTemplParams" colspan="2"><a id="aa66fb8fb5ec74a2dd7dfe5e02523d4f5" name="aa66fb8fb5ec74a2dd7dfe5e02523d4f5"></a>
-template&lt;<a class="el" href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> Mode&gt; <br />
+template&lt;test_mode Mode&gt; <br />
 requires std::is_empty_v&lt;weight_type&gt;&amp;&amp; std::is_empty_v&lt;MetaData&gt;</td></tr>
 <tr class="memitem:aa66fb8fb5ec74a2dd7dfe5e02523d4f5"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>test</b> (<a class="el" href="../../df/d9e/structsequoia_1_1testing_1_1general__equivalence__check__t.html">equivalence_check_t</a>, <a class="el" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger</a>&lt; Mode &gt; &amp;logger, const <a class="el" href="../../d8/d4d/classsequoia_1_1maths_1_1embedded__partial__edge.html">type</a> &amp;edge, const IndexType &amp;target, const IndexType &amp;comp)</td></tr>
 <tr class="separator:aa66fb8fb5ec74a2dd7dfe5e02523d4f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a083cd0e447dc320c7092c6246fbc3c25"><td class="memTemplParams" colspan="2"><a id="a083cd0e447dc320c7092c6246fbc3c25" name="a083cd0e447dc320c7092c6246fbc3c25"></a>
-template&lt;<a class="el" href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> Mode&gt; <br />
+template&lt;test_mode Mode&gt; <br />
 requires (!std::is_empty_v&lt;weight_type&gt;) &amp;&amp; std::is_empty_v&lt;MetaData&gt;</td></tr>
 <tr class="memitem:a083cd0e447dc320c7092c6246fbc3c25"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>test</b> (<a class="el" href="../../df/d9e/structsequoia_1_1testing_1_1general__equivalence__check__t.html">equivalence_check_t</a>, <a class="el" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger</a>&lt; Mode &gt; &amp;logger, const <a class="el" href="../../d8/d4d/classsequoia_1_1maths_1_1embedded__partial__edge.html">type</a> &amp;edge, const IndexType &amp;target, const IndexType &amp;comp, const weight_type &amp;w)</td></tr>
 <tr class="separator:a083cd0e447dc320c7092c6246fbc3c25"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a57d22596f3f18196630fab50cdd7beb6"><td class="memTemplParams" colspan="2"><a id="a57d22596f3f18196630fab50cdd7beb6" name="a57d22596f3f18196630fab50cdd7beb6"></a>
-template&lt;<a class="el" href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> Mode&gt; <br />
+template&lt;test_mode Mode&gt; <br />
 requires std::is_empty_v&lt;weight_type&gt; &amp;&amp; (!std::is_empty_v&lt;MetaData&gt;)</td></tr>
 <tr class="memitem:a57d22596f3f18196630fab50cdd7beb6"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>test</b> (<a class="el" href="../../df/d9e/structsequoia_1_1testing_1_1general__equivalence__check__t.html">equivalence_check_t</a>, <a class="el" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger</a>&lt; Mode &gt; &amp;logger, const <a class="el" href="../../d8/d4d/classsequoia_1_1maths_1_1embedded__partial__edge.html">type</a> &amp;edge, const IndexType &amp;target, const IndexType &amp;comp, const MetaData &amp;m)</td></tr>
 <tr class="separator:a57d22596f3f18196630fab50cdd7beb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5181af628822c00d42d4248dba3f44e6"><td class="memTemplParams" colspan="2"><a id="a5181af628822c00d42d4248dba3f44e6" name="a5181af628822c00d42d4248dba3f44e6"></a>
-template&lt;<a class="el" href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> Mode&gt; <br />
+template&lt;test_mode Mode&gt; <br />
 requires (!std::is_empty_v&lt;weight_type&gt;) &amp;&amp; (!std::is_empty_v&lt;MetaData&gt;)</td></tr>
 <tr class="memitem:a5181af628822c00d42d4248dba3f44e6"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>test</b> (<a class="el" href="../../df/d9e/structsequoia_1_1testing_1_1general__equivalence__check__t.html">equivalence_check_t</a>, <a class="el" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger</a>&lt; Mode &gt; &amp;logger, const <a class="el" href="../../d8/d4d/classsequoia_1_1maths_1_1embedded__partial__edge.html">type</a> &amp;edge, const IndexType &amp;target, const IndexType &amp;comp, const MetaData &amp;m, const weight_type &amp;w)</td></tr>
 <tr class="separator:a5181af628822c00d42d4248dba3f44e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
