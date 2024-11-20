@@ -80,7 +80,7 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    const std::filesystem::path& summary_file_path() const noexcept
+    const test_summary_path& summary_file_path() const noexcept
     {
       return m_pTest->summary_file_path();
     }
@@ -127,11 +127,11 @@ namespace sequoia::testing
     {
       virtual ~soul() = default;
 
-      virtual const std::string& name() const noexcept                        = 0;
-      virtual const std::filesystem::path& summary_file_path() const noexcept = 0;
-      virtual std::filesystem::path source_file() const                       = 0;
-      virtual std::filesystem::path working_materials() const                 = 0;
-      virtual std::filesystem::path predictive_materials() const              = 0;
+      virtual const std::string& name() const noexcept                    = 0;
+      virtual const test_summary_path& summary_file_path() const noexcept = 0;
+      virtual std::filesystem::path source_file() const                   = 0;
+      virtual std::filesystem::path working_materials() const             = 0;
+      virtual std::filesystem::path predictive_materials() const          = 0;
 
       virtual log_summary execute(std::optional<std::size_t> index) = 0;
       virtual void reset(const project_paths& projPaths, std::vector<std::filesystem::path>& materialsPaths) = 0;
@@ -157,7 +157,7 @@ namespace sequoia::testing
       }
 
       [[nodiscard]]
-      const std::filesystem::path& summary_file_path() const noexcept final
+      const test_summary_path& summary_file_path() const noexcept final
       {
         return m_Test.summary_file_path();
       }
@@ -209,8 +209,8 @@ namespace sequoia::testing
 
         if(!m_Test.has_critical_failures())
         {
-          versioned_write(m_Test.diagnostics_output_filename(),       summary.diagnostics_output());
-          versioned_write(m_Test.caught_exceptions_output_filename(), summary.caught_exceptions_output());
+          versioned_write(m_Test.diagnostics_file_paths().false_positive_or_negative_file_path(), summary.diagnostics_output());
+          versioned_write(m_Test.diagnostics_file_paths().caught_exceptions_file_path(), summary.caught_exceptions_output());
         }
 
         return summary;

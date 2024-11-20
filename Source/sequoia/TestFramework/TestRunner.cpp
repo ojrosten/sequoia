@@ -89,19 +89,20 @@ namespace sequoia::testing
     struct test_paths
     {
       test_paths(const std::filesystem::path& sourceFile,
-                 const std::filesystem::path& summaryFile,
+                 const test_summary_path& summaryFile,
                  const std::filesystem::path& workingMaterials,
                  const std::filesystem::path& predictiveMaterials,
                  const project_paths& projPaths)
-        : test_file{rebase_from(sourceFile, projPaths.tests().repo())}
-        , summary{summaryFile}
+        : summary{summaryFile}
+        , test_file{rebase_from(sourceFile, projPaths.tests().repo())}
         , workingMaterials{workingMaterials}
         , predictions{predictiveMaterials}
       {}
 
+      test_summary_path summary;
+
       std::filesystem::path
         test_file,
-        summary,
         workingMaterials,
         predictions;
     };
@@ -237,8 +238,9 @@ namespace sequoia::testing
       std::set<test_paths, paths_comparator> m_Updateables{};
       std::set<std::filesystem::path> m_FilesWrittenTo{};
 
-      void to_file(const std::filesystem::path& filename, const log_summary& summary)
+      void to_file(const test_summary_path& summaryFile, const log_summary& summary)
       {
+        const auto& filename{summaryFile.file_path()};
         if(filename.empty()) return;
 
         auto mode{std::ios_base::out};

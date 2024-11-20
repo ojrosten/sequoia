@@ -68,13 +68,13 @@ namespace sequoia::testing
     individual_diagnostics_paths(const std::filesystem::path& projectRoot, std::string_view suite, const std::filesystem::path& source, test_mode mode, const std::optional<std::string>& platform);
 
     [[nodiscard]]
-    const std::filesystem::path& diagnostics_file() const noexcept
+    const std::filesystem::path& false_positive_or_negative_file_path() const noexcept
     {
       return m_Diagnostics;
     }
 
     [[nodiscard]]
-    const std::filesystem::path& caught_exceptions_file() const noexcept
+    const std::filesystem::path& caught_exceptions_file_path() const noexcept
     {
       return m_CaughtExceptions;
     }
@@ -85,5 +85,20 @@ namespace sequoia::testing
     std::filesystem::path
       m_Diagnostics,
       m_CaughtExceptions;
+  };
+
+  class test_summary_path {
+  public:
+    test_summary_path() = default;
+
+    test_summary_path(const std::filesystem::path& sourceFile, const project_paths& projectPaths, const std::optional<std::string>& summaryDiscriminator);
+
+    [[nodiscard]]
+    const std::filesystem::path& file_path() const noexcept { return m_Summary; }
+
+    [[nodiscard]]
+    friend bool operator==(const test_summary_path&, const test_summary_path&) noexcept = default;
+  private:
+    std::filesystem::path m_Summary;
   };
 }

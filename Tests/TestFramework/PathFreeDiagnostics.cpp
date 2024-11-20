@@ -52,7 +52,7 @@ namespace sequoia::testing
   log_summary path_false_negative_free_diagnostics::summarize(duration delta) const
   {
     auto summary{free_false_negative_test::summarize(delta)};
-    return postprocess(summary, project_root());
+    return postprocess(summary, get_project_paths().project_root());
   }
 
   void path_false_negative_free_diagnostics::run_tests()
@@ -144,7 +144,7 @@ namespace sequoia::testing
   log_summary path_false_positive_free_diagnostics::summarize(duration delta) const
   {
     auto summary{free_false_positive_test::summarize(delta)};
-    return postprocess(summary, project_root());
+    return postprocess(summary, get_project_paths().project_root());
   }
 
   void path_false_positive_free_diagnostics::run_tests()

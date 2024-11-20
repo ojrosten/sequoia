@@ -79,7 +79,7 @@ namespace sequoia::testing
     if constexpr(Mode != test_mode::standard)
     {
       const auto referenceOutput{
-        [filename{this->diagnostics_output_filename()}]() -> std::string {
+        [filename{this->diagnostics_file_paths().false_positive_or_negative_file_path()}]() -> std::string {
           if(std::filesystem::exists(filename))
           {
             if(auto contents{read_to_string(filename)})

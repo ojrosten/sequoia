@@ -38,46 +38,9 @@ namespace sequoia::testing
   {
     if(index.has_value())
     {
-      const auto file{output_paths::instability_analysis_file(project_root(), srcFile, name(), index.value())};
+      const auto file{output_paths::instability_analysis_file(get_project_paths().project_root(), srcFile, name(), index.value())};
       serialize(file, output);
     }
-  }
-  
-  [[nodiscard]]
-  fs::path test_base::test_summary_filename(const fs::path& sourceFile, const std::optional<std::string>& discriminator) const
-  {
-    const auto name{
-        [&]() {
-          auto summaryFile{fs::path{sourceFile}.replace_extension(".txt")};
-          if(discriminator && !discriminator->empty())
-            summaryFile.replace_filename(summaryFile.stem().concat("_" + discriminator.value()).concat(summaryFile.extension().string()));
-
-          return summaryFile;
-        }()
-    };
-
-    if(name.empty())
-      throw std::logic_error("Source files should have a non-trivial name!");
-
-    if(!name.is_absolute())
-    {
-      if(const auto testRepo{m_ProjectPaths.tests().repo()}; !testRepo.empty())
-      {
-        return m_ProjectPaths.output().test_summaries() / back(testRepo) / rebase_from(name, testRepo);
-      }
-    }
-    else
-    {
-      auto summaryFile{m_ProjectPaths.output().test_summaries()};
-      auto iters{std::ranges::mismatch(name, summaryFile)};
-
-      while(iters.in1 != name.end())
-        summaryFile /= *iters.in1++;
-
-      return summaryFile;
-    }
-
-    return name;
   }
 
   timer::timer()

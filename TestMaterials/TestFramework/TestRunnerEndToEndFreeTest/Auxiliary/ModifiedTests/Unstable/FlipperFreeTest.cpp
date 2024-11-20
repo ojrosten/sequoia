@@ -22,6 +22,6 @@ namespace generatedProject::testing
 	void flipper_free_test::run_tests()
 	{
 		check(equality, "", flipper{}.x, true);
-		check("", !fs::exists(output_paths::instability_analysis(project_root()) / "FlipperFreeTest_cpp"));
+		check("", !fs::exists(output_paths::instability_analysis(get_project_paths().project_root()) / "FlipperFreeTest_cpp"));
 	}
 }

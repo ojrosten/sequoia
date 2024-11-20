@@ -50,14 +50,14 @@ namespace sequoia::testing
   public:
     explicit test_base(std::string name) : m_Name{std::move(name)} {}
 
-    test_base(std::string name, test_mode mode, std::string_view suiteName, const normal_path& srcFile, const project_paths& projPaths, individual_materials_paths materials, const std::optional<std::string>& outputDiscriminator, const std::optional<std::string>& reductionDiscriminator)
+    test_base(std::string name, test_mode mode, std::string_view suiteName, const normal_path& srcFile, project_paths projPaths, individual_materials_paths materials, const std::optional<std::string>& outputDiscriminator, const std::optional<std::string>& reductionDiscriminator)
       : m_Name{std::move(name)}
-      , m_ProjectPaths{projPaths}
+      , m_ProjectPaths{std::move(projPaths)}
       , m_Materials{std::move(materials)}
-      , m_Diagnostics{project_root(), suiteName, srcFile, mode, outputDiscriminator}
-      , m_SummaryFile{test_summary_filename(srcFile, reductionDiscriminator)}
+      , m_Diagnostics{get_project_paths().project_root(), suiteName, srcFile, mode, outputDiscriminator}
+      , m_SummaryFile{srcFile, m_ProjectPaths, reductionDiscriminator}
     {
-      std::filesystem::create_directories(m_Diagnostics.diagnostics_file().parent_path());
+      std::filesystem::create_directories(m_Diagnostics.false_positive_or_negative_file_path().parent_path());
     }
 
     test_base(const test_base&)            = delete;
@@ -67,12 +67,6 @@ namespace sequoia::testing
     const std::string& name() const noexcept
     {
       return m_Name;
-    }
-
-    [[nodiscard]]
-    const std::filesystem::path& project_root() const
-    {
-      return m_ProjectPaths.project_root();
     }
 
     [[nodiscard]]
@@ -94,21 +88,21 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    const std::filesystem::path& diagnostics_output_filename() const noexcept
+    const project_paths& get_project_paths() const noexcept
     {
-      return m_Diagnostics.diagnostics_file();
+      return m_ProjectPaths;
     }
 
     [[nodiscard]]
-    const std::filesystem::path& summary_file_path() const noexcept
+    const individual_diagnostics_paths& diagnostics_file_paths() const noexcept
+    {
+      return m_Diagnostics;
+    }
+
+    [[nodiscard]]
+    const test_summary_path& summary_file_path() const noexcept
     {
       return m_SummaryFile;
-    }
-
-    [[nodiscard]]
-    const std::filesystem::path& caught_exceptions_output_filename() const noexcept
-    {
-      return m_Diagnostics.caught_exceptions_file();
     }
 
     [[nodiscard]]
@@ -123,21 +117,12 @@ namespace sequoia::testing
     test_base& operator=(test_base&&) noexcept = default;
 
     void write_instability_analysis_output(const normal_path& srcFile, std::optional<std::size_t> index, const failure_output& output) const;
-
-    [[nodiscard]]
-    const project_paths& get_project_paths() const noexcept
-    {
-      return m_ProjectPaths;
-    }
   private:
     std::string m_Name{};
     project_paths m_ProjectPaths{};
     individual_materials_paths m_Materials{};
     individual_diagnostics_paths m_Diagnostics{};
-    std::filesystem::path m_SummaryFile{};
-
-    [[nodiscard]]
-    std::filesystem::path test_summary_filename(const std::filesystem::path& sourceFile, const std::optional<std::string>& discriminator) const;
+    test_summary_path m_SummaryFile{};
   };
 
   /*! \brief class template from which all concrete tests should derive.

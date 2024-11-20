@@ -207,7 +207,7 @@ namespace sequoia::testing
 
     std::stringstream outputStream{};
 
-    const auto relativeMainCppPath{rebase_from(get_project_paths().main().file(), project_root())};
+    const auto relativeMainCppPath{rebase_from(get_project_paths().main().file(), get_project_paths().project_root())};
     test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ", {.main_cpp{relativeMainCppPath.generic_string()}, .common_includes{"TestCommon/TestIncludes.hpp"}}, outputStream};
 
     //=================== Initialize, cmake and build new project ===================//
