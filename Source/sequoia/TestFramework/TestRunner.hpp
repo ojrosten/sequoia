@@ -219,7 +219,7 @@ namespace sequoia::testing
       Test m_Test;
     };
 
-    enum class parallelizable_candidate { no, yes };
+    enum class parallelizable_candidate : bool { no, yes };
 
     std::unique_ptr<soul> m_pTest{};
     parallelizable_candidate m_Parallelizable{parallelizable_candidate::yes};
