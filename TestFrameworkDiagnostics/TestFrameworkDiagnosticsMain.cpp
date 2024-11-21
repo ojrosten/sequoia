@@ -34,6 +34,7 @@ int main(int argc, char** argv)
 
     runner.add_test_suite(
       "Test Framework Auxiliary",
+      basic_test_interface_free_test{"Basic Test Interface Free Test"},
       commands_free_test{"Commands Free Test"},
       failure_info_test{"failure_info Unit Test"},
       failure_info_false_negative_test{"failure_info False Negative Test"},
