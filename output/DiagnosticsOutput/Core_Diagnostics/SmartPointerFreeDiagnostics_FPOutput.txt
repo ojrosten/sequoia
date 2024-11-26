@@ -1,441 +1,117 @@
-Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 34
-Equality for null vs. not null
+False Negative Failure:
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 134
+Equality of null pointer with itself
 
 [std::unique_ptr<int, std::default_delete<int> >]
-operator== returned false
-
-  Underlying pointers differ
-  [int*]
-  operator== returned false
-  Obtained : null
-  Predicted: not null
 
 =======================================
 
-Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 35
-Equality for not null vs. null 
+False Negative Failure:
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 135
+Equality of non-null pointer with itself
 
 [std::unique_ptr<int, std::default_delete<int> >]
-operator== returned false
-
-  Underlying pointers differ
-  [int*]
-  operator== returned false
-  Obtained : not null
-  Predicted: null
 
 =======================================
 
-Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 36
-Equality for different pointers
-
-[std::unique_ptr<int, std::default_delete<int> >]
-operator== returned false
-
-  Underlying pointers differ
-  [int*]
-  operator== returned false
-  Pointers both non-null, but they point to different addresses
-
-=======================================
-
-Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 37
-Equivalence for null vs. not null
+False Negative Failure:
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 136
+Different pointers pointing to identical values
 
 Comparison performed using:
 [sequoia::testing::value_tester<std::unique_ptr<int, std::default_delete<int> > >]
 Checking for equivalence with:
 [std::unique_ptr<int, std::default_delete<int> >]
 
-  Obtained : null
-  Predicted: not null
-  [bool]
-  check failed
-
 =======================================
 
-Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 38
-Equivalence for not null vs. null 
-
-Comparison performed using:
-[sequoia::testing::value_tester<std::unique_ptr<int, std::default_delete<int> > >]
-Checking for equivalence with:
-[std::unique_ptr<int, std::default_delete<int> >]
-
-  Obtained : not null
-  Predicted: null
-  [bool]
-  check failed
-
-=======================================
-
-Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 39
-Different pointers pointing to different values
-
-Comparison performed using:
-[sequoia::testing::value_tester<std::unique_ptr<int, std::default_delete<int> > >]
-Checking for equivalence with:
-[std::unique_ptr<int, std::default_delete<int> >]
-
-  Pointees differ
-  [int]
-  operator== returned false
-  Obtained : 42
-  Predicted: 43
-
-=======================================
-
-Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 42
-Advice for different pointers pointing to different values
-
-Comparison performed using:
-[sequoia::testing::value_tester<std::unique_ptr<int, std::default_delete<int> > >]
-Checking for equivalence with:
-[std::unique_ptr<int, std::default_delete<int> >]
-
-  Pointees differ
-  [int]
-  operator== returned false
-  Obtained : 42
-  Predicted: 43
-  Advice: int advice
-
-=======================================
-
-Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 50
-Different pointers pointing to different values
+False Negative Failure:
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 141
+Different pointers pointing to identical values
 
 Comparison performed using:
 [sequoia::testing::value_tester<std::unique_ptr<sequoia::testing::only_equivalence_checkable, std::default_delete<sequoia::testing::only_equivalence_checkable> > >]
 Checking for equivalence with:
 [std::unique_ptr<sequoia::testing::only_equivalence_checkable, std::default_delete<sequoia::testing::only_equivalence_checkable> >]
 
-  Pointees differ
-  [sequoia::testing::only_equivalence_checkable]
-    Wrapped double
-    [double]
-    operator== returned false
-    Obtained : 1
-    Predicted: 2
-
 =======================================
 
-Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 57
-Different pointers pointing to different values
+False Negative Failure:
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 148
+Different pointers pointing to identical values
 
 Comparison performed using:
 [sequoia::testing::value_tester<std::unique_ptr<sequoia::testing::only_weakly_checkable, std::default_delete<sequoia::testing::only_weakly_checkable> > >]
 Checking for equivalence with:
 [std::unique_ptr<sequoia::testing::only_weakly_checkable, std::default_delete<sequoia::testing::only_weakly_checkable> >]
 
-  Pointees differ
-  [sequoia::testing::only_weakly_checkable]
-    Wrapped int
-    [int]
-    operator== returned false
-    Obtained : 42
-    Predicted: 43
-
-    Wrapped double
-    [double]
-    operator== returned false
-    Obtained : 1
-    Predicted: -2
-
 =======================================
 
-Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 65
-Different pointers pointing to different values
+False Negative Failure:
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 156
+Different pointers pointing to identical values
 
 Comparison performed using:
 [sequoia::testing::value_tester<std::unique_ptr<std::tuple<int, sequoia::testing::only_equivalence_checkable, sequoia::testing::only_weakly_checkable>, std::default_delete<std::tuple<int, sequoia::testing::only_equivalence_checkable, sequoia::testing::only_weakly_checkable> > > >]
 Checking for equivalence with:
 [std::unique_ptr<std::tuple<int, sequoia::testing::only_equivalence_checkable, sequoia::testing::only_weakly_checkable>, std::default_delete<std::tuple<int, sequoia::testing::only_equivalence_checkable, sequoia::testing::only_weakly_checkable> > >]
 
-  Pointees differ
-  [std::tuple<int, sequoia::testing::only_equivalence_checkable, sequoia::testing::only_weakly_checkable>]
-    Element 0 of tuple incorrect
-    [int]
-    operator== returned false
-    Obtained : 1
-    Predicted: -1
-
-    Element 1 of tuple incorrect
-    [sequoia::testing::only_equivalence_checkable]
-      Wrapped double
-      [double]
-      operator== returned false
-      Obtained : 2
-      Predicted: 3
-
-    Element 2 of tuple incorrect
-    [sequoia::testing::only_weakly_checkable]
-      Wrapped int
-      [int]
-      operator== returned false
-      Obtained : 42
-      Predicted: 43
-
-      Wrapped double
-      [double]
-      operator== returned false
-      Obtained : 1
-      Predicted: -2
-
 =======================================
 
-Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 75
-Equality for null vs. not null
+False Negative Failure:
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 167
+Equality of null pointer with itself
 
 [std::shared_ptr<int>]
-operator== returned false
-
-  Underlying pointers differ
-  [int*]
-  operator== returned false
-  Obtained : null
-  Predicted: not null
 
 =======================================
 
-Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 76
-Equality for not null vs. null 
+False Negative Failure:
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 168
+Equality of non-null pointer with itself
 
 [std::shared_ptr<int>]
-operator== returned false
-
-  Underlying pointers differ
-  [int*]
-  operator== returned false
-  Obtained : not null
-  Predicted: null
 
 =======================================
 
-Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 77
-Equality for different pointers
-
-[std::shared_ptr<int>]
-operator== returned false
-
-  Underlying pointers differ
-  [int*]
-  operator== returned false
-  Pointers both non-null, but they point to different addresses
-
-=======================================
-
-Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 78
-Equivalence for null vs. not null
+False Negative Failure:
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 169
+Different pointers pointing to identical values
 
 Comparison performed using:
 [sequoia::testing::value_tester<std::shared_ptr<int> >]
 Checking for equivalence with:
 [std::shared_ptr<int>]
 
-  Obtained : null
-  Predicted: not null
-  [bool]
-  check failed
-
 =======================================
 
-Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 79
-Equivalence for not null vs. null 
-
-Comparison performed using:
-[sequoia::testing::value_tester<std::shared_ptr<int> >]
-Checking for equivalence with:
-[std::shared_ptr<int>]
-
-  Obtained : not null
-  Predicted: null
-  [bool]
-  check failed
-
-=======================================
-
-Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 80
-Different pointers pointing to different values
-
-Comparison performed using:
-[sequoia::testing::value_tester<std::shared_ptr<int> >]
-Checking for equivalence with:
-[std::shared_ptr<int>]
-
-  Pointees differ
-  [int]
-  operator== returned false
-  Obtained : 42
-  Predicted: 43
-
-=======================================
-
-Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 83
-Advice for different pointers pointing to different values
-
-Comparison performed using:
-[sequoia::testing::value_tester<std::shared_ptr<int> >]
-Checking for equivalence with:
-[std::shared_ptr<int>]
-
-  Pointees differ
-  [int]
-  operator== returned false
-  Obtained : 42
-  Predicted: 43
-  Advice: int advice
-
-=======================================
-
-Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 92
-Different pointers pointing to different values
+False Negative Failure:
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 175
+Different pointers pointing to identical values
 
 Comparison performed using:
 [sequoia::testing::value_tester<std::shared_ptr<std::tuple<int, sequoia::testing::only_equivalence_checkable, sequoia::testing::only_weakly_checkable> > >]
 Checking for equivalence with:
 [std::shared_ptr<std::tuple<int, sequoia::testing::only_equivalence_checkable, sequoia::testing::only_weakly_checkable> >]
 
-  Pointees differ
-  [std::tuple<int, sequoia::testing::only_equivalence_checkable, sequoia::testing::only_weakly_checkable>]
-    Element 0 of tuple incorrect
-    [int]
-    operator== returned false
-    Obtained : 1
-    Predicted: -1
-
-    Element 1 of tuple incorrect
-    [sequoia::testing::only_equivalence_checkable]
-      Wrapped double
-      [double]
-      operator== returned false
-      Obtained : 2
-      Predicted: 3
-
-    Element 2 of tuple incorrect
-    [sequoia::testing::only_weakly_checkable]
-      Wrapped int
-      [int]
-      operator== returned false
-      Obtained : 42
-      Predicted: 43
-
-      Wrapped double
-      [double]
-      operator== returned false
-      Obtained : 1
-      Predicted: -2
-
 =======================================
 
-Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 107
-Equality for null vs. not null
+False Negative Failure:
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 186
+Equality of null pointer with itself
 
 [std::weak_ptr<int>]
-  Underlying pointers differ
-  [std::shared_ptr<int>]
-  operator== returned false
-
-    Underlying pointers differ
-    [int*]
-    operator== returned false
-    Obtained : null
-    Predicted: not null
 
 =======================================
 
-Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 108
-Equality for not null vs. null 
-
-[std::weak_ptr<int>]
-  Underlying pointers differ
-  [std::shared_ptr<int>]
-  operator== returned false
-
-    Underlying pointers differ
-    [int*]
-    operator== returned false
-    Obtained : not null
-    Predicted: null
-
-=======================================
-
-Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 109
-Equality for different pointers
-
-[std::weak_ptr<int>]
-  Underlying pointers differ
-  [std::shared_ptr<int>]
-  operator== returned false
-
-    Underlying pointers differ
-    [int*]
-    operator== returned false
-    Pointers both non-null, but they point to different addresses
-
-=======================================
-
-Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 110
-Equivalence for null vs. not null
+False Negative Failure:
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 191
+Different pointers weakly pointing to identical values
 
 Comparison performed using:
 [sequoia::testing::value_tester<std::weak_ptr<int> >]
 Checking for equivalence with:
 [std::weak_ptr<int>]
-
-  Underlying pointers differ
-  Comparison performed using:
-  [sequoia::testing::value_tester<std::shared_ptr<int> >]
-  Checking for equivalence with:
-  [std::shared_ptr<int>]
-
-    Obtained : null
-    Predicted: not null
-    [bool]
-    check failed
-
-=======================================
-
-Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 111
-Equivalence for not null vs. null 
-
-Comparison performed using:
-[sequoia::testing::value_tester<std::weak_ptr<int> >]
-Checking for equivalence with:
-[std::weak_ptr<int>]
-
-  Underlying pointers differ
-  Comparison performed using:
-  [sequoia::testing::value_tester<std::shared_ptr<int> >]
-  Checking for equivalence with:
-  [std::shared_ptr<int>]
-
-    Obtained : not null
-    Predicted: null
-    [bool]
-    check failed
-
-=======================================
-
-Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 112
-Different pointers pointing to different values
-
-Comparison performed using:
-[sequoia::testing::value_tester<std::weak_ptr<int> >]
-Checking for equivalence with:
-[std::weak_ptr<int>]
-
-  Underlying pointers differ
-  Comparison performed using:
-  [sequoia::testing::value_tester<std::shared_ptr<int> >]
-  Checking for equivalence with:
-  [std::shared_ptr<int>]
-
-    Pointees differ
-    [int]
-    operator== returned false
-    Obtained : 42
-    Predicted: 43
 
 =======================================
 

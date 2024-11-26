@@ -1,66 +1,90 @@
-False Negative Failure:
-Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 73
-Both bound
+Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 26
+Obtained bound but prediction not
 
 Comparison performed using:
 [sequoia::testing::value_tester<std::function<void ()> >]
 Checking for weak equivalence with:
 [std::function<void ()>]
 
+  Obtained : not null
+  Predicted: null
+  [bool]
+  check failed
+
 =======================================
 
-False Negative Failure:
-Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 74
-Neither bound
+Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 31
+Prediction bound but obtained not
 
 Comparison performed using:
 [sequoia::testing::value_tester<std::function<void ()> >]
 Checking for weak equivalence with:
 [std::function<void ()>]
 
+  Obtained : null
+  Predicted: not null
+  [bool]
+  check failed
+
 =======================================
 
-False Negative Failure:
-Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 79
-Both bound
+Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 39
+Obtained bound but prediction not
 
 Comparison performed using:
 [sequoia::testing::value_tester<std::function<int ()> >]
 Checking for weak equivalence with:
 [std::function<int ()>]
 
+  Obtained : not null
+  Predicted: null
+  [bool]
+  check failed
+
 =======================================
 
-False Negative Failure:
-Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 80
-Neither bound
+Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 44
+Prediction bound but obtained not
 
 Comparison performed using:
 [sequoia::testing::value_tester<std::function<int ()> >]
 Checking for weak equivalence with:
 [std::function<int ()>]
 
+  Obtained : null
+  Predicted: not null
+  [bool]
+  check failed
+
 =======================================
 
-False Negative Failure:
-Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 85
-Both bound
+Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 52
+Obtained bound but prediction not
 
 Comparison performed using:
 [sequoia::testing::value_tester<std::function<void (int)> >]
 Checking for weak equivalence with:
 [std::function<void (int)>]
 
+  Obtained : not null
+  Predicted: null
+  [bool]
+  check failed
+
 =======================================
 
-False Negative Failure:
-Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 86
-Neither bound
+Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 57
+Prediction bound but obtained not
 
 Comparison performed using:
 [sequoia::testing::value_tester<std::function<void (int)> >]
 Checking for weak equivalence with:
 [std::function<void (int)>]
+
+  Obtained : null
+  Predicted: not null
+  [bool]
+  check failed
 
 =======================================
 

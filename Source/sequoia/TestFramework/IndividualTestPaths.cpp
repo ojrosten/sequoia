@@ -29,9 +29,9 @@ namespace sequoia::testing
       switch(mode)
       {
       case test_mode::false_positive:
-        return "FN";
-      case test_mode::false_negative:
         return "FP";
+      case test_mode::false_negative:
+        return "FN";
       case test_mode::standard:
         return "";
       }

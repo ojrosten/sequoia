@@ -1,28 +1,16 @@
-Tests/TestFramework/ExceptionsFreeDiagnostics.cpp, Line 23
-Exception expected but nothing thrown
+False Negative Failure:
+Tests/TestFramework/ExceptionsFreeDiagnostics.cpp, Line 36
 
 Expected Exception Type:
 [std::runtime_error]
-No exception thrown
 
 =======================================
 
-Tests/TestFramework/ExceptionsFreeDiagnostics.cpp, Line 24
-Exception thrown but of wrong type
+False Negative Failure:
+Tests/TestFramework/ExceptionsFreeDiagnostics.cpp, Line 38
 
 Expected Exception Type:
-[std::runtime_error]
-Unexpected exception thrown (caught by std::exception&):
-"Error"
-
-=======================================
-
-Tests/TestFramework/ExceptionsFreeDiagnostics.cpp, Line 25
-Exception thrown but of unknown type
-
-Expected Exception Type:
-[std::runtime_error]
-Unknown exception thrown
+[int]
 
 =======================================
 

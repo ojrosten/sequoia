@@ -48,7 +48,7 @@ namespace sequoia::testing
   {
     {
       fake_test t{"fake test", "foo suite", source_file(), get_project_paths(), {}, {}, {}, {}};
-      
+
       const auto& projPaths{get_project_paths()};
       check(equality,
             reporter{"Summary File Path"},

@@ -1,7 +1,28 @@
-False Negative Failure:
-Tests/TestFramework/ComplexFreeDiagnostics.cpp, Line 42
+Tests/TestFramework/ComplexFreeDiagnostics.cpp, Line 27
 
 [std::complex<double>]
+operator== returned false
+Obtained : (0,0)
+Predicted: (1,0)
+
+=======================================
+
+Tests/TestFramework/ComplexFreeDiagnostics.cpp, Line 28
+
+[std::complex<double>]
+operator== returned false
+Obtained : (0,0)
+Predicted: (1,2)
+
+=======================================
+
+Tests/TestFramework/ComplexFreeDiagnostics.cpp, Line 29
+
+[std::complex<double>]
+operator== returned false
+Obtained : (0,0)
+Predicted: (1,2)
+Advice: complex advice, no pun intended
 
 =======================================
 

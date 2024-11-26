@@ -1,332 +1,93 @@
-Tests/TestFramework/PathFreeDiagnostics.cpp, Line 67
-Inequivalence of two different paths, neither of which exists
+False Negative Failure:
+Tests/TestFramework/PathFreeDiagnostics.cpp, Line 159
+Equivalence of a file to itself
 
 Comparison performed using:
 [sequoia::testing::value_tester<std::filesystem::path>]
 Checking for equivalence with:
 [std::filesystem::path]
 
-  Final path token
-  [std::filesystem::path]
-  operator== returned false
-  Obtained : Blah
-  Predicted: Blurg
-
 =======================================
 
-Tests/TestFramework/PathFreeDiagnostics.cpp, Line 72
-Inequivalence of two different paths, one of which exists
+False Negative Failure:
+Tests/TestFramework/PathFreeDiagnostics.cpp, Line 164
+Equivalence of a directory to itself
 
 Comparison performed using:
 [sequoia::testing::value_tester<std::filesystem::path>]
 Checking for equivalence with:
 [std::filesystem::path]
 
-  Path type
-  output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/Stuff/Blah
-  vs
-  output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/Stuff/A
-
-  [std::filesystem::file_type]
-  operator== returned false
-  Obtained : not found
-  Predicted: directory
-
 =======================================
 
-Tests/TestFramework/PathFreeDiagnostics.cpp, Line 77
-Inequivalence of directory/file
+False Negative Failure:
+Tests/TestFramework/PathFreeDiagnostics.cpp, Line 169
+Equivalence of a directory, with sub-directories to itself
 
 Comparison performed using:
 [sequoia::testing::value_tester<std::filesystem::path>]
 Checking for equivalence with:
 [std::filesystem::path]
 
-  Path type
-  output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/Stuff/A
-  vs
-  output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/Stuff/A/foo.txt
-
-  [std::filesystem::file_type]
-  operator== returned false
-  Obtained : directory
-  Predicted: regular
-
 =======================================
 
-Tests/TestFramework/PathFreeDiagnostics.cpp, Line 82
-Inequivalence of differently named files
+False Negative Failure:
+Tests/TestFramework/PathFreeDiagnostics.cpp, Line 174
+Equivalence of identical directories in different locations
 
 Comparison performed using:
 [sequoia::testing::value_tester<std::filesystem::path>]
 Checking for equivalence with:
 [std::filesystem::path]
 
-  Path type
-  output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/Stuff/B/foo.txt
-  vs
-  output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/Stuff/B/bar.txt
-
-  [std::filesystem::file_type]
-  operator== returned false
-  Obtained : regular
-  Predicted: not found
-
 =======================================
 
-Tests/TestFramework/PathFreeDiagnostics.cpp, Line 87
-Inequivalence of file contents
+False Negative Failure:
+Tests/TestFramework/PathFreeDiagnostics.cpp, Line 179
+File equivalence when .ignore is ignored
 
 Comparison performed using:
 [sequoia::testing::value_tester<std::filesystem::path>]
 Checking for equivalence with:
 [std::filesystem::path]
 
-  Contents of
-  output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/Stuff/A/foo.txt
-  vs
-  output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/Stuff/B/foo.txt
-
-  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
-  operator== returned false
-
-    First difference detected at character 5:
-    [char]
-    operator== returned false
-    Obtained : ,
-    Predicted: '\n'
-
-    Surrounding substring(s):
-    Obtained : ..., world...
-    Predicted: ...\n
-
 =======================================
 
-Tests/TestFramework/PathFreeDiagnostics.cpp, Line 92
-Inequivalence of differently named directories with the same contents
-
-Comparison performed using:
-[sequoia::testing::value_tester<std::filesystem::path>]
-Checking for equivalence with:
-[std::filesystem::path]
-
-  Final path token
-  [std::filesystem::path]
-  operator== returned false
-  Obtained : A
-  Predicted: C
-
-=======================================
-
-Tests/TestFramework/PathFreeDiagnostics.cpp, Line 97
-Inequivalence of directories with the same files but different contents
-
-Comparison performed using:
-[sequoia::testing::value_tester<std::filesystem::path>]
-Checking for equivalence with:
-[std::filesystem::path]
-
-  Contents of
-  output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/Stuff/A/foo.txt
-  vs
-  output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/MoreStuff/A/foo.txt
-
-  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
-  operator== returned false
-
-    First difference detected at character 5:
-    [char]
-    operator== returned false
-    Obtained : ,
-    Predicted: '\n'
-
-    Surrounding substring(s):
-    Obtained : ..., world...
-    Predicted: ...\n
-
-=======================================
-
-Tests/TestFramework/PathFreeDiagnostics.cpp, Line 102
-Inequivalence of directories with some common files
-
-Comparison performed using:
-[sequoia::testing::value_tester<std::filesystem::path>]
-Checking for equivalence with:
-[std::filesystem::path]
-
-  Number of directory entries for output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/Stuff/B
-  [unsigned long long]
-  operator== returned false
-  Obtained : 1
-  Predicted: 2
-
-  First directory entry mismatch
-  [std::filesystem::path]
-  operator== returned false
-  Obtained : output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/Stuff/B/foo.txt
-  Predicted: output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/MoreStuff/B/bar.txt
-
-=======================================
-
-Tests/TestFramework/PathFreeDiagnostics.cpp, Line 107
-Inequivalence of directories with some common files
-
-Comparison performed using:
-[sequoia::testing::value_tester<std::filesystem::path>]
-Checking for equivalence with:
-[std::filesystem::path]
-
-  Number of directory entries for output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/MoreStuff/B
-  [unsigned long long]
-  operator== returned false
-  Obtained : 2
-  Predicted: 1
-
-  First directory entry mismatch
-  [std::filesystem::path]
-  operator== returned false
-  Obtained : output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/MoreStuff/B/bar.txt
-  Predicted: output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/Stuff/B/foo.txt
-
-=======================================
-
-Tests/TestFramework/PathFreeDiagnostics.cpp, Line 112
-File inequivalence when default file checking is used
-
-Comparison performed using:
-[sequoia::testing::value_tester<std::filesystem::path>]
-Checking for equivalence with:
-[std::filesystem::path]
-
-  Contents of
-  output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/CustomComparison/A/DifferingContent.ignore
-  vs
-  output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/CustomComparison/B/DifferingContent.ignore
-
-  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
-  operator== returned false
-
-    First difference detected at character 39:
-    [char]
-    operator== returned false
-    Obtained : B
-    Predicted: A
-
-    Surrounding substring(s):
-    Obtained : ...iffers from that in directory B
-    Predicted: ...iffers from that in directory A
-
-=======================================
-
-Tests/TestFramework/PathFreeDiagnostics.cpp, Line 117
-Range inequivalence when default file checking us used
+False Negative Failure:
+Tests/TestFramework/PathFreeDiagnostics.cpp, Line 184
+Range equivalence when .ignore is ignored
 
 [std::vector<std::filesystem::path, std::allocator<std::filesystem::path> >]
 
-  Element 0 of range incorrect
-  Comparison performed using:
-  [sequoia::testing::value_tester<std::filesystem::path>]
-  Checking for equivalence with:
-  [std::filesystem::path]
-
-    Contents of
-    output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/CustomComparison/A/DifferingContent.ignore
-    vs
-    output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/CustomComparison/B/DifferingContent.ignore
-
-    [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
-    operator== returned false
-
-      First difference detected at character 39:
-      [char]
-      operator== returned false
-      Obtained : B
-      Predicted: A
-
-      Surrounding substring(s):
-      Obtained : ...iffers from that in directory B
-      Predicted: ...iffers from that in directory A
-
 =======================================
 
-Tests/TestFramework/PathFreeDiagnostics.cpp, Line 122
-Weak inequivalence of directories with some common files
+False Negative Failure:
+Tests/TestFramework/PathFreeDiagnostics.cpp, Line 189
+Weak equivalence of directories in with the same contents but different names
 
 Comparison performed using:
 [sequoia::testing::value_tester<std::filesystem::path>]
 Checking for weak equivalence with:
 [std::filesystem::path]
 
-  Number of directory entries for output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/MoreStuff/B
-  [unsigned long long]
-  operator== returned false
-  Obtained : 2
-  Predicted: 1
-
-  First directory entry mismatch
-  [std::filesystem::path]
-  operator== returned false
-  Obtained : output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/MoreStuff/B/bar.txt
-  Predicted: output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/Stuff/B/foo.txt
-
 =======================================
 
-Tests/TestFramework/PathFreeDiagnostics.cpp, Line 127
-Directory weak inequivalence when default file checking is used
+False Negative Failure:
+Tests/TestFramework/PathFreeDiagnostics.cpp, Line 194
+Weak equivalence when .ignore is ignored
 
 Comparison performed using:
 [sequoia::testing::value_tester<std::filesystem::path>]
 Checking for weak equivalence with:
 [std::filesystem::path]
 
-  Contents of
-  output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/CustomComparison/A/DifferingContent.ignore
-  vs
-  output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/CustomComparison/B/DifferingContent.ignore
-
-  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
-  operator== returned false
-
-    First difference detected at character 39:
-    [char]
-    operator== returned false
-    Obtained : B
-    Predicted: A
-
-    Surrounding substring(s):
-    Obtained : ...iffers from that in directory B
-    Predicted: ...iffers from that in directory A
-
 =======================================
 
-Tests/TestFramework/PathFreeDiagnostics.cpp, Line 132
-Weak inequivalence of range when default file checking is used
+False Negative Failure:
+Tests/TestFramework/PathFreeDiagnostics.cpp, Line 199
+Weak equivalence of range when .ignore is ignored
 
 [std::vector<std::filesystem::path, std::allocator<std::filesystem::path> >]
-
-  Element 0 of range incorrect
-  Comparison performed using:
-  [sequoia::testing::value_tester<std::filesystem::path>]
-  Checking for weak equivalence with:
-  [std::filesystem::path]
-
-    Contents of
-    output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/CustomComparison/A/DifferingContent.ignore
-    vs
-    output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/CustomComparison/B/DifferingContent.ignore
-
-    [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
-    operator== returned false
-
-      First difference detected at character 39:
-      [char]
-      operator== returned false
-      Obtained : B
-      Predicted: A
-
-      Surrounding substring(s):
-      Obtained : ...iffers from that in directory B
-      Predicted: ...iffers from that in directory A
 
 =======================================
 
