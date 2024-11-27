@@ -22,5 +22,11 @@ namespace sequoia::testing
     std::filesystem::path source_file() const;
 
     void run_tests();
+
+    [[nodiscard]]
+    std::filesystem::path fake_project() const;
+
+    [[nodiscard]]
+    std::filesystem::path minimal_fake_path() const;
   };
 }

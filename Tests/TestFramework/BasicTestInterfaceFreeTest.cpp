@@ -8,7 +8,10 @@
 /*! \file */
 
 #include "BasicTestInterfaceFreeTest.hpp"
+#include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
+
 #include "sequoia/TestFramework/FreeTestCore.hpp"
+#include "sequoia/TestFramework/TestRunner.hpp"
 
 namespace sequoia::testing
 {
@@ -44,16 +47,40 @@ namespace sequoia::testing
     return std::source_location::current().file_name();
   }
 
+  [[nodiscard]]
+  std::filesystem::path basic_test_interface_free_test::fake_project() const
+  {
+    return working_materials() /= "FakeProject";
+  }
+
+  [[nodiscard]]
+  fs::path basic_test_interface_free_test::minimal_fake_path() const
+  {
+    return fake_project().append("build/CMade");
+  }
+
   void basic_test_interface_free_test::run_tests()
   {
-    {
-      fake_test t{"fake test", "foo suite", source_file(), get_project_paths(), {}, {}, {}, {}};
+    commandline_arguments args{{(minimal_fake_path()).generic_string()}};
 
-      const auto& projPaths{get_project_paths()};
+    std::stringstream outputStream{};
+    test_runner runner{args.size(),
+                       args.get(),
+                       "Oliver J. Rosten",
+                       "  ",
+                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
+                       outputStream};
+
+    const auto& projPaths{runner.proj_paths()};
+    const auto rebasedSource{rebase_from(source_file(), get_project_paths().project_root())};
+
+    {
+      fake_test t{"fake test", "foo suite", source_file(), projPaths, {}, {}, {}, {}};
+
       check(equality,
             reporter{"Summary File Path"},
             t.summary_file_path().file_path(),
-            (projPaths.output().test_summaries() / rebase_from(source_file(), projPaths.project_root())).replace_extension(".txt"));
+            (projPaths.output().test_summaries() / rebasedSource).replace_extension(".txt"));
       
       check(equality,
             reporter{"Exceptions File Path"},
@@ -62,13 +89,12 @@ namespace sequoia::testing
     }
 
     {
-      fake_test t{"fake test", "foo suite", source_file(), get_project_paths(), {}, {}, {""}, {""}};
+      fake_test t{"fake test", "foo suite", source_file(), projPaths, {}, {}, {""}, {""}};
 
-      const auto& projPaths{get_project_paths()};
       check(equality,
         reporter{"Summary File Path"},
         t.summary_file_path().file_path(),
-        (projPaths.output().test_summaries() / rebase_from(source_file(), projPaths.project_root())).replace_extension(".txt"));
+        (projPaths.output().test_summaries() / rebasedSource).replace_extension(".txt"));
 
       check(equality,
         reporter{"Exceptions File Path"},
@@ -77,12 +103,12 @@ namespace sequoia::testing
     }
 
     {
-      fake_test_with_discriminated_summary t{"fake test", "foo suite", source_file(), get_project_paths(), {}, {}, {}, {"bar"}};
-      const auto& projPaths{get_project_paths()};
+      fake_test_with_discriminated_summary t{"fake test", "foo suite", source_file(), projPaths, {}, {}, {}, {"bar"}};
+
       check(equality,
             reporter{"Summary File Path"},
             t.summary_file_path().file_path(),
-            (projPaths.output().test_summaries() / rebase_from(source_file(), projPaths.project_root())).replace_filename(source_file().stem().concat("_bar.txt")));
+            (projPaths.output().test_summaries() / rebasedSource).replace_filename(source_file().stem().concat("_bar.txt")));
 
       check(equality,
             reporter{"Exceptions File Path"},
@@ -91,13 +117,12 @@ namespace sequoia::testing
     }
 
     {
-      fake_test_with_discriminated_exceptions t{"fake test", "foo suite", source_file(), get_project_paths(), {}, {}, {"baz"}, {}};
+      fake_test_with_discriminated_exceptions t{"fake test", "foo suite", source_file(), projPaths, {}, {}, {"baz"}, {}};
 
-      const auto& projPaths{get_project_paths()};
       check(equality,
             reporter{"Summary File Path"},
             t.summary_file_path().file_path(),
-            (projPaths.output().test_summaries() / rebase_from(source_file(), projPaths.project_root())).replace_extension(".txt"));
+            (projPaths.output().test_summaries() / rebasedSource).replace_extension(".txt"));
 
       check(equality,
             reporter{"Exceptions File Path"},
