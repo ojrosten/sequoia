@@ -112,7 +112,7 @@ namespace sequoia::testing
       std::string output_discriminator() const { return "Platypus"; }
 
       [[nodiscard]]
-      std::string reduction_discriminator() const { return "Release"; }
+      std::string summary_discriminator() const { return "Release"; }
 
       void run_tests()
       {

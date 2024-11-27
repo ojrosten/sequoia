@@ -237,8 +237,8 @@ namespace sequoia::testing
   template<concrete_test T>
   [[nodiscard]]
   std::optional<std::string> get_reduction_discriminator(const T& test){
-    if constexpr(has_reduced_output_v<T>)
-      return test.reduction_discriminator();
+    if constexpr(has_discriminated_summary_v<T>)
+      return test.summary_discriminator();
     else
       return std::nullopt;
   }

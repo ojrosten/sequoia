@@ -26,7 +26,7 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      std::string reduction_discriminator() const { return "bar"; }
+      std::string summary_discriminator() const { return "bar"; }
     };
 
     class fake_test_with_discriminated_exceptions : public free_test {

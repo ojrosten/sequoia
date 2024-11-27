@@ -50,12 +50,12 @@ namespace sequoia::testing
   public:
     explicit test_base(std::string name) : m_Name{std::move(name)} {}
 
-    test_base(std::string name, test_mode mode, std::string_view suiteName, const normal_path& srcFile, project_paths projPaths, individual_materials_paths materials, const std::optional<std::string>& outputDiscriminator, const std::optional<std::string>& reductionDiscriminator)
+    test_base(std::string name, test_mode mode, std::string_view suiteName, const normal_path& srcFile, project_paths projPaths, individual_materials_paths materials, const std::optional<std::string>& outputDiscriminator, const std::optional<std::string>& summaryDiscriminator)
       : m_Name{std::move(name)}
       , m_ProjectPaths{std::move(projPaths)}
       , m_Materials{std::move(materials)}
       , m_Diagnostics{get_project_paths().project_root(), suiteName, srcFile, mode, outputDiscriminator}
-      , m_SummaryFile{srcFile, m_ProjectPaths, reductionDiscriminator}
+      , m_SummaryFile{srcFile, m_ProjectPaths, summaryDiscriminator}
     {
       std::filesystem::create_directories(m_Diagnostics.false_positive_or_negative_file_path().parent_path());
     }
@@ -148,8 +148,8 @@ namespace sequoia::testing
 
     explicit basic_test(std::string name) : test_base{std::move(name)} {}
 
-    basic_test(std::string name, std::string_view suiteName, const normal_path& srcFile, const project_paths& projPaths, individual_materials_paths materials, active_recovery_files files, const std::optional<std::string>& outputDiscriminator, const std::optional<std::string>& reductionDiscriminator)
-      : test_base{std::move(name), Mode, suiteName, srcFile, projPaths, std::move(materials), outputDiscriminator, reductionDiscriminator}
+    basic_test(std::string name, std::string_view suiteName, const normal_path& srcFile, const project_paths& projPaths, individual_materials_paths materials, active_recovery_files files, const std::optional<std::string>& outputDiscriminator, const std::optional<std::string>& summaryDiscriminator)
+      : test_base{std::move(name), Mode, suiteName, srcFile, projPaths, std::move(materials), outputDiscriminator, summaryDiscriminator}
       , checker<Mode, Extender>{std::move(files)}
     {}
 
@@ -202,9 +202,9 @@ namespace sequoia::testing
   };
 
   template<concrete_test T>
-  inline constexpr bool has_reduced_output_v{
+  inline constexpr bool has_discriminated_summary_v{
     requires(const T & t){
-      { t.reduction_discriminator() } -> std::convertible_to<std::string>;
+      { t.summary_discriminator() } -> std::convertible_to<std::string>;
     }
   };
 
