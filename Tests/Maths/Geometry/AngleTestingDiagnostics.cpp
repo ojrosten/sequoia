@@ -14,12 +14,12 @@ namespace sequoia::testing
   using namespace maths;
 
   [[nodiscard]]
-  std::filesystem::path angle_false_positive_test::source_file() const
+  std::filesystem::path angle_false_negative_test::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void angle_false_positive_test::run_tests()
+  void angle_false_negative_test::run_tests()
   {
     test_angle<float, 360.f>();
     test_angle<double, 360.0>();
@@ -29,7 +29,7 @@ namespace sequoia::testing
   }
 
   template<std::floating_point T, T Period>
-  void angle_false_positive_test::test_angle()
+  void angle_false_negative_test::test_angle()
   {
     angle<T, Period> theta{}, phi{1};
     check(equivalence, "", theta, T{1});

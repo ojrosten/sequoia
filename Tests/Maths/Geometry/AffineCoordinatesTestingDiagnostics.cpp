@@ -19,12 +19,12 @@ namespace sequoia::testing
   using namespace maths;
 
   [[nodiscard]]
-  std::filesystem::path affine_coordinates_false_positive_test::source_file() const
+  std::filesystem::path affine_coordinates_false_negative_test::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void affine_coordinates_false_positive_test::run_tests()
+  void affine_coordinates_false_negative_test::run_tests()
   {
     {
       using coords = affine_coordinates<my_affine_space<float, float, 1>, canonical_basis<float, float, 1>, alice>;
@@ -38,7 +38,7 @@ namespace sequoia::testing
   }
 
   template<class AffineCoords>
-  void affine_coordinates_false_positive_test::test_affine_1()
+  void affine_coordinates_false_negative_test::test_affine_1()
   {
     using field_t = AffineCoords::field_type;
     using array_t = std::array<field_t, 1>;

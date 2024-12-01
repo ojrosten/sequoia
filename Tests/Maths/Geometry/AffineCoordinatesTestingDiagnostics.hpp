@@ -13,10 +13,10 @@
 
 namespace sequoia::testing
 {
-  class affine_coordinates_false_positive_test final : public regular_false_positive_test
+  class affine_coordinates_false_negative_test final : public regular_false_negative_test
   {
   public:
-    using regular_false_positive_test::regular_false_positive_test;
+    using regular_false_negative_test::regular_false_negative_test;
 
     [[nodiscard]]
     std::filesystem::path source_file() const;

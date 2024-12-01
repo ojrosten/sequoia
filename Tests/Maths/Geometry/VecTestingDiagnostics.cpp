@@ -14,12 +14,12 @@ namespace sequoia::testing
   using namespace maths;
 
   [[nodiscard]]
-  std::filesystem::path vec_false_positive_test::source_file() const
+  std::filesystem::path vec_false_negative_test::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void vec_false_positive_test::run_tests()
+  void vec_false_negative_test::run_tests()
   {
     {
       using coords = vector_coordinates<my_vec_space<sets::R<1, float>, float, 1>, canonical_basis<sets::R<1, float>, float, 1>>;
@@ -33,7 +33,7 @@ namespace sequoia::testing
   }
 
   template<class VecCoords>
-  void vec_false_positive_test::test_vec_1()
+  void vec_false_negative_test::test_vec_1()
   {
     using field_t = VecCoords::field_type;
     using array_t = std::array<field_t, 1>;

@@ -371,7 +371,7 @@ int main(int argc, char** argv)
 
     runner.add_test_suite(
       "Angle",
-      angle_false_positive_test{"False Positive Test"},
+      angle_false_negative_test{"False negative Test"},
       angle_test{"Unit Test"}
     );
 
@@ -379,12 +379,12 @@ int main(int argc, char** argv)
       "Geometry",
       suite{
         "Vec",
-        vec_false_positive_test{"False Positive Test"},
+        vec_false_negative_test{"False negative Test"},
         vec_test{"Unit Test"}
       },
       suite{
         "Affine Coordinates",
-        affine_coordinates_false_positive_test{"False Positive Test"},
+        affine_coordinates_false_negative_test{"False negative Test"},
         affine_coordinates_test{"Unit Test"}
       }
     );
