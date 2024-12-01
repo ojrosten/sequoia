@@ -9,7 +9,7 @@
 
 #include "ContainerTest.hpp"
 
-namespace sequoia::testing
+namespace fakeProject::testing
 {
     [[nodiscard]]
     std::filesystem::path container_test::source_file() const

@@ -23,12 +23,12 @@
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::filesystem::path elementary_false_positive_free_diagnostics::source_file() const
+  std::filesystem::path elementary_false_negative_free_diagnostics::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void elementary_false_positive_free_diagnostics::run_tests()
+  void elementary_false_negative_free_diagnostics::run_tests()
   {
     built_in_type_tests();
     test_equality_checks();
@@ -37,7 +37,7 @@ namespace sequoia::testing
     test_with_best_available_checks();
   }
 
-  void elementary_false_positive_free_diagnostics::built_in_type_tests()
+  void elementary_false_negative_free_diagnostics::built_in_type_tests()
   {
     check("Boolean check", false);
     check("Boolean check with advice", false, tutor{[](bool, bool){
@@ -162,7 +162,7 @@ namespace sequoia::testing
     }
   }
 
-  void elementary_false_positive_free_diagnostics::test_equality_checks()
+  void elementary_false_negative_free_diagnostics::test_equality_checks()
   {
     check(equality, "Equality checking", perfectly_normal_type{42}, perfectly_normal_type{43});
     check(equality,
@@ -201,7 +201,7 @@ namespace sequoia::testing
           tutor{[](int, int) { return "int advice"; }});
   }
 
-  void elementary_false_positive_free_diagnostics::test_equivalence_checks()
+  void elementary_false_negative_free_diagnostics::test_equivalence_checks()
   {
     check(equivalence, "Equivalence checking", only_equivalence_checkable{42}, 41);
     check(equivalence,
@@ -242,7 +242,7 @@ namespace sequoia::testing
           tutor{[](double, double) { return "double advice"; }});
   }
 
-  void elementary_false_positive_free_diagnostics::test_weak_equivalence_checks()
+  void elementary_false_negative_free_diagnostics::test_weak_equivalence_checks()
   {
     check(weak_equivalence,
           reporter{"Weak equivalence checking"},
@@ -268,7 +268,7 @@ namespace sequoia::testing
   }
 
 
-  void elementary_false_positive_free_diagnostics::test_with_best_available_checks()
+  void elementary_false_negative_free_diagnostics::test_with_best_available_checks()
   {
     check(with_best_available, "Best available for int", 1, 2);
     check(with_best_available, "Advice for best available for int", 1, 2, tutor{[](int, int) { return "int advice"; }});
@@ -295,12 +295,12 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path elementary_false_negative_free_diagnostics::source_file() const
+  std::filesystem::path elementary_false_positive_free_diagnostics::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void elementary_false_negative_free_diagnostics::run_tests()
+  void elementary_false_positive_free_diagnostics::run_tests()
   {
     built_in_type_tests();
     test_equality_checks();
@@ -309,7 +309,7 @@ namespace sequoia::testing
     test_with_best_available_checks();
   }
 
-  void elementary_false_negative_free_diagnostics::built_in_type_tests()
+  void elementary_false_positive_free_diagnostics::built_in_type_tests()
   {
     check("Boolean test", true);
 
@@ -331,13 +331,13 @@ namespace sequoia::testing
     }
   }
 
-  void elementary_false_negative_free_diagnostics::test_equivalence_checks()
+  void elementary_false_positive_free_diagnostics::test_equivalence_checks()
   {
     check(equivalence, "Equivalence checking", only_equivalence_checkable{42}, 42);
     check(equivalence, "Eequivalence checking with advice", only_equivalence_checkable{42}, 42, tutor{bland{}});
   }
 
-  void elementary_false_negative_free_diagnostics::test_weak_equivalence_checks()
+  void elementary_false_positive_free_diagnostics::test_weak_equivalence_checks()
   {
     check(weak_equivalence,
           reporter{"Weak equivalence checking"},
@@ -351,7 +351,7 @@ namespace sequoia::testing
           tutor{bland{}});
   }
 
-  void elementary_false_negative_free_diagnostics::test_with_best_available_checks()
+  void elementary_false_positive_free_diagnostics::test_with_best_available_checks()
   {
     check(with_best_available, "Best available for int", 1, 1);
 
@@ -366,7 +366,7 @@ namespace sequoia::testing
           only_weakly_checkable{1, 6.7});
   }
 
-  void elementary_false_negative_free_diagnostics::test_equality_checks()
+  void elementary_false_positive_free_diagnostics::test_equality_checks()
   {
     check(equality, "Equality checking", perfectly_normal_type{42}, perfectly_normal_type{42});
   }

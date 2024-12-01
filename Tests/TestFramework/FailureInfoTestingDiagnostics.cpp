@@ -12,12 +12,12 @@
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::filesystem::path failure_info_false_positive_test::source_file() const
+  std::filesystem::path failure_info_false_negative_test::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void failure_info_false_positive_test::run_tests()
+  void failure_info_false_negative_test::run_tests()
   {
     failure_info x{}, y{4}, z{0, "foo"};
     check(equivalence, "", x, 1, "");

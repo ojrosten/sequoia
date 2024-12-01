@@ -197,18 +197,18 @@ namespace sequoia::testing
   {
     check("Command processor existance", std::system(nullptr) > 0);
 
-    commandline_arguments args{get_project_paths().discovered().executable().generic_string(),
+    commandline_arguments args{{get_project_paths().discovered().executable().generic_string(),
                                "init",
                                "Oliver Jacob Rosten",
                                generated_project().string(),
                                "\t",
                                "--to-files", "GenerationOutput.txt",
-                               "--no-ide"};
+                               "--no-ide"}};
 
     std::stringstream outputStream{};
 
-    const auto relativeMainCppPath{rebase_from(get_project_paths().main().file(), project_root())};
-    test_runner tr{args.size(), args.get(), "Oliver J. Rosten", {relativeMainCppPath.generic_string(), {}, "TestCommon/TestIncludes.hpp"}, "  ", outputStream};
+    const auto relativeMainCppPath{rebase_from(get_project_paths().main().file(), get_project_paths().project_root())};
+    test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ", {.main_cpp{relativeMainCppPath.generic_string()}, .common_includes{"TestCommon/TestIncludes.hpp"}}, outputStream};
 
     //=================== Initialize, cmake and build new project ===================//
 

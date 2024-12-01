@@ -13,10 +13,10 @@
 
 namespace sequoia::testing
 {
-  class move_only_state_transition_false_negative_diagnostics final : public move_only_false_negative_test
+  class move_only_state_transition_false_positive_diagnostics final : public move_only_false_positive_test
   {
   public:
-    using move_only_false_negative_test::move_only_false_negative_test;
+    using move_only_false_positive_test::move_only_false_positive_test;
 
     [[nodiscard]]
     std::filesystem::path source_file() const;
@@ -27,10 +27,10 @@ namespace sequoia::testing
     void test_equality_comparable();
   };
 
-  class move_only_state_transition_false_positive_diagnostics final : public move_only_false_positive_test
+  class move_only_state_transition_false_negative_diagnostics final : public move_only_false_negative_test
   {
   public:
-    using move_only_false_positive_test::move_only_false_positive_test;
+    using move_only_false_negative_test::move_only_false_negative_test;
 
     [[nodiscard]]
     std::filesystem::path source_file() const;

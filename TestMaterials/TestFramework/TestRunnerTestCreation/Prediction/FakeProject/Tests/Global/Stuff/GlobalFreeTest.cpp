@@ -10,7 +10,7 @@
 #include "GlobalFreeTest.hpp"
 #include "fakeProject/Global/Stuff/Global.hpp"
 
-namespace sequoia::testing
+namespace fakeProject::testing
 {
     [[nodiscard]]
     std::filesystem::path global_free_test::source_file() const

@@ -11,8 +11,10 @@
 
 #include "VariadicTestingUtilities.hpp"
 
-namespace sequoia::testing
+namespace fakeProject::testing
 {
+    using namespace sequoia::testing;
+
     class variadic_test final : public move_only_test
     {
     public:

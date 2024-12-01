@@ -13,6 +13,7 @@
 
 #include <filesystem>
 #include <optional>
+#include <span>
 #include <string>
 #include <vector>
 
@@ -101,7 +102,7 @@ namespace sequoia::testing
   public:
     source_paths() = default;
 
-    explicit source_paths(const std::filesystem::path& projectRoot);
+    explicit source_paths(const std::filesystem::path& projectRoot, const std::optional<std::filesystem::path>& folderName = {});
 
     [[nodiscard]]
     const std::filesystem::path& project() const noexcept
@@ -467,18 +468,22 @@ namespace sequoia::testing
   class project_paths
   {
   public:
-    struct initializer
+    struct customizer
     {
-      std::filesystem::path mainCpp;
+      std::optional<std::filesystem::path> source_folder{};
+      
+      std::vector<std::filesystem::path> additional_dependency_analysis_paths{};
 
-      std::vector<std::string> ancillaryMainCpps{};
+      std::filesystem::path main_cpp{main_paths::default_main_cpp_from_root()};
 
-      std::filesystem::path commonIncludes{};
+      std::vector<std::filesystem::path> ancillary_main_cpps{};
+
+      std::filesystem::path common_includes{main_paths::default_main_cpp_from_root()};
     };
 
     project_paths() = default;
 
-    project_paths(int argc, char** argv, const initializer& pathsFromRoot);
+    project_paths(int argc, char** argv, const customizer& customization);
 
     [[nodiscard]]
     const std::filesystem::path& project_root() const noexcept
@@ -558,15 +563,14 @@ namespace sequoia::testing
       return m_Discovered;
     }
 
+    [[nodiscard]]
+    std::span<const std::filesystem::path> additional_dependency_analysis_paths() const noexcept { return m_AdditionalDependencyAnalysisPaths; }
 
     [[nodiscard]]
     prune_paths prune() const;
 
     [[nodiscard]]
     friend bool operator==(const project_paths&, const project_paths&) noexcept = default;
-
-    [[nodiscard]]
-    friend bool operator!=(const project_paths&, const project_paths&) noexcept = default;
   private:
     discoverable_paths   m_Discovered;
     main_paths           m_Main;
@@ -580,5 +584,6 @@ namespace sequoia::testing
     build_system_paths   m_BuildSystem;
 
     std::vector<main_paths> m_AncillaryMainCpps{};
+    std::vector<std::filesystem::path> m_AdditionalDependencyAnalysisPaths{};
   };
 }

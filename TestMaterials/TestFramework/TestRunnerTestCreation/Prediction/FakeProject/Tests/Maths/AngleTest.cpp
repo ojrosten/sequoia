@@ -9,7 +9,7 @@
 
 #include "AngleTest.hpp"
 
-namespace sequoia::testing
+namespace fakeProject::testing
 {
     [[nodiscard]]
     std::filesystem::path angle_test::source_file() const

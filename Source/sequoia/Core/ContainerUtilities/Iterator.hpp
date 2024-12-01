@@ -415,6 +415,6 @@ namespace sequoia::utilities
       return !(lhs < rhs);
     }
   private:
-    Iterator m_BaseIterator;
+    Iterator m_BaseIterator{};
   };
 }

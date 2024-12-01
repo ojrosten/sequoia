@@ -91,9 +91,9 @@
     similar confidence in any extensions.
 
     One of the defining features of the testing framework is that it is designed to expose
-    false-positives. As such, each test operates in a particular
+    false-negatives. As such, each test operates in a particular
     \ref test_mode_enum "test_mode", chosen at
-    compile time: standard, false_positive and false_negative.
+    compile time: standard, false_negative and false_positive.
 
     In standard mode, the test framework operates as one might expect. A typical
     check looks as follows:
@@ -104,9 +104,9 @@
 
     If `x==5` the check passes, whereas if `x!=5` a failure is reported. However, suppose that
     `check` has a bug. For example, it might never report failure.
-    To counter this, tests can be created to be run in false-positive mode. In this case,
+    To counter this, tests can be created to be run in false-negative mode. In this case,
     the above example will pass when `x!=5` and fail when `x==5`. The purpose of this is to pick
-    up bugs in the testing framework itself.
+    up bugs in the testing framework itself: false negatives.
 
     In standard mode, when a test fails, details of the failure will be given directly to
     the client. In the above example, for the case where `x==4`, something like this will be
@@ -117,21 +117,21 @@
     Predicted: 5
     </pre>
 
-    In false-positive mode, this output is not made directly visible to the user, since 
-    the false-positive test has succeeded. Instead, it is dumped to a file. This means that
+    In false-negative mode, this output is not made directly visible to the user, since 
+    the false-negative test has succeeded. Instead, it is dumped to a file. This means that
     clients can check whether
-    the underlying failure which the false-positive check has detected is as expected. It is
+    the underlying failure which the false-negative check has detected is as expected. It is
     good practice to place this file under version control. This provides sensitivity both to
-    changes in the false-positive test and also changes to the way in which the testing
+    changes in the false-negative test and also changes to the way in which the testing
     framework generates output.
 
     Clients may extend the testing framework to conveniently test their types, for example
     by specializing the \ref value_tester_primary "value_tester"
     (see \ref sec_extensible). This is a perfect
-    opportunity to write some false-positive tests to give confidence that the newly-added code
+    opportunity to write some false-negative tests to give confidence that the newly-added code
     is not spuriously reporting success.
 
-    Finally, there are false-negative tests. They are essentially the same as standard mode tests;
+    Finally, there are false-positive tests. They are essentially the same as standard mode tests;
     however, they are treated separately since statements like
 
     <pre>
@@ -139,11 +139,11 @@
     </pre>
 
     are morally tests of the testing framework itself, rather than tests of client code. As
-    with false-positive tests, output is dumped to an auxiliary file, primarily as a means
+    with false-negative tests, output is dumped to an auxiliary file, primarily as a means
     of detecting (via version control) changes to the way the testing framework generates
     output.
 
-	Just as the outputs of false-negative and, especially, false-positive tests is written to files,
+	Just as the outputs of false-positive and, especially, false-negative tests is written to files,
 	so to is the output from exception checks. For example, consider the call
 	
 	<pre>

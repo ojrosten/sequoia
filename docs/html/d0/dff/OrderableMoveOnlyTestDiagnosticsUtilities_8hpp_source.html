@@ -180,11 +180,11 @@ $(function() {
 <div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>      : m_Index{i}</div>
 <div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    {}</div>
 <div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span> </div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>    <a class="code hl_class" href="../../db/dc2/classsequoia_1_1testing_1_1orderable__resource__binder.html">orderable_resource_binder</a>(<a class="code hl_class" href="../../db/dc2/classsequoia_1_1testing_1_1orderable__resource__binder.html">orderable_resource_binder</a>&amp;&amp; other)</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>    <a class="code hl_class" href="../../db/dc2/classsequoia_1_1testing_1_1orderable__resource__binder.html">orderable_resource_binder</a>(<a class="code hl_class" href="../../db/dc2/classsequoia_1_1testing_1_1orderable__resource__binder.html">orderable_resource_binder</a>&amp;&amp; other) noexcept</div>
 <div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>      : m_Index{std::exchange(other.m_Index, 0)}</div>
 <div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    {}</div>
 <div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span> </div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    <a class="code hl_class" href="../../db/dc2/classsequoia_1_1testing_1_1orderable__resource__binder.html">orderable_resource_binder</a>&amp; operator=(<a class="code hl_class" href="../../db/dc2/classsequoia_1_1testing_1_1orderable__resource__binder.html">orderable_resource_binder</a>&amp;&amp; other)</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    <a class="code hl_class" href="../../db/dc2/classsequoia_1_1testing_1_1orderable__resource__binder.html">orderable_resource_binder</a>&amp; operator=(<a class="code hl_class" href="../../db/dc2/classsequoia_1_1testing_1_1orderable__resource__binder.html">orderable_resource_binder</a>&amp;&amp; other) <span class="keyword">noexcept</span></div>
 <div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    {</div>
 <div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>      m_Index = std::exchange(other.m_Index, 0);</div>
 <div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>      <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>

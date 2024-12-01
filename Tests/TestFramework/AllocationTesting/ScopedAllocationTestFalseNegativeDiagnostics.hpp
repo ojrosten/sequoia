@@ -29,9 +29,6 @@ namespace sequoia::testing
   private:
 
     template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
-    void test_perfectly_scoped();
-
-    template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
-    void test_perfectly_branched();
+    void test_regular_semantics();
   };
 }

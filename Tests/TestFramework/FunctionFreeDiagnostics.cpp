@@ -13,12 +13,12 @@
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::filesystem::path function_false_positive_free_diagnostics::source_file() const
+  std::filesystem::path function_false_negative_free_diagnostics::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void function_false_positive_free_diagnostics::run_tests()
+  void function_false_negative_free_diagnostics::run_tests()
   {
     {
       using function = std::function<void()>;
@@ -61,12 +61,12 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path function_false_negative_free_diagnostics::source_file() const
+  std::filesystem::path function_false_positive_free_diagnostics::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void function_false_negative_free_diagnostics::run_tests()
+  void function_false_positive_free_diagnostics::run_tests()
   {
     {
       using function = std::function<void()>;

@@ -9,7 +9,7 @@
 
 #include "?ClassTest.hpp"
 
-namespace sequoia::testing
+namespace ?::testing
 {
 	[[nodiscard]]
 	std::filesystem::path ?forename_?surname::source_file() const

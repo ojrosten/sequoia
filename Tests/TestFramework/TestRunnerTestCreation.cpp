@@ -26,22 +26,17 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path test_runner_test_creation::fake_project() const
+  std::string test_runner_test_creation::zeroth_arg(std::string_view projectName) const
   {
-    return working_materials() /= "FakeProject";
-  }
-
-  [[nodiscard]]
-  std::string test_runner_test_creation::zeroth_arg() const
-  {
-    return (fake_project() / "build/CMade").generic_string();
+    return (working_materials() / projectName / "build/CMade").generic_string();
   }
 
   void test_runner_test_creation::run_tests()
   {
     test_type_handling();
     test_template_data_generation();
-    test_creation();
+    test_creation("FakeProject", std::nullopt);
+    test_creation("AnotherFakeProject", "curlew");
     test_creation_failure();
   }
 
@@ -101,23 +96,28 @@ namespace sequoia::testing
                    generate_template_data("<class ... T>"), template_data{{"class ...", "T"}});
   }
 
-  void test_runner_test_creation::test_creation()
+  void test_runner_test_creation::test_creation(std::string_view projectName, std::optional<std::string> sourceFolder)
   {
     namespace fs = std::filesystem;
 
-    fs::copy(auxiliary_paths::repo(project_root()), auxiliary_paths::repo(fake_project()), fs::copy_options::recursive);
-    fs::create_directory(fake_project() / "TestSandbox");
+    const auto projectPath{working_materials() / projectName};
+    const source_paths sourcePaths{projectPath, sourceFolder};
+    const auto sourceFolderPath{sourcePaths.project()};
+    const auto sourceFolderName{back(sourceFolderPath).generic_string()};
 
-    fs::copy(source_paths{auxiliary_paths::project_template(project_root())}.cmake_lists(), source_paths{fake_project()}.project());
+    fs::copy(auxiliary_paths::repo(get_project_paths().project_root()), auxiliary_paths::repo(projectPath), fs::copy_options::recursive);
+    fs::create_directory(projectPath / "TestSandbox");
 
-    const main_paths templateMain{auxiliary_paths::project_template(project_root()) / main_paths::default_main_cpp_from_root()},
-                     fakeMain{fake_project() / "TestSandbox" / "TestSandbox.cpp"};
+    fs::copy(source_paths{auxiliary_paths::project_template(get_project_paths().project_root())}.cmake_lists(), sourceFolderPath);
+
+    const main_paths templateMain{auxiliary_paths::project_template(get_project_paths().project_root()) / main_paths::default_main_cpp_from_root()},
+                     fakeMain{projectPath / "TestSandbox" / "TestSandbox.cpp"};
 
     fs::copy(templateMain.file(), fakeMain.file());
     fs::copy(templateMain.cmake_lists(), fakeMain.cmake_lists());
     read_modify_write(fakeMain.cmake_lists(), [](std::string& text) { replace_all(text, "TestAllMain.cpp", "TestSandbox.cpp"); } );
 
-    commandline_arguments args{  zeroth_arg()
+    commandline_arguments args{{zeroth_arg(projectName)
                                , "create", "regular_test", "other::functional::maybe<class T>", "std::optional<T>"
                                , "create", "regular", "utilities::iterator", "int*"
                                , "create", "regular_test", "stuff::widget", "std::vector<int>", "gen-source", "Stuff"
@@ -128,35 +128,35 @@ namespace sequoia::testing
                                , "create", "regular_test", "container<class T>", "const std::vector<T>"
                                , "create", "regular_test", "other::couple<class S, class T>", "S", "-e", "T",
                                               "-s", "partners", "-h", "Couple.hpp"
-                               , "create", "regular_test", "bar::things", "double", "-h", "fakeProject/Stuff/Things.hpp"
+                               , "create", "regular_test", "bar::things", "double", "-h", std::format("{}/Stuff/Things.hpp", sourceFolderName)
                                , "create", "move_only_test", "bar::baz::foo<maths::floating_point T>", "T", "--suite", "Iterator"
                                , "create", "move_only", "variadic<class... T>", "std::tuple<T...>"
                                , "create", "move_only_test", "multiple<class... T>", "std::tuple<T...>", "gen-source", "Utilities"
                                , "create", "move_only_test", "cloud", "double", "gen-source", "Weather"
                                , "create", "free_test", "Utilities.h"
-                               , "create", "free_test", "Source/fakeProject/Stuff/Baz.h", "--forename", "bazzer"
-                               , "create", "free_test", "Source/fakeProject/Stuff/Baz.h", "--forename", "bazagain", "--suite", "Bazzer"
+                               , "create", "free_test", std::format("Source/{}/Stuff/Baz.h", sourceFolderName), "--forename", "bazzer"
+                               , "create", "free_test", std::format("Source/{}/Stuff/Baz.h", sourceFolderName), "--forename", "bazagain", "--suite", "Bazzer"
                                , "create", "free_test", "Stuff/Doohicky.hpp", "gen-source", "bar::things"
                                , "create", "free_test", "Global/Stuff/Global.hpp", "gen-source", "::"
                                , "create", "free_test", "Global/Stuff/Defs.hpp", "gen-source", ""
-                               , "create", "free", "fakeProject/Maths/Angle.hpp", "--diagnostics"
+                               , "create", "free", std::format("{}/Maths/Angle.hpp", sourceFolderName), "--diagnostics"
                                , "create", "regular_allocation_test", "container"
                                , "create", "move_only_allocation_test", "foo", "--suite", "Iterator"
                                , "create", "performance_test", "Container.hpp"
-                               , "create", "performance_test", "Container.hpp"
+                               , "create", "performance_test", "Container.hpp"}
     };
 
     std::stringstream outputStream{};
-    test_runner tr{args.size(), args.get(), "Oliver Jacob Rosten", {"TestSandbox/TestSandbox.cpp", {}, "TestShared/SharedIncludes.hpp"}, "    ", outputStream};
+    test_runner tr{args.size(), args.get(), "Oliver Jacob Rosten", "    ",  {.source_folder{sourceFolder}, .main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}}, outputStream};
 
     tr.execute();
 
-    if(std::ofstream file{fake_project() / "output" / "io.txt"})
+    if(std::ofstream file{projectPath / "output" / "io.txt"})
     {
       file << outputStream.str();
     }
 
-    check(equivalence, "", fake_project(), predictive_materials() /= "FakeProject");
+    check(equivalence, "", projectPath, predictive_materials() /= projectName);
   }
 
   void test_runner_test_creation::test_creation_failure()
@@ -165,8 +165,8 @@ namespace sequoia::testing
         reporter{"Plurgh.h does not exist"},
         [this]() {
           std::stringstream outputStream{};
-          commandline_arguments args{zeroth_arg(), "create", "free", "Plurgh.h"};
-          test_runner tr{args.size(), args.get(), "Oliver J. Rosten", {"TestSandbox/TestSandbox.cpp", {}, "TestShared/SharedIncludes.hpp"}, "  ", outputStream};
+          commandline_arguments args{{zeroth_arg("FakeProject"), "create", "free", "Plurgh.h"}};
+          test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ", {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}}, outputStream};
           tr.execute();
         });
 
@@ -174,8 +174,8 @@ namespace sequoia::testing
         reporter{"Typo in specified class header"},
         [this]() {
           std::stringstream outputStream{};
-          commandline_arguments args{zeroth_arg(), "create", "regular_test", "bar::things", "double", "-h", "fakeProject/Stuff/Thingz.hpp"};
-          test_runner tr{args.size(), args.get(), "Oliver J. Rosten", {"TestSandbox/TestSandbox.cpp", {}, "TestShared/SharedIncludes.hpp"}, "  ", outputStream};
+          commandline_arguments args{{zeroth_arg("FakeProject"), "create", "regular_test", "bar::things", "double", "-h", "fakeProject/Stuff/Thingz.hpp"}};
+          test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ", {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}}, outputStream};
         });
   }
 }

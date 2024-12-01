@@ -9,7 +9,7 @@
 
 #include "ProbabilityTest.hpp"
 
-namespace sequoia::testing
+namespace fakeProject::testing
 {
     [[nodiscard]]
     std::filesystem::path probability_test::source_file() const

@@ -34,20 +34,20 @@ namespace sequoia::testing
   template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
   void scoped_allocation_false_negative_diagnostics::test_allocation()
   {
-    test_perfectly_scoped<PropagateCopy, PropagateMove, PropagateSwap>();
-    test_perfectly_branched<PropagateCopy, PropagateMove, PropagateSwap>();
+    test_regular_semantics<PropagateCopy, PropagateMove, PropagateSwap>();
   }
 
   template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
-  void scoped_allocation_false_negative_diagnostics::test_perfectly_scoped()
+  void scoped_allocation_false_negative_diagnostics::test_regular_semantics()
   {
-    using beast = perfectly_scoped_beast<shared_counting_allocator<char, PropagateCopy, PropagateMove, PropagateSwap>>;
+    using beast
+      = perfectly_scoped_beast<shared_counting_allocator<char, PropagateCopy, PropagateMove, PropagateSwap>>;
 
     auto mutator{
-      [](beast& b) {
-        b.x.push_back("baz");
-      }
-    };
+        [](beast& b) {
+          b.x.push_back("baz");
+        }
+      };
 
     auto allocGetter{
       [](const beast& b) {
@@ -55,66 +55,63 @@ namespace sequoia::testing
       }
     };
 
-    check_semantics("",
-                    beast{},
-                    beast{ {"something too long for small string optimization"},
-                           {"something else too long for small string optimization"}
-                    },
-                    mutator,
-                    allocation_info{
-                      allocGetter,
-                      {0_c, {1_c,1_mu}, {1_anp,1_awp}},
-                      { {0_c, {2_c,0_mu}, {2_anp,2_awp}, {0_containers, 2_containers, 3_postmutation}} }
-                    }
+    check_semantics("Incorrect copy x outer allocs", beast{}, beast{{"something too long for small string optimization"}, {"something else too long for small string optimization"}}, mutator, allocation_info{
+        allocGetter, {1_c, {1_c,1_mu}, {1_anp,1_awp}}, {{0_c, {2_c,0_mu}, {2_anp,2_awp}, {0_containers, 2_containers, 3_postmutation}}}
+      }
     );
 
-    auto[s,t]{check_semantics("",
-                    [](){ return beast{}; },
-                    [](){ return beast{ {"something too long for small string optimization"},
-                                         {"something else too long for small string optimization"}};
-                    },
-                    mutator,
-                    allocation_info{
-                      allocGetter,
-                      {0_c, {1_c,1_mu}, {1_anp,1_awp}},
-                      { {0_c, {2_c,0_mu}, {2_anp,2_awp}, {0_containers, 2_containers, 3_postmutation}} }
-                    }
-    )};
-
-    check(equality, "check_semantics return value (x)", s, beast{});
-    check(equality, "check_semantics return value (y)",
-                   t,
-                   beast{{"something too long for small string optimization"},
-                                         {"something else too long for small string optimization"}});
-  }
-
-  template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
-  void scoped_allocation_false_negative_diagnostics::test_perfectly_branched()
-  {
-    using inner_allocator = shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>;
-    using inner_beast = perfectly_normal_beast<int, inner_allocator>;
-    using inner_type = std::tuple<inner_beast, inner_beast>;
-
-    using outer_allocator = shared_counting_allocator<inner_type, PropagateCopy, PropagateMove, PropagateSwap>;
-    using beast = perfectly_normal_beast<inner_type, std::scoped_allocator_adaptor<outer_allocator, inner_allocator>>;
-
-    auto getter{[](const beast& b) { return b.x.get_allocator(); }};
-
-    auto mutator{
-      [](beast& b) {
-        b.x.reserve(10);
-        b.x.push_back({{},{}});
+    check_semantics("Incorrect copy y outer allocs", beast{}, beast{{"something too long for small string optimization"}, {"something else too long for small string optimization"}}, mutator, allocation_info{
+        allocGetter, {0_c, {0_c,1_mu}, {1_anp,1_awp}}, {{0_c, {2_c,0_mu}, {2_anp,2_awp}, {0_containers, 2_containers, 3_postmutation}}}
       }
-    };
+    );
 
-    check_semantics("",
-      beast{},
-      beast{{{1}, {2}}},
-      mutator,
-      allocation_info{
-        getter,
-        {0_c, {1_c,1_mu}, {1_anp,1_awp}},
-        { {0_c, {2_c,0_mu}, {2_anp,2_awp}, {0_containers, 2_containers, 4_postmutation}} }
+    check_semantics("Incorrect mutation outer allocs", beast{}, beast{{"something too long for small string optimization"}, {"something else too long for small string optimization"}}, mutator, allocation_info{
+        allocGetter, {0_c, {1_c,2_mu}, {1_anp,1_awp}}, {{0_c, {2_c,0_mu}, {2_anp,2_awp}, {0_containers, 2_containers, 3_postmutation}}}
+      }
+    );
+
+    check_semantics("Incorrect assignment outer allocs", beast{}, beast{{"something too long for small string optimization"}, {"something else too long for small string optimization"}}, mutator, allocation_info{
+        allocGetter, {0_c, {1_c,1_mu}, {3_anp,2_awp}}, {{0_c, {2_c,0_mu}, {2_anp,2_awp}, {0_containers, 2_containers, 3_postmutation}}}
+      }
+    );
+
+    check_semantics("Incorrect para copy x outer allocs", beast{}, beast{{"something too long for small string optimization"}, {"something else too long for small string optimization"}}, mutator, allocation_info{
+        allocGetter, {0_c, {1_c,1_mu, 2_pc}, {1_anp,1_awp}}, {{0_c, {2_c,0_mu}, {2_anp,2_awp}, {0_containers, 2_containers, 3_postmutation}}}
+      }
+    );
+
+    check_semantics("Incorrect para move x outer allocs", beast{}, beast{{"something too long for small string optimization"}, {"something else too long for small string optimization"}}, mutator, allocation_info{
+        allocGetter, {0_c, {1_c,1_mu, 1_pc, 0_pm}, {1_anp,1_awp}}, {{0_c, {2_c,0_mu}, {2_anp,2_awp}, {0_containers, 2_containers, 3_postmutation}}}
+      }
+    );
+
+    check_semantics("Incorrect copy x inner allocs", beast{}, beast{{"something too long for small string optimization"}, {"something else too long for small string optimization"}}, mutator, allocation_info{
+        allocGetter, {0_c, {1_c,1_mu}, {1_anp,1_awp}}, {{4_c, {2_c,0_mu}, {2_anp,2_awp}, {0_containers, 2_containers, 3_postmutation}}}
+      }
+    );
+
+    check_semantics("Incorrect copy y inner allocs", beast{}, beast{{"something too long for small string optimization"}, {"something else too long for small string optimization"}}, mutator, allocation_info{
+        allocGetter, {0_c, {1_c,1_mu}, {1_anp,1_awp}}, {{0_c, {0_c,0_mu}, {2_anp,2_awp}, {0_containers, 2_containers, 3_postmutation}}}
+      }
+    );
+
+    check_semantics("Incorrect mutation inner allocs", beast{}, beast{{"something too long for small string optimization"}, {"something else too long for small string optimization"}}, mutator, allocation_info{
+        allocGetter, {0_c, {1_c,1_mu}, {1_anp,1_awp}}, {{0_c, {2_c,3_mu}, {2_anp,2_awp}, {0_containers, 2_containers, 3_postmutation}}}
+      }
+    );
+
+    check_semantics("Incorrect assignment inner allocs", beast{}, beast{{"something too long for small string optimization"}, {"something else too long for small string optimization"}}, mutator, allocation_info{
+        allocGetter, {0_c, {1_c,1_mu}, {1_anp,1_awp}}, {{0_c, {2_c,0_mu}, {0_anp,1_awp}, {0_containers, 2_containers, 3_postmutation}}}
+      }
+    );
+
+    check_semantics("Incorrect para copy x inner allocs", beast{}, beast{{"something too long for small string optimization"}, {"something else too long for small string optimization"}}, mutator, allocation_info{
+        allocGetter, {0_c, {1_c,1_mu}, {1_anp,1_awp}}, {{0_c, {2_c,0_mu,4_pc}, {2_anp,2_awp}, {0_containers, 2_containers, 3_postmutation}}}
+      }
+    );
+
+    check_semantics("Incorrect para move x inner allocs", beast{}, beast{{"something too long for small string optimization"}, {"something else too long for small string optimization"}}, mutator, allocation_info{
+        allocGetter, {0_c, {1_c,1_mu}, {1_anp,1_awp}}, {{0_c, {2_c,0_mu,2_pc,0_pm}, {2_anp,2_awp}, {0_containers, 2_containers, 3_postmutation}}}
       }
     );
   }

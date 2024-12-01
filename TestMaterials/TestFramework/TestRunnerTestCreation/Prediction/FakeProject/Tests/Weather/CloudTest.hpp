@@ -11,8 +11,10 @@
 
 #include "CloudTestingUtilities.hpp"
 
-namespace sequoia::testing
+namespace fakeProject::testing
 {
+    using namespace sequoia::testing;
+
     class cloud_test final : public move_only_test
     {
     public:

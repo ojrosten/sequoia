@@ -10,7 +10,7 @@
 #include "UtilitiesFreeTest.hpp"
 #include "fakeProject/Utilities/Utilities.h"
 
-namespace sequoia::testing
+namespace fakeProject::testing
 {
     [[nodiscard]]
     std::filesystem::path utilities_free_test::source_file() const

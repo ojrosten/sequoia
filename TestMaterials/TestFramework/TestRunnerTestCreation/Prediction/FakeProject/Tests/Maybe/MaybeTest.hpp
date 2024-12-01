@@ -11,8 +11,10 @@
 
 #include "MaybeTestingUtilities.hpp"
 
-namespace sequoia::testing
+namespace fakeProject::testing
 {
+    using namespace sequoia::testing;
+
     class maybe_test final : public regular_test
     {
     public:

@@ -8,7 +8,7 @@
 #include "UsefulThingsFreeTest.hpp"
 #include "generatedProject/Utilities/UsefulThings.hpp"
 
-namespace sequoia::testing
+namespace generatedProject::testing
 {
   [[nodiscard]]
   std::filesystem::path useful_things_free_test::source_file() const

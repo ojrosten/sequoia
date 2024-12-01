@@ -10,7 +10,7 @@
 #include "sequoia/TestFramework/FileEditors.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
-namespace sequoia::testing
+namespace generatedProject::testing
 {
   [[nodiscard]]
   std::filesystem::path foo_test::source_file() const
@@ -21,6 +21,7 @@ namespace sequoia::testing
   void foo_test::run_tests()
   {
     namespace fs = std::filesystem;
+    using namespace sequoia;
     for(auto& e : fs::recursive_directory_iterator(working_materials()))
     {
       if(fs::is_regular_file(e))

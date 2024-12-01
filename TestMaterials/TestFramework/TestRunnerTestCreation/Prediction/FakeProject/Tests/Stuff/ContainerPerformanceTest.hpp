@@ -11,8 +11,10 @@
 
 #include "sequoia/TestFramework/PerformanceTestCore.hpp"
 
-namespace sequoia::testing
+namespace fakeProject::testing
 {
+    using namespace sequoia::testing;
+
     class container_performance_test final : public performance_test
     {
     public:

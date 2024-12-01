@@ -11,12 +11,14 @@
 
 #include "sequoia/TestFramework/FreeTestCore.hpp"
 
-namespace sequoia::testing
+namespace fakeProject::testing
 {
-    class angle_false_positive_free_diagnostics final : public free_false_positive_test
+    using namespace sequoia::testing;
+
+    class angle_false_negative_free_diagnostics final : public free_false_negative_test
     {
     public:
-        using free_false_positive_test::free_false_positive_test;
+        using free_false_negative_test::free_false_negative_test;
 
         [[nodiscard]]
         std::filesystem::path source_file() const;

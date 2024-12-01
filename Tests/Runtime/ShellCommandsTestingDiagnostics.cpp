@@ -15,12 +15,12 @@ namespace sequoia::testing
   using namespace std::string_literals;
 
   [[nodiscard]]
-  std::filesystem::path shell_commands_false_positive_test::source_file() const
+  std::filesystem::path shell_commands_false_negative_test::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void shell_commands_false_positive_test::run_tests()
+  void shell_commands_false_negative_test::run_tests()
   {
     shell_command x{}, y{"foo"};
     check(equivalence, "", x, "cmd"s);

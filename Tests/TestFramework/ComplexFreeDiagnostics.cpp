@@ -15,12 +15,12 @@
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::filesystem::path complex_false_positive_free_diagnostics::source_file() const
+  std::filesystem::path complex_false_negative_free_diagnostics::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void complex_false_positive_free_diagnostics::run_tests()
+  void complex_false_negative_free_diagnostics::run_tests()
   {
     using complex = std::complex<double>;
 
@@ -30,12 +30,12 @@ namespace sequoia::testing
   }
   
   [[nodiscard]]
-  std::filesystem::path complex_false_negative_free_diagnostics::source_file() const
+  std::filesystem::path complex_false_positive_free_diagnostics::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void complex_false_negative_free_diagnostics::run_tests()
+  void complex_false_positive_free_diagnostics::run_tests()
   {
     using complex = std::complex<double>;
 

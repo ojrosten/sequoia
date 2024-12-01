@@ -9,15 +9,15 @@
 
 #include "FooTestingDiagnostics.hpp"
 
-namespace sequoia::testing
+namespace fakeProject::testing
 {
     [[nodiscard]]
-    std::filesystem::path foo_false_positive_test::source_file() const
+    std::filesystem::path foo_false_negative_test::source_file() const
     {
         return std::source_location::current().file_name();
     }
 
-    void foo_false_positive_test::run_tests()
+    void foo_false_negative_test::run_tests()
     {
         // For example:
 

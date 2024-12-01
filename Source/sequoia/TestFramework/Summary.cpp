@@ -71,10 +71,10 @@ namespace sequoia::testing
     std::array<std::string, entries> summaries{
       indent().append("Standard Top Level Checks:"),
       indent().append("Standard Performance Checks:"),
-      indent().append("False Negative Checks:"),
-      indent().append("False Negative Performance Checks:"),
       indent().append("False Positive Checks:"),
-      indent().append("False Positive Performance Checks:")
+      indent().append("False Positive Performance Checks:"),
+      indent().append("False Negative Checks:"),
+      indent().append("False Negative Performance Checks:")
     };
 
     pad_right(summaries.begin(), summaries.end(), "  ");
@@ -82,10 +82,10 @@ namespace sequoia::testing
     std::array<std::string, entries> checkNums{
       std::to_string(log.standard_top_level_checks()),
       std::to_string(log.standard_performance_checks()),
-      std::to_string(log.false_negative_checks()),
-      std::to_string(log.false_negative_performance_checks()),
       std::to_string(log.false_positive_checks()),
-      std::to_string(log.false_positive_performance_checks())
+      std::to_string(log.false_positive_performance_checks()),
+      std::to_string(log.false_negative_checks()),
+      std::to_string(log.false_negative_performance_checks())
     };
 
     constexpr std::size_t minChars{8};
@@ -101,10 +101,10 @@ namespace sequoia::testing
     std::array<std::string, entries> failures{
       std::to_string(log.standard_top_level_failures()),
       std::to_string(log.standard_performance_failures()),
-      std::to_string(log.false_negative_failures()),
-      std::to_string(log.false_negative_performance_failures()),
       std::to_string(log.false_positive_failures()),
-      std::to_string(log.false_positive_performance_failures())
+      std::to_string(log.false_positive_performance_failures()),
+      std::to_string(log.false_negative_failures()),
+      std::to_string(log.false_negative_performance_failures())
     };
 
     pad_left(failures.begin(), failures.end(), 2);
@@ -138,10 +138,10 @@ namespace sequoia::testing
       const std::array<std::size_t, entries> checks{
         log.standard_top_level_checks(),
         log.standard_performance_checks(),
-        log.false_negative_checks(),
-        log.false_negative_performance_checks(),
         log.false_positive_checks(),
-        log.false_positive_performance_checks()
+        log.false_positive_performance_checks(),
+        log.false_negative_checks(),
+        log.false_negative_performance_checks()
       };
 
       for(std::size_t i{}; i<entries; ++i)

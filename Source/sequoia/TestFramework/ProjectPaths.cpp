@@ -19,6 +19,7 @@
 
 #include <algorithm>
 #include <numeric>
+#include <ranges>
 
 namespace sequoia::testing
 {
@@ -27,15 +28,12 @@ namespace sequoia::testing
   namespace
   {
     [[nodiscard]]
-    std::vector<main_paths> make_ancillary_info(const fs::path& root, const fs::path& commonIncludes, const project_paths::initializer& initializer)
+    std::vector<main_paths> make_ancillary_info(const fs::path& root, const fs::path& commonIncludes, const project_paths::customizer& customization)
     {
-      std::vector<main_paths> ancillaryInfo;
-
-      std::ranges::transform(initializer.ancillaryMainCpps,
-                             std::back_inserter(ancillaryInfo),
-                             [&root,&commonIncludes](const fs::path& relPath) { return main_paths{root / relPath, commonIncludes}; });
-
-      return ancillaryInfo;
+      return std::views::transform(
+               customization.ancillary_main_cpps,
+               [&root,&commonIncludes](const fs::path& relPath) { return main_paths{root / relPath, commonIncludes}; }
+             ) | std::ranges::to<std::vector>();
     }
 
     [[nodiscard]]
@@ -131,9 +129,9 @@ namespace sequoia::testing
 
   //===================================== source_paths =====================================//
 
-  source_paths::source_paths(const fs::path& projectRoot)
+  source_paths::source_paths(const fs::path& projectRoot, const std::optional<fs::path>& folderName)
     : m_Repo{repo(projectRoot)}
-    , m_Project{repo() / uncapitalize(back(projectRoot).generic_string())}
+    , m_Project{folderName ? repo() / rebase_from(folderName.value(), repo()) : repo() / uncapitalize(back(projectRoot).generic_string())}
   {}
 
   [[nodiscard]]
@@ -366,10 +364,10 @@ namespace sequoia::testing
 
   //===================================== project_paths =====================================//
 
-  project_paths::project_paths(int argc, char** argv, const initializer& pathsFromRoot)
+  project_paths::project_paths(int argc, char** argv, const customizer& customization)
     : m_Discovered{argc, argv}
-    , m_Main{project_root() / pathsFromRoot.mainCpp, project_root() / pathsFromRoot.commonIncludes}
-    , m_Source{project_root()}
+    , m_Main{project_root() / rebase_from(customization.main_cpp, project_root()), project_root() / rebase_from(customization.common_includes, project_root())}
+    , m_Source{project_root(), customization.source_folder}
     , m_Build{project_root(), m_Discovered.executable().parent_path(), m_Discovered.cmake_cache()}
     , m_Auxiliary{project_root()}
     , m_Output{project_root()}
@@ -377,7 +375,10 @@ namespace sequoia::testing
     , m_Tests{project_root()}
     , m_Materials{project_root()}
     , m_BuildSystem{project_root()}
-    , m_AncillaryMainCpps{make_ancillary_info(project_root(), main().common_includes(), pathsFromRoot)}
+    , m_AncillaryMainCpps{make_ancillary_info(project_root(), main().common_includes(), customization)}
+    , m_AdditionalDependencyAnalysisPaths{
+        std::views::transform(customization.additional_dependency_analysis_paths, [root{project_root()}](const fs::path& p){ return root / rebase_from(p, root); }) | std::ranges::to<std::vector>()
+    }
   {
     throw_unless_directory(project_root(), "\nRepository root not found");
     throw_unless_regular_file(main().file(), "\nTry ensuring that the application is run from the appropriate directory");

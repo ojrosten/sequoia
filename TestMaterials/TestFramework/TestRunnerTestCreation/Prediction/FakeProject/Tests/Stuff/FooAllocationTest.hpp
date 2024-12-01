@@ -11,8 +11,10 @@
 
 #include "sequoia/TestFramework/MoveOnlyAllocationTestCore.hpp"
 
-namespace sequoia::testing
+namespace fakeProject::testing
 {
+    using namespace sequoia::testing;
+
     class foo_allocation_test final : public move_only_allocation_test
     {
     public:

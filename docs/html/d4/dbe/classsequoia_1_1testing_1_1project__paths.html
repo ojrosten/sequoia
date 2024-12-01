@@ -89,14 +89,14 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d13/structsequoia_1_1testing_1_1project__paths_1_1initializer.html">initializer</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d6b/structsequoia_1_1testing_1_1project__paths_1_1customizer.html">customizer</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a3d949f7f17d508270f3182673049ede4"><td class="memItemLeft" align="right" valign="top"><a id="a3d949f7f17d508270f3182673049ede4" name="a3d949f7f17d508270f3182673049ede4"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>project_paths</b> (int argc, char **argv, const <a class="el" href="../../d2/d13/structsequoia_1_1testing_1_1project__paths_1_1initializer.html">initializer</a> &amp;pathsFromRoot)</td></tr>
-<tr class="separator:a3d949f7f17d508270f3182673049ede4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aba848683f93437dfdab0b0728530c183"><td class="memItemLeft" align="right" valign="top"><a id="aba848683f93437dfdab0b0728530c183" name="aba848683f93437dfdab0b0728530c183"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>project_paths</b> (int argc, char **argv, const <a class="el" href="../../d9/d6b/structsequoia_1_1testing_1_1project__paths_1_1customizer.html">customizer</a> &amp;customization)</td></tr>
+<tr class="separator:aba848683f93437dfdab0b0728530c183"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a191da0fec8b0b37348e1096dab5680a5"><td class="memItemLeft" align="right" valign="top"><a id="a191da0fec8b0b37348e1096dab5680a5" name="a191da0fec8b0b37348e1096dab5680a5"></a>
 const std::filesystem::path &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>project_root</b> () const noexcept</td></tr>
 <tr class="separator:a191da0fec8b0b37348e1096dab5680a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -136,6 +136,9 @@ const std::vector&lt; <a class="el" href="../../dc/d82/classsequoia_1_1testing_1
 <tr class="memitem:a4e0ce01dba8a62f25075c87781626bcf"><td class="memItemLeft" align="right" valign="top"><a id="a4e0ce01dba8a62f25075c87781626bcf" name="a4e0ce01dba8a62f25075c87781626bcf"></a>
 const <a class="el" href="../../d9/d74/classsequoia_1_1testing_1_1discoverable__paths.html">discoverable_paths</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>discovered</b> () const noexcept</td></tr>
 <tr class="separator:a4e0ce01dba8a62f25075c87781626bcf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1955965ba8f5a5935e9178d7d34e0e86"><td class="memItemLeft" align="right" valign="top"><a id="a1955965ba8f5a5935e9178d7d34e0e86" name="a1955965ba8f5a5935e9178d7d34e0e86"></a>
+std::span&lt; const std::filesystem::path &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>additional_dependency_analysis_paths</b> () const noexcept</td></tr>
+<tr class="separator:a1955965ba8f5a5935e9178d7d34e0e86"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a99db4185398e2bc57c15111ae6db2e1c"><td class="memItemLeft" align="right" valign="top"><a id="a99db4185398e2bc57c15111ae6db2e1c" name="a99db4185398e2bc57c15111ae6db2e1c"></a>
 <a class="el" href="../../dd/df6/classsequoia_1_1testing_1_1prune__paths.html">prune_paths</a>&#160;</td><td class="memItemRight" valign="bottom"><b>prune</b> () const</td></tr>
 <tr class="separator:a99db4185398e2bc57c15111ae6db2e1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -145,9 +148,6 @@ Friends</h2></td></tr>
 <tr class="memitem:af4799b27adeabf4c8f5409e5b5d05152"><td class="memItemLeft" align="right" valign="top"><a id="af4799b27adeabf4c8f5409e5b5d05152" name="af4799b27adeabf4c8f5409e5b5d05152"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const <a class="el" href="../../d4/dbe/classsequoia_1_1testing_1_1project__paths.html">project_paths</a> &amp;, const <a class="el" href="../../d4/dbe/classsequoia_1_1testing_1_1project__paths.html">project_paths</a> &amp;) noexcept=default</td></tr>
 <tr class="separator:af4799b27adeabf4c8f5409e5b5d05152"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac5dd4e4a6eb3fdf051385f50a4d3a0e7"><td class="memItemLeft" align="right" valign="top"><a id="ac5dd4e4a6eb3fdf051385f50a4d3a0e7" name="ac5dd4e4a6eb3fdf051385f50a4d3a0e7"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator!=</b> (const <a class="el" href="../../d4/dbe/classsequoia_1_1testing_1_1project__paths.html">project_paths</a> &amp;, const <a class="el" href="../../d4/dbe/classsequoia_1_1testing_1_1project__paths.html">project_paths</a> &amp;) noexcept=default</td></tr>
-<tr class="separator:ac5dd4e4a6eb3fdf051385f50a4d3a0e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Paths used by the project. </p>

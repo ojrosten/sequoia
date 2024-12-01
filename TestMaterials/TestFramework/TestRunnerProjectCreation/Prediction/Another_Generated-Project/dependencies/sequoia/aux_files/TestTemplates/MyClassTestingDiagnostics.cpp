@@ -9,15 +9,15 @@
 
 #include "?ClassTestingDiagnostics.hpp"
 
-namespace sequoia::testing
+namespace ?::testing
 {
 	[[nodiscard]]
-	std::filesystem::path ?forename_false_positive_?surname::source_file() const
+	std::filesystem::path ?forename_false_negative_?surname::source_file() const
 	{
 		return std::source_location::current().file_name();
 	}
 
-	void ?forename_false_positive_?surname::run_tests()
+	void ?forename_false_negative_?surname::run_tests()
 	{
 		// For example:
 $Regular

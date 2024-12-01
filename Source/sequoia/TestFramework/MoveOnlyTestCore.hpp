@@ -128,6 +128,6 @@ namespace sequoia::testing
 
   /*! \anchor move_only_test_alias */
   using move_only_test                = canonical_move_only_test<test_mode::standard>;
-  using move_only_false_negative_test = canonical_move_only_test<test_mode::false_negative>;
   using move_only_false_positive_test = canonical_move_only_test<test_mode::false_positive>;
+  using move_only_false_negative_test = canonical_move_only_test<test_mode::false_negative>;
 }

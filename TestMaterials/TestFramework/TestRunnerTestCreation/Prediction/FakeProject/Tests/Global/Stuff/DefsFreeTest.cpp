@@ -10,7 +10,7 @@
 #include "DefsFreeTest.hpp"
 #include "fakeProject/Global/Stuff/Defs.hpp"
 
-namespace sequoia::testing
+namespace fakeProject::testing
 {
     [[nodiscard]]
     std::filesystem::path defs_free_test::source_file() const

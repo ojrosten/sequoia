@@ -13,17 +13,17 @@
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::filesystem::path regular_false_positive_diagnostics::source_file() const
+  std::filesystem::path regular_false_negative_diagnostics::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void regular_false_positive_diagnostics::run_tests()
+  void regular_false_negative_diagnostics::run_tests()
   {
     
   }
 
-  void regular_false_positive_diagnostics::test_regular_semantics()
+  void regular_false_negative_diagnostics::test_regular_semantics()
   {
     check_semantics("Broken check invariant", perfectly_normal_beast{1}, perfectly_normal_beast{1});
     check_semantics("Broken equality", broken_equality{1}, broken_equality{2});
@@ -42,17 +42,17 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path regular_false_negative_diagnostics::source_file() const
+  std::filesystem::path regular_false_positive_diagnostics::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void regular_false_negative_diagnostics::run_tests()
+  void regular_false_positive_diagnostics::run_tests()
   {
     test_regular_semantics();
   }
 
-  void regular_false_negative_diagnostics::test_regular_semantics()
+  void regular_false_positive_diagnostics::test_regular_semantics()
   {
     check_semantics("", perfectly_normal_beast{1}, perfectly_normal_beast{2});
     check_semantics("", perfectly_stringy_beast{}, perfectly_stringy_beast{"Hello, world"});

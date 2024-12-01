@@ -17,12 +17,12 @@ namespace sequoia::testing
   using namespace object;
 
   [[nodiscard]]
-  std::filesystem::path test_edge_false_positives::source_file() const
+  std::filesystem::path test_edge_false_negatives::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void test_edge_false_positives::run_tests()
+  void test_edge_false_negatives::run_tests()
   {
     test_plain_partial_edge();
     test_partial_edge_indep_weight();
@@ -40,7 +40,7 @@ namespace sequoia::testing
   }
 
 
-  void test_edge_false_positives::test_plain_partial_edge()
+  void test_edge_false_negatives::test_plain_partial_edge()
   {
     using edge_t = partial_edge<by_value<null_weight>, null_meta_data>;
 
@@ -51,7 +51,7 @@ namespace sequoia::testing
     check(equality, "Differing target indices", compact_edge_t{10}, compact_edge_t{255});
   }
 
-  void test_edge_false_positives::test_partial_edge_indep_weight()
+  void test_edge_false_negatives::test_partial_edge_indep_weight()
   {
     using edge_t = partial_edge<by_value<int>, null_meta_data>;
 
@@ -63,7 +63,7 @@ namespace sequoia::testing
     check(equality, "Differing targets and weights", edge_t{0,1}, edge_t{2,3});
   }
 
-  void test_edge_false_positives::test_partial_edge_shared_weight()
+  void test_edge_false_negatives::test_partial_edge_shared_weight()
   {
     using edge_t = partial_edge<shared<int>, null_meta_data>;
 
@@ -75,7 +75,7 @@ namespace sequoia::testing
     check(equality, "Differing targets and weights", edge_t{0,1}, edge_t{2,3});
   }
 
-  void test_edge_false_positives::test_partial_edge_meta_data()
+  void test_edge_false_negatives::test_partial_edge_meta_data()
   {
     using edge_t = partial_edge<by_value<null_weight>, float>;
 
@@ -83,7 +83,7 @@ namespace sequoia::testing
     check(equality, "Differing meta data", edge_t{0, 0.5f}, edge_t{1, -0.5f});
   }
 
-  void test_edge_false_positives::test_partial_edge_indep_weight_meta_data()
+  void test_edge_false_negatives::test_partial_edge_indep_weight_meta_data()
   {
     using edge_t = partial_edge<by_value<double>, float>;
 
@@ -92,7 +92,7 @@ namespace sequoia::testing
     check(equality, "Differing meta data", edge_t{0, 0.5f, 2.2}, edge_t{0, -0.5f, 2.2});
   }
 
-  void test_edge_false_positives::test_partial_edge_shared_weight_meta_data()
+  void test_edge_false_negatives::test_partial_edge_shared_weight_meta_data()
   {
     using edge_t = partial_edge<shared<double>, float>;
 
@@ -101,7 +101,7 @@ namespace sequoia::testing
     check(equality, "Differing meta data", edge_t{0, 0.5f, 2.2}, edge_t{0, -0.5f, 2.2});
   }
 
-  void test_edge_false_positives::test_plain_embedded_partial_edge()
+  void test_edge_false_negatives::test_plain_embedded_partial_edge()
   {
     using edge_t = partial_edge<shared<int>, null_meta_data>;
 
@@ -113,7 +113,7 @@ namespace sequoia::testing
     check(equality, "Differing targets and complementary indices", edge_t{0,1}, edge_t{1,0});
   }
 
-  void test_edge_false_positives::test_embedded_partial_edge_indep_weight()
+  void test_edge_false_negatives::test_embedded_partial_edge_indep_weight()
   {
     using edge_t = embedded_partial_edge<by_value<double>, null_meta_data>;
 
@@ -136,7 +136,7 @@ namespace sequoia::testing
     check(equality, "Differing targets, complementary indices and weights", edge_t{0,1,2.0}, edge_t{1,0,5.0});
   }
 
-  void test_edge_false_positives::test_embedded_partial_edge_shared_weight()
+  void test_edge_false_negatives::test_embedded_partial_edge_shared_weight()
   {
     using edge_t = embedded_partial_edge<by_value<double>, null_meta_data>;
 
@@ -159,7 +159,7 @@ namespace sequoia::testing
     check(equality, "Differing targets, complementary indices and weights", edge_t{0,1,2.0}, edge_t{1,0,5.0});
   }
 
-  void test_edge_false_positives::test_embedded_partial_edge_meta_data()
+  void test_edge_false_negatives::test_embedded_partial_edge_meta_data()
   {
     using edge_t = embedded_partial_edge<by_value<null_weight>, float>;
 
@@ -168,7 +168,7 @@ namespace sequoia::testing
     check(equality, "Differing meta data", edge_t{0, 1, 0.5f}, edge_t{0, 1, -0.5f});
   }
 
-  void test_edge_false_positives::test_embedded_partial_edge_indep_weight_meta_data()
+  void test_edge_false_negatives::test_embedded_partial_edge_indep_weight_meta_data()
   {
     using edge_t = embedded_partial_edge<by_value<double>, float>;
 
@@ -178,7 +178,7 @@ namespace sequoia::testing
     check(equality, "Differing meta data", edge_t{0, 2, 0.5f, 2.2}, edge_t{0, 2, -0.5f, 2.2});
   }
 
-  void test_edge_false_positives::test_embedded_partial_edge_shared_weight_meta_data()
+  void test_edge_false_negatives::test_embedded_partial_edge_shared_weight_meta_data()
   {
     using edge_t = embedded_partial_edge<shared<double>, float>;
 

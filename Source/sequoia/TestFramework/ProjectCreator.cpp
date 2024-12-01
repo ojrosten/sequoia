@@ -118,15 +118,16 @@ namespace sequoia::testing
       throw std::runtime_error{"Code indent must comprise only spaces or tabs"};
   }
 
-  void generate_test_main(std::string_view copyright, const fs::path& newProjRoot, indentation codeIndent)
+  void generate_test_main(std::string_view copyright, indentation codeIndent, const fs::path& newProjRoot)
   {
     auto modifier{
-      [copyright, codeIndent](std::string& text) {
+      [&](std::string& text) {
 
         set_top_copyright(text, copyright);
 
         tabs_to_spacing(text, codeIndent);
         replace(text, "Oliver J. Rosten", copyright);
+        replace_all(text, "myProject", back(source_paths{newProjRoot}.project()).string());
 
         const auto indentReplacement{
           [&codeIndent]() {
@@ -212,9 +213,9 @@ namespace sequoia::testing
 
       fs::create_directories(data.project_root);
       fs::copy(parentProjectPaths.aux_paths().project_template(), data.project_root, fs::copy_options::recursive | fs::copy_options::skip_existing);
-      fs::rename(source_paths(data.project_root).repo() / "projectTemplate", source_paths(data.project_root).project());
+      fs::rename(source_paths(data.project_root).repo() / "projectTemplate", source_paths{data.project_root}.project());
 
-      generate_test_main(data.copyright, data.project_root, data.code_indent);
+      generate_test_main(data.copyright, data.code_indent, data.project_root);
       generate_build_system_files(data.project_root);
 
       if(data.use_git == git_invocation::yes)

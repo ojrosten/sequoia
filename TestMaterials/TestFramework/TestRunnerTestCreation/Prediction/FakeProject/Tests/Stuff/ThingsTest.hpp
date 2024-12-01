@@ -11,8 +11,10 @@
 
 #include "ThingsTestingUtilities.hpp"
 
-namespace sequoia::testing
+namespace fakeProject::testing
 {
+    using namespace sequoia::testing;
+
     class things_test final : public regular_test
     {
     public:

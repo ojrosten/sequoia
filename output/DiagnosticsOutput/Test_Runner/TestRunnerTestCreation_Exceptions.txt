@@ -1,4 +1,4 @@
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 50
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 45
 Empty string
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ Equivalent type is unspecified
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 51
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 46
 Just spaces
 
 Expected Exception Type:
@@ -16,7 +16,7 @@ Equivalent type is unspecified
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 73
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 68
 Unmatched <
 
 Expected Exception Type:
@@ -25,7 +25,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 75
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 70
 Backwards delimiters
 
 Expected Exception Type:
@@ -34,7 +34,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 77
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 72
 Missing symbol
 
 Expected Exception Type:
@@ -43,7 +43,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 79
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 74
 Missing symbol
 
 Expected Exception Type:
@@ -58,7 +58,7 @@ Plurgh.h does not exist
 Expected Exception Type:
 [std::runtime_error]
 Unable to locate file Plurgh.h or Plurgh.hpp or Plurgh.hxx in the source repository
-../Source/fakeProject
+../Source
 
 =======================================
 
@@ -68,7 +68,7 @@ Typo in specified class header
 Expected Exception Type:
 [std::runtime_error]
 Unable to locate file fakeProject/Stuff/Thingz.hpp or fakeProject/Stuff/Thingz.h or fakeProject/Stuff/Thingz.hxx in the source repository
-../Source/fakeProject
+../Source
 
 =======================================
 

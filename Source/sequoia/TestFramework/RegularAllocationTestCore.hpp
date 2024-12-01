@@ -127,6 +127,6 @@ namespace sequoia::testing
 
   /*! \anchor regular_allocation_test_alias */
   using regular_allocation_test                = basic_regular_allocation_test<test_mode::standard>;
-  using regular_allocation_false_negative_test = basic_regular_allocation_test<test_mode::false_negative>;
   using regular_allocation_false_positive_test = basic_regular_allocation_test<test_mode::false_positive>;
+  using regular_allocation_false_negative_test = basic_regular_allocation_test<test_mode::false_negative>;
 }

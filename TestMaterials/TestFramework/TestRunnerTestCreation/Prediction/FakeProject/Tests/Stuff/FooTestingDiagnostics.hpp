@@ -11,12 +11,14 @@
 
 #include "FooTestingUtilities.hpp"
 
-namespace sequoia::testing
+namespace fakeProject::testing
 {
-    class foo_false_positive_test final : public move_only_false_positive_test
+    using namespace sequoia::testing;
+
+    class foo_false_negative_test final : public move_only_false_negative_test
     {
     public:
-        using move_only_false_positive_test::move_only_false_positive_test;
+        using move_only_false_negative_test::move_only_false_negative_test;
 
         [[nodiscard]]
         std::filesystem::path source_file() const;

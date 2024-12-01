@@ -38,18 +38,18 @@ namespace sequoia::testing
   };
 
   [[nodiscard]]
-  std::filesystem::path regular_state_transition_false_negative_diagnostics::source_file() const
+  std::filesystem::path regular_state_transition_false_positive_diagnostics::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void regular_state_transition_false_negative_diagnostics::run_tests()
+  void regular_state_transition_false_positive_diagnostics::run_tests()
   {
     test_orderable();
     test_equality_comparable();
   }
 
-  void regular_state_transition_false_negative_diagnostics::test_orderable()
+  void regular_state_transition_false_positive_diagnostics::test_orderable()
   {
     using double_graph = transition_checker<double>::transition_graph;
     using edge_t       = transition_checker<double>::edge;
@@ -102,7 +102,7 @@ namespace sequoia::testing
     }
   }
 
-  void regular_state_transition_false_negative_diagnostics::test_equality_comparable()
+  void regular_state_transition_false_positive_diagnostics::test_equality_comparable()
   {
     using cmplx         = std::complex<double>;
     using complex_graph = transition_checker<cmplx>::transition_graph;
@@ -157,19 +157,19 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path regular_state_transition_false_positive_diagnostics::source_file() const
+  std::filesystem::path regular_state_transition_false_negative_diagnostics::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void regular_state_transition_false_positive_diagnostics::run_tests()
+  void regular_state_transition_false_negative_diagnostics::run_tests()
   {
     test_orderable();
     test_equality_comparable();
     test_broken_constructor();
   }
 
-  void regular_state_transition_false_positive_diagnostics::test_orderable()
+  void regular_state_transition_false_negative_diagnostics::test_orderable()
   {
     using double_graph = transition_checker<double>::transition_graph;
     using edge_t       = transition_checker<double>::edge;
@@ -192,7 +192,7 @@ namespace sequoia::testing
     transition_checker<double>::check(report("Mistake in transition functions"), g, checker);
   }
 
-  void regular_state_transition_false_positive_diagnostics::test_equality_comparable()
+  void regular_state_transition_false_negative_diagnostics::test_equality_comparable()
   {
     using cmplx         = std::complex<double>;
     using complex_graph = transition_checker<cmplx>::transition_graph;
@@ -215,7 +215,7 @@ namespace sequoia::testing
     transition_checker<cmplx>::check(report("Mistake in transition functions"), g, checker);
   }
 
-  void regular_state_transition_false_positive_diagnostics::test_broken_constructor()
+  void regular_state_transition_false_negative_diagnostics::test_broken_constructor()
   {
     using transition_checker_type  = transition_checker<broken_constructor>;
     using broken_constructor_graph = transition_checker_type::transition_graph;

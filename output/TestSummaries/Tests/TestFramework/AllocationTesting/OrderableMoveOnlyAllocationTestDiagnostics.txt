@@ -1,2 +1,2 @@
-Orderable Move-Only Allocation False Negative Diagnostics
-False Negative Checks:                     8;  Failures:  0
+Orderable Move-Only Allocation False Positive Diagnostics
+False Positive Checks:                     8;  Failures:  0

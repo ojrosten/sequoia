@@ -40,9 +40,6 @@ namespace sequoia::testing
     time_point m_Start;
   };
 
-  [[nodiscard]]
-  std::string to_tag(test_mode mode);
-
   /*! \brief class from which all tests ultimately derive
 
       The primary purpose of this class is to reduce code which is templated.
@@ -53,6 +50,16 @@ namespace sequoia::testing
   public:
     explicit test_base(std::string name) : m_Name{std::move(name)} {}
 
+    test_base(std::string name, test_mode mode, std::string_view suiteName, const normal_path& srcFile, project_paths projPaths, individual_materials_paths materials, const std::optional<std::string>& outputDiscriminator, const std::optional<std::string>& summaryDiscriminator)
+      : m_Name{std::move(name)}
+      , m_ProjectPaths{std::move(projPaths)}
+      , m_Materials{std::move(materials)}
+      , m_Diagnostics{get_project_paths().project_root(), suiteName, srcFile, mode, outputDiscriminator}
+      , m_SummaryFile{srcFile, m_ProjectPaths, summaryDiscriminator}
+    {
+      std::filesystem::create_directories(m_Diagnostics.false_positive_or_negative_file_path().parent_path());
+    }
+
     test_base(const test_base&)            = delete;
     test_base& operator=(const test_base&) = delete;
 
@@ -60,12 +67,6 @@ namespace sequoia::testing
     const std::string& name() const noexcept
     {
       return m_Name;
-    }
-
-    [[nodiscard]]
-    const std::filesystem::path& project_root() const
-    {
-      return m_ProjectPaths.project_root();
     }
 
     [[nodiscard]]
@@ -87,15 +88,21 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    const std::filesystem::path& diagnostics_output_filename() const noexcept
+    const project_paths& get_project_paths() const noexcept
     {
-      return m_Diagnostics.diagnostics_file();
+      return m_ProjectPaths;
     }
 
     [[nodiscard]]
-    const std::filesystem::path& caught_exceptions_output_filename() const noexcept
+    const individual_diagnostics_paths& diagnostics_file_paths() const noexcept
     {
-      return m_Diagnostics.caught_exceptions_file();
+      return m_Diagnostics;
+    }
+
+    [[nodiscard]]
+    const test_summary_path& summary_file_path() const noexcept
+    {
+      return m_SummaryFile;
     }
 
     [[nodiscard]]
@@ -109,20 +116,13 @@ namespace sequoia::testing
     test_base(test_base&&)            noexcept = default;
     test_base& operator=(test_base&&) noexcept = default;
 
-    void initialize(test_mode mode, std::string_view suiteName, const normal_path& srcFile, const project_paths& projPaths, individual_materials_paths materials);
-
     void write_instability_analysis_output(const normal_path& srcFile, std::optional<std::size_t> index, const failure_output& output) const;
-
-    [[nodiscard]]
-    const project_paths& get_project_paths() const noexcept
-    {
-      return m_ProjectPaths;
-    }
   private:
     std::string m_Name{};
     project_paths m_ProjectPaths{};
     individual_materials_paths m_Materials{};
     individual_diagnostics_paths m_Diagnostics{};
+    test_summary_path m_SummaryFile{};
   };
 
   /*! \brief class template from which all concrete tests should derive.
@@ -146,16 +146,15 @@ namespace sequoia::testing
     using checker_type = checker<Mode, Extender>;
     constexpr static test_mode mode{Mode};
 
-    using test_base::test_base;
+    explicit basic_test(std::string name) : test_base{std::move(name)} {}
+
+    basic_test(std::string name, std::string_view suiteName, const normal_path& srcFile, const project_paths& projPaths, individual_materials_paths materials, active_recovery_files files, const std::optional<std::string>& outputDiscriminator, const std::optional<std::string>& summaryDiscriminator)
+      : test_base{std::move(name), Mode, suiteName, srcFile, projPaths, std::move(materials), outputDiscriminator, summaryDiscriminator}
+      , checker<Mode, Extender>{std::move(files)}
+    {}
 
     basic_test(const basic_test&)            = delete;
     basic_test& operator=(const basic_test&) = delete;
-
-    void initialize(std::string_view suiteName, const normal_path& srcFile, const project_paths& projPaths, individual_materials_paths materials, active_recovery_files files)
-    {
-      test_base::initialize(mode, suiteName, srcFile, projPaths, std::move(materials));
-      checker_type::recovery(std::move(files));
-    }
 
     using checker_type::reset_results;
   protected:
@@ -195,6 +194,19 @@ namespace sequoia::testing
         }
     && std::derived_from<T, test_base> && std::movable<T> && std::destructible<T>;
 
+  template<concrete_test T>
+  inline constexpr bool has_discriminated_output_v{
+    requires(const T& t){
+      { t.output_discriminator() } -> std::convertible_to<std::string>;
+    }
+  };
+
+  template<concrete_test T>
+  inline constexpr bool has_discriminated_summary_v{
+    requires(const T & t){
+      { t.summary_discriminator() } -> std::convertible_to<std::string>;
+    }
+  };
 
   /*! \brief Temporary workaround while waiting for variadic friends */
   class trivial_extender
@@ -213,6 +225,32 @@ namespace sequoia::testing
 
   /*! \anchor free_test_alias */
   using free_test                = basic_free_test<test_mode::standard>;
-  using free_false_negative_test = basic_free_test<test_mode::false_negative>;
   using free_false_positive_test = basic_free_test<test_mode::false_positive>;
+  using free_false_negative_test = basic_free_test<test_mode::false_negative>;
+
+  template<class T>
+  inline constexpr bool has_parallelizable_type{
+      requires {
+        typename T::parallelizable_type;
+        requires std::is_convertible_v<typename T::parallelizable_type, std::true_type> || std::is_convertible_v<typename T::parallelizable_type, std::false_type>;
+      }
+  };
+
+  /*! \anchor is_parallelizable primary class tempate */
+  template<class T>
+  struct is_parallelizable;
+
+  template<class T>
+  using is_parallelizable_t = typename is_parallelizable<T>::type;
+
+  template<class T>
+  inline constexpr bool is_parallelizable_v{is_parallelizable<T>::value};
+
+  template<concrete_test T>
+  struct is_parallelizable<T> : std::true_type {};
+
+  template<concrete_test T>
+    requires has_parallelizable_type<T>
+  struct is_parallelizable<T> : T::parallelizable_type {};
+
 }

@@ -21,24 +21,24 @@ Maybe:
 Oldschool:
 Probability:
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 39]
-	False Positive Checks:                     2;  Failures:  0
+	False Negative Checks:                     2;  Failures:  0
 Foo:
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 38]
 Unique Thing:
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 35]
-	False Positive Checks:                     2;  Failures:  0
+	False Negative Checks:                     2;  Failures:  0
 Container:
 House:
 
 -----------Grand Totals-----------
-[Total Run Time: 37.9ms]
-[Execution Time: 18.8ms]
+[Total Run Time: 26.8ms]
+[Execution Time: 13ms]
 	Standard Top Level Checks:                12;  Failures:  1  [Deep checks: 116]
 	Standard Performance Checks:               0;  Failures:  0
-	False Negative Checks:                     0;  Failures:  0
-	False Negative Performance Checks:         0;  Failures:  0
-	False Positive Checks:                     4;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     4;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
 
 Running tests...
 
@@ -77,24 +77,24 @@ Maybe:
 Oldschool:
 Probability:
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 39]
-	False Positive Checks:                     2;  Failures:  0
+	False Negative Checks:                     2;  Failures:  0
 Foo:
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 38]
 Unique Thing:
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 35]
-	False Positive Checks:                     2;  Failures:  0
+	False Negative Checks:                     2;  Failures:  0
 Container:
 House:
 
 -----------Grand Totals-----------
-[Total Run Time: 33.9ms]
-[Execution Time: 15.6ms]
+[Total Run Time: 25.4ms]
+[Execution Time: 10.7ms]
 	Standard Top Level Checks:                12;  Failures:  3  [Deep checks: 116]
 	Standard Performance Checks:               0;  Failures:  0
-	False Negative Checks:                     0;  Failures:  0
-	False Negative Performance Checks:         0;  Failures:  0
-	False Positive Checks:                     4;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     4;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
 
 Instability detected in file "FlipperFreeTest.cpp"
 Outcome frequencies:

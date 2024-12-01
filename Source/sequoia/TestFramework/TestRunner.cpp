@@ -54,79 +54,55 @@ namespace sequoia::testing
       std::size_t num{8};
     };
 
-    template<class ForwardIt, class UnaryFn>
-    void accelerate(thread_pool_policy p, ForwardIt first, ForwardIt last, UnaryFn fn)
+    template<class Weight, class UnaryFn>
+    void accelerate(thread_pool_policy p, std::span<Weight> weights, UnaryFn fn)
     {
-      if(const auto dist{static_cast<std::size_t>(std::ranges::distance(first, last))}; dist > 0)
+      if(const auto num{weights.size()}; num > 1)
       {
-        concurrency::thread_pool<void> pool{std::ranges::min(dist, p.num)};
-        std::vector<std::future<void>> futures{};
-        futures.reserve(dist);
-        while(first != last)
-        {
-          futures.emplace_back(pool.push([fn, &wt{*(first++)}](){ fn(wt); }));
-        }
+        concurrency::thread_pool<void> pool{std::ranges::min(num, p.num)};
+        auto futures{
+              std::views::transform(weights, [&pool, fn](auto& wt){ return pool.push([&](){ return fn(wt); }); })
+            | std::ranges::to<std::vector>()
+        };
 
         for(auto& f : futures) f.get();
       }
+      else if(num > 0)
+      {
+        fn(weights.front());
+      }
     }
 
-    template<class ExecutionPolicy, class ForwardIt, class UnaryFn>
-    void accelerate(ExecutionPolicy&& policy, ForwardIt first, ForwardIt last, UnaryFn f)
+    template<class ExecutionPolicy, class Weight, class UnaryFn>
+    void accelerate(ExecutionPolicy&& policy, std::span<Weight> weights, UnaryFn f)
     {
       if constexpr(!with_clang_v)
       {
-        std::for_each(std::forward<ExecutionPolicy>(policy), first, last, std::move(f));
+        std::for_each(std::forward<ExecutionPolicy>(policy), weights.begin(), weights.end(), std::move(f));
       }
       else
       {
-        accelerate(thread_pool_policy{.num{8}}, first, last, std::move(f));
+        accelerate(thread_pool_policy{.num{8}}, weights, std::move(f));
       }
-    }
-
-    [[nodiscard]]
-    fs::path test_summary_filename(const fs::path& sourceFile, const project_paths& projPaths)
-    {
-      const auto name{fs::path{sourceFile}.replace_extension(".txt")};
-      if(name.empty())
-        throw std::logic_error("Source files should have a non-trivial name!");
-
-      if(!name.is_absolute())
-      {
-        if(const auto testRepo{projPaths.tests().repo()}; !testRepo.empty())
-        {
-          return projPaths.output().test_summaries() / back(testRepo) / rebase_from(name, testRepo);
-        }
-      }
-      else
-      {
-        auto summaryFile{projPaths.output().test_summaries()};
-        auto iters{std::ranges::mismatch(name, summaryFile)};
-
-        while(iters.in1 != name.end())
-          summaryFile /= *iters.in1++;
-
-        return summaryFile;
-      }
-
-      return name;
     }
 
     struct test_paths
     {
       test_paths(const std::filesystem::path& sourceFile,
+                 const test_summary_path& summaryFile,
                  const std::filesystem::path& workingMaterials,
                  const std::filesystem::path& predictiveMaterials,
                  const project_paths& projPaths)
-        : test_file{rebase_from(sourceFile, projPaths.tests().repo())}
-        , summary{test_summary_filename(sourceFile, projPaths)}
+        : summary{summaryFile}
+        , test_file{rebase_from(sourceFile, projPaths.tests().repo())}
         , workingMaterials{workingMaterials}
         , predictions{predictiveMaterials}
       {}
 
+      test_summary_path summary;
+
       std::filesystem::path
         test_file,
-        summary,
         workingMaterials,
         predictions;
     };
@@ -161,7 +137,7 @@ namespace sequoia::testing
 
     void nascent_test_data::operator()(const parsing::commandline::arg_list& args)
     {
-      nascent_test_factory factory{{"semantic", "allocation", "behavioural"}};
+      nascent_test_factory factory{"semantic", "allocation", "behavioural"};
       auto nascent{factory.make(genus, runner.proj_paths(), runner.copyright(), runner.code_indent(), runner.stream())};
 
       std::visit(
@@ -262,8 +238,9 @@ namespace sequoia::testing
       std::set<test_paths, paths_comparator> m_Updateables{};
       std::set<std::filesystem::path> m_FilesWrittenTo{};
 
-      void to_file(const std::filesystem::path& filename, const log_summary& summary)
+      void to_file(const test_summary_path& summaryFile, const log_summary& summary)
       {
+        const auto& filename{summaryFile.file_path()};
         if(filename.empty()) return;
 
         auto mode{std::ios_base::out};
@@ -383,23 +360,10 @@ namespace sequoia::testing
                            char** argv,
                            std::string copyright,
                            std::string codeIndent,
-                           std::ostream& stream)
-    : test_runner{argc,
-                  argv,
-                  std::move(copyright),
-                    {main_paths::default_main_cpp_from_root(), {}, main_paths::default_main_cpp_from_root()},
-                  std::move(codeIndent),
-                  stream}
-  {}
-
-  test_runner::test_runner(int argc,
-                           char** argv,
-                           std::string copyright,
-                           const project_paths::initializer& pathsFromProjectRoot,
-                           std::string codeIndent,
+                           const project_paths::customizer& projectPathsCustomization,
                            std::ostream& stream)
     : m_Copyright{std::move(copyright)}
-    , m_ProjPaths{project_paths{argc, argv, pathsFromProjectRoot}}
+    , m_ProjPaths{project_paths{argc, argv, projectPathsCustomization}}
     , m_CodeIndent{std::move(codeIndent)}
     , m_Stream{&stream}
   {
@@ -902,10 +866,10 @@ namespace sequoia::testing
       {
         using enum concurrency_mode;
       case dynamic:
-        accelerate(sequoia::execution::par, next, m_Suites.end_node_weights(), executor);
+        accelerate(sequoia::execution::par, std::span{next, m_Suites.end_node_weights()}, executor);
         break;
       case fixed:
-        accelerate(thread_pool_policy{.num{m_PoolSize}}, next, m_Suites.end_node_weights(), executor);
+        accelerate(thread_pool_policy{.num{m_PoolSize}}, std::span{next, m_Suites.end_node_weights()}, executor);
         break;
       default:
         throw std::logic_error{"Unexpected concurrency_mode"};
@@ -941,6 +905,7 @@ namespace sequoia::testing
               auto pathsMaker{
                   [this](auto& test) -> test_paths {
                     return {test.source_file(),
+                            test.summary_file_path(),
                             test.working_materials(),
                             test.predictive_materials(),
                             proj_paths()};

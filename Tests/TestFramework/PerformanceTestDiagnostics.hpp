@@ -12,10 +12,10 @@
 
 namespace sequoia::testing
 {
-  class performance_false_positive_diagnostics final : public performance_false_positive_test
+  class performance_false_negative_diagnostics final : public performance_false_negative_test
   {
   public:
-    using performance_false_positive_test::performance_false_positive_test;
+    using performance_false_negative_test::performance_false_negative_test;
 
     [[nodiscard]]
     std::filesystem::path source_file() const;
@@ -26,10 +26,10 @@ namespace sequoia::testing
     void test_relative_performance();
   };
 
-  class performance_false_negative_diagnostics final : public performance_false_negative_test
+  class performance_false_positive_diagnostics final : public performance_false_positive_test
   {
   public:
-    using performance_false_negative_test::performance_false_negative_test;
+    using performance_false_positive_test::performance_false_positive_test;
 
     [[nodiscard]]
     std::filesystem::path source_file() const;

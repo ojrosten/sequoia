@@ -9,7 +9,7 @@
 
 #include "ThingsTest.hpp"
 
-namespace sequoia::testing
+namespace fakeProject::testing
 {
     [[nodiscard]]
     std::filesystem::path things_test::source_file() const

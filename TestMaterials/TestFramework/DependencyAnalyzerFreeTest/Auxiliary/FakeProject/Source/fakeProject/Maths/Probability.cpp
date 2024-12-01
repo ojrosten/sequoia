@@ -7,6 +7,7 @@
 
 #include "fakeProject/Maths/Probability.hpp"
 #include "fakeProject/Maths/Helper.hpp"
+#include "foo/Utilities/Helper.hpp"
 
 namespace maths
 {

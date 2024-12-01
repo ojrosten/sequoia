@@ -63,7 +63,7 @@ namespace sequoia::testing
     test_vessel(Test&& t)
       : m_pTest{std::make_unique<essence<Test>>(std::forward<Test>(t))}
     {
-      if constexpr(is_performance_test_v<Test>)
+      if constexpr(!is_parallelizable_v<Test>)
         m_Parallelizable = parallelizable_candidate::no;
     }
 
@@ -77,6 +77,12 @@ namespace sequoia::testing
     const std::string& name() const noexcept
     {
       return m_pTest->name();
+    }
+
+    [[nodiscard]]
+    const test_summary_path& summary_file_path() const noexcept
+    {
+      return m_pTest->summary_file_path();
     }
 
     [[nodiscard]]
@@ -121,10 +127,11 @@ namespace sequoia::testing
     {
       virtual ~soul() = default;
 
-      virtual const std::string& name() const noexcept           = 0;
-      virtual std::filesystem::path source_file() const          = 0;
-      virtual std::filesystem::path working_materials() const    = 0;
-      virtual std::filesystem::path predictive_materials() const = 0;
+      virtual const std::string& name() const noexcept                    = 0;
+      virtual const test_summary_path& summary_file_path() const noexcept = 0;
+      virtual std::filesystem::path source_file() const                   = 0;
+      virtual std::filesystem::path working_materials() const             = 0;
+      virtual std::filesystem::path predictive_materials() const          = 0;
 
       virtual log_summary execute(std::optional<std::size_t> index) = 0;
       virtual void reset(const project_paths& projPaths, std::vector<std::filesystem::path>& materialsPaths) = 0;
@@ -147,6 +154,12 @@ namespace sequoia::testing
       const std::string& name() const noexcept final
       {
         return m_Test.name();
+      }
+
+      [[nodiscard]]
+      const test_summary_path& summary_file_path() const noexcept final
+      {
+        return m_Test.summary_file_path();
       }
 
       [[nodiscard]]
@@ -196,8 +209,8 @@ namespace sequoia::testing
 
         if(!m_Test.has_critical_failures())
         {
-          versioned_write(m_Test.diagnostics_output_filename(),       summary.diagnostics_output());
-          versioned_write(m_Test.caught_exceptions_output_filename(), summary.caught_exceptions_output());
+          versioned_write(m_Test.diagnostics_file_paths().false_positive_or_negative_file_path(), summary.diagnostics_output());
+          versioned_write(m_Test.diagnostics_file_paths().caught_exceptions_file_path(), summary.caught_exceptions_output());
         }
 
         return summary;
@@ -206,11 +219,29 @@ namespace sequoia::testing
       Test m_Test;
     };
 
-    enum class parallelizable_candidate { no, yes };
+    enum class parallelizable_candidate : bool { no, yes };
 
     std::unique_ptr<soul> m_pTest{};
     parallelizable_candidate m_Parallelizable{parallelizable_candidate::yes};
   };
+
+  template<concrete_test T>
+  [[nodiscard]]
+  std::optional<std::string> get_output_discriminator(const T& test){
+    if constexpr(has_discriminated_output_v<T>)
+      return test.output_discriminator();
+    else
+      return std::nullopt;
+  }
+
+  template<concrete_test T>
+  [[nodiscard]]
+  std::optional<std::string> get_reduction_discriminator(const T& test){
+    if constexpr(has_discriminated_summary_v<T>)
+      return test.summary_discriminator();
+    else
+      return std::nullopt;
+  }
 
   /*! \brief Consumes command-line arguments and holds all test suites.
 
@@ -225,13 +256,7 @@ namespace sequoia::testing
                 char** argv,
                 std::string copyright,
                 std::string codeIndent="  ",
-                std::ostream& stream=std::cout);
-
-    test_runner(int argc,
-                char** argv,
-                std::string copyright,
-                const project_paths::initializer& pathsFromProjectRoot,
-                std::string codeIndent="  ",
+                const project_paths::customizer& projectPathsCustomization = {},
                 std::ostream& stream=std::cout);
 
     test_runner(const test_runner&)     = delete;
@@ -369,19 +394,22 @@ namespace sequoia::testing
 
       std::vector<std::filesystem::path> materialsPaths{};
 
-      // TO DO: may need generalizing
-      std::string name{s.name};
+      // TO DO: may need generalizing since suites can have arbitrary depth.
+      const std::string suiteName{s.name};
 
       extract_tree(std::forward<Suite>(s),
                    std::forward<Filter>(filter),
                    overloaded{
                      [] <class... Ts> (const suite<Ts...>&s) -> suite_node { return {.summary{log_summary{s.name}}}; },
-                     [this, &name, &materialsPaths]<concrete_test T>(T&& test) -> suite_node {
-                       test.initialize(name,
-                                       test.source_file(),
-                                       proj_paths(),
-                                       set_materials(test.source_file(), proj_paths(), materialsPaths),
-                                       make_active_recovery_paths(m_RecoveryMode, proj_paths()));
+                     [this, &suiteName, &materialsPaths]<concrete_test T>(T&& test) -> suite_node {
+                       test = T{test.name(),
+                                suiteName,
+                                test.source_file(),
+                                proj_paths(),
+                                set_materials(test.source_file(), proj_paths(), materialsPaths),
+                                make_active_recovery_paths(m_RecoveryMode, proj_paths()),
+                                get_output_discriminator(test),
+                                get_reduction_discriminator(test)};
                    
                        return {.summary{log_summary{test.name()}}, .optTest{std::move(test)}};
                      }

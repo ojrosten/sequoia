@@ -9,7 +9,7 @@
 
 #include "MultipleTest.hpp"
 
-namespace sequoia::testing
+namespace fakeProject::testing
 {
     [[nodiscard]]
     std::filesystem::path multiple_test::source_file() const

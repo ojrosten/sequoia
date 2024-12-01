@@ -11,8 +11,10 @@
 
 #include "sequoia/TestFramework/RegularAllocationTestCore.hpp"
 
-namespace sequoia::testing
+namespace fakeProject::testing
 {
+    using namespace sequoia::testing;
+
     class container_allocation_test final : public regular_allocation_test
     {
     public:

@@ -76,8 +76,7 @@ $(function() {
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
-<a href="#func-members">Functions</a> &#124;
-<a href="#var-members">Variables</a>  </div>
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">PerformanceTestCore.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
@@ -101,23 +100,19 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d88/classsequoia_1_1testing_1_1basic__performance__test.html">sequoia::testing::basic_performance_test&lt; Mode &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">class template from which all concrete tests should derive  <a href="../../db/d88/classsequoia_1_1testing_1_1basic__performance__test.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d62/structsequoia_1_1testing_1_1is__performance__test.html">sequoia::testing::is_performance_test&lt; T &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d46/structsequoia_1_1testing_1_1is__parallelizable_3_01T_01_4.html">sequoia::testing::is_parallelizable&lt; T &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
 <tr class="memitem:a3b874e01861e15541be69707ad861a5c"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d44/PerformanceTestCore_8hpp.html#a3b874e01861e15541be69707ad861a5c">sequoia::testing::performance_test</a> = basic_performance_test&lt; test_mode::standard &gt;</td></tr>
 <tr class="separator:a3b874e01861e15541be69707ad861a5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2c92efd3ec66c66bc04c225c05d91868"><td class="memItemLeft" align="right" valign="top"><a id="a2c92efd3ec66c66bc04c225c05d91868" name="a2c92efd3ec66c66bc04c225c05d91868"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::performance_false_negative_test</b> = basic_performance_test&lt; test_mode::false_negative &gt;</td></tr>
-<tr class="separator:a2c92efd3ec66c66bc04c225c05d91868"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae139f2a0f6850ad8184392a8171f7117"><td class="memItemLeft" align="right" valign="top"><a id="ae139f2a0f6850ad8184392a8171f7117" name="ae139f2a0f6850ad8184392a8171f7117"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::performance_false_positive_test</b> = basic_performance_test&lt; test_mode::false_positive &gt;</td></tr>
 <tr class="separator:ae139f2a0f6850ad8184392a8171f7117"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af899f90bf6284d99cf6b71faf34367fa"><td class="memTemplParams" colspan="2"><a id="af899f90bf6284d99cf6b71faf34367fa" name="af899f90bf6284d99cf6b71faf34367fa"></a>
-template&lt;class T &gt; </td></tr>
-<tr class="memitem:af899f90bf6284d99cf6b71faf34367fa"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::is_performance_test_t</b> = typename is_performance_test&lt; T &gt;::type</td></tr>
-<tr class="separator:af899f90bf6284d99cf6b71faf34367fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2c92efd3ec66c66bc04c225c05d91868"><td class="memItemLeft" align="right" valign="top"><a id="a2c92efd3ec66c66bc04c225c05d91868" name="a2c92efd3ec66c66bc04c225c05d91868"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::performance_false_negative_test</b> = basic_performance_test&lt; test_mode::false_negative &gt;</td></tr>
+<tr class="separator:a2c92efd3ec66c66bc04c225c05d91868"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
@@ -136,13 +131,6 @@ template&lt;class T , class Period &gt; </td></tr>
 <tr class="memitem:a7c427026f953aaae88fd1d432200111c"><td class="memItemLeft" align="right" valign="top"><a id="a7c427026f953aaae88fd1d432200111c" name="a7c427026f953aaae88fd1d432200111c"></a>
 std::string_view&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::postprocess</b> (std::string_view testOutput, std::string_view referenceOutput)</td></tr>
 <tr class="separator:a7c427026f953aaae88fd1d432200111c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
-Variables</h2></td></tr>
-<tr class="memitem:a4b8e630d9a13fabfa9c179a7973a8f77"><td class="memTemplParams" colspan="2"><a id="a4b8e630d9a13fabfa9c179a7973a8f77" name="a4b8e630d9a13fabfa9c179a7973a8f77"></a>
-template&lt;class T &gt; </td></tr>
-<tr class="memitem:a4b8e630d9a13fabfa9c179a7973a8f77"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::is_performance_test_v</b> {is_performance_test&lt;T&gt;::value}</td></tr>
-<tr class="separator:a4b8e630d9a13fabfa9c179a7973a8f77"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Extension of the testing framework for perfomance testing. </p>

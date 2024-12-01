@@ -24,7 +24,7 @@ namespace sequoia::testing
     return append_lines(prefix, path.generic_string(), "vs", prediction.generic_string()).append("\n");
   }
 
-  const basic_file_checker_t value_tester<std::filesystem::path>::basic_file_checker{{".*"}};
+  const basic_file_checker_t value_tester<std::filesystem::path>::basic_file_checker{".*"};
 
   const general_equivalence_check_t<basic_file_checker_t> value_tester<std::filesystem::path>::basic_path_equivalence{basic_file_checker};
 

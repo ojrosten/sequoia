@@ -102,9 +102,11 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>names_iterator</b> =
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:affc237a8223fd16f5e6fb3cbf4bd6dfb"><td class="memItemLeft" align="right" valign="top"><a id="affc237a8223fd16f5e6fb3cbf4bd6dfb" name="affc237a8223fd16f5e6fb3cbf4bd6dfb"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>factory</b> (const std::array&lt; std::string_view, size()&gt; &amp;names)</td></tr>
-<tr class="separator:affc237a8223fd16f5e6fb3cbf4bd6dfb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a968f7d1f01ffd9e407d2d67a46412ee8"><td class="memTemplParams" colspan="2"><a id="a968f7d1f01ffd9e407d2d67a46412ee8" name="a968f7d1f01ffd9e407d2d67a46412ee8"></a>
+template&lt;class... Names&gt; <br />
+requires (sizeof...(Names) == size()) &amp;&amp; (std::is_constructible_v&lt;std::string, Names&gt; &amp;&amp; ...)</td></tr>
+<tr class="memitem:a968f7d1f01ffd9e407d2d67a46412ee8"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>factory</b> (Names... names)</td></tr>
+<tr class="separator:a968f7d1f01ffd9e407d2d67a46412ee8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a26fe82036658c5542de5329057d8350c"><td class="memTemplParams" colspan="2"><a id="a26fe82036658c5542de5329057d8350c" name="a26fe82036658c5542de5329057d8350c"></a>
 template&lt;class... Args&gt; <br />
 requires (initializable_from&lt;Products, Args...&gt; &amp;&amp; ...)</td></tr>

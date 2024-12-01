@@ -11,8 +11,10 @@
 
 #include "IteratorTestingUtilities.hpp"
 
-namespace sequoia::testing
+namespace fakeProject::testing
 {
+    using namespace sequoia::testing;
+
     class iterator_test final : public regular_test
     {
     public:

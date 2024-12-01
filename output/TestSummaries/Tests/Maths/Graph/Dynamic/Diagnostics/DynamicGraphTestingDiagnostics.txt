@@ -1,2 +1,2 @@
 Graph false positive diagnostics
-False Positive Checks:                    12;  Failures:  0
+False Negative Checks:                    12;  Failures:  0

@@ -130,8 +130,8 @@ namespace sequoia::testing
 
     const auto fake{auxiliary_materials() /= "FakeProject"};
     const main_paths main{fake / main_paths::default_main_cpp_from_root()};
-    commandline_arguments args{(fake / "build/CMade/TestAll/TestAll").generic_string()};
-    const project_paths projPaths{args.size(), args.get(), {main.file(), {}, main.file()}};
+    commandline_arguments args{{(fake / "build/CMade/TestAll/TestAll").generic_string()}};
+    const project_paths projPaths{args.size(), args.get(), {.additional_dependency_analysis_paths{{"TestUtilities"}, {"dependencies/foo/Source"}}, .main_cpp{main.file()}, .common_includes{main.file()}}};
 
     check(equality, "No timestamp", tests_to_run(projPaths, ""), opt_test_list{});
 
@@ -165,6 +165,8 @@ namespace sequoia::testing
 
     const auto& testRepo{projPaths.tests().repo()};
     const auto& sourceRepo{projPaths.source().project()};
+    const auto testUtilsPath{projPaths.project_root() / "TestUtilities"};
+    const auto fooPath{projPaths.project_root() / "dependencies" / "foo" / "Source"};
     const auto& materials{projPaths.test_materials().repo()};
 
     check_tests_to_run("Nothing stale", projPaths, "", {}, {}, {});
@@ -300,6 +302,30 @@ namespace sequoia::testing
                        "namespace",
                        {.stale{{{sourceRepo / "Maths" / "Helper.cpp"}, modification_time::early}},
                          .to_run{{"Maths/ProbabilityTest.cpp"}, {"Maths/ProbabilityTestingDiagnostics.cpp"}}},
+                       {},
+                       {});
+
+    check_tests_to_run("Source cpps indirectly stale via cpp from dependencies with the same name as a project cpp",
+                       projPaths,
+                       "namespace",
+                       {.stale{{{fooPath / "foo" / "Utilities" / "Helper.cpp"}, modification_time::early}},
+                         .to_run{{"Maths/ProbabilityTest.cpp"}, {"Maths/ProbabilityTestingDiagnostics.cpp"}, {"Utilities/UsefulThingsFreeTest.cpp"}}},
+                       {},
+                       {});
+
+    check_tests_to_run("Stale header in additional project",
+                       projPaths,
+                       "namespace",
+                       {.stale{{{testUtilsPath / "myLib" / "Utils.hpp"}, modification_time::early}},
+                        .to_run{{"Maybe/MaybeTest.cpp"}, {"Stuff/OldschoolTest.cpp"}, {"Stuff/OldschoolTestingDiagnostics.cpp"}}},
+                       {},
+                       {});
+
+    check_tests_to_run("Stale cpp in additional project",
+                       projPaths,
+                       "namespace",
+                       {.stale{{{testUtilsPath / "myLib" / "Utils.cpp"}, modification_time::early}},
+                        .to_run{{"Maybe/MaybeTest.cpp"}, {"Stuff/OldschoolTest.cpp"}, {"Stuff/OldschoolTestingDiagnostics.cpp"}}},
                        {},
                        {});
 

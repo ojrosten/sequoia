@@ -11,8 +11,10 @@
 
 #include "sequoia/TestFramework/FreeTestCore.hpp"
 
-namespace sequoia::testing
+namespace fakeProject::testing
 {
+    using namespace sequoia::testing;
+
     class global_free_test final : public free_test
     {
     public:

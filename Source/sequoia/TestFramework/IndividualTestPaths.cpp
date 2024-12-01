@@ -12,7 +12,10 @@
 #include "sequoia/TestFramework/IndividualTestPaths.hpp"
 #include "sequoia/TestFramework/FileSystemUtilities.hpp"
 
+#include "sequoia/FileSystem/FileSystem.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
+
+#include <algorithm>
 
 namespace sequoia::testing
 {
@@ -21,17 +24,71 @@ namespace sequoia::testing
   namespace
   {
     [[nodiscard]]
-    fs::path versioned_diagnostics(fs::path dir, std::string_view suite, const fs::path& source, std::string_view mode, std::string_view suffix)
+    std::string to_tag(test_mode mode)
+    {
+      switch(mode)
+      {
+      case test_mode::false_positive:
+        return "FP";
+      case test_mode::false_negative:
+        return "FN";
+      case test_mode::standard:
+        return "";
+      }
+
+      throw std::logic_error{"Unrecognized case for test_mode"};
+    }
+
+    [[nodiscard]]
+    fs::path versioned_diagnostics(fs::path dir, std::string_view suite, const fs::path& source, test_mode mode, std::string_view suffix,const std::optional<std::string>& platform)
     {
       const auto file{
         fs::path{source}.filename()
                         .replace_extension()
                         .concat("_")
-                        .concat(mode)
+                        .concat(to_tag(mode))
                         .concat(suffix)
+                        .concat((platform && !platform->empty()) ? "_" + platform.value() : "")
                         .concat(".txt")};
 
       return (dir /= fs::path{replace_all(suite, " ", "_")}) /= file;
+    }
+
+    [[nodiscard]]
+    fs::path test_summary_filename(const fs::path& sourceFile, const project_paths& projectPaths, const std::optional<std::string>& discriminator)
+    {
+      const auto name{
+          [&]() {
+            auto summaryFile{fs::path{sourceFile}.replace_extension(".txt")};
+            if(discriminator && !discriminator->empty())
+              summaryFile.replace_filename(summaryFile.stem().concat("_" + discriminator.value()).concat(summaryFile.extension().string()));
+
+            return summaryFile;
+          }()
+      };
+
+      if(name.empty())
+        throw std::logic_error("Source files should have a non-trivial name!");
+
+      if(!name.is_absolute())
+      {
+        if(const auto testRepo{projectPaths.tests().repo()}; !testRepo.empty())
+        {
+          return projectPaths.output().test_summaries() / back(testRepo) / rebase_from(name, testRepo);
+        }
+      }
+      else
+      {
+        auto summaryFile{projectPaths.output().test_summaries()};
+        auto iters{std::ranges::mismatch(name, summaryFile)};
+
+        while(iters.in1 != name.end())
+          summaryFile /= *iters.in1++;
+
+        return summaryFile;
+      }
+
+      return name;
     }
   }
 
@@ -84,8 +141,14 @@ namespace sequoia::testing
 
   //===================================== individual_diagnostics_paths =====================================//
 
-  individual_diagnostics_paths::individual_diagnostics_paths(fs::path projectRoot, std::string_view suite, const fs::path& source, std::string_view mode)
-    : m_Diagnostics{versioned_diagnostics(output_paths::diagnostics(projectRoot), suite, source, mode, "Output")}
-    , m_CaughtExceptions{versioned_diagnostics(output_paths::diagnostics(projectRoot), suite, source, mode, "Exceptions")}
+  individual_diagnostics_paths::individual_diagnostics_paths(const fs::path& projectRoot, std::string_view suite, const fs::path& source, test_mode mode, const std::optional<std::string>& platform)
+    : m_Diagnostics{versioned_diagnostics(output_paths::diagnostics(projectRoot), suite, source, mode, "Output", platform)}
+    , m_CaughtExceptions{versioned_diagnostics(output_paths::diagnostics(projectRoot), suite, source, mode, "Exceptions", platform)}
+  {}
+
+  //===================================== individual_diagnostics_paths =====================================//
+
+  test_summary_path::test_summary_path(const fs::path& sourceFile, const project_paths& projectPaths, const std::optional<std::string>& summaryDiscriminator)
+    : m_Summary{test_summary_filename(sourceFile, projectPaths, summaryDiscriminator)}
   {}
 }

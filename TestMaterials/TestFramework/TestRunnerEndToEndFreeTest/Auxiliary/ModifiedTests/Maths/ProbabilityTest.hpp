@@ -9,8 +9,10 @@
 
 #include "ProbabilityTestingUtilities.hpp"
 
-namespace sequoia::testing
+namespace generatedProject::testing
 {
+	using namespace sequoia::testing;
+
 	class probability_test final : public regular_test
 	{
 	public:

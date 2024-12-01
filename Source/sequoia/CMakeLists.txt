@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
 
-include(../../build_system/Utilities.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/../../build_system/Utilities.cmake)
 
 sequoia_init()
 
@@ -38,8 +38,8 @@ set(SourceList
     TextProcessing/Patterns.cpp
     TextProcessing/Substitutions.cpp)
 
-add_library(Sequoia STATIC ${SourceList})
+add_library(sequoia STATIC ${SourceList})
 
-target_include_directories(Sequoia PUBLIC ../)
+target_include_directories(sequoia PUBLIC ${CMAKE_CURRENT_LIST_DIR}/../)
 
-sequoia_finalize_library(Sequoia)
+sequoia_finalize_library(sequoia)

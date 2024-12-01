@@ -64,19 +64,19 @@ namespace sequoia::testing
   };
 
   [[nodiscard]]
-  std::filesystem::path container_false_positive_free_diagnostics::source_file() const
+  std::filesystem::path container_false_negative_free_diagnostics::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void container_false_positive_free_diagnostics::run_tests()
+  void container_false_negative_free_diagnostics::run_tests()
   {
     test_homogeneous();
     test_heterogeneous();
     test_mixed();
   }
 
-  void container_false_positive_free_diagnostics::test_homogeneous()
+  void container_false_negative_free_diagnostics::test_homogeneous()
   {
     check(equality, "Empty vector check which should fail", std::vector<double>{}, std::vector<double>{1});
     check(equality, "One element vector check which should fail due to wrong value", std::vector<double>{1}, std::vector<double>{2});
@@ -159,7 +159,7 @@ namespace sequoia::testing
           }});
   }
 
-  void container_false_positive_free_diagnostics::test_heterogeneous()
+  void container_false_negative_free_diagnostics::test_heterogeneous()
   {
     {
       using type = std::pair<int, double>;
@@ -228,7 +228,7 @@ namespace sequoia::testing
     }
   }
 
-  void container_false_positive_free_diagnostics::test_mixed()
+  void container_false_negative_free_diagnostics::test_mixed()
   {
     using t_0 = std::vector<std::pair<int, float>>;
     using t_1 = std::set<double>;
@@ -257,19 +257,19 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path container_false_negative_free_diagnostics::source_file() const
+  std::filesystem::path container_false_positive_free_diagnostics::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void container_false_negative_free_diagnostics::run_tests()
+  void container_false_positive_free_diagnostics::run_tests()
   {
     test_homogeneous();
     test_heterogeneous();
     test_mixed();
   }
 
-  void container_false_negative_free_diagnostics::test_homogeneous()
+  void container_false_positive_free_diagnostics::test_homogeneous()
   {
     check(equality, "Empty vector check which should pass", std::vector<double>{}, std::vector<double>{});
     check(equality, "One element vector check which should pass", std::vector<double>{2}, std::vector<double>{2});
@@ -300,7 +300,7 @@ namespace sequoia::testing
     check(weak_equivalence, "Advice for weak equivalence checking", only_weakly_checkable{42, 3.14}, std::pair<int, double>{42, 3.14}, tutor{bland{}});
   }
 
-  void container_false_negative_free_diagnostics::test_heterogeneous()
+  void container_false_positive_free_diagnostics::test_heterogeneous()
   {
     check(equality, "", std::pair<int, double>{5, 7.8}, std::pair<int, double>{5, 7.8});
 
@@ -326,7 +326,7 @@ namespace sequoia::testing
     }
   }
 
-  void container_false_negative_free_diagnostics::test_mixed()
+  void container_false_positive_free_diagnostics::test_mixed()
   {
     using t_0 = std::vector<std::pair<int, float>>;
     using t_1 = std::set<double>;

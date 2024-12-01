@@ -11,8 +11,10 @@
 
 #include "MultipleTestingUtilities.hpp"
 
-namespace sequoia::testing
+namespace fakeProject::testing
 {
+    using namespace sequoia::testing;
+
     class multiple_test final : public move_only_test
     {
     public:

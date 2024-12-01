@@ -1,4 +1,4 @@
-Move-Only Scoped Allocation False Positive Diagnostics
-False Positive Checks:                    20;  Failures:  0
 Move-Only Scoped Allocation False Negative Diagnostics
-False Negative Checks:                    16;  Failures:  0
+False Negative Checks:                    20;  Failures:  0
+Move-Only Scoped Allocation False Positive Diagnostics
+False Positive Checks:                    16;  Failures:  0

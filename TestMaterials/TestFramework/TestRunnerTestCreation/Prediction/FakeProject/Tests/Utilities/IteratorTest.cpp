@@ -9,7 +9,7 @@
 
 #include "IteratorTest.hpp"
 
-namespace sequoia::testing
+namespace fakeProject::testing
 {
     [[nodiscard]]
     std::filesystem::path iterator_test::source_file() const

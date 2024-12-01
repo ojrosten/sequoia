@@ -7,15 +7,15 @@
 
 #include "ProbabilityTestingDiagnostics.hpp"
 
-namespace sequoia::testing
+namespace generatedProject::testing
 {
 	[[nodiscard]]
-	std::filesystem::path probability_false_positive_test::source_file() const
+	std::filesystem::path probability_false_negative_test::source_file() const
 	{
 		return std::source_location::current().file_name();
 	}
 
-	void probability_false_positive_test::run_tests()
+	void probability_false_negative_test::run_tests()
 	{
 		maths::probability x{0.5}, y{1.0};
 		check(equivalence, "", x, 0.6);

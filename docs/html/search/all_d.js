@@ -5,7 +5,7 @@ var searchData=
   ['only_5fweakly_5fcheckable_2',['only_weakly_checkable',['../dc/dec/structsequoia_1_1testing_1_1only__weakly__checkable.html',1,'sequoia::testing']]],
   ['operation_3',['operation',['../d0/d7a/structsequoia_1_1parsing_1_1commandline_1_1operation.html',1,'sequoia::parsing::commandline']]],
   ['option_4',['option',['../db/da8/structsequoia_1_1parsing_1_1commandline_1_1option.html',1,'sequoia::parsing::commandline']]],
-  ['orderable_5fmove_5fonly_5fallocation_5ffalse_5fnegative_5fdiagnostics_5',['orderable_move_only_allocation_false_negative_diagnostics',['../d7/d44/classsequoia_1_1testing_1_1orderable__move__only__allocation__false__negative__diagnostics.html',1,'sequoia::testing']]],
+  ['orderable_5fmove_5fonly_5fallocation_5ffalse_5fpositive_5fdiagnostics_5',['orderable_move_only_allocation_false_positive_diagnostics',['../d2/df0/classsequoia_1_1testing_1_1orderable__move__only__allocation__false__positive__diagnostics.html',1,'sequoia::testing']]],
   ['orderable_5fmove_5fonly_5fbeast_6',['orderable_move_only_beast',['../d2/de3/structsequoia_1_1testing_1_1orderable__move__only__beast.html',1,'sequoia::testing']]],
   ['orderable_5fmove_5fonly_5ffalse_5fnegative_5fdiagnostics_7',['orderable_move_only_false_negative_diagnostics',['../dc/d29/classsequoia_1_1testing_1_1orderable__move__only__false__negative__diagnostics.html',1,'sequoia::testing']]],
   ['orderable_5fmove_5fonly_5ffalse_5fpositive_5fdiagnostics_8',['orderable_move_only_false_positive_diagnostics',['../d9/d58/classsequoia_1_1testing_1_1orderable__move__only__false__positive__diagnostics.html',1,'sequoia::testing']]],

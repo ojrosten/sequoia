@@ -11,8 +11,10 @@
 
 #include "ThingummyTestingUtilities.hpp"
 
-namespace sequoia::testing
+namespace fakeProject::testing
 {
+    using namespace sequoia::testing;
+
     class thingummy_test final : public regular_test
     {
     public:

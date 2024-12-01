@@ -11,8 +11,10 @@
 
 #include "WidgetTestingUtilities.hpp"
 
-namespace sequoia::testing
+namespace fakeProject::testing
 {
+    using namespace sequoia::testing;
+
     class widget_test final : public regular_test
     {
     public:

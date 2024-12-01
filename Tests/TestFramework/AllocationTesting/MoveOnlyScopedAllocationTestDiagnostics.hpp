@@ -13,11 +13,11 @@
 
 namespace sequoia::testing
 {
-  class move_only_scoped_allocation_false_negative_diagnostics final
-    : public move_only_allocation_false_negative_test
+  class move_only_scoped_allocation_false_positive_diagnostics final
+    : public move_only_allocation_false_positive_test
   {
   public:
-    using move_only_allocation_false_negative_test::move_only_allocation_false_negative_test;
+    using move_only_allocation_false_positive_test::move_only_allocation_false_positive_test;
 
     [[nodiscard]]
     std::filesystem::path source_file() const;
@@ -32,11 +32,11 @@ namespace sequoia::testing
     void test_regular_semantics();
   };
 
-  class move_only_scoped_allocation_false_positive_diagnostics final
-    : public move_only_allocation_false_positive_test
+  class move_only_scoped_allocation_false_negative_diagnostics final
+    : public move_only_allocation_false_negative_test
   {
   public:
-    using move_only_allocation_false_positive_test::move_only_allocation_false_positive_test;
+    using move_only_allocation_false_negative_test::move_only_allocation_false_negative_test;
 
     [[nodiscard]]
     std::filesystem::path source_file() const;

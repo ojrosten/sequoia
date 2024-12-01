@@ -12,6 +12,7 @@
  */
 
 #include <filesystem>
+#include <functional>
 
 namespace sequoia
 {
@@ -44,10 +45,28 @@ namespace sequoia
     std::filesystem::path m_Path;
   };
 
-  /// precondition: a non-empty path; return value: the last element of the path
   [[nodiscard]]
   inline std::filesystem::path back(const std::filesystem::path& p)
   {
+    if(p.empty())
+      throw std::runtime_error{"Cannot extract final element from an empty path"};
+
     return *--p.end();
+  }
+
+  template<class Path, class Pattern, class Proj=std::identity>
+    requires std::is_same_v<std::remove_cvref_t<Path>, std::filesystem::path> && std::predicate<std::ranges::equal_to, std::invoke_result_t<Proj, std::filesystem::path> , Pattern>
+  [[nodiscard]]
+  std::conditional_t<std::is_const_v<std::remove_reference_t<Path>>, std::filesystem::path::const_iterator, std::filesystem::path::iterator> 
+    rfind(Path&& p, Pattern pattern, Proj proj = {})
+  {
+    auto i{p.end()};
+    while(i != p.begin())
+    {
+      --i;
+      if(std::ranges::equal_to{}(proj(*i), pattern)) break;
+    }
+
+    return i;
   }
 }

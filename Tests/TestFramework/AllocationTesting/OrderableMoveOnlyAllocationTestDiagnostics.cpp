@@ -13,24 +13,24 @@
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::filesystem::path orderable_move_only_allocation_false_negative_diagnostics::source_file() const
+  std::filesystem::path orderable_move_only_allocation_false_positive_diagnostics::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void orderable_move_only_allocation_false_negative_diagnostics::run_tests()
+  void orderable_move_only_allocation_false_positive_diagnostics::run_tests()
   {
     do_allocation_tests();
   }
 
   template<bool PropagateMove, bool PropagateSwap>
-  void orderable_move_only_allocation_false_negative_diagnostics::test_allocation()
+  void orderable_move_only_allocation_false_positive_diagnostics::test_allocation()
   {
     test_semantics_allocations<PropagateMove, PropagateSwap>();
   }
 
   template<bool PropagateMove, bool PropagateSwap>
-  void orderable_move_only_allocation_false_negative_diagnostics::test_semantics_allocations()
+  void orderable_move_only_allocation_false_positive_diagnostics::test_semantics_allocations()
   {
     using beast = orderable_move_only_beast<int, shared_counting_allocator<int, true, PropagateMove, PropagateSwap>>;
 

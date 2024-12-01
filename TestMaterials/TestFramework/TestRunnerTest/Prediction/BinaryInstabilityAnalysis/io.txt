@@ -2,26 +2,26 @@
 Running tests, synchronously...
 
 Suite:
-[Execution Time: 1.33ms]
+[Execution Time: 1.25ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 
 -----------Grand Totals-----------
-[Total Run Time: 2.91ms]
-[Execution Time: 1.33ms]
+[Total Run Time: 3.07ms]
+[Execution Time: 1.25ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
-	False Negative Checks:                     0;  Failures:  0
-	False Negative Performance Checks:         0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
 
 Running tests, synchronously...
 
 Suite:
-[Execution Time: 1.35ms]
+[Execution Time: 821us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 132
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 177
 	Flipper
 
 	[bool]
@@ -31,16 +31,16 @@ Suite:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 3.93ms]
-[Execution Time: 1.35ms]
+[Total Run Time: 2.61ms]
+[Execution Time: 821us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
-	False Negative Checks:                     0;  Failures:  0
-	False Negative Performance Checks:         0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
 
-Instability detected in file "TestRunnerTest.cpp"
+Instability detected in file "Free_Test.cpp"
 Outcome frequencies:
 [50%,50%]
 
@@ -48,7 +48,7 @@ Outcome frequencies:
 
 vs.
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 132
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 177
 	Flipper
 
 	[bool]

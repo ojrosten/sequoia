@@ -1,1072 +1,128 @@
-Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 81
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 40
 
 --Ordered Semantics--
-[sequoia::testing::orderable_regular_inefficient_comparisons<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = false,
-  		Propagate on move assignment = false,
-  		Propagate on swap = false
-   >]
-  Unexpected allocation detected for operator< (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = false,
-  		Propagate on move assignment = false,
-  		Propagate on swap = false
-   >]
-  Unexpected allocation detected for operator<= (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = false,
-  		Propagate on move assignment = false,
-  		Propagate on swap = false
-   >]
-  Unexpected allocation detected for operator> (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = false,
-  		Propagate on move assignment = false,
-  		Propagate on swap = false
-   >]
-  Unexpected allocation detected for operator>= (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = false,
-  		Propagate on move assignment = false,
-  		Propagate on swap = false
-   >]
-  Unexpected allocation detected for operator<=> (y)
-  [int]
-  operator== returned false
-  Obtained : 6
-  Predicted: 0
+[sequoia::testing::orderable_regular_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 88
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 47
 
 --Ordered Semantics--
-[sequoia::testing::orderable_regular_inefficient_comparisons<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = false,
-  		Propagate on move assignment = false,
-  		Propagate on swap = false
-   >]
-  Unexpected allocation detected for operator< (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = false,
-  		Propagate on move assignment = false,
-  		Propagate on swap = false
-   >]
-  Unexpected allocation detected for operator<= (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = false,
-  		Propagate on move assignment = false,
-  		Propagate on swap = false
-   >]
-  Unexpected allocation detected for operator> (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = false,
-  		Propagate on move assignment = false,
-  		Propagate on swap = false
-   >]
-  Unexpected allocation detected for operator>= (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = false,
-  		Propagate on move assignment = false,
-  		Propagate on swap = false
-   >]
-  Unexpected allocation detected for operator<=> (y)
-  [int]
-  operator== returned false
-  Obtained : 6
-  Predicted: 0
+[sequoia::testing::orderable_regular_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 81
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 40
 
 --Ordered Semantics--
-[sequoia::testing::orderable_regular_inefficient_comparisons<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = false,
-  		Propagate on move assignment = false,
-  		Propagate on swap = true
-   >]
-  Unexpected allocation detected for operator< (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = false,
-  		Propagate on move assignment = false,
-  		Propagate on swap = true
-   >]
-  Unexpected allocation detected for operator<= (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = false,
-  		Propagate on move assignment = false,
-  		Propagate on swap = true
-   >]
-  Unexpected allocation detected for operator> (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = false,
-  		Propagate on move assignment = false,
-  		Propagate on swap = true
-   >]
-  Unexpected allocation detected for operator>= (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = false,
-  		Propagate on move assignment = false,
-  		Propagate on swap = true
-   >]
-  Unexpected allocation detected for operator<=> (y)
-  [int]
-  operator== returned false
-  Obtained : 6
-  Predicted: 0
+[sequoia::testing::orderable_regular_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 88
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 47
 
 --Ordered Semantics--
-[sequoia::testing::orderable_regular_inefficient_comparisons<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = false,
-  		Propagate on move assignment = false,
-  		Propagate on swap = true
-   >]
-  Unexpected allocation detected for operator< (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = false,
-  		Propagate on move assignment = false,
-  		Propagate on swap = true
-   >]
-  Unexpected allocation detected for operator<= (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = false,
-  		Propagate on move assignment = false,
-  		Propagate on swap = true
-   >]
-  Unexpected allocation detected for operator> (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = false,
-  		Propagate on move assignment = false,
-  		Propagate on swap = true
-   >]
-  Unexpected allocation detected for operator>= (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = false,
-  		Propagate on move assignment = false,
-  		Propagate on swap = true
-   >]
-  Unexpected allocation detected for operator<=> (y)
-  [int]
-  operator== returned false
-  Obtained : 6
-  Predicted: 0
+[sequoia::testing::orderable_regular_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 81
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 40
 
 --Ordered Semantics--
-[sequoia::testing::orderable_regular_inefficient_comparisons<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = false,
-  		Propagate on move assignment = true,
-  		Propagate on swap = false
-   >]
-  Unexpected allocation detected for operator< (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = false,
-  		Propagate on move assignment = true,
-  		Propagate on swap = false
-   >]
-  Unexpected allocation detected for operator<= (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = false,
-  		Propagate on move assignment = true,
-  		Propagate on swap = false
-   >]
-  Unexpected allocation detected for operator> (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = false,
-  		Propagate on move assignment = true,
-  		Propagate on swap = false
-   >]
-  Unexpected allocation detected for operator>= (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = false,
-  		Propagate on move assignment = true,
-  		Propagate on swap = false
-   >]
-  Unexpected allocation detected for operator<=> (y)
-  [int]
-  operator== returned false
-  Obtained : 6
-  Predicted: 0
+[sequoia::testing::orderable_regular_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 88
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 47
 
 --Ordered Semantics--
-[sequoia::testing::orderable_regular_inefficient_comparisons<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = false,
-  		Propagate on move assignment = true,
-  		Propagate on swap = false
-   >]
-  Unexpected allocation detected for operator< (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = false,
-  		Propagate on move assignment = true,
-  		Propagate on swap = false
-   >]
-  Unexpected allocation detected for operator<= (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = false,
-  		Propagate on move assignment = true,
-  		Propagate on swap = false
-   >]
-  Unexpected allocation detected for operator> (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = false,
-  		Propagate on move assignment = true,
-  		Propagate on swap = false
-   >]
-  Unexpected allocation detected for operator>= (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = false,
-  		Propagate on move assignment = true,
-  		Propagate on swap = false
-   >]
-  Unexpected allocation detected for operator<=> (y)
-  [int]
-  operator== returned false
-  Obtained : 6
-  Predicted: 0
+[sequoia::testing::orderable_regular_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 81
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 40
 
 --Ordered Semantics--
-[sequoia::testing::orderable_regular_inefficient_comparisons<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = false,
-  		Propagate on move assignment = true,
-  		Propagate on swap = true
-   >]
-  Unexpected allocation detected for operator< (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = false,
-  		Propagate on move assignment = true,
-  		Propagate on swap = true
-   >]
-  Unexpected allocation detected for operator<= (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = false,
-  		Propagate on move assignment = true,
-  		Propagate on swap = true
-   >]
-  Unexpected allocation detected for operator> (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = false,
-  		Propagate on move assignment = true,
-  		Propagate on swap = true
-   >]
-  Unexpected allocation detected for operator>= (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = false,
-  		Propagate on move assignment = true,
-  		Propagate on swap = true
-   >]
-  Unexpected allocation detected for operator<=> (y)
-  [int]
-  operator== returned false
-  Obtained : 6
-  Predicted: 0
+[sequoia::testing::orderable_regular_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 88
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 47
 
 --Ordered Semantics--
-[sequoia::testing::orderable_regular_inefficient_comparisons<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = false,
-  		Propagate on move assignment = true,
-  		Propagate on swap = true
-   >]
-  Unexpected allocation detected for operator< (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = false,
-  		Propagate on move assignment = true,
-  		Propagate on swap = true
-   >]
-  Unexpected allocation detected for operator<= (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = false,
-  		Propagate on move assignment = true,
-  		Propagate on swap = true
-   >]
-  Unexpected allocation detected for operator> (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = false,
-  		Propagate on move assignment = true,
-  		Propagate on swap = true
-   >]
-  Unexpected allocation detected for operator>= (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = false,
-  		Propagate on move assignment = true,
-  		Propagate on swap = true
-   >]
-  Unexpected allocation detected for operator<=> (y)
-  [int]
-  operator== returned false
-  Obtained : 6
-  Predicted: 0
+[sequoia::testing::orderable_regular_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 81
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 40
 
 --Ordered Semantics--
-[sequoia::testing::orderable_regular_inefficient_comparisons<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = true,
-  		Propagate on move assignment = false,
-  		Propagate on swap = false
-   >]
-  Unexpected allocation detected for operator< (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = true,
-  		Propagate on move assignment = false,
-  		Propagate on swap = false
-   >]
-  Unexpected allocation detected for operator<= (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = true,
-  		Propagate on move assignment = false,
-  		Propagate on swap = false
-   >]
-  Unexpected allocation detected for operator> (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = true,
-  		Propagate on move assignment = false,
-  		Propagate on swap = false
-   >]
-  Unexpected allocation detected for operator>= (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = true,
-  		Propagate on move assignment = false,
-  		Propagate on swap = false
-   >]
-  Unexpected allocation detected for operator<=> (y)
-  [int]
-  operator== returned false
-  Obtained : 6
-  Predicted: 0
+[sequoia::testing::orderable_regular_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 88
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 47
 
 --Ordered Semantics--
-[sequoia::testing::orderable_regular_inefficient_comparisons<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = true,
-  		Propagate on move assignment = false,
-  		Propagate on swap = false
-   >]
-  Unexpected allocation detected for operator< (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = true,
-  		Propagate on move assignment = false,
-  		Propagate on swap = false
-   >]
-  Unexpected allocation detected for operator<= (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = true,
-  		Propagate on move assignment = false,
-  		Propagate on swap = false
-   >]
-  Unexpected allocation detected for operator> (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = true,
-  		Propagate on move assignment = false,
-  		Propagate on swap = false
-   >]
-  Unexpected allocation detected for operator>= (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = true,
-  		Propagate on move assignment = false,
-  		Propagate on swap = false
-   >]
-  Unexpected allocation detected for operator<=> (y)
-  [int]
-  operator== returned false
-  Obtained : 6
-  Predicted: 0
+[sequoia::testing::orderable_regular_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 81
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 40
 
 --Ordered Semantics--
-[sequoia::testing::orderable_regular_inefficient_comparisons<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = true,
-  		Propagate on move assignment = false,
-  		Propagate on swap = true
-   >]
-  Unexpected allocation detected for operator< (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = true,
-  		Propagate on move assignment = false,
-  		Propagate on swap = true
-   >]
-  Unexpected allocation detected for operator<= (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = true,
-  		Propagate on move assignment = false,
-  		Propagate on swap = true
-   >]
-  Unexpected allocation detected for operator> (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = true,
-  		Propagate on move assignment = false,
-  		Propagate on swap = true
-   >]
-  Unexpected allocation detected for operator>= (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = true,
-  		Propagate on move assignment = false,
-  		Propagate on swap = true
-   >]
-  Unexpected allocation detected for operator<=> (y)
-  [int]
-  operator== returned false
-  Obtained : 6
-  Predicted: 0
+[sequoia::testing::orderable_regular_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 88
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 47
 
 --Ordered Semantics--
-[sequoia::testing::orderable_regular_inefficient_comparisons<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = true,
-  		Propagate on move assignment = false,
-  		Propagate on swap = true
-   >]
-  Unexpected allocation detected for operator< (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = true,
-  		Propagate on move assignment = false,
-  		Propagate on swap = true
-   >]
-  Unexpected allocation detected for operator<= (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = true,
-  		Propagate on move assignment = false,
-  		Propagate on swap = true
-   >]
-  Unexpected allocation detected for operator> (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = true,
-  		Propagate on move assignment = false,
-  		Propagate on swap = true
-   >]
-  Unexpected allocation detected for operator>= (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = true,
-  		Propagate on move assignment = false,
-  		Propagate on swap = true
-   >]
-  Unexpected allocation detected for operator<=> (y)
-  [int]
-  operator== returned false
-  Obtained : 6
-  Predicted: 0
+[sequoia::testing::orderable_regular_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 81
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 40
 
 --Ordered Semantics--
-[sequoia::testing::orderable_regular_inefficient_comparisons<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = true,
-  		Propagate on move assignment = true,
-  		Propagate on swap = false
-   >]
-  Unexpected allocation detected for operator< (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = true,
-  		Propagate on move assignment = true,
-  		Propagate on swap = false
-   >]
-  Unexpected allocation detected for operator<= (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = true,
-  		Propagate on move assignment = true,
-  		Propagate on swap = false
-   >]
-  Unexpected allocation detected for operator> (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = true,
-  		Propagate on move assignment = true,
-  		Propagate on swap = false
-   >]
-  Unexpected allocation detected for operator>= (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = true,
-  		Propagate on move assignment = true,
-  		Propagate on swap = false
-   >]
-  Unexpected allocation detected for operator<=> (y)
-  [int]
-  operator== returned false
-  Obtained : 6
-  Predicted: 0
+[sequoia::testing::orderable_regular_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 88
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 47
 
 --Ordered Semantics--
-[sequoia::testing::orderable_regular_inefficient_comparisons<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = true,
-  		Propagate on move assignment = true,
-  		Propagate on swap = false
-   >]
-  Unexpected allocation detected for operator< (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = true,
-  		Propagate on move assignment = true,
-  		Propagate on swap = false
-   >]
-  Unexpected allocation detected for operator<= (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = true,
-  		Propagate on move assignment = true,
-  		Propagate on swap = false
-   >]
-  Unexpected allocation detected for operator> (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = true,
-  		Propagate on move assignment = true,
-  		Propagate on swap = false
-   >]
-  Unexpected allocation detected for operator>= (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = true,
-  		Propagate on move assignment = true,
-  		Propagate on swap = false
-   >]
-  Unexpected allocation detected for operator<=> (y)
-  [int]
-  operator== returned false
-  Obtained : 6
-  Predicted: 0
+[sequoia::testing::orderable_regular_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 81
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 40
 
 --Ordered Semantics--
-[sequoia::testing::orderable_regular_inefficient_comparisons<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = true,
-  		Propagate on move assignment = true,
-  		Propagate on swap = true
-   >]
-  Unexpected allocation detected for operator< (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = true,
-  		Propagate on move assignment = true,
-  		Propagate on swap = true
-   >]
-  Unexpected allocation detected for operator<= (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = true,
-  		Propagate on move assignment = true,
-  		Propagate on swap = true
-   >]
-  Unexpected allocation detected for operator> (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = true,
-  		Propagate on move assignment = true,
-  		Propagate on swap = true
-   >]
-  Unexpected allocation detected for operator>= (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = true,
-  		Propagate on move assignment = true,
-  		Propagate on swap = true
-   >]
-  Unexpected allocation detected for operator<=> (y)
-  [int]
-  operator== returned false
-  Obtained : 6
-  Predicted: 0
+[sequoia::testing::orderable_regular_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
 =======================================
 
-Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 88
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 47
 
 --Ordered Semantics--
-[sequoia::testing::orderable_regular_inefficient_comparisons<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = true,
-  		Propagate on move assignment = true,
-  		Propagate on swap = true
-   >]
-  Unexpected allocation detected for operator< (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = true,
-  		Propagate on move assignment = true,
-  		Propagate on swap = true
-   >]
-  Unexpected allocation detected for operator<= (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = true,
-  		Propagate on move assignment = true,
-  		Propagate on swap = true
-   >]
-  Unexpected allocation detected for operator> (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = true,
-  		Propagate on move assignment = true,
-  		Propagate on swap = true
-   >]
-  Unexpected allocation detected for operator>= (y)
-  [int]
-  operator== returned false
-  Obtained : 2
-  Predicted: 0
-
-  [shared_counting_allocator<
-  		int,
-  		Propagate on copy assignment = true,
-  		Propagate on move assignment = true,
-  		Propagate on swap = true
-   >]
-  Unexpected allocation detected for operator<=> (y)
-  [int]
-  operator== returned false
-  Obtained : 6
-  Predicted: 0
+[sequoia::testing::orderable_regular_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
 =======================================
 

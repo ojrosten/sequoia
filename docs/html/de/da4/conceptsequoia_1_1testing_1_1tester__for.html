@@ -77,11 +77,10 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <h2 class="groupheader">Concept definition</h2>
-<div class="fragment"><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class </span>CheckType, <a class="code hl_enumeration" href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> Mode, <span class="keyword">class </span>T, <span class="keyword">class</span>... Args&gt;</div>
+<div class="fragment"><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class </span>CheckType, test_mode Mode, <span class="keyword">class </span>T, <span class="keyword">class</span>... Args&gt;</div>
 <div class="line"><span class="keyword">concept </span><a class="code hl_concept" href="../../de/da4/conceptsequoia_1_1testing_1_1tester__for.html">sequoia::testing::tester_for</a> =  <span class="keyword">requires</span>(test_logger&lt;Mode&gt;&amp; logger, Args&amp;&amp;... args) {</div>
 <div class="line">    value_tester&lt;T&gt;::test(std::declval&lt;CheckType&gt;(), logger, std::forward&lt;Args&gt;(args)...);</div>
 <div class="line">  }</div>
-<div class="ttc" id="aTestLogger_8hpp_html_ae4e97c9d45a89647799f0d308ba6d244"><div class="ttname"><a href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">sequoia::testing::test_mode</a></div><div class="ttdeci">test_mode</div><div class="ttdoc">Specifies whether tests are run as standard tests or in false postive/negative mode.</div><div class="ttdef"><b>Definition:</b> TestLogger.hpp:35</div></div>
 <div class="ttc" id="aconceptsequoia_1_1testing_1_1tester__for_html"><div class="ttname"><a href="../../de/da4/conceptsequoia_1_1testing_1_1tester__for.html">sequoia::testing::tester_for</a></div><div class="ttdef"><b>Definition:</b> FreeCheckers.hpp:183</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->

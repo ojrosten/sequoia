@@ -1,2 +1,2 @@
-False Positive Test
-False Positive Checks:                    40;  Failures:  0
+False Negative Test
+False Negative Checks:                    40;  Failures:  0

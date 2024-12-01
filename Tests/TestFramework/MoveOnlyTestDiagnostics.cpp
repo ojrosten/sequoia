@@ -13,17 +13,17 @@
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::filesystem::path move_only_false_positive_diagnostics::source_file() const
+  std::filesystem::path move_only_false_negative_diagnostics::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void move_only_false_positive_diagnostics::run_tests()
+  void move_only_false_negative_diagnostics::run_tests()
   {
     test_regular_semantics();
   }
 
-  void move_only_false_positive_diagnostics::test_regular_semantics()
+  void move_only_false_negative_diagnostics::test_regular_semantics()
   {
     check_semantics("Broken equality",   move_only_broken_equality{1},    move_only_broken_equality{2},    move_only_broken_equality{1},    move_only_broken_equality{2});
     check_semantics("Broken inequality", move_only_broken_inequality{1},  move_only_broken_inequality{2},  move_only_broken_inequality{1},  move_only_broken_inequality{2});
@@ -40,17 +40,17 @@ namespace sequoia::testing
 
 
   [[nodiscard]]
-  std::filesystem::path move_only_false_negative_diagnostics::source_file() const
+  std::filesystem::path move_only_false_positive_diagnostics::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void move_only_false_negative_diagnostics::run_tests()
+  void move_only_false_positive_diagnostics::run_tests()
   {
     test_regular_semantics();
   }
 
-  void move_only_false_negative_diagnostics::test_regular_semantics()
+  void move_only_false_positive_diagnostics::test_regular_semantics()
   {
     using beast = move_only_beast<int>;
     check_semantics("", beast{1}, beast{2}, beast{1}, beast{2});

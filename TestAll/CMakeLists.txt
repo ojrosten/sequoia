@@ -3,13 +3,13 @@ cmake_minimum_required(VERSION 3.20)
 project(SequoiaTestAll DESCRIPTION "The Sequoia Library plus all tests"
                        LANGUAGES CXX)
 
-include(../build_system/Utilities.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/../build_system/Utilities.cmake)
 
 sequoia_init()
 
 add_executable(TestAll TestMain.cpp)
 
-set(TestDir ../Tests)
+set(TestDir ${CMAKE_CURRENT_LIST_DIR}/../Tests)
 
 target_sources(TestAll PRIVATE
                ${TestDir}/Algorithms/AlgorithmsTest.cpp
@@ -113,14 +113,15 @@ target_sources(TestAll PRIVATE
                ${TestDir}/TestFramework/AllocationTesting/OrderableMoveOnlyAllocationTestDiagnostics.cpp
                ${TestDir}/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp
                ${TestDir}/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp
+               ${TestDir}/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnosticsBrokenSemantics.cpp
+               ${TestDir}/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnosticsBrokenValueSemantics.cpp
+               ${TestDir}/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnosticsInefficientOperations.cpp
                ${TestDir}/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp
-               ${TestDir}/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenSemantics.cpp
-               ${TestDir}/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsBrokenValueSemantics.cpp
-               ${TestDir}/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnosticsInefficientOperations.cpp
                ${TestDir}/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp
-               ${TestDir}/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsMixed.cpp
-               ${TestDir}/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnosticsThreeLevel.cpp
                ${TestDir}/TestFramework/AllocationTesting/ScopedAllocationTestFalsePositiveDiagnostics.cpp
+               ${TestDir}/TestFramework/AllocationTesting/ScopedAllocationTestFalsePositiveDiagnosticsMixed.cpp
+               ${TestDir}/TestFramework/AllocationTesting/ScopedAllocationTestFalsePositiveDiagnosticsThreeLevel.cpp
+               ${TestDir}/TestFramework/BasicTestInterfaceFreeTest.cpp
                ${TestDir}/TestFramework/ChronoFreeDiagnostics.cpp
                ${TestDir}/TestFramework/CommandsFreeTest.cpp
                ${TestDir}/TestFramework/ComplexFreeDiagnostics.cpp

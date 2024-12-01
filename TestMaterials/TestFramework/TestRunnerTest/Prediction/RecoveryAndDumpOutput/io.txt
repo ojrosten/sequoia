@@ -2,9 +2,9 @@
 Running tests, synchronously...
 
 Bar:
-[Execution Time: 8.9ms]
+[Execution Time: 1.79ms]
 	Free Test
-	[Execution Time: 8.9ms]
+	[Execution Time: 1.79ms]
 		Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 1]
 
 ******  Critical Failures:  1  ******
@@ -24,9 +24,9 @@ Bar:
 		=======================================
 
 Foo:
-[Execution Time: 5.77ms]
+[Execution Time: 1.78ms]
 	Unit Test
-	[Execution Time: 5.77ms]
+	[Execution Time: 1.78ms]
 		Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 0]
 
 ******  Critical Failures:  1  ******
@@ -38,7 +38,7 @@ Foo:
 		Exception thrown during last check
 		Last Recorded Message:
 
-		Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 40
+		Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 45
 		Throw during check
 
 		[sequoia::testing::(anonymous namespace)::foo]
@@ -47,14 +47,14 @@ Foo:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 19.8ms]
-[Execution Time: 14.7ms]
+[Total Run Time: 7.59ms]
+[Execution Time: 3.57ms]
 	Standard Top Level Checks:                 4;  Failures:  0  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
-	False Negative Checks:                     0;  Failures:  0
-	False Negative Performance Checks:         0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
 
 ******  Critical Failures:  2  ******
 

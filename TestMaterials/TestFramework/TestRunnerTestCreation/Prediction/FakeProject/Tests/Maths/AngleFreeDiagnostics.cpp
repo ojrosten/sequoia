@@ -10,15 +10,15 @@
 #include "AngleFreeDiagnostics.hpp"
 #include "fakeProject/Maths/Angle.hpp"
 
-namespace sequoia::testing
+namespace fakeProject::testing
 {
     [[nodiscard]]
-    std::filesystem::path angle_false_positive_free_diagnostics::source_file() const
+    std::filesystem::path angle_false_negative_free_diagnostics::source_file() const
     {
         return std::source_location::current().file_name();
     }
 
-    void angle_false_positive_free_diagnostics::run_tests()
+    void angle_false_negative_free_diagnostics::run_tests()
     {
         // e.g. check(equality, "Useful description", some_function(), 42);
     }
