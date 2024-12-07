@@ -334,7 +334,7 @@ namespace sequoia::testing
 
   void vec_test::test_masses()
   {
-    using mass_t = quantity<mass_space<float>, scalar_atlas<sets2::masses, units::kilogram_t, absolute_validator>>;
+    using mass_t = quantity<mass_space<float>, scalar_atlas<quantity_sets::masses, units::kilogram_t, absolute_validator>>;
     // Independent info:
     // set2s::masses
     // sets2::mass_differences, but this could be derived from masses

@@ -15,20 +15,18 @@ namespace sequoia::physics
 {
   using namespace maths;
 
-  template<class T>
-  struct difference_space
-  {
-  };
-
-
-  namespace sets2
+  namespace quantity_sets
   {
     struct masses
     {
       using topological_space_type = std::true_type;
     };
 
-    //struct mass_differences {};
+    template<class T>
+    struct differences
+    {
+      // using ??? = T;
+    };
   }
 
   namespace units
@@ -99,8 +97,8 @@ namespace sequoia::physics
   template<std::floating_point T>
   struct mass_displacement_space
   {
-    using set_type = difference_space<sets2::masses>;
-    using field_type = T;
+    using set_type          = quantity_sets::differences<quantity_sets::masses>;
+    using field_type        = T;
     using vector_space_type = mass_displacement_space;
     constexpr static std::size_t dimension{1};
   };
@@ -108,7 +106,7 @@ namespace sequoia::physics
   template<std::floating_point T>
   struct mass_space
   {
-    using set_type = sets2::masses;
+    using set_type          = quantity_sets::masses;
     using vector_space_type = mass_displacement_space<T>;
   };
 
@@ -136,8 +134,8 @@ namespace sequoia::physics
   template<atlas A, class S>
   inline constexpr bool atlas_for{std::is_same_v<typename A::topological_space_type, S>};
 
-  static_assert(atlas<scalar_atlas<sets2::masses, units::kilogram_t, absolute_validator>>);
-  static_assert(atlas_for<scalar_atlas<sets2::masses, units::kilogram_t, absolute_validator>, sets2::masses>);
+  static_assert(atlas<scalar_atlas<quantity_sets::masses, units::kilogram_t, absolute_validator>>);
+  static_assert(atlas_for<scalar_atlas<quantity_sets::masses, units::kilogram_t, absolute_validator>, quantity_sets::masses>);
 
   template<class T>
   concept quantity_space = requires {
@@ -160,22 +158,22 @@ namespace sequoia::physics
   using to_default_basis_t = typename to_default_basis<QuantitySpace, Atlas>::type;
 
 
-  //template<quantity_space QuantitySpace, class Unit, class Validator>
+  //template<quantity_space QuantitySpace, class Unit>
   template<quantity_space QuantitySpace, atlas Atlas, basis Basis = to_default_basis_t<QuantitySpace, Atlas>>
     requires  atlas_for<Atlas, typename QuantitySpace::set_type>
-  && basis_for<Basis, typename QuantitySpace::vector_space_type>
-    && has_unit_type_v<Basis>
-    && std::is_same_v<typename Atlas::unit_type, typename Basis::unit_type> // this could be relaxed to allow e.g. m + cm
+           && basis_for<Basis, typename QuantitySpace::vector_space_type>
+           && has_unit_type_v<Basis>
+           && std::is_same_v<typename Atlas::unit_type, typename Basis::unit_type> // this could be relaxed to allow e.g. m + cm
     class quantity
   {
   public:
-    using quantity_space_type = QuantitySpace;
+    using quantity_space_type     = QuantitySpace;
     using displacement_space_type = typename QuantitySpace::vector_space_type;
-    using atlas_type = Atlas;
-    using validator_type = typename Atlas::validator_type;
-    using unit_type = typename Atlas::unit_type;
-    using field_type = typename displacement_space_type::field_type;
-    using value_type = field_type;
+    using atlas_type              = Atlas;
+    using validator_type          = typename Atlas::validator_type;
+    using unit_type               = typename Atlas::unit_type;
+    using field_type              = typename displacement_space_type::field_type;
+    using value_type              = field_type;
 
     quantity(value_type val, unit_type) : m_Value{m_Atlas.validate(val)} {}
 
