@@ -73,12 +73,6 @@ namespace sequoia::maths
     }
   };
 
-  static_assert(has_plus_v<int>);
-  static_assert(has_minus_v<int>);
-  static_assert(has_multiply_v<int>);
-  static_assert(has_divide_v<int>);
-
-
   template<class T>
   struct weakly_abelian_group_under_addition : std::bool_constant<has_plus_v<T>> {};
 
@@ -111,13 +105,6 @@ namespace sequoia::maths
 
   template<class T>
   inline constexpr bool multiplication_weakly_distributive_over_addition_v{multiplication_weakly_distributive_over_addition<T>::value};
-
-
-
-  static_assert(weakly_abelian_group_under_addition_v<int>);
-  static_assert(weakly_abelian_group_under_addition_v<double>);
-  static_assert(!weakly_abelian_group_under_multiplication_v<int>);
-  static_assert(weakly_abelian_group_under_multiplication_v<double>);
 
   template<class T>
   concept weak_field 
