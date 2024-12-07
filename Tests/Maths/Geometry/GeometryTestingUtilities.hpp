@@ -38,7 +38,7 @@ namespace sequoia::testing
     }
   };
 
-  template<class Set, maths::field Field, std::size_t D>
+  template<class Set, maths::weak_field Field, std::size_t D>
   struct my_vec_space
   {
     using set_type          = Set;
@@ -63,14 +63,14 @@ namespace sequoia::testing
     }
   };
 
-  template<class Set, maths::field Field, std::size_t D>
+  template<class Set, maths::weak_field Field, std::size_t D>
   struct my_affine_space
   {
     using set_type          = Set;
     using vector_space_type = my_vec_space<Set, Field, D>;
   };
 
-  template<class Set, maths::field Field, std::size_t D>
+  template<class Set, maths::weak_field Field, std::size_t D>
   struct canonical_basis
   {
     using vector_space_type = my_vec_space<Set, Field, D>;

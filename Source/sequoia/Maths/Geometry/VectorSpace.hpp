@@ -42,18 +42,93 @@ namespace sequoia::maths
   }
 
   template<class T>
-  concept field = std::regular<T> &&
+  inline constexpr bool has_plus_v{
     requires(T& t) {
-      { t += t } -> std::convertible_to<T>;
-      { t -= t } -> std::convertible_to<T>;
-      { t *= t } -> std::convertible_to<T>;
-      { t /= t } -> std::convertible_to<T>;
-
-      { t + t } -> std::convertible_to<T>;
-      { t - t } -> std::convertible_to<T>;
-      { t * t } -> std::convertible_to<T>;
-      { t / t } -> std::convertible_to<T>;
+      { t += t } -> std::same_as<T&>;
+      { t + t }  -> std::same_as<T>;
+    }
   };
+
+  template<class T>
+  inline constexpr bool has_minus_v{
+    requires(T & t) {
+      { t -= t } -> std::same_as<T&>;
+      { t - t }  -> std::same_as<T>;
+    }
+  };
+
+  template<class T>
+  inline constexpr bool has_multiply_v{
+    requires(T & t) {
+      { t *= t } -> std::same_as<T&>;
+      { t * t }  -> std::same_as<T>;
+    }
+  };
+
+  template<class T>
+  inline constexpr bool has_divide_v{
+    requires(T & t) {
+      { t /= t } -> std::same_as<T&>;
+      { t / t }  -> std::same_as<T>;
+    }
+  };
+
+  static_assert(has_plus_v<int>);
+  static_assert(has_minus_v<int>);
+  static_assert(has_multiply_v<int>);
+  static_assert(has_divide_v<int>);
+
+
+  template<class T>
+  struct weakly_abelian_group_under_addition : std::bool_constant<has_plus_v<T>> {};
+
+  template<class T>
+  using weakly_abelian_group_under_addition_t = typename weakly_abelian_group_under_addition<T>::type;
+
+  template<class T>
+  inline constexpr bool weakly_abelian_group_under_addition_v{weakly_abelian_group_under_addition<T>::value};
+
+  template<class T>
+  struct weakly_abelian_group_under_multiplication : std::false_type {};
+
+  template<class T>
+  using weakly_abelian_group_under_multiplication_t = typename weakly_abelian_group_under_multiplication<T>::type;
+
+  template<class T>
+  inline constexpr bool weakly_abelian_group_under_multiplication_v{weakly_abelian_group_under_multiplication<T>::value};
+
+  template<std::floating_point T>
+  struct weakly_abelian_group_under_multiplication<T> : std::true_type {};
+
+  template<std::floating_point T>
+  struct weakly_abelian_group_under_multiplication<std::complex<T>> : std::true_type {};
+
+  template<class T>
+  struct multiplication_weakly_distributive_over_addition : std::true_type {};
+
+  template<class T>
+  using multiplication_weakly_distributive_over_addition_t = typename multiplication_weakly_distributive_over_addition<T>::type;
+
+  template<class T>
+  inline constexpr bool multiplication_weakly_distributive_over_addition_v{multiplication_weakly_distributive_over_addition<T>::value};
+
+
+
+  static_assert(weakly_abelian_group_under_addition_v<int>);
+  static_assert(weakly_abelian_group_under_addition_v<double>);
+  static_assert(!weakly_abelian_group_under_multiplication_v<int>);
+  static_assert(weakly_abelian_group_under_multiplication_v<double>);
+
+  template<class T>
+  concept weak_field 
+    =    std::regular<T>
+      && weakly_abelian_group_under_addition_v<T>
+      && weakly_abelian_group_under_multiplication_v<T>
+      && multiplication_weakly_distributive_over_addition_v<T>
+      && has_plus_v<T>
+      && has_minus_v<T>
+      && has_multiply_v<T>
+      && has_divide_v<T>;
 
   template<class T>
   inline constexpr bool has_dimension{
@@ -64,7 +139,7 @@ namespace sequoia::maths
   inline constexpr bool has_field_type{
     requires { 
       typename T::field_type;
-      requires field<typename T::field_type>;
+      requires weak_field<typename T::field_type>;
     }
   };
 
@@ -84,7 +159,7 @@ namespace sequoia::maths
   template<class B>
   concept basis = requires { 
     typename B::vector_space_type;
-    requires vector_space< typename B::vector_space_type>;
+    requires vector_space<typename B::vector_space_type>;
   };
 
   template<basis B, vector_space V>

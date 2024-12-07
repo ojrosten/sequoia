@@ -167,7 +167,7 @@ namespace sequoia::testing
       requires  atlas_for<Atlas, typename QuantitySpace::set_type> 
              && basis_for<Basis, typename QuantitySpace::vector_space_type>
              && has_unit_type_v<Basis>
-             && std::is_same_v<typename Atlas::unit_type, typename Basis::unit_type> // this could be relazxed to allow e.g. m + cm
+             && std::is_same_v<typename Atlas::unit_type, typename Basis::unit_type> // this could be relaxed to allow e.g. m + cm
     class quantity
     {
     public:
@@ -421,7 +421,7 @@ namespace sequoia::testing
     test_masses();
   }
 
-  template<class Set, maths::field Field>
+  template<class Set, maths::weak_field Field>
   void vec_test::test_vec_1_orderable()
   {
     using vec_t = vector_coordinates<my_vec_space<Set, Field, 1>, canonical_basis<Set, Field, 1>>;
@@ -440,7 +440,7 @@ namespace sequoia::testing
     transition_checker<vec_t>::check(report(""), g, checker);
   }
 
-  template<class Set, maths::field Field>
+  template<class Set, maths::weak_field Field>
   void vec_test::test_vec_1_unorderable()
   {
     using vec_t = vector_coordinates<my_vec_space<Set, Field, 1>, canonical_basis<Set, Field, 1>>;
@@ -458,7 +458,7 @@ namespace sequoia::testing
     transition_checker<vec_t>::check(report(""), g, checker);
   }
 
-  template<class Set, maths::field Field>
+  template<class Set, maths::weak_field Field>
   void vec_test::test_vec_2()
   {
     using vec_t = vector_coordinates<my_vec_space<Set, Field, 2>, canonical_basis<Set, Field, 2>>;

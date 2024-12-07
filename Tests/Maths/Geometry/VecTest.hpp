@@ -23,13 +23,13 @@ namespace sequoia::testing
 
     void run_tests();
 
-    template<class Set, maths::field Field>
+    template<class Set, maths::weak_field Field>
     void test_vec_1_orderable();
 
-    template<class Set, maths::field Field>
+    template<class Set, maths::weak_field Field>
     void test_vec_1_unorderable();
 
-    template<class Set, maths::field Field>
+    template<class Set, maths::weak_field Field>
     void test_vec_2();
 
     template<class Set, std::floating_point Field>

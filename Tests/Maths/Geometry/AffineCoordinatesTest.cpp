@@ -31,7 +31,7 @@ namespace sequoia::testing
     test_affine_1_unorderable<std::complex<float>, std::complex<float>>();
   }
 
-  template<class Element, maths::field Field>
+  template<class Element, maths::weak_field Field>
   void affine_coordinates_test::test_affine_1_orderable()
   {
     using affine_t = affine_coordinates<my_affine_space<Element, Field, 1>, canonical_basis<Element, Field, 1>, alice>;
@@ -48,7 +48,7 @@ namespace sequoia::testing
     transition_checker<affine_t>::check(report(""), g, checker);
   }
 
-  template<class Element, maths::field Field>
+  template<class Element, maths::weak_field Field>
   void affine_coordinates_test::test_affine_1_unorderable()
   {
     using affine_t = affine_coordinates<my_affine_space<Element, Field, 1>, canonical_basis<Element, Field, 1>, alice>;
@@ -64,7 +64,7 @@ namespace sequoia::testing
     transition_checker<affine_t>::check(report(""), g, checker);
   }
 
-  template<class Element, maths::field Field>
+  template<class Element, maths::weak_field Field>
   void affine_coordinates_test::test_affine_2()
   {
     using affine_t = affine_coordinates<my_affine_space<Element, Field, 2>, canonical_basis<Element, Field, 2>, alice>;
