@@ -19,7 +19,7 @@ namespace sequoia::physics
   {
     template<std::floating_point T>
     [[nodiscard]]
-    T operator()(const T val) const
+    constexpr T operator()(const T val) const
     {
       if(val < T{}) throw std::domain_error{std::format("Value {} less than zero", val)};
 
@@ -62,24 +62,23 @@ namespace sequoia::physics
     using field_type              = typename displacement_space_type::field_type;
     using value_type              = field_type;
 
-    quantity(value_type val, unit_type) : m_Value{m_Validator(val)} {}
+    constexpr quantity(value_type val, unit_type) : m_Value{m_Validator(val)} {}
 
-    quantity(unchecked_t, value_type val, unit_type)
+    constexpr quantity(unchecked_t, value_type val, unit_type)
       : m_Value{val}
-    {
-    }
+    {}
 
     [[nodiscard]]
-    const value_type& value() const noexcept { return m_Value; }
+    constexpr const value_type& value() const noexcept { return m_Value; }
 
     [[nodiscard]]
-    const validator_type& validator() const noexcept { return m_Validator; }
+    constexpr const validator_type& validator() const noexcept { return m_Validator; }
 
     [[nodiscard]]
-    friend bool operator==(const quantity& lhs, const quantity& rhs) noexcept { return lhs.value() == rhs.value(); }
+    constexpr friend bool operator==(const quantity& lhs, const quantity& rhs) noexcept { return lhs.value() == rhs.value(); }
 
     [[nodiscard]]
-    friend auto operator<=>(const quantity& lhs, const quantity& rhs) noexcept { return lhs.value() <=> rhs.value(); }
+    constexpr friend auto operator<=>(const quantity& lhs, const quantity& rhs) noexcept { return lhs.value() <=> rhs.value(); }
   private:
     SEQUOIA_NO_UNIQUE_ADDRESS validator_type m_Validator;
     value_type m_Value;

@@ -32,7 +32,8 @@ namespace sequoia::testing
 
     check_exception_thrown<std::domain_error>("Negative mass", [](){ return mass_t{-1.0, units::kilogram}; });
 
-    mass_t m{1.0, units::kilogram}, m2{2.0, units::kilogram};
+    mass_t m{1.0, units::kilogram};
+    constexpr mass_t m2{2.0, units::kilogram};
     check(equivalence, "", m, 1.0f);
     check(equivalence, "", m2, 2.0f);
 
