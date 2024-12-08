@@ -26,7 +26,7 @@ namespace sequoia::testing
 
   void quantity_test::test_masses()
   {
-    static_assert(quantity_space<mass_space<float>>);
+    static_assert(convex_space<mass_space<float>>);
 
     using mass_t = quantity<mass_space<float>, units::kilogram_t>;
 

@@ -14,7 +14,7 @@
 
 namespace sequoia::testing
 {
-  template<physics::quantity_space QuantitySpace, physics::quantity_unit Unit>
+  template<maths::convex_space QuantitySpace, physics::quantity_unit Unit>
   struct value_tester<physics::quantity<QuantitySpace, Unit>>
   {
     using type       = physics::quantity<QuantitySpace, Unit>;

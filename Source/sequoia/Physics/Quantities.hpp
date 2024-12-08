@@ -11,6 +11,8 @@
 
 #include "sequoia/Maths/Geometry/VectorSpace.hpp"
 
+#include <functional>
+
 namespace sequoia::physics
 {
   using namespace maths;
@@ -27,6 +29,21 @@ namespace sequoia::physics
     }
   };
 
+  template<class T>
+  inline constexpr bool is_identity_validator_v{std::is_same_v<T, std::identity>};
+
+  template<class T>
+  struct defines_absolute_scale : std::false_type {};
+
+  template<class T>
+  using defines_absolute_scale_t = typename defines_absolute_scale<T>::type;
+
+  template<class T>
+  inline constexpr bool defines_absolute_scale_v{defines_absolute_scale<T>::value};
+
+  template<>
+  struct defines_absolute_scale<absolute_validator> : std::true_type {};
+
   struct coordinate_basis_type{};
 
   template<class VectorSpace, class Unit, std::floating_point T>
@@ -38,20 +55,13 @@ namespace sequoia::physics
   };
 
   template<class T>
-  concept quantity_space = requires {
-    typename T::set_type;
-    typename T::vector_space_type;
-    requires vector_space<typename T::vector_space_type>;
-  };
-
-  template<class T>
   concept quantity_unit = requires {
     typename T::validator_type;
   };
 
   struct unchecked_t {};
 
-  template<quantity_space QuantitySpace, quantity_unit Unit>
+  template<convex_space QuantitySpace, quantity_unit Unit>
   class quantity
   {
   public:
@@ -61,6 +71,10 @@ namespace sequoia::physics
     using validator_type          = typename Unit::validator_type;
     using field_type              = typename displacement_space_type::field_type;
     using value_type              = field_type;
+
+    constexpr static auto dimension{displacement_space_type::dimension};
+
+    constexpr static bool is_absolute{(dimension == 1) && defines_absolute_scale_v<validator_type>};
 
     constexpr quantity(value_type val, unit_type) : m_Value{m_Validator(val)} {}
 

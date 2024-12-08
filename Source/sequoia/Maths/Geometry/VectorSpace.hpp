@@ -141,7 +141,7 @@ namespace sequoia::maths
   };
 
   template<class T>
-  concept vector_space = has_set_type<T> && has_field_type<T> && has_dimension<T>;
+  concept vector_space = has_set_type<T> && has_field_type<T> && has_dimension<T>; // TO DO: refer to vector axioms?
 
   template<class B>
   concept basis = requires { 
@@ -153,11 +153,14 @@ namespace sequoia::maths
   inline constexpr bool basis_for{std::is_same_v<typename B::vector_space_type, V>};
 
   template<class T>
-  concept affine_space = requires {
+  concept convex_space = requires {
     typename T::set_type;
     typename T::vector_space_type;
     requires vector_space<typename T::vector_space_type>;
   };
+
+  template<class T>
+  concept affine_space = convex_space<T>; //TO DO: more than a semantic difference?
 
   template<affine_space AffineSpace, basis Basis, class Origin>
     requires basis_for<Basis, typename AffineSpace::vector_space_type>
@@ -319,7 +322,8 @@ namespace sequoia::maths
     friend constexpr bool operator==(const affine_coordinates&, const affine_coordinates&) noexcept = default;
 
     [[nodiscard]]
-    friend constexpr auto operator<=>(const affine_coordinates& lhs, const affine_coordinates& rhs) noexcept requires (D == 1) && std::totally_ordered<value_type>
+    friend constexpr auto operator<=>(const affine_coordinates& lhs, const affine_coordinates& rhs) noexcept
+      requires (D == 1) && std::totally_ordered<value_type>
     {
       return lhs.value() <=> rhs.value();
     }
