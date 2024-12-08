@@ -9,11 +9,11 @@
 
 /*! \file */
 
-#include "GeometryTestingUtilities.hpp"
+#include "QuantityTestingUtilities.hpp"
 
 namespace sequoia::testing
 {
-  class vec_test final : public regular_test
+  class quantity_test final : public regular_test
   {
   public:
     using regular_test::regular_test;
@@ -23,20 +23,6 @@ namespace sequoia::testing
 
     void run_tests();
 
-    template<class Set, maths::weak_field Field>
-    void test_vec_1_orderable();
-
-    template<class Set, maths::weak_field Field>
-    void test_vec_1_unorderable();
-
-    template<class Set, maths::weak_field Field>
-    void test_vec_2();
-
-    template<class Set, std::floating_point Field>
-    void test_real_vec_1_inner_prod();
-
-    template<class Set, class Field>
-      requires is_complex_v<Field>
-    void test_complex_vec_1_inner_prod();
+    void test_masses();
   };
 }

@@ -1,0 +1,28 @@
+Tests/Physics/QuantityTestingDiagnostics.cpp, Line 27
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::physics::quantity<sequoia::physics::mass_space<float>, sequoia::physics::units::kilogram_t> >]
+Checking for equivalence with:
+[float]
+
+  Wrapped Value
+  [float]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/Physics/QuantityTestingDiagnostics.cpp, Line 28
+
+[sequoia::physics::quantity<sequoia::physics::mass_space<float>, sequoia::physics::units::kilogram_t>]
+operator== returned false
+
+  Wrapped Value
+  [float]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
+
+=======================================
+

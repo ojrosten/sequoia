@@ -9,8 +9,6 @@
 
 #include "VecTest.hpp"
 
-#include "sequoia/Physics/Quantities.hpp"  // TO DO: relocate this
-
 #include "sequoia/TestFramework/StateTransitionUtilities.hpp"
 
 #include <complex>
@@ -18,7 +16,6 @@
 namespace sequoia::testing
 {
   using namespace maths;
-  using namespace physics; // TO DO: move to a different tests
 
   // TO DO: move these
   static_assert(has_plus_v<int>);
@@ -248,8 +245,6 @@ namespace sequoia::testing
 
     test_real_vec_1_inner_prod<sets::R<1, float>, float>();
     test_complex_vec_1_inner_prod<sets::C<1, double>, std::complex<double>>();
-
-    test_masses();
   }
 
   template<class Set, maths::weak_field Field>
@@ -330,14 +325,5 @@ namespace sequoia::testing
 
     check(equality, "", inner_product(vec_t{Field(1, 1)}, vec_t{Field(1, 1)}), Field{2});
     check(equality, "", inner_product(vec_t{Field(1, -1)}, vec_t{Field(1, 1)}), Field{0, 2});
-  }
-
-  void vec_test::test_masses()
-  {
-    static_assert(quantity_space<mass_space<float>>);
-
-    using mass_t = quantity<mass_space<float>, units::kilogram_t>;
-
-    mass_t m{2.0, units::kilogram};
   }
 }
