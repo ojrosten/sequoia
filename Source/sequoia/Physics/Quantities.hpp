@@ -49,12 +49,14 @@ namespace sequoia::physics
   };
 
   // Maybe drop topological space and trade atlas for coordinate system?
+  // But mamybe not... there needs to be some meaningful distinction between
+  // continuous and discrete quantities.
   template<class TopologicalSpace, class Unit, class Validator>
   struct scalar_atlas
   {
     using topological_space_type = TopologicalSpace;
-    using unit_type = Unit;
-    using validator_type = Validator;
+    using unit_type              = Unit;
+    using validator_type         = Validator;
     constexpr static std::size_t dimension{1};
 
     template<std::floating_point T>
@@ -88,8 +90,8 @@ namespace sequoia::physics
   template<class VectorSpace, class Unit, std::floating_point T>
   struct quantity_displacement_basis
   {
-    using vector_space_type = VectorSpace;
-    using unit_type = Unit;
+    using vector_space_type    = VectorSpace;
+    using unit_type            = Unit;
     using basis_alignment_type = coordinate_basis_type;
   };
 
@@ -134,14 +136,11 @@ namespace sequoia::physics
   template<atlas A, class S>
   inline constexpr bool atlas_for{std::is_same_v<typename A::topological_space_type, S>};
 
-  static_assert(atlas<scalar_atlas<quantity_sets::masses, units::kilogram_t, absolute_validator>>);
-  static_assert(atlas_for<scalar_atlas<quantity_sets::masses, units::kilogram_t, absolute_validator>, quantity_sets::masses>);
-
   template<class T>
   concept quantity_space = requires {
     typename T::set_type;
     typename T::vector_space_type;
-      requires vector_space<typename T::vector_space_type>;
+    requires vector_space<typename T::vector_space_type>;
   };
 
   static_assert(quantity_space<mass_space<float>>);
@@ -164,7 +163,7 @@ namespace sequoia::physics
            && basis_for<Basis, typename QuantitySpace::vector_space_type>
            && has_unit_type_v<Basis>
            && std::is_same_v<typename Atlas::unit_type, typename Basis::unit_type> // this could be relaxed to allow e.g. m + cm
-    class quantity
+  class quantity
   {
   public:
     using quantity_space_type     = QuantitySpace;

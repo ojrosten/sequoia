@@ -340,7 +340,12 @@ namespace sequoia::testing
     // sets2::mass_differences, but this could be derived from masses
     // unit
     // validator
+    // but maybe the validator should be part of the unit type...
 
     mass_t m{2.0, units::kilogram};
+
+    static_assert(atlas<scalar_atlas<quantity_sets::masses, units::kilogram_t, absolute_validator>>);
+    static_assert(atlas_for<scalar_atlas<quantity_sets::masses, units::kilogram_t, absolute_validator>, quantity_sets::masses>);
+
   }
 }
