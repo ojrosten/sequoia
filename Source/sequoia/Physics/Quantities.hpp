@@ -72,30 +72,37 @@ namespace sequoia::physics
     using field_type              = typename displacement_space_type::field_type;
     using value_type              = field_type;
 
-    constexpr static auto dimension{displacement_space_type::dimension};
+    constexpr static std::size_t dimension{displacement_space_type::dimension};
+    constexpr static std::size_t D{dimension};
 
     constexpr static bool is_absolute{(dimension == 1) && defines_absolute_scale_v<validator_type>};
 
-    constexpr quantity(value_type val, unit_type) : m_Value{m_Validator(val)} {}
+    constexpr quantity(value_type val, unit_type) requires (D==1)
+      : m_Values{m_Validator(val)}
+    {}
 
-    constexpr quantity(unchecked_t, value_type val, unit_type)
-      : m_Value{val}
+    constexpr quantity(unchecked_t, value_type val, unit_type) requires (D==1)
+      : m_Values{val}
     {}
 
     [[nodiscard]]
-    constexpr const value_type& value() const noexcept { return m_Value; }
+    constexpr const value_type& value() const noexcept requires (D==1) { return m_Values[0]; }
 
     [[nodiscard]]
     constexpr const validator_type& validator() const noexcept { return m_Validator; }
 
     [[nodiscard]]
-    constexpr friend bool operator==(const quantity& lhs, const quantity& rhs) noexcept { return lhs.value() == rhs.value(); }
+    constexpr friend bool operator==(const quantity& lhs, const quantity& rhs) noexcept { return lhs.m_Values == rhs.m_Values; }
 
     [[nodiscard]]
-    constexpr friend auto operator<=>(const quantity& lhs, const quantity& rhs) noexcept { return lhs.value() <=> rhs.value(); }
+    constexpr friend auto operator<=>(const quantity& lhs, const quantity& rhs) noexcept
+      requires (D == 1) && std::totally_ordered<value_type>
+    {
+      return lhs.value() <=> rhs.value();
+    }
   private:
     SEQUOIA_NO_UNIQUE_ADDRESS validator_type m_Validator;
-    value_type m_Value;
+    std::array<value_type, D> m_Values{};
   };
 
 
