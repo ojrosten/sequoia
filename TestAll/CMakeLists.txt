@@ -103,6 +103,8 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Parsing/CommandLineArgumentsDiagnostics.cpp
                ${TestDir}/Parsing/CommandLineArgumentsTest.cpp
                ${TestDir}/Parsing/CommandLineArgumentsTestingUtilities.cpp
+               ${TestDir}/Physics/QuantityTest.cpp
+               ${TestDir}/Physics/QuantityTestingDiagnostics.cpp
                ${TestDir}/Runtime/FactoryTest.cpp
                ${TestDir}/Runtime/FactoryTestingDiagnostics.cpp
                ${TestDir}/Runtime/ShellCommandsTest.cpp

@@ -389,6 +389,12 @@ int main(int argc, char** argv)
       }
     );
 
+    runner.add_test_suite(
+      "Quantity",
+      quantity_false_negative_test{"False Negative Test"},
+      quantity_test{"Unit Test"}
+    );
+
     runner.execute(timer_resolution{1ms});
   }
   catch(const std::exception& e)
