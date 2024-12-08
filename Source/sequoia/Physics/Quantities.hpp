@@ -69,7 +69,6 @@ namespace sequoia::physics
     {
     }
 
-
     [[nodiscard]]
     const value_type& value() const noexcept { return m_Value; }
 

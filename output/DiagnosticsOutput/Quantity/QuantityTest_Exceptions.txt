@@ -1,0 +1,9 @@
+Tests/Physics/QuantityTest.cpp, Line 33
+Negative mass
+
+Expected Exception Type:
+[std::domain_error]
+Value -1 less than zero
+
+=======================================
+
