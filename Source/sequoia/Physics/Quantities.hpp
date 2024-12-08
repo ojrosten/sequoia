@@ -106,7 +106,6 @@ namespace sequoia::physics
   {
     using set_type          = quantity_sets::differences<quantity_sets::masses>;
     using field_type        = T;
-    using vector_space_type = mass_displacement_space;
     constexpr static std::size_t dimension{1};
   };
 
