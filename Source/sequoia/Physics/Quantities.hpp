@@ -29,13 +29,6 @@ namespace sequoia::physics
     };
   }
 
-  namespace units
-  {
-    struct kilogram_t{};
-
-    inline constexpr kilogram_t kilogram{};
-  }
-
   struct absolute_validator
   {
     template<std::floating_point T>
@@ -47,6 +40,17 @@ namespace sequoia::physics
       return val;
     }
   };
+
+  namespace units
+  {
+    struct kilogram_t
+    {
+      using validator_type = absolute_validator;
+    };
+
+    inline constexpr kilogram_t kilogram{};
+  }
+
 
   // Maybe drop topological space and trade atlas for coordinate system?
   // But mamybe not... there needs to be some meaningful distinction between
@@ -157,24 +161,24 @@ namespace sequoia::physics
   using to_default_basis_t = typename to_default_basis<QuantitySpace, Atlas>::type;
 
 
-  //template<quantity_space QuantitySpace, class Unit>
-  template<quantity_space QuantitySpace, atlas Atlas, basis Basis = to_default_basis_t<QuantitySpace, Atlas>>
-    requires  atlas_for<Atlas, typename QuantitySpace::set_type>
-           && basis_for<Basis, typename QuantitySpace::vector_space_type>
-           && has_unit_type_v<Basis>
-           && std::is_same_v<typename Atlas::unit_type, typename Basis::unit_type> // this could be relaxed to allow e.g. m + cm
+  template<quantity_space QuantitySpace, class Unit>
+  //template<quantity_space QuantitySpace, atlas Atlas, basis Basis = to_default_basis_t<QuantitySpace, Atlas>>
+  //  requires  atlas_for<Atlas, typename QuantitySpace::set_type>
+  //         && basis_for<Basis, typename QuantitySpace::vector_space_type>
+  //         && has_unit_type_v<Basis>
+  //         && std::is_same_v<typename Atlas::unit_type, typename Basis::unit_type> // this could be relaxed to allow e.g. m + cm
   class quantity
   {
   public:
     using quantity_space_type     = QuantitySpace;
+    using unit_type               = Unit;
     using displacement_space_type = typename QuantitySpace::vector_space_type;
-    using atlas_type              = Atlas;
-    using validator_type          = typename Atlas::validator_type;
-    using unit_type               = typename Atlas::unit_type;
+    //using atlas_type              = Atlas;
+    using validator_type          = typename Unit::validator_type;
     using field_type              = typename displacement_space_type::field_type;
     using value_type              = field_type;
 
-    quantity(value_type val, unit_type) : m_Value{m_Atlas.validate(val)} {}
+    quantity(value_type val, unit_type) : m_Value{m_Validator(val)} {}
 
     quantity(unchecked_t, value_type val, unit_type)
       : m_Value{val}
@@ -186,7 +190,7 @@ namespace sequoia::physics
     const value_type& value() const noexcept { return m_Value; }
 
     [[nodiscard]]
-    const atlas_type& atlas() const noexcept { return m_Atlas; }
+    const validator_type& validator() const noexcept { return m_Validator; }
 
     [[nodiscard]]
     friend bool operator==(const quantity& lhs, const quantity& rhs) noexcept { return lhs.value() == rhs.value(); }
@@ -194,7 +198,7 @@ namespace sequoia::physics
     [[nodiscard]]
     friend auto operator<=>(const quantity& lhs, const quantity& rhs) noexcept { return lhs.value() <=> rhs.value(); }
   private:
-    SEQUOIA_NO_UNIQUE_ADDRESS atlas_type m_Atlas;
+    SEQUOIA_NO_UNIQUE_ADDRESS validator_type m_Validator;
     value_type m_Value;
   };
 }
