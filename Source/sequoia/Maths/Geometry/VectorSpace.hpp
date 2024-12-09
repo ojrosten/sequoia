@@ -23,13 +23,6 @@
 
 namespace sequoia::maths
 {
-  template<class V, class T>
-  inline constexpr bool is_validator_for{
-    requires (V & v, const T & t) {
-      { v(t) } -> std::convertible_to<T>;
-    }
-  };
-
   template<class T, std::size_t D, class Fn = std::identity>
     requires std::is_invocable_r_v<T, Fn, T>
   [[nodiscard]]
@@ -159,10 +152,25 @@ namespace sequoia::maths
   };
 
   template<convex_space ConvexSpace>
-  using field_type_t = typename ConvexSpace::vector_space_type::field_type;
+  using space_value_type = typename ConvexSpace::vector_space_type::field_type;
+
+  template<convex_space ConvexSpace>
+  inline constexpr std::size_t space_dimension{ConvexSpace::vector_space_type::dimension};
 
   template<class T>
   concept affine_space = convex_space<T>; //TO DO: more than a semantic difference?
+
+  template<class V, convex_space ConvexSpace>
+  inline constexpr bool is_validator_for{
+       std::default_initializable<V>
+    && std::constructible_from<V, V>
+    && (    requires (V& v, std::array<const space_value_type<ConvexSpace>, space_dimension<ConvexSpace>> values) {
+              { v(values) } -> std::convertible_to<decltype(values)>;
+            }
+         || (   (space_dimension<ConvexSpace> == 1)
+             && requires(V & v, const space_value_type<ConvexSpace>& val) { { v(val) } -> std::convertible_to<decltype(val)>; })
+       )
+  };
 
   template<convex_space ConvexSpace, basis Basis, class Origin, class Validator>
     requires basis_for<Basis, typename ConvexSpace::vector_space_type>
