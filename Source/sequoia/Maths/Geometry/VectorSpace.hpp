@@ -162,66 +162,72 @@ namespace sequoia::maths
   template<class T>
   concept affine_space = convex_space<T>; //TO DO: more than a semantic difference?
 
-  template<affine_space AffineSpace, basis Basis, class Origin>
-    requires basis_for<Basis, typename AffineSpace::vector_space_type>
-  class affine_coordinates;
+  template<convex_space ConvexSpace, basis Basis, class Origin, class Validator>
+    requires basis_for<Basis, typename ConvexSpace::vector_space_type>
+  class coordinates;
 
   struct intrinsic_origin {};
 
-  template<vector_space VectorSpace, basis Basis>
-    requires basis_for<Basis, typename VectorSpace::vector_space_type>
-  using vector_coordinates = affine_coordinates<VectorSpace, Basis, intrinsic_origin>;
-
   template<affine_space AffineSpace, basis Basis, class Origin>
     requires basis_for<Basis, typename AffineSpace::vector_space_type>
-  class affine_coordinates
+  using affine_coordinates = coordinates<AffineSpace, Basis, Origin, std::identity>;
+
+  template<vector_space VectorSpace, basis Basis>
+    requires basis_for<Basis, typename VectorSpace::vector_space_type>
+  using vector_coordinates = coordinates<VectorSpace, Basis, intrinsic_origin, std::identity>;
+
+  template<convex_space ConvexSpace, basis Basis, class Origin, class Validator>
+    requires basis_for<Basis, typename ConvexSpace::vector_space_type>
+  class coordinates
   {
   public:
-    using affine_space_type = AffineSpace;
-    using set_type          = typename AffineSpace::set_type;
-    using vector_space_type = typename AffineSpace::vector_space_type;
+    using affine_space_type = ConvexSpace;
+    using set_type          = typename ConvexSpace::set_type;
+    using vector_space_type = typename ConvexSpace::vector_space_type;
     using basis_type        = Basis;
     using field_type        = typename vector_space_type::field_type;
     using value_type        = field_type;
 
-    constexpr static bool is_vector_space{vector_space<AffineSpace> && std::is_same_v<Origin, intrinsic_origin>};
+    constexpr static bool is_vector_space{vector_space<ConvexSpace> && std::is_same_v<Origin, intrinsic_origin>};
     constexpr static std::size_t dimension{vector_space_type::dimension};
     constexpr static std::size_t D{dimension};
 
-    constexpr affine_coordinates() noexcept = default;
+    constexpr coordinates() noexcept = default;
 
-    constexpr explicit affine_coordinates(std::span<const value_type, D> d) noexcept
+    constexpr explicit coordinates(std::span<const value_type, D> d) noexcept
       : m_Values{to_array(d)}
     {}
 
-    constexpr explicit affine_coordinates(std::span<value_type, D> d) noexcept
+    constexpr explicit coordinates(std::span<value_type, D> d) noexcept
       : m_Values{to_array(d)}
     {}
 
     template<class... Ts>
       requires (sizeof...(Ts) == D) && (is_initializable_v<value_type, Ts> && ...)
-    constexpr affine_coordinates(Ts... ts) noexcept
+    constexpr coordinates(Ts... ts) noexcept
       : m_Values{ts...}
     {}
 
-    constexpr affine_coordinates& operator+=(const vector_coordinates<vector_space_type, Basis>& v) noexcept {
+    constexpr coordinates& operator+=(const vector_coordinates<vector_space_type, Basis>& v) noexcept
+    {
       apply_to_each_element(m_Values, v.values(), [](value_type& lhs, value_type rhs){ lhs += rhs; });
       return *this;
     }
 
-    constexpr affine_coordinates& operator-=(const vector_coordinates<vector_space_type, Basis>& v) noexcept {
+    constexpr coordinates& operator-=(const vector_coordinates<vector_space_type, Basis>& v) noexcept
+    {
       apply_to_each_element(m_Values, v.values(), [](value_type& lhs, value_type rhs){ lhs -= rhs; });
       return *this;
     }
 
-    constexpr affine_coordinates& operator*=(value_type u) noexcept
+    constexpr coordinates& operator*=(value_type u) noexcept
       requires is_vector_space
     {
       std::ranges::for_each(m_Values, [u](value_type& x) { return x *= u; });
       return *this;
     }
 
-    constexpr affine_coordinates& operator/=(value_type u)
+    constexpr coordinates& operator/=(value_type u)
       requires is_vector_space
     {
       std::ranges::for_each(m_Values, [u](value_type& x) { return x /= u; });
@@ -229,31 +235,31 @@ namespace sequoia::maths
     }
 
     [[nodiscard]]
-    friend constexpr affine_coordinates operator+(affine_coordinates c, const vector_coordinates<vector_space_type, Basis>& v) noexcept { return c += v; }
+    friend constexpr coordinates operator+(coordinates c, const vector_coordinates<vector_space_type, Basis>& v) noexcept { return c += v; }
 
     [[nodiscard]]
-    friend constexpr affine_coordinates operator+(const vector_coordinates<vector_space_type, Basis>& v, affine_coordinates c) noexcept
+    friend constexpr coordinates operator+(const vector_coordinates<vector_space_type, Basis>& v, coordinates c) noexcept
       requires (!is_vector_space)
     {
       return c += v;
     }
 
     [[nodiscard]]
-    friend constexpr affine_coordinates operator-(affine_coordinates c, const vector_coordinates<vector_space_type, Basis>& v) noexcept
+    friend constexpr coordinates operator-(coordinates c, const vector_coordinates<vector_space_type, Basis>& v) noexcept
       requires (!is_vector_space)
     {
       return c -= v;
     }
 
     [[nodiscard]]
-    friend constexpr affine_coordinates operator-(const vector_coordinates<vector_space_type, Basis>& v, affine_coordinates c) noexcept
+    friend constexpr coordinates operator-(const vector_coordinates<vector_space_type, Basis>& v, coordinates c) noexcept
       requires (!is_vector_space)
     {
       return c -= v;
     }
 
     [[nodiscard]]
-    friend constexpr vector_coordinates<vector_space_type, Basis> operator-(const affine_coordinates& lhs, const affine_coordinates& rhs) noexcept
+    friend constexpr vector_coordinates<vector_space_type, Basis> operator-(const coordinates& lhs, const coordinates& rhs) noexcept
     {
       return[&] <std::size_t... Is>(std::index_sequence<Is...>) {
         return vector_coordinates<vector_space_type, Basis>{(lhs.values()[Is] - rhs.values()[Is])...};
@@ -261,33 +267,33 @@ namespace sequoia::maths
     }
 
     [[nodiscard]]
-    constexpr affine_coordinates operator+() const noexcept
+    constexpr coordinates operator+() const noexcept
     {
-      return affine_coordinates{values()};
+      return coordinates{values()};
     }
 
     [[nodiscard]]
-    constexpr affine_coordinates operator-() const noexcept
+    constexpr coordinates operator-() const noexcept
     {
-      return affine_coordinates{to_array(values(), [](value_type t) { return -t; })};
+      return coordinates{to_array(values(), [](value_type t) { return -t; })};
     }
 
     [[nodiscard]]
-    friend constexpr affine_coordinates operator*(affine_coordinates v, value_type u) noexcept
+    friend constexpr coordinates operator*(coordinates v, value_type u) noexcept
       requires is_vector_space
     {
       return v *= u;
     }
 
     [[nodiscard]]
-    friend constexpr affine_coordinates operator*(value_type u, affine_coordinates v) noexcept
+    friend constexpr coordinates operator*(value_type u, coordinates v) noexcept
       requires is_vector_space
     {
       return v * u;
     }
 
     [[nodiscard]]
-    friend constexpr affine_coordinates operator/(affine_coordinates v, value_type u)
+    friend constexpr coordinates operator/(coordinates v, value_type u)
       requires is_vector_space
     {
       return v /= u;
@@ -319,10 +325,10 @@ namespace sequoia::maths
     constexpr value_type& operator[](std::size_t i) { return m_Values[i]; }
 
     [[nodiscard]]
-    friend constexpr bool operator==(const affine_coordinates&, const affine_coordinates&) noexcept = default;
+    friend constexpr bool operator==(const coordinates&, const coordinates&) noexcept = default;
 
     [[nodiscard]]
-    friend constexpr auto operator<=>(const affine_coordinates& lhs, const affine_coordinates& rhs) noexcept
+    friend constexpr auto operator<=>(const coordinates& lhs, const coordinates& rhs) noexcept
       requires (D == 1) && std::totally_ordered<value_type>
     {
       return lhs.value() <=> rhs.value();

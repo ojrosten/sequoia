@@ -77,11 +77,11 @@ namespace sequoia::testing
     using orthonormal = std::true_type;
   };
 
-  template<maths::affine_space AffineSpace, maths::basis Basis, class Origin>
-    requires basis_for<Basis, typename AffineSpace::vector_space_type>
-  struct value_tester<maths::affine_coordinates<AffineSpace, Basis, Origin>>
+  template<maths::convex_space ConvexSpace, maths::basis Basis, class Origin, class Validator>
+    requires basis_for<Basis, typename ConvexSpace::vector_space_type>
+  struct value_tester<maths::coordinates<ConvexSpace, Basis, Origin, Validator>>
   {
-    using coord_type = maths::affine_coordinates<AffineSpace, Basis, Origin>;
+    using coord_type = maths::coordinates<ConvexSpace, Basis, Origin, Validator>;
     using field_type = typename coord_type::field_type;
     constexpr static std::size_t D{coord_type::dimension};
 
