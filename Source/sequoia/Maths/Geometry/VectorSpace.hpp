@@ -12,8 +12,10 @@
  */
 
 #include "sequoia/Core/Meta/TypeTraits.hpp"
+#include "sequoia//PlatformSpecific/Preprocessor.hpp"
 
 #include <algorithm>
+#include <concepts>
 #include <cmath>
 #include <complex>
 #include <ranges>
@@ -21,15 +23,12 @@
 
 namespace sequoia::maths
 {
-  template<class T, std::size_t D, class Fn>
-    requires std::invocable<Fn, T&, T>
-  constexpr void apply_to_each_element(std::array<T, D>& lhs, std::span<const T, D> rhs, Fn f)
-  {
-    //std::ranges::for_each(std::views::zip(lhs, rhs), [&f](auto&& z){ f(std::get<0>(z), std::get<1>(z)); });
-    [&] <std::size_t... Is>(std::index_sequence<Is...>){
-      (f(lhs[Is], rhs[Is]), ...);
-    }(std::make_index_sequence<D>{});
-  }
+  template<class V, class T>
+  inline constexpr bool is_validator_for{
+    requires (V & v, const T & t) {
+      { v(t) } -> std::convertible_to<T>;
+    }
+  };
 
   template<class T, std::size_t D, class Fn = std::identity>
     requires std::is_invocable_r_v<T, Fn, T>
@@ -159,11 +158,16 @@ namespace sequoia::maths
     requires vector_space<typename T::vector_space_type>;
   };
 
+  template<convex_space ConvexSpace>
+  using field_type_t = typename ConvexSpace::vector_space_type::field_type;
+
   template<class T>
   concept affine_space = convex_space<T>; //TO DO: more than a semantic difference?
 
   template<convex_space ConvexSpace, basis Basis, class Origin, class Validator>
     requires basis_for<Basis, typename ConvexSpace::vector_space_type>
+          && std::default_initializable<Validator>
+          && std::constructible_from<Validator, Validator>
   class coordinates;
 
   struct intrinsic_origin {};
@@ -178,10 +182,13 @@ namespace sequoia::maths
 
   template<convex_space ConvexSpace, basis Basis, class Origin, class Validator>
     requires basis_for<Basis, typename ConvexSpace::vector_space_type>
+          && std::default_initializable<Validator>
+          && std::constructible_from<Validator, Validator>
   class coordinates
   {
   public:
-    using affine_space_type = ConvexSpace;
+    using convex_space_type = ConvexSpace;
+    using validator_type    = Validator;
     using set_type          = typename ConvexSpace::set_type;
     using vector_space_type = typename ConvexSpace::vector_space_type;
     using basis_type        = Basis;
@@ -195,11 +202,11 @@ namespace sequoia::maths
     constexpr coordinates() noexcept = default;
 
     constexpr explicit coordinates(std::span<const value_type, D> d) noexcept
-      : m_Values{to_array(d)}
+      : m_Values{m_Validator(to_array(d))}
     {}
 
     constexpr explicit coordinates(std::span<value_type, D> d) noexcept
-      : m_Values{to_array(d)}
+      : m_Values{m_Validator(to_array(d))}
     {}
 
     template<class... Ts>
@@ -210,27 +217,27 @@ namespace sequoia::maths
 
     constexpr coordinates& operator+=(const vector_coordinates<vector_space_type, Basis>& v) noexcept
     {
-      apply_to_each_element(m_Values, v.values(), [](value_type& lhs, value_type rhs){ lhs += rhs; });
+      apply_to_each_element(v.values(), [](value_type& lhs, value_type rhs){ lhs += rhs; });
       return *this;
     }
 
     constexpr coordinates& operator-=(const vector_coordinates<vector_space_type, Basis>& v) noexcept
     {
-      apply_to_each_element(m_Values, v.values(), [](value_type& lhs, value_type rhs){ lhs -= rhs; });
+      apply_to_each_element(v.values(), [](value_type& lhs, value_type rhs){ lhs -= rhs; });
       return *this;
     }
 
     constexpr coordinates& operator*=(value_type u) noexcept
       requires is_vector_space
     {
-      std::ranges::for_each(m_Values, [u](value_type& x) { return x *= u; });
+      for_each_element([u](value_type& x) { return x *= u; });
       return *this;
     }
 
     constexpr coordinates& operator/=(value_type u)
       requires is_vector_space
     {
-      std::ranges::for_each(m_Values, [u](value_type& x) { return x /= u; });
+      for_each_element([u](value_type& x) { return x /= u; });
       return *this;
     }
 
@@ -300,6 +307,9 @@ namespace sequoia::maths
     }
 
     [[nodiscard]]
+    constexpr const validator_type& validator() const noexcept { return m_Validator; }
+
+    [[nodiscard]]
     constexpr std::span<const value_type, D> values() const noexcept { return m_Values; }
 
     [[nodiscard]]
@@ -325,7 +335,7 @@ namespace sequoia::maths
     constexpr value_type& operator[](std::size_t i) { return m_Values[i]; }
 
     [[nodiscard]]
-    friend constexpr bool operator==(const coordinates&, const coordinates&) noexcept = default;
+    friend constexpr bool operator==(const coordinates& lhs, const coordinates& rhs) noexcept { return lhs.m_Values == rhs.m_Values; }
 
     [[nodiscard]]
     friend constexpr auto operator<=>(const coordinates& lhs, const coordinates& rhs) noexcept
@@ -334,7 +344,40 @@ namespace sequoia::maths
       return lhs.value() <=> rhs.value();
     }
   private:
+    SEQUOIA_NO_UNIQUE_ADDRESS validator_type m_Validator;
     std::array<value_type, D> m_Values{};
+
+    template<class Fn>
+      requires std::invocable<Fn, value_type&, value_type>
+    constexpr void apply_to_each_element(std::span<const value_type, D> rhs, Fn f)
+    {
+      if constexpr(std::same_as<Validator, std::identity>)
+      {
+        std::ranges::for_each(std::views::zip(values(), rhs), [&f](auto&& z){ f(std::get<0>(z), std::get<1>(z)); });
+      }
+      else
+      {
+        auto tmp{values()};
+        std::ranges::for_each(std::views::zip(tmp, rhs), [&f](auto&& z){ f(std::get<0>(z), std::get<1>(z)); });
+        values() = m_Validator(tmp);
+      }
+    }
+
+    template<class Fn>
+      requires std::invocable<Fn, value_type&>
+    constexpr void for_each_element(Fn f)
+    {
+      if constexpr(std::same_as<Validator, std::identity>)
+      {
+        std::ranges::for_each(values(), f);
+      }
+      else
+      {
+        auto tmp{values()};
+        std::ranges::for_each(tmp, f);
+        values() = m_Validator(tmp);
+      }
+    }
   };
 
   namespace sets
