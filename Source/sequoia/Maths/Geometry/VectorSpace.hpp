@@ -176,9 +176,15 @@ namespace sequoia::maths
     requires basis_for<Basis, typename ConvexSpace::vector_space_type>
           && std::default_initializable<Validator>
           && std::constructible_from<Validator, Validator>
-  class coordinates;
+  class coordinates_base;
 
   struct intrinsic_origin {};
+
+  template<convex_space ConvexSpace, basis Basis, class Origin, class Validator>
+    requires basis_for<Basis, typename ConvexSpace::vector_space_type>
+          && std::default_initializable<Validator>
+          && std::constructible_from<Validator, Validator>
+  class coordinates;
 
   template<affine_space AffineSpace, basis Basis, class Origin>
     requires basis_for<Basis, typename AffineSpace::vector_space_type>
@@ -186,13 +192,13 @@ namespace sequoia::maths
 
   template<vector_space VectorSpace, basis Basis>
     requires basis_for<Basis, typename VectorSpace::vector_space_type>
-  using vector_coordinates = coordinates<VectorSpace, Basis, intrinsic_origin, std::identity>;
+  using vector_coordinates = affine_coordinates<VectorSpace, Basis, intrinsic_origin>;
 
   template<convex_space ConvexSpace, basis Basis, class Origin, class Validator>
     requires basis_for<Basis, typename ConvexSpace::vector_space_type>
           && std::default_initializable<Validator>
           && std::constructible_from<Validator, Validator>
-  class coordinates
+  class coordinates_base
   {
   public:
     using convex_space_type = ConvexSpace;
@@ -207,108 +213,132 @@ namespace sequoia::maths
     constexpr static std::size_t dimension{vector_space_type::dimension};
     constexpr static std::size_t D{dimension};
 
-    constexpr coordinates() noexcept = default;
+    constexpr coordinates_base() noexcept = default;
 
-    constexpr explicit coordinates(std::span<const value_type, D> d) noexcept
+    constexpr explicit coordinates_base(std::span<const value_type, D> d) noexcept
       : m_Values{m_Validator(to_array(d))}
-    {}
+    {
+    }
 
-    constexpr explicit coordinates(std::span<value_type, D> d) noexcept
+    constexpr explicit coordinates_base(std::span<value_type, D> d) noexcept
       : m_Values{m_Validator(to_array(d))}
-    {}
+    {
+    }
 
     template<class... Ts>
       requires (sizeof...(Ts) == D) && (is_initializable_v<value_type, Ts> && ...)
-    constexpr coordinates(Ts... ts) noexcept
+    constexpr coordinates_base(Ts... ts) noexcept
       : m_Values{ts...}
-    {}
-
-    constexpr coordinates& operator+=(const vector_coordinates<vector_space_type, Basis>& v) noexcept
     {
-      apply_to_each_element(v.values(), [](value_type& lhs, value_type rhs){ lhs += rhs; });
-      return *this;
     }
 
-    constexpr coordinates& operator-=(const vector_coordinates<vector_space_type, Basis>& v) noexcept
+    template<class Self>
+    constexpr Self& operator+=(this Self& self, const vector_coordinates<vector_space_type, Basis>& v) noexcept
     {
-      apply_to_each_element(v.values(), [](value_type& lhs, value_type rhs){ lhs -= rhs; });
-      return *this;
+      self.apply_to_each_element(v.values(), [](value_type& lhs, value_type rhs){ lhs += rhs; });
+      return self;
     }
 
-    constexpr coordinates& operator*=(value_type u) noexcept
+    template<class Self>
+    constexpr Self& operator-=(this Self& self, const vector_coordinates<vector_space_type, Basis>& v) noexcept
+    {
+      self.apply_to_each_element(v.values(), [](value_type& lhs, value_type rhs){ lhs -= rhs; });
+      return self;
+    }
+
+    template<class Self>
+    constexpr Self& operator*=(this Self& self, value_type u) noexcept
       requires is_vector_space
     {
-      for_each_element([u](value_type& x) { return x *= u; });
-      return *this;
+      self.for_each_element([u](value_type& x) { return x *= u; });
+      return self;
     }
 
-    constexpr coordinates& operator/=(value_type u)
+    template<class Self>
+    constexpr Self& operator/=(this Self& self, value_type u)
       requires is_vector_space
     {
-      for_each_element([u](value_type& x) { return x /= u; });
-      return *this;
+      self.for_each_element([u](value_type& x) { return x /= u; });
+      return self;
     }
 
+    template<class Derived>
+      requires std::is_base_of_v<coordinates_base, Derived>
     [[nodiscard]]
-    friend constexpr coordinates operator+(coordinates c, const vector_coordinates<vector_space_type, Basis>& v) noexcept { return c += v; }
+    friend constexpr Derived operator+(Derived c, const vector_coordinates<vector_space_type, Basis>& v) noexcept { return c += v; }
 
+    template<class Derived>
+      requires std::is_base_of_v<coordinates_base, Derived>
     [[nodiscard]]
-    friend constexpr coordinates operator+(const vector_coordinates<vector_space_type, Basis>& v, coordinates c) noexcept
+    friend constexpr Derived operator+(const vector_coordinates<vector_space_type, Basis>& v, Derived c) noexcept
       requires (!is_vector_space)
     {
       return c += v;
     }
 
+    template<class Derived>
+      requires std::is_base_of_v<coordinates_base, Derived>
     [[nodiscard]]
-    friend constexpr coordinates operator-(coordinates c, const vector_coordinates<vector_space_type, Basis>& v) noexcept
+    friend constexpr Derived operator-(Derived c, const vector_coordinates<vector_space_type, Basis>& v) noexcept
       requires (!is_vector_space)
     {
       return c -= v;
     }
 
+    template<class Derived>
+      requires std::is_base_of_v<coordinates_base, Derived>
     [[nodiscard]]
-    friend constexpr coordinates operator-(const vector_coordinates<vector_space_type, Basis>& v, coordinates c) noexcept
+    friend constexpr Derived operator-(const vector_coordinates<vector_space_type, Basis>& v, Derived c) noexcept
       requires (!is_vector_space)
     {
       return c -= v;
     }
 
+    template<class Derived>
+      requires std::is_base_of_v<coordinates_base, Derived>
     [[nodiscard]]
-    friend constexpr vector_coordinates<vector_space_type, Basis> operator-(const coordinates& lhs, const coordinates& rhs) noexcept
+    friend constexpr vector_coordinates<vector_space_type, Basis> operator-(const Derived& lhs, const Derived& rhs) noexcept
     {
       return[&] <std::size_t... Is>(std::index_sequence<Is...>) {
         return vector_coordinates<vector_space_type, Basis>{(lhs.values()[Is] - rhs.values()[Is])...};
       }(std::make_index_sequence<D>{});
     }
 
+    template<class Self>
     [[nodiscard]]
-    constexpr coordinates operator+() const noexcept
+    constexpr Self operator+(this const Self& self) noexcept
     {
-      return coordinates{values()};
+      return Self{self.values()};
     }
 
+    template<class Self>
     [[nodiscard]]
-    constexpr coordinates operator-() const noexcept
+    constexpr Self operator-(this const Self& self) noexcept
     {
-      return coordinates{to_array(values(), [](value_type t) { return -t; })};
+      return Self{to_array(self.values(), [](value_type t) { return -t; })};
     }
 
+    template<class Derived>
     [[nodiscard]]
-    friend constexpr coordinates operator*(coordinates v, value_type u) noexcept
+    friend constexpr Derived operator*(Derived v, value_type u) noexcept
       requires is_vector_space
     {
       return v *= u;
     }
 
+    template<class Derived>
+      requires std::is_base_of_v<coordinates_base, Derived>
     [[nodiscard]]
-    friend constexpr coordinates operator*(value_type u, coordinates v) noexcept
+    friend constexpr Derived operator*(value_type u, Derived v) noexcept
       requires is_vector_space
     {
       return v * u;
     }
 
+    template<class Derived>
+      requires std::is_base_of_v<coordinates_base, Derived>
     [[nodiscard]]
-    friend constexpr coordinates operator/(coordinates v, value_type u)
+    friend constexpr Derived operator/(Derived v, value_type u)
       requires is_vector_space
     {
       return v /= u;
@@ -343,49 +373,67 @@ namespace sequoia::maths
     constexpr value_type& operator[](std::size_t i) { return m_Values[i]; }
 
     [[nodiscard]]
-    friend constexpr bool operator==(const coordinates& lhs, const coordinates& rhs) noexcept { return lhs.m_Values == rhs.m_Values; }
+    friend constexpr bool operator==(const coordinates_base& lhs, const coordinates_base& rhs) noexcept { return lhs.m_Values == rhs.m_Values; }
 
     [[nodiscard]]
-    friend constexpr auto operator<=>(const coordinates& lhs, const coordinates& rhs) noexcept
+    friend constexpr auto operator<=>(const coordinates_base& lhs, const coordinates_base& rhs) noexcept
       requires (D == 1) && std::totally_ordered<value_type>
     {
       return lhs.value() <=> rhs.value();
     }
+  protected:
+    coordinates_base(const coordinates_base&)     = default;
+    coordinates_base(coordinates_base&&) noexcept = default;
+
+    coordinates_base& operator=(const coordinates_base&)     = default;
+    coordinates_base& operator=(coordinates_base&&) noexcept = default;
+
+    ~coordinates_base() = default;
   private:
     SEQUOIA_NO_UNIQUE_ADDRESS validator_type m_Validator;
     std::array<value_type, D> m_Values{};
 
-    template<class Fn>
+    template<class Self, class Fn>
       requires std::invocable<Fn, value_type&, value_type>
-    constexpr void apply_to_each_element(std::span<const value_type, D> rhs, Fn f)
+    constexpr void apply_to_each_element(this Self& self, std::span<const value_type, D> rhs, Fn f)
     {
       if constexpr(std::same_as<Validator, std::identity>)
       {
-        std::ranges::for_each(std::views::zip(values(), rhs), [&f](auto&& z){ f(std::get<0>(z), std::get<1>(z)); });
+        std::ranges::for_each(std::views::zip(self.values(), rhs), [&f](auto&& z){ f(std::get<0>(z), std::get<1>(z)); });
       }
       else
       {
-        auto tmp{values()};
+        auto tmp{self.values()};
         std::ranges::for_each(std::views::zip(tmp, rhs), [&f](auto&& z){ f(std::get<0>(z), std::get<1>(z)); });
-        values() = m_Validator(tmp);
+        self.values() = self.m_Validator(tmp);
       }
     }
 
-    template<class Fn>
+    template<class Self, class Fn>
       requires std::invocable<Fn, value_type&>
-    constexpr void for_each_element(Fn f)
+    constexpr void for_each_element(this Self& self, Fn f)
     {
       if constexpr(std::same_as<Validator, std::identity>)
       {
-        std::ranges::for_each(values(), f);
+        std::ranges::for_each(self.values(), f);
       }
       else
       {
         auto tmp{values()};
         std::ranges::for_each(tmp, f);
-        values() = m_Validator(tmp);
+        self.values() = self.m_Validator(tmp);
       }
     }
+  };
+
+  template<convex_space ConvexSpace, basis Basis, class Origin, class Validator>
+    requires basis_for<Basis, typename ConvexSpace::vector_space_type>
+          && std::default_initializable<Validator>
+          && std::constructible_from<Validator, Validator>
+  class coordinates : public coordinates_base<ConvexSpace, Basis, Origin, Validator>
+  {
+  public:
+    using coordinates_base<ConvexSpace, Basis, Origin, Validator>::coordinates_base;
   };
 
   namespace sets
