@@ -28,15 +28,28 @@ namespace sequoia::testing
   {
     static_assert(convex_space<mass_space<float>>);
 
-    using mass_t = quantity<mass_space<float>, units::kilogram_t>;
+    {
+      using mass_t = quantity<mass_space<float>, units::kilogram_t>;
 
-    check_exception_thrown<std::domain_error>("Negative mass", [](){ return mass_t{-1.0, units::kilogram}; });
+      check_exception_thrown<std::domain_error>("Negative mass", [](){ return mass_t{-1.0, units::kilogram}; });
 
-    mass_t m{1.0, units::kilogram};
-    constexpr mass_t m2{2.0, units::kilogram};
-    check(equivalence, "", m, 1.0f);
-    check(equivalence, "", m2, 2.0f);
+      mass_t m{1.0, units::kilogram};
+      constexpr mass_t m2{2.0, units::kilogram};
+      check(equivalence, "", m, 1.0f);
+      check(equivalence, "", m2, 2.0f);
 
-    check_semantics("", m, m2, std::weak_ordering::less);
+      check_semantics("", m, m2, std::weak_ordering::less);
+    }
+
+    {
+      using unsafe_mass_t = quantity<mass_space<float>, units::kilogram_t, std::identity>;
+
+      unsafe_mass_t m{-1.0, units::kilogram};
+      constexpr unsafe_mass_t m2{2.0, units::kilogram};
+      check(equivalence, "", m, -1.0f);
+      check(equivalence, "", m2, 2.0f);
+
+      check_semantics("", m, m2, std::weak_ordering::less);
+    }
   }
 }

@@ -66,18 +66,16 @@ namespace sequoia::physics
     typename T::validator_type;
   };
 
-  struct unchecked_t {};
-
-  template<convex_space QuantitySpace, quantity_unit Unit>
-  class quantity : public coordinates_base<QuantitySpace, quantity_displacement_basis<typename QuantitySpace::vector_space_type, Unit, typename QuantitySpace::vector_space_type::field_type>, intrinsic_origin, typename Unit::validator_type>
+  template<convex_space QuantitySpace, quantity_unit Unit, class Validator=typename Unit::validator_type>
+  class quantity : public coordinates_base<QuantitySpace, quantity_displacement_basis<typename QuantitySpace::vector_space_type, Unit, typename QuantitySpace::vector_space_type::field_type>, intrinsic_origin, Validator>
   {
   public:
-    using coordinates_type = coordinates_base<QuantitySpace, quantity_displacement_basis<typename QuantitySpace::vector_space_type, Unit, typename QuantitySpace::vector_space_type::field_type>, intrinsic_origin, typename Unit::validator_type>;
+    using coordinates_type = coordinates_base<QuantitySpace, quantity_displacement_basis<typename QuantitySpace::vector_space_type, Unit, typename QuantitySpace::vector_space_type::field_type>, intrinsic_origin, Validator>;
 
     using quantity_space_type     = QuantitySpace;
     using unit_type               = Unit;
     using displacement_space_type = typename QuantitySpace::vector_space_type;
-    using validator_type          = typename Unit::validator_type;
+    using validator_type          = Validator;
     using field_type              = typename displacement_space_type::field_type;
     using value_type              = field_type;
 
