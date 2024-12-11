@@ -217,20 +217,17 @@ namespace sequoia::maths
 
     constexpr explicit coordinates_base(std::span<const value_type, D> d) noexcept
       : m_Values{m_Validator(to_array(d))}
-    {
-    }
+    {}
 
     constexpr explicit coordinates_base(std::span<value_type, D> d) noexcept
       : m_Values{m_Validator(to_array(d))}
-    {
-    }
+    {}
 
     template<class... Ts>
       requires (sizeof...(Ts) == D) && (is_initializable_v<value_type, Ts> && ...)
-    constexpr coordinates_base(Ts... ts) noexcept
-      : m_Values{ts...}
-    {
-    }
+    constexpr coordinates_base(Ts... ts)
+      : m_Values{m_Validator(std::array<value_type, D>{ts...})}
+    {}
 
     template<class Self>
     constexpr Self& operator+=(this Self& self, const vector_coordinates<vector_space_type, Basis>& v) noexcept

@@ -27,6 +27,13 @@ namespace sequoia::physics
 
       return val;
     }
+
+    template<std::floating_point T>
+    [[nodiscard]]
+    constexpr T operator()(std::array<T, 1> val) const
+    {
+      return operator()(val.front());
+    }
   };
 
   template<class T>
@@ -62,9 +69,11 @@ namespace sequoia::physics
   struct unchecked_t {};
 
   template<convex_space QuantitySpace, quantity_unit Unit>
-  class quantity
+  class quantity : public coordinates_base<QuantitySpace, quantity_displacement_basis<typename QuantitySpace::vector_space_type, Unit, typename QuantitySpace::vector_space_type::field_type>, intrinsic_origin, typename Unit::validator_type>
   {
   public:
+    using coordinates_type = coordinates_base<QuantitySpace, quantity_displacement_basis<typename QuantitySpace::vector_space_type, Unit, typename QuantitySpace::vector_space_type::field_type>, intrinsic_origin, typename Unit::validator_type>;
+
     using quantity_space_type     = QuantitySpace;
     using unit_type               = Unit;
     using displacement_space_type = typename QuantitySpace::vector_space_type;
@@ -77,32 +86,9 @@ namespace sequoia::physics
 
     constexpr static bool is_absolute{(dimension == 1) && defines_absolute_scale_v<validator_type>};
 
-    constexpr quantity(value_type val, unit_type) requires (D==1)
-      : m_Values{m_Validator(val)}
+    constexpr quantity(value_type val, unit_type) requires (D == 1)
+      : coordinates_type{val}
     {}
-
-    constexpr quantity(unchecked_t, value_type val, unit_type) requires (D==1)
-      : m_Values{val}
-    {}
-
-    [[nodiscard]]
-    constexpr const value_type& value() const noexcept requires (D==1) { return m_Values[0]; }
-
-    [[nodiscard]]
-    constexpr const validator_type& validator() const noexcept { return m_Validator; }
-
-    [[nodiscard]]
-    constexpr friend bool operator==(const quantity& lhs, const quantity& rhs) noexcept { return lhs.m_Values == rhs.m_Values; }
-
-    [[nodiscard]]
-    constexpr friend auto operator<=>(const quantity& lhs, const quantity& rhs) noexcept
-      requires (D == 1) && std::totally_ordered<value_type>
-    {
-      return lhs.value() <=> rhs.value();
-    }
-  private:
-    SEQUOIA_NO_UNIQUE_ADDRESS validator_type m_Validator;
-    std::array<value_type, D> m_Values{};
   };
 
 
@@ -125,6 +111,7 @@ namespace sequoia::physics
   {
     using set_type          = quantity_sets::differences<quantity_sets::masses>;
     using field_type        = T;
+    using vector_space_type = mass_displacement_space;
     constexpr static std::size_t dimension{1};
   };
 
