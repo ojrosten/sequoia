@@ -81,19 +81,27 @@ namespace sequoia::physics
 
     constexpr static bool is_absolute{(dimension == 1) && defines_absolute_scale_v<validator_type>};
 
+    constexpr quantity() = default;
+
     constexpr quantity(value_type val, unit_type) requires (D == 1)
       : coordinates_type{val}
     {}
 
     constexpr quantity(std::span<const value_type, D> val, unit_type)
       : coordinates_type{val}
-    {
-    }
+    {}
 
     quantity operator-() const requires is_absolute = delete;
 
     [[nodiscard]]
-    quantity operator-() const noexcept(coordinates_type::is_identity_validator)
+    constexpr quantity operator+() const
+      requires (!is_absolute)
+    {
+      return quantity{this->values(), unit_type{}};
+    }
+
+    [[nodiscard]]
+    constexpr quantity operator-() const noexcept(coordinates_type::is_identity_validator)
       requires (!is_absolute)
     {
       return quantity{to_array(this->values(), [](value_type t) { return -t; }), unit_type{}};

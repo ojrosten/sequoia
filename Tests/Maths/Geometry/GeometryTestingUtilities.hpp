@@ -114,8 +114,8 @@ namespace sequoia::testing
     enum dim_1_label{ neg_one, zero, one, two };
     enum dim_2_label{ neg_one_neg_one, neg_one_zero, zero_neg_one, zero_zero, zero_one, one_zero, one_one };
 
-    template<class Coordinates>
-    static typename transition_checker<Coordinates>::transition_graph make_dim_1_orderable_transition_graph()
+    template<class Coordinates, class... Units>
+    static typename transition_checker<Coordinates>::transition_graph make_dim_1_orderable_transition_graph(Units... units)
     {
       using coords_t     = Coordinates;
       using coords_graph = transition_checker<coords_t>::transition_graph;
@@ -147,7 +147,7 @@ namespace sequoia::testing
             edge_t{dim_1_label::one, "(2) - (1)", [](coords_t p) -> coords_t { return p - vec_t{field_t(1)}; }, std::weak_ordering::less}
           }, // two
         },
-        {coords_t{field_t(-1)}, coords_t{}, coords_t{field_t(1)}, coords_t{field_t(2)}}
+        {coords_t{field_t(-1), units...}, coords_t{}, coords_t{field_t(1), units...}, coords_t{field_t(2), units...}}
       };
 
       return g;
