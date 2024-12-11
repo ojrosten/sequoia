@@ -13,6 +13,13 @@ namespace sequoia::testing
 {
   using namespace physics;
 
+  namespace{
+    template<class T>
+    inline constexpr bool has_unary_minus{
+      requires(T t){ { -t } -> std::same_as<T>; }
+    };
+  }
+
   [[nodiscard]]
   std::filesystem::path quantity_test::source_file() const
   {
@@ -27,6 +34,7 @@ namespace sequoia::testing
   void quantity_test::test_masses()
   {
     static_assert(convex_space<mass_space<float>>);
+    static_assert(!has_unary_minus<mass_space<float>>);
 
     {
       using mass_t = quantity<mass_space<float>, units::kilogram_t>;

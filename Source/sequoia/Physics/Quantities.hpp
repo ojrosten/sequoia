@@ -37,9 +37,6 @@ namespace sequoia::physics
   };
 
   template<class T>
-  inline constexpr bool is_identity_validator_v{std::is_same_v<T, std::identity>};
-
-  template<class T>
   struct defines_absolute_scale : std::false_type {};
 
   template<class T>
@@ -87,6 +84,20 @@ namespace sequoia::physics
     constexpr quantity(value_type val, unit_type) requires (D == 1)
       : coordinates_type{val}
     {}
+
+    constexpr quantity(std::span<const value_type, D> val, unit_type)
+      : coordinates_type{val}
+    {
+    }
+
+    quantity operator-() const requires is_absolute = delete;
+
+    [[nodiscard]]
+    quantity operator-() const noexcept(coordinates_type::is_identity_validator)
+      requires (!is_absolute)
+    {
+      return quantity{to_array(this->values(), [](value_type t) { return -t; }), unit_type{}};
+    }
   };
 
 

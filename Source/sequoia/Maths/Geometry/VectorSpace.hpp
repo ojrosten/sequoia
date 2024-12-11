@@ -210,41 +210,42 @@ namespace sequoia::maths
     using value_type        = field_type;
 
     constexpr static bool is_vector_space{vector_space<ConvexSpace> && std::is_same_v<Origin, intrinsic_origin>};
+    constexpr static bool is_identity_validator{std::is_same_v<Validator, std::identity>};
     constexpr static std::size_t dimension{vector_space_type::dimension};
     constexpr static std::size_t D{dimension};
 
     constexpr coordinates_base() noexcept = default;
 
-    constexpr explicit coordinates_base(std::span<const value_type, D> d) noexcept
+    constexpr explicit coordinates_base(std::span<const value_type, D> d) noexcept(is_identity_validator)
       : m_Values{m_Validator(to_array(d))}
     {}
 
-    constexpr explicit coordinates_base(std::span<value_type, D> d) noexcept
+    constexpr explicit coordinates_base(std::span<value_type, D> d) noexcept(is_identity_validator)
       : m_Values{m_Validator(to_array(d))}
     {}
 
     template<class... Ts>
       requires (sizeof...(Ts) == D) && (is_initializable_v<value_type, Ts> && ...)
-    constexpr coordinates_base(Ts... ts)
+    constexpr coordinates_base(Ts... ts) noexcept(is_identity_validator)
       : m_Values{m_Validator(std::array<value_type, D>{ts...})}
     {}
 
     template<class Self>
-    constexpr Self& operator+=(this Self& self, const vector_coordinates<vector_space_type, Basis>& v) noexcept
+    constexpr Self& operator+=(this Self& self, const vector_coordinates<vector_space_type, Basis>& v) noexcept(is_identity_validator)
     {
       self.apply_to_each_element(v.values(), [](value_type& lhs, value_type rhs){ lhs += rhs; });
       return self;
     }
 
     template<class Self>
-    constexpr Self& operator-=(this Self& self, const vector_coordinates<vector_space_type, Basis>& v) noexcept
+    constexpr Self& operator-=(this Self& self, const vector_coordinates<vector_space_type, Basis>& v) noexcept(is_identity_validator)
     {
       self.apply_to_each_element(v.values(), [](value_type& lhs, value_type rhs){ lhs -= rhs; });
       return self;
     }
 
     template<class Self>
-    constexpr Self& operator*=(this Self& self, value_type u) noexcept
+    constexpr Self& operator*=(this Self& self, value_type u) noexcept(is_identity_validator)
       requires is_vector_space
     {
       self.for_each_element([u](value_type& x) { return x *= u; });
@@ -262,12 +263,12 @@ namespace sequoia::maths
     template<class Derived>
       requires std::is_base_of_v<coordinates_base, Derived>
     [[nodiscard]]
-    friend constexpr Derived operator+(Derived c, const vector_coordinates<vector_space_type, Basis>& v) noexcept { return c += v; }
+    friend constexpr Derived operator+(Derived c, const vector_coordinates<vector_space_type, Basis>& v) noexcept(is_identity_validator) { return c += v; }
 
     template<class Derived>
       requires std::is_base_of_v<coordinates_base, Derived>
     [[nodiscard]]
-    friend constexpr Derived operator+(const vector_coordinates<vector_space_type, Basis>& v, Derived c) noexcept
+    friend constexpr Derived operator+(const vector_coordinates<vector_space_type, Basis>& v, Derived c) noexcept(is_identity_validator)
       requires (!is_vector_space)
     {
       return c += v;
@@ -276,7 +277,7 @@ namespace sequoia::maths
     template<class Derived>
       requires std::is_base_of_v<coordinates_base, Derived>
     [[nodiscard]]
-    friend constexpr Derived operator-(Derived c, const vector_coordinates<vector_space_type, Basis>& v) noexcept
+    friend constexpr Derived operator-(Derived c, const vector_coordinates<vector_space_type, Basis>& v) noexcept(is_identity_validator)
       requires (!is_vector_space)
     {
       return c -= v;
@@ -285,7 +286,7 @@ namespace sequoia::maths
     template<class Derived>
       requires std::is_base_of_v<coordinates_base, Derived>
     [[nodiscard]]
-    friend constexpr Derived operator-(const vector_coordinates<vector_space_type, Basis>& v, Derived c) noexcept
+    friend constexpr Derived operator-(const vector_coordinates<vector_space_type, Basis>& v, Derived c) noexcept(is_identity_validator)
       requires (!is_vector_space)
     {
       return c -= v;
@@ -294,7 +295,7 @@ namespace sequoia::maths
     template<class Derived>
       requires std::is_base_of_v<coordinates_base, Derived>
     [[nodiscard]]
-    friend constexpr vector_coordinates<vector_space_type, Basis> operator-(const Derived& lhs, const Derived& rhs) noexcept
+    friend constexpr vector_coordinates<vector_space_type, Basis> operator-(const Derived& lhs, const Derived& rhs) noexcept(is_identity_validator)
     {
       return[&] <std::size_t... Is>(std::index_sequence<Is...>) {
         return vector_coordinates<vector_space_type, Basis>{(lhs.values()[Is] - rhs.values()[Is])...};
@@ -303,21 +304,21 @@ namespace sequoia::maths
 
     template<class Self>
     [[nodiscard]]
-    constexpr Self operator+(this const Self& self) noexcept
+    constexpr Self operator+(this const Self& self) noexcept(is_identity_validator)
     {
       return Self{self.values()};
     }
 
     template<class Self>
     [[nodiscard]]
-    constexpr Self operator-(this const Self& self) noexcept
+    constexpr Self operator-(this const Self& self) noexcept(is_identity_validator)
     {
       return Self{to_array(self.values(), [](value_type t) { return -t; })};
     }
 
     template<class Derived>
     [[nodiscard]]
-    friend constexpr Derived operator*(Derived v, value_type u) noexcept
+    friend constexpr Derived operator*(Derived v, value_type u) noexcept(is_identity_validator)
       requires is_vector_space
     {
       return v *= u;
@@ -326,7 +327,7 @@ namespace sequoia::maths
     template<class Derived>
       requires std::is_base_of_v<coordinates_base, Derived>
     [[nodiscard]]
-    friend constexpr Derived operator*(value_type u, Derived v) noexcept
+    friend constexpr Derived operator*(value_type u, Derived v) noexcept(is_identity_validator)
       requires is_vector_space
     {
       return v * u;
