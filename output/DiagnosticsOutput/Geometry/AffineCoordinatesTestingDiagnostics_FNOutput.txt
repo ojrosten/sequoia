@@ -6,7 +6,7 @@ Checking for equivalence with:
 [std::array<float, 1>]
 
   Wrapped values
-  [std::span<float const , 1>]
+  [std::span<float const, 1>]
     Element 0 of range incorrect
     [float]
     operator== returned false
@@ -21,7 +21,7 @@ Tests/Maths/Geometry/AffineCoordinatesTestingDiagnostics.cpp, Line 48
 operator== returned false
 
   Wrapped values
-  [std::span<float const , 1>]
+  [std::span<float const, 1>]
     Element 0 of range incorrect
     [float]
     operator== returned false
@@ -54,7 +54,7 @@ Checking for equivalence with:
 [std::array<float, 1>]
 
   Wrapped values
-  [std::span<float const , 1>]
+  [std::span<float const, 1>]
     Element 0 of range incorrect
     [float]
     operator== returned false
@@ -69,7 +69,7 @@ Tests/Maths/Geometry/AffineCoordinatesTestingDiagnostics.cpp, Line 48
 operator== returned false
 
   Wrapped values
-  [std::span<float const , 1>]
+  [std::span<float const, 1>]
     Element 0 of range incorrect
     [float]
     operator== returned false

@@ -78,7 +78,7 @@ namespace sequoia::testing
   };
 
   template<maths::convex_space ConvexSpace, maths::basis Basis, class Origin, class Validator>
-    requires basis_for<Basis, typename ConvexSpace::vector_space_type>
+    requires maths::basis_for<Basis, typename ConvexSpace::vector_space_type>
   struct value_tester<maths::coordinates<ConvexSpace, Basis, Origin, Validator>>
   {
     using coord_type = maths::coordinates<ConvexSpace, Basis, Origin, Validator>;

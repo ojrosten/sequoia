@@ -109,10 +109,10 @@ namespace sequoia::testing
   void angle_test::test_principal_angle()
   {
     constexpr auto pi{std::numbers::pi_v<T>};
-    check(equality, "", radians{ pi / 2}.principal_angle(), radians<T>{ pi/2});
-    check(equality, "", radians{-pi / 2}.principal_angle(), radians<T>{-pi/2});
-    check(equality, "", radians{ 2 * pi}.principal_angle(), radians<T>{});
-    check(equality, "", radians{-2 * pi}.principal_angle(), radians<T>{});
+    check(equality, "", radians<T>{ pi / 2}.principal_angle(), radians<T>{ pi/2});
+    check(equality, "", radians<T>{-pi / 2}.principal_angle(), radians<T>{-pi/2});
+    check(equality, "", radians<T>{ 2 * pi}.principal_angle(), radians<T>{});
+    check(equality, "", radians<T>{-2 * pi}.principal_angle(), radians<T>{});
     // check(equality, "", radians{5 * pi / 2}.principal_angle(), radians<T>{pi/2});
 
     check(equality, "", degrees<T>{ 180}.principal_angle(), degrees<T>{ 180});

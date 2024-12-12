@@ -317,6 +317,7 @@ namespace sequoia::maths
     }
 
     template<class Derived>
+      requires std::is_base_of_v<coordinates_base, Derived>
     [[nodiscard]]
     friend constexpr Derived operator*(Derived v, value_type u) noexcept(has_identity_validator)
       requires is_vector_space
@@ -417,7 +418,7 @@ namespace sequoia::maths
       }
       else
       {
-        auto tmp{values()};
+        auto tmp{self.values()};
         std::ranges::for_each(tmp, f);
         self.values() = self.m_Validator(tmp);
       }
@@ -467,14 +468,14 @@ namespace sequoia::maths
 
   template<vector_space V>
   inline constexpr bool has_norm_v{
-    requires (const vector_coordinates<vector_space, arbitary_basis<V>>& v) {
+    requires (const vector_coordinates<V, arbitary_basis<V>>& v) {
       { norm(v) } -> std::convertible_to<typename V::field_type>;
     }
   };
 
   template<vector_space V>
   inline constexpr bool has_inner_product_v{
-    requires (const vector_coordinates<vector_space, arbitary_basis<V>>& v) {
+    requires (const vector_coordinates<V, arbitary_basis<V>>& v) {
       { inner_product(v, v) } -> std::convertible_to<typename V::field_type>;
     }
   };

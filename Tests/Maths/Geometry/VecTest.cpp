@@ -42,7 +42,7 @@ namespace sequoia::testing
       using vector_space_type = world_vector_space;
       constexpr static std::size_t dimension{D};
 
-      template<maths::basis<world_vector_space> Basis>
+      template<maths::basis Basis>
         requires is_orthonormal_basis_v<Basis>
       [[nodiscard]]
       // We want Units^2
