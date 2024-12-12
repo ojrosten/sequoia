@@ -27,6 +27,10 @@ clang 19.1.0
 g++ 14.2  
 Visual Studio 2022, 17.12.1
 
+## Dependencies
+
+mac/linux: Threaded Building Blocks (tbb)
+
 ## Testing Framework API:
 
 Nearly stable, but still being refined.
