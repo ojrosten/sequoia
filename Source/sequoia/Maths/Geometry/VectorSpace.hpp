@@ -202,7 +202,7 @@ namespace sequoia::maths
     using field_type        = typename vector_space_type::field_type;
     using value_type        = field_type;
 
-    constexpr static bool is_vector_space{vector_space<ConvexSpace> && std::is_same_v<Origin, intrinsic_origin>};
+    constexpr static bool has_intrinsic_origin{std::is_same_v<Origin, intrinsic_origin>};
     constexpr static bool has_identity_validator{std::is_same_v<Validator, std::identity>};
     constexpr static std::size_t dimension{vector_space_type::dimension};
     constexpr static std::size_t D{dimension};
@@ -239,7 +239,7 @@ namespace sequoia::maths
 
     template<class Self>
     constexpr Self& operator*=(this Self& self, value_type u) noexcept(has_identity_validator)
-      requires is_vector_space
+      requires has_intrinsic_origin
     {
       self.for_each_element([u](value_type& x) { return x *= u; });
       return self;
@@ -247,7 +247,7 @@ namespace sequoia::maths
 
     template<class Self>
     constexpr Self& operator/=(this Self& self, value_type u)
-      requires is_vector_space
+      requires has_intrinsic_origin
     {
       self.for_each_element([u](value_type& x) { return x /= u; });
       return self;
@@ -259,28 +259,25 @@ namespace sequoia::maths
     friend constexpr Derived operator+(Derived c, const vector_coordinates<vector_space_type, Basis>& v) noexcept(has_identity_validator) { return c += v; }
 
     template<class Derived>
-      requires std::is_base_of_v<coordinates_base, Derived>
+    requires std::is_base_of_v<coordinates_base, Derived> && (!std::is_same_v<Derived, vector_coordinates<vector_space_type, Basis>>)
     [[nodiscard]]
     friend constexpr Derived operator+(const vector_coordinates<vector_space_type, Basis>& v, Derived c) noexcept(has_identity_validator)
-      requires (!is_vector_space)
     {
       return c += v;
     }
 
     template<class Derived>
-      requires std::is_base_of_v<coordinates_base, Derived>
+      requires std::is_base_of_v<coordinates_base, Derived> && (!std::is_same_v<Derived, vector_coordinates<vector_space_type, Basis>>)
     [[nodiscard]]
     friend constexpr Derived operator-(Derived c, const vector_coordinates<vector_space_type, Basis>& v) noexcept(has_identity_validator)
-      requires (!is_vector_space)
     {
       return c -= v;
     }
 
     template<class Derived>
-      requires std::is_base_of_v<coordinates_base, Derived>
+      requires std::is_base_of_v<coordinates_base, Derived> && (!std::is_same_v<Derived, vector_coordinates<vector_space_type, Basis>>)
     [[nodiscard]]
     friend constexpr Derived operator-(const vector_coordinates<vector_space_type, Basis>& v, Derived c) noexcept(has_identity_validator)
-      requires (!is_vector_space)
     {
       return c -= v;
     }
@@ -313,7 +310,7 @@ namespace sequoia::maths
       requires std::is_base_of_v<coordinates_base, Derived>
     [[nodiscard]]
     friend constexpr Derived operator*(Derived v, value_type u) noexcept(has_identity_validator)
-      requires is_vector_space
+      requires has_intrinsic_origin
     {
       return v *= u;
     }
@@ -322,7 +319,7 @@ namespace sequoia::maths
       requires std::is_base_of_v<coordinates_base, Derived>
     [[nodiscard]]
     friend constexpr Derived operator*(value_type u, Derived v) noexcept(has_identity_validator)
-      requires is_vector_space
+      requires has_intrinsic_origin
     {
       return v * u;
     }
@@ -331,7 +328,7 @@ namespace sequoia::maths
       requires std::is_base_of_v<coordinates_base, Derived>
     [[nodiscard]]
     friend constexpr Derived operator/(Derived v, value_type u)
-      requires is_vector_space
+      requires has_intrinsic_origin
     {
       return v /= u;
     }
