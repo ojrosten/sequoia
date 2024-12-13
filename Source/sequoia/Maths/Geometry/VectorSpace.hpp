@@ -141,8 +141,8 @@ namespace sequoia::maths
     requires vector_space<typename B::vector_space_type>;
   };
 
-  template<basis B, vector_space V>
-  inline constexpr bool basis_for{std::is_same_v<typename B::vector_space_type, V>};
+  template<class B, class V>
+  concept basis_for = basis<B> && vector_space<V> && std::is_same_v<typename B::vector_space_type, V>;
 
   template<class T>
   concept convex_space = requires {
@@ -152,52 +152,45 @@ namespace sequoia::maths
   };
 
   template<convex_space ConvexSpace>
-  using space_value_type = typename ConvexSpace::vector_space_type::field_type;
+  using vector_space_type = typename ConvexSpace::vector_space_type;
 
   template<convex_space ConvexSpace>
-  inline constexpr std::size_t space_dimension{ConvexSpace::vector_space_type::dimension};
+  using space_value_type = typename vector_space_type<ConvexSpace>::field_type;
+
+
+  template<convex_space ConvexSpace>
+  inline constexpr std::size_t space_dimension{vector_space_type<ConvexSpace>::dimension};
 
   template<class T>
   concept affine_space = convex_space<T>; //TO DO: more than a semantic difference?
 
-  template<class V, convex_space ConvexSpace>
-  inline constexpr bool is_validator_for{
-       std::default_initializable<V>
+  template<class V, class ConvexSpace>
+  concept validator_for =
+       convex_space<ConvexSpace>
+    && std::default_initializable<V>
     && std::constructible_from<V, V>
     && (    requires (V& v, std::array<const space_value_type<ConvexSpace>, space_dimension<ConvexSpace>> values) {
               { v(values) } -> std::convertible_to<decltype(values)>;
             }
          || (   (space_dimension<ConvexSpace> == 1)
              && requires(V & v, const space_value_type<ConvexSpace>& val) { { v(val) } -> std::convertible_to<decltype(val)>; })
-       )
-  };
+       );
 
-  template<convex_space ConvexSpace, basis Basis, class Origin, class Validator>
-    requires basis_for<Basis, typename ConvexSpace::vector_space_type>
-          && std::default_initializable<Validator>
-          && std::constructible_from<Validator, Validator>
+  template<convex_space ConvexSpace, basis_for<vector_space_type<ConvexSpace>> Basis, class Origin, validator_for<ConvexSpace> Validator>
   class coordinates_base;
 
   struct intrinsic_origin {};
 
-  template<convex_space ConvexSpace, basis Basis, class Origin, class Validator>
-    requires basis_for<Basis, typename ConvexSpace::vector_space_type>
-          && std::default_initializable<Validator>
-          && std::constructible_from<Validator, Validator>
+  template<convex_space ConvexSpace, basis_for<vector_space_type<ConvexSpace>> Basis, class Origin, validator_for<ConvexSpace> Validator>
   class coordinates;
 
-  template<affine_space AffineSpace, basis Basis, class Origin>
-    requires basis_for<Basis, typename AffineSpace::vector_space_type>
+  template<affine_space AffineSpace, basis_for<vector_space_type<AffineSpace>> Basis, class Origin>
   using affine_coordinates = coordinates<AffineSpace, Basis, Origin, std::identity>;
 
-  template<vector_space VectorSpace, basis Basis>
-    requires basis_for<Basis, typename VectorSpace::vector_space_type>
+  template<vector_space VectorSpace, basis_for<vector_space_type<VectorSpace>> Basis>
   using vector_coordinates = affine_coordinates<VectorSpace, Basis, intrinsic_origin>;
 
-  template<convex_space ConvexSpace, basis Basis, class Origin, class Validator>
-    requires basis_for<Basis, typename ConvexSpace::vector_space_type>
-          && std::default_initializable<Validator>
-          && std::constructible_from<Validator, Validator>
+  template<convex_space ConvexSpace, basis_for<vector_space_type<ConvexSpace>> Basis, class Origin, validator_for<ConvexSpace> Validator>
   class coordinates_base
   {
   public:
@@ -425,10 +418,7 @@ namespace sequoia::maths
     }
   };
 
-  template<convex_space ConvexSpace, basis Basis, class Origin, class Validator>
-    requires basis_for<Basis, typename ConvexSpace::vector_space_type>
-          && std::default_initializable<Validator>
-          && std::constructible_from<Validator, Validator>
+  template<convex_space ConvexSpace, basis_for<vector_space_type<ConvexSpace>> Basis, class Origin, validator_for<ConvexSpace> Validator>
   class coordinates : public coordinates_base<ConvexSpace, Basis, Origin, Validator>
   {
   public:
