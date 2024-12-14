@@ -42,13 +42,18 @@ namespace sequoia::testing
       using mass_t = quantity<mass_space<float>, units::kilogram_t>;
 
       check_exception_thrown<std::domain_error>("Negative mass", [](){ return mass_t{-1.0, units::kilogram}; });
-      
-      mass_t m{1.0, units::kilogram};
-      constexpr mass_t m2{2.0, units::kilogram};
-      check(equivalence, "", m, 1.0f);
-      check(equivalence, "", m2, 2.0f);
 
-      check_semantics("", m, m2, std::weak_ordering::less);
+      auto g{coordinates_operations::make_dim_1_orderable_transition_graph<mass_t>(units::kilogram)};
+
+      auto checker{
+          [this](std::string_view description, const mass_t& obtained, const mass_t& prediction, const mass_t& parent, std::weak_ordering ordering) {
+            check(equality, description, obtained, prediction);
+            if(ordering != std::weak_ordering::equivalent)
+              check_semantics(description, prediction, parent, ordering);
+          }
+      };
+
+      transition_checker<mass_t>::check(report(""), g, checker);
     }
 
     {
