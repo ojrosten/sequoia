@@ -116,8 +116,8 @@ namespace sequoia::testing
   [[nodiscard]]
   std::weak_ordering to_ordering(Label From, Label To)
   {
-    return From > To ? std::weak_ordering::less
-         : From < To ? std::weak_ordering::greater
+    return From < To ? std::weak_ordering::less
+         : From > To ? std::weak_ordering::greater
                      : std::weak_ordering::equivalent;
   }
 
@@ -153,7 +153,7 @@ namespace sequoia::testing
   
   struct coordinates_operations
   {
-    enum dim_1_label{ zero, one, two, neg_one };
+    enum dim_1_label{ two, one, zero, neg_one };
     enum dim_2_label{ neg_one_neg_one, neg_one_zero, zero_neg_one, zero_zero, zero_one, one_zero, one_one };
 
     template<class Coordinates>
@@ -171,7 +171,7 @@ namespace sequoia::testing
     };
 
     template<class Coordinates, class CoordGenerator=default_producer<Coordinates>>
-    static typename transition_checker<Coordinates>::transition_graph make_dim_1_orderable_transition_graph(CoordGenerator producer={})
+    static typename transition_checker<Coordinates>::transition_graph make_dim_1_transition_graph(CoordGenerator producer={})
     {
       using coords_t     = Coordinates;
       using coords_graph = transition_checker<coords_t>::transition_graph;
@@ -182,96 +182,194 @@ namespace sequoia::testing
         {
           {}, {}, {}
         },
-        {coords_t{}, producer(1), producer(2)}
+        {producer(2), producer(1), coords_t{}}
       };
 
       // Joins from zero
-      g.join(dim_1_label::zero,
-             dim_1_label::one,
-             "(0) +  (1)",
-             [](coords_t p) -> coords_t { return p +  vec_t{field_t(1)}; },
-             std::weak_ordering::greater);
+      add_transition<coords_t>(
+        g,
+        dim_1_label::zero,
+        dim_1_label::one,
+        "(0) +  (1)",
+        [](coords_t p) -> coords_t { return p +  vec_t{field_t(1)}; }
+      );
 
-      g.join(dim_1_label::zero,
-             dim_1_label::one,
-             "(0) += (1)",
-             [](coords_t p) -> coords_t { return p += vec_t{field_t(1)}; },
-             std::weak_ordering::greater);
+      add_transition<coords_t>(
+        g,
+        dim_1_label::zero,
+        dim_1_label::one,
+        "(0) += (1)",
+        [](coords_t p) -> coords_t { return p += vec_t{field_t(1)}; }
+      );
 
       // Joins from one
 
-      g.join(dim_1_label::one,
-             dim_1_label::zero,
-             "(1)  - (1)",
-             [](coords_t p) -> coords_t { return p -  vec_t{field_t(1)}; },
-             std::weak_ordering::less);
+      add_transition<coords_t>(
+        g,
+        dim_1_label::one,
+        dim_1_label::zero,
+        "(1)  - (1)",
+        [](coords_t p) -> coords_t { return p -  vec_t{field_t(1)}; }
+      );
 
-      g.join(dim_1_label::one,
-             dim_1_label::zero,
-             "(1) -= (1)", [](coords_t p) -> coords_t { return p -= vec_t{field_t(1)}; },
-             std::weak_ordering::less);
+      add_transition<coords_t>(
+        g,
+        dim_1_label::one,
+        dim_1_label::zero,
+        "(1) -= (1)", [](coords_t p) -> coords_t { return p -= vec_t{field_t(1)}; }
+      );
 
-      g.join(dim_1_label::one,
-             dim_1_label::one,
-             "+(1)",
-             [](coords_t p) -> coords_t { return +p;},
-             std::weak_ordering::equivalent);
+      add_transition<coords_t>(
+        g,
+        dim_1_label::one,
+        dim_1_label::one,
+        "+(1)",
+        [](coords_t p) -> coords_t { return +p;}
+      );
 
-      g.join(dim_1_label::one,
-             dim_1_label::two,
-             "(1)  + (1)",
-             [](coords_t p) -> coords_t { return p +  vec_t{field_t(1)}; },
-             std::weak_ordering::greater);
+      add_transition<coords_t>(
+        g,
+        dim_1_label::one,
+        dim_1_label::two,
+        "(1)  + (1)",
+        [](coords_t p) -> coords_t { return p +  vec_t{field_t(1)}; }
+      );
 
-      g.join(dim_1_label::one,
-             dim_1_label::two,
-             "(1) += (1)",
-             [](coords_t p) -> coords_t { return p += vec_t{field_t(1)}; },
-             std::weak_ordering::greater);
+      add_transition<coords_t>(
+        g,
+        dim_1_label::one,
+        dim_1_label::two,
+        "(1) += (1)",
+        [](coords_t p) -> coords_t { return p += vec_t{field_t(1)}; }
+      );
 
       // Joins from two
 
-      g.join(dim_1_label::two,
-             dim_1_label::one,
-             "(2) - (1)",
-             [](coords_t p) -> coords_t { return p - vec_t{field_t(1)}; },
-             std::weak_ordering::less);
+      add_transition<coords_t>(
+        g,
+        dim_1_label::two,
+        dim_1_label::one,
+        "(2) - (1)",
+        [](coords_t p) -> coords_t { return p - vec_t{field_t(1)}; }
+      );
 
       if constexpr(!maths::defines_absolute_scale_v<typename Coordinates::validator_type>)
       {
         g.add_node(producer(-1));
 
         // Joins to neg_one
-        g.join(dim_1_label::one,
-               dim_1_label::neg_one,
-               "-(1)",
-               [](coords_t p) -> coords_t { return -p; },
-               std::weak_ordering::less);
+        add_transition<coords_t>(
+          g,
+          dim_1_label::one,
+          dim_1_label::neg_one,
+          "-(1)",
+          [](coords_t p) -> coords_t { return -p; }
+        );
 
         // Joins from neg_one
-        g.join(dim_1_label::neg_one,
-               dim_1_label::one,
-               "- (-1)",
-               [](coords_t p) -> coords_t { return -p;  },
-               std::weak_ordering::greater);
+        add_transition<coords_t>(
+          g,
+          dim_1_label::neg_one,
+          dim_1_label::one,
+          "- (-1)",
+          [](coords_t p) -> coords_t { return -p;  }
+        );
     
-        g.join(dim_1_label::neg_one,
-               dim_1_label::neg_one,
-               "+ (-1)",
-               [](coords_t p) -> coords_t { return +p;  },
-               std::weak_ordering::equivalent);
+        add_transition<coords_t>(
+          g,
+          dim_1_label::neg_one,
+          dim_1_label::neg_one,
+          "+ (-1)",
+          [](coords_t p) -> coords_t { return +p;  }
+        );
 
-        g.join(dim_1_label::neg_one,
-               dim_1_label::zero,
-               "(-1) += 1",
-               [](coords_t p) -> coords_t { auto& v{p.value()}; v += 1; return p; },
-               std::weak_ordering::greater);
+        add_transition<coords_t>(
+          g,
+          dim_1_label::neg_one,
+          dim_1_label::zero,
+          "(-1) += 1",
+          [](coords_t p) -> coords_t { auto& v{p.value()}; v += 1; return p; }
+        );
 
-        g.join(dim_1_label::neg_one,
-               dim_1_label::zero,
-               "(-1) + 1",
-               [](coords_t p) -> coords_t { auto& v{p.value()}; v += 1; return p; },
-               std::weak_ordering::greater);
+        add_transition<coords_t>(
+          g,
+          dim_1_label::neg_one,
+          dim_1_label::zero,
+          "(-1) + 1",
+          [](coords_t p) -> coords_t { auto& v{p.value()}; v += 1; return p; }
+        );
+      }
+
+      if constexpr(   //maths::defines_absolute_scale_v<typename Coordinates::validator_type>
+                   std::is_same_v<typename Coordinates::origin_type, maths::intrinsic_origin>)
+      {
+        add_transition<coords_t>(
+          g,
+          dim_1_label::one,
+          dim_1_label::zero,
+          "(1) * field_t{}",
+          [](coords_t v) -> coords_t { return v * field_t{}; }
+        );
+
+        add_transition<coords_t>(
+          g,
+          dim_1_label::one,
+          dim_1_label::zero,
+          "field_t{} * (1)",
+          [](coords_t v) -> coords_t { return field_t{} *v; }
+        );
+
+        add_transition<coords_t>(
+          g,
+          dim_1_label::one,
+          dim_1_label::zero,
+          "(1) *= field_t{}",
+          [](coords_t v) -> coords_t { return v *= field_t{}; }
+        );
+
+        // (1) --> (2)
+
+        add_transition<coords_t>(
+          g,
+          dim_1_label::one,
+          dim_1_label::two,
+          "(1) * field_t{2}",
+          [](coords_t v) -> coords_t { return v * field_t{2}; }
+        );
+
+        add_transition<coords_t>(
+          g,
+          dim_1_label::one,
+          dim_1_label::two,
+          "field_t{2} * (1)",
+          [](coords_t v) -> coords_t { return field_t{2} *v; }
+        );
+
+        add_transition<coords_t>(
+          g,
+          dim_1_label::one,
+          dim_1_label::two,
+          "(1) *= field_t{2}",
+          [](coords_t v) -> coords_t { return v *= field_t{2}; }
+        );
+
+        // (2) --> (1)
+
+        add_transition<coords_t>(
+          g,
+          dim_1_label::two,
+          dim_1_label::one,
+          "(2) / field_t{2}",
+          [](coords_t v) -> coords_t { return v / field_t{2}; }
+        );
+
+        add_transition<coords_t>(
+          g,
+          dim_1_label::two,
+          dim_1_label::one,
+          "(2) /= field_t{2}",
+          [](coords_t v) -> coords_t { return v /= field_t{2}; }
+        );
       }
 
       return g;

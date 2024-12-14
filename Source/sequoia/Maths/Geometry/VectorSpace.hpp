@@ -230,11 +230,12 @@ namespace sequoia::maths
   class coordinates_base
   {
   public:
-    using convex_space_type = ConvexSpace;
+    using convex_space_type = ConvexSpace;   
+    using basis_type        = Basis;
     using validator_type    = Validator;
+    using origin_type       = Origin;
     using set_type          = typename ConvexSpace::set_type;
     using vector_space_type = typename ConvexSpace::vector_space_type;
-    using basis_type        = Basis;
     using field_type        = typename vector_space_type::field_type;
     using value_type        = field_type;
 
@@ -444,9 +445,9 @@ namespace sequoia::maths
       }
       else
       {
-        auto tmp{self.values()};
+        auto tmp{self.m_Values};
         std::ranges::for_each(tmp, f);
-        self.values() = self.m_Validator(tmp);
+        self.m_Values = self.m_Validator(tmp);
       }
     }
   };

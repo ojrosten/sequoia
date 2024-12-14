@@ -35,7 +35,7 @@ namespace sequoia::testing
   void affine_coordinates_test::test_affine_1_orderable()
   {
     using affine_t = affine_coordinates<my_affine_space<Element, Field, 1>, canonical_basis<Element, Field, 1>, alice>;
-    auto g{coordinates_operations::make_dim_1_orderable_transition_graph<affine_t>()};
+    auto g{coordinates_operations::make_dim_1_transition_graph<affine_t>()};
 
     auto checker{
         [this](std::string_view description, const affine_t& obtained, const affine_t& prediction, const affine_t& parent, std::weak_ordering ordering) {
@@ -52,7 +52,7 @@ namespace sequoia::testing
   void affine_coordinates_test::test_affine_1_unorderable()
   {
     using affine_t = affine_coordinates<my_affine_space<Element, Field, 1>, canonical_basis<Element, Field, 1>, alice>;
-    auto g{coordinates_operations::make_dim_1_unorderable_transition_graph<affine_t>()};
+    auto g{coordinates_operations::make_dim_1_transition_graph<affine_t>()};
 
     auto checker{
         [this](std::string_view description, const affine_t& obtained, const affine_t& prediction, const affine_t& parent, std::size_t host, std::size_t target) {

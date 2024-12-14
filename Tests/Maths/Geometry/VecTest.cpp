@@ -109,83 +109,6 @@ namespace sequoia::testing
     }
 
     template<class VecCoords, maths::network Graph>
-    void add_dim_1_transitions(Graph& g, vec_test& t)
-    {
-      using vec_t   = VecCoords;
-      using field_t = vec_t::field_type;
-
-      // (1) --> (0)
-
-      add_transition<vec_t>(
-        g,
-        coordinates_operations::dim_1_label::one,
-        coordinates_operations::dim_1_label::zero,
-        t.report("(1) * field_t{}"),
-        [](vec_t v) -> vec_t { return v * field_t{}; }
-      );
-
-      add_transition<vec_t>(
-        g,
-        coordinates_operations::dim_1_label::one,
-        coordinates_operations::dim_1_label::zero,
-        t.report("field_t{} * (1)"),
-        [](vec_t v) -> vec_t { return field_t{} *v; }
-      );
-
-      add_transition<vec_t>(
-        g,
-        coordinates_operations::dim_1_label::one,
-        coordinates_operations::dim_1_label::zero,
-        t.report("(1) *= field_t{}"),
-        [](vec_t v) -> vec_t { return v *= field_t{}; }
-      );
-
-      // (1) --> (2)
-
-      add_transition<vec_t>(
-        g,
-        coordinates_operations::dim_1_label::one,
-        coordinates_operations::dim_1_label::two,
-        t.report("(1) * field_t{2}"),
-        [](vec_t v) -> vec_t { return v * field_t{2}; }
-      );
-
-      add_transition<vec_t>(
-        g,
-        coordinates_operations::dim_1_label::one,
-        coordinates_operations::dim_1_label::two,
-        t.report("field_t{2} * (1)"),
-        [](vec_t v) -> vec_t { return field_t{2} *v; }
-      );
-
-      add_transition<vec_t>(
-        g,
-        coordinates_operations::dim_1_label::one,
-        coordinates_operations::dim_1_label::two,
-        t.report("(1) *= field_t{2}"),
-        [](vec_t v) -> vec_t { return v *= field_t{2}; }
-      );
-
-      // (2) --> (1)
-
-      add_transition<vec_t>(
-        g,
-        coordinates_operations::dim_1_label::two,
-        coordinates_operations::dim_1_label::one,
-        t.report("(2) / field_t{2}"),
-        [](vec_t v) -> vec_t { return v / field_t{2}; }
-      );
-
-      add_transition<vec_t>(
-        g,
-        coordinates_operations::dim_1_label::two,
-        coordinates_operations::dim_1_label::one,
-        t.report("(2) /= field_t{2}"),
-        [](vec_t v) -> vec_t { return v /= field_t{2}; }
-      );
-    }
-
-    template<class VecCoords, maths::network Graph>
     void add_dim_2_transitions(Graph& g, vec_test& t)
     {
       using vec_t = VecCoords;
@@ -251,9 +174,7 @@ namespace sequoia::testing
   void vec_test::test_vec_1_orderable()
   {
     using vec_t = vector_coordinates<my_vec_space<Set, Field, 1>, canonical_basis<Set, Field, 1>>;
-    auto g{coordinates_operations::make_dim_1_orderable_transition_graph<vec_t>()};
-
-    add_dim_1_transitions<vec_t>(g, *this);
+    auto g{coordinates_operations::make_dim_1_transition_graph<vec_t>()};
 
     auto checker{
       [this](std::string_view description, const vec_t& obtained, const vec_t& prediction, const vec_t& parent, std::weak_ordering ordering) {
@@ -263,16 +184,14 @@ namespace sequoia::testing
       }
     };
 
-    transition_checker<vec_t>::check(report(""), g, checker);
+    transition_checker<vec_t>::check("", g, checker);
   }
 
   template<class Set, maths::weak_field Field>
   void vec_test::test_vec_1_unorderable()
   {
     using vec_t = vector_coordinates<my_vec_space<Set, Field, 1>, canonical_basis<Set, Field, 1>>;
-    auto g{coordinates_operations::make_dim_1_unorderable_transition_graph<vec_t>()};
-
-    add_dim_1_transitions<vec_t>(g, *this);
+    auto g{coordinates_operations::make_dim_1_transition_graph<vec_t>()};
 
     auto checker{
         [this](std::string_view description, const vec_t& obtained, const vec_t& prediction, const vec_t& parent, std::size_t host, std::size_t target) {
@@ -281,7 +200,7 @@ namespace sequoia::testing
         }
     };
 
-    transition_checker<vec_t>::check(report(""), g, checker);
+    transition_checker<vec_t>::check("", g, checker);
   }
 
   template<class Set, maths::weak_field Field>
@@ -299,7 +218,7 @@ namespace sequoia::testing
         }
     };
 
-    transition_checker<vec_t>::check(report(""), g, checker);
+    transition_checker<vec_t>::check("", g, checker);
   }
 
   template<class Set, std::floating_point Field>
