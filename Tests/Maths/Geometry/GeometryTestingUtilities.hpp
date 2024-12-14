@@ -126,18 +126,18 @@ namespace sequoia::testing
       coords_graph g{
         {
           {
-            edge_t{dim_1_label::one, "(0) +  (1)", [](coords_t p) -> coords_t { return p +  vec_t{field_t(1)}; }, std::weak_ordering::greater},
-            edge_t{dim_1_label::one, "(0) += (1)", [](coords_t p) -> coords_t { return p += vec_t{field_t(1)}; }, std::weak_ordering::greater}
+            edge_t{dim_1_label::one,  "(0) +  (1)", [](coords_t p) -> coords_t { return p +  vec_t{field_t(1)}; }, std::weak_ordering::greater},
+            edge_t{dim_1_label::one,  "(0) += (1)", [](coords_t p) -> coords_t { return p += vec_t{field_t(1)}; }, std::weak_ordering::greater}
           }, // zero
           {
-            edge_t{dim_1_label::zero,    "(1)  - (1)", [](coords_t p) -> coords_t { return p -  vec_t{field_t(1)}; }, std::weak_ordering::less},
-            edge_t{dim_1_label::zero,    "(1) -= (1)", [](coords_t p) -> coords_t { return p -= vec_t{field_t(1)}; }, std::weak_ordering::less},
-            edge_t{dim_1_label::one,     "+(1)",       [](coords_t p) -> coords_t { return +p;                     }, std::weak_ordering::equivalent},
-            edge_t{dim_1_label::two,     "(1)  + (1)", [](coords_t p) -> coords_t { return p +  vec_t{field_t(1)}; }, std::weak_ordering::greater},
-            edge_t{dim_1_label::two,     "(1) += (1)", [](coords_t p) -> coords_t { return p += vec_t{field_t(1)}; }, std::weak_ordering::greater},
+            edge_t{dim_1_label::zero, "(1)  - (1)", [](coords_t p) -> coords_t { return p -  vec_t{field_t(1)}; }, std::weak_ordering::less},
+            edge_t{dim_1_label::zero, "(1) -= (1)", [](coords_t p) -> coords_t { return p -= vec_t{field_t(1)}; }, std::weak_ordering::less},
+            edge_t{dim_1_label::one,  "+(1)",       [](coords_t p) -> coords_t { return +p;                     }, std::weak_ordering::equivalent},
+            edge_t{dim_1_label::two,  "(1)  + (1)", [](coords_t p) -> coords_t { return p +  vec_t{field_t(1)}; }, std::weak_ordering::greater},
+            edge_t{dim_1_label::two,  "(1) += (1)", [](coords_t p) -> coords_t { return p += vec_t{field_t(1)}; }, std::weak_ordering::greater},
           }, // one
           {
-            edge_t{dim_1_label::one, "(2) - (1)", [](coords_t p) -> coords_t { return p - vec_t{field_t(1)}; }, std::weak_ordering::less}
+            edge_t{dim_1_label::one,  "(2) - (1)",  [](coords_t p) -> coords_t { return p - vec_t{field_t(1)}; }, std::weak_ordering::less}
           }  // two
         },
         {coords_t{}, coords_t{field_t(1), units...}, coords_t{field_t(2), units...}}
