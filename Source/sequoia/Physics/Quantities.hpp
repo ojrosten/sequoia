@@ -17,37 +17,6 @@ namespace sequoia::physics
 {
   using namespace maths;
 
-  struct absolute_validator
-  {
-    template<std::floating_point T>
-    [[nodiscard]]
-    constexpr T operator()(const T val) const
-    {
-      if(val < T{}) throw std::domain_error{std::format("Value {} less than zero", val)};
-
-      return val;
-    }
-
-    template<std::floating_point T>
-    [[nodiscard]]
-    constexpr T operator()(std::array<T, 1> val) const
-    {
-      return operator()(val.front());
-    }
-  };
-
-  template<class T>
-  struct defines_absolute_scale : std::false_type {};
-
-  template<class T>
-  using defines_absolute_scale_t = typename defines_absolute_scale<T>::type;
-
-  template<class T>
-  inline constexpr bool defines_absolute_scale_v{defines_absolute_scale<T>::value};
-
-  template<>
-  struct defines_absolute_scale<absolute_validator> : std::true_type {};
-
   struct coordinate_basis_type{};
 
   template<class VectorSpace, class Unit, std::floating_point T>

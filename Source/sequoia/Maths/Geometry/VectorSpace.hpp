@@ -18,6 +18,7 @@
 #include <concepts>
 #include <cmath>
 #include <complex>
+#include <format>
 #include <ranges>
 #include <span>
 
@@ -178,6 +179,41 @@ namespace sequoia::maths
 
   template<convex_space ConvexSpace, basis_for<vector_space_type<ConvexSpace>> Basis, class Origin, validator_for<ConvexSpace> Validator>
   class coordinates_base;
+
+  struct absolute_validator
+  {
+    template<std::floating_point T>
+    [[nodiscard]]
+    constexpr T operator()(const T val) const
+    {
+      if(val < T{}) throw std::domain_error{std::format("Value {} less than zero", val)};
+
+      return val;
+    }
+
+    template<std::floating_point T>
+    [[nodiscard]]
+    constexpr std::array<T, 1> operator()(std::array<T, 1> val) const
+    {
+      return {operator()(val.front())};
+    }
+  };
+
+  // TO DO: review this! absolute scale is more physics than maths.
+  // However, the notion of a half-space is reasonable for the maths
+  // namespace; so maybe it's a matter of renaming...
+  template<class T>
+  struct defines_absolute_scale : std::false_type {};
+
+  template<class T>
+  using defines_absolute_scale_t = typename defines_absolute_scale<T>::type;
+
+  template<class T>
+  inline constexpr bool defines_absolute_scale_v{defines_absolute_scale<T>::value};
+
+  template<>
+  struct defines_absolute_scale<absolute_validator> : std::true_type {};
+
 
   struct intrinsic_origin {};
 
@@ -392,9 +428,9 @@ namespace sequoia::maths
       }
       else
       {
-        auto tmp{self.values()};
+        auto tmp{self.m_Values};
         std::ranges::for_each(std::views::zip(tmp, rhs), [&f](auto&& z){ f(std::get<0>(z), std::get<1>(z)); });
-        self.values() = self.m_Validator(tmp);
+        self.m_Values = self.m_Validator(tmp);
       }
     }
 
