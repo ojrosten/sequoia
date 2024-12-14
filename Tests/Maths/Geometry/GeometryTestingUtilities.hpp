@@ -111,7 +111,7 @@ namespace sequoia::testing
 
   struct coordinates_operations
   {
-    enum dim_1_label{ neg_one, zero, one, two };
+    enum dim_1_label{ zero, one, two, neg_one };
     enum dim_2_label{ neg_one_neg_one, neg_one_zero, zero_neg_one, zero_zero, zero_one, one_zero, one_one };
 
     template<class Coordinates, class... Units>
@@ -126,17 +126,10 @@ namespace sequoia::testing
       coords_graph g{
         {
           {
-            edge_t{dim_1_label::one,     "- (-1)",    [](coords_t p) -> coords_t { return -p;  }, std::weak_ordering::greater},
-            edge_t{dim_1_label::neg_one, "+ (-1)",    [](coords_t p) -> coords_t { return +p;  }, std::weak_ordering::equivalent},
-            edge_t{dim_1_label::zero,    "(-1) + 1",  [](coords_t p) -> coords_t { auto& v{p.value()}; v += 1; return p; }, std::weak_ordering::greater},
-            edge_t{dim_1_label::zero,    "(-1) + 1",  [](coords_t p) -> coords_t { auto& v{p.value()}; v += 1; return p; }, std::weak_ordering::greater}
-          }, // neg_one
-          {
             edge_t{dim_1_label::one, "(0) +  (1)", [](coords_t p) -> coords_t { return p +  vec_t{field_t(1)}; }, std::weak_ordering::greater},
             edge_t{dim_1_label::one, "(0) += (1)", [](coords_t p) -> coords_t { return p += vec_t{field_t(1)}; }, std::weak_ordering::greater}
           }, // zero
           {
-            edge_t{dim_1_label::neg_one, "-(1)",       [](coords_t p) -> coords_t { return -p;                     }, std::weak_ordering::less},
             edge_t{dim_1_label::zero,    "(1)  - (1)", [](coords_t p) -> coords_t { return p -  vec_t{field_t(1)}; }, std::weak_ordering::less},
             edge_t{dim_1_label::zero,    "(1) -= (1)", [](coords_t p) -> coords_t { return p -= vec_t{field_t(1)}; }, std::weak_ordering::less},
             edge_t{dim_1_label::one,     "+(1)",       [](coords_t p) -> coords_t { return +p;                     }, std::weak_ordering::equivalent},
@@ -145,10 +138,47 @@ namespace sequoia::testing
           }, // one
           {
             edge_t{dim_1_label::one, "(2) - (1)", [](coords_t p) -> coords_t { return p - vec_t{field_t(1)}; }, std::weak_ordering::less}
-          }, // two
+          }  // two
         },
-        {coords_t{field_t(-1), units...}, coords_t{}, coords_t{field_t(1), units...}, coords_t{field_t(2), units...}}
+        {coords_t{}, coords_t{field_t(1), units...}, coords_t{field_t(2), units...}}
       };
+
+      if constexpr(!maths::defines_absolute_scale_v<typename Coordinates::validator_type>)
+      {
+        g.add_node(coords_t{field_t(-1), units...});
+
+        // Joins to neg_one
+        g.join(dim_1_label::one,
+               dim_1_label::neg_one,
+               "-(1)",
+               [](coords_t p) -> coords_t { return -p; },
+               std::weak_ordering::less);
+
+        // Joins from neg_one
+        g.join(dim_1_label::neg_one,
+               dim_1_label::one,
+               "- (-1)",
+               [](coords_t p) -> coords_t { return -p;  },
+               std::weak_ordering::greater);
+    
+        g.join(dim_1_label::neg_one,
+               dim_1_label::neg_one,
+               "+ (-1)",
+               [](coords_t p) -> coords_t { return +p;  },
+               std::weak_ordering::equivalent);
+
+        g.join(dim_1_label::neg_one,
+               dim_1_label::zero,
+               "(-1) += 1",
+               [](coords_t p) -> coords_t { auto& v{p.value()}; v += 1; return p; },
+               std::weak_ordering::greater);
+
+        g.join(dim_1_label::neg_one,
+               dim_1_label::zero,
+               "(-1) + 1",
+               [](coords_t p) -> coords_t { auto& v{p.value()}; v += 1; return p; },
+               std::weak_ordering::greater);
+      }
 
       return g;
     }
@@ -163,11 +193,7 @@ namespace sequoia::testing
       using field_t      = vec_t::field_type;
 
       coords_graph g{
-        {
-          {
-            edge_t{dim_1_label::one,     "- (-1)", [](coords_t p) -> coords_t { return -p;  }},
-            edge_t{dim_1_label::neg_one, "+ (-1)", [](coords_t p) -> coords_t { return +p;  }}
-          }, // neg_one
+        {          
           {
             edge_t{dim_1_label::one, "(0) +  (1)", [](coords_t p) -> coords_t { return p +  vec_t{field_t(1)}; }},
             edge_t{dim_1_label::one, "(0) += (1)", [](coords_t p) -> coords_t { return p += vec_t{field_t(1)}; }}
@@ -183,8 +209,12 @@ namespace sequoia::testing
           {
             edge_t{dim_1_label::one, "(2) - (1)", [](coords_t p) -> coords_t { return p - vec_t{field_t(1)}; }}
           }, // two
+          {
+            edge_t{dim_1_label::one,     "- (-1)", [](coords_t p) -> coords_t { return -p;  }},
+            edge_t{dim_1_label::neg_one, "+ (-1)", [](coords_t p) -> coords_t { return +p;  }}
+          }  // neg_one
         },
-        {coords_t{field_t(-1)}, coords_t{}, coords_t{field_t(1)}, coords_t{field_t(2)}}
+        {coords_t{}, coords_t{field_t(1)}, coords_t{field_t(2)}, coords_t{field_t(-1)}}
       };
 
       return g;
