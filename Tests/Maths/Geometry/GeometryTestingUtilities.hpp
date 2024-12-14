@@ -114,8 +114,22 @@ namespace sequoia::testing
     enum dim_1_label{ zero, one, two, neg_one };
     enum dim_2_label{ neg_one_neg_one, neg_one_zero, zero_neg_one, zero_zero, zero_one, one_zero, one_one };
 
-    template<class Coordinates, class... Units>
-    static typename transition_checker<Coordinates>::transition_graph make_dim_1_orderable_transition_graph(Units... units)
+    template<class Coordinates>
+    struct default_producer
+    {
+      using coords_t = Coordinates;
+      using vec_t    = maths::vector_coordinates<typename coords_t::vector_space_type, typename coords_t::basis_type>;
+      using field_t  = vec_t::field_type;
+
+      [[nodiscard]]
+      Coordinates operator()(field_t val) const
+      {
+        return Coordinates{val};
+      }
+    };
+
+    template<class Coordinates, class CoordGenerator=default_producer<Coordinates>>
+    static typename transition_checker<Coordinates>::transition_graph make_dim_1_orderable_transition_graph(CoordGenerator producer={})
     {
       using coords_t     = Coordinates;
       using coords_graph = transition_checker<coords_t>::transition_graph;
@@ -140,12 +154,12 @@ namespace sequoia::testing
             edge_t{dim_1_label::one,  "(2) - (1)",  [](coords_t p) -> coords_t { return p - vec_t{field_t(1)}; }, std::weak_ordering::less}
           }  // two
         },
-        {coords_t{}, coords_t{field_t(1), units...}, coords_t{field_t(2), units...}}
+        {coords_t{}, producer(1), producer(2)}
       };
 
       if constexpr(!maths::defines_absolute_scale_v<typename Coordinates::validator_type>)
       {
-        g.add_node(coords_t{field_t(-1), units...});
+        g.add_node(producer(-1));
 
         // Joins to neg_one
         g.join(dim_1_label::one,
