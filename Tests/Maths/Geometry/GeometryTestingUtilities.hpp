@@ -109,6 +109,48 @@ namespace sequoia::testing
     }
   };
 
+  /*! Helper functions for building state-transition graphs*/
+
+  template<class Label>
+    requires std::convertible_to<Label, std::size_t>
+  [[nodiscard]]
+  std::weak_ordering to_ordering(Label From, Label To)
+  {
+    return From > To ? std::weak_ordering::less
+         : From < To ? std::weak_ordering::greater
+                     : std::weak_ordering::equivalent;
+  }
+
+  template<maths::network Graph, class Label, class Fn>
+    requires std::convertible_to<Label, std::size_t>
+  void add_transition(Graph& g, Label From, Label To, std::string_view message, Fn f, std::weak_ordering ordering)
+  {
+    g.join(From, To, std::string{message}, f, ordering);
+  }
+
+  template<maths::network Graph, class Label, class Fn>
+    requires std::convertible_to<Label, std::size_t>
+  void add_transition(Graph& g, Label From, Label To, std::string_view message, Fn f)
+  {
+    g.join(From, To, std::string{message}, f);
+  }
+
+  template<class Coords, maths::network Graph, class Label, class Fn>
+    requires std::is_invocable_r_v<Coords, Fn, Coords> && std::convertible_to<Label, std::size_t>
+  void add_transition(Graph& g, Label From, Label To, std::string_view message, Fn f)
+  {
+    using field_t = Coords::field_type;
+
+    if constexpr(std::totally_ordered<field_t>)
+      {
+        add_transition(g, From, To, message, f, to_ordering(From, To));
+      }
+    else
+      {
+        add_transition(g, From, To, message, f);
+      }
+  }
+  
   struct coordinates_operations
   {
     enum dim_1_label{ zero, one, two, neg_one };
@@ -133,29 +175,67 @@ namespace sequoia::testing
     {
       using coords_t     = Coordinates;
       using coords_graph = transition_checker<coords_t>::transition_graph;
-      using edge_t       = transition_checker<coords_t>::edge;
       using vec_t        = maths::vector_coordinates<typename coords_t::vector_space_type, typename coords_t::basis_type>;
       using field_t      = vec_t::field_type;
 
       coords_graph g{
         {
-          {
-            edge_t{dim_1_label::one,  "(0) +  (1)", [](coords_t p) -> coords_t { return p +  vec_t{field_t(1)}; }, std::weak_ordering::greater},
-            edge_t{dim_1_label::one,  "(0) += (1)", [](coords_t p) -> coords_t { return p += vec_t{field_t(1)}; }, std::weak_ordering::greater}
-          }, // zero
-          {
-            edge_t{dim_1_label::zero, "(1)  - (1)", [](coords_t p) -> coords_t { return p -  vec_t{field_t(1)}; }, std::weak_ordering::less},
-            edge_t{dim_1_label::zero, "(1) -= (1)", [](coords_t p) -> coords_t { return p -= vec_t{field_t(1)}; }, std::weak_ordering::less},
-            edge_t{dim_1_label::one,  "+(1)",       [](coords_t p) -> coords_t { return +p;                     }, std::weak_ordering::equivalent},
-            edge_t{dim_1_label::two,  "(1)  + (1)", [](coords_t p) -> coords_t { return p +  vec_t{field_t(1)}; }, std::weak_ordering::greater},
-            edge_t{dim_1_label::two,  "(1) += (1)", [](coords_t p) -> coords_t { return p += vec_t{field_t(1)}; }, std::weak_ordering::greater},
-          }, // one
-          {
-            edge_t{dim_1_label::one,  "(2) - (1)",  [](coords_t p) -> coords_t { return p - vec_t{field_t(1)}; }, std::weak_ordering::less}
-          }  // two
+          {}, {}, {}
         },
         {coords_t{}, producer(1), producer(2)}
       };
+
+      // Joins from zero
+      g.join(dim_1_label::zero,
+             dim_1_label::one,
+             "(0) +  (1)",
+             [](coords_t p) -> coords_t { return p +  vec_t{field_t(1)}; },
+             std::weak_ordering::greater);
+
+      g.join(dim_1_label::zero,
+             dim_1_label::one,
+             "(0) += (1)",
+             [](coords_t p) -> coords_t { return p += vec_t{field_t(1)}; },
+             std::weak_ordering::greater);
+
+      // Joins from one
+
+      g.join(dim_1_label::one,
+             dim_1_label::zero,
+             "(1)  - (1)",
+             [](coords_t p) -> coords_t { return p -  vec_t{field_t(1)}; },
+             std::weak_ordering::less);
+
+      g.join(dim_1_label::one,
+             dim_1_label::zero,
+             "(1) -= (1)", [](coords_t p) -> coords_t { return p -= vec_t{field_t(1)}; },
+             std::weak_ordering::less);
+
+      g.join(dim_1_label::one,
+             dim_1_label::one,
+             "+(1)",
+             [](coords_t p) -> coords_t { return +p;},
+             std::weak_ordering::equivalent);
+
+      g.join(dim_1_label::one,
+             dim_1_label::two,
+             "(1)  + (1)",
+             [](coords_t p) -> coords_t { return p +  vec_t{field_t(1)}; },
+             std::weak_ordering::greater);
+
+      g.join(dim_1_label::one,
+             dim_1_label::two,
+             "(1) += (1)",
+             [](coords_t p) -> coords_t { return p += vec_t{field_t(1)}; },
+             std::weak_ordering::greater);
+
+      // Joins from two
+
+      g.join(dim_1_label::two,
+             dim_1_label::one,
+             "(2) - (1)",
+             [](coords_t p) -> coords_t { return p - vec_t{field_t(1)}; },
+             std::weak_ordering::less);
 
       if constexpr(!maths::defines_absolute_scale_v<typename Coordinates::validator_type>)
       {
@@ -274,7 +354,13 @@ namespace sequoia::testing
         
           }, // one_one
         },
-        {coords_t{field_t(-1), field_t(-1)}, coords_t{field_t(-1), field_t{}}, coords_t{field_t{}, field_t(-1)}, coords_t{field_t{}, field_t{}}, coords_t{field_t{}, field_t(1)}, coords_t{field_t(1), field_t{}}, coords_t{field_t(1), field_t(1)}}
+        {coords_t{field_t(-1), field_t(-1)},
+         coords_t{field_t(-1), field_t{}},
+         coords_t{field_t{}, field_t(-1)},
+         coords_t{field_t{}, field_t{}},
+         coords_t{field_t{}, field_t(1)},
+         coords_t{field_t(1), field_t{}},
+         coords_t{field_t(1), field_t(1)}}
       };
 
       return g;
