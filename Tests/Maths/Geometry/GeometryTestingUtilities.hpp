@@ -231,16 +231,20 @@ namespace sequoia::testing
         {producer(2), producer(1), coords_t{}}
       };
 
-      add_common_dim_1_transitions(g, test);
+      add_dim_1_common_transitions(g, test);
 
       if constexpr(!maths::defines_absolute_scale_v<typename Coordinates::validator_type>)
       {
-        add_negative_dim_1_transitions(g, producer, test);
+        add_dim_1_negative_transitions(g, producer, test);
       }
+      else
+      {
+        add_dim_1_attempted_negative_transitions(g, producer, test);
+      }    
 
       if constexpr(std::is_same_v<typename Coordinates::origin_type, maths::intrinsic_origin>)
       {
-        add_intrinsic_origin_dim_1_transitions(g, test);
+        add_dim_1_intrinsic_origin_transitions(g, test);
       }
 
       return g;
@@ -293,13 +297,13 @@ namespace sequoia::testing
 
       if constexpr(std::is_same_v<typename Coordinates::origin_type, maths::intrinsic_origin>)
       {
-        add_intrinsic_origin_dim_2_transitions(g, test);
+        add_dim_2_intrinsic_origin_transitions(g, test);
       }
 
       return g;
     }
 
-    static void add_common_dim_1_transitions(maths::network auto& g, regular_test& test)
+    static void add_dim_1_common_transitions(maths::network auto& g, regular_test& test)
     {
       // Joins from zero
       add_transition<coords_t>(
@@ -372,7 +376,7 @@ namespace sequoia::testing
     }
 
     template<class Producer>
-    static void add_negative_dim_1_transitions(maths::network auto& g, Producer producer, regular_test& test)
+    static void add_dim_1_negative_transitions(maths::network auto& g, Producer producer, regular_test& test)
     {
       g.add_node(producer(-1));
 
@@ -385,6 +389,14 @@ namespace sequoia::testing
         [](coords_t p) -> coords_t { return -p; }
       );
 
+      add_transition<coords_t>(
+        g,
+        dim_1_label::one,
+        dim_1_label::neg_one,
+        test.report("(1) - (2)"),
+        [](coords_t p) -> coords_t { return p - vec_t{field_t(2)}; }
+      );
+      
       // Joins from neg_one
       add_transition<coords_t>(
         g,
@@ -419,7 +431,33 @@ namespace sequoia::testing
       );    
     }
 
-    static void add_intrinsic_origin_dim_1_transitions(maths::network auto& g, regular_test& test)
+    template<class Producer>
+    static void add_dim_1_attempted_negative_transitions(maths::network auto& g, Producer, regular_test& test)
+    {
+      add_transition<coords_t>(
+        g,
+        dim_1_label::one,
+        dim_1_label::one,
+        test.report("(1) - (2)"),
+        [&test](coords_t p) -> coords_t {
+          test.check_exception_thrown<std::domain_error>("", [&p](){ return p -= vec_t{field_t(2)};});
+          return p;
+        }
+      );
+
+      add_transition<coords_t>(
+        g,
+        dim_1_label::one,
+        dim_1_label::one,
+        test.report("(1) - (2)"),
+        [&test](coords_t p) -> coords_t {
+          test.check_exception_thrown<std::domain_error>("", [&p](){ return p = (p - vec_t{field_t(2)}); });
+          return p;
+        }
+      );
+    }
+
+    static void add_dim_1_intrinsic_origin_transitions(maths::network auto& g, regular_test& test)
     {
       add_transition<coords_t>(
         g,
@@ -490,7 +528,7 @@ namespace sequoia::testing
       );
     }
 
-    static void add_intrinsic_origin_dim_2_transitions(maths::network auto& g, regular_test& test)
+    static void add_dim_2_intrinsic_origin_transitions(maths::network auto& g, regular_test& test)
     {
       // (-1, -1) --> (1, 1)
 

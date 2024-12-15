@@ -7,3 +7,19 @@ Value -1 less than zero
 
 =======================================
 
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 443
+
+Expected Exception Type:
+[std::domain_error]
+Value -1 less than zero
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 454
+
+Expected Exception Type:
+[std::domain_error]
+Value -1 less than zero
+
+=======================================
+
