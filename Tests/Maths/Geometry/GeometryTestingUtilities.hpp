@@ -179,9 +179,14 @@ namespace sequoia::testing
 
     explicit coordinates_operations(regular_test& t) : m_Test{t} {} 
 
-    void test_vec_1()
+    void execute()
     {
-      auto g{make_dim_1_transition_graph()};
+      auto g{
+        [](){
+          if constexpr     (dimension == 1) return make_dim_1_transition_graph();
+          else if constexpr(dimension == 2) return make_dim_2_transition_graph();
+        }()
+      };
 
       transition_checker<vec_t>::check("", g, make_checker());
     }

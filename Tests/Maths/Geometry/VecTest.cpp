@@ -74,40 +74,23 @@ namespace sequoia::testing
 
   void vec_test::run_tests()
   {
-    test_vec_1<sets::R<1, float>, float>();
-    test_vec_1<sets::R<1,double>, double>();
-    test_vec_1<sets::C<1, float>, std::complex<float>>();
+    test_vec<sets::R<1, float>, float, 1>();
+    test_vec<sets::R<1,double>, double, 1>();
+    test_vec<sets::C<1, float>, std::complex<float>, 1>();
 
-    test_vec_2<sets::R<2, float>, float>();
-    test_vec_2<sets::C<2, double>, std::complex<double>>();
-    test_vec_2<sets::C<1, double>, double>(); // Complex numbers over the reals
+    test_vec<sets::R<2, float>, float, 2>();
+    test_vec<sets::C<2, double>, std::complex<double>, 2>();
+    test_vec<sets::C<1, double>, double, 2>(); // Complex numbers over the reals
 
     test_real_vec_1_inner_prod<sets::R<1, float>, float>();
     test_complex_vec_1_inner_prod<sets::C<1, double>, std::complex<double>>();
   }
 
-  template<class Set, maths::weak_field Field>
-  void vec_test::test_vec_1()
+  template<class Set, maths::weak_field Field, std::size_t D>
+  void vec_test::test_vec()
   {
-    using vec_t = vector_coordinates<my_vec_space<Set, Field, 1>, canonical_basis<Set, Field, 1>>;
-    coordinates_operations<vec_t> operations{*this};
-    operations.test_vec_1();
-  }
-
-  template<class Set, maths::weak_field Field>
-  void vec_test::test_vec_2()
-  {
-    using vec_t = vector_coordinates<my_vec_space<Set, Field, 2>, canonical_basis<Set, Field, 2>>;
-    auto g{coordinates_operations<vec_t>::make_dim_2_transition_graph()};
-
-    auto checker{
-        [this](std::string_view description, const vec_t& obtained, const vec_t& prediction, const vec_t& parent, std::size_t host, std::size_t target) {
-          check(equality, description, obtained, prediction);
-          if(host != target) check_semantics(description, prediction, parent);
-        }
-    };
-
-    transition_checker<vec_t>::check("", g, checker);
+    using vec_t = vector_coordinates<my_vec_space<Set, Field, D>, canonical_basis<Set, Field, D>>;
+    coordinates_operations<vec_t>{*this}.execute();
   }
 
   template<class Set, std::floating_point Field>

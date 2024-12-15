@@ -23,11 +23,8 @@ namespace sequoia::testing
 
     void run_tests();
 
-    template<class Set, maths::weak_field Field>
-    void test_vec_1();
-
-    template<class Set, maths::weak_field Field>
-    void test_vec_2();
+    template<class Set, maths::weak_field Field, std::size_t D>
+    void test_vec();
 
     template<class Set, std::floating_point Field>
     void test_real_vec_1_inner_prod();
