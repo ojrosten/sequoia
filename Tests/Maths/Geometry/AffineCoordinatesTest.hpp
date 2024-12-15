@@ -23,13 +23,7 @@ namespace sequoia::testing
 
     void run_tests();
 
-    template<class Element, maths::weak_field Field>
-    void test_affine_1_orderable();
-
-    template<class Element, maths::weak_field Field>
-    void test_affine_1_unorderable();
-
-    template<class Element, maths::weak_field Field>
-    void test_affine_2();
+    template<class Element, maths::weak_field Field, std::size_t D>
+    void test_affine();
   };
 }

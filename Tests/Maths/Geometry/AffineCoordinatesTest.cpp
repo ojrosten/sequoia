@@ -26,58 +26,15 @@ namespace sequoia::testing
 
   void affine_coordinates_test::run_tests()
   {
-    test_affine_1_orderable<float, float>();
-    test_affine_1_orderable<double, double>();
-    test_affine_1_unorderable<std::complex<float>, std::complex<float>>();
+    test_affine<float, float, 1>();
+    test_affine<double, double, 1>();
+    test_affine<std::complex<float>, std::complex<float>, 1>();
   }
 
-  template<class Element, maths::weak_field Field>
-  void affine_coordinates_test::test_affine_1_orderable()
+  template<class Element, maths::weak_field Field, std::size_t D>
+  void affine_coordinates_test::test_affine()
   {
-    using affine_t = affine_coordinates<my_affine_space<Element, Field, 1>, canonical_basis<Element, Field, 1>, alice>;
-    auto g{coordinates_operations<affine_t>::make_dim_1_transition_graph()};
-
-    auto checker{
-        [this](std::string_view description, const affine_t& obtained, const affine_t& prediction, const affine_t& parent, std::weak_ordering ordering) {
-          check(equality, description, obtained, prediction);
-          if(ordering != std::weak_ordering::equivalent)
-            check_semantics(description, prediction, parent, ordering);
-        }
-    };
-
-    transition_checker<affine_t>::check(report(""), g, checker);
+    using affine_t = affine_coordinates<my_affine_space<Element, Field, D>, canonical_basis<Element, Field, D>, alice>;
+    coordinates_operations<affine_t>{*this}.execute();
   }
-
-  template<class Element, maths::weak_field Field>
-  void affine_coordinates_test::test_affine_1_unorderable()
-  {
-    using affine_t = affine_coordinates<my_affine_space<Element, Field, 1>, canonical_basis<Element, Field, 1>, alice>;
-    auto g{coordinates_operations<affine_t>::make_dim_1_transition_graph()};
-
-    auto checker{
-        [this](std::string_view description, const affine_t& obtained, const affine_t& prediction, const affine_t& parent, std::size_t host, std::size_t target) {
-          check(equality, description, obtained, prediction);
-          if(host != target) check_semantics(description, prediction, parent);
-        }
-    };
-
-    transition_checker<affine_t>::check(report(""), g, checker);
-  }
-
-  template<class Element, maths::weak_field Field>
-  void affine_coordinates_test::test_affine_2()
-  {
-    using affine_t = affine_coordinates<my_affine_space<Element, Field, 2>, canonical_basis<Element, Field, 2>, alice>;
-    auto g{coordinates_operations<affine_t>::make_dim_2_transition_graph()};
-
-    auto checker{
-        [this](std::string_view description, const affine_t& obtained, const affine_t& prediction, const affine_t& parent, std::size_t host, std::size_t target) {
-          check(equality, description, obtained, prediction);
-          if(host != target) check_semantics(description, prediction, parent);
-        }
-    };
-
-    transition_checker<affine_t>::check(report(""), g, checker);
-  }
-
 }

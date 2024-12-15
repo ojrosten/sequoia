@@ -188,7 +188,7 @@ namespace sequoia::testing
         }()
       };
 
-      transition_checker<vec_t>::check("", g, make_checker());
+      transition_checker<coords_t>::check("", g, make_checker());
     }
 
     auto make_checker()
@@ -196,7 +196,7 @@ namespace sequoia::testing
       if constexpr(orderable)
       {
         return
-          [&test{m_Test}](std::string_view description, const vec_t& obtained, const vec_t& prediction, const vec_t& parent, std::weak_ordering ordering) {
+          [&test{m_Test}](std::string_view description, const coords_t& obtained, const coords_t& prediction, const coords_t& parent, std::weak_ordering ordering) {
             test.check(equality, description, obtained, prediction);
             if(ordering != std::weak_ordering::equivalent)
               test.check_semantics(description, prediction, parent, ordering);
@@ -205,7 +205,7 @@ namespace sequoia::testing
       else
       {
         return
-          [&test{m_Test}](std::string_view description, const vec_t& obtained, const vec_t& prediction, const vec_t& parent, std::size_t host, std::size_t target) {
+          [&test{m_Test}](std::string_view description, const coords_t& obtained, const coords_t& prediction, const coords_t& parent, std::size_t host, std::size_t target) {
             test.check(equality, description, obtained, prediction);
             if(host!= target) test.check_semantics(description, prediction, parent);
           };
