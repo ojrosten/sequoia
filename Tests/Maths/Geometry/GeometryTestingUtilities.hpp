@@ -155,21 +155,22 @@ namespace sequoia::testing
   
   template<class Coordinates>
   class coordinates_operations
-  {
-  public:
+  {    
+    enum dim_1_label{ two, one, zero, neg_one };
+    enum dim_2_label{ neg_one_neg_one, neg_one_zero, zero_neg_one, zero_zero, zero_one, one_zero, one_one };
+    
+    using graph_type = transition_checker<Coordinates>::transition_graph;    
     using coords_t   = Coordinates;
     using vec_t      = maths::vector_coordinates<typename coords_t::vector_space_type, typename coords_t::basis_type>;
-    using field_t    = vec_t::field_type;    
-    using graph_type = transition_checker<Coordinates>::transition_graph;
+    using field_t    = vec_t::field_type;
     constexpr static std::size_t dimension{Coordinates::dimension};
     constexpr static bool orderable{(dimension == 1) && std::totally_ordered<field_t>};
-    
+
+    regular_test& m_Test;
+    graph_type m_Graph;
+  public: 
     struct default_producer
     {
-      using coords_t = Coordinates;
-      using vec_t    = maths::vector_coordinates<typename coords_t::vector_space_type, typename coords_t::basis_type>;
-      using field_t  = vec_t::field_type;
-
       template<class... Ts>
         requires (std::convertible_to<Ts, field_t> && ...)
       [[nodiscard]]
@@ -189,8 +190,17 @@ namespace sequoia::testing
     {
       transition_checker<coords_t>::check("", m_Graph, make_checker());
     }
-
-    auto make_checker()
+  private:
+    template<class Producer>
+    [[nodiscard]]
+    static graph_type make_graph(Producer producer)
+    {
+      if constexpr     (dimension == 1) return make_dim_1_transition_graph(producer);
+      else if constexpr(dimension == 2) return make_dim_2_transition_graph(producer);
+    }
+    
+    [[nodiscard]]
+    auto make_checker() const
     {
       if constexpr(orderable)
       {
@@ -287,20 +297,6 @@ namespace sequoia::testing
       }
 
       return g;
-    }
-  private:    
-    enum dim_1_label{ two, one, zero, neg_one };
-    enum dim_2_label{ neg_one_neg_one, neg_one_zero, zero_neg_one, zero_zero, zero_one, one_zero, one_one };
-
-    regular_test& m_Test;
-    graph_type m_Graph;
-
-    template<class Producer>
-    [[nodiscard]]
-    static graph_type make_graph(Producer producer)
-    {
-      if constexpr     (dimension == 1) return make_dim_1_transition_graph(producer);
-      else if constexpr(dimension == 2) return make_dim_2_transition_graph(producer);
     }
 
     static void add_common_dim_1_transitions(maths::network auto& g)
