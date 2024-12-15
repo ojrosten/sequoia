@@ -29,10 +29,7 @@ namespace sequoia::testing
     test_affine<float, float, 1>();
     test_affine<double, double, 1>();
     test_affine<std::complex<float>, std::complex<float>, 1>();
-    //test_affine<std::complex<float>, float, 2>();
-    // TO DO: reinstate; this will involve generalizing coordinate_operations
-    // to respect the fact that affine spaces do not permit addition of coords,
-    // unlike vector spaces
+    test_affine<std::complex<float>, float, 2>();
   }
 
   template<class Element, maths::weak_field Field, std::size_t D>
