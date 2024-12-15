@@ -161,7 +161,9 @@ namespace sequoia::testing
     using coords_graph = transition_checker<coords_t>::transition_graph;
     using vec_t        = maths::vector_coordinates<typename coords_t::vector_space_type, typename coords_t::basis_type>;
     using field_t      = vec_t::field_type;
-
+    constexpr static std::size_t dimension{Coordinates::dimension};
+    constexpr static bool orderable{(dimension == 1) && std::totally_ordered<field_t>};
+    
     struct default_producer
     {
       using coords_t = Coordinates;
@@ -174,6 +176,36 @@ namespace sequoia::testing
         return Coordinates{val};
       }
     };
+
+    explicit coordinates_operations(regular_test& t) : m_Test{t} {} 
+
+    void test_vec_1()
+    {
+      auto g{make_dim_1_transition_graph()};
+
+      transition_checker<vec_t>::check("", g, make_checker());
+    }
+
+    auto make_checker()
+    {
+      if constexpr(orderable)
+      {
+        return
+          [&test{m_Test}](std::string_view description, const vec_t& obtained, const vec_t& prediction, const vec_t& parent, std::weak_ordering ordering) {
+            test.check(equality, description, obtained, prediction);
+            if(ordering != std::weak_ordering::equivalent)
+              test.check_semantics(description, prediction, parent, ordering);
+          };
+      }
+      else
+      {
+        return
+          [&test{m_Test}](std::string_view description, const vec_t& obtained, const vec_t& prediction, const vec_t& parent, std::size_t host, std::size_t target) {
+            test.check(equality, description, obtained, prediction);
+            if(host!= target) test.check_semantics(description, prediction, parent);
+          };
+      }
+    }
 
     template<class Producer=default_producer>
     static typename transition_checker<Coordinates>::transition_graph make_dim_1_transition_graph(Producer producer={})
@@ -254,6 +286,8 @@ namespace sequoia::testing
   private:    
     enum dim_1_label{ two, one, zero, neg_one };
     enum dim_2_label{ neg_one_neg_one, neg_one_zero, zero_neg_one, zero_zero, zero_one, one_zero, one_one };
+
+    regular_test& m_Test;
 
     static void add_common_dim_1_transitions(maths::network auto& g)
     {

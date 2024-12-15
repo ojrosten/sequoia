@@ -90,33 +90,16 @@ namespace sequoia::testing
   void vec_test::test_vec_1_orderable()
   {
     using vec_t = vector_coordinates<my_vec_space<Set, Field, 1>, canonical_basis<Set, Field, 1>>;
-    auto g{coordinates_operations<vec_t>::make_dim_1_transition_graph()};
-
-    auto checker{
-      [this](std::string_view description, const vec_t& obtained, const vec_t& prediction, const vec_t& parent, std::weak_ordering ordering) {
-        check(equality, description, obtained, prediction);
-        if(ordering != std::weak_ordering::equivalent)
-          check_semantics(description, prediction, parent, ordering);
-      }
-    };
-
-    transition_checker<vec_t>::check("", g, checker);
+    coordinates_operations<vec_t> operations{*this};
+    operations.test_vec_1();
   }
 
   template<class Set, maths::weak_field Field>
   void vec_test::test_vec_1_unorderable()
   {
     using vec_t = vector_coordinates<my_vec_space<Set, Field, 1>, canonical_basis<Set, Field, 1>>;
-    auto g{coordinates_operations<vec_t>::make_dim_1_transition_graph()};
-
-    auto checker{
-        [this](std::string_view description, const vec_t& obtained, const vec_t& prediction, const vec_t& parent, std::size_t host, std::size_t target) {
-          check(equality, description, obtained, prediction);
-          if(host!= target) check_semantics(description, prediction, parent);
-        }
-    };
-
-    transition_checker<vec_t>::check("", g, checker);
+    coordinates_operations<vec_t> operations{*this};
+    operations.test_vec_1();
   }
 
   template<class Set, maths::weak_field Field>
