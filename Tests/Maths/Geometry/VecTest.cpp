@@ -64,90 +64,6 @@ namespace sequoia::testing
 
     template<std::size_t D, std::floating_point T, class Units, basis Basis>
     using world_vector_coordinates = vector_coordinates<world_vector_space<D, T, Units>, Basis>;
-
-    [[nodiscard]]
-    std::weak_ordering to_ordering(coordinates_operations::dim_1_label From, coordinates_operations::dim_1_label To)
-    {
-      return From > To ? std::weak_ordering::less
-           : From < To ? std::weak_ordering::greater
-                       : std::weak_ordering::equivalent;
-    }
-
-    template<maths::network Graph, class Fn>
-    void add_transition(Graph& g, coordinates_operations::dim_1_label From, coordinates_operations::dim_1_label To, std::string_view message, Fn f, std::weak_ordering ordering)
-    {
-      g.join(From, To, std::string{message}, f, ordering);
-    }
-
-    template<maths::network Graph, class Fn>
-    void add_transition(Graph& g, coordinates_operations::dim_1_label From, coordinates_operations::dim_1_label To, std::string_view message, Fn f)
-    {
-      g.join(From, To, std::string{message}, f);
-    }
-
-    template<class VecCoords, maths::network Graph, class Fn>
-      requires std::is_invocable_r_v<VecCoords, Fn, VecCoords>
-    void add_transition(Graph& g, coordinates_operations::dim_1_label From, coordinates_operations::dim_1_label To, std::string_view message, Fn f)
-    {
-      using field_t = VecCoords::field_type;
-
-      if constexpr(std::totally_ordered<field_t>)
-      {
-        add_transition(g, From, To, message, f, to_ordering(From, To));
-      }
-      else
-      {
-        add_transition(g, From, To, message, f);
-      }
-    }
-
-    template<class VecCoords, maths::network Graph, class Fn>
-      requires std::is_invocable_r_v<VecCoords, Fn, VecCoords>
-    void add_transition(Graph& g, coordinates_operations::dim_2_label From, coordinates_operations::dim_2_label To, std::string_view message, Fn f)
-    {
-      g.join(From, To, std::string{message}, f);
-    }
-
-    template<class VecCoords, maths::network Graph>
-    void add_dim_2_transitions(Graph& g, vec_test& t)
-    {
-      using vec_t = VecCoords;
-      using field_t = vec_t::field_type;
-
-      // (-1, -1) --> (1, 1)
-
-      add_transition<vec_t>(
-        g,
-        coordinates_operations::dim_2_label::neg_one_neg_one,
-        coordinates_operations::dim_2_label::one_one,
-        t.report("(-1, -1) *= -1"),
-        [](vec_t v) -> vec_t { return v *= field_t{-1}; }
-      );
-
-      add_transition<vec_t>(
-        g,
-        coordinates_operations::dim_2_label::neg_one_neg_one,
-        coordinates_operations::dim_2_label::one_one,
-        t.report("(-1, -1) * -1"),
-        [](vec_t v) -> vec_t { return v * field_t{-1}; }
-      );
-
-      add_transition<vec_t>(
-        g,
-        coordinates_operations::dim_2_label::neg_one_neg_one,
-        coordinates_operations::dim_2_label::one_one,
-        t.report("(-1, -1) /= -1"),
-        [](vec_t v) -> vec_t { return v /= field_t{-1}; }
-      );
-
-      add_transition<vec_t>(
-        g,
-        coordinates_operations::dim_2_label::neg_one_neg_one,
-        coordinates_operations::dim_2_label::one_one,
-        t.report("(-1, -1) / -1"),
-        [](vec_t v) -> vec_t { return v / field_t{-1}; }
-      );
-    }
   }
 
   [[nodiscard]]
@@ -162,7 +78,7 @@ namespace sequoia::testing
     test_vec_1_orderable<sets::R<1,double>, double>();
     test_vec_1_unorderable<sets::C<1, float>, std::complex<float>>();
 
-    test_vec_2<sets::R<1, float>, float>();
+    test_vec_2<sets::R<2, float>, float>();
     test_vec_2<sets::C<2, double>, std::complex<double>>();
     test_vec_2<sets::C<1, double>, double>(); // Complex numbers over the reals
 
@@ -174,7 +90,7 @@ namespace sequoia::testing
   void vec_test::test_vec_1_orderable()
   {
     using vec_t = vector_coordinates<my_vec_space<Set, Field, 1>, canonical_basis<Set, Field, 1>>;
-    auto g{coordinates_operations::make_dim_1_transition_graph<vec_t>()};
+    auto g{coordinates_operations<vec_t>::make_dim_1_transition_graph()};
 
     auto checker{
       [this](std::string_view description, const vec_t& obtained, const vec_t& prediction, const vec_t& parent, std::weak_ordering ordering) {
@@ -191,7 +107,7 @@ namespace sequoia::testing
   void vec_test::test_vec_1_unorderable()
   {
     using vec_t = vector_coordinates<my_vec_space<Set, Field, 1>, canonical_basis<Set, Field, 1>>;
-    auto g{coordinates_operations::make_dim_1_transition_graph<vec_t>()};
+    auto g{coordinates_operations<vec_t>::make_dim_1_transition_graph()};
 
     auto checker{
         [this](std::string_view description, const vec_t& obtained, const vec_t& prediction, const vec_t& parent, std::size_t host, std::size_t target) {
@@ -207,9 +123,7 @@ namespace sequoia::testing
   void vec_test::test_vec_2()
   {
     using vec_t = vector_coordinates<my_vec_space<Set, Field, 2>, canonical_basis<Set, Field, 2>>;
-    auto g{coordinates_operations::make_dim_2_transition_graph<vec_t>()};
-
-    add_dim_2_transitions<vec_t>(g, *this);
+    auto g{coordinates_operations<vec_t>::make_dim_2_transition_graph()};
 
     auto checker{
         [this](std::string_view description, const vec_t& obtained, const vec_t& prediction, const vec_t& parent, std::size_t host, std::size_t target) {

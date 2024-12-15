@@ -140,23 +140,28 @@ namespace sequoia::testing
   void add_transition(Graph& g, Label From, Label To, std::string_view message, Fn f)
   {
     using field_t = Coords::field_type;
+    constexpr static auto dimension{Coords::dimension};
 
-    if constexpr(std::totally_ordered<field_t>)
-      {
-        add_transition(g, From, To, message, f, to_ordering(From, To));
-      }
+    if constexpr((dimension == 1) && std::totally_ordered<field_t>)
+    {
+      add_transition(g, From, To, message, f, to_ordering(From, To));
+    }
     else
-      {
-        add_transition(g, From, To, message, f);
-      }
+    {
+      add_transition(g, From, To, message, f);
+    }
   }
-  
-  struct coordinates_operations
-  {
-    enum dim_1_label{ two, one, zero, neg_one };
-    enum dim_2_label{ neg_one_neg_one, neg_one_zero, zero_neg_one, zero_zero, zero_one, one_zero, one_one };
 
-    template<class Coordinates>
+  
+  template<class Coordinates>
+  class coordinates_operations
+  {
+  public:
+    using coords_t     = Coordinates;
+    using coords_graph = transition_checker<coords_t>::transition_graph;
+    using vec_t        = maths::vector_coordinates<typename coords_t::vector_space_type, typename coords_t::basis_type>;
+    using field_t      = vec_t::field_type;
+
     struct default_producer
     {
       using coords_t = Coordinates;
@@ -170,14 +175,9 @@ namespace sequoia::testing
       }
     };
 
-    template<class Coordinates, class CoordGenerator=default_producer<Coordinates>>
-    static typename transition_checker<Coordinates>::transition_graph make_dim_1_transition_graph(CoordGenerator producer={})
+    template<class Producer=default_producer>
+    static typename transition_checker<Coordinates>::transition_graph make_dim_1_transition_graph(Producer producer={})
     {
-      using coords_t     = Coordinates;
-      using coords_graph = transition_checker<coords_t>::transition_graph;
-      using vec_t        = maths::vector_coordinates<typename coords_t::vector_space_type, typename coords_t::basis_type>;
-      using field_t      = vec_t::field_type;
-
       coords_graph g{
         {
           {}, {}, {}
@@ -185,6 +185,78 @@ namespace sequoia::testing
         {producer(2), producer(1), coords_t{}}
       };
 
+      add_common_dim_1_transitions(g);
+
+      if constexpr(!maths::defines_absolute_scale_v<typename Coordinates::validator_type>)
+      {
+        add_negative_dim_1_transitions(g, producer);
+      }
+
+      if constexpr(std::is_same_v<typename Coordinates::origin_type, maths::intrinsic_origin>)
+      {
+        add_intrinsic_origin_dim_1_transitions(g);
+      }
+
+      return g;
+    }
+
+    static typename transition_checker<Coordinates>::transition_graph make_dim_2_transition_graph()
+    {
+      using coords_t     = Coordinates;
+      using coords_graph = transition_checker<coords_t>::transition_graph;
+      using edge_t       = transition_checker<coords_t>::edge;
+      using vec_t        = maths::vector_coordinates<typename coords_t::vector_space_type, typename coords_t::basis_type>;
+      using field_t      = vec_t::field_type;
+
+      coords_graph g{
+        {
+          {
+            edge_t{dim_2_label::one_one,         "- (-1, -1)",          [](coords_t v) -> coords_t { return -v; }},
+            edge_t{dim_2_label::neg_one_neg_one, "+ (-1, -1)",          [](coords_t v) -> coords_t { return +v; }},
+            edge_t{dim_2_label::neg_one_zero,    "(-1, -1) +  (0, 1)",  [](coords_t v) -> coords_t { return v +  coords_t{field_t{}, field_t(1)}; }},
+            edge_t{dim_2_label::neg_one_zero,    "(-1, -1) += (0, 1)",  [](coords_t v) -> coords_t { return v += coords_t{field_t{}, field_t(1)}; }},
+            edge_t{dim_2_label::zero_neg_one,    "(-1, -1) +  (1, 0)",  [](coords_t v) -> coords_t { return v +  coords_t{field_t(1), field_t{}}; }},
+            edge_t{dim_2_label::zero_neg_one,    "(-1, -1) += (1, 0)",  [](coords_t v) -> coords_t { return v += coords_t{field_t(1), field_t{}}; }}
+          }, // neg_one_neg_one
+          {
+            edge_t{dim_2_label::neg_one_neg_one, "(-1, 0) -  (0, 1)",  [](coords_t v) -> coords_t { return v -  coords_t{field_t{}, field_t(1)}; }},
+            edge_t{dim_2_label::neg_one_neg_one, "(-1, 0) -= (0, 1)",  [](coords_t v) -> coords_t { return v -= coords_t{field_t{}, field_t(1)}; }}
+          }, // neg_one_zero
+          {
+            edge_t{dim_2_label::neg_one_neg_one, "(0, -1) -  (1, 0)",  [](coords_t v) -> coords_t { return v - coords_t{field_t{1}, field_t(0)}; }},
+            edge_t{dim_2_label::neg_one_neg_one, "(0, -1) -= (1, 0)",  [](coords_t v) -> coords_t { return v -= coords_t{field_t{1}, field_t(0)}; }}
+          }, // zero_neg_one
+          {
+          }, // zero_zero
+          {
+          }, // zero_one
+          {
+          }, // one_zero
+          {
+          }, // one_one
+        },
+        {coords_t{field_t(-1), field_t(-1)},
+         coords_t{field_t(-1), field_t{}},
+         coords_t{field_t{}, field_t(-1)},
+         coords_t{field_t{}, field_t{}},
+         coords_t{field_t{}, field_t(1)},
+         coords_t{field_t(1), field_t{}},
+         coords_t{field_t(1), field_t(1)}}
+      };
+
+      if constexpr(std::is_same_v<typename Coordinates::origin_type, maths::intrinsic_origin>)
+      {
+        add_intrinsic_origin_dim_2_transitions(g);
+      }
+
+      return g;
+    }
+  private:    
+    enum dim_1_label{ two, one, zero, neg_one };
+    enum dim_2_label{ neg_one_neg_one, neg_one_zero, zero_neg_one, zero_zero, zero_one, one_zero, one_one };
+
+    static void add_common_dim_1_transitions(maths::network auto& g)
+    {
       // Joins from zero
       add_transition<coords_t>(
         g,
@@ -252,179 +324,162 @@ namespace sequoia::testing
         "(2) - (1)",
         [](coords_t p) -> coords_t { return p - vec_t{field_t(1)}; }
       );
-
-      if constexpr(!maths::defines_absolute_scale_v<typename Coordinates::validator_type>)
-      {
-        g.add_node(producer(-1));
-
-        // Joins to neg_one
-        add_transition<coords_t>(
-          g,
-          dim_1_label::one,
-          dim_1_label::neg_one,
-          "-(1)",
-          [](coords_t p) -> coords_t { return -p; }
-        );
-
-        // Joins from neg_one
-        add_transition<coords_t>(
-          g,
-          dim_1_label::neg_one,
-          dim_1_label::one,
-          "- (-1)",
-          [](coords_t p) -> coords_t { return -p;  }
-        );
-    
-        add_transition<coords_t>(
-          g,
-          dim_1_label::neg_one,
-          dim_1_label::neg_one,
-          "+ (-1)",
-          [](coords_t p) -> coords_t { return +p;  }
-        );
-
-        add_transition<coords_t>(
-          g,
-          dim_1_label::neg_one,
-          dim_1_label::zero,
-          "(-1) += 1",
-          [](coords_t p) -> coords_t { auto& v{p.value()}; v += 1; return p; }
-        );
-
-        add_transition<coords_t>(
-          g,
-          dim_1_label::neg_one,
-          dim_1_label::zero,
-          "(-1) + 1",
-          [](coords_t p) -> coords_t { auto& v{p.value()}; v += 1; return p; }
-        );
-      }
-
-      if constexpr(   //maths::defines_absolute_scale_v<typename Coordinates::validator_type>
-                   std::is_same_v<typename Coordinates::origin_type, maths::intrinsic_origin>)
-      {
-        add_transition<coords_t>(
-          g,
-          dim_1_label::one,
-          dim_1_label::zero,
-          "(1) * field_t{}",
-          [](coords_t v) -> coords_t { return v * field_t{}; }
-        );
-
-        add_transition<coords_t>(
-          g,
-          dim_1_label::one,
-          dim_1_label::zero,
-          "field_t{} * (1)",
-          [](coords_t v) -> coords_t { return field_t{} *v; }
-        );
-
-        add_transition<coords_t>(
-          g,
-          dim_1_label::one,
-          dim_1_label::zero,
-          "(1) *= field_t{}",
-          [](coords_t v) -> coords_t { return v *= field_t{}; }
-        );
-
-        // (1) --> (2)
-
-        add_transition<coords_t>(
-          g,
-          dim_1_label::one,
-          dim_1_label::two,
-          "(1) * field_t{2}",
-          [](coords_t v) -> coords_t { return v * field_t{2}; }
-        );
-
-        add_transition<coords_t>(
-          g,
-          dim_1_label::one,
-          dim_1_label::two,
-          "field_t{2} * (1)",
-          [](coords_t v) -> coords_t { return field_t{2} *v; }
-        );
-
-        add_transition<coords_t>(
-          g,
-          dim_1_label::one,
-          dim_1_label::two,
-          "(1) *= field_t{2}",
-          [](coords_t v) -> coords_t { return v *= field_t{2}; }
-        );
-
-        // (2) --> (1)
-
-        add_transition<coords_t>(
-          g,
-          dim_1_label::two,
-          dim_1_label::one,
-          "(2) / field_t{2}",
-          [](coords_t v) -> coords_t { return v / field_t{2}; }
-        );
-
-        add_transition<coords_t>(
-          g,
-          dim_1_label::two,
-          dim_1_label::one,
-          "(2) /= field_t{2}",
-          [](coords_t v) -> coords_t { return v /= field_t{2}; }
-        );
-      }
-
-      return g;
     }
 
-    template<class Coordinates>
-    static typename transition_checker<Coordinates>::transition_graph make_dim_2_transition_graph()
+    template<class Producer>
+    static void add_negative_dim_1_transitions(maths::network auto& g, Producer producer)
     {
-      using coords_t     = Coordinates;
-      using coords_graph = transition_checker<coords_t>::transition_graph;
-      using edge_t       = transition_checker<coords_t>::edge;
-      using vec_t        = maths::vector_coordinates<typename coords_t::vector_space_type, typename coords_t::basis_type>;
-      using field_t      = vec_t::field_type;
+      g.add_node(producer(-1));
 
-      coords_graph g{
-        {
-          {
-            edge_t{dim_2_label::one_one,         "- (-1, -1)",          [](coords_t v) -> coords_t { return -v; }},
-            edge_t{dim_2_label::neg_one_neg_one, "+ (-1, -1)",          [](coords_t v) -> coords_t { return +v; }},
-            edge_t{dim_2_label::neg_one_zero,    "(-1, -1) +  (0, 1)",  [](coords_t v) -> coords_t { return v +  coords_t{field_t{}, field_t(1)}; }},
-            edge_t{dim_2_label::neg_one_zero,    "(-1, -1) += (0, 1)",  [](coords_t v) -> coords_t { return v += coords_t{field_t{}, field_t(1)}; }},
-            edge_t{dim_2_label::zero_neg_one,    "(-1, -1) +  (1, 0)",  [](coords_t v) -> coords_t { return v +  coords_t{field_t(1), field_t{}}; }},
-            edge_t{dim_2_label::zero_neg_one,    "(-1, -1) += (1, 0)",  [](coords_t v) -> coords_t { return v += coords_t{field_t(1), field_t{}}; }}
-          }, // neg_one_neg_one
-          {
-            edge_t{dim_2_label::neg_one_neg_one, "(-1, 0) -  (0, 1)",  [](coords_t v) -> coords_t { return v -  coords_t{field_t{}, field_t(1)}; }},
-            edge_t{dim_2_label::neg_one_neg_one, "(-1, 0) -= (0, 1)",  [](coords_t v) -> coords_t { return v -= coords_t{field_t{}, field_t(1)}; }}
-          }, // neg_one_zero
-          {
-            edge_t{dim_2_label::neg_one_neg_one, "(0, -1) -  (1, 0)",  [](coords_t v) -> coords_t { return v - coords_t{field_t{1}, field_t(0)}; }},
-            edge_t{dim_2_label::neg_one_neg_one, "(0, -1) -= (1, 0)",  [](coords_t v) -> coords_t { return v -= coords_t{field_t{1}, field_t(0)}; }}
-          }, // zero_neg_one
-          {
-        
-          }, // zero_zero
-          {
-        
-          }, // zero_one
-          {
-        
-          }, // one_zero
-          {
-        
-          }, // one_one
-        },
-        {coords_t{field_t(-1), field_t(-1)},
-         coords_t{field_t(-1), field_t{}},
-         coords_t{field_t{}, field_t(-1)},
-         coords_t{field_t{}, field_t{}},
-         coords_t{field_t{}, field_t(1)},
-         coords_t{field_t(1), field_t{}},
-         coords_t{field_t(1), field_t(1)}}
-      };
+      // Joins to neg_one
+      add_transition<coords_t>(
+        g,
+        dim_1_label::one,
+        dim_1_label::neg_one,
+        "-(1)",
+        [](coords_t p) -> coords_t { return -p; }
+      );
 
-      return g;
+      // Joins from neg_one
+      add_transition<coords_t>(
+        g,
+        dim_1_label::neg_one,
+        dim_1_label::one,
+        "- (-1)",
+        [](coords_t p) -> coords_t { return -p;  }
+      );
+    
+      add_transition<coords_t>(
+        g,
+        dim_1_label::neg_one,
+        dim_1_label::neg_one,
+        "+ (-1)",
+        [](coords_t p) -> coords_t { return +p;  }
+      );
+
+      add_transition<coords_t>(
+        g,
+        dim_1_label::neg_one,
+        dim_1_label::zero,
+        "(-1) += 1",
+        [](coords_t p) -> coords_t { auto& v{p.value()}; v += 1; return p; }
+      );
+
+      add_transition<coords_t>(
+        g,
+        dim_1_label::neg_one,
+        dim_1_label::zero,
+        "(-1) + 1",
+        [](coords_t p) -> coords_t { auto& v{p.value()}; v += 1; return p; }
+      );    
+    }
+
+    static void add_intrinsic_origin_dim_1_transitions(maths::network auto& g)
+    {
+      add_transition<coords_t>(
+        g,
+        dim_1_label::one,
+        dim_1_label::zero,
+        "(1) * field_t{}",
+        [](coords_t v) -> coords_t { return v * field_t{}; }
+      );
+
+      add_transition<coords_t>(
+        g,
+        dim_1_label::one,
+        dim_1_label::zero,
+        "field_t{} * (1)",
+        [](coords_t v) -> coords_t { return field_t{} *v; }
+      );
+
+      add_transition<coords_t>(
+        g,
+        dim_1_label::one,
+        dim_1_label::zero,
+        "(1) *= field_t{}",
+        [](coords_t v) -> coords_t { return v *= field_t{}; }
+      );
+
+      // (1) --> (2)
+
+      add_transition<coords_t>(
+        g,
+        dim_1_label::one,
+        dim_1_label::two,
+        "(1) * field_t{2}",
+        [](coords_t v) -> coords_t { return v * field_t{2}; }
+      );
+
+      add_transition<coords_t>(
+        g,
+        dim_1_label::one,
+        dim_1_label::two,
+        "field_t{2} * (1)",
+        [](coords_t v) -> coords_t { return field_t{2} *v; }
+      );
+
+      add_transition<coords_t>(
+        g,
+        dim_1_label::one,
+        dim_1_label::two,
+        "(1) *= field_t{2}",
+        [](coords_t v) -> coords_t { return v *= field_t{2}; }
+      );
+
+      // (2) --> (1)
+
+      add_transition<coords_t>(
+        g,
+        dim_1_label::two,
+        dim_1_label::one,
+        "(2) / field_t{2}",
+        [](coords_t v) -> coords_t { return v / field_t{2}; }
+      );
+
+      add_transition<coords_t>(
+        g,
+        dim_1_label::two,
+        dim_1_label::one,
+        "(2) /= field_t{2}",
+        [](coords_t v) -> coords_t { return v /= field_t{2}; }
+      );
+    }
+
+    static void add_intrinsic_origin_dim_2_transitions(maths::network auto& g)
+    {
+      // (-1, -1) --> (1, 1)
+
+      add_transition<coords_t>(
+        g,
+        dim_2_label::neg_one_neg_one,
+        dim_2_label::one_one,
+        "(-1, -1) *= -1",
+        [](coords_t v) -> coords_t { return v *= field_t{-1}; }
+      );
+
+      add_transition<coords_t>(
+        g,
+        dim_2_label::neg_one_neg_one,
+        dim_2_label::one_one,
+        "(-1, -1) * -1",
+        [](coords_t v) -> coords_t { return v * field_t{-1}; }
+      );
+
+      add_transition<coords_t>(
+        g,
+        dim_2_label::neg_one_neg_one,
+        dim_2_label::one_one,
+        "(-1, -1) /= -1",
+        [](coords_t v) -> coords_t { return v /= field_t{-1}; }
+      );
+
+      add_transition<coords_t>(
+        g,
+        dim_2_label::neg_one_neg_one,
+        dim_2_label::one_one,
+        "(-1, -1) / -1",
+        [](coords_t v) -> coords_t { return v / field_t{-1}; }
+      );
     }
   };
 }
