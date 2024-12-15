@@ -376,43 +376,6 @@ namespace sequoia::testing
     }
 
     template<class Coordinates>
-    static typename transition_checker<Coordinates>::transition_graph make_dim_1_unorderable_transition_graph()
-    {
-      using coords_t     = Coordinates;
-      using coords_graph = transition_checker<coords_t>::transition_graph;
-      using edge_t       = transition_checker<coords_t>::edge;
-      using vec_t        = maths::vector_coordinates<typename coords_t::vector_space_type, typename coords_t::basis_type>;
-      using field_t      = vec_t::field_type;
-
-      coords_graph g{
-        {          
-          {
-            edge_t{dim_1_label::one, "(0) +  (1)", [](coords_t p) -> coords_t { return p +  vec_t{field_t(1)}; }},
-            edge_t{dim_1_label::one, "(0) += (1)", [](coords_t p) -> coords_t { return p += vec_t{field_t(1)}; }}
-          }, // zero
-          {
-            edge_t{dim_1_label::neg_one, "-(1)",       [](coords_t p) -> coords_t { return -p;                     }},
-            edge_t{dim_1_label::zero,    "(1)  - (1)", [](coords_t p) -> coords_t { return p -  vec_t{field_t(1)}; }},
-            edge_t{dim_1_label::zero,    "(1) -= (1)", [](coords_t p) -> coords_t { return p -= vec_t{field_t(1)}; }},
-            edge_t{dim_1_label::one,     "+(1)",       [](coords_t p) -> coords_t { return +p;                     }},
-            edge_t{dim_1_label::two,     "(1)  + (1)", [](coords_t p) -> coords_t { return p +  vec_t{field_t(1)}; }},
-            edge_t{dim_1_label::two,     "(1) += (1)", [](coords_t p) -> coords_t { return p += vec_t{field_t(1)}; }},
-          }, // one
-          {
-            edge_t{dim_1_label::one, "(2) - (1)", [](coords_t p) -> coords_t { return p - vec_t{field_t(1)}; }}
-          }, // two
-          {
-            edge_t{dim_1_label::one,     "- (-1)", [](coords_t p) -> coords_t { return -p;  }},
-            edge_t{dim_1_label::neg_one, "+ (-1)", [](coords_t p) -> coords_t { return +p;  }}
-          }  // neg_one
-        },
-        {coords_t{}, coords_t{field_t(1)}, coords_t{field_t(2)}, coords_t{field_t(-1)}}
-      };
-
-      return g;
-    }
-
-    template<class Coordinates>
     static typename transition_checker<Coordinates>::transition_graph make_dim_2_transition_graph()
     {
       using coords_t     = Coordinates;
