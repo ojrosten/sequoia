@@ -183,7 +183,7 @@ namespace sequoia::testing
     template<class Producer=default_producer>
     explicit coordinates_operations(regular_test& t, Producer producer={})
       : m_Test{t}
-      , m_Graph{make_graph(producer)}
+      , m_Graph{make_graph(producer, m_Test)}
     {}
 
     void execute()
@@ -193,10 +193,10 @@ namespace sequoia::testing
   private:
     template<class Producer>
     [[nodiscard]]
-    static graph_type make_graph(Producer producer)
+    static graph_type make_graph(Producer producer, regular_test& test)
     {
-      if constexpr     (dimension == 1) return make_dim_1_transition_graph(producer);
-      else if constexpr(dimension == 2) return make_dim_2_transition_graph(producer);
+      if constexpr     (dimension == 1) return make_dim_1_transition_graph(producer, test);
+      else if constexpr(dimension == 2) return make_dim_2_transition_graph(producer, test);
     }
     
     [[nodiscard]]
@@ -222,7 +222,7 @@ namespace sequoia::testing
     }
 
     template<class Producer>
-    static graph_type make_dim_1_transition_graph(Producer producer)
+    static graph_type make_dim_1_transition_graph(Producer producer, regular_test& test)
     {
       graph_type g{
         {
@@ -231,23 +231,23 @@ namespace sequoia::testing
         {producer(2), producer(1), coords_t{}}
       };
 
-      add_common_dim_1_transitions(g);
+      add_common_dim_1_transitions(g, test);
 
       if constexpr(!maths::defines_absolute_scale_v<typename Coordinates::validator_type>)
       {
-        add_negative_dim_1_transitions(g, producer);
+        add_negative_dim_1_transitions(g, producer, test);
       }
 
       if constexpr(std::is_same_v<typename Coordinates::origin_type, maths::intrinsic_origin>)
       {
-        add_intrinsic_origin_dim_1_transitions(g);
+        add_intrinsic_origin_dim_1_transitions(g, test);
       }
 
       return g;
     }
 
     template<class Producer>
-    static graph_type make_dim_2_transition_graph(Producer producer)
+    static graph_type make_dim_2_transition_graph(Producer producer, regular_test& test)
     {
       using coords_t     = Coordinates;
       using edge_t       = transition_checker<coords_t>::edge;
@@ -257,20 +257,20 @@ namespace sequoia::testing
       graph_type g{
         {
           {
-            edge_t{dim_2_label::one_one,         "- (-1, -1)",          [](coords_t v) -> coords_t { return -v; }},
-            edge_t{dim_2_label::neg_one_neg_one, "+ (-1, -1)",          [](coords_t v) -> coords_t { return +v; }},
-            edge_t{dim_2_label::neg_one_zero,    "(-1, -1) +  (0, 1)",  [](coords_t v) -> coords_t { return v +  coords_t{field_t{}, field_t(1)}; }},
-            edge_t{dim_2_label::neg_one_zero,    "(-1, -1) += (0, 1)",  [](coords_t v) -> coords_t { return v += coords_t{field_t{}, field_t(1)}; }},
-            edge_t{dim_2_label::zero_neg_one,    "(-1, -1) +  (1, 0)",  [](coords_t v) -> coords_t { return v +  coords_t{field_t(1), field_t{}}; }},
-            edge_t{dim_2_label::zero_neg_one,    "(-1, -1) += (1, 0)",  [](coords_t v) -> coords_t { return v += coords_t{field_t(1), field_t{}}; }}
+            edge_t{dim_2_label::one_one,         test.report("- (-1, -1)"),          [](coords_t v) -> coords_t { return -v; }},
+            edge_t{dim_2_label::neg_one_neg_one, test.report("+ (-1, -1)"),          [](coords_t v) -> coords_t { return +v; }},
+            edge_t{dim_2_label::neg_one_zero,    test.report("(-1, -1) +  (0, 1)"),  [](coords_t v) -> coords_t { return v +  coords_t{field_t{}, field_t(1)}; }},
+            edge_t{dim_2_label::neg_one_zero,    test.report("(-1, -1) += (0, 1)"),  [](coords_t v) -> coords_t { return v += coords_t{field_t{}, field_t(1)}; }},
+            edge_t{dim_2_label::zero_neg_one,    test.report("(-1, -1) +  (1, 0)"),  [](coords_t v) -> coords_t { return v +  coords_t{field_t(1), field_t{}}; }},
+            edge_t{dim_2_label::zero_neg_one,    test.report("(-1, -1) += (1, 0)"),  [](coords_t v) -> coords_t { return v += coords_t{field_t(1), field_t{}}; }}
           }, // neg_one_neg_one
           {
-            edge_t{dim_2_label::neg_one_neg_one, "(-1, 0) -  (0, 1)",  [](coords_t v) -> coords_t { return v -  coords_t{field_t{}, field_t(1)}; }},
-            edge_t{dim_2_label::neg_one_neg_one, "(-1, 0) -= (0, 1)",  [](coords_t v) -> coords_t { return v -= coords_t{field_t{}, field_t(1)}; }}
+            edge_t{dim_2_label::neg_one_neg_one, test.report("(-1, 0) -  (0, 1)"),  [](coords_t v) -> coords_t { return v -  coords_t{field_t{}, field_t(1)}; }},
+            edge_t{dim_2_label::neg_one_neg_one, test.report("(-1, 0) -= (0, 1)"),  [](coords_t v) -> coords_t { return v -= coords_t{field_t{}, field_t(1)}; }}
           }, // neg_one_zero
           {
-            edge_t{dim_2_label::neg_one_neg_one, "(0, -1) -  (1, 0)",  [](coords_t v) -> coords_t { return v - coords_t{field_t{1}, field_t(0)}; }},
-            edge_t{dim_2_label::neg_one_neg_one, "(0, -1) -= (1, 0)",  [](coords_t v) -> coords_t { return v -= coords_t{field_t{1}, field_t(0)}; }}
+            edge_t{dim_2_label::neg_one_neg_one, test.report("(0, -1) -  (1, 0)"),  [](coords_t v) -> coords_t { return v - coords_t{field_t{1}, field_t(0)}; }},
+            edge_t{dim_2_label::neg_one_neg_one, test.report("(0, -1) -= (1, 0)"),  [](coords_t v) -> coords_t { return v -= coords_t{field_t{1}, field_t(0)}; }}
           }, // zero_neg_one
           {
           }, // zero_zero
@@ -293,20 +293,20 @@ namespace sequoia::testing
 
       if constexpr(std::is_same_v<typename Coordinates::origin_type, maths::intrinsic_origin>)
       {
-        add_intrinsic_origin_dim_2_transitions(g);
+        add_intrinsic_origin_dim_2_transitions(g, test);
       }
 
       return g;
     }
 
-    static void add_common_dim_1_transitions(maths::network auto& g)
+    static void add_common_dim_1_transitions(maths::network auto& g, regular_test& test)
     {
       // Joins from zero
       add_transition<coords_t>(
         g,
         dim_1_label::zero,
         dim_1_label::one,
-        "(0) +  (1)",
+        test.report("(0) +  (1)"),
         [](coords_t p) -> coords_t { return p +  vec_t{field_t(1)}; }
       );
 
@@ -314,7 +314,7 @@ namespace sequoia::testing
         g,
         dim_1_label::zero,
         dim_1_label::one,
-        "(0) += (1)",
+        test.report("(0) += (1)"),
         [](coords_t p) -> coords_t { return p += vec_t{field_t(1)}; }
       );
 
@@ -324,7 +324,7 @@ namespace sequoia::testing
         g,
         dim_1_label::one,
         dim_1_label::zero,
-        "(1)  - (1)",
+        test.report("(1)  - (1)"),
         [](coords_t p) -> coords_t { return p -  vec_t{field_t(1)}; }
       );
 
@@ -332,14 +332,15 @@ namespace sequoia::testing
         g,
         dim_1_label::one,
         dim_1_label::zero,
-        "(1) -= (1)", [](coords_t p) -> coords_t { return p -= vec_t{field_t(1)}; }
+        test.report("(1) -= (1)"),
+        [](coords_t p) -> coords_t { return p -= vec_t{field_t(1)}; }
       );
 
       add_transition<coords_t>(
         g,
         dim_1_label::one,
         dim_1_label::one,
-        "+(1)",
+        test.report("+(1)"),
         [](coords_t p) -> coords_t { return +p;}
       );
 
@@ -347,7 +348,7 @@ namespace sequoia::testing
         g,
         dim_1_label::one,
         dim_1_label::two,
-        "(1)  + (1)",
+        test.report("(1)  + (1)"),
         [](coords_t p) -> coords_t { return p +  vec_t{field_t(1)}; }
       );
 
@@ -355,7 +356,7 @@ namespace sequoia::testing
         g,
         dim_1_label::one,
         dim_1_label::two,
-        "(1) += (1)",
+        test.report("(1) += (1)"),
         [](coords_t p) -> coords_t { return p += vec_t{field_t(1)}; }
       );
 
@@ -365,13 +366,13 @@ namespace sequoia::testing
         g,
         dim_1_label::two,
         dim_1_label::one,
-        "(2) - (1)",
+        test.report("(2) - (1)"),
         [](coords_t p) -> coords_t { return p - vec_t{field_t(1)}; }
       );
     }
 
     template<class Producer>
-    static void add_negative_dim_1_transitions(maths::network auto& g, Producer producer)
+    static void add_negative_dim_1_transitions(maths::network auto& g, Producer producer, regular_test& test)
     {
       g.add_node(producer(-1));
 
@@ -380,7 +381,7 @@ namespace sequoia::testing
         g,
         dim_1_label::one,
         dim_1_label::neg_one,
-        "-(1)",
+        test.report("-(1)"),
         [](coords_t p) -> coords_t { return -p; }
       );
 
@@ -389,7 +390,7 @@ namespace sequoia::testing
         g,
         dim_1_label::neg_one,
         dim_1_label::one,
-        "- (-1)",
+        test.report("- (-1)"),
         [](coords_t p) -> coords_t { return -p;  }
       );
     
@@ -397,7 +398,7 @@ namespace sequoia::testing
         g,
         dim_1_label::neg_one,
         dim_1_label::neg_one,
-        "+ (-1)",
+        test.report("+ (-1)"),
         [](coords_t p) -> coords_t { return +p;  }
       );
 
@@ -405,7 +406,7 @@ namespace sequoia::testing
         g,
         dim_1_label::neg_one,
         dim_1_label::zero,
-        "(-1) += 1",
+        test.report("(-1) += 1"),
         [](coords_t p) -> coords_t { auto& v{p.value()}; v += 1; return p; }
       );
 
@@ -413,18 +414,18 @@ namespace sequoia::testing
         g,
         dim_1_label::neg_one,
         dim_1_label::zero,
-        "(-1) + 1",
+        test.report("(-1) + 1"),
         [](coords_t p) -> coords_t { auto& v{p.value()}; v += 1; return p; }
       );    
     }
 
-    static void add_intrinsic_origin_dim_1_transitions(maths::network auto& g)
+    static void add_intrinsic_origin_dim_1_transitions(maths::network auto& g, regular_test& test)
     {
       add_transition<coords_t>(
         g,
         dim_1_label::one,
         dim_1_label::zero,
-        "(1) * field_t{}",
+        test.report("(1) * field_t{}"),
         [](coords_t v) -> coords_t { return v * field_t{}; }
       );
 
@@ -432,7 +433,7 @@ namespace sequoia::testing
         g,
         dim_1_label::one,
         dim_1_label::zero,
-        "field_t{} * (1)",
+        test.report("field_t{} * (1)"),
         [](coords_t v) -> coords_t { return field_t{} *v; }
       );
 
@@ -440,7 +441,7 @@ namespace sequoia::testing
         g,
         dim_1_label::one,
         dim_1_label::zero,
-        "(1) *= field_t{}",
+        test.report("(1) *= field_t{}"),
         [](coords_t v) -> coords_t { return v *= field_t{}; }
       );
 
@@ -450,7 +451,7 @@ namespace sequoia::testing
         g,
         dim_1_label::one,
         dim_1_label::two,
-        "(1) * field_t{2}",
+        test.report("(1) * field_t{2}"),
         [](coords_t v) -> coords_t { return v * field_t{2}; }
       );
 
@@ -458,7 +459,7 @@ namespace sequoia::testing
         g,
         dim_1_label::one,
         dim_1_label::two,
-        "field_t{2} * (1)",
+        test.report("field_t{2} * (1)"),
         [](coords_t v) -> coords_t { return field_t{2} *v; }
       );
 
@@ -466,7 +467,7 @@ namespace sequoia::testing
         g,
         dim_1_label::one,
         dim_1_label::two,
-        "(1) *= field_t{2}",
+        test.report("(1) *= field_t{2}"),
         [](coords_t v) -> coords_t { return v *= field_t{2}; }
       );
 
@@ -476,7 +477,7 @@ namespace sequoia::testing
         g,
         dim_1_label::two,
         dim_1_label::one,
-        "(2) / field_t{2}",
+        test.report("(2) / field_t{2}"),
         [](coords_t v) -> coords_t { return v / field_t{2}; }
       );
 
@@ -484,12 +485,12 @@ namespace sequoia::testing
         g,
         dim_1_label::two,
         dim_1_label::one,
-        "(2) /= field_t{2}",
+        test.report("(2) /= field_t{2}"),
         [](coords_t v) -> coords_t { return v /= field_t{2}; }
       );
     }
 
-    static void add_intrinsic_origin_dim_2_transitions(maths::network auto& g)
+    static void add_intrinsic_origin_dim_2_transitions(maths::network auto& g, regular_test& test)
     {
       // (-1, -1) --> (1, 1)
 
@@ -497,7 +498,7 @@ namespace sequoia::testing
         g,
         dim_2_label::neg_one_neg_one,
         dim_2_label::one_one,
-        "(-1, -1) *= -1",
+        test.report("(-1, -1) *= -1"),
         [](coords_t v) -> coords_t { return v *= field_t{-1}; }
       );
 
@@ -505,7 +506,7 @@ namespace sequoia::testing
         g,
         dim_2_label::neg_one_neg_one,
         dim_2_label::one_one,
-        "(-1, -1) * -1",
+        test.report("(-1, -1) * -1"),
         [](coords_t v) -> coords_t { return v * field_t{-1}; }
       );
 
@@ -513,7 +514,7 @@ namespace sequoia::testing
         g,
         dim_2_label::neg_one_neg_one,
         dim_2_label::one_one,
-        "(-1, -1) /= -1",
+        test.report("(-1, -1) /= -1"),
         [](coords_t v) -> coords_t { return v /= field_t{-1}; }
       );
 
@@ -521,7 +522,7 @@ namespace sequoia::testing
         g,
         dim_2_label::neg_one_neg_one,
         dim_2_label::one_one,
-        "(-1, -1) / -1",
+        test.report("(-1, -1) / -1"),
         [](coords_t v) -> coords_t { return v / field_t{-1}; }
       );
     }
