@@ -157,10 +157,10 @@ namespace sequoia::testing
   class coordinates_operations
   {
   public:
-    using coords_t     = Coordinates;
-    using coords_graph = transition_checker<coords_t>::transition_graph;
-    using vec_t        = maths::vector_coordinates<typename coords_t::vector_space_type, typename coords_t::basis_type>;
-    using field_t      = vec_t::field_type;
+    using coords_t   = Coordinates;
+    using vec_t      = maths::vector_coordinates<typename coords_t::vector_space_type, typename coords_t::basis_type>;
+    using field_t    = vec_t::field_type;    
+    using graph_type = transition_checker<Coordinates>::transition_graph;
     constexpr static std::size_t dimension{Coordinates::dimension};
     constexpr static bool orderable{(dimension == 1) && std::totally_ordered<field_t>};
     
@@ -170,25 +170,24 @@ namespace sequoia::testing
       using vec_t    = maths::vector_coordinates<typename coords_t::vector_space_type, typename coords_t::basis_type>;
       using field_t  = vec_t::field_type;
 
+      template<class... Ts>
+        requires (std::convertible_to<Ts, field_t> && ...)
       [[nodiscard]]
-      Coordinates operator()(field_t val) const
+      Coordinates operator()(Ts... vals) const
       {
-        return Coordinates{val};
+        return Coordinates{field_t(vals)...};
       }
     };
 
-    explicit coordinates_operations(regular_test& t) : m_Test{t} {} 
+    template<class Producer=default_producer>
+    explicit coordinates_operations(regular_test& t, Producer producer={})
+      : m_Test{t}
+      , m_Graph{make_graph(producer)}
+    {}
 
     void execute()
     {
-      auto g{
-        [](){
-          if constexpr     (dimension == 1) return make_dim_1_transition_graph();
-          else if constexpr(dimension == 2) return make_dim_2_transition_graph();
-        }()
-      };
-
-      transition_checker<coords_t>::check("", g, make_checker());
+      transition_checker<coords_t>::check("", m_Graph, make_checker());
     }
 
     auto make_checker()
@@ -212,10 +211,10 @@ namespace sequoia::testing
       }
     }
 
-    template<class Producer=default_producer>
-    static typename transition_checker<Coordinates>::transition_graph make_dim_1_transition_graph(Producer producer={})
+    template<class Producer>
+    static graph_type make_dim_1_transition_graph(Producer producer)
     {
-      coords_graph g{
+      graph_type g{
         {
           {}, {}, {}
         },
@@ -237,15 +236,15 @@ namespace sequoia::testing
       return g;
     }
 
-    static typename transition_checker<Coordinates>::transition_graph make_dim_2_transition_graph()
+    template<class Producer>
+    static graph_type make_dim_2_transition_graph(Producer producer)
     {
       using coords_t     = Coordinates;
-      using coords_graph = transition_checker<coords_t>::transition_graph;
       using edge_t       = transition_checker<coords_t>::edge;
       using vec_t        = maths::vector_coordinates<typename coords_t::vector_space_type, typename coords_t::basis_type>;
       using field_t      = vec_t::field_type;
 
-      coords_graph g{
+      graph_type g{
         {
           {
             edge_t{dim_2_label::one_one,         "- (-1, -1)",          [](coords_t v) -> coords_t { return -v; }},
@@ -272,13 +271,14 @@ namespace sequoia::testing
           {
           }, // one_one
         },
-        {coords_t{field_t(-1), field_t(-1)},
-         coords_t{field_t(-1), field_t{}},
-         coords_t{field_t{}, field_t(-1)},
-         coords_t{field_t{}, field_t{}},
-         coords_t{field_t{}, field_t(1)},
-         coords_t{field_t(1), field_t{}},
-         coords_t{field_t(1), field_t(1)}}
+        {producer(field_t(-1), field_t(-1)),
+         producer(field_t(-1), field_t{}),
+         producer(field_t{}, field_t(-1)),
+         producer(field_t{}, field_t{}),
+         producer(field_t{}, field_t(1)),
+         producer(field_t(1), field_t{}),
+         producer(field_t(1), field_t(1))
+        }
       };
 
       if constexpr(std::is_same_v<typename Coordinates::origin_type, maths::intrinsic_origin>)
@@ -293,6 +293,15 @@ namespace sequoia::testing
     enum dim_2_label{ neg_one_neg_one, neg_one_zero, zero_neg_one, zero_zero, zero_one, one_zero, one_one };
 
     regular_test& m_Test;
+    graph_type m_Graph;
+
+    template<class Producer>
+    [[nodiscard]]
+    static graph_type make_graph(Producer producer)
+    {
+      if constexpr     (dimension == 1) return make_dim_1_transition_graph(producer);
+      else if constexpr(dimension == 2) return make_dim_2_transition_graph(producer);
+    }
 
     static void add_common_dim_1_transitions(maths::network auto& g)
     {

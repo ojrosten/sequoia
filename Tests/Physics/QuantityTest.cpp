@@ -56,33 +56,13 @@ namespace sequoia::testing
 
       check_exception_thrown<std::domain_error>("Negative mass", [](){ return mass_t{-1.0, units::kilogram}; });
 
-      auto g{coordinates_operations<mass_t>::make_dim_1_transition_graph(producer<mass_t>{})};
-
-      auto checker{
-          [this](std::string_view description, const mass_t& obtained, const mass_t& prediction, const mass_t& parent, std::weak_ordering ordering) {
-            check(equality, description, obtained, prediction);
-            if(ordering != std::weak_ordering::equivalent)
-              check_semantics(description, prediction, parent, ordering);
-          }
-      };
-
-      transition_checker<mass_t>::check(report(""), g, checker);
+      coordinates_operations<mass_t>{*this, producer<mass_t>{}}.execute();
     }
 
     {
       using unsafe_mass_t = quantity<mass_space<float>, units::kilogram_t, std::identity>;
 
-      auto g{coordinates_operations<unsafe_mass_t>::make_dim_1_transition_graph(producer<unsafe_mass_t>{})};
-
-      auto checker{
-          [this](std::string_view description, const unsafe_mass_t& obtained, const unsafe_mass_t& prediction, const unsafe_mass_t& parent, std::weak_ordering ordering) {
-            check(equality, description, obtained, prediction);
-            if(ordering != std::weak_ordering::equivalent)
-              check_semantics(description, prediction, parent, ordering);
-          }
-      };
-
-      transition_checker<unsafe_mass_t>::check(report(""), g, checker);
+      coordinates_operations<unsafe_mass_t>{*this, producer<unsafe_mass_t>{}}.execute();
     }
   }
 }
