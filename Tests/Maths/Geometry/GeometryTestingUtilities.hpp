@@ -459,6 +459,7 @@ namespace sequoia::testing
 
     static void add_dim_1_intrinsic_origin_transitions(maths::network auto& g, regular_test& test)
     {
+      // TO DO: add in negative transitions
       add_transition<coords_t>(
         g,
         dim_1_label::one,
