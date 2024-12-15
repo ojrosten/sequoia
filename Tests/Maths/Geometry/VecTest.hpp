@@ -24,10 +24,7 @@ namespace sequoia::testing
     void run_tests();
 
     template<class Set, maths::weak_field Field>
-    void test_vec_1_orderable();
-
-    template<class Set, maths::weak_field Field>
-    void test_vec_1_unorderable();
+    void test_vec_1();
 
     template<class Set, maths::weak_field Field>
     void test_vec_2();

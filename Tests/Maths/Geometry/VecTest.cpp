@@ -74,9 +74,9 @@ namespace sequoia::testing
 
   void vec_test::run_tests()
   {
-    test_vec_1_orderable<sets::R<1, float>, float>();
-    test_vec_1_orderable<sets::R<1,double>, double>();
-    test_vec_1_unorderable<sets::C<1, float>, std::complex<float>>();
+    test_vec_1<sets::R<1, float>, float>();
+    test_vec_1<sets::R<1,double>, double>();
+    test_vec_1<sets::C<1, float>, std::complex<float>>();
 
     test_vec_2<sets::R<2, float>, float>();
     test_vec_2<sets::C<2, double>, std::complex<double>>();
@@ -87,15 +87,7 @@ namespace sequoia::testing
   }
 
   template<class Set, maths::weak_field Field>
-  void vec_test::test_vec_1_orderable()
-  {
-    using vec_t = vector_coordinates<my_vec_space<Set, Field, 1>, canonical_basis<Set, Field, 1>>;
-    coordinates_operations<vec_t> operations{*this};
-    operations.test_vec_1();
-  }
-
-  template<class Set, maths::weak_field Field>
-  void vec_test::test_vec_1_unorderable()
+  void vec_test::test_vec_1()
   {
     using vec_t = vector_coordinates<my_vec_space<Set, Field, 1>, canonical_basis<Set, Field, 1>>;
     coordinates_operations<vec_t> operations{*this};
