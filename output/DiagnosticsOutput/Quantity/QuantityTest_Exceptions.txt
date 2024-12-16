@@ -1,4 +1,4 @@
-Tests/Physics/QuantityTest.cpp, Line 57
+Tests/Physics/QuantityTest.cpp, Line 61
 Negative mass
 
 Expected Exception Type:
@@ -16,6 +16,38 @@ Value -1 less than zero
 =======================================
 
 Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 454
+
+Expected Exception Type:
+[std::domain_error]
+Value -1 less than zero
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 467
+
+Expected Exception Type:
+[std::domain_error]
+Value -1 less than zero
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 478
+
+Expected Exception Type:
+[std::domain_error]
+Value -1 less than zero
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 489
+
+Expected Exception Type:
+[std::domain_error]
+Value -1 less than zero
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 500
 
 Expected Exception Type:
 [std::domain_error]

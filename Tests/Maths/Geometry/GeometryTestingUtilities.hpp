@@ -240,7 +240,7 @@ namespace sequoia::testing
       else
       {
         add_dim_1_attempted_negative_transitions(g, producer, test);
-      }    
+      }
 
       if constexpr(std::is_same_v<typename Coordinates::origin_type, maths::intrinsic_origin>)
       {
@@ -438,7 +438,7 @@ namespace sequoia::testing
         g,
         dim_1_label::one,
         dim_1_label::one,
-        test.report("(1) - (2)"),
+        test.report("(1) -= (2)"),
         [&test](coords_t p) -> coords_t {
           test.check_exception_thrown<std::domain_error>("", [&p](){ return p -= vec_t{field_t(2)};});
           return p;
@@ -455,6 +455,53 @@ namespace sequoia::testing
           return p;
         }
       );
+
+      if constexpr(std::is_same_v<typename Coordinates::origin_type, maths::intrinsic_origin>)
+      {
+        add_transition<coords_t>(
+          g,
+          dim_1_label::one,
+          dim_1_label::one,
+          test.report("(1) *= field_t{-1}"),
+          [&test](coords_t v) -> coords_t {
+            test.check_exception_thrown<std::domain_error>("", [&v](){ return v *= field_t{-1}; });
+            return v;
+          }          
+        );
+
+        add_transition<coords_t>(
+          g,
+          dim_1_label::one,
+          dim_1_label::one,
+          test.report("field_t{-1} * (1)"),
+          [&test](coords_t v) -> coords_t {
+            test.check_exception_thrown<std::domain_error>("", [&v](){ return v = field_t{-1} * v; });
+            return v;
+          }          
+        );
+
+        add_transition<coords_t>(
+          g,
+          dim_1_label::one,
+          dim_1_label::one,
+          test.report("(1) /= field_t{-1}"),
+          [&test](coords_t v) -> coords_t {
+            test.check_exception_thrown<std::domain_error>("", [&v](){ return v /= field_t{-1}; });
+            return v;
+          }          
+        );
+
+        add_transition<coords_t>(
+          g,
+          dim_1_label::one,
+          dim_1_label::one,
+          test.report("(1) / field_t{-1}"),
+          [&test](coords_t v) -> coords_t {
+            test.check_exception_thrown<std::domain_error>("", [&v](){ return v = v / field_t{-1}; });
+            return v;
+          }          
+        );
+      }
     }
 
     static void add_dim_1_intrinsic_origin_transitions(maths::network auto& g, regular_test& test)

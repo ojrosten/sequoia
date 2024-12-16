@@ -238,7 +238,7 @@ namespace sequoia::maths
     using vector_space_type = typename ConvexSpace::vector_space_type;
     using field_type        = typename vector_space_type::field_type;
     using value_type        = field_type;
-    using displacement_coordinates = vector_coordinates<vector_space_type, Basis>;
+    using displacement_coordinates_type = vector_coordinates<vector_space_type, Basis>;
 
     constexpr static bool has_intrinsic_origin{std::is_same_v<Origin, intrinsic_origin>};
     constexpr static bool has_identity_validator{std::is_same_v<Validator, std::identity>};
@@ -262,14 +262,14 @@ namespace sequoia::maths
     {}
 
     template<class Self>
-    constexpr Self& operator+=(this Self& self, const displacement_coordinates& v) noexcept(has_identity_validator)
+    constexpr Self& operator+=(this Self& self, const displacement_coordinates_type& v) noexcept(has_identity_validator)
     {
       self.apply_to_each_element(v.values(), [](value_type& lhs, value_type rhs){ lhs += rhs; });
       return self;
     }
 
     template<class Self>
-    constexpr Self& operator-=(this Self& self, const displacement_coordinates& v) noexcept(has_identity_validator)
+    constexpr Self& operator-=(this Self& self, const displacement_coordinates_type& v) noexcept(has_identity_validator)
     {
       self.apply_to_each_element(v.values(), [](value_type& lhs, value_type rhs){ lhs -= rhs; });
       return self;
@@ -294,28 +294,28 @@ namespace sequoia::maths
     template<class Derived>
       requires std::is_base_of_v<coordinates_base, Derived>
     [[nodiscard]]
-    friend constexpr Derived operator+(Derived c, const displacement_coordinates& v) noexcept(has_identity_validator) { return c += v; }
+    friend constexpr Derived operator+(Derived c, const displacement_coordinates_type& v) noexcept(has_identity_validator) { return c += v; }
 
     template<class Derived>
-    requires std::is_base_of_v<coordinates_base, Derived> && (!std::is_same_v<Derived, displacement_coordinates>)
+    requires std::is_base_of_v<coordinates_base, Derived> && (!std::is_same_v<Derived, displacement_coordinates_type>)
     [[nodiscard]]
-    friend constexpr Derived operator+(const displacement_coordinates& v, Derived c) noexcept(has_identity_validator)
+    friend constexpr Derived operator+(const displacement_coordinates_type& v, Derived c) noexcept(has_identity_validator)
     {
       return c += v;
     }
 
     template<class Derived>
-      requires std::is_base_of_v<coordinates_base, Derived> && (!std::is_same_v<Derived, displacement_coordinates>)
+      requires std::is_base_of_v<coordinates_base, Derived> && (!std::is_same_v<Derived, displacement_coordinates_type>)
     [[nodiscard]]
-    friend constexpr Derived operator-(Derived c, const displacement_coordinates& v) noexcept(has_identity_validator)
+    friend constexpr Derived operator-(Derived c, const displacement_coordinates_type& v) noexcept(has_identity_validator)
     {
       return c -= v;
     }
 
     template<class Derived>
-      requires std::is_base_of_v<coordinates_base, Derived> && (!std::is_same_v<Derived, displacement_coordinates>)
+      requires std::is_base_of_v<coordinates_base, Derived> && (!std::is_same_v<Derived, displacement_coordinates_type>)
     [[nodiscard]]
-    friend constexpr Derived operator-(const displacement_coordinates& v, Derived c) noexcept(has_identity_validator)
+    friend constexpr Derived operator-(const displacement_coordinates_type& v, Derived c) noexcept(has_identity_validator)
     {
       return c -= v;
     }
@@ -323,10 +323,10 @@ namespace sequoia::maths
     template<class Derived>
       requires std::is_base_of_v<coordinates_base, Derived>
     [[nodiscard]]
-    friend constexpr displacement_coordinates operator-(const Derived& lhs, const Derived& rhs) noexcept(has_identity_validator)
+    friend constexpr displacement_coordinates_type operator-(const Derived& lhs, const Derived& rhs) noexcept(has_identity_validator)
     {
       return[&] <std::size_t... Is>(std::index_sequence<Is...>) {
-        return displacement_coordinates{(lhs.values()[Is] - rhs.values()[Is])...};
+        return displacement_coordinates_type{(lhs.values()[Is] - rhs.values()[Is])...};
       }(std::make_index_sequence<D>{});
     }
 
