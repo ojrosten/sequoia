@@ -40,7 +40,7 @@ namespace sequoia::testing
 
     {
       using mass_t = quantity<mass_space<float>, units::kilogram_t>;
-
+      
       check_exception_thrown<std::domain_error>("Negative mass", [](){ return mass_t{-1.0, units::kilogram}; });
 
       coordinates_operations<mass_t>{*this}.execute();

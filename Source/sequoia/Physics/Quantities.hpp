@@ -71,9 +71,6 @@ namespace sequoia::physics
 
     constexpr quantity() = default;
 
-    // TO DO: figure out whether this should be preferred to
-    // coordinate_base's stricter approach of disallowing potentially
-    // narrowing conversions
     constexpr quantity(value_type val, units_type) requires (D == 1)
       : coordinates_type{val}
     {}

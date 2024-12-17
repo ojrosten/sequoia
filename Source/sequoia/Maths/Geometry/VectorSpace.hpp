@@ -269,12 +269,8 @@ namespace sequoia::maths
       : m_Values{m_Validator(to_array(d))}
     {}
 
-    constexpr explicit coordinates_base(std::span<value_type, D> d) noexcept(has_identity_validator)
-      : m_Values{m_Validator(to_array(d))}
-    {}
-
     template<class... Ts>
-      requires (sizeof...(Ts) == D) && (is_initializable_v<value_type, Ts> && ...)
+      requires (sizeof...(Ts) == D) && (std::convertible_to<Ts, value_type> && ...)
     constexpr coordinates_base(Ts... ts) noexcept(has_identity_validator)
       : m_Values{m_Validator(std::array<value_type, D>{ts...})}
     {}
