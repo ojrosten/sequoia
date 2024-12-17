@@ -1,3 +1,7 @@
+include(CTest)
+
+option(CODE_COVERAGE "Build with Code Coverage" OFF)
+
 FUNCTION(sequoia_compile_options)
     if (MSVC)
         add_definitions(/W4)
@@ -60,10 +64,18 @@ FUNCTION(sequoia_set_properties target)
     endif()
 ENDFUNCTION()
 
+FUNCTION(sequoia_add_coverage target)
+    if(CODE_COVERAGE)
+        target_compile_options(${target} PRIVATE -coverage)
+        target_link_options(${target} PRIVATE -coverage)
+    endif()
+ENDFUNCTION()
+
 FUNCTION(sequoia_finalize_tests target sourceGroupRoot sourceGroupPrefix)
     sequoia_compile_features(${target})
     sequoia_set_properties(${target})
     sequoia_set_ide_source_groups_with_prefix(${target} ${sourceGroupRoot} ${sourceGroupPrefix})
+    sequoia_add_coverage(${target})
 ENDFUNCTION()
 
 FUNCTION(sequoia_finalize_self target sourceGroupRoot sourceGroupPrefix)
@@ -80,6 +92,7 @@ FUNCTION(sequoia_finalize_library target)
     sequoia_compile_features(${target})
     sequoia_link_libraries(${target})
     sequoia_set_ide_source_groups(${target} ${CMAKE_CURRENT_LIST_DIR})
+    sequoia_add_coverage(${target})
 ENDFUNCTION()
 
 FUNCTION(sequoia_finalize_executable target)
