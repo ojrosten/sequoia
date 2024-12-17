@@ -152,6 +152,11 @@ namespace sequoia::testing
     }
   }
 
+  template<class T>
+  inline constexpr bool has_units_type{
+    requires { typename T::units_type; }
+  };
+
   
   template<class Coordinates>
   class coordinates_operations
@@ -161,29 +166,17 @@ namespace sequoia::testing
     
     using graph_type = transition_checker<Coordinates>::transition_graph;    
     using coords_t   = Coordinates;
-    using vec_t      = maths::vector_coordinates<typename coords_t::vector_space_type, typename coords_t::basis_type>;
+    using vec_t      = coords_t::displacement_coordinates_type;
     using field_t    = vec_t::field_type;
     constexpr static std::size_t dimension{Coordinates::dimension};
     constexpr static bool orderable{(dimension == 1) && std::totally_ordered<field_t>};
 
     regular_test& m_Test;
     graph_type m_Graph;
-  public: 
-    struct default_producer
-    {
-      template<class... Ts>
-        requires (std::convertible_to<Ts, field_t> && ...)
-      [[nodiscard]]
-      Coordinates operator()(Ts... vals) const
-      {
-        return Coordinates{field_t(vals)...};
-      }
-    };
-
-    template<class Producer=default_producer>
-    explicit coordinates_operations(regular_test& t, Producer producer={})
+  public:
+    explicit coordinates_operations(regular_test& t)
       : m_Test{t}
-      , m_Graph{make_graph(producer, m_Test)}
+      , m_Graph{make_graph(m_Test)}
     {}
 
     void execute()
@@ -191,12 +184,20 @@ namespace sequoia::testing
       transition_checker<coords_t>::check("", m_Graph, make_checker());
     }
   private:
-    template<class Producer>
-    [[nodiscard]]
-    static graph_type make_graph(Producer producer, regular_test& test)
+    static graph_type make_graph(regular_test& test)
     {
-      if constexpr     (dimension == 1) return make_dim_1_transition_graph(producer, test);
-      else if constexpr(dimension == 2) return make_dim_2_transition_graph(producer, test);
+      if constexpr(has_units_type<coords_t>)
+        return do_make_graph(test, typename coords_t::units_type{});
+      else
+        return do_make_graph(test);
+    }
+    
+    template<class... Units>
+    [[nodiscard]]
+    static graph_type do_make_graph(regular_test& test, Units... units)
+    {
+      if constexpr     (dimension == 1) return make_dim_1_transition_graph(test, units...);
+      else if constexpr(dimension == 2) return make_dim_2_transition_graph(test, units...);
     }
     
     [[nodiscard]]
@@ -221,43 +222,39 @@ namespace sequoia::testing
       }
     }
 
-    template<class Producer>
-    static graph_type make_dim_1_transition_graph(Producer producer, regular_test& test)
+    template<class... Units>
+    static graph_type make_dim_1_transition_graph(regular_test& test, Units... units)
     {
       graph_type g{
         {
           {}, {}, {}
         },
-        {producer(2), producer(1), coords_t{}}
+        {coords_t{field_t(2), units...}, coords_t{field_t(1), units...}, coords_t{}}
       };
 
-      add_dim_1_common_transitions(g, test);
+      add_dim_1_common_transitions(g, test, units...);
 
       if constexpr(!maths::defines_absolute_scale_v<typename Coordinates::validator_type>)
       {
-        add_dim_1_negative_transitions(g, producer, test);
+        add_dim_1_negative_transitions(g, test, units...);
       }
       else
       {
-        add_dim_1_attempted_negative_transitions(g, producer, test);
+        add_dim_1_attempted_negative_transitions(g, test, units...);
       }
 
       if constexpr(std::is_same_v<typename Coordinates::origin_type, maths::intrinsic_origin>)
       {
-        add_dim_1_intrinsic_origin_transitions(g, test);
+        add_dim_1_intrinsic_origin_transitions(g, test, units...);
       }
 
       return g;
     }
 
-    template<class Producer>
-    static graph_type make_dim_2_transition_graph(Producer producer, regular_test& test)
+    template<class... Units>
+    static graph_type make_dim_2_transition_graph(regular_test& test, Units... units)
     {
-      using coords_t     = Coordinates;
       using edge_t       = transition_checker<coords_t>::edge;
-      using vec_t        = maths::vector_coordinates<typename coords_t::vector_space_type, typename coords_t::basis_type>;
-      using field_t      = vec_t::field_type;
-
       graph_type g{
         {
           {
@@ -285,25 +282,26 @@ namespace sequoia::testing
           {
           }, // one_one
         },
-        {producer(field_t(-1), field_t(-1)),
-         producer(field_t(-1), field_t{}),
-         producer(field_t{}, field_t(-1)),
-         producer(field_t{}, field_t{}),
-         producer(field_t{}, field_t(1)),
-         producer(field_t(1), field_t{}),
-         producer(field_t(1), field_t(1))
+        {coords_t{field_t(-1), field_t(-1), units...},
+         coords_t{field_t(-1), field_t{},   units...},
+         coords_t{field_t{},   field_t(-1), units...},
+         coords_t{field_t{},   field_t{},   units...},
+         coords_t{field_t{},   field_t(1),  units...},
+         coords_t{field_t(1),   field_t{},  units...},
+         coords_t{field_t(1),   field_t(1), units...}
         }
       };
 
       if constexpr(std::is_same_v<typename Coordinates::origin_type, maths::intrinsic_origin>)
       {
-        add_dim_2_intrinsic_origin_transitions(g, test);
+        add_dim_2_intrinsic_origin_transitions(g, test, units...);
       }
 
       return g;
     }
 
-    static void add_dim_1_common_transitions(maths::network auto& g, regular_test& test)
+    template<class... Units>
+    static void add_dim_1_common_transitions(maths::network auto& g, regular_test& test, Units... units)
     {
       // Joins from zero
       add_transition<coords_t>(
@@ -311,7 +309,7 @@ namespace sequoia::testing
         dim_1_label::zero,
         dim_1_label::one,
         test.report("(0) +  (1)"),
-        [](coords_t p) -> coords_t { return p +  vec_t{field_t(1)}; }
+        [&](coords_t p) -> coords_t { return p +  vec_t{field_t(1), units...}; }
       );
 
       add_transition<coords_t>(
@@ -319,7 +317,7 @@ namespace sequoia::testing
         dim_1_label::zero,
         dim_1_label::one,
         test.report("(0) += (1)"),
-        [](coords_t p) -> coords_t { return p += vec_t{field_t(1)}; }
+        [&](coords_t p) -> coords_t { return p += vec_t{field_t(1), units...}; }
       );
 
       // Joins from one
@@ -329,7 +327,7 @@ namespace sequoia::testing
         dim_1_label::one,
         dim_1_label::zero,
         test.report("(1)  - (1)"),
-        [](coords_t p) -> coords_t { return p -  vec_t{field_t(1)}; }
+        [&](coords_t p) -> coords_t { return p -  vec_t{field_t(1), units...}; }
       );
 
       add_transition<coords_t>(
@@ -337,7 +335,7 @@ namespace sequoia::testing
         dim_1_label::one,
         dim_1_label::zero,
         test.report("(1) -= (1)"),
-        [](coords_t p) -> coords_t { return p -= vec_t{field_t(1)}; }
+        [&](coords_t p) -> coords_t { return p -= vec_t{field_t(1), units...}; }
       );
 
       add_transition<coords_t>(
@@ -353,7 +351,7 @@ namespace sequoia::testing
         dim_1_label::one,
         dim_1_label::two,
         test.report("(1)  + (1)"),
-        [](coords_t p) -> coords_t { return p +  vec_t{field_t(1)}; }
+        [&](coords_t p) -> coords_t { return p +  vec_t{field_t(1), units...}; }
       );
 
       add_transition<coords_t>(
@@ -361,7 +359,7 @@ namespace sequoia::testing
         dim_1_label::one,
         dim_1_label::two,
         test.report("(1) += (1)"),
-        [](coords_t p) -> coords_t { return p += vec_t{field_t(1)}; }
+        [&](coords_t p) -> coords_t { return p += vec_t{field_t(1), units...}; }
       );
 
       // Joins from two
@@ -371,14 +369,14 @@ namespace sequoia::testing
         dim_1_label::two,
         dim_1_label::one,
         test.report("(2) - (1)"),
-        [](coords_t p) -> coords_t { return p - vec_t{field_t(1)}; }
+        [&](coords_t p) -> coords_t { return p - vec_t{field_t(1), units...}; }
       );
     }
 
-    template<class Producer>
-    static void add_dim_1_negative_transitions(maths::network auto& g, Producer producer, regular_test& test)
+    template<class... Units>
+    static void add_dim_1_negative_transitions(maths::network auto& g, regular_test& test, Units... units)
     {
-      g.add_node(producer(-1));
+      g.add_node(field_t(-1), units...);
 
       // Joins to neg_one
       add_transition<coords_t>(
@@ -394,7 +392,7 @@ namespace sequoia::testing
         dim_1_label::one,
         dim_1_label::neg_one,
         test.report("(1) - (2)"),
-        [](coords_t p) -> coords_t { return p - vec_t{field_t(2)}; }
+        [&](coords_t p) -> coords_t { return p - vec_t{field_t(2), units...}; }
       );
       
       // Joins from neg_one
@@ -431,16 +429,16 @@ namespace sequoia::testing
       );    
     }
 
-    template<class Producer>
-    static void add_dim_1_attempted_negative_transitions(maths::network auto& g, Producer, regular_test& test)
+    template<class... Units>
+    static void add_dim_1_attempted_negative_transitions(maths::network auto& g, regular_test& test, Units... units)
     {
       add_transition<coords_t>(
         g,
         dim_1_label::one,
         dim_1_label::one,
         test.report("(1) -= (2)"),
-        [&test](coords_t p) -> coords_t {
-          test.check_exception_thrown<std::domain_error>("", [&p](){ return p -= vec_t{field_t(2)};});
+        [&](coords_t p) -> coords_t {
+          test.check_exception_thrown<std::domain_error>("", [&](){ return p -= vec_t{field_t(2), units...};});
           return p;
         }
       );
@@ -450,8 +448,8 @@ namespace sequoia::testing
         dim_1_label::one,
         dim_1_label::one,
         test.report("(1) - (2)"),
-        [&test](coords_t p) -> coords_t {
-          test.check_exception_thrown<std::domain_error>("", [&p](){ return p = (p - vec_t{field_t(2)}); });
+        [&](coords_t p) -> coords_t {
+          test.check_exception_thrown<std::domain_error>("", [&](){ return p = (p - vec_t{field_t(2), units...}); });
           return p;
         }
       );
@@ -463,7 +461,7 @@ namespace sequoia::testing
           dim_1_label::one,
           dim_1_label::one,
           test.report("(1) *= field_t{-1}"),
-          [&test](coords_t v) -> coords_t {
+          [&](coords_t v) -> coords_t {
             test.check_exception_thrown<std::domain_error>("", [&v](){ return v *= field_t{-1}; });
             return v;
           }          
@@ -504,7 +502,8 @@ namespace sequoia::testing
       }
     }
 
-    static void add_dim_1_intrinsic_origin_transitions(maths::network auto& g, regular_test& test)
+    template<class... Units>
+    static void add_dim_1_intrinsic_origin_transitions(maths::network auto& g, regular_test& test, Units...)
     {
       // TO DO: add in negative transitions
       add_transition<coords_t>(
@@ -576,7 +575,8 @@ namespace sequoia::testing
       );
     }
 
-    static void add_dim_2_intrinsic_origin_transitions(maths::network auto& g, regular_test& test)
+    template<class... Units>
+    static void add_dim_2_intrinsic_origin_transitions(maths::network auto& g, regular_test& test, Units...)
     {
       // (-1, -1) --> (1, 1)
 

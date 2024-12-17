@@ -1,4 +1,4 @@
-Tests/Physics/QuantityTest.cpp, Line 61
+Tests/Physics/QuantityTest.cpp, Line 44
 Negative mass
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ Value -1 less than zero
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 443
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 441
 
 Expected Exception Type:
 [std::domain_error]
@@ -15,7 +15,7 @@ Value -1 less than zero
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 454
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 452
 
 Expected Exception Type:
 [std::domain_error]
@@ -23,7 +23,7 @@ Value -1 less than zero
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 467
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 465
 
 Expected Exception Type:
 [std::domain_error]
@@ -31,7 +31,7 @@ Value -1 less than zero
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 478
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 476
 
 Expected Exception Type:
 [std::domain_error]
@@ -39,7 +39,7 @@ Value -1 less than zero
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 489
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 487
 
 Expected Exception Type:
 [std::domain_error]
@@ -47,7 +47,7 @@ Value -1 less than zero
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 500
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 498
 
 Expected Exception Type:
 [std::domain_error]

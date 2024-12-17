@@ -156,8 +156,10 @@ namespace sequoia::maths
   using vector_space_type = typename ConvexSpace::vector_space_type;
 
   template<convex_space ConvexSpace>
-  using space_value_type = typename vector_space_type<ConvexSpace>::field_type;
+  using space_field_type = typename vector_space_type<ConvexSpace>::field_type;
 
+  template<convex_space ConvexSpace>
+  using space_value_type = space_field_type<ConvexSpace>;
 
   template<convex_space ConvexSpace>
   inline constexpr std::size_t space_dimension{vector_space_type<ConvexSpace>::dimension};
@@ -176,9 +178,6 @@ namespace sequoia::maths
          || (   (space_dimension<ConvexSpace> == 1)
              && requires(V & v, const space_value_type<ConvexSpace>& val) { { v(val) } -> std::convertible_to<decltype(val)>; })
        );
-
-  template<convex_space ConvexSpace, basis_for<vector_space_type<ConvexSpace>> Basis, class Origin, validator_for<ConvexSpace> Validator>
-  class coordinates_base;
 
   struct absolute_validator
   {
@@ -214,10 +213,23 @@ namespace sequoia::maths
   template<>
   struct defines_absolute_scale<absolute_validator> : std::true_type {};
 
-
   struct intrinsic_origin {};
 
-  template<convex_space ConvexSpace, basis_for<vector_space_type<ConvexSpace>> Basis, class Origin, validator_for<ConvexSpace> Validator>
+  template<
+    convex_space ConvexSpace,
+    basis_for<vector_space_type<ConvexSpace>>  Basis,
+    class Origin,
+    validator_for<ConvexSpace> Validator,
+    class DisplacementCoordinates
+  >
+  class coordinates_base;
+
+  template<
+    convex_space ConvexSpace,
+    basis_for<vector_space_type<ConvexSpace>> Basis,
+    class Origin,
+    validator_for<ConvexSpace> Validator
+  >
   class coordinates;
 
   template<affine_space AffineSpace, basis_for<vector_space_type<AffineSpace>> Basis, class Origin>
@@ -226,7 +238,13 @@ namespace sequoia::maths
   template<vector_space VectorSpace, basis_for<vector_space_type<VectorSpace>> Basis>
   using vector_coordinates = affine_coordinates<VectorSpace, Basis, intrinsic_origin>;
 
-  template<convex_space ConvexSpace, basis_for<vector_space_type<ConvexSpace>> Basis, class Origin, validator_for<ConvexSpace> Validator>
+  template<
+    convex_space ConvexSpace,
+    basis_for<vector_space_type<ConvexSpace>> Basis,
+    class Origin,
+    validator_for<ConvexSpace> Validator,
+    class DisplacementCoordinates=vector_coordinates<vector_space_type<ConvexSpace>, Basis>
+  >
   class coordinates_base
   {
   public:
@@ -235,10 +253,10 @@ namespace sequoia::maths
     using validator_type    = Validator;
     using origin_type       = Origin;
     using set_type          = typename ConvexSpace::set_type;
-    using vector_space_type = typename ConvexSpace::vector_space_type;
-    using field_type        = typename vector_space_type::field_type;
+    using vector_space_type = vector_space_type<ConvexSpace>;
+    using field_type        = space_field_type<ConvexSpace>;
     using value_type        = field_type;
-    using displacement_coordinates_type = vector_coordinates<vector_space_type, Basis>;
+    using displacement_coordinates_type = DisplacementCoordinates;
 
     constexpr static bool has_intrinsic_origin{std::is_same_v<Origin, intrinsic_origin>};
     constexpr static bool has_identity_validator{std::is_same_v<Validator, std::identity>};
@@ -321,7 +339,7 @@ namespace sequoia::maths
     }
 
     template<class Derived>
-      requires std::is_base_of_v<coordinates_base, Derived>
+    requires std::is_base_of_v<coordinates_base, Derived> // && Tighten constraint
     [[nodiscard]]
     friend constexpr displacement_coordinates_type operator-(const Derived& lhs, const Derived& rhs) noexcept(has_identity_validator)
     {

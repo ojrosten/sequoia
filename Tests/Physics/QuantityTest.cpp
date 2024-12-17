@@ -20,19 +20,6 @@ namespace sequoia::testing
     inline constexpr bool has_unary_minus{
       requires(T t){ { -t } -> std::same_as<T>; }
     };
-
-    template<class Quantity>
-    struct producer
-    {
-      using quantity_type = Quantity;
-      using unit_type     = typename Quantity::unit_type;
-
-      [[nodiscard]]
-      quantity_type operator()(float val) const
-      {
-        return quantity_type{val, unit_type{}};
-      }
-    };
   }
 
   [[nodiscard]]
@@ -56,13 +43,13 @@ namespace sequoia::testing
 
       check_exception_thrown<std::domain_error>("Negative mass", [](){ return mass_t{-1.0, units::kilogram}; });
 
-      coordinates_operations<mass_t>{*this, producer<mass_t>{}}.execute();
+      coordinates_operations<mass_t>{*this}.execute();
     }
 
     {
       using unsafe_mass_t = quantity<mass_space<float>, units::kilogram_t, std::identity>;
 
-      coordinates_operations<unsafe_mass_t>{*this, producer<unsafe_mass_t>{}}.execute();
+      coordinates_operations<unsafe_mass_t>{*this}.execute();
     }
   }
 }
