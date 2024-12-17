@@ -36,63 +36,6 @@ namespace sequoia::physics
   using to_displacement_basis_t
     = quantity_displacement_basis<vector_space_type<QuantitySpace>, Unit, space_field_type<QuantitySpace>>;
 
-  /*template<convex_space QuantitySpace, quantity_unit Unit, class Validator>
-  class quantity_coordinates
-    : public coordinates_base<QuantitySpace, to_displacement_basis_t<QuantitySpace, Unit>, intrinsic_origin, Validator>
-  {
-  public:
-    using coordinates_type
-      = coordinates_base<QuantitySpace, to_displacement_basis_t<QuantitySpace, Unit>, intrinsic_origin, Validator>;
-
-    using quantity_space_type      = QuantitySpace;
-    using unit_type                = Unit;
-    using displacement_space_type  = vector_space_type<QuantitySpace>;
-    using intrinsic_validator_type = typename Unit::validator_type;
-    using validator_type           = Validator;
-    using field_type               = space_field_type<QuantitySpace>;
-    using value_type               = field_type;
-
-    constexpr static std::size_t dimension{displacement_space_type::dimension};
-    constexpr static std::size_t D{dimension};
-
-    constexpr static bool is_intrinsically_absolute{(dimension == 1) && defines_absolute_scale_v<intrinsic_validator_type>};
-    constexpr static bool is_unsafe{!std::is_same_v<Validator, intrinsic_validator_type>};
-    constexpr static bool is_effectively_absolute{is_intrinsically_absolute && !is_unsafe};
-
-    constexpr quantity() = default;
-
-    constexpr quantity(value_type val, unit_type) requires (D == 1)
-      : coordinates_type{val}
-    {}
-
-    constexpr quantity(std::span<const value_type, D> val, unit_type)
-      : coordinates_type{val}
-    {}
-
-    quantity operator-() const requires is_effectively_absolute = delete;
-
-    [[nodiscard]]
-    constexpr quantity operator+() const
-    {
-      return quantity{this->values(), unit_type{}};
-    }
-
-    [[nodiscard]]
-    constexpr quantity operator-() const noexcept(coordinates_type::has_identity_validator)
-      requires (!is_effectively_absolute)
-    {
-      return quantity{to_array(this->values(), [](value_type t) { return -t; }), unit_type{}};
-    }
-  protected:
-    quantity_coordinates(const quantity_coordinates&)     = default;
-    quantity_coordinates(quantity_coordinates&&) noexcept = default;
-
-    quantity_coordinates& operator=(const quantity_coordinates&)     = default;
-    quantity_coordinates& operator=(quantity_coordinates&&) noexcept = default;
-
-    ~quantity_coordinates() = default;
-    };*/
-
   template<convex_space QuantitySpace, quantity_unit Unit, class Validator>
   class quantity;
   
