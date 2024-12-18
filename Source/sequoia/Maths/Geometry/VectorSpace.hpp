@@ -335,30 +335,6 @@ namespace sequoia::maths
     }
 
     template<class Derived>
-    requires std::is_base_of_v<coordinates_base, Derived> // && Tighten constraint
-    [[nodiscard]]
-    friend constexpr displacement_coordinates_type operator-(const Derived& lhs, const Derived& rhs) noexcept(has_identity_validator)
-    {
-      return[&] <std::size_t... Is>(std::index_sequence<Is...>) {
-        return displacement_coordinates_type{(lhs.values()[Is] - rhs.values()[Is])...};
-      }(std::make_index_sequence<D>{});
-    }
-
-    template<class Self>
-    [[nodiscard]]
-    constexpr Self operator+(this const Self& self) noexcept(has_identity_validator)
-    {
-      return Self{self.values()};
-    }
-
-    template<class Self>
-    [[nodiscard]]
-    constexpr Self operator-(this const Self& self) noexcept(has_identity_validator)
-    {
-      return Self{to_array(self.values(), [](value_type t) { return -t; })};
-    }
-
-    template<class Derived>
       requires std::is_base_of_v<coordinates_base, Derived>
     [[nodiscard]]
     friend constexpr Derived operator*(Derived v, value_type u) noexcept(has_identity_validator)
@@ -471,7 +447,31 @@ namespace sequoia::maths
   class coordinates : public coordinates_base<ConvexSpace, Basis, Origin, Validator>
   {
   public:
-    using coordinates_base<ConvexSpace, Basis, Origin, Validator>::coordinates_base;
+    using base_type = coordinates_base<ConvexSpace, Basis, Origin, Validator>;
+    using base_type::base_type;
+    using displacement_coordinates_type = base_type::displacement_coordinates_type;
+    using value_type                    = base_type::value_type;
+    constexpr static bool has_identity_validator{base_type::has_identity_validator};
+
+    [[nodiscard]]
+    friend constexpr displacement_coordinates_type operator-(const coordinates& lhs, const coordinates& rhs) noexcept(has_identity_validator)
+    {
+      return[&] <std::size_t... Is>(std::index_sequence<Is...>) {
+        return displacement_coordinates_type{(lhs.values()[Is] - rhs.values()[Is])...};
+      }(std::make_index_sequence<base_type::D>{});
+    }
+
+    [[nodiscard]]
+    constexpr coordinates operator+() const noexcept(has_identity_validator)
+    {
+      return coordinates{this->values()};
+    }
+
+    [[nodiscard]]
+    constexpr coordinates operator-() const noexcept(has_identity_validator)
+    {
+      return coordinates{to_array(this->values(), [](value_type t) { return -t; })};
+    }
   };
 
   namespace sets
