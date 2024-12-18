@@ -368,13 +368,13 @@ namespace sequoia::maths
     constexpr std::span<const value_type, D> values() const noexcept { return m_Values; }
 
     [[nodiscard]]
-    constexpr std::span<value_type, D> values() noexcept { return m_Values; }
+    constexpr std::span<value_type, D> values() noexcept requires(has_identity_validator) { return m_Values; }
 
     [[nodiscard]]
     constexpr const value_type& value() const noexcept requires (D == 1) { return m_Values[0]; }
 
     [[nodiscard]]
-    constexpr value_type& value() noexcept requires (D == 1) { return m_Values[0]; }
+    constexpr value_type& value() noexcept requires (D == 1) && has_identity_validator { return m_Values[0]; }
 
     // Make this explicit since otherwise, given two vectors a,b, a/b is well-formed due to implicit boolean conversion
     [[nodiscard]]
@@ -387,7 +387,7 @@ namespace sequoia::maths
     constexpr value_type operator[](std::size_t i) const { return m_Values[i]; }
 
     [[nodiscard]]
-    constexpr value_type& operator[](std::size_t i) { return m_Values[i]; }
+    constexpr value_type& operator[](std::size_t i) requires(has_identity_validator) { return m_Values[i]; }
 
     [[nodiscard]]
     friend constexpr bool operator==(const coordinates_base& lhs, const coordinates_base& rhs) noexcept { return lhs.m_Values == rhs.m_Values; }
