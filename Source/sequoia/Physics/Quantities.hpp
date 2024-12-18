@@ -118,9 +118,29 @@ namespace sequoia::physics
     }
   };
 
-  namespace quantity_sets
+  namespace classical_quantity_sets
   {
     struct masses
+    {
+      using topological_space_type = std::true_type;
+    };
+
+    struct lengths
+    {
+      using topological_space_type = std::true_type;
+    };
+
+    struct times
+    {
+      using topological_space_type = std::true_type;
+    };
+
+    struct temperatures
+    {
+      using topological_space_type = std::true_type;
+    };
+
+    struct electrical_charges
     {
       using topological_space_type = std::true_type;
     };
@@ -132,21 +152,36 @@ namespace sequoia::physics
     };
   }
 
-  template<std::floating_point T>
-  struct mass_displacement_space
+  template<class QuantitySet, std::floating_point T>
+  struct displacement_space
   {
-    using set_type          = quantity_sets::differences<quantity_sets::masses>;
+    using set_type          = classical_quantity_sets::differences<QuantitySet>;
     using field_type        = T;
-    using vector_space_type = mass_displacement_space;
+    using vector_space_type = displacement_space;
     constexpr static std::size_t dimension{1};
   };
 
-  template<std::floating_point T>
-  struct mass_space
+  template<class QuantitySet, std::floating_point T>
+  struct quantity_space
   {
-    using set_type          = quantity_sets::masses;
-    using vector_space_type = mass_displacement_space<T>;
+    using set_type          = QuantitySet;
+    using vector_space_type = displacement_space<QuantitySet, T>;
   };
+
+  template<std::floating_point T>
+  struct mass_space : quantity_space<classical_quantity_sets::masses, T> {};
+
+  template<std::floating_point T>
+  struct length_space : quantity_space<classical_quantity_sets::lengths, T> {};
+
+  template<std::floating_point T>
+  struct time_space : quantity_space<classical_quantity_sets::times, T> {};
+
+  template<std::floating_point T>
+  struct temperature_space : quantity_space<classical_quantity_sets::temperatures, T> {};
+
+  template<std::floating_point T>
+  struct electrical_charge_space : quantity_space<classical_quantity_sets::electrical_charges, T> {};
 
   namespace units
   {
@@ -155,6 +190,30 @@ namespace sequoia::physics
       using validator_type = absolute_validator;
     };
 
+    struct metre_t
+    {
+      using validator_type = absolute_validator;
+    };
+
+    struct second_t
+    {
+      using validator_type = std::identity;
+    };
+
+    struct kelvin_t
+    {
+      using validator_type = absolute_validator;
+    };
+
+    struct coulomb_t
+    {
+      using validator_type = std::identity;
+    };
+
     inline constexpr kilogram_t kilogram{};
+    inline constexpr metre_t metre{};
+    inline constexpr second_t second{};
+    inline constexpr kelvin_t kelvin{};
+    inline constexpr coulomb_t coulomb{};
   }
 }
