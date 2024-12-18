@@ -79,7 +79,7 @@ namespace sequoia::physics
       : coordinates_type{val}
     {}
 
-    quantity operator-() const requires is_effectively_absolute = delete;
+    constexpr quantity operator-() const requires is_effectively_absolute = delete;
 
     [[nodiscard]]
     constexpr quantity operator+() const
