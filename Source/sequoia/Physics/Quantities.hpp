@@ -102,8 +102,21 @@ namespace sequoia::physics
         return displacement_quantity_type{(lhs.values()[Is] - rhs.values()[Is])..., units_type{}};
       }(std::make_index_sequence<D>{});
     }
-  };
 
+    // Start with the special case of the same units and the numerator of dim 1 (the latter is always true of the denom)
+    template<convex_space DenominatorQuantitySpace, class DenominatorValidator>
+      requires     ( D == 1)
+                && (quantity<DenominatorQuantitySpace, Unit, DenominatorValidator>::D == 1)
+                && (is_intrinsically_absolute || vector_space<QuantitySpace>)
+                && (   quantity<DenominatorQuantitySpace, Unit, DenominatorValidator>::is_intrinsically_absolute
+                    || vector_space<DenominatorQuantitySpace>)
+    [[nodiscard]]
+    friend constexpr std::common_type_t<value_type, typename quantity<DenominatorQuantitySpace, Unit, DenominatorValidator>::value_type>
+      operator/(const quantity& lhs, const quantity<DenominatorQuantitySpace, Unit, DenominatorValidator>& rhs)
+    {
+      return lhs.value() / rhs.value();
+    }
+  };
 
   namespace quantity_sets
   {
