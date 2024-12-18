@@ -65,9 +65,10 @@ namespace sequoia::physics
     constexpr static std::size_t dimension{displacement_space_type::dimension};
     constexpr static std::size_t D{dimension};
 
-    constexpr static bool is_intrinsically_absolute{(dimension == 1) && defines_absolute_scale_v<intrinsic_validator_type>};
+    constexpr static bool is_intrinsically_absolute{(D == 1) && defines_absolute_scale_v<intrinsic_validator_type>};
     constexpr static bool is_unsafe{!std::is_same_v<Validator, intrinsic_validator_type>};
     constexpr static bool is_effectively_absolute{is_intrinsically_absolute && !is_unsafe};
+    constexpr static bool has_identity_validator{coordinates_type::has_identity_validator};
 
     constexpr quantity() = default;
 
@@ -88,14 +89,14 @@ namespace sequoia::physics
     }
 
     [[nodiscard]]
-    constexpr quantity operator-() const noexcept(coordinates_type::has_identity_validator)
+    constexpr quantity operator-() const noexcept(has_identity_validator)
       requires (!is_effectively_absolute)
     {
       return quantity{to_array(this->values(), [](value_type t) { return -t; }), units_type{}};
     }
 
     [[nodiscard]]
-    friend constexpr displacement_quantity_type operator-(const quantity& lhs, const quantity& rhs) noexcept(coordinates_type::has_identity_validator)
+    friend constexpr displacement_quantity_type operator-(const quantity& lhs, const quantity& rhs) noexcept(has_identity_validator)
     {
       return[&] <std::size_t... Is>(std::index_sequence<Is...>) {
         return displacement_quantity_type{(lhs.values()[Is] - rhs.values()[Is])..., units_type{}};
