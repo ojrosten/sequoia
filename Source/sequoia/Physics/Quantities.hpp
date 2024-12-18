@@ -19,7 +19,7 @@ namespace sequoia::physics
 
   struct coordinate_basis_type{};
 
-  template<class VectorSpace, class Unit, std::floating_point T>
+  template<vector_space VectorSpace, class Unit, std::floating_point T>
   struct quantity_displacement_basis
   {
     using vector_space_type      = VectorSpace;
