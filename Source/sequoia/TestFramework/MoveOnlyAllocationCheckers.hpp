@@ -178,11 +178,22 @@ namespace sequoia::testing
                        T&& y,
                        const T& xClone,
                        const T& yClone,
-                       opt_moved_from_ref<T> movedFrom,
+                       opt_moved_from_ref<T> movedFromPostConstruction,
+                       opt_moved_from_ref<T> movedFromPostAssignment,
                        Mutator m,
                        const allocation_info<T, Getters>&... info)
   {
-    impl::check_semantics(std::move(description), logger, impl::move_only_allocation_actions<T>{}, std::forward<T>(x), std::forward<T>(y), xClone, yClone, movedFrom, std::move(m), info...);
+    impl::check_semantics(std::move(description),
+                          logger,
+                          impl::move_only_allocation_actions<T>{},
+                          std::forward<T>(x),
+                          std::forward<T>(y),
+                          xClone,
+                          yClone,
+                          movedFromPostConstruction,
+                          movedFromPostAssignment,
+                          std::move(m),
+                          info...);
   }
 
   template<test_mode Mode, moveonly T, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
@@ -193,20 +204,31 @@ namespace sequoia::testing
                        T&& y,
                        const T& xClone,
                        const T& yClone,
-                       opt_moved_from_ref<T> movedFrom,
+                       opt_moved_from_ref<T> movedFromPostConstruction,
+                       opt_moved_from_ref<T> movedFromPostAssignment,
                        std::weak_ordering order,
                        Mutator m,
                        const allocation_info<T, Getters>&... info)
   {
-    impl::check_semantics(std::move(description), logger, impl::move_only_allocation_actions<T>{order}, std::forward<T>(x), std::forward<T>(y), xClone, yClone, movedFrom, std::move(m), info...);
+    impl::check_semantics(std::move(description),
+                          logger,
+                          impl::move_only_allocation_actions<T>{order},
+                          std::forward<T>(x),
+                          std::forward<T>(y),
+                          xClone,
+                          yClone,
+                          movedFromPostConstruction,
+                          movedFromPostAssignment,
+                          std::move(m),
+                          info...);
   }
 
   template
   <
     test_mode Mode,
     moveonly T,
-    invocable_r<T> xMaker,
-    invocable_r<T> yMaker,
+    regular_invocable_r<T> xMaker,
+    regular_invocable_r<T> yMaker,
     std::invocable<T&> Mutator,
     alloc_getter<T>... Getters
   >
@@ -215,19 +237,28 @@ namespace sequoia::testing
                                  test_logger<Mode>& logger,
                                  xMaker xFn,
                                  yMaker yFn,
-                                 opt_moved_from_ref<T> movedFrom,
+                                 opt_moved_from_ref<T> movedFromPostConstruction,
+                                 opt_moved_from_ref<T> movedFromPostAssignment,
                                  Mutator m,
                                  const allocation_info<T, Getters>&... info)
   {
-    return impl::check_semantics(std::move(description), logger, impl::move_only_allocation_actions<T>{}, std::move(xFn), std::move(yFn), movedFrom, std::move(m), info...);
+    return impl::check_semantics(std::move(description),
+                                 logger,
+                                 impl::move_only_allocation_actions<T>{},
+                                 std::move(xFn),
+                                 std::move(yFn),
+                                 movedFromPostConstruction,
+                                 movedFromPostAssignment,
+                                 std::move(m),
+                                 info...);
   }
 
   template
   <
     test_mode Mode,
     moveonly T,
-    invocable_r<T> xMaker,
-    invocable_r<T> yMaker,
+    regular_invocable_r<T> xMaker,
+    regular_invocable_r<T> yMaker,
     std::invocable<T&> Mutator,
     alloc_getter<T>... Getters
   >
@@ -236,11 +267,20 @@ namespace sequoia::testing
                                  test_logger<Mode>& logger,
                                  xMaker xFn,
                                  yMaker yFn,
-                                 opt_moved_from_ref<T> movedFrom,
+                                 opt_moved_from_ref<T> movedFromPostConstruction,
+                                 opt_moved_from_ref<T> movedFromPostAssignment,
                                  std::weak_ordering order,
                                  Mutator m,
                                  const allocation_info<T, Getters>&... info)
   {
-    return impl::check_semantics(std::move(description), logger, impl::move_only_allocation_actions<T>{order}, std::move(xFn), std::move(yFn), movedFrom, std::move(m), info...);
+    return impl::check_semantics(std::move(description),
+                                 logger,
+                                 impl::move_only_allocation_actions<T>{order},
+                                 std::move(xFn),
+                                 std::move(yFn),
+                                 movedFromPostConstruction,
+                                 movedFromPostAssignment,
+                                 std::move(m),
+                                 info...);
   }
 }

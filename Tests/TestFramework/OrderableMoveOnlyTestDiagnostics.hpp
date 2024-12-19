@@ -24,7 +24,7 @@ namespace sequoia:: testing
     void run_tests();
   private:
 
-    void test_regular_semantics();
+    void test_semantics();
   };
 
   class orderable_move_only_false_positive_diagnostics final : public move_only_false_positive_test
@@ -38,6 +38,6 @@ namespace sequoia:: testing
     void run_tests();
   private:
 
-    void test_regular_semantics();
+    void test_semantics();
   };
 }

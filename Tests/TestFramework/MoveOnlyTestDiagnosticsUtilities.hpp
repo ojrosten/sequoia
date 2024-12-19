@@ -75,7 +75,7 @@ namespace sequoia::testing
 
     resource_binder& operator=(resource_binder&& other) noexcept
     {
-      m_Index = std::exchange(other.m_Index, 0);
+      std::ranges::swap(m_Index, other.m_Index);
       return *this;
     }
 

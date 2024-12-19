@@ -22,7 +22,8 @@ namespace sequoia::testing::impl
                        T&& y,
                        const T& xClone,
                        const T& yClone,
-                       opt_moved_from_ref<T> movedFrom,
+                       opt_moved_from_ref<T> movedFromPostConstruction,
+                       opt_moved_from_ref<T> movedFromPostAssignment,
                        Mutator m,
                        const Args&... args)
   {
@@ -31,19 +32,19 @@ namespace sequoia::testing::impl
     if(!check_preconditions(logger, actions, x, y, xClone, yClone, args...))
       return false;
 
-    auto opt{check_move_construction(logger, actions, std::move(x), xClone, movedFrom, args...)};
+    auto opt{check_move_construction(logger, actions, std::move(x), xClone, movedFromPostConstruction, args...)};
     if(!opt) return false;
 
     if constexpr (do_swap<Args...>::value)
     {
       if(check_swap(logger, actions, std::move(*opt), std::move(y), xClone, yClone, args...))
       {
-        check_move_assign(logger, actions, y, std::move(*opt), yClone, movedFrom, std::move(m), args...);
+        check_move_assign(logger, actions, y, std::move(*opt), yClone, movedFromPostAssignment, std::move(m), args...);
       }
     }
     else
     {
-      check_move_assign(logger, actions, *opt, std::move(y), yClone, movedFrom, std::move(m), args...);
+      check_move_assign(logger, actions, *opt, std::move(y), yClone, movedFromPostAssignment, std::move(m), args...);
     }
 
     if constexpr (serializable_to<T, std::stringstream> && deserializable_from<T, std::stringstream>)

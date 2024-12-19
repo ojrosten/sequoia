@@ -40,37 +40,63 @@ namespace sequoia::testing
 
     /// Preconditions: x!=y; x==xClone, y==yClone
     template<class Self, moveonly T>
-    void check_semantics(this Self&& self, const reporter& description, T&& x, T&& y, const T& xClone, const T& yClone, const T& movedFrom)
+    void check_semantics(this Self& self,
+                         const reporter& description,
+                         T&& x,
+                         T&& y,
+                         const T& xClone,
+                         const T& yClone,
+                         const T& movedFromPostConstruction,
+                         const T& movedFromPostAssignment)
     {
-      testing::check_semantics(move_only_message(self.report(description)), self.m_Logger, std::move(x), std::move(y), xClone, yClone, opt_moved_from_ref<T>{movedFrom});
+      testing::check_semantics(move_only_message(self.report(description)),
+                               self.m_Logger,
+                               std::move(x),
+                               std::move(y),
+                               xClone,
+                               yClone,
+                               opt_moved_from_ref<T>{movedFromPostConstruction},
+                               opt_moved_from_ref<T>{movedFromPostAssignment});
     }
 
     template<class Self, moveonly T>
-    void check_semantics(this Self&& self, const reporter& description, T&& x, T&& y, const T& xClone, const T& yClone)
+    void check_semantics(this Self& self, const reporter& description, T&& x, T&& y, const T& xClone, const T& yClone)
     {
-      testing::check_semantics(move_only_message(self.report(description)), self.m_Logger, std::move(x), std::move(y), xClone, yClone, opt_moved_from_ref<T>{});
+      testing::check_semantics(move_only_message(self.report(description)),
+                               self.m_Logger,
+                               std::move(x),
+                               std::move(y),
+                               xClone,
+                               yClone,
+                               opt_moved_from_ref<T>{},
+                               opt_moved_from_ref<T>{});
     }
 
     template
     <
       class Self,
-      std::invocable xMaker,
+      moveonly T,
+      regular_invocable_r<T> xMaker,
+      regular_invocable_r<T> yMaker
+    >
+    void check_semantics(this Self& self,
+                         const reporter& description,
+                         xMaker xFn,
+                         yMaker yFn,
+                         const T& movedFromPostConstruction,
+                         const T& movedFromPostAssignment)
+    {
+      self.check_semantics(description, xFn(), yFn(), xFn(), yFn(), movedFromPostConstruction, movedFromPostAssignment);
+    }
+
+    template
+    <
+      class Self,
+      std::regular_invocable xMaker,
       moveonly T=std::invoke_result_t<xMaker>,
-      invocable_r<T> yMaker
+      regular_invocable_r<T> yMaker
     >
-    void check_semantics(this Self&& self, const reporter& description, xMaker xFn, yMaker yFn, const T& movedFrom)
-    {
-      self.check_semantics(description, xFn(), yFn(), xFn(), yFn(), movedFrom);
-    }
-
-    template
-    <
-      class Self,
-      std::invocable xMaker,
-      moveonly T = std::invoke_result_t<xMaker>,
-      invocable_r<T> yMaker
-    >
-      void check_semantics(this Self&& self,const reporter& description, xMaker xFn, yMaker yFn)
+      void check_semantics(this Self& self, const reporter& description, xMaker xFn, yMaker yFn)
     {
       self.check_semantics(description, xFn(), yFn(), xFn(), yFn());
     }
@@ -78,40 +104,83 @@ namespace sequoia::testing
      /// Preconditions: x!=y, with values consistent with order; x==xClone, y==yClone
     template<class Self, moveonly T>
       requires std::totally_ordered<T>
-    void check_semantics(this Self&& self, const reporter& description, T&& x, T&& y, const T& xClone, const T& yClone, const T& movedFrom, std::weak_ordering order)
+    void check_semantics(this Self& self,
+                         const reporter& description,
+                         T&& x,
+                         T&& y,
+                         const T& xClone,
+                         const T& yClone,
+                         const T& movedFromPostConstruction,
+                         const T& movedFromPostAssignment,
+                         std::weak_ordering order)
     {
-      testing::check_semantics(move_only_message(self.report(description)), self.m_Logger, std::move(x), std::move(y), xClone, yClone, opt_moved_from_ref<T>{movedFrom}, order);
+      testing::check_semantics(move_only_message(self.report(description)),
+                               self.m_Logger,
+                               std::move(x),
+                               std::move(y),
+                               xClone,
+                               yClone,
+                               opt_moved_from_ref<T>{movedFromPostConstruction},
+                               opt_moved_from_ref<T>{movedFromPostAssignment},
+                               order);
     }
 
     template<class Self, moveonly T>
       requires std::totally_ordered<T>
-    void check_semantics(this Self&& self, const reporter& description, T&& x, T&& y, const T& xClone, const T& yClone, std::weak_ordering order)
+    void check_semantics(this Self& self,
+                         const reporter& description,
+                         T&& x,
+                         T&& y,
+                         const T& xClone,
+                         const T& yClone,
+                         std::weak_ordering order)
     {
-      testing::check_semantics(move_only_message(self.report(description)), self.m_Logger, std::move(x), std::move(y), xClone, yClone, opt_moved_from_ref<T>{}, order);
+      testing::check_semantics(move_only_message(self.report(description)),
+                               self.m_Logger,
+                               std::move(x),
+                               std::move(y),
+                               xClone,
+                               yClone,
+                               opt_moved_from_ref<T>{},
+                               opt_moved_from_ref<T>{},
+                               order);
     }
 
     template
     <
       class Self,
-      std::invocable<> xMaker,
-      moveonly T = std::invoke_result_t<xMaker>,
-      invocable_r<T> yMaker
-    >
-      requires std::totally_ordered<T>
-    void check_semantics(this Self&& self, const reporter& description, xMaker xFn, yMaker yFn, const T& movedFrom, std::weak_ordering order)
-    {
-      self.check_semantics(description, xFn(), yFn(), xFn(), yFn(), movedFrom, order);
-    }
-
-    template
-    <
-      class Self,
-      std::invocable<> xMaker,
+      std::regular_invocable xMaker,
       moveonly T=std::invoke_result_t<xMaker>,
-      invocable_r<T> yMaker
+      regular_invocable_r<T> yMaker
     >
       requires std::totally_ordered<T>
-    void check_semantics(this Self&& self, const reporter& description, xMaker xFn, yMaker yFn, std::weak_ordering order)
+    void check_semantics(this Self& self,
+                         const reporter& description,
+                         xMaker xFn,
+                         yMaker yFn,
+                         const T& movedFromPostConstruction,
+                         const T& movedFromPostAssignment,
+                         std::weak_ordering order)
+    {
+      self.check_semantics(description,
+                           xFn(),
+                           yFn(),
+                           xFn(),
+                           yFn(),
+                           movedFromPostConstruction,
+                           movedFromPostAssignment,
+                           order);
+    }
+
+    template
+    <
+      class Self,
+      std::regular_invocable xMaker,
+      moveonly T=std::invoke_result_t<xMaker>,
+      regular_invocable_r<T> yMaker
+    >
+      requires std::totally_ordered<T>
+    void check_semantics(this Self& self, const reporter& description, xMaker xFn, yMaker yFn, std::weak_ordering order)
     {
       self.check_semantics(description, xFn(), yFn(), xFn(), yFn(), order);
     }

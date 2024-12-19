@@ -162,10 +162,16 @@ namespace sequoia::testing
         }
       };
 
-      check_semantics("Incorrect moved-from state", beast{1}, beast{2}, beast{1}, beast{2}, beast{3}, mutator,
+      check_semantics("Incorrect moved-from state post construction", beast{1}, beast{2}, beast{1}, beast{2}, beast{3}, beast{}, mutator,
         allocation_info{allocGetter, {1_pm, {1_pm, 1_mu}, {0_manp}}});
 
-      check_semantics("Incorrect moved-from state", []() { return beast{1}; }, []() { return beast{2}; }, beast{3}, mutator,
+      check_semantics("Incorrect moved-from state post construction", []() { return beast{1}; }, []() { return beast{2}; }, beast{3}, beast{}, mutator,
+        allocation_info{allocGetter, {1_pm, {1_pm, 1_mu}, {0_manp}}});
+
+      check_semantics("Incorrect moved-from state post assignment", beast{1}, beast{2}, beast{1}, beast{2}, beast{}, beast{3}, mutator,
+        allocation_info{allocGetter, {1_pm, {1_pm, 1_mu}, {0_manp}}});
+
+      check_semantics("Incorrect moved-from state post assignment", []() { return beast{1}; }, []() { return beast{2}; }, beast{}, beast{3}, mutator,
         allocation_info{allocGetter, {1_pm, {1_pm, 1_mu}, {0_manp}}});
     }
   }
@@ -229,10 +235,10 @@ namespace sequoia::testing
         }
       };
 
-      check_semantics("Check moved-from state", beast{1}, beast{2}, beast{1}, beast{2}, beast{}, mutator,
+      check_semantics("Check moved-from state", beast{1}, beast{2}, beast{1}, beast{2}, beast{}, beast{},  mutator,
         allocation_info{allocGetter, {1_pm, {1_pm, 1_mu}, {0_manp}}});
 
-      check_semantics("Check moved-from state", []() { return beast{1}; }, []() { return beast{2}; }, beast{}, mutator,
+      check_semantics("Check moved-from state", []() { return beast{1}; }, []() { return beast{2}; }, beast{}, beast{}, mutator,
         allocation_info{allocGetter, {1_pm, {1_pm, 1_mu}, {0_manp}}});
     }
   }

@@ -123,18 +123,12 @@ Broken check invariant
 =======================================
 
 Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 37
-Incorrect moved-from state
+Incorrect moved-from state post construction
 
 --Move-only Semantics--
 [sequoia::testing::resource_binder]
 
   Incorrect moved-from value after move construction
-  [sequoia::testing::resource_binder]
-  operator== returned false
-  Obtained : 0
-  Predicted: 3
-
-  Incorrect moved-from value after move assignment
   [sequoia::testing::resource_binder]
   operator== returned false
   Obtained : 0
@@ -143,7 +137,7 @@ Incorrect moved-from state
 =======================================
 
 Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 38
-Incorrect moved-from state
+Incorrect moved-from state post construction
 
 --Move-only Semantics--
 [sequoia::testing::resource_binder]
@@ -154,10 +148,32 @@ Incorrect moved-from state
   Obtained : 0
   Predicted: 3
 
-  Incorrect moved-from value after move assignment
+=======================================
+
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 40
+Incorrect moved-from state post assignment
+
+--Move-only Semantics--
+[sequoia::testing::resource_binder]
+
+  Incorrect moved-from value after move construction
   [sequoia::testing::resource_binder]
   operator== returned false
   Obtained : 0
+  Predicted: 3
+
+=======================================
+
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 41
+Incorrect moved-from state post assignment
+
+--Move-only Semantics--
+[sequoia::testing::resource_binder]
+
+  Incorrect moved-from value after move assignment
+  [sequoia::testing::resource_binder]
+  operator== returned false
+  Obtained : 1
   Predicted: 3
 
 =======================================

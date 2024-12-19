@@ -109,7 +109,7 @@ Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 69
 =======================================
 
 Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 75
-Incorrect moved-from state
+Incorrect moved-from state post construction
 
 --Move-only Semantics--
 [sequoia::testing::orderable_resource_binder]
@@ -124,12 +124,12 @@ Incorrect moved-from state
   [sequoia::testing::orderable_resource_binder]
   operator== returned false
   Obtained : 0
-  Predicted: 3
+  Predicted: 1
 
 =======================================
 
 Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 76
-Incorrect moved-from state
+Incorrect moved-from state post construction
 
 --Move-only Semantics--
 [sequoia::testing::orderable_resource_binder]
@@ -139,6 +139,34 @@ Incorrect moved-from state
   operator== returned false
   Obtained : 0
   Predicted: 3
+
+  Incorrect moved-from value after move assignment
+  [sequoia::testing::orderable_resource_binder]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
+
+=======================================
+
+Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 78
+Incorrect moved-from state post assignment
+
+--Move-only Semantics--
+[sequoia::testing::orderable_resource_binder]
+
+  Incorrect moved-from value after move assignment
+  [sequoia::testing::orderable_resource_binder]
+  operator== returned false
+  Obtained : 0
+  Predicted: 3
+
+=======================================
+
+Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 79
+Incorrect moved-from state post assignment
+
+--Move-only Semantics--
+[sequoia::testing::orderable_resource_binder]
 
   Incorrect moved-from value after move assignment
   [sequoia::testing::orderable_resource_binder]

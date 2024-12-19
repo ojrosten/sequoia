@@ -33,7 +33,7 @@ namespace sequoia::testing
 
     template<class Self, pseudoregular T, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
       requires (!std::totally_ordered<T> && (sizeof...(Getters) > 0))
-    void check_semantics(this Self&& self, const reporter& description, const T& x, const T& y, Mutator m, allocation_info<T, Getters>... info)
+    void check_semantics(this Self& self, const reporter& description, const T& x, const T& y, Mutator m, allocation_info<T, Getters>... info)
     {
       testing::check_semantics(append_lines(self.report(description), emphasise("Regular Semantics")), self.m_Logger, x, y, m, info...);
     }
@@ -48,14 +48,14 @@ namespace sequoia::testing
       alloc_getter<T>... Getters
     >
       requires (!std::totally_ordered<T> && (sizeof...(Getters) > 0))
-    std::pair<T, T> check_semantics(this Self&& self, const reporter& description, xMaker xFn, yMaker yFn, Mutator m, allocation_info<T, Getters>... info)
+    std::pair<T, T> check_semantics(this Self& self, const reporter& description, xMaker xFn, yMaker yFn, Mutator m, allocation_info<T, Getters>... info)
     {
       return testing::check_semantics(append_lines(self.report(description), emphasise("Regular Semantics")), self.m_Logger, std::move(xFn), std::move(yFn), m, info...);
     }
 
     template<class Self, pseudoregular T, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
       requires (std::totally_ordered<T> && (sizeof...(Getters) > 0))
-    void check_semantics(this Self&& self, const reporter& description, const T& x, const T& y, std::weak_ordering order, Mutator m, allocation_info<T, Getters>... info)
+    void check_semantics(this Self& self, const reporter& description, const T& x, const T& y, std::weak_ordering order, Mutator m, allocation_info<T, Getters>... info)
     {
       testing::check_semantics(append_lines(self.report(description), emphasise("Ordered Semantics")), self.m_Logger, x, y, order, m, info...);
     }
@@ -70,7 +70,7 @@ namespace sequoia::testing
       alloc_getter<T>... Getters
     >
       requires (std::totally_ordered<T> && (sizeof...(Getters) > 0))
-    std::pair<T, T> check_semantics(this Self&& self, const reporter& description, xMaker xFn, yMaker yFn, std::weak_ordering order, Mutator m, allocation_info<T, Getters>... info)
+    std::pair<T, T> check_semantics(this Self& self, const reporter& description, xMaker xFn, yMaker yFn, std::weak_ordering order, Mutator m, allocation_info<T, Getters>... info)
     {
       return testing::check_semantics(append_lines(self.report(description), emphasise("Ordered Semantics")), self.m_Logger, std::move(xFn), std::move(yFn), order, m, info...);
     }
@@ -112,7 +112,7 @@ namespace sequoia::testing
     basic_regular_allocation_test& operator=(basic_regular_allocation_test&&) noexcept = default;
 
     template<class Self>
-    void do_allocation_tests(this Self&& self)
+    void do_allocation_tests(this Self& self)
     {
       self.template test_allocation<false, false, false>();
       self.template test_allocation<false, false, true>();

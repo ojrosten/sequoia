@@ -47,11 +47,26 @@ namespace sequoia::testing
       x != y
    */
   template<test_mode Mode, moveonly T>
-  void check_semantics(std::string description, test_logger<Mode>& logger, T&& x, T&& y, const T& xClone, const T& yClone, opt_moved_from_ref<T> movedFrom)
+  void check_semantics(std::string description,
+                       test_logger<Mode>& logger,
+                       T&& x,
+                       T&& y,
+                       const T& xClone,
+                       const T& yClone,
+                       opt_moved_from_ref<T> movedFromPostConstruction,
+                       opt_moved_from_ref<T> movedFromPostAssignment)
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(std::move(description)).append("\n")};
 
-    impl::check_semantics(logger, impl::auxiliary_data<T>{}, std::forward<T>(x), std::forward<T>(y), xClone, yClone, movedFrom, impl::null_mutator{});
+    impl::check_semantics(logger,
+                          impl::auxiliary_data<T>{},
+                          std::forward<T>(x),
+                          std::forward<T>(y),
+                          xClone,
+                          yClone,
+                          movedFromPostConstruction,
+                          movedFromPostAssignment,
+                          impl::null_mutator{});
   }
 
   /*! Preconditions:
@@ -62,10 +77,26 @@ namespace sequoia::testing
    */
   template<test_mode Mode, moveonly T>
     requires std::totally_ordered<T>
-  void check_semantics(std::string description, test_logger<Mode>& logger, T&& x, T&& y, const T& xClone, const T& yClone, opt_moved_from_ref<T> movedFrom, std::weak_ordering order)
+  void check_semantics(std::string description,
+                       test_logger<Mode>& logger,
+                       T&& x,
+                       T&& y,
+                       const T& xClone,
+                       const T& yClone,
+                       opt_moved_from_ref<T> movedFromPostConstruction,
+                       opt_moved_from_ref<T> movedFromPostAssignment,
+                       std::weak_ordering order)
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(std::move(description)).append("\n")};
 
-    impl::check_semantics(logger, impl::auxiliary_data<T>{order}, std::forward<T>(x), std::forward<T>(y), xClone, yClone, movedFrom, impl::null_mutator{});
+    impl::check_semantics(logger,
+                          impl::auxiliary_data<T>{order},
+                          std::forward<T>(x),
+                          std::forward<T>(y),
+                          xClone,
+                          yClone,
+                          movedFromPostConstruction,
+                          movedFromPostAssignment,
+                          impl::null_mutator{});
   }
 }

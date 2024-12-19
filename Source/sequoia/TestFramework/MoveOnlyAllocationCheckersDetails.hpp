@@ -83,7 +83,8 @@ namespace sequoia::testing::impl
                        T&& y,
                        const T& xClone,
                        const T& yClone,
-                       opt_moved_from_ref<T> movedFrom,
+                       opt_moved_from_ref<T> movedFromPostConstruction,
+                       opt_moved_from_ref<T> movedFromPostAssignment,
                        Mutator m,
                        const allocation_info<T, Getters>&... info)
   {
@@ -92,7 +93,16 @@ namespace sequoia::testing::impl
 
     if(auto[optx,opty]{check_para_constructor_allocations(logger, std::forward<T>(x), std::forward<T>(y), xClone, yClone, info...)}; (optx != std::nullopt) && (opty != std::nullopt))
     {
-      check_semantics(logger, actions, std::move(*optx), std::move(*opty), xClone, yClone, movedFrom, std::move(m), std::tuple_cat(make_dual_allocation_checkers(info, x, y)...));
+      check_semantics(logger,
+                      actions,
+                      std::move(*optx),
+                      std::move(*opty),
+                      xClone,
+                      yClone,
+                      movedFromPostConstruction,
+                      movedFromPostAssignment,
+                      std::move(m),
+                      std::tuple_cat(make_dual_allocation_checkers(info, x, y)...));
     }
   }
 
@@ -112,7 +122,8 @@ namespace sequoia::testing::impl
                                  const Actions& actions,
                                  xMaker xFn,
                                  yMaker yFn,
-                                 opt_moved_from_ref<T> movedFrom,
+                                 opt_moved_from_ref<T> movedFromPostConstruction,
+                                 opt_moved_from_ref<T> movedFromPostAssignment,
                                  Mutator m,
                                  const allocation_info<T, Getters>&... info)
   {
@@ -122,7 +133,7 @@ namespace sequoia::testing::impl
     auto y{yFn()};
 
     impl::check_initialization_allocations(logger, x, y, info...);
-    check_semantics("", logger, actions, xFn(), yFn(), x, y, movedFrom, std::move(m), info...);
+    check_semantics("", logger, actions, xFn(), yFn(), x, y, movedFromPostConstruction, movedFromPostAssignment, std::move(m), info...);
 
     return {std::move(x), std::move(y)};
   }
@@ -136,13 +147,23 @@ namespace sequoia::testing::impl
                        T&& y,
                        const T& xClone,
                        const T& yClone,
-                       opt_moved_from_ref<T> movedFrom,
+                       opt_moved_from_ref<T> movedFromPostConstruction,
+                       opt_moved_from_ref<T> movedFromPostAssignment,
                        Mutator m,
                        std::tuple<dual_allocation_checker<T, Getters>...> checkers)
   {
     auto fn{
       [&,m{std::move(m)}](auto&&... checkers){
-        return check_semantics(logger, actions, std::forward<T>(x), std::forward<T>(y), xClone, yClone, movedFrom, std::move(m), std::forward<decltype(checkers)>(checkers)...);
+        return check_semantics(logger,
+                               actions,
+                               std::forward<T>(x),
+                               std::forward<T>(y),
+                               xClone,
+                               yClone,
+                               movedFromPostConstruction,
+                               movedFromPostAssignment,
+                               std::move(m),
+                               std::forward<decltype(checkers)>(checkers)...);
       }
     };
 

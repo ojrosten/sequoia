@@ -20,10 +20,10 @@ namespace sequoia::testing
 
   void orderable_move_only_false_negative_diagnostics::run_tests()
   {
-    test_regular_semantics();
+    test_semantics();
   }
 
-  void orderable_move_only_false_negative_diagnostics::test_regular_semantics()
+  void orderable_move_only_false_negative_diagnostics::test_semantics()
   {
     {
       using beast = orderable_move_only_beast<int>;
@@ -72,8 +72,11 @@ namespace sequoia::testing
     {
       using binder = orderable_resource_binder;
 
-      check_semantics("Incorrect moved-from state", binder{1}, binder{2}, binder{1}, binder{2}, binder{3}, std::strong_ordering::less);
-      check_semantics("Incorrect moved-from state", []() { return binder{1}; }, []() {return binder{2}; }, binder{3}, std::strong_ordering::less);
+      check_semantics("Incorrect moved-from state post construction", binder{1}, binder{2}, binder{1}, binder{2}, binder{3}, binder{1}, std::strong_ordering::less);
+      check_semantics("Incorrect moved-from state post construction", []() { return binder{1}; }, []() {return binder{2}; }, binder{3}, binder{1}, std::strong_ordering::less);
+
+      check_semantics("Incorrect moved-from state post assignment", binder{1}, binder{2}, binder{1}, binder{2}, binder{0}, binder{3}, std::strong_ordering::less);
+      check_semantics("Incorrect moved-from state post assignment", []() { return binder{1}; }, []() {return binder{2}; }, binder{0}, binder{3}, std::strong_ordering::less);
     }
   }
 
@@ -85,10 +88,10 @@ namespace sequoia::testing
 
   void orderable_move_only_false_positive_diagnostics::run_tests()
   {
-    test_regular_semantics();
+    test_semantics();
   }
 
-  void orderable_move_only_false_positive_diagnostics::test_regular_semantics()
+  void orderable_move_only_false_positive_diagnostics::test_semantics()
   {
     {
       using beast = orderable_move_only_beast<int>;
@@ -101,8 +104,8 @@ namespace sequoia::testing
     {
       using binder = orderable_resource_binder;
 
-      check_semantics("Incorrect moved-from state", binder{1}, binder{2}, binder{1}, binder{2}, binder{0}, std::strong_ordering::less);
-      check_semantics("Incorrect moved-from state", []() { return binder{1}; }, []() {return binder{2}; }, binder{0}, std::strong_ordering::less);
+      check_semantics("Check moved-from state", binder{1}, binder{2}, binder{1}, binder{2}, binder{0}, binder{0},  std::strong_ordering::less);
+      check_semantics("Check moved-from state", []() { return binder{1}; }, []() {return binder{2}; }, binder{0}, binder{0}, std::strong_ordering::less);
     }
   }
 }

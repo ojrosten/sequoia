@@ -38,7 +38,7 @@ namespace sequoia::testing
     /// Precondition: x!=y
     template<class Self, pseudoregular T>
       requires (!std::totally_ordered<T>)
-    void check_semantics(this Self&& self, const reporter& description, const T& x, const T& y)
+    void check_semantics(this Self& self, const reporter& description, const T& x, const T& y)
     {
       testing::check_semantics(regular_message(self.report(description)), self.m_Logger, x, y);
     }
@@ -46,14 +46,14 @@ namespace sequoia::testing
     /// Precondition: x!=y, with values consistent with order
     template<class Self, pseudoregular T>
       requires std::totally_ordered<T>
-    void check_semantics(this Self&& self, const reporter& description, const T& x, const T& y, std::weak_ordering order)
+    void check_semantics(this Self& self, const reporter& description, const T& x, const T& y, std::weak_ordering order)
     {
       testing::check_semantics(regular_message(self.report(description)), self.m_Logger, x, y, order);
     }
 
     /// Precondition: x!=y
     template<class Self, pseudoregular T, std::invocable<T&> Mutator>
-    void check_semantics(this Self&& self, const reporter& description, const T& x, const T& y, Mutator m)
+    void check_semantics(this Self& self, const reporter& description, const T& x, const T& y, Mutator m)
     {
       testing::check_semantics(regular_message(self.report(description)), self.m_Logger, x, y, std::move(m));
     }
@@ -61,7 +61,7 @@ namespace sequoia::testing
     /// Precondition: x!=y, with values consistent with order
     template<class Self, pseudoregular T, std::invocable<T&> Mutator>
       requires std::totally_ordered<T>
-    void check_semantics(this Self&& self, const reporter& description, const T& x, const T& y, std::weak_ordering order, Mutator m)
+    void check_semantics(this Self& self, const reporter& description, const T& x, const T& y, std::weak_ordering order, Mutator m)
     {
       testing::check_semantics(regular_message(self.report(description)), self.m_Logger, x, y, order, std::move(m));
     }

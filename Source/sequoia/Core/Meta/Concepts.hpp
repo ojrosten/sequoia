@@ -32,7 +32,11 @@ namespace sequoia
   concept invocable_r =
     requires(F&& f, Args&&... args) {
       { std::invoke(std::forward<F>(f), std::forward<Args>(args)...) } -> std::same_as<R>;
-  }; 
+  };
+
+  /// \brief Supplements `std::regular_invocable`.
+  template <class F, class R, class... Args>
+  concept regular_invocable_r = invocable_r<F, R, Args...>;
 
   /// \brief Building block for concepts related to `std::regular` but without the requirement of default constructibility.
   template <class T>
