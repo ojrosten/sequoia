@@ -216,4 +216,22 @@ namespace sequoia::physics
     inline constexpr kelvin_t kelvin{};
     inline constexpr coulomb_t coulomb{};
   }
+
+  namespace si
+  {
+    template<std::floating_point T>
+    using mass = quantity<mass_space<T>, units::kilogram_t>;
+
+    template<std::floating_point T>
+    using length = quantity<length_space<T>, units::metre_t>;
+
+    template<std::floating_point T>
+    using time = quantity<time_space<T>, units::second_t>;
+
+    template<std::floating_point T>
+    using temperature = quantity<temperature_space<T>, units::kelvin_t>;
+
+    template<std::floating_point T>
+    using electrical_charge = quantity<electrical_charge_space<T>, units::coulomb_t>;
+  }
 }

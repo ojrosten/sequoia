@@ -39,7 +39,7 @@ namespace sequoia::testing
     static_assert(!has_unary_minus<mass_space<float>>);
 
     {
-      using mass_t    = quantity<mass_space<float>, units::kilogram_t>;
+      using mass_t    = si::mass<float>;
       using delta_m_t = mass_t::displacement_quantity_type;
       static_assert(vector_space<delta_m_t>);
       static_assert(mass_t::is_intrinsically_absolute);
