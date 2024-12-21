@@ -42,6 +42,27 @@ namespace sequoia::testing
 {
   /*! Preconditions:
 
+      x != y
+   */
+  template<test_mode Mode, moveonly T>
+  bool check_semantics(std::string description,
+                       test_logger<Mode>& logger,
+                       T&& x,
+                       T&& y)
+  {
+    sentinel<Mode> sentry{logger, add_type_info<T>(std::move(description)).append("\n")};
+
+    return impl::check_semantics(
+             logger,
+             impl::auxiliary_data<T>{},
+             std::forward<T>(x),
+             std::forward<T>(y),
+             impl::null_mutator{}
+           );
+  }
+  
+  /*! Preconditions:
+
       x == xClone
       y == yClone
       x != y

@@ -67,6 +67,7 @@
 #include "sequoia/Core/Meta/Concepts.hpp"
 
 #include <compare>
+#include <format>
 #include <optional>
 
 namespace sequoia::testing
@@ -185,6 +186,13 @@ namespace sequoia::testing::impl
     return check_equality_preconditions(logger, actions, x, y, xClone, yClone, args...);
   }
 
+  template<test_mode Mode, class Actions, moveonly T, class... Args>
+  [[nodiscard]]
+  static bool check_preconditions(test_logger<Mode>& logger,  const Actions& actions, const T& x, const T& y, const Args&... args)
+  {
+    return check_equality_preconditions(logger, actions, x, y, args...);
+  }
+
   template<test_mode Mode, class Actions, pseudoregular T, class... Args>
     requires std::totally_ordered<T>
   [[nodiscard]]
@@ -199,6 +207,14 @@ namespace sequoia::testing::impl
   static bool check_preconditions(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const T& xClone, const T& yClone, const Args&... args)
   {
     return check_orderable_preconditions(logger, actions, x, y, xClone, yClone, args...);
+  }
+
+  template<test_mode Mode, class Actions, moveonly T, class... Args>
+    requires std::totally_ordered<T>
+  [[nodiscard]]
+  static bool check_preconditions(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
+  {
+    return check_orderable_preconditions(logger, actions, x, y, args...);
   }
 
   //================================ comparisons ================================//
@@ -299,13 +315,12 @@ namespace sequoia::testing::impl
       return false;
 
     auto mess{
-        [](std::string_view var){
-          return std::string{"Precondition - for checking move-only semantics, "}
-            .append(var).append(" and ").append(var).append("Clone are assumed to be equal");
-        }
-      };
+      [](std::string_view var) {
+        return std::format("Precondition - for checking move-only semantics, {} and {}Clone are assumed to be equal", var, var);
+      }
+    };
 
-      return check(mess("x"), logger, x == xClone) && check(mess("y"), logger, y == yClone);
+    return check(mess("x"), logger, x == xClone) && check(mess("y"), logger, y == yClone);
   }
 
   template<test_mode Mode, class Actions, std::totally_ordered T, class... Args>

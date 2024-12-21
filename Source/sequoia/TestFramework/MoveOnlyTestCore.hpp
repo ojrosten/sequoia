@@ -43,6 +43,21 @@ namespace sequoia::testing
     bool check_semantics(this Self& self,
                          const reporter& description,
                          T&& x,
+                         T&& y)
+    {
+      return testing::check_semantics(
+               move_only_message(self.report(description)),
+               self.m_Logger,
+               std::move(x),
+               std::move(y)
+             );
+    }
+    
+    /// Preconditions: x!=y; x==xClone, y==yClone
+    template<class Self, moveonly T>
+    bool check_semantics(this Self& self,
+                         const reporter& description,
+                         T&& x,
                          T&& y,
                          const T& xClone,
                          const T& yClone,

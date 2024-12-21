@@ -20,10 +20,11 @@ namespace sequoia::testing
 
   void move_only_false_negative_diagnostics::run_tests()
   {
-    test_semantics();
+    test_move_only_semantics();
+    test_as_unique_semantics();
   }
 
-  void move_only_false_negative_diagnostics::test_semantics()
+  void move_only_false_negative_diagnostics::test_move_only_semantics()
   {
     check_semantics("Broken equality",   move_only_broken_equality{1},    move_only_broken_equality{2},    move_only_broken_equality{1},    move_only_broken_equality{2});
     check_semantics("Broken inequality", move_only_broken_inequality{1},  move_only_broken_inequality{2},  move_only_broken_inequality{1},  move_only_broken_inequality{2});
@@ -39,6 +40,12 @@ namespace sequoia::testing
 
     check_semantics("Incorrect moved-from state post assignment", resource_binder{1}, resource_binder{2}, resource_binder{1}, resource_binder{2}, resource_binder{3}, resource_binder{1});
     check_semantics("Incorrect moved-from state post assignment", []() { return resource_binder{1}; }, []() {return resource_binder{2}; }, resource_binder{0}, resource_binder{3});
+  }
+
+  void move_only_false_negative_diagnostics::test_as_unique_semantics()
+  {
+    check_semantics("Broken equality",   move_only_broken_equality{1},    move_only_broken_equality{2});
+    check_semantics("Broken inequality", move_only_broken_inequality{1},  move_only_broken_inequality{2});
   }
 
 

@@ -20,6 +20,22 @@ namespace sequoia::testing::impl
                        const Actions& actions,
                        T&& x,
                        T&& y,
+                       Mutator,
+                       const Args&... args)
+  {
+    sentinel<Mode> sentry{logger, ""};
+
+    if(!check_preconditions(logger, actions, x, y, args...))
+      return false;
+
+    return !sentry.failure_detected();
+  }
+  
+  template<test_mode Mode, class Actions, moveonly T, std::invocable<T&> Mutator, class... Args>
+  bool check_semantics(test_logger<Mode>& logger,
+                       const Actions& actions,
+                       T&& x,
+                       T&& y,
                        const T& xClone,
                        const T& yClone,
                        opt_moved_from_ref<T> movedFromPostConstruction,
