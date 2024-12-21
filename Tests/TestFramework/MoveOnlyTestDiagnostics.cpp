@@ -57,10 +57,11 @@ namespace sequoia::testing
 
   void move_only_false_positive_diagnostics::run_tests()
   {
-    test_semantics();
+    test_move_only_semantics();
+    test_as_unique_semantics();
   }
 
-  void move_only_false_positive_diagnostics::test_semantics()
+  void move_only_false_positive_diagnostics::test_move_only_semantics()
   {
     using beast = move_only_beast<int>;
     check_semantics("", beast{1}, beast{2}, beast{1}, beast{2});
@@ -68,5 +69,11 @@ namespace sequoia::testing
 
     check_semantics("Check moved-from state", resource_binder{1}, resource_binder{2}, resource_binder{1}, resource_binder{2}, resource_binder{0}, resource_binder{1});
     check_semantics("Check moved-from state", []() { return resource_binder{1}; }, []() {return resource_binder{2}; }, resource_binder{0}, resource_binder{1});
+  }
+
+  void move_only_false_positive_diagnostics::test_as_unique_semantics()
+  {
+    using beast = move_only_beast<int>;
+    check_semantics("", beast{1}, beast{2});
   }
 }

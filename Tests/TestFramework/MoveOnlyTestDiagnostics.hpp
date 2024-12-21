@@ -42,6 +42,8 @@ namespace sequoia:: testing
     void run_tests();
   private:
 
-    void test_semantics();
+    void test_move_only_semantics();
+
+    void test_as_unique_semantics();
   };
 }
