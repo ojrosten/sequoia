@@ -9,15 +9,14 @@
 
 /*! \file */
 
-#include "sequoia/TestFramework/MoveOnlyTestCore.hpp"
-
-#include <vector>
+#include "CommonMoveOnlyTestDiagnosticsUtilities.hpp"
 
 namespace sequoia::testing
-{
+{  
   template<class T=int, class Allocator=std::allocator<int>>
   struct move_only_beast
   {
+    using value_type     = T;
     using allocator_type = Allocator;
 
     move_only_beast(std::initializer_list<T> list) : x{list} {}
@@ -59,6 +58,9 @@ namespace sequoia::testing
       return s;
     }
   };
+
+  template<class T, class Allocator>
+  struct value_tester<move_only_beast<T, Allocator>> : move_only_beast_value_tester<move_only_beast<T, Allocator>> {};
 
   class resource_binder
   {
@@ -108,6 +110,7 @@ namespace sequoia::testing
   template<class T = int, class Allocator = std::allocator<int>>
   struct specified_moved_from_beast
   {
+    using     value_type = T;
     using allocator_type = Allocator;
 
     specified_moved_from_beast(std::initializer_list<T> list) : x{list} {}
@@ -163,6 +166,7 @@ namespace sequoia::testing
   template<class T=int, class Allocator=std::allocator<int>>
   struct move_only_broken_equality
   {
+    using value_type     = T;
     using allocator_type = Allocator;
 
     move_only_broken_equality(std::initializer_list<T> list) : x{list} {}
@@ -206,9 +210,13 @@ namespace sequoia::testing
     }
   };
 
+  template<class T, class Allocator>
+  struct value_tester<move_only_broken_equality<T, Allocator>> : move_only_beast_value_tester<move_only_broken_equality<T, Allocator>> {};
+
   template<class T=int, class Allocator=std::allocator<int>>
   struct move_only_broken_inequality
   {
+    using     value_type = int;
     using allocator_type = Allocator;
 
     move_only_broken_inequality(std::initializer_list<T> list) : x{list} {}
@@ -252,9 +260,13 @@ namespace sequoia::testing
     }
   };
 
+  template<class T, class Allocator>
+  struct value_tester<move_only_broken_inequality<T, Allocator>> : move_only_beast_value_tester<move_only_broken_inequality<T, Allocator>> {};
+
   template<class T=int, class Allocator=std::allocator<int>>
   struct move_only_broken_move
   {
+    using value_type     = int;
     using allocator_type = Allocator;
 
     move_only_broken_move(std::initializer_list<T> list) : x{list} {}
@@ -301,6 +313,9 @@ namespace sequoia::testing
       return s;
     }
   };
+
+  template<class T, class Allocator>
+  struct value_tester<move_only_broken_move<T, Allocator>> : move_only_beast_value_tester<move_only_broken_move<T, Allocator>> {};
 
   template<class T=int, class Allocator=std::allocator<int>>
   struct move_only_broken_move_assignment

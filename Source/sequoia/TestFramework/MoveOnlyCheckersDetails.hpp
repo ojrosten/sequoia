@@ -15,11 +15,12 @@
 
 namespace sequoia::testing::impl
 {
-  template<test_mode Mode, class Actions, moveonly T, std::invocable<T&> Mutator, class... Args>
+  template<test_mode Mode, class Actions, moveonly T, class S, std::invocable<T&> Mutator, class... Args>
   bool check_semantics(test_logger<Mode>& logger,
                        const Actions& actions,
                        T&& x,
                        T&& y,
+                       const S& xEquivalent,
                        Mutator,
                        const Args&... args)
   {
@@ -27,6 +28,9 @@ namespace sequoia::testing::impl
 
     if(!check_preconditions(logger, actions, x, y, args...))
       return false;
+
+    auto opt{check_move_construction(logger, actions, std::move(x), xEquivalent, /*movedFromPostConstruction,*/ args...)};
+    if(!opt) return false;
 
     return !sentry.failure_detected();
   }

@@ -39,17 +39,19 @@ namespace sequoia::testing
     move_only_extender() = default;
 
     /// Preconditions: x!=y; x==xClone, y==yClone
-    template<class Self, moveonly T>
+    template<class Self, moveonly T, class S>
     bool check_semantics(this Self& self,
                          const reporter& description,
                          T&& x,
-                         T&& y)
+                         T&& y,
+                         const S& xEquivalent)
     {
       return testing::check_semantics(
                move_only_message(self.report(description)),
                self.m_Logger,
                std::move(x),
-               std::move(y)
+               std::move(y),
+               xEquivalent
              );
     }
     
@@ -127,12 +129,13 @@ namespace sequoia::testing
       return self.check_semantics(description, xFn(), yFn(), xFn(), yFn());
     }
 
-    /// Preconditions: x!=y; x==xClone, y==yClone
-    template<class Self, moveonly T>
+    /// Preconditions: x!=y
+    template<class Self, moveonly T, class S>
     bool check_semantics(this Self& self,
                          const reporter& description,
                          T&& x,
                          T&& y,
+                         const S& xEquivalent,
                          std::weak_ordering order)
     {
       return testing::check_semantics(
@@ -140,6 +143,7 @@ namespace sequoia::testing
                self.m_Logger,
                std::move(x),
                std::move(y),
+               xEquivalent,
                order
              );
     }

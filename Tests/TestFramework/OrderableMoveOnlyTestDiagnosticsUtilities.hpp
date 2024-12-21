@@ -9,7 +9,7 @@
 
 /*! \file */
 
-#include "sequoia/TestFramework/MoveOnlyTestCore.hpp"
+#include "CommonMoveOnlyTestDiagnosticsUtilities.hpp"
 
 #include <vector>
 
@@ -18,6 +18,7 @@ namespace sequoia::testing
   template<class T=int, class Allocator=std::allocator<int>>
   struct orderable_move_only_beast
   {
+    using value_type     = T;
     using allocator_type = Allocator;
 
     orderable_move_only_beast(std::initializer_list<T> list) : x{list} {}
@@ -94,7 +95,8 @@ namespace sequoia::testing
     }
   };
 
-
+  template<class T, class Allocator>
+  struct value_tester<orderable_move_only_beast<T, Allocator>> : move_only_beast_value_tester<orderable_move_only_beast<T, Allocator>> {};
 
   class orderable_resource_binder
   {
@@ -144,6 +146,7 @@ namespace sequoia::testing
   template<class T=int, class Allocator=std::allocator<int>>
   struct move_only_broken_less
   {
+    using     value_type = int;
     using allocator_type = Allocator;
 
     move_only_broken_less(std::initializer_list<T> list) : x{list} {}
@@ -220,9 +223,13 @@ namespace sequoia::testing
     }
   };
 
+  template<class T, class Allocator>
+  struct value_tester<move_only_broken_less<T, Allocator>> : move_only_beast_value_tester<move_only_broken_less<T, Allocator>> {};
+
   template<class T=int, class Allocator=std::allocator<int>>
   struct move_only_broken_lesseq
   {
+    using     value_type = T;
     using allocator_type = Allocator;
 
     move_only_broken_lesseq(std::initializer_list<T> list) : x{list} {}
@@ -299,9 +306,13 @@ namespace sequoia::testing
     }
   };
 
+  template<class T, class Allocator>
+  struct value_tester<move_only_broken_lesseq<T, Allocator>> : move_only_beast_value_tester<move_only_broken_lesseq<T, Allocator>> {};
+
   template<class T=int, class Allocator=std::allocator<int>>
   struct move_only_broken_greater
   {
+    using     value_type = T;
     using allocator_type = Allocator;
 
     move_only_broken_greater(std::initializer_list<T> list) : x{list} {}
@@ -381,9 +392,13 @@ namespace sequoia::testing
     }
   };
 
+  template<class T, class Allocator>
+  struct value_tester<move_only_broken_greater<T, Allocator>> : move_only_beast_value_tester<move_only_broken_greater<T, Allocator>> {};
+
   template<class T=int, class Allocator=std::allocator<int>>
   struct move_only_broken_greatereq
   {
+    using     value_type = T;
     using allocator_type = Allocator;
 
     move_only_broken_greatereq(std::initializer_list<T> list) : x{list} {}
@@ -463,9 +478,13 @@ namespace sequoia::testing
     }
   };
 
+  template<class T, class Allocator>
+  struct value_tester<move_only_broken_greatereq<T, Allocator>> : move_only_beast_value_tester<move_only_broken_greatereq<T, Allocator>> {};
+
   template<class T=int, class Allocator=std::allocator<int>>
   struct move_only_inverted_comparisons
   {
+    using     value_type = T;
     using allocator_type = Allocator;
 
     move_only_inverted_comparisons(std::initializer_list<T> list) : x{list} {}
@@ -545,9 +564,13 @@ namespace sequoia::testing
     }
   };
 
+  template<class T, class Allocator>
+  struct value_tester<move_only_inverted_comparisons<T, Allocator>> : move_only_beast_value_tester<move_only_inverted_comparisons<T, Allocator>> {};
+
   template<class T=int, class Allocator=std::allocator<int>>
   struct move_only_broken_spaceship
   {
+    using     value_type = T;
     using allocator_type = Allocator;
 
     move_only_broken_spaceship(std::initializer_list<T> list) : x{list} {}
@@ -609,7 +632,6 @@ namespace sequoia::testing
       return lhs.x >= rhs.x;
     }
 
-    // TO DO: default this and remove most of the above when libc++ rolls out <=> to std
     friend std::weak_ordering operator<=>(const move_only_broken_spaceship& lhs, const move_only_broken_spaceship& rhs) noexcept
     {
       if(lhs < rhs) return std::weak_ordering::greater;
@@ -626,4 +648,7 @@ namespace sequoia::testing
       return s;
     }
   };
+
+  template<class T, class Allocator>
+  struct value_tester<move_only_broken_spaceship<T, Allocator>> : move_only_beast_value_tester<move_only_broken_spaceship<T, Allocator>> {};
 }

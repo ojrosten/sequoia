@@ -218,3 +218,27 @@ Broken inequality
 
 =======================================
 
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 49
+Broken move
+
+--Move-only Semantics--
+[sequoia::testing::move_only_broken_move<int, std::allocator<int> >]
+
+  Inconsistent move construction
+  Comparison performed using:
+  [sequoia::testing::value_tester<sequoia::testing::move_only_broken_move<int, std::allocator<int> > >]
+  Checking for equivalence with:
+  [std::vector<int, std::allocator<int> >]
+
+    Wrapped vector
+    [std::vector<int, std::allocator<int> >]
+    operator== returned false
+
+      Container size wrong
+      [unsigned long long]
+      operator== returned false
+      Obtained : 0
+      Predicted: 1
+
+=======================================
+

@@ -44,8 +44,9 @@ namespace sequoia::testing
 
   void move_only_false_negative_diagnostics::test_as_unique_semantics()
   {
-    check_semantics("Broken equality",   move_only_broken_equality{1},    move_only_broken_equality{2});
-    check_semantics("Broken inequality", move_only_broken_inequality{1},  move_only_broken_inequality{2});
+    check_semantics("Broken equality",   move_only_broken_equality{1},    move_only_broken_equality{2}, std::vector<int>{1});
+    check_semantics("Broken inequality", move_only_broken_inequality{1},  move_only_broken_inequality{2}, std::vector<int>{1});
+    check_semantics("Broken move",  move_only_broken_move{1},  move_only_broken_move{2}, std::vector<int>{1});
   }
 
 
@@ -74,6 +75,6 @@ namespace sequoia::testing
   void move_only_false_positive_diagnostics::test_as_unique_semantics()
   {
     using beast = move_only_beast<int>;
-    check_semantics("", beast{1}, beast{2});
+    check_semantics("", beast{1}, beast{2}, std::vector<int>{1});
   }
 }

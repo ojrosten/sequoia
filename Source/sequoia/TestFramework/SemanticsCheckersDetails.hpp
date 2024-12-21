@@ -393,6 +393,29 @@ namespace sequoia::testing::impl
     return do_check_move_construction(logger, actions, std::forward<T>(z), y, movedFrom);
   }
 
+  template<test_mode Mode, class Actions, movable_comparable T, class S, class... Args>
+  // TO DO: requires equivalence checker
+  std::optional<T> do_check_move_construction(test_logger<Mode>& logger,
+                                              [[maybe_unused]] const Actions& actions,
+                                              T&& z,
+                                              const S& equivalent,
+                                              //opt_moved_from_ref<T> movedFrom,
+                                              const Args&...)
+  {
+    T w{std::move(z)};
+    if(!check(equivalence, "Inconsistent move construction", logger, w, equivalent))
+      return {};
+
+    return w;
+  }
+
+  template<test_mode Mode, class Actions, movable_comparable T, class S>
+  // TO DO: requires equivalence checker
+  std::optional<T> check_move_construction(test_logger<Mode>& logger, const Actions& actions, T&& z, const S& equivalent/*, opt_moved_from_ref<T> movedFrom*/)
+  {
+    return do_check_move_construction(logger, actions, std::forward<T>(z), equivalent/*, movedFrom*/);
+  }
+
   //================================ move assign ================================//
 
   template<test_mode Mode, class Actions, movable_comparable T, std::invocable<T&> Mutator, class... Args>
