@@ -47,7 +47,7 @@ namespace sequoia::testing
       x != y
    */
   template<test_mode Mode, moveonly T>
-  void check_semantics(std::string description,
+  bool check_semantics(std::string description,
                        test_logger<Mode>& logger,
                        T&& x,
                        T&& y,
@@ -58,15 +58,17 @@ namespace sequoia::testing
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(std::move(description)).append("\n")};
 
-    impl::check_semantics(logger,
-                          impl::auxiliary_data<T>{},
-                          std::forward<T>(x),
-                          std::forward<T>(y),
-                          xClone,
-                          yClone,
-                          movedFromPostConstruction,
-                          movedFromPostAssignment,
-                          impl::null_mutator{});
+    return impl::check_semantics(
+             logger,
+             impl::auxiliary_data<T>{},
+             std::forward<T>(x),
+             std::forward<T>(y),
+             xClone,
+             yClone,
+             movedFromPostConstruction,
+             movedFromPostAssignment,
+             impl::null_mutator{}
+           );
   }
 
   /*! Preconditions:
@@ -77,7 +79,7 @@ namespace sequoia::testing
    */
   template<test_mode Mode, moveonly T>
     requires std::totally_ordered<T>
-  void check_semantics(std::string description,
+  bool check_semantics(std::string description,
                        test_logger<Mode>& logger,
                        T&& x,
                        T&& y,
@@ -89,14 +91,16 @@ namespace sequoia::testing
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(std::move(description)).append("\n")};
 
-    impl::check_semantics(logger,
-                          impl::auxiliary_data<T>{order},
-                          std::forward<T>(x),
-                          std::forward<T>(y),
-                          xClone,
-                          yClone,
-                          movedFromPostConstruction,
-                          movedFromPostAssignment,
-                          impl::null_mutator{});
+    return impl::check_semantics(
+             logger,
+             impl::auxiliary_data<T>{order},
+             std::forward<T>(x),
+             std::forward<T>(y),
+             xClone,
+             yClone,
+             movedFromPostConstruction,
+             movedFromPostAssignment,
+             impl::null_mutator{}
+           );
   }
 }

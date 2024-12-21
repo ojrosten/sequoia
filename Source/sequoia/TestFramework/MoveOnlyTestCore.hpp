@@ -40,7 +40,7 @@ namespace sequoia::testing
 
     /// Preconditions: x!=y; x==xClone, y==yClone
     template<class Self, moveonly T>
-    void check_semantics(this Self& self,
+    bool check_semantics(this Self& self,
                          const reporter& description,
                          T&& x,
                          T&& y,
@@ -49,27 +49,31 @@ namespace sequoia::testing
                          const T& movedFromPostConstruction,
                          const T& movedFromPostAssignment)
     {
-      testing::check_semantics(move_only_message(self.report(description)),
-                               self.m_Logger,
-                               std::move(x),
-                               std::move(y),
-                               xClone,
-                               yClone,
-                               opt_moved_from_ref<T>{movedFromPostConstruction},
-                               opt_moved_from_ref<T>{movedFromPostAssignment});
+      return testing::check_semantics(
+               move_only_message(self.report(description)),
+               self.m_Logger,
+               std::move(x),
+               std::move(y),
+               xClone,
+               yClone,
+               opt_moved_from_ref<T>{movedFromPostConstruction},
+               opt_moved_from_ref<T>{movedFromPostAssignment}
+             );
     }
 
     template<class Self, moveonly T>
-    void check_semantics(this Self& self, const reporter& description, T&& x, T&& y, const T& xClone, const T& yClone)
+    bool check_semantics(this Self& self, const reporter& description, T&& x, T&& y, const T& xClone, const T& yClone)
     {
-      testing::check_semantics(move_only_message(self.report(description)),
-                               self.m_Logger,
-                               std::move(x),
-                               std::move(y),
-                               xClone,
-                               yClone,
-                               opt_moved_from_ref<T>{},
-                               opt_moved_from_ref<T>{});
+      return testing::check_semantics(
+               move_only_message(self.report(description)),
+               self.m_Logger,
+               std::move(x),
+               std::move(y),
+               xClone,
+               yClone,
+               opt_moved_from_ref<T>{},
+               opt_moved_from_ref<T>{}
+             );
     }
 
     template
@@ -79,14 +83,21 @@ namespace sequoia::testing
       regular_invocable_r<T> xMaker,
       regular_invocable_r<T> yMaker
     >
-    void check_semantics(this Self& self,
+    bool check_semantics(this Self& self,
                          const reporter& description,
                          xMaker xFn,
                          yMaker yFn,
                          const T& movedFromPostConstruction,
                          const T& movedFromPostAssignment)
     {
-      self.check_semantics(description, xFn(), yFn(), xFn(), yFn(), movedFromPostConstruction, movedFromPostAssignment);
+      return self.check_semantics(
+               description,
+               xFn(),
+               yFn(),
+               xFn(),
+               yFn(),
+               movedFromPostConstruction,
+               movedFromPostAssignment);
     }
 
     template
@@ -96,15 +107,15 @@ namespace sequoia::testing
       moveonly T=std::invoke_result_t<xMaker>,
       regular_invocable_r<T> yMaker
     >
-      void check_semantics(this Self& self, const reporter& description, xMaker xFn, yMaker yFn)
+    bool check_semantics(this Self& self, const reporter& description, xMaker xFn, yMaker yFn)
     {
-      self.check_semantics(description, xFn(), yFn(), xFn(), yFn());
+      return self.check_semantics(description, xFn(), yFn(), xFn(), yFn());
     }
 
      /// Preconditions: x!=y, with values consistent with order; x==xClone, y==yClone
     template<class Self, moveonly T>
       requires std::totally_ordered<T>
-    void check_semantics(this Self& self,
+    bool check_semantics(this Self& self,
                          const reporter& description,
                          T&& x,
                          T&& y,
@@ -114,20 +125,22 @@ namespace sequoia::testing
                          const T& movedFromPostAssignment,
                          std::weak_ordering order)
     {
-      testing::check_semantics(move_only_message(self.report(description)),
-                               self.m_Logger,
-                               std::move(x),
-                               std::move(y),
-                               xClone,
-                               yClone,
-                               opt_moved_from_ref<T>{movedFromPostConstruction},
-                               opt_moved_from_ref<T>{movedFromPostAssignment},
-                               order);
+      return testing::check_semantics(
+               move_only_message(self.report(description)),
+               self.m_Logger,
+               std::move(x),
+               std::move(y),
+               xClone,
+               yClone,
+               opt_moved_from_ref<T>{movedFromPostConstruction},
+               opt_moved_from_ref<T>{movedFromPostAssignment},
+               order
+             );
     }
 
     template<class Self, moveonly T>
       requires std::totally_ordered<T>
-    void check_semantics(this Self& self,
+    bool check_semantics(this Self& self,
                          const reporter& description,
                          T&& x,
                          T&& y,
@@ -135,15 +148,17 @@ namespace sequoia::testing
                          const T& yClone,
                          std::weak_ordering order)
     {
-      testing::check_semantics(move_only_message(self.report(description)),
-                               self.m_Logger,
-                               std::move(x),
-                               std::move(y),
-                               xClone,
-                               yClone,
-                               opt_moved_from_ref<T>{},
-                               opt_moved_from_ref<T>{},
-                               order);
+      return testing::check_semantics(
+               move_only_message(self.report(description)),
+               self.m_Logger,
+               std::move(x),
+               std::move(y),
+               xClone,
+               yClone,
+               opt_moved_from_ref<T>{},
+               opt_moved_from_ref<T>{},
+               order
+             );
     }
 
     template
@@ -154,7 +169,7 @@ namespace sequoia::testing
       regular_invocable_r<T> yMaker
     >
       requires std::totally_ordered<T>
-    void check_semantics(this Self& self,
+    bool check_semantics(this Self& self,
                          const reporter& description,
                          xMaker xFn,
                          yMaker yFn,
@@ -162,14 +177,16 @@ namespace sequoia::testing
                          const T& movedFromPostAssignment,
                          std::weak_ordering order)
     {
-      self.check_semantics(description,
-                           xFn(),
-                           yFn(),
-                           xFn(),
-                           yFn(),
-                           movedFromPostConstruction,
-                           movedFromPostAssignment,
-                           order);
+      return self.check_semantics(
+               description,
+               xFn(),
+               yFn(),
+               xFn(),
+               yFn(),
+               movedFromPostConstruction,
+               movedFromPostAssignment,
+               order
+             );
     }
 
     template
@@ -180,9 +197,9 @@ namespace sequoia::testing
       regular_invocable_r<T> yMaker
     >
       requires std::totally_ordered<T>
-    void check_semantics(this Self& self, const reporter& description, xMaker xFn, yMaker yFn, std::weak_ordering order)
+    bool check_semantics(this Self& self, const reporter& description, xMaker xFn, yMaker yFn, std::weak_ordering order)
     {
-      self.check_semantics(description, xFn(), yFn(), xFn(), yFn(), order);
+      return self.check_semantics(description, xFn(), yFn(), xFn(), yFn(), order);
     }
 
   protected:
