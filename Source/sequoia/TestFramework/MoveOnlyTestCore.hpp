@@ -127,7 +127,24 @@ namespace sequoia::testing
       return self.check_semantics(description, xFn(), yFn(), xFn(), yFn());
     }
 
-     /// Preconditions: x!=y, with values consistent with order; x==xClone, y==yClone
+    /// Preconditions: x!=y; x==xClone, y==yClone
+    template<class Self, moveonly T>
+    bool check_semantics(this Self& self,
+                         const reporter& description,
+                         T&& x,
+                         T&& y,
+                         std::weak_ordering order)
+    {
+      return testing::check_semantics(
+               move_only_message(self.report(description)),
+               self.m_Logger,
+               std::move(x),
+               std::move(y),
+               order
+             );
+    }
+
+    /// Preconditions: x!=y, with values consistent with order; x==xClone, y==yClone
     template<class Self, moveonly T>
       requires std::totally_ordered<T>
     bool check_semantics(this Self& self,

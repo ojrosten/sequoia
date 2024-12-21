@@ -1,4 +1,4 @@
 Orderable Move-Only False Negative Diagnostics
-False Negative Checks:                    13;  Failures:  0
+False Negative Checks:                    22;  Failures:  0
 Orderable Move-Only False Positive Diagnostics
-False Positive Checks:                     5;  Failures:  0
+False Positive Checks:                     6;  Failures:  0
