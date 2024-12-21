@@ -51,41 +51,7 @@ namespace sequoia::testing
     std::vector<T, Allocator> x{};
 
     [[nodiscard]]
-    friend bool operator==(const orderable_move_only_beast&, const orderable_move_only_beast&) noexcept = default;
-
-    [[nodiscard]]
-    friend bool operator<(const orderable_move_only_beast& lhs, const orderable_move_only_beast& rhs) noexcept
-    {
-      return lhs.x < rhs.x;
-    }
-
-    [[nodiscard]]
-    friend bool operator<=(const orderable_move_only_beast& lhs, const orderable_move_only_beast& rhs) noexcept
-    {
-      return lhs.x <= rhs.x;
-    }
-
-    [[nodiscard]]
-    friend bool operator>(const orderable_move_only_beast& lhs, const orderable_move_only_beast& rhs) noexcept
-    {
-      return lhs.x > rhs.x;
-    }
-
-    [[nodiscard]]
-    friend bool operator>=(const orderable_move_only_beast& lhs, const orderable_move_only_beast& rhs) noexcept
-    {
-      return lhs.x >= rhs.x;
-    }
-
-    // TO DO: default this and remove most of the above when libc++ rolls out <=> to std
-    friend std::weak_ordering operator<=>(const orderable_move_only_beast& lhs, const orderable_move_only_beast& rhs) noexcept
-    {
-      if(lhs < rhs) return std::weak_ordering::less;
-
-      if(rhs > lhs) return std::weak_ordering::greater;
-
-      return std::weak_ordering::equivalent;
-    }
+    friend auto operator<=>(const orderable_move_only_beast&, const orderable_move_only_beast&) noexcept = default;
 
     template<class Stream>
     friend Stream& operator<<(Stream& s, const orderable_move_only_beast& b)
@@ -179,40 +145,12 @@ namespace sequoia::testing
     std::vector<T, Allocator> x{};
 
     [[nodiscard]]
-    friend bool operator==(const move_only_broken_less&, const move_only_broken_less&) noexcept = default;
+    friend auto operator<=>(const move_only_broken_less&, const move_only_broken_less&) noexcept = default;
 
     [[nodiscard]]
     friend bool operator<(const move_only_broken_less& lhs, const move_only_broken_less& rhs) noexcept
     {
       return lhs.x > rhs.x;
-    }
-
-    [[nodiscard]]
-    friend bool operator<=(const move_only_broken_less& lhs, const move_only_broken_less& rhs) noexcept
-    {
-      return lhs.x <= rhs.x;
-    }
-
-    [[nodiscard]]
-    friend bool operator>(const move_only_broken_less& lhs, const move_only_broken_less& rhs) noexcept
-    {
-      return lhs.x > rhs.x;
-    }
-
-    [[nodiscard]]
-    friend bool operator>=(const move_only_broken_less& lhs, const move_only_broken_less& rhs) noexcept
-    {
-      return lhs.x >= rhs.x;
-    }
-
-    // TO DO: default this and remove most of the above when libc++ rolls out <=> to std
-    friend std::weak_ordering operator<=>(const move_only_broken_less& lhs, const move_only_broken_less& rhs) noexcept
-    {
-      if(lhs < rhs) return std::weak_ordering::less;
-
-      if(rhs > lhs) return std::weak_ordering::greater;
-
-      return std::weak_ordering::equivalent;
     }
 
     template<class Stream>
@@ -262,41 +200,13 @@ namespace sequoia::testing
     std::vector<T, Allocator> x{};
 
     [[nodiscard]]
-    friend bool operator==(const move_only_broken_lesseq&, const move_only_broken_lesseq&) noexcept = default;
-
-    [[nodiscard]]
-    friend bool operator<(const move_only_broken_lesseq& lhs, const move_only_broken_lesseq& rhs) noexcept
-    {
-      return lhs.x < rhs.x;
-    }
-
-    [[nodiscard]]
     friend bool operator<=(const move_only_broken_lesseq& lhs, const move_only_broken_lesseq& rhs) noexcept
     {
       return lhs.x >= rhs.x;
     }
 
     [[nodiscard]]
-    friend bool operator>(const move_only_broken_lesseq& lhs, const move_only_broken_lesseq& rhs) noexcept
-    {
-      return lhs.x > rhs.x;
-    }
-
-    [[nodiscard]]
-    friend bool operator>=(const move_only_broken_lesseq& lhs, const move_only_broken_lesseq& rhs) noexcept
-    {
-      return lhs.x >= rhs.x;
-    }
-
-    // TO DO: default this and remove most of the above when libc++ rolls out <=> to std
-    friend std::weak_ordering operator<=>(const move_only_broken_lesseq& lhs, const move_only_broken_lesseq& rhs) noexcept
-    {
-      if(lhs < rhs) return std::weak_ordering::less;
-
-      if(rhs > lhs) return std::weak_ordering::greater;
-
-      return std::weak_ordering::equivalent;
-    }
+    friend auto operator<=>(const move_only_broken_lesseq&, const move_only_broken_lesseq&) noexcept = default;
 
     template<class Stream>
     friend Stream& operator<<(Stream& s, const move_only_broken_lesseq& b)
@@ -345,44 +255,13 @@ namespace sequoia::testing
     std::vector<T, Allocator> x{};
 
     [[nodiscard]]
-    friend bool operator==(const move_only_broken_greater&, const move_only_broken_greater&) noexcept = default;
-
-    [[nodiscard]]
-    friend bool operator!=(const move_only_broken_greater&, const move_only_broken_greater&) noexcept = default;
-
-    [[nodiscard]]
-    friend bool operator<(const move_only_broken_greater& lhs, const move_only_broken_greater& rhs) noexcept
-    {
-      return lhs.x < rhs.x;
-    }
-
-    [[nodiscard]]
-    friend bool operator<=(const move_only_broken_greater& lhs, const move_only_broken_greater& rhs) noexcept
-    {
-      return lhs.x <= rhs.x;
-    }
-
-    [[nodiscard]]
     friend bool operator>(const move_only_broken_greater& lhs, const move_only_broken_greater& rhs) noexcept
     {
       return lhs.x < rhs.x;
     }
 
     [[nodiscard]]
-    friend bool operator>=(const move_only_broken_greater& lhs, const move_only_broken_greater& rhs) noexcept
-    {
-      return lhs.x >= rhs.x;
-    }
-
-    // TO DO: default this and remove most of the above when libc++ rolls out <=> to std
-    friend std::weak_ordering operator<=>(const move_only_broken_greater& lhs, const move_only_broken_greater& rhs) noexcept
-    {
-      if(lhs < rhs) return std::weak_ordering::less;
-
-      if(rhs > lhs) return std::weak_ordering::greater;
-
-      return std::weak_ordering::equivalent;
-    }
+    friend auto operator<=>(const move_only_broken_greater&, const move_only_broken_greater&) noexcept = default;
 
     template<class Stream>
     friend Stream& operator<<(Stream& s, const move_only_broken_greater& b)
@@ -431,44 +310,13 @@ namespace sequoia::testing
     std::vector<T, Allocator> x{};
 
     [[nodiscard]]
-    friend bool operator==(const move_only_broken_greatereq&, const move_only_broken_greatereq&) noexcept = default;
-
-    [[nodiscard]]
-    friend bool operator!=(const move_only_broken_greatereq&, const move_only_broken_greatereq&) noexcept = default;
-
-    [[nodiscard]]
-    friend bool operator<(const move_only_broken_greatereq& lhs, const move_only_broken_greatereq& rhs) noexcept
-    {
-      return lhs.x < rhs.x;
-    }
-
-    [[nodiscard]]
-    friend bool operator<=(const move_only_broken_greatereq& lhs, const move_only_broken_greatereq& rhs) noexcept
-    {
-      return lhs.x >= rhs.x;
-    }
-
-    [[nodiscard]]
-    friend bool operator>(const move_only_broken_greatereq& lhs, const move_only_broken_greatereq& rhs) noexcept
-    {
-      return lhs.x > rhs.x;
-    }
-
-    [[nodiscard]]
     friend bool operator>=(const move_only_broken_greatereq& lhs, const move_only_broken_greatereq& rhs) noexcept
     {
-      return lhs.x >= rhs.x;
+      return lhs.x <= rhs.x;
     }
 
-    // TO DO: default this and remove most of the above when libc++ rolls out <=> to std
-    friend std::weak_ordering operator<=>(const move_only_broken_greatereq& lhs, const move_only_broken_greatereq& rhs) noexcept
-    {
-      if(lhs < rhs) return std::weak_ordering::less;
-
-      if(rhs > lhs) return std::weak_ordering::greater;
-
-      return std::weak_ordering::equivalent;
-    }
+    [[nodiscard]]
+    friend auto operator<=>(const move_only_broken_greatereq&, const move_only_broken_greatereq&) noexcept = default;
 
     template<class Stream>
     friend Stream& operator<<(Stream& s, const move_only_broken_greatereq& b)
@@ -546,15 +394,8 @@ namespace sequoia::testing
       return lhs.x <= rhs.x;
     }
 
-    // TO DO: default this and remove most of the above when libc++ rolls out <=> to std
-    friend std::weak_ordering operator<=>(const move_only_inverted_comparisons& lhs, const move_only_inverted_comparisons& rhs) noexcept
-    {
-      if(lhs < rhs) return std::weak_ordering::less;
-
-      if(rhs > lhs) return std::weak_ordering::greater;
-
-      return std::weak_ordering::equivalent;
-    }
+    [[nodiscard]]
+    friend auto operator<=>(const move_only_inverted_comparisons&, const move_only_inverted_comparisons&) noexcept = default;
 
     template<class Stream>
     friend Stream& operator<<(Stream& s, const move_only_inverted_comparisons& b)
