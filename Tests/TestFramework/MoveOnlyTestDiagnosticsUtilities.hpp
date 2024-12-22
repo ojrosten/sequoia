@@ -163,6 +163,9 @@ namespace sequoia::testing
     }
   };
 
+  template<class T, class Allocator>
+  struct value_tester<specified_moved_from_beast<T, Allocator>> : move_only_beast_value_tester<specified_moved_from_beast<T, Allocator>> {};
+
   template<class T=int, class Allocator=std::allocator<int>>
   struct move_only_broken_equality
   {
@@ -216,7 +219,7 @@ namespace sequoia::testing
   template<class T=int, class Allocator=std::allocator<int>>
   struct move_only_broken_inequality
   {
-    using     value_type = int;
+    using     value_type = T;
     using allocator_type = Allocator;
 
     move_only_broken_inequality(std::initializer_list<T> list) : x{list} {}
@@ -266,7 +269,7 @@ namespace sequoia::testing
   template<class T=int, class Allocator=std::allocator<int>>
   struct move_only_broken_move
   {
-    using value_type     = int;
+    using value_type     = T;
     using allocator_type = Allocator;
 
     move_only_broken_move(std::initializer_list<T> list) : x{list} {}
@@ -320,6 +323,7 @@ namespace sequoia::testing
   template<class T=int, class Allocator=std::allocator<int>>
   struct move_only_broken_move_assignment
   {
+    using value_type     = T;
     using allocator_type = Allocator;
 
     move_only_broken_move_assignment(std::initializer_list<T> list) : x{list} {}
@@ -366,9 +370,15 @@ namespace sequoia::testing
     }
   };
 
+  template<class T, class Allocator>
+  struct value_tester<move_only_broken_move_assignment<T, Allocator>>
+    : move_only_beast_value_tester<move_only_broken_move_assignment<T, Allocator>>
+  {};
+
   template<class T=int, class Allocator=std::allocator<int>>
   struct move_only_broken_swap
   {
+    using value_type     = T;
     using allocator_type = Allocator;
 
     move_only_broken_swap(std::initializer_list<T> list) : x{list} {}
@@ -412,9 +422,13 @@ namespace sequoia::testing
     }
   };
 
+  template<class T, class Allocator>
+  struct value_tester<move_only_broken_swap<T, Allocator>> : move_only_beast_value_tester<move_only_broken_swap<T, Allocator>> {};
+  
   template<class T=int, class Allocator=std::allocator<int>>
   struct move_only_inefficient_move
   {
+    using value_type     = T;
     using allocator_type = Allocator;
 
     move_only_inefficient_move(std::initializer_list<T> list) : x{list} {}
@@ -469,9 +483,13 @@ namespace sequoia::testing
     }
   };
 
+  template<class T, class Allocator>
+  struct value_tester<move_only_inefficient_move<T, Allocator>> : move_only_beast_value_tester<move_only_inefficient_move<T, Allocator>> {};
+  
   template<class T=int, class Allocator=std::allocator<int>>
   struct move_only_inefficient_move_assignment
   {
+    using value_type     = T;
     using allocator_type = Allocator;
 
     move_only_inefficient_move_assignment(std::initializer_list<T> list) : x{list} {}
@@ -530,4 +548,9 @@ namespace sequoia::testing
       return s;
     }
   };
+
+  template<class T, class Allocator>
+  struct value_tester<move_only_inefficient_move_assignment<T, Allocator>>
+    : move_only_beast_value_tester<move_only_inefficient_move_assignment<T, Allocator>>
+  {};
 }
