@@ -179,14 +179,16 @@ namespace sequoia::testing
     requires { typename T::fallback; }
   };
 
+  // TO DO: improve this! It's probably worth changing the design (back) to a single
+  // equivalent type; with CTAD using a tuple is much less unpleasant!
   template<class CheckType, test_mode Mode, class T, class... Args>
   concept tester_for = requires(test_logger<Mode>& logger, Args&&... args) {
     value_tester<T>::test(std::declval<CheckType>(), logger, std::forward<Args>(args)...);
   };
 
-  template<class CheckType, test_mode Mode, class T, class Advisor>
+  template<class CheckType, test_mode Mode, class T, class U, class Advisor>
   concept binary_tester_for =
-    tester_for<CheckType, Mode, T, T, T, tutor<Advisor>> || tester_for<CheckType, Mode, T, T, T>;
+    tester_for<CheckType, Mode, T, T, U, tutor<Advisor>> || tester_for<CheckType, Mode, T, T, U>;
 
   template<class... Ts>
   struct equivalent_type_processor
@@ -350,7 +352,7 @@ namespace sequoia::testing
 
 
   template<class CheckType, test_mode Mode, class T, class U, class Advisor>
-    requires binary_tester_for<CheckType, Mode, T, tutor<Advisor>>
+    requires binary_tester_for<CheckType, Mode, T, U, tutor<Advisor>>
   void select_test(CheckType flavour, test_logger<Mode>& logger, const T& obtained, const U& prediction, [[maybe_unused]] tutor<Advisor> advisor)
   {
     if constexpr(tester_for<CheckType, Mode, T, T, U, tutor<Advisor>>)
@@ -367,12 +369,12 @@ namespace sequoia::testing
     }
   }
 
-  template<test_mode Mode, class T, class Advisor>
+  template<test_mode Mode, class T, class Advisor> // TO DO: probably want an additional template parameter, U
   inline constexpr bool has_detailed_agnostic_check{
-       binary_tester_for<equality_check_t, Mode, T, Advisor>
-    || binary_tester_for<equivalence_check_t, Mode, T, Advisor>
-    || binary_tester_for<weak_equivalence_check_t, Mode, T, Advisor>
-    || binary_tester_for<with_best_available_check_t, Mode, T, Advisor>
+       binary_tester_for<equality_check_t, Mode, T, T, Advisor>
+    || binary_tester_for<equivalence_check_t, Mode, T, T, Advisor>
+    || binary_tester_for<weak_equivalence_check_t, Mode, T, T, Advisor>
+    || binary_tester_for<with_best_available_check_t, Mode, T, T, Advisor>
   };
 
   struct default_exception_message_postprocessor
@@ -530,7 +532,7 @@ namespace sequoia::testing
 
   template<test_mode Mode, class T, class Advisor=null_advisor>
     requires (    deep_equality_comparable<T>
-               || binary_tester_for<equality_check_t, Mode, T, tutor<Advisor>>
+               || binary_tester_for<equality_check_t, Mode, T, T, tutor<Advisor>>
                || faithful_range<T>)
   bool check(equality_check_t,
              std::string description,
@@ -543,11 +545,11 @@ namespace sequoia::testing
 
     if constexpr(deep_equality_comparable<T>)
     {
-      using finality = final_message_constant<!(binary_tester_for<equality_check_t, Mode, T, tutor<Advisor>> || faithful_range<T>)>;
+      using finality = final_message_constant<!(binary_tester_for<equality_check_t, Mode, T, T, tutor<Advisor>> || faithful_range<T>)>;
       binary_comparison(finality{}, sentry, std::ranges::equal_to{}, obtained, prediction, advisor);
     }
 
-    if constexpr(binary_tester_for<equality_check_t, Mode, T, tutor<Advisor>>)
+    if constexpr(binary_tester_for<equality_check_t, Mode, T, T, tutor<Advisor>>)
     {
       select_test(equality_check_t{}, logger, obtained, prediction, advisor);
     }
@@ -609,25 +611,26 @@ namespace sequoia::testing
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(std::move(description))};
 
-    if constexpr(deep_equality_comparable<T>)
+    // TO DO: generalize this to deep_equality_comparable_with<T, U>
+    if constexpr(std::is_same_v<T, U> && deep_equality_comparable<T>)
     {
       using finality = final_message_constant<!(has_detailed_agnostic_check<Mode, T, Advisor> || faithful_range<T>)>;
       binary_comparison(finality{}, sentry, std::ranges::equal_to{}, obtained, prediction, advisor);
     }
 
-    if constexpr(binary_tester_for<with_best_available_check_t, Mode, T, tutor<Advisor>>)
+    if constexpr(binary_tester_for<with_best_available_check_t, Mode, T, U, tutor<Advisor>>)
     {
       select_test(with_best_available_check_t{}, logger, obtained, prediction, advisor);
     }
-    else if constexpr(binary_tester_for<equality_check_t, Mode, T, tutor<Advisor>>)
+    else if constexpr(binary_tester_for<equality_check_t, Mode, T, U, tutor<Advisor>>)
     {
       select_test(equality_check_t{}, logger, obtained, prediction, advisor);
     }
-    else if constexpr(binary_tester_for<equivalence_check_t, Mode, T, tutor<Advisor>>)
+    else if constexpr(binary_tester_for<equivalence_check_t, Mode, T, U, tutor<Advisor>>)
     {
       select_test(equivalence_check_t{}, logger, obtained, prediction, advisor);
     }
-    else if constexpr(binary_tester_for<weak_equivalence_check_t, Mode, T, tutor<Advisor>>)
+    else if constexpr(binary_tester_for<weak_equivalence_check_t, Mode, T, U, tutor<Advisor>>)
     {
       select_test(weak_equivalence_check_t{}, logger, obtained, prediction, advisor);
     }

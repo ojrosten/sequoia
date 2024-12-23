@@ -22,7 +22,7 @@ namespace sequoia::testing
     using equivalent_type = std::vector<typename M::value_type>;
 
     template<test_mode Mode, class Advisor>
-    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& obtained, const equivalent_type&  prediction, const tutor<Advisor>& advisor)
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& obtained, const equivalent_type& prediction, const tutor<Advisor>& advisor)
     {
       check(equality, "Wrapped vector", logger, obtained.x, prediction, advisor);
     }

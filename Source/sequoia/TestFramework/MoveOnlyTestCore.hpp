@@ -37,34 +37,17 @@ namespace sequoia::testing
     constexpr static test_mode mode{Mode};
 
     move_only_extender() = default;
-
-    /// Preconditions: x!=y; x==xClone, y==yClone
-    template<class Self, moveonly T, class S>
-    bool check_semantics(this Self& self,
-                         const reporter& description,
-                         T&& x,
-                         T&& y,
-                         const S& xEquivalent)
-    {
-      return testing::check_semantics(
-               move_only_message(self.report(description)),
-               self.m_Logger,
-               std::move(x),
-               std::move(y),
-               xEquivalent
-             );
-    }
     
     /// Preconditions: x!=y; x==xClone, y==yClone
-    template<class Self, moveonly T>
+    template<class Self, moveonly T, class U>
     bool check_semantics(this Self& self,
                          const reporter& description,
                          T&& x,
                          T&& y,
-                         const T& xClone,
-                         const T& yClone,
-                         const T& movedFromPostConstruction,
-                         const T& movedFromPostAssignment)
+                         const U& xClone,
+                         const U& yClone,
+                         const U& movedFromPostConstruction,
+                         const U& movedFromPostAssignment)
     {
       return testing::check_semantics(
                move_only_message(self.report(description)),
@@ -78,8 +61,8 @@ namespace sequoia::testing
              );
     }
 
-    template<class Self, moveonly T>
-    bool check_semantics(this Self& self, const reporter& description, T&& x, T&& y, const T& xClone, const T& yClone)
+    template<class Self, moveonly T, class U>
+    bool check_semantics(this Self& self, const reporter& description, T&& x, T&& y, const U& xClone, const U& yClone)
     {
       return testing::check_semantics(
                move_only_message(self.report(description)),
@@ -88,8 +71,8 @@ namespace sequoia::testing
                std::move(y),
                xClone,
                yClone,
-               opt_moved_from_ref<T>{},
-               opt_moved_from_ref<T>{}
+               opt_moved_from_ref<U>{},
+               opt_moved_from_ref<U>{}
              );
     }
 
@@ -129,36 +112,17 @@ namespace sequoia::testing
       return self.check_semantics(description, xFn(), yFn(), xFn(), yFn());
     }
 
-    /// Preconditions: x!=y
-    template<class Self, moveonly T, class S>
-    bool check_semantics(this Self& self,
-                         const reporter& description,
-                         T&& x,
-                         T&& y,
-                         const S& xEquivalent,
-                         std::weak_ordering order)
-    {
-      return testing::check_semantics(
-               move_only_message(self.report(description)),
-               self.m_Logger,
-               std::move(x),
-               std::move(y),
-               xEquivalent,
-               order
-             );
-    }
-
     /// Preconditions: x!=y, with values consistent with order; x==xClone, y==yClone
-    template<class Self, moveonly T>
+    template<class Self, moveonly T, class U>
       requires std::totally_ordered<T>
     bool check_semantics(this Self& self,
                          const reporter& description,
                          T&& x,
                          T&& y,
-                         const T& xClone,
-                         const T& yClone,
-                         const T& movedFromPostConstruction,
-                         const T& movedFromPostAssignment,
+                         const U& xClone,
+                         const U& yClone,
+                         const U& movedFromPostConstruction,
+                         const U& movedFromPostAssignment,
                          std::weak_ordering order)
     {
       return testing::check_semantics(
@@ -168,20 +132,20 @@ namespace sequoia::testing
                std::move(y),
                xClone,
                yClone,
-               opt_moved_from_ref<T>{movedFromPostConstruction},
-               opt_moved_from_ref<T>{movedFromPostAssignment},
+               opt_moved_from_ref<U>{movedFromPostConstruction},
+               opt_moved_from_ref<U>{movedFromPostAssignment},
                order
              );
     }
 
-    template<class Self, moveonly T>
+    template<class Self, moveonly T, class U>
       requires std::totally_ordered<T>
     bool check_semantics(this Self& self,
                          const reporter& description,
                          T&& x,
                          T&& y,
-                         const T& xClone,
-                         const T& yClone,
+                         const U& xClone,
+                         const U& yClone,
                          std::weak_ordering order)
     {
       return testing::check_semantics(
@@ -191,8 +155,8 @@ namespace sequoia::testing
                std::move(y),
                xClone,
                yClone,
-               opt_moved_from_ref<T>{},
-               opt_moved_from_ref<T>{},
+               opt_moved_from_ref<U>{},
+               opt_moved_from_ref<U>{},
                order
              );
     }

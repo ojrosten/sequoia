@@ -42,42 +42,19 @@ namespace sequoia::testing
 {
   /*! Preconditions:
 
-      x != y
-   */
-  template<test_mode Mode, moveonly T, class S>
-  bool check_semantics(std::string description,
-                       test_logger<Mode>& logger,
-                       T&& x,
-                       T&& y,
-                       const S& equivalent)
-  {
-    sentinel<Mode> sentry{logger, add_type_info<T>(std::move(description)).append("\n")};
-
-    return impl::check_semantics(
-             logger,
-             impl::auxiliary_data<T>{},
-             std::forward<T>(x),
-             std::forward<T>(y),
-             equivalent,
-             impl::null_mutator{}
-           );
-  }
-  
-  /*! Preconditions:
-
       x == xClone
       y == yClone
       x != y
    */
-  template<test_mode Mode, moveonly T>
+  template<test_mode Mode, moveonly T, class U>
   bool check_semantics(std::string description,
                        test_logger<Mode>& logger,
                        T&& x,
                        T&& y,
-                       const T& xClone,
-                       const T& yClone,
-                       opt_moved_from_ref<T> movedFromPostConstruction,
-                       opt_moved_from_ref<T> movedFromPostAssignment)
+                       const U& xClone,
+                       const U& yClone,
+                       opt_moved_from_ref<U> movedFromPostConstruction,
+                       opt_moved_from_ref<U> movedFromPostAssignment)
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(std::move(description)).append("\n")};
 
@@ -93,30 +70,6 @@ namespace sequoia::testing
              impl::null_mutator{}
            );
   }
-
-  /*! Preconditions:
-
-      x != y
-   */
-  template<test_mode Mode, moveonly T, class S>
-  bool check_semantics(std::string description,
-                       test_logger<Mode>& logger,
-                       T&& x,
-                       T&& y,
-                       const S& equivalent,
-                       std::weak_ordering order)
-  {
-    sentinel<Mode> sentry{logger, add_type_info<T>(std::move(description)).append("\n")};
-
-    return impl::check_semantics(
-             logger,
-             impl::auxiliary_data<T>{order},
-             std::forward<T>(x),
-             std::forward<T>(y),
-             equivalent,
-             impl::null_mutator{}
-           );
-  }
   
   /*! Preconditions:
 
@@ -124,16 +77,16 @@ namespace sequoia::testing
       y == yClone
       x != y
    */
-  template<test_mode Mode, moveonly T>
+  template<test_mode Mode, moveonly T, class U>
     requires std::totally_ordered<T>
   bool check_semantics(std::string description,
                        test_logger<Mode>& logger,
                        T&& x,
                        T&& y,
-                       const T& xClone,
-                       const T& yClone,
-                       opt_moved_from_ref<T> movedFromPostConstruction,
-                       opt_moved_from_ref<T> movedFromPostAssignment,
+                       const U& xClone,
+                       const U& yClone,
+                       opt_moved_from_ref<U> movedFromPostConstruction,
+                       opt_moved_from_ref<U> movedFromPostAssignment,
                        std::weak_ordering order)
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(std::move(description)).append("\n")};
