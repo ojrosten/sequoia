@@ -282,7 +282,11 @@ namespace sequoia::testing
           only_equivalence_checkable{1},
           only_equivalence_checkable{2},
           tutor{[](only_equivalence_checkable, only_equivalence_checkable) { return "only_equivalence_checkable advice"; }});
-
+    check(with_best_available,
+          reporter{"Best available for only_equivalence_checkable compared with an int"},
+          only_equivalence_checkable{1},
+          2);
+ 
     check(with_best_available,
           reporter{"Best available for only_weakly_checkable"},
           only_weakly_checkable{1, -1.4},
@@ -354,6 +358,16 @@ namespace sequoia::testing
   void elementary_false_positive_free_diagnostics::test_with_best_available_checks()
   {
     check(with_best_available, "Best available for int", 1, 1);
+
+    check(with_best_available,
+          reporter{"Best available for only_equivalence_checkable"},
+          only_equivalence_checkable{1},
+          only_equivalence_checkable{1});
+
+    check(with_best_available,
+          reporter{"Best available for only_equivalence_checkable compared with an int"},
+          only_equivalence_checkable{1},
+          1);
 
     check(with_best_available,
           reporter{"Best available for only_weakly_checkable"},

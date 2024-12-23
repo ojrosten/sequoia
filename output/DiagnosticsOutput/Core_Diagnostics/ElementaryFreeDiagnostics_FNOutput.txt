@@ -1071,7 +1071,19 @@ Best available for only_equivalence_checkable with advice requiring implicit con
 
 =======================================
 
-Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 287
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 286
+Best available for only_equivalence_checkable compared with an int
+
+[sequoia::testing::only_equivalence_checkable]
+  Wrapped double
+  [double]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
+
+=======================================
+
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 291
 Best available for only_weakly_checkable
 
 [sequoia::testing::only_weakly_checkable]
@@ -1089,7 +1101,7 @@ Best available for only_weakly_checkable
 
 =======================================
 
-Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 291
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 295
 Best available for only_weakly_checkable with advice
 
 [sequoia::testing::only_weakly_checkable]

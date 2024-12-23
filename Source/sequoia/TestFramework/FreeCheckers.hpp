@@ -349,15 +349,15 @@ namespace sequoia::testing
   };
 
 
-  template<class CheckType, test_mode Mode, class T, class Advisor>
+  template<class CheckType, test_mode Mode, class T, class U, class Advisor>
     requires binary_tester_for<CheckType, Mode, T, tutor<Advisor>>
-  void select_test(CheckType flavour, test_logger<Mode>& logger, const T& obtained, const T& prediction, [[maybe_unused]] tutor<Advisor> advisor)
+  void select_test(CheckType flavour, test_logger<Mode>& logger, const T& obtained, const U& prediction, [[maybe_unused]] tutor<Advisor> advisor)
   {
-    if constexpr(tester_for<CheckType, Mode, T, T, T, tutor<Advisor>>)
+    if constexpr(tester_for<CheckType, Mode, T, T, U, tutor<Advisor>>)
     {
       value_tester<T>::test(flavour, logger, obtained, prediction, advisor);
     }
-    else if constexpr(tester_for<CheckType, Mode, T, T, T>)
+    else if constexpr(tester_for<CheckType, Mode, T, T, U>)
     {
       value_tester<T>::test(flavour, logger, obtained, prediction);
     }
@@ -598,13 +598,13 @@ namespace sequoia::testing
   
    */
 
-  template<test_mode Mode, class T, class Advisor=null_advisor>
+  template<test_mode Mode, class T, class U, class Advisor=null_advisor>
     requires (deep_equality_comparable<T> || has_detailed_agnostic_check<Mode, T, Advisor> || faithful_range<T>)
   bool check(with_best_available_check_t,
              std::string description,
              test_logger<Mode>& logger,
              const T& obtained,
-             const T& prediction,
+             const U& prediction,
              tutor<Advisor> advisor={})
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(std::move(description))};
@@ -678,8 +678,8 @@ namespace sequoia::testing
         return testing::check(equality, self.report(description), self.m_Logger, obtained, prediction, std::move(advisor));
     }
 
-    template<class T, class Advisor = null_advisor, class Self>
-    bool check(this Self& self, with_best_available_check_t, const reporter& description, const T& obtained, const T& prediction, tutor<Advisor> advisor = {})
+    template<class T, class U, class Advisor = null_advisor, class Self>
+    bool check(this Self& self, with_best_available_check_t, const reporter& description, const T& obtained, const U& prediction, tutor<Advisor> advisor = {})
     {
       return testing::check(with_best_available, self.report(description), self.m_Logger, obtained, prediction, std::move(advisor));
     }
