@@ -371,12 +371,12 @@ namespace sequoia::testing::impl
                                               const Args&... args)
   {
     T w{std::move(z)};
-    if(!check(equality, "Inconsistent move construction", logger, w, y))
+    if(!check(with_best_available, "Inconsistent move construction", logger, w, y))
       return {};
 
     if(movedFrom.has_value())
     {
-      check(equality, "Incorrect moved-from value after move construction", logger, z, movedFrom.value().get());
+      check(with_best_available, "Incorrect moved-from value after move construction", logger, z, movedFrom.value().get());
     }
 
     if constexpr(has_post_move_action<Actions, test_logger<Mode>, T, Args...>)
@@ -422,12 +422,12 @@ namespace sequoia::testing::impl
   void do_check_move_assign(test_logger<Mode>& logger, [[maybe_unused]] const Actions& actions, T& z, T&& y, const T& yClone, opt_moved_from_ref<T> movedFrom, [[maybe_unused]] Mutator&& yMutator, const Args&... args)
   {
     z = std::move(y);
-    if(!check(equality, "Inconsistent move assignment (from y)", logger, z, yClone))
+    if(!check(with_best_available, "Inconsistent move assignment (from y)", logger, z, yClone))
        return;
 
     if(movedFrom.has_value())
     {
-      check(equality, "Incorrect moved-from value after move assignment", logger, y, movedFrom.value().get());
+      check(with_best_available, "Incorrect moved-from value after move assignment", logger, y, movedFrom.value().get());
     }
 
     if constexpr(has_post_move_assign_action<Actions, test_logger<Mode>, T, T, Mutator, Args...>)
@@ -450,11 +450,11 @@ namespace sequoia::testing::impl
     std::ranges::swap(x, y);
 
     const bool swapy{
-      check(equality, "Inconsistent Swap (y)", logger, y, xClone)
+      check(with_best_available, "Inconsistent Swap (y)", logger, y, xClone)
     };
 
     const bool swapx{
-      check(equality, "Inconsistent Swap (x)", logger, x, yClone)
+      check(with_best_available, "Inconsistent Swap (x)", logger, x, yClone)
     };
 
     if(swapx && swapy)
@@ -465,7 +465,7 @@ namespace sequoia::testing::impl
       }
 
       std::ranges::swap(y,y);
-      return check(equality, "Inconsistent Self Swap", logger, y, xClone);
+      return check(with_best_available, "Inconsistent Self Swap", logger, y, xClone);
     }
 
     return false;
@@ -503,7 +503,7 @@ namespace sequoia::testing::impl
 
     s >> u;
 
-    return check(equality, "Inconsistent (de)serialization", logger, u, y);
+    return check(with_best_available, "Inconsistent (de)serialization", logger, u, y);
   }
 
   template<test_mode Mode, class Actions, movable_comparable T>
