@@ -628,11 +628,17 @@ namespace sequoia::testing
     }
     else if constexpr(binary_tester_for<equivalence_check_t, Mode, T, U, tutor<Advisor>>)
     {
-      select_test(equivalence_check_t{}, logger, obtained, prediction, advisor);
+      if constexpr(std::is_same_v<T, U>) // TO DO: simplify this
+        select_test(equivalence_check_t{}, logger, obtained, prediction, advisor);
+      else
+        general_equivalence_check(equivalence_check_t{}, "", logger, obtained, prediction, advisor);
     }
     else if constexpr(binary_tester_for<weak_equivalence_check_t, Mode, T, U, tutor<Advisor>>)
     {
-      select_test(weak_equivalence_check_t{}, logger, obtained, prediction, advisor);
+      if constexpr(std::is_same_v<T, U>)
+        select_test(weak_equivalence_check_t{}, logger, obtained, prediction, advisor);
+      else
+        general_equivalence_check(weak_equivalence_check_t{}, "", logger, obtained, prediction, advisor);
     }
     else if constexpr(faithful_range<T>)
     {

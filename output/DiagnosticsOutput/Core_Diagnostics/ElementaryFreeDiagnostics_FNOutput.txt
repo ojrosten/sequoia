@@ -1075,11 +1075,16 @@ Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 286
 Best available for only_equivalence_checkable compared with an int
 
 [sequoia::testing::only_equivalence_checkable]
-  Wrapped double
-  [double]
-  operator== returned false
-  Obtained : 1
-  Predicted: 2
+  Comparison performed using:
+  [sequoia::testing::value_tester<sequoia::testing::only_equivalence_checkable>]
+  Checking for equivalence with:
+  [int]
+
+    Wrapped double
+    [double]
+    operator== returned false
+    Obtained : 1
+    Predicted: 2
 
 =======================================
 
