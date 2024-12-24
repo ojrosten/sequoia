@@ -149,143 +149,143 @@ Checking for equivalence with:
 [std::filesystem::path]
 
 Path type
-C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases
+/Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases
 vs
-C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases
+/Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases
 
 [std::filesystem::file_type]
 Final path token
 [std::filesystem::path]
-Number of directory entries for C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases
+Number of directory entries for /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases
 [unsigned long long]
 Path type
-C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/NoSeqpat
+/Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/NoSeqpat
 vs
-C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/NoSeqpat
+/Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/NoSeqpat
 
 [std::filesystem::file_type]
 Final path token
 [std::filesystem::path]
-Number of directory entries for C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/NoSeqpat
+Number of directory entries for /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/NoSeqpat
 [unsigned long long]
 Path type
-C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/NoSeqpat/baz.txt
+/Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/NoSeqpat/baz.txt
 vs
-C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/NoSeqpat/baz.txt
+/Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/NoSeqpat/baz.txt
 
 [std::filesystem::file_type]
 Final path token
 [std::filesystem::path]
-Unable to open file C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/NoSeqpat/baz.txt  for reading
+Unable to open file /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/NoSeqpat/baz.txt  for reading
 
 [bool]
-Unable to open file C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/NoSeqpat/baz.txt  for reading
+Unable to open file /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/NoSeqpat/baz.txt  for reading
 
 [bool]
 Contents of
-C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/NoSeqpat/baz.txt
+/Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/NoSeqpat/baz.txt
 vs
-C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/NoSeqpat/baz.txt
+/Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/NoSeqpat/baz.txt
 
 [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
 Path type
-C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/NoSeqpat/baz2.txt
+/Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/NoSeqpat/baz2.txt
 vs
-C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/NoSeqpat/baz2.txt
+/Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/NoSeqpat/baz2.txt
 
 [std::filesystem::file_type]
 Final path token
 [std::filesystem::path]
-Unable to open file C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/NoSeqpat/baz2.txt  for reading
+Unable to open file /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/NoSeqpat/baz2.txt  for reading
 
 [bool]
-Unable to open file C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/NoSeqpat/baz2.txt  for reading
+Unable to open file /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/NoSeqpat/baz2.txt  for reading
 
 [bool]
 Contents of
-C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/NoSeqpat/baz2.txt
+/Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/NoSeqpat/baz2.txt
 vs
-C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/NoSeqpat/baz2.txt
+/Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/NoSeqpat/baz2.txt
 
 [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
 Path type
-C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/RemovedSeqpat
+/Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/RemovedSeqpat
 vs
-C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/RemovedSeqpat
+/Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/RemovedSeqpat
 
 [std::filesystem::file_type]
 Final path token
 [std::filesystem::path]
-Number of directory entries for C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/RemovedSeqpat
+Number of directory entries for /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/RemovedSeqpat
 [unsigned long long]
 Path type
-C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/RemovedSeqpat/bar2.txt
+/Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/RemovedSeqpat/bar2.txt
 vs
-C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/RemovedSeqpat/bar2.txt
+/Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/RemovedSeqpat/bar2.txt
 
 [std::filesystem::file_type]
 Final path token
 [std::filesystem::path]
-Unable to open file C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/RemovedSeqpat/bar2.txt  for reading
+Unable to open file /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/RemovedSeqpat/bar2.txt  for reading
 
 [bool]
-Unable to open file C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/RemovedSeqpat/bar2.txt  for reading
+Unable to open file /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/RemovedSeqpat/bar2.txt  for reading
 
 [bool]
 Contents of
-C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/RemovedSeqpat/bar2.txt
+/Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/RemovedSeqpat/bar2.txt
 vs
-C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/RemovedSeqpat/bar2.txt
+/Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/RemovedSeqpat/bar2.txt
 
 [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
 Path type
-C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/RetainedSeqpat
+/Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/RetainedSeqpat
 vs
-C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/RetainedSeqpat
+/Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/RetainedSeqpat
 
 [std::filesystem::file_type]
 Final path token
 [std::filesystem::path]
-Number of directory entries for C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/RetainedSeqpat
+Number of directory entries for /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/RetainedSeqpat
 [unsigned long long]
 Path type
-C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/RetainedSeqpat/foo.txt
+/Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/RetainedSeqpat/foo.txt
 vs
-C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/RetainedSeqpat/foo.txt
+/Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/RetainedSeqpat/foo.txt
 
 [std::filesystem::file_type]
 Final path token
 [std::filesystem::path]
-Unable to open file C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/RetainedSeqpat/foo.txt  for reading
+Unable to open file /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/RetainedSeqpat/foo.txt  for reading
 
 [bool]
-Unable to open file C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/RetainedSeqpat/foo.txt  for reading
+Unable to open file /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/RetainedSeqpat/foo.txt  for reading
 
 [bool]
 Contents of
-C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/RetainedSeqpat/foo.txt
+/Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/RetainedSeqpat/foo.txt
 vs
-C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/RetainedSeqpat/foo.txt
+/Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/RetainedSeqpat/foo.txt
 
 [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
 Path type
-C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/RetainedSeqpat/foo2.txt
+/Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/RetainedSeqpat/foo2.txt
 vs
-C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/RetainedSeqpat/foo2.txt
+/Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/RetainedSeqpat/foo2.txt
 
 [std::filesystem::file_type]
 Final path token
 [std::filesystem::path]
-Unable to open file C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/RetainedSeqpat/foo2.txt  for reading
+Unable to open file /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/RetainedSeqpat/foo2.txt  for reading
 
 [bool]
-Unable to open file C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/RetainedSeqpat/foo2.txt  for reading
+Unable to open file /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/RetainedSeqpat/foo2.txt  for reading
 
 [bool]
 Contents of
-C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/RetainedSeqpat/foo2.txt
+/Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases/RetainedSeqpat/foo2.txt
 vs
-C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/RetainedSeqpat/foo2.txt
+/Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases/RetainedSeqpat/foo2.txt
 
 [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
 
@@ -356,9 +356,9 @@ operator!= is inconsistent (y)
 [bool]
 Precondition - for checking semantics, x and y are assumed to be different
 [bool]
-Precondition - for checking move-only semantics, x and xClone are assumed to be equal
+Precondition - for checking move-only semantics, x and xEquivalent are assumed to be equal
 [bool]
-Precondition - for checking move-only semantics, y and yClone are assumed to be equal
+Precondition - for checking move-only semantics, y and yEquivalent are assumed to be equal
 [bool]
 Precondition - for checking semantics, order must be weak_ordering::less or weak_ordering::greater
 [bool]

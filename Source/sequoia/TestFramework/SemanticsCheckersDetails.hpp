@@ -314,7 +314,7 @@ namespace sequoia::testing::impl
     if(!check_equality_preconditions(logger, actions, x, y, args...))
       return false;
 
-    // TO DO: harmonize with other changes along the same lines which require deepn_equality_comparable_with
+    // TO DO: harmonize with other changes along the same lines which require deep_equality_comparable_with
     if constexpr(std::is_same_v<T, U>)
     {
       auto mess{
