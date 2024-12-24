@@ -38,14 +38,14 @@ namespace sequoia::testing
 
     move_only_extender() = default;
     
-    /// Preconditions: x!=y; x==xClone, y==yClone
+    /// Preconditions: x!=y; x==xEquivalent, y==yEquivalent
     template<class Self, moveonly T, class U>
     bool check_semantics(this Self& self,
                          const reporter& description,
                          T&& x,
                          T&& y,
-                         const U& xClone,
-                         const U& yClone,
+                         const U& xEquivalent,
+                         const U& yEquivalent,
                          const U& movedFromPostConstruction,
                          const U& movedFromPostAssignment)
     {
@@ -54,23 +54,23 @@ namespace sequoia::testing
                self.m_Logger,
                std::move(x),
                std::move(y),
-               xClone,
-               yClone,
+               xEquivalent,
+               yEquivalent,
                opt_moved_from_ref<T>{movedFromPostConstruction},
                opt_moved_from_ref<T>{movedFromPostAssignment}
              );
     }
 
     template<class Self, moveonly T, class U>
-    bool check_semantics(this Self& self, const reporter& description, T&& x, T&& y, const U& xClone, const U& yClone)
+    bool check_semantics(this Self& self, const reporter& description, T&& x, T&& y, const U& xEquivalent, const U& yEquivalent)
     {
       return testing::check_semantics(
                move_only_message(self.report(description)),
                self.m_Logger,
                std::move(x),
                std::move(y),
-               xClone,
-               yClone,
+               xEquivalent,
+               yEquivalent,
                opt_moved_from_ref<U>{},
                opt_moved_from_ref<U>{}
              );
@@ -112,15 +112,15 @@ namespace sequoia::testing
       return self.check_semantics(description, xFn(), yFn(), xFn(), yFn());
     }
 
-    /// Preconditions: x!=y, with values consistent with order; x==xClone, y==yClone
+    /// Preconditions: x!=y, with values consistent with order; x==xEquivalent, y==yEquivalent
     template<class Self, moveonly T, class U>
       requires std::totally_ordered<T>
     bool check_semantics(this Self& self,
                          const reporter& description,
                          T&& x,
                          T&& y,
-                         const U& xClone,
-                         const U& yClone,
+                         const U& xEquivalent,
+                         const U& yEquivalent,
                          const U& movedFromPostConstruction,
                          const U& movedFromPostAssignment,
                          std::weak_ordering order)
@@ -130,8 +130,8 @@ namespace sequoia::testing
                self.m_Logger,
                std::move(x),
                std::move(y),
-               xClone,
-               yClone,
+               xEquivalent,
+               yEquivalent,
                opt_moved_from_ref<U>{movedFromPostConstruction},
                opt_moved_from_ref<U>{movedFromPostAssignment},
                order
@@ -144,8 +144,8 @@ namespace sequoia::testing
                          const reporter& description,
                          T&& x,
                          T&& y,
-                         const U& xClone,
-                         const U& yClone,
+                         const U& xEquivalent,
+                         const U& yEquivalent,
                          std::weak_ordering order)
     {
       return testing::check_semantics(
@@ -153,8 +153,8 @@ namespace sequoia::testing
                self.m_Logger,
                std::move(x),
                std::move(y),
-               xClone,
-               yClone,
+               xEquivalent,
+               yEquivalent,
                opt_moved_from_ref<U>{},
                opt_moved_from_ref<U>{},
                order

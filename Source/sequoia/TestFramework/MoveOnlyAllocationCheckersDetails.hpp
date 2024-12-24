@@ -25,9 +25,9 @@ namespace sequoia::testing::impl
   };
 
   template<test_mode Mode, class Actions, moveonly T, alloc_getter<T>... Getters>
-  bool check_swap(test_logger<Mode>& logger, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, const dual_allocation_checker<T, Getters>&... checkers)
+  bool check_swap(test_logger<Mode>& logger, const Actions& actions, T&& x, T&& y, const T& xEquivalent, const T& yEquivalent, const dual_allocation_checker<T, Getters>&... checkers)
   {
-    return do_check_swap(logger, actions, std::move(x), std::move(y), xClone, yClone, dual_allocation_checker{checkers.info(), x, y}...);
+    return do_check_swap(logger, actions, std::move(x), std::move(y), xEquivalent, yEquivalent, dual_allocation_checker{checkers.info(), x, y}...);
   }
 
   template<test_mode Mode, container_tag tag, moveonly T, alloc_getter<T>... Getters>
@@ -35,24 +35,24 @@ namespace sequoia::testing::impl
   check_para_constructor_allocations(test_logger<Mode>& logger,
                                      container_tag_constant<tag>,
                                      T&& z,
-                                     const T& zClone,
+                                     const T& zEquivalent,
                                      const allocation_info<T, Getters>&... info)
   {
     const auto tagStr{to_string(container_tag_constant<tag>::value)};
 
-    if(!check(std::string{"Precondition - for checking move-only semantics, "}.append(tagStr).append("and ").append(tagStr).append("Clone are assumed to be equal"),
+    if(!check(std::string{"Precondition - for checking move-only semantics, "}.append(tagStr).append("and ").append(tagStr).append("Equivalent are assumed to be equal"),
               logger,
-              z == zClone))
+              z == zEquivalent))
       return{};
 
     T v{std::move(z), info.make_allocator()...};
 
     using ctag = container_tag_constant<tag>;
     check_para_move_allocation(logger, ctag{}, v, std::tuple_cat(make_allocation_checkers(info)...));
-    if(check(equality, "Inonsistent para-move constructor", logger, v, zClone))
+    if(check(equality, "Inonsistent para-move constructor", logger, v, zEquivalent))
     {
       std::optional<T> w{std::move(v)};
-      if(check(equality, "Inconsistent move construction", logger, *w, zClone))
+      if(check(equality, "Inconsistent move construction", logger, *w, zEquivalent))
       {
         return w;
       }
@@ -66,12 +66,12 @@ namespace sequoia::testing::impl
   check_para_constructor_allocations(test_logger<Mode>& logger,
                                      T&& x,
                                      T&& y,
-                                     const T& xClone,
-                                     const T& yClone,
+                                     const T& xEquivalent,
+                                     const T& yEquivalent,
                                      const allocation_info<T, Getters>&... info)
   {
-    return {check_para_constructor_allocations(logger, container_tag_constant<container_tag::x>{}, std::forward<T>(x), xClone, info...),
-            check_para_constructor_allocations(logger, container_tag_constant<container_tag::y>{}, std::forward<T>(y), yClone, info...)};
+    return {check_para_constructor_allocations(logger, container_tag_constant<container_tag::x>{}, std::forward<T>(x), xEquivalent, info...),
+            check_para_constructor_allocations(logger, container_tag_constant<container_tag::y>{}, std::forward<T>(y), yEquivalent, info...)};
   }
 
   template<test_mode Mode, class Actions, moveonly T, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
@@ -81,8 +81,8 @@ namespace sequoia::testing::impl
                        const Actions& actions,
                        T&& x,
                        T&& y,
-                       const T& xClone,
-                       const T& yClone,
+                       const T& xEquivalent,
+                       const T& yEquivalent,
                        opt_moved_from_ref<T> movedFromPostConstruction,
                        opt_moved_from_ref<T> movedFromPostAssignment,
                        Mutator m,
@@ -91,14 +91,14 @@ namespace sequoia::testing::impl
     const auto message{!description.empty() ? add_type_info<T>(std::move(description)).append("\n") : ""};
     sentinel<Mode> sentry{logger, message};
 
-    if(auto[optx,opty]{check_para_constructor_allocations(logger, std::forward<T>(x), std::forward<T>(y), xClone, yClone, info...)}; (optx != std::nullopt) && (opty != std::nullopt))
+    if(auto[optx,opty]{check_para_constructor_allocations(logger, std::forward<T>(x), std::forward<T>(y), xEquivalent, yEquivalent, info...)}; (optx != std::nullopt) && (opty != std::nullopt))
     {
       check_semantics(logger,
                       actions,
                       std::move(*optx),
                       std::move(*opty),
-                      xClone,
-                      yClone,
+                      xEquivalent,
+                      yEquivalent,
                       movedFromPostConstruction,
                       movedFromPostAssignment,
                       std::move(m),
@@ -145,8 +145,8 @@ namespace sequoia::testing::impl
                        const Actions& actions,
                        T&& x,
                        T&& y,
-                       const T& xClone,
-                       const T& yClone,
+                       const T& xEquivalent,
+                       const T& yEquivalent,
                        opt_moved_from_ref<T> movedFromPostConstruction,
                        opt_moved_from_ref<T> movedFromPostAssignment,
                        Mutator m,
@@ -158,8 +158,8 @@ namespace sequoia::testing::impl
                                actions,
                                std::forward<T>(x),
                                std::forward<T>(y),
-                               xClone,
-                               yClone,
+                               xEquivalent,
+                               yEquivalent,
                                movedFromPostConstruction,
                                movedFromPostAssignment,
                                std::move(m),

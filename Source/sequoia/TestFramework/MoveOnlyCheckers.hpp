@@ -42,8 +42,8 @@ namespace sequoia::testing
 {
   /*! Preconditions:
 
-      x == xClone
-      y == yClone
+      x == xEquivalent
+      y == yEquivalent
       x != y
    */
   template<test_mode Mode, moveonly T, class U>
@@ -51,8 +51,8 @@ namespace sequoia::testing
                        test_logger<Mode>& logger,
                        T&& x,
                        T&& y,
-                       const U& xClone,
-                       const U& yClone,
+                       const U& xEquivalent,
+                       const U& yEquivalent,
                        opt_moved_from_ref<U> movedFromPostConstruction,
                        opt_moved_from_ref<U> movedFromPostAssignment)
   {
@@ -63,8 +63,8 @@ namespace sequoia::testing
              impl::auxiliary_data<T>{},
              std::forward<T>(x),
              std::forward<T>(y),
-             xClone,
-             yClone,
+             xEquivalent,
+             yEquivalent,
              movedFromPostConstruction,
              movedFromPostAssignment,
              impl::null_mutator{}
@@ -73,8 +73,8 @@ namespace sequoia::testing
   
   /*! Preconditions:
 
-      x == xClone
-      y == yClone
+      x == xEquivalent
+      y == yEquivalent
       x != y
    */
   template<test_mode Mode, moveonly T, class U>
@@ -83,8 +83,8 @@ namespace sequoia::testing
                        test_logger<Mode>& logger,
                        T&& x,
                        T&& y,
-                       const U& xClone,
-                       const U& yClone,
+                       const U& xEquivalent,
+                       const U& yEquivalent,
                        opt_moved_from_ref<U> movedFromPostConstruction,
                        opt_moved_from_ref<U> movedFromPostAssignment,
                        std::weak_ordering order)
@@ -96,8 +96,8 @@ namespace sequoia::testing
              impl::auxiliary_data<T>{order},
              std::forward<T>(x),
              std::forward<T>(y),
-             xClone,
-             yClone,
+             xEquivalent,
+             yEquivalent,
              movedFromPostConstruction,
              movedFromPostAssignment,
              impl::null_mutator{}

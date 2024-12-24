@@ -630,10 +630,10 @@ namespace sequoia::testing::impl
     }
 
     template<test_mode Mode, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
-    static void post_move_assign_action(test_logger<Mode>& logger, T& y, const T& yClone, Mutator yMutator, const dual_allocation_checker<T, Getters>&... checkers)
+    static void post_move_assign_action(test_logger<Mode>& logger, T& y, const T& yEquivalent, Mutator yMutator, const dual_allocation_checker<T, Getters>&... checkers)
     {
       check_move_assign_allocation(logger, y, checkers...);
-      check_mutation_after_move("assignment", logger, y, yClone, std::move(yMutator), allocation_checker{checkers.info(), y}...);
+      check_mutation_after_move("assignment", logger, y, yEquivalent, std::move(yMutator), allocation_checker{checkers.info(), y}...);
     }
 
     template<test_mode Mode, alloc_getter<T>... Getters>

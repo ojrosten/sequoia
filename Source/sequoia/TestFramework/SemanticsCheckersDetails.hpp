@@ -189,17 +189,17 @@ namespace sequoia::testing::impl
 
   template<test_mode Mode, class Actions, moveonly T, class U, class... Args>
   [[nodiscard]]
-  static bool check_preconditions(test_logger<Mode>& logger,  const Actions& actions, const T& x, const T& y, const U& xClone, const U& yClone, const Args&... args)
+  static bool check_preconditions(test_logger<Mode>& logger,  const Actions& actions, const T& x, const T& y, const U& xEquivalent, const U& yEquivalent, const Args&... args)
   {
-    return check_equality_preconditions(logger, actions, x, y, xClone, yClone, args...);
+    return check_equality_preconditions(logger, actions, x, y, xEquivalent, yEquivalent, args...);
   }
 
   template<test_mode Mode, class Actions, moveonly T, class U, class... Args>
     requires std::totally_ordered<T>
   [[nodiscard]]
-  static bool check_preconditions(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const U& xClone, const U& yClone, const Args&... args)
+  static bool check_preconditions(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const U& xEquivalent, const U& yEquivalent, const Args&... args)
   {
-    return check_orderable_preconditions(logger, actions, x, y, xClone, yClone, args...);
+    return check_orderable_preconditions(logger, actions, x, y, xEquivalent, yEquivalent, args...);
   }
 
   template<test_mode Mode, class Actions, moveonly T, class... Args>
@@ -309,7 +309,7 @@ namespace sequoia::testing::impl
 
   template<test_mode Mode, class Actions, std::equality_comparable T, class U, class... Args>
   [[nodiscard]]
-  bool check_equality_preconditions(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const U& xClone, const U& yClone, const Args&... args)
+  bool check_equality_preconditions(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const U& xEquivalent, const U& yEquivalent, const Args&... args)
   {
     if(!check_equality_preconditions(logger, actions, x, y, args...))
       return false;
@@ -319,11 +319,11 @@ namespace sequoia::testing::impl
     {
       auto mess{
         [](std::string_view var) {
-          return std::format("Precondition - for checking move-only semantics, {} and {}Clone are assumed to be equal", var, var);
+          return std::format("Precondition - for checking move-only semantics, {} and {}Equivalent are assumed to be equal", var, var);
         }
       };
 
-      return check(mess("x"), logger, x == xClone) && check(mess("y"), logger, y == yClone);
+      return check(mess("x"), logger, x == xEquivalent) && check(mess("y"), logger, y == yEquivalent);
     }
     else
     {
@@ -412,13 +412,13 @@ namespace sequoia::testing::impl
                             [[maybe_unused]] const Actions& actions,
                             T& z,
                             T&& y,
-                            const U& yClone,
+                            const U& yEquivalent,
                             opt_moved_from_ref<U> movedFrom,
                             [[maybe_unused]] Mutator&& yMutator,
                             const Args&... args)
   {
     z = std::move(y);
-    if(!check(with_best_available, "Inconsistent move assignment (from y)", logger, z, yClone))
+    if(!check(with_best_available, "Inconsistent move assignment (from y)", logger, z, yEquivalent))
        return;
 
     if(movedFrom.has_value())
@@ -428,7 +428,7 @@ namespace sequoia::testing::impl
 
     if constexpr(has_post_move_assign_action<Actions, test_logger<Mode>, T, T, Mutator, Args...>)
     {
-      actions.post_move_assign_action(logger, z, yClone, std::move(yMutator), args...);
+      actions.post_move_assign_action(logger, z, yEquivalent, std::move(yMutator), args...);
     }
   }
 
@@ -437,11 +437,11 @@ namespace sequoia::testing::impl
                          const Actions& actions,
                          T& z,
                          T&& y,
-                         const U& yClone,
+                         const U& yEquivalent,
                          opt_moved_from_ref<U> movedFrom,
                          Mutator m)
   {
-    do_check_move_assign(logger, actions, z, std::forward<T>(y), yClone, movedFrom, std::move(m));
+    do_check_move_assign(logger, actions, z, std::forward<T>(y), yEquivalent, movedFrom, std::move(m));
   }
 
   //================================ swap ================================//
@@ -451,44 +451,44 @@ namespace sequoia::testing::impl
                      [[maybe_unused]] const Actions& actions,
                      T&& x,
                      T&& y,
-                     const U& xClone,
-                     const U& yClone,
+                     const U& xEquivalent,
+                     const U& yEquivalent,
                      [[maybe_unused]] const Args&... args)
   {
     std::ranges::swap(x, y);
 
     const bool swapy{
-      check(with_best_available, "Inconsistent Swap (y)", logger, y, xClone)
+      check(with_best_available, "Inconsistent Swap (y)", logger, y, xEquivalent)
     };
 
     const bool swapx{
-      check(with_best_available, "Inconsistent Swap (x)", logger, x, yClone)
+      check(with_best_available, "Inconsistent Swap (x)", logger, x, yEquivalent)
     };
 
     if(swapx && swapy)
     {
       if constexpr(has_post_swap_action<Actions, test_logger<Mode>, T, T, T, Args...>)
       {
-        actions.post_swap_action(logger, x, y, yClone, args...);
+        actions.post_swap_action(logger, x, y, yEquivalent, args...);
       }
 
       std::ranges::swap(y,y);
-      return check(with_best_available, "Inconsistent Self Swap", logger, y, xClone);
+      return check(with_best_available, "Inconsistent Self Swap", logger, y, xEquivalent);
     }
 
     return false;
   }
 
   template<test_mode Mode, class Actions, movable_comparable T, class U>
-  bool check_swap(test_logger<Mode>& logger, const Actions& actions, T&& x, T&& y, const U& xClone, const U& yClone)
+  bool check_swap(test_logger<Mode>& logger, const Actions& actions, T&& x, T&& y, const U& xEquivalent, const U& yEquivalent)
   {
-    return do_check_swap(logger, actions, std::move(x), std::move(y), xClone, yClone);
+    return do_check_swap(logger, actions, std::move(x), std::move(y), xEquivalent, yEquivalent);
   }
 
   template<test_mode Mode, class Actions, pseudoregular T, class U, std::invocable<T&> Mutator>
-  bool check_swap(test_logger<Mode>& logger, const Actions& actions, T&& x, T&& y, const U& xClone, const U& yClone, Mutator yMutator)
+  bool check_swap(test_logger<Mode>& logger, const Actions& actions, T&& x, T&& y, const U& xEquivalent, const U& yEquivalent, Mutator yMutator)
   {
-    return do_check_swap(logger, actions, std::move(x), std::move(y), xClone, yClone, std::move(yMutator));
+    return do_check_swap(logger, actions, std::move(x), std::move(y), xEquivalent, yEquivalent, std::move(yMutator));
   }
 
   //================================  serialization  ================================ //

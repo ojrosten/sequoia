@@ -20,8 +20,8 @@ namespace sequoia::testing::impl
                        const Actions& actions,
                        T&& x,
                        T&& y,
-                       const U& xClone,
-                       const U& yClone,
+                       const U& xEquivalent,
+                       const U& yEquivalent,
                        opt_moved_from_ref<U> movedFromPostConstruction,
                        opt_moved_from_ref<U> movedFromPostAssignment,
                        Mutator m,
@@ -29,27 +29,27 @@ namespace sequoia::testing::impl
   {
     sentinel<Mode> sentry{logger, ""};
 
-    if(!check_preconditions(logger, actions, x, y, xClone, yClone, args...))
+    if(!check_preconditions(logger, actions, x, y, xEquivalent, yEquivalent, args...))
       return false;
 
-    auto opt{check_move_construction(logger, actions, std::move(x), xClone, movedFromPostConstruction, args...)};
+    auto opt{check_move_construction(logger, actions, std::move(x), xEquivalent, movedFromPostConstruction, args...)};
     if(!opt) return false;
 
     if constexpr (do_swap<Args...>::value)
     {
-      if(check_swap(logger, actions, std::move(*opt), std::move(y), xClone, yClone, args...))
+      if(check_swap(logger, actions, std::move(*opt), std::move(y), xEquivalent, yEquivalent, args...))
       {
-        check_move_assign(logger, actions, y, std::move(*opt), yClone, movedFromPostAssignment, std::move(m), args...);
+        check_move_assign(logger, actions, y, std::move(*opt), yEquivalent, movedFromPostAssignment, std::move(m), args...);
       }
     }
     else
     {
-      check_move_assign(logger, actions, *opt, std::move(y), yClone, movedFromPostAssignment, std::move(m), args...);
+      check_move_assign(logger, actions, *opt, std::move(y), yEquivalent, movedFromPostAssignment, std::move(m), args...);
     }
 
     if constexpr (serializable_to<T, std::stringstream> && deserializable_from<T, std::stringstream>)
     {
-      check_serialization(logger, actions, std::move(x), yClone, args...);
+      check_serialization(logger, actions, std::move(x), yEquivalent, args...);
     }
 
     return !sentry.failure_detected();
