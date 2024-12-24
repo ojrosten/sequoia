@@ -47,6 +47,11 @@ namespace sequoia::testing
     check_semantics("Broken equality",   move_only_broken_equality{1},    move_only_broken_equality{2}, std::vector<int>{1}, std::vector<int>{2});
     check_semantics("Broken inequality", move_only_broken_inequality{1},  move_only_broken_inequality{2}, std::vector<int>{1}, std::vector<int>{2});
     check_semantics("Broken move",  move_only_broken_move{1},  move_only_broken_move{2}, std::vector<int>{1}, std::vector<int>{2});
+    check_semantics("Broken swap",  move_only_broken_swap{1},  move_only_broken_swap{2}, std::vector<int>{1}, std::vector<int>{2});
+    check_semantics("Broken move assignment", move_only_broken_move_assignment{1}, move_only_broken_move_assignment{2}, std::vector<int>{1}, std::vector<int>{2});
+    check_semantics("Broken check invariant", move_only_beast{1}, move_only_beast{1}, std::vector<int>{1}, std::vector<int>{1});
+    check_semantics("Broken check invariant", move_only_beast{1}, move_only_beast{3}, std::vector<int>{2}, std::vector<int>{3});
+    check_semantics("Broken check invariant", move_only_beast{2}, move_only_beast{1}, std::vector<int>{2}, std::vector<int>{3});
   }
 
 
