@@ -178,8 +178,8 @@ namespace sequoia::testing
                        T&& y,
                        const T& xEquivalent,
                        const T& yEquivalent,
-                       opt_moved_from_ref<T> movedFromPostConstruction,
-                       opt_moved_from_ref<T> movedFromPostAssignment,
+                       optional_ref<const T> movedFromPostConstruction,
+                       optional_ref<const T> movedFromPostAssignment,
                        Mutator m,
                        const allocation_info<T, Getters>&... info)
   {
@@ -204,8 +204,8 @@ namespace sequoia::testing
                        T&& y,
                        const T& xEquivalent,
                        const T& yEquivalent,
-                       opt_moved_from_ref<T> movedFromPostConstruction,
-                       opt_moved_from_ref<T> movedFromPostAssignment,
+                       optional_ref<const T> movedFromPostConstruction,
+                       optional_ref<const T> movedFromPostAssignment,
                        std::weak_ordering order,
                        Mutator m,
                        const allocation_info<T, Getters>&... info)
@@ -237,8 +237,8 @@ namespace sequoia::testing
                                  test_logger<Mode>& logger,
                                  xMaker xFn,
                                  yMaker yFn,
-                                 opt_moved_from_ref<T> movedFromPostConstruction,
-                                 opt_moved_from_ref<T> movedFromPostAssignment,
+                                 optional_ref<const T> movedFromPostConstruction,
+                                 optional_ref<const T> movedFromPostAssignment,
                                  Mutator m,
                                  const allocation_info<T, Getters>&... info)
   {
@@ -267,8 +267,8 @@ namespace sequoia::testing
                                  test_logger<Mode>& logger,
                                  xMaker xFn,
                                  yMaker yFn,
-                                 opt_moved_from_ref<T> movedFromPostConstruction,
-                                 opt_moved_from_ref<T> movedFromPostAssignment,
+                                 optional_ref<const T> movedFromPostConstruction,
+                                 optional_ref<const T> movedFromPostAssignment,
                                  std::weak_ordering order,
                                  Mutator m,
                                  const allocation_info<T, Getters>&... info)

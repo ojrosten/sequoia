@@ -89,7 +89,7 @@ namespace sequoia::testing
   std::string to_string(comparison_flavour f);
 
   template<class T>
-  using opt_moved_from_ref = std::optional<std::reference_wrapper<const T>>;
+  using optional_ref = std::optional<std::reference_wrapper<T>>;
 }
 
 namespace sequoia::testing::impl
@@ -375,7 +375,7 @@ namespace sequoia::testing::impl
                                               [[maybe_unused]] const Actions& actions,
                                               T&& z,
                                               const U& y,
-                                              opt_moved_from_ref<U> movedFrom,
+                                              optional_ref<const U> movedFrom,
                                               const Args&... args)
   {
     T w{std::move(z)};
@@ -400,7 +400,7 @@ namespace sequoia::testing::impl
                                            const Actions& actions,
                                            T&& z,
                                            const U& y,
-                                           opt_moved_from_ref<U> movedFrom)
+                                           optional_ref<const U> movedFrom)
   {
     return do_check_move_construction(logger, actions, std::forward<T>(z), y, movedFrom);
   }
@@ -413,7 +413,7 @@ namespace sequoia::testing::impl
                             T& z,
                             T&& y,
                             const U& yEquivalent,
-                            opt_moved_from_ref<U> movedFrom,
+                            optional_ref<const U> movedFrom,
                             [[maybe_unused]] Mutator&& yMutator,
                             const Args&... args)
   {
@@ -438,7 +438,7 @@ namespace sequoia::testing::impl
                          T& z,
                          T&& y,
                          const U& yEquivalent,
-                         opt_moved_from_ref<U> movedFrom,
+                         optional_ref<const U> movedFrom,
                          Mutator m)
   {
     do_check_move_assign(logger, actions, z, std::forward<T>(y), yEquivalent, movedFrom, std::move(m));

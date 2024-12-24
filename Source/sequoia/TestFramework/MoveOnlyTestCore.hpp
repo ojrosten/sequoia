@@ -56,8 +56,8 @@ namespace sequoia::testing
                std::move(y),
                xEquivalent,
                yEquivalent,
-               opt_moved_from_ref<T>{movedFromPostConstruction},
-               opt_moved_from_ref<T>{movedFromPostAssignment}
+               optional_ref<const T>{movedFromPostConstruction},
+               optional_ref<const T>{movedFromPostAssignment}
              );
     }
 
@@ -71,8 +71,8 @@ namespace sequoia::testing
                std::move(y),
                xEquivalent,
                yEquivalent,
-               opt_moved_from_ref<U>{},
-               opt_moved_from_ref<U>{}
+               optional_ref<const U>{},
+               optional_ref<const U>{}
              );
     }
 
@@ -132,8 +132,8 @@ namespace sequoia::testing
                std::move(y),
                xEquivalent,
                yEquivalent,
-               opt_moved_from_ref<U>{movedFromPostConstruction},
-               opt_moved_from_ref<U>{movedFromPostAssignment},
+               optional_ref<const U>{movedFromPostConstruction},
+               optional_ref<const U>{movedFromPostAssignment},
                order
              );
     }
@@ -155,8 +155,8 @@ namespace sequoia::testing
                std::move(y),
                xEquivalent,
                yEquivalent,
-               opt_moved_from_ref<U>{},
-               opt_moved_from_ref<U>{},
+               optional_ref<const U>{},
+               optional_ref<const U>{},
                order
              );
     }
