@@ -257,10 +257,12 @@ namespace sequoia::testing
 
   namespace impl
   {
-    // TO DO: investigate if this 'concept' can be traded for a constexpr bool
     template<class Fn, class... Args>
-    concept invocable_without_last_arg = (sizeof...(Args) > 0) && requires(Fn && fn, Args&&... args) {
-      invoke_with_specified_args(fn, std::make_index_sequence<sizeof...(Args) - 1>(), std::forward<Args>(args)...);
+    inline constexpr bool invocable_without_last_arg{
+         (sizeof...(Args) > 0)
+      && requires(Fn && fn, Args&&... args) {
+           invoke_with_specified_args(fn, std::make_index_sequence<sizeof...(Args) - 1>(), std::forward<Args>(args)...);
+         }
     };
   }
 
