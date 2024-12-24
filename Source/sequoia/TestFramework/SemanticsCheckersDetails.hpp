@@ -307,39 +307,28 @@ namespace sequoia::testing::impl
     return eq && neq && check("Precondition - for checking semantics, x and y are assumed to be different", logger, x != y);
   }
 
-  template<test_mode Mode, class Actions, std::equality_comparable T, class... Args>
-  [[nodiscard]]
-  bool check_equality_preconditions(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const T& xClone, const T& yClone, const Args&... args)
-  {
-    if(!check_equality_preconditions(logger, actions, x, y, args...))
-      return false;
-
-    auto mess{
-      [](std::string_view var) {
-        return std::format("Precondition - for checking move-only semantics, {} and {}Clone are assumed to be equal", var, var);
-      }
-    };
-
-    return check(mess("x"), logger, x == xClone) && check(mess("y"), logger, y == yClone);
-  }
-
   template<test_mode Mode, class Actions, std::equality_comparable T, class U, class... Args>
-    requires (!std::is_same_v<T, U>)
   [[nodiscard]]
-  bool check_equality_preconditions(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const U&, const U&, const Args&... args)
+  bool check_equality_preconditions(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const U& xClone, const U& yClone, const Args&... args)
   {
     if(!check_equality_preconditions(logger, actions, x, y, args...))
       return false;
 
-    // TO DO: reinstate and combine with function above
-    /*auto mess{
-      [](std::string_view var) {
-        return std::format("Precondition - for checking move-only semantics, {} and {}Clone are assumed to be equal", var, var);
-      }
-    };
+    // TO DO: harmonize with other changes along the same lines which require deepn_equality_comparable_with
+    if constexpr(std::is_same_v<T, U>)
+    {
+      auto mess{
+        [](std::string_view var) {
+          return std::format("Precondition - for checking move-only semantics, {} and {}Clone are assumed to be equal", var, var);
+        }
+      };
 
-    return check(mess("x"), logger, x == xClone) && check(mess("y"), logger, y == yClone);*/
-    return true;
+      return check(mess("x"), logger, x == xClone) && check(mess("y"), logger, y == yClone);
+    }
+    else
+    {
+      return true;
+    }
   }
   
   template<test_mode Mode, class Actions, std::totally_ordered T, class... Args>
