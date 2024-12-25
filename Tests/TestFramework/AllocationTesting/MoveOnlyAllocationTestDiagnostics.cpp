@@ -34,6 +34,7 @@ namespace sequoia::testing
   template<bool PropagateMove, bool PropagateSwap>
   void move_only_allocation_false_negative_diagnostics::test_move_only_semantics_allocations()
   {
+    using equivalent_type = std::vector<int, shared_counting_allocator<int, true, PropagateMove, PropagateSwap>>;
 
     auto mutator{
       [](auto& b) {
@@ -51,6 +52,9 @@ namespace sequoia::testing
       };
 
       check_semantics("Incorrect para-move allocs", beast{}, beast{2}, beast{}, beast{2}, mutator,
+                      allocation_info{allocGetter, {0_pm, {0_pm, 1_mu}, {1_manp}}});
+
+      check_semantics("Incorrect para-move allocs, as unique", beast{}, beast{2}, equivalent_type{}, equivalent_type{2}, mutator,
                       allocation_info{allocGetter, {0_pm, {0_pm, 1_mu}, {1_manp}}});
 
       check_semantics("Incorrect mutation allocs", beast{}, beast{2}, beast{}, beast{2}, mutator,
@@ -196,6 +200,8 @@ namespace sequoia::testing
   template<bool PropagateMove, bool PropagateSwap>
   void move_only_allocation_false_positive_diagnostics::test_move_only_semantics_allocations()
   {
+    using equivalent_type = std::vector<int, shared_counting_allocator<int, true, PropagateMove, PropagateSwap>>;
+
     auto mutator{
       [](auto& b) {
         b.x.reserve(b.x.capacity() + 1);
@@ -214,6 +220,9 @@ namespace sequoia::testing
       check_semantics("Move-only beast", beast{1}, beast{2}, beast{1}, beast{2}, mutator,
                       allocation_info{allocGetter, {1_pm, {1_pm, 1_mu}, {0_manp}}});
 
+      check_semantics("Move-only beast, as unique", beast{1}, beast{2}, equivalent_type{1}, equivalent_type{2}, mutator,
+                      allocation_info{allocGetter, {1_pm, {1_pm, 1_mu}, {0_manp}}});
+      
       check_semantics("Move-only beast", beast{}, beast{2}, beast{}, beast{2}, mutator,
                       allocation_info{allocGetter, {0_pm, {1_pm, 1_mu}, {1_manp}}});
 
@@ -236,6 +245,9 @@ namespace sequoia::testing
       };
 
       check_semantics("Check moved-from state", beast{1}, beast{2}, beast{1}, beast{2}, beast{}, beast{},  mutator,
+        allocation_info{allocGetter, {1_pm, {1_pm, 1_mu}, {0_manp}}});
+
+      check_semantics("Check moved-from state, as unique", beast{1}, beast{2}, equivalent_type{1}, equivalent_type{2}, equivalent_type{}, equivalent_type{},  mutator,
         allocation_info{allocGetter, {1_pm, {1_pm, 1_mu}, {0_manp}}});
 
       check_semantics("Check moved-from state", []() { return beast{1}; }, []() { return beast{2}; }, beast{}, beast{}, mutator,

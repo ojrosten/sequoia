@@ -32,16 +32,16 @@ namespace sequoia::testing
 
     move_only_allocation_extender() = default;
 
-    template<class Self, moveonly T, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
+    template<class Self, moveonly T, class U, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
       requires (!std::totally_ordered<T> && (sizeof...(Getters) > 0))
     void check_semantics(this Self& self,
                          const reporter& description,
                          T&& x,
                          T&& y,
-                         const T& xEquivalent,
-                         const T& yEquivalent,
-                         const T& movedFromPostConstruction,
-                         const T& movedFromPostAssignment,
+                         const U& xEquivalent,
+                         const U& yEquivalent,
+                         const U& movedFromPostConstruction,
+                         const U& movedFromPostAssignment,
                          Mutator yMutator,
                          const allocation_info<T, Getters>&... info)
     {
@@ -51,20 +51,20 @@ namespace sequoia::testing
                                std::move(y),
                                xEquivalent,
                                yEquivalent,
-                               optional_ref<const T>{movedFromPostConstruction},
-                               optional_ref<const T>{movedFromPostAssignment},
+                               optional_ref<const U>{movedFromPostConstruction},
+                               optional_ref<const U>{movedFromPostAssignment},
                                std::move(yMutator),
                                info...);
     }
 
-    template<class Self, moveonly T, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
+    template<class Self, moveonly T, class U, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
       requires (!std::totally_ordered<T>  && (sizeof...(Getters) > 0))
     void check_semantics(this Self& self,
                          const reporter& description,
                          T&& x,
                          T&& y,
-                         const T& xEquivalent,
-                         const T& yEquivalent,
+                         const U& xEquivalent,
+                         const U& yEquivalent,
                          Mutator yMutator,
                          const allocation_info<T, Getters>&... info)
     {
@@ -74,8 +74,8 @@ namespace sequoia::testing
                                std::move(y),
                                xEquivalent,
                                yEquivalent,
-                               optional_ref<const T>{},
-                               optional_ref<const T>{},
+                               optional_ref<const U>{},
+                               optional_ref<const U>{},
                                std::move(yMutator),
                                info...);
     }
@@ -131,16 +131,16 @@ namespace sequoia::testing
                                       info...);
     }
 
-    template<class Self, moveonly T, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
+    template<class Self, moveonly T, class U, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
       requires (std::totally_ordered<T> && (sizeof...(Getters) > 0))
     void check_semantics(this Self& self,
                          const reporter& description,
                          T&& x,
                          T&& y,
-                         const T& xEquivalent,
-                         const T& yEquivalent,
-                         const T& movedFromPostConstruction,
-                         const T& movedFromPostAssignment,
+                         const U& xEquivalent,
+                         const U& yEquivalent,
+                         const U& movedFromPostConstruction,
+                         const U& movedFromPostAssignment,
                          std::weak_ordering order,
                          Mutator yMutator,
                          const allocation_info<T, Getters>&... info)
@@ -158,14 +158,14 @@ namespace sequoia::testing
                                info...);
     }
 
-    template<class Self, moveonly T, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
+    template<class Self, moveonly T, class U, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
       requires (std::totally_ordered<T>  && (sizeof...(Getters) > 0))
     void check_semantics(this Self& self,
                          const reporter& description,
                          T&& x,
                          T&& y,
-                         const T& xEquivalent,
-                         const T& yEquivalent,
+                         const U& xEquivalent,
+                         const U& yEquivalent,
                          std::weak_ordering order,
                          Mutator yMutator,
                          const allocation_info<T, Getters>&... info)
@@ -187,8 +187,8 @@ namespace sequoia::testing
     <
       class Self,
       moveonly T,
-      invocable_r<T> xMaker,
-      invocable_r<T> yMaker,
+      regular_invocable_r<T> xMaker,
+      regular_invocable_r<T> yMaker,
       std::invocable<T&> Mutator,
       alloc_getter<T>... Getters
     >
@@ -218,8 +218,8 @@ namespace sequoia::testing
     <
       class Self,
       moveonly T,
-      invocable_r<T> xMaker,
-      invocable_r<T> yMaker,
+      regular_invocable_r<T> xMaker,
+      regular_invocable_r<T> yMaker,
       std::invocable<T&> Mutator,
       alloc_getter<T>... Getters
     >

@@ -170,16 +170,16 @@ namespace sequoia::testing
     using inner_predictions_type = move_only_inner_allocation_predictions;
   };
 
-  template<test_mode Mode, moveonly T, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
+  template<test_mode Mode, moveonly T, class U, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
     requires (!std::totally_ordered<T> && (sizeof...(Getters) > 0))
   void check_semantics(std::string description,
                        test_logger<Mode>& logger,
                        T&& x,
                        T&& y,
-                       const T& xEquivalent,
-                       const T& yEquivalent,
-                       optional_ref<const T> movedFromPostConstruction,
-                       optional_ref<const T> movedFromPostAssignment,
+                       const U& xEquivalent,
+                       const U& yEquivalent,
+                       optional_ref<const U> movedFromPostConstruction,
+                       optional_ref<const U> movedFromPostAssignment,
                        Mutator m,
                        const allocation_info<T, Getters>&... info)
   {
@@ -196,16 +196,16 @@ namespace sequoia::testing
                           info...);
   }
 
-  template<test_mode Mode, moveonly T, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
+  template<test_mode Mode, moveonly T, class U, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
     requires (std::totally_ordered<T> && (sizeof...(Getters) > 0))
   void check_semantics(std::string description,
                        test_logger<Mode>& logger,
                        T&& x,
                        T&& y,
-                       const T& xEquivalent,
-                       const T& yEquivalent,
-                       optional_ref<const T> movedFromPostConstruction,
-                       optional_ref<const T> movedFromPostAssignment,
+                       const U& xEquivalent,
+                       const U& yEquivalent,
+                       optional_ref<const U> movedFromPostConstruction,
+                       optional_ref<const U> movedFromPostAssignment,
                        std::weak_ordering order,
                        Mutator m,
                        const allocation_info<T, Getters>&... info)

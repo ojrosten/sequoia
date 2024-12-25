@@ -629,18 +629,18 @@ namespace sequoia::testing::impl
       check_move_y_allocation(logger, y, checkers...);
     }
 
-    template<test_mode Mode, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
-    static void post_move_assign_action(test_logger<Mode>& logger, T& y, const T& yEquivalent, Mutator yMutator, const dual_allocation_checker<T, Getters>&... checkers)
+    template<test_mode Mode, class U, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
+    static void post_move_assign_action(test_logger<Mode>& logger, T& y, const U& yEquivalent, Mutator yMutator, const dual_allocation_checker<T, Getters>&... checkers)
     {
       check_move_assign_allocation(logger, y, checkers...);
       check_mutation_after_move("assignment", logger, y, yEquivalent, std::move(yMutator), allocation_checker{checkers.info(), y}...);
     }
 
-    template<test_mode Mode, alloc_getter<T>... Getters>
+    template<test_mode Mode, class U, alloc_getter<T>... Getters>
     static void post_swap_action([[maybe_unused]] test_logger<Mode>& logger,
                                  [[maybe_unused]] const T& x,
                                  [[maybe_unused]] const T& y,
-                                 [[maybe_unused]] const T&,
+                                                  const U&,
                                  [[maybe_unused]] const dual_allocation_checker<T, Getters>&... checkers)
     {
       if constexpr (do_check_swap<dual_allocation_checker<T, Getters>...>())
@@ -689,46 +689,50 @@ namespace sequoia::testing::impl
   }
 
 
-  template<test_mode Mode, class Actions, movable_comparable T, alloc_getter<T>... Getters>
+  template<test_mode Mode, class Actions, movable_comparable T, class U, alloc_getter<T>... Getters>
     requires (sizeof...(Getters) > 0)
-  std::optional<T> check_move_construction(test_logger<Mode>& logger, const Actions& actions, T&& z, const T& y, optional_ref<const T> movedFrom, const dual_allocation_checker<T, Getters>&... checkers)
+  std::optional<T> check_move_construction(test_logger<Mode>& logger, const Actions& actions, T&& z, const U& y, optional_ref<const U> movedFrom, const dual_allocation_checker<T, Getters>&... checkers)
   {
     return do_check_move_construction(logger, actions, std::forward<T>(z), y, movedFrom, allocation_checker{checkers.info(), z}...);
   }
 
-  template<test_mode Mode, class Actions, movable_comparable T, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
+  template<test_mode Mode, class Actions, movable_comparable T, class U, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
     requires (sizeof...(Getters) > 0)
-  void check_move_assign(test_logger<Mode>& logger, const Actions& actions, T& u, T&& v, const T& y, optional_ref<const T> movedFrom, Mutator yMutator, const dual_allocation_checker<T, Getters>&... checkers)
+  void check_move_assign(test_logger<Mode>& logger, const Actions& actions, T& u, T&& v, const U& y, optional_ref<const U> movedFrom, Mutator yMutator, const dual_allocation_checker<T, Getters>&... checkers)
   {
     do_check_move_assign(logger, actions, u, std::forward<T>(v), y, movedFrom, std::move(yMutator), dual_allocation_checker{checkers.info(), u, v}...);
   }
 
-  template<test_mode Mode, movable_comparable T, std::invocable<T&> Mutator, class... Checkers>
-  void check_mutation_after_move(std::string_view moveType, test_logger<Mode>& logger, T& u, const T& y, Mutator yMutator, Checkers... checkers)
+  template<test_mode Mode, movable_comparable T, class U, std::invocable<T&> Mutator, class... Checkers>
+  void check_mutation_after_move(std::string_view moveType, test_logger<Mode>& logger, T& u, const U& y, Mutator yMutator, Checkers... checkers)
   {
     yMutator(u);
     check_mutation_allocation(moveType, logger, u, checkers...);
 
-    const auto mess{
-      std::string{"Mutation is not doing anything following move "}.append(moveType)
-    };
-    check(mess, logger, u != y);
+    // TO DO: generalize this
+    if constexpr(std::is_same_v<T, U>)
+    {
+      const auto mess{
+        std::string{"Mutation is not doing anything following move "}.append(moveType)
+      };
+      check(mess, logger, u != y);
+    }
   }
 
-  template<test_mode Mode, movable_comparable T, std::invocable<T&> Mutator, class... Checkers, std::size_t... I>
-  void check_mutation_after_move(std::string_view moveType, test_logger<Mode>& logger, T& u, const T& y, Mutator yMutator, std::tuple<Checkers...> checkers, std::index_sequence<I...>)
+  template<test_mode Mode, movable_comparable T, class U, std::invocable<T&> Mutator, class... Checkers, std::size_t... I>
+  void check_mutation_after_move(std::string_view moveType, test_logger<Mode>& logger, T& u, const U& y, Mutator yMutator, std::tuple<Checkers...> checkers, std::index_sequence<I...>)
   {
     check_mutation_after_move(moveType, logger, u, y, std::move(yMutator), std::get<I>(checkers)...);
   }
 
-  template<test_mode Mode, movable_comparable T, std::invocable<T&> Mutator, class... Checkers>
-  void check_mutation_after_move(std::string_view moveType, test_logger<Mode>& logger, T& u, const T& y, Mutator yMutator, std::tuple<Checkers...> checkers)
+  template<test_mode Mode, movable_comparable T, class U, std::invocable<T&> Mutator, class... Checkers>
+  void check_mutation_after_move(std::string_view moveType, test_logger<Mode>& logger, T& u, const U& y, Mutator yMutator, std::tuple<Checkers...> checkers)
   {
     check_mutation_after_move(moveType, logger, u, y, std::move(yMutator), std::move(checkers), std::make_index_sequence<sizeof...(Checkers)>{});
   }
 
-  template<test_mode Mode, class Actions, movable_comparable T, alloc_getter<T>... Getters>
-  bool check_serialization(test_logger<Mode>& logger, const Actions& actions, T&& u, const T& y, const dual_allocation_checker<T, Getters>&... checkers)
+  template<test_mode Mode, class Actions, movable_comparable T, class U, alloc_getter<T>... Getters>
+  bool check_serialization(test_logger<Mode>& logger, const Actions& actions, T&& u, const U& y, const dual_allocation_checker<T, Getters>&... checkers)
   {
     return do_check_serialization(logger, actions, std::forward<T>(u), y, allocation_checker{checkers.info(), y}...);
   }

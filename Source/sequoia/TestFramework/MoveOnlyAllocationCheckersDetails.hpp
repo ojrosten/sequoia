@@ -24,35 +24,39 @@ namespace sequoia::testing::impl
     using allocation_actions<T>::allocation_actions;
   };
 
-  template<test_mode Mode, class Actions, moveonly T, alloc_getter<T>... Getters>
-  bool check_swap(test_logger<Mode>& logger, const Actions& actions, T&& x, T&& y, const T& xEquivalent, const T& yEquivalent, const dual_allocation_checker<T, Getters>&... checkers)
+  template<test_mode Mode, class Actions, moveonly T, class U, alloc_getter<T>... Getters>
+  bool check_swap(test_logger<Mode>& logger, const Actions& actions, T&& x, T&& y, const U& xEquivalent, const U& yEquivalent, const dual_allocation_checker<T, Getters>&... checkers)
   {
     return do_check_swap(logger, actions, std::move(x), std::move(y), xEquivalent, yEquivalent, dual_allocation_checker{checkers.info(), x, y}...);
   }
 
-  template<test_mode Mode, container_tag tag, moveonly T, alloc_getter<T>... Getters>
+  template<test_mode Mode, container_tag tag, moveonly T, class U, alloc_getter<T>... Getters>
   std::optional<T>
   check_para_constructor_allocations(test_logger<Mode>& logger,
                                      container_tag_constant<tag>,
                                      T&& z,
-                                     const T& zEquivalent,
+                                     const U& zEquivalent,
                                      const allocation_info<T, Getters>&... info)
   {
     const auto tagStr{to_string(container_tag_constant<tag>::value)};
 
-    if(!check(std::string{"Precondition - for checking move-only semantics, "}.append(tagStr).append("and ").append(tagStr).append("Equivalent are assumed to be equal"),
-              logger,
-              z == zEquivalent))
-      return{};
+    // TO DO: generalize this
+    if constexpr(std::is_same_v<std::remove_cvref_t<T>, U>)
+    {      
+      if(!check(std::format("Precondition - for checking move-only semantics, {}and {} Equivalent are assumed to be equal", tagStr, tagStr),
+                logger,
+                z == zEquivalent))
+        return{};
+    }
 
     T v{std::move(z), info.make_allocator()...};
 
     using ctag = container_tag_constant<tag>;
     check_para_move_allocation(logger, ctag{}, v, std::tuple_cat(make_allocation_checkers(info)...));
-    if(check(equality, "Inonsistent para-move constructor", logger, v, zEquivalent))
+    if(check(with_best_available, "Inonsistent para-move constructor", logger, v, zEquivalent))
     {
       std::optional<T> w{std::move(v)};
-      if(check(equality, "Inconsistent move construction", logger, *w, zEquivalent))
+      if(check(with_best_available, "Inconsistent move construction", logger, *w, zEquivalent))
       {
         return w;
       }
@@ -61,30 +65,30 @@ namespace sequoia::testing::impl
     return std::nullopt;
   }
 
-  template<test_mode Mode, moveonly T, alloc_getter<T>... Getters>
+  template<test_mode Mode, moveonly T, class U, alloc_getter<T>... Getters>
   std::pair<std::optional<T>, std::optional<T>>
   check_para_constructor_allocations(test_logger<Mode>& logger,
                                      T&& x,
                                      T&& y,
-                                     const T& xEquivalent,
-                                     const T& yEquivalent,
+                                     const U& xEquivalent,
+                                     const U& yEquivalent,
                                      const allocation_info<T, Getters>&... info)
   {
     return {check_para_constructor_allocations(logger, container_tag_constant<container_tag::x>{}, std::forward<T>(x), xEquivalent, info...),
             check_para_constructor_allocations(logger, container_tag_constant<container_tag::y>{}, std::forward<T>(y), yEquivalent, info...)};
   }
 
-  template<test_mode Mode, class Actions, moveonly T, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
+  template<test_mode Mode, class Actions, moveonly T, class U, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
     requires (sizeof...(Getters) > 0)
   void check_semantics(std::string description,
                        test_logger<Mode>& logger,
                        const Actions& actions,
                        T&& x,
                        T&& y,
-                       const T& xEquivalent,
-                       const T& yEquivalent,
-                       optional_ref<const T> movedFromPostConstruction,
-                       optional_ref<const T> movedFromPostAssignment,
+                       const U& xEquivalent,
+                       const U& yEquivalent,
+                       optional_ref<const U> movedFromPostConstruction,
+                       optional_ref<const U> movedFromPostAssignment,
                        Mutator m,
                        const allocation_info<T, Getters>&... info)
   {
@@ -139,16 +143,16 @@ namespace sequoia::testing::impl
   }
 
   /// Unpacks the tuple and feeds to the overload of check_semantics defined in MoveOnlyCheckersDetails.hpp
-  template<test_mode Mode, class Actions, moveonly T, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
+  template<test_mode Mode, class Actions, moveonly T, class U, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
     requires (sizeof...(Getters) > 0)
   void check_semantics(test_logger<Mode>& logger,
                        const Actions& actions,
                        T&& x,
                        T&& y,
-                       const T& xEquivalent,
-                       const T& yEquivalent,
-                       optional_ref<const T> movedFromPostConstruction,
-                       optional_ref<const T> movedFromPostAssignment,
+                       const U& xEquivalent,
+                       const U& yEquivalent,
+                       optional_ref<const U> movedFromPostConstruction,
+                       optional_ref<const U> movedFromPostAssignment,
                        Mutator m,
                        std::tuple<dual_allocation_checker<T, Getters>...> checkers)
   {

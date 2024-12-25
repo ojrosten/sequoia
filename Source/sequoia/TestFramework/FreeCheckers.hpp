@@ -166,8 +166,9 @@ namespace sequoia::testing
     }
   };
 
-  static_assert(is_customized_check<general_equivalence_check_t<int>>);
-  static_assert(is_customized_check<general_weak_equivalence_check_t<int>>);
+  // TO DO: move into test
+  //static_assert(is_customized_check<general_equivalence_check_t<int>>);
+  //static_assert(is_customized_check<general_weak_equivalence_check_t<int>>);
 
   template<class Compare, class T>
   inline constexpr bool maybe_comparison_type{

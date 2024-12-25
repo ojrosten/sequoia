@@ -408,6 +408,8 @@ namespace sequoia::testing::impl
   //================================ move assign ================================//
 
   template<test_mode Mode, class Actions, movable_comparable T, class U, std::invocable<T&> Mutator, class... Args>
+  // TO DO: figure out how to reinstate this:
+  //  requires has_detailed_agnostic_check<Mode, T, U, null_advisor>
   void do_check_move_assign(test_logger<Mode>& logger,
                             [[maybe_unused]] const Actions& actions,
                             T& z,
