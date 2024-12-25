@@ -256,7 +256,7 @@ namespace sequoia::testing::impl
     check_comparison_consistency(logger, greater_than_type{}, actions, x, y, [](const T& x) { return !(x > x); }, args...);
     check_comparison_consistency(logger, geq_type{}, actions, x, y, [](const T& x) { return x >= x; }, args...);
 
-    if constexpr (three_way_comparable<T>)
+    if constexpr (std::three_way_comparable<T>)
     {
       check_comparison_consistency(logger, threeway_type{}, actions, x, y, [](const T& x) { return (x <=> x) == 0; }, args...);
     }
@@ -278,7 +278,7 @@ namespace sequoia::testing::impl
         check("operator< and operator<= are inconsistent", logger, x <= y);
         check("operator< and operator>= are inconsistent", logger, y >= x);
 
-        if constexpr (three_way_comparable<T>)
+        if constexpr (std::three_way_comparable<T>)
         {
           check("operator< and operator<=> are inconsistent", logger, (x <=> y) < 0);
         }

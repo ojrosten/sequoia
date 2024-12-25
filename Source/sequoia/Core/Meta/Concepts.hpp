@@ -19,14 +19,6 @@
 
 namespace sequoia
 {
-  /// TO DO: Temporary, crude implementation while waiting for clang.
-  template<class T>
-  concept three_way_comparable = requires(const std::remove_reference_t<T>&t,
-                                          const std::remove_reference_t<T>&u)
-  {
-    t <=> u;
-  };
-
   /// \brief Supplements `std::invocable`.
   template <class F, class R, class... Args>
   concept invocable_r =
