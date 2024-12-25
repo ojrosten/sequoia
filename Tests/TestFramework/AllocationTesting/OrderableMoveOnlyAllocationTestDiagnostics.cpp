@@ -33,6 +33,7 @@ namespace sequoia::testing
   void orderable_move_only_allocation_false_positive_diagnostics::test_semantics_allocations()
   {
     using beast = orderable_move_only_beast<int, shared_counting_allocator<int, true, PropagateMove, PropagateSwap>>;
+    using equivalent_type = std::vector<int, shared_counting_allocator<int, true, PropagateMove, PropagateSwap>>;
 
     auto getter{[](const beast& b){ return b.x.get_allocator(); }};
     auto mutator{[](beast& b) { b.x.shrink_to_fit(); b.x.push_back(3); }};
@@ -49,6 +50,15 @@ namespace sequoia::testing
                     beast{2},
                     beast{},
                     beast{2},
+                    std::weak_ordering::less,
+                    mutator,
+                    allocation_info{getter, {0_pm, {1_pm, 1_mu}, {1_manp}}});
+
+    check_semantics("As unique",
+                    beast{},
+                    beast{2},
+                    equivalent_type{},
+                    equivalent_type{2},
                     std::weak_ordering::less,
                     mutator,
                     allocation_info{getter, {0_pm, {1_pm, 1_mu}, {1_manp}}});

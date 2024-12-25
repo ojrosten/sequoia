@@ -84,8 +84,8 @@ namespace sequoia::testing
     <
       class Self,
       moveonly T,
-      invocable_r<T> xMaker,
-      invocable_r<T> yMaker,
+      regular_invocable_r<T> xMaker,
+      regular_invocable_r<T> yMaker,
       std::invocable<T&> Mutator,
       alloc_getter<T>... Getters
     >
@@ -113,8 +113,8 @@ namespace sequoia::testing
     <
       class Self,
       moveonly T,
-      invocable_r<T> xMaker,
-      invocable_r<T> yMaker,
+      regular_invocable_r<T> xMaker,
+      regular_invocable_r<T> yMaker,
       std::invocable<T&> Mutator,
       alloc_getter<T>... Getters
     >
@@ -151,8 +151,8 @@ namespace sequoia::testing
                                std::move(y),
                                xEquivalent,
                                yEquivalent,
-                               optional_ref<const T>{movedFromPostConstruction},
-                               optional_ref<const T>{movedFromPostAssignment},
+                               optional_ref<const U>{movedFromPostConstruction},
+                               optional_ref<const U>{movedFromPostAssignment},
                                order,
                                std::move(yMutator),
                                info...);
@@ -176,8 +176,8 @@ namespace sequoia::testing
                                std::move(y),
                                xEquivalent,
                                yEquivalent,
-                               optional_ref<const T>{},
-                               optional_ref<const T>{},
+                               optional_ref<const U>{},
+                               optional_ref<const U>{},
                                order,
                                std::move(yMutator),
                                info...);
