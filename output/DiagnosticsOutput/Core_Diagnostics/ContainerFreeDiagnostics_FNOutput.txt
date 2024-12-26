@@ -674,11 +674,16 @@ Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 216
 [std::pair<int, sequoia::testing::only_weakly_checkable>]
   Second element of pair is incorrect
   [sequoia::testing::only_weakly_checkable]
-    Wrapped double
-    [double]
-    operator== returned false
-    Obtained : 2
-    Predicted: 2.1
+    Comparison performed using:
+    [sequoia::testing::value_tester<sequoia::testing::only_weakly_checkable>]
+    Checking for weak equivalence with:
+    [sequoia::testing::only_weakly_checkable]
+
+      Wrapped double
+      [double]
+      operator== returned false
+      Obtained : 2
+      Predicted: 2.1
 
 =======================================
 
@@ -693,11 +698,16 @@ Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 217
 
   Second element of pair is incorrect
   [sequoia::testing::only_weakly_checkable]
-    Wrapped double
-    [double]
-    operator== returned false
-    Obtained : 2
-    Predicted: 2.1
+    Comparison performed using:
+    [sequoia::testing::value_tester<sequoia::testing::only_weakly_checkable>]
+    Checking for weak equivalence with:
+    [sequoia::testing::only_weakly_checkable]
+
+      Wrapped double
+      [double]
+      operator== returned false
+      Obtained : 2
+      Predicted: 2.1
 
 =======================================
 
@@ -706,12 +716,17 @@ Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 218
 [std::pair<int, sequoia::testing::only_weakly_checkable>]
   Second element of pair is incorrect
   [sequoia::testing::only_weakly_checkable]
-    Wrapped double
-    [double]
-    operator== returned false
-    Obtained : 2
-    Predicted: 2.1
-    Advice: Double advice
+    Comparison performed using:
+    [sequoia::testing::value_tester<sequoia::testing::only_weakly_checkable>]
+    Checking for weak equivalence with:
+    [sequoia::testing::only_weakly_checkable]
+
+      Wrapped double
+      [double]
+      operator== returned false
+      Obtained : 2
+      Predicted: 2.1
+      Advice: Double advice
 
 =======================================
 
@@ -731,11 +746,16 @@ Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 225
 [std::pair<int, sequoia::testing::only_equivalence_checkable>]
   Second element of pair is incorrect
   [sequoia::testing::only_equivalence_checkable]
-    Wrapped double
-    [double]
-    operator== returned false
-    Obtained : 1.5
-    Predicted: 1.4
+    Comparison performed using:
+    [sequoia::testing::value_tester<sequoia::testing::only_equivalence_checkable>]
+    Checking for equivalence with:
+    [sequoia::testing::only_equivalence_checkable]
+
+      Wrapped double
+      [double]
+      operator== returned false
+      Obtained : 1.5
+      Predicted: 1.4
 
 =======================================
 
@@ -750,11 +770,16 @@ Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 226
 
   Second element of pair is incorrect
   [sequoia::testing::only_equivalence_checkable]
-    Wrapped double
-    [double]
-    operator== returned false
-    Obtained : 1.5
-    Predicted: 1.4
+    Comparison performed using:
+    [sequoia::testing::value_tester<sequoia::testing::only_equivalence_checkable>]
+    Checking for equivalence with:
+    [sequoia::testing::only_equivalence_checkable]
+
+      Wrapped double
+      [double]
+      operator== returned false
+      Obtained : 1.5
+      Predicted: 1.4
 
 =======================================
 

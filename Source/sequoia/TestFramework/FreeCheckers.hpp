@@ -142,6 +142,12 @@ namespace sequoia::testing
     return "weak equivalence";
   }
 
+  [[nodiscard]]
+  inline std::string to_string(with_best_available_check_t)
+  {
+    return "with best available";
+  }
+
   //=========================== Values defined for convenience ===========================//
 
   inline constexpr equality_check_t equality{};
@@ -618,7 +624,8 @@ namespace sequoia::testing
 
     if constexpr(binary_tester_for<with_best_available_check_t, Mode, T, U, tutor<Advisor>>)
     {
-      select_test(with_best_available_check_t{}, logger, obtained, prediction, advisor);
+      // TO DO: output could perhaps harmonize with general_equivalence_check
+      select_test(with_best_available, logger, obtained, prediction, advisor);
     }
     else if constexpr(binary_tester_for<equality_check_t, Mode, T, U, tutor<Advisor>>)
     {
@@ -626,21 +633,15 @@ namespace sequoia::testing
     }
     else if constexpr(binary_tester_for<equivalence_check_t, Mode, T, U, tutor<Advisor>>)
     {
-      if constexpr(std::is_same_v<T, U>) // TO DO: simplify this
-        select_test(equivalence_check_t{}, logger, obtained, prediction, advisor);
-      else
-        general_equivalence_check(equivalence_check_t{}, "", logger, obtained, prediction, advisor);
+      general_equivalence_check(equivalence, "", logger, obtained, prediction, advisor);
     }
     else if constexpr(binary_tester_for<weak_equivalence_check_t, Mode, T, U, tutor<Advisor>>)
     {
-      if constexpr(std::is_same_v<T, U>)
-        select_test(weak_equivalence_check_t{}, logger, obtained, prediction, advisor);
-      else
-        general_equivalence_check(weak_equivalence_check_t{}, "", logger, obtained, prediction, advisor);
+      general_equivalence_check(weak_equivalence, "", logger, obtained, prediction, advisor);
     }
     else if constexpr(faithful_range<T>)
     {
-      check(with_best_available_check_t{}, "", logger, std::begin(obtained), std::end(obtained), std::begin(prediction), std::end(prediction), advisor);
+      check(with_best_available, "", logger, std::begin(obtained), std::end(obtained), std::begin(prediction), std::end(prediction), advisor);
     }
 
     return !sentry.failure_detected();

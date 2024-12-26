@@ -112,11 +112,16 @@ Checking for equivalence with:
 
   Pointees differ
   [sequoia::testing::only_equivalence_checkable]
-    Wrapped double
-    [double]
-    operator== returned false
-    Obtained : 1
-    Predicted: 2
+    Comparison performed using:
+    [sequoia::testing::value_tester<sequoia::testing::only_equivalence_checkable>]
+    Checking for equivalence with:
+    [sequoia::testing::only_equivalence_checkable]
+
+      Wrapped double
+      [double]
+      operator== returned false
+      Obtained : 1
+      Predicted: 2
 
 =======================================
 
@@ -130,17 +135,22 @@ Checking for equivalence with:
 
   Pointees differ
   [sequoia::testing::only_weakly_checkable]
-    Wrapped int
-    [int]
-    operator== returned false
-    Obtained : 42
-    Predicted: 43
+    Comparison performed using:
+    [sequoia::testing::value_tester<sequoia::testing::only_weakly_checkable>]
+    Checking for weak equivalence with:
+    [sequoia::testing::only_weakly_checkable]
 
-    Wrapped double
-    [double]
-    operator== returned false
-    Obtained : 1
-    Predicted: -2
+      Wrapped int
+      [int]
+      operator== returned false
+      Obtained : 42
+      Predicted: 43
+
+      Wrapped double
+      [double]
+      operator== returned false
+      Obtained : 1
+      Predicted: -2
 
 =======================================
 
@@ -162,25 +172,35 @@ Checking for equivalence with:
 
     Element 1 of tuple incorrect
     [sequoia::testing::only_equivalence_checkable]
-      Wrapped double
-      [double]
-      operator== returned false
-      Obtained : 2
-      Predicted: 3
+      Comparison performed using:
+      [sequoia::testing::value_tester<sequoia::testing::only_equivalence_checkable>]
+      Checking for equivalence with:
+      [sequoia::testing::only_equivalence_checkable]
+
+        Wrapped double
+        [double]
+        operator== returned false
+        Obtained : 2
+        Predicted: 3
 
     Element 2 of tuple incorrect
     [sequoia::testing::only_weakly_checkable]
-      Wrapped int
-      [int]
-      operator== returned false
-      Obtained : 42
-      Predicted: 43
+      Comparison performed using:
+      [sequoia::testing::value_tester<sequoia::testing::only_weakly_checkable>]
+      Checking for weak equivalence with:
+      [sequoia::testing::only_weakly_checkable]
 
-      Wrapped double
-      [double]
-      operator== returned false
-      Obtained : 1
-      Predicted: -2
+        Wrapped int
+        [int]
+        operator== returned false
+        Obtained : 42
+        Predicted: 43
+
+        Wrapped double
+        [double]
+        operator== returned false
+        Obtained : 1
+        Predicted: -2
 
 =======================================
 
@@ -306,25 +326,35 @@ Checking for equivalence with:
 
     Element 1 of tuple incorrect
     [sequoia::testing::only_equivalence_checkable]
-      Wrapped double
-      [double]
-      operator== returned false
-      Obtained : 2
-      Predicted: 3
+      Comparison performed using:
+      [sequoia::testing::value_tester<sequoia::testing::only_equivalence_checkable>]
+      Checking for equivalence with:
+      [sequoia::testing::only_equivalence_checkable]
+
+        Wrapped double
+        [double]
+        operator== returned false
+        Obtained : 2
+        Predicted: 3
 
     Element 2 of tuple incorrect
     [sequoia::testing::only_weakly_checkable]
-      Wrapped int
-      [int]
-      operator== returned false
-      Obtained : 42
-      Predicted: 43
+      Comparison performed using:
+      [sequoia::testing::value_tester<sequoia::testing::only_weakly_checkable>]
+      Checking for weak equivalence with:
+      [sequoia::testing::only_weakly_checkable]
 
-      Wrapped double
-      [double]
-      operator== returned false
-      Obtained : 1
-      Predicted: -2
+        Wrapped int
+        [int]
+        operator== returned false
+        Obtained : 42
+        Predicted: 43
+
+        Wrapped double
+        [double]
+        operator== returned false
+        Obtained : 1
+        Predicted: -2
 
 =======================================
 

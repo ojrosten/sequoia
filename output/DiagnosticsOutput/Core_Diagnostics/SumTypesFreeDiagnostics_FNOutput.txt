@@ -100,11 +100,16 @@ Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 63
 [std::variant<int, sequoia::testing::only_equivalence_checkable, sequoia::testing::only_weakly_checkable>]
   Variant Contents
   [sequoia::testing::only_equivalence_checkable]
-    Wrapped double
-    [double]
-    operator== returned false
-    Obtained : 41
-    Predicted: 42
+    Comparison performed using:
+    [sequoia::testing::value_tester<sequoia::testing::only_equivalence_checkable>]
+    Checking for equivalence with:
+    [sequoia::testing::only_equivalence_checkable]
+
+      Wrapped double
+      [double]
+      operator== returned false
+      Obtained : 41
+      Predicted: 42
 
 =======================================
 
@@ -113,11 +118,16 @@ Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 64
 [std::variant<int, sequoia::testing::only_equivalence_checkable, sequoia::testing::only_weakly_checkable>]
   Variant Contents
   [sequoia::testing::only_weakly_checkable]
-    Wrapped double
-    [double]
-    operator== returned false
-    Obtained : 1.5
-    Predicted: 2.5
+    Comparison performed using:
+    [sequoia::testing::value_tester<sequoia::testing::only_weakly_checkable>]
+    Checking for weak equivalence with:
+    [sequoia::testing::only_weakly_checkable]
+
+      Wrapped double
+      [double]
+      operator== returned false
+      Obtained : 1.5
+      Predicted: 2.5
 
 =======================================
 
@@ -351,11 +361,16 @@ Checking for equivalence with:
 
   Value held by std::any
   [sequoia::testing::only_equivalence_checkable]
-    Wrapped double
-    [double]
-    operator== returned false
-    Obtained : 1
-    Predicted: 2
+    Comparison performed using:
+    [sequoia::testing::value_tester<sequoia::testing::only_equivalence_checkable>]
+    Checking for equivalence with:
+    [sequoia::testing::only_equivalence_checkable]
+
+      Wrapped double
+      [double]
+      operator== returned false
+      Obtained : 1
+      Predicted: 2
 
 =======================================
 
@@ -368,17 +383,22 @@ Checking for equivalence with:
 
   Value held by std::any
   [sequoia::testing::only_weakly_checkable]
-    Wrapped int
-    [int]
-    operator== returned false
-    Obtained : 1
-    Predicted: 2
+    Comparison performed using:
+    [sequoia::testing::value_tester<sequoia::testing::only_weakly_checkable>]
+    Checking for weak equivalence with:
+    [sequoia::testing::only_weakly_checkable]
 
-    Wrapped double
-    [double]
-    operator== returned false
-    Obtained : 1
-    Predicted: 2
+      Wrapped int
+      [int]
+      operator== returned false
+      Obtained : 1
+      Predicted: 2
+
+      Wrapped double
+      [double]
+      operator== returned false
+      Obtained : 1
+      Predicted: 2
 
 =======================================
 
