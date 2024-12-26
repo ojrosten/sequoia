@@ -48,6 +48,7 @@ int main(int argc, char** argv)
 
     runner.add_test_suite(
       "Core Diagnostics",
+      free_checkers_meta_free_test{"Free Checkers Meta Free Test"},
       elementary_false_negative_free_diagnostics{"Elementary False Negative Free Diagnostics"},
       elementary_false_positive_free_diagnostics{"Elementary False Positive Free Diagnostics"},
       exceptions_false_negative_free_diagnostics{"Exceptions False Negative Free Diagnostics"},
