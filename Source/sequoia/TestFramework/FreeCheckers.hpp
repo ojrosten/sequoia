@@ -690,6 +690,7 @@ namespace sequoia::testing
     }
 
     template<class T, class U, class Advisor = null_advisor, class Self>
+      requires (deep_equality_comparable<T> || has_detailed_agnostic_check<Mode, T, U, Advisor> || faithful_range<T>)
     bool check(this Self& self, with_best_available_check_t, const reporter& description, const T& obtained, const U& prediction, tutor<Advisor> advisor = {})
     {
       return testing::check(with_best_available, self.report(description), self.m_Logger, obtained, prediction, std::move(advisor));
