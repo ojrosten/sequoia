@@ -15,6 +15,51 @@
 
 namespace sequoia::testing
 {
+  class orderable_resource_binder
+  {
+  public:
+    orderable_resource_binder() = default;
+
+    explicit orderable_resource_binder(int i)
+      : m_Index{i}
+    {}
+
+    orderable_resource_binder(orderable_resource_binder&& other) noexcept
+      : m_Index{std::exchange(other.m_Index, 0)}
+    {}
+
+    orderable_resource_binder& operator=(orderable_resource_binder&& other) noexcept
+    {
+      m_Index = std::exchange(other.m_Index, 0);
+      return *this;
+    }
+
+    [[nodiscard]]
+    int index() const noexcept
+    {
+      return m_Index;
+    }
+
+    [[nodiscard]]
+    friend auto operator<=>(const orderable_resource_binder&, const orderable_resource_binder&) = default;
+
+    template<class Stream>
+    friend Stream& operator<<(Stream& s, const orderable_resource_binder& b)
+    {
+      s << b.index();
+      return s;
+    }
+
+    template<class Stream>
+    friend Stream& operator>>(Stream& s, orderable_resource_binder& b)
+    {
+      s >> b.m_Index;
+      return s;
+    }
+  private:
+    int m_Index{-1};
+  };
+
   template<class T=int, class Allocator=std::allocator<int>>
   struct orderable_move_only_beast
   {
@@ -64,49 +109,60 @@ namespace sequoia::testing
   template<class T, class Allocator>
   struct value_tester<orderable_move_only_beast<T, Allocator>> : move_only_beast_value_tester<orderable_move_only_beast<T, Allocator>> {};
 
-  class orderable_resource_binder
+  template<class T = int, class Allocator = std::allocator<int>>
+  struct orderable_specified_moved_from_beast
   {
-  public:
-    orderable_resource_binder() = default;
+    using     value_type = T;
+    using allocator_type = Allocator;
 
-    explicit orderable_resource_binder(int i)
-      : m_Index{i}
-    {}
+    orderable_specified_moved_from_beast(std::initializer_list<T> list) : x{list} {}
 
-    orderable_resource_binder(orderable_resource_binder&& other) noexcept
-      : m_Index{std::exchange(other.m_Index, 0)}
-    {}
+    orderable_specified_moved_from_beast(std::initializer_list<T> list, const allocator_type& a) : x(list, a) {}
 
-    orderable_resource_binder& operator=(orderable_resource_binder&& other) noexcept
+    orderable_specified_moved_from_beast(const allocator_type& a) : x(a) {}
+
+    orderable_specified_moved_from_beast(const orderable_specified_moved_from_beast&) = delete;
+
+    orderable_specified_moved_from_beast(orderable_specified_moved_from_beast&& other) noexcept
+      : x{std::move(other.x)}
     {
-      m_Index = std::exchange(other.m_Index, 0);
+      other.x.clear();
+    }
+
+    orderable_specified_moved_from_beast(orderable_specified_moved_from_beast&& other, const allocator_type& a) : x(std::move(other.x), a) {}
+
+    orderable_specified_moved_from_beast& operator=(const orderable_specified_moved_from_beast&) = delete;
+
+    orderable_specified_moved_from_beast& operator=(orderable_specified_moved_from_beast&& other)
+    {
+      x = std::move(other.x);
+      other.x.clear();
+
       return *this;
     }
 
-    [[nodiscard]]
-    int index() const noexcept
+    void swap(orderable_specified_moved_from_beast& other) noexcept(noexcept(std::ranges::swap(this->x, other.x)))
     {
-      return m_Index;
+      std::ranges::swap(x, other.x);
     }
+
+    friend void swap(orderable_specified_moved_from_beast& lhs, orderable_specified_moved_from_beast& rhs)
+      noexcept(noexcept(lhs.swap(rhs)))
+    {
+      lhs.swap(rhs);
+    }
+
+    std::vector<T, Allocator> x{};
 
     [[nodiscard]]
-    friend auto operator<=>(const orderable_resource_binder&, const orderable_resource_binder&) = default;
+    friend auto operator<=>(const orderable_specified_moved_from_beast&, const orderable_specified_moved_from_beast&) noexcept = default;
 
     template<class Stream>
-    friend Stream& operator<<(Stream& s, const orderable_resource_binder& b)
+    friend Stream& operator<<(Stream& s, const orderable_specified_moved_from_beast& b)
     {
-      s << b.index();
+      for(const auto& i : b.x) s << i << '\n';
       return s;
     }
-
-    template<class Stream>
-    friend Stream& operator>>(Stream& s, orderable_resource_binder& b)
-    {
-      s >> b.m_Index;
-      return s;
-    }
-  private:
-    int m_Index{-1};
   };
 
   template<class T=int, class Allocator=std::allocator<int>>
