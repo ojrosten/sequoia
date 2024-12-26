@@ -171,7 +171,7 @@ namespace sequoia::testing
   };
 
   template<test_mode Mode, moveonly T, class U, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
-    requires (!std::totally_ordered<T> && (sizeof...(Getters) > 0))
+    requires (checkable_against<Mode, T, U> && !std::totally_ordered<T> && (sizeof...(Getters) > 0))
   void check_semantics(std::string description,
                        test_logger<Mode>& logger,
                        T&& x,
@@ -197,7 +197,7 @@ namespace sequoia::testing
   }
 
   template<test_mode Mode, moveonly T, class U, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
-    requires (std::totally_ordered<T> && (sizeof...(Getters) > 0))
+    requires (checkable_against<Mode, T, U> && std::totally_ordered<T> && (sizeof...(Getters) > 0))
   void check_semantics(std::string description,
                        test_logger<Mode>& logger,
                        T&& x,
