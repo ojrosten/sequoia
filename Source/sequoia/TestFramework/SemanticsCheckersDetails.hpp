@@ -321,21 +321,16 @@ namespace sequoia::testing::impl
     if(!check_equality_prerequisites(logger, actions, x, y, args...))
       return false;
 
-    // TO DO: harmonize with other changes along the same lines which require deep_equality_comparable_with
-    if constexpr(std::is_same_v<T, U>)
-    {
-      auto mess{
-        [](std::string_view var) {
-          return std::format("Prerequisite - for checking move-only semantics, {} and {}Equivalent are assumed to be equal", var, var);
-        }
-      };
+    auto mess{
+      [](std::string_view var) {
+        return std::format("Prerequisite - for checking move-only semantics, {} and {}Equivalent are assumed to be equal", var, var);
+      }
+    };
 
-      return check(mess("x"), logger, x == xEquivalent) && check(mess("y"), logger, y == yEquivalent);
-    }
-    else
-    {
-      return true;
-    }
+    using check_type = std::conditional_t<std::is_same_v<T, U>, simple_equality_check_t, with_best_available_check_t>;
+    const bool xPassed{check(check_type{}, mess("x"), logger, x, xEquivalent)};
+
+    return check(check_type{}, mess("y"), logger, y, yEquivalent) && xPassed;
   }
   
   template<test_mode Mode, class Actions, std::totally_ordered T, class... Args>

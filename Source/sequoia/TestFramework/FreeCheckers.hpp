@@ -85,6 +85,7 @@ namespace sequoia::testing
   //=========================== Types used to generate overload sets ===========================//
 
   struct equality_check_t {};
+  struct simple_equality_check_t {};
 
   template<class ValueBasedCustomizer>
   struct general_equivalence_check_t
@@ -150,7 +151,8 @@ namespace sequoia::testing
 
   //=========================== Values defined for convenience ===========================//
 
-  inline constexpr equality_check_t equality{};
+  inline constexpr equality_check_t equality{};  
+  inline constexpr simple_equality_check_t simple_equality{};
   inline constexpr equivalence_check_t equivalence{};
   inline constexpr weak_equivalence_check_t weak_equivalence{};
   inline constexpr with_best_available_check_t with_best_available{};
@@ -600,9 +602,34 @@ namespace sequoia::testing
     }
   }
 
-  /*! \brief The workhorse for dispatching to the strongest available type of check.
   
-   */
+
+  /*! \brief The workhorse for checking simple equality. */
+
+  template<test_mode Mode, class T, class Advisor=null_advisor>
+    requires (deep_equality_comparable<T> || faithful_range<T>)
+  bool check(simple_equality_check_t,
+             std::string description,
+             test_logger<Mode>& logger,
+             const T& obtained,
+             const T& prediction,
+             tutor<Advisor> advisor={})
+  {
+    sentinel<Mode> sentry{logger, add_type_info<T>(std::move(description))};
+
+    using finality = final_message_constant<!faithful_range<T>>;
+    binary_comparison(finality{}, sentry, std::ranges::equal_to{}, obtained, prediction, advisor);
+
+    if constexpr(faithful_range<T>)
+    {
+      check(simple_equality, "", logger, std::begin(obtained), std::end(obtained), std::begin(prediction), std::end(prediction), advisor);
+    }
+
+    return !sentry.failure_detected();
+  }
+  
+  
+  /*! \brief The workhorse for dispatching to the strongest available type of check. */
 
   template<test_mode Mode, class T, class U, class Advisor=null_advisor>
     requires (deep_equality_comparable<T> || has_detailed_agnostic_check<Mode, T, U, Advisor> || faithful_range<T>)

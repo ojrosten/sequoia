@@ -105,8 +105,11 @@ Broken check invariant
 [sequoia::testing::move_only_beast<int, std::allocator<int> >]
 
   Prerequisite - for checking move-only semantics, x and xEquivalent are assumed to be equal
-  [bool]
-  check failed
+  [sequoia::testing::move_only_beast<int, std::allocator<int> >]
+  operator== returned false
+  Obtained : 1
+
+  Predicted: 2
 
 =======================================
 
@@ -117,8 +120,11 @@ Broken check invariant
 [sequoia::testing::move_only_beast<int, std::allocator<int> >]
 
   Prerequisite - for checking move-only semantics, y and yEquivalent are assumed to be equal
-  [bool]
-  check failed
+  [sequoia::testing::move_only_beast<int, std::allocator<int> >]
+  operator== returned false
+  Obtained : 1
+
+  Predicted: 3
 
 =======================================
 
@@ -328,7 +334,7 @@ Broken check invariant
 --Move-only Semantics--
 [sequoia::testing::move_only_beast<int, std::allocator<int> >]
 
-  Inconsistent move construction
+  Prerequisite - for checking move-only semantics, x and xEquivalent are assumed to be equal
   [sequoia::testing::move_only_beast<int, std::allocator<int> >]
     Comparison performed using:
     [sequoia::testing::value_tester<sequoia::testing::move_only_beast<int, std::allocator<int> > >]
@@ -353,7 +359,7 @@ Broken check invariant
 --Move-only Semantics--
 [sequoia::testing::move_only_beast<int, std::allocator<int> >]
 
-  Inconsistent Swap (x)
+  Prerequisite - for checking move-only semantics, y and yEquivalent are assumed to be equal
   [sequoia::testing::move_only_beast<int, std::allocator<int> >]
     Comparison performed using:
     [sequoia::testing::value_tester<sequoia::testing::move_only_beast<int, std::allocator<int> > >]
