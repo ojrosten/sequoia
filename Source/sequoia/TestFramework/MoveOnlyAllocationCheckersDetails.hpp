@@ -41,13 +41,15 @@ namespace sequoia::testing::impl
   {
     const auto tagStr{to_string(container_tag_constant<tag>::value)};
 
-    // TO DO: generalize this
-    if constexpr(std::is_same_v<std::remove_cvref_t<T>, U>)
-    {      
-      if(!check(std::format("Prerequisite - for checking move-only semantics, {}and {} Equivalent are assumed to be equal", tagStr, tagStr),
-                logger,
-                z == zEquivalent))
-        return{};
+    using check_type = std::conditional_t<std::is_same_v<std::remove_cvref_t<T>, U>, simple_equality_check_t, with_best_available_check_t>;
+    
+    if(!check(check_type{},
+              std::format("Prerequisite - for checking move-only semantics, {}and {} Equivalent are assumed to be equal", tagStr, tagStr),
+              logger,
+              z,
+              zEquivalent))
+    {
+      return{};
     }
 
     T v{std::move(z), info.make_allocator()...};

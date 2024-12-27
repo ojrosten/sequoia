@@ -212,8 +212,11 @@ Invariant violated: x != xClone
 [sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
   Prerequisite - for checking move-only semantics, xand x Equivalent are assumed to be equal
-  [bool]
-  check failed
+  [sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+  operator== returned false
+  Obtained : 1
+
+  Predicted: 3
 
 =======================================
 
@@ -224,8 +227,11 @@ Invariant violated: y != YClone
 [sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
   Prerequisite - for checking move-only semantics, yand y Equivalent are assumed to be equal
-  [bool]
-  check failed
+  [sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+  operator== returned false
+  Obtained : 2
+
+  Predicted: 3
 
 =======================================
 
@@ -531,8 +537,11 @@ Invariant violated: x != xClone
 [sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
   Prerequisite - for checking move-only semantics, xand x Equivalent are assumed to be equal
-  [bool]
-  check failed
+  [sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+  operator== returned false
+  Obtained : 1
+
+  Predicted: 3
 
 =======================================
 
@@ -543,8 +552,11 @@ Invariant violated: y != YClone
 [sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
   Prerequisite - for checking move-only semantics, yand y Equivalent are assumed to be equal
-  [bool]
-  check failed
+  [sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+  operator== returned false
+  Obtained : 2
+
+  Predicted: 3
 
 =======================================
 
@@ -810,8 +822,11 @@ Invariant violated: x != xClone
 [sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
   Prerequisite - for checking move-only semantics, xand x Equivalent are assumed to be equal
-  [bool]
-  check failed
+  [sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+  operator== returned false
+  Obtained : 1
+
+  Predicted: 3
 
 =======================================
 
@@ -822,8 +837,11 @@ Invariant violated: y != YClone
 [sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
   Prerequisite - for checking move-only semantics, yand y Equivalent are assumed to be equal
-  [bool]
-  check failed
+  [sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+  operator== returned false
+  Obtained : 2
+
+  Predicted: 3
 
 =======================================
 
@@ -1109,8 +1127,11 @@ Invariant violated: x != xClone
 [sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
   Prerequisite - for checking move-only semantics, xand x Equivalent are assumed to be equal
-  [bool]
-  check failed
+  [sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+  operator== returned false
+  Obtained : 1
+
+  Predicted: 3
 
 =======================================
 
@@ -1121,8 +1142,11 @@ Invariant violated: y != YClone
 [sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
   Prerequisite - for checking move-only semantics, yand y Equivalent are assumed to be equal
-  [bool]
-  check failed
+  [sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+  operator== returned false
+  Obtained : 2
+
+  Predicted: 3
 
 =======================================
 
