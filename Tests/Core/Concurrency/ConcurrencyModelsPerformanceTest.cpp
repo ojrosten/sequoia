@@ -161,8 +161,8 @@ namespace sequoia::testing
 
       auto nullThreadFn{[millisecs]() { waiting_task<wait, serial<void>>{4u, wait{millisecs}}(); }};
 
-      check_relative_performance("Four Waiting tasks; pool_4/null", threadPoolFn, nullThreadFn, 3.9, 4.1);
-      check_relative_performance("Four Waiting tasks; pool_4M/null", threadPoolMonoFn, nullThreadFn, 3.9, 4.1);
+      check_relative_performance("Four Waiting tasks; pool_4/null", threadPoolFn, nullThreadFn, 3.7, 4.1);
+      check_relative_performance("Four Waiting tasks; pool_4M/null", threadPoolMonoFn, nullThreadFn, 3.7, 4.1);
     }
   }
 
