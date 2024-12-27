@@ -431,9 +431,9 @@ namespace sequoia::testing::impl
       check(with_best_available, "Incorrect moved-from value after move assignment", logger, y, movedFrom.value().get());
     }
 
-    if constexpr(has_post_move_assign_action<Actions, test_logger<Mode>, T, T, Mutator, Args...>)
+    if constexpr(has_post_move_assign_action<Actions, test_logger<Mode>, T, Mutator, Args...>)
     {
-      actions.post_move_assign_action(logger, z, yEquivalent, std::move(yMutator), args...);
+      actions.post_move_assign_action(logger, z, std::move(yMutator), args...);
     }
   }
 

@@ -629,12 +629,11 @@ namespace sequoia::testing::impl
       check_move_y_allocation(logger, y, checkers...);
     }
 
-    template<test_mode Mode, class U, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
-      requires checkable_against<Mode, T, U>
-    static void post_move_assign_action(test_logger<Mode>& logger, T& y, const U& yEquivalent, Mutator yMutator, const dual_allocation_checker<T, Getters>&... checkers)
+    template<test_mode Mode, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
+    static void post_move_assign_action(test_logger<Mode>& logger, T& y, Mutator yMutator, const dual_allocation_checker<T, Getters>&... checkers)
     {
       check_move_assign_allocation(logger, y, checkers...);
-      check_mutation_after_move("assignment", logger, y, yEquivalent, std::move(yMutator), allocation_checker{checkers.info(), y}...);
+      check_mutation_after_move("assignment", logger, y, std::move(yMutator), allocation_checker{checkers.info(), y}...);
     }
 
     template<test_mode Mode, class U, alloc_getter<T>... Getters>
@@ -704,35 +703,23 @@ namespace sequoia::testing::impl
     do_check_move_assign(logger, actions, u, std::forward<T>(v), y, movedFrom, std::move(yMutator), dual_allocation_checker{checkers.info(), u, v}...);
   }
 
-  template<test_mode Mode, movable_comparable T, class U, std::invocable<T&> Mutator, class... Checkers>
-  //  requires checkable_against<Mode, T, U>
-  void check_mutation_after_move(std::string_view moveType, test_logger<Mode>& logger, T& u, const U& y, Mutator yMutator, Checkers... checkers)
+  template<test_mode Mode, movable_comparable T, std::invocable<T&> Mutator, class... Checkers>
+  void check_mutation_after_move(std::string_view moveType, test_logger<Mode>& logger, T& t, Mutator yMutator, Checkers... checkers)
   {
-    yMutator(u);
-    check_mutation_allocation(moveType, logger, u, checkers...);
-
-    // TO DO: generalize this
-    if constexpr(std::is_same_v<T, U>)
-    {
-      const auto mess{
-        std::string{"Mutation is not doing anything following move "}.append(moveType)
-      };
-      check(mess, logger, u != y);
-    }
+    yMutator(t);
+    check_mutation_allocation(moveType, logger, t, checkers...);
   }
 
-  template<test_mode Mode, movable_comparable T, class U, std::invocable<T&> Mutator, class... Checkers, std::size_t... I>
-    requires checkable_against<Mode, T, U>
-  void check_mutation_after_move(std::string_view moveType, test_logger<Mode>& logger, T& u, const U& y, Mutator yMutator, std::tuple<Checkers...> checkers, std::index_sequence<I...>)
+  template<test_mode Mode, movable_comparable T, std::invocable<T&> Mutator, class... Checkers, std::size_t... I>
+  void check_mutation_after_move(std::string_view moveType, test_logger<Mode>& logger, T& t, Mutator yMutator, std::tuple<Checkers...> checkers, std::index_sequence<I...>)
   {
-    check_mutation_after_move(moveType, logger, u, y, std::move(yMutator), std::get<I>(checkers)...);
+    check_mutation_after_move(moveType, logger, t, std::move(yMutator), std::get<I>(checkers)...);
   }
 
-  template<test_mode Mode, movable_comparable T, class U, std::invocable<T&> Mutator, class... Checkers>
-    requires checkable_against<Mode, T, U>
-  void check_mutation_after_move(std::string_view moveType, test_logger<Mode>& logger, T& u, const U& y, Mutator yMutator, std::tuple<Checkers...> checkers)
+  template<test_mode Mode, movable_comparable T, std::invocable<T&> Mutator, class... Checkers>
+  void check_mutation_after_move(std::string_view moveType, test_logger<Mode>& logger, T& t, Mutator yMutator, std::tuple<Checkers...> checkers)
   {
-    check_mutation_after_move(moveType, logger, u, y, std::move(yMutator), std::move(checkers), std::make_index_sequence<sizeof...(Checkers)>{});
+    check_mutation_after_move(moveType, logger, t, std::move(yMutator), std::move(checkers), std::make_index_sequence<sizeof...(Checkers)>{});
   }
 
   template<test_mode Mode, class Actions, movable_comparable T, alloc_getter<T>... Getters>

@@ -4,10 +4,6 @@ Broken copy value semantics
 --Regular Semantics--
 [sequoia::testing::broken_copy_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 0> >]
 
-  Mutation is not doing anything following move assignment
-  [bool]
-  check failed
-
   Either mutation is not doing anything following copy construction or value semantics are broken, with mutation of an object also changing the object from which it was copied
   [bool]
   check failed
@@ -31,10 +27,6 @@ Broken copy value semantics
 
 --Regular Semantics--
 [sequoia::testing::broken_copy_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 1> >]
-
-  Mutation is not doing anything following move assignment
-  [bool]
-  check failed
 
   Mutation is not doing anything following copy then swap
   [bool]
@@ -63,10 +55,6 @@ Broken copy value semantics
 
 --Regular Semantics--
 [sequoia::testing::broken_copy_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 0> >]
-
-  Mutation is not doing anything following move assignment
-  [bool]
-  check failed
 
   Either mutation is not doing anything following copy construction or value semantics are broken, with mutation of an object also changing the object from which it was copied
   [bool]
@@ -145,10 +133,6 @@ Broken copy value semantics
 
 --Regular Semantics--
 [sequoia::testing::broken_copy_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 1> >]
-
-  Mutation is not doing anything following move assignment
-  [bool]
-  check failed
 
   Mutation is not doing anything following copy then swap
   [bool]
@@ -232,10 +216,6 @@ Broken copy value semantics
 --Regular Semantics--
 [sequoia::testing::broken_copy_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 0> >]
 
-  Mutation is not doing anything following move assignment
-  [bool]
-  check failed
-
   Either mutation is not doing anything following copy construction or value semantics are broken, with mutation of an object also changing the object from which it was copied
   [bool]
   check failed
@@ -311,10 +291,6 @@ Broken copy value semantics
 
 --Regular Semantics--
 [sequoia::testing::broken_copy_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 1> >]
-
-  Mutation is not doing anything following move assignment
-  [bool]
-  check failed
 
   Mutation is not doing anything following copy then swap
   [bool]
@@ -396,10 +372,6 @@ Broken copy value semantics
 --Regular Semantics--
 [sequoia::testing::broken_copy_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 0> >]
 
-  Mutation is not doing anything following move assignment
-  [bool]
-  check failed
-
   Either mutation is not doing anything following copy construction or value semantics are broken, with mutation of an object also changing the object from which it was copied
   [bool]
   check failed
@@ -423,10 +395,6 @@ Broken copy value semantics
 
 --Regular Semantics--
 [sequoia::testing::broken_copy_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 1> >]
-
-  Mutation is not doing anything following move assignment
-  [bool]
-  check failed
 
   Mutation is not doing anything following copy then swap
   [bool]
