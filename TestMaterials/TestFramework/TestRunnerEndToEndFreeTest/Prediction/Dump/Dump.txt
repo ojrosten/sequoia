@@ -74,9 +74,9 @@ operator!= is inconsistent (x)
 [bool]
 operator!= is inconsistent (y)
 [bool]
-Precondition - for checking semantics, x and y are assumed to be different
+Prerequisite - for checking semantics, x and y are assumed to be different
 [bool]
-Precondition - for checking semantics, order must be weak_ordering::less or weak_ordering::greater
+Prerequisite - for checking semantics, order must be weak_ordering::less or weak_ordering::greater
 [bool]
 
 
@@ -113,7 +113,7 @@ operator< and operator>= are inconsistent
 [bool]
 operator< and operator<=> are inconsistent
 [bool]
-Precondition - for ordered semantics, it is assumed that y > x
+Prerequisite - for ordered semantics, it is assumed that y > x
 [bool]
 Inconsistent copy constructor (x)
 [maths::probability]
@@ -354,13 +354,13 @@ operator!= is inconsistent (x)
 [bool]
 operator!= is inconsistent (y)
 [bool]
-Precondition - for checking semantics, x and y are assumed to be different
+Prerequisite - for checking semantics, x and y are assumed to be different
 [bool]
-Precondition - for checking move-only semantics, x and xEquivalent are assumed to be equal
+Prerequisite - for checking move-only semantics, x and xEquivalent are assumed to be equal
 [bool]
-Precondition - for checking move-only semantics, y and yEquivalent are assumed to be equal
+Prerequisite - for checking move-only semantics, y and yEquivalent are assumed to be equal
 [bool]
-Precondition - for checking semantics, order must be weak_ordering::less or weak_ordering::greater
+Prerequisite - for checking semantics, order must be weak_ordering::less or weak_ordering::greater
 [bool]
 
 
@@ -397,7 +397,7 @@ operator< and operator>= are inconsistent
 [bool]
 operator< and operator<=> are inconsistent
 [bool]
-Precondition - for ordered semantics, it is assumed that y > x
+Prerequisite - for ordered semantics, it is assumed that y > x
 [bool]
 Inconsistent move construction
 [stuff::unique_thing]

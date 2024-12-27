@@ -30,7 +30,7 @@ namespace sequoia::testing::impl
   {
     sentinel<Mode> sentry{logger, ""};
 
-    if(!check_preconditions(logger, actions, x, y, xEquivalent, yEquivalent, args...))
+    if(!check_prerequisites(logger, actions, x, y, xEquivalent, yEquivalent, args...))
       return false;
 
     auto opt{check_move_construction(logger, actions, std::move(x), xEquivalent, movedFromPostConstruction, args...)};

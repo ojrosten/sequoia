@@ -30,9 +30,9 @@
     which indicate whether or not additional actions should be carried out.
 
     For example, when checking the semantics of a regular type, two const references to the type must be supplied.
-    It is a precondition that these instances are not equal to one another. This is always checked. However, if
+    It is a prerequisite that these instances are not equal to one another. This is always checked. However, if
     the type allocates, clients may prefer to utilize the allocation-checking extension supplied with sequoia. In
-    this case, there is a constexpr flag which indicates that, after checking the precondition, it is further checked
+    this case, there is a constexpr flag which indicates that, after checking the prerequisite, it is further checked
     that <pre>operator==</pre> hasn't unwittingly allocated - as can happen if it accidentally captures by value rather than reference.
 
     Thus, the general structure is
@@ -181,47 +181,47 @@ namespace sequoia::testing::impl
 
   template<test_mode Mode, class Actions, pseudoregular T, class... Args>
   [[nodiscard]]
-  static bool check_preconditions(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
+  static bool check_prerequisites(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
   {
-    return check_equality_preconditions(logger, actions, x, y, args...);
+    return check_equality_prerequisites(logger, actions, x, y, args...);
   }
   
   template<test_mode Mode, class Actions, pseudoregular T, class... Args>
     requires std::totally_ordered<T>
   [[nodiscard]]
-  static bool check_preconditions(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
+  static bool check_prerequisites(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
   {
-    return check_orderable_preconditions(logger, actions, x, y, args...);
+    return check_orderable_prerequisites(logger, actions, x, y, args...);
   }
 
   template<test_mode Mode, class Actions, moveonly T, class U, class... Args>
   [[nodiscard]]
-  static bool check_preconditions(test_logger<Mode>& logger,  const Actions& actions, const T& x, const T& y, const U& xEquivalent, const U& yEquivalent, const Args&... args)
+  static bool check_prerequisites(test_logger<Mode>& logger,  const Actions& actions, const T& x, const T& y, const U& xEquivalent, const U& yEquivalent, const Args&... args)
   {
-    return check_equality_preconditions(logger, actions, x, y, xEquivalent, yEquivalent, args...);
+    return check_equality_prerequisites(logger, actions, x, y, xEquivalent, yEquivalent, args...);
   }
 
   template<test_mode Mode, class Actions, moveonly T, class U, class... Args>
     requires std::totally_ordered<T>
   [[nodiscard]]
-  static bool check_preconditions(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const U& xEquivalent, const U& yEquivalent, const Args&... args)
+  static bool check_prerequisites(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const U& xEquivalent, const U& yEquivalent, const Args&... args)
   {
-    return check_orderable_preconditions(logger, actions, x, y, xEquivalent, yEquivalent, args...);
+    return check_orderable_prerequisites(logger, actions, x, y, xEquivalent, yEquivalent, args...);
   }
 
   template<test_mode Mode, class Actions, moveonly T, class... Args>
   [[nodiscard]]
-  static bool check_preconditions(test_logger<Mode>& logger,  const Actions& actions, const T& x, const T& y, const Args&... args)
+  static bool check_prerequisites(test_logger<Mode>& logger,  const Actions& actions, const T& x, const T& y, const Args&... args)
   {
-    return check_equality_preconditions(logger, actions, x, y, args...);
+    return check_equality_prerequisites(logger, actions, x, y, args...);
   }
 
   template<test_mode Mode, class Actions, moveonly T, class... Args>
     requires std::totally_ordered<T>
   [[nodiscard]]
-  static bool check_preconditions(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
+  static bool check_prerequisites(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
   {
-    return check_orderable_preconditions(logger, actions, x, y, args...);
+    return check_orderable_prerequisites(logger, actions, x, y, args...);
   }
 
   //================================ comparisons ================================//
@@ -306,19 +306,19 @@ namespace sequoia::testing::impl
 
   template<test_mode Mode, class Actions, std::equality_comparable T, class... Args>
   [[nodiscard]]
-  bool check_equality_preconditions(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
+  bool check_equality_prerequisites(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
   {
     const bool eq{check_comparison_consistency(logger, equality_type{}, actions, x, y, [](const T& x) { return x == x; }, args...)};
     const bool neq{check_comparison_consistency(logger, inequality_type{}, actions, x, y, [](const T& x) { return !(x != x); }, args...)};
 
-    return eq && neq && check("Precondition - for checking semantics, x and y are assumed to be different", logger, x != y);
+    return eq && neq && check("Prerequisite - for checking semantics, x and y are assumed to be different", logger, x != y);
   }
 
   template<test_mode Mode, class Actions, std::equality_comparable T, class U, class... Args>
   [[nodiscard]]
-  bool check_equality_preconditions(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const U& xEquivalent, const U& yEquivalent, const Args&... args)
+  bool check_equality_prerequisites(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const U& xEquivalent, const U& yEquivalent, const Args&... args)
   {
-    if(!check_equality_preconditions(logger, actions, x, y, args...))
+    if(!check_equality_prerequisites(logger, actions, x, y, args...))
       return false;
 
     // TO DO: harmonize with other changes along the same lines which require deep_equality_comparable_with
@@ -326,7 +326,7 @@ namespace sequoia::testing::impl
     {
       auto mess{
         [](std::string_view var) {
-          return std::format("Precondition - for checking move-only semantics, {} and {}Equivalent are assumed to be equal", var, var);
+          return std::format("Prerequisite - for checking move-only semantics, {} and {}Equivalent are assumed to be equal", var, var);
         }
       };
 
@@ -340,12 +340,12 @@ namespace sequoia::testing::impl
   
   template<test_mode Mode, class Actions, std::totally_ordered T, class... Args>
   [[nodiscard]]
-  bool check_orderable_preconditions(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
+  bool check_orderable_prerequisites(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
   {
-    if(check_equality_preconditions(logger, actions, x, y, args...))
+    if(check_equality_prerequisites(logger, actions, x, y, args...))
     {
       const auto order{actions.order()};
-      if(check("Precondition - for checking semantics, order must be weak_ordering::less or weak_ordering::greater",
+      if(check("Prerequisite - for checking semantics, order must be weak_ordering::less or weak_ordering::greater",
                logger, order != 0))
       {
         if(check_ordering_consistency(logger, actions, x, y, args...))
@@ -353,7 +353,7 @@ namespace sequoia::testing::impl
           const bool cond{order < 0 ? x < y : x > y};
           auto mess{
             [order](){
-              std::string mess{"Precondition - for ordered semantics, it is assumed that "};
+              std::string mess{"Prerequisite - for ordered semantics, it is assumed that "};
               return order == 0 ? mess.append("x < y") : mess.append("y > x");
             }
           };

@@ -58,7 +58,7 @@ namespace sequoia::testing::impl
   {
     sentinel<Mode> sentry{logger, ""};
 
-    if(!check_preconditions(logger, actions, x, y, args...))
+    if(!check_prerequisites(logger, actions, x, y, args...))
       return false;
 
     T z{x};

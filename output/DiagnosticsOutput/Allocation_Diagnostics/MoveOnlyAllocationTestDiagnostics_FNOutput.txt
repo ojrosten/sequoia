@@ -211,7 +211,7 @@ Invariant violated: x != xClone
 --Move-only Semantics--
 [sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
-  Precondition - for checking move-only semantics, xand x Equivalent are assumed to be equal
+  Prerequisite - for checking move-only semantics, xand x Equivalent are assumed to be equal
   [bool]
   check failed
 
@@ -223,7 +223,7 @@ Invariant violated: y != YClone
 --Move-only Semantics--
 [sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
-  Precondition - for checking move-only semantics, yand y Equivalent are assumed to be equal
+  Prerequisite - for checking move-only semantics, yand y Equivalent are assumed to be equal
   [bool]
   check failed
 
@@ -235,7 +235,7 @@ Invariant violated: x == y
 --Move-only Semantics--
 [sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
-  Precondition - for checking semantics, x and y are assumed to be different
+  Prerequisite - for checking semantics, x and y are assumed to be different
   [bool]
   check failed
 
@@ -530,7 +530,7 @@ Invariant violated: x != xClone
 --Move-only Semantics--
 [sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
-  Precondition - for checking move-only semantics, xand x Equivalent are assumed to be equal
+  Prerequisite - for checking move-only semantics, xand x Equivalent are assumed to be equal
   [bool]
   check failed
 
@@ -542,7 +542,7 @@ Invariant violated: y != YClone
 --Move-only Semantics--
 [sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
-  Precondition - for checking move-only semantics, yand y Equivalent are assumed to be equal
+  Prerequisite - for checking move-only semantics, yand y Equivalent are assumed to be equal
   [bool]
   check failed
 
@@ -554,7 +554,7 @@ Invariant violated: x == y
 --Move-only Semantics--
 [sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
-  Precondition - for checking semantics, x and y are assumed to be different
+  Prerequisite - for checking semantics, x and y are assumed to be different
   [bool]
   check failed
 
@@ -809,7 +809,7 @@ Invariant violated: x != xClone
 --Move-only Semantics--
 [sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
-  Precondition - for checking move-only semantics, xand x Equivalent are assumed to be equal
+  Prerequisite - for checking move-only semantics, xand x Equivalent are assumed to be equal
   [bool]
   check failed
 
@@ -821,7 +821,7 @@ Invariant violated: y != YClone
 --Move-only Semantics--
 [sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
-  Precondition - for checking move-only semantics, yand y Equivalent are assumed to be equal
+  Prerequisite - for checking move-only semantics, yand y Equivalent are assumed to be equal
   [bool]
   check failed
 
@@ -833,7 +833,7 @@ Invariant violated: x == y
 --Move-only Semantics--
 [sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
-  Precondition - for checking semantics, x and y are assumed to be different
+  Prerequisite - for checking semantics, x and y are assumed to be different
   [bool]
   check failed
 
@@ -1108,7 +1108,7 @@ Invariant violated: x != xClone
 --Move-only Semantics--
 [sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
-  Precondition - for checking move-only semantics, xand x Equivalent are assumed to be equal
+  Prerequisite - for checking move-only semantics, xand x Equivalent are assumed to be equal
   [bool]
   check failed
 
@@ -1120,7 +1120,7 @@ Invariant violated: y != YClone
 --Move-only Semantics--
 [sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
-  Precondition - for checking move-only semantics, yand y Equivalent are assumed to be equal
+  Prerequisite - for checking move-only semantics, yand y Equivalent are assumed to be equal
   [bool]
   check failed
 
@@ -1132,7 +1132,7 @@ Invariant violated: x == y
 --Move-only Semantics--
 [sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
-  Precondition - for checking semantics, x and y are assumed to be different
+  Prerequisite - for checking semantics, x and y are assumed to be different
   [bool]
   check failed
 

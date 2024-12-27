@@ -92,7 +92,7 @@ Broken check invariant
 --Move-only Semantics--
 [sequoia::testing::move_only_beast<int, std::allocator<int> >]
 
-  Precondition - for checking semantics, x and y are assumed to be different
+  Prerequisite - for checking semantics, x and y are assumed to be different
   [bool]
   check failed
 
@@ -104,7 +104,7 @@ Broken check invariant
 --Move-only Semantics--
 [sequoia::testing::move_only_beast<int, std::allocator<int> >]
 
-  Precondition - for checking move-only semantics, x and xEquivalent are assumed to be equal
+  Prerequisite - for checking move-only semantics, x and xEquivalent are assumed to be equal
   [bool]
   check failed
 
@@ -116,7 +116,7 @@ Broken check invariant
 --Move-only Semantics--
 [sequoia::testing::move_only_beast<int, std::allocator<int> >]
 
-  Precondition - for checking move-only semantics, y and yEquivalent are assumed to be equal
+  Prerequisite - for checking move-only semantics, y and yEquivalent are assumed to be equal
   [bool]
   check failed
 
@@ -316,7 +316,7 @@ Broken check invariant
 --Move-only Semantics--
 [sequoia::testing::move_only_beast<int, std::allocator<int> >]
 
-  Precondition - for checking semantics, x and y are assumed to be different
+  Prerequisite - for checking semantics, x and y are assumed to be different
   [bool]
   check failed
 

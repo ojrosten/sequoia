@@ -40,7 +40,7 @@
 
 namespace sequoia::testing
 {
-  /*! Preconditions:
+  /*! Prerequisites:
 
       x == xEquivalent
       y == yEquivalent
@@ -72,7 +72,7 @@ namespace sequoia::testing
            );
   }
   
-  /*! Preconditions:
+  /*! Prerequisites:
 
       x == xEquivalent
       y == yEquivalent

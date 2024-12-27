@@ -4,7 +4,7 @@ Broken check invariant
 --Move-only Semantics--
 [sequoia::testing::orderable_move_only_beast<int, std::allocator<int> >]
 
-  Precondition - for checking semantics, order must be weak_ordering::less or weak_ordering::greater
+  Prerequisite - for checking semantics, order must be weak_ordering::less or weak_ordering::greater
   [bool]
   check failed
 
@@ -16,7 +16,7 @@ Broken check invariant
 --Move-only Semantics--
 [sequoia::testing::orderable_move_only_beast<int, std::allocator<int> >]
 
-  Precondition - for ordered semantics, it is assumed that y > x
+  Prerequisite - for ordered semantics, it is assumed that y > x
   [bool]
   check failed
 
@@ -28,7 +28,7 @@ Broken check invariant
 --Move-only Semantics--
 [sequoia::testing::orderable_move_only_beast<int, std::allocator<int> >]
 
-  Precondition - for ordered semantics, it is assumed that y > x
+  Prerequisite - for ordered semantics, it is assumed that y > x
   [bool]
   check failed
 
@@ -186,7 +186,7 @@ Broken check invariant
 --Move-only Semantics--
 [sequoia::testing::orderable_move_only_beast<int, std::allocator<int> >]
 
-  Precondition - for checking semantics, order must be weak_ordering::less or weak_ordering::greater
+  Prerequisite - for checking semantics, order must be weak_ordering::less or weak_ordering::greater
   [bool]
   check failed
 
@@ -198,7 +198,7 @@ Broken check invariant
 --Move-only Semantics--
 [sequoia::testing::orderable_move_only_beast<int, std::allocator<int> >]
 
-  Precondition - for ordered semantics, it is assumed that y > x
+  Prerequisite - for ordered semantics, it is assumed that y > x
   [bool]
   check failed
 
@@ -210,7 +210,7 @@ Broken check invariant
 --Move-only Semantics--
 [sequoia::testing::orderable_move_only_beast<int, std::allocator<int> >]
 
-  Precondition - for ordered semantics, it is assumed that y > x
+  Prerequisite - for ordered semantics, it is assumed that y > x
   [bool]
   check failed
 

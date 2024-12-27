@@ -44,7 +44,7 @@ namespace sequoia::testing::impl
     // TO DO: generalize this
     if constexpr(std::is_same_v<std::remove_cvref_t<T>, U>)
     {      
-      if(!check(std::format("Precondition - for checking move-only semantics, {}and {} Equivalent are assumed to be equal", tagStr, tagStr),
+      if(!check(std::format("Prerequisite - for checking move-only semantics, {}and {} Equivalent are assumed to be equal", tagStr, tagStr),
                 logger,
                 z == zEquivalent))
         return{};

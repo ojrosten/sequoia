@@ -38,7 +38,7 @@ namespace sequoia::testing
 
     move_only_extender() = default;
     
-    /// Preconditions: x!=y; x==xEquivalent, y==yEquivalent
+    /// Prerequisites: x!=y; x==xEquivalent, y==yEquivalent
     template<class Self, moveonly T, class U>
       requires checkable_against<Mode, T, U>
     bool check_semantics(this Self& self,
@@ -114,7 +114,7 @@ namespace sequoia::testing
       return self.check_semantics(description, xFn(), yFn(), xFn(), yFn());
     }
 
-    /// Preconditions: x!=y, with values consistent with order; x==xEquivalent, y==yEquivalent
+    /// Prerequisites: x!=y, with values consistent with order; x==xEquivalent, y==yEquivalent
     template<class Self, moveonly T, class U>
       requires std::totally_ordered<T>
     bool check_semantics(this Self& self,
