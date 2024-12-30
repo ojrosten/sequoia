@@ -198,7 +198,7 @@ namespace sequoia::testing
 
       using suites_map_t = std::optional<filter_by_paths::suites_map_type>;
       using items_map_t  = std::optional<filter_by_paths::items_map_type>;
-      check(equivalence, "", filter, suites_map_t{}, items_map_t{{{"foo/bar1", true}}});
+      check(equivalence, "", filter, std::pair{suites_map_t{}, items_map_t{{{"foo/bar1", true}}}});
     }
   }
 
@@ -367,7 +367,7 @@ namespace sequoia::testing
 
         using opt_suites_map_t = std::optional<filter_by_names::suites_map_type>;
         using opt_items_map_t  = std::optional<filter_by_names::items_map_type>;
-        check(equivalence, "", filter, opt_suites_map_t{}, opt_items_map_t{});
+        check(equivalence, "", filter, std::pair{opt_suites_map_t{}, opt_items_map_t{}});
       }
 
       {
@@ -377,7 +377,7 @@ namespace sequoia::testing
 
         using opt_suites_map_t = std::optional<filter_by_names::suites_map_type>;
         using opt_items_map_t = std::optional<filter_by_names::items_map_type>;
-        check(equivalence, "", filter, opt_suites_map_t{opt_suites_map_t::value_type{}}, opt_items_map_t{});
+        check(equivalence, "", filter, std::pair{opt_suites_map_t{opt_suites_map_t::value_type{}}, opt_items_map_t{}});
       }
 
       {
@@ -387,7 +387,7 @@ namespace sequoia::testing
 
         using opt_suites_map_t = std::optional<filter_by_names::suites_map_type>;
         using opt_items_map_t  = std::optional<filter_by_names::items_map_type>;
-        check(equivalence, "", filter, opt_suites_map_t{}, opt_items_map_t{opt_items_map_t::value_type{}});
+        check(equivalence, "", filter, std::pair{opt_suites_map_t{}, opt_items_map_t{opt_items_map_t::value_type{}}});
       }
 
       {
@@ -399,7 +399,7 @@ namespace sequoia::testing
 
         using opt_suites_map_t = std::optional<filter_by_names::suites_map_type>;
         using opt_items_map_t  = std::optional<filter_by_names::items_map_type>;
-        check(equivalence, "", filter, opt_suites_map_t{{{"suite_2"s, true}}}, opt_items_map_t{});
+        check(equivalence, "", filter, std::pair{opt_suites_map_t{{{"suite_2"s, true}}}, opt_items_map_t{}});
       }
     }
 
@@ -414,7 +414,7 @@ namespace sequoia::testing
 
       using opt_suites_map_t = std::optional<filter_by_names::suites_map_type>;
       using opt_items_map_t  = std::optional<filter_by_names::items_map_type>;
-      check(equivalence, "", filter, opt_suites_map_t{{{"suite_2"s, true}, {"plurgh"s, false}}}, opt_items_map_t{});
+      check(equivalence, "", filter, std::pair{opt_suites_map_t{{{"suite_2"s, true}, {"plurgh"s, false}}}, opt_items_map_t{}});
     }
 
     {
@@ -427,7 +427,7 @@ namespace sequoia::testing
 
       using opt_suites_map_t = std::optional<filter_by_names::suites_map_type>;
       using opt_items_map_t  = std::optional<filter_by_names::items_map_type>;
-      check(equivalence, "", filter, opt_suites_map_t{}, opt_items_map_t{{{"bar1"s, true}}});
+      check(equivalence, "", filter, std::pair{opt_suites_map_t{}, opt_items_map_t{{{"bar1"s, true}}}});
     }
 
     {
@@ -444,7 +444,7 @@ namespace sequoia::testing
 
       using opt_suites_map_t = std::optional<filter_t::suites_map_type>;
       using opt_items_map_t  = std::optional<filter_t::items_map_type>;
-      check(equivalence, "", filter, opt_suites_map_t{}, opt_items_map_t{{{"bar1"s, true}}});
+      check(equivalence, "", filter, std::pair{opt_suites_map_t{}, opt_items_map_t{{{"bar1"s, true}}}});
     }
 
     {
@@ -460,7 +460,7 @@ namespace sequoia::testing
 
       using opt_suites_map_t = std::optional<filter_by_paths::suites_map_type>;
       using opt_items_map_t  = std::optional<filter_by_paths::items_map_type>;
-      check(equivalence, "", filter, opt_suites_map_t{}, opt_items_map_t{{{"foo/bar1"s, true}}});
+      check(equivalence, "", filter, std::pair{opt_suites_map_t{}, opt_items_map_t{{{"foo/bar1"s, true}}}});
     }
 
     {
@@ -473,7 +473,7 @@ namespace sequoia::testing
 
       using opt_suites_map_t = std::optional<filter_by_names::suites_map_type>;
       using opt_items_map_t  = std::optional<filter_by_names::items_map_type>;
-      check(equivalence, "", filter, opt_suites_map_t{}, opt_items_map_t{{{"bar1"s, true}, {"far"s, false}}});
+      check(equivalence, "", filter, std::pair{opt_suites_map_t{}, opt_items_map_t{{{"bar1"s, true}, {"far"s, false}}}});
     }
 
     {
@@ -493,7 +493,7 @@ namespace sequoia::testing
 
       using opt_suites_map_t = std::optional<filter_by_names::suites_map_type>;
       using opt_items_map_t  = std::optional<filter_by_names::items_map_type>;
-      check(equivalence, "", filter, opt_suites_map_t{{{"suite_2"s, true}}}, opt_items_map_t{{{"bar1"s, true}}});
+      check(equivalence, "", filter, std::pair{opt_suites_map_t{{{"suite_2"s, true}}}, opt_items_map_t{{{"bar1"s, true}}}});
     }
 
     {
@@ -506,7 +506,7 @@ namespace sequoia::testing
 
       using opt_suites_map_t = std::optional<filter_by_names::suites_map_type>;
       using opt_items_map_t  = std::optional<filter_by_names::items_map_type>;
-      check(equivalence, "", filter, opt_suites_map_t{{{"suite_2"s, true}, {"suite_2_0"s, true}}}, opt_items_map_t{{{"bar1"s, true}}});
+      check(equivalence, "", filter, std::pair{opt_suites_map_t{{{"suite_2"s, true}, {"suite_2_0"s, true}}}, opt_items_map_t{{{"bar1"s, true}}}});
     }
 
     {
@@ -519,7 +519,7 @@ namespace sequoia::testing
 
       using opt_suites_map_t = std::optional<filter_by_names::suites_map_type>;
       using opt_items_map_t  = std::optional<filter_by_names::items_map_type>;
-      check(equivalence, "", filter, opt_suites_map_t{{{"suite_2"s, true},  {"aardvark"s, false}}}, opt_items_map_t{{{"bar1"s, true}, {"aardvark"s, false}}});
+      check(equivalence, "", filter, std::pair{opt_suites_map_t{{{"suite_2"s, true},  {"aardvark"s, false}}}, opt_items_map_t{{{"bar1"s, true}, {"aardvark"s, false}}}});
     }
 
     {
@@ -588,7 +588,7 @@ namespace sequoia::testing
 
       using opt_suites_map_t = std::optional<filter_by_paths::suites_map_type>;
       using opt_items_map_t  = std::optional<filter_by_paths::items_map_type>;
-      check(equivalence, "", filter, opt_suites_map_t{}, opt_items_map_t{{{"foo/bar1", true}}});
+      check(equivalence, "", filter, std::pair{opt_suites_map_t{}, opt_items_map_t{{{"foo/bar1", true}}}});
     }
   }
 

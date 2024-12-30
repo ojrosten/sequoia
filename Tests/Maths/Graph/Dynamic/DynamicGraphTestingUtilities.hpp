@@ -188,7 +188,7 @@ namespace sequoia::testing
     static G make_and_check(Test& t, std::string_view description, std::initializer_list<std::initializer_list<edge_type>> edgeInit, std::initializer_list<node_weight_type> nodeInit)
     {
       G g{edgeInit, nodeInit};
-      t.check(equivalence, description, g, edgeInit, nodeInit);
+      t.check(equivalence, description, g, std::pair{edgeInit, nodeInit});
       return g;
     }
   };

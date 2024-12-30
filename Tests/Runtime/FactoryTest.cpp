@@ -147,10 +147,11 @@ namespace sequoia::testing
     {
       using prediction_type = std::array<std::pair<std::string, std::variant<regular_type, move_only_type>>, 2>;
 
-      factory<regular_type, move_only_type> f{"x", "y"}, g{"make_x", "make_y"};
+      factory<regular_type, move_only_type> f{"x", "y"}, g{"make_x", "make_y"};   
+      using check_type = value_tester<factory<regular_type, move_only_type>>::factory_check_type<int>;
 
-      check(equivalence, "", f, prediction_type{{{"x", regular_type{1}}, {"y", move_only_type{1}}}}, 1);
-      check(equivalence, "", g, prediction_type{{{"make_x", regular_type{2}}, {"make_y", move_only_type{2}}}}, 2);
+      check(check_type{1}, "", f, prediction_type{{{"x", regular_type{1}}, {"y", move_only_type{1}}}});
+      check(check_type{2}, "", g, prediction_type{{{"make_x", regular_type{2}}, {"make_y", move_only_type{2}}}});
 
       check_semantics("", f, g);
     }
@@ -159,8 +160,10 @@ namespace sequoia::testing
       using prediction_type = std::array<std::pair<std::string, std::variant<foo<int>, foo<double>>>, 2>;
 
       factory<foo<int>, foo<double>> f{}, g{"int", "double"};
+      using check_type = value_tester<factory<foo<int>, foo<double>>>::factory_check_type<int>;
+      
       check(equivalence, "", f, prediction_type{ {{"foo-int", foo<int>{}}, {"foo-double", foo<double>{}}} });
-      check(equivalence, "", g, prediction_type{ {{"int", foo<int>{42}}, {"double", foo<double>{42}}} }, 42);
+      check(check_type{42}, "", g, prediction_type{ {{"int", foo<int>{42}}, {"double", foo<double>{42}}} });
 
       check_semantics("", f, g);
     }

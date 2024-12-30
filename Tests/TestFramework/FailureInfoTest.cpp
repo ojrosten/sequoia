@@ -46,9 +46,11 @@ namespace sequoia::testing
 
   void failure_info_test::check_failure_info()
   {
+    using namespace std::string_literals;
+
     failure_info x{}, y{1, "foo"};
-    check(equivalence, "", x, 0, "");
-    check(equivalence, "", y, 1, "foo");
+    check(equivalence, "", x, std::pair{0, ""s});
+    check(equivalence, "", y, std::pair{1, "foo"s});
 
     check_semantics("", x, y, std::weak_ordering::less);
 
