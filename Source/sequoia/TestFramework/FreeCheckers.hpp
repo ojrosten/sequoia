@@ -237,7 +237,7 @@ namespace sequoia::testing
                                  test_logger<Mode>& logger,
                                  const T& obtained,
                                  const U& predicted,
-                                 const Args&... args)
+                                 [[maybe_unused]] const Args&... args)
   {
     const auto msg{
       [flavour, &description] () -> std::string&& {
