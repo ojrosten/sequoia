@@ -8,7 +8,7 @@
 #pragma once
 
 /*! \file
-    \brief Free functions for performing checks, together with the 'checker' class template which wraps them.
+    \brief Free functions for performing checks, together with the 'checker' class template which wraps them.has_generalized_equivalence_check
 
     Given a type, `T`, any reasonable testing framework must provide a mechanism for checking whether or
     not two instances of `T` are, in some sense, the same. If the type implements `operator==` then it
@@ -218,9 +218,9 @@ namespace sequoia::testing
     static std::string get(const E& e) { return to_string(e); }
   };
 
-  template<test_mode Mode, class CheckType, class T, class U, class... Args>
+  template<test_mode Mode, class CheckType, class T, class U, class Advisor>
   inline constexpr bool implements_general_equivalence_check{
-       tester_for<CheckType, Mode, T, U, Args...>
+       tester_for<CheckType, Mode, T, U, tutor<Advisor>>
     || tester_for<CheckType, Mode, T, U>
     || tester_for<CheckType, Mode, T, U, tutor<null_advisor>>
   };
@@ -230,14 +230,14 @@ namespace sequoia::testing
       This employs a \ref test_logger_primary "sentinel" and so can be used naively.
    */
 
-  template<class CheckType, test_mode Mode, class T, class U, class... Args>
-    requires implements_general_equivalence_check<Mode, CheckType, T, U, Args...>
+  template<class CheckType, test_mode Mode, class T, class U, class Advisor=null_advisor>
+    requires implements_general_equivalence_check<Mode, CheckType, T, U, Advisor>
   bool general_equivalence_check(CheckType flavour,
                                  std::string description,
                                  test_logger<Mode>& logger,
                                  const T& obtained,
                                  const U& predicted,
-                                 [[maybe_unused]] const Args&... args)
+                                 [[maybe_unused]] tutor<Advisor> advisor={})
   {
     const auto msg{
       [flavour, &description] () -> std::string&& {
@@ -252,9 +252,9 @@ namespace sequoia::testing
 
     sentinel<Mode> sentry{logger, msg()};
 
-    if constexpr(tester_for<CheckType, Mode, T, U, Args...>)
+    if constexpr(tester_for<CheckType, Mode, T, U, tutor<Advisor>>)
     {
-      value_tester<T>::test(flavour, logger, obtained, predicted, args...);
+      value_tester<T>::test(flavour, logger, obtained, predicted, advisor);
     }
     else if constexpr(tester_for<CheckType, Mode, T, U>)
     {
@@ -273,13 +273,13 @@ namespace sequoia::testing
   }
 
   template<bool IsFinalMessage, test_mode Mode, class Compare, class T, class Advisor>
-    requires (std::invocable<Compare, T, T> && (!IsFinalMessage || reportable<T>) && !std::is_array_v<T>)
+    requires std::invocable<Compare, T, T>
   void binary_comparison(final_message_constant<IsFinalMessage>, sentinel<Mode>& sentry, Compare compare, const T& obtained, const T& prediction, tutor<Advisor> advisor)
   {
     sentry.log_check();
     if(!compare(obtained, prediction))
     {
-      std::string message{failure_reporter<Compare>::reporter(final_message_constant<IsFinalMessage>{}, compare, obtained, prediction)};
+      std::string message{failure_reporter<Compare>::reporter(final_message_constant<IsFinalMessage && reportable<T>>{}, compare, obtained, prediction)};
       append_advice(message, {advisor, obtained, prediction});
 
       sentry.log_failure(message);
@@ -289,6 +289,7 @@ namespace sequoia::testing
   template<class CheckType, test_mode Mode, class T, class S, class... U>
   inline constexpr bool has_generalized_equivalence_check{
       !(   std::is_same_v<CheckType, equality_check_t>
+        || std::is_same_v<CheckType, simple_equality_check_t>
         || std::is_same_v<CheckType, with_best_available_check_t>)
     && (   implements_general_equivalence_check<Mode, CheckType, T, S, U...>
         || faithful_range<T>
@@ -518,18 +519,18 @@ namespace sequoia::testing
 
    */
 
-  template<class CheckType, test_mode Mode, class T, class U, class... Args>
-  requires has_generalized_equivalence_check<CheckType, Mode, T, U, Args...>
-  bool check(CheckType flavour, std::string description, test_logger<Mode>& logger, const T& obtained, const U& prediction, Args&&... args)
+  template<class CheckType, test_mode Mode, class T, class U, class Advisor=null_advisor>
+    requires has_generalized_equivalence_check<CheckType, Mode, T, U, Advisor>
+  bool check(CheckType flavour, std::string description, test_logger<Mode>& logger, const T& obtained, const U& prediction, tutor<Advisor> advisor={})
   {
-    if constexpr(implements_general_equivalence_check<Mode, CheckType, T, U, Args...>)
+    if constexpr(implements_general_equivalence_check<Mode, CheckType, T, U, Advisor>)
     {
       return general_equivalence_check(flavour,
                                        std::move(description),
                                        logger,
                                        obtained,
                                        prediction,
-                                       std::forward<Args>(args)...);
+                                       advisor);
     }
     else if constexpr(faithful_range<T>)
     {
@@ -540,7 +541,7 @@ namespace sequoia::testing
                    std::end(obtained),
                    std::begin(prediction),
                    std::end(prediction),
-                   std::forward<Args>(args)...);
+                   advisor);
     }
     else if constexpr(has_fallback<CheckType>)
     {
@@ -550,7 +551,7 @@ namespace sequoia::testing
                    logger,
                    obtained,
                    prediction,
-                   std::forward<Args>(args)...);
+                   advisor);
     }
     else
     {
