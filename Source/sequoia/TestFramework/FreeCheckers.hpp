@@ -192,9 +192,18 @@ namespace sequoia::testing
                                                std::forward<Args>(args)...);
   };
 
-  template<class CheckType, test_mode Mode, class T, class U, class Advisor>
-  concept tests_against_with_or_without_advice =
-    tests_against<CheckType, Mode, T, U, tutor<Advisor>> || tests_against<CheckType, Mode, T, U>;
+  template<class CheckType, test_mode Mode, class T, class U, class Tutor>
+  concept tests_against_with_or_without_tutor =
+    tests_against<CheckType, Mode, T, U, Tutor> || tests_against<CheckType, Mode, T, U>;
+
+    template<test_mode Mode, class T, class U, class Tutor>
+  inline constexpr bool has_detailed_agnostic_check{
+       tests_against_with_or_without_tutor<equality_check_t, Mode, T, U, Tutor>
+    || tests_against_with_or_without_tutor<simple_equality_check_t, Mode, T, U, Tutor>
+    || tests_against_with_or_without_tutor<equivalence_check_t, Mode, T, U, Tutor>
+    || tests_against_with_or_without_tutor<weak_equivalence_check_t, Mode, T, U, Tutor>
+    || tests_against_with_or_without_tutor<with_best_available_check_t, Mode, T, U, Tutor>
+  };
 
   /*! \brief class template, specializations of which extract messages from various exception types.
      \anchor exception_message_extractor_primary
@@ -224,7 +233,7 @@ namespace sequoia::testing
    */
 
   template<class CheckType, test_mode Mode, class T, class U, class Advisor>
-    requires tests_against_with_or_without_advice<CheckType, Mode, T, U, Advisor>
+    requires tests_against_with_or_without_tutor<CheckType, Mode, T, U, tutor<Advisor>>
   bool general_equivalence_check(CheckType flavour,
                                  std::string description,
                                  test_logger<Mode>& logger,
@@ -280,7 +289,7 @@ namespace sequoia::testing
   }
 
   template<class CheckType, test_mode Mode, class T, class U, class Advisor>
-    requires tests_against_with_or_without_advice<CheckType, Mode, T, U, tutor<Advisor>>
+    requires tests_against_with_or_without_tutor<CheckType, Mode, T, U, tutor<Advisor>>
   void select_test(CheckType flavour, test_logger<Mode>& logger, const T& obtained, const U& prediction, [[maybe_unused]] tutor<Advisor> advisor)
   {
     if constexpr(tests_against<CheckType, Mode, T, U, tutor<Advisor>>)
@@ -296,14 +305,6 @@ namespace sequoia::testing
       static_assert(dependent_false<CheckType>::value, "Should never be triggered; indicates mismatch between requirement and logic");
     }
   }
-
-  template<test_mode Mode, class T, class U, class Advisor>
-  inline constexpr bool has_detailed_agnostic_check{
-       tests_against_with_or_without_advice<equality_check_t, Mode, T, U, Advisor>
-    || tests_against_with_or_without_advice<equivalence_check_t, Mode, T, U, Advisor>
-    || tests_against_with_or_without_advice<weak_equivalence_check_t, Mode, T, U, Advisor>
-    || tests_against_with_or_without_advice<with_best_available_check_t, Mode, T, U, Advisor>
-  };
 
   struct default_exception_message_postprocessor
   {
@@ -460,7 +461,7 @@ namespace sequoia::testing
 
   template<test_mode Mode, class T, class Advisor=null_advisor>
     requires (    deep_equality_comparable<T>
-               || tests_against_with_or_without_advice<equality_check_t, Mode, T, T, tutor<Advisor>>
+               || tests_against_with_or_without_tutor<equality_check_t, Mode, T, T, tutor<Advisor>>
                || faithful_range<T>)
   bool check(equality_check_t,
              std::string description,
@@ -473,11 +474,11 @@ namespace sequoia::testing
 
     if constexpr(deep_equality_comparable<T>)
     {
-      using finality = final_message_constant<!(tests_against_with_or_without_advice<equality_check_t, Mode, T, T, Advisor> || faithful_range<T>)>;
+      using finality = final_message_constant<!(tests_against_with_or_without_tutor<equality_check_t, Mode, T, T, tutor<Advisor>> || faithful_range<T>)>;
       binary_comparison(finality{}, sentry, std::ranges::equal_to{}, obtained, prediction, advisor);
     }
 
-    if constexpr(tests_against_with_or_without_advice<equality_check_t, Mode, T, T, Advisor>)
+    if constexpr(tests_against_with_or_without_tutor<equality_check_t, Mode, T, T, tutor<Advisor>>)
     {
       select_test(equality_check_t{}, logger, obtained, prediction, advisor);
     }
@@ -502,10 +503,10 @@ namespace sequoia::testing
    */
 
   template<class CheckType, test_mode Mode, class T, class U, class Advisor=null_advisor>
-    requires tests_against_with_or_without_advice<CheckType, Mode, T, U, Advisor> || faithful_range<T> || has_fallback<CheckType>
+    requires tests_against_with_or_without_tutor<CheckType, Mode, T, U, tutor<Advisor>> || faithful_range<T> || has_fallback<CheckType>
   bool check(CheckType flavour, std::string description, test_logger<Mode>& logger, const T& obtained, const U& prediction, tutor<Advisor> advisor={})
   {
-    if constexpr(tests_against_with_or_without_advice<CheckType, Mode, T, U, Advisor>)
+    if constexpr(tests_against_with_or_without_tutor<CheckType, Mode, T, U, tutor<Advisor>>)
     {
       return general_equivalence_check(flavour,
                                        std::move(description),
@@ -571,7 +572,7 @@ namespace sequoia::testing
   /*! \brief The workhorse for dispatching to the strongest available type of check. */
 
   template<test_mode Mode, class T, class U, class Advisor=null_advisor>
-    requires (deep_equality_comparable<T> || has_detailed_agnostic_check<Mode, T, U, Advisor> || faithful_range<T>)
+    requires (deep_equality_comparable<T> || has_detailed_agnostic_check<Mode, T, U, tutor<Advisor>> || faithful_range<T>)
   bool check(with_best_available_check_t,
              std::string description,
              test_logger<Mode>& logger,
@@ -584,24 +585,24 @@ namespace sequoia::testing
     // TO DO: generalize this to deep_equality_comparable_with<T, U>
     if constexpr(std::is_same_v<T, U> && deep_equality_comparable<T>)
     {
-      using finality = final_message_constant<!(has_detailed_agnostic_check<Mode, T, U, Advisor> || faithful_range<T>)>;
+      using finality = final_message_constant<!(has_detailed_agnostic_check<Mode, T, U, tutor<Advisor>> || faithful_range<T>)>;
       binary_comparison(finality{}, sentry, std::ranges::equal_to{}, obtained, prediction, advisor);
     }
 
-    if constexpr(tests_against_with_or_without_advice<with_best_available_check_t, Mode, T, U, Advisor>)
+    if constexpr(tests_against_with_or_without_tutor<with_best_available_check_t, Mode, T, U, tutor<Advisor>>)
     {
       // TO DO: output could perhaps harmonize with general_equivalence_check
       select_test(with_best_available, logger, obtained, prediction, advisor);
     }
-    else if constexpr(tests_against_with_or_without_advice<equality_check_t, Mode, T, U, Advisor>)
+    else if constexpr(tests_against_with_or_without_tutor<equality_check_t, Mode, T, U, tutor<Advisor>>)
     {
       select_test(equality_check_t{}, logger, obtained, prediction, advisor);
     }
-    else if constexpr(tests_against_with_or_without_advice<equivalence_check_t, Mode, T, U, Advisor>)
+    else if constexpr(tests_against_with_or_without_tutor<equivalence_check_t, Mode, T, U, tutor<Advisor>>)
     {
       general_equivalence_check(equivalence, "", logger, obtained, prediction, advisor);
     }
-    else if constexpr(tests_against_with_or_without_advice<weak_equivalence_check_t, Mode, T, U, Advisor>)
+    else if constexpr(tests_against_with_or_without_tutor<weak_equivalence_check_t, Mode, T, U, tutor<Advisor>>)
     {
       general_equivalence_check(weak_equivalence, "", logger, obtained, prediction, advisor);
     }
@@ -653,7 +654,7 @@ namespace sequoia::testing
     }
 
     template<class T, class U, class Advisor = null_advisor, class Self>
-      requires (deep_equality_comparable<T> || has_detailed_agnostic_check<Mode, T, U, Advisor> || faithful_range<T>)
+      requires (deep_equality_comparable<T> || has_detailed_agnostic_check<Mode, T, U, tutor<Advisor>> || faithful_range<T>)
     bool check(this Self& self, with_best_available_check_t, const reporter& description, const T& obtained, const U& prediction, tutor<Advisor> advisor = {})
     {
       return testing::check(with_best_available, self.report(description), self.m_Logger, obtained, prediction, std::move(advisor));
