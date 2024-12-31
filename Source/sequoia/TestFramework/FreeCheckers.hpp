@@ -227,67 +227,6 @@ namespace sequoia::testing
     static std::string get(const E& e) { return to_string(e); }
   };
 
-  /*! \brief generic function that generates a check from any class providing a static check method.
-
-      This employs a \ref test_logger_primary "sentinel" and so can be used naively.
-   */
-
-  template<class CheckType, test_mode Mode, class T, class U, class Advisor>
-    requires tests_against_with_or_without_tutor<CheckType, Mode, T, U, tutor<Advisor>>
-  bool general_equivalence_check(CheckType flavour,
-                                 std::string description,
-                                 test_logger<Mode>& logger,
-                                 const T& obtained,
-                                 const U& predicted,
-                                 [[maybe_unused]] tutor<Advisor> advisor)
-  {
-    const auto msg{
-      [flavour, &description] () -> std::string&& {
-        return std::move(
-                append_lines(description,
-                             "Comparison performed using:",
-                             make_type_info<value_tester<T>>(),
-                             std::format("Checking for {} with:", to_string(flavour)), make_type_info<U>()).append("\n")
-                );
-      }
-    };
-
-    sentinel<Mode> sentry{logger, msg()};
-
-    if constexpr(tests_against<CheckType, Mode, T, U, tutor<Advisor>>)
-    {
-      value_tester<T>::test(flavour, logger, obtained, predicted, advisor);
-    }
-    else if constexpr(tests_against<CheckType, Mode, T, U>)
-    {
-      value_tester<T>::test(flavour, logger, obtained, predicted);
-    }
-    else if constexpr(tests_against<CheckType, Mode, T, U, tutor<null_advisor>>)
-    {
-      value_tester<T>::test(flavour, logger, obtained, predicted, tutor<null_advisor>{});
-    }
-    else
-    {
-      static_assert(dependent_false<value_tester<T>>::value, "Should never be triggered; indicates mismatch between requirement and logic");
-    }
-
-    return !sentry.failure_detected();
-  }
-
-  template<bool IsFinalMessage, test_mode Mode, class Compare, class T, class Advisor>
-    requires std::invocable<Compare, T, T>
-  void binary_comparison(final_message_constant<IsFinalMessage>, sentinel<Mode>& sentry, Compare compare, const T& obtained, const T& prediction, tutor<Advisor> advisor)
-  {
-    sentry.log_check();
-    if(!compare(obtained, prediction))
-    {
-      std::string message{failure_reporter<Compare>::reporter(final_message_constant<IsFinalMessage && reportable<T>>{}, compare, obtained, prediction)};
-      append_advice(message, {advisor, obtained, prediction});
-
-      sentry.log_failure(message);
-    }
-  }
-
   template<class CheckType, test_mode Mode, class T, class U, class Advisor>
     requires tests_against_with_or_without_tutor<CheckType, Mode, T, U, tutor<Advisor>>
   void select_test(CheckType flavour, test_logger<Mode>& logger, const T& obtained, const U& prediction, [[maybe_unused]] tutor<Advisor> advisor)
@@ -303,6 +242,52 @@ namespace sequoia::testing
     else
     {
       static_assert(dependent_false<CheckType>::value, "Should never be triggered; indicates mismatch between requirement and logic");
+    }
+  }
+
+  /*! \brief generic function that generates a check from any class providing a static check method.
+
+      This employs a \ref test_logger_primary "sentinel" and so can be used naively.
+   */
+
+  template<class CheckType, test_mode Mode, class T, class U, class Advisor>
+    requires tests_against_with_or_without_tutor<CheckType, Mode, T, U, tutor<Advisor>>
+  bool general_equivalence_check(CheckType flavour,
+                                 std::string description,
+                                 test_logger<Mode>& logger,
+                                 const T& obtained,
+                                 const U& predicted,
+                                 tutor<Advisor> advisor)
+  {
+    const auto msg{
+      [flavour, &description] () -> std::string&& {
+        return std::move(
+                append_lines(description,
+                             "Comparison performed using:",
+                             make_type_info<value_tester<T>>(),
+                             std::format("Checking for {} with:", to_string(flavour)), make_type_info<U>()).append("\n")
+                );
+      }
+    };
+
+    sentinel<Mode> sentry{logger, msg()};
+
+    select_test(flavour, logger, obtained, predicted, advisor);
+
+    return !sentry.failure_detected();
+  }
+
+  template<bool IsFinalMessage, test_mode Mode, class Compare, class T, class Advisor>
+    requires std::invocable<Compare, T, T>
+  void binary_comparison(final_message_constant<IsFinalMessage>, sentinel<Mode>& sentry, Compare compare, const T& obtained, const T& prediction, tutor<Advisor> advisor)
+  {
+    sentry.log_check();
+    if(!compare(obtained, prediction))
+    {
+      std::string message{failure_reporter<Compare>::reporter(final_message_constant<IsFinalMessage && reportable<T>>{}, compare, obtained, prediction)};
+      append_advice(message, {advisor, obtained, prediction});
+
+      sentry.log_failure(message);
     }
   }
 
