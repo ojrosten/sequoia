@@ -8,7 +8,7 @@
 #pragma once
 
 /*! \file
-    \brief Free functions for performing checks, together with the 'checker' class template which wraps them.has_generalized_equivalence_check
+    \brief Free functions for performing checks, together with the 'checker' class template which wraps them.
 
     Given a type, `T`, any reasonable testing framework must provide a mechanism for checking whether or
     not two instances of `T` are, in some sense, the same. If the type implements `operator==` then it
@@ -184,7 +184,7 @@ namespace sequoia::testing
   inline constexpr bool has_fallback { requires { typename T::fallback; } };
 
   template<class CheckType, test_mode Mode, class T, class U, class... Args>
-  concept tester_for = requires(test_logger<Mode>& logger, T&& obtained, const U& predicted, Args&&... args) {
+  concept tests_against = requires(test_logger<Mode>& logger, T&& obtained, const U& predicted, Args&&... args) {
     value_tester<std::remove_cvref_t<T>>::test(std::declval<CheckType>(),
                                                logger,
                                                std::forward<T>(obtained),
@@ -194,7 +194,7 @@ namespace sequoia::testing
 
   template<class CheckType, test_mode Mode, class T, class U, class Advisor>
   concept binary_tester_for =
-    tester_for<CheckType, Mode, T, U, tutor<Advisor>> || tester_for<CheckType, Mode, T, U>;
+    tests_against<CheckType, Mode, T, U, tutor<Advisor>> || tests_against<CheckType, Mode, T, U>;
 
   /*! \brief class template, specializations of which extract messages from various exception types.
      \anchor exception_message_extractor_primary
@@ -218,11 +218,11 @@ namespace sequoia::testing
     static std::string get(const E& e) { return to_string(e); }
   };
 
-  template<test_mode Mode, class CheckType, class T, class U, class Advisor>
-  inline constexpr bool implements_general_equivalence_check{
-       tester_for<CheckType, Mode, T, U, tutor<Advisor>>
-    || tester_for<CheckType, Mode, T, U>
-    || tester_for<CheckType, Mode, T, U, tutor<null_advisor>>
+  template<class CheckType, test_mode Mode, class T, class U, class Advisor>
+  inline constexpr bool tests_against_with_or_without_advice{
+       tests_against<CheckType, Mode, T, U, tutor<Advisor>>
+    || tests_against<CheckType, Mode, T, U>
+    || tests_against<CheckType, Mode, T, U, tutor<null_advisor>>
   };
 
   /*! \brief generic function that generates a check from any class providing a static check method.
@@ -230,14 +230,14 @@ namespace sequoia::testing
       This employs a \ref test_logger_primary "sentinel" and so can be used naively.
    */
 
-  template<class CheckType, test_mode Mode, class T, class U, class Advisor=null_advisor>
-    requires implements_general_equivalence_check<Mode, CheckType, T, U, Advisor>
+  template<class CheckType, test_mode Mode, class T, class U, class Advisor>
+    requires tests_against_with_or_without_advice<CheckType, Mode, T, U, Advisor>
   bool general_equivalence_check(CheckType flavour,
                                  std::string description,
                                  test_logger<Mode>& logger,
                                  const T& obtained,
                                  const U& predicted,
-                                 [[maybe_unused]] tutor<Advisor> advisor={})
+                                 [[maybe_unused]] tutor<Advisor> advisor)
   {
     const auto msg{
       [flavour, &description] () -> std::string&& {
@@ -252,15 +252,15 @@ namespace sequoia::testing
 
     sentinel<Mode> sentry{logger, msg()};
 
-    if constexpr(tester_for<CheckType, Mode, T, U, tutor<Advisor>>)
+    if constexpr(tests_against<CheckType, Mode, T, U, tutor<Advisor>>)
     {
       value_tester<T>::test(flavour, logger, obtained, predicted, advisor);
     }
-    else if constexpr(tester_for<CheckType, Mode, T, U>)
+    else if constexpr(tests_against<CheckType, Mode, T, U>)
     {
       value_tester<T>::test(flavour, logger, obtained, predicted);
     }
-    else if constexpr(tester_for<CheckType, Mode, T, U, tutor<null_advisor>>)
+    else if constexpr(tests_against<CheckType, Mode, T, U, tutor<null_advisor>>)
     {
       value_tester<T>::test(flavour, logger, obtained, predicted, tutor<null_advisor>{});
     }
@@ -286,26 +286,15 @@ namespace sequoia::testing
     }
   }
 
-  template<class CheckType, test_mode Mode, class T, class S, class... U>
-  inline constexpr bool has_generalized_equivalence_check{
-      !(   std::is_same_v<CheckType, equality_check_t>
-        || std::is_same_v<CheckType, simple_equality_check_t>
-        || std::is_same_v<CheckType, with_best_available_check_t>)
-    && (   implements_general_equivalence_check<Mode, CheckType, T, S, U...>
-        || faithful_range<T>
-        || has_fallback<CheckType>)
-  };
-
-
   template<class CheckType, test_mode Mode, class T, class U, class Advisor>
     requires binary_tester_for<CheckType, Mode, T, U, tutor<Advisor>>
   void select_test(CheckType flavour, test_logger<Mode>& logger, const T& obtained, const U& prediction, [[maybe_unused]] tutor<Advisor> advisor)
   {
-    if constexpr(tester_for<CheckType, Mode, T, U, tutor<Advisor>>)
+    if constexpr(tests_against<CheckType, Mode, T, U, tutor<Advisor>>)
     {
       value_tester<T>::test(flavour, logger, obtained, prediction, advisor);
     }
-    else if constexpr(tester_for<CheckType, Mode, T, U>)
+    else if constexpr(tests_against<CheckType, Mode, T, U>)
     {
       value_tester<T>::test(flavour, logger, obtained, prediction);
     }
@@ -520,10 +509,10 @@ namespace sequoia::testing
    */
 
   template<class CheckType, test_mode Mode, class T, class U, class Advisor=null_advisor>
-    requires has_generalized_equivalence_check<CheckType, Mode, T, U, Advisor>
+    requires tests_against_with_or_without_advice<CheckType, Mode, T, U, Advisor> || faithful_range<T> || has_fallback<CheckType>
   bool check(CheckType flavour, std::string description, test_logger<Mode>& logger, const T& obtained, const U& prediction, tutor<Advisor> advisor={})
   {
-    if constexpr(implements_general_equivalence_check<Mode, CheckType, T, U, Advisor>)
+    if constexpr(tests_against_with_or_without_advice<CheckType, Mode, T, U, Advisor>)
     {
       return general_equivalence_check(flavour,
                                        std::move(description),
