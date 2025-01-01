@@ -472,6 +472,8 @@ template<class T>
 
   /*! \brief The workhorse for checking simple equality. */
 
+  template<test_mode Mode, class T, class Advisor=null_advisor>
+    requires (deep_equality_comparable<T> || faithful_range<T>)
   bool check(simple_equality_check_t,
              std::string description,
              test_logger<Mode>& logger,
