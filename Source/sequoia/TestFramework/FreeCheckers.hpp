@@ -143,12 +143,6 @@ namespace sequoia::testing
     return "weak equivalence";
   }
 
-  [[nodiscard]]
-  inline std::string to_string(with_best_available_check_t)
-  {
-    return "with best available";
-  }
-
   //=========================== Values defined for convenience ===========================//
 
   inline constexpr equality_check_t            equality{};  
@@ -157,7 +151,7 @@ namespace sequoia::testing
   inline constexpr weak_equivalence_check_t    weak_equivalence{};
   inline constexpr with_best_available_check_t with_best_available{};
 
-template<class T>
+  template<class T>
   inline constexpr bool is_elementary_check{
        std::is_same_v<std::remove_cvref_t<T>, equality_check_t>
     || std::is_same_v<std::remove_cvref_t<T>, simple_equality_check_t>
@@ -175,11 +169,14 @@ template<class T>
     }
   };
 
+  template<class T>
+  inline constexpr bool is_general_equivalence_check{is_customized_check<T> || std::is_same_v<T, equivalence_check_t> || std::is_same_v<T, weak_equivalence_check_t>};
+
   template<class Compare, class T>
   inline constexpr bool potential_comparator_for{
     std::is_invocable_r_v<bool, Compare, T, T> || (faithful_range<T> && !(is_elementary_check<Compare> || is_customized_check<Compare>))
   };
-    
+
   template<class T>
   inline constexpr bool has_fallback { requires { typename T::fallback; } };
 
@@ -246,7 +243,7 @@ template<class T>
    */
 
   template<class CheckType, test_mode Mode, class T, class U, class Advisor>
-    requires tests_against_with_or_without_tutor<CheckType, Mode, T, U, tutor<Advisor>>
+    requires is_general_equivalence_check<CheckType> && tests_against_with_or_without_tutor<CheckType, Mode, T, U, tutor<Advisor>>
   bool general_equivalence_check(CheckType flavour,
                                  std::string description,
                                  test_logger<Mode>& logger,
@@ -255,17 +252,15 @@ template<class T>
                                  tutor<Advisor> advisor)
   {
     const auto msg{
-      [flavour, &description] () -> std::string&& {
-        return std::move(
-                append_lines(description,
-                             "Comparison performed using:",
-                             make_type_info<value_tester<T>>(),
-                             std::format("Checking for {} with:", to_string(flavour)), make_type_info<U>()).append("\n")
-                );
+      [] (CheckType flavour, std::string desc) -> std::string {
+          return append_lines(desc,
+                              "Comparison performed using:",
+                              make_type_info<value_tester<T>>(),
+                              std::format("Checking for {} with:", to_string(flavour)), make_type_info<U>()).append("\n");
       }
     };
 
-    sentinel<Mode> sentry{logger, msg()};
+    sentinel<Mode> sentry{logger, msg(flavour, std::move(description))};
 
     select_test(flavour, logger, obtained, predicted, advisor);
 
@@ -507,7 +502,8 @@ template<class T>
    */
 
   template<class CheckType, test_mode Mode, class T, class U, class Advisor=null_advisor>
-    requires tests_against_with_or_without_tutor<CheckType, Mode, T, U, tutor<Advisor>> || faithful_range<T> || has_fallback<CheckType>
+    requires    is_general_equivalence_check<CheckType>
+             && (tests_against_with_or_without_tutor<CheckType, Mode, T, U, tutor<Advisor>> || faithful_range<T> || has_fallback<CheckType>)
   bool check(CheckType flavour, std::string description, test_logger<Mode>& logger, const T& obtained, const U& prediction, tutor<Advisor> advisor={})
   {
     if constexpr(tests_against_with_or_without_tutor<CheckType, Mode, T, U, tutor<Advisor>>)
@@ -559,7 +555,6 @@ template<class T>
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(std::move(description))};
 
-    // TO DO: generalize this to deep_equality_comparable_with<T, U>
     if constexpr(std::is_same_v<T, U> && deep_equality_comparable<T>)
     {
       using finality = final_message_constant<!(has_any_elementary_test<Mode, T, U, tutor<Advisor>> || faithful_range<T>)>;
@@ -568,12 +563,15 @@ template<class T>
 
     if constexpr(tests_against_with_or_without_tutor<with_best_available_check_t, Mode, T, U, tutor<Advisor>>)
     {
-      // TO DO: output could perhaps harmonize with general_equivalence_check
       select_test(with_best_available, logger, obtained, prediction, advisor);
     }
     else if constexpr(tests_against_with_or_without_tutor<equality_check_t, Mode, T, U, tutor<Advisor>>)
     {
-      select_test(equality_check_t{}, logger, obtained, prediction, advisor);
+      select_test(equality, logger, obtained, prediction, advisor);
+    }
+    else if constexpr(tests_against_with_or_without_tutor<simple_equality_check_t, Mode, T, U, tutor<Advisor>>)
+    {
+      select_test(simple_equality, logger, obtained, prediction, advisor);
     }
     else if constexpr(tests_against_with_or_without_tutor<equivalence_check_t, Mode, T, U, tutor<Advisor>>)
     {
