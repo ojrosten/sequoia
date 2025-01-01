@@ -27,4 +27,6 @@ namespace sequoia::testing
       check(equality, "Wrapped vector", logger, obtained.x, prediction, advisor);
     }
   };
+  
+  enum class enable_serialization : bool {no, yes};
 }

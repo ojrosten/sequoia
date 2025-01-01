@@ -35,11 +35,8 @@ namespace sequoia::testing
     check_semantics("Broken check invariant", move_only_beast{1}, move_only_beast{3}, move_only_beast{2}, move_only_beast{3});
     check_semantics("Broken check invariant", move_only_beast{2}, move_only_beast{1}, move_only_beast{2}, move_only_beast{3});
 
-    check_semantics("Incorrect moved-from state post construction", resource_binder{1}, resource_binder{2}, resource_binder{1}, resource_binder{2}, resource_binder{3}, resource_binder{1});
-    check_semantics("Incorrect moved-from state post construction", []() { return resource_binder{1}; }, []() {return resource_binder{2}; }, resource_binder{3}, resource_binder{1});
-
-    check_semantics("Incorrect moved-from state post assignment", resource_binder{1}, resource_binder{2}, resource_binder{1}, resource_binder{2}, resource_binder{3}, resource_binder{1});
-    check_semantics("Incorrect moved-from state post assignment", []() { return resource_binder{1}; }, []() {return resource_binder{2}; }, resource_binder{0}, resource_binder{3});
+    test_binder<enable_serialization::no>();
+    test_binder<enable_serialization::yes>();
   }
 
   void move_only_false_negative_diagnostics::test_as_unique_semantics()
@@ -52,6 +49,17 @@ namespace sequoia::testing
     check_semantics("Broken check invariant", move_only_beast{1}, move_only_beast{1}, std::vector<int>{1}, std::vector<int>{1});
     check_semantics("Broken check invariant", move_only_beast{1}, move_only_beast{3}, std::vector<int>{2}, std::vector<int>{3});
     check_semantics("Broken check invariant", move_only_beast{2}, move_only_beast{1}, std::vector<int>{2}, std::vector<int>{3});
+  }
+
+  template<enable_serialization EnableSerialization>
+  void move_only_false_negative_diagnostics::test_binder()
+  {
+    using binder_t = resource_binder<EnableSerialization>;
+    check_semantics("Incorrect moved-from state post construction", binder_t{1}, binder_t{2}, binder_t{1}, binder_t{2}, binder_t{3}, binder_t{1});
+    check_semantics("Incorrect moved-from state post construction", []() { return binder_t{1}; }, []() {return binder_t{2}; }, binder_t{3}, binder_t{1});
+
+    check_semantics("Incorrect moved-from state post assignment", binder_t{1}, binder_t{2}, binder_t{1}, binder_t{2}, binder_t{3}, binder_t{1});
+    check_semantics("Incorrect moved-from state post assignment", []() { return binder_t{1}; }, []() {return binder_t{2}; }, binder_t{0}, binder_t{3});
   }
 
 
@@ -73,8 +81,9 @@ namespace sequoia::testing
     check_semantics("", beast{1}, beast{2}, beast{1}, beast{2});
     check_semantics("Function object syntax", [](){ return beast{1}; }, [](){ return beast{2}; });
 
-    check_semantics("Check moved-from state", resource_binder{1}, resource_binder{2}, resource_binder{1}, resource_binder{2}, resource_binder{0}, resource_binder{1});
-    check_semantics("Check moved-from state", []() { return resource_binder{1}; }, []() {return resource_binder{2}; }, resource_binder{0}, resource_binder{1});
+    using binder_t = resource_binder<enable_serialization::yes>;
+    check_semantics("Check moved-from state", binder_t{1}, binder_t{2}, binder_t{1}, binder_t{2}, binder_t{0}, binder_t{1});
+    check_semantics("Check moved-from state", []() { return binder_t{1}; }, []() {return binder_t{2}; }, binder_t{0}, binder_t{1});
   }
 
   void move_only_false_positive_diagnostics::test_as_unique_semantics()

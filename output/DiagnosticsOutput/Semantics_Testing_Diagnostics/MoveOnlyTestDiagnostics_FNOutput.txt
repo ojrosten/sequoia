@@ -128,63 +128,111 @@ Broken check invariant
 
 =======================================
 
-Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 38
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 58
 Incorrect moved-from state post construction
 
 --Move-only Semantics--
-[sequoia::testing::resource_binder]
+[sequoia::testing::resource_binder<0>]
 
   Incorrect moved-from value after move construction
-  [sequoia::testing::resource_binder]
+  [sequoia::testing::resource_binder<0>]
   operator== returned false
-  Obtained : 0
-  Predicted: 3
 
 =======================================
 
-Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 39
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 59
 Incorrect moved-from state post construction
 
 --Move-only Semantics--
-[sequoia::testing::resource_binder]
+[sequoia::testing::resource_binder<0>]
 
   Incorrect moved-from value after move construction
-  [sequoia::testing::resource_binder]
+  [sequoia::testing::resource_binder<0>]
   operator== returned false
-  Obtained : 0
-  Predicted: 3
 
 =======================================
 
-Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 41
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 61
 Incorrect moved-from state post assignment
 
 --Move-only Semantics--
-[sequoia::testing::resource_binder]
+[sequoia::testing::resource_binder<0>]
 
   Incorrect moved-from value after move construction
-  [sequoia::testing::resource_binder]
+  [sequoia::testing::resource_binder<0>]
   operator== returned false
-  Obtained : 0
-  Predicted: 3
 
 =======================================
 
-Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 42
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 62
 Incorrect moved-from state post assignment
 
 --Move-only Semantics--
-[sequoia::testing::resource_binder]
+[sequoia::testing::resource_binder<0>]
 
   Incorrect moved-from value after move assignment
-  [sequoia::testing::resource_binder]
+  [sequoia::testing::resource_binder<0>]
+  operator== returned false
+
+=======================================
+
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 58
+Incorrect moved-from state post construction
+
+--Move-only Semantics--
+[sequoia::testing::resource_binder<1>]
+
+  Incorrect moved-from value after move construction
+  [sequoia::testing::resource_binder<1>]
+  operator== returned false
+  Obtained : 0
+  Predicted: 3
+
+=======================================
+
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 59
+Incorrect moved-from state post construction
+
+--Move-only Semantics--
+[sequoia::testing::resource_binder<1>]
+
+  Incorrect moved-from value after move construction
+  [sequoia::testing::resource_binder<1>]
+  operator== returned false
+  Obtained : 0
+  Predicted: 3
+
+=======================================
+
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 61
+Incorrect moved-from state post assignment
+
+--Move-only Semantics--
+[sequoia::testing::resource_binder<1>]
+
+  Incorrect moved-from value after move construction
+  [sequoia::testing::resource_binder<1>]
+  operator== returned false
+  Obtained : 0
+  Predicted: 3
+
+=======================================
+
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 62
+Incorrect moved-from state post assignment
+
+--Move-only Semantics--
+[sequoia::testing::resource_binder<1>]
+
+  Incorrect moved-from value after move assignment
+  [sequoia::testing::resource_binder<1>]
   operator== returned false
   Obtained : 1
   Predicted: 3
 
 =======================================
 
-Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 47
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 44
 Broken equality
 
 --Move-only Semantics--
@@ -200,7 +248,7 @@ Broken equality
 
 =======================================
 
-Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 48
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 45
 Broken inequality
 
 --Move-only Semantics--
@@ -224,7 +272,7 @@ Broken inequality
 
 =======================================
 
-Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 49
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 46
 Broken move
 
 --Move-only Semantics--
@@ -249,7 +297,7 @@ Broken move
 
 =======================================
 
-Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 50
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 47
 Broken swap
 
 --Move-only Semantics--
@@ -291,7 +339,7 @@ Broken swap
 
 =======================================
 
-Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 51
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 48
 Broken move assignment
 
 --Move-only Semantics--
@@ -316,7 +364,7 @@ Broken move assignment
 
 =======================================
 
-Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 52
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 49
 Broken check invariant
 
 --Move-only Semantics--
@@ -328,7 +376,7 @@ Broken check invariant
 
 =======================================
 
-Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 53
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 50
 Broken check invariant
 
 --Move-only Semantics--
@@ -353,7 +401,7 @@ Broken check invariant
 
 =======================================
 
-Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 54
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 51
 Broken check invariant
 
 --Move-only Semantics--

@@ -12,8 +12,9 @@
 #include "CommonMoveOnlyTestDiagnosticsUtilities.hpp"
 
 namespace sequoia::testing
-{
-    class resource_binder
+{  
+  template<enable_serialization EnableSerialization>
+  class resource_binder
   {
   public:
     resource_binder() = default;
@@ -42,6 +43,7 @@ namespace sequoia::testing
     friend bool operator==(const resource_binder&, const resource_binder&) = default;
 
     template<class Stream>
+      requires (EnableSerialization == enable_serialization::yes)
     friend Stream& operator<<(Stream& s, const resource_binder& b)
     {
       s << b.index();
@@ -49,6 +51,7 @@ namespace sequoia::testing
     }
 
     template<class Stream>
+      requires (EnableSerialization == enable_serialization::yes)
     friend Stream& operator>>(Stream& s, resource_binder& b)
     {
       s >> b.m_Index;
