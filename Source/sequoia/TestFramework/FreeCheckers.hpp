@@ -176,7 +176,7 @@ namespace sequoia::testing
   };
 
   template<class Compare, class T>
-  inline constexpr bool potentially_comparison_type{
+  inline constexpr bool potential_comparator_for{
     (std::invocable<Compare, T, T> || faithful_range<T>) && !(is_elementary_check<Compare> || is_customized_check<Compare>)
   };
 
@@ -403,7 +403,7 @@ namespace sequoia::testing
    */
 
   template<class Compare, test_mode Mode, class T, class Advisor=null_advisor>
-    requires potentially_comparison_type<Compare, T>
+    requires potential_comparator_for<Compare, T>
   bool check(Compare compare,
              std::string description,
              test_logger<Mode>& logger,
@@ -658,7 +658,7 @@ namespace sequoia::testing
     }
 
     template<class Compare, class T, class Advisor = null_advisor, class Self>
-      requires potentially_comparison_type<Compare, T>
+      requires potential_comparator_for<Compare, T>
     bool check(this Self& self, Compare compare, const reporter& description, const T& obtained, const T& prediction, tutor<Advisor> advisor = {})
     {
       return testing::check(std::move(compare), self.report(description), self.m_Logger, obtained, prediction, std::move(advisor));
@@ -713,7 +713,7 @@ namespace sequoia::testing
       class Advisor = null_advisor,
       class Self
     >
-      requires potentially_comparison_type<Compare, typename Iter::value_type>
+      requires potential_comparator_for<Compare, typename Iter::value_type>
     bool check(this Self& self,
                Compare compare,
                const reporter& description,
