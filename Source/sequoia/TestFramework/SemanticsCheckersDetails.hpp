@@ -91,12 +91,15 @@ namespace sequoia::testing
   template<class T>
   using optional_ref = std::optional<std::reference_wrapper<T>>;
 
-  template<test_mode Mode, movable_comparable T, class U>
-  inline constexpr bool checkable_against{
+  template<test_mode Mode, class T, class U>
+  inline constexpr bool checkable_against_with_best_available{
     requires(test_logger<Mode>& logger, T& t, const U& u) {
       check(with_best_available, "", logger, t, u);
     }
   };
+
+  template<test_mode Mode, std::equality_comparable T, class U>
+  inline constexpr bool checkable_against{std::is_same_v<T, U> || checkable_against_with_best_available<Mode, T, U>};
 }
 
 namespace sequoia::testing::impl
@@ -314,6 +317,23 @@ namespace sequoia::testing::impl
     return eq && neq && check("Prerequisite - for checking semantics, x and y are assumed to be different", logger, x != y);
   }
 
+  template<test_mode Mode, std::equality_comparable T, class U>
+    requires checkable_against<Mode, T, U>
+  bool check_against(std::string message, test_logger<Mode>& logger, const T& x, const U& xEquivalent)
+  {
+    if constexpr(std::is_same_v<T, U>)
+    {
+      if constexpr (reportable<T>)
+        return check(simple_equality, std::move(message), logger, x, xEquivalent);
+      else
+        return check(std::move(message), logger, x == xEquivalent);
+    }
+    else
+    {
+      return check(with_best_available, std::move(message), logger, x, xEquivalent);
+    }
+  }
+
   template<test_mode Mode, class Actions, std::equality_comparable T, class U, class... Args>
   [[nodiscard]]
   bool check_equality_prerequisites(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const U& xEquivalent, const U& yEquivalent, const Args&... args)
@@ -321,16 +341,15 @@ namespace sequoia::testing::impl
     if(!check_equality_prerequisites(logger, actions, x, y, args...))
       return false;
 
-    auto mess{
+    auto makeMessage{
       [](std::string_view var) {
         return std::format("Prerequisite - for checking move-only semantics, {} and {}Equivalent are assumed to be equal", var, var);
       }
     };
+    
+    const bool xPassed{check_against(makeMessage("x"), logger, x, xEquivalent)};
 
-    using check_type = std::conditional_t<std::is_same_v<T, U>, simple_equality_check_t, with_best_available_check_t>;
-    const bool xPassed{check(check_type{}, mess("x"), logger, x, xEquivalent)};
-
-    return check(check_type{}, mess("y"), logger, y, yEquivalent) && xPassed;
+    return check_against(makeMessage("y"), logger, y, yEquivalent) && xPassed;
   }
   
   template<test_mode Mode, class Actions, std::totally_ordered T, class... Args>
@@ -382,12 +401,12 @@ namespace sequoia::testing::impl
                                               const Args&... args)
   {
     T w{std::move(z)};
-    if(!check(with_best_available, "Inconsistent move construction", logger, w, y))
+    if(!check_against("Inconsistent move construction", logger, w, y))
       return {};
 
     if(movedFrom.has_value())
     {
-      check(with_best_available, "Incorrect moved-from value after move construction", logger, z, movedFrom.value().get());
+      check_against("Incorrect moved-from value after move construction", logger, z, movedFrom.value().get());
     }
 
     if constexpr(has_post_move_action<Actions, test_logger<Mode>, T, Args...>)
@@ -423,12 +442,12 @@ namespace sequoia::testing::impl
                             const Args&... args)
   {
     z = std::move(y);
-    if(!check(with_best_available, "Inconsistent move assignment (from y)", logger, z, yEquivalent))
+    if(!check_against("Inconsistent move assignment (from y)", logger, z, yEquivalent))
        return;
 
     if(movedFrom.has_value())
     {
-      check(with_best_available, "Incorrect moved-from value after move assignment", logger, y, movedFrom.value().get());
+      check_against("Incorrect moved-from value after move assignment", logger, y, movedFrom.value().get());
     }
 
     if constexpr(has_post_move_assign_action<Actions, test_logger<Mode>, T, Mutator, Args...>)
@@ -465,11 +484,11 @@ namespace sequoia::testing::impl
     std::ranges::swap(x, y);
 
     const bool swapy{
-      check(with_best_available, "Inconsistent Swap (y)", logger, y, xEquivalent)
+      check_against("Inconsistent Swap (y)", logger, y, xEquivalent)
     };
 
     const bool swapx{
-      check(with_best_available, "Inconsistent Swap (x)", logger, x, yEquivalent)
+      check_against("Inconsistent Swap (x)", logger, x, yEquivalent)
     };
 
     if(swapx && swapy)
@@ -480,7 +499,7 @@ namespace sequoia::testing::impl
       }
 
       std::ranges::swap(y,y);
-      return check(with_best_available, "Inconsistent Self Swap", logger, y, xEquivalent);
+      return check_against("Inconsistent Self Swap", logger, y, xEquivalent);
     }
 
     return false;
@@ -520,7 +539,7 @@ namespace sequoia::testing::impl
 
     s >> u;
 
-    return check(with_best_available, "Inconsistent (de)serialization", logger, u, y);
+    return check_against("Inconsistent (de)serialization", logger, u, y);
   }
 
   template<test_mode Mode, class Actions, movable_comparable T>

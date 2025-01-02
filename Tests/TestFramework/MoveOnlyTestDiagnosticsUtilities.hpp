@@ -61,13 +61,6 @@ namespace sequoia::testing
     int m_Index{-1};
   };
 
-  template<>
-  struct serializer<resource_binder<enable_serialization::no>>
-  {
-    [[nodiscard]]
-    static std::string make(const resource_binder<enable_serialization::no>& b) { return std::format("{}", b.index()); }
-  };
-  
   template<class T=int, class Allocator=std::allocator<int>>
   struct move_only_beast
   {
