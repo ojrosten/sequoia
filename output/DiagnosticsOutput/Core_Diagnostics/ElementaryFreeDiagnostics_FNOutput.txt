@@ -1195,3 +1195,24 @@ Best available for only_weakly_checkable with advice
 
 =======================================
 
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 318
+Best available for perfectly_serializable_type
+
+[sequoia::testing::perfectly_serializable_type]
+operator== returned false
+Obtained : 1
+Predicted: 2
+
+=======================================
+
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 323
+Best available for perfectly_serializable_type with advice
+
+[sequoia::testing::perfectly_serializable_type]
+operator== returned false
+Obtained : 2
+Predicted: 1
+Advice: Perfectly reasonable advice
+
+=======================================
+

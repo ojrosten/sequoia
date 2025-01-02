@@ -313,6 +313,17 @@ namespace sequoia::testing
           only_weakly_checkable{1, -1.4},
           only_weakly_checkable{2, 6.7},
           tutor{bland{}});
+
+    check(with_best_available,
+          reporter{"Best available for perfectly_serializable_type"},
+          perfectly_serializable_type{1},
+          perfectly_serializable_type{2});
+
+    check(with_best_available,
+          reporter{"Best available for perfectly_serializable_type with advice"},
+          perfectly_serializable_type{2},
+          perfectly_serializable_type{1},
+          tutor{[](const perfectly_serializable_type&, const perfectly_serializable_type&){ return "Perfectly reasonable advice";}});
   }
 
   [[nodiscard]]
@@ -397,6 +408,11 @@ namespace sequoia::testing
           reporter{"Best available for only_weakly_checkable"},
           only_weakly_checkable{1, 6.7},
           only_weakly_checkable{1, 6.7});
+
+    check(with_best_available,
+          reporter{"Best available for perfectly_serializable_type"},
+          perfectly_serializable_type{1},
+          perfectly_serializable_type{1});
   }
 
   void elementary_false_positive_free_diagnostics::test_equality_checks()
