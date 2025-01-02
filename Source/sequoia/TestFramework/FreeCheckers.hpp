@@ -268,13 +268,13 @@ namespace sequoia::testing
   }
 
   template<bool IsFinalMessage, test_mode Mode, class Compare, class T, class Advisor>
-  requires std::is_invocable_r_v<bool, Compare, T, T>
+    requires std::is_invocable_r_v<bool, Compare, T, T>
   void binary_comparison(final_message_constant<IsFinalMessage>, sentinel<Mode>& sentry, Compare compare, const T& obtained, const T& prediction, tutor<Advisor> advisor)
   {
     sentry.log_check();
     if(!compare(obtained, prediction))
     {
-      std::string message{failure_reporter<Compare>::reporter(final_message_constant<IsFinalMessage && reportable<T>>{}, compare, obtained, prediction)};
+      std::string message{failure_reporter<Compare>::reporter(final_message_constant<IsFinalMessage>{}, compare, obtained, prediction)};
       append_advice(message, {advisor, obtained, prediction});
 
       sentry.log_failure(message);

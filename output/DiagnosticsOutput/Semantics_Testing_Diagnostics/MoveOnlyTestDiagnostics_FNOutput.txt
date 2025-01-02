@@ -137,6 +137,8 @@ Incorrect moved-from state post construction
   Incorrect moved-from value after move construction
   [sequoia::testing::resource_binder<0>]
   operator== returned false
+  Obtained : 0
+  Predicted: 3
 
 =======================================
 
@@ -149,6 +151,8 @@ Incorrect moved-from state post construction
   Incorrect moved-from value after move construction
   [sequoia::testing::resource_binder<0>]
   operator== returned false
+  Obtained : 0
+  Predicted: 3
 
 =======================================
 
@@ -161,6 +165,8 @@ Incorrect moved-from state post assignment
   Incorrect moved-from value after move construction
   [sequoia::testing::resource_binder<0>]
   operator== returned false
+  Obtained : 0
+  Predicted: 3
 
 =======================================
 
@@ -173,6 +179,8 @@ Incorrect moved-from state post assignment
   Incorrect moved-from value after move assignment
   [sequoia::testing::resource_binder<0>]
   operator== returned false
+  Obtained : 1
+  Predicted: 3
 
 =======================================
 
