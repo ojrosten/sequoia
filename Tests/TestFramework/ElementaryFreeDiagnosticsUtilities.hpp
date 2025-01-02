@@ -71,6 +71,21 @@ namespace sequoia::testing
     }
   };
 
+  struct perfectly_nonserializable_type
+  {
+    int i{};
+
+    [[nodiscard]]
+    friend constexpr auto operator<=>(const perfectly_nonserializable_type&, const perfectly_nonserializable_type&) = default;
+  };
+
+  template<>
+  struct serializer<perfectly_nonserializable_type>
+  {
+    [[nodiscard]]
+    static std::string make(const perfectly_nonserializable_type& x) { return std::format("{}", x.i); }
+  };
+  
   struct only_equivalence_checkable
   {
     only_equivalence_checkable(double val) : x{val} {}

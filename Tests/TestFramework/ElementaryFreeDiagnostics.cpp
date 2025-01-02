@@ -210,6 +210,7 @@ namespace sequoia::testing
   void elementary_false_negative_free_diagnostics::test_simple_equality_checks()
   {
     check(simple_equality, "Simple Equality Checking", perfectly_serializable_type{42}, perfectly_serializable_type{43});
+    check(simple_equality, "Simple Equality Checking", perfectly_nonserializable_type{42}, perfectly_nonserializable_type{43});
   }
   
   void elementary_false_negative_free_diagnostics::test_equivalence_checks()
@@ -401,5 +402,6 @@ namespace sequoia::testing
   void elementary_false_positive_free_diagnostics::test_simple_equality_checks()
   {
     check(simple_equality, "Simple Equality Checking", perfectly_serializable_type{42}, perfectly_serializable_type{42});
+    check(simple_equality, "Simple Equality Checking", perfectly_nonserializable_type{42}, perfectly_nonserializable_type{42});
   }
 }
