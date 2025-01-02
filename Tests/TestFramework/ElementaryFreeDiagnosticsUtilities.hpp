@@ -30,8 +30,6 @@ namespace sequoia::testing
 
   struct perfectly_normal_type
   {
-    perfectly_normal_type(int j) : i{j} {}
-
     int i{};
 
     [[nodiscard]]
@@ -60,6 +58,18 @@ namespace sequoia::testing
     }
   };
 
+  struct perfectly_serializable_type
+  {
+    int i{};
+
+    [[nodiscard]]
+    friend constexpr auto operator<=>(const perfectly_serializable_type&, const perfectly_serializable_type&) = default;
+
+    friend std::ostream& operator<<(std::ostream& s, const perfectly_serializable_type& x)
+    {
+      return s << x.i;      
+    }
+  };
 
   struct only_equivalence_checkable
   {

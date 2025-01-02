@@ -32,6 +32,7 @@ namespace sequoia::testing
   {
     built_in_type_tests();
     test_equality_checks();
+    test_simple_equality_checks();
     test_equivalence_checks();
     test_weak_equivalence_checks();
     test_with_best_available_checks();
@@ -52,6 +53,11 @@ namespace sequoia::testing
       return "int advice";
       }});
 
+    check(simple_equality, "Simple integer check", 5, 4);
+    check(simple_equality, "Simple integer check with advice", 5, 4, tutor{[](int, int) {
+      return "int advice";
+      }});
+    
     check(equivalence, "Integer check via fallback", 5, 4);
     check(equivalence, "Integer check with fallback", 5, 4, tutor{[](int, int) {
       return "int advice";
@@ -201,6 +207,11 @@ namespace sequoia::testing
           tutor{[](int, int) { return "int advice"; }});
   }
 
+  void elementary_false_negative_free_diagnostics::test_simple_equality_checks()
+  {
+    check(simple_equality, "Simple Equality Checking", perfectly_serializable_type{42}, perfectly_serializable_type{43});
+  }
+  
   void elementary_false_negative_free_diagnostics::test_equivalence_checks()
   {
     check(equivalence, "Equivalence checking", only_equivalence_checkable{42}, 41);
@@ -308,6 +319,7 @@ namespace sequoia::testing
   {
     built_in_type_tests();
     test_equality_checks();
+    test_simple_equality_checks();
     test_equivalence_checks();
     test_weak_equivalence_checks();
     test_with_best_available_checks();
@@ -318,6 +330,7 @@ namespace sequoia::testing
     check("Boolean test", true);
 
     check(equality, "Integer test", 5, 5);
+    check(simple_equality, "Simple integer test", 5, 5);
     check(equality, "Double test", 5.0, 5.0);
 
     {
@@ -383,5 +396,10 @@ namespace sequoia::testing
   void elementary_false_positive_free_diagnostics::test_equality_checks()
   {
     check(equality, "Equality checking", perfectly_normal_type{42}, perfectly_normal_type{42});
+  }
+
+  void elementary_false_positive_free_diagnostics::test_simple_equality_checks()
+  {
+    check(simple_equality, "Simple Equality Checking", perfectly_serializable_type{42}, perfectly_serializable_type{42});
   }
 }

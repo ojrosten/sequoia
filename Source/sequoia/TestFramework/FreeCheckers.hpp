@@ -435,9 +435,9 @@ namespace sequoia::testing
    */
 
   template<test_mode Mode, class T, class Advisor=null_advisor>
-    requires (    deep_equality_comparable<T>
-               || tests_against_with_or_without_tutor<equality_check_t, Mode, T, T, tutor<Advisor>>
-               || faithful_range<T>)
+    requires    (deep_equality_comparable<T> && reportable<T>)
+             || tests_against_with_or_without_tutor<equality_check_t, Mode, T, T, tutor<Advisor>>
+             || faithful_range<T>
   bool check(equality_check_t,
              std::string description,
              test_logger<Mode>& logger,
@@ -468,7 +468,7 @@ namespace sequoia::testing
   /*! \brief The workhorse for checking simple equality. */
 
   template<test_mode Mode, class T, class Advisor=null_advisor>
-    requires (deep_equality_comparable<T> || faithful_range<T>)
+    requires (deep_equality_comparable<T> && reportable<T>) || faithful_range<T>
   bool check(simple_equality_check_t,
              std::string description,
              test_logger<Mode>& logger,
@@ -553,6 +553,7 @@ namespace sequoia::testing
              const U& prediction,
              tutor<Advisor> advisor={})
   {
+    // TO DO: sort this out!
     sentinel<Mode> sentry{logger, add_type_info<T>(std::move(description))};
 
     if constexpr(std::is_same_v<T, U> && deep_equality_comparable<T>)
@@ -623,9 +624,17 @@ namespace sequoia::testing
     checker& operator=(const checker&) = delete;
 
     template<class T, class Advisor = null_advisor, class Self>
+    // TO DO
     bool check(this Self& self, equality_check_t, const reporter& description, const T& obtained, const T& prediction, tutor<Advisor> advisor = {})
     {
         return testing::check(equality, self.report(description), self.m_Logger, obtained, prediction, std::move(advisor));
+    }
+
+    template<class T, class Advisor = null_advisor, class Self>
+      requires (deep_equality_comparable<T> && reportable<T>) || faithful_range<T>
+    bool check(this Self& self, simple_equality_check_t, const reporter& description, const T& obtained, const T& prediction, tutor<Advisor> advisor = {})
+    {
+        return testing::check(simple_equality, self.report(description), self.m_Logger, obtained, prediction, std::move(advisor));
     }
 
     template<class T, class U, class Advisor = null_advisor, class Self>
@@ -636,12 +645,14 @@ namespace sequoia::testing
     }
 
     template<class ValueBasedCustomizer, class T, class U, class Advisor = null_advisor, class Self>
+    // TO DO
     bool check(this Self& self, general_equivalence_check_t<ValueBasedCustomizer> checker, const reporter& description, const T& obtained, const U& prediction, tutor<Advisor> advisor = {})
     {
       return testing::check(checker, self.report(description), self.m_Logger, obtained, prediction, std::move(advisor));
     }
 
     template<class ValueBasedCustomizer, class T, class U, class Advisor = null_advisor, class Self>
+    // TO DO
     bool check(this Self& self, general_weak_equivalence_check_t<ValueBasedCustomizer> checker, const reporter& description, const T& obtained, const U& prediction, tutor<Advisor> advisor = {})
     {
       return testing::check(checker, self.report(description), self.m_Logger, obtained, prediction, std::move(advisor));
