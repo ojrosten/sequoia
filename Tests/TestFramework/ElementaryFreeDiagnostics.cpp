@@ -211,6 +211,11 @@ namespace sequoia::testing
   {
     check(simple_equality, "Simple Equality Checking", perfectly_serializable_type{42}, perfectly_serializable_type{43});
     check(simple_equality, "Simple Equality Checking", perfectly_nonserializable_type{42}, perfectly_nonserializable_type{43});
+    check(simple_equality,
+          reporter{"Simple Equality Checking with advice"},
+          perfectly_serializable_type{42},
+          perfectly_serializable_type{43},
+          tutor{[](const  perfectly_serializable_type&, const  perfectly_serializable_type&){ return "Perfectly reasonable advice";}});
   }
   
   void elementary_false_negative_free_diagnostics::test_equivalence_checks()
