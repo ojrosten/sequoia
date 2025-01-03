@@ -1,2 +1,2 @@
 Static Undirected Embedded Graph Fundamental Weight Test
-Standard Top Level Checks:               455;  Failures:  0  [Deep checks: 17318]
+Standard Top Level Checks:               455;  Failures:  0  [Deep checks: 12728]
