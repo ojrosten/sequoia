@@ -197,6 +197,11 @@ namespace sequoia::testing
     || tests_against_with_or_without_tutor<with_best_available_check_t, Mode, T, U, Tutor>
   };
 
+  template<class CheckType, test_mode Mode, class T, class U, class Tutor>
+  concept checkable_against = requires(CheckType c, test_logger<Mode>& logger, T&& obtained, const U& predicted, Tutor tutor) {
+    check(c, "", logger, std::forward<T>(obtained), predicted, tutor);
+  };
+
   /*! \brief class template, specializations of which extract messages from various exception types.
      \anchor exception_message_extractor_primary
   */

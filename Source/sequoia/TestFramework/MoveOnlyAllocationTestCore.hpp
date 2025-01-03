@@ -33,7 +33,7 @@ namespace sequoia::testing
     move_only_allocation_extender() = default;
 
     template<class Self, moveonly T, class U, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
-      requires checkable_against<Mode, T, U> &&  (!std::totally_ordered<T> && (sizeof...(Getters) > 0))
+      requires checkable_for_move_semantics<Mode, T, U> && (!std::totally_ordered<T>) && (sizeof...(Getters) > 0)
     void check_semantics(this Self& self,
                          const reporter& description,
                          T&& x,
@@ -58,7 +58,7 @@ namespace sequoia::testing
     }
 
     template<class Self, moveonly T, class U, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
-      requires (checkable_against<Mode, T, U> && !std::totally_ordered<T>  && (sizeof...(Getters) > 0))
+      requires checkable_for_move_semantics<Mode, T, U> && (!std::totally_ordered<T>)  && (sizeof...(Getters) > 0)
     void check_semantics(this Self& self,
                          const reporter& description,
                          T&& x,
@@ -89,7 +89,7 @@ namespace sequoia::testing
       std::invocable<T&> Mutator,
       alloc_getter<T>... Getters
     >
-      requires (!std::totally_ordered<T>  && (sizeof...(Getters) > 0))
+      requires (!std::totally_ordered<T>)  && (sizeof...(Getters) > 0)
     std::pair<T,T> check_semantics(this Self& self,
                                    const reporter& description,
                                    xMaker xFn,
@@ -118,7 +118,7 @@ namespace sequoia::testing
       std::invocable<T&> Mutator,
       alloc_getter<T>... Getters
     >
-      requires (!std::totally_ordered<T>  && (sizeof...(Getters) > 0))
+      requires (!std::totally_ordered<T>)  && (sizeof...(Getters) > 0)
     std::pair<T,T> check_semantics(this Self& self, const reporter& description, xMaker xFn, yMaker yFn, Mutator yMutator, const allocation_info<T, Getters>&... info)
     {
       return testing::check_semantics(move_only_message(self.report(description)),
@@ -132,7 +132,7 @@ namespace sequoia::testing
     }
 
     template<class Self, moveonly T, class U, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
-      requires (checkable_against<Mode, T, U> && std::totally_ordered<T> && (sizeof...(Getters) > 0))
+      requires checkable_for_move_semantics<Mode, T, U> && std::totally_ordered<T> && (sizeof...(Getters) > 0)
     void check_semantics(this Self& self,
                          const reporter& description,
                          T&& x,
@@ -159,7 +159,7 @@ namespace sequoia::testing
     }
 
     template<class Self, moveonly T, class U, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
-      requires (checkable_against<Mode, T, U> && std::totally_ordered<T>  && (sizeof...(Getters) > 0))
+      requires checkable_for_move_semantics<Mode, T, U> && std::totally_ordered<T> && (sizeof...(Getters) > 0)
     void check_semantics(this Self& self,
                          const reporter& description,
                          T&& x,
@@ -192,7 +192,7 @@ namespace sequoia::testing
       std::invocable<T&> Mutator,
       alloc_getter<T>... Getters
     >
-      requires (std::totally_ordered<T> && (sizeof...(Getters) > 0))
+      requires std::totally_ordered<T> && (sizeof...(Getters) > 0)
     std::pair<T, T> check_semantics(this Self& self,
                                     const reporter& description,
                                     xMaker xFn,
@@ -223,7 +223,7 @@ namespace sequoia::testing
       std::invocable<T&> Mutator,
       alloc_getter<T>... Getters
     >
-      requires (std::totally_ordered<T>  && (sizeof...(Getters) > 0))
+      requires std::totally_ordered<T>  && (sizeof...(Getters) > 0)
     std::pair<T,T> check_semantics(this Self& self,
                                    const reporter& description,
                                    xMaker xFn,

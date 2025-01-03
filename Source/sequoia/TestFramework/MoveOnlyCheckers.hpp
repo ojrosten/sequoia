@@ -47,7 +47,7 @@ namespace sequoia::testing
       x != y
    */
   template<test_mode Mode, moveonly T, class U>
-    requires checkable_against<Mode, T, U>
+    requires checkable_for_move_semantics<Mode, T, U>
   bool check_semantics(std::string description,
                        test_logger<Mode>& logger,
                        T&& x,
@@ -79,7 +79,7 @@ namespace sequoia::testing
       x != y
    */
   template<test_mode Mode, moveonly T, class U>
-    requires checkable_against<Mode, T, U> && std::totally_ordered<T>
+    requires checkable_for_move_semantics<Mode, T, U> && std::totally_ordered<T>
   bool check_semantics(std::string description,
                        test_logger<Mode>& logger,
                        T&& x,

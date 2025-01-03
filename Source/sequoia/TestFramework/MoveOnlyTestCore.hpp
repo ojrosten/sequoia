@@ -40,7 +40,7 @@ namespace sequoia::testing
     
     /// Prerequisites: x!=y; x==xEquivalent, y==yEquivalent
     template<class Self, moveonly T, class U>
-      requires checkable_against<Mode, T, U>
+      requires checkable_for_move_semantics<Mode, T, U>
     bool check_semantics(this Self& self,
                          const reporter& description,
                          T&& x,
@@ -63,7 +63,7 @@ namespace sequoia::testing
     }
 
     template<class Self, moveonly T, class U>
-      requires checkable_against<Mode, T, U>
+      requires checkable_for_move_semantics<Mode, T, U>
     bool check_semantics(this Self& self, const reporter& description, T&& x, T&& y, const U& xEquivalent, const U& yEquivalent)
     {
       return testing::check_semantics(
@@ -141,7 +141,7 @@ namespace sequoia::testing
     }
 
     template<class Self, moveonly T, class U>
-      requires checkable_against<Mode, T, U> && std::totally_ordered<T>
+      requires checkable_for_move_semantics<Mode, T, U> && std::totally_ordered<T>
     bool check_semantics(this Self& self,
                          const reporter& description,
                          T&& x,

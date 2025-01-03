@@ -16,7 +16,7 @@
 namespace sequoia::testing::impl
 {
   template<test_mode Mode, class Actions, moveonly T, class U, std::invocable<T&> Mutator, class... Args>
-    requires checkable_against<Mode, T, U>
+    requires checkable_for_move_semantics<Mode, T, U>
   bool check_semantics(test_logger<Mode>& logger,
                        const Actions& actions,
                        T&& x,
