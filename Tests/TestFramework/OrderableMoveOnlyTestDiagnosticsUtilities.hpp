@@ -165,6 +165,9 @@ namespace sequoia::testing
     }
   };
 
+  template<class T, class Allocator>
+  struct value_tester<orderable_specified_moved_from_beast<T, Allocator>> : move_only_beast_value_tester<orderable_specified_moved_from_beast<T, Allocator>> {};
+
   template<class T=int, class Allocator=std::allocator<int>>
   struct move_only_broken_less
   {

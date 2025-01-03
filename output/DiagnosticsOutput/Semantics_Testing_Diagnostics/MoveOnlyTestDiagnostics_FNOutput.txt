@@ -279,21 +279,20 @@ Broken move
 [sequoia::testing::move_only_broken_move<int, std::allocator<int> >]
 
   Inconsistent move construction
-  [sequoia::testing::move_only_broken_move<int, std::allocator<int> >]
-    Comparison performed using:
-    [sequoia::testing::value_tester<sequoia::testing::move_only_broken_move<int, std::allocator<int> > >]
-    Checking for equivalence with:
+  Comparison performed using:
+  [sequoia::testing::value_tester<sequoia::testing::move_only_broken_move<int, std::allocator<int> > >]
+  Checking for equivalence with:
+  [std::vector<int, std::allocator<int> >]
+
+    Wrapped vector
     [std::vector<int, std::allocator<int> >]
+    operator== returned false
 
-      Wrapped vector
-      [std::vector<int, std::allocator<int> >]
+      Container size wrong
+      [unsigned long long]
       operator== returned false
-
-        Container size wrong
-        [unsigned long long]
-        operator== returned false
-        Obtained : 0
-        Predicted: 1
+      Obtained : 0
+      Predicted: 1
 
 =======================================
 
@@ -304,38 +303,36 @@ Broken swap
 [sequoia::testing::move_only_broken_swap<int, std::allocator<int> >]
 
   Inconsistent Swap (y)
-  [sequoia::testing::move_only_broken_swap<int, std::allocator<int> >]
-    Comparison performed using:
-    [sequoia::testing::value_tester<sequoia::testing::move_only_broken_swap<int, std::allocator<int> > >]
-    Checking for equivalence with:
+  Comparison performed using:
+  [sequoia::testing::value_tester<sequoia::testing::move_only_broken_swap<int, std::allocator<int> > >]
+  Checking for equivalence with:
+  [std::vector<int, std::allocator<int> >]
+
+    Wrapped vector
     [std::vector<int, std::allocator<int> >]
+    operator== returned false
 
-      Wrapped vector
-      [std::vector<int, std::allocator<int> >]
+      Element 0 of range incorrect
+      [int]
       operator== returned false
-
-        Element 0 of range incorrect
-        [int]
-        operator== returned false
-        Obtained : 2
-        Predicted: 1
+      Obtained : 2
+      Predicted: 1
 
   Inconsistent Swap (x)
-  [sequoia::testing::move_only_broken_swap<int, std::allocator<int> >]
-    Comparison performed using:
-    [sequoia::testing::value_tester<sequoia::testing::move_only_broken_swap<int, std::allocator<int> > >]
-    Checking for equivalence with:
+  Comparison performed using:
+  [sequoia::testing::value_tester<sequoia::testing::move_only_broken_swap<int, std::allocator<int> > >]
+  Checking for equivalence with:
+  [std::vector<int, std::allocator<int> >]
+
+    Wrapped vector
     [std::vector<int, std::allocator<int> >]
+    operator== returned false
 
-      Wrapped vector
-      [std::vector<int, std::allocator<int> >]
+      Element 0 of range incorrect
+      [int]
       operator== returned false
-
-        Element 0 of range incorrect
-        [int]
-        operator== returned false
-        Obtained : 1
-        Predicted: 2
+      Obtained : 1
+      Predicted: 2
 
 =======================================
 
@@ -346,21 +343,20 @@ Broken move assignment
 [sequoia::testing::move_only_broken_move_assignment<int, std::allocator<int> >]
 
   Inconsistent move assignment (from y)
-  [sequoia::testing::move_only_broken_move_assignment<int, std::allocator<int> >]
-    Comparison performed using:
-    [sequoia::testing::value_tester<sequoia::testing::move_only_broken_move_assignment<int, std::allocator<int> > >]
-    Checking for equivalence with:
+  Comparison performed using:
+  [sequoia::testing::value_tester<sequoia::testing::move_only_broken_move_assignment<int, std::allocator<int> > >]
+  Checking for equivalence with:
+  [std::vector<int, std::allocator<int> >]
+
+    Wrapped vector
     [std::vector<int, std::allocator<int> >]
+    operator== returned false
 
-      Wrapped vector
-      [std::vector<int, std::allocator<int> >]
+      Element 0 of range incorrect
+      [int]
       operator== returned false
-
-        Element 0 of range incorrect
-        [int]
-        operator== returned false
-        Obtained : 1
-        Predicted: 2
+      Obtained : 1
+      Predicted: 2
 
 =======================================
 
@@ -383,21 +379,20 @@ Broken check invariant
 [sequoia::testing::move_only_beast<int, std::allocator<int> >]
 
   Prerequisite - for checking move-only semantics, x and xEquivalent are assumed to be equal
-  [sequoia::testing::move_only_beast<int, std::allocator<int> >]
-    Comparison performed using:
-    [sequoia::testing::value_tester<sequoia::testing::move_only_beast<int, std::allocator<int> > >]
-    Checking for equivalence with:
+  Comparison performed using:
+  [sequoia::testing::value_tester<sequoia::testing::move_only_beast<int, std::allocator<int> > >]
+  Checking for equivalence with:
+  [std::vector<int, std::allocator<int> >]
+
+    Wrapped vector
     [std::vector<int, std::allocator<int> >]
+    operator== returned false
 
-      Wrapped vector
-      [std::vector<int, std::allocator<int> >]
+      Element 0 of range incorrect
+      [int]
       operator== returned false
-
-        Element 0 of range incorrect
-        [int]
-        operator== returned false
-        Obtained : 1
-        Predicted: 2
+      Obtained : 1
+      Predicted: 2
 
 =======================================
 
@@ -408,21 +403,20 @@ Broken check invariant
 [sequoia::testing::move_only_beast<int, std::allocator<int> >]
 
   Prerequisite - for checking move-only semantics, y and yEquivalent are assumed to be equal
-  [sequoia::testing::move_only_beast<int, std::allocator<int> >]
-    Comparison performed using:
-    [sequoia::testing::value_tester<sequoia::testing::move_only_beast<int, std::allocator<int> > >]
-    Checking for equivalence with:
+  Comparison performed using:
+  [sequoia::testing::value_tester<sequoia::testing::move_only_beast<int, std::allocator<int> > >]
+  Checking for equivalence with:
+  [std::vector<int, std::allocator<int> >]
+
+    Wrapped vector
     [std::vector<int, std::allocator<int> >]
+    operator== returned false
 
-      Wrapped vector
-      [std::vector<int, std::allocator<int> >]
+      Element 0 of range incorrect
+      [int]
       operator== returned false
-
-        Element 0 of range incorrect
-        [int]
-        operator== returned false
-        Obtained : 1
-        Predicted: 3
+      Obtained : 1
+      Predicted: 3
 
 =======================================
 

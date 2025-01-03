@@ -145,6 +145,9 @@ False Negative Failure:
 Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 393
 Best available for only_equivalence_checkable
 
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::testing::only_equivalence_checkable>]
+Checking for equivalence with:
 [sequoia::testing::only_equivalence_checkable]
 
 =======================================
@@ -153,7 +156,10 @@ False Negative Failure:
 Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 398
 Best available for only_equivalence_checkable compared with an int
 
-[sequoia::testing::only_equivalence_checkable]
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::testing::only_equivalence_checkable>]
+Checking for equivalence with:
+[int]
 
 =======================================
 
@@ -161,6 +167,9 @@ False Negative Failure:
 Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 403
 Best available for only_weakly_checkable
 
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::testing::only_weakly_checkable>]
+Checking for weak equivalence with:
 [sequoia::testing::only_weakly_checkable]
 
 =======================================
@@ -169,6 +178,9 @@ False Negative Failure:
 Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 408
 Best available for only_weakly_checkable
 
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::testing::only_weakly_checkable>]
+Checking for weak equivalence with:
 [sequoia::testing::only_weakly_checkable]
 
 =======================================

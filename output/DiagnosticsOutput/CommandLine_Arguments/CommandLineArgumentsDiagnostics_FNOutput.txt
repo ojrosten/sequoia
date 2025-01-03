@@ -85,15 +85,14 @@ Checking for weak equivalence with:
         const_node_iter
 
           Element 0 of range incorrect
+          Comparison performed using:
+          [sequoia::testing::value_tester<sequoia::parsing::commandline::operation>]
+          Checking for weak equivalence with:
           [sequoia::parsing::commandline::operation]
-            Comparison performed using:
-            [sequoia::testing::value_tester<sequoia::parsing::commandline::operation>]
-            Checking for weak equivalence with:
-            [sequoia::parsing::commandline::operation]
 
-              Existence ofearly function objects differs
-              [bool]
-              check failed
+            Existence ofearly function objects differs
+            [bool]
+            check failed
 
 =======================================
 
@@ -118,15 +117,14 @@ Checking for weak equivalence with:
         const_node_iter
 
           Element 0 of range incorrect
+          Comparison performed using:
+          [sequoia::testing::value_tester<sequoia::parsing::commandline::operation>]
+          Checking for weak equivalence with:
           [sequoia::parsing::commandline::operation]
-            Comparison performed using:
-            [sequoia::testing::value_tester<sequoia::parsing::commandline::operation>]
-            Checking for weak equivalence with:
-            [sequoia::parsing::commandline::operation]
 
-              Existence oflate function objects differs
-              [bool]
-              check failed
+            Existence oflate function objects differs
+            [bool]
+            check failed
 
 =======================================
 
@@ -151,27 +149,26 @@ Checking for weak equivalence with:
         const_node_iter
 
           Element 0 of range incorrect
+          Comparison performed using:
+          [sequoia::testing::value_tester<sequoia::parsing::commandline::operation>]
+          Checking for weak equivalence with:
           [sequoia::parsing::commandline::operation]
-            Comparison performed using:
-            [sequoia::testing::value_tester<sequoia::parsing::commandline::operation>]
-            Checking for weak equivalence with:
-            [sequoia::parsing::commandline::operation]
 
-              Function object tag
-              [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+            Function object tag
+            [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+            operator== returned false
+
+              Lengths differ
+              Obtained string is too short
+              [unsigned long long]
               operator== returned false
+              Obtained : 0
+              Predicted: 1
 
-                Lengths differ
-                Obtained string is too short
-                [unsigned long long]
-                operator== returned false
-                Obtained : 0
-                Predicted: 1
-
-                First missing character: x
-                Full strings:
-                Obtained : 
-                Predicted: x
+              First missing character: x
+              Full strings:
+              Obtained : 
+              Predicted: x
 
 =======================================
 
@@ -196,27 +193,26 @@ Checking for weak equivalence with:
         const_node_iter
 
           Element 0 of range incorrect
+          Comparison performed using:
+          [sequoia::testing::value_tester<sequoia::parsing::commandline::operation>]
+          Checking for weak equivalence with:
           [sequoia::parsing::commandline::operation]
-            Comparison performed using:
-            [sequoia::testing::value_tester<sequoia::parsing::commandline::operation>]
-            Checking for weak equivalence with:
-            [sequoia::parsing::commandline::operation]
 
-              Function object tag
-              [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+            Function object tag
+            [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+            operator== returned false
+
+              Lengths differ
+              Obtained string is too short
+              [unsigned long long]
               operator== returned false
+              Obtained : 0
+              Predicted: 1
 
-                Lengths differ
-                Obtained string is too short
-                [unsigned long long]
-                operator== returned false
-                Obtained : 0
-                Predicted: 1
-
-                First missing character: y
-                Full strings:
-                Obtained : 
-                Predicted: y
+              First missing character: y
+              Full strings:
+              Obtained : 
+              Predicted: y
 
 =======================================
 
@@ -241,39 +237,38 @@ Checking for weak equivalence with:
         const_node_iter
 
           Element 0 of range incorrect
+          Comparison performed using:
+          [sequoia::testing::value_tester<sequoia::parsing::commandline::operation>]
+          Checking for weak equivalence with:
           [sequoia::parsing::commandline::operation]
-            Comparison performed using:
-            [sequoia::testing::value_tester<sequoia::parsing::commandline::operation>]
-            Checking for weak equivalence with:
-            [sequoia::parsing::commandline::operation]
 
-              Function object tag
-              [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+            Function object tag
+            [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+            operator== returned false
+
+              First difference detected at character 0:
+              [char]
               operator== returned false
+              Obtained : x
+              Predicted: y
 
-                First difference detected at character 0:
-                [char]
-                operator== returned false
-                Obtained : x
-                Predicted: y
+              Full strings:
+              Obtained : x
+              Predicted: y
 
-                Full strings:
-                Obtained : x
-                Predicted: y
+            Function object tag
+            [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+            operator== returned false
 
-              Function object tag
-              [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+              First difference detected at character 0:
+              [char]
               operator== returned false
+              Obtained : y
+              Predicted: x
 
-                First difference detected at character 0:
-                [char]
-                operator== returned false
-                Obtained : y
-                Predicted: x
-
-                Full strings:
-                Obtained : y
-                Predicted: x
+              Full strings:
+              Obtained : y
+              Predicted: x
 
 =======================================
 

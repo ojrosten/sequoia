@@ -19,7 +19,7 @@ namespace sequoia::testing
   struct move_only_beast_value_tester
   {
     using type            = M;
-    using equivalent_type = std::vector<typename M::value_type>;
+    using equivalent_type = std::vector<typename M::value_type, typename M::allocator_type>;
 
     template<test_mode Mode, class Advisor>
     static void test(equivalence_check_t, test_logger<Mode>& logger, const type& obtained, const equivalent_type& prediction, const tutor<Advisor>& advisor)
