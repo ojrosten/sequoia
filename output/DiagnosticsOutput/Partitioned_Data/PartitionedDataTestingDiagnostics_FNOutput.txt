@@ -1226,8 +1226,6 @@ Checking for equivalence with:
   Partition 0: iterator
 
     Element 0 of range incorrect
-    [std::vector<double, std::allocator<double> >]
-    operator== returned false
 
       Element 0 of range incorrect
       [double]
@@ -1238,8 +1236,6 @@ Checking for equivalence with:
   Partition 0: riterator
 
     Element 0 of range incorrect
-    [std::vector<double, std::allocator<double> >]
-    operator== returned false
 
       Element 0 of range incorrect
       [double]
@@ -1972,8 +1968,6 @@ Checking for equivalence with:
   Partition 0: iterator
 
     Element 0 of range incorrect
-    [std::vector<double, std::allocator<double> >]
-    operator== returned false
 
       Element 0 of range incorrect
       [double]
@@ -1984,8 +1978,6 @@ Checking for equivalence with:
   Partition 0: riterator
 
     Element 0 of range incorrect
-    [std::vector<double, std::allocator<double> >]
-    operator== returned false
 
       Element 0 of range incorrect
       [double]

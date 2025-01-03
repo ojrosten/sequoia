@@ -173,7 +173,7 @@ namespace sequoia::testing
 
   template<class Compare, class T>
   inline constexpr bool potential_comparator_for{
-    std::is_invocable_r_v<bool, Compare, T, T> || (faithful_range<T> && !(is_elementary_check<Compare> || std::is_same_v<T, with_best_available_check_t> || is_customized_check<Compare>))
+    std::is_invocable_r_v<bool, Compare, T, T> || (faithful_range<T> && !(is_elementary_check<Compare> || std::is_same_v<Compare, with_best_available_check_t> || is_customized_check<Compare>))
   };
 
   template<class CheckType, test_mode Mode, class T, class U, class... Args>
