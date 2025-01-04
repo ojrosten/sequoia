@@ -5,8 +5,8 @@ Another Suite:
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 
 -----------Grand Totals-----------
-[Total Run Time: 2.93ms]
-[Execution Time: 1.07ms]
+[Total Run Time: 363us]
+[Execution Time: 136us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -19,7 +19,7 @@ Running tests...
 Another Suite:
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 177
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 190
 	Flipper
 
 	[bool]
@@ -29,8 +29,8 @@ Another Suite:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 3.15ms]
-[Execution Time: 925us]
+[Total Run Time: 244us]
+[Execution Time: 60.7us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -46,7 +46,7 @@ Outcome frequencies:
 
 vs.
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 177
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 190
 	Flipper
 
 	[bool]

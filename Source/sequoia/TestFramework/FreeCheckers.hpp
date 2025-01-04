@@ -299,6 +299,8 @@ namespace sequoia::testing
     }
   };
 
+  //================= namespace-level check functions =================//
+  
   template
   <
     class E,
@@ -340,8 +342,6 @@ namespace sequoia::testing
       return false;
     }
   }
-
-  //================= namespace-level convenience functions =================//
 
   /*! \brief The workhorse for comparing the contents of ranges.
 
@@ -425,6 +425,16 @@ namespace sequoia::testing
     return !sentry.failure_detected();
   }
 
+  /*! \brief Condition for applying an equality check */
+
+  template<test_mode Mode, class T, class Advisor>
+  inline constexpr bool supports_equality_check{
+       (deep_equality_comparable<T> && reportable<T>)
+    || tests_against_with_or_without_tutor<equality_check_t, Mode, T, T, tutor<Advisor>>
+    || faithful_range<T>
+  };
+  
+
   /*! \brief The workhorse of equality checking, which takes responsibility for reflecting upon types
       and then dispatching, appropriately.
 
@@ -444,9 +454,7 @@ namespace sequoia::testing
    */
 
   template<test_mode Mode, class T, class Advisor=null_advisor>
-    requires    (deep_equality_comparable<T> && reportable<T>)
-             || tests_against_with_or_without_tutor<equality_check_t, Mode, T, T, tutor<Advisor>>
-             || faithful_range<T>
+    requires supports_equality_check<Mode, T, Advisor>
   bool check(equality_check_t,
              std::string description,
              test_logger<Mode>& logger,
@@ -635,14 +643,14 @@ namespace sequoia::testing
     checker& operator=(const checker&) = delete;
 
     template<class T, class Advisor = null_advisor, class Self>
-    // TO DO
+      requires supports_equality_check<Mode, T, Advisor>
     bool check(this Self& self, equality_check_t, const reporter& description, const T& obtained, const T& prediction, tutor<Advisor> advisor = {})
     {
-        return testing::check(equality, self.report(description), self.m_Logger, obtained, prediction, std::move(advisor));
+      return testing::check(equality, self.report(description), self.m_Logger, obtained, prediction, std::move(advisor));
     }
 
     template<class T, class Advisor = null_advisor, class Self>
-      requires (deep_equality_comparable<T> && reportable<T>) || faithful_range<T>
+     requires (deep_equality_comparable<T> && reportable<T>) || faithful_range<T>
     bool check(this Self& self, simple_equality_check_t, const reporter& description, const T& obtained, const T& prediction, tutor<Advisor> advisor = {})
     {
         return testing::check(simple_equality, self.report(description), self.m_Logger, obtained, prediction, std::move(advisor));
