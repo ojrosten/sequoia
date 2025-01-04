@@ -524,11 +524,18 @@ namespace sequoia::testing
 
    */
 
+  /*! \brief Condition for applying a generalized equivalance check */
+
+  template<class CheckType, test_mode Mode, class T, class U, class Advisor>
+  inline constexpr bool supports_generalized_equivalence_check{
+       is_general_equivalence_check<CheckType>
+    && (   tests_against_with_or_without_tutor<CheckType, Mode, T, U, tutor<Advisor>>
+        || faithful_range<T>
+        || checkable_against_fallback<CheckType, Mode, T, U, tutor<Advisor>>)
+  };
+  
   template<class CheckType, test_mode Mode, class T, class U, class Advisor=null_advisor>
-    requires    is_general_equivalence_check<CheckType>
-            && (   tests_against_with_or_without_tutor<CheckType, Mode, T, U, tutor<Advisor>>
-                || faithful_range<T>
-                || checkable_against_fallback<CheckType, Mode, T, U, tutor<Advisor>>)
+    requires supports_generalized_equivalence_check<CheckType, Mode, T, U, Advisor>
   bool check(CheckType flavour, std::string description, test_logger<Mode>& logger, const T& obtained, const U& prediction, tutor<Advisor> advisor={})
   {
     if constexpr(tests_against_with_or_without_tutor<CheckType, Mode, T, U, tutor<Advisor>>)
@@ -677,14 +684,14 @@ namespace sequoia::testing
     }
 
     template<class ValueBasedCustomizer, class T, class U, class Advisor = null_advisor, class Self>
-    // TO DO
+      requires supports_generalized_equivalence_check<general_equivalence_check_t<ValueBasedCustomizer>, Mode, T, U, Advisor>
     bool check(this Self& self, general_equivalence_check_t<ValueBasedCustomizer> checker, const reporter& description, const T& obtained, const U& prediction, tutor<Advisor> advisor = {})
     {
       return testing::check(checker, self.report(description), self.m_Logger, obtained, prediction, std::move(advisor));
     }
 
     template<class ValueBasedCustomizer, class T, class U, class Advisor = null_advisor, class Self>
-    // TO DO
+      requires supports_generalized_equivalence_check<general_weak_equivalence_check_t<ValueBasedCustomizer>, Mode, T, U, Advisor>
     bool check(this Self& self, general_weak_equivalence_check_t<ValueBasedCustomizer> checker, const reporter& description, const T& obtained, const U& prediction, tutor<Advisor> advisor = {})
     {
       return testing::check(checker, self.report(description), self.m_Logger, obtained, prediction, std::move(advisor));
