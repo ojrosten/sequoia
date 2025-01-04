@@ -428,7 +428,7 @@ namespace sequoia::testing
 
   /*! \brief Condition for applying an equality check */
 
-  // TO DO: improve range condition
+  // TO DO: improve range condition here and below
   template<test_mode Mode, class T, class Advisor>
   inline constexpr bool supports_equality_check{
        (deep_equality_comparable<T> && reportable<T>)
@@ -566,13 +566,20 @@ namespace sequoia::testing
       static_assert(dependent_false<CheckType>::value, "Should never be triggered; indicates mismatch between requirement and logic");
     }
   }  
+
+  /*! \brief Condition for applying the best available check */
+
+  template<test_mode Mode, class T, class U, class Advisor>
+  inline constexpr bool supports_best_available_check{
+       tests_against_with_or_without_tutor<with_best_available_check_t, Mode, T, U, tutor<Advisor>>
+    || has_elementary_check_against<Mode, T, U, tutor<Advisor>>
+    || faithful_range<T>
+  };
   
   /*! \brief The workhorse for dispatching to the strongest available type of check. */
 
   template<test_mode Mode, class T, class U, class Advisor=null_advisor>
-    requires    tests_against_with_or_without_tutor<with_best_available_check_t, Mode, T, U, tutor<Advisor>>
-             || has_elementary_check_against<Mode, T, U, tutor<Advisor>>
-             || faithful_range<T>
+    requires supports_best_available_check<Mode, T, U, Advisor>
   bool check(with_best_available_check_t,
              std::string description,
              test_logger<Mode>& logger,
@@ -663,9 +670,7 @@ namespace sequoia::testing
     }
 
     template<class T, class U, class Advisor = null_advisor, class Self>
-      requires    tests_against_with_or_without_tutor<with_best_available_check_t, Mode, T, U, tutor<Advisor>>
-               || has_elementary_check_against<Mode, T, U, tutor<Advisor>>
-               || faithful_range<T>
+      requires supports_best_available_check<Mode, T, U, Advisor>
     bool check(this Self& self, with_best_available_check_t, const reporter& description, const T& obtained, const U& prediction, tutor<Advisor> advisor = {})
     {
       return testing::check(with_best_available, self.report(description), self.m_Logger, obtained, prediction, std::move(advisor));
