@@ -505,7 +505,7 @@ namespace sequoia::testing
     {
       select_test(equality_check_t{}, logger, obtained, prediction, advisor);
     }
-    else if constexpr(faithful_range<T>)
+    else if constexpr(supports_range_check_v<equality_check_t, Mode, T, T, Advisor>)
     {
       check(equality, "", logger, std::begin(obtained), std::end(obtained), std::begin(prediction), std::end(prediction), advisor);
     }
@@ -515,13 +515,16 @@ namespace sequoia::testing
 
   /*! \brief Condition for applying an equality check */
 
-  template<class T>
-  inline constexpr bool supports_simple_equality_check{(deep_equality_comparable<T> && reportable<T>) || faithful_range<T>};
+  template<test_mode Mode, class T, class Advisor>
+  inline constexpr bool supports_simple_equality_check{
+       (deep_equality_comparable<T> && reportable<T>)
+    || supports_range_check_v<simple_equality_check_t, Mode, T, T, Advisor>
+  };
   
   /*! \brief The workhorse for checking simple equality. */
 
   template<test_mode Mode, class T, class Advisor=null_advisor>
-    requires supports_simple_equality_check<T>
+    requires supports_simple_equality_check<Mode, T, Advisor>
   bool check(simple_equality_check_t,
              std::string description,
              test_logger<Mode>& logger,
@@ -534,7 +537,7 @@ namespace sequoia::testing
     using finality = final_message_constant<!faithful_range<T>>;
     binary_comparison(finality{}, sentry, std::ranges::equal_to{}, obtained, prediction, advisor);
 
-    if constexpr(faithful_range<T>)
+    if constexpr(supports_range_check_v<simple_equality_check_t, Mode, T, T, Advisor>)
     {
       check(simple_equality, "", logger, std::begin(obtained), std::end(obtained), std::begin(prediction), std::end(prediction), advisor);
     }
@@ -560,7 +563,7 @@ namespace sequoia::testing
   inline constexpr bool supports_generalized_equivalence_check{
        is_general_equivalence_check<CheckType>
     && (   tests_against_with_or_without_tutor<CheckType, Mode, T, U, tutor<Advisor>>
-        || faithful_range<T>
+        || supports_range_check_v<CheckType, Mode, T, U, Advisor>
         || checkable_against_fallback<CheckType, Mode, T, U, tutor<Advisor>>)
   };
   
@@ -577,7 +580,7 @@ namespace sequoia::testing
                                        prediction,
                                        advisor);
     }
-    else if constexpr(faithful_range<T>)
+    else if constexpr(supports_range_check_v<CheckType, Mode, T, U, Advisor>)
     {
       return check(flavour,
                    add_type_info<T>(std::move(description)),
@@ -610,7 +613,7 @@ namespace sequoia::testing
   inline constexpr bool supports_best_available_check{
        tests_against_with_or_without_tutor<with_best_available_check_t, Mode, T, U, tutor<Advisor>>
     || has_elementary_check_against<Mode, T, U, tutor<Advisor>>
-    || faithful_range<T>
+    || supports_range_check_v<with_best_available_check_t, Mode, T, U, Advisor>
   };
   
   /*! \brief The workhorse for dispatching to the strongest available type of check. */
@@ -648,14 +651,14 @@ namespace sequoia::testing
     else if constexpr(tests_against_with_or_without_tutor<weak_equivalence_check_t, Mode, T, U, tutor<Advisor>>)
     {
       return check(weak_equivalence, description, logger, obtained, prediction, advisor);
-    }    
-    else if constexpr(std::is_same_v<T, U> && deep_equality_comparable<T> && reportable<T> && !faithful_range<T>)
-    {
-      return check(simple_equality, description, logger, obtained, prediction, advisor);
     }
-    else if constexpr(faithful_range<T>)
+    else if constexpr(supports_range_check_v<with_best_available_check_t, Mode, T, U, Advisor>)
     {
       return check(with_best_available, description, logger, std::begin(obtained), std::end(obtained), std::begin(prediction), std::end(prediction), advisor);
+    } 
+    else if constexpr(std::is_same_v<T, U> && deep_equality_comparable<T> && reportable<T>)
+    {
+      return check(simple_equality, description, logger, obtained, prediction, advisor);
     }
   }
 
@@ -700,7 +703,7 @@ namespace sequoia::testing
     }
 
     template<class T, class Advisor = null_advisor, class Self>
-     requires supports_simple_equality_check<T>
+      requires supports_simple_equality_check<Mode, T, Advisor>
     bool check(this Self& self, simple_equality_check_t, const reporter& description, const T& obtained, const T& prediction, tutor<Advisor> advisor = {})
     {
         return testing::check(simple_equality, self.report(description), self.m_Logger, obtained, prediction, std::move(advisor));
