@@ -41,7 +41,7 @@ namespace sequoia::object
     friend constexpr bool operator==(const factory_dereference_policy&, const factory_dereference_policy&) noexcept = default;
 
     [[nodiscard]]
-    static reference get(Iterator i)
+    constexpr static reference get(Iterator i)
     {
       return i->first;
     }
@@ -67,8 +67,8 @@ namespace sequoia::object
   class factory
   {
   public:
-    using key          = std::string;
-    using vessel       = std::variant<Products...>;
+    using key    = std::string;
+    using vessel = std::variant<Products...>;
 
     [[nodiscard]]
     constexpr static std::size_t size() noexcept

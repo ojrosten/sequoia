@@ -343,6 +343,12 @@ namespace sequoia::testing
     }
   }
 
+  /*! \brief Condition for applying a check across a range of values */
+
+  // TO DO: improve range condition here and below
+  template<class CheckType, test_mode Mode, std::input_or_output_iterator Iter, std::input_or_output_iterator PredictionIter, class Advisor>
+  inline constexpr bool supports_range_check{checkable_against<CheckType, Mode, std::iter_value_t<Iter>, std::iter_value_t<PredictionIter>, tutor<Advisor>>};
+  
   /*! \brief The workhorse for comparing the contents of ranges.
 
   */
@@ -357,6 +363,7 @@ namespace sequoia::testing
     std::sentinel_for<PredictionIter> PredictionSentinel,
     class Advisor = null_advisor
   >
+    requires supports_range_check<CheckType, Mode, Iter, PredictionIter, Advisor>
   bool check(CheckType flavour,
              std::string description,
              test_logger<Mode>& logger,
@@ -365,7 +372,6 @@ namespace sequoia::testing
              PredictionIter predictionFirst,
              PredictionSentinel predictionLast,
              tutor<Advisor> advisor = {})
-  // TO DO requires...
   {
     auto info{
       [&description]() -> std::string&& {
@@ -712,39 +718,6 @@ namespace sequoia::testing
 
     template
     <
-      class E,
-      class Fn,
-      invocable_r<std::string, std::string> Postprocessor=default_exception_message_postprocessor,
-      class Self
-    >
-    bool check_exception_thrown(this Self& self, const reporter& description, Fn&& function, Postprocessor postprocessor={})
-    {
-      return testing::check_exception_thrown<E>(self.report(description), self.m_Logger, std::forward<Fn>(function), std::move(postprocessor));
-    }
-
-    template
-    <
-      std::input_or_output_iterator Iter,
-      std::sentinel_for<Iter> Sentinel,
-      std::input_or_output_iterator PredictionIter,
-      std::sentinel_for<PredictionIter> PredictionSentinel,
-      class Advisor=null_advisor,
-      class Self
-    >
-    bool check(this Self& self,
-               equality_check_t,
-               const reporter& description,
-               Iter first,
-               Sentinel last,
-               PredictionIter predictionFirst,
-               PredictionSentinel predictionLast,
-               tutor<Advisor> advisor={})
-    {
-      return testing::check(equality, self.report(description), self.m_Logger, first, last, predictionFirst, predictionLast, std::move(advisor));
-    }
-
-    template
-    <
       class Compare,
       std::input_or_output_iterator Iter,
       std::sentinel_for<Iter> Sentinel,
@@ -753,7 +726,7 @@ namespace sequoia::testing
       class Advisor = null_advisor,
       class Self
     >
-      requires potential_comparator_for<Compare, typename Iter::value_type>
+      requires supports_range_check<Compare, Mode, Iter, PredictionIter, Advisor>
     bool check(this Self& self,
                Compare compare,
                const reporter& description,
@@ -764,6 +737,18 @@ namespace sequoia::testing
                tutor<Advisor> advisor={})
     {
       return testing::check(std::move(compare), self.report(description), self.m_Logger, first, last, predictionFirst, predictionLast, std::move(advisor));
+    }
+
+    template
+    <
+      class E,
+      class Fn,
+      invocable_r<std::string, std::string> Postprocessor=default_exception_message_postprocessor,
+      class Self
+    >
+    bool check_exception_thrown(this Self& self, const reporter& description, Fn&& function, Postprocessor postprocessor={})
+    {
+      return testing::check_exception_thrown<E>(self.report(description), self.m_Logger, std::forward<Fn>(function), std::move(postprocessor));
     }
 
     template<class Stream>
