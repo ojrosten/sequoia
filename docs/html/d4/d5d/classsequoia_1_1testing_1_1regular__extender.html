@@ -89,29 +89,29 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a722b5eb77b3ed237205c3c47938afa73"><td class="memTemplParams" colspan="2"><a id="a722b5eb77b3ed237205c3c47938afa73" name="a722b5eb77b3ed237205c3c47938afa73"></a>
+<tr class="memitem:af03022091e06e7e272960af3b0a62df1"><td class="memTemplParams" colspan="2"><a id="af03022091e06e7e272960af3b0a62df1" name="af03022091e06e7e272960af3b0a62df1"></a>
 template&lt;class Self , pseudoregular T&gt; <br />
 requires (!std::totally_ordered&lt;T&gt;)</td></tr>
-<tr class="memitem:a722b5eb77b3ed237205c3c47938afa73"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_semantics</b> (this Self &amp;&amp;self, const <a class="el" href="../../da/dce/classsequoia_1_1testing_1_1reporter.html">reporter</a> &amp;description, const T &amp;x, const T &amp;y)</td></tr>
-<tr class="memdesc:a722b5eb77b3ed237205c3c47938afa73"><td class="mdescLeft">&#160;</td><td class="mdescRight">Precondition: x!=y. <br /></td></tr>
-<tr class="separator:a722b5eb77b3ed237205c3c47938afa73"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afeff3f24b2f23255ad34f690a503f4ae"><td class="memTemplParams" colspan="2"><a id="afeff3f24b2f23255ad34f690a503f4ae" name="afeff3f24b2f23255ad34f690a503f4ae"></a>
+<tr class="memitem:af03022091e06e7e272960af3b0a62df1"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_semantics</b> (this Self &amp;self, const <a class="el" href="../../da/dce/classsequoia_1_1testing_1_1reporter.html">reporter</a> &amp;description, const T &amp;x, const T &amp;y)</td></tr>
+<tr class="memdesc:af03022091e06e7e272960af3b0a62df1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prerequisite: x!=y. <br /></td></tr>
+<tr class="separator:af03022091e06e7e272960af3b0a62df1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9dfbdc3364ce3f61e8841ea5cf2ed94c"><td class="memTemplParams" colspan="2"><a id="a9dfbdc3364ce3f61e8841ea5cf2ed94c" name="a9dfbdc3364ce3f61e8841ea5cf2ed94c"></a>
 template&lt;class Self , pseudoregular T&gt; <br />
 requires std::totally_ordered&lt;T&gt;</td></tr>
-<tr class="memitem:afeff3f24b2f23255ad34f690a503f4ae"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_semantics</b> (this Self &amp;&amp;self, const <a class="el" href="../../da/dce/classsequoia_1_1testing_1_1reporter.html">reporter</a> &amp;description, const T &amp;x, const T &amp;y, std::weak_ordering order)</td></tr>
-<tr class="memdesc:afeff3f24b2f23255ad34f690a503f4ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Precondition: x!=y, with values consistent with order. <br /></td></tr>
-<tr class="separator:afeff3f24b2f23255ad34f690a503f4ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4f4186668276d70750725bcda1facb56"><td class="memTemplParams" colspan="2"><a id="a4f4186668276d70750725bcda1facb56" name="a4f4186668276d70750725bcda1facb56"></a>
+<tr class="memitem:a9dfbdc3364ce3f61e8841ea5cf2ed94c"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_semantics</b> (this Self &amp;self, const <a class="el" href="../../da/dce/classsequoia_1_1testing_1_1reporter.html">reporter</a> &amp;description, const T &amp;x, const T &amp;y, std::weak_ordering order)</td></tr>
+<tr class="memdesc:a9dfbdc3364ce3f61e8841ea5cf2ed94c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prerequisite: x!=y, with values consistent with order. <br /></td></tr>
+<tr class="separator:a9dfbdc3364ce3f61e8841ea5cf2ed94c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3cbb9e690349c8baa1f33ebe3660eae5"><td class="memTemplParams" colspan="2"><a id="a3cbb9e690349c8baa1f33ebe3660eae5" name="a3cbb9e690349c8baa1f33ebe3660eae5"></a>
 template&lt;class Self , pseudoregular T, std::invocable&lt; T &amp; &gt; Mutator&gt; </td></tr>
-<tr class="memitem:a4f4186668276d70750725bcda1facb56"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_semantics</b> (this Self &amp;&amp;self, const <a class="el" href="../../da/dce/classsequoia_1_1testing_1_1reporter.html">reporter</a> &amp;description, const T &amp;x, const T &amp;y, Mutator m)</td></tr>
-<tr class="memdesc:a4f4186668276d70750725bcda1facb56"><td class="mdescLeft">&#160;</td><td class="mdescRight">Precondition: x!=y. <br /></td></tr>
-<tr class="separator:a4f4186668276d70750725bcda1facb56"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac2bb20a6768cce38d7a06dca0d7f9b9a"><td class="memTemplParams" colspan="2"><a id="ac2bb20a6768cce38d7a06dca0d7f9b9a" name="ac2bb20a6768cce38d7a06dca0d7f9b9a"></a>
+<tr class="memitem:a3cbb9e690349c8baa1f33ebe3660eae5"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_semantics</b> (this Self &amp;self, const <a class="el" href="../../da/dce/classsequoia_1_1testing_1_1reporter.html">reporter</a> &amp;description, const T &amp;x, const T &amp;y, Mutator m)</td></tr>
+<tr class="memdesc:a3cbb9e690349c8baa1f33ebe3660eae5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prerequisite: x!=y. <br /></td></tr>
+<tr class="separator:a3cbb9e690349c8baa1f33ebe3660eae5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a131b40ca6c2afcfaa1fcb72e79951697"><td class="memTemplParams" colspan="2"><a id="a131b40ca6c2afcfaa1fcb72e79951697" name="a131b40ca6c2afcfaa1fcb72e79951697"></a>
 template&lt;class Self , pseudoregular T, std::invocable&lt; T &amp; &gt; Mutator&gt; <br />
 requires std::totally_ordered&lt;T&gt;</td></tr>
-<tr class="memitem:ac2bb20a6768cce38d7a06dca0d7f9b9a"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_semantics</b> (this Self &amp;&amp;self, const <a class="el" href="../../da/dce/classsequoia_1_1testing_1_1reporter.html">reporter</a> &amp;description, const T &amp;x, const T &amp;y, std::weak_ordering order, Mutator m)</td></tr>
-<tr class="memdesc:ac2bb20a6768cce38d7a06dca0d7f9b9a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Precondition: x!=y, with values consistent with order. <br /></td></tr>
-<tr class="separator:ac2bb20a6768cce38d7a06dca0d7f9b9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a131b40ca6c2afcfaa1fcb72e79951697"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_semantics</b> (this Self &amp;self, const <a class="el" href="../../da/dce/classsequoia_1_1testing_1_1reporter.html">reporter</a> &amp;description, const T &amp;x, const T &amp;y, std::weak_ordering order, Mutator m)</td></tr>
+<tr class="memdesc:a131b40ca6c2afcfaa1fcb72e79951697"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prerequisites: x!=y, with values consistent with order. <br /></td></tr>
+<tr class="separator:a131b40ca6c2afcfaa1fcb72e79951697"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>

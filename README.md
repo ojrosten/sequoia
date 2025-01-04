@@ -25,7 +25,7 @@ git 2.40.0
 CMake 3.29.2  
 clang 19.1.6  
 g++ 14.2  
-Visual Studio 2022, 17.12.1
+Visual Studio 2022, 17.12.2
 
 ## Dependencies
 

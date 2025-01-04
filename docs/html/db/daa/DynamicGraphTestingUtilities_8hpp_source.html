@@ -262,7 +262,7 @@ $(function() {
 <div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>    <span class="keyword">static</span> G make_and_check(Test&amp; t, std::string_view description, std::initializer_list&lt;std::initializer_list&lt;edge_type&gt;&gt; edgeInit, std::initializer_list&lt;node_weight_type&gt; nodeInit)</div>
 <div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>    {</div>
 <div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>      G g{edgeInit, nodeInit};</div>
-<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>      t.check(equivalence, description, g, edgeInit, nodeInit);</div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>      t.check(equivalence, description, g, std::pair{edgeInit, nodeInit});</div>
 <div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>      <span class="keywordflow">return</span> g;</div>
 <div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>    }</div>
 <div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>  };</div>
