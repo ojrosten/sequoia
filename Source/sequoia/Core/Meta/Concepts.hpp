@@ -88,7 +88,7 @@ namespace sequoia
     std::ranges::begin(t);
     std::ranges::end(t);
 
-    requires (!std::same_as<std::remove_cvref_t<decltype(*std::begin(t))>, std::remove_cvref_t<T>>);
+    requires (!std::same_as<std::remove_cvref_t<decltype(*std::ranges::begin(t))>, std::remove_cvref_t<T>>);
   };
 
   /*! \addtogroup deep_equality

@@ -345,9 +345,8 @@ namespace sequoia::testing
 
   /*! \brief Condition for applying a check across a range of values */
 
-  // TO DO: improve range condition here and below
   template<class CheckType, test_mode Mode, std::input_or_output_iterator Iter, std::input_or_output_iterator PredictionIter, class Advisor>
-  inline constexpr bool supports_range_check{checkable_against<CheckType, Mode, std::iter_value_t<Iter>, std::iter_value_t<PredictionIter>, tutor<Advisor>>};
+  inline constexpr bool supports_iterator_range_check{checkable_against<CheckType, Mode, std::iter_value_t<Iter>, std::iter_value_t<PredictionIter>, tutor<Advisor>>};
   
   /*! \brief The workhorse for comparing the contents of ranges.
 
@@ -363,7 +362,7 @@ namespace sequoia::testing
     std::sentinel_for<PredictionIter> PredictionSentinel,
     class Advisor = null_advisor
   >
-    requires supports_range_check<CheckType, Mode, Iter, PredictionIter, Advisor>
+    requires supports_iterator_range_check<CheckType, Mode, Iter, PredictionIter, Advisor>
   bool check(CheckType flavour,
              std::string description,
              test_logger<Mode>& logger,
@@ -432,14 +431,39 @@ namespace sequoia::testing
     return !sentry.failure_detected();
   }
 
+  /*! \brief Condition for applying a container check
+
+      An extra level of indirection is required here to avoid recursive concept checks
+      for type like filesystem which satisfy the range concept but not sequoia::faithul_range
+   */
+
+  namespace impl
+  {
+    template<class CheckType, test_mode Mode, faithful_range T, faithful_range U, class Advisor>
+    inline constexpr bool supports_range_check_v{
+      requires(T& t, U& u) {
+         requires supports_iterator_range_check<CheckType, Mode, decltype(std::ranges::begin(t)), decltype(std::ranges::begin(u)), Advisor>;
+       }
+    };
+  }
+
+  template<class CheckType, test_mode Mode, class T, class U, class Advisor>
+  struct supports_range_check : std::false_type {};
+
+  template<class CheckType, test_mode Mode, faithful_range T, faithful_range U, class Advisor>
+  requires impl::supports_range_check_v<CheckType, Mode, T, U, Advisor>
+  struct supports_range_check<CheckType, Mode, T, U, Advisor> : std::true_type {};
+
+  template<class CheckType, test_mode Mode, class T, class U, class Advisor>
+  inline constexpr bool supports_range_check_v{supports_range_check<CheckType, Mode, T, U, Advisor>::value};
+  
   /*! \brief Condition for applying an equality check */
 
-  // TO DO: improve range condition here and below
   template<test_mode Mode, class T, class Advisor>
   inline constexpr bool supports_equality_check{
        (deep_equality_comparable<T> && reportable<T>)
     || tests_against_with_or_without_tutor<equality_check_t, Mode, T, T, tutor<Advisor>>
-    || faithful_range<T>
+    || supports_range_check_v<equality_check_t, Mode, T, T, Advisor>
   };
 
   /*! \brief The workhorse of equality checking, which takes responsibility for reflecting upon types
@@ -726,7 +750,7 @@ namespace sequoia::testing
       class Advisor = null_advisor,
       class Self
     >
-      requires supports_range_check<Compare, Mode, Iter, PredictionIter, Advisor>
+      requires supports_iterator_range_check<Compare, Mode, Iter, PredictionIter, Advisor>
     bool check(this Self& self,
                Compare compare,
                const reporter& description,
