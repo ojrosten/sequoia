@@ -9,6 +9,8 @@
 
 /*! \file */
 
+#include "CommonMoveOnlyTestDiagnosticsUtilities.hpp"
+
 #include "sequoia/TestFramework/MoveOnlyTestCore.hpp"
 
 namespace sequoia:: testing
@@ -24,7 +26,12 @@ namespace sequoia:: testing
     void run_tests();
   private:
 
-    void test_regular_semantics();
+    void test_move_only_semantics();
+
+    void test_as_unique_semantics();
+
+    template<enable_serialization EnableSerialization>
+    void test_binder();
   };
 
   class move_only_false_positive_diagnostics final : public move_only_false_positive_test
@@ -38,6 +45,8 @@ namespace sequoia:: testing
     void run_tests();
   private:
 
-    void test_regular_semantics();
+    void test_move_only_semantics();
+
+    void test_as_unique_semantics();
   };
 }

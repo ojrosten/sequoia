@@ -4,7 +4,7 @@ Broken check invariant
 --Regular Semantics--
 [sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
 
-  Precondition - for checking semantics, x and y are assumed to be different
+  Prerequisite - for checking semantics, x and y are assumed to be different
   [bool]
   check failed
 
@@ -268,7 +268,7 @@ Broken check invariant
 --Regular Semantics--
 [sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
 
-  Precondition - for checking semantics, x and y are assumed to be different
+  Prerequisite - for checking semantics, x and y are assumed to be different
   [bool]
   check failed
 
@@ -556,7 +556,7 @@ Broken check invariant
 --Regular Semantics--
 [sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
 
-  Precondition - for checking semantics, x and y are assumed to be different
+  Prerequisite - for checking semantics, x and y are assumed to be different
   [bool]
   check failed
 
@@ -784,7 +784,7 @@ Broken check invariant
 --Regular Semantics--
 [sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
 
-  Precondition - for checking semantics, x and y are assumed to be different
+  Prerequisite - for checking semantics, x and y are assumed to be different
   [bool]
   check failed
 
@@ -1036,7 +1036,7 @@ Broken check invariant
 --Regular Semantics--
 [sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
-  Precondition - for checking semantics, x and y are assumed to be different
+  Prerequisite - for checking semantics, x and y are assumed to be different
   [bool]
   check failed
 
@@ -1300,7 +1300,7 @@ Broken check invariant
 --Regular Semantics--
 [sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
-  Precondition - for checking semantics, x and y are assumed to be different
+  Prerequisite - for checking semantics, x and y are assumed to be different
   [bool]
   check failed
 
@@ -1588,7 +1588,7 @@ Broken check invariant
 --Regular Semantics--
 [sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
-  Precondition - for checking semantics, x and y are assumed to be different
+  Prerequisite - for checking semantics, x and y are assumed to be different
   [bool]
   check failed
 
@@ -1840,7 +1840,7 @@ Broken check invariant
 --Regular Semantics--
 [sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
-  Precondition - for checking semantics, x and y are assumed to be different
+  Prerequisite - for checking semantics, x and y are assumed to be different
   [bool]
   check failed
 

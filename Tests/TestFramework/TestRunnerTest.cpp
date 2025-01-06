@@ -28,7 +28,20 @@ namespace sequoia::testing
     fs::path make_fake_file_path(std::string_view testName) {
       return fs::path{std::source_location::current().file_name()}.parent_path().parent_path() / replace_all(testName, " ", "_").append(".cpp");
     }
+  }
 
+  template<>
+  struct value_tester<foo>
+  {
+    template<test_mode Mode>
+    static void test(equality_check_t, test_logger<Mode>&, const foo&, const foo&)
+    {
+      throw std::runtime_error{"This is bad"};
+    }
+  };
+  
+  namespace
+  {
     class foo_test final : public regular_test
     {
     public:
@@ -313,17 +326,7 @@ namespace sequoia::testing
       return runner;
     }
   }
-
-  template<>
-  struct value_tester<foo>
-  {
-    template<test_mode Mode>
-    static void test(equality_check_t, test_logger<Mode>&, const foo&, const foo&)
-    {
-      throw std::runtime_error{"This is bad"};
-    }
-  };
-
+  
   [[nodiscard]]
   std::filesystem::path test_runner_test::source_file() const
   {

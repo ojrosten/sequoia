@@ -32,6 +32,7 @@ namespace sequoia::testing
   {
     built_in_type_tests();
     test_equality_checks();
+    test_simple_equality_checks();
     test_equivalence_checks();
     test_weak_equivalence_checks();
     test_with_best_available_checks();
@@ -52,6 +53,11 @@ namespace sequoia::testing
       return "int advice";
       }});
 
+    check(simple_equality, "Simple integer check", 5, 4);
+    check(simple_equality, "Simple integer check with advice", 5, 4, tutor{[](int, int) {
+      return "int advice";
+      }});
+    
     check(equivalence, "Integer check via fallback", 5, 4);
     check(equivalence, "Integer check with fallback", 5, 4, tutor{[](int, int) {
       return "int advice";
@@ -201,6 +207,17 @@ namespace sequoia::testing
           tutor{[](int, int) { return "int advice"; }});
   }
 
+  void elementary_false_negative_free_diagnostics::test_simple_equality_checks()
+  {
+    check(simple_equality, "Simple Equality Checking", perfectly_serializable_type{42}, perfectly_serializable_type{43});
+    check(simple_equality, "Simple Equality Checking", perfectly_nonserializable_type{42}, perfectly_nonserializable_type{43});
+    check(simple_equality,
+          reporter{"Simple Equality Checking with advice"},
+          perfectly_serializable_type{42},
+          perfectly_serializable_type{43},
+          tutor{[](const  perfectly_serializable_type&, const  perfectly_serializable_type&){ return "Perfectly reasonable advice";}});
+  }
+  
   void elementary_false_negative_free_diagnostics::test_equivalence_checks()
   {
     check(equivalence, "Equivalence checking", only_equivalence_checkable{42}, 41);
@@ -282,7 +299,11 @@ namespace sequoia::testing
           only_equivalence_checkable{1},
           only_equivalence_checkable{2},
           tutor{[](only_equivalence_checkable, only_equivalence_checkable) { return "only_equivalence_checkable advice"; }});
-
+    check(with_best_available,
+          reporter{"Best available for only_equivalence_checkable compared with an int"},
+          only_equivalence_checkable{1},
+          2);
+ 
     check(with_best_available,
           reporter{"Best available for only_weakly_checkable"},
           only_weakly_checkable{1, -1.4},
@@ -292,6 +313,17 @@ namespace sequoia::testing
           only_weakly_checkable{1, -1.4},
           only_weakly_checkable{2, 6.7},
           tutor{bland{}});
+
+    check(with_best_available,
+          reporter{"Best available for perfectly_serializable_type"},
+          perfectly_serializable_type{1},
+          perfectly_serializable_type{2});
+
+    check(with_best_available,
+          reporter{"Best available for perfectly_serializable_type with advice"},
+          perfectly_serializable_type{2},
+          perfectly_serializable_type{1},
+          tutor{[](const perfectly_serializable_type&, const perfectly_serializable_type&){ return "Perfectly reasonable advice";}});
   }
 
   [[nodiscard]]
@@ -304,6 +336,7 @@ namespace sequoia::testing
   {
     built_in_type_tests();
     test_equality_checks();
+    test_simple_equality_checks();
     test_equivalence_checks();
     test_weak_equivalence_checks();
     test_with_best_available_checks();
@@ -314,6 +347,7 @@ namespace sequoia::testing
     check("Boolean test", true);
 
     check(equality, "Integer test", 5, 5);
+    check(simple_equality, "Simple integer test", 5, 5);
     check(equality, "Double test", 5.0, 5.0);
 
     {
@@ -356,6 +390,16 @@ namespace sequoia::testing
     check(with_best_available, "Best available for int", 1, 1);
 
     check(with_best_available,
+          reporter{"Best available for only_equivalence_checkable"},
+          only_equivalence_checkable{1},
+          only_equivalence_checkable{1});
+
+    check(with_best_available,
+          reporter{"Best available for only_equivalence_checkable compared with an int"},
+          only_equivalence_checkable{1},
+          1);
+
+    check(with_best_available,
           reporter{"Best available for only_weakly_checkable"},
           only_weakly_checkable{2, -1.4},
           only_weakly_checkable{2, -1.4});
@@ -364,10 +408,21 @@ namespace sequoia::testing
           reporter{"Best available for only_weakly_checkable"},
           only_weakly_checkable{1, 6.7},
           only_weakly_checkable{1, 6.7});
+
+    check(with_best_available,
+          reporter{"Best available for perfectly_serializable_type"},
+          perfectly_serializable_type{1},
+          perfectly_serializable_type{1});
   }
 
   void elementary_false_positive_free_diagnostics::test_equality_checks()
   {
     check(equality, "Equality checking", perfectly_normal_type{42}, perfectly_normal_type{42});
+  }
+
+  void elementary_false_positive_free_diagnostics::test_simple_equality_checks()
+  {
+    check(simple_equality, "Simple Equality Checking", perfectly_serializable_type{42}, perfectly_serializable_type{42});
+    check(simple_equality, "Simple Equality Checking", perfectly_nonserializable_type{42}, perfectly_nonserializable_type{42});
   }
 }

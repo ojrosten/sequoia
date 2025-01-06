@@ -1,22 +1,10 @@
-Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 31
-Broken check invariant
-
---Move-only Semantics--
-[sequoia::testing::orderable_move_only_beast<int, std::allocator<int> >]
-
-  Precondition - for checking semantics, order must be weak_ordering::less or weak_ordering::greater
-  [bool]
-  check failed
-
-=======================================
-
 Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 32
 Broken check invariant
 
 --Move-only Semantics--
 [sequoia::testing::orderable_move_only_beast<int, std::allocator<int> >]
 
-  Precondition - for ordered semantics, it is assumed that y > x
+  Prerequisite - for checking semantics, order must be weak_ordering::less or weak_ordering::greater
   [bool]
   check failed
 
@@ -28,13 +16,25 @@ Broken check invariant
 --Move-only Semantics--
 [sequoia::testing::orderable_move_only_beast<int, std::allocator<int> >]
 
-  Precondition - for ordered semantics, it is assumed that y > x
+  Prerequisite - for ordered semantics, it is assumed that y > x
   [bool]
   check failed
 
 =======================================
 
-Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 39
+Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 34
+Broken check invariant
+
+--Move-only Semantics--
+[sequoia::testing::orderable_move_only_beast<int, std::allocator<int> >]
+
+  Prerequisite - for ordered semantics, it is assumed that y > x
+  [bool]
+  check failed
+
+=======================================
+
+Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 40
 
 --Move-only Semantics--
 [sequoia::testing::move_only_broken_less<int, std::allocator<int> >]
@@ -51,9 +51,13 @@ Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 39
   [bool]
   check failed
 
+  operator< and operator<=> are inconsistent
+  [bool]
+  check failed
+
 =======================================
 
-Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 45
+Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 46
 
 --Move-only Semantics--
 [sequoia::testing::move_only_broken_lesseq<int, std::allocator<int> >]
@@ -64,7 +68,7 @@ Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 45
 
 =======================================
 
-Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 51
+Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 52
 
 --Move-only Semantics--
 [sequoia::testing::move_only_broken_greater<int, std::allocator<int> >]
@@ -75,29 +79,29 @@ Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 51
 
 =======================================
 
-Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 57
+Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 58
 
 --Move-only Semantics--
 [sequoia::testing::move_only_broken_greatereq<int, std::allocator<int> >]
 
-  operator< and operator<= are inconsistent
+  operator< and operator>= are inconsistent
   [bool]
   check failed
 
 =======================================
 
-Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 63
+Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 64
 
 --Move-only Semantics--
 [sequoia::testing::move_only_inverted_comparisons<int, std::allocator<int> >]
 
-  Precondition - for ordered semantics, it is assumed that y > x
+  operator< and operator<=> are inconsistent
   [bool]
   check failed
 
 =======================================
 
-Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 69
+Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 70
 
 --Move-only Semantics--
 [sequoia::testing::move_only_broken_spaceship<int, std::allocator<int> >]
@@ -108,8 +112,8 @@ Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 69
 
 =======================================
 
-Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 75
-Incorrect moved-from state
+Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 76
+Incorrect moved-from state post construction
 
 --Move-only Semantics--
 [sequoia::testing::orderable_resource_binder]
@@ -119,6 +123,40 @@ Incorrect moved-from state
   operator== returned false
   Obtained : 0
   Predicted: 3
+
+  Incorrect moved-from value after move assignment
+  [sequoia::testing::orderable_resource_binder]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
+
+=======================================
+
+Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 77
+Incorrect moved-from state post construction
+
+--Move-only Semantics--
+[sequoia::testing::orderable_resource_binder]
+
+  Incorrect moved-from value after move construction
+  [sequoia::testing::orderable_resource_binder]
+  operator== returned false
+  Obtained : 0
+  Predicted: 3
+
+  Incorrect moved-from value after move assignment
+  [sequoia::testing::orderable_resource_binder]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
+
+=======================================
+
+Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 79
+Incorrect moved-from state post assignment
+
+--Move-only Semantics--
+[sequoia::testing::orderable_resource_binder]
 
   Incorrect moved-from value after move assignment
   [sequoia::testing::orderable_resource_binder]
@@ -128,23 +166,131 @@ Incorrect moved-from state
 
 =======================================
 
-Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 76
-Incorrect moved-from state
+Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 80
+Incorrect moved-from state post assignment
 
 --Move-only Semantics--
 [sequoia::testing::orderable_resource_binder]
-
-  Incorrect moved-from value after move construction
-  [sequoia::testing::orderable_resource_binder]
-  operator== returned false
-  Obtained : 0
-  Predicted: 3
 
   Incorrect moved-from value after move assignment
   [sequoia::testing::orderable_resource_binder]
   operator== returned false
   Obtained : 0
   Predicted: 3
+
+=======================================
+
+Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 89
+Broken check invariant
+
+--Move-only Semantics--
+[sequoia::testing::orderable_move_only_beast<int, std::allocator<int> >]
+
+  Prerequisite - for checking semantics, order must be weak_ordering::less or weak_ordering::greater
+  [bool]
+  check failed
+
+=======================================
+
+Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 90
+Broken check invariant
+
+--Move-only Semantics--
+[sequoia::testing::orderable_move_only_beast<int, std::allocator<int> >]
+
+  Prerequisite - for ordered semantics, it is assumed that y > x
+  [bool]
+  check failed
+
+=======================================
+
+Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 91
+Broken check invariant
+
+--Move-only Semantics--
+[sequoia::testing::orderable_move_only_beast<int, std::allocator<int> >]
+
+  Prerequisite - for ordered semantics, it is assumed that y > x
+  [bool]
+  check failed
+
+=======================================
+
+Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 97
+
+--Move-only Semantics--
+[sequoia::testing::move_only_broken_less<int, std::allocator<int> >]
+
+  operator> and operator< are inconsistent
+  [bool]
+  check failed
+
+  operator< and operator<= are inconsistent
+  [bool]
+  check failed
+
+  operator< and operator>= are inconsistent
+  [bool]
+  check failed
+
+  operator< and operator<=> are inconsistent
+  [bool]
+  check failed
+
+=======================================
+
+Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 103
+
+--Move-only Semantics--
+[sequoia::testing::move_only_broken_lesseq<int, std::allocator<int> >]
+
+  operator< and operator<= are inconsistent
+  [bool]
+  check failed
+
+=======================================
+
+Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 109
+
+--Move-only Semantics--
+[sequoia::testing::move_only_broken_greater<int, std::allocator<int> >]
+
+  operator> and operator< are inconsistent
+  [bool]
+  check failed
+
+=======================================
+
+Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 115
+
+--Move-only Semantics--
+[sequoia::testing::move_only_broken_greatereq<int, std::allocator<int> >]
+
+  operator< and operator>= are inconsistent
+  [bool]
+  check failed
+
+=======================================
+
+Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 121
+
+--Move-only Semantics--
+[sequoia::testing::move_only_inverted_comparisons<int, std::allocator<int> >]
+
+  operator< and operator<=> are inconsistent
+  [bool]
+  check failed
+
+=======================================
+
+Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 127
+
+--Move-only Semantics--
+[sequoia::testing::move_only_broken_spaceship<int, std::allocator<int> >]
+
+  operator< and operator<=> are inconsistent
+  [bool]
+  check failed
 
 =======================================
 

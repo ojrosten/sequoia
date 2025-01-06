@@ -16,9 +16,10 @@ var searchData=
   ['orderable_5fregular_5ffalse_5fpositive_5fdiagnostics_13',['orderable_regular_false_positive_diagnostics',['../d8/d4a/classsequoia_1_1testing_1_1orderable__regular__false__positive__diagnostics.html',1,'sequoia::testing']]],
   ['orderable_5fregular_5finefficient_5fcomparisons_14',['orderable_regular_inefficient_comparisons',['../d2/d36/structsequoia_1_1testing_1_1orderable__regular__inefficient__comparisons.html',1,'sequoia::testing']]],
   ['orderable_5fresource_5fbinder_15',['orderable_resource_binder',['../db/dc2/classsequoia_1_1testing_1_1orderable__resource__binder.html',1,'sequoia::testing']]],
-  ['outcome_16',['outcome',['../df/dd1/structsequoia_1_1parsing_1_1commandline_1_1outcome.html',1,'sequoia::parsing::commandline']]],
-  ['outer_5falloc_5fgetter_17',['outer_alloc_getter',['../d0/d65/structsequoia_1_1testing_1_1outer__alloc__getter.html',1,'sequoia::testing']]],
-  ['output_5ffree_5ftest_18',['output_free_test',['../df/dcd/classsequoia_1_1testing_1_1output__free__test.html',1,'sequoia::testing']]],
-  ['output_5fpaths_19',['output_paths',['../d9/d48/classsequoia_1_1testing_1_1output__paths.html',1,'sequoia::testing']]],
-  ['overloaded_20',['overloaded',['../da/d6e/structsequoia_1_1overloaded.html',1,'sequoia']]]
+  ['orderable_5fspecified_5fmoved_5ffrom_5fbeast_16',['orderable_specified_moved_from_beast',['../d4/d29/structsequoia_1_1testing_1_1orderable__specified__moved__from__beast.html',1,'sequoia::testing']]],
+  ['outcome_17',['outcome',['../df/dd1/structsequoia_1_1parsing_1_1commandline_1_1outcome.html',1,'sequoia::parsing::commandline']]],
+  ['outer_5falloc_5fgetter_18',['outer_alloc_getter',['../d0/d65/structsequoia_1_1testing_1_1outer__alloc__getter.html',1,'sequoia::testing']]],
+  ['output_5ffree_5ftest_19',['output_free_test',['../df/dcd/classsequoia_1_1testing_1_1output__free__test.html',1,'sequoia::testing']]],
+  ['output_5fpaths_20',['output_paths',['../d9/d48/classsequoia_1_1testing_1_1output__paths.html',1,'sequoia::testing']]],
+  ['overloaded_21',['overloaded',['../da/d6e/structsequoia_1_1overloaded.html',1,'sequoia']]]
 ];

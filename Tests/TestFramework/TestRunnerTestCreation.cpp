@@ -126,7 +126,7 @@ namespace sequoia::testing
                                , "create", "regular_test", "human", "std::string", "g", "hominins"
                                , "create", "regular_test", "stuff::thingummy<class T>", "std::vector<T>", "g", "Thingummies"
                                , "create", "regular_test", "container<class T>", "const std::vector<T>"
-                               , "create", "regular_test", "other::couple<class S, class T>", "S", "-e", "T",
+                               , "create", "regular_test", "other::couple<class S, class T>", "std::pair<S, T>",
                                               "-s", "partners", "-h", "Couple.hpp"
                                , "create", "regular_test", "bar::things", "double", "-h", std::format("{}/Stuff/Things.hpp", sourceFolderName)
                                , "create", "move_only_test", "bar::baz::foo<maths::floating_point T>", "T", "--suite", "Iterator"

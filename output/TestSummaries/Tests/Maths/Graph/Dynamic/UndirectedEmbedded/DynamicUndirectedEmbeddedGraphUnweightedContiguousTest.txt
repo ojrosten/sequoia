@@ -1,2 +1,2 @@
 Undirected Embedded Graph Unweighted Contiguous Test
-Standard Top Level Checks:               370;  Failures:  0  [Deep checks: 23818]
+Standard Top Level Checks:               370;  Failures:  0  [Deep checks: 12288]

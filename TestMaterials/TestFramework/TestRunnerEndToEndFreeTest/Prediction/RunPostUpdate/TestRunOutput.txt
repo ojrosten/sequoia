@@ -2,9 +2,9 @@
 Running tests, synchronously...
 
 Utilities:
-[Execution Time: 16.6us]
+[Execution Time: 1.04us]
 Useful Things:
-[Execution Time: 993us]
+[Execution Time: 233us]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
 	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 21
@@ -17,34 +17,34 @@ Useful Things:
 	=======================================
 
 Bar:
-[Execution Time: 15.4us]
+[Execution Time: 1.04us]
 Unstable:
-[Execution Time: 668us]
+[Execution Time: 108us]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 Maybe:
-[Execution Time: 34.3us]
+[Execution Time: 1.96us]
 Oldschool:
-[Execution Time: 43.4us]
+[Execution Time: 1.75us]
 Probability:
-[Execution Time: 9.61ms]
-	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 39]
+[Execution Time: 1.25ms]
+	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 34]
 	False Negative Checks:                     2;  Failures:  0
 Foo:
-[Execution Time: 12.8ms]
+[Execution Time: 2.19ms]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 38]
 Unique Thing:
-[Execution Time: 9.43ms]
-	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 35]
+[Execution Time: 1.61ms]
+	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 30]
 	False Negative Checks:                     2;  Failures:  0
 Container:
-[Execution Time: 31.8us]
+[Execution Time: 5.5us]
 House:
-[Execution Time: 14.9us]
+[Execution Time: 1.42us]
 
 -----------Grand Totals-----------
-[Total Run Time: 49ms]
-[Execution Time: 33.7ms]
-	Standard Top Level Checks:                12;  Failures:  1  [Deep checks: 116]
+[Total Run Time: 7.57ms]
+[Execution Time: 5.4ms]
+	Standard Top Level Checks:                12;  Failures:  1  [Deep checks: 106]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0

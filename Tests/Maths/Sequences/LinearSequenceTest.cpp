@@ -30,8 +30,8 @@ namespace sequoia::testing
     using namespace maths;
 
     linear_sequence<int, int> s{1, 3}, t{0,2};
-    check(equivalence, "", s, 1, 3);
-    check(equivalence, "", t, 0, 2);
+    check(equivalence, "", s, std::pair{1, 3});
+    check(equivalence, "", t, std::pair{0, 2});
 
     check_semantics("", s, t);
 

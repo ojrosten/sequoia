@@ -401,22 +401,6 @@ namespace sequoia::testing
       }
     };
 
-    const option equivOption{"--equivalent-type", {"-e"}, {"equivalent_type"},
-      [&nascentTests](const arg_list& args){
-        if(nascentTests.empty())
-          throw std::logic_error{"Unable to find nascent test"};
-
-        auto visitor{
-          overloaded{
-            [&args](nascent_semantics_test& nascent){ nascent.add_equivalent_type(args[0]); },
-            [](auto&){}
-          }
-        };
-
-        std::visit(visitor, nascentTests.back());
-      }
-    };
-
     const option headerOption{"--header", {"-h"}, {"header of class to test"},
       [&nascentTests](const arg_list& args){
         if(nascentTests.empty())
@@ -477,7 +461,7 @@ namespace sequoia::testing
       }
     };
 
-    const std::initializer_list<maths::tree_initializer<option>> semanticsOptions{{equivOption}, {suiteOption}, {headerOption}, {genSemanticsSourceOption}};
+    const std::initializer_list<maths::tree_initializer<option>> semanticsOptions{{suiteOption}, {headerOption}, {genSemanticsSourceOption}};
     const std::initializer_list<maths::tree_initializer<option>> allocationOptions{{suiteOption}, {headerOption}};
     const std::initializer_list<maths::tree_initializer<option>> performanceOptions{{suiteOption}};
     const std::initializer_list<maths::tree_initializer<option>> freeOptions{{suiteOption}, {forenameOption}, {genFreeSourceOption}, {diagnosticsOption}};

@@ -44,7 +44,7 @@
 
 namespace sequoia::testing
 {
-  /// Precondition: x!=y
+  /// Prerequisite: x!=y
   template<test_mode Mode, pseudoregular T>
   void check_semantics(std::string description, test_logger<Mode>& logger, const T& x, const T& y)
   {
@@ -52,7 +52,7 @@ namespace sequoia::testing
     impl::check_semantics(logger, impl::auxiliary_data<T>{}, x, y, impl::null_mutator{});
   }
 
-  /// Precondition: x!=y with values consistent with order
+  /// Prerequisite: x!=y with values consistent with order
   template<test_mode Mode, pseudoregular T>
     requires std::totally_ordered<T>
   void check_semantics(std::string description, test_logger<Mode>& logger, const T& x, const T& y, std::weak_ordering order)
@@ -61,7 +61,7 @@ namespace sequoia::testing
     impl::check_semantics(logger, impl::auxiliary_data<T>{order}, x, y, impl::null_mutator{});
   }
 
-  /// Precondition: x!=y
+  /// Prerequisite: x!=y
   template<test_mode Mode, pseudoregular T, std::invocable<T&> Mutator>
   void check_semantics(std::string description, test_logger<Mode>& logger, const T& x, const T& y, Mutator yMutator)
   {
@@ -69,7 +69,7 @@ namespace sequoia::testing
     impl::check_semantics(logger, impl::auxiliary_data<T>{}, x, y, yMutator);
   }
 
-  /// Precondition: x!=y, with values consistent with order
+  /// Prerequisite: x!=y, with values consistent with order
   template<test_mode Mode, pseudoregular T, std::invocable<T&> Mutator>
     requires std::totally_ordered<T>
   void check_semantics(std::string description, test_logger<Mode>& logger, const T& x, const T& y, std::weak_ordering order, Mutator yMutator)

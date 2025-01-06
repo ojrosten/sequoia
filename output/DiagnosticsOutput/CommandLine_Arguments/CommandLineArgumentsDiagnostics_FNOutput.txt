@@ -85,7 +85,11 @@ Checking for weak equivalence with:
         const_node_iter
 
           Element 0 of range incorrect
+          Comparison performed using:
+          [sequoia::testing::value_tester<sequoia::parsing::commandline::operation>]
+          Checking for weak equivalence with:
           [sequoia::parsing::commandline::operation]
+
             Existence ofearly function objects differs
             [bool]
             check failed
@@ -113,7 +117,11 @@ Checking for weak equivalence with:
         const_node_iter
 
           Element 0 of range incorrect
+          Comparison performed using:
+          [sequoia::testing::value_tester<sequoia::parsing::commandline::operation>]
+          Checking for weak equivalence with:
           [sequoia::parsing::commandline::operation]
+
             Existence oflate function objects differs
             [bool]
             check failed
@@ -141,7 +149,11 @@ Checking for weak equivalence with:
         const_node_iter
 
           Element 0 of range incorrect
+          Comparison performed using:
+          [sequoia::testing::value_tester<sequoia::parsing::commandline::operation>]
+          Checking for weak equivalence with:
           [sequoia::parsing::commandline::operation]
+
             Function object tag
             [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
             operator== returned false
@@ -181,7 +193,11 @@ Checking for weak equivalence with:
         const_node_iter
 
           Element 0 of range incorrect
+          Comparison performed using:
+          [sequoia::testing::value_tester<sequoia::parsing::commandline::operation>]
+          Checking for weak equivalence with:
           [sequoia::parsing::commandline::operation]
+
             Function object tag
             [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
             operator== returned false
@@ -221,7 +237,11 @@ Checking for weak equivalence with:
         const_node_iter
 
           Element 0 of range incorrect
+          Comparison performed using:
+          [sequoia::testing::value_tester<sequoia::parsing::commandline::operation>]
+          Checking for weak equivalence with:
           [sequoia::parsing::commandline::operation]
+
             Function object tag
             [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
             operator== returned false

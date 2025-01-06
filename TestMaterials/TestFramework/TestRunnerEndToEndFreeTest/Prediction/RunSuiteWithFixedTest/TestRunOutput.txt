@@ -2,13 +2,13 @@
 Running tests...
 
 Probability:
-	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 39]
+	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 34]
 	False Negative Checks:                     2;  Failures:  0
 
 -----------Grand Totals-----------
-[Total Run Time: 4.16ms]
-[Execution Time: 1.1ms]
-	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 39]
+[Total Run Time: 967us]
+[Execution Time: 571us]
+	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 34]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0

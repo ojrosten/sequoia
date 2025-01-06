@@ -37,83 +37,171 @@ namespace sequoia::testing
     constexpr static test_mode mode{Mode};
 
     move_only_extender() = default;
-
-    /// Preconditions: x!=y; x==xClone, y==yClone
-    template<class Self, moveonly T>
-    void check_semantics(this Self&& self, const reporter& description, T&& x, T&& y, const T& xClone, const T& yClone, const T& movedFrom)
+    
+    /// Prerequisites: x!=y; x==xEquivalent, y==yEquivalent
+    template<class Self, moveonly T, class U>
+      requires checkable_for_move_semantics<Mode, T, U>
+    bool check_semantics(this Self& self,
+                         const reporter& description,
+                         T&& x,
+                         T&& y,
+                         const U& xEquivalent,
+                         const U& yEquivalent,
+                         const U& movedFromPostConstruction,
+                         const U& movedFromPostAssignment)
     {
-      testing::check_semantics(move_only_message(self.report(description)), self.m_Logger, std::move(x), std::move(y), xClone, yClone, opt_moved_from_ref<T>{movedFrom});
+      return testing::check_semantics(
+               move_only_message(self.report(description)),
+               self.m_Logger,
+               std::move(x),
+               std::move(y),
+               xEquivalent,
+               yEquivalent,
+               optional_ref<const T>{movedFromPostConstruction},
+               optional_ref<const T>{movedFromPostAssignment}
+             );
     }
 
-    template<class Self, moveonly T>
-    void check_semantics(this Self&& self, const reporter& description, T&& x, T&& y, const T& xClone, const T& yClone)
+    template<class Self, moveonly T, class U>
+      requires checkable_for_move_semantics<Mode, T, U>
+    bool check_semantics(this Self& self, const reporter& description, T&& x, T&& y, const U& xEquivalent, const U& yEquivalent)
     {
-      testing::check_semantics(move_only_message(self.report(description)), self.m_Logger, std::move(x), std::move(y), xClone, yClone, opt_moved_from_ref<T>{});
+      return testing::check_semantics(
+               move_only_message(self.report(description)),
+               self.m_Logger,
+               std::move(x),
+               std::move(y),
+               xEquivalent,
+               yEquivalent,
+               optional_ref<const U>{},
+               optional_ref<const U>{}
+             );
     }
 
     template
     <
       class Self,
-      std::invocable xMaker,
+      moveonly T,
+      regular_invocable_r<T> xMaker,
+      regular_invocable_r<T> yMaker
+    >
+    bool check_semantics(this Self& self,
+                         const reporter& description,
+                         xMaker xFn,
+                         yMaker yFn,
+                         const T& movedFromPostConstruction,
+                         const T& movedFromPostAssignment)
+    {
+      return self.check_semantics(
+               description,
+               xFn(),
+               yFn(),
+               xFn(),
+               yFn(),
+               movedFromPostConstruction,
+               movedFromPostAssignment);
+    }
+
+    template
+    <
+      class Self,
+      std::regular_invocable xMaker,
       moveonly T=std::invoke_result_t<xMaker>,
-      invocable_r<T> yMaker
+      regular_invocable_r<T> yMaker
     >
-    void check_semantics(this Self&& self, const reporter& description, xMaker xFn, yMaker yFn, const T& movedFrom)
+    bool check_semantics(this Self& self, const reporter& description, xMaker xFn, yMaker yFn)
     {
-      self.check_semantics(description, xFn(), yFn(), xFn(), yFn(), movedFrom);
+      return self.check_semantics(description, xFn(), yFn(), xFn(), yFn());
+    }
+
+    /// Prerequisites: x!=y, with values consistent with order; x==xEquivalent, y==yEquivalent
+    template<class Self, moveonly T, class U>
+      requires std::totally_ordered<T>
+    bool check_semantics(this Self& self,
+                         const reporter& description,
+                         T&& x,
+                         T&& y,
+                         const U& xEquivalent,
+                         const U& yEquivalent,
+                         const U& movedFromPostConstruction,
+                         const U& movedFromPostAssignment,
+                         std::weak_ordering order)
+    {
+      return testing::check_semantics(
+               move_only_message(self.report(description)),
+               self.m_Logger,
+               std::move(x),
+               std::move(y),
+               xEquivalent,
+               yEquivalent,
+               optional_ref<const U>{movedFromPostConstruction},
+               optional_ref<const U>{movedFromPostAssignment},
+               order
+             );
+    }
+
+    template<class Self, moveonly T, class U>
+      requires checkable_for_move_semantics<Mode, T, U> && std::totally_ordered<T>
+    bool check_semantics(this Self& self,
+                         const reporter& description,
+                         T&& x,
+                         T&& y,
+                         const U& xEquivalent,
+                         const U& yEquivalent,
+                         std::weak_ordering order)
+    {
+      return testing::check_semantics(
+               move_only_message(self.report(description)),
+               self.m_Logger,
+               std::move(x),
+               std::move(y),
+               xEquivalent,
+               yEquivalent,
+               optional_ref<const U>{},
+               optional_ref<const U>{},
+               order
+             );
     }
 
     template
     <
       class Self,
-      std::invocable xMaker,
-      moveonly T = std::invoke_result_t<xMaker>,
-      invocable_r<T> yMaker
-    >
-      void check_semantics(this Self&& self,const reporter& description, xMaker xFn, yMaker yFn)
-    {
-      self.check_semantics(description, xFn(), yFn(), xFn(), yFn());
-    }
-
-     /// Preconditions: x!=y, with values consistent with order; x==xClone, y==yClone
-    template<class Self, moveonly T>
-      requires std::totally_ordered<T>
-    void check_semantics(this Self&& self, const reporter& description, T&& x, T&& y, const T& xClone, const T& yClone, const T& movedFrom, std::weak_ordering order)
-    {
-      testing::check_semantics(move_only_message(self.report(description)), self.m_Logger, std::move(x), std::move(y), xClone, yClone, opt_moved_from_ref<T>{movedFrom}, order);
-    }
-
-    template<class Self, moveonly T>
-      requires std::totally_ordered<T>
-    void check_semantics(this Self&& self, const reporter& description, T&& x, T&& y, const T& xClone, const T& yClone, std::weak_ordering order)
-    {
-      testing::check_semantics(move_only_message(self.report(description)), self.m_Logger, std::move(x), std::move(y), xClone, yClone, opt_moved_from_ref<T>{}, order);
-    }
-
-    template
-    <
-      class Self,
-      std::invocable<> xMaker,
-      moveonly T = std::invoke_result_t<xMaker>,
-      invocable_r<T> yMaker
-    >
-      requires std::totally_ordered<T>
-    void check_semantics(this Self&& self, const reporter& description, xMaker xFn, yMaker yFn, const T& movedFrom, std::weak_ordering order)
-    {
-      self.check_semantics(description, xFn(), yFn(), xFn(), yFn(), movedFrom, order);
-    }
-
-    template
-    <
-      class Self,
-      std::invocable<> xMaker,
+      std::regular_invocable xMaker,
       moveonly T=std::invoke_result_t<xMaker>,
-      invocable_r<T> yMaker
+      regular_invocable_r<T> yMaker
     >
       requires std::totally_ordered<T>
-    void check_semantics(this Self&& self, const reporter& description, xMaker xFn, yMaker yFn, std::weak_ordering order)
+    bool check_semantics(this Self& self,
+                         const reporter& description,
+                         xMaker xFn,
+                         yMaker yFn,
+                         const T& movedFromPostConstruction,
+                         const T& movedFromPostAssignment,
+                         std::weak_ordering order)
     {
-      self.check_semantics(description, xFn(), yFn(), xFn(), yFn(), order);
+      return self.check_semantics(
+               description,
+               xFn(),
+               yFn(),
+               xFn(),
+               yFn(),
+               movedFromPostConstruction,
+               movedFromPostAssignment,
+               order
+             );
+    }
+
+    template
+    <
+      class Self,
+      std::regular_invocable xMaker,
+      moveonly T=std::invoke_result_t<xMaker>,
+      regular_invocable_r<T> yMaker
+    >
+      requires std::totally_ordered<T>
+    bool check_semantics(this Self& self, const reporter& description, xMaker xFn, yMaker yFn, std::weak_ordering order)
+    {
+      return self.check_semantics(description, xFn(), yFn(), xFn(), yFn(), order);
     }
 
   protected:

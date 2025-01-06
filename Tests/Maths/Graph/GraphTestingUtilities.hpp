@@ -106,10 +106,10 @@ namespace sequoia::testing
 
     template<class CheckType, test_mode Mode, class E, class NodesEquivalentType>
       requires (!std::is_empty_v<nodes_type>)
-    static void test(CheckType flavour, test_logger<Mode>& logger, const type& graph, connectivity_equivalent_type<E> connPrediction, NodesEquivalentType&& nodesPrediction)
+    static void test(CheckType flavour, test_logger<Mode>& logger, const type& graph, std::pair<connectivity_equivalent_type<E>, NodesEquivalentType> prediction)
     {
-      check(flavour, "", logger, static_cast<const connectivity_type&>(graph), connPrediction);
-      check(flavour, "", logger, static_cast<const nodes_type&>(graph), std::forward<NodesEquivalentType>(nodesPrediction));
+      check(flavour, "", logger, static_cast<const connectivity_type&>(graph), prediction.first);
+      check(flavour, "", logger, static_cast<const nodes_type&>(graph), prediction.second);
     }
 
     template<class CheckType, test_mode Mode, class E>

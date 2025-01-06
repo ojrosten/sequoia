@@ -84,7 +84,7 @@ namespace sequoia
       static_assert(sizeof(std::shared_ptr<int>) + sizeof(std::size_t) == sizeof(edge_t));
 
       edge_t edge{1, 4};
-      check(equivalence, "Construction", edge, 1, 4);
+      check(equivalence, "Construction", edge, std::pair{1, 4});
 
       edge.weight(5);
       check(equality, "Set weight", edge, edge_t{1, 5});
@@ -96,7 +96,7 @@ namespace sequoia
       check(equality, "Change target node", edge, edge_t{2, -1});
 
       edge_t edge1{2,-7};
-      check(equivalence, "Construction", edge1, 2, -7);
+      check(equivalence, "Construction", edge1, std::pair{2, -7});
 
       check_semantics("Standard Semantics", edge1, edge);
 
@@ -118,7 +118,7 @@ namespace sequoia
       check_semantics("Standard semantics with shared weight", edge2, edge);
 
       edge_t edge3(2, 8);
-      check(equivalence, "", edge3, 2, 8);
+      check(equivalence, "", edge3, std::pair{2, 8});
 
       check_semantics("Standard semantics with one having a shared weight", edge2, edge);
 
@@ -150,7 +150,7 @@ namespace sequoia
       static_assert(2 * sizeof(std::size_t) == sizeof(edge_t));
 
       edge_t edge{2, 7};
-      check(equivalence, "Construction", edge, 2, 7);
+      check(equivalence, "Construction", edge, std::pair{2, 7});
 
       edge.target_node(3);
       check(equality, "Change target node", edge, edge_t{3, 7});
@@ -159,7 +159,7 @@ namespace sequoia
       check(equality, "Set weight", edge, edge_t{3, -5});
 
       edge_t edge2(5, edge);
-      check(equivalence, "Construction with by_value weight", edge2, 5, -5);
+      check(equivalence, "Construction with by_value weight", edge2, std::pair{5, -5});
       check(equality, "", edge, edge_t{3, -5});
 
       edge.mutate_weight([](int& a) { a *= 2;} );
@@ -175,7 +175,7 @@ namespace sequoia
       using edge_b = partial_edge<by_value<int>, null_meta_data>;
 
       edge_a edge{edge_b{1, -7}};
-      check(equivalence, "", edge, 1, -7);
+      check(equivalence, "", edge, std::pair{1, -7});
     }
 
     void test_edges::test_partial_edge_meta_data()
@@ -184,7 +184,7 @@ namespace sequoia
       static_assert(2 * sizeof(std::size_t) == sizeof(edge_t));
 
       edge_t edge{2, 0.5f};
-      check(equivalence, "Construction", edge, 2, 0.5f);
+      check(equivalence, "Construction", edge, std::pair{2, 0.5f});
 
       edge.target_node(3);
       check(equality, "Change target node", edge, edge_t{3, 0.5f});
@@ -199,7 +199,7 @@ namespace sequoia
       check(equality, "", edge2, edge_t{7, 0.9f});
 
       constexpr edge_t edge3{7};
-      check(equivalence, "Construction", edge3, 7, 0.0f);
+      check(equivalence, "Construction", edge3, std::pair{7, 0.0f});
     }
 
     void test_edges::test_partial_edge_indep_weight_meta_data()
@@ -208,7 +208,7 @@ namespace sequoia
       static_assert(3 * sizeof(std::size_t) == sizeof(edge_t));
 
       edge_t edge{2, 0.5f, 1.0};
-      check(equivalence, "Construction", edge, 2, 0.5f, 1.0);
+      check(equivalence, "Construction", edge, std::tuple{2, 0.5f, 1.0});
 
       edge.target_node(3);
       check(equality, "Change target node", edge, edge_t{3, 0.5f, 1.0});
@@ -226,7 +226,7 @@ namespace sequoia
       check(equality, "", edge2, edge_t{7, 0.9f, 1.0});
 
       constexpr edge_t edge3{7};
-      check(equivalence, "Construction", edge3, 7, 0.0f, 0.0);
+      check(equivalence, "Construction", edge3, std::tuple{7, 0.0f, 0.0});
     }
 
     void test_edges::test_partial_edge_shared_weight_meta_data()
@@ -235,7 +235,7 @@ namespace sequoia
       static_assert(sizeof(std::shared_ptr<double>) + 2*sizeof(std::size_t) == sizeof(edge_t));
 
       edge_t edge{2, 0.5f, 1.0};
-      check(equivalence, "Construction", edge, 2, 0.5f, 1.0);
+      check(equivalence, "Construction", edge, std::tuple{2, 0.5f, 1.0});
 
       edge.target_node(3);
       check(equality, "Change target node", edge, edge_t{3, 0.5f, 1.0});
@@ -253,7 +253,7 @@ namespace sequoia
       check(equality, "", edge2, edge_t{7, 0.9f, 1.0});
 
       const edge_t edge3{7};
-      check(equivalence, "Construction", edge3, 7, 0.0f, 0.0);
+      check(equivalence, "Construction", edge3, std::tuple{7, 0.0f, 0.0});
     }
 
     void test_edges::test_partial_edge_meta_data_conversions()
@@ -262,7 +262,7 @@ namespace sequoia
       using edge_b = partial_edge<by_value<double>, float>;
 
       edge_a edge{edge_b{1, 0.6f, 5.5}};
-      check(equivalence, "", edge, 1, 0.6f, 5.5);
+      check(equivalence, "", edge, std::tuple{1, 0.6f, 5.5});
     }
 
 
@@ -276,7 +276,7 @@ namespace sequoia
       static_assert(2*sizeof(unsigned char) == sizeof(compact_edge_t));
 
       edge_t e1{0, 4};
-      check(equivalence, "Construction", e1, 0, 4);
+      check(equivalence, "Construction", e1, std::pair{0, 4});
 
       e1.target_node(1);
       check(equality, "Change target", e1, edge_t{1, 4});
@@ -285,7 +285,7 @@ namespace sequoia
       check(equality, "Change complementary index", e1, edge_t{1, 5});
 
       edge_t e2{10, 10};
-      check(equivalence, "Construction", e2, 10, 10);
+      check(equivalence, "Construction", e2, std::pair{10, 10});
 
       check_semantics("Standard semantics", e2, e1);
     }
@@ -296,7 +296,7 @@ namespace sequoia
       static_assert(2*sizeof(std::size_t) + sizeof(double) == sizeof(edge_t));
 
       constexpr edge_t edge1{1, 2, 5.0};
-      check(equivalence, "Construction", edge1, 1, 2, 5.0);
+      check(equivalence, "Construction", edge1, std::tuple{1, 2, 5.0});
 
       edge_t edge2{3, 7, edge1};
       check(equality, "Construction with by_value weight", edge2, edge_t{3, 7, 5.0});
@@ -319,7 +319,7 @@ namespace sequoia
       static_assert(sizeof(std::shared_ptr<double>) + 2*sizeof(std::size_t) == sizeof(edge_t));
 
       edge_t edge1{1, 2, 5.0};
-      check(equivalence, "Construction", edge1, 1, 2, 5.0);
+      check(equivalence, "Construction", edge1, std::tuple{1, 2, 5.0});
 
       edge_t edge2{3, 7, edge1};
       check(equality, "Construction with shared weight", edge2, edge_t{3, 7, 5.0});
@@ -343,7 +343,7 @@ namespace sequoia
       using edge_b = embedded_partial_edge<by_value<double>, null_meta_data>;
 
       edge_a edge{edge_b{1, 5, 1.0}};
-      check(equivalence, "", edge, 1, 5, 1.0);
+      check(equivalence, "", edge, std::tuple{1, 5, 1.0});
     }
 
     void test_edges::test_embedded_partial_edge_meta_data()
@@ -352,7 +352,7 @@ namespace sequoia
       static_assert(3 * sizeof(std::size_t) == sizeof(edge_t));
 
       edge_t edge{2, 1, 0.5f};
-      check(equivalence, "Construction", edge, 2, 1, 0.5f);
+      check(equivalence, "Construction", edge, std::tuple{2, 1, 0.5f});
 
       edge.target_node(3);
       check(equality, "Change target node", edge, edge_t{3, 1, 0.5f});
@@ -370,7 +370,7 @@ namespace sequoia
       check(equality, "", edge2, edge_t{7, 4, 0.9f});
 
       constexpr edge_t edge3{8, 2};
-      check(equivalence, "Construction", edge3, 8, 2, 0.0f);
+      check(equivalence, "Construction", edge3, std::tuple{8, 2, 0.0f});
     }
 
     void test_edges::test_embedded_partial_edge_indep_weight_meta_data()
@@ -379,7 +379,7 @@ namespace sequoia
       static_assert(4 * sizeof(std::size_t) == sizeof(edge_t));
 
       edge_t edge{2, 5, 0.5f, 1.0};
-      check(equivalence, "Construction", edge, 2, 5, 0.5f, 1.0);
+      check(equivalence, "Construction", edge, std::tuple{2, 5, 0.5f, 1.0});
 
       edge.complementary_index(6);
       check(equality, "Change complementary index", edge, edge_t{2, 6, 0.5f, 1.0});
@@ -400,7 +400,7 @@ namespace sequoia
       check(equality, "", edge2, edge_t{7, 4, 0.9f, 1.0});
 
       constexpr edge_t edge3{8, 2};
-      check(equivalence, "Construction", edge3, 8, 2, 0.0f, 0.0);
+      check(equivalence, "Construction", edge3, std::tuple{8, 2, 0.0f, 0.0});
     }
 
     void test_edges::test_embedded_partial_edge_shared_weight_meta_data()
@@ -409,7 +409,7 @@ namespace sequoia
       static_assert(sizeof(std::shared_ptr<double>) + 3*sizeof(std::size_t) == sizeof(edge_t));
 
       edge_t edge{2, 5, 0.5f, 1.0};
-      check(equivalence, "Construction", edge, 2, 5, 0.5f, 1.0);
+      check(equivalence, "Construction", edge, std::tuple{2, 5, 0.5f, 1.0});
 
       edge.complementary_index(6);
       check(equality, "Change complementary index", edge, edge_t{2, 6, 0.5f, 1.0});
@@ -430,7 +430,7 @@ namespace sequoia
       check(equality, "", edge2, edge_t{7, 4, 0.9f, 1.0});
 
       const edge_t edge3{8, 2};
-      check(equivalence, "Construction", edge3, 8, 2, 0.0f, 0.0);
+      check(equivalence, "Construction", edge3, std::tuple{8, 2, 0.0f, 0.0});
     }
 
     void test_edges::test_embedded_partial_edge_meta_data_conversions()
@@ -439,7 +439,7 @@ namespace sequoia
       using edge_b = embedded_partial_edge<by_value<double>, float>;
 
       edge_a edge{edge_b{1, 5, 0.4f, 1.0}};
-      check(equivalence, "", edge, 1, 5, 0.4f, 1.0);
+      check(equivalence, "", edge, std::tuple{1, 5, 0.4f, 1.0});
     }
   }
 }

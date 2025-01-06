@@ -19,9 +19,11 @@ namespace sequoia::testing
 
   void failure_info_false_negative_test::run_tests()
   {
+    using namespace std::string_literals;
+
     failure_info x{}, y{4}, z{0, "foo"};
-    check(equivalence, "", x, 1, "");
-    check(equivalence, "", x, 0, "foo");
+    check(equivalence, "", x, std::pair{1, ""s});
+    check(equivalence, "", x, std::pair{0, "foo"s});
     check(equality, "check_index differs", x, y);
     check(equality, "message differs", x, z);
   }

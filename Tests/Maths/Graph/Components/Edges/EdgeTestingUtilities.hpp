@@ -68,27 +68,27 @@ namespace sequoia::testing
 
     template<test_mode Mode>
       requires (!std::is_empty_v<weight_type>) && std::is_empty_v<MetaData>
-    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& edge, const IndexType& target, const weight_type& w)
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& edge, const std::pair<IndexType, weight_type>& prediction)
     {
-      check(equality, "Target node incorrect", logger, edge.target_node(), target);
-      check(equality, "Weight incorrect", logger, edge.weight(), w);
+      check(equality, "Target node incorrect", logger, edge.target_node(), prediction.first);
+      check(equality, "Weight incorrect", logger, edge.weight(), prediction.second);
     }
 
     template<test_mode Mode>
       requires std::is_empty_v<weight_type> && (!std::is_empty_v<MetaData>)
-    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& edge, const IndexType& target, const MetaData& m)
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& edge, const std::pair<IndexType, MetaData>& prediction)
     {
-      check(equality, "Target node incorrect", logger, edge.target_node(), target);
-      check(equality, "Weight incorrect", logger, edge.meta_data(), m);
+      check(equality, "Target node incorrect", logger, edge.target_node(), prediction.first);
+      check(equality, "Weight incorrect", logger, edge.meta_data(), prediction.second);
     }
 
     template<test_mode Mode>
       requires (!std::is_empty_v<weight_type>) && (!std::is_empty_v<MetaData>)
-    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& edge, const IndexType& target, const MetaData& m, const weight_type& w)
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& edge, const std::tuple<IndexType, MetaData, weight_type>& prediction)
     {
-      check(equality, "Target node incorrect", logger, edge.target_node(), target);
-      check(equality, "Weight incorrect", logger, edge.weight(), w);
-      check(equality, "Meta data incorrect", logger, edge.meta_data(), m);
+      check(equality, "Target node incorrect", logger, edge.target_node(), std::get<0>(prediction));
+      check(equality, "Weight incorrect", logger, edge.weight(), std::get<2>(prediction));
+      check(equality, "Meta data incorrect", logger, edge.meta_data(), std::get<1>(prediction));
     }
   };
 
@@ -116,38 +116,38 @@ namespace sequoia::testing
 
     template<test_mode Mode>
       requires std::is_empty_v<weight_type>&& std::is_empty_v<MetaData>
-    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& edge, const IndexType& target, const IndexType& comp)
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& edge, const std::pair<IndexType, IndexType>& prediction)
     {
-      check(equality, "Target node incorrect", logger, edge.target_node(), target);
-      check(equality, "Complementary index incorrect", logger, edge.complementary_index(), comp);
+      check(equality, "Target node incorrect", logger, edge.target_node(), prediction.first);
+      check(equality, "Complementary index incorrect", logger, edge.complementary_index(), prediction.second);
     }
 
     template<test_mode Mode>
       requires (!std::is_empty_v<weight_type>) && std::is_empty_v<MetaData>
-    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& edge, const IndexType& target, const IndexType& comp, const weight_type& w)
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& edge, const std::tuple<IndexType, IndexType, weight_type>& prediction)
     {
-      check(equality, "Target node incorrect", logger, edge.target_node(), target);
-      check(equality, "Complementary index incorrect", logger, edge.complementary_index(), comp);
-      check(equality, "Weight incorrect", logger, edge.weight(), w);
+      check(equality, "Target node incorrect", logger, edge.target_node(), std::get<0>(prediction));
+      check(equality, "Complementary index incorrect", logger, edge.complementary_index(), std::get<1>(prediction));
+      check(equality, "Weight incorrect", logger, edge.weight(), std::get<2>(prediction));
     }
 
     template<test_mode Mode>
       requires std::is_empty_v<weight_type> && (!std::is_empty_v<MetaData>)
-    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& edge, const IndexType& target, const IndexType& comp, const MetaData& m)
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& edge, const std::tuple<IndexType, IndexType, MetaData>& prediction)
     {
-      check(equality, "Target node incorrect", logger, edge.target_node(), target);
-      check(equality, "Complementary index incorrect", logger, edge.complementary_index(), comp);
-      check(equality, "Weight incorrect", logger, edge.meta_data(), m);
+      check(equality, "Target node incorrect", logger, edge.target_node(), std::get<0>(prediction));
+      check(equality, "Complementary index incorrect", logger, edge.complementary_index(), std::get<1>(prediction));
+      check(equality, "Weight incorrect", logger, edge.meta_data(), std::get<2>(prediction));
     }
 
     template<test_mode Mode>
       requires (!std::is_empty_v<weight_type>) && (!std::is_empty_v<MetaData>)
-    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& edge, const IndexType& target, const IndexType& comp, const MetaData& m, const weight_type& w)
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& edge, const std::tuple<IndexType, IndexType, MetaData, weight_type>& prediction)
     {
-      check(equality, "Target node incorrect", logger, edge.target_node(), target);
-      check(equality, "Complementary index incorrect", logger, edge.complementary_index(), comp);
-      check(equality, "Weight incorrect", logger, edge.weight(), w);
-      check(equality, "Meta data incorrect", logger, edge.meta_data(), m);
+      check(equality, "Target node incorrect", logger, edge.target_node(), std::get<0>(prediction));
+      check(equality, "Complementary index incorrect", logger, edge.complementary_index(), std::get<1>(prediction));
+      check(equality, "Weight incorrect", logger, edge.weight(), std::get<3>(prediction));
+      check(equality, "Meta data incorrect", logger, edge.meta_data(), std::get<2>(prediction));
     }
   };
 }

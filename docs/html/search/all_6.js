@@ -1,7 +1,7 @@
 var searchData=
 [
   ['gaussian_5fapprox_5festimator_0',['gaussian_approx_estimator',['../d5/d31/structsequoia_1_1maths_1_1bias_1_1gaussian__approx__estimator.html',1,'sequoia::maths::bias']]],
-  ['general_5fequivalence_5fcheck_1',['general_equivalence_check',['../d2/d0d/FreeCheckers_8hpp.html#a4ec4b971693fdcad9ad8cebb2f2722ec',1,'sequoia::testing']]],
+  ['general_5fequivalence_5fcheck_1',['general_equivalence_check',['../d2/d0d/FreeCheckers_8hpp.html#a72b1b8fc4ea47c40f244c40801fa4913',1,'sequoia::testing']]],
   ['general_5fequivalence_5fcheck_5ft_2',['general_equivalence_check_t',['../df/d9e/structsequoia_1_1testing_1_1general__equivalence__check__t.html',1,'sequoia::testing']]],
   ['general_5fequivalence_5fcheck_5ft_3c_20sequoia_3a_3atesting_3a_3ageneral_5ffile_5fchecker_20_3e_3',['general_equivalence_check_t&lt; sequoia::testing::general_file_checker &gt;',['../df/d9e/structsequoia_1_1testing_1_1general__equivalence__check__t.html',1,'sequoia::testing']]],
   ['general_5fequivalence_5fcheck_5ft_3c_20valuebasedcustomizer_20_3e_4',['general_equivalence_check_t&lt; ValueBasedCustomizer &gt;',['../d4/de7/structsequoia_1_1testing_1_1general__equivalence__check__t_3_01ValueBasedCustomizer_01_4.html',1,'sequoia::testing']]],

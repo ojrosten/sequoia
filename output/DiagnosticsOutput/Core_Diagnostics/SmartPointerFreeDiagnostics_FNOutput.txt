@@ -111,7 +111,11 @@ Checking for equivalence with:
 [std::unique_ptr<sequoia::testing::only_equivalence_checkable, std::default_delete<sequoia::testing::only_equivalence_checkable> >]
 
   Pointees differ
+  Comparison performed using:
+  [sequoia::testing::value_tester<sequoia::testing::only_equivalence_checkable>]
+  Checking for equivalence with:
   [sequoia::testing::only_equivalence_checkable]
+
     Wrapped double
     [double]
     operator== returned false
@@ -129,7 +133,11 @@ Checking for equivalence with:
 [std::unique_ptr<sequoia::testing::only_weakly_checkable, std::default_delete<sequoia::testing::only_weakly_checkable> >]
 
   Pointees differ
+  Comparison performed using:
+  [sequoia::testing::value_tester<sequoia::testing::only_weakly_checkable>]
+  Checking for weak equivalence with:
   [sequoia::testing::only_weakly_checkable]
+
     Wrapped int
     [int]
     operator== returned false
@@ -161,7 +169,11 @@ Checking for equivalence with:
     Predicted: -1
 
     Element 1 of tuple incorrect
+    Comparison performed using:
+    [sequoia::testing::value_tester<sequoia::testing::only_equivalence_checkable>]
+    Checking for equivalence with:
     [sequoia::testing::only_equivalence_checkable]
+
       Wrapped double
       [double]
       operator== returned false
@@ -169,7 +181,11 @@ Checking for equivalence with:
       Predicted: 3
 
     Element 2 of tuple incorrect
+    Comparison performed using:
+    [sequoia::testing::value_tester<sequoia::testing::only_weakly_checkable>]
+    Checking for weak equivalence with:
     [sequoia::testing::only_weakly_checkable]
+
       Wrapped int
       [int]
       operator== returned false
@@ -305,7 +321,11 @@ Checking for equivalence with:
     Predicted: -1
 
     Element 1 of tuple incorrect
+    Comparison performed using:
+    [sequoia::testing::value_tester<sequoia::testing::only_equivalence_checkable>]
+    Checking for equivalence with:
     [sequoia::testing::only_equivalence_checkable]
+
       Wrapped double
       [double]
       operator== returned false
@@ -313,7 +333,11 @@ Checking for equivalence with:
       Predicted: 3
 
     Element 2 of tuple incorrect
+    Comparison performed using:
+    [sequoia::testing::value_tester<sequoia::testing::only_weakly_checkable>]
+    Checking for weak equivalence with:
     [sequoia::testing::only_weakly_checkable]
+
       Wrapped int
       [int]
       operator== returned false

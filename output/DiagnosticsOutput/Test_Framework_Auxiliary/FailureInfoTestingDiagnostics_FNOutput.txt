@@ -1,10 +1,9 @@
-Tests/TestFramework/FailureInfoTestingDiagnostics.cpp, Line 23
+Tests/TestFramework/FailureInfoTestingDiagnostics.cpp, Line 25
 
 Comparison performed using:
 [sequoia::testing::value_tester<sequoia::testing::failure_info>]
 Checking for equivalence with:
-[int,
-char [1]]
+[std::pair<int, std::basic_string<char, std::char_traits<char>, std::allocator<char> > >]
 
   Check index
   [unsigned long long]
@@ -14,13 +13,12 @@ char [1]]
 
 =======================================
 
-Tests/TestFramework/FailureInfoTestingDiagnostics.cpp, Line 24
+Tests/TestFramework/FailureInfoTestingDiagnostics.cpp, Line 26
 
 Comparison performed using:
 [sequoia::testing::value_tester<sequoia::testing::failure_info>]
 Checking for equivalence with:
-[int,
-char [4]]
+[std::pair<int, std::basic_string<char, std::char_traits<char>, std::allocator<char> > >]
 
   Message
   [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
@@ -40,7 +38,7 @@ char [4]]
 
 =======================================
 
-Tests/TestFramework/FailureInfoTestingDiagnostics.cpp, Line 25
+Tests/TestFramework/FailureInfoTestingDiagnostics.cpp, Line 27
 check_index differs
 
 [sequoia::testing::failure_info]
@@ -54,7 +52,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/FailureInfoTestingDiagnostics.cpp, Line 26
+Tests/TestFramework/FailureInfoTestingDiagnostics.cpp, Line 28
 message differs
 
 [sequoia::testing::failure_info]

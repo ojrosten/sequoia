@@ -1,2 +1,2 @@
 Weighted Graph Allocation Contiguous Test
-Standard Top Level Checks:                81;  Failures:  0  [Deep checks: 3965]
+Standard Top Level Checks:                81;  Failures:  0  [Deep checks: 3235]

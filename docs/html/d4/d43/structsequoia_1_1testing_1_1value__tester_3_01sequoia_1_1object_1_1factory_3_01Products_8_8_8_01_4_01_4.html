@@ -89,14 +89,22 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>type</b> = <a class=
 <tr class="memitem:a4846415a71644cffd750ff4377d18a30"><td class="memItemLeft" align="right" valign="top"><a id="a4846415a71644cffd750ff4377d18a30" name="a4846415a71644cffd750ff4377d18a30"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>element</b> = std::pair&lt; std::string, std::variant&lt; Products... &gt; &gt;</td></tr>
 <tr class="separator:a4846415a71644cffd750ff4377d18a30"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6f0a03a12d083d4a0d788e23b96a8aea"><td class="memTemplParams" colspan="2"><a id="a6f0a03a12d083d4a0d788e23b96a8aea" name="a6f0a03a12d083d4a0d788e23b96a8aea"></a>
+template&lt;class... Args&gt; </td></tr>
+<tr class="memitem:a6f0a03a12d083d4a0d788e23b96a8aea"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>factory_check_type</b> = <a class="el" href="../../df/d9e/structsequoia_1_1testing_1_1general__equivalence__check__t.html">general_equivalence_check_t</a>&lt; std::tuple&lt; Args... &gt; &gt;</td></tr>
+<tr class="separator:a6f0a03a12d083d4a0d788e23b96a8aea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:ae8e886e5276a5c95d73c9f67ece9d371"><td class="memTemplParams" colspan="2"><a id="ae8e886e5276a5c95d73c9f67ece9d371" name="ae8e886e5276a5c95d73c9f67ece9d371"></a>
+<tr class="memitem:a548ad8a08f5f00a67d94eee788d6405c"><td class="memTemplParams" colspan="2"><a id="a548ad8a08f5f00a67d94eee788d6405c" name="a548ad8a08f5f00a67d94eee788d6405c"></a>
 template&lt;test_mode Mode, class... Args&gt; <br />
-requires (initializable_from&lt;Products, Args...&gt; &amp;&amp; ...)</td></tr>
-<tr class="memitem:ae8e886e5276a5c95d73c9f67ece9d371"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>test</b> (<a class="el" href="../../df/d9e/structsequoia_1_1testing_1_1general__equivalence__check__t.html">equivalence_check_t</a>, <a class="el" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger</a>&lt; Mode &gt; &amp;logger, const <a class="el" href="../../dc/d0c/classsequoia_1_1object_1_1factory.html">type</a> &amp;actual, const std::array&lt; element, sizeof...(Products)&gt; &amp;prediction, const Args &amp;... args)</td></tr>
-<tr class="separator:ae8e886e5276a5c95d73c9f67ece9d371"><td class="memSeparator" colspan="2">&#160;</td></tr>
+requires (initializable_from&lt;Products, Args...&gt; &amp;&amp; ... )</td></tr>
+<tr class="memitem:a548ad8a08f5f00a67d94eee788d6405c"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>test</b> (<a class="el" href="../../df/d9e/structsequoia_1_1testing_1_1general__equivalence__check__t.html">factory_check_type</a>&lt; Args... &gt; equivChecker, <a class="el" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger</a>&lt; Mode &gt; &amp;logger, const <a class="el" href="../../dc/d0c/classsequoia_1_1object_1_1factory.html">type</a> &amp;actual, const std::array&lt; element, sizeof...(Products)&gt; &amp;prediction)</td></tr>
+<tr class="separator:a548ad8a08f5f00a67d94eee788d6405c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac3e0d1754ba1ca9a635bb68b278e0754"><td class="memTemplParams" colspan="2"><a id="ac3e0d1754ba1ca9a635bb68b278e0754" name="ac3e0d1754ba1ca9a635bb68b278e0754"></a>
+template&lt;test_mode Mode&gt; </td></tr>
+<tr class="memitem:ac3e0d1754ba1ca9a635bb68b278e0754"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>test</b> (<a class="el" href="../../df/d9e/structsequoia_1_1testing_1_1general__equivalence__check__t.html">equivalence_check_t</a>, <a class="el" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger</a>&lt; Mode &gt; &amp;logger, const <a class="el" href="../../dc/d0c/classsequoia_1_1object_1_1factory.html">type</a> &amp;actual, const std::array&lt; element, sizeof...(Products)&gt; &amp;prediction)</td></tr>
+<tr class="separator:ac3e0d1754ba1ca9a635bb68b278e0754"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a593cea3216563ccbbe69c58349e689d1"><td class="memTemplParams" colspan="2"><a id="a593cea3216563ccbbe69c58349e689d1" name="a593cea3216563ccbbe69c58349e689d1"></a>
 template&lt;test_mode Mode&gt; </td></tr>
 <tr class="memitem:a593cea3216563ccbbe69c58349e689d1"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>test</b> (<a class="el" href="../../d2/d95/structsequoia_1_1testing_1_1equality__check__t.html">equality_check_t</a>, <a class="el" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger</a>&lt; Mode &gt; &amp;logger, const <a class="el" href="../../dc/d0c/classsequoia_1_1object_1_1factory.html">type</a> &amp;actual, const <a class="el" href="../../dc/d0c/classsequoia_1_1object_1_1factory.html">type</a> &amp;prediction)</td></tr>

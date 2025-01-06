@@ -1,6 +1,6 @@
 
 Analyzing dependencies...
-[57.8ms]
+[4.68ms]
 
 
 Running tests...
@@ -21,17 +21,17 @@ Useful Things:
 Unstable:
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 Probability:
-	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 39]
+	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 34]
 	False Negative Checks:                     2;  Failures:  0
 Unique Thing:
-	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 35]
+	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 30]
 	False Negative Checks:                     2;  Failures:  0
 Container:
 
 -----------Grand Totals-----------
-[Total Run Time: 11ms]
-[Execution Time: 2.75ms]
-	Standard Top Level Checks:                10;  Failures:  1  [Deep checks: 78]
+[Total Run Time: 2.99ms]
+[Execution Time: 1.29ms]
+	Standard Top Level Checks:                10;  Failures:  1  [Deep checks: 68]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0

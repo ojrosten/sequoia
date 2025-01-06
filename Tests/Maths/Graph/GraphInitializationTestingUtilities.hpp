@@ -24,14 +24,14 @@ namespace sequoia::testing
     template<class G, class... NodeWeights, class E=typename G::edge_init_type, class Self>
     void check_graph(this Self&& self, const reporter& description, const G& graph, std::initializer_list<std::initializer_list<E>> edges, const std::tuple<NodeWeights...>& nodeWeights)
     {
-      testing::check(weak_equivalence, self.report(description), self.m_Logger, graph, edges, nodeWeights);
+      testing::check(weak_equivalence, self.report(description), self.m_Logger, graph, std::pair{edges, nodeWeights});
     }
 
     template<class G, class E=typename G::edge_init_typ, class Self>
       requires (!std::is_empty_v<typename G::node_weight_type>)
     void check_graph(this Self&& self, const reporter& description, const G& graph, std::initializer_list<std::initializer_list<E>> edges, std::initializer_list<typename G::node_weight_type> nodeWeights)
     {
-      testing::check(weak_equivalence, self.report(description), self.m_Logger, graph, edges, nodeWeights);
+      testing::check(weak_equivalence, self.report(description), self.m_Logger, graph, std::pair{edges, nodeWeights});
     }
 
     template<class G, class E=typename G::edge_init_type, class Self>

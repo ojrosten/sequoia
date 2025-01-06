@@ -125,6 +125,7 @@
 #include "TestFramework/FailureInfoTest.hpp"
 #include "TestFramework/FailureInfoTestingDiagnostics.hpp"
 #include "TestFramework/FileSystemUtilitiesFreeTest.hpp"
+#include "TestFramework/FreeCheckersMetaFreeTest.hpp"
 #include "TestFramework/FunctionFreeDiagnostics.hpp"
 #include "TestFramework/MaterialsUpdaterFreeTest.hpp"
 #include "TestFramework/MoveOnlyStateTransitionDiagnostics.hpp"

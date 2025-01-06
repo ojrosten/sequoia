@@ -37,10 +37,10 @@ namespace sequoia::testing::impl
     }
 
     template<test_mode Mode, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
-    static void post_swap_action(test_logger<Mode>& logger, T& x, const T& y, const T& yClone, Mutator yMutator, const dual_allocation_checker<T, Getters>&... checkers)
+    static void post_swap_action(test_logger<Mode>& logger, T& x, const T& y, const T& yEquivalent, Mutator yMutator, const dual_allocation_checker<T, Getters>&... checkers)
     {
-      allocation_actions<T>::post_swap_action(logger, x, y, yClone, checkers...);
-      check_mutation_after_swap(logger, x, y, yClone, std::move(yMutator), checkers...);
+      allocation_actions<T>::post_swap_action(logger, x, y, yEquivalent, checkers...);
+      check_mutation_after_swap(logger, x, y, yEquivalent, std::move(yMutator), checkers...);
     }
   };
 
@@ -76,7 +76,7 @@ namespace sequoia::testing::impl
       {
         using ctag = container_tag_constant<container_tag::y>;
         check_para_move_allocation(logger, ctag{}, v, std::tuple_cat(make_allocation_checkers(info)...));
-        check_mutation_after_move("para-move", logger, v, y, std::move(yMutator), std::tuple_cat(make_allocation_checkers(info, v)...));
+        check_mutation_after_move("para-move", logger, v, std::move(yMutator), std::tuple_cat(make_allocation_checkers(info, v)...));
       }
     }
   }
@@ -89,9 +89,9 @@ namespace sequoia::testing::impl
     std::invocable<T&> Mutator,
     alloc_getter<T>... Getters
   >
-  bool check_swap(test_logger<Mode>& logger, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, Mutator yMutator, const dual_allocation_checker<T, Getters>&... checkers)
+  bool check_swap(test_logger<Mode>& logger, const Actions& actions, T&& x, T&& y, const T& xEquivalent, const T& yEquivalent, Mutator yMutator, const dual_allocation_checker<T, Getters>&... checkers)
   {
-    return do_check_swap(logger, actions, std::move(x), std::move(y), xClone, yClone, std::move(yMutator), dual_allocation_checker{checkers.info(), x, y}...);
+    return do_check_swap(logger, actions, std::move(x), std::move(y), xEquivalent, yEquivalent, std::move(yMutator), dual_allocation_checker{checkers.info(), x, y}...);
   }
 
   template<test_mode Mode, class Actions, pseudoregular T, std::invocable<T&> Mutator, alloc_getter<T>... Getters>

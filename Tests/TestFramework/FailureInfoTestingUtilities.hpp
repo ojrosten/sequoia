@@ -16,6 +16,7 @@ namespace sequoia::testing
   template<> struct value_tester<sequoia::testing::failure_info>
   {
     using type = sequoia::testing::failure_info;
+    using equivalent_type = std::pair<std::size_t, std::string>;
 
     template<test_mode Mode>
     static void test(equality_check_t, test_logger<Mode>& logger, const type& actual, const type& prediction)
@@ -25,10 +26,10 @@ namespace sequoia::testing
     }
 
     template<test_mode Mode>
-    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& actual, const std::size_t checkIndex, const std::string& message)
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& actual, const equivalent_type prediction)
     {
-      check(equality, "Check index", logger, actual.check_index, checkIndex);
-      check(equality, "Message", logger, actual.message, message);
+      check(equality, "Check index", logger, actual.check_index, prediction.first);
+      check(equality, "Message", logger, actual.message, prediction.second);
     }
   };
 }

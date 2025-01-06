@@ -673,7 +673,11 @@ Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 216
 
 [std::pair<int, sequoia::testing::only_weakly_checkable>]
   Second element of pair is incorrect
+  Comparison performed using:
+  [sequoia::testing::value_tester<sequoia::testing::only_weakly_checkable>]
+  Checking for weak equivalence with:
   [sequoia::testing::only_weakly_checkable]
+
     Wrapped double
     [double]
     operator== returned false
@@ -692,7 +696,11 @@ Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 217
   Predicted: 0
 
   Second element of pair is incorrect
+  Comparison performed using:
+  [sequoia::testing::value_tester<sequoia::testing::only_weakly_checkable>]
+  Checking for weak equivalence with:
   [sequoia::testing::only_weakly_checkable]
+
     Wrapped double
     [double]
     operator== returned false
@@ -705,7 +713,11 @@ Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 218
 
 [std::pair<int, sequoia::testing::only_weakly_checkable>]
   Second element of pair is incorrect
+  Comparison performed using:
+  [sequoia::testing::value_tester<sequoia::testing::only_weakly_checkable>]
+  Checking for weak equivalence with:
   [sequoia::testing::only_weakly_checkable]
+
     Wrapped double
     [double]
     operator== returned false
@@ -730,7 +742,11 @@ Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 225
 
 [std::pair<int, sequoia::testing::only_equivalence_checkable>]
   Second element of pair is incorrect
+  Comparison performed using:
+  [sequoia::testing::value_tester<sequoia::testing::only_equivalence_checkable>]
+  Checking for equivalence with:
   [sequoia::testing::only_equivalence_checkable]
+
     Wrapped double
     [double]
     operator== returned false
@@ -749,7 +765,11 @@ Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 226
   Predicted: 1
 
   Second element of pair is incorrect
+  Comparison performed using:
+  [sequoia::testing::value_tester<sequoia::testing::only_equivalence_checkable>]
+  Checking for equivalence with:
   [sequoia::testing::only_equivalence_checkable]
+
     Wrapped double
     [double]
     operator== returned false

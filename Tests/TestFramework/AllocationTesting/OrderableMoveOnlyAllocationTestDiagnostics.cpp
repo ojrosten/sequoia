@@ -32,25 +32,69 @@ namespace sequoia::testing
   template<bool PropagateMove, bool PropagateSwap>
   void orderable_move_only_allocation_false_positive_diagnostics::test_semantics_allocations()
   {
-    using beast = orderable_move_only_beast<int, shared_counting_allocator<int, true, PropagateMove, PropagateSwap>>;
+    using equivalent_type = std::vector<int, shared_counting_allocator<int, true, PropagateMove, PropagateSwap>>;
+    auto mutator{[](auto& b) { b.x.shrink_to_fit(); b.x.push_back(3); }};
 
-    auto getter{[](const beast& b){ return b.x.get_allocator(); }};
-    auto mutator{[](beast& b) { b.x.shrink_to_fit(); b.x.push_back(3); }};
+    {
+      using beast = orderable_move_only_beast<int, shared_counting_allocator<int, true, PropagateMove, PropagateSwap>>;
 
-    check_semantics("",
-                    [](){ return beast{}; },
-                    [](){ return beast{2}; },
-                    std::weak_ordering::less,
-                    mutator,
-                    allocation_info{getter, {0_pm, {1_pm, 1_mu}, {1_manp}}});
+      auto getter{[](const beast& b){ return b.x.get_allocator(); }};
 
-    check_semantics("",
-                    beast{},
-                    beast{2},
-                    beast{},
-                    beast{2},
-                    std::weak_ordering::less,
-                    mutator,
-                    allocation_info{getter, {0_pm, {1_pm, 1_mu}, {1_manp}}});
+      check_semantics("",
+                      [](){ return beast{}; },
+                      [](){ return beast{2}; },
+                      std::weak_ordering::less,
+                      mutator,
+                      allocation_info{getter, {0_pm, {1_pm, 1_mu}, {1_manp}}});
+
+      check_semantics("",
+                      beast{},
+                      beast{2},
+                      beast{},
+                      beast{2},
+                      std::weak_ordering::less,
+                      mutator,
+                      allocation_info{getter, {0_pm, {1_pm, 1_mu}, {1_manp}}});
+
+      check_semantics("As unique",
+                      beast{},
+                      beast{2},
+                      equivalent_type{},
+                      equivalent_type{2},
+                      std::weak_ordering::less,
+                      mutator,
+                      allocation_info{getter, {0_pm, {1_pm, 1_mu}, {1_manp}}});
+    }
+
+    {
+      using beast = orderable_specified_moved_from_beast<int, shared_counting_allocator<int, true, PropagateMove, PropagateSwap>>;
+      auto allocGetter{
+        [](const beast& b) {
+          return b.x.get_allocator();
+        }
+      };
+
+      check_semantics("Check moved-from state",
+                      beast{1},
+                      beast{2},
+                      beast{1},
+                      beast{2},
+                      beast{},
+                      beast{},
+                      std::weak_ordering::less,
+                      mutator,
+                      allocation_info{allocGetter, {1_pm, {1_pm, 1_mu}, {0_manp}}});
+
+      check_semantics("Check moved-from state, as unique",
+                      beast{1},
+                      beast{2},
+                      equivalent_type{1},
+                      equivalent_type{2},
+                      equivalent_type{},
+                      equivalent_type{},
+                      std::weak_ordering::less,
+                      mutator,
+                      allocation_info{allocGetter, {1_pm, {1_pm, 1_mu}, {0_manp}}});
+    }
   }
 }
