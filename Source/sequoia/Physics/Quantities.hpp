@@ -211,10 +211,10 @@ namespace sequoia::physics
     };
 
     inline constexpr kilogram_t kilogram{};
-    inline constexpr metre_t metre{};
-    inline constexpr second_t second{};
-    inline constexpr kelvin_t kelvin{};
-    inline constexpr coulomb_t coulomb{};
+    inline constexpr metre_t    metre{};
+    inline constexpr second_t   second{};
+    inline constexpr kelvin_t   kelvin{};
+    inline constexpr coulomb_t  coulomb{};
   }
 
   namespace si
