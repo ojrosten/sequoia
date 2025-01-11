@@ -1,0 +1,146 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - coverage.info - Source/sequoia/Core/ContainerUtilities/ArrayUtilities.hpp</title>
+  <link rel="stylesheet" type="text/css" href="../../../../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../../../../index.html">top level</a> - <a href="index.html">Source/sequoia/Core/ContainerUtilities</a> - ArrayUtilities.hpp<span style="font-size: 80%;"> (source / <a href="ArrayUtilities.hpp.func-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryMed">76.9&nbsp;%</td>
+            <td class="headerCovTableEntry">13</td>
+            <td class="headerCovTableEntry">10</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2025-01-11 16:12:34</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">10</td>
+            <td class="headerCovTableEntry">10</td>
+          </tr>
+                  <tr><td><img src="../../../../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../../../../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">            Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>              : ////////////////////////////////////////////////////////////////////</span>
+<span id="L2"><span class="lineNum">       2</span>              : //                Copyright Oliver J. Rosten 2018.                //</span>
+<span id="L3"><span class="lineNum">       3</span>              : // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //</span>
+<span id="L4"><span class="lineNum">       4</span>              : //    (See accompanying file LICENSE.md or copy at                //</span>
+<span id="L5"><span class="lineNum">       5</span>              : //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //</span>
+<span id="L6"><span class="lineNum">       6</span>              : ////////////////////////////////////////////////////////////////////</span>
+<span id="L7"><span class="lineNum">       7</span>              : </span>
+<span id="L8"><span class="lineNum">       8</span>              : #pragma once</span>
+<span id="L9"><span class="lineNum">       9</span>              : </span>
+<span id="L10"><span class="lineNum">      10</span>              : /*! \file</span>
+<span id="L11"><span class="lineNum">      11</span>              :     \brief Utility to convert an initializer_list into an array, potentially transforming</span>
+<span id="L12"><span class="lineNum">      12</span>              :     the initializer_list in the process</span>
+<span id="L13"><span class="lineNum">      13</span>              :  */</span>
+<span id="L14"><span class="lineNum">      14</span>              : </span>
+<span id="L15"><span class="lineNum">      15</span>              : #include &lt;array&gt;</span>
+<span id="L16"><span class="lineNum">      16</span>              : #include &lt;string&gt;</span>
+<span id="L17"><span class="lineNum">      17</span>              : #include &lt;stdexcept&gt;</span>
+<span id="L18"><span class="lineNum">      18</span>              : #include &lt;type_traits&gt;</span>
+<span id="L19"><span class="lineNum">      19</span>              : #include &lt;utility&gt;</span>
+<span id="L20"><span class="lineNum">      20</span>              : </span>
+<span id="L21"><span class="lineNum">      21</span>              : namespace sequoia::utilities</span>
+<span id="L22"><span class="lineNum">      22</span>              : {</span>
+<span id="L23"><span class="lineNum">      23</span>              :   namespace impl</span>
+<span id="L24"><span class="lineNum">      24</span>              :   {</span>
+<span id="L25"><span class="lineNum">      25</span>              :     template&lt;class T, class InitType, std::invocable&lt;InitType&gt; Fn&gt;</span>
+<span id="L26"><span class="lineNum">      26</span>              :     [[nodiscard]]</span>
+<span id="L27"><span class="lineNum">      27</span> <span class="tlaGNC tlaBgGNC">        4104 :     constexpr T to_element(std::initializer_list&lt;InitType&gt; l, const std::size_t i, Fn fn)</span></span>
+<span id="L28"><span class="lineNum">      28</span>              :     {</span>
+<span id="L29"><span class="lineNum">      29</span>              :       if constexpr(std::is_default_constructible_v&lt;InitType&gt;)</span>
+<span id="L30"><span class="lineNum">      30</span>              :       {</span>
+<span id="L31"><span class="lineNum">      31</span>              :         return fn((i &lt; l.size()) ? *(l.begin() + i) : InitType{});</span>
+<span id="L32"><span class="lineNum">      32</span>              :       }</span>
+<span id="L33"><span class="lineNum">      33</span>              :       else</span>
+<span id="L34"><span class="lineNum">      34</span>              :       {</span>
+<span id="L35"><span class="lineNum">      35</span> <span class="tlaGNC">        4104 :         if(i &gt; l.size())</span></span>
+<span id="L36"><span class="lineNum">      36</span> <span class="tlaUNC tlaBgUNC">           0 :           throw std::logic_error(&quot;Insuffucient arguments to initialize an array of objects which cannot be default constructed.&quot;);</span></span>
+<span id="L37"><span class="lineNum">      37</span>              : </span>
+<span id="L38"><span class="lineNum">      38</span> <span class="tlaGNC tlaBgGNC">        4104 :         return fn(*(l.begin() + i));</span></span>
+<span id="L39"><span class="lineNum">      39</span>              :       }</span>
+<span id="L40"><span class="lineNum">      40</span>              :     }</span>
+<span id="L41"><span class="lineNum">      41</span>              : </span>
+<span id="L42"><span class="lineNum">      42</span>              :     template&lt;class T, std::size_t N, class InitType, std::size_t... I, std::invocable&lt;InitType&gt; Fn&gt;</span>
+<span id="L43"><span class="lineNum">      43</span>              :     [[nodiscard]]</span>
+<span id="L44"><span class="lineNum">      44</span> <span class="tlaGNC">        3960 :     constexpr std::array&lt;T, N&gt; to_array([[maybe_unused]] std::initializer_list&lt;InitType&gt; l, [[maybe_unused]] std::index_sequence&lt;I...&gt;, Fn&amp;&amp; fn)</span></span>
+<span id="L45"><span class="lineNum">      45</span>              :     {</span>
+<span id="L46"><span class="lineNum">      46</span> <span class="tlaGNC">        3960 :       return std::array&lt;T, N&gt;{ to_element&lt;T&gt;(l, I, std::forward&lt;Fn&gt;(fn))...};</span></span>
+<span id="L47"><span class="lineNum">      47</span>              :     }</span>
+<span id="L48"><span class="lineNum">      48</span>              :   }</span>
+<span id="L49"><span class="lineNum">      49</span>              : </span>
+<span id="L50"><span class="lineNum">      50</span>              :   template&lt;class T&gt; struct identity_transform</span>
+<span id="L51"><span class="lineNum">      51</span>              :   {</span>
+<span id="L52"><span class="lineNum">      52</span>              :     [[nodiscard]]</span>
+<span id="L53"><span class="lineNum">      53</span> <span class="tlaGNC">        4104 :     constexpr const T&amp; operator()(const T&amp; t) const</span></span>
+<span id="L54"><span class="lineNum">      54</span>              :     {</span>
+<span id="L55"><span class="lineNum">      55</span> <span class="tlaGNC">        4104 :       return t;</span></span>
+<span id="L56"><span class="lineNum">      56</span>              :     }</span>
+<span id="L57"><span class="lineNum">      57</span>              :   };</span>
+<span id="L58"><span class="lineNum">      58</span>              : </span>
+<span id="L59"><span class="lineNum">      59</span>              : </span>
+<span id="L60"><span class="lineNum">      60</span>              :   template&lt;class T, std::size_t N, class InitType=T, std::invocable&lt;InitType&gt; Fn=identity_transform&lt;InitType&gt;&gt;</span>
+<span id="L61"><span class="lineNum">      61</span>              :   [[nodiscard]]</span>
+<span id="L62"><span class="lineNum">      62</span> <span class="tlaGNC">        3960 :   constexpr std::array&lt;T, N&gt; to_array(std::initializer_list&lt;InitType&gt; l, Fn fn = Fn{})</span></span>
+<span id="L63"><span class="lineNum">      63</span>              :   {</span>
+<span id="L64"><span class="lineNum">      64</span> <span class="tlaGNC">        3960 :     if(l.size() &gt; N)</span></span>
+<span id="L65"><span class="lineNum">      65</span> <span class="tlaUNC tlaBgUNC">           0 :       throw std::out_of_range{std::string{&quot;initializer_list of size &quot;}.append(std::to_string(l.size())).append(&quot; too big for array: expected at most &quot;)</span></span>
+<span id="L66"><span class="lineNum">      66</span> <span class="tlaUNC">           0 :         .append(std::to_string(N)).append(&quot; elements&quot;)};</span></span>
+<span id="L67"><span class="lineNum">      67</span>              : </span>
+<span id="L68"><span class="lineNum">      68</span> <span class="tlaGNC tlaBgGNC">        3960 :     return impl::to_array&lt;T, N&gt;(l, std::make_index_sequence&lt;N&gt;{}, fn);</span></span>
+<span id="L69"><span class="lineNum">      69</span>              :   }</span>
+<span id="L70"><span class="lineNum">      70</span>              : }</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../../../../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.0-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>
