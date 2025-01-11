@@ -50,8 +50,13 @@ namespace sequoia::testing
       commandline_arguments args{{minimal_fake_path().generic_string()}};
       project_paths projPaths{args.size(), args.get(), {}};
       check(equality,
-        reporter{""},
+        reporter{"Absolute Path"},
         test_summary_path{working_materials() / "Tests" / "Foo.cpp", projPaths, std::nullopt}.file_path(),
+        projPaths.output().test_summaries() / "Tests" / "Foo.txt");
+
+      check(equality,
+        reporter{"Non-Absolute Path"},
+        test_summary_path{fs::path{"Tests/Foo.cpp"}, projPaths, std::nullopt}.file_path(),
         projPaths.output().test_summaries() / "Tests" / "Foo.txt");
     }
 
