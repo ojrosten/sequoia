@@ -17,6 +17,7 @@
 #include "sequoia/TestFramework/ProjectPaths.hpp"
 
 #include <algorithm>
+#include <format>
 
 namespace sequoia::testing
 {
@@ -120,8 +121,7 @@ namespace sequoia::testing
           break;
         }
         default:
-          throw std::logic_error{std::string{"Detailed equivalance check for paths of type '"}
-                                  .append(serializer<fs::file_type>::make(pathType)).append("' not currently implemented")};
+          throw std::logic_error{std::format("Detailed equivalance check for paths of type '{}' not currently implemented", serializer<fs::file_type>::make(pathType))};
         }
       }
 
