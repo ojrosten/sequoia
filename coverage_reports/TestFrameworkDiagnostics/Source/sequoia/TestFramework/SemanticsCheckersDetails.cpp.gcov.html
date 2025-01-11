@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2025-01-11 16:12:34</td>
+            <td class="headerValue">2025-01-11 20:40:10</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -76,24 +76,24 @@
 <span id="L14"><span class="lineNum">      14</span>              : namespace sequoia::testing</span>
 <span id="L15"><span class="lineNum">      15</span>              : {</span>
 <span id="L16"><span class="lineNum">      16</span>              :   [[nodiscard]]</span>
-<span id="L17"><span class="lineNum">      17</span> <span class="tlaGNC tlaBgGNC">      136823 :   std::string to_string(const comparison_flavour f)</span></span>
+<span id="L17"><span class="lineNum">      17</span> <span class="tlaGNC tlaBgGNC">      182627 :   std::string to_string(const comparison_flavour f)</span></span>
 <span id="L18"><span class="lineNum">      18</span>              :   {</span>
-<span id="L19"><span class="lineNum">      19</span> <span class="tlaGNC">      136823 :     switch(f)</span></span>
+<span id="L19"><span class="lineNum">      19</span> <span class="tlaGNC">      182627 :     switch(f)</span></span>
 <span id="L20"><span class="lineNum">      20</span>              :     {</span>
-<span id="L21"><span class="lineNum">      21</span> <span class="tlaGNC">       54488 :     case comparison_flavour::equality:</span></span>
-<span id="L22"><span class="lineNum">      22</span> <span class="tlaGNC">      108979 :       return &quot;==&quot;;</span></span>
-<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC">       54495 :     case comparison_flavour::inequality:</span></span>
-<span id="L24"><span class="lineNum">      24</span> <span class="tlaGNC">      108985 :       return &quot;!=&quot;;</span></span>
-<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">        5580 :     case comparison_flavour::less_than:</span></span>
-<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">       11160 :       return &quot;&lt;&quot;;</span></span>
-<span id="L27"><span class="lineNum">      27</span> <span class="tlaGNC">        5580 :     case comparison_flavour::greater_than:</span></span>
-<span id="L28"><span class="lineNum">      28</span> <span class="tlaGNC">       11160 :       return &quot;&gt;&quot;;</span></span>
-<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">        5579 :     case comparison_flavour::leq:</span></span>
-<span id="L30"><span class="lineNum">      30</span> <span class="tlaGNC">       11159 :       return &quot;&lt;=&quot;;</span></span>
-<span id="L31"><span class="lineNum">      31</span> <span class="tlaGNC">        5580 :     case comparison_flavour::geq:</span></span>
-<span id="L32"><span class="lineNum">      32</span> <span class="tlaGNC">       11160 :       return &quot;&gt;=&quot;;</span></span>
-<span id="L33"><span class="lineNum">      33</span> <span class="tlaGNC">        5580 :     case comparison_flavour::threeway:</span></span>
-<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">       11160 :       return &quot;&lt;=&gt;&quot;;</span></span>
+<span id="L21"><span class="lineNum">      21</span> <span class="tlaGNC">       72740 :     case comparison_flavour::equality:</span></span>
+<span id="L22"><span class="lineNum">      22</span> <span class="tlaGNC">      145483 :       return &quot;==&quot;;</span></span>
+<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC">       72747 :     case comparison_flavour::inequality:</span></span>
+<span id="L24"><span class="lineNum">      24</span> <span class="tlaGNC">      145489 :       return &quot;!=&quot;;</span></span>
+<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">        7440 :     case comparison_flavour::less_than:</span></span>
+<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">       14880 :       return &quot;&lt;&quot;;</span></span>
+<span id="L27"><span class="lineNum">      27</span> <span class="tlaGNC">        7440 :     case comparison_flavour::greater_than:</span></span>
+<span id="L28"><span class="lineNum">      28</span> <span class="tlaGNC">       14880 :       return &quot;&gt;&quot;;</span></span>
+<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">        7439 :     case comparison_flavour::leq:</span></span>
+<span id="L30"><span class="lineNum">      30</span> <span class="tlaGNC">       14879 :       return &quot;&lt;=&quot;;</span></span>
+<span id="L31"><span class="lineNum">      31</span> <span class="tlaGNC">        7440 :     case comparison_flavour::geq:</span></span>
+<span id="L32"><span class="lineNum">      32</span> <span class="tlaGNC">       14880 :       return &quot;&gt;=&quot;;</span></span>
+<span id="L33"><span class="lineNum">      33</span> <span class="tlaGNC">        7440 :     case comparison_flavour::threeway:</span></span>
+<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">       14880 :       return &quot;&lt;=&gt;&quot;;</span></span>
 <span id="L35"><span class="lineNum">      35</span>              :     };</span>
 <span id="L36"><span class="lineNum">      36</span>              : </span>
 <span id="L37"><span class="lineNum">      37</span> <span class="tlaUNC tlaBgUNC">           0 :     throw std::logic_error{&quot;Unrecognized case for comparison_flavour&quot;};</span></span>

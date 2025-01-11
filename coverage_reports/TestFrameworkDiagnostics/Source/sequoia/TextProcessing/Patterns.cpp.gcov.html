@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2025-01-11 16:12:34</td>
+            <td class="headerValue">2025-01-11 20:40:10</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -78,40 +78,40 @@
 <span id="L16"><span class="lineNum">      16</span>              : {</span>
 <span id="L17"><span class="lineNum">      17</span>              :   [[nodiscard]]</span>
 <span id="L18"><span class="lineNum">      18</span>              :   std::pair&lt;std::string::size_type, std::string::size_type&gt;</span>
-<span id="L19"><span class="lineNum">      19</span> <span class="tlaGNC tlaBgGNC">      969906 :   find_matched_delimiters(std::string_view text, const char open, const char close, std::string::size_type pos)</span></span>
+<span id="L19"><span class="lineNum">      19</span> <span class="tlaGNC tlaBgGNC">     1294874 :   find_matched_delimiters(std::string_view text, const char open, const char close, std::string::size_type pos)</span></span>
 <span id="L20"><span class="lineNum">      20</span>              :   {</span>
-<span id="L21"><span class="lineNum">      21</span> <span class="tlaGNC">      969906 :     constexpr auto npos{std::string::npos};</span></span>
+<span id="L21"><span class="lineNum">      21</span> <span class="tlaGNC">     1294874 :     constexpr auto npos{std::string::npos};</span></span>
 <span id="L22"><span class="lineNum">      22</span>              : </span>
-<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC">      969906 :     if(const std::string::size_type openPos{text.find(open, pos)}; openPos != npos)</span></span>
+<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC">     1294874 :     if(const std::string::size_type openPos{text.find(open, pos)}; openPos != npos)</span></span>
 <span id="L24"><span class="lineNum">      24</span>              :     {</span>
-<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">       10116 :       int64_t openCount{1};</span></span>
-<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">       10116 :       pos = openPos+1;</span></span>
-<span id="L27"><span class="lineNum">      27</span> <span class="tlaGNC">      289019 :       while(pos &lt; text.size())</span></span>
+<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">       13488 :       int64_t openCount{1};</span></span>
+<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">       13488 :       pos = openPos+1;</span></span>
+<span id="L27"><span class="lineNum">      27</span> <span class="tlaGNC">      385391 :       while(pos &lt; text.size())</span></span>
 <span id="L28"><span class="lineNum">      28</span>              :       {</span>
-<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">      288985 :         if     (text[pos] == open)  ++openCount;</span></span>
-<span id="L30"><span class="lineNum">      30</span> <span class="tlaGNC">      288922 :         else if(text[pos] == close) --openCount;</span></span>
+<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">      385345 :         if     (text[pos] == open)  ++openCount;</span></span>
+<span id="L30"><span class="lineNum">      30</span> <span class="tlaGNC">      385264 :         else if(text[pos] == close) --openCount;</span></span>
 <span id="L31"><span class="lineNum">      31</span>              : </span>
-<span id="L32"><span class="lineNum">      32</span> <span class="tlaGNC">      288983 :         ++pos;</span></span>
+<span id="L32"><span class="lineNum">      32</span> <span class="tlaGNC">      385343 :         ++pos;</span></span>
 <span id="L33"><span class="lineNum">      33</span>              : </span>
-<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">      288983 :         if(!openCount) return {openPos, pos};</span></span>
+<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">      385343 :         if(!openCount) return {openPos, pos};</span></span>
 <span id="L35"><span class="lineNum">      35</span>              :       }</span>
 <span id="L36"><span class="lineNum">      36</span>              : </span>
-<span id="L37"><span class="lineNum">      37</span> <span class="tlaGNC">          33 :       return {openPos, openPos};</span></span>
+<span id="L37"><span class="lineNum">      37</span> <span class="tlaGNC">          45 :       return {openPos, openPos};</span></span>
 <span id="L38"><span class="lineNum">      38</span>              :     }</span>
 <span id="L39"><span class="lineNum">      39</span>              : </span>
-<span id="L40"><span class="lineNum">      40</span> <span class="tlaGNC">      961015 :     return {npos, npos};</span></span>
+<span id="L40"><span class="lineNum">      40</span> <span class="tlaGNC">     1282605 :     return {npos, npos};</span></span>
 <span id="L41"><span class="lineNum">      41</span>              :   }</span>
 <span id="L42"><span class="lineNum">      42</span>              : </span>
 <span id="L43"><span class="lineNum">      43</span>              :   [[nodiscard]]</span>
 <span id="L44"><span class="lineNum">      44</span>              :   std::pair&lt;std::string::size_type, std::string::size_type&gt;</span>
-<span id="L45"><span class="lineNum">      45</span> <span class="tlaGNC">         270 :   find_sandwiched_text(std::string_view s, std::string_view leftPattern, std::string_view rightPattern, std::string::size_type pos)</span></span>
+<span id="L45"><span class="lineNum">      45</span> <span class="tlaGNC">         360 :   find_sandwiched_text(std::string_view s, std::string_view leftPattern, std::string_view rightPattern, std::string::size_type pos)</span></span>
 <span id="L46"><span class="lineNum">      46</span>              :   {</span>
-<span id="L47"><span class="lineNum">      47</span> <span class="tlaGNC">         270 :     constexpr auto npos{std::string::npos};</span></span>
-<span id="L48"><span class="lineNum">      48</span> <span class="tlaGNC">         270 :     const auto start{s.find(leftPattern,pos)};</span></span>
-<span id="L49"><span class="lineNum">      49</span> <span class="tlaGNC">         270 :     if(start == npos) return {npos, npos};</span></span>
+<span id="L47"><span class="lineNum">      47</span> <span class="tlaGNC">         360 :     constexpr auto npos{std::string::npos};</span></span>
+<span id="L48"><span class="lineNum">      48</span> <span class="tlaGNC">         360 :     const auto start{s.find(leftPattern,pos)};</span></span>
+<span id="L49"><span class="lineNum">      49</span> <span class="tlaGNC">         360 :     if(start == npos) return {npos, npos};</span></span>
 <span id="L50"><span class="lineNum">      50</span>              : </span>
-<span id="L51"><span class="lineNum">      51</span> <span class="tlaGNC">         162 :     const auto offset{start + leftPattern.size()};</span></span>
-<span id="L52"><span class="lineNum">      52</span> <span class="tlaGNC">         162 :     return {offset, s.find(rightPattern, offset)};</span></span>
+<span id="L51"><span class="lineNum">      51</span> <span class="tlaGNC">         216 :     const auto offset{start + leftPattern.size()};</span></span>
+<span id="L52"><span class="lineNum">      52</span> <span class="tlaGNC">         216 :     return {offset, s.find(rightPattern, offset)};</span></span>
 <span id="L53"><span class="lineNum">      53</span>              :   }</span>
 <span id="L54"><span class="lineNum">      54</span>              : }</span>
         </pre>

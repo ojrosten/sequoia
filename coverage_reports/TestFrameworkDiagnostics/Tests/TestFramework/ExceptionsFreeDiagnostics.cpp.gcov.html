@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2025-01-11 16:12:34</td>
+            <td class="headerValue">2025-01-11 20:40:10</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -75,30 +75,30 @@
 <span id="L13"><span class="lineNum">      13</span>              : namespace sequoia::testing</span>
 <span id="L14"><span class="lineNum">      14</span>              : {</span>
 <span id="L15"><span class="lineNum">      15</span>              :   [[nodiscard]]</span>
-<span id="L16"><span class="lineNum">      16</span> <span class="tlaGNC tlaBgGNC">          90 :   std::filesystem::path exceptions_false_negative_free_diagnostics::source_file() const</span></span>
+<span id="L16"><span class="lineNum">      16</span> <span class="tlaGNC tlaBgGNC">         120 :   std::filesystem::path exceptions_false_negative_free_diagnostics::source_file() const</span></span>
 <span id="L17"><span class="lineNum">      17</span>              :   {</span>
-<span id="L18"><span class="lineNum">      18</span> <span class="tlaGNC">          90 :     return std::source_location::current().file_name();</span></span>
+<span id="L18"><span class="lineNum">      18</span> <span class="tlaGNC">         120 :     return std::source_location::current().file_name();</span></span>
 <span id="L19"><span class="lineNum">      19</span>              :   }</span>
 <span id="L20"><span class="lineNum">      20</span>              : </span>
-<span id="L21"><span class="lineNum">      21</span> <span class="tlaGNC">          18 :   void exceptions_false_negative_free_diagnostics::run_tests()</span></span>
+<span id="L21"><span class="lineNum">      21</span> <span class="tlaGNC">          24 :   void exceptions_false_negative_free_diagnostics::run_tests()</span></span>
 <span id="L22"><span class="lineNum">      22</span>              :   {</span>
-<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC">          18 :     check_exception_thrown&lt;std::runtime_error&gt;(&quot;Exception expected but nothing thrown&quot;, []() {});</span></span>
-<span id="L24"><span class="lineNum">      24</span> <span class="tlaGNC">          36 :     check_exception_thrown&lt;std::runtime_error&gt;(&quot;Exception thrown but of wrong type&quot;, []() { throw std::logic_error(&quot;Error&quot;); });</span></span>
-<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">          36 :     check_exception_thrown&lt;std::runtime_error&gt;(&quot;Exception thrown but of unknown type&quot;, []() { throw 1; });</span></span>
-<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">          18 :   }</span></span>
+<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC">          24 :     check_exception_thrown&lt;std::runtime_error&gt;(&quot;Exception expected but nothing thrown&quot;, []() {});</span></span>
+<span id="L24"><span class="lineNum">      24</span> <span class="tlaGNC">          48 :     check_exception_thrown&lt;std::runtime_error&gt;(&quot;Exception thrown but of wrong type&quot;, []() { throw std::logic_error(&quot;Error&quot;); });</span></span>
+<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">          48 :     check_exception_thrown&lt;std::runtime_error&gt;(&quot;Exception thrown but of unknown type&quot;, []() { throw 1; });</span></span>
+<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">          24 :   }</span></span>
 <span id="L27"><span class="lineNum">      27</span>              :   </span>
 <span id="L28"><span class="lineNum">      28</span>              :   [[nodiscard]]</span>
-<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">          90 :   std::filesystem::path exceptions_false_positive_free_diagnostics::source_file() const</span></span>
+<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">         120 :   std::filesystem::path exceptions_false_positive_free_diagnostics::source_file() const</span></span>
 <span id="L30"><span class="lineNum">      30</span>              :   {</span>
-<span id="L31"><span class="lineNum">      31</span> <span class="tlaGNC">          90 :     return std::source_location::current().file_name();</span></span>
+<span id="L31"><span class="lineNum">      31</span> <span class="tlaGNC">         120 :     return std::source_location::current().file_name();</span></span>
 <span id="L32"><span class="lineNum">      32</span>              :   }</span>
 <span id="L33"><span class="lineNum">      33</span>              : </span>
-<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">          18 :   void exceptions_false_positive_free_diagnostics::run_tests()</span></span>
+<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">          24 :   void exceptions_false_positive_free_diagnostics::run_tests()</span></span>
 <span id="L35"><span class="lineNum">      35</span>              :   {</span>
-<span id="L36"><span class="lineNum">      36</span> <span class="tlaGNC">          36 :     check_exception_thrown&lt;std::runtime_error&gt;(&quot;&quot;, []() { throw std::runtime_error(&quot;Error&quot;); });</span></span>
+<span id="L36"><span class="lineNum">      36</span> <span class="tlaGNC">          48 :     check_exception_thrown&lt;std::runtime_error&gt;(&quot;&quot;, []() { throw std::runtime_error(&quot;Error&quot;); });</span></span>
 <span id="L37"><span class="lineNum">      37</span>              : </span>
-<span id="L38"><span class="lineNum">      38</span> <span class="tlaGNC">          36 :     check_exception_thrown&lt;int&gt;(&quot;&quot;, []() { throw 1; });</span></span>
-<span id="L39"><span class="lineNum">      39</span> <span class="tlaGNC">          18 :   }</span></span>
+<span id="L38"><span class="lineNum">      38</span> <span class="tlaGNC">          48 :     check_exception_thrown&lt;int&gt;(&quot;&quot;, []() { throw 1; });</span></span>
+<span id="L39"><span class="lineNum">      39</span> <span class="tlaGNC">          24 :   }</span></span>
 <span id="L40"><span class="lineNum">      40</span>              : }</span>
         </pre>
               </td>

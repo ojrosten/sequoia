@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2025-01-11 16:12:34</td>
+            <td class="headerValue">2025-01-11 20:40:10</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryMed">87.7&nbsp;%</td>
@@ -79,36 +79,36 @@
 <span id="L17"><span class="lineNum">      17</span>              : namespace sequoia::testing</span>
 <span id="L18"><span class="lineNum">      18</span>              : {</span>
 <span id="L19"><span class="lineNum">      19</span>              :   [[nodiscard]]</span>
-<span id="L20"><span class="lineNum">      20</span> <span class="tlaGNC tlaBgGNC">          90 :   std::filesystem::path allocation_false_negative_diagnostics_inefficient_operations::source_file() const</span></span>
+<span id="L20"><span class="lineNum">      20</span> <span class="tlaGNC tlaBgGNC">         120 :   std::filesystem::path allocation_false_negative_diagnostics_inefficient_operations::source_file() const</span></span>
 <span id="L21"><span class="lineNum">      21</span>              :   {</span>
-<span id="L22"><span class="lineNum">      22</span> <span class="tlaGNC">          90 :     return std::source_location::current().file_name();</span></span>
+<span id="L22"><span class="lineNum">      22</span> <span class="tlaGNC">         120 :     return std::source_location::current().file_name();</span></span>
 <span id="L23"><span class="lineNum">      23</span>              :   }</span>
 <span id="L24"><span class="lineNum">      24</span>              : </span>
-<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">          18 :   void allocation_false_negative_diagnostics_inefficient_operations::run_tests()</span></span>
+<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">          24 :   void allocation_false_negative_diagnostics_inefficient_operations::run_tests()</span></span>
 <span id="L26"><span class="lineNum">      26</span>              :   {</span>
-<span id="L27"><span class="lineNum">      27</span> <span class="tlaGNC">          18 :     do_allocation_tests();</span></span>
-<span id="L28"><span class="lineNum">      28</span> <span class="tlaGNC">          18 :   }</span></span>
+<span id="L27"><span class="lineNum">      27</span> <span class="tlaGNC">          24 :     do_allocation_tests();</span></span>
+<span id="L28"><span class="lineNum">      28</span> <span class="tlaGNC">          24 :   }</span></span>
 <span id="L29"><span class="lineNum">      29</span>              : </span>
 <span id="L30"><span class="lineNum">      30</span>              :   template&lt;bool PropagateCopy, bool PropagateMove, bool PropagateSwap&gt;</span>
-<span id="L31"><span class="lineNum">      31</span> <span class="tlaGNC">         144 :   void allocation_false_negative_diagnostics_inefficient_operations::test_allocation()</span></span>
+<span id="L31"><span class="lineNum">      31</span> <span class="tlaGNC">         192 :   void allocation_false_negative_diagnostics_inefficient_operations::test_allocation()</span></span>
 <span id="L32"><span class="lineNum">      32</span>              :   {</span>
-<span id="L33"><span class="lineNum">      33</span> <span class="tlaGNC">         144 :     test_regular_semantics&lt;PropagateCopy, PropagateMove, PropagateSwap&gt;();</span></span>
-<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">         144 :   }</span></span>
+<span id="L33"><span class="lineNum">      33</span> <span class="tlaGNC">         192 :     test_regular_semantics&lt;PropagateCopy, PropagateMove, PropagateSwap&gt;();</span></span>
+<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">         192 :   }</span></span>
 <span id="L35"><span class="lineNum">      35</span>              : </span>
 <span id="L36"><span class="lineNum">      36</span>              :   template&lt;bool PropagateCopy, bool PropagateMove, bool PropagateSwap&gt;</span>
-<span id="L37"><span class="lineNum">      37</span> <span class="tlaGNC">         144 :   void allocation_false_negative_diagnostics_inefficient_operations::test_regular_semantics()</span></span>
+<span id="L37"><span class="lineNum">      37</span> <span class="tlaGNC">         192 :   void allocation_false_negative_diagnostics_inefficient_operations::test_regular_semantics()</span></span>
 <span id="L38"><span class="lineNum">      38</span>              :   {</span>
-<span id="L39"><span class="lineNum">      39</span> <span class="tlaGNC">        1008 :       auto mutator{ [](auto&amp; b) { b.x.push_back(1); } };</span></span>
+<span id="L39"><span class="lineNum">      39</span> <span class="tlaGNC">        1344 :       auto mutator{ [](auto&amp; b) { b.x.push_back(1); } };</span></span>
 <span id="L40"><span class="lineNum">      40</span>              : </span>
 <span id="L41"><span class="lineNum">      41</span>              :       {</span>
 <span id="L42"><span class="lineNum">      42</span>              :         using beast = inefficient_equality&lt;int, shared_counting_allocator&lt;int, PropagateCopy, PropagateMove, PropagateSwap&gt;&gt;;</span>
 <span id="L43"><span class="lineNum">      43</span>              :         using allocator = typename beast::allocator_type;</span>
 <span id="L44"><span class="lineNum">      44</span>              : </span>
 <span id="L45"><span class="lineNum">      45</span>              :         auto allocGetter{</span>
-<span id="L46"><span class="lineNum">      46</span> <span class="tlaGNC">        1728 :           [](const beast&amp; b){ return b.x.get_allocator(); }</span></span>
+<span id="L46"><span class="lineNum">      46</span> <span class="tlaGNC">        2304 :           [](const beast&amp; b){ return b.x.get_allocator(); }</span></span>
 <span id="L47"><span class="lineNum">      47</span>              :         };</span>
 <span id="L48"><span class="lineNum">      48</span>              : </span>
-<span id="L49"><span class="lineNum">      49</span> <span class="tlaGNC">         144 :         check_semantics(&quot;Inefficient equality&quot;, beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {1_anp,1_awp}}});</span></span>
+<span id="L49"><span class="lineNum">      49</span> <span class="tlaGNC">         192 :         check_semantics(&quot;Inefficient equality&quot;, beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {1_anp,1_awp}}});</span></span>
 <span id="L50"><span class="lineNum">      50</span>              :       }</span>
 <span id="L51"><span class="lineNum">      51</span>              : </span>
 <span id="L52"><span class="lineNum">      52</span>              :       {</span>
@@ -116,10 +116,10 @@
 <span id="L54"><span class="lineNum">      54</span>              :         using allocator = typename beast::allocator_type;</span>
 <span id="L55"><span class="lineNum">      55</span>              : </span>
 <span id="L56"><span class="lineNum">      56</span>              :         auto allocGetter{</span>
-<span id="L57"><span class="lineNum">      57</span> <span class="tlaGNC">        1728 :           [](const beast&amp; b){ return b.x.get_allocator(); }</span></span>
+<span id="L57"><span class="lineNum">      57</span> <span class="tlaGNC">        2304 :           [](const beast&amp; b){ return b.x.get_allocator(); }</span></span>
 <span id="L58"><span class="lineNum">      58</span>              :         };</span>
 <span id="L59"><span class="lineNum">      59</span>              : </span>
-<span id="L60"><span class="lineNum">      60</span> <span class="tlaGNC">         144 :         check_semantics(&quot;Inefficient inequality&quot;, beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {1_anp,1_awp}}});</span></span>
+<span id="L60"><span class="lineNum">      60</span> <span class="tlaGNC">         192 :         check_semantics(&quot;Inefficient inequality&quot;, beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {1_anp,1_awp}}});</span></span>
 <span id="L61"><span class="lineNum">      61</span>              :       }</span>
 <span id="L62"><span class="lineNum">      62</span>              : </span>
 <span id="L63"><span class="lineNum">      63</span>              :       {</span>
@@ -127,18 +127,18 @@
 <span id="L65"><span class="lineNum">      65</span>              :         using allocator = typename beast::allocator_type;</span>
 <span id="L66"><span class="lineNum">      66</span>              : </span>
 <span id="L67"><span class="lineNum">      67</span>              :         auto allocGetter{</span>
-<span id="L68"><span class="lineNum">      68</span> <span class="tlaGNC">        9360 :           [](const beast&amp; b){ return b.x.get_allocator(); }</span></span>
+<span id="L68"><span class="lineNum">      68</span> <span class="tlaGNC">       12480 :           [](const beast&amp; b){ return b.x.get_allocator(); }</span></span>
 <span id="L69"><span class="lineNum">      69</span>              :         };</span>
 <span id="L70"><span class="lineNum">      70</span>              : </span>
 <span id="L71"><span class="lineNum">      71</span>              :         auto mutator2{</span>
-<span id="L72"><span class="lineNum">      72</span> <span class="tlaGNC">        2016 :           [](beast&amp; b) {</span></span>
-<span id="L73"><span class="lineNum">      73</span> <span class="tlaGNC">        1008 :             b.x.reserve(b.x.capacity() + 1);</span></span>
-<span id="L74"><span class="lineNum">      74</span> <span class="tlaGNC">        1008 :             b.x.push_back(1);</span></span>
+<span id="L72"><span class="lineNum">      72</span> <span class="tlaGNC">        2688 :           [](beast&amp; b) {</span></span>
+<span id="L73"><span class="lineNum">      73</span> <span class="tlaGNC">        1344 :             b.x.reserve(b.x.capacity() + 1);</span></span>
+<span id="L74"><span class="lineNum">      74</span> <span class="tlaGNC">        1344 :             b.x.push_back(1);</span></span>
 <span id="L75"><span class="lineNum">      75</span>              :           }</span>
 <span id="L76"><span class="lineNum">      76</span>              :         };</span>
 <span id="L77"><span class="lineNum">      77</span>              : </span>
-<span id="L78"><span class="lineNum">      78</span> <span class="tlaGNC">         144 :         check_semantics(&quot;Inefficient copy&quot;, beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator2, allocation_info{allocGetter, {2_c, {3_c,1_mu,1_pc,1_pm}, {1_anp,1_awp}}});</span></span>
-<span id="L79"><span class="lineNum">      79</span> <span class="tlaGNC">         144 :         check_semantics(&quot;Inefficient copy&quot;, beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator2, allocation_info{allocGetter, {3_c, {2_c,1_mu,1_pc,1_pm}, {1_anp,1_awp}}});</span></span>
+<span id="L78"><span class="lineNum">      78</span> <span class="tlaGNC">         192 :         check_semantics(&quot;Inefficient copy&quot;, beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator2, allocation_info{allocGetter, {2_c, {3_c,1_mu,1_pc,1_pm}, {1_anp,1_awp}}});</span></span>
+<span id="L79"><span class="lineNum">      79</span> <span class="tlaGNC">         192 :         check_semantics(&quot;Inefficient copy&quot;, beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator2, allocation_info{allocGetter, {3_c, {2_c,1_mu,1_pc,1_pm}, {1_anp,1_awp}}});</span></span>
 <span id="L80"><span class="lineNum">      80</span>              :       }</span>
 <span id="L81"><span class="lineNum">      81</span>              : </span>
 <span id="L82"><span class="lineNum">      82</span>              :       {</span>
@@ -146,10 +146,10 @@
 <span id="L84"><span class="lineNum">      84</span>              :         using allocator = typename beast::allocator_type;</span>
 <span id="L85"><span class="lineNum">      85</span>              : </span>
 <span id="L86"><span class="lineNum">      86</span>              :         auto allocGetter{</span>
-<span id="L87"><span class="lineNum">      87</span> <span class="tlaGNC">        4680 :           [](const beast&amp; b){ return b.x.get_allocator(); }</span></span>
+<span id="L87"><span class="lineNum">      87</span> <span class="tlaGNC">        6240 :           [](const beast&amp; b){ return b.x.get_allocator(); }</span></span>
 <span id="L88"><span class="lineNum">      88</span>              :         };</span>
 <span id="L89"><span class="lineNum">      89</span>              : </span>
-<span id="L90"><span class="lineNum">      90</span> <span class="tlaGNC">         144 :         check_semantics(&quot;Inefficient move&quot;, beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {1_anp,1_awp}}});</span></span>
+<span id="L90"><span class="lineNum">      90</span> <span class="tlaGNC">         192 :         check_semantics(&quot;Inefficient move&quot;, beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {1_anp,1_awp}}});</span></span>
 <span id="L91"><span class="lineNum">      91</span>              :       }</span>
 <span id="L92"><span class="lineNum">      92</span>              : </span>
 <span id="L93"><span class="lineNum">      93</span>              :       {</span>
@@ -157,17 +157,17 @@
 <span id="L95"><span class="lineNum">      95</span>              :         using allocator = typename beast::allocator_type;</span>
 <span id="L96"><span class="lineNum">      96</span>              : </span>
 <span id="L97"><span class="lineNum">      97</span>              :         auto allocGetter{</span>
-<span id="L98"><span class="lineNum">      98</span> <span class="tlaGNC">        5256 :           [](const beast&amp; b){ return b.x.get_allocator(); }</span></span>
+<span id="L98"><span class="lineNum">      98</span> <span class="tlaGNC">        7008 :           [](const beast&amp; b){ return b.x.get_allocator(); }</span></span>
 <span id="L99"><span class="lineNum">      99</span>              :         };</span>
 <span id="L100"><span class="lineNum">     100</span>              : </span>
 <span id="L101"><span class="lineNum">     101</span>              :         auto mutator2{</span>
-<span id="L102"><span class="lineNum">     102</span> <span class="tlaGNC">        1296 :           [](beast&amp; b) {</span></span>
-<span id="L103"><span class="lineNum">     103</span> <span class="tlaGNC">         648 :             b.x.reserve(b.x.capacity() + 1);</span></span>
-<span id="L104"><span class="lineNum">     104</span> <span class="tlaGNC">         648 :             b.x.push_back(1);</span></span>
+<span id="L102"><span class="lineNum">     102</span> <span class="tlaGNC">        1728 :           [](beast&amp; b) {</span></span>
+<span id="L103"><span class="lineNum">     103</span> <span class="tlaGNC">         864 :             b.x.reserve(b.x.capacity() + 1);</span></span>
+<span id="L104"><span class="lineNum">     104</span> <span class="tlaGNC">         864 :             b.x.push_back(1);</span></span>
 <span id="L105"><span class="lineNum">     105</span>              :           }</span>
 <span id="L106"><span class="lineNum">     106</span>              :         };</span>
 <span id="L107"><span class="lineNum">     107</span>              : </span>
-<span id="L108"><span class="lineNum">     108</span> <span class="tlaGNC">         144 :         check_semantics(&quot;Inefficient para-copy&quot;, beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator2, allocation_info{allocGetter, {1_c, {1_c,1_mu,3_pc,1_pm}, {1_anp,1_awp}}});</span></span>
+<span id="L108"><span class="lineNum">     108</span> <span class="tlaGNC">         192 :         check_semantics(&quot;Inefficient para-copy&quot;, beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator2, allocation_info{allocGetter, {1_c, {1_c,1_mu,3_pc,1_pm}, {1_anp,1_awp}}});</span></span>
 <span id="L109"><span class="lineNum">     109</span>              :       }</span>
 <span id="L110"><span class="lineNum">     110</span>              : </span>
 <span id="L111"><span class="lineNum">     111</span>              :       {</span>
@@ -175,28 +175,28 @@
 <span id="L113"><span class="lineNum">     113</span>              :         using allocator = typename beast::allocator_type;</span>
 <span id="L114"><span class="lineNum">     114</span>              : </span>
 <span id="L115"><span class="lineNum">     115</span>              :         auto allocGetter{</span>
-<span id="L116"><span class="lineNum">     116</span> <span class="tlaGNC">        5256 :           [](const beast&amp; b){ return b.x.get_allocator(); }</span></span>
+<span id="L116"><span class="lineNum">     116</span> <span class="tlaGNC">        7008 :           [](const beast&amp; b){ return b.x.get_allocator(); }</span></span>
 <span id="L117"><span class="lineNum">     117</span>              :         };</span>
 <span id="L118"><span class="lineNum">     118</span>              : </span>
 <span id="L119"><span class="lineNum">     119</span>              :         auto mutator2{</span>
-<span id="L120"><span class="lineNum">     120</span> <span class="tlaGNC">        1296 :           [](beast&amp; b) {</span></span>
-<span id="L121"><span class="lineNum">     121</span> <span class="tlaGNC">         648 :             b.x.reserve(b.x.capacity() + 1);</span></span>
-<span id="L122"><span class="lineNum">     122</span> <span class="tlaGNC">         648 :             b.x.push_back(1);</span></span>
+<span id="L120"><span class="lineNum">     120</span> <span class="tlaGNC">        1728 :           [](beast&amp; b) {</span></span>
+<span id="L121"><span class="lineNum">     121</span> <span class="tlaGNC">         864 :             b.x.reserve(b.x.capacity() + 1);</span></span>
+<span id="L122"><span class="lineNum">     122</span> <span class="tlaGNC">         864 :             b.x.push_back(1);</span></span>
 <span id="L123"><span class="lineNum">     123</span>              :           }</span>
 <span id="L124"><span class="lineNum">     124</span>              :         };</span>
 <span id="L125"><span class="lineNum">     125</span>              : </span>
-<span id="L126"><span class="lineNum">     126</span> <span class="tlaGNC">         144 :         check_semantics(&quot;Inefficient para-move&quot;, beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator2, allocation_info{allocGetter, {1_c, {1_c,1_mu,1_pc,3_pm}, {1_anp,1_awp}}});</span></span>
+<span id="L126"><span class="lineNum">     126</span> <span class="tlaGNC">         192 :         check_semantics(&quot;Inefficient para-move&quot;, beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator2, allocation_info{allocGetter, {1_c, {1_c,1_mu,1_pc,3_pm}, {1_anp,1_awp}}});</span></span>
 <span id="L127"><span class="lineNum">     127</span>              :       }</span>
 <span id="L128"><span class="lineNum">     128</span>              : </span>
 <span id="L129"><span class="lineNum">     129</span>              :       {</span>
 <span id="L130"><span class="lineNum">     130</span>              :         using beast = inefficient_serialization&lt;int, shared_counting_allocator&lt;int, PropagateCopy, PropagateMove, PropagateSwap&gt;&gt;;</span>
 <span id="L131"><span class="lineNum">     131</span>              :         using allocator = typename beast::allocator_type;</span>
 <span id="L132"><span class="lineNum">     132</span>              : </span>
-<span id="L133"><span class="lineNum">     133</span> <span class="tlaGNC">        4968 :         auto allocGetter{ [](const beast&amp; b){ return b.x.get_allocator(); } };</span></span>
+<span id="L133"><span class="lineNum">     133</span> <span class="tlaGNC">        6624 :         auto allocGetter{ [](const beast&amp; b){ return b.x.get_allocator(); } };</span></span>
 <span id="L134"><span class="lineNum">     134</span>              : </span>
-<span id="L135"><span class="lineNum">     135</span> <span class="tlaGNC">         144 :         check_semantics(&quot;Inefficient serialization&quot;, beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {1_anp,1_awp}}});</span></span>
+<span id="L135"><span class="lineNum">     135</span> <span class="tlaGNC">         192 :         check_semantics(&quot;Inefficient serialization&quot;, beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {1_anp,1_awp}}});</span></span>
 <span id="L136"><span class="lineNum">     136</span>              :       }</span>
-<span id="L137"><span class="lineNum">     137</span> <span class="tlaGNC">         144 :   }</span></span>
+<span id="L137"><span class="lineNum">     137</span> <span class="tlaGNC">         192 :   }</span></span>
 <span id="L138"><span class="lineNum">     138</span>              : }</span>
         </pre>
               </td>

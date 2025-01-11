@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2025-01-11 16:12:34</td>
+            <td class="headerValue">2025-01-11 20:40:10</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -117,23 +117,23 @@
 <span id="L55"><span class="lineNum">      55</span>              :   [[nodiscard]]</span>
 <span id="L56"><span class="lineNum">      56</span>              :   std::string inversion_consistency_message(std::size_t nodeIndex, edge_inversion_info zerothEdge, edge_inversion_info firstEdge);</span>
 <span id="L57"><span class="lineNum">      57</span>              : </span>
-<span id="L58"><span class="lineNum">      58</span> <span class="tlaGNC tlaBgGNC">     1820108 :   constexpr void check_node_index_range(std::string_view method, const std::size_t order, const std::size_t node)</span></span>
+<span id="L58"><span class="lineNum">      58</span> <span class="tlaGNC tlaBgGNC">       30742 :   constexpr void check_node_index_range(std::string_view method, const std::size_t order, const std::size_t node)</span></span>
 <span id="L59"><span class="lineNum">      59</span>              :   {</span>
-<span id="L60"><span class="lineNum">      60</span> <span class="tlaGNC">     1820108 :     if(node &gt;= order)</span></span>
+<span id="L60"><span class="lineNum">      60</span> <span class="tlaGNC">       30742 :     if(node &gt;= order)</span></span>
 <span id="L61"><span class="lineNum">      61</span> <span class="tlaUNC tlaBgUNC">           0 :       throw std::out_of_range{node_index_range_message(method, order, node)};</span></span>
-<span id="L62"><span class="lineNum">      62</span> <span class="tlaGNC tlaBgGNC">     1820108 :   }</span></span>
+<span id="L62"><span class="lineNum">      62</span> <span class="tlaGNC tlaBgGNC">       30742 :   }</span></span>
 <span id="L63"><span class="lineNum">      63</span>              : </span>
-<span id="L64"><span class="lineNum">      64</span> <span class="tlaGNC">       95971 :   constexpr void check_node_index_range(std::string_view method, const std::size_t order, const std::size_t node1, const std::size_t node2)</span></span>
+<span id="L64"><span class="lineNum">      64</span> <span class="tlaGNC">        9722 :   constexpr void check_node_index_range(std::string_view method, const std::size_t order, const std::size_t node1, const std::size_t node2)</span></span>
 <span id="L65"><span class="lineNum">      65</span>              :   {</span>
-<span id="L66"><span class="lineNum">      66</span> <span class="tlaGNC">       95971 :     if((node1 &gt;= order) || (node2 &gt;= order))</span></span>
+<span id="L66"><span class="lineNum">      66</span> <span class="tlaGNC">        9722 :     if((node1 &gt;= order) || (node2 &gt;= order))</span></span>
 <span id="L67"><span class="lineNum">      67</span> <span class="tlaUNC tlaBgUNC">           0 :       throw std::out_of_range{node_index_range_message(method, order, node1, node2)};</span></span>
-<span id="L68"><span class="lineNum">      68</span> <span class="tlaGNC tlaBgGNC">       95972 :   }</span></span>
+<span id="L68"><span class="lineNum">      68</span> <span class="tlaGNC tlaBgGNC">        9722 :   }</span></span>
 <span id="L69"><span class="lineNum">      69</span>              : </span>
-<span id="L70"><span class="lineNum">      70</span> <span class="tlaGNC">         954 :   constexpr void check_edge_index_range(std::string_view method, const edge_indices edgeIndices, std::string_view indexName, const std::size_t size, const std::size_t index)</span></span>
+<span id="L70"><span class="lineNum">      70</span> <span class="tlaGNC">        1272 :   constexpr void check_edge_index_range(std::string_view method, const edge_indices edgeIndices, std::string_view indexName, const std::size_t size, const std::size_t index)</span></span>
 <span id="L71"><span class="lineNum">      71</span>              :   {</span>
-<span id="L72"><span class="lineNum">      72</span> <span class="tlaGNC">         954 :     if(index &gt;= size)</span></span>
+<span id="L72"><span class="lineNum">      72</span> <span class="tlaGNC">        1272 :     if(index &gt;= size)</span></span>
 <span id="L73"><span class="lineNum">      73</span> <span class="tlaUNC tlaBgUNC">           0 :       throw std::out_of_range{edge_index_range_message(method, edgeIndices, indexName, size, index)};</span></span>
-<span id="L74"><span class="lineNum">      74</span> <span class="tlaGNC tlaBgGNC">         954 :   }</span></span>
+<span id="L74"><span class="lineNum">      74</span> <span class="tlaGNC tlaBgGNC">        1272 :   }</span></span>
 <span id="L75"><span class="lineNum">      75</span>              : </span>
 <span id="L76"><span class="lineNum">      76</span>              :   constexpr void check_edge_insertion_index(std::string_view method, const std::size_t node, const std::size_t sizeAfterFirstInsertion, const std::size_t index)</span>
 <span id="L77"><span class="lineNum">      77</span>              :   {</span>

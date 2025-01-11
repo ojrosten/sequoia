@@ -37,12 +37,12 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2025-01-11 16:12:34</td>
+            <td class="headerValue">2025-01-11 20:40:10</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryLo">51.3&nbsp;%</td>
-            <td class="headerCovTableEntry">785</td>
-            <td class="headerCovTableEntry">403</td>
+            <td class="headerCovTableEntry">790</td>
+            <td class="headerCovTableEntry">405</td>
           </tr>
                   <tr><td><img src="../../../../glass.png" width=3 height=3 alt=""></td></tr>
                 </table>
@@ -110,9 +110,9 @@
 <span id="L48"><span class="lineNum">      48</span>              :     std::string name;</span>
 <span id="L49"><span class="lineNum">      49</span>              :     std::tuple&lt;Ts...&gt; values;</span>
 <span id="L50"><span class="lineNum">      50</span>              : </span>
-<span id="L51"><span class="lineNum">      51</span> <span class="tlaGNC tlaBgGNC">         792 :     suite(std::string name, Ts&amp;&amp;... ts)</span></span>
-<span id="L52"><span class="lineNum">      52</span> <span class="tlaGNC">         792 :       : name{std::move(name)}</span></span>
-<span id="L53"><span class="lineNum">      53</span> <span class="tlaGNC">         792 :       , values{std::forward&lt;Ts&gt;(ts)...} {}</span></span>
+<span id="L51"><span class="lineNum">      51</span> <span class="tlaGNC tlaBgGNC">         748 :     suite(std::string name, Ts&amp;&amp;... ts)</span></span>
+<span id="L52"><span class="lineNum">      52</span> <span class="tlaGNC">         748 :       : name{std::move(name)}</span></span>
+<span id="L53"><span class="lineNum">      53</span> <span class="tlaGNC">         748 :       , values{std::forward&lt;Ts&gt;(ts)...} {}</span></span>
 <span id="L54"><span class="lineNum">      54</span>              :   };</span>
 <span id="L55"><span class="lineNum">      55</span>              : </span>
 <span id="L56"><span class="lineNum">      56</span>              : </span>
@@ -292,46 +292,46 @@
 <span id="L230"><span class="lineNum">     230</span>              :              std::integral SizeType = typename Tree::size_type,</span>
 <span id="L231"><span class="lineNum">     231</span>              :              class Fn&gt;</span>
 <span id="L232"><span class="lineNum">     232</span>              :       requires maths::dynamic_tree&lt;std::remove_cvref_t&lt;Tree&gt;&gt;</span>
-<span id="L233"><span class="lineNum">     233</span> <span class="tlaGNC">         792 :     Tree&amp;&amp; extract_tree(suite&lt;Ts...&gt;&amp; s, Transform transform, Tree&amp;&amp; tree, const SizeType parentNode, Fn fn)</span></span>
+<span id="L233"><span class="lineNum">     233</span> <span class="tlaGNC">         748 :     Tree&amp;&amp; extract_tree(suite&lt;Ts...&gt;&amp; s, Transform transform, Tree&amp;&amp; tree, const SizeType parentNode, Fn fn)</span></span>
 <span id="L234"><span class="lineNum">     234</span>              :     {</span>
-<span id="L235"><span class="lineNum">     235</span> <span class="tlaGNC">         792 :       const auto node{tree.add_node(parentNode, transform(s))};</span></span>
+<span id="L235"><span class="lineNum">     235</span> <span class="tlaGNC">         748 :       const auto node{tree.add_node(parentNode, transform(s))};</span></span>
 <span id="L236"><span class="lineNum">     236</span>              : </span>
-<span id="L237"><span class="lineNum">     237</span> <span class="tlaGNC">        1440 :       [node, fn, &amp;s] &lt;std::size_t... Is&gt; (std::index_sequence&lt;Is...&gt;) {</span></span>
-<span id="L238"><span class="lineNum">     238</span> <span class="tlaGNC">         324 :         (fn(node, std::get&lt;Is&gt;(s.values)), ...);</span></span>
-<span id="L239"><span class="lineNum">     239</span> <span class="tlaGNC">         792 :       }(std::make_index_sequence&lt;sizeof...(Ts)&gt;{});</span></span>
+<span id="L237"><span class="lineNum">     237</span> <span class="tlaGNC">        1304 :       [node, fn, &amp;s] &lt;std::size_t... Is&gt; (std::index_sequence&lt;Is...&gt;) {</span></span>
+<span id="L238"><span class="lineNum">     238</span> <span class="tlaGNC">         124 :         (fn(node, std::get&lt;Is&gt;(s.values)), ...);</span></span>
+<span id="L239"><span class="lineNum">     239</span> <span class="tlaGNC">         748 :       }(std::make_index_sequence&lt;sizeof...(Ts)&gt;{});</span></span>
 <span id="L240"><span class="lineNum">     240</span>              : </span>
-<span id="L241"><span class="lineNum">     241</span> <span class="tlaGNC">         792 :       if(!std::ranges::distance(tree.cedges(node)))</span></span>
-<span id="L242"><span class="lineNum">     242</span> <span class="tlaGNC">          54 :         tree.prune(node);</span></span>
+<span id="L241"><span class="lineNum">     241</span> <span class="tlaGNC">         748 :       if(!std::ranges::distance(tree.cedges(node)))</span></span>
+<span id="L242"><span class="lineNum">     242</span> <span class="tlaGNC">          72 :         tree.prune(node);</span></span>
 <span id="L243"><span class="lineNum">     243</span>              : </span>
-<span id="L244"><span class="lineNum">     244</span> <span class="tlaGNC">         792 :       return std::forward&lt;Tree&gt;(tree);</span></span>
+<span id="L244"><span class="lineNum">     244</span> <span class="tlaGNC">         748 :       return std::forward&lt;Tree&gt;(tree);</span></span>
 <span id="L245"><span class="lineNum">     245</span>              :     }</span>
 <span id="L246"><span class="lineNum">     246</span>              : </span>
 <span id="L247"><span class="lineNum">     247</span>              : </span>
 <span id="L248"><span class="lineNum">     248</span>              :     template&lt;class... Ts, class Filter, class Transform, class Tree, std::integral SizeType = typename Tree::size_type, class... PreviousSuites&gt;</span>
 <span id="L249"><span class="lineNum">     249</span>              :       requires maths::dynamic_tree&lt;std::remove_cvref_t&lt;Tree&gt;&gt; &amp;&amp; (is_suite_v&lt;PreviousSuites&gt; &amp;&amp; ...) &amp;&amp; ((!is_suite_v&lt;Ts&gt;) &amp;&amp; ...)</span>
-<span id="L250"><span class="lineNum">     250</span> <span class="tlaGNC">         756 :     Tree&amp;&amp; extract_tree(suite&lt;Ts...&gt;&amp; s, Filter&amp;&amp; filter, Transform transform, Tree&amp;&amp; tree, const SizeType parentNode, const PreviousSuites&amp;... previous)</span></span>
+<span id="L250"><span class="lineNum">     250</span> <span class="tlaGNC">         700 :     Tree&amp;&amp; extract_tree(suite&lt;Ts...&gt;&amp; s, Filter&amp;&amp; filter, Transform transform, Tree&amp;&amp; tree, const SizeType parentNode, const PreviousSuites&amp;... previous)</span></span>
 <span id="L251"><span class="lineNum">     251</span>              :     {</span>
-<span id="L252"><span class="lineNum">     252</span> <span class="tlaGNC">         756 :       auto emplacer{</span></span>
-<span id="L253"><span class="lineNum">     253</span> <span class="tlaGNC">        2646 :         [&amp;](SizeType node, auto&amp;&amp; val) {</span></span>
-<span id="L254"><span class="lineNum">     254</span> <span class="tlaGNC">        2646 :           if(filter(val, previous..., s))</span></span>
-<span id="L255"><span class="lineNum">     255</span> <span class="tlaGNC">        2592 :             tree.add_node(node, transform(std::move(val)));</span></span>
+<span id="L252"><span class="lineNum">     252</span> <span class="tlaGNC">         700 :       auto emplacer{</span></span>
+<span id="L253"><span class="lineNum">     253</span> <span class="tlaGNC">        1858 :         [&amp;](SizeType node, auto&amp;&amp; val) {</span></span>
+<span id="L254"><span class="lineNum">     254</span> <span class="tlaGNC">        1858 :           if(filter(val, previous..., s))</span></span>
+<span id="L255"><span class="lineNum">     255</span> <span class="tlaGNC">        1786 :             tree.add_node(node, transform(std::move(val)));</span></span>
 <span id="L256"><span class="lineNum">     256</span>              :         }</span>
 <span id="L257"><span class="lineNum">     257</span>              :       };</span>
 <span id="L258"><span class="lineNum">     258</span>              : </span>
-<span id="L259"><span class="lineNum">     259</span> <span class="tlaGNC">        1512 :       return impl::extract_tree(s, transform, std::forward&lt;Tree&gt;(tree), parentNode, emplacer);</span></span>
+<span id="L259"><span class="lineNum">     259</span> <span class="tlaGNC">        1400 :       return impl::extract_tree(s, transform, std::forward&lt;Tree&gt;(tree), parentNode, emplacer);</span></span>
 <span id="L260"><span class="lineNum">     260</span>              :     }</span>
 <span id="L261"><span class="lineNum">     261</span>              : </span>
 <span id="L262"><span class="lineNum">     262</span>              :     template&lt;class... Ts, class Filter, class Transform, class Tree, std::integral SizeType = typename Tree::size_type, class... PreviousSuites&gt;</span>
 <span id="L263"><span class="lineNum">     263</span>              :       requires maths::dynamic_tree&lt;std::remove_cvref_t&lt;Tree&gt;&gt; &amp;&amp; (is_suite_v&lt;PreviousSuites&gt; &amp;&amp; ...) &amp;&amp; ((is_suite_v&lt;Ts&gt;) &amp;&amp; ...)</span>
-<span id="L264"><span class="lineNum">     264</span> <span class="tlaGNC">          36 :     Tree&amp;&amp; extract_tree(suite&lt;Ts...&gt;&amp; s, Filter&amp;&amp; filter, Transform transform, Tree&amp;&amp; tree, const SizeType parentNode, const PreviousSuites&amp;... previous)</span></span>
+<span id="L264"><span class="lineNum">     264</span> <span class="tlaGNC">          48 :     Tree&amp;&amp; extract_tree(suite&lt;Ts...&gt;&amp; s, Filter&amp;&amp; filter, Transform transform, Tree&amp;&amp; tree, const SizeType parentNode, const PreviousSuites&amp;... previous)</span></span>
 <span id="L265"><span class="lineNum">     265</span>              :     {</span>
-<span id="L266"><span class="lineNum">     266</span> <span class="tlaGNC">          36 :       auto recurser{</span></span>
-<span id="L267"><span class="lineNum">     267</span> <span class="tlaGNC">         144 :         [&amp;] &lt;class V&gt; (SizeType node, V&amp;&amp; val) {</span></span>
-<span id="L268"><span class="lineNum">     268</span> <span class="tlaGNC">          72 :           impl::extract_tree(std::forward&lt;V&gt;(val), std::forward&lt;Filter&gt;(filter), transform, std::forward&lt;Tree&gt;(tree), node, previous..., s);</span></span>
+<span id="L266"><span class="lineNum">     266</span> <span class="tlaGNC">          48 :       auto recurser{</span></span>
+<span id="L267"><span class="lineNum">     267</span> <span class="tlaGNC">         192 :         [&amp;] &lt;class V&gt; (SizeType node, V&amp;&amp; val) {</span></span>
+<span id="L268"><span class="lineNum">     268</span> <span class="tlaGNC">          96 :           impl::extract_tree(std::forward&lt;V&gt;(val), std::forward&lt;Filter&gt;(filter), transform, std::forward&lt;Tree&gt;(tree), node, previous..., s);</span></span>
 <span id="L269"><span class="lineNum">     269</span>              :         }</span>
 <span id="L270"><span class="lineNum">     270</span>              :       };</span>
 <span id="L271"><span class="lineNum">     271</span>              : </span>
-<span id="L272"><span class="lineNum">     272</span> <span class="tlaGNC">          72 :       return impl::extract_tree(s, transform, std::forward&lt;Tree&gt;(tree), parentNode, recurser);</span></span>
+<span id="L272"><span class="lineNum">     272</span> <span class="tlaGNC">          96 :       return impl::extract_tree(s, transform, std::forward&lt;Tree&gt;(tree), parentNode, recurser);</span></span>
 <span id="L273"><span class="lineNum">     273</span>              :     }</span>
 <span id="L274"><span class="lineNum">     274</span>              :   }</span>
 <span id="L275"><span class="lineNum">     275</span>              : </span>
@@ -362,9 +362,9 @@
 <span id="L300"><span class="lineNum">     300</span>              :            class Transform,</span>
 <span id="L301"><span class="lineNum">     301</span>              :            maths::dynamic_tree Tree&gt;</span>
 <span id="L302"><span class="lineNum">     302</span>              :     requires is_suite_v&lt;Suite&gt;</span>
-<span id="L303"><span class="lineNum">     303</span> <span class="tlaGNC">         720 :   Tree&amp; extract_tree(Suite s, Filter&amp;&amp; filter, Transform transform, Tree&amp; tree, typename Tree::size_type pos)</span></span>
+<span id="L303"><span class="lineNum">     303</span> <span class="tlaGNC">         652 :   Tree&amp; extract_tree(Suite s, Filter&amp;&amp; filter, Transform transform, Tree&amp; tree, typename Tree::size_type pos)</span></span>
 <span id="L304"><span class="lineNum">     304</span>              :   {</span>
-<span id="L305"><span class="lineNum">     305</span> <span class="tlaGNC">         720 :     return impl::extract_tree(s, std::forward&lt;Filter&gt;(filter), std::move(transform), tree, pos);</span></span>
+<span id="L305"><span class="lineNum">     305</span> <span class="tlaGNC">         652 :     return impl::extract_tree(s, std::forward&lt;Filter&gt;(filter), std::move(transform), tree, pos);</span></span>
 <span id="L306"><span class="lineNum">     306</span>              :   }</span>
 <span id="L307"><span class="lineNum">     307</span>              : </span>
 <span id="L308"><span class="lineNum">     308</span>              :   struct item_to_name</span>
@@ -372,9 +372,9 @@
 <span id="L310"><span class="lineNum">     310</span>              :     template&lt;class T&gt;</span>
 <span id="L311"><span class="lineNum">     311</span>              :       requires has_intrinsic_nomenclator&lt;T&gt; || has_extrinsic_nomenclator&lt;T&gt;</span>
 <span id="L312"><span class="lineNum">     312</span>              :     [[nodiscard]]</span>
-<span id="L313"><span class="lineNum">     313</span> <span class="tlaGNC">         198 :     std::string operator()(const T&amp; t) const</span></span>
+<span id="L313"><span class="lineNum">     313</span> <span class="tlaGNC">         264 :     std::string operator()(const T&amp; t) const</span></span>
 <span id="L314"><span class="lineNum">     314</span>              :     {</span>
-<span id="L315"><span class="lineNum">     315</span> <span class="tlaGNC">         198 :       return object::nomenclature(t);</span></span>
+<span id="L315"><span class="lineNum">     315</span> <span class="tlaGNC">         264 :       return object::nomenclature(t);</span></span>
 <span id="L316"><span class="lineNum">     316</span>              :     }</span>
 <span id="L317"><span class="lineNum">     317</span>              :   };</span>
 <span id="L318"><span class="lineNum">     318</span>              : </span>
@@ -408,10 +408,10 @@
 <span id="L346"><span class="lineNum">     346</span>              :     using optional_suite_selection = std::optional&lt;std::vector&lt;std::string&gt;&gt;;</span>
 <span id="L347"><span class="lineNum">     347</span>              :     using optional_item_selection  = std::optional&lt;std::vector&lt;items_key_type&gt;&gt;;</span>
 <span id="L348"><span class="lineNum">     348</span>              : </span>
-<span id="L349"><span class="lineNum">     349</span> <span class="tlaGNC">         738 :     granular_filter(ItemCompare compare = {}, ItemProjector proj = {})</span></span>
-<span id="L350"><span class="lineNum">     350</span> <span class="tlaGNC">         738 :       : m_Compare{std::move(compare)}</span></span>
-<span id="L351"><span class="lineNum">     351</span> <span class="tlaGNC">         738 :       , m_Proj{std::move(proj)}</span></span>
-<span id="L352"><span class="lineNum">     352</span> <span class="tlaGNC">         738 :     {}</span></span>
+<span id="L349"><span class="lineNum">     349</span> <span class="tlaGNC">         984 :     granular_filter(ItemCompare compare = {}, ItemProjector proj = {})</span></span>
+<span id="L350"><span class="lineNum">     350</span> <span class="tlaGNC">         984 :       : m_Compare{std::move(compare)}</span></span>
+<span id="L351"><span class="lineNum">     351</span> <span class="tlaGNC">         984 :       , m_Proj{std::move(proj)}</span></span>
+<span id="L352"><span class="lineNum">     352</span> <span class="tlaGNC">         984 :     {}</span></span>
 <span id="L353"><span class="lineNum">     353</span>              : </span>
 <span id="L354"><span class="lineNum">     354</span> <span class="tlaUNC tlaBgUNC">           0 :     granular_filter(optional_suite_selection selectedSuites, optional_item_selection selectedItems, ItemCompare compare = {}, ItemProjector proj = {})</span></span>
 <span id="L355"><span class="lineNum">     355</span> <span class="tlaUNC">           0 :       : m_Compare{std::move(compare)}</span></span>
@@ -420,10 +420,10 @@
 <span id="L358"><span class="lineNum">     358</span> <span class="tlaUNC">           0 :       , m_SelectedItems{make(std::move(selectedItems))}</span></span>
 <span id="L359"><span class="lineNum">     359</span> <span class="tlaUNC">           0 :     {}</span></span>
 <span id="L360"><span class="lineNum">     360</span>              : </span>
-<span id="L361"><span class="lineNum">     361</span> <span class="tlaGNC tlaBgGNC">          72 :     void add_selected_suite(std::string name)</span></span>
+<span id="L361"><span class="lineNum">     361</span> <span class="tlaGNC tlaBgGNC">          96 :     void add_selected_suite(std::string name)</span></span>
 <span id="L362"><span class="lineNum">     362</span>              :     {</span>
-<span id="L363"><span class="lineNum">     363</span> <span class="tlaGNC">          72 :       add(m_SelectedSuites, std::move(name));</span></span>
-<span id="L364"><span class="lineNum">     364</span> <span class="tlaGNC">          72 :     }</span></span>
+<span id="L363"><span class="lineNum">     363</span> <span class="tlaGNC">          96 :       add(m_SelectedSuites, std::move(name));</span></span>
+<span id="L364"><span class="lineNum">     364</span> <span class="tlaGNC">          96 :     }</span></span>
 <span id="L365"><span class="lineNum">     365</span>              : </span>
 <span id="L366"><span class="lineNum">     366</span> <span class="tlaUNC tlaBgUNC">           0 :     void add_selected_item(items_key_type key)</span></span>
 <span id="L367"><span class="lineNum">     367</span>              :     {</span>
@@ -433,35 +433,35 @@
 <span id="L371"><span class="lineNum">     371</span>              :     template&lt;class T, class... Suites&gt;</span>
 <span id="L372"><span class="lineNum">     372</span>              :       requires (is_suite_v&lt;Suites&gt; &amp;&amp; ...) &amp;&amp; granular_filter_for&lt;ItemKeyType, ItemCompare, ItemProjector, T&gt;</span>
 <span id="L373"><span class="lineNum">     373</span>              :     [[nodiscard]]</span>
-<span id="L374"><span class="lineNum">     374</span> <span class="tlaGNC tlaBgGNC">        2646 :     bool operator()(const T&amp; val, const Suites&amp;... suites)</span></span>
+<span id="L374"><span class="lineNum">     374</span> <span class="tlaGNC tlaBgGNC">        1858 :     bool operator()(const T&amp; val, const Suites&amp;... suites)</span></span>
 <span id="L375"><span class="lineNum">     375</span>              :     {</span>
-<span id="L376"><span class="lineNum">     376</span> <span class="tlaGNC">        2646 :       if(!m_SelectedSuites &amp;&amp; !m_SelectedItems) return true;</span></span>
+<span id="L376"><span class="lineNum">     376</span> <span class="tlaGNC">        1858 :       if(!m_SelectedSuites &amp;&amp; !m_SelectedItems) return true;</span></span>
 <span id="L377"><span class="lineNum">     377</span>              : </span>
 <span id="L378"><span class="lineNum">     378</span>              :       // Don't use logical short-circuit, otherwise the maps may not accurately update</span>
-<span id="L379"><span class="lineNum">     379</span> <span class="tlaGNC">         162 :       std::array&lt;bool, sizeof...(Suites) + 1&gt; isFound{ find(m_SelectedItems, val, m_Proj, m_Compare), find(m_SelectedSuites, suites, item_to_name{}, std::ranges::equal_to{}) ... };</span></span>
+<span id="L379"><span class="lineNum">     379</span> <span class="tlaGNC">         216 :       std::array&lt;bool, sizeof...(Suites) + 1&gt; isFound{ find(m_SelectedItems, val, m_Proj, m_Compare), find(m_SelectedSuites, suites, item_to_name{}, std::ranges::equal_to{}) ... };</span></span>
 <span id="L380"><span class="lineNum">     380</span>              : </span>
-<span id="L381"><span class="lineNum">     381</span> <span class="tlaGNC">         486 :       return std::ranges::any_of(isFound, [](bool b) { return b; });</span></span>
+<span id="L381"><span class="lineNum">     381</span> <span class="tlaGNC">         648 :       return std::ranges::any_of(isFound, [](bool b) { return b; });</span></span>
 <span id="L382"><span class="lineNum">     382</span>              :     }</span>
 <span id="L383"><span class="lineNum">     383</span>              : </span>
 <span id="L384"><span class="lineNum">     384</span>              :     [[nodiscard]]</span>
-<span id="L385"><span class="lineNum">     385</span> <span class="tlaGNC">         468 :     std::optional&lt;std::ranges::subrange&lt;selected_suites_iterator&gt;&gt; selected_suites() const noexcept</span></span>
+<span id="L385"><span class="lineNum">     385</span> <span class="tlaGNC">         624 :     std::optional&lt;std::ranges::subrange&lt;selected_suites_iterator&gt;&gt; selected_suites() const noexcept</span></span>
 <span id="L386"><span class="lineNum">     386</span>              :     {</span>
-<span id="L387"><span class="lineNum">     387</span> <span class="tlaGNC">         468 :       return m_SelectedSuites ? std::optional&lt;std::ranges::subrange&lt;selected_suites_iterator&gt;&gt;{{m_SelectedSuites-&gt;begin(), m_SelectedSuites-&gt;end()}} : std::nullopt;</span></span>
+<span id="L387"><span class="lineNum">     387</span> <span class="tlaGNC">         624 :       return m_SelectedSuites ? std::optional&lt;std::ranges::subrange&lt;selected_suites_iterator&gt;&gt;{{m_SelectedSuites-&gt;begin(), m_SelectedSuites-&gt;end()}} : std::nullopt;</span></span>
 <span id="L388"><span class="lineNum">     388</span>              :     }</span>
 <span id="L389"><span class="lineNum">     389</span>              : </span>
 <span id="L390"><span class="lineNum">     390</span>              :     [[nodiscard]]</span>
-<span id="L391"><span class="lineNum">     391</span> <span class="tlaGNC">         468 :     std::optional&lt;std::ranges::subrange&lt;selected_items_iterator&gt;&gt; selected_items() const noexcept</span></span>
+<span id="L391"><span class="lineNum">     391</span> <span class="tlaGNC">         624 :     std::optional&lt;std::ranges::subrange&lt;selected_items_iterator&gt;&gt; selected_items() const noexcept</span></span>
 <span id="L392"><span class="lineNum">     392</span>              :     {</span>
-<span id="L393"><span class="lineNum">     393</span> <span class="tlaGNC">         468 :       return m_SelectedItems ? std::optional&lt;std::ranges::subrange&lt;selected_items_iterator&gt;&gt;{{m_SelectedItems-&gt;begin(), m_SelectedItems-&gt;end()}} : std::nullopt;</span></span>
+<span id="L393"><span class="lineNum">     393</span> <span class="tlaGNC">         624 :       return m_SelectedItems ? std::optional&lt;std::ranges::subrange&lt;selected_items_iterator&gt;&gt;{{m_SelectedItems-&gt;begin(), m_SelectedItems-&gt;end()}} : std::nullopt;</span></span>
 <span id="L394"><span class="lineNum">     394</span>              :     }</span>
 <span id="L395"><span class="lineNum">     395</span>              : </span>
 <span id="L396"><span class="lineNum">     396</span>              :     [[nodiscard]]</span>
 <span id="L397"><span class="lineNum">     397</span>              :     friend bool operator==(const granular_filter&amp;, const granular_filter&amp;) noexcept = default;</span>
 <span id="L398"><span class="lineNum">     398</span>              : </span>
 <span id="L399"><span class="lineNum">     399</span>              :     [[nodiscard]]</span>
-<span id="L400"><span class="lineNum">     400</span> <span class="tlaGNC">         792 :     operator bool() const noexcept</span></span>
+<span id="L400"><span class="lineNum">     400</span> <span class="tlaGNC">        1056 :     operator bool() const noexcept</span></span>
 <span id="L401"><span class="lineNum">     401</span>              :     {</span>
-<span id="L402"><span class="lineNum">     402</span> <span class="tlaGNC">         792 :       return m_SelectedSuites || m_SelectedItems;</span></span>
+<span id="L402"><span class="lineNum">     402</span> <span class="tlaGNC">        1056 :       return m_SelectedSuites || m_SelectedItems;</span></span>
 <span id="L403"><span class="lineNum">     403</span>              :     }</span>
 <span id="L404"><span class="lineNum">     404</span>              :   private:</span>
 <span id="L405"><span class="lineNum">     405</span>              :     [[no_unique_address]] ItemCompare m_Compare{};</span>
@@ -473,13 +473,13 @@
 <span id="L411"><span class="lineNum">     411</span>              :     using opt_map_type = std::optional&lt;std::vector&lt;std::pair&lt;Key, bool&gt;&gt;&gt;;</span>
 <span id="L412"><span class="lineNum">     412</span>              : </span>
 <span id="L413"><span class="lineNum">     413</span>              :     template&lt;class Key&gt;</span>
-<span id="L414"><span class="lineNum">     414</span> <span class="tlaGNC">          72 :     static void add(opt_map_type&lt;Key&gt;&amp; map, Key k)</span></span>
+<span id="L414"><span class="lineNum">     414</span> <span class="tlaGNC">          96 :     static void add(opt_map_type&lt;Key&gt;&amp; map, Key k)</span></span>
 <span id="L415"><span class="lineNum">     415</span>              :     {</span>
 <span id="L416"><span class="lineNum">     416</span>              :       using map_type = typename opt_map_type&lt;Key&gt;::value_type;</span>
-<span id="L417"><span class="lineNum">     417</span> <span class="tlaGNC">          72 :       if(!map) map = map_type{};</span></span>
+<span id="L417"><span class="lineNum">     417</span> <span class="tlaGNC">          96 :       if(!map) map = map_type{};</span></span>
 <span id="L418"><span class="lineNum">     418</span>              : </span>
-<span id="L419"><span class="lineNum">     419</span> <span class="tlaGNC">          72 :       map-&gt;emplace_back(std::move(k), false);</span></span>
-<span id="L420"><span class="lineNum">     420</span> <span class="tlaGNC">          72 :     }</span></span>
+<span id="L419"><span class="lineNum">     419</span> <span class="tlaGNC">          96 :       map-&gt;emplace_back(std::move(k), false);</span></span>
+<span id="L420"><span class="lineNum">     420</span> <span class="tlaGNC">          96 :     }</span></span>
 <span id="L421"><span class="lineNum">     421</span>              : </span>
 <span id="L422"><span class="lineNum">     422</span>              :     template&lt;class Key&gt;</span>
 <span id="L423"><span class="lineNum">     423</span>              :     [[nodiscard]]</span>
@@ -495,20 +495,20 @@
 <span id="L433"><span class="lineNum">     433</span> <span class="tlaUNC">           0 :     }</span></span>
 <span id="L434"><span class="lineNum">     434</span>              : </span>
 <span id="L435"><span class="lineNum">     435</span>              :     template&lt;class Key, class U, class Projector, class Comp&gt;</span>
-<span id="L436"><span class="lineNum">     436</span> <span class="tlaGNC tlaBgGNC">         324 :     static bool find(opt_map_type&lt;Key&gt;&amp; selected, const U&amp; u, Projector proj, Comp compare)</span></span>
+<span id="L436"><span class="lineNum">     436</span> <span class="tlaGNC tlaBgGNC">         432 :     static bool find(opt_map_type&lt;Key&gt;&amp; selected, const U&amp; u, Projector proj, Comp compare)</span></span>
 <span id="L437"><span class="lineNum">     437</span>              :     {</span>
-<span id="L438"><span class="lineNum">     438</span> <span class="tlaGNC">         324 :       if(selected)</span></span>
+<span id="L438"><span class="lineNum">     438</span> <span class="tlaGNC">         432 :       if(selected)</span></span>
 <span id="L439"><span class="lineNum">     439</span>              :       {</span>
-<span id="L440"><span class="lineNum">     440</span> <span class="tlaGNC">         360 :         auto found{std::ranges::find_if(*selected, [&amp;proj, &amp;compare, &amp;u](const std::pair&lt;Key, bool&gt;&amp; e) { return compare(e.first, proj(u)); })};</span></span>
+<span id="L440"><span class="lineNum">     440</span> <span class="tlaGNC">         480 :         auto found{std::ranges::find_if(*selected, [&amp;proj, &amp;compare, &amp;u](const std::pair&lt;Key, bool&gt;&amp; e) { return compare(e.first, proj(u)); })};</span></span>
 <span id="L441"><span class="lineNum">     441</span>              : </span>
-<span id="L442"><span class="lineNum">     442</span> <span class="tlaGNC">         162 :         if(found != selected-&gt;end())</span></span>
+<span id="L442"><span class="lineNum">     442</span> <span class="tlaGNC">         216 :         if(found != selected-&gt;end())</span></span>
 <span id="L443"><span class="lineNum">     443</span>              :         {</span>
-<span id="L444"><span class="lineNum">     444</span> <span class="tlaGNC">         108 :           found-&gt;second = true;</span></span>
-<span id="L445"><span class="lineNum">     445</span> <span class="tlaGNC">         108 :           return true;</span></span>
+<span id="L444"><span class="lineNum">     444</span> <span class="tlaGNC">         144 :           found-&gt;second = true;</span></span>
+<span id="L445"><span class="lineNum">     445</span> <span class="tlaGNC">         144 :           return true;</span></span>
 <span id="L446"><span class="lineNum">     446</span>              :         }</span>
 <span id="L447"><span class="lineNum">     447</span>              :       }</span>
 <span id="L448"><span class="lineNum">     448</span>              : </span>
-<span id="L449"><span class="lineNum">     449</span> <span class="tlaGNC">         216 :       return false;</span></span>
+<span id="L449"><span class="lineNum">     449</span> <span class="tlaGNC">         288 :       return false;</span></span>
 <span id="L450"><span class="lineNum">     450</span>              :     }</span>
 <span id="L451"><span class="lineNum">     451</span>              :   };</span>
 <span id="L452"><span class="lineNum">     452</span>              : }</span>

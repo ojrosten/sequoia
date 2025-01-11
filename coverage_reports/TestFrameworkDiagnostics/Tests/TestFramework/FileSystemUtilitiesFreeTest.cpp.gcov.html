@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2025-01-11 16:12:34</td>
+            <td class="headerValue">2025-01-11 20:40:10</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -77,72 +77,72 @@
 <span id="L15"><span class="lineNum">      15</span>              :   namespace fs = std::filesystem;</span>
 <span id="L16"><span class="lineNum">      16</span>              : </span>
 <span id="L17"><span class="lineNum">      17</span>              :   [[nodiscard]]</span>
-<span id="L18"><span class="lineNum">      18</span> <span class="tlaGNC tlaBgGNC">          90 :   std::filesystem::path file_system_utilities_free_test::source_file() const</span></span>
+<span id="L18"><span class="lineNum">      18</span> <span class="tlaGNC tlaBgGNC">         120 :   std::filesystem::path file_system_utilities_free_test::source_file() const</span></span>
 <span id="L19"><span class="lineNum">      19</span>              :   {</span>
-<span id="L20"><span class="lineNum">      20</span> <span class="tlaGNC">          90 :     return std::source_location::current().file_name();</span></span>
+<span id="L20"><span class="lineNum">      20</span> <span class="tlaGNC">         120 :     return std::source_location::current().file_name();</span></span>
 <span id="L21"><span class="lineNum">      21</span>              :   }</span>
 <span id="L22"><span class="lineNum">      22</span>              : </span>
-<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC">          18 :   void file_system_utilities_free_test::run_tests()</span></span>
+<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC">          24 :   void file_system_utilities_free_test::run_tests()</span></span>
 <span id="L24"><span class="lineNum">      24</span>              :   {</span>
-<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">          18 :     test_find_in_tree();</span></span>
-<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">          18 :     test_rebase_from();</span></span>
-<span id="L27"><span class="lineNum">      27</span> <span class="tlaGNC">          18 :   }</span></span>
+<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">          24 :     test_find_in_tree();</span></span>
+<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">          24 :     test_rebase_from();</span></span>
+<span id="L27"><span class="lineNum">      27</span> <span class="tlaGNC">          24 :   }</span></span>
 <span id="L28"><span class="lineNum">      28</span>              : </span>
-<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">          18 :   void file_system_utilities_free_test::test_find_in_tree()</span></span>
+<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">          24 :   void file_system_utilities_free_test::test_find_in_tree()</span></span>
 <span id="L30"><span class="lineNum">      30</span>              :   {</span>
-<span id="L31"><span class="lineNum">      31</span> <span class="tlaGNC">          18 :     const auto root{working_materials()}, fooPath{root / &quot;Foo&quot;};</span></span>
+<span id="L31"><span class="lineNum">      31</span> <span class="tlaGNC">          24 :     const auto root{working_materials()}, fooPath{root / &quot;Foo&quot;};</span></span>
 <span id="L32"><span class="lineNum">      32</span>              : </span>
 <span id="L33"><span class="lineNum">      33</span>              :     auto postprocessor{</span>
-<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">          36 :       [](std::string mess) -&gt;std::string {</span></span>
-<span id="L35"><span class="lineNum">      35</span> <span class="tlaGNC">          36 :         constexpr auto npos{std::string::npos};</span></span>
-<span id="L36"><span class="lineNum">      36</span> <span class="tlaGNC">          36 :         if (const auto end{mess.find(&quot;output&quot;)}; end != npos)</span></span>
+<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">          48 :       [](std::string mess) -&gt;std::string {</span></span>
+<span id="L35"><span class="lineNum">      35</span> <span class="tlaGNC">          48 :         constexpr auto npos{std::string::npos};</span></span>
+<span id="L36"><span class="lineNum">      36</span> <span class="tlaGNC">          48 :         if (const auto end{mess.find(&quot;output&quot;)}; end != npos)</span></span>
 <span id="L37"><span class="lineNum">      37</span>              :         {</span>
-<span id="L38"><span class="lineNum">      38</span> <span class="tlaGNC">          36 :           mess.erase(0, end);</span></span>
+<span id="L38"><span class="lineNum">      38</span> <span class="tlaGNC">          48 :           mess.erase(0, end);</span></span>
 <span id="L39"><span class="lineNum">      39</span>              :         }</span>
 <span id="L40"><span class="lineNum">      40</span>              : </span>
-<span id="L41"><span class="lineNum">      41</span> <span class="tlaGNC">          36 :         return mess;</span></span>
+<span id="L41"><span class="lineNum">      41</span> <span class="tlaGNC">          48 :         return mess;</span></span>
 <span id="L42"><span class="lineNum">      42</span>              :       }</span>
 <span id="L43"><span class="lineNum">      43</span>              :     };</span>
 <span id="L44"><span class="lineNum">      44</span>              : </span>
-<span id="L45"><span class="lineNum">      45</span> <span class="tlaGNC">          18 :     check_exception_thrown&lt;std::runtime_error&gt;(&quot;&quot;,</span></span>
-<span id="L46"><span class="lineNum">      46</span> <span class="tlaGNC">         108 :                                                [&amp;fooPath](){ return find_in_tree(fooPath / &quot;Bar&quot; / &quot;baz.txt&quot;, &quot;baz.txt&quot;); },</span></span>
+<span id="L45"><span class="lineNum">      45</span> <span class="tlaGNC">          24 :     check_exception_thrown&lt;std::runtime_error&gt;(&quot;&quot;,</span></span>
+<span id="L46"><span class="lineNum">      46</span> <span class="tlaGNC">         144 :                                                [&amp;fooPath](){ return find_in_tree(fooPath / &quot;Bar&quot; / &quot;baz.txt&quot;, &quot;baz.txt&quot;); },</span></span>
 <span id="L47"><span class="lineNum">      47</span>              :                                                postprocessor);</span>
-<span id="L48"><span class="lineNum">      48</span> <span class="tlaGNC">          18 :     check_exception_thrown&lt;std::runtime_error&gt;(&quot;&quot;,</span></span>
-<span id="L49"><span class="lineNum">      49</span> <span class="tlaGNC">          72 :                                                [&amp;fooPath](){ return find_in_tree(fooPath / &quot;Stuff&quot;, &quot;baz.txt&quot;); },</span></span>
+<span id="L48"><span class="lineNum">      48</span> <span class="tlaGNC">          24 :     check_exception_thrown&lt;std::runtime_error&gt;(&quot;&quot;,</span></span>
+<span id="L49"><span class="lineNum">      49</span> <span class="tlaGNC">          96 :                                                [&amp;fooPath](){ return find_in_tree(fooPath / &quot;Stuff&quot;, &quot;baz.txt&quot;); },</span></span>
 <span id="L50"><span class="lineNum">      50</span>              :                                                postprocessor);</span>
 <span id="L51"><span class="lineNum">      51</span>              : </span>
-<span id="L52"><span class="lineNum">      52</span> <span class="tlaGNC">          18 :     check(equality, &quot;Not found&quot;, find_in_tree(root, &quot;thing.txt&quot;), fs::path{});</span></span>
-<span id="L53"><span class="lineNum">      53</span> <span class="tlaGNC">          18 :     check(equality, &quot;Not found - empty&quot;, find_in_tree(root, &quot;&quot;), fs::path{});</span></span>
-<span id="L54"><span class="lineNum">      54</span> <span class="tlaGNC">          18 :     check(equality, &quot;Unique file&quot;, find_in_tree(root, &quot;plurgh.txt&quot;), fooPath / &quot;Bar&quot; / &quot;plurgh.txt&quot;);</span></span>
-<span id="L55"><span class="lineNum">      55</span> <span class="tlaGNC">          18 :     check(equality, &quot;Unique directory&quot;, find_in_tree(root, &quot;Bar&quot;), fooPath / &quot;Bar&quot;);</span></span>
-<span id="L56"><span class="lineNum">      56</span> <span class="tlaGNC">          18 :     check(equality, &quot;Partial path&quot;, find_in_tree(root, &quot;Bar/plurgh.txt&quot;), fooPath / &quot;Bar&quot; / &quot;plurgh.txt&quot;);</span></span>
-<span id="L57"><span class="lineNum">      57</span> <span class="tlaGNC">          18 :     check(equality, &quot;Absolute path&quot;, find_in_tree(root, fooPath), fooPath);</span></span>
-<span id="L58"><span class="lineNum">      58</span> <span class="tlaGNC">          18 :     check(equality, &quot;Absolute path: not found&quot;, find_in_tree(root, fooPath / &quot;Baz&quot;), fs::path{});</span></span>
-<span id="L59"><span class="lineNum">      59</span> <span class="tlaGNC">          18 :   }</span></span>
+<span id="L52"><span class="lineNum">      52</span> <span class="tlaGNC">          24 :     check(equality, &quot;Not found&quot;, find_in_tree(root, &quot;thing.txt&quot;), fs::path{});</span></span>
+<span id="L53"><span class="lineNum">      53</span> <span class="tlaGNC">          24 :     check(equality, &quot;Not found - empty&quot;, find_in_tree(root, &quot;&quot;), fs::path{});</span></span>
+<span id="L54"><span class="lineNum">      54</span> <span class="tlaGNC">          24 :     check(equality, &quot;Unique file&quot;, find_in_tree(root, &quot;plurgh.txt&quot;), fooPath / &quot;Bar&quot; / &quot;plurgh.txt&quot;);</span></span>
+<span id="L55"><span class="lineNum">      55</span> <span class="tlaGNC">          24 :     check(equality, &quot;Unique directory&quot;, find_in_tree(root, &quot;Bar&quot;), fooPath / &quot;Bar&quot;);</span></span>
+<span id="L56"><span class="lineNum">      56</span> <span class="tlaGNC">          24 :     check(equality, &quot;Partial path&quot;, find_in_tree(root, &quot;Bar/plurgh.txt&quot;), fooPath / &quot;Bar&quot; / &quot;plurgh.txt&quot;);</span></span>
+<span id="L57"><span class="lineNum">      57</span> <span class="tlaGNC">          24 :     check(equality, &quot;Absolute path&quot;, find_in_tree(root, fooPath), fooPath);</span></span>
+<span id="L58"><span class="lineNum">      58</span> <span class="tlaGNC">          24 :     check(equality, &quot;Absolute path: not found&quot;, find_in_tree(root, fooPath / &quot;Baz&quot;), fs::path{});</span></span>
+<span id="L59"><span class="lineNum">      59</span> <span class="tlaGNC">          24 :   }</span></span>
 <span id="L60"><span class="lineNum">      60</span>              : </span>
-<span id="L61"><span class="lineNum">      61</span> <span class="tlaGNC">          18 :   void file_system_utilities_free_test::test_rebase_from()</span></span>
+<span id="L61"><span class="lineNum">      61</span> <span class="tlaGNC">          24 :   void file_system_utilities_free_test::test_rebase_from()</span></span>
 <span id="L62"><span class="lineNum">      62</span>              :   {</span>
-<span id="L63"><span class="lineNum">      63</span> <span class="tlaGNC">          18 :     check_exception_thrown&lt;std::runtime_error&gt;(&quot;Attempt to rebase from file&quot;,</span></span>
-<span id="L64"><span class="lineNum">      64</span> <span class="tlaGNC">          54 :                                              [this]() { return rebase_from(&quot;Foo/Bar&quot;, working_materials() /= &quot;Foo/baz.txt&quot;); });</span></span>
+<span id="L63"><span class="lineNum">      63</span> <span class="tlaGNC">          24 :     check_exception_thrown&lt;std::runtime_error&gt;(&quot;Attempt to rebase from file&quot;,</span></span>
+<span id="L64"><span class="lineNum">      64</span> <span class="tlaGNC">          72 :                                              [this]() { return rebase_from(&quot;Foo/Bar&quot;, working_materials() /= &quot;Foo/baz.txt&quot;); });</span></span>
 <span id="L65"><span class="lineNum">      65</span>              : </span>
-<span id="L66"><span class="lineNum">      66</span> <span class="tlaGNC">          18 :     check_exception_thrown&lt;std::runtime_error&gt;(&quot;Attempt to rebase non-empty path from empty path&quot;,</span></span>
-<span id="L67"><span class="lineNum">      67</span> <span class="tlaGNC">          54 :                                              [this]() { return rebase_from(&quot;Foo/Bar&quot;, &quot;&quot;); });</span></span>
+<span id="L66"><span class="lineNum">      66</span> <span class="tlaGNC">          24 :     check_exception_thrown&lt;std::runtime_error&gt;(&quot;Attempt to rebase non-empty path from empty path&quot;,</span></span>
+<span id="L67"><span class="lineNum">      67</span> <span class="tlaGNC">          72 :                                              [this]() { return rebase_from(&quot;Foo/Bar&quot;, &quot;&quot;); });</span></span>
 <span id="L68"><span class="lineNum">      68</span>              : </span>
-<span id="L69"><span class="lineNum">      69</span> <span class="tlaGNC">          18 :     check_exception_thrown&lt;std::runtime_error&gt;(&quot;Attempt to rebase ../&quot;,</span></span>
-<span id="L70"><span class="lineNum">      70</span> <span class="tlaGNC">          54 :                                              [this]() { return rebase_from(&quot;../&quot;, &quot;Foo&quot;); });</span></span>
+<span id="L69"><span class="lineNum">      69</span> <span class="tlaGNC">          24 :     check_exception_thrown&lt;std::runtime_error&gt;(&quot;Attempt to rebase ../&quot;,</span></span>
+<span id="L70"><span class="lineNum">      70</span> <span class="tlaGNC">          72 :                                              [this]() { return rebase_from(&quot;../&quot;, &quot;Foo&quot;); });</span></span>
 <span id="L71"><span class="lineNum">      71</span>              : </span>
-<span id="L72"><span class="lineNum">      72</span> <span class="tlaGNC">          18 :     check_exception_thrown&lt;std::runtime_error&gt;(&quot;Attempt to rebase ../../&quot;,</span></span>
-<span id="L73"><span class="lineNum">      73</span> <span class="tlaGNC">          54 :                                              [this]() { return rebase_from(&quot;../../&quot;, &quot;Foo&quot;); });</span></span>
+<span id="L72"><span class="lineNum">      72</span> <span class="tlaGNC">          24 :     check_exception_thrown&lt;std::runtime_error&gt;(&quot;Attempt to rebase ../../&quot;,</span></span>
+<span id="L73"><span class="lineNum">      73</span> <span class="tlaGNC">          72 :                                              [this]() { return rebase_from(&quot;../../&quot;, &quot;Foo&quot;); });</span></span>
 <span id="L74"><span class="lineNum">      74</span>              : </span>
-<span id="L75"><span class="lineNum">      75</span> <span class="tlaGNC">          18 :     check(equality, &quot;Empty path&quot;, rebase_from(&quot;&quot;, &quot;Baz&quot;), fs::path{&quot;&quot;});</span></span>
-<span id="L76"><span class="lineNum">      76</span> <span class="tlaGNC">          18 :     check(equality, &quot;Empty path from empty path&quot;, rebase_from(&quot;&quot;, &quot;&quot;), fs::path{&quot;&quot;});</span></span>
-<span id="L77"><span class="lineNum">      77</span> <span class="tlaGNC">          18 :     check(equality, &quot;Non-existant path&quot;, rebase_from(&quot;Foo/Bar&quot;, &quot;Baz&quot;), fs::path{&quot;Foo/Bar&quot;});</span></span>
-<span id="L78"><span class="lineNum">      78</span> <span class="tlaGNC">          18 :     check(equality, &quot;Rebase absolute&quot;, rebase_from(working_materials() /= &quot;Foo&quot;, working_materials()), fs::path{&quot;Foo&quot;});</span></span>
-<span id="L79"><span class="lineNum">      79</span> <span class="tlaGNC">          18 :     check(equality, &quot;No overlap&quot;, rebase_from(fs::path{&quot;Things/Stuff.txt&quot;}, working_materials()), fs::path{&quot;Things/Stuff.txt&quot;});</span></span>
-<span id="L80"><span class="lineNum">      80</span> <span class="tlaGNC">          18 :     check(equality, &quot;Overlap&quot;, rebase_from(fs::path{&quot;Foo/Stuff.txt&quot;}, working_materials() /= &quot;Foo&quot;), fs::path{&quot;Stuff.txt&quot;});</span></span>
-<span id="L81"><span class="lineNum">      81</span> <span class="tlaGNC">          18 :     check(equality, &quot;Relative&quot;, rebase_from(fs::path{&quot;../Stuff.txt&quot;}, working_materials()), fs::path{&quot;Stuff.txt&quot;});</span></span>
-<span id="L82"><span class="lineNum">      82</span> <span class="tlaGNC">          18 :     check(equality, &quot;Double overlap&quot;, rebase_from(fs::path{&quot;Foo/Bar/Stuff.txt&quot;}, working_materials() /= &quot;Foo/Bar&quot;), fs::path{&quot;Stuff.txt&quot;});</span></span>
-<span id="L83"><span class="lineNum">      83</span> <span class="tlaGNC">          18 :   }</span></span>
+<span id="L75"><span class="lineNum">      75</span> <span class="tlaGNC">          24 :     check(equality, &quot;Empty path&quot;, rebase_from(&quot;&quot;, &quot;Baz&quot;), fs::path{&quot;&quot;});</span></span>
+<span id="L76"><span class="lineNum">      76</span> <span class="tlaGNC">          24 :     check(equality, &quot;Empty path from empty path&quot;, rebase_from(&quot;&quot;, &quot;&quot;), fs::path{&quot;&quot;});</span></span>
+<span id="L77"><span class="lineNum">      77</span> <span class="tlaGNC">          24 :     check(equality, &quot;Non-existant path&quot;, rebase_from(&quot;Foo/Bar&quot;, &quot;Baz&quot;), fs::path{&quot;Foo/Bar&quot;});</span></span>
+<span id="L78"><span class="lineNum">      78</span> <span class="tlaGNC">          24 :     check(equality, &quot;Rebase absolute&quot;, rebase_from(working_materials() /= &quot;Foo&quot;, working_materials()), fs::path{&quot;Foo&quot;});</span></span>
+<span id="L79"><span class="lineNum">      79</span> <span class="tlaGNC">          24 :     check(equality, &quot;No overlap&quot;, rebase_from(fs::path{&quot;Things/Stuff.txt&quot;}, working_materials()), fs::path{&quot;Things/Stuff.txt&quot;});</span></span>
+<span id="L80"><span class="lineNum">      80</span> <span class="tlaGNC">          24 :     check(equality, &quot;Overlap&quot;, rebase_from(fs::path{&quot;Foo/Stuff.txt&quot;}, working_materials() /= &quot;Foo&quot;), fs::path{&quot;Stuff.txt&quot;});</span></span>
+<span id="L81"><span class="lineNum">      81</span> <span class="tlaGNC">          24 :     check(equality, &quot;Relative&quot;, rebase_from(fs::path{&quot;../Stuff.txt&quot;}, working_materials()), fs::path{&quot;Stuff.txt&quot;});</span></span>
+<span id="L82"><span class="lineNum">      82</span> <span class="tlaGNC">          24 :     check(equality, &quot;Double overlap&quot;, rebase_from(fs::path{&quot;Foo/Bar/Stuff.txt&quot;}, working_materials() /= &quot;Foo/Bar&quot;), fs::path{&quot;Stuff.txt&quot;});</span></span>
+<span id="L83"><span class="lineNum">      83</span> <span class="tlaGNC">          24 :   }</span></span>
 <span id="L84"><span class="lineNum">      84</span>              : }</span>
         </pre>
               </td>

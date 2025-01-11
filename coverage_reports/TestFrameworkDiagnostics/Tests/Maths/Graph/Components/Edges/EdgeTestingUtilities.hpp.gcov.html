@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2025-01-11 16:12:34</td>
+            <td class="headerValue">2025-01-11 20:40:10</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryLo">50.0&nbsp;%</td>
@@ -79,9 +79,9 @@
 <span id="L17"><span class="lineNum">      17</span>              :   namespace impl</span>
 <span id="L18"><span class="lineNum">      18</span>              :   {</span>
 <span id="L19"><span class="lineNum">      19</span>              :     template&lt;class CheckerType, test_mode Mode, class Edge, class Prediction&gt;</span>
-<span id="L20"><span class="lineNum">      20</span> <span class="tlaGNC tlaBgGNC">          90 :     void check_partial([[maybe_unused]] CheckerType flavour, test_logger&lt;Mode&gt;&amp; logger, const Edge&amp; edge, const Prediction&amp; prediction)</span></span>
+<span id="L20"><span class="lineNum">      20</span> <span class="tlaGNC tlaBgGNC">         120 :     void check_partial([[maybe_unused]] CheckerType flavour, test_logger&lt;Mode&gt;&amp; logger, const Edge&amp; edge, const Prediction&amp; prediction)</span></span>
 <span id="L21"><span class="lineNum">      21</span>              :     {</span>
-<span id="L22"><span class="lineNum">      22</span> <span class="tlaGNC">         180 :       check(equality, &quot;Target node incorrect&quot;, logger, edge.target_node(), prediction.target_node());</span></span>
+<span id="L22"><span class="lineNum">      22</span> <span class="tlaGNC">         240 :       check(equality, &quot;Target node incorrect&quot;, logger, edge.target_node(), prediction.target_node());</span></span>
 <span id="L23"><span class="lineNum">      23</span>              : </span>
 <span id="L24"><span class="lineNum">      24</span>              :       if constexpr (!std::is_empty_v&lt;typename Edge::weight_type&gt;)</span>
 <span id="L25"><span class="lineNum">      25</span>              :       {</span>
@@ -92,7 +92,7 @@
 <span id="L30"><span class="lineNum">      30</span>              :       {</span>
 <span id="L31"><span class="lineNum">      31</span>              :         check(flavour, &quot;Meta data incorrect&quot;, logger, edge.meta_data(), prediction.meta_data());</span>
 <span id="L32"><span class="lineNum">      32</span>              :       }</span>
-<span id="L33"><span class="lineNum">      33</span> <span class="tlaGNC">          90 :     }</span></span>
+<span id="L33"><span class="lineNum">      33</span> <span class="tlaGNC">         120 :     }</span></span>
 <span id="L34"><span class="lineNum">      34</span>              : </span>
 <span id="L35"><span class="lineNum">      35</span>              :     template&lt;test_mode Mode, class Edge, class Prediction&gt;</span>
 <span id="L36"><span class="lineNum">      36</span>              :     void check_complementary(test_logger&lt;Mode&gt;&amp; logger, const Edge&amp; edge, const Prediction&amp; prediction)</span>
@@ -109,10 +109,10 @@
 <span id="L47"><span class="lineNum">      47</span>              :     using weight_type = typename type::weight_type;</span>
 <span id="L48"><span class="lineNum">      48</span>              : </span>
 <span id="L49"><span class="lineNum">      49</span>              :     template&lt;class CheckerType, test_mode Mode&gt;</span>
-<span id="L50"><span class="lineNum">      50</span> <span class="tlaGNC">          90 :     static void test(CheckerType flavour, test_logger&lt;Mode&gt;&amp; logger, const type&amp; edge, const type&amp; prediction)</span></span>
+<span id="L50"><span class="lineNum">      50</span> <span class="tlaGNC">         120 :     static void test(CheckerType flavour, test_logger&lt;Mode&gt;&amp; logger, const type&amp; edge, const type&amp; prediction)</span></span>
 <span id="L51"><span class="lineNum">      51</span>              :     {</span>
-<span id="L52"><span class="lineNum">      52</span> <span class="tlaGNC">          90 :       impl::check_partial(flavour, logger, edge, prediction);</span></span>
-<span id="L53"><span class="lineNum">      53</span> <span class="tlaGNC">          90 :     }</span></span>
+<span id="L52"><span class="lineNum">      52</span> <span class="tlaGNC">         120 :       impl::check_partial(flavour, logger, edge, prediction);</span></span>
+<span id="L53"><span class="lineNum">      53</span> <span class="tlaGNC">         120 :     }</span></span>
 <span id="L54"><span class="lineNum">      54</span>              : </span>
 <span id="L55"><span class="lineNum">      55</span>              :     template&lt;test_mode Mode, class OtherHandler&gt;</span>
 <span id="L56"><span class="lineNum">      56</span>              :       requires (object::handler&lt;OtherHandler&gt; &amp;&amp; !std::is_same_v&lt;WeightHandler, OtherHandler&gt;)</span>

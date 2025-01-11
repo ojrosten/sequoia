@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2025-01-11 16:12:34</td>
+            <td class="headerValue">2025-01-11 20:40:10</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -114,21 +114,21 @@
 <span id="L52"><span class="lineNum">      52</span>              : </span>
 <span id="L53"><span class="lineNum">      53</span>              :     constexpr static tree_link_direction link_dir{TreeLinkDir};</span>
 <span id="L54"><span class="lineNum">      54</span>              : </span>
-<span id="L55"><span class="lineNum">      55</span> <span class="tlaGNC tlaBgGNC">         738 :     tree_base() = default;</span></span>
+<span id="L55"><span class="lineNum">      55</span> <span class="tlaGNC tlaBgGNC">         984 :     tree_base() = default;</span></span>
 <span id="L56"><span class="lineNum">      56</span>              : </span>
-<span id="L57"><span class="lineNum">      57</span> <span class="tlaGNC">       13489 :     tree_base(const tree_base&amp;)            = default;</span></span>
+<span id="L57"><span class="lineNum">      57</span> <span class="tlaGNC">       17989 :     tree_base(const tree_base&amp;)            = default;</span></span>
 <span id="L58"><span class="lineNum">      58</span>              :     tree_base&amp; operator=(const tree_base&amp;) = default;</span>
 <span id="L59"><span class="lineNum">      59</span>              : </span>
 <span id="L60"><span class="lineNum">      60</span>              :     // TO DO: think about depth-like vs breadth-like initialization</span>
-<span id="L61"><span class="lineNum">      61</span> <span class="tlaGNC">       13579 :     tree_base(tree_initializer&lt;NodeWeight&gt; tree)</span></span>
-<span id="L62"><span class="lineNum">      62</span> <span class="tlaGNC">       13579 :       : base_type{tree, tree_link_direction_constant&lt;TreeLinkDir&gt;{}}</span></span>
-<span id="L63"><span class="lineNum">      63</span> <span class="tlaGNC">       13579 :     {}</span></span>
+<span id="L61"><span class="lineNum">      61</span> <span class="tlaGNC">       18109 :     tree_base(tree_initializer&lt;NodeWeight&gt; tree)</span></span>
+<span id="L62"><span class="lineNum">      62</span> <span class="tlaGNC">       18109 :       : base_type{tree, tree_link_direction_constant&lt;TreeLinkDir&gt;{}}</span></span>
+<span id="L63"><span class="lineNum">      63</span> <span class="tlaGNC">       18109 :     {}</span></span>
 <span id="L64"><span class="lineNum">      64</span>              : </span>
 <span id="L65"><span class="lineNum">      65</span>              :     template&lt;class... Args&gt;</span>
 <span id="L66"><span class="lineNum">      66</span>              :       requires is_initializable_v&lt;NodeWeight, Args...&gt;</span>
-<span id="L67"><span class="lineNum">      67</span> <span class="tlaGNC">        5598 :     size_type add_node(const size_type parent, Args&amp;&amp;... args)</span></span>
+<span id="L67"><span class="lineNum">      67</span> <span class="tlaGNC">        2824 :     size_type add_node(const size_type parent, Args&amp;&amp;... args)</span></span>
 <span id="L68"><span class="lineNum">      68</span>              :     {</span>
-<span id="L69"><span class="lineNum">      69</span> <span class="tlaGNC">        5598 :       return base_type::add_node_to_tree(tree_link_direction_constant&lt;TreeLinkDir&gt;{}, parent, std::forward&lt;Args&gt;(args)...);</span></span>
+<span id="L69"><span class="lineNum">      69</span> <span class="tlaGNC">        2824 :       return base_type::add_node_to_tree(tree_link_direction_constant&lt;TreeLinkDir&gt;{}, parent, std::forward&lt;Args&gt;(args)...);</span></span>
 <span id="L70"><span class="lineNum">      70</span>              :     }</span>
 <span id="L71"><span class="lineNum">      71</span>              : </span>
 <span id="L72"><span class="lineNum">      72</span>              :     template&lt;class... Args&gt;</span>
@@ -138,10 +138,10 @@
 <span id="L76"><span class="lineNum">      76</span>              :       return base_type::insert_node_to_tree(tree_link_direction_constant&lt;TreeLinkDir&gt;{}, pos, parent, std::forward&lt;Args&gt;(args)...);</span>
 <span id="L77"><span class="lineNum">      77</span>              :     }</span>
 <span id="L78"><span class="lineNum">      78</span>              : </span>
-<span id="L79"><span class="lineNum">      79</span> <span class="tlaGNC">          54 :     void prune(const size_type node)</span></span>
+<span id="L79"><span class="lineNum">      79</span> <span class="tlaGNC">           6 :     void prune(const size_type node)</span></span>
 <span id="L80"><span class="lineNum">      80</span>              :     {</span>
-<span id="L81"><span class="lineNum">      81</span> <span class="tlaGNC">          54 :       prune(node, tree_link_direction_constant&lt;link_dir&gt;{});</span></span>
-<span id="L82"><span class="lineNum">      82</span> <span class="tlaGNC">          54 :     }</span></span>
+<span id="L81"><span class="lineNum">      81</span> <span class="tlaGNC">           6 :       prune(node, tree_link_direction_constant&lt;link_dir&gt;{});</span></span>
+<span id="L82"><span class="lineNum">      82</span> <span class="tlaGNC">           6 :     }</span></span>
 <span id="L83"><span class="lineNum">      83</span>              : </span>
 <span id="L84"><span class="lineNum">      84</span>              :     using base_type::swap_edges;</span>
 <span id="L85"><span class="lineNum">      85</span>              :     using base_type::sort_edges;</span>
@@ -149,21 +149,21 @@
 <span id="L87"><span class="lineNum">      87</span>              :     using base_type::swap_nodes;</span>
 <span id="L88"><span class="lineNum">      88</span>              :     using base_type::sort_nodes;</span>
 <span id="L89"><span class="lineNum">      89</span>              :   protected:</span>
-<span id="L90"><span class="lineNum">      90</span> <span class="tlaGNC">       32349 :     ~tree_base() = default;</span></span>
+<span id="L90"><span class="lineNum">      90</span> <span class="tlaGNC">       42241 :     ~tree_base() = default;</span></span>
 <span id="L91"><span class="lineNum">      91</span>              : </span>
-<span id="L92"><span class="lineNum">      92</span> <span class="tlaGNC">        4543 :     tree_base(tree_base&amp;&amp;) noexcept = default;</span></span>
+<span id="L92"><span class="lineNum">      92</span> <span class="tlaGNC">        6061 :     tree_base(tree_base&amp;&amp;) noexcept = default;</span></span>
 <span id="L93"><span class="lineNum">      93</span>              :     tree_base&amp; operator=(tree_base&amp;&amp;) noexcept = default;</span>
 <span id="L94"><span class="lineNum">      94</span>              :   private:</span>
-<span id="L95"><span class="lineNum">      95</span> <span class="tlaGNC">          54 :     void prune(const size_type node, forward_tree_type ftt)</span></span>
+<span id="L95"><span class="lineNum">      95</span> <span class="tlaGNC">           6 :     void prune(const size_type node, forward_tree_type ftt)</span></span>
 <span id="L96"><span class="lineNum">      96</span>              :     {</span>
-<span id="L97"><span class="lineNum">      97</span> <span class="tlaGNC">          54 :       while(std::ranges::distance(this-&gt;crbegin_edges(node), this-&gt;crend_edges(node)))</span></span>
+<span id="L97"><span class="lineNum">      97</span> <span class="tlaGNC">           6 :       while(std::ranges::distance(this-&gt;crbegin_edges(node), this-&gt;crend_edges(node)))</span></span>
 <span id="L98"><span class="lineNum">      98</span>              :       {</span>
 <span id="L99"><span class="lineNum">      99</span> <span class="tlaUNC tlaBgUNC">           0 :         const auto target{this-&gt;crbegin_edges(node)-&gt;target_node()};</span></span>
 <span id="L100"><span class="lineNum">     100</span> <span class="tlaUNC">           0 :         prune(target, ftt);</span></span>
 <span id="L101"><span class="lineNum">     101</span>              :       }</span>
 <span id="L102"><span class="lineNum">     102</span>              : </span>
-<span id="L103"><span class="lineNum">     103</span> <span class="tlaGNC tlaBgGNC">          54 :       this-&gt;erase_node(node);</span></span>
-<span id="L104"><span class="lineNum">     104</span> <span class="tlaGNC">          54 :     }</span></span>
+<span id="L103"><span class="lineNum">     103</span> <span class="tlaGNC tlaBgGNC">           6 :       this-&gt;erase_node(node);</span></span>
+<span id="L104"><span class="lineNum">     104</span> <span class="tlaGNC">           6 :     }</span></span>
 <span id="L105"><span class="lineNum">     105</span>              : </span>
 <span id="L106"><span class="lineNum">     106</span>              :     void prune(const size_type node, symmetric_tree_type stt)</span>
 <span id="L107"><span class="lineNum">     107</span>              :     {</span>
@@ -290,46 +290,46 @@
 <span id="L228"><span class="lineNum">     228</span>              : </span>
 <span id="L229"><span class="lineNum">     229</span>              :     using size_type = typename Tree::size_type;</span>
 <span id="L230"><span class="lineNum">     230</span>              : </span>
-<span id="L231"><span class="lineNum">     231</span> <span class="tlaGNC">        6181 :     basic_tree_adaptor() = default;</span></span>
+<span id="L231"><span class="lineNum">     231</span> <span class="tlaGNC">        8245 :     basic_tree_adaptor() = default;</span></span>
 <span id="L232"><span class="lineNum">     232</span>              : </span>
-<span id="L233"><span class="lineNum">     233</span> <span class="tlaGNC">       42294 :     basic_tree_adaptor(Tree&amp; tree, size_type node)</span></span>
-<span id="L234"><span class="lineNum">     234</span> <span class="tlaGNC">       42294 :       : m_pTree{&amp;tree}</span></span>
-<span id="L235"><span class="lineNum">     235</span> <span class="tlaGNC">       42294 :       , m_Node{node}</span></span>
-<span id="L236"><span class="lineNum">     236</span> <span class="tlaGNC">       42294 :     {};</span></span>
+<span id="L233"><span class="lineNum">     233</span> <span class="tlaGNC">       56436 :     basic_tree_adaptor(Tree&amp; tree, size_type node)</span></span>
+<span id="L234"><span class="lineNum">     234</span> <span class="tlaGNC">       56436 :       : m_pTree{&amp;tree}</span></span>
+<span id="L235"><span class="lineNum">     235</span> <span class="tlaGNC">       56436 :       , m_Node{node}</span></span>
+<span id="L236"><span class="lineNum">     236</span> <span class="tlaGNC">       56436 :     {};</span></span>
 <span id="L237"><span class="lineNum">     237</span>              : </span>
 <span id="L238"><span class="lineNum">     238</span>              :     [[nodiscard]]</span>
-<span id="L239"><span class="lineNum">     239</span> <span class="tlaGNC">        3726 :     Tree&amp; tree()</span></span>
+<span id="L239"><span class="lineNum">     239</span> <span class="tlaGNC">        4968 :     Tree&amp; tree()</span></span>
 <span id="L240"><span class="lineNum">     240</span>              :       requires (!std::is_const_v&lt;Tree&gt;)</span>
 <span id="L241"><span class="lineNum">     241</span>              :     {</span>
-<span id="L242"><span class="lineNum">     242</span> <span class="tlaGNC">        3726 :       if(!m_pTree) throw std::logic_error{&quot;Tree not found&quot;};</span></span>
+<span id="L242"><span class="lineNum">     242</span> <span class="tlaGNC">        4968 :       if(!m_pTree) throw std::logic_error{&quot;Tree not found&quot;};</span></span>
 <span id="L243"><span class="lineNum">     243</span>              : </span>
-<span id="L244"><span class="lineNum">     244</span> <span class="tlaGNC">        3726 :       return *m_pTree;</span></span>
+<span id="L244"><span class="lineNum">     244</span> <span class="tlaGNC">        4968 :       return *m_pTree;</span></span>
 <span id="L245"><span class="lineNum">     245</span>              :     }</span>
 <span id="L246"><span class="lineNum">     246</span>              : </span>
 <span id="L247"><span class="lineNum">     247</span>              :     [[nodiscard]]</span>
-<span id="L248"><span class="lineNum">     248</span> <span class="tlaGNC">      113645 :     const Tree&amp; tree() const</span></span>
+<span id="L248"><span class="lineNum">     248</span> <span class="tlaGNC">      151631 :     const Tree&amp; tree() const</span></span>
 <span id="L249"><span class="lineNum">     249</span>              :     {</span>
-<span id="L250"><span class="lineNum">     250</span> <span class="tlaGNC">      113645 :       if(!m_pTree) throw std::logic_error{&quot;Tree not found&quot;};</span></span>
+<span id="L250"><span class="lineNum">     250</span> <span class="tlaGNC">      151631 :       if(!m_pTree) throw std::logic_error{&quot;Tree not found&quot;};</span></span>
 <span id="L251"><span class="lineNum">     251</span>              : </span>
-<span id="L252"><span class="lineNum">     252</span> <span class="tlaGNC">      113645 :       return *m_pTree;</span></span>
+<span id="L252"><span class="lineNum">     252</span> <span class="tlaGNC">      151631 :       return *m_pTree;</span></span>
 <span id="L253"><span class="lineNum">     253</span>              :     }</span>
 <span id="L254"><span class="lineNum">     254</span>              : </span>
 <span id="L255"><span class="lineNum">     255</span>              :     [[nodiscard]]</span>
-<span id="L256"><span class="lineNum">     256</span> <span class="tlaGNC">      102034 :     size_type node() const noexcept</span></span>
+<span id="L256"><span class="lineNum">     256</span> <span class="tlaGNC">      136138 :     size_type node() const noexcept</span></span>
 <span id="L257"><span class="lineNum">     257</span>              :     {</span>
-<span id="L258"><span class="lineNum">     258</span> <span class="tlaGNC">      102034 :       return m_Node;</span></span>
+<span id="L258"><span class="lineNum">     258</span> <span class="tlaGNC">      136138 :       return m_Node;</span></span>
 <span id="L259"><span class="lineNum">     259</span>              :     }</span>
 <span id="L260"><span class="lineNum">     260</span>              : </span>
 <span id="L261"><span class="lineNum">     261</span>              :     [[nodiscard]]</span>
-<span id="L262"><span class="lineNum">     262</span> <span class="tlaGNC">       34059 :     bool empty() const noexcept</span></span>
+<span id="L262"><span class="lineNum">     262</span> <span class="tlaGNC">       45423 :     bool empty() const noexcept</span></span>
 <span id="L263"><span class="lineNum">     263</span>              :     {</span>
-<span id="L264"><span class="lineNum">     264</span> <span class="tlaGNC">       34059 :       return m_pTree == nullptr;</span></span>
+<span id="L264"><span class="lineNum">     264</span> <span class="tlaGNC">       45423 :       return m_pTree == nullptr;</span></span>
 <span id="L265"><span class="lineNum">     265</span>              :     }</span>
 <span id="L266"><span class="lineNum">     266</span>              : </span>
 <span id="L267"><span class="lineNum">     267</span>              :     [[nodiscard]]</span>
-<span id="L268"><span class="lineNum">     268</span> <span class="tlaGNC">       34059 :     explicit operator bool() const noexcept</span></span>
+<span id="L268"><span class="lineNum">     268</span> <span class="tlaGNC">       45423 :     explicit operator bool() const noexcept</span></span>
 <span id="L269"><span class="lineNum">     269</span>              :     {</span>
-<span id="L270"><span class="lineNum">     270</span> <span class="tlaGNC">       34059 :       return !empty() &amp;&amp; (m_Node &lt; m_pTree-&gt;order());</span></span>
+<span id="L270"><span class="lineNum">     270</span> <span class="tlaGNC">       45423 :       return !empty() &amp;&amp; (m_Node &lt; m_pTree-&gt;order());</span></span>
 <span id="L271"><span class="lineNum">     271</span>              :     }</span>
 <span id="L272"><span class="lineNum">     272</span>              : </span>
 <span id="L273"><span class="lineNum">     273</span>              :     [[nodiscard]]</span>
@@ -347,23 +347,23 @@
 <span id="L285"><span class="lineNum">     285</span>              : </span>
 <span id="L286"><span class="lineNum">     286</span>              :   template&lt;dynamic_tree T&gt;</span>
 <span id="L287"><span class="lineNum">     287</span>              :   [[nodiscard]]</span>
-<span id="L288"><span class="lineNum">     288</span> <span class="tlaGNC">        3726 :   auto root_weight_iter(const basic_tree_adaptor&lt;T&gt;&amp; adaptor)</span></span>
+<span id="L288"><span class="lineNum">     288</span> <span class="tlaGNC">        4968 :   auto root_weight_iter(const basic_tree_adaptor&lt;T&gt;&amp; adaptor)</span></span>
 <span id="L289"><span class="lineNum">     289</span>              :   {</span>
-<span id="L290"><span class="lineNum">     290</span> <span class="tlaGNC">        3726 :     return adaptor.tree().cbegin_node_weights() + adaptor.node();</span></span>
+<span id="L290"><span class="lineNum">     290</span> <span class="tlaGNC">        4968 :     return adaptor.tree().cbegin_node_weights() + adaptor.node();</span></span>
 <span id="L291"><span class="lineNum">     291</span>              :   }</span>
 <span id="L292"><span class="lineNum">     292</span>              : </span>
 <span id="L293"><span class="lineNum">     293</span>              :   template&lt;dynamic_tree T&gt;</span>
 <span id="L294"><span class="lineNum">     294</span>              :   [[nodiscard]]</span>
-<span id="L295"><span class="lineNum">     295</span> <span class="tlaGNC">       91854 :   const auto&amp; root_weight(const basic_tree_adaptor&lt;T&gt;&amp; adaptor)</span></span>
+<span id="L295"><span class="lineNum">     295</span> <span class="tlaGNC">      122562 :   const auto&amp; root_weight(const basic_tree_adaptor&lt;T&gt;&amp; adaptor)</span></span>
 <span id="L296"><span class="lineNum">     296</span>              :   {</span>
-<span id="L297"><span class="lineNum">     297</span> <span class="tlaGNC">       91854 :     return adaptor.tree().cbegin_node_weights()[adaptor.node()];</span></span>
+<span id="L297"><span class="lineNum">     297</span> <span class="tlaGNC">      122562 :     return adaptor.tree().cbegin_node_weights()[adaptor.node()];</span></span>
 <span id="L298"><span class="lineNum">     298</span>              :   }</span>
 <span id="L299"><span class="lineNum">     299</span>              : </span>
 <span id="L300"><span class="lineNum">     300</span>              :   template&lt;dynamic_tree T, std::invocable&lt;typename T::node_weight_type&amp;&gt; Fn&gt;</span>
-<span id="L301"><span class="lineNum">     301</span> <span class="tlaGNC">        3726 :   void mutate_root_weight(basic_tree_adaptor&lt;T&gt;&amp; adaptor, Fn fn)</span></span>
+<span id="L301"><span class="lineNum">     301</span> <span class="tlaGNC">        4968 :   void mutate_root_weight(basic_tree_adaptor&lt;T&gt;&amp; adaptor, Fn fn)</span></span>
 <span id="L302"><span class="lineNum">     302</span>              :   {</span>
-<span id="L303"><span class="lineNum">     303</span> <span class="tlaGNC">        3726 :     adaptor.tree().mutate_node_weight(root_weight_iter(adaptor), fn);</span></span>
-<span id="L304"><span class="lineNum">     304</span> <span class="tlaGNC">        3726 :   }</span></span>
+<span id="L303"><span class="lineNum">     303</span> <span class="tlaGNC">        4968 :     adaptor.tree().mutate_node_weight(root_weight_iter(adaptor), fn);</span></span>
+<span id="L304"><span class="lineNum">     304</span> <span class="tlaGNC">        4968 :   }</span></span>
 <span id="L305"><span class="lineNum">     305</span>              : </span>
 <span id="L306"><span class="lineNum">     306</span>              :   template&lt;std::input_or_output_iterator Iterator, class TreeAdaptor&gt;</span>
 <span id="L307"><span class="lineNum">     307</span>              :   class forest_from_tree_dereference_policy</span>
@@ -375,13 +375,13 @@
 <span id="L313"><span class="lineNum">     313</span>              :     using tree_reference_type = typename TreeAdaptor::value_type&amp;;</span>
 <span id="L314"><span class="lineNum">     314</span>              : </span>
 <span id="L315"><span class="lineNum">     315</span>              :     constexpr forest_from_tree_dereference_policy() = default;</span>
-<span id="L316"><span class="lineNum">     316</span> <span class="tlaGNC">        8942 :     constexpr forest_from_tree_dereference_policy(tree_reference_type tree) : m_pTree{&amp;tree} {}</span></span>
+<span id="L316"><span class="lineNum">     316</span> <span class="tlaGNC">       11930 :     constexpr forest_from_tree_dereference_policy(tree_reference_type tree) : m_pTree{&amp;tree} {}</span></span>
 <span id="L317"><span class="lineNum">     317</span>              :     constexpr forest_from_tree_dereference_policy(const forest_from_tree_dereference_policy&amp;) = default;</span>
 <span id="L318"><span class="lineNum">     318</span>              : </span>
 <span id="L319"><span class="lineNum">     319</span>              :     [[nodiscard]]</span>
-<span id="L320"><span class="lineNum">     320</span> <span class="tlaGNC">       23147 :     constexpr proxy get(Iterator i) const</span></span>
+<span id="L320"><span class="lineNum">     320</span> <span class="tlaGNC">       30863 :     constexpr proxy get(Iterator i) const</span></span>
 <span id="L321"><span class="lineNum">     321</span>              :     {</span>
-<span id="L322"><span class="lineNum">     322</span> <span class="tlaGNC">       23147 :       return {*m_pTree, i-&gt;target_node()};</span></span>
+<span id="L322"><span class="lineNum">     322</span> <span class="tlaGNC">       30863 :       return {*m_pTree, i-&gt;target_node()};</span></span>
 <span id="L323"><span class="lineNum">     323</span>              :     }</span>
 <span id="L324"><span class="lineNum">     324</span>              : </span>
 <span id="L325"><span class="lineNum">     325</span>              :     [[nodiscard]]</span>
@@ -415,9 +415,9 @@
 <span id="L353"><span class="lineNum">     353</span>              :     constexpr forest_dereference_policy(const forest_dereference_policy&amp;) = default;</span>
 <span id="L354"><span class="lineNum">     354</span>              : </span>
 <span id="L355"><span class="lineNum">     355</span>              :     [[nodiscard]]</span>
-<span id="L356"><span class="lineNum">     356</span> <span class="tlaGNC">       14603 :     constexpr static proxy get(Iterator i)</span></span>
+<span id="L356"><span class="lineNum">     356</span> <span class="tlaGNC">       19511 :     constexpr static proxy get(Iterator i)</span></span>
 <span id="L357"><span class="lineNum">     357</span>              :     {</span>
-<span id="L358"><span class="lineNum">     358</span> <span class="tlaGNC">       14603 :       return {*i, 0};</span></span>
+<span id="L358"><span class="lineNum">     358</span> <span class="tlaGNC">       19511 :       return {*i, 0};</span></span>
 <span id="L359"><span class="lineNum">     359</span>              :     }</span>
 <span id="L360"><span class="lineNum">     360</span>              : </span>
 <span id="L361"><span class="lineNum">     361</span>              :     [[nodiscard]]</span>

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2025-01-11 16:12:34</td>
+            <td class="headerValue">2025-01-11 20:40:10</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -110,7 +110,7 @@
 <span id="L48"><span class="lineNum">      48</span>              :    */</span>
 <span id="L49"><span class="lineNum">      49</span>              :   template&lt;test_mode Mode, moveonly T, class U&gt;</span>
 <span id="L50"><span class="lineNum">      50</span>              :     requires checkable_for_move_semantics&lt;Mode, T, U&gt;</span>
-<span id="L51"><span class="lineNum">      51</span> <span class="tlaGNC tlaBgGNC">         648 :   bool check_semantics(std::string description,</span></span>
+<span id="L51"><span class="lineNum">      51</span> <span class="tlaGNC tlaBgGNC">         864 :   bool check_semantics(std::string description,</span></span>
 <span id="L52"><span class="lineNum">      52</span>              :                        test_logger&lt;Mode&gt;&amp; logger,</span>
 <span id="L53"><span class="lineNum">      53</span>              :                        T&amp;&amp; x,</span>
 <span id="L54"><span class="lineNum">      54</span>              :                        T&amp;&amp; y,</span>
@@ -119,9 +119,9 @@
 <span id="L57"><span class="lineNum">      57</span>              :                        optional_ref&lt;const U&gt; movedFromPostConstruction,</span>
 <span id="L58"><span class="lineNum">      58</span>              :                        optional_ref&lt;const U&gt; movedFromPostAssignment)</span>
 <span id="L59"><span class="lineNum">      59</span>              :   {</span>
-<span id="L60"><span class="lineNum">      60</span> <span class="tlaGNC">         648 :     sentinel&lt;Mode&gt; sentry{logger, add_type_info&lt;T&gt;(std::move(description)).append(&quot;\n&quot;)};</span></span>
+<span id="L60"><span class="lineNum">      60</span> <span class="tlaGNC">         864 :     sentinel&lt;Mode&gt; sentry{logger, add_type_info&lt;T&gt;(std::move(description)).append(&quot;\n&quot;)};</span></span>
 <span id="L61"><span class="lineNum">      61</span>              : </span>
-<span id="L62"><span class="lineNum">      62</span> <span class="tlaGNC">         648 :     return impl::check_semantics(</span></span>
+<span id="L62"><span class="lineNum">      62</span> <span class="tlaGNC">         864 :     return impl::check_semantics(</span></span>
 <span id="L63"><span class="lineNum">      63</span>              :              logger,</span>
 <span id="L64"><span class="lineNum">      64</span>              :              impl::auxiliary_data&lt;T&gt;{},</span>
 <span id="L65"><span class="lineNum">      65</span>              :              std::forward&lt;T&gt;(x),</span>
@@ -131,8 +131,8 @@
 <span id="L69"><span class="lineNum">      69</span>              :              movedFromPostConstruction,</span>
 <span id="L70"><span class="lineNum">      70</span>              :              movedFromPostAssignment,</span>
 <span id="L71"><span class="lineNum">      71</span>              :              impl::null_mutator{}</span>
-<span id="L72"><span class="lineNum">      72</span> <span class="tlaGNC">        1296 :            );</span></span>
-<span id="L73"><span class="lineNum">      73</span> <span class="tlaGNC">         648 :   }</span></span>
+<span id="L72"><span class="lineNum">      72</span> <span class="tlaGNC">        1728 :            );</span></span>
+<span id="L73"><span class="lineNum">      73</span> <span class="tlaGNC">         864 :   }</span></span>
 <span id="L74"><span class="lineNum">      74</span>              :   </span>
 <span id="L75"><span class="lineNum">      75</span>              :   /*! Prerequisites:</span>
 <span id="L76"><span class="lineNum">      76</span>              : </span>
@@ -142,7 +142,7 @@
 <span id="L80"><span class="lineNum">      80</span>              :    */</span>
 <span id="L81"><span class="lineNum">      81</span>              :   template&lt;test_mode Mode, moveonly T, class U&gt;</span>
 <span id="L82"><span class="lineNum">      82</span>              :     requires checkable_for_move_semantics&lt;Mode, T, U&gt; &amp;&amp; std::totally_ordered&lt;T&gt;</span>
-<span id="L83"><span class="lineNum">      83</span> <span class="tlaGNC">         612 :   bool check_semantics(std::string description,</span></span>
+<span id="L83"><span class="lineNum">      83</span> <span class="tlaGNC">         816 :   bool check_semantics(std::string description,</span></span>
 <span id="L84"><span class="lineNum">      84</span>              :                        test_logger&lt;Mode&gt;&amp; logger,</span>
 <span id="L85"><span class="lineNum">      85</span>              :                        T&amp;&amp; x,</span>
 <span id="L86"><span class="lineNum">      86</span>              :                        T&amp;&amp; y,</span>
@@ -152,9 +152,9 @@
 <span id="L90"><span class="lineNum">      90</span>              :                        optional_ref&lt;const U&gt; movedFromPostAssignment,</span>
 <span id="L91"><span class="lineNum">      91</span>              :                        std::weak_ordering order)</span>
 <span id="L92"><span class="lineNum">      92</span>              :   {</span>
-<span id="L93"><span class="lineNum">      93</span> <span class="tlaGNC">         612 :     sentinel&lt;Mode&gt; sentry{logger, add_type_info&lt;T&gt;(std::move(description)).append(&quot;\n&quot;)};</span></span>
+<span id="L93"><span class="lineNum">      93</span> <span class="tlaGNC">         816 :     sentinel&lt;Mode&gt; sentry{logger, add_type_info&lt;T&gt;(std::move(description)).append(&quot;\n&quot;)};</span></span>
 <span id="L94"><span class="lineNum">      94</span>              : </span>
-<span id="L95"><span class="lineNum">      95</span> <span class="tlaGNC">         612 :     return impl::check_semantics(</span></span>
+<span id="L95"><span class="lineNum">      95</span> <span class="tlaGNC">         816 :     return impl::check_semantics(</span></span>
 <span id="L96"><span class="lineNum">      96</span>              :              logger,</span>
 <span id="L97"><span class="lineNum">      97</span>              :              impl::auxiliary_data&lt;T&gt;{order},</span>
 <span id="L98"><span class="lineNum">      98</span>              :              std::forward&lt;T&gt;(x),</span>
@@ -164,8 +164,8 @@
 <span id="L102"><span class="lineNum">     102</span>              :              movedFromPostConstruction,</span>
 <span id="L103"><span class="lineNum">     103</span>              :              movedFromPostAssignment,</span>
 <span id="L104"><span class="lineNum">     104</span>              :              impl::null_mutator{}</span>
-<span id="L105"><span class="lineNum">     105</span> <span class="tlaGNC">        1224 :            );</span></span>
-<span id="L106"><span class="lineNum">     106</span> <span class="tlaGNC">         612 :   }</span></span>
+<span id="L105"><span class="lineNum">     105</span> <span class="tlaGNC">        1632 :            );</span></span>
+<span id="L106"><span class="lineNum">     106</span> <span class="tlaGNC">         816 :   }</span></span>
 <span id="L107"><span class="lineNum">     107</span>              : }</span>
         </pre>
               </td>

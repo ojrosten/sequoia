@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2025-01-11 16:12:34</td>
+            <td class="headerValue">2025-01-11 20:40:10</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryLo">49.8&nbsp;%</td>
@@ -190,23 +190,23 @@
 <span id="L128"><span class="lineNum">     128</span>              :   public:</span>
 <span id="L129"><span class="lineNum">     129</span>              :     using sequoia_advisor_type = Advisor;</span>
 <span id="L130"><span class="lineNum">     130</span>              : </span>
-<span id="L131"><span class="lineNum">     131</span> <span class="tlaGNC tlaBgGNC">      699210 :     tutor(Advisor a, std::string prefix=&quot;Advice: &quot;)</span></span>
-<span id="L132"><span class="lineNum">     132</span> <span class="tlaGNC">      233067 :       : m_Advisor{std::move(a)}</span></span>
-<span id="L133"><span class="lineNum">     133</span> <span class="tlaGNC">      233129 :       , m_Prefix{std::move(prefix)}</span></span>
-<span id="L134"><span class="lineNum">     134</span> <span class="tlaGNC">      233042 :     {}</span></span>
+<span id="L131"><span class="lineNum">     131</span> <span class="tlaGNC tlaBgGNC">      932280 :     tutor(Advisor a, std::string prefix=&quot;Advice: &quot;)</span></span>
+<span id="L132"><span class="lineNum">     132</span> <span class="tlaGNC">      310845 :       : m_Advisor{std::move(a)}</span></span>
+<span id="L133"><span class="lineNum">     133</span> <span class="tlaGNC">      310907 :       , m_Prefix{std::move(prefix)}</span></span>
+<span id="L134"><span class="lineNum">     134</span> <span class="tlaGNC">      310820 :     {}</span></span>
 <span id="L135"><span class="lineNum">     135</span>              : </span>
 <span id="L136"><span class="lineNum">     136</span>              :     template&lt;class T&gt;</span>
 <span id="L137"><span class="lineNum">     137</span>              :       requires use_advisor_v&lt;Advisor, T&gt;</span>
 <span id="L138"><span class="lineNum">     138</span>              :     [[nodiscard]]</span>
-<span id="L139"><span class="lineNum">     139</span> <span class="tlaGNC">       11123 :     std::string operator()(const T&amp; value, const T&amp; prediction) const</span></span>
+<span id="L139"><span class="lineNum">     139</span> <span class="tlaGNC">       14831 :     std::string operator()(const T&amp; value, const T&amp; prediction) const</span></span>
 <span id="L140"><span class="lineNum">     140</span>              :     {</span>
-<span id="L141"><span class="lineNum">     141</span> <span class="tlaGNC">       11897 :       return m_Advisor(value, prediction);</span></span>
+<span id="L141"><span class="lineNum">     141</span> <span class="tlaGNC">       15863 :       return m_Advisor(value, prediction);</span></span>
 <span id="L142"><span class="lineNum">     142</span>              :     }</span>
 <span id="L143"><span class="lineNum">     143</span>              : </span>
 <span id="L144"><span class="lineNum">     144</span>              :     [[nodiscard]]</span>
-<span id="L145"><span class="lineNum">     145</span> <span class="tlaGNC">       11124 :     const std::string&amp; prefix() const noexcept</span></span>
+<span id="L145"><span class="lineNum">     145</span> <span class="tlaGNC">       14832 :     const std::string&amp; prefix() const noexcept</span></span>
 <span id="L146"><span class="lineNum">     146</span>              :     {</span>
-<span id="L147"><span class="lineNum">     147</span> <span class="tlaGNC">       11124 :       return m_Prefix;</span></span>
+<span id="L147"><span class="lineNum">     147</span> <span class="tlaGNC">       14832 :       return m_Prefix;</span></span>
 <span id="L148"><span class="lineNum">     148</span>              :     }</span>
 <span id="L149"><span class="lineNum">     149</span>              :   private:</span>
 <span id="L150"><span class="lineNum">     150</span>              :     Advisor m_Advisor;</span>
@@ -244,16 +244,16 @@
 <span id="L182"><span class="lineNum">     182</span>              :   {</span>
 <span id="L183"><span class="lineNum">     183</span>              :   public:</span>
 <span id="L184"><span class="lineNum">     184</span>              :     template&lt;class Advisor, class T&gt;</span>
-<span id="L185"><span class="lineNum">     185</span> <span class="tlaGNC">       11673 :     advice_data(const tutor&lt;Advisor&gt;&amp;, const T&amp;, const T&amp;)</span></span>
-<span id="L186"><span class="lineNum">     186</span> <span class="tlaGNC">       11673 :     {}</span></span>
+<span id="L185"><span class="lineNum">     185</span> <span class="tlaGNC">       15615 :     advice_data(const tutor&lt;Advisor&gt;&amp;, const T&amp;, const T&amp;)</span></span>
+<span id="L186"><span class="lineNum">     186</span> <span class="tlaGNC">       15615 :     {}</span></span>
 <span id="L187"><span class="lineNum">     187</span>              : </span>
 <span id="L188"><span class="lineNum">     188</span>              :     template&lt;class Advisor, class T&gt;</span>
 <span id="L189"><span class="lineNum">     189</span>              :       requires std::is_invocable_r_v&lt;std::string, tutor&lt;Advisor&gt;, T, T&gt;</span>
-<span id="L190"><span class="lineNum">     190</span> <span class="tlaGNC">       11124 :     advice_data(const tutor&lt;Advisor&gt;&amp; advisor, const T&amp; value, const T&amp; prediction)</span></span>
-<span id="L191"><span class="lineNum">     191</span> <span class="tlaGNC">       11124 :     {</span></span>
-<span id="L192"><span class="lineNum">     192</span> <span class="tlaGNC">       11123 :         m_Advice = advisor(value, prediction);</span></span>
-<span id="L193"><span class="lineNum">     193</span> <span class="tlaGNC">       11124 :         m_Prefix = advisor.prefix();</span></span>
-<span id="L194"><span class="lineNum">     194</span> <span class="tlaGNC">       11124 :     }</span></span>
+<span id="L190"><span class="lineNum">     190</span> <span class="tlaGNC">       14832 :     advice_data(const tutor&lt;Advisor&gt;&amp; advisor, const T&amp; value, const T&amp; prediction)</span></span>
+<span id="L191"><span class="lineNum">     191</span> <span class="tlaGNC">       14832 :     {</span></span>
+<span id="L192"><span class="lineNum">     192</span> <span class="tlaGNC">       14831 :         m_Advice = advisor(value, prediction);</span></span>
+<span id="L193"><span class="lineNum">     193</span> <span class="tlaGNC">       14832 :         m_Prefix = advisor.prefix();</span></span>
+<span id="L194"><span class="lineNum">     194</span> <span class="tlaGNC">       14832 :     }</span></span>
 <span id="L195"><span class="lineNum">     195</span>              : </span>
 <span id="L196"><span class="lineNum">     196</span>              :     std::string&amp; append_to(std::string&amp; message) const;</span>
 <span id="L197"><span class="lineNum">     197</span>              :   private:</span>

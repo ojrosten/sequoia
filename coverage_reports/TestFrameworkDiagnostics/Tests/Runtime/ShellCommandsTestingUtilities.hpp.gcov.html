@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2025-01-11 16:12:34</td>
+            <td class="headerValue">2025-01-11 20:40:10</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -81,16 +81,16 @@
 <span id="L19"><span class="lineNum">      19</span>              :     using type = runtime::shell_command;</span>
 <span id="L20"><span class="lineNum">      20</span>              : </span>
 <span id="L21"><span class="lineNum">      21</span>              :     template&lt;test_mode Mode&gt;</span>
-<span id="L22"><span class="lineNum">      22</span> <span class="tlaGNC tlaBgGNC">         180 :     static void test(equality_check_t, test_logger&lt;Mode&gt;&amp; logger, const type&amp; actual, const type&amp; prediction)</span></span>
+<span id="L22"><span class="lineNum">      22</span> <span class="tlaGNC tlaBgGNC">         240 :     static void test(equality_check_t, test_logger&lt;Mode&gt;&amp; logger, const type&amp; actual, const type&amp; prediction)</span></span>
 <span id="L23"><span class="lineNum">      23</span>              :     {</span>
-<span id="L24"><span class="lineNum">      24</span> <span class="tlaGNC">         360 :       check(equality, &quot;Description&quot;, logger, actual.string(), prediction.string());</span></span>
-<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">         180 :     }</span></span>
+<span id="L24"><span class="lineNum">      24</span> <span class="tlaGNC">         480 :       check(equality, &quot;Description&quot;, logger, actual.string(), prediction.string());</span></span>
+<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">         240 :     }</span></span>
 <span id="L26"><span class="lineNum">      26</span>              :     </span>
 <span id="L27"><span class="lineNum">      27</span>              :     template&lt;test_mode Mode&gt;</span>
-<span id="L28"><span class="lineNum">      28</span> <span class="tlaGNC">         126 :     static void test(equivalence_check_t, test_logger&lt;Mode&gt;&amp; logger, const type&amp; actual, const std::string&amp; prediction)</span></span>
+<span id="L28"><span class="lineNum">      28</span> <span class="tlaGNC">         168 :     static void test(equivalence_check_t, test_logger&lt;Mode&gt;&amp; logger, const type&amp; actual, const std::string&amp; prediction)</span></span>
 <span id="L29"><span class="lineNum">      29</span>              :     {</span>
-<span id="L30"><span class="lineNum">      30</span> <span class="tlaGNC">         252 :       check(equality, &quot;Wrapped command&quot;, logger, actual.string(), prediction);</span></span>
-<span id="L31"><span class="lineNum">      31</span> <span class="tlaGNC">         126 :     }</span></span>
+<span id="L30"><span class="lineNum">      30</span> <span class="tlaGNC">         336 :       check(equality, &quot;Wrapped command&quot;, logger, actual.string(), prediction);</span></span>
+<span id="L31"><span class="lineNum">      31</span> <span class="tlaGNC">         168 :     }</span></span>
 <span id="L32"><span class="lineNum">      32</span>              :   };</span>
 <span id="L33"><span class="lineNum">      33</span>              : }</span>
         </pre>

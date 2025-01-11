@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2025-01-11 16:12:34</td>
+            <td class="headerValue">2025-01-11 20:40:10</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">91.6&nbsp;%</td>
@@ -104,9 +104,9 @@
 <span id="L42"><span class="lineNum">      42</span>              : </span>
 <span id="L43"><span class="lineNum">      43</span>              :   template&lt;auto To, auto From&gt;</span>
 <span id="L44"><span class="lineNum">      44</span>              :   [[nodiscard]]</span>
-<span id="L45"><span class="lineNum">      45</span> <span class="tlaGNC tlaBgGNC">       35279 :   constexpr alloc_prediction&lt;To&gt; convert(alloc_prediction&lt;From&gt; p) noexcept</span></span>
+<span id="L45"><span class="lineNum">      45</span> <span class="tlaGNC tlaBgGNC">       47039 :   constexpr alloc_prediction&lt;To&gt; convert(alloc_prediction&lt;From&gt; p) noexcept</span></span>
 <span id="L46"><span class="lineNum">      46</span>              :   {</span>
-<span id="L47"><span class="lineNum">      47</span> <span class="tlaGNC">       35279 :     return {p.unshifted(), p.value() - p.unshifted()};</span></span>
+<span id="L47"><span class="lineNum">      47</span> <span class="tlaGNC">       47039 :     return {p.unshifted(), p.value() - p.unshifted()};</span></span>
 <span id="L48"><span class="lineNum">      48</span>              :   }</span>
 <span id="L49"><span class="lineNum">      49</span>              : </span>
 <span id="L50"><span class="lineNum">      50</span>              :   using initialization_prediction      = alloc_prediction&lt;construction_allocation_event::initialization&gt;;</span>
@@ -183,9 +183,9 @@
 <span id="L121"><span class="lineNum">     121</span>              :     constexpr explicit corrections(std::size_t n) : m_Num{n} {}</span>
 <span id="L122"><span class="lineNum">     122</span>              : </span>
 <span id="L123"><span class="lineNum">     123</span>              :     [[nodiscard]]</span>
-<span id="L124"><span class="lineNum">     124</span> <span class="tlaGNC">      235711 :     constexpr int value() const noexcept</span></span>
+<span id="L124"><span class="lineNum">     124</span> <span class="tlaGNC">      314287 :     constexpr int value() const noexcept</span></span>
 <span id="L125"><span class="lineNum">     125</span>              :     {</span>
-<span id="L126"><span class="lineNum">     126</span> <span class="tlaGNC">      235711 :       return static_cast&lt;int&gt;(m_Num);</span></span>
+<span id="L126"><span class="lineNum">     126</span> <span class="tlaGNC">      314287 :       return static_cast&lt;int&gt;(m_Num);</span></span>
 <span id="L127"><span class="lineNum">     127</span>              :     }</span>
 <span id="L128"><span class="lineNum">     128</span>              : </span>
 <span id="L129"><span class="lineNum">     129</span>              :     [[nodiscard]]</span>
@@ -212,11 +212,11 @@
 <span id="L150"><span class="lineNum">     150</span>              : </span>
 <span id="L151"><span class="lineNum">     151</span>              :   struct container_counts</span>
 <span id="L152"><span class="lineNum">     152</span>              :   {</span>
-<span id="L153"><span class="lineNum">     153</span> <span class="tlaGNC">       21168 :     constexpr container_counts(number_of_containers x, number_of_containers y, post_mutation_correction postMutation) noexcept</span></span>
-<span id="L154"><span class="lineNum">     154</span> <span class="tlaGNC">       21168 :       : num_x{x}</span></span>
-<span id="L155"><span class="lineNum">     155</span> <span class="tlaGNC">       21168 :       , num_y{y}</span></span>
-<span id="L156"><span class="lineNum">     156</span> <span class="tlaGNC">       21168 :       , mutation_correction{postMutation}</span></span>
-<span id="L157"><span class="lineNum">     157</span> <span class="tlaGNC">       21168 :     {}</span></span>
+<span id="L153"><span class="lineNum">     153</span> <span class="tlaGNC">       28224 :     constexpr container_counts(number_of_containers x, number_of_containers y, post_mutation_correction postMutation) noexcept</span></span>
+<span id="L154"><span class="lineNum">     154</span> <span class="tlaGNC">       28224 :       : num_x{x}</span></span>
+<span id="L155"><span class="lineNum">     155</span> <span class="tlaGNC">       28224 :       , num_y{y}</span></span>
+<span id="L156"><span class="lineNum">     156</span> <span class="tlaGNC">       28224 :       , mutation_correction{postMutation}</span></span>
+<span id="L157"><span class="lineNum">     157</span> <span class="tlaGNC">       28224 :     {}</span></span>
 <span id="L158"><span class="lineNum">     158</span>              : </span>
 <span id="L159"><span class="lineNum">     159</span>              :     number_of_containers num_x, num_y;</span>
 <span id="L160"><span class="lineNum">     160</span>              :     post_mutation_correction mutation_correction;</span>
@@ -244,7 +244,7 @@
 <span id="L182"><span class="lineNum">     182</span>              : </span>
 <span id="L183"><span class="lineNum">     183</span>              :   template&lt;auto AllocEvent&gt;</span>
 <span id="L184"><span class="lineNum">     184</span>              :   [[nodiscard]]</span>
-<span id="L185"><span class="lineNum">     185</span> <span class="tlaGNC">      317648 :   constexpr alloc_prediction&lt;AllocEvent&gt; increment_msvc_debug_count(alloc_prediction&lt;AllocEvent&gt; p, int val) noexcept</span></span>
+<span id="L185"><span class="lineNum">     185</span> <span class="tlaGNC">      423536 :   constexpr alloc_prediction&lt;AllocEvent&gt; increment_msvc_debug_count(alloc_prediction&lt;AllocEvent&gt; p, int val) noexcept</span></span>
 <span id="L186"><span class="lineNum">     186</span>              :   {</span>
 <span id="L187"><span class="lineNum">     187</span>              :     if constexpr (with_msvc_v &amp;&amp; (iterator_debug_level() &gt; 0))</span>
 <span id="L188"><span class="lineNum">     188</span>              :     {</span>
@@ -253,7 +253,7 @@
 <span id="L191"><span class="lineNum">     191</span>              :     }</span>
 <span id="L192"><span class="lineNum">     192</span>              :     else</span>
 <span id="L193"><span class="lineNum">     193</span>              :     {</span>
-<span id="L194"><span class="lineNum">     194</span> <span class="tlaGNC">      317648 :       return p;</span></span>
+<span id="L194"><span class="lineNum">     194</span> <span class="tlaGNC">      423536 :       return p;</span></span>
 <span id="L195"><span class="lineNum">     195</span>              :     }</span>
 <span id="L196"><span class="lineNum">     196</span>              :   }</span>
 <span id="L197"><span class="lineNum">     197</span>              : </span>
@@ -262,9 +262,9 @@
 <span id="L200"><span class="lineNum">     200</span>              :   {</span>
 <span id="L201"><span class="lineNum">     201</span>              :     template&lt;auto NullAllocEvent&gt;</span>
 <span id="L202"><span class="lineNum">     202</span>              :     [[nodiscard]]</span>
-<span id="L203"><span class="lineNum">     203</span> <span class="tlaGNC">      192977 :     constexpr static int shift(int count, const alloc_prediction&lt;NullAllocEvent&gt;&amp;) noexcept</span></span>
+<span id="L203"><span class="lineNum">     203</span> <span class="tlaGNC">      257303 :     constexpr static int shift(int count, const alloc_prediction&lt;NullAllocEvent&gt;&amp;) noexcept</span></span>
 <span id="L204"><span class="lineNum">     204</span>              :     {</span>
-<span id="L205"><span class="lineNum">     205</span> <span class="tlaGNC">      192977 :       return count;</span></span>
+<span id="L205"><span class="lineNum">     205</span> <span class="tlaGNC">      257303 :       return count;</span></span>
 <span id="L206"><span class="lineNum">     206</span>              :     }</span>
 <span id="L207"><span class="lineNum">     207</span>              :   };</span>
 <span id="L208"><span class="lineNum">     208</span>              : </span>
@@ -282,78 +282,78 @@
 <span id="L220"><span class="lineNum">     220</span>              :   class alloc_prediction_shifter&lt;allocation_equivalence_classes::container_of_values&lt;Allocator&gt;&gt;</span>
 <span id="L221"><span class="lineNum">     221</span>              :   {</span>
 <span id="L222"><span class="lineNum">     222</span>              :   public:</span>
-<span id="L223"><span class="lineNum">     223</span> <span class="tlaGNC">       33838 :     alloc_prediction_shifter(const container_counts&amp; data, top_level level)</span></span>
-<span id="L224"><span class="lineNum">     224</span> <span class="tlaGNC">       33838 :       : m_Counts{data}</span></span>
-<span id="L225"><span class="lineNum">     225</span> <span class="tlaGNC">       33838 :       , m_TopLevel{level}</span></span>
-<span id="L226"><span class="lineNum">     226</span> <span class="tlaGNC">       33838 :     {}</span></span>
+<span id="L223"><span class="lineNum">     223</span> <span class="tlaGNC">       45118 :     alloc_prediction_shifter(const container_counts&amp; data, top_level level)</span></span>
+<span id="L224"><span class="lineNum">     224</span> <span class="tlaGNC">       45118 :       : m_Counts{data}</span></span>
+<span id="L225"><span class="lineNum">     225</span> <span class="tlaGNC">       45118 :       , m_TopLevel{level}</span></span>
+<span id="L226"><span class="lineNum">     226</span> <span class="tlaGNC">       45118 :     {}</span></span>
 <span id="L227"><span class="lineNum">     227</span>              : </span>
 <span id="L228"><span class="lineNum">     228</span>              :     [[nodiscard]]</span>
-<span id="L229"><span class="lineNum">     229</span> <span class="tlaGNC">       57310 :     constexpr copy_prediction shift(copy_prediction p, container_tag tag) const noexcept</span></span>
+<span id="L229"><span class="lineNum">     229</span> <span class="tlaGNC">       76414 :     constexpr copy_prediction shift(copy_prediction p, container_tag tag) const noexcept</span></span>
 <span id="L230"><span class="lineNum">     230</span>              :     {</span>
-<span id="L231"><span class="lineNum">     231</span> <span class="tlaGNC">       57310 :       const auto&amp; c{tag == container_tag::x ? m_Counts.num_x : m_Counts.num_y};</span></span>
-<span id="L232"><span class="lineNum">     232</span> <span class="tlaGNC">       57310 :       return increment_msvc_debug_count(p, c.value());</span></span>
+<span id="L231"><span class="lineNum">     231</span> <span class="tlaGNC">       76414 :       const auto&amp; c{tag == container_tag::x ? m_Counts.num_x : m_Counts.num_y};</span></span>
+<span id="L232"><span class="lineNum">     232</span> <span class="tlaGNC">       76414 :       return increment_msvc_debug_count(p, c.value());</span></span>
 <span id="L233"><span class="lineNum">     233</span>              :     }</span>
 <span id="L234"><span class="lineNum">     234</span>              : </span>
 <span id="L235"><span class="lineNum">     235</span>              :     [[nodiscard]]</span>
-<span id="L236"><span class="lineNum">     236</span> <span class="tlaGNC">       33840 :     constexpr move_prediction shift(move_prediction p) const noexcept</span></span>
+<span id="L236"><span class="lineNum">     236</span> <span class="tlaGNC">       45120 :     constexpr move_prediction shift(move_prediction p) const noexcept</span></span>
 <span id="L237"><span class="lineNum">     237</span>              :     {</span>
-<span id="L238"><span class="lineNum">     238</span> <span class="tlaGNC">       33840 :       return increment_msvc_debug_count(p, is_top_level() ? 1 : 0);</span></span>
+<span id="L238"><span class="lineNum">     238</span> <span class="tlaGNC">       45120 :       return increment_msvc_debug_count(p, is_top_level() ? 1 : 0);</span></span>
 <span id="L239"><span class="lineNum">     239</span>              :     }</span>
 <span id="L240"><span class="lineNum">     240</span>              : </span>
 <span id="L241"><span class="lineNum">     241</span>              :     [[nodiscard]]</span>
-<span id="L242"><span class="lineNum">     242</span> <span class="tlaGNC">       28656 :     constexpr para_copy_prediction shift(para_copy_prediction p) const noexcept</span></span>
+<span id="L242"><span class="lineNum">     242</span> <span class="tlaGNC">       38208 :     constexpr para_copy_prediction shift(para_copy_prediction p) const noexcept</span></span>
 <span id="L243"><span class="lineNum">     243</span>              :     {</span>
-<span id="L244"><span class="lineNum">     244</span> <span class="tlaGNC">       28656 :       return increment_msvc_debug_count(p, m_Counts.num_y.value());</span></span>
+<span id="L244"><span class="lineNum">     244</span> <span class="tlaGNC">       38208 :       return increment_msvc_debug_count(p, m_Counts.num_y.value());</span></span>
 <span id="L245"><span class="lineNum">     245</span>              :     }</span>
 <span id="L246"><span class="lineNum">     246</span>              : </span>
 <span id="L247"><span class="lineNum">     247</span>              :     [[nodiscard]]</span>
-<span id="L248"><span class="lineNum">     248</span> <span class="tlaGNC">       39024 :     constexpr para_move_prediction shift(para_move_prediction p, container_tag tag) const noexcept</span></span>
+<span id="L248"><span class="lineNum">     248</span> <span class="tlaGNC">       52032 :     constexpr para_move_prediction shift(para_move_prediction p, container_tag tag) const noexcept</span></span>
 <span id="L249"><span class="lineNum">     249</span>              :     {</span>
-<span id="L250"><span class="lineNum">     250</span> <span class="tlaGNC">       39024 :       const auto&amp; c{tag == container_tag::x ? m_Counts.num_x : m_Counts.num_y};</span></span>
-<span id="L251"><span class="lineNum">     251</span> <span class="tlaGNC">       39024 :       return increment_msvc_debug_count(p, c.value());</span></span>
+<span id="L250"><span class="lineNum">     250</span> <span class="tlaGNC">       52032 :       const auto&amp; c{tag == container_tag::x ? m_Counts.num_x : m_Counts.num_y};</span></span>
+<span id="L251"><span class="lineNum">     251</span> <span class="tlaGNC">       52032 :       return increment_msvc_debug_count(p, c.value());</span></span>
 <span id="L252"><span class="lineNum">     252</span>              :     }</span>
 <span id="L253"><span class="lineNum">     253</span>              : </span>
 <span id="L254"><span class="lineNum">     254</span>              :     [[nodiscard]]</span>
-<span id="L255"><span class="lineNum">     255</span> <span class="tlaGNC">       33840 :     constexpr mutation_prediction shift(mutation_prediction p) const noexcept</span></span>
+<span id="L255"><span class="lineNum">     255</span> <span class="tlaGNC">       45120 :     constexpr mutation_prediction shift(mutation_prediction p) const noexcept</span></span>
 <span id="L256"><span class="lineNum">     256</span>              :     {</span>
-<span id="L257"><span class="lineNum">     257</span> <span class="tlaGNC">       33840 :       return increment_msvc_debug_count(p, m_Counts.mutation_correction.value());</span></span>
+<span id="L257"><span class="lineNum">     257</span> <span class="tlaGNC">       45120 :       return increment_msvc_debug_count(p, m_Counts.mutation_correction.value());</span></span>
 <span id="L258"><span class="lineNum">     258</span>              :     }</span>
 <span id="L259"><span class="lineNum">     259</span>              : </span>
 <span id="L260"><span class="lineNum">     260</span>              :     [[nodiscard]]</span>
-<span id="L261"><span class="lineNum">     261</span> <span class="tlaGNC">       27216 :     constexpr assign_prediction shift(assign_prediction p) const noexcept</span></span>
+<span id="L261"><span class="lineNum">     261</span> <span class="tlaGNC">       36288 :     constexpr assign_prediction shift(assign_prediction p) const noexcept</span></span>
 <span id="L262"><span class="lineNum">     262</span>              :     {</span>
-<span id="L263"><span class="lineNum">     263</span> <span class="tlaGNC">       27216 :       return increment_msvc_debug_count(p, m_Counts.num_y.value());</span></span>
+<span id="L263"><span class="lineNum">     263</span> <span class="tlaGNC">       36288 :       return increment_msvc_debug_count(p, m_Counts.num_y.value());</span></span>
 <span id="L264"><span class="lineNum">     264</span>              :     }</span>
 <span id="L265"><span class="lineNum">     265</span>              : </span>
 <span id="L266"><span class="lineNum">     266</span>              :     [[nodiscard]]</span>
-<span id="L267"><span class="lineNum">     267</span> <span class="tlaGNC">       33840 :     constexpr move_assign_prediction shift(move_assign_prediction p) const noexcept</span></span>
+<span id="L267"><span class="lineNum">     267</span> <span class="tlaGNC">       45120 :     constexpr move_assign_prediction shift(move_assign_prediction p) const noexcept</span></span>
 <span id="L268"><span class="lineNum">     268</span>              :     {</span>
-<span id="L269"><span class="lineNum">     269</span> <span class="tlaGNC">       33840 :       return increment_msvc_debug_count(p, is_top_level() ? 1 : 0);</span></span>
+<span id="L269"><span class="lineNum">     269</span> <span class="tlaGNC">       45120 :       return increment_msvc_debug_count(p, is_top_level() ? 1 : 0);</span></span>
 <span id="L270"><span class="lineNum">     270</span>              :     }</span>
 <span id="L271"><span class="lineNum">     271</span>              : </span>
 <span id="L272"><span class="lineNum">     272</span>              :     [[nodiscard]]</span>
-<span id="L273"><span class="lineNum">     273</span> <span class="tlaGNC">       27216 :     constexpr assign_no_prop_prediction shift(assign_no_prop_prediction p) const noexcept</span></span>
+<span id="L273"><span class="lineNum">     273</span> <span class="tlaGNC">       36288 :     constexpr assign_no_prop_prediction shift(assign_no_prop_prediction p) const noexcept</span></span>
 <span id="L274"><span class="lineNum">     274</span>              :     {</span>
-<span id="L275"><span class="lineNum">     275</span> <span class="tlaGNC">       27216 :       return increment_msvc_debug_count(p, is_top_level() ? 0 : m_Counts.num_y.value());</span></span>
+<span id="L275"><span class="lineNum">     275</span> <span class="tlaGNC">       36288 :       return increment_msvc_debug_count(p, is_top_level() ? 0 : m_Counts.num_y.value());</span></span>
 <span id="L276"><span class="lineNum">     276</span>              :     }</span>
 <span id="L277"><span class="lineNum">     277</span>              : </span>
 <span id="L278"><span class="lineNum">     278</span>              :     [[nodiscard]]</span>
-<span id="L279"><span class="lineNum">     279</span> <span class="tlaGNC">       33840 :     constexpr move_assign_no_prop_prediction shift(move_assign_no_prop_prediction p) const noexcept</span></span>
+<span id="L279"><span class="lineNum">     279</span> <span class="tlaGNC">       45120 :     constexpr move_assign_no_prop_prediction shift(move_assign_no_prop_prediction p) const noexcept</span></span>
 <span id="L280"><span class="lineNum">     280</span>              :     {</span>
-<span id="L281"><span class="lineNum">     281</span> <span class="tlaGNC">       33840 :       const bool doIncrement{!is_top_level() &amp;&amp; (m_Counts.num_y.value() &gt; m_Counts.num_x.value())};</span></span>
-<span id="L282"><span class="lineNum">     282</span> <span class="tlaGNC">       33840 :       return increment_msvc_debug_count(p, doIncrement ? m_Counts.num_y.value() : 0);</span></span>
+<span id="L281"><span class="lineNum">     281</span> <span class="tlaGNC">       45120 :       const bool doIncrement{!is_top_level() &amp;&amp; (m_Counts.num_y.value() &gt; m_Counts.num_x.value())};</span></span>
+<span id="L282"><span class="lineNum">     282</span> <span class="tlaGNC">       45120 :       return increment_msvc_debug_count(p, doIncrement ? m_Counts.num_y.value() : 0);</span></span>
 <span id="L283"><span class="lineNum">     283</span>              :     }</span>
 <span id="L284"><span class="lineNum">     284</span>              : </span>
 <span id="L285"><span class="lineNum">     285</span>              :     [[nodiscard]]</span>
-<span id="L286"><span class="lineNum">     286</span> <span class="tlaGNC">        2880 :     constexpr const container_counts&amp; counts() const noexcept</span></span>
+<span id="L286"><span class="lineNum">     286</span> <span class="tlaGNC">        3840 :     constexpr const container_counts&amp; counts() const noexcept</span></span>
 <span id="L287"><span class="lineNum">     287</span>              :     {</span>
-<span id="L288"><span class="lineNum">     288</span> <span class="tlaGNC">        2880 :       return m_Counts;</span></span>
+<span id="L288"><span class="lineNum">     288</span> <span class="tlaGNC">        3840 :       return m_Counts;</span></span>
 <span id="L289"><span class="lineNum">     289</span>              :     }</span>
 <span id="L290"><span class="lineNum">     290</span>              : </span>
 <span id="L291"><span class="lineNum">     291</span>              :     [[nodiscard]]</span>
-<span id="L292"><span class="lineNum">     292</span> <span class="tlaGNC">      128736 :     constexpr bool is_top_level() const noexcept</span></span>
+<span id="L292"><span class="lineNum">     292</span> <span class="tlaGNC">      171648 :     constexpr bool is_top_level() const noexcept</span></span>
 <span id="L293"><span class="lineNum">     293</span>              :     {</span>
-<span id="L294"><span class="lineNum">     294</span> <span class="tlaGNC">      128736 :       return m_TopLevel == top_level::yes;</span></span>
+<span id="L294"><span class="lineNum">     294</span> <span class="tlaGNC">      171648 :       return m_TopLevel == top_level::yes;</span></span>
 <span id="L295"><span class="lineNum">     295</span>              :     }</span>
 <span id="L296"><span class="lineNum">     296</span>              :   private:</span>
 <span id="L297"><span class="lineNum">     297</span>              :     container_counts m_Counts;</span>
@@ -369,9 +369,9 @@
 <span id="L307"><span class="lineNum">     307</span>              :     using alloc_prediction_shifter&lt;allocation_equivalence_classes::container_of_values&lt;Allocator&gt;&gt;::shift;</span>
 <span id="L308"><span class="lineNum">     308</span>              : </span>
 <span id="L309"><span class="lineNum">     309</span>              :     [[nodiscard]]</span>
-<span id="L310"><span class="lineNum">     310</span> <span class="tlaGNC">        1440 :     constexpr assign_prediction shift(assign_prediction p) const noexcept</span></span>
+<span id="L310"><span class="lineNum">     310</span> <span class="tlaGNC">        1920 :     constexpr assign_prediction shift(assign_prediction p) const noexcept</span></span>
 <span id="L311"><span class="lineNum">     311</span>              :     {</span>
-<span id="L312"><span class="lineNum">     312</span> <span class="tlaGNC">        1440 :       const auto val{</span></span>
+<span id="L312"><span class="lineNum">     312</span> <span class="tlaGNC">        1920 :       const auto val{</span></span>
 <span id="L313"><span class="lineNum">     313</span>              :         []() {</span>
 <span id="L314"><span class="lineNum">     314</span>              :           constexpr bool copyProp{std::allocator_traits&lt;Allocator&gt;::propagate_on_container_copy_assignment::value};</span>
 <span id="L315"><span class="lineNum">     315</span>              :           constexpr bool moveProp{std::allocator_traits&lt;Allocator&gt;::propagate_on_container_move_assignment::value};</span>
@@ -382,13 +382,13 @@
 <span id="L320"><span class="lineNum">     320</span>              :         }()</span>
 <span id="L321"><span class="lineNum">     321</span>              :       };</span>
 <span id="L322"><span class="lineNum">     322</span>              : </span>
-<span id="L323"><span class="lineNum">     323</span> <span class="tlaGNC">        1440 :       return increment_msvc_debug_count(p, this-&gt;counts().num_y.value()*val);</span></span>
+<span id="L323"><span class="lineNum">     323</span> <span class="tlaGNC">        1920 :       return increment_msvc_debug_count(p, this-&gt;counts().num_y.value()*val);</span></span>
 <span id="L324"><span class="lineNum">     324</span>              :     }</span>
 <span id="L325"><span class="lineNum">     325</span>              : </span>
 <span id="L326"><span class="lineNum">     326</span>              :     [[nodiscard]]</span>
-<span id="L327"><span class="lineNum">     327</span> <span class="tlaGNC">        1440 :     constexpr assign_no_prop_prediction shift(assign_no_prop_prediction p) const noexcept</span></span>
+<span id="L327"><span class="lineNum">     327</span> <span class="tlaGNC">        1920 :     constexpr assign_no_prop_prediction shift(assign_no_prop_prediction p) const noexcept</span></span>
 <span id="L328"><span class="lineNum">     328</span>              :     {</span>
-<span id="L329"><span class="lineNum">     329</span> <span class="tlaGNC">        1440 :       return increment_msvc_debug_count(p, this-&gt;counts().num_y.value());</span></span>
+<span id="L329"><span class="lineNum">     329</span> <span class="tlaGNC">        1920 :       return increment_msvc_debug_count(p, this-&gt;counts().num_y.value());</span></span>
 <span id="L330"><span class="lineNum">     330</span>              :     }</span>
 <span id="L331"><span class="lineNum">     331</span>              :   };</span>
 <span id="L332"><span class="lineNum">     332</span>              : </span>
@@ -434,29 +434,29 @@
 <span id="L372"><span class="lineNum">     372</span>              :   public:</span>
 <span id="L373"><span class="lineNum">     373</span>              :     using allocator_type = std::invoke_result_t&lt;Getter, T&gt;;</span>
 <span id="L374"><span class="lineNum">     374</span>              : </span>
-<span id="L375"><span class="lineNum">     375</span> <span class="tlaGNC">       37800 :     constexpr explicit allocation_info_base(Getter allocGetter)</span></span>
-<span id="L376"><span class="lineNum">     376</span> <span class="tlaGNC">       37800 :       : m_AllocatorGetter{std::move(allocGetter)}</span></span>
-<span id="L377"><span class="lineNum">     377</span> <span class="tlaGNC">       37800 :     {}</span></span>
+<span id="L375"><span class="lineNum">     375</span> <span class="tlaGNC">       50400 :     constexpr explicit allocation_info_base(Getter allocGetter)</span></span>
+<span id="L376"><span class="lineNum">     376</span> <span class="tlaGNC">       50400 :       : m_AllocatorGetter{std::move(allocGetter)}</span></span>
+<span id="L377"><span class="lineNum">     377</span> <span class="tlaGNC">       50400 :     {}</span></span>
 <span id="L378"><span class="lineNum">     378</span>              : </span>
 <span id="L379"><span class="lineNum">     379</span>              :     constexpr allocation_info_base(const allocation_info_base&amp;) = default;</span>
 <span id="L380"><span class="lineNum">     380</span>              : </span>
 <span id="L381"><span class="lineNum">     381</span>              :     [[nodiscard]]</span>
-<span id="L382"><span class="lineNum">     382</span> <span class="tlaGNC">      453924 :     int count(const T&amp; c) const noexcept</span></span>
+<span id="L382"><span class="lineNum">     382</span> <span class="tlaGNC">      605232 :     int count(const T&amp; c) const noexcept</span></span>
 <span id="L383"><span class="lineNum">     383</span>              :     {</span>
-<span id="L384"><span class="lineNum">     384</span> <span class="tlaGNC">      453924 :       return m_AllocatorGetter(c).allocs();</span></span>
+<span id="L384"><span class="lineNum">     384</span> <span class="tlaGNC">      605232 :       return m_AllocatorGetter(c).allocs();</span></span>
 <span id="L385"><span class="lineNum">     385</span>              :     }</span>
 <span id="L386"><span class="lineNum">     386</span>              : </span>
 <span id="L387"><span class="lineNum">     387</span>              :     template&lt;class... Args&gt;</span>
 <span id="L388"><span class="lineNum">     388</span>              :     [[nodiscard]]</span>
-<span id="L389"><span class="lineNum">     389</span> <span class="tlaGNC">       15696 :     allocator_type make_allocator(Args&amp;&amp;... args) const</span></span>
+<span id="L389"><span class="lineNum">     389</span> <span class="tlaGNC">       20928 :     allocator_type make_allocator(Args&amp;&amp;... args) const</span></span>
 <span id="L390"><span class="lineNum">     390</span>              :     {</span>
-<span id="L391"><span class="lineNum">     391</span> <span class="tlaGNC">       15696 :       return {std::forward&lt;Args&gt;(args)...};</span></span>
+<span id="L391"><span class="lineNum">     391</span> <span class="tlaGNC">       20928 :       return {std::forward&lt;Args&gt;(args)...};</span></span>
 <span id="L392"><span class="lineNum">     392</span>              :     }</span>
 <span id="L393"><span class="lineNum">     393</span>              : </span>
 <span id="L394"><span class="lineNum">     394</span>              :     [[nodiscard]]</span>
-<span id="L395"><span class="lineNum">     395</span> <span class="tlaGNC">      107100 :     allocator_type allocator(const T&amp; c) const</span></span>
+<span id="L395"><span class="lineNum">     395</span> <span class="tlaGNC">      142800 :     allocator_type allocator(const T&amp; c) const</span></span>
 <span id="L396"><span class="lineNum">     396</span>              :     {</span>
-<span id="L397"><span class="lineNum">     397</span> <span class="tlaGNC">      107100 :       return m_AllocatorGetter(c);</span></span>
+<span id="L397"><span class="lineNum">     397</span> <span class="tlaGNC">      142800 :       return m_AllocatorGetter(c);</span></span>
 <span id="L398"><span class="lineNum">     398</span>              :     }</span>
 <span id="L399"><span class="lineNum">     399</span>              :   protected:</span>
 <span id="L400"><span class="lineNum">     400</span>              :     ~allocation_info_base() = default;</span>
@@ -467,9 +467,9 @@
 <span id="L405"><span class="lineNum">     405</span>              :     constexpr allocation_info_base&amp; operator=(allocation_info_base&amp;&amp;) noexcept = default;</span>
 <span id="L406"><span class="lineNum">     406</span>              : </span>
 <span id="L407"><span class="lineNum">     407</span>              :     [[nodiscard]]</span>
-<span id="L408"><span class="lineNum">     408</span> <span class="tlaGNC">       24768 :     constexpr Getter make_getter() const</span></span>
+<span id="L408"><span class="lineNum">     408</span> <span class="tlaGNC">       33024 :     constexpr Getter make_getter() const</span></span>
 <span id="L409"><span class="lineNum">     409</span>              :     {</span>
-<span id="L410"><span class="lineNum">     410</span> <span class="tlaGNC">       24768 :       return m_AllocatorGetter;</span></span>
+<span id="L410"><span class="lineNum">     410</span> <span class="tlaGNC">       33024 :       return m_AllocatorGetter;</span></span>
 <span id="L411"><span class="lineNum">     411</span>              :     }</span>
 <span id="L412"><span class="lineNum">     412</span>              :   private:</span>
 <span id="L413"><span class="lineNum">     413</span>              : </span>
@@ -493,20 +493,20 @@
 <span id="L431"><span class="lineNum">     431</span>              :     using predictions_type       = type_to_allocation_predictions_t&lt;T&gt;;</span>
 <span id="L432"><span class="lineNum">     432</span>              :     using inner_predictions_type = type_to_inner_allocation_predictions_t&lt;T&gt;;</span>
 <span id="L433"><span class="lineNum">     433</span>              : </span>
-<span id="L434"><span class="lineNum">     434</span> <span class="tlaGNC">       21168 :     constexpr allocation_info(Getter allocGetter, const predictions_type&amp; predictions)</span></span>
-<span id="L435"><span class="lineNum">     435</span> <span class="tlaGNC">       21168 :       : base_t{std::move(allocGetter)}</span></span>
-<span id="L436"><span class="lineNum">     436</span> <span class="tlaGNC">       21168 :       , m_Predictions{prediction_shifter{}(predictions)}</span></span>
-<span id="L437"><span class="lineNum">     437</span> <span class="tlaGNC">       21168 :     {}</span></span>
+<span id="L434"><span class="lineNum">     434</span> <span class="tlaGNC">       28224 :     constexpr allocation_info(Getter allocGetter, const predictions_type&amp; predictions)</span></span>
+<span id="L435"><span class="lineNum">     435</span> <span class="tlaGNC">       28224 :       : base_t{std::move(allocGetter)}</span></span>
+<span id="L436"><span class="lineNum">     436</span> <span class="tlaGNC">       28224 :       , m_Predictions{prediction_shifter{}(predictions)}</span></span>
+<span id="L437"><span class="lineNum">     437</span> <span class="tlaGNC">       28224 :     {}</span></span>
 <span id="L438"><span class="lineNum">     438</span>              : </span>
-<span id="L439"><span class="lineNum">     439</span> <span class="tlaGNC">       12672 :     constexpr allocation_info(Getter allocGetter, const inner_predictions_type&amp; predictions)</span></span>
-<span id="L440"><span class="lineNum">     440</span> <span class="tlaGNC">       12672 :       : base_t{std::move(allocGetter)}</span></span>
-<span id="L441"><span class="lineNum">     441</span> <span class="tlaGNC">       12672 :       , m_Predictions{prediction_shifter{}(predictions)}</span></span>
-<span id="L442"><span class="lineNum">     442</span> <span class="tlaGNC">       12672 :     {}</span></span>
+<span id="L439"><span class="lineNum">     439</span> <span class="tlaGNC">       16896 :     constexpr allocation_info(Getter allocGetter, const inner_predictions_type&amp; predictions)</span></span>
+<span id="L440"><span class="lineNum">     440</span> <span class="tlaGNC">       16896 :       : base_t{std::move(allocGetter)}</span></span>
+<span id="L441"><span class="lineNum">     441</span> <span class="tlaGNC">       16896 :       , m_Predictions{prediction_shifter{}(predictions)}</span></span>
+<span id="L442"><span class="lineNum">     442</span> <span class="tlaGNC">       16896 :     {}</span></span>
 <span id="L443"><span class="lineNum">     443</span>              : </span>
 <span id="L444"><span class="lineNum">     444</span>              :     [[nodiscard]]</span>
-<span id="L445"><span class="lineNum">     445</span> <span class="tlaGNC">      123624 :     constexpr const predictions_type&amp; get_predictions() const noexcept</span></span>
+<span id="L445"><span class="lineNum">     445</span> <span class="tlaGNC">      164832 :     constexpr const predictions_type&amp; get_predictions() const noexcept</span></span>
 <span id="L446"><span class="lineNum">     446</span>              :     {</span>
-<span id="L447"><span class="lineNum">     447</span> <span class="tlaGNC">      123624 :       return m_Predictions;</span></span>
+<span id="L447"><span class="lineNum">     447</span> <span class="tlaGNC">      164832 :       return m_Predictions;</span></span>
 <span id="L448"><span class="lineNum">     448</span>              :     }</span>
 <span id="L449"><span class="lineNum">     449</span>              :   private:</span>
 <span id="L450"><span class="lineNum">     450</span>              :     predictions_type m_Predictions;</span>
@@ -516,15 +516,15 @@
 <span id="L454"><span class="lineNum">     454</span>              :       using allocClass = alloc_equivalence_class_generator_t&lt;T, Getter&gt;;</span>
 <span id="L455"><span class="lineNum">     455</span>              : </span>
 <span id="L456"><span class="lineNum">     456</span>              :       [[nodiscard]]</span>
-<span id="L457"><span class="lineNum">     457</span> <span class="tlaGNC">       21168 :       constexpr predictions_type operator()(const predictions_type&amp; predictions) const</span></span>
+<span id="L457"><span class="lineNum">     457</span> <span class="tlaGNC">       28224 :       constexpr predictions_type operator()(const predictions_type&amp; predictions) const</span></span>
 <span id="L458"><span class="lineNum">     458</span>              :       {</span>
-<span id="L459"><span class="lineNum">     459</span> <span class="tlaGNC">       21168 :         return shift&lt;allocClass&gt;(predictions);</span></span>
+<span id="L459"><span class="lineNum">     459</span> <span class="tlaGNC">       28224 :         return shift&lt;allocClass&gt;(predictions);</span></span>
 <span id="L460"><span class="lineNum">     460</span>              :       }</span>
 <span id="L461"><span class="lineNum">     461</span>              : </span>
 <span id="L462"><span class="lineNum">     462</span>              :       [[nodiscard]]</span>
-<span id="L463"><span class="lineNum">     463</span> <span class="tlaGNC">       12672 :       constexpr predictions_type operator()(const inner_predictions_type&amp; predictions) const</span></span>
+<span id="L463"><span class="lineNum">     463</span> <span class="tlaGNC">       16896 :       constexpr predictions_type operator()(const inner_predictions_type&amp; predictions) const</span></span>
 <span id="L464"><span class="lineNum">     464</span>              :       {</span>
-<span id="L465"><span class="lineNum">     465</span> <span class="tlaGNC">       12672 :         return to_top_level(shift&lt;allocClass&gt;(predictions));</span></span>
+<span id="L465"><span class="lineNum">     465</span> <span class="tlaGNC">       16896 :         return to_top_level(shift&lt;allocClass&gt;(predictions));</span></span>
 <span id="L466"><span class="lineNum">     466</span>              :       }</span>
 <span id="L467"><span class="lineNum">     467</span>              :     };</span>
 <span id="L468"><span class="lineNum">     468</span>              :   };</span>
@@ -542,12 +542,12 @@
 <span id="L480"><span class="lineNum">     480</span>              :   {</span>
 <span id="L481"><span class="lineNum">     481</span>              :     using alloc_equivalence_class = alloc_equivalence_class_generator_t&lt;T, Getter&gt;;</span>
 <span id="L482"><span class="lineNum">     482</span>              : </span>
-<span id="L483"><span class="lineNum">     483</span> <span class="tlaGNC">       12096 :     outer_alloc_getter(Getter g) : getter{std::move(g)} {}</span></span>
+<span id="L483"><span class="lineNum">     483</span> <span class="tlaGNC">       16128 :     outer_alloc_getter(Getter g) : getter{std::move(g)} {}</span></span>
 <span id="L484"><span class="lineNum">     484</span>              : </span>
 <span id="L485"><span class="lineNum">     485</span>              :     [[nodiscard]]</span>
-<span id="L486"><span class="lineNum">     486</span> <span class="tlaGNC">      134784 :     auto operator()(const T&amp; c) const</span></span>
+<span id="L486"><span class="lineNum">     486</span> <span class="tlaGNC">      179712 :     auto operator()(const T&amp; c) const</span></span>
 <span id="L487"><span class="lineNum">     487</span>              :     {</span>
-<span id="L488"><span class="lineNum">     488</span> <span class="tlaGNC">      134784 :       return getter(c).outer_allocator();</span></span>
+<span id="L488"><span class="lineNum">     488</span> <span class="tlaGNC">      179712 :       return getter(c).outer_allocator();</span></span>
 <span id="L489"><span class="lineNum">     489</span>              :     }</span>
 <span id="L490"><span class="lineNum">     490</span>              : </span>
 <span id="L491"><span class="lineNum">     491</span>              :     Getter getter;</span>
@@ -574,47 +574,47 @@
 <span id="L512"><span class="lineNum">     512</span>              :     constexpr static std::size_t size{alloc_count&lt;allocator_type&gt;::size};</span>
 <span id="L513"><span class="lineNum">     513</span>              :     static_assert(size &gt; 0);</span>
 <span id="L514"><span class="lineNum">     514</span>              : </span>
-<span id="L515"><span class="lineNum">     515</span> <span class="tlaGNC">        3960 :     constexpr allocation_info(Getter allocGetter,</span></span>
+<span id="L515"><span class="lineNum">     515</span> <span class="tlaGNC">        5280 :     constexpr allocation_info(Getter allocGetter,</span></span>
 <span id="L516"><span class="lineNum">     516</span>              :                               predictions_type predictions,</span>
 <span id="L517"><span class="lineNum">     517</span>              :                               std::initializer_list&lt;inner_predictions_type&gt; innerPredictions)</span>
-<span id="L518"><span class="lineNum">     518</span> <span class="tlaGNC">        3960 :       : base_t{std::move(allocGetter)}</span></span>
-<span id="L519"><span class="lineNum">     519</span> <span class="tlaGNC">        3960 :       , m_Predictions{predictions}</span></span>
-<span id="L520"><span class="lineNum">     520</span> <span class="tlaGNC">        3960 :       , m_InnerPredictions{utilities::to_array&lt;inner_predictions_type, size-1&gt;(innerPredictions)}</span></span>
-<span id="L521"><span class="lineNum">     521</span> <span class="tlaGNC">        3960 :     {}</span></span>
+<span id="L518"><span class="lineNum">     518</span> <span class="tlaGNC">        5280 :       : base_t{std::move(allocGetter)}</span></span>
+<span id="L519"><span class="lineNum">     519</span> <span class="tlaGNC">        5280 :       , m_Predictions{predictions}</span></span>
+<span id="L520"><span class="lineNum">     520</span> <span class="tlaGNC">        5280 :       , m_InnerPredictions{utilities::to_array&lt;inner_predictions_type, size-1&gt;(innerPredictions)}</span></span>
+<span id="L521"><span class="lineNum">     521</span> <span class="tlaGNC">        5280 :     {}</span></span>
 <span id="L522"><span class="lineNum">     522</span>              : </span>
 <span id="L523"><span class="lineNum">     523</span>              :     /// unpacks the scoped_allocator_adaptor, returning allocation_info for the</span>
 <span id="L524"><span class="lineNum">     524</span>              :     /// allocator at the ith level.</span>
 <span id="L525"><span class="lineNum">     525</span>              :     template&lt;std::size_t I&gt;</span>
 <span id="L526"><span class="lineNum">     526</span>              :     [[nodiscard]]</span>
-<span id="L527"><span class="lineNum">     527</span> <span class="tlaGNC">       24768 :     auto unpack() const</span></span>
+<span id="L527"><span class="lineNum">     527</span> <span class="tlaGNC">       33024 :     auto unpack() const</span></span>
 <span id="L528"><span class="lineNum">     528</span>              :     {</span>
 <span id="L529"><span class="lineNum">     529</span>              :       if constexpr(I == 0)</span>
 <span id="L530"><span class="lineNum">     530</span>              :       {</span>
 <span id="L531"><span class="lineNum">     531</span>              :         using getter = outer_alloc_getter&lt;T, Getter&gt;;</span>
-<span id="L532"><span class="lineNum">     532</span> <span class="tlaGNC">       12096 :         return allocation_info&lt;T, getter&gt;{getter{this-&gt;make_getter()}, m_Predictions};</span></span>
+<span id="L532"><span class="lineNum">     532</span> <span class="tlaGNC">       16128 :         return allocation_info&lt;T, getter&gt;{getter{this-&gt;make_getter()}, m_Predictions};</span></span>
 <span id="L533"><span class="lineNum">     533</span>              :       }</span>
 <span id="L534"><span class="lineNum">     534</span>              :       else</span>
 <span id="L535"><span class="lineNum">     535</span>              :       {</span>
-<span id="L536"><span class="lineNum">     536</span> <span class="tlaGNC">      152712 :         auto scopedGetter{[getter{this-&gt;make_getter()}] (const T&amp; c){</span></span>
-<span id="L537"><span class="lineNum">     537</span> <span class="tlaGNC">      140040 :             return get&lt;I&gt;(getter(c));</span></span>
+<span id="L536"><span class="lineNum">     536</span> <span class="tlaGNC">      203616 :         auto scopedGetter{[getter{this-&gt;make_getter()}] (const T&amp; c){</span></span>
+<span id="L537"><span class="lineNum">     537</span> <span class="tlaGNC">      186720 :             return get&lt;I&gt;(getter(c));</span></span>
 <span id="L538"><span class="lineNum">     538</span>              :           }</span>
 <span id="L539"><span class="lineNum">     539</span>              :         };</span>
-<span id="L540"><span class="lineNum">     540</span> <span class="tlaGNC">       25344 :         return allocation_info&lt;T, decltype(scopedGetter)&gt;{scopedGetter, m_InnerPredictions[I-1]};</span></span>
+<span id="L540"><span class="lineNum">     540</span> <span class="tlaGNC">       33792 :         return allocation_info&lt;T, decltype(scopedGetter)&gt;{scopedGetter, m_InnerPredictions[I-1]};</span></span>
 <span id="L541"><span class="lineNum">     541</span>              :       }</span>
 <span id="L542"><span class="lineNum">     542</span>              :     }</span>
 <span id="L543"><span class="lineNum">     543</span>              : </span>
 <span id="L544"><span class="lineNum">     544</span>              :   private:</span>
 <span id="L545"><span class="lineNum">     545</span>              :     template&lt;std::size_t I, counting_alloc... As&gt;</span>
 <span id="L546"><span class="lineNum">     546</span>              :     [[nodiscard]]</span>
-<span id="L547"><span class="lineNum">     547</span> <span class="tlaGNC">      285336 :     static auto get(const std::scoped_allocator_adaptor&lt;As...&gt;&amp; a)</span></span>
+<span id="L547"><span class="lineNum">     547</span> <span class="tlaGNC">      380448 :     static auto get(const std::scoped_allocator_adaptor&lt;As...&gt;&amp; a)</span></span>
 <span id="L548"><span class="lineNum">     548</span>              :     {</span>
 <span id="L549"><span class="lineNum">     549</span>              :       if constexpr(I==0)</span>
 <span id="L550"><span class="lineNum">     550</span>              :       {</span>
-<span id="L551"><span class="lineNum">     551</span> <span class="tlaGNC">      140040 :         return a.outer_allocator();</span></span>
+<span id="L551"><span class="lineNum">     551</span> <span class="tlaGNC">      186720 :         return a.outer_allocator();</span></span>
 <span id="L552"><span class="lineNum">     552</span>              :       }</span>
 <span id="L553"><span class="lineNum">     553</span>              :       else</span>
 <span id="L554"><span class="lineNum">     554</span>              :       {</span>
-<span id="L555"><span class="lineNum">     555</span> <span class="tlaGNC">      145296 :         return get&lt;I-1&gt;(a.inner_allocator());</span></span>
+<span id="L555"><span class="lineNum">     555</span> <span class="tlaGNC">      193728 :         return get&lt;I-1&gt;(a.inner_allocator());</span></span>
 <span id="L556"><span class="lineNum">     556</span>              :       }</span>
 <span id="L557"><span class="lineNum">     557</span>              :     }</span>
 <span id="L558"><span class="lineNum">     558</span>              : </span>
@@ -637,7 +637,7 @@
 <span id="L575"><span class="lineNum">     575</span>              :   {</span>
 <span id="L576"><span class="lineNum">     576</span>              :   public:</span>
 <span id="L577"><span class="lineNum">     577</span>              :     [[nodiscard]]</span>
-<span id="L578"><span class="lineNum">     578</span> <span class="tlaGNC">       12672 :     constexpr container_counts containers() const noexcept { return m_Containers; }</span></span>
+<span id="L578"><span class="lineNum">     578</span> <span class="tlaGNC">       16896 :     constexpr container_counts containers() const noexcept { return m_Containers; }</span></span>
 <span id="L579"><span class="lineNum">     579</span>              :   protected:</span>
 <span id="L580"><span class="lineNum">     580</span>              :     constexpr container_predictions_policy(container_counts counts)</span>
 <span id="L581"><span class="lineNum">     581</span>              :       : m_Containers{std::move(counts)}</span>

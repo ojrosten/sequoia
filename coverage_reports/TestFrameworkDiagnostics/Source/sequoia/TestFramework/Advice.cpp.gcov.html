@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2025-01-11 16:12:34</td>
+            <td class="headerValue">2025-01-11 20:40:10</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -75,19 +75,19 @@
 <span id="L13"><span class="lineNum">      13</span>              : </span>
 <span id="L14"><span class="lineNum">      14</span>              : namespace sequoia::testing</span>
 <span id="L15"><span class="lineNum">      15</span>              : {</span>
-<span id="L16"><span class="lineNum">      16</span> <span class="tlaGNC tlaBgGNC">       22797 :   std::string&amp; advice_data::append_to(std::string&amp; message) const</span></span>
+<span id="L16"><span class="lineNum">      16</span> <span class="tlaGNC tlaBgGNC">       30447 :   std::string&amp; advice_data::append_to(std::string&amp; message) const</span></span>
 <span id="L17"><span class="lineNum">      17</span>              :   {</span>
-<span id="L18"><span class="lineNum">      18</span> <span class="tlaGNC">       22797 :     if(!m_Advice.empty())</span></span>
+<span id="L18"><span class="lineNum">      18</span> <span class="tlaGNC">       30447 :     if(!m_Advice.empty())</span></span>
 <span id="L19"><span class="lineNum">      19</span>              :     {</span>
-<span id="L20"><span class="lineNum">      20</span> <span class="tlaGNC">        2844 :       append_lines(message, m_Prefix).append(m_Advice);</span></span>
+<span id="L20"><span class="lineNum">      20</span> <span class="tlaGNC">        3792 :       append_lines(message, m_Prefix).append(m_Advice);</span></span>
 <span id="L21"><span class="lineNum">      21</span>              :     }</span>
 <span id="L22"><span class="lineNum">      22</span>              : </span>
-<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC">       22797 :     return message;</span></span>
+<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC">       30447 :     return message;</span></span>
 <span id="L24"><span class="lineNum">      24</span>              :   }</span>
 <span id="L25"><span class="lineNum">      25</span>              : </span>
-<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">       22797 :   std::string&amp; append_advice(std::string&amp; message, const advice_data&amp; adviceData)</span></span>
+<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">       30447 :   std::string&amp; append_advice(std::string&amp; message, const advice_data&amp; adviceData)</span></span>
 <span id="L27"><span class="lineNum">      27</span>              :   {</span>
-<span id="L28"><span class="lineNum">      28</span> <span class="tlaGNC">       22797 :     return adviceData.append_to(message);</span></span>
+<span id="L28"><span class="lineNum">      28</span> <span class="tlaGNC">       30447 :     return adviceData.append_to(message);</span></span>
 <span id="L29"><span class="lineNum">      29</span>              :   }</span>
 <span id="L30"><span class="lineNum">      30</span>              : }</span>
         </pre>

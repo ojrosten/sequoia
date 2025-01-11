@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2025-01-11 16:12:34</td>
+            <td class="headerValue">2025-01-11 20:40:10</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryLo">60.0&nbsp;%</td>
@@ -79,24 +79,24 @@
 <span id="L17"><span class="lineNum">      17</span>              : </span>
 <span id="L18"><span class="lineNum">      18</span>              : namespace sequoia::runtime</span>
 <span id="L19"><span class="lineNum">      19</span>              : {</span>
-<span id="L20"><span class="lineNum">      20</span> <span class="tlaGNC tlaBgGNC">          72 :   shell_command::shell_command(std::string cmd, const std::filesystem::path&amp; output, append_mode app)</span></span>
-<span id="L21"><span class="lineNum">      21</span> <span class="tlaGNC">          72 :     : m_Command{std::move(cmd)}</span></span>
+<span id="L20"><span class="lineNum">      20</span> <span class="tlaGNC tlaBgGNC">          96 :   shell_command::shell_command(std::string cmd, const std::filesystem::path&amp; output, append_mode app)</span></span>
+<span id="L21"><span class="lineNum">      21</span> <span class="tlaGNC">          96 :     : m_Command{std::move(cmd)}</span></span>
 <span id="L22"><span class="lineNum">      22</span>              :   {</span>
-<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC">          72 :     if(!output.empty())</span></span>
+<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC">          96 :     if(!output.empty())</span></span>
 <span id="L24"><span class="lineNum">      24</span>              :     {</span>
-<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">          72 :       if(!m_Command.empty() &amp;&amp; std::isdigit(m_Command.back()))</span></span>
-<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">          36 :         m_Command.append(&quot; &quot;);</span></span>
+<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">          96 :       if(!m_Command.empty() &amp;&amp; std::isdigit(m_Command.back()))</span></span>
+<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">          48 :         m_Command.append(&quot; &quot;);</span></span>
 <span id="L27"><span class="lineNum">      27</span>              : </span>
-<span id="L28"><span class="lineNum">      28</span> <span class="tlaGNC">          72 :       m_Command.append(app == append_mode::no ? &quot;&gt; &quot; : &quot;&gt;&gt; &quot;);</span></span>
-<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">          72 :       m_Command.append(output.string()).append(&quot; 2&gt;&amp;1&quot;);</span></span>
+<span id="L28"><span class="lineNum">      28</span> <span class="tlaGNC">          96 :       m_Command.append(app == append_mode::no ? &quot;&gt; &quot; : &quot;&gt;&gt; &quot;);</span></span>
+<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">          96 :       m_Command.append(output.string()).append(&quot; 2&gt;&amp;1&quot;);</span></span>
 <span id="L30"><span class="lineNum">      30</span>              :     }</span>
-<span id="L31"><span class="lineNum">      31</span> <span class="tlaGNC">          72 :   }</span></span>
+<span id="L31"><span class="lineNum">      31</span> <span class="tlaGNC">          96 :   }</span></span>
 <span id="L32"><span class="lineNum">      32</span>              : </span>
-<span id="L33"><span class="lineNum">      33</span> <span class="tlaGNC">          72 :   shell_command::shell_command(std::string_view preamble, std::string cmd, const std::filesystem::path&amp; output, append_mode app)</span></span>
+<span id="L33"><span class="lineNum">      33</span> <span class="tlaGNC">          96 :   shell_command::shell_command(std::string_view preamble, std::string cmd, const std::filesystem::path&amp; output, append_mode app)</span></span>
 <span id="L34"><span class="lineNum">      34</span>              :   {</span>
 <span id="L35"><span class="lineNum">      35</span>              :     const auto pre{</span>
 <span id="L36"><span class="lineNum">      36</span> <span class="tlaUNC tlaBgUNC">           0 :       [&amp;]() -&gt; shell_command {</span></span>
-<span id="L37"><span class="lineNum">      37</span> <span class="tlaGNC tlaBgGNC">          72 :         if(!preamble.empty())</span></span>
+<span id="L37"><span class="lineNum">      37</span> <span class="tlaGNC tlaBgGNC">          96 :         if(!preamble.empty())</span></span>
 <span id="L38"><span class="lineNum">      38</span>              :         {</span>
 <span id="L39"><span class="lineNum">      39</span> <span class="tlaUNC tlaBgUNC">           0 :           const std::string newline{with_msvc_v ? &quot;echo/&quot; : &quot;echo&quot;};</span></span>
 <span id="L40"><span class="lineNum">      40</span> <span class="tlaUNC">           0 :           return shell_command{newline, output, app}</span></span>
@@ -104,12 +104,12 @@
 <span id="L42"><span class="lineNum">      42</span> <span class="tlaUNC">           0 :               &amp;&amp; shell_command{newline, output, append_mode::yes};</span></span>
 <span id="L43"><span class="lineNum">      43</span> <span class="tlaUNC">           0 :         }</span></span>
 <span id="L44"><span class="lineNum">      44</span>              : </span>
-<span id="L45"><span class="lineNum">      45</span> <span class="tlaGNC tlaBgGNC">          72 :         return {};</span></span>
+<span id="L45"><span class="lineNum">      45</span> <span class="tlaGNC tlaBgGNC">          96 :         return {};</span></span>
 <span id="L46"><span class="lineNum">      46</span>              :       }()</span>
-<span id="L47"><span class="lineNum">      47</span> <span class="tlaGNC">          72 :     };</span></span>
+<span id="L47"><span class="lineNum">      47</span> <span class="tlaGNC">          96 :     };</span></span>
 <span id="L48"><span class="lineNum">      48</span>              : </span>
-<span id="L49"><span class="lineNum">      49</span> <span class="tlaGNC">          72 :     *this = pre &amp;&amp; shell_command{std::move(cmd), output, !pre.empty() ? append_mode::yes : app};</span></span>
-<span id="L50"><span class="lineNum">      50</span> <span class="tlaGNC">          72 :   }</span></span>
+<span id="L49"><span class="lineNum">      49</span> <span class="tlaGNC">          96 :     *this = pre &amp;&amp; shell_command{std::move(cmd), output, !pre.empty() ? append_mode::yes : app};</span></span>
+<span id="L50"><span class="lineNum">      50</span> <span class="tlaGNC">          96 :   }</span></span>
 <span id="L51"><span class="lineNum">      51</span>              : </span>
 <span id="L52"><span class="lineNum">      52</span> <span class="tlaUNC tlaBgUNC">           0 :   void invoke(const shell_command&amp; cmd)</span></span>
 <span id="L53"><span class="lineNum">      53</span>              :   {</span>
