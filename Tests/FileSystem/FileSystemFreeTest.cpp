@@ -29,6 +29,7 @@ namespace sequoia::testing
     {
       fs::path p{"A/B/C"};
       check("", rfind(p, "B") == std::ranges::next(p.begin(), 1, p.end()));
+      check("", rfind(p, "D") == p.end());
     }
 
     {

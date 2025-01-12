@@ -52,6 +52,10 @@ namespace sequoia
     return *--p.end();
   }
 
+  /*! This function has slightly peculiar semantics, due to the fact that path::iterator isn't
+      strictly bidirectional - which MSVC exploits. Therefore, it returns a forward iterator
+      to the last instance of a pattern or end, otherwise.
+  */
   template<class Path, class Pattern, class Proj=std::identity>
     requires std::is_same_v<std::remove_cvref_t<Path>, std::filesystem::path> && std::predicate<std::ranges::equal_to, std::invoke_result_t<Proj, std::filesystem::path> , Pattern>
   [[nodiscard]]
@@ -62,9 +66,9 @@ namespace sequoia
     while(i != p.begin())
     {
       --i;
-      if(std::ranges::equal_to{}(proj(*i), pattern)) break;
+      if(std::ranges::equal_to{}(proj(*i), pattern)) return i;
     }
 
-    return i;
+    return p.end();
   }
 }
