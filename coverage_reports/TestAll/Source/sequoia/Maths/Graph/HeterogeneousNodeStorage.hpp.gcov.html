@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2025-01-12 17:02:37</td>
+            <td class="headerValue">2025-01-12 21:38:39</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -100,47 +100,47 @@
 <span id="L38"><span class="lineNum">      38</span>              :     {}</span>
 <span id="L39"><span class="lineNum">      39</span>              : </span>
 <span id="L40"><span class="lineNum">      40</span>              :     [[nodiscard]]</span>
-<span id="L41"><span class="lineNum">      41</span> <span class="tlaGNC tlaBgGNC">          48 :     constexpr std::size_t size() const noexcept</span></span>
+<span id="L41"><span class="lineNum">      41</span> <span class="tlaGNC tlaBgGNC">          24 :     constexpr std::size_t size() const noexcept</span></span>
 <span id="L42"><span class="lineNum">      42</span>              :     {</span>
-<span id="L43"><span class="lineNum">      43</span> <span class="tlaGNC">          48 :       return std::tuple_size_v&lt;std::tuple&lt;Ts...&gt;&gt;;</span></span>
+<span id="L43"><span class="lineNum">      43</span> <span class="tlaGNC">          24 :       return std::tuple_size_v&lt;std::tuple&lt;Ts...&gt;&gt;;</span></span>
 <span id="L44"><span class="lineNum">      44</span>              :     }</span>
 <span id="L45"><span class="lineNum">      45</span>              : </span>
 <span id="L46"><span class="lineNum">      46</span>              :     template&lt;std::size_t I&gt;</span>
 <span id="L47"><span class="lineNum">      47</span>              :     [[nodiscard]]</span>
-<span id="L48"><span class="lineNum">      48</span> <span class="tlaGNC">         224 :     constexpr const auto&amp; get_node_weight() const noexcept</span></span>
+<span id="L48"><span class="lineNum">      48</span> <span class="tlaGNC">         256 :     constexpr const auto&amp; get_node_weight() const noexcept</span></span>
 <span id="L49"><span class="lineNum">      49</span>              :     {</span>
-<span id="L50"><span class="lineNum">      50</span> <span class="tlaGNC">         224 :       return std::get&lt;I&gt;(m_Weights);</span></span>
+<span id="L50"><span class="lineNum">      50</span> <span class="tlaGNC">         256 :       return std::get&lt;I&gt;(m_Weights);</span></span>
 <span id="L51"><span class="lineNum">      51</span>              :     }</span>
 <span id="L52"><span class="lineNum">      52</span>              : </span>
 <span id="L53"><span class="lineNum">      53</span>              :     template&lt;class T&gt;</span>
 <span id="L54"><span class="lineNum">      54</span>              :     [[nodiscard]]</span>
-<span id="L55"><span class="lineNum">      55</span> <span class="tlaGNC">          96 :     constexpr const auto&amp; get_node_weight() const noexcept</span></span>
+<span id="L55"><span class="lineNum">      55</span> <span class="tlaGNC">         144 :     constexpr const auto&amp; get_node_weight() const noexcept</span></span>
 <span id="L56"><span class="lineNum">      56</span>              :     {</span>
-<span id="L57"><span class="lineNum">      57</span> <span class="tlaGNC">          96 :       return std::get&lt;T&gt;(m_Weights);</span></span>
+<span id="L57"><span class="lineNum">      57</span> <span class="tlaGNC">         144 :       return std::get&lt;T&gt;(m_Weights);</span></span>
 <span id="L58"><span class="lineNum">      58</span>              :     }</span>
 <span id="L59"><span class="lineNum">      59</span>              : </span>
 <span id="L60"><span class="lineNum">      60</span>              :     template&lt;std::size_t I, class W&gt;</span>
-<span id="L61"><span class="lineNum">      61</span> <span class="tlaGNC">          16 :     constexpr void set_node_weight(W w)</span></span>
+<span id="L61"><span class="lineNum">      61</span> <span class="tlaGNC">          24 :     constexpr void set_node_weight(W w)</span></span>
 <span id="L62"><span class="lineNum">      62</span>              :     {</span>
-<span id="L63"><span class="lineNum">      63</span> <span class="tlaGNC">          16 :       std::get&lt;I&gt;(m_Weights) = std::move(w);</span></span>
-<span id="L64"><span class="lineNum">      64</span> <span class="tlaGNC">          16 :     }</span></span>
+<span id="L63"><span class="lineNum">      63</span> <span class="tlaGNC">          24 :       std::get&lt;I&gt;(m_Weights) = std::move(w);</span></span>
+<span id="L64"><span class="lineNum">      64</span> <span class="tlaGNC">          24 :     }</span></span>
 <span id="L65"><span class="lineNum">      65</span>              : </span>
 <span id="L66"><span class="lineNum">      66</span>              :     template&lt;class T, class W&gt;</span>
-<span id="L67"><span class="lineNum">      67</span> <span class="tlaGNC">          16 :     constexpr void set_node_weight(W w)</span></span>
+<span id="L67"><span class="lineNum">      67</span> <span class="tlaGNC">          24 :     constexpr void set_node_weight(W w)</span></span>
 <span id="L68"><span class="lineNum">      68</span>              :     {</span>
-<span id="L69"><span class="lineNum">      69</span> <span class="tlaGNC">          16 :       std::get&lt;T&gt;(m_Weights) = std::move(w);</span></span>
-<span id="L70"><span class="lineNum">      70</span> <span class="tlaGNC">          16 :     }</span></span>
+<span id="L69"><span class="lineNum">      69</span> <span class="tlaGNC">          24 :       std::get&lt;T&gt;(m_Weights) = std::move(w);</span></span>
+<span id="L70"><span class="lineNum">      70</span> <span class="tlaGNC">          24 :     }</span></span>
 <span id="L71"><span class="lineNum">      71</span>              : </span>
 <span id="L72"><span class="lineNum">      72</span>              :     template&lt;std::size_t I, class Fn&gt;</span>
-<span id="L73"><span class="lineNum">      73</span> <span class="tlaGNC">          16 :     constexpr decltype(auto) mutate_node_weight(Fn fn)</span></span>
+<span id="L73"><span class="lineNum">      73</span> <span class="tlaGNC">          24 :     constexpr decltype(auto) mutate_node_weight(Fn fn)</span></span>
 <span id="L74"><span class="lineNum">      74</span>              :     {</span>
-<span id="L75"><span class="lineNum">      75</span> <span class="tlaGNC">          16 :       return fn(std::get&lt;I&gt;(m_Weights));</span></span>
+<span id="L75"><span class="lineNum">      75</span> <span class="tlaGNC">          24 :       return fn(std::get&lt;I&gt;(m_Weights));</span></span>
 <span id="L76"><span class="lineNum">      76</span>              :     }</span>
 <span id="L77"><span class="lineNum">      77</span>              : </span>
 <span id="L78"><span class="lineNum">      78</span>              :     template&lt;class T, class Fn&gt;</span>
-<span id="L79"><span class="lineNum">      79</span> <span class="tlaGNC">          16 :     constexpr decltype(auto) mutate_node_weight(Fn fn)</span></span>
+<span id="L79"><span class="lineNum">      79</span> <span class="tlaGNC">          24 :     constexpr decltype(auto) mutate_node_weight(Fn fn)</span></span>
 <span id="L80"><span class="lineNum">      80</span>              :     {</span>
-<span id="L81"><span class="lineNum">      81</span> <span class="tlaGNC">          16 :       return fn(std::get&lt;T&gt;(m_Weights));</span></span>
+<span id="L81"><span class="lineNum">      81</span> <span class="tlaGNC">          24 :       return fn(std::get&lt;T&gt;(m_Weights));</span></span>
 <span id="L82"><span class="lineNum">      82</span>              :     }</span>
 <span id="L83"><span class="lineNum">      83</span>              : </span>
 <span id="L84"><span class="lineNum">      84</span>              :     [[nodiscard]]</span>

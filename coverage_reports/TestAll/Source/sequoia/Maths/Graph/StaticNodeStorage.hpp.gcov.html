@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2025-01-12 17:02:37</td>
+            <td class="headerValue">2025-01-12 21:38:39</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryMed">87.5&nbsp;%</td>
@@ -93,13 +93,13 @@
 <span id="L31"><span class="lineNum">      31</span>              : </span>
 <span id="L32"><span class="lineNum">      32</span>              :     constexpr static_node_storage() = default;</span>
 <span id="L33"><span class="lineNum">      33</span>              : </span>
-<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC tlaBgGNC">        3168 :     constexpr static_node_storage(const size_type)</span></span>
-<span id="L35"><span class="lineNum">      35</span> <span class="tlaGNC">        4416 :       : base_t{}</span></span>
-<span id="L36"><span class="lineNum">      36</span> <span class="tlaGNC">        3168 :     {}</span></span>
+<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC tlaBgGNC">        1584 :     constexpr static_node_storage(const size_type)</span></span>
+<span id="L35"><span class="lineNum">      35</span> <span class="tlaGNC">        2208 :       : base_t{}</span></span>
+<span id="L36"><span class="lineNum">      36</span> <span class="tlaGNC">        1584 :     {}</span></span>
 <span id="L37"><span class="lineNum">      37</span>              : </span>
-<span id="L38"><span class="lineNum">      38</span> <span class="tlaGNC">         808 :     constexpr static_node_storage(std::initializer_list&lt;weight_type&gt; weights)</span></span>
-<span id="L39"><span class="lineNum">      39</span> <span class="tlaGNC">         808 :       : base_t{utilities::to_array&lt;weight_type, N&gt;(weights, std::identity{})}</span></span>
-<span id="L40"><span class="lineNum">      40</span> <span class="tlaGNC">         808 :     {}</span></span>
+<span id="L38"><span class="lineNum">      38</span> <span class="tlaGNC">         412 :     constexpr static_node_storage(std::initializer_list&lt;weight_type&gt; weights)</span></span>
+<span id="L39"><span class="lineNum">      39</span> <span class="tlaGNC">         412 :       : base_t{utilities::to_array&lt;weight_type, N&gt;(weights, std::identity{})}</span></span>
+<span id="L40"><span class="lineNum">      40</span> <span class="tlaGNC">         412 :     {}</span></span>
 <span id="L41"><span class="lineNum">      41</span>              : </span>
 <span id="L42"><span class="lineNum">      42</span>              :     constexpr static_node_storage(const static_node_storage&amp;)                = default;</span>
 <span id="L43"><span class="lineNum">      43</span>              :     constexpr static_node_storage&amp; operator=(const static_node_storage&amp;)     = default;</span>
@@ -122,7 +122,7 @@
 <span id="L60"><span class="lineNum">      60</span>              :     constexpr static_node_storage(const std::size_t) {}</span>
 <span id="L61"><span class="lineNum">      61</span>              : </span>
 <span id="L62"><span class="lineNum">      62</span>              :     [[nodiscard]]</span>
-<span id="L63"><span class="lineNum">      63</span> <span class="tlaGNC">        1888 :     constexpr friend bool operator==(const static_node_storage&amp;, const static_node_storage&amp;) noexcept = default;</span></span>
+<span id="L63"><span class="lineNum">      63</span> <span class="tlaGNC">         944 :     constexpr friend bool operator==(const static_node_storage&amp;, const static_node_storage&amp;) noexcept = default;</span></span>
 <span id="L64"><span class="lineNum">      64</span>              : </span>
 <span id="L65"><span class="lineNum">      65</span>              :     [[nodiscard]]</span>
 <span id="L66"><span class="lineNum">      66</span>              :     constexpr static std::size_t size() noexcept { return N; }</span>

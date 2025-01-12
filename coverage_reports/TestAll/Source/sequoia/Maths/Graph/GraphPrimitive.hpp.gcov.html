@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2025-01-12 19:58:35</td>
+            <td class="headerValue">2025-01-12 21:38:39</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">95.1&nbsp;%</td>
@@ -98,9 +98,9 @@
 <span id="L36"><span class="lineNum">      36</span>              :         using reference       = index_type;</span>
 <span id="L37"><span class="lineNum">      37</span>              : </span>
 <span id="L38"><span class="lineNum">      38</span>              :         [[nodiscard]]</span>
-<span id="L39"><span class="lineNum">      39</span> <span class="tlaGNC tlaBgGNC">       13082 :         constexpr graph_type&amp; graph() noexcept</span></span>
+<span id="L39"><span class="lineNum">      39</span> <span class="tlaGNC tlaBgGNC">       13748 :         constexpr graph_type&amp; graph() noexcept</span></span>
 <span id="L40"><span class="lineNum">      40</span>              :         {</span>
-<span id="L41"><span class="lineNum">      41</span> <span class="tlaGNC">       13082 :           return *m_Graph;</span></span>
+<span id="L41"><span class="lineNum">      41</span> <span class="tlaGNC">       13748 :           return *m_Graph;</span></span>
 <span id="L42"><span class="lineNum">      42</span>              :         }</span>
 <span id="L43"><span class="lineNum">      43</span>              : </span>
 <span id="L44"><span class="lineNum">      44</span>              :         [[nodiscard]]</span>
@@ -110,11 +110,11 @@
 <span id="L48"><span class="lineNum">      48</span>              :         }</span>
 <span id="L49"><span class="lineNum">      49</span>              : </span>
 <span id="L50"><span class="lineNum">      50</span>              :         [[nodiscard]]</span>
-<span id="L51"><span class="lineNum">      51</span> <span class="tlaGNC">       31714 :         constexpr static reference get(index_type i) { return i; }</span></span>
+<span id="L51"><span class="lineNum">      51</span> <span class="tlaGNC">       32842 :         constexpr static reference get(index_type i) { return i; }</span></span>
 <span id="L52"><span class="lineNum">      52</span>              :       protected:</span>
 <span id="L53"><span class="lineNum">      53</span>              :         constexpr graph_dereference_policy() = default;</span>
 <span id="L54"><span class="lineNum">      54</span>              : </span>
-<span id="L55"><span class="lineNum">      55</span> <span class="tlaGNC">         578 :         constexpr graph_dereference_policy(graph_type&amp; g) : m_Graph{&amp;g} {}</span></span>
+<span id="L55"><span class="lineNum">      55</span> <span class="tlaGNC">         806 :         constexpr graph_dereference_policy(graph_type&amp; g) : m_Graph{&amp;g} {}</span></span>
 <span id="L56"><span class="lineNum">      56</span>              : </span>
 <span id="L57"><span class="lineNum">      57</span>              :         constexpr graph_dereference_policy(const graph_dereference_policy&amp;)     = default;</span>
 <span id="L58"><span class="lineNum">      58</span>              :         constexpr graph_dereference_policy(graph_dereference_policy&amp;&amp;) noexcept = default;</span>
@@ -136,10 +136,10 @@
 <span id="L74"><span class="lineNum">      74</span>              :     }</span>
 <span id="L75"><span class="lineNum">      75</span>              : </span>
 <span id="L76"><span class="lineNum">      76</span>              :     template&lt;network Connectivity, class Nodes&gt;</span>
-<span id="L77"><span class="lineNum">      77</span> <span class="tlaGNC">       13082 :     constexpr void iter_swap(graph_impl::pseudo_iterator&lt;Connectivity, Nodes&gt; a, graph_impl::pseudo_iterator&lt;Connectivity, Nodes&gt; b)</span></span>
+<span id="L77"><span class="lineNum">      77</span> <span class="tlaGNC">       13748 :     constexpr void iter_swap(graph_impl::pseudo_iterator&lt;Connectivity, Nodes&gt; a, graph_impl::pseudo_iterator&lt;Connectivity, Nodes&gt; b)</span></span>
 <span id="L78"><span class="lineNum">      78</span>              :     {</span>
-<span id="L79"><span class="lineNum">      79</span> <span class="tlaGNC">       13082 :       a.graph().swap_nodes(a.base_iterator(), b.base_iterator());</span></span>
-<span id="L80"><span class="lineNum">      80</span> <span class="tlaGNC">       13082 :     }</span></span>
+<span id="L79"><span class="lineNum">      79</span> <span class="tlaGNC">       13748 :       a.graph().swap_nodes(a.base_iterator(), b.base_iterator());</span></span>
+<span id="L80"><span class="lineNum">      80</span> <span class="tlaGNC">       13748 :     }</span></span>
 <span id="L81"><span class="lineNum">      81</span>              : </span>
 <span id="L82"><span class="lineNum">      82</span>              :     template&lt;class NodeWeight&gt;</span>
 <span id="L83"><span class="lineNum">      83</span>              :     struct tree_initializer</span>
@@ -180,25 +180,25 @@
 <span id="L118"><span class="lineNum">     118</span>              : </span>
 <span id="L119"><span class="lineNum">     119</span>              :       using edges_initializer = std::initializer_list&lt;std::initializer_list&lt;edge_init_type&gt;&gt;;</span>
 <span id="L120"><span class="lineNum">     120</span>              : </span>
-<span id="L121"><span class="lineNum">     121</span> <span class="tlaGNC">        1077 :       constexpr graph_primitive() = default;</span></span>
+<span id="L121"><span class="lineNum">     121</span> <span class="tlaGNC">        1356 :       constexpr graph_primitive() = default;</span></span>
 <span id="L122"><span class="lineNum">     122</span>              : </span>
-<span id="L123"><span class="lineNum">     123</span> <span class="tlaGNC">         338 :       constexpr graph_primitive(edges_initializer edges)</span></span>
+<span id="L123"><span class="lineNum">     123</span> <span class="tlaGNC">        1352 :       constexpr graph_primitive(edges_initializer edges)</span></span>
 <span id="L124"><span class="lineNum">     124</span>              :         requires std::is_empty_v&lt;node_weight_type&gt;</span>
 <span id="L125"><span class="lineNum">     125</span>              :         : Connectivity{edges}</span>
-<span id="L126"><span class="lineNum">     126</span> <span class="tlaGNC">         338 :         , Nodes{}</span></span>
-<span id="L127"><span class="lineNum">     127</span> <span class="tlaGNC">         265 :       {}</span></span>
+<span id="L126"><span class="lineNum">     126</span> <span class="tlaGNC">        1352 :         , Nodes{}</span></span>
+<span id="L127"><span class="lineNum">     127</span> <span class="tlaGNC">        1060 :       {}</span></span>
 <span id="L128"><span class="lineNum">     128</span>              : </span>
-<span id="L129"><span class="lineNum">     129</span> <span class="tlaGNC">         880 :       constexpr graph_primitive(edges_initializer edges)</span></span>
+<span id="L129"><span class="lineNum">     129</span> <span class="tlaGNC">        3520 :       constexpr graph_primitive(edges_initializer edges)</span></span>
 <span id="L130"><span class="lineNum">     130</span>              :         requires (!std::is_empty_v&lt;node_weight_type&gt; &amp;&amp; !heterogeneous_nodes&lt;graph_primitive&gt; &amp;&amp; std::is_default_constructible_v&lt;node_weight_type&gt;)</span>
 <span id="L131"><span class="lineNum">     131</span>              :         : Connectivity{edges}</span>
-<span id="L132"><span class="lineNum">     132</span> <span class="tlaGNC">         873 :         , Nodes(edges.size())</span></span>
-<span id="L133"><span class="lineNum">     133</span> <span class="tlaGNC">         766 :       {}</span></span>
+<span id="L132"><span class="lineNum">     132</span> <span class="tlaGNC">        3492 :         , Nodes(edges.size())</span></span>
+<span id="L133"><span class="lineNum">     133</span> <span class="tlaGNC">        3064 :       {}</span></span>
 <span id="L134"><span class="lineNum">     134</span>              : </span>
-<span id="L135"><span class="lineNum">     135</span> <span class="tlaGNC">        1125 :       constexpr graph_primitive(edges_initializer edges, std::initializer_list&lt;node_weight_type&gt; nodeWeights)</span></span>
+<span id="L135"><span class="lineNum">     135</span> <span class="tlaGNC">        3708 :       constexpr graph_primitive(edges_initializer edges, std::initializer_list&lt;node_weight_type&gt; nodeWeights)</span></span>
 <span id="L136"><span class="lineNum">     136</span>              :         requires (!std::is_empty_v&lt;node_weight_type&gt; &amp;&amp; !heterogeneous_nodes&lt;graph_primitive&gt;)</span>
-<span id="L137"><span class="lineNum">     137</span> <span class="tlaGNC">        1125 :         : Connectivity{check_initialization(edges, nodeWeights.size(), edges.size())}</span></span>
-<span id="L138"><span class="lineNum">     138</span> <span class="tlaGNC">        2190 :         , Nodes{nodeWeights}</span></span>
-<span id="L139"><span class="lineNum">     139</span> <span class="tlaGNC">        1065 :       {}</span></span>
+<span id="L137"><span class="lineNum">     137</span> <span class="tlaGNC">        3708 :         : Connectivity{check_initialization(edges, nodeWeights.size(), edges.size())}</span></span>
+<span id="L138"><span class="lineNum">     138</span> <span class="tlaGNC">        7176 :         , Nodes{nodeWeights}</span></span>
+<span id="L139"><span class="lineNum">     139</span> <span class="tlaGNC">        3468 :       {}</span></span>
 <span id="L140"><span class="lineNum">     140</span>              : </span>
 <span id="L141"><span class="lineNum">     141</span>              :       template&lt;class... NodeWeights&gt;</span>
 <span id="L142"><span class="lineNum">     142</span>              :         requires heterogeneous_nodes&lt;graph_primitive&gt;</span>
@@ -221,12 +221,12 @@
 <span id="L159"><span class="lineNum">     159</span>              :       template&lt;tree_link_direction dir&gt;</span>
 <span id="L160"><span class="lineNum">     160</span>              :       requires (    !heterogeneous_nodes&lt;graph_primitive&gt;</span>
 <span id="L161"><span class="lineNum">     161</span>              :                  &amp;&amp; ((dir == tree_link_direction::symmetric) || is_directed(Connectivity::flavour)))</span>
-<span id="L162"><span class="lineNum">     162</span> <span class="tlaGNC">       18934 :       constexpr graph_primitive(tree_initializer&lt;node_weight_type&gt; tree, tree_link_direction_constant&lt;dir&gt; tdc)</span></span>
-<span id="L163"><span class="lineNum">     163</span> <span class="tlaGNC">       18934 :       {</span></span>
-<span id="L164"><span class="lineNum">     164</span> <span class="tlaGNC">       18934 :         build_tree(std::numeric_limits&lt;size_type&gt;::max(), tree, tdc);</span></span>
-<span id="L165"><span class="lineNum">     165</span> <span class="tlaGNC">       18934 :       }</span></span>
+<span id="L162"><span class="lineNum">     162</span> <span class="tlaGNC">       21409 :       constexpr graph_primitive(tree_initializer&lt;node_weight_type&gt; tree, tree_link_direction_constant&lt;dir&gt; tdc)</span></span>
+<span id="L163"><span class="lineNum">     163</span> <span class="tlaGNC">       21409 :       {</span></span>
+<span id="L164"><span class="lineNum">     164</span> <span class="tlaGNC">       21409 :         build_tree(std::numeric_limits&lt;size_type&gt;::max(), tree, tdc);</span></span>
+<span id="L165"><span class="lineNum">     165</span> <span class="tlaGNC">       21409 :       }</span></span>
 <span id="L166"><span class="lineNum">     166</span>              : </span>
-<span id="L167"><span class="lineNum">     167</span> <span class="tlaGNC">       57792 :       constexpr graph_primitive(const graph_primitive&amp;) = default;</span></span>
+<span id="L167"><span class="lineNum">     167</span> <span class="tlaGNC">      177201 :       constexpr graph_primitive(const graph_primitive&amp;) = default;</span></span>
 <span id="L168"><span class="lineNum">     168</span>              : </span>
 <span id="L169"><span class="lineNum">     169</span>              :       [[nodiscard]]</span>
 <span id="L170"><span class="lineNum">     170</span>              :       constexpr size_type size() const noexcept</span>
@@ -234,15 +234,15 @@
 <span id="L172"><span class="lineNum">     172</span>              :         return connectivity_type::size();</span>
 <span id="L173"><span class="lineNum">     173</span>              :       }</span>
 <span id="L174"><span class="lineNum">     174</span>              : </span>
-<span id="L175"><span class="lineNum">     175</span> <span class="tlaGNC">       13573 :       constexpr void swap_nodes(edge_index_type i, edge_index_type j)</span></span>
+<span id="L175"><span class="lineNum">     175</span> <span class="tlaGNC">       15712 :       constexpr void swap_nodes(edge_index_type i, edge_index_type j)</span></span>
 <span id="L176"><span class="lineNum">     176</span>              :       {</span>
 <span id="L177"><span class="lineNum">     177</span>              :         if constexpr(!std::is_empty_v&lt;node_weight_type&gt;)</span>
 <span id="L178"><span class="lineNum">     178</span>              :         {</span>
-<span id="L179"><span class="lineNum">     179</span> <span class="tlaGNC">       13433 :           Nodes::swap_nodes(i, j);</span></span>
+<span id="L179"><span class="lineNum">     179</span> <span class="tlaGNC">       15152 :           Nodes::swap_nodes(i, j);</span></span>
 <span id="L180"><span class="lineNum">     180</span>              :         }</span>
 <span id="L181"><span class="lineNum">     181</span>              : </span>
-<span id="L182"><span class="lineNum">     182</span> <span class="tlaGNC">       13537 :         Connectivity::swap_nodes(i, j);</span></span>
-<span id="L183"><span class="lineNum">     183</span> <span class="tlaGNC">       13519 :       }</span></span>
+<span id="L182"><span class="lineNum">     182</span> <span class="tlaGNC">       15568 :         Connectivity::swap_nodes(i, j);</span></span>
+<span id="L183"><span class="lineNum">     183</span> <span class="tlaGNC">       15496 :       }</span></span>
 <span id="L184"><span class="lineNum">     184</span>              : </span>
 <span id="L185"><span class="lineNum">     185</span>              :       template&lt;class Compare&gt;</span>
 <span id="L186"><span class="lineNum">     186</span>              :       constexpr void sort_nodes(Compare c)</span>
@@ -251,15 +251,15 @@
 <span id="L189"><span class="lineNum">     189</span>              :       }</span>
 <span id="L190"><span class="lineNum">     190</span>              : </span>
 <span id="L191"><span class="lineNum">     191</span>              :       template&lt;class Compare&gt;</span>
-<span id="L192"><span class="lineNum">     192</span> <span class="tlaGNC">         289 :       constexpr void sort_nodes(const edge_index_type first, const edge_index_type last, Compare c)</span></span>
+<span id="L192"><span class="lineNum">     192</span> <span class="tlaGNC">         403 :       constexpr void sort_nodes(const edge_index_type first, const edge_index_type last, Compare c)</span></span>
 <span id="L193"><span class="lineNum">     193</span>              :       {</span>
-<span id="L194"><span class="lineNum">     194</span> <span class="tlaGNC">         289 :         sequoia::sort(pseudo_iterator{first, *this}, pseudo_iterator{last, *this}, std::move(c));</span></span>
-<span id="L195"><span class="lineNum">     195</span> <span class="tlaGNC">         289 :       }</span></span>
+<span id="L194"><span class="lineNum">     194</span> <span class="tlaGNC">         403 :         sequoia::sort(pseudo_iterator{first, *this}, pseudo_iterator{last, *this}, std::move(c));</span></span>
+<span id="L195"><span class="lineNum">     195</span> <span class="tlaGNC">         403 :       }</span></span>
 <span id="L196"><span class="lineNum">     196</span>              : </span>
 <span id="L197"><span class="lineNum">     197</span>              :       //===============================equality (not isomorphism) operators================================//</span>
 <span id="L198"><span class="lineNum">     198</span>              : </span>
 <span id="L199"><span class="lineNum">     199</span>              :       [[nodiscard]]</span>
-<span id="L200"><span class="lineNum">     200</span> <span class="tlaGNC">       46923 :       friend constexpr bool operator==(const graph_primitive&amp;, const graph_primitive&amp;) noexcept = default;</span></span>
+<span id="L200"><span class="lineNum">     200</span> <span class="tlaGNC">      187692 :       friend constexpr bool operator==(const graph_primitive&amp;, const graph_primitive&amp;) noexcept = default;</span></span>
 <span id="L201"><span class="lineNum">     201</span>              :     protected:</span>
 <span id="L202"><span class="lineNum">     202</span>              :       // Constructors with allocators</span>
 <span id="L203"><span class="lineNum">     203</span>              : </span>
@@ -272,11 +272,11 @@
 <span id="L210"><span class="lineNum">     210</span>              :         alloc NodeAllocator</span>
 <span id="L211"><span class="lineNum">     211</span>              :       &gt;</span>
 <span id="L212"><span class="lineNum">     212</span>              :         requires enableNodeAllocation&lt;node_weight_type&gt;</span>
-<span id="L213"><span class="lineNum">     213</span> <span class="tlaGNC">           9 :       constexpr graph_primitive(const EdgeAllocator&amp; edgeAlloc, const NodeAllocator&amp; nodeAlloc)</span></span>
+<span id="L213"><span class="lineNum">     213</span> <span class="tlaGNC">          36 :       constexpr graph_primitive(const EdgeAllocator&amp; edgeAlloc, const NodeAllocator&amp; nodeAlloc)</span></span>
 <span id="L214"><span class="lineNum">     214</span>              :        </span>
 <span id="L215"><span class="lineNum">     215</span>              :         : Connectivity(edgeAlloc)</span>
-<span id="L216"><span class="lineNum">     216</span> <span class="tlaGNC">           9 :         , Nodes(nodeAlloc)</span></span>
-<span id="L217"><span class="lineNum">     217</span> <span class="tlaGNC">           9 :       {}</span></span>
+<span id="L216"><span class="lineNum">     216</span> <span class="tlaGNC">          36 :         , Nodes(nodeAlloc)</span></span>
+<span id="L217"><span class="lineNum">     217</span> <span class="tlaGNC">          36 :       {}</span></span>
 <span id="L218"><span class="lineNum">     218</span>              : </span>
 <span id="L219"><span class="lineNum">     219</span>              :       template</span>
 <span id="L220"><span class="lineNum">     220</span>              :       &lt;</span>
@@ -285,16 +285,16 @@
 <span id="L223"><span class="lineNum">     223</span>              :         alloc NodeAllocator</span>
 <span id="L224"><span class="lineNum">     224</span>              :       &gt;</span>
 <span id="L225"><span class="lineNum">     225</span>              :         requires (enableNodeAllocation&lt;node_weight_type&gt;)</span>
-<span id="L226"><span class="lineNum">     226</span> <span class="tlaGNC">           9 :       constexpr graph_primitive(const EdgeAllocator&amp; edgeAlloc, const EdgePartitionsAllocator&amp; edgeParitionsAlloc, const NodeAllocator&amp; nodeAlloc)</span></span>
+<span id="L226"><span class="lineNum">     226</span> <span class="tlaGNC">          36 :       constexpr graph_primitive(const EdgeAllocator&amp; edgeAlloc, const EdgePartitionsAllocator&amp; edgeParitionsAlloc, const NodeAllocator&amp; nodeAlloc)</span></span>
 <span id="L227"><span class="lineNum">     227</span>              :         : Connectivity(edgeAlloc, edgeParitionsAlloc)</span>
-<span id="L228"><span class="lineNum">     228</span> <span class="tlaGNC">           9 :         , Nodes(nodeAlloc)</span></span>
-<span id="L229"><span class="lineNum">     229</span> <span class="tlaGNC">           9 :       {}</span></span>
+<span id="L228"><span class="lineNum">     228</span> <span class="tlaGNC">          36 :         , Nodes(nodeAlloc)</span></span>
+<span id="L229"><span class="lineNum">     229</span> <span class="tlaGNC">          36 :       {}</span></span>
 <span id="L230"><span class="lineNum">     230</span>              : </span>
 <span id="L231"><span class="lineNum">     231</span>              :       template&lt;alloc EdgeAllocator&gt;</span>
 <span id="L232"><span class="lineNum">     232</span>              :         requires (!enableNodeAllocation&lt;node_weight_type&gt;)</span>
-<span id="L233"><span class="lineNum">     233</span> <span class="tlaGNC">           3 :       constexpr graph_primitive(const EdgeAllocator&amp; edgeAlloc)</span></span>
-<span id="L234"><span class="lineNum">     234</span> <span class="tlaGNC">           3 :         : Connectivity(edgeAlloc)</span></span>
-<span id="L235"><span class="lineNum">     235</span> <span class="tlaGNC">           3 :       {}</span></span>
+<span id="L233"><span class="lineNum">     233</span> <span class="tlaGNC">          12 :       constexpr graph_primitive(const EdgeAllocator&amp; edgeAlloc)</span></span>
+<span id="L234"><span class="lineNum">     234</span> <span class="tlaGNC">          12 :         : Connectivity(edgeAlloc)</span></span>
+<span id="L235"><span class="lineNum">     235</span> <span class="tlaGNC">          12 :       {}</span></span>
 <span id="L236"><span class="lineNum">     236</span>              : </span>
 <span id="L237"><span class="lineNum">     237</span>              :       template</span>
 <span id="L238"><span class="lineNum">     238</span>              :       &lt;</span>
@@ -302,9 +302,9 @@
 <span id="L240"><span class="lineNum">     240</span>              :         alloc EdgePartitionsAllocator</span>
 <span id="L241"><span class="lineNum">     241</span>              :       &gt;</span>
 <span id="L242"><span class="lineNum">     242</span>              :         requires(!enableNodeAllocation&lt;node_weight_type&gt;)</span>
-<span id="L243"><span class="lineNum">     243</span> <span class="tlaGNC">           3 :       constexpr graph_primitive(const EdgeAllocator&amp; edgeAlloc, const EdgePartitionsAllocator&amp; edgeParitionsAlloc)</span></span>
-<span id="L244"><span class="lineNum">     244</span> <span class="tlaGNC">           3 :         : Connectivity(edgeAlloc, edgeParitionsAlloc)</span></span>
-<span id="L245"><span class="lineNum">     245</span> <span class="tlaGNC">           3 :       {}</span></span>
+<span id="L243"><span class="lineNum">     243</span> <span class="tlaGNC">          12 :       constexpr graph_primitive(const EdgeAllocator&amp; edgeAlloc, const EdgePartitionsAllocator&amp; edgeParitionsAlloc)</span></span>
+<span id="L244"><span class="lineNum">     244</span> <span class="tlaGNC">          12 :         : Connectivity(edgeAlloc, edgeParitionsAlloc)</span></span>
+<span id="L245"><span class="lineNum">     245</span> <span class="tlaGNC">          12 :       {}</span></span>
 <span id="L246"><span class="lineNum">     246</span>              : </span>
 <span id="L247"><span class="lineNum">     247</span>              :       template</span>
 <span id="L248"><span class="lineNum">     248</span>              :       &lt;</span>
@@ -312,10 +312,10 @@
 <span id="L250"><span class="lineNum">     250</span>              :         alloc NodeAllocator</span>
 <span id="L251"><span class="lineNum">     251</span>              :       &gt;</span>
 <span id="L252"><span class="lineNum">     252</span>              :         requires enableNodeAllocation&lt;node_weight_type&gt;</span>
-<span id="L253"><span class="lineNum">     253</span> <span class="tlaGNC">           9 :       constexpr graph_primitive(edges_initializer edges, const EdgeAllocator&amp; edgeAlloc, std::initializer_list&lt;node_weight_type&gt; nodeWeights, const NodeAllocator&amp; nodeAlloc)</span></span>
+<span id="L253"><span class="lineNum">     253</span> <span class="tlaGNC">          36 :       constexpr graph_primitive(edges_initializer edges, const EdgeAllocator&amp; edgeAlloc, std::initializer_list&lt;node_weight_type&gt; nodeWeights, const NodeAllocator&amp; nodeAlloc)</span></span>
 <span id="L254"><span class="lineNum">     254</span>              :         : Connectivity{edges, edgeAlloc}</span>
-<span id="L255"><span class="lineNum">     255</span> <span class="tlaGNC">           9 :         , Nodes{nodeWeights, nodeAlloc}</span></span>
-<span id="L256"><span class="lineNum">     256</span> <span class="tlaGNC">           9 :       {}</span></span>
+<span id="L255"><span class="lineNum">     255</span> <span class="tlaGNC">          36 :         , Nodes{nodeWeights, nodeAlloc}</span></span>
+<span id="L256"><span class="lineNum">     256</span> <span class="tlaGNC">          36 :       {}</span></span>
 <span id="L257"><span class="lineNum">     257</span>              : </span>
 <span id="L258"><span class="lineNum">     258</span>              :       template</span>
 <span id="L259"><span class="lineNum">     259</span>              :       &lt;</span>
@@ -324,10 +324,10 @@
 <span id="L262"><span class="lineNum">     262</span>              :         alloc NodeAllocator</span>
 <span id="L263"><span class="lineNum">     263</span>              :       &gt;</span>
 <span id="L264"><span class="lineNum">     264</span>              :         requires enableNodeAllocation&lt;node_weight_type&gt;</span>
-<span id="L265"><span class="lineNum">     265</span> <span class="tlaGNC">           9 :       constexpr graph_primitive(edges_initializer edges, const EdgeAllocator&amp; edgeAlloc, const EdgePartitionsAllocator&amp; edgeParitionsAlloc, std::initializer_list&lt;node_weight_type&gt; nodeWeights, const NodeAllocator&amp; nodeAlloc)</span></span>
+<span id="L265"><span class="lineNum">     265</span> <span class="tlaGNC">          36 :       constexpr graph_primitive(edges_initializer edges, const EdgeAllocator&amp; edgeAlloc, const EdgePartitionsAllocator&amp; edgeParitionsAlloc, std::initializer_list&lt;node_weight_type&gt; nodeWeights, const NodeAllocator&amp; nodeAlloc)</span></span>
 <span id="L266"><span class="lineNum">     266</span>              :         : Connectivity{edges, edgeAlloc, edgeParitionsAlloc}</span>
-<span id="L267"><span class="lineNum">     267</span> <span class="tlaGNC">           9 :         , Nodes{nodeWeights, nodeAlloc}</span></span>
-<span id="L268"><span class="lineNum">     268</span> <span class="tlaGNC">           9 :       {}</span></span>
+<span id="L267"><span class="lineNum">     267</span> <span class="tlaGNC">          36 :         , Nodes{nodeWeights, nodeAlloc}</span></span>
+<span id="L268"><span class="lineNum">     268</span> <span class="tlaGNC">          36 :       {}</span></span>
 <span id="L269"><span class="lineNum">     269</span>              : </span>
 <span id="L270"><span class="lineNum">     270</span>              :       template</span>
 <span id="L271"><span class="lineNum">     271</span>              :       &lt;</span>
@@ -347,10 +347,10 @@
 <span id="L285"><span class="lineNum">     285</span>              :         alloc NodeAllocator</span>
 <span id="L286"><span class="lineNum">     286</span>              :       &gt;</span>
 <span id="L287"><span class="lineNum">     287</span>              :         requires enableNodeAllocation&lt;node_weight_type&gt;</span>
-<span id="L288"><span class="lineNum">     288</span> <span class="tlaGNC">          27 :       constexpr graph_primitive(edges_initializer edges, const EdgeAllocator&amp; edgeAlloc, const NodeAllocator&amp; nodeAlloc)</span></span>
+<span id="L288"><span class="lineNum">     288</span> <span class="tlaGNC">         108 :       constexpr graph_primitive(edges_initializer edges, const EdgeAllocator&amp; edgeAlloc, const NodeAllocator&amp; nodeAlloc)</span></span>
 <span id="L289"><span class="lineNum">     289</span>              :         : Connectivity{edges, edgeAlloc}</span>
-<span id="L290"><span class="lineNum">     290</span> <span class="tlaGNC">          27 :         , Nodes(edges.size(), nodeAlloc)</span></span>
-<span id="L291"><span class="lineNum">     291</span> <span class="tlaGNC">          27 :       {}</span></span>
+<span id="L290"><span class="lineNum">     290</span> <span class="tlaGNC">         108 :         , Nodes(edges.size(), nodeAlloc)</span></span>
+<span id="L291"><span class="lineNum">     291</span> <span class="tlaGNC">         108 :       {}</span></span>
 <span id="L292"><span class="lineNum">     292</span>              : </span>
 <span id="L293"><span class="lineNum">     293</span>              :       template</span>
 <span id="L294"><span class="lineNum">     294</span>              :       &lt;</span>
@@ -359,10 +359,10 @@
 <span id="L297"><span class="lineNum">     297</span>              :         alloc NodeAllocator</span>
 <span id="L298"><span class="lineNum">     298</span>              :       &gt;</span>
 <span id="L299"><span class="lineNum">     299</span>              :         requires enableNodeAllocation&lt;node_weight_type&gt;</span>
-<span id="L300"><span class="lineNum">     300</span> <span class="tlaGNC">           9 :       constexpr graph_primitive(edges_initializer edges, const EdgeAllocator&amp; edgeAlloc, const EdgePartitionsAllocator&amp; edgeParitionsAlloc, const NodeAllocator&amp; nodeAlloc)</span></span>
+<span id="L300"><span class="lineNum">     300</span> <span class="tlaGNC">          36 :       constexpr graph_primitive(edges_initializer edges, const EdgeAllocator&amp; edgeAlloc, const EdgePartitionsAllocator&amp; edgeParitionsAlloc, const NodeAllocator&amp; nodeAlloc)</span></span>
 <span id="L301"><span class="lineNum">     301</span>              :         : Connectivity{edges, edgeAlloc, edgeParitionsAlloc}</span>
-<span id="L302"><span class="lineNum">     302</span> <span class="tlaGNC">           9 :         , Nodes(edges.size(), nodeAlloc)</span></span>
-<span id="L303"><span class="lineNum">     303</span> <span class="tlaGNC">           9 :       {}</span></span>
+<span id="L302"><span class="lineNum">     302</span> <span class="tlaGNC">          36 :         , Nodes(edges.size(), nodeAlloc)</span></span>
+<span id="L303"><span class="lineNum">     303</span> <span class="tlaGNC">          36 :       {}</span></span>
 <span id="L304"><span class="lineNum">     304</span>              : </span>
 <span id="L305"><span class="lineNum">     305</span>              :       template</span>
 <span id="L306"><span class="lineNum">     306</span>              :       &lt;</span>
@@ -370,17 +370,17 @@
 <span id="L308"><span class="lineNum">     308</span>              :         alloc EdgePartitionsAllocator</span>
 <span id="L309"><span class="lineNum">     309</span>              :       &gt;</span>
 <span id="L310"><span class="lineNum">     310</span>              :         requires (!enableNodeAllocation&lt;node_weight_type&gt;)</span>
-<span id="L311"><span class="lineNum">     311</span> <span class="tlaGNC">           3 :       constexpr graph_primitive(edges_initializer edges, const EdgeAllocator&amp; edgeAlloc, const EdgePartitionsAllocator&amp; edgeParitionsAlloc)</span></span>
+<span id="L311"><span class="lineNum">     311</span> <span class="tlaGNC">          12 :       constexpr graph_primitive(edges_initializer edges, const EdgeAllocator&amp; edgeAlloc, const EdgePartitionsAllocator&amp; edgeParitionsAlloc)</span></span>
 <span id="L312"><span class="lineNum">     312</span>              :         : Connectivity{edges, edgeAlloc, edgeParitionsAlloc}</span>
-<span id="L313"><span class="lineNum">     313</span> <span class="tlaGNC">           3 :         , Nodes{}</span></span>
-<span id="L314"><span class="lineNum">     314</span> <span class="tlaGNC">           3 :       {}</span></span>
+<span id="L313"><span class="lineNum">     313</span> <span class="tlaGNC">          12 :         , Nodes{}</span></span>
+<span id="L314"><span class="lineNum">     314</span> <span class="tlaGNC">          12 :       {}</span></span>
 <span id="L315"><span class="lineNum">     315</span>              : </span>
 <span id="L316"><span class="lineNum">     316</span>              :       template&lt;alloc EdgeAllocator&gt;</span>
 <span id="L317"><span class="lineNum">     317</span>              :         requires (!enableNodeAllocation&lt;node_weight_type&gt;)</span>
-<span id="L318"><span class="lineNum">     318</span> <span class="tlaGNC">           9 :       constexpr graph_primitive(edges_initializer edges, const EdgeAllocator&amp; edgeAlloc)</span></span>
+<span id="L318"><span class="lineNum">     318</span> <span class="tlaGNC">          36 :       constexpr graph_primitive(edges_initializer edges, const EdgeAllocator&amp; edgeAlloc)</span></span>
 <span id="L319"><span class="lineNum">     319</span>              :         : Connectivity{edges, edgeAlloc}</span>
-<span id="L320"><span class="lineNum">     320</span> <span class="tlaGNC">           9 :         , Nodes{}</span></span>
-<span id="L321"><span class="lineNum">     321</span> <span class="tlaGNC">           9 :       {}</span></span>
+<span id="L320"><span class="lineNum">     320</span> <span class="tlaGNC">          36 :         , Nodes{}</span></span>
+<span id="L321"><span class="lineNum">     321</span> <span class="tlaGNC">          36 :       {}</span></span>
 <span id="L322"><span class="lineNum">     322</span>              : </span>
 <span id="L323"><span class="lineNum">     323</span>              :       // Copy-like constructors with allocators</span>
 <span id="L324"><span class="lineNum">     324</span>              : </span>
@@ -391,10 +391,10 @@
 <span id="L329"><span class="lineNum">     329</span>              :         alloc NodeAllocator</span>
 <span id="L330"><span class="lineNum">     330</span>              :       &gt;</span>
 <span id="L331"><span class="lineNum">     331</span>              :         requires enableNodeAllocation&lt;node_weight_type&gt;</span>
-<span id="L332"><span class="lineNum">     332</span> <span class="tlaGNC">          27 :       constexpr graph_primitive(const graph_primitive&amp; in, const EdgeAllocator&amp; edgeAlloc, const EdgePartitionsAllocator&amp; edgeParitionsAlloc, const NodeAllocator&amp; nodeAlloc)</span></span>
+<span id="L332"><span class="lineNum">     332</span> <span class="tlaGNC">         108 :       constexpr graph_primitive(const graph_primitive&amp; in, const EdgeAllocator&amp; edgeAlloc, const EdgePartitionsAllocator&amp; edgeParitionsAlloc, const NodeAllocator&amp; nodeAlloc)</span></span>
 <span id="L333"><span class="lineNum">     333</span>              :         : Connectivity{static_cast&lt;const Connectivity&amp;&gt;(in), edgeAlloc, edgeParitionsAlloc}</span>
-<span id="L334"><span class="lineNum">     334</span> <span class="tlaGNC">          27 :         , Nodes{static_cast&lt;const Nodes&amp;&gt;(in), nodeAlloc}</span></span>
-<span id="L335"><span class="lineNum">     335</span> <span class="tlaGNC">          27 :       {}</span></span>
+<span id="L334"><span class="lineNum">     334</span> <span class="tlaGNC">         108 :         , Nodes{static_cast&lt;const Nodes&amp;&gt;(in), nodeAlloc}</span></span>
+<span id="L335"><span class="lineNum">     335</span> <span class="tlaGNC">         108 :       {}</span></span>
 <span id="L336"><span class="lineNum">     336</span>              : </span>
 <span id="L337"><span class="lineNum">     337</span>              :       template</span>
 <span id="L338"><span class="lineNum">     338</span>              :       &lt;</span>
@@ -402,10 +402,10 @@
 <span id="L340"><span class="lineNum">     340</span>              :         alloc NodeAllocator</span>
 <span id="L341"><span class="lineNum">     341</span>              :       &gt;</span>
 <span id="L342"><span class="lineNum">     342</span>              :         requires enableNodeAllocation&lt;node_weight_type&gt;</span>
-<span id="L343"><span class="lineNum">     343</span> <span class="tlaGNC">          27 :       constexpr graph_primitive(const graph_primitive&amp; in, const EdgeAllocator&amp; edgeAlloc, const NodeAllocator&amp; nodeAlloc)</span></span>
+<span id="L343"><span class="lineNum">     343</span> <span class="tlaGNC">         108 :       constexpr graph_primitive(const graph_primitive&amp; in, const EdgeAllocator&amp; edgeAlloc, const NodeAllocator&amp; nodeAlloc)</span></span>
 <span id="L344"><span class="lineNum">     344</span>              :         : Connectivity{static_cast&lt;const Connectivity&amp;&gt;(in), edgeAlloc}</span>
-<span id="L345"><span class="lineNum">     345</span> <span class="tlaGNC">          27 :         , Nodes{static_cast&lt;const Nodes&amp;&gt;(in), nodeAlloc}</span></span>
-<span id="L346"><span class="lineNum">     346</span> <span class="tlaGNC">          27 :       {}</span></span>
+<span id="L345"><span class="lineNum">     345</span> <span class="tlaGNC">         108 :         , Nodes{static_cast&lt;const Nodes&amp;&gt;(in), nodeAlloc}</span></span>
+<span id="L346"><span class="lineNum">     346</span> <span class="tlaGNC">         108 :       {}</span></span>
 <span id="L347"><span class="lineNum">     347</span>              : </span>
 <span id="L348"><span class="lineNum">     348</span>              :       template</span>
 <span id="L349"><span class="lineNum">     349</span>              :       &lt;</span>
@@ -413,19 +413,19 @@
 <span id="L351"><span class="lineNum">     351</span>              :         alloc EdgePartitionsAllocator</span>
 <span id="L352"><span class="lineNum">     352</span>              :       &gt;</span>
 <span id="L353"><span class="lineNum">     353</span>              :         requires (!enableNodeAllocation&lt;node_weight_type&gt;)</span>
-<span id="L354"><span class="lineNum">     354</span> <span class="tlaGNC">          12 :       constexpr graph_primitive(const graph_primitive&amp; in, const EdgeAllocator&amp; edgeAlloc, const EdgePartitionsAllocator&amp; edgeParitionsAlloc)</span></span>
+<span id="L354"><span class="lineNum">     354</span> <span class="tlaGNC">          48 :       constexpr graph_primitive(const graph_primitive&amp; in, const EdgeAllocator&amp; edgeAlloc, const EdgePartitionsAllocator&amp; edgeParitionsAlloc)</span></span>
 <span id="L355"><span class="lineNum">     355</span>              :         : Connectivity{static_cast&lt;const Connectivity&amp;&gt;(in), edgeAlloc, edgeParitionsAlloc}</span>
-<span id="L356"><span class="lineNum">     356</span> <span class="tlaGNC">          12 :         , Nodes{static_cast&lt;const Nodes&amp;&gt;(in)}</span></span>
-<span id="L357"><span class="lineNum">     357</span> <span class="tlaGNC">          12 :       {}</span></span>
+<span id="L356"><span class="lineNum">     356</span> <span class="tlaGNC">          48 :         , Nodes{static_cast&lt;const Nodes&amp;&gt;(in)}</span></span>
+<span id="L357"><span class="lineNum">     357</span> <span class="tlaGNC">          48 :       {}</span></span>
 <span id="L358"><span class="lineNum">     358</span>              : </span>
 <span id="L359"><span class="lineNum">     359</span>              :       template&lt;alloc EdgeAllocator&gt;</span>
 <span id="L360"><span class="lineNum">     360</span>              :         requires (!enableNodeAllocation&lt;node_weight_type&gt;)</span>
-<span id="L361"><span class="lineNum">     361</span> <span class="tlaGNC">          10 :       constexpr graph_primitive(const graph_primitive&amp; in, const EdgeAllocator&amp; edgeAlloc)</span></span>
+<span id="L361"><span class="lineNum">     361</span> <span class="tlaGNC">          40 :       constexpr graph_primitive(const graph_primitive&amp; in, const EdgeAllocator&amp; edgeAlloc)</span></span>
 <span id="L362"><span class="lineNum">     362</span>              :         : Connectivity{static_cast&lt;const Connectivity&amp;&gt;(in), edgeAlloc}</span>
-<span id="L363"><span class="lineNum">     363</span> <span class="tlaGNC">          10 :         , Nodes{static_cast&lt;const Nodes&amp;&gt;(in)}</span></span>
-<span id="L364"><span class="lineNum">     364</span> <span class="tlaGNC">          10 :       {}</span></span>
+<span id="L363"><span class="lineNum">     363</span> <span class="tlaGNC">          40 :         , Nodes{static_cast&lt;const Nodes&amp;&gt;(in)}</span></span>
+<span id="L364"><span class="lineNum">     364</span> <span class="tlaGNC">          40 :       {}</span></span>
 <span id="L365"><span class="lineNum">     365</span>              : </span>
-<span id="L366"><span class="lineNum">     366</span> <span class="tlaGNC">       23592 :       constexpr graph_primitive(graph_primitive&amp;&amp;) noexcept = default;</span></span>
+<span id="L366"><span class="lineNum">     366</span> <span class="tlaGNC">       76185 :       constexpr graph_primitive(graph_primitive&amp;&amp;) noexcept = default;</span></span>
 <span id="L367"><span class="lineNum">     367</span>              : </span>
 <span id="L368"><span class="lineNum">     368</span>              :       // Move-like constructors with allocators</span>
 <span id="L369"><span class="lineNum">     369</span>              : </span>
@@ -436,10 +436,10 @@
 <span id="L374"><span class="lineNum">     374</span>              :         alloc NodeAllocator</span>
 <span id="L375"><span class="lineNum">     375</span>              :       &gt;</span>
 <span id="L376"><span class="lineNum">     376</span>              :         requires enableNodeAllocation&lt;node_weight_type&gt;</span>
-<span id="L377"><span class="lineNum">     377</span> <span class="tlaGNC">          27 :       constexpr graph_primitive(graph_primitive&amp;&amp; in, const EdgeAllocator&amp; edgeAlloc, const EdgePartitionsAllocator&amp; edgeParitionsAlloc, const NodeAllocator&amp; nodeAlloc)</span></span>
+<span id="L377"><span class="lineNum">     377</span> <span class="tlaGNC">         108 :       constexpr graph_primitive(graph_primitive&amp;&amp; in, const EdgeAllocator&amp; edgeAlloc, const EdgePartitionsAllocator&amp; edgeParitionsAlloc, const NodeAllocator&amp; nodeAlloc)</span></span>
 <span id="L378"><span class="lineNum">     378</span>              :         : Connectivity{static_cast&lt;Connectivity&amp;&amp;&gt;(in), edgeAlloc, edgeParitionsAlloc}</span>
-<span id="L379"><span class="lineNum">     379</span> <span class="tlaGNC">          27 :         , Nodes{static_cast&lt;Nodes&amp;&amp;&gt;(in), nodeAlloc}</span></span>
-<span id="L380"><span class="lineNum">     380</span> <span class="tlaGNC">          27 :       {}</span></span>
+<span id="L379"><span class="lineNum">     379</span> <span class="tlaGNC">         108 :         , Nodes{static_cast&lt;Nodes&amp;&amp;&gt;(in), nodeAlloc}</span></span>
+<span id="L380"><span class="lineNum">     380</span> <span class="tlaGNC">         108 :       {}</span></span>
 <span id="L381"><span class="lineNum">     381</span>              : </span>
 <span id="L382"><span class="lineNum">     382</span>              :       template</span>
 <span id="L383"><span class="lineNum">     383</span>              :       &lt;</span>
@@ -447,10 +447,10 @@
 <span id="L385"><span class="lineNum">     385</span>              :         alloc NodeAllocator</span>
 <span id="L386"><span class="lineNum">     386</span>              :       &gt;</span>
 <span id="L387"><span class="lineNum">     387</span>              :         requires enableNodeAllocation&lt;node_weight_type&gt;</span>
-<span id="L388"><span class="lineNum">     388</span> <span class="tlaGNC">          27 :       constexpr graph_primitive(graph_primitive&amp;&amp; in, const EdgeAllocator&amp; edgeAlloc, const NodeAllocator&amp; nodeAlloc)</span></span>
+<span id="L388"><span class="lineNum">     388</span> <span class="tlaGNC">         108 :       constexpr graph_primitive(graph_primitive&amp;&amp; in, const EdgeAllocator&amp; edgeAlloc, const NodeAllocator&amp; nodeAlloc)</span></span>
 <span id="L389"><span class="lineNum">     389</span>              :         : Connectivity{static_cast&lt;Connectivity&amp;&amp;&gt;(in), edgeAlloc}</span>
-<span id="L390"><span class="lineNum">     390</span> <span class="tlaGNC">          27 :         , Nodes{static_cast&lt;Nodes&amp;&amp;&gt;(in), nodeAlloc}</span></span>
-<span id="L391"><span class="lineNum">     391</span> <span class="tlaGNC">          27 :       {}</span></span>
+<span id="L390"><span class="lineNum">     390</span> <span class="tlaGNC">         108 :         , Nodes{static_cast&lt;Nodes&amp;&amp;&gt;(in), nodeAlloc}</span></span>
+<span id="L391"><span class="lineNum">     391</span> <span class="tlaGNC">         108 :       {}</span></span>
 <span id="L392"><span class="lineNum">     392</span>              : </span>
 <span id="L393"><span class="lineNum">     393</span>              :       template</span>
 <span id="L394"><span class="lineNum">     394</span>              :       &lt;</span>
@@ -475,11 +475,11 @@
 <span id="L413"><span class="lineNum">     413</span>              :         , Nodes{static_cast&lt;Nodes&amp;&amp;&gt;(in)}</span>
 <span id="L414"><span class="lineNum">     414</span>              :       {}</span>
 <span id="L415"><span class="lineNum">     415</span>              : </span>
-<span id="L416"><span class="lineNum">     416</span> <span class="tlaGNC">      102914 :       ~graph_primitive() = default;</span></span>
+<span id="L416"><span class="lineNum">     416</span> <span class="tlaGNC">      279896 :       ~graph_primitive() = default;</span></span>
 <span id="L417"><span class="lineNum">     417</span>              : </span>
-<span id="L418"><span class="lineNum">     418</span> <span class="tlaGNC">       15219 :       constexpr graph_primitive&amp; operator=(graph_primitive&amp;&amp;) noexcept = default;</span></span>
+<span id="L418"><span class="lineNum">     418</span> <span class="tlaGNC">       60876 :       constexpr graph_primitive&amp; operator=(graph_primitive&amp;&amp;) noexcept = default;</span></span>
 <span id="L419"><span class="lineNum">     419</span>              : </span>
-<span id="L420"><span class="lineNum">     420</span> <span class="tlaGNC">        6529 :       constexpr graph_primitive&amp; operator=(const graph_primitive&amp;) = default;</span></span>
+<span id="L420"><span class="lineNum">     420</span> <span class="tlaGNC">       26116 :       constexpr graph_primitive&amp; operator=(const graph_primitive&amp;) = default;</span></span>
 <span id="L421"><span class="lineNum">     421</span>              : </span>
 <span id="L422"><span class="lineNum">     422</span>              :       void swap(graph_primitive&amp; rhs)</span>
 <span id="L423"><span class="lineNum">     423</span>              :         noexcept(noexcept(this-&gt;Connectivity::swap(rhs)) &amp;&amp; noexcept(this-&gt;Nodes::swap(rhs)))</span>
@@ -488,108 +488,108 @@
 <span id="L426"><span class="lineNum">     426</span>              :         Nodes::swap(rhs);</span>
 <span id="L427"><span class="lineNum">     427</span>              :       }</span>
 <span id="L428"><span class="lineNum">     428</span>              : </span>
-<span id="L429"><span class="lineNum">     429</span> <span class="tlaGNC">          24 :       void reserve_nodes(const size_type size)</span></span>
+<span id="L429"><span class="lineNum">     429</span> <span class="tlaGNC">          96 :       void reserve_nodes(const size_type size)</span></span>
 <span id="L430"><span class="lineNum">     430</span>              :       {</span>
 <span id="L431"><span class="lineNum">     431</span>              :         if constexpr(!std::is_empty_v&lt;node_weight_type&gt;)</span>
 <span id="L432"><span class="lineNum">     432</span>              :         {</span>
-<span id="L433"><span class="lineNum">     433</span> <span class="tlaGNC">          18 :           Nodes::reserve(size);</span></span>
+<span id="L433"><span class="lineNum">     433</span> <span class="tlaGNC">          72 :           Nodes::reserve(size);</span></span>
 <span id="L434"><span class="lineNum">     434</span>              :         }</span>
 <span id="L435"><span class="lineNum">     435</span>              : </span>
-<span id="L436"><span class="lineNum">     436</span> <span class="tlaGNC">          24 :         Connectivity::reserve_nodes(size);</span></span>
-<span id="L437"><span class="lineNum">     437</span> <span class="tlaGNC">          24 :       }</span></span>
+<span id="L436"><span class="lineNum">     436</span> <span class="tlaGNC">          96 :         Connectivity::reserve_nodes(size);</span></span>
+<span id="L437"><span class="lineNum">     437</span> <span class="tlaGNC">          96 :       }</span></span>
 <span id="L438"><span class="lineNum">     438</span>              : </span>
 <span id="L439"><span class="lineNum">     439</span>              :       [[nodiscard]]</span>
-<span id="L440"><span class="lineNum">     440</span> <span class="tlaGNC">          84 :       size_type node_capacity() const noexcept</span></span>
+<span id="L440"><span class="lineNum">     440</span> <span class="tlaGNC">         336 :       size_type node_capacity() const noexcept</span></span>
 <span id="L441"><span class="lineNum">     441</span>              :       {</span>
 <span id="L442"><span class="lineNum">     442</span>              :         if constexpr(!std::is_empty_v&lt;node_weight_type&gt;)</span>
 <span id="L443"><span class="lineNum">     443</span>              :         {</span>
-<span id="L444"><span class="lineNum">     444</span> <span class="tlaGNC">          63 :           return std::ranges::min(Connectivity::node_capacity(), Nodes::capacity());</span></span>
+<span id="L444"><span class="lineNum">     444</span> <span class="tlaGNC">         252 :           return std::ranges::min(Connectivity::node_capacity(), Nodes::capacity());</span></span>
 <span id="L445"><span class="lineNum">     445</span>              :         }</span>
 <span id="L446"><span class="lineNum">     446</span>              :         else</span>
 <span id="L447"><span class="lineNum">     447</span>              :         {</span>
-<span id="L448"><span class="lineNum">     448</span> <span class="tlaGNC">          21 :           return Connectivity::node_capacity();</span></span>
+<span id="L448"><span class="lineNum">     448</span> <span class="tlaGNC">          84 :           return Connectivity::node_capacity();</span></span>
 <span id="L449"><span class="lineNum">     449</span>              :         }</span>
 <span id="L450"><span class="lineNum">     450</span>              :       }</span>
 <span id="L451"><span class="lineNum">     451</span>              : </span>
-<span id="L452"><span class="lineNum">     452</span> <span class="tlaGNC">          24 :       void shrink_to_fit()</span></span>
+<span id="L452"><span class="lineNum">     452</span> <span class="tlaGNC">          96 :       void shrink_to_fit()</span></span>
 <span id="L453"><span class="lineNum">     453</span>              :       {</span>
 <span id="L454"><span class="lineNum">     454</span>              :         if constexpr(!std::is_empty_v&lt;node_weight_type&gt;)</span>
 <span id="L455"><span class="lineNum">     455</span>              :         {</span>
-<span id="L456"><span class="lineNum">     456</span> <span class="tlaGNC">          18 :           Nodes::shrink_to_fit();</span></span>
+<span id="L456"><span class="lineNum">     456</span> <span class="tlaGNC">          72 :           Nodes::shrink_to_fit();</span></span>
 <span id="L457"><span class="lineNum">     457</span>              :         }</span>
 <span id="L458"><span class="lineNum">     458</span>              : </span>
-<span id="L459"><span class="lineNum">     459</span> <span class="tlaGNC">          24 :         Connectivity::shrink_to_fit();</span></span>
-<span id="L460"><span class="lineNum">     460</span> <span class="tlaGNC">          24 :       }</span></span>
+<span id="L459"><span class="lineNum">     459</span> <span class="tlaGNC">          96 :         Connectivity::shrink_to_fit();</span></span>
+<span id="L460"><span class="lineNum">     460</span> <span class="tlaGNC">          96 :       }</span></span>
 <span id="L461"><span class="lineNum">     461</span>              : </span>
 <span id="L462"><span class="lineNum">     462</span>              :       template&lt;class... Args&gt;</span>
-<span id="L463"><span class="lineNum">     463</span> <span class="tlaGNC">      103856 :       size_type add_node(Args&amp;&amp;... args)</span></span>
+<span id="L463"><span class="lineNum">     463</span> <span class="tlaGNC">      118889 :       size_type add_node(Args&amp;&amp;... args)</span></span>
 <span id="L464"><span class="lineNum">     464</span>              :       {</span>
-<span id="L465"><span class="lineNum">     465</span> <span class="tlaGNC">      103856 :         return insert_node(this-&gt;order(), std::forward&lt;Args&gt;(args)...);</span></span>
+<span id="L465"><span class="lineNum">     465</span> <span class="tlaGNC">      118889 :         return insert_node(this-&gt;order(), std::forward&lt;Args&gt;(args)...);</span></span>
 <span id="L466"><span class="lineNum">     466</span>              :       }</span>
 <span id="L467"><span class="lineNum">     467</span>              : </span>
 <span id="L468"><span class="lineNum">     468</span>              :       template&lt;class... Args&gt;</span>
-<span id="L469"><span class="lineNum">     469</span> <span class="tlaGNC">      136049 :       size_type insert_node(const size_type pos, Args&amp;&amp;... args)</span></span>
+<span id="L469"><span class="lineNum">     469</span> <span class="tlaGNC">      156968 :       size_type insert_node(const size_type pos, Args&amp;&amp;... args)</span></span>
 <span id="L470"><span class="lineNum">     470</span>              :       {</span>
-<span id="L471"><span class="lineNum">     471</span> <span class="tlaGNC">      136049 :         insertion_sentinel sentinel{*this, pos};</span></span>
+<span id="L471"><span class="lineNum">     471</span> <span class="tlaGNC">      156968 :         insertion_sentinel sentinel{*this, pos};</span></span>
 <span id="L472"><span class="lineNum">     472</span>              : </span>
-<span id="L473"><span class="lineNum">     473</span> <span class="tlaGNC">      272099 :         return Connectivity::insert_node(insert_node_impl(pos, std::forward&lt;Args&gt;(args)...));</span></span>
-<span id="L474"><span class="lineNum">     474</span> <span class="tlaGNC">      136049 :       }</span></span>
+<span id="L473"><span class="lineNum">     473</span> <span class="tlaGNC">      313937 :         return Connectivity::insert_node(insert_node_impl(pos, std::forward&lt;Args&gt;(args)...));</span></span>
+<span id="L474"><span class="lineNum">     474</span> <span class="tlaGNC">      156968 :       }</span></span>
 <span id="L475"><span class="lineNum">     475</span>              : </span>
-<span id="L476"><span class="lineNum">     476</span> <span class="tlaGNC">        1010 :       void erase_node(const size_type node)</span></span>
+<span id="L476"><span class="lineNum">     476</span> <span class="tlaGNC">        4022 :       void erase_node(const size_type node)</span></span>
 <span id="L477"><span class="lineNum">     477</span>              :       {</span>
-<span id="L478"><span class="lineNum">     478</span> <span class="tlaGNC">        1010 :         Connectivity::erase_node(node);</span></span>
-<span id="L479"><span class="lineNum">     479</span> <span class="tlaGNC">         680 :         if constexpr (!std::is_empty_v&lt;node_weight_type&gt;) Nodes::erase_node(this-&gt;cbegin_node_weights() + node);</span></span>
-<span id="L480"><span class="lineNum">     480</span> <span class="tlaGNC">        1010 :       }</span></span>
+<span id="L478"><span class="lineNum">     478</span> <span class="tlaGNC">        4022 :         Connectivity::erase_node(node);</span></span>
+<span id="L479"><span class="lineNum">     479</span> <span class="tlaGNC">        2702 :         if constexpr (!std::is_empty_v&lt;node_weight_type&gt;) Nodes::erase_node(this-&gt;cbegin_node_weights() + node);</span></span>
+<span id="L480"><span class="lineNum">     480</span> <span class="tlaGNC">        4022 :       }</span></span>
 <span id="L481"><span class="lineNum">     481</span>              : </span>
-<span id="L482"><span class="lineNum">     482</span> <span class="tlaGNC">         312 :       void clear() noexcept</span></span>
+<span id="L482"><span class="lineNum">     482</span> <span class="tlaGNC">        1248 :       void clear() noexcept</span></span>
 <span id="L483"><span class="lineNum">     483</span>              :       {</span>
-<span id="L484"><span class="lineNum">     484</span> <span class="tlaGNC">         206 :         if constexpr (!std::is_empty_v&lt;node_weight_type&gt;) Nodes::clear();</span></span>
-<span id="L485"><span class="lineNum">     485</span> <span class="tlaGNC">         312 :         Connectivity::clear();</span></span>
-<span id="L486"><span class="lineNum">     486</span> <span class="tlaGNC">         312 :       }</span></span>
+<span id="L484"><span class="lineNum">     484</span> <span class="tlaGNC">         824 :         if constexpr (!std::is_empty_v&lt;node_weight_type&gt;) Nodes::clear();</span></span>
+<span id="L485"><span class="lineNum">     485</span> <span class="tlaGNC">        1248 :         Connectivity::clear();</span></span>
+<span id="L486"><span class="lineNum">     486</span> <span class="tlaGNC">        1248 :       }</span></span>
 <span id="L487"><span class="lineNum">     487</span>              : </span>
 <span id="L488"><span class="lineNum">     488</span>              :       template&lt;tree_link_direction dir, class... Args&gt;</span>
-<span id="L489"><span class="lineNum">     489</span> <span class="tlaGNC">       32042 :       size_type insert_node_to_tree(tree_link_direction_constant&lt;dir&gt;, size_type pos, size_type parent, Args&amp;&amp;... args)</span></span>
+<span id="L489"><span class="lineNum">     489</span> <span class="tlaGNC">       37472 :       size_type insert_node_to_tree(tree_link_direction_constant&lt;dir&gt;, size_type pos, size_type parent, Args&amp;&amp;... args)</span></span>
 <span id="L490"><span class="lineNum">     490</span>              :       {</span>
-<span id="L491"><span class="lineNum">     491</span> <span class="tlaGNC">       32042 :         const auto n{insert_node(pos, std::forward&lt;Args&gt;(args)...)};</span></span>
+<span id="L491"><span class="lineNum">     491</span> <span class="tlaGNC">       37472 :         const auto n{insert_node(pos, std::forward&lt;Args&gt;(args)...)};</span></span>
 <span id="L492"><span class="lineNum">     492</span>              : </span>
-<span id="L493"><span class="lineNum">     493</span> <span class="tlaGNC">       32042 :         if(this-&gt;order() &gt; 1)</span></span>
+<span id="L493"><span class="lineNum">     493</span> <span class="tlaGNC">       37472 :         if(this-&gt;order() &gt; 1)</span></span>
 <span id="L494"><span class="lineNum">     494</span>              :         {</span>
 <span id="L495"><span class="lineNum">     495</span>              :           if constexpr((dir != tree_link_direction::forward) &amp;&amp; is_directed(Connectivity::flavour))</span>
 <span id="L496"><span class="lineNum">     496</span>              :           {</span>
-<span id="L497"><span class="lineNum">     497</span> <span class="tlaGNC">          54 :             Connectivity::join(n, parent);</span></span>
+<span id="L497"><span class="lineNum">     497</span> <span class="tlaGNC">         216 :             Connectivity::join(n, parent);</span></span>
 <span id="L498"><span class="lineNum">     498</span>              :           }</span>
 <span id="L499"><span class="lineNum">     499</span>              : </span>
 <span id="L500"><span class="lineNum">     500</span>              :           if constexpr(dir != tree_link_direction::backward)</span>
 <span id="L501"><span class="lineNum">     501</span>              :           {</span>
-<span id="L502"><span class="lineNum">     502</span> <span class="tlaGNC">       31927 :             Connectivity::join(parent, n);</span></span>
+<span id="L502"><span class="lineNum">     502</span> <span class="tlaGNC">       37150 :             Connectivity::join(parent, n);</span></span>
 <span id="L503"><span class="lineNum">     503</span>              :           }</span>
 <span id="L504"><span class="lineNum">     504</span>              :         }</span>
 <span id="L505"><span class="lineNum">     505</span>              : </span>
-<span id="L506"><span class="lineNum">     506</span> <span class="tlaGNC">       32042 :         return n;</span></span>
+<span id="L506"><span class="lineNum">     506</span> <span class="tlaGNC">       37472 :         return n;</span></span>
 <span id="L507"><span class="lineNum">     507</span>              :       }</span>
 <span id="L508"><span class="lineNum">     508</span>              : </span>
 <span id="L509"><span class="lineNum">     509</span>              :       template&lt;tree_link_direction dir, class... Args&gt;</span>
-<span id="L510"><span class="lineNum">     510</span> <span class="tlaGNC">       32034 :       size_type add_node_to_tree(tree_link_direction_constant&lt;dir&gt; tldc, size_type parent, Args&amp;&amp;... args)</span></span>
+<span id="L510"><span class="lineNum">     510</span> <span class="tlaGNC">       37440 :       size_type add_node_to_tree(tree_link_direction_constant&lt;dir&gt; tldc, size_type parent, Args&amp;&amp;... args)</span></span>
 <span id="L511"><span class="lineNum">     511</span>              :       {</span>
-<span id="L512"><span class="lineNum">     512</span> <span class="tlaGNC">       32034 :         return insert_node_to_tree(tldc, this-&gt;order(), parent, std::forward&lt;Args&gt;(args)...);</span></span>
+<span id="L512"><span class="lineNum">     512</span> <span class="tlaGNC">       37440 :         return insert_node_to_tree(tldc, this-&gt;order(), parent, std::forward&lt;Args&gt;(args)...);</span></span>
 <span id="L513"><span class="lineNum">     513</span>              :       }</span>
 <span id="L514"><span class="lineNum">     514</span>              :     private:</span>
 <span id="L515"><span class="lineNum">     515</span>              :       class [[nodiscard]] insertion_sentinel</span>
 <span id="L516"><span class="lineNum">     516</span>              :       {</span>
 <span id="L517"><span class="lineNum">     517</span>              :       public:</span>
-<span id="L518"><span class="lineNum">     518</span> <span class="tlaGNC">      136049 :         insertion_sentinel(graph_primitive&amp; g, size_type index)</span></span>
-<span id="L519"><span class="lineNum">     519</span> <span class="tlaGNC">      136049 :           : m_Graph{g}</span></span>
-<span id="L520"><span class="lineNum">     520</span> <span class="tlaGNC">      136049 :           , m_NodeIndex{index}</span></span>
-<span id="L521"><span class="lineNum">     521</span> <span class="tlaGNC">      136049 :         {}</span></span>
+<span id="L518"><span class="lineNum">     518</span> <span class="tlaGNC">      156968 :         insertion_sentinel(graph_primitive&amp; g, size_type index)</span></span>
+<span id="L519"><span class="lineNum">     519</span> <span class="tlaGNC">      156968 :           : m_Graph{g}</span></span>
+<span id="L520"><span class="lineNum">     520</span> <span class="tlaGNC">      156968 :           , m_NodeIndex{index}</span></span>
+<span id="L521"><span class="lineNum">     521</span> <span class="tlaGNC">      156968 :         {}</span></span>
 <span id="L522"><span class="lineNum">     522</span>              : </span>
-<span id="L523"><span class="lineNum">     523</span> <span class="tlaGNC">      136050 :         ~insertion_sentinel()</span></span>
+<span id="L523"><span class="lineNum">     523</span> <span class="tlaGNC">      156969 :         ~insertion_sentinel()</span></span>
 <span id="L524"><span class="lineNum">     524</span>              :         {</span>
 <span id="L525"><span class="lineNum">     525</span>              :           if constexpr(!std::is_empty_v&lt;node_weight_type&gt;)</span>
 <span id="L526"><span class="lineNum">     526</span>              :           {</span>
-<span id="L527"><span class="lineNum">     527</span> <span class="tlaGNC">      135820 :             if(static_cast&lt;Nodes&amp;&gt;(m_Graph).size() &gt; static_cast&lt;Connectivity&amp;&gt;(m_Graph).order())</span></span>
+<span id="L527"><span class="lineNum">     527</span> <span class="tlaGNC">      156049 :             if(static_cast&lt;Nodes&amp;&gt;(m_Graph).size() &gt; static_cast&lt;Connectivity&amp;&gt;(m_Graph).order())</span></span>
 <span id="L528"><span class="lineNum">     528</span> <span class="tlaUNC tlaBgUNC">           0 :               m_Graph.remove_excess_node(m_NodeIndex);</span></span>
 <span id="L529"><span class="lineNum">     529</span>              :           }</span>
-<span id="L530"><span class="lineNum">     530</span> <span class="tlaGNC tlaBgGNC">      136049 :         }</span></span>
+<span id="L530"><span class="lineNum">     530</span> <span class="tlaGNC tlaBgGNC">      156968 :         }</span></span>
 <span id="L531"><span class="lineNum">     531</span>              :       private:</span>
 <span id="L532"><span class="lineNum">     532</span>              :         graph_primitive&amp; m_Graph{};</span>
 <span id="L533"><span class="lineNum">     533</span>              :         size_type m_NodeIndex{};</span>
@@ -598,39 +598,39 @@
 <span id="L536"><span class="lineNum">     536</span>              :       friend insertion_sentinel;</span>
 <span id="L537"><span class="lineNum">     537</span>              : </span>
 <span id="L538"><span class="lineNum">     538</span>              :       [[nodiscard]]</span>
-<span id="L539"><span class="lineNum">     539</span> <span class="tlaGNC">        1125 :       constexpr static const edges_initializer&amp; check_initialization(const edges_initializer&amp; edges, std::size_t numNodes, std::size_t edgeParitions)</span></span>
+<span id="L539"><span class="lineNum">     539</span> <span class="tlaGNC">        3708 :       constexpr static const edges_initializer&amp; check_initialization(const edges_initializer&amp; edges, std::size_t numNodes, std::size_t edgeParitions)</span></span>
 <span id="L540"><span class="lineNum">     540</span>              :       {</span>
-<span id="L541"><span class="lineNum">     541</span> <span class="tlaGNC">        1125 :         if(numNodes != edgeParitions)</span></span>
-<span id="L542"><span class="lineNum">     542</span> <span class="tlaGNC">          60 :           throw std::logic_error{graph_errors::inconsistent_initialization_message(numNodes, edgeParitions)};</span></span>
+<span id="L541"><span class="lineNum">     541</span> <span class="tlaGNC">        3708 :         if(numNodes != edgeParitions)</span></span>
+<span id="L542"><span class="lineNum">     542</span> <span class="tlaGNC">         240 :           throw std::logic_error{graph_errors::inconsistent_initialization_message(numNodes, edgeParitions)};</span></span>
 <span id="L543"><span class="lineNum">     543</span>              : </span>
-<span id="L544"><span class="lineNum">     544</span> <span class="tlaGNC">        1065 :         return edges;</span></span>
+<span id="L544"><span class="lineNum">     544</span> <span class="tlaGNC">        3468 :         return edges;</span></span>
 <span id="L545"><span class="lineNum">     545</span>              :       }</span>
 <span id="L546"><span class="lineNum">     546</span>              : </span>
 <span id="L547"><span class="lineNum">     547</span>              :       template&lt;tree_link_direction dir&gt;</span>
 <span id="L548"><span class="lineNum">     548</span>              :         requires (!heterogeneous_nodes&lt;graph_primitive&gt; &amp;&amp; !std::is_empty_v&lt;node_weight_type&gt;)</span>
-<span id="L549"><span class="lineNum">     549</span> <span class="tlaGNC">       47574 :       constexpr void build_tree(size_type root, tree_initializer&lt;node_weight_type&gt; tree, tree_link_direction_constant&lt;dir&gt; tdc)</span></span>
+<span id="L549"><span class="lineNum">     549</span> <span class="tlaGNC">       53745 :       constexpr void build_tree(size_type root, tree_initializer&lt;node_weight_type&gt; tree, tree_link_direction_constant&lt;dir&gt; tdc)</span></span>
 <span id="L550"><span class="lineNum">     550</span>              :       {</span>
-<span id="L551"><span class="lineNum">     551</span> <span class="tlaGNC">       47574 :         if(root &gt;= Connectivity::order()) root = add_node(tree.node);</span></span>
+<span id="L551"><span class="lineNum">     551</span> <span class="tlaGNC">       53745 :         if(root &gt;= Connectivity::order()) root = add_node(tree.node);</span></span>
 <span id="L552"><span class="lineNum">     552</span>              : </span>
-<span id="L553"><span class="lineNum">     553</span> <span class="tlaGNC">       76228 :         for(const auto&amp; child : tree.children)</span></span>
+<span id="L553"><span class="lineNum">     553</span> <span class="tlaGNC">       86143 :         for(const auto&amp; child : tree.children)</span></span>
 <span id="L554"><span class="lineNum">     554</span>              :         {</span>
-<span id="L555"><span class="lineNum">     555</span> <span class="tlaGNC">       28656 :           const auto n{add_node_to_tree(tdc, root, child.node)};</span></span>
-<span id="L556"><span class="lineNum">     556</span> <span class="tlaGNC">       28656 :           build_tree(n, child, tdc);</span></span>
+<span id="L555"><span class="lineNum">     555</span> <span class="tlaGNC">       32400 :           const auto n{add_node_to_tree(tdc, root, child.node)};</span></span>
+<span id="L556"><span class="lineNum">     556</span> <span class="tlaGNC">       32400 :           build_tree(n, child, tdc);</span></span>
 <span id="L557"><span class="lineNum">     557</span>              :         }</span>
-<span id="L558"><span class="lineNum">     558</span> <span class="tlaGNC">       47573 :       }</span></span>
+<span id="L558"><span class="lineNum">     558</span> <span class="tlaGNC">       53744 :       }</span></span>
 <span id="L559"><span class="lineNum">     559</span>              : </span>
 <span id="L560"><span class="lineNum">     560</span>              :       template&lt;tree_link_direction dir&gt;</span>
 <span id="L561"><span class="lineNum">     561</span>              :         requires (!heterogeneous_nodes&lt;graph_primitive&gt; &amp;&amp; std::is_empty_v&lt;node_weight_type&gt;)</span>
-<span id="L562"><span class="lineNum">     562</span> <span class="tlaGNC">          40 :       constexpr void build_tree(size_type root, tree_initializer&lt;node_weight_type&gt; tree, tree_link_direction_constant&lt;dir&gt; tdc)</span></span>
+<span id="L562"><span class="lineNum">     562</span> <span class="tlaGNC">         160 :       constexpr void build_tree(size_type root, tree_initializer&lt;node_weight_type&gt; tree, tree_link_direction_constant&lt;dir&gt; tdc)</span></span>
 <span id="L563"><span class="lineNum">     563</span>              :       {</span>
-<span id="L564"><span class="lineNum">     564</span> <span class="tlaGNC">          40 :         if(root &gt;= Connectivity::order()) root = add_node();</span></span>
+<span id="L564"><span class="lineNum">     564</span> <span class="tlaGNC">         160 :         if(root &gt;= Connectivity::order()) root = add_node();</span></span>
 <span id="L565"><span class="lineNum">     565</span>              : </span>
-<span id="L566"><span class="lineNum">     566</span> <span class="tlaGNC">          64 :         for(const auto&amp; child : tree.children)</span></span>
+<span id="L566"><span class="lineNum">     566</span> <span class="tlaGNC">         256 :         for(const auto&amp; child : tree.children)</span></span>
 <span id="L567"><span class="lineNum">     567</span>              :         {</span>
-<span id="L568"><span class="lineNum">     568</span> <span class="tlaGNC">          24 :           const auto n{add_node_to_tree(tdc, root)};</span></span>
-<span id="L569"><span class="lineNum">     569</span> <span class="tlaGNC">          24 :           build_tree(n, child, tdc);</span></span>
+<span id="L568"><span class="lineNum">     568</span> <span class="tlaGNC">          96 :           const auto n{add_node_to_tree(tdc, root)};</span></span>
+<span id="L569"><span class="lineNum">     569</span> <span class="tlaGNC">          96 :           build_tree(n, child, tdc);</span></span>
 <span id="L570"><span class="lineNum">     570</span>              :         }</span>
-<span id="L571"><span class="lineNum">     571</span> <span class="tlaGNC">          40 :       }</span></span>
+<span id="L571"><span class="lineNum">     571</span> <span class="tlaGNC">         160 :       }</span></span>
 <span id="L572"><span class="lineNum">     572</span>              : </span>
 <span id="L573"><span class="lineNum">     573</span>              :       [[nodiscard]]</span>
 <span id="L574"><span class="lineNum">     574</span>              :       pseudo_iterator begin() noexcept { return {edge_index_type{}, *this}; }</span>
@@ -639,15 +639,15 @@
 <span id="L577"><span class="lineNum">     577</span>              :       pseudo_iterator end() noexcept { return {Connectivity::order(), *this}; }</span>
 <span id="L578"><span class="lineNum">     578</span>              : </span>
 <span id="L579"><span class="lineNum">     579</span>              :       template&lt;class... Args&gt;</span>
-<span id="L580"><span class="lineNum">     580</span> <span class="tlaGNC">      136049 :       size_type insert_node_impl(const size_type pos, Args&amp;&amp;... args)</span></span>
+<span id="L580"><span class="lineNum">     580</span> <span class="tlaGNC">      156968 :       size_type insert_node_impl(const size_type pos, Args&amp;&amp;... args)</span></span>
 <span id="L581"><span class="lineNum">     581</span>              :       {</span>
-<span id="L582"><span class="lineNum">     582</span> <span class="tlaGNC">      136049 :         const auto node{std::ranges::min(pos, this-&gt;order())};</span></span>
+<span id="L582"><span class="lineNum">     582</span> <span class="tlaGNC">      156968 :         const auto node{std::ranges::min(pos, this-&gt;order())};</span></span>
 <span id="L583"><span class="lineNum">     583</span>              :         if constexpr (!std::is_empty_v&lt;node_weight_type&gt;)</span>
 <span id="L584"><span class="lineNum">     584</span>              :         {</span>
-<span id="L585"><span class="lineNum">     585</span> <span class="tlaGNC">      135819 :           Nodes::insert_node(this-&gt;cbegin_node_weights() + node, std::forward&lt;Args&gt;(args)...);</span></span>
+<span id="L585"><span class="lineNum">     585</span> <span class="tlaGNC">      156048 :           Nodes::insert_node(this-&gt;cbegin_node_weights() + node, std::forward&lt;Args&gt;(args)...);</span></span>
 <span id="L586"><span class="lineNum">     586</span>              :         }</span>
 <span id="L587"><span class="lineNum">     587</span>              : </span>
-<span id="L588"><span class="lineNum">     588</span> <span class="tlaGNC">      136050 :         return node;</span></span>
+<span id="L588"><span class="lineNum">     588</span> <span class="tlaGNC">      156969 :         return node;</span></span>
 <span id="L589"><span class="lineNum">     589</span>              :       }</span>
 <span id="L590"><span class="lineNum">     590</span>              : </span>
 <span id="L591"><span class="lineNum">     591</span> <span class="tlaUNC tlaBgUNC">           0 :       void remove_excess_node(size_type index)</span></span>

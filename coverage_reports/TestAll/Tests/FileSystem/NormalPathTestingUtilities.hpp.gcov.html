@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2025-01-12 17:02:37</td>
+            <td class="headerValue">2025-01-12 21:38:39</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -81,17 +81,17 @@
 <span id="L19"><span class="lineNum">      19</span>              :     using type = normal_path;</span>
 <span id="L20"><span class="lineNum">      20</span>              : </span>
 <span id="L21"><span class="lineNum">      21</span>              :     template&lt;test_mode Mode&gt;</span>
-<span id="L22"><span class="lineNum">      22</span> <span class="tlaGNC tlaBgGNC">          24 :     static void test(equality_check_t, test_logger&lt;Mode&gt;&amp; logger, const type&amp; actual, const type&amp; prediction)</span></span>
+<span id="L22"><span class="lineNum">      22</span> <span class="tlaGNC tlaBgGNC">          40 :     static void test(equality_check_t, test_logger&lt;Mode&gt;&amp; logger, const type&amp; actual, const type&amp; prediction)</span></span>
 <span id="L23"><span class="lineNum">      23</span>              :     {</span>
-<span id="L24"><span class="lineNum">      24</span> <span class="tlaGNC">          48 :       check(equality, &quot;Wrapped Path&quot;, logger, actual.path(), prediction.path());</span></span>
-<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">          24 :     }</span></span>
+<span id="L24"><span class="lineNum">      24</span> <span class="tlaGNC">          80 :       check(equality, &quot;Wrapped Path&quot;, logger, actual.path(), prediction.path());</span></span>
+<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">          40 :     }</span></span>
 <span id="L26"><span class="lineNum">      26</span>              :     </span>
 <span id="L27"><span class="lineNum">      27</span>              :     template&lt;test_mode Mode&gt;</span>
-<span id="L28"><span class="lineNum">      28</span> <span class="tlaGNC">          18 :     static void test(equivalence_check_t, test_logger&lt;Mode&gt;&amp; logger, const type&amp; actual, const std::filesystem::path&amp; prediction)</span></span>
+<span id="L28"><span class="lineNum">      28</span> <span class="tlaGNC">          30 :     static void test(equivalence_check_t, test_logger&lt;Mode&gt;&amp; logger, const type&amp; actual, const std::filesystem::path&amp; prediction)</span></span>
 <span id="L29"><span class="lineNum">      29</span>              :     {</span>
-<span id="L30"><span class="lineNum">      30</span> <span class="tlaGNC">          36 :       check(equality, &quot;Wrapped Path&quot;, logger, actual.path(), prediction);</span></span>
-<span id="L31"><span class="lineNum">      31</span> <span class="tlaGNC">          54 :       check(equality, &quot;Conversion to Path&quot;, logger, static_cast&lt;std::filesystem::path&gt;(actual), prediction);</span></span>
-<span id="L32"><span class="lineNum">      32</span> <span class="tlaGNC">          18 :     }</span></span>
+<span id="L30"><span class="lineNum">      30</span> <span class="tlaGNC">          60 :       check(equality, &quot;Wrapped Path&quot;, logger, actual.path(), prediction);</span></span>
+<span id="L31"><span class="lineNum">      31</span> <span class="tlaGNC">          90 :       check(equality, &quot;Conversion to Path&quot;, logger, static_cast&lt;std::filesystem::path&gt;(actual), prediction);</span></span>
+<span id="L32"><span class="lineNum">      32</span> <span class="tlaGNC">          30 :     }</span></span>
 <span id="L33"><span class="lineNum">      33</span>              :   };</span>
 <span id="L34"><span class="lineNum">      34</span>              : }</span>
         </pre>

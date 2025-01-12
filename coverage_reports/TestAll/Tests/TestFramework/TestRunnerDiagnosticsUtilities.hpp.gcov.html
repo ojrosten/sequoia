@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2025-01-12 19:58:35</td>
+            <td class="headerValue">2025-01-12 21:38:39</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -81,11 +81,11 @@
 <span id="L19"><span class="lineNum">      19</span>              :   struct value_tester&lt;template_spec&gt;</span>
 <span id="L20"><span class="lineNum">      20</span>              :   {</span>
 <span id="L21"><span class="lineNum">      21</span>              :     template&lt;test_mode Mode&gt;</span>
-<span id="L22"><span class="lineNum">      22</span> <span class="tlaGNC tlaBgGNC">         376 :     static void test(equality_check_t, test_logger&lt;Mode&gt;&amp; logger, const template_spec&amp; obtained, const template_spec&amp; prediction)</span></span>
+<span id="L22"><span class="lineNum">      22</span> <span class="tlaGNC tlaBgGNC">         412 :     static void test(equality_check_t, test_logger&lt;Mode&gt;&amp; logger, const template_spec&amp; obtained, const template_spec&amp; prediction)</span></span>
 <span id="L23"><span class="lineNum">      23</span>              :     {</span>
-<span id="L24"><span class="lineNum">      24</span> <span class="tlaGNC">         752 :       check(equality, &quot;Species&quot;, logger, obtained.species, prediction.species);</span></span>
-<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">         752 :       check(equality, &quot;Symbol&quot;,  logger, obtained.symbol,  prediction.symbol);</span></span>
-<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">         376 :     }</span></span>
+<span id="L24"><span class="lineNum">      24</span> <span class="tlaGNC">         824 :       check(equality, &quot;Species&quot;, logger, obtained.species, prediction.species);</span></span>
+<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">         824 :       check(equality, &quot;Symbol&quot;,  logger, obtained.symbol,  prediction.symbol);</span></span>
+<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">         412 :     }</span></span>
 <span id="L27"><span class="lineNum">      27</span>              :   };</span>
 <span id="L28"><span class="lineNum">      28</span>              : </span>
 <span id="L29"><span class="lineNum">      29</span>              :   class bar_free_test final : public free_test</span>
@@ -96,10 +96,10 @@
 <span id="L34"><span class="lineNum">      34</span>              :     [[nodiscard]]</span>
 <span id="L35"><span class="lineNum">      35</span>              :     std::filesystem::path source_file() const;</span>
 <span id="L36"><span class="lineNum">      36</span>              : </span>
-<span id="L37"><span class="lineNum">      37</span> <span class="tlaGNC">          25 :     void run_tests()</span></span>
+<span id="L37"><span class="lineNum">      37</span> <span class="tlaGNC">          28 :     void run_tests()</span></span>
 <span id="L38"><span class="lineNum">      38</span>              :     {</span>
-<span id="L39"><span class="lineNum">      39</span> <span class="tlaGNC">          25 :       check(equality, {&quot;Phoney equality check&quot;}, 1, 1);</span></span>
-<span id="L40"><span class="lineNum">      40</span> <span class="tlaGNC">          25 :       throw std::runtime_error{&quot;Throw after check&quot;};</span></span>
+<span id="L39"><span class="lineNum">      39</span> <span class="tlaGNC">          28 :       check(equality, {&quot;Phoney equality check&quot;}, 1, 1);</span></span>
+<span id="L40"><span class="lineNum">      40</span> <span class="tlaGNC">          28 :       throw std::runtime_error{&quot;Throw after check&quot;};</span></span>
 <span id="L41"><span class="lineNum">      41</span>              :     }</span>
 <span id="L42"><span class="lineNum">      42</span>              :   };</span>
 <span id="L43"><span class="lineNum">      43</span>              : }</span>

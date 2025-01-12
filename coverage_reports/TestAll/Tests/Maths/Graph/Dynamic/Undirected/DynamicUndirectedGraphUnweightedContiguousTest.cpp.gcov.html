@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2025-01-12 17:02:37</td>
+            <td class="headerValue">2025-01-12 21:38:39</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -75,16 +75,16 @@
 <span id="L13"><span class="lineNum">      13</span>              : namespace sequoia::testing</span>
 <span id="L14"><span class="lineNum">      14</span>              : {</span>
 <span id="L15"><span class="lineNum">      15</span>              :   [[nodiscard]]</span>
-<span id="L16"><span class="lineNum">      16</span> <span class="tlaGNC tlaBgGNC">          32 :   std::filesystem::path dynamic_undirected_graph_unweighted_contiguous_test::source_file() const</span></span>
+<span id="L16"><span class="lineNum">      16</span> <span class="tlaGNC tlaBgGNC">          16 :   std::filesystem::path dynamic_undirected_graph_unweighted_contiguous_test::source_file() const</span></span>
 <span id="L17"><span class="lineNum">      17</span>              :   {</span>
-<span id="L18"><span class="lineNum">      18</span> <span class="tlaGNC">          32 :     return std::source_location::current().file_name();</span></span>
+<span id="L18"><span class="lineNum">      18</span> <span class="tlaGNC">          16 :     return std::source_location::current().file_name();</span></span>
 <span id="L19"><span class="lineNum">      19</span>              :   }</span>
 <span id="L20"><span class="lineNum">      20</span>              : </span>
-<span id="L21"><span class="lineNum">      21</span> <span class="tlaGNC">           8 :   void dynamic_undirected_graph_unweighted_contiguous_test::run_tests()</span></span>
+<span id="L21"><span class="lineNum">      21</span> <span class="tlaGNC">           4 :   void dynamic_undirected_graph_unweighted_contiguous_test::run_tests()</span></span>
 <span id="L22"><span class="lineNum">      22</span>              :   {</span>
 <span id="L23"><span class="lineNum">      23</span>              :     using namespace maths;</span>
-<span id="L24"><span class="lineNum">      24</span> <span class="tlaGNC">           8 :     dynamic_undirected_graph_operations&lt;null_weight, null_weight, null_meta_data, independent_contiguous_edge_storage_config, node_storage&lt;null_weight&gt;&gt;::execute_operations(*this);</span></span>
-<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">           8 :   }</span></span>
+<span id="L24"><span class="lineNum">      24</span> <span class="tlaGNC">           4 :     dynamic_undirected_graph_operations&lt;null_weight, null_weight, null_meta_data, independent_contiguous_edge_storage_config, node_storage&lt;null_weight&gt;&gt;::execute_operations(*this);</span></span>
+<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">           4 :   }</span></span>
 <span id="L26"><span class="lineNum">      26</span>              : }</span>
         </pre>
               </td>

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2025-01-12 17:02:37</td>
+            <td class="headerValue">2025-01-12 21:38:39</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -120,55 +120,55 @@
 <span id="L58"><span class="lineNum">      58</span>              :   }</span>
 <span id="L59"><span class="lineNum">      59</span>              : </span>
 <span id="L60"><span class="lineNum">      60</span>              :   [[nodiscard]]</span>
-<span id="L61"><span class="lineNum">      61</span> <span class="tlaGNC tlaBgGNC">          40 :   std::filesystem::path concepts_test::source_file() const</span></span>
+<span id="L61"><span class="lineNum">      61</span> <span class="tlaGNC tlaBgGNC">          60 :   std::filesystem::path concepts_test::source_file() const</span></span>
 <span id="L62"><span class="lineNum">      62</span>              :   {</span>
-<span id="L63"><span class="lineNum">      63</span> <span class="tlaGNC">          40 :     return std::source_location::current().file_name();</span></span>
+<span id="L63"><span class="lineNum">      63</span> <span class="tlaGNC">          60 :     return std::source_location::current().file_name();</span></span>
 <span id="L64"><span class="lineNum">      64</span>              :   }</span>
 <span id="L65"><span class="lineNum">      65</span>              : </span>
-<span id="L66"><span class="lineNum">      66</span> <span class="tlaGNC">           8 :   void concepts_test::run_tests()</span></span>
+<span id="L66"><span class="lineNum">      66</span> <span class="tlaGNC">          12 :   void concepts_test::run_tests()</span></span>
 <span id="L67"><span class="lineNum">      67</span>              :   {</span>
-<span id="L68"><span class="lineNum">      68</span> <span class="tlaGNC">           8 :     test_is_range();</span></span>
-<span id="L69"><span class="lineNum">      69</span> <span class="tlaGNC">           8 :     test_is_allocator();</span></span>
-<span id="L70"><span class="lineNum">      70</span> <span class="tlaGNC">           8 :     test_is_serializable();</span></span>
-<span id="L71"><span class="lineNum">      71</span> <span class="tlaGNC">           8 :     test_deep_equality_comparable();</span></span>
-<span id="L72"><span class="lineNum">      72</span> <span class="tlaGNC">           8 :     test_initializable_from();</span></span>
-<span id="L73"><span class="lineNum">      73</span> <span class="tlaGNC">           8 :   }</span></span>
+<span id="L68"><span class="lineNum">      68</span> <span class="tlaGNC">          12 :     test_is_range();</span></span>
+<span id="L69"><span class="lineNum">      69</span> <span class="tlaGNC">          12 :     test_is_allocator();</span></span>
+<span id="L70"><span class="lineNum">      70</span> <span class="tlaGNC">          12 :     test_is_serializable();</span></span>
+<span id="L71"><span class="lineNum">      71</span> <span class="tlaGNC">          12 :     test_deep_equality_comparable();</span></span>
+<span id="L72"><span class="lineNum">      72</span> <span class="tlaGNC">          12 :     test_initializable_from();</span></span>
+<span id="L73"><span class="lineNum">      73</span> <span class="tlaGNC">          12 :   }</span></span>
 <span id="L74"><span class="lineNum">      74</span>              : </span>
-<span id="L75"><span class="lineNum">      75</span> <span class="tlaGNC">           8 :   void concepts_test::test_is_range()</span></span>
+<span id="L75"><span class="lineNum">      75</span> <span class="tlaGNC">          12 :   void concepts_test::test_is_range()</span></span>
 <span id="L76"><span class="lineNum">      76</span>              :   {</span>
-<span id="L77"><span class="lineNum">      77</span> <span class="tlaGNC">           8 :     check(&quot;&quot;, []() {</span></span>
+<span id="L77"><span class="lineNum">      77</span> <span class="tlaGNC">          12 :     check(&quot;&quot;, []() {</span></span>
 <span id="L78"><span class="lineNum">      78</span>              :         static_assert(faithful_range&lt;std::vector&lt;double&gt;&gt;);</span>
 <span id="L79"><span class="lineNum">      79</span>              :         static_assert(!faithful_range&lt;double&gt;);</span>
-<span id="L80"><span class="lineNum">      80</span> <span class="tlaGNC">           8 :         return true;</span></span>
-<span id="L81"><span class="lineNum">      81</span> <span class="tlaGNC">           8 :       }()</span></span>
+<span id="L80"><span class="lineNum">      80</span> <span class="tlaGNC">          12 :         return true;</span></span>
+<span id="L81"><span class="lineNum">      81</span> <span class="tlaGNC">          12 :       }()</span></span>
 <span id="L82"><span class="lineNum">      82</span>              :     );</span>
-<span id="L83"><span class="lineNum">      83</span> <span class="tlaGNC">           8 :   }</span></span>
+<span id="L83"><span class="lineNum">      83</span> <span class="tlaGNC">          12 :   }</span></span>
 <span id="L84"><span class="lineNum">      84</span>              : </span>
-<span id="L85"><span class="lineNum">      85</span> <span class="tlaGNC">           8 :   void concepts_test::test_is_allocator()</span></span>
+<span id="L85"><span class="lineNum">      85</span> <span class="tlaGNC">          12 :   void concepts_test::test_is_allocator()</span></span>
 <span id="L86"><span class="lineNum">      86</span>              :   {</span>
-<span id="L87"><span class="lineNum">      87</span> <span class="tlaGNC">           8 :     check(&quot;&quot;, []() {</span></span>
+<span id="L87"><span class="lineNum">      87</span> <span class="tlaGNC">          12 :     check(&quot;&quot;, []() {</span></span>
 <span id="L88"><span class="lineNum">      88</span>              :         static_assert(!alloc&lt;int&gt;);</span>
 <span id="L89"><span class="lineNum">      89</span>              :         static_assert(alloc&lt;std::allocator&lt;int&gt;&gt;);</span>
-<span id="L90"><span class="lineNum">      90</span> <span class="tlaGNC">           8 :         return true;</span></span>
-<span id="L91"><span class="lineNum">      91</span> <span class="tlaGNC">           8 :       }()</span></span>
+<span id="L90"><span class="lineNum">      90</span> <span class="tlaGNC">          12 :         return true;</span></span>
+<span id="L91"><span class="lineNum">      91</span> <span class="tlaGNC">          12 :       }()</span></span>
 <span id="L92"><span class="lineNum">      92</span>              :     );</span>
-<span id="L93"><span class="lineNum">      93</span> <span class="tlaGNC">           8 :   }</span></span>
+<span id="L93"><span class="lineNum">      93</span> <span class="tlaGNC">          12 :   }</span></span>
 <span id="L94"><span class="lineNum">      94</span>              : </span>
-<span id="L95"><span class="lineNum">      95</span> <span class="tlaGNC">           8 :   void concepts_test::test_is_serializable()</span></span>
+<span id="L95"><span class="lineNum">      95</span> <span class="tlaGNC">          12 :   void concepts_test::test_is_serializable()</span></span>
 <span id="L96"><span class="lineNum">      96</span>              :   {</span>
 <span id="L97"><span class="lineNum">      97</span>              : </span>
-<span id="L98"><span class="lineNum">      98</span> <span class="tlaGNC">           8 :     check(&quot;&quot;, []() {</span></span>
+<span id="L98"><span class="lineNum">      98</span> <span class="tlaGNC">          12 :     check(&quot;&quot;, []() {</span></span>
 <span id="L99"><span class="lineNum">      99</span>              :         static_assert(serializable_to&lt;int, std::stringstream&gt;);</span>
 <span id="L100"><span class="lineNum">     100</span>              :         static_assert(serializable_to&lt;serializable_thing, std::stringstream&gt;);</span>
 <span id="L101"><span class="lineNum">     101</span>              :         static_assert(!serializable_to&lt;non_serializable, std::stringstream&gt;);</span>
-<span id="L102"><span class="lineNum">     102</span> <span class="tlaGNC">           8 :         return true;</span></span>
-<span id="L103"><span class="lineNum">     103</span> <span class="tlaGNC">           8 :       }()</span></span>
+<span id="L102"><span class="lineNum">     102</span> <span class="tlaGNC">          12 :         return true;</span></span>
+<span id="L103"><span class="lineNum">     103</span> <span class="tlaGNC">          12 :       }()</span></span>
 <span id="L104"><span class="lineNum">     104</span>              :     );</span>
-<span id="L105"><span class="lineNum">     105</span> <span class="tlaGNC">           8 :   }</span></span>
+<span id="L105"><span class="lineNum">     105</span> <span class="tlaGNC">          12 :   }</span></span>
 <span id="L106"><span class="lineNum">     106</span>              : </span>
-<span id="L107"><span class="lineNum">     107</span> <span class="tlaGNC">           8 :   void concepts_test::test_deep_equality_comparable()</span></span>
+<span id="L107"><span class="lineNum">     107</span> <span class="tlaGNC">          12 :   void concepts_test::test_deep_equality_comparable()</span></span>
 <span id="L108"><span class="lineNum">     108</span>              :   {</span>
-<span id="L109"><span class="lineNum">     109</span> <span class="tlaGNC">           8 :     check(&quot;&quot;, []() {</span></span>
+<span id="L109"><span class="lineNum">     109</span> <span class="tlaGNC">          12 :     check(&quot;&quot;, []() {</span></span>
 <span id="L110"><span class="lineNum">     110</span>              :         static_assert(deep_equality_comparable&lt;int&gt;);</span>
 <span id="L111"><span class="lineNum">     111</span>              :         static_assert(deep_equality_comparable&lt;std::vector&lt;int&gt;&gt;);</span>
 <span id="L112"><span class="lineNum">     112</span>              :         static_assert(deep_equality_comparable&lt;std::array&lt;int, 3&gt;&gt;);</span>
@@ -192,14 +192,14 @@
 <span id="L130"><span class="lineNum">     130</span>              :         static_assert(!deep_equality_comparable&lt;std::tuple&lt;std::vector&lt;int&gt;, std::array&lt;std::pair&lt;bar, float&gt;, 2&gt;&gt;&gt;);</span>
 <span id="L131"><span class="lineNum">     131</span>              :         static_assert(!deep_equality_comparable&lt;std::tuple&lt;std::vector&lt;int&gt;, std::array&lt;std::pair&lt;int, bar&gt;, 2&gt;&gt;&gt;);</span>
 <span id="L132"><span class="lineNum">     132</span>              : </span>
-<span id="L133"><span class="lineNum">     133</span> <span class="tlaGNC">           8 :         return true;</span></span>
-<span id="L134"><span class="lineNum">     134</span> <span class="tlaGNC">           8 :       }()</span></span>
+<span id="L133"><span class="lineNum">     133</span> <span class="tlaGNC">          12 :         return true;</span></span>
+<span id="L134"><span class="lineNum">     134</span> <span class="tlaGNC">          12 :       }()</span></span>
 <span id="L135"><span class="lineNum">     135</span>              :     );</span>
-<span id="L136"><span class="lineNum">     136</span> <span class="tlaGNC">           8 :   }</span></span>
+<span id="L136"><span class="lineNum">     136</span> <span class="tlaGNC">          12 :   }</span></span>
 <span id="L137"><span class="lineNum">     137</span>              : </span>
-<span id="L138"><span class="lineNum">     138</span> <span class="tlaGNC">           8 :   void concepts_test::test_initializable_from()</span></span>
+<span id="L138"><span class="lineNum">     138</span> <span class="tlaGNC">          12 :   void concepts_test::test_initializable_from()</span></span>
 <span id="L139"><span class="lineNum">     139</span>              :   {</span>
-<span id="L140"><span class="lineNum">     140</span> <span class="tlaGNC">           8 :     check(&quot;&quot;, []() {</span></span>
+<span id="L140"><span class="lineNum">     140</span> <span class="tlaGNC">          12 :     check(&quot;&quot;, []() {</span></span>
 <span id="L141"><span class="lineNum">     141</span>              :         static_assert(initializable_from&lt;int, int&gt;);</span>
 <span id="L142"><span class="lineNum">     142</span>              :         static_assert(initializable_from&lt;bar&gt;);</span>
 <span id="L143"><span class="lineNum">     143</span>              :         static_assert(!initializable_from&lt;bar, int&gt;);</span>
@@ -207,10 +207,10 @@
 <span id="L145"><span class="lineNum">     145</span>              :         static_assert(!initializable_from&lt;aggregate, int, double, char&gt;);</span>
 <span id="L146"><span class="lineNum">     146</span>              :         static_assert(initializable_from&lt;move_only_init, std::vector&lt;int&gt;&gt;);</span>
 <span id="L147"><span class="lineNum">     147</span>              : </span>
-<span id="L148"><span class="lineNum">     148</span> <span class="tlaGNC">           8 :         return true;</span></span>
-<span id="L149"><span class="lineNum">     149</span> <span class="tlaGNC">           8 :       }()</span></span>
+<span id="L148"><span class="lineNum">     148</span> <span class="tlaGNC">          12 :         return true;</span></span>
+<span id="L149"><span class="lineNum">     149</span> <span class="tlaGNC">          12 :       }()</span></span>
 <span id="L150"><span class="lineNum">     150</span>              :     );</span>
-<span id="L151"><span class="lineNum">     151</span> <span class="tlaGNC">           8 :   }</span></span>
+<span id="L151"><span class="lineNum">     151</span> <span class="tlaGNC">          12 :   }</span></span>
 <span id="L152"><span class="lineNum">     152</span>              : }</span>
         </pre>
               </td>

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2025-01-12 17:02:37</td>
+            <td class="headerValue">2025-01-12 21:38:39</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryMed">81.6&nbsp;%</td>
@@ -122,18 +122,18 @@
 <span id="L60"><span class="lineNum">      60</span>              :   public:</span>
 <span id="L61"><span class="lineNum">      61</span>              :     template&lt;class Test&gt;</span>
 <span id="L62"><span class="lineNum">      62</span>              :       requires (!std::is_same_v&lt;Test, test_vessel&gt; &amp;&amp; concrete_test&lt;Test&gt;)</span>
-<span id="L63"><span class="lineNum">      63</span> <span class="tlaGNC tlaBgGNC">        3172 :     test_vessel(Test&amp;&amp; t)</span></span>
-<span id="L64"><span class="lineNum">      64</span> <span class="tlaGNC">        3172 :       : m_pTest{std::make_unique&lt;essence&lt;Test&gt;&gt;(std::forward&lt;Test&gt;(t))}</span></span>
+<span id="L63"><span class="lineNum">      63</span> <span class="tlaGNC tlaBgGNC">        2710 :     test_vessel(Test&amp;&amp; t)</span></span>
+<span id="L64"><span class="lineNum">      64</span> <span class="tlaGNC">        2710 :       : m_pTest{std::make_unique&lt;essence&lt;Test&gt;&gt;(std::forward&lt;Test&gt;(t))}</span></span>
 <span id="L65"><span class="lineNum">      65</span>              :     {</span>
 <span id="L66"><span class="lineNum">      66</span>              :       if constexpr(!is_parallelizable_v&lt;Test&gt;)</span>
-<span id="L67"><span class="lineNum">      67</span> <span class="tlaGNC">          36 :         m_Parallelizable = parallelizable_candidate::no;</span></span>
-<span id="L68"><span class="lineNum">      68</span> <span class="tlaGNC">        3172 :     }</span></span>
+<span id="L67"><span class="lineNum">      67</span> <span class="tlaGNC">          26 :         m_Parallelizable = parallelizable_candidate::no;</span></span>
+<span id="L68"><span class="lineNum">      68</span> <span class="tlaGNC">        2710 :     }</span></span>
 <span id="L69"><span class="lineNum">      69</span>              : </span>
 <span id="L70"><span class="lineNum">      70</span>              :     test_vessel(const test_vessel&amp;)     = delete;</span>
-<span id="L71"><span class="lineNum">      71</span> <span class="tlaGNC">        7816 :     test_vessel(test_vessel&amp;&amp;) noexcept = default;</span></span>
+<span id="L71"><span class="lineNum">      71</span> <span class="tlaGNC">        3824 :     test_vessel(test_vessel&amp;&amp;) noexcept = default;</span></span>
 <span id="L72"><span class="lineNum">      72</span>              : </span>
 <span id="L73"><span class="lineNum">      73</span>              :     test_vessel&amp; operator=(const test_vessel&amp;)     = delete;</span>
-<span id="L74"><span class="lineNum">      74</span> <span class="tlaGNC">        3552 :     test_vessel&amp; operator=(test_vessel&amp;&amp;) noexcept = default;</span></span>
+<span id="L74"><span class="lineNum">      74</span> <span class="tlaGNC">         900 :     test_vessel&amp; operator=(test_vessel&amp;&amp;) noexcept = default;</span></span>
 <span id="L75"><span class="lineNum">      75</span>              : </span>
 <span id="L76"><span class="lineNum">      76</span>              :     [[nodiscard]]</span>
 <span id="L77"><span class="lineNum">      77</span>              :     const std::string&amp; name() const noexcept</span>
@@ -142,52 +142,52 @@
 <span id="L80"><span class="lineNum">      80</span>              :     }</span>
 <span id="L81"><span class="lineNum">      81</span>              : </span>
 <span id="L82"><span class="lineNum">      82</span>              :     [[nodiscard]]</span>
-<span id="L83"><span class="lineNum">      83</span> <span class="tlaGNC">        5924 :     const test_summary_path&amp; summary_file_path() const noexcept</span></span>
+<span id="L83"><span class="lineNum">      83</span> <span class="tlaGNC">        5390 :     const test_summary_path&amp; summary_file_path() const noexcept</span></span>
 <span id="L84"><span class="lineNum">      84</span>              :     {</span>
-<span id="L85"><span class="lineNum">      85</span> <span class="tlaGNC">        5924 :       return m_pTest-&gt;summary_file_path();</span></span>
+<span id="L85"><span class="lineNum">      85</span> <span class="tlaGNC">        5390 :       return m_pTest-&gt;summary_file_path();</span></span>
 <span id="L86"><span class="lineNum">      86</span>              :     }</span>
 <span id="L87"><span class="lineNum">      87</span>              : </span>
 <span id="L88"><span class="lineNum">      88</span>              :     [[nodiscard]]</span>
-<span id="L89"><span class="lineNum">      89</span> <span class="tlaGNC">        5924 :     std::filesystem::path source_file() const</span></span>
+<span id="L89"><span class="lineNum">      89</span> <span class="tlaGNC">        5390 :     std::filesystem::path source_file() const</span></span>
 <span id="L90"><span class="lineNum">      90</span>              :     {</span>
-<span id="L91"><span class="lineNum">      91</span> <span class="tlaGNC">        5924 :       return m_pTest-&gt;source_file();</span></span>
+<span id="L91"><span class="lineNum">      91</span> <span class="tlaGNC">        5390 :       return m_pTest-&gt;source_file();</span></span>
 <span id="L92"><span class="lineNum">      92</span>              :     }</span>
 <span id="L93"><span class="lineNum">      93</span>              : </span>
 <span id="L94"><span class="lineNum">      94</span>              :     [[nodiscard]]</span>
-<span id="L95"><span class="lineNum">      95</span> <span class="tlaGNC">        5924 :     std::filesystem::path working_materials() const</span></span>
+<span id="L95"><span class="lineNum">      95</span> <span class="tlaGNC">        5390 :     std::filesystem::path working_materials() const</span></span>
 <span id="L96"><span class="lineNum">      96</span>              :     {</span>
-<span id="L97"><span class="lineNum">      97</span> <span class="tlaGNC">        5924 :       return m_pTest-&gt;working_materials();</span></span>
+<span id="L97"><span class="lineNum">      97</span> <span class="tlaGNC">        5390 :       return m_pTest-&gt;working_materials();</span></span>
 <span id="L98"><span class="lineNum">      98</span>              :     }</span>
 <span id="L99"><span class="lineNum">      99</span>              : </span>
 <span id="L100"><span class="lineNum">     100</span>              :     [[nodiscard]]</span>
-<span id="L101"><span class="lineNum">     101</span> <span class="tlaGNC">        5924 :     std::filesystem::path predictive_materials() const</span></span>
+<span id="L101"><span class="lineNum">     101</span> <span class="tlaGNC">        5390 :     std::filesystem::path predictive_materials() const</span></span>
 <span id="L102"><span class="lineNum">     102</span>              :     {</span>
-<span id="L103"><span class="lineNum">     103</span> <span class="tlaGNC">        5924 :       return m_pTest-&gt;predictive_materials();</span></span>
+<span id="L103"><span class="lineNum">     103</span> <span class="tlaGNC">        5390 :       return m_pTest-&gt;predictive_materials();</span></span>
 <span id="L104"><span class="lineNum">     104</span>              :     }</span>
 <span id="L105"><span class="lineNum">     105</span>              : </span>
 <span id="L106"><span class="lineNum">     106</span>              :     [[nodiscard]]</span>
-<span id="L107"><span class="lineNum">     107</span> <span class="tlaGNC">       34667 :     bool parallelizable() const noexcept</span></span>
+<span id="L107"><span class="lineNum">     107</span> <span class="tlaGNC">       29062 :     bool parallelizable() const noexcept</span></span>
 <span id="L108"><span class="lineNum">     108</span>              :     {</span>
-<span id="L109"><span class="lineNum">     109</span> <span class="tlaGNC">       34667 :       return m_Parallelizable == parallelizable_candidate::yes;</span></span>
+<span id="L109"><span class="lineNum">     109</span> <span class="tlaGNC">       29062 :       return m_Parallelizable == parallelizable_candidate::yes;</span></span>
 <span id="L110"><span class="lineNum">     110</span>              :     }</span>
 <span id="L111"><span class="lineNum">     111</span>              : </span>
 <span id="L112"><span class="lineNum">     112</span>              :     [[nodiscard]]</span>
-<span id="L113"><span class="lineNum">     113</span> <span class="tlaGNC">        5921 :     log_summary execute(std::optional&lt;std::size_t&gt; index)</span></span>
+<span id="L113"><span class="lineNum">     113</span> <span class="tlaGNC">        5388 :     log_summary execute(std::optional&lt;std::size_t&gt; index)</span></span>
 <span id="L114"><span class="lineNum">     114</span>              :     {</span>
-<span id="L115"><span class="lineNum">     115</span> <span class="tlaGNC">        5921 :       return m_pTest-&gt;execute(index);</span></span>
+<span id="L115"><span class="lineNum">     115</span> <span class="tlaGNC">        5388 :       return m_pTest-&gt;execute(index);</span></span>
 <span id="L116"><span class="lineNum">     116</span>              :     }</span>
 <span id="L117"><span class="lineNum">     117</span>              : </span>
-<span id="L118"><span class="lineNum">     118</span> <span class="tlaGNC">        1080 :     void reset(const project_paths&amp; projPaths, std::vector&lt;std::filesystem::path&gt;&amp; materialsPaths)</span></span>
+<span id="L118"><span class="lineNum">     118</span> <span class="tlaGNC">        1008 :     void reset(const project_paths&amp; projPaths, std::vector&lt;std::filesystem::path&gt;&amp; materialsPaths)</span></span>
 <span id="L119"><span class="lineNum">     119</span>              :     {</span>
-<span id="L120"><span class="lineNum">     120</span> <span class="tlaGNC">        1080 :       m_pTest-&gt;reset(projPaths, materialsPaths);</span></span>
-<span id="L121"><span class="lineNum">     121</span> <span class="tlaGNC">        1080 :     }</span></span>
+<span id="L120"><span class="lineNum">     120</span> <span class="tlaGNC">        1008 :       m_pTest-&gt;reset(projPaths, materialsPaths);</span></span>
+<span id="L121"><span class="lineNum">     121</span> <span class="tlaGNC">        1008 :     }</span></span>
 <span id="L122"><span class="lineNum">     122</span>              :   private:</span>
 <span id="L123"><span class="lineNum">     123</span>              :     static void versioned_write(const std::filesystem::path&amp; file, const failure_output&amp; output);</span>
 <span id="L124"><span class="lineNum">     124</span>              :     static void versioned_write(const std::filesystem::path&amp; file, std::string_view text);</span>
 <span id="L125"><span class="lineNum">     125</span>              : </span>
 <span id="L126"><span class="lineNum">     126</span>              :     struct soul</span>
 <span id="L127"><span class="lineNum">     127</span>              :     {</span>
-<span id="L128"><span class="lineNum">     128</span> <span class="tlaGNC">        1676 :       virtual ~soul() = default;</span></span>
+<span id="L128"><span class="lineNum">     128</span> <span class="tlaGNC">        1214 :       virtual ~soul() = default;</span></span>
 <span id="L129"><span class="lineNum">     129</span>              : </span>
 <span id="L130"><span class="lineNum">     130</span>              :       virtual const std::string&amp; name() const noexcept                    = 0;</span>
 <span id="L131"><span class="lineNum">     131</span>              :       virtual const test_summary_path&amp; summary_file_path() const noexcept = 0;</span>
@@ -203,13 +203,13 @@
 <span id="L141"><span class="lineNum">     141</span>              :     class essence final : public soul</span>
 <span id="L142"><span class="lineNum">     142</span>              :     {</span>
 <span id="L143"><span class="lineNum">     143</span>              :     public:</span>
-<span id="L144"><span class="lineNum">     144</span> <span class="tlaGNC">        3172 :       essence(Test&amp;&amp; t) : m_Test{std::forward&lt;Test&gt;(t)}</span></span>
-<span id="L145"><span class="lineNum">     145</span> <span class="tlaGNC">        3172 :       {}</span></span>
+<span id="L144"><span class="lineNum">     144</span> <span class="tlaGNC">        2710 :       essence(Test&amp;&amp; t) : m_Test{std::forward&lt;Test&gt;(t)}</span></span>
+<span id="L145"><span class="lineNum">     145</span> <span class="tlaGNC">        2710 :       {}</span></span>
 <span id="L146"><span class="lineNum">     146</span>              : </span>
 <span id="L147"><span class="lineNum">     147</span>              :       [[nodiscard]]</span>
-<span id="L148"><span class="lineNum">     148</span> <span class="tlaGNC">        4252 :       std::filesystem::path source_file() const final</span></span>
+<span id="L148"><span class="lineNum">     148</span> <span class="tlaGNC">        3718 :       std::filesystem::path source_file() const final</span></span>
 <span id="L149"><span class="lineNum">     149</span>              :       {</span>
-<span id="L150"><span class="lineNum">     150</span> <span class="tlaGNC">        4252 :         return m_Test.source_file();</span></span>
+<span id="L150"><span class="lineNum">     150</span> <span class="tlaGNC">        3718 :         return m_Test.source_file();</span></span>
 <span id="L151"><span class="lineNum">     151</span>              :       }</span>
 <span id="L152"><span class="lineNum">     152</span>              : </span>
 <span id="L153"><span class="lineNum">     153</span>              :       [[nodiscard]]</span>
@@ -219,63 +219,63 @@
 <span id="L157"><span class="lineNum">     157</span>              :       }</span>
 <span id="L158"><span class="lineNum">     158</span>              : </span>
 <span id="L159"><span class="lineNum">     159</span>              :       [[nodiscard]]</span>
-<span id="L160"><span class="lineNum">     160</span> <span class="tlaGNC tlaBgGNC">        4252 :       const test_summary_path&amp; summary_file_path() const noexcept final</span></span>
+<span id="L160"><span class="lineNum">     160</span> <span class="tlaGNC tlaBgGNC">        3718 :       const test_summary_path&amp; summary_file_path() const noexcept final</span></span>
 <span id="L161"><span class="lineNum">     161</span>              :       {</span>
-<span id="L162"><span class="lineNum">     162</span> <span class="tlaGNC">        4252 :         return m_Test.summary_file_path();</span></span>
+<span id="L162"><span class="lineNum">     162</span> <span class="tlaGNC">        3718 :         return m_Test.summary_file_path();</span></span>
 <span id="L163"><span class="lineNum">     163</span>              :       }</span>
 <span id="L164"><span class="lineNum">     164</span>              : </span>
 <span id="L165"><span class="lineNum">     165</span>              :       [[nodiscard]]</span>
-<span id="L166"><span class="lineNum">     166</span> <span class="tlaGNC">        4252 :       std::filesystem::path working_materials() const final</span></span>
+<span id="L166"><span class="lineNum">     166</span> <span class="tlaGNC">        3718 :       std::filesystem::path working_materials() const final</span></span>
 <span id="L167"><span class="lineNum">     167</span>              :       {</span>
-<span id="L168"><span class="lineNum">     168</span> <span class="tlaGNC">        4252 :         return m_Test.working_materials();</span></span>
+<span id="L168"><span class="lineNum">     168</span> <span class="tlaGNC">        3718 :         return m_Test.working_materials();</span></span>
 <span id="L169"><span class="lineNum">     169</span>              :       }</span>
 <span id="L170"><span class="lineNum">     170</span>              : </span>
 <span id="L171"><span class="lineNum">     171</span>              :       [[nodiscard]]</span>
-<span id="L172"><span class="lineNum">     172</span> <span class="tlaGNC">        4252 :       std::filesystem::path predictive_materials() const final</span></span>
+<span id="L172"><span class="lineNum">     172</span> <span class="tlaGNC">        3718 :       std::filesystem::path predictive_materials() const final</span></span>
 <span id="L173"><span class="lineNum">     173</span>              :       {</span>
-<span id="L174"><span class="lineNum">     174</span> <span class="tlaGNC">        4252 :         return m_Test.predictive_materials();</span></span>
+<span id="L174"><span class="lineNum">     174</span> <span class="tlaGNC">        3718 :         return m_Test.predictive_materials();</span></span>
 <span id="L175"><span class="lineNum">     175</span>              :       }</span>
 <span id="L176"><span class="lineNum">     176</span>              : </span>
 <span id="L177"><span class="lineNum">     177</span>              :       [[nodiscard]]</span>
-<span id="L178"><span class="lineNum">     178</span> <span class="tlaGNC">        4252 :       log_summary execute(std::optional&lt;std::size_t&gt; index) final</span></span>
+<span id="L178"><span class="lineNum">     178</span> <span class="tlaGNC">        3718 :       log_summary execute(std::optional&lt;std::size_t&gt; index) final</span></span>
 <span id="L179"><span class="lineNum">     179</span>              :       {</span>
-<span id="L180"><span class="lineNum">     180</span> <span class="tlaGNC">        4252 :         const timer t{};</span></span>
+<span id="L180"><span class="lineNum">     180</span> <span class="tlaGNC">        3718 :         const timer t{};</span></span>
 <span id="L181"><span class="lineNum">     181</span>              : </span>
 <span id="L182"><span class="lineNum">     182</span>              :         try</span>
 <span id="L183"><span class="lineNum">     183</span>              :         {</span>
-<span id="L184"><span class="lineNum">     184</span> <span class="tlaGNC">        4250 :           m_Test.run_tests();</span></span>
+<span id="L184"><span class="lineNum">     184</span> <span class="tlaGNC">        3717 :           m_Test.run_tests();</span></span>
 <span id="L185"><span class="lineNum">     185</span>              :         }</span>
-<span id="L186"><span class="lineNum">     186</span> <span class="tlaGNC">          90 :         catch(const std::exception&amp; e)</span></span>
+<span id="L186"><span class="lineNum">     186</span> <span class="tlaGNC">          84 :         catch(const std::exception&amp; e)</span></span>
 <span id="L187"><span class="lineNum">     187</span>              :         {</span>
-<span id="L188"><span class="lineNum">     188</span> <span class="tlaGNC">          90 :           m_Test.log_critical_failure(m_Test.source_file(), &quot;Unexpected&quot;, e.what());</span></span>
+<span id="L188"><span class="lineNum">     188</span> <span class="tlaGNC">          84 :           m_Test.log_critical_failure(m_Test.source_file(), &quot;Unexpected&quot;, e.what());</span></span>
 <span id="L189"><span class="lineNum">     189</span>              :         }</span>
 <span id="L190"><span class="lineNum">     190</span> <span class="tlaUNC tlaBgUNC">           0 :         catch(...)</span></span>
 <span id="L191"><span class="lineNum">     191</span>              :         {</span>
 <span id="L192"><span class="lineNum">     192</span> <span class="tlaUNC">           0 :           m_Test.log_critical_failure(m_Test.source_file(), &quot;Unknown&quot;, &quot;&quot;);</span></span>
 <span id="L193"><span class="lineNum">     193</span>              :         }</span>
 <span id="L194"><span class="lineNum">     194</span>              : </span>
-<span id="L195"><span class="lineNum">     195</span> <span class="tlaGNC tlaBgGNC">        4249 :         m_Test.write_instability_analysis_output(m_Test.source_file(), index);</span></span>
+<span id="L195"><span class="lineNum">     195</span> <span class="tlaGNC tlaBgGNC">        3714 :         m_Test.write_instability_analysis_output(m_Test.source_file(), index);</span></span>
 <span id="L196"><span class="lineNum">     196</span>              : </span>
-<span id="L197"><span class="lineNum">     197</span> <span class="tlaGNC">        8500 :         return write_versioned_output(t);</span></span>
+<span id="L197"><span class="lineNum">     197</span> <span class="tlaGNC">        7432 :         return write_versioned_output(t);</span></span>
 <span id="L198"><span class="lineNum">     198</span>              :       }</span>
 <span id="L199"><span class="lineNum">     199</span>              : </span>
-<span id="L200"><span class="lineNum">     200</span> <span class="tlaGNC">        1080 :       void reset(const project_paths&amp; projPaths, std::vector&lt;std::filesystem::path&gt;&amp; materialsPaths) final</span></span>
+<span id="L200"><span class="lineNum">     200</span> <span class="tlaGNC">        1008 :       void reset(const project_paths&amp; projPaths, std::vector&lt;std::filesystem::path&gt;&amp; materialsPaths) final</span></span>
 <span id="L201"><span class="lineNum">     201</span>              :       {</span>
-<span id="L202"><span class="lineNum">     202</span> <span class="tlaGNC">        1080 :         m_Test.reset_results();</span></span>
-<span id="L203"><span class="lineNum">     203</span> <span class="tlaGNC">        1080 :         set_materials(m_Test.source_file(), projPaths, materialsPaths);</span></span>
-<span id="L204"><span class="lineNum">     204</span> <span class="tlaGNC">        1080 :       }</span></span>
+<span id="L202"><span class="lineNum">     202</span> <span class="tlaGNC">        1008 :         m_Test.reset_results();</span></span>
+<span id="L203"><span class="lineNum">     203</span> <span class="tlaGNC">        1008 :         set_materials(m_Test.source_file(), projPaths, materialsPaths);</span></span>
+<span id="L204"><span class="lineNum">     204</span> <span class="tlaGNC">        1008 :       }</span></span>
 <span id="L205"><span class="lineNum">     205</span>              :     private:</span>
-<span id="L206"><span class="lineNum">     206</span> <span class="tlaGNC">        4252 :       log_summary write_versioned_output(const timer&amp; t) const</span></span>
+<span id="L206"><span class="lineNum">     206</span> <span class="tlaGNC">        3717 :       log_summary write_versioned_output(const timer&amp; t) const</span></span>
 <span id="L207"><span class="lineNum">     207</span>              :       {</span>
-<span id="L208"><span class="lineNum">     208</span> <span class="tlaGNC">        4252 :         auto summary{m_Test.summarize(t.time_elapsed())};</span></span>
+<span id="L208"><span class="lineNum">     208</span> <span class="tlaGNC">        3717 :         auto summary{m_Test.summarize(t.time_elapsed())};</span></span>
 <span id="L209"><span class="lineNum">     209</span>              : </span>
-<span id="L210"><span class="lineNum">     210</span> <span class="tlaGNC">        4249 :         if(!m_Test.has_critical_failures())</span></span>
+<span id="L210"><span class="lineNum">     210</span> <span class="tlaGNC">        3714 :         if(!m_Test.has_critical_failures())</span></span>
 <span id="L211"><span class="lineNum">     211</span>              :         {</span>
-<span id="L212"><span class="lineNum">     212</span> <span class="tlaGNC">        4157 :           versioned_write(m_Test.diagnostics_file_paths().false_positive_or_negative_file_path(), summary.diagnostics_output());</span></span>
-<span id="L213"><span class="lineNum">     213</span> <span class="tlaGNC">        4153 :           versioned_write(m_Test.diagnostics_file_paths().caught_exceptions_file_path(), summary.caught_exceptions_output());</span></span>
+<span id="L212"><span class="lineNum">     212</span> <span class="tlaGNC">        3629 :           versioned_write(m_Test.diagnostics_file_paths().false_positive_or_negative_file_path(), summary.diagnostics_output());</span></span>
+<span id="L213"><span class="lineNum">     213</span> <span class="tlaGNC">        3625 :           versioned_write(m_Test.diagnostics_file_paths().caught_exceptions_file_path(), summary.caught_exceptions_output());</span></span>
 <span id="L214"><span class="lineNum">     214</span>              :         }</span>
 <span id="L215"><span class="lineNum">     215</span>              : </span>
-<span id="L216"><span class="lineNum">     216</span> <span class="tlaGNC">        4249 :         return summary;</span></span>
+<span id="L216"><span class="lineNum">     216</span> <span class="tlaGNC">        3716 :         return summary;</span></span>
 <span id="L217"><span class="lineNum">     217</span> <span class="tlaUNC tlaBgUNC">           0 :       }</span></span>
 <span id="L218"><span class="lineNum">     218</span>              : </span>
 <span id="L219"><span class="lineNum">     219</span>              :       Test m_Test;</span>
@@ -289,20 +289,20 @@
 <span id="L227"><span class="lineNum">     227</span>              : </span>
 <span id="L228"><span class="lineNum">     228</span>              :   template&lt;concrete_test T&gt;</span>
 <span id="L229"><span class="lineNum">     229</span>              :   [[nodiscard]]</span>
-<span id="L230"><span class="lineNum">     230</span> <span class="tlaGNC tlaBgGNC">        3172 :   std::optional&lt;std::string&gt; get_output_discriminator(const T&amp; test){</span></span>
+<span id="L230"><span class="lineNum">     230</span> <span class="tlaGNC tlaBgGNC">        2710 :   std::optional&lt;std::string&gt; get_output_discriminator(const T&amp; test){</span></span>
 <span id="L231"><span class="lineNum">     231</span>              :     if constexpr(has_discriminated_output_v&lt;T&gt;)</span>
-<span id="L232"><span class="lineNum">     232</span> <span class="tlaGNC">          30 :       return test.output_discriminator();</span></span>
+<span id="L232"><span class="lineNum">     232</span> <span class="tlaGNC">          28 :       return test.output_discriminator();</span></span>
 <span id="L233"><span class="lineNum">     233</span>              :     else</span>
-<span id="L234"><span class="lineNum">     234</span> <span class="tlaGNC">        3142 :       return std::nullopt;</span></span>
+<span id="L234"><span class="lineNum">     234</span> <span class="tlaGNC">        2682 :       return std::nullopt;</span></span>
 <span id="L235"><span class="lineNum">     235</span>              :   }</span>
 <span id="L236"><span class="lineNum">     236</span>              : </span>
 <span id="L237"><span class="lineNum">     237</span>              :   template&lt;concrete_test T&gt;</span>
 <span id="L238"><span class="lineNum">     238</span>              :   [[nodiscard]]</span>
-<span id="L239"><span class="lineNum">     239</span> <span class="tlaGNC">        3172 :   std::optional&lt;std::string&gt; get_reduction_discriminator(const T&amp; test){</span></span>
+<span id="L239"><span class="lineNum">     239</span> <span class="tlaGNC">        2710 :   std::optional&lt;std::string&gt; get_reduction_discriminator(const T&amp; test){</span></span>
 <span id="L240"><span class="lineNum">     240</span>              :     if constexpr(has_discriminated_summary_v&lt;T&gt;)</span>
-<span id="L241"><span class="lineNum">     241</span> <span class="tlaGNC">          30 :       return test.summary_discriminator();</span></span>
+<span id="L241"><span class="lineNum">     241</span> <span class="tlaGNC">          28 :       return test.summary_discriminator();</span></span>
 <span id="L242"><span class="lineNum">     242</span>              :     else</span>
-<span id="L243"><span class="lineNum">     243</span> <span class="tlaGNC">        3142 :       return std::nullopt;</span></span>
+<span id="L243"><span class="lineNum">     243</span> <span class="tlaGNC">        2682 :       return std::nullopt;</span></span>
 <span id="L244"><span class="lineNum">     244</span>              :   }</span>
 <span id="L245"><span class="lineNum">     245</span>              : </span>
 <span id="L246"><span class="lineNum">     246</span>              :   /*! \brief Consumes command-line arguments and holds all test suites.</span>
@@ -329,33 +329,33 @@
 <span id="L267"><span class="lineNum">     267</span>              : </span>
 <span id="L268"><span class="lineNum">     268</span>              :     template&lt;concrete_test... Tests&gt;</span>
 <span id="L269"><span class="lineNum">     269</span>              :       requires (sizeof...(Tests) &gt; 0)</span>
-<span id="L270"><span class="lineNum">     270</span> <span class="tlaGNC">         976 :     void add_test_suite(std::string_view name, Tests&amp;&amp;... tests)</span></span>
+<span id="L270"><span class="lineNum">     270</span> <span class="tlaGNC">         860 :     void add_test_suite(std::string_view name, Tests&amp;&amp;... tests)</span></span>
 <span id="L271"><span class="lineNum">     271</span>              :     {</span>
 <span id="L272"><span class="lineNum">     272</span>              :       using namespace object;</span>
 <span id="L273"><span class="lineNum">     273</span>              : </span>
-<span id="L274"><span class="lineNum">     274</span> <span class="tlaGNC">         976 :       check_for_duplicates(name, tests...);</span></span>
+<span id="L274"><span class="lineNum">     274</span> <span class="tlaGNC">         860 :       check_for_duplicates(name, tests...);</span></span>
 <span id="L275"><span class="lineNum">     275</span>              : </span>
-<span id="L276"><span class="lineNum">     276</span> <span class="tlaGNC">         946 :       extract_suite_tree(name, m_Filter, std::forward&lt;Tests&gt;(tests)...);</span></span>
-<span id="L277"><span class="lineNum">     277</span> <span class="tlaGNC">         946 :     }</span></span>
+<span id="L276"><span class="lineNum">     276</span> <span class="tlaGNC">         832 :       extract_suite_tree(name, m_Filter, std::forward&lt;Tests&gt;(tests)...);</span></span>
+<span id="L277"><span class="lineNum">     277</span> <span class="tlaGNC">         832 :     }</span></span>
 <span id="L278"><span class="lineNum">     278</span>              : </span>
 <span id="L279"><span class="lineNum">     279</span>              :     template&lt;class... Suites&gt;</span>
 <span id="L280"><span class="lineNum">     280</span>              :       requires (object::is_suite_v&lt;Suites&gt; &amp;&amp; ...)</span>
-<span id="L281"><span class="lineNum">     281</span> <span class="tlaGNC">          72 :     void add_test_suite(std::string_view name, Suites... s)</span></span>
+<span id="L281"><span class="lineNum">     281</span> <span class="tlaGNC">          64 :     void add_test_suite(std::string_view name, Suites... s)</span></span>
 <span id="L282"><span class="lineNum">     282</span>              :     {</span>
 <span id="L283"><span class="lineNum">     283</span>              :       using namespace object;</span>
 <span id="L284"><span class="lineNum">     284</span>              : </span>
-<span id="L285"><span class="lineNum">     285</span> <span class="tlaGNC">          72 :       extract_suite_tree(m_Filter, suite{std::string{name}, std::move(s)...});</span></span>
-<span id="L286"><span class="lineNum">     286</span> <span class="tlaGNC">          72 :     }</span></span>
+<span id="L285"><span class="lineNum">     285</span> <span class="tlaGNC">          64 :       extract_suite_tree(m_Filter, suite{std::string{name}, std::move(s)...});</span></span>
+<span id="L286"><span class="lineNum">     286</span> <span class="tlaGNC">          64 :     }</span></span>
 <span id="L287"><span class="lineNum">     287</span>              : </span>
 <span id="L288"><span class="lineNum">     288</span>              :     void execute([[maybe_unused]] timer_resolution r={});</span>
 <span id="L289"><span class="lineNum">     289</span>              : </span>
-<span id="L290"><span class="lineNum">     290</span> <span class="tlaGNC">        7992 :     std::ostream&amp; stream() noexcept { return *m_Stream; }</span></span>
+<span id="L290"><span class="lineNum">     290</span> <span class="tlaGNC">        7424 :     std::ostream&amp; stream() noexcept { return *m_Stream; }</span></span>
 <span id="L291"><span class="lineNum">     291</span>              : </span>
-<span id="L292"><span class="lineNum">     292</span> <span class="tlaGNC">       10498 :     const project_paths&amp; proj_paths() const noexcept { return m_ProjPaths; }</span></span>
+<span id="L292"><span class="lineNum">     292</span> <span class="tlaGNC">        7698 :     const project_paths&amp; proj_paths() const noexcept { return m_ProjPaths; }</span></span>
 <span id="L293"><span class="lineNum">     293</span>              : </span>
-<span id="L294"><span class="lineNum">     294</span> <span class="tlaGNC">        1560 :     const std::string&amp; copyright() const noexcept { return m_Copyright; }</span></span>
+<span id="L294"><span class="lineNum">     294</span> <span class="tlaGNC">        1456 :     const std::string&amp; copyright() const noexcept { return m_Copyright; }</span></span>
 <span id="L295"><span class="lineNum">     295</span>              : </span>
-<span id="L296"><span class="lineNum">     296</span> <span class="tlaGNC">        1560 :     const indentation&amp; code_indent() const noexcept { return m_CodeIndent; }</span></span>
+<span id="L296"><span class="lineNum">     296</span> <span class="tlaGNC">        1456 :     const indentation&amp; code_indent() const noexcept { return m_CodeIndent; }</span></span>
 <span id="L297"><span class="lineNum">     297</span>              : </span>
 <span id="L298"><span class="lineNum">     298</span>              :   private:</span>
 <span id="L299"><span class="lineNum">     299</span>              :     enum class output_mode { standard = 0, verbose = 1 };</span>
@@ -377,9 +377,9 @@
 <span id="L315"><span class="lineNum">     315</span>              :     class path_equivalence</span>
 <span id="L316"><span class="lineNum">     316</span>              :     {</span>
 <span id="L317"><span class="lineNum">     317</span>              :     public:</span>
-<span id="L318"><span class="lineNum">     318</span> <span class="tlaGNC tlaBgGNC">        1236 :       explicit path_equivalence(const std::filesystem::path&amp; repo)</span></span>
-<span id="L319"><span class="lineNum">     319</span> <span class="tlaGNC">        1236 :         : m_Repo{&amp;repo}</span></span>
-<span id="L320"><span class="lineNum">     320</span> <span class="tlaGNC">        1236 :       {}</span></span>
+<span id="L318"><span class="lineNum">     318</span> <span class="tlaGNC tlaBgGNC">        1152 :       explicit path_equivalence(const std::filesystem::path&amp; repo)</span></span>
+<span id="L319"><span class="lineNum">     319</span> <span class="tlaGNC">        1152 :         : m_Repo{&amp;repo}</span></span>
+<span id="L320"><span class="lineNum">     320</span> <span class="tlaGNC">        1152 :       {}</span></span>
 <span id="L321"><span class="lineNum">     321</span>              : </span>
 <span id="L322"><span class="lineNum">     322</span>              :       [[nodiscard]]</span>
 <span id="L323"><span class="lineNum">     323</span>              :       bool operator()(const normal_path&amp; selectedSource, const normal_path&amp; filepath) const;</span>
@@ -424,7 +424,7 @@
 <span id="L362"><span class="lineNum">     362</span>              :     void check_for_missing_tests();</span>
 <span id="L363"><span class="lineNum">     363</span>              : </span>
 <span id="L364"><span class="lineNum">     364</span>              :     [[nodiscard]]</span>
-<span id="L365"><span class="lineNum">     365</span> <span class="tlaGNC">        5076 :     bool concurrent_execution() const noexcept { return m_ConcurrencyMode != concurrency_mode::serial; }</span></span>
+<span id="L365"><span class="lineNum">     365</span> <span class="tlaGNC">        4704 :     bool concurrent_execution() const noexcept { return m_ConcurrencyMode != concurrency_mode::serial; }</span></span>
 <span id="L366"><span class="lineNum">     366</span>              : </span>
 <span id="L367"><span class="lineNum">     367</span>              :     void sort_tests();</span>
 <span id="L368"><span class="lineNum">     368</span>              : </span>
@@ -436,7 +436,7 @@
 <span id="L374"><span class="lineNum">     374</span>              :     bool nothing_to_do();</span>
 <span id="L375"><span class="lineNum">     375</span>              : </span>
 <span id="L376"><span class="lineNum">     376</span>              :     [[nodiscard]]</span>
-<span id="L377"><span class="lineNum">     377</span> <span class="tlaGNC">        3978 :     bool in_mode(runner_mode m) const noexcept { return (m_RunnerMode &amp; m) == m; }</span></span>
+<span id="L377"><span class="lineNum">     377</span> <span class="tlaGNC">        3708 :     bool in_mode(runner_mode m) const noexcept { return (m_RunnerMode &amp; m) == m; }</span></span>
 <span id="L378"><span class="lineNum">     378</span>              : </span>
 <span id="L379"><span class="lineNum">     379</span>              :     void prune();</span>
 <span id="L380"><span class="lineNum">     380</span>              : </span>
@@ -445,65 +445,65 @@
 <span id="L383"><span class="lineNum">     383</span>              : </span>
 <span id="L384"><span class="lineNum">     384</span>              :     template&lt;class Filter, class Suite&gt;</span>
 <span id="L385"><span class="lineNum">     385</span>              :       requires object::is_suite_v&lt;Suite&gt;</span>
-<span id="L386"><span class="lineNum">     386</span> <span class="tlaGNC">        1018 :     void extract_suite_tree(Filter&amp;&amp; filter, Suite&amp;&amp; s)</span></span>
+<span id="L386"><span class="lineNum">     386</span> <span class="tlaGNC">         896 :     void extract_suite_tree(Filter&amp;&amp; filter, Suite&amp;&amp; s)</span></span>
 <span id="L387"><span class="lineNum">     387</span>              :     {</span>
 <span id="L388"><span class="lineNum">     388</span>              :       using namespace object;</span>
 <span id="L389"><span class="lineNum">     389</span>              : </span>
-<span id="L390"><span class="lineNum">     390</span> <span class="tlaGNC">        1018 :       if(!m_Suites.order())</span></span>
+<span id="L390"><span class="lineNum">     390</span> <span class="tlaGNC">         896 :       if(!m_Suites.order())</span></span>
 <span id="L391"><span class="lineNum">     391</span>              :       {</span>
-<span id="L392"><span class="lineNum">     392</span> <span class="tlaGNC">         668 :         m_Suites.add_node(suite_type::npos);</span></span>
+<span id="L392"><span class="lineNum">     392</span> <span class="tlaGNC">         622 :         m_Suites.add_node(suite_type::npos);</span></span>
 <span id="L393"><span class="lineNum">     393</span>              :       }</span>
 <span id="L394"><span class="lineNum">     394</span>              : </span>
-<span id="L395"><span class="lineNum">     395</span> <span class="tlaGNC">        1018 :       std::vector&lt;std::filesystem::path&gt; materialsPaths{};</span></span>
+<span id="L395"><span class="lineNum">     395</span> <span class="tlaGNC">         896 :       std::vector&lt;std::filesystem::path&gt; materialsPaths{};</span></span>
 <span id="L396"><span class="lineNum">     396</span>              : </span>
 <span id="L397"><span class="lineNum">     397</span>              :       // TO DO: may need generalizing since suites can have arbitrary depth.</span>
-<span id="L398"><span class="lineNum">     398</span> <span class="tlaGNC">        1018 :       const std::string suiteName{s.name};</span></span>
+<span id="L398"><span class="lineNum">     398</span> <span class="tlaGNC">         896 :       const std::string suiteName{s.name};</span></span>
 <span id="L399"><span class="lineNum">     399</span>              : </span>
-<span id="L400"><span class="lineNum">     400</span> <span class="tlaGNC">        1018 :       extract_tree(std::forward&lt;Suite&gt;(s),</span></span>
+<span id="L400"><span class="lineNum">     400</span> <span class="tlaGNC">         896 :       extract_tree(std::forward&lt;Suite&gt;(s),</span></span>
 <span id="L401"><span class="lineNum">     401</span>              :                    std::forward&lt;Filter&gt;(filter),</span>
 <span id="L402"><span class="lineNum">     402</span>              :                    overloaded{</span>
-<span id="L403"><span class="lineNum">     403</span> <span class="tlaGNC">        1240 :                      [] &lt;class... Ts&gt; (const suite&lt;Ts...&gt;&amp;s) -&gt; suite_node { return {.summary{log_summary{s.name}}}; },</span></span>
-<span id="L404"><span class="lineNum">     404</span> <span class="tlaGNC">        6344 :                      [this, &amp;suiteName, &amp;materialsPaths]&lt;concrete_test T&gt;(T&amp;&amp; test) -&gt; suite_node {</span></span>
-<span id="L405"><span class="lineNum">     405</span> <span class="tlaGNC">        9516 :                        test = T{test.name(),</span></span>
+<span id="L403"><span class="lineNum">     403</span> <span class="tlaGNC">        1076 :                      [] &lt;class... Ts&gt; (const suite&lt;Ts...&gt;&amp;s) -&gt; suite_node { return {.summary{log_summary{s.name}}}; },</span></span>
+<span id="L404"><span class="lineNum">     404</span> <span class="tlaGNC">        5420 :                      [this, &amp;suiteName, &amp;materialsPaths]&lt;concrete_test T&gt;(T&amp;&amp; test) -&gt; suite_node {</span></span>
+<span id="L405"><span class="lineNum">     405</span> <span class="tlaGNC">        8130 :                        test = T{test.name(),</span></span>
 <span id="L406"><span class="lineNum">     406</span>              :                                 suiteName,</span>
-<span id="L407"><span class="lineNum">     407</span> <span class="tlaGNC">        6344 :                                 test.source_file(),</span></span>
+<span id="L407"><span class="lineNum">     407</span> <span class="tlaGNC">        5420 :                                 test.source_file(),</span></span>
 <span id="L408"><span class="lineNum">     408</span>              :                                 proj_paths(),</span>
-<span id="L409"><span class="lineNum">     409</span> <span class="tlaGNC">        6344 :                                 set_materials(test.source_file(), proj_paths(), materialsPaths),</span></span>
-<span id="L410"><span class="lineNum">     410</span> <span class="tlaGNC">        6344 :                                 make_active_recovery_paths(m_RecoveryMode, proj_paths()),</span></span>
-<span id="L411"><span class="lineNum">     411</span> <span class="tlaGNC">        6344 :                                 get_output_discriminator(test),</span></span>
-<span id="L412"><span class="lineNum">     412</span> <span class="tlaGNC">        6344 :                                 get_reduction_discriminator(test)};</span></span>
+<span id="L409"><span class="lineNum">     409</span> <span class="tlaGNC">        5420 :                                 set_materials(test.source_file(), proj_paths(), materialsPaths),</span></span>
+<span id="L410"><span class="lineNum">     410</span> <span class="tlaGNC">        5420 :                                 make_active_recovery_paths(m_RecoveryMode, proj_paths()),</span></span>
+<span id="L411"><span class="lineNum">     411</span> <span class="tlaGNC">        5420 :                                 get_output_discriminator(test),</span></span>
+<span id="L412"><span class="lineNum">     412</span> <span class="tlaGNC">        5420 :                                 get_reduction_discriminator(test)};</span></span>
 <span id="L413"><span class="lineNum">     413</span>              :                    </span>
-<span id="L414"><span class="lineNum">     414</span> <span class="tlaGNC">        6276 :                        return {.summary{log_summary{test.name()}}, .optTest{std::move(test)}};</span></span>
+<span id="L414"><span class="lineNum">     414</span> <span class="tlaGNC">        5106 :                        return {.summary{log_summary{test.name()}}, .optTest{std::move(test)}};</span></span>
 <span id="L415"><span class="lineNum">     415</span>              :                      }</span>
 <span id="L416"><span class="lineNum">     416</span>              :                    },</span>
-<span id="L417"><span class="lineNum">     417</span> <span class="tlaGNC">        1018 :                    m_Suites,</span></span>
+<span id="L417"><span class="lineNum">     417</span> <span class="tlaGNC">         896 :                    m_Suites,</span></span>
 <span id="L418"><span class="lineNum">     418</span>              :                    0);</span>
-<span id="L419"><span class="lineNum">     419</span> <span class="tlaGNC">        1018 :     }</span></span>
+<span id="L419"><span class="lineNum">     419</span> <span class="tlaGNC">         896 :     }</span></span>
 <span id="L420"><span class="lineNum">     420</span>              : </span>
 <span id="L421"><span class="lineNum">     421</span>              :     template&lt;class Filter, concrete_test... Tests&gt;</span>
 <span id="L422"><span class="lineNum">     422</span>              :       requires (sizeof...(Tests) &gt; 0)</span>
-<span id="L423"><span class="lineNum">     423</span> <span class="tlaGNC">         946 :     void extract_suite_tree(std::string_view name, Filter&amp;&amp; filter, Tests&amp;&amp;... tests)</span></span>
+<span id="L423"><span class="lineNum">     423</span> <span class="tlaGNC">         832 :     void extract_suite_tree(std::string_view name, Filter&amp;&amp; filter, Tests&amp;&amp;... tests)</span></span>
 <span id="L424"><span class="lineNum">     424</span>              :     {</span>
-<span id="L425"><span class="lineNum">     425</span> <span class="tlaGNC">         946 :       extract_suite_tree(std::forward&lt;Filter&gt;(filter), object::suite{std::string{name}, std::forward&lt;Tests&gt;(tests)...});</span></span>
-<span id="L426"><span class="lineNum">     426</span> <span class="tlaGNC">         946 :     }</span></span>
+<span id="L425"><span class="lineNum">     425</span> <span class="tlaGNC">         832 :       extract_suite_tree(std::forward&lt;Filter&gt;(filter), object::suite{std::string{name}, std::forward&lt;Tests&gt;(tests)...});</span></span>
+<span id="L426"><span class="lineNum">     426</span> <span class="tlaGNC">         832 :     }</span></span>
 <span id="L427"><span class="lineNum">     427</span>              : </span>
 <span id="L428"><span class="lineNum">     428</span>              :     template&lt;concrete_test... Tests&gt;</span>
 <span id="L429"><span class="lineNum">     429</span>              :       requires (sizeof...(Tests) &gt; 0)</span>
-<span id="L430"><span class="lineNum">     430</span> <span class="tlaGNC">         976 :     static void check_for_duplicates(std::string_view name, const Tests&amp;... tests)</span></span>
+<span id="L430"><span class="lineNum">     430</span> <span class="tlaGNC">         860 :     static void check_for_duplicates(std::string_view name, const Tests&amp;... tests)</span></span>
 <span id="L431"><span class="lineNum">     431</span>              :     {</span>
 <span id="L432"><span class="lineNum">     432</span>              :       using duplicate_set = std::set&lt;std::pair&lt;std::string_view, std::filesystem::path&gt;&gt;;</span>
 <span id="L433"><span class="lineNum">     433</span>              : </span>
-<span id="L434"><span class="lineNum">     434</span> <span class="tlaGNC">         976 :       duplicate_set namesAndSources{};</span></span>
+<span id="L434"><span class="lineNum">     434</span> <span class="tlaGNC">         860 :       duplicate_set namesAndSources{};</span></span>
 <span id="L435"><span class="lineNum">     435</span>              : </span>
-<span id="L436"><span class="lineNum">     436</span> <span class="tlaGNC">         976 :       auto check{</span></span>
-<span id="L437"><span class="lineNum">     437</span> <span class="tlaGNC">        2824 :         [&amp;,name](concrete_test auto const&amp; test) {</span></span>
-<span id="L438"><span class="lineNum">     438</span> <span class="tlaGNC">        2854 :           if(!namesAndSources.emplace(test.name(), test.source_file()).second)</span></span>
-<span id="L439"><span class="lineNum">     439</span> <span class="tlaGNC">          30 :             throw std::runtime_error{duplication_message(name, test.name(), test.source_file())};</span></span>
+<span id="L436"><span class="lineNum">     436</span> <span class="tlaGNC">         860 :       auto check{</span></span>
+<span id="L437"><span class="lineNum">     437</span> <span class="tlaGNC">        2462 :         [&amp;,name](concrete_test auto const&amp; test) {</span></span>
+<span id="L438"><span class="lineNum">     438</span> <span class="tlaGNC">        2490 :           if(!namesAndSources.emplace(test.name(), test.source_file()).second)</span></span>
+<span id="L439"><span class="lineNum">     439</span> <span class="tlaGNC">          28 :             throw std::runtime_error{duplication_message(name, test.name(), test.source_file())};</span></span>
 <span id="L440"><span class="lineNum">     440</span>              :         }</span>
 <span id="L441"><span class="lineNum">     441</span>              :       };</span>
 <span id="L442"><span class="lineNum">     442</span>              : </span>
-<span id="L443"><span class="lineNum">     443</span> <span class="tlaGNC">         976 :       (check(tests), ...);</span></span>
-<span id="L444"><span class="lineNum">     444</span> <span class="tlaGNC">         946 :     }</span></span>
+<span id="L443"><span class="lineNum">     443</span> <span class="tlaGNC">         860 :       (check(tests), ...);</span></span>
+<span id="L444"><span class="lineNum">     444</span> <span class="tlaGNC">         832 :     }</span></span>
 <span id="L445"><span class="lineNum">     445</span>              : </span>
 <span id="L446"><span class="lineNum">     446</span>              :     [[nodiscard]]</span>
 <span id="L447"><span class="lineNum">     447</span>              :     static std::string duplication_message(std::string_view suiteName, std::string_view testName, const std::filesystem::path&amp; source);</span>

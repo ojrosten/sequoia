@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2025-01-12 19:58:35</td>
+            <td class="headerValue">2025-01-12 21:38:39</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -81,37 +81,37 @@
 <span id="L19"><span class="lineNum">      19</span>              :   class normal_path</span>
 <span id="L20"><span class="lineNum">      20</span>              :   {</span>
 <span id="L21"><span class="lineNum">      21</span>              :   public:</span>
-<span id="L22"><span class="lineNum">      22</span> <span class="tlaGNC tlaBgGNC">         672 :     normal_path() = default;</span></span>
+<span id="L22"><span class="lineNum">      22</span> <span class="tlaGNC tlaBgGNC">         675 :     normal_path() = default;</span></span>
 <span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC">         665 : </span></span>
-<span id="L24"><span class="lineNum">      24</span> <span class="tlaGNC">        1173 :     normal_path(const std::filesystem::path&amp; path)</span></span>
-<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">         508 :       : m_Path{path.lexically_normal()}</span></span>
-<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">         508 :     {}</span></span>
+<span id="L24"><span class="lineNum">      24</span> <span class="tlaGNC">        2692 :     normal_path(const std::filesystem::path&amp; path)</span></span>
+<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">        2027 :       : m_Path{path.lexically_normal()}</span></span>
+<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">        2031 :     {}</span></span>
 <span id="L27"><span class="lineNum">      27</span> <span class="tlaGNC">         702 : </span></span>
 <span id="L28"><span class="lineNum">      28</span>              :     [[nodiscard]]</span>
-<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">        1228 :     operator const std::filesystem::path&amp; () const</span></span>
+<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">        2806 :     operator const std::filesystem::path&amp; () const</span></span>
 <span id="L30"><span class="lineNum">      30</span>              :     {</span>
-<span id="L31"><span class="lineNum">      31</span> <span class="tlaGNC">         526 :       return m_Path;</span></span>
+<span id="L31"><span class="lineNum">      31</span> <span class="tlaGNC">        2104 :       return m_Path;</span></span>
 <span id="L32"><span class="lineNum">      32</span>              :     }</span>
 <span id="L33"><span class="lineNum">      33</span> <span class="tlaUNC tlaBgUNC">           0 : </span></span>
 <span id="L34"><span class="lineNum">      34</span>              :     [[nodiscard]]</span>
-<span id="L35"><span class="lineNum">      35</span> <span class="tlaGNC tlaBgGNC">          77 :     const std::filesystem::path&amp; path() const noexcept</span></span>
+<span id="L35"><span class="lineNum">      35</span> <span class="tlaGNC tlaBgGNC">         110 :     const std::filesystem::path&amp; path() const noexcept</span></span>
 <span id="L36"><span class="lineNum">      36</span>              :     {</span>
-<span id="L37"><span class="lineNum">      37</span> <span class="tlaGNC">          77 :       return m_Path;</span></span>
+<span id="L37"><span class="lineNum">      37</span> <span class="tlaGNC">         110 :       return m_Path;</span></span>
 <span id="L38"><span class="lineNum">      38</span>              :     }</span>
 <span id="L39"><span class="lineNum">      39</span>              : </span>
 <span id="L40"><span class="lineNum">      40</span>              :     [[nodiscard]]</span>
-<span id="L41"><span class="lineNum">      41</span> <span class="tlaGNC">         182 :     friend auto operator&lt;=&gt;(const normal_path&amp;, const normal_path&amp;) = default;</span></span>
+<span id="L41"><span class="lineNum">      41</span> <span class="tlaGNC">         260 :     friend auto operator&lt;=&gt;(const normal_path&amp;, const normal_path&amp;) = default;</span></span>
 <span id="L42"><span class="lineNum">      42</span>              :   private:</span>
-<span id="L43"><span class="lineNum">      43</span> <span class="tlaGNC">         112 :     std::filesystem::path m_Path;</span></span>
+<span id="L43"><span class="lineNum">      43</span> <span class="tlaGNC">         160 :     std::filesystem::path m_Path;</span></span>
 <span id="L44"><span class="lineNum">      44</span>              :   };</span>
 <span id="L45"><span class="lineNum">      45</span> <span class="tlaGNC">       88038 : </span></span>
 <span id="L46"><span class="lineNum">      46</span>              :   [[nodiscard]]</span>
-<span id="L47"><span class="lineNum">      47</span> <span class="tlaGNC">      104306 :   inline std::filesystem::path back(const std::filesystem::path&amp; p)</span></span>
+<span id="L47"><span class="lineNum">      47</span> <span class="tlaGNC">      153105 :   inline std::filesystem::path back(const std::filesystem::path&amp; p)</span></span>
 <span id="L48"><span class="lineNum">      48</span> <span class="tlaUNC tlaBgUNC">           0 :   {</span></span>
-<span id="L49"><span class="lineNum">      49</span> <span class="tlaGNC tlaBgGNC">       16268 :     if(p.empty())</span></span>
-<span id="L50"><span class="lineNum">      50</span> <span class="tlaGNC">       88043 :       throw std::runtime_error{&quot;Cannot extract final element from an empty path&quot;};</span></span>
+<span id="L49"><span class="lineNum">      49</span> <span class="tlaGNC tlaBgGNC">       65067 :     if(p.empty())</span></span>
+<span id="L50"><span class="lineNum">      50</span> <span class="tlaGNC">       88046 :       throw std::runtime_error{&quot;Cannot extract final element from an empty path&quot;};</span></span>
 <span id="L51"><span class="lineNum">      51</span>              : </span>
-<span id="L52"><span class="lineNum">      52</span> <span class="tlaGNC">       16267 :     return *--p.end();</span></span>
+<span id="L52"><span class="lineNum">      52</span> <span class="tlaGNC">       65062 :     return *--p.end();</span></span>
 <span id="L53"><span class="lineNum">      53</span>              :   }</span>
 <span id="L54"><span class="lineNum">      54</span>              : </span>
 <span id="L55"><span class="lineNum">      55</span>              :   /*! This function has slightly peculiar semantics, due to the fact that path::iterator isn't</span>
@@ -122,16 +122,16 @@
 <span id="L60"><span class="lineNum">      60</span> <span class="tlaGNC">       69424 :     requires std::is_same_v&lt;std::remove_cvref_t&lt;Path&gt;, std::filesystem::path&gt; &amp;&amp; std::predicate&lt;std::ranges::equal_to, std::invoke_result_t&lt;Proj, std::filesystem::path&gt; , Pattern&gt;</span></span>
 <span id="L61"><span class="lineNum">      61</span>              :   [[nodiscard]]</span>
 <span id="L62"><span class="lineNum">      62</span> <span class="tlaGNC">       63540 :   std::conditional_t&lt;std::is_const_v&lt;std::remove_reference_t&lt;Path&gt;&gt;, std::filesystem::path::const_iterator, std::filesystem::path::iterator&gt; </span></span>
-<span id="L63"><span class="lineNum">      63</span> <span class="tlaGNC">       65060 :     rfind(Path&amp;&amp; p, Pattern pattern, Proj proj = {})</span></span>
+<span id="L63"><span class="lineNum">      63</span> <span class="tlaGNC">       65972 :     rfind(Path&amp;&amp; p, Pattern pattern, Proj proj = {})</span></span>
 <span id="L64"><span class="lineNum">      64</span>              :   {</span>
-<span id="L65"><span class="lineNum">      65</span> <span class="tlaGNC">        1520 :     auto i{p.end()};</span></span>
-<span id="L66"><span class="lineNum">      66</span> <span class="tlaGNC">       21740 :     while(i != p.begin())</span></span>
+<span id="L65"><span class="lineNum">      65</span> <span class="tlaGNC">        2432 :     auto i{p.end()};</span></span>
+<span id="L66"><span class="lineNum">      66</span> <span class="tlaGNC">       30533 :     while(i != p.begin())</span></span>
 <span id="L67"><span class="lineNum">      67</span>              :     {</span>
-<span id="L68"><span class="lineNum">      68</span> <span class="tlaGNC">       13405 :       --i;</span></span>
-<span id="L69"><span class="lineNum">      69</span> <span class="tlaGNC">       13405 :       if(std::ranges::equal_to{}(proj(*i), pattern)) return i;</span></span>
+<span id="L68"><span class="lineNum">      68</span> <span class="tlaGNC">       21448 :       --i;</span></span>
+<span id="L69"><span class="lineNum">      69</span> <span class="tlaGNC">       21448 :       if(std::ranges::equal_to{}(proj(*i), pattern)) return i;</span></span>
 <span id="L70"><span class="lineNum">      70</span>              :     }</span>
 <span id="L71"><span class="lineNum">      71</span>              : </span>
-<span id="L72"><span class="lineNum">      72</span> <span class="tlaGNC">        1250 :     return p.end();</span></span>
+<span id="L72"><span class="lineNum">      72</span> <span class="tlaGNC">        2000 :     return p.end();</span></span>
 <span id="L73"><span class="lineNum">      73</span>              :   }</span>
 <span id="L74"><span class="lineNum">      74</span>              : }</span>
         </pre>

@@ -29,7 +29,7 @@ mkdir -p "$output_dir"
 ctest -T Coverage
 
 # Generate lcov coverage report
-lcov --directory "$test_dir".  --capture --output-file coverage.info --keep-going --rc geninfo_unexecuted_blocks=1
+lcov --directory "$test_dir".  --capture --output-file coverage.info --keep-going --filter range --rc geninfo_unexecuted_blocks=1
 lcov --remove coverage.info '/usr/*' --output-file coverage.info
 
 # Generate HTML report

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2025-01-12 17:02:37</td>
+            <td class="headerValue">2025-01-12 21:38:39</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -108,28 +108,28 @@
 <span id="L46"><span class="lineNum">      46</span>              : {</span>
 <span id="L47"><span class="lineNum">      47</span>              :   /// Prerequisite: x!=y</span>
 <span id="L48"><span class="lineNum">      48</span>              :   template&lt;test_mode Mode, pseudoregular T&gt;</span>
-<span id="L49"><span class="lineNum">      49</span> <span class="tlaGNC tlaBgGNC">       27543 :   void check_semantics(std::string description, test_logger&lt;Mode&gt;&amp; logger, const T&amp; x, const T&amp; y)</span></span>
+<span id="L49"><span class="lineNum">      49</span> <span class="tlaGNC tlaBgGNC">       14458 :   void check_semantics(std::string description, test_logger&lt;Mode&gt;&amp; logger, const T&amp; x, const T&amp; y)</span></span>
 <span id="L50"><span class="lineNum">      50</span>              :   {</span>
-<span id="L51"><span class="lineNum">      51</span> <span class="tlaGNC">       27543 :     sentinel&lt;Mode&gt; sentry{logger, add_type_info&lt;T&gt;(std::move(description)).append(&quot;\n&quot;)};</span></span>
-<span id="L52"><span class="lineNum">      52</span> <span class="tlaGNC">       27543 :     impl::check_semantics(logger, impl::auxiliary_data&lt;T&gt;{}, x, y, impl::null_mutator{});</span></span>
-<span id="L53"><span class="lineNum">      53</span> <span class="tlaGNC">       27543 :   }</span></span>
+<span id="L51"><span class="lineNum">      51</span> <span class="tlaGNC">       14458 :     sentinel&lt;Mode&gt; sentry{logger, add_type_info&lt;T&gt;(std::move(description)).append(&quot;\n&quot;)};</span></span>
+<span id="L52"><span class="lineNum">      52</span> <span class="tlaGNC">       14458 :     impl::check_semantics(logger, impl::auxiliary_data&lt;T&gt;{}, x, y, impl::null_mutator{});</span></span>
+<span id="L53"><span class="lineNum">      53</span> <span class="tlaGNC">       14458 :   }</span></span>
 <span id="L54"><span class="lineNum">      54</span>              : </span>
 <span id="L55"><span class="lineNum">      55</span>              :   /// Prerequisite: x!=y with values consistent with order</span>
 <span id="L56"><span class="lineNum">      56</span>              :   template&lt;test_mode Mode, pseudoregular T&gt;</span>
 <span id="L57"><span class="lineNum">      57</span>              :     requires std::totally_ordered&lt;T&gt;</span>
-<span id="L58"><span class="lineNum">      58</span> <span class="tlaGNC">         838 :   void check_semantics(std::string description, test_logger&lt;Mode&gt;&amp; logger, const T&amp; x, const T&amp; y, std::weak_ordering order)</span></span>
+<span id="L58"><span class="lineNum">      58</span> <span class="tlaGNC">         762 :   void check_semantics(std::string description, test_logger&lt;Mode&gt;&amp; logger, const T&amp; x, const T&amp; y, std::weak_ordering order)</span></span>
 <span id="L59"><span class="lineNum">      59</span>              :   {</span>
-<span id="L60"><span class="lineNum">      60</span> <span class="tlaGNC">         838 :     sentinel&lt;Mode&gt; sentry{logger, add_type_info&lt;T&gt;(std::move(description)).append(&quot;\n&quot;)};</span></span>
-<span id="L61"><span class="lineNum">      61</span> <span class="tlaGNC">         838 :     impl::check_semantics(logger, impl::auxiliary_data&lt;T&gt;{order}, x, y, impl::null_mutator{});</span></span>
-<span id="L62"><span class="lineNum">      62</span> <span class="tlaGNC">         838 :   }</span></span>
+<span id="L60"><span class="lineNum">      60</span> <span class="tlaGNC">         762 :     sentinel&lt;Mode&gt; sentry{logger, add_type_info&lt;T&gt;(std::move(description)).append(&quot;\n&quot;)};</span></span>
+<span id="L61"><span class="lineNum">      61</span> <span class="tlaGNC">         762 :     impl::check_semantics(logger, impl::auxiliary_data&lt;T&gt;{order}, x, y, impl::null_mutator{});</span></span>
+<span id="L62"><span class="lineNum">      62</span> <span class="tlaGNC">         762 :   }</span></span>
 <span id="L63"><span class="lineNum">      63</span>              : </span>
 <span id="L64"><span class="lineNum">      64</span>              :   /// Prerequisite: x!=y</span>
 <span id="L65"><span class="lineNum">      65</span>              :   template&lt;test_mode Mode, pseudoregular T, std::invocable&lt;T&amp;&gt; Mutator&gt;</span>
-<span id="L66"><span class="lineNum">      66</span> <span class="tlaGNC">          46 :   void check_semantics(std::string description, test_logger&lt;Mode&gt;&amp; logger, const T&amp; x, const T&amp; y, Mutator yMutator)</span></span>
+<span id="L66"><span class="lineNum">      66</span> <span class="tlaGNC">          54 :   void check_semantics(std::string description, test_logger&lt;Mode&gt;&amp; logger, const T&amp; x, const T&amp; y, Mutator yMutator)</span></span>
 <span id="L67"><span class="lineNum">      67</span>              :   {</span>
-<span id="L68"><span class="lineNum">      68</span> <span class="tlaGNC">          46 :     sentinel&lt;Mode&gt; sentry{logger, add_type_info&lt;T&gt;(std::move(description)).append(&quot;\n&quot;)};</span></span>
-<span id="L69"><span class="lineNum">      69</span> <span class="tlaGNC">          46 :     impl::check_semantics(logger, impl::auxiliary_data&lt;T&gt;{}, x, y, yMutator);</span></span>
-<span id="L70"><span class="lineNum">      70</span> <span class="tlaGNC">          46 :   }</span></span>
+<span id="L68"><span class="lineNum">      68</span> <span class="tlaGNC">          54 :     sentinel&lt;Mode&gt; sentry{logger, add_type_info&lt;T&gt;(std::move(description)).append(&quot;\n&quot;)};</span></span>
+<span id="L69"><span class="lineNum">      69</span> <span class="tlaGNC">          54 :     impl::check_semantics(logger, impl::auxiliary_data&lt;T&gt;{}, x, y, yMutator);</span></span>
+<span id="L70"><span class="lineNum">      70</span> <span class="tlaGNC">          54 :   }</span></span>
 <span id="L71"><span class="lineNum">      71</span>              : </span>
 <span id="L72"><span class="lineNum">      72</span>              :   /// Prerequisite: x!=y, with values consistent with order</span>
 <span id="L73"><span class="lineNum">      73</span>              :   template&lt;test_mode Mode, pseudoregular T, std::invocable&lt;T&amp;&gt; Mutator&gt;</span>

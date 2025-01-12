@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2025-01-12 17:02:37</td>
+            <td class="headerValue">2025-01-12 21:38:39</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -83,22 +83,22 @@
 <span id="L21"><span class="lineNum">      21</span>              :     using type = sequoia::data_structures::static_linearly_partitioned_sequence&lt;T, Npartitions, NelementsPerPartition, IndexType&gt;;</span>
 <span id="L22"><span class="lineNum">      22</span>              : </span>
 <span id="L23"><span class="lineNum">      23</span>              :     template&lt;class CheckType, test_mode Mode&gt;</span>
-<span id="L24"><span class="lineNum">      24</span> <span class="tlaGNC tlaBgGNC">          72 :     static void test(CheckType flavour, test_logger&lt;Mode&gt;&amp; logger, const type&amp; actual, const type&amp; prediction)</span></span>
+<span id="L24"><span class="lineNum">      24</span> <span class="tlaGNC tlaBgGNC">          36 :     static void test(CheckType flavour, test_logger&lt;Mode&gt;&amp; logger, const type&amp; actual, const type&amp; prediction)</span></span>
 <span id="L25"><span class="lineNum">      25</span>              :     {</span>
-<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">          72 :       impl::check_details(flavour, logger, actual, prediction);</span></span>
-<span id="L27"><span class="lineNum">      27</span> <span class="tlaGNC">          72 :     }</span></span>
+<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">          36 :       impl::check_details(flavour, logger, actual, prediction);</span></span>
+<span id="L27"><span class="lineNum">      27</span> <span class="tlaGNC">          36 :     }</span></span>
 <span id="L28"><span class="lineNum">      28</span>              : </span>
 <span id="L29"><span class="lineNum">      29</span>              :     template&lt;test_mode Mode&gt;</span>
-<span id="L30"><span class="lineNum">      30</span> <span class="tlaGNC">          16 :     static void test(equivalence_check_t, test_logger&lt;Mode&gt;&amp; logger, const type&amp; actual, const std::array&lt;std::array&lt;T, NelementsPerPartition&gt;, Npartitions&gt;&amp; prediction)</span></span>
+<span id="L30"><span class="lineNum">      30</span> <span class="tlaGNC">           8 :     static void test(equivalence_check_t, test_logger&lt;Mode&gt;&amp; logger, const type&amp; actual, const std::array&lt;std::array&lt;T, NelementsPerPartition&gt;, Npartitions&gt;&amp; prediction)</span></span>
 <span id="L31"><span class="lineNum">      31</span>              :     {</span>
-<span id="L32"><span class="lineNum">      32</span> <span class="tlaGNC">          64 :       for (std::size_t i{}; i &lt; prediction.size(); ++i)</span></span>
+<span id="L32"><span class="lineNum">      32</span> <span class="tlaGNC">          32 :       for (std::size_t i{}; i &lt; prediction.size(); ++i)</span></span>
 <span id="L33"><span class="lineNum">      33</span>              :       {</span>
-<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">          16 :         const auto message{ std::string{&quot;Partition &quot;}.append(std::to_string(i)) };</span></span>
-<span id="L35"><span class="lineNum">      35</span> <span class="tlaGNC">          16 :         check(with_best_available, message + &quot;: iterator&quot;, logger, actual.begin_partition(i), actual.end_partition(i), (prediction.begin() + i)-&gt;begin(), (prediction.begin() + i)-&gt;end());</span></span>
+<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">           8 :         const auto message{ std::string{&quot;Partition &quot;}.append(std::to_string(i)) };</span></span>
+<span id="L35"><span class="lineNum">      35</span> <span class="tlaGNC">           8 :         check(with_best_available, message + &quot;: iterator&quot;, logger, actual.begin_partition(i), actual.end_partition(i), (prediction.begin() + i)-&gt;begin(), (prediction.begin() + i)-&gt;end());</span></span>
 <span id="L36"><span class="lineNum">      36</span>              : </span>
-<span id="L37"><span class="lineNum">      37</span> <span class="tlaGNC">          48 :         check(with_best_available, message + &quot;: riterator&quot;, logger, actual.rbegin_partition(i), actual.rend_partition(i), std::rbegin(*(prediction.begin() + i)), std::rend(*(prediction.begin() + i)));</span></span>
+<span id="L37"><span class="lineNum">      37</span> <span class="tlaGNC">          24 :         check(with_best_available, message + &quot;: riterator&quot;, logger, actual.rbegin_partition(i), actual.rend_partition(i), std::rbegin(*(prediction.begin() + i)), std::rend(*(prediction.begin() + i)));</span></span>
 <span id="L38"><span class="lineNum">      38</span>              :       }</span>
-<span id="L39"><span class="lineNum">      39</span> <span class="tlaGNC">          16 :     }</span></span>
+<span id="L39"><span class="lineNum">      39</span> <span class="tlaGNC">           8 :     }</span></span>
 <span id="L40"><span class="lineNum">      40</span>              :   };</span>
 <span id="L41"><span class="lineNum">      41</span>              : }</span>
         </pre>
