@@ -13,6 +13,22 @@
 
 namespace sequoia::testing
 {
+  namespace
+  {
+    struct postprocessor
+    {
+      [[nodiscard]]
+      std::string operator()(std::string message) const
+      {
+        auto i{message.find("output")};
+        if(i != std::string::npos)
+          message.erase(message.begin(), std::ranges::next(message.begin(), i, message.end()));
+
+        return message;
+      }
+    };
+  }
+
   [[nodiscard]]
   std::filesystem::path streaming_free_test::source_file() const
   {
@@ -28,7 +44,8 @@ namespace sequoia::testing
 
     check_exception_thrown<std::runtime_error>(
       reporter{""},
-      [this]() { read_modify_write(working_materials() /= "Bar.txt", [](std::string& s) { capitalize(s);  }); }
+      [this]() { read_modify_write(working_materials() /= "Bar.txt", [](std::string& s) { capitalize(s);  }); },
+      postprocessor{}
     );
 
     read_modify_write(working_materials() /= "Foo.txt", [](std::string& s) { capitalize(s);  });

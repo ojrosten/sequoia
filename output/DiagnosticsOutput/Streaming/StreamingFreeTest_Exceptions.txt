@@ -1,8 +1,8 @@
-Tests/Streaming/StreamingFreeTest.cpp, Line 30
+Tests/Streaming/StreamingFreeTest.cpp, Line 46
 
 Expected Exception Type:
 [std::runtime_error]
-Unable to open file C:/Users/olive/sequoia/output/TestsTemporaryData/Streaming/StreamingFreeTest/WorkingCopy/Bar.txt  for reading
+output/TestsTemporaryData/Streaming/StreamingFreeTest/WorkingCopy/Bar.txt  for reading
 
 =======================================
 
