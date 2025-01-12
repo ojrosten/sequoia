@@ -1,0 +1,250 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - coverage.info - Source/sequoia/Core/ContainerUtilities/AssignmentUtilities.hpp</title>
+  <link rel="stylesheet" type="text/css" href="../../../../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../../../../index.html">top level</a> - <a href="index.html">Source/sequoia/Core/ContainerUtilities</a> - AssignmentUtilities.hpp<span style="font-size: 80%;"> (source / <a href="AssignmentUtilities.hpp.func-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">21</td>
+            <td class="headerCovTableEntry">21</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2025-01-12 17:02:37</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">424</td>
+            <td class="headerCovTableEntry">424</td>
+          </tr>
+                  <tr><td><img src="../../../../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../../../../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">            Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>              : ////////////////////////////////////////////////////////////////////</span>
+<span id="L2"><span class="lineNum">       2</span>              : //                Copyright Oliver J. Rosten 2019.                //</span>
+<span id="L3"><span class="lineNum">       3</span>              : // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //</span>
+<span id="L4"><span class="lineNum">       4</span>              : //    (See accompanying file LICENSE.md or copy at                //</span>
+<span id="L5"><span class="lineNum">       5</span>              : //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //</span>
+<span id="L6"><span class="lineNum">       6</span>              : ////////////////////////////////////////////////////////////////////</span>
+<span id="L7"><span class="lineNum">       7</span>              : </span>
+<span id="L8"><span class="lineNum">       8</span>              : #pragma once</span>
+<span id="L9"><span class="lineNum">       9</span>              : </span>
+<span id="L10"><span class="lineNum">      10</span>              : /*! \file</span>
+<span id="L11"><span class="lineNum">      11</span>              :     \brief Helper for dealing with allocator propagation during copy assignment.</span>
+<span id="L12"><span class="lineNum">      12</span>              : </span>
+<span id="L13"><span class="lineNum">      13</span>              :     Consider a type which wraps one or containers. If the enclosing type is</span>
+<span id="L14"><span class="lineNum">      14</span>              :     allocator-aware, getting copy assigment right in situations were it cannot</span>
+<span id="L15"><span class="lineNum">      15</span>              :     be defaulted is non-trivial. This file defines the class sequoia::assignment_helper</span>
+<span id="L16"><span class="lineNum">      16</span>              :     to help with this.</span>
+<span id="L17"><span class="lineNum">      17</span>              :  */</span>
+<span id="L18"><span class="lineNum">      18</span>              : </span>
+<span id="L19"><span class="lineNum">      19</span>              : #include &quot;sequoia/Core/Meta/Sequences.hpp&quot;</span>
+<span id="L20"><span class="lineNum">      20</span>              : </span>
+<span id="L21"><span class="lineNum">      21</span>              : #include &lt;memory&gt;</span>
+<span id="L22"><span class="lineNum">      22</span>              : </span>
+<span id="L23"><span class="lineNum">      23</span>              : namespace sequoia::impl</span>
+<span id="L24"><span class="lineNum">      24</span>              : {</span>
+<span id="L25"><span class="lineNum">      25</span>              :   template&lt;class Excluded, template&lt;class&gt; class TypeToType, class Fn, class... Ts&gt;</span>
+<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC tlaBgGNC">       36661 :   void invoke_filtered(Fn f, Ts... t)</span></span>
+<span id="L27"><span class="lineNum">      27</span>              :   {</span>
+<span id="L28"><span class="lineNum">      28</span> <span class="tlaGNC">       36661 :     invoke_with_specified_args(f, make_filtered_sequence&lt;Excluded, TypeToType, Ts...&gt;{}, t...);</span></span>
+<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">       36662 :   }</span></span>
+<span id="L30"><span class="lineNum">      30</span>              : </span>
+<span id="L31"><span class="lineNum">      31</span>              :   template&lt;class T&gt;</span>
+<span id="L32"><span class="lineNum">      32</span>              :   struct type_to_type</span>
+<span id="L33"><span class="lineNum">      33</span>              :   {</span>
+<span id="L34"><span class="lineNum">      34</span>              :     template&lt;std::invocable&lt;T&gt; AllocGetter&gt;</span>
+<span id="L35"><span class="lineNum">      35</span>              :     struct mapper</span>
+<span id="L36"><span class="lineNum">      36</span>              :     {</span>
+<span id="L37"><span class="lineNum">      37</span>              :       using type = std::invoke_result_t&lt;AllocGetter, T&gt;;</span>
+<span id="L38"><span class="lineNum">      38</span>              :     };</span>
+<span id="L39"><span class="lineNum">      39</span>              :   };</span>
+<span id="L40"><span class="lineNum">      40</span>              : }</span>
+<span id="L41"><span class="lineNum">      41</span>              : </span>
+<span id="L42"><span class="lineNum">      42</span>              : namespace sequoia</span>
+<span id="L43"><span class="lineNum">      43</span>              : {</span>
+<span id="L44"><span class="lineNum">      44</span>              :   /*! \brief Helper class to assist with copy assignment for allocator-aware types.</span>
+<span id="L45"><span class="lineNum">      45</span>              :   </span>
+<span id="L46"><span class="lineNum">      46</span>              :       Consider a type, `T`, which is allocator-aware and for which copy assignment cannot</span>
+<span id="L47"><span class="lineNum">      47</span>              :       be defaulted. Suppose that `T` wraps containers `Cs...`. To utilize the this helper,</span>
+<span id="L48"><span class="lineNum">      48</span>              :       do the following:</span>
+<span id="L49"><span class="lineNum">      49</span>              :         -# Ensure assignment_helper is befriended by `T`.</span>
+<span id="L50"><span class="lineNum">      50</span>              :         -# Furnish `T` with a `reset` method, the arguments of which are the allocators associated with `Cs...`.</span>
+<span id="L51"><span class="lineNum">      51</span>              :            Internally, `reset` should construct instances `Cs...` using the allocators and copy assign these</span>
+<span id="L52"><span class="lineNum">      52</span>              :            to the wrapped containers. It is important that copy assignment is used since allocator propagation</span>
+<span id="L53"><span class="lineNum">      53</span>              :            may differ between copying and moving.</span>
+<span id="L54"><span class="lineNum">      54</span>              :         -# Utilize assignment_helper to define copy assignment. A single allocator example is provided</span>
+<span id="L55"><span class="lineNum">      55</span>              :            by sequoia::data_structures::bucketed_sequence and a two allocator example is provided by </span>
+<span id="L56"><span class="lineNum">      56</span>              :            sequoia::data_structures::partitioned_sequence_base.</span>
+<span id="L57"><span class="lineNum">      57</span>              :            The basic idea is that assignment_helper::assign takes references to two instances of `T`,</span>
+<span id="L58"><span class="lineNum">      58</span>              :            together with a sequence of function objects which return the requisite allocators.</span>
+<span id="L59"><span class="lineNum">      59</span>              : </span>
+<span id="L60"><span class="lineNum">      60</span>              :       This pattern has an extra layer of generality, an example of which may be seen in sequoia::maths::connectivity.</span>
+<span id="L61"><span class="lineNum">      61</span>              :       Depending on how its template arguments are chosen, sequoia::maths::connectivity may wrap either one or two</span>
+<span id="L62"><span class="lineNum">      62</span>              :       allocator-aware types. To deal with these situations homogeneously, assignment_helper::assign ignores</span>
+<span id="L63"><span class="lineNum">      63</span>              :       any of the supplied function objects if they return void.</span>
+<span id="L64"><span class="lineNum">      64</span>              :   */</span>
+<span id="L65"><span class="lineNum">      65</span>              : </span>
+<span id="L66"><span class="lineNum">      66</span>              :   struct assignment_helper</span>
+<span id="L67"><span class="lineNum">      67</span>              :   {</span>
+<span id="L68"><span class="lineNum">      68</span>              :     /*! Can be used to implement non-defaultable copy assignment for allocator-aware classes */</span>
+<span id="L69"><span class="lineNum">      69</span>              :     template&lt;class T, std::invocable&lt;T&gt;... AllocGetters&gt;</span>
+<span id="L70"><span class="lineNum">      70</span> <span class="tlaGNC">       36661 :     constexpr static void assign(T&amp; to, const T&amp; from, [[maybe_unused]] AllocGetters... allocGetters)</span></span>
+<span id="L71"><span class="lineNum">      71</span>              :     {</span>
+<span id="L72"><span class="lineNum">      72</span> <span class="tlaGNC">       73323 :       impl::invoke_filtered&lt;void, impl::type_to_type&lt;T&gt;::template mapper&gt;([&amp;to, &amp;from](auto... filteredAllocGetters){ assign_filtered(to, from, filteredAllocGetters...); }, allocGetters...);</span></span>
+<span id="L73"><span class="lineNum">      73</span> <span class="tlaGNC">       36662 :     }</span></span>
+<span id="L74"><span class="lineNum">      74</span>              : </span>
+<span id="L75"><span class="lineNum">      75</span>              :   private:</span>
+<span id="L76"><span class="lineNum">      76</span>              :     template&lt;class T, std::invocable&lt;T&gt;... FilteredAllocGetters&gt;</span>
+<span id="L77"><span class="lineNum">      77</span> <span class="tlaGNC">       36662 :     constexpr static void assign_filtered(T&amp; to, const T&amp; from, [[maybe_unused]] FilteredAllocGetters... allocGetters)</span></span>
+<span id="L78"><span class="lineNum">      78</span>              :     {</span>
+<span id="L79"><span class="lineNum">      79</span>              :       if constexpr((naive_treatment&lt;T, FilteredAllocGetters&gt;() &amp;&amp; ...))</span>
+<span id="L80"><span class="lineNum">      80</span>              :       {</span>
+<span id="L81"><span class="lineNum">      81</span> <span class="tlaGNC">       25382 :         auto tmp{from};</span></span>
+<span id="L82"><span class="lineNum">      82</span> <span class="tlaGNC">       25382 :         to = std::move(tmp);</span></span>
+<span id="L83"><span class="lineNum">      83</span> <span class="tlaGNC">       24206 :       }</span></span>
+<span id="L84"><span class="lineNum">      84</span>              :       else</span>
+<span id="L85"><span class="lineNum">      85</span>              :       {</span>
+<span id="L86"><span class="lineNum">      86</span>              :         static_assert(consistency&lt;T, FilteredAllocGetters...&gt;());</span>
+<span id="L87"><span class="lineNum">      87</span>              : </span>
+<span id="L88"><span class="lineNum">      88</span> <span class="tlaGNC">       11280 :         T tmp{from, get_allocator(to, from, allocGetters)...};</span></span>
+<span id="L89"><span class="lineNum">      89</span>              :         constexpr bool</span>
+<span id="L90"><span class="lineNum">      90</span> <span class="tlaGNC">       11280 :           movePropagation{move_propagation&lt;T, FilteredAllocGetters...&gt;()},</span></span>
+<span id="L91"><span class="lineNum">      91</span> <span class="tlaGNC">       11280 :           copyPropagation{copy_propagation&lt;T, FilteredAllocGetters...&gt;()};</span></span>
+<span id="L92"><span class="lineNum">      92</span>              : </span>
+<span id="L93"><span class="lineNum">      93</span>              :         if constexpr (movePropagation || !copyPropagation)</span>
+<span id="L94"><span class="lineNum">      94</span>              :         {</span>
+<span id="L95"><span class="lineNum">      95</span> <span class="tlaGNC">        7808 :           to = std::move(tmp);</span></span>
+<span id="L96"><span class="lineNum">      96</span>              :         }</span>
+<span id="L97"><span class="lineNum">      97</span>              :         else</span>
+<span id="L98"><span class="lineNum">      98</span>              :         {</span>
+<span id="L99"><span class="lineNum">      99</span>              :           if constexpr(!swap_propagation&lt;T, FilteredAllocGetters...&gt;())</span>
+<span id="L100"><span class="lineNum">     100</span>              :           {</span>
+<span id="L101"><span class="lineNum">     101</span> <span class="tlaGNC">        2256 :             to.reset(allocGetters(tmp)...);</span></span>
+<span id="L102"><span class="lineNum">     102</span>              :           }</span>
+<span id="L103"><span class="lineNum">     103</span>              : </span>
+<span id="L104"><span class="lineNum">     104</span> <span class="tlaGNC">        3472 :           to.swap(tmp);</span></span>
+<span id="L105"><span class="lineNum">     105</span>              :         }</span>
+<span id="L106"><span class="lineNum">     106</span> <span class="tlaGNC">       11280 :       }</span></span>
+<span id="L107"><span class="lineNum">     107</span> <span class="tlaGNC">       36662 :     }</span></span>
+<span id="L108"><span class="lineNum">     108</span>              : </span>
+<span id="L109"><span class="lineNum">     109</span>              :     template&lt;class T, std::invocable&lt;T&gt; AllocGetter&gt;</span>
+<span id="L110"><span class="lineNum">     110</span>              :     constexpr static bool naive_treatment() noexcept</span>
+<span id="L111"><span class="lineNum">     111</span>              :     {</span>
+<span id="L112"><span class="lineNum">     112</span>              :       using allocator = std::invoke_result_t&lt;AllocGetter, T&gt;;</span>
+<span id="L113"><span class="lineNum">     113</span>              :       return std::allocator_traits&lt;allocator&gt;::is_always_equal::value;</span>
+<span id="L114"><span class="lineNum">     114</span>              :     }</span>
+<span id="L115"><span class="lineNum">     115</span>              : </span>
+<span id="L116"><span class="lineNum">     116</span>              :     template&lt;class T, std::invocable&lt;T&gt; AllocGetter, std::invocable&lt;T&gt;... AllocGetters&gt;</span>
+<span id="L117"><span class="lineNum">     117</span>              :     constexpr static bool consistency() noexcept</span>
+<span id="L118"><span class="lineNum">     118</span>              :     {</span>
+<span id="L119"><span class="lineNum">     119</span>              :       if constexpr(sizeof...(AllocGetters) &gt; 0)</span>
+<span id="L120"><span class="lineNum">     120</span>              :       {</span>
+<span id="L121"><span class="lineNum">     121</span>              :         return (consistent&lt;T, AllocGetter, AllocGetters&gt;() &amp;&amp; ...);</span>
+<span id="L122"><span class="lineNum">     122</span>              :       }</span>
+<span id="L123"><span class="lineNum">     123</span>              :       else</span>
+<span id="L124"><span class="lineNum">     124</span>              :       {</span>
+<span id="L125"><span class="lineNum">     125</span>              :         return true;</span>
+<span id="L126"><span class="lineNum">     126</span>              :       }</span>
+<span id="L127"><span class="lineNum">     127</span>              :     }</span>
+<span id="L128"><span class="lineNum">     128</span>              : </span>
+<span id="L129"><span class="lineNum">     129</span>              :     template&lt;class T, std::invocable&lt;T&gt; AllocGetterL, std::invocable&lt;T&gt; AllocGetterR&gt;</span>
+<span id="L130"><span class="lineNum">     130</span>              :     constexpr static bool consistent() noexcept</span>
+<span id="L131"><span class="lineNum">     131</span>              :     {</span>
+<span id="L132"><span class="lineNum">     132</span>              :       return (copy_propagation&lt;T, AllocGetterL&gt;() == copy_propagation&lt;T, AllocGetterR&gt;())</span>
+<span id="L133"><span class="lineNum">     133</span>              :           &amp;&amp; (move_propagation&lt;T, AllocGetterL&gt;() == move_propagation&lt;T, AllocGetterR&gt;())</span>
+<span id="L134"><span class="lineNum">     134</span>              :           &amp;&amp; (swap_propagation&lt;T, AllocGetterL&gt;() == swap_propagation&lt;T, AllocGetterR&gt;());</span>
+<span id="L135"><span class="lineNum">     135</span>              :     }</span>
+<span id="L136"><span class="lineNum">     136</span>              : </span>
+<span id="L137"><span class="lineNum">     137</span>              :     template&lt;class T, class AllocGetter&gt;</span>
+<span id="L138"><span class="lineNum">     138</span> <span class="tlaGNC">       11808 :     static auto get_allocator(const T&amp; to, const T&amp; from, AllocGetter allocGetter)</span></span>
+<span id="L139"><span class="lineNum">     139</span>              :     {</span>
+<span id="L140"><span class="lineNum">     140</span>              :       if constexpr(copy_propagation&lt;T, AllocGetter&gt;())</span>
+<span id="L141"><span class="lineNum">     141</span>              :       {</span>
+<span id="L142"><span class="lineNum">     142</span> <span class="tlaGNC">        6432 :         return allocGetter(from);</span></span>
+<span id="L143"><span class="lineNum">     143</span>              :       }</span>
+<span id="L144"><span class="lineNum">     144</span>              :       else</span>
+<span id="L145"><span class="lineNum">     145</span>              :       {</span>
+<span id="L146"><span class="lineNum">     146</span> <span class="tlaGNC">        5376 :         return allocGetter(to);</span></span>
+<span id="L147"><span class="lineNum">     147</span>              :       }</span>
+<span id="L148"><span class="lineNum">     148</span>              :     }</span>
+<span id="L149"><span class="lineNum">     149</span>              : </span>
+<span id="L150"><span class="lineNum">     150</span>              :     template&lt;class T, class AllocGetter, class... AllocGetters&gt;</span>
+<span id="L151"><span class="lineNum">     151</span>              :     constexpr static bool copy_propagation() noexcept</span>
+<span id="L152"><span class="lineNum">     152</span>              :     {</span>
+<span id="L153"><span class="lineNum">     153</span>              :       using allocator = std::invoke_result_t&lt;AllocGetter, T&gt;;</span>
+<span id="L154"><span class="lineNum">     154</span>              :       return    std::allocator_traits&lt;allocator&gt;::propagate_on_container_copy_assignment::value</span>
+<span id="L155"><span class="lineNum">     155</span>              :              || std::allocator_traits&lt;allocator&gt;::is_always_equal::value;</span>
+<span id="L156"><span class="lineNum">     156</span>              :     }</span>
+<span id="L157"><span class="lineNum">     157</span>              : </span>
+<span id="L158"><span class="lineNum">     158</span>              :     template&lt;class T, class AllocGetter, class... AllocGetters&gt;</span>
+<span id="L159"><span class="lineNum">     159</span>              :     constexpr static bool move_propagation() noexcept</span>
+<span id="L160"><span class="lineNum">     160</span>              :     {</span>
+<span id="L161"><span class="lineNum">     161</span>              :       using allocator = std::invoke_result_t&lt;AllocGetter, T&gt;;</span>
+<span id="L162"><span class="lineNum">     162</span>              :       return    std::allocator_traits&lt;allocator&gt;::propagate_on_container_move_assignment::value</span>
+<span id="L163"><span class="lineNum">     163</span>              :              || std::allocator_traits&lt;allocator&gt;::is_always_equal::value;</span>
+<span id="L164"><span class="lineNum">     164</span>              :     }</span>
+<span id="L165"><span class="lineNum">     165</span>              : </span>
+<span id="L166"><span class="lineNum">     166</span>              :     template&lt;class T, class AllocGetter, class... AllocGetters&gt;</span>
+<span id="L167"><span class="lineNum">     167</span>              :     constexpr static bool swap_propagation() noexcept</span>
+<span id="L168"><span class="lineNum">     168</span>              :     {</span>
+<span id="L169"><span class="lineNum">     169</span>              :       using allocator = std::invoke_result_t&lt;AllocGetter, T&gt;;</span>
+<span id="L170"><span class="lineNum">     170</span>              :       return    std::allocator_traits&lt;allocator&gt;::propagate_on_container_swap::value</span>
+<span id="L171"><span class="lineNum">     171</span>              :              || std::allocator_traits&lt;allocator&gt;::is_always_equal::value;</span>
+<span id="L172"><span class="lineNum">     172</span>              :     }</span>
+<span id="L173"><span class="lineNum">     173</span>              :   };</span>
+<span id="L174"><span class="lineNum">     174</span>              : }</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../../../../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.0-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>
