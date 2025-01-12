@@ -25,5 +25,20 @@ namespace sequoia::testing
     check_exception_thrown<std::runtime_error>("",  [](){ return back(""); });
     check(equality, "", back("A"), fs::path{"A"});
     check(equality, "", back("A/B"), fs::path{"B"});
+
+    {
+      fs::path p{"A/B/C"};
+      check("", rfind(p, "B") == std::ranges::next(p.begin(), 1, p.end()));
+    }
+
+    {
+      fs::path p{"A/B/C/B"};
+      check("", rfind(p, "B") == std::ranges::next(p.begin(), 3, p.end()));
+    }
+
+    {
+      const fs::path p{"A/B/C"};
+      check("", rfind(p, "B") == std::ranges::next(p.begin(), 1, p.end()));
+    }
   }
 }
