@@ -11,8 +11,12 @@
 #include "sequoia/Streaming/Streaming.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
+#include <fstream>
+
 namespace sequoia::testing
 {
+  namespace fs = std::filesystem;
+
   namespace
   {
     struct postprocessor
@@ -48,8 +52,13 @@ namespace sequoia::testing
       postprocessor{}
     );
 
-    read_modify_write(working_materials() /= "Foo.txt", [](std::string& s) { capitalize(s);  });
+    check_exception_thrown<std::runtime_error>(
+      reporter{""},
+      [this]() { write_to_file(working_materials() /= "Baz.txt", "Hello!", std::ios_base::noreplace); },
+      postprocessor{}
+    );
 
+    read_modify_write(working_materials() /= "Foo.txt", [](std::string& s) { capitalize(s);  });
     check(equivalence, "", working_materials() /= "Foo.txt", predictive_materials() /= "Foo.txt");
   }
 }
