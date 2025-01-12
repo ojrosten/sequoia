@@ -11,6 +11,12 @@ Checking for equivalence with:
   Obtained : 
   Predicted: A
 
+  Conversion to Path
+  [std::filesystem::path]
+  operator== returned false
+  Obtained : 
+  Predicted: A
+
 =======================================
 
 Tests/FileSystem/NormalPathTestingDiagnostics.cpp, Line 26

@@ -28,6 +28,7 @@ namespace sequoia::testing
     static void test(equivalence_check_t, test_logger<Mode>& logger, const type& actual, const std::filesystem::path& prediction)
     {
       check(equality, "Wrapped Path", logger, actual.path(), prediction);
+      check(equality, "Conversion to Path", logger, static_cast<std::filesystem::path>(actual), prediction);
     }
   };
 }
