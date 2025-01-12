@@ -372,7 +372,8 @@ int main(int argc, char** argv)
     );
 
     runner.add_test_suite(
-      "Normal Path",
+      "File System",
+      file_system_free_test{"File System Free Test"},
       normal_path_false_negative_test{"False Negative Test"},
       normal_path_test{"Unit Test"}
     );
