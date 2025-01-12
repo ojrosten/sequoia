@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2025-01-12 21:38:39</td>
+            <td class="headerValue">2025-01-12 21:58:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -83,21 +83,21 @@
 <span id="L21"><span class="lineNum">      21</span>              :     using type = data_structures::static_queue&lt;T, MaxPushes&gt;;</span>
 <span id="L22"><span class="lineNum">      22</span>              : </span>
 <span id="L23"><span class="lineNum">      23</span>              :     template&lt;class CheckerType, test_mode Mode&gt;</span>
-<span id="L24"><span class="lineNum">      24</span> <span class="tlaGNC tlaBgGNC">         300 :     static void test(CheckerType flavour, test_logger&lt;Mode&gt;&amp; logger, const type&amp; queue, const type&amp; prediction)</span></span>
+<span id="L24"><span class="lineNum">      24</span> <span class="tlaGNC tlaBgGNC">         325 :     static void test(CheckerType flavour, test_logger&lt;Mode&gt;&amp; logger, const type&amp; queue, const type&amp; prediction)</span></span>
 <span id="L25"><span class="lineNum">      25</span>              :     {</span>
-<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">         600 :       check(equality, &quot;Emptiness incorrect&quot;, logger, queue.empty(), prediction.empty());</span></span>
-<span id="L27"><span class="lineNum">      27</span> <span class="tlaGNC">         600 :       check(equality, &quot;Size incorrect&quot;, logger, queue.size(), prediction.size());</span></span>
+<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">         650 :       check(equality, &quot;Emptiness incorrect&quot;, logger, queue.empty(), prediction.empty());</span></span>
+<span id="L27"><span class="lineNum">      27</span> <span class="tlaGNC">         650 :       check(equality, &quot;Size incorrect&quot;, logger, queue.size(), prediction.size());</span></span>
 <span id="L28"><span class="lineNum">      28</span>              : </span>
-<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">         300 :       if(!prediction.empty() &amp;&amp; !queue.empty())</span></span>
+<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">         325 :       if(!prediction.empty() &amp;&amp; !queue.empty())</span></span>
 <span id="L30"><span class="lineNum">      30</span>              :       {</span>
-<span id="L31"><span class="lineNum">      31</span> <span class="tlaGNC">         456 :         check(flavour, &quot;Front element incorrect&quot;, logger, queue.front(), prediction.front());</span></span>
+<span id="L31"><span class="lineNum">      31</span> <span class="tlaGNC">         494 :         check(flavour, &quot;Front element incorrect&quot;, logger, queue.front(), prediction.front());</span></span>
 <span id="L32"><span class="lineNum">      32</span>              : </span>
-<span id="L33"><span class="lineNum">      33</span> <span class="tlaGNC">         684 :         check(flavour, &quot;Back element incorrect&quot;, logger, queue.back(), prediction.back());</span></span>
+<span id="L33"><span class="lineNum">      33</span> <span class="tlaGNC">         741 :         check(flavour, &quot;Back element incorrect&quot;, logger, queue.back(), prediction.back());</span></span>
 <span id="L34"><span class="lineNum">      34</span>              :       }</span>
 <span id="L35"><span class="lineNum">      35</span>              : </span>
-<span id="L36"><span class="lineNum">      36</span> <span class="tlaGNC">         600 :       check(&quot;Hidden state incorrect&quot;, logger, prediction == queue);</span></span>
-<span id="L37"><span class="lineNum">      37</span> <span class="tlaGNC">         600 :       check(&quot;Hidden state, symmetry of operator== incorrect&quot;, logger, queue == prediction);</span></span>
-<span id="L38"><span class="lineNum">      38</span> <span class="tlaGNC">         300 :     }</span></span>
+<span id="L36"><span class="lineNum">      36</span> <span class="tlaGNC">         650 :       check(&quot;Hidden state incorrect&quot;, logger, prediction == queue);</span></span>
+<span id="L37"><span class="lineNum">      37</span> <span class="tlaGNC">         650 :       check(&quot;Hidden state, symmetry of operator== incorrect&quot;, logger, queue == prediction);</span></span>
+<span id="L38"><span class="lineNum">      38</span> <span class="tlaGNC">         325 :     }</span></span>
 <span id="L39"><span class="lineNum">      39</span>              :   };</span>
 <span id="L40"><span class="lineNum">      40</span>              : }</span>
         </pre>

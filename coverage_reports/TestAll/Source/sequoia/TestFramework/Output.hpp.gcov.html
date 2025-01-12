@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2025-01-12 21:38:39</td>
+            <td class="headerValue">2025-01-12 21:58:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">90.6&nbsp;%</td>
@@ -92,9 +92,9 @@
 <span id="L30"><span class="lineNum">      30</span>              :     {}</span>
 <span id="L31"><span class="lineNum">      31</span>              : </span>
 <span id="L32"><span class="lineNum">      32</span>              :     [[nodiscard]]</span>
-<span id="L33"><span class="lineNum">      33</span> <span class="tlaGNC tlaBgGNC">      399942 :     constexpr std::size_t value() const noexcept</span></span>
+<span id="L33"><span class="lineNum">      33</span> <span class="tlaGNC tlaBgGNC">      416202 :     constexpr std::size_t value() const noexcept</span></span>
 <span id="L34"><span class="lineNum">      34</span>              :     {</span>
-<span id="L35"><span class="lineNum">      35</span> <span class="tlaGNC">      399942 :       return m_Breaks;</span></span>
+<span id="L35"><span class="lineNum">      35</span> <span class="tlaGNC">      416202 :       return m_Breaks;</span></span>
 <span id="L36"><span class="lineNum">      36</span>              :     }</span>
 <span id="L37"><span class="lineNum">      37</span>              :   private:</span>
 <span id="L38"><span class="lineNum">      38</span>              :     std::size_t m_Breaks{};</span>
@@ -121,19 +121,19 @@
 <span id="L59"><span class="lineNum">      59</span>              :   template&lt;class Char&gt;</span>
 <span id="L60"><span class="lineNum">      60</span>              :     requires is_character_v&lt;Char&gt;</span>
 <span id="L61"><span class="lineNum">      61</span>              :   [[nodiscard]]</span>
-<span id="L62"><span class="lineNum">      62</span> <span class="tlaGNC">        4556 :   std::string display_character(Char c)</span></span>
+<span id="L62"><span class="lineNum">      62</span> <span class="tlaGNC">        4713 :   std::string display_character(Char c)</span></span>
 <span id="L63"><span class="lineNum">      63</span>              :   {</span>
-<span id="L64"><span class="lineNum">      64</span> <span class="tlaGNC">        4556 :     if(c == '\a') return &quot;'\\a'&quot;;</span></span>
-<span id="L65"><span class="lineNum">      65</span> <span class="tlaGNC">        4556 :     if(c == '\b') return &quot;'\\b'&quot;;</span></span>
-<span id="L66"><span class="lineNum">      66</span> <span class="tlaGNC">        4556 :     if(c == '\f') return &quot;'\\f'&quot;;</span></span>
-<span id="L67"><span class="lineNum">      67</span> <span class="tlaGNC">        6356 :     if(c == '\n') return &quot;'\\n'&quot;;</span></span>
-<span id="L68"><span class="lineNum">      68</span> <span class="tlaGNC">        3656 :     if(c == '\r') return &quot;'\\r'&quot;;</span></span>
-<span id="L69"><span class="lineNum">      69</span> <span class="tlaGNC">        3712 :     if(c == '\t') return &quot;'\\t'&quot;;</span></span>
-<span id="L70"><span class="lineNum">      70</span> <span class="tlaGNC">        3628 :     if(c == '\v') return &quot;'\\v'&quot;;</span></span>
-<span id="L71"><span class="lineNum">      71</span> <span class="tlaGNC">        3740 :     if(c == '\0') return &quot;'\\0'&quot;;</span></span>
-<span id="L72"><span class="lineNum">      72</span> <span class="tlaGNC">        3964 :     if(c == ' ')  return &quot;' '&quot;;</span></span>
+<span id="L64"><span class="lineNum">      64</span> <span class="tlaGNC">        4713 :     if(c == '\a') return &quot;'\\a'&quot;;</span></span>
+<span id="L65"><span class="lineNum">      65</span> <span class="tlaGNC">        4713 :     if(c == '\b') return &quot;'\\b'&quot;;</span></span>
+<span id="L66"><span class="lineNum">      66</span> <span class="tlaGNC">        4713 :     if(c == '\f') return &quot;'\\f'&quot;;</span></span>
+<span id="L67"><span class="lineNum">      67</span> <span class="tlaGNC">        6575 :     if(c == '\n') return &quot;'\\n'&quot;;</span></span>
+<span id="L68"><span class="lineNum">      68</span> <span class="tlaGNC">        3782 :     if(c == '\r') return &quot;'\\r'&quot;;</span></span>
+<span id="L69"><span class="lineNum">      69</span> <span class="tlaGNC">        3840 :     if(c == '\t') return &quot;'\\t'&quot;;</span></span>
+<span id="L70"><span class="lineNum">      70</span> <span class="tlaGNC">        3753 :     if(c == '\v') return &quot;'\\v'&quot;;</span></span>
+<span id="L71"><span class="lineNum">      71</span> <span class="tlaGNC">        3869 :     if(c == '\0') return &quot;'\\0'&quot;;</span></span>
+<span id="L72"><span class="lineNum">      72</span> <span class="tlaGNC">        4101 :     if(c == ' ')  return &quot;' '&quot;;</span></span>
 <span id="L73"><span class="lineNum">      73</span>              : </span>
-<span id="L74"><span class="lineNum">      74</span> <span class="tlaGNC">        6752 :     return std::string(1, static_cast&lt;char&gt;(c));</span></span>
+<span id="L74"><span class="lineNum">      74</span> <span class="tlaGNC">        6984 :     return std::string(1, static_cast&lt;char&gt;(c));</span></span>
 <span id="L75"><span class="lineNum">      75</span>              :   }</span>
 <span id="L76"><span class="lineNum">      76</span>              : </span>
 <span id="L77"><span class="lineNum">      77</span>              :   void end_block(std::string&amp; s, line_breaks newlines, std::string_view footer=&quot;&quot;);</span>
@@ -168,50 +168,50 @@
 <span id="L106"><span class="lineNum">     106</span>              :   template&lt;class Char&gt;</span>
 <span id="L107"><span class="lineNum">     107</span>              :     requires is_character_v&lt;Char&gt;</span>
 <span id="L108"><span class="lineNum">     108</span>              :   [[nodiscard]]</span>
-<span id="L109"><span class="lineNum">     109</span> <span class="tlaGNC">        1872 :   std::string prediction_message(Char obtained, Char prediction)</span></span>
+<span id="L109"><span class="lineNum">     109</span> <span class="tlaGNC">        1936 :   std::string prediction_message(Char obtained, Char prediction)</span></span>
 <span id="L110"><span class="lineNum">     110</span>              :   {</span>
-<span id="L111"><span class="lineNum">     111</span> <span class="tlaGNC">        1872 :     return prediction_message(display_character(obtained), display_character(prediction));</span></span>
+<span id="L111"><span class="lineNum">     111</span> <span class="tlaGNC">        1936 :     return prediction_message(display_character(obtained), display_character(prediction));</span></span>
 <span id="L112"><span class="lineNum">     112</span>              :   }</span>
 <span id="L113"><span class="lineNum">     113</span>              : </span>
 <span id="L114"><span class="lineNum">     114</span>              :   template&lt;class Ptr&gt;</span>
 <span id="L115"><span class="lineNum">     115</span>              :     requires std::is_pointer_v&lt;Ptr&gt; || is_const_pointer_v&lt;Ptr&gt;</span>
 <span id="L116"><span class="lineNum">     116</span>              :   [[nodiscard]]</span>
-<span id="L117"><span class="lineNum">     117</span> <span class="tlaGNC">         804 :   std::string prediction_message(Ptr obtained, Ptr prediction)</span></span>
+<span id="L117"><span class="lineNum">     117</span> <span class="tlaGNC">         831 :   std::string prediction_message(Ptr obtained, Ptr prediction)</span></span>
 <span id="L118"><span class="lineNum">     118</span>              :   {</span>
-<span id="L119"><span class="lineNum">     119</span> <span class="tlaGNC">         804 :     return (obtained &amp;&amp; prediction) ? pointer_prediction_message() : nullable_type_message(obtained, prediction);</span></span>
+<span id="L119"><span class="lineNum">     119</span> <span class="tlaGNC">         831 :     return (obtained &amp;&amp; prediction) ? pointer_prediction_message() : nullable_type_message(obtained, prediction);</span></span>
 <span id="L120"><span class="lineNum">     120</span>              :   }</span>
 <span id="L121"><span class="lineNum">     121</span>              : </span>
 <span id="L122"><span class="lineNum">     122</span>              :   template&lt;serializable T&gt;</span>
 <span id="L123"><span class="lineNum">     123</span>              :     requires (!std::is_floating_point_v&lt;T&gt; &amp;&amp; !is_character_v&lt;T&gt; &amp;&amp; !std::is_pointer_v&lt;T&gt; &amp;&amp; !is_const_pointer_v&lt;T&gt;)</span>
 <span id="L124"><span class="lineNum">     124</span>              :   [[nodiscard]]</span>
-<span id="L125"><span class="lineNum">     125</span> <span class="tlaGNC">       31330 :   std::string prediction_message(const T&amp; obtained, const T&amp; prediction)</span></span>
+<span id="L125"><span class="lineNum">     125</span> <span class="tlaGNC">       32443 :   std::string prediction_message(const T&amp; obtained, const T&amp; prediction)</span></span>
 <span id="L126"><span class="lineNum">     126</span>              :   {</span>
-<span id="L127"><span class="lineNum">     127</span> <span class="tlaGNC">       31330 :     return default_prediction_message(to_string(obtained), to_string(prediction));</span></span>
+<span id="L127"><span class="lineNum">     127</span> <span class="tlaGNC">       32443 :     return default_prediction_message(to_string(obtained), to_string(prediction));</span></span>
 <span id="L128"><span class="lineNum">     128</span>              :   }</span>
 <span id="L129"><span class="lineNum">     129</span>              : </span>
 <span id="L130"><span class="lineNum">     130</span>              :   template&lt;std::floating_point T&gt;</span>
 <span id="L131"><span class="lineNum">     131</span>              :   [[nodiscard]]</span>
-<span id="L132"><span class="lineNum">     132</span> <span class="tlaGNC">        3192 :   std::string prediction_message(T obtained, T prediction)</span></span>
+<span id="L132"><span class="lineNum">     132</span> <span class="tlaGNC">        3392 :   std::string prediction_message(T obtained, T prediction)</span></span>
 <span id="L133"><span class="lineNum">     133</span>              :   {</span>
-<span id="L134"><span class="lineNum">     134</span> <span class="tlaGNC">        3192 :     if(((obtained &gt; T{}) &amp;&amp; (prediction &gt; T{})) || ((obtained &lt; T{}) &amp;&amp; (prediction &lt; T{})))</span></span>
+<span id="L134"><span class="lineNum">     134</span> <span class="tlaGNC">        3392 :     if(((obtained &gt; T{}) &amp;&amp; (prediction &gt; T{})) || ((obtained &lt; T{}) &amp;&amp; (prediction &lt; T{})))</span></span>
 <span id="L135"><span class="lineNum">     135</span>              :     {</span>
-<span id="L136"><span class="lineNum">     136</span> <span class="tlaGNC">        2356 :       const auto diff{std::abs(obtained - prediction)};</span></span>
-<span id="L137"><span class="lineNum">     137</span> <span class="tlaGNC">        2356 :       const auto logDiff{std::log10(diff)}, logScale{std::log10(std::abs(prediction))};</span></span>
-<span id="L138"><span class="lineNum">     138</span> <span class="tlaGNC">        2356 :       if(const auto precision{1 + static_cast&lt;int&gt;(std::ceil(std::abs(logDiff - logScale)))}; precision &gt; 1)</span></span>
+<span id="L136"><span class="lineNum">     136</span> <span class="tlaGNC">        2519 :       const auto diff{std::abs(obtained - prediction)};</span></span>
+<span id="L137"><span class="lineNum">     137</span> <span class="tlaGNC">        2519 :       const auto logDiff{std::log10(diff)}, logScale{std::log10(std::abs(prediction))};</span></span>
+<span id="L138"><span class="lineNum">     138</span> <span class="tlaGNC">        2519 :       if(const auto precision{1 + static_cast&lt;int&gt;(std::ceil(std::abs(logDiff - logScale)))}; precision &gt; 1)</span></span>
 <span id="L139"><span class="lineNum">     139</span>              :       {</span>
-<span id="L140"><span class="lineNum">     140</span> <span class="tlaGNC">        2236 :         auto toString{</span></span>
-<span id="L141"><span class="lineNum">     141</span> <span class="tlaGNC">        4472 :           [precision](T val){</span></span>
-<span id="L142"><span class="lineNum">     142</span> <span class="tlaGNC">        4472 :             std::ostringstream os{};</span></span>
-<span id="L143"><span class="lineNum">     143</span> <span class="tlaGNC">        4472 :             os &lt;&lt; std::setprecision(precision) &lt;&lt; val;</span></span>
-<span id="L144"><span class="lineNum">     144</span> <span class="tlaGNC">        8944 :             return os.str();</span></span>
-<span id="L145"><span class="lineNum">     145</span> <span class="tlaGNC">        4040 :           }</span></span>
+<span id="L140"><span class="lineNum">     140</span> <span class="tlaGNC">        2369 :         auto toString{</span></span>
+<span id="L141"><span class="lineNum">     141</span> <span class="tlaGNC">        4738 :           [precision](T val){</span></span>
+<span id="L142"><span class="lineNum">     142</span> <span class="tlaGNC">        4738 :             std::ostringstream os{};</span></span>
+<span id="L143"><span class="lineNum">     143</span> <span class="tlaGNC">        4738 :             os &lt;&lt; std::setprecision(precision) &lt;&lt; val;</span></span>
+<span id="L144"><span class="lineNum">     144</span> <span class="tlaGNC">        9476 :             return os.str();</span></span>
+<span id="L145"><span class="lineNum">     145</span> <span class="tlaGNC">        4294 :           }</span></span>
 <span id="L146"><span class="lineNum">     146</span>              :         };</span>
 <span id="L147"><span class="lineNum">     147</span>              : </span>
-<span id="L148"><span class="lineNum">     148</span> <span class="tlaGNC">        2236 :         return default_prediction_message(toString(obtained), toString(prediction));</span></span>
+<span id="L148"><span class="lineNum">     148</span> <span class="tlaGNC">        2369 :         return default_prediction_message(toString(obtained), toString(prediction));</span></span>
 <span id="L149"><span class="lineNum">     149</span>              :       }</span>
 <span id="L150"><span class="lineNum">     150</span>              :     }</span>
 <span id="L151"><span class="lineNum">     151</span>              : </span>
-<span id="L152"><span class="lineNum">     152</span> <span class="tlaGNC">         956 :     return default_prediction_message(to_string(obtained), to_string(prediction));</span></span>
+<span id="L152"><span class="lineNum">     152</span> <span class="tlaGNC">        1023 :     return default_prediction_message(to_string(obtained), to_string(prediction));</span></span>
 <span id="L153"><span class="lineNum">     153</span>              :   }</span>
 <span id="L154"><span class="lineNum">     154</span>              : </span>
 <span id="L155"><span class="lineNum">     155</span>              :   template&lt;bool IsFinalMessage&gt;</span>
@@ -230,28 +230,28 @@
 <span id="L168"><span class="lineNum">     168</span>              :   template&lt;reportable T&gt;</span>
 <span id="L169"><span class="lineNum">     169</span>              :     requires std::is_same_v&lt;T, bool&gt;</span>
 <span id="L170"><span class="lineNum">     170</span>              :   [[nodiscard]]</span>
-<span id="L171"><span class="lineNum">     171</span> <span class="tlaGNC">        6597 :   std::string failure_message(is_final_message_t, T, T)</span></span>
+<span id="L171"><span class="lineNum">     171</span> <span class="tlaGNC">        6808 :   std::string failure_message(is_final_message_t, T, T)</span></span>
 <span id="L172"><span class="lineNum">     172</span>              :   {</span>
-<span id="L173"><span class="lineNum">     173</span> <span class="tlaGNC">       13194 :     return &quot;check failed&quot;;</span></span>
+<span id="L173"><span class="lineNum">     173</span> <span class="tlaGNC">       13616 :     return &quot;check failed&quot;;</span></span>
 <span id="L174"><span class="lineNum">     174</span>              :   }</span>
 <span id="L175"><span class="lineNum">     175</span>              : </span>
 <span id="L176"><span class="lineNum">     176</span>              :   template&lt;reportable T&gt;</span>
 <span id="L177"><span class="lineNum">     177</span>              :     requires (!std::is_same_v&lt;T, bool&gt;)</span>
 <span id="L178"><span class="lineNum">     178</span>              :   [[nodiscard]]</span>
-<span id="L179"><span class="lineNum">     179</span> <span class="tlaGNC">       37003 :   std::string failure_message(is_final_message_t, const T&amp; obtained, const T&amp; prediction)</span></span>
+<span id="L179"><span class="lineNum">     179</span> <span class="tlaGNC">       38400 :   std::string failure_message(is_final_message_t, const T&amp; obtained, const T&amp; prediction)</span></span>
 <span id="L180"><span class="lineNum">     180</span>              :   {</span>
-<span id="L181"><span class="lineNum">     181</span> <span class="tlaGNC">       37003 :     auto message{equality_operator_failure_message()};</span></span>
+<span id="L181"><span class="lineNum">     181</span> <span class="tlaGNC">       38400 :     auto message{equality_operator_failure_message()};</span></span>
 <span id="L182"><span class="lineNum">     182</span>              : </span>
-<span id="L183"><span class="lineNum">     183</span> <span class="tlaGNC">       37002 :     append_lines(message, prediction_message(obtained, prediction));</span></span>
+<span id="L183"><span class="lineNum">     183</span> <span class="tlaGNC">       38399 :     append_lines(message, prediction_message(obtained, prediction));</span></span>
 <span id="L184"><span class="lineNum">     184</span>              : </span>
-<span id="L185"><span class="lineNum">     185</span> <span class="tlaGNC">       37003 :     return message;</span></span>
+<span id="L185"><span class="lineNum">     185</span> <span class="tlaGNC">       38400 :     return message;</span></span>
 <span id="L186"><span class="lineNum">     186</span> <span class="tlaUNC tlaBgUNC">           0 :   }</span></span>
 <span id="L187"><span class="lineNum">     187</span>              : </span>
 <span id="L188"><span class="lineNum">     188</span>              :   template&lt;class T&gt;</span>
 <span id="L189"><span class="lineNum">     189</span>              :   [[nodiscard]]</span>
-<span id="L190"><span class="lineNum">     190</span> <span class="tlaGNC tlaBgGNC">        6402 :   std::string failure_message(is_not_final_message_t, const T&amp;, const T&amp;)</span></span>
+<span id="L190"><span class="lineNum">     190</span> <span class="tlaGNC tlaBgGNC">        6777 :   std::string failure_message(is_not_final_message_t, const T&amp;, const T&amp;)</span></span>
 <span id="L191"><span class="lineNum">     191</span>              :   {</span>
-<span id="L192"><span class="lineNum">     192</span> <span class="tlaGNC">        6402 :     return equality_operator_failure_message();</span></span>
+<span id="L192"><span class="lineNum">     192</span> <span class="tlaGNC">        6777 :     return equality_operator_failure_message();</span></span>
 <span id="L193"><span class="lineNum">     193</span>              :   }</span>
 <span id="L194"><span class="lineNum">     194</span>              : </span>
 <span id="L195"><span class="lineNum">     195</span>              :   [[nodiscard]]</span>
@@ -272,32 +272,32 @@
 <span id="L210"><span class="lineNum">     210</span>              :   class reporter</span>
 <span id="L211"><span class="lineNum">     211</span>              :   {</span>
 <span id="L212"><span class="lineNum">     212</span>              :   public:</span>
-<span id="L213"><span class="lineNum">     213</span> <span class="tlaGNC">      170193 :     reporter(const char* message, const std::source_location loc = std::source_location::current())</span></span>
-<span id="L214"><span class="lineNum">     214</span> <span class="tlaGNC">      340386 :       : reporter{std::string{message},loc}</span></span>
-<span id="L215"><span class="lineNum">     215</span> <span class="tlaGNC">      170150 :     {}</span></span>
+<span id="L213"><span class="lineNum">     213</span> <span class="tlaGNC">      180811 :     reporter(const char* message, const std::source_location loc = std::source_location::current())</span></span>
+<span id="L214"><span class="lineNum">     214</span> <span class="tlaGNC">      361622 :       : reporter{std::string{message},loc}</span></span>
+<span id="L215"><span class="lineNum">     215</span> <span class="tlaGNC">      180765 :     {}</span></span>
 <span id="L216"><span class="lineNum">     216</span>              : </span>
-<span id="L217"><span class="lineNum">     217</span> <span class="tlaGNC">       21108 :     reporter(std::string_view message, const std::source_location loc = std::source_location::current())</span></span>
-<span id="L218"><span class="lineNum">     218</span> <span class="tlaGNC">       42216 :       : reporter{std::string{message},loc}</span></span>
-<span id="L219"><span class="lineNum">     219</span> <span class="tlaGNC">       21108 :     {}</span></span>
+<span id="L217"><span class="lineNum">     217</span> <span class="tlaGNC">       22859 :     reporter(std::string_view message, const std::source_location loc = std::source_location::current())</span></span>
+<span id="L218"><span class="lineNum">     218</span> <span class="tlaGNC">       45718 :       : reporter{std::string{message},loc}</span></span>
+<span id="L219"><span class="lineNum">     219</span> <span class="tlaGNC">       22859 :     {}</span></span>
 <span id="L220"><span class="lineNum">     220</span>              : </span>
-<span id="L221"><span class="lineNum">     221</span> <span class="tlaGNC">      213009 :     reporter(std::string message, const std::source_location loc = std::source_location::current())</span></span>
-<span id="L222"><span class="lineNum">     222</span> <span class="tlaGNC">      213009 :       : m_Message{std::move(message)}</span></span>
-<span id="L223"><span class="lineNum">     223</span> <span class="tlaGNC">      212999 :       , m_Loc{loc}</span></span>
-<span id="L224"><span class="lineNum">     224</span> <span class="tlaGNC">      213010 :     {}</span></span>
+<span id="L221"><span class="lineNum">     221</span> <span class="tlaGNC">      226993 :     reporter(std::string message, const std::source_location loc = std::source_location::current())</span></span>
+<span id="L222"><span class="lineNum">     222</span> <span class="tlaGNC">      226993 :       : m_Message{std::move(message)}</span></span>
+<span id="L223"><span class="lineNum">     223</span> <span class="tlaGNC">      226984 :       , m_Loc{loc}</span></span>
+<span id="L224"><span class="lineNum">     224</span> <span class="tlaGNC">      226994 :     {}</span></span>
 <span id="L225"><span class="lineNum">     225</span>              : </span>
-<span id="L226"><span class="lineNum">     226</span> <span class="tlaGNC">       30500 :     reporter(std::string message, no_source_location_t)</span></span>
-<span id="L227"><span class="lineNum">     227</span> <span class="tlaGNC">       30500 :       : m_Message{std::move(message)}</span></span>
-<span id="L228"><span class="lineNum">     228</span> <span class="tlaGNC">       30499 :     {}</span></span>
+<span id="L226"><span class="lineNum">     226</span> <span class="tlaGNC">       37447 :     reporter(std::string message, no_source_location_t)</span></span>
+<span id="L227"><span class="lineNum">     227</span> <span class="tlaGNC">       37447 :       : m_Message{std::move(message)}</span></span>
+<span id="L228"><span class="lineNum">     228</span> <span class="tlaGNC">       37446 :     {}</span></span>
 <span id="L229"><span class="lineNum">     229</span>              : </span>
-<span id="L230"><span class="lineNum">     230</span> <span class="tlaGNC">       30500 :     reporter(std::string_view message, no_source_location_t)</span></span>
-<span id="L231"><span class="lineNum">     231</span> <span class="tlaGNC">       61000 :       : reporter{std::string{message}, no_source_location}</span></span>
-<span id="L232"><span class="lineNum">     232</span> <span class="tlaGNC">       30499 :     {}</span></span>
+<span id="L230"><span class="lineNum">     230</span> <span class="tlaGNC">       37447 :     reporter(std::string_view message, no_source_location_t)</span></span>
+<span id="L231"><span class="lineNum">     231</span> <span class="tlaGNC">       74894 :       : reporter{std::string{message}, no_source_location}</span></span>
+<span id="L232"><span class="lineNum">     232</span> <span class="tlaGNC">       37446 :     {}</span></span>
 <span id="L233"><span class="lineNum">     233</span>              : </span>
 <span id="L234"><span class="lineNum">     234</span>              :     [[nodiscard]]</span>
-<span id="L235"><span class="lineNum">     235</span> <span class="tlaGNC">      299060 :     const std::string&amp; message() const noexcept { return m_Message; }</span></span>
+<span id="L235"><span class="lineNum">     235</span> <span class="tlaGNC">      319992 :     const std::string&amp; message() const noexcept { return m_Message; }</span></span>
 <span id="L236"><span class="lineNum">     236</span>              : </span>
 <span id="L237"><span class="lineNum">     237</span>              :     [[nodiscard]]</span>
-<span id="L238"><span class="lineNum">     238</span> <span class="tlaGNC">      509941 :     const std::optional&lt;std::source_location&gt;&amp; location() const noexcept { return m_Loc; }</span></span>
+<span id="L238"><span class="lineNum">     238</span> <span class="tlaGNC">      544797 :     const std::optional&lt;std::source_location&gt;&amp; location() const noexcept { return m_Loc; }</span></span>
 <span id="L239"><span class="lineNum">     239</span>              :   private:</span>
 <span id="L240"><span class="lineNum">     240</span>              :     std::string m_Message{};</span>
 <span id="L241"><span class="lineNum">     241</span>              :     std::optional&lt;std::source_location&gt; m_Loc{};</span>
@@ -320,16 +320,16 @@
 <span id="L258"><span class="lineNum">     258</span>              : </span>
 <span id="L259"><span class="lineNum">     259</span>              :   template&lt;class T, invocable_r&lt;std::string, std::string&gt; Tidy&gt;</span>
 <span id="L260"><span class="lineNum">     260</span>              :   [[nodiscard]]</span>
-<span id="L261"><span class="lineNum">     261</span> <span class="tlaGNC">     5752920 :   std::string demangle(Tidy tidy)</span></span>
+<span id="L261"><span class="lineNum">     261</span> <span class="tlaGNC">     6236877 :   std::string demangle(Tidy tidy)</span></span>
 <span id="L262"><span class="lineNum">     262</span>              :   {</span>
-<span id="L263"><span class="lineNum">     263</span> <span class="tlaGNC">    17258714 :     return tidy(demangle({typeid(T).name()}));</span></span>
+<span id="L263"><span class="lineNum">     263</span> <span class="tlaGNC">    18710584 :     return tidy(demangle({typeid(T).name()}));</span></span>
 <span id="L264"><span class="lineNum">     264</span>              :   }</span>
 <span id="L265"><span class="lineNum">     265</span>              : </span>
 <span id="L266"><span class="lineNum">     266</span>              :   template&lt;class T&gt;</span>
 <span id="L267"><span class="lineNum">     267</span>              :   [[nodiscard]]</span>
-<span id="L268"><span class="lineNum">     268</span> <span class="tlaGNC">     5752831 :   std::string demangle()</span></span>
+<span id="L268"><span class="lineNum">     268</span> <span class="tlaGNC">     6236788 :   std::string demangle()</span></span>
 <span id="L269"><span class="lineNum">     269</span>              :   {</span>
-<span id="L270"><span class="lineNum">     270</span> <span class="tlaGNC">    11505372 :     return demangle&lt;type_normalizer_t&lt;T&gt;&gt;([](std::string name) -&gt; std::string { return tidy_name(name, compiler_constant{}); });</span></span>
+<span id="L270"><span class="lineNum">     270</span> <span class="tlaGNC">    12473286 :     return demangle&lt;type_normalizer_t&lt;T&gt;&gt;([](std::string name) -&gt; std::string { return tidy_name(name, compiler_constant{}); });</span></span>
 <span id="L271"><span class="lineNum">     271</span>              :   }</span>
 <span id="L272"><span class="lineNum">     272</span>              : </span>
 <span id="L273"><span class="lineNum">     273</span>              :   /*! \brief Specialize this struct template to customize the way in which type info is generated for a given class.</span>
@@ -342,9 +342,9 @@
 <span id="L280"><span class="lineNum">     280</span>              :   struct type_demangler</span>
 <span id="L281"><span class="lineNum">     281</span>              :   {</span>
 <span id="L282"><span class="lineNum">     282</span>              :     [[nodiscard]]</span>
-<span id="L283"><span class="lineNum">     283</span> <span class="tlaGNC">     5293663 :     static std::string make()</span></span>
+<span id="L283"><span class="lineNum">     283</span> <span class="tlaGNC">     5761226 :     static std::string make()</span></span>
 <span id="L284"><span class="lineNum">     284</span>              :     {</span>
-<span id="L285"><span class="lineNum">     285</span> <span class="tlaGNC">     5293663 :       return demangle&lt;T&gt;();</span></span>
+<span id="L285"><span class="lineNum">     285</span> <span class="tlaGNC">     5761226 :       return demangle&lt;T&gt;();</span></span>
 <span id="L286"><span class="lineNum">     286</span>              :     }</span>
 <span id="L287"><span class="lineNum">     287</span>              :   };</span>
 <span id="L288"><span class="lineNum">     288</span>              : </span>
@@ -354,31 +354,31 @@
 <span id="L292"><span class="lineNum">     292</span>              :   struct type_list_demangler</span>
 <span id="L293"><span class="lineNum">     293</span>              :   {</span>
 <span id="L294"><span class="lineNum">     294</span>              :     [[nodiscard]]</span>
-<span id="L295"><span class="lineNum">     295</span> <span class="tlaGNC">     5722744 :     static std::string make()</span></span>
+<span id="L295"><span class="lineNum">     295</span> <span class="tlaGNC">     6206700 :     static std::string make()</span></span>
 <span id="L296"><span class="lineNum">     296</span>              :     {</span>
-<span id="L297"><span class="lineNum">     297</span> <span class="tlaGNC">     5722744 :       auto info{type_demangler&lt;T&gt;::make()};</span></span>
+<span id="L297"><span class="lineNum">     297</span> <span class="tlaGNC">     6206700 :       auto info{type_demangler&lt;T&gt;::make()};</span></span>
 <span id="L298"><span class="lineNum">     298</span>              :       if constexpr(sizeof...(U) &gt; 0)</span>
 <span id="L299"><span class="lineNum">     299</span>              :       {</span>
-<span id="L300"><span class="lineNum">     300</span> <span class="tlaGNC">         112 :         info += ',';</span></span>
-<span id="L301"><span class="lineNum">     301</span> <span class="tlaGNC">         112 :         append_lines(info, type_list_demangler&lt;U...&gt;::make());</span></span>
+<span id="L300"><span class="lineNum">     300</span> <span class="tlaGNC">         116 :         info += ',';</span></span>
+<span id="L301"><span class="lineNum">     301</span> <span class="tlaGNC">         116 :         append_lines(info, type_list_demangler&lt;U...&gt;::make());</span></span>
 <span id="L302"><span class="lineNum">     302</span>              :       }</span>
 <span id="L303"><span class="lineNum">     303</span>              : </span>
-<span id="L304"><span class="lineNum">     304</span> <span class="tlaGNC">     5722418 :       return info;</span></span>
+<span id="L304"><span class="lineNum">     304</span> <span class="tlaGNC">     6206375 :       return info;</span></span>
 <span id="L305"><span class="lineNum">     305</span> <span class="tlaUNC tlaBgUNC">           0 :     }</span></span>
 <span id="L306"><span class="lineNum">     306</span>              :   };</span>
 <span id="L307"><span class="lineNum">     307</span>              : </span>
 <span id="L308"><span class="lineNum">     308</span>              :   template&lt;class T, class... U&gt;</span>
 <span id="L309"><span class="lineNum">     309</span>              :   [[nodiscard]]</span>
-<span id="L310"><span class="lineNum">     310</span> <span class="tlaGNC tlaBgGNC">     5722469 :   std::string make_type_info()</span></span>
+<span id="L310"><span class="lineNum">     310</span> <span class="tlaGNC tlaBgGNC">     6206422 :   std::string make_type_info()</span></span>
 <span id="L311"><span class="lineNum">     311</span>              :   {</span>
-<span id="L312"><span class="lineNum">     312</span> <span class="tlaGNC">    11445012 :     return std::string{&quot;[&quot;}.append(type_list_demangler&lt;T, U...&gt;::make()).append(&quot;]&quot;);</span></span>
+<span id="L312"><span class="lineNum">     312</span> <span class="tlaGNC">    12412918 :     return std::string{&quot;[&quot;}.append(type_list_demangler&lt;T, U...&gt;::make()).append(&quot;]&quot;);</span></span>
 <span id="L313"><span class="lineNum">     313</span>              :   }</span>
 <span id="L314"><span class="lineNum">     314</span>              : </span>
 <span id="L315"><span class="lineNum">     315</span>              :   template&lt;class T, class... U&gt;</span>
 <span id="L316"><span class="lineNum">     316</span>              :   [[nodiscard]]</span>
-<span id="L317"><span class="lineNum">     317</span> <span class="tlaGNC">     5028590 :   std::string add_type_info(std::string description)</span></span>
+<span id="L317"><span class="lineNum">     317</span> <span class="tlaGNC">     5459611 :   std::string add_type_info(std::string description)</span></span>
 <span id="L318"><span class="lineNum">     318</span>              :   {</span>
-<span id="L319"><span class="lineNum">     319</span> <span class="tlaGNC">     5028590 :     return append_lines(std::move(description), make_type_info&lt;T, U...&gt;());</span></span>
+<span id="L319"><span class="lineNum">     319</span> <span class="tlaGNC">     5459611 :     return append_lines(std::move(description), make_type_info&lt;T, U...&gt;());</span></span>
 <span id="L320"><span class="lineNum">     320</span>              :   }</span>
 <span id="L321"><span class="lineNum">     321</span>              : }</span>
         </pre>

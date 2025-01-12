@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2025-01-12 21:38:39</td>
+            <td class="headerValue">2025-01-12 21:58:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -103,61 +103,61 @@
 <span id="L41"><span class="lineNum">      41</span>              :   }</span>
 <span id="L42"><span class="lineNum">      42</span>              : </span>
 <span id="L43"><span class="lineNum">      43</span>              :   [[nodiscard]]</span>
-<span id="L44"><span class="lineNum">      44</span> <span class="tlaGNC tlaBgGNC">          48 :   std::filesystem::path test_heterogeneous_node_storage::source_file() const</span></span>
+<span id="L44"><span class="lineNum">      44</span> <span class="tlaGNC tlaBgGNC">          52 :   std::filesystem::path test_heterogeneous_node_storage::source_file() const</span></span>
 <span id="L45"><span class="lineNum">      45</span>              :   {</span>
-<span id="L46"><span class="lineNum">      46</span> <span class="tlaGNC">          48 :     return std::source_location::current().file_name();</span></span>
+<span id="L46"><span class="lineNum">      46</span> <span class="tlaGNC">          52 :     return std::source_location::current().file_name();</span></span>
 <span id="L47"><span class="lineNum">      47</span>              :   }</span>
 <span id="L48"><span class="lineNum">      48</span>              : </span>
-<span id="L49"><span class="lineNum">      49</span> <span class="tlaGNC">          12 :   void test_heterogeneous_node_storage::run_tests()</span></span>
+<span id="L49"><span class="lineNum">      49</span> <span class="tlaGNC">          13 :   void test_heterogeneous_node_storage::run_tests()</span></span>
 <span id="L50"><span class="lineNum">      50</span>              :   {</span>
-<span id="L51"><span class="lineNum">      51</span> <span class="tlaGNC">          12 :     storage_tester&lt;int, double&gt; s{3, 0.8};</span></span>
+<span id="L51"><span class="lineNum">      51</span> <span class="tlaGNC">          13 :     storage_tester&lt;int, double&gt; s{3, 0.8};</span></span>
 <span id="L52"><span class="lineNum">      52</span>              : </span>
-<span id="L53"><span class="lineNum">      53</span> <span class="tlaGNC">          12 :     check(equality, &quot;&quot;, s.get_node_weight&lt;0&gt;(), 3);</span></span>
-<span id="L54"><span class="lineNum">      54</span> <span class="tlaGNC">          12 :     check(equality, &quot;&quot;, s.get_node_weight&lt;int&gt;(), 3);</span></span>
+<span id="L53"><span class="lineNum">      53</span> <span class="tlaGNC">          13 :     check(equality, &quot;&quot;, s.get_node_weight&lt;0&gt;(), 3);</span></span>
+<span id="L54"><span class="lineNum">      54</span> <span class="tlaGNC">          13 :     check(equality, &quot;&quot;, s.get_node_weight&lt;int&gt;(), 3);</span></span>
 <span id="L55"><span class="lineNum">      55</span>              : </span>
-<span id="L56"><span class="lineNum">      56</span> <span class="tlaGNC">          12 :     check(equality, &quot;&quot;, s.get_node_weight&lt;1&gt;(), 0.8);</span></span>
-<span id="L57"><span class="lineNum">      57</span> <span class="tlaGNC">          12 :     check(equality, &quot;&quot;, s.get_node_weight&lt;double&gt;(), 0.8);</span></span>
+<span id="L56"><span class="lineNum">      56</span> <span class="tlaGNC">          13 :     check(equality, &quot;&quot;, s.get_node_weight&lt;1&gt;(), 0.8);</span></span>
+<span id="L57"><span class="lineNum">      57</span> <span class="tlaGNC">          13 :     check(equality, &quot;&quot;, s.get_node_weight&lt;double&gt;(), 0.8);</span></span>
 <span id="L58"><span class="lineNum">      58</span>              : </span>
-<span id="L59"><span class="lineNum">      59</span> <span class="tlaGNC">          12 :     s.set_node_weight&lt;0&gt;(-4);</span></span>
-<span id="L60"><span class="lineNum">      60</span> <span class="tlaGNC">          12 :     check(equality, &quot;&quot;, s.get_node_weight&lt;0&gt;(), -4);</span></span>
-<span id="L61"><span class="lineNum">      61</span> <span class="tlaGNC">          12 :     check(equality, &quot;&quot;, s.get_node_weight&lt;int&gt;(), -4);</span></span>
+<span id="L59"><span class="lineNum">      59</span> <span class="tlaGNC">          13 :     s.set_node_weight&lt;0&gt;(-4);</span></span>
+<span id="L60"><span class="lineNum">      60</span> <span class="tlaGNC">          13 :     check(equality, &quot;&quot;, s.get_node_weight&lt;0&gt;(), -4);</span></span>
+<span id="L61"><span class="lineNum">      61</span> <span class="tlaGNC">          13 :     check(equality, &quot;&quot;, s.get_node_weight&lt;int&gt;(), -4);</span></span>
 <span id="L62"><span class="lineNum">      62</span>              : </span>
-<span id="L63"><span class="lineNum">      63</span> <span class="tlaGNC">          12 :     s.set_node_weight&lt;int&gt;(10);</span></span>
-<span id="L64"><span class="lineNum">      64</span> <span class="tlaGNC">          12 :     check(equality, &quot;&quot;, s.get_node_weight&lt;0&gt;(), 10);</span></span>
-<span id="L65"><span class="lineNum">      65</span> <span class="tlaGNC">          12 :     check(equality, &quot;&quot;, s.get_node_weight&lt;int&gt;(), 10);</span></span>
+<span id="L63"><span class="lineNum">      63</span> <span class="tlaGNC">          13 :     s.set_node_weight&lt;int&gt;(10);</span></span>
+<span id="L64"><span class="lineNum">      64</span> <span class="tlaGNC">          13 :     check(equality, &quot;&quot;, s.get_node_weight&lt;0&gt;(), 10);</span></span>
+<span id="L65"><span class="lineNum">      65</span> <span class="tlaGNC">          13 :     check(equality, &quot;&quot;, s.get_node_weight&lt;int&gt;(), 10);</span></span>
 <span id="L66"><span class="lineNum">      66</span>              : </span>
-<span id="L67"><span class="lineNum">      67</span> <span class="tlaGNC">          12 :     s.set_node_weight&lt;1&gt;(3.2);</span></span>
-<span id="L68"><span class="lineNum">      68</span> <span class="tlaGNC">          12 :     check(equality, &quot;&quot;, s.get_node_weight&lt;1&gt;(), 3.2);</span></span>
-<span id="L69"><span class="lineNum">      69</span> <span class="tlaGNC">          12 :     check(equality, &quot;&quot;, s.get_node_weight&lt;double&gt;(), 3.2);</span></span>
+<span id="L67"><span class="lineNum">      67</span> <span class="tlaGNC">          13 :     s.set_node_weight&lt;1&gt;(3.2);</span></span>
+<span id="L68"><span class="lineNum">      68</span> <span class="tlaGNC">          13 :     check(equality, &quot;&quot;, s.get_node_weight&lt;1&gt;(), 3.2);</span></span>
+<span id="L69"><span class="lineNum">      69</span> <span class="tlaGNC">          13 :     check(equality, &quot;&quot;, s.get_node_weight&lt;double&gt;(), 3.2);</span></span>
 <span id="L70"><span class="lineNum">      70</span>              : </span>
-<span id="L71"><span class="lineNum">      71</span> <span class="tlaGNC">          12 :     s.set_node_weight&lt;double&gt;(10.4);</span></span>
-<span id="L72"><span class="lineNum">      72</span> <span class="tlaGNC">          12 :     check(equality, &quot;&quot;, s.get_node_weight&lt;1&gt;(), 10.4);</span></span>
-<span id="L73"><span class="lineNum">      73</span> <span class="tlaGNC">          12 :     check(equality, &quot;&quot;, s.get_node_weight&lt;double&gt;(), 10.4);</span></span>
+<span id="L71"><span class="lineNum">      71</span> <span class="tlaGNC">          13 :     s.set_node_weight&lt;double&gt;(10.4);</span></span>
+<span id="L72"><span class="lineNum">      72</span> <span class="tlaGNC">          13 :     check(equality, &quot;&quot;, s.get_node_weight&lt;1&gt;(), 10.4);</span></span>
+<span id="L73"><span class="lineNum">      73</span> <span class="tlaGNC">          13 :     check(equality, &quot;&quot;, s.get_node_weight&lt;double&gt;(), 10.4);</span></span>
 <span id="L74"><span class="lineNum">      74</span>              : </span>
-<span id="L75"><span class="lineNum">      75</span> <span class="tlaGNC">          24 :     s.mutate_node_weight&lt;0&gt;([](int&amp; i) { return i+=5; });</span></span>
-<span id="L76"><span class="lineNum">      76</span> <span class="tlaGNC">          12 :     check(equality, &quot;&quot;, s.get_node_weight&lt;0&gt;(), 15);</span></span>
-<span id="L77"><span class="lineNum">      77</span> <span class="tlaGNC">          12 :     check(equality, &quot;&quot;, s.get_node_weight&lt;int&gt;(), 15);</span></span>
+<span id="L75"><span class="lineNum">      75</span> <span class="tlaGNC">          26 :     s.mutate_node_weight&lt;0&gt;([](int&amp; i) { return i+=5; });</span></span>
+<span id="L76"><span class="lineNum">      76</span> <span class="tlaGNC">          13 :     check(equality, &quot;&quot;, s.get_node_weight&lt;0&gt;(), 15);</span></span>
+<span id="L77"><span class="lineNum">      77</span> <span class="tlaGNC">          13 :     check(equality, &quot;&quot;, s.get_node_weight&lt;int&gt;(), 15);</span></span>
 <span id="L78"><span class="lineNum">      78</span>              : </span>
-<span id="L79"><span class="lineNum">      79</span> <span class="tlaGNC">          24 :     s.mutate_node_weight&lt;int&gt;([](int&amp; i) { return i/=5; });</span></span>
-<span id="L80"><span class="lineNum">      80</span> <span class="tlaGNC">          12 :     check(equality, &quot;&quot;, s.get_node_weight&lt;0&gt;(), 3);</span></span>
-<span id="L81"><span class="lineNum">      81</span> <span class="tlaGNC">          12 :     check(equality, &quot;&quot;, s.get_node_weight&lt;int&gt;(), 3);</span></span>
+<span id="L79"><span class="lineNum">      79</span> <span class="tlaGNC">          26 :     s.mutate_node_weight&lt;int&gt;([](int&amp; i) { return i/=5; });</span></span>
+<span id="L80"><span class="lineNum">      80</span> <span class="tlaGNC">          13 :     check(equality, &quot;&quot;, s.get_node_weight&lt;0&gt;(), 3);</span></span>
+<span id="L81"><span class="lineNum">      81</span> <span class="tlaGNC">          13 :     check(equality, &quot;&quot;, s.get_node_weight&lt;int&gt;(), 3);</span></span>
 <span id="L82"><span class="lineNum">      82</span>              : </span>
-<span id="L83"><span class="lineNum">      83</span> <span class="tlaGNC">          24 :     s.mutate_node_weight&lt;1&gt;([](double&amp; d) { return d-=4.4; });</span></span>
-<span id="L84"><span class="lineNum">      84</span> <span class="tlaGNC">          12 :     check(equality, &quot;&quot;, s.get_node_weight&lt;1&gt;(), 6.0);</span></span>
-<span id="L85"><span class="lineNum">      85</span> <span class="tlaGNC">          12 :     check(equality, &quot;&quot;, s.get_node_weight&lt;double&gt;(), 6.0);</span></span>
+<span id="L83"><span class="lineNum">      83</span> <span class="tlaGNC">          26 :     s.mutate_node_weight&lt;1&gt;([](double&amp; d) { return d-=4.4; });</span></span>
+<span id="L84"><span class="lineNum">      84</span> <span class="tlaGNC">          13 :     check(equality, &quot;&quot;, s.get_node_weight&lt;1&gt;(), 6.0);</span></span>
+<span id="L85"><span class="lineNum">      85</span> <span class="tlaGNC">          13 :     check(equality, &quot;&quot;, s.get_node_weight&lt;double&gt;(), 6.0);</span></span>
 <span id="L86"><span class="lineNum">      86</span>              : </span>
-<span id="L87"><span class="lineNum">      87</span> <span class="tlaGNC">          24 :     s.mutate_node_weight&lt;double&gt;([](double&amp; d) { return d/=6; });</span></span>
-<span id="L88"><span class="lineNum">      88</span> <span class="tlaGNC">          12 :     check(equality, &quot;&quot;, s.get_node_weight&lt;1&gt;(), 1.0);</span></span>
-<span id="L89"><span class="lineNum">      89</span> <span class="tlaGNC">          12 :     check(equality, &quot;&quot;, s.get_node_weight&lt;double&gt;(), 1.0);</span></span>
+<span id="L87"><span class="lineNum">      87</span> <span class="tlaGNC">          26 :     s.mutate_node_weight&lt;double&gt;([](double&amp; d) { return d/=6; });</span></span>
+<span id="L88"><span class="lineNum">      88</span> <span class="tlaGNC">          13 :     check(equality, &quot;&quot;, s.get_node_weight&lt;1&gt;(), 1.0);</span></span>
+<span id="L89"><span class="lineNum">      89</span> <span class="tlaGNC">          13 :     check(equality, &quot;&quot;, s.get_node_weight&lt;double&gt;(), 1.0);</span></span>
 <span id="L90"><span class="lineNum">      90</span>              : </span>
-<span id="L91"><span class="lineNum">      91</span> <span class="tlaGNC">          12 :     constexpr storage_tester&lt;float, int&gt; t{make_storage()};</span></span>
+<span id="L91"><span class="lineNum">      91</span> <span class="tlaGNC">          13 :     constexpr storage_tester&lt;float, int&gt; t{make_storage()};</span></span>
 <span id="L92"><span class="lineNum">      92</span>              : </span>
-<span id="L93"><span class="lineNum">      93</span> <span class="tlaGNC">          12 :     check(equality, &quot;&quot;, t.get_node_weight&lt;0&gt;(), 3.0f);</span></span>
-<span id="L94"><span class="lineNum">      94</span> <span class="tlaGNC">          12 :     check(equality, &quot;&quot;, t.get_node_weight&lt;float&gt;(), 3.0f);</span></span>
+<span id="L93"><span class="lineNum">      93</span> <span class="tlaGNC">          13 :     check(equality, &quot;&quot;, t.get_node_weight&lt;0&gt;(), 3.0f);</span></span>
+<span id="L94"><span class="lineNum">      94</span> <span class="tlaGNC">          13 :     check(equality, &quot;&quot;, t.get_node_weight&lt;float&gt;(), 3.0f);</span></span>
 <span id="L95"><span class="lineNum">      95</span>              : </span>
-<span id="L96"><span class="lineNum">      96</span> <span class="tlaGNC">          12 :     check(equality, &quot;&quot;, t.get_node_weight&lt;1&gt;(), 2);</span></span>
-<span id="L97"><span class="lineNum">      97</span> <span class="tlaGNC">          12 :     check(equality, &quot;&quot;, t.get_node_weight&lt;int&gt;(), 2);</span></span>
-<span id="L98"><span class="lineNum">      98</span> <span class="tlaGNC">          12 :   }</span></span>
+<span id="L96"><span class="lineNum">      96</span> <span class="tlaGNC">          13 :     check(equality, &quot;&quot;, t.get_node_weight&lt;1&gt;(), 2);</span></span>
+<span id="L97"><span class="lineNum">      97</span> <span class="tlaGNC">          13 :     check(equality, &quot;&quot;, t.get_node_weight&lt;int&gt;(), 2);</span></span>
+<span id="L98"><span class="lineNum">      98</span> <span class="tlaGNC">          13 :   }</span></span>
 <span id="L99"><span class="lineNum">      99</span>              : }</span>
         </pre>
               </td>

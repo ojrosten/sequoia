@@ -159,15 +159,11 @@ namespace sequoia
   {
     constexpr auto npos{std::string::npos};
 
-    auto left{
-      [anyOfLeft](char c) { return !anyOfLeft.size() || (anyOfLeft.find(c) < npos); }
-    };
-
-    auto right{
-      [anyOfRight](char c) {return !anyOfRight.size() || (anyOfRight.find(c) < npos); }
-    };
-
-    return replace_all(text, left, from, right, to);
+    return replace_all(text,
+		       [anyOfLeft] (char c) { return !anyOfLeft.size() || (anyOfLeft.find(c)  < npos); },
+		       from,
+		       [anyOfRight](char c) {return !anyOfRight.size() || (anyOfRight.find(c) < npos); },
+		       to);
   }
 
   [[nodiscard]]

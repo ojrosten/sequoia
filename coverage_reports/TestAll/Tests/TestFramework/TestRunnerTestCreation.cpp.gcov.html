@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2025-01-12 21:38:39</td>
+            <td class="headerValue">2025-01-12 21:58:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -82,102 +82,102 @@
 <span id="L20"><span class="lineNum">      20</span>              : namespace sequoia::testing</span>
 <span id="L21"><span class="lineNum">      21</span>              : {</span>
 <span id="L22"><span class="lineNum">      22</span>              :   [[nodiscard]]</span>
-<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC tlaBgGNC">         170 :   std::filesystem::path test_runner_test_creation::source_file() const</span></span>
+<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC tlaBgGNC">         175 :   std::filesystem::path test_runner_test_creation::source_file() const</span></span>
 <span id="L24"><span class="lineNum">      24</span>              :   {</span>
-<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">         170 :     return std::source_location::current().file_name();</span></span>
+<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">         175 :     return std::source_location::current().file_name();</span></span>
 <span id="L26"><span class="lineNum">      26</span>              :   }</span>
 <span id="L27"><span class="lineNum">      27</span>              : </span>
 <span id="L28"><span class="lineNum">      28</span>              :   [[nodiscard]]</span>
-<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">         136 :   std::string test_runner_test_creation::zeroth_arg(std::string_view projectName) const</span></span>
+<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">         140 :   std::string test_runner_test_creation::zeroth_arg(std::string_view projectName) const</span></span>
 <span id="L30"><span class="lineNum">      30</span>              :   {</span>
-<span id="L31"><span class="lineNum">      31</span> <span class="tlaGNC">         136 :     return (working_materials() / projectName / &quot;build/CMade&quot;).generic_string();</span></span>
+<span id="L31"><span class="lineNum">      31</span> <span class="tlaGNC">         140 :     return (working_materials() / projectName / &quot;build/CMade&quot;).generic_string();</span></span>
 <span id="L32"><span class="lineNum">      32</span>              :   }</span>
 <span id="L33"><span class="lineNum">      33</span>              : </span>
-<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">          34 :   void test_runner_test_creation::run_tests()</span></span>
+<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">          35 :   void test_runner_test_creation::run_tests()</span></span>
 <span id="L35"><span class="lineNum">      35</span>              :   {</span>
-<span id="L36"><span class="lineNum">      36</span> <span class="tlaGNC">          34 :     test_type_handling();</span></span>
-<span id="L37"><span class="lineNum">      37</span> <span class="tlaGNC">          34 :     test_template_data_generation();</span></span>
-<span id="L38"><span class="lineNum">      38</span> <span class="tlaGNC">          34 :     test_creation(&quot;FakeProject&quot;, std::nullopt);</span></span>
-<span id="L39"><span class="lineNum">      39</span> <span class="tlaGNC">          34 :     test_creation(&quot;AnotherFakeProject&quot;, &quot;curlew&quot;);</span></span>
-<span id="L40"><span class="lineNum">      40</span> <span class="tlaGNC">          34 :     test_creation_failure();</span></span>
-<span id="L41"><span class="lineNum">      41</span> <span class="tlaGNC">          34 :   }</span></span>
+<span id="L36"><span class="lineNum">      36</span> <span class="tlaGNC">          35 :     test_type_handling();</span></span>
+<span id="L37"><span class="lineNum">      37</span> <span class="tlaGNC">          35 :     test_template_data_generation();</span></span>
+<span id="L38"><span class="lineNum">      38</span> <span class="tlaGNC">          35 :     test_creation(&quot;FakeProject&quot;, std::nullopt);</span></span>
+<span id="L39"><span class="lineNum">      39</span> <span class="tlaGNC">          35 :     test_creation(&quot;AnotherFakeProject&quot;, &quot;curlew&quot;);</span></span>
+<span id="L40"><span class="lineNum">      40</span> <span class="tlaGNC">          35 :     test_creation_failure();</span></span>
+<span id="L41"><span class="lineNum">      41</span> <span class="tlaGNC">          35 :   }</span></span>
 <span id="L42"><span class="lineNum">      42</span>              : </span>
-<span id="L43"><span class="lineNum">      43</span> <span class="tlaGNC">          34 :   void test_runner_test_creation::test_type_handling()</span></span>
+<span id="L43"><span class="lineNum">      43</span> <span class="tlaGNC">          35 :   void test_runner_test_creation::test_type_handling()</span></span>
 <span id="L44"><span class="lineNum">      44</span>              :   {</span>
-<span id="L45"><span class="lineNum">      45</span> <span class="tlaGNC">          68 :     check_exception_thrown&lt;std::logic_error&gt;(&quot;Empty string&quot;, []() { return handle_as_ref(&quot;&quot;); });</span></span>
-<span id="L46"><span class="lineNum">      46</span> <span class="tlaGNC">          68 :     check_exception_thrown&lt;std::logic_error&gt;(&quot;Just spaces&quot;, []() { return handle_as_ref(&quot; &quot;); });</span></span>
-<span id="L47"><span class="lineNum">      47</span> <span class="tlaGNC">          34 :     check(&quot;Letter&quot;,        handle_as_ref(&quot;a&quot;));</span></span>
-<span id="L48"><span class="lineNum">      48</span> <span class="tlaGNC">          34 :     check(&quot;int&quot;,          !handle_as_ref(&quot;int&quot;));</span></span>
-<span id="L49"><span class="lineNum">      49</span> <span class="tlaGNC">          34 :     check(&quot; int&quot;,         !handle_as_ref(&quot; int&quot;));</span></span>
-<span id="L50"><span class="lineNum">      50</span> <span class="tlaGNC">          34 :     check(&quot;  int&quot;,        !handle_as_ref(&quot;  int&quot;));</span></span>
-<span id="L51"><span class="lineNum">      51</span> <span class="tlaGNC">          34 :     check(&quot;int*&quot;,         !handle_as_ref(&quot;int*&quot;));</span></span>
-<span id="L52"><span class="lineNum">      52</span> <span class="tlaGNC">          34 :     check(&quot;int&amp;&quot;,         !handle_as_ref(&quot;int&amp;&quot;));</span></span>
-<span id="L53"><span class="lineNum">      53</span> <span class="tlaGNC">          34 :     check(&quot;int *&quot;,        !handle_as_ref(&quot;int *&quot;));</span></span>
-<span id="L54"><span class="lineNum">      54</span> <span class="tlaGNC">          34 :     check(&quot; int &quot;,        !handle_as_ref(&quot; int &quot;));</span></span>
-<span id="L55"><span class="lineNum">      55</span> <span class="tlaGNC">          34 :     check(&quot;long&quot;,         !handle_as_ref(&quot;long&quot;));</span></span>
-<span id="L56"><span class="lineNum">      56</span> <span class="tlaGNC">          34 :     check(&quot;longint&quot;,      handle_as_ref(&quot;longint&quot;));</span></span>
-<span id="L57"><span class="lineNum">      57</span> <span class="tlaGNC">          34 :     check(&quot;long int&quot;,     !handle_as_ref(&quot;long int&quot;));</span></span>
-<span id="L58"><span class="lineNum">      58</span> <span class="tlaGNC">          34 :     check(&quot;double&quot;,       !handle_as_ref(&quot;double&quot;));</span></span>
-<span id="L59"><span class="lineNum">      59</span> <span class="tlaGNC">          34 :     check(&quot;std::size_t&quot;,  !handle_as_ref(&quot;std::size_t&quot;));</span></span>
-<span id="L60"><span class="lineNum">      60</span> <span class="tlaGNC">          34 :     check(&quot;tuple&lt;int&gt;&quot;,    handle_as_ref(&quot;tuple&lt;int&gt;&quot;));</span></span>
-<span id="L61"><span class="lineNum">      61</span> <span class="tlaGNC">          34 :     check(&quot;tuple&lt;int &gt;&quot;,   handle_as_ref(&quot;tuple&lt;int &gt;&quot;));</span></span>
-<span id="L62"><span class="lineNum">      62</span> <span class="tlaGNC">          34 :     check(&quot;tuple&lt; int &gt;&quot;,  handle_as_ref(&quot;tuple&lt; int &gt;&quot;));</span></span>
-<span id="L63"><span class="lineNum">      63</span> <span class="tlaGNC">          34 :   }</span></span>
+<span id="L45"><span class="lineNum">      45</span> <span class="tlaGNC">          70 :     check_exception_thrown&lt;std::logic_error&gt;(&quot;Empty string&quot;, []() { return handle_as_ref(&quot;&quot;); });</span></span>
+<span id="L46"><span class="lineNum">      46</span> <span class="tlaGNC">          70 :     check_exception_thrown&lt;std::logic_error&gt;(&quot;Just spaces&quot;, []() { return handle_as_ref(&quot; &quot;); });</span></span>
+<span id="L47"><span class="lineNum">      47</span> <span class="tlaGNC">          35 :     check(&quot;Letter&quot;,        handle_as_ref(&quot;a&quot;));</span></span>
+<span id="L48"><span class="lineNum">      48</span> <span class="tlaGNC">          35 :     check(&quot;int&quot;,          !handle_as_ref(&quot;int&quot;));</span></span>
+<span id="L49"><span class="lineNum">      49</span> <span class="tlaGNC">          35 :     check(&quot; int&quot;,         !handle_as_ref(&quot; int&quot;));</span></span>
+<span id="L50"><span class="lineNum">      50</span> <span class="tlaGNC">          35 :     check(&quot;  int&quot;,        !handle_as_ref(&quot;  int&quot;));</span></span>
+<span id="L51"><span class="lineNum">      51</span> <span class="tlaGNC">          35 :     check(&quot;int*&quot;,         !handle_as_ref(&quot;int*&quot;));</span></span>
+<span id="L52"><span class="lineNum">      52</span> <span class="tlaGNC">          35 :     check(&quot;int&amp;&quot;,         !handle_as_ref(&quot;int&amp;&quot;));</span></span>
+<span id="L53"><span class="lineNum">      53</span> <span class="tlaGNC">          35 :     check(&quot;int *&quot;,        !handle_as_ref(&quot;int *&quot;));</span></span>
+<span id="L54"><span class="lineNum">      54</span> <span class="tlaGNC">          35 :     check(&quot; int &quot;,        !handle_as_ref(&quot; int &quot;));</span></span>
+<span id="L55"><span class="lineNum">      55</span> <span class="tlaGNC">          35 :     check(&quot;long&quot;,         !handle_as_ref(&quot;long&quot;));</span></span>
+<span id="L56"><span class="lineNum">      56</span> <span class="tlaGNC">          35 :     check(&quot;longint&quot;,      handle_as_ref(&quot;longint&quot;));</span></span>
+<span id="L57"><span class="lineNum">      57</span> <span class="tlaGNC">          35 :     check(&quot;long int&quot;,     !handle_as_ref(&quot;long int&quot;));</span></span>
+<span id="L58"><span class="lineNum">      58</span> <span class="tlaGNC">          35 :     check(&quot;double&quot;,       !handle_as_ref(&quot;double&quot;));</span></span>
+<span id="L59"><span class="lineNum">      59</span> <span class="tlaGNC">          35 :     check(&quot;std::size_t&quot;,  !handle_as_ref(&quot;std::size_t&quot;));</span></span>
+<span id="L60"><span class="lineNum">      60</span> <span class="tlaGNC">          35 :     check(&quot;tuple&lt;int&gt;&quot;,    handle_as_ref(&quot;tuple&lt;int&gt;&quot;));</span></span>
+<span id="L61"><span class="lineNum">      61</span> <span class="tlaGNC">          35 :     check(&quot;tuple&lt;int &gt;&quot;,   handle_as_ref(&quot;tuple&lt;int &gt;&quot;));</span></span>
+<span id="L62"><span class="lineNum">      62</span> <span class="tlaGNC">          35 :     check(&quot;tuple&lt; int &gt;&quot;,  handle_as_ref(&quot;tuple&lt; int &gt;&quot;));</span></span>
+<span id="L63"><span class="lineNum">      63</span> <span class="tlaGNC">          35 :   }</span></span>
 <span id="L64"><span class="lineNum">      64</span>              : </span>
-<span id="L65"><span class="lineNum">      65</span> <span class="tlaGNC">          34 :   void test_runner_test_creation::test_template_data_generation()</span></span>
+<span id="L65"><span class="lineNum">      65</span> <span class="tlaGNC">          35 :   void test_runner_test_creation::test_template_data_generation()</span></span>
 <span id="L66"><span class="lineNum">      66</span>              :   {</span>
-<span id="L67"><span class="lineNum">      67</span> <span class="tlaGNC">          34 :     check(&quot;&quot;, generate_template_data(&quot;&quot;).empty());</span></span>
-<span id="L68"><span class="lineNum">      68</span> <span class="tlaGNC">          34 :     check_exception_thrown&lt;std::runtime_error&gt;(&quot;Unmatched &lt;&quot;,</span></span>
-<span id="L69"><span class="lineNum">      69</span> <span class="tlaGNC">          34 :                                                [](){ return generate_template_data(&quot;&lt;&quot;); });</span></span>
-<span id="L70"><span class="lineNum">      70</span> <span class="tlaGNC">          34 :     check_exception_thrown&lt;std::runtime_error&gt;(&quot;Backwards delimiters&quot;,</span></span>
-<span id="L71"><span class="lineNum">      71</span> <span class="tlaGNC">          34 :                                                [](){ return generate_template_data(&quot;&gt;&lt;&quot;); });</span></span>
-<span id="L72"><span class="lineNum">      72</span> <span class="tlaGNC">          34 :     check_exception_thrown&lt;std::runtime_error&gt;(&quot;Missing symbol&quot;,</span></span>
-<span id="L73"><span class="lineNum">      73</span> <span class="tlaGNC">          34 :                                                [](){ return generate_template_data(&quot;&lt;class&gt;&quot;); });</span></span>
-<span id="L74"><span class="lineNum">      74</span> <span class="tlaGNC">          34 :     check_exception_thrown&lt;std::runtime_error&gt;(&quot;Missing symbol&quot;,</span></span>
-<span id="L75"><span class="lineNum">      75</span> <span class="tlaGNC">          34 :                                                [](){ return generate_template_data(&quot;&lt; class&gt;&quot;); });</span></span>
+<span id="L67"><span class="lineNum">      67</span> <span class="tlaGNC">          35 :     check(&quot;&quot;, generate_template_data(&quot;&quot;).empty());</span></span>
+<span id="L68"><span class="lineNum">      68</span> <span class="tlaGNC">          35 :     check_exception_thrown&lt;std::runtime_error&gt;(&quot;Unmatched &lt;&quot;,</span></span>
+<span id="L69"><span class="lineNum">      69</span> <span class="tlaGNC">          35 :                                                [](){ return generate_template_data(&quot;&lt;&quot;); });</span></span>
+<span id="L70"><span class="lineNum">      70</span> <span class="tlaGNC">          35 :     check_exception_thrown&lt;std::runtime_error&gt;(&quot;Backwards delimiters&quot;,</span></span>
+<span id="L71"><span class="lineNum">      71</span> <span class="tlaGNC">          35 :                                                [](){ return generate_template_data(&quot;&gt;&lt;&quot;); });</span></span>
+<span id="L72"><span class="lineNum">      72</span> <span class="tlaGNC">          35 :     check_exception_thrown&lt;std::runtime_error&gt;(&quot;Missing symbol&quot;,</span></span>
+<span id="L73"><span class="lineNum">      73</span> <span class="tlaGNC">          35 :                                                [](){ return generate_template_data(&quot;&lt;class&gt;&quot;); });</span></span>
+<span id="L74"><span class="lineNum">      74</span> <span class="tlaGNC">          35 :     check_exception_thrown&lt;std::runtime_error&gt;(&quot;Missing symbol&quot;,</span></span>
+<span id="L75"><span class="lineNum">      75</span> <span class="tlaGNC">          35 :                                                [](){ return generate_template_data(&quot;&lt; class&gt;&quot;); });</span></span>
 <span id="L76"><span class="lineNum">      76</span>              : </span>
-<span id="L77"><span class="lineNum">      77</span> <span class="tlaGNC">         102 :     check(equality, &quot;Specialization&quot;, generate_template_data(&quot;&lt;&gt;&quot;), template_data{{}});</span></span>
-<span id="L78"><span class="lineNum">      78</span> <span class="tlaGNC">          34 :     check(equality, &quot;Class template parameter&quot;,</span></span>
-<span id="L79"><span class="lineNum">      79</span> <span class="tlaGNC">         136 :                    generate_template_data(&quot;&lt;class T&gt;&quot;), template_data{{&quot;class&quot;, &quot;T&quot;}});</span></span>
-<span id="L80"><span class="lineNum">      80</span> <span class="tlaGNC">          34 :     check(equality, &quot;Class template parameter&quot;,</span></span>
-<span id="L81"><span class="lineNum">      81</span> <span class="tlaGNC">         136 :                    generate_template_data(&quot;&lt;class T &gt;&quot;), template_data{{&quot;class&quot;, &quot;T&quot;}});</span></span>
-<span id="L82"><span class="lineNum">      82</span> <span class="tlaGNC">          34 :     check(equality, &quot;Class template parameter&quot;,</span></span>
-<span id="L83"><span class="lineNum">      83</span> <span class="tlaGNC">         136 :                    generate_template_data(&quot;&lt; class T&gt;&quot;), template_data{{&quot;class&quot;, &quot;T&quot;}});</span></span>
+<span id="L77"><span class="lineNum">      77</span> <span class="tlaGNC">         105 :     check(equality, &quot;Specialization&quot;, generate_template_data(&quot;&lt;&gt;&quot;), template_data{{}});</span></span>
+<span id="L78"><span class="lineNum">      78</span> <span class="tlaGNC">          35 :     check(equality, &quot;Class template parameter&quot;,</span></span>
+<span id="L79"><span class="lineNum">      79</span> <span class="tlaGNC">         140 :                    generate_template_data(&quot;&lt;class T&gt;&quot;), template_data{{&quot;class&quot;, &quot;T&quot;}});</span></span>
+<span id="L80"><span class="lineNum">      80</span> <span class="tlaGNC">          35 :     check(equality, &quot;Class template parameter&quot;,</span></span>
+<span id="L81"><span class="lineNum">      81</span> <span class="tlaGNC">         140 :                    generate_template_data(&quot;&lt;class T &gt;&quot;), template_data{{&quot;class&quot;, &quot;T&quot;}});</span></span>
+<span id="L82"><span class="lineNum">      82</span> <span class="tlaGNC">          35 :     check(equality, &quot;Class template parameter&quot;,</span></span>
+<span id="L83"><span class="lineNum">      83</span> <span class="tlaGNC">         140 :                    generate_template_data(&quot;&lt; class T&gt;&quot;), template_data{{&quot;class&quot;, &quot;T&quot;}});</span></span>
 <span id="L84"><span class="lineNum">      84</span>              : </span>
-<span id="L85"><span class="lineNum">      85</span> <span class="tlaGNC">          34 :     check(equality, &quot;Two template parameters&quot;,</span></span>
-<span id="L86"><span class="lineNum">      86</span> <span class="tlaGNC">          68 :                    generate_template_data(&quot;&lt;class T, typename S&gt;&quot;),</span></span>
-<span id="L87"><span class="lineNum">      87</span> <span class="tlaGNC">         170 :                    template_data{{&quot;class&quot;, &quot;T&quot;}, {&quot;typename&quot;, &quot;S&quot;}});</span></span>
-<span id="L88"><span class="lineNum">      88</span> <span class="tlaGNC">          34 :     check(equality, &quot;Two template parameters&quot;,</span></span>
-<span id="L89"><span class="lineNum">      89</span> <span class="tlaGNC">          68 :                    generate_template_data(&quot;&lt; class  T,  typename S &gt;&quot;),</span></span>
-<span id="L90"><span class="lineNum">      90</span> <span class="tlaGNC">         170 :                    template_data{{&quot;class&quot;, &quot;T&quot;}, {&quot;typename&quot;, &quot;S&quot;}});</span></span>
+<span id="L85"><span class="lineNum">      85</span> <span class="tlaGNC">          35 :     check(equality, &quot;Two template parameters&quot;,</span></span>
+<span id="L86"><span class="lineNum">      86</span> <span class="tlaGNC">          70 :                    generate_template_data(&quot;&lt;class T, typename S&gt;&quot;),</span></span>
+<span id="L87"><span class="lineNum">      87</span> <span class="tlaGNC">         175 :                    template_data{{&quot;class&quot;, &quot;T&quot;}, {&quot;typename&quot;, &quot;S&quot;}});</span></span>
+<span id="L88"><span class="lineNum">      88</span> <span class="tlaGNC">          35 :     check(equality, &quot;Two template parameters&quot;,</span></span>
+<span id="L89"><span class="lineNum">      89</span> <span class="tlaGNC">          70 :                    generate_template_data(&quot;&lt; class  T,  typename S &gt;&quot;),</span></span>
+<span id="L90"><span class="lineNum">      90</span> <span class="tlaGNC">         175 :                    template_data{{&quot;class&quot;, &quot;T&quot;}, {&quot;typename&quot;, &quot;S&quot;}});</span></span>
 <span id="L91"><span class="lineNum">      91</span>              : </span>
-<span id="L92"><span class="lineNum">      92</span> <span class="tlaGNC">          34 :     check(equality, &quot;Variadic template&quot;,</span></span>
-<span id="L93"><span class="lineNum">      93</span> <span class="tlaGNC">         136 :                    generate_template_data(&quot;&lt;class... T&gt;&quot;), template_data{{&quot;class...&quot;, &quot;T&quot;}});</span></span>
+<span id="L92"><span class="lineNum">      92</span> <span class="tlaGNC">          35 :     check(equality, &quot;Variadic template&quot;,</span></span>
+<span id="L93"><span class="lineNum">      93</span> <span class="tlaGNC">         140 :                    generate_template_data(&quot;&lt;class... T&gt;&quot;), template_data{{&quot;class...&quot;, &quot;T&quot;}});</span></span>
 <span id="L94"><span class="lineNum">      94</span>              : </span>
-<span id="L95"><span class="lineNum">      95</span> <span class="tlaGNC">          34 :     check(equality, &quot;Variadic template&quot;,</span></span>
-<span id="L96"><span class="lineNum">      96</span> <span class="tlaGNC">         136 :                    generate_template_data(&quot;&lt;class ... T&gt;&quot;), template_data{{&quot;class ...&quot;, &quot;T&quot;}});</span></span>
-<span id="L97"><span class="lineNum">      97</span> <span class="tlaGNC">         544 :   }</span></span>
+<span id="L95"><span class="lineNum">      95</span> <span class="tlaGNC">          35 :     check(equality, &quot;Variadic template&quot;,</span></span>
+<span id="L96"><span class="lineNum">      96</span> <span class="tlaGNC">         140 :                    generate_template_data(&quot;&lt;class ... T&gt;&quot;), template_data{{&quot;class ...&quot;, &quot;T&quot;}});</span></span>
+<span id="L97"><span class="lineNum">      97</span> <span class="tlaGNC">         560 :   }</span></span>
 <span id="L98"><span class="lineNum">      98</span>              : </span>
-<span id="L99"><span class="lineNum">      99</span> <span class="tlaGNC">          68 :   void test_runner_test_creation::test_creation(std::string_view projectName, std::optional&lt;std::string&gt; sourceFolder)</span></span>
+<span id="L99"><span class="lineNum">      99</span> <span class="tlaGNC">          70 :   void test_runner_test_creation::test_creation(std::string_view projectName, std::optional&lt;std::string&gt; sourceFolder)</span></span>
 <span id="L100"><span class="lineNum">     100</span>              :   {</span>
 <span id="L101"><span class="lineNum">     101</span>              :     namespace fs = std::filesystem;</span>
 <span id="L102"><span class="lineNum">     102</span>              : </span>
-<span id="L103"><span class="lineNum">     103</span> <span class="tlaGNC">          68 :     const auto projectPath{working_materials() / projectName};</span></span>
-<span id="L104"><span class="lineNum">     104</span> <span class="tlaGNC">          68 :     const source_paths sourcePaths{projectPath, sourceFolder};</span></span>
-<span id="L105"><span class="lineNum">     105</span> <span class="tlaGNC">          68 :     const auto sourceFolderPath{sourcePaths.project()};</span></span>
-<span id="L106"><span class="lineNum">     106</span> <span class="tlaGNC">          68 :     const auto sourceFolderName{back(sourceFolderPath).generic_string()};</span></span>
+<span id="L103"><span class="lineNum">     103</span> <span class="tlaGNC">          70 :     const auto projectPath{working_materials() / projectName};</span></span>
+<span id="L104"><span class="lineNum">     104</span> <span class="tlaGNC">          70 :     const source_paths sourcePaths{projectPath, sourceFolder};</span></span>
+<span id="L105"><span class="lineNum">     105</span> <span class="tlaGNC">          70 :     const auto sourceFolderPath{sourcePaths.project()};</span></span>
+<span id="L106"><span class="lineNum">     106</span> <span class="tlaGNC">          70 :     const auto sourceFolderName{back(sourceFolderPath).generic_string()};</span></span>
 <span id="L107"><span class="lineNum">     107</span>              : </span>
-<span id="L108"><span class="lineNum">     108</span> <span class="tlaGNC">          68 :     fs::copy(auxiliary_paths::repo(get_project_paths().project_root()), auxiliary_paths::repo(projectPath), fs::copy_options::recursive);</span></span>
-<span id="L109"><span class="lineNum">     109</span> <span class="tlaGNC">          68 :     fs::create_directory(projectPath / &quot;TestSandbox&quot;);</span></span>
+<span id="L108"><span class="lineNum">     108</span> <span class="tlaGNC">          70 :     fs::copy(auxiliary_paths::repo(get_project_paths().project_root()), auxiliary_paths::repo(projectPath), fs::copy_options::recursive);</span></span>
+<span id="L109"><span class="lineNum">     109</span> <span class="tlaGNC">          70 :     fs::create_directory(projectPath / &quot;TestSandbox&quot;);</span></span>
 <span id="L110"><span class="lineNum">     110</span>              : </span>
-<span id="L111"><span class="lineNum">     111</span> <span class="tlaGNC">          68 :     fs::copy(source_paths{auxiliary_paths::project_template(get_project_paths().project_root())}.cmake_lists(), sourceFolderPath);</span></span>
+<span id="L111"><span class="lineNum">     111</span> <span class="tlaGNC">          70 :     fs::copy(source_paths{auxiliary_paths::project_template(get_project_paths().project_root())}.cmake_lists(), sourceFolderPath);</span></span>
 <span id="L112"><span class="lineNum">     112</span>              : </span>
-<span id="L113"><span class="lineNum">     113</span> <span class="tlaGNC">          68 :     const main_paths templateMain{auxiliary_paths::project_template(get_project_paths().project_root()) / main_paths::default_main_cpp_from_root()},</span></span>
-<span id="L114"><span class="lineNum">     114</span> <span class="tlaGNC">          68 :                      fakeMain{projectPath / &quot;TestSandbox&quot; / &quot;TestSandbox.cpp&quot;};</span></span>
+<span id="L113"><span class="lineNum">     113</span> <span class="tlaGNC">          70 :     const main_paths templateMain{auxiliary_paths::project_template(get_project_paths().project_root()) / main_paths::default_main_cpp_from_root()},</span></span>
+<span id="L114"><span class="lineNum">     114</span> <span class="tlaGNC">          70 :                      fakeMain{projectPath / &quot;TestSandbox&quot; / &quot;TestSandbox.cpp&quot;};</span></span>
 <span id="L115"><span class="lineNum">     115</span>              : </span>
-<span id="L116"><span class="lineNum">     116</span> <span class="tlaGNC">          68 :     fs::copy(templateMain.file(), fakeMain.file());</span></span>
-<span id="L117"><span class="lineNum">     117</span> <span class="tlaGNC">          68 :     fs::copy(templateMain.cmake_lists(), fakeMain.cmake_lists());</span></span>
-<span id="L118"><span class="lineNum">     118</span> <span class="tlaGNC">         136 :     read_modify_write(fakeMain.cmake_lists(), [](std::string&amp; text) { replace_all(text, &quot;TestAllMain.cpp&quot;, &quot;TestSandbox.cpp&quot;); } );</span></span>
+<span id="L116"><span class="lineNum">     116</span> <span class="tlaGNC">          70 :     fs::copy(templateMain.file(), fakeMain.file());</span></span>
+<span id="L117"><span class="lineNum">     117</span> <span class="tlaGNC">          70 :     fs::copy(templateMain.cmake_lists(), fakeMain.cmake_lists());</span></span>
+<span id="L118"><span class="lineNum">     118</span> <span class="tlaGNC">         140 :     read_modify_write(fakeMain.cmake_lists(), [](std::string&amp; text) { replace_all(text, &quot;TestAllMain.cpp&quot;, &quot;TestSandbox.cpp&quot;); } );</span></span>
 <span id="L119"><span class="lineNum">     119</span>              : </span>
 <span id="L120"><span class="lineNum">     120</span>              :     commandline_arguments args{{zeroth_arg(projectName)</span>
 <span id="L121"><span class="lineNum">     121</span>              :                                , &quot;create&quot;, &quot;regular_test&quot;, &quot;other::functional::maybe&lt;class T&gt;&quot;, &quot;std::optional&lt;T&gt;&quot;</span>
@@ -206,40 +206,40 @@
 <span id="L144"><span class="lineNum">     144</span>              :                                , &quot;create&quot;, &quot;move_only_allocation_test&quot;, &quot;foo&quot;, &quot;--suite&quot;, &quot;Iterator&quot;</span>
 <span id="L145"><span class="lineNum">     145</span>              :                                , &quot;create&quot;, &quot;performance_test&quot;, &quot;Container.hpp&quot;</span>
 <span id="L146"><span class="lineNum">     146</span>              :                                , &quot;create&quot;, &quot;performance_test&quot;, &quot;Container.hpp&quot;}</span>
-<span id="L147"><span class="lineNum">     147</span> <span class="tlaGNC">        8772 :     };</span></span>
+<span id="L147"><span class="lineNum">     147</span> <span class="tlaGNC">        9030 :     };</span></span>
 <span id="L148"><span class="lineNum">     148</span>              : </span>
-<span id="L149"><span class="lineNum">     149</span> <span class="tlaGNC">          68 :     std::stringstream outputStream{};</span></span>
-<span id="L150"><span class="lineNum">     150</span> <span class="tlaGNC">         340 :     test_runner tr{args.size(), args.get(), &quot;Oliver Jacob Rosten&quot;, &quot;    &quot;,  {.source_folder{sourceFolder}, .main_cpp{&quot;TestSandbox/TestSandbox.cpp&quot;}, .common_includes{&quot;TestShared/SharedIncludes.hpp&quot;}}, outputStream};</span></span>
+<span id="L149"><span class="lineNum">     149</span> <span class="tlaGNC">          70 :     std::stringstream outputStream{};</span></span>
+<span id="L150"><span class="lineNum">     150</span> <span class="tlaGNC">         350 :     test_runner tr{args.size(), args.get(), &quot;Oliver Jacob Rosten&quot;, &quot;    &quot;,  {.source_folder{sourceFolder}, .main_cpp{&quot;TestSandbox/TestSandbox.cpp&quot;}, .common_includes{&quot;TestShared/SharedIncludes.hpp&quot;}}, outputStream};</span></span>
 <span id="L151"><span class="lineNum">     151</span>              : </span>
-<span id="L152"><span class="lineNum">     152</span> <span class="tlaGNC">          68 :     tr.execute();</span></span>
+<span id="L152"><span class="lineNum">     152</span> <span class="tlaGNC">          70 :     tr.execute();</span></span>
 <span id="L153"><span class="lineNum">     153</span>              : </span>
-<span id="L154"><span class="lineNum">     154</span> <span class="tlaGNC">          68 :     if(std::ofstream file{projectPath / &quot;output&quot; / &quot;io.txt&quot;})</span></span>
+<span id="L154"><span class="lineNum">     154</span> <span class="tlaGNC">          70 :     if(std::ofstream file{projectPath / &quot;output&quot; / &quot;io.txt&quot;})</span></span>
 <span id="L155"><span class="lineNum">     155</span>              :     {</span>
-<span id="L156"><span class="lineNum">     156</span> <span class="tlaGNC">          68 :       file &lt;&lt; outputStream.str();</span></span>
-<span id="L157"><span class="lineNum">     157</span> <span class="tlaGNC">          68 :     }</span></span>
+<span id="L156"><span class="lineNum">     156</span> <span class="tlaGNC">          70 :       file &lt;&lt; outputStream.str();</span></span>
+<span id="L157"><span class="lineNum">     157</span> <span class="tlaGNC">          70 :     }</span></span>
 <span id="L158"><span class="lineNum">     158</span>              : </span>
-<span id="L159"><span class="lineNum">     159</span> <span class="tlaGNC">          68 :     check(equivalence, &quot;&quot;, projectPath, predictive_materials() /= projectName);</span></span>
-<span id="L160"><span class="lineNum">     160</span> <span class="tlaGNC">         272 :   }</span></span>
+<span id="L159"><span class="lineNum">     159</span> <span class="tlaGNC">          70 :     check(equivalence, &quot;&quot;, projectPath, predictive_materials() /= projectName);</span></span>
+<span id="L160"><span class="lineNum">     160</span> <span class="tlaGNC">         280 :   }</span></span>
 <span id="L161"><span class="lineNum">     161</span>              : </span>
-<span id="L162"><span class="lineNum">     162</span> <span class="tlaGNC">          34 :   void test_runner_test_creation::test_creation_failure()</span></span>
+<span id="L162"><span class="lineNum">     162</span> <span class="tlaGNC">          35 :   void test_runner_test_creation::test_creation_failure()</span></span>
 <span id="L163"><span class="lineNum">     163</span>              :   {</span>
-<span id="L164"><span class="lineNum">     164</span> <span class="tlaGNC">          34 :       check_exception_thrown&lt;std::runtime_error&gt;(</span></span>
-<span id="L165"><span class="lineNum">     165</span> <span class="tlaGNC">          34 :         reporter{&quot;Plurgh.h does not exist&quot;},</span></span>
-<span id="L166"><span class="lineNum">     166</span> <span class="tlaGNC">          34 :         [this]() {</span></span>
-<span id="L167"><span class="lineNum">     167</span> <span class="tlaGNC">          34 :           std::stringstream outputStream{};</span></span>
-<span id="L168"><span class="lineNum">     168</span> <span class="tlaGNC">         204 :           commandline_arguments args{{zeroth_arg(&quot;FakeProject&quot;), &quot;create&quot;, &quot;free&quot;, &quot;Plurgh.h&quot;}};</span></span>
-<span id="L169"><span class="lineNum">     169</span> <span class="tlaGNC">         238 :           test_runner tr{args.size(), args.get(), &quot;Oliver J. Rosten&quot;, &quot;  &quot;, {.main_cpp{&quot;TestSandbox/TestSandbox.cpp&quot;}, .common_includes{&quot;TestShared/SharedIncludes.hpp&quot;}}, outputStream};</span></span>
+<span id="L164"><span class="lineNum">     164</span> <span class="tlaGNC">          35 :       check_exception_thrown&lt;std::runtime_error&gt;(</span></span>
+<span id="L165"><span class="lineNum">     165</span> <span class="tlaGNC">          35 :         reporter{&quot;Plurgh.h does not exist&quot;},</span></span>
+<span id="L166"><span class="lineNum">     166</span> <span class="tlaGNC">          35 :         [this]() {</span></span>
+<span id="L167"><span class="lineNum">     167</span> <span class="tlaGNC">          35 :           std::stringstream outputStream{};</span></span>
+<span id="L168"><span class="lineNum">     168</span> <span class="tlaGNC">         210 :           commandline_arguments args{{zeroth_arg(&quot;FakeProject&quot;), &quot;create&quot;, &quot;free&quot;, &quot;Plurgh.h&quot;}};</span></span>
+<span id="L169"><span class="lineNum">     169</span> <span class="tlaGNC">         245 :           test_runner tr{args.size(), args.get(), &quot;Oliver J. Rosten&quot;, &quot;  &quot;, {.main_cpp{&quot;TestSandbox/TestSandbox.cpp&quot;}, .common_includes{&quot;TestShared/SharedIncludes.hpp&quot;}}, outputStream};</span></span>
 <span id="L170"><span class="lineNum">     170</span> <span class="tlaUNC tlaBgUNC">           0 :           tr.execute();</span></span>
-<span id="L171"><span class="lineNum">     171</span> <span class="tlaGNC tlaBgGNC">         340 :         });</span></span>
+<span id="L171"><span class="lineNum">     171</span> <span class="tlaGNC tlaBgGNC">         350 :         });</span></span>
 <span id="L172"><span class="lineNum">     172</span>              : </span>
-<span id="L173"><span class="lineNum">     173</span> <span class="tlaGNC">          34 :       check_exception_thrown&lt;std::runtime_error&gt;(</span></span>
-<span id="L174"><span class="lineNum">     174</span> <span class="tlaGNC">          34 :         reporter{&quot;Typo in specified class header&quot;},</span></span>
-<span id="L175"><span class="lineNum">     175</span> <span class="tlaGNC">          34 :         [this]() {</span></span>
-<span id="L176"><span class="lineNum">     176</span> <span class="tlaGNC">          34 :           std::stringstream outputStream{};</span></span>
-<span id="L177"><span class="lineNum">     177</span> <span class="tlaGNC">         306 :           commandline_arguments args{{zeroth_arg(&quot;FakeProject&quot;), &quot;create&quot;, &quot;regular_test&quot;, &quot;bar::things&quot;, &quot;double&quot;, &quot;-h&quot;, &quot;fakeProject/Stuff/Thingz.hpp&quot;}};</span></span>
-<span id="L178"><span class="lineNum">     178</span> <span class="tlaGNC">         238 :           test_runner tr{args.size(), args.get(), &quot;Oliver J. Rosten&quot;, &quot;  &quot;, {.main_cpp{&quot;TestSandbox/TestSandbox.cpp&quot;}, .common_includes{&quot;TestShared/SharedIncludes.hpp&quot;}}, outputStream};</span></span>
-<span id="L179"><span class="lineNum">     179</span> <span class="tlaGNC">         340 :         });</span></span>
-<span id="L180"><span class="lineNum">     180</span> <span class="tlaGNC">          34 :   }</span></span>
+<span id="L173"><span class="lineNum">     173</span> <span class="tlaGNC">          35 :       check_exception_thrown&lt;std::runtime_error&gt;(</span></span>
+<span id="L174"><span class="lineNum">     174</span> <span class="tlaGNC">          35 :         reporter{&quot;Typo in specified class header&quot;},</span></span>
+<span id="L175"><span class="lineNum">     175</span> <span class="tlaGNC">          35 :         [this]() {</span></span>
+<span id="L176"><span class="lineNum">     176</span> <span class="tlaGNC">          35 :           std::stringstream outputStream{};</span></span>
+<span id="L177"><span class="lineNum">     177</span> <span class="tlaGNC">         315 :           commandline_arguments args{{zeroth_arg(&quot;FakeProject&quot;), &quot;create&quot;, &quot;regular_test&quot;, &quot;bar::things&quot;, &quot;double&quot;, &quot;-h&quot;, &quot;fakeProject/Stuff/Thingz.hpp&quot;}};</span></span>
+<span id="L178"><span class="lineNum">     178</span> <span class="tlaGNC">         245 :           test_runner tr{args.size(), args.get(), &quot;Oliver J. Rosten&quot;, &quot;  &quot;, {.main_cpp{&quot;TestSandbox/TestSandbox.cpp&quot;}, .common_includes{&quot;TestShared/SharedIncludes.hpp&quot;}}, outputStream};</span></span>
+<span id="L179"><span class="lineNum">     179</span> <span class="tlaGNC">         350 :         });</span></span>
+<span id="L180"><span class="lineNum">     180</span> <span class="tlaGNC">          35 :   }</span></span>
 <span id="L181"><span class="lineNum">     181</span>              : }</span>
         </pre>
               </td>

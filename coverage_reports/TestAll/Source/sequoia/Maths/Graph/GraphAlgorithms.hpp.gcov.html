@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2025-01-12 21:38:39</td>
+            <td class="headerValue">2025-01-12 21:58:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -80,24 +80,24 @@
 <span id="L18"><span class="lineNum">      18</span>              : {</span>
 <span id="L19"><span class="lineNum">      19</span>              :   template&lt;class G, class Pred&gt;</span>
 <span id="L20"><span class="lineNum">      20</span>              :   [[nodiscard]]</span>
-<span id="L21"><span class="lineNum">      21</span> <span class="tlaGNC tlaBgGNC">         240 :   G sub_graph(const G&amp; g, Pred nodePred)</span></span>
+<span id="L21"><span class="lineNum">      21</span> <span class="tlaGNC tlaBgGNC">         300 :   G sub_graph(const G&amp; g, Pred nodePred)</span></span>
 <span id="L22"><span class="lineNum">      22</span>              :   {</span>
-<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC">         240 :     G subGraph{g};</span></span>
+<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC">         300 :     G subGraph{g};</span></span>
 <span id="L24"><span class="lineNum">      24</span>              : </span>
-<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">         240 :     std::size_t pos{};</span></span>
-<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">         720 :     while(pos &lt; subGraph.order())</span></span>
+<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">         300 :     std::size_t pos{};</span></span>
+<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">         900 :     while(pos &lt; subGraph.order())</span></span>
 <span id="L27"><span class="lineNum">      27</span>              :     {</span>
-<span id="L28"><span class="lineNum">      28</span> <span class="tlaGNC">         480 :       if(!nodePred(*(subGraph.cbegin_node_weights() + pos)))</span></span>
+<span id="L28"><span class="lineNum">      28</span> <span class="tlaGNC">         600 :       if(!nodePred(*(subGraph.cbegin_node_weights() + pos)))</span></span>
 <span id="L29"><span class="lineNum">      29</span>              :       {</span>
-<span id="L30"><span class="lineNum">      30</span> <span class="tlaGNC">         240 :         subGraph.erase_node(pos);</span></span>
+<span id="L30"><span class="lineNum">      30</span> <span class="tlaGNC">         300 :         subGraph.erase_node(pos);</span></span>
 <span id="L31"><span class="lineNum">      31</span>              :       }</span>
 <span id="L32"><span class="lineNum">      32</span>              :       else</span>
 <span id="L33"><span class="lineNum">      33</span>              :       {</span>
-<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">         240 :         ++pos;</span></span>
+<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">         300 :         ++pos;</span></span>
 <span id="L35"><span class="lineNum">      35</span>              :       }</span>
 <span id="L36"><span class="lineNum">      36</span>              :     }</span>
 <span id="L37"><span class="lineNum">      37</span>              : </span>
-<span id="L38"><span class="lineNum">      38</span> <span class="tlaGNC">         240 :     return subGraph;</span></span>
+<span id="L38"><span class="lineNum">      38</span> <span class="tlaGNC">         300 :     return subGraph;</span></span>
 <span id="L39"><span class="lineNum">      39</span> <span class="tlaUNC tlaBgUNC">           0 :   }</span></span>
 <span id="L40"><span class="lineNum">      40</span>              : }</span>
         </pre>

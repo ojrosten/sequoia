@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2025-01-12 21:38:39</td>
+            <td class="headerValue">2025-01-12 21:58:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -83,9 +83,9 @@
 <span id="L21"><span class="lineNum">      21</span>              : {</span>
 <span id="L22"><span class="lineNum">      22</span>              :   template&lt;class Fn, class... Ts, std::size_t... I&gt;</span>
 <span id="L23"><span class="lineNum">      23</span>              :     requires std::invocable&lt;Fn, decltype(std::get&lt;I&gt;(std::declval&lt;std::tuple&lt;Ts&amp;&amp;...&gt;&gt;()))...&gt;</span>
-<span id="L24"><span class="lineNum">      24</span> <span class="tlaGNC tlaBgGNC">       24761 :   auto invoke_with_specified_args(Fn f, std::index_sequence&lt;I...&gt;, [[maybe_unused]] Ts&amp;&amp;... ts)</span></span>
+<span id="L24"><span class="lineNum">      24</span> <span class="tlaGNC tlaBgGNC">       28380 :   auto invoke_with_specified_args(Fn f, std::index_sequence&lt;I...&gt;, [[maybe_unused]] Ts&amp;&amp;... ts)</span></span>
 <span id="L25"><span class="lineNum">      25</span>              :   {</span>
-<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">       24761 :     return f(std::get&lt;I&gt;(std::tuple&lt;Ts&amp;&amp;...&gt;{std::forward&lt;Ts&gt;(ts)...})...);</span></span>
+<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">       28380 :     return f(std::get&lt;I&gt;(std::tuple&lt;Ts&amp;&amp;...&gt;{std::forward&lt;Ts&gt;(ts)...})...);</span></span>
 <span id="L27"><span class="lineNum">      27</span>              :   }</span>
 <span id="L28"><span class="lineNum">      28</span>              : </span>
 <span id="L29"><span class="lineNum">      29</span>              :   template&lt;class F&gt; struct function_signature;</span>

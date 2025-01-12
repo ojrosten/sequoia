@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2025-01-12 21:38:39</td>
+            <td class="headerValue">2025-01-12 21:58:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -84,7 +84,7 @@
 <span id="L22"><span class="lineNum">      22</span>              :     using index_type = IndexType;</span>
 <span id="L23"><span class="lineNum">      23</span>              : </span>
 <span id="L24"><span class="lineNum">      24</span>              :     constexpr partition_index_policy() = default;</span>
-<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC tlaBgGNC">     3438846 :     constexpr explicit partition_index_policy(const index_type n) : m_Partition{n} {}</span></span>
+<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC tlaBgGNC">     4173057 :     constexpr explicit partition_index_policy(const index_type n) : m_Partition{n} {}</span></span>
 <span id="L26"><span class="lineNum">      26</span>              :     constexpr partition_index_policy(const partition_index_policy&amp;) = default;</span>
 <span id="L27"><span class="lineNum">      27</span>              : </span>
 <span id="L28"><span class="lineNum">      28</span>              :     constexpr static auto npos{std::numeric_limits&lt;index_type&gt;::max()};</span>
@@ -96,7 +96,7 @@
 <span id="L34"><span class="lineNum">      34</span>              :     friend constexpr bool operator==(const partition_index_policy&amp; lhs, const partition_index_policy&amp; rhs) noexcept = default;</span>
 <span id="L35"><span class="lineNum">      35</span>              : </span>
 <span id="L36"><span class="lineNum">      36</span>              :     [[nodiscard]]</span>
-<span id="L37"><span class="lineNum">      37</span> <span class="tlaGNC">       70372 :     constexpr IndexType partition_index() const noexcept { return m_Partition; }</span></span>
+<span id="L37"><span class="lineNum">      37</span> <span class="tlaGNC">       87920 :     constexpr IndexType partition_index() const noexcept { return m_Partition; }</span></span>
 <span id="L38"><span class="lineNum">      38</span>              :   protected:</span>
 <span id="L39"><span class="lineNum">      39</span>              :     constexpr partition_index_policy(partition_index_policy&amp;&amp;) noexcept = default;</span>
 <span id="L40"><span class="lineNum">      40</span>              : </span>

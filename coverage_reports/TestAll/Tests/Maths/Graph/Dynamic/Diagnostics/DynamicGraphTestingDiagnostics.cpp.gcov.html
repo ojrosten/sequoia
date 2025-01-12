@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2025-01-12 21:38:39</td>
+            <td class="headerValue">2025-01-12 21:58:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -74,18 +74,18 @@
 <span id="L12"><span class="lineNum">      12</span>              : namespace sequoia::testing</span>
 <span id="L13"><span class="lineNum">      13</span>              : {</span>
 <span id="L14"><span class="lineNum">      14</span>              :   [[nodiscard]]</span>
-<span id="L15"><span class="lineNum">      15</span> <span class="tlaGNC tlaBgGNC">          16 :   std::filesystem::path test_graph_false_negatives::source_file() const</span></span>
+<span id="L15"><span class="lineNum">      15</span> <span class="tlaGNC tlaBgGNC">          20 :   std::filesystem::path test_graph_false_negatives::source_file() const</span></span>
 <span id="L16"><span class="lineNum">      16</span>              :   {</span>
-<span id="L17"><span class="lineNum">      17</span> <span class="tlaGNC">          16 :     return std::source_location::current().file_name();</span></span>
+<span id="L17"><span class="lineNum">      17</span> <span class="tlaGNC">          20 :     return std::source_location::current().file_name();</span></span>
 <span id="L18"><span class="lineNum">      18</span>              :   }</span>
 <span id="L19"><span class="lineNum">      19</span>              : </span>
-<span id="L20"><span class="lineNum">      20</span> <span class="tlaGNC">           4 :   void test_graph_false_negatives::run_tests()</span></span>
+<span id="L20"><span class="lineNum">      20</span> <span class="tlaGNC">           5 :   void test_graph_false_negatives::run_tests()</span></span>
 <span id="L21"><span class="lineNum">      21</span>              :   {</span>
 <span id="L22"><span class="lineNum">      22</span>              :     using namespace maths;</span>
 <span id="L23"><span class="lineNum">      23</span>              : </span>
-<span id="L24"><span class="lineNum">      24</span> <span class="tlaGNC">           4 :     graph_test_helper&lt;null_weight, null_weight, test_graph_false_negatives&gt; helper{*this};</span></span>
-<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">           4 :     helper.run_tests();</span></span>
-<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">           4 :   }</span></span>
+<span id="L24"><span class="lineNum">      24</span> <span class="tlaGNC">           5 :     graph_test_helper&lt;null_weight, null_weight, test_graph_false_negatives&gt; helper{*this};</span></span>
+<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">           5 :     helper.run_tests();</span></span>
+<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">           5 :   }</span></span>
 <span id="L27"><span class="lineNum">      27</span>              : </span>
 <span id="L28"><span class="lineNum">      28</span>              :   template</span>
 <span id="L29"><span class="lineNum">      29</span>              :   &lt;</span>
@@ -95,31 +95,31 @@
 <span id="L33"><span class="lineNum">      33</span>              :     class EdgeStorageConfig,</span>
 <span id="L34"><span class="lineNum">      34</span>              :     class NodeWeightStorage</span>
 <span id="L35"><span class="lineNum">      35</span>              :   &gt;</span>
-<span id="L36"><span class="lineNum">      36</span> <span class="tlaGNC">          24 :   void test_graph_false_negatives::execute_operations()</span></span>
+<span id="L36"><span class="lineNum">      36</span> <span class="tlaGNC">          30 :   void test_graph_false_negatives::execute_operations()</span></span>
 <span id="L37"><span class="lineNum">      37</span>              :   {</span>
 <span id="L38"><span class="lineNum">      38</span>              :     using namespace maths;</span>
 <span id="L39"><span class="lineNum">      39</span>              :     using graph_type = typename graph_type_generator&lt;GraphFlavour, EdgeWeight, NodeWeight, EdgeStorageConfig, NodeWeightStorage&gt;::graph_type;</span>
 <span id="L40"><span class="lineNum">      40</span>              : </span>
 <span id="L41"><span class="lineNum">      41</span>              :     using edge_init_t = typename graph_type::edge_init_type;</span>
 <span id="L42"><span class="lineNum">      42</span>              : </span>
-<span id="L43"><span class="lineNum">      43</span> <span class="tlaGNC">          24 :     graph_type g{};</span></span>
+<span id="L43"><span class="lineNum">      43</span> <span class="tlaGNC">          30 :     graph_type g{};</span></span>
 <span id="L44"><span class="lineNum">      44</span>              : </span>
-<span id="L45"><span class="lineNum">      45</span> <span class="tlaGNC">          24 :     check(equality, &quot;Check false positive: empty graph versus single node&quot;, g, graph_type{{}});</span></span>
+<span id="L45"><span class="lineNum">      45</span> <span class="tlaGNC">          30 :     check(equality, &quot;Check false positive: empty graph versus single node&quot;, g, graph_type{{}});</span></span>
 <span id="L46"><span class="lineNum">      46</span>              : </span>
-<span id="L47"><span class="lineNum">      47</span> <span class="tlaGNC">          24 :     std::string message{&quot;Check false positive: empty graph versus single node with loop&quot;};</span></span>
+<span id="L47"><span class="lineNum">      47</span> <span class="tlaGNC">          30 :     std::string message{&quot;Check false positive: empty graph versus single node with loop&quot;};</span></span>
 <span id="L48"><span class="lineNum">      48</span>              :     if constexpr (GraphFlavour == graph_flavour::directed)</span>
 <span id="L49"><span class="lineNum">      49</span>              :     {</span>
-<span id="L50"><span class="lineNum">      50</span> <span class="tlaGNC">           8 :       check(equality, message, g, graph_type{{edge_init_t{0}}});</span></span>
+<span id="L50"><span class="lineNum">      50</span> <span class="tlaGNC">          10 :       check(equality, message, g, graph_type{{edge_init_t{0}}});</span></span>
 <span id="L51"><span class="lineNum">      51</span>              :     }</span>
 <span id="L52"><span class="lineNum">      52</span>              :     else if constexpr(GraphFlavour == graph_flavour::undirected)</span>
 <span id="L53"><span class="lineNum">      53</span>              :     {</span>
-<span id="L54"><span class="lineNum">      54</span> <span class="tlaGNC">           8 :       check(equality, message, g, graph_type{{edge_init_t{0}, edge_init_t{0}}});</span></span>
+<span id="L54"><span class="lineNum">      54</span> <span class="tlaGNC">          10 :       check(equality, message, g, graph_type{{edge_init_t{0}, edge_init_t{0}}});</span></span>
 <span id="L55"><span class="lineNum">      55</span>              :     }</span>
 <span id="L56"><span class="lineNum">      56</span>              :     else</span>
 <span id="L57"><span class="lineNum">      57</span>              :     {</span>
-<span id="L58"><span class="lineNum">      58</span> <span class="tlaGNC">           8 :       check(equality, message, g, graph_type{{edge_init_t{0,1}, edge_init_t{0,0}}});</span></span>
+<span id="L58"><span class="lineNum">      58</span> <span class="tlaGNC">          10 :       check(equality, message, g, graph_type{{edge_init_t{0,1}, edge_init_t{0,0}}});</span></span>
 <span id="L59"><span class="lineNum">      59</span>              :     }</span>
-<span id="L60"><span class="lineNum">      60</span> <span class="tlaGNC">          24 :   }</span></span>
+<span id="L60"><span class="lineNum">      60</span> <span class="tlaGNC">          30 :   }</span></span>
 <span id="L61"><span class="lineNum">      61</span>              : }</span>
         </pre>
               </td>

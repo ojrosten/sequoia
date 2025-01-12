@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2025-01-12 21:38:39</td>
+            <td class="headerValue">2025-01-12 21:58:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -80,25 +80,25 @@
 <span id="L18"><span class="lineNum">      18</span>              : </span>
 <span id="L19"><span class="lineNum">      19</span>              : namespace sequoia</span>
 <span id="L20"><span class="lineNum">      20</span>              : {</span>
-<span id="L21"><span class="lineNum">      21</span> <span class="tlaGNC tlaBgGNC">          36 :   timer_resolution::timer_resolution(std::chrono::milliseconds t)</span></span>
-<span id="L22"><span class="lineNum">      22</span> <span class="tlaGNC">          36 :     : m_Resolution{resolution(t)}</span></span>
+<span id="L21"><span class="lineNum">      21</span> <span class="tlaGNC tlaBgGNC">          37 :   timer_resolution::timer_resolution(std::chrono::milliseconds t)</span></span>
+<span id="L22"><span class="lineNum">      22</span> <span class="tlaGNC">          37 :     : m_Resolution{resolution(t)}</span></span>
 <span id="L23"><span class="lineNum">      23</span>              :   {</span>
 <span id="L24"><span class="lineNum">      24</span>              :     #ifdef _MSC_VER</span>
 <span id="L25"><span class="lineNum">      25</span>              :       if(m_Resolution &gt; 0) timeBeginPeriod(m_Resolution);</span>
 <span id="L26"><span class="lineNum">      26</span>              :     #endif</span>
-<span id="L27"><span class="lineNum">      27</span> <span class="tlaGNC">          36 :   }</span></span>
+<span id="L27"><span class="lineNum">      27</span> <span class="tlaGNC">          37 :   }</span></span>
 <span id="L28"><span class="lineNum">      28</span>              : </span>
-<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">        1080 :   timer_resolution::~timer_resolution()</span></span>
+<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">        1110 :   timer_resolution::~timer_resolution()</span></span>
 <span id="L30"><span class="lineNum">      30</span>              :   {</span>
 <span id="L31"><span class="lineNum">      31</span>              :     #ifdef _MSC_VER</span>
 <span id="L32"><span class="lineNum">      32</span>              :       if(m_Resolution &gt; 0) timeEndPeriod(m_Resolution);</span>
 <span id="L33"><span class="lineNum">      33</span>              :     #endif</span>
-<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">        1080 :   }</span></span>
+<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">        1110 :   }</span></span>
 <span id="L35"><span class="lineNum">      35</span>              : </span>
 <span id="L36"><span class="lineNum">      36</span>              :   [[nodiscard]]</span>
-<span id="L37"><span class="lineNum">      37</span> <span class="tlaGNC">          36 :   unsigned int timer_resolution::resolution(std::chrono::milliseconds t) noexcept</span></span>
+<span id="L37"><span class="lineNum">      37</span> <span class="tlaGNC">          37 :   unsigned int timer_resolution::resolution(std::chrono::milliseconds t) noexcept</span></span>
 <span id="L38"><span class="lineNum">      38</span>              :   {</span>
-<span id="L39"><span class="lineNum">      39</span> <span class="tlaGNC">          36 :     return t &lt;= std::chrono::milliseconds{} ? 0u : static_cast&lt;unsigned int&gt;(t.count());</span></span>
+<span id="L39"><span class="lineNum">      39</span> <span class="tlaGNC">          37 :     return t &lt;= std::chrono::milliseconds{} ? 0u : static_cast&lt;unsigned int&gt;(t.count());</span></span>
 <span id="L40"><span class="lineNum">      40</span>              :   }</span>
 <span id="L41"><span class="lineNum">      41</span>              : }</span>
         </pre>

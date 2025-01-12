@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2025-01-12 21:38:39</td>
+            <td class="headerValue">2025-01-12 21:58:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -78,9 +78,9 @@
 <span id="L16"><span class="lineNum">      16</span>              : namespace sequoia::testing</span>
 <span id="L17"><span class="lineNum">      17</span>              : {</span>
 <span id="L18"><span class="lineNum">      18</span>              :   [[nodiscard]]</span>
-<span id="L19"><span class="lineNum">      19</span> <span class="tlaGNC tlaBgGNC">          60 :   std::filesystem::path test_static_graph_traversals::source_file() const</span></span>
+<span id="L19"><span class="lineNum">      19</span> <span class="tlaGNC tlaBgGNC">          65 :   std::filesystem::path test_static_graph_traversals::source_file() const</span></span>
 <span id="L20"><span class="lineNum">      20</span>              :   {</span>
-<span id="L21"><span class="lineNum">      21</span> <span class="tlaGNC">          60 :     return std::source_location::current().file_name();</span></span>
+<span id="L21"><span class="lineNum">      21</span> <span class="tlaGNC">          65 :     return std::source_location::current().file_name();</span></span>
 <span id="L22"><span class="lineNum">      22</span>              :   }</span>
 <span id="L23"><span class="lineNum">      23</span>              : </span>
 <span id="L24"><span class="lineNum">      24</span>              :   constexpr auto test_static_graph_traversals::arrage()</span>
@@ -173,12 +173,12 @@
 <span id="L111"><span class="lineNum">     111</span>              :   }</span>
 <span id="L112"><span class="lineNum">     112</span>              : </span>
 <span id="L113"><span class="lineNum">     113</span>              : </span>
-<span id="L114"><span class="lineNum">     114</span> <span class="tlaGNC">          12 :   void test_static_graph_traversals::run_tests()</span></span>
+<span id="L114"><span class="lineNum">     114</span> <span class="tlaGNC">          13 :   void test_static_graph_traversals::run_tests()</span></span>
 <span id="L115"><span class="lineNum">     115</span>              :   {</span>
 <span id="L116"><span class="lineNum">     116</span>              :     {</span>
-<span id="L117"><span class="lineNum">     117</span> <span class="tlaGNC">          12 :       constexpr auto ordering{arrage()};</span></span>
-<span id="L118"><span class="lineNum">     118</span> <span class="tlaGNC">          12 :       check(equality, &quot;&quot;, ordering[0], 0_sz);</span></span>
-<span id="L119"><span class="lineNum">     119</span> <span class="tlaGNC">          12 :       check(equality, &quot;&quot;, ordering[1], 1_sz);</span></span>
+<span id="L117"><span class="lineNum">     117</span> <span class="tlaGNC">          13 :       constexpr auto ordering{arrage()};</span></span>
+<span id="L118"><span class="lineNum">     118</span> <span class="tlaGNC">          13 :       check(equality, &quot;&quot;, ordering[0], 0_sz);</span></span>
+<span id="L119"><span class="lineNum">     119</span> <span class="tlaGNC">          13 :       check(equality, &quot;&quot;, ordering[1], 1_sz);</span></span>
 <span id="L120"><span class="lineNum">     120</span>              :     }</span>
 <span id="L121"><span class="lineNum">     121</span>              : </span>
 <span id="L122"><span class="lineNum">     122</span>              :     /*{</span>
@@ -188,13 +188,13 @@
 <span id="L126"><span class="lineNum">     126</span>              :     }*/</span>
 <span id="L127"><span class="lineNum">     127</span>              : </span>
 <span id="L128"><span class="lineNum">     128</span>              :     {</span>
-<span id="L129"><span class="lineNum">     129</span> <span class="tlaGNC">          12 :       constexpr auto weights{priority_search()};</span></span>
-<span id="L130"><span class="lineNum">     130</span> <span class="tlaGNC">          12 :       check(equality, &quot;&quot;, weights[0], 0);</span></span>
-<span id="L131"><span class="lineNum">     131</span> <span class="tlaGNC">          12 :       check(equality, &quot;&quot;, weights[1], 8);</span></span>
-<span id="L132"><span class="lineNum">     132</span> <span class="tlaGNC">          12 :       check(equality, &quot;&quot;, weights[2], 6);</span></span>
-<span id="L133"><span class="lineNum">     133</span> <span class="tlaGNC">          12 :       check(equality, &quot;&quot;, weights[3], 2);</span></span>
+<span id="L129"><span class="lineNum">     129</span> <span class="tlaGNC">          13 :       constexpr auto weights{priority_search()};</span></span>
+<span id="L130"><span class="lineNum">     130</span> <span class="tlaGNC">          13 :       check(equality, &quot;&quot;, weights[0], 0);</span></span>
+<span id="L131"><span class="lineNum">     131</span> <span class="tlaGNC">          13 :       check(equality, &quot;&quot;, weights[1], 8);</span></span>
+<span id="L132"><span class="lineNum">     132</span> <span class="tlaGNC">          13 :       check(equality, &quot;&quot;, weights[2], 6);</span></span>
+<span id="L133"><span class="lineNum">     133</span> <span class="tlaGNC">          13 :       check(equality, &quot;&quot;, weights[3], 2);</span></span>
 <span id="L134"><span class="lineNum">     134</span>              :     }</span>
-<span id="L135"><span class="lineNum">     135</span> <span class="tlaGNC">          12 :   }</span></span>
+<span id="L135"><span class="lineNum">     135</span> <span class="tlaGNC">          13 :   }</span></span>
 <span id="L136"><span class="lineNum">     136</span>              : }</span>
         </pre>
               </td>
