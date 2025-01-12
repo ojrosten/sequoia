@@ -57,7 +57,8 @@ var searchData=
   ['reverse_5fsequence_3c_20std_3a_3aindex_5fsequence_3c_20i_20_3e_20_3e_54',['reverse_sequence&lt; std::index_sequence&lt; I &gt; &gt;',['../d0/d3b/structsequoia_1_1reverse__sequence_3_01std_1_1index__sequence_3_01I_01_4_01_4.html',1,'sequoia']]],
   ['reverse_5fsequence_3c_20std_3a_3aindex_5fsequence_3c_20i_2c_20is_2e_2e_2e_20_3e_20_3e_55',['reverse_sequence&lt; std::index_sequence&lt; I, Is... &gt; &gt;',['../dc/ddc/structsequoia_1_1reverse__sequence_3_01std_1_1index__sequence_3_01I_00_01Is_8_8_8_01_4_01_4.html',1,'sequoia']]],
   ['reverse_5fsequence_3c_20std_3a_3aindex_5fsequence_3c_3e_20_3e_56',['reverse_sequence&lt; std::index_sequence&lt;&gt; &gt;',['../d8/dd1/structsequoia_1_1reverse__sequence_3_01std_1_1index__sequence_3_4_01_4.html',1,'sequoia']]],
-  ['rotate_5fsequence_57',['rotate_sequence',['../d9/d23/structsequoia_1_1rotate__sequence.html',1,'sequoia']]],
-  ['rotate_5fsequence_3c_20std_3a_3aindex_5fsequence_3c_20i_2c_20is_2e_2e_2e_20_3e_20_3e_58',['rotate_sequence&lt; std::index_sequence&lt; I, Is... &gt; &gt;',['../d3/d75/structsequoia_1_1rotate__sequence_3_01std_1_1index__sequence_3_01I_00_01Is_8_8_8_01_4_01_4.html',1,'sequoia']]],
-  ['rotate_5fsequence_3c_20std_3a_3aindex_5fsequence_3c_3e_20_3e_59',['rotate_sequence&lt; std::index_sequence&lt;&gt; &gt;',['../d3/d08/structsequoia_1_1rotate__sequence_3_01std_1_1index__sequence_3_4_01_4.html',1,'sequoia']]]
+  ['rfind_57',['rfind',['../d2/dbb/FileSystem_8hpp.html#a8c7549355ee51c0138f62e797056ca77',1,'sequoia']]],
+  ['rotate_5fsequence_58',['rotate_sequence',['../d9/d23/structsequoia_1_1rotate__sequence.html',1,'sequoia']]],
+  ['rotate_5fsequence_3c_20std_3a_3aindex_5fsequence_3c_20i_2c_20is_2e_2e_2e_20_3e_20_3e_59',['rotate_sequence&lt; std::index_sequence&lt; I, Is... &gt; &gt;',['../d3/d75/structsequoia_1_1rotate__sequence_3_01std_1_1index__sequence_3_01I_00_01Is_8_8_8_01_4_01_4.html',1,'sequoia']]],
+  ['rotate_5fsequence_3c_20std_3a_3aindex_5fsequence_3c_3e_20_3e_60',['rotate_sequence&lt; std::index_sequence&lt;&gt; &gt;',['../d3/d08/structsequoia_1_1rotate__sequence_3_01std_1_1index__sequence_3_4_01_4.html',1,'sequoia']]]
 ];

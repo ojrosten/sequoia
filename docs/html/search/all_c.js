@@ -50,10 +50,17 @@ var searchData=
   ['nomenclator_3c_20foo_3c_20int_20_3e_20_3e_47',['nomenclator&lt; foo&lt; int &gt; &gt;',['../db/d64/structsequoia_1_1object_1_1nomenclator_3_01foo_3_01int_01_4_01_4.html',1,'sequoia::object']]],
   ['nomenclator_3c_20t_20_3e_48',['nomenclator&lt; T &gt;',['../d9/d89/structsequoia_1_1object_1_1nomenclator_3_01T_01_4.html',1,'sequoia::object']]],
   ['normal_5fpath_49',['normal_path',['../d9/d72/classsequoia_1_1normal__path.html',1,'sequoia']]],
-  ['null_5fadvisor_50',['null_advisor',['../da/d10/structsequoia_1_1testing_1_1null__advisor.html',1,'sequoia::testing']]],
-  ['null_5fdata_5fpolicy_51',['null_data_policy',['../d1/d81/structsequoia_1_1utilities_1_1null__data__policy.html',1,'sequoia::utilities']]],
-  ['null_5ffunc_5fobj_52',['null_func_obj',['../d1/df7/structsequoia_1_1maths_1_1null__func__obj.html',1,'sequoia::maths']]],
-  ['null_5fmeta_5fdata_53',['null_meta_data',['../d8/d64/structsequoia_1_1maths_1_1null__meta__data.html',1,'sequoia::maths']]],
-  ['null_5fmutator_54',['null_mutator',['../d2/da1/structsequoia_1_1testing_1_1impl_1_1null__mutator.html',1,'sequoia::testing::impl']]],
-  ['null_5fweight_55',['null_weight',['../de/d05/structsequoia_1_1maths_1_1null__weight.html',1,'sequoia::maths']]]
+  ['normal_5fpath_5ffalse_5fnegative_5ftest_50',['normal_path_false_negative_test',['../d9/d9b/classsequoia_1_1testing_1_1normal__path__false__negative__test.html',1,'sequoia::testing']]],
+  ['normal_5fpath_5ftest_51',['normal_path_test',['../df/d6f/classsequoia_1_1testing_1_1normal__path__test.html',1,'sequoia::testing']]],
+  ['normalpathtest_2ecpp_52',['NormalPathTest.cpp',['../db/da1/NormalPathTest_8cpp.html',1,'']]],
+  ['normalpathtest_2ehpp_53',['NormalPathTest.hpp',['../d1/dde/NormalPathTest_8hpp.html',1,'']]],
+  ['normalpathtestingdiagnostics_2ecpp_54',['NormalPathTestingDiagnostics.cpp',['../d8/df7/NormalPathTestingDiagnostics_8cpp.html',1,'']]],
+  ['normalpathtestingdiagnostics_2ehpp_55',['NormalPathTestingDiagnostics.hpp',['../d7/d08/NormalPathTestingDiagnostics_8hpp.html',1,'']]],
+  ['normalpathtestingutilities_2ehpp_56',['NormalPathTestingUtilities.hpp',['../db/d02/NormalPathTestingUtilities_8hpp.html',1,'']]],
+  ['null_5fadvisor_57',['null_advisor',['../da/d10/structsequoia_1_1testing_1_1null__advisor.html',1,'sequoia::testing']]],
+  ['null_5fdata_5fpolicy_58',['null_data_policy',['../d1/d81/structsequoia_1_1utilities_1_1null__data__policy.html',1,'sequoia::utilities']]],
+  ['null_5ffunc_5fobj_59',['null_func_obj',['../d1/df7/structsequoia_1_1maths_1_1null__func__obj.html',1,'sequoia::maths']]],
+  ['null_5fmeta_5fdata_60',['null_meta_data',['../d8/d64/structsequoia_1_1maths_1_1null__meta__data.html',1,'sequoia::maths']]],
+  ['null_5fmutator_61',['null_mutator',['../d2/da1/structsequoia_1_1testing_1_1impl_1_1null__mutator.html',1,'sequoia::testing::impl']]],
+  ['null_5fweight_62',['null_weight',['../de/d05/structsequoia_1_1maths_1_1null__weight.html',1,'sequoia::maths']]]
 ];

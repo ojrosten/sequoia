@@ -42,10 +42,12 @@ var searchData=
   ['nomenclator_3c_20foo_3c_20int_20_3e_20_3e_39',['nomenclator&lt; foo&lt; int &gt; &gt;',['../db/d64/structsequoia_1_1object_1_1nomenclator_3_01foo_3_01int_01_4_01_4.html',1,'sequoia::object']]],
   ['nomenclator_3c_20t_20_3e_40',['nomenclator&lt; T &gt;',['../d9/d89/structsequoia_1_1object_1_1nomenclator_3_01T_01_4.html',1,'sequoia::object']]],
   ['normal_5fpath_41',['normal_path',['../d9/d72/classsequoia_1_1normal__path.html',1,'sequoia']]],
-  ['null_5fadvisor_42',['null_advisor',['../da/d10/structsequoia_1_1testing_1_1null__advisor.html',1,'sequoia::testing']]],
-  ['null_5fdata_5fpolicy_43',['null_data_policy',['../d1/d81/structsequoia_1_1utilities_1_1null__data__policy.html',1,'sequoia::utilities']]],
-  ['null_5ffunc_5fobj_44',['null_func_obj',['../d1/df7/structsequoia_1_1maths_1_1null__func__obj.html',1,'sequoia::maths']]],
-  ['null_5fmeta_5fdata_45',['null_meta_data',['../d8/d64/structsequoia_1_1maths_1_1null__meta__data.html',1,'sequoia::maths']]],
-  ['null_5fmutator_46',['null_mutator',['../d2/da1/structsequoia_1_1testing_1_1impl_1_1null__mutator.html',1,'sequoia::testing::impl']]],
-  ['null_5fweight_47',['null_weight',['../de/d05/structsequoia_1_1maths_1_1null__weight.html',1,'sequoia::maths']]]
+  ['normal_5fpath_5ffalse_5fnegative_5ftest_42',['normal_path_false_negative_test',['../d9/d9b/classsequoia_1_1testing_1_1normal__path__false__negative__test.html',1,'sequoia::testing']]],
+  ['normal_5fpath_5ftest_43',['normal_path_test',['../df/d6f/classsequoia_1_1testing_1_1normal__path__test.html',1,'sequoia::testing']]],
+  ['null_5fadvisor_44',['null_advisor',['../da/d10/structsequoia_1_1testing_1_1null__advisor.html',1,'sequoia::testing']]],
+  ['null_5fdata_5fpolicy_45',['null_data_policy',['../d1/d81/structsequoia_1_1utilities_1_1null__data__policy.html',1,'sequoia::utilities']]],
+  ['null_5ffunc_5fobj_46',['null_func_obj',['../d1/df7/structsequoia_1_1maths_1_1null__func__obj.html',1,'sequoia::maths']]],
+  ['null_5fmeta_5fdata_47',['null_meta_data',['../d8/d64/structsequoia_1_1maths_1_1null__meta__data.html',1,'sequoia::maths']]],
+  ['null_5fmutator_48',['null_mutator',['../d2/da1/structsequoia_1_1testing_1_1impl_1_1null__mutator.html',1,'sequoia::testing::impl']]],
+  ['null_5fweight_49',['null_weight',['../de/d05/structsequoia_1_1maths_1_1null__weight.html',1,'sequoia::maths']]]
 ];
