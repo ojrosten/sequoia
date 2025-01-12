@@ -36,6 +36,7 @@ int main(int argc, char** argv)
 
     runner.add_test_suite(
       "Test Framework Auxiliary",
+      individual_test_paths_free_test{"Individual Test Paths Free Test"},
       basic_test_interface_free_test{"Basic Test Interface Free Test"},
       commands_free_test{"Commands Free Test"},
       failure_info_test{"failure_info Unit Test"},
@@ -369,6 +370,13 @@ int main(int argc, char** argv)
       "Suite",
       suite_free_test{"Suite Free Test"}
     );
+      
+    runner.add_test_suite(
+      "File System",
+      file_system_free_test{"File System Free Test"},
+      normal_path_false_negative_test{"False Negative Test"},
+      normal_path_test{"Unit Test"}
+   );
 
     runner.add_test_suite(
       "Angle",
@@ -389,11 +397,11 @@ int main(int argc, char** argv)
         affine_coordinates_test{"Unit Test"}
       }
     );
-
+      
     runner.add_test_suite(
-      "Quantity",
-      quantity_false_negative_test{"False Negative Test"},
-      quantity_test{"Unit Test"}
+        "Quantity",
+        quantity_false_negative_test{"False Negative Test"},
+        quantity_test{"Unit Test"}
     );
 
     runner.execute(timer_resolution{1ms});

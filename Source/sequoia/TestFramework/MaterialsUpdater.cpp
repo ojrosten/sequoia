@@ -17,42 +17,42 @@
 #include "sequoia/TestFramework/ProjectPaths.hpp"
 
 #include <algorithm>
+#include <format>
 
 namespace sequoia::testing
 {
   namespace fs = std::filesystem;
 
-
-  void copy_special_files(const fs::path& from, const fs::path& to)
+  namespace
   {
-    for(auto& p : fs::directory_iterator(to))
+    void copy_special_files_back(const fs::path& from, const fs::path& to)
     {
-      if(fs::is_regular_file(p) && ((p.path().extension() == seqpat) || (p.path().filename() == ".keep")))
+      for(auto& p : fs::directory_iterator(to))
       {
-        const auto predRelDir{fs::relative(p.path().parent_path(), to)};
-        const auto workingSubdir{from / predRelDir};
-
-        if(p.path().extension() == seqpat)
+        if(fs::is_regular_file(p) && ((p.path().extension() == seqpat) || (p.path().filename() == ".keep")))
         {
-          for(auto& w : fs::directory_iterator(workingSubdir))
+          const auto predRelDir{fs::relative(p.path().parent_path(), to)};
+          const auto workingSubdir{from / predRelDir};
+
+          if(p.path().extension() == seqpat)
           {
-            if((w.path().stem() == p.path().stem()) && (w.path().extension() != seqpat))
+            for(auto& w : fs::directory_iterator(workingSubdir))
             {
-              fs::copy(p, workingSubdir, fs::copy_options::overwrite_existing);
-              break;
+              if((w.path().stem() == p.path().stem()) && (w.path().extension() != seqpat))
+              {
+                fs::copy(p, workingSubdir, fs::copy_options::overwrite_existing);
+                break;
+              }
             }
           }
-        }
-        else if(p.path().filename() == ".keep")
-        {
-          fs::copy(p, workingSubdir, fs::copy_options::overwrite_existing);
+          else if(p.path().filename() == ".keep")
+          {
+            fs::copy(p, workingSubdir, fs::copy_options::overwrite_existing);
+          }
         }
       }
     }
-  }
 
-  namespace
-  {
     struct path_info
     {
       fs::path full, relative;
@@ -121,8 +121,7 @@ namespace sequoia::testing
           break;
         }
         default:
-          throw std::logic_error{std::string{"Detailed equivalance check for paths of type '"}
-                                  .append(serializer<fs::file_type>::make(pathType)).append("' not currently implemented")};
+          throw std::logic_error{std::format("Detailed equivalance check for paths of type '{}' not currently implemented", serializer<fs::file_type>::make(pathType))};
         }
       }
 
@@ -168,7 +167,7 @@ namespace sequoia::testing
     throw_unless_exists(from);
     throw_unless_exists(to);
 
-    copy_special_files(from, to);
+    copy_special_files_back(from, to);
 
     const std::vector<path_info>
       sortedFromEntries{sort_dir_entries(from)},

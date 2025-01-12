@@ -20,7 +20,7 @@ namespace sequoia::testing
 
   void regular_false_negative_diagnostics::run_tests()
   {
-    
+    test_regular_semantics();
   }
 
   void regular_false_negative_diagnostics::test_regular_semantics()

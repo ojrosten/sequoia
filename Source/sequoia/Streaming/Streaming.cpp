@@ -54,9 +54,9 @@ namespace sequoia
     return std::nullopt;
   }
 
-  void write_to_file(const std::filesystem::path& file, std::string_view text)
+  void write_to_file(const std::filesystem::path& file, std::string_view text,std::ios_base::openmode mode)
   {
-    if(std::ofstream ofile{file})
+    if(std::ofstream ofile{file, mode})
     {
       ofile.write(text.data(), text.size());
     }

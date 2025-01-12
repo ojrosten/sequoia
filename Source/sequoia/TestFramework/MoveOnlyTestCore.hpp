@@ -57,8 +57,8 @@ namespace sequoia::testing
                std::move(y),
                xEquivalent,
                yEquivalent,
-               optional_ref<const T>{movedFromPostConstruction},
-               optional_ref<const T>{movedFromPostAssignment}
+               optional_ref<const U>{movedFromPostConstruction},
+               optional_ref<const U>{movedFromPostAssignment}
              );
     }
 

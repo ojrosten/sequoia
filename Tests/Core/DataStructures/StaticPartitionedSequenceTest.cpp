@@ -9,8 +9,7 @@
 
 #include "StaticPartitionedSequenceTest.hpp"
 #include "PartitionedDataTestingUtilities.hpp"
-#include "sequoia/TestFramework/TestUtilities.hpp"
-
+#include "Utilities/TestUtilities.hpp"
 
 namespace sequoia::testing
 {

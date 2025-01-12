@@ -53,7 +53,7 @@
 
 namespace sequoia::testing
 {
-  enum class container_tag { x, y };
+  enum class container_tag : bool { x, y };
 
   template<container_tag tag>
   struct container_tag_constant : std::integral_constant<container_tag, tag>

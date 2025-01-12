@@ -37,37 +37,44 @@ namespace sequoia::testing
     {
       using beast = move_only_broken_less<int>;
 
-      check_semantics("", beast{1}, beast{2}, beast{1}, beast{2}, std::weak_ordering::less);
+      check_semantics("Broken less", beast{1}, beast{2}, beast{1}, beast{2}, std::weak_ordering::less);
     }
 
     {
       using beast = move_only_broken_lesseq<int>;
 
-      check_semantics("", beast{1}, beast{2}, beast{1}, beast{2}, std::weak_ordering::less);
+      check_semantics("Broken lesseq", beast{1}, beast{2}, beast{1}, beast{2}, std::weak_ordering::less);
     }
 
     {
       using beast = move_only_broken_greater<int>;
 
-      check_semantics("", beast{1}, beast{2}, beast{1}, beast{2}, std::weak_ordering::less);
+      check_semantics("Broken greater", beast{1}, beast{2}, beast{1}, beast{2}, std::weak_ordering::less);
     }
 
     {
       using beast = move_only_broken_greatereq<int>;
 
-      check_semantics("", beast{1}, beast{2}, beast{1}, beast{2}, std::weak_ordering::less);
+      check_semantics("Broken greatereq", beast{1}, beast{2}, beast{1}, beast{2}, std::weak_ordering::less);
     }
 
     {
       using beast = move_only_inverted_comparisons<int>;
 
-      check_semantics("", beast{1}, beast{2}, beast{1}, beast{2}, std::weak_ordering::less);
+      check_semantics("Inverted comparisons", beast{1}, beast{2}, beast{1}, beast{2}, std::weak_ordering::less);
     }
 
     {
       using beast = move_only_broken_spaceship<int>;
 
-      check_semantics("", beast{1}, beast{2}, beast{1}, beast{2}, std::weak_ordering::less);
+      check_semantics("Broken spaceship", beast{1}, beast{2}, beast{1}, beast{2}, std::weak_ordering::less);
+    }
+
+    {
+      using beast = orderable_specified_moved_from_beast<int>;
+      using equiv_t = std::vector<int>;
+      check_semantics("Incorrect moved-from state post construction", beast{1}, beast{2}, equiv_t{1}, equiv_t{2}, equiv_t{1}, equiv_t{}, std::weak_ordering::less);
+      check_semantics("Incorrect moved-from state post assignment",   beast{1}, beast{2}, equiv_t{1}, equiv_t{2}, equiv_t{}, equiv_t{2}, std::weak_ordering::less);
     }
 
     {
@@ -94,37 +101,37 @@ namespace sequoia::testing
     {
       using beast = move_only_broken_less<int>;
 
-      check_semantics("", beast{1}, beast{2}, std::vector<int>{1}, std::vector<int>{2}, std::weak_ordering::less);
+      check_semantics("Broken less", beast{1}, beast{2}, std::vector<int>{1}, std::vector<int>{2}, std::weak_ordering::less);
     }
 
     {
       using beast = move_only_broken_lesseq<int>;
 
-      check_semantics("", beast{1}, beast{2}, std::vector<int>{1}, std::vector<int>{2}, std::weak_ordering::less);
+      check_semantics("Broken lesseq", beast{1}, beast{2}, std::vector<int>{1}, std::vector<int>{2}, std::weak_ordering::less);
     }
 
     {
       using beast = move_only_broken_greater<int>;
 
-      check_semantics("", beast{1}, beast{2}, std::vector<int>{1}, std::vector<int>{2}, std::weak_ordering::less);
+      check_semantics("Broken greater", beast{1}, beast{2}, std::vector<int>{1}, std::vector<int>{2}, std::weak_ordering::less);
     }
 
     {
       using beast = move_only_broken_greatereq<int>;
 
-      check_semantics("", beast{1}, beast{2}, std::vector<int>{1}, std::vector<int>{2}, std::weak_ordering::less);
+      check_semantics("Broken greatereq", beast{1}, beast{2}, std::vector<int>{1}, std::vector<int>{2}, std::weak_ordering::less);
     }
 
     {
       using beast = move_only_inverted_comparisons<int>;
 
-      check_semantics("", beast{1}, beast{2}, std::vector<int>{1}, std::vector<int>{2}, std::weak_ordering::less);
+      check_semantics("Inverted comparisons", beast{1}, beast{2}, std::vector<int>{1}, std::vector<int>{2}, std::weak_ordering::less);
     }
 
     {
       using beast = move_only_broken_spaceship<int>;
 
-      check_semantics("", beast{1}, beast{2}, std::vector<int>{1}, std::vector<int>{2}, std::weak_ordering::less);
+      check_semantics("Broken spaceship", beast{1}, beast{2}, std::vector<int>{1}, std::vector<int>{2}, std::weak_ordering::less);
     }
   }
 

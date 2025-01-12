@@ -275,23 +275,12 @@ namespace sequoia::utilities
       return DereferencePolicy::get(m_BaseIterator);
     }
 
-#if defined(__clang__)
-  // Do nothing
-#elif defined(__GNUG__)
-  #pragma GCC diagnostic push
-  #pragma GCC diagnostic ignored "-Wdangling-reference"
-#endif
     [[nodiscard]]
     constexpr reference operator[](const difference_type n) const
       requires steppable<Iterator>
     {
       return DereferencePolicy::get(m_BaseIterator + n);
     }
-#if defined(__clang__)
-    // Do nothing
-#elif defined(__GNUG__)
-#pragma GCC diagnostic pop
-#endif
 
     constexpr pointer operator->() const
       requires requires (Iterator i){ DereferencePolicy::get_ptr(i); }

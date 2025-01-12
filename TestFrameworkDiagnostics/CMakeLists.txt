@@ -45,6 +45,7 @@ target_sources(TestFrameworkDiagnostics PRIVATE
                ${TestDir}/TestFramework/FileSystemUtilitiesFreeTest.cpp
                ${TestDir}/TestFramework/FreeCheckersMetaFreeTest.cpp
                ${TestDir}/TestFramework/FunctionFreeDiagnostics.cpp
+               ${TestDir}/TestFramework/IndividualTestPathsFreeTest.cpp
                ${TestDir}/TestFramework/MaterialsUpdaterFreeTest.cpp
                ${TestDir}/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp
                ${TestDir}/TestFramework/MoveOnlyTestDiagnostics.cpp

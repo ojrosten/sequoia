@@ -1,22 +1,5 @@
 False Negative Failure:
-Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 148
-
---Move-only Semantics--
-[sequoia::testing::orderable_move_only_beast<int, std::allocator<int> >]
-
-=======================================
-
-False Negative Failure:
-Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 149
-Function object syntax
-
---Move-only Semantics--
-[sequoia::testing::orderable_move_only_beast<int, std::allocator<int> >]
-
-=======================================
-
-False Negative Failure:
-Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 150
+Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 155
 
 --Move-only Semantics--
 [sequoia::testing::orderable_move_only_beast<int, std::allocator<int> >]
@@ -25,15 +8,23 @@ Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 150
 
 False Negative Failure:
 Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 156
-Check moved-from state
+Function object syntax
 
 --Move-only Semantics--
-[sequoia::testing::orderable_resource_binder]
+[sequoia::testing::orderable_move_only_beast<int, std::allocator<int> >]
 
 =======================================
 
 False Negative Failure:
 Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 157
+
+--Move-only Semantics--
+[sequoia::testing::orderable_move_only_beast<int, std::allocator<int> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 163
 Check moved-from state
 
 --Move-only Semantics--
@@ -42,7 +33,16 @@ Check moved-from state
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 165
+Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 164
+Check moved-from state
+
+--Move-only Semantics--
+[sequoia::testing::orderable_resource_binder]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 172
 
 --Move-only Semantics--
 [sequoia::testing::orderable_move_only_beast<int, std::allocator<int> >]

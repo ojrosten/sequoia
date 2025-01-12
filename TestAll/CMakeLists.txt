@@ -41,7 +41,10 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Core/Object/CreatorFreeTest.cpp
                ${TestDir}/Core/Object/SuiteFreeTest.cpp
                ${TestDir}/Experimental/ExperimentalTest.cpp
-               ${TestDir}/Experimental/FlattenTypeListFreeTest.cpp
+               ${TestDir}/Experimental/FlattenTypeListFreeTest.cpp                              
+               ${TestDir}/FileSystem/FileSystemFreeTest.cpp
+               ${TestDir}/FileSystem/NormalPathTest.cpp
+               ${TestDir}/FileSystem/NormalPathTestingDiagnostics.cpp
                ${TestDir}/Maths/Geometry/AffineCoordinatesTest.cpp
                ${TestDir}/Maths/Geometry/AffineCoordinatesTestingDiagnostics.cpp
                ${TestDir}/Maths/Geometry/AngleTest.cpp
@@ -136,6 +139,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/TestFramework/FileSystemUtilitiesFreeTest.cpp
                ${TestDir}/TestFramework/FreeCheckersMetaFreeTest.cpp
                ${TestDir}/TestFramework/FunctionFreeDiagnostics.cpp
+               ${TestDir}/TestFramework/IndividualTestPathsFreeTest.cpp
                ${TestDir}/TestFramework/MaterialsUpdaterFreeTest.cpp
                ${TestDir}/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp
                ${TestDir}/TestFramework/MoveOnlyTestDiagnostics.cpp

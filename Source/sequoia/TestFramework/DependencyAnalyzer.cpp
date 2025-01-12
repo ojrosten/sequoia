@@ -9,13 +9,6 @@
     \brief Definitions for DependencyAnalyzer.hpp
  */
 
-// GCC seems to object to cbegin_node_weights()[i]
-#if defined(__clang__)
-#elif defined(__GNUG__)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdangling-reference"
-#endif
-
 #include "sequoia/TestFramework/DependencyAnalyzer.hpp"
 #include "sequoia/TestFramework/FileSystemUtilities.hpp"
 
@@ -651,8 +644,3 @@ namespace sequoia::testing
     fs::remove_all(prunePaths.instability_analysis());
   }
 }
-
-#if defined(__clang__)
-#elif defined(__GNUG__)
-#pragma GCC diagnostic pop
-#endif

@@ -57,6 +57,10 @@ namespace sequoia::testing
     [[nodiscard]]
     fs::path test_summary_filename(const fs::path& sourceFile, const project_paths& projectPaths, const std::optional<std::string>& discriminator)
     {
+
+      if(sourceFile.empty())
+        throw std::runtime_error("Source files should have a non-trivial name!");
+
       const auto name{
           [&]() {
             auto summaryFile{fs::path{sourceFile}.replace_extension(".txt")};
@@ -66,9 +70,6 @@ namespace sequoia::testing
             return summaryFile;
           }()
       };
-
-      if(name.empty())
-        throw std::logic_error("Source files should have a non-trivial name!");
 
       if(!name.is_absolute())
       {

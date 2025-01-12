@@ -11,8 +11,28 @@
 #include "sequoia/Streaming/Streaming.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
+#include <fstream>
+
 namespace sequoia::testing
 {
+  namespace fs = std::filesystem;
+
+  namespace
+  {
+    struct postprocessor
+    {
+      [[nodiscard]]
+      std::string operator()(std::string message) const
+      {
+        auto i{message.find("output")};
+        if(i != std::string::npos)
+          message.erase(message.begin(), std::ranges::next(message.begin(), i, message.end()));
+
+        return message;
+      }
+    };
+  }
+
   [[nodiscard]]
   std::filesystem::path streaming_free_test::source_file() const
   {
@@ -21,8 +41,24 @@ namespace sequoia::testing
 
   void streaming_free_test::run_tests()
   {
-    read_modify_write(working_materials() /= "Foo.txt", [](std::string& s) { capitalize(s);  });
+    using namespace std::string_literals;
 
+    check(equality, "", read_to_string(working_materials() /= "Foo.txt"), std::optional{"hello, World"s});
+    check(equality, "", read_to_string(working_materials() /= "Bar.txt"), std::optional<std::string>{});
+
+    check_exception_thrown<std::runtime_error>(
+      reporter{""},
+      [this]() { read_modify_write(working_materials() /= "Bar.txt", [](std::string& s) { capitalize(s);  }); },
+      postprocessor{}
+    );
+
+    check_exception_thrown<std::runtime_error>(
+      reporter{""},
+      [this]() { write_to_file(working_materials() /= "Baz.txt", "Hello!", std::ios_base::noreplace); },
+      postprocessor{}
+    );
+
+    read_modify_write(working_materials() /= "Foo.txt", [](std::string& s) { capitalize(s);  });
     check(equivalence, "", working_materials() /= "Foo.txt", predictive_materials() /= "Foo.txt");
   }
 }
