@@ -7,8 +7,8 @@
 
 /*! \file */
 
-#include "sequoia/TestFramework/TestUtilities.hpp"
 #include "ArrayUtilitiesTest.hpp"
+#include "Utilities/TestUtilities.hpp"
 
 #include "sequoia/Core/ContainerUtilities/ArrayUtilities.hpp"
 
