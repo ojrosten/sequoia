@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2025-01-12 17:02:37</td>
+            <td class="headerValue">2025-01-12 19:58:35</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -76,32 +76,32 @@
 <span id="L14"><span class="lineNum">      14</span>              :   using namespace runtime;</span>
 <span id="L15"><span class="lineNum">      15</span>              : </span>
 <span id="L16"><span class="lineNum">      16</span>              :   [[nodiscard]]</span>
-<span id="L17"><span class="lineNum">      17</span> <span class="tlaGNC tlaBgGNC">         160 :   std::filesystem::path shell_commands_test::source_file() const</span></span>
+<span id="L17"><span class="lineNum">      17</span> <span class="tlaGNC tlaBgGNC">         165 :   std::filesystem::path shell_commands_test::source_file() const</span></span>
 <span id="L18"><span class="lineNum">      18</span>              :   {</span>
-<span id="L19"><span class="lineNum">      19</span> <span class="tlaGNC">         160 :     return std::source_location::current().file_name();</span></span>
+<span id="L19"><span class="lineNum">      19</span> <span class="tlaGNC">         165 :     return std::source_location::current().file_name();</span></span>
 <span id="L20"><span class="lineNum">      20</span>              :   }</span>
 <span id="L21"><span class="lineNum">      21</span>              : </span>
-<span id="L22"><span class="lineNum">      22</span> <span class="tlaGNC">          32 :   void shell_commands_test::run_tests()</span></span>
+<span id="L22"><span class="lineNum">      22</span> <span class="tlaGNC">          33 :   void shell_commands_test::run_tests()</span></span>
 <span id="L23"><span class="lineNum">      23</span>              :   {</span>
 <span id="L24"><span class="lineNum">      24</span>              :     using append_mode = shell_command::append_mode;</span>
 <span id="L25"><span class="lineNum">      25</span>              : </span>
-<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">          32 :     shell_command nullCmd{},</span></span>
-<span id="L27"><span class="lineNum">      27</span> <span class="tlaGNC">          32 :                   simpleCmd{&quot;cmd&quot;},</span></span>
-<span id="L28"><span class="lineNum">      28</span> <span class="tlaGNC">          64 :                   cmdNoAppend{&quot;&quot;, &quot;foo&quot;, &quot;dir&quot;, append_mode::no},</span></span>
-<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">          64 :                   cmdAppend{&quot;&quot;, &quot;foo&quot;, &quot;dir&quot;, append_mode::yes};</span></span>
+<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">          33 :     shell_command nullCmd{},</span></span>
+<span id="L27"><span class="lineNum">      27</span> <span class="tlaGNC">          33 :                   simpleCmd{&quot;cmd&quot;},</span></span>
+<span id="L28"><span class="lineNum">      28</span> <span class="tlaGNC">          66 :                   cmdNoAppend{&quot;&quot;, &quot;foo&quot;, &quot;dir&quot;, append_mode::no},</span></span>
+<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">          66 :                   cmdAppend{&quot;&quot;, &quot;foo&quot;, &quot;dir&quot;, append_mode::yes};</span></span>
 <span id="L30"><span class="lineNum">      30</span>              : </span>
-<span id="L31"><span class="lineNum">      31</span> <span class="tlaGNC">          32 :     check(equivalence, &quot;&quot;, nullCmd, &quot;&quot;);</span></span>
-<span id="L32"><span class="lineNum">      32</span> <span class="tlaGNC">          32 :     check(equivalence, &quot;&quot;, simpleCmd, &quot;cmd&quot;);</span></span>
-<span id="L33"><span class="lineNum">      33</span> <span class="tlaGNC">          32 :     check(equivalence, &quot;&quot;, cmdNoAppend, &quot;foo&gt; dir 2&gt;&amp;1&quot;);</span></span>
-<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">          32 :     check(equivalence, &quot;&quot;, cmdAppend, &quot;foo&gt;&gt; dir 2&gt;&amp;1&quot;);</span></span>
+<span id="L31"><span class="lineNum">      31</span> <span class="tlaGNC">          33 :     check(equivalence, &quot;&quot;, nullCmd, &quot;&quot;);</span></span>
+<span id="L32"><span class="lineNum">      32</span> <span class="tlaGNC">          33 :     check(equivalence, &quot;&quot;, simpleCmd, &quot;cmd&quot;);</span></span>
+<span id="L33"><span class="lineNum">      33</span> <span class="tlaGNC">          33 :     check(equivalence, &quot;&quot;, cmdNoAppend, &quot;foo&gt; dir 2&gt;&amp;1&quot;);</span></span>
+<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">          33 :     check(equivalence, &quot;&quot;, cmdAppend, &quot;foo&gt;&gt; dir 2&gt;&amp;1&quot;);</span></span>
 <span id="L35"><span class="lineNum">      35</span>              : </span>
-<span id="L36"><span class="lineNum">      36</span> <span class="tlaGNC">          32 :     check_semantics(&quot;&quot;, nullCmd, simpleCmd);</span></span>
-<span id="L37"><span class="lineNum">      37</span> <span class="tlaGNC">          32 :     check_semantics(&quot;&quot;, simpleCmd, cmdNoAppend);</span></span>
-<span id="L38"><span class="lineNum">      38</span> <span class="tlaGNC">          32 :     check_semantics(&quot;&quot;, cmdAppend, cmdNoAppend);</span></span>
+<span id="L36"><span class="lineNum">      36</span> <span class="tlaGNC">          33 :     check_semantics(&quot;&quot;, nullCmd, simpleCmd);</span></span>
+<span id="L37"><span class="lineNum">      37</span> <span class="tlaGNC">          33 :     check_semantics(&quot;&quot;, simpleCmd, cmdNoAppend);</span></span>
+<span id="L38"><span class="lineNum">      38</span> <span class="tlaGNC">          33 :     check_semantics(&quot;&quot;, cmdAppend, cmdNoAppend);</span></span>
 <span id="L39"><span class="lineNum">      39</span>              : </span>
-<span id="L40"><span class="lineNum">      40</span> <span class="tlaGNC">          64 :     check(equivalence, &quot;Space after digit, before &gt;&quot;,  shell_command{&quot;&quot;, &quot;foo1&quot;, &quot;dir&quot;, append_mode::no}, &quot;foo1 &gt; dir 2&gt;&amp;1&quot;);</span></span>
-<span id="L41"><span class="lineNum">      41</span> <span class="tlaGNC">          64 :     check(equivalence, &quot;Space after digit, before &gt;&gt;&quot;, shell_command{&quot;&quot;, &quot;foo1&quot;, &quot;dir&quot;, append_mode::yes}, &quot;foo1 &gt;&gt; dir 2&gt;&amp;1&quot;);</span></span>
-<span id="L42"><span class="lineNum">      42</span> <span class="tlaGNC">          32 :   }</span></span>
+<span id="L40"><span class="lineNum">      40</span> <span class="tlaGNC">          66 :     check(equivalence, &quot;Space after digit, before &gt;&quot;,  shell_command{&quot;&quot;, &quot;foo1&quot;, &quot;dir&quot;, append_mode::no}, &quot;foo1 &gt; dir 2&gt;&amp;1&quot;);</span></span>
+<span id="L41"><span class="lineNum">      41</span> <span class="tlaGNC">          66 :     check(equivalence, &quot;Space after digit, before &gt;&gt;&quot;, shell_command{&quot;&quot;, &quot;foo1&quot;, &quot;dir&quot;, append_mode::yes}, &quot;foo1 &gt;&gt; dir 2&gt;&amp;1&quot;);</span></span>
+<span id="L42"><span class="lineNum">      42</span> <span class="tlaGNC">          33 :   }</span></span>
 <span id="L43"><span class="lineNum">      43</span>              : }</span>
         </pre>
               </td>

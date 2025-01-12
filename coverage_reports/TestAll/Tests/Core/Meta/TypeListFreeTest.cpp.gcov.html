@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2025-01-12 17:02:37</td>
+            <td class="headerValue">2025-01-12 19:58:35</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -75,32 +75,32 @@
 <span id="L13"><span class="lineNum">      13</span>              : namespace sequoia::testing</span>
 <span id="L14"><span class="lineNum">      14</span>              : {</span>
 <span id="L15"><span class="lineNum">      15</span>              :   [[nodiscard]]</span>
-<span id="L16"><span class="lineNum">      16</span> <span class="tlaGNC tlaBgGNC">          40 :   std::filesystem::path type_list_free_test::source_file() const</span></span>
+<span id="L16"><span class="lineNum">      16</span> <span class="tlaGNC tlaBgGNC">          45 :   std::filesystem::path type_list_free_test::source_file() const</span></span>
 <span id="L17"><span class="lineNum">      17</span>              :   {</span>
-<span id="L18"><span class="lineNum">      18</span> <span class="tlaGNC">          40 :     return std::source_location::current().file_name();</span></span>
+<span id="L18"><span class="lineNum">      18</span> <span class="tlaGNC">          45 :     return std::source_location::current().file_name();</span></span>
 <span id="L19"><span class="lineNum">      19</span>              :   }</span>
 <span id="L20"><span class="lineNum">      20</span>              : </span>
-<span id="L21"><span class="lineNum">      21</span> <span class="tlaGNC">           8 :   void type_list_free_test::run_tests()</span></span>
+<span id="L21"><span class="lineNum">      21</span> <span class="tlaGNC">           9 :   void type_list_free_test::run_tests()</span></span>
 <span id="L22"><span class="lineNum">      22</span>              :   {</span>
-<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC">           8 :       test_type_list();</span></span>
-<span id="L24"><span class="lineNum">      24</span> <span class="tlaGNC">           8 :       test_type_list_union();</span></span>
-<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">           8 :   }</span></span>
+<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC">           9 :       test_type_list();</span></span>
+<span id="L24"><span class="lineNum">      24</span> <span class="tlaGNC">           9 :       test_type_list_union();</span></span>
+<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">           9 :   }</span></span>
 <span id="L26"><span class="lineNum">      26</span>              : </span>
-<span id="L27"><span class="lineNum">      27</span> <span class="tlaGNC">           8 :   void type_list_free_test::test_type_list()</span></span>
+<span id="L27"><span class="lineNum">      27</span> <span class="tlaGNC">           9 :   void type_list_free_test::test_type_list()</span></span>
 <span id="L28"><span class="lineNum">      28</span>              :   {</span>
-<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">          16 :       check(&quot;&quot;, [](){ static_assert(std::is_same_v&lt;faithful_type_list&lt;&gt;, type_list&lt;&gt;&gt;);                                         return true; }());</span></span>
-<span id="L30"><span class="lineNum">      30</span> <span class="tlaGNC">          16 :       check(&quot;&quot;, [](){ static_assert(std::is_same_v&lt;faithful_type_list&lt;int&gt;, type_list&lt;int&gt;&gt;);                                   return true; }());</span></span>
-<span id="L31"><span class="lineNum">      31</span> <span class="tlaGNC">          16 :       check(&quot;&quot;, [](){ static_assert(std::is_same_v&lt;faithful_type_list&lt;int, int&gt;, type_list&lt;int&gt;&gt;);                              return true; }());</span></span>
-<span id="L32"><span class="lineNum">      32</span> <span class="tlaGNC">          16 :       check(&quot;&quot;, [](){ static_assert(std::is_same_v&lt;faithful_type_list&lt;int, int, int&gt;, type_list&lt;int&gt;&gt;);                         return true; }());</span></span>
-<span id="L33"><span class="lineNum">      33</span> <span class="tlaGNC">          16 :       check(&quot;&quot;, [](){ static_assert(std::is_same_v&lt;faithful_type_list&lt;int, double, int, int, double&gt;, type_list&lt;int, double&gt;&gt;); return true; }());</span></span>
-<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">           8 :   }</span></span>
+<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">          18 :       check(&quot;&quot;, [](){ static_assert(std::is_same_v&lt;faithful_type_list&lt;&gt;, type_list&lt;&gt;&gt;);                                         return true; }());</span></span>
+<span id="L30"><span class="lineNum">      30</span> <span class="tlaGNC">          18 :       check(&quot;&quot;, [](){ static_assert(std::is_same_v&lt;faithful_type_list&lt;int&gt;, type_list&lt;int&gt;&gt;);                                   return true; }());</span></span>
+<span id="L31"><span class="lineNum">      31</span> <span class="tlaGNC">          18 :       check(&quot;&quot;, [](){ static_assert(std::is_same_v&lt;faithful_type_list&lt;int, int&gt;, type_list&lt;int&gt;&gt;);                              return true; }());</span></span>
+<span id="L32"><span class="lineNum">      32</span> <span class="tlaGNC">          18 :       check(&quot;&quot;, [](){ static_assert(std::is_same_v&lt;faithful_type_list&lt;int, int, int&gt;, type_list&lt;int&gt;&gt;);                         return true; }());</span></span>
+<span id="L33"><span class="lineNum">      33</span> <span class="tlaGNC">          18 :       check(&quot;&quot;, [](){ static_assert(std::is_same_v&lt;faithful_type_list&lt;int, double, int, int, double&gt;, type_list&lt;int, double&gt;&gt;); return true; }());</span></span>
+<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">           9 :   }</span></span>
 <span id="L35"><span class="lineNum">      35</span>              : </span>
-<span id="L36"><span class="lineNum">      36</span> <span class="tlaGNC">           8 :   void type_list_free_test::test_type_list_union()</span></span>
+<span id="L36"><span class="lineNum">      36</span> <span class="tlaGNC">           9 :   void type_list_free_test::test_type_list_union()</span></span>
 <span id="L37"><span class="lineNum">      37</span>              :   {</span>
-<span id="L38"><span class="lineNum">      38</span> <span class="tlaGNC">          16 :       check(&quot;&quot;, [](){ static_assert(std::is_same_v&lt;type_list&lt;int&gt;, type_list_union_t&lt;type_list&lt;int&gt;&gt;&gt;);                            return true; }());</span></span>
-<span id="L39"><span class="lineNum">      39</span> <span class="tlaGNC">          16 :       check(&quot;&quot;, [](){ static_assert(std::is_same_v&lt;type_list&lt;int, double&gt;, type_list_union_t&lt;type_list&lt;int&gt;, type_list&lt;double&gt;&gt;&gt;); return true; }());</span></span>
-<span id="L40"><span class="lineNum">      40</span> <span class="tlaGNC">          16 :       check(&quot;&quot;, [](){ static_assert(std::is_same_v&lt;type_list&lt;int&gt;, type_list_union_t&lt;type_list&lt;int&gt;, type_list&lt;int&gt;&gt;&gt;);            return true; }());</span></span>
-<span id="L41"><span class="lineNum">      41</span> <span class="tlaGNC">           8 :   }</span></span>
+<span id="L38"><span class="lineNum">      38</span> <span class="tlaGNC">          18 :       check(&quot;&quot;, [](){ static_assert(std::is_same_v&lt;type_list&lt;int&gt;, type_list_union_t&lt;type_list&lt;int&gt;&gt;&gt;);                            return true; }());</span></span>
+<span id="L39"><span class="lineNum">      39</span> <span class="tlaGNC">          18 :       check(&quot;&quot;, [](){ static_assert(std::is_same_v&lt;type_list&lt;int, double&gt;, type_list_union_t&lt;type_list&lt;int&gt;, type_list&lt;double&gt;&gt;&gt;); return true; }());</span></span>
+<span id="L40"><span class="lineNum">      40</span> <span class="tlaGNC">          18 :       check(&quot;&quot;, [](){ static_assert(std::is_same_v&lt;type_list&lt;int&gt;, type_list_union_t&lt;type_list&lt;int&gt;, type_list&lt;int&gt;&gt;&gt;);            return true; }());</span></span>
+<span id="L41"><span class="lineNum">      41</span> <span class="tlaGNC">           9 :   }</span></span>
 <span id="L42"><span class="lineNum">      42</span>              : }</span>
         </pre>
               </td>

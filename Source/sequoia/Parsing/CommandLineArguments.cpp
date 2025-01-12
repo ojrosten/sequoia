@@ -9,13 +9,6 @@
     \brief Definitions for CommandLineArguments.hpp
 */
 
-// GCC seems to object to cbegin_node_weights()[i]
-#if defined(__clang__)
-#elif defined(__GNUG__)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdangling-reference"
-#endif
-
 #include "sequoia/Parsing/CommandLineArguments.hpp"
 #include "sequoia/TextProcessing/Indent.hpp"
 
@@ -312,8 +305,3 @@ namespace sequoia::parsing::commandline
     return p.get();
   }
 }
-
-#if defined(__clang__)
-#elif defined(__GNUG__)
-#pragma GCC diagnostic pop
-#endif

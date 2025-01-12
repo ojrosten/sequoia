@@ -9,13 +9,6 @@
     \brief Definitions for TestRunner.hpp
 */
 
-// GCC seems to object to cbegin_node_weights()[i]
-#if defined(__clang__)
-#elif defined(__GNUG__)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdangling-reference"
-#endif
-
 #include "sequoia/TestFramework/TestRunner.hpp"
 
 #include "sequoia/TestFramework/DependencyAnalyzer.hpp"
@@ -1087,8 +1080,3 @@ namespace sequoia::testing
     return paths;
   }
 }
-
-#if defined(__clang__)
-#elif defined(__GNUG__)
-#pragma GCC diagnostic pop
-#endif

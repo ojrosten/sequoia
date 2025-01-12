@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2025-01-12 17:02:37</td>
+            <td class="headerValue">2025-01-12 19:58:35</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -82,42 +82,42 @@
 <span id="L20"><span class="lineNum">      20</span>              :   struct char_to_char</span>
 <span id="L21"><span class="lineNum">      21</span>              :   {</span>
 <span id="L22"><span class="lineNum">      22</span>              :     [[nodiscard]]</span>
-<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC tlaBgGNC">        1504 :     char operator()(char c) const noexcept</span></span>
+<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC tlaBgGNC">        1551 :     char operator()(char c) const noexcept</span></span>
 <span id="L24"><span class="lineNum">      24</span>              :     {</span>
-<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">        1504 :       return c;</span></span>
+<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">        1551 :       return c;</span></span>
 <span id="L26"><span class="lineNum">      26</span>              :     }</span>
 <span id="L27"><span class="lineNum">      27</span>              :   };</span>
 <span id="L28"><span class="lineNum">      28</span>              : </span>
 <span id="L29"><span class="lineNum">      29</span>              :   template&lt;invocable_r&lt;char, char&gt; OnUpper=char_to_char&gt;</span>
-<span id="L30"><span class="lineNum">      30</span> <span class="tlaGNC">        2208 :   std::string&amp; camel_to_words(std::string&amp; text, std::string_view separator = &quot; &quot;, OnUpper onUpper = OnUpper{})</span></span>
+<span id="L30"><span class="lineNum">      30</span> <span class="tlaGNC">        2277 :   std::string&amp; camel_to_words(std::string&amp; text, std::string_view separator = &quot; &quot;, OnUpper onUpper = OnUpper{})</span></span>
 <span id="L31"><span class="lineNum">      31</span>              :   {</span>
-<span id="L32"><span class="lineNum">      32</span> <span class="tlaGNC">        2208 :     auto i{text.begin()};</span></span>
-<span id="L33"><span class="lineNum">      33</span> <span class="tlaGNC">       16224 :     while(i != text.end())</span></span>
+<span id="L32"><span class="lineNum">      32</span> <span class="tlaGNC">        2277 :     auto i{text.begin()};</span></span>
+<span id="L33"><span class="lineNum">      33</span> <span class="tlaGNC">       16731 :     while(i != text.end())</span></span>
 <span id="L34"><span class="lineNum">      34</span>              :     {</span>
-<span id="L35"><span class="lineNum">      35</span> <span class="tlaGNC">       14016 :       auto&amp; c{*i};</span></span>
-<span id="L36"><span class="lineNum">      36</span> <span class="tlaGNC">       14016 :       if(std::isupper(c))</span></span>
+<span id="L35"><span class="lineNum">      35</span> <span class="tlaGNC">       14454 :       auto&amp; c{*i};</span></span>
+<span id="L36"><span class="lineNum">      36</span> <span class="tlaGNC">       14454 :       if(std::isupper(c))</span></span>
 <span id="L37"><span class="lineNum">      37</span>              :       {</span>
-<span id="L38"><span class="lineNum">      38</span> <span class="tlaGNC">        2176 :         c = onUpper(c);</span></span>
-<span id="L39"><span class="lineNum">      39</span> <span class="tlaGNC">        2176 :         if((std::ranges::distance(text.begin(), i) &gt; 0))</span></span>
+<span id="L38"><span class="lineNum">      38</span> <span class="tlaGNC">        2244 :         c = onUpper(c);</span></span>
+<span id="L39"><span class="lineNum">      39</span> <span class="tlaGNC">        2244 :         if((std::ranges::distance(text.begin(), i) &gt; 0))</span></span>
 <span id="L40"><span class="lineNum">      40</span>              :         {</span>
-<span id="L41"><span class="lineNum">      41</span> <span class="tlaGNC">         160 :           i = text.insert(i, separator.begin(), separator.end());</span></span>
-<span id="L42"><span class="lineNum">      42</span> <span class="tlaGNC">         160 :           i += std::ranges::distance(separator);</span></span>
+<span id="L41"><span class="lineNum">      41</span> <span class="tlaGNC">         165 :           i = text.insert(i, separator.begin(), separator.end());</span></span>
+<span id="L42"><span class="lineNum">      42</span> <span class="tlaGNC">         165 :           i += std::ranges::distance(separator);</span></span>
 <span id="L43"><span class="lineNum">      43</span>              :         }</span>
 <span id="L44"><span class="lineNum">      44</span>              :       }</span>
 <span id="L45"><span class="lineNum">      45</span>              : </span>
-<span id="L46"><span class="lineNum">      46</span> <span class="tlaGNC">       14016 :       ++i;</span></span>
+<span id="L46"><span class="lineNum">      46</span> <span class="tlaGNC">       14454 :       ++i;</span></span>
 <span id="L47"><span class="lineNum">      47</span>              :     }</span>
 <span id="L48"><span class="lineNum">      48</span>              : </span>
-<span id="L49"><span class="lineNum">      49</span> <span class="tlaGNC">        2208 :     return text;</span></span>
+<span id="L49"><span class="lineNum">      49</span> <span class="tlaGNC">        2277 :     return text;</span></span>
 <span id="L50"><span class="lineNum">      50</span>              :   }</span>
 <span id="L51"><span class="lineNum">      51</span>              : </span>
 <span id="L52"><span class="lineNum">      52</span>              :   template&lt;invocable_r&lt;char, char&gt; OnUpper = char_to_char&gt;</span>
 <span id="L53"><span class="lineNum">      53</span>              :   [[nodiscard]]</span>
-<span id="L54"><span class="lineNum">      54</span> <span class="tlaGNC">         192 :   std::string camel_to_words(std::string_view text, std::string_view separator = &quot; &quot;, OnUpper onUpper = OnUpper{})</span></span>
+<span id="L54"><span class="lineNum">      54</span> <span class="tlaGNC">         198 :   std::string camel_to_words(std::string_view text, std::string_view separator = &quot; &quot;, OnUpper onUpper = OnUpper{})</span></span>
 <span id="L55"><span class="lineNum">      55</span>              :   {</span>
-<span id="L56"><span class="lineNum">      56</span> <span class="tlaGNC">         192 :     std::string str{text};</span></span>
-<span id="L57"><span class="lineNum">      57</span> <span class="tlaGNC">         384 :     return camel_to_words(str, separator, onUpper);</span></span>
-<span id="L58"><span class="lineNum">      58</span> <span class="tlaGNC">         192 :   }</span></span>
+<span id="L56"><span class="lineNum">      56</span> <span class="tlaGNC">         198 :     std::string str{text};</span></span>
+<span id="L57"><span class="lineNum">      57</span> <span class="tlaGNC">         396 :     return camel_to_words(str, separator, onUpper);</span></span>
+<span id="L58"><span class="lineNum">      58</span> <span class="tlaGNC">         198 :   }</span></span>
 <span id="L59"><span class="lineNum">      59</span>              : </span>
 <span id="L60"><span class="lineNum">      60</span>              :   std::string&amp; to_camel_case(std::string&amp; text, std::string_view separator=&quot;&quot;);</span>
 <span id="L61"><span class="lineNum">      61</span>              : </span>
@@ -166,21 +166,21 @@
 <span id="L104"><span class="lineNum">     104</span>              : </span>
 <span id="L105"><span class="lineNum">     105</span>              :   template&lt;class... Replacement&gt;</span>
 <span id="L106"><span class="lineNum">     106</span>              :     requires (std::is_same_v&lt;Replacement, replacement&gt; &amp;&amp; ...)</span>
-<span id="L107"><span class="lineNum">     107</span> <span class="tlaGNC">       12704 :   std::string&amp; replace_all(std::string&amp; text, const Replacement&amp;... rs)</span></span>
+<span id="L107"><span class="lineNum">     107</span> <span class="tlaGNC">       13101 :   std::string&amp; replace_all(std::string&amp; text, const Replacement&amp;... rs)</span></span>
 <span id="L108"><span class="lineNum">     108</span>              :   {</span>
-<span id="L109"><span class="lineNum">     109</span> <span class="tlaGNC">       12704 :     (replace_all(text, rs.from, rs.to), ...);</span></span>
+<span id="L109"><span class="lineNum">     109</span> <span class="tlaGNC">       13101 :     (replace_all(text, rs.from, rs.to), ...);</span></span>
 <span id="L110"><span class="lineNum">     110</span>              : </span>
-<span id="L111"><span class="lineNum">     111</span> <span class="tlaGNC">       12704 :     return text;</span></span>
+<span id="L111"><span class="lineNum">     111</span> <span class="tlaGNC">       13101 :     return text;</span></span>
 <span id="L112"><span class="lineNum">     112</span>              :   }</span>
 <span id="L113"><span class="lineNum">     113</span>              : </span>
 <span id="L114"><span class="lineNum">     114</span>              :   template&lt;class... Replacement&gt;</span>
 <span id="L115"><span class="lineNum">     115</span>              :     requires (std::is_same_v&lt;Replacement, replacement&gt; &amp;&amp; ...)</span>
 <span id="L116"><span class="lineNum">     116</span>              :   [[nodiscard]]</span>
-<span id="L117"><span class="lineNum">     117</span> <span class="tlaGNC">          32 :   std::string replace_all(std::string_view text, const Replacement&amp;... rs)</span></span>
+<span id="L117"><span class="lineNum">     117</span> <span class="tlaGNC">          33 :   std::string replace_all(std::string_view text, const Replacement&amp;... rs)</span></span>
 <span id="L118"><span class="lineNum">     118</span>              :   {</span>
-<span id="L119"><span class="lineNum">     119</span> <span class="tlaGNC">          32 :     std::string str{text};</span></span>
-<span id="L120"><span class="lineNum">     120</span> <span class="tlaGNC">          64 :     return replace_all(str, rs...);</span></span>
-<span id="L121"><span class="lineNum">     121</span> <span class="tlaGNC">          32 :   }</span></span>
+<span id="L119"><span class="lineNum">     119</span> <span class="tlaGNC">          33 :     std::string str{text};</span></span>
+<span id="L120"><span class="lineNum">     120</span> <span class="tlaGNC">          66 :     return replace_all(str, rs...);</span></span>
+<span id="L121"><span class="lineNum">     121</span> <span class="tlaGNC">          33 :   }</span></span>
 <span id="L122"><span class="lineNum">     122</span>              : </span>
 <span id="L123"><span class="lineNum">     123</span>              :   std::string&amp; replace_all(std::string&amp; text, std::string_view anyOfLeft, std::string_view from, std::string_view anyOfRight, std::string_view to);</span>
 <span id="L124"><span class="lineNum">     124</span>              : </span>
@@ -188,27 +188,27 @@
 <span id="L126"><span class="lineNum">     126</span>              :   std::string replace_all(std::string_view text, std::string_view anyOfLeft, std::string_view from, std::string_view anyOfRight, std::string_view to);</span>
 <span id="L127"><span class="lineNum">     127</span>              : </span>
 <span id="L128"><span class="lineNum">     128</span>              :   template&lt;invocable_r&lt;bool, char&gt; LeftPred, invocable_r&lt;bool, char&gt; RightPred&gt;</span>
-<span id="L129"><span class="lineNum">     129</span> <span class="tlaGNC">    10307878 :   std::string&amp; replace_all(std::string&amp; text, LeftPred lPred, std::string_view from, RightPred rPred, std::string_view to)</span></span>
+<span id="L129"><span class="lineNum">     129</span> <span class="tlaGNC">    11275809 :   std::string&amp; replace_all(std::string&amp; text, LeftPred lPred, std::string_view from, RightPred rPred, std::string_view to)</span></span>
 <span id="L130"><span class="lineNum">     130</span>              :   {</span>
-<span id="L131"><span class="lineNum">     131</span> <span class="tlaGNC">    10307878 :     constexpr auto npos{std::string::npos};</span></span>
-<span id="L132"><span class="lineNum">     132</span> <span class="tlaGNC">    10307878 :     std::string::size_type pos{};</span></span>
-<span id="L133"><span class="lineNum">     133</span> <span class="tlaGNC">    12857258 :     while((pos = text.find(from, pos)) != npos)</span></span>
+<span id="L131"><span class="lineNum">     131</span> <span class="tlaGNC">    11275809 :     constexpr auto npos{std::string::npos};</span></span>
+<span id="L132"><span class="lineNum">     132</span> <span class="tlaGNC">    11275809 :     std::string::size_type pos{};</span></span>
+<span id="L133"><span class="lineNum">     133</span> <span class="tlaGNC">    13913675 :     while((pos = text.find(from, pos)) != npos)</span></span>
 <span id="L134"><span class="lineNum">     134</span>              :     {</span>
-<span id="L135"><span class="lineNum">     135</span> <span class="tlaGNC">     2534076 :       if(    (((pos &gt; 0) &amp;&amp; lPred(text[pos - 1])) || ((pos == 0) &amp;&amp; lPred('\0')))</span></span>
-<span id="L136"><span class="lineNum">     136</span> <span class="tlaGNC">     5068831 :           &amp;&amp; (   ((pos + from.length() &lt; text.length())  &amp;&amp; rPred(text[pos + from.length()]))</span></span>
-<span id="L137"><span class="lineNum">     137</span> <span class="tlaGNC">          23 :               || ((pos + from.length() == text.length()) &amp;&amp; rPred('\0')))</span></span>
+<span id="L135"><span class="lineNum">     135</span> <span class="tlaGNC">     2622562 :       if(    (((pos &gt; 0) &amp;&amp; lPred(text[pos - 1])) || ((pos == 0) &amp;&amp; lPred('\0')))</span></span>
+<span id="L136"><span class="lineNum">     136</span> <span class="tlaGNC">     5245806 :           &amp;&amp; (   ((pos + from.length() &lt; text.length())  &amp;&amp; rPred(text[pos + from.length()]))</span></span>
+<span id="L137"><span class="lineNum">     137</span> <span class="tlaGNC">          26 :               || ((pos + from.length() == text.length()) &amp;&amp; rPred('\0')))</span></span>
 <span id="L138"><span class="lineNum">     138</span>              :         )</span>
 <span id="L139"><span class="lineNum">     139</span>              :       {</span>
-<span id="L140"><span class="lineNum">     140</span> <span class="tlaGNC">     2554152 :         text.replace(pos, from.length(), to);</span></span>
-<span id="L141"><span class="lineNum">     141</span> <span class="tlaGNC">     2549287 :         pos += (to.length() + 1);</span></span>
+<span id="L140"><span class="lineNum">     140</span> <span class="tlaGNC">     2642634 :         text.replace(pos, from.length(), to);</span></span>
+<span id="L141"><span class="lineNum">     141</span> <span class="tlaGNC">     2637769 :         pos += (to.length() + 1);</span></span>
 <span id="L142"><span class="lineNum">     142</span>              :       }</span>
 <span id="L143"><span class="lineNum">     143</span>              :       else</span>
 <span id="L144"><span class="lineNum">     144</span>              :       {</span>
-<span id="L145"><span class="lineNum">     145</span> <span class="tlaGNC">          31 :         pos += (from.length() + 1) ;</span></span>
+<span id="L145"><span class="lineNum">     145</span> <span class="tlaGNC">          35 :         pos += (from.length() + 1) ;</span></span>
 <span id="L146"><span class="lineNum">     146</span>              :       }</span>
 <span id="L147"><span class="lineNum">     147</span>              :     }</span>
 <span id="L148"><span class="lineNum">     148</span>              : </span>
-<span id="L149"><span class="lineNum">     149</span> <span class="tlaGNC">    10295356 :     return text;</span></span>
+<span id="L149"><span class="lineNum">     149</span> <span class="tlaGNC">    11263287 :     return text;</span></span>
 <span id="L150"><span class="lineNum">     150</span>              :   }</span>
 <span id="L151"><span class="lineNum">     151</span>              : </span>
 <span id="L152"><span class="lineNum">     152</span>              :   template&lt;invocable_r&lt;bool, char&gt; LeftPred, invocable_r&lt;bool, char&gt; RightPred&gt;</span>
