@@ -21,6 +21,16 @@ namespace sequoia::testing
 
   void streaming_free_test::run_tests()
   {
+    using namespace std::string_literals;
+
+    check(equality, "", read_to_string(working_materials() /= "Foo.txt"), std::optional{"hello, World"s});
+    check(equality, "", read_to_string(working_materials() /= "Bar.txt"), std::optional<std::string>{});
+
+    check_exception_thrown<std::runtime_error>(
+      reporter{""},
+      [this]() { read_modify_write(working_materials() /= "Bar.txt", [](std::string& s) { capitalize(s);  }); }
+    );
+
     read_modify_write(working_materials() /= "Foo.txt", [](std::string& s) { capitalize(s);  });
 
     check(equivalence, "", working_materials() /= "Foo.txt", predictive_materials() /= "Foo.txt");

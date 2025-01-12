@@ -1,2 +1,2 @@
 Free Test
-Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 5]
+Standard Top Level Checks:                 4;  Failures:  0  [Deep checks: 10]
