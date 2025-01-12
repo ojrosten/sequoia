@@ -92,11 +92,6 @@ namespace sequoia
   [[nodiscard]]
   std::string replace_all_recursive(std::string_view text, std::string_view from, std::string_view to);
 
-  std::string& replace_all(std::string& text, std::string_view fromBegin, std::string_view fromEnd, std::string_view to);
-
-  [[nodiscard]]
-  std::string replace_all(std::string_view text, std::string_view fromBegin, std::string_view fromEnd, std::string_view to);
-
   struct replacement
   {
     std::string from, to;

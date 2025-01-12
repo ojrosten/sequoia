@@ -155,29 +155,6 @@ namespace sequoia
     return replace_all_recursive(str, from, to);
   }
 
-  std::string& replace_all(std::string& text, std::string_view fromBegin, std::string_view fromEnd, std::string_view to)
-  {
-    constexpr auto npos{std::string::npos};
-    std::string::size_type pos{};
-    while((pos = text.find(fromBegin, pos)) != npos)
-    {
-      const auto pos2{text.find(fromEnd, pos + fromBegin.length())};
-      if(pos2 == npos) break;
-
-      text.replace(pos, pos2-pos, to);
-      pos += to.length();
-    }
-
-    return text;
-  }
-
-  [[nodiscard]]
-  std::string replace_all(std::string_view text, std::string_view fromBegin, std::string_view fromEnd, std::string_view to)
-  {
-    std::string str{text};
-    return replace_all(str, fromBegin, fromEnd, to);
-  }
-
   std::string& replace_all(std::string& text, std::string_view anyOfLeft, std::string_view from, std::string_view anyOfRight, std::string_view to)
   {
     constexpr auto npos{std::string::npos};
