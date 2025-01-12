@@ -35,6 +35,8 @@
 #include "Core/Object/SuiteFreeTest.hpp"
 #include "Experimental/ExperimentalTest.hpp"
 #include "Experimental/FlattenTypeListFreeTest.hpp"
+#include "FileSystem/NormalPathTest.hpp"
+#include "FileSystem/NormalPathTestingDiagnostics.hpp"
 #include "Maths/Graph/Algorithms/DynamicGraphTraversalsTest.hpp"
 #include "Maths/Graph/Algorithms/DynamicGraphUpdateTest.hpp"
 #include "Maths/Graph/Algorithms/DynamicSubgraphTest.hpp"

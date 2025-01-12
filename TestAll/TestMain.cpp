@@ -371,6 +371,12 @@ int main(int argc, char** argv)
       suite_free_test{"Suite Free Test"}
     );
 
+    runner.add_test_suite(
+      "Normal Path",
+      normal_path_false_negative_test{"False Negative Test"},
+      normal_path_test{"Unit Test"}
+    );
+
     runner.execute(timer_resolution{1ms});
   }
   catch(const std::exception& e)

@@ -19,6 +19,8 @@ namespace sequoia
   class normal_path
   {
   public:
+    normal_path() = default;
+
     normal_path(const std::filesystem::path& path)
       : m_Path{path.lexically_normal()}
     {}

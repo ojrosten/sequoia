@@ -42,6 +42,8 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Core/Object/SuiteFreeTest.cpp
                ${TestDir}/Experimental/ExperimentalTest.cpp
                ${TestDir}/Experimental/FlattenTypeListFreeTest.cpp
+               ${TestDir}/FileSystem/NormalPathTest.cpp
+               ${TestDir}/FileSystem/NormalPathTestingDiagnostics.cpp
                ${TestDir}/Maths/Graph/Algorithms/DynamicGraphTraversalsTest.cpp
                ${TestDir}/Maths/Graph/Algorithms/DynamicGraphUpdateTest.cpp
                ${TestDir}/Maths/Graph/Algorithms/DynamicSubgraphTest.cpp
