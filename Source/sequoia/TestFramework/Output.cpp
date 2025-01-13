@@ -15,7 +15,11 @@
 #include "sequoia/TextProcessing/Patterns.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
+#include <cstdlib>
+#include <format>
 #include <numeric>
+
+#include <iostream>
 
 #ifndef _MSC_VER
   #include <cxxabi.h>
@@ -50,22 +54,39 @@ namespace sequoia::testing
 
     std::string& remove_integral_suffix(std::string& name)
     {
-      constexpr auto npos{std::string::npos};
-
       std::string::size_type pos{};
       while(pos < name.size())
       {
         const auto open{name.find_first_of("< ", pos)};
         pos = open;
-        while((pos < name.size() - 1) && std::isdigit(name[++pos])) {}
-        
-        if((pos < name.size()) && (pos-1 > open) && std::isalpha(name[pos]))
+        while((pos < name.size() - 1) && !std::isdigit(name[++pos])) {}
+        if(pos < name.size() - 1)
         {
-          if(const auto close{name.find_first_of(",>", pos)}; close != npos)
+          if(name[pos + 1] == 'x')
           {
-            name.erase(pos, close - pos);
-            pos++;
+            char* end{};
+            const auto start{name.data() + pos};
+            const auto val{std::strtold(start, &end)};
+            if(const auto dist{std::ranges::distance(start, end)}; dist > 0)
+            {
+              name.erase(pos, dist);
+              const auto str{std::format("{:f}", val)};
+              name.insert(pos, str);
+              pos += (str.size() - 1);
+            }
           }
+
+          while((pos < name.size() - 1) && std::isdigit(name[++pos])) {}
+        
+          if((pos < name.size()) && (pos-1 > open) && std::isalpha(name[pos]))
+          {
+            if(const auto close{name.find_first_of(",>", pos)}; close < name.size())
+            {
+              name.erase(pos, close - pos);
+              pos++;
+            }
+          }
+            
         }
       }
       

@@ -10,7 +10,7 @@
 #include "AngleTest.hpp"
 
 #include "sequoia/TestFramework/StateTransitionUtilities.hpp"
-
+#include <iostream>
 namespace sequoia::testing
 {
   using namespace maths;

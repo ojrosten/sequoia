@@ -24,6 +24,11 @@ int main(int argc, char** argv)
                        "  ",
                        {.main_cpp{"TestChamber/TestChamberMain.cpp"}, .common_includes{"TestCommon/TestIncludes.hpp"}}};
 
+    runner.add_test_suite(
+      "Angle",
+      angle_false_negative_test{"False negative Test"},
+      angle_test{"Unit Test"}
+    );
 
     runner.add_test_suite(
       "Geometry",
