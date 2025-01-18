@@ -238,6 +238,44 @@ namespace sequoia::maths
   template<vector_space VectorSpace, basis_for<vector_space_type<VectorSpace>> Basis>
   using vector_coordinates = affine_coordinates<VectorSpace, Basis, intrinsic_origin>;
 
+  //============================== direct_product etc ==============================//
+  template<class T, class U>
+  struct direct_product
+  {
+    using set_type = std::pair<T, U>;
+  };
+
+  template<vector_space T, vector_space U>
+  struct direct_product<T, U>
+  {
+    using set_type   = direct_product<typename T::set_type, typename U::set_type>;
+    using field_type = std::common_type_t<typename T::field_type, typename U::field_type>;
+    constexpr static std::size_t dimension{T::dimension * U::dimension};
+  };
+  
+  template<convex_space T, convex_space U>
+  // TO DO: change this to || ?
+    requires (!vector_space<T> && !vector_space<U>)
+  struct direct_product<T, U>
+  {
+    using set_type          = direct_product<typename T::set_type, typename U::set_type>;
+    using vector_space_type = direct_product<typename T::vector_space_type, typename U::vector_space_type>;
+  };
+
+  template<class T>
+  struct reduction
+  {
+    
+  };
+
+  template<class T, class U>
+  struct reduction<direct_product<T, U>>
+  {
+    using set_type = reduction<typename direct_product<T, U>::set_type>;
+  };
+
+  //============================== coordinates_base definition  ==============================//
+
   template<
     convex_space ConvexSpace,
     basis_for<vector_space_type<ConvexSpace>> Basis,
@@ -319,17 +357,9 @@ namespace sequoia::maths
     }
 
     template<class Derived>
-      requires std::is_base_of_v<coordinates_base, Derived> && (!std::is_same_v<Derived, displacement_coordinates_type>)
+      requires std::is_base_of_v<coordinates_base, Derived>
     [[nodiscard]]
     friend constexpr Derived operator-(Derived c, const displacement_coordinates_type& v) noexcept(has_identity_validator)
-    {
-      return c -= v;
-    }
-
-    template<class Derived>
-      requires std::is_base_of_v<coordinates_base, Derived> && (!std::is_same_v<Derived, displacement_coordinates_type>)
-    [[nodiscard]]
-    friend constexpr Derived operator-(const displacement_coordinates_type& v, Derived c) noexcept(has_identity_validator)
     {
       return c -= v;
     }
