@@ -156,6 +156,12 @@ namespace sequoia::maths
   }
 
   template<std::floating_point T, T Period>
+  angle<T, Period> abs(angle<T, Period> theta)
+  {
+    return angle<T, Period>{std::abs(theta.value())};
+  }
+
+  template<std::floating_point T, T Period>
   [[nodiscard]]
   constexpr T sin(angle<T, Period> theta) { return std::sin(convert<radians<T>::period>(theta).value()); }
 

@@ -32,4 +32,17 @@ namespace sequoia::testing
       check(equality, "Principal angle", logger, actual.principal_angle().value(), std::fmod(prediction, Period));
     }
   };
+
+  // TO DO: consider necessity of this; it's only used by the
+  // check of asin within_tolerance; perhaps the latter could
+  // be worked to delegate to test(equality...)
+  template<std::floating_point T, T Period>
+  struct serializer<maths::angle<T, Period>>
+  {
+    [[nodiscard]]
+    static std::string make(maths::angle<T, Period> theta)
+    {
+      return std::format("{}", theta.value());
+    }
+  };
 }
