@@ -57,5 +57,21 @@ namespace sequoia::testing
 
       coordinates_operations<unsafe_mass_t>{*this}.execute();
     }
+
+    {
+      using mass_t   = si::mass<float>;
+      using length_t = si::length<float>;
+
+      static_assert(convex_space<mass_space<float>>);
+      static_assert(convex_space<length_space<float>>);
+      static_assert(convex_space<direct_product<mass_space<float>, length_space<float>>>);
+      static_assert(vector_space<displacement_space<classical_quantity_sets::masses, float>>);
+      static_assert(vector_space<displacement_space<classical_quantity_sets::lengths, float>>);
+      static_assert(vector_space<direct_product<displacement_space<classical_quantity_sets::masses, float>, displacement_space<classical_quantity_sets::lengths, float>>>);
+      static_assert(vector_space<reduction<direct_product<displacement_space<classical_quantity_sets::masses, float>, displacement_space<classical_quantity_sets::lengths, float>>>>);
+      
+      static_assert(convex_space<reduction<direct_product<mass_space<float>, length_space<float>>>>);
+      auto ml = mass_t{1.0, units::kilogram} * length_t{2.0, units::metre};
+    }
   }
 }

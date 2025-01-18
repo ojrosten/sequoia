@@ -32,6 +32,37 @@ namespace sequoia::physics
     typename T::validator_type;
   };
 
+  template<class T, class U>
+  struct resultant_validator;
+
+  template<class T, class U>
+  using resultant_validator_t = resultant_validator<T, U>::type;
+
+  template<class T>
+  struct resultant_validator<T, std::identity>
+  {
+    using type = std::identity;
+  };
+
+  template<class T>
+    requires (!std::is_same_v<T, std::identity>)
+  struct resultant_validator<std::identity, T>
+  {
+    using type = std::identity;
+  };
+
+  template<>
+  struct resultant_validator<absolute_validator, absolute_validator>
+  {
+    using type = absolute_validator;
+  };
+
+  template<quantity_unit T, quantity_unit U>
+  struct product_of_units
+  {
+    using validator_type = resultant_validator_t<typename T::validator_type, typename U::validator_type>;
+  };
+
   template<convex_space QuantitySpace, quantity_unit Unit>
   using to_displacement_basis_t
     = quantity_displacement_basis<vector_space_type<QuantitySpace>, Unit, space_field_type<QuantitySpace>>;
@@ -48,6 +79,27 @@ namespace sequoia::physics
         Validator,
         quantity<vector_space_type<QuantitySpace>, Unit, std::identity>>;
 
+  template<class T, class U>
+  struct quantity_product;
+
+  template<class T, class U>
+  using quantity_product_t = quantity_product<T, U>::type;
+  
+  template<
+    convex_space LHSQuantitySpace, quantity_unit LHSUnit, class LHSValidator,
+    convex_space RHSQuantitySpace, quantity_unit RHSUnit, class RHSValidator
+  >
+  struct quantity_product<
+           quantity<LHSQuantitySpace, LHSUnit, LHSValidator>,
+           quantity<RHSQuantitySpace, RHSUnit, RHSValidator>
+         >
+  {
+    using type = quantity<
+                   reduction<direct_product<LHSQuantitySpace, RHSQuantitySpace>>,
+                   product_of_units<LHSUnit, RHSUnit>,
+                   resultant_validator_t<LHSValidator, RHSValidator>>;
+  };
+  
   template<convex_space QuantitySpace, quantity_unit Unit, class Validator=typename Unit::validator_type>
   class quantity : public to_coordinates_base_type<QuantitySpace, Unit, Validator>
   {
@@ -115,6 +167,15 @@ namespace sequoia::physics
       operator/(const quantity& lhs, const quantity<DenominatorQuantitySpace, Unit, DenominatorValidator>& rhs)
     {
       return lhs.value() / rhs.value();
+    }   
+
+    template<convex_space RHSQuantitySpace, quantity_unit RHSUnit, class RHSValidator>
+      requires (D == 1) || (quantity<RHSQuantitySpace, Unit, RHSValidator>::D == 1)
+    [[nodiscard]]
+    friend constexpr quantity_product_t<quantity, quantity<RHSQuantitySpace, RHSUnit, RHSValidator>>
+      operator*(const quantity& lhs, const quantity<RHSQuantitySpace, RHSUnit, RHSValidator>& rhs)
+    {
+      return quantity_product_t<quantity, quantity<RHSQuantitySpace, RHSUnit, RHSValidator>>{lhs.value() * rhs.value(), product_of_units<Unit, RHSUnit>{}};
     }
   };
 

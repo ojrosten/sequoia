@@ -251,6 +251,7 @@ namespace sequoia::maths
     using set_type   = direct_product<typename T::set_type, typename U::set_type>;
     using field_type = std::common_type_t<typename T::field_type, typename U::field_type>;
     constexpr static std::size_t dimension{T::dimension * U::dimension};
+    using vector_space_type = direct_product<T, U>;
   };
   
   template<convex_space T, convex_space U>
@@ -265,13 +266,24 @@ namespace sequoia::maths
   template<class T>
   struct reduction
   {
-    
   };
 
-  template<class T, class U>
+  template<vector_space T, vector_space U>
+  struct reduction<direct_product<T, U>>
+  {
+    using set_type = int; // TO DO: fix this!
+    using field_type = float;
+    constexpr static std::size_t dimension{1};
+    using vector_space_type = reduction<direct_product<T, U>>;
+  };
+
+  template<convex_space T, convex_space U>
+  // TO DO: change this to || ?
+    requires (!vector_space<T> && !vector_space<U>)
   struct reduction<direct_product<T, U>>
   {
     using set_type = reduction<typename direct_product<T, U>::set_type>;
+    using vector_space_type = reduction<direct_product<typename T::vector_space_type, typename U::vector_space_type>>;
   };
 
   //============================== coordinates_base definition  ==============================//
