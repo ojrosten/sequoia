@@ -28,6 +28,40 @@ namespace sequoia::testing
   static_assert(!weakly_abelian_group_under_multiplication_v<int>);
   static_assert(weakly_abelian_group_under_multiplication_v<double>);
 
+  static_assert(std::is_same_v<direct_product_set_t<int, double>, std::tuple<set_copies<int, 1>, set_copies<double, 1>>>);
+  // TO DO: canonical ordering?
+  static_assert(std::is_same_v<direct_product_set_t<double, int>, std::tuple<set_copies<double, 1>, set_copies<int, 1>>>);
+  static_assert(std::is_same_v<direct_product_set_t<int, int>, std::tuple<set_copies<int, 2>>>);
+ 
+  static_assert(std::is_same_v<direct_product_set_t<int, set_copies<double, 1>>, std::tuple<set_copies<int, 1>, set_copies<double, 1>>>);
+  static_assert(std::is_same_v<direct_product_set_t<set_copies<int, 1>, double>, std::tuple<set_copies<int, 1>, set_copies<double, 1>>>);
+  static_assert(std::is_same_v<direct_product_set_t<int, set_copies<int, 2>>, std::tuple<set_copies<int, 3>>>);
+  static_assert(std::is_same_v<direct_product_set_t<set_copies<int, 2>, int>, std::tuple<set_copies<int, 3>>>);
+
+  static_assert(std::is_same_v<direct_product_set_t<set_copies<int, 1>, set_copies<double, 3>>, std::tuple<set_copies<int, 1>, set_copies<double, 3>>>);
+  static_assert(std::is_same_v<direct_product_set_t<set_copies<int, 1>, set_copies<int, 3>>, std::tuple<set_copies<int, 4>>>);
+
+  static_assert(std::is_same_v<direct_product_set_t<int, std::tuple<set_copies<double, 1>>>, std::tuple<set_copies<int, 1>, set_copies<double, 1>>>);
+  static_assert(std::is_same_v<direct_product_set_t<int, std::tuple<set_copies<double, 1>, set_copies<float, 3>>>,
+                              std::tuple<set_copies<int, 1>, set_copies<double, 1>, set_copies<float, 3>>>);
+  static_assert(std::is_same_v<direct_product_set_t<std::tuple<set_copies<double, 1>, set_copies<float, 3>>, int>,
+                               std::tuple<set_copies<double, 1>, set_copies<float, 3>, set_copies<int, 1>>>);
+  static_assert(std::is_same_v<direct_product_set_t<int, std::tuple<set_copies<int, 1>>>, std::tuple<set_copies<int, 2>>>);
+  static_assert(std::is_same_v<direct_product_set_t<int, std::tuple<set_copies<int, 1>, set_copies<double, 2>>>,
+                              std::tuple<set_copies<int, 2>, set_copies<double, 2>>>);
+  static_assert(std::is_same_v<direct_product_set_t<int, std::tuple<set_copies<double, 1>, set_copies<int, 2>>>,
+                              std::tuple<set_copies<double, 1>, set_copies<int, 3>>>);
+  
+  static_assert(std::is_same_v<direct_product_set_t<std::tuple<set_copies<double, 1>>, int>, std::tuple<set_copies<double, 1>, set_copies<int, 1>>>);
+  static_assert(std::is_same_v<direct_product_set_t<std::tuple<set_copies<int, 1>>, int>, std::tuple<set_copies<int, 2>>>);
+  static_assert(std::is_same_v<direct_product_set_t<std::tuple<set_copies<int, 1>, set_copies<double, 2>>, int>,
+                              std::tuple<set_copies<int, 2>, set_copies<double, 2>>>);
+
+  // Note current ordering rule
+  static_assert(std::is_same_v<direct_product_set_t<std::tuple<set_copies<double, 1>, set_copies<int, 2>>, int>,
+                               std::tuple<set_copies<int, 3>, set_copies<double, 1>>>);
+  static_assert(std::is_same_v<direct_product_set_t<set_copies<int, 1>, std::tuple<set_copies<double, 1>>>, std::tuple<set_copies<int, 1>, set_copies<double, 1>>>);
+
   // TO DO: move this to physics examples
   namespace
   {
@@ -94,6 +128,9 @@ namespace sequoia::testing
     coordinates_operations<vec_t>{*this}.execute();
 
     static_assert(vector_space<direct_product<vec_t, vec_t>>);
+    static_assert(std::is_same_v<direct_product_set_t<vec_t, vec_t>, std::tuple<set_copies<Set, 2>>>);
+    static_assert(vector_space<direct_product<direct_product<vec_t, vec_t>, vec_t>>);
+    static_assert(std::is_same_v<direct_product_set_t<direct_product<vec_t, vec_t>, vec_t>, std::tuple<set_copies<Set, 3>>>);
   }
 
   template<class Set, std::floating_point Field>

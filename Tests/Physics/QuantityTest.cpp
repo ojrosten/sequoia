@@ -72,6 +72,7 @@ namespace sequoia::testing
       
       static_assert(convex_space<reduction<direct_product<mass_space<float>, length_space<float>>>>);
       auto ml = mass_t{1.0, units::kilogram} * length_t{2.0, units::metre};
+      check(equivalence, "", ml, 2.0f);
     }
   }
 }
