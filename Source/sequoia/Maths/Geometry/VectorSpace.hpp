@@ -380,7 +380,7 @@ namespace sequoia::maths
   {
     using set_type   = direct_product_set_t<typename T::set_type, typename U::set_type>;
     using field_type = std::common_type_t<typename T::field_type, typename U::field_type>;
-    constexpr static std::size_t dimension{T::dimension * U::dimension};
+    constexpr static std::size_t dimension{T::dimension + U::dimension};
     using vector_space_type = direct_product<T, U>;
   };
   
