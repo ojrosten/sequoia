@@ -268,8 +268,6 @@ namespace sequoia::maths
 
   //=========== Rules for combining two types, at most one of which is a set_copies ==========//
   template<class T, class U>
-  // TO DO: hack to keep everything compiling
-    requires (!vector_space<T> && !vector_space<U> && !convex_space<T> && !convex_space<U>)
   struct direct_product<T, U> : direct_product<set_copies<T, 1>, set_copies<U, 1>>
   {};
 
