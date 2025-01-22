@@ -23,18 +23,18 @@ namespace sequoia
     };
     
     template<class T, class U>
-    struct resultant_validator;
+    struct reduced_validator;
 
     template<class T, class U>
-    using resultant_validator_t = resultant_validator<T, U>::type;
+    using reduced_validator_t = reduced_validator<T, U>::type;
   }
 
   namespace maths
   {
     template<physics::quantity_unit T, physics::quantity_unit U>
-    struct direct_product<T, U>
+    struct reduction<direct_product<T, U>>
     {
-      using validator_type = physics::resultant_validator_t<typename T::validator_type, typename U::validator_type>;
+      using validator_type = physics::reduced_validator_t<typename T::validator_type, typename U::validator_type>;
     };
   }
 }
@@ -55,20 +55,20 @@ namespace sequoia::physics
   };
 
   template<class T>
-  struct resultant_validator<T, std::identity>
+  struct reduced_validator<T, std::identity>
   {
     using type = std::identity;
   };
 
   template<class T>
     requires (!std::is_same_v<T, std::identity>)
-  struct resultant_validator<std::identity, T>
+  struct reduced_validator<std::identity, T>
   {
     using type = std::identity;
   };
 
   template<>
-  struct resultant_validator<absolute_validator, absolute_validator>
+  struct reduced_validator<absolute_validator, absolute_validator>
   {
     using type = absolute_validator;
   };
@@ -106,8 +106,8 @@ namespace sequoia::physics
   {
     using type = quantity<
                    reduction<direct_product<LHSQuantitySpace, RHSQuantitySpace>>,
-                   direct_product<LHSUnit, RHSUnit>,
-                   resultant_validator_t<LHSValidator, RHSValidator>>;
+                   reduction<direct_product<LHSUnit, RHSUnit>>,
+                   reduced_validator_t<LHSValidator, RHSValidator>>;
   };
   
   template<convex_space QuantitySpace, quantity_unit Unit, class Validator=typename Unit::validator_type>
@@ -185,7 +185,7 @@ namespace sequoia::physics
     friend constexpr quantity_product_t<quantity, quantity<RHSQuantitySpace, RHSUnit, RHSValidator>>
       operator*(const quantity& lhs, const quantity<RHSQuantitySpace, RHSUnit, RHSValidator>& rhs)
     {
-      return quantity_product_t<quantity, quantity<RHSQuantitySpace, RHSUnit, RHSValidator>>{lhs.value() * rhs.value(), direct_product<Unit, RHSUnit>{}};
+      return quantity_product_t<quantity, quantity<RHSQuantitySpace, RHSUnit, RHSValidator>>{lhs.value() * rhs.value(), reduction<direct_product<Unit, RHSUnit>>{}};
     }
   };
 

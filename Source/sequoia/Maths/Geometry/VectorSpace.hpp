@@ -385,7 +385,6 @@ namespace sequoia::maths
   };
   
   template<convex_space T, convex_space U>
-  // TO DO: change this to || ?
     requires (!vector_space<T> && !vector_space<U>)
   struct direct_product<T, U>
   {
@@ -410,7 +409,6 @@ namespace sequoia::maths
   };
 
   template<convex_space T, convex_space U>
-  // TO DO: change this to || ?
     requires (!vector_space<T> && !vector_space<U>)
   struct reduction<direct_product<T, U>>
   {
