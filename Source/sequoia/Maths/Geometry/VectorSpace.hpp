@@ -240,11 +240,11 @@ namespace sequoia::maths
 
   //============================== direct_product etc ==============================//
 
-  template<class T, std::size_t I>
-  struct set_copies
+  template<class T, std::size_t N>
+  struct nfold_direct_product
   {
     using set_type = T;
-    constexpr static auto copies{I};
+    constexpr static auto copies{N};
   };
 
   template<class... Ts>
@@ -253,124 +253,124 @@ namespace sequoia::maths
   template<class... Ts>
   using direct_product_set_t = direct_product<Ts...>::set_type;
 
-  //=========== Rules for combining two set_copies ==========//
+  //=========== Rules for combining two nfold_direct_product ==========//
   template<class T, class U, std::size_t I, std::size_t J>
-  struct direct_product<set_copies<T, I>, set_copies<U, J>>
+  struct direct_product<nfold_direct_product<T, I>, nfold_direct_product<U, J>>
   {
-    using set_type = std::tuple<set_copies<T, I>, set_copies<U, J>>;
+    using set_type = std::tuple<nfold_direct_product<T, I>, nfold_direct_product<U, J>>;
   };
 
   template<class T, std::size_t I, std::size_t J>
-  struct direct_product<set_copies<T, I>, set_copies<T, J>>
+  struct direct_product<nfold_direct_product<T, I>, nfold_direct_product<T, J>>
   {
-    using set_type = std::tuple<set_copies<T, I + J>>;
+    using set_type = std::tuple<nfold_direct_product<T, I + J>>;
   };
 
-  //=========== Rules for combining two types, at most one of which is a set_copies ==========//
+  //=========== Rules for combining two types, at most one of which is a nfold_direct_product ==========//
   template<class T, class U>
-  struct direct_product<T, U> : direct_product<set_copies<T, 1>, set_copies<U, 1>>
+  struct direct_product<T, U> : direct_product<nfold_direct_product<T, 1>, nfold_direct_product<U, 1>>
   {};
 
   template<class T, class U, std::size_t I>
-  struct direct_product<T, set_copies<U, I>> : direct_product<set_copies<T, 1>, set_copies<U, I>>
+  struct direct_product<T, nfold_direct_product<U, I>> : direct_product<nfold_direct_product<T, 1>, nfold_direct_product<U, I>>
   {};
 
   template<class T, class U, std::size_t I>
-  struct direct_product<set_copies<T, I>, U> : direct_product<set_copies<T, I>, set_copies<U, 1>>
+  struct direct_product<nfold_direct_product<T, I>, U> : direct_product<nfold_direct_product<T, I>, nfold_direct_product<U, 1>>
   {};
 
   template<class T, std::size_t I>
-  struct direct_product<T, set_copies<T, I>> : direct_product<set_copies<T, 1>, set_copies<T, I>>
+  struct direct_product<T, nfold_direct_product<T, I>> : direct_product<nfold_direct_product<T, 1>, nfold_direct_product<T, I>>
   {};
 
   template<class T, std::size_t I>
-  struct direct_product<set_copies<T, I>, T> : direct_product<set_copies<T, I>, set_copies<T, 1>>
+  struct direct_product<nfold_direct_product<T, I>, T> : direct_product<nfold_direct_product<T, I>, nfold_direct_product<T, 1>>
   {};
 
-  //=========== Rules for combining set_copies with a tuple of set_copies==========//
+  //=========== Rules for combining nfold_direct_product with a tuple of nfold_direct_product==========//
 
   template<class T, std::size_t I, class... Us, std::size_t... Is>
     requires ((!std::is_same_v<T, Us>) && ...)
-  struct direct_product<set_copies<T, I>, std::tuple<set_copies<Us, Is>...>>
+  struct direct_product<nfold_direct_product<T, I>, std::tuple<nfold_direct_product<Us, Is>...>>
   {
-    using set_type = std::tuple<set_copies<T, I>, set_copies<Us, Is>...>;
+    using set_type = std::tuple<nfold_direct_product<T, I>, nfold_direct_product<Us, Is>...>;
   };
 
   template<class... Us, std::size_t... Is, class T, std::size_t I>
     requires ((!std::is_same_v<T, Us>) && ...)
-  struct direct_product<std::tuple<set_copies<Us, Is>...>, set_copies<T, I>>
+  struct direct_product<std::tuple<nfold_direct_product<Us, Is>...>, nfold_direct_product<T, I>>
   {
-    using set_type = std::tuple<set_copies<Us, Is>..., set_copies<T, I>>;
+    using set_type = std::tuple<nfold_direct_product<Us, Is>..., nfold_direct_product<T, I>>;
   };
 
   template<class T, std::size_t I, class... Us, std::size_t J, std::size_t... Is>
-  struct direct_product<set_copies<T, I>, std::tuple<set_copies<T, J>, set_copies<Us, Is>...>>
+  struct direct_product<nfold_direct_product<T, I>, std::tuple<nfold_direct_product<T, J>, nfold_direct_product<Us, Is>...>>
   {
-    using set_type = std::tuple<set_copies<T, I + J>, set_copies<Us, Is>...>;
+    using set_type = std::tuple<nfold_direct_product<T, I + J>, nfold_direct_product<Us, Is>...>;
   };
 
   template<class... Us, std::size_t J, std::size_t... Is, class T, std::size_t I>
-  struct direct_product<std::tuple<set_copies<T, J>, set_copies<Us, Is>...>, set_copies<T, I>>
+  struct direct_product<std::tuple<nfold_direct_product<T, J>, nfold_direct_product<Us, Is>...>, nfold_direct_product<T, I>>
   {
-    using set_type = std::tuple<set_copies<T, I + J>, set_copies<Us, Is>...>;
+    using set_type = std::tuple<nfold_direct_product<T, I + J>, nfold_direct_product<Us, Is>...>;
   };
 
   template<class T, std::size_t I, class U, class... Us, std::size_t J, std::size_t... Js>
   requires (!std::is_same_v<T, U>) && (std::is_same_v<T, Us> || ...)
-  struct direct_product<set_copies<T, I>, std::tuple<set_copies<U, J>, set_copies<Us, Js>...>>
+  struct direct_product<nfold_direct_product<T, I>, std::tuple<nfold_direct_product<U, J>, nfold_direct_product<Us, Js>...>>
   {
-    using set_type = direct_product_set_t<std::tuple<set_copies<T, I>, set_copies<U, J>>, std::tuple<set_copies<Us, Js>...>>;
+    using set_type = direct_product_set_t<std::tuple<nfold_direct_product<T, I>, nfold_direct_product<U, J>>, std::tuple<nfold_direct_product<Us, Js>...>>;
   };
 
   template<class T, std::size_t I, class U, class... Us, std::size_t J, std::size_t... Js>
   requires (!std::is_same_v<T, U>) && (std::is_same_v<T, Us> || ...)
-  struct direct_product<std::tuple<set_copies<U, J>, set_copies<Us, Js>...>, set_copies<T, I>>
+  struct direct_product<std::tuple<nfold_direct_product<U, J>, nfold_direct_product<Us, Js>...>, nfold_direct_product<T, I>>
   {
-    using set_type = direct_product_set_t<std::tuple<set_copies<Us, Js>...>, std::tuple<set_copies<T, I>, set_copies<U, J>>>;
+    using set_type = direct_product_set_t<std::tuple<nfold_direct_product<Us, Js>...>, std::tuple<nfold_direct_product<T, I>, nfold_direct_product<U, J>>>;
   };
 
   template<class... Ts, class T, class... Us, std::size_t... Is, std::size_t I, std::size_t J, std::size_t... Js>
   struct direct_product<
-           std::tuple<set_copies<T, I>, set_copies<Ts, Is>...>,
-           std::tuple<set_copies<T, J>, set_copies<Us, Js>...>
+           std::tuple<nfold_direct_product<T, I>, nfold_direct_product<Ts, Is>...>,
+           std::tuple<nfold_direct_product<T, J>, nfold_direct_product<Us, Js>...>
          >
   {
-    using set_type = std::tuple<set_copies<Ts, Is>..., set_copies<T, I+J>, set_copies<Us, Js>...>;
+    using set_type = std::tuple<nfold_direct_product<Ts, Is>..., nfold_direct_product<T, I+J>, nfold_direct_product<Us, Js>...>;
   };
   
   
   template<class T, class... Us, std::size_t... Is>
     requires ((!std::is_same_v<T, Us>) && ...)
-  struct direct_product<T, std::tuple<set_copies<Us, Is>...>>
-    : direct_product<set_copies<T, 1>, std::tuple<set_copies<Us, Is>...>>
+  struct direct_product<T, std::tuple<nfold_direct_product<Us, Is>...>>
+    : direct_product<nfold_direct_product<T, 1>, std::tuple<nfold_direct_product<Us, Is>...>>
   {};
 
   template<class... Us, std::size_t... Is, class T>
     requires ((!std::is_same_v<T, Us>) && ...)
-  struct direct_product<std::tuple<set_copies<Us, Is>...>, T>
-    : direct_product<std::tuple<set_copies<Us, Is>...>, set_copies<T, 1>>
+  struct direct_product<std::tuple<nfold_direct_product<Us, Is>...>, T>
+    : direct_product<std::tuple<nfold_direct_product<Us, Is>...>, nfold_direct_product<T, 1>>
   {};
   
   template<class T, std::size_t I, class... Us, std::size_t... Is>
-  struct direct_product<T, std::tuple<set_copies<T, I>, set_copies<Us, Is>...>>
-    : direct_product<set_copies<T, 1>, std::tuple<set_copies<T, I>, set_copies<Us, Is>...>>
+  struct direct_product<T, std::tuple<nfold_direct_product<T, I>, nfold_direct_product<Us, Is>...>>
+    : direct_product<nfold_direct_product<T, 1>, std::tuple<nfold_direct_product<T, I>, nfold_direct_product<Us, Is>...>>
   {};
 
   template<class T, std::size_t I, class... Us, std::size_t... Is>
-  struct direct_product<std::tuple<set_copies<T, I>, set_copies<Us, Is>...>, T>
-    : direct_product<std::tuple<set_copies<T, I>, set_copies<Us, Is>...>, set_copies<T, 1>>
+  struct direct_product<std::tuple<nfold_direct_product<T, I>, nfold_direct_product<Us, Is>...>, T>
+    : direct_product<std::tuple<nfold_direct_product<T, I>, nfold_direct_product<Us, Is>...>, nfold_direct_product<T, 1>>
   {};
 
   template<class T, class U, class... Us, std::size_t J, std::size_t... Js>
   requires (!std::is_same_v<T, U>) && (std::is_same_v<T, Us> || ...)
-  struct direct_product<T, std::tuple<set_copies<U, J>, set_copies<Us, Js>...>>
-    : direct_product<set_copies<T, 1>, std::tuple<set_copies<U, J>, set_copies<Us, Js>...>>
+  struct direct_product<T, std::tuple<nfold_direct_product<U, J>, nfold_direct_product<Us, Js>...>>
+    : direct_product<nfold_direct_product<T, 1>, std::tuple<nfold_direct_product<U, J>, nfold_direct_product<Us, Js>...>>
   {};
 
   template<class T, class U, class... Us, std::size_t J, std::size_t... Js>
   requires (!std::is_same_v<T, U>) && (std::is_same_v<T, Us> || ...)
-  struct direct_product<std::tuple<set_copies<U, J>, set_copies<Us, Js>...>, T>
-    : direct_product<std::tuple<set_copies<U, J>, set_copies<Us, Js>...>, set_copies<T, 1>>
+  struct direct_product<std::tuple<nfold_direct_product<U, J>, nfold_direct_product<Us, Js>...>, T>
+    : direct_product<std::tuple<nfold_direct_product<U, J>, nfold_direct_product<Us, Js>...>, nfold_direct_product<T, 1>>
   {};
 
 
