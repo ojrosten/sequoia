@@ -13,6 +13,80 @@
 
 namespace sequoia::testing
 {
+  template<class T, class U, class Compare>
+  struct merge;
+
+  template<class T, class U, class Compare>
+  using merge_t = merge<T, U, Compare>::type;
+
+  template<class... Ts, class Compare>
+  struct merge<std::tuple<Ts...>, std::tuple<>, Compare>
+  {
+    using type = std::tuple<Ts...>;
+  };
+
+  template<class... Ts, class Compare>
+  struct merge<std::tuple<>, std::tuple<Ts...>, Compare>
+  {
+    using type = std::tuple<Ts...>;
+  };
+
+  template<class T, class U, class Compare>
+  struct merge<std::tuple<T>, std::tuple<U>, Compare>
+  {
+    using type = std::tuple<U, T>;
+  };
+
+  template<class T, class U, class Compare>
+  requires (Compare{}(std::declval<T>(), std::declval<U>()))
+  struct merge<std::tuple<T>, std::tuple<U>, Compare>
+  {
+    using type = std::tuple<T, U>;
+  };
+  
+  
+  template<class T, class... Us, class Compare>
+  struct merge<std::tuple<T>, std::tuple<Us...>, Compare>
+  {
+    constexpr static auto partition{sizeof...(Us)/2};
+  };
+
+  template<class T, class U, class Compare>
+  struct lower_bound;
+
+  template<class T, class U, class Compare>
+  inline constexpr auto lower_bound_v{lower_bound<T, U, Compare>::value};
+
+  template<class T, class... Us, class Compare>
+  struct lower_bound<T, std::tuple<Us...>, Compare>
+  {
+    constexpr static std::size_t N{sizeof...(Us)};
+
+    template<std::size_t Lower, std::size_t Upper>
+      requires (Lower <= Upper) && (Upper <= N)
+    constexpr static std::size_t get() noexcept {      
+      if constexpr (Lower == Upper)
+        return Lower;
+      else
+      {
+        constexpr auto partition{(Lower + Upper) / 2};
+        if constexpr(Compare{}(std::declval<std::tuple_element_t<partition, std::tuple<Us...>>>(), std::declval<T>()))
+          return get<partition + 1, Upper>();
+        else
+          return get<Lower, partition>();
+      }
+    }
+
+    constexpr static std::size_t value{get<0, N>()};
+  };
+
+  struct comparator
+  {
+  };
+
+  static_assert(lower_bound_v<int, std::tuple<>, comparator> == 0);
+  
+  
   using namespace physics;
 
   namespace{
