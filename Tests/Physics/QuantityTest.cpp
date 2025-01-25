@@ -90,7 +90,9 @@ namespace sequoia::testing
   static_assert(lower_bound_v<short, std::tuple<char, short, int>, comparator> == 1);
   static_assert(lower_bound_v<int, std::tuple<char, short, int>, comparator> == 2);
   static_assert(lower_bound_v<double, std::tuple<char, short, int>, comparator> == 3);
-  
+  static_assert(lower_bound_v<char, std::tuple<char, char, short, short, int, int>, comparator> == 0);
+  static_assert(lower_bound_v<short, std::tuple<char, char, short, short, int, int>, comparator> == 2);
+  static_assert(lower_bound_v<int, std::tuple<char, char, short, short, int, int>, comparator> == 4);
   
   using namespace physics;
 
