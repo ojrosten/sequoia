@@ -13,39 +13,39 @@
 
 namespace sequoia::testing
 {
-  template<class T, class U, class Compare>
+  template<class T, class U,  template<class, class> class Compare>
   struct merge;
 
-  template<class T, class U, class Compare>
+  template<class T, class U,  template<class, class> class Compare>
   using merge_t = merge<T, U, Compare>::type;
 
-  template<class... Ts, class Compare>
+  template<class... Ts,  template<class, class> class Compare>
   struct merge<std::tuple<Ts...>, std::tuple<>, Compare>
   {
     using type = std::tuple<Ts...>;
   };
 
-  template<class... Ts, class Compare>
+  template<class... Ts, template<class, class> class Compare>
   struct merge<std::tuple<>, std::tuple<Ts...>, Compare>
   {
     using type = std::tuple<Ts...>;
   };
 
-  template<class T, class U, class Compare>
+  template<class T, class U, template<class, class> class Compare>
   struct merge<std::tuple<T>, std::tuple<U>, Compare>
   {
     using type = std::tuple<U, T>;
   };
 
-  template<class T, class U, class Compare>
-  requires (Compare{}(std::declval<T>(), std::declval<U>()))
+  template<class T, class U, template<class, class> class Compare>
+  requires (Compare<T, U>::value)
   struct merge<std::tuple<T>, std::tuple<U>, Compare>
   {
     using type = std::tuple<T, U>;
   };
   
   
-  template<class T, class... Us, class Compare>
+  template<class T, class... Us, template<class, class> class Compare>
   struct merge<std::tuple<T>, std::tuple<Us...>, Compare>
   {
     constexpr static auto partition{sizeof...(Us)/2};
