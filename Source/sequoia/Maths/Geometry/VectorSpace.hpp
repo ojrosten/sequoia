@@ -255,6 +255,19 @@ namespace sequoia::maths
     using set_type = std::tuple<T, U>;
   };
 
+  /*template<class T, class U, class V>
+  struct direct_product<direct_product<T, U>, V>
+  {
+    using set_type = std::tuple<T, U, V>;
+  };
+
+  template<class T, class U, class V>
+  struct direct_product<T, direct_product<U, V>>
+  {
+    using set_type = std::tuple<T, U, V>;
+    };*/
+  
+
   template<vector_space T, vector_space U>
   struct direct_product<T, U>
   {
@@ -268,7 +281,7 @@ namespace sequoia::maths
     requires (!vector_space<T> && !vector_space<U>)
   struct direct_product<T, U>
   {
-    using set_type          = direct_product_set_t<typename T::set_type, typename U::set_type>;
+    using set_type          = direct_product<typename T::set_type, typename U::set_type>;
     using vector_space_type = direct_product<typename T::vector_space_type, typename U::vector_space_type>;
   };
 
