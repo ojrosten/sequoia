@@ -28,40 +28,6 @@ namespace sequoia::testing
   static_assert(!weakly_abelian_group_under_multiplication_v<int>);
   static_assert(weakly_abelian_group_under_multiplication_v<double>);
 
-  static_assert(std::is_same_v<direct_product_set_t<int, double>, std::tuple<nfold_direct_product<int, 1>, nfold_direct_product<double, 1>>>);
-  // TO DO: canonical ordering?
-  static_assert(std::is_same_v<direct_product_set_t<double, int>, std::tuple<nfold_direct_product<double, 1>, nfold_direct_product<int, 1>>>);
-  static_assert(std::is_same_v<direct_product_set_t<int, int>, std::tuple<nfold_direct_product<int, 2>>>);
- 
-  static_assert(std::is_same_v<direct_product_set_t<int, nfold_direct_product<double, 1>>, std::tuple<nfold_direct_product<int, 1>, nfold_direct_product<double, 1>>>);
-  static_assert(std::is_same_v<direct_product_set_t<nfold_direct_product<int, 1>, double>, std::tuple<nfold_direct_product<int, 1>, nfold_direct_product<double, 1>>>);
-  static_assert(std::is_same_v<direct_product_set_t<int, nfold_direct_product<int, 2>>, std::tuple<nfold_direct_product<int, 3>>>);
-  static_assert(std::is_same_v<direct_product_set_t<nfold_direct_product<int, 2>, int>, std::tuple<nfold_direct_product<int, 3>>>);
-
-  static_assert(std::is_same_v<direct_product_set_t<nfold_direct_product<int, 1>, nfold_direct_product<double, 3>>, std::tuple<nfold_direct_product<int, 1>, nfold_direct_product<double, 3>>>);
-  static_assert(std::is_same_v<direct_product_set_t<nfold_direct_product<int, 1>, nfold_direct_product<int, 3>>, std::tuple<nfold_direct_product<int, 4>>>);
-
-  static_assert(std::is_same_v<direct_product_set_t<int, std::tuple<nfold_direct_product<double, 1>>>, std::tuple<nfold_direct_product<int, 1>, nfold_direct_product<double, 1>>>);
-  static_assert(std::is_same_v<direct_product_set_t<int, std::tuple<nfold_direct_product<double, 1>, nfold_direct_product<float, 3>>>,
-                              std::tuple<nfold_direct_product<int, 1>, nfold_direct_product<double, 1>, nfold_direct_product<float, 3>>>);
-  static_assert(std::is_same_v<direct_product_set_t<std::tuple<nfold_direct_product<double, 1>, nfold_direct_product<float, 3>>, int>,
-                               std::tuple<nfold_direct_product<double, 1>, nfold_direct_product<float, 3>, nfold_direct_product<int, 1>>>);
-  static_assert(std::is_same_v<direct_product_set_t<int, std::tuple<nfold_direct_product<int, 1>>>, std::tuple<nfold_direct_product<int, 2>>>);
-  static_assert(std::is_same_v<direct_product_set_t<int, std::tuple<nfold_direct_product<int, 1>, nfold_direct_product<double, 2>>>,
-                              std::tuple<nfold_direct_product<int, 2>, nfold_direct_product<double, 2>>>);
-  static_assert(std::is_same_v<direct_product_set_t<int, std::tuple<nfold_direct_product<double, 1>, nfold_direct_product<int, 2>>>,
-                              std::tuple<nfold_direct_product<double, 1>, nfold_direct_product<int, 3>>>);
-  
-  static_assert(std::is_same_v<direct_product_set_t<std::tuple<nfold_direct_product<double, 1>>, int>, std::tuple<nfold_direct_product<double, 1>, nfold_direct_product<int, 1>>>);
-  static_assert(std::is_same_v<direct_product_set_t<std::tuple<nfold_direct_product<int, 1>>, int>, std::tuple<nfold_direct_product<int, 2>>>);
-  static_assert(std::is_same_v<direct_product_set_t<std::tuple<nfold_direct_product<int, 1>, nfold_direct_product<double, 2>>, int>,
-                              std::tuple<nfold_direct_product<int, 2>, nfold_direct_product<double, 2>>>);
-
-  // Note current ordering rule
-  static_assert(std::is_same_v<direct_product_set_t<std::tuple<nfold_direct_product<double, 1>, nfold_direct_product<int, 2>>, int>,
-                               std::tuple<nfold_direct_product<int, 3>, nfold_direct_product<double, 1>>>);
-  static_assert(std::is_same_v<direct_product_set_t<nfold_direct_product<int, 1>, std::tuple<nfold_direct_product<double, 1>>>, std::tuple<nfold_direct_product<int, 1>, nfold_direct_product<double, 1>>>);
-
   // TO DO: move this to physics examples
   namespace
   {
@@ -124,13 +90,14 @@ namespace sequoia::testing
   template<class Set, maths::weak_field Field, std::size_t D>
   void vec_test::test_vec()
   {
-    using vec_t = vector_coordinates<my_vec_space<Set, Field, D>, canonical_basis<Set, Field, D>>;
+    using vec_space_t = my_vec_space<Set, Field, D>;
+    using vec_t = vector_coordinates<vec_space_t, canonical_basis<Set, Field, D>>;
     coordinates_operations<vec_t>{*this}.execute();
 
+    static_assert(vector_space<direct_product<vec_space_t, vec_space_t>>);
+    // TO DO: Fix this! vec_t is the coordinates type, not the vector space itself!
     static_assert(vector_space<direct_product<vec_t, vec_t>>);
-    static_assert(std::is_same_v<direct_product_set_t<vec_t, vec_t>, std::tuple<nfold_direct_product<Set, 2>>>);
-    static_assert(vector_space<direct_product<direct_product<vec_t, vec_t>, vec_t>>);
-    static_assert(std::is_same_v<direct_product_set_t<direct_product<vec_t, vec_t>, vec_t>, std::tuple<nfold_direct_product<Set, 3>>>);
+    static_assert(vector_space<direct_product<direct_product<vec_space_t, vec_space_t>, vec_space_t>>);
   }
 
   template<class Set, std::floating_point Field>
