@@ -304,17 +304,17 @@ namespace sequoia::maths
     requires (T::dimension == 1) || (U::dimension == 1)
   struct reduction<direct_product<T, U>>
   {
-    using set_type   = reduction<typename direct_product<T, U>::set_type>;
-    using field_type = std::common_type_t<typename T::field_type, typename U::field_type>;
-    constexpr static std::size_t dimension{std::max(T::dimension, U::dimension)};
+    using set_type          = reduction<direct_product_set_t<T, U>>;
+    using field_type        = std::common_type_t<typename T::field_type, typename U::field_type>;
     using vector_space_type = reduction<direct_product<T, U>>;
+    constexpr static std::size_t dimension{std::max(T::dimension, U::dimension)};
   };
 
   template<convex_space T, convex_space U>
     requires (!vector_space<T> && !vector_space<U>)
   struct reduction<direct_product<T, U>>
   {
-    using set_type = reduction<typename direct_product<T, U>::set_type>;
+    using set_type          = reduction<direct_product_set_t<T, U>>;
     using vector_space_type = reduction<direct_product<typename T::vector_space_type, typename U::vector_space_type>>;
   };
 
