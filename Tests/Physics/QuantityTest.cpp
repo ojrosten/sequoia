@@ -51,13 +51,13 @@ namespace sequoia::testing
     constexpr static auto partition{sizeof...(Us)/2};
   };
 
-  template<class T, class U, class Compare>
+  template<class T, class U, template<class, class> class Compare>
   struct lower_bound;
 
-  template<class T, class U, class Compare>
+  template<class T, class U, template<class, class> class Compare>
   inline constexpr auto lower_bound_v{lower_bound<T, U, Compare>::value};
 
-  template<class T, class... Us, class Compare>
+  template<class T, class... Us, template<class, class> class Compare>
   struct lower_bound<T, std::tuple<Us...>, Compare>
   {
     constexpr static std::size_t N{sizeof...(Us)};
@@ -70,7 +70,7 @@ namespace sequoia::testing
       else
       {
         constexpr auto partition{(Lower + Upper) / 2};
-        if constexpr(Compare{}(std::declval<std::tuple_element_t<partition, std::tuple<Us...>>>(), std::declval<T>()))
+        if constexpr(Compare<std::tuple_element_t<partition, std::tuple<Us...>>, T>::value)
           return get<partition + 1, Upper>();
         else
           return get<Lower, partition>();
@@ -80,11 +80,15 @@ namespace sequoia::testing
     constexpr static std::size_t value{get<0, N>()};
   };
 
-  struct comparator
-  {
-  };
+  template<class T, class U>
+  struct comparator;
+
+  template<class T>
+  struct comparator<T, T> : std::false_type {};
+  
 
   static_assert(lower_bound_v<int, std::tuple<>, comparator> == 0);
+  static_assert(lower_bound_v<int, std::tuple<int>, comparator> == 0);
   
   
   using namespace physics;
