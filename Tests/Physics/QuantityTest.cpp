@@ -81,14 +81,15 @@ namespace sequoia::testing
   };
 
   template<class T, class U>
-  struct comparator;
-
-  template<class T>
-  struct comparator<T, T> : std::false_type {};
-  
+  struct comparator : std::bool_constant<sizeof(T) < sizeof(U)> {};  
 
   static_assert(lower_bound_v<int, std::tuple<>, comparator> == 0);
   static_assert(lower_bound_v<int, std::tuple<int>, comparator> == 0);
+  static_assert(lower_bound_v<int, std::tuple<char>, comparator> == 1);
+  static_assert(lower_bound_v<char, std::tuple<char, short, int>, comparator> == 0);
+  static_assert(lower_bound_v<short, std::tuple<char, short, int>, comparator> == 1);
+  static_assert(lower_bound_v<int, std::tuple<char, short, int>, comparator> == 2);
+  static_assert(lower_bound_v<double, std::tuple<char, short, int>, comparator> == 3);
   
   
   using namespace physics;
