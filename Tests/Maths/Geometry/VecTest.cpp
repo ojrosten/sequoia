@@ -28,6 +28,11 @@ namespace sequoia::testing
   static_assert(!weakly_abelian_group_under_multiplication_v<int>);
   static_assert(weakly_abelian_group_under_multiplication_v<double>);
 
+  static_assert(std::is_same_v<direct_product_set_t<int, double>, std::tuple<int, double>>);
+  static_assert(std::is_same_v<direct_product_set_t<direct_product<int, double>, float>, std::tuple<int, double, float>>);
+  static_assert(std::is_same_v<direct_product_set_t<float, direct_product<int, double>>, std::tuple<float, int, double>>);
+  static_assert(std::is_same_v<direct_product_set_t<direct_product<int, double>, direct_product<float, int>>, std::tuple<int, double, float, int>>);
+
   // TO DO: move this to physics examples
   namespace
   {
