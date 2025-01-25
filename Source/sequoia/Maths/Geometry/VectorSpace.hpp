@@ -240,7 +240,7 @@ namespace sequoia::maths
   template<vector_space VectorSpace, basis_for<vector_space_type<VectorSpace>> Basis>
   using vector_coordinates = affine_coordinates<VectorSpace, Basis, intrinsic_origin>;
 
-  //============================== direct_product  ==============================//
+  //============================== direct_product ==============================//
 
   template<class... Ts>
   struct direct_product;
@@ -255,17 +255,26 @@ namespace sequoia::maths
     using set_type = std::tuple<T, U>;
   };
 
-  /*template<class T, class U, class V>
+  template<class T, class U, class V>
+    requires (!vector_space<direct_product<T, U>> && !vector_space<V>)
   struct direct_product<direct_product<T, U>, V>
   {
     using set_type = std::tuple<T, U, V>;
   };
 
   template<class T, class U, class V>
+    requires (!vector_space<T> && !vector_space<direct_product<U, V>>)
   struct direct_product<T, direct_product<U, V>>
   {
     using set_type = std::tuple<T, U, V>;
-    };*/
+  };
+
+  template<class T, class U, class V, class W>
+    requires (!vector_space<direct_product<T, U>> && !vector_space<direct_product<V, W>>)
+  struct direct_product<direct_product<T, U>, direct_product<V, W>>
+  {
+    using set_type = std::tuple<T, U, V, W>;
+  };
   
 
   template<vector_space T, vector_space U>
@@ -295,7 +304,7 @@ namespace sequoia::maths
     requires (T::dimension == 1) || (U::dimension == 1)
   struct reduction<direct_product<T, U>>
   {
-    using set_type = reduction<typename direct_product<T, U>::set_type>;
+    using set_type   = reduction<typename direct_product<T, U>::set_type>;
     using field_type = std::common_type_t<typename T::field_type, typename U::field_type>;
     constexpr static std::size_t dimension{std::max(T::dimension, U::dimension)};
     using vector_space_type = reduction<direct_product<T, U>>;
