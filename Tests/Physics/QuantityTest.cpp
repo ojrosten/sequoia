@@ -107,6 +107,14 @@ namespace sequoia::testing
     constexpr static auto Pos{lower_bound_v<std::tuple<Us...>, T, Compare>};
     using type = impl::merge_one<std::make_index_sequence<Pos>, impl::shift_sequence_t<Pos, std::make_index_sequence<N-Pos>>, T, Us...>::type;
   };
+
+  template<class T, class... Ts, class... Us, template<class, class> class Compare>
+    requires (sizeof...(Ts) > 0) && (sizeof...(Us) > 0)
+  struct merge<std::tuple<T, Ts...>, std::tuple<Us...>, Compare>
+  {
+    // TO DO: make this more efficient
+    using type = merge_t<std::tuple<Ts...>, merge_t<std::tuple<T>, std::tuple<Us...>, Compare>, Compare>;
+  };
   
   template<class T, class U>
   struct comparator : std::bool_constant<sizeof(T) < sizeof(U)> {};  
@@ -131,6 +139,7 @@ namespace sequoia::testing
   static_assert(std::is_same_v<merge_t<std::tuple<char>, std::tuple<char, int>, comparator>, std::tuple<char, char, int>>);
   static_assert(std::is_same_v<merge_t<std::tuple<short>, std::tuple<char, int>, comparator>, std::tuple<char, short, int>>);
   static_assert(std::is_same_v<merge_t<std::tuple<double>, std::tuple<char, int>, comparator>, std::tuple<char, int, double>>);
+  static_assert(std::is_same_v<merge_t<std::tuple<char, int>, std::tuple<char>, comparator>, std::tuple<char, char, int>>);
   
   using namespace physics;
 
