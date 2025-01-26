@@ -155,18 +155,14 @@ namespace sequoia::testing
     {
       constexpr static auto N{sizeof...(Us)};
       constexpr static auto Pos{I + lower_bound_v<drop_t<std::tuple<Us...>, I>, T, Compare>};
-      using type = impl::merge_one<std::make_index_sequence<Pos>, shift_sequence_t<Pos, std::make_index_sequence<N-Pos>>, T, Us...>::type;
+      using type = merge_one<std::make_index_sequence<Pos>, shift_sequence_t<Pos, std::make_index_sequence<N-Pos>>, T, Us...>::type;
     };
   }  
   
   template<class T, class... Us, template<class, class> class Compare>
     requires (sizeof...(Us) > 1)
-  struct merge<std::tuple<T>, std::tuple<Us...>, Compare>
-  {
-    constexpr static auto N{sizeof...(Us)};
-    constexpr static auto Pos{lower_bound_v<std::tuple<Us...>, T, Compare>};
-    using type = impl::merge_one<std::make_index_sequence<Pos>, shift_sequence_t<Pos, std::make_index_sequence<N-Pos>>, T, Us...>::type;
-  };
+  struct merge<std::tuple<T>, std::tuple<Us...>, Compare> : impl::merge_from_position<std::tuple<T>, std::tuple<Us...>, 0, Compare>
+  {};
 
   template<class T, class... Ts, class... Us, template<class, class> class Compare>
     requires (sizeof...(Ts) > 0) && (sizeof...(Us) > 0)
