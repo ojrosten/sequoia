@@ -127,6 +127,20 @@ namespace sequoia
     using type = concat_sequences_t<reverse_sequence_t<std::index_sequence<Is...>>, std::index_sequence<I>>;
   };
 
+  //==================================================== shift_sequence ===================================================//
+
+  template<class T, std::size_t N>
+  struct shift_sequence;
+
+  template<class T, std::size_t N>
+  using shift_sequence_t = shift_sequence<T, N>::type;
+
+  template<std::size_t... Is, std::size_t N>
+  struct shift_sequence<std::index_sequence<Is...>, N>
+  {
+    using type = std::index_sequence<N+Is...>;
+  };
+
   //==================================================== sequence_partial_sum ===================================================//
 
   namespace impl

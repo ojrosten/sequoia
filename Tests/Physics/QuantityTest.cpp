@@ -62,22 +62,6 @@ namespace sequoia::testing
   static_assert(std::is_same_v<filter_t<std::tuple<int, float>, std::index_sequence<1>>, std::tuple<float>>);
   static_assert(std::is_same_v<filter_t<std::tuple<int, float>, std::index_sequence<0, 1>>, std::tuple<int, float>>);
 
-  template<std::size_t N, class T>
-  struct shift_sequence;
-
-  template<std::size_t N, class T>
-  using shift_sequence_t = shift_sequence<N, T>::type;
-
-  template<std::size_t N, std::size_t... Is>
-  struct shift_sequence<N, std::index_sequence<Is...>>
-  {
-    using type = std::index_sequence<N+Is...>;
-  };
-
-  static_assert(std::is_same_v<shift_sequence_t<42, std::index_sequence<>>, std::index_sequence<>>);
-  static_assert(std::is_same_v<shift_sequence_t<42, std::index_sequence<0>>, std::index_sequence<42>>);
-  static_assert(std::is_same_v<shift_sequence_t<42, std::index_sequence<0, 7>>, std::index_sequence<42, 49>>);
-
   template<class T, std::size_t N>
   struct drop;
 
@@ -94,7 +78,7 @@ namespace sequoia::testing
   template<class... Ts, std::size_t N>
   struct drop<std::tuple<Ts...>, N>
   {
-    using type = filter_t<std::tuple<Ts...>, shift_sequence_t<N, std::make_index_sequence<sizeof...(Ts) - N>>>;
+    using type = filter_t<std::tuple<Ts...>, shift_sequence_t<std::make_index_sequence<sizeof...(Ts) - N>, N>>;
   };
 
   static_assert(std::is_same_v<drop_t<std::tuple<>, 0>, std::tuple<>>);
@@ -189,7 +173,7 @@ namespace sequoia::testing
     {
       constexpr static auto N{sizeof...(Us)};
       constexpr static auto Pos{I + lower_bound_v<drop_t<std::tuple<Us...>, I>, T, Compare>};
-      using type = merge_one<std::make_index_sequence<Pos>, shift_sequence_t<Pos, std::make_index_sequence<N-Pos>>, T, Us...>::type;
+      using type = merge_one<std::make_index_sequence<Pos>, shift_sequence_t<std::make_index_sequence<N-Pos>, Pos>, T, Us...>::type;
     };
 
     template<class T, class... Ts, class... Us, std::size_t I, template<class, class> class Compare>
