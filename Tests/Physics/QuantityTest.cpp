@@ -42,6 +42,67 @@ namespace sequoia::testing
     constexpr static std::size_t value{get<0, N>()};
   };
 
+  template<class T, class U>
+  struct filter;
+
+  template<class T, class U>
+  using filter_t = filter<T, U>::type;
+
+  template<class... Ts, std::size_t... Is>
+    requires ((Is < sizeof...(Ts)) && ...)
+  struct filter<std::tuple<Ts...>, std::index_sequence<Is...>>
+  {
+    using type = std::tuple<std::tuple_element_t<Is, std::tuple<Ts...>> ...>;
+  };
+
+  static_assert(std::is_same_v<filter_t<std::tuple<>, std::index_sequence<>>, std::tuple<>>);
+  static_assert(std::is_same_v<filter_t<std::tuple<int>, std::index_sequence<>>, std::tuple<>>);
+  static_assert(std::is_same_v<filter_t<std::tuple<int>, std::index_sequence<0>>, std::tuple<int>>);
+  static_assert(std::is_same_v<filter_t<std::tuple<int, float>, std::index_sequence<0>>, std::tuple<int>>);
+  static_assert(std::is_same_v<filter_t<std::tuple<int, float>, std::index_sequence<1>>, std::tuple<float>>);
+  static_assert(std::is_same_v<filter_t<std::tuple<int, float>, std::index_sequence<0, 1>>, std::tuple<int, float>>);
+
+  template<std::size_t N, class T>
+  struct shift_sequence;
+
+  template<std::size_t N, class T>
+  using shift_sequence_t = shift_sequence<N, T>::type;
+
+  template<std::size_t N, std::size_t... Is>
+  struct shift_sequence<N, std::index_sequence<Is...>>
+  {
+    using type = std::index_sequence<N+Is...>;
+  };
+
+  static_assert(std::is_same_v<shift_sequence_t<42, std::index_sequence<>>, std::index_sequence<>>);
+  static_assert(std::is_same_v<shift_sequence_t<42, std::index_sequence<0>>, std::index_sequence<42>>);
+  static_assert(std::is_same_v<shift_sequence_t<42, std::index_sequence<0, 7>>, std::index_sequence<42, 49>>);
+
+  template<class T, std::size_t N>
+  struct drop;
+
+  template<class T, std::size_t N>
+  using drop_t = drop<T, N>::type;
+
+  template<class... Ts, std::size_t N>
+    requires (N >= sizeof...(Ts))
+  struct drop<std::tuple<Ts...>, N>
+  {
+    using type = std::tuple<>;
+  };
+    
+  template<class... Ts, std::size_t N>
+  struct drop<std::tuple<Ts...>, N>
+  {
+    using type = filter_t<std::tuple<Ts...>, shift_sequence_t<N, std::make_index_sequence<sizeof...(Ts) - N>>>;
+  };
+
+  static_assert(std::is_same_v<drop_t<std::tuple<>, 0>, std::tuple<>>);
+  static_assert(std::is_same_v<drop_t<std::tuple<int>, 0>, std::tuple<int>>);
+  static_assert(std::is_same_v<drop_t<std::tuple<int>, 1>, std::tuple<>>);
+  static_assert(std::is_same_v<drop_t<std::tuple<char, int>, 1>, std::tuple<int>>);
+  static_assert(std::is_same_v<drop_t<std::tuple<char, int>, 2>, std::tuple<>>);  
+
   template<class T, class U, template<class, class> class Compare>
   struct merge;
 
@@ -83,21 +144,20 @@ namespace sequoia::testing
     struct merge_one<std::index_sequence<Is...>, std::index_sequence<Js...>, T, Us...>
     {
       using type = std::tuple<std::tuple_element_t<Is, std::tuple<Us...>>..., T, std::tuple_element_t<Js, std::tuple<Us...>>...>;
-    };
+    };  
 
-    template<std::size_t N, class T>
-    struct shift_sequence;
+    template<class T, class U, std::size_t I, template<class, class> class Compare>
+    struct merge_from_position;
 
-    template<std::size_t N, class T>
-    using shift_sequence_t = shift_sequence<N, T>::type;
-
-    template<std::size_t N, std::size_t... Is>
-    struct shift_sequence<N, std::index_sequence<Is...>>
+    template<class T, class... Us, std::size_t I, template<class, class> class Compare>
+      requires (sizeof...(Us) > 1)
+    struct merge_from_position<std::tuple<T>, std::tuple<Us...>, I, Compare>
     {
-      using type = std::index_sequence<N+Is...>;
+      constexpr static auto N{sizeof...(Us)};
+      constexpr static auto Pos{I + lower_bound_v<drop_t<std::tuple<Us...>, I>, T, Compare>};
+      using type = impl::merge_one<std::make_index_sequence<Pos>, shift_sequence_t<Pos, std::make_index_sequence<N-Pos>>, T, Us...>::type;
     };
-  }
-  
+  }  
   
   template<class T, class... Us, template<class, class> class Compare>
     requires (sizeof...(Us) > 1)
@@ -105,7 +165,7 @@ namespace sequoia::testing
   {
     constexpr static auto N{sizeof...(Us)};
     constexpr static auto Pos{lower_bound_v<std::tuple<Us...>, T, Compare>};
-    using type = impl::merge_one<std::make_index_sequence<Pos>, impl::shift_sequence_t<Pos, std::make_index_sequence<N-Pos>>, T, Us...>::type;
+    using type = impl::merge_one<std::make_index_sequence<Pos>, shift_sequence_t<Pos, std::make_index_sequence<N-Pos>>, T, Us...>::type;
   };
 
   template<class T, class... Ts, class... Us, template<class, class> class Compare>
