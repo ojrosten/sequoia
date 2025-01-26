@@ -101,8 +101,34 @@ namespace sequoia::testing
   static_assert(std::is_same_v<drop_t<std::tuple<int>, 0>, std::tuple<int>>);
   static_assert(std::is_same_v<drop_t<std::tuple<int>, 1>, std::tuple<>>);
   static_assert(std::is_same_v<drop_t<std::tuple<char, int>, 1>, std::tuple<int>>);
-  static_assert(std::is_same_v<drop_t<std::tuple<char, int>, 2>, std::tuple<>>);  
+  static_assert(std::is_same_v<drop_t<std::tuple<char, int>, 2>, std::tuple<>>);
 
+  template<class T, std::size_t N>
+  struct keep;
+
+  template<class T, std::size_t N>
+  using keep_t = keep<T, N>::type;
+
+  template<class... Ts, std::size_t N>
+    requires (N >= sizeof...(Ts))
+  struct keep<std::tuple<Ts...>, N>
+  {
+    using type = std::tuple<Ts...>;
+  };
+    
+  template<class... Ts, std::size_t N>
+  struct keep<std::tuple<Ts...>, N>
+  {
+    using type = filter_t<std::tuple<Ts...>, std::make_index_sequence<N>>;
+  };
+
+  static_assert(std::is_same_v<keep_t<std::tuple<>, 0>, std::tuple<>>);
+  static_assert(std::is_same_v<keep_t<std::tuple<int>, 0>, std::tuple<>>);
+  static_assert(std::is_same_v<keep_t<std::tuple<int>, 1>, std::tuple<int>>);
+  static_assert(std::is_same_v<keep_t<std::tuple<char, int>, 0>, std::tuple<>>);
+  static_assert(std::is_same_v<keep_t<std::tuple<char, int>, 1>, std::tuple<char>>);
+  static_assert(std::is_same_v<keep_t<std::tuple<char, int>, 2>, std::tuple<char, int>>);
+  
   template<class T, class U, template<class, class> class Compare>
   struct merge;
 
@@ -206,6 +232,40 @@ namespace sequoia::testing
   static_assert(std::is_same_v<merge_t<std::tuple<char, int>, std::tuple<char, short>, comparator>, std::tuple<char, char, short, int>>);
 
   static_assert(std::is_same_v<merge_t<std::tuple<short, int>, std::tuple<char, short, double>, comparator>, std::tuple<char, short, short, int, double>>);
+
+  template<class T, template<class, class> class Compare>
+  struct stable_sort;
+
+  template<class T, template<class, class> class Compare>
+  using stable_sort_t = stable_sort<T, Compare>::type;
+
+  template<template<class, class> class Compare>
+  struct stable_sort<std::tuple<>, Compare>
+  {
+    using type = std::tuple<>;
+  };
+
+  template<class T, template<class, class> class Compare>
+  struct stable_sort<std::tuple<T>, Compare>
+  {
+    using type = std::tuple<T>;
+  };
+  
+  template<class... Ts, template<class, class> class Compare>
+  struct stable_sort<std::tuple<Ts...>, Compare>
+  {
+    constexpr static auto partition{sizeof...(Ts) / 2};
+    using type = merge_t<stable_sort_t<keep_t<std::tuple<Ts...>, partition>, comparator>,
+                         stable_sort_t<drop_t<std::tuple<Ts...>, partition>, comparator>,
+                         comparator>;
+  };
+
+  static_assert(std::is_same_v<stable_sort_t<std::tuple<>, comparator>, std::tuple<>>);
+  static_assert(std::is_same_v<stable_sort_t<std::tuple<int>, comparator>, std::tuple<int>>);
+  static_assert(std::is_same_v<stable_sort_t<std::tuple<char, int>, comparator>, std::tuple<char, int>>);
+  static_assert(std::is_same_v<stable_sort_t<std::tuple<int, char>, comparator>, std::tuple<char, int>>);
+  static_assert(std::is_same_v<stable_sort_t<std::tuple<int, char, double, short>, comparator>, std::tuple<char, short, int, double>>);
+  
   
   using namespace physics;
 
