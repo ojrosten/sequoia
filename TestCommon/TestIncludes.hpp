@@ -28,6 +28,7 @@
 #include "Core/Logic/BitmaskFreeTest.hpp"
 #include "Core/Meta/ConceptsTest.hpp"
 #include "Core/Meta/SequencesFreeTest.hpp"
+#include "Core/Meta/TypeAlgorithmsFreeTest.hpp"
 #include "Core/Meta/TypeListFreeTest.hpp"
 #include "Core/Meta/TypeTraitsTest.hpp"
 #include "Core/Meta/UtilitiesTest.hpp"

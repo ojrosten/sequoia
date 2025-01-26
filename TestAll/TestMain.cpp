@@ -161,6 +161,7 @@ int main(int argc, char** argv)
     runner.add_test_suite(
       "Meta",
       sequences_free_test{"Sequences Free Test"},
+      type_algorithms_free_test{"Type Algorithms Free Test"},
       type_list_free_test{"Type List Free Test"},
       type_traits_test{"Type Traits"},
       concepts_test{"Concepts"},

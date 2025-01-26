@@ -1,0 +1,212 @@
+////////////////////////////////////////////////////////////////////
+//                Copyright Oliver J. Rosten 2025.                //
+// Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
+//    (See accompanying file LICENSE.md or copy at                //
+//          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
+////////////////////////////////////////////////////////////////////
+
+#pragma once
+
+#include "sequoia/Core/Meta/Sequences.hpp"
+
+#include <tuple>
+
+/*! \file */
+
+namespace sequoia::meta
+{
+  //==================================================== lower_bound ===================================================//
+
+  template<class T, class U, template<class, class> class Compare>
+  struct lower_bound;
+
+  template<class T, class U, template<class, class> class Compare>
+  inline constexpr auto lower_bound_v{lower_bound<T, U, Compare>::value};
+
+  template<class... Ts, class U, template<class, class> class Compare>
+  struct lower_bound<std::tuple<Ts...>, U, Compare>
+  {
+    constexpr static std::size_t N{sizeof...(Ts)};
+
+    template<std::size_t Lower, std::size_t Upper>
+      requires (Lower <= Upper) && (Upper <= N)
+    constexpr static std::size_t get() noexcept {      
+      if constexpr (Lower == Upper)
+        return Lower;
+      else
+      {
+        constexpr auto partition{(Lower + Upper) / 2};
+        if constexpr(Compare<std::tuple_element_t<partition, std::tuple<Ts...>>, U>::value)
+          return get<partition + 1, Upper>();
+        else
+          return get<Lower, partition>();
+      }
+    }
+
+    constexpr static std::size_t value{get<0, N>()};
+  };
+
+  //==================================================== filter ===================================================//
+
+  template<class T, class U>
+  struct filter;
+
+  template<class T, class U>
+  using filter_t = filter<T, U>::type;
+
+  template<class... Ts, std::size_t... Is>
+    requires ((Is < sizeof...(Ts)) && ...)
+  struct filter<std::tuple<Ts...>, std::index_sequence<Is...>>
+  {
+    using type = std::tuple<std::tuple_element_t<Is, std::tuple<Ts...>> ...>;
+  };
+
+  //==================================================== drop ===================================================//
+
+  template<class T, std::size_t N>
+  struct drop;
+
+  template<class T, std::size_t N>
+  using drop_t = drop<T, N>::type;
+
+  template<class... Ts, std::size_t N>
+    requires (N >= sizeof...(Ts))
+  struct drop<std::tuple<Ts...>, N>
+  {
+    using type = std::tuple<>;
+  };
+    
+  template<class... Ts, std::size_t N>
+  struct drop<std::tuple<Ts...>, N>
+  {
+    using type = filter_t<std::tuple<Ts...>, shift_sequence_t<std::make_index_sequence<sizeof...(Ts) - N>, N>>;
+  };
+
+  //==================================================== keep ===================================================//
+
+  template<class T, std::size_t N>
+  struct keep;
+
+  template<class T, std::size_t N>
+  using keep_t = keep<T, N>::type;
+
+  template<class... Ts, std::size_t N>
+    requires (N >= sizeof...(Ts))
+  struct keep<std::tuple<Ts...>, N>
+  {
+    using type = std::tuple<Ts...>;
+  };
+    
+  template<class... Ts, std::size_t N>
+  struct keep<std::tuple<Ts...>, N>
+  {
+    using type = filter_t<std::tuple<Ts...>, std::make_index_sequence<N>>;
+  };
+
+  //==================================================== merge ===================================================//
+
+  template<class T, class U, template<class, class> class Compare>
+  struct merge;
+
+  template<class T, class U, template<class, class> class Compare>
+  using merge_t = merge<T, U, Compare>::type;
+
+  template<class... Ts,  template<class, class> class Compare>
+  struct merge<std::tuple<Ts...>, std::tuple<>, Compare>
+  {
+    using type = std::tuple<Ts...>;
+  };
+
+  template<class... Ts, template<class, class> class Compare>
+    requires (sizeof...(Ts) > 0)
+  struct merge<std::tuple<>, std::tuple<Ts...>, Compare>
+  {
+    using type = std::tuple<Ts...>;
+  };
+
+  template<class T, class U, template<class, class> class Compare>
+  struct merge<std::tuple<T>, std::tuple<U>, Compare>
+  {
+    using type = std::tuple<U, T>;
+  };
+
+  template<class T, class U, template<class, class> class Compare>
+  requires (Compare<T, U>::value)
+  struct merge<std::tuple<T>, std::tuple<U>, Compare>
+  {
+    using type = std::tuple<T, U>;
+  };
+
+    namespace impl
+  {
+    template<class...>
+    struct merge_one;
+
+    template<class T, class... Us, std::size_t... Is, std::size_t... Js>
+    struct merge_one<std::index_sequence<Is...>, std::index_sequence<Js...>, T, Us...>
+    {
+      using type = std::tuple<std::tuple_element_t<Is, std::tuple<Us...>>..., T, std::tuple_element_t<Js, std::tuple<Us...>>...>;
+    };  
+
+    template<class T, class U, std::size_t I, template<class, class> class Compare>
+    struct merge_from_position;
+
+    template<class T, class U, std::size_t I, template<class, class> class Compare>
+    using merge_from_position_t = merge_from_position<T, U, I, Compare>::type;
+
+    template<class... Us, std::size_t I, template<class, class> class Compare>
+    struct merge_from_position<std::tuple<>, std::tuple<Us...>, I, Compare>
+    {
+      using type = std::tuple<Us...>;
+    };
+    
+    template<class T, class... Us, std::size_t I, template<class, class> class Compare>
+    struct merge_from_position<std::tuple<T>, std::tuple<Us...>, I, Compare>
+    {
+      constexpr static auto N{sizeof...(Us)};
+      constexpr static auto Pos{I + lower_bound_v<drop_t<std::tuple<Us...>, I>, T, Compare>};
+      using type = merge_one<std::make_index_sequence<Pos>, shift_sequence_t<std::make_index_sequence<N-Pos>, Pos>, T, Us...>::type;
+    };
+
+    template<class T, class... Ts, class... Us, std::size_t I, template<class, class> class Compare>
+    struct merge_from_position<std::tuple<T, Ts...>, std::tuple<Us...>, I, Compare>
+    {
+      using first_merge = merge_from_position<std::tuple<T>, std::tuple<Us...>, 0, Compare>;
+      using type = merge_from_position_t<std::tuple<Ts...>, typename first_merge::type, first_merge::Pos + 1, Compare>;
+    };
+  }  
+
+  template<class... Ts, class... Us, template<class, class> class Compare>
+    requires (sizeof...(Ts) > 0) && (sizeof...(Us) > 0)
+  struct merge<std::tuple<Ts...>, std::tuple<Us...>, Compare> : impl::merge_from_position<std::tuple<Ts...>, std::tuple<Us...>, 0, Compare>
+  {};
+
+  //==================================================== stable_sort ===================================================//
+
+  template<class T, template<class, class> class Compare>
+  struct stable_sort;
+
+  template<class T, template<class, class> class Compare>
+  using stable_sort_t = stable_sort<T, Compare>::type;
+
+  template<template<class, class> class Compare>
+  struct stable_sort<std::tuple<>, Compare>
+  {
+    using type = std::tuple<>;
+  };
+
+  template<class T, template<class, class> class Compare>
+  struct stable_sort<std::tuple<T>, Compare>
+  {
+    using type = std::tuple<T>;
+  };
+  
+  template<class... Ts, template<class, class> class Compare>
+  struct stable_sort<std::tuple<Ts...>, Compare>
+  {
+    constexpr static auto partition{sizeof...(Ts) / 2};
+    using type = merge_t<stable_sort_t<keep_t<std::tuple<Ts...>, partition>, Compare>,
+                         stable_sort_t<drop_t<std::tuple<Ts...>, partition>, Compare>,
+                         Compare>;
+  }; 
+}

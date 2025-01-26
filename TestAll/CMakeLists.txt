@@ -35,6 +35,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Core/Logic/BitmaskFreeTest.cpp
                ${TestDir}/Core/Meta/ConceptsTest.cpp
                ${TestDir}/Core/Meta/SequencesFreeTest.cpp
+               ${TestDir}/Core/Meta/TypeAlgorithmsFreeTest.cpp
                ${TestDir}/Core/Meta/TypeListFreeTest.cpp
                ${TestDir}/Core/Meta/TypeTraitsTest.cpp
                ${TestDir}/Core/Meta/UtilitiesTest.cpp
