@@ -34,5 +34,7 @@ namespace sequoia::testing
     void test_merge();
 
     void test_stable_sort();
+
+    void test_type_comparator();
   };
 }

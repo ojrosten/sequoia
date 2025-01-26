@@ -34,6 +34,7 @@ namespace sequoia::testing
     test_keep();
     test_merge();
     test_stable_sort();
+    test_type_comparator();
   }
 
   void type_algorithms_free_test::test_lower_bound()
@@ -102,5 +103,11 @@ namespace sequoia::testing
     STATIC_CHECK((std::is_same_v<stable_sort_t<std::tuple<char, int>, comparator>, std::tuple<char, int>>), "");
     STATIC_CHECK((std::is_same_v<stable_sort_t<std::tuple<int, char>, comparator>, std::tuple<char, int>>), "");
     STATIC_CHECK((std::is_same_v<stable_sort_t<std::tuple<int, char, double, short>, comparator>, std::tuple<char, short, int, double>>), "");
+  }
+
+  void type_algorithms_free_test::test_type_comparator()
+  {
+    STATIC_CHECK((type_comparator_v<char, void>), "");
+    STATIC_CHECK((!type_comparator_v<int, char>), "");
   }
 }
