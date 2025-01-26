@@ -149,28 +149,35 @@ namespace sequoia::testing
     template<class T, class U, std::size_t I, template<class, class> class Compare>
     struct merge_from_position;
 
+    template<class T, class U, std::size_t I, template<class, class> class Compare>
+    using merge_from_position_t = merge_from_position<T, U, I, Compare>::type;
+
+    template<class... Us, std::size_t I, template<class, class> class Compare>
+    struct merge_from_position<std::tuple<>, std::tuple<Us...>, I, Compare>
+    {
+      using type = std::tuple<Us...>;
+    };
+    
     template<class T, class... Us, std::size_t I, template<class, class> class Compare>
-      requires (sizeof...(Us) > 1)
     struct merge_from_position<std::tuple<T>, std::tuple<Us...>, I, Compare>
     {
       constexpr static auto N{sizeof...(Us)};
       constexpr static auto Pos{I + lower_bound_v<drop_t<std::tuple<Us...>, I>, T, Compare>};
       using type = merge_one<std::make_index_sequence<Pos>, shift_sequence_t<Pos, std::make_index_sequence<N-Pos>>, T, Us...>::type;
     };
-  }  
-  
-  template<class T, class... Us, template<class, class> class Compare>
-    requires (sizeof...(Us) > 1)
-  struct merge<std::tuple<T>, std::tuple<Us...>, Compare> : impl::merge_from_position<std::tuple<T>, std::tuple<Us...>, 0, Compare>
-  {};
 
-  template<class T, class... Ts, class... Us, template<class, class> class Compare>
+    template<class T, class... Ts, class... Us, std::size_t I, template<class, class> class Compare>
+    struct merge_from_position<std::tuple<T, Ts...>, std::tuple<Us...>, I, Compare>
+    {
+      using first_merge = merge_from_position<std::tuple<T>, std::tuple<Us...>, 0, Compare>;
+      using type = merge_from_position_t<std::tuple<Ts...>, typename first_merge::type, first_merge::Pos + 1, Compare>;
+    };
+  }  
+
+  template<class... Ts, class... Us, template<class, class> class Compare>
     requires (sizeof...(Ts) > 0) && (sizeof...(Us) > 0)
-  struct merge<std::tuple<T, Ts...>, std::tuple<Us...>, Compare>
-  {
-    // TO DO: make this more efficient
-    using type = merge_t<std::tuple<Ts...>, merge_t<std::tuple<T>, std::tuple<Us...>, Compare>, Compare>;
-  };
+  struct merge<std::tuple<Ts...>, std::tuple<Us...>, Compare> : impl::merge_from_position<std::tuple<Ts...>, std::tuple<Us...>, 0, Compare>
+  {};
   
   template<class T, class U>
   struct comparator : std::bool_constant<sizeof(T) < sizeof(U)> {};  
