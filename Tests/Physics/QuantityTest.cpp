@@ -19,10 +19,10 @@ namespace sequoia::testing
   template<class T, class U, template<class, class> class Compare>
   inline constexpr auto lower_bound_v{lower_bound<T, U, Compare>::value};
 
-  template<class T, class... Us, template<class, class> class Compare>
-  struct lower_bound<T, std::tuple<Us...>, Compare>
+  template<class... Ts, class U, template<class, class> class Compare>
+  struct lower_bound<std::tuple<Ts...>, U, Compare>
   {
-    constexpr static std::size_t N{sizeof...(Us)};
+    constexpr static std::size_t N{sizeof...(Ts)};
 
     template<std::size_t Lower, std::size_t Upper>
       requires (Lower <= Upper) && (Upper <= N)
@@ -32,7 +32,7 @@ namespace sequoia::testing
       else
       {
         constexpr auto partition{(Lower + Upper) / 2};
-        if constexpr(Compare<std::tuple_element_t<partition, std::tuple<Us...>>, T>::value)
+        if constexpr(Compare<std::tuple_element_t<partition, std::tuple<Ts...>>, U>::value)
           return get<partition + 1, Upper>();
         else
           return get<Lower, partition>();
@@ -104,28 +104,28 @@ namespace sequoia::testing
   struct merge<std::tuple<T>, std::tuple<Us...>, Compare>
   {
     constexpr static auto N{sizeof...(Us)};
-    constexpr static auto Pos{lower_bound_v<T, std::tuple<Us...>, Compare>};
+    constexpr static auto Pos{lower_bound_v<std::tuple<Us...>, T, Compare>};
     using type = impl::merge_one<std::make_index_sequence<Pos>, impl::shift_sequence_t<Pos, std::make_index_sequence<N-Pos>>, T, Us...>::type;
   };
   
   template<class T, class U>
   struct comparator : std::bool_constant<sizeof(T) < sizeof(U)> {};  
 
-  static_assert(lower_bound_v<int, std::tuple<>, comparator> == 0);
-  static_assert(lower_bound_v<int, std::tuple<int>, comparator> == 0);
-  static_assert(lower_bound_v<int, std::tuple<char>, comparator> == 1);
-  static_assert(lower_bound_v<char, std::tuple<char, short, int>, comparator> == 0);
-  static_assert(lower_bound_v<short, std::tuple<char, short, int>, comparator> == 1);
-  static_assert(lower_bound_v<int, std::tuple<char, short, int>, comparator> == 2);
-  static_assert(lower_bound_v<double, std::tuple<char, short, int>, comparator> == 3);
-  static_assert(lower_bound_v<char, std::tuple<char, char, short, short, int, int>, comparator> == 0);
-  static_assert(lower_bound_v<short, std::tuple<char, char, short, short, int, int>, comparator> == 2);
-  static_assert(lower_bound_v<int, std::tuple<char, char, short, short, int, int>, comparator> == 4);
+  static_assert(lower_bound_v<std::tuple<>,     int, comparator> == 0);
+  static_assert(lower_bound_v<std::tuple<int>,  int, comparator> == 0);
+  static_assert(lower_bound_v<std::tuple<char>, int, comparator> == 1);
+  static_assert(lower_bound_v<std::tuple<char, short, int>, char,   comparator> == 0);
+  static_assert(lower_bound_v<std::tuple<char, short, int>, short,  comparator> == 1);
+  static_assert(lower_bound_v<std::tuple<char, short, int>, int,    comparator> == 2);
+  static_assert(lower_bound_v<std::tuple<char, short, int>, double, comparator> == 3);
+  static_assert(lower_bound_v<std::tuple<char, char, short, short, int, int>, char,  comparator> == 0);
+  static_assert(lower_bound_v<std::tuple<char, char, short, short, int, int>, short, comparator> == 2);
+  static_assert(lower_bound_v<std::tuple<char, char, short, short, int, int>, int,   comparator> == 4);
 
   static_assert(std::is_same_v<merge_t<std::tuple<>, std::tuple<>, comparator>, std::tuple<>>);
   static_assert(std::is_same_v<merge_t<std::tuple<>, std::tuple<int>, comparator>, std::tuple<int>>);
   static_assert(std::is_same_v<merge_t<std::tuple<int>, std::tuple<>, comparator>, std::tuple<int>>);
-  static_assert(std::is_same_v<merge_t<std::tuple<int>, std::tuple<int>, comparator>, std::tuple<int, int>>);
+  static_assert(std::is_same_v<merge_t<std::tuple<int>, std::tuple<int>,  comparator>, std::tuple<int, int>>);
   static_assert(std::is_same_v<merge_t<std::tuple<char>, std::tuple<int>, comparator>, std::tuple<char, int>>);
   static_assert(std::is_same_v<merge_t<std::tuple<int>, std::tuple<char>, comparator>, std::tuple<char, int>>);
   static_assert(std::is_same_v<merge_t<std::tuple<char>, std::tuple<char, int>, comparator>, std::tuple<char, char, int>>);
