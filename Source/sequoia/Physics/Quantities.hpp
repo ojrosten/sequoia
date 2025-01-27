@@ -28,6 +28,15 @@ namespace sequoia
 
     template<class T, class U>
     using reduced_validator_t = reduced_validator<T, U>::type;
+
+    template<class T>
+    struct composite_unit;
+    
+    template<physics::quantity_unit T, physics::quantity_unit U>
+    struct composite_unit<std::tuple<T, U>>
+    {
+      using validator_type = physics::reduced_validator_t<typename T::validator_type, typename U::validator_type>;
+    };
   }
 
   namespace maths
@@ -35,7 +44,7 @@ namespace sequoia
     template<physics::quantity_unit T, physics::quantity_unit U>
     struct reduction<std::tuple<T, U>>
     {
-      using validator_type = physics::reduced_validator_t<typename T::validator_type, typename U::validator_type>;
+      using type = physics::composite_unit<meta::stable_sort_t<std::tuple<T, U>, meta::type_comparator>>;
     };
   }
 }
@@ -107,7 +116,7 @@ namespace sequoia::physics
   {
     using type = quantity<
       reduction<std::conditional_t<meta::type_comparator_v<LHSQuantitySpace, RHSQuantitySpace>, direct_product<LHSQuantitySpace, RHSQuantitySpace>, direct_product<RHSQuantitySpace, LHSQuantitySpace>>>,
-      reduction<meta::stable_sort_t<std::tuple<LHSUnit, RHSUnit>, meta::type_comparator>>,
+      typename reduction<std::tuple<LHSUnit, RHSUnit>>::type,
       reduced_validator_t<LHSValidator, RHSValidator>>;
   };
   
