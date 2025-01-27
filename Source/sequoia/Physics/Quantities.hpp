@@ -9,6 +9,7 @@
 
 /*! \file */
 
+#include "sequoia/Core/Meta/TypeAlgorithms.hpp"
 #include "sequoia/Maths/Geometry/VectorSpace.hpp"
 
 #include <functional>
@@ -105,9 +106,9 @@ namespace sequoia::physics
          >
   {
     using type = quantity<
-                   reduction<direct_product<LHSQuantitySpace, RHSQuantitySpace>>,
-                   reduction<direct_product<LHSUnit, RHSUnit>>,
-                   reduced_validator_t<LHSValidator, RHSValidator>>;
+      reduction<std::conditional_t<meta::type_comparator_v<LHSQuantitySpace, RHSQuantitySpace>, direct_product<LHSQuantitySpace, RHSQuantitySpace>, direct_product<RHSQuantitySpace, LHSQuantitySpace>>>,
+      reduction<std::conditional_t<meta::type_comparator_v<LHSUnit, RHSUnit>, direct_product<LHSUnit, RHSUnit>, direct_product<RHSUnit, LHSUnit>>>,
+      reduced_validator_t<LHSValidator, RHSValidator>>;
   };
   
   template<convex_space QuantitySpace, quantity_unit Unit, class Validator=typename Unit::validator_type>
@@ -185,7 +186,8 @@ namespace sequoia::physics
     friend constexpr quantity_product_t<quantity, quantity<RHSQuantitySpace, RHSUnit, RHSValidator>>
       operator*(const quantity& lhs, const quantity<RHSQuantitySpace, RHSUnit, RHSValidator>& rhs)
     {
-      return quantity_product_t<quantity, quantity<RHSQuantitySpace, RHSUnit, RHSValidator>>{lhs.value() * rhs.value(), reduction<direct_product<Unit, RHSUnit>>{}};
+      using derived_units_type = quantity_product_t<quantity, quantity<RHSQuantitySpace, RHSUnit, RHSValidator>>::units_type;
+      return quantity_product_t<quantity, quantity<RHSQuantitySpace, RHSUnit, RHSValidator>>{lhs.value() * rhs.value(), derived_units_type{}};
     }
   };
 
