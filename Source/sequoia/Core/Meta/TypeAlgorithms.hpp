@@ -9,6 +9,7 @@
 
 #include "sequoia/Core/Meta/Sequences.hpp"
 
+#include <source_location>
 #include <string_view>
 #include <tuple>
 
