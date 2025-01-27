@@ -11,6 +11,8 @@
     \brief Utilities relating to vector sets
  */
 
+
+#include "sequoia/Core/Meta/TypeAlgorithms.hpp"
 #include "sequoia/Core/Meta/TypeTraits.hpp"
 #include "sequoia//PlatformSpecific/Preprocessor.hpp"
 
@@ -295,10 +297,7 @@ namespace sequoia::maths
   };
 
   template<class T>
-  struct reduction
-  {
-    using image_type = T;
-  };
+  struct reduction;
 
   template<vector_space T, vector_space U>
     requires (T::dimension == 1) || (U::dimension == 1)

@@ -33,7 +33,7 @@ namespace sequoia
   namespace maths
   {
     template<physics::quantity_unit T, physics::quantity_unit U>
-    struct reduction<direct_product<T, U>>
+    struct reduction<std::tuple<T, U>>
     {
       using validator_type = physics::reduced_validator_t<typename T::validator_type, typename U::validator_type>;
     };
@@ -107,7 +107,7 @@ namespace sequoia::physics
   {
     using type = quantity<
       reduction<std::conditional_t<meta::type_comparator_v<LHSQuantitySpace, RHSQuantitySpace>, direct_product<LHSQuantitySpace, RHSQuantitySpace>, direct_product<RHSQuantitySpace, LHSQuantitySpace>>>,
-      reduction<std::conditional_t<meta::type_comparator_v<LHSUnit, RHSUnit>, direct_product<LHSUnit, RHSUnit>, direct_product<RHSUnit, LHSUnit>>>,
+      reduction<meta::stable_sort_t<std::tuple<LHSUnit, RHSUnit>, meta::type_comparator>>,
       reduced_validator_t<LHSValidator, RHSValidator>>;
   };
   
