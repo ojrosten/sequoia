@@ -23,19 +23,32 @@ namespace sequoia
       typename T::validator_type;
     };
     
-    template<class T, class U>
+    template<class... Ts>
     struct reduced_validator;
 
-    template<class T, class U>
-    using reduced_validator_t = reduced_validator<T, U>::type;
+    template<class... Ts>
+    using reduced_validator_t = reduced_validator<Ts...>::type;
+
+    template<class T>
+    struct reduced_validator<T>
+    {
+      using type = T;
+    };
+
+    template<class T, class... Us>
+    struct reduced_validator<T, Us...>
+    {
+      using type = reduced_validator_t<T, reduced_validator_t<Us...>>;
+    };
 
     template<class T>
     struct composite_unit;
-    
-    template<physics::quantity_unit T, physics::quantity_unit U>
-    struct composite_unit<std::tuple<T, U>>
+
+    // Ts are assumed to be ordered
+    template<physics::quantity_unit... Ts>
+    struct composite_unit<std::tuple<Ts...>>
     {
-      using validator_type = physics::reduced_validator_t<typename T::validator_type, typename U::validator_type>;
+      using validator_type = reduced_validator_t<typename Ts::validator_type...>;
     };
   }
 
@@ -44,7 +57,25 @@ namespace sequoia
     template<physics::quantity_unit T, physics::quantity_unit U>
     struct reduction<std::tuple<T, U>>
     {
-      using type = physics::composite_unit<meta::stable_sort_t<std::tuple<T, U>, meta::type_comparator>>;
+      using type = physics::composite_unit<meta::merge_t<std::tuple<T>, std::tuple<U>, meta::type_comparator>>;
+    };
+
+    template<physics::quantity_unit... Ts, physics::quantity_unit U>
+    struct reduction<std::tuple<physics::composite_unit<std::tuple<Ts...>>, U>>
+    {
+      using type = physics::composite_unit<meta::merge_t<std::tuple<Ts...>, std::tuple<U>, meta::type_comparator>>;
+    };
+
+    template<physics::quantity_unit T, physics::quantity_unit... Us>
+    struct reduction<std::tuple<T, physics::composite_unit<std::tuple<Us...>>>>
+    {
+      using type = physics::composite_unit<meta::merge_t<std::tuple<Us...>, std::tuple<T>, meta::type_comparator>>;
+    };
+
+    template<physics::quantity_unit... Ts, physics::quantity_unit... Us>
+    struct reduction<std::tuple<physics::composite_unit<std::tuple<Ts...>>, physics::composite_unit<std::tuple<Us...>>>>
+    {
+      using type = physics::composite_unit<meta::merge_t<std::tuple<Ts...>, std::tuple<Us...>, meta::type_comparator>>;
     };
   }
 }
@@ -116,7 +147,7 @@ namespace sequoia::physics
   {
     using type = quantity<
       reduction<std::conditional_t<meta::type_comparator_v<LHSQuantitySpace, RHSQuantitySpace>, direct_product<LHSQuantitySpace, RHSQuantitySpace>, direct_product<RHSQuantitySpace, LHSQuantitySpace>>>,
-      typename reduction<std::tuple<LHSUnit, RHSUnit>>::type,
+      reduction_t<std::tuple<LHSUnit, RHSUnit>>,
       reduced_validator_t<LHSValidator, RHSValidator>>;
   };
   

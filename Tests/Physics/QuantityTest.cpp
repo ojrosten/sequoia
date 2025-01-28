@@ -68,13 +68,37 @@ namespace sequoia::testing
       static_assert(vector_space<displacement_space<classical_quantity_sets::masses, float>>);
       static_assert(vector_space<displacement_space<classical_quantity_sets::lengths, float>>);
       static_assert(vector_space<direct_product<displacement_space<classical_quantity_sets::masses, float>, displacement_space<classical_quantity_sets::lengths, float>>>);
-      static_assert(vector_space<reduction<direct_product<displacement_space<classical_quantity_sets::masses, float>, displacement_space<classical_quantity_sets::lengths, float>>>>);
+      static_assert(vector_space<reduction_t<direct_product<displacement_space<classical_quantity_sets::masses, float>, displacement_space<classical_quantity_sets::lengths, float>>>>);
       
       static_assert(convex_space<reduction<direct_product<mass_space<float>, length_space<float>>>>);
+      static_assert(std::is_same_v<reduction_t<std::tuple<units::metre_t, units::kilogram_t>>,
+                                   reduction_t<std::tuple<units::kilogram_t, units::metre_t>>>);
+
+      static_assert(std::is_same_v<reduction_t<std::tuple<units::kelvin_t, reduction_t<std::tuple<units::metre_t, units::kilogram_t>>>>,
+                                   reduction_t<std::tuple<reduction_t<std::tuple<units::kilogram_t, units::metre_t>>, units::kelvin_t>>>);
+
+      static_assert(std::is_same_v<reduction_t<std::tuple<units::coulomb_t, units::kelvin_t>>, composite_unit<std::tuple<units::coulomb_t, units::kelvin_t>>>);
+      static_assert(std::is_same_v<reduction_t<std::tuple<units::kilogram_t, units::metre_t>>, composite_unit<std::tuple<units::kilogram_t, units::metre_t>>>);
+      static_assert(std::is_same_v<reduction_t<std::tuple<composite_unit<std::tuple<units::coulomb_t, units::kelvin_t>>, composite_unit<std::tuple<units::kilogram_t, units::metre_t>>>>,
+                    composite_unit<std::tuple<units::coulomb_t, units::kelvin_t, units::kilogram_t, units::metre_t>>
+                    >);
+      
+      static_assert(std::is_same_v<reduction_t<std::tuple<reduction_t<std::tuple<units::coulomb_t, units::kelvin_t>>, reduction_t<std::tuple<units::kilogram_t, units::metre_t>>>>,
+                                  reduction_t<std::tuple<reduction_t<std::tuple<units::kelvin_t, units::kilogram_t>>, reduction_t<std::tuple<units::coulomb_t, units::metre_t>>>>>);
+      
       auto ml = mass_t{1.0, units::kilogram} * length_t{2.0, units::metre},
            lm = length_t{2.0, units::metre} * mass_t{1.0, units::kilogram};
       check(equivalence, "", ml, 2.0f);
       check(equivalence, "", lm, 2.0f);
+
+      /*using charge_t = si::electrical_charge<float>;
+      using temperature_t = si::time<float>;
+      
+      auto mlct = mass_t{1.0, units::kilogram} * length_t{2.0, units::metre} * charge_t{-1.0, units::coulomb} * temperature_t{5.0, units::kelvin},
+           cltm = charge_t{-1.0, units::coulomb} * length_t{2.0, units::metre} * temperature_t{5.0, units::kelvin} *  mass_t{1.0, units::kilogram};
+
+      check(equivalence, "", mlct, -10.0f);
+      check(equivalence, "", cltm, -10.0f);*/
     }
   }
 }

@@ -297,17 +297,40 @@ namespace sequoia::maths
   };
 
   template<class T>
+  struct ordered_direct_product;
+
+  // Types assumed to be ordered
+  template<vector_space... Ts>
+  struct ordered_direct_product<std::tuple<Ts...>>
+  {
+    using set_type   = std::tuple<typename Ts::set_type...>;
+    using field_type = std::common_type_t<typename Ts::field_type...>;
+    constexpr static auto dimension{(Ts::dimension + ...)};
+  };
+  
+  
+
+  template<class T>
   struct reduction;
 
+  template<class T>
+  using reduction_t = reduction<T>::type;
+
+  template<vector_space... Ts>
+  struct reduction<ordered_direct_product<std::tuple<Ts...>>>
+  {
+    using direct_product_t  = ordered_direct_product<std::tuple<Ts...>>;
+    using set_type          = reduction<typename direct_product_t::set_type>;
+    using field_type        = typename direct_product_t::field_type;
+    using vector_space_type = reduction<ordered_direct_product<std::tuple<Ts...>>>;
+    constexpr static std::size_t dimension{std::max(Ts::dimension...)};
+  };
+  
   template<vector_space T, vector_space U>
     requires (T::dimension == 1) || (U::dimension == 1)
   struct reduction<direct_product<T, U>>
   {
-    using direct_product_type  = direct_product<T, U>;
-    using set_type             = reduction<typename direct_product_type::set_type>;
-    using field_type           = std::common_type_t<typename T::field_type, typename U::field_type>;
-    using vector_space_type    = reduction<direct_product_type>;
-    constexpr static std::size_t dimension{std::max(T::dimension, U::dimension)};
+    using type = reduction<ordered_direct_product<meta::merge_t<std::tuple<T>, std::tuple<U>, meta::type_comparator>>>;
   };
 
   template<convex_space T, convex_space U>
@@ -315,7 +338,7 @@ namespace sequoia::maths
   struct reduction<direct_product<T, U>>
   {
     using set_type          = reduction<direct_product_set_t<T, U>>;
-    using vector_space_type = reduction<direct_product<typename T::vector_space_type, typename U::vector_space_type>>;
+    using vector_space_type = reduction_t<direct_product<typename T::vector_space_type, typename U::vector_space_type>>;
   };
 
   //============================== coordinates_base definition  ==============================//
