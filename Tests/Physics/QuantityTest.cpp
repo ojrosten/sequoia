@@ -70,7 +70,7 @@ namespace sequoia::testing
       static_assert(vector_space<direct_product<displacement_space<classical_quantity_sets::masses, float>, displacement_space<classical_quantity_sets::lengths, float>>>);
       static_assert(vector_space<reduction_t<direct_product<displacement_space<classical_quantity_sets::masses, float>, displacement_space<classical_quantity_sets::lengths, float>>>>);
       
-      static_assert(convex_space<reduction<direct_product<mass_space<float>, length_space<float>>>>);
+      static_assert(convex_space<reduction_t<direct_product<mass_space<float>, length_space<float>>>>);
       static_assert(std::is_same_v<reduction_t<std::tuple<units::metre_t, units::kilogram_t>>,
                                    reduction_t<std::tuple<units::kilogram_t, units::metre_t>>>);
 

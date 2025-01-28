@@ -146,7 +146,7 @@ namespace sequoia::physics
          >
   {
     using type = quantity<
-      reduction<std::conditional_t<meta::type_comparator_v<LHSQuantitySpace, RHSQuantitySpace>, direct_product<LHSQuantitySpace, RHSQuantitySpace>, direct_product<RHSQuantitySpace, LHSQuantitySpace>>>,
+      reduction_t<direct_product<LHSQuantitySpace, RHSQuantitySpace>>,
       reduction_t<std::tuple<LHSUnit, RHSUnit>>,
       reduced_validator_t<LHSValidator, RHSValidator>>;
   };
