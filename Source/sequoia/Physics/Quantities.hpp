@@ -221,7 +221,9 @@ namespace sequoia::physics
     }   
 
     template<convex_space RHSQuantitySpace, quantity_unit RHSUnit, class RHSValidator>
-      requires (D == 1) || (quantity<RHSQuantitySpace, Unit, RHSValidator>::D == 1)
+    requires    ((D == 1) || (quantity<RHSQuantitySpace, Unit, RHSValidator>::D == 1))
+             && (is_intrinsically_absolute || vector_space<QuantitySpace>)
+             && (quantity<RHSQuantitySpace, RHSUnit, RHSValidator>::is_intrinsically_absolute || vector_space<RHSQuantitySpace>)
     [[nodiscard]]
     friend constexpr quantity_product_t<quantity, quantity<RHSQuantitySpace, RHSUnit, RHSValidator>>
       operator*(const quantity& lhs, const quantity<RHSQuantitySpace, RHSUnit, RHSValidator>& rhs)
