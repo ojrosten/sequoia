@@ -64,7 +64,8 @@ namespace sequoia::testing
 
       using mass_space_t   = mass_space<float>;
       using length_space_t = length_space<float>;
-      //using temp_space_t   = temperature_space<float>;
+      using temp_space_t   = temperature_space<float>;
+      using time_space_t   = time_space<float>;
 
       using delta_mass_space_t = displacement_space<classical_quantity_sets::masses, float>;
       using delta_len_space_t  = displacement_space<classical_quantity_sets::lengths, float>;
@@ -93,11 +94,14 @@ namespace sequoia::testing
                                    reduction<direct_product<std::tuple<length_space_t, mass_space_t>>>>);
       static_assert(std::is_same_v<reduction_t<direct_product<mass_space_t, length_space_t>>,
                                    reduction_t<direct_product<length_space_t, mass_space_t>>>);
-
-      //static_assert(std::is_same_v<reduction_t<direct_product<reduction_t<direct_product<mass_space_t, length_space_t>>, temp_space_t>>,
-      //            reduction<direct_product<std::tuple<length_space_t, mass_space_t, temp_space_t>>>>);
-
-
+      static_assert(std::is_same_v<reduction_t<direct_product<temp_space_t, reduction_t<direct_product<mass_space_t, length_space_t>>>>,
+                                   reduction<direct_product<std::tuple<length_space_t, mass_space_t, temp_space_t>>>>);
+      static_assert(std::is_same_v<reduction_t<direct_product<reduction_t<direct_product<mass_space_t, length_space_t>>, temp_space_t>>,
+                                   reduction<direct_product<std::tuple<length_space_t, mass_space_t, temp_space_t>>>>);
+      static_assert(std::is_same_v<reduction_t<direct_product<reduction_t<direct_product<mass_space_t, length_space_t>>,
+                                                              reduction_t<direct_product<time_space_t, temp_space_t>>>>,
+                                   reduction<direct_product<std::tuple<length_space_t, mass_space_t, temp_space_t, time_space_t>>>>);
+      
       
       static_assert(std::is_same_v<reduction_t<std::tuple<units::metre_t, units::kilogram_t>>,
                                    reduction_t<std::tuple<units::kilogram_t, units::metre_t>>>);
