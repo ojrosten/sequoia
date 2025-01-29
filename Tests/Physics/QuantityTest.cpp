@@ -72,7 +72,7 @@ namespace sequoia::testing
       
       static_assert(convex_space<reduction_t<direct_product<mass_space<float>, length_space<float>>>>);
       static_assert(std::is_same_v<reduction_t<direct_product<mass_space<float>, length_space<float>>>,
-                                   reduction<ordered_direct_product<std::tuple<length_space<float>, mass_space<float>>>>>);
+                                   reduction<direct_product<std::tuple<length_space<float>, mass_space<float>>>>>);
       static_assert(std::is_same_v<reduction_t<direct_product<mass_space<float>, length_space<float>>>,
                                    reduction_t<direct_product<length_space<float>, mass_space<float>>>>);
 
