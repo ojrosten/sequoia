@@ -364,12 +364,21 @@ namespace sequoia::maths
     using type = reduction<direct_product<meta::merge_t<std::tuple<T, U>, std::tuple<V>, meta::type_comparator>>>;
   };
 
+  template<vector_space T, vector_space U, vector_space V, vector_space W>
+    requires ((T::dimension == 1) && (U::dimension == 1)) || ((V::dimension == 1) && (W::dimension == 1))
+  struct reduction<direct_product<reduction<direct_product<std::tuple<T, U>>>, reduction<direct_product<std::tuple<V, W>>>>>
+  {
+    using type = reduction<direct_product<meta::merge_t<std::tuple<T, U>, std::tuple<V, W>, meta::type_comparator>>>;
+  };
+
   template<convex_space T, convex_space U>
     requires (!vector_space<T> && !vector_space<U>)
   struct reduction<direct_product<T, U>>
   {
     using type = reduction<direct_product<meta::merge_t<std::tuple<T>, std::tuple<U>, meta::type_comparator>>>;
   };
+
+  // TO DO: fill in the gaps for convex spaces
 
   //============================== coordinates_base definition  ==============================//
 

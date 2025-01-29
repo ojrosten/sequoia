@@ -69,6 +69,7 @@ namespace sequoia::testing
       using delta_mass_space_t = displacement_space<classical_quantity_sets::masses, float>;
       using delta_len_space_t  = displacement_space<classical_quantity_sets::lengths, float>;
       using delta_temp_space_t = displacement_space<classical_quantity_sets::temperatures, float>;
+      using delta_time_space_t = displacement_space<classical_quantity_sets::times, float>;
    
       static_assert(vector_space<delta_mass_space_t>);
       static_assert(vector_space<delta_len_space_t>);
@@ -80,6 +81,9 @@ namespace sequoia::testing
                                    reduction<direct_product<std::tuple<delta_len_space_t, delta_mass_space_t, delta_temp_space_t>>>>);
       static_assert(std::is_same_v<reduction_t<direct_product<reduction_t<direct_product<delta_mass_space_t, delta_len_space_t>>, delta_temp_space_t>>,
                                    reduction<direct_product<std::tuple<delta_len_space_t, delta_mass_space_t, delta_temp_space_t>>>>);
+      static_assert(std::is_same_v<reduction_t<direct_product<reduction_t<direct_product<delta_mass_space_t, delta_len_space_t>>,
+                                                              reduction_t<direct_product<delta_time_space_t, delta_temp_space_t>>>>,
+                                   reduction<direct_product<std::tuple<delta_len_space_t, delta_mass_space_t, delta_temp_space_t, delta_time_space_t>>>>);
       
       static_assert(convex_space<length_space_t>);
       static_assert(convex_space<mass_space_t>);
