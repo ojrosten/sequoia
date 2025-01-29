@@ -297,6 +297,8 @@ namespace sequoia::maths
   };
 
   // Types assumed to be ordered
+  // Could add this as a constraint, at the cost of changing
+  // the algorithmic complexity...
   template<vector_space... Ts>
   struct direct_product<std::tuple<Ts...>>
   {
@@ -323,7 +325,8 @@ namespace sequoia::maths
 
   template<vector_space... Ts>
   struct reduction<direct_product<std::tuple<Ts...>>>
-  {
+  {    
+    using tuple_type        = std::tuple<Ts...>;
     using direct_product_t  = direct_product<std::tuple<Ts...>>;
     using set_type          = reduction<typename direct_product_t::set_type>;
     using field_type        = typename direct_product_t::field_type;
@@ -339,14 +342,19 @@ namespace sequoia::maths
     using set_type          = reduction<typename direct_product_t::set_type>;
     using vector_space_type = reduction_t<typename direct_product_t::vector_space_type>;
   };
-
-  // TO DO: adapt to deal with direct products of direct products...
   
   template<vector_space T, vector_space U>
     requires (T::dimension == 1) || (U::dimension == 1)
   struct reduction<direct_product<T, U>>
   {
     using type = reduction<direct_product<meta::merge_t<std::tuple<T>, std::tuple<U>, meta::type_comparator>>>;
+  };
+
+  template<vector_space T, vector_space U, vector_space V>
+    requires (T::dimension == 1) || ((U::dimension == 1) && (V::dimension == 1))
+  struct reduction<direct_product<T, reduction<direct_product<std::tuple<U, V>>>>>
+  {
+    using type = reduction<direct_product<meta::merge_t<std::tuple<T>, std::tuple<U, V>, meta::type_comparator>>>;
   };
 
   template<convex_space T, convex_space U>
