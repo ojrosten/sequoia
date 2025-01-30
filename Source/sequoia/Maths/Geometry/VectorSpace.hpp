@@ -307,7 +307,7 @@ namespace sequoia::maths
     constexpr static auto dimension{(Ts::dimension + ...)};
   };
   
-  // Types assumed to be ordered
+  // Types assumed to be ordered wrt type_comparator, but dependent types may not be against the same comparator
   template<convex_space... Ts>
     requires (!vector_space<Ts> && ...)
   struct direct_product<std::tuple<Ts...>>
@@ -331,7 +331,7 @@ namespace sequoia::maths
     using set_type          = reduction<typename direct_product_t::set_type>;
     using field_type        = typename direct_product_t::field_type;
     using vector_space_type = reduction<direct_product<std::tuple<Ts...>>>;
-    constexpr static std::size_t dimension{std::max(Ts::dimension...)};
+    constexpr static std::size_t dimension{std::ranges::max({Ts::dimension...})};
   };
 
   template<convex_space... Ts>
@@ -371,6 +371,11 @@ namespace sequoia::maths
     using type = reduction<direct_product<meta::merge_t<std::tuple<T, U>, std::tuple<V, W>, meta::type_comparator>>>;
   };
 
+  template<vector_space... Ts>
+  struct reduction<direct_product<Ts...>>
+  {
+    using type = reduction<direct_product<std::tuple<Ts...>>>;
+  };
   //============================== coordinates_base definition  ==============================//
 
   template<
