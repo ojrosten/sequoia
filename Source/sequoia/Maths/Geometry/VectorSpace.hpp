@@ -323,6 +323,15 @@ namespace sequoia::maths
   template<class T>
   using reduction_t = reduction<T>::type;
 
+  template<class T>
+  struct is_reduction : std::false_type {};
+
+  template<class T>
+  struct is_reduction<reduction<T>> : std::true_type {};
+
+  template<class T>
+  inline constexpr bool is_reduction_v{is_reduction<T>::value};
+
   template<vector_space... Ts>
   struct reduction<direct_product<std::tuple<Ts...>>>
   {    
@@ -344,32 +353,36 @@ namespace sequoia::maths
   };
   
   template<convex_space T, convex_space U>
+  requires (!is_reduction_v<T>) && (!is_reduction_v<U>)
   //  requires (T::dimension == 1) || (U::dimension == 1)
   struct reduction<direct_product<T, U>>
   {
     using type = reduction<direct_product<meta::merge_t<std::tuple<T>, std::tuple<U>, meta::type_comparator>>>;
   };
 
-  template<convex_space T, convex_space U, convex_space V>
+  template<convex_space T, convex_space... Us>
+  requires (!is_reduction_v<T>)
   //  requires (T::dimension == 1) || ((U::dimension == 1) && (V::dimension == 1))
-  struct reduction<direct_product<T, reduction<direct_product<std::tuple<U, V>>>>>
+  struct reduction<direct_product<T, reduction<direct_product<std::tuple<Us...>>>>>
   {
-    using type = reduction<direct_product<meta::merge_t<std::tuple<T>, std::tuple<U, V>, meta::type_comparator>>>;
+    using type = reduction<direct_product<meta::merge_t<std::tuple<T>, std::tuple<Us...>, meta::type_comparator>>>;
   };
 
-  template<convex_space T, convex_space U, convex_space V>
+  template<convex_space... Ts, convex_space U>
+  requires (!is_reduction_v<U>)
   //  requires ((T::dimension == 1) && (U::dimension == 1)) || (V::dimension == 1)
-  struct reduction<direct_product<reduction<direct_product<std::tuple<T, U>>>, V>>
+  struct reduction<direct_product<reduction<direct_product<std::tuple<Ts...>>>, U>>
   {
-    using type = reduction<direct_product<meta::merge_t<std::tuple<T, U>, std::tuple<V>, meta::type_comparator>>>;
+    using type = reduction<direct_product<meta::merge_t<std::tuple<Ts...>, std::tuple<U>, meta::type_comparator>>>;
   };
 
-  template<convex_space T, convex_space U, convex_space V, convex_space W>
+  template<convex_space... Ts, convex_space... Us>
+  requires (sizeof...(Ts) > 1) && (sizeof...(Us) > 1)
   //  requires ((T::dimension == 1) && (U::dimension == 1)) || ((V::dimension == 1) && (W::dimension == 1))
-  struct reduction<direct_product<reduction<direct_product<std::tuple<T, U>>>, reduction<direct_product<std::tuple<V, W>>>>>
+  struct reduction<direct_product<reduction<direct_product<std::tuple<Ts...>>>, reduction<direct_product<std::tuple<Us...>>>>>
   {
-    using type = reduction<direct_product<meta::merge_t<std::tuple<T, U>, std::tuple<V, W>, meta::type_comparator>>>;
-  };
+    using type = reduction<direct_product<meta::merge_t<std::tuple<Ts...>, std::tuple<Us...>, meta::type_comparator>>>;
+    };
 
   template<vector_space... Ts>
   struct reduction<direct_product<Ts...>>
