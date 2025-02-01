@@ -19,6 +19,7 @@ target_sources(TestChamber PRIVATE
                ${TestDir}/Maths/Geometry/AngleTestingDiagnostics.cpp
                ${TestDir}/Maths/Geometry/VecTest.cpp
                ${TestDir}/Maths/Geometry/VecTestingDiagnostics.cpp
+               ${TestDir}/Physics/QuantityMetaFreeTest.cpp
                ${TestDir}/Physics/QuantityTest.cpp
                ${TestDir}/Physics/QuantityTestingDiagnostics.cpp)
 

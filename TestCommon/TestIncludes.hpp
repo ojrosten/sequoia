@@ -98,6 +98,7 @@
 #include "Maths/Statistics/StatisticalAlgorithmsTest.hpp"
 #include "Parsing/CommandLineArgumentsDiagnostics.hpp"
 #include "Parsing/CommandLineArgumentsTest.hpp"
+#include "Physics/QuantityMetaFreeTest.hpp"
 #include "Physics/QuantityTest.hpp"
 #include "Physics/QuantityTestingDiagnostics.hpp"
 #include "Runtime/FactoryTest.hpp"

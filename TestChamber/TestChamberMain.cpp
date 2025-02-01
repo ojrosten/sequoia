@@ -46,6 +46,7 @@ int main(int argc, char** argv)
 
     runner.add_test_suite(
       "Quantity",
+      quantity_meta_free_test{"Quantity Meta Free Test"},
       quantity_false_negative_test{"False Negative Test"},
       quantity_test{"Unit Test"}
     );

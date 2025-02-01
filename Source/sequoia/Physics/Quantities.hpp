@@ -150,6 +150,24 @@ namespace sequoia::physics
       reduction_t<std::tuple<LHSUnit, RHSUnit>>,
       reduced_validator_t<LHSValidator, RHSValidator>>;
   };
+
+  template<class>
+  struct dual;
+  
+  template<convex_space C>
+  struct dual<C>
+  {
+    using set_type = typename C::set_type;
+    using vector_space_type = dual<typename C::vector_space_type>;
+  };
+
+  template<vector_space V>
+  struct dual<V>
+  {
+    using set_type   = typename V::set_type;
+    using field_type = typename V::field_type;
+    constexpr static auto dimension{V::dimension};
+  };
   
   template<convex_space QuantitySpace, quantity_unit Unit, class Validator=typename Unit::validator_type>
   class quantity : public to_coordinates_base_type<QuantitySpace, Unit, Validator>
