@@ -39,6 +39,7 @@ namespace sequoia::testing
     using delta_temp_space_t = displacement_space<classical_quantity_sets::temperatures, float>;
     using delta_time_space_t = displacement_space<classical_quantity_sets::times, float>;
 
+    STATIC_CHECK((si::mass<float>::is_intrinsically_absolute), "");
     
     STATIC_CHECK((convex_space<mass_space<float>>), "");
     STATIC_CHECK((!has_unary_minus<mass_space<float>>), "");
