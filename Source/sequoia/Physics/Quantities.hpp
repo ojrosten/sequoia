@@ -320,31 +320,26 @@ namespace sequoia::physics
   {
     struct kilogram_t
     {
-      constexpr static std::string_view symbol{"kg"};
       using validator_type = absolute_validator;
     };
 
     struct metre_t
     {
-      constexpr static std::string_view symbol{"m"};
       using validator_type = absolute_validator;
     };
 
     struct second_t
     {
-      constexpr static std::string_view symbol{"s"};
       using validator_type = std::identity;
     };
 
     struct kelvin_t
     {
-      constexpr static std::string_view symbol{"K"};
       using validator_type = absolute_validator;
     };
 
     struct coulomb_t
     {
-      constexpr static std::string_view symbol{"C"};
       using validator_type = std::identity;
     };
 
@@ -353,6 +348,11 @@ namespace sequoia::physics
     inline constexpr second_t   second{};
     inline constexpr kelvin_t   kelvin{};
     inline constexpr coulomb_t  coulomb{};
+
+    struct celsius
+    {
+      
+    };
   }
 
   namespace si

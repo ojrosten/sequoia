@@ -1,4 +1,4 @@
-Tests/Physics/QuantityTest.cpp, Line 62
+Tests/Physics/QuantityTest.cpp, Line 65
 Negative mass
 
 Expected Exception Type:

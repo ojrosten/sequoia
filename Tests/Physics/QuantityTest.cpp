@@ -54,10 +54,13 @@ namespace sequoia::testing
     {
       using mass_t    = si::mass<float>;
       using delta_m_t = mass_t::displacement_quantity_type;
-      STATIC_CHECK((can_multiply<mass_t, float>), "");
-      STATIC_CHECK((can_divide<mass_t, float>), "");
-      STATIC_CHECK((can_add<mass_t, mass_t>), "");
-      STATIC_CHECK((can_subtract<mass_t, mass_t>), "");
+      STATIC_CHECK((can_multiply<mass_t, float>),   "");
+      STATIC_CHECK((can_divide<mass_t, float>),     "");
+      STATIC_CHECK((can_divide<mass_t, mass_t>),    "");
+      STATIC_CHECK((can_divide<mass_t, delta_m_t>), "");
+      STATIC_CHECK((can_divide<delta_m_t, mass_t>), "");
+      STATIC_CHECK((can_add<mass_t, mass_t>),       "");
+      STATIC_CHECK((can_subtract<mass_t, mass_t>),  "");
             
       check_exception_thrown<std::domain_error>("Negative mass", [](){ return mass_t{-1.0, units::kilogram}; });
 
@@ -69,9 +72,17 @@ namespace sequoia::testing
 
     {
       using unsafe_mass_t = quantity<mass_space<float>, units::kilogram_t, std::identity>;
+      using delta_m_t = unsafe_mass_t::displacement_quantity_type;
+
+      STATIC_CHECK((can_multiply<unsafe_mass_t, float>),         "");
+      STATIC_CHECK((can_divide<unsafe_mass_t, float>),           "");
+      STATIC_CHECK((can_divide<unsafe_mass_t, unsafe_mass_t>),   "");
+      STATIC_CHECK((can_divide<unsafe_mass_t, delta_m_t>),       "");
+      STATIC_CHECK((can_divide<delta_m_t, unsafe_mass_t>),       "");
+      STATIC_CHECK((can_add<unsafe_mass_t, unsafe_mass_t>),      "");
+      STATIC_CHECK((can_subtract<unsafe_mass_t, unsafe_mass_t>), "");
 
       coordinates_operations<unsafe_mass_t>{*this}.execute();
-      using delta_m_t = unsafe_mass_t::displacement_quantity_type;
 
       check(equality, "", unsafe_mass_t{-2.0, units::kilogram} / delta_m_t{1.0, units::kilogram}, -2.0f);
     }
