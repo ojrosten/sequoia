@@ -388,6 +388,10 @@ int main(int argc, char** argv)
     runner.add_test_suite(
       "Geometry",
       suite{
+        "Spaces",        
+        spaces_meta_free_test{"Spaces Meta Free Test"}
+      },
+      suite{
         "Vector Coordinates",
         vector_coordinates_false_negative_test{"False negative Test"},
         vector_coordinates_test{"Unit Test"}
@@ -404,12 +408,6 @@ int main(int argc, char** argv)
       quantity_meta_free_test{"Quantity Meta Free Test"},
       quantity_false_negative_test{"False Negative Test"},
       quantity_test{"Unit Test"}
-    );
-      
-    runner.add_test_suite(
-        "Quantity",
-        quantity_false_negative_test{"False Negative Test"},
-        quantity_test{"Unit Test"}
     );
 
     runner.execute(timer_resolution{1ms});

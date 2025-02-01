@@ -1,4 +1,2 @@
 False Negative Test
 False Negative Checks:                     2;  Failures:  0
-False Negative Test
-False Negative Checks:                     2;  Failures:  0

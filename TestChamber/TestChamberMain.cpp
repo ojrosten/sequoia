@@ -33,6 +33,10 @@ int main(int argc, char** argv)
     runner.add_test_suite(
       "Geometry",
       suite{
+        "Spaces",        
+        spaces_meta_free_test{"Spaces Meta Free Test"}
+      },
+      suite{
         "Vector Coordinates",
         vector_coordinates_false_negative_test{"False negative Test"},
         vector_coordinates_test{"Unit Test"}
