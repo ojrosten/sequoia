@@ -10,7 +10,7 @@
 /*! \file */
 
 #include "sequoia/Core/Meta/TypeAlgorithms.hpp"
-#include "sequoia/Maths/Geometry/VectorSpace.hpp"
+#include "sequoia/Maths/Geometry/Spaces.hpp"
 
 #include <functional>
 

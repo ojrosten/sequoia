@@ -9,7 +9,7 @@
 
 /*! \file */
 
-#include "sequoia/Maths/Geometry/VectorSpace.hpp"
+#include "sequoia/Maths/Geometry/Spaces.hpp"
 
 #include "sequoia/TestFramework/RegularTestCore.hpp"
 #include "sequoia/TestFramework/StateTransitionUtilities.hpp"
