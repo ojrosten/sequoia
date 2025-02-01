@@ -120,13 +120,18 @@ namespace sequoia::physics
 
   template<convex_space QuantitySpace, quantity_unit Unit, class Validator>
   class quantity;
+
+  template<quantity_unit Unit>
+  struct unit_defined_origin{};
   
   template<convex_space QuantitySpace, quantity_unit Unit, class Validator>
   using to_coordinates_base_type
     = coordinates_base<
         QuantitySpace,
         to_displacement_basis_t<QuantitySpace, Unit>,
-        intrinsic_origin,
+        std::conditional_t<vector_space<QuantitySpace> || defines_absolute_scale_v<typename Unit::validator_type>,
+                           intrinsic_origin,
+                           unit_defined_origin<Unit>>,
         Validator,
         quantity<vector_space_type<QuantitySpace>, Unit, std::identity>>;
 
@@ -349,7 +354,7 @@ namespace sequoia::physics
     inline constexpr kelvin_t   kelvin{};
     inline constexpr coulomb_t  coulomb{};
 
-    struct celsius
+    struct celsius_t
     {
       struct validator
       {
@@ -360,11 +365,21 @@ namespace sequoia::physics
           if(val < T(-273.15)) throw std::domain_error{std::format("Value {} less than -273.15", val)};
 
           return val;
-        }        
+        }
+
+        // TO DO: remove the need for this
+        template<std::floating_point T>
+        [[nodiscard]]
+        constexpr std::array<T, 1> operator()(std::array<T, 1> val) const
+        {
+          return {operator()(val.front())};
+        }
       };
 
       using validator_type = validator;
     };
+
+    inline constexpr celsius_t celsius{};
   }
 
   namespace si
