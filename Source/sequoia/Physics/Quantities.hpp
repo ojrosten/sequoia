@@ -351,7 +351,19 @@ namespace sequoia::physics
 
     struct celsius
     {
-      
+      struct validator
+      {
+        template<std::floating_point T>
+        [[nodiscard]]
+        constexpr T operator()(const T val) const
+        {
+          if(val < T(-273.15)) throw std::domain_error{std::format("Value {} less than -273.15", val)};
+
+          return val;
+        }        
+      };
+
+      using validator_type = validator;
     };
   }
 
