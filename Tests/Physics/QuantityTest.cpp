@@ -15,6 +15,29 @@ namespace sequoia::testing
 { 
   using namespace physics;
 
+  namespace
+  {
+    template<class T, class U>
+    constexpr bool can_multiply{
+      requires(const T& t, const U& u) { t * u; }
+    };
+
+    template<class T, class U>
+    constexpr bool can_divide{
+      requires(const T& t, const U& u) { t / u; }
+    };
+
+    template<class T, class U>
+    constexpr bool can_add{
+      requires(const T& t, const U& u) { t + u; }
+    };
+
+    template<class T, class U>
+    constexpr bool can_subtract{
+      requires(const T& t, const U& u) { t - u; }
+    };
+  }
+
   [[nodiscard]]
   std::filesystem::path quantity_test::source_file() const
   {
@@ -31,6 +54,10 @@ namespace sequoia::testing
     {
       using mass_t    = si::mass<float>;
       using delta_m_t = mass_t::displacement_quantity_type;
+      STATIC_CHECK((can_multiply<mass_t, float>), "");
+      STATIC_CHECK((can_divide<mass_t, float>), "");
+      STATIC_CHECK((can_add<mass_t, mass_t>), "");
+      STATIC_CHECK((can_subtract<mass_t, mass_t>), "");
             
       check_exception_thrown<std::domain_error>("Negative mass", [](){ return mass_t{-1.0, units::kilogram}; });
 

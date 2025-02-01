@@ -436,6 +436,14 @@ namespace sequoia::maths
     }
 
     template<class Self>
+      requires has_intrinsic_origin && (!std::is_same_v<coordinates_base, displacement_coordinates_type>)
+    constexpr Self& operator+=(this Self& self, const coordinates_base& v) noexcept(has_identity_validator)
+    {
+      self.apply_to_each_element(v.values(), [](value_type& lhs, value_type rhs){ lhs += rhs; });
+      return self;
+    }
+
+    template<class Self>
     constexpr Self& operator-=(this Self& self, const displacement_coordinates_type& v) noexcept(has_identity_validator)
     {
       self.apply_to_each_element(v.values(), [](value_type& lhs, value_type rhs){ lhs -= rhs; });
@@ -467,6 +475,14 @@ namespace sequoia::maths
     requires std::is_base_of_v<coordinates_base, Derived> && (!std::is_same_v<Derived, displacement_coordinates_type>)
     [[nodiscard]]
     friend constexpr Derived operator+(const displacement_coordinates_type& v, Derived c) noexcept(has_identity_validator)
+    {
+      return c += v;
+    }
+  
+    template<class Derived>
+      requires std::is_base_of_v<coordinates_base, Derived> && (!std::is_same_v<Derived, displacement_coordinates_type>) && has_intrinsic_origin 
+    [[nodiscard]]
+    friend constexpr Derived operator+(Derived c, const Derived& v) noexcept(has_identity_validator)
     {
       return c += v;
     }
