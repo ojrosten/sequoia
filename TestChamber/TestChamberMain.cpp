@@ -33,9 +33,9 @@ int main(int argc, char** argv)
     runner.add_test_suite(
       "Geometry",
       suite{
-        "Vec",
-        vec_false_negative_test{"False negative Test"},
-        vec_test{"Unit Test"}
+        "Vector Coordinates",
+        vector_coordinates_false_negative_test{"False negative Test"},
+        vector_coordinates_test{"Unit Test"}
       },
       suite{
         "Affine Coordinates",

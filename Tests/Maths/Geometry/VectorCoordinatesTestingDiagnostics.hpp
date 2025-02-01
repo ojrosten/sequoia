@@ -13,7 +13,7 @@
 
 namespace sequoia::testing
 {
-  class vec_false_negative_test final : public regular_false_negative_test
+  class vector_coordinates_false_negative_test final : public regular_false_negative_test
   {
   public:
     using regular_false_negative_test::regular_false_negative_test;

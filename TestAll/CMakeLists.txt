@@ -50,8 +50,8 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Maths/Geometry/AffineCoordinatesTestingDiagnostics.cpp
                ${TestDir}/Maths/Geometry/AngleTest.cpp
                ${TestDir}/Maths/Geometry/AngleTestingDiagnostics.cpp
-               ${TestDir}/Maths/Geometry/VecTest.cpp
-               ${TestDir}/Maths/Geometry/VecTestingDiagnostics.cpp
+               ${TestDir}/Maths/Geometry/VectorCoordinatesTest.cpp
+               ${TestDir}/Maths/Geometry/VectorCoordinatesTestingDiagnostics.cpp
                ${TestDir}/Maths/Graph/Algorithms/DynamicGraphTraversalsTest.cpp
                ${TestDir}/Maths/Graph/Algorithms/DynamicGraphUpdateTest.cpp
                ${TestDir}/Maths/Graph/Algorithms/DynamicSubgraphTest.cpp
@@ -107,6 +107,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Parsing/CommandLineArgumentsDiagnostics.cpp
                ${TestDir}/Parsing/CommandLineArgumentsTest.cpp
                ${TestDir}/Parsing/CommandLineArgumentsTestingUtilities.cpp
+               ${TestDir}/Physics/QuantityMetaFreeTest.cpp
                ${TestDir}/Physics/QuantityTest.cpp
                ${TestDir}/Physics/QuantityTestingDiagnostics.cpp
                ${TestDir}/Runtime/FactoryTest.cpp

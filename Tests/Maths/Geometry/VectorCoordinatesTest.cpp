@@ -7,7 +7,7 @@
 
 /*! \file */
 
-#include "VecTest.hpp"
+#include "VectorCoordinatesTest.hpp"
 
 #include "sequoia/TestFramework/StateTransitionUtilities.hpp"
 
@@ -73,12 +73,12 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path vec_test::source_file() const
+  std::filesystem::path vector_coordinates_test::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void vec_test::run_tests()
+  void vector_coordinates_test::run_tests()
   {
     test_vec<sets::R<1, float>, float, 1>();
     test_vec<sets::R<1,double>, double, 1>();
@@ -93,7 +93,7 @@ namespace sequoia::testing
   }
 
   template<class Set, maths::weak_field Field, std::size_t D>
-  void vec_test::test_vec()
+  void vector_coordinates_test::test_vec()
   {
     using vec_space_t = my_vec_space<Set, Field, D>;
     using vec_t = vector_coordinates<vec_space_t, canonical_basis<Set, Field, D>>;
@@ -106,7 +106,7 @@ namespace sequoia::testing
   }
 
   template<class Set, std::floating_point Field>
-  void vec_test::test_real_vec_1_inner_prod()
+  void vector_coordinates_test::test_real_vec_1_inner_prod()
   {
     using vec_t = vector_coordinates<my_vec_space<Set, Field, 1>, canonical_basis<Set, Field, 1>>;
 
@@ -122,7 +122,7 @@ namespace sequoia::testing
 
   template<class Set, class Field>
     requires is_complex_v<Field>
-  void vec_test::test_complex_vec_1_inner_prod()
+  void vector_coordinates_test::test_complex_vec_1_inner_prod()
   {
     using vec_t = vector_coordinates<my_vec_space<Set, Field, 1>, canonical_basis<Set, Field, 1>>;
 

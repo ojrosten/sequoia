@@ -17,8 +17,8 @@ target_sources(TestChamber PRIVATE
                ${TestDir}/Maths/Geometry/AffineCoordinatesTestingDiagnostics.cpp
                ${TestDir}/Maths/Geometry/AngleTest.cpp
                ${TestDir}/Maths/Geometry/AngleTestingDiagnostics.cpp
-               ${TestDir}/Maths/Geometry/VecTest.cpp
-               ${TestDir}/Maths/Geometry/VecTestingDiagnostics.cpp
+               ${TestDir}/Maths/Geometry/VectorCoordinatesTest.cpp
+               ${TestDir}/Maths/Geometry/VectorCoordinatesTestingDiagnostics.cpp
                ${TestDir}/Physics/QuantityMetaFreeTest.cpp
                ${TestDir}/Physics/QuantityTest.cpp
                ${TestDir}/Physics/QuantityTestingDiagnostics.cpp)

@@ -388,15 +388,22 @@ int main(int argc, char** argv)
     runner.add_test_suite(
       "Geometry",
       suite{
-        "Vec",
-        vec_false_negative_test{"False negative Test"},
-        vec_test{"Unit Test"}
+        "Vector Coordinates",
+        vector_coordinates_false_negative_test{"False negative Test"},
+        vector_coordinates_test{"Unit Test"}
       },
       suite{
         "Affine Coordinates",
         affine_coordinates_false_negative_test{"False negative Test"},
         affine_coordinates_test{"Unit Test"}
       }
+    );
+
+    runner.add_test_suite(
+      "Quantity",
+      quantity_meta_free_test{"Quantity Meta Free Test"},
+      quantity_false_negative_test{"False Negative Test"},
+      quantity_test{"Unit Test"}
     );
       
     runner.add_test_suite(
