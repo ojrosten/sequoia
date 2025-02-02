@@ -108,7 +108,6 @@ namespace sequoia::testing
 
       replace_all(name, " <", "true", ",>", "1");
       replace_all(name, " <", "false", ",>", "0");
-      remove_integral_suffix(name);
 
       remove_enum_spec(name);
       constexpr auto npos{std::string::npos};
@@ -279,6 +278,8 @@ namespace sequoia::testing
     replace_all(name, "::__1::", "::");
     replace_all(name, "::__fs::", "::");
     replace_all_recursive(name, ">>", "> >");
+    remove_integral_suffix(name);
+
     return tidy_name(name);
   }
 
