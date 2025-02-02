@@ -1,7 +1,7 @@
 Tests/Maths/Geometry/AngleTestingDiagnostics.cpp, Line 35
 
 Comparison performed using:
-[sequoia::testing::value_tester<sequoia::maths::angle<float, 360.000000> >]
+[sequoia::testing::value_tester<sequoia::maths::angle<float, (float)[43b40000]> >]
 Checking for equivalence with:
 [float]
 
@@ -22,7 +22,7 @@ Checking for equivalence with:
 Tests/Maths/Geometry/AngleTestingDiagnostics.cpp, Line 36
 
 Comparison performed using:
-[sequoia::testing::value_tester<sequoia::maths::angle<float, 360.000000> >]
+[sequoia::testing::value_tester<sequoia::maths::angle<float, (float)[43b40000]> >]
 Checking for equivalence with:
 [float]
 
@@ -42,7 +42,7 @@ Checking for equivalence with:
 
 Tests/Maths/Geometry/AngleTestingDiagnostics.cpp, Line 37
 
-[sequoia::maths::angle<float, 360.000000>]
+[sequoia::maths::angle<float, (float)[43b40000]>]
 operator== returned false
 
   Wrapped value
@@ -56,7 +56,7 @@ operator== returned false
 Tests/Maths/Geometry/AngleTestingDiagnostics.cpp, Line 35
 
 Comparison performed using:
-[sequoia::testing::value_tester<sequoia::maths::angle<double, 360.000000> >]
+[sequoia::testing::value_tester<sequoia::maths::angle<double, (double)[4076800000000000]> >]
 Checking for equivalence with:
 [double]
 
@@ -77,7 +77,7 @@ Checking for equivalence with:
 Tests/Maths/Geometry/AngleTestingDiagnostics.cpp, Line 36
 
 Comparison performed using:
-[sequoia::testing::value_tester<sequoia::maths::angle<double, 360.000000> >]
+[sequoia::testing::value_tester<sequoia::maths::angle<double, (double)[4076800000000000]> >]
 Checking for equivalence with:
 [double]
 
@@ -97,7 +97,7 @@ Checking for equivalence with:
 
 Tests/Maths/Geometry/AngleTestingDiagnostics.cpp, Line 37
 
-[sequoia::maths::angle<double, 360.000000>]
+[sequoia::maths::angle<double, (double)[4076800000000000]>]
 operator== returned false
 
   Wrapped value
@@ -111,7 +111,7 @@ operator== returned false
 Tests/Maths/Geometry/AngleTestingDiagnostics.cpp, Line 35
 
 Comparison performed using:
-[sequoia::testing::value_tester<sequoia::maths::angle<float, 3.141593> >]
+[sequoia::testing::value_tester<sequoia::maths::angle<float, (float)[40490fdb]> >]
 Checking for equivalence with:
 [float]
 
@@ -132,7 +132,7 @@ Checking for equivalence with:
 Tests/Maths/Geometry/AngleTestingDiagnostics.cpp, Line 36
 
 Comparison performed using:
-[sequoia::testing::value_tester<sequoia::maths::angle<float, 3.141593> >]
+[sequoia::testing::value_tester<sequoia::maths::angle<float, (float)[40490fdb]> >]
 Checking for equivalence with:
 [float]
 
@@ -152,7 +152,7 @@ Checking for equivalence with:
 
 Tests/Maths/Geometry/AngleTestingDiagnostics.cpp, Line 37
 
-[sequoia::maths::angle<float, 3.141593>]
+[sequoia::maths::angle<float, (float)[40490fdb]>]
 operator== returned false
 
   Wrapped value
@@ -166,7 +166,7 @@ operator== returned false
 Tests/Maths/Geometry/AngleTestingDiagnostics.cpp, Line 35
 
 Comparison performed using:
-[sequoia::testing::value_tester<sequoia::maths::angle<double, 3.141593> >]
+[sequoia::testing::value_tester<sequoia::maths::angle<double, (double)[400921fb54442d18]> >]
 Checking for equivalence with:
 [double]
 
@@ -187,7 +187,7 @@ Checking for equivalence with:
 Tests/Maths/Geometry/AngleTestingDiagnostics.cpp, Line 36
 
 Comparison performed using:
-[sequoia::testing::value_tester<sequoia::maths::angle<double, 3.141593> >]
+[sequoia::testing::value_tester<sequoia::maths::angle<double, (double)[400921fb54442d18]> >]
 Checking for equivalence with:
 [double]
 
@@ -207,7 +207,7 @@ Checking for equivalence with:
 
 Tests/Maths/Geometry/AngleTestingDiagnostics.cpp, Line 37
 
-[sequoia::maths::angle<double, 3.141593>]
+[sequoia::maths::angle<double, (double)[400921fb54442d18]>]
 operator== returned false
 
   Wrapped value

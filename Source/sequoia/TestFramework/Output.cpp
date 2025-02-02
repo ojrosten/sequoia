@@ -51,10 +51,8 @@ namespace sequoia::testing
 
       return name;
     }
-
-    enum class binary_to_decimal : bool {no, yes};
     
-    std::string& process_literals(std::string& name, binary_to_decimal btd)
+    std::string& process_literals(std::string& name)
     {
       std::string::size_type pos{};
       while(pos < name.size())
@@ -64,7 +62,16 @@ namespace sequoia::testing
         while((pos < name.size() - 1) && !std::isdigit(name[++pos])) {}
         if(pos < name.size() - 1)
         {
-          if((btd == binary_to_decimal::yes) && (name[pos + 1] == 'x'))
+	  if(name[pos - 1] == '[')
+	  {
+	    // GCC seems to represent floating-point NTTPs as
+	    // a reinterpretation of a implicit hex number
+	    // e.g. (double)[40687....] (note: no Ox); for now
+	    // just leave these
+	    pos = name.find(']');
+	  }
+	  
+          if(name[pos + 1] == 'x')
           {
             char* end{};
             const auto start{name.data() + pos};
@@ -280,7 +287,7 @@ namespace sequoia::testing
     replace_all(name, "::__1::", "::");
     replace_all(name, "::__fs::", "::");
     replace_all_recursive(name, ">>", "> >");
-    process_literals(name, binary_to_decimal::yes);
+    process_literals(name);
 
     return tidy_name(name);
   }
@@ -291,7 +298,7 @@ namespace sequoia::testing
     replace_all(name, ">>", ">> ");
     replace_all(name, "__cxx11::", "");
     replace_all(name, "_V2::", "");
-    process_literals(name, binary_to_decimal::no);
+    process_literals(name);
 
     return tidy_name(name);
   }
