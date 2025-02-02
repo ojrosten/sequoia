@@ -157,16 +157,16 @@ namespace sequoia::maths
   };
 
   template<convex_space ConvexSpace>
-  using vector_space_type = typename ConvexSpace::vector_space_type;
+  using vector_space_type_of = typename ConvexSpace::vector_space_type;
 
   template<convex_space ConvexSpace>
-  using space_field_type = typename vector_space_type<ConvexSpace>::field_type;
+  using space_field_type = typename vector_space_type_of<ConvexSpace>::field_type;
 
   template<convex_space ConvexSpace>
   using space_value_type = space_field_type<ConvexSpace>;
 
   template<convex_space ConvexSpace>
-  inline constexpr std::size_t space_dimension{vector_space_type<ConvexSpace>::dimension};
+  inline constexpr std::size_t space_dimension{vector_space_type_of<ConvexSpace>::dimension};
 
   template<class T>
   concept affine_space = convex_space<T>; //TO DO: more than a semantic difference?
@@ -221,7 +221,7 @@ namespace sequoia::maths
 
   template<
     convex_space ConvexSpace,
-    basis_for<vector_space_type<ConvexSpace>>  Basis,
+    basis_for<vector_space_type_of<ConvexSpace>>  Basis,
     class Origin,
     validator_for<ConvexSpace> Validator,
     class DisplacementCoordinates
@@ -230,16 +230,16 @@ namespace sequoia::maths
 
   template<
     convex_space ConvexSpace,
-    basis_for<vector_space_type<ConvexSpace>> Basis,
+    basis_for<vector_space_type_of<ConvexSpace>> Basis,
     class Origin,
     validator_for<ConvexSpace> Validator
   >
   class coordinates;
 
-  template<affine_space AffineSpace, basis_for<vector_space_type<AffineSpace>> Basis, class Origin>
+  template<affine_space AffineSpace, basis_for<vector_space_type_of<AffineSpace>> Basis, class Origin>
   using affine_coordinates = coordinates<AffineSpace, Basis, Origin, std::identity>;
 
-  template<vector_space VectorSpace, basis_for<vector_space_type<VectorSpace>> Basis>
+  template<vector_space VectorSpace, basis_for<vector_space_type_of<VectorSpace>> Basis>
   using vector_coordinates = affine_coordinates<VectorSpace, Basis, intrinsic_origin>;
 
   //============================== direct_product ==============================//
@@ -389,10 +389,10 @@ namespace sequoia::maths
 
   template<
     convex_space ConvexSpace,
-    basis_for<vector_space_type<ConvexSpace>> Basis,
+    basis_for<vector_space_type_of<ConvexSpace>> Basis,
     class Origin,
     validator_for<ConvexSpace> Validator,
-    class DisplacementCoordinates=vector_coordinates<vector_space_type<ConvexSpace>, Basis>
+    class DisplacementCoordinates=vector_coordinates<vector_space_type_of<ConvexSpace>, Basis>
   >
   class coordinates_base
   {
@@ -402,7 +402,7 @@ namespace sequoia::maths
     using validator_type    = Validator;
     using origin_type       = Origin;
     using set_type          = typename ConvexSpace::set_type;
-    using vector_space_type = vector_space_type<ConvexSpace>;
+    using vector_space_type = vector_space_type_of<ConvexSpace>;
     using field_type        = space_field_type<ConvexSpace>;
     using value_type        = field_type;
     using displacement_coordinates_type = DisplacementCoordinates;
@@ -600,7 +600,7 @@ namespace sequoia::maths
     }
   };
 
-  template<convex_space ConvexSpace, basis_for<vector_space_type<ConvexSpace>> Basis, class Origin, validator_for<ConvexSpace> Validator>
+  template<convex_space ConvexSpace, basis_for<vector_space_type_of<ConvexSpace>> Basis, class Origin, validator_for<ConvexSpace> Validator>
   class coordinates : public coordinates_base<ConvexSpace, Basis, Origin, Validator>
   {
   public:

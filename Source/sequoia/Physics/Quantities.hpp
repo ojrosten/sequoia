@@ -116,7 +116,7 @@ namespace sequoia::physics
 
   template<convex_space QuantitySpace, quantity_unit Unit>
   using to_displacement_basis_t
-    = quantity_displacement_basis<vector_space_type<QuantitySpace>, Unit, space_field_type<QuantitySpace>>;
+    = quantity_displacement_basis<vector_space_type_of<QuantitySpace>, Unit, space_field_type<QuantitySpace>>;
 
   template<convex_space QuantitySpace, quantity_unit Unit, class Validator>
   class quantity;
@@ -134,7 +134,7 @@ namespace sequoia::physics
                            intrinsic_origin,
                            unit_defined_origin<Unit>>,
         Validator,
-        quantity<vector_space_type<QuantitySpace>, Unit, std::identity>>;
+        quantity<vector_space_type_of<QuantitySpace>, Unit, std::identity>>;
 
   template<class T, class U>
   struct quantity_product;
@@ -182,7 +182,7 @@ namespace sequoia::physics
     using coordinates_type           = to_coordinates_base_type<QuantitySpace, Unit, Validator>;
     using quantity_space_type        = QuantitySpace;
     using units_type                 = Unit;
-    using displacement_space_type    = vector_space_type<QuantitySpace>;
+    using displacement_space_type    = vector_space_type_of<QuantitySpace>;
     using intrinsic_validator_type   = Unit::validator_type;
     using validator_type             = Validator;
     using field_type                 = space_field_type<QuantitySpace>;
