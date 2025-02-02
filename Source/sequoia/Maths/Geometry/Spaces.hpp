@@ -353,32 +353,28 @@ namespace sequoia::maths
   };
   
   template<convex_space T, convex_space U>
-  requires (!is_reduction_v<T>) && (!is_reduction_v<U>)
-  //  requires (T::dimension == 1) || (U::dimension == 1)
+    requires (!is_reduction_v<T>) && (!is_reduction_v<U>)
   struct reduction<direct_product<T, U>>
   {
     using type = reduction<direct_product<meta::merge_t<std::tuple<T>, std::tuple<U>, meta::type_comparator>>>;
   };
 
   template<convex_space T, convex_space... Us>
-  requires (!is_reduction_v<T>)
-  //  requires (T::dimension == 1) || ((U::dimension == 1) && (V::dimension == 1))
+    requires (!is_reduction_v<T>)
   struct reduction<direct_product<T, reduction<direct_product<std::tuple<Us...>>>>>
   {
     using type = reduction<direct_product<meta::merge_t<std::tuple<T>, std::tuple<Us...>, meta::type_comparator>>>;
   };
 
   template<convex_space... Ts, convex_space U>
-  requires (!is_reduction_v<U>)
-  //  requires ((T::dimension == 1) && (U::dimension == 1)) || (V::dimension == 1)
+    requires (!is_reduction_v<U>)
   struct reduction<direct_product<reduction<direct_product<std::tuple<Ts...>>>, U>>
   {
     using type = reduction<direct_product<meta::merge_t<std::tuple<Ts...>, std::tuple<U>, meta::type_comparator>>>;
   };
 
   template<convex_space... Ts, convex_space... Us>
-  requires (sizeof...(Ts) > 1) && (sizeof...(Us) > 1)
-  //  requires ((T::dimension == 1) && (U::dimension == 1)) || ((V::dimension == 1) && (W::dimension == 1))
+    requires (sizeof...(Ts) > 1) && (sizeof...(Us) > 1)
   struct reduction<direct_product<reduction<direct_product<std::tuple<Ts...>>>, reduction<direct_product<std::tuple<Us...>>>>>
   {
     using type = reduction<direct_product<meta::merge_t<std::tuple<Ts...>, std::tuple<Us...>, meta::type_comparator>>>;
