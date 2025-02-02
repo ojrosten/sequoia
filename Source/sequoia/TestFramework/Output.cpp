@@ -52,7 +52,9 @@ namespace sequoia::testing
       return name;
     }
 
-    std::string& remove_integral_suffix(std::string& name)
+    enum class binary_to_decimal : bool {no, yes};
+    
+    std::string& process_literals(std::string& name, binary_to_decimal btd)
     {
       std::string::size_type pos{};
       while(pos < name.size())
@@ -62,7 +64,7 @@ namespace sequoia::testing
         while((pos < name.size() - 1) && !std::isdigit(name[++pos])) {}
         if(pos < name.size() - 1)
         {
-          if(name[pos + 1] == 'x')
+          if((btd == binary_to_decimal::yes) && (name[pos + 1] == 'x'))
           {
             char* end{};
             const auto start{name.data() + pos};
@@ -278,7 +280,7 @@ namespace sequoia::testing
     replace_all(name, "::__1::", "::");
     replace_all(name, "::__fs::", "::");
     replace_all_recursive(name, ">>", "> >");
-    remove_integral_suffix(name);
+    process_literals(name, binary_to_decimal::yes);
 
     return tidy_name(name);
   }
@@ -289,6 +291,8 @@ namespace sequoia::testing
     replace_all(name, ">>", ">> ");
     replace_all(name, "__cxx11::", "");
     replace_all(name, "_V2::", "");
+    process_literals(name, binary_to_decimal::no);
+
     return tidy_name(name);
   }
 
