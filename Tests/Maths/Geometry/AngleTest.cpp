@@ -169,7 +169,8 @@ namespace sequoia::testing
     check(equality, "", tan(degrees<T>{90}), std::tan(pi / 2));
 
     check(equality, "", asin(T{}), radians<T>{});
-    check(within_tolerance{radians<T>(1e-6)}, "", asin(T{1}), radians<T>{pi/2});
+    // For some reason, libc++'s answer is slightly off
+    check(within_tolerance{radians<T>(T(1e-6))}, "", asin(T{1}), radians<T>{pi/2});
 
     check(equality, "", acos(T{}), radians<T>{pi / 2});
     check(equality, "", acos(T{1}), radians<T>{});

@@ -315,6 +315,7 @@ namespace sequoia::testing
     replace_all(name, "<,", "enum ", "", "");
 
     replace_all(name, ",", ", ");
+    replace_all(name, " ,", ",");
 
     replace_all(name, " & __ptr64", "&");
     replace_all(name, " * __ptr64", "*");
