@@ -412,21 +412,24 @@ namespace sequoia::testing
         [](coords_t p) -> coords_t { return +p;  }
       );
 
-      add_transition<coords_t>(
-        g,
-        dim_1_label::neg_one,
-        dim_1_label::zero,
-        test.report("(-1) += 1"),
-        [](coords_t p) -> coords_t { auto& v{p.value()}; v += 1; return p; }
-      );
+      if constexpr(std::is_same_v<typename Coordinates::validator_type, std::identity>)
+      {
+        add_transition<coords_t>(
+          g,
+          dim_1_label::neg_one,
+          dim_1_label::zero,
+          test.report("(-1) += 1"),
+          [](coords_t p) -> coords_t { auto& v{p.value()}; v += 1; return p; }
+        );
 
-      add_transition<coords_t>(
-        g,
-        dim_1_label::neg_one,
-        dim_1_label::zero,
-        test.report("(-1) + 1"),
-        [](coords_t p) -> coords_t { auto& v{p.value()}; v += 1; return p; }
-      );    
+        add_transition<coords_t>(
+          g,
+          dim_1_label::neg_one,
+          dim_1_label::zero,
+          test.report("(-1) + 1"),
+          [](coords_t p) -> coords_t { auto& v{p.value()}; v += 1; return p; }
+        );
+      }
     }
 
     template<class... Units>

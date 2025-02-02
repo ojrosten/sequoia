@@ -112,7 +112,7 @@ namespace sequoia::testing
       STATIC_CHECK(!(can_add<temperature_t, temperature_t>),      "");
       STATIC_CHECK((can_subtract<temperature_t, temperature_t>), "");
 
-      //coordinates_operations<temperature_t>{*this}.execute();
+      coordinates_operations<temperature_t>{*this}.execute();
     }
     
     {

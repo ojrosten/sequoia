@@ -129,6 +129,7 @@ namespace sequoia::physics
     = coordinates_base<
         QuantitySpace,
         to_displacement_basis_t<QuantitySpace, Unit>,
+        // TO DO: figure out if there's a better way of expressing this
         std::conditional_t<vector_space<QuantitySpace> || defines_absolute_scale_v<typename Unit::validator_type>,
                            intrinsic_origin,
                            unit_defined_origin<Unit>>,
