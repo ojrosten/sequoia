@@ -57,8 +57,8 @@ namespace sequoia::testing
       return name;
     }
 
-    template<std::floating_point To, std::integral From=std::conditional_t<std::is_same_v<To,float>, int, long>>
-    size_type hex_to_floating_point(std::string& name, size_type start, size_type end, long val)
+    template<std::floating_point To, std::integral From=std::conditional_t<std::is_same_v<To,float>, int, std::conditional_t<sizeof(double) == sizeof(long), long, long long>>>
+    size_type hex_to_floating_point(std::string& name, size_type start, size_type end, long long val)
     {
        name.erase(start, end - start);
        const auto str{std::format("{:f}", std::bit_cast<To>(static_cast<From>(val)))};
@@ -76,39 +76,39 @@ namespace sequoia::testing
         while((pos < name.size() - 1) && !std::isdigit(name[++pos])) {}
         if(pos < name.size() - 1)
         {
-	  if(name[pos - 1] == '[')
-	  {
-	    // GCC seems to represent floating-point NTTPs as
-	    // a reinterpretation of a implicit hex number
-	    // e.g. (double)[40687....] (note: no Ox);
-	    const auto close{name.find(']', pos)};
-	    if(close != npos)
-	    {
-	      std::stringstream ss{name.substr(pos, close -pos)};
-	      long hexNum{};
-	      if(ss >> std::hex >> hexNum)
-	      {
-		const auto closeParen{pos - 2};
-		if(auto openParen{name.rfind('(', pos - 1)}; (openParen != npos) && name[closeParen] ==')')
-		{
-		  const auto type{name.substr(openParen + 1, closeParen - openParen - 1)};
-		  if(type == "float")
-		  {
-		    pos = hex_to_floating_point<float>(name, openParen, close + 1, hexNum);
-		  }
-		  else if(type == "double")
-		  {
-		    pos = hex_to_floating_point<double>(name, openParen, close + 1, hexNum);
-		  }
-		  else
-		  {
-		    pos = close;
-		  }
-		}
-	      }
-	    }
-	  }
-	  
+          if(name[pos - 1] == '[')
+          {
+            // GCC seems to represent floating-point NTTPs as
+            // a reinterpretation of a implicit hex number
+            // e.g. (double)[40687....] (note: no Ox);
+            const auto close{name.find(']', pos)};
+            if(close != npos)
+            {
+              std::stringstream ss{name.substr(pos, close - pos)};
+              long long hexNum{};
+              if(ss >> std::hex >> hexNum)
+              {
+                const auto closeParen{pos - 2};
+                if(auto openParen{name.rfind('(', pos - 1)}; (openParen != npos) && name[closeParen] == ')')
+                {
+                  const auto type{name.substr(openParen + 1, closeParen - openParen - 1)};
+                  if(type == "float")
+                  {
+                    pos = hex_to_floating_point<float>(name, openParen, close + 1, hexNum);
+                  }
+                  else if(type == "double")
+                  {
+                    pos = hex_to_floating_point<double>(name, openParen, close + 1, hexNum);
+                  }
+                  else
+                  {
+                    pos = close;
+                  }
+                }
+              }
+            }
+          }
+
           if(name[pos + 1] == 'x')
           {
             char* end{};
@@ -157,7 +157,6 @@ namespace sequoia::testing
       replace_all(name, " <", "false", ",>", "0");
 
       remove_enum_spec(name);
-      constexpr auto npos{std::string::npos};
       auto openPos{name.find('(')};
       auto pos{openPos};
       int64_t open{};
