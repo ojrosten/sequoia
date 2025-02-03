@@ -15,9 +15,11 @@
 #include "sequoia/TextProcessing/Patterns.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
+#include <bit>
 #include <cstdlib>
 #include <format>
 #include <numeric>
+#include <sstream>
 
 #include <iostream>
 
@@ -30,12 +32,15 @@ namespace sequoia::testing
   namespace fs = std::filesystem;
 
   namespace
-  {    
+  {
+    constexpr auto npos{std::string::npos};
+    using size_type = std::string::size_type;
+    
     std::string& remove_enum_spec(std::string& name)
     {
       std::string::size_type pos{};
 
-      while(pos != std::string::npos)
+      while(pos != npos)
       {
         const auto[open, close]{find_matched_delimiters(name, '(', ')', pos)};
         if((open != close) && (close < name.size()) && std::isdigit(name[close]))
@@ -51,7 +56,16 @@ namespace sequoia::testing
 
       return name;
     }
-    
+
+    template<std::floating_point To, std::integral From=std::conditional_t<std::is_same_v<To,float>, int, long>>
+    size_type hex_to_floating_point(std::string& name, size_type start, size_type end, long val)
+    {
+       name.erase(start, end - start);
+       const auto str{std::format("{:f}", std::bit_cast<To>(static_cast<From>(val)))};
+       name.insert(start, str);
+       return start + str.size();
+    }
+  
     std::string& process_literals(std::string& name)
     {
       std::string::size_type pos{};
@@ -66,9 +80,33 @@ namespace sequoia::testing
 	  {
 	    // GCC seems to represent floating-point NTTPs as
 	    // a reinterpretation of a implicit hex number
-	    // e.g. (double)[40687....] (note: no Ox); for now
-	    // just leave these
-	    pos = name.find(']');
+	    // e.g. (double)[40687....] (note: no Ox);
+	    const auto close{name.find(']', pos)};
+	    if(close != npos)
+	    {
+	      std::stringstream ss{name.substr(pos, close -pos)};
+	      long hexNum{};
+	      if(ss >> std::hex >> hexNum)
+	      {
+		const auto closeParen{pos - 2};
+		if(auto openParen{name.rfind('(', pos - 1)}; (openParen != npos) && name[closeParen] ==')')
+		{
+		  const auto type{name.substr(openParen + 1, closeParen - openParen - 1)};
+		  if(type == "float")
+		  {
+		    pos = hex_to_floating_point<float>(name, openParen, close + 1, hexNum);
+		  }
+		  else if(type == "double")
+		  {
+		    pos = hex_to_floating_point<double>(name, openParen, close + 1, hexNum);
+		  }
+		  else
+		  {
+		    pos = close;
+		  }
+		}
+	      }
+	    }
 	  }
 	  
           if(name[pos + 1] == 'x')
