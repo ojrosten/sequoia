@@ -301,26 +301,29 @@ namespace sequoia::physics
   };
 
   template<class QuantitySet, std::floating_point T>
+  template<class QuantitySet, std::floating_point Rep>
   struct quantity_space
   {
-    using set_type          = QuantitySet;
-    using vector_space_type = displacement_space<QuantitySet, T>;
+    using set_type            = QuantitySet;
+    using representation_type = Rep;
   };
 
-  template<std::floating_point T>
   struct mass_space : quantity_space<classical_quantity_sets::masses, T> {};
+  template<std::floating_point Rep>
+  struct mass_space : quantity_space<classical_quantity_sets::masses, Rep> {};
 
   template<std::floating_point T>
-  struct length_space : quantity_space<classical_quantity_sets::lengths, T> {};
+  template<std::floating_point Rep>
+  struct length_space : quantity_space<classical_quantity_sets::lengths, Rep> {};
 
-  template<std::floating_point T>
-  struct time_space : quantity_space<classical_quantity_sets::times, T> {};
+  template<std::floating_point Rep>
+  struct time_space : quantity_space<classical_quantity_sets::times, Rep> {};
 
-  template<std::floating_point T>
-  struct temperature_space : quantity_space<classical_quantity_sets::temperatures, T> {};
+  template<std::floating_point Rep>
+  struct temperature_space : quantity_space<classical_quantity_sets::temperatures, Rep> {};
 
-  template<std::floating_point T>
-  struct electrical_charge_space : quantity_space<classical_quantity_sets::electrical_charges, T> {};
+  template<std::floating_point Rep>
+  struct electrical_charge_space : quantity_space<classical_quantity_sets::electrical_charges, Rep> {};
 
   namespace units
   {
