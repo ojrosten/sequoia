@@ -315,7 +315,59 @@ namespace sequoia::maths
     using set_type          = std::tuple<typename Ts::set_type...>;
     using vector_space_type = direct_product<typename Ts::vector_space_type...>; 
   };
+
+  //==============================  dual spaces ============================== //
+  // TO DO: think about whether there's a proper mathematical representation for
+  // convex_spaces. I have an informal notion of what I'm trying to do, but only
+  // for vector spaces is this based on something concrete...
+  template<class>
+  struct dual;
   
+  template<convex_space C>
+    requires (!vector_space<C>)
+  struct dual<C>
+  {
+    using set_type = C::set_type;
+    using vector_space_type = dual<typename C::vector_space_type>;
+  };
+
+  template<vector_space V>
+  struct dual<V>
+  {
+    using set_type   = V::set_type;
+    using field_type = V::field_type;
+    constexpr static auto dimension{V::dimension};
+  };
+}
+
+namespace sequoia::meta
+{
+  using namespace maths;
+
+  template<class T, class U>
+  struct type_comparator<dual<T>, U> : std::bool_constant<type_name<T>() < type_name<U>()>
+  {};
+
+  template<class T, class U>
+  struct type_comparator<T, dual<U>> : std::bool_constant<type_name<T>() < type_name<U>()>
+  {};
+
+  template<class T, class U>
+  struct type_comparator<dual<T>, dual<U>> : std::bool_constant<type_name<T>() < type_name<U>()>
+  {};
+
+  template<class T>
+  struct type_comparator<dual<T>, T> : std::false_type
+  {};
+
+  template<class T>
+  struct type_comparator<T, dual<T>> : std::false_type
+  {};
+}
+
+namespace sequoia::maths
+{
+  //============================== reduction of direct products ostensibly to a lower dimensional space ============================== //
 
   template<class T>
   struct reduction;
@@ -342,6 +394,18 @@ namespace sequoia::maths
     using vector_space_type = reduction<direct_product<std::tuple<Ts...>>>;
     constexpr static std::size_t dimension{std::ranges::max({Ts::dimension...})};
   };
+
+  template<vector_space T>
+  struct reduction<direct_product<std::tuple<T, dual<T>>>>
+  {
+    using set_type   = T::set_type;
+    using field_type = T::field_type;
+    constexpr static std::size_t dimension{1};
+  };
+
+  template<vector_space T>
+  struct reduction<direct_product<std::tuple<dual<T>, T>>> : reduction<direct_product<std::tuple<T, dual<T>>>>
+  {};
 
   template<convex_space... Ts>
     requires (!vector_space<Ts> && ...)

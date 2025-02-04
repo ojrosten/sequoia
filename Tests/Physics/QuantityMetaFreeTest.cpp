@@ -60,6 +60,10 @@ namespace sequoia::testing
     STATIC_CHECK((std::is_same_v<reduction_t<direct_product<delta_len_space_t,
                                                             reduction_t<direct_product<delta_mass_space_t, reduction_t<direct_product<delta_time_space_t, delta_temp_space_t>>>>>>,
                                  reduction<direct_product<std::tuple<delta_len_space_t, delta_mass_space_t, delta_temp_space_t, delta_time_space_t>>>>), "");
+
+    STATIC_CHECK((vector_space<dual<delta_mass_space_t>>), "");
+    STATIC_CHECK((vector_space<direct_product<dual<delta_mass_space_t>, delta_mass_space_t>>), "");
+    STATIC_CHECK((vector_space<reduction_t<direct_product<dual<delta_mass_space_t>, delta_mass_space_t>>>), "");
       
     STATIC_CHECK((convex_space<length_space_t>), "");
     STATIC_CHECK((convex_space<mass_space_t>), "");
