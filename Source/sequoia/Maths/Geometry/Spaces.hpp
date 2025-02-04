@@ -398,8 +398,9 @@ namespace sequoia::maths
   template<vector_space T>
   struct reduction<direct_product<std::tuple<T, dual<T>>>>
   {
-    using set_type   = T::set_type;
-    using field_type = T::field_type;
+    using direct_product_t = direct_product<std::tuple<T, dual<T>>>;
+    using set_type         = reduction<typename direct_product_t::set_type>;
+    using field_type       = T::field_type;
     constexpr static std::size_t dimension{1};
   };
 
@@ -415,7 +416,7 @@ namespace sequoia::maths
     using set_type          = reduction<typename direct_product_t::set_type>;
     using vector_space_type = reduction_t<typename direct_product_t::vector_space_type>;
   };
-  
+
   template<convex_space T, convex_space U>
     requires (!is_reduction_v<T>) && (!is_reduction_v<U>)
   struct reduction<direct_product<T, U>>

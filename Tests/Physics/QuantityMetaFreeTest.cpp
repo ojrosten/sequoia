@@ -95,5 +95,7 @@ namespace sequoia::testing
       
     STATIC_CHECK((std::is_same_v<reduction_t<std::tuple<reduction_t<std::tuple<units::coulomb_t, units::kelvin_t>>, reduction_t<std::tuple<units::kilogram_t, units::metre_t>>>>,
                                  reduction_t<std::tuple<reduction_t<std::tuple<units::kelvin_t, units::kilogram_t>>, reduction_t<std::tuple<units::coulomb_t, units::metre_t>>>>>), "");
+
+    STATIC_CHECK((convex_space<direct_product<mass_space_t, dual<mass_space_t>>>), "");
   }
 }
