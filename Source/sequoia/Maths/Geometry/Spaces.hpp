@@ -334,7 +334,7 @@ namespace sequoia::maths
   template<vector_space V>
   struct dual<V>
   {
-    using set_type   = V::set_type;
+    using set_type   = V::set_type; // TO DO: think about this
     using field_type = V::field_type;
     constexpr static auto dimension{V::dimension};
   };
@@ -419,7 +419,7 @@ namespace sequoia::maths
   template<convex_space T, convex_space U>
     requires (!is_reduction_v<T>) && (!is_reduction_v<U>)
   struct reduction<direct_product<T, U>>
-  {
+  {    
     using type = reduction<direct_product<meta::merge_t<std::tuple<T>, std::tuple<U>, meta::type_comparator>>>;
   };
 

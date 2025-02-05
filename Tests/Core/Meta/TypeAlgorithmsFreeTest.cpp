@@ -35,6 +35,7 @@ namespace sequoia::testing
     test_merge();
     test_stable_sort();
     test_type_comparator();
+    test_find();
   }
 
   void type_algorithms_free_test::test_lower_bound()
@@ -109,5 +110,19 @@ namespace sequoia::testing
   {
     STATIC_CHECK((type_comparator_v<char, void>), "");
     STATIC_CHECK((!type_comparator_v<int, char>), "");
+  }
+
+  void type_algorithms_free_test::test_find()
+  {
+    STATIC_CHECK((find_v<std::tuple<>, int>                      == 0), "");
+    STATIC_CHECK((find_v<std::tuple<int>, int>                   == 0), "");
+    STATIC_CHECK((find_v<std::tuple<int>, float>                 == 1), "");
+    STATIC_CHECK((find_v<std::tuple<int, int>, int>              == 0), "");
+    STATIC_CHECK((find_v<std::tuple<int, int>, float>            == 2), "");
+    STATIC_CHECK((find_v<std::tuple<int, float>, float>          == 1), "");
+    STATIC_CHECK((find_v<std::tuple<int, double, float>, int>    == 0), "");
+    STATIC_CHECK((find_v<std::tuple<int, double, float>, double> == 1), "");
+    STATIC_CHECK((find_v<std::tuple<int, double, float>, float>  == 2), "");
+    STATIC_CHECK((find_v<std::tuple<int, double, float>, char>   == 3), "");
   }
 }

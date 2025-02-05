@@ -261,5 +261,25 @@ namespace sequoia::meta
     using type = merge_t<stable_sort_t<keep_t<std::tuple<Ts...>, partition>, Compare>,
                          stable_sort_t<drop_t<std::tuple<Ts...>, partition>, Compare>,
                          Compare>;
-  }; 
+  };
+
+  //==================================================== find ===================================================//
+
+  template<class T, class U>
+  struct find;
+
+  template<class T, class U>
+  inline constexpr std::size_t find_v{find<T, U>::index};
+
+  template<class U>
+  struct find<std::tuple<>, U>
+  {
+    constexpr static std::size_t index{};
+  };
+
+  template<class T, class... Ts, class U>
+  struct find<std::tuple<T, Ts...>, U>
+  {
+    constexpr static std::size_t index{std::is_same_v<T, U> ? 0 : 1 + find_v<std::tuple<Ts...>, U>};
+  };
 }
