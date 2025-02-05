@@ -14,11 +14,11 @@
 
 #include "sequoia/Core/Meta/TypeAlgorithms.hpp"
 #include "sequoia/Core/Meta/TypeTraits.hpp"
-#include "sequoia//PlatformSpecific/Preprocessor.hpp"
+#include "sequoia/PlatformSpecific/Preprocessor.hpp"
 
 #include <algorithm>
-#include <concepts>
 #include <cmath>
+#include <concepts>
 #include <complex>
 #include <format>
 #include <ranges>
@@ -367,7 +367,7 @@ namespace sequoia::meta
 
 namespace sequoia::maths
 {
-  //============================== reduction of direct products ostensibly to a lower dimensional space ============================== //
+  //========= reduction of direct products ostensibly to a lower dimensional space ========= //
 
   template<class T>
   struct reduction;
@@ -397,10 +397,9 @@ namespace sequoia::maths
 
   template<vector_space T>
   struct reduction<direct_product<std::tuple<T, dual<T>>>>
-  {
-    using direct_product_t = direct_product<std::tuple<T, dual<T>>>;
-    using set_type         = reduction<typename direct_product_t::set_type>;
+  {    
     using field_type       = T::field_type;
+    using set_type         = std::tuple<field_type>;
     constexpr static std::size_t dimension{1};
   };
 
