@@ -36,6 +36,7 @@ namespace sequoia::testing
     test_stable_sort();
     test_type_comparator();
     test_find();
+    test_erase();
   }
 
   void type_algorithms_free_test::test_lower_bound()
@@ -124,5 +125,15 @@ namespace sequoia::testing
     STATIC_CHECK((find_v<std::tuple<int, double, float>, double> == 1), "");
     STATIC_CHECK((find_v<std::tuple<int, double, float>, float>  == 2), "");
     STATIC_CHECK((find_v<std::tuple<int, double, float>, char>   == 3), "");
+  }
+
+  void type_algorithms_free_test::test_erase()
+  {
+    STATIC_CHECK((std::is_same_v<erase_t<std::tuple<int>, 0>,                std::tuple<>>),              "");
+    STATIC_CHECK((std::is_same_v<erase_t<std::tuple<int, float>, 0>,         std::tuple<float>>),         "");
+    STATIC_CHECK((std::is_same_v<erase_t<std::tuple<int, float>, 1>,         std::tuple<int>>),           "");
+    STATIC_CHECK((std::is_same_v<erase_t<std::tuple<int, float, double>, 0>, std::tuple<float, double>>), "");
+    STATIC_CHECK((std::is_same_v<erase_t<std::tuple<int, float, double>, 1>, std::tuple<int, double>>),   "");
+    STATIC_CHECK((std::is_same_v<erase_t<std::tuple<int, float, double>, 2>, std::tuple<int, float>>),    "");
   }
 }

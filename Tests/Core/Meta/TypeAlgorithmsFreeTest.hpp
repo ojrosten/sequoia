@@ -38,5 +38,7 @@ namespace sequoia::testing
     void test_type_comparator();
 
     void test_find();
+
+    void test_erase();
   };
 }

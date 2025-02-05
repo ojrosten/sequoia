@@ -282,4 +282,25 @@ namespace sequoia::meta
   {
     constexpr static std::size_t index{std::is_same_v<T, U> ? 0 : 1 + find_v<std::tuple<Ts...>, U>};
   };
+
+  //==================================================== erase ===================================================//
+
+  template<class T, std::size_t I>
+  struct erase;
+
+  template<class T, std::size_t I>
+  using erase_t = erase<T, I>::type;
+
+  template<class T, class... Ts>
+  struct erase<std::tuple<T, Ts...>, 0>
+  {
+    using type = std::tuple<Ts...>;
+  };
+
+  template<class... Ts, std::size_t I>
+  struct erase<std::tuple<Ts...>, I>
+    : filter<std::tuple<Ts...>,
+             concat_sequences_t<std::make_index_sequence<I>,
+                                shift_sequence_t<std::make_index_sequence<sizeof...(Ts)-I-1>, I+1>>>
+  {}; 
 }
