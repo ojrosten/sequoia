@@ -40,5 +40,7 @@ namespace sequoia::testing
     void test_find();
 
     void test_erase();
+
+    void test_insert();
   };
 }

@@ -37,6 +37,7 @@ namespace sequoia::testing
     test_type_comparator();
     test_find();
     test_erase();
+    test_insert();
   }
 
   void type_algorithms_free_test::test_lower_bound()
@@ -135,5 +136,17 @@ namespace sequoia::testing
     STATIC_CHECK((std::is_same_v<erase_t<std::tuple<int, float, double>, 0>, std::tuple<float, double>>), "");
     STATIC_CHECK((std::is_same_v<erase_t<std::tuple<int, float, double>, 1>, std::tuple<int, double>>),   "");
     STATIC_CHECK((std::is_same_v<erase_t<std::tuple<int, float, double>, 2>, std::tuple<int, float>>),    "");
+  }
+
+  void type_algorithms_free_test::test_insert()
+  {
+    STATIC_CHECK((std::is_same_v<insert_t<std::tuple<>, int, 0>,            std::tuple<int>>),              "");
+    STATIC_CHECK((std::is_same_v<insert_t<std::tuple<int>, int, 0>,         std::tuple<int, int>>),         "");
+    STATIC_CHECK((std::is_same_v<insert_t<std::tuple<int>, int, 1>,         std::tuple<int, int>>),         "");
+    STATIC_CHECK((std::is_same_v<insert_t<std::tuple<int>, float, 0>,       std::tuple<float, int>>),       "");
+    STATIC_CHECK((std::is_same_v<insert_t<std::tuple<int>, float, 1>,       std::tuple<int, float>>),       "");
+    STATIC_CHECK((std::is_same_v<insert_t<std::tuple<int, float>, char, 0>, std::tuple<char, int, float>>), "");
+    STATIC_CHECK((std::is_same_v<insert_t<std::tuple<int, float>, char, 1>, std::tuple<int, char, float>>), "");
+    STATIC_CHECK((std::is_same_v<insert_t<std::tuple<int, float>, char, 2>, std::tuple<int, float, char>>), "");
   }
 }

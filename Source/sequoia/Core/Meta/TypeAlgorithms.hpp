@@ -302,5 +302,46 @@ namespace sequoia::meta
     : filter<std::tuple<Ts...>,
              concat_sequences_t<std::make_index_sequence<I>,
                                 shift_sequence_t<std::make_index_sequence<sizeof...(Ts)-I-1>, I+1>>>
-  {}; 
+  {};
+
+  //==================================================== insert ===================================================//
+
+  template<class T, class U, std::size_t I>
+  struct insert;
+
+  template<class T, class U, std::size_t I>
+  using insert_t = insert<T, U, I>::type;
+
+  template<class U>
+  struct insert<std::tuple<>, U, 0>
+  {
+    using type = std::tuple<U>;
+  };
+
+  namespace impl
+  {
+    template<class...>
+    struct insert;
+
+    template<class... Ts>
+    using insert_t = insert<Ts...>::type;
+
+    template<class T, class... Us, std::size_t... Is, std::size_t... Js>
+    struct insert<T, std::tuple<Us...>, std::index_sequence<Is...>, std::index_sequence<Js...>>
+    {
+      using type = std::tuple<std::tuple_element_t<Is, std::tuple<Us...>>..., T, std::tuple_element_t<Js, std::tuple<Us...>>...>;
+    };
+  }
+
+  template<class T, class... Us, std::size_t I>
+  requires (I <= sizeof...(Us))
+  struct insert<std::tuple<Us...>, T, I>
+  {
+    using type = impl::insert_t<T,
+                                std::tuple<Us...>,
+                                std::make_index_sequence<I>,
+                                shift_sequence_t<std::make_index_sequence<sizeof...(Us) - I>, I>>;
+  };
+
+  //==================================================== binary_search ===================================================//
 }
