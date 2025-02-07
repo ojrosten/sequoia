@@ -338,6 +338,34 @@ namespace sequoia::maths
     using field_type = V::field_type;
     constexpr static auto dimension{V::dimension};
   };
+
+  template<class>
+  struct dual_space;
+
+  template<class T>
+  using dual_space_t = dual_space<T>::type;
+
+  template<convex_space C>
+  struct dual_space<C> {
+    using type = dual<C>;
+  };
+
+  template<convex_space C>
+  struct dual_space<dual<C>> {
+    using type = C;
+  };
+
+  template<convex_space C>
+  struct is_dual : std::false_type {};
+
+  template<convex_space C>
+  struct is_dual<dual<C>> : std::true_type {};
+
+  template<convex_space C>
+  using is_dual_t = is_dual<C>::type;
+
+  template<convex_space C>
+  inline constexpr bool is_dual_v{is_dual<C>::value}; 
 }
 
 namespace sequoia::meta
@@ -368,6 +396,57 @@ namespace sequoia::meta
 namespace sequoia::maths
 {
   //========= reduction of direct products ostensibly to a lower dimensional space ========= //
+
+  namespace impl
+  {
+    template<class T, class U>
+      requires (std::is_same_v<T, U>)
+    consteval auto count(std::vector<int>& values) { ++values.back();}
+
+    template<class T, class U>
+      requires (std::is_same_v<T, U> && is_dual_v<T>)
+    consteval auto count(std::vector<int>& values) { --values.back(); }
+
+    template<class T, class U>
+      requires (!std::is_same_v<T, U>)
+    consteval auto count(std::vector<int>& values) { values.push_back(1);}
+
+    template<class T, class U>
+      requires (!std::is_same_v<T, U> && is_dual_v<U>)
+    consteval auto count(std::vector<int>& values) { values.push_back(-1);}
+        
+    template<class T, class... Ts>
+    consteval std::vector<int> count(const std::tuple<T, Ts...>&) {
+      using tuple_t = std::tuple<T, Ts...>;
+      std::vector<int> values{is_dual_v<T> ? -1 : 1};
+      [&]<std::size_t... Is> (std::index_sequence<Is...>) {
+        (count<std::tuple_element_t<Is, tuple_t>, std::tuple_element_t<Is+1, tuple_t>>(values), ...);
+      }(std::make_index_sequence<sizeof...(Ts)>{});
+
+      return values;
+    }
+
+    template<class>
+    struct to_filter;
+
+    template<class T>
+    using to_filter_t = to_filter<T>::type;
+    
+    template<class T, class... Ts>
+    struct to_filter<std::tuple<T, Ts...>>
+    {
+    private:
+      consteval static auto make_filter()
+      {
+        constexpr auto sz{count(std::tuple<T, Ts...>{}).size()};
+        return [&]<std::size_t... Is> (std::index_sequence<Is...>) {
+          return std::index_sequence<count(std::tuple<T, Ts...>{})[Is...]>{};
+        }(std::make_index_sequence<sz>{});
+      }
+    public:
+      using type = decltype(to_filter::make_filter());
+    };
+  }
 
   template<class T>
   struct reduction;
