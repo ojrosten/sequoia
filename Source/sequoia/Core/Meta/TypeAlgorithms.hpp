@@ -156,6 +156,45 @@ namespace sequoia::meta
     using type = filter_t<std::tuple<Ts...>, std::make_index_sequence<N>>;
   };
 
+  //==================================================== insert ===================================================//
+
+  template<class T, class U, std::size_t I>
+  struct insert;
+
+  template<class T, class U, std::size_t I>
+  using insert_t = insert<T, U, I>::type;
+
+  template<class U>
+  struct insert<std::tuple<>, U, 0>
+  {
+    using type = std::tuple<U>;
+  };
+
+  namespace impl
+  {
+    template<class...>
+    struct do_insert;
+
+    template<class... Ts>
+    using do_insert_t = do_insert<Ts...>::type;
+
+    template<class T, class... Us, std::size_t... Is, std::size_t... Js>
+    struct do_insert<T, std::tuple<Us...>, std::index_sequence<Is...>, std::index_sequence<Js...>>
+    {
+      using type = std::tuple<std::tuple_element_t<Is, std::tuple<Us...>>..., T, std::tuple_element_t<Js, std::tuple<Us...>>...>;
+    };
+  }
+
+  template<class... Us, class T, std::size_t I>
+  requires (I <= sizeof...(Us))
+  struct insert<std::tuple<Us...>, T, I>
+  {
+    using type = impl::do_insert_t<T,
+                                   std::tuple<Us...>,
+                                   std::make_index_sequence<I>,
+                                   shift_sequence_t<std::make_index_sequence<sizeof...(Us) - I>, I>>;
+  };
+
   //==================================================== merge ===================================================//
 
   template<class T, class U, template<class, class> class Compare>
@@ -190,17 +229,8 @@ namespace sequoia::meta
     using type = std::tuple<T, U>;
   };
 
-    namespace impl
+  namespace impl
   {
-    template<class...>
-    struct merge_one;
-
-    template<class T, class... Us, std::size_t... Is, std::size_t... Js>
-    struct merge_one<std::index_sequence<Is...>, std::index_sequence<Js...>, T, Us...>
-    {
-      using type = std::tuple<std::tuple_element_t<Is, std::tuple<Us...>>..., T, std::tuple_element_t<Js, std::tuple<Us...>>...>;
-    };  
-
     template<class T, class U, std::size_t I, template<class, class> class Compare>
     struct merge_from_position;
 
@@ -218,7 +248,7 @@ namespace sequoia::meta
     {
       constexpr static auto N{sizeof...(Us)};
       constexpr static auto Pos{I + lower_bound_v<drop_t<std::tuple<Us...>, I>, T, Compare>};
-      using type = merge_one<std::make_index_sequence<Pos>, shift_sequence_t<std::make_index_sequence<N-Pos>, Pos>, T, Us...>::type;
+      using type = insert_t<std::tuple<Us...>, T, Pos>;
     };
 
     template<class T, class... Ts, class... Us, std::size_t I, template<class, class> class Compare>
@@ -303,45 +333,4 @@ namespace sequoia::meta
              concat_sequences_t<std::make_index_sequence<I>,
                                 shift_sequence_t<std::make_index_sequence<sizeof...(Ts)-I-1>, I+1>>>
   {};
-
-  //==================================================== insert ===================================================//
-
-  template<class T, class U, std::size_t I>
-  struct insert;
-
-  template<class T, class U, std::size_t I>
-  using insert_t = insert<T, U, I>::type;
-
-  template<class U>
-  struct insert<std::tuple<>, U, 0>
-  {
-    using type = std::tuple<U>;
-  };
-
-  namespace impl
-  {
-    template<class...>
-    struct insert;
-
-    template<class... Ts>
-    using insert_t = insert<Ts...>::type;
-
-    template<class T, class... Us, std::size_t... Is, std::size_t... Js>
-    struct insert<T, std::tuple<Us...>, std::index_sequence<Is...>, std::index_sequence<Js...>>
-    {
-      using type = std::tuple<std::tuple_element_t<Is, std::tuple<Us...>>..., T, std::tuple_element_t<Js, std::tuple<Us...>>...>;
-    };
-  }
-
-  template<class T, class... Us, std::size_t I>
-  requires (I <= sizeof...(Us))
-  struct insert<std::tuple<Us...>, T, I>
-  {
-    using type = impl::insert_t<T,
-                                std::tuple<Us...>,
-                                std::make_index_sequence<I>,
-                                shift_sequence_t<std::make_index_sequence<sizeof...(Us) - I>, I>>;
-  };
-
-  //==================================================== binary_search ===================================================//
 }
