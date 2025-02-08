@@ -399,6 +399,89 @@ namespace sequoia::maths
 
   namespace impl
   {
+    template<class T, int I>
+    struct type_counter
+    {
+    };
+    
+    template<class...>
+    struct counter;
+
+    template<class... Ts>
+    using counter_t = counter<Ts...>::type;
+
+    template<>
+    struct counter<std::tuple<>>
+    {
+      using type = std::tuple<>;
+    };
+
+    template<convex_space T>
+    struct counter<T>
+    {
+      using type = std::tuple<type_counter<T, 1>>;
+    };
+
+    template<convex_space T>
+    struct counter<std::tuple<T>>
+    {
+      using type = std::tuple<type_counter<T, 1>>;
+    };
+    
+    template<convex_space T, convex_space... Ts>
+    struct counter<std::tuple<T, Ts...>>
+    {
+      using type = counter_t<std::tuple<Ts...>, counter_t<T>>;
+    };
+
+    template<convex_space T, convex_space... Us, int... Is>
+    struct counter<std::tuple<T>, std::tuple<type_counter<Us, Is>...>>
+    {
+      using type = counter_t<T, std::tuple<type_counter<Us, Is>...>>;
+    };
+
+    
+    template<convex_space T, convex_space... Ts, convex_space... Us, int... Is>
+    struct counter<std::tuple<T, Ts...>, std::tuple<type_counter<Us, Is>...>>
+    {
+      using type = counter_t<std::tuple<Ts...>, counter_t<T, std::tuple<type_counter<Us, Is>...>>>;
+    };
+    
+
+
+    template<convex_space S, convex_space T, int I, convex_space... Ts, int... Is>
+    struct counter<S, std::tuple<type_counter<T, I>, type_counter<Ts, Is>...>>
+    {
+      using type = std::tuple<type_counter<S, 1>, type_counter<T, I>, type_counter<Ts, Is>...>;
+    };
+
+    template<convex_space S, convex_space T, int I, convex_space... Ts, int... Is>
+    struct counter<dual<S>, std::tuple<type_counter<T, I>, type_counter<Ts, Is>...>>
+    {
+      using type = std::tuple<type_counter<S, -1>, type_counter<T, I>, type_counter<Ts, Is>...>;
+    };
+
+    template<convex_space T, int I, convex_space... Ts, int... Is>
+    struct counter<T, std::tuple<type_counter<T, I>, type_counter<Ts, Is>...>>
+    {
+      using type = std::tuple<type_counter<T, I+1>, type_counter<Ts, Is>...>;
+    };
+
+    template<convex_space T, int I, convex_space... Ts, int... Is>
+    struct counter<dual<T>, std::tuple<type_counter<T, I>, type_counter<Ts, Is>...>>
+    {
+      using type = std::tuple<type_counter<T, I-1>, type_counter<Ts, Is>...>;
+    };
+
+    template<convex_space T, int I, convex_space... Ts, int... Is>
+    struct counter<dual<T>, std::tuple<type_counter<dual<T>, I>, type_counter<Ts, Is>...>>
+    {
+      using type = std::tuple<type_counter<T, I+1>, type_counter<Ts, Is>...>;
+    };
+
+    
+
+    
     template<class T, class U>
       requires (std::is_same_v<T, U>)
     consteval auto count(std::vector<int>& values) { ++values.back();}
@@ -414,6 +497,10 @@ namespace sequoia::maths
     template<class T, class U>
       requires (!std::is_same_v<T, U> && is_dual_v<U>)
     consteval auto count(std::vector<int>& values) { values.push_back(-1);}
+
+    template<class T, class U>
+      requires (!std::is_same_v<T, U> && is_dual_v<U> && std::is_same_v<dual<T>, U>)
+    consteval auto count(std::vector<int>& values) { --values.back(); }
         
     template<class T, class... Ts>
     consteval std::vector<int> count(const std::tuple<T, Ts...>&) {
