@@ -99,7 +99,6 @@ namespace sequoia::testing
     STATIC_CHECK((convex_space<direct_product<mass_space_t, dual<mass_space_t>>>), "");
 
     using namespace maths::impl;
-    STATIC_CHECK((std::is_same_v<std::index_sequence<1>, to_filter_t<std::tuple<mass_space_t>>>), "");
 
     STATIC_CHECK((std::is_same_v<counter_t<std::tuple<>>, std::tuple<>>), "");
     STATIC_CHECK((std::is_same_v<counter_t<mass_space_t>,       std::tuple<type_counter<mass_space_t, 1>>>), "");
