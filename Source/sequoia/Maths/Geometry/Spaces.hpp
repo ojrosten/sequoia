@@ -462,7 +462,69 @@ namespace sequoia::maths
     struct counter<dual<T>, std::tuple<type_counter<T, I>, type_counter<Ts, Is>...>>
     {
       using type = std::tuple<type_counter<T, I-1>, type_counter<Ts, Is>...>;
-    };    
+    };
+
+    template<class...>
+    struct unpack;
+
+    template<class... Ts>
+    using unpack_t = unpack<Ts...>::type;
+
+    template<convex_space T, int I>
+      requires (I > 0)
+    struct unpack<type_counter<T, I>>
+    {
+      using type = unpack_t<type_counter<T, I - 1>, std::tuple<T>>;
+    };
+
+    template<convex_space T, int I, class... Ts>
+    struct unpack<type_counter<T, I>, std::tuple<Ts...>>
+    {
+      using type = unpack_t<type_counter<T, I - 1>, std::tuple<Ts..., T>>;
+    };
+
+    template<convex_space T, class... Ts>
+    struct unpack<type_counter<T, 0>, std::tuple<Ts...>>
+    {
+      using type = std::tuple<Ts...>;
+    };
+    
+
+    template<class...>
+    struct reduce;
+
+    template<class... Ts>
+    using reduce_t = reduce<Ts...>::type;
+
+    template<convex_space T, convex_space... Ts, int... Is>
+    struct reduce<std::tuple<type_counter<T, 0>, type_counter<Ts, Is>...>>
+    {
+      using type = reduce_t<std::tuple<type_counter<Ts, Is>...>>;
+    };
+
+    template<convex_space T, int I, convex_space... Ts, int... Is>
+    struct reduce<std::tuple<type_counter<T, I>, type_counter<Ts, Is>...>>
+    {
+      using type = reduce_t<std::tuple<type_counter<Ts, Is>...>, unpack_t<type_counter<T, I>>>;
+    };
+
+    template<convex_space T, convex_space... Ts, int... Is, class... Us>
+    struct reduce<std::tuple<type_counter<T, 0>, type_counter<Ts, Is>...>, std::tuple<Us...>>
+    {
+      using type = reduce_t<std::tuple<type_counter<Ts, Is>...>, std::tuple<Us...>>;
+    };
+
+    template<convex_space T, int I, convex_space... Ts, int... Is, class... Us>
+    struct reduce<std::tuple<type_counter<T, I>, type_counter<Ts, Is>...>, std::tuple<Us...>>
+    {
+      using type = reduce_t<std::tuple<type_counter<Ts, Is>...>, unpack_t<type_counter<T, I>, std::tuple<Us...>>>;
+    };
+
+    template<class... Us>
+    struct reduce<std::tuple<>, std::tuple<Us...>>
+    {
+      using type = std::tuple<Us...>;
+    };
   }
 
   template<class T>
