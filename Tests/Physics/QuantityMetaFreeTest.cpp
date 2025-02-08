@@ -112,8 +112,10 @@ namespace sequoia::testing
 
     STATIC_CHECK((std::is_same_v<counter_t<std::tuple<length_space_t, mass_space_t, dual<mass_space_t>>>,
                                  std::tuple<type_counter<mass_space_t, 0>, type_counter<length_space_t, 1>>>), "");
+    STATIC_CHECK((std::is_same_v<counter_t<std::tuple<dual<length_space_t>, mass_space_t, dual<mass_space_t>>>,
+                                 std::tuple<type_counter<mass_space_t, 0>, type_counter<dual<length_space_t>, 1>>>), "");
 
     STATIC_CHECK((std::is_same_v<counter_t<std::tuple<length_space_t, mass_space_t, dual<mass_space_t>, temp_space_t>>,
-                                 std::tuple<type_counter<temp_space_t, 1>, type_counter<mass_space_t, 0>, type_counter<length_space_t, 1>>>), "");
+                                  std::tuple<type_counter<temp_space_t, 1>, type_counter<mass_space_t, 0>, type_counter<length_space_t, 1>>>), "");
   }
 }
