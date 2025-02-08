@@ -480,7 +480,7 @@ namespace sequoia::maths
     template<convex_space T, int I, class... Ts>
     struct unpack<type_counter<T, I>, std::tuple<Ts...>>
     {
-      using type = unpack_t<type_counter<T, I - 1>, std::tuple<Ts..., T>>;
+      using type = unpack_t<type_counter<T, I - 1>, std::tuple<T, Ts...>>;
     };
 
     template<convex_space T, class... Ts>
@@ -495,6 +495,12 @@ namespace sequoia::maths
 
     template<class... Ts>
     using reduce_t = reduce<Ts...>::type;
+
+    template<convex_space T>
+    struct reduce<std::tuple<type_counter<T, 0>>>
+    {
+      using type = std::tuple<>;
+    };
 
     template<convex_space T, convex_space... Ts, int... Is>
     struct reduce<std::tuple<type_counter<T, 0>, type_counter<Ts, Is>...>>
