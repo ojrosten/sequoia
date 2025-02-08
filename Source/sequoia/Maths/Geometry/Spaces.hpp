@@ -476,7 +476,7 @@ namespace sequoia::maths
     template<convex_space T, int I, convex_space... Ts, int... Is>
     struct counter<dual<T>, std::tuple<type_counter<dual<T>, I>, type_counter<Ts, Is>...>>
     {
-      using type = std::tuple<type_counter<T, I+1>, type_counter<Ts, Is>...>;
+      using type = std::tuple<type_counter<dual<T>, I+1>, type_counter<Ts, Is>...>;
     };
 
     
