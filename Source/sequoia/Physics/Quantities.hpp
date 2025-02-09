@@ -44,6 +44,11 @@ namespace sequoia
     template<class T>
     struct composite_unit;
 
+    struct no_unit
+    {
+      using validator_type = std::identity;
+    };
+
     // Ts are assumed to be ordered
     template<physics::quantity_unit... Ts>
     struct composite_unit<std::tuple<Ts...>>
@@ -54,28 +59,46 @@ namespace sequoia
 
   namespace maths
   {
+    namespace impl
+    {
+       template<physics::quantity_unit T>
+       struct reduce<std::tuple<type_counter<T, 0>>>
+       {
+         using type = physics::no_unit;
+       };
+
+      template<physics::quantity_unit... Ts>
+      struct simplify<physics::composite_unit<std::tuple<Ts...>>>
+      {
+        using reduced_tuple_type = simplify_t<std::tuple<Ts...>>;
+        using type = std::conditional_t<std::tuple_size_v<reduced_tuple_type> == 1,
+                                        std::tuple_element_t<0, reduced_tuple_type>,
+                                        physics::composite_unit<reduced_tuple_type>>;
+      };
+    }
+    
     template<physics::quantity_unit T, physics::quantity_unit U>
     struct reduction<std::tuple<T, U>>
     {
-      using type = physics::composite_unit<meta::merge_t<std::tuple<T>, std::tuple<U>, meta::type_comparator>>;
+      using type = impl::simplify_t<physics::composite_unit<meta::merge_t<std::tuple<T>, std::tuple<U>, meta::type_comparator>>>;
     };
 
     template<physics::quantity_unit... Ts, physics::quantity_unit U>
     struct reduction<std::tuple<physics::composite_unit<std::tuple<Ts...>>, U>>
     {
-      using type = physics::composite_unit<meta::merge_t<std::tuple<Ts...>, std::tuple<U>, meta::type_comparator>>;
+      using type = impl::simplify_t<physics::composite_unit<meta::merge_t<std::tuple<Ts...>, std::tuple<U>, meta::type_comparator>>>;
     };
 
     template<physics::quantity_unit T, physics::quantity_unit... Us>
     struct reduction<std::tuple<T, physics::composite_unit<std::tuple<Us...>>>>
     {
-      using type = physics::composite_unit<meta::merge_t<std::tuple<Us...>, std::tuple<T>, meta::type_comparator>>;
+      using type = impl::simplify_t<physics::composite_unit<meta::merge_t<std::tuple<Us...>, std::tuple<T>, meta::type_comparator>>>;
     };
 
     template<physics::quantity_unit... Ts, physics::quantity_unit... Us>
     struct reduction<std::tuple<physics::composite_unit<std::tuple<Ts...>>, physics::composite_unit<std::tuple<Us...>>>>
     {
-      using type = physics::composite_unit<meta::merge_t<std::tuple<Ts...>, std::tuple<Us...>, meta::type_comparator>>;
+      using type = impl::simplify_t<physics::composite_unit<meta::merge_t<std::tuple<Ts...>, std::tuple<Us...>, meta::type_comparator>>>;
     };
   }
 }
