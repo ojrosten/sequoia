@@ -508,25 +508,25 @@ namespace sequoia::maths
       using type = std::tuple<euclidean_vector_space<1, typename T::vector_space_type::field_type>>;
     };
 
-    template<convex_space T, convex_space... Ts, int... Is>
+    template<class T, class... Ts, int... Is>
     struct reduce<std::tuple<type_counter<T, 0>, type_counter<Ts, Is>...>>
     {
       using type = reduce_t<std::tuple<type_counter<Ts, Is>...>>;
     };
 
-    template<convex_space T, int I, convex_space... Ts, int... Is>
+    template<class T, int I, class... Ts, int... Is>
     struct reduce<std::tuple<type_counter<T, I>, type_counter<Ts, Is>...>>
     {
       using type = reduce_t<std::tuple<type_counter<Ts, Is>...>, unpack_t<type_counter<T, I>>>;
     };
 
-    template<convex_space T, convex_space... Ts, int... Is, class... Us>
+    template<class T, class... Ts, int... Is, class... Us>
     struct reduce<std::tuple<type_counter<T, 0>, type_counter<Ts, Is>...>, std::tuple<Us...>>
     {
       using type = reduce_t<std::tuple<type_counter<Ts, Is>...>, std::tuple<Us...>>;
     };
 
-    template<convex_space T, int I, convex_space... Ts, int... Is, class... Us>
+    template<class T, int I, class... Ts, int... Is, class... Us>
     struct reduce<std::tuple<type_counter<T, I>, type_counter<Ts, Is>...>, std::tuple<Us...>>
     {
       using type = reduce_t<std::tuple<type_counter<Ts, Is>...>, unpack_t<type_counter<T, I>, std::tuple<Us...>>>;
@@ -544,7 +544,7 @@ namespace sequoia::maths
     template<class T>
     using simplify_t = simplify<T>::type;
 
-    template<convex_space... Ts>
+    template<class... Ts>
     struct simplify<std::tuple<Ts...>>
     {
       using type = reduce_t<counter_t<std::tuple<Ts...>>>;
