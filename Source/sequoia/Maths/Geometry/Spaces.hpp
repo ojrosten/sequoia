@@ -548,6 +548,15 @@ namespace sequoia::maths
     {
       using type = reduce_t<counter_t<std::tuple<Ts...>>>;
     };
+
+    template<convex_space... Ts>
+    struct simplify<direct_product<std::tuple<Ts...>>>
+    {
+      using reduced_tuple_type = simplify_t<std::tuple<Ts...>>;
+      using type = std::conditional_t<std::tuple_size_v<reduced_tuple_type> == 1,
+                                      std::tuple_element_t<0, reduced_tuple_type>,
+                                      direct_product<reduced_tuple_type>>;
+    };
   }
 
   template<class T>
@@ -589,28 +598,28 @@ namespace sequoia::maths
     requires (!is_reduction_v<T>) && (!is_reduction_v<U>)
   struct reduction<direct_product<T, U>>
   {    
-    using type = reduction<direct_product<meta::merge_t<std::tuple<T>, std::tuple<U>, meta::type_comparator>>>;
+    using type = reduction<impl::simplify_t<direct_product<meta::merge_t<std::tuple<T>, std::tuple<U>, meta::type_comparator>>>>;
   };
 
   template<convex_space T, convex_space... Us>
     requires (!is_reduction_v<T>)
   struct reduction<direct_product<T, reduction<direct_product<std::tuple<Us...>>>>>
   {
-    using type = reduction<direct_product<meta::merge_t<std::tuple<T>, std::tuple<Us...>, meta::type_comparator>>>;
+    using type = reduction<impl::simplify_t<direct_product<meta::merge_t<std::tuple<T>, std::tuple<Us...>, meta::type_comparator>>>>;
   };
 
   template<convex_space... Ts, convex_space U>
     requires (!is_reduction_v<U>)
   struct reduction<direct_product<reduction<direct_product<std::tuple<Ts...>>>, U>>
   {
-    using type = reduction<direct_product<meta::merge_t<std::tuple<Ts...>, std::tuple<U>, meta::type_comparator>>>;
+    using type = reduction<impl::simplify_t<direct_product<meta::merge_t<std::tuple<Ts...>, std::tuple<U>, meta::type_comparator>>>>;
   };
 
   template<convex_space... Ts, convex_space... Us>
     requires (sizeof...(Ts) > 1) && (sizeof...(Us) > 1)
   struct reduction<direct_product<reduction<direct_product<std::tuple<Ts...>>>, reduction<direct_product<std::tuple<Us...>>>>>
   {
-    using type = reduction<direct_product<meta::merge_t<std::tuple<Ts...>, std::tuple<Us...>, meta::type_comparator>>>;
+    using type = reduction<impl::simplify_t<direct_product<meta::merge_t<std::tuple<Ts...>, std::tuple<Us...>, meta::type_comparator>>>>;
     };
 
   template<vector_space... Ts>
