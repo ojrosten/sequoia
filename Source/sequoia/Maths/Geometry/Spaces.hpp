@@ -531,6 +531,18 @@ namespace sequoia::maths
     {
       using type = std::tuple<Us...>;
     };
+
+    template<class>
+    struct simplify;
+
+    template<class T>
+    using simplify_t = simplify<T>::type;
+
+    template<convex_space... Ts>
+    struct simplify<std::tuple<Ts...>>
+    {
+      using type = reduce_t<counter_t<std::tuple<Ts...>>>;
+    };
   }
 
   template<class T>
