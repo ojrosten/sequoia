@@ -59,6 +59,13 @@ namespace sequoia
 
   namespace maths
   {
+    template<physics::quantity_unit T>
+    struct dual<T>
+    {
+      // TO DO: this doesn't hold for all validators!
+      using validator_type = T::validator_type;
+    };
+    
     namespace impl
     {
        template<physics::quantity_unit T>
@@ -244,8 +251,12 @@ namespace sequoia::physics
                     || vector_space<DenominatorQuantitySpace>)
     [[nodiscard]]
     friend constexpr std::common_type_t<value_type, typename quantity<DenominatorQuantitySpace, Unit, DenominatorValidator>::value_type>
+    //    friend constexpr quantity_product_t<quantity, quantity<dual<DenominatorQuantitySpace>, dual<Unit>, DenominatorValidator>>
       operator/(const quantity& lhs, const quantity<DenominatorQuantitySpace, Unit, DenominatorValidator>& rhs)
     {
+      //using quantity_t = quantity_product_t<quantity, quantity<dual<DenominatorQuantitySpace>, dual<Unit>, DenominatorValidator>>;
+      //using derived_units_type = quantity_t::units_type;
+      //return quantity_t{lhs.value() / rhs.value(), derived_units_type{}};
       return lhs.value() / rhs.value();
     }   
 
@@ -257,8 +268,9 @@ namespace sequoia::physics
     friend constexpr quantity_product_t<quantity, quantity<RHSQuantitySpace, RHSUnit, RHSValidator>>
       operator*(const quantity& lhs, const quantity<RHSQuantitySpace, RHSUnit, RHSValidator>& rhs)
     {
-      using derived_units_type = quantity_product_t<quantity, quantity<RHSQuantitySpace, RHSUnit, RHSValidator>>::units_type;
-      return quantity_product_t<quantity, quantity<RHSQuantitySpace, RHSUnit, RHSValidator>>{lhs.value() * rhs.value(), derived_units_type{}};
+      using quantity_t = quantity_product_t<quantity, quantity<RHSQuantitySpace, RHSUnit, RHSValidator>>;
+      using derived_units_type = quantity_t::units_type;
+      return quantity_t{lhs.value() * rhs.value(), derived_units_type{}};
     }
   };
 

@@ -339,6 +339,7 @@ namespace sequoia::maths
     constexpr static auto dimension{V::dimension};
   };
 
+  // TO DO: probably need to work in terms of this to deal with the dual of a dual behaving properly
   template<class>
   struct dual_space;
 

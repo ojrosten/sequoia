@@ -92,7 +92,12 @@ namespace sequoia::testing
     STATIC_CHECK((std::is_same_v<reduction_t<std::tuple<units::kilogram_t, units::metre_t>>, composite_unit<std::tuple<units::kilogram_t, units::metre_t>>>), "");
     STATIC_CHECK((std::is_same_v<reduction_t<std::tuple<composite_unit<std::tuple<units::coulomb_t, units::kelvin_t>>, composite_unit<std::tuple<units::kilogram_t, units::metre_t>>>>,
                                  composite_unit<std::tuple<units::coulomb_t, units::kelvin_t, units::kilogram_t, units::metre_t>>>), "");
-      
+
+    STATIC_CHECK((std::is_same_v<reduction_t<std::tuple<units::coulomb_t, dual<units::kelvin_t>>>, composite_unit<std::tuple<units::coulomb_t, dual<units::kelvin_t>>>>), "");
+    STATIC_CHECK((std::is_same_v<reduction_t<std::tuple<dual<units::kelvin_t>, units::coulomb_t>>, composite_unit<std::tuple<units::coulomb_t, dual<units::kelvin_t>>>>), "");
+    //STATIC_CHECK((std::is_same_v<reduction_t<std::tuple<units::kelvin_t, dual<units::kelvin_t>>>, no_unit>), "");
+    
+    
     STATIC_CHECK((std::is_same_v<reduction_t<std::tuple<reduction_t<std::tuple<units::coulomb_t, units::kelvin_t>>, reduction_t<std::tuple<units::kilogram_t, units::metre_t>>>>,
                                  reduction_t<std::tuple<reduction_t<std::tuple<units::kelvin_t, units::kilogram_t>>, reduction_t<std::tuple<units::coulomb_t, units::metre_t>>>>>), "");
 
@@ -124,5 +129,14 @@ namespace sequoia::testing
 
     STATIC_CHECK((std::is_same_v<simplify_t<std::tuple<length_space_t, mass_space_t, dual<mass_space_t>, temp_space_t>>,
                                  std::tuple<length_space_t, temp_space_t>>), "");
+
+    STATIC_CHECK((std::is_same_v<counter_t<units::kilogram_t>,       std::tuple<type_counter<units::kilogram_t, 1>>>), "");
+    STATIC_CHECK((std::is_same_v<counter_t<dual<units::kilogram_t>>,  std::tuple<type_counter<dual<units::kilogram_t>, 1>>>), "");
+    STATIC_CHECK((std::is_same_v<counter_t<std::tuple<units::kilogram_t>>,       std::tuple<type_counter<units::kilogram_t, 1>>>), "");
+    STATIC_CHECK((std::is_same_v<counter_t<std::tuple<dual<units::kilogram_t>>>, std::tuple<type_counter<dual<units::kilogram_t>, 1>>>), "");
+    STATIC_CHECK((std::is_same_v<counter_t<std::tuple<units::kilogram_t, units::kilogram_t>>,             std::tuple<type_counter<units::kilogram_t, 2>>>), "");
+    STATIC_CHECK((std::is_same_v<counter_t<std::tuple<units::kilogram_t, dual<units::kilogram_t>>>,       std::tuple<type_counter<units::kilogram_t, 0>>>), "");
+    STATIC_CHECK((std::is_same_v<counter_t<std::tuple<dual<units::kilogram_t>, dual<units::kilogram_t>>>, std::tuple<type_counter<dual<units::kilogram_t>,2 >>>), "");
+    STATIC_CHECK((std::is_same_v<reduce_t<counter_t<std::tuple<units::kilogram_t, dual<units::kilogram_t>>>>,  no_unit>), "");
   }
 }
