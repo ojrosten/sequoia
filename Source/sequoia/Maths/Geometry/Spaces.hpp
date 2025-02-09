@@ -395,6 +395,10 @@ namespace sequoia::meta
 
 namespace sequoia::maths
 {
+  // TO DO: consider reordering to avoid forward declaration here?
+  template<std::size_t D, std::floating_point T>
+  struct euclidean_vector_space;
+  
   //========= reduction of direct products ostensibly to a lower dimensional space ========= //
 
   namespace impl
@@ -499,7 +503,8 @@ namespace sequoia::maths
     template<convex_space T>
     struct reduce<std::tuple<type_counter<T, 0>>>
     {
-      using type = std::tuple<>;
+      // TO DO: in principle this could be something other than a Euclidean vector space
+      using type = std::tuple<euclidean_vector_space<1, typename T::vector_space_type::field_type>>;
     };
 
     template<convex_space T, convex_space... Ts, int... Is>
@@ -570,18 +575,6 @@ namespace sequoia::maths
     using vector_space_type = reduction<direct_product<std::tuple<Ts...>>>;
     constexpr static std::size_t dimension{std::ranges::max({Ts::dimension...})};
   };
-
-  template<vector_space T>
-  struct reduction<direct_product<std::tuple<T, dual<T>>>>
-  {    
-    using field_type       = T::field_type;
-    using set_type         = std::tuple<field_type>;
-    constexpr static std::size_t dimension{1};
-  };
-
-  template<vector_space T>
-  struct reduction<direct_product<std::tuple<dual<T>, T>>> : reduction<direct_product<std::tuple<T, dual<T>>>>
-  {};
 
   template<convex_space... Ts>
     requires (!vector_space<Ts> && ...)
