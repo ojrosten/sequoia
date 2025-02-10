@@ -137,6 +137,6 @@ namespace sequoia::testing
     STATIC_CHECK((std::is_same_v<counter_t<std::tuple<units::kilogram_t, units::kilogram_t>>,             std::tuple<type_counter<units::kilogram_t, 2>>>), "");
     STATIC_CHECK((std::is_same_v<counter_t<std::tuple<units::kilogram_t, dual<units::kilogram_t>>>,       std::tuple<type_counter<units::kilogram_t, 0>>>), "");
     STATIC_CHECK((std::is_same_v<counter_t<std::tuple<dual<units::kilogram_t>, dual<units::kilogram_t>>>, std::tuple<type_counter<dual<units::kilogram_t>,2 >>>), "");
-    STATIC_CHECK((std::is_same_v<reduce_t<counter_t<std::tuple<units::kilogram_t, dual<units::kilogram_t>>>>,  no_unit_t>), "");
+    STATIC_CHECK((std::is_same_v<reduce_t<counter_t<std::tuple<units::kilogram_t, dual<units::kilogram_t>>>>,  std::tuple<no_unit_t>>), "");
   }
 }

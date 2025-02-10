@@ -471,6 +471,8 @@ namespace sequoia::maths
       using type = std::tuple<type_counter<T, I-1>, type_counter<Ts, Is>...>;
     };
 
+    // TO DO: this unpacking roundtrip is probably unnecessary;
+    // could just work in terms of counter.
     template<class...>
     struct unpack;
 

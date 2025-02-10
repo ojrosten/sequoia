@@ -136,12 +136,12 @@ namespace sequoia::testing
       using length_t      = si::length<float>;
       using charge_t      = si::electrical_charge<float>;
       using temperature_t = si::temperature<float>;
-
-      
+    
       auto ml = mass_t{1.0, units::kilogram} * length_t{2.0, units::metre},
            lm = length_t{2.0, units::metre} * mass_t{1.0, units::kilogram};
       check(equivalence, "", ml, 2.0f);
       check(equivalence, "", lm, 2.0f);
+      check(equality, "", lm / mass_t{2.0, units::kilogram}, length_t{1.0, units::metre});
       
       auto mlc = mass_t{1.0, units::kilogram} * length_t{2.0, units::metre} * charge_t{-1.0, units::coulomb},
            clm = charge_t{-1.0, units::coulomb} * length_t{2.0, units::metre} *  mass_t{1.0, units::kilogram};

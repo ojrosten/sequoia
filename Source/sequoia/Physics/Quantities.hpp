@@ -73,14 +73,17 @@ namespace sequoia
        template<physics::quantity_unit T>
        struct reduce<std::tuple<type_counter<T, 0>>>
        {
-         using type = physics::no_unit_t;
+         using type = std::tuple<physics::no_unit_t>;
        };
 
       template<physics::quantity_unit... Ts>
       struct simplify<physics::composite_unit<std::tuple<Ts...>>>
       {
-        using reduced_type = simplify_t<std::tuple<Ts...>>;
-        using type = std::conditional_t<is_tuple_v<reduced_type>, physics::composite_unit<reduced_type>, reduced_type>;
+        using reduced_tuple_type = simplify_t<std::tuple<Ts...>>;
+        //using type = std::conditional_t<is_tuple_v<reduced_type>, physics::composite_unit<reduced_type>, reduced_type>;
+        using type = std::conditional_t<std::tuple_size_v<reduced_tuple_type> == 1,
+                                      std::tuple_element_t<0, reduced_tuple_type>,
+                                      physics::composite_unit<reduced_tuple_type>>;
       };
     }
     
@@ -242,23 +245,22 @@ namespace sequoia::physics
       }(std::make_index_sequence<D>{});
     }
 
-    // Start with the special case of the same units and the numerator of dim 1 (the latter is always true of the denom)
-    template<convex_space DenominatorQuantitySpace, class DenominatorValidator>
-      requires     ( D == 1)
-                && (quantity<DenominatorQuantitySpace, Unit, DenominatorValidator>::D == 1)
+    template<convex_space RHSQuantitySpace, class RHSUnit, class RHSValidator>
+      requires     (quantity<RHSQuantitySpace, RHSUnit, RHSValidator>::D == 1)
                 && (is_intrinsically_absolute || vector_space<QuantitySpace>)
-                && (   quantity<DenominatorQuantitySpace, Unit, DenominatorValidator>::is_intrinsically_absolute
-                    || vector_space<DenominatorQuantitySpace>)
+                && (   quantity<RHSQuantitySpace, RHSUnit, RHSValidator>::is_intrinsically_absolute
+                    || vector_space<RHSQuantitySpace>)
     [[nodiscard]]
-    friend constexpr auto operator/(const quantity& lhs, const quantity<DenominatorQuantitySpace, Unit, DenominatorValidator>& rhs)
+    friend constexpr auto operator/(const quantity& lhs, const quantity<RHSQuantitySpace, RHSUnit, RHSValidator>& rhs)
     {
-      using quantity_t = quantity_product_t<quantity, quantity<dual<DenominatorQuantitySpace>, dual<Unit>, DenominatorValidator>>;
+      using quantity_t = quantity_product_t<quantity, quantity<dual<RHSQuantitySpace>, dual<RHSUnit>, RHSValidator>>;
       using derived_units_type = quantity_t::units_type;
       return quantity_t{lhs.value() / rhs.value(), derived_units_type{}};
     }   
 
     template<convex_space RHSQuantitySpace, quantity_unit RHSUnit, class RHSValidator>
     requires    ((D == 1) || (quantity<RHSQuantitySpace, Unit, RHSValidator>::D == 1))
+    // TO DO: figure this out
     //     && (is_intrinsically_absolute || vector_space<QuantitySpace>)
     //       && (quantity<RHSQuantitySpace, RHSUnit, RHSValidator>::is_intrinsically_absolute || vector_space<RHSQuantitySpace>)
     [[nodiscard]]
