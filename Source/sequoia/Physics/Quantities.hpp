@@ -44,10 +44,12 @@ namespace sequoia
     template<class T>
     struct composite_unit;
 
-    struct no_unit
+    struct no_unit_t
     {
       using validator_type = std::identity;
     };
+
+    inline constexpr no_unit_t no_unit{};
 
     // Ts are assumed to be ordered
     template<physics::quantity_unit... Ts>
@@ -71,16 +73,14 @@ namespace sequoia
        template<physics::quantity_unit T>
        struct reduce<std::tuple<type_counter<T, 0>>>
        {
-         using type = physics::no_unit;
+         using type = physics::no_unit_t;
        };
 
       template<physics::quantity_unit... Ts>
       struct simplify<physics::composite_unit<std::tuple<Ts...>>>
       {
-        using reduced_tuple_type = simplify_t<std::tuple<Ts...>>;
-        using type = std::conditional_t<std::tuple_size_v<reduced_tuple_type> == 1,
-                                        std::tuple_element_t<0, reduced_tuple_type>,
-                                        physics::composite_unit<reduced_tuple_type>>;
+        using reduced_type = simplify_t<std::tuple<Ts...>>;
+        using type = std::conditional_t<is_tuple_v<reduced_type>, physics::composite_unit<reduced_type>, reduced_type>;
       };
     }
     
@@ -165,7 +165,7 @@ namespace sequoia::physics
                            unit_defined_origin<Unit>>,
         Validator,
         quantity<vector_space_type_of<QuantitySpace>, Unit, std::identity>>;
-
+  
   template<class T, class U>
   struct quantity_product;
 
@@ -250,14 +250,11 @@ namespace sequoia::physics
                 && (   quantity<DenominatorQuantitySpace, Unit, DenominatorValidator>::is_intrinsically_absolute
                     || vector_space<DenominatorQuantitySpace>)
     [[nodiscard]]
-    friend constexpr std::common_type_t<value_type, typename quantity<DenominatorQuantitySpace, Unit, DenominatorValidator>::value_type>
-    //    friend constexpr quantity_product_t<quantity, quantity<dual<DenominatorQuantitySpace>, dual<Unit>, DenominatorValidator>>
-      operator/(const quantity& lhs, const quantity<DenominatorQuantitySpace, Unit, DenominatorValidator>& rhs)
+    friend constexpr auto operator/(const quantity& lhs, const quantity<DenominatorQuantitySpace, Unit, DenominatorValidator>& rhs)
     {
-      //using quantity_t = quantity_product_t<quantity, quantity<dual<DenominatorQuantitySpace>, dual<Unit>, DenominatorValidator>>;
-      //using derived_units_type = quantity_t::units_type;
-      //return quantity_t{lhs.value() / rhs.value(), derived_units_type{}};
-      return lhs.value() / rhs.value();
+      using quantity_t = quantity_product_t<quantity, quantity<dual<DenominatorQuantitySpace>, dual<Unit>, DenominatorValidator>>;
+      using derived_units_type = quantity_t::units_type;
+      return quantity_t{lhs.value() / rhs.value(), derived_units_type{}};
     }   
 
     template<convex_space RHSQuantitySpace, quantity_unit RHSUnit, class RHSValidator>

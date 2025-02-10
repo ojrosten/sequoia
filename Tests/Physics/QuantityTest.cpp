@@ -69,8 +69,12 @@ namespace sequoia::testing
 
       coordinates_operations<mass_t>{*this}.execute();
 
-      //check(equality, "", mass_t{2.0, units::kilogram} / delta_m_t{1.0, units::kilogram}, 2.0f);
-      //check(equality, "", delta_m_t{2.0, units::kilogram} / mass_t{1.0, units::kilogram}, 2.0f);
+      using inv_mass_t = quantity<dual<mass_space<float>>, dual<units::kilogram_t>>;
+      coordinates_operations<inv_mass_t>{*this}.execute();
+
+      check(equality, "", mass_t{2.0, units::kilogram} / mass_t{1.0, units::kilogram}, quantity<euclidean_vector_space<1, float>, no_unit_t, absolute_validator>{2.0f, no_unit});
+      check(equality, "", (mass_t{2.0, units::kilogram} / delta_m_t{1.0, units::kilogram}).value(), 2.0f);
+      check(equality, "", (delta_m_t{2.0, units::kilogram} / mass_t{1.0, units::kilogram}).value(), 2.0f);
     }
 
     {
@@ -90,7 +94,7 @@ namespace sequoia::testing
 
       coordinates_operations<unsafe_mass_t>{*this}.execute();
 
-      //check(equality, "", unsafe_mass_t{-2.0, units::kilogram} / delta_m_t{1.0, units::kilogram}, -2.0f);
+      check(equality, "", (unsafe_mass_t{-2.0, units::kilogram} / delta_m_t{1.0, units::kilogram}).value(), -2.0f);
     }
 
     {
