@@ -461,14 +461,13 @@ namespace sequoia::maths
     };
 
     template<class S, class T, int I, class... Ts, int... Is>
-      requires (!std::is_same_v<S, T>)
+      requires (!std::is_same_v<S, T> && !is_dual_v<T>)
     struct counter<dual<S>, std::tuple<type_counter<T, I>, type_counter<Ts, Is>...>>
     {
-      using type = std::tuple<type_counter<S, 1>, type_counter<T, I>, type_counter<Ts, Is>...>;
+      using type = std::tuple<type_counter<dual<S>, 1>, type_counter<T, I>, type_counter<Ts, Is>...>;
     };
 
     template<class T, int I, class... Ts, int... Is>
-      requires (!is_dual_v<T>)
     struct counter<T, std::tuple<type_counter<T, I>, type_counter<Ts, Is>...>>
     {
       using type = std::tuple<type_counter<T, I+1>, type_counter<Ts, Is>...>;
