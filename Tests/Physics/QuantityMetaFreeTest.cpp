@@ -33,6 +33,7 @@ namespace sequoia::testing
     using length_space_t = length_space<float>;
     using temp_space_t   = temperature_space<float>;
     using time_space_t   = time_space<float>;
+    using electrical_charge_space_t = electrical_charge_space<float>;
 
     using delta_mass_space_t = displacement_space<classical_quantity_sets::masses, float>;
     using delta_len_space_t  = displacement_space<classical_quantity_sets::lengths, float>;
@@ -43,7 +44,8 @@ namespace sequoia::testing
     
     STATIC_CHECK((convex_space<mass_space<float>>), "");
     STATIC_CHECK((!has_unary_minus<mass_space<float>>), "");
-   
+
+    STATIC_CHECK((vector_space<electrical_charge_space_t>), "");
     STATIC_CHECK((vector_space<delta_mass_space_t>), "");
     STATIC_CHECK((vector_space<delta_len_space_t>), "");
     STATIC_CHECK((vector_space<direct_product<delta_mass_space_t, delta_len_space_t>>), "");
