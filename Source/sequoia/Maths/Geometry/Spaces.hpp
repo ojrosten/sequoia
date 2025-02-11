@@ -357,16 +357,16 @@ namespace sequoia::maths
     using type = C;
   };
 
-  template<convex_space C>
+  template<class C>
   struct is_dual : std::false_type {};
 
-  template<convex_space C>
+  template<class C>
   struct is_dual<dual<C>> : std::true_type {};
 
-  template<convex_space C>
+  template<class C>
   using is_dual_t = is_dual<C>::type;
 
-  template<convex_space C>
+  template<class C>
   inline constexpr bool is_dual_v{is_dual<C>::value}; 
 }
 
@@ -447,19 +447,28 @@ namespace sequoia::maths
     };
 
     template<class T, class... Ts, class... Us, int... Is>
+    requires (sizeof...(Ts) > 0)
     struct counter<std::tuple<T, Ts...>, std::tuple<type_counter<Us, Is>...>>
     {
       using type = counter_t<std::tuple<Ts...>, counter_t<T, std::tuple<type_counter<Us, Is>...>>>;
     };
    
     template<class S, class T, int I, class... Ts, int... Is>
-      requires (!is_tuple_v<S>)
+      requires (!is_tuple_v<S> && !is_dual_v<S> && !std::is_same_v<S, T>)
     struct counter<S, std::tuple<type_counter<T, I>, type_counter<Ts, Is>...>>
     {
       using type = std::tuple<type_counter<S, 1>, type_counter<T, I>, type_counter<Ts, Is>...>;
     };
 
+    template<class S, class T, int I, class... Ts, int... Is>
+      requires (!std::is_same_v<S, T>)
+    struct counter<dual<S>, std::tuple<type_counter<T, I>, type_counter<Ts, Is>...>>
+    {
+      using type = std::tuple<type_counter<S, 1>, type_counter<T, I>, type_counter<Ts, Is>...>;
+    };
+
     template<class T, int I, class... Ts, int... Is>
+      requires (!is_dual_v<T>)
     struct counter<T, std::tuple<type_counter<T, I>, type_counter<Ts, Is>...>>
     {
       using type = std::tuple<type_counter<T, I+1>, type_counter<Ts, Is>...>;
@@ -519,6 +528,7 @@ namespace sequoia::maths
     };
 
     template<class T, int I, class... Ts, int... Is>
+      requires (I > 0)
     struct reduce<std::tuple<type_counter<T, I>, type_counter<Ts, Is>...>>
     {
       using type = reduce_t<std::tuple<type_counter<Ts, Is>...>, unpack_t<type_counter<T, I>>>;
@@ -531,6 +541,7 @@ namespace sequoia::maths
     };
 
     template<class T, int I, class... Ts, int... Is, class... Us>
+      requires (I > 0)
     struct reduce<std::tuple<type_counter<T, I>, type_counter<Ts, Is>...>, std::tuple<Us...>>
     {
       using type = reduce_t<std::tuple<type_counter<Ts, Is>...>, unpack_t<type_counter<T, I>, std::tuple<Us...>>>;
