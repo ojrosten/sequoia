@@ -248,36 +248,7 @@ namespace sequoia::maths
   struct direct_product;
   
   template<class... Ts>
-  using direct_product_set_t = direct_product<Ts...>::set_type;
-
-
-  template<class T, class U>
-  struct direct_product<T, U>
-  {
-    using set_type = std::tuple<T, U>;
-  };
-
-  template<class T, class U, class V>
-    requires (!vector_space<direct_product<T, U>> && !vector_space<V>)
-  struct direct_product<direct_product<T, U>, V>
-  {
-    using set_type = std::tuple<T, U, V>;
-  };
-
-  template<class T, class U, class V>
-    requires (!vector_space<T> && !vector_space<direct_product<U, V>>)
-  struct direct_product<T, direct_product<U, V>>
-  {
-    using set_type = std::tuple<T, U, V>;
-  };
-
-  template<class T, class U, class V, class W>
-    requires (!vector_space<direct_product<T, U>> && !vector_space<direct_product<V, W>>)
-  struct direct_product<direct_product<T, U>, direct_product<V, W>>
-  {
-    using set_type = std::tuple<T, U, V, W>;
-  };
-  
+  using direct_product_set_t = direct_product<Ts...>::set_type;  
 
   template<vector_space T, vector_space U>
   struct direct_product<T, U>
@@ -604,7 +575,9 @@ namespace sequoia::maths
     using type = reduction<direct_product<std::tuple<Ts...>>>;
   };
 
-  template<vector_space... Ts>
+  template<convex_space... Ts>
+  requires (vector_space<Ts> &&  ...)
+  //requires (vector_space<Ts> ||  ...)
   struct reduction<direct_product<std::tuple<Ts...>>>
   {    
     using tuple_type        = std::tuple<Ts...>;
@@ -616,7 +589,8 @@ namespace sequoia::maths
   };
 
   template<convex_space... Ts>
-    requires (!vector_space<Ts> || ...)
+  requires (!vector_space<Ts> ||  ...)
+  //requires (!vector_space<Ts> &&  ...)
   struct reduction<direct_product<std::tuple<Ts...>>>
   {
     using direct_product_t  = direct_product<std::tuple<Ts...>>;
