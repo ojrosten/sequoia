@@ -54,16 +54,16 @@ namespace sequoia::testing
     {
       using mass_t    = si::mass<float>;
       using delta_m_t = mass_t::displacement_quantity_type;
-      STATIC_CHECK((can_multiply<mass_t, float>),      "");
-      STATIC_CHECK((can_divide<mass_t, float>),        "");
-      STATIC_CHECK((can_divide<mass_t, mass_t>),       "");
-      STATIC_CHECK((can_divide<mass_t, delta_m_t>),    "");
-      STATIC_CHECK((can_divide<delta_m_t, mass_t>),    "");
-      STATIC_CHECK((can_divide<delta_m_t, delta_m_t>), "");
-      STATIC_CHECK((can_add<mass_t, mass_t>),          "");
-      STATIC_CHECK((can_add<mass_t, delta_m_t>),       "");
-      STATIC_CHECK((can_subtract<mass_t, mass_t>),     "");
-      STATIC_CHECK((can_subtract<mass_t, delta_m_t>),  "");
+      STATIC_CHECK(can_multiply<mass_t, float>);
+      STATIC_CHECK(can_divide<mass_t, float>);
+      STATIC_CHECK(can_divide<mass_t, mass_t>);
+      STATIC_CHECK(can_divide<mass_t, delta_m_t>);
+      STATIC_CHECK(can_divide<delta_m_t, mass_t>);
+      STATIC_CHECK(can_divide<delta_m_t, delta_m_t>);
+      STATIC_CHECK(can_add<mass_t, mass_t>);
+      STATIC_CHECK(can_add<mass_t, delta_m_t>);
+      STATIC_CHECK(can_subtract<mass_t, mass_t>);
+      STATIC_CHECK(can_subtract<mass_t, delta_m_t>);
             
       check_exception_thrown<std::domain_error>("Negative mass", [](){ return mass_t{-1.0, units::kilogram}; });
 
@@ -81,16 +81,16 @@ namespace sequoia::testing
       using unsafe_mass_t = quantity<mass_space<float>, units::kilogram_t, std::identity>;
       using delta_m_t = unsafe_mass_t::displacement_quantity_type;
 
-      STATIC_CHECK((can_multiply<unsafe_mass_t, float>),         "");
-      STATIC_CHECK((can_divide<unsafe_mass_t, float>),           "");
-      STATIC_CHECK((can_divide<unsafe_mass_t, unsafe_mass_t>),   "");
-      STATIC_CHECK((can_divide<unsafe_mass_t, delta_m_t>),       "");
-      STATIC_CHECK((can_divide<delta_m_t, unsafe_mass_t>),       "");
-      STATIC_CHECK((can_divide<delta_m_t, delta_m_t>),           "");
-      STATIC_CHECK((can_add<unsafe_mass_t, unsafe_mass_t>),      "");
-      STATIC_CHECK((can_add<unsafe_mass_t, delta_m_t>),          "");
-      STATIC_CHECK((can_subtract<unsafe_mass_t, unsafe_mass_t>), "");
-      STATIC_CHECK((can_subtract<unsafe_mass_t, delta_m_t>),     "");
+      STATIC_CHECK(can_multiply<unsafe_mass_t, float>);
+      STATIC_CHECK(can_divide<unsafe_mass_t, float>);
+      STATIC_CHECK(can_divide<unsafe_mass_t, unsafe_mass_t>);
+      STATIC_CHECK(can_divide<unsafe_mass_t, delta_m_t>);
+      STATIC_CHECK(can_divide<delta_m_t, unsafe_mass_t>);
+      STATIC_CHECK(can_divide<delta_m_t, delta_m_t>);
+      STATIC_CHECK(can_add<unsafe_mass_t, unsafe_mass_t>);
+      STATIC_CHECK(can_add<unsafe_mass_t, delta_m_t>);
+      STATIC_CHECK(can_subtract<unsafe_mass_t, unsafe_mass_t>);
+      STATIC_CHECK(can_subtract<unsafe_mass_t, delta_m_t>);
 
       coordinates_operations<unsafe_mass_t>{*this}.execute();
 
@@ -100,16 +100,16 @@ namespace sequoia::testing
     {
       using temperature_t = si::temperature<float>;
       using delta_temp_t = temperature_t::displacement_quantity_type;
-      STATIC_CHECK((can_multiply<temperature_t, float>),         "");
-      STATIC_CHECK((can_divide<temperature_t, float>),           "");
-      STATIC_CHECK((can_divide<temperature_t, temperature_t>),   "");
-      STATIC_CHECK((can_divide<temperature_t, delta_temp_t>),    "");
-      STATIC_CHECK((can_divide<delta_temp_t, temperature_t>),    "");
-      STATIC_CHECK((can_divide<delta_temp_t, delta_temp_t>),     "");
-      STATIC_CHECK((can_add<temperature_t, temperature_t>),      "");
-      STATIC_CHECK((can_add<temperature_t, delta_temp_t>),       "");
-      STATIC_CHECK((can_subtract<temperature_t, temperature_t>), "");
-      STATIC_CHECK((can_subtract<temperature_t, delta_temp_t>),  "");
+      STATIC_CHECK(can_multiply<temperature_t, float>);
+      STATIC_CHECK(can_divide<temperature_t, float>);
+      STATIC_CHECK(can_divide<temperature_t, temperature_t>);
+      STATIC_CHECK(can_divide<temperature_t, delta_temp_t>);
+      STATIC_CHECK(can_divide<delta_temp_t, temperature_t>);
+      STATIC_CHECK(can_divide<delta_temp_t, delta_temp_t>);
+      STATIC_CHECK(can_add<temperature_t, temperature_t>);
+      STATIC_CHECK(can_add<temperature_t, delta_temp_t>);
+      STATIC_CHECK(can_subtract<temperature_t, temperature_t>);
+      STATIC_CHECK(can_subtract<temperature_t, delta_temp_t>);
 
       coordinates_operations<temperature_t>{*this}.execute();
     }
@@ -117,16 +117,16 @@ namespace sequoia::testing
     {
       using temperature_t = quantity<temperature_space<float>, units::celsius_t>;;
       using delta_temp_t = temperature_t::displacement_quantity_type;
-      STATIC_CHECK(!(can_multiply<temperature_t, float>),         "");
-      STATIC_CHECK(!(can_divide<temperature_t, float>),           "");
-      STATIC_CHECK(!(can_divide<temperature_t, temperature_t>),   "");
-      STATIC_CHECK(!(can_divide<temperature_t, delta_temp_t>),    "");
-      STATIC_CHECK(!(can_divide<delta_temp_t, temperature_t>),    "");
-      STATIC_CHECK((can_divide<delta_temp_t, delta_temp_t>),      "");
-      STATIC_CHECK(!(can_add<temperature_t, temperature_t>),      "");
-      STATIC_CHECK((can_add<temperature_t, delta_temp_t>),        "");
-      STATIC_CHECK((can_subtract<temperature_t, temperature_t>),  "");
-      STATIC_CHECK((can_subtract<temperature_t, delta_temp_t>),   "");
+      STATIC_CHECK(!can_multiply<temperature_t, float>);
+      STATIC_CHECK(!can_divide<temperature_t, float>);
+      STATIC_CHECK(!can_divide<temperature_t, temperature_t>);
+      STATIC_CHECK(!can_divide<temperature_t, delta_temp_t>);
+      STATIC_CHECK(!can_divide<delta_temp_t, temperature_t>);
+      STATIC_CHECK(can_divide<delta_temp_t, delta_temp_t>);
+      STATIC_CHECK(!can_add<temperature_t, temperature_t>);
+      STATIC_CHECK(can_add<temperature_t, delta_temp_t>);
+      STATIC_CHECK(can_subtract<temperature_t, temperature_t>);
+      STATIC_CHECK(can_subtract<temperature_t, delta_temp_t>);
 
       coordinates_operations<temperature_t>{*this}.execute();
     }
