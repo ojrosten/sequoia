@@ -114,6 +114,18 @@ namespace sequoia::meta
     using type = std::tuple<std::tuple_element_t<Is, std::tuple<Ts...>> ...>;
   };
 
+  template<class T, template<class> class Trait>
+  struct filter_by_trait;
+
+  template<class T, template<class> class Trait>
+  using filter_by_trait_t = filter_by_trait<T, Trait>::type;
+
+  template<class... Ts, template<class> class Trait>
+  struct filter_by_trait<std::tuple<Ts...>, Trait>
+  {
+    using type = filter_t<std::tuple<Ts...>, make_filtered_sequence<std::false_type, Trait, Ts...>>;
+  };
+
   //==================================================== drop ===================================================//
 
   template<class T, std::size_t N>
