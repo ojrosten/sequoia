@@ -140,6 +140,10 @@ namespace sequoia::maths
   template<class T>
   concept vector_space = has_set_type<T> && has_field_type<T> && has_dimension<T>;
 
+  // Universal template parameters will obviate the need for this
+  template<class T>
+  struct is_vector_space : std::integral_constant<bool, vector_space<T>> {};
+
   template<class B>
   concept basis = requires { 
     typename B::vector_space_type;
@@ -280,11 +284,32 @@ namespace sequoia::maths
   
   // Types assumed to be ordered wrt type_comparator, but dependent types may not be against the same comparator
   template<convex_space... Ts>
-    requires (!vector_space<Ts> || ...)
+    requires (!vector_space<Ts> && ...)
   struct direct_product<std::tuple<Ts...>>
   {
     using set_type          = std::tuple<typename Ts::set_type...>;
-    using vector_space_type = direct_product<typename Ts::vector_space_type...>; 
+    using vector_space_type = direct_product<typename Ts::vector_space_type...>;
+  };
+
+  template<class>
+  struct extract_common_field_type;
+
+  template<class T>
+  using extract_common_field_type_t = extract_common_field_type<T>::type;
+
+  template<convex_space... Ts>
+  struct extract_common_field_type<std::tuple<Ts...>>
+  {
+    using type = std::common_type_t<typename Ts::field_type...>;
+  };
+
+  template<convex_space... Ts>
+    requires (vector_space<Ts> || ...) && (!vector_space<Ts> || ...)
+  struct direct_product<std::tuple<Ts...>>
+  {
+    using set_type          = std::tuple<typename Ts::set_type...>;
+    using field_type        = extract_common_field_type_t<meta::filter_by_trait_t<std::tuple<Ts...>, is_vector_space>>;
+    using vector_space_type = direct_product<typename Ts::vector_space_type...>;
   };
 
   //==============================  dual spaces ============================== //
