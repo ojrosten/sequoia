@@ -601,8 +601,7 @@ namespace sequoia::maths
   };
 
   template<convex_space... Ts>
-  requires (vector_space<Ts> &&  ...)
-  //requires (vector_space<Ts> ||  ...)
+    requires (vector_space<Ts> ||  ...)
   struct reduction<direct_product<std::tuple<Ts...>>>
   {    
     using tuple_type        = std::tuple<Ts...>;
@@ -610,12 +609,12 @@ namespace sequoia::maths
     using set_type          = reduction<typename direct_product_t::set_type>;
     using field_type        = typename direct_product_t::field_type;
     using vector_space_type = reduction<direct_product<std::tuple<Ts...>>>;
-    constexpr static std::size_t dimension{std::ranges::max({Ts::dimension...})};
+    // TO DO: fix this!
+    constexpr static std::size_t dimension{/*std::ranges::max({Ts::dimension...})*/ 1};
   };
 
   template<convex_space... Ts>
-  requires (!vector_space<Ts> ||  ...)
-  //requires (!vector_space<Ts> &&  ...)
+    requires (!vector_space<Ts> &&  ...)
   struct reduction<direct_product<std::tuple<Ts...>>>
   {
     using direct_product_t  = direct_product<std::tuple<Ts...>>;
