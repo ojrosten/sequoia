@@ -212,6 +212,17 @@ namespace sequoia::physics
     constexpr static bool is_effectively_absolute{is_intrinsically_absolute && !is_unsafe};
     constexpr static bool has_identity_validator{coordinates_type::has_identity_validator};
 
+    template<convex_space RHSQuantitySpace, class RHSUnit, class RHSValidator>
+    constexpr static bool is_multipicable_with{
+         (is_intrinsically_absolute || vector_space<QuantitySpace>)
+      && (quantity<RHSQuantitySpace, RHSUnit, RHSValidator>::is_intrinsically_absolute || vector_space<RHSQuantitySpace>)
+    };
+
+    template<convex_space RHSQuantitySpace, class RHSUnit, class RHSValidator>
+    constexpr static bool is_divisible_with{
+      is_multipicable_with<RHSQuantitySpace, RHSUnit, RHSValidator> && (quantity<RHSQuantitySpace, RHSUnit, RHSValidator>::D == 1)
+    };
+
     constexpr quantity() = default;
 
     constexpr quantity(value_type val, units_type) requires (D == 1)
@@ -245,23 +256,9 @@ namespace sequoia::physics
       }(std::make_index_sequence<D>{});
     }
 
-    template<convex_space RHSQuantitySpace, class RHSUnit, class RHSValidator>
-      requires     (quantity<RHSQuantitySpace, RHSUnit, RHSValidator>::D == 1)
-                && (is_intrinsically_absolute || vector_space<QuantitySpace>)
-                && (   quantity<RHSQuantitySpace, RHSUnit, RHSValidator>::is_intrinsically_absolute
-                    || vector_space<RHSQuantitySpace>)
-    [[nodiscard]]
-    friend constexpr auto operator/(const quantity& lhs, const quantity<RHSQuantitySpace, RHSUnit, RHSValidator>& rhs)
-    {
-      using quantity_t = quantity_product_t<quantity, quantity<dual<RHSQuantitySpace>, dual<RHSUnit>, RHSValidator>>;
-      using derived_units_type = quantity_t::units_type;
-      return quantity_t{lhs.value() / rhs.value(), derived_units_type{}};
-    }   
-
+    // TO DO: deal properly with mutliplication/division involving dimensionless quantities
     template<convex_space RHSQuantitySpace, quantity_unit RHSUnit, class RHSValidator>
-    requires    ((D == 1) || (quantity<RHSQuantitySpace, Unit, RHSValidator>::D == 1))
-             && (is_intrinsically_absolute || vector_space<QuantitySpace>)
-             && (quantity<RHSQuantitySpace, RHSUnit, RHSValidator>::is_intrinsically_absolute || vector_space<RHSQuantitySpace>)
+      requires is_multipicable_with<RHSQuantitySpace, RHSUnit, RHSValidator>
     [[nodiscard]]
     friend constexpr quantity_product_t<quantity, quantity<RHSQuantitySpace, RHSUnit, RHSValidator>>
       operator*(const quantity& lhs, const quantity<RHSQuantitySpace, RHSUnit, RHSValidator>& rhs)
@@ -270,6 +267,19 @@ namespace sequoia::physics
       using derived_units_type = quantity_t::units_type;
       return quantity_t{lhs.value() * rhs.value(), derived_units_type{}};
     }
+
+    template<convex_space RHSQuantitySpace, class RHSUnit, class RHSValidator>
+       requires is_divisible_with<RHSQuantitySpace, RHSUnit, RHSValidator>
+    [[nodiscard]]
+    friend constexpr auto operator/(const quantity& lhs, const quantity<RHSQuantitySpace, RHSUnit, RHSValidator>& rhs)
+    {
+      using quantity_t = quantity_product_t<quantity, quantity<dual<RHSQuantitySpace>, dual<RHSUnit>, RHSValidator>>;
+      using derived_units_type = quantity_t::units_type;
+      return quantity_t{lhs.value() / rhs.value(), derived_units_type{}};
+    }
+
+    // TO DO:
+    //[[nodiscard]] friend constexpr auto operator/(value_type val, const quantity& rhs);
   };
 
   namespace classical_quantity_sets
