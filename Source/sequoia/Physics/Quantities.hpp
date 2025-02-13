@@ -303,7 +303,7 @@ namespace sequoia::physics
     [[nodiscard]] friend constexpr auto operator/(value_type value, const quantity& rhs)
       requires ((D == 1) && (is_intrinsically_absolute || vector_space<QuantitySpace>))
     {
-      using quantity_t = quantity<dual<QuantitySpace>, dual<Unit>, Validator>;
+      using quantity_t = quantity<dual<QuantitySpace>, dual<Unit>, std::identity>;
       return quantity_t{value / rhs.value(), dual<Unit>{}};
     }    
   };

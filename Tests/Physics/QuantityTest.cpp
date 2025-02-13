@@ -166,6 +166,7 @@ namespace sequoia::testing
       check(equality, "", mlct / mass_t{1.0, units::kilogram}, length_t{2.0, units::metre} * charge_t{-1.0, units::coulomb} * temperature_t{5.0, units::kelvin});
 
       check(equivalence, "", 4.0f / length_t{2.0, units::metre}, 2.0f);
+      check(equality, "", 4.0f / mass_t{2.0, units::kilogram}, quantity<dual<mass_space<float>>, dual<units::kilogram_t>, std::identity>{2.0f, dual<units::kilogram_t>{}});
     }
   }
 }
