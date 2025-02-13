@@ -136,6 +136,7 @@ namespace sequoia::testing
       using length_t      = si::length<float>;
       using charge_t      = si::electrical_charge<float>;
       using temperature_t = si::temperature<float>;
+      using unsafe_mass_t = quantity<mass_space<float>, units::kilogram_t, std::identity>;
     
       auto ml = mass_t{1.0, units::kilogram} * length_t{2.0, units::metre},
            lm = length_t{2.0, units::metre} * mass_t{1.0, units::kilogram};
@@ -151,7 +152,7 @@ namespace sequoia::testing
       check(equivalence, "", clm, -2.0f);
       check(equality, "", mlc / mass_t{1.0, units::kilogram}, length_t{2.0, units::metre} * charge_t{-1.0, units::coulomb});
       check(equality, "", mlc / length_t{1.0, units::metre}, mass_t{2.0, units::kilogram} * charge_t{-1.0, units::coulomb});
-      //check(equality, "", mlc / charge_t{-1.0, units::coulomb}, ml);
+      check(equality, "", mlc / charge_t{-1.0, units::coulomb}, unsafe_mass_t{1.0, units::kilogram} * length_t{2.0, units::metre});
       
       auto mlct = mass_t{1.0, units::kilogram} * length_t{2.0, units::metre} * charge_t{-1.0, units::coulomb} * temperature_t{5.0, units::kelvin},
            cltm = charge_t{-1.0, units::coulomb} * length_t{2.0, units::metre} * temperature_t{5.0, units::kelvin} *  mass_t{1.0, units::kilogram};
