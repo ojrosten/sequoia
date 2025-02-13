@@ -300,8 +300,12 @@ namespace sequoia::physics
       return quantity_t{lhs.value() / rhs.value(), derived_units_type{}};
     }
 
-    // TO DO:
-    //[[nodiscard]] friend constexpr auto operator/(value_type val, const quantity& rhs);
+    [[nodiscard]] friend constexpr auto operator/(value_type value, const quantity& rhs)
+      requires ((D == 1) && (is_intrinsically_absolute || vector_space<QuantitySpace>))
+    {
+      using quantity_t = quantity<dual<QuantitySpace>, dual<Unit>, Validator>;
+      return quantity_t{value / rhs.value(), dual<Unit>{}};
+    }    
   };
 
   namespace classical_quantity_sets

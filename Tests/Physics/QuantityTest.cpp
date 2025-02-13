@@ -163,7 +163,9 @@ namespace sequoia::testing
 
       check(equivalence, "", mlct, -10.0f);
       check(equivalence, "", cltm, -10.0f);
-      check(equality, "", mlct / mass_t{1.0, units::kilogram}, length_t{2.0, units::metre} * charge_t{-1.0, units::coulomb} * temperature_t{5.0, units::kelvin}); 
+      check(equality, "", mlct / mass_t{1.0, units::kilogram}, length_t{2.0, units::metre} * charge_t{-1.0, units::coulomb} * temperature_t{5.0, units::kelvin});
+
+      check(equivalence, "", 4.0f / length_t{2.0, units::metre}, 2.0f);
     }
   }
 }
