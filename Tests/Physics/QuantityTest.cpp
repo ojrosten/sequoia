@@ -101,6 +101,7 @@ namespace sequoia::testing
       using temperature_t = si::temperature<float>;
       using delta_temp_t = temperature_t::displacement_quantity_type;
       STATIC_CHECK(can_multiply<temperature_t, float>);
+      STATIC_CHECK(can_multiply<temperature_t, temperature_t>);
       STATIC_CHECK(can_divide<temperature_t, float>);
       STATIC_CHECK(can_divide<temperature_t, temperature_t>);
       STATIC_CHECK(can_divide<temperature_t, delta_temp_t>);
@@ -118,6 +119,7 @@ namespace sequoia::testing
       using temperature_t = quantity<temperature_space<float>, units::celsius_t>;;
       using delta_temp_t = temperature_t::displacement_quantity_type;
       STATIC_CHECK(!can_multiply<temperature_t, float>);
+      STATIC_CHECK(!can_multiply<temperature_t, temperature_t>);
       STATIC_CHECK(!can_divide<temperature_t, float>);
       STATIC_CHECK(!can_divide<temperature_t, temperature_t>);
       STATIC_CHECK(!can_divide<temperature_t, delta_temp_t>);

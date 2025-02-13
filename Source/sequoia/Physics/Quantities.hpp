@@ -213,14 +213,20 @@ namespace sequoia::physics
     constexpr static bool has_identity_validator{coordinates_type::has_identity_validator};
 
     template<convex_space RHSQuantitySpace, class RHSUnit, class RHSValidator>
-    constexpr static bool is_multipicable_with{
+    constexpr static bool is_composable_with{
          (is_intrinsically_absolute || vector_space<QuantitySpace>)
       && (quantity<RHSQuantitySpace, RHSUnit, RHSValidator>::is_intrinsically_absolute || vector_space<RHSQuantitySpace>)
     };
 
     template<convex_space RHSQuantitySpace, class RHSUnit, class RHSValidator>
+    constexpr static bool is_multipicable_with{
+            is_composable_with<RHSQuantitySpace, RHSUnit, RHSValidator>
+         && ((D == 1) || (quantity<RHSQuantitySpace, RHSUnit, RHSValidator>::D == 1))
+    };
+
+    template<convex_space RHSQuantitySpace, class RHSUnit, class RHSValidator>
     constexpr static bool is_divisible_with{
-      is_multipicable_with<RHSQuantitySpace, RHSUnit, RHSValidator> && (quantity<RHSQuantitySpace, RHSUnit, RHSValidator>::D == 1)
+      is_composable_with<RHSQuantitySpace, RHSUnit, RHSValidator> && (quantity<RHSQuantitySpace, RHSUnit, RHSValidator>::D == 1)
     };
 
     constexpr quantity() = default;
@@ -260,8 +266,7 @@ namespace sequoia::physics
     template<convex_space RHSQuantitySpace, quantity_unit RHSUnit, class RHSValidator>
       requires is_multipicable_with<RHSQuantitySpace, RHSUnit, RHSValidator>
     [[nodiscard]]
-    friend constexpr quantity_product_t<quantity, quantity<RHSQuantitySpace, RHSUnit, RHSValidator>>
-      operator*(const quantity& lhs, const quantity<RHSQuantitySpace, RHSUnit, RHSValidator>& rhs)
+    friend constexpr auto operator*(const quantity& lhs, const quantity<RHSQuantitySpace, RHSUnit, RHSValidator>& rhs)
     {
       using quantity_t = quantity_product_t<quantity, quantity<RHSQuantitySpace, RHSUnit, RHSValidator>>;
       using derived_units_type = quantity_t::units_type;
