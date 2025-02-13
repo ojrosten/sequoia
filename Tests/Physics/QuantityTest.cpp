@@ -146,6 +146,8 @@ namespace sequoia::testing
       check(equivalence, "", lm, 2.0f);
       check(equality, "", lm / mass_t{2.0, units::kilogram}, length_t{1.0, units::metre});
       check(equality, "", lm / length_t{0.5, units::metre}, mass_t{4.0, units::kilogram});
+      check(equality, "", (mass_t{3.0, units::kilogram} / mass_t{1.0, units::kilogram})*mass_t{3.0, units::kilogram}, mass_t{9.0, units::kilogram});
+      check(equality, "", (charge_t{-3.0, units::coulomb} / charge_t{1.0, units::coulomb})*mass_t{3.0, units::kilogram}, unsafe_mass_t{-9.0, units::kilogram});
       
       auto mlc = mass_t{1.0, units::kilogram} * length_t{2.0, units::metre} * charge_t{-1.0, units::coulomb},
            clm = charge_t{-1.0, units::coulomb} * length_t{2.0, units::metre} *  mass_t{1.0, units::kilogram};

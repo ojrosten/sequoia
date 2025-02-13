@@ -179,15 +179,32 @@ namespace sequoia::physics
     convex_space LHSQuantitySpace, quantity_unit LHSUnit, class LHSValidator,
     convex_space RHSQuantitySpace, quantity_unit RHSUnit, class RHSValidator
   >
-  struct quantity_product<
-           quantity<LHSQuantitySpace, LHSUnit, LHSValidator>,
-           quantity<RHSQuantitySpace, RHSUnit, RHSValidator>
-         >
+  struct quantity_product<quantity<LHSQuantitySpace, LHSUnit, LHSValidator>, quantity<RHSQuantitySpace, RHSUnit, RHSValidator>>
   {
     using type = quantity<
       reduction_t<direct_product<LHSQuantitySpace, RHSQuantitySpace>>,
       reduction_t<std::tuple<LHSUnit, RHSUnit>>,
       reduced_validator_t<LHSValidator, RHSValidator>>;
+  };
+
+  template<
+    convex_space LHSQuantitySpace, quantity_unit LHSUnit, class LHSValidator,
+    convex_space RHSQuantitySpace, quantity_unit RHSUnit, class RHSValidator
+  >
+    requires std::is_same_v<euclidean_vector_space<1, space_field_type<LHSQuantitySpace>>, LHSQuantitySpace>
+  struct quantity_product<quantity<LHSQuantitySpace, LHSUnit, LHSValidator>, quantity<RHSQuantitySpace, RHSUnit, RHSValidator>>
+  {
+    using type = quantity<RHSQuantitySpace, RHSUnit, reduced_validator_t<LHSValidator, RHSValidator>>;
+  };
+
+  template<
+    convex_space LHSQuantitySpace, quantity_unit LHSUnit, class LHSValidator,
+    convex_space RHSQuantitySpace, quantity_unit RHSUnit, class RHSValidator
+  >
+    requires std::is_same_v<euclidean_vector_space<1, space_field_type<RHSQuantitySpace>>, RHSQuantitySpace>
+  struct quantity_product<quantity<LHSQuantitySpace, LHSUnit, LHSValidator>, quantity<RHSQuantitySpace, RHSUnit, RHSValidator>>
+  {
+    using type = quantity<LHSQuantitySpace, LHSUnit, reduced_validator_t<LHSValidator, RHSValidator>>;
   };
   
   template<convex_space QuantitySpace, quantity_unit Unit, class Validator=typename Unit::validator_type>
@@ -262,7 +279,6 @@ namespace sequoia::physics
       }(std::make_index_sequence<D>{});
     }
 
-    // TO DO: deal properly with mutliplication/division involving dimensionless quantities
     template<convex_space RHSQuantitySpace, quantity_unit RHSUnit, class RHSValidator>
       requires is_multipicable_with<RHSQuantitySpace, RHSUnit, RHSValidator>
     [[nodiscard]]
@@ -272,7 +288,8 @@ namespace sequoia::physics
       using derived_units_type = quantity_t::units_type;
       return quantity_t{lhs.value() * rhs.value(), derived_units_type{}};
     }
-
+    
+    // TO DO: deal properly with division involving dimensionless quantities
     template<convex_space RHSQuantitySpace, class RHSUnit, class RHSValidator>
        requires is_divisible_with<RHSQuantitySpace, RHSUnit, RHSValidator>
     [[nodiscard]]
