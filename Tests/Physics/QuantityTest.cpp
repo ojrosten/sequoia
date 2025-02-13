@@ -150,6 +150,7 @@ namespace sequoia::testing
       check(equivalence, "", mlc, -2.0f);
       check(equivalence, "", clm, -2.0f);
       check(equality, "", mlc / mass_t{1.0, units::kilogram}, length_t{2.0, units::metre} * charge_t{-1.0, units::coulomb});
+      check(equality, "", mlc / length_t{1.0, units::metre}, mass_t{2.0, units::kilogram} * charge_t{-1.0, units::coulomb});
       //check(equality, "", mlc / charge_t{-1.0, units::coulomb}, ml);
       
       auto mlct = mass_t{1.0, units::kilogram} * length_t{2.0, units::metre} * charge_t{-1.0, units::coulomb} * temperature_t{5.0, units::kelvin},
@@ -157,6 +158,7 @@ namespace sequoia::testing
 
       check(equivalence, "", mlct, -10.0f);
       check(equivalence, "", cltm, -10.0f);
+      check(equality, "", mlct / mass_t{1.0, units::kilogram}, length_t{2.0, units::metre} * charge_t{-1.0, units::coulomb} * temperature_t{5.0, units::kelvin}); 
     }
   }
 }
