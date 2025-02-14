@@ -37,7 +37,7 @@ namespace sequoia::maths
   }
 
   template<class T>
-  inline constexpr bool has_plus_v{
+  inline constexpr bool addable_v{
     requires(T& t) {
       { t += t } -> std::same_as<T&>;
       { t + t }  -> std::same_as<T>;
@@ -45,7 +45,7 @@ namespace sequoia::maths
   };
 
   template<class T>
-  inline constexpr bool has_minus_v{
+  inline constexpr bool subtractable_v{
     requires(T & t) {
       { t -= t } -> std::same_as<T&>;
       { t - t }  -> std::same_as<T>;
@@ -53,7 +53,7 @@ namespace sequoia::maths
   };
 
   template<class T>
-  inline constexpr bool has_multiply_v{
+  inline constexpr bool multiplicable_v{
     requires(T & t) {
       { t *= t } -> std::same_as<T&>;
       { t * t }  -> std::same_as<T>;
@@ -61,7 +61,7 @@ namespace sequoia::maths
   };
 
   template<class T>
-  inline constexpr bool has_divide_v{
+  inline constexpr bool divisible_v{
     requires(T & t) {
       { t /= t } -> std::same_as<T&>;
       { t / t }  -> std::same_as<T>;
@@ -69,7 +69,7 @@ namespace sequoia::maths
   };
 
   template<class T>
-  struct weakly_abelian_group_under_addition : std::bool_constant<has_plus_v<T>> {};
+  struct weakly_abelian_group_under_addition : std::bool_constant<addable_v<T>> {};
 
   template<class T>
   using weakly_abelian_group_under_addition_t = typename weakly_abelian_group_under_addition<T>::type;
@@ -107,10 +107,10 @@ namespace sequoia::maths
       && weakly_abelian_group_under_addition_v<T>
       && weakly_abelian_group_under_multiplication_v<T>
       && multiplication_weakly_distributive_over_addition_v<T>
-      && has_plus_v<T>
-      && has_minus_v<T>
-      && has_multiply_v<T>
-      && has_divide_v<T>;
+      && addable_v<T>
+      && subtractable_v<T>
+      && multiplicable_v<T>
+      && divisible_v<T>;
 
   template<class T>
   inline constexpr bool has_dimension{

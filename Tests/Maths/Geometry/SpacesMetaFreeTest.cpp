@@ -22,10 +22,10 @@ namespace sequoia::testing
   {
     using namespace maths;
 
-    STATIC_CHECK(has_plus_v<int>);
-    STATIC_CHECK(has_minus_v<int>);
-    STATIC_CHECK(has_multiply_v<int>);
-    STATIC_CHECK(has_divide_v<int>);
+    STATIC_CHECK(addable_v<int>);
+    STATIC_CHECK(subtractable_v<int>);
+    STATIC_CHECK(multiplicable_v<int>);
+    STATIC_CHECK(divisible_v<int>);
 
     STATIC_CHECK(weakly_abelian_group_under_addition_v<int>);
     STATIC_CHECK(weakly_abelian_group_under_addition_v<double>);
