@@ -158,9 +158,9 @@ namespace sequoia::physics
   };
 
   template<>
-  struct reduced_validator<absolute_validator, absolute_validator>
+  struct reduced_validator<half_space_validator, half_space_validator>
   {
-    using type = absolute_validator;
+    using type = half_space_validator;
   };
 
   template<convex_space QuantitySpace, quantity_unit Unit>
@@ -179,7 +179,7 @@ namespace sequoia::physics
         QuantitySpace,
         to_displacement_basis_t<QuantitySpace, Unit>,
         // TO DO: figure out if there's a better way of expressing this
-        std::conditional_t<vector_space<QuantitySpace> || defines_absolute_scale_v<typename Unit::validator_type>,
+        std::conditional_t<vector_space<QuantitySpace> || defines_half_space_v<typename Unit::validator_type>,
                            intrinsic_origin,
                            unit_defined_origin<Unit>>,
         Validator,
@@ -240,7 +240,7 @@ namespace sequoia::physics
     constexpr static std::size_t dimension{displacement_space_type::dimension};
     constexpr static std::size_t D{dimension};
 
-    constexpr static bool is_intrinsically_absolute{(D == 1) && defines_absolute_scale_v<intrinsic_validator_type>};
+    constexpr static bool is_intrinsically_absolute{(D == 1) && defines_half_space_v<intrinsic_validator_type>};
     constexpr static bool is_unsafe{!std::is_same_v<Validator, intrinsic_validator_type>};
     constexpr static bool is_effectively_absolute{is_intrinsically_absolute && !is_unsafe};
     constexpr static bool has_identity_validator{coordinates_type::has_identity_validator};
@@ -407,12 +407,12 @@ namespace sequoia::physics
   {
     struct kilogram_t
     {
-      using validator_type = absolute_validator;
+      using validator_type = half_space_validator;
     };
 
     struct metre_t
     {
-      using validator_type = absolute_validator;
+      using validator_type = half_space_validator;
     };
 
     struct second_t
@@ -422,7 +422,7 @@ namespace sequoia::physics
 
     struct kelvin_t
     {
-      using validator_type = absolute_validator;
+      using validator_type = half_space_validator;
     };
 
     struct coulomb_t

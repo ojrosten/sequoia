@@ -187,7 +187,7 @@ namespace sequoia::maths
              && requires(V & v, const space_value_type<ConvexSpace>& val) { { v(val) } -> std::convertible_to<decltype(val)>; })
        );
 
-  struct absolute_validator
+  struct half_space_validator
   {
     template<std::floating_point T>
     [[nodiscard]]
@@ -206,20 +206,17 @@ namespace sequoia::maths
     }
   };
 
-  // TO DO: review this! absolute scale is more physics than maths.
-  // However, the notion of a half-space is reasonable for the maths
-  // namespace; so maybe it's a matter of renaming...
   template<class T>
-  struct defines_absolute_scale : std::false_type {};
+  struct defines_half_space : std::false_type {};
 
   template<class T>
-  using defines_absolute_scale_t = typename defines_absolute_scale<T>::type;
+  using defines_half_space_t = typename defines_half_space<T>::type;
 
   template<class T>
-  inline constexpr bool defines_absolute_scale_v{defines_absolute_scale<T>::value};
+  inline constexpr bool defines_half_space_v{defines_half_space<T>::value};
 
   template<>
-  struct defines_absolute_scale<absolute_validator> : std::true_type {};
+  struct defines_half_space<half_space_validator> : std::true_type {};
 
   struct intrinsic_origin {};
 

@@ -1,7 +1,7 @@
 Tests/Physics/QuantityTestingDiagnostics.cpp, Line 27
 
 Comparison performed using:
-[sequoia::testing::value_tester<sequoia::physics::quantity<sequoia::physics::mass_space<float>, sequoia::physics::units::kilogram_t, sequoia::maths::absolute_validator> >]
+[sequoia::testing::value_tester<sequoia::physics::quantity<sequoia::physics::mass_space<float>, sequoia::physics::units::kilogram_t, sequoia::maths::half_space_validator> >]
 Checking for equivalence with:
 [float]
 
@@ -15,7 +15,7 @@ Checking for equivalence with:
 
 Tests/Physics/QuantityTestingDiagnostics.cpp, Line 28
 
-[sequoia::physics::quantity<sequoia::physics::mass_space<float>, sequoia::physics::units::kilogram_t, sequoia::maths::absolute_validator>]
+[sequoia::physics::quantity<sequoia::physics::mass_space<float>, sequoia::physics::units::kilogram_t, sequoia::maths::half_space_validator>]
 operator== returned false
 
   Wrapped Value
