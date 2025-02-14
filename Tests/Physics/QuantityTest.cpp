@@ -139,6 +139,8 @@ namespace sequoia::testing
       using charge_t      = si::electrical_charge<float>;
       using temperature_t = si::temperature<float>;
       using unsafe_mass_t = quantity<mass_space<float>, units::kilogram_t, std::identity>;
+      using unsafe_inv_mass_t = quantity<dual<mass_space<float>>, dual<units::kilogram_t>, std::identity>;
+      using inv_charge_t = quantity<dual<electrical_charge_space<float>>, dual<units::coulomb_t>, std::identity>;
     
       auto ml = mass_t{1.0, units::kilogram} * length_t{2.0, units::metre},
            lm = length_t{2.0, units::metre} * mass_t{1.0, units::kilogram};
@@ -166,7 +168,9 @@ namespace sequoia::testing
       check(equality, "", mlct / mass_t{1.0, units::kilogram}, length_t{2.0, units::metre} * charge_t{-1.0, units::coulomb} * temperature_t{5.0, units::kelvin});
 
       check(equivalence, "", 4.0f / length_t{2.0, units::metre}, 2.0f);
-      check(equality, "", 4.0f / mass_t{2.0, units::kilogram}, quantity<dual<mass_space<float>>, dual<units::kilogram_t>, std::identity>{2.0f, dual<units::kilogram_t>{}});
+      check(equality, "", 4.0f / mass_t{2.0, units::kilogram}, unsafe_inv_mass_t{2.0f, dual<units::kilogram_t>{}});
+      check(equality, "", 4.0f / unsafe_inv_mass_t{2.0f, dual<units::kilogram_t>{}}, unsafe_mass_t{2.0, units::kilogram});
+      check(equality, "", 4.0f / inv_charge_t{2.0f, dual<units::coulomb_t>{}}, charge_t{2.0, units::coulomb});
     }
   }
 }

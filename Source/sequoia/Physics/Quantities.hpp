@@ -295,7 +295,7 @@ namespace sequoia::physics
     [[nodiscard]]
     friend constexpr auto operator/(const quantity& lhs, const quantity<RHSQuantitySpace, RHSUnit, RHSValidator>& rhs)
     {
-      using quantity_t = quantity_product_t<quantity, quantity<dual<RHSQuantitySpace>, dual<RHSUnit>, RHSValidator>>;
+      using quantity_t = quantity_product_t<quantity, quantity<dual_space_t<RHSQuantitySpace>, dual_space_t<RHSUnit>, RHSValidator>>;
       using derived_units_type = quantity_t::units_type;
       return quantity_t{lhs.value() / rhs.value(), derived_units_type{}};
     }
@@ -303,8 +303,9 @@ namespace sequoia::physics
     [[nodiscard]] friend constexpr auto operator/(value_type value, const quantity& rhs)
       requires ((D == 1) && (is_intrinsically_absolute || vector_space<QuantitySpace>))
     {
-      using quantity_t = quantity<dual<QuantitySpace>, dual<Unit>, std::identity>;
-      return quantity_t{value / rhs.value(), dual<Unit>{}};
+      using quantity_t = quantity<dual_space_t<QuantitySpace>, dual_space_t<Unit>, std::identity>;
+      using derived_units_type = quantity_t::units_type;
+      return quantity_t{value / rhs.value(), derived_units_type{}};
     }    
   };
 

@@ -336,19 +336,18 @@ namespace sequoia::maths
     using vector_space_type = dual<V>;
   };
 
-  // TO DO: probably need to work in terms of this to deal with the dual of a dual behaving properly
   template<class>
   struct dual_space;
 
   template<class T>
   using dual_space_t = dual_space<T>::type;
 
-  template<convex_space C>
-  struct dual_space<C> {
+  template<class C>
+  struct dual_space {
     using type = dual<C>;
   };
 
-  template<convex_space C>
+  template<class C>
   struct dual_space<dual<C>> {
     using type = C;
   };
