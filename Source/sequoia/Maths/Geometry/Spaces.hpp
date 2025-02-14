@@ -336,22 +336,6 @@ namespace sequoia::maths
     using vector_space_type = dual<V>;
   };
 
-  template<class>
-  struct dual_space;
-
-  template<class T>
-  using dual_space_t = dual_space<T>::type;
-
-  template<class C>
-  struct dual_space {
-    using type = dual<C>;
-  };
-
-  template<class C>
-  struct dual_space<dual<C>> {
-    using type = C;
-  };
-
   template<class C>
   struct is_dual : std::false_type {};
 

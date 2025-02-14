@@ -70,11 +70,27 @@ namespace sequoia
     
     namespace impl
     {
-       template<physics::quantity_unit T>
-       struct reduce<std::tuple<type_counter<T, 0>>>
-       {
-         using type = std::tuple<physics::no_unit_t>;
-       };
+      template<class>
+      struct to_dual;
+
+      template<class T>
+      using to_dual_t = to_dual<T>::type;
+
+      template<class C>
+      struct to_dual {
+        using type = dual<C>;
+      };
+
+      template<class C>
+      struct to_dual<dual<C>> {
+        using type = C;
+      };
+
+      template<physics::quantity_unit T>
+      struct reduce<std::tuple<type_counter<T, 0>>>
+      {
+        using type = std::tuple<physics::no_unit_t>;
+      };
 
       template<physics::quantity_unit... Ts>
       struct simplify<physics::composite_unit<std::tuple<Ts...>>>
@@ -295,7 +311,8 @@ namespace sequoia::physics
     [[nodiscard]]
     friend constexpr auto operator/(const quantity& lhs, const quantity<RHSQuantitySpace, RHSUnit, RHSValidator>& rhs)
     {
-      using quantity_t = quantity_product_t<quantity, quantity<dual_space_t<RHSQuantitySpace>, dual_space_t<RHSUnit>, RHSValidator>>;
+      using maths::impl::to_dual_t;
+      using quantity_t = quantity_product_t<quantity, quantity<to_dual_t<RHSQuantitySpace>, to_dual_t<RHSUnit>, RHSValidator>>;
       using derived_units_type = quantity_t::units_type;
       return quantity_t{lhs.value() / rhs.value(), derived_units_type{}};
     }
@@ -303,7 +320,8 @@ namespace sequoia::physics
     [[nodiscard]] friend constexpr auto operator/(value_type value, const quantity& rhs)
       requires ((D == 1) && (is_intrinsically_absolute || vector_space<QuantitySpace>))
     {
-      using quantity_t = quantity<dual_space_t<QuantitySpace>, dual_space_t<Unit>, std::identity>;
+      using maths::impl::to_dual_t;
+      using quantity_t = quantity<to_dual_t<QuantitySpace>, to_dual_t<Unit>, std::identity>;
       using derived_units_type = quantity_t::units_type;
       return quantity_t{value / rhs.value(), derived_units_type{}};
     }    
