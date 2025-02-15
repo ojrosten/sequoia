@@ -44,12 +44,14 @@ namespace sequoia
     template<class T>
     struct composite_unit;
 
+    template<class Validator>
     struct no_unit_t
     {
-      using validator_type = std::identity;
+      using validator_type = Validator;
     };
 
-    inline constexpr no_unit_t no_unit{};
+    template<class Validator>
+    inline constexpr no_unit_t<Validator> no_unit{};
 
     // Ts are assumed to be ordered
     template<physics::quantity_unit... Ts>
@@ -89,7 +91,7 @@ namespace sequoia
       template<physics::quantity_unit T>
       struct reduce<std::tuple<type_counter<T, 0>>>
       {
-        using type = std::tuple<physics::no_unit_t>;
+        using type = std::tuple<physics::no_unit_t<typename T::validator_type>>;
       };
 
       template<physics::quantity_unit... Ts>

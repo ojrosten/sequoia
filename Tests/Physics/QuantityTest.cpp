@@ -72,7 +72,8 @@ namespace sequoia::testing
       using inv_mass_t = quantity<dual<mass_space<float>>, dual<units::kilogram_t>>;
       coordinates_operations<inv_mass_t>{*this}.execute();
 
-      check(equality, "", mass_t{2.0, units::kilogram} / mass_t{1.0, units::kilogram}, quantity<euclidean_vector_space<1, float>, no_unit_t, half_space_validator>{2.0f, no_unit});
+      // TO DO: this isn't quite right; the space should be the 1D Euclidean half space
+      check(equality, "", mass_t{2.0, units::kilogram} / mass_t{1.0, units::kilogram}, quantity<euclidean_vector_space<1, float>, no_unit_t<half_space_validator>>{2.0f, no_unit<half_space_validator>});
       check(equivalence, "", mass_t{2.0, units::kilogram} / delta_m_t{1.0, units::kilogram}, 2.0f);
       check(equivalence, "", delta_m_t{2.0, units::kilogram} / mass_t{1.0, units::kilogram}, 2.0f);
     }
