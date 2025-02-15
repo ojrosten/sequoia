@@ -133,6 +133,27 @@ namespace sequoia::testing
 
       coordinates_operations<temperature_t>{*this}.execute();
     }
+
+    {
+      using charge_t = si::electrical_charge<float>;
+      using delta_charge_t = charge_t::displacement_quantity_type;
+
+      STATIC_CHECK(can_multiply<charge_t, float>);
+      STATIC_CHECK(can_divide<charge_t, float>);
+      STATIC_CHECK(can_divide<charge_t, charge_t>);
+      STATIC_CHECK(can_divide<charge_t, delta_charge_t>);
+      STATIC_CHECK(can_divide<delta_charge_t, charge_t>);
+      STATIC_CHECK(can_divide<delta_charge_t, delta_charge_t>);
+      STATIC_CHECK(can_add<charge_t, charge_t>);
+      STATIC_CHECK(can_add<charge_t, delta_charge_t>);
+      STATIC_CHECK(can_subtract<charge_t, charge_t>);
+      STATIC_CHECK(can_subtract<charge_t, delta_charge_t>);
+
+      coordinates_operations<charge_t>{*this}.execute();
+
+      check(equivalence, "", charge_t{-2.0, units::coulomb} / delta_charge_t{1.0, units::coulomb}, -2.0f);
+      check(equality, "", charge_t{-2.0, units::coulomb} / charge_t{1.0, units::coulomb}, quantity<euclidean_vector_space<1, float>, no_unit_t<std::identity>>{-2.0f, no_unit<std::identity>});
+    }
     
     {
       using mass_t        = si::mass<float>;
