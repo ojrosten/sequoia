@@ -305,7 +305,7 @@ namespace sequoia::physics
       return quantity_t{lhs.value() * rhs.value(), derived_units_type{}};
     }
     
-    // TO DO: deal properly with division involving dimensionless quantities
+    // TO DO: ensure e.g. T / Delta T explicitly reduces to a 1D Euclidean vector space
     template<convex_space RHSQuantitySpace, class RHSUnit, class RHSValidator>
        requires is_divisible_with<RHSQuantitySpace, RHSUnit, RHSValidator>
     [[nodiscard]]
