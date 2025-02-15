@@ -135,10 +135,13 @@ namespace sequoia::maths
     requires { typename T::set_type; }
   };
 
-  // TO DO: refer to vector axioms?
-  // Also vector_coordinates currently satifies this concept...
   template<class T>
-  concept vector_space = has_set_type<T> && has_field_type<T> && has_dimension<T>;
+  concept vector_space
+    =    has_set_type<T> && has_field_type<T> && has_dimension<T>
+      && requires {
+           typename T::vector_space_type;
+           requires std::same_as<T, typename T::vector_space_type>;
+         };
 
   // Universal template parameters will obviate the need for this
   template<class T>

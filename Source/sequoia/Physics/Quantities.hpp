@@ -380,12 +380,12 @@ namespace sequoia::physics
     using vector_space_type   = displacement_space<QuantitySet, Rep>;
   };
 
-  template<class QuantitySet, std::floating_point Rep>
+  template<class QuantitySet, std::floating_point Rep, class Derived>
   struct quantity_vector_space
   {
     using set_type          = QuantitySet;
     using field_type        = Rep;
-    using vector_space_type = quantity_vector_space<QuantitySet, Rep>;
+    using vector_space_type = Derived;
 
     constexpr static std::size_t dimension{1};
   };
@@ -403,7 +403,7 @@ namespace sequoia::physics
   struct temperature_space : quantity_space<classical_quantity_sets::temperatures, Rep> {};
 
   template<std::floating_point Rep>
-  struct electrical_charge_space : quantity_vector_space<classical_quantity_sets::electrical_charges, Rep> {};
+  struct electrical_charge_space : quantity_vector_space<classical_quantity_sets::electrical_charges, Rep, electrical_charge_space<Rep>> {};
 
   namespace units
   {

@@ -84,8 +84,7 @@ namespace sequoia::testing
     coordinates_operations<vec_t>{*this}.execute();
 
     static_assert(vector_space<direct_product<vec_space_t, vec_space_t>>);
-    // TO DO: Fix this! vec_t is the coordinates type, not the vector space itself!
-    static_assert(vector_space<direct_product<vec_t, vec_t>>);
+    static_assert(!vector_space<direct_product<vec_t, vec_t>>);
     static_assert(vector_space<direct_product<direct_product<vec_space_t, vec_space_t>, vec_space_t>>);
   }
 
