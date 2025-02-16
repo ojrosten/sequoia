@@ -47,6 +47,11 @@ namespace sequoia::testing
   void quantity_test::run_tests()
   {
     test_masses();
+    test_lengths();
+    test_times();
+    test_temperatures();
+    test_charges();
+    test_mixed();
   }
 
   void quantity_test::test_masses()
@@ -98,6 +103,20 @@ namespace sequoia::testing
       check(equivalence, "", unsafe_mass_t{-2.0, units::kilogram} / delta_m_t{1.0, units::kilogram}, -2.0f);
     }
 
+    
+
+  }
+
+  void quantity_test::test_lengths()
+  {
+  }
+
+  void quantity_test::test_times()
+  {
+  }
+
+  void quantity_test::test_temperatures()
+  {
     {
       using temperature_t = si::temperature<float>;
       using delta_temp_t = temperature_t::displacement_quantity_type;
@@ -133,69 +152,71 @@ namespace sequoia::testing
 
       coordinates_operations<temperature_t>{*this}.execute();
     }
+  }
 
-    {
-      using charge_t = si::electrical_charge<float>;
-      using delta_charge_t = charge_t::displacement_quantity_type;
+  void quantity_test::test_charges()
+  {
+    using charge_t = si::electrical_charge<float>;
+    using delta_charge_t = charge_t::displacement_quantity_type;
 
-      STATIC_CHECK(can_multiply<charge_t, float>);
-      STATIC_CHECK(can_divide<charge_t, float>);
-      STATIC_CHECK(can_divide<charge_t, charge_t>);
-      STATIC_CHECK(can_divide<charge_t, delta_charge_t>);
-      STATIC_CHECK(can_divide<delta_charge_t, charge_t>);
-      STATIC_CHECK(can_divide<delta_charge_t, delta_charge_t>);
-      STATIC_CHECK(can_add<charge_t, charge_t>);
-      STATIC_CHECK(can_add<charge_t, delta_charge_t>);
-      STATIC_CHECK(can_subtract<charge_t, charge_t>);
-      STATIC_CHECK(can_subtract<charge_t, delta_charge_t>);
+    STATIC_CHECK(can_multiply<charge_t, float>);
+    STATIC_CHECK(can_divide<charge_t, float>);
+    STATIC_CHECK(can_divide<charge_t, charge_t>);
+    STATIC_CHECK(can_divide<charge_t, delta_charge_t>);
+    STATIC_CHECK(can_divide<delta_charge_t, charge_t>);
+    STATIC_CHECK(can_divide<delta_charge_t, delta_charge_t>);
+    STATIC_CHECK(can_add<charge_t, charge_t>);
+    STATIC_CHECK(can_add<charge_t, delta_charge_t>);
+    STATIC_CHECK(can_subtract<charge_t, charge_t>);
+    STATIC_CHECK(can_subtract<charge_t, delta_charge_t>);
 
-      coordinates_operations<charge_t>{*this}.execute();
+    coordinates_operations<charge_t>{*this}.execute();
 
-      check(equivalence, "", charge_t{-2.0, units::coulomb} / delta_charge_t{1.0, units::coulomb}, -2.0f);
-      check(equality, "", charge_t{-2.0, units::coulomb} / charge_t{1.0, units::coulomb}, quantity<euclidean_vector_space<1, float>, no_unit_t<std::identity>>{-2.0f, no_unit<std::identity>});
-    }
+    check(equivalence, "", charge_t{-2.0, units::coulomb} / delta_charge_t{1.0, units::coulomb}, -2.0f);
+    check(equality, "", charge_t{-2.0, units::coulomb} / charge_t{1.0, units::coulomb}, quantity<euclidean_vector_space<1, float>, no_unit_t<std::identity>>{-2.0f, no_unit<std::identity>});
+  }
+
+  void quantity_test::test_mixed()
+  {
+    using mass_t        = si::mass<float>;
+    using length_t      = si::length<float>;
+    using charge_t      = si::electrical_charge<float>;
+    using temperature_t = si::temperature<float>;
+    using unsafe_mass_t = quantity<mass_space<float>, units::kilogram_t, std::identity>;
+    using unsafe_inv_mass_t = quantity<dual<mass_space<float>>, dual<units::kilogram_t>, std::identity>;
+    using inv_charge_t = quantity<dual<electrical_charge_space<float>>, dual<units::coulomb_t>, std::identity>;
     
-    {
-      using mass_t        = si::mass<float>;
-      using length_t      = si::length<float>;
-      using charge_t      = si::electrical_charge<float>;
-      using temperature_t = si::temperature<float>;
-      using unsafe_mass_t = quantity<mass_space<float>, units::kilogram_t, std::identity>;
-      using unsafe_inv_mass_t = quantity<dual<mass_space<float>>, dual<units::kilogram_t>, std::identity>;
-      using inv_charge_t = quantity<dual<electrical_charge_space<float>>, dual<units::coulomb_t>, std::identity>;
-    
-      auto ml = mass_t{1.0, units::kilogram} * length_t{2.0, units::metre},
-           lm = length_t{2.0, units::metre} * mass_t{1.0, units::kilogram};
-      check(equivalence, "", ml, 2.0f);
-      check(equivalence, "", lm, 2.0f);
-      check(equality, "", lm / mass_t{2.0, units::kilogram}, length_t{1.0, units::metre});
-      check(equality, "", lm / length_t{0.5, units::metre}, mass_t{4.0, units::kilogram});
-      check(equality, "", (mass_t{3.0, units::kilogram} / mass_t{1.0, units::kilogram})*mass_t{3.0, units::kilogram}, mass_t{9.0, units::kilogram});
-      check(equality, "", (charge_t{-3.0, units::coulomb} / charge_t{1.0, units::coulomb})*mass_t{3.0, units::kilogram}, unsafe_mass_t{-9.0, units::kilogram});
+    auto ml = mass_t{1.0, units::kilogram} * length_t{2.0, units::metre},
+         lm = length_t{2.0, units::metre} * mass_t{1.0, units::kilogram};
+    check(equivalence, "", ml, 2.0f);
+    check(equivalence, "", lm, 2.0f);
+    check(equality, "", lm / mass_t{2.0, units::kilogram}, length_t{1.0, units::metre});
+    check(equality, "", lm / length_t{0.5, units::metre}, mass_t{4.0, units::kilogram});
+    check(equality, "", (mass_t{3.0, units::kilogram} / mass_t{1.0, units::kilogram})*mass_t{3.0, units::kilogram}, mass_t{9.0, units::kilogram});
+    check(equality, "", (charge_t{-3.0, units::coulomb} / charge_t{1.0, units::coulomb})*mass_t{3.0, units::kilogram}, unsafe_mass_t{-9.0, units::kilogram});
       
-      auto mlc = mass_t{1.0, units::kilogram} * length_t{2.0, units::metre} * charge_t{-1.0, units::coulomb},
-           clm = charge_t{-1.0, units::coulomb} * length_t{2.0, units::metre} *  mass_t{1.0, units::kilogram};
+    auto mlc = mass_t{1.0, units::kilogram} * length_t{2.0, units::metre} * charge_t{-1.0, units::coulomb},
+         clm = charge_t{-1.0, units::coulomb} * length_t{2.0, units::metre} *  mass_t{1.0, units::kilogram};
 
-      check(equivalence, "", mlc, -2.0f);
-      check(equivalence, "", clm, -2.0f);
-      check(equality, "", mlc / mass_t{1.0, units::kilogram}, length_t{2.0, units::metre} * charge_t{-1.0, units::coulomb});
-      check(equality, "", mlc / length_t{1.0, units::metre}, mass_t{2.0, units::kilogram} * charge_t{-1.0, units::coulomb});
-      check(equality, "", mlc / charge_t{-1.0, units::coulomb}, unsafe_mass_t{1.0, units::kilogram} * length_t{2.0, units::metre});
+    check(equivalence, "", mlc, -2.0f);
+    check(equivalence, "", clm, -2.0f);
+    check(equality, "", mlc / mass_t{1.0, units::kilogram}, length_t{2.0, units::metre} * charge_t{-1.0, units::coulomb});
+    check(equality, "", mlc / length_t{1.0, units::metre}, mass_t{2.0, units::kilogram} * charge_t{-1.0, units::coulomb});
+    check(equality, "", mlc / charge_t{-1.0, units::coulomb}, unsafe_mass_t{1.0, units::kilogram} * length_t{2.0, units::metre});
       
-      auto mlct = mass_t{1.0, units::kilogram} * length_t{2.0, units::metre} * charge_t{-1.0, units::coulomb} * temperature_t{5.0, units::kelvin},
-           cltm = charge_t{-1.0, units::coulomb} * length_t{2.0, units::metre} * temperature_t{5.0, units::kelvin} *  mass_t{1.0, units::kilogram};
+    auto mlct = mass_t{1.0, units::kilogram} * length_t{2.0, units::metre} * charge_t{-1.0, units::coulomb} * temperature_t{5.0, units::kelvin},
+         cltm = charge_t{-1.0, units::coulomb} * length_t{2.0, units::metre} * temperature_t{5.0, units::kelvin} *  mass_t{1.0, units::kilogram};
 
-      check(equivalence, "", mlct, -10.0f);
-      check(equivalence, "", cltm, -10.0f);
-      check(equality, "", mlct / mass_t{1.0, units::kilogram}, length_t{2.0, units::metre} * charge_t{-1.0, units::coulomb} * temperature_t{5.0, units::kelvin});
+    check(equivalence, "", mlct, -10.0f);
+    check(equivalence, "", cltm, -10.0f);
+    check(equality, "", mlct / mass_t{1.0, units::kilogram}, length_t{2.0, units::metre} * charge_t{-1.0, units::coulomb} * temperature_t{5.0, units::kelvin});
 
-      check(equivalence, "", 4.0f / length_t{2.0, units::metre}, 2.0f);
-      check(equality, "", 4.0f / mass_t{2.0, units::kilogram}, unsafe_inv_mass_t{2.0f, dual<units::kilogram_t>{}});
-      check(equality, "", 4.0f / unsafe_inv_mass_t{2.0f, dual<units::kilogram_t>{}}, unsafe_mass_t{2.0, units::kilogram});
-      check(equality, "", 4.0f / inv_charge_t{2.0f, dual<units::coulomb_t>{}}, charge_t{2.0, units::coulomb});
+    check(equivalence, "", 4.0f / length_t{2.0, units::metre}, 2.0f);
+    check(equality, "", 4.0f / mass_t{2.0, units::kilogram}, unsafe_inv_mass_t{2.0f, dual<units::kilogram_t>{}});
+    check(equality, "", 4.0f / unsafe_inv_mass_t{2.0f, dual<units::kilogram_t>{}}, unsafe_mass_t{2.0, units::kilogram});
+    check(equality, "", 4.0f / inv_charge_t{2.0f, dual<units::coulomb_t>{}}, charge_t{2.0, units::coulomb});
 
-      check(equality, "", 1.0f /(1.0f / charge_t{2.0, units::coulomb}), charge_t{2.0, units::coulomb});
-      check(equality, "", charge_t{2.0, units::coulomb} /(1.0f / charge_t{2.0, units::coulomb}), charge_t{2.0, units::coulomb} * charge_t{2.0, units::coulomb});
-    }
+    check(equality, "", 1.0f /(1.0f / charge_t{2.0, units::coulomb}), charge_t{2.0, units::coulomb});
+    check(equality, "", charge_t{2.0, units::coulomb} /(1.0f / charge_t{2.0, units::coulomb}), charge_t{2.0, units::coulomb} * charge_t{2.0, units::coulomb});
   }
 }

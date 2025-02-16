@@ -24,5 +24,10 @@ namespace sequoia::testing
     void run_tests();
 
     void test_masses();
+    void test_lengths();
+    void test_times();
+    void test_temperatures();
+    void test_charges();
+    void test_mixed();
   };
 }
