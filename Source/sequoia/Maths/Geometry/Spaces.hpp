@@ -194,7 +194,7 @@ namespace sequoia::maths
   using space_value_type = space_field_type<ConvexSpace>;
 
   template<convex_space ConvexSpace>
-  inline constexpr std::size_t space_dimension{vector_space_type_of<ConvexSpace>::dimension};
+  inline constexpr std::size_t dimension_of{vector_space_type_of<ConvexSpace>::dimension};
 
   template<class T>
   concept affine_space = convex_space<T> && (identifies_as_affine_space_v<T> || identifies_as_vector_space_v<T>);
@@ -204,10 +204,10 @@ namespace sequoia::maths
        convex_space<ConvexSpace>
     && std::default_initializable<V>
     && std::constructible_from<V, V>
-    && (    requires (V& v, std::array<const space_value_type<ConvexSpace>, space_dimension<ConvexSpace>> values) {
+    && (    requires (V& v, std::array<const space_value_type<ConvexSpace>, dimension_of<ConvexSpace>> values) {
               { v(values) } -> std::convertible_to<decltype(values)>;
             }
-         || (   (space_dimension<ConvexSpace> == 1)
+         || (   (dimension_of<ConvexSpace> == 1)
              && requires(V & v, const space_value_type<ConvexSpace>& val) { { v(val) } -> std::convertible_to<decltype(val)>; })
        );
 
@@ -633,8 +633,7 @@ namespace sequoia::maths
     using set_type          = reduction<typename direct_product_t::set_type>;
     using field_type        = typename direct_product_t::field_type;
     using vector_space_type = reduction<direct_product<std::tuple<Ts...>>>;
-    // TO DO: fix this!
-    constexpr static std::size_t dimension{/*std::ranges::max({Ts::dimension...})*/ 1};
+    constexpr static std::size_t dimension{std::ranges::max({dimension_of<Ts>...})};
   };
 
   template<convex_space... Ts>
