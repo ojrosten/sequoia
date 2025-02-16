@@ -59,6 +59,8 @@ namespace sequoia::testing
     {
       using mass_t    = si::mass<float>;
       using delta_m_t = mass_t::displacement_quantity_type;
+      STATIC_CHECK(convex_space<mass_space<float>>);
+      STATIC_CHECK(vector_space<mass_space<float>::vector_space_type>);
       STATIC_CHECK(can_multiply<mass_t, float>);
       STATIC_CHECK(can_divide<mass_t, float>);
       STATIC_CHECK(can_divide<mass_t, mass_t>);
@@ -108,6 +110,8 @@ namespace sequoia::testing
   {
     using length_t  = si::length<float>;
     using delta_len_t = length_t::displacement_quantity_type;
+    STATIC_CHECK(convex_space<length_space<float>>);
+    STATIC_CHECK(vector_space<length_space<float>::vector_space_type>);
     STATIC_CHECK(can_multiply<length_t, float>);
     STATIC_CHECK(can_divide<length_t, float>);
     STATIC_CHECK(can_divide<length_t, length_t>);
@@ -129,6 +133,8 @@ namespace sequoia::testing
     using time_t = si::time<float>;
     using delta_time_t = time_t::displacement_quantity_type;
 
+    STATIC_CHECK(affine_space<time_space<float>>);
+    STATIC_CHECK(vector_space<time_space<float>::vector_space_type>);
     STATIC_CHECK(!can_multiply<time_t, float>);
     STATIC_CHECK(!can_divide<time_t, float>);
     STATIC_CHECK(!can_divide<time_t, time_t>);
@@ -148,6 +154,8 @@ namespace sequoia::testing
     {
       using temperature_t = si::temperature<float>;
       using delta_temp_t = temperature_t::displacement_quantity_type;
+      STATIC_CHECK(convex_space<temperature_space<float>>);
+      STATIC_CHECK(vector_space<temperature_space<float>::vector_space_type>);
       STATIC_CHECK(can_multiply<temperature_t, float>);
       STATIC_CHECK(can_multiply<temperature_t, temperature_t>);
       STATIC_CHECK(can_divide<temperature_t, float>);
@@ -166,6 +174,8 @@ namespace sequoia::testing
     {
       using temperature_t = quantity<temperature_space<float>, units::celsius_t>;;
       using delta_temp_t = temperature_t::displacement_quantity_type;
+      STATIC_CHECK(convex_space<temperature_space<float>>);
+      STATIC_CHECK(vector_space<temperature_space<float>::vector_space_type>);
       STATIC_CHECK(!can_multiply<temperature_t, float>);
       STATIC_CHECK(!can_multiply<temperature_t, temperature_t>);
       STATIC_CHECK(!can_divide<temperature_t, float>);
@@ -187,6 +197,8 @@ namespace sequoia::testing
     using charge_t = si::electrical_charge<float>;
     using delta_charge_t = charge_t::displacement_quantity_type;
 
+    STATIC_CHECK(vector_space<electrical_charge_space<float>>);
+    STATIC_CHECK(vector_space<electrical_charge_space<float>::vector_space_type>);
     STATIC_CHECK(can_multiply<charge_t, float>);
     STATIC_CHECK(can_divide<charge_t, float>);
     STATIC_CHECK(can_divide<charge_t, charge_t>);
@@ -206,13 +218,13 @@ namespace sequoia::testing
 
   void quantity_test::test_mixed()
   {
-    using mass_t        = si::mass<float>;
-    using length_t      = si::length<float>;
-    using charge_t      = si::electrical_charge<float>;
-    using temperature_t = si::temperature<float>;
-    using unsafe_mass_t = quantity<mass_space<float>, units::kilogram_t, std::identity>;
+    using mass_t            = si::mass<float>;
+    using length_t          = si::length<float>;
+    using charge_t          = si::electrical_charge<float>;
+    using temperature_t     = si::temperature<float>;
+    using unsafe_mass_t     = quantity<mass_space<float>, units::kilogram_t, std::identity>;
     using unsafe_inv_mass_t = quantity<dual<mass_space<float>>, dual<units::kilogram_t>, std::identity>;
-    using inv_charge_t = quantity<dual<electrical_charge_space<float>>, dual<units::coulomb_t>, std::identity>;
+    using inv_charge_t      = quantity<dual<electrical_charge_space<float>>, dual<units::coulomb_t>, std::identity>;
     
     auto ml = mass_t{1.0, units::kilogram} * length_t{2.0, units::metre},
          lm = length_t{2.0, units::metre} * mass_t{1.0, units::kilogram};

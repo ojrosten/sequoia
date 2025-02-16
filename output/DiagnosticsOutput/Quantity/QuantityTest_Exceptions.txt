@@ -1,4 +1,4 @@
-Tests/Physics/QuantityTest.cpp, Line 73
+Tests/Physics/QuantityTest.cpp, Line 75
 Negative mass
 
 Expected Exception Type:
@@ -103,7 +103,7 @@ Value -1 less than zero
 
 =======================================
 
-Tests/Physics/QuantityTest.cpp, Line 122
+Tests/Physics/QuantityTest.cpp, Line 126
 Negative length
 
 Expected Exception Type:

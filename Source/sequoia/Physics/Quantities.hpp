@@ -381,6 +381,15 @@ namespace sequoia::physics
   };
 
   template<class QuantitySet, std::floating_point Rep, class Derived>
+  struct quantity_affine_space
+  {
+    using set_type            = QuantitySet;
+    using representation_type = Rep;
+    using vector_space_type   = displacement_space<QuantitySet, Rep>;
+    using affine_space_type   = Derived;
+  };
+
+  template<class QuantitySet, std::floating_point Rep, class Derived>
   struct quantity_vector_space
   {
     using set_type          = QuantitySet;
@@ -397,7 +406,7 @@ namespace sequoia::physics
   struct length_space : quantity_space<classical_quantity_sets::lengths, Rep> {};
 
   template<std::floating_point Rep>
-  struct time_space : quantity_space<classical_quantity_sets::times, Rep> {};
+  struct time_space : quantity_affine_space<classical_quantity_sets::times, Rep, time_space<Rep>> {};
 
   template<std::floating_point Rep>
   struct temperature_space : quantity_space<classical_quantity_sets::temperatures, Rep> {};
