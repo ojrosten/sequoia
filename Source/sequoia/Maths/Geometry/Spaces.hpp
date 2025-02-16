@@ -160,11 +160,29 @@ namespace sequoia::maths
   concept basis_for = basis<B> && vector_space<V> && std::is_same_v<typename B::vector_space_type, V>;
 
   template<class T>
-  concept convex_space = requires {
-    typename T::set_type;
-    typename T::vector_space_type;
-    requires vector_space<typename T::vector_space_type>;
+  inline constexpr bool identifies_as_convex_space_v{
+    requires {
+      typename T::convex_space_type;
+      requires std::same_as<T, typename T::convex_space_type>;
+    }
   };
+
+  template<class T>
+  inline constexpr bool identifies_as_affine_space_v{
+    requires {
+      typename T::affine_space_type;
+      requires std::same_as<T, typename T::affine_space_type>;
+    }
+  };
+
+  template<class T>
+  concept convex_space
+    =    (identifies_as_convex_space_v<T> || identifies_as_affine_space_v<T> || identifies_as_vector_space_v<T>)
+      && requires {
+           typename T::set_type;
+           typename T::vector_space_type;
+           requires vector_space<typename T::vector_space_type>;
+         };
 
   template<convex_space ConvexSpace>
   using vector_space_type_of = typename ConvexSpace::vector_space_type;
@@ -177,14 +195,6 @@ namespace sequoia::maths
 
   template<convex_space ConvexSpace>
   inline constexpr std::size_t space_dimension{vector_space_type_of<ConvexSpace>::dimension};
-
-  template<class T>
-  inline constexpr bool identifies_as_affine_space_v{
-    requires {
-      typename T::affine_space_type;
-      requires std::same_as<T, typename T::affine_space_type>;
-    }
-  };
 
   template<class T>
   concept affine_space = convex_space<T> && (identifies_as_affine_space_v<T> || identifies_as_vector_space_v<T>);
@@ -280,6 +290,7 @@ namespace sequoia::maths
   {
     using set_type          = direct_product<typename T::set_type, typename U::set_type>;
     using vector_space_type = direct_product<typename T::vector_space_type, typename U::vector_space_type>;
+    using convex_space_type = direct_product<T, U>;
   };
 
   // Types assumed to be ordered
@@ -336,6 +347,7 @@ namespace sequoia::maths
   {
     using set_type = C::set_type;
     using vector_space_type = dual<typename C::vector_space_type>;
+    using convex_space_type = dual;
   };
 
   template<vector_space V>
@@ -614,6 +626,7 @@ namespace sequoia::maths
     using direct_product_t  = direct_product<std::tuple<Ts...>>;
     using set_type          = reduction<typename direct_product_t::set_type>;
     using vector_space_type = reduction_t<typename direct_product_t::vector_space_type>;
+    using convex_space_type = reduction<direct_product<std::tuple<Ts...>>>;
   };
 
   template<convex_space T, convex_space U>

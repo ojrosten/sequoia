@@ -372,12 +372,13 @@ namespace sequoia::physics
     constexpr static std::size_t dimension{1};
   };
 
-  template<class QuantitySet, std::floating_point Rep>
-  struct quantity_space
+  template<class QuantitySet, std::floating_point Rep, class Derived>
+  struct quantity_convex_space
   {
     using set_type            = QuantitySet;
     using representation_type = Rep;
     using vector_space_type   = displacement_space<QuantitySet, Rep>;
+    using convex_space_type   = Derived;
   };
 
   template<class QuantitySet, std::floating_point Rep, class Derived>
@@ -400,16 +401,16 @@ namespace sequoia::physics
   };
 
   template<std::floating_point Rep>
-  struct mass_space : quantity_space<classical_quantity_sets::masses, Rep> {};
+  struct mass_space : quantity_convex_space<classical_quantity_sets::masses, Rep, mass_space<Rep>> {};
 
   template<std::floating_point Rep>
-  struct length_space : quantity_space<classical_quantity_sets::lengths, Rep> {};
+  struct length_space : quantity_convex_space<classical_quantity_sets::lengths, Rep, length_space<Rep>> {};
 
   template<std::floating_point Rep>
   struct time_space : quantity_affine_space<classical_quantity_sets::times, Rep, time_space<Rep>> {};
 
   template<std::floating_point Rep>
-  struct temperature_space : quantity_space<classical_quantity_sets::temperatures, Rep> {};
+  struct temperature_space : quantity_convex_space<classical_quantity_sets::temperatures, Rep, temperature_space<Rep>> {};
 
   template<std::floating_point Rep>
   struct electrical_charge_space : quantity_vector_space<classical_quantity_sets::electrical_charges, Rep, electrical_charge_space<Rep>> {};
