@@ -103,6 +103,63 @@ Value -1 less than zero
 
 =======================================
 
+Tests/Physics/QuantityTest.cpp, Line 122
+Negative length
+
+Expected Exception Type:
+[std::domain_error]
+Value -1 less than zero
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 444
+
+Expected Exception Type:
+[std::domain_error]
+Value -1 less than zero
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 455
+
+Expected Exception Type:
+[std::domain_error]
+Value -1 less than zero
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 468
+
+Expected Exception Type:
+[std::domain_error]
+Value -1 less than zero
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 479
+
+Expected Exception Type:
+[std::domain_error]
+Value -1 less than zero
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 490
+
+Expected Exception Type:
+[std::domain_error]
+Value -1 less than zero
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 501
+
+Expected Exception Type:
+[std::domain_error]
+Value -1 less than zero
+
+=======================================
+
 Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 444
 
 Expected Exception Type:
