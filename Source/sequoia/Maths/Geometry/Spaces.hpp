@@ -284,8 +284,17 @@ namespace sequoia::maths
     using vector_space_type = direct_product<T, U>;
   };
   
-  template<convex_space T, convex_space U>
+  template<affine_space T, affine_space U>
     requires (!vector_space<T> && !vector_space<U>)
+  struct direct_product<T, U>
+  {
+    using set_type          = direct_product<typename T::set_type, typename U::set_type>;
+    using vector_space_type = direct_product<typename T::vector_space_type, typename U::vector_space_type>;
+    using affine_space_type = direct_product<T, U>;
+  };
+
+  template<convex_space T, convex_space U>
+    requires (!affine_space<T> && !affine_space<U>)
   struct direct_product<T, U>
   {
     using set_type          = direct_product<typename T::set_type, typename U::set_type>;
@@ -342,12 +351,21 @@ namespace sequoia::maths
   struct dual;
   
   template<convex_space C>
+    requires (!affine_space<C>)
+  struct dual<C>
+  {
+    using set_type          = C::set_type;
+    using vector_space_type = dual<typename C::vector_space_type>;
+    using convex_space_type = dual<C>;
+  };
+
+  template<affine_space C>
     requires (!vector_space<C>)
   struct dual<C>
   {
-    using set_type = C::set_type;
+    using set_type          = C::set_type;
     using vector_space_type = dual<typename C::vector_space_type>;
-    using convex_space_type = dual;
+    using affine_space_type = dual<C>;
   };
 
   template<vector_space V>
