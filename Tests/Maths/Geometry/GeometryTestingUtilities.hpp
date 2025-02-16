@@ -68,6 +68,7 @@ namespace sequoia::testing
   {
     using set_type          = Set;
     using vector_space_type = my_vec_space<Set, Field, D>;
+    using affine_space_type = my_affine_space;
   };
 
   template<class Set, maths::weak_field Field, std::size_t D>

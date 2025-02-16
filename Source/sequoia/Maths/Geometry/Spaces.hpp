@@ -136,12 +136,15 @@ namespace sequoia::maths
   };
 
   template<class T>
-  concept vector_space
-    =    has_set_type<T> && has_field_type<T> && has_dimension<T>
-      && requires {
-           typename T::vector_space_type;
-           requires std::same_as<T, typename T::vector_space_type>;
-         };
+  inline constexpr bool identifies_as_vector_space_v{
+    requires {
+      typename T::vector_space_type;
+      requires std::same_as<T, typename T::vector_space_type>;
+    }
+  };
+
+  template<class T>
+  concept vector_space = has_set_type<T> && has_field_type<T> && has_dimension<T> && identifies_as_vector_space_v<T>;
 
   // Universal template parameters will obviate the need for this
   template<class T>
@@ -176,7 +179,15 @@ namespace sequoia::maths
   inline constexpr std::size_t space_dimension{vector_space_type_of<ConvexSpace>::dimension};
 
   template<class T>
-  concept affine_space = convex_space<T>; //TO DO: more than a semantic difference?
+  inline constexpr bool identifies_as_affine_space_v{
+    requires {
+      typename T::affine_space_type;
+      requires std::same_as<T, typename T::affine_space_type>;
+    }
+  };
+
+  template<class T>
+  concept affine_space = convex_space<T> && (identifies_as_affine_space_v<T> || identifies_as_vector_space_v<T>);
 
   template<class V, class ConvexSpace>
   concept validator_for =
@@ -981,6 +992,7 @@ namespace sequoia::maths
   {
     using set_type          = sets::R<D, T>;
     using vector_space_type = euclidean_vector_space<D, T>;
+    using affine_space_type = euclidean_affine_space;
   };
 
   template<std::size_t D, std::floating_point T, basis Basis, class Origin>
