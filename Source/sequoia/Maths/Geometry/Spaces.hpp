@@ -420,6 +420,9 @@ namespace sequoia::maths
   // TO DO: consider reordering to avoid forward declaration here?
   template<std::size_t D, std::floating_point T>
   struct euclidean_vector_space;
+
+  template<std::size_t D, std::floating_point T>
+  struct euclidean_half_space;
   
   //========= reduction of direct products ostensibly to a lower dimensional space ========= //
 
@@ -533,10 +536,24 @@ namespace sequoia::maths
     template<class... Ts>
     using reduce_t = reduce<Ts...>::type;
 
-    template<convex_space T>
+    template<vector_space T>
     struct reduce<std::tuple<type_counter<T, 0>>>
     {
-      // TO DO: in principle this could be something other than a Euclidean vector space
+      using type = std::tuple<euclidean_vector_space<1, typename T::vector_space_type::field_type>>;
+    };
+
+    template<affine_space T>
+      requires (!vector_space<T>)
+    struct reduce<std::tuple<type_counter<T, 0>>>
+    {
+      using type = std::tuple<euclidean_vector_space<1, typename T::affine_space_type::field_type>>;
+    };
+
+    template<convex_space T>
+      requires (!affine_space<T> && !vector_space<T>)
+    struct reduce<std::tuple<type_counter<T, 0>>>
+    {
+      // TO DO: need a way of propagating the correct underlying euclidean subspace
       using type = std::tuple<euclidean_vector_space<1, typename T::vector_space_type::field_type>>;
     };
 
@@ -935,6 +952,14 @@ namespace sequoia::maths
       using element_type = T;
     };
 
+    template<std::size_t N, std::floating_point T>
+    struct half_space
+    {
+      constexpr static std::size_t dimension{N};
+      using element_type = T;
+    };
+
+
     template<std::size_t N, class T>
     struct C;
 
@@ -1023,6 +1048,14 @@ namespace sequoia::maths
     using set_type          = sets::R<D, T>;
     using vector_space_type = euclidean_vector_space<D, T>;
     using affine_space_type = euclidean_affine_space;
+  };
+
+  template<std::size_t D, std::floating_point T>
+  struct euclidean_half_space
+  {
+    using set_type          = sets::half_space<D, T>;
+    using vector_space_type = euclidean_vector_space<D, T>;
+    using convex_space_type = euclidean_half_space;
   };
 
   template<std::size_t D, std::floating_point T, basis Basis, class Origin>
