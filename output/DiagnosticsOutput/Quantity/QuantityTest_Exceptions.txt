@@ -103,7 +103,7 @@ Value -1 less than zero
 
 =======================================
 
-Tests/Physics/QuantityTest.cpp, Line 126
+Tests/Physics/QuantityTest.cpp, Line 125
 Negative length
 
 Expected Exception Type:

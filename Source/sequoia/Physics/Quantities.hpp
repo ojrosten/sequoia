@@ -209,7 +209,8 @@ namespace sequoia::physics
     convex_space LHSQuantitySpace, quantity_unit LHSUnit, class LHSValidator,
     convex_space RHSQuantitySpace, quantity_unit RHSUnit, class RHSValidator
   >
-    requires std::is_same_v<euclidean_vector_space<1, space_field_type<LHSQuantitySpace>>, LHSQuantitySpace>
+    requires    std::is_same_v<euclidean_vector_space<1, space_field_type<LHSQuantitySpace>>, LHSQuantitySpace>
+             || std::is_same_v<euclidean_half_space<1, space_field_type<LHSQuantitySpace>>, LHSQuantitySpace>
   struct quantity_product<quantity<LHSQuantitySpace, LHSUnit, LHSValidator>, quantity<RHSQuantitySpace, RHSUnit, RHSValidator>>
   {
     using type = quantity<RHSQuantitySpace, RHSUnit, reduced_validator_t<LHSValidator, RHSValidator>>;
@@ -219,7 +220,8 @@ namespace sequoia::physics
     convex_space LHSQuantitySpace, quantity_unit LHSUnit, class LHSValidator,
     convex_space RHSQuantitySpace, quantity_unit RHSUnit, class RHSValidator
   >
-    requires std::is_same_v<euclidean_vector_space<1, space_field_type<RHSQuantitySpace>>, RHSQuantitySpace>
+    requires    std::is_same_v<euclidean_vector_space<1, space_field_type<RHSQuantitySpace>>, RHSQuantitySpace>
+             || std::is_same_v<euclidean_half_space<1, space_field_type<RHSQuantitySpace>>, RHSQuantitySpace>
   struct quantity_product<quantity<LHSQuantitySpace, LHSUnit, LHSValidator>, quantity<RHSQuantitySpace, RHSUnit, RHSValidator>>
   {
     using type = quantity<LHSQuantitySpace, LHSUnit, reduced_validator_t<LHSValidator, RHSValidator>>;
