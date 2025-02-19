@@ -50,6 +50,8 @@ namespace sequoia::testing
     test_absolute_quantity<si::mass<double>>();
     test_absolute_quantity<si::length<float>>();
     test_absolute_quantity<si::length<double>>();
+    test_absolute_quantity<si::temperature<float>>();
+    test_absolute_quantity<si::temperature<double>>();
 
     test_affine_quantity<si::time<float>>();
     test_affine_quantity<si::time<double>>();
@@ -146,49 +148,6 @@ namespace sequoia::testing
     coordinates_operations<inv_quantity_t>{*this}.execute();
   }
 
-  void quantity_test::test_temperatures()
-  {
-    {
-      using temperature_t = si::temperature<float>;
-      using delta_temp_t = temperature_t::displacement_quantity_type;
-      STATIC_CHECK(convex_space<temperature_space<float>>);
-      STATIC_CHECK(vector_space<temperature_space<float>::vector_space_type>);
-      STATIC_CHECK(can_multiply<temperature_t, float>);
-      STATIC_CHECK(can_multiply<temperature_t, temperature_t>);
-      STATIC_CHECK(can_divide<temperature_t, float>);
-      STATIC_CHECK(can_divide<temperature_t, temperature_t>);
-      STATIC_CHECK(can_divide<temperature_t, delta_temp_t>);
-      STATIC_CHECK(can_divide<delta_temp_t, temperature_t>);
-      STATIC_CHECK(can_divide<delta_temp_t, delta_temp_t>);
-      STATIC_CHECK(can_add<temperature_t, temperature_t>);
-      STATIC_CHECK(can_add<temperature_t, delta_temp_t>);
-      STATIC_CHECK(can_subtract<temperature_t, temperature_t>);
-      STATIC_CHECK(can_subtract<temperature_t, delta_temp_t>);
-
-      coordinates_operations<temperature_t>{*this}.execute();
-    }
-
-    {
-      using temperature_t = quantity<temperature_space<float>, units::celsius_t>;;
-      using delta_temp_t = temperature_t::displacement_quantity_type;
-      STATIC_CHECK(convex_space<temperature_space<float>>);
-      STATIC_CHECK(vector_space<temperature_space<float>::vector_space_type>);
-      STATIC_CHECK(!can_multiply<temperature_t, float>);
-      STATIC_CHECK(!can_multiply<temperature_t, temperature_t>);
-      STATIC_CHECK(!can_divide<temperature_t, float>);
-      STATIC_CHECK(!can_divide<temperature_t, temperature_t>);
-      STATIC_CHECK(!can_divide<temperature_t, delta_temp_t>);
-      STATIC_CHECK(!can_divide<delta_temp_t, temperature_t>);
-      STATIC_CHECK(can_divide<delta_temp_t, delta_temp_t>);
-      STATIC_CHECK(!can_add<temperature_t, temperature_t>);
-      STATIC_CHECK(can_add<temperature_t, delta_temp_t>);
-      STATIC_CHECK(can_subtract<temperature_t, temperature_t>);
-      STATIC_CHECK(can_subtract<temperature_t, delta_temp_t>);
-
-      coordinates_operations<temperature_t>{*this}.execute();
-    }
-  }
-
   template<class Quantity>
   void quantity_test::test_vector_quantity()
   {
@@ -218,6 +177,29 @@ namespace sequoia::testing
 
     check(equivalence, "", quantity_t{-2.0, units_type{}} / delta_q_t{1.0, units_type{}}, value_type(-2.0));
     check(equality, "", quantity_t{-2.0, units_type{}} / quantity_t{1.0, units_type{}}, quantity<euclidean_vector_space<1, value_type>, no_unit_t<std::identity>>{value_type(-2.0), no_unit<std::identity>});
+  }
+
+  void quantity_test::test_temperatures()
+  {
+    {
+      using temperature_t = quantity<temperature_space<float>, units::celsius_t>;;
+      using delta_temp_t = temperature_t::displacement_quantity_type;
+      STATIC_CHECK(convex_space<temperature_space<float>>);
+      STATIC_CHECK(vector_space<temperature_space<float>::vector_space_type>);
+      STATIC_CHECK(!can_multiply<temperature_t, float>);
+      STATIC_CHECK(!can_multiply<temperature_t, temperature_t>);
+      STATIC_CHECK(!can_divide<temperature_t, float>);
+      STATIC_CHECK(!can_divide<temperature_t, temperature_t>);
+      STATIC_CHECK(!can_divide<temperature_t, delta_temp_t>);
+      STATIC_CHECK(!can_divide<delta_temp_t, temperature_t>);
+      STATIC_CHECK(can_divide<delta_temp_t, delta_temp_t>);
+      STATIC_CHECK(!can_add<temperature_t, temperature_t>);
+      STATIC_CHECK(can_add<temperature_t, delta_temp_t>);
+      STATIC_CHECK(can_subtract<temperature_t, temperature_t>);
+      STATIC_CHECK(can_subtract<temperature_t, delta_temp_t>);
+
+      coordinates_operations<temperature_t>{*this}.execute();
+    }
   }
 
   void quantity_test::test_mixed()
