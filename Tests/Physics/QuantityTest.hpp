@@ -29,8 +29,10 @@ namespace sequoia::testing
     template<class Quantity>
     void test_affine_quantity();
 
+    template<class Quantity>
+    void test_vector_quantity();
+
     void test_temperatures();
-    void test_charges();
     void test_mixed();
   };
 }

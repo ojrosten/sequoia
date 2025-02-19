@@ -54,8 +54,10 @@ namespace sequoia::testing
     test_affine_quantity<si::time<float>>();
     test_affine_quantity<si::time<double>>();
 
+    test_vector_quantity<si::electrical_charge<float>>();
+    test_vector_quantity<si::electrical_charge<double>>();
+
     test_temperatures();
-    test_charges();
     test_mixed();
   }
 
@@ -90,17 +92,18 @@ namespace sequoia::testing
       coordinates_operations<inv_quantity_t>{*this}.execute();
 
       check(equality, "", quantity_t{2.0, units_type{}} / quantity_t{1.0, units_type{}}, quantity<euclidean_half_space<1, value_type>, no_unit_t<half_space_validator>>{2.0f, no_unit<half_space_validator>});
-      check(equivalence, "", quantity_t{2.0, units_type{}} / delta_q_t{1.0, units_type{}}, 2.0f);
-      check(equivalence, "", delta_q_t{2.0, units_type{}} / quantity_t{1.0, units_type{}}, 2.0f);
+      check(equivalence, "", quantity_t{2.0, units_type{}} / delta_q_t{1.0, units_type{}}, value_type(2.0));
+      check(equivalence, "", delta_q_t{2.0, units_type{}} / quantity_t{1.0, units_type{}}, value_type(2.0));
     }
 
     {
       using unsafe_qty_t = quantity<typename Quantity::quantity_space_type, typename Quantity::units_type, std::identity>;
       using delta_q_t    = unsafe_qty_t::displacement_quantity_type;
       using units_type   = unsafe_qty_t::units_type;
+      using value_type   = unsafe_qty_t::value_type;
 
-      STATIC_CHECK(can_multiply<unsafe_qty_t, float>);
-      STATIC_CHECK(can_divide<unsafe_qty_t, float>);
+      STATIC_CHECK(can_multiply<unsafe_qty_t, value_type>);
+      STATIC_CHECK(can_divide<unsafe_qty_t, value_type>);
       STATIC_CHECK(can_divide<unsafe_qty_t, unsafe_qty_t>);
       STATIC_CHECK(can_divide<unsafe_qty_t, delta_q_t>);
       STATIC_CHECK(can_divide<delta_q_t, unsafe_qty_t>);
@@ -112,7 +115,7 @@ namespace sequoia::testing
 
       coordinates_operations<unsafe_qty_t>{*this}.execute();
 
-      check(equivalence, "", unsafe_qty_t{-2.0, units_type{}} / delta_q_t{1.0, units_type{}}, -2.0f);
+      check(equivalence, "", unsafe_qty_t{-2.0, units_type{}} / delta_q_t{1.0, units_type{}}, value_type(-2.0));
     }
   }
 
@@ -186,28 +189,32 @@ namespace sequoia::testing
     }
   }
 
-  void quantity_test::test_charges()
+  template<class Quantity>
+  void quantity_test::test_vector_quantity()
   {
-    using charge_t = si::electrical_charge<float>;
-    using delta_charge_t = charge_t::displacement_quantity_type;
+    using quantity_t = Quantity;
+    using delta_q_t  = quantity_t::displacement_quantity_type;
+    using space_type = quantity_t::quantity_space_type;
+    using value_type = quantity_t::value_type;
+    using units_type = quantity_t::units_type;
 
-    STATIC_CHECK(vector_space<electrical_charge_space<float>>);
-    STATIC_CHECK(vector_space<electrical_charge_space<float>::vector_space_type>);
-    STATIC_CHECK(can_multiply<charge_t, float>);
-    STATIC_CHECK(can_divide<charge_t, float>);
-    STATIC_CHECK(can_divide<charge_t, charge_t>);
-    STATIC_CHECK(can_divide<charge_t, delta_charge_t>);
-    STATIC_CHECK(can_divide<delta_charge_t, charge_t>);
-    STATIC_CHECK(can_divide<delta_charge_t, delta_charge_t>);
-    STATIC_CHECK(can_add<charge_t, charge_t>);
-    STATIC_CHECK(can_add<charge_t, delta_charge_t>);
-    STATIC_CHECK(can_subtract<charge_t, charge_t>);
-    STATIC_CHECK(can_subtract<charge_t, delta_charge_t>);
+    STATIC_CHECK(vector_space<space_type>);
+    STATIC_CHECK(vector_space<typename space_type::vector_space_type>);
+    STATIC_CHECK(can_multiply<quantity_t, value_type>);
+    STATIC_CHECK(can_divide<quantity_t, value_type>);
+    STATIC_CHECK(can_divide<quantity_t, quantity_t>);
+    STATIC_CHECK(can_divide<quantity_t, delta_q_t>);
+    STATIC_CHECK(can_divide<delta_q_t, quantity_t>);
+    STATIC_CHECK(can_divide<delta_q_t, delta_q_t>);
+    STATIC_CHECK(can_add<quantity_t, quantity_t>);
+    STATIC_CHECK(can_add<quantity_t, delta_q_t>);
+    STATIC_CHECK(can_subtract<quantity_t, quantity_t>);
+    STATIC_CHECK(can_subtract<quantity_t, delta_q_t>);
 
-    coordinates_operations<charge_t>{*this}.execute();
+    coordinates_operations<quantity_t>{*this}.execute();
 
-    check(equivalence, "", charge_t{-2.0, units::coulomb} / delta_charge_t{1.0, units::coulomb}, -2.0f);
-    check(equality, "", charge_t{-2.0, units::coulomb} / charge_t{1.0, units::coulomb}, quantity<euclidean_vector_space<1, float>, no_unit_t<std::identity>>{-2.0f, no_unit<std::identity>});
+    check(equivalence, "", quantity_t{-2.0, units_type{}} / delta_q_t{1.0, units_type{}}, value_type(-2.0));
+    check(equality, "", quantity_t{-2.0, units_type{}} / quantity_t{1.0, units_type{}}, quantity<euclidean_vector_space<1, value_type>, no_unit_t<std::identity>>{value_type(-2.0), no_unit<std::identity>});
   }
 
   void quantity_test::test_mixed()
