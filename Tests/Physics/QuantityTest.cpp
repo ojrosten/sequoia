@@ -59,7 +59,9 @@ namespace sequoia::testing
     test_vector_quantity<si::electrical_charge<float>>();
     test_vector_quantity<si::electrical_charge<double>>();
 
-    test_temperatures();
+    test_convex_quantity<quantity<temperature_space<float>, units::celsius_t>>();
+    test_convex_quantity<quantity<temperature_space<double>, units::celsius_t>>();
+
     test_mixed();
   }
 
@@ -179,26 +181,33 @@ namespace sequoia::testing
     check(equality, "", quantity_t{-2.0, units_type{}} / quantity_t{1.0, units_type{}}, quantity<euclidean_vector_space<1, value_type>, no_unit_t<std::identity>>{value_type(-2.0), no_unit<std::identity>});
   }
 
-  void quantity_test::test_temperatures()
+  template<class Quantity>
+  void quantity_test::test_convex_quantity()
   {
     {
-      using temperature_t = quantity<temperature_space<float>, units::celsius_t>;;
-      using delta_temp_t = temperature_t::displacement_quantity_type;
+      using quantity_t = quantity<temperature_space<float>, units::celsius_t>;;
+      using delta_q_t = quantity_t::displacement_quantity_type;
+      using space_type = quantity_t::quantity_space_type;
+      using units_type = quantity_t::units_type;
+
       STATIC_CHECK(convex_space<temperature_space<float>>);
       STATIC_CHECK(vector_space<temperature_space<float>::vector_space_type>);
-      STATIC_CHECK(!can_multiply<temperature_t, float>);
-      STATIC_CHECK(!can_multiply<temperature_t, temperature_t>);
-      STATIC_CHECK(!can_divide<temperature_t, float>);
-      STATIC_CHECK(!can_divide<temperature_t, temperature_t>);
-      STATIC_CHECK(!can_divide<temperature_t, delta_temp_t>);
-      STATIC_CHECK(!can_divide<delta_temp_t, temperature_t>);
-      STATIC_CHECK(can_divide<delta_temp_t, delta_temp_t>);
-      STATIC_CHECK(!can_add<temperature_t, temperature_t>);
-      STATIC_CHECK(can_add<temperature_t, delta_temp_t>);
-      STATIC_CHECK(can_subtract<temperature_t, temperature_t>);
-      STATIC_CHECK(can_subtract<temperature_t, delta_temp_t>);
+      STATIC_CHECK(!can_multiply<quantity_t, float>);
+      STATIC_CHECK(!can_multiply<quantity_t, quantity_t>);
+      STATIC_CHECK(!can_divide<quantity_t, float>);
+      STATIC_CHECK(!can_divide<quantity_t, quantity_t>);
+      STATIC_CHECK(!can_divide<quantity_t, delta_q_t>);
+      STATIC_CHECK(!can_divide<delta_q_t, quantity_t>);
+      STATIC_CHECK(can_divide<delta_q_t, delta_q_t>);
+      STATIC_CHECK(!can_add<quantity_t, quantity_t>);
+      STATIC_CHECK(can_add<quantity_t, delta_q_t>);
+      STATIC_CHECK(can_subtract<quantity_t, quantity_t>);
+      STATIC_CHECK(can_subtract<quantity_t, delta_q_t>);
 
-      coordinates_operations<temperature_t>{*this}.execute();
+      coordinates_operations<quantity_t>{*this}.execute();
+
+      using inv_quantity_t = quantity<dual<space_type>, dual<units_type>>;
+      coordinates_operations<inv_quantity_t>{*this}.execute();
     }
   }
 

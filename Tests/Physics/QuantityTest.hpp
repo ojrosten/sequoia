@@ -32,7 +32,9 @@ namespace sequoia::testing
     template<class Quantity>
     void test_vector_quantity();
 
-    void test_temperatures();
+    template<class Quantity>
+    void test_convex_quantity();
+
     void test_mixed();
   };
 }
