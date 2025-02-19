@@ -213,6 +213,9 @@ namespace sequoia::testing
 
     coordinates_operations<quantity_t>{*this}.execute();
 
+    using inv_quantity_t = quantity<dual<space_type>, dual<units_type>>;
+    coordinates_operations<inv_quantity_t>{*this}.execute();
+
     check(equivalence, "", quantity_t{-2.0, units_type{}} / delta_q_t{1.0, units_type{}}, value_type(-2.0));
     check(equality, "", quantity_t{-2.0, units_type{}} / quantity_t{1.0, units_type{}}, quantity<euclidean_vector_space<1, value_type>, no_unit_t<std::identity>>{value_type(-2.0), no_unit<std::identity>});
   }
