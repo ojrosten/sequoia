@@ -46,10 +46,10 @@ namespace sequoia::testing
 
   void quantity_test::run_tests()
   {
-    test_convex_quantity<si::mass<float>>();
-    test_convex_quantity<si::mass<double>>();
-    test_convex_quantity<si::length<float>>();
-    test_convex_quantity<si::length<double>>();
+    test_absolute_quantity<si::mass<float>>();
+    test_absolute_quantity<si::mass<double>>();
+    test_absolute_quantity<si::length<float>>();
+    test_absolute_quantity<si::length<double>>();
 
     test_times();
     test_temperatures();
@@ -58,7 +58,7 @@ namespace sequoia::testing
   }
 
   template<class Quantity>
-  void quantity_test::test_convex_quantity()
+  void quantity_test::test_absolute_quantity()
   {
     {
       using quantity_t = Quantity;
