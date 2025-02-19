@@ -51,7 +51,9 @@ namespace sequoia::testing
     test_absolute_quantity<si::length<float>>();
     test_absolute_quantity<si::length<double>>();
 
-    test_times();
+    test_affine_quantity<si::time<float>>();
+    test_affine_quantity<si::time<double>>();
+
     test_temperatures();
     test_charges();
     test_mixed();
@@ -114,25 +116,31 @@ namespace sequoia::testing
     }
   }
 
-  void quantity_test::test_times()
+  template<class Quantity>
+  void quantity_test::test_affine_quantity()
   {
-    using time_t = si::time<float>;
-    using delta_time_t = time_t::displacement_quantity_type;
+    using quantity_t = Quantity;
+    using delta_q_t  = quantity_t::displacement_quantity_type;
+    using space_type = quantity_t::quantity_space_type;
+    using units_type = quantity_t::units_type;
 
-    STATIC_CHECK(affine_space<time_space<float>>);
-    STATIC_CHECK(vector_space<time_space<float>::vector_space_type>);
-    STATIC_CHECK(!can_multiply<time_t, float>);
-    STATIC_CHECK(!can_divide<time_t, float>);
-    STATIC_CHECK(!can_divide<time_t, time_t>);
-    STATIC_CHECK(!can_divide<time_t, delta_time_t>);
-    STATIC_CHECK(!can_divide<delta_time_t, time_t>);
-    STATIC_CHECK(can_divide<delta_time_t, delta_time_t>);
-    STATIC_CHECK(!can_add<time_t, time_t>);
-    STATIC_CHECK(can_add<time_t, delta_time_t>);
-    STATIC_CHECK(can_subtract<time_t, time_t>);
-    STATIC_CHECK(can_subtract<time_t, delta_time_t>);
+    STATIC_CHECK(affine_space<space_type>);
+    STATIC_CHECK(vector_space<typename space_type::vector_space_type>);
+    STATIC_CHECK(!can_multiply<quantity_t, float>);
+    STATIC_CHECK(!can_divide<quantity_t, float>);
+    STATIC_CHECK(!can_divide<quantity_t, quantity_t>);
+    STATIC_CHECK(!can_divide<quantity_t, delta_q_t>);
+    STATIC_CHECK(!can_divide<delta_q_t, quantity_t>);
+    STATIC_CHECK(can_divide<delta_q_t, delta_q_t>);
+    STATIC_CHECK(!can_add<quantity_t, quantity_t>);
+    STATIC_CHECK(can_add<quantity_t, delta_q_t>);
+    STATIC_CHECK(can_subtract<quantity_t, quantity_t>);
+    STATIC_CHECK(can_subtract<quantity_t, delta_q_t>);
 
-    coordinates_operations<time_t>{*this}.execute();
+    coordinates_operations<quantity_t>{*this}.execute();
+
+    using inv_quantity_t = quantity<dual<space_type>, dual<units_type>>;
+    coordinates_operations<inv_quantity_t>{*this}.execute();
   }
 
   void quantity_test::test_temperatures()

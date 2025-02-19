@@ -1,4 +1,4 @@
-Tests/Physics/QuantityTest.cpp, Line 83
+Tests/Physics/QuantityTest.cpp, Line 85
 Negative quantity
 
 Expected Exception Type:
@@ -103,7 +103,7 @@ Value -1 less than zero
 
 =======================================
 
-Tests/Physics/QuantityTest.cpp, Line 83
+Tests/Physics/QuantityTest.cpp, Line 85
 Negative quantity
 
 Expected Exception Type:
@@ -208,7 +208,7 @@ Value -1 less than zero
 
 =======================================
 
-Tests/Physics/QuantityTest.cpp, Line 83
+Tests/Physics/QuantityTest.cpp, Line 85
 Negative quantity
 
 Expected Exception Type:
@@ -313,7 +313,7 @@ Value -1 less than zero
 
 =======================================
 
-Tests/Physics/QuantityTest.cpp, Line 83
+Tests/Physics/QuantityTest.cpp, Line 85
 Negative quantity
 
 Expected Exception Type:
