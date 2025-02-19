@@ -185,8 +185,8 @@ namespace sequoia::testing
   void quantity_test::test_convex_quantity()
   {
     {
-      using quantity_t = quantity<temperature_space<float>, units::celsius_t>;;
-      using delta_q_t = quantity_t::displacement_quantity_type;
+      using quantity_t = Quantity;
+      using delta_q_t  = quantity_t::displacement_quantity_type;
       using space_type = quantity_t::quantity_space_type;
       using units_type = quantity_t::units_type;
 
