@@ -46,7 +46,9 @@ namespace sequoia::testing
 
   void quantity_test::run_tests()
   {
-    test_masses();
+    test_convex_quantity<si::mass<float>>();
+    test_convex_quantity<si::mass<double>>();
+
     test_lengths();
     test_times();
     test_temperatures();
@@ -54,56 +56,62 @@ namespace sequoia::testing
     test_mixed();
   }
 
-  void quantity_test::test_masses()
+  template<class Quantity>
+  void quantity_test::test_convex_quantity()
   {
     {
-      using mass_t    = si::mass<float>;
-      using delta_m_t = mass_t::displacement_quantity_type;
-      STATIC_CHECK(convex_space<mass_space<float>>);
-      STATIC_CHECK(vector_space<mass_space<float>::vector_space_type>);
-      STATIC_CHECK(can_multiply<mass_t, float>);
-      STATIC_CHECK(can_divide<mass_t, float>);
-      STATIC_CHECK(can_divide<mass_t, mass_t>);
-      STATIC_CHECK(can_divide<mass_t, delta_m_t>);
-      STATIC_CHECK(can_divide<delta_m_t, mass_t>);
-      STATIC_CHECK(can_divide<delta_m_t, delta_m_t>);
-      STATIC_CHECK(can_add<mass_t, mass_t>);
-      STATIC_CHECK(can_add<mass_t, delta_m_t>);
-      STATIC_CHECK(can_subtract<mass_t, mass_t>);
-      STATIC_CHECK(can_subtract<mass_t, delta_m_t>);
-            
-      check_exception_thrown<std::domain_error>("Negative mass", [](){ return mass_t{-1.0, units::kilogram}; });
+      using quantity_t = Quantity;
+      using delta_q_t  = quantity_t::displacement_quantity_type;
+      using space_type = quantity_t::quantity_space_type;
+      using value_type = quantity_t::value_type;
+      using units_type = quantity_t::units_type;
 
-      coordinates_operations<mass_t>{*this}.execute();
+      STATIC_CHECK(convex_space<space_type>);
+      STATIC_CHECK(vector_space<typename space_type::vector_space_type>);
+      STATIC_CHECK(can_multiply<quantity_t, value_type>);
+      STATIC_CHECK(can_divide<quantity_t, value_type>);
+      STATIC_CHECK(can_divide<quantity_t, quantity_t>);
+      STATIC_CHECK(can_divide<quantity_t, delta_q_t>);
+      STATIC_CHECK(can_divide<delta_q_t, quantity_t>);
+      STATIC_CHECK(can_divide<delta_q_t, delta_q_t>);
+      STATIC_CHECK(can_add<quantity_t, quantity_t>);
+      STATIC_CHECK(can_add<quantity_t, delta_q_t>);
+      STATIC_CHECK(can_subtract<quantity_t, quantity_t>);
+      STATIC_CHECK(can_subtract<quantity_t, delta_q_t>);
 
-      using inv_mass_t = quantity<dual<mass_space<float>>, dual<units::kilogram_t>>;
-      coordinates_operations<inv_mass_t>{*this}.execute();
+      check_exception_thrown<std::domain_error>("Negative quantity", [](){ return quantity_t{-1.0, units_type{}}; });
 
-      check(equality, "", mass_t{2.0, units::kilogram} / mass_t{1.0, units::kilogram}, quantity<euclidean_half_space<1, float>, no_unit_t<half_space_validator>>{2.0f, no_unit<half_space_validator>});
-      check(equivalence, "", mass_t{2.0, units::kilogram} / delta_m_t{1.0, units::kilogram}, 2.0f);
-      check(equivalence, "", delta_m_t{2.0, units::kilogram} / mass_t{1.0, units::kilogram}, 2.0f);
+      coordinates_operations<quantity_t>{*this}.execute();
+
+      using inv_quantity_t = quantity<dual<space_type>, dual<units_type>>;
+      coordinates_operations<inv_quantity_t>{*this}.execute();
+
+      check(equality, "", quantity_t{2.0, units_type{}} / quantity_t{1.0, units_type{}}, quantity<euclidean_half_space<1, value_type>, no_unit_t<half_space_validator>>{2.0f, no_unit<half_space_validator>});
+      check(equivalence, "", quantity_t{2.0, units_type{}} / delta_q_t{1.0, units_type{}}, 2.0f);
+      check(equivalence, "", delta_q_t{2.0, units_type{}} / quantity_t{1.0, units_type{}}, 2.0f);
     }
 
     {
-      using unsafe_mass_t = quantity<mass_space<float>, units::kilogram_t, std::identity>;
-      using delta_m_t = unsafe_mass_t::displacement_quantity_type;
+      using unsafe_qty_t = quantity<typename Quantity::quantity_space_type, typename Quantity::units_type, std::identity>;
+      using delta_q_t    = unsafe_qty_t::displacement_quantity_type;
+      using units_type   = unsafe_qty_t::units_type;
 
-      STATIC_CHECK(can_multiply<unsafe_mass_t, float>);
-      STATIC_CHECK(can_divide<unsafe_mass_t, float>);
-      STATIC_CHECK(can_divide<unsafe_mass_t, unsafe_mass_t>);
-      STATIC_CHECK(can_divide<unsafe_mass_t, delta_m_t>);
-      STATIC_CHECK(can_divide<delta_m_t, unsafe_mass_t>);
-      STATIC_CHECK(can_divide<delta_m_t, delta_m_t>);
-      STATIC_CHECK(can_add<unsafe_mass_t, unsafe_mass_t>);
-      STATIC_CHECK(can_add<unsafe_mass_t, delta_m_t>);
-      STATIC_CHECK(can_subtract<unsafe_mass_t, unsafe_mass_t>);
-      STATIC_CHECK(can_subtract<unsafe_mass_t, delta_m_t>);
+      STATIC_CHECK(can_multiply<unsafe_qty_t, float>);
+      STATIC_CHECK(can_divide<unsafe_qty_t, float>);
+      STATIC_CHECK(can_divide<unsafe_qty_t, unsafe_qty_t>);
+      STATIC_CHECK(can_divide<unsafe_qty_t, delta_q_t>);
+      STATIC_CHECK(can_divide<delta_q_t, unsafe_qty_t>);
+      STATIC_CHECK(can_divide<delta_q_t, delta_q_t>);
+      STATIC_CHECK(can_add<unsafe_qty_t, unsafe_qty_t>);
+      STATIC_CHECK(can_add<unsafe_qty_t, delta_q_t>);
+      STATIC_CHECK(can_subtract<unsafe_qty_t, unsafe_qty_t>);
+      STATIC_CHECK(can_subtract<unsafe_qty_t, delta_q_t>);
 
-      coordinates_operations<unsafe_mass_t>{*this}.execute();
+      coordinates_operations<unsafe_qty_t>{*this}.execute();
 
-      check(equivalence, "", unsafe_mass_t{-2.0, units::kilogram} / delta_m_t{1.0, units::kilogram}, -2.0f);
+      check(equivalence, "", unsafe_qty_t{-2.0, units_type{}} / delta_q_t{1.0, units_type{}}, -2.0f);
     }
-  }
+  }  
 
   void quantity_test::test_lengths()
   {

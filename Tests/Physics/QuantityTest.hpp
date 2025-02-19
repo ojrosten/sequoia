@@ -23,7 +23,9 @@ namespace sequoia::testing
 
     void run_tests();
 
-    void test_masses();
+    template<class Quantity>
+    void test_convex_quantity();
+
     void test_lengths();
     void test_times();
     void test_temperatures();
