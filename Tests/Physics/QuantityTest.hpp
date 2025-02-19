@@ -26,7 +26,6 @@ namespace sequoia::testing
     template<class Quantity>
     void test_convex_quantity();
 
-    void test_lengths();
     void test_times();
     void test_temperatures();
     void test_charges();

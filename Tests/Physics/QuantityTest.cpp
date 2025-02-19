@@ -48,8 +48,9 @@ namespace sequoia::testing
   {
     test_convex_quantity<si::mass<float>>();
     test_convex_quantity<si::mass<double>>();
+    test_convex_quantity<si::length<float>>();
+    test_convex_quantity<si::length<double>>();
 
-    test_lengths();
     test_times();
     test_temperatures();
     test_charges();
@@ -111,28 +112,6 @@ namespace sequoia::testing
 
       check(equivalence, "", unsafe_qty_t{-2.0, units_type{}} / delta_q_t{1.0, units_type{}}, -2.0f);
     }
-  }  
-
-  void quantity_test::test_lengths()
-  {
-    using length_t  = si::length<float>;
-    using delta_len_t = length_t::displacement_quantity_type;
-    STATIC_CHECK(convex_space<length_space<float>>);
-    STATIC_CHECK(vector_space<length_space<float>::vector_space_type>);
-    STATIC_CHECK(can_multiply<length_t, float>);
-    STATIC_CHECK(can_divide<length_t, float>);
-    STATIC_CHECK(can_divide<length_t, length_t>);
-    STATIC_CHECK(can_divide<length_t, delta_len_t>);
-    STATIC_CHECK(can_divide<delta_len_t, length_t>);
-    STATIC_CHECK(can_divide<delta_len_t, delta_len_t>);
-    STATIC_CHECK(can_add<length_t, length_t>);
-    STATIC_CHECK(can_add<length_t, delta_len_t>);
-    STATIC_CHECK(can_subtract<length_t, length_t>);
-    STATIC_CHECK(can_subtract<length_t, delta_len_t>);
-            
-    check_exception_thrown<std::domain_error>("Negative length", [](){ return length_t{-1.0, units::metre}; });
-
-    coordinates_operations<length_t>{*this}.execute();
   }
 
   void quantity_test::test_times()
