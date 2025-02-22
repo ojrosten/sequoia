@@ -20,8 +20,12 @@ target_sources(TestChamber PRIVATE
                ${TestDir}/Maths/Geometry/SpacesMetaFreeTest.cpp
                ${TestDir}/Maths/Geometry/VectorCoordinatesTest.cpp
                ${TestDir}/Maths/Geometry/VectorCoordinatesTestingDiagnostics.cpp
-               ${TestDir}/Physics/QuantityMetaFreeTest.cpp
-               ${TestDir}/Physics/QuantityTest.cpp
-               ${TestDir}/Physics/QuantityTestingDiagnostics.cpp)
+               ${TestDir}/Physics/AbsoluteQuantityTest.cpp
+               ${TestDir}/Physics/AffineQuantityTest.cpp
+               ${TestDir}/Physics/ConvexQuantityTest.cpp
+               ${TestDir}/Physics/MixedQuantityTest.cpp
+               ${TestDir}/Physics/QuantityMetaFreeTest.cpp               
+               ${TestDir}/Physics/QuantityTestingDiagnostics.cpp
+               ${TestDir}/Physics/VectorQuantityTest.cpp)
 
 sequoia_finalize_self(TestChamber ${TestDir}/Experimental Experimental)

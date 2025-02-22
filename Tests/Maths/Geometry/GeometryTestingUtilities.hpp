@@ -18,6 +18,26 @@
 
 namespace sequoia::testing
 {
+  template<class T, class U>
+  constexpr bool can_multiply{
+    requires(const T& t, const U& u) { t * u; }
+  };
+
+  template<class T, class U>
+  constexpr bool can_divide{
+    requires(const T& t, const U& u) { t / u; }
+  };
+
+  template<class T, class U>
+  constexpr bool can_add{
+    requires(const T& t, const U& u) { t + u; }
+  };
+
+  template<class T, class U>
+  constexpr bool can_subtract{
+    requires(const T& t, const U& u) { t - u; }
+  };
+  
   template<class T>
   struct is_complex : std::false_type {};
 

@@ -13,7 +13,7 @@
 
 namespace sequoia::testing
 {
-  class quantity_test final : public regular_test
+  class affine_quantity_test final : public regular_test
   {
   public:
     using regular_test::regular_test;
@@ -22,19 +22,8 @@ namespace sequoia::testing
     std::filesystem::path source_file() const;
 
     void run_tests();
-
-    template<class Quantity>
-    void test_absolute_quantity();
-
+  private:
     template<class Quantity>
     void test_affine_quantity();
-
-    template<class Quantity>
-    void test_vector_quantity();
-
-    template<class Quantity>
-    void test_convex_quantity();
-
-    void test_mixed();
   };
 }

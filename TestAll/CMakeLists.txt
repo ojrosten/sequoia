@@ -108,9 +108,13 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Parsing/CommandLineArgumentsDiagnostics.cpp
                ${TestDir}/Parsing/CommandLineArgumentsTest.cpp
                ${TestDir}/Parsing/CommandLineArgumentsTestingUtilities.cpp
-               ${TestDir}/Physics/QuantityMetaFreeTest.cpp
-               ${TestDir}/Physics/QuantityTest.cpp
+               ${TestDir}/Physics/AbsoluteQuantityTest.cpp
+               ${TestDir}/Physics/AffineQuantityTest.cpp
+               ${TestDir}/Physics/ConvexQuantityTest.cpp
+               ${TestDir}/Physics/MixedQuantityTest.cpp
+               ${TestDir}/Physics/QuantityMetaFreeTest.cpp               
                ${TestDir}/Physics/QuantityTestingDiagnostics.cpp
+               ${TestDir}/Physics/VectorQuantityTest.cpp
                ${TestDir}/Runtime/FactoryTest.cpp
                ${TestDir}/Runtime/FactoryTestingDiagnostics.cpp
                ${TestDir}/Runtime/ShellCommandsTest.cpp

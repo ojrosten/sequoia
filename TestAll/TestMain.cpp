@@ -407,7 +407,11 @@ int main(int argc, char** argv)
       "Quantity",
       quantity_meta_free_test{"Quantity Meta Free Test"},
       quantity_false_negative_test{"False Negative Test"},
-      quantity_test{"Unit Test"}
+      absolute_quantity_test{"Absolute Quantity Test"},
+      affine_quantity_test{"Affine Quantity Test"},
+      convex_quantity_test{"Convex Quantity Test"},
+      vector_quantity_test{"Vector Quantity Test"},
+      mixed_quantity_test{"Mixed Quantity Test"}
     );
 
     runner.execute(timer_resolution{1ms});
