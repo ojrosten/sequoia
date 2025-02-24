@@ -16,6 +16,29 @@
 
 namespace sequoia
 {
+  namespace meta
+  {
+    template<class T, class U>
+    struct type_comparator<maths::dual<T>, U> : std::bool_constant<type_name<T>() < type_name<U>()>
+    {};
+
+    template<class T, class U>
+    struct type_comparator<T, maths::dual<U>> : std::bool_constant<type_name<T>() < type_name<U>()>
+    {};
+
+    template<class T, class U>
+    struct type_comparator<maths::dual<T>, maths::dual<U>> : std::bool_constant<type_name<T>() < type_name<U>()>
+    {};
+
+    template<class T>
+    struct type_comparator<maths::dual<T>, T> : std::false_type
+    {};
+
+    template<class T>
+    struct type_comparator<T, maths::dual<T>> : std::true_type
+    {};
+  }
+  
   namespace physics
   {
     template<class T>
@@ -69,6 +92,78 @@ namespace sequoia
       // TO DO: this doesn't hold for all validators!
       using validator_type = T::validator_type;
     };
+
+    template<class T, int I>
+    struct type_counter {};
+    
+    template<class...>
+    struct counter;
+
+    template<class... Ts>
+    using counter_t = counter<Ts...>::type;
+
+    template<>
+    struct counter<std::tuple<>>
+    {
+      using type = std::tuple<>;
+    };
+
+    template<class T>
+    struct counter<T>
+    {
+      using type = std::tuple<type_counter<T, 1>>;
+    };
+
+    template<class T>
+    struct counter<std::tuple<T>>
+    {
+      using type = std::tuple<type_counter<T, 1>>;
+    };
+    
+    template<class T, class... Ts>
+    struct counter<std::tuple<T, Ts...>>
+    {
+      using type = counter_t<std::tuple<Ts...>, counter_t<T>>;
+    };
+
+    template<class T, class... Us, int... Is>
+    struct counter<std::tuple<T>, std::tuple<type_counter<Us, Is>...>>
+    {
+      using type = counter_t<T, std::tuple<type_counter<Us, Is>...>>;
+    };
+
+    template<class T, class... Ts, class... Us, int... Is>
+      requires (sizeof...(Ts) > 0)
+    struct counter<std::tuple<T, Ts...>, std::tuple<type_counter<Us, Is>...>>
+    {
+      using type = counter_t<std::tuple<Ts...>, counter_t<T, std::tuple<type_counter<Us, Is>...>>>;
+    };
+   
+    template<class S, class T, int I, class... Ts, int... Is>
+      requires (!is_tuple_v<S> && !is_dual_v<S> && !std::is_same_v<S, T>)
+    struct counter<S, std::tuple<type_counter<T, I>, type_counter<Ts, Is>...>>
+    {
+      using type = std::tuple<type_counter<S, 1>, type_counter<T, I>, type_counter<Ts, Is>...>;
+    };
+
+    template<class S, class T, int I, class... Ts, int... Is>
+      requires (!std::is_same_v<S, T> && !is_dual_v<T>)
+    struct counter<dual<S>, std::tuple<type_counter<T, I>, type_counter<Ts, Is>...>>
+    {
+      using type = std::tuple<type_counter<dual<S>, 1>, type_counter<T, I>, type_counter<Ts, Is>...>;
+    };
+
+    template<class T, int I, class... Ts, int... Is>
+    struct counter<T, std::tuple<type_counter<T, I>, type_counter<Ts, Is>...>>
+    {
+      using type = std::tuple<type_counter<T, I+1>, type_counter<Ts, Is>...>;
+    };
+
+    template<class T, int I, class... Ts, int... Is>
+    struct counter<dual<T>, std::tuple<type_counter<T, I>, type_counter<Ts, Is>...>>
+    {
+      using type = std::tuple<type_counter<T, I-1>, type_counter<Ts, Is>...>;
+    };
     
     namespace impl
     {
@@ -88,22 +183,152 @@ namespace sequoia
         using type = C;
       };
 
+      //========= reduction of direct products to a lower dimensional space ========= //
+
+      // TO DO: this unpacking roundtrip is probably unnecessary;
+      // could just work in terms of counter.
+      template<class...>
+      struct unpack;
+
+      template<class... Ts>
+      using unpack_t = unpack<Ts...>::type;
+
+      template<class T, int I>
+      requires (I > 0)
+      struct unpack<type_counter<T, I>>
+      {
+        using type = unpack_t<type_counter<T, I - 1>, std::tuple<T>>;
+      };
+
+      template<class T, int I, class... Ts>
+      struct unpack<type_counter<T, I>, std::tuple<Ts...>>
+      {
+        using type = unpack_t<type_counter<T, I - 1>, std::tuple<T, Ts...>>;
+      };
+
+      template<class T, class... Ts>
+      struct unpack<type_counter<T, 0>, std::tuple<Ts...>>
+      {
+        using type = std::tuple<Ts...>;
+      };
+    
+      template<class...>
+      struct reduce;
+
+      template<class... Ts>
+      using reduce_t = reduce<Ts...>::type;
+
+      template<vector_space T>
+      struct reduce<std::tuple<type_counter<T, 0>>>
+      {
+        using type = std::tuple<euclidean_vector_space<1, typename T::vector_space_type::field_type>>;
+      };
+
+      template<convex_space T>
+        requires (!affine_space<T> && !vector_space<T>)
+      struct reduce<std::tuple<type_counter<T, 0>>>
+      {
+        using type = std::tuple<euclidean_half_space<1, typename T::vector_space_type::field_type>>;
+      };
+
+      template<class T, class... Ts, int... Is>
+      struct reduce<std::tuple<type_counter<T, 0>, type_counter<Ts, Is>...>>
+      {
+        using type = reduce_t<std::tuple<type_counter<Ts, Is>...>>;
+      };
+
+      template<class T, int I, class... Ts, int... Is>
+        requires (I > 0)
+      struct reduce<std::tuple<type_counter<T, I>, type_counter<Ts, Is>...>>
+      {
+        using type = reduce_t<std::tuple<type_counter<Ts, Is>...>, unpack_t<type_counter<T, I>>>;
+      };
+
+      template<class T, class... Ts, int... Is, class... Us>
+      struct reduce<std::tuple<type_counter<T, 0>, type_counter<Ts, Is>...>, std::tuple<Us...>>
+      {
+        using type = reduce_t<std::tuple<type_counter<Ts, Is>...>, std::tuple<Us...>>;
+      };
+
+      template<class T, int I, class... Ts, int... Is, class... Us>
+      requires (I > 0)
+      struct reduce<std::tuple<type_counter<T, I>, type_counter<Ts, Is>...>, std::tuple<Us...>>
+      {
+        using type = reduce_t<std::tuple<type_counter<Ts, Is>...>, unpack_t<type_counter<T, I>, std::tuple<Us...>>>;
+      };
+
+      template<class... Us>
+      struct reduce<std::tuple<>, std::tuple<Us...>>
+      {
+        using type = std::tuple<Us...>;
+      };
+
       template<physics::quantity_unit T>
       struct reduce<std::tuple<type_counter<T, 0>>>
       {
         using type = std::tuple<physics::no_unit_t<typename T::validator_type>>;
       };
 
+      template<class>
+      struct simplify;
+
+      template<class T>
+      using simplify_t = simplify<T>::type;
+
+      template<class... Ts>
+      struct simplify<std::tuple<Ts...>>
+      {
+        using type = reduce_t<counter_t<std::tuple<Ts...>>>;
+      };
+
+      template<convex_space... Ts>
+      struct simplify<direct_product<std::tuple<Ts...>>>
+      {
+        using reduced_tuple_type = simplify_t<std::tuple<Ts...>>;
+        using type = std::conditional_t<std::tuple_size_v<reduced_tuple_type> == 1,
+                                        std::tuple_element_t<0, reduced_tuple_type>,
+                                        direct_product<reduced_tuple_type>>;
+      };
+     
       template<physics::quantity_unit... Ts>
       struct simplify<physics::composite_unit<std::tuple<Ts...>>>
       {
         using reduced_tuple_type = simplify_t<std::tuple<Ts...>>;
-        //using type = std::conditional_t<is_tuple_v<reduced_type>, physics::composite_unit<reduced_type>, reduced_type>;
         using type = std::conditional_t<std::tuple_size_v<reduced_tuple_type> == 1,
-                                      std::tuple_element_t<0, reduced_tuple_type>,
-                                      physics::composite_unit<reduced_tuple_type>>;
+                                        std::tuple_element_t<0, reduced_tuple_type>,
+                                        physics::composite_unit<reduced_tuple_type>>;
       };
     }
+
+    template<class T>
+    struct reduction;
+
+    template<class T>
+    using reduction_t = reduction<T>::type;
+
+    template<class T>
+    struct is_reduction : std::false_type {};
+
+    template<class T>
+    struct is_reduction<reduction<T>> : std::true_type {};
+
+    template<class T>
+    inline constexpr bool is_reduction_v{is_reduction<T>::value};
+
+    template<class T>
+    struct to_reduction
+    {
+      using type = T;
+    };
+
+    template<class T>
+    using to_reduction_t = to_reduction<T>::type;
+
+    template<class... Ts>
+    struct to_reduction<direct_product<std::tuple<Ts...>>>
+    {
+      using type = reduction<direct_product<std::tuple<Ts...>>>;
+    };
     
     template<physics::quantity_unit T, physics::quantity_unit U>
     struct reduction<std::tuple<T, U>>
@@ -127,6 +352,62 @@ namespace sequoia
     struct reduction<std::tuple<physics::composite_unit<std::tuple<Ts...>>, physics::composite_unit<std::tuple<Us...>>>>
     {
       using type = impl::simplify_t<physics::composite_unit<meta::merge_t<std::tuple<Ts...>, std::tuple<Us...>, meta::type_comparator>>>;
+    };
+   
+    template<convex_space... Ts>
+      requires (vector_space<Ts> ||  ...)
+    struct reduction<direct_product<std::tuple<Ts...>>>
+    {    
+      using tuple_type        = std::tuple<Ts...>;
+      using direct_product_t  = direct_product<std::tuple<Ts...>>;
+      using set_type          = reduction<typename direct_product_t::set_type>;
+      using field_type        = typename direct_product_t::field_type;
+      using vector_space_type = reduction<direct_product<std::tuple<Ts...>>>;
+      constexpr static std::size_t dimension{std::ranges::max({dimension_of<Ts>...})};
+    };
+
+    template<convex_space... Ts>
+      requires (!vector_space<Ts> &&  ...)
+    struct reduction<direct_product<std::tuple<Ts...>>>
+    {
+      using direct_product_t  = direct_product<std::tuple<Ts...>>;
+      using set_type          = reduction<typename direct_product_t::set_type>;
+      using vector_space_type = reduction_t<typename direct_product_t::vector_space_type>;
+      using convex_space_type = reduction<direct_product<std::tuple<Ts...>>>;
+    };
+
+    template<convex_space T, convex_space U>
+      requires (!is_reduction_v<T>) && (!is_reduction_v<U>)
+    struct reduction<direct_product<T, U>>
+    {    
+      using type = to_reduction_t<impl::simplify_t<direct_product<meta::merge_t<std::tuple<T>, std::tuple<U>, meta::type_comparator>>>>;
+    };
+
+    template<convex_space T, convex_space... Us>
+      requires (!is_reduction_v<T>)
+    struct reduction<direct_product<T, reduction<direct_product<std::tuple<Us...>>>>>
+    {
+      using type = to_reduction_t<impl::simplify_t<direct_product<meta::merge_t<std::tuple<T>, std::tuple<Us...>, meta::type_comparator>>>>;
+    };
+
+    template<convex_space... Ts, convex_space U>
+      requires (!is_reduction_v<U>)
+    struct reduction<direct_product<reduction<direct_product<std::tuple<Ts...>>>, U>>
+    {
+      using type = to_reduction_t<impl::simplify_t<direct_product<meta::merge_t<std::tuple<Ts...>, std::tuple<U>, meta::type_comparator>>>>;
+    };
+
+    template<convex_space... Ts, convex_space... Us>
+      requires (sizeof...(Ts) > 1) && (sizeof...(Us) > 1)
+    struct reduction<direct_product<reduction<direct_product<std::tuple<Ts...>>>, reduction<direct_product<std::tuple<Us...>>>>>
+    {
+      using type = to_reduction_t<impl::simplify_t<direct_product<meta::merge_t<std::tuple<Ts...>, std::tuple<Us...>, meta::type_comparator>>>>;
+    };
+
+    template<vector_space... Ts>
+    struct reduction<direct_product<Ts...>>
+    {
+      using type = reduction<direct_product<std::tuple<Ts...>>>;
     };
   }
 }
