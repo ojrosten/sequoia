@@ -596,8 +596,7 @@ namespace sequoia::physics
     constexpr static std::size_t D{dimension};
 
     constexpr static bool is_intrinsically_absolute{(D == 1) && defines_half_space_v<intrinsic_validator_type>};
-    constexpr static bool is_unsafe{!std::is_same_v<Validator, intrinsic_validator_type>};
-    constexpr static bool is_effectively_absolute{is_intrinsically_absolute && !is_unsafe};
+    constexpr static bool is_effectively_absolute{is_intrinsically_absolute && std::is_same_v<Validator, intrinsic_validator_type>};
     constexpr static bool has_identity_validator{coordinates_type::has_identity_validator};
 
     template<convex_space RHSQuantitySpace, class RHSUnit, class RHSValidator>
