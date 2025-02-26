@@ -35,10 +35,10 @@ namespace sequoia::testing
     using time_space_t   = time_space<float>;
     using electrical_charge_space_t = electrical_charge_space<float>;
 
-    using delta_mass_space_t = displacement_space<classical_quantity_sets::masses, float>;
-    using delta_len_space_t  = displacement_space<classical_quantity_sets::lengths, float>;
-    using delta_temp_space_t = displacement_space<classical_quantity_sets::temperatures, float>;
-    using delta_time_space_t = displacement_space<classical_quantity_sets::times, float>;
+    using delta_mass_space_t = displacement_space<mass_space_t>;
+    using delta_len_space_t  = displacement_space<length_space_t>;
+    using delta_temp_space_t = displacement_space<temp_space_t>;
+    using delta_time_space_t = displacement_space<time_space_t>;
 
     STATIC_CHECK(si::mass<float>::is_intrinsically_absolute);
  

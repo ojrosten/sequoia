@@ -136,11 +136,14 @@ namespace sequoia::maths
   };
 
   template<class T>
+  inline constexpr bool has_vector_space_type_v{
+    requires { typename T::vector_space_type; }
+  };
+
+  template<class T>
   inline constexpr bool identifies_as_vector_space_v{
-    requires {
-      typename T::vector_space_type;
-      requires std::same_as<T, typename T::vector_space_type>;
-    }
+    has_vector_space_type_v<T> &&
+    requires { requires std::same_as<T, typename T::vector_space_type>; }
   };
 
   template<class T>
@@ -151,10 +154,8 @@ namespace sequoia::maths
   struct is_vector_space : std::integral_constant<bool, vector_space<T>> {};
 
   template<class B>
-  concept basis = requires { 
-    typename B::vector_space_type;
-    requires vector_space<typename B::vector_space_type>;
-  };
+  concept basis =    has_vector_space_type_v<B>
+                  && requires { requires vector_space<typename B::vector_space_type>; };
 
   template<class B, class V>
   concept basis_for = basis<B> && vector_space<V> && std::is_same_v<typename B::vector_space_type, V>;

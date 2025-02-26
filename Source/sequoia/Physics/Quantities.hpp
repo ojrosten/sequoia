@@ -16,6 +16,12 @@
 
 namespace sequoia
 {
+  namespace physics
+  {
+    template<class Space>
+    struct displacement_space;
+  };
+  
   namespace meta
   {
     template<class T, class U>
@@ -36,6 +42,55 @@ namespace sequoia
 
     template<class T>
     struct type_comparator<T, maths::dual<T>> : std::true_type
+    {};
+
+    template<class T, class U>
+    struct type_comparator<physics::displacement_space<T>, U> : std::bool_constant<type_name<T>() < type_name<U>()>
+    {};
+
+    template<class T, class U>
+    struct type_comparator<T, physics::displacement_space<U>> : std::bool_constant<type_name<T>() < type_name<U>()>
+    {};
+
+    template<class T, class U>
+    struct type_comparator<maths::dual<physics::displacement_space<T>>, U>
+      : std::bool_constant<type_name<T>() < type_name<U>()>
+    {};
+
+    template<class T, class U>
+    struct type_comparator<T, maths::dual<physics::displacement_space<U>>>
+      : std::bool_constant<type_name<T>() < type_name<U>()>
+    {};
+
+    template<class T, class U>
+    struct type_comparator<physics::displacement_space<T>, physics::displacement_space<U>>
+      : std::bool_constant<type_name<T>() < type_name<U>()>
+    {};
+
+    template<class T, class U>
+    struct type_comparator<maths::dual<physics::displacement_space<T>>, maths::dual<physics::displacement_space<U>>>
+      : std::bool_constant<type_name<T>() < type_name<U>()>
+    {};
+
+    template<class T>
+    struct type_comparator<physics::displacement_space<T>, T> : std::false_type
+    {};
+
+    template<class T>
+    struct type_comparator<maths::dual<physics::displacement_space<T>>, T> : std::false_type
+    {};
+
+    template<class T>
+    struct type_comparator<T, physics::displacement_space<T>> : std::true_type
+    {};
+    
+    template<class T>
+    struct type_comparator<T, maths::dual<physics::displacement_space<T>>> : std::true_type
+    {};
+
+    template<class T>
+    struct type_comparator<physics::displacement_space<T>, maths::dual<physics::displacement_space<T>>>
+      : std::true_type
     {};
   }
   
@@ -156,7 +211,7 @@ namespace sequoia::physics
     };
 
     template<class S, class T, int I, class... Ts, int... Is>
-      requires (!std::is_same_v<S, T> && !is_dual_v<T>)
+    requires (!std::is_same_v<S, T> && /*!std::is_same_v<S, displacement_space<T>> &&*/ !is_dual_v<T>)
     struct counter<dual<S>, std::tuple<type_counter<T, I>, type_counter<Ts, Is>...>>
     {
       using type = std::tuple<type_counter<dual<S>, 1>, type_counter<T, I>, type_counter<Ts, Is>...>;
@@ -201,16 +256,31 @@ namespace sequoia::physics
     using unpack_t = unpack<Ts...>::type;
 
     template<class T, int I>
-    requires (I > 0)
+      requires (I > 0)
     struct unpack<type_counter<T, I>>
     {
       using type = unpack_t<type_counter<T, I - 1>, std::tuple<T>>;
     };
 
+    template<class T, int I>
+      requires (I < 0)
+    struct unpack<type_counter<T, I>>
+    {
+      using type = unpack_t<type_counter<T, I + 1>, std::tuple<dual<T>>>;
+    };
+
     template<class T, int I, class... Ts>
+      requires (I > 0)
     struct unpack<type_counter<T, I>, std::tuple<Ts...>>
     {
       using type = unpack_t<type_counter<T, I - 1>, std::tuple<T, Ts...>>;
+    };
+
+    template<class T, int I, class... Ts>
+      requires (I < 0)
+    struct unpack<type_counter<T, I>, std::tuple<Ts...>>
+    {
+      using type = unpack_t<type_counter<T, I + 1>, std::tuple<dual<T>, Ts...>>;
     };
 
     template<class T, class... Ts>
@@ -232,7 +302,7 @@ namespace sequoia::physics
     };
 
     template<convex_space T>
-    requires (!affine_space<T> && !vector_space<T>)
+      requires (!affine_space<T> && !vector_space<T>)
     struct reduce<std::tuple<type_counter<T, 0>>>
     {
       using type = std::tuple<euclidean_half_space<1, typename T::vector_space_type::field_type>>;
@@ -245,7 +315,7 @@ namespace sequoia::physics
     };
 
     template<class T, int I, class... Ts, int... Is>
-    requires (I > 0)
+      requires (I != 0)
     struct reduce<std::tuple<type_counter<T, I>, type_counter<Ts, Is>...>>
     {
       using type = reduce_t<std::tuple<type_counter<Ts, Is>...>, unpack_t<type_counter<T, I>>>;
@@ -258,7 +328,7 @@ namespace sequoia::physics
     };
 
     template<class T, int I, class... Ts, int... Is, class... Us>
-    requires (I > 0)
+      requires (I != 0)
     struct reduce<std::tuple<type_counter<T, I>, type_counter<Ts, Is>...>, std::tuple<Us...>>
     {
       using type = reduce_t<std::tuple<type_counter<Ts, Is>...>, unpack_t<type_counter<T, I>, std::tuple<Us...>>>;
@@ -646,11 +716,11 @@ namespace sequoia::physics
     };
   }
 
-  template<class QuantitySet, std::floating_point T>
+  template<class Space>
   struct displacement_space
   {
-    using set_type          = classical_quantity_sets::differences<QuantitySet>;
-    using field_type        = T;
+    using set_type          = classical_quantity_sets::differences<typename Space::set_type>;
+    using field_type        = Space::representation_type;
     using vector_space_type = displacement_space;
     constexpr static std::size_t dimension{1};
   };
@@ -660,7 +730,7 @@ namespace sequoia::physics
   {
     using set_type            = QuantitySet;
     using representation_type = Rep;
-    using vector_space_type   = displacement_space<QuantitySet, Rep>;
+    using vector_space_type   = displacement_space<quantity_convex_space>;
     using convex_space_type   = Derived;
   };
 
@@ -669,16 +739,17 @@ namespace sequoia::physics
   {
     using set_type            = QuantitySet;
     using representation_type = Rep;
-    using vector_space_type   = displacement_space<QuantitySet, Rep>;
+    using vector_space_type   = displacement_space<quantity_affine_space>;
     using affine_space_type   = Derived;
   };
 
   template<class QuantitySet, std::floating_point Rep, class Derived>
   struct quantity_vector_space
   {
-    using set_type          = QuantitySet;
-    using field_type        = Rep;
-    using vector_space_type = Derived;
+    using set_type            = QuantitySet;
+    using representation_type = Rep;
+    using field_type          = Rep;
+    using vector_space_type   = Derived;
 
     constexpr static std::size_t dimension{1};
   };
