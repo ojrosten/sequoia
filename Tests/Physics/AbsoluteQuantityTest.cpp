@@ -65,9 +65,8 @@ namespace sequoia::testing
       using euc_half_space_qty = quantity<euclidean_half_space<1, value_type>, no_unit_t, half_space_validator>;
       using euc_vec_space_qty  = quantity<euclidean_vector_space<1, value_type>, no_unit_t, std::identity>;
       check(equality, "", quantity_t{2.0, units_type{}} / quantity_t{1.0, units_type{}}, euc_half_space_qty{2.0f, no_unit});
-
-      check(equality, "", quantity_t{2.0, units_type{}} / delta_q_t{1.0, units_type{}}, euc_vec_space_qty{2.0, no_unit});
-      check(equality, "", delta_q_t{2.0, units_type{}} / quantity_t{1.0, units_type{}}, euc_vec_space_qty{2.0, no_unit});
+      check(equality, "", quantity_t{2.0, units_type{}} / delta_q_t{1.0, units_type{}},  euc_vec_space_qty{2.0, no_unit});
+      check(equality, "", delta_q_t{2.0, units_type{}}  / quantity_t{1.0, units_type{}}, euc_vec_space_qty{2.0, no_unit});
     }
 
     {
@@ -89,7 +88,11 @@ namespace sequoia::testing
 
       coordinates_operations<unsafe_qty_t>{*this}.execute();
 
-      check(equivalence, "", unsafe_qty_t{-2.0, units_type{}} / delta_q_t{1.0, units_type{}}, value_type(-2.0));
+      using unsafe_euc_half_space_qty = quantity<euclidean_half_space<1, value_type>, no_unit_t, std::identity>;
+      using euc_vec_space_qty = quantity<euclidean_vector_space<1, value_type>, no_unit_t, std::identity>;
+      check(equality, "", unsafe_qty_t{2.0, units_type{}}  / unsafe_qty_t {-1.0, units_type{}}, unsafe_euc_half_space_qty{-2.0f, no_unit});
+      check(equality, "", unsafe_qty_t{-2.0, units_type{}} / delta_q_t{1.0, units_type{}},      euc_vec_space_qty{-2.0, no_unit});
+      check(equality, "", delta_q_t{-2.0, units_type{}}    / unsafe_qty_t{1.0, units_type{}},   euc_vec_space_qty{-2.0, no_unit});
     }
   }
 }

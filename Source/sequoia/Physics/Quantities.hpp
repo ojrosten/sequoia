@@ -307,7 +307,7 @@ namespace sequoia::physics
     };
 
     //********* TO DO : Complete this approach
-    template<convex_space T, int I>
+    /*template<convex_space T, int I>
     struct reduce<std::tuple<type_counter<displacement_space<T>, -I>>, type_counter<T, I>>
     {
       using type = std::tuple<euclidean_vector_space<1, typename T::vector_space_type::field_type>>;
@@ -323,7 +323,7 @@ namespace sequoia::physics
     struct reduce<std::tuple<type_counter<T, I>, type_counter<dual<displacement_space<T>>, I>>>
     {
       using type = std::tuple<euclidean_vector_space<1, typename T::vector_space_type::field_type>>;
-    };
+      };*/
 
     template<convex_space T, int I>
     struct reduce<std::tuple<type_counter<dual<displacement_space<T>>, I>, type_counter<T, I>>>
