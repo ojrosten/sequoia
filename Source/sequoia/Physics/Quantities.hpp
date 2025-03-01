@@ -330,6 +330,12 @@ namespace sequoia::physics
     {
       using type = std::tuple<euclidean_vector_space<1, typename T::vector_space_type::field_type>>;
     };
+
+    template<convex_space T, int I>
+    struct reduce<std::tuple<type_counter<displacement_space<T>, I>, type_counter<dual<T>, I>>>
+    {
+      using type = std::tuple<euclidean_vector_space<1, typename T::vector_space_type::field_type>>;
+    };
     //**********
 
     template<class T, class... Ts, int... Is>
