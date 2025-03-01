@@ -122,14 +122,12 @@ namespace sequoia
     template<class T>
     struct composite_unit;
 
-    template<class Validator>
     struct no_unit_t
     {
-      using validator_type = Validator;
+      using validator_type = maths::half_space_validator;
     };
 
-    template<class Validator>
-    inline constexpr no_unit_t<Validator> no_unit{};
+    inline constexpr no_unit_t no_unit{};
 
     // Ts are assumed to be ordered
     template<physics::quantity_unit... Ts>
@@ -211,7 +209,7 @@ namespace sequoia::physics
     };
 
     template<class S, class T, int I, class... Ts, int... Is>
-    requires (!std::is_same_v<S, T> && /*!std::is_same_v<S, displacement_space<T>> &&*/ !is_dual_v<T>)
+      requires (!std::is_same_v<S, T> && !is_dual_v<T>)
     struct counter<dual<S>, std::tuple<type_counter<T, I>, type_counter<Ts, Is>...>>
     {
       using type = std::tuple<type_counter<dual<S>, 1>, type_counter<T, I>, type_counter<Ts, Is>...>;
@@ -308,12 +306,38 @@ namespace sequoia::physics
       using type = std::tuple<euclidean_half_space<1, typename T::vector_space_type::field_type>>;
     };
 
+    //********* TO DO : Complete this approach
+    template<convex_space T, int I>
+    struct reduce<std::tuple<type_counter<displacement_space<T>, -I>>, type_counter<T, I>>
+    {
+      using type = std::tuple<euclidean_vector_space<1, typename T::vector_space_type::field_type>>;
+    };
+
+    template<convex_space T, int I>
+    struct reduce<std::tuple<type_counter<T, I>, type_counter<displacement_space<T>, -I>>>
+    {
+      using type = std::tuple<euclidean_vector_space<1, typename T::vector_space_type::field_type>>;
+    };
+
+    template<convex_space T, int I>
+    struct reduce<std::tuple<type_counter<T, I>, type_counter<dual<displacement_space<T>>, I>>>
+    {
+      using type = std::tuple<euclidean_vector_space<1, typename T::vector_space_type::field_type>>;
+    };
+
+    template<convex_space T, int I>
+    struct reduce<std::tuple<type_counter<dual<displacement_space<T>>, I>, type_counter<T, I>>>
+    {
+      using type = std::tuple<euclidean_vector_space<1, typename T::vector_space_type::field_type>>;
+    };
+    //**********
+
     template<class T, class... Ts, int... Is>
     struct reduce<std::tuple<type_counter<T, 0>, type_counter<Ts, Is>...>>
     {
       using type = reduce_t<std::tuple<type_counter<Ts, Is>...>>;
     };
-
+ 
     template<class T, int I, class... Ts, int... Is>
       requires (I != 0)
     struct reduce<std::tuple<type_counter<T, I>, type_counter<Ts, Is>...>>
@@ -343,7 +367,7 @@ namespace sequoia::physics
     template<physics::quantity_unit T>
     struct reduce<std::tuple<type_counter<T, 0>>>
     {
-      using type = std::tuple<physics::no_unit_t<typename T::validator_type>>;
+      using type = std::tuple<physics::no_unit_t>;
     };
 
     template<class>
@@ -461,7 +485,7 @@ namespace sequoia::physics
   };
 
   template<convex_space T, convex_space... Us>
-  requires (!is_reduction_v<T>)
+    requires (!is_reduction_v<T>)
   struct reduction<direct_product<T, reduction<direct_product<std::tuple<Us...>>>>>
   {
     using type = to_reduction_t<impl::simplify_t<direct_product<meta::merge_t<std::tuple<T>, std::tuple<Us...>, meta::type_comparator>>>>;
@@ -729,7 +753,7 @@ namespace sequoia::physics
   {
     using set_type            = QuantitySet;
     using representation_type = Rep;
-    using vector_space_type   = displacement_space<quantity_convex_space>;
+    using vector_space_type   = displacement_space<Derived>;
     using convex_space_type   = Derived;
   };
 
@@ -738,7 +762,7 @@ namespace sequoia::physics
   {
     using set_type            = QuantitySet;
     using representation_type = Rep;
-    using vector_space_type   = displacement_space<quantity_affine_space>;
+    using vector_space_type   = displacement_space<Derived>;
     using affine_space_type   = Derived;
   };
 

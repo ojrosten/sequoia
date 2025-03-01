@@ -12,7 +12,7 @@
 #include "../Maths/Geometry/GeometryTestingUtilities.hpp"
 
 namespace sequoia::testing
-{ 
+{
   using namespace physics;
 
   [[nodiscard]]
@@ -62,12 +62,13 @@ namespace sequoia::testing
 
       check(equality, "", (inv_quantity_t{2.0, inv_unit_t{}} * inv_quantity_t{3.0, inv_unit_t{}}) * quantity_t{2.0, units_type{}}, inv_quantity_t{12.0, inv_unit_t{}});
 
-      using euc_half_space_qty = quantity<euclidean_half_space<1, value_type>, no_unit_t<half_space_validator>>;
-      //using euc_vec_space_qty  = quantity<euclidean_vector_space<1, value_type>, no_unit_t<std::identity>>;
-      check(equality, "", quantity_t{2.0, units_type{}} / quantity_t{1.0, units_type{}}, euc_half_space_qty{2.0f, no_unit<half_space_validator>});
-      // TO DO: get this working
-      //check(equality, "", quantity_t{2.0, units_type{}} / delta_q_t{1.0, units_type{}}, euc_vec_space_qty{2.0, no_unit<std::identity>});      
-      check(equivalence, "", quantity_t{2.0, units_type{}} / delta_q_t{1.0, units_type{}}, value_type(2.0));
+      using euc_half_space_qty = quantity<euclidean_half_space<1, value_type>, no_unit_t, half_space_validator>;
+      using euc_vec_space_qty  = quantity<euclidean_vector_space<1, value_type>, no_unit_t, std::identity>;
+      check(equality, "", quantity_t{2.0, units_type{}} / quantity_t{1.0, units_type{}}, euc_half_space_qty{2.0f, no_unit});
+
+      check(equality, "", quantity_t{2.0, units_type{}} / delta_q_t{1.0, units_type{}}, euc_vec_space_qty{2.0, no_unit});
+      // TO DO:
+      //check(equality, "", delta_q_t{2.0, units_type{}} / quantity_t{1.0, units_type{}}, euc_vec_space_qty{2.0, no_unit});
       check(equivalence, "", delta_q_t{2.0, units_type{}} / quantity_t{1.0, units_type{}}, value_type(2.0));
     }
 
