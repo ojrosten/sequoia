@@ -1,2 +1,2 @@
 Absolute Quantity Test
-Standard Top Level Checks:               640;  Failures:  0  [Deep checks: 7140]
+Standard Top Level Checks:               648;  Failures:  0  [Deep checks: 7156]

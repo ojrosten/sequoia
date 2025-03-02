@@ -152,6 +152,9 @@ namespace sequoia
 namespace sequoia::physics
 {
   using namespace maths;
+  
+  template<class T>
+  struct reduction;
 
   namespace impl
   {
@@ -241,6 +244,18 @@ namespace sequoia::physics
     template<class C>
     struct to_dual<dual<C>> {
       using type = C;
+    };
+
+    template<convex_space... Ts>
+    struct to_dual<reduction<direct_product<std::tuple<Ts...>>>>
+    {
+      using type = reduction<direct_product<std::tuple<to_dual_t<Ts>...>>>;
+    };
+
+    template<quantity_unit... Ts>
+    struct to_dual<composite_unit<std::tuple<Ts...>>>
+    {
+      using type = composite_unit<std::tuple<to_dual_t<Ts>...>>;
     };
 
     //========= reduction of direct products to a lower dimensional space ========= //
@@ -406,9 +421,6 @@ namespace sequoia::physics
                                       physics::composite_unit<reduced_tuple_type>>;
     };
   }
-
-  template<class T>
-  struct reduction;
 
   template<class T>
   using reduction_t = reduction<T>::type;
