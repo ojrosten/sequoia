@@ -44,12 +44,22 @@ namespace sequoia
     struct type_comparator<T, maths::dual<T>> : std::true_type
     {};
 
-    template<class T, class U>
+    template<class T, class U>    
+      requires (!maths::is_dual_v<U>)
     struct type_comparator<physics::displacement_space<T>, U> : std::bool_constant<type_name<T>() < type_name<U>()>
     {};
 
     template<class T, class U>
+      requires (!maths::is_dual_v<T>)
     struct type_comparator<T, physics::displacement_space<U>> : std::bool_constant<type_name<T>() < type_name<U>()>
+    {};
+
+    template<class T, class U>
+    struct type_comparator<physics::displacement_space<T>, maths::dual<U>> : std::bool_constant<type_name<T>() < type_name<U>()>
+    {};
+
+    template<class T, class U>
+    struct type_comparator<maths::dual<T>, physics::displacement_space<U>> : std::bool_constant<type_name<T>() < type_name<U>()>
     {};
 
     template<class T, class U>
@@ -321,25 +331,6 @@ namespace sequoia::physics
       using type = std::tuple<euclidean_half_space<1, typename T::vector_space_type::field_type>>;
     };
 
-    //********* TO DO : Complete this approach
-    /*template<convex_space T, int I>
-    struct reduce<std::tuple<type_counter<displacement_space<T>, -I>>, type_counter<T, I>>
-    {
-      using type = std::tuple<euclidean_vector_space<1, typename T::vector_space_type::field_type>>;
-    };
-
-    template<convex_space T, int I>
-    struct reduce<std::tuple<type_counter<T, I>, type_counter<displacement_space<T>, -I>>>
-    {
-      using type = std::tuple<euclidean_vector_space<1, typename T::vector_space_type::field_type>>;
-    };
-
-    template<convex_space T, int I>
-    struct reduce<std::tuple<type_counter<T, I>, type_counter<dual<displacement_space<T>>, I>>>
-    {
-      using type = std::tuple<euclidean_vector_space<1, typename T::vector_space_type::field_type>>;
-      };*/
-
     template<convex_space T, int I>
     struct reduce<std::tuple<type_counter<dual<displacement_space<T>>, I>, type_counter<T, I>>>
     {
@@ -351,12 +342,52 @@ namespace sequoia::physics
     {
       using type = std::tuple<euclidean_vector_space<1, typename T::vector_space_type::field_type>>;
     };
-    //**********
+
+    template<convex_space T, int I>
+    struct reduce<std::tuple<type_counter<dual<T>, I>, type_counter<displacement_space<T>, I>>>
+    {
+      using type = std::tuple<euclidean_vector_space<1, typename T::vector_space_type::field_type>>;
+    };
+
+    template<convex_space T, int I, int J>
+      requires (I > J)
+    struct reduce<std::tuple<type_counter<dual<displacement_space<T>>, I>, type_counter<T, J>>>
+    {
+      using type = unpack_t<type_counter<dual<displacement_space<T>>, I - J>>;
+    };
+
+    template<convex_space T, int I, int J>
+      requires (I < J)
+    struct reduce<std::tuple<type_counter<dual<displacement_space<T>>, I>, type_counter<T, J>>>
+    {
+      using type = unpack_t<type_counter<displacement_space<T>, J - I>>;
+    };
+
+    template<convex_space T, int I, int J>
+      requires (I > J)
+    struct reduce<std::tuple<type_counter<dual<T>, I>, type_counter<displacement_space<T>, J>>>
+    {
+      using type = unpack_t<type_counter<dual<displacement_space<T>>, I - J>>;
+    };
+
+    template<convex_space T, int I, int J>
+      requires (I < J)
+    struct reduce<std::tuple<type_counter<dual<T>, I>, type_counter<displacement_space<T>, J>>>
+    {
+      using type = unpack_t<type_counter<displacement_space<T>, J - I>>;
+    };
 
     template<class T, class... Ts, int... Is>
     struct reduce<std::tuple<type_counter<T, 0>, type_counter<Ts, Is>...>>
     {
       using type = reduce_t<std::tuple<type_counter<Ts, Is>...>>;
+    };
+
+    template<class T, int I>
+      requires (I != 0)
+    struct reduce<std::tuple<type_counter<T, I>>>
+    {
+      using type = unpack_t<type_counter<T, I>>;
     };
  
     template<class T, int I, class... Ts, int... Is>
