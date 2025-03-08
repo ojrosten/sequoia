@@ -140,10 +140,8 @@ namespace sequoia::testing
     STATIC_CHECK(std::is_same_v<counter_t<std::tuple<dual<units::kilogram_t>, dual<units::kilogram_t>>>, std::tuple<type_counter<dual<units::kilogram_t>,2 >>>);
     STATIC_CHECK(std::is_same_v<reduce_t<counter_t<std::tuple<units::kilogram_t, dual<units::kilogram_t>>>>,  std::tuple<no_unit_t>>);
     
-    STATIC_CHECK(std::is_same_v<reduce_t<std::tuple<type_counter<dual<delta_mass_space_t>, 1>, type_counter<mass_space_t, 1>>>, std::tuple<euclidean_vector_space<1, float>>>);
-    STATIC_CHECK(std::is_same_v<counter_t<std::tuple<mass_space_t, dual<delta_mass_space_t>>>, std::tuple<type_counter<dual<delta_mass_space_t>, 1>, type_counter<mass_space_t, 1>>>);
-
-    STATIC_CHECK(std::is_same_v<reduce_t<std::tuple<type_counter<dual<delta_mass_space_t>, 1>, type_counter<mass_space_t, 1>>>, std::tuple<euclidean_vector_space<1, float>>>);
+    STATIC_CHECK(std::is_same_v<counter_t<std::tuple<mass_space_t, dual<delta_mass_space_t>>>, std::tuple<type_counter<delta_mass_space_t, 0>>>);
+    STATIC_CHECK(std::is_same_v<reduce_t<counter_t<std::tuple<mass_space_t, dual<delta_mass_space_t>>>>, std::tuple<euclidean_vector_space<1, float>>>);
     STATIC_CHECK(std::is_same_v<reduction_t<direct_product<mass_space_t, dual<delta_mass_space_t>>>, euclidean_vector_space<1, float>>);
   }
 }

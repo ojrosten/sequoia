@@ -29,10 +29,12 @@ namespace sequoia::testing
   void mixed_quantity_test::test_mixed()
   {
     using mass_t            = si::mass<float>;
+    using d_mass_t          = mass_t::displacement_quantity_type;
     using length_t          = si::length<float>;
     using charge_t          = si::electrical_charge<float>;
     using temperature_t     = si::temperature<float>;
     using unsafe_mass_t     = quantity<mass_space<float>, units::kilogram_t, std::identity>;
+    using unsafe_len_t      = quantity<length_space<float>, units::metre_t, std::identity>;
     using unsafe_inv_mass_t = quantity<dual<mass_space<float>>, dual<units::kilogram_t>, std::identity>;
     using inv_charge_t      = quantity<dual<electrical_charge_space<float>>, dual<units::coulomb_t>, std::identity>;
     
@@ -68,5 +70,7 @@ namespace sequoia::testing
 
     check(equality, "", 1.0f /(1.0f / charge_t{2.0, units::coulomb}), charge_t{2.0, units::coulomb});
     check(equality, "", charge_t{2.0, units::coulomb} /(1.0f / charge_t{2.0, units::coulomb}), charge_t{2.0, units::coulomb} * charge_t{2.0, units::coulomb});
+
+    //check(equality, "", mass_t{2.0, units::kilogram} * length_t{3.0, units::metre} / d_mass_t{-2.0, units::kilogram}, unsafe_len_t{-3.0, units::metre});
   }
 }
