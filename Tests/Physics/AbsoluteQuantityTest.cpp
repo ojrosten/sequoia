@@ -71,6 +71,8 @@ namespace sequoia::testing
       check(equality, "", (quantity_t{4.0, units_type{}} *  quantity_t{3.0, units_type{}}  /  quantity_t{2.0, units_type{}}) / quantity_t{2.0, units_type{}},   euc_half_space_qty{3.0, no_unit});
       check(equality, "", (quantity_t{4.0, units_type{}} *  quantity_t{3.0, units_type{}}) / (quantity_t{2.0, units_type{}}  * quantity_t{2.0, units_type{}}),  euc_half_space_qty{3.0, no_unit});
       check(equality, "",  quantity_t{4.0, units_type{}} * (quantity_t{3.0, units_type{}}  / (quantity_t{2.0, units_type{}}  * quantity_t{2.0, units_type{}})), euc_half_space_qty{3.0, no_unit});
+      check(equality, "",  quantity_t{4.0, units_type{}} * quantity_t{3.0, units_type{}}  * ((1.0 / quantity_t{2.0, units_type{}}) * (1.0 / quantity_t{2.0, units_type{}})), euc_half_space_qty{3.0, no_unit});
+      // cf quantity<euclidean_half_space<1, value_type>, no_unit_t, half_space_validator>
 
       check(equality, "", (quantity_t{4.0, units_type{}} *  quantity_t{3.0, units_type{}}  /  delta_q_t{2.0, units_type{}})  / delta_q_t{-2.0, units_type{}},   euc_vec_space_qty{-3.0, no_unit});
       check(equality, "", (quantity_t{4.0, units_type{}} *  quantity_t{3.0, units_type{}}) / (delta_q_t{2.0, units_type{}}   * delta_q_t{-2.0, units_type{}}),  euc_vec_space_qty{-3.0, no_unit});

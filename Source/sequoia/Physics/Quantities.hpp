@@ -775,7 +775,7 @@ namespace sequoia::physics
       requires ((D == 1) && (is_intrinsically_absolute || vector_space<QuantitySpace>))
     {
       using impl::to_dual_t;
-      using quantity_t = quantity<to_dual_t<QuantitySpace>, to_dual_t<Unit>, std::identity>;
+      using quantity_t = quantity<to_dual_t<QuantitySpace>, to_dual_t<Unit>, validator_type>;
       using derived_units_type = quantity_t::units_type;
       return quantity_t{value / rhs.value(), derived_units_type{}};
     }    
