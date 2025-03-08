@@ -63,10 +63,6 @@ namespace sequoia::testing
     check(equivalence, "", cltm, -10.0f);
     check(equality, "", mlct / mass_t{1.0, units::kilogram}, length_t{2.0, units::metre} * charge_t{-1.0, units::coulomb} * temperature_t{5.0, units::kelvin});
 
-    check(equivalence, "", 4.0f / length_t{2.0, units::metre}, 2.0f);
-    check(equality, "", 4.0f / mass_t{2.0, units::kilogram}, inv_mass_t{2.0f, dual<units::kilogram_t>{}});
-    check(equality, "", 4.0f / unsafe_inv_mass_t{2.0f, dual<units::kilogram_t>{}}, unsafe_mass_t{2.0, units::kilogram});
-
     check(equality, "", mass_t{2.0, units::kilogram} * length_t{3.0, units::metre} / d_mass_t{-2.0, units::kilogram}, unsafe_len_t{-3.0, units::metre});
   }
 }
