@@ -89,16 +89,13 @@ namespace sequoia
       : std::bool_constant<type_name<T>() < type_name<U>()>
     {};
 
-    template<class T>
-    struct type_comparator<maths::dual<T>, T> : std::false_type
-    {};
-
+    // Ordering is T, displacement_space<T>, dual<T>, dual<displacement_space<T>>
     template<class T>
     struct type_comparator<T, maths::dual<T>> : std::true_type
     {};
-    
+
     template<class T>
-    struct type_comparator<physics::displacement_space<T>, T> : std::false_type
+    struct type_comparator<maths::dual<T>, T> : std::false_type
     {};
 
     template<class T>
@@ -106,11 +103,31 @@ namespace sequoia
     {};
 
     template<class T>
-    struct type_comparator<maths::dual<physics::displacement_space<T>>, T> : std::false_type
+    struct type_comparator<physics::displacement_space<T>, T> : std::false_type
     {};
     
     template<class T>
     struct type_comparator<T, maths::dual<physics::displacement_space<T>>> : std::true_type
+    {};
+
+    template<class T>
+    struct type_comparator<maths::dual<physics::displacement_space<T>>, T> : std::false_type
+    {};
+    
+    template<class T>
+    struct type_comparator<physics::displacement_space<T>, maths::dual<T>> : std::true_type
+    {};
+
+    template<class T>
+    struct type_comparator<maths::dual<T>, physics::displacement_space<T>> : std::false_type
+    {};
+
+    template<class T>
+    struct type_comparator<maths::dual<T>, maths::dual<physics::displacement_space<T>>> : std::true_type
+    {};
+
+    template<class T>
+    struct type_comparator<maths::dual<physics::displacement_space<T>>, maths::dual<T>> : std::false_type
     {};
   }
   
