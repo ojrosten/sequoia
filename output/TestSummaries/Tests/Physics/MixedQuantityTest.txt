@@ -1,2 +1,2 @@
 Mixed Quantity Test
-Standard Top Level Checks:                19;  Failures:  0  [Deep checks: 31]
+Standard Top Level Checks:                18;  Failures:  0  [Deep checks: 29]
