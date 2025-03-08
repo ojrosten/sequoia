@@ -71,6 +71,6 @@ namespace sequoia::testing
     check(equality, "", 1.0f /(1.0f / charge_t{2.0, units::coulomb}), charge_t{2.0, units::coulomb});
     check(equality, "", charge_t{2.0, units::coulomb} /(1.0f / charge_t{2.0, units::coulomb}), charge_t{2.0, units::coulomb} * charge_t{2.0, units::coulomb});
 
-    //check(equality, "", mass_t{2.0, units::kilogram} * length_t{3.0, units::metre} / d_mass_t{-2.0, units::kilogram}, unsafe_len_t{-3.0, units::metre});
+    check(equality, "", mass_t{2.0, units::kilogram} * length_t{3.0, units::metre} / d_mass_t{-2.0, units::kilogram}, unsafe_len_t{-3.0, units::metre});
   }
 }
