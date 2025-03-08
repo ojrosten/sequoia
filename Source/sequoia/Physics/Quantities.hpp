@@ -37,6 +37,7 @@ namespace sequoia
   namespace meta
   {
     template<class T, class U>
+      requires (!std::is_same_v<T, U>)
     struct type_comparator<maths::dual<T>, U> : std::bool_constant<type_name<T>() < type_name<U>()>
     {};
 
@@ -65,10 +66,12 @@ namespace sequoia
     {};
 
     template<class T, class U>
+      requires (!std::is_same_v<T, physics::displacement_space<U>>)
     struct type_comparator<maths::dual<T>, physics::displacement_space<U>> : std::bool_constant<type_name<T>() < type_name<U>()>
     {};
 
     template<class T, class U>
+    requires (!std::is_same_v<physics::displacement_space<T>, U>)
     struct type_comparator<maths::dual<physics::displacement_space<T>>, U>
       : std::bool_constant<type_name<T>() < type_name<U>()>
     {};

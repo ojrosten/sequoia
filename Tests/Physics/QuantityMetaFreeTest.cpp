@@ -40,6 +40,23 @@ namespace sequoia::testing
     using delta_temp_space_t = displacement_space<temp_space_t>;
     using delta_time_space_t = displacement_space<time_space_t>;
 
+    STATIC_CHECK(meta::type_comparator_v<mass_space_t, dual<mass_space_t>>);
+    STATIC_CHECK(!meta::type_comparator_v<dual<mass_space_t>, mass_space_t>);
+    STATIC_CHECK(meta::type_comparator_v<mass_space_t, delta_mass_space_t>);
+    STATIC_CHECK(!meta::type_comparator_v<delta_mass_space_t, mass_space_t>);
+    STATIC_CHECK(meta::type_comparator_v<mass_space_t, dual<delta_mass_space_t>>);
+    STATIC_CHECK(!meta::type_comparator_v<dual<delta_mass_space_t>, mass_space_t>);
+
+    STATIC_CHECK(meta::type_comparator_v<delta_mass_space_t, dual<mass_space_t>>);
+    STATIC_CHECK(!meta::type_comparator_v<dual<mass_space_t>, delta_mass_space_t>);    
+    STATIC_CHECK(meta::type_comparator_v<delta_mass_space_t, dual<delta_mass_space_t>>);
+    STATIC_CHECK(!meta::type_comparator_v<dual<delta_mass_space_t>, delta_mass_space_t>);
+    STATIC_CHECK(meta::type_comparator_v<dual<mass_space_t>, dual<delta_mass_space_t>>);
+    STATIC_CHECK(!meta::type_comparator_v<dual<delta_mass_space_t>, dual<mass_space_t>>);
+
+    STATIC_CHECK(meta::type_comparator_v<delta_mass_space_t, dual<delta_mass_space_t>>);
+    STATIC_CHECK(!meta::type_comparator_v<dual<delta_mass_space_t>, delta_mass_space_t>);
+    
     STATIC_CHECK(si::mass<float>::is_intrinsically_absolute);
  
     STATIC_CHECK(convex_space<mass_space<float>>);
@@ -143,7 +160,5 @@ namespace sequoia::testing
     STATIC_CHECK(std::is_same_v<counter_t<std::tuple<mass_space_t, dual<delta_mass_space_t>>>, std::tuple<type_counter<delta_mass_space_t, 0>>>);
     STATIC_CHECK(std::is_same_v<reduce_t<counter_t<std::tuple<mass_space_t, dual<delta_mass_space_t>>>>, std::tuple<euclidean_vector_space<1, float>>>);
     STATIC_CHECK(std::is_same_v<reduction_t<direct_product<mass_space_t, dual<delta_mass_space_t>>>, euclidean_vector_space<1, float>>);
-
-    STATIC_CHECK(meta::type_comparator_v<delta_mass_space_t, dual<delta_mass_space_t>>);
   }
 }
