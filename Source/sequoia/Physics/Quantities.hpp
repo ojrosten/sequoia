@@ -278,11 +278,11 @@ namespace sequoia::physics
     };
 
     /// Promote all dual<T> to dual<displacement_space<T>>
-    template<class T, int I, class... Ts, int... Is>
+    /*template<class T, int I, class... Ts, int... Is>
     struct counter<dual<displacement_space<T>>, std::tuple<type_counter<dual<T>, I>, type_counter<Ts, Is>...>>
     {
       using type = std::tuple<type_counter<dual<displacement_space<T>>, I+1>, type_counter<Ts, Is>...>;
-    };
+      };*/
 
     /// Promote all T to displacement_space<T>
     template<class T, int I, class... Ts, int... Is>
@@ -292,17 +292,26 @@ namespace sequoia::physics
     };
 
     /// Promote all dual<T> to dual<displacement_space<T>>
-    template<class T, int I, class... Ts, int... Is>
+    /*template<class T, int I, class... Ts, int... Is>
     struct counter<displacement_space<T>, std::tuple<type_counter<dual<T>, I>, type_counter<Ts, Is>...>>
     {
       using type = std::tuple<type_counter<dual<displacement_space<T>>, I-1>, type_counter<Ts, Is>...>;
-    };
+      };*/
 
+    /// Promote dual<T> to displacement_space<T>
     template<class T, int I, class... Ts, int... Is>
     struct counter<dual<T>, std::tuple<type_counter<displacement_space<T>, I>, type_counter<Ts, Is>...>>
     {
       using type = std::tuple<type_counter<displacement_space<T>, I-1>, type_counter<Ts, Is>...>;
     };
+
+    /// Promote dual<T> to dual<displacement_space<T>>
+    template<class T, int I, class... Ts, int... Is>
+    struct counter<dual<displacement_space<T>>, std::tuple<type_counter<dual<T>, I>, type_counter<Ts, Is>...>>
+    {
+      using type = std::tuple<type_counter<dual<displacement_space<T>>, I+1>, type_counter<Ts, Is>...>;
+    };
+
 
     template<class>
     struct to_dual;
