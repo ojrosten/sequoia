@@ -385,7 +385,23 @@ namespace sequoia::maths
   using is_dual_t = is_dual<C>::type;
 
   template<class C>
-  inline constexpr bool is_dual_v{is_dual<C>::value}; 
+  inline constexpr bool is_dual_v{is_dual<C>::value};
+
+  template<class>
+  struct dual_of;
+
+  template<class T>
+  using dual_of_t = dual_of<T>::type;
+
+  template<class C>
+  struct dual_of {
+    using type = dual<C>;
+  };
+
+  template<class C>
+  struct dual_of<dual<C>> {
+    using type = C;
+  };
 }
 
 namespace sequoia::maths

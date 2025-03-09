@@ -60,37 +60,6 @@ namespace sequoia::physics
   template<class T>
   struct reduction;
 
-  namespace impl
-  {
-    template<class>
-    struct dual_of;
-
-    template<class T>
-    using dual_of_t = dual_of<T>::type;
-
-    template<class C>
-    struct dual_of {
-      using type = dual<C>;
-    };
-
-    template<class C>
-    struct dual_of<dual<C>> {
-      using type = C;
-    };
-
-    template<convex_space... Ts>
-    struct dual_of<reduction<direct_product<std::tuple<Ts...>>>>
-    {
-      using type = reduction<direct_product<std::tuple<dual_of_t<Ts>...>>>;
-    };
-
-    template<quantity_unit... Ts>
-    struct dual_of<composite_unit<std::tuple<Ts...>>>
-    {
-      using type = composite_unit<std::tuple<dual_of_t<Ts>...>>;
-    };
-  }
-
   template<class T>
   using reduction_t = reduction<T>::type;
 
@@ -376,7 +345,6 @@ namespace sequoia::physics
     [[nodiscard]]
     friend constexpr auto operator/(const quantity& lhs, const quantity<RHSQuantitySpace, RHSUnit, RHSValidator>& rhs)
     {
-      using impl::dual_of_t;
       using quantity_t = quantity_product_t<quantity, quantity<dual_of_t<RHSQuantitySpace>, dual_of_t<RHSUnit>, RHSValidator>>;
       using derived_units_type = quantity_t::units_type;
       return quantity_t{lhs.value() / rhs.value(), derived_units_type{}};
@@ -385,7 +353,6 @@ namespace sequoia::physics
     [[nodiscard]] friend constexpr auto operator/(value_type value, const quantity& rhs)
       requires ((D == 1) && (is_intrinsically_absolute || vector_space<QuantitySpace>))
     {
-      using impl::dual_of_t;
       using quantity_t = quantity<dual_of_t<QuantitySpace>, dual_of_t<Unit>, validator_type>;
       using derived_units_type = quantity_t::units_type;
       return quantity_t{value / rhs.value(), derived_units_type{}};

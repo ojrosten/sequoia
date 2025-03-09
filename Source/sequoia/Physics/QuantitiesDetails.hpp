@@ -40,6 +40,9 @@ namespace sequoia
     concept quantity_unit = requires {
       typename T::validator_type;
     };
+
+      template<class T>
+      struct reduction;
   };
 
     
@@ -390,4 +393,19 @@ namespace sequoia::physics
                                       physics::composite_unit<reduced_tuple_type>>;
     };
   }
+}
+
+namespace sequoia::maths
+{
+  template<convex_space... Ts>
+  struct dual_of<physics::reduction<direct_product<std::tuple<Ts...>>>>
+  {
+    using type = physics::reduction<direct_product<std::tuple<dual_of_t<Ts>...>>>;
+  };
+
+  template<physics::quantity_unit... Ts>
+  struct dual_of<physics::composite_unit<std::tuple<Ts...>>>
+  {
+    using type = physics::composite_unit<std::tuple<dual_of_t<Ts>...>>;
+  };
 }
