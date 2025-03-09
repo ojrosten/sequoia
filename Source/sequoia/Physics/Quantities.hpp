@@ -86,7 +86,7 @@ namespace sequoia::physics
   {
     using type = reduction<direct_product<std::tuple<Ts...>>>;
   };
-    
+
   template<physics::quantity_unit T, physics::quantity_unit U>
   struct reduction<std::tuple<T, U>>
   {
