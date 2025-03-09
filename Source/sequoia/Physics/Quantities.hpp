@@ -11,58 +11,51 @@
 
 #include "sequoia/Physics/QuantitiesDetails.hpp"
 
-namespace sequoia
-{  
-  namespace physics
-  {    
-    template<class... Ts>
-    struct reduced_validator;
-
-    template<class... Ts>
-    using reduced_validator_t = reduced_validator<Ts...>::type;
-
-    template<class T>
-    struct reduced_validator<T>
-    {
-      using type = T;
-    };
-
-    template<class T, class... Us>
-    struct reduced_validator<T, Us...>
-    {
-      using type = reduced_validator_t<T, reduced_validator_t<Us...>>;
-    };
-
-    struct no_unit_t
-    {
-      using validator_type = maths::half_space_validator;
-    };
-
-    inline constexpr no_unit_t no_unit{};
-
-    // Ts are assumed to be ordered
-    template<physics::quantity_unit... Ts>
-    struct composite_unit<std::tuple<Ts...>>
-    {
-      using validator_type = reduced_validator_t<typename Ts::validator_type...>;
-    };
-  }
-
-  namespace maths
+namespace sequoia::maths
+{
+  template<physics::quantity_unit T>
+  struct dual<T>
   {
-    template<physics::quantity_unit T>
-    struct dual<T>
-    {
-      // TO DO: this doesn't hold for all validators!
-      using validator_type = T::validator_type;
-    };    
-  }
+    // TO DO: this doesn't hold for all validators!
+    using validator_type = T::validator_type;
+  };    
 }
-
 
 namespace sequoia::physics
 {
   using namespace maths;
+
+  template<class... Ts>
+  struct reduced_validator;
+
+  template<class... Ts>
+  using reduced_validator_t = reduced_validator<Ts...>::type;
+
+  template<class T>
+  struct reduced_validator<T>
+  {
+    using type = T;
+  };
+
+  template<class T, class... Us>
+  struct reduced_validator<T, Us...>
+  {
+    using type = reduced_validator_t<T, reduced_validator_t<Us...>>;
+  };
+
+  struct no_unit_t
+  {
+    using validator_type = maths::half_space_validator;
+  };
+
+  inline constexpr no_unit_t no_unit{};
+
+  // Ts are assumed to be ordered
+  template<physics::quantity_unit... Ts>
+  struct composite_unit<std::tuple<Ts...>>
+  {
+    using validator_type = reduced_validator_t<typename Ts::validator_type...>;
+  };
   
   template<class T>
   struct reduction;
@@ -70,31 +63,31 @@ namespace sequoia::physics
   namespace impl
   {
     template<class>
-    struct to_dual;
+    struct dual_of;
 
     template<class T>
-    using to_dual_t = to_dual<T>::type;
+    using dual_of_t = dual_of<T>::type;
 
     template<class C>
-    struct to_dual {
+    struct dual_of {
       using type = dual<C>;
     };
 
     template<class C>
-    struct to_dual<dual<C>> {
+    struct dual_of<dual<C>> {
       using type = C;
     };
 
     template<convex_space... Ts>
-    struct to_dual<reduction<direct_product<std::tuple<Ts...>>>>
+    struct dual_of<reduction<direct_product<std::tuple<Ts...>>>>
     {
-      using type = reduction<direct_product<std::tuple<to_dual_t<Ts>...>>>;
+      using type = reduction<direct_product<std::tuple<dual_of_t<Ts>...>>>;
     };
 
     template<quantity_unit... Ts>
-    struct to_dual<composite_unit<std::tuple<Ts...>>>
+    struct dual_of<composite_unit<std::tuple<Ts...>>>
     {
-      using type = composite_unit<std::tuple<to_dual_t<Ts>...>>;
+      using type = composite_unit<std::tuple<dual_of_t<Ts>...>>;
     };
   }
 
@@ -383,8 +376,8 @@ namespace sequoia::physics
     [[nodiscard]]
     friend constexpr auto operator/(const quantity& lhs, const quantity<RHSQuantitySpace, RHSUnit, RHSValidator>& rhs)
     {
-      using impl::to_dual_t;
-      using quantity_t = quantity_product_t<quantity, quantity<to_dual_t<RHSQuantitySpace>, to_dual_t<RHSUnit>, RHSValidator>>;
+      using impl::dual_of_t;
+      using quantity_t = quantity_product_t<quantity, quantity<dual_of_t<RHSQuantitySpace>, dual_of_t<RHSUnit>, RHSValidator>>;
       using derived_units_type = quantity_t::units_type;
       return quantity_t{lhs.value() / rhs.value(), derived_units_type{}};
     }
@@ -392,8 +385,8 @@ namespace sequoia::physics
     [[nodiscard]] friend constexpr auto operator/(value_type value, const quantity& rhs)
       requires ((D == 1) && (is_intrinsically_absolute || vector_space<QuantitySpace>))
     {
-      using impl::to_dual_t;
-      using quantity_t = quantity<to_dual_t<QuantitySpace>, to_dual_t<Unit>, validator_type>;
+      using impl::dual_of_t;
+      using quantity_t = quantity<dual_of_t<QuantitySpace>, dual_of_t<Unit>, validator_type>;
       using derived_units_type = quantity_t::units_type;
       return quantity_t{value / rhs.value(), derived_units_type{}};
     }    
