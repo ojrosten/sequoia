@@ -105,6 +105,7 @@
 #include "Physics/MixedQuantityTest.hpp"
 #include "Physics/QuantityMetaFreeTest.hpp"
 #include "Physics/QuantityTestingDiagnostics.hpp"
+#include "Physics/UnsafeAbsoluteQuantityTest.hpp"
 #include "Physics/VectorQuantityTest.hpp"
 #include "Runtime/FactoryTest.hpp"
 #include "Runtime/FactoryTestingDiagnostics.hpp"

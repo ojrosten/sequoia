@@ -26,6 +26,7 @@ target_sources(TestChamber PRIVATE
                ${TestDir}/Physics/MixedQuantityTest.cpp
                ${TestDir}/Physics/QuantityMetaFreeTest.cpp               
                ${TestDir}/Physics/QuantityTestingDiagnostics.cpp
+               ${TestDir}/Physics/UnsafeAbsoluteQuantityTest.cpp
                ${TestDir}/Physics/VectorQuantityTest.cpp)
 
 sequoia_finalize_self(TestChamber ${TestDir}/Experimental Experimental)

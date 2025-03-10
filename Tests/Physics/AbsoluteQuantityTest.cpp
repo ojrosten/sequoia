@@ -32,94 +32,59 @@ namespace sequoia::testing
   template<class Quantity>
   void absolute_quantity_test::test_absolute_quantity()
   {
-    {
-      using quantity_t = Quantity;
-      using delta_q_t  = quantity_t::displacement_quantity_type;
-      using space_type = quantity_t::quantity_space_type;
-      using value_type = quantity_t::value_type;
-      using units_type = quantity_t::units_type;
+    using quantity_t = Quantity;
+    using delta_q_t  = quantity_t::displacement_quantity_type;
+    using space_type = quantity_t::quantity_space_type;
+    using value_type = quantity_t::value_type;
+    using units_type = quantity_t::units_type;
 
-      STATIC_CHECK(convex_space<space_type>);
-      STATIC_CHECK(vector_space<typename space_type::vector_space_type>);
-      STATIC_CHECK(can_multiply<quantity_t, value_type>);
-      STATIC_CHECK(can_divide<quantity_t, value_type>);
-      STATIC_CHECK(can_divide<quantity_t, quantity_t>);
-      STATIC_CHECK(can_divide<quantity_t, delta_q_t>);
-      STATIC_CHECK(can_divide<delta_q_t, quantity_t>);
-      STATIC_CHECK(can_divide<delta_q_t, delta_q_t>);
-      STATIC_CHECK(can_add<quantity_t, quantity_t>);
-      STATIC_CHECK(can_add<quantity_t, delta_q_t>);
-      STATIC_CHECK(can_subtract<quantity_t, quantity_t>);
-      STATIC_CHECK(can_subtract<quantity_t, delta_q_t>);
+    STATIC_CHECK(convex_space<space_type>);
+    STATIC_CHECK(vector_space<typename space_type::vector_space_type>);
+    STATIC_CHECK(can_multiply<quantity_t, value_type>);
+    STATIC_CHECK(can_divide<quantity_t, value_type>);
+    STATIC_CHECK(can_divide<quantity_t, quantity_t>);
+    STATIC_CHECK(can_divide<quantity_t, delta_q_t>);
+    STATIC_CHECK(can_divide<delta_q_t, quantity_t>);
+    STATIC_CHECK(can_divide<delta_q_t, delta_q_t>);
+    STATIC_CHECK(can_add<quantity_t, quantity_t>);
+    STATIC_CHECK(can_add<quantity_t, delta_q_t>);
+    STATIC_CHECK(can_subtract<quantity_t, quantity_t>);
+    STATIC_CHECK(can_subtract<quantity_t, delta_q_t>);
 
-      check_exception_thrown<std::domain_error>("Negative quantity", [](){ return quantity_t{-1.0, units_type{}}; });
+    check_exception_thrown<std::domain_error>("Negative quantity", [](){ return quantity_t{-1.0, units_type{}}; });
 
-      coordinates_operations<quantity_t>{*this}.execute();
+    coordinates_operations<quantity_t>{*this}.execute();
 
-      using inv_unit_t = dual<units_type>;
-      using inv_quantity_t = quantity<dual<space_type>, inv_unit_t>;
-      coordinates_operations<inv_quantity_t>{*this}.execute();
+    using inv_unit_t = dual<units_type>;
+    using inv_quantity_t = quantity<dual<space_type>, inv_unit_t>;
+    coordinates_operations<inv_quantity_t>{*this}.execute();
 
-      check(equality, "", (inv_quantity_t{2.0, inv_unit_t{}} * inv_quantity_t{3.0, inv_unit_t{}}) * quantity_t{2.0, units_type{}}, inv_quantity_t{12.0, inv_unit_t{}});
+    check(equality, "", (inv_quantity_t{2.0, inv_unit_t{}} * inv_quantity_t{3.0, inv_unit_t{}}) * quantity_t{2.0, units_type{}}, inv_quantity_t{12.0, inv_unit_t{}});
 
-      check(equivalence, "", 4.0f / quantity_t{2.0, units_type{}}, 2.0f);
-      check(equality, "", 4.0f / quantity_t{2.0, units_type{}}, inv_quantity_t{2.0f, inv_unit_t{}});
+    check(equivalence, "", 4.0f / quantity_t{2.0, units_type{}}, 2.0f);
+    check(equality, "", 4.0f / quantity_t{2.0, units_type{}}, inv_quantity_t{2.0f, inv_unit_t{}});
 
-      using euc_half_space_qty = quantity<euclidean_half_space<1, value_type>, no_unit_t, half_space_validator>;
-      using euc_vec_space_qty  = quantity<euclidean_vector_space<1, value_type>, no_unit_t, std::identity>;
-      check(equality, "", quantity_t{2.0, units_type{}} / quantity_t{1.0, units_type{}}, euc_half_space_qty{2.0, no_unit});
-      check(equality, "", quantity_t{2.0, units_type{}} / delta_q_t{1.0, units_type{}},  euc_vec_space_qty{2.0, no_unit});
-      check(equality, "", delta_q_t{2.0, units_type{}}  / quantity_t{1.0, units_type{}}, euc_vec_space_qty{2.0, no_unit});
+    using euc_half_space_qty = quantity<euclidean_half_space<1, value_type>, no_unit_t, half_space_validator>;
+    using euc_vec_space_qty  = quantity<euclidean_vector_space<1, value_type>, no_unit_t, std::identity>;
+    check(equality, "", quantity_t{2.0, units_type{}} / quantity_t{1.0, units_type{}}, euc_half_space_qty{2.0, no_unit});
+    check(equality, "", quantity_t{2.0, units_type{}} / delta_q_t{1.0, units_type{}},  euc_vec_space_qty{2.0, no_unit});
+    check(equality, "", delta_q_t{2.0, units_type{}}  / quantity_t{1.0, units_type{}}, euc_vec_space_qty{2.0, no_unit});
 
-      check(equality, "", (quantity_t{4.0, units_type{}} *  quantity_t{3.0, units_type{}}  /  quantity_t{2.0, units_type{}}) / quantity_t{2.0, units_type{}},   euc_half_space_qty{3.0, no_unit});
-      check(equality, "", (quantity_t{4.0, units_type{}} *  quantity_t{3.0, units_type{}}) / (quantity_t{2.0, units_type{}}  * quantity_t{2.0, units_type{}}),  euc_half_space_qty{3.0, no_unit});
-      check(equality, "",  quantity_t{4.0, units_type{}} * (quantity_t{3.0, units_type{}}  / (quantity_t{2.0, units_type{}}  * quantity_t{2.0, units_type{}})), euc_half_space_qty{3.0, no_unit});
-      check(equality, "",  quantity_t{4.0, units_type{}} * quantity_t{3.0, units_type{}}  * ((1.0 / quantity_t{2.0, units_type{}}) * (1.0 / quantity_t{2.0, units_type{}})), euc_half_space_qty{3.0, no_unit});
+    check(equality, "", (quantity_t{4.0, units_type{}} *  quantity_t{3.0, units_type{}}  /  quantity_t{2.0, units_type{}}) / quantity_t{2.0, units_type{}},   euc_half_space_qty{3.0, no_unit});
+    check(equality, "", (quantity_t{4.0, units_type{}} *  quantity_t{3.0, units_type{}}) / (quantity_t{2.0, units_type{}}  * quantity_t{2.0, units_type{}}),  euc_half_space_qty{3.0, no_unit});
+    check(equality, "",  quantity_t{4.0, units_type{}} * (quantity_t{3.0, units_type{}}  / (quantity_t{2.0, units_type{}}  * quantity_t{2.0, units_type{}})), euc_half_space_qty{3.0, no_unit});
+    check(equality, "",  quantity_t{4.0, units_type{}} * quantity_t{3.0, units_type{}}  * ((1.0 / quantity_t{2.0, units_type{}}) * (1.0 / quantity_t{2.0, units_type{}})), euc_half_space_qty{3.0, no_unit});
 
-      check(equality, "", (quantity_t{4.0, units_type{}} *  quantity_t{3.0, units_type{}}  /  delta_q_t{2.0, units_type{}})  / delta_q_t{-2.0, units_type{}},   euc_vec_space_qty{-3.0, no_unit});
-      check(equality, "", (quantity_t{4.0, units_type{}} *  quantity_t{3.0, units_type{}}) / (delta_q_t{2.0, units_type{}}   * delta_q_t{-2.0, units_type{}}),  euc_vec_space_qty{-3.0, no_unit});
-      check(equality, "",  quantity_t{4.0, units_type{}} * (quantity_t{3.0, units_type{}}  / (delta_q_t{2.0, units_type{}}   * delta_q_t{-2.0, units_type{}})), euc_vec_space_qty{-3.0, no_unit});
+    check(equality, "", (quantity_t{4.0, units_type{}} *  quantity_t{3.0, units_type{}}  /  delta_q_t{2.0, units_type{}})  / delta_q_t{-2.0, units_type{}},   euc_vec_space_qty{-3.0, no_unit});
+    check(equality, "", (quantity_t{4.0, units_type{}} *  quantity_t{3.0, units_type{}}) / (delta_q_t{2.0, units_type{}}   * delta_q_t{-2.0, units_type{}}),  euc_vec_space_qty{-3.0, no_unit});
+    check(equality, "",  quantity_t{4.0, units_type{}} * (quantity_t{3.0, units_type{}}  / (delta_q_t{2.0, units_type{}}   * delta_q_t{-2.0, units_type{}})), euc_vec_space_qty{-3.0, no_unit});
 
-      check(equality, "", (quantity_t{4.0, units_type{}} *  quantity_t{3.0, units_type{}}  / delta_q_t{-2.0, units_type{}})  / quantity_t{2.0, units_type{}},  euc_vec_space_qty{-3.0, no_unit});
-      check(equality, "", (quantity_t{4.0, units_type{}} *  quantity_t{3.0, units_type{}}) / (delta_q_t{-2.0, units_type{}}  * quantity_t{2.0, units_type{}}),  euc_vec_space_qty{-3.0, no_unit});
-      check(equality, "", (quantity_t{4.0, units_type{}} *  quantity_t{3.0, units_type{}}) * ((1.0 / delta_q_t{-2.0, units_type{}})  * (1.0 / quantity_t{2.0, units_type{}})),  euc_vec_space_qty{-3.0, no_unit});      
+    check(equality, "", (quantity_t{4.0, units_type{}} *  quantity_t{3.0, units_type{}}  / delta_q_t{-2.0, units_type{}})  / quantity_t{2.0, units_type{}},  euc_vec_space_qty{-3.0, no_unit});
+    check(equality, "", (quantity_t{4.0, units_type{}} *  quantity_t{3.0, units_type{}}) / (delta_q_t{-2.0, units_type{}}  * quantity_t{2.0, units_type{}}),  euc_vec_space_qty{-3.0, no_unit});
+    check(equality, "", (quantity_t{4.0, units_type{}} *  quantity_t{3.0, units_type{}}) * ((1.0 / delta_q_t{-2.0, units_type{}})  * (1.0 / quantity_t{2.0, units_type{}})),  euc_vec_space_qty{-3.0, no_unit});      
 
-      check(equality, "", (delta_q_t{4.0, units_type{}} *  delta_q_t{-3.0, units_type{}}  /  quantity_t{2.0, units_type{}})  / quantity_t{2.0, units_type{}},   euc_vec_space_qty{-3.0, no_unit});
-      check(equality, "", (delta_q_t{4.0, units_type{}} *  delta_q_t{-3.0, units_type{}}) / (quantity_t{2.0, units_type{}}   * quantity_t{2.0, units_type{}}),  euc_vec_space_qty{-3.0, no_unit});
-      check(equality, "",  delta_q_t{4.0, units_type{}} * (delta_q_t{-3.0, units_type{}}  / (quantity_t{2.0, units_type{}}   * quantity_t{2.0, units_type{}})), euc_vec_space_qty{-3.0, no_unit});
-    }
-
-    {
-      using space_type   = typename Quantity::quantity_space_type;
-      using unsafe_qty_t = quantity<space_type, typename Quantity::units_type, std::identity>;
-      using delta_q_t    = unsafe_qty_t::displacement_quantity_type;
-      using units_type   = unsafe_qty_t::units_type;
-      using value_type   = unsafe_qty_t::value_type;
-
-      STATIC_CHECK(can_multiply<unsafe_qty_t, value_type>);
-      STATIC_CHECK(can_divide<unsafe_qty_t, value_type>);
-      STATIC_CHECK(can_divide<unsafe_qty_t, unsafe_qty_t>);
-      STATIC_CHECK(can_divide<unsafe_qty_t, delta_q_t>);
-      STATIC_CHECK(can_divide<delta_q_t, unsafe_qty_t>);
-      STATIC_CHECK(can_divide<delta_q_t, delta_q_t>);
-      STATIC_CHECK(can_add<unsafe_qty_t, unsafe_qty_t>);
-      STATIC_CHECK(can_add<unsafe_qty_t, delta_q_t>);
-      STATIC_CHECK(can_subtract<unsafe_qty_t, unsafe_qty_t>);
-      STATIC_CHECK(can_subtract<unsafe_qty_t, delta_q_t>);
-
-      coordinates_operations<unsafe_qty_t>{*this}.execute();
-
-      using inv_unit_t = dual<units_type>;
-      using unsafe_inv_quantity_t = quantity<dual<space_type>, inv_unit_t, std::identity>;
-      coordinates_operations<unsafe_inv_quantity_t>{*this}.execute();
-
-      using unsafe_euc_half_space_qty = quantity<euclidean_half_space<1, value_type>, no_unit_t, std::identity>;
-      using euc_vec_space_qty = quantity<euclidean_vector_space<1, value_type>, no_unit_t, std::identity>;
-      check(equality, "", unsafe_qty_t{2.0, units_type{}}  / unsafe_qty_t {-1.0, units_type{}}, unsafe_euc_half_space_qty{-2.0f, no_unit});
-      check(equality, "", unsafe_qty_t{-2.0, units_type{}} / delta_q_t{1.0, units_type{}},      euc_vec_space_qty{-2.0, no_unit});
-      check(equality, "", delta_q_t{-2.0, units_type{}}    / unsafe_qty_t{1.0, units_type{}},   euc_vec_space_qty{-2.0, no_unit});
-     
-      check(equality, "", 4.0f / unsafe_inv_quantity_t{2.0f, inv_unit_t{}}, unsafe_qty_t{2.0, units_type{}});
-    }
+    check(equality, "", (delta_q_t{4.0, units_type{}} *  delta_q_t{-3.0, units_type{}}  /  quantity_t{2.0, units_type{}})  / quantity_t{2.0, units_type{}},   euc_vec_space_qty{-3.0, no_unit});
+    check(equality, "", (delta_q_t{4.0, units_type{}} *  delta_q_t{-3.0, units_type{}}) / (quantity_t{2.0, units_type{}}   * quantity_t{2.0, units_type{}}),  euc_vec_space_qty{-3.0, no_unit});
+    check(equality, "",  delta_q_t{4.0, units_type{}} * (delta_q_t{-3.0, units_type{}}  / (quantity_t{2.0, units_type{}}   * quantity_t{2.0, units_type{}})), euc_vec_space_qty{-3.0, no_unit});
   }
 }

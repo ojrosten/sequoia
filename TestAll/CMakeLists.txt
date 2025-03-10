@@ -114,6 +114,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Physics/MixedQuantityTest.cpp
                ${TestDir}/Physics/QuantityMetaFreeTest.cpp               
                ${TestDir}/Physics/QuantityTestingDiagnostics.cpp
+               ${TestDir}/Physics/UnsafeAbsoluteQuantityTest.cpp
                ${TestDir}/Physics/VectorQuantityTest.cpp
                ${TestDir}/Runtime/FactoryTest.cpp
                ${TestDir}/Runtime/FactoryTestingDiagnostics.cpp

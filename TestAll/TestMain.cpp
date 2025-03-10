@@ -408,6 +408,7 @@ int main(int argc, char** argv)
       quantity_meta_free_test{"Quantity Meta Free Test"},
       quantity_false_negative_test{"False Negative Test"},
       absolute_quantity_test{"Absolute Quantity Test"},
+      unsafe_absolute_quantity_test{"Unsafe Absolute Quantity Test"},
       affine_quantity_test{"Affine Quantity Test"},
       convex_quantity_test{"Convex Quantity Test"},
       vector_quantity_test{"Vector Quantity Test"},
