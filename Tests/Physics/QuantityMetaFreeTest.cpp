@@ -123,42 +123,42 @@ namespace sequoia::testing
 
     using namespace physics::impl;
 
-    STATIC_CHECK(std::is_same_v<counter_t<std::tuple<>>, std::tuple<>>);
-    STATIC_CHECK(std::is_same_v<counter_t<mass_space_t>,       std::tuple<type_counter<mass_space_t, 1>>>);
-    STATIC_CHECK(std::is_same_v<counter_t<dual<mass_space_t>>, std::tuple<type_counter<dual<mass_space_t>, 1>>>);
-    STATIC_CHECK(std::is_same_v<counter_t<std::tuple<mass_space_t>>,       std::tuple<type_counter<mass_space_t, 1>>>);
-    STATIC_CHECK(std::is_same_v<counter_t<std::tuple<dual<mass_space_t>>>, std::tuple<type_counter<dual<mass_space_t>, 1>>>);
-    STATIC_CHECK(std::is_same_v<counter_t<std::tuple<mass_space_t, mass_space_t>>,             std::tuple<type_counter<mass_space_t, 2>>>);
-    STATIC_CHECK(std::is_same_v<counter_t<std::tuple<mass_space_t, dual<mass_space_t>>>,       std::tuple<type_counter<mass_space_t, 0>>>);
-    STATIC_CHECK(std::is_same_v<counter_t<std::tuple<dual<mass_space_t>, dual<mass_space_t>>>, std::tuple<type_counter<dual<mass_space_t>,2 >>>);
+    STATIC_CHECK(std::is_same_v<count_and_combine_t<std::tuple<>>, std::tuple<>>);
+    STATIC_CHECK(std::is_same_v<count_and_combine_t<mass_space_t>,       std::tuple<type_counter<mass_space_t, 1>>>);
+    STATIC_CHECK(std::is_same_v<count_and_combine_t<dual<mass_space_t>>, std::tuple<type_counter<dual<mass_space_t>, 1>>>);
+    STATIC_CHECK(std::is_same_v<count_and_combine_t<std::tuple<mass_space_t>>,       std::tuple<type_counter<mass_space_t, 1>>>);
+    STATIC_CHECK(std::is_same_v<count_and_combine_t<std::tuple<dual<mass_space_t>>>, std::tuple<type_counter<dual<mass_space_t>, 1>>>);
+    STATIC_CHECK(std::is_same_v<count_and_combine_t<std::tuple<mass_space_t, mass_space_t>>,             std::tuple<type_counter<mass_space_t, 2>>>);
+    STATIC_CHECK(std::is_same_v<count_and_combine_t<std::tuple<mass_space_t, dual<mass_space_t>>>,       std::tuple<type_counter<mass_space_t, 0>>>);
+    STATIC_CHECK(std::is_same_v<count_and_combine_t<std::tuple<dual<mass_space_t>, dual<mass_space_t>>>, std::tuple<type_counter<dual<mass_space_t>,2 >>>);
 
-    STATIC_CHECK((std::is_same_v<counter_t<std::tuple<length_space_t, mass_space_t, dual<mass_space_t>>>,
+    STATIC_CHECK((std::is_same_v<count_and_combine_t<std::tuple<length_space_t, mass_space_t, dual<mass_space_t>>>,
                                  std::tuple<type_counter<mass_space_t, 0>, type_counter<length_space_t, 1>>>));
-    STATIC_CHECK((std::is_same_v<counter_t<std::tuple<dual<length_space_t>, mass_space_t, dual<mass_space_t>>>,
+    STATIC_CHECK((std::is_same_v<count_and_combine_t<std::tuple<dual<length_space_t>, mass_space_t, dual<mass_space_t>>>,
                                  std::tuple<type_counter<mass_space_t, 0>, type_counter<dual<length_space_t>, 1>>>));
 
-    STATIC_CHECK((std::is_same_v<counter_t<std::tuple<length_space_t, mass_space_t, dual<mass_space_t>, temp_space_t>>,
+    STATIC_CHECK((std::is_same_v<count_and_combine_t<std::tuple<length_space_t, mass_space_t, dual<mass_space_t>, temp_space_t>>,
                                  std::tuple<type_counter<temp_space_t, 1>, type_counter<mass_space_t, 0>, type_counter<length_space_t, 1>>>));
 
-    STATIC_CHECK(std::is_same_v<reduce_t<counter_t<mass_space_t>>,       std::tuple<mass_space_t>>);
-    STATIC_CHECK(std::is_same_v<reduce_t<counter_t<dual<mass_space_t>>>, std::tuple<dual<mass_space_t>>>);
-    STATIC_CHECK(std::is_same_v<reduce_t<counter_t<std::tuple<mass_space_t, mass_space_t>>>,  std::tuple<mass_space_t, mass_space_t>>);
-    STATIC_CHECK(std::is_same_v<reduce_t<counter_t<std::tuple<mass_space_t, dual<mass_space_t>>>>,  std::tuple<euclidean_half_space<1, float>>>);
+    STATIC_CHECK(std::is_same_v<reduce_t<count_and_combine_t<mass_space_t>>,       std::tuple<mass_space_t>>);
+    STATIC_CHECK(std::is_same_v<reduce_t<count_and_combine_t<dual<mass_space_t>>>, std::tuple<dual<mass_space_t>>>);
+    STATIC_CHECK(std::is_same_v<reduce_t<count_and_combine_t<std::tuple<mass_space_t, mass_space_t>>>,  std::tuple<mass_space_t, mass_space_t>>);
+    STATIC_CHECK(std::is_same_v<reduce_t<count_and_combine_t<std::tuple<mass_space_t, dual<mass_space_t>>>>,  std::tuple<euclidean_half_space<1, float>>>);
 
     STATIC_CHECK((std::is_same_v<simplify_t<std::tuple<length_space_t, mass_space_t, dual<mass_space_t>, temp_space_t>>,
                                  std::tuple<length_space_t, temp_space_t>>));
 
-    STATIC_CHECK(std::is_same_v<counter_t<units::kilogram_t>,       std::tuple<type_counter<units::kilogram_t, 1>>>);
-    STATIC_CHECK(std::is_same_v<counter_t<dual<units::kilogram_t>>,  std::tuple<type_counter<dual<units::kilogram_t>, 1>>>);
-    STATIC_CHECK(std::is_same_v<counter_t<std::tuple<units::kilogram_t>>,       std::tuple<type_counter<units::kilogram_t, 1>>>);
-    STATIC_CHECK(std::is_same_v<counter_t<std::tuple<dual<units::kilogram_t>>>, std::tuple<type_counter<dual<units::kilogram_t>, 1>>>);
-    STATIC_CHECK(std::is_same_v<counter_t<std::tuple<units::kilogram_t, units::kilogram_t>>,             std::tuple<type_counter<units::kilogram_t, 2>>>);
-    STATIC_CHECK(std::is_same_v<counter_t<std::tuple<units::kilogram_t, dual<units::kilogram_t>>>,       std::tuple<type_counter<units::kilogram_t, 0>>>);
-    STATIC_CHECK(std::is_same_v<counter_t<std::tuple<dual<units::kilogram_t>, dual<units::kilogram_t>>>, std::tuple<type_counter<dual<units::kilogram_t>,2 >>>);
-    STATIC_CHECK(std::is_same_v<reduce_t<counter_t<std::tuple<units::kilogram_t, dual<units::kilogram_t>>>>,  std::tuple<no_unit_t>>);
+    STATIC_CHECK(std::is_same_v<count_and_combine_t<units::kilogram_t>,       std::tuple<type_counter<units::kilogram_t, 1>>>);
+    STATIC_CHECK(std::is_same_v<count_and_combine_t<dual<units::kilogram_t>>,  std::tuple<type_counter<dual<units::kilogram_t>, 1>>>);
+    STATIC_CHECK(std::is_same_v<count_and_combine_t<std::tuple<units::kilogram_t>>,       std::tuple<type_counter<units::kilogram_t, 1>>>);
+    STATIC_CHECK(std::is_same_v<count_and_combine_t<std::tuple<dual<units::kilogram_t>>>, std::tuple<type_counter<dual<units::kilogram_t>, 1>>>);
+    STATIC_CHECK(std::is_same_v<count_and_combine_t<std::tuple<units::kilogram_t, units::kilogram_t>>,             std::tuple<type_counter<units::kilogram_t, 2>>>);
+    STATIC_CHECK(std::is_same_v<count_and_combine_t<std::tuple<units::kilogram_t, dual<units::kilogram_t>>>,       std::tuple<type_counter<units::kilogram_t, 0>>>);
+    STATIC_CHECK(std::is_same_v<count_and_combine_t<std::tuple<dual<units::kilogram_t>, dual<units::kilogram_t>>>, std::tuple<type_counter<dual<units::kilogram_t>,2 >>>);
+    STATIC_CHECK(std::is_same_v<reduce_t<count_and_combine_t<std::tuple<units::kilogram_t, dual<units::kilogram_t>>>>,  std::tuple<no_unit_t>>);
     
-    STATIC_CHECK(std::is_same_v<counter_t<std::tuple<mass_space_t, dual<delta_mass_space_t>>>, std::tuple<type_counter<delta_mass_space_t, 0>>>);
-    STATIC_CHECK(std::is_same_v<reduce_t<counter_t<std::tuple<mass_space_t, dual<delta_mass_space_t>>>>, std::tuple<euclidean_vector_space<1, float>>>);
+    STATIC_CHECK(std::is_same_v<count_and_combine_t<std::tuple<mass_space_t, dual<delta_mass_space_t>>>, std::tuple<type_counter<delta_mass_space_t, 0>>>);
+    STATIC_CHECK(std::is_same_v<reduce_t<count_and_combine_t<std::tuple<mass_space_t, dual<delta_mass_space_t>>>>, std::tuple<euclidean_vector_space<1, float>>>);
     STATIC_CHECK(std::is_same_v<reduction_t<direct_product<mass_space_t, dual<delta_mass_space_t>>>, euclidean_vector_space<1, float>>);
   }
 }

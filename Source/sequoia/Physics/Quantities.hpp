@@ -56,7 +56,8 @@ namespace sequoia::physics
   {
     using validator_type = reduced_validator_t<typename Ts::validator_type...>;
   };
-  
+
+  /// \class Primary class template for the reduction of direct products to a lower dimensional space
   template<class T>
   struct reduction;
 

@@ -152,98 +152,98 @@ namespace sequoia::physics::impl
 
   /// \class Primary class template for counting and combinging instances of various types
   template<class...>
-  struct counter;
+  struct count_and_combine;
 
   template<class... Ts>
-  using counter_t = counter<Ts...>::type;
+  using count_and_combine_t = count_and_combine<Ts...>::type;
 
   template<>
-  struct counter<std::tuple<>>
+  struct count_and_combine<std::tuple<>>
   {
     using type = std::tuple<>;
   };
 
   template<class T>
-  struct counter<T>
+  struct count_and_combine<T>
   {
     using type = std::tuple<type_counter<T, 1>>;
   };
 
   template<class T>
-  struct counter<std::tuple<T>>
+  struct count_and_combine<std::tuple<T>>
   {
     using type = std::tuple<type_counter<T, 1>>;
   };
     
   template<class T, class... Ts>
-  struct counter<std::tuple<T, Ts...>>
+  struct count_and_combine<std::tuple<T, Ts...>>
   {
-    using type = counter_t<std::tuple<Ts...>, counter_t<T>>;
+    using type = count_and_combine_t<std::tuple<Ts...>, count_and_combine_t<T>>;
   };
 
   template<class T, class... Us, int... Is>
-  struct counter<std::tuple<T>, std::tuple<type_counter<Us, Is>...>>
+  struct count_and_combine<std::tuple<T>, std::tuple<type_counter<Us, Is>...>>
   {
-    using type = counter_t<T, std::tuple<type_counter<Us, Is>...>>;
+    using type = count_and_combine_t<T, std::tuple<type_counter<Us, Is>...>>;
   };
 
   template<class T, class... Ts, class... Us, int... Is>
     requires (sizeof...(Ts) > 0)
-  struct counter<std::tuple<T, Ts...>, std::tuple<type_counter<Us, Is>...>>
+  struct count_and_combine<std::tuple<T, Ts...>, std::tuple<type_counter<Us, Is>...>>
   {
-    using type = counter_t<std::tuple<Ts...>, counter_t<T, std::tuple<type_counter<Us, Is>...>>>;
+    using type = count_and_combine_t<std::tuple<Ts...>, count_and_combine_t<T, std::tuple<type_counter<Us, Is>...>>>;
   };
    
   template<class S, class T, int I, class... Ts, int... Is>
     requires (!is_tuple_v<S> && !is_dual_v<S> && !std::is_same_v<S, T>)
-  struct counter<S, std::tuple<type_counter<T, I>, type_counter<Ts, Is>...>>
+  struct count_and_combine<S, std::tuple<type_counter<T, I>, type_counter<Ts, Is>...>>
   {
     using type = std::tuple<type_counter<S, 1>, type_counter<T, I>, type_counter<Ts, Is>...>;
   };
 
   template<class S, class T, int I, class... Ts, int... Is>
     requires (!std::is_same_v<S, T> && !is_dual_v<T>)
-  struct counter<dual<S>, std::tuple<type_counter<T, I>, type_counter<Ts, Is>...>>
+  struct count_and_combine<dual<S>, std::tuple<type_counter<T, I>, type_counter<Ts, Is>...>>
   {
     using type = std::tuple<type_counter<dual<S>, 1>, type_counter<T, I>, type_counter<Ts, Is>...>;
   };
 
   template<class T, int I, class... Ts, int... Is>
-  struct counter<T, std::tuple<type_counter<T, I>, type_counter<Ts, Is>...>>
+  struct count_and_combine<T, std::tuple<type_counter<T, I>, type_counter<Ts, Is>...>>
   {
     using type = std::tuple<type_counter<T, I+1>, type_counter<Ts, Is>...>;
   };
 
   template<class T, int I, class... Ts, int... Is>
-  struct counter<dual<T>, std::tuple<type_counter<T, I>, type_counter<Ts, Is>...>>
+  struct count_and_combine<dual<T>, std::tuple<type_counter<T, I>, type_counter<Ts, Is>...>>
   {
     using type = std::tuple<type_counter<T, I-1>, type_counter<Ts, Is>...>;
   };
 
   /// Promote all T to displacement_space<T>
   template<class T, int I, class... Ts, int... Is>
-  struct counter<displacement_space<T>, std::tuple<type_counter<T, I>, type_counter<Ts, Is>...>>
+  struct count_and_combine<displacement_space<T>, std::tuple<type_counter<T, I>, type_counter<Ts, Is>...>>
   {
     using type = std::tuple<type_counter<displacement_space<T>, I+1>, type_counter<Ts, Is>...>;
   };
 
   /// Promote all T to displacement_space<T>
   template<class T, int I, class... Ts, int... Is>
-  struct counter<dual<displacement_space<T>>, std::tuple<type_counter<T, I>, type_counter<Ts, Is>...>>
+  struct count_and_combine<dual<displacement_space<T>>, std::tuple<type_counter<T, I>, type_counter<Ts, Is>...>>
   {
     using type = std::tuple<type_counter<displacement_space<T>, I-1>, type_counter<Ts, Is>...>;
   };
 
   /// Promote dual<T> to displacement_space<T>
   template<class T, int I, class... Ts, int... Is>
-  struct counter<dual<T>, std::tuple<type_counter<displacement_space<T>, I>, type_counter<Ts, Is>...>>
+  struct count_and_combine<dual<T>, std::tuple<type_counter<displacement_space<T>, I>, type_counter<Ts, Is>...>>
   {
     using type = std::tuple<type_counter<displacement_space<T>, I-1>, type_counter<Ts, Is>...>;
   };
 
   /// Promote dual<T> to dual<displacement_space<T>>
   template<class T, int I, class... Ts, int... Is>
-  struct counter<dual<displacement_space<T>>, std::tuple<type_counter<dual<T>, I>, type_counter<Ts, Is>...>>
+  struct count_and_combine<dual<displacement_space<T>>, std::tuple<type_counter<dual<T>, I>, type_counter<Ts, Is>...>>
   {
     using type = std::tuple<type_counter<dual<displacement_space<T>>, I+1>, type_counter<Ts, Is>...>;
   };
@@ -291,7 +291,7 @@ namespace sequoia::physics::impl
     using type = std::tuple<Ts...>;
   };
 
-  /// \class Primary class template for the reduction  of direct products to a lower dimensional space    
+  /// \class Primary class template for aiding the reduction of direct products to a lower dimensional space    
   template<class...>
   struct reduce;
 
@@ -366,7 +366,7 @@ namespace sequoia::physics::impl
   template<class... Ts>
   struct simplify<std::tuple<Ts...>>
   {
-    using type = reduce_t<counter_t<std::tuple<Ts...>>>;
+    using type = reduce_t<count_and_combine_t<std::tuple<Ts...>>>;
   };
 
   template<convex_space... Ts>
