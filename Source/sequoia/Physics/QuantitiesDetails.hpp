@@ -193,16 +193,16 @@ namespace sequoia::physics::impl
   {
     using type = count_and_combine_t<std::tuple<Ts...>, count_and_combine_t<T, std::tuple<type_counter<Us, Is>...>>>;
   };
-   
+
   template<class S, class T, int I, class... Ts, int... Is>
-    requires (!is_tuple_v<S> && !is_dual_v<S> && !std::is_same_v<S, T>)
+  requires (!is_tuple_v<S> && !is_dual_v<S> && !std::is_same_v<S, T> && !std::is_same_v<S, displacement_space<T>>)
   struct count_and_combine<S, std::tuple<type_counter<T, I>, type_counter<Ts, Is>...>>
   {
     using type = std::tuple<type_counter<S, 1>, type_counter<T, I>, type_counter<Ts, Is>...>;
   };
 
   template<class S, class T, int I, class... Ts, int... Is>
-    requires (!std::is_same_v<S, T> && !is_dual_v<T>)
+    requires (!std::is_same_v<S, T> && !is_dual_v<T> && !is_displacement_space_v<S> && !is_displacement_space_v<T>)
   struct count_and_combine<dual<S>, std::tuple<type_counter<T, I>, type_counter<Ts, Is>...>>
   {
     using type = std::tuple<type_counter<dual<S>, 1>, type_counter<T, I>, type_counter<Ts, Is>...>;
