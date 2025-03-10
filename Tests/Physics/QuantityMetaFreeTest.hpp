@@ -22,5 +22,19 @@ namespace sequoia::testing
     std::filesystem::path source_file() const;
 
     void run_tests();
+
+    void test_type_comparator();
+
+    void test_space_properties();
+
+    void test_count_and_combine();
+
+    void test_reduce();
+
+    void test_simplify();
+
+    void test_space_reduction();
+
+    void test_units_reduction();
   };
 }
