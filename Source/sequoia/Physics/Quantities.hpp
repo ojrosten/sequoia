@@ -339,8 +339,7 @@ namespace sequoia::physics
       using derived_units_type = quantity_t::units_type;
       return quantity_t{lhs.value() * rhs.value(), derived_units_type{}};
     }
-    
-    // TO DO: ensure e.g. T / Delta T explicitly reduces to a 1D Euclidean vector space
+
     template<convex_space RHSQuantitySpace, class RHSUnit, class RHSValidator>
        requires is_divisible_with<RHSQuantitySpace, RHSUnit, RHSValidator>
     [[nodiscard]]
@@ -362,36 +361,26 @@ namespace sequoia::physics
 
   namespace classical_quantity_sets
   {
+    template<class HostSystem>
     struct masses
     {
-      using topological_space_type = std::true_type;
+      using host_system_type = HostSystem;
     };
 
     struct lengths
-    {
-      using topological_space_type = std::true_type;
-    };
+    {};
 
     struct temperatures
-    {
-      using topological_space_type = std::true_type;
-    };
+    {};
 
     struct electrical_charges
-    {
-      using topological_space_type = std::true_type;
-    };
+    {};
 
-    // Maybe template this on an underlying space
     struct times
-    {
-      using topological_space_type = std::true_type;
-    };
-    
+    {};
+
     struct angles
-    {
-      using topological_space_type = std::true_type;
-    };
+    {};
 
     template<class QuantitySet>
     struct differences
@@ -438,8 +427,10 @@ namespace sequoia::physics
     constexpr static std::size_t dimension{1};
   };
 
-  template<std::floating_point Rep>
-  struct mass_space : quantity_convex_space<classical_quantity_sets::masses, Rep, mass_space<Rep>> {};
+  struct implicit_common_system {};
+
+  template<std::floating_point Rep, class HostSystem=implicit_common_system>
+  struct mass_space : quantity_convex_space<classical_quantity_sets::masses<HostSystem>, Rep, mass_space<Rep>> {};
 
   template<std::floating_point Rep>
   struct length_space : quantity_convex_space<classical_quantity_sets::lengths, Rep, length_space<Rep>> {};
