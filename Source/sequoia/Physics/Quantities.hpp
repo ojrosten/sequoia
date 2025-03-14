@@ -372,17 +372,23 @@ namespace sequoia::physics
       using topological_space_type = std::true_type;
     };
 
-    struct times
-    {
-      using topological_space_type = std::true_type;
-    };
-
     struct temperatures
     {
       using topological_space_type = std::true_type;
     };
 
     struct electrical_charges
+    {
+      using topological_space_type = std::true_type;
+    };
+
+    // Maybe template this on an underlying space
+    struct times
+    {
+      using topological_space_type = std::true_type;
+    };
+    
+    struct angles
     {
       using topological_space_type = std::true_type;
     };
@@ -447,6 +453,9 @@ namespace sequoia::physics
   template<std::floating_point Rep>
   struct electrical_charge_space : quantity_vector_space<classical_quantity_sets::electrical_charges, Rep, electrical_charge_space<Rep>> {};
 
+  template<std::floating_point Rep>
+  struct angular_space : quantity_vector_space<classical_quantity_sets::angles, Rep, angular_space<Rep>> {};
+
   namespace units
   {
     struct kilogram_t
@@ -474,11 +483,17 @@ namespace sequoia::physics
       using validator_type = std::identity;
     };
 
+    struct radian_t
+    {
+      using validator_type = std::identity;
+    };
+
     inline constexpr kilogram_t kilogram{};
     inline constexpr metre_t    metre{};
     inline constexpr second_t   second{};
     inline constexpr kelvin_t   kelvin{};
     inline constexpr coulomb_t  coulomb{};
+    inline constexpr radian_t   radian{};
 
     struct celsius_t
     {
@@ -524,5 +539,8 @@ namespace sequoia::physics
 
     template<std::floating_point T>
     using electrical_charge = quantity<electrical_charge_space<T>, units::coulomb_t>;
+
+    template<std::floating_point T>
+    using angle = quantity<angular_space<T>, units::radian_t>;
   }
 }

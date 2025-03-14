@@ -25,6 +25,7 @@ namespace sequoia::testing
   {
     test_vector_quantity<si::electrical_charge<float>>();
     test_vector_quantity<si::electrical_charge<double>>();
+    test_vector_quantity<si::angle<float>>();
   }
 
   template<class Quantity>
