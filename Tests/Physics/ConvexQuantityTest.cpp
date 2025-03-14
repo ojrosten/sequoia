@@ -23,8 +23,8 @@ namespace sequoia::testing
 
   void convex_quantity_test::run_tests()
   {
-    test_convex_quantity<quantity<temperature_space<float>, units::celsius_t>>();
-    test_convex_quantity<quantity<temperature_space<double>, units::celsius_t>>();
+    test_convex_quantity<quantity<temperature_space<float,  implicit_common_system>, units::celsius_t>>();
+    test_convex_quantity<quantity<temperature_space<double, implicit_common_system>, units::celsius_t>>();
   }
 
   template<class Quantity>
@@ -36,8 +36,8 @@ namespace sequoia::testing
       using space_type = quantity_t::quantity_space_type;
       using units_type = quantity_t::units_type;
 
-      STATIC_CHECK(convex_space<temperature_space<float>>);
-      STATIC_CHECK(vector_space<temperature_space<float>::vector_space_type>);
+      STATIC_CHECK(convex_space<space_type>);
+      STATIC_CHECK(vector_space<typename space_type::vector_space_type>);
       STATIC_CHECK(!can_multiply<quantity_t, float>);
       STATIC_CHECK(!can_multiply<quantity_t, quantity_t>);
       STATIC_CHECK(!can_divide<quantity_t, float>);

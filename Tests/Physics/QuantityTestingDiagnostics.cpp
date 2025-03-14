@@ -21,9 +21,7 @@ namespace sequoia::testing
 
   void quantity_false_negative_test::run_tests()
   {
-    using mass_t = quantity<mass_space<float>, units::kilogram_t>;
-
-    mass_t m{1.0, units::kilogram}, m2{2.0, units::kilogram};
+    si::mass<float> m{1.0, units::kilogram}, m2{2.0, units::kilogram};
     check(equivalence, "", m, 0.0f);
     check(equality, "", m, m2);
   }

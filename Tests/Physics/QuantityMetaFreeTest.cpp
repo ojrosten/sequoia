@@ -21,11 +21,11 @@ namespace sequoia::testing
       requires(T t){ { -t } -> std::same_as<T>; }
     };
 
-    using mass_space_t   = mass_space<float>;
-    using length_space_t = length_space<float>;
-    using temp_space_t   = temperature_space<float>;
-    using time_space_t   = time_space<float>;
-    using electrical_charge_space_t = electrical_charge_space<float>;
+    using mass_space_t   = mass_space<float, implicit_common_system>;
+    using length_space_t = length_space<float, implicit_common_system>;
+    using temp_space_t   = temperature_space<float, implicit_common_system>;
+    using time_space_t   = time_space<float, implicit_common_system>;
+    using electrical_charge_space_t = electrical_charge_space<float, implicit_common_system>;
 
     using delta_mass_space_t = displacement_space<mass_space_t>;
     using delta_len_space_t  = displacement_space<length_space_t>;
@@ -74,8 +74,8 @@ namespace sequoia::testing
   {
     STATIC_CHECK(si::mass<float>::is_intrinsically_absolute);
  
-    STATIC_CHECK(convex_space<mass_space<float>>);
-    STATIC_CHECK(!has_unary_minus<mass_space<float>>);
+    STATIC_CHECK(convex_space<mass_space_t>);
+    STATIC_CHECK(!has_unary_minus<mass_space_t>);
 
     STATIC_CHECK(vector_space<electrical_charge_space_t>);
     STATIC_CHECK(vector_space<delta_mass_space_t>);

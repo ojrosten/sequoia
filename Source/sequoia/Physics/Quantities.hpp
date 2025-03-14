@@ -206,16 +206,49 @@ namespace sequoia::physics
 
   template<quantity_unit Unit>
   struct unit_defined_origin{};
+
+  struct affine_origin {};
+
+  template<convex_space QuantitySpace, quantity_unit Unit>
+  inline constexpr bool has_intrinsic_origin{
+       vector_space<QuantitySpace>
+    || (!affine_space<QuantitySpace> && defines_half_space_v<typename Unit::validator_type>)
+  };
+
+  template<convex_space QuantitySpace, quantity_unit Unit>
+  struct to_origin_type;
+
+  template<convex_space QuantitySpace, quantity_unit Unit>
+    requires (!has_intrinsic_origin<QuantitySpace, Unit>) && (!affine_space<QuantitySpace>)
+  struct to_origin_type<QuantitySpace, Unit>
+  {
+    using type = unit_defined_origin<Unit>;
+  };
+
+  template<convex_space QuantitySpace, quantity_unit Unit>
+  using to_origin_type_t = to_origin_type<QuantitySpace, Unit>::type;
+
+  template<convex_space QuantitySpace, quantity_unit Unit>
+    requires has_intrinsic_origin<QuantitySpace, Unit>
+  struct to_origin_type<QuantitySpace, Unit>
+  {
+    using type = intrinsic_origin;
+  };
+
+  template<convex_space QuantitySpace, quantity_unit Unit>
+    requires   (!has_intrinsic_origin<QuantitySpace, Unit>)
+            && affine_space<QuantitySpace>
+  struct to_origin_type<QuantitySpace, Unit>
+  {
+    using type = affine_origin;
+  };
   
   template<convex_space QuantitySpace, quantity_unit Unit, class Validator>
   using to_coordinates_base_type
     = coordinates_base<
         QuantitySpace,
         to_displacement_basis_t<QuantitySpace, Unit>,
-        // TO DO: figure out if there's a better way of expressing this
-        std::conditional_t<vector_space<QuantitySpace> || defines_half_space_v<typename Unit::validator_type>,
-                           intrinsic_origin,
-                           unit_defined_origin<Unit>>,
+        to_origin_type_t<QuantitySpace, Unit>,
         Validator,
         quantity<vector_space_type_of<QuantitySpace>, Unit, std::identity>>;
   
@@ -442,25 +475,35 @@ namespace sequoia::physics
     constexpr static std::size_t dimension{1};
   };
 
-  struct implicit_common_system {};
+  template<std::floating_point Rep, class HostSystem>
+  struct mass_space
+    : quantity_convex_space<classical_quantity_sets::masses<HostSystem>, Rep, mass_space<Rep, HostSystem>>
+  {};
 
-  template<std::floating_point Rep, class HostSystem=implicit_common_system>
-  struct mass_space : quantity_convex_space<classical_quantity_sets::masses<HostSystem>, Rep, mass_space<Rep>> {};
+  template<std::floating_point Rep, class HostSystem>
+  struct length_space
+    : quantity_convex_space<classical_quantity_sets::lengths<HostSystem>, Rep, length_space<Rep, HostSystem>>
+  {};
 
-  template<std::floating_point Rep, class HostSystem=implicit_common_system>
-  struct length_space : quantity_convex_space<classical_quantity_sets::lengths<HostSystem>, Rep, length_space<Rep>> {};
+  template<std::floating_point Rep, class HostSystem>
+  struct time_space
+    : quantity_affine_space<classical_quantity_sets::times<HostSystem>, Rep, time_space<Rep, HostSystem>>
+  {};
 
-  template<std::floating_point Rep, class HostSystem=implicit_common_system>
-  struct time_space : quantity_affine_space<classical_quantity_sets::times<HostSystem>, Rep, time_space<Rep>> {};
+  template<std::floating_point Rep, class HostSystem>
+  struct temperature_space
+    : quantity_convex_space<classical_quantity_sets::temperatures<HostSystem>, Rep, temperature_space<Rep, HostSystem>>
+  {};
 
-  template<std::floating_point Rep, class HostSystem=implicit_common_system>
-  struct temperature_space : quantity_convex_space<classical_quantity_sets::temperatures<HostSystem>, Rep, temperature_space<Rep>> {};
+  template<std::floating_point Rep, class HostSystem>
+  struct electrical_charge_space
+    : quantity_vector_space<classical_quantity_sets::electrical_charges<HostSystem>, Rep, electrical_charge_space<Rep, HostSystem>>
+  {};
 
-  template<std::floating_point Rep, class HostSystem=implicit_common_system>
-  struct electrical_charge_space : quantity_vector_space<classical_quantity_sets::electrical_charges<HostSystem>, Rep, electrical_charge_space<Rep>> {};
-
-  template<std::floating_point Rep, class HostSystem=implicit_common_system>
-  struct angular_space : quantity_vector_space<classical_quantity_sets::angles<HostSystem>, Rep, angular_space<Rep>> {};
+  template<std::floating_point Rep, class HostSystem>
+  struct angular_space
+    : quantity_vector_space<classical_quantity_sets::angles<HostSystem>, Rep, angular_space<Rep, HostSystem>>
+  {};
 
   namespace units
   {
@@ -528,25 +571,28 @@ namespace sequoia::physics
 
     inline constexpr celsius_t celsius{};
   }
+  
+  struct implicit_common_system {};
+  struct implicit_temporal_origin {};
 
   namespace si
   {
-    template<std::floating_point T>
-    using mass = quantity<mass_space<T>, units::kilogram_t>;
+    template<std::floating_point T, class HostSystem=implicit_common_system>
+    using mass = quantity<mass_space<T, HostSystem>, units::kilogram_t>;
 
-    template<std::floating_point T>
-    using length = quantity<length_space<T>, units::metre_t>;
+    template<std::floating_point T, class HostSystem=implicit_common_system>
+    using length = quantity<length_space<T, HostSystem>, units::metre_t>;
 
-    template<std::floating_point T>
-    using time = quantity<time_space<T>, units::second_t>;
+    template<std::floating_point T, class HostSystem=implicit_common_system>
+    using time = quantity<time_space<T, HostSystem>, units::second_t>;
 
-    template<std::floating_point T>
-    using temperature = quantity<temperature_space<T>, units::kelvin_t>;
+    template<std::floating_point T, class HostSystem=implicit_common_system>
+    using temperature = quantity<temperature_space<T, HostSystem>, units::kelvin_t>;
 
-    template<std::floating_point T>
-    using electrical_charge = quantity<electrical_charge_space<T>, units::coulomb_t>;
+    template<std::floating_point T, class HostSystem=implicit_common_system>
+    using electrical_charge = quantity<electrical_charge_space<T, HostSystem>, units::coulomb_t>;
 
-    template<std::floating_point T>
-    using angle = quantity<angular_space<T>, units::radian_t>;
+    template<std::floating_point T, class HostSystem=implicit_common_system>
+    using angle = quantity<angular_space<T, HostSystem>, units::radian_t>;
   }
 }
