@@ -367,20 +367,35 @@ namespace sequoia::physics
       using host_system_type = HostSystem;
     };
 
+    template<class HostSystem>
     struct lengths
-    {};
+    {
+      using host_system_type = HostSystem;
+    };
 
+    template<class HostSystem>
     struct temperatures
-    {};
+    {
+      using host_system_type = HostSystem;
+    };
 
+    template<class HostSystem>
     struct electrical_charges
-    {};
+    {
+      using host_system_type = HostSystem;
+    };
 
+    template<class HostSystem>
     struct times
-    {};
+    {
+      using host_system_type = HostSystem;
+    };
 
+    template<class HostSystem>
     struct angles
-    {};
+    {
+      using host_system_type = HostSystem;
+    };
 
     template<class QuantitySet>
     struct differences
@@ -432,20 +447,20 @@ namespace sequoia::physics
   template<std::floating_point Rep, class HostSystem=implicit_common_system>
   struct mass_space : quantity_convex_space<classical_quantity_sets::masses<HostSystem>, Rep, mass_space<Rep>> {};
 
-  template<std::floating_point Rep>
-  struct length_space : quantity_convex_space<classical_quantity_sets::lengths, Rep, length_space<Rep>> {};
+  template<std::floating_point Rep, class HostSystem=implicit_common_system>
+  struct length_space : quantity_convex_space<classical_quantity_sets::lengths<HostSystem>, Rep, length_space<Rep>> {};
 
-  template<std::floating_point Rep>
-  struct time_space : quantity_affine_space<classical_quantity_sets::times, Rep, time_space<Rep>> {};
+  template<std::floating_point Rep, class HostSystem=implicit_common_system>
+  struct time_space : quantity_affine_space<classical_quantity_sets::times<HostSystem>, Rep, time_space<Rep>> {};
 
-  template<std::floating_point Rep>
-  struct temperature_space : quantity_convex_space<classical_quantity_sets::temperatures, Rep, temperature_space<Rep>> {};
+  template<std::floating_point Rep, class HostSystem=implicit_common_system>
+  struct temperature_space : quantity_convex_space<classical_quantity_sets::temperatures<HostSystem>, Rep, temperature_space<Rep>> {};
 
-  template<std::floating_point Rep>
-  struct electrical_charge_space : quantity_vector_space<classical_quantity_sets::electrical_charges, Rep, electrical_charge_space<Rep>> {};
+  template<std::floating_point Rep, class HostSystem=implicit_common_system>
+  struct electrical_charge_space : quantity_vector_space<classical_quantity_sets::electrical_charges<HostSystem>, Rep, electrical_charge_space<Rep>> {};
 
-  template<std::floating_point Rep>
-  struct angular_space : quantity_vector_space<classical_quantity_sets::angles, Rep, angular_space<Rep>> {};
+  template<std::floating_point Rep, class HostSystem=implicit_common_system>
+  struct angular_space : quantity_vector_space<classical_quantity_sets::angles<HostSystem>, Rep, angular_space<Rep>> {};
 
   namespace units
   {
