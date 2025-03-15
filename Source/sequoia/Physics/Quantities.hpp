@@ -239,9 +239,8 @@ namespace sequoia::physics
     using type = intrinsic_origin;
   };
 
-  template<convex_space QuantitySpace, quantity_unit Unit>
-    requires   (!has_intrinsic_origin<QuantitySpace, Unit>)
-            && affine_space<QuantitySpace>
+  template<affine_space QuantitySpace, quantity_unit Unit>
+    requires (!has_intrinsic_origin<QuantitySpace, Unit>)
   struct to_origin_type<QuantitySpace, Unit>
   {
     using type = implicit_affine_origin<QuantitySpace>;

@@ -1,4 +1,4 @@
-Tests/Physics/AbsoluteQuantityTest.cpp, Line 55
+Tests/Physics/AbsoluteQuantityTest.cpp, Line 54
 Negative quantity
 
 Expected Exception Type:
@@ -103,7 +103,7 @@ Value -1 less than zero
 
 =======================================
 
-Tests/Physics/AbsoluteQuantityTest.cpp, Line 55
+Tests/Physics/AbsoluteQuantityTest.cpp, Line 54
 Negative quantity
 
 Expected Exception Type:
@@ -208,7 +208,7 @@ Value -1 less than zero
 
 =======================================
 
-Tests/Physics/AbsoluteQuantityTest.cpp, Line 55
+Tests/Physics/AbsoluteQuantityTest.cpp, Line 54
 Negative quantity
 
 Expected Exception Type:
@@ -313,7 +313,7 @@ Value -1 less than zero
 
 =======================================
 
-Tests/Physics/AbsoluteQuantityTest.cpp, Line 55
+Tests/Physics/AbsoluteQuantityTest.cpp, Line 54
 Negative quantity
 
 Expected Exception Type:

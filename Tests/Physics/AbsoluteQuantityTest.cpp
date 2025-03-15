@@ -32,12 +32,11 @@ namespace sequoia::testing
   template<class Quantity>
   void absolute_quantity_test::test_absolute_quantity()
   {
-    using quantity_t  = Quantity;
-    using delta_q_t   = quantity_t::displacement_quantity_type;
-    using space_type  = quantity_t::quantity_space_type;
-    using value_type  = quantity_t::value_type;
-    using units_type  = quantity_t::units_type;
-    using origin_type = quantity_t::origin_type;
+    using quantity_t = Quantity;
+    using delta_q_t  = quantity_t::displacement_quantity_type;
+    using space_type = quantity_t::quantity_space_type;
+    using value_type = quantity_t::value_type;
+    using units_type = quantity_t::units_type;
 
     STATIC_CHECK(convex_space<space_type>);
     STATIC_CHECK(vector_space<typename space_type::vector_space_type>);
