@@ -14,11 +14,11 @@
 
 namespace sequoia::testing
 {
-  template<maths::convex_space QuantitySpace, physics::quantity_unit Unit, class Validator>
-  struct value_tester<physics::quantity<QuantitySpace, Unit, Validator>>
+  template<maths::convex_space QuantitySpace, physics::quantity_unit Unit, class Origin, class Validator>
+  struct value_tester<physics::quantity<QuantitySpace, Unit, Origin, Validator>>
   {
-    using type       = physics::quantity<QuantitySpace, Unit, Validator>;
-    using value_type = typename physics::quantity<QuantitySpace, Unit, Validator>::value_type;
+    using type       = physics::quantity<QuantitySpace, Unit, Origin, Validator>;
+    using value_type = type::value_type;
 
     template<test_mode Mode>
     static void test(equality_check_t, test_logger<Mode>& logger, const type& actual, const type& prediction)

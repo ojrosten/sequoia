@@ -33,8 +33,8 @@ namespace sequoia::testing
     using length_t          = si::length<float>;
     using charge_t          = si::electrical_charge<float>;
     using temperature_t     = si::temperature<float>;
-    using unsafe_mass_t     = quantity<mass_space<float, implicit_common_system>, units::kilogram_t, std::identity>;
-    using unsafe_len_t      = quantity<length_space<float, implicit_common_system>, units::metre_t, std::identity>;
+    using unsafe_mass_t     = quantity<mass_space<float, implicit_common_system>, units::kilogram_t, intrinsic_origin, std::identity>;
+    using unsafe_len_t      = quantity<length_space<float, implicit_common_system>, units::metre_t, intrinsic_origin, std::identity>;
     
     auto ml = mass_t{1.0, units::kilogram} * length_t{2.0, units::metre},
          lm = length_t{2.0, units::metre} * mass_t{1.0, units::kilogram};

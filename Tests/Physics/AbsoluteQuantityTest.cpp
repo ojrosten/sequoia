@@ -32,11 +32,12 @@ namespace sequoia::testing
   template<class Quantity>
   void absolute_quantity_test::test_absolute_quantity()
   {
-    using quantity_t = Quantity;
-    using delta_q_t  = quantity_t::displacement_quantity_type;
-    using space_type = quantity_t::quantity_space_type;
-    using value_type = quantity_t::value_type;
-    using units_type = quantity_t::units_type;
+    using quantity_t  = Quantity;
+    using delta_q_t   = quantity_t::displacement_quantity_type;
+    using space_type  = quantity_t::quantity_space_type;
+    using value_type  = quantity_t::value_type;
+    using units_type  = quantity_t::units_type;
+    using origin_type = quantity_t::origin_type;
 
     STATIC_CHECK(convex_space<space_type>);
     STATIC_CHECK(vector_space<typename space_type::vector_space_type>);
@@ -64,8 +65,8 @@ namespace sequoia::testing
     check(equivalence, "", 4.0f / quantity_t{2.0, units_type{}}, 2.0f);
     check(equality, "", 4.0f / quantity_t{2.0, units_type{}}, inv_quantity_t{2.0f, inv_unit_t{}});
 
-    using euc_half_space_qty = quantity<euclidean_half_space<1, value_type>, no_unit_t, half_space_validator>;
-    using euc_vec_space_qty  = quantity<euclidean_vector_space<1, value_type>, no_unit_t, std::identity>;
+    using euc_half_space_qty = quantity<euclidean_half_space<1, value_type>, no_unit_t, intrinsic_origin, half_space_validator>;
+    using euc_vec_space_qty  = quantity<euclidean_vector_space<1, value_type>, no_unit_t, intrinsic_origin, std::identity>;
     check(equality, "", quantity_t{2.0, units_type{}} / quantity_t{1.0, units_type{}}, euc_half_space_qty{2.0, no_unit});
     check(equality, "", quantity_t{2.0, units_type{}} / delta_q_t{1.0, units_type{}},  euc_vec_space_qty{2.0, no_unit});
     check(equality, "", delta_q_t{2.0, units_type{}}  / quantity_t{1.0, units_type{}}, euc_vec_space_qty{2.0, no_unit});

@@ -18,7 +18,7 @@ namespace sequoia::maths
   {
     // TO DO: this doesn't hold for all validators!
     using validator_type = T::validator_type;
-  };    
+  };
 }
 
 namespace sequoia::physics
@@ -201,19 +201,23 @@ namespace sequoia::physics
   using to_displacement_basis_t
     = quantity_displacement_basis<vector_space_type_of<QuantitySpace>, Unit, space_field_type<QuantitySpace>>;
 
-  template<convex_space QuantitySpace, quantity_unit Unit, class Validator>
-  class quantity;
-
-  template<quantity_unit Unit>
-  struct unit_defined_origin{};
-
-  struct affine_origin {};
-
   template<convex_space QuantitySpace, quantity_unit Unit>
   inline constexpr bool has_intrinsic_origin{
        vector_space<QuantitySpace>
     || (!affine_space<QuantitySpace> && defines_half_space_v<typename Unit::validator_type>)
   };
+
+
+  template<convex_space QuantitySpace, quantity_unit Unit, class Origin, class Validator>
+    requires (!affine_space<QuantitySpace> || (std::is_same_v<Validator, std::identity>))
+  //&& has_intrinsic_origin<QuantitySpace, Unit> && std::is_same_v<Origin, intrinsic_origin>
+  class quantity;
+
+  template<quantity_unit Unit>
+  struct unit_defined_origin{};
+
+  template<affine_space T>
+  struct implicit_affine_origin {};
 
   template<convex_space QuantitySpace, quantity_unit Unit>
   struct to_origin_type;
@@ -240,18 +244,18 @@ namespace sequoia::physics
             && affine_space<QuantitySpace>
   struct to_origin_type<QuantitySpace, Unit>
   {
-    using type = affine_origin;
+    using type = implicit_affine_origin<QuantitySpace>;
   };
   
-  template<convex_space QuantitySpace, quantity_unit Unit, class Validator>
+  template<convex_space QuantitySpace, quantity_unit Unit, class Origin, class Validator>
   using to_coordinates_base_type
     = coordinates_base<
         QuantitySpace,
         to_displacement_basis_t<QuantitySpace, Unit>,
-        to_origin_type_t<QuantitySpace, Unit>,
+        Origin,
         Validator,
-        quantity<vector_space_type_of<QuantitySpace>, Unit, std::identity>>;
-  
+        quantity<vector_space_type_of<QuantitySpace>, Unit, intrinsic_origin, std::identity>>;
+
   template<class T, class U>
   struct quantity_product;
 
@@ -262,11 +266,13 @@ namespace sequoia::physics
     convex_space LHSQuantitySpace, quantity_unit LHSUnit, class LHSValidator,
     convex_space RHSQuantitySpace, quantity_unit RHSUnit, class RHSValidator
   >
-  struct quantity_product<quantity<LHSQuantitySpace, LHSUnit, LHSValidator>, quantity<RHSQuantitySpace, RHSUnit, RHSValidator>>
+  struct quantity_product<quantity<LHSQuantitySpace, LHSUnit, intrinsic_origin, LHSValidator>,
+                          quantity<RHSQuantitySpace, RHSUnit, intrinsic_origin, RHSValidator>>
   {
     using type = quantity<
       reduction_t<direct_product<LHSQuantitySpace, RHSQuantitySpace>>,
       reduction_t<std::tuple<LHSUnit, RHSUnit>>,
+      intrinsic_origin,
       reduced_validator_t<LHSValidator, RHSValidator>>;
   };
 
@@ -276,9 +282,10 @@ namespace sequoia::physics
   >
     requires    std::is_same_v<euclidean_vector_space<1, space_field_type<LHSQuantitySpace>>, LHSQuantitySpace>
              || std::is_same_v<euclidean_half_space<1, space_field_type<LHSQuantitySpace>>, LHSQuantitySpace>
-  struct quantity_product<quantity<LHSQuantitySpace, LHSUnit, LHSValidator>, quantity<RHSQuantitySpace, RHSUnit, RHSValidator>>
+  struct quantity_product<quantity<LHSQuantitySpace, LHSUnit, intrinsic_origin, LHSValidator>,
+                          quantity<RHSQuantitySpace, RHSUnit, intrinsic_origin, RHSValidator>>
   {
-    using type = quantity<RHSQuantitySpace, RHSUnit, reduced_validator_t<LHSValidator, RHSValidator>>;
+    using type = quantity<RHSQuantitySpace, RHSUnit, intrinsic_origin, reduced_validator_t<LHSValidator, RHSValidator>>;
   };
 
   template<
@@ -287,18 +294,24 @@ namespace sequoia::physics
   >
     requires    std::is_same_v<euclidean_vector_space<1, space_field_type<RHSQuantitySpace>>, RHSQuantitySpace>
              || std::is_same_v<euclidean_half_space<1, space_field_type<RHSQuantitySpace>>, RHSQuantitySpace>
-  struct quantity_product<quantity<LHSQuantitySpace, LHSUnit, LHSValidator>, quantity<RHSQuantitySpace, RHSUnit, RHSValidator>>
+  struct quantity_product<quantity<LHSQuantitySpace, LHSUnit, intrinsic_origin, LHSValidator>,
+                          quantity<RHSQuantitySpace, RHSUnit, intrinsic_origin, RHSValidator>>
   {
-    using type = quantity<LHSQuantitySpace, LHSUnit, reduced_validator_t<LHSValidator, RHSValidator>>;
+    using type = quantity<LHSQuantitySpace, LHSUnit, intrinsic_origin, reduced_validator_t<LHSValidator, RHSValidator>>;
   };
-  
-  template<convex_space QuantitySpace, quantity_unit Unit, class Validator=typename Unit::validator_type>
-  class quantity : public to_coordinates_base_type<QuantitySpace, Unit, Validator>
+
+  template<convex_space QuantitySpace,
+           quantity_unit Unit,
+           class Origin=to_origin_type_t<QuantitySpace, Unit>,
+           class Validator=typename Unit::validator_type>
+    requires (!affine_space<QuantitySpace> || (std::is_same_v<Validator, std::identity>))
+  class quantity : public to_coordinates_base_type<QuantitySpace, Unit, Origin, Validator>
   {
   public:
-    using coordinates_type           = to_coordinates_base_type<QuantitySpace, Unit, Validator>;
+    using coordinates_type           = to_coordinates_base_type<QuantitySpace, Unit, Origin, Validator>;
     using quantity_space_type        = QuantitySpace;
     using units_type                 = Unit;
+    using origin_type                = Origin;
     using displacement_space_type    = vector_space_type_of<QuantitySpace>;
     using intrinsic_validator_type   = Unit::validator_type;
     using validator_type             = Validator;
@@ -313,21 +326,22 @@ namespace sequoia::physics
     constexpr static bool is_effectively_absolute{is_intrinsically_absolute && std::is_same_v<Validator, intrinsic_validator_type>};
     constexpr static bool has_identity_validator{coordinates_type::has_identity_validator};
 
-    template<convex_space RHSQuantitySpace, class RHSUnit, class RHSValidator>
+    template<convex_space RHSQuantitySpace, class RHSUnit, class RHSOrigin, class RHSValidator>
     constexpr static bool is_composable_with{
          (is_intrinsically_absolute || vector_space<QuantitySpace>)
-      && (quantity<RHSQuantitySpace, RHSUnit, RHSValidator>::is_intrinsically_absolute || vector_space<RHSQuantitySpace>)
+      && (quantity<RHSQuantitySpace, RHSUnit, RHSOrigin, RHSValidator>::is_intrinsically_absolute || vector_space<RHSQuantitySpace>)
     };
 
-    template<convex_space RHSQuantitySpace, class RHSUnit, class RHSValidator>
+    template<convex_space RHSQuantitySpace, class RHSUnit, class RHSOrigin, class RHSValidator>
     constexpr static bool is_multipicable_with{
-            is_composable_with<RHSQuantitySpace, RHSUnit, RHSValidator>
-         && ((D == 1) || (quantity<RHSQuantitySpace, RHSUnit, RHSValidator>::D == 1))
+         is_composable_with<RHSQuantitySpace, RHSUnit, RHSOrigin, RHSValidator>
+      && ((D == 1) || (quantity<RHSQuantitySpace, RHSUnit, RHSOrigin, RHSValidator>::D == 1))
     };
 
-    template<convex_space RHSQuantitySpace, class RHSUnit, class RHSValidator>
+    template<convex_space RHSQuantitySpace, class RHSUnit, class RHSOrigin, class RHSValidator>
     constexpr static bool is_divisible_with{
-      is_composable_with<RHSQuantitySpace, RHSUnit, RHSValidator> && (quantity<RHSQuantitySpace, RHSUnit, RHSValidator>::D == 1)
+         is_composable_with<RHSQuantitySpace, RHSUnit, RHSOrigin, RHSValidator>
+      && (quantity<RHSQuantitySpace, RHSUnit, RHSOrigin, RHSValidator>::D == 1)
     };
 
     constexpr quantity() = default;
@@ -363,22 +377,22 @@ namespace sequoia::physics
       }(std::make_index_sequence<D>{});
     }
 
-    template<convex_space RHSQuantitySpace, quantity_unit RHSUnit, class RHSValidator>
-      requires is_multipicable_with<RHSQuantitySpace, RHSUnit, RHSValidator>
+    template<convex_space RHSQuantitySpace, quantity_unit RHSUnit, class RHSOrigin, class RHSValidator>
+      requires is_multipicable_with<RHSQuantitySpace, RHSUnit, RHSOrigin, RHSValidator>
     [[nodiscard]]
-    friend constexpr auto operator*(const quantity& lhs, const quantity<RHSQuantitySpace, RHSUnit, RHSValidator>& rhs)
+    friend constexpr auto operator*(const quantity& lhs, const quantity<RHSQuantitySpace, RHSUnit, RHSOrigin, RHSValidator>& rhs)
     {
-      using quantity_t = quantity_product_t<quantity, quantity<RHSQuantitySpace, RHSUnit, RHSValidator>>;
+      using quantity_t = quantity_product_t<quantity, quantity<RHSQuantitySpace, RHSUnit, RHSOrigin, RHSValidator>>;
       using derived_units_type = quantity_t::units_type;
       return quantity_t{lhs.value() * rhs.value(), derived_units_type{}};
     }
 
-    template<convex_space RHSQuantitySpace, class RHSUnit, class RHSValidator>
-       requires is_divisible_with<RHSQuantitySpace, RHSUnit, RHSValidator>
+    template<convex_space RHSQuantitySpace, class RHSUnit, class RHSOrigin, class RHSValidator>
+      requires is_divisible_with<RHSQuantitySpace, RHSUnit, RHSOrigin, RHSValidator>
     [[nodiscard]]
-    friend constexpr auto operator/(const quantity& lhs, const quantity<RHSQuantitySpace, RHSUnit, RHSValidator>& rhs)
+    friend constexpr auto operator/(const quantity& lhs, const quantity<RHSQuantitySpace, RHSUnit, RHSOrigin, RHSValidator>& rhs)
     {
-      using quantity_t = quantity_product_t<quantity, quantity<dual_of_t<RHSQuantitySpace>, dual_of_t<RHSUnit>, RHSValidator>>;
+      using quantity_t = quantity_product_t<quantity, quantity<dual_of_t<RHSQuantitySpace>, dual_of_t<RHSUnit>, RHSOrigin, RHSValidator>>;
       using derived_units_type = quantity_t::units_type;
       return quantity_t{lhs.value() / rhs.value(), derived_units_type{}};
     }
@@ -386,7 +400,7 @@ namespace sequoia::physics
     [[nodiscard]] friend constexpr auto operator/(value_type value, const quantity& rhs)
       requires ((D == 1) && (is_intrinsically_absolute || vector_space<QuantitySpace>))
     {
-      using quantity_t = quantity<dual_of_t<QuantitySpace>, dual_of_t<Unit>, validator_type>;
+      using quantity_t = quantity<dual_of_t<QuantitySpace>, dual_of_t<Unit>, origin_type, validator_type>;
       using derived_units_type = quantity_t::units_type;
       return quantity_t{value / rhs.value(), derived_units_type{}};
     }    
@@ -573,7 +587,6 @@ namespace sequoia::physics
   }
   
   struct implicit_common_system {};
-  struct implicit_temporal_origin {};
 
   namespace si
   {
