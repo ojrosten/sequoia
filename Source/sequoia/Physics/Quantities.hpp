@@ -208,9 +208,19 @@ namespace sequoia::physics
   };
 
 
+  template<convex_space QuantitySpace, quantity_unit Unit, class Origin>
+  inline constexpr bool has_consistent_origin{
+       ( has_intrinsic_origin<QuantitySpace, Unit> &&  std::is_same_v<Origin, intrinsic_origin>)
+    || (!has_intrinsic_origin<QuantitySpace, Unit> && !std::is_same_v<Origin, intrinsic_origin>)
+  };
+
+  template<convex_space QuantitySpace, class Validator>
+  inline constexpr bool has_consistent_validator{
+    !affine_space<QuantitySpace> || std::is_same_v<Validator, std::identity>
+  };
+
   template<convex_space QuantitySpace, quantity_unit Unit, class Origin, class Validator>
-    requires (!affine_space<QuantitySpace> || (std::is_same_v<Validator, std::identity>))
-  //&& has_intrinsic_origin<QuantitySpace, Unit> && std::is_same_v<Origin, intrinsic_origin>
+    requires has_consistent_validator<QuantitySpace, Validator> && has_consistent_origin<QuantitySpace, Unit, Origin>
   class quantity;
 
   template<quantity_unit Unit>
@@ -299,11 +309,13 @@ namespace sequoia::physics
     using type = quantity<LHSQuantitySpace, LHSUnit, intrinsic_origin, reduced_validator_t<LHSValidator, RHSValidator>>;
   };
 
-  template<convex_space QuantitySpace,
-           quantity_unit Unit,
-           class Origin=to_origin_type_t<QuantitySpace, Unit>,
-           class Validator=typename Unit::validator_type>
-    requires (!affine_space<QuantitySpace> || (std::is_same_v<Validator, std::identity>))
+  template<
+    convex_space QuantitySpace,
+    quantity_unit Unit,
+    class Origin=to_origin_type_t<QuantitySpace, Unit>,
+    class Validator=typename Unit::validator_type
+  >
+    requires has_consistent_validator<QuantitySpace, Validator> && has_consistent_origin<QuantitySpace, Unit, Origin>
   class quantity : public to_coordinates_base_type<QuantitySpace, Unit, Origin, Validator>
   {
   public:
