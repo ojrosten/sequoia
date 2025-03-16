@@ -25,6 +25,8 @@ namespace sequoia::testing
   {
     test_affine_quantity<si::time<float>>();
     test_affine_quantity<si::time<double>>();
+    test_affine_quantity<si::position<1, float>>();
+    test_affine_quantity<si::position<2, float>>();
   }
 
   template<class Quantity>
@@ -34,6 +36,7 @@ namespace sequoia::testing
     using delta_q_t  = quantity_t::displacement_quantity_type;
     using space_type = quantity_t::quantity_space_type;
     using units_type = quantity_t::units_type;
+    using origin_type = quantity_t::origin_type;
 
     STATIC_CHECK(affine_space<space_type>);
     STATIC_CHECK(vector_space<typename space_type::vector_space_type>);
@@ -49,7 +52,7 @@ namespace sequoia::testing
     STATIC_CHECK(can_subtract<quantity_t, delta_q_t>);
 
     coordinates_operations<quantity_t>{*this}.execute();
-    using inv_quantity_t = quantity<dual<space_type>, dual<units_type>>;
+    using inv_quantity_t = quantity<dual<space_type>, dual<units_type>, dual<origin_type>, std::identity>;
     coordinates_operations<inv_quantity_t>{*this}.execute();
   }
 }
