@@ -530,6 +530,10 @@ namespace sequoia::physics
     : quantity_vector_space<classical_quantity_sets::angles<HostSystem>, Rep, angular_space<Rep, HostSystem>>
   {};
 
+  template<std::size_t D, std::floating_point Rep, class HostSystem>
+  struct position_space : quantity_affine_space<sets::R<D, Rep>, Rep, position_space<D, Rep, HostSystem>>
+  {};
+
   namespace units
   {
     struct kilogram_t
@@ -607,8 +611,12 @@ namespace sequoia::physics
     template<std::floating_point T, class HostSystem=implicit_common_system>
     using length = quantity<length_space<T, HostSystem>, units::metre_t>;
 
-    template<std::floating_point T, class HostSystem=implicit_common_system>
-    using time = quantity<time_space<T, HostSystem>, units::second_t>;
+    template<
+      std::floating_point T,
+      class HostSystem=implicit_common_system,
+      class Origin=implicit_affine_origin<time_space<T, HostSystem>>
+    >
+    using time = quantity<time_space<T, HostSystem>, units::second_t, Origin>;
 
     template<std::floating_point T, class HostSystem=implicit_common_system>
     using temperature = quantity<temperature_space<T, HostSystem>, units::kelvin_t>;
@@ -618,5 +626,13 @@ namespace sequoia::physics
 
     template<std::floating_point T, class HostSystem=implicit_common_system>
     using angle = quantity<angular_space<T, HostSystem>, units::radian_t>;
+
+    template<
+      std::size_t D,
+      std::floating_point T,
+      class HostSystem=implicit_common_system,
+      class Origin=implicit_affine_origin<position_space<D, T, HostSystem>>
+    >
+    using position = quantity<position_space<D, T, HostSystem>, units::metre_t, Origin, std::identity>;
   }
 }
