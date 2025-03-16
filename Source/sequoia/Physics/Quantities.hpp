@@ -446,18 +446,6 @@ namespace sequoia::physics
       using host_system_type = HostSystem;
     };
 
-    template<class HostSystem>
-    struct times
-    {
-      using host_system_type = HostSystem;
-    };
-
-    template<class HostSystem>
-    struct angles
-    {
-      using host_system_type = HostSystem;
-    };
-
     template<class QuantitySet>
     struct differences
     {
@@ -514,11 +502,6 @@ namespace sequoia::physics
   {};
 
   template<std::floating_point Rep, class HostSystem>
-  struct time_space
-    : quantity_affine_space<classical_quantity_sets::times<HostSystem>, Rep, time_space<Rep, HostSystem>>
-  {};
-
-  template<std::floating_point Rep, class HostSystem>
   struct temperature_space
     : quantity_convex_space<classical_quantity_sets::temperatures<HostSystem>, Rep, temperature_space<Rep, HostSystem>>
   {};
@@ -529,8 +512,11 @@ namespace sequoia::physics
   {};
 
   template<std::floating_point Rep, class HostSystem>
-  struct angular_space
-    : quantity_vector_space<classical_quantity_sets::angles<HostSystem>, Rep, angular_space<Rep, HostSystem>>
+  struct angular_space : quantity_vector_space<sets::R<1, Rep>, Rep, angular_space<Rep, HostSystem>>
+  {};
+
+  template<std::floating_point Rep, class HostSystem>
+  struct time_space : quantity_affine_space<sets::R<1, Rep>, Rep, time_space<Rep, HostSystem>>
   {};
 
   template<std::size_t D, std::floating_point Rep, class HostSystem>
