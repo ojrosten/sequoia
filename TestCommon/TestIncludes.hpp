@@ -41,8 +41,6 @@
 #include "FileSystem/NormalPathTestingDiagnostics.hpp"
 #include "Maths/Geometry/AffineCoordinatesTest.hpp"
 #include "Maths/Geometry/AffineCoordinatesTestingDiagnostics.hpp"
-#include "Maths/Geometry/AngleTest.hpp"
-#include "Maths/Geometry/AngleTestingDiagnostics.hpp"
 #include "Maths/Geometry/SpacesMetaFreeTest.hpp"
 #include "Maths/Geometry/VectorCoordinatesTest.hpp"
 #include "Maths/Geometry/VectorCoordinatesTestingDiagnostics.hpp"

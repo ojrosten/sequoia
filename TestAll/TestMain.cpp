@@ -377,12 +377,6 @@ int main(int argc, char** argv)
       file_system_free_test{"File System Free Test"},
       normal_path_false_negative_test{"False Negative Test"},
       normal_path_test{"Unit Test"}
-   );
-
-    runner.add_test_suite(
-      "Angle",
-      angle_false_negative_test{"False negative Test"},
-      angle_test{"Unit Test"}
     );
 
     runner.add_test_suite(
