@@ -26,6 +26,7 @@ namespace sequoia::testing
     test_absolute_quantity<si::mass<float>>();
     test_absolute_quantity<si::mass<double>>();
     test_absolute_quantity<si::length<float>>();
+    test_absolute_quantity<si::time_interval<float>>();
     test_absolute_quantity<si::temperature<double>>();
   }
 

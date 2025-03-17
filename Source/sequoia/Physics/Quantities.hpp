@@ -435,6 +435,12 @@ namespace sequoia::physics
     };
 
     template<class HostSystem>
+    struct time_intervals
+    {
+      using host_system_type = HostSystem;
+    };
+
+    template<class HostSystem>
     struct temperatures
     {
       using host_system_type = HostSystem;
@@ -502,6 +508,11 @@ namespace sequoia::physics
   {};
 
   template<std::floating_point Rep, class HostSystem>
+  struct time_interval_space
+    : quantity_convex_space<classical_quantity_sets::time_intervals<HostSystem>, Rep, time_interval_space<Rep, HostSystem>>
+  {};
+
+  template<std::floating_point Rep, class HostSystem>
   struct temperature_space
     : quantity_convex_space<classical_quantity_sets::temperatures<HostSystem>, Rep, temperature_space<Rep, HostSystem>>
   {};
@@ -537,7 +548,7 @@ namespace sequoia::physics
 
     struct second_t
     {
-      using validator_type = std::identity;
+      using validator_type = half_space_validator;
     };
 
     struct kelvin_t
@@ -600,12 +611,8 @@ namespace sequoia::physics
     template<std::floating_point T, class HostSystem=implicit_common_system>
     using length = quantity<length_space<T, HostSystem>, units::metre_t>;
 
-    template<
-      std::floating_point T,
-      class HostSystem=implicit_common_system,
-      class Origin=implicit_affine_origin<time_space<T, HostSystem>>
-    >
-    using time = quantity<time_space<T, HostSystem>, units::second_t, Origin>;
+    template<std::floating_point T, class HostSystem=implicit_common_system>
+    using time_interval = quantity<time_interval_space<T, HostSystem>, units::second_t>;
 
     template<std::floating_point T, class HostSystem=implicit_common_system>
     using temperature = quantity<temperature_space<T, HostSystem>, units::kelvin_t>;
@@ -616,6 +623,13 @@ namespace sequoia::physics
     template<std::floating_point T, class HostSystem=implicit_common_system>
     using angle = quantity<angular_space<T, HostSystem>, units::radian_t>;
 
+    template<
+      std::floating_point T,
+      class HostSystem=implicit_common_system,
+      class Origin=implicit_affine_origin<time_space<T, HostSystem>>
+    >
+    using time = quantity<time_space<T, HostSystem>, units::second_t, Origin, std::identity>;
+    
     template<
       std::size_t D,
       std::floating_point T,
