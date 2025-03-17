@@ -24,17 +24,18 @@ namespace sequoia::testing
   void mixed_quantity_test::run_tests()
   {
     test_mixed();
+    test_mixed_vector();
   }
 
   void mixed_quantity_test::test_mixed()
   {
-    using mass_t            = si::mass<float>;
-    using d_mass_t          = mass_t::displacement_quantity_type;
-    using length_t          = si::length<float>;
-    using charge_t          = si::electrical_charge<float>;
-    using temperature_t     = si::temperature<float>;
-    using unsafe_mass_t     = quantity<mass_space<float, implicit_common_system>, units::kilogram_t, intrinsic_origin, std::identity>;
-    using unsafe_len_t      = quantity<length_space<float, implicit_common_system>, units::metre_t, intrinsic_origin, std::identity>;
+    using mass_t        = si::mass<float>;
+    using d_mass_t      = mass_t::displacement_quantity_type;
+    using length_t      = si::length<float>;
+    using charge_t      = si::electrical_charge<float>;
+    using temperature_t = si::temperature<float>;
+    using unsafe_mass_t = quantity<mass_space<float, implicit_common_system>, units::kilogram_t, intrinsic_origin, std::identity>;
+    using unsafe_len_t  = quantity<length_space<float, implicit_common_system>, units::metre_t, intrinsic_origin, std::identity>;
     
     auto ml = mass_t{1.0, units::kilogram} * length_t{2.0, units::metre},
          lm = length_t{2.0, units::metre} * mass_t{1.0, units::kilogram};
@@ -62,5 +63,13 @@ namespace sequoia::testing
     check(equality, "", mlct / mass_t{1.0, units::kilogram}, length_t{2.0, units::metre} * charge_t{-1.0, units::coulomb} * temperature_t{5.0, units::kelvin});
 
     check(equality, "", mass_t{2.0, units::kilogram} * length_t{3.0, units::metre} / d_mass_t{-2.0, units::kilogram}, unsafe_len_t{-3.0, units::metre});
+  }
+
+  void mixed_quantity_test::test_mixed_vector()
+  {
+    using pos_t  = si::position<2, float>;
+    using time_t = si::time<float>;
+
+    check(equivalence, "", (pos_t{2.0, units::metre} - pos_t{1.0, units::metre}) / (time_t{4.0, units::second} - time_t{2.0, units::second}), 0.5);
   }
 }

@@ -24,5 +24,7 @@ namespace sequoia::testing
     void run_tests();
   private:
     void test_mixed();
+
+    void test_mixed_vector();
   };
 }

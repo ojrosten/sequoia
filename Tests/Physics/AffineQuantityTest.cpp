@@ -32,10 +32,10 @@ namespace sequoia::testing
   template<class Quantity>
   void affine_quantity_test::test_affine_quantity()
   {
-    using quantity_t = Quantity;
-    using delta_q_t  = quantity_t::displacement_quantity_type;
-    using space_type = quantity_t::quantity_space_type;
-    using units_type = quantity_t::units_type;
+    using quantity_t  = Quantity;
+    using delta_q_t   = quantity_t::displacement_quantity_type;
+    using space_type  = quantity_t::quantity_space_type;
+    using units_type  = quantity_t::units_type;
     using origin_type = quantity_t::origin_type;
 
     STATIC_CHECK(affine_space<space_type>);
