@@ -638,4 +638,54 @@ namespace sequoia::physics
     >
     using position = quantity<position_space<D, T, HostSystem>, units::metre_t, Origin, std::identity>;
   }
+
+  // TO DO: generalize this to other interval-like quantities
+  template<std::floating_point T, class HostSystem=implicit_common_system>
+  [[nodiscard]]
+  constexpr quantity<angular_space<T, HostSystem>, units::radian_t> abs(quantity<angular_space<T, HostSystem>, units::radian_t> theta)
+  {
+    return quantity<angular_space<T, HostSystem>, units::radian_t>{std::abs(theta.value()), units::radian};
+  }
+
+  template<std::floating_point T, class HostSystem=implicit_common_system>
+  [[nodiscard]]
+  constexpr T sin(quantity<angular_space<T, HostSystem>, units::radian_t> theta)
+  {
+    return std::sin(theta.value());
+  }
+
+  template<std::floating_point T, class HostSystem=implicit_common_system>
+  [[nodiscard]]
+  constexpr T cos(quantity<angular_space<T, HostSystem>, units::radian_t> theta)
+  {
+    return std::cos(theta.value());
+  }
+
+  template<std::floating_point T, class HostSystem=implicit_common_system>
+  [[nodiscard]]
+  constexpr T tan(quantity<angular_space<T, HostSystem>, units::radian_t> theta)
+  {
+    return std::tan(theta.value());
+  }
+
+  template<class HostSystem=implicit_common_system, std::floating_point T>
+  [[nodiscard]]
+  constexpr quantity<angular_space<T, HostSystem>, units::radian_t> asin(T x)
+  {
+    return quantity<angular_space<T, HostSystem>, units::radian_t>{std::asin(x), units::radian};
+  }
+
+  template<class HostSystem=implicit_common_system, std::floating_point T>
+  [[nodiscard]]
+  constexpr quantity<angular_space<T, HostSystem>, units::radian_t> acos(T x)
+  {
+    return quantity<angular_space<T, HostSystem>, units::radian_t>{std::acos(x), units::radian};
+  }
+
+  template<class HostSystem=implicit_common_system, std::floating_point T>
+  [[nodiscard]]
+  constexpr quantity<angular_space<T, HostSystem>, units::radian_t> atan(T x)
+  {
+    return quantity<angular_space<T, HostSystem>, units::radian_t>{std::atan(x), units::radian};
+  }
 }

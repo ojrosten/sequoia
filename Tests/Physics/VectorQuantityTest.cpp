@@ -11,6 +11,8 @@
 
 #include "../Maths/Geometry/GeometryTestingUtilities.hpp"
 
+#include <numbers>
+
 namespace sequoia::testing
 { 
   using namespace physics;
@@ -26,6 +28,9 @@ namespace sequoia::testing
     test_vector_quantity<si::electrical_charge<float>>();
     test_vector_quantity<si::electrical_charge<double>>();
     test_vector_quantity<si::angle<float>>();
+
+    test_trig<float>();
+    test_trig<double>();
   }
 
   template<class Quantity>
@@ -75,5 +80,41 @@ namespace sequoia::testing
     check(equality, "", 1.0f / (1.0f / quantity_t{2.0, units_type{}}), quantity_t{2.0, units_type{}});
     check(equality, "", quantity_t{2.0, units_type{}} /(1.0f / quantity_t{2.0, units_type{}}), quantity_t{2.0, units_type{}} * quantity_t{2.0, units_type{}});
     check(equality, "", 4.0f / inv_quantity_t{2.0f, dual<units_type>{}}, quantity_t{2.0, units_type{}});
+  }
+
+  template<std::floating_point T>
+  void vector_quantity_test::test_trig()
+  {
+    using angle_t = si::angle<T>;
+    using namespace units;
+    constexpr auto pi{std::numbers::pi_v<T>};
+
+    check(equality, "", sin(angle_t{-pi / 2, radian}), -T(1));
+    check(equality, "", sin(angle_t{}), T{});
+    check(equality, "", sin(angle_t{pi/2, radian}), T(1));
+
+    check(equality, "", cos(angle_t{-pi / 2, radian}), std::cos(-pi/2));
+    check(equality, "", cos(angle_t{}), T{1});
+    check(equality, "", cos(angle_t{pi / 2, radian}), std::cos(pi / 2));
+
+    check(equality, "", tan(angle_t{-pi / 2, radian}), std::tan(-pi / 2));
+    check(equality, "", tan(angle_t{}), T{});
+    check(equality, "", tan(angle_t{pi / 2, radian}), std::tan(pi / 2));
+
+    check(equality, "", asin(T{}), angle_t{});
+    if constexpr(std::is_same_v<T, float> && with_clang_v)
+    {
+      check(within_tolerance{angle_t{T(1e-6), radian}}, "", asin(T{1}), angle_t{pi/2, radian});
+    }
+    else
+    {
+      check(equality, "", asin(T{1}), angle_t{pi/2, radian});
+    }
+
+    check(equality, "", acos(T{}), angle_t{pi / 2, radian});
+    check(equality, "", acos(T{1}), angle_t{});
+
+    check(equality, "", atan(T{}), angle_t{});
+    check(equality, "", atan(T{1}), angle_t{pi / 4, radian});
   }
 }

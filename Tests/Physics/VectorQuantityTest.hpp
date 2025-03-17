@@ -25,5 +25,21 @@ namespace sequoia::testing
   private:
     template<class Quantity>
     void test_vector_quantity();
+
+    template<std::floating_point T>
+    void test_trig();
+  };
+
+  // TO DO: consider necessity of this; it's only used by the
+  // check of asin within_tolerance; perhaps the latter could
+  // be worked to delegate to test(equality...)
+  template<class HostSystem, std::floating_point T>
+  struct serializer<physics::quantity<physics::angular_space<T, HostSystem>, physics::units::radian_t>>
+  {
+    [[nodiscard]]
+    static std::string make(physics::quantity<physics::angular_space<T, HostSystem>, physics::units::radian_t> theta)
+    {
+      return std::format("{}", theta.value());
+    }
   };
 }

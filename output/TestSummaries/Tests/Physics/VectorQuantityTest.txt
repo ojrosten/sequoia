@@ -1,2 +1,2 @@
 Vector Quantity Test
-Standard Top Level Checks:               333;  Failures:  0  [Deep checks: 4230]
+Standard Top Level Checks:               363;  Failures:  0  [Deep checks: 4271]
