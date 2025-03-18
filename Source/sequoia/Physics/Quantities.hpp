@@ -219,7 +219,7 @@ namespace sequoia::physics
     !affine_space<QuantitySpace> || std::is_same_v<Validator, std::identity>
   };
 
-  template<convex_space QuantitySpace, quantity_unit Unit, class Origin, class Validator>
+  template<convex_space QuantitySpace, quantity_unit Unit, class Origin, validator_for<QuantitySpace> Validator>
     requires has_consistent_validator<QuantitySpace, Validator> && has_consistent_origin<QuantitySpace, Unit, Origin>
   class quantity;
 
@@ -313,7 +313,7 @@ namespace sequoia::physics
     convex_space QuantitySpace,
     quantity_unit Unit,
     class Origin=to_origin_type_t<QuantitySpace, Unit>,
-    class Validator=typename Unit::validator_type
+    validator_for<QuantitySpace> Validator=typename Unit::validator_type
   >
     requires has_consistent_validator<QuantitySpace, Validator> && has_consistent_origin<QuantitySpace, Unit, Origin>
   class quantity : public to_coordinates_base_type<QuantitySpace, Unit, Origin, Validator>
@@ -632,7 +632,7 @@ namespace sequoia::physics
   }
 
   // TO DO: generalize this higher dimensions
-  template<vector_space QuantitySpace, quantity_unit Unit, class Origin, class Validator>
+  template<vector_space QuantitySpace, quantity_unit Unit, class Origin, validator_for<QuantitySpace> Validator>
     requires (dimension_of<QuantitySpace> == 1)
   [[nodiscard]]
   constexpr quantity<QuantitySpace, Unit, Origin, Validator> abs(quantity<QuantitySpace, Unit, Origin, Validator> q)
