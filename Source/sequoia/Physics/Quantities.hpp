@@ -631,12 +631,13 @@ namespace sequoia::physics
     using position = quantity<position_space<D, T, HostSystem>, units::metre_t, Origin, std::identity>;
   }
 
-  // TO DO: generalize this to other interval-like quantities
-  template<std::floating_point T, class HostSystem=implicit_common_system>
+  // TO DO: generalize this higher dimensions
+  template<vector_space QuantitySpace, quantity_unit Unit, class Origin, class Validator>
+    requires (dimension_of<QuantitySpace> == 1)
   [[nodiscard]]
-  constexpr quantity<angular_space<T, HostSystem>, units::radian_t> abs(quantity<angular_space<T, HostSystem>, units::radian_t> theta)
+  constexpr quantity<QuantitySpace, Unit, Origin, Validator> abs(quantity<QuantitySpace, Unit, Origin, Validator> q)
   {
-    return quantity<angular_space<T, HostSystem>, units::radian_t>{std::abs(theta.value()), units::radian};
+    return {std::abs(q.value()), Unit{}};
   }
 
   template<std::floating_point T, class HostSystem=implicit_common_system>
