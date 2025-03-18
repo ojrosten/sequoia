@@ -45,7 +45,7 @@ namespace sequoia::physics
 
   struct no_unit_t
   {
-    using validator_type = maths::half_space_validator;
+    using validator_type = maths::half_line_validator;
   };
 
   inline constexpr no_unit_t no_unit{};
@@ -192,9 +192,9 @@ namespace sequoia::physics
   };
 
   template<>
-  struct reduced_validator<half_space_validator, half_space_validator>
+  struct reduced_validator<half_line_validator, half_line_validator>
   {
-    using type = half_space_validator;
+    using type = half_line_validator;
   };
 
   template<convex_space QuantitySpace, quantity_unit Unit>
@@ -204,7 +204,7 @@ namespace sequoia::physics
   template<convex_space QuantitySpace, quantity_unit Unit>
   inline constexpr bool has_intrinsic_origin{
        vector_space<QuantitySpace>
-    || (!affine_space<QuantitySpace> && defines_half_space_v<typename Unit::validator_type>)
+    || (!affine_space<QuantitySpace> && defines_half_line_v<typename Unit::validator_type>)
   };
 
 
@@ -334,7 +334,7 @@ namespace sequoia::physics
     constexpr static std::size_t D{dimension};
 
     constexpr static bool is_intrinsically_absolute{
-      (D == 1) && !affine_space<quantity_space_type> && defines_half_space_v<intrinsic_validator_type>
+      (D == 1) && !affine_space<quantity_space_type> && defines_half_line_v<intrinsic_validator_type>
     };
 
     constexpr static bool is_effectively_absolute{is_intrinsically_absolute && std::is_same_v<Validator, intrinsic_validator_type>};
@@ -538,22 +538,22 @@ namespace sequoia::physics
   {
     struct kilogram_t
     {
-      using validator_type = half_space_validator;
+      using validator_type = half_line_validator;
     };
 
     struct metre_t
     {
-      using validator_type = half_space_validator;
+      using validator_type = half_line_validator;
     };
 
     struct second_t
     {
-      using validator_type = half_space_validator;
+      using validator_type = half_line_validator;
     };
 
     struct kelvin_t
     {
-      using validator_type = half_space_validator;
+      using validator_type = half_line_validator;
     };
 
     struct coulomb_t
@@ -584,14 +584,6 @@ namespace sequoia::physics
           if(val < T(-273.15)) throw std::domain_error{std::format("Value {} less than -273.15", val)};
 
           return val;
-        }
-
-        // TO DO: remove the need for this
-        template<std::floating_point T>
-        [[nodiscard]]
-        constexpr std::array<T, 1> operator()(std::array<T, 1> val) const
-        {
-          return {operator()(val.front())};
         }
       };
 

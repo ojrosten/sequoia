@@ -201,18 +201,26 @@ namespace sequoia::maths
   concept affine_space = convex_space<T> && (identifies_as_affine_space_v<T> || identifies_as_vector_space_v<T>);
 
   template<class V, class ConvexSpace>
+  inline constexpr bool validator_for_single_value{
+       (dimension_of<ConvexSpace> == 1)
+    && requires(V& v, const space_value_type<ConvexSpace>& val) { { v(val) } -> std::convertible_to<decltype(val)>; }
+  };
+
+  template<class V, class ConvexSpace>
+  inline constexpr bool validator_for_array{
+    requires (V& v, std::array<space_value_type<ConvexSpace>, dimension_of<ConvexSpace>> values) {
+      { v(values) } -> std::convertible_to<decltype(values)>;
+    }
+  };
+
+  template<class V, class ConvexSpace>
   concept validator_for =
        convex_space<ConvexSpace>
     && std::default_initializable<V>
     && std::constructible_from<V, V>
-    && (    requires (V& v, std::array<const space_value_type<ConvexSpace>, dimension_of<ConvexSpace>> values) {
-              { v(values) } -> std::convertible_to<decltype(values)>;
-            }
-         || (   (dimension_of<ConvexSpace> == 1)
-             && requires(V & v, const space_value_type<ConvexSpace>& val) { { v(val) } -> std::convertible_to<decltype(val)>; })
-       );
+    && (validator_for_single_value<V, ConvexSpace> || validator_for_array<V, ConvexSpace>);
 
-  struct half_space_validator
+  struct half_line_validator
   {
     template<std::floating_point T>
     [[nodiscard]]
@@ -222,26 +230,19 @@ namespace sequoia::maths
 
       return val;
     }
-
-    template<std::floating_point T>
-    [[nodiscard]]
-    constexpr std::array<T, 1> operator()(std::array<T, 1> val) const
-    {
-      return {operator()(val.front())};
-    }
   };
 
   template<class T>
-  struct defines_half_space : std::false_type {};
+  struct defines_half_line : std::false_type {};
 
   template<class T>
-  using defines_half_space_t = typename defines_half_space<T>::type;
+  using defines_half_line_t = typename defines_half_line<T>::type;
 
   template<class T>
-  inline constexpr bool defines_half_space_v{defines_half_space<T>::value};
+  inline constexpr bool defines_half_line_v{defines_half_line<T>::value};
 
   template<>
-  struct defines_half_space<half_space_validator> : std::true_type {};
+  struct defines_half_line<half_line_validator> : std::true_type {};
 
   struct intrinsic_origin {};
 
@@ -435,14 +436,20 @@ namespace sequoia::maths
 
     constexpr coordinates_base() noexcept = default;
 
-    constexpr explicit coordinates_base(std::span<const value_type, D> d) noexcept(has_identity_validator)
-      : m_Values{m_Validator(to_array(d))}
+    constexpr explicit coordinates_base(std::span<const value_type, D> vals) noexcept(has_identity_validator)
+      : m_Values{validate(vals, m_Validator)}
     {}
 
     template<class... Ts>
-      requires (sizeof...(Ts) == D) && (std::convertible_to<Ts, value_type> && ...)
-    constexpr explicit(sizeof...(Ts) == 1) coordinates_base(Ts... ts) noexcept(has_identity_validator)
+      requires (D > 1) && (sizeof...(Ts) == D) && (std::convertible_to<Ts, value_type> && ...)
+    constexpr coordinates_base(Ts... ts) noexcept(has_identity_validator)
       : m_Values{m_Validator(std::array<value_type, D>{ts...})}
+    {}
+
+    template<class T>
+      requires (D == 1) && (std::convertible_to<T, value_type>)
+    constexpr explicit coordinates_base(T val) noexcept(has_identity_validator)
+      : m_Values{m_Validator(val)}
     {}
 
     template<class Self>
@@ -588,6 +595,21 @@ namespace sequoia::maths
     SEQUOIA_NO_UNIQUE_ADDRESS validator_type m_Validator;
     std::array<value_type, D> m_Values{};
 
+    [[nodiscard]]
+    static std::array<value_type, D> validate(std::span<const value_type, D> vals, Validator& validator)
+    {
+      return validate(to_array(vals), validator);
+    }
+
+    [[nodiscard]]
+    static std::array<value_type, D> validate(std::array<value_type, D> vals, Validator& validator)
+    {
+      if constexpr(validator_for_array<Validator, ConvexSpace>)
+        return validator(vals);
+      else
+        return {validator(vals.front())};
+    }
+
     template<class Self, class Fn>
       requires std::invocable<Fn, value_type&, value_type>
     constexpr void apply_to_each_element(this Self& self, std::span<const value_type, D> rhs, Fn f)
@@ -600,7 +622,7 @@ namespace sequoia::maths
       {
         auto tmp{self.m_Values};
         std::ranges::for_each(std::views::zip(tmp, rhs), [&f](auto&& z){ f(std::get<0>(z), std::get<1>(z)); });
-        self.m_Values = self.m_Validator(tmp);
+        self.m_Values = validate(tmp, self.m_Validator);
       }
     }
 
@@ -616,7 +638,7 @@ namespace sequoia::maths
       {
         auto tmp{self.m_Values};
         std::ranges::for_each(tmp, f);
-        self.m_Values = self.m_Validator(tmp);
+        self.m_Values = validate(tmp, self.m_Validator);
       }
     }
   };

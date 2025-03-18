@@ -255,7 +255,7 @@ namespace sequoia::testing
 
       add_dim_1_common_transitions(g, test, units...);
 
-      if constexpr(!maths::defines_half_space_v<typename Coordinates::validator_type>)
+      if constexpr(!maths::defines_half_line_v<typename Coordinates::validator_type>)
       {
         add_dim_1_negative_transitions(g, test, units...);
       }
