@@ -429,7 +429,19 @@ namespace sequoia::physics
     };
 
     template<class HostSystem>
-    struct lengths
+    struct temperatures
+    {
+      using host_system_type = HostSystem;
+    };
+
+    template<class HostSystem>
+    struct electrical_charges
+    {
+      using host_system_type = HostSystem;
+    };
+
+    template<class HostSystem>
+    struct times
     {
       using host_system_type = HostSystem;
     };
@@ -441,13 +453,19 @@ namespace sequoia::physics
     };
 
     template<class HostSystem>
-    struct temperatures
+    struct positions
     {
       using host_system_type = HostSystem;
     };
 
     template<class HostSystem>
-    struct electrical_charges
+    struct lengths
+    {
+      using host_system_type = HostSystem;
+    };
+
+    template<class HostSystem>
+    struct angles
     {
       using host_system_type = HostSystem;
     };
@@ -503,16 +521,6 @@ namespace sequoia::physics
   {};
 
   template<std::floating_point Rep, class HostSystem>
-  struct length_space
-    : quantity_convex_space<classical_quantity_sets::lengths<HostSystem>, Rep, length_space<Rep, HostSystem>>
-  {};
-
-  template<std::floating_point Rep, class HostSystem>
-  struct time_interval_space
-    : quantity_convex_space<classical_quantity_sets::time_intervals<HostSystem>, Rep, time_interval_space<Rep, HostSystem>>
-  {};
-
-  template<std::floating_point Rep, class HostSystem>
   struct temperature_space
     : quantity_convex_space<classical_quantity_sets::temperatures<HostSystem>, Rep, temperature_space<Rep, HostSystem>>
   {};
@@ -523,15 +531,25 @@ namespace sequoia::physics
   {};
 
   template<std::floating_point Rep, class HostSystem>
-  struct angular_space : quantity_vector_space<sets::R<1, Rep>, Rep, angular_space<Rep, HostSystem>>
+  struct angular_space : quantity_vector_space<classical_quantity_sets::angles<HostSystem>, Rep, angular_space<Rep, HostSystem>>
   {};
 
   template<std::floating_point Rep, class HostSystem>
-  struct time_space : quantity_affine_space<sets::R<1, Rep>, Rep, time_space<Rep, HostSystem>>
+  struct length_space
+    : quantity_convex_space<classical_quantity_sets::lengths<HostSystem>, Rep, length_space<Rep, HostSystem>>
+  {};
+
+  template<std::floating_point Rep, class HostSystem>
+  struct time_interval_space
+    : quantity_convex_space<classical_quantity_sets::time_intervals<HostSystem>, Rep, time_interval_space<Rep, HostSystem>>
+  {};
+  
+  template<std::floating_point Rep, class HostSystem>
+  struct time_space : quantity_affine_space<classical_quantity_sets::times<HostSystem>, Rep, time_space<Rep, HostSystem>>
   {};
 
   template<std::size_t D, std::floating_point Rep, class HostSystem>
-  struct position_space : quantity_affine_space<sets::R<D, Rep>, Rep, position_space<D, Rep, HostSystem>>
+  struct position_space : quantity_affine_space<classical_quantity_sets::positions<HostSystem>, Rep, position_space<D, Rep, HostSystem>>
   {};
 
   namespace units
@@ -621,7 +639,8 @@ namespace sequoia::physics
       class Origin=implicit_affine_origin<time_space<T, HostSystem>>
     >
     using time = quantity<time_space<T, HostSystem>, units::second_t, Origin, std::identity>;
-    
+
+    // TO DO: consider other coordinate systems
     template<
       std::size_t D,
       std::floating_point T,
@@ -631,7 +650,6 @@ namespace sequoia::physics
     using position = quantity<position_space<D, T, HostSystem>, units::metre_t, Origin, std::identity>;
   }
 
-  // TO DO: generalize this higher dimensions
   template<vector_space QuantitySpace, quantity_unit Unit, class Origin, validator_for<QuantitySpace> Validator>
     requires (dimension_of<QuantitySpace> == 1)
   [[nodiscard]]
