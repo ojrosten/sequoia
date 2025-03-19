@@ -214,7 +214,7 @@ namespace sequoia::physics
     || (!has_intrinsic_origin<QuantitySpace, Unit> && !std::is_same_v<Origin, intrinsic_origin>)
   };
 
-  template<convex_space QuantitySpace, class Validator>
+  template<convex_space QuantitySpace, validator_for<QuantitySpace> Validator>
   inline constexpr bool has_consistent_validator{
     !affine_space<QuantitySpace> || std::is_same_v<Validator, std::identity>
   };
