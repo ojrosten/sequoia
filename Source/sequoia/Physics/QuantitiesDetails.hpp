@@ -35,7 +35,7 @@ namespace sequoia::physics
   struct composite_unit;
     
   template<class T>
-  concept quantity_unit = requires {
+  concept physical_unit = requires {
     typename T::validator_type;
   };
 
@@ -350,7 +350,7 @@ namespace sequoia::physics::impl
     using type = std::tuple<Us...>;
   };
 
-  template<physics::quantity_unit T>
+  template<physics::physical_unit T>
   struct reduce<std::tuple<type_counter<T, 0>>>
   {
     using type = std::tuple<physics::no_unit_t>;
@@ -378,7 +378,7 @@ namespace sequoia::physics::impl
                                     direct_product<reduced_tuple_type>>;
   };
      
-  template<physics::quantity_unit... Ts>
+  template<physics::physical_unit... Ts>
   struct simplify<physics::composite_unit<std::tuple<Ts...>>>
   {
     using reduced_tuple_type = simplify_t<std::tuple<Ts...>>;
@@ -396,7 +396,7 @@ namespace sequoia::maths
     using type = physics::reduction<direct_product<std::tuple<dual_of_t<Ts>...>>>;
   };
 
-  template<physics::quantity_unit... Ts>
+  template<physics::physical_unit... Ts>
   struct dual_of<physics::composite_unit<std::tuple<Ts...>>>
   {
     using type = physics::composite_unit<std::tuple<dual_of_t<Ts>...>>;

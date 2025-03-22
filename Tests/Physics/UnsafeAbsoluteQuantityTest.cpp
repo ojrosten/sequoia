@@ -32,9 +32,9 @@ namespace sequoia::testing
   template<class Quantity>
   void unsafe_absolute_quantity_test::test_absolute_quantity()
   {
-    using space_type   = Quantity::quantity_space_type;
+    using space_type   = Quantity::space_type;
     using unsafe_qty_t = quantity<space_type, typename Quantity::units_type, typename Quantity::origin_type, std::identity>;
-    using delta_q_t    = unsafe_qty_t::displacement_quantity_type;
+    using delta_q_t    = unsafe_qty_t::displacement_type;
     using units_type   = unsafe_qty_t::units_type;
     using value_type   = unsafe_qty_t::value_type;
 

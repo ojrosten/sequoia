@@ -32,8 +32,8 @@ namespace sequoia::testing
   {
     {
       using quantity_t = Quantity;
-      using delta_q_t  = quantity_t::displacement_quantity_type;
-      using space_type = quantity_t::quantity_space_type;
+      using delta_q_t  = quantity_t::displacement_type;
+      using space_type = quantity_t::space_type;
       using units_type = quantity_t::units_type;
 
       STATIC_CHECK(convex_space<space_type>);

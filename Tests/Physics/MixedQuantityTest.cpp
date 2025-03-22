@@ -30,7 +30,7 @@ namespace sequoia::testing
   void mixed_quantity_test::test_mixed()
   {
     using mass_t        = si::mass<float>;
-    using d_mass_t      = mass_t::displacement_quantity_type;
+    using d_mass_t      = mass_t::displacement_type;
     using length_t      = si::length<float>;
     using charge_t      = si::electrical_charge<float>;
     using temperature_t = si::temperature<float>;

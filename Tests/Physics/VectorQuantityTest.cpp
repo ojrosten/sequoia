@@ -37,8 +37,8 @@ namespace sequoia::testing
   void vector_quantity_test::test_vector_quantity()
   {
     using quantity_t = Quantity;
-    using delta_q_t  = quantity_t::displacement_quantity_type;
-    using space_type = quantity_t::quantity_space_type;
+    using delta_q_t  = quantity_t::displacement_type;
+    using space_type = quantity_t::space_type;
     using value_type = quantity_t::value_type;
     using units_type = quantity_t::units_type;
 
