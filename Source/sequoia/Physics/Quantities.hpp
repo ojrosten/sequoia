@@ -435,7 +435,7 @@ namespace sequoia::physics
     };
 
     template<class Arena>
-    struct electrical_charges
+    struct electrical_currents
     {
       using arena_type = Arena;
     };
@@ -526,8 +526,8 @@ namespace sequoia::physics
   {};
 
   template<std::floating_point Rep, class Arena>
-  struct electrical_charge_space
-    : physical_value_vector_space<classical_physical_value_sets::electrical_charges<Arena>, Rep, electrical_charge_space<Rep, Arena>>
+  struct electrical_current_space
+    : physical_value_vector_space<classical_physical_value_sets::electrical_currents<Arena>, Rep, electrical_current_space<Rep, Arena>>
   {};
 
   template<std::floating_point Rep, class Arena>
@@ -554,6 +554,11 @@ namespace sequoia::physics
 
   namespace units
   {
+    struct ampere_t
+    {
+      using validator_type = std::identity;
+    };
+    
     struct kilogram_t
     {
       using validator_type = half_line_validator;
@@ -584,6 +589,7 @@ namespace sequoia::physics
       using validator_type = std::identity;
     };
 
+    inline constexpr ampere_t   ampere{};
     inline constexpr kilogram_t kilogram{};
     inline constexpr metre_t    metre{};
     inline constexpr second_t   second{};
@@ -628,7 +634,7 @@ namespace sequoia::physics
     using temperature = physical_value<temperature_space<T, Arena>, units::kelvin_t>;
 
     template<std::floating_point T, class Arena=implicit_common_arena>
-    using electrical_charge = physical_value<electrical_charge_space<T, Arena>, units::coulomb_t>;
+    using electrical_current = physical_value<electrical_current_space<T, Arena>, units::ampere_t>;
 
     template<std::floating_point T, class Arena=implicit_common_arena>
     using angle = physical_value<angular_space<T, Arena>, units::radian_t>;

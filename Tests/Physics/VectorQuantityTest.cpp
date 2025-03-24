@@ -25,8 +25,8 @@ namespace sequoia::testing
 
   void vector_quantity_test::run_tests()
   {
-    test_vector_quantity<si::electrical_charge<float>>();
-    test_vector_quantity<si::electrical_charge<double>>();
+    test_vector_quantity<si::electrical_current<float>>();
+    test_vector_quantity<si::electrical_current<double>>();
     test_vector_quantity<si::angle<float>>();
 
     test_trig<float>();
