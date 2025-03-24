@@ -422,52 +422,52 @@ namespace sequoia::physics
 
   namespace classical_physical_value_sets
   {
-    template<class HostSystem>
+    template<class Arena>
     struct masses
     {
-      using host_system_type = HostSystem;
+      using arena_type = Arena;
     };
 
-    template<class HostSystem>
+    template<class Arena>
     struct temperatures
     {
-      using host_system_type = HostSystem;
+      using arena_type = Arena;
     };
 
-    template<class HostSystem>
+    template<class Arena>
     struct electrical_charges
     {
-      using host_system_type = HostSystem;
+      using arena_type = Arena;
     };
 
-    template<class HostSystem>
+    template<class Arena>
     struct times
     {
-      using host_system_type = HostSystem;
+      using arena_type = Arena;
     };
 
-    template<class HostSystem>
+    template<class Arena>
     struct time_intervals
     {
-      using host_system_type = HostSystem;
+      using arena_type = Arena;
     };
 
-    template<class HostSystem>
+    template<class Arena>
     struct positions
     {
-      using host_system_type = HostSystem;
+      using arena_type = Arena;
     };
 
-    template<class HostSystem>
+    template<class Arena>
     struct lengths
     {
-      using host_system_type = HostSystem;
+      using arena_type = Arena;
     };
 
-    template<class HostSystem>
+    template<class Arena>
     struct angles
     {
-      using host_system_type = HostSystem;
+      using arena_type = Arena;
     };
 
     template<class Physical_ValueSet>
@@ -515,41 +515,41 @@ namespace sequoia::physics
     constexpr static std::size_t dimension{1};
   };
 
-  template<std::floating_point Rep, class HostSystem>
+  template<std::floating_point Rep, class Arena>
   struct mass_space
-    : physical_value_convex_space<classical_physical_value_sets::masses<HostSystem>, Rep, mass_space<Rep, HostSystem>>
+    : physical_value_convex_space<classical_physical_value_sets::masses<Arena>, Rep, mass_space<Rep, Arena>>
   {};
 
-  template<std::floating_point Rep, class HostSystem>
+  template<std::floating_point Rep, class Arena>
   struct temperature_space
-    : physical_value_convex_space<classical_physical_value_sets::temperatures<HostSystem>, Rep, temperature_space<Rep, HostSystem>>
+    : physical_value_convex_space<classical_physical_value_sets::temperatures<Arena>, Rep, temperature_space<Rep, Arena>>
   {};
 
-  template<std::floating_point Rep, class HostSystem>
+  template<std::floating_point Rep, class Arena>
   struct electrical_charge_space
-    : physical_value_vector_space<classical_physical_value_sets::electrical_charges<HostSystem>, Rep, electrical_charge_space<Rep, HostSystem>>
+    : physical_value_vector_space<classical_physical_value_sets::electrical_charges<Arena>, Rep, electrical_charge_space<Rep, Arena>>
   {};
 
-  template<std::floating_point Rep, class HostSystem>
-  struct angular_space : physical_value_vector_space<classical_physical_value_sets::angles<HostSystem>, Rep, angular_space<Rep, HostSystem>>
+  template<std::floating_point Rep, class Arena>
+  struct angular_space : physical_value_vector_space<classical_physical_value_sets::angles<Arena>, Rep, angular_space<Rep, Arena>>
   {};
 
-  template<std::floating_point Rep, class HostSystem>
+  template<std::floating_point Rep, class Arena>
   struct length_space
-    : physical_value_convex_space<classical_physical_value_sets::lengths<HostSystem>, Rep, length_space<Rep, HostSystem>>
+    : physical_value_convex_space<classical_physical_value_sets::lengths<Arena>, Rep, length_space<Rep, Arena>>
   {};
 
-  template<std::floating_point Rep, class HostSystem>
+  template<std::floating_point Rep, class Arena>
   struct time_interval_space
-    : physical_value_convex_space<classical_physical_value_sets::time_intervals<HostSystem>, Rep, time_interval_space<Rep, HostSystem>>
+    : physical_value_convex_space<classical_physical_value_sets::time_intervals<Arena>, Rep, time_interval_space<Rep, Arena>>
   {};
   
-  template<std::floating_point Rep, class HostSystem>
-  struct time_space : physical_value_affine_space<classical_physical_value_sets::times<HostSystem>, Rep, time_space<Rep, HostSystem>>
+  template<std::floating_point Rep, class Arena>
+  struct time_space : physical_value_affine_space<classical_physical_value_sets::times<Arena>, Rep, time_space<Rep, Arena>>
   {};
 
-  template<std::size_t D, std::floating_point Rep, class HostSystem>
-  struct position_space : physical_value_affine_space<classical_physical_value_sets::positions<HostSystem>, Rep, position_space<D, Rep, HostSystem>>
+  template<std::size_t D, std::floating_point Rep, class Arena>
+  struct position_space : physical_value_affine_space<classical_physical_value_sets::positions<Arena>, Rep, position_space<D, Rep, Arena>>
   {};
 
   namespace units
@@ -611,43 +611,43 @@ namespace sequoia::physics
     inline constexpr celsius_t celsius{};
   }
   
-  struct implicit_common_system {};
+  struct implicit_common_arena {};
 
   namespace si
   {
-    template<std::floating_point T, class HostSystem=implicit_common_system>
-    using mass = physical_value<mass_space<T, HostSystem>, units::kilogram_t>;
+    template<std::floating_point T, class Arena=implicit_common_arena>
+    using mass = physical_value<mass_space<T, Arena>, units::kilogram_t>;
 
-    template<std::floating_point T, class HostSystem=implicit_common_system>
-    using length = physical_value<length_space<T, HostSystem>, units::metre_t>;
+    template<std::floating_point T, class Arena=implicit_common_arena>
+    using length = physical_value<length_space<T, Arena>, units::metre_t>;
 
-    template<std::floating_point T, class HostSystem=implicit_common_system>
-    using time_interval = physical_value<time_interval_space<T, HostSystem>, units::second_t>;
+    template<std::floating_point T, class Arena=implicit_common_arena>
+    using time_interval = physical_value<time_interval_space<T, Arena>, units::second_t>;
 
-    template<std::floating_point T, class HostSystem=implicit_common_system>
-    using temperature = physical_value<temperature_space<T, HostSystem>, units::kelvin_t>;
+    template<std::floating_point T, class Arena=implicit_common_arena>
+    using temperature = physical_value<temperature_space<T, Arena>, units::kelvin_t>;
 
-    template<std::floating_point T, class HostSystem=implicit_common_system>
-    using electrical_charge = physical_value<electrical_charge_space<T, HostSystem>, units::coulomb_t>;
+    template<std::floating_point T, class Arena=implicit_common_arena>
+    using electrical_charge = physical_value<electrical_charge_space<T, Arena>, units::coulomb_t>;
 
-    template<std::floating_point T, class HostSystem=implicit_common_system>
-    using angle = physical_value<angular_space<T, HostSystem>, units::radian_t>;
+    template<std::floating_point T, class Arena=implicit_common_arena>
+    using angle = physical_value<angular_space<T, Arena>, units::radian_t>;
 
     template<
       std::floating_point T,
-      class HostSystem=implicit_common_system,
-      class Origin=implicit_affine_origin<time_space<T, HostSystem>>
+      class Arena=implicit_common_arena,
+      class Origin=implicit_affine_origin<time_space<T, Arena>>
     >
-    using time = physical_value<time_space<T, HostSystem>, units::second_t, Origin, std::identity>;
+    using time = physical_value<time_space<T, Arena>, units::second_t, Origin, std::identity>;
 
-    // TO DO: consider other coordinate systems
+    // TO DO: consider other coordinate arenas
     template<
       std::size_t D,
       std::floating_point T,
-      class HostSystem=implicit_common_system,
-      class Origin=implicit_affine_origin<position_space<D, T, HostSystem>>
+      class Arena=implicit_common_arena,
+      class Origin=implicit_affine_origin<position_space<D, T, Arena>>
     >
-    using position = physical_value<position_space<D, T, HostSystem>, units::metre_t, Origin, std::identity>;
+    using position = physical_value<position_space<D, T, Arena>, units::metre_t, Origin, std::identity>;
   }
 
   template<vector_space ValueSpace, physical_unit Unit, class Origin, validator_for<ValueSpace> Validator>
@@ -658,46 +658,46 @@ namespace sequoia::physics
     return {std::abs(q.value()), Unit{}};
   }
 
-  template<std::floating_point T, class HostSystem=implicit_common_system>
+  template<std::floating_point T, class Arena=implicit_common_arena>
   [[nodiscard]]
-  constexpr T sin(physical_value<angular_space<T, HostSystem>, units::radian_t> theta)
+  constexpr T sin(physical_value<angular_space<T, Arena>, units::radian_t> theta)
   {
     return std::sin(theta.value());
   }
 
-  template<std::floating_point T, class HostSystem=implicit_common_system>
+  template<std::floating_point T, class Arena=implicit_common_arena>
   [[nodiscard]]
-  constexpr T cos(physical_value<angular_space<T, HostSystem>, units::radian_t> theta)
+  constexpr T cos(physical_value<angular_space<T, Arena>, units::radian_t> theta)
   {
     return std::cos(theta.value());
   }
 
-  template<std::floating_point T, class HostSystem=implicit_common_system>
+  template<std::floating_point T, class Arena=implicit_common_arena>
   [[nodiscard]]
-  constexpr T tan(physical_value<angular_space<T, HostSystem>, units::radian_t> theta)
+  constexpr T tan(physical_value<angular_space<T, Arena>, units::radian_t> theta)
   {
     return std::tan(theta.value());
   }
 
-  template<class HostSystem=implicit_common_system, std::floating_point T>
+  template<class Arena=implicit_common_arena, std::floating_point T>
   [[nodiscard]]
-  constexpr physical_value<angular_space<T, HostSystem>, units::radian_t> asin(T x)
+  constexpr physical_value<angular_space<T, Arena>, units::radian_t> asin(T x)
   {
-    return physical_value<angular_space<T, HostSystem>, units::radian_t>{std::asin(x), units::radian};
+    return physical_value<angular_space<T, Arena>, units::radian_t>{std::asin(x), units::radian};
   }
 
-  template<class HostSystem=implicit_common_system, std::floating_point T>
+  template<class Arena=implicit_common_arena, std::floating_point T>
   [[nodiscard]]
-  constexpr physical_value<angular_space<T, HostSystem>, units::radian_t> acos(T x)
+  constexpr physical_value<angular_space<T, Arena>, units::radian_t> acos(T x)
   {
-    return physical_value<angular_space<T, HostSystem>, units::radian_t>{std::acos(x), units::radian};
+    return physical_value<angular_space<T, Arena>, units::radian_t>{std::acos(x), units::radian};
   }
 
-  template<class HostSystem=implicit_common_system, std::floating_point T>
+  template<class Arena=implicit_common_arena, std::floating_point T>
   [[nodiscard]]
-  constexpr physical_value<angular_space<T, HostSystem>, units::radian_t> atan(T x)
+  constexpr physical_value<angular_space<T, Arena>, units::radian_t> atan(T x)
   {
-    return physical_value<angular_space<T, HostSystem>, units::radian_t>{std::atan(x), units::radian};
+    return physical_value<angular_space<T, Arena>, units::radian_t>{std::atan(x), units::radian};
   }
 
   template<

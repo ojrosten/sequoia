@@ -23,8 +23,8 @@ namespace sequoia::testing
 
   void convex_quantity_test::run_tests()
   {
-    test_convex_quantity<quantity<temperature_space<float,  implicit_common_system>, units::celsius_t>>();
-    test_convex_quantity<quantity<temperature_space<double, implicit_common_system>, units::celsius_t>>();
+    test_convex_quantity<quantity<temperature_space<float,  implicit_common_arena>, units::celsius_t>>();
+    test_convex_quantity<quantity<temperature_space<double, implicit_common_arena>, units::celsius_t>>();
   }
 
   template<class Quantity>
