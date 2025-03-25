@@ -426,18 +426,21 @@ namespace sequoia::physics
     struct masses
     {
       using arena_type = Arena;
+      using base_space = masses;
     };
 
     template<class Arena>
     struct temperatures
     {
       using arena_type = Arena;
+      using base_space = temperatures;
     };
 
     template<class Arena>
     struct electrical_currents
     {
       using arena_type = Arena;
+      using base_space = electrical_currents;
     };
 
     template<class Arena>
@@ -450,6 +453,7 @@ namespace sequoia::physics
     struct time_intervals
     {
       using arena_type = Arena;
+      using base_space = time_intervals;
     };
 
     template<class Arena>
@@ -462,6 +466,7 @@ namespace sequoia::physics
     struct lengths
     {
       using arena_type = Arena;
+      using base_space = lengths;
     };
 
     template<class Arena>
@@ -470,11 +475,17 @@ namespace sequoia::physics
       using arena_type = Arena;
     };
 
-    template<class Physical_ValueSet>
+    template<class PhysicalValueSet>
     struct differences
     {
-      using physical_value_set_type = Physical_ValueSet;
+      using physical_value_set_type = PhysicalValueSet;
     };
+
+    template<class Arena>
+    struct widths : lengths<Arena> {};
+
+    template<class Arena>
+    struct heights : lengths<Arena> {};
   }
 
   template<class Space>
@@ -483,73 +494,74 @@ namespace sequoia::physics
     using set_type          = classical_physical_value_sets::differences<typename Space::set_type>;
     using field_type        = Space::representation_type;
     using vector_space_type = displacement_space;
+    // TO DO: fix this!
     constexpr static std::size_t dimension{1};
   };
 
-  template<class Physical_ValueSet, std::floating_point Rep, class Derived>
+  template<class PhysicalValueSet, std::floating_point Rep, std::size_t D, class Derived>
   struct physical_value_convex_space
   {
-    using set_type            = Physical_ValueSet;
+    using set_type            = PhysicalValueSet;
     using representation_type = Rep;
     using vector_space_type   = displacement_space<Derived>;
     using convex_space_type   = Derived;
   };
 
-  template<class Physical_ValueSet, std::floating_point Rep, class Derived>
+  template<class PhysicalValueSet, std::floating_point Rep, std::size_t D, class Derived>
   struct physical_value_affine_space
   {
-    using set_type            = Physical_ValueSet;
+    using set_type            = PhysicalValueSet;
     using representation_type = Rep;
     using vector_space_type   = displacement_space<Derived>;
     using affine_space_type   = Derived;
   };
 
-  template<class Physical_ValueSet, std::floating_point Rep, class Derived>
+  template<class PhysicalValueSet, std::floating_point Rep, std::size_t D, class Derived>
   struct physical_value_vector_space
   {
-    using set_type            = Physical_ValueSet;
+    using set_type            = PhysicalValueSet;
     using representation_type = Rep;
     using field_type          = Rep;
     using vector_space_type   = Derived;
 
-    constexpr static std::size_t dimension{1};
+    constexpr static std::size_t dimension{D};
   };
 
   template<std::floating_point Rep, class Arena>
   struct mass_space
-    : physical_value_convex_space<classical_physical_value_sets::masses<Arena>, Rep, mass_space<Rep, Arena>>
+    : physical_value_convex_space<classical_physical_value_sets::masses<Arena>, Rep, 1, mass_space<Rep, Arena>>
   {};
 
   template<std::floating_point Rep, class Arena>
   struct temperature_space
-    : physical_value_convex_space<classical_physical_value_sets::temperatures<Arena>, Rep, temperature_space<Rep, Arena>>
+    : physical_value_convex_space<classical_physical_value_sets::temperatures<Arena>, Rep, 1, temperature_space<Rep, Arena>>
   {};
 
   template<std::floating_point Rep, class Arena>
   struct electrical_current_space
-    : physical_value_vector_space<classical_physical_value_sets::electrical_currents<Arena>, Rep, electrical_current_space<Rep, Arena>>
+    : physical_value_vector_space<classical_physical_value_sets::electrical_currents<Arena>, Rep, 1, electrical_current_space<Rep, Arena>>
   {};
 
   template<std::floating_point Rep, class Arena>
-  struct angular_space : physical_value_vector_space<classical_physical_value_sets::angles<Arena>, Rep, angular_space<Rep, Arena>>
+  struct angular_space : physical_value_vector_space<classical_physical_value_sets::angles<Arena>, Rep, 1, angular_space<Rep, Arena>>
   {};
 
   template<std::floating_point Rep, class Arena>
   struct length_space
-    : physical_value_convex_space<classical_physical_value_sets::lengths<Arena>, Rep, length_space<Rep, Arena>>
+    : physical_value_convex_space<classical_physical_value_sets::lengths<Arena>, Rep, 1, length_space<Rep, Arena>>
   {};
 
   template<std::floating_point Rep, class Arena>
   struct time_interval_space
-    : physical_value_convex_space<classical_physical_value_sets::time_intervals<Arena>, Rep, time_interval_space<Rep, Arena>>
+    : physical_value_convex_space<classical_physical_value_sets::time_intervals<Arena>, Rep, 1, time_interval_space<Rep, Arena>>
   {};
   
   template<std::floating_point Rep, class Arena>
-  struct time_space : physical_value_affine_space<classical_physical_value_sets::times<Arena>, Rep, time_space<Rep, Arena>>
+  struct time_space : physical_value_affine_space<classical_physical_value_sets::times<Arena>, Rep, 1, time_space<Rep, Arena>>
   {};
 
   template<std::size_t D, std::floating_point Rep, class Arena>
-  struct position_space : physical_value_affine_space<classical_physical_value_sets::positions<Arena>, Rep, position_space<D, Rep, Arena>>
+  struct position_space : physical_value_affine_space<classical_physical_value_sets::positions<Arena>, Rep, D, position_space<D, Rep, Arena>>
   {};
 
   namespace units
