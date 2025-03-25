@@ -70,6 +70,9 @@ namespace sequoia::testing
     using pos_t  = si::position<2, float>;
     using time_t = si::time<float>;
 
-    check(equivalence, "", (pos_t{2.0, units::metre} - pos_t{1.0, units::metre}) / (time_t{4.0, units::second} - time_t{2.0, units::second}), 0.5);
+    check(equivalence,
+          "",
+          (pos_t{std::array{2.0f, 1.0f}, units::metre} - pos_t{std::array{1.0f, -1.0f}, units::metre}) / (time_t{4.0, units::second} - time_t{2.0, units::second}),
+          std::array{0.5f, 1.0f});
   }
 }

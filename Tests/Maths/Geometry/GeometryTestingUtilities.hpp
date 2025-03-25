@@ -275,24 +275,24 @@ namespace sequoia::testing
     template<class... Units>
     static graph_type make_dim_2_transition_graph(regular_test& test, Units... units)
     {
-      using edge_t       = transition_checker<coords_t>::edge;
+      using edge_t = transition_checker<coords_t>::edge;
       graph_type g{
         {
           {
             edge_t{dim_2_label::one_one,         test.report("- (-1, -1)"),          [](coords_t v) -> coords_t { return -v; }},
             edge_t{dim_2_label::neg_one_neg_one, test.report("+ (-1, -1)"),          [](coords_t v) -> coords_t { return +v; }},
-            edge_t{dim_2_label::neg_one_zero,    test.report("(-1, -1) +  (0, 1)"),  [](coords_t v) -> coords_t { return v +  vec_t{field_t{}, field_t(1)}; }},
-            edge_t{dim_2_label::neg_one_zero,    test.report("(-1, -1) += (0, 1)"),  [](coords_t v) -> coords_t { return v += vec_t{field_t{}, field_t(1)}; }},
-            edge_t{dim_2_label::zero_neg_one,    test.report("(-1, -1) +  (1, 0)"),  [](coords_t v) -> coords_t { return v +  vec_t{field_t(1), field_t{}}; }},
-            edge_t{dim_2_label::zero_neg_one,    test.report("(-1, -1) += (1, 0)"),  [](coords_t v) -> coords_t { return v += vec_t{field_t(1), field_t{}}; }}
+            edge_t{dim_2_label::neg_one_zero,    test.report("(-1, -1) +  (0, 1)"),  [&](coords_t v) -> coords_t { return v +  vec_t{std::array{field_t{}, field_t(1)}, units...}; }},
+            edge_t{dim_2_label::neg_one_zero,    test.report("(-1, -1) += (0, 1)"),  [&](coords_t v) -> coords_t { return v += vec_t{std::array{field_t{}, field_t(1)}, units...}; }},
+            edge_t{dim_2_label::zero_neg_one,    test.report("(-1, -1) +  (1, 0)"),  [&](coords_t v) -> coords_t { return v +  vec_t{std::array{field_t(1), field_t{}}, units...}; }},
+            edge_t{dim_2_label::zero_neg_one,    test.report("(-1, -1) += (1, 0)"),  [&](coords_t v) -> coords_t { return v += vec_t{std::array{field_t(1), field_t{}}, units...}; }}
           }, // neg_one_neg_one
           {
-            edge_t{dim_2_label::neg_one_neg_one, test.report("(-1, 0) -  (0, 1)"),  [](coords_t v) -> coords_t { return v -  vec_t{field_t{}, field_t(1)}; }},
-            edge_t{dim_2_label::neg_one_neg_one, test.report("(-1, 0) -= (0, 1)"),  [](coords_t v) -> coords_t { return v -= vec_t{field_t{}, field_t(1)}; }}
+            edge_t{dim_2_label::neg_one_neg_one, test.report("(-1, 0) -  (0, 1)"),  [&](coords_t v) -> coords_t { return v -  vec_t{std::array{field_t{}, field_t(1)}, units...}; }},
+            edge_t{dim_2_label::neg_one_neg_one, test.report("(-1, 0) -= (0, 1)"),  [&](coords_t v) -> coords_t { return v -= vec_t{std::array{field_t{}, field_t(1)}, units...}; }}
           }, // neg_one_zero
           {
-            edge_t{dim_2_label::neg_one_neg_one, test.report("(0, -1) -  (1, 0)"),  [](coords_t v) -> coords_t { return v -  vec_t{field_t{1}, field_t(0)}; }},
-            edge_t{dim_2_label::neg_one_neg_one, test.report("(0, -1) -= (1, 0)"),  [](coords_t v) -> coords_t { return v -= vec_t{field_t{1}, field_t(0)}; }}
+            edge_t{dim_2_label::neg_one_neg_one, test.report("(0, -1) -  (1, 0)"),  [&](coords_t v) -> coords_t { return v -  vec_t{std::array{field_t{1}, field_t(0)}, units...}; }},
+            edge_t{dim_2_label::neg_one_neg_one, test.report("(0, -1) -= (1, 0)"),  [&](coords_t v) -> coords_t { return v -= vec_t{std::array{field_t{1}, field_t(0)}, units...}; }}
           }, // zero_neg_one
           {
           }, // zero_zero
@@ -303,13 +303,13 @@ namespace sequoia::testing
           {
           }, // one_one
         },
-        {coords_t{field_t(-1), field_t(-1), units...},
-         coords_t{field_t(-1), field_t{},   units...},
-         coords_t{field_t{},   field_t(-1), units...},
-         coords_t{field_t{},   field_t{},   units...},
-         coords_t{field_t{},   field_t(1),  units...},
-         coords_t{field_t(1),   field_t{},  units...},
-         coords_t{field_t(1),   field_t(1), units...}
+        {coords_t{std::array{field_t(-1), field_t(-1)}, units...},
+         coords_t{std::array{field_t(-1), field_t{}},   units...},
+         coords_t{std::array{field_t{},   field_t(-1)}, units...},
+         coords_t{std::array{field_t{},   field_t{}},   units...},
+         coords_t{std::array{field_t{},   field_t(1)},  units...},
+         coords_t{std::array{field_t(1),  field_t{}},   units...},
+         coords_t{std::array{field_t(1),  field_t(1)},  units...}
         }
       };
 

@@ -19,17 +19,33 @@ namespace sequoia::testing
   {
     using type       = physics::physical_value<PhysicalValueSpace, Unit, Origin, Validator>;
     using value_type = type::value_type;
+    constexpr static auto dimension{type::dimension};
 
     template<test_mode Mode>
     static void test(equality_check_t, test_logger<Mode>& logger, const type& actual, const type& prediction)
     {
-      check(equality, "Wrapped Value", logger, actual.value(), prediction.value());
+      if constexpr(dimension == 1)
+      {
+        check(equality, "Wrapped Value", logger, actual.value(), prediction.value());
+      }
+      else
+      {
+        check(equality, "Wrapped Values", logger, actual.values(), prediction.values());
+      }
     }
     
     template<test_mode Mode>
+      requires (dimension == 1)
     static void test(equivalence_check_t, test_logger<Mode>& logger, const type& actual, const value_type& prediction)
     {
       check(equality, "Wrapped Value", logger, actual.value(), prediction);
+    }
+
+    template<test_mode Mode>
+      requires (dimension > 1)
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const type& actual, const std::array<value_type, dimension>& prediction)
+    {
+      check(equivalence, "Wrapped Values", logger, actual.values(), prediction);
     }
   };
 }

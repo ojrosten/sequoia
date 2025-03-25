@@ -1,2 +1,2 @@
 Affine Quantity Test
-Standard Top Level Checks:               256;  Failures:  0  [Deep checks: 3344]
+Standard Top Level Checks:               241;  Failures:  0  [Deep checks: 2995]

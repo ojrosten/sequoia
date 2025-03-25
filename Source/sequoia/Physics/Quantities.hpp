@@ -387,7 +387,7 @@ namespace sequoia::physics
     friend constexpr displacement_type operator-(const physical_value& lhs, const physical_value& rhs) noexcept(has_identity_validator)
     {
       return[&] <std::size_t... Is>(std::index_sequence<Is...>) {
-        return displacement_type{(lhs.values()[Is] - rhs.values()[Is])..., units_type{}};
+        return displacement_type{std::array{(lhs.values()[Is] - rhs.values()[Is])...}, units_type{}};
       }(std::make_index_sequence<D>{});
     }
 
@@ -408,7 +408,16 @@ namespace sequoia::physics
     {
       using physical_value_t = physical_value_product_t<physical_value, physical_value<dual_of_t<RHSValueSpace>, dual_of_t<RHSUnit>, RHSOrigin, RHSValidator>>;
       using derived_units_type = physical_value_t::units_type;
-      return physical_value_t{lhs.value() / rhs.value(), derived_units_type{}};
+      if constexpr(dimension == 1)
+      {
+        return physical_value_t{lhs.value() / rhs.value(), derived_units_type{}};
+      }
+      else
+      {
+        return[&] <std::size_t... Is>(std::index_sequence<Is...>) {
+          return physical_value_t{std::array{(lhs.values()[Is] / rhs.value())...}, derived_units_type{}};
+        }(std::make_index_sequence<D>{});
+      }
     }
 
     [[nodiscard]] friend constexpr auto operator/(value_type value, const physical_value& rhs)
@@ -490,17 +499,17 @@ namespace sequoia::physics
 
   template<class Space>
   struct displacement_space
-  {
+  {    
+    constexpr static std::size_t dimension{Space::dimension};
     using set_type          = classical_physical_value_sets::differences<typename Space::set_type>;
     using field_type        = Space::representation_type;
     using vector_space_type = displacement_space;
-    // TO DO: fix this!
-    constexpr static std::size_t dimension{1};
   };
 
   template<class PhysicalValueSet, std::floating_point Rep, std::size_t D, class Derived>
   struct physical_value_convex_space
   {
+    constexpr static std::size_t dimension{D};
     using set_type            = PhysicalValueSet;
     using representation_type = Rep;
     using vector_space_type   = displacement_space<Derived>;
@@ -510,6 +519,7 @@ namespace sequoia::physics
   template<class PhysicalValueSet, std::floating_point Rep, std::size_t D, class Derived>
   struct physical_value_affine_space
   {
+    constexpr static std::size_t dimension{D};
     using set_type            = PhysicalValueSet;
     using representation_type = Rep;
     using vector_space_type   = displacement_space<Derived>;
@@ -519,12 +529,11 @@ namespace sequoia::physics
   template<class PhysicalValueSet, std::floating_point Rep, std::size_t D, class Derived>
   struct physical_value_vector_space
   {
+    constexpr static std::size_t dimension{D};
     using set_type            = PhysicalValueSet;
     using representation_type = Rep;
     using field_type          = Rep;
     using vector_space_type   = Derived;
-
-    constexpr static std::size_t dimension{D};
   };
 
   template<std::floating_point Rep, class Arena>
