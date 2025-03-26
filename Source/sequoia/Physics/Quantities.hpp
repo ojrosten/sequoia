@@ -376,6 +376,16 @@ namespace sequoia::physics
       return physical_value{this->values(), units_type{}};
     }
 
+    using coordinates_type::operator+=;
+    
+    template<convex_space OtherValueSpace>
+      requires is_intrinsically_absolute && (std::is_base_of_v<ValueSpace, OtherValueSpace>)
+    constexpr physical_value& operator+=(const physical_value<OtherValueSpace, Unit, Origin, Validator>& other) noexcept(has_identity_validator)
+    {
+      this->apply_to_each_element(other.values(), [](value_type& lhs, value_type rhs){ lhs += rhs; });
+      return *this;
+    }
+    
     [[nodiscard]]
     constexpr physical_value operator-() const noexcept(has_identity_validator)
       requires (!is_effectively_absolute)

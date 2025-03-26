@@ -467,19 +467,6 @@ namespace sequoia::maths
       return self;
     }
 
-    template<
-      class Self,
-      convex_space OtherConvexSpace,
-      class OtherDisplacementCoordinates
-    >
-    requires has_intrinsic_origin && (std::is_base_of_v<ConvexSpace, OtherConvexSpace>)
-    constexpr Self& operator+=(this Self& self,
-                               const coordinates_base<OtherConvexSpace, Basis, Origin, Validator, OtherDisplacementCoordinates>& other) noexcept(has_identity_validator)
-    {
-      self.apply_to_each_element(other.values(), [](value_type& lhs, value_type rhs){ lhs += rhs; });
-      return self;
-    }
-
     template<class Self>
     constexpr Self& operator-=(this Self& self, const displacement_coordinates_type& v) noexcept(has_identity_validator)
     {
@@ -604,25 +591,7 @@ namespace sequoia::maths
     coordinates_base& operator=(coordinates_base&&) noexcept = default;
 
     ~coordinates_base() = default;
-  private:
-    SEQUOIA_NO_UNIQUE_ADDRESS validator_type m_Validator;
-    std::array<value_type, D> m_Values{};
-
-    [[nodiscard]]
-    static std::array<value_type, D> validate(std::span<const value_type, D> vals, Validator& validator)
-    {
-      return validate(to_array(vals), validator);
-    }
-
-    [[nodiscard]]
-    static std::array<value_type, D> validate(std::array<value_type, D> vals, Validator& validator)
-    {
-      if constexpr(validator_for_array<Validator, ConvexSpace>)
-        return validator(vals);
-      else
-        return {validator(vals.front())};
-    }
-
+    
     template<class Self, class Fn>
       requires std::invocable<Fn, value_type&, value_type>
     constexpr void apply_to_each_element(this Self& self, std::span<const value_type, D> rhs, Fn f)
@@ -654,8 +623,26 @@ namespace sequoia::maths
         self.m_Values = validate(tmp, self.m_Validator);
       }
     }
-  };
+  private:
+    SEQUOIA_NO_UNIQUE_ADDRESS validator_type m_Validator;
+    std::array<value_type, D> m_Values{};
 
+    [[nodiscard]]
+    static std::array<value_type, D> validate(std::span<const value_type, D> vals, Validator& validator)
+    {
+      return validate(to_array(vals), validator);
+    }
+
+    [[nodiscard]]
+    static std::array<value_type, D> validate(std::array<value_type, D> vals, Validator& validator)
+    {
+      if constexpr(validator_for_array<Validator, ConvexSpace>)
+        return validator(vals);
+      else
+        return {validator(vals.front())};
+    }
+  };
+  
   template<convex_space ConvexSpace, basis_for<vector_space_type_of<ConvexSpace>> Basis, class Origin, validator_for<ConvexSpace> Validator>
   class coordinates : public coordinates_base<ConvexSpace, Basis, Origin, Validator>
   {
