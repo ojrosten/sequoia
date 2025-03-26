@@ -561,6 +561,16 @@ namespace sequoia::physics
   {};
 
   template<std::floating_point Rep, class Arena>
+  struct width_space
+    : physical_value_convex_space<classical_physical_value_sets::lengths<Arena>, Rep, 1, width_space<Rep, Arena>>
+  {};
+
+  template<std::floating_point Rep, class Arena>
+  struct height_space
+    : physical_value_convex_space<classical_physical_value_sets::lengths<Arena>, Rep, 1, height_space<Rep, Arena>>
+  {};
+
+  template<std::floating_point Rep, class Arena>
   struct time_interval_space
     : physical_value_convex_space<classical_physical_value_sets::time_intervals<Arena>, Rep, 1, time_interval_space<Rep, Arena>>
   {};
@@ -572,76 +582,77 @@ namespace sequoia::physics
   template<std::size_t D, std::floating_point Rep, class Arena>
   struct position_space : physical_value_affine_space<classical_physical_value_sets::positions<Arena>, Rep, D, position_space<D, Rep, Arena>>
   {};
-
-  namespace units
-  {
-    struct ampere_t
-    {
-      using validator_type = std::identity;
-    };
-    
-    struct kilogram_t
-    {
-      using validator_type = half_line_validator;
-    };
-
-    struct metre_t
-    {
-      using validator_type = half_line_validator;
-    };
-
-    struct second_t
-    {
-      using validator_type = half_line_validator;
-    };
-
-    struct kelvin_t
-    {
-      using validator_type = half_line_validator;
-    };
-
-    struct coulomb_t
-    {
-      using validator_type = std::identity;
-    };
-
-    struct radian_t
-    {
-      using validator_type = std::identity;
-    };
-
-    inline constexpr ampere_t   ampere{};
-    inline constexpr kilogram_t kilogram{};
-    inline constexpr metre_t    metre{};
-    inline constexpr second_t   second{};
-    inline constexpr kelvin_t   kelvin{};
-    inline constexpr coulomb_t  coulomb{};
-    inline constexpr radian_t   radian{};
-
-    struct celsius_t
-    {
-      struct validator
-      {
-        template<std::floating_point T>
-        [[nodiscard]]
-        constexpr T operator()(const T val) const
-        {
-          if(val < T(-273.15)) throw std::domain_error{std::format("Value {} less than -273.15", val)};
-
-          return val;
-        }
-      };
-
-      using validator_type = validator;
-    };
-
-    inline constexpr celsius_t celsius{};
-  }
   
   struct implicit_common_arena {};
 
   namespace si
   {
+    namespace units
+    {
+      struct ampere_t
+      {
+        using validator_type = std::identity;
+      };
+    
+      struct kilogram_t
+      {
+        using validator_type = half_line_validator;
+      };
+
+      struct metre_t
+      {
+        using validator_type = half_line_validator;
+      };
+
+      struct second_t
+      {
+        using validator_type = half_line_validator;
+      };
+
+      struct kelvin_t
+      {
+        using validator_type = half_line_validator;
+      };
+
+      struct coulomb_t
+      {
+        using validator_type = std::identity;
+      };
+
+      struct radian_t
+      {
+        using validator_type = std::identity;
+      };
+
+
+      struct celsius_t
+      {
+        struct validator
+        {
+          template<std::floating_point T>
+          [[nodiscard]]
+          constexpr T operator()(const T val) const
+          {
+            if(val < T(-273.15)) throw std::domain_error{std::format("Value {} less than -273.15", val)};
+
+            return val;
+          }
+        };
+
+        using validator_type = validator;
+      };
+
+      inline constexpr ampere_t   ampere{};
+      inline constexpr kilogram_t kilogram{};
+      inline constexpr metre_t    metre{};
+      inline constexpr second_t   second{};
+      inline constexpr kelvin_t   kelvin{};
+      inline constexpr coulomb_t  coulomb{};
+      inline constexpr radian_t   radian{};
+
+      inline constexpr celsius_t celsius{};
+    }
+  
     template<std::floating_point T, class Arena=implicit_common_arena>
     using mass = physical_value<mass_space<T, Arena>, units::kilogram_t>;
 
@@ -660,6 +671,13 @@ namespace sequoia::physics
     template<std::floating_point T, class Arena=implicit_common_arena>
     using angle = physical_value<angular_space<T, Arena>, units::radian_t>;
 
+
+    template<std::floating_point T, class Arena=implicit_common_arena>
+    using width = physical_value<width_space<T, Arena>, units::metre_t>;
+
+    template<std::floating_point T, class Arena=implicit_common_arena>
+    using height = physical_value<height_space<T, Arena>, units::metre_t>;
+
     template<
       std::floating_point T,
       class Arena=implicit_common_arena,
@@ -667,7 +685,7 @@ namespace sequoia::physics
     >
     using time = physical_value<time_space<T, Arena>, units::second_t, Origin, std::identity>;
 
-    // TO DO: consider other coordinate arenas
+    // TO DO: allow choice of eg LH or RH coordinate systems
     template<
       std::size_t D,
       std::floating_point T,
@@ -687,44 +705,44 @@ namespace sequoia::physics
 
   template<std::floating_point T, class Arena=implicit_common_arena>
   [[nodiscard]]
-  constexpr T sin(physical_value<angular_space<T, Arena>, units::radian_t> theta)
+  constexpr T sin(physical_value<angular_space<T, Arena>, si::units::radian_t> theta)
   {
     return std::sin(theta.value());
   }
 
   template<std::floating_point T, class Arena=implicit_common_arena>
   [[nodiscard]]
-  constexpr T cos(physical_value<angular_space<T, Arena>, units::radian_t> theta)
+  constexpr T cos(physical_value<angular_space<T, Arena>, si::units::radian_t> theta)
   {
     return std::cos(theta.value());
   }
 
   template<std::floating_point T, class Arena=implicit_common_arena>
   [[nodiscard]]
-  constexpr T tan(physical_value<angular_space<T, Arena>, units::radian_t> theta)
+  constexpr T tan(physical_value<angular_space<T, Arena>, si::units::radian_t> theta)
   {
     return std::tan(theta.value());
   }
 
   template<class Arena=implicit_common_arena, std::floating_point T>
   [[nodiscard]]
-  constexpr physical_value<angular_space<T, Arena>, units::radian_t> asin(T x)
+  constexpr physical_value<angular_space<T, Arena>, si::units::radian_t> asin(T x)
   {
-    return physical_value<angular_space<T, Arena>, units::radian_t>{std::asin(x), units::radian};
+    return physical_value<angular_space<T, Arena>, si::units::radian_t>{std::asin(x), si::units::radian};
   }
 
   template<class Arena=implicit_common_arena, std::floating_point T>
   [[nodiscard]]
-  constexpr physical_value<angular_space<T, Arena>, units::radian_t> acos(T x)
+  constexpr physical_value<angular_space<T, Arena>, si::units::radian_t> acos(T x)
   {
-    return physical_value<angular_space<T, Arena>, units::radian_t>{std::acos(x), units::radian};
+    return physical_value<angular_space<T, Arena>, si::units::radian_t>{std::acos(x), si::units::radian};
   }
 
   template<class Arena=implicit_common_arena, std::floating_point T>
   [[nodiscard]]
-  constexpr physical_value<angular_space<T, Arena>, units::radian_t> atan(T x)
+  constexpr physical_value<angular_space<T, Arena>, si::units::radian_t> atan(T x)
   {
-    return physical_value<angular_space<T, Arena>, units::radian_t>{std::atan(x), units::radian};
+    return physical_value<angular_space<T, Arena>, si::units::radian_t>{std::atan(x), si::units::radian};
   }
 
   template<

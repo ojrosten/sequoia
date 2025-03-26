@@ -86,7 +86,7 @@ namespace sequoia::testing
   void vector_quantity_test::test_trig()
   {
     using angle_t = si::angle<T>;
-    using namespace units;
+    using namespace si::units;
     constexpr auto pi{std::numbers::pi_v<T>};
 
     check(equality, "", sin(angle_t{-pi / 2, radian}), -T(1));

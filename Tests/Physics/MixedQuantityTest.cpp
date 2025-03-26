@@ -34,45 +34,48 @@ namespace sequoia::testing
     using length_t      = si::length<float>;
     using current_t     = si::electrical_current<float>;
     using temperature_t = si::temperature<float>;
-    using unsafe_mass_t = quantity<mass_space<float, implicit_common_arena>, units::kilogram_t, intrinsic_origin, std::identity>;
-    using unsafe_len_t  = quantity<length_space<float, implicit_common_arena>, units::metre_t, intrinsic_origin, std::identity>;
 
-    auto ml = mass_t{1.0, units::kilogram} * length_t{2.0, units::metre},
-         lm = length_t{2.0, units::metre} * mass_t{1.0, units::kilogram};
+    using namespace si::units;
+    using unsafe_mass_t = quantity<mass_space<float, implicit_common_arena>, kilogram_t, intrinsic_origin, std::identity>;
+    using unsafe_len_t  = quantity<length_space<float, implicit_common_arena>, metre_t, intrinsic_origin, std::identity>;
+
+    auto ml = mass_t{1.0, kilogram} * length_t{2.0, metre},
+         lm = length_t{2.0, metre} * mass_t{1.0, kilogram};
     check(equivalence, "", ml, 2.0f);
     check(equivalence, "", lm, 2.0f);
-    check(equality, "", lm / mass_t{2.0, units::kilogram}, length_t{1.0, units::metre});
-    check(equality, "", lm / length_t{0.5, units::metre}, mass_t{4.0, units::kilogram});
-    check(equality, "", (mass_t{3.0, units::kilogram} / mass_t{1.0, units::kilogram})*mass_t{3.0, units::kilogram}, mass_t{9.0, units::kilogram});
-    check(equality, "", (current_t{-3.0, units::ampere} / current_t{1.0, units::ampere})*mass_t{3.0, units::kilogram}, unsafe_mass_t{-9.0, units::kilogram});
+    check(equality, "", lm / mass_t{2.0, kilogram}, length_t{1.0, metre});
+    check(equality, "", lm / length_t{0.5, metre}, mass_t{4.0, kilogram});
+    check(equality, "", (mass_t{3.0, kilogram} / mass_t{1.0, kilogram})*mass_t{3.0, kilogram}, mass_t{9.0, kilogram});
+    check(equality, "", (current_t{-3.0, ampere} / current_t{1.0, ampere})*mass_t{3.0, kilogram}, unsafe_mass_t{-9.0, kilogram});
       
-    auto mlc = mass_t{1.0, units::kilogram} * length_t{2.0, units::metre} * current_t{-1.0, units::ampere},
-         clm = current_t{-1.0, units::ampere} * length_t{2.0, units::metre} *  mass_t{1.0, units::kilogram};
+    auto mlc = mass_t{1.0, kilogram} * length_t{2.0, metre} * current_t{-1.0, ampere},
+         clm = current_t{-1.0, ampere} * length_t{2.0, metre} *  mass_t{1.0, kilogram};
 
     check(equivalence, "", mlc, -2.0f);
     check(equivalence, "", clm, -2.0f);
-    check(equality, "", mlc / mass_t{1.0, units::kilogram}, length_t{2.0, units::metre} * current_t{-1.0, units::ampere});
-    check(equality, "", mlc / length_t{1.0, units::metre}, mass_t{2.0, units::kilogram} * current_t{-1.0, units::ampere});
-    check(equality, "", mlc / current_t{-1.0, units::ampere}, unsafe_mass_t{1.0, units::kilogram} * length_t{2.0, units::metre});
+    check(equality, "", mlc / mass_t{1.0, kilogram}, length_t{2.0, metre} * current_t{-1.0, ampere});
+    check(equality, "", mlc / length_t{1.0, metre}, mass_t{2.0, kilogram} * current_t{-1.0, ampere});
+    check(equality, "", mlc / current_t{-1.0, ampere}, unsafe_mass_t{1.0, kilogram} * length_t{2.0, metre});
       
-    auto mlct = mass_t{1.0, units::kilogram} * length_t{2.0, units::metre} * current_t{-1.0, units::ampere} * temperature_t{5.0, units::kelvin},
-         cltm = current_t{-1.0, units::ampere} * length_t{2.0, units::metre} * temperature_t{5.0, units::kelvin} *  mass_t{1.0, units::kilogram};
+    auto mlct = mass_t{1.0, kilogram} * length_t{2.0, metre} * current_t{-1.0, ampere} * temperature_t{5.0, kelvin},
+         cltm = current_t{-1.0, ampere} * length_t{2.0, metre} * temperature_t{5.0, kelvin} *  mass_t{1.0, kilogram};
 
     check(equivalence, "", mlct, -10.0f);
     check(equivalence, "", cltm, -10.0f);
-    check(equality, "", mlct / mass_t{1.0, units::kilogram}, length_t{2.0, units::metre} * current_t{-1.0, units::ampere} * temperature_t{5.0, units::kelvin});
+    check(equality, "", mlct / mass_t{1.0, kilogram}, length_t{2.0, metre} * current_t{-1.0, ampere} * temperature_t{5.0, kelvin});
 
-    check(equality, "", mass_t{2.0, units::kilogram} * length_t{3.0, units::metre} / d_mass_t{-2.0, units::kilogram}, unsafe_len_t{-3.0, units::metre});
+    check(equality, "", mass_t{2.0, kilogram} * length_t{3.0, metre} / d_mass_t{-2.0, kilogram}, unsafe_len_t{-3.0, metre});
   }
 
   void mixed_quantity_test::test_mixed_vector()
   {
     using pos_t  = si::position<2, float>;
     using time_t = si::time<float>;
+    using namespace si::units;
 
     check(equivalence,
           "",
-          (pos_t{std::array{2.0f, 1.0f}, units::metre} - pos_t{std::array{1.0f, -1.0f}, units::metre}) / (time_t{4.0, units::second} - time_t{2.0, units::second}),
+          (pos_t{std::array{2.0f, 1.0f}, metre} - pos_t{std::array{1.0f, -1.0f}, metre}) / (time_t{4.0, second} - time_t{2.0, second}),
           std::array{0.5f, 1.0f});
   }
 }
