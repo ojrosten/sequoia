@@ -14,6 +14,7 @@
 namespace sequoia::testing
 { 
   using namespace physics;
+  using namespace si::units;
 
   [[nodiscard]]
   std::filesystem::path mixed_quantity_test::source_file() const
@@ -25,6 +26,7 @@ namespace sequoia::testing
   {
     test_mixed();
     test_mixed_vector();
+    test_mixed_kinds();
   }
 
   void mixed_quantity_test::test_mixed()
@@ -35,7 +37,6 @@ namespace sequoia::testing
     using current_t     = si::electrical_current<float>;
     using temperature_t = si::temperature<float>;
 
-    using namespace si::units;
     using unsafe_mass_t = quantity<mass_space<float, implicit_common_arena>, kilogram_t, intrinsic_origin, std::identity>;
     using unsafe_len_t  = quantity<length_space<float, implicit_common_arena>, metre_t, intrinsic_origin, std::identity>;
 
@@ -71,11 +72,22 @@ namespace sequoia::testing
   {
     using pos_t  = si::position<2, float>;
     using time_t = si::time<float>;
-    using namespace si::units;
 
     check(equivalence,
           "",
           (pos_t{std::array{2.0f, 1.0f}, metre} - pos_t{std::array{1.0f, -1.0f}, metre}) / (time_t{4.0, second} - time_t{2.0, second}),
           std::array{0.5f, 1.0f});
+  }
+
+  void mixed_quantity_test::test_mixed_kinds()
+  {
+    using length_t = si::length<float>;
+    using width_t  = si::width<float>;
+    using height_t = si::height<float>;
+
+    length_t len{1.0, metre};
+    check(equality, "", len += width_t{1.0, metre},  length_t{2.0, metre});
+    check(equality, "", len += height_t{0.5, metre}, length_t{2.5, metre});
+    
   }
 }

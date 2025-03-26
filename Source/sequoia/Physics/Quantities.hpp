@@ -561,14 +561,16 @@ namespace sequoia::physics
   {};
 
   template<std::floating_point Rep, class Arena>
-  struct width_space
-    : physical_value_convex_space<classical_physical_value_sets::lengths<Arena>, Rep, 1, width_space<Rep, Arena>>
-  {};
+  struct width_space : length_space<Rep, Arena>
+  {
+    using convex_space_type = width_space;
+  };
 
   template<std::floating_point Rep, class Arena>
-  struct height_space
-    : physical_value_convex_space<classical_physical_value_sets::lengths<Arena>, Rep, 1, height_space<Rep, Arena>>
-  {};
+  struct height_space : length_space<Rep, Arena>
+  {
+    using convex_space_type = height_space;
+  };
 
   template<std::floating_point Rep, class Arena>
   struct time_interval_space

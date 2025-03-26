@@ -467,6 +467,19 @@ namespace sequoia::maths
       return self;
     }
 
+    template<
+      class Self,
+      convex_space OtherConvexSpace,
+      class OtherDisplacementCoordinates
+    >
+    requires has_intrinsic_origin && (std::is_base_of_v<ConvexSpace, OtherConvexSpace>)
+    constexpr Self& operator+=(this Self& self,
+                               const coordinates_base<OtherConvexSpace, Basis, Origin, Validator, OtherDisplacementCoordinates>& other) noexcept(has_identity_validator)
+    {
+      self.apply_to_each_element(other.values(), [](value_type& lhs, value_type rhs){ lhs += rhs; });
+      return self;
+    }
+
     template<class Self>
     constexpr Self& operator-=(this Self& self, const displacement_coordinates_type& v) noexcept(has_identity_validator)
     {

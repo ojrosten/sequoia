@@ -26,5 +26,7 @@ namespace sequoia::testing
     void test_mixed();
 
     void test_mixed_vector();
+
+    void test_mixed_kinds();
   };
 }
