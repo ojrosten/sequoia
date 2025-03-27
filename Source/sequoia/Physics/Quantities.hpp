@@ -265,6 +265,27 @@ namespace sequoia::physics
         Validator,
         physical_value<vector_space_type_of<ValueSpace>, Unit, intrinsic_origin, std::identity>>;
 
+  template<convex_space T>
+  inline constexpr bool has_base_space_v{
+    requires { typename T::base_space; }
+  };
+
+  template<convex_space T>
+  struct to_base_space
+  {
+    using type = T;
+  };
+
+  template<convex_space T>
+    requires has_base_space_v<T>
+  struct to_base_space<T>
+  {
+    using type = T::base_space;
+  };
+
+  template<convex_space T>
+  using to_base_space_t = to_base_space<T>::type;
+  
   template<class T, class U>
   struct physical_value_product;
 
@@ -276,10 +297,10 @@ namespace sequoia::physics
     convex_space RHSValueSpace, physical_unit RHSUnit, class RHSValidator
   >
   struct physical_value_product<physical_value<LHSValueSpace, LHSUnit, intrinsic_origin, LHSValidator>,
-                          physical_value<RHSValueSpace, RHSUnit, intrinsic_origin, RHSValidator>>
+                                physical_value<RHSValueSpace, RHSUnit, intrinsic_origin, RHSValidator>>
   {
     using type = physical_value<
-      reduction_t<direct_product<LHSValueSpace, RHSValueSpace>>,
+      reduction_t<direct_product<to_base_space_t<LHSValueSpace>, to_base_space_t<RHSValueSpace>>>,
       reduction_t<std::tuple<LHSUnit, RHSUnit>>,
       intrinsic_origin,
       reduced_validator_t<LHSValidator, RHSValidator>>;
@@ -294,7 +315,7 @@ namespace sequoia::physics
   struct physical_value_product<physical_value<LHSValueSpace, LHSUnit, intrinsic_origin, LHSValidator>,
                           physical_value<RHSValueSpace, RHSUnit, intrinsic_origin, RHSValidator>>
   {
-    using type = physical_value<RHSValueSpace, RHSUnit, intrinsic_origin, reduced_validator_t<LHSValidator, RHSValidator>>;
+    using type = physical_value<to_base_space_t<RHSValueSpace>, RHSUnit, intrinsic_origin, reduced_validator_t<LHSValidator, RHSValidator>>;
   };
 
   template<
@@ -306,12 +327,7 @@ namespace sequoia::physics
   struct physical_value_product<physical_value<LHSValueSpace, LHSUnit, intrinsic_origin, LHSValidator>,
                           physical_value<RHSValueSpace, RHSUnit, intrinsic_origin, RHSValidator>>
   {
-    using type = physical_value<LHSValueSpace, LHSUnit, intrinsic_origin, reduced_validator_t<LHSValidator, RHSValidator>>;
-  };
-
-  template<convex_space T>
-  inline constexpr bool has_base_space_v{
-    requires { typename T::base_space; }
+    using type = physical_value<to_base_space_t<LHSValueSpace>, LHSUnit, intrinsic_origin, reduced_validator_t<LHSValidator, RHSValidator>>;
   };
   
   template<

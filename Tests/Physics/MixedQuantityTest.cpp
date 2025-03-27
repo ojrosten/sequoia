@@ -90,5 +90,6 @@ namespace sequoia::testing
     check(equality, "", len += height_t{0.5, metre}, length_t{2.5, metre});
     check(equality, "", width_t{0.5, metre} + height_t{0.5, metre}, length_t{1.0, metre});
     check(equality, "", height_t{0.5, metre} + width_t{0.5, metre}, length_t{1.0, metre});
+    check(equality, "", height_t{0.5, metre} * width_t{0.5, metre}, length_t{0.5, metre} * length_t{0.5, metre});
   }
 }
