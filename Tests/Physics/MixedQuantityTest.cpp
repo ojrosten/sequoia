@@ -37,8 +37,8 @@ namespace sequoia::testing
     using current_t     = si::electrical_current<float>;
     using temperature_t = si::temperature<float>;
 
-    using unsafe_mass_t = quantity<mass_space<float, implicit_common_arena>, kilogram_t, intrinsic_origin, std::identity>;
-    using unsafe_len_t  = quantity<length_space<float, implicit_common_arena>, metre_t, intrinsic_origin, std::identity>;
+    using unsafe_mass_t = quantity<mass_space<float, implicit_common_arena>, kilogram_t, std::identity>;
+    using unsafe_len_t  = quantity<length_space<float, implicit_common_arena>, metre_t, std::identity>;
 
     auto ml = mass_t{1.0, kilogram} * length_t{2.0, metre},
          lm = length_t{2.0, metre} * mass_t{1.0, kilogram};
@@ -92,7 +92,7 @@ namespace sequoia::testing
     check(equality, "", height_t{0.5, metre} + width_t{0.5, metre}, length_t{1.0, metre});
     check(equality, "", height_t{0.5, metre} * width_t{0.5, metre}, length_t{0.5, metre} * length_t{0.5, metre});
 
-    using euc_half_line_qty = quantity<euclidean_half_space<1, float>, no_unit_t, intrinsic_origin, half_line_validator>;
+    using euc_half_line_qty = quantity<euclidean_half_space<1, float>, no_unit_t, half_line_validator>;
     check(equality, "", height_t{0.5, metre} / width_t{0.5, metre}, euc_half_line_qty{1.0, no_unit});
   }
 }

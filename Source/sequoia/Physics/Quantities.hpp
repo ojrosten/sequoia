@@ -797,9 +797,8 @@ namespace sequoia::physics
   template<
     convex_space ValueSpace,
     physical_unit Unit,
-    class Origin=to_origin_type_t<ValueSpace, Unit>,
     validator_for<ValueSpace> Validator=typename Unit::validator_type
   >
-    requires has_consistent_validator<ValueSpace, Validator> && has_consistent_origin<ValueSpace, Unit, Origin>
-  using quantity =  physical_value<ValueSpace, Unit, Origin, Validator>;
+    requires has_consistent_validator<ValueSpace, Validator>
+  using quantity =  physical_value<ValueSpace, Unit, to_origin_type_t<ValueSpace, Unit>, Validator>;
 }

@@ -33,7 +33,7 @@ namespace sequoia::testing
   void unsafe_absolute_quantity_test::test_absolute_quantity()
   {
     using space_type   = Quantity::space_type;
-    using unsafe_qty_t = quantity<space_type, typename Quantity::units_type, typename Quantity::origin_type, std::identity>;
+    using unsafe_qty_t = quantity<space_type, typename Quantity::units_type, std::identity>;
     using delta_q_t    = unsafe_qty_t::displacement_type;
     using units_type   = unsafe_qty_t::units_type;
     using value_type   = unsafe_qty_t::value_type;
@@ -52,11 +52,11 @@ namespace sequoia::testing
     coordinates_operations<unsafe_qty_t>{*this}.execute();
 
     using inv_unit_t = dual<units_type>;
-    using unsafe_inv_quantity_t = quantity<dual<space_type>, inv_unit_t, intrinsic_origin, std::identity>;
+    using unsafe_inv_quantity_t = quantity<dual<space_type>, inv_unit_t, std::identity>;
     coordinates_operations<unsafe_inv_quantity_t>{*this}.execute();
 
-    using unsafe_euc_half_space_qty = quantity<euclidean_half_space<1, value_type>, no_unit_t, intrinsic_origin, std::identity>;
-    using euc_vec_space_qty = quantity<euclidean_vector_space<1, value_type>, no_unit_t, intrinsic_origin, std::identity>;
+    using unsafe_euc_half_space_qty = quantity<euclidean_half_space<1, value_type>, no_unit_t, std::identity>;
+    using euc_vec_space_qty = quantity<euclidean_vector_space<1, value_type>, no_unit_t, std::identity>;
     check(equality, "", unsafe_qty_t{2.0, units_type{}}  / unsafe_qty_t {-1.0, units_type{}}, unsafe_euc_half_space_qty{-2.0f, no_unit});
     check(equality, "", unsafe_qty_t{-2.0, units_type{}} / delta_q_t{1.0, units_type{}},      euc_vec_space_qty{-2.0, no_unit});
     check(equality, "", delta_q_t{-2.0, units_type{}}    / unsafe_qty_t{1.0, units_type{}},   euc_vec_space_qty{-2.0, no_unit});

@@ -55,7 +55,7 @@ namespace sequoia::testing
     STATIC_CHECK(can_subtract<quantity_t, delta_q_t>);
 
     coordinates_operations<quantity_t>{*this}.execute();
-    using inv_quantity_t = quantity<dual<space_type>, dual<units_type>, dual<origin_type>, std::identity>;
+    using inv_quantity_t = physical_value<dual<space_type>, dual<units_type>, dual<origin_type>, std::identity>;
     coordinates_operations<inv_quantity_t>{*this}.execute();
   }
 }
