@@ -309,6 +309,11 @@ namespace sequoia::physics
     using type = physical_value<LHSValueSpace, LHSUnit, intrinsic_origin, reduced_validator_t<LHSValidator, RHSValidator>>;
   };
 
+  template<convex_space T>
+  inline constexpr bool has_base_space_v{
+    requires { typename T::base_space; }
+  };
+  
   template<
     convex_space ValueSpace,
     physical_unit Unit,
@@ -384,6 +389,18 @@ namespace sequoia::physics
     {
       this->apply_to_each_element(other.values(), [](value_type& lhs, value_type rhs){ lhs += rhs; });
       return *this;
+    }
+
+    template<convex_space OtherValueSpace>
+      requires    (!std::is_same_v<ValueSpace, OtherValueSpace>)
+               && (D == vector_space_type_of<OtherValueSpace>::dimension)
+               && has_base_space_v<ValueSpace>
+               && has_base_space_v<OtherValueSpace>
+    [[nodiscard]]
+    friend constexpr auto operator+(const physical_value& lhs, const physical_value<OtherValueSpace, Unit, Origin, Validator>& rhs)
+    {
+      using physical_value_t = physical_value<std::common_type_t<typename ValueSpace::base_space, typename OtherValueSpace::base_space>, Unit, Origin, Validator>;
+      return physical_value_t{lhs.values(), units_type{}} += rhs;
     }
     
     [[nodiscard]]
@@ -499,12 +516,6 @@ namespace sequoia::physics
     {
       using physical_value_set_type = PhysicalValueSet;
     };
-
-    template<class Arena>
-    struct widths : lengths<Arena> {};
-
-    template<class Arena>
-    struct heights : lengths<Arena> {};
   }
 
   template<class Space>
@@ -549,26 +560,36 @@ namespace sequoia::physics
   template<std::floating_point Rep, class Arena>
   struct mass_space
     : physical_value_convex_space<classical_physical_value_sets::masses<Arena>, Rep, 1, mass_space<Rep, Arena>>
-  {};
+  {
+    using base_space = mass_space;
+  };
 
   template<std::floating_point Rep, class Arena>
   struct temperature_space
     : physical_value_convex_space<classical_physical_value_sets::temperatures<Arena>, Rep, 1, temperature_space<Rep, Arena>>
-  {};
+  {
+    using base_space = temperature_space;
+  };
 
   template<std::floating_point Rep, class Arena>
   struct electrical_current_space
     : physical_value_vector_space<classical_physical_value_sets::electrical_currents<Arena>, Rep, 1, electrical_current_space<Rep, Arena>>
-  {};
+  {
+    using base_space = electrical_current_space;
+  };
 
   template<std::floating_point Rep, class Arena>
   struct angular_space : physical_value_vector_space<classical_physical_value_sets::angles<Arena>, Rep, 1, angular_space<Rep, Arena>>
-  {};
+  {
+    using base_space = angular_space;
+  };
 
   template<std::floating_point Rep, class Arena>
   struct length_space
     : physical_value_convex_space<classical_physical_value_sets::lengths<Arena>, Rep, 1, length_space<Rep, Arena>>
-  {};
+  {
+    using base_space = length_space;
+  };
 
   template<std::floating_point Rep, class Arena>
   struct width_space : length_space<Rep, Arena>
