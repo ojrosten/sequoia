@@ -449,7 +449,7 @@ namespace sequoia::physics
     [[nodiscard]]
     friend constexpr auto operator/(const physical_value& lhs, const physical_value<RHSValueSpace, RHSUnit, RHSOrigin, RHSValidator>& rhs)
     {
-      using physical_value_t = physical_value_product_t<physical_value, physical_value<dual_of_t<RHSValueSpace>, dual_of_t<RHSUnit>, RHSOrigin, RHSValidator>>;
+      using physical_value_t = physical_value_product_t<physical_value, physical_value<dual_of_t<to_base_space_t<RHSValueSpace>>, dual_of_t<RHSUnit>, RHSOrigin, RHSValidator>>;
       using derived_units_type = physical_value_t::units_type;
       if constexpr(dimension == 1)
       {
