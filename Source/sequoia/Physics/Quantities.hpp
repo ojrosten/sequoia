@@ -285,6 +285,13 @@ namespace sequoia::physics
 
   template<convex_space T>
   using to_base_space_t = to_base_space<T>::type;
+
+  template<convex_space T, convex_space U>
+  inline constexpr bool have_compatible_base_spaces_v{
+    has_base_space_v<T> && has_base_space_v<U> && (vector_space_type_of<T>::dimension == vector_space_type_of<U>::dimension) && requires {
+      typename std::common_type<typename T::base_space, typename U::base_space>::type;
+    }
+  };
   
   template<class T, class U>
   struct physical_value_product;
@@ -408,10 +415,7 @@ namespace sequoia::physics
     }
 
     template<convex_space OtherValueSpace>
-      requires    (!std::is_same_v<ValueSpace, OtherValueSpace>)
-               && (D == vector_space_type_of<OtherValueSpace>::dimension)
-               && has_base_space_v<ValueSpace>
-               && has_base_space_v<OtherValueSpace>
+      requires (!std::is_same_v<ValueSpace, OtherValueSpace>) && have_compatible_base_spaces_v<ValueSpace, OtherValueSpace>
     [[nodiscard]]
     friend constexpr auto operator+(const physical_value& lhs, const physical_value<OtherValueSpace, Unit, Origin, Validator>& rhs)
     {
