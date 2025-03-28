@@ -9,11 +9,11 @@
 
 /*! \file */
 
-#include "QuantityTestingUtilities.hpp"
+#include "PhysicalValueTestingUtilities.hpp"
 
 namespace sequoia::testing
 {
-  class vector_quantity_test final : public regular_test
+  class vector_physical_value_test final : public regular_test
   {
   public:
     using regular_test::regular_test;

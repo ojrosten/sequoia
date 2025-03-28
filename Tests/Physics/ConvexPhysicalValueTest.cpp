@@ -7,7 +7,7 @@
 
 /*! \file */
 
-#include "ConvexQuantityTest.hpp"
+#include "ConvexPhysicalValueTest.hpp"
 
 #include "../Maths/Geometry/GeometryTestingUtilities.hpp"
 
@@ -16,19 +16,19 @@ namespace sequoia::testing
   using namespace physics;
 
   [[nodiscard]]
-  std::filesystem::path convex_quantity_test::source_file() const
+  std::filesystem::path convex_physical_value_test::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void convex_quantity_test::run_tests()
+  void convex_physical_value_test::run_tests()
   {
     test_convex_quantity<quantity<temperature_space<float,  implicit_common_arena>, si::units::celsius_t>>();
     test_convex_quantity<quantity<temperature_space<double, implicit_common_arena>, si::units::celsius_t>>();
   }
 
   template<class Quantity>
-  void convex_quantity_test::test_convex_quantity()
+  void convex_physical_value_test::test_convex_quantity()
   {
     {
       using quantity_t = Quantity;

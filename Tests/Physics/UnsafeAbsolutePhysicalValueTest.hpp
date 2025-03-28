@@ -9,11 +9,11 @@
 
 /*! \file */
 
-#include "QuantityTestingUtilities.hpp"
+#include "PhysicalValueTestingUtilities.hpp"
 
 namespace sequoia::testing
 {
-  class mixed_quantity_test final : public regular_test
+  class unsafe_absolute_physical_value_test final : public regular_test
   {
   public:
     using regular_test::regular_test;
@@ -23,10 +23,7 @@ namespace sequoia::testing
 
     void run_tests();
   private:
-    void test_mixed();
-
-    void test_mixed_vector();
-
-    void test_mixed_kinds();
+    template<class Quantity>
+    void test_absolute_quantity();
   };
 }

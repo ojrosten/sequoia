@@ -9,7 +9,7 @@
 
 /*! \file */
 
-#include "sequoia/Physics/QuantitiesDetails.hpp"
+#include "sequoia/Physics/PhysicalValuesDetails.hpp"
 
 namespace sequoia::maths
 {

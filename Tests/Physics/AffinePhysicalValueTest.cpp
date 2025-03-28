@@ -7,7 +7,7 @@
 
 /*! \file */
 
-#include "AffineQuantityTest.hpp"
+#include "AffinePhysicalValueTest.hpp"
 
 #include "../Maths/Geometry/GeometryTestingUtilities.hpp"
 
@@ -16,12 +16,12 @@ namespace sequoia::testing
   using namespace physics;
 
   [[nodiscard]]
-  std::filesystem::path affine_quantity_test::source_file() const
+  std::filesystem::path affine_physical_value_test::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void affine_quantity_test::run_tests()
+  void affine_physical_value_test::run_tests()
   {
     test_affine_quantity<si::time<float>>();
     test_affine_quantity<si::time<double>>();
@@ -30,7 +30,7 @@ namespace sequoia::testing
   }
 
   template<class Quantity>
-  void affine_quantity_test::test_affine_quantity()
+  void affine_physical_value_test::test_affine_quantity()
   {
     using quantity_t  = Quantity;
     using delta_q_t   = quantity_t::displacement_type;

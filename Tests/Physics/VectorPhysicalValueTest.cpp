@@ -7,7 +7,7 @@
 
 /*! \file */
 
-#include "VectorQuantityTest.hpp"
+#include "VectorPhysicalValueTest.hpp"
 
 #include "../Maths/Geometry/GeometryTestingUtilities.hpp"
 
@@ -18,12 +18,12 @@ namespace sequoia::testing
   using namespace physics;
 
   [[nodiscard]]
-  std::filesystem::path vector_quantity_test::source_file() const
+  std::filesystem::path vector_physical_value_test::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void vector_quantity_test::run_tests()
+  void vector_physical_value_test::run_tests()
   {
     test_vector_quantity<si::electrical_current<float>>();
     test_vector_quantity<si::electrical_current<double>>();
@@ -34,7 +34,7 @@ namespace sequoia::testing
   }
 
   template<class Quantity>
-  void vector_quantity_test::test_vector_quantity()
+  void vector_physical_value_test::test_vector_quantity()
   {
     using quantity_t = Quantity;
     using delta_q_t  = quantity_t::displacement_type;
@@ -83,7 +83,7 @@ namespace sequoia::testing
   }
 
   template<std::floating_point T>
-  void vector_quantity_test::test_trig()
+  void vector_physical_value_test::test_trig()
   {
     using angle_t = si::angle<T>;
     using namespace si::units;

@@ -7,7 +7,7 @@
 
 /*! \file */
 
-#include "MixedQuantityTest.hpp"
+#include "MixedPhysicalValueTest.hpp"
 
 #include "../Maths/Geometry/GeometryTestingUtilities.hpp"
 
@@ -17,19 +17,19 @@ namespace sequoia::testing
   using namespace si::units;
 
   [[nodiscard]]
-  std::filesystem::path mixed_quantity_test::source_file() const
+  std::filesystem::path mixed_physical_value_test::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void mixed_quantity_test::run_tests()
+  void mixed_physical_value_test::run_tests()
   {
     test_mixed();
     test_mixed_vector();
     test_mixed_kinds();
   }
 
-  void mixed_quantity_test::test_mixed()
+  void mixed_physical_value_test::test_mixed()
   {
     using mass_t        = si::mass<float>;
     using d_mass_t      = mass_t::displacement_type;
@@ -68,7 +68,7 @@ namespace sequoia::testing
     check(equality, "", mass_t{2.0, kilogram} * length_t{3.0, metre} / d_mass_t{-2.0, kilogram}, unsafe_len_t{-3.0, metre});
   }
 
-  void mixed_quantity_test::test_mixed_vector()
+  void mixed_physical_value_test::test_mixed_vector()
   {
     using pos_t  = si::position<2, float>;
     using time_t = si::time<float>;
@@ -79,7 +79,7 @@ namespace sequoia::testing
           std::array{0.5f, 1.0f});
   }
 
-  void mixed_quantity_test::test_mixed_kinds()
+  void mixed_physical_value_test::test_mixed_kinds()
   {
     using length_t = si::length<float>;
     using d_len_t  = length_t::displacement_type;

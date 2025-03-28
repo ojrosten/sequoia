@@ -7,7 +7,7 @@
 
 /*! \file */
 
-#include "AbsoluteQuantityTest.hpp"
+#include "AbsolutePhysicalValueTest.hpp"
 
 #include "../Maths/Geometry/GeometryTestingUtilities.hpp"
 
@@ -16,12 +16,12 @@ namespace sequoia::testing
   using namespace physics;
 
   [[nodiscard]]
-  std::filesystem::path absolute_quantity_test::source_file() const
+  std::filesystem::path absolute_physical_value_test::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void absolute_quantity_test::run_tests()
+  void absolute_physical_value_test::run_tests()
   {
     test_absolute_quantity<si::mass<float>>();
     test_absolute_quantity<si::mass<double>>();
@@ -31,7 +31,7 @@ namespace sequoia::testing
   }
 
   template<class Quantity>
-  void absolute_quantity_test::test_absolute_quantity()
+  void absolute_physical_value_test::test_absolute_quantity()
   {
     using quantity_t = Quantity;
     using delta_q_t  = quantity_t::displacement_type;

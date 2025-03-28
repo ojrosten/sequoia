@@ -7,7 +7,7 @@
 
 /*! \file */
 
-#include "UnsafeAbsoluteQuantityTest.hpp"
+#include "UnsafeAbsolutePhysicalValueTest.hpp"
 
 #include "../Maths/Geometry/GeometryTestingUtilities.hpp"
 
@@ -16,12 +16,12 @@ namespace sequoia::testing
   using namespace physics;
 
   [[nodiscard]]
-  std::filesystem::path unsafe_absolute_quantity_test::source_file() const
+  std::filesystem::path unsafe_absolute_physical_value_test::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void unsafe_absolute_quantity_test::run_tests()
+  void unsafe_absolute_physical_value_test::run_tests()
   {
     test_absolute_quantity<si::mass<float>>();
     test_absolute_quantity<si::mass<double>>();
@@ -30,7 +30,7 @@ namespace sequoia::testing
   }
 
   template<class Quantity>
-  void unsafe_absolute_quantity_test::test_absolute_quantity()
+  void unsafe_absolute_physical_value_test::test_absolute_quantity()
   {
     using space_type   = Quantity::space_type;
     using unsafe_qty_t = quantity<space_type, typename Quantity::units_type, std::identity>;

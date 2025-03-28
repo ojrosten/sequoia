@@ -5,25 +5,24 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#pragma once
-
 /*! \file */
 
-#include "QuantityTestingUtilities.hpp"
+#include "PhysicalValueTestingDiagnostics.hpp"
 
 namespace sequoia::testing
 {
-  class unsafe_absolute_quantity_test final : public regular_test
+  using namespace physics;
+
+  [[nodiscard]]
+  std::filesystem::path physical_value_false_negative_test::source_file() const
   {
-  public:
-    using regular_test::regular_test;
+    return std::source_location::current().file_name();
+  }
 
-    [[nodiscard]]
-    std::filesystem::path source_file() const;
-
-    void run_tests();
-  private:
-    template<class Quantity>
-    void test_absolute_quantity();
-  };
+  void physical_value_false_negative_test::run_tests()
+  {
+    si::mass<float> m{1.0, si::units::kilogram}, m2{2.0, si::units::kilogram};
+    check(equivalence, "", m, 0.0f);
+    check(equality, "", m, m2);
+  }
 }

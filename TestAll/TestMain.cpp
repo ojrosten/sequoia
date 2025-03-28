@@ -398,15 +398,15 @@ int main(int argc, char** argv)
     );
 
     runner.add_test_suite(
-      "Quantity",
-      quantity_meta_free_test{"Quantity Meta Free Test"},
-      quantity_false_negative_test{"False Negative Test"},
-      absolute_quantity_test{"Absolute Quantity Test"},
-      unsafe_absolute_quantity_test{"Unsafe Absolute Quantity Test"},
-      affine_quantity_test{"Affine Quantity Test"},
-      convex_quantity_test{"Convex Quantity Test"},
-      vector_quantity_test{"Vector Quantity Test"},
-      mixed_quantity_test{"Mixed Quantity Test"}
+      "Physical Values",
+      physical_value_meta_free_test{"Physical Value Meta Free Test"},
+      physical_value_false_negative_test{"False Negative Test"},
+      absolute_physical_value_test{"Absolute Physical Value Test"},
+      unsafe_absolute_physical_value_test{"Unsafe Absolute Physical Value Test"},
+      affine_physical_value_test{"Affine Physical Value Test"},
+      convex_physical_value_test{"Convex Physical Value Test"},
+      vector_physical_value_test{"Vector Physical Value Test"},
+      mixed_physical_value_test{"Mixed Physical Value Test"}
     );
 
     runner.execute(timer_resolution{1ms});

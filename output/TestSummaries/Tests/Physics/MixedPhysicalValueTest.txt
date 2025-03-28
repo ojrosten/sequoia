@@ -1,2 +1,2 @@
-Mixed Quantity Test
+Mixed Physical Value Test
 Standard Top Level Checks:                26;  Failures:  0  [Deep checks: 47]

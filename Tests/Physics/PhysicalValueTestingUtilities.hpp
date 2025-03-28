@@ -10,7 +10,7 @@
 /*! \file */
 
 #include "sequoia/TestFramework/RegularTestCore.hpp"
-#include "sequoia/Physics/Quantities.hpp"
+#include "sequoia/Physics/PhysicalValues.hpp"
 
 namespace sequoia::testing
 {

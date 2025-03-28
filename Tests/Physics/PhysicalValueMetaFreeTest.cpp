@@ -7,8 +7,8 @@
 
 /*! \file */
 
-#include "QuantityMetaFreeTest.hpp"
-#include "sequoia/Physics/Quantities.hpp"
+#include "PhysicalValueMetaFreeTest.hpp"
+#include "sequoia/Physics/PhysicalValues.hpp"
 
 namespace sequoia::testing
 {
@@ -34,12 +34,12 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path quantity_meta_free_test::source_file() const
+  std::filesystem::path physical_value_meta_free_test::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void quantity_meta_free_test::run_tests()
+  void physical_value_meta_free_test::run_tests()
   {
     test_type_comparator();
     test_space_properties();
@@ -50,7 +50,7 @@ namespace sequoia::testing
     test_simplify();
   }
 
-  void quantity_meta_free_test::test_type_comparator()
+  void physical_value_meta_free_test::test_type_comparator()
   {
     STATIC_CHECK(meta::type_comparator_v<mass_space_t, dual<mass_space_t>>);
     STATIC_CHECK(!meta::type_comparator_v<dual<mass_space_t>, mass_space_t>);
@@ -70,7 +70,7 @@ namespace sequoia::testing
     STATIC_CHECK(!meta::type_comparator_v<dual<delta_mass_space_t>, delta_mass_space_t>);
   }
 
-  void quantity_meta_free_test::test_space_properties()
+  void physical_value_meta_free_test::test_space_properties()
   {
     STATIC_CHECK(si::mass<float>::is_intrinsically_absolute);
  
@@ -94,7 +94,7 @@ namespace sequoia::testing
     STATIC_CHECK(convex_space<direct_product<mass_space_t, dual<mass_space_t>>>);
   }
 
-  void quantity_meta_free_test::test_count_and_combine()
+  void physical_value_meta_free_test::test_count_and_combine()
   {
     using namespace physics::impl;
 
@@ -135,7 +135,7 @@ namespace sequoia::testing
                                  std::tuple<type_counter<temp_space_t, 1>, type_counter<mass_space_t, 0>, type_counter<length_space_t, 1>>>));
   }
 
-  void quantity_meta_free_test::test_reduce()
+  void physical_value_meta_free_test::test_reduce()
   {
     using namespace physics::impl;
 
@@ -148,7 +148,7 @@ namespace sequoia::testing
     STATIC_CHECK(std::is_same_v<reduce_t<count_and_combine_t<std::tuple<mass_space_t, dual<delta_mass_space_t>>>>, std::tuple<euclidean_vector_space<1, float>>>);
   }
 
-  void quantity_meta_free_test::test_simplify()
+  void physical_value_meta_free_test::test_simplify()
   {
     using namespace physics::impl;
 
@@ -156,7 +156,7 @@ namespace sequoia::testing
                                  std::tuple<length_space_t, temp_space_t>>));
   }
 
-  void quantity_meta_free_test::test_space_reduction()
+  void physical_value_meta_free_test::test_space_reduction()
   {
     STATIC_CHECK((std::is_same_v<reduction_t<direct_product<delta_mass_space_t, delta_len_space_t>>,
                                  reduction<direct_product<std::tuple<delta_len_space_t, delta_mass_space_t>>>>));
@@ -195,7 +195,7 @@ namespace sequoia::testing
                                  reduction<direct_product<std::tuple<length_space_t, mass_space_t, temp_space_t, time_space_t>>>>));
   }
 
-  void quantity_meta_free_test::test_units_reduction()
+  void physical_value_meta_free_test::test_units_reduction()
   { 
     STATIC_CHECK((std::is_same_v<reduction_t<std::tuple<si::units::metre_t, si::units::kilogram_t>>,
                                  reduction_t<std::tuple<si::units::kilogram_t, si::units::metre_t>>>));
