@@ -292,6 +292,25 @@ namespace sequoia::physics
       typename std::common_type<typename T::base_space, typename U::base_space>::type;
     }
   };
+
+  template<convex_space T, convex_space U>
+  struct to_displacement_space;
+
+  template<convex_space T, convex_space U>
+  using to_displacement_space_t = to_displacement_space<T, U>::type;
+
+  template<convex_space T>
+  struct to_displacement_space<T, T>
+  {
+    using type = vector_space_type_of<T>;
+  };
+
+  template<convex_space T, convex_space U>
+  requires (!std::is_same_v<T, U>) && have_compatible_base_spaces_v<T, U>
+  struct to_displacement_space<T, U>
+  {
+    using type = vector_space_type_of<std::common_type_t<typename T::base_space, typename U::base_space>>;
+  };
   
   template<class T, class U>
   struct physical_value_product;
@@ -430,21 +449,15 @@ namespace sequoia::physics
       return physical_value{to_array(this->values(), [](value_type t) { return -t; }), units_type{}};
     }
 
-    [[nodiscard]]
-    friend constexpr displacement_type operator-(const physical_value& lhs, const physical_value& rhs) noexcept(has_identity_validator)
-    {
-      return[&] <std::size_t... Is>(std::index_sequence<Is...>) {
-        return displacement_type{std::array{(lhs.values()[Is] - rhs.values()[Is])...}, units_type{}};
-      }(std::make_index_sequence<D>{});
-    }
-
-    // TO DO: harmonize with above
-    template<convex_space OtherValueSpace>
-      requires (!std::is_same_v<ValueSpace, OtherValueSpace>) && have_compatible_base_spaces_v<ValueSpace, OtherValueSpace>
+    template<class OtherValueSpace>
+    requires   (!std::is_same_v<OtherValueSpace, displacement_space_type>)
+            && (std::is_same_v<ValueSpace, OtherValueSpace> || have_compatible_base_spaces_v<ValueSpace, OtherValueSpace>)
     [[nodiscard]]
     friend constexpr auto operator-(const physical_value& lhs, const physical_value<OtherValueSpace, Unit, Origin, Validator>& rhs)
+      noexcept(has_identity_validator)
     {
-      using disp_t = to_coordinates_base_type<to_base_space_t<ValueSpace>, Unit, Origin, Validator>::displacement_coordinates_type;
+      using disp_space_t = to_displacement_space_t<ValueSpace, OtherValueSpace>;
+      using disp_t = to_coordinates_base_type<disp_space_t,  Unit, Origin, Validator>::displacement_coordinates_type;
       return[&] <std::size_t... Is>(std::index_sequence<Is...>) {
         return disp_t{std::array{(lhs.values()[Is] - rhs.values()[Is])...}, units_type{}};
       }(std::make_index_sequence<D>{});
