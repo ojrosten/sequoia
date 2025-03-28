@@ -438,6 +438,18 @@ namespace sequoia::physics
       }(std::make_index_sequence<D>{});
     }
 
+    // TO DO: harmonize with above
+    template<convex_space OtherValueSpace>
+      requires (!std::is_same_v<ValueSpace, OtherValueSpace>) && have_compatible_base_spaces_v<ValueSpace, OtherValueSpace>
+    [[nodiscard]]
+    friend constexpr auto operator-(const physical_value& lhs, const physical_value<OtherValueSpace, Unit, Origin, Validator>& rhs)
+    {
+      using disp_t = to_coordinates_base_type<to_base_space_t<ValueSpace>, Unit, Origin, Validator>::displacement_coordinates_type;
+      return[&] <std::size_t... Is>(std::index_sequence<Is...>) {
+        return disp_t{std::array{(lhs.values()[Is] - rhs.values()[Is])...}, units_type{}};
+      }(std::make_index_sequence<D>{});
+    }
+
     template<convex_space RHSValueSpace, physical_unit RHSUnit, class RHSOrigin, class RHSValidator>
       requires is_multipicable_with<RHSValueSpace, RHSUnit, RHSOrigin, RHSValidator>
     [[nodiscard]]
