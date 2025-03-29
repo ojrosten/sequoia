@@ -102,8 +102,9 @@ namespace sequoia::testing
     check(equality, "", tan(angle_t{pi / 2, radian}), std::tan(pi / 2));
 
     check(equality, "", asin(T{}), angle_t{});
-    if constexpr(std::is_same_v<T, float> && with_clang_v)
+    if constexpr(std::is_same_v<T, float>)
     {
+      // libc++ computes a value which differs from pi/2 by 1ulp
       check(within_tolerance{angle_t{T(1e-6), radian}}, "", asin(T{1}), angle_t{pi/2, radian});
     }
     else
