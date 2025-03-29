@@ -71,11 +71,11 @@ namespace sequoia::testing
   void mixed_physical_value_test::test_mixed_vector()
   {
     using pos_t  = si::position<2, float>;
-    using time_t = si::time<float>;
+    using temporal_t = si::time<float>;
 
     check(equivalence,
           "",
-          (pos_t{std::array{2.0f, 1.0f}, metre} - pos_t{std::array{1.0f, -1.0f}, metre}) / (time_t{4.0, second} - time_t{2.0, second}),
+          (pos_t{std::array{2.0f, 1.0f}, metre} - pos_t{std::array{1.0f, -1.0f}, metre}) / (temporal_t{4.0, second} - temporal_t{2.0, second}),
           std::array{0.5f, 1.0f});
   }
 
