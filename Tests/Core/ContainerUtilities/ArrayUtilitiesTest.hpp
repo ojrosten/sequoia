@@ -22,5 +22,9 @@ namespace sequoia::testing
     std::filesystem::path source_file() const;
 
     void run_tests();
+
+    void test_to_array();
+
+    void test_make_array();
   };
 }

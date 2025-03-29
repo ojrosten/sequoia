@@ -13,7 +13,9 @@
 #include "sequoia/Core/ContainerUtilities/ArrayUtilities.hpp"
 
 namespace sequoia::testing
-{
+{  
+  using namespace utilities;
+
   [[nodiscard]]
   std::filesystem::path array_utilities_test::source_file() const
   {
@@ -22,8 +24,12 @@ namespace sequoia::testing
 
   void array_utilities_test::run_tests()
   {
-    using namespace utilities;
+    test_to_array();
+    test_make_array();
+  }
 
+  void array_utilities_test::test_to_array()
+  {
     {
       check_exception_thrown<std::logic_error>("", [](){ return to_array<int,0>({1});});
 
@@ -60,5 +66,12 @@ namespace sequoia::testing
 
       check(equality, "", a, {ndc_t{2}, ndc_t{3}});
     }
+  }
+
+  void array_utilities_test::test_make_array()
+  {
+    check(equality, "", make_array<int, 0>(std::identity{}), std::array<int, 0>{});
+    check(equality, "", make_array<int, 1>([](std::size_t) { return 42;}), std::array<int, 1>{42});
+    check(equality, "", make_array<int, 2>([](std::size_t i) { return 42*i;}), std::array<int, 2>{0, 42});
   }
 }
