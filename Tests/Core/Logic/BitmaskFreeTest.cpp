@@ -24,10 +24,6 @@ namespace sequoia::testing
       return (stream << static_cast<int>(m));
     }
   }
-
-  template<invocable_r<mask, const mask&> TransitionFn>
-  struct transition_info<mask, TransitionFn> : transition_info_base<mask, TransitionFn>
-  {};
 }
 
 NAMESPACE_SEQUOIA_AS_BITMASK

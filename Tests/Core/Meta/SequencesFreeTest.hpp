@@ -31,6 +31,8 @@ namespace sequoia::testing
 
     void test_reverse_sequence();
 
+    void test_shift_sequence();
+
     void test_sequence_partial_sum();
   };
 }

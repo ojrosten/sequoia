@@ -24,6 +24,7 @@ namespace sequoia::testing
     test_filtered_sequence();
     test_rotate_sequence();
     test_reverse_sequence();
+    test_shift_sequence();
     test_sequence_partial_sum();
   }
 
@@ -156,6 +157,30 @@ namespace sequoia::testing
         static_assert(std::is_same_v<reverse_sequence_t<std::index_sequence<0, 1, 2>>, std::index_sequence<2, 1, 0>>);
         return true;
       }()
+    );
+  }
+
+  void sequences_free_test::test_shift_sequence()
+  {
+    check("",
+          [](){
+            static_assert(std::is_same_v<shift_sequence_t<std::index_sequence<>, 42>, std::index_sequence<>>);
+            return true;
+          }()
+    );
+
+    check("",
+          [](){
+            static_assert(std::is_same_v<shift_sequence_t<std::index_sequence<0>, 42>, std::index_sequence<42>>);
+            return true;
+          }()
+    );
+
+    check("",
+          [](){
+            static_assert(std::is_same_v<shift_sequence_t<std::index_sequence<0, 7>, 42>, std::index_sequence<42, 49>>);
+            return true;
+          }()
     );
   }
 

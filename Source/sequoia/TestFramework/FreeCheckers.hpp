@@ -772,6 +772,8 @@ namespace sequoia::testing
     {
       return testing::check_exception_thrown<E>(self.report(description), self.m_Logger, std::forward<Fn>(function), std::move(postprocessor));
     }
+    
+#define STATIC_CHECK(...) (check("", [](){ static_assert(__VA_ARGS__); return true; }()))
 
     template<class Stream>
       requires serializable_to<Stream, test_logger<Mode>>

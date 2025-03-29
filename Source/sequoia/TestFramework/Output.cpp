@@ -15,7 +15,13 @@
 #include "sequoia/TextProcessing/Patterns.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
+#include <bit>
+#include <cstdlib>
+#include <format>
 #include <numeric>
+#include <sstream>
+
+#include <iostream>
 
 #ifndef _MSC_VER
   #include <cxxabi.h>
@@ -26,12 +32,15 @@ namespace sequoia::testing
   namespace fs = std::filesystem;
 
   namespace
-  {    
+  {
+    constexpr auto npos{std::string::npos};
+    using size_type = std::string::size_type;
+    
     std::string& remove_enum_spec(std::string& name)
     {
       std::string::size_type pos{};
 
-      while(pos != std::string::npos)
+      while(pos != npos)
       {
         const auto[open, close]{find_matched_delimiters(name, '(', ')', pos)};
         if((open != close) && (close < name.size()) && std::isdigit(name[close]))
@@ -48,24 +57,83 @@ namespace sequoia::testing
       return name;
     }
 
-    std::string& remove_integral_suffix(std::string& name)
+    template<std::floating_point To, std::integral From=std::conditional_t<std::is_same_v<To,float>, int, std::conditional_t<sizeof(double) == sizeof(long), long, long long>>>
+    size_type hex_to_floating_point(std::string& name, size_type start, size_type end, long long val)
     {
-      constexpr auto npos{std::string::npos};
-
+       name.erase(start, end - start);
+       const auto str{std::format("{:f}", std::bit_cast<To>(static_cast<From>(val)))};
+       name.insert(start, str);
+       return start + str.size();
+    }
+  
+    std::string& process_literals(std::string& name)
+    {
       std::string::size_type pos{};
       while(pos < name.size())
       {
         const auto open{name.find_first_of("< ", pos)};
         pos = open;
-        while((pos < name.size() - 1) && std::isdigit(name[++pos])) {}
-        
-        if((pos < name.size()) && (pos-1 > open) && std::isalpha(name[pos]))
+        while((pos < name.size() - 1) && !std::isdigit(name[++pos])) {}
+        if(pos < name.size() - 1)
         {
-          if(const auto close{name.find_first_of(",>", pos)}; close != npos)
+          if(name[pos - 1] == '[')
           {
-            name.erase(pos, close - pos);
-            pos++;
+            // GCC seems to represent floating-point NTTPs as
+            // a reinterpretation of a implicit hex number
+            // e.g. (double)[40687....] (note: no Ox);
+            const auto close{name.find(']', pos)};
+            if(close != npos)
+            {
+              std::stringstream ss{name.substr(pos, close - pos)};
+              long long hexNum{};
+              if(ss >> std::hex >> hexNum)
+              {
+                const auto closeParen{pos - 2};
+                if(auto openParen{name.rfind('(', pos - 1)}; (openParen != npos) && name[closeParen] == ')')
+                {
+                  const auto type{name.substr(openParen + 1, closeParen - openParen - 1)};
+                  if(type == "float")
+                  {
+                    pos = hex_to_floating_point<float>(name, openParen, close + 1, hexNum);
+                  }
+                  else if(type == "double")
+                  {
+                    pos = hex_to_floating_point<double>(name, openParen, close + 1, hexNum);
+                  }
+                  else
+                  {
+                    pos = close;
+                  }
+                }
+              }
+            }
           }
+
+          if(name[pos + 1] == 'x')
+          {
+            char* end{};
+            const auto start{name.data() + pos};
+            const auto val{std::strtold(start, &end)};
+            if(const auto dist{std::ranges::distance(start, end)}; dist > 0)
+            {
+              name.erase(pos, dist);
+              const auto str{std::format("{:f}", val)};
+              name.insert(pos, str);
+              pos += (str.size() - 1);
+            }
+          }
+
+          while((pos < name.size() - 1) && std::isdigit(name[++pos])) {}
+        
+          if((pos < name.size()) && (pos-1 > open) && std::isalpha(name[pos]))
+          {
+            if(const auto close{name.find_first_of(",>", pos)}; close < name.size())
+            {
+              name.erase(pos, close - pos);
+              pos++;
+            }
+          }
+            
         }
       }
       
@@ -87,10 +155,8 @@ namespace sequoia::testing
 
       replace_all(name, " <", "true", ",>", "1");
       replace_all(name, " <", "false", ",>", "0");
-      remove_integral_suffix(name);
 
       remove_enum_spec(name);
-      constexpr auto npos{std::string::npos};
       auto openPos{name.find('(')};
       auto pos{openPos};
       int64_t open{};
@@ -258,6 +324,8 @@ namespace sequoia::testing
     replace_all(name, "::__1::", "::");
     replace_all(name, "::__fs::", "::");
     replace_all_recursive(name, ">>", "> >");
+    process_literals(name);
+
     return tidy_name(name);
   }
 
@@ -267,6 +335,8 @@ namespace sequoia::testing
     replace_all(name, ">>", ">> ");
     replace_all(name, "__cxx11::", "");
     replace_all(name, "_V2::", "");
+    process_literals(name);
+
     return tidy_name(name);
   }
 
@@ -294,6 +364,7 @@ namespace sequoia::testing
     replace_all(name, "<,", "enum ", "", "");
 
     replace_all(name, ",", ", ");
+    replace_all(name, " ,", ",");
 
     replace_all(name, " & __ptr64", "&");
     replace_all(name, " * __ptr64", "*");

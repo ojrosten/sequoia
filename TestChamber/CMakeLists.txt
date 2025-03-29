@@ -12,7 +12,19 @@ add_executable(TestChamber TestChamberMain.cpp)
 set(TestDir ${CMAKE_CURRENT_LIST_DIR}/../Tests)
 
 target_sources(TestChamber PRIVATE 
-               ${TestDir}/Experimental/ExperimentalTest.cpp
-)
+               
+               ${TestDir}/Maths/Geometry/AffineCoordinatesTest.cpp
+               ${TestDir}/Maths/Geometry/AffineCoordinatesTestingDiagnostics.cpp
+               ${TestDir}/Maths/Geometry/SpacesMetaFreeTest.cpp
+               ${TestDir}/Maths/Geometry/VectorCoordinatesTest.cpp
+               ${TestDir}/Maths/Geometry/VectorCoordinatesTestingDiagnostics.cpp
+               ${TestDir}/Physics/AbsolutePhysicalValueTest.cpp
+               ${TestDir}/Physics/AffinePhysicalValueTest.cpp
+               ${TestDir}/Physics/ConvexPhysicalValueTest.cpp
+               ${TestDir}/Physics/MixedPhysicalValueTest.cpp
+               ${TestDir}/Physics/PhysicalValueMetaFreeTest.cpp               
+               ${TestDir}/Physics/PhysicalValueTestingDiagnostics.cpp
+               ${TestDir}/Physics/UnsafeAbsolutePhysicalValueTest.cpp
+               ${TestDir}/Physics/VectorPhysicalValueTest.cpp)
 
 sequoia_finalize_self(TestChamber ${TestDir}/Experimental Experimental)

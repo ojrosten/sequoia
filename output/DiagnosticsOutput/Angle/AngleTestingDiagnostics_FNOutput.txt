@@ -1,0 +1,220 @@
+Tests/Maths/Geometry/AngleTestingDiagnostics.cpp, Line 35
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::maths::angle<float, 360.000000> >]
+Checking for equivalence with:
+[float]
+
+  Wrapped value
+  [float]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
+
+  Principal angle
+  [float]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
+
+=======================================
+
+Tests/Maths/Geometry/AngleTestingDiagnostics.cpp, Line 36
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::maths::angle<float, 360.000000> >]
+Checking for equivalence with:
+[float]
+
+  Wrapped value
+  [float]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+  Principal angle
+  [float]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/Maths/Geometry/AngleTestingDiagnostics.cpp, Line 37
+
+[sequoia::maths::angle<float, 360.000000>]
+operator== returned false
+
+  Wrapped value
+  [float]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
+
+=======================================
+
+Tests/Maths/Geometry/AngleTestingDiagnostics.cpp, Line 35
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::maths::angle<double, 360.000000> >]
+Checking for equivalence with:
+[double]
+
+  Wrapped value
+  [double]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
+
+  Principal angle
+  [double]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
+
+=======================================
+
+Tests/Maths/Geometry/AngleTestingDiagnostics.cpp, Line 36
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::maths::angle<double, 360.000000> >]
+Checking for equivalence with:
+[double]
+
+  Wrapped value
+  [double]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+  Principal angle
+  [double]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/Maths/Geometry/AngleTestingDiagnostics.cpp, Line 37
+
+[sequoia::maths::angle<double, 360.000000>]
+operator== returned false
+
+  Wrapped value
+  [double]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
+
+=======================================
+
+Tests/Maths/Geometry/AngleTestingDiagnostics.cpp, Line 35
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::maths::angle<float, 3.141593> >]
+Checking for equivalence with:
+[float]
+
+  Wrapped value
+  [float]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
+
+  Principal angle
+  [float]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
+
+=======================================
+
+Tests/Maths/Geometry/AngleTestingDiagnostics.cpp, Line 36
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::maths::angle<float, 3.141593> >]
+Checking for equivalence with:
+[float]
+
+  Wrapped value
+  [float]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+  Principal angle
+  [float]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/Maths/Geometry/AngleTestingDiagnostics.cpp, Line 37
+
+[sequoia::maths::angle<float, 3.141593>]
+operator== returned false
+
+  Wrapped value
+  [float]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
+
+=======================================
+
+Tests/Maths/Geometry/AngleTestingDiagnostics.cpp, Line 35
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::maths::angle<double, 3.141593> >]
+Checking for equivalence with:
+[double]
+
+  Wrapped value
+  [double]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
+
+  Principal angle
+  [double]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
+
+=======================================
+
+Tests/Maths/Geometry/AngleTestingDiagnostics.cpp, Line 36
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::maths::angle<double, 3.141593> >]
+Checking for equivalence with:
+[double]
+
+  Wrapped value
+  [double]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+  Principal angle
+  [double]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/Maths/Geometry/AngleTestingDiagnostics.cpp, Line 37
+
+[sequoia::maths::angle<double, 3.141593>]
+operator== returned false
+
+  Wrapped value
+  [double]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
+
+=======================================
+

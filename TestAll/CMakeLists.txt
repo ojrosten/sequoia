@@ -35,16 +35,22 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Core/Logic/BitmaskFreeTest.cpp
                ${TestDir}/Core/Meta/ConceptsTest.cpp
                ${TestDir}/Core/Meta/SequencesFreeTest.cpp
+               ${TestDir}/Core/Meta/TypeAlgorithmsFreeTest.cpp
                ${TestDir}/Core/Meta/TypeListFreeTest.cpp
                ${TestDir}/Core/Meta/TypeTraitsTest.cpp
                ${TestDir}/Core/Meta/UtilitiesTest.cpp
                ${TestDir}/Core/Object/CreatorFreeTest.cpp
                ${TestDir}/Core/Object/SuiteFreeTest.cpp
                ${TestDir}/Experimental/ExperimentalTest.cpp
-               ${TestDir}/Experimental/FlattenTypeListFreeTest.cpp
+               ${TestDir}/Experimental/FlattenTypeListFreeTest.cpp                              
                ${TestDir}/FileSystem/FileSystemFreeTest.cpp
                ${TestDir}/FileSystem/NormalPathTest.cpp
                ${TestDir}/FileSystem/NormalPathTestingDiagnostics.cpp
+               ${TestDir}/Maths/Geometry/AffineCoordinatesTest.cpp
+               ${TestDir}/Maths/Geometry/AffineCoordinatesTestingDiagnostics.cpp
+               ${TestDir}/Maths/Geometry/SpacesMetaFreeTest.cpp
+               ${TestDir}/Maths/Geometry/VectorCoordinatesTest.cpp
+               ${TestDir}/Maths/Geometry/VectorCoordinatesTestingDiagnostics.cpp
                ${TestDir}/Maths/Graph/Algorithms/DynamicGraphTraversalsTest.cpp
                ${TestDir}/Maths/Graph/Algorithms/DynamicGraphUpdateTest.cpp
                ${TestDir}/Maths/Graph/Algorithms/DynamicSubgraphTest.cpp
@@ -100,6 +106,14 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Parsing/CommandLineArgumentsDiagnostics.cpp
                ${TestDir}/Parsing/CommandLineArgumentsTest.cpp
                ${TestDir}/Parsing/CommandLineArgumentsTestingUtilities.cpp
+               ${TestDir}/Physics/AbsolutePhysicalValueTest.cpp
+               ${TestDir}/Physics/AffinePhysicalValueTest.cpp
+               ${TestDir}/Physics/ConvexPhysicalValueTest.cpp
+               ${TestDir}/Physics/MixedPhysicalValueTest.cpp
+               ${TestDir}/Physics/PhysicalValueMetaFreeTest.cpp               
+               ${TestDir}/Physics/PhysicalValueTestingDiagnostics.cpp
+               ${TestDir}/Physics/UnsafeAbsolutePhysicalValueTest.cpp
+               ${TestDir}/Physics/VectorPhysicalValueTest.cpp
                ${TestDir}/Runtime/FactoryTest.cpp
                ${TestDir}/Runtime/FactoryTestingDiagnostics.cpp
                ${TestDir}/Runtime/ShellCommandsTest.cpp

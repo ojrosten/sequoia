@@ -38,6 +38,7 @@ namespace sequoia::testing
     test_is_tuple();
     test_is_initializable();
     test_has_allocator_type();
+    test_is_compatible();
   }
 
   void type_traits_test::test_resolve_to_copy()
@@ -343,6 +344,65 @@ namespace sequoia::testing
 
   void type_traits_test::test_has_allocator_type()
   {
+    check("", []() {
+        static_assert(has_allocator_type_v<std::vector<double>>);
+        static_assert(std::is_same_v<std::true_type, has_allocator_type_t<std::vector<double>>>);
+        return true;
+      }()
+    );
+
+    check("", []() {
+        static_assert(!has_allocator_type_v<double>);
+        static_assert(std::is_same_v<std::false_type, has_allocator_type_t<double>>);
+        return true;
+      }()
+    );
+  }
+
+  void type_traits_test::test_is_compatible()
+  {
+    check("", []() {
+        static_assert(is_compatible_v<double, float>);
+        static_assert(std::is_same_v<std::true_type, is_compatible_t<double, float>>);
+        return true;
+      }()
+    );
+
+    check("", []() {
+        static_assert(is_compatible_v<double, double>);
+        static_assert(std::is_same_v<std::true_type, is_compatible_t<double, double>>);
+        return true;
+      }()
+    );
+
+    check("", []() {
+        static_assert(is_compatible_v<double, int>);
+        static_assert(std::is_same_v<std::true_type, is_compatible_t<double, int>>);
+        return true;
+      }()
+    );
+
+    check("", []() {
+        static_assert(!is_compatible_v<float, double>);
+        static_assert(std::is_same_v<std::false_type, is_compatible_t<float, double>>);
+        return true;
+      }()
+    );
+
+    check("", []() {
+        static_assert(is_compatible_v<float, float>);
+        static_assert(std::is_same_v<std::true_type, is_compatible_t<float, float>>);
+        return true;
+      }()
+    );
+
+    check("", []() {
+      static_assert(is_compatible_v<float, int>);
+      static_assert(std::is_same_v<std::true_type, is_compatible_t<float, int>>);
+      return true;
+      }()
+    );
+
     check("", []() {
       static_assert(has_allocator_type_v<std::vector<double>>);
       static_assert(std::is_same_v<std::true_type, has_allocator_type_t<std::vector<double>>>);
