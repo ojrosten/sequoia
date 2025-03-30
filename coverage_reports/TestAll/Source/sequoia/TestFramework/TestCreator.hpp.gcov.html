@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2025-01-12 21:58:51</td>
+            <td class="headerValue">2025-03-30 21:18:04</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -89,10 +89,10 @@
 <span id="L27"><span class="lineNum">      27</span>              : </span>
 <span id="L28"><span class="lineNum">      28</span>              :   struct template_spec</span>
 <span id="L29"><span class="lineNum">      29</span>              :   {</span>
-<span id="L30"><span class="lineNum">      30</span> <span class="tlaGNC tlaBgGNC">        1702 :     std::string species, symbol;</span></span>
+<span id="L30"><span class="lineNum">      30</span> <span class="tlaGNC tlaBgGNC">        1150 :     std::string species, symbol;</span></span>
 <span id="L31"><span class="lineNum">      31</span>              : </span>
 <span id="L32"><span class="lineNum">      32</span>              :     [[nodiscard]]</span>
-<span id="L33"><span class="lineNum">      33</span> <span class="tlaGNC">         888 :     friend bool operator==(const template_spec&amp;, const template_spec&amp;) noexcept = default;</span></span>
+<span id="L33"><span class="lineNum">      33</span> <span class="tlaGNC">         600 :     friend bool operator==(const template_spec&amp;, const template_spec&amp;) noexcept = default;</span></span>
 <span id="L34"><span class="lineNum">      34</span>              :   };</span>
 <span id="L35"><span class="lineNum">      35</span>              : </span>
 <span id="L36"><span class="lineNum">      36</span>              :   using template_data = std::vector&lt;template_spec&gt;;</span>
@@ -115,54 +115,54 @@
 <span id="L53"><span class="lineNum">      53</span>              :   public:</span>
 <span id="L54"><span class="lineNum">      54</span>              :     enum class gen_source_option {no, yes};</span>
 <span id="L55"><span class="lineNum">      55</span>              : </span>
-<span id="L56"><span class="lineNum">      56</span> <span class="tlaGNC">        1508 :     nascent_test_base(project_paths paths, std::string copyright, indentation codeIndent, std::ostream&amp; stream)</span></span>
-<span id="L57"><span class="lineNum">      57</span> <span class="tlaGNC">        1508 :       : m_Paths{std::move(paths)}</span></span>
-<span id="L58"><span class="lineNum">      58</span> <span class="tlaGNC">        1508 :       , m_Copyright{std::move(copyright)}</span></span>
-<span id="L59"><span class="lineNum">      59</span> <span class="tlaGNC">        1508 :       , m_CodeIndent{codeIndent}</span></span>
-<span id="L60"><span class="lineNum">      60</span> <span class="tlaGNC">        1508 :       , m_Stream{&amp;stream}</span></span>
-<span id="L61"><span class="lineNum">      61</span> <span class="tlaGNC">        1508 :       , m_ProjectNamespace{back(m_Paths.source().project()).string()}</span></span>
-<span id="L62"><span class="lineNum">      62</span> <span class="tlaGNC">        1508 :     {}</span></span>
+<span id="L56"><span class="lineNum">      56</span> <span class="tlaGNC">        1300 :     nascent_test_base(project_paths paths, std::string copyright, indentation codeIndent, std::ostream&amp; stream)</span></span>
+<span id="L57"><span class="lineNum">      57</span> <span class="tlaGNC">        1300 :       : m_Paths{std::move(paths)}</span></span>
+<span id="L58"><span class="lineNum">      58</span> <span class="tlaGNC">        1300 :       , m_Copyright{std::move(copyright)}</span></span>
+<span id="L59"><span class="lineNum">      59</span> <span class="tlaGNC">        1300 :       , m_CodeIndent{codeIndent}</span></span>
+<span id="L60"><span class="lineNum">      60</span> <span class="tlaGNC">        1300 :       , m_Stream{&amp;stream}</span></span>
+<span id="L61"><span class="lineNum">      61</span> <span class="tlaGNC">        1300 :       , m_ProjectNamespace{back(m_Paths.source().project()).string()}</span></span>
+<span id="L62"><span class="lineNum">      62</span> <span class="tlaGNC">        1300 :     {}</span></span>
 <span id="L63"><span class="lineNum">      63</span>              : </span>
 <span id="L64"><span class="lineNum">      64</span>              :     [[nodiscard]]</span>
-<span id="L65"><span class="lineNum">      65</span> <span class="tlaGNC">        3444 :     nascent_test_flavour flavour() const noexcept { return m_Flavour; }</span></span>
+<span id="L65"><span class="lineNum">      65</span> <span class="tlaGNC">        3075 :     nascent_test_flavour flavour() const noexcept { return m_Flavour; }</span></span>
 <span id="L66"><span class="lineNum">      66</span>              : </span>
-<span id="L67"><span class="lineNum">      67</span> <span class="tlaGNC">          58 :     void flavour(nascent_test_flavour f) { m_Flavour = f; }</span></span>
+<span id="L67"><span class="lineNum">      67</span> <span class="tlaGNC">          50 :     void flavour(nascent_test_flavour f) { m_Flavour = f; }</span></span>
 <span id="L68"><span class="lineNum">      68</span>              : </span>
 <span id="L69"><span class="lineNum">      69</span>              :     [[nodiscard]]</span>
-<span id="L70"><span class="lineNum">      70</span> <span class="tlaGNC">        1400 :     const std::string&amp; suite() const noexcept { return m_Suite; }</span></span>
+<span id="L70"><span class="lineNum">      70</span> <span class="tlaGNC">        1250 :     const std::string&amp; suite() const noexcept { return m_Suite; }</span></span>
 <span id="L71"><span class="lineNum">      71</span>              : </span>
-<span id="L72"><span class="lineNum">      72</span> <span class="tlaGNC">         232 :     void suite(std::string name) { m_Suite = std::move(name); }</span></span>
+<span id="L72"><span class="lineNum">      72</span> <span class="tlaGNC">         200 :     void suite(std::string name) { m_Suite = std::move(name); }</span></span>
 <span id="L73"><span class="lineNum">      73</span>              : </span>
 <span id="L74"><span class="lineNum">      74</span>              :     [[nodiscard]]</span>
-<span id="L75"><span class="lineNum">      75</span> <span class="tlaGNC">        1344 :     const std::filesystem::path&amp; header() const noexcept { return m_Header; }</span></span>
+<span id="L75"><span class="lineNum">      75</span> <span class="tlaGNC">        1200 :     const std::filesystem::path&amp; header() const noexcept { return m_Header; }</span></span>
 <span id="L76"><span class="lineNum">      76</span>              : </span>
-<span id="L77"><span class="lineNum">      77</span> <span class="tlaGNC">        1456 :     void header(std::filesystem::path h) { m_Header = std::move(h); }</span></span>
+<span id="L77"><span class="lineNum">      77</span> <span class="tlaGNC">        1300 :     void header(std::filesystem::path h) { m_Header = std::move(h); }</span></span>
 <span id="L78"><span class="lineNum">      78</span>              : </span>
 <span id="L79"><span class="lineNum">      79</span>              :     [[nodiscard]]</span>
-<span id="L80"><span class="lineNum">      80</span> <span class="tlaGNC">       13328 :     const std::string&amp; test_type() const noexcept { return m_TestType; }</span></span>
+<span id="L80"><span class="lineNum">      80</span> <span class="tlaGNC">       11900 :     const std::string&amp; test_type() const noexcept { return m_TestType; }</span></span>
 <span id="L81"><span class="lineNum">      81</span>              : </span>
-<span id="L82"><span class="lineNum">      82</span> <span class="tlaGNC">        1508 :     void test_type(std::string type) { m_TestType = std::move(type); }</span></span>
+<span id="L82"><span class="lineNum">      82</span> <span class="tlaGNC">        1300 :     void test_type(std::string type) { m_TestType = std::move(type); }</span></span>
 <span id="L83"><span class="lineNum">      83</span>              : </span>
 <span id="L84"><span class="lineNum">      84</span>              :     [[nodiscard]]</span>
-<span id="L85"><span class="lineNum">      85</span> <span class="tlaGNC">       11984 :     const std::string&amp; forename() const noexcept { return m_Forename; }</span></span>
+<span id="L85"><span class="lineNum">      85</span> <span class="tlaGNC">       10700 :     const std::string&amp; forename() const noexcept { return m_Forename; }</span></span>
 <span id="L86"><span class="lineNum">      86</span>              : </span>
-<span id="L87"><span class="lineNum">      87</span> <span class="tlaGNC">        1848 :     void forename(std::string name) { m_Forename = std::move(name); }</span></span>
+<span id="L87"><span class="lineNum">      87</span> <span class="tlaGNC">        1650 :     void forename(std::string name) { m_Forename = std::move(name); }</span></span>
 <span id="L88"><span class="lineNum">      88</span>              : </span>
 <span id="L89"><span class="lineNum">      89</span>              :     [[nodiscard]]</span>
-<span id="L90"><span class="lineNum">      90</span> <span class="tlaGNC">        8820 :     const std::string&amp; surname() const noexcept { return m_Surname; }</span></span>
+<span id="L90"><span class="lineNum">      90</span> <span class="tlaGNC">        7875 :     const std::string&amp; surname() const noexcept { return m_Surname; }</span></span>
 <span id="L91"><span class="lineNum">      91</span>              : </span>
-<span id="L92"><span class="lineNum">      92</span> <span class="tlaGNC">        1456 :     void surname(std::string name) { m_Surname = std::move(name); }</span></span>
+<span id="L92"><span class="lineNum">      92</span> <span class="tlaGNC">        1300 :     void surname(std::string name) { m_Surname = std::move(name); }</span></span>
 <span id="L93"><span class="lineNum">      93</span>              : </span>
-<span id="L94"><span class="lineNum">      94</span> <span class="tlaGNC">         580 :     void generate_source_files(gen_source_option opt)</span></span>
+<span id="L94"><span class="lineNum">      94</span> <span class="tlaGNC">         500 :     void generate_source_files(gen_source_option opt)</span></span>
 <span id="L95"><span class="lineNum">      95</span>              :     {</span>
-<span id="L96"><span class="lineNum">      96</span> <span class="tlaGNC">         580 :       m_SourceOption = opt;</span></span>
-<span id="L97"><span class="lineNum">      97</span> <span class="tlaGNC">         580 :     }</span></span>
+<span id="L96"><span class="lineNum">      96</span> <span class="tlaGNC">         500 :       m_SourceOption = opt;</span></span>
+<span id="L97"><span class="lineNum">      97</span> <span class="tlaGNC">         500 :     }</span></span>
 <span id="L98"><span class="lineNum">      98</span>              : </span>
 <span id="L99"><span class="lineNum">      99</span>              :     [[nodiscard]]</span>
-<span id="L100"><span class="lineNum">     100</span> <span class="tlaGNC">        5152 :     const std::filesystem::path&amp; host_dir() const noexcept { return m_HostDir; }</span></span>
+<span id="L100"><span class="lineNum">     100</span> <span class="tlaGNC">        4600 :     const std::filesystem::path&amp; host_dir() const noexcept { return m_HostDir; }</span></span>
 <span id="L101"><span class="lineNum">     101</span>              : </span>
 <span id="L102"><span class="lineNum">     102</span>              :     [[nodiscard]]</span>
-<span id="L103"><span class="lineNum">     103</span> <span class="tlaGNC">        4816 :     const std::filesystem::path&amp; header_path() const noexcept { return m_HeaderPath; }</span></span>
+<span id="L103"><span class="lineNum">     103</span> <span class="tlaGNC">        4300 :     const std::filesystem::path&amp; header_path() const noexcept { return m_HeaderPath; }</span></span>
 <span id="L104"><span class="lineNum">     104</span>              : </span>
 <span id="L105"><span class="lineNum">     105</span>              :     [[nodiscard]]</span>
 <span id="L106"><span class="lineNum">     106</span>              :     friend bool operator==(const nascent_test_base&amp;, const nascent_test_base&amp;) noexcept = default;</span>
@@ -171,16 +171,16 @@
 <span id="L109"><span class="lineNum">     109</span>              :     static std::vector&lt;std::string&gt; framework_diagnostics_stubs();</span>
 <span id="L110"><span class="lineNum">     110</span>              :   protected:</span>
 <span id="L111"><span class="lineNum">     111</span>              :     nascent_test_base(const nascent_test_base&amp;)     = default;</span>
-<span id="L112"><span class="lineNum">     112</span> <span class="tlaGNC">        4814 :     nascent_test_base(nascent_test_base&amp;&amp;) noexcept = default;</span></span>
+<span id="L112"><span class="lineNum">     112</span> <span class="tlaGNC">        4150 :     nascent_test_base(nascent_test_base&amp;&amp;) noexcept = default;</span></span>
 <span id="L113"><span class="lineNum">     113</span>              :     nascent_test_base&amp; operator=(const nascent_test_base&amp;)     = default;</span>
 <span id="L114"><span class="lineNum">     114</span>              :     nascent_test_base&amp; operator=(nascent_test_base&amp;&amp;) noexcept = default;</span>
 <span id="L115"><span class="lineNum">     115</span>              : </span>
-<span id="L116"><span class="lineNum">     116</span> <span class="tlaGNC">        6322 :     ~nascent_test_base() = default;</span></span>
+<span id="L116"><span class="lineNum">     116</span> <span class="tlaGNC">        5450 :     ~nascent_test_base() = default;</span></span>
 <span id="L117"><span class="lineNum">     117</span>              : </span>
 <span id="L118"><span class="lineNum">     118</span>              :     [[nodiscard]]</span>
-<span id="L119"><span class="lineNum">     119</span> <span class="tlaGNC">        5376 :     const project_paths&amp; paths() const noexcept</span></span>
+<span id="L119"><span class="lineNum">     119</span> <span class="tlaGNC">        4800 :     const project_paths&amp; paths() const noexcept</span></span>
 <span id="L120"><span class="lineNum">     120</span>              :     {</span>
-<span id="L121"><span class="lineNum">     121</span> <span class="tlaGNC">        5376 :       return m_Paths;</span></span>
+<span id="L121"><span class="lineNum">     121</span> <span class="tlaGNC">        4800 :       return m_Paths;</span></span>
 <span id="L122"><span class="lineNum">     122</span>              :     }</span>
 <span id="L123"><span class="lineNum">     123</span>              : </span>
 <span id="L124"><span class="lineNum">     124</span>              :     [[nodiscard]]</span>
@@ -194,23 +194,23 @@
 <span id="L132"><span class="lineNum">     132</span>              :                   FileTransformer transformer);</span>
 <span id="L133"><span class="lineNum">     133</span>              : </span>
 <span id="L134"><span class="lineNum">     134</span>              :     [[nodiscard]]</span>
-<span id="L135"><span class="lineNum">     135</span> <span class="tlaGNC">       11900 :     const std::string&amp; camel_name() const noexcept { return m_CamelName; }</span></span>
+<span id="L135"><span class="lineNum">     135</span> <span class="tlaGNC">       10625 :     const std::string&amp; camel_name() const noexcept { return m_CamelName; }</span></span>
 <span id="L136"><span class="lineNum">     136</span>              : </span>
 <span id="L137"><span class="lineNum">     137</span>              :     void camel_name(std::string name);</span>
 <span id="L138"><span class="lineNum">     138</span>              : </span>
 <span id="L139"><span class="lineNum">     139</span>              :     void set_cpp(const std::filesystem::path&amp; headerPath, std::string_view nameSpace);</span>
 <span id="L140"><span class="lineNum">     140</span>              : </span>
 <span id="L141"><span class="lineNum">     141</span>              :     [[nodiscard]]</span>
-<span id="L142"><span class="lineNum">     142</span> <span class="tlaGNC">        8064 :     const indentation&amp; code_indent() const noexcept { return m_CodeIndent; }</span></span>
+<span id="L142"><span class="lineNum">     142</span> <span class="tlaGNC">        7200 :     const indentation&amp; code_indent() const noexcept { return m_CodeIndent; }</span></span>
 <span id="L143"><span class="lineNum">     143</span>              : </span>
 <span id="L144"><span class="lineNum">     144</span>              :     [[nodiscard]]</span>
-<span id="L145"><span class="lineNum">     145</span> <span class="tlaGNC">        1008 :     const std::string&amp; copyright() const noexcept { return m_Copyright; }</span></span>
+<span id="L145"><span class="lineNum">     145</span> <span class="tlaGNC">         900 :     const std::string&amp; copyright() const noexcept { return m_Copyright; }</span></span>
 <span id="L146"><span class="lineNum">     146</span>              : </span>
 <span id="L147"><span class="lineNum">     147</span>              :     [[nodiscard]]</span>
-<span id="L148"><span class="lineNum">     148</span> <span class="tlaGNC">       10080 :     const std::string&amp; project_namespace() const noexcept { return m_ProjectNamespace; }</span></span>
+<span id="L148"><span class="lineNum">     148</span> <span class="tlaGNC">        9000 :     const std::string&amp; project_namespace() const noexcept { return m_ProjectNamespace; }</span></span>
 <span id="L149"><span class="lineNum">     149</span>              : </span>
 <span id="L150"><span class="lineNum">     150</span>              :     [[nodiscard]]</span>
-<span id="L151"><span class="lineNum">     151</span> <span class="tlaGNC">        9016 :     std::ostream&amp; stream() noexcept { return *m_Stream; }</span></span>
+<span id="L151"><span class="lineNum">     151</span> <span class="tlaGNC">        8050 :     std::ostream&amp; stream() noexcept { return *m_Stream; }</span></span>
 <span id="L152"><span class="lineNum">     152</span>              : </span>
 <span id="L153"><span class="lineNum">     153</span>              :     void finalize_suite(std::string_view fallbackIngredient);</span>
 <span id="L154"><span class="lineNum">     154</span>              : </span>
@@ -249,11 +249,11 @@
 <span id="L187"><span class="lineNum">     187</span>              :   public:</span>
 <span id="L188"><span class="lineNum">     188</span>              :     using nascent_test_base::nascent_test_base;</span>
 <span id="L189"><span class="lineNum">     189</span>              : </span>
-<span id="L190"><span class="lineNum">     190</span> <span class="tlaGNC">         841 :     void qualified_name(std::string name) { m_QualifiedName = std::move(name); }</span></span>
+<span id="L190"><span class="lineNum">     190</span> <span class="tlaGNC">         725 :     void qualified_name(std::string name) { m_QualifiedName = std::move(name); }</span></span>
 <span id="L191"><span class="lineNum">     191</span>              : </span>
-<span id="L192"><span class="lineNum">     192</span> <span class="tlaGNC">         841 :     void add_equivalent_type(std::string name) { m_EquivalentTypes.emplace_back(std::move(name)); }</span></span>
+<span id="L192"><span class="lineNum">     192</span> <span class="tlaGNC">         725 :     void add_equivalent_type(std::string name) { m_EquivalentTypes.emplace_back(std::move(name)); }</span></span>
 <span id="L193"><span class="lineNum">     193</span>              : </span>
-<span id="L194"><span class="lineNum">     194</span> <span class="tlaGNC">         406 :     void source_dir(std::filesystem::path dir) { m_SourceDir = std::move(dir); }</span></span>
+<span id="L194"><span class="lineNum">     194</span> <span class="tlaGNC">         350 :     void source_dir(std::filesystem::path dir) { m_SourceDir = std::move(dir); }</span></span>
 <span id="L195"><span class="lineNum">     195</span>              : </span>
 <span id="L196"><span class="lineNum">     196</span>              :     void finalize();</span>
 <span id="L197"><span class="lineNum">     197</span>              : </span>
@@ -314,7 +314,7 @@
 <span id="L252"><span class="lineNum">     252</span>              :     [[nodiscard]]</span>
 <span id="L253"><span class="lineNum">     253</span>              :     static std::vector&lt;std::string&gt; stubs();</span>
 <span id="L254"><span class="lineNum">     254</span>              : </span>
-<span id="L255"><span class="lineNum">     255</span> <span class="tlaGNC">         116 :     void set_namespace(std::string n) { m_Namespace = std::move(n); }</span></span>
+<span id="L255"><span class="lineNum">     255</span> <span class="tlaGNC">         100 :     void set_namespace(std::string n) { m_Namespace = std::move(n); }</span></span>
 <span id="L256"><span class="lineNum">     256</span>              :   private:</span>
 <span id="L257"><span class="lineNum">     257</span>              :     void transform_file(std::string&amp; text) const;</span>
 <span id="L258"><span class="lineNum">     258</span>              : </span>

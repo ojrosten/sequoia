@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2025-01-12 21:58:51</td>
+            <td class="headerValue">2025-03-30 21:18:04</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -89,11 +89,11 @@
 <span id="L27"><span class="lineNum">      27</span>              :       using type = Nodes;</span>
 <span id="L28"><span class="lineNum">      28</span>              : </span>
 <span id="L29"><span class="lineNum">      29</span>              :       template&lt;test_mode Mode&gt;</span>
-<span id="L30"><span class="lineNum">      30</span> <span class="tlaGNC tlaBgGNC">       56753 :       static void test(equality_check_t, test_logger&lt;Mode&gt;&amp; logger, const Nodes&amp; nodes, const Nodes&amp; prediction)</span></span>
+<span id="L30"><span class="lineNum">      30</span> <span class="tlaGNC tlaBgGNC">       12221 :       static void test(equality_check_t, test_logger&lt;Mode&gt;&amp; logger, const Nodes&amp; nodes, const Nodes&amp; prediction)</span></span>
 <span id="L31"><span class="lineNum">      31</span>              :       {</span>
-<span id="L32"><span class="lineNum">      32</span> <span class="tlaGNC">      113506 :         check(equality, &quot;Sizes different&quot;, logger, nodes.size(), prediction.size());</span></span>
-<span id="L33"><span class="lineNum">      33</span> <span class="tlaGNC">      113506 :         check(with_best_available, &quot;const_node_iter&quot;, logger, nodes.cbegin_node_weights(), nodes.cend_node_weights(), prediction.cbegin_node_weights(), prediction.cend_node_weights());</span></span>
-<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">       56753 :       }</span></span>
+<span id="L32"><span class="lineNum">      32</span> <span class="tlaGNC">       24442 :         check(equality, &quot;Sizes different&quot;, logger, nodes.size(), prediction.size());</span></span>
+<span id="L33"><span class="lineNum">      33</span> <span class="tlaGNC">       24442 :         check(with_best_available, &quot;const_node_iter&quot;, logger, nodes.cbegin_node_weights(), nodes.cend_node_weights(), prediction.cbegin_node_weights(), prediction.cend_node_weights());</span></span>
+<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">       12221 :       }</span></span>
 <span id="L35"><span class="lineNum">      35</span>              :     };</span>
 <span id="L36"><span class="lineNum">      36</span>              : </span>
 <span id="L37"><span class="lineNum">      37</span>              :     template&lt;class Nodes&gt;</span>
@@ -103,9 +103,9 @@
 <span id="L41"><span class="lineNum">      41</span>              :       using type = Nodes;</span>
 <span id="L42"><span class="lineNum">      42</span>              : </span>
 <span id="L43"><span class="lineNum">      43</span>              :       template&lt;test_mode Mode&gt;</span>
-<span id="L44"><span class="lineNum">      44</span> <span class="tlaGNC">       18950 :       static void test(equality_check_t, test_logger&lt;Mode&gt;&amp;, const Nodes&amp;, const Nodes&amp;)</span></span>
+<span id="L44"><span class="lineNum">      44</span> <span class="tlaGNC">        3790 :       static void test(equality_check_t, test_logger&lt;Mode&gt;&amp;, const Nodes&amp;, const Nodes&amp;)</span></span>
 <span id="L45"><span class="lineNum">      45</span>              :       {</span>
-<span id="L46"><span class="lineNum">      46</span> <span class="tlaGNC">       18950 :       }</span></span>
+<span id="L46"><span class="lineNum">      46</span> <span class="tlaGNC">        3790 :       }</span></span>
 <span id="L47"><span class="lineNum">      47</span>              :     };</span>
 <span id="L48"><span class="lineNum">      48</span>              : </span>
 <span id="L49"><span class="lineNum">      49</span>              :     template&lt;class Nodes&gt;</span>
@@ -116,22 +116,22 @@
 <span id="L54"><span class="lineNum">      54</span>              :       using equivalent_type = std::initializer_list&lt;typename type::weight_type&gt;;</span>
 <span id="L55"><span class="lineNum">      55</span>              : </span>
 <span id="L56"><span class="lineNum">      56</span>              :       template&lt;test_mode Mode&gt;</span>
-<span id="L57"><span class="lineNum">      57</span> <span class="tlaGNC">        2269 :       static void test(equivalence_check_t, test_logger&lt;Mode&gt;&amp; logger, const Nodes&amp; nodes, equivalent_type prediction)</span></span>
+<span id="L57"><span class="lineNum">      57</span> <span class="tlaGNC">         425 :       static void test(equivalence_check_t, test_logger&lt;Mode&gt;&amp; logger, const Nodes&amp; nodes, equivalent_type prediction)</span></span>
 <span id="L58"><span class="lineNum">      58</span>              :       {</span>
-<span id="L59"><span class="lineNum">      59</span> <span class="tlaGNC">        4538 :         check(equality, &quot;Sizes different&quot;, logger, nodes.size(), prediction.size());</span></span>
+<span id="L59"><span class="lineNum">      59</span> <span class="tlaGNC">         850 :         check(equality, &quot;Sizes different&quot;, logger, nodes.size(), prediction.size());</span></span>
 <span id="L60"><span class="lineNum">      60</span>              : </span>
-<span id="L61"><span class="lineNum">      61</span> <span class="tlaGNC">        4538 :         check(with_best_available, &quot;const_node_iter&quot;, logger, nodes.cbegin_node_weights(), nodes.cend_node_weights(), prediction.begin(), prediction.end());</span></span>
-<span id="L62"><span class="lineNum">      62</span> <span class="tlaGNC">        4538 :         check(with_best_available, &quot;const_reverse_node_iter&quot;, logger, nodes.crbegin_node_weights(), nodes.crend_node_weights(), std::reverse_iterator(prediction.end()), std::reverse_iterator(prediction.begin()));</span></span>
-<span id="L63"><span class="lineNum">      63</span> <span class="tlaGNC">        4538 :         check(with_best_available, &quot;implicitly const range&quot;, logger, nodes.node_weights().begin(), nodes.node_weights().end(), prediction.begin(), prediction.end());</span></span>
-<span id="L64"><span class="lineNum">      64</span> <span class="tlaGNC">        4538 :         check(with_best_available, &quot;explicitly const range&quot;, logger, nodes.cnode_weights().begin(), nodes.cnode_weights().end(), prediction.begin(), prediction.end());</span></span>
+<span id="L61"><span class="lineNum">      61</span> <span class="tlaGNC">         850 :         check(with_best_available, &quot;const_node_iter&quot;, logger, nodes.cbegin_node_weights(), nodes.cend_node_weights(), prediction.begin(), prediction.end());</span></span>
+<span id="L62"><span class="lineNum">      62</span> <span class="tlaGNC">         850 :         check(with_best_available, &quot;const_reverse_node_iter&quot;, logger, nodes.crbegin_node_weights(), nodes.crend_node_weights(), std::reverse_iterator(prediction.end()), std::reverse_iterator(prediction.begin()));</span></span>
+<span id="L63"><span class="lineNum">      63</span> <span class="tlaGNC">         850 :         check(with_best_available, &quot;implicitly const range&quot;, logger, nodes.node_weights().begin(), nodes.node_weights().end(), prediction.begin(), prediction.end());</span></span>
+<span id="L64"><span class="lineNum">      64</span> <span class="tlaGNC">         850 :         check(with_best_available, &quot;explicitly const range&quot;, logger, nodes.cnode_weights().begin(), nodes.cnode_weights().end(), prediction.begin(), prediction.end());</span></span>
 <span id="L65"><span class="lineNum">      65</span>              : </span>
 <span id="L66"><span class="lineNum">      66</span>              :         using iterator_type = Nodes::iterator;</span>
 <span id="L67"><span class="lineNum">      67</span>              :         if constexpr(std::indirectly_writable&lt;iterator_type, std::iter_value_t&lt;iterator_type&gt;&gt;)</span>
 <span id="L68"><span class="lineNum">      68</span>              :         {</span>
-<span id="L69"><span class="lineNum">      69</span> <span class="tlaGNC">        2269 :           auto&amp; n{const_cast&lt;Nodes&amp;&gt;(nodes)};</span></span>
-<span id="L70"><span class="lineNum">      70</span> <span class="tlaGNC">        4538 :           check(with_best_available, &quot;range&quot;, logger, n.node_weights().begin(), n.node_weights().end(), prediction.begin(), prediction.end());</span></span>
+<span id="L69"><span class="lineNum">      69</span> <span class="tlaGNC">         425 :           auto&amp; n{const_cast&lt;Nodes&amp;&gt;(nodes)};</span></span>
+<span id="L70"><span class="lineNum">      70</span> <span class="tlaGNC">         850 :           check(with_best_available, &quot;range&quot;, logger, n.node_weights().begin(), n.node_weights().end(), prediction.begin(), prediction.end());</span></span>
 <span id="L71"><span class="lineNum">      71</span>              :         }</span>
-<span id="L72"><span class="lineNum">      72</span> <span class="tlaGNC">        2269 :       }</span></span>
+<span id="L72"><span class="lineNum">      72</span> <span class="tlaGNC">         425 :       }</span></span>
 <span id="L73"><span class="lineNum">      73</span>              :     };</span>
 <span id="L74"><span class="lineNum">      74</span>              : </span>
 <span id="L75"><span class="lineNum">      75</span>              :     template&lt;class Nodes&gt;</span>
@@ -190,13 +190,13 @@
 <span id="L128"><span class="lineNum">     128</span>              :     }</span>
 <span id="L129"><span class="lineNum">     129</span>              : </span>
 <span id="L130"><span class="lineNum">     130</span>              :     template&lt;test_mode Mode&gt;</span>
-<span id="L131"><span class="lineNum">     131</span> <span class="tlaGNC">          30 :     static void test(equivalence_check_t, test_logger&lt;Mode&gt;&amp; logger, const type&amp; nodes, const equivalent_type&amp; prediction)</span></span>
+<span id="L131"><span class="lineNum">     131</span> <span class="tlaGNC">           6 :     static void test(equivalence_check_t, test_logger&lt;Mode&gt;&amp; logger, const type&amp; nodes, const equivalent_type&amp; prediction)</span></span>
 <span id="L132"><span class="lineNum">     132</span>              :     {</span>
-<span id="L133"><span class="lineNum">     133</span> <span class="tlaGNC">          90 :       if (check(equality, &quot;Node storage sizes different&quot;, logger, nodes.size(), sizeof...(Ts)))</span></span>
+<span id="L133"><span class="lineNum">     133</span> <span class="tlaGNC">          18 :       if (check(equality, &quot;Node storage sizes different&quot;, logger, nodes.size(), sizeof...(Ts)))</span></span>
 <span id="L134"><span class="lineNum">     134</span>              :       {</span>
-<span id="L135"><span class="lineNum">     135</span> <span class="tlaGNC">          30 :         check_elements(logger, nodes, prediction);</span></span>
+<span id="L135"><span class="lineNum">     135</span> <span class="tlaGNC">           6 :         check_elements(logger, nodes, prediction);</span></span>
 <span id="L136"><span class="lineNum">     136</span>              :       }</span>
-<span id="L137"><span class="lineNum">     137</span> <span class="tlaGNC">          30 :     }</span></span>
+<span id="L137"><span class="lineNum">     137</span> <span class="tlaGNC">           6 :     }</span></span>
 <span id="L138"><span class="lineNum">     138</span>              : </span>
 <span id="L139"><span class="lineNum">     139</span>              :   private:</span>
 <span id="L140"><span class="lineNum">     140</span>              :     template&lt;test_mode Mode, std::size_t I=0&gt;</span>
@@ -213,17 +213,17 @@
 <span id="L151"><span class="lineNum">     151</span>              :     }</span>
 <span id="L152"><span class="lineNum">     152</span>              : </span>
 <span id="L153"><span class="lineNum">     153</span>              :     template&lt;test_mode Mode, std::size_t I = 0&gt;</span>
-<span id="L154"><span class="lineNum">     154</span> <span class="tlaGNC">         105 :     static void check_elements([[maybe_unused]] test_logger&lt;Mode&gt;&amp; logger,</span></span>
+<span id="L154"><span class="lineNum">     154</span> <span class="tlaGNC">          21 :     static void check_elements([[maybe_unused]] test_logger&lt;Mode&gt;&amp; logger,</span></span>
 <span id="L155"><span class="lineNum">     155</span>              :                                [[maybe_unused]] const type&amp; nodes,</span>
 <span id="L156"><span class="lineNum">     156</span>              :                                [[maybe_unused]] const equivalent_type&amp; prediction)</span>
 <span id="L157"><span class="lineNum">     157</span>              :     {</span>
 <span id="L158"><span class="lineNum">     158</span>              :       if constexpr (I &lt; sizeof...(Ts))</span>
 <span id="L159"><span class="lineNum">     159</span>              :       {</span>
-<span id="L160"><span class="lineNum">     160</span> <span class="tlaGNC">          75 :         const auto message{ std::to_string(I).append(&quot;th element incorrect&quot;) };</span></span>
-<span id="L161"><span class="lineNum">     161</span> <span class="tlaGNC">          75 :         check(equality, message, logger, nodes.template get_node_weight&lt;I&gt;(), std::get&lt;I&gt;(prediction));</span></span>
-<span id="L162"><span class="lineNum">     162</span> <span class="tlaGNC">          75 :         check_elements&lt;Mode, I + 1&gt;(logger, nodes, prediction);</span></span>
-<span id="L163"><span class="lineNum">     163</span> <span class="tlaGNC">          75 :       }</span></span>
-<span id="L164"><span class="lineNum">     164</span> <span class="tlaGNC">         105 :     }</span></span>
+<span id="L160"><span class="lineNum">     160</span> <span class="tlaGNC">          15 :         const auto message{ std::to_string(I).append(&quot;th element incorrect&quot;) };</span></span>
+<span id="L161"><span class="lineNum">     161</span> <span class="tlaGNC">          15 :         check(equality, message, logger, nodes.template get_node_weight&lt;I&gt;(), std::get&lt;I&gt;(prediction));</span></span>
+<span id="L162"><span class="lineNum">     162</span> <span class="tlaGNC">          15 :         check_elements&lt;Mode, I + 1&gt;(logger, nodes, prediction);</span></span>
+<span id="L163"><span class="lineNum">     163</span> <span class="tlaGNC">          15 :       }</span></span>
+<span id="L164"><span class="lineNum">     164</span> <span class="tlaGNC">          21 :     }</span></span>
 <span id="L165"><span class="lineNum">     165</span>              :   };</span>
 <span id="L166"><span class="lineNum">     166</span>              : </span>
 <span id="L167"><span class="lineNum">     167</span>              :   template&lt;class Weight, bool PropagateCopy=true, bool PropagateMove=true, bool PropagateSwap=true&gt;</span>
@@ -237,11 +237,11 @@
 <span id="L175"><span class="lineNum">     175</span>              :     using size_type      = typename base_t::size_type;</span>
 <span id="L176"><span class="lineNum">     176</span>              :     using weight_type    = typename base_t::weight_type;</span>
 <span id="L177"><span class="lineNum">     177</span>              : </span>
-<span id="L178"><span class="lineNum">     178</span> <span class="tlaGNC">          39 :     node_storage_tester() = default;</span></span>
+<span id="L178"><span class="lineNum">     178</span> <span class="tlaGNC">           3 :     node_storage_tester() = default;</span></span>
 <span id="L179"><span class="lineNum">     179</span>              : </span>
-<span id="L180"><span class="lineNum">     180</span> <span class="tlaGNC">         104 :     explicit node_storage_tester(const allocator_type&amp; allocator)</span></span>
-<span id="L181"><span class="lineNum">     181</span> <span class="tlaGNC">         104 :       : base_t(allocator)</span></span>
-<span id="L182"><span class="lineNum">     182</span> <span class="tlaGNC">         104 :     {}</span></span>
+<span id="L180"><span class="lineNum">     180</span> <span class="tlaGNC">           8 :     explicit node_storage_tester(const allocator_type&amp; allocator)</span></span>
+<span id="L181"><span class="lineNum">     181</span> <span class="tlaGNC">           8 :       : base_t(allocator)</span></span>
+<span id="L182"><span class="lineNum">     182</span> <span class="tlaGNC">           8 :     {}</span></span>
 <span id="L183"><span class="lineNum">     183</span>              : </span>
 <span id="L184"><span class="lineNum">     184</span>              :     explicit node_storage_tester(const size_type n)</span>
 <span id="L185"><span class="lineNum">     185</span>              :       : base_t(n)</span>
@@ -251,36 +251,36 @@
 <span id="L189"><span class="lineNum">     189</span>              :       : base_t(n, allocator)</span>
 <span id="L190"><span class="lineNum">     190</span>              :     {}</span>
 <span id="L191"><span class="lineNum">     191</span>              : </span>
-<span id="L192"><span class="lineNum">     192</span> <span class="tlaGNC">         143 :     node_storage_tester(std::initializer_list&lt;weight_type&gt; weights)</span></span>
-<span id="L193"><span class="lineNum">     193</span> <span class="tlaGNC">         143 :       : base_t{weights}</span></span>
-<span id="L194"><span class="lineNum">     194</span> <span class="tlaGNC">         143 :     {}</span></span>
+<span id="L192"><span class="lineNum">     192</span> <span class="tlaGNC">          11 :     node_storage_tester(std::initializer_list&lt;weight_type&gt; weights)</span></span>
+<span id="L193"><span class="lineNum">     193</span> <span class="tlaGNC">          11 :       : base_t{weights}</span></span>
+<span id="L194"><span class="lineNum">     194</span> <span class="tlaGNC">          11 :     {}</span></span>
 <span id="L195"><span class="lineNum">     195</span>              : </span>
-<span id="L196"><span class="lineNum">     196</span> <span class="tlaGNC">         104 :     node_storage_tester(std::initializer_list&lt;weight_type&gt; weights, const allocator_type&amp; allocator)</span></span>
-<span id="L197"><span class="lineNum">     197</span> <span class="tlaGNC">         104 :       : base_t{weights, allocator}</span></span>
-<span id="L198"><span class="lineNum">     198</span> <span class="tlaGNC">         104 :     {}</span></span>
+<span id="L196"><span class="lineNum">     196</span> <span class="tlaGNC">           8 :     node_storage_tester(std::initializer_list&lt;weight_type&gt; weights, const allocator_type&amp; allocator)</span></span>
+<span id="L197"><span class="lineNum">     197</span> <span class="tlaGNC">           8 :       : base_t{weights, allocator}</span></span>
+<span id="L198"><span class="lineNum">     198</span> <span class="tlaGNC">           8 :     {}</span></span>
 <span id="L199"><span class="lineNum">     199</span>              : </span>
-<span id="L200"><span class="lineNum">     200</span> <span class="tlaGNC">         858 :     node_storage_tester(const node_storage_tester&amp;) = default;</span></span>
+<span id="L200"><span class="lineNum">     200</span> <span class="tlaGNC">          66 :     node_storage_tester(const node_storage_tester&amp;) = default;</span></span>
 <span id="L201"><span class="lineNum">     201</span>              : </span>
-<span id="L202"><span class="lineNum">     202</span> <span class="tlaGNC">         104 :     node_storage_tester(const node_storage_tester&amp; s, const allocator_type&amp; allocator)</span></span>
-<span id="L203"><span class="lineNum">     203</span> <span class="tlaGNC">         104 :       : base_t{s, allocator}</span></span>
-<span id="L204"><span class="lineNum">     204</span> <span class="tlaGNC">         104 :     {}</span></span>
+<span id="L202"><span class="lineNum">     202</span> <span class="tlaGNC">           8 :     node_storage_tester(const node_storage_tester&amp; s, const allocator_type&amp; allocator)</span></span>
+<span id="L203"><span class="lineNum">     203</span> <span class="tlaGNC">           8 :       : base_t{s, allocator}</span></span>
+<span id="L204"><span class="lineNum">     204</span> <span class="tlaGNC">           8 :     {}</span></span>
 <span id="L205"><span class="lineNum">     205</span>              : </span>
-<span id="L206"><span class="lineNum">     206</span> <span class="tlaGNC">         468 :     node_storage_tester(node_storage_tester&amp;&amp;) noexcept = default;</span></span>
+<span id="L206"><span class="lineNum">     206</span> <span class="tlaGNC">          36 :     node_storage_tester(node_storage_tester&amp;&amp;) noexcept = default;</span></span>
 <span id="L207"><span class="lineNum">     207</span>              : </span>
-<span id="L208"><span class="lineNum">     208</span> <span class="tlaGNC">         104 :     node_storage_tester(node_storage_tester&amp;&amp; s, const allocator_type&amp; allocator)</span></span>
-<span id="L209"><span class="lineNum">     209</span> <span class="tlaGNC">         104 :       : base_t{std::move(s), allocator}</span></span>
-<span id="L210"><span class="lineNum">     210</span> <span class="tlaGNC">         104 :     {}</span></span>
+<span id="L208"><span class="lineNum">     208</span> <span class="tlaGNC">           8 :     node_storage_tester(node_storage_tester&amp;&amp; s, const allocator_type&amp; allocator)</span></span>
+<span id="L209"><span class="lineNum">     209</span> <span class="tlaGNC">           8 :       : base_t{std::move(s), allocator}</span></span>
+<span id="L210"><span class="lineNum">     210</span> <span class="tlaGNC">           8 :     {}</span></span>
 <span id="L211"><span class="lineNum">     211</span>              : </span>
-<span id="L212"><span class="lineNum">     212</span> <span class="tlaGNC">        1924 :     ~node_storage_tester() = default;</span></span>
+<span id="L212"><span class="lineNum">     212</span> <span class="tlaGNC">         148 :     ~node_storage_tester() = default;</span></span>
 <span id="L213"><span class="lineNum">     213</span>              : </span>
-<span id="L214"><span class="lineNum">     214</span> <span class="tlaGNC">         364 :     node_storage_tester&amp; operator=(const node_storage_tester&amp;) = default;</span></span>
+<span id="L214"><span class="lineNum">     214</span> <span class="tlaGNC">          28 :     node_storage_tester&amp; operator=(const node_storage_tester&amp;) = default;</span></span>
 <span id="L215"><span class="lineNum">     215</span>              : </span>
-<span id="L216"><span class="lineNum">     216</span> <span class="tlaGNC">         130 :     node_storage_tester&amp; operator=(node_storage_tester&amp;&amp;) = default;</span></span>
+<span id="L216"><span class="lineNum">     216</span> <span class="tlaGNC">          10 :     node_storage_tester&amp; operator=(node_storage_tester&amp;&amp;) = default;</span></span>
 <span id="L217"><span class="lineNum">     217</span>              : </span>
-<span id="L218"><span class="lineNum">     218</span> <span class="tlaGNC">         156 :     friend void swap(node_storage_tester&amp; lhs, node_storage_tester&amp; rhs)</span></span>
+<span id="L218"><span class="lineNum">     218</span> <span class="tlaGNC">          12 :     friend void swap(node_storage_tester&amp; lhs, node_storage_tester&amp; rhs)</span></span>
 <span id="L219"><span class="lineNum">     219</span>              :     {</span>
-<span id="L220"><span class="lineNum">     220</span> <span class="tlaGNC">         156 :       lhs.swap(rhs);</span></span>
-<span id="L221"><span class="lineNum">     221</span> <span class="tlaGNC">         156 :     }</span></span>
+<span id="L220"><span class="lineNum">     220</span> <span class="tlaGNC">          12 :       lhs.swap(rhs);</span></span>
+<span id="L221"><span class="lineNum">     221</span> <span class="tlaGNC">          12 :     }</span></span>
 <span id="L222"><span class="lineNum">     222</span>              : </span>
 <span id="L223"><span class="lineNum">     223</span>              :     using base_t::reserve;</span>
 <span id="L224"><span class="lineNum">     224</span>              :     using base_t::capacity;</span>

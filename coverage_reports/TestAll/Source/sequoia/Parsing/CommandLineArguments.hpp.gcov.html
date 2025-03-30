@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2025-01-12 21:58:51</td>
+            <td class="headerValue">2025-03-30 21:18:04</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -94,14 +94,14 @@
 <span id="L32"><span class="lineNum">      32</span>              :   class proper_string</span>
 <span id="L33"><span class="lineNum">      33</span>              :   {</span>
 <span id="L34"><span class="lineNum">      34</span>              :   public:</span>
-<span id="L35"><span class="lineNum">      35</span> <span class="tlaGNC tlaBgGNC">       94188 :     proper_string(std::string s) : m_String{std::move(s)}</span></span>
+<span id="L35"><span class="lineNum">      35</span> <span class="tlaGNC tlaBgGNC">       80944 :     proper_string(std::string s) : m_String{std::move(s)}</span></span>
 <span id="L36"><span class="lineNum">      36</span>              :     {</span>
-<span id="L37"><span class="lineNum">      37</span> <span class="tlaGNC">       94186 :       if(m_String.empty())</span></span>
-<span id="L38"><span class="lineNum">      38</span> <span class="tlaGNC">          87 :         throw std::logic_error{&quot;Empty string detected&quot;};</span></span>
-<span id="L39"><span class="lineNum">      39</span> <span class="tlaGNC">       94184 :     }</span></span>
+<span id="L37"><span class="lineNum">      37</span> <span class="tlaGNC">       80942 :       if(m_String.empty())</span></span>
+<span id="L38"><span class="lineNum">      38</span> <span class="tlaGNC">          75 :         throw std::logic_error{&quot;Empty string detected&quot;};</span></span>
+<span id="L39"><span class="lineNum">      39</span> <span class="tlaGNC">       80940 :     }</span></span>
 <span id="L40"><span class="lineNum">      40</span>              : </span>
-<span id="L41"><span class="lineNum">      41</span> <span class="tlaGNC">      188469 :     proper_string(const char* c) : proper_string{std::string{c}}</span></span>
-<span id="L42"><span class="lineNum">      42</span> <span class="tlaGNC">       94103 :     {}</span></span>
+<span id="L41"><span class="lineNum">      41</span> <span class="tlaGNC">      161969 :     proper_string(const char* c) : proper_string{std::string{c}}</span></span>
+<span id="L42"><span class="lineNum">      42</span> <span class="tlaGNC">       80871 :     {}</span></span>
 <span id="L43"><span class="lineNum">      43</span>              : </span>
 <span id="L44"><span class="lineNum">      44</span>              :     [[nodiscard]]</span>
 <span id="L45"><span class="lineNum">      45</span>              :     operator const std::string&amp; () const noexcept</span>
@@ -110,9 +110,9 @@
 <span id="L48"><span class="lineNum">      48</span>              :     }</span>
 <span id="L49"><span class="lineNum">      49</span>              : </span>
 <span id="L50"><span class="lineNum">      50</span>              :     [[nodiscard]]</span>
-<span id="L51"><span class="lineNum">      51</span> <span class="tlaGNC">       87965 :     operator std::string_view() const noexcept</span></span>
+<span id="L51"><span class="lineNum">      51</span> <span class="tlaGNC">       75753 :     operator std::string_view() const noexcept</span></span>
 <span id="L52"><span class="lineNum">      52</span>              :     {</span>
-<span id="L53"><span class="lineNum">      53</span> <span class="tlaGNC">       87965 :       return m_String;</span></span>
+<span id="L53"><span class="lineNum">      53</span> <span class="tlaGNC">       75753 :       return m_String;</span></span>
 <span id="L54"><span class="lineNum">      54</span>              :     }</span>
 <span id="L55"><span class="lineNum">      55</span>              : </span>
 <span id="L56"><span class="lineNum">      56</span>              :     [[nodiscard]]</span>
@@ -205,33 +205,33 @@
 <span id="L143"><span class="lineNum">     143</span>              : </span>
 <span id="L144"><span class="lineNum">     144</span>              :   template&lt;std::invocable&lt;std::string&gt; Fn&gt;</span>
 <span id="L145"><span class="lineNum">     145</span>              :   [[nodiscard]]</span>
-<span id="L146"><span class="lineNum">     146</span> <span class="tlaGNC">        1165 :   std::string parse_invoke_depth_first(int argc, char** argv, const options_forest options, Fn zerothArgProcessor)</span></span>
+<span id="L146"><span class="lineNum">     146</span> <span class="tlaGNC">        1001 :   std::string parse_invoke_depth_first(int argc, char** argv, const options_forest options, Fn zerothArgProcessor)</span></span>
 <span id="L147"><span class="lineNum">     147</span>              :   {</span>
-<span id="L148"><span class="lineNum">     148</span> <span class="tlaGNC">        1165 :     auto[zerothArg, operations, help]{parse(argc, argv, options)};</span></span>
+<span id="L148"><span class="lineNum">     148</span> <span class="tlaGNC">        1001 :     auto[zerothArg, operations, help]{parse(argc, argv, options)};</span></span>
 <span id="L149"><span class="lineNum">     149</span>              : </span>
-<span id="L150"><span class="lineNum">     150</span> <span class="tlaGNC">        1165 :     if(help.empty())</span></span>
+<span id="L150"><span class="lineNum">     150</span> <span class="tlaGNC">        1001 :     if(help.empty())</span></span>
 <span id="L151"><span class="lineNum">     151</span>              :     {</span>
-<span id="L152"><span class="lineNum">     152</span> <span class="tlaGNC">        1165 :       zerothArgProcessor(zerothArg);</span></span>
+<span id="L152"><span class="lineNum">     152</span> <span class="tlaGNC">        1001 :       zerothArgProcessor(zerothArg);</span></span>
 <span id="L153"><span class="lineNum">     153</span>              : </span>
 <span id="L154"><span class="lineNum">     154</span>              :       using namespace maths;</span>
-<span id="L155"><span class="lineNum">     155</span> <span class="tlaGNC">        3856 :       for(const auto&amp; operTree : operations)</span></span>
+<span id="L155"><span class="lineNum">     155</span> <span class="tlaGNC">        3316 :       for(const auto&amp; operTree : operations)</span></span>
 <span id="L156"><span class="lineNum">     156</span>              :       {</span>
-<span id="L157"><span class="lineNum">     157</span> <span class="tlaGNC">        2923 :        traverse(depth_first,</span></span>
+<span id="L157"><span class="lineNum">     157</span> <span class="tlaGNC">        2515 :        traverse(depth_first,</span></span>
 <span id="L158"><span class="lineNum">     158</span>              :                 operTree,</span>
-<span id="L159"><span class="lineNum">     159</span> <span class="tlaGNC">        2807 :                 ignore_disconnected_t{},</span></span>
-<span id="L160"><span class="lineNum">     160</span> <span class="tlaGNC">         116 :                 [&amp;operTree](const auto node) {</span></span>
-<span id="L161"><span class="lineNum">     161</span> <span class="tlaGNC">        5572 :                    const operation&amp; oper{operTree.cbegin_node_weights()[node]};</span></span>
-<span id="L162"><span class="lineNum">     162</span> <span class="tlaGNC">        5572 :                    if(oper.early) oper.early(oper.arguments);</span></span>
+<span id="L159"><span class="lineNum">     159</span> <span class="tlaGNC">        2415 :                 ignore_disconnected_t{},</span></span>
+<span id="L160"><span class="lineNum">     160</span> <span class="tlaGNC">         100 :                 [&amp;operTree](const auto node) {</span></span>
+<span id="L161"><span class="lineNum">     161</span> <span class="tlaGNC">        4792 :                    const operation&amp; oper{operTree.cbegin_node_weights()[node]};</span></span>
+<span id="L162"><span class="lineNum">     162</span> <span class="tlaGNC">        4792 :                    if(oper.early) oper.early(oper.arguments);</span></span>
 <span id="L163"><span class="lineNum">     163</span>              :                 },</span>
-<span id="L164"><span class="lineNum">     164</span> <span class="tlaGNC">        5614 :                 [&amp;operTree](const auto node) {</span></span>
-<span id="L165"><span class="lineNum">     165</span> <span class="tlaGNC">        5514 :                    const operation&amp; oper{operTree.cbegin_node_weights()[node]};</span></span>
-<span id="L166"><span class="lineNum">     166</span> <span class="tlaGNC">        5514 :                    if(oper.late) oper.late(oper.arguments);</span></span>
+<span id="L164"><span class="lineNum">     164</span> <span class="tlaGNC">        4830 :                 [&amp;operTree](const auto node) {</span></span>
+<span id="L165"><span class="lineNum">     165</span> <span class="tlaGNC">        4742 :                    const operation&amp; oper{operTree.cbegin_node_weights()[node]};</span></span>
+<span id="L166"><span class="lineNum">     166</span> <span class="tlaGNC">        4742 :                    if(oper.late) oper.late(oper.arguments);</span></span>
 <span id="L167"><span class="lineNum">     167</span>              :                 });</span>
 <span id="L168"><span class="lineNum">     168</span>              :       }</span>
 <span id="L169"><span class="lineNum">     169</span>              :     }</span>
 <span id="L170"><span class="lineNum">     170</span>              : </span>
-<span id="L171"><span class="lineNum">     171</span> <span class="tlaGNC">        2098 :     return help;</span></span>
-<span id="L172"><span class="lineNum">     172</span> <span class="tlaGNC">        1165 :   }</span></span>
+<span id="L171"><span class="lineNum">     171</span> <span class="tlaGNC">        1802 :     return help;</span></span>
+<span id="L172"><span class="lineNum">     172</span> <span class="tlaGNC">        1001 :   }</span></span>
 <span id="L173"><span class="lineNum">     173</span>              : </span>
 <span id="L174"><span class="lineNum">     174</span>              :   /*! \brief Parses command line arguments, building \ref outcome from an \ref option forest. */</span>
 <span id="L175"><span class="lineNum">     175</span>              :   class argument_parser</span>
@@ -241,10 +241,10 @@
 <span id="L179"><span class="lineNum">     179</span>              :     argument_parser(int argc, char** argv, const options_forest&amp; options);</span>
 <span id="L180"><span class="lineNum">     180</span>              : </span>
 <span id="L181"><span class="lineNum">     181</span>              :     [[nodiscard]]</span>
-<span id="L182"><span class="lineNum">     182</span> <span class="tlaGNC">        2441 :     outcome get() const</span></span>
+<span id="L182"><span class="lineNum">     182</span> <span class="tlaGNC">        2101 :     outcome get() const</span></span>
 <span id="L183"><span class="lineNum">     183</span>              :     {</span>
-<span id="L184"><span class="lineNum">     184</span> <span class="tlaGNC">        2441 :       return {m_ZerothArg, m_Operations, m_Help};</span></span>
-<span id="L185"><span class="lineNum">     185</span> <span class="tlaGNC">        2441 :     }</span></span>
+<span id="L184"><span class="lineNum">     184</span> <span class="tlaGNC">        2101 :       return {m_ZerothArg, m_Operations, m_Help};</span></span>
+<span id="L185"><span class="lineNum">     185</span> <span class="tlaGNC">        2101 :     }</span></span>
 <span id="L186"><span class="lineNum">     186</span>              :   private:</span>
 <span id="L187"><span class="lineNum">     187</span>              :     enum class top_level { yes, no };</span>
 <span id="L188"><span class="lineNum">     188</span>              : </span>

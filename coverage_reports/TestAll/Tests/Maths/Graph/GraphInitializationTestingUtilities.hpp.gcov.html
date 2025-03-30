@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2025-01-12 21:58:51</td>
+            <td class="headerValue">2025-03-30 21:18:04</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -84,10 +84,10 @@
 <span id="L22"><span class="lineNum">      22</span>              :     graph_init_extender() = default;</span>
 <span id="L23"><span class="lineNum">      23</span>              : </span>
 <span id="L24"><span class="lineNum">      24</span>              :     template&lt;class G, class... NodeWeights, class E=typename G::edge_init_type, class Self&gt;</span>
-<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC tlaBgGNC">          30 :     void check_graph(this Self&amp;&amp; self, const reporter&amp; description, const G&amp; graph, std::initializer_list&lt;std::initializer_list&lt;E&gt;&gt; edges, const std::tuple&lt;NodeWeights...&gt;&amp; nodeWeights)</span></span>
+<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC tlaBgGNC">           6 :     void check_graph(this Self&amp;&amp; self, const reporter&amp; description, const G&amp; graph, std::initializer_list&lt;std::initializer_list&lt;E&gt;&gt; edges, const std::tuple&lt;NodeWeights...&gt;&amp; nodeWeights)</span></span>
 <span id="L26"><span class="lineNum">      26</span>              :     {</span>
-<span id="L27"><span class="lineNum">      27</span> <span class="tlaGNC">          30 :       testing::check(weak_equivalence, self.report(description), self.m_Logger, graph, std::pair{edges, nodeWeights});</span></span>
-<span id="L28"><span class="lineNum">      28</span> <span class="tlaGNC">          30 :     }</span></span>
+<span id="L27"><span class="lineNum">      27</span> <span class="tlaGNC">           6 :       testing::check(weak_equivalence, self.report(description), self.m_Logger, graph, std::pair{edges, nodeWeights});</span></span>
+<span id="L28"><span class="lineNum">      28</span> <span class="tlaGNC">           6 :     }</span></span>
 <span id="L29"><span class="lineNum">      29</span>              : </span>
 <span id="L30"><span class="lineNum">      30</span>              :     template&lt;class G, class E=typename G::edge_init_typ, class Self&gt;</span>
 <span id="L31"><span class="lineNum">      31</span>              :       requires (!std::is_empty_v&lt;typename G::node_weight_type&gt;)</span>

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2025-01-12 21:58:51</td>
+            <td class="headerValue">2025-03-30 21:18:04</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">94.7&nbsp;%</td>
@@ -84,10 +84,10 @@
 <span id="L22"><span class="lineNum">      22</span>              :     using equivalent_type = std::vector&lt;typename M::value_type, typename M::allocator_type&gt;;</span>
 <span id="L23"><span class="lineNum">      23</span>              : </span>
 <span id="L24"><span class="lineNum">      24</span>              :     template&lt;test_mode Mode, class Advisor&gt;</span>
-<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC tlaBgGNC">       12654 :     static void test(equivalence_check_t, test_logger&lt;Mode&gt;&amp; logger, const type&amp; obtained, const equivalent_type&amp; prediction, const tutor&lt;Advisor&gt;&amp; advisor)</span></span>
+<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC tlaBgGNC">        8550 :     static void test(equivalence_check_t, test_logger&lt;Mode&gt;&amp; logger, const type&amp; obtained, const equivalent_type&amp; prediction, const tutor&lt;Advisor&gt;&amp; advisor)</span></span>
 <span id="L26"><span class="lineNum">      26</span>              :     {</span>
-<span id="L27"><span class="lineNum">      27</span> <span class="tlaGNC">       25308 :       check(equality, &quot;Wrapped vector&quot;, logger, obtained.x, prediction, advisor);</span></span>
-<span id="L28"><span class="lineNum">      28</span> <span class="tlaGNC">       12654 :     }</span></span>
+<span id="L27"><span class="lineNum">      27</span> <span class="tlaGNC">       17100 :       check(equality, &quot;Wrapped vector&quot;, logger, obtained.x, prediction, advisor);</span></span>
+<span id="L28"><span class="lineNum">      28</span> <span class="tlaGNC">        8550 :     }</span></span>
 <span id="L29"><span class="lineNum">      29</span>              :   };</span>
 <span id="L30"><span class="lineNum">      30</span>              :   </span>
 <span id="L31"><span class="lineNum">      31</span>              :   enum class enable_serialization : bool {no, yes};</span>

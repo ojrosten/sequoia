@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2025-01-12 21:58:51</td>
+            <td class="headerValue">2025-03-30 21:18:04</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -140,17 +140,17 @@
 <span id="L78"><span class="lineNum">      78</span>              :   };</span>
 <span id="L79"><span class="lineNum">      79</span>              : </span>
 <span id="L80"><span class="lineNum">      80</span>              :   [[nodiscard]]</span>
-<span id="L81"><span class="lineNum">      81</span> <span class="tlaGNC tlaBgGNC">          65 :   std::filesystem::path flatten_type_list_free_test::source_file() const</span></span>
+<span id="L81"><span class="lineNum">      81</span> <span class="tlaGNC tlaBgGNC">           5 :   std::filesystem::path flatten_type_list_free_test::source_file() const</span></span>
 <span id="L82"><span class="lineNum">      82</span>              :   {</span>
-<span id="L83"><span class="lineNum">      83</span> <span class="tlaGNC">          65 :     return std::source_location::current().file_name();</span></span>
+<span id="L83"><span class="lineNum">      83</span> <span class="tlaGNC">           5 :     return std::source_location::current().file_name();</span></span>
 <span id="L84"><span class="lineNum">      84</span>              :   }</span>
 <span id="L85"><span class="lineNum">      85</span>              : </span>
-<span id="L86"><span class="lineNum">      86</span> <span class="tlaGNC">          13 :   void flatten_type_list_free_test::run_tests()</span></span>
+<span id="L86"><span class="lineNum">      86</span> <span class="tlaGNC">           1 :   void flatten_type_list_free_test::run_tests()</span></span>
 <span id="L87"><span class="lineNum">      87</span>              :   {</span>
-<span id="L88"><span class="lineNum">      88</span> <span class="tlaGNC">          13 :     test_flatten();</span></span>
-<span id="L89"><span class="lineNum">      89</span> <span class="tlaGNC">          13 :   }</span></span>
+<span id="L88"><span class="lineNum">      88</span> <span class="tlaGNC">           1 :     test_flatten();</span></span>
+<span id="L89"><span class="lineNum">      89</span> <span class="tlaGNC">           1 :   }</span></span>
 <span id="L90"><span class="lineNum">      90</span>              : </span>
-<span id="L91"><span class="lineNum">      91</span> <span class="tlaGNC">          13 :   void flatten_type_list_free_test::test_flatten()</span></span>
+<span id="L91"><span class="lineNum">      91</span> <span class="tlaGNC">           1 :   void flatten_type_list_free_test::test_flatten()</span></span>
 <span id="L92"><span class="lineNum">      92</span>              :   {</span>
 <span id="L93"><span class="lineNum">      93</span>              :     static_assert(std::is_same_v&lt;flatten_t&lt;int&gt;, int&gt;);</span>
 <span id="L94"><span class="lineNum">      94</span>              :     static_assert(std::is_same_v&lt;flatten_t&lt;type_list&lt;int&gt;&gt;, int&gt;);</span>
@@ -222,8 +222,8 @@
 <span id="L160"><span class="lineNum">     160</span>              :           type_list&lt;float&gt;</span>
 <span id="L161"><span class="lineNum">     161</span>              :         &gt;</span>
 <span id="L162"><span class="lineNum">     162</span>              :       &gt;</span>
-<span id="L163"><span class="lineNum">     163</span> <span class="tlaGNC">          13 :     &gt; e{};</span></span>
-<span id="L164"><span class="lineNum">     164</span> <span class="tlaGNC">          13 :   }</span></span>
+<span id="L163"><span class="lineNum">     163</span> <span class="tlaGNC">           1 :     &gt; e{};</span></span>
+<span id="L164"><span class="lineNum">     164</span> <span class="tlaGNC">           1 :   }</span></span>
 <span id="L165"><span class="lineNum">     165</span>              : }</span>
         </pre>
               </td>

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2025-01-12 21:58:51</td>
+            <td class="headerValue">2025-03-30 21:18:04</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -95,10 +95,10 @@
 <span id="L33"><span class="lineNum">      33</span>              : </span>
 <span id="L34"><span class="lineNum">      34</span>              :     template&lt;class Self, pseudoregular T, std::invocable&lt;T&amp;&gt; Mutator, alloc_getter&lt;T&gt;... Getters&gt;</span>
 <span id="L35"><span class="lineNum">      35</span>              :       requires (!std::totally_ordered&lt;T&gt; &amp;&amp; (sizeof...(Getters) &gt; 0))</span>
-<span id="L36"><span class="lineNum">      36</span> <span class="tlaGNC tlaBgGNC">       19605 :     void check_semantics(this Self&amp; self, const reporter&amp; description, const T&amp; x, const T&amp; y, Mutator m, allocation_info&lt;T, Getters&gt;... info)</span></span>
+<span id="L36"><span class="lineNum">      36</span> <span class="tlaGNC tlaBgGNC">       13073 :     void check_semantics(this Self&amp; self, const reporter&amp; description, const T&amp; x, const T&amp; y, Mutator m, allocation_info&lt;T, Getters&gt;... info)</span></span>
 <span id="L37"><span class="lineNum">      37</span>              :     {</span>
-<span id="L38"><span class="lineNum">      38</span> <span class="tlaGNC">       19605 :       testing::check_semantics(append_lines(self.report(description), emphasise(&quot;Regular Semantics&quot;)), self.m_Logger, x, y, m, info...);</span></span>
-<span id="L39"><span class="lineNum">      39</span> <span class="tlaGNC">       19605 :     }</span></span>
+<span id="L38"><span class="lineNum">      38</span> <span class="tlaGNC">       13073 :       testing::check_semantics(append_lines(self.report(description), emphasise(&quot;Regular Semantics&quot;)), self.m_Logger, x, y, m, info...);</span></span>
+<span id="L39"><span class="lineNum">      39</span> <span class="tlaGNC">       13073 :     }</span></span>
 <span id="L40"><span class="lineNum">      40</span>              : </span>
 <span id="L41"><span class="lineNum">      41</span>              :     template</span>
 <span id="L42"><span class="lineNum">      42</span>              :     &lt;</span>
@@ -110,17 +110,17 @@
 <span id="L48"><span class="lineNum">      48</span>              :       alloc_getter&lt;T&gt;... Getters</span>
 <span id="L49"><span class="lineNum">      49</span>              :     &gt;</span>
 <span id="L50"><span class="lineNum">      50</span>              :       requires (!std::totally_ordered&lt;T&gt; &amp;&amp; (sizeof...(Getters) &gt; 0))</span>
-<span id="L51"><span class="lineNum">      51</span> <span class="tlaGNC">        1176 :     std::pair&lt;T, T&gt; check_semantics(this Self&amp; self, const reporter&amp; description, xMaker xFn, yMaker yFn, Mutator m, allocation_info&lt;T, Getters&gt;... info)</span></span>
+<span id="L51"><span class="lineNum">      51</span> <span class="tlaGNC">         632 :     std::pair&lt;T, T&gt; check_semantics(this Self&amp; self, const reporter&amp; description, xMaker xFn, yMaker yFn, Mutator m, allocation_info&lt;T, Getters&gt;... info)</span></span>
 <span id="L52"><span class="lineNum">      52</span>              :     {</span>
-<span id="L53"><span class="lineNum">      53</span> <span class="tlaGNC">        1176 :       return testing::check_semantics(append_lines(self.report(description), emphasise(&quot;Regular Semantics&quot;)), self.m_Logger, std::move(xFn), std::move(yFn), m, info...);</span></span>
+<span id="L53"><span class="lineNum">      53</span> <span class="tlaGNC">         632 :       return testing::check_semantics(append_lines(self.report(description), emphasise(&quot;Regular Semantics&quot;)), self.m_Logger, std::move(xFn), std::move(yFn), m, info...);</span></span>
 <span id="L54"><span class="lineNum">      54</span>              :     }</span>
 <span id="L55"><span class="lineNum">      55</span>              : </span>
 <span id="L56"><span class="lineNum">      56</span>              :     template&lt;class Self, pseudoregular T, std::invocable&lt;T&amp;&gt; Mutator, alloc_getter&lt;T&gt;... Getters&gt;</span>
 <span id="L57"><span class="lineNum">      57</span>              :       requires (std::totally_ordered&lt;T&gt; &amp;&amp; (sizeof...(Getters) &gt; 0))</span>
-<span id="L58"><span class="lineNum">      58</span> <span class="tlaGNC">         592 :     void check_semantics(this Self&amp; self, const reporter&amp; description, const T&amp; x, const T&amp; y, std::weak_ordering order, Mutator m, allocation_info&lt;T, Getters&gt;... info)</span></span>
+<span id="L58"><span class="lineNum">      58</span> <span class="tlaGNC">         400 :     void check_semantics(this Self&amp; self, const reporter&amp; description, const T&amp; x, const T&amp; y, std::weak_ordering order, Mutator m, allocation_info&lt;T, Getters&gt;... info)</span></span>
 <span id="L59"><span class="lineNum">      59</span>              :     {</span>
-<span id="L60"><span class="lineNum">      60</span> <span class="tlaGNC">         592 :       testing::check_semantics(append_lines(self.report(description), emphasise(&quot;Ordered Semantics&quot;)), self.m_Logger, x, y, order, m, info...);</span></span>
-<span id="L61"><span class="lineNum">      61</span> <span class="tlaGNC">         592 :     }</span></span>
+<span id="L60"><span class="lineNum">      60</span> <span class="tlaGNC">         400 :       testing::check_semantics(append_lines(self.report(description), emphasise(&quot;Ordered Semantics&quot;)), self.m_Logger, x, y, order, m, info...);</span></span>
+<span id="L61"><span class="lineNum">      61</span> <span class="tlaGNC">         400 :     }</span></span>
 <span id="L62"><span class="lineNum">      62</span>              : </span>
 <span id="L63"><span class="lineNum">      63</span>              :     template</span>
 <span id="L64"><span class="lineNum">      64</span>              :     &lt;</span>
@@ -132,9 +132,9 @@
 <span id="L70"><span class="lineNum">      70</span>              :       alloc_getter&lt;T&gt;... Getters</span>
 <span id="L71"><span class="lineNum">      71</span>              :     &gt;</span>
 <span id="L72"><span class="lineNum">      72</span>              :       requires (std::totally_ordered&lt;T&gt; &amp;&amp; (sizeof...(Getters) &gt; 0))</span>
-<span id="L73"><span class="lineNum">      73</span> <span class="tlaGNC">         592 :     std::pair&lt;T, T&gt; check_semantics(this Self&amp; self, const reporter&amp; description, xMaker xFn, yMaker yFn, std::weak_ordering order, Mutator m, allocation_info&lt;T, Getters&gt;... info)</span></span>
+<span id="L73"><span class="lineNum">      73</span> <span class="tlaGNC">         400 :     std::pair&lt;T, T&gt; check_semantics(this Self&amp; self, const reporter&amp; description, xMaker xFn, yMaker yFn, std::weak_ordering order, Mutator m, allocation_info&lt;T, Getters&gt;... info)</span></span>
 <span id="L74"><span class="lineNum">      74</span>              :     {</span>
-<span id="L75"><span class="lineNum">      75</span> <span class="tlaGNC">         592 :       return testing::check_semantics(append_lines(self.report(description), emphasise(&quot;Ordered Semantics&quot;)), self.m_Logger, std::move(xFn), std::move(yFn), order, m, info...);</span></span>
+<span id="L75"><span class="lineNum">      75</span> <span class="tlaGNC">         400 :       return testing::check_semantics(append_lines(self.report(description), emphasise(&quot;Ordered Semantics&quot;)), self.m_Logger, std::move(xFn), std::move(yFn), order, m, info...);</span></span>
 <span id="L76"><span class="lineNum">      76</span>              :     }</span>
 <span id="L77"><span class="lineNum">      77</span>              :   protected:</span>
 <span id="L78"><span class="lineNum">      78</span>              :     ~regular_allocation_extender() = default;</span>
@@ -168,23 +168,23 @@
 <span id="L106"><span class="lineNum">     106</span>              :     using basic_test&lt;Mode, regular_allocation_extender&lt;Mode&gt;&gt;::basic_test;</span>
 <span id="L107"><span class="lineNum">     107</span>              : </span>
 <span id="L108"><span class="lineNum">     108</span>              :   protected:</span>
-<span id="L109"><span class="lineNum">     109</span> <span class="tlaGNC">         620 :     ~basic_regular_allocation_test() = default;</span></span>
+<span id="L109"><span class="lineNum">     109</span> <span class="tlaGNC">         212 :     ~basic_regular_allocation_test() = default;</span></span>
 <span id="L110"><span class="lineNum">     110</span>              : </span>
-<span id="L111"><span class="lineNum">     111</span> <span class="tlaGNC">         386 :     basic_regular_allocation_test(basic_regular_allocation_test&amp;&amp;)            noexcept = default;</span></span>
-<span id="L112"><span class="lineNum">     112</span> <span class="tlaGNC">         117 :     basic_regular_allocation_test&amp; operator=(basic_regular_allocation_test&amp;&amp;) noexcept = default;</span></span>
+<span id="L111"><span class="lineNum">     111</span> <span class="tlaGNC">         130 :     basic_regular_allocation_test(basic_regular_allocation_test&amp;&amp;)            noexcept = default;</span></span>
+<span id="L112"><span class="lineNum">     112</span> <span class="tlaGNC">          41 :     basic_regular_allocation_test&amp; operator=(basic_regular_allocation_test&amp;&amp;) noexcept = default;</span></span>
 <span id="L113"><span class="lineNum">     113</span>              : </span>
 <span id="L114"><span class="lineNum">     114</span>              :     template&lt;class Self&gt;</span>
-<span id="L115"><span class="lineNum">     115</span> <span class="tlaGNC">         443 :     void do_allocation_tests(this Self&amp; self)</span></span>
+<span id="L115"><span class="lineNum">     115</span> <span class="tlaGNC">         279 :     void do_allocation_tests(this Self&amp; self)</span></span>
 <span id="L116"><span class="lineNum">     116</span>              :     {</span>
-<span id="L117"><span class="lineNum">     117</span> <span class="tlaGNC">         443 :       self.template test_allocation&lt;false, false, false&gt;();</span></span>
-<span id="L118"><span class="lineNum">     118</span> <span class="tlaGNC">         443 :       self.template test_allocation&lt;false, false, true&gt;();</span></span>
-<span id="L119"><span class="lineNum">     119</span> <span class="tlaGNC">         443 :       self.template test_allocation&lt;false, true, false&gt;();</span></span>
-<span id="L120"><span class="lineNum">     120</span> <span class="tlaGNC">         443 :       self.template test_allocation&lt;false, true, true&gt;();</span></span>
-<span id="L121"><span class="lineNum">     121</span> <span class="tlaGNC">         443 :       self.template test_allocation&lt;true, false, false&gt;();</span></span>
-<span id="L122"><span class="lineNum">     122</span> <span class="tlaGNC">         443 :       self.template test_allocation&lt;true, false, true&gt;();</span></span>
-<span id="L123"><span class="lineNum">     123</span> <span class="tlaGNC">         443 :       self.template test_allocation&lt;true, true, false&gt;();</span></span>
-<span id="L124"><span class="lineNum">     124</span> <span class="tlaGNC">         443 :       self.template test_allocation&lt;true, true, true&gt;();</span></span>
-<span id="L125"><span class="lineNum">     125</span> <span class="tlaGNC">         443 :     }</span></span>
+<span id="L117"><span class="lineNum">     117</span> <span class="tlaGNC">         279 :       self.template test_allocation&lt;false, false, false&gt;();</span></span>
+<span id="L118"><span class="lineNum">     118</span> <span class="tlaGNC">         279 :       self.template test_allocation&lt;false, false, true&gt;();</span></span>
+<span id="L119"><span class="lineNum">     119</span> <span class="tlaGNC">         279 :       self.template test_allocation&lt;false, true, false&gt;();</span></span>
+<span id="L120"><span class="lineNum">     120</span> <span class="tlaGNC">         279 :       self.template test_allocation&lt;false, true, true&gt;();</span></span>
+<span id="L121"><span class="lineNum">     121</span> <span class="tlaGNC">         279 :       self.template test_allocation&lt;true, false, false&gt;();</span></span>
+<span id="L122"><span class="lineNum">     122</span> <span class="tlaGNC">         279 :       self.template test_allocation&lt;true, false, true&gt;();</span></span>
+<span id="L123"><span class="lineNum">     123</span> <span class="tlaGNC">         279 :       self.template test_allocation&lt;true, true, false&gt;();</span></span>
+<span id="L124"><span class="lineNum">     124</span> <span class="tlaGNC">         279 :       self.template test_allocation&lt;true, true, true&gt;();</span></span>
+<span id="L125"><span class="lineNum">     125</span> <span class="tlaGNC">         279 :     }</span></span>
 <span id="L126"><span class="lineNum">     126</span>              :   };</span>
 <span id="L127"><span class="lineNum">     127</span>              : </span>
 <span id="L128"><span class="lineNum">     128</span>              :   /*! \anchor regular_allocation_test_alias */</span>

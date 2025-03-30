@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2025-01-12 21:58:51</td>
+            <td class="headerValue">2025-03-30 21:18:04</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -83,18 +83,18 @@
 <span id="L21"><span class="lineNum">      21</span>              :     using type = data_structures::static_stack&lt;T, MaxDepth&gt;;</span>
 <span id="L22"><span class="lineNum">      22</span>              : </span>
 <span id="L23"><span class="lineNum">      23</span>              :     template&lt;class CheckerType, test_mode Mode&gt;</span>
-<span id="L24"><span class="lineNum">      24</span> <span class="tlaGNC tlaBgGNC">         156 :     static void test(CheckerType flavour, test_logger&lt;Mode&gt;&amp; logger, const type&amp; stack, const type&amp; prediction)</span></span>
+<span id="L24"><span class="lineNum">      24</span> <span class="tlaGNC tlaBgGNC">          12 :     static void test(CheckerType flavour, test_logger&lt;Mode&gt;&amp; logger, const type&amp; stack, const type&amp; prediction)</span></span>
 <span id="L25"><span class="lineNum">      25</span>              :     {</span>
-<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">         312 :       check(equality, &quot;Emptiness incorrect&quot;, logger, stack.empty(), prediction.empty());</span></span>
-<span id="L27"><span class="lineNum">      27</span> <span class="tlaGNC">         312 :       check(equality, &quot;Size incorrect&quot;, logger, stack.size(), prediction.size());</span></span>
+<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">          24 :       check(equality, &quot;Emptiness incorrect&quot;, logger, stack.empty(), prediction.empty());</span></span>
+<span id="L27"><span class="lineNum">      27</span> <span class="tlaGNC">          24 :       check(equality, &quot;Size incorrect&quot;, logger, stack.size(), prediction.size());</span></span>
 <span id="L28"><span class="lineNum">      28</span>              : </span>
-<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">         156 :       if(!prediction.empty() &amp;&amp; !stack.empty())</span></span>
+<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">          12 :       if(!prediction.empty() &amp;&amp; !stack.empty())</span></span>
 <span id="L30"><span class="lineNum">      30</span>              :       {</span>
-<span id="L31"><span class="lineNum">      31</span> <span class="tlaGNC">         273 :         check(flavour, &quot;Top element incorrect&quot;, logger, stack.top(), prediction.top());</span></span>
+<span id="L31"><span class="lineNum">      31</span> <span class="tlaGNC">          21 :         check(flavour, &quot;Top element incorrect&quot;, logger, stack.top(), prediction.top());</span></span>
 <span id="L32"><span class="lineNum">      32</span>              :       }</span>
 <span id="L33"><span class="lineNum">      33</span>              : </span>
-<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">         312 :       check(&quot;Hidden state incorrect&quot;, logger, prediction == stack);</span></span>
-<span id="L35"><span class="lineNum">      35</span> <span class="tlaGNC">         156 :     }</span></span>
+<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">          24 :       check(&quot;Hidden state incorrect&quot;, logger, prediction == stack);</span></span>
+<span id="L35"><span class="lineNum">      35</span> <span class="tlaGNC">          12 :     }</span></span>
 <span id="L36"><span class="lineNum">      36</span>              :   };</span>
 <span id="L37"><span class="lineNum">      37</span>              : }</span>
         </pre>

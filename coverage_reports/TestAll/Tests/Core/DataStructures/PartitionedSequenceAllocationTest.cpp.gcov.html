@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2025-01-12 21:58:51</td>
+            <td class="headerValue">2025-03-30 21:18:04</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -88,25 +88,25 @@
 <span id="L26"><span class="lineNum">      26</span>              :   }</span>
 <span id="L27"><span class="lineNum">      27</span>              : </span>
 <span id="L28"><span class="lineNum">      28</span>              :   [[nodiscard]]</span>
-<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC tlaBgGNC">          20 :   std::filesystem::path partitioned_sequence_allocation_test::source_file() const</span></span>
+<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC tlaBgGNC">           4 :   std::filesystem::path partitioned_sequence_allocation_test::source_file() const</span></span>
 <span id="L30"><span class="lineNum">      30</span>              :   {</span>
-<span id="L31"><span class="lineNum">      31</span> <span class="tlaGNC">          20 :     return std::source_location::current().file_name();</span></span>
+<span id="L31"><span class="lineNum">      31</span> <span class="tlaGNC">           4 :     return std::source_location::current().file_name();</span></span>
 <span id="L32"><span class="lineNum">      32</span>              :   }</span>
 <span id="L33"><span class="lineNum">      33</span>              : </span>
-<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">           5 :   void partitioned_sequence_allocation_test::run_tests()</span></span>
+<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">           1 :   void partitioned_sequence_allocation_test::run_tests()</span></span>
 <span id="L35"><span class="lineNum">      35</span>              :   {</span>
-<span id="L36"><span class="lineNum">      36</span> <span class="tlaGNC">           5 :     do_allocation_tests();</span></span>
-<span id="L37"><span class="lineNum">      37</span> <span class="tlaGNC">           5 :   }</span></span>
+<span id="L36"><span class="lineNum">      36</span> <span class="tlaGNC">           1 :     do_allocation_tests();</span></span>
+<span id="L37"><span class="lineNum">      37</span> <span class="tlaGNC">           1 :   }</span></span>
 <span id="L38"><span class="lineNum">      38</span>              : </span>
 <span id="L39"><span class="lineNum">      39</span>              : </span>
 <span id="L40"><span class="lineNum">      40</span>              :   template&lt;bool PropagateCopy, bool PropagateMove, bool PropagateSwap&gt;</span>
-<span id="L41"><span class="lineNum">      41</span> <span class="tlaGNC">          40 :   void partitioned_sequence_allocation_test::test_allocation()</span></span>
+<span id="L41"><span class="lineNum">      41</span> <span class="tlaGNC">           8 :   void partitioned_sequence_allocation_test::test_allocation()</span></span>
 <span id="L42"><span class="lineNum">      42</span>              :   {</span>
-<span id="L43"><span class="lineNum">      43</span> <span class="tlaGNC">          40 :     test_contiguous_allocation&lt;int, PropagateCopy, PropagateMove, PropagateSwap&gt;();</span></span>
-<span id="L44"><span class="lineNum">      44</span> <span class="tlaGNC">          40 :   }</span></span>
+<span id="L43"><span class="lineNum">      43</span> <span class="tlaGNC">           8 :     test_contiguous_allocation&lt;int, PropagateCopy, PropagateMove, PropagateSwap&gt;();</span></span>
+<span id="L44"><span class="lineNum">      44</span> <span class="tlaGNC">           8 :   }</span></span>
 <span id="L45"><span class="lineNum">      45</span>              : </span>
 <span id="L46"><span class="lineNum">      46</span>              :   template&lt;class T, bool PropagateCopy, bool PropagateMove, bool PropagateSwap&gt;</span>
-<span id="L47"><span class="lineNum">      47</span> <span class="tlaGNC">          40 :   void partitioned_sequence_allocation_test::test_contiguous_allocation()</span></span>
+<span id="L47"><span class="lineNum">      47</span> <span class="tlaGNC">           8 :   void partitioned_sequence_allocation_test::test_contiguous_allocation()</span></span>
 <span id="L48"><span class="lineNum">      48</span>              :   {</span>
 <span id="L49"><span class="lineNum">      49</span>              :     using namespace data_structures;</span>
 <span id="L50"><span class="lineNum">      50</span>              : </span>
@@ -116,23 +116,23 @@
 <span id="L54"><span class="lineNum">      54</span>              :     using partitions_allocator = typename storage::partitions_allocator_type;</span>
 <span id="L55"><span class="lineNum">      55</span>              :     using prediction = std::initializer_list&lt;std::initializer_list&lt;int&gt;&gt;;</span>
 <span id="L56"><span class="lineNum">      56</span>              : </span>
-<span id="L57"><span class="lineNum">      57</span> <span class="tlaGNC">         180 :     auto partitionMaker{ [](storage&amp; s) { s.add_slot(); } };</span></span>
+<span id="L57"><span class="lineNum">      57</span> <span class="tlaGNC">          36 :     auto partitionMaker{ [](storage&amp; s) { s.add_slot(); } };</span></span>
 <span id="L58"><span class="lineNum">      58</span>              :     // null; [0,2][1]</span>
-<span id="L59"><span class="lineNum">      59</span> <span class="tlaGNC">         120 :     auto[s,t]{check_semantics(add_type_info&lt;storage&gt;(&quot;&quot;),</span></span>
-<span id="L60"><span class="lineNum">      60</span> <span class="tlaGNC">          40 :                               [](){ return storage{allocator{}, partitions_allocator{}}; },</span></span>
-<span id="L61"><span class="lineNum">      61</span> <span class="tlaGNC">          40 :                               [](){ return storage{{{0,2}, {1}}, allocator{}, partitions_allocator{}}; },</span></span>
+<span id="L59"><span class="lineNum">      59</span> <span class="tlaGNC">          24 :     auto[s,t]{check_semantics(add_type_info&lt;storage&gt;(&quot;&quot;),</span></span>
+<span id="L60"><span class="lineNum">      60</span> <span class="tlaGNC">           8 :                               [](){ return storage{allocator{}, partitions_allocator{}}; },</span></span>
+<span id="L61"><span class="lineNum">      61</span> <span class="tlaGNC">           8 :                               [](){ return storage{{{0,2}, {1}}, allocator{}, partitions_allocator{}}; },</span></span>
 <span id="L62"><span class="lineNum">      62</span>              :                               partitionMaker,</span>
 <span id="L63"><span class="lineNum">      63</span>              :                               allocation_info{contiguous_alloc_getter&lt;storage&gt;{}, {0_c, {1_c,0_mu}, {1_anp, 1_awp}}},</span>
 <span id="L64"><span class="lineNum">      64</span>              :                               allocation_info{partitions_alloc_getter&lt;storage&gt;{}, {0_c, {1_c,1_mu}, {1_anp, 1_awp}}})};</span>
 <span id="L65"><span class="lineNum">      65</span>              : </span>
-<span id="L66"><span class="lineNum">      66</span> <span class="tlaGNC">          80 :     check(equivalence, add_type_info&lt;storage&gt;(&quot;&quot;), s, prediction{});</span></span>
-<span id="L67"><span class="lineNum">      67</span> <span class="tlaGNC">          80 :     check(equivalence, add_type_info&lt;storage&gt;(&quot;&quot;), t, prediction{{0,2}, {1}});</span></span>
+<span id="L66"><span class="lineNum">      66</span> <span class="tlaGNC">          16 :     check(equivalence, add_type_info&lt;storage&gt;(&quot;&quot;), s, prediction{});</span></span>
+<span id="L67"><span class="lineNum">      67</span> <span class="tlaGNC">          16 :     check(equivalence, add_type_info&lt;storage&gt;(&quot;&quot;), t, prediction{{0,2}, {1}});</span></span>
 <span id="L68"><span class="lineNum">      68</span>              : </span>
-<span id="L69"><span class="lineNum">      69</span> <span class="tlaGNC">          40 :     s.add_slot();</span></span>
+<span id="L69"><span class="lineNum">      69</span> <span class="tlaGNC">           8 :     s.add_slot();</span></span>
 <span id="L70"><span class="lineNum">      70</span>              :     // []</span>
 <span id="L71"><span class="lineNum">      71</span>              : </span>
-<span id="L72"><span class="lineNum">      72</span> <span class="tlaGNC">         120 :     check(equality, add_type_info&lt;storage&gt;(&quot;&quot;), s, storage{{{}}, allocator{}, partitions_allocator{}});</span></span>
-<span id="L73"><span class="lineNum">      73</span> <span class="tlaGNC">          40 :   }</span></span>
+<span id="L72"><span class="lineNum">      72</span> <span class="tlaGNC">          24 :     check(equality, add_type_info&lt;storage&gt;(&quot;&quot;), s, storage{{{}}, allocator{}, partitions_allocator{}});</span></span>
+<span id="L73"><span class="lineNum">      73</span> <span class="tlaGNC">           8 :   }</span></span>
 <span id="L74"><span class="lineNum">      74</span>              : }</span>
         </pre>
               </td>

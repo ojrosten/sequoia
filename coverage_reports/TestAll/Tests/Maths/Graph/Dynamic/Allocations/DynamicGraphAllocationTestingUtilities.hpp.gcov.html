@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2025-01-12 21:58:51</td>
+            <td class="headerValue">2025-03-30 21:18:04</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -98,9 +98,9 @@
 <span id="L36"><span class="lineNum">      36</span>              :     using alloc_equivalence_class = allocation_equivalence_classes::container_of_pointers&lt;edge_allocator&gt;;</span>
 <span id="L37"><span class="lineNum">      37</span>              : </span>
 <span id="L38"><span class="lineNum">      38</span>              :     [[nodiscard]]</span>
-<span id="L39"><span class="lineNum">      39</span> <span class="tlaGNC tlaBgGNC">       16005 :     edge_allocator operator()(const Graph&amp; g) const</span></span>
+<span id="L39"><span class="lineNum">      39</span> <span class="tlaGNC tlaBgGNC">        3201 :     edge_allocator operator()(const Graph&amp; g) const</span></span>
 <span id="L40"><span class="lineNum">      40</span>              :     {</span>
-<span id="L41"><span class="lineNum">      41</span> <span class="tlaGNC">       16005 :       return g.get_edge_allocator();</span></span>
+<span id="L41"><span class="lineNum">      41</span> <span class="tlaGNC">        3201 :       return g.get_edge_allocator();</span></span>
 <span id="L42"><span class="lineNum">      42</span>              :     }</span>
 <span id="L43"><span class="lineNum">      43</span>              :   };</span>
 <span id="L44"><span class="lineNum">      44</span>              : </span>
@@ -111,9 +111,9 @@
 <span id="L49"><span class="lineNum">      49</span>              :     using alloc_equivalence_class = allocation_equivalence_classes::container_of_pointers&lt;edge_partitions_allocator&gt;;</span>
 <span id="L50"><span class="lineNum">      50</span>              : </span>
 <span id="L51"><span class="lineNum">      51</span>              :     [[nodiscard]]</span>
-<span id="L52"><span class="lineNum">      52</span> <span class="tlaGNC">        5445 :     edge_partitions_allocator operator()(const Graph&amp; g) const</span></span>
+<span id="L52"><span class="lineNum">      52</span> <span class="tlaGNC">        1089 :     edge_partitions_allocator operator()(const Graph&amp; g) const</span></span>
 <span id="L53"><span class="lineNum">      53</span>              :     {</span>
-<span id="L54"><span class="lineNum">      54</span> <span class="tlaGNC">        5445 :       return g.get_edge_allocator(maths::partitions_allocator_tag{});</span></span>
+<span id="L54"><span class="lineNum">      54</span> <span class="tlaGNC">        1089 :       return g.get_edge_allocator(maths::partitions_allocator_tag{});</span></span>
 <span id="L55"><span class="lineNum">      55</span>              :     }</span>
 <span id="L56"><span class="lineNum">      56</span>              :   };</span>
 <span id="L57"><span class="lineNum">      57</span>              : </span>
@@ -124,9 +124,9 @@
 <span id="L62"><span class="lineNum">      62</span>              :     using alloc_equivalence_class = allocation_equivalence_classes::container_of_values&lt;node_allocator&gt;;</span>
 <span id="L63"><span class="lineNum">      63</span>              : </span>
 <span id="L64"><span class="lineNum">      64</span>              :     [[nodiscard]]</span>
-<span id="L65"><span class="lineNum">      65</span> <span class="tlaGNC">        8910 :     node_allocator operator()(const Graph&amp; g) const</span></span>
+<span id="L65"><span class="lineNum">      65</span> <span class="tlaGNC">        1782 :     node_allocator operator()(const Graph&amp; g) const</span></span>
 <span id="L66"><span class="lineNum">      66</span>              :     {</span>
-<span id="L67"><span class="lineNum">      67</span> <span class="tlaGNC">        8910 :       return g.get_node_allocator();</span></span>
+<span id="L67"><span class="lineNum">      67</span> <span class="tlaGNC">        1782 :       return g.get_node_allocator();</span></span>
 <span id="L68"><span class="lineNum">      68</span>              :     }</span>
 <span id="L69"><span class="lineNum">      69</span>              :   };</span>
 <span id="L70"><span class="lineNum">      70</span>              : </span>

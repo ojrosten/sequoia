@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2025-01-12 21:58:51</td>
+            <td class="headerValue">2025-03-30 21:18:04</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryMed">75.1&nbsp;%</td>
@@ -82,72 +82,72 @@
 <span id="L20"><span class="lineNum">      20</span>              :   {</span>
 <span id="L21"><span class="lineNum">      21</span>              :     using allocator_type = Allocator;</span>
 <span id="L22"><span class="lineNum">      22</span>              : </span>
-<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC tlaBgGNC">        2072 :     orderable_regular_beast(std::initializer_list&lt;T&gt; list) : x{list} {}</span></span>
+<span id="L23"><span class="lineNum">      23</span> <span class="tlaGNC tlaBgGNC">        1400 :     orderable_regular_beast(std::initializer_list&lt;T&gt; list) : x{list} {}</span></span>
 <span id="L24"><span class="lineNum">      24</span>              : </span>
 <span id="L25"><span class="lineNum">      25</span>              :     orderable_regular_beast(std::initializer_list&lt;T&gt; list, const allocator_type&amp; a) : x{list, a} {}</span>
 <span id="L26"><span class="lineNum">      26</span>              : </span>
 <span id="L27"><span class="lineNum">      27</span>              :     orderable_regular_beast(const allocator_type&amp; a) : x(a) {}</span>
 <span id="L28"><span class="lineNum">      28</span>              : </span>
-<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">        4514 :     orderable_regular_beast(const orderable_regular_beast&amp;) = default;</span></span>
+<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">        3050 :     orderable_regular_beast(const orderable_regular_beast&amp;) = default;</span></span>
 <span id="L30"><span class="lineNum">      30</span>              : </span>
-<span id="L31"><span class="lineNum">      31</span> <span class="tlaGNC">         592 :     orderable_regular_beast(const orderable_regular_beast&amp; other, const allocator_type&amp; a) : x(other.x, a) {}</span></span>
+<span id="L31"><span class="lineNum">      31</span> <span class="tlaGNC">         400 :     orderable_regular_beast(const orderable_regular_beast&amp; other, const allocator_type&amp; a) : x(other.x, a) {}</span></span>
 <span id="L32"><span class="lineNum">      32</span>              : </span>
-<span id="L33"><span class="lineNum">      33</span> <span class="tlaGNC">        1924 :     orderable_regular_beast(orderable_regular_beast&amp;&amp;) noexcept = default;</span></span>
+<span id="L33"><span class="lineNum">      33</span> <span class="tlaGNC">        1300 :     orderable_regular_beast(orderable_regular_beast&amp;&amp;) noexcept = default;</span></span>
 <span id="L34"><span class="lineNum">      34</span>              : </span>
-<span id="L35"><span class="lineNum">      35</span> <span class="tlaGNC">         592 :     orderable_regular_beast(orderable_regular_beast&amp;&amp; other, const allocator_type&amp; a) : x(std::move(other.x), a) {}</span></span>
+<span id="L35"><span class="lineNum">      35</span> <span class="tlaGNC">         400 :     orderable_regular_beast(orderable_regular_beast&amp;&amp; other, const allocator_type&amp; a) : x(std::move(other.x), a) {}</span></span>
 <span id="L36"><span class="lineNum">      36</span>              : </span>
-<span id="L37"><span class="lineNum">      37</span> <span class="tlaGNC">        1924 :     orderable_regular_beast&amp; operator=(const orderable_regular_beast&amp;) = default;</span></span>
+<span id="L37"><span class="lineNum">      37</span> <span class="tlaGNC">        1300 :     orderable_regular_beast&amp; operator=(const orderable_regular_beast&amp;) = default;</span></span>
 <span id="L38"><span class="lineNum">      38</span>              : </span>
-<span id="L39"><span class="lineNum">      39</span> <span class="tlaGNC">         666 :     orderable_regular_beast&amp; operator=(orderable_regular_beast&amp;&amp;) = default;</span></span>
+<span id="L39"><span class="lineNum">      39</span> <span class="tlaGNC">         450 :     orderable_regular_beast&amp; operator=(orderable_regular_beast&amp;&amp;) = default;</span></span>
 <span id="L40"><span class="lineNum">      40</span>              : </span>
-<span id="L41"><span class="lineNum">      41</span> <span class="tlaGNC">         740 :     void swap(orderable_regular_beast&amp; other) noexcept(noexcept(std::ranges::swap(this-&gt;x, other.x)))</span></span>
+<span id="L41"><span class="lineNum">      41</span> <span class="tlaGNC">         500 :     void swap(orderable_regular_beast&amp; other) noexcept(noexcept(std::ranges::swap(this-&gt;x, other.x)))</span></span>
 <span id="L42"><span class="lineNum">      42</span>              :     {</span>
-<span id="L43"><span class="lineNum">      43</span> <span class="tlaGNC">         740 :       std::ranges::swap(x, other.x);</span></span>
-<span id="L44"><span class="lineNum">      44</span> <span class="tlaGNC">         740 :     }</span></span>
+<span id="L43"><span class="lineNum">      43</span> <span class="tlaGNC">         500 :       std::ranges::swap(x, other.x);</span></span>
+<span id="L44"><span class="lineNum">      44</span> <span class="tlaGNC">         500 :     }</span></span>
 <span id="L45"><span class="lineNum">      45</span>              : </span>
-<span id="L46"><span class="lineNum">      46</span> <span class="tlaGNC">         740 :     friend void swap(orderable_regular_beast&amp; lhs, orderable_regular_beast&amp; rhs)</span></span>
+<span id="L46"><span class="lineNum">      46</span> <span class="tlaGNC">         500 :     friend void swap(orderable_regular_beast&amp; lhs, orderable_regular_beast&amp; rhs)</span></span>
 <span id="L47"><span class="lineNum">      47</span>              :       noexcept(noexcept(lhs.swap(rhs)))</span>
 <span id="L48"><span class="lineNum">      48</span>              :     {</span>
-<span id="L49"><span class="lineNum">      49</span> <span class="tlaGNC">         740 :       lhs.swap(rhs);</span></span>
-<span id="L50"><span class="lineNum">      50</span> <span class="tlaGNC">         740 :     }</span></span>
+<span id="L49"><span class="lineNum">      49</span> <span class="tlaGNC">         500 :       lhs.swap(rhs);</span></span>
+<span id="L50"><span class="lineNum">      50</span> <span class="tlaGNC">         500 :     }</span></span>
 <span id="L51"><span class="lineNum">      51</span>              : </span>
-<span id="L52"><span class="lineNum">      52</span> <span class="tlaGNC">       11692 :     std::vector&lt;T, Allocator&gt; x{};</span></span>
+<span id="L52"><span class="lineNum">      52</span> <span class="tlaGNC">        7900 :     std::vector&lt;T, Allocator&gt; x{};</span></span>
 <span id="L53"><span class="lineNum">      53</span>              : </span>
 <span id="L54"><span class="lineNum">      54</span>              :     [[nodiscard]]</span>
-<span id="L55"><span class="lineNum">      55</span> <span class="tlaGNC">       11692 :     friend bool operator==(const orderable_regular_beast&amp;, const orderable_regular_beast&amp;) noexcept = default;</span></span>
+<span id="L55"><span class="lineNum">      55</span> <span class="tlaGNC">        7900 :     friend bool operator==(const orderable_regular_beast&amp;, const orderable_regular_beast&amp;) noexcept = default;</span></span>
 <span id="L56"><span class="lineNum">      56</span>              : </span>
 <span id="L57"><span class="lineNum">      57</span>              :     [[nodiscard]]</span>
-<span id="L58"><span class="lineNum">      58</span> <span class="tlaGNC">        4847 :     friend bool operator&lt;(const orderable_regular_beast&amp; lhs, const orderable_regular_beast&amp; rhs) noexcept</span></span>
+<span id="L58"><span class="lineNum">      58</span> <span class="tlaGNC">        3275 :     friend bool operator&lt;(const orderable_regular_beast&amp; lhs, const orderable_regular_beast&amp; rhs) noexcept</span></span>
 <span id="L59"><span class="lineNum">      59</span>              :     {</span>
-<span id="L60"><span class="lineNum">      60</span> <span class="tlaGNC">        4847 :       return lhs.x &lt; rhs.x;</span></span>
+<span id="L60"><span class="lineNum">      60</span> <span class="tlaGNC">        3275 :       return lhs.x &lt; rhs.x;</span></span>
 <span id="L61"><span class="lineNum">      61</span>              :     }</span>
 <span id="L62"><span class="lineNum">      62</span>              : </span>
 <span id="L63"><span class="lineNum">      63</span>              :     [[nodiscard]]</span>
-<span id="L64"><span class="lineNum">      64</span> <span class="tlaGNC">        2109 :     friend bool operator&lt;=(const orderable_regular_beast&amp; lhs, const orderable_regular_beast&amp; rhs) noexcept</span></span>
+<span id="L64"><span class="lineNum">      64</span> <span class="tlaGNC">        1425 :     friend bool operator&lt;=(const orderable_regular_beast&amp; lhs, const orderable_regular_beast&amp; rhs) noexcept</span></span>
 <span id="L65"><span class="lineNum">      65</span>              :     {</span>
-<span id="L66"><span class="lineNum">      66</span> <span class="tlaGNC">        2109 :       return lhs.x &lt;= rhs.x;</span></span>
+<span id="L66"><span class="lineNum">      66</span> <span class="tlaGNC">        1425 :       return lhs.x &lt;= rhs.x;</span></span>
 <span id="L67"><span class="lineNum">      67</span>              :     }</span>
 <span id="L68"><span class="lineNum">      68</span>              : </span>
 <span id="L69"><span class="lineNum">      69</span>              :     [[nodiscard]]</span>
-<span id="L70"><span class="lineNum">      70</span> <span class="tlaGNC">        3589 :     friend bool operator&gt;(const orderable_regular_beast&amp; lhs, const orderable_regular_beast&amp; rhs) noexcept</span></span>
+<span id="L70"><span class="lineNum">      70</span> <span class="tlaGNC">        2425 :     friend bool operator&gt;(const orderable_regular_beast&amp; lhs, const orderable_regular_beast&amp; rhs) noexcept</span></span>
 <span id="L71"><span class="lineNum">      71</span>              :     {</span>
-<span id="L72"><span class="lineNum">      72</span> <span class="tlaGNC">        3589 :       return lhs.x &gt; rhs.x;</span></span>
+<span id="L72"><span class="lineNum">      72</span> <span class="tlaGNC">        2425 :       return lhs.x &gt; rhs.x;</span></span>
 <span id="L73"><span class="lineNum">      73</span>              :     }</span>
 <span id="L74"><span class="lineNum">      74</span>              : </span>
 <span id="L75"><span class="lineNum">      75</span>              :     [[nodiscard]]</span>
-<span id="L76"><span class="lineNum">      76</span> <span class="tlaGNC">        2109 :     friend bool operator&gt;=(const orderable_regular_beast&amp; lhs, const orderable_regular_beast&amp; rhs) noexcept</span></span>
+<span id="L76"><span class="lineNum">      76</span> <span class="tlaGNC">        1425 :     friend bool operator&gt;=(const orderable_regular_beast&amp; lhs, const orderable_regular_beast&amp; rhs) noexcept</span></span>
 <span id="L77"><span class="lineNum">      77</span>              :     {</span>
-<span id="L78"><span class="lineNum">      78</span> <span class="tlaGNC">        2109 :       return lhs.x &gt;= rhs.x;</span></span>
+<span id="L78"><span class="lineNum">      78</span> <span class="tlaGNC">        1425 :       return lhs.x &gt;= rhs.x;</span></span>
 <span id="L79"><span class="lineNum">      79</span>              :     }</span>
 <span id="L80"><span class="lineNum">      80</span>              : </span>
 <span id="L81"><span class="lineNum">      81</span>              :     // TO DO: default this and remove most of the above when libc++ rolls out &lt;=&gt; to std</span>
-<span id="L82"><span class="lineNum">      82</span> <span class="tlaGNC">        2109 :     friend std::weak_ordering operator&lt;=&gt;(const orderable_regular_beast&amp; lhs, const orderable_regular_beast&amp; rhs) noexcept</span></span>
+<span id="L82"><span class="lineNum">      82</span> <span class="tlaGNC">        1425 :     friend std::weak_ordering operator&lt;=&gt;(const orderable_regular_beast&amp; lhs, const orderable_regular_beast&amp; rhs) noexcept</span></span>
 <span id="L83"><span class="lineNum">      83</span>              :     {</span>
-<span id="L84"><span class="lineNum">      84</span> <span class="tlaGNC">        2109 :       if(lhs &lt; rhs) return std::weak_ordering::less;</span></span>
+<span id="L84"><span class="lineNum">      84</span> <span class="tlaGNC">        1425 :       if(lhs &lt; rhs) return std::weak_ordering::less;</span></span>
 <span id="L85"><span class="lineNum">      85</span>              : </span>
-<span id="L86"><span class="lineNum">      86</span> <span class="tlaGNC">        1406 :       if(rhs &gt; lhs) return std::weak_ordering::greater;</span></span>
+<span id="L86"><span class="lineNum">      86</span> <span class="tlaGNC">         950 :       if(rhs &gt; lhs) return std::weak_ordering::greater;</span></span>
 <span id="L87"><span class="lineNum">      87</span>              : </span>
-<span id="L88"><span class="lineNum">      88</span> <span class="tlaGNC">        1406 :       return std::weak_ordering::equivalent;</span></span>
+<span id="L88"><span class="lineNum">      88</span> <span class="tlaGNC">         950 :       return std::weak_ordering::equivalent;</span></span>
 <span id="L89"><span class="lineNum">      89</span>              :     }</span>
 <span id="L90"><span class="lineNum">      90</span>              : </span>
 <span id="L91"><span class="lineNum">      91</span>              :     template&lt;class Stream&gt;</span>
@@ -163,7 +163,7 @@
 <span id="L101"><span class="lineNum">     101</span>              :   {</span>
 <span id="L102"><span class="lineNum">     102</span>              :     using allocator_type = Allocator;</span>
 <span id="L103"><span class="lineNum">     103</span>              : </span>
-<span id="L104"><span class="lineNum">     104</span> <span class="tlaGNC tlaBgGNC">         222 :     regular_broken_less(std::initializer_list&lt;T&gt; list) : x{list} {}</span></span>
+<span id="L104"><span class="lineNum">     104</span> <span class="tlaGNC tlaBgGNC">         150 :     regular_broken_less(std::initializer_list&lt;T&gt; list) : x{list} {}</span></span>
 <span id="L105"><span class="lineNum">     105</span>              : </span>
 <span id="L106"><span class="lineNum">     106</span>              :     regular_broken_less(std::initializer_list&lt;T&gt; list, const allocator_type&amp; a) : x{list, a} {}</span>
 <span id="L107"><span class="lineNum">     107</span>              : </span>
@@ -190,43 +190,43 @@
 <span id="L128"><span class="lineNum">     128</span> <span class="tlaUNC">           0 :       lhs.swap(rhs);</span></span>
 <span id="L129"><span class="lineNum">     129</span> <span class="tlaUNC">           0 :     }</span></span>
 <span id="L130"><span class="lineNum">     130</span>              : </span>
-<span id="L131"><span class="lineNum">     131</span> <span class="tlaGNC tlaBgGNC">         185 :     std::vector&lt;T, Allocator&gt; x{};</span></span>
+<span id="L131"><span class="lineNum">     131</span> <span class="tlaGNC tlaBgGNC">         125 :     std::vector&lt;T, Allocator&gt; x{};</span></span>
 <span id="L132"><span class="lineNum">     132</span>              : </span>
 <span id="L133"><span class="lineNum">     133</span>              :     [[nodiscard]]</span>
-<span id="L134"><span class="lineNum">     134</span> <span class="tlaGNC">         185 :     friend bool operator==(const regular_broken_less&amp;, const regular_broken_less&amp;) noexcept = default;</span></span>
+<span id="L134"><span class="lineNum">     134</span> <span class="tlaGNC">         125 :     friend bool operator==(const regular_broken_less&amp;, const regular_broken_less&amp;) noexcept = default;</span></span>
 <span id="L135"><span class="lineNum">     135</span>              : </span>
 <span id="L136"><span class="lineNum">     136</span>              :     [[nodiscard]]</span>
-<span id="L137"><span class="lineNum">     137</span> <span class="tlaGNC">         222 :     friend bool operator&lt;(const regular_broken_less&amp; lhs, const regular_broken_less&amp; rhs) noexcept</span></span>
+<span id="L137"><span class="lineNum">     137</span> <span class="tlaGNC">         150 :     friend bool operator&lt;(const regular_broken_less&amp; lhs, const regular_broken_less&amp; rhs) noexcept</span></span>
 <span id="L138"><span class="lineNum">     138</span>              :     {</span>
-<span id="L139"><span class="lineNum">     139</span> <span class="tlaGNC">         222 :       return lhs.x &gt; rhs.x;</span></span>
+<span id="L139"><span class="lineNum">     139</span> <span class="tlaGNC">         150 :       return lhs.x &gt; rhs.x;</span></span>
 <span id="L140"><span class="lineNum">     140</span>              :     }</span>
 <span id="L141"><span class="lineNum">     141</span>              : </span>
 <span id="L142"><span class="lineNum">     142</span>              :     [[nodiscard]]</span>
-<span id="L143"><span class="lineNum">     143</span> <span class="tlaGNC">         111 :     friend bool operator&lt;=(const regular_broken_less&amp; lhs, const regular_broken_less&amp; rhs) noexcept</span></span>
+<span id="L143"><span class="lineNum">     143</span> <span class="tlaGNC">          75 :     friend bool operator&lt;=(const regular_broken_less&amp; lhs, const regular_broken_less&amp; rhs) noexcept</span></span>
 <span id="L144"><span class="lineNum">     144</span>              :     {</span>
-<span id="L145"><span class="lineNum">     145</span> <span class="tlaGNC">         111 :       return lhs.x &lt;= rhs.x;</span></span>
+<span id="L145"><span class="lineNum">     145</span> <span class="tlaGNC">          75 :       return lhs.x &lt;= rhs.x;</span></span>
 <span id="L146"><span class="lineNum">     146</span>              :     }</span>
 <span id="L147"><span class="lineNum">     147</span>              : </span>
 <span id="L148"><span class="lineNum">     148</span>              :     [[nodiscard]]</span>
-<span id="L149"><span class="lineNum">     149</span> <span class="tlaGNC">         185 :     friend bool operator&gt;(const regular_broken_less&amp; lhs, const regular_broken_less&amp; rhs) noexcept</span></span>
+<span id="L149"><span class="lineNum">     149</span> <span class="tlaGNC">         125 :     friend bool operator&gt;(const regular_broken_less&amp; lhs, const regular_broken_less&amp; rhs) noexcept</span></span>
 <span id="L150"><span class="lineNum">     150</span>              :     {</span>
-<span id="L151"><span class="lineNum">     151</span> <span class="tlaGNC">         185 :       return lhs.x &gt; rhs.x;</span></span>
+<span id="L151"><span class="lineNum">     151</span> <span class="tlaGNC">         125 :       return lhs.x &gt; rhs.x;</span></span>
 <span id="L152"><span class="lineNum">     152</span>              :     }</span>
 <span id="L153"><span class="lineNum">     153</span>              : </span>
 <span id="L154"><span class="lineNum">     154</span>              :     [[nodiscard]]</span>
-<span id="L155"><span class="lineNum">     155</span> <span class="tlaGNC">         111 :     friend bool operator&gt;=(const regular_broken_less&amp; lhs, const regular_broken_less&amp; rhs) noexcept</span></span>
+<span id="L155"><span class="lineNum">     155</span> <span class="tlaGNC">          75 :     friend bool operator&gt;=(const regular_broken_less&amp; lhs, const regular_broken_less&amp; rhs) noexcept</span></span>
 <span id="L156"><span class="lineNum">     156</span>              :     {</span>
-<span id="L157"><span class="lineNum">     157</span> <span class="tlaGNC">         111 :       return lhs.x &gt;= rhs.x;</span></span>
+<span id="L157"><span class="lineNum">     157</span> <span class="tlaGNC">          75 :       return lhs.x &gt;= rhs.x;</span></span>
 <span id="L158"><span class="lineNum">     158</span>              :     }</span>
 <span id="L159"><span class="lineNum">     159</span>              : </span>
 <span id="L160"><span class="lineNum">     160</span>              :     // TO DO: default this and remove most of the above when libc++ rolls out &lt;=&gt; to std</span>
-<span id="L161"><span class="lineNum">     161</span> <span class="tlaGNC">         111 :     friend std::weak_ordering operator&lt;=&gt;(const regular_broken_less&amp; lhs, const regular_broken_less&amp; rhs) noexcept</span></span>
+<span id="L161"><span class="lineNum">     161</span> <span class="tlaGNC">          75 :     friend std::weak_ordering operator&lt;=&gt;(const regular_broken_less&amp; lhs, const regular_broken_less&amp; rhs) noexcept</span></span>
 <span id="L162"><span class="lineNum">     162</span>              :     {</span>
-<span id="L163"><span class="lineNum">     163</span> <span class="tlaGNC">         111 :       if(lhs &lt; rhs) return std::weak_ordering::less;</span></span>
+<span id="L163"><span class="lineNum">     163</span> <span class="tlaGNC">          75 :       if(lhs &lt; rhs) return std::weak_ordering::less;</span></span>
 <span id="L164"><span class="lineNum">     164</span>              : </span>
-<span id="L165"><span class="lineNum">     165</span> <span class="tlaGNC">          74 :       if(rhs &gt; lhs) return std::weak_ordering::greater;</span></span>
+<span id="L165"><span class="lineNum">     165</span> <span class="tlaGNC">          50 :       if(rhs &gt; lhs) return std::weak_ordering::greater;</span></span>
 <span id="L166"><span class="lineNum">     166</span>              : </span>
-<span id="L167"><span class="lineNum">     167</span> <span class="tlaGNC">          74 :       return std::weak_ordering::equivalent;</span></span>
+<span id="L167"><span class="lineNum">     167</span> <span class="tlaGNC">          50 :       return std::weak_ordering::equivalent;</span></span>
 <span id="L168"><span class="lineNum">     168</span>              :     }</span>
 <span id="L169"><span class="lineNum">     169</span>              : </span>
 <span id="L170"><span class="lineNum">     170</span>              :     template&lt;class Stream&gt;</span>
@@ -242,7 +242,7 @@
 <span id="L180"><span class="lineNum">     180</span>              :   {</span>
 <span id="L181"><span class="lineNum">     181</span>              :     using allocator_type = Allocator;</span>
 <span id="L182"><span class="lineNum">     182</span>              : </span>
-<span id="L183"><span class="lineNum">     183</span> <span class="tlaGNC tlaBgGNC">         222 :     regular_broken_lesseq(std::initializer_list&lt;T&gt; list) : x{list} {}</span></span>
+<span id="L183"><span class="lineNum">     183</span> <span class="tlaGNC tlaBgGNC">         150 :     regular_broken_lesseq(std::initializer_list&lt;T&gt; list) : x{list} {}</span></span>
 <span id="L184"><span class="lineNum">     184</span>              : </span>
 <span id="L185"><span class="lineNum">     185</span>              :     regular_broken_lesseq(std::initializer_list&lt;T&gt; list, const allocator_type&amp; a) : x{list, a} {}</span>
 <span id="L186"><span class="lineNum">     186</span>              : </span>
@@ -269,43 +269,43 @@
 <span id="L207"><span class="lineNum">     207</span> <span class="tlaUNC">           0 :       lhs.swap(rhs);</span></span>
 <span id="L208"><span class="lineNum">     208</span> <span class="tlaUNC">           0 :     }</span></span>
 <span id="L209"><span class="lineNum">     209</span>              : </span>
-<span id="L210"><span class="lineNum">     210</span> <span class="tlaGNC tlaBgGNC">         185 :     std::vector&lt;T, Allocator&gt; x{};</span></span>
+<span id="L210"><span class="lineNum">     210</span> <span class="tlaGNC tlaBgGNC">         125 :     std::vector&lt;T, Allocator&gt; x{};</span></span>
 <span id="L211"><span class="lineNum">     211</span>              : </span>
 <span id="L212"><span class="lineNum">     212</span>              :     [[nodiscard]]</span>
-<span id="L213"><span class="lineNum">     213</span> <span class="tlaGNC">         185 :     friend bool operator==(const regular_broken_lesseq&amp;, const regular_broken_lesseq&amp;) noexcept = default;</span></span>
+<span id="L213"><span class="lineNum">     213</span> <span class="tlaGNC">         125 :     friend bool operator==(const regular_broken_lesseq&amp;, const regular_broken_lesseq&amp;) noexcept = default;</span></span>
 <span id="L214"><span class="lineNum">     214</span>              : </span>
 <span id="L215"><span class="lineNum">     215</span>              :     [[nodiscard]]</span>
-<span id="L216"><span class="lineNum">     216</span> <span class="tlaGNC">         222 :     friend bool operator&lt;(const regular_broken_lesseq&amp; lhs, const regular_broken_lesseq&amp; rhs) noexcept</span></span>
+<span id="L216"><span class="lineNum">     216</span> <span class="tlaGNC">         150 :     friend bool operator&lt;(const regular_broken_lesseq&amp; lhs, const regular_broken_lesseq&amp; rhs) noexcept</span></span>
 <span id="L217"><span class="lineNum">     217</span>              :     {</span>
-<span id="L218"><span class="lineNum">     218</span> <span class="tlaGNC">         222 :       return lhs.x &lt; rhs.x;</span></span>
+<span id="L218"><span class="lineNum">     218</span> <span class="tlaGNC">         150 :       return lhs.x &lt; rhs.x;</span></span>
 <span id="L219"><span class="lineNum">     219</span>              :     }</span>
 <span id="L220"><span class="lineNum">     220</span>              : </span>
 <span id="L221"><span class="lineNum">     221</span>              :     [[nodiscard]]</span>
-<span id="L222"><span class="lineNum">     222</span> <span class="tlaGNC">         111 :     friend bool operator&lt;=(const regular_broken_lesseq&amp; lhs, const regular_broken_lesseq&amp; rhs) noexcept</span></span>
+<span id="L222"><span class="lineNum">     222</span> <span class="tlaGNC">          75 :     friend bool operator&lt;=(const regular_broken_lesseq&amp; lhs, const regular_broken_lesseq&amp; rhs) noexcept</span></span>
 <span id="L223"><span class="lineNum">     223</span>              :     {</span>
-<span id="L224"><span class="lineNum">     224</span> <span class="tlaGNC">         111 :       return lhs.x &gt;= rhs.x;</span></span>
+<span id="L224"><span class="lineNum">     224</span> <span class="tlaGNC">          75 :       return lhs.x &gt;= rhs.x;</span></span>
 <span id="L225"><span class="lineNum">     225</span>              :     }</span>
 <span id="L226"><span class="lineNum">     226</span>              : </span>
 <span id="L227"><span class="lineNum">     227</span>              :     [[nodiscard]]</span>
-<span id="L228"><span class="lineNum">     228</span> <span class="tlaGNC">         185 :     friend bool operator&gt;(const regular_broken_lesseq&amp; lhs, const regular_broken_lesseq&amp; rhs) noexcept</span></span>
+<span id="L228"><span class="lineNum">     228</span> <span class="tlaGNC">         125 :     friend bool operator&gt;(const regular_broken_lesseq&amp; lhs, const regular_broken_lesseq&amp; rhs) noexcept</span></span>
 <span id="L229"><span class="lineNum">     229</span>              :     {</span>
-<span id="L230"><span class="lineNum">     230</span> <span class="tlaGNC">         185 :       return lhs.x &gt; rhs.x;</span></span>
+<span id="L230"><span class="lineNum">     230</span> <span class="tlaGNC">         125 :       return lhs.x &gt; rhs.x;</span></span>
 <span id="L231"><span class="lineNum">     231</span>              :     }</span>
 <span id="L232"><span class="lineNum">     232</span>              : </span>
 <span id="L233"><span class="lineNum">     233</span>              :     [[nodiscard]]</span>
-<span id="L234"><span class="lineNum">     234</span> <span class="tlaGNC">         111 :     friend bool operator&gt;=(const regular_broken_lesseq&amp; lhs, const regular_broken_lesseq&amp; rhs) noexcept</span></span>
+<span id="L234"><span class="lineNum">     234</span> <span class="tlaGNC">          75 :     friend bool operator&gt;=(const regular_broken_lesseq&amp; lhs, const regular_broken_lesseq&amp; rhs) noexcept</span></span>
 <span id="L235"><span class="lineNum">     235</span>              :     {</span>
-<span id="L236"><span class="lineNum">     236</span> <span class="tlaGNC">         111 :       return lhs.x &gt;= rhs.x;</span></span>
+<span id="L236"><span class="lineNum">     236</span> <span class="tlaGNC">          75 :       return lhs.x &gt;= rhs.x;</span></span>
 <span id="L237"><span class="lineNum">     237</span>              :     }</span>
 <span id="L238"><span class="lineNum">     238</span>              : </span>
 <span id="L239"><span class="lineNum">     239</span>              :     // TO DO: default this and remove most of the above when libc++ rolls out &lt;=&gt; to std</span>
-<span id="L240"><span class="lineNum">     240</span> <span class="tlaGNC">         111 :     friend std::weak_ordering operator&lt;=&gt;(const regular_broken_lesseq&amp; lhs, const regular_broken_lesseq&amp; rhs) noexcept</span></span>
+<span id="L240"><span class="lineNum">     240</span> <span class="tlaGNC">          75 :     friend std::weak_ordering operator&lt;=&gt;(const regular_broken_lesseq&amp; lhs, const regular_broken_lesseq&amp; rhs) noexcept</span></span>
 <span id="L241"><span class="lineNum">     241</span>              :     {</span>
-<span id="L242"><span class="lineNum">     242</span> <span class="tlaGNC">         111 :       if(lhs &lt; rhs) return std::weak_ordering::less;</span></span>
+<span id="L242"><span class="lineNum">     242</span> <span class="tlaGNC">          75 :       if(lhs &lt; rhs) return std::weak_ordering::less;</span></span>
 <span id="L243"><span class="lineNum">     243</span>              : </span>
-<span id="L244"><span class="lineNum">     244</span> <span class="tlaGNC">          74 :       if(rhs &gt; lhs) return std::weak_ordering::greater;</span></span>
+<span id="L244"><span class="lineNum">     244</span> <span class="tlaGNC">          50 :       if(rhs &gt; lhs) return std::weak_ordering::greater;</span></span>
 <span id="L245"><span class="lineNum">     245</span>              : </span>
-<span id="L246"><span class="lineNum">     246</span> <span class="tlaGNC">          74 :       return std::weak_ordering::equivalent;</span></span>
+<span id="L246"><span class="lineNum">     246</span> <span class="tlaGNC">          50 :       return std::weak_ordering::equivalent;</span></span>
 <span id="L247"><span class="lineNum">     247</span>              :     }</span>
 <span id="L248"><span class="lineNum">     248</span>              : </span>
 <span id="L249"><span class="lineNum">     249</span>              :     template&lt;class Stream&gt;</span>
@@ -321,7 +321,7 @@
 <span id="L259"><span class="lineNum">     259</span>              :   {</span>
 <span id="L260"><span class="lineNum">     260</span>              :     using allocator_type = Allocator;</span>
 <span id="L261"><span class="lineNum">     261</span>              : </span>
-<span id="L262"><span class="lineNum">     262</span> <span class="tlaGNC tlaBgGNC">         222 :     regular_broken_greater(std::initializer_list&lt;T&gt; list) : x{list} {}</span></span>
+<span id="L262"><span class="lineNum">     262</span> <span class="tlaGNC tlaBgGNC">         150 :     regular_broken_greater(std::initializer_list&lt;T&gt; list) : x{list} {}</span></span>
 <span id="L263"><span class="lineNum">     263</span>              : </span>
 <span id="L264"><span class="lineNum">     264</span>              :     regular_broken_greater(std::initializer_list&lt;T&gt; list, const allocator_type&amp; a) : x{list, a} {}</span>
 <span id="L265"><span class="lineNum">     265</span>              : </span>
@@ -348,46 +348,46 @@
 <span id="L286"><span class="lineNum">     286</span> <span class="tlaUNC">           0 :       lhs.swap(rhs);</span></span>
 <span id="L287"><span class="lineNum">     287</span> <span class="tlaUNC">           0 :     }</span></span>
 <span id="L288"><span class="lineNum">     288</span>              : </span>
-<span id="L289"><span class="lineNum">     289</span> <span class="tlaGNC tlaBgGNC">         185 :     std::vector&lt;T, Allocator&gt; x{};</span></span>
+<span id="L289"><span class="lineNum">     289</span> <span class="tlaGNC tlaBgGNC">         125 :     std::vector&lt;T, Allocator&gt; x{};</span></span>
 <span id="L290"><span class="lineNum">     290</span>              : </span>
 <span id="L291"><span class="lineNum">     291</span>              :     [[nodiscard]]</span>
-<span id="L292"><span class="lineNum">     292</span> <span class="tlaGNC">         185 :     friend bool operator==(const regular_broken_greater&amp;, const regular_broken_greater&amp;) noexcept = default;</span></span>
+<span id="L292"><span class="lineNum">     292</span> <span class="tlaGNC">         125 :     friend bool operator==(const regular_broken_greater&amp;, const regular_broken_greater&amp;) noexcept = default;</span></span>
 <span id="L293"><span class="lineNum">     293</span>              : </span>
 <span id="L294"><span class="lineNum">     294</span>              :     [[nodiscard]]</span>
-<span id="L295"><span class="lineNum">     295</span> <span class="tlaGNC">         111 :     friend bool operator!=(const regular_broken_greater&amp;, const regular_broken_greater&amp;) noexcept = default;</span></span>
+<span id="L295"><span class="lineNum">     295</span> <span class="tlaGNC">          75 :     friend bool operator!=(const regular_broken_greater&amp;, const regular_broken_greater&amp;) noexcept = default;</span></span>
 <span id="L296"><span class="lineNum">     296</span>              : </span>
 <span id="L297"><span class="lineNum">     297</span>              :     [[nodiscard]]</span>
-<span id="L298"><span class="lineNum">     298</span> <span class="tlaGNC">         222 :     friend bool operator&lt;(const regular_broken_greater&amp; lhs, const regular_broken_greater&amp; rhs) noexcept</span></span>
+<span id="L298"><span class="lineNum">     298</span> <span class="tlaGNC">         150 :     friend bool operator&lt;(const regular_broken_greater&amp; lhs, const regular_broken_greater&amp; rhs) noexcept</span></span>
 <span id="L299"><span class="lineNum">     299</span>              :     {</span>
-<span id="L300"><span class="lineNum">     300</span> <span class="tlaGNC">         222 :       return lhs.x &lt; rhs.x;</span></span>
+<span id="L300"><span class="lineNum">     300</span> <span class="tlaGNC">         150 :       return lhs.x &lt; rhs.x;</span></span>
 <span id="L301"><span class="lineNum">     301</span>              :     }</span>
 <span id="L302"><span class="lineNum">     302</span>              : </span>
 <span id="L303"><span class="lineNum">     303</span>              :     [[nodiscard]]</span>
-<span id="L304"><span class="lineNum">     304</span> <span class="tlaGNC">         111 :     friend bool operator&lt;=(const regular_broken_greater&amp; lhs, const regular_broken_greater&amp; rhs) noexcept</span></span>
+<span id="L304"><span class="lineNum">     304</span> <span class="tlaGNC">          75 :     friend bool operator&lt;=(const regular_broken_greater&amp; lhs, const regular_broken_greater&amp; rhs) noexcept</span></span>
 <span id="L305"><span class="lineNum">     305</span>              :     {</span>
-<span id="L306"><span class="lineNum">     306</span> <span class="tlaGNC">         111 :       return lhs.x &lt;= rhs.x;</span></span>
+<span id="L306"><span class="lineNum">     306</span> <span class="tlaGNC">          75 :       return lhs.x &lt;= rhs.x;</span></span>
 <span id="L307"><span class="lineNum">     307</span>              :     }</span>
 <span id="L308"><span class="lineNum">     308</span>              : </span>
 <span id="L309"><span class="lineNum">     309</span>              :     [[nodiscard]]</span>
-<span id="L310"><span class="lineNum">     310</span> <span class="tlaGNC">         185 :     friend bool operator&gt;(const regular_broken_greater&amp; lhs, const regular_broken_greater&amp; rhs) noexcept</span></span>
+<span id="L310"><span class="lineNum">     310</span> <span class="tlaGNC">         125 :     friend bool operator&gt;(const regular_broken_greater&amp; lhs, const regular_broken_greater&amp; rhs) noexcept</span></span>
 <span id="L311"><span class="lineNum">     311</span>              :     {</span>
-<span id="L312"><span class="lineNum">     312</span> <span class="tlaGNC">         185 :       return lhs.x &lt; rhs.x;</span></span>
+<span id="L312"><span class="lineNum">     312</span> <span class="tlaGNC">         125 :       return lhs.x &lt; rhs.x;</span></span>
 <span id="L313"><span class="lineNum">     313</span>              :     }</span>
 <span id="L314"><span class="lineNum">     314</span>              : </span>
 <span id="L315"><span class="lineNum">     315</span>              :     [[nodiscard]]</span>
-<span id="L316"><span class="lineNum">     316</span> <span class="tlaGNC">         111 :     friend bool operator&gt;=(const regular_broken_greater&amp; lhs, const regular_broken_greater&amp; rhs) noexcept</span></span>
+<span id="L316"><span class="lineNum">     316</span> <span class="tlaGNC">          75 :     friend bool operator&gt;=(const regular_broken_greater&amp; lhs, const regular_broken_greater&amp; rhs) noexcept</span></span>
 <span id="L317"><span class="lineNum">     317</span>              :     {</span>
-<span id="L318"><span class="lineNum">     318</span> <span class="tlaGNC">         111 :       return lhs.x &gt;= rhs.x;</span></span>
+<span id="L318"><span class="lineNum">     318</span> <span class="tlaGNC">          75 :       return lhs.x &gt;= rhs.x;</span></span>
 <span id="L319"><span class="lineNum">     319</span>              :     }</span>
 <span id="L320"><span class="lineNum">     320</span>              : </span>
 <span id="L321"><span class="lineNum">     321</span>              :     // TO DO: default this and remove most of the above when libc++ rolls out &lt;=&gt; to std</span>
-<span id="L322"><span class="lineNum">     322</span> <span class="tlaGNC">         111 :     friend std::weak_ordering operator&lt;=&gt;(const regular_broken_greater&amp; lhs, const regular_broken_greater&amp; rhs) noexcept</span></span>
+<span id="L322"><span class="lineNum">     322</span> <span class="tlaGNC">          75 :     friend std::weak_ordering operator&lt;=&gt;(const regular_broken_greater&amp; lhs, const regular_broken_greater&amp; rhs) noexcept</span></span>
 <span id="L323"><span class="lineNum">     323</span>              :     {</span>
-<span id="L324"><span class="lineNum">     324</span> <span class="tlaGNC">         111 :       if(lhs &lt; rhs) return std::weak_ordering::less;</span></span>
+<span id="L324"><span class="lineNum">     324</span> <span class="tlaGNC">          75 :       if(lhs &lt; rhs) return std::weak_ordering::less;</span></span>
 <span id="L325"><span class="lineNum">     325</span>              : </span>
-<span id="L326"><span class="lineNum">     326</span> <span class="tlaGNC">          74 :       if(rhs &gt; lhs) return std::weak_ordering::greater;</span></span>
+<span id="L326"><span class="lineNum">     326</span> <span class="tlaGNC">          50 :       if(rhs &gt; lhs) return std::weak_ordering::greater;</span></span>
 <span id="L327"><span class="lineNum">     327</span>              : </span>
-<span id="L328"><span class="lineNum">     328</span> <span class="tlaGNC">          74 :       return std::weak_ordering::equivalent;</span></span>
+<span id="L328"><span class="lineNum">     328</span> <span class="tlaGNC">          50 :       return std::weak_ordering::equivalent;</span></span>
 <span id="L329"><span class="lineNum">     329</span>              :     }</span>
 <span id="L330"><span class="lineNum">     330</span>              : </span>
 <span id="L331"><span class="lineNum">     331</span>              :     template&lt;class Stream&gt;</span>
@@ -403,7 +403,7 @@
 <span id="L341"><span class="lineNum">     341</span>              :   {</span>
 <span id="L342"><span class="lineNum">     342</span>              :     using allocator_type = Allocator;</span>
 <span id="L343"><span class="lineNum">     343</span>              : </span>
-<span id="L344"><span class="lineNum">     344</span> <span class="tlaGNC tlaBgGNC">         222 :     regular_broken_greatereq(std::initializer_list&lt;T&gt; list) : x{list} {}</span></span>
+<span id="L344"><span class="lineNum">     344</span> <span class="tlaGNC tlaBgGNC">         150 :     regular_broken_greatereq(std::initializer_list&lt;T&gt; list) : x{list} {}</span></span>
 <span id="L345"><span class="lineNum">     345</span>              : </span>
 <span id="L346"><span class="lineNum">     346</span>              :     regular_broken_greatereq(std::initializer_list&lt;T&gt; list, const allocator_type&amp; a) : x{list, a} {}</span>
 <span id="L347"><span class="lineNum">     347</span>              : </span>
@@ -430,46 +430,46 @@
 <span id="L368"><span class="lineNum">     368</span> <span class="tlaUNC">           0 :       lhs.swap(rhs);</span></span>
 <span id="L369"><span class="lineNum">     369</span> <span class="tlaUNC">           0 :     }</span></span>
 <span id="L370"><span class="lineNum">     370</span>              : </span>
-<span id="L371"><span class="lineNum">     371</span> <span class="tlaGNC tlaBgGNC">         185 :     std::vector&lt;T, Allocator&gt; x{};</span></span>
+<span id="L371"><span class="lineNum">     371</span> <span class="tlaGNC tlaBgGNC">         125 :     std::vector&lt;T, Allocator&gt; x{};</span></span>
 <span id="L372"><span class="lineNum">     372</span>              : </span>
 <span id="L373"><span class="lineNum">     373</span>              :     [[nodiscard]]</span>
-<span id="L374"><span class="lineNum">     374</span> <span class="tlaGNC">         185 :     friend bool operator==(const regular_broken_greatereq&amp;, const regular_broken_greatereq&amp;) noexcept = default;</span></span>
+<span id="L374"><span class="lineNum">     374</span> <span class="tlaGNC">         125 :     friend bool operator==(const regular_broken_greatereq&amp;, const regular_broken_greatereq&amp;) noexcept = default;</span></span>
 <span id="L375"><span class="lineNum">     375</span>              : </span>
 <span id="L376"><span class="lineNum">     376</span>              :     [[nodiscard]]</span>
-<span id="L377"><span class="lineNum">     377</span> <span class="tlaGNC">         111 :     friend bool operator!=(const regular_broken_greatereq&amp;, const regular_broken_greatereq&amp;) noexcept = default;</span></span>
+<span id="L377"><span class="lineNum">     377</span> <span class="tlaGNC">          75 :     friend bool operator!=(const regular_broken_greatereq&amp;, const regular_broken_greatereq&amp;) noexcept = default;</span></span>
 <span id="L378"><span class="lineNum">     378</span>              : </span>
 <span id="L379"><span class="lineNum">     379</span>              :     [[nodiscard]]</span>
-<span id="L380"><span class="lineNum">     380</span> <span class="tlaGNC">         222 :     friend bool operator&lt;(const regular_broken_greatereq&amp; lhs, const regular_broken_greatereq&amp; rhs) noexcept</span></span>
+<span id="L380"><span class="lineNum">     380</span> <span class="tlaGNC">         150 :     friend bool operator&lt;(const regular_broken_greatereq&amp; lhs, const regular_broken_greatereq&amp; rhs) noexcept</span></span>
 <span id="L381"><span class="lineNum">     381</span>              :     {</span>
-<span id="L382"><span class="lineNum">     382</span> <span class="tlaGNC">         222 :       return lhs.x &lt; rhs.x;</span></span>
+<span id="L382"><span class="lineNum">     382</span> <span class="tlaGNC">         150 :       return lhs.x &lt; rhs.x;</span></span>
 <span id="L383"><span class="lineNum">     383</span>              :     }</span>
 <span id="L384"><span class="lineNum">     384</span>              : </span>
 <span id="L385"><span class="lineNum">     385</span>              :     [[nodiscard]]</span>
-<span id="L386"><span class="lineNum">     386</span> <span class="tlaGNC">         111 :     friend bool operator&lt;=(const regular_broken_greatereq&amp; lhs, const regular_broken_greatereq&amp; rhs) noexcept</span></span>
+<span id="L386"><span class="lineNum">     386</span> <span class="tlaGNC">          75 :     friend bool operator&lt;=(const regular_broken_greatereq&amp; lhs, const regular_broken_greatereq&amp; rhs) noexcept</span></span>
 <span id="L387"><span class="lineNum">     387</span>              :     {</span>
-<span id="L388"><span class="lineNum">     388</span> <span class="tlaGNC">         111 :       return lhs.x &gt;= rhs.x;</span></span>
+<span id="L388"><span class="lineNum">     388</span> <span class="tlaGNC">          75 :       return lhs.x &gt;= rhs.x;</span></span>
 <span id="L389"><span class="lineNum">     389</span>              :     }</span>
 <span id="L390"><span class="lineNum">     390</span>              : </span>
 <span id="L391"><span class="lineNum">     391</span>              :     [[nodiscard]]</span>
-<span id="L392"><span class="lineNum">     392</span> <span class="tlaGNC">         185 :     friend bool operator&gt;(const regular_broken_greatereq&amp; lhs, const regular_broken_greatereq&amp; rhs) noexcept</span></span>
+<span id="L392"><span class="lineNum">     392</span> <span class="tlaGNC">         125 :     friend bool operator&gt;(const regular_broken_greatereq&amp; lhs, const regular_broken_greatereq&amp; rhs) noexcept</span></span>
 <span id="L393"><span class="lineNum">     393</span>              :     {</span>
-<span id="L394"><span class="lineNum">     394</span> <span class="tlaGNC">         185 :       return lhs.x &gt; rhs.x;</span></span>
+<span id="L394"><span class="lineNum">     394</span> <span class="tlaGNC">         125 :       return lhs.x &gt; rhs.x;</span></span>
 <span id="L395"><span class="lineNum">     395</span>              :     }</span>
 <span id="L396"><span class="lineNum">     396</span>              : </span>
 <span id="L397"><span class="lineNum">     397</span>              :     [[nodiscard]]</span>
-<span id="L398"><span class="lineNum">     398</span> <span class="tlaGNC">         111 :     friend bool operator&gt;=(const regular_broken_greatereq&amp; lhs, const regular_broken_greatereq&amp; rhs) noexcept</span></span>
+<span id="L398"><span class="lineNum">     398</span> <span class="tlaGNC">          75 :     friend bool operator&gt;=(const regular_broken_greatereq&amp; lhs, const regular_broken_greatereq&amp; rhs) noexcept</span></span>
 <span id="L399"><span class="lineNum">     399</span>              :     {</span>
-<span id="L400"><span class="lineNum">     400</span> <span class="tlaGNC">         111 :       return lhs.x &gt;= rhs.x;</span></span>
+<span id="L400"><span class="lineNum">     400</span> <span class="tlaGNC">          75 :       return lhs.x &gt;= rhs.x;</span></span>
 <span id="L401"><span class="lineNum">     401</span>              :     }</span>
 <span id="L402"><span class="lineNum">     402</span>              : </span>
 <span id="L403"><span class="lineNum">     403</span>              :     // TO DO: default this and remove most of the above when libc++ rolls out &lt;=&gt; to std</span>
-<span id="L404"><span class="lineNum">     404</span> <span class="tlaGNC">         111 :     friend std::weak_ordering operator&lt;=&gt;(const regular_broken_greatereq&amp; lhs, const regular_broken_greatereq&amp; rhs) noexcept</span></span>
+<span id="L404"><span class="lineNum">     404</span> <span class="tlaGNC">          75 :     friend std::weak_ordering operator&lt;=&gt;(const regular_broken_greatereq&amp; lhs, const regular_broken_greatereq&amp; rhs) noexcept</span></span>
 <span id="L405"><span class="lineNum">     405</span>              :     {</span>
-<span id="L406"><span class="lineNum">     406</span> <span class="tlaGNC">         111 :       if(lhs &lt; rhs) return std::weak_ordering::less;</span></span>
+<span id="L406"><span class="lineNum">     406</span> <span class="tlaGNC">          75 :       if(lhs &lt; rhs) return std::weak_ordering::less;</span></span>
 <span id="L407"><span class="lineNum">     407</span>              : </span>
-<span id="L408"><span class="lineNum">     408</span> <span class="tlaGNC">          74 :       if(rhs &gt; lhs) return std::weak_ordering::greater;</span></span>
+<span id="L408"><span class="lineNum">     408</span> <span class="tlaGNC">          50 :       if(rhs &gt; lhs) return std::weak_ordering::greater;</span></span>
 <span id="L409"><span class="lineNum">     409</span>              : </span>
-<span id="L410"><span class="lineNum">     410</span> <span class="tlaGNC">          74 :       return std::weak_ordering::equivalent;</span></span>
+<span id="L410"><span class="lineNum">     410</span> <span class="tlaGNC">          50 :       return std::weak_ordering::equivalent;</span></span>
 <span id="L411"><span class="lineNum">     411</span>              :     }</span>
 <span id="L412"><span class="lineNum">     412</span>              : </span>
 <span id="L413"><span class="lineNum">     413</span>              :     template&lt;class Stream&gt;</span>
@@ -485,7 +485,7 @@
 <span id="L423"><span class="lineNum">     423</span>              :   {</span>
 <span id="L424"><span class="lineNum">     424</span>              :     using allocator_type = Allocator;</span>
 <span id="L425"><span class="lineNum">     425</span>              : </span>
-<span id="L426"><span class="lineNum">     426</span> <span class="tlaGNC tlaBgGNC">         222 :     regular_inverted_comparisons(std::initializer_list&lt;T&gt; list) : x{list} {}</span></span>
+<span id="L426"><span class="lineNum">     426</span> <span class="tlaGNC tlaBgGNC">         150 :     regular_inverted_comparisons(std::initializer_list&lt;T&gt; list) : x{list} {}</span></span>
 <span id="L427"><span class="lineNum">     427</span>              : </span>
 <span id="L428"><span class="lineNum">     428</span>              :     regular_inverted_comparisons(std::initializer_list&lt;T&gt; list, const allocator_type&amp; a) : x{list, a} {}</span>
 <span id="L429"><span class="lineNum">     429</span>              : </span>
@@ -512,46 +512,46 @@
 <span id="L450"><span class="lineNum">     450</span> <span class="tlaUNC">           0 :       lhs.swap(rhs);</span></span>
 <span id="L451"><span class="lineNum">     451</span> <span class="tlaUNC">           0 :     }</span></span>
 <span id="L452"><span class="lineNum">     452</span>              : </span>
-<span id="L453"><span class="lineNum">     453</span> <span class="tlaGNC tlaBgGNC">         185 :     std::vector&lt;T, Allocator&gt; x{};</span></span>
+<span id="L453"><span class="lineNum">     453</span> <span class="tlaGNC tlaBgGNC">         125 :     std::vector&lt;T, Allocator&gt; x{};</span></span>
 <span id="L454"><span class="lineNum">     454</span>              : </span>
 <span id="L455"><span class="lineNum">     455</span>              :     [[nodiscard]]</span>
-<span id="L456"><span class="lineNum">     456</span> <span class="tlaGNC">         185 :     friend bool operator==(const regular_inverted_comparisons&amp;, const regular_inverted_comparisons&amp;) noexcept = default;</span></span>
+<span id="L456"><span class="lineNum">     456</span> <span class="tlaGNC">         125 :     friend bool operator==(const regular_inverted_comparisons&amp;, const regular_inverted_comparisons&amp;) noexcept = default;</span></span>
 <span id="L457"><span class="lineNum">     457</span>              : </span>
 <span id="L458"><span class="lineNum">     458</span>              :     [[nodiscard]]</span>
-<span id="L459"><span class="lineNum">     459</span> <span class="tlaGNC">         111 :     friend bool operator!=(const regular_inverted_comparisons&amp;, const regular_inverted_comparisons&amp;) noexcept = default;</span></span>
+<span id="L459"><span class="lineNum">     459</span> <span class="tlaGNC">          75 :     friend bool operator!=(const regular_inverted_comparisons&amp;, const regular_inverted_comparisons&amp;) noexcept = default;</span></span>
 <span id="L460"><span class="lineNum">     460</span>              : </span>
 <span id="L461"><span class="lineNum">     461</span>              :     [[nodiscard]]</span>
-<span id="L462"><span class="lineNum">     462</span> <span class="tlaGNC">         259 :     friend bool operator&lt;(const regular_inverted_comparisons&amp; lhs, const regular_inverted_comparisons&amp; rhs) noexcept</span></span>
+<span id="L462"><span class="lineNum">     462</span> <span class="tlaGNC">         175 :     friend bool operator&lt;(const regular_inverted_comparisons&amp; lhs, const regular_inverted_comparisons&amp; rhs) noexcept</span></span>
 <span id="L463"><span class="lineNum">     463</span>              :     {</span>
-<span id="L464"><span class="lineNum">     464</span> <span class="tlaGNC">         259 :       return lhs.x &gt; rhs.x;</span></span>
+<span id="L464"><span class="lineNum">     464</span> <span class="tlaGNC">         175 :       return lhs.x &gt; rhs.x;</span></span>
 <span id="L465"><span class="lineNum">     465</span>              :     }</span>
 <span id="L466"><span class="lineNum">     466</span>              : </span>
 <span id="L467"><span class="lineNum">     467</span>              :     [[nodiscard]]</span>
-<span id="L468"><span class="lineNum">     468</span> <span class="tlaGNC">         111 :     friend bool operator&lt;=(const regular_inverted_comparisons&amp; lhs, const regular_inverted_comparisons&amp; rhs) noexcept</span></span>
+<span id="L468"><span class="lineNum">     468</span> <span class="tlaGNC">          75 :     friend bool operator&lt;=(const regular_inverted_comparisons&amp; lhs, const regular_inverted_comparisons&amp; rhs) noexcept</span></span>
 <span id="L469"><span class="lineNum">     469</span>              :     {</span>
-<span id="L470"><span class="lineNum">     470</span> <span class="tlaGNC">         111 :       return lhs.x &gt;= rhs.x;</span></span>
+<span id="L470"><span class="lineNum">     470</span> <span class="tlaGNC">          75 :       return lhs.x &gt;= rhs.x;</span></span>
 <span id="L471"><span class="lineNum">     471</span>              :     }</span>
 <span id="L472"><span class="lineNum">     472</span>              : </span>
 <span id="L473"><span class="lineNum">     473</span>              :     [[nodiscard]]</span>
-<span id="L474"><span class="lineNum">     474</span> <span class="tlaGNC">         185 :     friend bool operator&gt;(const regular_inverted_comparisons&amp; lhs, const regular_inverted_comparisons&amp; rhs) noexcept</span></span>
+<span id="L474"><span class="lineNum">     474</span> <span class="tlaGNC">         125 :     friend bool operator&gt;(const regular_inverted_comparisons&amp; lhs, const regular_inverted_comparisons&amp; rhs) noexcept</span></span>
 <span id="L475"><span class="lineNum">     475</span>              :     {</span>
-<span id="L476"><span class="lineNum">     476</span> <span class="tlaGNC">         185 :       return lhs.x &lt; rhs.x;</span></span>
+<span id="L476"><span class="lineNum">     476</span> <span class="tlaGNC">         125 :       return lhs.x &lt; rhs.x;</span></span>
 <span id="L477"><span class="lineNum">     477</span>              :     }</span>
 <span id="L478"><span class="lineNum">     478</span>              : </span>
 <span id="L479"><span class="lineNum">     479</span>              :     [[nodiscard]]</span>
-<span id="L480"><span class="lineNum">     480</span> <span class="tlaGNC">         111 :     friend bool operator&gt;=(const regular_inverted_comparisons&amp; lhs, const regular_inverted_comparisons&amp; rhs) noexcept</span></span>
+<span id="L480"><span class="lineNum">     480</span> <span class="tlaGNC">          75 :     friend bool operator&gt;=(const regular_inverted_comparisons&amp; lhs, const regular_inverted_comparisons&amp; rhs) noexcept</span></span>
 <span id="L481"><span class="lineNum">     481</span>              :     {</span>
-<span id="L482"><span class="lineNum">     482</span> <span class="tlaGNC">         111 :       return lhs.x &lt;= rhs.x;</span></span>
+<span id="L482"><span class="lineNum">     482</span> <span class="tlaGNC">          75 :       return lhs.x &lt;= rhs.x;</span></span>
 <span id="L483"><span class="lineNum">     483</span>              :     }</span>
 <span id="L484"><span class="lineNum">     484</span>              : </span>
 <span id="L485"><span class="lineNum">     485</span>              :     // TO DO: default this and remove most of the above when libc++ rolls out &lt;=&gt; to std</span>
-<span id="L486"><span class="lineNum">     486</span> <span class="tlaGNC">         111 :     friend std::weak_ordering operator&lt;=&gt;(const regular_inverted_comparisons&amp; lhs, const regular_inverted_comparisons&amp; rhs) noexcept</span></span>
+<span id="L486"><span class="lineNum">     486</span> <span class="tlaGNC">          75 :     friend std::weak_ordering operator&lt;=&gt;(const regular_inverted_comparisons&amp; lhs, const regular_inverted_comparisons&amp; rhs) noexcept</span></span>
 <span id="L487"><span class="lineNum">     487</span>              :     {</span>
-<span id="L488"><span class="lineNum">     488</span> <span class="tlaGNC">         111 :       if(lhs &lt; rhs) return std::weak_ordering::less;</span></span>
+<span id="L488"><span class="lineNum">     488</span> <span class="tlaGNC">          75 :       if(lhs &lt; rhs) return std::weak_ordering::less;</span></span>
 <span id="L489"><span class="lineNum">     489</span>              : </span>
-<span id="L490"><span class="lineNum">     490</span> <span class="tlaGNC">          74 :       if(rhs &gt; lhs) return std::weak_ordering::greater;</span></span>
+<span id="L490"><span class="lineNum">     490</span> <span class="tlaGNC">          50 :       if(rhs &gt; lhs) return std::weak_ordering::greater;</span></span>
 <span id="L491"><span class="lineNum">     491</span>              : </span>
-<span id="L492"><span class="lineNum">     492</span> <span class="tlaGNC">          74 :       return std::weak_ordering::equivalent;</span></span>
+<span id="L492"><span class="lineNum">     492</span> <span class="tlaGNC">          50 :       return std::weak_ordering::equivalent;</span></span>
 <span id="L493"><span class="lineNum">     493</span>              :     }</span>
 <span id="L494"><span class="lineNum">     494</span>              : </span>
 <span id="L495"><span class="lineNum">     495</span>              :     template&lt;class Stream&gt;</span>
@@ -567,7 +567,7 @@
 <span id="L505"><span class="lineNum">     505</span>              :   {</span>
 <span id="L506"><span class="lineNum">     506</span>              :     using allocator_type = Allocator;</span>
 <span id="L507"><span class="lineNum">     507</span>              : </span>
-<span id="L508"><span class="lineNum">     508</span> <span class="tlaGNC tlaBgGNC">         222 :     regular_broken_spaceship(std::initializer_list&lt;T&gt; list) : x{list} {}</span></span>
+<span id="L508"><span class="lineNum">     508</span> <span class="tlaGNC tlaBgGNC">         150 :     regular_broken_spaceship(std::initializer_list&lt;T&gt; list) : x{list} {}</span></span>
 <span id="L509"><span class="lineNum">     509</span>              : </span>
 <span id="L510"><span class="lineNum">     510</span>              :     regular_broken_spaceship(std::initializer_list&lt;T&gt; list, const allocator_type&amp; a) : x{list, a} {}</span>
 <span id="L511"><span class="lineNum">     511</span>              : </span>
@@ -594,46 +594,46 @@
 <span id="L532"><span class="lineNum">     532</span> <span class="tlaUNC">           0 :       lhs.swap(rhs);</span></span>
 <span id="L533"><span class="lineNum">     533</span> <span class="tlaUNC">           0 :     }</span></span>
 <span id="L534"><span class="lineNum">     534</span>              : </span>
-<span id="L535"><span class="lineNum">     535</span> <span class="tlaGNC tlaBgGNC">         185 :     std::vector&lt;T, Allocator&gt; x{};</span></span>
+<span id="L535"><span class="lineNum">     535</span> <span class="tlaGNC tlaBgGNC">         125 :     std::vector&lt;T, Allocator&gt; x{};</span></span>
 <span id="L536"><span class="lineNum">     536</span>              : </span>
 <span id="L537"><span class="lineNum">     537</span>              :     [[nodiscard]]</span>
-<span id="L538"><span class="lineNum">     538</span> <span class="tlaGNC">         185 :     friend bool operator==(const regular_broken_spaceship&amp;, const regular_broken_spaceship&amp;) noexcept = default;</span></span>
+<span id="L538"><span class="lineNum">     538</span> <span class="tlaGNC">         125 :     friend bool operator==(const regular_broken_spaceship&amp;, const regular_broken_spaceship&amp;) noexcept = default;</span></span>
 <span id="L539"><span class="lineNum">     539</span>              : </span>
 <span id="L540"><span class="lineNum">     540</span>              :     [[nodiscard]]</span>
-<span id="L541"><span class="lineNum">     541</span> <span class="tlaGNC">         111 :     friend bool operator!=(const regular_broken_spaceship&amp;, const regular_broken_spaceship&amp;) noexcept = default;</span></span>
+<span id="L541"><span class="lineNum">     541</span> <span class="tlaGNC">          75 :     friend bool operator!=(const regular_broken_spaceship&amp;, const regular_broken_spaceship&amp;) noexcept = default;</span></span>
 <span id="L542"><span class="lineNum">     542</span>              : </span>
 <span id="L543"><span class="lineNum">     543</span>              :     [[nodiscard]]</span>
-<span id="L544"><span class="lineNum">     544</span> <span class="tlaGNC">         222 :     friend bool operator&lt;(const regular_broken_spaceship&amp; lhs, const regular_broken_spaceship&amp; rhs) noexcept</span></span>
+<span id="L544"><span class="lineNum">     544</span> <span class="tlaGNC">         150 :     friend bool operator&lt;(const regular_broken_spaceship&amp; lhs, const regular_broken_spaceship&amp; rhs) noexcept</span></span>
 <span id="L545"><span class="lineNum">     545</span>              :     {</span>
-<span id="L546"><span class="lineNum">     546</span> <span class="tlaGNC">         222 :       return lhs.x &lt; rhs.x;</span></span>
+<span id="L546"><span class="lineNum">     546</span> <span class="tlaGNC">         150 :       return lhs.x &lt; rhs.x;</span></span>
 <span id="L547"><span class="lineNum">     547</span>              :     }</span>
 <span id="L548"><span class="lineNum">     548</span>              : </span>
 <span id="L549"><span class="lineNum">     549</span>              :     [[nodiscard]]</span>
-<span id="L550"><span class="lineNum">     550</span> <span class="tlaGNC">         111 :     friend bool operator&lt;=(const regular_broken_spaceship&amp; lhs, const regular_broken_spaceship&amp; rhs) noexcept</span></span>
+<span id="L550"><span class="lineNum">     550</span> <span class="tlaGNC">          75 :     friend bool operator&lt;=(const regular_broken_spaceship&amp; lhs, const regular_broken_spaceship&amp; rhs) noexcept</span></span>
 <span id="L551"><span class="lineNum">     551</span>              :     {</span>
-<span id="L552"><span class="lineNum">     552</span> <span class="tlaGNC">         111 :       return lhs.x &lt;= rhs.x;</span></span>
+<span id="L552"><span class="lineNum">     552</span> <span class="tlaGNC">          75 :       return lhs.x &lt;= rhs.x;</span></span>
 <span id="L553"><span class="lineNum">     553</span>              :     }</span>
 <span id="L554"><span class="lineNum">     554</span>              : </span>
 <span id="L555"><span class="lineNum">     555</span>              :     [[nodiscard]]</span>
-<span id="L556"><span class="lineNum">     556</span> <span class="tlaGNC">         185 :     friend bool operator&gt;(const regular_broken_spaceship&amp; lhs, const regular_broken_spaceship&amp; rhs) noexcept</span></span>
+<span id="L556"><span class="lineNum">     556</span> <span class="tlaGNC">         125 :     friend bool operator&gt;(const regular_broken_spaceship&amp; lhs, const regular_broken_spaceship&amp; rhs) noexcept</span></span>
 <span id="L557"><span class="lineNum">     557</span>              :     {</span>
-<span id="L558"><span class="lineNum">     558</span> <span class="tlaGNC">         185 :       return lhs.x &gt; rhs.x;</span></span>
+<span id="L558"><span class="lineNum">     558</span> <span class="tlaGNC">         125 :       return lhs.x &gt; rhs.x;</span></span>
 <span id="L559"><span class="lineNum">     559</span>              :     }</span>
 <span id="L560"><span class="lineNum">     560</span>              : </span>
 <span id="L561"><span class="lineNum">     561</span>              :     [[nodiscard]]</span>
-<span id="L562"><span class="lineNum">     562</span> <span class="tlaGNC">         111 :     friend bool operator&gt;=(const regular_broken_spaceship&amp; lhs, const regular_broken_spaceship&amp; rhs) noexcept</span></span>
+<span id="L562"><span class="lineNum">     562</span> <span class="tlaGNC">          75 :     friend bool operator&gt;=(const regular_broken_spaceship&amp; lhs, const regular_broken_spaceship&amp; rhs) noexcept</span></span>
 <span id="L563"><span class="lineNum">     563</span>              :     {</span>
-<span id="L564"><span class="lineNum">     564</span> <span class="tlaGNC">         111 :       return lhs.x &gt;= rhs.x;</span></span>
+<span id="L564"><span class="lineNum">     564</span> <span class="tlaGNC">          75 :       return lhs.x &gt;= rhs.x;</span></span>
 <span id="L565"><span class="lineNum">     565</span>              :     }</span>
 <span id="L566"><span class="lineNum">     566</span>              : </span>
 <span id="L567"><span class="lineNum">     567</span>              :     // TO DO: default this and remove most of the above when libc++ rolls out &lt;=&gt; to std</span>
-<span id="L568"><span class="lineNum">     568</span> <span class="tlaGNC">         111 :     friend std::weak_ordering operator&lt;=&gt;(const regular_broken_spaceship&amp; lhs, const regular_broken_spaceship&amp; rhs) noexcept</span></span>
+<span id="L568"><span class="lineNum">     568</span> <span class="tlaGNC">          75 :     friend std::weak_ordering operator&lt;=&gt;(const regular_broken_spaceship&amp; lhs, const regular_broken_spaceship&amp; rhs) noexcept</span></span>
 <span id="L569"><span class="lineNum">     569</span>              :     {</span>
-<span id="L570"><span class="lineNum">     570</span> <span class="tlaGNC">         111 :       if(lhs &lt; rhs) return std::weak_ordering::greater;</span></span>
+<span id="L570"><span class="lineNum">     570</span> <span class="tlaGNC">          75 :       if(lhs &lt; rhs) return std::weak_ordering::greater;</span></span>
 <span id="L571"><span class="lineNum">     571</span>              : </span>
-<span id="L572"><span class="lineNum">     572</span> <span class="tlaGNC">          74 :       if(rhs &gt; lhs) return std::weak_ordering::less;</span></span>
+<span id="L572"><span class="lineNum">     572</span> <span class="tlaGNC">          50 :       if(rhs &gt; lhs) return std::weak_ordering::less;</span></span>
 <span id="L573"><span class="lineNum">     573</span>              : </span>
-<span id="L574"><span class="lineNum">     574</span> <span class="tlaGNC">          74 :       return std::weak_ordering::equivalent;</span></span>
+<span id="L574"><span class="lineNum">     574</span> <span class="tlaGNC">          50 :       return std::weak_ordering::equivalent;</span></span>
 <span id="L575"><span class="lineNum">     575</span>              :     }</span>
 <span id="L576"><span class="lineNum">     576</span>              : </span>
 <span id="L577"><span class="lineNum">     577</span>              :     template&lt;class Stream&gt;</span>
@@ -649,17 +649,17 @@
 <span id="L587"><span class="lineNum">     587</span>              :   {</span>
 <span id="L588"><span class="lineNum">     588</span>              :     using allocator_type = Allocator;</span>
 <span id="L589"><span class="lineNum">     589</span>              : </span>
-<span id="L590"><span class="lineNum">     590</span> <span class="tlaGNC tlaBgGNC">        1184 :     orderable_regular_inefficient_comparisons(std::initializer_list&lt;T&gt; list) : x{list} {}</span></span>
+<span id="L590"><span class="lineNum">     590</span> <span class="tlaGNC tlaBgGNC">         800 :     orderable_regular_inefficient_comparisons(std::initializer_list&lt;T&gt; list) : x{list} {}</span></span>
 <span id="L591"><span class="lineNum">     591</span>              : </span>
 <span id="L592"><span class="lineNum">     592</span>              :     orderable_regular_inefficient_comparisons(std::initializer_list&lt;T&gt; list, const allocator_type&amp; a) : x{list, a} {}</span>
 <span id="L593"><span class="lineNum">     593</span>              : </span>
 <span id="L594"><span class="lineNum">     594</span>              :     orderable_regular_inefficient_comparisons(const allocator_type&amp; a) : x(a) {}</span>
 <span id="L595"><span class="lineNum">     595</span>              : </span>
-<span id="L596"><span class="lineNum">     596</span> <span class="tlaGNC">       16576 :     orderable_regular_inefficient_comparisons(const orderable_regular_inefficient_comparisons&amp;) = default;</span></span>
+<span id="L596"><span class="lineNum">     596</span> <span class="tlaGNC">       11200 :     orderable_regular_inefficient_comparisons(const orderable_regular_inefficient_comparisons&amp;) = default;</span></span>
 <span id="L597"><span class="lineNum">     597</span>              : </span>
 <span id="L598"><span class="lineNum">     598</span> <span class="tlaUNC tlaBgUNC">           0 :     orderable_regular_inefficient_comparisons(const orderable_regular_inefficient_comparisons&amp; other, const allocator_type&amp; a) : x(other.x, a) {}</span></span>
 <span id="L599"><span class="lineNum">     599</span>              : </span>
-<span id="L600"><span class="lineNum">     600</span> <span class="tlaGNC tlaBgGNC">         592 :     orderable_regular_inefficient_comparisons(orderable_regular_inefficient_comparisons&amp;&amp;) noexcept = default;</span></span>
+<span id="L600"><span class="lineNum">     600</span> <span class="tlaGNC tlaBgGNC">         400 :     orderable_regular_inefficient_comparisons(orderable_regular_inefficient_comparisons&amp;&amp;) noexcept = default;</span></span>
 <span id="L601"><span class="lineNum">     601</span>              : </span>
 <span id="L602"><span class="lineNum">     602</span> <span class="tlaUNC tlaBgUNC">           0 :     orderable_regular_inefficient_comparisons(orderable_regular_inefficient_comparisons&amp;&amp; other, const allocator_type&amp; a) : x(std::move(other.x), a) {}</span></span>
 <span id="L603"><span class="lineNum">     603</span>              : </span>
@@ -678,46 +678,46 @@
 <span id="L616"><span class="lineNum">     616</span> <span class="tlaUNC">           0 :       lhs.swap(rhs);</span></span>
 <span id="L617"><span class="lineNum">     617</span> <span class="tlaUNC">           0 :     }</span></span>
 <span id="L618"><span class="lineNum">     618</span>              : </span>
-<span id="L619"><span class="lineNum">     619</span> <span class="tlaGNC tlaBgGNC">        2960 :     std::vector&lt;T, Allocator&gt; x{};</span></span>
+<span id="L619"><span class="lineNum">     619</span> <span class="tlaGNC tlaBgGNC">        2000 :     std::vector&lt;T, Allocator&gt; x{};</span></span>
 <span id="L620"><span class="lineNum">     620</span>              : </span>
 <span id="L621"><span class="lineNum">     621</span>              :     [[nodiscard]]</span>
-<span id="L622"><span class="lineNum">     622</span> <span class="tlaGNC">        2960 :     friend bool operator==(const orderable_regular_inefficient_comparisons&amp;, const orderable_regular_inefficient_comparisons&amp;) noexcept = default;</span></span>
+<span id="L622"><span class="lineNum">     622</span> <span class="tlaGNC">        2000 :     friend bool operator==(const orderable_regular_inefficient_comparisons&amp;, const orderable_regular_inefficient_comparisons&amp;) noexcept = default;</span></span>
 <span id="L623"><span class="lineNum">     623</span>              : </span>
 <span id="L624"><span class="lineNum">     624</span>              :     [[nodiscard]]</span>
-<span id="L625"><span class="lineNum">     625</span> <span class="tlaGNC">        1776 :     friend bool operator!=(const orderable_regular_inefficient_comparisons&amp; lhs, const orderable_regular_inefficient_comparisons&amp; rhs) noexcept = default;</span></span>
+<span id="L625"><span class="lineNum">     625</span> <span class="tlaGNC">        1200 :     friend bool operator!=(const orderable_regular_inefficient_comparisons&amp; lhs, const orderable_regular_inefficient_comparisons&amp; rhs) noexcept = default;</span></span>
 <span id="L626"><span class="lineNum">     626</span>              : </span>
 <span id="L627"><span class="lineNum">     627</span>              :     [[nodiscard]]</span>
-<span id="L628"><span class="lineNum">     628</span> <span class="tlaGNC">        2368 :     friend bool operator&lt;(const orderable_regular_inefficient_comparisons lhs, const orderable_regular_inefficient_comparisons rhs) noexcept</span></span>
+<span id="L628"><span class="lineNum">     628</span> <span class="tlaGNC">        1600 :     friend bool operator&lt;(const orderable_regular_inefficient_comparisons lhs, const orderable_regular_inefficient_comparisons rhs) noexcept</span></span>
 <span id="L629"><span class="lineNum">     629</span>              :     {</span>
-<span id="L630"><span class="lineNum">     630</span> <span class="tlaGNC">        2368 :       return lhs.x &lt; rhs.x;</span></span>
+<span id="L630"><span class="lineNum">     630</span> <span class="tlaGNC">        1600 :       return lhs.x &lt; rhs.x;</span></span>
 <span id="L631"><span class="lineNum">     631</span>              :     }</span>
 <span id="L632"><span class="lineNum">     632</span>              : </span>
 <span id="L633"><span class="lineNum">     633</span>              :     [[nodiscard]]</span>
-<span id="L634"><span class="lineNum">     634</span> <span class="tlaGNC">        1184 :     friend bool operator&lt;=(const orderable_regular_inefficient_comparisons lhs, const orderable_regular_inefficient_comparisons rhs) noexcept</span></span>
+<span id="L634"><span class="lineNum">     634</span> <span class="tlaGNC">         800 :     friend bool operator&lt;=(const orderable_regular_inefficient_comparisons lhs, const orderable_regular_inefficient_comparisons rhs) noexcept</span></span>
 <span id="L635"><span class="lineNum">     635</span>              :     {</span>
-<span id="L636"><span class="lineNum">     636</span> <span class="tlaGNC">        1184 :       return lhs.x &lt;= rhs.x;</span></span>
+<span id="L636"><span class="lineNum">     636</span> <span class="tlaGNC">         800 :       return lhs.x &lt;= rhs.x;</span></span>
 <span id="L637"><span class="lineNum">     637</span>              :     }</span>
 <span id="L638"><span class="lineNum">     638</span>              : </span>
 <span id="L639"><span class="lineNum">     639</span>              :     [[nodiscard]]</span>
-<span id="L640"><span class="lineNum">     640</span> <span class="tlaGNC">        2368 :     friend bool operator&gt;(const orderable_regular_inefficient_comparisons lhs, const orderable_regular_inefficient_comparisons rhs) noexcept</span></span>
+<span id="L640"><span class="lineNum">     640</span> <span class="tlaGNC">        1600 :     friend bool operator&gt;(const orderable_regular_inefficient_comparisons lhs, const orderable_regular_inefficient_comparisons rhs) noexcept</span></span>
 <span id="L641"><span class="lineNum">     641</span>              :     {</span>
-<span id="L642"><span class="lineNum">     642</span> <span class="tlaGNC">        2368 :       return lhs.x &gt; rhs.x;</span></span>
+<span id="L642"><span class="lineNum">     642</span> <span class="tlaGNC">        1600 :       return lhs.x &gt; rhs.x;</span></span>
 <span id="L643"><span class="lineNum">     643</span>              :     }</span>
 <span id="L644"><span class="lineNum">     644</span>              : </span>
 <span id="L645"><span class="lineNum">     645</span>              :     [[nodiscard]]</span>
-<span id="L646"><span class="lineNum">     646</span> <span class="tlaGNC">        1184 :     friend bool operator&gt;=(const orderable_regular_inefficient_comparisons lhs, const orderable_regular_inefficient_comparisons rhs) noexcept</span></span>
+<span id="L646"><span class="lineNum">     646</span> <span class="tlaGNC">         800 :     friend bool operator&gt;=(const orderable_regular_inefficient_comparisons lhs, const orderable_regular_inefficient_comparisons rhs) noexcept</span></span>
 <span id="L647"><span class="lineNum">     647</span>              :     {</span>
-<span id="L648"><span class="lineNum">     648</span> <span class="tlaGNC">        1184 :       return lhs.x &gt;= rhs.x;</span></span>
+<span id="L648"><span class="lineNum">     648</span> <span class="tlaGNC">         800 :       return lhs.x &gt;= rhs.x;</span></span>
 <span id="L649"><span class="lineNum">     649</span>              :     }</span>
 <span id="L650"><span class="lineNum">     650</span>              : </span>
 <span id="L651"><span class="lineNum">     651</span>              :     // TO DO: default this and remove most of the above when libc++ rolls out &lt;=&gt; to std</span>
-<span id="L652"><span class="lineNum">     652</span> <span class="tlaGNC">        1184 :     friend std::weak_ordering operator&lt;=&gt;(const orderable_regular_inefficient_comparisons lhs, const orderable_regular_inefficient_comparisons rhs) noexcept</span></span>
+<span id="L652"><span class="lineNum">     652</span> <span class="tlaGNC">         800 :     friend std::weak_ordering operator&lt;=&gt;(const orderable_regular_inefficient_comparisons lhs, const orderable_regular_inefficient_comparisons rhs) noexcept</span></span>
 <span id="L653"><span class="lineNum">     653</span>              :     {</span>
-<span id="L654"><span class="lineNum">     654</span> <span class="tlaGNC">        1184 :       if(lhs &lt; rhs) return std::weak_ordering::less;</span></span>
+<span id="L654"><span class="lineNum">     654</span> <span class="tlaGNC">         800 :       if(lhs &lt; rhs) return std::weak_ordering::less;</span></span>
 <span id="L655"><span class="lineNum">     655</span>              : </span>
-<span id="L656"><span class="lineNum">     656</span> <span class="tlaGNC">        1184 :       if(rhs &gt; lhs) return std::weak_ordering::greater;</span></span>
+<span id="L656"><span class="lineNum">     656</span> <span class="tlaGNC">         800 :       if(rhs &gt; lhs) return std::weak_ordering::greater;</span></span>
 <span id="L657"><span class="lineNum">     657</span>              : </span>
-<span id="L658"><span class="lineNum">     658</span> <span class="tlaGNC">        1184 :       return std::weak_ordering::equivalent;</span></span>
+<span id="L658"><span class="lineNum">     658</span> <span class="tlaGNC">         800 :       return std::weak_ordering::equivalent;</span></span>
 <span id="L659"><span class="lineNum">     659</span>              :     }</span>
 <span id="L660"><span class="lineNum">     660</span>              : </span>
 <span id="L661"><span class="lineNum">     661</span>              :     template&lt;class Stream&gt;</span>
@@ -734,32 +734,32 @@
 <span id="L672"><span class="lineNum">     672</span>              :   {</span>
 <span id="L673"><span class="lineNum">     673</span>              :     using allocation_count_shifter&lt;int&gt;::shift;</span>
 <span id="L674"><span class="lineNum">     674</span>              : </span>
-<span id="L675"><span class="lineNum">     675</span> <span class="tlaGNC tlaBgGNC">        1184 :     static int shift(int count, const alloc_prediction&lt;comparison_flavour::greater_than&gt;&amp;) noexcept</span></span>
+<span id="L675"><span class="lineNum">     675</span> <span class="tlaGNC tlaBgGNC">         800 :     static int shift(int count, const alloc_prediction&lt;comparison_flavour::greater_than&gt;&amp;) noexcept</span></span>
 <span id="L676"><span class="lineNum">     676</span>              :     {</span>
-<span id="L677"><span class="lineNum">     677</span> <span class="tlaGNC">        1184 :       return shift_comparison(count);</span></span>
+<span id="L677"><span class="lineNum">     677</span> <span class="tlaGNC">         800 :       return shift_comparison(count);</span></span>
 <span id="L678"><span class="lineNum">     678</span>              :     }</span>
 <span id="L679"><span class="lineNum">     679</span>              : </span>
-<span id="L680"><span class="lineNum">     680</span> <span class="tlaGNC">        1184 :     static int shift(int count, const alloc_prediction&lt;comparison_flavour::geq&gt;) noexcept</span></span>
+<span id="L680"><span class="lineNum">     680</span> <span class="tlaGNC">         800 :     static int shift(int count, const alloc_prediction&lt;comparison_flavour::geq&gt;) noexcept</span></span>
 <span id="L681"><span class="lineNum">     681</span>              :     {</span>
-<span id="L682"><span class="lineNum">     682</span> <span class="tlaGNC">        1184 :       return shift_comparison(count);</span></span>
+<span id="L682"><span class="lineNum">     682</span> <span class="tlaGNC">         800 :       return shift_comparison(count);</span></span>
 <span id="L683"><span class="lineNum">     683</span>              :     }</span>
 <span id="L684"><span class="lineNum">     684</span>              : </span>
-<span id="L685"><span class="lineNum">     685</span> <span class="tlaGNC">        1184 :     static int shift(int count, const alloc_prediction&lt;comparison_flavour::less_than&gt;&amp;) noexcept</span></span>
+<span id="L685"><span class="lineNum">     685</span> <span class="tlaGNC">         800 :     static int shift(int count, const alloc_prediction&lt;comparison_flavour::less_than&gt;&amp;) noexcept</span></span>
 <span id="L686"><span class="lineNum">     686</span>              :     {</span>
-<span id="L687"><span class="lineNum">     687</span> <span class="tlaGNC">        1184 :       return shift_comparison(count);</span></span>
+<span id="L687"><span class="lineNum">     687</span> <span class="tlaGNC">         800 :       return shift_comparison(count);</span></span>
 <span id="L688"><span class="lineNum">     688</span>              :     }</span>
 <span id="L689"><span class="lineNum">     689</span>              : </span>
-<span id="L690"><span class="lineNum">     690</span> <span class="tlaGNC">        1184 :     static int shift(int count, const alloc_prediction&lt;comparison_flavour::leq&gt;&amp;) noexcept</span></span>
+<span id="L690"><span class="lineNum">     690</span> <span class="tlaGNC">         800 :     static int shift(int count, const alloc_prediction&lt;comparison_flavour::leq&gt;&amp;) noexcept</span></span>
 <span id="L691"><span class="lineNum">     691</span>              :     {</span>
-<span id="L692"><span class="lineNum">     692</span> <span class="tlaGNC">        1184 :       return shift_comparison(count);</span></span>
+<span id="L692"><span class="lineNum">     692</span> <span class="tlaGNC">         800 :       return shift_comparison(count);</span></span>
 <span id="L693"><span class="lineNum">     693</span>              :     }</span>
 <span id="L694"><span class="lineNum">     694</span>              : </span>
-<span id="L695"><span class="lineNum">     695</span> <span class="tlaGNC">        1184 :     static int shift(int count, const alloc_prediction&lt;comparison_flavour::threeway&gt;&amp;) noexcept</span></span>
+<span id="L695"><span class="lineNum">     695</span> <span class="tlaGNC">         800 :     static int shift(int count, const alloc_prediction&lt;comparison_flavour::threeway&gt;&amp;) noexcept</span></span>
 <span id="L696"><span class="lineNum">     696</span>              :     {</span>
-<span id="L697"><span class="lineNum">     697</span> <span class="tlaGNC">        1184 :       return shift_comparison(count, 6);</span></span>
+<span id="L697"><span class="lineNum">     697</span> <span class="tlaGNC">         800 :       return shift_comparison(count, 6);</span></span>
 <span id="L698"><span class="lineNum">     698</span>              :     }</span>
 <span id="L699"><span class="lineNum">     699</span>              :   private:</span>
-<span id="L700"><span class="lineNum">     700</span> <span class="tlaGNC">        5920 :     static int shift_comparison(int count, [[maybe_unused]] int shift = 2) noexcept</span></span>
+<span id="L700"><span class="lineNum">     700</span> <span class="tlaGNC">        4000 :     static int shift_comparison(int count, [[maybe_unused]] int shift = 2) noexcept</span></span>
 <span id="L701"><span class="lineNum">     701</span>              :     {</span>
 <span id="L702"><span class="lineNum">     702</span>              :       if constexpr (with_msvc_v &amp;&amp; (iterator_debug_level() &gt; 0))</span>
 <span id="L703"><span class="lineNum">     703</span>              :       {</span>
@@ -767,7 +767,7 @@
 <span id="L705"><span class="lineNum">     705</span>              :       }</span>
 <span id="L706"><span class="lineNum">     706</span>              :       else</span>
 <span id="L707"><span class="lineNum">     707</span>              :       {</span>
-<span id="L708"><span class="lineNum">     708</span> <span class="tlaGNC">        5920 :         return count;</span></span>
+<span id="L708"><span class="lineNum">     708</span> <span class="tlaGNC">        4000 :         return count;</span></span>
 <span id="L709"><span class="lineNum">     709</span>              :       }</span>
 <span id="L710"><span class="lineNum">     710</span>              :     }</span>
 <span id="L711"><span class="lineNum">     711</span>              :   };</span>

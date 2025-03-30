@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2025-01-12 21:58:51</td>
+            <td class="headerValue">2025-03-30 21:18:04</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -76,19 +76,19 @@
 <span id="L14"><span class="lineNum">      14</span>              :   namespace fs = std::filesystem;</span>
 <span id="L15"><span class="lineNum">      15</span>              : </span>
 <span id="L16"><span class="lineNum">      16</span>              :   [[nodiscard]]</span>
-<span id="L17"><span class="lineNum">      17</span> <span class="tlaGNC tlaBgGNC">          55 :   std::filesystem::path normal_path_test::source_file() const</span></span>
+<span id="L17"><span class="lineNum">      17</span> <span class="tlaGNC tlaBgGNC">           5 :   std::filesystem::path normal_path_test::source_file() const</span></span>
 <span id="L18"><span class="lineNum">      18</span>              :   {</span>
-<span id="L19"><span class="lineNum">      19</span> <span class="tlaGNC">          55 :     return std::source_location::current().file_name();</span></span>
+<span id="L19"><span class="lineNum">      19</span> <span class="tlaGNC">           5 :     return std::source_location::current().file_name();</span></span>
 <span id="L20"><span class="lineNum">      20</span>              :   }</span>
 <span id="L21"><span class="lineNum">      21</span>              : </span>
-<span id="L22"><span class="lineNum">      22</span> <span class="tlaGNC">          11 :   void normal_path_test::run_tests()</span></span>
+<span id="L22"><span class="lineNum">      22</span> <span class="tlaGNC">           1 :   void normal_path_test::run_tests()</span></span>
 <span id="L23"><span class="lineNum">      23</span>              :   {</span>
-<span id="L24"><span class="lineNum">      24</span> <span class="tlaGNC">          11 :     normal_path x{&quot;A/C/../B&quot;}, y{&quot;A/C&quot;};</span></span>
-<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">          11 :     check(equivalence, &quot;&quot;, x, fs::path{&quot;A/B&quot;});</span></span>
-<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">          11 :     check(equivalence, &quot;&quot;, y, fs::path{&quot;A/C&quot;});</span></span>
+<span id="L24"><span class="lineNum">      24</span> <span class="tlaGNC">           1 :     normal_path x{&quot;A/C/../B&quot;}, y{&quot;A/C&quot;};</span></span>
+<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">           1 :     check(equivalence, &quot;&quot;, x, fs::path{&quot;A/B&quot;});</span></span>
+<span id="L26"><span class="lineNum">      26</span> <span class="tlaGNC">           1 :     check(equivalence, &quot;&quot;, y, fs::path{&quot;A/C&quot;});</span></span>
 <span id="L27"><span class="lineNum">      27</span>              : </span>
-<span id="L28"><span class="lineNum">      28</span> <span class="tlaGNC">          11 :     check_semantics(&quot;&quot;, x, y, std::weak_ordering::less);</span></span>
-<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">          11 :   }</span></span>
+<span id="L28"><span class="lineNum">      28</span> <span class="tlaGNC">           1 :     check_semantics(&quot;&quot;, x, y, std::weak_ordering::less);</span></span>
+<span id="L29"><span class="lineNum">      29</span> <span class="tlaGNC">           1 :   }</span></span>
 <span id="L30"><span class="lineNum">      30</span>              : }</span>
         </pre>
               </td>
