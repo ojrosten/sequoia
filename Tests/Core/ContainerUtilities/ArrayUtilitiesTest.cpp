@@ -15,6 +15,7 @@
 namespace sequoia::testing
 {  
   using namespace utilities;
+  using ndc_t = no_default_constructor;
 
   [[nodiscard]]
   std::filesystem::path array_utilities_test::source_file() const
@@ -53,15 +54,13 @@ namespace sequoia::testing
     }
 
     {
-      using ndc_t = no_default_constructor;
-
       auto converter{
-        [](int i){ return no_default_constructor{i}; }
+        [](int i){ return ndc_t{i}; }
       };
 
       check_exception_thrown<std::logic_error>("", [converter](){ return to_array<ndc_t,2>({0,1,2}, converter);});
 
-      constexpr std::array<no_default_constructor, 2>
+      constexpr std::array<ndc_t, 2>
         a{to_array<ndc_t, 2>({2, 3}, converter)};
 
       check(equality, "", a, {ndc_t{2}, ndc_t{3}});
@@ -72,6 +71,7 @@ namespace sequoia::testing
   {
     check(equality, "", make_array<int, 0>(std::identity{}), std::array<int, 0>{});
     check(equality, "", make_array<int, 1>([](std::size_t) { return 42;}), std::array<int, 1>{42});
-    check(equality, "", make_array<int, 2>([](std::size_t i) { return 42*i;}), std::array<int, 2>{0, 42});
+    check(equality, "", make_array<int, 2>([](std::size_t i) { return 42*static_cast<int>(i); }), std::array<int, 2>{0, 42});
+    check(equality, "", make_array<ndc_t, 3>([](std::size_t i) { return ndc_t{static_cast<int>(i)}; }), std::array<ndc_t, 3>{ndc_t{0}, ndc_t{1}, ndc_t{2}});
   }
 }
