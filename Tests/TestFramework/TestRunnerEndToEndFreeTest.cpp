@@ -17,11 +17,13 @@
 
 #include <fstream>
 #include <numeric>
+#include <thread>
 
 namespace sequoia::testing
 {
   using namespace runtime;
   namespace fs = std::filesystem;
+  using namespace std::chrono_literals;
 
   namespace
   {
@@ -29,6 +31,12 @@ namespace sequoia::testing
     std::string run_cmd()
     {
       return with_msvc_v ? "TestAll.exe" : "./TestAll";
+    }
+
+    // This seems necessary on Mac-M series perhaps because of resolution of system clock (?)
+    void pause()
+    {
+      std::this_thread::sleep_for(500ms);
     }
 
     [[nodiscard]]
@@ -119,7 +127,8 @@ namespace sequoia::testing
     const auto absoluteFrom{auxiliary_materials() /= relativeFrom};
     const auto absoluteTo{generated_project() / relativeTo};
     fs::copy(absoluteFrom, absoluteTo, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
-    const auto now{fs::file_time_type::clock::now() + std::chrono::seconds(1)};
+    pause();
+    const auto now{fs::file_time_type::clock::now()};
 
     if(fs::is_regular_file(absoluteFrom))
     {
@@ -145,6 +154,7 @@ namespace sequoia::testing
     fs::create_directory(working_materials() /= "CreationOutput");
     fs::create_directory(working_materials() /= "Output");
 
+    pause();
     b.create_build_run(working_materials() /= "CreationOutput", "BuildOutput2.txt", working_materials() /= "Output");
 
     // Note: the act of creation invokes cmake, and so the first check implicitly checks the cmake output
@@ -439,7 +449,6 @@ namespace sequoia::testing
     //=================== Fix the final failing test and 'test' it ===================//
 
     copy_aux_materials("ModifiedTests/Maths/ProbabilityTest.cpp", "Tests/Maths");
-
     rebuild_run_and_check(report("Rebuild, run and 'test' after fixing a test"), b, "RunSuiteWithFixedTest", "CMakeOutput6.txt", "BuildOutput6.txt", "test Probability");
 
     check(equivalence, "Fixed Test Output", working_materials() /= "RunSelectedFixedTest", predictive_materials() /= "RunSelectedFixedTest");
