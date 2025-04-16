@@ -18,6 +18,7 @@
 #include <chrono>
 #include <random>
 #include <future>
+#include <thread>
 
 namespace sequoia::testing
 {

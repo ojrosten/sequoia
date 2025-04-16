@@ -39,7 +39,7 @@ namespace sequoia::testing
   };
 
   [[nodiscard]]
-  consteval line_breaks operator "" _linebreaks(unsigned long long int n) noexcept
+  consteval line_breaks operator ""_linebreaks(unsigned long long int n) noexcept
   {
     return line_breaks{static_cast<std::size_t>(n)};
   }
