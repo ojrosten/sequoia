@@ -96,6 +96,9 @@ namespace sequoia::testing
     check(equality, "Iterators demarcate differing numbers of elements", refs.cbegin(), refs.cend(), ans.cbegin(), ans.cend());
     check(equality, "Iterators demarcate differing elements", refs.cbegin(), refs.cend(), ans.cbegin(), ans.cbegin() + 4);
 
+    check(equality, "Spans over vectors of differing length", std::span<const int>{std::vector<int>{}}, std::span<const int>{std::vector<int>{1}});
+    check(equality, "Spans over vectors of differing elements", std::span<const int>{std::vector<int>{42}}, std::span<const int>{std::vector<int>{1}});
+
     check(equivalence,
           reporter{"Range equivalence, where the containerized form is explicitly specialized"},
           std::vector<foo>{{42}},
