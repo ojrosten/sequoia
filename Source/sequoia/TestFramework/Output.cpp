@@ -22,9 +22,6 @@
 #include <numeric>
 #include <sstream>
 
-#include <iostream>
-#include <print>
-
 #ifndef _MSC_VER
   #include <cxxabi.h>
 #endif
@@ -118,9 +115,8 @@ namespace sequoia::testing
             const auto val{std::strtold(start, &end)};
             if(const auto dist{std::ranges::distance(start, end)}; dist > 0)
             {
-              name.erase(pos, dist);
               const auto str{std::format("{:f}", val)};
-              name.insert(pos, str);
+              name.replace(pos, dist, str);
               pos += (str.size() - 1);
             }
           }
