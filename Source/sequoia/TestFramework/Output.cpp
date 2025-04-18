@@ -16,12 +16,11 @@
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
 #include <bit>
+#include <charconv>
 #include <cstdlib>
 #include <format>
 #include <numeric>
 #include <sstream>
-
-#include <iostream>
 
 #ifndef _MSC_VER
   #include <cxxabi.h>
@@ -116,9 +115,8 @@ namespace sequoia::testing
             const auto val{std::strtold(start, &end)};
             if(const auto dist{std::ranges::distance(start, end)}; dist > 0)
             {
-              name.erase(pos, dist);
               const auto str{std::format("{:f}", val)};
-              name.insert(pos, str);
+              name.replace(pos, dist, str);
               pos += (str.size() - 1);
             }
           }
@@ -134,6 +132,30 @@ namespace sequoia::testing
             }
           }
             
+        }
+      }
+      
+      return name;
+    }
+
+    std::string& process_spans(std::string& name)
+    {      
+      if(auto[start, end]{find_sandwiched_text(name, "::span<", ">")}; start != end)
+      {
+        start = name.find(',', start);
+        if(start < end - 1)
+        {
+          ++start;
+          if(name[start] == ' ') ++start;
+
+          auto startPtr{std::ranges::next(name.data(), start)}, endPtr{std::ranges::next(name.data(), end)};
+          std::size_t val{};
+          const auto[ptr, ec]{std::from_chars(startPtr, endPtr, val)};
+          if((ptr == endPtr) && (val == std::numeric_limits<std::size_t>::max()))
+          {
+            // Use the MSVC convention
+            name.replace(start, end-start, "-1");
+          }
         }
       }
       
@@ -325,6 +347,7 @@ namespace sequoia::testing
     replace_all(name, "::__fs::", "::");
     replace_all_recursive(name, ">>", "> >");
     process_literals(name);
+    process_spans(name);
 
     return tidy_name(name);
   }
@@ -336,6 +359,7 @@ namespace sequoia::testing
     replace_all(name, "__cxx11::", "");
     replace_all(name, "_V2::", "");
     process_literals(name);
+    process_spans(name);
 
     return tidy_name(name);
   }
