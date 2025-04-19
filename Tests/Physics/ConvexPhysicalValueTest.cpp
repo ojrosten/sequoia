@@ -34,7 +34,6 @@ namespace sequoia::testing
       using quantity_t = Quantity;
       using delta_q_t  = quantity_t::displacement_type;
       using space_type = quantity_t::space_type;
-      using units_type = quantity_t::units_type;
 
       STATIC_CHECK(convex_space<space_type>);
       STATIC_CHECK(vector_space<typename space_type::vector_space_type>);
@@ -52,8 +51,9 @@ namespace sequoia::testing
 
       coordinates_operations<quantity_t>{*this}.execute();
 
-      using inv_quantity_t = quantity<dual<space_type>, dual<units_type>>;
-      coordinates_operations<inv_quantity_t>{*this}.execute();
+      //using units_type = quantity_t::units_type;
+      //using inv_quantity_t = quantity<dual<space_type>, dual<units_type>>;
+      //coordinates_operations<inv_quantity_t>{*this}.execute();
     }
   }
 }

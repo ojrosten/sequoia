@@ -42,7 +42,7 @@ namespace sequoia::physics
   template<class T>
   struct reduction;
 }
-    
+
 namespace sequoia::meta
 {
   template<class T, class U>

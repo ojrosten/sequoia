@@ -11,13 +11,45 @@
 
 #include "sequoia/Physics/PhysicalValuesDetails.hpp"
 
+namespace sequoia::physics
+{
+  template<physical_unit T>
+  struct is_invertible_unit : std::false_type {};
+
+  template<physical_unit T>
+    requires   std::is_same_v<typename T::validator_type, std::identity>
+            || std::is_same_v<typename T::validator_type, maths::half_line_validator>
+  struct is_invertible_unit<T> : std::true_type
+  {};
+
+  template<physical_unit T>
+  using is_invertible_unit_t = is_invertible_unit<T>::type;
+
+  template<physical_unit T>
+  inline constexpr bool is_invertible_unit_v{is_invertible_unit<T>::value};
+}
+
 namespace sequoia::maths
 {
   template<physics::physical_unit T>
+    requires physics::is_invertible_unit_v<T>
   struct dual<T>
   {
-    // TO DO: this doesn't hold for all validators!
     using validator_type = T::validator_type;
+  };
+
+  /*! \brief Specialization for units, such as degrees Celsius, for which
+             the corresponding quantity cannot be inverted.
+
+      It is assumed, in this case, that the dual is obtained via the
+      displacement space and that the latter has the identity validator.
+
+   */
+  template<physics::physical_unit T>
+    requires (!physics::is_invertible_unit_v<T>)
+  struct dual<T>
+  {
+    using validator_type = std::identity;
   };
 }
 
@@ -219,8 +251,15 @@ namespace sequoia::physics
     !affine_space<ValueSpace> || std::is_same_v<Validator, std::identity>
   };
 
+  template<convex_space ValueSpace, physical_unit Unit>
+  inline constexpr bool has_consistent_unit{
+    !is_dual_v<Unit> || vector_space<ValueSpace> || (!affine_space<ValueSpace> && is_invertible_unit_v<dual_of_t<Unit>>)
+  };
+  
   template<convex_space ValueSpace, physical_unit Unit, class Origin, validator_for<ValueSpace> Validator>
-    requires has_consistent_validator<ValueSpace, Validator> && has_consistent_origin<ValueSpace, Unit, Origin>
+    requires    has_consistent_unit<ValueSpace, Unit>
+             && has_consistent_validator<ValueSpace, Validator>
+             && has_consistent_origin<ValueSpace, Unit, Origin>
   class physical_value;
 
   template<physical_unit Unit>
@@ -339,7 +378,7 @@ namespace sequoia::physics
     requires    std::is_same_v<euclidean_vector_space<1, space_field_type<LHSValueSpace>>, LHSValueSpace>
              || std::is_same_v<euclidean_half_space<1, space_field_type<LHSValueSpace>>, LHSValueSpace>
   struct physical_value_product<physical_value<LHSValueSpace, LHSUnit, intrinsic_origin, LHSValidator>,
-                          physical_value<RHSValueSpace, RHSUnit, intrinsic_origin, RHSValidator>>
+                                physical_value<RHSValueSpace, RHSUnit, intrinsic_origin, RHSValidator>>
   {
     using type = physical_value<to_base_space_t<RHSValueSpace>, RHSUnit, intrinsic_origin, reduced_validator_t<LHSValidator, RHSValidator>>;
   };
@@ -351,7 +390,7 @@ namespace sequoia::physics
     requires    std::is_same_v<euclidean_vector_space<1, space_field_type<RHSValueSpace>>, RHSValueSpace>
              || std::is_same_v<euclidean_half_space<1, space_field_type<RHSValueSpace>>, RHSValueSpace>
   struct physical_value_product<physical_value<LHSValueSpace, LHSUnit, intrinsic_origin, LHSValidator>,
-                          physical_value<RHSValueSpace, RHSUnit, intrinsic_origin, RHSValidator>>
+                                physical_value<RHSValueSpace, RHSUnit, intrinsic_origin, RHSValidator>>
   {
     using type = physical_value<to_base_space_t<LHSValueSpace>, LHSUnit, intrinsic_origin, reduced_validator_t<LHSValidator, RHSValidator>>;
   };
@@ -362,7 +401,9 @@ namespace sequoia::physics
     class Origin=to_origin_type_t<ValueSpace, Unit>,
     validator_for<ValueSpace> Validator=typename Unit::validator_type
   >
-    requires has_consistent_validator<ValueSpace, Validator> && has_consistent_origin<ValueSpace, Unit, Origin>
+    requires    has_consistent_unit<ValueSpace, Unit>
+             && has_consistent_validator<ValueSpace, Validator>
+             && has_consistent_origin<ValueSpace, Unit, Origin>
   class physical_value : public to_coordinates_base_type<ValueSpace, Unit, Origin, Validator>
   {
   public:
