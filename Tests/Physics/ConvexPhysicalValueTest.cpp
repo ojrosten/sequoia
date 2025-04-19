@@ -51,9 +51,8 @@ namespace sequoia::testing
 
       coordinates_operations<quantity_t>{*this}.execute();
 
-      //using units_type = quantity_t::units_type;
-      //using inv_quantity_t = quantity<dual<space_type>, dual<units_type>>;
-      //coordinates_operations<inv_quantity_t>{*this}.execute();
+      using units_type = quantity_t::units_type;
+      STATIC_CHECK(!defines_physical_value_v<dual<space_type>, dual<units_type>, to_origin_type_t<dual<space_type>, dual<units_type>>, typename dual<units_type>::validator_type>);
     }
   }
 }

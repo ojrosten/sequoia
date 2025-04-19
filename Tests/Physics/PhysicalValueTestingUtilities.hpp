@@ -48,4 +48,11 @@ namespace sequoia::testing
       check(equivalence, "Wrapped Values", logger, actual.values(), prediction);
     }
   };
+
+  template<maths::convex_space ValueSpace, physics::physical_unit Unit, class Origin, maths::validator_for<ValueSpace> Validator>
+  inline constexpr bool defines_physical_value_v{
+    requires {
+      typename physics::physical_value<ValueSpace, Unit, Origin, Validator>;
+    }
+  };
 }

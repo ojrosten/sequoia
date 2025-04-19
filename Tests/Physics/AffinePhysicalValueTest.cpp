@@ -12,7 +12,7 @@
 #include "../Maths/Geometry/GeometryTestingUtilities.hpp"
 
 namespace sequoia::testing
-{ 
+{
   using namespace physics;
 
   [[nodiscard]]
@@ -54,9 +54,8 @@ namespace sequoia::testing
 
     coordinates_operations<quantity_t>{*this}.execute();
 
-    //using units_type  = quantity_t::units_type;
-    //using origin_type = quantity_t::origin_type;
-    //using inv_quantity_t = physical_value<dual<space_type>, dual<units_type>, dual<origin_type>, std::identity>;
-    //coordinates_operations<inv_quantity_t>{*this}.execute();
+    using units_type  = quantity_t::units_type;
+    using origin_type = quantity_t::origin_type;
+    STATIC_CHECK(!defines_physical_value_v<dual<space_type>, dual<units_type>, dual<origin_type>, std::identity>);
   }
 }

@@ -1,2 +1,2 @@
 Convex Physical Value Test
-Standard Top Level Checks:                70;  Failures:  0  [Deep checks: 714]
+Standard Top Level Checks:                72;  Failures:  0  [Deep checks: 716]
