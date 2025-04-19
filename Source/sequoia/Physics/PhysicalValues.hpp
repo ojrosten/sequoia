@@ -507,21 +507,18 @@ namespace sequoia::physics
     struct masses
     {
       using arena_type = Arena;
-      using base_space = masses;
     };
 
     template<class Arena>
     struct temperatures
     {
       using arena_type = Arena;
-      using base_space = temperatures;
     };
 
     template<class Arena>
     struct electrical_currents
     {
       using arena_type = Arena;
-      using base_space = electrical_currents;
     };
 
     template<class Arena>
@@ -534,7 +531,6 @@ namespace sequoia::physics
     struct time_intervals
     {
       using arena_type = Arena;
-      using base_space = time_intervals;
     };
 
     template<class Arena>
@@ -547,7 +543,6 @@ namespace sequoia::physics
     struct lengths
     {
       using arena_type = Arena;
-      using base_space = lengths;
     };
 
     template<class Arena>
