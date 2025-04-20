@@ -723,6 +723,12 @@ namespace sequoia::physics
   
   struct implicit_common_arena {};
 
+  template<physical_unit U>
+  inline constexpr bool has_symbol_v{
+    requires {
+      { U::symbol } -> std::convertible_to<std::string_view>; }
+  };
+
   namespace si
   {
     namespace units
@@ -730,36 +736,43 @@ namespace sequoia::physics
       struct ampere_t
       {
         using validator_type = std::identity;
+        constexpr static std::string_view symbol{"A"};
       };
     
       struct kilogram_t
       {
         using validator_type = half_line_validator;
+        constexpr static std::string_view symbol{"kg"};
       };
 
       struct metre_t
       {
         using validator_type = half_line_validator;
+        constexpr static std::string_view symbol{"m"};
       };
 
       struct second_t
       {
         using validator_type = half_line_validator;
+        constexpr static std::string_view symbol{"s"};
       };
 
       struct kelvin_t
       {
         using validator_type = half_line_validator;
+        constexpr static std::string_view symbol{"K"};
       };
 
       struct coulomb_t
       {
         using validator_type = std::identity;
+        constexpr static std::string_view symbol{"C"};
       };
 
       struct radian_t
       {
         using validator_type = std::identity;
+        constexpr static std::string_view symbol{"rad"};
       };
 
 
@@ -778,6 +791,7 @@ namespace sequoia::physics
         };
 
         using validator_type = validator;
+        constexpr static std::string_view symbol{"degC"};
       };
 
       inline constexpr ampere_t   ampere{};
@@ -888,5 +902,27 @@ namespace sequoia::physics
     validator_for<ValueSpace> Validator=typename Unit::validator_type
   >
     requires has_consistent_validator<ValueSpace, Validator>
-  using quantity =  physical_value<ValueSpace, Unit, right_handed_type, to_origin_type_t<ValueSpace, Unit>, Validator>;
+  using quantity = physical_value<ValueSpace, Unit, right_handed_type, to_origin_type_t<ValueSpace, Unit>, Validator>;
 }
+
+template<
+  sequoia::maths::convex_space ValueSpace,
+  sequoia::physics::physical_unit Unit,
+  sequoia::maths::validator_for<ValueSpace> Validator
+>
+struct std::formatter<sequoia::physics::quantity<ValueSpace, Unit, Validator>>
+{
+  constexpr auto parse(auto& ctx)
+  {
+    return ctx.begin();
+  }
+
+  auto format(const sequoia::physics::quantity<ValueSpace, Unit, Validator>& q, auto& ctx) const
+  {
+    if constexpr(sequoia::physics::has_symbol_v<Unit>)
+      return std::format_to(ctx.out(), "{} {}", q.value(), Unit::symbol);
+    else
+      return std::format_to(ctx.out(), "{}", q.value());
+  }
+};
+

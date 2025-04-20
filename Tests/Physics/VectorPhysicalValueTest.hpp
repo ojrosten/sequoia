@@ -30,16 +30,14 @@ namespace sequoia::testing
     void test_trig();
   };
 
-  // TO DO: consider necessity of this; it's only used by the
-  // check of asin within_tolerance; perhaps the latter could
-  // be worked to delegate to test(equality...)
+  // TO DO: sequoia serialization needs to be updated to take account of std::format
   template<class HostSystem, std::floating_point T>
   struct serializer<physics::quantity<physics::angular_space<T, HostSystem>, physics::si::units::radian_t>>
   {
     [[nodiscard]]
     static std::string make(physics::quantity<physics::angular_space<T, HostSystem>, physics::si::units::radian_t> theta)
     {
-      return std::format("{}", theta.value());
+      return std::format("{}", theta);
     }
   };
 }
