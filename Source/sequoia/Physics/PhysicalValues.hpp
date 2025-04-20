@@ -41,15 +41,15 @@ namespace sequoia::maths
   /*! \brief Specialization for units, such as degrees Celsius, for which
              the corresponding quantity cannot be inverted.
 
-      It is assumed, in this case, that the dual is obtained via the
-      displacement space and that the latter has the identity validator.
-
+             Note, though, that inverse units of this type can appear in
+             displacements, where the validator is overridden, assumed to
+             be std::identity
    */
   template<physics::physical_unit T>
     requires (!physics::is_invertible_unit_v<T>)
   struct dual<T>
   {
-    using validator_type = std::identity;
+    using validator_type = void;
   };
 }
 

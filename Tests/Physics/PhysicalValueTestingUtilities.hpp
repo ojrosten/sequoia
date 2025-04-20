@@ -49,7 +49,7 @@ namespace sequoia::testing
     }
   };
 
-  template<maths::convex_space ValueSpace, physics::physical_unit Unit, class Origin, maths::validator_for<ValueSpace> Validator>
+  template<maths::convex_space ValueSpace, class Unit, class Origin, class Validator>
   inline constexpr bool defines_physical_value_v{
     requires {
       typename physics::physical_value<ValueSpace, Unit, Origin, Validator>;
