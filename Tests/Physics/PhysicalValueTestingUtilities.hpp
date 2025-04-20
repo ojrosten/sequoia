@@ -14,10 +14,10 @@
 
 namespace sequoia::testing
 {
-  template<maths::convex_space PhysicalValueSpace, physics::physical_unit Unit, class Origin, class Validator>
-  struct value_tester<physics::physical_value<PhysicalValueSpace, Unit, Origin, Validator>>
+  template<maths::convex_space PhysicalValueSpace, physics::physical_unit Unit, class Convention, class Origin, class Validator>
+  struct value_tester<physics::physical_value<PhysicalValueSpace, Unit, Convention, Origin, Validator>>
   {
-    using type       = physics::physical_value<PhysicalValueSpace, Unit, Origin, Validator>;
+    using type       = physics::physical_value<PhysicalValueSpace, Unit, Convention, Origin, Validator>;
     using value_type = type::value_type;
     constexpr static auto dimension{type::dimension};
 
@@ -49,10 +49,10 @@ namespace sequoia::testing
     }
   };
 
-  template<maths::convex_space ValueSpace, class Unit, class Origin, class Validator>
+  template<maths::convex_space ValueSpace, class Unit, class Convention, class Origin, class Validator>
   inline constexpr bool defines_physical_value_v{
     requires {
-      typename physics::physical_value<ValueSpace, Unit, Origin, Validator>;
+      typename physics::physical_value<ValueSpace, Unit, Convention, Origin, Validator>;
     }
   };
 }

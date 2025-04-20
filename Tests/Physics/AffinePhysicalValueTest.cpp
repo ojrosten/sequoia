@@ -56,6 +56,6 @@ namespace sequoia::testing
 
     using units_type  = quantity_t::units_type;
     using origin_type = quantity_t::origin_type;
-    STATIC_CHECK(!defines_physical_value_v<dual<space_type>, dual<units_type>, dual<origin_type>, std::identity>);
+    STATIC_CHECK(!defines_physical_value_v<dual<space_type>, dual<units_type>, right_handed_type, dual<origin_type>, std::identity>);
   }
 }
