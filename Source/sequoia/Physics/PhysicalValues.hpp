@@ -200,8 +200,7 @@ namespace sequoia::physics
     using type = reduction<direct_product<std::tuple<Ts...>>>;
   };
 
-  struct right_handed_type{};
-  struct left_handed_type{};
+  struct canonical_type{};
 
   template<vector_space VectorSpace, class Unit, std::floating_point T, class Convention>
   struct physical_value_displacement_basis
@@ -419,7 +418,7 @@ namespace sequoia::physics
   template<
     convex_space ValueSpace,
     physical_unit Unit,
-    class Convention                    = right_handed_type,
+    class Convention                    = canonical_type,
     class Origin                        = to_origin_type_t<ValueSpace, Unit>,
     validator_for<ValueSpace> Validator =typename Unit::validator_type
   >
@@ -834,13 +833,13 @@ namespace sequoia::physics
       class Arena=implicit_common_arena,
       class Origin=implicit_affine_origin<time_space<T, Arena>>
     >
-    using time = physical_value<time_space<T, Arena>, units::second_t, right_handed_type, Origin, std::identity>;
+    using time = physical_value<time_space<T, Arena>, units::second_t, canonical_type, Origin, std::identity>;
 
     template<
       std::size_t D,
       std::floating_point T,
       class Arena      = implicit_common_arena,      
-      class Convention = right_handed_type,
+      class Convention = canonical_type,
       class Origin     = implicit_affine_origin<position_space<D, T, Arena>>
     >
     using position = physical_value<position_space<D, T, Arena>, units::metre_t, Convention, Origin, std::identity>;
@@ -902,7 +901,7 @@ namespace sequoia::physics
     validator_for<ValueSpace> Validator=typename Unit::validator_type
   >
     requires has_consistent_validator<ValueSpace, Validator>
-  using quantity = physical_value<ValueSpace, Unit, right_handed_type, to_origin_type_t<ValueSpace, Unit>, Validator>;
+  using quantity = physical_value<ValueSpace, Unit, canonical_type, to_origin_type_t<ValueSpace, Unit>, Validator>;
 }
 
 template<
