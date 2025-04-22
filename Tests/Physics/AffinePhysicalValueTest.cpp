@@ -15,6 +15,13 @@ namespace sequoia::testing
 {
   using namespace physics;
 
+  namespace
+  {
+    struct y_down_convention : canonical_convention {};
+    struct bruce_arena{};
+    struct alice {};
+  }
+
   [[nodiscard]]
   std::filesystem::path affine_physical_value_test::source_file() const
   {
@@ -27,6 +34,7 @@ namespace sequoia::testing
     test_affine_quantity<si::time<double>>();
     test_affine_quantity<si::position<1, float>>();
     test_affine_quantity<si::position<2, float>>();
+    test_affine_quantity<si::position<2, float, bruce_arena, y_down_convention, alice>>();
   }
 
   template<class Quantity>
