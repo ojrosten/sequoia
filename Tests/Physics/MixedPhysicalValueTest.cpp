@@ -16,6 +16,11 @@ namespace sequoia::testing
   using namespace physics;
   using namespace si::units;
 
+  namespace
+  {
+    struct y_down_convention : canonical_convention {};
+  }
+
   [[nodiscard]]
   std::filesystem::path mixed_physical_value_test::source_file() const
   {
@@ -25,7 +30,8 @@ namespace sequoia::testing
   void mixed_physical_value_test::run_tests()
   {
     test_mixed();
-    test_mixed_vector();
+    test_mixed_vector<canonical_convention>();
+    test_mixed_vector<y_down_convention>();
     test_mixed_kinds();
   }
 
@@ -68,9 +74,10 @@ namespace sequoia::testing
     check(equality, "", mass_t{2.0, kilogram} * length_t{3.0, metre} / d_mass_t{-2.0, kilogram}, unsafe_len_t{-3.0, metre});
   }
 
+  template<class Convention>
   void mixed_physical_value_test::test_mixed_vector()
   {
-    using pos_t  = si::position<2, float>;
+    using pos_t  = si::position<2, float, implicit_common_arena, Convention>;
     using temporal_t = si::time<float>;
 
     check(equivalence,
