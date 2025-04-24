@@ -200,9 +200,32 @@ namespace sequoia::physics
     using type = reduction<direct_product<std::tuple<Ts...>>>;
   };
 
-  struct canonical_convention {};
-  struct canonical_2d_convention : canonical_convention {};
-  struct right_handed_convention : canonical_convention {};
+  template<std::size_t D>
+  struct canonical_convention;
+
+  template<>
+  struct canonical_convention<1>
+  {
+    constexpr static std::size_t dimension{1};
+  };
+
+  template<std::size_t D>
+    requires (D > 1)
+  struct canonical_convention<D> : canonical_convention<1>
+  {
+    constexpr static std::size_t dimension{D};
+  };
+
+  struct y_down_convention : canonical_convention<1>
+  {
+    constexpr static std::size_t dimension{2};
+  };
+
+  struct left_handed_convention : canonical_convention<1>
+  {
+    constexpr static std::size_t dimension{3};
+  };
+  
 
   template<vector_space VectorSpace, class Unit, std::floating_point T, class Convention>
   struct physical_value_displacement_basis
@@ -419,7 +442,7 @@ namespace sequoia::physics
   template<
     convex_space ValueSpace,
     physical_unit Unit,
-    class Convention                    = canonical_convention,
+    class Convention                    = canonical_convention<ValueSpace::vector_space_type::dimension>,
     class Origin                        = to_origin_type_t<ValueSpace, Unit>,
     validator_for<ValueSpace> Validator =typename Unit::validator_type
   >
@@ -848,13 +871,13 @@ namespace sequoia::physics
       class Arena=implicit_common_arena,
       class Origin=implicit_affine_origin<time_space<T, Arena>>
     >
-    using time = physical_value<time_space<T, Arena>, units::second_t, canonical_convention, Origin, std::identity>;
+    using time = physical_value<time_space<T, Arena>, units::second_t, canonical_convention<1>, Origin, std::identity>;
 
     template<
       std::size_t D,
       std::floating_point T,
       class Arena      = implicit_common_arena,      
-      class Convention = canonical_convention,
+      class Convention = canonical_convention<D>,
       class Origin     = implicit_affine_origin<position_space<D, T, Arena>>
     >
     using position = physical_value<position_space<D, T, Arena>, units::metre_t, Convention, Origin, std::identity>;
@@ -916,7 +939,7 @@ namespace sequoia::physics
     validator_for<ValueSpace> Validator=typename Unit::validator_type
   >
     requires has_consistent_validator<ValueSpace, Validator>
-  using quantity = physical_value<ValueSpace, Unit, canonical_convention, to_origin_type_t<ValueSpace, Unit>, Validator>;
+  using quantity = physical_value<ValueSpace, Unit, canonical_convention<1>, to_origin_type_t<ValueSpace, Unit>, Validator>;
 }
 
 template<

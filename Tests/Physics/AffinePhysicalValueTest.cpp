@@ -17,8 +17,7 @@ namespace sequoia::testing
 
   namespace
   {
-    struct y_down_convention : canonical_convention {};
-    struct bruce_arena{};
+    struct tina_arena{};
     struct alice {};
   }
 
@@ -34,7 +33,7 @@ namespace sequoia::testing
     test_affine_quantity<si::time<double>>();
     test_affine_quantity<si::position<1, float>>();
     test_affine_quantity<si::position<2, float>>();
-    test_affine_quantity<si::position<2, float, bruce_arena, y_down_convention, alice>>();
+    test_affine_quantity<si::position<2, float, tina_arena, y_down_convention, alice>>();
   }
 
   template<class Quantity>
@@ -43,6 +42,7 @@ namespace sequoia::testing
     using quantity_t  = Quantity;
     using delta_q_t   = quantity_t::displacement_type;
     using space_type  = quantity_t::space_type;
+    constexpr std::size_t D{quantity_t::D};
 
     STATIC_CHECK(affine_space<space_type>);
     STATIC_CHECK(vector_space<typename space_type::vector_space_type>);
@@ -64,6 +64,6 @@ namespace sequoia::testing
 
     using units_type  = quantity_t::units_type;
     using origin_type = quantity_t::origin_type;
-    STATIC_CHECK(!defines_physical_value_v<dual<space_type>, dual<units_type>, canonical_convention, dual<origin_type>, std::identity>);
+    STATIC_CHECK(!defines_physical_value_v<dual<space_type>, dual<units_type>, canonical_convention<D>, dual<origin_type>, std::identity>);
   }
 }

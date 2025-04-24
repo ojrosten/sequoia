@@ -16,11 +16,6 @@ namespace sequoia::testing
   using namespace physics;
   using namespace si::units;
 
-  namespace
-  {
-    struct y_down_convention : canonical_convention {};
-  }
-
   [[nodiscard]]
   std::filesystem::path mixed_physical_value_test::source_file() const
   {
@@ -30,7 +25,7 @@ namespace sequoia::testing
   void mixed_physical_value_test::run_tests()
   {
     test_mixed();
-    test_mixed_vector<canonical_convention>();
+    test_mixed_vector<canonical_convention<2>>();
     test_mixed_vector<y_down_convention>();
     test_mixed_kinds();
   }
