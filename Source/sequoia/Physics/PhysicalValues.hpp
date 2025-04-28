@@ -449,7 +449,7 @@ namespace sequoia::physics
     requires    has_consistent_unit<ValueSpace, Unit>
              && has_consistent_validator<ValueSpace, Validator>
              && has_consistent_origin<ValueSpace, Unit, Origin>
-  class physical_value : public to_coordinates_base_type<ValueSpace, Unit, Convention, Origin, Validator>
+  class physical_value final : public to_coordinates_base_type<ValueSpace, Unit, Convention, Origin, Validator>
   {
   public:
     using coordinates_type         = to_coordinates_base_type<ValueSpace, Unit, Convention, Origin, Validator>;
