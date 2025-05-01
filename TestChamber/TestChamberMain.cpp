@@ -24,6 +24,11 @@ int main(int argc, char** argv)
                        "  ",
                        {.main_cpp{"TestChamber/TestChamberMain.cpp"}, .common_includes{"TestCommon/TestIncludes.hpp"}}};
 
+    runner.add_test_suite(
+      "Experimental",
+      experimental_test{"Unit Test"}
+    );
+    
     runner.execute(timer_resolution{1ms});
   }
   catch(const std::exception& e)

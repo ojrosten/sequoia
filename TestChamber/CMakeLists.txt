@@ -11,6 +11,6 @@ add_executable(TestChamber TestChamberMain.cpp)
 
 set(TestDir ${CMAKE_CURRENT_LIST_DIR}/../Tests)
 
- #target_sources(TestChamber PRIVATE)
+target_sources(TestChamber PRIVATE ${TestDir}/Experimental/ExperimentalTest.cpp)
 
 sequoia_finalize_self(TestChamber ${TestDir}/Experimental Experimental)
