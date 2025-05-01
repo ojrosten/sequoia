@@ -18,6 +18,8 @@
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
 #include <algorithm>
+#include <numeric>
+#include <ranges>
 
 namespace sequoia::testing
 {
@@ -26,15 +28,37 @@ namespace sequoia::testing
   namespace
   {
     [[nodiscard]]
-    std::vector<main_paths> make_ancillary_info(const fs::path& root, const fs::path& commonIncludes, const project_paths::initializer& initializer)
+    std::vector<main_paths> make_ancillary_info(const fs::path& root, const fs::path& commonIncludes, const project_paths::customizer& customization)
     {
-      std::vector<main_paths> ancillaryInfo;
+      return std::views::transform(
+               customization.ancillary_main_cpps,
+               [&root,&commonIncludes](const fs::path& relPath) { return main_paths{root / relPath, commonIncludes}; }
+             ) | std::ranges::to<std::vector>();
+    }
 
-      std::ranges::transform(initializer.ancillaryMainCpps,
-                             std::back_inserter(ancillaryInfo),
-                             [&root,&commonIncludes](const fs::path& relPath) { return main_paths{root / relPath, commonIncludes}; });
+    [[nodiscard]]
+    std::optional<fs::path> get_cmake_cache(const fs::path& executableDir)
+    {
+      if(executableDir.empty()) return {};
 
-      return ancillaryInfo;
+      using opt_path = std::optional<fs::path>;
+
+      auto get{
+        [](const fs::path& dir) -> opt_path {
+          auto entries{fs::directory_iterator{dir}};
+          auto found{std::ranges::find(entries, "CMakeCache.txt", [](const auto& entry){ return entry.path().filename(); })};
+          return found != fs::directory_iterator{} ? opt_path{*found} : std::nullopt;
+        }
+      };
+
+      opt_path cacheFile{get(executableDir)};
+      if(!cacheFile)
+      {
+        // Try one level back, mainly for MSVC
+        cacheFile = get(executableDir.parent_path());
+      }
+
+      return cacheFile;
     }
   }
 
@@ -42,9 +66,10 @@ namespace sequoia::testing
     : discoverable_paths{make(argc, argv)}
   {}
 
-  discoverable_paths::discoverable_paths(fs::path rt, fs::path ex)
+  discoverable_paths::discoverable_paths(std::filesystem::path rt, std::filesystem::path exec, std::optional<std::filesystem::path> cmakeCache)
     : m_Root{std::move(rt)}
-    , m_Executable{std::move(ex)}
+    , m_Executable{std::move(exec)}
+    , m_CMakeCache{std::move(cmakeCache)}
   {}
 
   [[nodiscard]]
@@ -54,18 +79,14 @@ namespace sequoia::testing
     {
       if(std::string_view zeroth{argv[0]}; !zeroth.empty())
       {
-        if(const auto exectable{fs::canonical(fs::path(zeroth))}; !exectable.empty())
+        if(const auto exec{fs::canonical(fs::path(zeroth))}; !exec.empty())
         {
-          auto trialRoot{exectable};
-          while((std::ranges::distance(trialRoot) > 1))
+          auto found{std::ranges::find(exec, fs::path{"build"})};
+          if((found != exec.begin()) && (std::ranges::distance(found, exec.end()) > 1))
           {
-            const auto last{back(trialRoot)};
-            const auto parent{trialRoot.parent_path()};
-
-            if(trialRoot == parent) break;
-
-            trialRoot = parent;
-            if(last == "build") return {trialRoot, exectable};
+            return {std::accumulate(exec.begin(), found, fs::path{}, [](const fs::path& lhs, const fs::path& rhs){ return lhs / rhs; }),
+                    exec,
+                    get_cmake_cache(exec.parent_path())};
           }
         }
 
@@ -108,21 +129,15 @@ namespace sequoia::testing
 
   //===================================== source_paths =====================================//
 
-  source_paths::source_paths(const fs::path& projectRoot)
+  source_paths::source_paths(const fs::path& projectRoot, const std::optional<fs::path>& folderName)
     : m_Repo{repo(projectRoot)}
-    , m_Project{repo() / uncapitalize(back(projectRoot).generic_string())}
+    , m_Project{folderName ? repo() / rebase_from(folderName.value(), repo()) : repo() / uncapitalize(back(projectRoot).generic_string())}
   {}
 
   [[nodiscard]]
   fs::path source_paths::cmake_lists() const
   {
-    return repo() / "CMakeLists.txt";
-  }
-
-  [[nodiscard]]
-  fs::path source_paths::cmake_lists(std::filesystem::path projectRoot)
-  {
-    return repo(projectRoot) /= "CMakeLists.txt";
+    return m_Project / "CMakeLists.txt";
   }
 
   [[nodiscard]]
@@ -146,6 +161,24 @@ namespace sequoia::testing
     return m_Repo.parent_path();
   }
 
+  //===================================== tests_paths =====================================//
+
+  dependencies_paths::dependencies_paths(fs::path projectRoot)
+    : m_Repo{std::move(projectRoot /= "dependencies")}
+  {}
+
+  [[nodiscard]]
+  std::filesystem::path dependencies_paths::project_root() const
+  {
+    return m_Repo.parent_path();
+  }
+
+  [[nodiscard]]
+  std::filesystem::path dependencies_paths::sequoia_root() const
+  {
+    return m_Repo / "sequoia";
+  }
+
   //===================================== test_materials_paths =====================================//
 
   test_materials_paths::test_materials_paths(fs::path projectRoot)
@@ -160,31 +193,11 @@ namespace sequoia::testing
 
   //===================================== build_paths =====================================//
 
-  build_paths::build_paths(fs::path projectRoot, const main_paths& main)
+  build_paths::build_paths(fs::path projectRoot, const std::filesystem::path& executableDir, std::optional<fs::path> cmakeCache)
     : m_Dir{std::move(projectRoot /= "build")}
-    , m_CMadeBuildDir{cmade_dir(main)}
+    , m_ExecutableDir{executableDir}
+    , m_CMakeCache{std::move(cmakeCache)}
   {}
-
-  [[nodiscard]]
-  fs::path build_paths::cmade_dir(const main_paths& main)
-  {
-    auto compilerDir{
-      []() -> std::string {
-        if      constexpr(with_msvc_v)  return "win";
-        else if constexpr(with_clang_v) return "clang";
-        else if constexpr(with_gcc_v)   return "gcc";
-        else                            throw std::runtime_error{"Compiler not supported"};
-      }
-    };
-
-    return (dir() / "CMade").append(compilerDir()) /= fs::relative(main.dir(), dir().parent_path());
-  }
-
-  [[nodiscard]]
-  fs::path build_paths::cmake_cache() const
-  {
-    return cmade_dir() / "CMakeCache.txt";
-  }
 
   //===================================== auxiliary_paths =====================================//
 
@@ -196,25 +209,26 @@ namespace sequoia::testing
   {}
 
   [[nodiscard]]
-  fs::path auxiliary_paths::repo(fs::path projectRoot)
+  fs::path auxiliary_paths::repo(const fs::path& projectRoot)
   {
-    return projectRoot /= "aux_files";
+    const auto trialPath{projectRoot / "aux_files"};
+    return fs::exists(trialPath) ? trialPath : dependencies_paths{projectRoot}.sequoia_root() / "aux_files";
   }
 
   [[nodiscard]]
-  fs::path auxiliary_paths::test_templates(fs::path projectRoot)
+  fs::path auxiliary_paths::test_templates(const fs::path& projectRoot)
   {
     return repo(projectRoot) /= "TestTemplates";
   }
 
   [[nodiscard]]
-  fs::path auxiliary_paths::source_templates(fs::path projectRoot)
+  fs::path auxiliary_paths::source_templates(const fs::path& projectRoot)
   {
     return repo(projectRoot) /= "SourceTemplates";
   }
 
   [[nodiscard]]
-  fs::path auxiliary_paths::project_template(fs::path projectRoot)
+  fs::path auxiliary_paths::project_template(const fs::path& projectRoot)
   {
     return repo(projectRoot) /= "ProjectTemplate";
   }
@@ -350,17 +364,21 @@ namespace sequoia::testing
 
   //===================================== project_paths =====================================//
 
-  project_paths::project_paths(int argc, char** argv, const initializer& pathsFromRoot)
+  project_paths::project_paths(int argc, char** argv, const customizer& customization)
     : m_Discovered{argc, argv}
-    , m_Main{project_root() / pathsFromRoot.mainCpp, project_root() / pathsFromRoot.commonIncludes}
-    , m_Source{project_root()}
-    , m_Build{project_root(), main()}
+    , m_Main{project_root() / rebase_from(customization.main_cpp, project_root()), project_root() / rebase_from(customization.common_includes, project_root())}
+    , m_Source{project_root(), customization.source_folder}
+    , m_Build{project_root(), m_Discovered.executable().parent_path(), m_Discovered.cmake_cache()}
     , m_Auxiliary{project_root()}
     , m_Output{project_root()}
+    , m_Dependencies{project_root()}
     , m_Tests{project_root()}
     , m_Materials{project_root()}
     , m_BuildSystem{project_root()}
-    , m_AncillaryMainCpps{make_ancillary_info(project_root(), main().common_includes(), pathsFromRoot)}
+    , m_AncillaryMainCpps{make_ancillary_info(project_root(), main().common_includes(), customization)}
+    , m_AdditionalDependencyAnalysisPaths{
+        std::views::transform(customization.additional_dependency_analysis_paths, [root{project_root()}](const fs::path& p){ return root / rebase_from(p, root); }) | std::ranges::to<std::vector>()
+    }
   {
     throw_unless_directory(project_root(), "\nRepository root not found");
     throw_unless_regular_file(main().file(), "\nTry ensuring that the application is run from the appropriate directory");
@@ -370,6 +388,6 @@ namespace sequoia::testing
   [[nodiscard]]
   prune_paths project_paths::prune() const
   {
-    return output().prune(build().dir(), build().cmade_dir());
+    return output().prune(build().dir(), build().executable_dir());
   }
 }

@@ -1,0 +1,2 @@
+Partitioned Sequence Allocation Test
+Standard Top Level Checks:                32;  Failures:  0  [Deep checks: 2716]

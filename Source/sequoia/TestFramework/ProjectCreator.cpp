@@ -10,7 +10,7 @@
  */
 
 #include "sequoia/TestFramework/ProjectCreator.hpp"
-#include "sequoia/TestFramework/ProjectPaths.hpp"
+#include "sequoia/TestFramework/FileSystemUtilities.hpp"
 #include "sequoia/TestFramework/TestRunnerUtilities.hpp"
 
 #include "sequoia/FileSystem/FileSystem.hpp"
@@ -47,9 +47,68 @@ namespace sequoia::testing
     {
       if(projRoot.empty()) return;
 
-      const auto name{(--projRoot.end())->generic_string()};
-      const std::string myProj{"MyProject"}, projName{replace_all(name, " ", "_")};
-      replace_all(text, myProj, projName);
+      const auto name{back(projRoot).generic_string()};
+      const std::string projName{replace_all(name, " ", "_")};
+      replace_all(text, "MyProject", projName);
+      replace_all(text, "myProject", uncapitalize(projName));
+    }
+
+    void copy_sequoia_subdir(std::ostream& stream, const fs::path& target, const fs::directory_entry& dir)
+    {
+      const auto entryName{back(dir.path())};
+      std::error_code ec{};
+      fs::copy(dir, target / entryName, fs::copy_options::recursive, ec);
+      if(ec)
+        stream << ec.message() << '\n';
+    }
+
+    void copy_sequoia_output(std::ostream& stream, const project_paths& parentProjectPaths, const output_paths& output, const fs::directory_entry& dir)
+    {
+      if(!fs::exists(output.dir()))
+        fs::create_directory(output.dir());
+
+      for(auto& entry : fs::directory_iterator{dir})
+      {
+        if(fs::is_directory(entry))
+        {
+          if((entry.path() == parentProjectPaths.output().diagnostics()) || (entry.path() == parentProjectPaths.output().test_summaries()))
+          {
+            copy_sequoia_subdir(stream, output.dir(), entry);
+          }
+        }
+      }
+    }
+
+    void copy_sequoia(std::ostream& stream, const project_paths& parentProjectPaths, const project_data& data)
+    {
+      const std::filesystem::path seqLocation{dependencies_paths{data.project_root}.sequoia_root()};
+      const auto parentSequoiaRoot{
+          [&parentProjectPaths](){
+            const auto sequoiaAsDependency{parentProjectPaths.dependencies().sequoia_root()};
+            return fs::exists(sequoiaAsDependency) ? sequoiaAsDependency : parentProjectPaths.project_root();
+          }()
+      };
+
+      for(auto& entry : fs::directory_iterator{parentSequoiaRoot})
+      {
+        if(fs::is_directory(entry))
+        {
+          if(entry.path() == parentProjectPaths.output().dir())
+          {
+            copy_sequoia_output(stream, parentProjectPaths, output_paths{seqLocation}, entry);
+          }
+          else if(entry.path() != parentProjectPaths.build().dir())
+          {
+            copy_sequoia_subdir(stream, seqLocation, entry);
+          }
+        }
+        else
+        {
+          fs::copy(entry, seqLocation);
+        }
+      }
+
+      fs::remove(seqLocation / ".keep");
     }
   }
 
@@ -59,15 +118,16 @@ namespace sequoia::testing
       throw std::runtime_error{"Code indent must comprise only spaces or tabs"};
   }
 
-  void generate_test_main(std::string_view copyright, const fs::path& newProjRoot, indentation codeIndent)
+  void generate_test_main(std::string_view copyright, indentation codeIndent, const fs::path& newProjRoot)
   {
     auto modifier{
-      [copyright, codeIndent](std::string& text) {
+      [&](std::string& text) {
 
         set_top_copyright(text, copyright);
 
         tabs_to_spacing(text, codeIndent);
         replace(text, "Oliver J. Rosten", copyright);
+        replace_all(text, "myProject", back(source_paths{newProjRoot}.project()).string());
 
         const auto indentReplacement{
           [&codeIndent]() {
@@ -89,49 +149,36 @@ namespace sequoia::testing
     read_modify_write(newProjRoot / main_paths::default_main_cpp_from_root(), modifier);
   }
 
-  void generate_build_system_files(const fs::path& parentProjRoot, const fs::path& newProjRoot)
+  void generate_build_system_files(const fs::path& newProjRoot)
   {
     if(newProjRoot.empty())
       throw std::logic_error{"Pre-condition violated: path should not be empty"};
 
     const fs::path relCmakeLocation{main_paths::default_cmake_from_root()};
 
-    auto setBuildSysPath{
-      [&parentProjRoot,&newProjRoot](std::string& text) {
-        std::string_view token{"/build_system"};
-        if(const auto pos{text.find(token)}; pos != npos)
-        {
-          std::string_view pattern{"BuildSystem "};
-          if(auto left{text.rfind(pattern)}; left != npos)
-          {
-            left += pattern.size();
-            if(pos >= left)
-            {
-              const auto count{pos - left + token.size()};
-              const auto relPath{fs::relative(parentProjRoot / "TestAll" / text.substr(left, count), newProjRoot / "TestAll")};
-              text.replace(left, count, relPath.generic_string());
-            }
-          }
-        }
+    read_modify_write(newProjRoot / relCmakeLocation, [&newProjRoot](std::string& text) {
+        set_proj_name(text, newProjRoot);
       }
+    );
+
+    read_modify_write(source_paths{newProjRoot}.cmake_lists(), [&newProjRoot](std::string& text) {
+        set_proj_name(text, newProjRoot);
+      }
+    );
+  }
+
+  [[nodiscard]]
+  build_paths make_new_build_paths(const std::filesystem::path& projectRoot, const build_paths& parentBuildPaths)
+  {
+    if(!parentBuildPaths.cmake_cache() || parentBuildPaths.cmake_cache()->empty())
+      throw std::logic_error{"init_project: No CMakeCache file found"};
+
+    auto cmakeCacheDir{parentBuildPaths.cmake_cache()->parent_path()};
+
+    return {projectRoot,
+            projectRoot / "build" / rebase_from(cmakeCacheDir.parent_path() / "TestAll" / rebase_from(parentBuildPaths.executable_dir(), cmakeCacheDir), parentBuildPaths.dir()),
+            projectRoot / "build" / rebase_from(parentBuildPaths.cmake_cache()->parent_path().parent_path() / "TestAll/CMakeCache.txt", parentBuildPaths.dir())
     };
-
-    read_modify_write(newProjRoot / relCmakeLocation, [setBuildSysPath, &newProjRoot](std::string& text) {
-        setBuildSysPath(text);
-        set_proj_name(text, newProjRoot);
-      }
-    );
-
-    read_modify_write(source_paths::cmake_lists(newProjRoot), [setBuildSysPath, &newProjRoot](std::string& text) {
-        setBuildSysPath(text);
-        set_proj_name(text, newProjRoot);
-      }
-    );
-
-    read_modify_write(auxiliary_paths::project_template(newProjRoot) / relCmakeLocation, [setBuildSysPath](std::string& text) {
-        setBuildSysPath(text);
-      }
-    );
   }
 
   void init_projects(const project_paths& parentProjectPaths, const std::vector<project_data>& projects, std::ostream& stream)
@@ -149,11 +196,11 @@ namespace sequoia::testing
       if(!is_appropriate_root(data.project_root))
         throw std::runtime_error{std::string{"Project location '"}.append(data.project_root.generic_string()).append("' is in use\n")};
 
-      const auto name{(--data.project_root.end())->generic_string()};
+      const auto name{back(data.project_root).generic_string()};
       if(name.empty())
         throw std::runtime_error{"Project name, deduced as the last token of path, is empty\n"};
 
-      if(std::ranges::find_if(name, [](char c) { return !std::isalnum(c) || (c == '_') || (c == '-'); }) != name.cend())
+      if(std::ranges::find_if(name, [](char c) { return !(std::isalnum(c) || (c == '_') || (c == '-')); }) != name.cend())
       {
         throw std::runtime_error{std::string{"Please ensure the project name '"}
           .append(name)
@@ -164,25 +211,35 @@ namespace sequoia::testing
 
       report(stream, "Creating new project at location:", data.project_root.generic_string());
 
-      const auto& parentProjRoot{parentProjectPaths.project_root()};
       fs::create_directories(data.project_root);
       fs::copy(parentProjectPaths.aux_paths().project_template(), data.project_root, fs::copy_options::recursive | fs::copy_options::skip_existing);
-      fs::create_directory(source_paths(data.project_root).project());
-      fs::copy(parentProjectPaths.aux_paths().repo(), auxiliary_paths::repo(data.project_root), fs::copy_options::recursive | fs::copy_options::skip_existing);
+      fs::rename(source_paths(data.project_root).repo() / "projectTemplate", source_paths{data.project_root}.project());
 
-      generate_test_main(data.copyright, data.project_root, data.code_indent);
-      generate_build_system_files(parentProjRoot, data.project_root);
+      generate_test_main(data.copyright, data.code_indent, data.project_root);
+      generate_build_system_files(data.project_root);
+
+      if(data.use_git == git_invocation::yes)
+        invoke(cd_cmd(data.project_root) && git_first_cmd(data.project_root, data.output));
+
+      report(stream, "", "\nCopying across sequoia...");
+      copy_sequoia(stream, parentProjectPaths, data);
+
+      if(data.use_git == git_invocation::yes)
+      {
+        invoke(cd_cmd(data.project_root)
+            && shell_command{"git: adding sequoia dependency...", "git add .", data.output }
+            && shell_command{"git: committing...", "git commit -m \"Add sequoia dependency\" --quiet", data.output});
+      }
 
       if(data.do_build != build_invocation::no)
       {
+        const auto build{make_new_build_paths(data.project_root, parentProjectPaths.build())};
         const main_paths main{data.project_root / main_paths::default_main_cpp_from_root()};
-        const build_paths build{data.project_root, main};
 
         invoke(cd_cmd(main.dir())
             && cmake_cmd(parentProjectPaths.build(), build, data.output)
             && build_cmd(build, data.output)
-            && git_first_cmd(data.project_root, data.output)
-            && (data.do_build == build_invocation::launch_ide ? launch_cmd(parentProjectPaths, data.project_root, build.cmade_dir()) : shell_command{})
+            && ((data.do_build == build_invocation::launch_ide) && build.cmake_cache() ? launch_cmd(parentProjectPaths, data.project_root, build.cmake_cache()->parent_path()) : shell_command{})
         );
       }
     }
@@ -210,20 +267,21 @@ namespace sequoia::testing
 
     if constexpr(with_msvc_v)
     {
-      const auto cmakeCache{parentProjectPaths.build().cmake_cache()};
-
-      if(const auto optText{read_to_string(cmakeCache)})
+      if(const auto cmakeCache{parentProjectPaths.build().cmake_cache()})
       {
-        const auto [first, last]{find_sandwiched_text(optText.value(), "CMAKE_GENERATOR_INSTANCE:INTERNAL=", "\n")};
-        if((first != npos) && (last != npos))
+        if(const auto optText{read_to_string(cmakeCache.value())})
         {
-          const auto devenv{fs::path(optText->substr(first, last - first)).append("Common7/IDE/devenv.exe")};
-          if(fs::exists(devenv))
+          const auto [first, last]{find_sandwiched_text(optText.value(), "CMAKE_GENERATOR_INSTANCE:INTERNAL=", "\n")};
+          if((first != npos) && (last != npos))
           {
-            const auto token{back(root)};
-            const auto sln{(buildDir / token).concat("Tests.sln")};
+            const auto devenv{fs::path(optText->substr(first, last - first)).append("Common7/IDE/devenv.exe")};
+            if(fs::exists(devenv))
+            {
+              const auto token{back(root)};
+              const auto sln{(buildDir / token).concat("Tests.sln")};
 
-            return {"Attempting to open IDE...", std::string{"\""}.append(devenv.string()).append("\" ").append("/Run ").append(sln.string()), ""};
+              return {"Attempting to open IDE...", std::string{"\""}.append(devenv.string()).append("\" ").append("/Run ").append(sln.string()), ""};
+            }
           }
         }
       }

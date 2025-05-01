@@ -86,10 +86,10 @@ namespace sequoia::testing
     }
   }
 
-  template<class T, class Handler, class Traits>
-  struct value_tester<data_structures::bucketed_sequence<T, Handler, Traits>>
+  template<class T, class Container>
+  struct value_tester<data_structures::bucketed_sequence<T, Container>>
   {
-    using type = data_structures::bucketed_sequence<T, Handler, Traits>;
+    using type = data_structures::bucketed_sequence<T, Container>;
 
     template<class CheckType, test_mode Mode>
     static void test(CheckType flavour, test_logger<Mode>& logger, const type& data, const type& prediction)
@@ -104,10 +104,10 @@ namespace sequoia::testing
     }
   };
 
-  template<class T, class Handler, class Traits>
-  struct value_tester<data_structures::partitioned_sequence<T, Handler, Traits>>
+  template<class T, class Container, class Partitions>
+  struct value_tester<data_structures::partitioned_sequence<T, Container, Partitions>>
   {
-    using type = data_structures::partitioned_sequence<T, Handler, Traits>;
+    using type = data_structures::partitioned_sequence<T, Container, Partitions>;
     using equivalent_type = std::initializer_list<std::initializer_list<T>>;
 
     template<class CheckType, test_mode Mode>
@@ -124,9 +124,9 @@ namespace sequoia::testing
   };
 
   template<class T, std::size_t Npartitions, std::size_t Nelements, std::integral IndexType>
-  struct value_tester<data_structures::static_partitioned_sequence<T, Npartitions, Nelements, IndexType>>
+  struct value_tester<data_structures::static_partitioned_sequence<T, Npartitions, Nelements, maths::static_monotonic_sequence<IndexType, Npartitions, std::ranges::greater>>>
   {
-    using type = data_structures::static_partitioned_sequence<T, Npartitions, Nelements, IndexType>;
+    using type = data_structures::static_partitioned_sequence<T, Npartitions, Nelements, maths::static_monotonic_sequence<IndexType, Npartitions, std::ranges::greater>>;
 
     template<class CheckType, test_mode Mode>
     static void test(CheckType flavour, test_logger<Mode>& logger, const type& data, const type& prediction)
@@ -138,6 +138,22 @@ namespace sequoia::testing
     static void test(equivalence_check_t, test_logger<Mode>& logger, const type& data, std::initializer_list<std::initializer_list<T>> prediction)
     {
       impl::check(equivalence, logger, data, prediction);
+    }
+  };
+
+  template<std::input_or_output_iterator I, class DerefPolicy>
+    requires requires(utilities::iterator<I, DerefPolicy>  i){ i.partition_index(); }
+  struct value_tester<utilities::iterator<I, DerefPolicy>>
+  {
+    using type = utilities::iterator<I, DerefPolicy>;
+
+    template<test_mode Mode>
+    static void test(equality_check_t, test_logger<Mode>& logger, const type& data, const type& prediction)
+    {
+      const auto dist{std::ranges::distance(data, prediction)};
+      using dist_t = decltype(dist);
+      check(equality, "Distance from prediction", logger, dist, dist_t{});
+      check(equality, "Partition Index", logger, data.partition_index(), prediction.partition_index());
     }
   };
 }

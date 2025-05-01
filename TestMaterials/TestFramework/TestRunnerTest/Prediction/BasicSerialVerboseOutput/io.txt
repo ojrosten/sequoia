@@ -2,48 +2,54 @@
 Running tests, synchronously...
 
 Failing Suite:
-[Execution Time: 167us]
+[Execution Time: 30.2us]
 	Free Test
-	[Execution Time: 69.7us]
+	[Execution Time: 8.58us]
 		Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
-	Standard Failure
-	[int]
-	operator== returned false
-	Obtained : 43
-	Predicted: 42
+		Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 92
+		Standard Failure
 
-	=======================================
+		[int]
+		operator== returned false
+		Obtained : 43
+		Predicted: 42
+
+		=======================================
 
 	False positive Test
-	[Execution Time: 31.3us]
-		False Positive Checks:                     1;  Failures:  1
-
-	False Positive Failure:
-	False positive failure
-	[int]
-
-	=======================================
-
-	False negative Test
-	[Execution Time: 66.3us]
+	[Execution Time: 11.8us]
 		False Negative Checks:                     1;  Failures:  1
 
-	False negative failure
-	[int]
-	operator== returned false
-	Obtained : 43
-	Predicted: 42
+		False Negative Failure:
+		Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 149
+		False positive failure
 
-	=======================================
+		[int]
+
+		=======================================
+
+	False negative Test
+	[Execution Time: 9.83us]
+		False Positive Checks:                     1;  Failures:  1
+
+		Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 166
+		False negative failure
+
+		[int]
+		operator== returned false
+		Obtained : 43
+		Predicted: 42
+
+		=======================================
 
 
 -----------Grand Totals-----------
-[Total Run Time: 9.04ms]
-[Execution Time: 167us]
+[Total Run Time: 274us]
+[Execution Time: 30.2us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
-	False Negative Checks:                     1;  Failures:  1
-	False Negative Performance Checks:         0;  Failures:  0
 	False Positive Checks:                     1;  Failures:  1
 	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     1;  Failures:  1
+	False Negative Performance Checks:         0;  Failures:  0

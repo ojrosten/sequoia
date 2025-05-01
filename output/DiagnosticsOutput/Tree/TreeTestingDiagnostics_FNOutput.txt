@@ -1,0 +1,810 @@
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 41
+Empty vs non-empty
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::maths::directed_tree<1, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_storage<int, std::vector<int, std::allocator<int> > > > >]
+Checking for equivalence with:
+[sequoia::maths::tree_initializer<int>]
+
+  Insufficient nodes detected while checking node 0
+  [bool]
+  check failed
+
+=======================================
+
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 42
+Incorrect weight
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::maths::directed_tree<1, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_storage<int, std::vector<int, std::allocator<int> > > > >]
+Checking for equivalence with:
+[sequoia::maths::tree_initializer<int>]
+
+  Node weight for node 0
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 43
+Too many children
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::maths::directed_tree<1, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_storage<int, std::vector<int, std::allocator<int> > > > >]
+Checking for equivalence with:
+[sequoia::maths::tree_initializer<int>]
+
+  Number of children for node 0
+  [unsigned long long]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 44
+Incorrect child weight
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::maths::directed_tree<1, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_storage<int, std::vector<int, std::allocator<int> > > > >]
+Checking for equivalence with:
+[sequoia::maths::tree_initializer<int>]
+
+  Node weight for node 1
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 3
+
+=======================================
+
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 45
+Too few children
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::maths::directed_tree<1, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_storage<int, std::vector<int, std::allocator<int> > > > >]
+Checking for equivalence with:
+[sequoia::maths::tree_initializer<int>]
+
+  Number of children for node 0
+  [unsigned long long]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
+
+=======================================
+
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 47
+Too many grand children
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::maths::directed_tree<1, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_storage<int, std::vector<int, std::allocator<int> > > > >]
+Checking for equivalence with:
+[sequoia::maths::tree_initializer<int>]
+
+  Number of children for node 1
+  [unsigned long long]
+  operator== returned false
+  Obtained : 2
+  Predicted: 1
+
+=======================================
+
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 48
+Incorrect grand child weight
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::maths::directed_tree<1, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_storage<int, std::vector<int, std::allocator<int> > > > >]
+Checking for equivalence with:
+[sequoia::maths::tree_initializer<int>]
+
+  Node weight for node 2
+  [int]
+  operator== returned false
+  Obtained : 4
+  Predicted: 3
+
+  Node weight for node 3
+  [int]
+  operator== returned false
+  Obtained : 5
+  Predicted: 4
+
+=======================================
+
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 49
+Too few grand children
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::maths::directed_tree<1, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_storage<int, std::vector<int, std::allocator<int> > > > >]
+Checking for equivalence with:
+[sequoia::maths::tree_initializer<int>]
+
+  Number of children for node 1
+  [unsigned long long]
+  operator== returned false
+  Obtained : 2
+  Predicted: 3
+
+=======================================
+
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 51
+
+[sequoia::maths::directed_tree<1, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_storage<int, std::vector<int, std::allocator<int> > > >]
+operator== returned false
+
+  [sequoia::maths::connectivity<2, sequoia::data_structures::bucketed_sequence<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::vector<std::vector<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::allocator<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long> > >, std::allocator<std::vector<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::allocator<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long> > > > > > >]
+  operator== returned false
+
+    Connectivity order incorrect
+    [unsigned long long]
+    operator== returned false
+    Obtained : 0
+    Predicted: 1
+
+  [sequoia::maths::node_storage<int, std::vector<int, std::allocator<int> > >]
+  operator== returned false
+
+    Sizes different
+    [unsigned long long]
+    operator== returned false
+    Obtained : 0
+    Predicted: 1
+
+    const_node_iter
+
+      Container size wrong
+      [unsigned long long]
+      operator== returned false
+      Obtained : 0
+      Predicted: 1
+
+=======================================
+
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 52
+
+[sequoia::maths::directed_tree<1, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_storage<int, std::vector<int, std::allocator<int> > > >]
+operator== returned false
+
+  [sequoia::maths::connectivity<2, sequoia::data_structures::bucketed_sequence<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::vector<std::vector<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::allocator<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long> > >, std::allocator<std::vector<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::allocator<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long> > > > > > >]
+  operator== returned false
+
+    Connectivity size incorrect
+    [unsigned long long]
+    operator== returned false
+    Obtained : 0
+    Predicted: 1
+
+    Connectivity order incorrect
+    [unsigned long long]
+    operator== returned false
+    Obtained : 1
+    Predicted: 2
+
+  [sequoia::maths::node_storage<int, std::vector<int, std::allocator<int> > >]
+  operator== returned false
+
+    Sizes different
+    [unsigned long long]
+    operator== returned false
+    Obtained : 1
+    Predicted: 2
+
+    const_node_iter
+
+      Container size wrong
+      [unsigned long long]
+      operator== returned false
+      Obtained : 1
+      Predicted: 2
+
+=======================================
+
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 41
+Empty vs non-empty
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::maths::directed_tree<2, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_storage<int, std::vector<int, std::allocator<int> > > > >]
+Checking for equivalence with:
+[sequoia::maths::tree_initializer<int>]
+
+  Insufficient nodes detected while checking node 0
+  [bool]
+  check failed
+
+=======================================
+
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 42
+Incorrect weight
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::maths::directed_tree<2, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_storage<int, std::vector<int, std::allocator<int> > > > >]
+Checking for equivalence with:
+[sequoia::maths::tree_initializer<int>]
+
+  Node weight for node 0
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 43
+Too many children
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::maths::directed_tree<2, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_storage<int, std::vector<int, std::allocator<int> > > > >]
+Checking for equivalence with:
+[sequoia::maths::tree_initializer<int>]
+
+  Extraneous nodes joined to node 0
+  [bool]
+  check failed
+
+=======================================
+
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 44
+Incorrect child weight
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::maths::directed_tree<2, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_storage<int, std::vector<int, std::allocator<int> > > > >]
+Checking for equivalence with:
+[sequoia::maths::tree_initializer<int>]
+
+  Node weight for node 1
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 3
+
+=======================================
+
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 45
+Too few children
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::maths::directed_tree<2, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_storage<int, std::vector<int, std::allocator<int> > > > >]
+Checking for equivalence with:
+[sequoia::maths::tree_initializer<int>]
+
+  Insufficient nodes detected while checking node 2
+  [bool]
+  check failed
+
+=======================================
+
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 47
+Too many grand children
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::maths::directed_tree<2, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_storage<int, std::vector<int, std::allocator<int> > > > >]
+Checking for equivalence with:
+[sequoia::maths::tree_initializer<int>]
+
+  Extraneous nodes joined to node 2
+  [bool]
+  check failed
+
+=======================================
+
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 48
+Incorrect grand child weight
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::maths::directed_tree<2, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_storage<int, std::vector<int, std::allocator<int> > > > >]
+Checking for equivalence with:
+[sequoia::maths::tree_initializer<int>]
+
+  Node weight for node 2
+  [int]
+  operator== returned false
+  Obtained : 4
+  Predicted: 3
+
+  Node weight for node 3
+  [int]
+  operator== returned false
+  Obtained : 5
+  Predicted: 4
+
+=======================================
+
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 49
+Too few grand children
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::maths::directed_tree<2, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_storage<int, std::vector<int, std::allocator<int> > > > >]
+Checking for equivalence with:
+[sequoia::maths::tree_initializer<int>]
+
+  Return edge target
+  [unsigned long long]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
+
+=======================================
+
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 51
+
+[sequoia::maths::directed_tree<2, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_storage<int, std::vector<int, std::allocator<int> > > >]
+operator== returned false
+
+  [sequoia::maths::connectivity<2, sequoia::data_structures::bucketed_sequence<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::vector<std::vector<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::allocator<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long> > >, std::allocator<std::vector<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::allocator<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long> > > > > > >]
+  operator== returned false
+
+    Connectivity order incorrect
+    [unsigned long long]
+    operator== returned false
+    Obtained : 0
+    Predicted: 1
+
+  [sequoia::maths::node_storage<int, std::vector<int, std::allocator<int> > >]
+  operator== returned false
+
+    Sizes different
+    [unsigned long long]
+    operator== returned false
+    Obtained : 0
+    Predicted: 1
+
+    const_node_iter
+
+      Container size wrong
+      [unsigned long long]
+      operator== returned false
+      Obtained : 0
+      Predicted: 1
+
+=======================================
+
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 52
+
+[sequoia::maths::directed_tree<2, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_storage<int, std::vector<int, std::allocator<int> > > >]
+operator== returned false
+
+  [sequoia::maths::connectivity<2, sequoia::data_structures::bucketed_sequence<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::vector<std::vector<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::allocator<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long> > >, std::allocator<std::vector<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::allocator<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long> > > > > > >]
+  operator== returned false
+
+    Connectivity size incorrect
+    [unsigned long long]
+    operator== returned false
+    Obtained : 0
+    Predicted: 1
+
+    Connectivity order incorrect
+    [unsigned long long]
+    operator== returned false
+    Obtained : 1
+    Predicted: 2
+
+  [sequoia::maths::node_storage<int, std::vector<int, std::allocator<int> > >]
+  operator== returned false
+
+    Sizes different
+    [unsigned long long]
+    operator== returned false
+    Obtained : 1
+    Predicted: 2
+
+    const_node_iter
+
+      Container size wrong
+      [unsigned long long]
+      operator== returned false
+      Obtained : 1
+      Predicted: 2
+
+=======================================
+
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 41
+Empty vs non-empty
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::maths::directed_tree<0, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_storage<int, std::vector<int, std::allocator<int> > > > >]
+Checking for equivalence with:
+[sequoia::maths::tree_initializer<int>]
+
+  Insufficient nodes detected while checking node 0
+  [bool]
+  check failed
+
+=======================================
+
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 42
+Incorrect weight
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::maths::directed_tree<0, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_storage<int, std::vector<int, std::allocator<int> > > > >]
+Checking for equivalence with:
+[sequoia::maths::tree_initializer<int>]
+
+  Node weight for node 0
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 43
+Too many children
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::maths::directed_tree<0, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_storage<int, std::vector<int, std::allocator<int> > > > >]
+Checking for equivalence with:
+[sequoia::maths::tree_initializer<int>]
+
+  Number of children for node 0
+  [unsigned long long]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 44
+Incorrect child weight
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::maths::directed_tree<0, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_storage<int, std::vector<int, std::allocator<int> > > > >]
+Checking for equivalence with:
+[sequoia::maths::tree_initializer<int>]
+
+  Node weight for node 1
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 3
+
+=======================================
+
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 45
+Too few children
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::maths::directed_tree<0, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_storage<int, std::vector<int, std::allocator<int> > > > >]
+Checking for equivalence with:
+[sequoia::maths::tree_initializer<int>]
+
+  Number of children for node 0
+  [unsigned long long]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
+
+=======================================
+
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 47
+Too many grand children
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::maths::directed_tree<0, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_storage<int, std::vector<int, std::allocator<int> > > > >]
+Checking for equivalence with:
+[sequoia::maths::tree_initializer<int>]
+
+  Number of children for node 1
+  [unsigned long long]
+  operator== returned false
+  Obtained : 2
+  Predicted: 1
+
+=======================================
+
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 48
+Incorrect grand child weight
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::maths::directed_tree<0, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_storage<int, std::vector<int, std::allocator<int> > > > >]
+Checking for equivalence with:
+[sequoia::maths::tree_initializer<int>]
+
+  Node weight for node 2
+  [int]
+  operator== returned false
+  Obtained : 4
+  Predicted: 3
+
+  Node weight for node 3
+  [int]
+  operator== returned false
+  Obtained : 5
+  Predicted: 4
+
+=======================================
+
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 49
+Too few grand children
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::maths::directed_tree<0, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_storage<int, std::vector<int, std::allocator<int> > > > >]
+Checking for equivalence with:
+[sequoia::maths::tree_initializer<int>]
+
+  Number of children for node 1
+  [unsigned long long]
+  operator== returned false
+  Obtained : 2
+  Predicted: 3
+
+=======================================
+
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 51
+
+[sequoia::maths::directed_tree<0, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_storage<int, std::vector<int, std::allocator<int> > > >]
+operator== returned false
+
+  [sequoia::maths::connectivity<2, sequoia::data_structures::bucketed_sequence<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::vector<std::vector<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::allocator<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long> > >, std::allocator<std::vector<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::allocator<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long> > > > > > >]
+  operator== returned false
+
+    Connectivity order incorrect
+    [unsigned long long]
+    operator== returned false
+    Obtained : 0
+    Predicted: 1
+
+  [sequoia::maths::node_storage<int, std::vector<int, std::allocator<int> > >]
+  operator== returned false
+
+    Sizes different
+    [unsigned long long]
+    operator== returned false
+    Obtained : 0
+    Predicted: 1
+
+    const_node_iter
+
+      Container size wrong
+      [unsigned long long]
+      operator== returned false
+      Obtained : 0
+      Predicted: 1
+
+=======================================
+
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 52
+
+[sequoia::maths::directed_tree<0, sequoia::maths::null_weight, int, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_storage<int, std::vector<int, std::allocator<int> > > >]
+operator== returned false
+
+  [sequoia::maths::connectivity<2, sequoia::data_structures::bucketed_sequence<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::vector<std::vector<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::allocator<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long> > >, std::allocator<std::vector<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::allocator<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long> > > > > > >]
+  operator== returned false
+
+    Connectivity size incorrect
+    [unsigned long long]
+    operator== returned false
+    Obtained : 0
+    Predicted: 2
+
+    Connectivity order incorrect
+    [unsigned long long]
+    operator== returned false
+    Obtained : 1
+    Predicted: 2
+
+  [sequoia::maths::node_storage<int, std::vector<int, std::allocator<int> > >]
+  operator== returned false
+
+    Sizes different
+    [unsigned long long]
+    operator== returned false
+    Obtained : 1
+    Predicted: 2
+
+    const_node_iter
+
+      Container size wrong
+      [unsigned long long]
+      operator== returned false
+      Obtained : 1
+      Predicted: 2
+
+=======================================
+
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 41
+Empty vs non-empty
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::maths::undirected_tree<0, sequoia::maths::null_weight, int, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_storage<int, std::vector<int, std::allocator<int> > > > >]
+Checking for equivalence with:
+[sequoia::maths::tree_initializer<int>]
+
+  Insufficient nodes detected while checking node 0
+  [bool]
+  check failed
+
+=======================================
+
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 42
+Incorrect weight
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::maths::undirected_tree<0, sequoia::maths::null_weight, int, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_storage<int, std::vector<int, std::allocator<int> > > > >]
+Checking for equivalence with:
+[sequoia::maths::tree_initializer<int>]
+
+  Node weight for node 0
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 43
+Too many children
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::maths::undirected_tree<0, sequoia::maths::null_weight, int, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_storage<int, std::vector<int, std::allocator<int> > > > >]
+Checking for equivalence with:
+[sequoia::maths::tree_initializer<int>]
+
+  Number of children for node 0
+  [unsigned long long]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 44
+Incorrect child weight
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::maths::undirected_tree<0, sequoia::maths::null_weight, int, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_storage<int, std::vector<int, std::allocator<int> > > > >]
+Checking for equivalence with:
+[sequoia::maths::tree_initializer<int>]
+
+  Node weight for node 1
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 3
+
+=======================================
+
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 45
+Too few children
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::maths::undirected_tree<0, sequoia::maths::null_weight, int, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_storage<int, std::vector<int, std::allocator<int> > > > >]
+Checking for equivalence with:
+[sequoia::maths::tree_initializer<int>]
+
+  Number of children for node 0
+  [unsigned long long]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
+
+=======================================
+
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 47
+Too many grand children
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::maths::undirected_tree<0, sequoia::maths::null_weight, int, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_storage<int, std::vector<int, std::allocator<int> > > > >]
+Checking for equivalence with:
+[sequoia::maths::tree_initializer<int>]
+
+  Number of children for node 1
+  [unsigned long long]
+  operator== returned false
+  Obtained : 2
+  Predicted: 1
+
+=======================================
+
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 48
+Incorrect grand child weight
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::maths::undirected_tree<0, sequoia::maths::null_weight, int, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_storage<int, std::vector<int, std::allocator<int> > > > >]
+Checking for equivalence with:
+[sequoia::maths::tree_initializer<int>]
+
+  Node weight for node 2
+  [int]
+  operator== returned false
+  Obtained : 4
+  Predicted: 3
+
+  Node weight for node 3
+  [int]
+  operator== returned false
+  Obtained : 5
+  Predicted: 4
+
+=======================================
+
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 49
+Too few grand children
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::maths::undirected_tree<0, sequoia::maths::null_weight, int, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_storage<int, std::vector<int, std::allocator<int> > > > >]
+Checking for equivalence with:
+[sequoia::maths::tree_initializer<int>]
+
+  Number of children for node 1
+  [unsigned long long]
+  operator== returned false
+  Obtained : 2
+  Predicted: 3
+
+=======================================
+
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 51
+
+[sequoia::maths::undirected_tree<0, sequoia::maths::null_weight, int, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_storage<int, std::vector<int, std::allocator<int> > > >]
+operator== returned false
+
+  [sequoia::maths::connectivity<0, sequoia::data_structures::bucketed_sequence<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::vector<std::vector<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::allocator<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long> > >, std::allocator<std::vector<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::allocator<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long> > > > > > >]
+  operator== returned false
+
+    Connectivity order incorrect
+    [unsigned long long]
+    operator== returned false
+    Obtained : 0
+    Predicted: 1
+
+  [sequoia::maths::node_storage<int, std::vector<int, std::allocator<int> > >]
+  operator== returned false
+
+    Sizes different
+    [unsigned long long]
+    operator== returned false
+    Obtained : 0
+    Predicted: 1
+
+    const_node_iter
+
+      Container size wrong
+      [unsigned long long]
+      operator== returned false
+      Obtained : 0
+      Predicted: 1
+
+=======================================
+
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 52
+
+[sequoia::maths::undirected_tree<0, sequoia::maths::null_weight, int, sequoia::maths::null_meta_data, sequoia::maths::bucketed_edge_storage_config, sequoia::maths::node_storage<int, std::vector<int, std::allocator<int> > > >]
+operator== returned false
+
+  [sequoia::maths::connectivity<0, sequoia::data_structures::bucketed_sequence<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::vector<std::vector<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::allocator<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long> > >, std::allocator<std::vector<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long>, std::allocator<sequoia::maths::partial_edge<sequoia::object::by_value<sequoia::maths::null_weight>, sequoia::maths::null_meta_data, unsigned long long> > > > > > >]
+  operator== returned false
+
+    Connectivity size incorrect
+    [unsigned long long]
+    operator== returned false
+    Obtained : 0
+    Predicted: 1
+
+    Connectivity order incorrect
+    [unsigned long long]
+    operator== returned false
+    Obtained : 1
+    Predicted: 2
+
+  [sequoia::maths::node_storage<int, std::vector<int, std::allocator<int> > >]
+  operator== returned false
+
+    Sizes different
+    [unsigned long long]
+    operator== returned false
+    Obtained : 1
+    Predicted: 2
+
+    const_node_iter
+
+      Container size wrong
+      [unsigned long long]
+      operator== returned false
+      Obtained : 1
+      Predicted: 2
+
+=======================================
+

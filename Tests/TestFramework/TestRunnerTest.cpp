@@ -24,6 +24,24 @@ namespace sequoia::testing
       int x{};
     };
 
+    [[nodiscard]]
+    fs::path make_fake_file_path(std::string_view testName) {
+      return fs::path{std::source_location::current().file_name()}.parent_path().parent_path() / replace_all(testName, " ", "_").append(".cpp");
+    }
+  }
+
+  template<>
+  struct value_tester<foo>
+  {
+    template<test_mode Mode>
+    static void test(equality_check_t, test_logger<Mode>&, const foo&, const foo&)
+    {
+      throw std::runtime_error{"This is bad"};
+    }
+  };
+  
+  namespace
+  {
     class foo_test final : public regular_test
     {
     public:
@@ -32,12 +50,12 @@ namespace sequoia::testing
       [[nodiscard]]
       std::filesystem::path source_file() const
       {
-        return std::source_location::current().file_name();
+        return make_fake_file_path(name());
       }
 
       void run_tests()
       {
-        check(equality, "Throw during check", foo{}, foo{});
+        check(equality, reporter{"Throw during check"}, foo{}, foo{});
       }
     };
 
@@ -49,12 +67,12 @@ namespace sequoia::testing
       [[nodiscard]]
       std::filesystem::path source_file() const
       {
-        return std::source_location::current().file_name();
+        return make_fake_file_path(name());
       }
 
       void run_tests()
       {
-        check(equality, "Integer equality", 42, 42);
+        check(equality, reporter{"Integer equality"}, 42, 42);
       }
     };
 
@@ -66,33 +84,56 @@ namespace sequoia::testing
       [[nodiscard]]
       std::filesystem::path source_file() const
       {
-        return std::source_location::current().file_name();
+        return make_fake_file_path(name());
       }
 
       void run_tests()
       {
-        check(equality, "Standard Failure", 43, 42);
+        check(equality, {"Standard Failure"}, 43, 42);
       }
     };
 
-    class failing_fp_test final : public free_false_positive_test
+    class throwing_test final : public free_test
     {
     public:
-      using free_false_positive_test::free_false_positive_test;
+      using free_test::free_test;
 
       [[nodiscard]]
       std::filesystem::path source_file() const
       {
-        return std::source_location::current().file_name();
+        return make_fake_file_path(name());
       }
 
       void run_tests()
       {
-        check(equality, "False positive failure", 42, 42);
+        check_exception_thrown<std::runtime_error>("Exception", [](){ throw std::runtime_error{"Oops"}; });
       }
     };
 
-    class failing_fn_test final : public free_false_negative_test
+    class platform_specific_throwing_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      std::filesystem::path source_file() const
+      {
+        return make_fake_file_path(name());
+      }
+
+      [[nodiscard]]
+      std::string output_discriminator() const { return "Platypus"; }
+
+      [[nodiscard]]
+      std::string summary_discriminator() const { return "Release"; }
+
+      void run_tests()
+      {
+        check_exception_thrown<std::runtime_error>("Another Exception", [](){ throw std::runtime_error{"Oh Dear"}; });
+      }
+    };
+
+    class failing_fp_test final : public free_false_negative_test
     {
     public:
       using free_false_negative_test::free_false_negative_test;
@@ -100,12 +141,29 @@ namespace sequoia::testing
       [[nodiscard]]
       std::filesystem::path source_file() const
       {
-        return std::source_location::current().file_name();
+        return make_fake_file_path(name());
       }
 
       void run_tests()
       {
-        check(equality, "False negative failure", 43, 42);
+        check(equality, {"False positive failure"}, 42, 42);
+      }
+    };
+
+    class failing_fn_test final : public free_false_positive_test
+    {
+    public:
+      using free_false_positive_test::free_false_positive_test;
+
+      [[nodiscard]]
+      std::filesystem::path source_file() const
+      {
+        return make_fake_file_path(name());
+      }
+
+      void run_tests()
+      {
+        check(equality, {"False negative failure"}, 43, 42);
       }
     };
 
@@ -124,12 +182,12 @@ namespace sequoia::testing
       [[nodiscard]]
       std::filesystem::path source_file() const
       {
-        return std::source_location::current().file_name();
+        return make_fake_file_path(name());
       }
 
       void run_tests()
       {
-        check(equality, "Flipper", flipper{}.x, true);
+        check(equality, {"Flipper"}, flipper{}.x, true);
       }
     };
 
@@ -149,12 +207,12 @@ namespace sequoia::testing
       [[nodiscard]]
       std::filesystem::path source_file() const
       {
-        return std::source_location::current().file_name();
+        return make_fake_file_path(name());
       }
 
       void run_tests()
       {
-        check(equality, "Period 4", periodic<4>{}.x, 1);
+        check(equality, {"Period 4"}, periodic<4>{}.x, 1);
       }
     };
 
@@ -167,13 +225,13 @@ namespace sequoia::testing
       [[nodiscard]]
       std::filesystem::path source_file() const
       {
-        return std::source_location::current().file_name();
+        return make_fake_file_path(name());
       }
 
       void run_tests()
       {
-        check(equality, "Period 2: Pass/Fail/Pass", periodic<2>{}.x, 1);
-        check("Period 3: Pass/Pass/Fail", periodic<3>{}.x > 0);
+        check(equality, {"Period 2: Pass/Fail/Pass"}, periodic<2>{}.x, 1);
+        check({"Period 3: Pass/Pass/Fail"}, periodic<3>{}.x > 0);
       }
     };
 
@@ -185,14 +243,14 @@ namespace sequoia::testing
       [[nodiscard]]
       std::filesystem::path source_file() const
       {
-        return std::source_location::current().file_name();
+        return make_fake_file_path(name());
       }
 
       void run_tests()
       {
-        check("Always fails", false);
+        check({"Always fails"}, false);
 
-        check(equality, "Flipper", flipper{}.x, true);
+        check(equality, {"Flipper"}, flipper{}.x, true);
       }
     };
 
@@ -204,12 +262,12 @@ namespace sequoia::testing
       [[nodiscard]]
       std::filesystem::path source_file() const
       {
-        return std::source_location::current().file_name();
+        return make_fake_file_path(name());
       }
 
       void run_tests()
       {
-        check("Always fails", false);
+        check({"Always fails"}, false);
       }
     };
 
@@ -222,12 +280,12 @@ namespace sequoia::testing
       [[nodiscard]]
       std::filesystem::path source_file() const
       {
-        return std::source_location::current().file_name();
+        return make_fake_file_path(name());
       }
 
       void run_tests()
       {
-        check("Always passes", true);
+        check({"Always passes"}, true);
       }
     };
 
@@ -239,7 +297,7 @@ namespace sequoia::testing
       [[nodiscard]]
       std::filesystem::path source_file() const
       {
-        return std::source_location::current().file_name();
+        return make_fake_file_path(name());
       }
 
       void run_tests()
@@ -254,8 +312,8 @@ namespace sequoia::testing
       test_runner runner{args.size(),
                          args.get(),
                          "Oliver J. Rosten",
-                         {"TestSandbox/TestSandbox.cpp", {}, "TestShared/SharedIncludes.hpp"},
                          "  ",
+                         {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
                          outputStream};
 
       runner.add_test_suite(
@@ -268,17 +326,7 @@ namespace sequoia::testing
       return runner;
     }
   }
-
-  template<>
-  struct value_tester<foo>
-  {
-    template<test_mode Mode>
-    static void test(equality_check_t, test_logger<Mode>&, const foo&, const foo&)
-    {
-      throw std::runtime_error{"This is bad"};
-    }
-  };
-
+  
   [[nodiscard]]
   std::filesystem::path test_runner_test::source_file() const
   {
@@ -292,8 +340,11 @@ namespace sequoia::testing
     test_basic_output();
     test_verbose_output();
     test_serial_verbose_output();
+    test_throwing_tests();
     test_filtered_suites();
     test_prune_basic_output();
+    test_nested_suite();
+    test_nested_suite_verbose();
     test_instability_analysis();
   }
 
@@ -304,33 +355,34 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string test_runner_test::zeroth_arg() const
+  fs::path test_runner_test::minimal_fake_path() const
   {
-    return (fake_project() / "build").generic_string();
+    return fake_project().append("build/CMade");
   }
 
-  fs::path test_runner_test::write(std::string_view dirName, std::stringstream& output) const
+  [[nodiscard]]
+  std::string test_runner_test::zeroth_arg() const
+  {
+    return (minimal_fake_path()).generic_string();
+  }
+
+  void test_runner_test::write(std::string_view dirName, std::stringstream& output) const
   {
     const auto outputDir{working_materials() /= dirName};
     fs::create_directory(outputDir);
 
-    const auto filePath{outputDir / "io.txt"};
-    if(std::ofstream file{filePath})
+    if(const auto filePath{outputDir / "io.txt"}; std::ofstream file{filePath})
     {
       file << output.str();
     }
 
     output.str("");
-
-    return filePath;
   }
 
-  fs::path test_runner_test::check_output(std::string_view description, std::string_view dirName, std::stringstream& output)
+  void test_runner_test::check_output(reporter description, std::string_view dirName, std::stringstream& output)
   {
-    fs::path filePath{write(dirName, output)};
+    write(dirName, output);
     check(equivalence, description, working_materials() /= dirName, predictive_materials() /= dirName);
-
-    return filePath;
   }
 
   void test_runner_test::test_exceptions()
@@ -354,79 +406,79 @@ namespace sequoia::testing
     };
 
     check_exception_thrown<std::runtime_error>(
-      report_line("Test Main has empty path"),
+      reporter{"Test Main has empty path"},
       [this]() {
         std::stringstream outputStream{};
-        commandline_arguments args{zeroth_arg()};
-        test_runner tr{args.size(), args.get(), "Oliver J. Rosten",{"", {}, "TestShared/SharedIncludes.hpp"}, "  ", outputStream};
+        commandline_arguments args{{zeroth_arg()}};
+        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ",  {.main_cpp{""}, .common_includes{"TestShared/SharedIncludes.hpp"}}, outputStream};
       },
       pathTrimmer);
 
     check_exception_thrown<std::runtime_error>(
-      report_line("Test Main does not exist"),
+      reporter{"Test Main does not exist"},
       [this]() {
         std::stringstream outputStream{};
-        commandline_arguments args{zeroth_arg()};
-        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", {"FooMain.cpp", {}, "TestShared/SharedIncludes.hpp"}, "  ", outputStream};
+        commandline_arguments args{{zeroth_arg()}};
+        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ",  {.main_cpp{"FooMain.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}}, outputStream};
       },
       pathTrimmer);
 
     check_exception_thrown<std::runtime_error>(
-      report_line("Include Target has empty path"),
+      reporter{"Include Target has empty path"},
       [this]() {
         std::stringstream outputStream{};
-        commandline_arguments args{zeroth_arg()};
-        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", {"TestSandbox/TestSandbox.cpp", {}, ""}, "  ", outputStream};
+        commandline_arguments args{{zeroth_arg()}};
+        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ",  {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{""}}, outputStream};
       },
       pathTrimmer);
 
     check_exception_thrown<std::runtime_error>(
-      report_line("Include Target does not exist"),
+      reporter{"Include Target does not exist"},
       [this]() {
         std::stringstream outputStream{};
-        commandline_arguments args{zeroth_arg()};
-        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", {"TestSandbox/TestSandbox.cpp", {}, "FooPath.hpp"}, "  ", outputStream};
+        commandline_arguments args{{zeroth_arg()}};
+        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ",  {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"FooPath.hpp"}}, outputStream};
       },
       pathTrimmer);
 
     check_exception_thrown<std::runtime_error>(
-      report_line("Project root is empty"),
+      reporter{"Project root is empty"},
       [this]() {
         std::stringstream outputStream{};
-        commandline_arguments args{""};
-        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", {"TestSandbox/TestSandbox.cpp", {}, "TestShared/SharedIncludes.hpp"}, "  ", outputStream};
+        commandline_arguments args{{""}};
+        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ",  {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}}, outputStream};
       });
 
     check_exception_thrown<std::runtime_error>(
-      report_line("Project root does not exist"),
+      reporter{"Project root does not exist"},
       [this]() {
         std::stringstream outputStream{};
-        commandline_arguments args{(fake_project() / "FooRepo").generic_string()};
-        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", {"TestSandbox/TestSandbox.cpp", {}, "TestShared/SharedIncludes.hpp"}, "  ", outputStream};
+        commandline_arguments args{{(fake_project() / "FooRepo").generic_string()}};
+        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ",  {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}}, outputStream};
       },
       pathTrimmer);
 
     check_exception_thrown<std::runtime_error>(
-      report_line("Project root not findable"),
+      reporter{"Project root not findable"},
       [this]() {
         const auto zerothArg{fake_project().append("TestShared").generic_string()};
         std::stringstream outputStream{};
-        commandline_arguments args{zerothArg};
-        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", {"TestSandbox/TestSandbox.cpp", {}, "TestShared/SharedIncludes.hpp"}, "  ", outputStream};
+        commandline_arguments args{{zerothArg}};
+        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ",  {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}}, outputStream};
       },
       pathTrimmer);
 
     check_exception_thrown<std::runtime_error>(
-      report_line("Neither name nor source unique"),
+      reporter{"Neither name nor source unique"},
       [this](){
-        commandline_arguments args{(fake_project() / "build").generic_string()};
+        commandline_arguments args{{zeroth_arg()}};
         std::stringstream outputStream{};
   
         test_runner runner{args.size(),
                            args.get(),
                            "Oliver J. Rosten",
-                           {"TestSandbox/TestSandbox.cpp", {}, "TestShared/SharedIncludes.hpp"},
                            "  ",
+                           {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
                            outputStream};
 
         runner.add_test_suite(
@@ -451,14 +503,14 @@ namespace sequoia::testing
     );
 
     check_exception_thrown<std::runtime_error>(
-      report_line("Invalid repetitions for instability analysis"),
+      reporter{"Invalid repetitions for instability analysis"},
       [this](){
         test_instability_analysis("", "", "foo", critical_free_test{"Free Test"});
       }
     );
 
     check_exception_thrown<std::runtime_error>(
-      report_line("Insufficient repetitions for instability analysis"),
+      reporter{"Insufficient repetitions for instability analysis"},
       [this](){
         test_instability_analysis("", "",  "1", critical_free_test{"Free Test"});
       }
@@ -472,15 +524,15 @@ namespace sequoia::testing
     // This is scoped to ensure destruction of the runner - and therefore loggers -
     // before dumping output to a file. The destructors are not trivial in recovery mode.
     {
-      commandline_arguments args{(fake_project() / "build").generic_string(), "-v", "recover", "dump",
+      commandline_arguments args{{(minimal_fake_path()).generic_string(), "-v", "recover", "dump",
                                  "test", "Bar",
-                                 "test", "Foo"};
+                                 "test", "Foo"}};
   
       test_runner runner{args.size(),
                          args.get(),
                          "Oliver J. Rosten",
-                         {"TestSandbox/TestSandbox.cpp", {}, "TestShared/SharedIncludes.hpp"},
                          "  ",
+                         {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
                          outputStream};
 
       runner.add_test_suite(
@@ -515,7 +567,7 @@ namespace sequoia::testing
              working_materials() /= "RecoveryAndDumpOutput/TestSummaries",
              fs::copy_options::recursive);
 
-    check(equivalence, report_line("Recovery and Dump"),
+    check(equivalence, "Recovery and Dump",
                       working_materials() /= "RecoveryAndDumpOutput",
                       predictive_materials() /= "RecoveryAndDumpOutput");
   }
@@ -523,17 +575,17 @@ namespace sequoia::testing
   void test_runner_test::test_basic_output()
   {
     std::stringstream outputStream{};
-    commandline_arguments args{(fake_project() / "build").generic_string()};
+    commandline_arguments args{{(minimal_fake_path()).generic_string()}};
 
     test_runner runner{args.size(),
                        args.get(),
                        "Oliver J. Rosten",
-                       {"TestSandbox/TestSandbox.cpp", {}, "TestShared/SharedIncludes.hpp"},
                        "  ",
+                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
                        outputStream};
 
     runner.execute();
-    check_output(report_line("No Tests"), "NoTests", outputStream);
+    check_output("No Tests", "NoTests", outputStream);
 
     runner.add_test_suite(
       "Failing Suite",
@@ -543,37 +595,65 @@ namespace sequoia::testing
     );
 
     runner.execute();
-    check_output(report_line("Basic Output"), "BasicOutput", outputStream);
+    check_output("Basic Output", "BasicOutput", outputStream);
   }
 
   void test_runner_test::test_verbose_output()
   {
     std::stringstream outputStream{};
-    auto runner{make_failing_suite({(fake_project() / "build").generic_string(), "-v"}, outputStream)};
+    auto runner{make_failing_suite({{(minimal_fake_path()).generic_string(), "-v"}}, outputStream)};
 
     runner.execute();
-    check_output(report_line("Basic Verbose Output"), "BasicVerboseOutput", outputStream);
+    check_output("Basic Verbose Output", "BasicVerboseOutput", outputStream);
   }
 
   void test_runner_test::test_serial_verbose_output()
   {
     std::stringstream outputStream{};
-    auto runner{make_failing_suite({(fake_project() / "build").generic_string(), "-v", "--serial"}, outputStream)};
+    auto runner{make_failing_suite({{(minimal_fake_path()).generic_string(), "-v", "--serial"}}, outputStream)};
 
     runner.execute();
-    check_output(report_line("Basic Serial Verbose Output"), "BasicSerialVerboseOutput", outputStream);
+    check_output("Basic Serial Verbose Output", "BasicSerialVerboseOutput", outputStream);
+  }
+
+  void test_runner_test::test_throwing_tests()
+  {
+    std::stringstream outputStream{};
+    commandline_arguments args{{(minimal_fake_path()).generic_string()}};
+
+    test_runner runner{args.size(),
+                       args.get(),
+                       "Oliver J. Rosten",
+                       "  ",
+                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
+                       outputStream};
+
+    runner.add_test_suite(
+      "Throwing Suite",
+      throwing_test{"Throwing Free Test"},
+      platform_specific_throwing_test{"Platform Specific Throwing Test"}
+    );
+
+    runner.execute();
+    check_output("Throwing Output", "ThrowingOutput", outputStream);
+
+    const fs::path diagnosticsDir{working_materials() /= "Throwing_Suite_Diagnostics"};
+    fs::create_directory(diagnosticsDir);
+    fs::copy(fake_project() / "output/DiagnosticsOutput/Throwing_Suite", diagnosticsDir);
+
+    check(equivalence, "Exception Output", predictive_materials() / "Throwing_Suite_Diagnostics", diagnosticsDir);
   }
 
   void test_runner_test::test_filtered_suites()
   {
     std::stringstream outputStream{};
-    commandline_arguments args{(fake_project() / "build").generic_string(), "test", "Failing Suite"};
+    commandline_arguments args{{(minimal_fake_path()).generic_string(), "test", "Failing Suite"}};
 
     test_runner runner{args.size(),
                        args.get(),
                        "Oliver J. Rosten",
-                       {"TestSandbox/TestSandbox.cpp", {}, "TestShared/SharedIncludes.hpp"},
                        "  ",
+                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
                        outputStream};
 
     runner.add_test_suite(
@@ -589,7 +669,7 @@ namespace sequoia::testing
     );
 
     runner.execute();
-    check_output(report_line("Filtered Suite Output"), "FilteredSuiteOutput", outputStream);
+    check_output("Filtered Suite Output", "FilteredSuiteOutput", outputStream);
   }
 
   void test_runner_test::test_prune_basic_output()
@@ -597,20 +677,78 @@ namespace sequoia::testing
     fs::remove_all(output_paths{fake_project()}.dir());
 
     std::stringstream outputStream{};
-    commandline_arguments args{(fake_project() / "build").generic_string(), "prune"};
+    commandline_arguments args{{(minimal_fake_path()).generic_string(), "prune"}};
 
     test_runner runner{args.size(),
                        args.get(),
                        "Oliver J. Rosten",
-                       {"TestSandbox/TestSandbox.cpp", {}, "TestShared/SharedIncludes.hpp"},
                        "  ",
+                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
                        outputStream};
 
     runner.execute();
-    check_output(report_line("Prune with no stamp"), "PruneWithNoStamp", outputStream);
+    check_output("Prune with no stamp", "PruneWithNoStamp", outputStream);
 
     runner.execute();
-    check_output(report_line("Prune with no tests"), "PruneWithNoTests", outputStream);
+    check_output("Prune with no tests", "PruneWithNoTests", outputStream);
+  }
+
+  void test_runner_test::test_nested_suite()
+  {
+      std::stringstream outputStream{};
+      commandline_arguments args{{(minimal_fake_path()).generic_string()}};
+
+      test_runner runner{args.size(),
+                         args.get(),
+                         "Oliver J. Rosten",
+                         "  ",
+                         {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
+                         outputStream};
+
+      using namespace object;
+
+      runner.add_test_suite(
+        "Failing Suite",
+        suite{"Free Suite",
+              failing_test{"Free Test"}
+        },
+        suite{"Diagnostics Suite",
+              failing_fp_test{"False positive Test"},
+              failing_fn_test{"False negative Test"}
+        }
+      );
+
+      runner.execute();
+      check_output("Basic Nested Output", "BasicNestedOutput", outputStream);
+  }
+
+  void test_runner_test::test_nested_suite_verbose()
+  {
+    std::stringstream outputStream{};
+    commandline_arguments args{{(minimal_fake_path()).generic_string(), "-v"}};
+
+    test_runner runner{args.size(),
+                       args.get(),
+                       "Oliver J. Rosten",
+                       "  ",
+                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
+                       outputStream};
+
+    using namespace object;
+
+    runner.add_test_suite(
+      "Failing Suite",
+      suite{"Free Suite",
+            failing_test{"Free Test"}
+      },
+      suite{"Diagnostics Suite",
+            failing_fp_test{"False positive Test"},
+            failing_fn_test{"False negative Test"}
+      }
+    );
+
+    runner.execute();
+    check_output("Verbose Nested Output", "VerboseNestedOutput", outputStream);
   }
 
   void test_runner_test::test_instability_analysis()
@@ -695,7 +833,7 @@ namespace sequoia::testing
 
     auto argGenerator{
       [this,&extraArgs, numRuns](){
-         std::vector<std::string> argList{(fake_project() / "build").generic_string(), "locate-instabilities", std::string{numRuns}};
+         std::vector<std::string> argList{(minimal_fake_path()).generic_string(), "locate-instabilities", std::string{numRuns}};
          argList.insert(argList.end(), extraArgs.begin(), extraArgs.end());
          return argList;
       }
@@ -707,8 +845,8 @@ namespace sequoia::testing
     test_runner runner{args.size(),
                        args.get(),
                        "Oliver J. Rosten",
-                       {"TestSandbox/TestSandbox.cpp", {}, "TestShared/SharedIncludes.hpp"},
                        "  ",
+                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
                        outputStream};
 
     runner.add_test_suite(
@@ -728,7 +866,7 @@ namespace sequoia::testing
       file << outputStream.str();
     }
 
-    check(equivalence, report_line(append_lines(message, make_type_info<Ts...>())),
+    check(equivalence, reporter(append_lines(message, make_type_info<Ts...>())),
                       outputDir,
                       predictive_materials() /= outputDirName);
   }

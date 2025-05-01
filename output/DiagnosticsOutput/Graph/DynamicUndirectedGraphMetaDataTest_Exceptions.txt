@@ -1,0 +1,72 @@
+Tests/Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphMetaDataTestingUtilities.hpp, Line 88
+Target index of edge out of range
+
+Expected Exception Type:
+[std::out_of_range]
+connectivity:: [node: 0, edge: 0]: target index 1 out of range - max index is 1
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphMetaDataTestingUtilities.hpp, Line 89
+Mismatched loop
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::connectivity_base: Odd number of loop edges for node 0
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphMetaDataTestingUtilities.hpp, Line 92
+Mismatched partial edges
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::connectivity_base [node: 0, edge: 0]: Reciprocated partial edge does not exist
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphMetaDataTestingUtilities.hpp, Line 93
+Mismatched loop
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::connectivity_base: Odd number of loop edges for node 1
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphMetaDataTestingUtilities.hpp, Line 88
+Target index of edge out of range
+
+Expected Exception Type:
+[std::out_of_range]
+connectivity:: [node: 0, edge: 0]: target index 1 out of range - max index is 1
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphMetaDataTestingUtilities.hpp, Line 89
+Mismatched loop
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::connectivity_base: Odd number of loop edges for node 0
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphMetaDataTestingUtilities.hpp, Line 92
+Mismatched partial edges
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::connectivity_base [node: 0, edge: 0]: Reciprocated partial edge does not exist
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphMetaDataTestingUtilities.hpp, Line 93
+Mismatched loop
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::connectivity_base: Odd number of loop edges for node 1
+
+=======================================
+

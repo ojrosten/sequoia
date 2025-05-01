@@ -1,0 +1,2 @@
+Dynamic and Static
+Standard Top Level Checks:                22;  Failures:  0  [Deep checks: 166]

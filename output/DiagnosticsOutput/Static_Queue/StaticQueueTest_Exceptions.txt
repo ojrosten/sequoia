@@ -5,16 +5,16 @@ Expected Exception Type:
 [std::logic_error]
 Attempting to exceed maximum queue depth
 
-	=======================================
+=======================================
 
 Tests/Core/DataStructures/StaticQueueTest.cpp, Line 40
 Can't construct non-null null queue
 
 Expected Exception Type:
 [std::logic_error]
-initializer_list too big for array
+initializer_list of size 1 too big for array: expected at most 0 elements
 
-	=======================================
+=======================================
 
 Tests/Core/DataStructures/StaticQueueTest.cpp, Line 53
 Trying to push two elements to queue of depth 1
@@ -23,25 +23,25 @@ Expected Exception Type:
 [std::logic_error]
 Attempting to exceed maximum queue depth
 
-	=======================================
+=======================================
 
 Tests/Core/DataStructures/StaticQueueTest.cpp, Line 54
 Can't construct queue of depth 1 with 2 elements
 
 Expected Exception Type:
 [std::logic_error]
-initializer_list too big for array
+initializer_list of size 2 too big for array: expected at most 1 elements
 
-	=======================================
+=======================================
 
 Tests/Core/DataStructures/StaticQueueTest.cpp, Line 86
 Can't construct queue of depth 2 with 3 elements
 
 Expected Exception Type:
 [std::logic_error]
-initializer_list too big for array
+initializer_list of size 3 too big for array: expected at most 2 elements
 
-	=======================================
+=======================================
 
 Tests/Core/DataStructures/StaticQueueTest.cpp, Line 95
 Trying to push 3 elements to a queue of depth 2
@@ -50,7 +50,7 @@ Expected Exception Type:
 [std::logic_error]
 Attempting to exceed maximum queue depth
 
-	=======================================
+=======================================
 
 Tests/Core/DataStructures/StaticQueueTest.cpp, Line 103
 Trying to push 3 elements to a queue of depth 2
@@ -59,5 +59,5 @@ Expected Exception Type:
 [std::logic_error]
 Attempting to exceed maximum queue depth
 
-	=======================================
+=======================================
 

@@ -1,0 +1,191 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - coverage.info - Tests/Maths/Geometry/VectorCoordinatesTest.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../../../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../../../index.html">top level</a> - <a href="index.html">Tests/Maths/Geometry</a> - VectorCoordinatesTest.cpp<span style="font-size: 80%;"> (source / <a href="VectorCoordinatesTest.cpp.func-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">27</td>
+            <td class="headerCovTableEntry">27</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2025-03-30 21:18:04</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">10</td>
+            <td class="headerCovTableEntry">10</td>
+          </tr>
+                  <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">            Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>              : ////////////////////////////////////////////////////////////////////</span>
+<span id="L2"><span class="lineNum">       2</span>              : //                Copyright Oliver J. Rosten 2024.                //</span>
+<span id="L3"><span class="lineNum">       3</span>              : // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //</span>
+<span id="L4"><span class="lineNum">       4</span>              : //    (See accompanying file LICENSE.md or copy at                //</span>
+<span id="L5"><span class="lineNum">       5</span>              : //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //</span>
+<span id="L6"><span class="lineNum">       6</span>              : ////////////////////////////////////////////////////////////////////</span>
+<span id="L7"><span class="lineNum">       7</span>              : </span>
+<span id="L8"><span class="lineNum">       8</span>              : /*! \file */</span>
+<span id="L9"><span class="lineNum">       9</span>              : </span>
+<span id="L10"><span class="lineNum">      10</span>              : #include &quot;VectorCoordinatesTest.hpp&quot;</span>
+<span id="L11"><span class="lineNum">      11</span>              : </span>
+<span id="L12"><span class="lineNum">      12</span>              : #include &quot;sequoia/TestFramework/StateTransitionUtilities.hpp&quot;</span>
+<span id="L13"><span class="lineNum">      13</span>              : </span>
+<span id="L14"><span class="lineNum">      14</span>              : #include &lt;complex&gt;</span>
+<span id="L15"><span class="lineNum">      15</span>              : </span>
+<span id="L16"><span class="lineNum">      16</span>              : namespace sequoia::testing</span>
+<span id="L17"><span class="lineNum">      17</span>              : {</span>
+<span id="L18"><span class="lineNum">      18</span>              :   using namespace maths;</span>
+<span id="L19"><span class="lineNum">      19</span>              : </span>
+<span id="L20"><span class="lineNum">      20</span>              :   // TO DO: move this to physics examples</span>
+<span id="L21"><span class="lineNum">      21</span>              :   namespace</span>
+<span id="L22"><span class="lineNum">      22</span>              :   {</span>
+<span id="L23"><span class="lineNum">      23</span>              :     template&lt;std::size_t D, std::floating_point T&gt;</span>
+<span id="L24"><span class="lineNum">      24</span>              :     struct world_displacements {};</span>
+<span id="L25"><span class="lineNum">      25</span>              : </span>
+<span id="L26"><span class="lineNum">      26</span>              :     template&lt;std::size_t D, std::floating_point T, class Atlas&gt;</span>
+<span id="L27"><span class="lineNum">      27</span>              :     struct world_vector_space</span>
+<span id="L28"><span class="lineNum">      28</span>              :     {</span>
+<span id="L29"><span class="lineNum">      29</span>              :       using set_type          = world_displacements&lt;D, T&gt;;</span>
+<span id="L30"><span class="lineNum">      30</span>              :       using field_type        = T;</span>
+<span id="L31"><span class="lineNum">      31</span>              :       using atlas_type        = Atlas;</span>
+<span id="L32"><span class="lineNum">      32</span>              :       using vector_space_type = world_vector_space;</span>
+<span id="L33"><span class="lineNum">      33</span>              :       constexpr static std::size_t dimension{D};</span>
+<span id="L34"><span class="lineNum">      34</span>              : </span>
+<span id="L35"><span class="lineNum">      35</span>              :       template&lt;maths::basis Basis&gt;</span>
+<span id="L36"><span class="lineNum">      36</span>              :         requires is_orthonormal_basis_v&lt;Basis&gt;</span>
+<span id="L37"><span class="lineNum">      37</span>              :       [[nodiscard]]</span>
+<span id="L38"><span class="lineNum">      38</span>              :       // We want Units^2</span>
+<span id="L39"><span class="lineNum">      39</span>              :       friend constexpr field_type inner_product(const maths::vector_coordinates&lt;world_vector_space, Basis&gt;&amp; lhs, const maths::vector_coordinates&lt;world_vector_space, Basis&gt;&amp; rhs)</span>
+<span id="L40"><span class="lineNum">      40</span>              :       {</span>
+<span id="L41"><span class="lineNum">      41</span>              :         return std::ranges::fold_left(std::views::zip(lhs.values(), rhs.values()), field_type{}, [](field_type f, const auto&amp; z){ return f + std::get&lt;0&gt;(z) * std::get&lt;1&gt;(z); });</span>
+<span id="L42"><span class="lineNum">      42</span>              :       }</span>
+<span id="L43"><span class="lineNum">      43</span>              :     };</span>
+<span id="L44"><span class="lineNum">      44</span>              : </span>
+<span id="L45"><span class="lineNum">      45</span>              :     template&lt;std::size_t D, std::floating_point T, class Units&gt;</span>
+<span id="L46"><span class="lineNum">      46</span>              :     struct world_affine_space</span>
+<span id="L47"><span class="lineNum">      47</span>              :     {</span>
+<span id="L48"><span class="lineNum">      48</span>              :       using set_type = sets::R&lt;D, T&gt;;</span>
+<span id="L49"><span class="lineNum">      49</span>              :       using vector_space_type = world_vector_space&lt;D, T, Units&gt;;</span>
+<span id="L50"><span class="lineNum">      50</span>              :     };</span>
+<span id="L51"><span class="lineNum">      51</span>              : </span>
+<span id="L52"><span class="lineNum">      52</span>              :     template&lt;std::size_t D, std::floating_point T, class Units, basis Basis, class Origin&gt;</span>
+<span id="L53"><span class="lineNum">      53</span>              :     using world_affine_coordinates = affine_coordinates&lt;world_affine_space&lt;D, T, Units&gt;, Basis, Origin&gt;;</span>
+<span id="L54"><span class="lineNum">      54</span>              : </span>
+<span id="L55"><span class="lineNum">      55</span>              :     template&lt;std::size_t D, std::floating_point T, class Units, basis Basis&gt;</span>
+<span id="L56"><span class="lineNum">      56</span>              :     using world_vector_coordinates = vector_coordinates&lt;world_vector_space&lt;D, T, Units&gt;, Basis&gt;;</span>
+<span id="L57"><span class="lineNum">      57</span>              :   }</span>
+<span id="L58"><span class="lineNum">      58</span>              : </span>
+<span id="L59"><span class="lineNum">      59</span>              :   [[nodiscard]]</span>
+<span id="L60"><span class="lineNum">      60</span> <span class="tlaGNC tlaBgGNC">           4 :   std::filesystem::path vector_coordinates_test::source_file() const</span></span>
+<span id="L61"><span class="lineNum">      61</span>              :   {</span>
+<span id="L62"><span class="lineNum">      62</span> <span class="tlaGNC">           4 :     return std::source_location::current().file_name();</span></span>
+<span id="L63"><span class="lineNum">      63</span>              :   }</span>
+<span id="L64"><span class="lineNum">      64</span>              : </span>
+<span id="L65"><span class="lineNum">      65</span> <span class="tlaGNC">           1 :   void vector_coordinates_test::run_tests()</span></span>
+<span id="L66"><span class="lineNum">      66</span>              :   {</span>
+<span id="L67"><span class="lineNum">      67</span> <span class="tlaGNC">           1 :     test_vec&lt;sets::R&lt;1, float&gt;, float, 1&gt;();</span></span>
+<span id="L68"><span class="lineNum">      68</span> <span class="tlaGNC">           1 :     test_vec&lt;sets::R&lt;1,double&gt;, double, 1&gt;();</span></span>
+<span id="L69"><span class="lineNum">      69</span> <span class="tlaGNC">           1 :     test_vec&lt;sets::C&lt;1, float&gt;, std::complex&lt;float&gt;, 1&gt;();</span></span>
+<span id="L70"><span class="lineNum">      70</span>              : </span>
+<span id="L71"><span class="lineNum">      71</span> <span class="tlaGNC">           1 :     test_vec&lt;sets::R&lt;2, float&gt;, float, 2&gt;();</span></span>
+<span id="L72"><span class="lineNum">      72</span> <span class="tlaGNC">           1 :     test_vec&lt;sets::C&lt;2, double&gt;, std::complex&lt;double&gt;, 2&gt;();</span></span>
+<span id="L73"><span class="lineNum">      73</span> <span class="tlaGNC">           1 :     test_vec&lt;sets::C&lt;1, double&gt;, double, 2&gt;(); // Complex numbers over the reals</span></span>
+<span id="L74"><span class="lineNum">      74</span>              : </span>
+<span id="L75"><span class="lineNum">      75</span> <span class="tlaGNC">           1 :     test_real_vec_1_inner_prod&lt;sets::R&lt;1, float&gt;, float&gt;();</span></span>
+<span id="L76"><span class="lineNum">      76</span> <span class="tlaGNC">           1 :     test_complex_vec_1_inner_prod&lt;sets::C&lt;1, double&gt;, std::complex&lt;double&gt;&gt;();</span></span>
+<span id="L77"><span class="lineNum">      77</span> <span class="tlaGNC">           1 :   }</span></span>
+<span id="L78"><span class="lineNum">      78</span>              : </span>
+<span id="L79"><span class="lineNum">      79</span>              :   template&lt;class Set, maths::weak_field Field, std::size_t D&gt;</span>
+<span id="L80"><span class="lineNum">      80</span> <span class="tlaGNC">           6 :   void vector_coordinates_test::test_vec()</span></span>
+<span id="L81"><span class="lineNum">      81</span>              :   {</span>
+<span id="L82"><span class="lineNum">      82</span>              :     using vec_space_t = my_vec_space&lt;Set, Field, D&gt;;</span>
+<span id="L83"><span class="lineNum">      83</span>              :     using vec_t = vector_coordinates&lt;vec_space_t, canonical_basis&lt;Set, Field, D&gt;&gt;;</span>
+<span id="L84"><span class="lineNum">      84</span> <span class="tlaGNC">           6 :     coordinates_operations&lt;vec_t&gt;{*this}.execute();</span></span>
+<span id="L85"><span class="lineNum">      85</span>              : </span>
+<span id="L86"><span class="lineNum">      86</span>              :     static_assert(vector_space&lt;direct_product&lt;vec_space_t, vec_space_t&gt;&gt;);</span>
+<span id="L87"><span class="lineNum">      87</span>              :     static_assert(!vector_space&lt;direct_product&lt;vec_t, vec_t&gt;&gt;);</span>
+<span id="L88"><span class="lineNum">      88</span>              :     static_assert(vector_space&lt;direct_product&lt;direct_product&lt;vec_space_t, vec_space_t&gt;, vec_space_t&gt;&gt;);</span>
+<span id="L89"><span class="lineNum">      89</span> <span class="tlaGNC">           6 :   }</span></span>
+<span id="L90"><span class="lineNum">      90</span>              : </span>
+<span id="L91"><span class="lineNum">      91</span>              :   template&lt;class Set, std::floating_point Field&gt;</span>
+<span id="L92"><span class="lineNum">      92</span> <span class="tlaGNC">           1 :   void vector_coordinates_test::test_real_vec_1_inner_prod()</span></span>
+<span id="L93"><span class="lineNum">      93</span>              :   {</span>
+<span id="L94"><span class="lineNum">      94</span>              :     using vec_t = vector_coordinates&lt;my_vec_space&lt;Set, Field, 1&gt;, canonical_basis&lt;Set, Field, 1&gt;&gt;;</span>
+<span id="L95"><span class="lineNum">      95</span>              : </span>
+<span id="L96"><span class="lineNum">      96</span>              :     static_assert(basis_for&lt;canonical_basis&lt;Set, Field, 1&gt;, my_vec_space&lt;Set, Field, 1&gt;&gt;);</span>
+<span id="L97"><span class="lineNum">      97</span>              : </span>
+<span id="L98"><span class="lineNum">      98</span> <span class="tlaGNC">           1 :     check(equality, &quot;&quot;, inner_product(vec_t{}, vec_t{Field(1)}), Field{});</span></span>
+<span id="L99"><span class="lineNum">      99</span> <span class="tlaGNC">           1 :     check(equality, &quot;&quot;, inner_product(vec_t{Field(1)}, vec_t{}), Field{});</span></span>
+<span id="L100"><span class="lineNum">     100</span> <span class="tlaGNC">           1 :     check(equality, &quot;&quot;, inner_product(vec_t{Field(-1)}, vec_t{Field(1)}), Field{-1});</span></span>
+<span id="L101"><span class="lineNum">     101</span> <span class="tlaGNC">           1 :     check(equality, &quot;&quot;, inner_product(vec_t{Field(1)}, vec_t{Field(-1)}), Field{-1});</span></span>
+<span id="L102"><span class="lineNum">     102</span> <span class="tlaGNC">           1 :     check(equality, &quot;&quot;, inner_product(vec_t{Field(1)}, vec_t{Field(1)}), Field{1});</span></span>
+<span id="L103"><span class="lineNum">     103</span> <span class="tlaGNC">           1 :     check(equality, &quot;&quot;, inner_product(vec_t{Field(-7)}, vec_t{Field(42)}), Field{-294});</span></span>
+<span id="L104"><span class="lineNum">     104</span> <span class="tlaGNC">           1 :   }</span></span>
+<span id="L105"><span class="lineNum">     105</span>              : </span>
+<span id="L106"><span class="lineNum">     106</span>              :   template&lt;class Set, class Field&gt;</span>
+<span id="L107"><span class="lineNum">     107</span>              :     requires is_complex_v&lt;Field&gt;</span>
+<span id="L108"><span class="lineNum">     108</span> <span class="tlaGNC">           1 :   void vector_coordinates_test::test_complex_vec_1_inner_prod()</span></span>
+<span id="L109"><span class="lineNum">     109</span>              :   {</span>
+<span id="L110"><span class="lineNum">     110</span>              :     using vec_t = vector_coordinates&lt;my_vec_space&lt;Set, Field, 1&gt;, canonical_basis&lt;Set, Field, 1&gt;&gt;;</span>
+<span id="L111"><span class="lineNum">     111</span>              : </span>
+<span id="L112"><span class="lineNum">     112</span> <span class="tlaGNC">           1 :     check(equality, &quot;&quot;, inner_product(vec_t{Field(1, 1)}, vec_t{Field(1, 1)}), Field{2});</span></span>
+<span id="L113"><span class="lineNum">     113</span> <span class="tlaGNC">           1 :     check(equality, &quot;&quot;, inner_product(vec_t{Field(1, -1)}, vec_t{Field(1, 1)}), Field{0, 2});</span></span>
+<span id="L114"><span class="lineNum">     114</span> <span class="tlaGNC">           1 :   }</span></span>
+<span id="L115"><span class="lineNum">     115</span>              : }</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.0-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>

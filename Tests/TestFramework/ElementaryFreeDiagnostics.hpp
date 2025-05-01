@@ -13,24 +13,6 @@
 
 namespace sequoia::testing
 {
-  class elementary_false_positive_free_diagnostics final : public free_false_positive_test
-  {
-  public:
-    using free_false_positive_test::free_false_positive_test;
-
-    [[nodiscard]]
-    std::filesystem::path source_file() const;
-
-    void run_tests();
-  private:
-
-    void built_in_type_tests();
-    void test_equality_checks();
-    void test_equivalence_checks();
-    void test_weak_equivalence_checks();
-    void test_with_best_available_checks();
-  };
-
   class elementary_false_negative_free_diagnostics final : public free_false_negative_test
   {
   public:
@@ -44,6 +26,26 @@ namespace sequoia::testing
 
     void built_in_type_tests();
     void test_equality_checks();
+    void test_simple_equality_checks();
+    void test_equivalence_checks();
+    void test_weak_equivalence_checks();
+    void test_with_best_available_checks();
+  };
+
+  class elementary_false_positive_free_diagnostics final : public free_false_positive_test
+  {
+  public:
+    using free_false_positive_test::free_false_positive_test;
+
+    [[nodiscard]]
+    std::filesystem::path source_file() const;
+
+    void run_tests();
+  private:
+
+    void built_in_type_tests();
+    void test_equality_checks();
+    void test_simple_equality_checks();
     void test_equivalence_checks();
     void test_weak_equivalence_checks();
     void test_with_best_available_checks();

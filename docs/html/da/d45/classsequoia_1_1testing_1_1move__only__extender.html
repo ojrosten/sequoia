@@ -76,81 +76,78 @@ $(function() {
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-attribs">Static Public Attributes</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="../../d5/d9f/classsequoia_1_1testing_1_1move__only__extender-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">sequoia::testing::move_only_extender&lt; Mode &gt; Class Template Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>class template for plugging into the <a class="el" href="../../d8/d58/conceptsequoia_1_1testing_1_1extender.html#checker_primary">checker</a> class template to provide allocation checks for move-only types, see <a class="el" href="../../d2/dbc/MoveOnlyCheckers_8hpp.html#move_only_definition">here</a>.  
+<p>class template for plugging into the <a class="el" href="../../d7/de5/classsequoia_1_1testing_1_1checker.html#checker_primary">checker</a> class template to provide allocation checks for move-only types, see <a class="el" href="../../d2/dbc/MoveOnlyCheckers_8hpp.html#move_only_definition">here</a>.  
  <a href="../../da/d45/classsequoia_1_1testing_1_1move__only__extender.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="../../de/d25/MoveOnlyTestCore_8hpp_source.html">MoveOnlyTestCore.hpp</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aa0b15134f8527fbcc0568e4c9b06c363"><td class="memItemLeft" align="right" valign="top"><a id="aa0b15134f8527fbcc0568e4c9b06c363" name="aa0b15134f8527fbcc0568e4c9b06c363"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>move_only_extender</b> (<a class="el" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger</a>&lt; Mode &gt; &amp;logger)</td></tr>
-<tr class="separator:aa0b15134f8527fbcc0568e4c9b06c363"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abc85c49cbc359e95544aa1ebea96f337"><td class="memItemLeft" align="right" valign="top"><a id="abc85c49cbc359e95544aa1ebea96f337" name="abc85c49cbc359e95544aa1ebea96f337"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>move_only_extender</b> (const <a class="el" href="../../da/d45/classsequoia_1_1testing_1_1move__only__extender.html">move_only_extender</a> &amp;)=delete</td></tr>
-<tr class="separator:abc85c49cbc359e95544aa1ebea96f337"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0c328ec6399e6b701d4860cf4be07e3c"><td class="memItemLeft" align="right" valign="top"><a id="a0c328ec6399e6b701d4860cf4be07e3c" name="a0c328ec6399e6b701d4860cf4be07e3c"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>move_only_extender</b> (<a class="el" href="../../da/d45/classsequoia_1_1testing_1_1move__only__extender.html">move_only_extender</a> &amp;&amp;)=delete</td></tr>
-<tr class="separator:a0c328ec6399e6b701d4860cf4be07e3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae8e50afa00df4f3d8c27c1a0b1e25390"><td class="memItemLeft" align="right" valign="top"><a id="ae8e50afa00df4f3d8c27c1a0b1e25390" name="ae8e50afa00df4f3d8c27c1a0b1e25390"></a>
-<a class="el" href="../../da/d45/classsequoia_1_1testing_1_1move__only__extender.html">move_only_extender</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="../../da/d45/classsequoia_1_1testing_1_1move__only__extender.html">move_only_extender</a> &amp;)=delete</td></tr>
-<tr class="separator:ae8e50afa00df4f3d8c27c1a0b1e25390"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afa8de0996f21db60c7582df68f5a4762"><td class="memItemLeft" align="right" valign="top"><a id="afa8de0996f21db60c7582df68f5a4762" name="afa8de0996f21db60c7582df68f5a4762"></a>
-<a class="el" href="../../da/d45/classsequoia_1_1testing_1_1move__only__extender.html">move_only_extender</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="../../da/d45/classsequoia_1_1testing_1_1move__only__extender.html">move_only_extender</a> &amp;&amp;)=delete</td></tr>
-<tr class="separator:afa8de0996f21db60c7582df68f5a4762"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adde575c5e33aa3e59ed7fe23b126cb04"><td class="memTemplParams" colspan="2"><a id="adde575c5e33aa3e59ed7fe23b126cb04" name="adde575c5e33aa3e59ed7fe23b126cb04"></a>
-template&lt;moveonly T&gt; </td></tr>
-<tr class="memitem:adde575c5e33aa3e59ed7fe23b126cb04"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_semantics</b> (std::string_view description, T &amp;&amp;x, T &amp;&amp;y, const T &amp;xClone, const T &amp;yClone, const T &amp;movedFrom)</td></tr>
-<tr class="memdesc:adde575c5e33aa3e59ed7fe23b126cb04"><td class="mdescLeft">&#160;</td><td class="mdescRight">Preconditions: x!=y; x==xClone, y==yClone. <br /></td></tr>
-<tr class="separator:adde575c5e33aa3e59ed7fe23b126cb04"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a531b2a2cb896a881c7141aacc7bfc20a"><td class="memTemplParams" colspan="2"><a id="a531b2a2cb896a881c7141aacc7bfc20a" name="a531b2a2cb896a881c7141aacc7bfc20a"></a>
-template&lt;moveonly T&gt; </td></tr>
-<tr class="memitem:a531b2a2cb896a881c7141aacc7bfc20a"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_semantics</b> (std::string_view description, T &amp;&amp;x, T &amp;&amp;y, const T &amp;xClone, const T &amp;yClone)</td></tr>
-<tr class="separator:a531b2a2cb896a881c7141aacc7bfc20a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a346e7a453cc524d847bd49662bf3321f"><td class="memTemplParams" colspan="2"><a id="a346e7a453cc524d847bd49662bf3321f" name="a346e7a453cc524d847bd49662bf3321f"></a>
-template&lt;std::invocable xMaker, moveonly T = std::invoke_result_t&lt;xMaker&gt;, invocable_r&lt; T &gt; yMaker&gt; </td></tr>
-<tr class="memitem:a346e7a453cc524d847bd49662bf3321f"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_semantics</b> (std::string_view description, xMaker xFn, yMaker yFn, const T &amp;movedFrom)</td></tr>
-<tr class="separator:a346e7a453cc524d847bd49662bf3321f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a300b31c84490210f7e48ad40ac049d22"><td class="memTemplParams" colspan="2"><a id="a300b31c84490210f7e48ad40ac049d22" name="a300b31c84490210f7e48ad40ac049d22"></a>
-template&lt;std::invocable xMaker, moveonly T = std::invoke_result_t&lt;xMaker&gt;, invocable_r&lt; T &gt; yMaker&gt; </td></tr>
-<tr class="memitem:a300b31c84490210f7e48ad40ac049d22"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_semantics</b> (std::string_view description, xMaker xFn, yMaker yFn)</td></tr>
-<tr class="separator:a300b31c84490210f7e48ad40ac049d22"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae79f15dc7f72f983e7a49f6ae692d83b"><td class="memTemplParams" colspan="2"><a id="ae79f15dc7f72f983e7a49f6ae692d83b" name="ae79f15dc7f72f983e7a49f6ae692d83b"></a>
-template&lt;moveonly T&gt; <br />
+<tr class="memitem:aa6d73b18672363a94a8d03cc06b60239"><td class="memTemplParams" colspan="2"><a id="aa6d73b18672363a94a8d03cc06b60239" name="aa6d73b18672363a94a8d03cc06b60239"></a>
+template&lt;class Self , moveonly T, class U &gt; <br />
+requires checkable_for_move_semantics&lt;Mode, T, U&gt;</td></tr>
+<tr class="memitem:aa6d73b18672363a94a8d03cc06b60239"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_semantics</b> (this Self &amp;self, const <a class="el" href="../../da/dce/classsequoia_1_1testing_1_1reporter.html">reporter</a> &amp;description, T &amp;&amp;x, T &amp;&amp;y, const U &amp;xEquivalent, const U &amp;yEquivalent, const U &amp;movedFromPostConstruction, const U &amp;movedFromPostAssignment)</td></tr>
+<tr class="memdesc:aa6d73b18672363a94a8d03cc06b60239"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prerequisites: x!=y; x==xEquivalent, y==yEquivalent. <br /></td></tr>
+<tr class="separator:aa6d73b18672363a94a8d03cc06b60239"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2456452f03ca0e478d1ec8c052db5c65"><td class="memTemplParams" colspan="2"><a id="a2456452f03ca0e478d1ec8c052db5c65" name="a2456452f03ca0e478d1ec8c052db5c65"></a>
+template&lt;class Self , moveonly T, class U &gt; <br />
+requires checkable_for_move_semantics&lt;Mode, T, U&gt;</td></tr>
+<tr class="memitem:a2456452f03ca0e478d1ec8c052db5c65"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_semantics</b> (this Self &amp;self, const <a class="el" href="../../da/dce/classsequoia_1_1testing_1_1reporter.html">reporter</a> &amp;description, T &amp;&amp;x, T &amp;&amp;y, const U &amp;xEquivalent, const U &amp;yEquivalent)</td></tr>
+<tr class="separator:a2456452f03ca0e478d1ec8c052db5c65"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca039631511048a9acb2274bb6365cfd"><td class="memTemplParams" colspan="2"><a id="aca039631511048a9acb2274bb6365cfd" name="aca039631511048a9acb2274bb6365cfd"></a>
+template&lt;class Self , moveonly T, regular_invocable_r&lt; T &gt; xMaker, regular_invocable_r&lt; T &gt; yMaker&gt; </td></tr>
+<tr class="memitem:aca039631511048a9acb2274bb6365cfd"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_semantics</b> (this Self &amp;self, const <a class="el" href="../../da/dce/classsequoia_1_1testing_1_1reporter.html">reporter</a> &amp;description, xMaker xFn, yMaker yFn, const T &amp;movedFromPostConstruction, const T &amp;movedFromPostAssignment)</td></tr>
+<tr class="separator:aca039631511048a9acb2274bb6365cfd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac83c8dcb5cf310799cdbcc01d106f90f"><td class="memTemplParams" colspan="2"><a id="ac83c8dcb5cf310799cdbcc01d106f90f" name="ac83c8dcb5cf310799cdbcc01d106f90f"></a>
+template&lt;class Self , std::regular_invocable xMaker, moveonly T = std::invoke_result_t&lt;xMaker&gt;, regular_invocable_r&lt; T &gt; yMaker&gt; </td></tr>
+<tr class="memitem:ac83c8dcb5cf310799cdbcc01d106f90f"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_semantics</b> (this Self &amp;self, const <a class="el" href="../../da/dce/classsequoia_1_1testing_1_1reporter.html">reporter</a> &amp;description, xMaker xFn, yMaker yFn)</td></tr>
+<tr class="separator:ac83c8dcb5cf310799cdbcc01d106f90f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa96373d17b6c94a454167a3ffe653a9a"><td class="memTemplParams" colspan="2"><a id="aa96373d17b6c94a454167a3ffe653a9a" name="aa96373d17b6c94a454167a3ffe653a9a"></a>
+template&lt;class Self , moveonly T, class U &gt; <br />
 requires std::totally_ordered&lt;T&gt;</td></tr>
-<tr class="memitem:ae79f15dc7f72f983e7a49f6ae692d83b"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_semantics</b> (std::string_view description, T &amp;&amp;x, T &amp;&amp;y, const T &amp;xClone, const T &amp;yClone, const T &amp;movedFrom, std::weak_ordering order)</td></tr>
-<tr class="memdesc:ae79f15dc7f72f983e7a49f6ae692d83b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Preconditions: x!=y, with values consistent with order; x==xClone, y==yClone. <br /></td></tr>
-<tr class="separator:ae79f15dc7f72f983e7a49f6ae692d83b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab19e91bfaca3552d96ca1d53dc3c1a78"><td class="memTemplParams" colspan="2"><a id="ab19e91bfaca3552d96ca1d53dc3c1a78" name="ab19e91bfaca3552d96ca1d53dc3c1a78"></a>
-template&lt;moveonly T&gt; <br />
+<tr class="memitem:aa96373d17b6c94a454167a3ffe653a9a"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_semantics</b> (this Self &amp;self, const <a class="el" href="../../da/dce/classsequoia_1_1testing_1_1reporter.html">reporter</a> &amp;description, T &amp;&amp;x, T &amp;&amp;y, const U &amp;xEquivalent, const U &amp;yEquivalent, const U &amp;movedFromPostConstruction, const U &amp;movedFromPostAssignment, std::weak_ordering order)</td></tr>
+<tr class="memdesc:aa96373d17b6c94a454167a3ffe653a9a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prerequisites: x!=y, with values consistent with order; x==xEquivalent, y==yEquivalent. <br /></td></tr>
+<tr class="separator:aa96373d17b6c94a454167a3ffe653a9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a17d1091a160dae0171a98a64caa15577"><td class="memTemplParams" colspan="2"><a id="a17d1091a160dae0171a98a64caa15577" name="a17d1091a160dae0171a98a64caa15577"></a>
+template&lt;class Self , moveonly T, class U &gt; <br />
+requires checkable_for_move_semantics&lt;Mode, T, U&gt; &amp;&amp; std::totally_ordered&lt;T&gt;</td></tr>
+<tr class="memitem:a17d1091a160dae0171a98a64caa15577"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_semantics</b> (this Self &amp;self, const <a class="el" href="../../da/dce/classsequoia_1_1testing_1_1reporter.html">reporter</a> &amp;description, T &amp;&amp;x, T &amp;&amp;y, const U &amp;xEquivalent, const U &amp;yEquivalent, std::weak_ordering order)</td></tr>
+<tr class="separator:a17d1091a160dae0171a98a64caa15577"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a44c271f65135ec399e2c25960302e1b6"><td class="memTemplParams" colspan="2"><a id="a44c271f65135ec399e2c25960302e1b6" name="a44c271f65135ec399e2c25960302e1b6"></a>
+template&lt;class Self , std::regular_invocable xMaker, moveonly T = std::invoke_result_t&lt;xMaker&gt;, regular_invocable_r&lt; T &gt; yMaker&gt; <br />
 requires std::totally_ordered&lt;T&gt;</td></tr>
-<tr class="memitem:ab19e91bfaca3552d96ca1d53dc3c1a78"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_semantics</b> (std::string_view description, T &amp;&amp;x, T &amp;&amp;y, const T &amp;xClone, const T &amp;yClone, std::weak_ordering order)</td></tr>
-<tr class="separator:ab19e91bfaca3552d96ca1d53dc3c1a78"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0fd1cc4d42ea482c5a8c318f50803141"><td class="memTemplParams" colspan="2"><a id="a0fd1cc4d42ea482c5a8c318f50803141" name="a0fd1cc4d42ea482c5a8c318f50803141"></a>
-template&lt;std::invocable&lt;&gt; xMaker, moveonly T = std::invoke_result_t&lt;xMaker&gt;, invocable_r&lt; T &gt; yMaker&gt; <br />
+<tr class="memitem:a44c271f65135ec399e2c25960302e1b6"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_semantics</b> (this Self &amp;self, const <a class="el" href="../../da/dce/classsequoia_1_1testing_1_1reporter.html">reporter</a> &amp;description, xMaker xFn, yMaker yFn, const T &amp;movedFromPostConstruction, const T &amp;movedFromPostAssignment, std::weak_ordering order)</td></tr>
+<tr class="separator:a44c271f65135ec399e2c25960302e1b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a15841c136927dfb187825eaf770f2ed8"><td class="memTemplParams" colspan="2"><a id="a15841c136927dfb187825eaf770f2ed8" name="a15841c136927dfb187825eaf770f2ed8"></a>
+template&lt;class Self , std::regular_invocable xMaker, moveonly T = std::invoke_result_t&lt;xMaker&gt;, regular_invocable_r&lt; T &gt; yMaker&gt; <br />
 requires std::totally_ordered&lt;T&gt;</td></tr>
-<tr class="memitem:a0fd1cc4d42ea482c5a8c318f50803141"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_semantics</b> (std::string_view description, xMaker xFn, yMaker yFn, const T &amp;movedFrom, std::weak_ordering order)</td></tr>
-<tr class="separator:a0fd1cc4d42ea482c5a8c318f50803141"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1c7eb55b9572ac8ffd13d24451e671ac"><td class="memTemplParams" colspan="2"><a id="a1c7eb55b9572ac8ffd13d24451e671ac" name="a1c7eb55b9572ac8ffd13d24451e671ac"></a>
-template&lt;std::invocable&lt;&gt; xMaker, moveonly T = std::invoke_result_t&lt;xMaker&gt;, invocable_r&lt; T &gt; yMaker&gt; <br />
-requires std::totally_ordered&lt;T&gt;</td></tr>
-<tr class="memitem:a1c7eb55b9572ac8ffd13d24451e671ac"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_semantics</b> (std::string_view description, xMaker xFn, yMaker yFn, std::weak_ordering order)</td></tr>
-<tr class="separator:a1c7eb55b9572ac8ffd13d24451e671ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a15841c136927dfb187825eaf770f2ed8"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_semantics</b> (this Self &amp;self, const <a class="el" href="../../da/dce/classsequoia_1_1testing_1_1reporter.html">reporter</a> &amp;description, xMaker xFn, yMaker yFn, std::weak_ordering order)</td></tr>
+<tr class="separator:a15841c136927dfb187825eaf770f2ed8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
 <tr class="memitem:acf19748c9f768e0f1d5a033949f119f7"><td class="memItemLeft" align="right" valign="top"><a id="acf19748c9f768e0f1d5a033949f119f7" name="acf19748c9f768e0f1d5a033949f119f7"></a>
-static constexpr <a class="el" href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a>&#160;</td><td class="memItemRight" valign="bottom"><b>mode</b> {Mode}</td></tr>
+static constexpr test_mode&#160;</td><td class="memItemRight" valign="bottom"><b>mode</b> {Mode}</td></tr>
 <tr class="separator:acf19748c9f768e0f1d5a033949f119f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr class="memitem:a6a6863520939429718fe811a66bdc582"><td class="memItemLeft" align="right" valign="top"><a id="a6a6863520939429718fe811a66bdc582" name="a6a6863520939429718fe811a66bdc582"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>move_only_extender</b> (<a class="el" href="../../da/d45/classsequoia_1_1testing_1_1move__only__extender.html">move_only_extender</a> &amp;&amp;) noexcept=default</td></tr>
+<tr class="separator:a6a6863520939429718fe811a66bdc582"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaf14fa47f7e10d5a2b8da2d434402238"><td class="memItemLeft" align="right" valign="top"><a id="aaf14fa47f7e10d5a2b8da2d434402238" name="aaf14fa47f7e10d5a2b8da2d434402238"></a>
+<a class="el" href="../../da/d45/classsequoia_1_1testing_1_1move__only__extender.html">move_only_extender</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="../../da/d45/classsequoia_1_1testing_1_1move__only__extender.html">move_only_extender</a> &amp;&amp;) noexcept=default</td></tr>
+<tr class="separator:aaf14fa47f7e10d5a2b8da2d434402238"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><div class="compoundTemplParams">template&lt;<a class="el" href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> Mode&gt;<br />
-class sequoia::testing::move_only_extender&lt; Mode &gt;</div><p>class template for plugging into the <a class="el" href="../../d8/d58/conceptsequoia_1_1testing_1_1extender.html#checker_primary">checker</a> class template to provide allocation checks for move-only types, see <a class="el" href="../../d2/dbc/MoveOnlyCheckers_8hpp.html#move_only_definition">here</a>. </p>
+<div class="textblock"><div class="compoundTemplParams">template&lt;test_mode Mode&gt;<br />
+class sequoia::testing::move_only_extender&lt; Mode &gt;</div><p>class template for plugging into the <a class="el" href="../../d7/de5/classsequoia_1_1testing_1_1checker.html#checker_primary">checker</a> class template to provide allocation checks for move-only types, see <a class="el" href="../../d2/dbc/MoveOnlyCheckers_8hpp.html#move_only_definition">here</a>. </p>
 <p><a class="anchor" id="move_only_extender_primary"></a></p>
 </div><hr/>The documentation for this class was generated from the following file:<ul>
 <li>C:/Users/olive/sequoia/Source/sequoia/TestFramework/<a class="el" href="../../de/d25/MoveOnlyTestCore_8hpp_source.html">MoveOnlyTestCore.hpp</a></li>

@@ -14,14 +14,14 @@ Container:
 House:
 
 -----------Grand Totals-----------
-[Total Run Time: 50.1ms]
-[Execution Time: 11.4ms]
+[Total Run Time: 20ms]
+[Execution Time: 6.99ms]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
-	False Negative Checks:                     0;  Failures:  0
-	False Negative Performance Checks:         0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
 
 Running tests...
 
@@ -38,13 +38,13 @@ Container:
 House:
 
 -----------Grand Totals-----------
-[Total Run Time: 51.4ms]
-[Execution Time: 8.97ms]
+[Total Run Time: 16.3ms]
+[Execution Time: 3.71ms]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
-	False Negative Checks:                     0;  Failures:  0
-	False Negative Performance Checks:         0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
 
 No instabilities detected

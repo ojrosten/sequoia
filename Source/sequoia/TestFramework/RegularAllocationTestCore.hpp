@@ -29,23 +29,18 @@ namespace sequoia::testing
   public:
     constexpr static test_mode mode{Mode};
 
-    explicit regular_allocation_extender(test_logger<Mode>& logger) : m_pLogger{&logger} {}
+    regular_allocation_extender() = default;
 
-    regular_allocation_extender(const regular_allocation_extender&) = delete;
-    regular_allocation_extender(regular_allocation_extender&&)      = delete;
-
-    regular_allocation_extender& operator=(const regular_allocation_extender&) = delete;
-    regular_allocation_extender& operator=(regular_allocation_extender&&)      = delete;
-
-    template<pseudoregular T, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
+    template<class Self, pseudoregular T, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
       requires (!std::totally_ordered<T> && (sizeof...(Getters) > 0))
-    void check_semantics(std::string_view description, const T& x, const T& y, Mutator m, allocation_info<T, Getters>... info)
+    void check_semantics(this Self& self, const reporter& description, const T& x, const T& y, Mutator m, allocation_info<T, Getters>... info)
     {
-      testing::check_semantics(append_lines(description, emphasise("Regular Semantics")), logger(), x, y, m, info...);
+      testing::check_semantics(append_lines(self.report(description), emphasise("Regular Semantics")), self.m_Logger, x, y, m, info...);
     }
 
     template
     <
+      class Self,
       pseudoregular T,
       invocable_r<T> xMaker,
       invocable_r<T> yMaker,
@@ -53,20 +48,21 @@ namespace sequoia::testing
       alloc_getter<T>... Getters
     >
       requires (!std::totally_ordered<T> && (sizeof...(Getters) > 0))
-    std::pair<T, T> check_semantics(std::string_view description, xMaker xFn, yMaker yFn, Mutator m, allocation_info<T, Getters>... info)
+    std::pair<T, T> check_semantics(this Self& self, const reporter& description, xMaker xFn, yMaker yFn, Mutator m, allocation_info<T, Getters>... info)
     {
-      return testing::check_semantics(append_lines(description, emphasise("Regular Semantics")), logger(), std::move(xFn), std::move(yFn), m, info...);
+      return testing::check_semantics(append_lines(self.report(description), emphasise("Regular Semantics")), self.m_Logger, std::move(xFn), std::move(yFn), m, info...);
     }
 
-    template<pseudoregular T, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
+    template<class Self, pseudoregular T, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
       requires (std::totally_ordered<T> && (sizeof...(Getters) > 0))
-    void check_semantics(std::string_view description, const T& x, const T& y, std::weak_ordering order, Mutator m, allocation_info<T, Getters>... info)
+    void check_semantics(this Self& self, const reporter& description, const T& x, const T& y, std::weak_ordering order, Mutator m, allocation_info<T, Getters>... info)
     {
-      testing::check_semantics(append_lines(description, emphasise("Ordered Semantics")), logger(), x, y, order, m, info...);
+      testing::check_semantics(append_lines(self.report(description), emphasise("Ordered Semantics")), self.m_Logger, x, y, order, m, info...);
     }
 
     template
     <
+      class Self,
       pseudoregular T,
       invocable_r<T> xMaker,
       invocable_r<T> yMaker,
@@ -74,25 +70,15 @@ namespace sequoia::testing
       alloc_getter<T>... Getters
     >
       requires (std::totally_ordered<T> && (sizeof...(Getters) > 0))
-    std::pair<T, T> check_semantics(std::string_view description, xMaker xFn, yMaker yFn, std::weak_ordering order, Mutator m, allocation_info<T, Getters>... info)
+    std::pair<T, T> check_semantics(this Self& self, const reporter& description, xMaker xFn, yMaker yFn, std::weak_ordering order, Mutator m, allocation_info<T, Getters>... info)
     {
-      return testing::check_semantics(append_lines(description, emphasise("Ordered Semantics")), logger(), std::move(xFn), std::move(yFn), order, m, info...);
+      return testing::check_semantics(append_lines(self.report(description), emphasise("Ordered Semantics")), self.m_Logger, std::move(xFn), std::move(yFn), order, m, info...);
     }
   protected:
     ~regular_allocation_extender() = default;
-  private:
-    [[nodiscard]]
-    test_logger<Mode>& logger() noexcept { return *m_pLogger; }
 
-    test_logger<Mode>* m_pLogger;
-  };
-
-  template<class Test, test_mode Mode>
-  concept reg_alloc_test =
-       std::derived_from<Test, basic_test<checker<Mode, regular_allocation_extender<Mode>>>>
-    && !std::is_abstract_v<Test>
-    && requires{
-         std::declval<Test>().template test_allocation<true, true, true>();
+    regular_allocation_extender(regular_allocation_extender&&)            noexcept = default;
+    regular_allocation_extender& operator=(regular_allocation_extender&&) noexcept = default;
   };
 
   /*!  \brief Templated on the test_mode, this forms the basis of all allocation tests for regular types.
@@ -106,7 +92,7 @@ namespace sequoia::testing
 
        Within the derived class, a call
 
-       do_allocation_tests(*this);
+       do_allocation_tests();
 
        will ensure that all checks defined in the test_allocation function template are executed
        for each combination of the allocation propagation flags.
@@ -114,33 +100,33 @@ namespace sequoia::testing
        \anchor basic_regular_allocation_test_primary
    */
   template<test_mode Mode>
-  class basic_regular_allocation_test : public basic_test<checker<Mode, regular_allocation_extender<Mode>>>
+  class basic_regular_allocation_test : public basic_test<Mode, regular_allocation_extender<Mode>>
   {
   public:
-    using basic_test<checker<Mode, regular_allocation_extender<Mode>>>::basic_test;
+    using basic_test<Mode, regular_allocation_extender<Mode>>::basic_test;
 
-    basic_regular_allocation_test(const basic_regular_allocation_test&) = delete;
-    basic_regular_allocation_test& operator=(const basic_regular_allocation_test&) = delete;
   protected:
+    ~basic_regular_allocation_test() = default;
+
     basic_regular_allocation_test(basic_regular_allocation_test&&)            noexcept = default;
     basic_regular_allocation_test& operator=(basic_regular_allocation_test&&) noexcept = default;
 
-    template<reg_alloc_test<Mode> Test>
-    static void do_allocation_tests(Test& test)
+    template<class Self>
+    void do_allocation_tests(this Self& self)
     {
-      test.template test_allocation<false, false, false>();
-      test.template test_allocation<false, false, true>();
-      test.template test_allocation<false, true, false>();
-      test.template test_allocation<false, true, true>();
-      test.template test_allocation<true, false, false>();
-      test.template test_allocation<true, false, true>();
-      test.template test_allocation<true, true, false>();
-      test.template test_allocation<true, true, true>();
+      self.template test_allocation<false, false, false>();
+      self.template test_allocation<false, false, true>();
+      self.template test_allocation<false, true, false>();
+      self.template test_allocation<false, true, true>();
+      self.template test_allocation<true, false, false>();
+      self.template test_allocation<true, false, true>();
+      self.template test_allocation<true, true, false>();
+      self.template test_allocation<true, true, true>();
     }
   };
 
   /*! \anchor regular_allocation_test_alias */
   using regular_allocation_test                = basic_regular_allocation_test<test_mode::standard>;
-  using regular_allocation_false_negative_test = basic_regular_allocation_test<test_mode::false_negative>;
   using regular_allocation_false_positive_test = basic_regular_allocation_test<test_mode::false_positive>;
+  using regular_allocation_false_negative_test = basic_regular_allocation_test<test_mode::false_negative>;
 }

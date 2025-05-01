@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////
-//               Copyright Oliver Jacob Rosten 2023.              //
+//               Copyright Oliver Jacob Rosten 2025.              //
 // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
 //    (See accompanying file LICENSE.md or copy at                //
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
@@ -9,7 +9,7 @@
 
 #include "ContainerAllocationTest.hpp"
 
-namespace sequoia::testing
+namespace fakeProject::testing
 {
     [[nodiscard]]
     std::filesystem::path container_allocation_test::source_file() const
@@ -19,7 +19,7 @@ namespace sequoia::testing
 
     void container_allocation_test::run_tests()
     {
-        do_allocation_tests(*this);
+        do_allocation_tests();
     }
 
     template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>

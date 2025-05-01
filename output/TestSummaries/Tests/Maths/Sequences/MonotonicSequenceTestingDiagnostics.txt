@@ -1,2 +1,2 @@
-False Positive Diagnostics
-False Positive Checks:                     9;  Failures:  0
+False Negative Diagnostics
+False Negative Checks:                     9;  Failures:  0

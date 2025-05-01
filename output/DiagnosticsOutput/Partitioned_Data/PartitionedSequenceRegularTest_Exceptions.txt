@@ -1,0 +1,78 @@
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 117
+Pushing back to non-existent partition throws
+
+Expected Exception Type:
+[std::out_of_range]
+partition_sequence::push_back_to_partitionindex 0 out of range
+
+=======================================
+
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 125
+Inserting to non-existent partition throws
+
+Expected Exception Type:
+[std::out_of_range]
+partition_sequence::insert_to_partitionindex 18446744073709551615 out of range
+
+=======================================
+
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 133
+Inserting to non-existent partition throws
+
+Expected Exception Type:
+[std::out_of_range]
+partition_sequence::insert_to_partitionindex 18446744073709551615 out of range
+
+=======================================
+
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 175
+Pushing back to non-existent partition throws
+
+Expected Exception Type:
+[std::out_of_range]
+partition_sequence::push_back_to_partitionindex 1 out of range
+
+=======================================
+
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 183
+Inserting to non-existent partition throws
+
+Expected Exception Type:
+[std::out_of_range]
+partition_sequence::insert_to_partitionindex 18446744073709551615 out of range
+
+=======================================
+
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 191
+Inserting to non-existent partition throws
+
+Expected Exception Type:
+[std::out_of_range]
+partition_sequence::insert_to_partitionindex 18446744073709551615 out of range
+
+=======================================
+
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 251
+
+Expected Exception Type:
+[std::domain_error]
+partitioned_sequence::erase - Invalid range specified by iterators belonging to partitions [0, 18446744073709551615]
+
+=======================================
+
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 259
+
+Expected Exception Type:
+[std::domain_error]
+partitioned_sequence::erase - Invalid range specified by iterators belonging to partitions [18446744073709551615, 0]
+
+=======================================
+
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 616
+
+Expected Exception Type:
+[std::domain_error]
+partitioned_sequence::erase - Invalid range specified by iterators belonging to partitions [0, 1]
+
+=======================================
+

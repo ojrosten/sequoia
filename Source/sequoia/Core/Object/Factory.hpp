@@ -41,7 +41,7 @@ namespace sequoia::object
     friend constexpr bool operator==(const factory_dereference_policy&, const factory_dereference_policy&) noexcept = default;
 
     [[nodiscard]]
-    static reference get(Iterator i)
+    constexpr static reference get(Iterator i)
     {
       return i->first;
     }
@@ -67,8 +67,8 @@ namespace sequoia::object
   class factory
   {
   public:
-    using key          = std::string;
-    using vessel       = std::variant<Products...>;
+    using key    = std::string;
+    using vessel = std::variant<Products...>;
 
     [[nodiscard]]
     constexpr static std::size_t size() noexcept
@@ -89,11 +89,13 @@ namespace sequoia::object
 
     factory()
       requires (has_extrinsic_nomenclator<Products> && ...)
-      : factory{ {nomenclator<Products>{}()...}}
+      : factory{nomenclator<Products>{}()...}
     {}
 
-    factory(const std::array<std::string_view, size()>& names)
-      : m_Creators{make_array(names, std::make_index_sequence<size()>{})}
+    template<class... Names>
+        requires (sizeof...(Names) == size()) && (std::is_constructible_v<std::string, Names> && ...)
+    factory(Names... names)
+      : m_Creators{make_element<Products>(std::move(names))...}
     {
       std::ranges::sort(m_Creators, [](const element& lhs, const element& rhs){ return lhs.first < rhs.first; });
 
@@ -155,23 +157,14 @@ namespace sequoia::object
       return (found != m_Creators.end()) && (found->first == name) ? found : m_Creators.end();
     }
 
-    template<std::size_t... I>
+    template<class Product>
     [[nodiscard]]
-    std::array<element, size()> make_array(const std::array<std::string_view, size()>& names, std::index_sequence<I...>)
+    static element make_element(std::string name)
     {
-      return {make_element<I, Products>(names)...};
-    }
-
-    template<std::size_t I, class Product>
-    [[nodiscard]]
-    static element make_element(const std::array<std::string_view, size()>& names)
-    {
-      auto view{names[I]};
-
-      if(view.empty())
+      if(name.empty())
         throw std::logic_error{"Factory product names must not be empty!"};
 
-      return {std::string{view}, product_creator<Product>{}};
+      return {std::move(name), product_creator<Product>{}};
     }
   };
 }

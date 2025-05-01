@@ -74,6 +74,7 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#namespaces">Namespaces</a> &#124;
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle"><div class="title">RegularCheckersDetails.hpp File Reference</div></div>
@@ -86,6 +87,12 @@ $(function() {
 </div>
 <p><a href="../../d6/d98/RegularCheckersDetails_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
+Namespaces</h2></td></tr>
+<tr class="memitem:dd/d52/namespacesequoia_1_1testing_1_1impl"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d52/namespacesequoia_1_1testing_1_1impl.html">sequoia::testing::impl</a></td></tr>
+<tr class="memdesc:dd/d52/namespacesequoia_1_1testing_1_1impl"><td class="mdescLeft">&#160;</td><td class="mdescRight">Condition for applying a container check. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a813d319dc5c03e9e8fa975dac72344d0"><td class="memTemplParams" colspan="2"><a id="a813d319dc5c03e9e8fa975dac72344d0" name="a813d319dc5c03e9e8fa975dac72344d0"></a>
@@ -104,70 +111,15 @@ template&lt;test_mode Mode, class Actions , pseudoregular T, std::invocable&lt; 
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
 <tr class="memitem:a843379f9a2b26cfd489b18888feb28f5"><td class="memTemplParams" colspan="2">template&lt;class Actions , class... Args&gt; </td></tr>
-<tr class="memitem:a843379f9a2b26cfd489b18888feb28f5"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d6/d98/RegularCheckersDetails_8hpp.html#a843379f9a2b26cfd489b18888feb28f5">sequoia::testing::impl::has_post_copy_action</a></td></tr>
+<tr class="memitem:a843379f9a2b26cfd489b18888feb28f5"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dd/d52/namespacesequoia_1_1testing_1_1impl.html#a843379f9a2b26cfd489b18888feb28f5">sequoia::testing::impl::has_post_copy_action</a></td></tr>
 <tr class="separator:a843379f9a2b26cfd489b18888feb28f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa375cacba2554e021a7bf6e122be262e"><td class="memTemplParams" colspan="2">template&lt;class Actions , class... Args&gt; </td></tr>
-<tr class="memitem:aa375cacba2554e021a7bf6e122be262e"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d6/d98/RegularCheckersDetails_8hpp.html#aa375cacba2554e021a7bf6e122be262e">sequoia::testing::impl::has_post_copy_assign_action</a></td></tr>
+<tr class="memitem:aa375cacba2554e021a7bf6e122be262e"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dd/d52/namespacesequoia_1_1testing_1_1impl.html#aa375cacba2554e021a7bf6e122be262e">sequoia::testing::impl::has_post_copy_assign_action</a></td></tr>
 <tr class="separator:aa375cacba2554e021a7bf6e122be262e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Implementation details for checking regular semantics. </p>
-</div><h2 class="groupheader">Variable Documentation</h2>
-<a id="a843379f9a2b26cfd489b18888feb28f5" name="a843379f9a2b26cfd489b18888feb28f5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a843379f9a2b26cfd489b18888feb28f5">&#9670;&#160;</a></span>has_post_copy_action</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class Actions , class... Args&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr bool sequoia::testing::impl::has_post_copy_action</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= <span class="keyword">requires</span> (std::remove_cvref_t&lt;Actions&gt; actions, std::remove_cvref_t&lt;Args&gt;&amp;... args) {</div>
-<div class="line">        actions.post_copy_action(args...);</div>
-<div class="line">      }</div>
-</div><!-- fragment -->
-</div>
-</div>
-<a id="aa375cacba2554e021a7bf6e122be262e" name="aa375cacba2554e021a7bf6e122be262e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa375cacba2554e021a7bf6e122be262e">&#9670;&#160;</a></span>has_post_copy_assign_action</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class Actions , class... Args&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr bool sequoia::testing::impl::has_post_copy_assign_action</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= <span class="keyword">requires</span> (std::remove_cvref_t&lt;Actions&gt; actions, std::remove_cvref_t&lt;Args&gt;&amp;... args) {</div>
-<div class="line">        actions.post_copy_assign_action(args...);</div>
-<div class="line">      }</div>
-</div><!-- fragment -->
-</div>
-</div>
-</div><!-- contents -->
+</div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.6

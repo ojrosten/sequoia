@@ -15,6 +15,13 @@
 #include "sequoia/TextProcessing/Patterns.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
+#include <bit>
+#include <charconv>
+#include <cstdlib>
+#include <format>
+#include <numeric>
+#include <sstream>
+
 #ifndef _MSC_VER
   #include <cxxabi.h>
 #endif
@@ -24,12 +31,15 @@ namespace sequoia::testing
   namespace fs = std::filesystem;
 
   namespace
-  {    
+  {
+    constexpr auto npos{std::string::npos};
+    using size_type = std::string::size_type;
+    
     std::string& remove_enum_spec(std::string& name)
     {
       std::string::size_type pos{};
 
-      while(pos != std::string::npos)
+      while(pos != npos)
       {
         const auto[open, close]{find_matched_delimiters(name, '(', ')', pos)};
         if((open != close) && (close < name.size()) && std::isdigit(name[close]))
@@ -46,23 +56,105 @@ namespace sequoia::testing
       return name;
     }
 
-    std::string& remove_integral_suffix(std::string& name)
+    template<std::floating_point To, std::integral From=std::conditional_t<std::is_same_v<To,float>, int, std::conditional_t<sizeof(double) == sizeof(long), long, long long>>>
+    size_type hex_to_floating_point(std::string& name, size_type start, size_type end, long long val)
     {
-      constexpr auto npos{std::string::npos};
-
+       name.erase(start, end - start);
+       const auto str{std::format("{:f}", std::bit_cast<To>(static_cast<From>(val)))};
+       name.insert(start, str);
+       return start + str.size();
+    }
+  
+    std::string& process_literals(std::string& name)
+    {
       std::string::size_type pos{};
       while(pos < name.size())
       {
         const auto open{name.find_first_of("< ", pos)};
         pos = open;
-        while((pos < name.size() - 1) && std::isdigit(name[++pos])) {}
-        
-        if((pos < name.size()) && (pos-1 > open) && std::isalpha(name[pos]))
+        while((pos < name.size() - 1) && !std::isdigit(name[++pos])) {}
+        if(pos < name.size() - 1)
         {
-          if(const auto close{name.find_first_of(",>", pos)}; close != npos)
+          if(name[pos - 1] == '[')
           {
-            name.erase(pos, close - pos);
-            pos++;
+            // GCC seems to represent floating-point NTTPs as
+            // a reinterpretation of a implicit hex number
+            // e.g. (double)[40687....] (note: no Ox);
+            const auto close{name.find(']', pos)};
+            if(close != npos)
+            {
+              std::stringstream ss{name.substr(pos, close - pos)};
+              long long hexNum{};
+              if(ss >> std::hex >> hexNum)
+              {
+                const auto closeParen{pos - 2};
+                if(auto openParen{name.rfind('(', pos - 1)}; (openParen != npos) && name[closeParen] == ')')
+                {
+                  const auto type{name.substr(openParen + 1, closeParen - openParen - 1)};
+                  if(type == "float")
+                  {
+                    pos = hex_to_floating_point<float>(name, openParen, close + 1, hexNum);
+                  }
+                  else if(type == "double")
+                  {
+                    pos = hex_to_floating_point<double>(name, openParen, close + 1, hexNum);
+                  }
+                  else
+                  {
+                    pos = close;
+                  }
+                }
+              }
+            }
+          }
+
+          if(name[pos + 1] == 'x')
+          {
+            char* end{};
+            const auto start{name.data() + pos};
+            const auto val{std::strtold(start, &end)};
+            if(const auto dist{std::ranges::distance(start, end)}; dist > 0)
+            {
+              const auto str{std::format("{:f}", val)};
+              name.replace(pos, dist, str);
+              pos += (str.size() - 1);
+            }
+          }
+
+          while((pos < name.size() - 1) && std::isdigit(name[++pos])) {}
+        
+          if((pos < name.size()) && (pos-1 > open) && std::isalpha(name[pos]))
+          {
+            if(const auto close{name.find_first_of(",>", pos)}; close < name.size())
+            {
+              name.erase(pos, close - pos);
+              pos++;
+            }
+          }
+            
+        }
+      }
+      
+      return name;
+    }
+
+    std::string& process_spans(std::string& name)
+    {      
+      if(auto[start, end]{find_sandwiched_text(name, "::span<", ">")}; start != end)
+      {
+        start = name.find(',', start);
+        if(start < end - 1)
+        {
+          ++start;
+          if(name[start] == ' ') ++start;
+
+          auto startPtr{std::ranges::next(name.data(), start)}, endPtr{std::ranges::next(name.data(), end)};
+          std::size_t val{};
+          const auto[ptr, ec]{std::from_chars(startPtr, endPtr, val)};
+          if((ptr == endPtr) && (val == std::numeric_limits<std::size_t>::max()))
+          {
+            // Use the MSVC convention
+            name.replace(start, end-start, "-1");
           }
         }
       }
@@ -85,10 +177,8 @@ namespace sequoia::testing
 
       replace_all(name, " <", "true", ",>", "1");
       replace_all(name, " <", "false", ",>", "0");
-      remove_integral_suffix(name);
 
       remove_enum_spec(name);
-      constexpr auto npos{std::string::npos};
       auto openPos{name.find('(')};
       auto pos{openPos};
       int64_t open{};
@@ -228,54 +318,26 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string report_line(std::string_view message, const std::source_location loc, const fs::path& repository)
+  fs::path path_for_reporting(const fs::path& file, const fs::path& repository)
   {
-    fs::path file{loc.file_name()};
+    if(file.is_relative())
+    {
+      auto it{std::ranges::find_if_not(file, [](const fs::path& p) { return p == ".."; })};
+      return std::accumulate(it, file.end(), fs::path{}, [](fs::path lhs, const fs::path& rhs){ return lhs /= rhs; });
+    }
+    else if(!repository.empty())
+    {
+      auto [filepathIter, repoIter]{std::ranges::mismatch(file, repository)};
+      return std::accumulate(filepathIter, file.end(), back(repository), [](fs::path lhs, const fs::path& rhs){ return lhs /= rhs; });
+    }
 
-    auto pathToString{
-      [&file,&repository](){
-        if(file.is_relative())
-        {
-          auto it{file.begin()};
-          while(it != file.end() && (*it == ".."))
-          {
-            ++it;
-          }
+    return file;
+  }
 
-          fs::path p{};
-          for(; it != file.end(); ++it)
-          {
-            p /= *it;
-          }
-
-          return p.generic_string();
-        }
-        else if(!repository.empty())
-        {
-          auto filepathIter{file.begin()}, repoIter{repository.begin()};
-          while((repoIter != repository.end()) && (filepathIter != file.end()))
-          {
-            if(*repoIter != *filepathIter) break;
-
-            ++repoIter;
-            ++filepathIter;
-          }
-
-          fs::path p{back(repository)};
-          for(; filepathIter != file.end(); ++filepathIter)
-          {
-            p /= *filepathIter;
-          }
-
-          return p.generic_string();
-        }
-
-        return file.generic_string();
-      }
-
-    };
-
-    return append_lines(pathToString().append(", Line ").append(std::to_string(loc.line())), message).append("\n");
+  [[nodiscard]]
+  std::string report_line(std::string_view message, const fs::path& repository, const std::source_location loc)
+  {
+    return append_lines(path_for_reporting(loc.file_name(), repository).generic_string().append(", Line ").append(std::to_string(loc.line())), message).append("\n");
   }
 
   [[nodiscard]]
@@ -283,6 +345,10 @@ namespace sequoia::testing
   {
     replace_all(name, "::__1::", "::");
     replace_all(name, "::__fs::", "::");
+    replace_all_recursive(name, ">>", "> >");
+    process_literals(name);
+    process_spans(name);
+
     return tidy_name(name);
   }
 
@@ -292,6 +358,9 @@ namespace sequoia::testing
     replace_all(name, ">>", ">> ");
     replace_all(name, "__cxx11::", "");
     replace_all(name, "_V2::", "");
+    process_literals(name);
+    process_spans(name);
+
     return tidy_name(name);
   }
 
@@ -319,6 +388,7 @@ namespace sequoia::testing
     replace_all(name, "<,", "enum ", "", "");
 
     replace_all(name, ",", ", ");
+    replace_all(name, " ,", ",");
 
     replace_all(name, " & __ptr64", "&");
     replace_all(name, " * __ptr64", "*");

@@ -81,7 +81,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>Tasks may be <code>push</code>ed, upon which they are immediately invoked; results may be acquired through <code>get</code>.  
+<p>Tasks may be <code>push</code>ed, upon which they are immediately invoked.  
  <a href="../../dc/d7a/classsequoia_1_1concurrency_1_1serial.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="../../d9/d70/ConcurrencyModels_8hpp_source.html">ConcurrencyModels.hpp</a>&gt;</code></p>
@@ -94,18 +94,15 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>return_type</b> = R<
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:afbc40780d65183272ec3993423d0c7ac"><td class="memTemplParams" colspan="2"><a id="afbc40780d65183272ec3993423d0c7ac" name="afbc40780d65183272ec3993423d0c7ac"></a>
+<tr class="memitem:a364900484ae04e84233a88c8d17d181c"><td class="memTemplParams" colspan="2"><a id="a364900484ae04e84233a88c8d17d181c" name="a364900484ae04e84233a88c8d17d181c"></a>
 template&lt;class Fn , class... Args&gt; <br />
-requires std::is_convertible_v&lt;R, std::invoke_result_t&lt;std::decay_t&lt;Fn&gt;, std::decay_t&lt;Args&gt;...&gt;&gt;</td></tr>
-<tr class="memitem:afbc40780d65183272ec3993423d0c7ac"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>push</b> (Fn &amp;&amp;fn, Args &amp;&amp;... args)</td></tr>
-<tr class="separator:afbc40780d65183272ec3993423d0c7ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa20416a5de0f844a17bee3ab5c39a2e2"><td class="memItemLeft" align="right" valign="top"><a id="aa20416a5de0f844a17bee3ab5c39a2e2" name="aa20416a5de0f844a17bee3ab5c39a2e2"></a>
-const std::vector&lt; R &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>get</b> () const noexcept</td></tr>
-<tr class="separator:aa20416a5de0f844a17bee3ab5c39a2e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+requires std::invocable&lt;Fn, Args...&gt; &amp;&amp; std::is_convertible_v&lt;R, std::invoke_result_t&lt;Fn, Args...&gt;&gt;</td></tr>
+<tr class="memitem:a364900484ae04e84233a88c8d17d181c"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::invoke_result_t&lt; Fn, Args... &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>push</b> (Fn &amp;&amp;fn, Args &amp;&amp;... args)</td></tr>
+<tr class="separator:a364900484ae04e84233a88c8d17d181c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><div class="compoundTemplParams">template&lt;class R = void&gt;<br />
-class sequoia::concurrency::serial&lt; R &gt;</div><p>Tasks may be <code>push</code>ed, upon which they are immediately invoked; results may be acquired through <code>get</code>. </p>
+<div class="textblock"><div class="compoundTemplParams">template&lt;class R&gt;<br />
+class sequoia::concurrency::serial&lt; R &gt;</div><p>Tasks may be <code>push</code>ed, upon which they are immediately invoked. </p>
 </div><hr/>The documentation for this class was generated from the following file:<ul>
 <li>C:/Users/olive/sequoia/Source/sequoia/Core/Concurrency/<a class="el" href="../../d9/d70/ConcurrencyModels_8hpp_source.html">ConcurrencyModels.hpp</a></li>
 </ul>

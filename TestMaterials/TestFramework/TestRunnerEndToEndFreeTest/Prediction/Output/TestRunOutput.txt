@@ -14,11 +14,11 @@ Container:
 House:
 
 -----------Grand Totals-----------
-[Total Run Time: 51.1ms]
-[Execution Time: 736us]
+[Total Run Time: 17.8ms]
+[Execution Time: 601us]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
-	False Negative Checks:                     0;  Failures:  0
-	False Negative Performance Checks:         0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0

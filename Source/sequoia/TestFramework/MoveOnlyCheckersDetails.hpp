@@ -15,40 +15,42 @@
 
 namespace sequoia::testing::impl
 {
-  template<test_mode Mode, class Actions, moveonly T, std::invocable<T&> Mutator, class... Args>
+  template<test_mode Mode, class Actions, moveonly T, class U, std::invocable<T&> Mutator, class... Args>
+    requires checkable_for_move_semantics<Mode, T, U>
   bool check_semantics(test_logger<Mode>& logger,
                        const Actions& actions,
                        T&& x,
                        T&& y,
-                       const T& xClone,
-                       const T& yClone,
-                       opt_moved_from_ref<T> movedFrom,
+                       const U& xEquivalent,
+                       const U& yEquivalent,
+                       optional_ref<const U> movedFromPostConstruction,
+                       optional_ref<const U> movedFromPostAssignment,
                        Mutator m,
                        const Args&... args)
   {
     sentinel<Mode> sentry{logger, ""};
 
-    if(!check_preconditions(logger, actions, x, y, xClone, yClone, args...))
+    if(!check_prerequisites(logger, actions, x, y, xEquivalent, yEquivalent, args...))
       return false;
 
-    auto opt{check_move_construction(logger, actions, std::move(x), xClone, movedFrom, args...)};
+    auto opt{check_move_construction(logger, actions, std::move(x), xEquivalent, movedFromPostConstruction, args...)};
     if(!opt) return false;
 
     if constexpr (do_swap<Args...>::value)
     {
-      if(check_swap(logger, actions, std::move(*opt), std::move(y), xClone, yClone, args...))
+      if(check_swap(logger, actions, std::move(*opt), std::move(y), xEquivalent, yEquivalent, args...))
       {
-        check_move_assign(logger, actions, y, std::move(*opt), yClone, movedFrom, std::move(m), args...);
+        check_move_assign(logger, actions, y, std::move(*opt), yEquivalent, movedFromPostAssignment, std::move(m), args...);
       }
     }
     else
     {
-      check_move_assign(logger, actions, *opt, std::move(y), yClone, movedFrom, std::move(m), args...);
+      check_move_assign(logger, actions, *opt, std::move(y), yEquivalent, movedFromPostAssignment, std::move(m), args...);
     }
 
     if constexpr (serializable_to<T, std::stringstream> && deserializable_from<T, std::stringstream>)
     {
-      check_serialization(logger, actions, std::move(x), yClone, args...);
+      check_serialization(logger, actions, std::move(x), yEquivalent, args...);
     }
 
     return !sentry.failure_detected();

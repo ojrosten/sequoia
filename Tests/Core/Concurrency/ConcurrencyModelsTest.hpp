@@ -15,10 +15,10 @@
 
 namespace sequoia::testing
 {
-  class threading_models_test final : public regular_test
+  class threading_models_test final : public free_test
   {
   public:
-    using regular_test::regular_test;
+    using free_test::free_test;
 
     [[nodiscard]]
     std::filesystem::path source_file() const;
@@ -28,22 +28,13 @@ namespace sequoia::testing
 
     void test_task_queue();
 
-    template<class ThreadModel, class Exception, class... Args>
+    template<class ThreadModel, class... Args>
     void test_exceptions(std::string_view message, Args&&... args);
 
-    template<class Model> void test_functor_update();
-  };
+    template<class ThreadModel, class... Args>
+    void test_execution(std::string_view message, Args&&... args);
 
-  class updatable
-  {
-  public:
-    void operator()(const int x)
-    {
-      m_Data.push_back(x);
-    }
-
-    const auto& get_data() const { return m_Data; }
-  private:
-    std::vector<int> m_Data;
+    void test_serial_exceptions();
+    void test_serial_execution();
   };
 }

@@ -282,21 +282,21 @@ $(function() {
 <div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span> </div>
 <div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>  <span class="keyword">template</span>&lt;test_mode Mode, pseudoregular T, std::invocable&lt;T&amp;&gt; Mutator, alloc_getter&lt;T&gt;... Getters&gt;</div>
 <div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>    <span class="keyword">requires</span> (!std::totally_ordered&lt;T&gt; &amp;&amp; (<span class="keyword">sizeof</span>...(Getters) &gt; 0))</div>
-<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>  <span class="keywordtype">void</span> check_semantics(std::string_view description, test_logger&lt;Mode&gt;&amp; logger, <span class="keyword">const</span> T&amp; x, <span class="keyword">const</span> T&amp; y, Mutator yMutator, <span class="keyword">const</span> allocation_info&lt;T, Getters&gt;&amp;... info)</div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>  <span class="keywordtype">void</span> check_semantics(std::string description, test_logger&lt;Mode&gt;&amp; logger, <span class="keyword">const</span> T&amp; x, <span class="keyword">const</span> T&amp; y, Mutator yMutator, <span class="keyword">const</span> allocation_info&lt;T, Getters&gt;&amp;... info)</div>
 <div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>  {</div>
-<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>    impl::check_semantics(description, logger, impl::regular_allocation_actions&lt;T&gt;{}, x, y, std::move(yMutator), info...);</div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>    impl::check_semantics(std::move(description), logger, impl::regular_allocation_actions&lt;T&gt;{}, x, y, std::move(yMutator), info...);</div>
 <div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>  }</div>
 <div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span> </div>
 <div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>  <span class="keyword">template</span>&lt;test_mode Mode, pseudoregular T, std::invocable&lt;T&amp;&gt; Mutator, alloc_getter&lt;T&gt;... Getters&gt;</div>
 <div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>    <span class="keyword">requires</span> (std::totally_ordered&lt;T&gt; &amp;&amp; (<span class="keyword">sizeof</span>...(Getters) &gt; 0))</div>
-<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>  <span class="keywordtype">void</span> check_semantics(std::string_view description, test_logger&lt;Mode&gt;&amp; logger, <span class="keyword">const</span> T&amp; x, <span class="keyword">const</span> T&amp; y, std::weak_ordering order, Mutator yMutator, <span class="keyword">const</span> allocation_info&lt;T, Getters&gt;&amp;... info)</div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>  <span class="keywordtype">void</span> check_semantics(std::string description, test_logger&lt;Mode&gt;&amp; logger, <span class="keyword">const</span> T&amp; x, <span class="keyword">const</span> T&amp; y, std::weak_ordering order, Mutator yMutator, <span class="keyword">const</span> allocation_info&lt;T, Getters&gt;&amp;... info)</div>
 <div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>  {</div>
-<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>    impl::check_semantics(description, logger, impl::regular_allocation_actions&lt;T&gt;{order}, x, y, std::move(yMutator), info...);</div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>    impl::check_semantics(std::move(description), logger, impl::regular_allocation_actions&lt;T&gt;{order}, x, y, std::move(yMutator), info...);</div>
 <div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>  }</div>
 <div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span> </div>
 <div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>  <span class="keyword">template</span></div>
 <div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>  &lt;</div>
-<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>    <a class="code hl_enumeration" href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> Mode,</div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>    test_mode Mode,</div>
 <div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>    pseudoregular T,</div>
 <div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>    invocable_r&lt;T&gt; xMaker,</div>
 <div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>    invocable_r&lt;T&gt; yMaker,</div>
@@ -304,14 +304,14 @@ $(function() {
 <div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>    alloc_getter&lt;T&gt;... Getters</div>
 <div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>  &gt;</div>
 <div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>    <span class="keyword">requires</span> (!std::totally_ordered&lt;T&gt; &amp;&amp; <span class="keyword">sizeof</span>...(Getters) &gt; 0)</div>
-<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>  std::pair&lt;T, T&gt; check_semantics(std::string_view description, test_logger&lt;Mode&gt;&amp; logger, xMaker xFn, yMaker yFn, Mutator yMutator, <span class="keyword">const</span> allocation_info&lt;T, Getters&gt;&amp;... info)</div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>  std::pair&lt;T, T&gt; check_semantics(std::string description, test_logger&lt;Mode&gt;&amp; logger, xMaker xFn, yMaker yFn, Mutator yMutator, <span class="keyword">const</span> allocation_info&lt;T, Getters&gt;&amp;... info)</div>
 <div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>  {</div>
-<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>    <span class="keywordflow">return</span> impl::check_semantics(description, logger, impl::regular_allocation_actions&lt;T&gt;{}, std::move(xFn), std::move(yFn), std::move(yMutator), info...);</div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>    <span class="keywordflow">return</span> impl::check_semantics(std::move(description), logger, impl::regular_allocation_actions&lt;T&gt;{}, std::move(xFn), std::move(yFn), std::move(yMutator), info...);</div>
 <div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>  }</div>
 <div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span> </div>
 <div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>  <span class="keyword">template</span></div>
 <div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>  &lt;</div>
-<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>    <a class="code hl_enumeration" href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> Mode,</div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>    test_mode Mode,</div>
 <div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>    pseudoregular T,</div>
 <div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>    invocable_r&lt;T&gt; xMaker,</div>
 <div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>    invocable_r&lt;T&gt; yMaker,</div>
@@ -319,14 +319,13 @@ $(function() {
 <div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>    alloc_getter&lt;T&gt;... Getters</div>
 <div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>  &gt;</div>
 <div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>    <span class="keyword">requires</span> (std::totally_ordered&lt;T&gt; &amp;&amp; <span class="keyword">sizeof</span>...(Getters) &gt; 0)</div>
-<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>  std::pair&lt;T, T&gt; check_semantics(std::string_view description, test_logger&lt;Mode&gt;&amp; logger, xMaker xFn, yMaker yFn, std::weak_ordering order, Mutator yMutator, <span class="keyword">const</span> allocation_info&lt;T, Getters&gt;&amp;... info)</div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>  std::pair&lt;T, T&gt; check_semantics(std::string description, test_logger&lt;Mode&gt;&amp; logger, xMaker xFn, yMaker yFn, std::weak_ordering order, Mutator yMutator, <span class="keyword">const</span> allocation_info&lt;T, Getters&gt;&amp;... info)</div>
 <div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>  {</div>
-<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>    <span class="keywordflow">return</span> impl::check_semantics(description, logger, impl::regular_allocation_actions&lt;T&gt;{order}, std::move(xFn), std::move(yFn), std::move(yMutator), info...);</div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>    <span class="keywordflow">return</span> impl::check_semantics(std::move(description), logger, impl::regular_allocation_actions&lt;T&gt;{order}, std::move(xFn), std::move(yFn), std::move(yMutator), info...);</div>
 <div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>  }</div>
 <div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>}</div>
 <div class="ttc" id="aAllocationCheckers_8hpp_html"><div class="ttname"><a href="../../d3/dfb/AllocationCheckers_8hpp.html">AllocationCheckers.hpp</a></div><div class="ttdoc">Client-facing utilities for performing allocation checks.</div></div>
 <div class="ttc" id="aRegularAllocationCheckersDetails_8hpp_html"><div class="ttname"><a href="../../d0/dce/RegularAllocationCheckersDetails_8hpp.html">RegularAllocationCheckersDetails.hpp</a></div><div class="ttdoc">Implementation details for allocation checks of regular types.</div></div>
-<div class="ttc" id="aTestLogger_8hpp_html_ae4e97c9d45a89647799f0d308ba6d244"><div class="ttname"><a href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">sequoia::testing::test_mode</a></div><div class="ttdeci">test_mode</div><div class="ttdoc">Specifies whether tests are run as standard tests or in false postive/negative mode.</div><div class="ttdef"><b>Definition:</b> TestLogger.hpp:35</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1alloc__prediction__shifter_html"><div class="ttname"><a href="../../d7/db2/classsequoia_1_1testing_1_1alloc__prediction__shifter.html">sequoia::testing::alloc_prediction_shifter</a></div><div class="ttdoc">class template for shifting allocation predictions, especially for MSVC debug builds.</div><div class="ttdef"><b>Definition:</b> AllocationCheckers.hpp:217</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1alloc__prediction_html"><div class="ttname"><a href="../../de/d6b/classsequoia_1_1testing_1_1alloc__prediction.html">sequoia::testing::alloc_prediction&lt; construction_allocation_event::copy &gt;</a></div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1basic__allocation__predictions_html"><div class="ttname"><a href="../../d9/de6/classsequoia_1_1testing_1_1basic__allocation__predictions.html">sequoia::testing::basic_allocation_predictions</a></div><div class="ttdef"><b>Definition:</b> RegularAllocationCheckers.hpp:107</div></div>

@@ -7,20 +7,20 @@
 
 #include "UniqueThingTestingDiagnostics.hpp"
 
-namespace sequoia::testing
+namespace generatedProject::testing
 {
 	[[nodiscard]]
-	std::filesystem::path unique_thing_false_positive_test::source_file() const
+	std::filesystem::path unique_thing_false_negative_test::source_file() const
 	{
 		return std::source_location::current().file_name();
 	}
 
-	void unique_thing_false_positive_test::run_tests()
+	void unique_thing_false_negative_test::run_tests()
 	{
 		auto x = []() { return stuff::unique_thing{0.0}; };
 		auto y = []() { return stuff::unique_thing{1.0}; };
 
-		check(equivalence, report_line("Useful Description"), x(), 1.0);
-		check(equality, report_line("Useful Description"), x(), y());
+		check(equivalence, "Useful Description", x(), 1.0);
+		check(equality, "Useful Description", x(), y());
 	}
 }

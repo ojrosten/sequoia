@@ -75,7 +75,9 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
+<a href="#namespaces">Namespaces</a> &#124;
 <a href="#concepts">Concepts</a> &#124;
+<a href="#define-members">Macros</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
@@ -90,12 +92,15 @@ $(function() {
 <code>#include &quot;<a class="el" href="../../da/d27/Advice_8hpp_source.html">sequoia/TestFramework/Advice.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d5/d05/TestLogger_8hpp_source.html">sequoia/TestFramework/TestLogger.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../db/d8f/Utilities_8hpp_source.html">sequoia/Core/Meta/Utilities.hpp</a>&quot;</code><br />
+<code>#include &lt;format&gt;</code><br />
 </div>
 <p><a href="../../d2/d0d/FreeCheckers_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d95/structsequoia_1_1testing_1_1equality__check__t.html">sequoia::testing::equality_check_t</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/dff/structsequoia_1_1testing_1_1simple__equality__check__t.html">sequoia::testing::simple_equality_check_t</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d9e/structsequoia_1_1testing_1_1general__equivalence__check__t.html">sequoia::testing::general_equivalence_check_t&lt; ValueBasedCustomizer &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -107,30 +112,38 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/dd7/structsequoia_1_1testing_1_1with__best__available__check__t.html">sequoia::testing::with_best_available_check_t</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d34/structsequoia_1_1testing_1_1equivalent__type__processor.html">sequoia::testing::equivalent_type_processor&lt; Ts &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d0d/structsequoia_1_1testing_1_1equivalent__type__processor_3_01Ts_8_8_8_01_4.html">sequoia::testing::equivalent_type_processor&lt; Ts... &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/df9/structsequoia_1_1testing_1_1exception__message__extractor_3_01E_01_4.html">sequoia::testing::exception_message_extractor&lt; E &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d33/structsequoia_1_1testing_1_1equivalence__checker__delegator.html">sequoia::testing::equivalence_checker_delegator&lt; T &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/dd3/structsequoia_1_1testing_1_1default__exception__message__postprocessor.html">sequoia::testing::default_exception_message_postprocessor</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">sequoia::testing::checker&lt; Mode, Extenders &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d56/structsequoia_1_1testing_1_1supports__range__check.html">sequoia::testing::supports_range_check&lt; CheckType, Mode, T, U, Advisor &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d03/structsequoia_1_1testing_1_1supports__range__check_3_01CheckType_00_01Mode_00_01T_00_01U_00_01Advisor_01_4.html">sequoia::testing::supports_range_check&lt; CheckType, Mode, T, U, Advisor &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">sequoia::testing::checker&lt; Mode, Extender &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Exposes elementary check methods, with the option to plug in arbitrary Extenders to compose functionality.  <a href="../../d7/de5/classsequoia_1_1testing_1_1checker.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
+Namespaces</h2></td></tr>
+<tr class="memitem:dd/d52/namespacesequoia_1_1testing_1_1impl"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d52/namespacesequoia_1_1testing_1_1impl.html">sequoia::testing::impl</a></td></tr>
+<tr class="memdesc:dd/d52/namespacesequoia_1_1testing_1_1impl"><td class="mdescLeft">&#160;</td><td class="mdescRight">Condition for applying a container check. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="concepts" name="concepts"></a>
 Concepts</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/da4/conceptsequoia_1_1testing_1_1tester__for.html">sequoia::testing::tester_for</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/db9/conceptsequoia_1_1testing_1_1tests__against.html">sequoia::testing::tests_against</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d63/conceptsequoia_1_1testing_1_1binary__tester__for.html">sequoia::testing::binary_tester_for</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d7a/conceptsequoia_1_1testing_1_1tests__against__with__or__without__tutor.html">sequoia::testing::tests_against_with_or_without_tutor</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d64/conceptsequoia_1_1testing_1_1impl_1_1invocable__without__last__arg.html">sequoia::testing::impl::invocable_without_last_arg</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/ddd/conceptsequoia_1_1testing_1_1checkable__against.html">sequoia::testing::checkable_against</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d58/conceptsequoia_1_1testing_1_1extender.html">sequoia::testing::extender</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Exposes elementary check methods, with the option to plug in arbitrary Extenders to compose functionality. <br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a861c7f934ad63490b03974831879bb85"><td class="memItemLeft" align="right" valign="top"><a id="a861c7f934ad63490b03974831879bb85" name="a861c7f934ad63490b03974831879bb85"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>STATIC_CHECK</b>(...)&#160;&#160;&#160;(check(&quot;&quot;, [](){ static_assert(__VA_ARGS__); return true; }()))</td></tr>
+<tr class="separator:a861c7f934ad63490b03974831879bb85"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
@@ -151,59 +164,70 @@ template&lt;class ValueBasedCustomizer &gt; </td></tr>
 template&lt;class ValueBasedCustomizer &gt; </td></tr>
 <tr class="memitem:a6a895401f0eff73dd2d37065b47c90b5"><td class="memTemplItemLeft" align="right" valign="top">std::string&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::to_string</b> (general_weak_equivalence_check_t&lt; ValueBasedCustomizer &gt;)</td></tr>
 <tr class="separator:a6a895401f0eff73dd2d37065b47c90b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5fd8ababa0fae7e42c053e162b405489"><td class="memTemplParams" colspan="2">template&lt;class CheckType , test_mode Mode, class T , class S , class... U&gt; <br />
-requires implements_general_equivalence_check&lt;Mode, CheckType, T, S, U...&gt;</td></tr>
-<tr class="memitem:a5fd8ababa0fae7e42c053e162b405489"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/d0d/FreeCheckers_8hpp.html#a5fd8ababa0fae7e42c053e162b405489">sequoia::testing::general_equivalence_check</a> (CheckType flavour, std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;obtained, const S &amp;s, const U &amp;... u)</td></tr>
-<tr class="memdesc:a5fd8ababa0fae7e42c053e162b405489"><td class="mdescLeft">&#160;</td><td class="mdescRight">generic function that generates a check from any class providing a static check method.  <br /></td></tr>
-<tr class="separator:a5fd8ababa0fae7e42c053e162b405489"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac2528231940be92189c4bc363e6ed46d"><td class="memTemplParams" colspan="2"><a id="ac2528231940be92189c4bc363e6ed46d" name="ac2528231940be92189c4bc363e6ed46d"></a>
+<tr class="memitem:abd0030916ddc04d7160ba3bac3c65222"><td class="memTemplParams" colspan="2"><a id="abd0030916ddc04d7160ba3bac3c65222" name="abd0030916ddc04d7160ba3bac3c65222"></a>
+template&lt;class CheckType , test_mode Mode, class T , class U , class Advisor &gt; <br />
+requires tests_against_with_or_without_tutor&lt;CheckType, Mode, T, U, tutor&lt;Advisor&gt;&gt;</td></tr>
+<tr class="memitem:abd0030916ddc04d7160ba3bac3c65222"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::select_test</b> (CheckType flavour, test_logger&lt; Mode &gt; &amp;logger, const T &amp;obtained, const U &amp;prediction, tutor&lt; Advisor &gt; advisor)</td></tr>
+<tr class="separator:abd0030916ddc04d7160ba3bac3c65222"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a72b1b8fc4ea47c40f244c40801fa4913"><td class="memTemplParams" colspan="2">template&lt;class CheckType , test_mode Mode, class T , class U , class Advisor &gt; <br />
+requires is_general_equivalence_check&lt;CheckType&gt; &amp;&amp; tests_against_with_or_without_tutor&lt;CheckType, Mode, T, U, tutor&lt;Advisor&gt;&gt;</td></tr>
+<tr class="memitem:a72b1b8fc4ea47c40f244c40801fa4913"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/d0d/FreeCheckers_8hpp.html#a72b1b8fc4ea47c40f244c40801fa4913">sequoia::testing::general_equivalence_check</a> (CheckType flavour, std::string description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;obtained, const U &amp;predicted, tutor&lt; Advisor &gt; advisor)</td></tr>
+<tr class="memdesc:a72b1b8fc4ea47c40f244c40801fa4913"><td class="mdescLeft">&#160;</td><td class="mdescRight">generic function that generates a check from any class providing a static check method.  <br /></td></tr>
+<tr class="separator:a72b1b8fc4ea47c40f244c40801fa4913"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7a8c782bf215868e121898e0b17cee96"><td class="memTemplParams" colspan="2"><a id="a7a8c782bf215868e121898e0b17cee96" name="a7a8c782bf215868e121898e0b17cee96"></a>
 template&lt;bool IsFinalMessage, test_mode Mode, class Compare , class T , class Advisor &gt; <br />
-requires (std::invocable&lt;Compare, T, T&gt; &amp;&amp; (!IsFinalMessage || reportable&lt;T&gt;) &amp;&amp; !std::is_array_v&lt;T&gt;)</td></tr>
-<tr class="memitem:ac2528231940be92189c4bc363e6ed46d"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::binary_comparison</b> (final_message_constant&lt; IsFinalMessage &gt;, sentinel&lt; Mode &gt; &amp;sentry, Compare compare, const T &amp;obtained, const T &amp;prediction, tutor&lt; Advisor &gt; advisor)</td></tr>
-<tr class="separator:ac2528231940be92189c4bc363e6ed46d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abeb595ebd2ddeb9e5ef491f2f8fbd5f3"><td class="memTemplParams" colspan="2"><a id="abeb595ebd2ddeb9e5ef491f2f8fbd5f3" name="abeb595ebd2ddeb9e5ef491f2f8fbd5f3"></a>
-template&lt;class CheckType , test_mode Mode, class T , class Advisor &gt; <br />
-requires binary_tester_for&lt;CheckType, Mode, T, tutor&lt;Advisor&gt;&gt;</td></tr>
-<tr class="memitem:abeb595ebd2ddeb9e5ef491f2f8fbd5f3"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::select_test</b> (CheckType flavour, test_logger&lt; Mode &gt; &amp;logger, const T &amp;obtained, const T &amp;prediction, tutor&lt; Advisor &gt; advisor)</td></tr>
-<tr class="separator:abeb595ebd2ddeb9e5ef491f2f8fbd5f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a11dc8803b7a0c1229343c6a49da20896"><td class="memTemplParams" colspan="2"><a id="a11dc8803b7a0c1229343c6a49da20896" name="a11dc8803b7a0c1229343c6a49da20896"></a>
+requires std::is_invocable_r_v&lt;bool, Compare, T, T&gt; &amp;&amp; (!IsFinalMessage || reportable&lt;T&gt;)</td></tr>
+<tr class="memitem:a7a8c782bf215868e121898e0b17cee96"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::binary_comparison</b> (final_message_constant&lt; IsFinalMessage &gt;, sentinel&lt; Mode &gt; &amp;sentry, Compare compare, const T &amp;obtained, const T &amp;prediction, tutor&lt; Advisor &gt; advisor)</td></tr>
+<tr class="separator:a7a8c782bf215868e121898e0b17cee96"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a13b994042e69ff0d91c99873a40b2bef"><td class="memTemplParams" colspan="2"><a id="a13b994042e69ff0d91c99873a40b2bef" name="a13b994042e69ff0d91c99873a40b2bef"></a>
 template&lt;class E , test_mode Mode, class Fn , invocable_r&lt; std::string, std::string &gt; Postprocessor = default_exception_message_postprocessor&gt; </td></tr>
-<tr class="memitem:a11dc8803b7a0c1229343c6a49da20896"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_exception_thrown</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, Fn &amp;&amp;function, Postprocessor postprocessor={})</td></tr>
-<tr class="separator:a11dc8803b7a0c1229343c6a49da20896"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a75993733a577e6b76bb93628fe2b722b"><td class="memTemplParams" colspan="2">template&lt;class CheckType , test_mode Mode, std::input_or_output_iterator Iter, std::sentinel_for&lt; Iter &gt; Sentinel, std::input_or_output_iterator PredictionIter, std::sentinel_for&lt; PredictionIter &gt; PredictionSentinel, class Advisor  = null_advisor&gt; </td></tr>
-<tr class="memitem:a75993733a577e6b76bb93628fe2b722b"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/d0d/FreeCheckers_8hpp.html#a75993733a577e6b76bb93628fe2b722b">sequoia::testing::check</a> (CheckType flavour, std::string_view description, test_logger&lt; Mode &gt; &amp;logger, Iter first, Sentinel last, PredictionIter predictionFirst, PredictionSentinel predictionLast, tutor&lt; Advisor &gt; advisor={})</td></tr>
-<tr class="memdesc:a75993733a577e6b76bb93628fe2b722b"><td class="mdescLeft">&#160;</td><td class="mdescRight">The workhorse for comparing the contents of ranges.  <br /></td></tr>
-<tr class="separator:a75993733a577e6b76bb93628fe2b722b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af74c18b631138b107fc0011ac2f5c291"><td class="memTemplParams" colspan="2">template&lt;class Compare , test_mode Mode, class T , class Advisor  = null_advisor&gt; <br />
-requires maybe_comparison_type&lt;Compare, T&gt;</td></tr>
-<tr class="memitem:af74c18b631138b107fc0011ac2f5c291"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/d0d/FreeCheckers_8hpp.html#af74c18b631138b107fc0011ac2f5c291">sequoia::testing::check</a> (Compare compare, std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;obtained, const T &amp;prediction, tutor&lt; Advisor &gt; advisor={})</td></tr>
-<tr class="memdesc:af74c18b631138b107fc0011ac2f5c291"><td class="mdescLeft">&#160;</td><td class="mdescRight">The workhorse for performing a check with respect to a user-specified binary operator.  <br /></td></tr>
-<tr class="separator:af74c18b631138b107fc0011ac2f5c291"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab55728109d9839f8e1b0921be4bb506e"><td class="memTemplParams" colspan="2">template&lt;test_mode Mode, class T , class Advisor  = null_advisor&gt; <br />
-requires ( deep_equality_comparable&lt;T&gt; || binary_tester_for&lt;equality_check_t, Mode, T, tutor&lt;Advisor&gt;&gt; || faithful_range&lt;T&gt;)</td></tr>
-<tr class="memitem:ab55728109d9839f8e1b0921be4bb506e"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/d0d/FreeCheckers_8hpp.html#ab55728109d9839f8e1b0921be4bb506e">sequoia::testing::check</a> (equality_check_t, std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;obtained, const T &amp;prediction, tutor&lt; Advisor &gt; advisor={})</td></tr>
-<tr class="memdesc:ab55728109d9839f8e1b0921be4bb506e"><td class="mdescLeft">&#160;</td><td class="mdescRight">The workhorse of equality checking, which takes responsibility for reflecting upon types and then dispatching, appropriately.  <br /></td></tr>
-<tr class="separator:ab55728109d9839f8e1b0921be4bb506e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a35e77cd405b72de79852dc81fd25705e"><td class="memTemplParams" colspan="2">template&lt;class CheckType , test_mode Mode, class T , class S , class... U&gt; <br />
-requires has_generalized_equivalence_check&lt;CheckType, Mode, T, S, U...&gt;</td></tr>
-<tr class="memitem:a35e77cd405b72de79852dc81fd25705e"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/d0d/FreeCheckers_8hpp.html#a35e77cd405b72de79852dc81fd25705e">sequoia::testing::check</a> (CheckType flavour, std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;obtained, S &amp;&amp;s, U &amp;&amp;... u)</td></tr>
-<tr class="memdesc:a35e77cd405b72de79852dc81fd25705e"><td class="mdescLeft">&#160;</td><td class="mdescRight">The workhorse for (weak) equivalence checking.  <br /></td></tr>
-<tr class="separator:a35e77cd405b72de79852dc81fd25705e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a892d1135816b1269d569c47988bf0d2d"><td class="memTemplParams" colspan="2">template&lt;test_mode Mode, class T , class Advisor  = null_advisor&gt; <br />
-requires (deep_equality_comparable&lt;T&gt; || has_detailed_agnostic_check&lt;Mode, T, Advisor&gt; || faithful_range&lt;T&gt;)</td></tr>
-<tr class="memitem:a892d1135816b1269d569c47988bf0d2d"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/d0d/FreeCheckers_8hpp.html#a892d1135816b1269d569c47988bf0d2d">sequoia::testing::check</a> (with_best_available_check_t, std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;obtained, const T &amp;prediction, tutor&lt; Advisor &gt; advisor={})</td></tr>
-<tr class="memdesc:a892d1135816b1269d569c47988bf0d2d"><td class="mdescLeft">&#160;</td><td class="mdescRight">The workhorse for dispatching to the strongest available type of check.  <br /></td></tr>
-<tr class="separator:a892d1135816b1269d569c47988bf0d2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af4e61caa1617d08060dfb112f61aeaff"><td class="memTemplParams" colspan="2"><a id="af4e61caa1617d08060dfb112f61aeaff" name="af4e61caa1617d08060dfb112f61aeaff"></a>
+<tr class="memitem:a13b994042e69ff0d91c99873a40b2bef"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_exception_thrown</b> (std::string description, test_logger&lt; Mode &gt; &amp;logger, Fn &amp;&amp;function, Postprocessor postprocessor={})</td></tr>
+<tr class="separator:a13b994042e69ff0d91c99873a40b2bef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a693b1c72f040262a4a9766c6e2b727ad"><td class="memTemplParams" colspan="2">template&lt;class CheckType , test_mode Mode, std::input_or_output_iterator Iter, std::sentinel_for&lt; Iter &gt; Sentinel, std::input_or_output_iterator PredictionIter, std::sentinel_for&lt; PredictionIter &gt; PredictionSentinel, class Advisor  = null_advisor&gt; <br />
+requires supports_iterator_range_check&lt;CheckType, Mode, Iter, PredictionIter, Advisor&gt;</td></tr>
+<tr class="memitem:a693b1c72f040262a4a9766c6e2b727ad"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/d0d/FreeCheckers_8hpp.html#a693b1c72f040262a4a9766c6e2b727ad">sequoia::testing::check</a> (CheckType flavour, std::string description, test_logger&lt; Mode &gt; &amp;logger, Iter first, Sentinel last, PredictionIter predictionFirst, PredictionSentinel predictionLast, tutor&lt; Advisor &gt; advisor={})</td></tr>
+<tr class="memdesc:a693b1c72f040262a4a9766c6e2b727ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">The workhorse for comparing the contents of ranges.  <br /></td></tr>
+<tr class="separator:a693b1c72f040262a4a9766c6e2b727ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa79b6a2cb5a26232399fc4ed77292bbd"><td class="memTemplParams" colspan="2">template&lt;class Compare , test_mode Mode, class T , class Advisor  = null_advisor&gt; <br />
+requires potential_comparator_for&lt;Compare, T&gt;</td></tr>
+<tr class="memitem:aa79b6a2cb5a26232399fc4ed77292bbd"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/d0d/FreeCheckers_8hpp.html#aa79b6a2cb5a26232399fc4ed77292bbd">sequoia::testing::check</a> (Compare compare, std::string description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;obtained, const T &amp;prediction, tutor&lt; Advisor &gt; advisor={})</td></tr>
+<tr class="memdesc:aa79b6a2cb5a26232399fc4ed77292bbd"><td class="mdescLeft">&#160;</td><td class="mdescRight">The workhorse for performing a check with respect to a user-specified binary operator.  <br /></td></tr>
+<tr class="separator:aa79b6a2cb5a26232399fc4ed77292bbd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a858a29c2cc34eb62ce7d6d7514a8fa47"><td class="memTemplParams" colspan="2">template&lt;test_mode Mode, class T , class Advisor  = null_advisor&gt; <br />
+requires supports_equality_check&lt;Mode, T, Advisor&gt;</td></tr>
+<tr class="memitem:a858a29c2cc34eb62ce7d6d7514a8fa47"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/d0d/FreeCheckers_8hpp.html#a858a29c2cc34eb62ce7d6d7514a8fa47">sequoia::testing::check</a> (equality_check_t, std::string description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;obtained, const T &amp;prediction, tutor&lt; Advisor &gt; advisor={})</td></tr>
+<tr class="memdesc:a858a29c2cc34eb62ce7d6d7514a8fa47"><td class="mdescLeft">&#160;</td><td class="mdescRight">The workhorse of equality checking, which takes responsibility for reflecting upon types and then dispatching, appropriately.  <br /></td></tr>
+<tr class="separator:a858a29c2cc34eb62ce7d6d7514a8fa47"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a060e625f7db12c16a61ea163ab51cb81"><td class="memTemplParams" colspan="2"><a id="a060e625f7db12c16a61ea163ab51cb81" name="a060e625f7db12c16a61ea163ab51cb81"></a>
+template&lt;test_mode Mode, class T , class Advisor  = null_advisor&gt; <br />
+requires supports_simple_equality_check&lt;Mode, T, Advisor&gt;</td></tr>
+<tr class="memitem:a060e625f7db12c16a61ea163ab51cb81"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check</b> (simple_equality_check_t, std::string description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;obtained, const T &amp;prediction, tutor&lt; Advisor &gt; advisor={})</td></tr>
+<tr class="memdesc:a060e625f7db12c16a61ea163ab51cb81"><td class="mdescLeft">&#160;</td><td class="mdescRight">The workhorse for checking simple equality. <br /></td></tr>
+<tr class="separator:a060e625f7db12c16a61ea163ab51cb81"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab21f38e577becde1a832791b65f60972"><td class="memTemplParams" colspan="2"><a id="ab21f38e577becde1a832791b65f60972" name="ab21f38e577becde1a832791b65f60972"></a>
+template&lt;class CheckType , test_mode Mode, class T , class U , class Advisor  = null_advisor&gt; <br />
+requires supports_generalized_equivalence_check&lt;CheckType, Mode, T, U, Advisor&gt;</td></tr>
+<tr class="memitem:ab21f38e577becde1a832791b65f60972"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check</b> (CheckType flavour, std::string description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;obtained, const U &amp;prediction, tutor&lt; Advisor &gt; advisor={})</td></tr>
+<tr class="separator:ab21f38e577becde1a832791b65f60972"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a16f7f4c071f4f80f26c0560ee01096e0"><td class="memTemplParams" colspan="2"><a id="a16f7f4c071f4f80f26c0560ee01096e0" name="a16f7f4c071f4f80f26c0560ee01096e0"></a>
+template&lt;test_mode Mode, class T , class U , class Advisor  = null_advisor&gt; <br />
+requires supports_best_available_check&lt;Mode, T, U, Advisor&gt;</td></tr>
+<tr class="memitem:a16f7f4c071f4f80f26c0560ee01096e0"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check</b> (with_best_available_check_t, std::string description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;obtained, const U &amp;prediction, tutor&lt; Advisor &gt; advisor={})</td></tr>
+<tr class="memdesc:a16f7f4c071f4f80f26c0560ee01096e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">The workhorse for dispatching to the strongest available type of check. <br /></td></tr>
+<tr class="separator:a16f7f4c071f4f80f26c0560ee01096e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab8bfa0edf8218a1d70a85cd34911ca29"><td class="memTemplParams" colspan="2"><a id="ab8bfa0edf8218a1d70a85cd34911ca29" name="ab8bfa0edf8218a1d70a85cd34911ca29"></a>
 template&lt;test_mode Mode, class Advisor  = null_advisor&gt; </td></tr>
-<tr class="memitem:af4e61caa1617d08060dfb112f61aeaff"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const bool obtained, tutor&lt; Advisor &gt; advisor={})</td></tr>
-<tr class="separator:af4e61caa1617d08060dfb112f61aeaff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab8bfa0edf8218a1d70a85cd34911ca29"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check</b> (std::string description, test_logger&lt; Mode &gt; &amp;logger, const bool obtained, tutor&lt; Advisor &gt; advisor={})</td></tr>
+<tr class="separator:ab8bfa0edf8218a1d70a85cd34911ca29"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
 <tr class="memitem:a34161910886ca7e582ddab4e6405af07"><td class="memItemLeft" align="right" valign="top"><a id="a34161910886ca7e582ddab4e6405af07" name="a34161910886ca7e582ddab4e6405af07"></a>
 constexpr equality_check_t&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::equality</b> {}</td></tr>
 <tr class="separator:a34161910886ca7e582ddab4e6405af07"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adcf2ce80f77565e1bb7913c6601b2759"><td class="memItemLeft" align="right" valign="top"><a id="adcf2ce80f77565e1bb7913c6601b2759" name="adcf2ce80f77565e1bb7913c6601b2759"></a>
+constexpr simple_equality_check_t&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::simple_equality</b> {}</td></tr>
+<tr class="separator:adcf2ce80f77565e1bb7913c6601b2759"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7dcbf123090a662e1f0eede2a78aa2fd"><td class="memItemLeft" align="right" valign="top"><a id="a7dcbf123090a662e1f0eede2a78aa2fd" name="a7dcbf123090a662e1f0eede2a78aa2fd"></a>
 constexpr equivalence_check_t&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::equivalence</b> {}</td></tr>
 <tr class="separator:a7dcbf123090a662e1f0eede2a78aa2fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -219,21 +243,47 @@ constexpr with_best_available_check_t&#160;</td><td class="memItemRight" valign=
 <tr class="memitem:af2545f90f7128f92e73fbdff3bbdf56a"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
 <tr class="memitem:af2545f90f7128f92e73fbdff3bbdf56a"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/d0d/FreeCheckers_8hpp.html#af2545f90f7128f92e73fbdff3bbdf56a">sequoia::testing::is_customized_check</a></td></tr>
 <tr class="separator:af2545f90f7128f92e73fbdff3bbdf56a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afecc9fe410e5664f1863a13447f4c287"><td class="memTemplParams" colspan="2">template&lt;class Compare , class T &gt; </td></tr>
-<tr class="memitem:afecc9fe410e5664f1863a13447f4c287"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/d0d/FreeCheckers_8hpp.html#afecc9fe410e5664f1863a13447f4c287">sequoia::testing::maybe_comparison_type</a></td></tr>
-<tr class="separator:afecc9fe410e5664f1863a13447f4c287"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab70e460d4c333169d2fde8d41b3a5f42"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
-<tr class="memitem:ab70e460d4c333169d2fde8d41b3a5f42"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/d0d/FreeCheckers_8hpp.html#ab70e460d4c333169d2fde8d41b3a5f42">sequoia::testing::has_fallback</a></td></tr>
-<tr class="separator:ab70e460d4c333169d2fde8d41b3a5f42"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab2033f4fa84ac361acc63ce72c9ed7fc"><td class="memTemplParams" colspan="2">template&lt;test_mode Mode, class CheckType , class T , class S , class... U&gt; </td></tr>
-<tr class="memitem:ab2033f4fa84ac361acc63ce72c9ed7fc"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/d0d/FreeCheckers_8hpp.html#ab2033f4fa84ac361acc63ce72c9ed7fc">sequoia::testing::implements_general_equivalence_check</a></td></tr>
-<tr class="separator:ab2033f4fa84ac361acc63ce72c9ed7fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aad35c9e1a08154285c86c94e31170409"><td class="memTemplParams" colspan="2">template&lt;class CheckType , test_mode Mode, class T , class S , class... U&gt; </td></tr>
-<tr class="memitem:aad35c9e1a08154285c86c94e31170409"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/d0d/FreeCheckers_8hpp.html#aad35c9e1a08154285c86c94e31170409">sequoia::testing::has_generalized_equivalence_check</a></td></tr>
-<tr class="separator:aad35c9e1a08154285c86c94e31170409"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af1369a880dd05442483eb442d6128176"><td class="memTemplParams" colspan="2">template&lt;test_mode Mode, class T , class Advisor &gt; </td></tr>
-<tr class="memitem:af1369a880dd05442483eb442d6128176"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/d0d/FreeCheckers_8hpp.html#af1369a880dd05442483eb442d6128176">sequoia::testing::has_detailed_agnostic_check</a></td></tr>
-<tr class="separator:af1369a880dd05442483eb442d6128176"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7970a46eba6bb642dfbd315b6d7a6c2d"><td class="memTemplParams" colspan="2"><a id="a7970a46eba6bb642dfbd315b6d7a6c2d" name="a7970a46eba6bb642dfbd315b6d7a6c2d"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:a7970a46eba6bb642dfbd315b6d7a6c2d"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::is_general_equivalence_check</b> {is_customized_check&lt;T&gt; || std::is_same_v&lt;T, equivalence_check_t&gt; || std::is_same_v&lt;T, weak_equivalence_check_t&gt;}</td></tr>
+<tr class="separator:a7970a46eba6bb642dfbd315b6d7a6c2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acaa7e49850e2154f14f1def9b1567ad6"><td class="memTemplParams" colspan="2">template&lt;class Compare , class T &gt; </td></tr>
+<tr class="memitem:acaa7e49850e2154f14f1def9b1567ad6"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/d0d/FreeCheckers_8hpp.html#acaa7e49850e2154f14f1def9b1567ad6">sequoia::testing::potential_comparator_for</a></td></tr>
+<tr class="separator:acaa7e49850e2154f14f1def9b1567ad6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9a7f6d930c702dbeaffba3e4a605b74c"><td class="memTemplParams" colspan="2">template&lt;class CheckType , test_mode Mode, class T , class U , class Tutor &gt; </td></tr>
+<tr class="memitem:a9a7f6d930c702dbeaffba3e4a605b74c"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/d0d/FreeCheckers_8hpp.html#a9a7f6d930c702dbeaffba3e4a605b74c">sequoia::testing::checkable_against_fallback</a></td></tr>
+<tr class="separator:a9a7f6d930c702dbeaffba3e4a605b74c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a124606befcccf8428453cd7f12a03fee"><td class="memTemplParams" colspan="2">template&lt;test_mode Mode, class T , class U , class Tutor &gt; </td></tr>
+<tr class="memitem:a124606befcccf8428453cd7f12a03fee"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/d0d/FreeCheckers_8hpp.html#a124606befcccf8428453cd7f12a03fee">sequoia::testing::has_elementary_check_against</a></td></tr>
+<tr class="separator:a124606befcccf8428453cd7f12a03fee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7206866f593f21d045faedc69b27c2c0"><td class="memTemplParams" colspan="2"><a id="a7206866f593f21d045faedc69b27c2c0" name="a7206866f593f21d045faedc69b27c2c0"></a>
+template&lt;class CheckType , test_mode Mode, std::input_or_output_iterator Iter, std::input_or_output_iterator PredictionIter, class Advisor &gt; </td></tr>
+<tr class="memitem:a7206866f593f21d045faedc69b27c2c0"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::supports_iterator_range_check</b> {checkable_against&lt;CheckType, Mode, std::iter_value_t&lt;Iter&gt;, std::iter_value_t&lt;PredictionIter&gt;, tutor&lt;Advisor&gt;&gt;}</td></tr>
+<tr class="memdesc:a7206866f593f21d045faedc69b27c2c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Condition for applying a check across a range of values. <br /></td></tr>
+<tr class="separator:a7206866f593f21d045faedc69b27c2c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa80af9c7073a16e873def3e35c17ed57"><td class="memTemplParams" colspan="2">template&lt;class CheckType , test_mode Mode, faithful_range T, faithful_range U, class Advisor &gt; </td></tr>
+<tr class="memitem:aa80af9c7073a16e873def3e35c17ed57"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dd/d52/namespacesequoia_1_1testing_1_1impl.html#aa80af9c7073a16e873def3e35c17ed57">sequoia::testing::impl::supports_range_check_v</a></td></tr>
+<tr class="separator:aa80af9c7073a16e873def3e35c17ed57"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0e5e22ef3bdc14f5e1705bb775926a20"><td class="memTemplParams" colspan="2"><a id="a0e5e22ef3bdc14f5e1705bb775926a20" name="a0e5e22ef3bdc14f5e1705bb775926a20"></a>
+template&lt;class CheckType , test_mode Mode, class T , class U , class Advisor &gt; </td></tr>
+<tr class="memitem:a0e5e22ef3bdc14f5e1705bb775926a20"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::supports_range_check_v</b> {supports_range_check&lt;CheckType, Mode, T, U, Advisor&gt;::value}</td></tr>
+<tr class="separator:a0e5e22ef3bdc14f5e1705bb775926a20"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6b9d3e8ba2c446ab35ec269ff47ee385"><td class="memTemplParams" colspan="2">template&lt;test_mode Mode, class T , class Advisor &gt; </td></tr>
+<tr class="memitem:a6b9d3e8ba2c446ab35ec269ff47ee385"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/d0d/FreeCheckers_8hpp.html#a6b9d3e8ba2c446ab35ec269ff47ee385">sequoia::testing::supports_equality_check</a></td></tr>
+<tr class="memdesc:a6b9d3e8ba2c446ab35ec269ff47ee385"><td class="mdescLeft">&#160;</td><td class="mdescRight">Condition for applying an equality check.  <br /></td></tr>
+<tr class="separator:a6b9d3e8ba2c446ab35ec269ff47ee385"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a001411d098363919c41360d75299131a"><td class="memTemplParams" colspan="2">template&lt;test_mode Mode, class T , class Advisor &gt; </td></tr>
+<tr class="memitem:a001411d098363919c41360d75299131a"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/d0d/FreeCheckers_8hpp.html#a001411d098363919c41360d75299131a">sequoia::testing::supports_simple_equality_check</a></td></tr>
+<tr class="memdesc:a001411d098363919c41360d75299131a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Condition for applying an equality check.  <br /></td></tr>
+<tr class="separator:a001411d098363919c41360d75299131a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a25080af3e6f9bf3a8f9a047b26613950"><td class="memTemplParams" colspan="2">template&lt;class CheckType , test_mode Mode, class T , class U , class Advisor &gt; </td></tr>
+<tr class="memitem:a25080af3e6f9bf3a8f9a047b26613950"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/d0d/FreeCheckers_8hpp.html#a25080af3e6f9bf3a8f9a047b26613950">sequoia::testing::supports_generalized_equivalence_check</a></td></tr>
+<tr class="memdesc:a25080af3e6f9bf3a8f9a047b26613950"><td class="mdescLeft">&#160;</td><td class="mdescRight">The workhorse for (weak) equivalence checking.  <br /></td></tr>
+<tr class="separator:a25080af3e6f9bf3a8f9a047b26613950"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa82662944b2fdfe65cf04472d20fe360"><td class="memTemplParams" colspan="2">template&lt;test_mode Mode, class T , class U , class Advisor &gt; </td></tr>
+<tr class="memitem:aa82662944b2fdfe65cf04472d20fe360"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/d0d/FreeCheckers_8hpp.html#aa82662944b2fdfe65cf04472d20fe360">sequoia::testing::supports_best_available_check</a></td></tr>
+<tr class="memdesc:aa82662944b2fdfe65cf04472d20fe360"><td class="mdescLeft">&#160;</td><td class="mdescRight">Condition for applying the best available check.  <br /></td></tr>
+<tr class="separator:aa82662944b2fdfe65cf04472d20fe360"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Free functions for performing checks, together with the 'checker' class template which wraps them. </p>
@@ -244,14 +294,14 @@ constexpr with_best_available_check_t&#160;</td><td class="memItemRight" valign=
 <p>With this in mind, imagine creating a container, <code>C</code>. One of the first things one may wish to do is to check that it is correctly initialized. It would be a mistake to use <code>value_tester&lt;C&gt;::test(equality_check_t, ...)</code> for this since, to do so, a second, identical instance would need to be created. This is circular and prone to false positives. However, one may instead furnish <code>value_tester&lt;C&gt;</code> with methods <code>test(equivalence_check_t, ...)</code> and/or <code>test(weak_equivalence_check_t, ...)</code>.</p>
 <p>We may consider a value for e.g. <code>std::vector&lt;int&gt;</code> to be equivalent to an <code>initializer_list&lt;int&gt;</code> in the sense that they hold (at the relevant point of the program) the same elements. Thus, an appropriate defintion of <code>test(equivalence_check_t, ...)</code> is supplied. Of course, there is more to a vector than the values it holds: there is the entire allocator framework too. In this case, however, it is not part of the logical structure and, indeed, the state of the allocator is not considered in <code>vector&lt;T&gt;::operator==</code>. Thus it is philosophically reasonable to consider equivalence of <code>vector</code> and <code>initializer_list</code>. However, sometimes is is useful to check the equivalence of the state of an instance of <code>T</code> to a proper subset of the logical state of an instance of some S. For this purpose, an appropriate defintion of <code>test(weak_equivalence_check_t, ...)</code>. </p>
 </div><h2 class="groupheader">Function Documentation</h2>
-<a id="a35e77cd405b72de79852dc81fd25705e" name="a35e77cd405b72de79852dc81fd25705e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a35e77cd405b72de79852dc81fd25705e">&#9670;&#160;</a></span>check() <span class="overload">[1/5]</span></h2>
+<a id="a693b1c72f040262a4a9766c6e2b727ad" name="a693b1c72f040262a4a9766c6e2b727ad"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a693b1c72f040262a4a9766c6e2b727ad">&#9670;&#160;</a></span>check() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class CheckType , test_mode Mode, class T , class S , class... U&gt; <br />
-requires has_generalized_equivalence_check&lt;CheckType, Mode, T, S, U...&gt;</div>
+template&lt;class CheckType , test_mode Mode, std::input_or_output_iterator Iter, std::sentinel_for&lt; Iter &gt; Sentinel, std::input_or_output_iterator PredictionIter, std::sentinel_for&lt; PredictionIter &gt; PredictionSentinel, class Advisor  = null_advisor&gt; <br />
+requires supports_iterator_range_check&lt;CheckType, Mode, Iter, PredictionIter, Advisor&gt;</div>
       <table class="memname">
         <tr>
           <td class="memname">bool sequoia::testing::check </td>
@@ -262,68 +312,7 @@ requires has_generalized_equivalence_check&lt;CheckType, Mode, T, S, U...&gt;</d
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::string_view&#160;</td>
-          <td class="paramname"><em>description</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger</a>&lt; Mode &gt; &amp;&#160;</td>
-          <td class="paramname"><em>logger</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const T &amp;&#160;</td>
-          <td class="paramname"><em>obtained</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">S &amp;&amp;&#160;</td>
-          <td class="paramname"><em>s</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">U &amp;&amp;...&#160;</td>
-          <td class="paramname"><em>u</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>The workhorse for (weak) equivalence checking. </p>
-<p>This function will reflect on whether an appropriate invocation of <code>check(equivalence_check_t,...)</code> or <code>check(weak_equivalence_check_t,...)</code> exists. If so, it will be used and if not the method will attempt to interpret T as a range. If both of these fail then:</p>
-<ol type="1">
-<li>A weak equivalence check will attempt to fall back to an equivalence check;</li>
-<li>An equivalence check will attemp to fall back to a equality check. </li>
-</ol>
-
-</div>
-</div>
-<a id="a75993733a577e6b76bb93628fe2b722b" name="a75993733a577e6b76bb93628fe2b722b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a75993733a577e6b76bb93628fe2b722b">&#9670;&#160;</a></span>check() <span class="overload">[2/5]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class CheckType , test_mode Mode, std::input_or_output_iterator Iter, std::sentinel_for&lt; Iter &gt; Sentinel, std::input_or_output_iterator PredictionIter, std::sentinel_for&lt; PredictionIter &gt; PredictionSentinel, class Advisor  = null_advisor&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">bool sequoia::testing::check </td>
-          <td>(</td>
-          <td class="paramtype">CheckType&#160;</td>
-          <td class="paramname"><em>flavour</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::string_view&#160;</td>
+          <td class="paramtype">std::string&#160;</td>
           <td class="paramname"><em>description</em>, </td>
         </tr>
         <tr>
@@ -374,14 +363,14 @@ template&lt;class CheckType , test_mode Mode, std::input_or_output_iterator Iter
 
 </div>
 </div>
-<a id="af74c18b631138b107fc0011ac2f5c291" name="af74c18b631138b107fc0011ac2f5c291"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af74c18b631138b107fc0011ac2f5c291">&#9670;&#160;</a></span>check() <span class="overload">[3/5]</span></h2>
+<a id="aa79b6a2cb5a26232399fc4ed77292bbd" name="aa79b6a2cb5a26232399fc4ed77292bbd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa79b6a2cb5a26232399fc4ed77292bbd">&#9670;&#160;</a></span>check() <span class="overload">[2/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class Compare , test_mode Mode, class T , class Advisor  = null_advisor&gt; <br />
-requires maybe_comparison_type&lt;Compare, T&gt;</div>
+requires potential_comparator_for&lt;Compare, T&gt;</div>
       <table class="memname">
         <tr>
           <td class="memname">bool sequoia::testing::check </td>
@@ -392,7 +381,7 @@ requires maybe_comparison_type&lt;Compare, T&gt;</div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::string_view&#160;</td>
+          <td class="paramtype">std::string&#160;</td>
           <td class="paramname"><em>description</em>, </td>
         </tr>
         <tr>
@@ -432,14 +421,14 @@ requires maybe_comparison_type&lt;Compare, T&gt;</div>
 
 </div>
 </div>
-<a id="ab55728109d9839f8e1b0921be4bb506e" name="ab55728109d9839f8e1b0921be4bb506e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab55728109d9839f8e1b0921be4bb506e">&#9670;&#160;</a></span>check() <span class="overload">[4/5]</span></h2>
+<a id="a858a29c2cc34eb62ce7d6d7514a8fa47" name="a858a29c2cc34eb62ce7d6d7514a8fa47"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a858a29c2cc34eb62ce7d6d7514a8fa47">&#9670;&#160;</a></span>check() <span class="overload">[3/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;test_mode Mode, class T , class Advisor  = null_advisor&gt; <br />
-requires ( deep_equality_comparable&lt;T&gt; || binary_tester_for&lt;equality_check_t, Mode, T, tutor&lt;Advisor&gt;&gt; || faithful_range&lt;T&gt;)</div>
+requires supports_equality_check&lt;Mode, T, Advisor&gt;</div>
       <table class="memname">
         <tr>
           <td class="memname">bool sequoia::testing::check </td>
@@ -450,7 +439,7 @@ requires ( deep_equality_comparable&lt;T&gt; || binary_tester_for&lt;equality_ch
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::string_view&#160;</td>
+          <td class="paramtype">std::string&#160;</td>
           <td class="paramname"><em>description</em>, </td>
         </tr>
         <tr>
@@ -499,71 +488,14 @@ requires ( deep_equality_comparable&lt;T&gt; || binary_tester_for&lt;equality_ch
 
 </div>
 </div>
-<a id="a892d1135816b1269d569c47988bf0d2d" name="a892d1135816b1269d569c47988bf0d2d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a892d1135816b1269d569c47988bf0d2d">&#9670;&#160;</a></span>check() <span class="overload">[5/5]</span></h2>
+<a id="a72b1b8fc4ea47c40f244c40801fa4913" name="a72b1b8fc4ea47c40f244c40801fa4913"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a72b1b8fc4ea47c40f244c40801fa4913">&#9670;&#160;</a></span>general_equivalence_check()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;test_mode Mode, class T , class Advisor  = null_advisor&gt; <br />
-requires (deep_equality_comparable&lt;T&gt; || has_detailed_agnostic_check&lt;Mode, T, Advisor&gt; || faithful_range&lt;T&gt;)</div>
-      <table class="memname">
-        <tr>
-          <td class="memname">bool sequoia::testing::check </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="../../df/dd7/structsequoia_1_1testing_1_1with__best__available__check__t.html">with_best_available_check_t</a>&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::string_view&#160;</td>
-          <td class="paramname"><em>description</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger</a>&lt; Mode &gt; &amp;&#160;</td>
-          <td class="paramname"><em>logger</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const T &amp;&#160;</td>
-          <td class="paramname"><em>obtained</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const T &amp;&#160;</td>
-          <td class="paramname"><em>prediction</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="../../d6/d71/classsequoia_1_1testing_1_1tutor.html">tutor</a>&lt; Advisor &gt;&#160;</td>
-          <td class="paramname"><em>advisor</em> = <code>{}</code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>The workhorse for dispatching to the strongest available type of check. </p>
-
-</div>
-</div>
-<a id="a5fd8ababa0fae7e42c053e162b405489" name="a5fd8ababa0fae7e42c053e162b405489"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5fd8ababa0fae7e42c053e162b405489">&#9670;&#160;</a></span>general_equivalence_check()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class CheckType , test_mode Mode, class T , class S , class... U&gt; <br />
-requires implements_general_equivalence_check&lt;Mode, CheckType, T, S, U...&gt;</div>
+template&lt;class CheckType , test_mode Mode, class T , class U , class Advisor &gt; <br />
+requires is_general_equivalence_check&lt;CheckType&gt; &amp;&amp; tests_against_with_or_without_tutor&lt;CheckType, Mode, T, U, tutor&lt;Advisor&gt;&gt;</div>
       <table class="memname">
         <tr>
           <td class="memname">bool sequoia::testing::general_equivalence_check </td>
@@ -574,7 +506,7 @@ requires implements_general_equivalence_check&lt;Mode, CheckType, T, S, U...&gt;
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::string_view&#160;</td>
+          <td class="paramtype">std::string&#160;</td>
           <td class="paramname"><em>description</em>, </td>
         </tr>
         <tr>
@@ -592,14 +524,14 @@ requires implements_general_equivalence_check&lt;Mode, CheckType, T, S, U...&gt;
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const S &amp;&#160;</td>
-          <td class="paramname"><em>s</em>, </td>
+          <td class="paramtype">const U &amp;&#160;</td>
+          <td class="paramname"><em>predicted</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const U &amp;...&#160;</td>
-          <td class="paramname"><em>u</em>&#160;</td>
+          <td class="paramtype"><a class="el" href="../../d6/d71/classsequoia_1_1testing_1_1tutor.html">tutor</a>&lt; Advisor &gt;&#160;</td>
+          <td class="paramname"><em>advisor</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -615,19 +547,19 @@ requires implements_general_equivalence_check&lt;Mode, CheckType, T, S, U...&gt;
 </div>
 </div>
 <h2 class="groupheader">Variable Documentation</h2>
-<a id="af1369a880dd05442483eb442d6128176" name="af1369a880dd05442483eb442d6128176"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af1369a880dd05442483eb442d6128176">&#9670;&#160;</a></span>has_detailed_agnostic_check</h2>
+<a id="a9a7f6d930c702dbeaffba3e4a605b74c" name="a9a7f6d930c702dbeaffba3e4a605b74c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9a7f6d930c702dbeaffba3e4a605b74c">&#9670;&#160;</a></span>checkable_against_fallback</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;test_mode Mode, class T , class Advisor &gt; </div>
+template&lt;class CheckType , test_mode Mode, class T , class U , class Tutor &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr bool sequoia::testing::has_detailed_agnostic_check</td>
+          <td class="memname">constexpr bool sequoia::testing::checkable_against_fallback</td>
         </tr>
       </table>
   </td>
@@ -637,28 +569,28 @@ template&lt;test_mode Mode, class T , class Advisor &gt; </div>
 </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">{</div>
-<div class="line">       <a class="code hl_concept" href="../../d2/d63/conceptsequoia_1_1testing_1_1binary__tester__for.html">binary_tester_for&lt;equality_check_t, Mode, T, Advisor&gt;</a></div>
-<div class="line">    || <a class="code hl_concept" href="../../d2/d63/conceptsequoia_1_1testing_1_1binary__tester__for.html">binary_tester_for&lt;equivalence_check_t, Mode, T, Advisor&gt;</a></div>
-<div class="line">    || <a class="code hl_concept" href="../../d2/d63/conceptsequoia_1_1testing_1_1binary__tester__for.html">binary_tester_for&lt;weak_equivalence_check_t, Mode, T, Advisor&gt;</a></div>
-<div class="line">    || <a class="code hl_concept" href="../../d2/d63/conceptsequoia_1_1testing_1_1binary__tester__for.html">binary_tester_for&lt;with_best_available_check_t, Mode, T, Advisor&gt;</a></div>
+<div class="line">    <span class="keyword">requires</span> {</div>
+<div class="line">      <span class="keyword">typename</span> CheckType::fallback;</div>
+<div class="line">      <span class="keyword">requires</span> <a class="code hl_concept" href="../../d2/ddd/conceptsequoia_1_1testing_1_1checkable__against.html">checkable_against&lt;typename CheckType::fallback, Mode, T, U, Tutor&gt;</a>;</div>
+<div class="line">    }</div>
 <div class="line">  }</div>
-<div class="ttc" id="aconceptsequoia_1_1testing_1_1binary__tester__for_html"><div class="ttname"><a href="../../d2/d63/conceptsequoia_1_1testing_1_1binary__tester__for.html">sequoia::testing::binary_tester_for</a></div><div class="ttdef"><b>Definition:</b> FreeCheckers.hpp:186</div></div>
+<div class="ttc" id="aconceptsequoia_1_1testing_1_1checkable__against_html"><div class="ttname"><a href="../../d2/ddd/conceptsequoia_1_1testing_1_1checkable__against.html">sequoia::testing::checkable_against</a></div><div class="ttdef"><b>Definition:</b> FreeCheckers.hpp:183</div></div>
 </div><!-- fragment -->
 </div>
 </div>
-<a id="ab70e460d4c333169d2fde8d41b3a5f42" name="ab70e460d4c333169d2fde8d41b3a5f42"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab70e460d4c333169d2fde8d41b3a5f42">&#9670;&#160;</a></span>has_fallback</h2>
+<a id="a124606befcccf8428453cd7f12a03fee" name="a124606befcccf8428453cd7f12a03fee"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a124606befcccf8428453cd7f12a03fee">&#9670;&#160;</a></span>has_elementary_check_against</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class T &gt; </div>
+template&lt;test_mode Mode, class T , class U , class Tutor &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr bool sequoia::testing::has_fallback</td>
+          <td class="memname">constexpr bool sequoia::testing::has_elementary_check_against</td>
         </tr>
       </table>
   </td>
@@ -668,72 +600,11 @@ template&lt;class T &gt; </div>
 </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">{</div>
-<div class="line">    <span class="keyword">requires</span> { <span class="keyword">typename</span> T::fallback; }</div>
+<div class="line">       <a class="code hl_concept" href="../../d2/ddd/conceptsequoia_1_1testing_1_1checkable__against.html">checkable_against&lt;equality_check_t,         Mode, T, U, Tutor&gt;</a></div>
+<div class="line">    || <a class="code hl_concept" href="../../d2/ddd/conceptsequoia_1_1testing_1_1checkable__against.html">checkable_against&lt;simple_equality_check_t,  Mode, T, U, Tutor&gt;</a></div>
+<div class="line">    || <a class="code hl_concept" href="../../d2/ddd/conceptsequoia_1_1testing_1_1checkable__against.html">checkable_against&lt;equivalence_check_t,      Mode, T, U, Tutor&gt;</a></div>
+<div class="line">    || <a class="code hl_concept" href="../../d2/ddd/conceptsequoia_1_1testing_1_1checkable__against.html">checkable_against&lt;weak_equivalence_check_t, Mode, T, U, Tutor&gt;</a></div>
 <div class="line">  }</div>
-</div><!-- fragment -->
-</div>
-</div>
-<a id="aad35c9e1a08154285c86c94e31170409" name="aad35c9e1a08154285c86c94e31170409"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aad35c9e1a08154285c86c94e31170409">&#9670;&#160;</a></span>has_generalized_equivalence_check</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class CheckType , test_mode Mode, class T , class S , class... U&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr bool sequoia::testing::has_generalized_equivalence_check</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">{</div>
-<div class="line">      !(   std::is_same_v&lt;CheckType, equality_check_t&gt;</div>
-<div class="line">        || std::is_same_v&lt;CheckType, with_best_available_check_t&gt;)</div>
-<div class="line">    &amp;&amp; (   implements_general_equivalence_check&lt;Mode, CheckType, T, S, U...&gt;</div>
-<div class="line">        || <a class="code hl_concept" href="../../dd/d51/conceptsequoia_1_1faithful__range.html">faithful_range&lt;T&gt;</a></div>
-<div class="line">        || has_fallback&lt;CheckType&gt;)</div>
-<div class="line">  }</div>
-<div class="ttc" id="aconceptsequoia_1_1faithful__range_html"><div class="ttname"><a href="../../dd/d51/conceptsequoia_1_1faithful__range.html">sequoia::faithful_range</a></div><div class="ttdoc">Similar to std::range but excludes the case where dereferencing yields the same type as the range.</div><div class="ttdef"><b>Definition:</b> Concepts.hpp:91</div></div>
-</div><!-- fragment -->
-</div>
-</div>
-<a id="ab2033f4fa84ac361acc63ce72c9ed7fc" name="ab2033f4fa84ac361acc63ce72c9ed7fc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab2033f4fa84ac361acc63ce72c9ed7fc">&#9670;&#160;</a></span>implements_general_equivalence_check</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;test_mode Mode, class CheckType , class T , class S , class... U&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr bool sequoia::testing::implements_general_equivalence_check</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">{</div>
-<div class="line">            <a class="code hl_concept" href="../../de/da4/conceptsequoia_1_1testing_1_1tester__for.html">tester_for</a>&lt;CheckType, Mode, T, T, S, U...&gt;</div>
-<div class="line">    || (    equivalent_type_processor&lt;S, U...&gt;::ends_with_tutor</div>
-<div class="line">         &amp;&amp; <a class="code hl_concept" href="../../d7/d64/conceptsequoia_1_1testing_1_1impl_1_1invocable__without__last__arg.html">impl::invocable_without_last_arg&lt;equivalence_checker_delegator&lt;T&gt;</a>, CheckType, test_logger&lt;Mode&gt;&amp;, T, S, U...&gt;)</div>
-<div class="line">    ||      <a class="code hl_concept" href="../../de/da4/conceptsequoia_1_1testing_1_1tester__for.html">tester_for</a>&lt;CheckType, Mode, T, T, S, U..., tutor&lt;null_advisor&gt;&gt;</div>
-<div class="line">  }</div>
-<div class="ttc" id="aconceptsequoia_1_1testing_1_1impl_1_1invocable__without__last__arg_html"><div class="ttname"><a href="../../d7/d64/conceptsequoia_1_1testing_1_1impl_1_1invocable__without__last__arg.html">sequoia::testing::impl::invocable_without_last_arg</a></div><div class="ttdef"><b>Definition:</b> FreeCheckers.hpp:259</div></div>
-<div class="ttc" id="aconceptsequoia_1_1testing_1_1tester__for_html"><div class="ttname"><a href="../../de/da4/conceptsequoia_1_1testing_1_1tester__for.html">sequoia::testing::tester_for</a></div><div class="ttdef"><b>Definition:</b> FreeCheckers.hpp:181</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -790,16 +661,16 @@ template&lt;class T &gt; </div>
 </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">{</div>
-<div class="line">       std::is_same_v&lt;std::remove_cvref_t&lt;T&gt;, equality_check_t&gt;</div>
-<div class="line">    || std::is_same_v&lt;std::remove_cvref_t&lt;T&gt;, equivalence_check_t&gt;</div>
-<div class="line">    || std::is_same_v&lt;std::remove_cvref_t&lt;T&gt;, weak_equivalence_check_t&gt;</div>
-<div class="line">    || std::is_same_v&lt;std::remove_cvref_t&lt;T&gt;, with_best_available_check_t&gt;</div>
+<div class="line">       std::is_same_v&lt;T, equality_check_t&gt;</div>
+<div class="line">    || std::is_same_v&lt;T, simple_equality_check_t&gt;</div>
+<div class="line">    || std::is_same_v&lt;T, equivalence_check_t&gt;</div>
+<div class="line">    || std::is_same_v&lt;T, weak_equivalence_check_t&gt;</div>
 <div class="line">  }</div>
 </div><!-- fragment -->
 </div>
 </div>
-<a id="afecc9fe410e5664f1863a13447f4c287" name="afecc9fe410e5664f1863a13447f4c287"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afecc9fe410e5664f1863a13447f4c287">&#9670;&#160;</a></span>maybe_comparison_type</h2>
+<a id="acaa7e49850e2154f14f1def9b1567ad6" name="acaa7e49850e2154f14f1def9b1567ad6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acaa7e49850e2154f14f1def9b1567ad6">&#9670;&#160;</a></span>potential_comparator_for</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -810,7 +681,7 @@ template&lt;class Compare , class T &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr bool sequoia::testing::maybe_comparison_type</td>
+          <td class="memname">constexpr bool sequoia::testing::potential_comparator_for</td>
         </tr>
       </table>
   </td>
@@ -820,9 +691,143 @@ template&lt;class Compare , class T &gt; </div>
 </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">{</div>
-<div class="line">    (std::invocable&lt;Compare, T, T&gt; || <a class="code hl_concept" href="../../dd/d51/conceptsequoia_1_1faithful__range.html">faithful_range&lt;T&gt;</a>) &amp;&amp; !(is_elementary_check&lt;Compare&gt; || is_customized_check&lt;Compare&gt;)</div>
+<div class="line">    std::is_invocable_r_v&lt;bool, Compare, T, T&gt; || (<a class="code hl_concept" href="../../dd/d51/conceptsequoia_1_1faithful__range.html">faithful_range&lt;T&gt;</a> &amp;&amp; !(is_elementary_check&lt;Compare&gt; || std::is_same_v&lt;Compare, with_best_available_check_t&gt; || is_customized_check&lt;Compare&gt;))</div>
+<div class="line">  }</div>
+<div class="ttc" id="aconceptsequoia_1_1faithful__range_html"><div class="ttname"><a href="../../dd/d51/conceptsequoia_1_1faithful__range.html">sequoia::faithful_range</a></div><div class="ttdoc">Similar to std::range but excludes the case where dereferencing yields the same type as the range.</div><div class="ttdef"><b>Definition:</b> Concepts.hpp:87</div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="aa82662944b2fdfe65cf04472d20fe360" name="aa82662944b2fdfe65cf04472d20fe360"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa82662944b2fdfe65cf04472d20fe360">&#9670;&#160;</a></span>supports_best_available_check</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;test_mode Mode, class T , class U , class Advisor &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr bool sequoia::testing::supports_best_available_check</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">{</div>
+<div class="line">       <a class="code hl_concept" href="../../d4/d7a/conceptsequoia_1_1testing_1_1tests__against__with__or__without__tutor.html">tests_against_with_or_without_tutor&lt;with_best_available_check_t, Mode, T, U, tutor&lt;Advisor&gt;</a>&gt;</div>
+<div class="line">    || has_elementary_check_against&lt;Mode, T, U, tutor&lt;Advisor&gt;&gt;</div>
+<div class="line">    || supports_range_check_v&lt;with_best_available_check_t, Mode, T, U, Advisor&gt;</div>
+<div class="line">  }</div>
+<div class="ttc" id="aconceptsequoia_1_1testing_1_1tests__against__with__or__without__tutor_html"><div class="ttname"><a href="../../d4/d7a/conceptsequoia_1_1testing_1_1tests__against__with__or__without__tutor.html">sequoia::testing::tests_against_with_or_without_tutor</a></div><div class="ttdef"><b>Definition:</b> FreeCheckers.hpp:180</div></div>
+</div><!-- fragment -->
+<p>Condition for applying the best available check. </p>
+
+</div>
+</div>
+<a id="a6b9d3e8ba2c446ab35ec269ff47ee385" name="a6b9d3e8ba2c446ab35ec269ff47ee385"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6b9d3e8ba2c446ab35ec269ff47ee385">&#9670;&#160;</a></span>supports_equality_check</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;test_mode Mode, class T , class Advisor &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr bool sequoia::testing::supports_equality_check</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">{</div>
+<div class="line">       (<a class="code hl_concept" href="../../da/d5f/conceptsequoia_1_1deep__equality__comparable.html">deep_equality_comparable&lt;T&gt;</a> &amp;&amp; <a class="code hl_concept" href="../../d7/d4b/conceptsequoia_1_1testing_1_1reportable.html">reportable&lt;T&gt;</a>)</div>
+<div class="line">    || <a class="code hl_concept" href="../../d4/d7a/conceptsequoia_1_1testing_1_1tests__against__with__or__without__tutor.html">tests_against_with_or_without_tutor</a>&lt;equality_check_t, Mode, T, T, tutor&lt;Advisor&gt;&gt;</div>
+<div class="line">    || supports_range_check_v&lt;equality_check_t, Mode, T, T, Advisor&gt;</div>
+<div class="line">  }</div>
+<div class="ttc" id="aconceptsequoia_1_1deep__equality__comparable_html"><div class="ttname"><a href="../../da/d5f/conceptsequoia_1_1deep__equality__comparable.html">sequoia::deep_equality_comparable</a></div><div class="ttdoc">Concept to work around the fact that currently the stl typically underconstrains operator==.</div><div class="ttdef"><b>Definition:</b> Concepts.hpp:101</div></div>
+<div class="ttc" id="aconceptsequoia_1_1testing_1_1reportable_html"><div class="ttname"><a href="../../d7/d4b/conceptsequoia_1_1testing_1_1reportable.html">sequoia::testing::reportable</a></div><div class="ttdef"><b>Definition:</b> Output.hpp:165</div></div>
+</div><!-- fragment -->
+<p>Condition for applying an equality check. </p>
+
+</div>
+</div>
+<a id="a25080af3e6f9bf3a8f9a047b26613950" name="a25080af3e6f9bf3a8f9a047b26613950"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a25080af3e6f9bf3a8f9a047b26613950">&#9670;&#160;</a></span>supports_generalized_equivalence_check</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class CheckType , test_mode Mode, class T , class U , class Advisor &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr bool sequoia::testing::supports_generalized_equivalence_check</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">{</div>
+<div class="line">       is_general_equivalence_check&lt;CheckType&gt;</div>
+<div class="line">    &amp;&amp; (   <a class="code hl_concept" href="../../d4/d7a/conceptsequoia_1_1testing_1_1tests__against__with__or__without__tutor.html">tests_against_with_or_without_tutor&lt;CheckType, Mode, T, U, tutor&lt;Advisor&gt;</a>&gt;</div>
+<div class="line">        || supports_range_check_v&lt;CheckType, Mode, T, U, Advisor&gt;</div>
+<div class="line">        || checkable_against_fallback&lt;CheckType, Mode, T, U, tutor&lt;Advisor&gt;&gt;)</div>
 <div class="line">  }</div>
 </div><!-- fragment -->
+<p>The workhorse for (weak) equivalence checking. </p>
+<p>This function will reflect on whether an appropriate invocation of <code>check(equivalence_check_t,...)</code> or <code>check(weak_equivalence_check_t,...)</code> exists. If so, it will be used and if not the method will attempt to interpret T as a range. If both of these fail then:</p>
+<ol type="1">
+<li>A weak equivalence check will attempt to fall back to an equivalence check;</li>
+<li>An equivalence check will attemp to fall back to a equality check.</li>
+</ol>
+<p>Condition for applying a generalized equivalance check </p>
+
+</div>
+</div>
+<a id="a001411d098363919c41360d75299131a" name="a001411d098363919c41360d75299131a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a001411d098363919c41360d75299131a">&#9670;&#160;</a></span>supports_simple_equality_check</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;test_mode Mode, class T , class Advisor &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr bool sequoia::testing::supports_simple_equality_check</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">{</div>
+<div class="line">       (<a class="code hl_concept" href="../../da/d5f/conceptsequoia_1_1deep__equality__comparable.html">deep_equality_comparable&lt;T&gt;</a> &amp;&amp; <a class="code hl_concept" href="../../d7/d4b/conceptsequoia_1_1testing_1_1reportable.html">reportable&lt;T&gt;</a>)</div>
+<div class="line">    || supports_range_check_v&lt;simple_equality_check_t, Mode, T, T, Advisor&gt;</div>
+<div class="line">  }</div>
+</div><!-- fragment -->
+<p>Condition for applying an equality check. </p>
+
 </div>
 </div>
 </div><!-- contents -->

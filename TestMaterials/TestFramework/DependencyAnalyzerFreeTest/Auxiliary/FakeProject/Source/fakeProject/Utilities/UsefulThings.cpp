@@ -6,6 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "fakeProject/Utilities/UsefulThings.hpp"
+#include "foo/Utilities/Helper.hpp"
 
 namespace utils
 {

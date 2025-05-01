@@ -74,7 +74,7 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
+<a href="#define-members">Macros</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
@@ -88,66 +88,91 @@ $(function() {
 </div>
 <p><a href="../../dc/d02/Bitmask_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d26/structsequoia_1_1as__bitmask.html">sequoia::as_bitmask&lt; T &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:abbf3938aa3a4e2971609cef72c4f3b12"><td class="memItemLeft" align="right" valign="top"><a id="abbf3938aa3a4e2971609cef72c4f3b12" name="abbf3938aa3a4e2971609cef72c4f3b12"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>NAMESPACE_SEQUOIA_AS_BITMASK</b>&#160;&#160;&#160;namespace sequoia</td></tr>
+<tr class="separator:abbf3938aa3a4e2971609cef72c4f3b12"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:aa7e9078a106f963f3836db7d3cae627c"><td class="memTemplParams" colspan="2"><a id="aa7e9078a106f963f3836db7d3cae627c" name="aa7e9078a106f963f3836db7d3cae627c"></a>
+<tr class="memitem:a716e54dab2705bfbb0006f85f3769014"><td class="memTemplParams" colspan="2"><a id="a716e54dab2705bfbb0006f85f3769014" name="a716e54dab2705bfbb0006f85f3769014"></a>
 template&lt;class T &gt; </td></tr>
-<tr class="memitem:aa7e9078a106f963f3836db7d3cae627c"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::as_bitmask_t</b> = typename as_bitmask&lt; T &gt;::type</td></tr>
-<tr class="separator:aa7e9078a106f963f3836db7d3cae627c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a716e54dab2705bfbb0006f85f3769014"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>as_bitmask_t</b> = typename as_bitmask&lt; T &gt;::type</td></tr>
+<tr class="separator:a716e54dab2705bfbb0006f85f3769014"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:aff9e6922aaaf405ac2c2b263b16d1e8f"><td class="memTemplParams" colspan="2"><a id="aff9e6922aaaf405ac2c2b263b16d1e8f" name="aff9e6922aaaf405ac2c2b263b16d1e8f"></a>
+<tr class="memitem:a278ca933f690f6a34231d54f0e64acab"><td class="memTemplParams" colspan="2"><a id="a278ca933f690f6a34231d54f0e64acab" name="a278ca933f690f6a34231d54f0e64acab"></a>
 template&lt;class T &gt; <br />
 requires as_bitmask_v&lt;T&gt;</td></tr>
-<tr class="memitem:aff9e6922aaaf405ac2c2b263b16d1e8f"><td class="memTemplItemLeft" align="right" valign="top">constexpr T&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::operator|</b> (T lhs, T rhs) noexcept</td></tr>
-<tr class="separator:aff9e6922aaaf405ac2c2b263b16d1e8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a60fdb3c70d98e39c7a0b064a0081e763"><td class="memTemplParams" colspan="2"><a id="a60fdb3c70d98e39c7a0b064a0081e763" name="a60fdb3c70d98e39c7a0b064a0081e763"></a>
+<tr class="memitem:a278ca933f690f6a34231d54f0e64acab"><td class="memTemplItemLeft" align="right" valign="top">constexpr T&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator|</b> (T lhs, T rhs) noexcept</td></tr>
+<tr class="separator:a278ca933f690f6a34231d54f0e64acab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4dbd76120ba8ce4618cf7f688bcaa832"><td class="memTemplParams" colspan="2"><a id="a4dbd76120ba8ce4618cf7f688bcaa832" name="a4dbd76120ba8ce4618cf7f688bcaa832"></a>
 template&lt;class T &gt; <br />
 requires as_bitmask_v&lt;T&gt;</td></tr>
-<tr class="memitem:a60fdb3c70d98e39c7a0b064a0081e763"><td class="memTemplItemLeft" align="right" valign="top">constexpr T &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::operator|=</b> (T &amp;lhs, T rhs) noexcept</td></tr>
-<tr class="separator:a60fdb3c70d98e39c7a0b064a0081e763"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aab95b24b7d5ac9ff49bf13dadaa551e6"><td class="memTemplParams" colspan="2"><a id="aab95b24b7d5ac9ff49bf13dadaa551e6" name="aab95b24b7d5ac9ff49bf13dadaa551e6"></a>
+<tr class="memitem:a4dbd76120ba8ce4618cf7f688bcaa832"><td class="memTemplItemLeft" align="right" valign="top">constexpr T &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator|=</b> (T &amp;lhs, T rhs) noexcept</td></tr>
+<tr class="separator:a4dbd76120ba8ce4618cf7f688bcaa832"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab69cc9a39925128807f4077b9cae223a"><td class="memTemplParams" colspan="2"><a id="ab69cc9a39925128807f4077b9cae223a" name="ab69cc9a39925128807f4077b9cae223a"></a>
 template&lt;class T &gt; <br />
 requires as_bitmask_v&lt;T&gt;</td></tr>
-<tr class="memitem:aab95b24b7d5ac9ff49bf13dadaa551e6"><td class="memTemplItemLeft" align="right" valign="top">constexpr T&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::operator&amp;</b> (T lhs, T rhs) noexcept</td></tr>
-<tr class="separator:aab95b24b7d5ac9ff49bf13dadaa551e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6995033a8e97c4c96b189c6ccb9721ac"><td class="memTemplParams" colspan="2"><a id="a6995033a8e97c4c96b189c6ccb9721ac" name="a6995033a8e97c4c96b189c6ccb9721ac"></a>
+<tr class="memitem:ab69cc9a39925128807f4077b9cae223a"><td class="memTemplItemLeft" align="right" valign="top">constexpr T&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator&amp;</b> (T lhs, T rhs) noexcept</td></tr>
+<tr class="separator:ab69cc9a39925128807f4077b9cae223a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af1e8877b8b97cae965c41615006f2fa9"><td class="memTemplParams" colspan="2"><a id="af1e8877b8b97cae965c41615006f2fa9" name="af1e8877b8b97cae965c41615006f2fa9"></a>
 template&lt;class T &gt; <br />
 requires as_bitmask_v&lt;T&gt;</td></tr>
-<tr class="memitem:a6995033a8e97c4c96b189c6ccb9721ac"><td class="memTemplItemLeft" align="right" valign="top">constexpr T &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::operator&amp;=</b> (T &amp;lhs, T rhs) noexcept</td></tr>
-<tr class="separator:a6995033a8e97c4c96b189c6ccb9721ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aef689e6d462f40f9aea6fb1ceeac9022"><td class="memTemplParams" colspan="2"><a id="aef689e6d462f40f9aea6fb1ceeac9022" name="aef689e6d462f40f9aea6fb1ceeac9022"></a>
+<tr class="memitem:af1e8877b8b97cae965c41615006f2fa9"><td class="memTemplItemLeft" align="right" valign="top">constexpr T &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator&amp;=</b> (T &amp;lhs, T rhs) noexcept</td></tr>
+<tr class="separator:af1e8877b8b97cae965c41615006f2fa9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4ddd1686c77a3c0e98e3fb0b52420f61"><td class="memTemplParams" colspan="2"><a id="a4ddd1686c77a3c0e98e3fb0b52420f61" name="a4ddd1686c77a3c0e98e3fb0b52420f61"></a>
 template&lt;class T &gt; <br />
 requires as_bitmask_v&lt;T&gt;</td></tr>
-<tr class="memitem:aef689e6d462f40f9aea6fb1ceeac9022"><td class="memTemplItemLeft" align="right" valign="top">constexpr T&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::operator^</b> (T lhs, T rhs) noexcept</td></tr>
-<tr class="separator:aef689e6d462f40f9aea6fb1ceeac9022"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9634e5aff64916bfce3621f9225ec921"><td class="memTemplParams" colspan="2"><a id="a9634e5aff64916bfce3621f9225ec921" name="a9634e5aff64916bfce3621f9225ec921"></a>
+<tr class="memitem:a4ddd1686c77a3c0e98e3fb0b52420f61"><td class="memTemplItemLeft" align="right" valign="top">constexpr T&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator^</b> (T lhs, T rhs) noexcept</td></tr>
+<tr class="separator:a4ddd1686c77a3c0e98e3fb0b52420f61"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abe479ab316f03fc37afeb3807b30d9a9"><td class="memTemplParams" colspan="2"><a id="abe479ab316f03fc37afeb3807b30d9a9" name="abe479ab316f03fc37afeb3807b30d9a9"></a>
 template&lt;class T &gt; <br />
 requires as_bitmask_v&lt;T&gt;</td></tr>
-<tr class="memitem:a9634e5aff64916bfce3621f9225ec921"><td class="memTemplItemLeft" align="right" valign="top">constexpr T &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::operator^=</b> (T &amp;lhs, T rhs) noexcept</td></tr>
-<tr class="separator:a9634e5aff64916bfce3621f9225ec921"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a288384d42731ea253eefa53bb1e21eef"><td class="memTemplParams" colspan="2"><a id="a288384d42731ea253eefa53bb1e21eef" name="a288384d42731ea253eefa53bb1e21eef"></a>
+<tr class="memitem:abe479ab316f03fc37afeb3807b30d9a9"><td class="memTemplItemLeft" align="right" valign="top">constexpr T &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator^=</b> (T &amp;lhs, T rhs) noexcept</td></tr>
+<tr class="separator:abe479ab316f03fc37afeb3807b30d9a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae106a22a7bce3f1d68aa9643a109bd74"><td class="memTemplParams" colspan="2"><a id="ae106a22a7bce3f1d68aa9643a109bd74" name="ae106a22a7bce3f1d68aa9643a109bd74"></a>
 template&lt;class T &gt; <br />
 requires as_bitmask_v&lt;T&gt;</td></tr>
-<tr class="memitem:a288384d42731ea253eefa53bb1e21eef"><td class="memTemplItemLeft" align="right" valign="top">constexpr T&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::operator~</b> (T om)</td></tr>
-<tr class="separator:a288384d42731ea253eefa53bb1e21eef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae106a22a7bce3f1d68aa9643a109bd74"><td class="memTemplItemLeft" align="right" valign="top">constexpr T&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator~</b> (T om)</td></tr>
+<tr class="separator:ae106a22a7bce3f1d68aa9643a109bd74"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:aaecc8c6fddd82d0d57ecae0bb28a0ce0"><td class="memTemplParams" colspan="2"><a id="aaecc8c6fddd82d0d57ecae0bb28a0ce0" name="aaecc8c6fddd82d0d57ecae0bb28a0ce0"></a>
+<tr class="memitem:afa6929b4fe3fbf6870d16c88fb346b23"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d02/Bitmask_8hpp.html#afa6929b4fe3fbf6870d16c88fb346b23">NAMESPACE_SEQUOIA_AS_BITMASK</a></td></tr>
+<tr class="separator:afa6929b4fe3fbf6870d16c88fb346b23"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a26f919cded94288a9f9e1965f84c5602"><td class="memTemplParams" colspan="2"><a id="a26f919cded94288a9f9e1965f84c5602" name="a26f919cded94288a9f9e1965f84c5602"></a>
 template&lt;class T &gt; </td></tr>
-<tr class="memitem:aaecc8c6fddd82d0d57ecae0bb28a0ce0"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::as_bitmask_v</b> {as_bitmask&lt;T&gt;::value}</td></tr>
-<tr class="separator:aaecc8c6fddd82d0d57ecae0bb28a0ce0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a26f919cded94288a9f9e1965f84c5602"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>as_bitmask_v</b> {as_bitmask&lt;T&gt;::value}</td></tr>
+<tr class="separator:a26f919cded94288a9f9e1965f84c5602"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Utilities to aid logical operations. </p>
-</div></div><!-- contents -->
+</div><h2 class="groupheader">Variable Documentation</h2>
+<a id="afa6929b4fe3fbf6870d16c88fb346b23" name="afa6929b4fe3fbf6870d16c88fb346b23"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afa6929b4fe3fbf6870d16c88fb346b23">&#9670;&#160;</a></span>NAMESPACE_SEQUOIA_AS_BITMASK</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">NAMESPACE_SEQUOIA_AS_BITMASK</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">{</div>
+<div class="line"> </div>
+<div class="line">  </div>
+<div class="line">  <span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt;</div>
+<div class="line">    <span class="keyword">requires</span> std::is_enum_v&lt;T&gt;</div>
+<div class="line">  <span class="keyword">struct </span>as_bitmask : std::false_type</div>
+<div class="line">  {}</div>
+</div><!-- fragment -->
+</div>
+</div>
+</div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.6

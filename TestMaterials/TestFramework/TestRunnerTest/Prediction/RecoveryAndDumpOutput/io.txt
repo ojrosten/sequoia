@@ -2,55 +2,59 @@
 Running tests, synchronously...
 
 Bar:
-[Execution Time: 2.97ms]
+[Execution Time: 306us]
 	Free Test
-	[Execution Time: 2.97ms]
+	[Execution Time: 306us]
 		Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 1]
 
 ******  Critical Failures:  1  ******
 
 
-	Error -- Unexpected Exception:
-	Throw after check
+		Error -- Unexpected Exception:
+		Throw after check
 
-	Exception thrown after check completed
-	Last Recorded Message:
+		Exception thrown after check completed
+		Last Recorded Message:
 
-	Phoney equality check
-	[int]
+		Tests/Tests/TestFramework/TestRunnerDiagnosticsUtilities.hpp, Line 39
+		Phoney equality check
 
-	=======================================
+		[int]
+
+		=======================================
 
 Foo:
-[Execution Time: 2.87ms]
+[Execution Time: 259us]
 	Unit Test
-	[Execution Time: 2.87ms]
+	[Execution Time: 259us]
 		Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 0]
 
 ******  Critical Failures:  1  ******
 
 
-	Error -- Unexpected Exception:
-	This is bad
+		Error -- Unexpected Exception:
+		This is bad
 
-	Exception thrown during last check
-	Last Recorded Message:
+		Exception thrown during last check
+		Last Recorded Message:
 
-	Throw during check
-	[sequoia::testing::(anonymous namespace)::foo]
+		Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 58
+		Throw during check
 
-	=======================================
+		[sequoia::testing::(anonymous namespace)::foo]
+
+		=======================================
 
 
 -----------Grand Totals-----------
-[Total Run Time: 13.4ms]
-[Execution Time: 5.84ms]
+[Total Run Time: 1.03ms]
+[Execution Time: 565us]
 	Standard Top Level Checks:                 4;  Failures:  0  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
-	False Negative Checks:                     0;  Failures:  0
-	False Negative Performance Checks:         0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
 
 ******  Critical Failures:  2  ******
 

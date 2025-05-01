@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////
-//               Copyright Oliver Jacob Rosten 2023.              //
+//               Copyright Oliver Jacob Rosten 2025.              //
 // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
 //    (See accompanying file LICENSE.md or copy at                //
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
@@ -11,12 +11,14 @@
 
 #include "sequoia/TestFramework/FreeTestCore.hpp"
 
-namespace sequoia::testing
+namespace fakeProject::testing
 {
-    class angle_false_positive_free_diagnostics final : public free_false_positive_test
+    using namespace sequoia::testing;
+
+    class angle_false_negative_free_diagnostics final : public free_false_negative_test
     {
     public:
-        using free_false_positive_test::free_false_positive_test;
+        using free_false_negative_test::free_false_negative_test;
 
         [[nodiscard]]
         std::filesystem::path source_file() const;

@@ -15,17 +15,14 @@ int main(int argc, char** argv)
   {
     using namespace sequoia;
     using namespace testing;
+    using namespace object;
     using namespace std::literals::chrono_literals;
 
     test_runner runner{argc,
                        argv,
                        "Oliver J. Rosten",
-                       {"TestChamber/TestChamberMain.cpp", {}, "TestCommon/TestIncludes.hpp"}};
-
-    runner.add_test_suite(
-      "Experimental",
-      experimental_test{"Unit Test"}
-    );
+                       "  ",
+                       {.main_cpp{"TestChamber/TestChamberMain.cpp"}, .common_includes{"TestCommon/TestIncludes.hpp"}}};
 
     runner.execute(timer_resolution{1ms});
   }

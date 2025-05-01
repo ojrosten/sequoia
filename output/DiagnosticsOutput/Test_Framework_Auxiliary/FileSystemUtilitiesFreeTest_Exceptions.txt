@@ -4,7 +4,7 @@ Expected Exception Type:
 [std::runtime_error]
 output/TestsTemporaryData/TestFramework/FileSystemUtilitiesFreeTest/Foo/Bar/baz.txt is not a directory
 
-	=======================================
+=======================================
 
 Tests/TestFramework/FileSystemUtilitiesFreeTest.cpp, Line 48
 
@@ -12,14 +12,41 @@ Expected Exception Type:
 [std::runtime_error]
 output/TestsTemporaryData/TestFramework/FileSystemUtilitiesFreeTest/Foo/Stuff is not a directory
 
-	=======================================
+=======================================
 
-Tests/TestFramework/FileSystemUtilitiesFreeTest.cpp, Line 65
+Tests/TestFramework/FileSystemUtilitiesFreeTest.cpp, Line 63
 Attempt to rebase from file
 
 Expected Exception Type:
-[std::logic_error]
+[std::runtime_error]
 Trying to rebase from something other than a directory
 
-	=======================================
+=======================================
+
+Tests/TestFramework/FileSystemUtilitiesFreeTest.cpp, Line 66
+Attempt to rebase non-empty path from empty path
+
+Expected Exception Type:
+[std::runtime_error]
+Tring to rebase from an empty path
+
+=======================================
+
+Tests/TestFramework/FileSystemUtilitiesFreeTest.cpp, Line 69
+Attempt to rebase ../
+
+Expected Exception Type:
+[std::runtime_error]
+Path comprises nothing but ../
+
+=======================================
+
+Tests/TestFramework/FileSystemUtilitiesFreeTest.cpp, Line 72
+Attempt to rebase ../../
+
+Expected Exception Type:
+[std::runtime_error]
+Path comprises nothing but ../
+
+=======================================
 

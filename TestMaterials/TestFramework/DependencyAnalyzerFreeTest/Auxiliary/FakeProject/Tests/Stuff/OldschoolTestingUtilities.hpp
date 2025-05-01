@@ -9,6 +9,7 @@
 
 #include "sequoia/TestFramework/RegularTestCore.hpp"
 #include "fakeProject/Stuff/NoTemplate.hpp"
+#include "myLib/Utils.hpp"
 
 namespace sequoia::testing
 {

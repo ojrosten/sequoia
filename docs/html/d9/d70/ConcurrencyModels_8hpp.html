@@ -74,8 +74,7 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
-<a href="#func-members">Functions</a>  </div>
+<a href="#nested-classes">Classes</a>  </div>
   <div class="headertitle"><div class="title">ConcurrencyModels.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
@@ -101,28 +100,18 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d34/structsequoia_1_1concurrency_1_1impl_1_1queue__details_3_01R_00_01false_01_4.html">sequoia::concurrency::impl::queue_details&lt; R, false &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d7a/classsequoia_1_1concurrency_1_1serial.html">sequoia::concurrency::serial&lt; R &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tasks may be <code>push</code>ed, upon which they are immediately invoked; results may be acquired through <code>get</code>.  <a href="../../dc/d7a/classsequoia_1_1concurrency_1_1serial.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d81/classsequoia_1_1concurrency_1_1serial_3_01void_01_4.html">sequoia::concurrency::serial&lt; void &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tasks may be pushed, upon which they are immediately invoked.  <a href="../../d0/d81/classsequoia_1_1concurrency_1_1serial_3_01void_01_4.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tasks may be <code>push</code>ed, upon which they are immediately invoked.  <a href="../../dc/d7a/classsequoia_1_1concurrency_1_1serial.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d11/classsequoia_1_1concurrency_1_1asynchronous.html">sequoia::concurrency::asynchronous&lt; R &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tasks may be <code>push</code>ed, upon which they are fed to std::async; results may be acquired through <code>get</code>.  <a href="../../d0/d11/classsequoia_1_1concurrency_1_1asynchronous.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tasks may be <code>push</code>ed, upon which they are fed to std::async.  <a href="../../d0/d11/classsequoia_1_1concurrency_1_1asynchronous.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d85/classsequoia_1_1concurrency_1_1thread__pool.html">sequoia::concurrency::thread_pool&lt; R, MultiPipeline &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Supports either a single pipeline or a pipeline for each thread, together with task stealing.  <a href="../../d4/d85/classsequoia_1_1concurrency_1_1thread__pool.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
-Functions</h2></td></tr>
-<tr class="memitem:a5cd43035ccb75132f6d9c186968fec45"><td class="memTemplParams" colspan="2"><a id="a5cd43035ccb75132f6d9c186968fec45" name="a5cd43035ccb75132f6d9c186968fec45"></a>
-template&lt;class R &gt; </td></tr>
-<tr class="memitem:a5cd43035ccb75132f6d9c186968fec45"><td class="memTemplItemLeft" align="right" valign="top">decltype(auto)&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::concurrency::impl::get_results</b> (std::vector&lt; std::future&lt; R &gt; &gt; &amp;futures)</td></tr>
-<tr class="separator:a5cd43035ccb75132f6d9c186968fec45"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Classes with a queue-like behaviour to which tasks can be pushed and results recovered, possibly following concurrent execution. </p>
-<p>The three concurrency models <a class="el" href="../../dc/d7a/classsequoia_1_1concurrency_1_1serial.html" title="Tasks may be pushed, upon which they are immediately invoked; results may be acquired through get.">sequoia::concurrency::serial</a>, <a class="el" href="../../d0/d11/classsequoia_1_1concurrency_1_1asynchronous.html" title="Tasks may be pushed, upon which they are fed to std::async; results may be acquired through get.">sequoia::concurrency::asynchronous</a> and sequoia::concurrencythread_pool have a common interface for pushing tasks and recovering results, via the <code>push</code> and <code>get</code> methods. The semantics of <code>get</code> is that it may change the state of the class; for <code>serial</code> execution, any results are moved out of the class, whereas for <code>asynchronous</code> or <code>thread_pool</code> models, extraction of data from a <code>std::future</code> occurs. </p>
+<p>The three concurrency models <a class="el" href="../../dc/d7a/classsequoia_1_1concurrency_1_1serial.html" title="Tasks may be pushed, upon which they are immediately invoked.">sequoia::concurrency::serial</a>, <a class="el" href="../../d0/d11/classsequoia_1_1concurrency_1_1asynchronous.html" title="Tasks may be pushed, upon which they are fed to std::async.">sequoia::concurrency::asynchronous</a> and sequoia::concurrencythread_pool have a common interface for pushing tasks via the <code>push</code> method. </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

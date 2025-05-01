@@ -20,16 +20,16 @@ namespace sequoia::utilities
   template<class I>
   concept decrementable = requires(I i) {
     { --i } -> std::same_as<I&>;
-    { i-- } -> std::same_as<I>;
+    { i-- } -> std::convertible_to<I>;
   };
 
   template<class I>
   concept steppable = requires(I i, const I j, const std::iter_difference_t<I> n) {
     { i += n } -> std::same_as<I&>;
-    { j + n }  -> std::same_as<I>;
-    { n + j }  -> std::same_as<I>;
+    { j + n }  -> std::convertible_to<I>;
+    { n + j }  -> std::convertible_to<I>;
     { i -= n } -> std::same_as<I&>;
-    { j - n }  -> std::same_as<I>;
+    { j - n }  -> std::convertible_to<I>;
   };
 
   namespace impl
@@ -105,9 +105,6 @@ namespace sequoia::utilities
   using difference_type_t = typename difference_type<Iterator, Deref>::type;
 
   /*! \brief Detects value_type */
-
-  template<class T>
-  inline constexpr bool has_value_type{requires { typename T::value_type; }};
 
   template<class T>
   struct value_type
@@ -278,23 +275,12 @@ namespace sequoia::utilities
       return DereferencePolicy::get(m_BaseIterator);
     }
 
-#if defined(__clang__)
-  // Do nothing
-#elif defined(__GNUG__)
-  #pragma GCC diagnostic push
-  #pragma GCC diagnostic ignored "-Wdangling-reference"
-#endif
     [[nodiscard]]
     constexpr reference operator[](const difference_type n) const
       requires steppable<Iterator>
     {
       return DereferencePolicy::get(m_BaseIterator + n);
     }
-#if defined(__clang__)
-    // Do nothing
-#elif defined(__GNUG__)
-#pragma GCC diagnostic pop
-#endif
 
     constexpr pointer operator->() const
       requires requires (Iterator i){ DereferencePolicy::get_ptr(i); }
@@ -381,43 +367,12 @@ namespace sequoia::utilities
       return lhs.m_BaseIterator == rhs.m_BaseIterator;
     }
 
-    // TO DO: reinstate once libc++ can cope :(
-    /*[[nodiscard]]
+    [[nodiscard]]
     friend constexpr auto operator<=>(const iterator& lhs, const iterator& rhs) noexcept
     {
       return lhs.m_BaseIterator <=> rhs.m_BaseIterator;
-    }*/
-
-    [[nodiscard]]
-    friend constexpr bool operator!=(const iterator& lhs, const iterator& rhs) noexcept
-    {
-      return !(lhs == rhs);
-    }
-
-    [[nodiscard]]
-    friend constexpr bool operator<(const iterator& lhs, const iterator& rhs) noexcept
-    {
-      return lhs.m_BaseIterator < rhs.m_BaseIterator;
-    }
-
-    [[nodiscard]]
-    friend constexpr bool operator<=(const iterator& lhs, const iterator& rhs) noexcept
-    {
-      return (lhs < rhs) || (lhs == rhs);
-    }
-
-    [[nodiscard]]
-    friend constexpr bool operator>(const iterator& lhs, const iterator& rhs) noexcept
-    {
-      return !(lhs <= rhs);
-    }
-
-    [[nodiscard]]
-    friend constexpr bool operator>=(const iterator& lhs, const iterator& rhs) noexcept
-    {
-      return !(lhs < rhs);
     }
   private:
-    Iterator m_BaseIterator;
+    Iterator m_BaseIterator{};
   };
 }

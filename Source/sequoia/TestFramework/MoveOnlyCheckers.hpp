@@ -40,32 +40,68 @@
 
 namespace sequoia::testing
 {
-  /*! Preconditions:
+  /*! Prerequisites:
 
-      x == xClone
-      y == yClone
+      x == xEquivalent
+      y == yEquivalent
       x != y
    */
-  template<test_mode Mode, moveonly T>
-  void check_semantics(std::string_view description, test_logger<Mode>& logger, T&& x, T&& y, const T& xClone, const T& yClone, opt_moved_from_ref<T> movedFrom)
+  template<test_mode Mode, moveonly T, class U>
+    requires checkable_for_move_semantics<Mode, T, U>
+  bool check_semantics(std::string description,
+                       test_logger<Mode>& logger,
+                       T&& x,
+                       T&& y,
+                       const U& xEquivalent,
+                       const U& yEquivalent,
+                       optional_ref<const U> movedFromPostConstruction,
+                       optional_ref<const U> movedFromPostAssignment)
   {
-    sentinel<Mode> sentry{logger, add_type_info<T>(description).append("\n")};
+    sentinel<Mode> sentry{logger, add_type_info<T>(std::move(description)).append("\n")};
 
-    impl::check_semantics(logger, impl::auxiliary_data<T>{}, std::forward<T>(x), std::forward<T>(y), xClone, yClone, movedFrom, impl::null_mutator{});
+    return impl::check_semantics(
+             logger,
+             impl::auxiliary_data<T>{},
+             std::forward<T>(x),
+             std::forward<T>(y),
+             xEquivalent,
+             yEquivalent,
+             movedFromPostConstruction,
+             movedFromPostAssignment,
+             impl::null_mutator{}
+           );
   }
+  
+  /*! Prerequisites:
 
-  /*! Preconditions:
-
-      x == xClone
-      y == yClone
+      x == xEquivalent
+      y == yEquivalent
       x != y
    */
-  template<test_mode Mode, moveonly T>
-    requires std::totally_ordered<T>
-  void check_semantics(std::string_view description, test_logger<Mode>& logger, T&& x, T&& y, const T& xClone, const T& yClone, opt_moved_from_ref<T> movedFrom, std::weak_ordering order)
+  template<test_mode Mode, moveonly T, class U>
+    requires checkable_for_move_semantics<Mode, T, U> && std::totally_ordered<T>
+  bool check_semantics(std::string description,
+                       test_logger<Mode>& logger,
+                       T&& x,
+                       T&& y,
+                       const U& xEquivalent,
+                       const U& yEquivalent,
+                       optional_ref<const U> movedFromPostConstruction,
+                       optional_ref<const U> movedFromPostAssignment,
+                       std::weak_ordering order)
   {
-    sentinel<Mode> sentry{logger, add_type_info<T>(description).append("\n")};
+    sentinel<Mode> sentry{logger, add_type_info<T>(std::move(description)).append("\n")};
 
-    impl::check_semantics(logger, impl::auxiliary_data<T>{order}, std::forward<T>(x), std::forward<T>(y), xClone, yClone, movedFrom, impl::null_mutator{});
+    return impl::check_semantics(
+             logger,
+             impl::auxiliary_data<T>{order},
+             std::forward<T>(x),
+             std::forward<T>(y),
+             xEquivalent,
+             yEquivalent,
+             movedFromPostConstruction,
+             movedFromPostAssignment,
+             impl::null_mutator{}
+           );
   }
 }

@@ -10,7 +10,7 @@
 #include "sequoia/TestFramework/FileEditors.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
-namespace sequoia::testing
+namespace generatedProject::testing
 {
   [[nodiscard]]
   std::filesystem::path foo_test::source_file() const
@@ -21,6 +21,7 @@ namespace sequoia::testing
   void foo_test::run_tests()
   {
     namespace fs = std::filesystem;
+    using namespace sequoia;
     for(auto& e : fs::recursive_directory_iterator(working_materials()))
     {
       if(fs::is_regular_file(e))
@@ -38,6 +39,7 @@ namespace sequoia::testing
     }
 
     const fs::path folder{"RepresentativeCases"};
-    check(equivalence, report_line(""), working_materials() / folder, predictive_materials() / folder);
+    check(equivalence, "", working_materials() / folder, predictive_materials() / folder);
+    check_exception_thrown<std::runtime_error>("", [](){ throw std::runtime_error{"A happy runtime error!"}; });
   }
 }

@@ -1,0 +1,2 @@
+Static Undirected Embedded Graph Unweighted Test
+Standard Top Level Checks:                22;  Failures:  0  [Deep checks: 286]

@@ -75,7 +75,6 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#concepts">Concepts</a> &#124;
 <a href="#typedef-members">Typedefs</a>  </div>
   <div class="headertitle"><div class="title">MoveOnlyAllocationTestCore.hpp File Reference</div></div>
 </div><!--header-->
@@ -92,27 +91,22 @@ $(function() {
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d8c/classsequoia_1_1testing_1_1move__only__allocation__extender.html">sequoia::testing::move_only_allocation_extender&lt; Mode &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">class template for plugging into the <a class="el" href="../../d8/d58/conceptsequoia_1_1testing_1_1extender.html#checker_primary">checker</a> class template to provide allocation checks for move-only types.  <a href="../../d7/d8c/classsequoia_1_1testing_1_1move__only__allocation__extender.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">class template for plugging into the <a class="el" href="../../d7/de5/classsequoia_1_1testing_1_1checker.html#checker_primary">checker</a> class template to provide allocation checks for move-only types.  <a href="../../d7/d8c/classsequoia_1_1testing_1_1move__only__allocation__extender.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/db2/classsequoia_1_1testing_1_1basic__move__only__allocation__test.html">sequoia::testing::basic_move_only_allocation_test&lt; Mode &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Templated on the test_mode, this forms the basis of all allocation tests for move-only types.  <a href="../../d5/db2/classsequoia_1_1testing_1_1basic__move__only__allocation__test.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="concepts" name="concepts"></a>
-Concepts</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d52/conceptsequoia_1_1testing_1_1move__only__alloc__test.html">sequoia::testing::move_only_alloc_test</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
 <tr class="memitem:ae2b2913ae89b8818cd9ea2d68d43980b"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d67/MoveOnlyAllocationTestCore_8hpp.html#ae2b2913ae89b8818cd9ea2d68d43980b">sequoia::testing::move_only_allocation_test</a> = basic_move_only_allocation_test&lt; test_mode::standard &gt;</td></tr>
 <tr class="separator:ae2b2913ae89b8818cd9ea2d68d43980b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae9e598017b13626efe33e4253045e423"><td class="memItemLeft" align="right" valign="top"><a id="ae9e598017b13626efe33e4253045e423" name="ae9e598017b13626efe33e4253045e423"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::move_only_allocation_false_negative_test</b> = basic_move_only_allocation_test&lt; test_mode::false_negative &gt;</td></tr>
-<tr class="separator:ae9e598017b13626efe33e4253045e423"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0885eccac33c8b7c42ee7d243ba87bf6"><td class="memItemLeft" align="right" valign="top"><a id="a0885eccac33c8b7c42ee7d243ba87bf6" name="a0885eccac33c8b7c42ee7d243ba87bf6"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::move_only_allocation_false_positive_test</b> = basic_move_only_allocation_test&lt; test_mode::false_positive &gt;</td></tr>
 <tr class="separator:a0885eccac33c8b7c42ee7d243ba87bf6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae9e598017b13626efe33e4253045e423"><td class="memItemLeft" align="right" valign="top"><a id="ae9e598017b13626efe33e4253045e423" name="ae9e598017b13626efe33e4253045e423"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::move_only_allocation_false_negative_test</b> = basic_move_only_allocation_test&lt; test_mode::false_negative &gt;</td></tr>
+<tr class="separator:ae9e598017b13626efe33e4253045e423"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Extension for checking allocations for types with move-only semantics. </p>

@@ -4,12 +4,10 @@ prune | p |
   --cutoff | -c | Cutoff for #include search e.g. 'namespace'
 create | c |
   regular_test | regular | qualified::class_name<class T>, equivalent type
-    --equivalent-type | -e | equivalent_type
     --suite | -s | suite name
     --header | -h | header of class to test
     gen-source | g | source dir
   move_only_test | move_only | qualified::class_name<class T>, equivalent type
-    --equivalent-type | -e | equivalent_type
     --suite | -s | suite name
     --header | -h | header of class to test
     gen-source | g | source dir
@@ -28,7 +26,8 @@ create | c |
     --suite | -s | suite name
 init | i | copyright owner, path ending with project name, code indent
   --no-build
-  --to-files filename (A file of this name will appear in multiple directories)
+  --no-git
+  --to-files output filename
   --no-ide
 update-materials | u |
 locate-instabilities | locate | number of repetitions >= 2

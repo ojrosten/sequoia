@@ -13,19 +13,6 @@
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::filesystem::path exceptions_false_positive_free_diagnostics::source_file() const
-  {
-    return std::source_location::current().file_name();
-  }
-
-  void exceptions_false_positive_free_diagnostics::run_tests()
-  {
-    check_exception_thrown<std::runtime_error>(report_line("Exception expected but nothing thrown"), []() {});
-    check_exception_thrown<std::runtime_error>(report_line("Exception thrown but of wrong type"), []() { throw std::logic_error("Error"); });
-    check_exception_thrown<std::runtime_error>(report_line("Exception thrown but of unknown type"), []() { throw 1; });
-  }
-  
-  [[nodiscard]]
   std::filesystem::path exceptions_false_negative_free_diagnostics::source_file() const
   {
     return std::source_location::current().file_name();
@@ -33,8 +20,21 @@ namespace sequoia::testing
 
   void exceptions_false_negative_free_diagnostics::run_tests()
   {
-    check_exception_thrown<std::runtime_error>(report_line(""), []() { throw std::runtime_error("Error"); });
+    check_exception_thrown<std::runtime_error>("Exception expected but nothing thrown", []() {});
+    check_exception_thrown<std::runtime_error>("Exception thrown but of wrong type", []() { throw std::logic_error("Error"); });
+    check_exception_thrown<std::runtime_error>("Exception thrown but of unknown type", []() { throw 1; });
+  }
+  
+  [[nodiscard]]
+  std::filesystem::path exceptions_false_positive_free_diagnostics::source_file() const
+  {
+    return std::source_location::current().file_name();
+  }
 
-    check_exception_thrown<int>(report_line(""), []() { throw 1; });
+  void exceptions_false_positive_free_diagnostics::run_tests()
+  {
+    check_exception_thrown<std::runtime_error>("", []() { throw std::runtime_error("Error"); });
+
+    check_exception_thrown<int>("", []() { throw 1; });
   }
 }

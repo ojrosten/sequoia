@@ -1,0 +1,19 @@
+Unit Test
+Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 0]
+
+******  Critical Failures:  1  ******
+
+
+Error -- Unexpected Exception:
+This is bad
+
+Exception thrown during last check
+Last Recorded Message:
+
+Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 58
+Throw during check
+
+[sequoia::testing::(anonymous namespace)::foo]
+
+=======================================
+

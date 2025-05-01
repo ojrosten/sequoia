@@ -83,30 +83,28 @@ $(function() {
 <p>Edge &amp; Node storage traits, base class and final classes for dynamic graphs.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="../../d3/d6e/PartitionedData_8hpp_source.html">sequoia/Core/DataStructures/PartitionedData.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../df/d01/DataPool_8hpp_source.html">sequoia/Core/Object/DataPool.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d8/d78/GraphImpl_8hpp_source.html">sequoia/Maths/Graph/GraphImpl.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../de/d77/DynamicGraphImpl_8hpp_source.html">sequoia/Maths/Graph/DynamicGraphImpl.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d3/d7a/GraphPrimitive_8hpp_source.html">sequoia/Maths/Graph/GraphPrimitive.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../dd/d8b/NodeStorage_8hpp_source.html">sequoia/Maths/Graph/NodeStorage.hpp</a>&quot;</code><br />
 </div>
 <p><a href="../../d8/d97/DynamicGraph_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d64/structsequoia_1_1maths_1_1contiguous__edge__storage__traits.html">sequoia::maths::contiguous_edge_storage_traits</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/df4/structsequoia_1_1maths_1_1contiguous__edge__storage__config.html">sequoia::maths::contiguous_edge_storage_config</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d63/structsequoia_1_1maths_1_1bucketed__edge__storage__traits.html">sequoia::maths::bucketed_edge_storage_traits</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/de5/structsequoia_1_1maths_1_1bucketed__edge__storage__config.html">sequoia::maths::bucketed_edge_storage_config</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/df6/structsequoia_1_1maths_1_1node__weight__storage__traits.html">sequoia::maths::node_weight_storage_traits&lt; NodeWeight &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d2b/classsequoia_1_1maths_1_1graph__base.html">sequoia::maths::graph_base&lt; GraphFlavour, EdgeWeight, NodeWeight, EdgeMetaData, EdgeStorageConfig, NodeWeightStorage &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/db2/structsequoia_1_1maths_1_1node__weight__storage__traits_3_01NodeWeight_01_4.html">sequoia::maths::node_weight_storage_traits&lt; NodeWeight &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/dba/classsequoia_1_1maths_1_1graph__base_3_01GraphFlavour_00_01EdgeWeight_00_01NodeWeight_00_01EdgeMdf05c2b5a17349a4c176cf4626249618.html">sequoia::maths::graph_base&lt; GraphFlavour, EdgeWeight, NodeWeight, EdgeMetaData, EdgeStorageConfig, NodeWeightStorage &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d2b/classsequoia_1_1maths_1_1graph__base.html">sequoia::maths::graph_base&lt; GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/dc1/classsequoia_1_1maths_1_1directed__graph.html">sequoia::maths::directed_graph&lt; EdgeWeight, NodeWeight, EdgeStorageConfig, NodeWeightStorage &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d22/classsequoia_1_1maths_1_1graph__base_3_01GraphFlavour_00_01EdgeWeight_00_01NodeWeight_00_01EdgeW0243f2a4069bfcc18baba787a0688157.html">sequoia::maths::graph_base&lt; GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d44/classsequoia_1_1maths_1_1undirected__graph.html">sequoia::maths::undirected_graph&lt; EdgeWeight, NodeWeight, EdgeMetaData, EdgeStorageConfig, NodeWeightStorage &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d87/classsequoia_1_1maths_1_1graph.html">sequoia::maths::graph&lt; Directedness, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d23/classsequoia_1_1maths_1_1undirected__graph_3_01EdgeWeight_00_01NodeWeight_00_01EdgeMetaData_00_08edd14e6a6521268e6d9e133fa863d1f.html">sequoia::maths::undirected_graph&lt; EdgeWeight, NodeWeight, EdgeMetaData, EdgeStorageConfig, NodeWeightStorage &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d31/classsequoia_1_1maths_1_1embedded__graph.html">sequoia::maths::embedded_graph&lt; Directedness, EdgeWeight, NodeWeight, EdgeWeightCreator, NodeWeightCreator, EdgeStorageTraits, NodeWeightStorageTraits &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d31/classsequoia_1_1maths_1_1embedded__graph.html">sequoia::maths::embedded_graph&lt; EdgeWeight, NodeWeight, EdgeMetaData, EdgeStorageConfig, NodeWeightStorage &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="concepts" name="concepts"></a>

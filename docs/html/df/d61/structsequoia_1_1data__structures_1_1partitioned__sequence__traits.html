@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.6"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: sequoia::data_structures::partitioned_sequence_traits&lt; T, Handler &gt; Struct Template Reference</title>
+<title>Sequoia: sequoia::data_structures::partitioned_sequence_traits&lt; T &gt; Struct Template Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -77,37 +77,40 @@ $(function() {
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="../../d2/d6d/structsequoia_1_1data__structures_1_1partitioned__sequence__traits-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">sequoia::data_structures::partitioned_sequence_traits&lt; T, Handler &gt; Struct Template Reference</div></div>
+  <div class="headertitle"><div class="title">sequoia::data_structures::partitioned_sequence_traits&lt; T &gt; Struct Template Reference</div></div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a0b505ab754c4c2c87024a9b2ba62f2f3"><td class="memItemLeft" align="right" valign="top"><a id="a0b505ab754c4c2c87024a9b2ba62f2f3" name="a0b505ab754c4c2c87024a9b2ba62f2f3"></a>
+<tr class="memitem:a505bfce13178d52161312b3e01caf8ad"><td class="memItemLeft" align="right" valign="top"><a id="a505bfce13178d52161312b3e01caf8ad" name="a505bfce13178d52161312b3e01caf8ad"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>value_type</b> = T</td></tr>
+<tr class="separator:a505bfce13178d52161312b3e01caf8ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a460fa152d629d8dc613b6fc8f848b884"><td class="memItemLeft" align="right" valign="top"><a id="a460fa152d629d8dc613b6fc8f848b884" name="a460fa152d629d8dc613b6fc8f848b884"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>index_type</b> = std::size_t</td></tr>
-<tr class="separator:a0b505ab754c4c2c87024a9b2ba62f2f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1a524c5a749825d037d5b7b031f0241f"><td class="memItemLeft" align="right" valign="top"><a id="a1a524c5a749825d037d5b7b031f0241f" name="a1a524c5a749825d037d5b7b031f0241f"></a>
+<tr class="separator:a460fa152d629d8dc613b6fc8f848b884"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab9fa1eb100ea233c59c76a277039fa27"><td class="memItemLeft" align="right" valign="top"><a id="ab9fa1eb100ea233c59c76a277039fa27" name="ab9fa1eb100ea233c59c76a277039fa27"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>partition_index_type</b> = std::size_t</td></tr>
-<tr class="separator:a1a524c5a749825d037d5b7b031f0241f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1e8f932d8e5d848f18e34b9763b90c10"><td class="memItemLeft" align="right" valign="top"><a id="a1e8f932d8e5d848f18e34b9763b90c10" name="a1e8f932d8e5d848f18e34b9763b90c10"></a>
+<tr class="separator:ab9fa1eb100ea233c59c76a277039fa27"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3119578b6136979fc906de5bce08520b"><td class="memItemLeft" align="right" valign="top"><a id="a3119578b6136979fc906de5bce08520b" name="a3119578b6136979fc906de5bce08520b"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>partitions_type</b> = <a class="el" href="../../d7/ddc/classsequoia_1_1maths_1_1monotonic__sequence.html">maths::monotonic_sequence</a>&lt; partition_index_type, std::greater&lt; partition_index_type &gt; &gt;</td></tr>
-<tr class="separator:a1e8f932d8e5d848f18e34b9763b90c10"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a89805b0459a1548b593d49cb09e0db34"><td class="memItemLeft" align="right" valign="top"><a id="a89805b0459a1548b593d49cb09e0db34" name="a89805b0459a1548b593d49cb09e0db34"></a>
+<tr class="separator:a3119578b6136979fc906de5bce08520b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a25f24b50e1c89bf7884d6ed05662b25c"><td class="memItemLeft" align="right" valign="top"><a id="a25f24b50e1c89bf7884d6ed05662b25c" name="a25f24b50e1c89bf7884d6ed05662b25c"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>partitions_allocator_type</b> = typename partitions_type::allocator_type</td></tr>
-<tr class="separator:a89805b0459a1548b593d49cb09e0db34"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8989bf72845b6173f90af82e87195098"><td class="memTemplParams" colspan="2"><a id="a8989bf72845b6173f90af82e87195098" name="a8989bf72845b6173f90af82e87195098"></a>
+<tr class="separator:a25f24b50e1c89bf7884d6ed05662b25c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6edb6e804c477483dda1db5d51c09ef3"><td class="memTemplParams" colspan="2"><a id="a6edb6e804c477483dda1db5d51c09ef3" name="a6edb6e804c477483dda1db5d51c09ef3"></a>
 template&lt;class S &gt; </td></tr>
-<tr class="memitem:a8989bf72845b6173f90af82e87195098"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>container_type</b> = std::vector&lt; S, std::allocator&lt; S &gt; &gt;</td></tr>
-<tr class="separator:a8989bf72845b6173f90af82e87195098"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6edb6e804c477483dda1db5d51c09ef3"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>container_type</b> = std::vector&lt; S, std::allocator&lt; S &gt; &gt;</td></tr>
+<tr class="separator:a6edb6e804c477483dda1db5d51c09ef3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
-<tr class="memitem:a6f5a0279b1f673364e36c0d729e7502f"><td class="memItemLeft" align="right" valign="top"><a id="a6f5a0279b1f673364e36c0d729e7502f" name="a6f5a0279b1f673364e36c0d729e7502f"></a>
+<tr class="memitem:a326da5e0c443e55b6598db159a0e2455"><td class="memItemLeft" align="right" valign="top"><a id="a326da5e0c443e55b6598db159a0e2455" name="a326da5e0c443e55b6598db159a0e2455"></a>
 static constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>static_storage_v</b> {false}</td></tr>
-<tr class="separator:a6f5a0279b1f673364e36c0d729e7502f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6c900b1bcca1c0ebb8b9caef557a66a6"><td class="memItemLeft" align="right" valign="top"><a id="a6c900b1bcca1c0ebb8b9caef557a66a6" name="a6c900b1bcca1c0ebb8b9caef557a66a6"></a>
+<tr class="separator:a326da5e0c443e55b6598db159a0e2455"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad9ee3ae1e4abd906530dbaac3a028f49"><td class="memItemLeft" align="right" valign="top"><a id="ad9ee3ae1e4abd906530dbaac3a028f49" name="ad9ee3ae1e4abd906530dbaac3a028f49"></a>
 static constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>throw_on_range_error</b> {true}</td></tr>
-<tr class="separator:a6c900b1bcca1c0ebb8b9caef557a66a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:ad9ee3ae1e4abd906530dbaac3a028f49"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li>C:/Users/olive/sequoia/Source/sequoia/Core/DataStructures/<a class="el" href="../../d3/d6e/PartitionedData_8hpp_source.html">PartitionedData.hpp</a></li>

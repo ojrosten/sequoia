@@ -15,6 +15,8 @@
 #include "sequoia/TestFramework/Output.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
+#include <numeric>
+
 namespace sequoia::testing
 {
   namespace fs = std::filesystem;
@@ -124,41 +126,24 @@ namespace sequoia::testing
   [[nodiscard]]
   fs::path rebase_from(const fs::path& p, const fs::path& dir)
   {
+    if(p.empty())
+      return p;
+
     if(dir.empty())
-      throw std::logic_error{"Tring to rebase from an empty path"};
+      throw std::runtime_error{"Tring to rebase from an empty path"};
 
     if(fs::exists(dir) && !fs::is_directory(dir))
-      throw std::logic_error{"Trying to rebase from something other than a directory"};
+      throw std::runtime_error{"Trying to rebase from something other than a directory"};
 
     if(p.is_absolute() && dir.is_absolute())
       return fs::relative(p, dir);
 
-    auto i{p.begin()};
+    auto i{std::ranges::find_if_not(p, [](const fs::path& p) { return p == ".."; })};
+    if((i == p.end()) || (i->empty()))
+      throw std::runtime_error{"Path comprises nothing but ../"};
 
-    while((i != p.end()) && (*i == "..")) ++i;
+    auto[rebasedPathIter, lastCommonDirIter]{std::ranges::mismatch(i, p.end(), rfind(dir, *i), dir.end())};
 
-    if(i != p.end())
-    {
-      auto dirIter{dir.end()};
-      while(dirIter != dir.begin())
-      {
-        --dirIter;
-        if(*dirIter == *i) break;
-      }
-
-      while((dirIter != dir.end()) && (i != p.end()) && (*dirIter == *i))
-      {
-        ++dirIter;
-        ++i;
-      }
-    }
-
-    fs::path rebased{};
-    for(; i!= p.end(); ++i)
-    {
-      rebased /= *i;
-    }
-
-    return rebased;
+    return std::accumulate(rebasedPathIter, p.end(), fs::path{}, [](fs::path lhs, const fs::path& rhs){ return lhs /= rhs; });
   }
 }

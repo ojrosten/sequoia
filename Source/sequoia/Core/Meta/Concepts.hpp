@@ -19,20 +19,16 @@
 
 namespace sequoia
 {
-  /// TO DO: Temporary, crude implementation while waiting for clang.
-  template<class T>
-  concept three_way_comparable = requires(const std::remove_reference_t<T>&t,
-                                          const std::remove_reference_t<T>&u)
-  {
-    t <=> u;
-  };
-
   /// \brief Supplements `std::invocable`.
   template <class F, class R, class... Args>
   concept invocable_r =
     requires(F&& f, Args&&... args) {
       { std::invoke(std::forward<F>(f), std::forward<Args>(args)...) } -> std::same_as<R>;
-  }; 
+  };
+
+  /// \brief Supplements `std::regular_invocable`.
+  template <class F, class R, class... Args>
+  concept regular_invocable_r = invocable_r<F, R, Args...>;
 
   /// \brief Building block for concepts related to `std::regular` but without the requirement of default constructibility.
   template <class T>
@@ -92,7 +88,7 @@ namespace sequoia
     std::ranges::begin(t);
     std::ranges::end(t);
 
-    requires (!std::same_as<std::remove_cvref_t<decltype(*std::begin(t))>, std::remove_cvref_t<T>>);
+    requires (!std::same_as<std::remove_cvref_t<decltype(*std::ranges::begin(t))>, std::remove_cvref_t<T>>);
   };
 
   /*! \addtogroup deep_equality

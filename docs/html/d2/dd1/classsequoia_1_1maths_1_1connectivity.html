@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.6"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: sequoia::maths::connectivity&lt; Directedness, EdgeTraits, WeightMaker &gt; Class Template Reference</title>
+<title>Sequoia: sequoia::maths::connectivity&lt; Flavour, EdgeStorage &gt; Class Template Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -74,257 +74,305 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
-<a href="#pub-types">Public Types</a> &#124;
-<a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
-<a href="#pro-types">Protected Types</a> &#124;
-<a href="#pro-methods">Protected Member Functions</a> &#124;
-<a href="#friends">Friends</a> &#124;
 <a href="../../d2/d28/classsequoia_1_1maths_1_1connectivity-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">sequoia::maths::connectivity&lt; Directedness, EdgeTraits, WeightMaker &gt; Class Template Reference</div></div>
+  <div class="headertitle"><div class="title">sequoia::maths::connectivity&lt; Flavour, EdgeStorage &gt; Class Template Reference</div></div>
 </div><!--header-->
 <div class="contents">
-
-<p>Graph connectivity, used as a building block for concrete graphs.  
- <a href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html#details">More...</a></p>
-
-<p><code>#include &lt;<a class="el" href="../../d5/d2d/Connectivity_8hpp_source.html">Connectivity.hpp</a>&gt;</code></p>
+<div class="dynheader">
+Inheritance diagram for sequoia::maths::connectivity&lt; Flavour, EdgeStorage &gt;:</div>
+<div class="dyncontent">
+ <div class="center">
+  <img src="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.png" usemap="#sequoia::maths::connectivity_3C_20Flavour_2C_20EdgeStorage_20_3E_map" alt=""/>
+  <map id="sequoia::maths::connectivity_3C_20Flavour_2C_20EdgeStorage_20_3E_map" name="sequoia::maths::connectivity_3C_20Flavour_2C_20EdgeStorage_20_3E_map">
+<area href="../../d8/df7/classsequoia_1_1maths_1_1connectivity__base.html" title="Graph connectivity_base, used as a building block for concrete graphs." alt="sequoia::maths::connectivity_base&lt; Flavour, EdgeStorage &gt;" shape="rect" coords="0,0,351,24"/>
+  </map>
+</div></div>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
-Public Types</h2></td></tr>
-<tr class="memitem:a2e5622d80b5b9183e74f19a2e0438ef0"><td class="memItemLeft" align="right" valign="top"><a id="a2e5622d80b5b9183e74f19a2e0438ef0" name="a2e5622d80b5b9183e74f19a2e0438ef0"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_traits_type</b> = EdgeTraits</td></tr>
-<tr class="separator:a2e5622d80b5b9183e74f19a2e0438ef0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a949efa2aeb61e352de4078ff6624736f"><td class="memItemLeft" align="right" valign="top"><a id="a949efa2aeb61e352de4078ff6624736f" name="a949efa2aeb61e352de4078ff6624736f"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_type</b> = typename EdgeTraits::edge_type</td></tr>
-<tr class="separator:a949efa2aeb61e352de4078ff6624736f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a708b7bb4586bc560b6661f6197596256"><td class="memItemLeft" align="right" valign="top"><a id="a708b7bb4586bc560b6661f6197596256" name="a708b7bb4586bc560b6661f6197596256"></a>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
+Additional Inherited Members</h2></td></tr>
+<tr class="inherit_header pub_types_classsequoia_1_1maths_1_1connectivity__base"><td colspan="2" onclick="javascript:toggleInherit('pub_types_classsequoia_1_1maths_1_1connectivity__base')"><img src="../../closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="../../d8/df7/classsequoia_1_1maths_1_1connectivity__base.html">sequoia::maths::connectivity_base&lt; Flavour, EdgeStorage &gt;</a></td></tr>
+<tr class="memitem:a357433e92c058d2f18fdc2874c13ee57 inherit pub_types_classsequoia_1_1maths_1_1connectivity__base"><td class="memItemLeft" align="right" valign="top"><a id="a357433e92c058d2f18fdc2874c13ee57" name="a357433e92c058d2f18fdc2874c13ee57"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_storage_type</b> = EdgeStorage</td></tr>
+<tr class="separator:a357433e92c058d2f18fdc2874c13ee57 inherit pub_types_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a274e1964981c431a70ad2307b4398a09 inherit pub_types_classsequoia_1_1maths_1_1connectivity__base"><td class="memItemLeft" align="right" valign="top"><a id="a274e1964981c431a70ad2307b4398a09" name="a274e1964981c431a70ad2307b4398a09"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_type</b> = typename edge_storage_type::value_type</td></tr>
+<tr class="separator:a274e1964981c431a70ad2307b4398a09 inherit pub_types_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a32a769dd6794d98445439478920d927c inherit pub_types_classsequoia_1_1maths_1_1connectivity__base"><td class="memItemLeft" align="right" valign="top"><a id="a32a769dd6794d98445439478920d927c" name="a32a769dd6794d98445439478920d927c"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_weight_type</b> = typename edge_type::weight_type</td></tr>
-<tr class="separator:a708b7bb4586bc560b6661f6197596256"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3d14afb235f0acf18924e789bc2d5726"><td class="memItemLeft" align="right" valign="top"><a id="a3d14afb235f0acf18924e789bc2d5726" name="a3d14afb235f0acf18924e789bc2d5726"></a>
+<tr class="separator:a32a769dd6794d98445439478920d927c inherit pub_types_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7b33a40a5e279b826525b9f848d9f47c inherit pub_types_classsequoia_1_1maths_1_1connectivity__base"><td class="memItemLeft" align="right" valign="top"><a id="a7b33a40a5e279b826525b9f848d9f47c" name="a7b33a40a5e279b826525b9f848d9f47c"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_meta_data_type</b> = typename edge_type::meta_data_type</td></tr>
+<tr class="separator:a7b33a40a5e279b826525b9f848d9f47c inherit pub_types_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa7dd938a7a812db3a1a4c16415d92a30 inherit pub_types_classsequoia_1_1maths_1_1connectivity__base"><td class="memItemLeft" align="right" valign="top"><a id="aa7dd938a7a812db3a1a4c16415d92a30" name="aa7dd938a7a812db3a1a4c16415d92a30"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_index_type</b> = typename edge_type::index_type</td></tr>
-<tr class="separator:a3d14afb235f0acf18924e789bc2d5726"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a81df83277b5d7a5d30430e171e87fd23"><td class="memItemLeft" align="right" valign="top"><a id="a81df83277b5d7a5d30430e171e87fd23" name="a81df83277b5d7a5d30430e171e87fd23"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_init_type</b> = typename EdgeTraits::edge_init_type</td></tr>
-<tr class="separator:a81df83277b5d7a5d30430e171e87fd23"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a49b469b536be05f13b148151d96b40a4"><td class="memItemLeft" align="right" valign="top"><a id="a49b469b536be05f13b148151d96b40a4" name="a49b469b536be05f13b148151d96b40a4"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>size_type</b> = typename edge_storage_type::size_type</td></tr>
-<tr class="separator:a49b469b536be05f13b148151d96b40a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a74eab4e923d0efb80e3a41842ff3a1d3"><td class="memItemLeft" align="right" valign="top"><a id="a74eab4e923d0efb80e3a41842ff3a1d3" name="a74eab4e923d0efb80e3a41842ff3a1d3"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>weight_maker_type</b> = WeightMaker</td></tr>
-<tr class="separator:a74eab4e923d0efb80e3a41842ff3a1d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a575f11e7f9dac8625f563e79f2561416"><td class="memItemLeft" align="right" valign="top"><a id="a575f11e7f9dac8625f563e79f2561416" name="a575f11e7f9dac8625f563e79f2561416"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>const_edge_iterator</b> = typename edge_storage_type::const_partition_iterator</td></tr>
-<tr class="separator:a575f11e7f9dac8625f563e79f2561416"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a318bbdca6c5e40695229cfcb36790637"><td class="memItemLeft" align="right" valign="top"><a id="a318bbdca6c5e40695229cfcb36790637" name="a318bbdca6c5e40695229cfcb36790637"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>const_reverse_edge_iterator</b> = typename edge_storage_type::const_reverse_partition_iterator</td></tr>
-<tr class="separator:a318bbdca6c5e40695229cfcb36790637"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a860c8abce34823fe5239aa9dda1b9b0e"><td class="memItemLeft" align="right" valign="top"><a id="a860c8abce34823fe5239aa9dda1b9b0e" name="a860c8abce34823fe5239aa9dda1b9b0e"></a>
+<tr class="separator:aa7dd938a7a812db3a1a4c16415d92a30 inherit pub_types_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa5238689fee99df22c33c704980ecf56 inherit pub_types_classsequoia_1_1maths_1_1connectivity__base"><td class="memItemLeft" align="right" valign="top"><a id="aa5238689fee99df22c33c704980ecf56" name="aa5238689fee99df22c33c704980ecf56"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_init_type</b> = edge_init_type_generator_t&lt; edge_type &gt;</td></tr>
+<tr class="separator:aa5238689fee99df22c33c704980ecf56 inherit pub_types_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa32a133aed1799a286ef0e45c0198f97 inherit pub_types_classsequoia_1_1maths_1_1connectivity__base"><td class="memItemLeft" align="right" valign="top"><a id="aa32a133aed1799a286ef0e45c0198f97" name="aa32a133aed1799a286ef0e45c0198f97"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>edges_initializer</b> = std::initializer_list&lt; std::initializer_list&lt; edge_init_type &gt; &gt;</td></tr>
-<tr class="separator:a860c8abce34823fe5239aa9dda1b9b0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a08de9cdd43000c42a17d687a79cf6451"><td class="memItemLeft" align="right" valign="top"><a id="a08de9cdd43000c42a17d687a79cf6451" name="a08de9cdd43000c42a17d687a79cf6451"></a>
+<tr class="separator:aa32a133aed1799a286ef0e45c0198f97 inherit pub_types_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa95d99229909898097a0347f64c46315 inherit pub_types_classsequoia_1_1maths_1_1connectivity__base"><td class="memItemLeft" align="right" valign="top"><a id="aa95d99229909898097a0347f64c46315" name="aa95d99229909898097a0347f64c46315"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>size_type</b> = typename edge_storage_type::size_type</td></tr>
+<tr class="separator:aa95d99229909898097a0347f64c46315 inherit pub_types_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ace123350f26fe009a4a4ec1d74aa99bf inherit pub_types_classsequoia_1_1maths_1_1connectivity__base"><td class="memItemLeft" align="right" valign="top"><a id="ace123350f26fe009a4a4ec1d74aa99bf" name="ace123350f26fe009a4a4ec1d74aa99bf"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>const_edge_iterator</b> = typename edge_storage_type::const_partition_iterator</td></tr>
+<tr class="separator:ace123350f26fe009a4a4ec1d74aa99bf inherit pub_types_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5e5581ad7e01e8c2106ba06411ba8280 inherit pub_types_classsequoia_1_1maths_1_1connectivity__base"><td class="memItemLeft" align="right" valign="top"><a id="a5e5581ad7e01e8c2106ba06411ba8280" name="a5e5581ad7e01e8c2106ba06411ba8280"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>const_reverse_edge_iterator</b> = typename edge_storage_type::const_reverse_partition_iterator</td></tr>
+<tr class="separator:a5e5581ad7e01e8c2106ba06411ba8280 inherit pub_types_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaf640f2caf367b4c0aa85dbf171420aa inherit pub_types_classsequoia_1_1maths_1_1connectivity__base"><td class="memItemLeft" align="right" valign="top"><a id="aaf640f2caf367b4c0aa85dbf171420aa" name="aaf640f2caf367b4c0aa85dbf171420aa"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>const_edges_range</b> = std::ranges::subrange&lt; const_edge_iterator &gt;</td></tr>
-<tr class="separator:a08de9cdd43000c42a17d687a79cf6451"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
-Public Member Functions</h2></td></tr>
-<tr class="memitem:a949dc47b05fe65f4746ef3fa1f30f3ed"><td class="memItemLeft" align="right" valign="top"><a id="a949dc47b05fe65f4746ef3fa1f30f3ed" name="a949dc47b05fe65f4746ef3fa1f30f3ed"></a>
-constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>connectivity</b> (std::initializer_list&lt; std::initializer_list&lt; edge_init_type &gt; &gt; edges)</td></tr>
-<tr class="separator:a949dc47b05fe65f4746ef3fa1f30f3ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a37c3618138cb06a075fc75c00b3d32b3"><td class="memItemLeft" align="right" valign="top"><a id="a37c3618138cb06a075fc75c00b3d32b3" name="a37c3618138cb06a075fc75c00b3d32b3"></a>
-constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>connectivity</b> (const <a class="el" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity</a> &amp;other)</td></tr>
-<tr class="separator:a37c3618138cb06a075fc75c00b3d32b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4f7d79907143583e167171f1d7b0088a"><td class="memItemLeft" align="right" valign="top"><a id="a4f7d79907143583e167171f1d7b0088a" name="a4f7d79907143583e167171f1d7b0088a"></a>
+<tr class="separator:aaf640f2caf367b4c0aa85dbf171420aa inherit pub_types_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_classsequoia_1_1maths_1_1connectivity__base"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classsequoia_1_1maths_1_1connectivity__base')"><img src="../../closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="../../d8/df7/classsequoia_1_1maths_1_1connectivity__base.html">sequoia::maths::connectivity_base&lt; Flavour, EdgeStorage &gt;</a></td></tr>
+<tr class="memitem:a6b984ff67d63e98717ca4ee25a7de4ce inherit pub_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memItemLeft" align="right" valign="top"><a id="a6b984ff67d63e98717ca4ee25a7de4ce" name="a6b984ff67d63e98717ca4ee25a7de4ce"></a>
+constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>connectivity_base</b> (std::initializer_list&lt; std::initializer_list&lt; edge_init_type &gt; &gt; edges)</td></tr>
+<tr class="separator:a6b984ff67d63e98717ca4ee25a7de4ce inherit pub_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad885e2bf2de944922bf6a01ccf4fa45d inherit pub_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memItemLeft" align="right" valign="top"><a id="ad885e2bf2de944922bf6a01ccf4fa45d" name="ad885e2bf2de944922bf6a01ccf4fa45d"></a>
+constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>connectivity_base</b> (const <a class="el" href="../../d8/df7/classsequoia_1_1maths_1_1connectivity__base.html">connectivity_base</a> &amp;other)</td></tr>
+<tr class="separator:ad885e2bf2de944922bf6a01ccf4fa45d inherit pub_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1d6ef58ca1c9b6b5e3d335c6f2fabbde inherit pub_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memItemLeft" align="right" valign="top"><a id="a1d6ef58ca1c9b6b5e3d335c6f2fabbde" name="a1d6ef58ca1c9b6b5e3d335c6f2fabbde"></a>
 constexpr size_type&#160;</td><td class="memItemRight" valign="bottom"><b>order</b> () const noexcept</td></tr>
-<tr class="separator:a4f7d79907143583e167171f1d7b0088a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0ac9e61d5f454b5535ade5879dbbb730"><td class="memItemLeft" align="right" valign="top"><a id="a0ac9e61d5f454b5535ade5879dbbb730" name="a0ac9e61d5f454b5535ade5879dbbb730"></a>
+<tr class="separator:a1d6ef58ca1c9b6b5e3d335c6f2fabbde inherit pub_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6a859c355e62a1669ce8a836575893fd inherit pub_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memItemLeft" align="right" valign="top"><a id="a6a859c355e62a1669ce8a836575893fd" name="a6a859c355e62a1669ce8a836575893fd"></a>
 constexpr size_type&#160;</td><td class="memItemRight" valign="bottom"><b>size</b> () const noexcept</td></tr>
-<tr class="separator:a0ac9e61d5f454b5535ade5879dbbb730"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a212dc2a0b1ec89de8e63f52b24682668"><td class="memItemLeft" align="right" valign="top"><a id="a212dc2a0b1ec89de8e63f52b24682668" name="a212dc2a0b1ec89de8e63f52b24682668"></a>
+<tr class="separator:a6a859c355e62a1669ce8a836575893fd inherit pub_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a84250c2a28605b3079a0699ffe0fa814 inherit pub_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memItemLeft" align="right" valign="top"><a id="a84250c2a28605b3079a0699ffe0fa814" name="a84250c2a28605b3079a0699ffe0fa814"></a>
 constexpr const_edge_iterator&#160;</td><td class="memItemRight" valign="bottom"><b>cbegin_edges</b> (const edge_index_type node) const</td></tr>
-<tr class="separator:a212dc2a0b1ec89de8e63f52b24682668"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a65089a06353740b22e06f92ea7cb3681"><td class="memItemLeft" align="right" valign="top"><a id="a65089a06353740b22e06f92ea7cb3681" name="a65089a06353740b22e06f92ea7cb3681"></a>
+<tr class="separator:a84250c2a28605b3079a0699ffe0fa814 inherit pub_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad73dab86743fe0a2496b9b4adb1e899f inherit pub_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memItemLeft" align="right" valign="top"><a id="ad73dab86743fe0a2496b9b4adb1e899f" name="ad73dab86743fe0a2496b9b4adb1e899f"></a>
 constexpr const_edge_iterator&#160;</td><td class="memItemRight" valign="bottom"><b>cend_edges</b> (const edge_index_type node) const</td></tr>
-<tr class="separator:a65089a06353740b22e06f92ea7cb3681"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a13fc067dcb2476192041cf152ea0236e"><td class="memItemLeft" align="right" valign="top"><a id="a13fc067dcb2476192041cf152ea0236e" name="a13fc067dcb2476192041cf152ea0236e"></a>
+<tr class="separator:ad73dab86743fe0a2496b9b4adb1e899f inherit pub_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a676554a48539e1cad1dbbf62e270ffe2 inherit pub_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memItemLeft" align="right" valign="top"><a id="a676554a48539e1cad1dbbf62e270ffe2" name="a676554a48539e1cad1dbbf62e270ffe2"></a>
 constexpr const_reverse_edge_iterator&#160;</td><td class="memItemRight" valign="bottom"><b>crbegin_edges</b> (const edge_index_type node) const</td></tr>
-<tr class="separator:a13fc067dcb2476192041cf152ea0236e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7af80d75ef346dbb85f9b6f3dd60b7f0"><td class="memItemLeft" align="right" valign="top"><a id="a7af80d75ef346dbb85f9b6f3dd60b7f0" name="a7af80d75ef346dbb85f9b6f3dd60b7f0"></a>
+<tr class="separator:a676554a48539e1cad1dbbf62e270ffe2 inherit pub_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad95c41c50a13c8b2dfae07c7b5ec6da6 inherit pub_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memItemLeft" align="right" valign="top"><a id="ad95c41c50a13c8b2dfae07c7b5ec6da6" name="ad95c41c50a13c8b2dfae07c7b5ec6da6"></a>
 constexpr const_reverse_edge_iterator&#160;</td><td class="memItemRight" valign="bottom"><b>crend_edges</b> (const edge_index_type node) const</td></tr>
-<tr class="separator:a7af80d75ef346dbb85f9b6f3dd60b7f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad790d6400107a0099eb81e058be86186"><td class="memItemLeft" align="right" valign="top"><a id="ad790d6400107a0099eb81e058be86186" name="ad790d6400107a0099eb81e058be86186"></a>
-const_edges_range&#160;</td><td class="memItemRight" valign="bottom"><b>cedges</b> (const edge_index_type node) const</td></tr>
-<tr class="separator:ad790d6400107a0099eb81e058be86186"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a886617372ac4810a2f8020da62c6cad7"><td class="memTemplParams" colspan="2"><a id="a886617372ac4810a2f8020da62c6cad7" name="a886617372ac4810a2f8020da62c6cad7"></a>
-template&lt;std::invocable&lt; edge_weight_type &amp; &gt; Fn&gt; <br />
-requires (!std::is_empty_v&lt;edge_weight_type&gt;)</td></tr>
-<tr class="memitem:a886617372ac4810a2f8020da62c6cad7"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::invoke_result_t&lt; Fn, edge_weight_type &amp; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>mutate_edge_weight</b> (const_edge_iterator citer, Fn fn)</td></tr>
-<tr class="separator:a886617372ac4810a2f8020da62c6cad7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8efcf0b8e69aebff4399ff3d03974eb3"><td class="memTemplParams" colspan="2"><a id="a8efcf0b8e69aebff4399ff3d03974eb3" name="a8efcf0b8e69aebff4399ff3d03974eb3"></a>
-template&lt;std::invocable&lt; edge_weight_type &amp; &gt; Fn&gt; <br />
-requires (!std::is_empty_v&lt;edge_weight_type&gt;)</td></tr>
-<tr class="memitem:a8efcf0b8e69aebff4399ff3d03974eb3"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::invoke_result_t&lt; Fn, edge_weight_type &amp; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>mutate_edge_weight</b> (const_reverse_edge_iterator criter, Fn fn)</td></tr>
-<tr class="separator:a8efcf0b8e69aebff4399ff3d03974eb3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a914890f30b860e63d142432628829164"><td class="memTemplParams" colspan="2"><a id="a914890f30b860e63d142432628829164" name="a914890f30b860e63d142432628829164"></a>
+<tr class="separator:ad95c41c50a13c8b2dfae07c7b5ec6da6 inherit pub_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a59387fa91bffc3a436ac3878de39b5f1 inherit pub_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memItemLeft" align="right" valign="top"><a id="a59387fa91bffc3a436ac3878de39b5f1" name="a59387fa91bffc3a436ac3878de39b5f1"></a>
+constexpr const_edges_range&#160;</td><td class="memItemRight" valign="bottom"><b>cedges</b> (const edge_index_type node) const</td></tr>
+<tr class="separator:a59387fa91bffc3a436ac3878de39b5f1 inherit pub_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2fca606c6effd72b4c3e415e1e81b7f0 inherit pub_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memTemplParams" colspan="2"><a id="a2fca606c6effd72b4c3e415e1e81b7f0" name="a2fca606c6effd72b4c3e415e1e81b7f0"></a>
 template&lt;class... Args&gt; <br />
 requires initializable_from&lt;edge_weight_type, Args...&gt;</td></tr>
-<tr class="memitem:a914890f30b860e63d142432628829164"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>set_edge_weight</b> (const_edge_iterator citer, Args &amp;&amp;... args)</td></tr>
-<tr class="separator:a914890f30b860e63d142432628829164"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a88929a1dad517570eef553fc63e08b21"><td class="memTemplParams" colspan="2"><a id="a88929a1dad517570eef553fc63e08b21" name="a88929a1dad517570eef553fc63e08b21"></a>
+<tr class="memitem:a2fca606c6effd72b4c3e415e1e81b7f0 inherit pub_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>set_edge_weight</b> (const_edge_iterator citer, Args &amp;&amp;... args)</td></tr>
+<tr class="separator:a2fca606c6effd72b4c3e415e1e81b7f0 inherit pub_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a142c423e01fd348a279d0fe4a385425d inherit pub_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memTemplParams" colspan="2"><a id="a142c423e01fd348a279d0fe4a385425d" name="a142c423e01fd348a279d0fe4a385425d"></a>
 template&lt;class... Args&gt; <br />
 requires initializable_from&lt;edge_weight_type, Args...&gt;</td></tr>
-<tr class="memitem:a88929a1dad517570eef553fc63e08b21"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>set_edge_weight</b> (const_reverse_edge_iterator criter, Args &amp;&amp;... args)</td></tr>
-<tr class="separator:a88929a1dad517570eef553fc63e08b21"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
-Static Public Attributes</h2></td></tr>
-<tr class="memitem:a4145338a882c427a33b97ee1004f1450"><td class="memItemLeft" align="right" valign="top"><a id="a4145338a882c427a33b97ee1004f1450" name="a4145338a882c427a33b97ee1004f1450"></a>
+<tr class="memitem:a142c423e01fd348a279d0fe4a385425d inherit pub_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>set_edge_weight</b> (const_reverse_edge_iterator criter, Args &amp;&amp;... args)</td></tr>
+<tr class="separator:a142c423e01fd348a279d0fe4a385425d inherit pub_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4e043cecbc949281910b65344a01c420 inherit pub_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memTemplParams" colspan="2"><a id="a4e043cecbc949281910b65344a01c420" name="a4e043cecbc949281910b65344a01c420"></a>
+template&lt;std::invocable&lt; edge_weight_type &amp; &gt; Fn&gt; <br />
+requires (!std::is_empty_v&lt;edge_weight_type&gt;)</td></tr>
+<tr class="memitem:a4e043cecbc949281910b65344a01c420 inherit pub_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::invoke_result_t&lt; Fn, edge_weight_type &amp; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>mutate_edge_weight</b> (const_edge_iterator citer, Fn fn)</td></tr>
+<tr class="separator:a4e043cecbc949281910b65344a01c420 inherit pub_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a695e10005167c71e478db6f5b19b2dea inherit pub_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memTemplParams" colspan="2"><a id="a695e10005167c71e478db6f5b19b2dea" name="a695e10005167c71e478db6f5b19b2dea"></a>
+template&lt;std::invocable&lt; edge_weight_type &amp; &gt; Fn&gt; <br />
+requires (!std::is_empty_v&lt;edge_weight_type&gt;)</td></tr>
+<tr class="memitem:a695e10005167c71e478db6f5b19b2dea inherit pub_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::invoke_result_t&lt; Fn, edge_weight_type &amp; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>mutate_edge_weight</b> (const_reverse_edge_iterator criter, Fn fn)</td></tr>
+<tr class="separator:a695e10005167c71e478db6f5b19b2dea inherit pub_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ade1f07e52133dd5024b32be5e0804300 inherit pub_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memTemplParams" colspan="2"><a id="ade1f07e52133dd5024b32be5e0804300" name="ade1f07e52133dd5024b32be5e0804300"></a>
+template&lt;class... Args&gt; <br />
+requires initializable_from&lt;edge_meta_data_type, Args...&gt;</td></tr>
+<tr class="memitem:ade1f07e52133dd5024b32be5e0804300 inherit pub_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>set_edge_meta_data</b> (const_edge_iterator citer, Args &amp;&amp;... args)</td></tr>
+<tr class="separator:ade1f07e52133dd5024b32be5e0804300 inherit pub_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a417b23d5c145a225a41df441d3f2d5a7 inherit pub_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memTemplParams" colspan="2"><a id="a417b23d5c145a225a41df441d3f2d5a7" name="a417b23d5c145a225a41df441d3f2d5a7"></a>
+template&lt;class... Args&gt; <br />
+requires initializable_from&lt;edge_meta_data_type, Args...&gt;</td></tr>
+<tr class="memitem:a417b23d5c145a225a41df441d3f2d5a7 inherit pub_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>set_edge_meta_data</b> (const_reverse_edge_iterator criter, Args &amp;&amp;... args)</td></tr>
+<tr class="separator:a417b23d5c145a225a41df441d3f2d5a7 inherit pub_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af57033fb2647f40d67d93f894b658c4b inherit pub_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memTemplParams" colspan="2"><a id="af57033fb2647f40d67d93f894b658c4b" name="af57033fb2647f40d67d93f894b658c4b"></a>
+template&lt;std::invocable&lt; edge_meta_data_type &amp; &gt; Fn&gt; <br />
+requires (!std::is_empty_v&lt;edge_meta_data_type&gt;)</td></tr>
+<tr class="memitem:af57033fb2647f40d67d93f894b658c4b inherit pub_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::invoke_result_t&lt; Fn, edge_meta_data_type &amp; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>mutate_edge_meta_data</b> (const_edge_iterator citer, Fn fn)</td></tr>
+<tr class="separator:af57033fb2647f40d67d93f894b658c4b inherit pub_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad767e3458853ed41974f88c3b5436901 inherit pub_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memTemplParams" colspan="2"><a id="ad767e3458853ed41974f88c3b5436901" name="ad767e3458853ed41974f88c3b5436901"></a>
+template&lt;std::invocable&lt; edge_meta_data_type &amp; &gt; Fn&gt; <br />
+requires (!std::is_empty_v&lt;edge_meta_data_type&gt;)</td></tr>
+<tr class="memitem:ad767e3458853ed41974f88c3b5436901 inherit pub_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::invoke_result_t&lt; Fn, edge_meta_data_type &amp; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>mutate_edge_meta_data</b> (const_reverse_edge_iterator criter, Fn fn)</td></tr>
+<tr class="separator:ad767e3458853ed41974f88c3b5436901 inherit pub_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_static_attribs_classsequoia_1_1maths_1_1connectivity__base"><td colspan="2" onclick="javascript:toggleInherit('pub_static_attribs_classsequoia_1_1maths_1_1connectivity__base')"><img src="../../closed.png" alt="-"/>&#160;Static Public Attributes inherited from <a class="el" href="../../d8/df7/classsequoia_1_1maths_1_1connectivity__base.html">sequoia::maths::connectivity_base&lt; Flavour, EdgeStorage &gt;</a></td></tr>
+<tr class="memitem:a7429b2d9a45f15b09170de7b19f2127f inherit pub_static_attribs_classsequoia_1_1maths_1_1connectivity__base"><td class="memItemLeft" align="right" valign="top"><a id="a7429b2d9a45f15b09170de7b19f2127f" name="a7429b2d9a45f15b09170de7b19f2127f"></a>
 static constexpr auto&#160;</td><td class="memItemRight" valign="bottom"><b>npos</b> {std::numeric_limits&lt;edge_index_type&gt;::max()}</td></tr>
-<tr class="separator:a4145338a882c427a33b97ee1004f1450"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8bfa6a1c66d0919801275621c02b5260"><td class="memItemLeft" align="right" valign="top"><a id="a8bfa6a1c66d0919801275621c02b5260" name="a8bfa6a1c66d0919801275621c02b5260"></a>
-static constexpr directed_flavour&#160;</td><td class="memItemRight" valign="bottom"><b>directedness</b> {Directedness}</td></tr>
-<tr class="separator:a8bfa6a1c66d0919801275621c02b5260"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5cba71b5502ffefec06c1e862686c4bc"><td class="memItemLeft" align="right" valign="top"><a id="a5cba71b5502ffefec06c1e862686c4bc" name="a5cba71b5502ffefec06c1e862686c4bc"></a>
-static constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>throw_on_range_error</b> {edge_storage_type::throw_on_range_error}</td></tr>
-<tr class="separator:a5cba71b5502ffefec06c1e862686c4bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-types" name="pro-types"></a>
-Protected Types</h2></td></tr>
-<tr class="memitem:a4e11619691a3f72de7cd7702cf02976f"><td class="memItemLeft" align="right" valign="top"><a id="a4e11619691a3f72de7cd7702cf02976f" name="a4e11619691a3f72de7cd7702cf02976f"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_storage_type</b> = typename EdgeTraits::edge_storage_type</td></tr>
-<tr class="separator:a4e11619691a3f72de7cd7702cf02976f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a72984214790f4ec33679d17dff99921e"><td class="memItemLeft" align="right" valign="top"><a id="a72984214790f4ec33679d17dff99921e" name="a72984214790f4ec33679d17dff99921e"></a>
+<tr class="separator:a7429b2d9a45f15b09170de7b19f2127f inherit pub_static_attribs_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9e94e85da192252ab921e06c4e581d27 inherit pub_static_attribs_classsequoia_1_1maths_1_1connectivity__base"><td class="memItemLeft" align="right" valign="top"><a id="a9e94e85da192252ab921e06c4e581d27" name="a9e94e85da192252ab921e06c4e581d27"></a>
+static constexpr graph_flavour&#160;</td><td class="memItemRight" valign="bottom"><b>flavour</b> {Flavour}</td></tr>
+<tr class="separator:a9e94e85da192252ab921e06c4e581d27 inherit pub_static_attribs_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_types_classsequoia_1_1maths_1_1connectivity__base"><td colspan="2" onclick="javascript:toggleInherit('pro_types_classsequoia_1_1maths_1_1connectivity__base')"><img src="../../closed.png" alt="-"/>&#160;Protected Types inherited from <a class="el" href="../../d8/df7/classsequoia_1_1maths_1_1connectivity__base.html">sequoia::maths::connectivity_base&lt; Flavour, EdgeStorage &gt;</a></td></tr>
+<tr class="memitem:af3e5f53a5fb5370ff5224754cc4183ad inherit pro_types_classsequoia_1_1maths_1_1connectivity__base"><td class="memItemLeft" align="right" valign="top"><a id="af3e5f53a5fb5370ff5224754cc4183ad" name="af3e5f53a5fb5370ff5224754cc4183ad"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_iterator</b> = typename edge_storage_type::partition_iterator</td></tr>
-<tr class="separator:a72984214790f4ec33679d17dff99921e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
-Protected Member Functions</h2></td></tr>
-<tr class="memitem:ac356c5d005ff3ef5fc12b88f0f029032"><td class="memTemplParams" colspan="2"><a id="ac356c5d005ff3ef5fc12b88f0f029032" name="ac356c5d005ff3ef5fc12b88f0f029032"></a>
+<tr class="separator:af3e5f53a5fb5370ff5224754cc4183ad inherit pro_types_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a92cf81dce3f2a4faecefd3eaed7af4d8 inherit pro_types_classsequoia_1_1maths_1_1connectivity__base"><td class="memItemLeft" align="right" valign="top"><a id="a92cf81dce3f2a4faecefd3eaed7af4d8" name="a92cf81dce3f2a4faecefd3eaed7af4d8"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>reverse_edge_iterator</b> = typename edge_storage_type::reverse_partition_iterator</td></tr>
+<tr class="separator:a92cf81dce3f2a4faecefd3eaed7af4d8 inherit pro_types_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a327adf763d86a74b3ebb49179d49f053 inherit pro_types_classsequoia_1_1maths_1_1connectivity__base"><td class="memItemLeft" align="right" valign="top"><a id="a327adf763d86a74b3ebb49179d49f053" name="a327adf763d86a74b3ebb49179d49f053"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>edges_range</b> = std::ranges::subrange&lt; edge_iterator &gt;</td></tr>
+<tr class="separator:a327adf763d86a74b3ebb49179d49f053 inherit pro_types_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classsequoia_1_1maths_1_1connectivity__base')"><img src="../../closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="../../d8/df7/classsequoia_1_1maths_1_1connectivity__base.html">sequoia::maths::connectivity_base&lt; Flavour, EdgeStorage &gt;</a></td></tr>
+<tr class="memitem:a15792ef2edab7c1d29c2f90d6595fddd inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memTemplParams" colspan="2"><a id="a15792ef2edab7c1d29c2f90d6595fddd" name="a15792ef2edab7c1d29c2f90d6595fddd"></a>
 template&lt;alloc... Allocators&gt; <br />
 requires (sizeof...(Allocators) &gt; 0)</td></tr>
-<tr class="memitem:ac356c5d005ff3ef5fc12b88f0f029032"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>connectivity</b> (const Allocators &amp;... as)</td></tr>
-<tr class="separator:ac356c5d005ff3ef5fc12b88f0f029032"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae0526bb34696bb0edc99251761799f33"><td class="memTemplParams" colspan="2"><a id="ae0526bb34696bb0edc99251761799f33" name="ae0526bb34696bb0edc99251761799f33"></a>
+<tr class="memitem:a15792ef2edab7c1d29c2f90d6595fddd inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>connectivity_base</b> (const Allocators &amp;... as)</td></tr>
+<tr class="separator:a15792ef2edab7c1d29c2f90d6595fddd inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a05ebba358cc60538ea33b79d0b246d8b inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memTemplParams" colspan="2"><a id="a05ebba358cc60538ea33b79d0b246d8b" name="a05ebba358cc60538ea33b79d0b246d8b"></a>
 template&lt;alloc... Allocators&gt; <br />
 requires (sizeof...(Allocators) &gt; 0)</td></tr>
-<tr class="memitem:ae0526bb34696bb0edc99251761799f33"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>connectivity</b> (edges_initializer edges, const Allocators &amp;... as)</td></tr>
-<tr class="separator:ae0526bb34696bb0edc99251761799f33"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a02a6bde04bcde8e7a2136d3dbe205ce7"><td class="memTemplParams" colspan="2"><a id="a02a6bde04bcde8e7a2136d3dbe205ce7" name="a02a6bde04bcde8e7a2136d3dbe205ce7"></a>
+<tr class="memitem:a05ebba358cc60538ea33b79d0b246d8b inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>connectivity_base</b> (edges_initializer edges, const Allocators &amp;... as)</td></tr>
+<tr class="separator:a05ebba358cc60538ea33b79d0b246d8b inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa0e195b3c33a6bc4c964560c20bb650a inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memTemplParams" colspan="2"><a id="aa0e195b3c33a6bc4c964560c20bb650a" name="aa0e195b3c33a6bc4c964560c20bb650a"></a>
 template&lt;alloc... Allocators&gt; <br />
 requires (sizeof...(Allocators) &gt; 0)</td></tr>
-<tr class="memitem:a02a6bde04bcde8e7a2136d3dbe205ce7"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>connectivity</b> (const <a class="el" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity</a> &amp;c, const Allocators &amp;... as)</td></tr>
-<tr class="separator:a02a6bde04bcde8e7a2136d3dbe205ce7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1691970e9c965c02a13cdf4e1bd4a535"><td class="memItemLeft" align="right" valign="top"><a id="a1691970e9c965c02a13cdf4e1bd4a535" name="a1691970e9c965c02a13cdf4e1bd4a535"></a>
-constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>connectivity</b> (<a class="el" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity</a> &amp;&amp;) noexcept=default</td></tr>
-<tr class="separator:a1691970e9c965c02a13cdf4e1bd4a535"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abe736b167e34316b2045914d824a4c32"><td class="memTemplParams" colspan="2"><a id="abe736b167e34316b2045914d824a4c32" name="abe736b167e34316b2045914d824a4c32"></a>
+<tr class="memitem:aa0e195b3c33a6bc4c964560c20bb650a inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>connectivity_base</b> (const <a class="el" href="../../d8/df7/classsequoia_1_1maths_1_1connectivity__base.html">connectivity_base</a> &amp;c, const Allocators &amp;... as)</td></tr>
+<tr class="separator:aa0e195b3c33a6bc4c964560c20bb650a inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae8e6a5380ff739779c62bb4d4275e2f4 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memItemLeft" align="right" valign="top"><a id="ae8e6a5380ff739779c62bb4d4275e2f4" name="ae8e6a5380ff739779c62bb4d4275e2f4"></a>
+constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>connectivity_base</b> (<a class="el" href="../../d8/df7/classsequoia_1_1maths_1_1connectivity__base.html">connectivity_base</a> &amp;&amp;) noexcept=default</td></tr>
+<tr class="separator:ae8e6a5380ff739779c62bb4d4275e2f4 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acef7e36476eda282c8f2d3cac842cfc9 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memTemplParams" colspan="2"><a id="acef7e36476eda282c8f2d3cac842cfc9" name="acef7e36476eda282c8f2d3cac842cfc9"></a>
 template&lt;alloc... Allocators&gt; </td></tr>
-<tr class="memitem:abe736b167e34316b2045914d824a4c32"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>connectivity</b> (<a class="el" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity</a> &amp;&amp;c, const Allocators &amp;... as)</td></tr>
-<tr class="separator:abe736b167e34316b2045914d824a4c32"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a33f1a5c385f4f6869bcfe9e03c0a3355"><td class="memItemLeft" align="right" valign="top"><a id="a33f1a5c385f4f6869bcfe9e03c0a3355" name="a33f1a5c385f4f6869bcfe9e03c0a3355"></a>
-constexpr <a class="el" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity</a> &amp;&amp;)=default</td></tr>
-<tr class="separator:a33f1a5c385f4f6869bcfe9e03c0a3355"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a19e4a6b7e5580d03c709bc696471680b"><td class="memItemLeft" align="right" valign="top"><a id="a19e4a6b7e5580d03c709bc696471680b" name="a19e4a6b7e5580d03c709bc696471680b"></a>
-constexpr <a class="el" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity</a> &amp;in)</td></tr>
-<tr class="separator:a19e4a6b7e5580d03c709bc696471680b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8f83ac52138ad773394bf9532c7a0542"><td class="memTemplParams" colspan="2"><a id="a8f83ac52138ad773394bf9532c7a0542" name="a8f83ac52138ad773394bf9532c7a0542"></a>
+<tr class="memitem:acef7e36476eda282c8f2d3cac842cfc9 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>connectivity_base</b> (<a class="el" href="../../d8/df7/classsequoia_1_1maths_1_1connectivity__base.html">connectivity_base</a> &amp;&amp;c, const Allocators &amp;... as)</td></tr>
+<tr class="separator:acef7e36476eda282c8f2d3cac842cfc9 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7a4baa921cac07d4b2a5ea515e93ea56 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memItemLeft" align="right" valign="top"><a id="a7a4baa921cac07d4b2a5ea515e93ea56" name="a7a4baa921cac07d4b2a5ea515e93ea56"></a>
+constexpr <a class="el" href="../../d8/df7/classsequoia_1_1maths_1_1connectivity__base.html">connectivity_base</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="../../d8/df7/classsequoia_1_1maths_1_1connectivity__base.html">connectivity_base</a> &amp;&amp;)=default</td></tr>
+<tr class="separator:a7a4baa921cac07d4b2a5ea515e93ea56 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae2ff9cc7034a84b986993567870ee6c1 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memItemLeft" align="right" valign="top"><a id="ae2ff9cc7034a84b986993567870ee6c1" name="ae2ff9cc7034a84b986993567870ee6c1"></a>
+constexpr <a class="el" href="../../d8/df7/classsequoia_1_1maths_1_1connectivity__base.html">connectivity_base</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="../../d8/df7/classsequoia_1_1maths_1_1connectivity__base.html">connectivity_base</a> &amp;in)</td></tr>
+<tr class="separator:ae2ff9cc7034a84b986993567870ee6c1 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab1c3a8a75915a9b405ea226d15dafdb2 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memTemplParams" colspan="2"><a id="ab1c3a8a75915a9b405ea226d15dafdb2" name="ab1c3a8a75915a9b405ea226d15dafdb2"></a>
 template&lt;alloc... Allocs&gt; <br />
-requires ( (sizeof...(Allocs) &gt; 0) &amp;&amp; (std::allocator_traits&lt;Allocs&gt;::propagate_on_container_copy_assignment::value &amp;&amp; ...))</td></tr>
-<tr class="memitem:a8f83ac52138ad773394bf9532c7a0542"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>reset</b> (const Allocs &amp;... allocs)</td></tr>
-<tr class="separator:a8f83ac52138ad773394bf9532c7a0542"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7b4bcc3ce2278b7c8d5bad90600fdda7"><td class="memItemLeft" align="right" valign="top"><a id="a7b4bcc3ce2278b7c8d5bad90600fdda7" name="a7b4bcc3ce2278b7c8d5bad90600fdda7"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>swap</b> (<a class="el" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity</a> &amp;rhs) noexcept(noexcept(std::ranges::swap(this-&gt;m_Edges, rhs.m_Edges)))</td></tr>
-<tr class="separator:a7b4bcc3ce2278b7c8d5bad90600fdda7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a83e213ed368909f00f87b3eee18f115c"><td class="memItemLeft" align="right" valign="top"><a id="a83e213ed368909f00f87b3eee18f115c" name="a83e213ed368909f00f87b3eee18f115c"></a>
+requires ((sizeof...(Allocs) &gt; 0) &amp;&amp; (std::allocator_traits&lt;Allocs&gt;::propagate_on_container_copy_assignment::value &amp;&amp; ...))</td></tr>
+<tr class="memitem:ab1c3a8a75915a9b405ea226d15dafdb2 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>reset</b> (const Allocs &amp;... allocs)</td></tr>
+<tr class="separator:ab1c3a8a75915a9b405ea226d15dafdb2 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3953c656b489ab178e4a7b2460cb3297 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memItemLeft" align="right" valign="top"><a id="a3953c656b489ab178e4a7b2460cb3297" name="a3953c656b489ab178e4a7b2460cb3297"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>swap</b> (<a class="el" href="../../d8/df7/classsequoia_1_1maths_1_1connectivity__base.html">connectivity_base</a> &amp;rhs) noexcept(noexcept(std::ranges::swap(this-&gt;m_Edges, rhs.m_Edges)))</td></tr>
+<tr class="separator:a3953c656b489ab178e4a7b2460cb3297 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a77826d5b30293e0dd95b60bf135b7ee9 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memItemLeft" align="right" valign="top"><a id="a77826d5b30293e0dd95b60bf135b7ee9" name="a77826d5b30293e0dd95b60bf135b7ee9"></a>
 constexpr void&#160;</td><td class="memItemRight" valign="bottom"><b>swap_edges</b> (edge_index_type node, edge_index_type i, edge_index_type j)</td></tr>
-<tr class="separator:a83e213ed368909f00f87b3eee18f115c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa3daaf71472e0da3c636b7859393fd8b"><td class="memItemLeft" align="right" valign="top"><a id="aa3daaf71472e0da3c636b7859393fd8b" name="aa3daaf71472e0da3c636b7859393fd8b"></a>
-constexpr void&#160;</td><td class="memItemRight" valign="bottom"><b>swap_nodes</b> (size_type i, size_type j)</td></tr>
-<tr class="separator:aa3daaf71472e0da3c636b7859393fd8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a122d8ac0601b87a434e04d6bf4cbbfa3"><td class="memItemLeft" align="right" valign="top"><a id="a122d8ac0601b87a434e04d6bf4cbbfa3" name="a122d8ac0601b87a434e04d6bf4cbbfa3"></a>
+<tr class="separator:a77826d5b30293e0dd95b60bf135b7ee9 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aba786d90df2f48e7a31804c18154ae5f inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memItemLeft" align="right" valign="top"><a id="aba786d90df2f48e7a31804c18154ae5f" name="aba786d90df2f48e7a31804c18154ae5f"></a>
+constexpr void&#160;</td><td class="memItemRight" valign="bottom"><b>swap_nodes</b> (edge_index_type i, edge_index_type j)</td></tr>
+<tr class="separator:aba786d90df2f48e7a31804c18154ae5f inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab0695c547ee94bc6c3a1bbb86bd3195f inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memItemLeft" align="right" valign="top"><a id="ab0695c547ee94bc6c3a1bbb86bd3195f" name="ab0695c547ee94bc6c3a1bbb86bd3195f"></a>
 auto&#160;</td><td class="memItemRight" valign="bottom"><b>get_edge_allocator</b> () const</td></tr>
-<tr class="separator:a122d8ac0601b87a434e04d6bf4cbbfa3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab26313b3a3361fc88b0df0d4b2904d79"><td class="memItemLeft" align="right" valign="top"><a id="ab26313b3a3361fc88b0df0d4b2904d79" name="ab26313b3a3361fc88b0df0d4b2904d79"></a>
+<tr class="separator:ab0695c547ee94bc6c3a1bbb86bd3195f inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a459fcacf7f669f6b06d2f3cb0611861b inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memItemLeft" align="right" valign="top"><a id="a459fcacf7f669f6b06d2f3cb0611861b" name="a459fcacf7f669f6b06d2f3cb0611861b"></a>
 auto&#160;</td><td class="memItemRight" valign="bottom"><b>get_edge_allocator</b> (<a class="el" href="../../d4/dd4/structsequoia_1_1maths_1_1partitions__allocator__tag.html">partitions_allocator_tag</a>) const</td></tr>
-<tr class="separator:ab26313b3a3361fc88b0df0d4b2904d79"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac619351b167e4c70cb76a5d73068bf9a"><td class="memItemLeft" align="right" valign="top"><a id="ac619351b167e4c70cb76a5d73068bf9a" name="ac619351b167e4c70cb76a5d73068bf9a"></a>
+<tr class="separator:a459fcacf7f669f6b06d2f3cb0611861b inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a915cc11ccb20da38ee25ae42e59bd01e inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memItemLeft" align="right" valign="top"><a id="a915cc11ccb20da38ee25ae42e59bd01e" name="a915cc11ccb20da38ee25ae42e59bd01e"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>reserve_nodes</b> (const size_type size)</td></tr>
-<tr class="separator:ac619351b167e4c70cb76a5d73068bf9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a22e603d2f47c548ffa87d3417db5b114"><td class="memItemLeft" align="right" valign="top"><a id="a22e603d2f47c548ffa87d3417db5b114" name="a22e603d2f47c548ffa87d3417db5b114"></a>
+<tr class="separator:a915cc11ccb20da38ee25ae42e59bd01e inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a283c9727d8d9ae4873035f7cc2f1436f inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memItemLeft" align="right" valign="top"><a id="a283c9727d8d9ae4873035f7cc2f1436f" name="a283c9727d8d9ae4873035f7cc2f1436f"></a>
 size_type&#160;</td><td class="memItemRight" valign="bottom"><b>node_capacity</b> () const noexcept</td></tr>
-<tr class="separator:a22e603d2f47c548ffa87d3417db5b114"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0ed5b7e264fec2e290972006eb4ab27c"><td class="memItemLeft" align="right" valign="top"><a id="a0ed5b7e264fec2e290972006eb4ab27c" name="a0ed5b7e264fec2e290972006eb4ab27c"></a>
+<tr class="separator:a283c9727d8d9ae4873035f7cc2f1436f inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac85a34c56be53971f7c732015de3d9f7 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memItemLeft" align="right" valign="top"><a id="ac85a34c56be53971f7c732015de3d9f7" name="ac85a34c56be53971f7c732015de3d9f7"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>reserve_edges</b> (const edge_index_type partition, const edge_index_type size)</td></tr>
-<tr class="separator:a0ed5b7e264fec2e290972006eb4ab27c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6e77a11d84a4a470d06d74f188f47c3c"><td class="memItemLeft" align="right" valign="top"><a id="a6e77a11d84a4a470d06d74f188f47c3c" name="a6e77a11d84a4a470d06d74f188f47c3c"></a>
+<tr class="separator:ac85a34c56be53971f7c732015de3d9f7 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7f10c8265a3dfca6cdd5cae8bce4f928 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memItemLeft" align="right" valign="top"><a id="a7f10c8265a3dfca6cdd5cae8bce4f928" name="a7f10c8265a3dfca6cdd5cae8bce4f928"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>reserve_edges</b> (const edge_index_type size)</td></tr>
-<tr class="separator:a6e77a11d84a4a470d06d74f188f47c3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad27767dffea542a5979cd4368c89ee59"><td class="memItemLeft" align="right" valign="top"><a id="ad27767dffea542a5979cd4368c89ee59" name="ad27767dffea542a5979cd4368c89ee59"></a>
+<tr class="separator:a7f10c8265a3dfca6cdd5cae8bce4f928 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3ef1a1715841841f6f881f11ff9e118e inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memItemLeft" align="right" valign="top"><a id="a3ef1a1715841841f6f881f11ff9e118e" name="a3ef1a1715841841f6f881f11ff9e118e"></a>
 size_type&#160;</td><td class="memItemRight" valign="bottom"><b>edges_capacity</b> (const edge_index_type partition) const</td></tr>
-<tr class="separator:ad27767dffea542a5979cd4368c89ee59"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abe5fce759cb2c90151512ab0500c8f10"><td class="memItemLeft" align="right" valign="top"><a id="abe5fce759cb2c90151512ab0500c8f10" name="abe5fce759cb2c90151512ab0500c8f10"></a>
+<tr class="separator:a3ef1a1715841841f6f881f11ff9e118e inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac5c548ee5e773c6ff2a65a36ce4c485d inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memItemLeft" align="right" valign="top"><a id="ac5c548ee5e773c6ff2a65a36ce4c485d" name="ac5c548ee5e773c6ff2a65a36ce4c485d"></a>
 size_type&#160;</td><td class="memItemRight" valign="bottom"><b>edges_capacity</b> () const noexcept</td></tr>
-<tr class="separator:abe5fce759cb2c90151512ab0500c8f10"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a373d00fa6e70ab02f4798b4874e22e05"><td class="memItemLeft" align="right" valign="top"><a id="a373d00fa6e70ab02f4798b4874e22e05" name="a373d00fa6e70ab02f4798b4874e22e05"></a>
+<tr class="separator:ac5c548ee5e773c6ff2a65a36ce4c485d inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a313932ffe1576dc36b1a1a0c63d9cdf6 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memItemLeft" align="right" valign="top"><a id="a313932ffe1576dc36b1a1a0c63d9cdf6" name="a313932ffe1576dc36b1a1a0c63d9cdf6"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>shrink_to_fit</b> ()</td></tr>
-<tr class="separator:a373d00fa6e70ab02f4798b4874e22e05"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1deefd597674a9166bc37fac8aaa4f0e"><td class="memItemLeft" align="right" valign="top"><a id="a1deefd597674a9166bc37fac8aaa4f0e" name="a1deefd597674a9166bc37fac8aaa4f0e"></a>
+<tr class="separator:a313932ffe1576dc36b1a1a0c63d9cdf6 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8fad49170b25c855c6b05b11d5d70d5d inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memItemLeft" align="right" valign="top"><a id="a8fad49170b25c855c6b05b11d5d70d5d" name="a8fad49170b25c855c6b05b11d5d70d5d"></a>
 constexpr edge_iterator&#160;</td><td class="memItemRight" valign="bottom"><b>begin_edges</b> (const edge_index_type node)</td></tr>
-<tr class="separator:a1deefd597674a9166bc37fac8aaa4f0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aad9b001b0a06e09436ae7f09ba85e13d"><td class="memItemLeft" align="right" valign="top"><a id="aad9b001b0a06e09436ae7f09ba85e13d" name="aad9b001b0a06e09436ae7f09ba85e13d"></a>
+<tr class="separator:a8fad49170b25c855c6b05b11d5d70d5d inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a07925a811e68985638da52021e8824b2 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memItemLeft" align="right" valign="top"><a id="a07925a811e68985638da52021e8824b2" name="a07925a811e68985638da52021e8824b2"></a>
 constexpr edge_iterator&#160;</td><td class="memItemRight" valign="bottom"><b>end_edges</b> (const edge_index_type node)</td></tr>
-<tr class="separator:aad9b001b0a06e09436ae7f09ba85e13d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a107c5176aef3436bbb5853212d2879e7"><td class="memItemLeft" align="right" valign="top"><a id="a107c5176aef3436bbb5853212d2879e7" name="a107c5176aef3436bbb5853212d2879e7"></a>
+<tr class="separator:a07925a811e68985638da52021e8824b2 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a976d5ceb6bcab836e08868af9a1df21c inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memItemLeft" align="right" valign="top"><a id="a976d5ceb6bcab836e08868af9a1df21c" name="a976d5ceb6bcab836e08868af9a1df21c"></a>
+constexpr const_edge_iterator&#160;</td><td class="memItemRight" valign="bottom"><b>begin_edges</b> (const edge_index_type node) const</td></tr>
+<tr class="separator:a976d5ceb6bcab836e08868af9a1df21c inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b97763226aa4b98e025dfb09f9d8417 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memItemLeft" align="right" valign="top"><a id="a2b97763226aa4b98e025dfb09f9d8417" name="a2b97763226aa4b98e025dfb09f9d8417"></a>
+constexpr const_edge_iterator&#160;</td><td class="memItemRight" valign="bottom"><b>end_edges</b> (const edge_index_type node) const</td></tr>
+<tr class="separator:a2b97763226aa4b98e025dfb09f9d8417 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6b8bd3368db3c70079c23dbb495d0d30 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memItemLeft" align="right" valign="top"><a id="a6b8bd3368db3c70079c23dbb495d0d30" name="a6b8bd3368db3c70079c23dbb495d0d30"></a>
+constexpr reverse_edge_iterator&#160;</td><td class="memItemRight" valign="bottom"><b>rbegin_edges</b> (const edge_index_type node)</td></tr>
+<tr class="separator:a6b8bd3368db3c70079c23dbb495d0d30 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a59dd8b87f4d949f3b60557c2a2e31b85 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memItemLeft" align="right" valign="top"><a id="a59dd8b87f4d949f3b60557c2a2e31b85" name="a59dd8b87f4d949f3b60557c2a2e31b85"></a>
+constexpr reverse_edge_iterator&#160;</td><td class="memItemRight" valign="bottom"><b>rend_edges</b> (const edge_index_type node)</td></tr>
+<tr class="separator:a59dd8b87f4d949f3b60557c2a2e31b85 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa994da399fe99019247d346db7623103 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memItemLeft" align="right" valign="top"><a id="aa994da399fe99019247d346db7623103" name="aa994da399fe99019247d346db7623103"></a>
+constexpr const_reverse_edge_iterator&#160;</td><td class="memItemRight" valign="bottom"><b>rbegin_edges</b> (const edge_index_type node) const</td></tr>
+<tr class="separator:aa994da399fe99019247d346db7623103 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a76d9c903b9311e30e7b3a0edacdb23a5 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memItemLeft" align="right" valign="top"><a id="a76d9c903b9311e30e7b3a0edacdb23a5" name="a76d9c903b9311e30e7b3a0edacdb23a5"></a>
+constexpr const_reverse_edge_iterator&#160;</td><td class="memItemRight" valign="bottom"><b>rend_edges</b> (const edge_index_type node) const</td></tr>
+<tr class="separator:a76d9c903b9311e30e7b3a0edacdb23a5 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7505dd08f548d197a221309cdd6423ca inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memItemLeft" align="right" valign="top"><a id="a7505dd08f548d197a221309cdd6423ca" name="a7505dd08f548d197a221309cdd6423ca"></a>
+constexpr edges_range&#160;</td><td class="memItemRight" valign="bottom"><b>edges</b> (const edge_index_type node)</td></tr>
+<tr class="separator:a7505dd08f548d197a221309cdd6423ca inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8a8badad406640b4935507e86dc21163 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memItemLeft" align="right" valign="top"><a id="a8a8badad406640b4935507e86dc21163" name="a8a8badad406640b4935507e86dc21163"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>add_node</b> ()</td></tr>
-<tr class="separator:a107c5176aef3436bbb5853212d2879e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac5587cc58e1bdb87efe36b69568c1ba6"><td class="memItemLeft" align="right" valign="top"><a id="ac5587cc58e1bdb87efe36b69568c1ba6" name="ac5587cc58e1bdb87efe36b69568c1ba6"></a>
+<tr class="separator:a8a8badad406640b4935507e86dc21163 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5901e4564c505575230b8d8754e46dcb inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memItemLeft" align="right" valign="top"><a id="a5901e4564c505575230b8d8754e46dcb" name="a5901e4564c505575230b8d8754e46dcb"></a>
 size_type&#160;</td><td class="memItemRight" valign="bottom"><b>insert_node</b> (const size_type node)</td></tr>
-<tr class="separator:ac5587cc58e1bdb87efe36b69568c1ba6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab56efe6a11e4a2118d1c0218cfef0c75"><td class="memItemLeft" align="right" valign="top"><a id="ab56efe6a11e4a2118d1c0218cfef0c75" name="ab56efe6a11e4a2118d1c0218cfef0c75"></a>
+<tr class="separator:a5901e4564c505575230b8d8754e46dcb inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adf9f81ffec8630b55854153e1e927e69 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memItemLeft" align="right" valign="top"><a id="adf9f81ffec8630b55854153e1e927e69" name="adf9f81ffec8630b55854153e1e927e69"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>erase_node</b> (const size_type node)</td></tr>
-<tr class="separator:ab56efe6a11e4a2118d1c0218cfef0c75"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a573c20346d8c443e68dec69c930790aa"><td class="memTemplParams" colspan="2"><a id="a573c20346d8c443e68dec69c930790aa" name="a573c20346d8c443e68dec69c930790aa"></a>
+<tr class="separator:adf9f81ffec8630b55854153e1e927e69 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:add4b4d3dc8513b5bb85aa3be6f441721 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memTemplParams" colspan="2"><a id="add4b4d3dc8513b5bb85aa3be6f441721" name="add4b4d3dc8513b5bb85aa3be6f441721"></a>
 template&lt;class... Args&gt; <br />
-requires initializable_from&lt;edge_weight_type, Args...&gt;</td></tr>
-<tr class="memitem:a573c20346d8c443e68dec69c930790aa"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>join</b> (const edge_index_type node1, const edge_index_type node2, Args &amp;&amp;... args)</td></tr>
-<tr class="separator:a573c20346d8c443e68dec69c930790aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a45f8ff4bed60a54147a75270c1db796c"><td class="memTemplParams" colspan="2"><a id="a45f8ff4bed60a54147a75270c1db796c" name="a45f8ff4bed60a54147a75270c1db796c"></a>
+requires (std::is_empty_v&lt;edge_meta_data_type&gt;&amp;&amp; initializable_from&lt;edge_weight_type, Args...&gt; &amp;&amp; (is_directed(flavour) || std::is_copy_constructible_v&lt;edge_type&gt;))</td></tr>
+<tr class="memitem:add4b4d3dc8513b5bb85aa3be6f441721 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>join</b> (const edge_index_type node1, const edge_index_type node2, Args &amp;&amp;... args)</td></tr>
+<tr class="separator:add4b4d3dc8513b5bb85aa3be6f441721 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3d23031d22116cb07a5d83978ffb75f9 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memTemplParams" colspan="2"><a id="a3d23031d22116cb07a5d83978ffb75f9" name="a3d23031d22116cb07a5d83978ffb75f9"></a>
 template&lt;class... Args&gt; <br />
-requires initializable_from&lt;edge_weight_type, Args...&gt;</td></tr>
-<tr class="memitem:a45f8ff4bed60a54147a75270c1db796c"><td class="memTemplItemLeft" align="right" valign="top">std::pair&lt; const_edge_iterator, const_edge_iterator &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>insert_join</b> (const_edge_iterator citer1, const_edge_iterator citer2, Args &amp;&amp;... args)</td></tr>
-<tr class="separator:a45f8ff4bed60a54147a75270c1db796c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6a65caa16bb929b5830348c095e0f7b4"><td class="memTemplParams" colspan="2"><a id="a6a65caa16bb929b5830348c095e0f7b4" name="a6a65caa16bb929b5830348c095e0f7b4"></a>
+requires (!std::is_empty_v&lt;edge_meta_data_type&gt;&amp;&amp; initializable_from&lt;edge_weight_type, Args...&gt; &amp;&amp; (is_directed(flavour) || std::is_copy_constructible_v&lt;edge_type&gt;))</td></tr>
+<tr class="memitem:a3d23031d22116cb07a5d83978ffb75f9 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>join</b> (const edge_index_type node1, const edge_index_type node2, edge_meta_data_type meta1, edge_meta_data_type meta2, Args &amp;&amp;... args)</td></tr>
+<tr class="separator:a3d23031d22116cb07a5d83978ffb75f9 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac835db02cca5138c6b76a32dba658753 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memTemplParams" colspan="2"><a id="ac835db02cca5138c6b76a32dba658753" name="ac835db02cca5138c6b76a32dba658753"></a>
 template&lt;class... Args&gt; <br />
-requires initializable_from&lt;edge_weight_type, Args...&gt;</td></tr>
-<tr class="memitem:a6a65caa16bb929b5830348c095e0f7b4"><td class="memTemplItemLeft" align="right" valign="top">std::pair&lt; const_edge_iterator, const_edge_iterator &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>insert_join</b> (const_edge_iterator citer1, const edge_index_type pos2, Args &amp;&amp;... args)</td></tr>
-<tr class="separator:a6a65caa16bb929b5830348c095e0f7b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad761c998a71a28cd4c2529c1ae386f84"><td class="memItemLeft" align="right" valign="top"><a id="ad761c998a71a28cd4c2529c1ae386f84" name="ad761c998a71a28cd4c2529c1ae386f84"></a>
+requires (std::is_empty_v&lt;edge_meta_data_type&gt; &amp;&amp; initializable_from&lt;edge_weight_type, Args...&gt;&amp;&amp; is_embedded(flavour) &amp;&amp; std::is_copy_constructible_v&lt;edge_type&gt;)</td></tr>
+<tr class="memitem:ac835db02cca5138c6b76a32dba658753 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memTemplItemLeft" align="right" valign="top">std::pair&lt; const_edge_iterator, const_edge_iterator &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>insert_join</b> (const_edge_iterator citer1, const_edge_iterator citer2, Args &amp;&amp;... args)</td></tr>
+<tr class="separator:ac835db02cca5138c6b76a32dba658753 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeeced111cd94c803778a973cac8b78c3 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memTemplParams" colspan="2"><a id="aeeced111cd94c803778a973cac8b78c3" name="aeeced111cd94c803778a973cac8b78c3"></a>
+template&lt;class... Args&gt; <br />
+requires (!std::is_empty_v&lt;edge_meta_data_type&gt;, initializable_from&lt;edge_weight_type, Args...&gt;&amp;&amp; is_embedded(flavour) &amp;&amp; std::is_copy_constructible_v&lt;edge_type&gt;)</td></tr>
+<tr class="memitem:aeeced111cd94c803778a973cac8b78c3 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memTemplItemLeft" align="right" valign="top">std::pair&lt; const_edge_iterator, const_edge_iterator &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>insert_join</b> (const_edge_iterator citer1, const_edge_iterator citer2, edge_meta_data_type meta1, edge_meta_data_type meta2, Args &amp;&amp;... args)</td></tr>
+<tr class="separator:aeeced111cd94c803778a973cac8b78c3 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a316d6dd50aba8da09b9a87bc0ac3252f inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memTemplParams" colspan="2"><a id="a316d6dd50aba8da09b9a87bc0ac3252f" name="a316d6dd50aba8da09b9a87bc0ac3252f"></a>
+template&lt;class... Args&gt; <br />
+requires (std::is_empty_v&lt;edge_meta_data_type&gt; &amp;&amp; initializable_from&lt;edge_weight_type, Args...&gt;&amp;&amp; is_embedded(flavour) &amp;&amp; std::is_copy_constructible_v&lt;edge_type&gt;)</td></tr>
+<tr class="memitem:a316d6dd50aba8da09b9a87bc0ac3252f inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memTemplItemLeft" align="right" valign="top">std::pair&lt; const_edge_iterator, const_edge_iterator &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>insert_join</b> (const_edge_iterator citer1, const edge_index_type pos2, Args &amp;&amp;... args)</td></tr>
+<tr class="separator:a316d6dd50aba8da09b9a87bc0ac3252f inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3b05b201dfb1b445071bc8a5b3443d3f inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memTemplParams" colspan="2"><a id="a3b05b201dfb1b445071bc8a5b3443d3f" name="a3b05b201dfb1b445071bc8a5b3443d3f"></a>
+template&lt;class... Args&gt; <br />
+requires (!std::is_empty_v&lt;edge_meta_data_type&gt;, initializable_from&lt;edge_weight_type, Args...&gt;&amp;&amp; is_embedded(flavour) &amp;&amp; std::is_copy_constructible_v&lt;edge_type&gt;)</td></tr>
+<tr class="memitem:a3b05b201dfb1b445071bc8a5b3443d3f inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memTemplItemLeft" align="right" valign="top">std::pair&lt; const_edge_iterator, const_edge_iterator &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>insert_join</b> (const_edge_iterator citer1, const edge_index_type pos2, edge_meta_data_type meta1, edge_meta_data_type meta2, Args &amp;&amp;... args)</td></tr>
+<tr class="separator:a3b05b201dfb1b445071bc8a5b3443d3f inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa4cd1bf0d45723bd7a1a15df6a4fd4d8 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memItemLeft" align="right" valign="top"><a id="aa4cd1bf0d45723bd7a1a15df6a4fd4d8" name="aa4cd1bf0d45723bd7a1a15df6a4fd4d8"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>erase_edge</b> (const_edge_iterator citer)</td></tr>
-<tr class="separator:ad761c998a71a28cd4c2529c1ae386f84"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a711ed92839f2a54af63512d19ed3d05f"><td class="memItemLeft" align="right" valign="top"><a id="a711ed92839f2a54af63512d19ed3d05f" name="a711ed92839f2a54af63512d19ed3d05f"></a>
+<tr class="separator:aa4cd1bf0d45723bd7a1a15df6a4fd4d8 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7763a69e6420986ff56667782dcfbf48 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memItemLeft" align="right" valign="top"><a id="a7763a69e6420986ff56667782dcfbf48" name="a7763a69e6420986ff56667782dcfbf48"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>clear</b> () noexcept</td></tr>
-<tr class="separator:a711ed92839f2a54af63512d19ed3d05f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9e8db9fec5fa1a93fb8b675e5c8f4df2"><td class="memTemplParams" colspan="2"><a id="a9e8db9fec5fa1a93fb8b675e5c8f4df2" name="a9e8db9fec5fa1a93fb8b675e5c8f4df2"></a>
-template&lt;class Comparer &gt; <br />
-requires ((edge_type::flavour == edge_flavour::partial) &amp;&amp; std::random_access_iterator&lt;edge_iterator&gt;)</td></tr>
-<tr class="memitem:a9e8db9fec5fa1a93fb8b675e5c8f4df2"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sort_edges</b> (const_edge_iterator begin, const_edge_iterator end, Comparer comp)</td></tr>
-<tr class="separator:a9e8db9fec5fa1a93fb8b675e5c8f4df2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="friends" name="friends"></a>
-Friends</h2></td></tr>
-<tr class="memitem:ac87b689ffe652a582abdfca7418f6630"><td class="memItemLeft" align="right" valign="top"><a id="ac87b689ffe652a582abdfca7418f6630" name="ac87b689ffe652a582abdfca7418f6630"></a>
-struct&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::assignment_helper</b></td></tr>
-<tr class="separator:ac87b689ffe652a582abdfca7418f6630"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a71a9b9f23df848c42bed806d22945bdc"><td class="memItemLeft" align="right" valign="top"><a id="a71a9b9f23df848c42bed806d22945bdc" name="a71a9b9f23df848c42bed806d22945bdc"></a>
-constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const <a class="el" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity</a> &amp;lhs, const <a class="el" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity</a> &amp;rhs) noexcept</td></tr>
-<tr class="separator:a71a9b9f23df848c42bed806d22945bdc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a7763a69e6420986ff56667782dcfbf48 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2339b42752716c34a5d8ef3910cb8a0d inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memTemplParams" colspan="2"><a id="a2339b42752716c34a5d8ef3910cb8a0d" name="a2339b42752716c34a5d8ef3910cb8a0d"></a>
+template&lt;class Comp , class Proj  = std::identity&gt; <br />
+requires ((edge_type::flavour == edge_flavour::partial) &amp;&amp; std::sortable&lt;edge_iterator, Comp, Proj&gt;)</td></tr>
+<tr class="memitem:a2339b42752716c34a5d8ef3910cb8a0d inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sort_edges</b> (const_edge_iterator begin, const_edge_iterator end, Comp comp, Proj proj={})</td></tr>
+<tr class="separator:a2339b42752716c34a5d8ef3910cb8a0d inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac8d42cfc2200c8e28988ab148ec25b05 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memTemplParams" colspan="2"><a id="ac8d42cfc2200c8e28988ab148ec25b05" name="ac8d42cfc2200c8e28988ab148ec25b05"></a>
+template&lt;class Comp , class Proj  = std::identity&gt; <br />
+requires ((edge_type::flavour == edge_flavour::partial) &amp;&amp; std::sortable&lt;edge_iterator, Comp, Proj&gt;)</td></tr>
+<tr class="memitem:ac8d42cfc2200c8e28988ab148ec25b05 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sort_edges</b> (const_edges_range r, Comp comp, Proj proj={})</td></tr>
+<tr class="separator:ac8d42cfc2200c8e28988ab148ec25b05 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adecaa3630b05d8b7787ad56a1d29b9e1 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memTemplParams" colspan="2"><a id="adecaa3630b05d8b7787ad56a1d29b9e1" name="adecaa3630b05d8b7787ad56a1d29b9e1"></a>
+template&lt;class Comp , class Proj  = std::identity&gt; <br />
+requires ((edge_type::flavour == edge_flavour::partial) &amp;&amp; merge_sortable&lt;edge_iterator, Comp, Proj&gt;)</td></tr>
+<tr class="memitem:adecaa3630b05d8b7787ad56a1d29b9e1 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>stable_sort_edges</b> (const_edge_iterator begin, const_edge_iterator end, Comp comp, Proj proj={})</td></tr>
+<tr class="separator:adecaa3630b05d8b7787ad56a1d29b9e1 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac32ab833f8a5f239120d2b3035f9e860 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memTemplParams" colspan="2"><a id="ac32ab833f8a5f239120d2b3035f9e860" name="ac32ab833f8a5f239120d2b3035f9e860"></a>
+template&lt;class Comp , class Proj  = std::identity&gt; <br />
+requires ((edge_type::flavour == edge_flavour::partial) &amp;&amp; merge_sortable&lt;edge_iterator, Comp, Proj&gt;)</td></tr>
+<tr class="memitem:ac32ab833f8a5f239120d2b3035f9e860 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>stable_sort_edges</b> (const_edges_range r, Comp comp, Proj proj={})</td></tr>
+<tr class="separator:ac32ab833f8a5f239120d2b3035f9e860 inherit pro_methods_classsequoia_1_1maths_1_1connectivity__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><div class="compoundTemplParams">template&lt;directed_flavour Directedness, class EdgeTraits, class WeightMaker&gt;<br />
-class sequoia::maths::connectivity&lt; Directedness, EdgeTraits, WeightMaker &gt;</div><p>Graph connectivity, used as a building block for concrete graphs. </p>
-<p>This class is flexible, allowing for representations of many different flavours of connectivity. It is designed for inheritance by concrete graphs; therefore various methods, including the destructor, are protected. Both static and dynamic graphs are supported; for the purposes of the latter, the relevant protected methods of <code>connectivity</code> are allocator-aware. </p>
-</div><hr/>The documentation for this class was generated from the following file:<ul>
+<hr/>The documentation for this class was generated from the following file:<ul>
 <li>C:/Users/olive/sequoia/Source/sequoia/Maths/Graph/<a class="el" href="../../d5/d2d/Connectivity_8hpp_source.html">Connectivity.hpp</a></li>
 </ul>
 </div><!-- contents -->

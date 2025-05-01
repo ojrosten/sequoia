@@ -1,0 +1,2 @@
+Undirected Graph Fundamental Weight Contiguous Test
+Standard Top Level Checks:               530;  Failures:  0  [Deep checks: 18342]

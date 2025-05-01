@@ -17,14 +17,13 @@ namespace sequoia::testing
   template
   <
     class T,
-    class Handler,
     bool PropagateCopy=true,
     bool PropagateMove=false,
     bool PropagateSwap=false
   >
-  struct custom_bucketed_storage_traits
+  struct custom_bucketed_sequence_generator
   {
-    constexpr static bool throw_on_range_error{true};
+    using value_type = T;
 
     template<class S>
     using allocator_template = shared_counting_allocator<S, PropagateCopy, PropagateMove, PropagateSwap>;
@@ -36,45 +35,33 @@ namespace sequoia::testing
           allocator_template<typename S::value_type>
         >;
 
-    template<class S>
-    using container_type = std::vector<S, allocator_template<S>>;
-
-    template<class S>
-    using buckets_type = std::vector<container_type<S>, allocator_type<container_type<S>>>;
+    using bucket_type = std::vector<T, allocator_template<T>>;
+    using storage_type = data_structures::bucketed_sequence<T, std::vector<bucket_type, allocator_type<bucket_type>>>;
   };
 
   template
   <
     class T,
-    class Handler,
-    bool PropagateCopy=true,
-    bool PropagateMove=false,
-    bool PropagateSwap=false
+    bool PropagateCopy = true,
+    bool PropagateMove = false,
+    bool PropagateSwap = false
   >
-  struct custom_partitioned_sequence_traits
+  struct custom_partitioned_sequence_generator
   {
-    constexpr static bool static_storage_v{false};
-    constexpr static bool throw_on_range_error{true};
-
-    using index_type = std::size_t;
-    using partition_index_type = std::size_t;
-    using partitions_type
-      = maths::monotonic_sequence<
-          partition_index_type,
-          std::greater<partition_index_type>,
-          std::vector<partition_index_type, shared_counting_allocator<partition_index_type, PropagateCopy, PropagateMove, PropagateSwap>>
-        >;
-
-    using partitions_allocator_type = typename partitions_type::allocator_type;
-
-    template<class S> using container_type = std::vector<S, shared_counting_allocator<S, PropagateCopy, PropagateMove, PropagateSwap>>;
+    using storage_type 
+      = data_structures::partitioned_sequence<T,
+                                              std::vector<T, shared_counting_allocator<T, PropagateCopy, PropagateMove, PropagateSwap>>,
+                                              maths::monotonic_sequence<
+                                                std::size_t,
+                                                std::ranges::greater,
+                                                std::vector<std::size_t, shared_counting_allocator<std::size_t, PropagateCopy, PropagateMove, PropagateSwap>>>>;
   };
 
   template<class Storage>
   struct bucket_alloc_getter
   {
     using allocator = typename Storage::allocator_type;
-    using alloc_equivalence_class = allocation_equivalence_classes::container_of_pointers<allocator>;
+    using alloc_equivalence_class = allocation_equivalence_classes::container_of_values<allocator>;
 
     [[nodiscard]]
     allocator operator()(const Storage& s) const
@@ -87,7 +74,7 @@ namespace sequoia::testing
   struct contiguous_alloc_getter
   {
     using allocator = typename Storage::allocator_type;
-    using alloc_equivalence_class = allocation_equivalence_classes::container_of_pointers<allocator>;
+    using alloc_equivalence_class = allocation_equivalence_classes::container_of_values<allocator>;
 
     [[nodiscard]]
     allocator operator()(const Storage& s) const
@@ -99,8 +86,8 @@ namespace sequoia::testing
   template<class Storage>
   struct partitions_alloc_getter
   {
-    using allocator = typename Storage::traits_type::partitions_allocator_type;
-    using alloc_equivalence_class = allocation_equivalence_classes::container_of_pointers<allocator>;
+    using allocator = typename Storage::partitions_allocator_type;
+    using alloc_equivalence_class = allocation_equivalence_classes::container_of_values<allocator>;
 
     [[nodiscard]]
     allocator operator()(const Storage& s) const

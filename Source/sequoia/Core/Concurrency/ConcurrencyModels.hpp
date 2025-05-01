@@ -12,11 +12,8 @@
            following concurrent execution
 
            The three concurrency models sequoia::concurrency::serial, sequoia::concurrency::asynchronous
-           and sequoia::concurrencythread_pool have a common interface for pushing tasks and recovering
-           results, via the `push` and `get` methods. The semantics of `get` is that it may change the
-           state of the class; for `serial` execution, any results are moved out of the class, whereas
-           for `asynchronous` or `thread_pool` models, extraction of data from a `std::future` occurs.
-
+           and sequoia::concurrencythread_pool have a common interface for pushing tasks via the `push`
+           method.
  */
 
 #include "sequoia/Core/Meta/TypeTraits.hpp"
@@ -128,31 +125,13 @@ namespace sequoia::concurrency
 
   namespace impl
   {
-    template<class R> [[nodiscard]]
-    decltype(auto) get_results(std::vector<std::future<R>>& futures)
-    {
-      if constexpr(std::is_same_v<R, void>)
-      {
-        std::ranges::for_each(futures, [](std::future<R>& fut) { fut.get(); });
-      }
-      else
-      {
-        std::vector<R> values;
-        values.reserve(futures.size());
-        std::ranges::transform(futures, std::back_inserter(values), [](std::future<R>& fut) { return fut.get(); });
-        futures.clear();
-
-        return values;
-      }
-    }
-
     template<class R, bool MultiChannel> struct queue_details
     {
       using Q_t = task_queue<R>;
       using task_t = typename Q_t::task_t;
       using queue_type = std::vector<Q_t>;
 
-      std::size_t m_PushCycles;
+      std::size_t push_cycles{};
     };
 
     template<class R> struct queue_details<R, false>
@@ -165,56 +144,25 @@ namespace sequoia::concurrency
 
   //===================================Serial Execution Model===================================//
 
-  /*! \brief Tasks may be `push`ed, upon which they are immediately invoked; results may be
-      acquired through `get`.
-   */
+  /*! \brief Tasks may be `push`ed, upon which they are immediately invoked */
 
-  template<class R=void>  class serial
+  template<class R>  class serial
   {
   public:
     using return_type = R;
 
     template<class Fn, class... Args>
-      requires std::is_convertible_v<R, std::invoke_result_t<std::decay_t<Fn>, std::decay_t<Args>...>>
-    void push(Fn&& fn, Args&&... args)
-    {
-      m_Results.push_back(fn(std::forward<Args>(args)...));
-    }
-
+      requires std::invocable<Fn, Args...> && std::is_convertible_v<R, std::invoke_result_t<Fn, Args...>>
     [[nodiscard]]
-    const std::vector<R>& get() const noexcept { return m_Results; }
-  private:
-    std::vector<R> m_Results;
-  };
-
-  /*! \class serial<void>
-      \brief Tasks may be pushed, upon which they are immediately invoked.
-
-      The dummy `get` method does nothing but serve to provide a uniform interface.
-   */
-
-  template<> class serial<void>
-  {
-  public:
-    using return_type = void;
-
-    template<class Fn, class... Args> constexpr void push(Fn&& fn, Args&&... args)
+    constexpr std::invoke_result_t<Fn, Args...> push(Fn&& fn, Args&&... args)
     {
-      fn(std::forward<Args>(args)...);
+      return std::forward<Fn>(fn)(std::forward<Args>(args)...);
     }
-
-    constexpr void get() const noexcept {}
   };
 
   //==================================Asynchronous Execution==================================//
 
-  /*! \brief Tasks may be `push`ed, upon which they are fed to std::async; results may be
-      acquired through `get`.
-
-      Internally, the class holds a future for each pushed task. The get method extracts the
-      associated return values of the tasks and, if they are non-`void`, returns them in a
-      `std::vector`.
-   */
+  /*! \brief Tasks may be `push`ed, upon which they are fed to std::async */
 
   template<class R>
   class asynchronous
@@ -231,18 +179,11 @@ namespace sequoia::concurrency
     asynchronous& operator=(asynchronous&&) noexcept = default;
 
     template<class Fn, class... Args>
-    void push(Fn&& fn, Args&&... args)
-    {
-      m_Futures.emplace_back(std::async(std::launch::async | std::launch::deferred, std::forward<Fn>(fn), std::forward<Args>(args)...));
-    }
-
     [[nodiscard]]
-    decltype(auto) get()
+    std::future<R> push(Fn&& fn, Args&&... args)
     {
-      return impl::get_results(m_Futures);
+      return std::async(std::launch::async | std::launch::deferred, std::forward<Fn>(fn), std::forward<Args>(args)...);
     }
-  private:
-    std::vector<std::future<R>> m_Futures;
   };
 
   //=======================================Thread Pool========================================//
@@ -284,10 +225,11 @@ namespace sequoia::concurrency
 
     template<std::invocable Fn>
       requires std::is_convertible_v<std::invoke_result_t<Fn>, R> && std::move_constructible<Fn>
-    void push(Fn fn)
+    [[nodiscard]]
+    std::future<R> push(Fn fn)
     {
       task_t task{std::move(fn)};
-      m_Futures.push_back(task.get_future());
+      std::future<R> f{task.get_future()};
 
       if constexpr(MultiPipeline)
       {
@@ -296,10 +238,10 @@ namespace sequoia::concurrency
 
         if(qIndex >= N)
         {
-          for(std::size_t i{}; i < N * this->m_PushCycles; ++i)
+          for(std::size_t i{}; i < N * this->push_cycles; ++i)
           {
             if(m_Queues[(qIndex + i) % N].push(std::move(task), std::try_to_lock))
-              return;
+              return f;
           }
         }
 
@@ -309,6 +251,8 @@ namespace sequoia::concurrency
       {
         m_Queues.push(std::move(task));
       }
+
+      return f;
     }
 
     template<class Fn, class... Args>
@@ -316,9 +260,10 @@ namespace sequoia::concurrency
                && std::is_convertible_v<std::invoke_result_t<Fn, Args...>, R>
                && std::move_constructible<Fn>
                && (std::move_constructible<Args> && ...)
-    void push(Fn fn, Args... args)
+    [[nodiscard]]
+    std::future<R> push(Fn fn, Args... args)
     {
-      push([fn = std::move(fn), ...args = std::move(args)](){ return fn(args...); });
+      return push([fn = std::move(fn), ...args = std::move(args)](){ return fn(args...); });
     }
 
     void join()
@@ -326,20 +271,12 @@ namespace sequoia::concurrency
       join_all();
       joined = true;
     }
-
-    [[nodiscard]]
-    decltype(auto) get()
-    {
-      join();
-      return impl::get_results(m_Futures);
-    }
   private:
     using task_t   = typename impl::queue_details<R, MultiPipeline>::task_t;
     using Queues_t = typename impl::queue_details<R, MultiPipeline>::queue_type;
 
     Queues_t m_Queues;
     std::vector<std::thread> m_Threads;
-    std::vector<std::future<R>> m_Futures;
     bool joined{};
 
     std::size_t m_QueueIndex{};

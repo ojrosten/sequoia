@@ -22,10 +22,10 @@ namespace sequoia::testing
   enum class summary_detail { none=0, absent_checks=1, failure_messages=2, timings=4};
 }
 
-namespace sequoia
+NAMESPACE_SEQUOIA_AS_BITMASK
 {
   template<>
-  struct as_bitmask<testing::summary_detail> : std::true_type
+  struct as_bitmask<sequoia::testing::summary_detail> : std::true_type
   {};
 }
 

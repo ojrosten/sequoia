@@ -1,2 +1,0 @@
-Subgraph
-Standard Top Level Checks:               600;  Failures:  0  [Deep checks: 14240]

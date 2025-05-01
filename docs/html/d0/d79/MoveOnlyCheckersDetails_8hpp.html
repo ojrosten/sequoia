@@ -74,6 +74,7 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#namespaces">Namespaces</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">MoveOnlyCheckersDetails.hpp File Reference</div></div>
 </div><!--header-->
@@ -85,12 +86,19 @@ $(function() {
 </div>
 <p><a href="../../d0/d79/MoveOnlyCheckersDetails_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
+Namespaces</h2></td></tr>
+<tr class="memitem:dd/d52/namespacesequoia_1_1testing_1_1impl"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d52/namespacesequoia_1_1testing_1_1impl.html">sequoia::testing::impl</a></td></tr>
+<tr class="memdesc:dd/d52/namespacesequoia_1_1testing_1_1impl"><td class="mdescLeft">&#160;</td><td class="mdescRight">Condition for applying a container check. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:af269b7998507e5448b9a7cf5f21bef42"><td class="memTemplParams" colspan="2"><a id="af269b7998507e5448b9a7cf5f21bef42" name="af269b7998507e5448b9a7cf5f21bef42"></a>
-template&lt;test_mode Mode, class Actions , moveonly T, std::invocable&lt; T &amp; &gt; Mutator, class... Args&gt; </td></tr>
-<tr class="memitem:af269b7998507e5448b9a7cf5f21bef42"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_semantics</b> (test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, T &amp;&amp;x, T &amp;&amp;y, const T &amp;xClone, const T &amp;yClone, opt_moved_from_ref&lt; T &gt; movedFrom, Mutator m, const Args &amp;... args)</td></tr>
-<tr class="separator:af269b7998507e5448b9a7cf5f21bef42"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a901a6f646290c9b78b7d0aac39852cbe"><td class="memTemplParams" colspan="2"><a id="a901a6f646290c9b78b7d0aac39852cbe" name="a901a6f646290c9b78b7d0aac39852cbe"></a>
+template&lt;test_mode Mode, class Actions , moveonly T, class U , std::invocable&lt; T &amp; &gt; Mutator, class... Args&gt; <br />
+requires checkable_for_move_semantics&lt;Mode, T, U&gt;</td></tr>
+<tr class="memitem:a901a6f646290c9b78b7d0aac39852cbe"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_semantics</b> (test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, T &amp;&amp;x, T &amp;&amp;y, const U &amp;xEquivalent, const U &amp;yEquivalent, optional_ref&lt; const U &gt; movedFromPostConstruction, optional_ref&lt; const U &gt; movedFromPostAssignment, Mutator m, const Args &amp;... args)</td></tr>
+<tr class="separator:a901a6f646290c9b78b7d0aac39852cbe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Implementation details for checking move-only semantics. </p>

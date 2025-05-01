@@ -1,98 +1,98 @@
-	Tests/Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 31
-	Empty queue must be empty
+Tests/Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 33
+Empty queue must be empty
 
-	[bool]
-	check failed
+[bool]
+check failed
 
-	=======================================
+=======================================
 
-	Tests/Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 32
-	Empty queue must have size zero
+Tests/Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 34
+Empty queue must have size zero
 
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+[unsigned long long]
+operator== returned false
+Obtained : 0
+Predicted: 1
 
-	=======================================
+=======================================
 
-	Tests/Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 42
-	Empty queue versus populated queue
+Tests/Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 44
+Empty queue versus populated queue
 
-	[sequoia::data_structures::static_queue<int, 1ul>]
-	operator== returned false
+[sequoia::data_structures::static_queue<int, 1>]
+operator== returned false
 
-	  Inconsistent emptiness
-	  [bool]
-	  check failed
+  Emptiness incorrect
+  [bool]
+  check failed
 
-	  Inconsistent size
-	  [unsigned long]
-	  operator== returned false
-	  Obtained : 0
-	  Predicted: 1
+  Size incorrect
+  [unsigned long long]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
 
-	  Hidden state
-	  [bool]
-	  check failed
+  Hidden state incorrect
+  [bool]
+  check failed
 
-	  Hidden state, symmetry of operator==
-	  [bool]
-	  check failed
+  Hidden state, symmetry of operator== incorrect
+  [bool]
+  check failed
 
-	=======================================
+=======================================
 
-	Tests/Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 45
-	Differing elements
+Tests/Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 47
+Differing elements
 
-	[sequoia::data_structures::static_queue<int, 1ul>]
-	operator== returned false
+[sequoia::data_structures::static_queue<int, 1>]
+operator== returned false
 
-	  Inconsistent front element
-	  [int]
-	  operator== returned false
-	  Obtained : 2
-	  Predicted: 1
+  Front element incorrect
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 1
 
-	  Inconsistent back element
-	  [int]
-	  operator== returned false
-	  Obtained : 2
-	  Predicted: 1
+  Back element incorrect
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 1
 
-	  Hidden state
-	  [bool]
-	  check failed
+  Hidden state incorrect
+  [bool]
+  check failed
 
-	  Hidden state, symmetry of operator==
-	  [bool]
-	  check failed
+  Hidden state, symmetry of operator== incorrect
+  [bool]
+  check failed
 
-	=======================================
+=======================================
 
-	Tests/Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 48
-	Empty queue versus populated queue
+Tests/Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 50
+Empty queue versus populated queue
 
-	[sequoia::data_structures::static_queue<int, 1ul>]
-	operator== returned false
+[sequoia::data_structures::static_queue<int, 1>]
+operator== returned false
 
-	  Inconsistent emptiness
-	  [bool]
-	  check failed
+  Emptiness incorrect
+  [bool]
+  check failed
 
-	  Inconsistent size
-	  [unsigned long]
-	  operator== returned false
-	  Obtained : 0
-	  Predicted: 1
+  Size incorrect
+  [unsigned long long]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
 
-	  Hidden state
-	  [bool]
-	  check failed
+  Hidden state incorrect
+  [bool]
+  check failed
 
-	  Hidden state, symmetry of operator==
-	  [bool]
-	  check failed
+  Hidden state, symmetry of operator== incorrect
+  [bool]
+  check failed
 
-	=======================================
+=======================================
 

@@ -2,33 +2,33 @@
 Running tests, synchronously...
 
 Suite:
-[Execution Time: 2.28ms]
+[Execution Time: 1.41ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 
 -----------Grand Totals-----------
-[Total Run Time: 6.47ms]
-[Execution Time: 2.28ms]
+[Total Run Time: 3.5ms]
+[Execution Time: 1.41ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
-	False Negative Checks:                     0;  Failures:  0
-	False Negative Performance Checks:         0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
 
 Running tests, synchronously...
 
 Suite:
-[Execution Time: 2.11ms]
+[Execution Time: 1.26ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 
 -----------Grand Totals-----------
-[Total Run Time: 6.02ms]
-[Execution Time: 2.11ms]
+[Total Run Time: 3.28ms]
+[Execution Time: 1.26ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
-	False Negative Checks:                     0;  Failures:  0
-	False Negative Performance Checks:         0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
 
 No instabilities detected

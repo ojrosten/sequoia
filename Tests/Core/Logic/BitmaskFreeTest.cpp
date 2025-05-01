@@ -24,16 +24,12 @@ namespace sequoia::testing
       return (stream << static_cast<int>(m));
     }
   }
-
-  template<invocable_r<mask, const mask&> TransitionFn>
-  struct transition_info<mask, TransitionFn> : transition_info_base<mask, TransitionFn>
-  {};
 }
 
-namespace sequoia
+NAMESPACE_SEQUOIA_AS_BITMASK
 {
   template<>
-  struct as_bitmask<testing::mask> : std::true_type {};
+  struct as_bitmask<sequoia::testing::mask> : std::true_type {};
 }
 
 namespace sequoia::testing
@@ -46,8 +42,9 @@ namespace sequoia::testing
 
   void bitmask_free_test::run_tests()
   {
-    using mask_graph = transition_checker<mask>::transition_graph;
-    using edge_t = transition_checker<mask>::edge;
+    using transition_checker_t = transition_checker<mask, check_ordering::no>;
+    using mask_graph           = transition_checker_t::transition_graph;
+    using edge_t               = transition_checker_t::edge;
 
     mask_graph g{
       { { edge_t{1, "none | a", [](mask m) -> mask { return m | mask::a; }} }, // 0: none
@@ -74,6 +71,6 @@ namespace sequoia::testing
         }
     };
 
-    transition_checker<mask>::check(report_line(""), g, checker);
+    transition_checker_t::check(report(""), g, checker);
   }
 }

@@ -2,26 +2,28 @@
 Running tests, synchronously...
 
 Suite:
-[Execution Time: 3.26ms]
+[Execution Time: 161us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 
 -----------Grand Totals-----------
-[Total Run Time: 8.51ms]
-[Execution Time: 3.26ms]
+[Total Run Time: 310us]
+[Execution Time: 161us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
-	False Negative Checks:                     0;  Failures:  0
-	False Negative Performance Checks:         0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
 
 Running tests, synchronously...
 
 Suite:
-[Execution Time: 2.12ms]
+[Execution Time: 59.9us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 190
 	Flipper
+
 	[bool]
 	check failed
 
@@ -29,16 +31,16 @@ Suite:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 6ms]
-[Execution Time: 2.12ms]
+[Total Run Time: 230us]
+[Execution Time: 59.9us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
-	False Negative Checks:                     0;  Failures:  0
-	False Negative Performance Checks:         0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
 
-Instability detected in file "TestRunnerTest.cpp"
+Instability detected in file "Free_Test.cpp"
 Outcome frequencies:
 [50%,50%]
 
@@ -46,7 +48,9 @@ Outcome frequencies:
 
 vs.
 
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 190
 	Flipper
+
 	[bool]
 	check failed
 

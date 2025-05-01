@@ -13,10 +13,10 @@
 
 namespace sequoia:: testing
 {
-  class relational_false_positive_diagnostics final : public free_false_positive_test
+  class relational_false_negative_diagnostics final : public free_false_negative_test
   {
   public:
-    using free_false_positive_test::free_false_positive_test;
+    using free_false_negative_test::free_false_negative_test;
 
     [[nodiscard]]
     std::filesystem::path source_file() const;
@@ -29,10 +29,10 @@ namespace sequoia:: testing
     void container_tests();
   };
 
-  class relational_false_negative_diagnostics final : public free_false_negative_test
+  class relational_false_positive_diagnostics final : public free_false_positive_test
   {
   public:
-    using free_false_negative_test::free_false_negative_test;
+    using free_false_positive_test::free_false_positive_test;
 
     [[nodiscard]]
     std::filesystem::path source_file() const;

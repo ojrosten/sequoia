@@ -36,7 +36,7 @@ namespace sequoia::testing
     {
       if(nameSpace.empty())
       {
-        replace_all(text, {{"namespace\n", ""}, {"?{\n", ""}, {"?}\n", ""}});
+        replace_all(text, replacement{"namespace\n", ""}, replacement{"?{\n", ""}, replacement{"?}\n", ""});
         std::string::size_type endLine{};
         while((endLine = text.find('\n', endLine)) != npos)
         {
@@ -48,8 +48,14 @@ namespace sequoia::testing
       }
       else
       {
-        replace_all(text, {{"namespace", std::string{"namespace "}.append(nameSpace)}, {"?{", "{"}, {"?}", "}"}});
+        replace_all(text, replacement{"namespace", std::string{"namespace "}.append(nameSpace)}, replacement{"?{", "{"}, replacement{"?}", "}"});
       }
+    }
+
+    void process_copyright_and_namespace(std::string& text, std::string_view copyright, std::string_view nameSpace)
+    {
+      set_top_copyright(text, copyright);
+      process_namespace(text, nameSpace);
     }
 
     [[nodiscard]]
@@ -219,7 +225,7 @@ namespace sequoia::testing
 
     auto cmake{
       [&stream](const main_paths& main, const build_paths& buildPaths) {
-        if(fs::exists(main.dir()) && fs::exists(buildPaths.cmade_dir()))
+        if(fs::exists(main.dir()) && buildPaths.cmake_cache() && fs::exists(buildPaths.cmake_cache()->parent_path()))
         {
           stream << "\n";
           invoke(cd_cmd(main.dir()) && cmake_cmd(std::nullopt, buildPaths, {}));
@@ -228,10 +234,6 @@ namespace sequoia::testing
     };
 
     cmake(projPaths.main(), projPaths.build());
-    for(const auto& main : projPaths.ancillary_main_cpps())
-    {
-      cmake(main, build_paths{projPaths.project_root(), main});
-    }
   }
 
 
@@ -251,7 +253,7 @@ namespace sequoia::testing
     if(filename.empty())
       throw std::runtime_error{"Header name is empty"};
 
-    if(const auto path{find_in_tree(m_Paths.source().project(), filename)}; !path.empty())
+    if(const auto path{find_in_tree(m_Paths.source().repo(), filename)}; !path.empty())
       return path;
 
     for(auto e : st_HeaderExtensions)
@@ -259,7 +261,7 @@ namespace sequoia::testing
       if(e != filename.extension())
       {
         const auto alternative{std::filesystem::path{filename}.replace_extension(e)};
-        if(const auto path{find_in_tree(m_Paths.source().project(), alternative)}; !path.empty())
+        if(const auto path{find_in_tree(m_Paths.source().repo(), alternative)}; !path.empty())
           return path;
       }
     }
@@ -389,36 +391,45 @@ namespace sequoia::testing
       }
     }
 
-    mess.append(" in the source repository\n").append(fs::relative(m_Paths.source().project(), m_Paths.tests().repo()).generic_string());
+    mess.append(" in the source repository\n").append(fs::relative(m_Paths.source().repo(), m_Paths.tests().repo()).generic_string());
 
     throw std::runtime_error{mess};
   }
 
-  void nascent_test_base::set_cpp(const std::filesystem::path& headerPath, std::string_view copyright, std::string_view nameSpace)
+  void nascent_test_base::set_cpp(const std::filesystem::path& headerPath, std::string_view nameSpace)
   {
     const auto srcPath{fs::path{headerPath}.replace_extension("cpp")};
 
-    const auto sourceRoot{paths().source().repo()};
     stream() << std::quoted(fs::relative(srcPath, paths().project_root()) .generic_string()) << '\n';
     fs::copy_file(paths().aux_paths().source_templates() / "MyCpp.cpp", srcPath);
 
     auto setCppText{
-        [&](std::string& text) {
-          set_top_copyright(text, copyright);
-          process_namespace(text, nameSpace);
-          replace_all(text, "?.hpp", rebase_from(headerPath, sourceRoot).generic_string());
+        [&, copyright{copyright()}](std::string& text) {
+          process_copyright_and_namespace(text, copyright, nameSpace);
+          replace_all(text, "?.hpp", rebase_from(headerPath, paths().source().repo()).generic_string());
           tabs_to_spacing(text, code_indent());
         }
     };
 
     read_modify_write(srcPath, setCppText);
 
-    add_to_cmake(paths().source().cmake_lists(), sourceRoot, srcPath, "set(SourceList", ")\n", "");
+    add_to_cmake(paths().source().cmake_lists(), paths().source().project(), srcPath, "set(SourceList", ")\n", "");
 
     read_modify_write(paths().main().cmake_lists(), [&root = paths().project_root()](std::string& text) {
         replace_all(text, "#!", "");
       }
     );
+  }
+
+  void nascent_test_base::make_common_replacements(std::string& text) const
+  {
+    
+    replace_all(text, replacement{"?::testing", std::format("{}::testing", project_namespace())},
+                      replacement{"using namespace sequoia::testing;", project_namespace() == "sequoia" ? "" : "using namespace sequoia::testing;\n\n\t"},
+                      replacement{"?forename", forename()},
+                      replacement{"?surname", surname()});
+
+    tabs_to_spacing(text, code_indent());
   }
 
   //=========================================== nascent_semantics_test ===========================================//
@@ -512,7 +523,7 @@ namespace sequoia::testing
 
     if(m_TemplateData.empty())
     {
-      set_cpp(headerPath, copyright(), nameSpace);
+      set_cpp(headerPath, nameSpace);
     }
 
     return headerPath;
@@ -521,7 +532,7 @@ namespace sequoia::testing
   [[nodiscard]]
   std::vector<std::string> nascent_semantics_test::constructors() const
   {
-    return { {std::string{forename()}.append("_false_positive_").append(surname()).append("{\"False Positive Test\"}")},
+    return { {std::string{forename()}.append("_false_negative_").append(surname()).append("{\"False Negative Test\"}")},
              {std::string{forename()}.append("_").append(surname()).append("{\"Unit Test\"}")}};
   }
 
@@ -547,8 +558,6 @@ namespace sequoia::testing
         }
       }
     }
-
-    tabs_to_spacing(text, code_indent());
 
     if(!m_EquivalentTypes.empty())
     {
@@ -605,19 +614,18 @@ namespace sequoia::testing
       replace_all(text, "<?>", "<>");
     }
 
-    replace_all(text, {{"::?_class", m_QualifiedName},
-                       {"?forename", forename()},
-                       {"?surname", surname()},
-                       {"?Class.hpp", header_path().generic_string()},
-                       {"?Class", camel_name()},
-                       {"?Test", to_camel_case(test_type()).append("Test")},
-                       {"?", test_type()}});
+    make_common_replacements(text);
+
+    replace_all(text, replacement{"::?_class", m_QualifiedName},
+                      replacement{"?Class.hpp", header_path().generic_string()},
+                      replacement{"?Class", camel_name()},
+                      replacement{"?Test", to_camel_case(test_type()).append("Test")},
+                      replacement{"?", test_type()});
   }
 
   void nascent_semantics_test::set_header_text(std::string& text, std::string_view copyright, std::string_view nameSpace) const
   {
-    set_top_copyright(text, copyright);
-    process_namespace(text, nameSpace);
+    process_copyright_and_namespace(text, copyright, nameSpace);
     replace_all(text, "?type", forename());
     if(m_TemplateData.empty())
     {
@@ -666,11 +674,11 @@ namespace sequoia::testing
   {
     tabs_to_spacing(text, code_indent());
 
-    replace_all(text, {{"?forename", forename()},
-                       {"?surname", surname()},
-                       {"?Class", camel_name()},
-                       {"?Allocation", to_camel_case(test_type())},
-                       {"?_allocation", test_type()}});
+    make_common_replacements(text);
+
+    replace_all(text, replacement{"?Class", camel_name()},
+                      replacement{"?Allocation", to_camel_case(test_type())},
+                      replacement{"?_allocation", test_type()});
 
     if (test_type() == "move_only_allocation")
     {
@@ -713,9 +721,12 @@ namespace sequoia::testing
     fs::create_directories(headerPath.parent_path());
     fs::copy_file(paths().aux_paths().source_templates() / "MyFreeFunctions.hpp", headerPath);
 
-    read_modify_write(headerPath, [&nameSpace = m_Namespace](std::string& text) { process_namespace(text, nameSpace); });
+    read_modify_write(headerPath, [&nameSpace = m_Namespace, copyright{copyright()}](std::string& text) {
+        process_copyright_and_namespace(text, copyright, nameSpace);
+      }
+    );
 
-    set_cpp(headerPath, copyright(), m_Namespace);
+    set_cpp(headerPath, m_Namespace);
 
     return headerPath;
   }
@@ -745,7 +756,7 @@ namespace sequoia::testing
     case nascent_test_flavour::standard:
       return { make("") };
     case nascent_test_flavour::framework_diagnostics:
-      return { make("false_negative"), make("false_positive")};
+      return { make("false_positive"), make("false_negative")};
     }
 
     throw std::logic_error{"Unrecognized option for nascent_test_flavour"};
@@ -753,13 +764,11 @@ namespace sequoia::testing
 
   void nascent_behavioural_test::transform_file(std::string& text) const
   {
-    tabs_to_spacing(text, code_indent());
+    make_common_replacements(text);
 
-    replace_all(text, {{"?forename", forename()},
-                       {"?surname", surname()},
-                       {"?Behavioural", camel_name()},
-                       {"?Test", to_camel_case(test_type()).append("Test")},
-                       {"?Header.hpp", header_path().generic_string()},
-                       {"?", test_type()}});
+    replace_all(text, replacement{"?Behavioural", camel_name()},
+                      replacement{"?Test", to_camel_case(test_type()).append("Test")},
+                      replacement{"?Header.hpp", header_path().generic_string()},
+                      replacement{"?", test_type()});
   }
 }

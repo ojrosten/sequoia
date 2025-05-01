@@ -28,14 +28,11 @@ namespace sequoia::testing
 
     void test_template_data_generation();
 
-    void test_creation();
+    void test_creation(std::string_view projectName, std::optional<std::string> sourceFolder);
 
     void test_creation_failure();
 
     [[nodiscard]]
-    std::filesystem::path fake_project() const;
-
-    [[nodiscard]]
-    std::string zeroth_arg() const;
+    std::string zeroth_arg(std::string_view projectName) const;
   };
 }

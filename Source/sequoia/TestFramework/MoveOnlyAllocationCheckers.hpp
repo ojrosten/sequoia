@@ -170,77 +170,117 @@ namespace sequoia::testing
     using inner_predictions_type = move_only_inner_allocation_predictions;
   };
 
-  template<test_mode Mode, moveonly T, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
-    requires (!std::totally_ordered<T> && (sizeof...(Getters) > 0))
-  void check_semantics(std::string_view description,
+  template<test_mode Mode, moveonly T, class U, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
+  requires checkable_for_move_semantics<Mode, T, U> && (!std::totally_ordered<T>) && (sizeof...(Getters) > 0)
+  void check_semantics(std::string description,
                        test_logger<Mode>& logger,
                        T&& x,
                        T&& y,
-                       const T& xClone,
-                       const T& yClone,
-                       opt_moved_from_ref<T> movedFrom,
+                       const U& xEquivalent,
+                       const U& yEquivalent,
+                       optional_ref<const U> movedFromPostConstruction,
+                       optional_ref<const U> movedFromPostAssignment,
                        Mutator m,
                        const allocation_info<T, Getters>&... info)
   {
-    impl::check_semantics(description, logger, impl::move_only_allocation_actions<T>{}, std::forward<T>(x), std::forward<T>(y), xClone, yClone, movedFrom, std::move(m), info...);
+    impl::check_semantics(std::move(description),
+                          logger,
+                          impl::move_only_allocation_actions<T>{},
+                          std::forward<T>(x),
+                          std::forward<T>(y),
+                          xEquivalent,
+                          yEquivalent,
+                          movedFromPostConstruction,
+                          movedFromPostAssignment,
+                          std::move(m),
+                          info...);
   }
 
-  template<test_mode Mode, moveonly T, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
-    requires (std::totally_ordered<T> && (sizeof...(Getters) > 0))
-  void check_semantics(std::string_view description,
+  template<test_mode Mode, moveonly T, class U, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
+    requires checkable_for_move_semantics<Mode, T, U> && std::totally_ordered<T> && (sizeof...(Getters) > 0)
+  void check_semantics(std::string description,
                        test_logger<Mode>& logger,
                        T&& x,
                        T&& y,
-                       const T& xClone,
-                       const T& yClone,
-                       opt_moved_from_ref<T> movedFrom,
+                       const U& xEquivalent,
+                       const U& yEquivalent,
+                       optional_ref<const U> movedFromPostConstruction,
+                       optional_ref<const U> movedFromPostAssignment,
                        std::weak_ordering order,
                        Mutator m,
                        const allocation_info<T, Getters>&... info)
   {
-    impl::check_semantics(description, logger, impl::move_only_allocation_actions<T>{order}, std::forward<T>(x), std::forward<T>(y), xClone, yClone, movedFrom, std::move(m), info...);
+    impl::check_semantics(std::move(description),
+                          logger,
+                          impl::move_only_allocation_actions<T>{order},
+                          std::forward<T>(x),
+                          std::forward<T>(y),
+                          xEquivalent,
+                          yEquivalent,
+                          movedFromPostConstruction,
+                          movedFromPostAssignment,
+                          std::move(m),
+                          info...);
   }
 
   template
   <
     test_mode Mode,
     moveonly T,
-    invocable_r<T> xMaker,
-    invocable_r<T> yMaker,
+    regular_invocable_r<T> xMaker,
+    regular_invocable_r<T> yMaker,
     std::invocable<T&> Mutator,
     alloc_getter<T>... Getters
   >
     requires (!std::totally_ordered<T> && (sizeof...(Getters) > 0))
-  std::pair<T,T> check_semantics(std::string_view description,
+  std::pair<T,T> check_semantics(std::string description,
                                  test_logger<Mode>& logger,
                                  xMaker xFn,
                                  yMaker yFn,
-                                 opt_moved_from_ref<T> movedFrom,
+                                 optional_ref<const T> movedFromPostConstruction,
+                                 optional_ref<const T> movedFromPostAssignment,
                                  Mutator m,
                                  const allocation_info<T, Getters>&... info)
   {
-    return impl::check_semantics(description, logger, impl::move_only_allocation_actions<T>{}, std::move(xFn), std::move(yFn), movedFrom, std::move(m), info...);
+    return impl::check_semantics(std::move(description),
+                                 logger,
+                                 impl::move_only_allocation_actions<T>{},
+                                 std::move(xFn),
+                                 std::move(yFn),
+                                 movedFromPostConstruction,
+                                 movedFromPostAssignment,
+                                 std::move(m),
+                                 info...);
   }
 
   template
   <
     test_mode Mode,
     moveonly T,
-    invocable_r<T> xMaker,
-    invocable_r<T> yMaker,
+    regular_invocable_r<T> xMaker,
+    regular_invocable_r<T> yMaker,
     std::invocable<T&> Mutator,
     alloc_getter<T>... Getters
   >
     requires (std::totally_ordered<T> && (sizeof...(Getters) > 0))
-  std::pair<T,T> check_semantics(std::string_view description,
+  std::pair<T,T> check_semantics(std::string description,
                                  test_logger<Mode>& logger,
                                  xMaker xFn,
                                  yMaker yFn,
-                                 opt_moved_from_ref<T> movedFrom,
+                                 optional_ref<const T> movedFromPostConstruction,
+                                 optional_ref<const T> movedFromPostAssignment,
                                  std::weak_ordering order,
                                  Mutator m,
                                  const allocation_info<T, Getters>&... info)
   {
-    return impl::check_semantics(description, logger, impl::move_only_allocation_actions<T>{order}, std::move(xFn), std::move(yFn), movedFrom, std::move(m), info...);
+    return impl::check_semantics(std::move(description),
+                                 logger,
+                                 impl::move_only_allocation_actions<T>{order},
+                                 std::move(xFn),
+                                 std::move(yFn),
+                                 movedFromPostConstruction,
+                                 movedFromPostAssignment,
+                                 std::move(m),
+                                 info...);
   }
 }

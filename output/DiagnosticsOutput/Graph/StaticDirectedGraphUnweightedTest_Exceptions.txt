@@ -1,0 +1,56 @@
+Tests/Maths/Graph/Static/Directed/StaticDirectedGraphUnweightedTest.cpp, Line 43
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists: expected 0 but got 1
+
+=======================================
+
+Tests/Maths/Graph/Static/Directed/StaticDirectedGraphUnweightedTest.cpp, Line 56
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists: expected 0 but got 1
+
+=======================================
+
+Tests/Maths/Graph/Static/Directed/StaticDirectedGraphUnweightedTest.cpp, Line 69
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists: expected 1 but got 2
+
+=======================================
+
+Tests/Maths/Graph/Static/Directed/StaticDirectedGraphUnweightedTest.cpp, Line 93
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists: expected 2 but got 1
+
+=======================================
+
+Tests/Maths/Graph/Static/Directed/StaticDirectedGraphUnweightedTest.cpp, Line 106
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists: expected 2 but got 1
+
+=======================================
+
+Tests/Maths/Graph/Static/Directed/StaticDirectedGraphUnweightedTest.cpp, Line 107
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::process_edges [node: 0, edge: 0]: target index 1 out of range - max index is 1
+
+=======================================
+
+Tests/Maths/Graph/Static/Directed/StaticDirectedGraphUnweightedTest.cpp, Line 108
+
+Expected Exception Type:
+[std::logic_error]
+Inconsistent number of elements supplied by initializer lists: expected 2 but got 3
+
+=======================================
+

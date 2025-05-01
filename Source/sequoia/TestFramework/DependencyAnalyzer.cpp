@@ -80,7 +80,7 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    std::string from_stream(std::istream& istr, char delimiter)
+    std::string from_stream(std::istream& istr, std::string_view delimiters)
     {
       constexpr auto eof{std::ifstream::traits_type::eof()};
       using int_type = std::ifstream::int_type;
@@ -90,7 +90,7 @@ namespace sequoia::testing
       int_type c{};
       while((c = istr.get()) != eof)
       {
-        if(c == delimiter) break;
+        if(auto found{std::ranges::find(delimiters, c)}; found != delimiters.end()) break;
 
         str.push_back(static_cast<char>(c));
       }
@@ -142,7 +142,8 @@ namespace sequoia::testing
           }
           else if(c == '#')
           {
-            const auto followsHash{from_stream(ifile, ' ')};
+            // Bug here with #endif
+            const auto followsHash{from_stream(ifile, " \n")};
             if(followsHash == "include")
             {
               int_type ch{};
@@ -154,11 +155,11 @@ namespace sequoia::testing
                   [&ifile, ch]() -> fs::path {
                     if(ch == '\"')
                     {
-                      return from_stream(ifile, '\"');
+                      return from_stream(ifile, "\"");
                     }
                     else if(ch == '<')
                     {
-                      return from_stream(ifile, '>');
+                      return from_stream(ifile, ">");
                     }
 
                     return "";
@@ -182,7 +183,7 @@ namespace sequoia::testing
           else if(!cutoff.empty() && (c == cutoff.front()))
           {
             ifile.unget();
-            const auto pattern{from_stream(ifile, '\n')};
+            const auto pattern{from_stream(ifile, "\n")};
             if(const auto pos{pattern.find(cutoff)}; pos != std::string::npos)
             {
               break;
@@ -194,17 +195,17 @@ namespace sequoia::testing
       return includes;
     }
 
-    using tests_dependency_graph = maths::graph<maths::directed_flavour::directed, maths::null_weight, file_info>;
+    using tests_dependency_graph = maths::directed_graph<maths::null_weight, file_info>;
     using node_iterator = tests_dependency_graph::iterator;
 
-    void add_files(tests_dependency_graph& g, const fs::path& repo, const fs::file_time_type& pruneTimeStamp, const std::optional<fs::file_time_type>& exeTimeStamp)
+    void add_files(std::vector<file_info>& info, const fs::path& repo, const fs::file_time_type& pruneTimeStamp, const std::optional<fs::file_time_type>& exeTimeStamp)
     {
       for(const auto& entry : fs::recursive_directory_iterator(repo))
       {
         const auto file{entry.path()};
         if(is_cpp(file) || is_header(file))
         {
-          g.add_node(file, pruneTimeStamp, exeTimeStamp);
+          info.emplace_back(file, pruneTimeStamp, exeTimeStamp);
         }
       }
     }
@@ -222,7 +223,7 @@ namespace sequoia::testing
 
         for(const auto& includedFile : get_includes(file, cutoff))
         {
-          if(auto eqrange{std::ranges::equal_range(g.begin_node_weights(), g.end_node_weights(), includedFile.filename(), std::ranges::less{}, [](const file_info& weight){ return weight.file.filename(); })}; !eqrange.empty())
+          if(auto eqrange{std::ranges::equal_range(g.node_weights(), includedFile.filename(), std::ranges::less{}, [](const file_info& weight){ return weight.file.filename(); })}; !eqrange.empty())
           {
             auto found{
               std::ranges::find_if(eqrange, [&includedFile,&projPaths,&file](const file_info& wt){
@@ -232,7 +233,10 @@ namespace sequoia::testing
                   }
                   else
                   {
-                    if((wt.file == (projPaths.source().repo() / includedFile)) || (wt.file == (projPaths.tests().repo() / includedFile)))
+                    if(    (wt.file == (projPaths.source().repo() / includedFile))
+                        || (wt.file == (projPaths.tests().repo() / includedFile))
+                        || std::ranges::contains(projPaths.additional_dependency_analysis_paths(), wt.file, [&includedFile](const fs::path& p) {  return  p / includedFile; })
+                      )
                       return true;
 
                     if(const auto trial{file.parent_path() / includedFile}; fs::exists(trial) && (wt.file == fs::canonical(trial)))
@@ -356,19 +360,32 @@ namespace sequoia::testing
       tests_dependency_graph g{};
 
       const auto exeTimeStamp{get_stamp(projPaths.executable())};
-      add_files(g, projPaths.source().project(), pruneTimeStamp, exeTimeStamp);
-      add_files(g, projPaths.tests().repo(), pruneTimeStamp, exeTimeStamp);
-      g.sort_nodes([&g](auto i, auto j) {
-        const fs::path&
-          lfile{(g.cbegin_node_weights() + i)->file},
-          rfile{(g.cbegin_node_weights() + j)->file};
+      std::vector<file_info> files{};
 
-        const fs::path
-          lname{lfile.filename()},
-          rname{rfile.filename()};
+      add_files(files, projPaths.source().repo(), pruneTimeStamp, exeTimeStamp);
+      add_files(files, projPaths.tests().repo(), pruneTimeStamp, exeTimeStamp);
+      for(const auto& p : projPaths.additional_dependency_analysis_paths())
+      {
+        add_files(files, p, pruneTimeStamp, exeTimeStamp);
+      }
 
-        return lname != rname ? lname < rname : lfile < rfile;
-        });
+      std::ranges::sort(
+        files,
+        [&g](const auto& lhs, const auto& rhs) {
+          const fs::path& lfile{lhs.file}, rfile{rhs.file};
+
+          const fs::path
+            lname{lfile.filename()},
+            rname{rfile.filename()};
+
+          return lname != rname ? lname < rname : lfile < rfile;
+        }
+      );
+
+      for(const auto& info : files)
+      {
+        g.add_node(info);
+      }
 
       build_dependencies(g, projPaths, cutoff);
 

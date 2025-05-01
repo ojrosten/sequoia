@@ -58,7 +58,7 @@ namespace sequoia::testing::impl
   {
     sentinel<Mode> sentry{logger, ""};
 
-    if(!check_preconditions(logger, actions, x, y, args...))
+    if(!check_prerequisites(logger, actions, x, y, args...))
       return false;
 
     T z{x};
@@ -79,14 +79,14 @@ namespace sequoia::testing::impl
 
     if(consistentCopyAssign)
     {
-      check_move_construction(logger, actions, std::move(z), y, opt_moved_from_ref<T>{}, args...);
+      check_move_construction(logger, actions, std::move(z), y, optional_ref<const T>{}, args...);
     }
 
     if(!consistentCopy)
       return false;
 
     T w{x};
-    check_move_assign(logger, actions, w, T{y}, y, opt_moved_from_ref<T>{}, yMutator, args...);
+    check_move_assign(logger, actions, w, T{y}, y, optional_ref<const T>{}, yMutator, args...);
 
     if constexpr (do_swap<Args...>::value)
     {

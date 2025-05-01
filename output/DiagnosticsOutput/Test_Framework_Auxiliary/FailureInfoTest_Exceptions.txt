@@ -5,7 +5,7 @@ Expected Exception Type:
 [std::runtime_error]
 Error while parsing failure_info: unable to find $Check:
 
-	=======================================
+=======================================
 
 Tests/TestFramework/FailureInfoTest.cpp, Line 30
 Stream does not contain index
@@ -14,7 +14,7 @@ Expected Exception Type:
 [std::runtime_error]
 Error while parsing failure_info: unable to determine index
 
-	=======================================
+=======================================
 
 Tests/TestFramework/FailureInfoTest.cpp, Line 38
 Stream does not contain message
@@ -23,5 +23,5 @@ Expected Exception Type:
 [std::runtime_error]
 Error while parsing failure_info: unable to find message
 
-	=======================================
+=======================================
 

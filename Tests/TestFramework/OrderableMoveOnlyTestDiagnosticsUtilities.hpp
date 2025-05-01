@@ -9,93 +9,12 @@
 
 /*! \file */
 
-#include "sequoia/TestFramework/MoveOnlyTestCore.hpp"
+#include "CommonMoveOnlyTestDiagnosticsUtilities.hpp"
 
 #include <vector>
 
 namespace sequoia::testing
 {
-  template<class T=int, class Allocator=std::allocator<int>>
-  struct orderable_move_only_beast
-  {
-    using allocator_type = Allocator;
-
-    orderable_move_only_beast(std::initializer_list<T> list) : x{list} {}
-
-    orderable_move_only_beast(std::initializer_list<T> list, const allocator_type& a) : x{list, a} {}
-
-    orderable_move_only_beast(const allocator_type& a) : x(a) {}
-
-    orderable_move_only_beast(const orderable_move_only_beast&) = delete;
-
-    orderable_move_only_beast(orderable_move_only_beast&&) noexcept = default;
-
-    orderable_move_only_beast(orderable_move_only_beast&& other, const allocator_type& a) : x(std::move(other.x), a) {}
-
-    orderable_move_only_beast& operator=(const orderable_move_only_beast&) = delete;
-
-    orderable_move_only_beast& operator=(orderable_move_only_beast&&) = default;
-
-    void swap(orderable_move_only_beast& other) noexcept(noexcept(std::ranges::swap(this->x, other.x)))
-    {
-      std::ranges::swap(x, other.x);
-    }
-
-    friend void swap(orderable_move_only_beast& lhs, orderable_move_only_beast& rhs)
-      noexcept(noexcept(lhs.swap(rhs)))
-    {
-      lhs.swap(rhs);
-    }
-
-    std::vector<T, Allocator> x{};
-
-    [[nodiscard]]
-    friend bool operator==(const orderable_move_only_beast&, const orderable_move_only_beast&) noexcept = default;
-
-    [[nodiscard]]
-    friend bool operator<(const orderable_move_only_beast& lhs, const orderable_move_only_beast& rhs) noexcept
-    {
-      return lhs.x < rhs.x;
-    }
-
-    [[nodiscard]]
-    friend bool operator<=(const orderable_move_only_beast& lhs, const orderable_move_only_beast& rhs) noexcept
-    {
-      return lhs.x <= rhs.x;
-    }
-
-    [[nodiscard]]
-    friend bool operator>(const orderable_move_only_beast& lhs, const orderable_move_only_beast& rhs) noexcept
-    {
-      return lhs.x > rhs.x;
-    }
-
-    [[nodiscard]]
-    friend bool operator>=(const orderable_move_only_beast& lhs, const orderable_move_only_beast& rhs) noexcept
-    {
-      return lhs.x >= rhs.x;
-    }
-
-    // TO DO: default this and remove most of the above when libc++ rolls out <=> to std
-    friend std::weak_ordering operator<=>(const orderable_move_only_beast& lhs, const orderable_move_only_beast& rhs) noexcept
-    {
-      if(lhs < rhs) return std::weak_ordering::less;
-
-      if(rhs > lhs) return std::weak_ordering::greater;
-
-      return std::weak_ordering::equivalent;
-    }
-
-    template<class Stream>
-    friend Stream& operator<<(Stream& s, const orderable_move_only_beast& b)
-    {
-      for(auto i : b.x) s << i << ' ';
-      return s;
-    }
-  };
-
-
-
   class orderable_resource_binder
   {
   public:
@@ -105,11 +24,11 @@ namespace sequoia::testing
       : m_Index{i}
     {}
 
-    orderable_resource_binder(orderable_resource_binder&& other)
+    orderable_resource_binder(orderable_resource_binder&& other) noexcept
       : m_Index{std::exchange(other.m_Index, 0)}
     {}
 
-    orderable_resource_binder& operator=(orderable_resource_binder&& other)
+    orderable_resource_binder& operator=(orderable_resource_binder&& other) noexcept
     {
       m_Index = std::exchange(other.m_Index, 0);
       return *this;
@@ -142,8 +61,117 @@ namespace sequoia::testing
   };
 
   template<class T=int, class Allocator=std::allocator<int>>
+  struct orderable_move_only_beast
+  {
+    using value_type     = T;
+    using allocator_type = Allocator;
+
+    orderable_move_only_beast(std::initializer_list<T> list) : x{list} {}
+
+    orderable_move_only_beast(std::initializer_list<T> list, const allocator_type& a) : x{list, a} {}
+
+    orderable_move_only_beast(const allocator_type& a) : x(a) {}
+
+    orderable_move_only_beast(const orderable_move_only_beast&) = delete;
+
+    orderable_move_only_beast(orderable_move_only_beast&&) noexcept = default;
+
+    orderable_move_only_beast(orderable_move_only_beast&& other, const allocator_type& a) : x(std::move(other.x), a) {}
+
+    orderable_move_only_beast& operator=(const orderable_move_only_beast&) = delete;
+
+    orderable_move_only_beast& operator=(orderable_move_only_beast&&) = default;
+
+    void swap(orderable_move_only_beast& other) noexcept(noexcept(std::ranges::swap(this->x, other.x)))
+    {
+      std::ranges::swap(x, other.x);
+    }
+
+    friend void swap(orderable_move_only_beast& lhs, orderable_move_only_beast& rhs)
+      noexcept(noexcept(lhs.swap(rhs)))
+    {
+      lhs.swap(rhs);
+    }
+
+    std::vector<T, Allocator> x{};
+
+    [[nodiscard]]
+    friend auto operator<=>(const orderable_move_only_beast&, const orderable_move_only_beast&) noexcept = default;
+
+    template<class Stream>
+    friend Stream& operator<<(Stream& s, const orderable_move_only_beast& b)
+    {
+      for(auto i : b.x) s << i << ' ';
+      return s;
+    }
+  };
+
+  template<class T, class Allocator>
+  struct value_tester<orderable_move_only_beast<T, Allocator>> : move_only_beast_value_tester<orderable_move_only_beast<T, Allocator>> {};
+
+  template<class T = int, class Allocator = std::allocator<int>>
+  struct orderable_specified_moved_from_beast
+  {
+    using     value_type = T;
+    using allocator_type = Allocator;
+
+    orderable_specified_moved_from_beast(std::initializer_list<T> list) : x{list} {}
+
+    orderable_specified_moved_from_beast(std::initializer_list<T> list, const allocator_type& a) : x(list, a) {}
+
+    orderable_specified_moved_from_beast(const allocator_type& a) : x(a) {}
+
+    orderable_specified_moved_from_beast(const orderable_specified_moved_from_beast&) = delete;
+
+    orderable_specified_moved_from_beast(orderable_specified_moved_from_beast&& other) noexcept
+      : x{std::move(other.x)}
+    {
+      other.x.clear();
+    }
+
+    orderable_specified_moved_from_beast(orderable_specified_moved_from_beast&& other, const allocator_type& a) : x(std::move(other.x), a) {}
+
+    orderable_specified_moved_from_beast& operator=(const orderable_specified_moved_from_beast&) = delete;
+
+    orderable_specified_moved_from_beast& operator=(orderable_specified_moved_from_beast&& other)
+    {
+      x = std::move(other.x);
+      other.x.clear();
+
+      return *this;
+    }
+
+    void swap(orderable_specified_moved_from_beast& other) noexcept(noexcept(std::ranges::swap(this->x, other.x)))
+    {
+      std::ranges::swap(x, other.x);
+    }
+
+    friend void swap(orderable_specified_moved_from_beast& lhs, orderable_specified_moved_from_beast& rhs)
+      noexcept(noexcept(lhs.swap(rhs)))
+    {
+      lhs.swap(rhs);
+    }
+
+    std::vector<T, Allocator> x{};
+
+    [[nodiscard]]
+    friend auto operator<=>(const orderable_specified_moved_from_beast&, const orderable_specified_moved_from_beast&) noexcept = default;
+
+    template<class Stream>
+    friend Stream& operator<<(Stream& s, const orderable_specified_moved_from_beast& b)
+    {
+      for(const auto& i : b.x) s << i << '\n';
+      return s;
+    }
+  };
+
+  template<class T, class Allocator>
+  struct value_tester<orderable_specified_moved_from_beast<T, Allocator>> : move_only_beast_value_tester<orderable_specified_moved_from_beast<T, Allocator>> {};
+
+  template<class T=int, class Allocator=std::allocator<int>>
   struct move_only_broken_less
   {
+    using     value_type = int;
     using allocator_type = Allocator;
 
     move_only_broken_less(std::initializer_list<T> list) : x{list} {}
@@ -176,40 +204,12 @@ namespace sequoia::testing
     std::vector<T, Allocator> x{};
 
     [[nodiscard]]
-    friend bool operator==(const move_only_broken_less&, const move_only_broken_less&) noexcept = default;
+    friend auto operator<=>(const move_only_broken_less&, const move_only_broken_less&) noexcept = default;
 
     [[nodiscard]]
     friend bool operator<(const move_only_broken_less& lhs, const move_only_broken_less& rhs) noexcept
     {
       return lhs.x > rhs.x;
-    }
-
-    [[nodiscard]]
-    friend bool operator<=(const move_only_broken_less& lhs, const move_only_broken_less& rhs) noexcept
-    {
-      return lhs.x <= rhs.x;
-    }
-
-    [[nodiscard]]
-    friend bool operator>(const move_only_broken_less& lhs, const move_only_broken_less& rhs) noexcept
-    {
-      return lhs.x > rhs.x;
-    }
-
-    [[nodiscard]]
-    friend bool operator>=(const move_only_broken_less& lhs, const move_only_broken_less& rhs) noexcept
-    {
-      return lhs.x >= rhs.x;
-    }
-
-    // TO DO: default this and remove most of the above when libc++ rolls out <=> to std
-    friend std::weak_ordering operator<=>(const move_only_broken_less& lhs, const move_only_broken_less& rhs) noexcept
-    {
-      if(lhs < rhs) return std::weak_ordering::less;
-
-      if(rhs > lhs) return std::weak_ordering::greater;
-
-      return std::weak_ordering::equivalent;
     }
 
     template<class Stream>
@@ -220,9 +220,13 @@ namespace sequoia::testing
     }
   };
 
+  template<class T, class Allocator>
+  struct value_tester<move_only_broken_less<T, Allocator>> : move_only_beast_value_tester<move_only_broken_less<T, Allocator>> {};
+
   template<class T=int, class Allocator=std::allocator<int>>
   struct move_only_broken_lesseq
   {
+    using     value_type = T;
     using allocator_type = Allocator;
 
     move_only_broken_lesseq(std::initializer_list<T> list) : x{list} {}
@@ -255,41 +259,13 @@ namespace sequoia::testing
     std::vector<T, Allocator> x{};
 
     [[nodiscard]]
-    friend bool operator==(const move_only_broken_lesseq&, const move_only_broken_lesseq&) noexcept = default;
-
-    [[nodiscard]]
-    friend bool operator<(const move_only_broken_lesseq& lhs, const move_only_broken_lesseq& rhs) noexcept
-    {
-      return lhs.x < rhs.x;
-    }
-
-    [[nodiscard]]
     friend bool operator<=(const move_only_broken_lesseq& lhs, const move_only_broken_lesseq& rhs) noexcept
     {
       return lhs.x >= rhs.x;
     }
 
     [[nodiscard]]
-    friend bool operator>(const move_only_broken_lesseq& lhs, const move_only_broken_lesseq& rhs) noexcept
-    {
-      return lhs.x > rhs.x;
-    }
-
-    [[nodiscard]]
-    friend bool operator>=(const move_only_broken_lesseq& lhs, const move_only_broken_lesseq& rhs) noexcept
-    {
-      return lhs.x >= rhs.x;
-    }
-
-    // TO DO: default this and remove most of the above when libc++ rolls out <=> to std
-    friend std::weak_ordering operator<=>(const move_only_broken_lesseq& lhs, const move_only_broken_lesseq& rhs) noexcept
-    {
-      if(lhs < rhs) return std::weak_ordering::less;
-
-      if(rhs > lhs) return std::weak_ordering::greater;
-
-      return std::weak_ordering::equivalent;
-    }
+    friend auto operator<=>(const move_only_broken_lesseq&, const move_only_broken_lesseq&) noexcept = default;
 
     template<class Stream>
     friend Stream& operator<<(Stream& s, const move_only_broken_lesseq& b)
@@ -299,9 +275,13 @@ namespace sequoia::testing
     }
   };
 
+  template<class T, class Allocator>
+  struct value_tester<move_only_broken_lesseq<T, Allocator>> : move_only_beast_value_tester<move_only_broken_lesseq<T, Allocator>> {};
+
   template<class T=int, class Allocator=std::allocator<int>>
   struct move_only_broken_greater
   {
+    using     value_type = T;
     using allocator_type = Allocator;
 
     move_only_broken_greater(std::initializer_list<T> list) : x{list} {}
@@ -334,44 +314,13 @@ namespace sequoia::testing
     std::vector<T, Allocator> x{};
 
     [[nodiscard]]
-    friend bool operator==(const move_only_broken_greater&, const move_only_broken_greater&) noexcept = default;
-
-    [[nodiscard]]
-    friend bool operator!=(const move_only_broken_greater&, const move_only_broken_greater&) noexcept = default;
-
-    [[nodiscard]]
-    friend bool operator<(const move_only_broken_greater& lhs, const move_only_broken_greater& rhs) noexcept
-    {
-      return lhs.x < rhs.x;
-    }
-
-    [[nodiscard]]
-    friend bool operator<=(const move_only_broken_greater& lhs, const move_only_broken_greater& rhs) noexcept
-    {
-      return lhs.x <= rhs.x;
-    }
-
-    [[nodiscard]]
     friend bool operator>(const move_only_broken_greater& lhs, const move_only_broken_greater& rhs) noexcept
     {
       return lhs.x < rhs.x;
     }
 
     [[nodiscard]]
-    friend bool operator>=(const move_only_broken_greater& lhs, const move_only_broken_greater& rhs) noexcept
-    {
-      return lhs.x >= rhs.x;
-    }
-
-    // TO DO: default this and remove most of the above when libc++ rolls out <=> to std
-    friend std::weak_ordering operator<=>(const move_only_broken_greater& lhs, const move_only_broken_greater& rhs) noexcept
-    {
-      if(lhs < rhs) return std::weak_ordering::less;
-
-      if(rhs > lhs) return std::weak_ordering::greater;
-
-      return std::weak_ordering::equivalent;
-    }
+    friend auto operator<=>(const move_only_broken_greater&, const move_only_broken_greater&) noexcept = default;
 
     template<class Stream>
     friend Stream& operator<<(Stream& s, const move_only_broken_greater& b)
@@ -381,9 +330,13 @@ namespace sequoia::testing
     }
   };
 
+  template<class T, class Allocator>
+  struct value_tester<move_only_broken_greater<T, Allocator>> : move_only_beast_value_tester<move_only_broken_greater<T, Allocator>> {};
+
   template<class T=int, class Allocator=std::allocator<int>>
   struct move_only_broken_greatereq
   {
+    using     value_type = T;
     using allocator_type = Allocator;
 
     move_only_broken_greatereq(std::initializer_list<T> list) : x{list} {}
@@ -416,44 +369,13 @@ namespace sequoia::testing
     std::vector<T, Allocator> x{};
 
     [[nodiscard]]
-    friend bool operator==(const move_only_broken_greatereq&, const move_only_broken_greatereq&) noexcept = default;
-
-    [[nodiscard]]
-    friend bool operator!=(const move_only_broken_greatereq&, const move_only_broken_greatereq&) noexcept = default;
-
-    [[nodiscard]]
-    friend bool operator<(const move_only_broken_greatereq& lhs, const move_only_broken_greatereq& rhs) noexcept
-    {
-      return lhs.x < rhs.x;
-    }
-
-    [[nodiscard]]
-    friend bool operator<=(const move_only_broken_greatereq& lhs, const move_only_broken_greatereq& rhs) noexcept
-    {
-      return lhs.x >= rhs.x;
-    }
-
-    [[nodiscard]]
-    friend bool operator>(const move_only_broken_greatereq& lhs, const move_only_broken_greatereq& rhs) noexcept
-    {
-      return lhs.x > rhs.x;
-    }
-
-    [[nodiscard]]
     friend bool operator>=(const move_only_broken_greatereq& lhs, const move_only_broken_greatereq& rhs) noexcept
     {
-      return lhs.x >= rhs.x;
+      return lhs.x <= rhs.x;
     }
 
-    // TO DO: default this and remove most of the above when libc++ rolls out <=> to std
-    friend std::weak_ordering operator<=>(const move_only_broken_greatereq& lhs, const move_only_broken_greatereq& rhs) noexcept
-    {
-      if(lhs < rhs) return std::weak_ordering::less;
-
-      if(rhs > lhs) return std::weak_ordering::greater;
-
-      return std::weak_ordering::equivalent;
-    }
+    [[nodiscard]]
+    friend auto operator<=>(const move_only_broken_greatereq&, const move_only_broken_greatereq&) noexcept = default;
 
     template<class Stream>
     friend Stream& operator<<(Stream& s, const move_only_broken_greatereq& b)
@@ -463,9 +385,13 @@ namespace sequoia::testing
     }
   };
 
+  template<class T, class Allocator>
+  struct value_tester<move_only_broken_greatereq<T, Allocator>> : move_only_beast_value_tester<move_only_broken_greatereq<T, Allocator>> {};
+
   template<class T=int, class Allocator=std::allocator<int>>
   struct move_only_inverted_comparisons
   {
+    using     value_type = T;
     using allocator_type = Allocator;
 
     move_only_inverted_comparisons(std::initializer_list<T> list) : x{list} {}
@@ -527,15 +453,8 @@ namespace sequoia::testing
       return lhs.x <= rhs.x;
     }
 
-    // TO DO: default this and remove most of the above when libc++ rolls out <=> to std
-    friend std::weak_ordering operator<=>(const move_only_inverted_comparisons& lhs, const move_only_inverted_comparisons& rhs) noexcept
-    {
-      if(lhs < rhs) return std::weak_ordering::less;
-
-      if(rhs > lhs) return std::weak_ordering::greater;
-
-      return std::weak_ordering::equivalent;
-    }
+    [[nodiscard]]
+    friend auto operator<=>(const move_only_inverted_comparisons&, const move_only_inverted_comparisons&) noexcept = default;
 
     template<class Stream>
     friend Stream& operator<<(Stream& s, const move_only_inverted_comparisons& b)
@@ -545,9 +464,13 @@ namespace sequoia::testing
     }
   };
 
+  template<class T, class Allocator>
+  struct value_tester<move_only_inverted_comparisons<T, Allocator>> : move_only_beast_value_tester<move_only_inverted_comparisons<T, Allocator>> {};
+
   template<class T=int, class Allocator=std::allocator<int>>
   struct move_only_broken_spaceship
   {
+    using     value_type = T;
     using allocator_type = Allocator;
 
     move_only_broken_spaceship(std::initializer_list<T> list) : x{list} {}
@@ -609,7 +532,6 @@ namespace sequoia::testing
       return lhs.x >= rhs.x;
     }
 
-    // TO DO: default this and remove most of the above when libc++ rolls out <=> to std
     friend std::weak_ordering operator<=>(const move_only_broken_spaceship& lhs, const move_only_broken_spaceship& rhs) noexcept
     {
       if(lhs < rhs) return std::weak_ordering::greater;
@@ -626,4 +548,7 @@ namespace sequoia::testing
       return s;
     }
   };
+
+  template<class T, class Allocator>
+  struct value_tester<move_only_broken_spaceship<T, Allocator>> : move_only_beast_value_tester<move_only_broken_spaceship<T, Allocator>> {};
 }

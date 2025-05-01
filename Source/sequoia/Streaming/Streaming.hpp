@@ -28,7 +28,7 @@ namespace sequoia
   [[nodiscard]]
   std::optional<std::string> read_to_string(const std::filesystem::path& file);
 
-  void write_to_file(const std::filesystem::path& file, std::string_view text);
+  void write_to_file(const std::filesystem::path& file, std::string_view text, std::ios_base::openmode mode=std::ios_base::out);
 
   template<std::invocable<std::string&> Fn>
   void read_modify_write(const std::filesystem::path& file, Fn fn)

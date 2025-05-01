@@ -28,4 +28,11 @@ namespace sequoia::testing
 			check(equality, "Description", logger, actual.get(), prediction);
 		}
 	};
+
+	template<>
+	struct serializer<stuff::unique_thing>
+	{
+		[[nodiscard]]
+		static std::string make(const stuff::unique_thing& thing) { return std::format("{}", thing.get()); }
+	};
 }

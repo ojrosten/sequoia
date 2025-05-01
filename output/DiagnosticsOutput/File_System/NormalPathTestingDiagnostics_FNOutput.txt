@@ -1,0 +1,35 @@
+Tests/FileSystem/NormalPathTestingDiagnostics.cpp, Line 25
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::normal_path>]
+Checking for equivalence with:
+[std::filesystem::path]
+
+  Wrapped Path
+  [std::filesystem::path]
+  operator== returned false
+  Obtained : 
+  Predicted: A
+
+  Conversion to Path
+  [std::filesystem::path]
+  operator== returned false
+  Obtained : 
+  Predicted: A
+
+=======================================
+
+Tests/FileSystem/NormalPathTestingDiagnostics.cpp, Line 26
+Useful Description
+
+[sequoia::normal_path]
+operator== returned false
+
+  Wrapped Path
+  [std::filesystem::path]
+  operator== returned false
+  Obtained : 
+  Predicted: Foo.cpp
+
+=======================================
+

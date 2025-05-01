@@ -23,9 +23,6 @@ namespace sequoia::testing
 
     void run_tests();
   private:
-
-    void test_filtered_sequence();
-
     void test_function_signature();
   };
 }

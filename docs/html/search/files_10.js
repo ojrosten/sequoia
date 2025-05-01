@@ -29,10 +29,13 @@ var searchData=
   ['treetestingdiagnostics_2ecpp_26',['TreeTestingDiagnostics.cpp',['../d1/d43/TreeTestingDiagnostics_8cpp.html',1,'']]],
   ['treetestingdiagnostics_2ehpp_27',['TreeTestingDiagnostics.hpp',['../db/def/TreeTestingDiagnostics_8hpp.html',1,'']]],
   ['treetestingutilities_2ehpp_28',['TreeTestingUtilities.hpp',['../db/d92/TreeTestingUtilities_8hpp.html',1,'']]],
-  ['typelist_2ehpp_29',['TypeList.hpp',['../dd/d90/TypeList_8hpp.html',1,'']]],
-  ['typelistfreetest_2ecpp_30',['TypeListFreeTest.cpp',['../de/d41/TypeListFreeTest_8cpp.html',1,'']]],
-  ['typelistfreetest_2ehpp_31',['TypeListFreeTest.hpp',['../d2/d93/TypeListFreeTest_8hpp.html',1,'']]],
-  ['typetraits_2ehpp_32',['TypeTraits.hpp',['../d0/d81/TypeTraits_8hpp.html',1,'']]],
-  ['typetraitstest_2ecpp_33',['TypeTraitsTest.cpp',['../de/d9c/TypeTraitsTest_8cpp.html',1,'']]],
-  ['typetraitstest_2ehpp_34',['TypeTraitsTest.hpp',['../df/d8b/TypeTraitsTest_8hpp.html',1,'']]]
+  ['typealgorithms_2ehpp_29',['TypeAlgorithms.hpp',['../d4/da8/TypeAlgorithms_8hpp.html',1,'']]],
+  ['typealgorithmsfreetest_2ecpp_30',['TypeAlgorithmsFreeTest.cpp',['../d0/d67/TypeAlgorithmsFreeTest_8cpp.html',1,'']]],
+  ['typealgorithmsfreetest_2ehpp_31',['TypeAlgorithmsFreeTest.hpp',['../d3/d2a/TypeAlgorithmsFreeTest_8hpp.html',1,'']]],
+  ['typelist_2ehpp_32',['TypeList.hpp',['../dd/d90/TypeList_8hpp.html',1,'']]],
+  ['typelistfreetest_2ecpp_33',['TypeListFreeTest.cpp',['../de/d41/TypeListFreeTest_8cpp.html',1,'']]],
+  ['typelistfreetest_2ehpp_34',['TypeListFreeTest.hpp',['../d2/d93/TypeListFreeTest_8hpp.html',1,'']]],
+  ['typetraits_2ehpp_35',['TypeTraits.hpp',['../d0/d81/TypeTraits_8hpp.html',1,'']]],
+  ['typetraitstest_2ecpp_36',['TypeTraitsTest.cpp',['../de/d9c/TypeTraitsTest_8cpp.html',1,'']]],
+  ['typetraitstest_2ehpp_37',['TypeTraitsTest.hpp',['../df/d8b/TypeTraitsTest_8hpp.html',1,'']]]
 ];

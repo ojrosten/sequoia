@@ -1,15 +1,15 @@
   Warning: Update of materials suppressed when checking for instabilities
 
 Analyzing dependencies...
-[22.5ms]
+[13ms]
 
 
 Running tests...
 
 Foo:
-	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 42]
+	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 43]
 
-	Tests/Stuff/FooTest.cpp, Line 41
+	Tests/Stuff/FooTest.cpp, Line 42
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<std::filesystem::path>]
@@ -110,21 +110,21 @@ Foo:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 16.6ms]
-[Execution Time: 12.9ms]
-	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 42]
+[Total Run Time: 9.33ms]
+[Execution Time: 7.74ms]
+	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 43]
 	Standard Performance Checks:               0;  Failures:  0
-	False Negative Checks:                     0;  Failures:  0
-	False Negative Performance Checks:         0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
 
 Running tests...
 
 Foo:
-	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 42]
+	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 43]
 
-	Tests/Stuff/FooTest.cpp, Line 41
+	Tests/Stuff/FooTest.cpp, Line 42
 
 	Comparison performed using:
 	[sequoia::testing::value_tester<std::filesystem::path>]
@@ -225,13 +225,13 @@ Foo:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 17.4ms]
-[Execution Time: 12.6ms]
-	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 42]
+[Total Run Time: 9.46ms]
+[Execution Time: 7.19ms]
+	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 43]
 	Standard Performance Checks:               0;  Failures:  0
-	False Negative Checks:                     0;  Failures:  0
-	False Negative Performance Checks:         0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
 
 No instabilities detected

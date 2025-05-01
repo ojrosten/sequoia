@@ -2,10 +2,12 @@
 Running tests, synchronously...
 
 Suite:
-[Execution Time: 2.56ms]
+[Execution Time: 152us]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 251
 	Always fails
+
 	[bool]
 	check failed
 
@@ -13,28 +15,32 @@ Suite:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 7.25ms]
-[Execution Time: 2.56ms]
+[Total Run Time: 325us]
+[Execution Time: 152us]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
-	False Negative Checks:                     0;  Failures:  0
-	False Negative Performance Checks:         0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
 
 Running tests, synchronously...
 
 Suite:
-[Execution Time: 2.3ms]
+[Execution Time: 57.9us]
 	Standard Top Level Checks:                 2;  Failures:  2  [Deep checks: 2]
 
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 251
 	Always fails
+
 	[bool]
 	check failed
 
 	=======================================
 
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 253
 	Flipper
+
 	[bool]
 	check failed
 
@@ -42,20 +48,22 @@ Suite:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 6.48ms]
-[Execution Time: 2.3ms]
+[Total Run Time: 226us]
+[Execution Time: 57.9us]
 	Standard Top Level Checks:                 2;  Failures:  2  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
-	False Negative Checks:                     0;  Failures:  0
-	False Negative Performance Checks:         0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
 
-Instability detected in file "TestRunnerTest.cpp"
+Instability detected in file "Free_Test.cpp"
 Outcome frequencies:
 [50%,50%]
 
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 251
 	Always fails
+
 	[bool]
 	check failed
 
@@ -63,13 +71,17 @@ Outcome frequencies:
 
 vs.
 
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 251
 	Always fails
+
 	[bool]
 	check failed
 
 	=======================================
 
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 253
 	Flipper
+
 	[bool]
 	check failed
 

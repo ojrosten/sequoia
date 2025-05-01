@@ -74,7 +74,7 @@ namespace sequoia::testing
 
   void concepts_test::test_is_range()
   {
-    check(report_line(""), []() {
+    check("", []() {
         static_assert(faithful_range<std::vector<double>>);
         static_assert(!faithful_range<double>);
         return true;
@@ -84,7 +84,7 @@ namespace sequoia::testing
 
   void concepts_test::test_is_allocator()
   {
-    check(report_line(""), []() {
+    check("", []() {
         static_assert(!alloc<int>);
         static_assert(alloc<std::allocator<int>>);
         return true;
@@ -95,7 +95,7 @@ namespace sequoia::testing
   void concepts_test::test_is_serializable()
   {
 
-    check(report_line(""), []() {
+    check("", []() {
         static_assert(serializable_to<int, std::stringstream>);
         static_assert(serializable_to<serializable_thing, std::stringstream>);
         static_assert(!serializable_to<non_serializable, std::stringstream>);
@@ -106,7 +106,7 @@ namespace sequoia::testing
 
   void concepts_test::test_deep_equality_comparable()
   {
-    check(report_line(""), []() {
+    check("", []() {
         static_assert(deep_equality_comparable<int>);
         static_assert(deep_equality_comparable<std::vector<int>>);
         static_assert(deep_equality_comparable<std::array<int, 3>>);
@@ -137,7 +137,7 @@ namespace sequoia::testing
 
   void concepts_test::test_initializable_from()
   {
-    check(report_line(""), []() {
+    check("", []() {
         static_assert(initializable_from<int, int>);
         static_assert(initializable_from<bar>);
         static_assert(!initializable_from<bar, int>);

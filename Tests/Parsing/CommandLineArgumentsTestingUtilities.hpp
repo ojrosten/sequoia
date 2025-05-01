@@ -12,8 +12,7 @@
 #include "sequoia/Parsing/CommandLineArguments.hpp"
 #include "sequoia/TestFramework/RegularTestCore.hpp"
 
-#include "../Maths/Graph/GraphTestingUtilities.hpp"
-
+#include "Maths/Graph/GraphTestingUtilities.hpp"
 
 
 namespace sequoia::testing
@@ -98,7 +97,6 @@ namespace sequoia::testing
       return static_cast<int>(m_Args.size());
     }
 
-    commandline_arguments(std::initializer_list<std::string_view> args);
     commandline_arguments(std::vector<std::string> args);
 
     [[nodiscard]]

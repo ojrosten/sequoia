@@ -37,6 +37,11 @@ namespace sequoia::maths
   };
 
   template<class G>
+  inline constexpr bool heterogeneous_nodes{
+    requires { typename G::heterogeneous_nodes_type; }
+  };
+
+  template<class G>
   inline constexpr bool static_nodes{!dynamic_nodes<G>};
 
   template<class G>
@@ -44,6 +49,9 @@ namespace sequoia::maths
 
   template<class G>
   concept static_network = network<G> && static_nodes<G>;
+
+  template<class G>
+  concept heterogeneous_network = network<G> && heterogeneous_nodes<G>;
 
   template<class T>
   concept dynamic_tree = dynamic_network<T> && requires {

@@ -14,15 +14,12 @@
     can be thought of as a directed edge with no additional information; as
     such is 'points', via an index, to a target node.
 
-    All concrete edges
-    inherit from this class but may have additional adornments. Depending on
-    the context, edges may have one or more of the following:
+    All concrete edges inherit from this class but may have additional adornments.
+    Depending on the context, edges may have one or more of the following:
 
     1. A non-trivial weight;
 
-    2. A record of the 'source' node, from which the edge points to its target;
-
-    3. An index recording the location on the target node into which the edge is
+    2. An index recording the location on the target node into which the edge is
     embedded.
 */
 
@@ -35,52 +32,8 @@
 
 namespace sequoia
 {
-  namespace object
-  {
-    template<class> struct by_value;
-  }
-
   namespace maths
   {
-    /*! \class edge_base
-        \brief The base class of all edges.
-
-        This class is designed for inheritance and has protected destructor
-        and assignment operators.
-
-        The private data comprises a single member of IndexType which is the
-        'target node' to which the edge points.
-    */
-
-    template<std::integral IndexType>
-    class edge_base
-    {
-    public:
-      using index_type = IndexType;
-
-      constexpr explicit edge_base(const index_type target) noexcept : m_Target{target} {}
-      constexpr edge_base(const edge_base&) noexcept = default;
-      constexpr edge_base(edge_base&&)      noexcept = default;
-
-      [[nodiscard]]
-      constexpr IndexType target_node() const noexcept { return m_Target; }
-
-      constexpr void target_node(const index_type target) noexcept { m_Target = target; }
-
-      [[nodiscard]]
-      friend constexpr bool operator==(const edge_base& lhs, const edge_base& rhs) noexcept
-      {
-        return (lhs.target_node() == rhs.target_node());
-      }
-    protected:
-      ~edge_base() = default;
-
-      constexpr edge_base& operator=(const edge_base&) noexcept = default;
-      constexpr edge_base& operator=(edge_base&&)      noexcept = default;
-    private:
-      IndexType m_Target;
-    };
-
     /*! \class weighting
         \brief A class to store non-trivial edge weights.
 
@@ -97,26 +50,31 @@ namespace sequoia
     class weighting
     {
     public:
-      using weight_proxy_type = typename WeightHandler::value_type;
-      using weight_type       = typename weight_proxy_type::value_type;
+      using weight_handler_type = WeightHandler;
+      using weight_type         = typename WeightHandler::value_type;
 
-      template<class... Args>
-        requires (sizeof...(Args) > 0)
-      constexpr void weight(Args&&... args)
+      [[nodiscard]]
+      constexpr const weight_type& weight() const noexcept { return WeightHandler::get(m_Weight); }
+
+      [[nodiscard]]
+      constexpr weight_type& weight() noexcept { return WeightHandler::get(m_Weight); }
+
+      constexpr void weight(weight_type w)
       {
-        WeightHandler::get(m_Weight).set(std::forward<Args>(args)...);
+        WeightHandler::get(m_Weight) = std::move(w);
       }
 
-      [[nodiscard]]
-      constexpr const weight_type& weight() const noexcept { return WeightHandler::get(m_Weight).get(); }
-
-      [[nodiscard]]
-      constexpr const weight_proxy_type& weight_proxy() const noexcept { return WeightHandler::get(m_Weight); }
+      template<class... Args>
+        requires ((sizeof...(Args) > 0) && is_initializable_v<weight_type, Args...>)
+      constexpr void weight(Args&&... args)
+      {
+        WeightHandler::get(m_Weight) = weight_type{std::forward<Args>(args)...};
+      }
 
       template<std::invocable<weight_type&> Fn>
       constexpr std::invoke_result_t<Fn, weight_type&> mutate_weight(Fn fn)
       {
-        return WeightHandler::get(m_Weight).mutate(fn);
+        return fn(WeightHandler::get(m_Weight));
       }
 
       [[nodiscard]]
@@ -162,17 +120,17 @@ namespace sequoia
      */
 
     template<class WeightHandler, std::integral IndexType>
-      requires (object::handler<WeightHandler> && std::is_empty_v<typename WeightHandler::value_type::value_type>)
+      requires (object::handler<WeightHandler> && std::is_empty_v<typename WeightHandler::value_type>)
     class weighting<WeightHandler, IndexType>
     {
     public:
-      using weight_proxy_type = typename WeightHandler::value_type;
-      using weight_type       = typename weight_proxy_type::value_type;
+      using weight_handler_type = WeightHandler;
+      using weight_type         = typename WeightHandler::value_type;
 
       [[nodiscard]]
       friend constexpr bool operator==(const weighting&, const weighting&) noexcept = default;
     protected:
-      constexpr weighting() = default;
+      constexpr weighting() noexcept = default;
       ~weighting() = default;
 
       constexpr weighting(const weighting&)                  noexcept = default;
@@ -191,25 +149,31 @@ namespace sequoia
 
     template<class WeightHandler, std::integral IndexType>
       requires object::handler<WeightHandler>
-    class partial_edge_base : public edge_base<IndexType>, public weighting<WeightHandler, IndexType>
+    class partial_edge_base : public weighting<WeightHandler, IndexType>
     {
     public:
-      using index_type = IndexType;
+      using index_type  = IndexType;
+      using weight_type = typename weighting<WeightHandler, IndexType>::weight_type;
 
       template<class... Args>
         requires (!resolve_to_copy_v<partial_edge_base, Args...>)
       constexpr explicit(sizeof...(Args) == 0) partial_edge_base(const index_type target, Args&&... args)
-        : edge_base<IndexType>{target}
-        , weighting<WeightHandler, IndexType>{std::forward<Args>(args)...}
+        : weighting<WeightHandler, IndexType>{std::forward<Args>(args)...}
+        , m_Target{target}
       {}
 
       constexpr partial_edge_base(const index_type target, const partial_edge_base& other)
-        : edge_base<IndexType>{target}
-        , weighting<WeightHandler, IndexType>{other}
+        : weighting<WeightHandler, IndexType>{other}
+        , m_Target{target}
       {}
 
       constexpr partial_edge_base(const partial_edge_base&)     = default;
       constexpr partial_edge_base(partial_edge_base&&) noexcept = default;
+
+      [[nodiscard]]
+      constexpr IndexType target_node() const noexcept { return m_Target; }
+
+      constexpr void target_node(const index_type target) noexcept { m_Target = target; }
 
       [[nodiscard]]
       friend constexpr bool operator==(const partial_edge_base&, const partial_edge_base&) noexcept = default;
@@ -218,11 +182,113 @@ namespace sequoia
 
       constexpr partial_edge_base& operator=(const partial_edge_base&)     = default;
       constexpr partial_edge_base& operator=(partial_edge_base&&) noexcept = default;
+    private:
+      IndexType m_Target;
     };
+
+    //===================================Decorated Partial Edge Base===================================//
+
+    template<class WeightHandler, class MetaData, std::integral IndexType>
+      requires object::handler<WeightHandler>
+    class decorated_partial_edge_base : public partial_edge_base<WeightHandler, IndexType>
+    {
+    public:
+      using partial_edge_base<WeightHandler, IndexType>::partial_edge_base;
+
+      template<class OtherHandler>
+        requires (object::handler<OtherHandler> && !std::is_same_v<WeightHandler, OtherHandler> && std::is_same_v<typename OtherHandler::value_type, typename WeightHandler::value_type>)
+      constexpr decorated_partial_edge_base(const decorated_partial_edge_base<OtherHandler, MetaData, IndexType>& other)
+        : partial_edge_base<WeightHandler, IndexType>{other.target_node(), other.weight()}
+      {}
+
+      constexpr decorated_partial_edge_base(const decorated_partial_edge_base&)            = default;
+      constexpr decorated_partial_edge_base& operator=(const decorated_partial_edge_base&) = default;
+
+    protected:
+      ~decorated_partial_edge_base() = default;
+
+      constexpr decorated_partial_edge_base(decorated_partial_edge_base&&) noexcept = default;
+      constexpr decorated_partial_edge_base& operator=(decorated_partial_edge_base&&) noexcept = default;
+    };
+
+    template<class WeightHandler, class MetaData, std::integral IndexType>
+      requires object::handler<WeightHandler> && (!std::is_empty_v<MetaData>)
+    class decorated_partial_edge_base<WeightHandler, MetaData, IndexType> : public partial_edge_base<WeightHandler, IndexType>
+    {
+    public:
+      using index_type     = IndexType;
+      using meta_data_type = MetaData;
+      using weight_type    = typename partial_edge_base<WeightHandler, IndexType>::weight_type;
+
+      constexpr explicit decorated_partial_edge_base(const index_type target)
+        requires is_initializable_v<MetaData> && is_initializable_v<weight_type>
+        : partial_edge_base<WeightHandler, IndexType>{target}
+        , m_MetaData{}
+      {}
+
+      constexpr decorated_partial_edge_base(const index_type target, meta_data_type m)
+        requires (std::is_empty_v<weight_type> && !std::is_empty_v<meta_data_type>)
+        : partial_edge_base<WeightHandler, IndexType>{target}
+        , m_MetaData{std::move(m)}
+      {}
+
+      constexpr decorated_partial_edge_base(const index_type target, meta_data_type m, weight_type w)
+        requires (!std::is_empty_v<weight_type> && !std::is_empty_v<meta_data_type>)
+        : partial_edge_base<WeightHandler, IndexType>{target, std::move(w)}
+        , m_MetaData{std::move(m)}
+      {}
+
+      constexpr decorated_partial_edge_base(const index_type target, meta_data_type m, const decorated_partial_edge_base& other)
+        : partial_edge_base<WeightHandler, IndexType>{target, other}
+        , m_MetaData{std::move(m)}
+      {}
+
+
+      template<class OtherHandler>
+        requires (object::handler<OtherHandler> && !std::is_same_v<WeightHandler, OtherHandler>  && std::is_same_v<typename OtherHandler::value_type, typename WeightHandler::value_type>)
+      constexpr decorated_partial_edge_base(const decorated_partial_edge_base<OtherHandler, MetaData, IndexType>& other)
+        : partial_edge_base<WeightHandler, IndexType>{other.target_node(), other.weight()}
+        , m_MetaData{other.meta_data()}
+      {}
+
+      constexpr decorated_partial_edge_base(const decorated_partial_edge_base&)            = default;
+      constexpr decorated_partial_edge_base& operator=(const decorated_partial_edge_base&) = default;
+
+
+      [[nodiscard]]
+      constexpr const MetaData& meta_data() const noexcept { return m_MetaData; }
+
+      constexpr void meta_data(MetaData m) { m_MetaData = std::move(m); }
+
+      template<class... Args>
+        requires ((sizeof...(Args) > 0) && is_initializable_v<meta_data_type, Args...>)
+      constexpr void meta_data(Args&&... args)
+      {
+        m_MetaData = {std::forward<Args>(args)...};
+      }
+
+      template<std::invocable<meta_data_type&> Fn>
+      constexpr std::invoke_result_t<Fn, meta_data_type&> mutate_meta_data(Fn fn)
+      {
+        return fn(m_MetaData);
+      }
+
+      [[nodiscard]]
+      friend constexpr bool operator==(const decorated_partial_edge_base&, const decorated_partial_edge_base&) noexcept = default;
+    protected:
+      ~decorated_partial_edge_base() = default;
+
+      constexpr decorated_partial_edge_base(decorated_partial_edge_base&&) noexcept            = default;
+      constexpr decorated_partial_edge_base& operator=(decorated_partial_edge_base&&) noexcept = default;
+    private:
+      MetaData m_MetaData;
+    };
+
+    struct null_meta_data {};
 
     //===================================Helper Enum===================================//
 
-    enum class edge_flavour{ partial, partial_embedded, full, full_embedded};
+    enum class edge_flavour : bool { partial, partial_embedded };
 
     //===================================Partial Edge===================================//
 
@@ -231,58 +297,21 @@ namespace sequoia
 
      */
 
-    template<class WeightHandler, std::integral IndexType=std::size_t>
+    template<class WeightHandler, class MetaData, std::integral IndexType=std::size_t>
       requires object::handler<WeightHandler>
-    class partial_edge : public partial_edge_base<WeightHandler, IndexType>
+    class partial_edge : public decorated_partial_edge_base<WeightHandler, MetaData, IndexType>
     {
     public:
       constexpr static edge_flavour flavour{edge_flavour::partial};
-      using partial_edge_base<WeightHandler, IndexType>::partial_edge_base;
-    };
 
-    //===================================Decorated Partial Edge Base===================================//
+      using weight_type    = typename decorated_partial_edge_base<WeightHandler, MetaData, IndexType>::weight_type;
+      using meta_data_type = MetaData;
+      using index_type     = IndexType;
 
-    /*! \class decorated_edge_base
-        \brief A new base class which aggregates a partial_edge_base and an auxiliary index.
-
-     */
-
-    template<class WeightHandler, std::integral IndexType=std::size_t>
-      requires object::handler<WeightHandler>
-    class decorated_edge_base : public partial_edge_base<WeightHandler, IndexType>
-    {
-    public:
-      using weight_type = typename partial_edge_base<WeightHandler, IndexType>::weight_type;
-      using index_type  = typename partial_edge_base<WeightHandler, IndexType>::index_type;
-
-      template<class... Args>
-        requires (!resolve_to_copy_v<decorated_edge_base, Args...>)
-      constexpr decorated_edge_base(const index_type target, const index_type auxIndex, Args&&... args)
-        : partial_edge_base<WeightHandler, IndexType>{target, std::forward<Args>(args)...}
-        , m_AuxiliaryIndex{auxIndex}
-      {}
-
-      constexpr decorated_edge_base(const index_type target, const index_type auxIndex, const decorated_edge_base& other)
-        : partial_edge_base<WeightHandler, IndexType>{target, other}
-        , m_AuxiliaryIndex{auxIndex}
-      {}
-
-      constexpr decorated_edge_base(const decorated_edge_base&)            = default;
-      constexpr decorated_edge_base(decorated_edge_base&&)                 = default;
-      constexpr decorated_edge_base& operator=(const decorated_edge_base&) = default;
-      constexpr decorated_edge_base& operator=(decorated_edge_base&&)      = default;
+      using decorated_partial_edge_base<WeightHandler, MetaData, IndexType>::decorated_partial_edge_base;
 
       [[nodiscard]]
-      friend constexpr bool operator==(const decorated_edge_base&, const decorated_edge_base&) noexcept = default;
-    protected:
-      ~decorated_edge_base() = default;
-
-      [[nodiscard]]
-      constexpr index_type auxiliary_index() const noexcept { return m_AuxiliaryIndex; }
-
-      constexpr void auxiliary_index(const index_type auxIndex) noexcept { m_AuxiliaryIndex = auxIndex; }
-    private:
-      IndexType m_AuxiliaryIndex;
+      friend constexpr bool operator==(const partial_edge&, const partial_edge&) noexcept = default;
     };
 
     //===================================Embedded Partial Edge===================================//
@@ -293,151 +322,56 @@ namespace sequoia
 
      */
 
-    template<class WeightHandler, std::integral IndexType=std::size_t>
+    template<class WeightHandler, class MetaData, std::integral IndexType=std::size_t>
       requires object::handler<WeightHandler>
-    class embedded_partial_edge : public decorated_edge_base<WeightHandler, IndexType>
+    class embedded_partial_edge : public decorated_partial_edge_base<WeightHandler, MetaData, IndexType>
     {
     public:
       constexpr static edge_flavour flavour{edge_flavour::partial_embedded};
-      using weight_type = typename decorated_edge_base<WeightHandler, IndexType>::weight_type;
-      using index_type  = typename decorated_edge_base<WeightHandler, IndexType>::index_type;
 
-      using decorated_edge_base<WeightHandler, IndexType>::decorated_edge_base;
-
-      [[nodiscard]]
-      constexpr index_type complementary_index() const noexcept { return this->auxiliary_index(); }
-      constexpr void complementary_index(const index_type index) noexcept { return this->auxiliary_index(index); }
-    };
-
-    //===================================Full Edge===================================//
-
-    template<bool Inverted> struct inversion_constant : public std::bool_constant<Inverted> {};
-
-    template<bool Inverted> constexpr bool inversion_v{inversion_constant<Inverted>::value};
-
-    /*! \class edge
-        \brief Stores the source node as well as the target node and an optional weight.
-
-     */
-
-    template<class WeightHandler, std::integral IndexType=std::size_t>
-      requires object::handler<WeightHandler>
-    class edge : public decorated_edge_base<WeightHandler, IndexType>
-    {
-    public:
-      constexpr static edge_flavour flavour{edge_flavour::full};
-      using weight_type = typename decorated_edge_base<WeightHandler, IndexType>::weight_type;
-      using index_type  = typename decorated_edge_base<WeightHandler, IndexType>::index_type;
+      using weight_type    = typename decorated_partial_edge_base<WeightHandler, MetaData, IndexType>::weight_type;
+      using meta_data_type = MetaData;
+      using index_type     = IndexType;
 
       template<class... Args>
-      constexpr edge(const index_type source, const index_type target, Args&&... args)
-        : decorated_edge_base<WeightHandler, IndexType>{target, source, std::forward<Args>(args)...}
-      {
-        if(source == npos) throw std::runtime_error("Cannot initialize full edge using max value of index");
-      }
+        requires (!resolve_to_copy_v<embedded_partial_edge, Args...>)
+      constexpr embedded_partial_edge(const index_type target, const index_type complimentaryIndex, Args&&... args)
+        : decorated_partial_edge_base<WeightHandler, MetaData, IndexType>{target, std::forward<Args>(args)...}
+        , m_ComplementaryIndex{complimentaryIndex}
+      {}
 
-      template<bool Inverted, class... Args>
-      constexpr edge(const index_type node, const inversion_constant<Inverted> inverted, Args&&... args)
-        : decorated_edge_base<WeightHandler, IndexType>{node, inverted.value ? npos : node, std::forward<Args>(args)...}
-      {
-        if(node == npos) throw std::runtime_error("Cannot initialize full edge using max value of index");
-      }
+      constexpr embedded_partial_edge(const index_type target, const index_type complimentaryIndex, const embedded_partial_edge& other)
+        requires std::is_empty_v<meta_data_type>
+        : decorated_partial_edge_base<WeightHandler, MetaData, IndexType>{target, other}
+        , m_ComplementaryIndex{complimentaryIndex}
+      {}
 
-      constexpr edge(const edge&)            = default;
-      constexpr edge(edge&&)                 = default;
-      constexpr edge& operator=(const edge&) = default;
-      constexpr edge& operator=(edge&&)      = default;
+      constexpr embedded_partial_edge(const index_type target, const index_type complimentaryIndex, meta_data_type m, const embedded_partial_edge& other)
+        : decorated_partial_edge_base<WeightHandler, MetaData, IndexType>{target, std::move(m), other}
+        , m_ComplementaryIndex{complimentaryIndex}
+      {}
+
+      template<class OtherHandler>
+        requires (object::handler<OtherHandler> && !std::is_same_v<WeightHandler, OtherHandler> && std::is_same_v<typename OtherHandler::value_type, typename WeightHandler::value_type>)
+      constexpr embedded_partial_edge(const embedded_partial_edge<OtherHandler, MetaData, IndexType>& other)
+        : decorated_partial_edge_base<WeightHandler, MetaData, IndexType>{static_cast<const decorated_partial_edge_base<OtherHandler, MetaData, IndexType>&>(other)}
+        , m_ComplementaryIndex{other.complementary_index()}
+      {}
+
+      constexpr embedded_partial_edge(const embedded_partial_edge&)     = default;
+      constexpr embedded_partial_edge(embedded_partial_edge&&) noexcept = default;
+
+      constexpr embedded_partial_edge& operator=(const embedded_partial_edge&)     = default;
+      constexpr embedded_partial_edge& operator=(embedded_partial_edge&&) noexcept = default;
 
       [[nodiscard]]
-      constexpr index_type source_node() const noexcept
-      {
-        return this->auxiliary_index() < npos ? this->auxiliary_index() : this->target_node();
-      }
-
-      constexpr void source_node(const index_type source) noexcept
-      {
-        if(!inverted()) this->auxiliary_index(source);
-        else            this->target_node(source);
-      }
+      constexpr index_type complementary_index() const noexcept { return m_ComplementaryIndex; }
+      constexpr void complementary_index(const index_type index) noexcept { m_ComplementaryIndex = index; }
 
       [[nodiscard]]
-      constexpr bool inverted() const noexcept { return this->auxiliary_index() == npos; }
+      friend constexpr bool operator==(const embedded_partial_edge&, const embedded_partial_edge&) noexcept = default;
     private:
-      constexpr static auto npos = std::numeric_limits<IndexType>::max();
-    };
-
-    //===================================Full Embedded Edge===================================//
-
-    /*! \class embedded_edge
-        \brief Decoration of edge to record the location on the target node into
-               which the edge is embedded.
-
-     */
-
-    template<class WeightHandler, std::integral IndexType=std::size_t>
-      requires object::handler<WeightHandler>
-    class embedded_edge : public decorated_edge_base<WeightHandler, IndexType>
-    {
-    public:
-      constexpr static edge_flavour flavour{edge_flavour::full_embedded};
-      using weight_type = typename decorated_edge_base<WeightHandler, IndexType>::weight_type;
-      using index_type  = typename decorated_edge_base<WeightHandler, IndexType>::index_type;
-
-      template<class... Args>
-      constexpr embedded_edge(const index_type source, const index_type target, const index_type auxIndex, Args&&... args)
-        : decorated_edge_base<WeightHandler, IndexType>{target, auxIndex, std::forward<Args>(args)...}
-        , m_HostIndex{source}
-      {
-        if(source == npos) throw std::runtime_error("Cannot initialize full edge using max value of index");
-      }
-
-      template<bool Inverted, class... Args>
-      constexpr embedded_edge(const index_type node, const inversion_constant<Inverted> inverted, const index_type auxIndex, Args&&... args)
-        : decorated_edge_base<WeightHandler, IndexType>{node, auxIndex, std::forward<Args>(args)...}
-        , m_HostIndex{inverted.value ? npos : node}
-      {
-        if(node == npos) throw std::runtime_error("Cannot initialize full edge using max value of index");
-      }
-
-      constexpr embedded_edge(const index_type auxIndex, const embedded_edge& in)
-        : decorated_edge_base<WeightHandler, IndexType>{in.target_node(), auxIndex, in}
-        , m_HostIndex{in.m_HostIndex}
-      {
-      }
-
-      constexpr embedded_edge(const embedded_edge&)            = default;
-      constexpr embedded_edge(embedded_edge&&)                 = default;
-      constexpr embedded_edge& operator=(const embedded_edge&) = default;
-      constexpr embedded_edge& operator=(embedded_edge&&)      = default;
-
-      [[nodiscard]]
-      constexpr index_type complementary_index() const noexcept { return this->auxiliary_index(); }
-      constexpr void complementary_index(const index_type auxIndex) noexcept { return this->auxiliary_index(auxIndex); }
-
-      [[nodiscard]]
-      constexpr index_type source_node() const noexcept { return !inverted() ? m_HostIndex : this->target_node(); }
-
-      constexpr void source_node(const index_type source) noexcept
-      {
-        if(!inverted()) m_HostIndex = source;
-        else            this->target_node(source);
-      }
-
-      [[nodiscard]]
-      constexpr bool inverted() const noexcept { return m_HostIndex == npos; }
-
-      [[nodiscard]]
-      friend constexpr bool operator==(const embedded_edge& lhs, const embedded_edge& rhs) noexcept
-      {
-        return (lhs.source_node() == rhs.source_node())
-          && (lhs.inverted() == rhs.inverted())
-          && (static_cast<const decorated_edge_base<WeightHandler, IndexType>&>(lhs) ==
-              static_cast<const decorated_edge_base<WeightHandler, IndexType>&>(rhs));
-      }
-    private:
-      constexpr static auto npos = std::numeric_limits<IndexType>::max();
-
-      IndexType m_HostIndex;
+      IndexType m_ComplementaryIndex;
     };
   }
 }

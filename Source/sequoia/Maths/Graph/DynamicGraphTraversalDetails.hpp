@@ -19,19 +19,9 @@
 
 namespace sequoia::maths::graph_impl
 {
-  template<dynamic_network G> struct traversal_tracking_traits<G>
-  {
-    using bitset = std::vector<bool>;
-
-    [[nodiscard]]
-    static bitset make_bitset(const G& g)
-    {
-      return bitset(g.order(), false);
-    }
-  };
-
-  // TO DO: refine this
-  template<dynamic_tree G> struct traversal_tracking_traits<G>
+  template<class G>
+    requires dynamic_network<G> || dynamic_tree<G>
+  struct traversal_tracking_traits<G>
   {
     using bitset = std::vector<bool>;
 

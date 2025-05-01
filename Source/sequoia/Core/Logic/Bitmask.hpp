@@ -13,27 +13,42 @@
 
 #include <type_traits>
 
-namespace sequoia
+#ifdef EXPOSE_SEQUOIA_BITMASK
+#define NAMESPACE_SEQUOIA_AS_BITMASK inline namespace sequoia_bitmask
+#else
+#define NAMESPACE_SEQUOIA_AS_BITMASK namespace sequoia
+#endif
+
+NAMESPACE_SEQUOIA_AS_BITMASK
 {
 
-  /*! Specialize this class template, and inherit from `std::true_type`, to cause `enum`
-      to be automatically useable as bit masks. This must be done in the `sequoia` namespace.
+  /*! Specialize this class template, and inherit from `std::true_type`, to cause an `enum`
+      to be automatically useable as a bit mask. If `EXPOSE_SEQUOIA_BITMASK` is not defined,
+      this must be done in the `sequoia` namespace. If `EXPOSE_SEQUOIA_BITMASK` is defined,
+      then `as_bitmask` lives in the namespace `sequoia_bitmask`, which is inlined. This
+      effectively makes `as_bitmask` available in the global namespace, but referable by
+      something which can be clearly traced back to `sequoia`. The purpose of this is to
+      allow clients of `sequoia`, by appropriately specializing `as_bitmask`, to
+      automatically expose the bitwise operators defined below in their project's namespaces.
+
       For example:
 
       <pre>
-      namespace sequoia
+      namespace foo
       {
-        namespace foo
-        {
-          enum class bar { none=0, a=1, b=2, c=4}
-        }
+        enum class bar { none=0, a=1, b=2, c=4}
+      }
 
+      NAMESPACE_SEQUOIA_AS_BITMASK
+      {
         template<>
         struct as_bitmask<foo::bar> : std::true_type {};
       }
       </pre>
 
       Clients must ensure themselves that any enums for which this is done actually have a bitmask structure.
+
+      
    */
   template<class T>
     requires std::is_enum_v<T>

@@ -88,7 +88,7 @@ $(function() {
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="keyword">namespace </span>sequoia::testing</div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>{</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno"><a class="line" href="../../d8/de6/classsequoia_1_1testing_1_1test__heterogeneous__static__graph.html">   16</a></span>  <span class="keyword">class </span><a class="code hl_class" href="../../d8/de6/classsequoia_1_1testing_1_1test__heterogeneous__static__graph.html">test_heterogeneous_static_graph</a> final : <span class="keyword">public</span> <a class="code hl_class" href="../../df/d76/classsequoia_1_1testing_1_1graph__init__basic__test.html">graph_init_test</a></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno"><a class="line" href="../../d8/de6/classsequoia_1_1testing_1_1test__heterogeneous__static__graph.html">   16</a></span>  <span class="keyword">class </span><a class="code hl_class" href="../../d8/de6/classsequoia_1_1testing_1_1test__heterogeneous__static__graph.html">test_heterogeneous_static_graph</a> final : <span class="keyword">public</span> <a class="code hl_class" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">graph_init_test</a></div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>  {</div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>  <span class="keyword">public</span>:</div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    <span class="keyword">using </span>graph_init_test::graph_init_test;</div>
@@ -102,21 +102,19 @@ $(function() {
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    <span class="keyword">constexpr</span> <span class="keyword">static</span> <span class="keyword">auto</span> make_undirected_graph();</div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    <span class="keyword">constexpr</span> <span class="keyword">static</span> <span class="keyword">auto</span> make_directed_graph();</div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    <span class="keyword">constexpr</span> <span class="keyword">static</span> <span class="keyword">auto</span> make_undirected_embedded_graph();</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    <span class="keyword">constexpr</span> <span class="keyword">static</span> <span class="keyword">auto</span> make_directed_embedded_graph();</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    <span class="keywordtype">void</span> test_generic_undirected();</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    <span class="keywordtype">void</span> test_generic_embedded_undirected();</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    <span class="keywordtype">void</span> test_generic_directed();</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    <span class="keywordtype">void</span> test_generic_embedded_directed();</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    <span class="keyword">struct </span>function_object</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    {</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>      <span class="keyword">constexpr</span> <span class="keywordtype">int</span> operator()(<span class="keywordtype">int</span> i) <span class="keyword">const</span> <span class="keyword">noexcept</span> { <span class="keywordflow">return</span> i*=2;}</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    };</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>  };</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>}</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    <span class="keywordtype">void</span> test_generic_undirected();</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    <span class="keywordtype">void</span> test_generic_embedded_undirected();</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    <span class="keywordtype">void</span> test_generic_directed();</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    <span class="keyword">struct </span>function_object</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    {</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>      <span class="keyword">constexpr</span> <span class="keywordtype">int</span> operator()(<span class="keywordtype">int</span> i) <span class="keyword">const</span> <span class="keyword">noexcept</span> { <span class="keywordflow">return</span> i*=2;}</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    };</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>  };</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>}</div>
 <div class="ttc" id="aGraphInitializationTestingUtilities_8hpp_html"><div class="ttname"><a href="../../db/d57/GraphInitializationTestingUtilities_8hpp.html">GraphInitializationTestingUtilities.hpp</a></div></div>
-<div class="ttc" id="aclasssequoia_1_1testing_1_1graph__init__basic__test_html"><div class="ttname"><a href="../../df/d76/classsequoia_1_1testing_1_1graph__init__basic__test.html">sequoia::testing::graph_init_basic_test</a></div><div class="ttdef"><b>Definition:</b> GraphInitializationTestingUtilities.hpp:63</div></div>
+<div class="ttc" id="aclasssequoia_1_1testing_1_1basic__test_html"><div class="ttname"><a href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">sequoia::testing::basic_test</a></div><div class="ttdoc">class template from which all concrete tests should derive.</div><div class="ttdef"><b>Definition:</b> FreeTestCore.hpp:144</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1test__heterogeneous__static__graph_html"><div class="ttname"><a href="../../d8/de6/classsequoia_1_1testing_1_1test__heterogeneous__static__graph.html">sequoia::testing::test_heterogeneous_static_graph</a></div><div class="ttdef"><b>Definition:</b> HeterogeneousStaticGraphTest.hpp:17</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->

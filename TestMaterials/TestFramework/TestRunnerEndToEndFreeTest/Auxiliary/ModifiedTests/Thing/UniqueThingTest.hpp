@@ -9,8 +9,10 @@
 
 #include "UniqueThingTestingUtilities.hpp"
 
-namespace sequoia::testing
+namespace generatedProject::testing
 {
+	using namespace sequoia::testing;
+
 	class unique_thing_test final : public move_only_test
 	{
 	public:

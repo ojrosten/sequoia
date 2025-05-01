@@ -74,12 +74,12 @@ namespace sequoia::testing
   [[nodiscard]]
   log_summary basic_performance_test<Mode>::summarize(duration delta) const
   {
-    auto summary{base_t::summarize(delta)};
+    auto summary{base_type::summarize(delta)};
 
     if constexpr(Mode != test_mode::standard)
     {
       const auto referenceOutput{
-        [filename{this->diagnostics_output_filename()}]() -> std::string {
+        [filename{this->diagnostics_file_paths().false_positive_or_negative_file_path()}]() -> std::string {
           if(std::filesystem::exists(filename))
           {
             if(auto contents{read_to_string(filename)})
@@ -100,6 +100,6 @@ namespace sequoia::testing
   }
 
   template class basic_performance_test<test_mode::standard>;
-  template class basic_performance_test<test_mode::false_positive>;
   template class basic_performance_test<test_mode::false_negative>;
+  template class basic_performance_test<test_mode::false_positive>;
 }

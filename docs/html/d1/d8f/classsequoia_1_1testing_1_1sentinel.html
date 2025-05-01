@@ -75,6 +75,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="../../d6/d0c/classsequoia_1_1testing_1_1sentinel-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">sequoia::testing::sentinel&lt; Mode &gt; Class Template Reference</div></div>
 </div><!--header-->
@@ -91,9 +92,9 @@ Inheritance diagram for sequoia::testing::sentinel&lt; Mode &gt;:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a519dce9c1a278623b6a652cb7649d255"><td class="memItemLeft" align="right" valign="top"><a id="a519dce9c1a278623b6a652cb7649d255" name="a519dce9c1a278623b6a652cb7649d255"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>sentinel</b> (<a class="el" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger</a>&lt; Mode &gt; &amp;logger, std::string_view message)</td></tr>
-<tr class="separator:a519dce9c1a278623b6a652cb7649d255"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a574d290a787757e3b5a702ef17b06849"><td class="memItemLeft" align="right" valign="top"><a id="a574d290a787757e3b5a702ef17b06849" name="a574d290a787757e3b5a702ef17b06849"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>sentinel</b> (<a class="el" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger</a>&lt; Mode &gt; &amp;logger, std::string message)</td></tr>
+<tr class="separator:a574d290a787757e3b5a702ef17b06849"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae884309b955829b9fbd54ceba7910a57"><td class="memItemLeft" align="right" valign="top"><a id="ae884309b955829b9fbd54ceba7910a57" name="ae884309b955829b9fbd54ceba7910a57"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>sentinel</b> (const <a class="el" href="../../d1/d8f/classsequoia_1_1testing_1_1sentinel.html">sentinel</a> &amp;)=delete</td></tr>
 <tr class="separator:ae884309b955829b9fbd54ceba7910a57"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -141,12 +142,18 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>failure_detected</b> 
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>checks_registered</b> () const noexcept</td></tr>
 <tr class="separator:a94153b6531ec56b923d6a65ade48e1e6 inherit pub_methods_classsequoia_1_1testing_1_1sentinel__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
+Static Public Attributes</h2></td></tr>
+<tr class="memitem:a8b76a152987926196452a86d8463c507"><td class="memItemLeft" align="right" valign="top"><a id="a8b76a152987926196452a86d8463c507" name="a8b76a152987926196452a86d8463c507"></a>
+static constexpr test_mode&#160;</td><td class="memItemRight" valign="bottom"><b>mode</b> {Mode}</td></tr>
+<tr class="separator:a8b76a152987926196452a86d8463c507"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
 <tr class="inherit_header pro_methods_classsequoia_1_1testing_1_1sentinel__base"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classsequoia_1_1testing_1_1sentinel__base')"><img src="../../closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="../../d7/de3/classsequoia_1_1testing_1_1sentinel__base.html">sequoia::testing::sentinel_base</a></td></tr>
-<tr class="memitem:a935d9d2e6237151a8fcf3f3c8384568b inherit pro_methods_classsequoia_1_1testing_1_1sentinel__base"><td class="memItemLeft" align="right" valign="top"><a id="a935d9d2e6237151a8fcf3f3c8384568b" name="a935d9d2e6237151a8fcf3f3c8384568b"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>sentinel_base</b> (<a class="el" href="../../d4/dc4/classsequoia_1_1testing_1_1test__logger__base.html">test_logger_base</a> &amp;logger, std::string_view message)</td></tr>
-<tr class="separator:a935d9d2e6237151a8fcf3f3c8384568b inherit pro_methods_classsequoia_1_1testing_1_1sentinel__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1de8f99e63adb40bfb3a63a9ac8cdabc inherit pro_methods_classsequoia_1_1testing_1_1sentinel__base"><td class="memItemLeft" align="right" valign="top"><a id="a1de8f99e63adb40bfb3a63a9ac8cdabc" name="a1de8f99e63adb40bfb3a63a9ac8cdabc"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>sentinel_base</b> (<a class="el" href="../../d4/dc4/classsequoia_1_1testing_1_1test__logger__base.html">test_logger_base</a> &amp;logger, test_mode mode, std::string message)</td></tr>
+<tr class="separator:a1de8f99e63adb40bfb3a63a9ac8cdabc inherit pro_methods_classsequoia_1_1testing_1_1sentinel__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8143c98167391d3d3064725ffa34951b inherit pro_methods_classsequoia_1_1testing_1_1sentinel__base"><td class="memItemLeft" align="right" valign="top"><a id="a8143c98167391d3d3064725ffa34951b" name="a8143c98167391d3d3064725ffa34951b"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>sentinel_base</b> (<a class="el" href="../../d7/de3/classsequoia_1_1testing_1_1sentinel__base.html">sentinel_base</a> &amp;&amp;) noexcept=default</td></tr>
 <tr class="separator:a8143c98167391d3d3064725ffa34951b inherit pro_methods_classsequoia_1_1testing_1_1sentinel__base"><td class="memSeparator" colspan="2">&#160;</td></tr>

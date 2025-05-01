@@ -80,10 +80,10 @@ $(function() {
 <div class="fragment"><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> I&gt;</div>
 <div class="line"><span class="keyword">concept </span><a class="code hl_concept" href="../../d0/d81/conceptsequoia_1_1utilities_1_1steppable.html">sequoia::utilities::steppable</a> =  <span class="keyword">requires</span>(I i, <span class="keyword">const</span> I j, <span class="keyword">const</span> std::iter_difference_t&lt;I&gt; n) {</div>
 <div class="line">    { i += n } -&gt; std::same_as&lt;I&amp;&gt;;</div>
-<div class="line">    { j + n }  -&gt; std::same_as&lt;I&gt;;</div>
-<div class="line">    { n + j }  -&gt; std::same_as&lt;I&gt;;</div>
+<div class="line">    { j + n }  -&gt; std::convertible_to&lt;I&gt;;</div>
+<div class="line">    { n + j }  -&gt; std::convertible_to&lt;I&gt;;</div>
 <div class="line">    { i -= n } -&gt; std::same_as&lt;I&amp;&gt;;</div>
-<div class="line">    { j - n }  -&gt; std::same_as&lt;I&gt;;</div>
+<div class="line">    { j - n }  -&gt; std::convertible_to&lt;I&gt;;</div>
 <div class="line">  }</div>
 <div class="ttc" id="aconceptsequoia_1_1utilities_1_1steppable_html"><div class="ttname"><a href="../../d0/d81/conceptsequoia_1_1utilities_1_1steppable.html">sequoia::utilities::steppable</a></div><div class="ttdef"><b>Definition:</b> Iterator.hpp:27</div></div>
 </div><!-- fragment --></div><!-- contents -->

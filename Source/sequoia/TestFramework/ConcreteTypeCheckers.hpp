@@ -55,6 +55,7 @@
 
 #include <any>
 #include <array>
+#include <format>
 #include <functional>
 #include <memory>
 #include <optional>
@@ -295,8 +296,7 @@ namespace sequoia::testing
       requires (I < sizeof...(T))
     static void check_tuple_elements(CheckType flavour, test_logger<Mode>& logger, const std::tuple<T...>& value, const std::tuple<U...>& prediction, const tutor<Advisor>& advisor)
     {
-      const std::string message{"Element " + std::to_string(I) + " of tuple incorrect"};
-      check(flavour, message, logger, std::get<I>(value), std::get<I>(prediction), advisor);
+      check(flavour, std::format("Element {} of tuple incorrect", I), logger, std::get<I>(value), std::get<I>(prediction), advisor);
       check_tuple_elements<I+1>(flavour, logger, value, prediction, advisor);
     }
 
@@ -360,8 +360,10 @@ namespace sequoia::testing
       return 1 + sizeof...(Comparers);
     }
 
-    general_file_checker(const std::array<std::string_view, size()>& extensions)
-      : m_Factory{extensions}
+    template<class... Extensions>
+        requires (sizeof...(Extensions) == size()) && (std::is_constructible_v<std::string, Extensions> && ...)
+    general_file_checker(Extensions... extensions)
+      : m_Factory{std::move(extensions)...}
     {}
 
     template<test_mode Mode>

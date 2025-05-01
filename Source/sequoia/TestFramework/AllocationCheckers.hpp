@@ -59,55 +59,55 @@ namespace sequoia::testing
   using mutation_prediction            = alloc_prediction<individual_allocation_event::mutation>;
 
   [[nodiscard]]
-  consteval initialization_prediction operator "" _init(unsigned long long int n) noexcept
+  consteval initialization_prediction operator ""_init(unsigned long long int n) noexcept
   {
     return initialization_prediction{static_cast<int>(n)};
   }
 
   [[nodiscard]]
-  consteval copy_prediction operator "" _c(unsigned long long int n) noexcept
+  consteval copy_prediction operator ""_c(unsigned long long int n) noexcept
   {
     return copy_prediction{ static_cast<int>(n) };
   }
 
   [[nodiscard]]
-  consteval mutation_prediction operator "" _mu(unsigned long long int n) noexcept
+  consteval mutation_prediction operator ""_mu(unsigned long long int n) noexcept
   {
     return mutation_prediction{ static_cast<int>(n) };
   }
 
   [[nodiscard]]
-  consteval para_copy_prediction operator "" _pc(unsigned long long int n) noexcept
+  consteval para_copy_prediction operator ""_pc(unsigned long long int n) noexcept
   {
     return para_copy_prediction{ static_cast<int>(n) };
   }
 
   [[nodiscard]]
-  consteval para_move_prediction operator "" _pm(unsigned long long int n) noexcept
+  consteval para_move_prediction operator ""_pm(unsigned long long int n) noexcept
   {
     return para_move_prediction{ static_cast<int>(n) };
   }
 
   [[nodiscard]]
-  consteval assign_no_prop_prediction operator "" _anp(unsigned long long int n) noexcept
+  consteval assign_no_prop_prediction operator ""_anp(unsigned long long int n) noexcept
   {
     return assign_no_prop_prediction{ static_cast<int>(n) };
   }
 
   [[nodiscard]]
-  consteval assign_prediction operator "" _awp(unsigned long long int n) noexcept
+  consteval assign_prediction operator ""_awp(unsigned long long int n) noexcept
   {
     return assign_prediction{ static_cast<int>(n) };
   }
 
   [[nodiscard]]
-  consteval move_assign_prediction operator "" _ma(unsigned long long int n) noexcept
+  consteval move_assign_prediction operator ""_ma(unsigned long long int n) noexcept
   {
     return move_assign_prediction{static_cast<int>(n)};
   }
 
   [[nodiscard]]
-  consteval move_assign_no_prop_prediction operator "" _manp(unsigned long long int n) noexcept
+  consteval move_assign_no_prop_prediction operator ""_manp(unsigned long long int n) noexcept
   {
     return move_assign_no_prop_prediction{ static_cast<int>(n) };
   }
@@ -137,13 +137,13 @@ namespace sequoia::testing
   using post_mutation_correction = corrections<scoped_prediction_corrections::post_mutation>;
 
   [[nodiscard]]
-  consteval number_of_containers operator "" _containers(unsigned long long int n) noexcept
+  consteval number_of_containers operator ""_containers(unsigned long long int n) noexcept
   {
     return number_of_containers{ static_cast<std::size_t>(n) };
   }
 
   [[nodiscard]]
-  consteval post_mutation_correction operator "" _postmutation(unsigned long long int n) noexcept
+  consteval post_mutation_correction operator ""_postmutation(unsigned long long int n) noexcept
   {
     return post_mutation_correction{static_cast<std::size_t>(n)};
   }

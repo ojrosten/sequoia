@@ -109,24 +109,33 @@ $(function() {
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>  };</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>  <span class="keyword">template</span>&lt;<span class="keyword">class</span> G&gt;</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>  <span class="keyword">inline</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> static_nodes{!dynamic_nodes&lt;G&gt;};</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>  <span class="keyword">template</span>&lt;<span class="keyword">class</span> G&gt;</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno"><a class="line" href="../../d9/d73/conceptsequoia_1_1maths_1_1dynamic__network.html">   43</a></span>  <span class="keyword">concept </span><a class="code hl_concept" href="../../d9/d73/conceptsequoia_1_1maths_1_1dynamic__network.html">dynamic_network</a> = <a class="code hl_concept" href="../../d0/d05/conceptsequoia_1_1maths_1_1network.html">network&lt;G&gt;</a> &amp;&amp; dynamic_nodes&lt;G&gt;;</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>  <span class="keyword">template</span>&lt;<span class="keyword">class</span> G&gt;</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="../../dd/d45/conceptsequoia_1_1maths_1_1static__network.html">   46</a></span>  <span class="keyword">concept </span><a class="code hl_concept" href="../../dd/d45/conceptsequoia_1_1maths_1_1static__network.html">static_network</a> = <a class="code hl_concept" href="../../d0/d05/conceptsequoia_1_1maths_1_1network.html">network&lt;G&gt;</a> &amp;&amp; static_nodes&lt;G&gt;;</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>  <span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt;</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno"><a class="line" href="../../d1/dc8/conceptsequoia_1_1maths_1_1dynamic__tree.html">   49</a></span>  <span class="keyword">concept </span><a class="code hl_concept" href="../../d1/dc8/conceptsequoia_1_1maths_1_1dynamic__tree.html">dynamic_tree</a> = <a class="code hl_concept" href="../../d9/d73/conceptsequoia_1_1maths_1_1dynamic__network.html">dynamic_network&lt;T&gt;</a> &amp;&amp; <span class="keyword">requires</span> {</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    T::link_dir;</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>  };</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>  <span class="keyword">inline</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> heterogeneous_nodes{</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="keyword">requires</span> { <span class="keyword">typename</span> G::heterogeneous_nodes_type; }</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>  };</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>  <span class="keyword">template</span>&lt;<span class="keyword">class</span> G&gt;</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>  <span class="keyword">inline</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> static_nodes{!dynamic_nodes&lt;G&gt;};</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>  <span class="keyword">template</span>&lt;<span class="keyword">class</span> G&gt;</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno"><a class="line" href="../../d9/d73/conceptsequoia_1_1maths_1_1dynamic__network.html">   48</a></span>  <span class="keyword">concept </span><a class="code hl_concept" href="../../d9/d73/conceptsequoia_1_1maths_1_1dynamic__network.html">dynamic_network</a> = <a class="code hl_concept" href="../../d0/d05/conceptsequoia_1_1maths_1_1network.html">network&lt;G&gt;</a> &amp;&amp; dynamic_nodes&lt;G&gt;;</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>  <span class="keyword">template</span>&lt;<span class="keyword">class</span> G&gt;</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno"><a class="line" href="../../dd/d45/conceptsequoia_1_1maths_1_1static__network.html">   51</a></span>  <span class="keyword">concept </span><a class="code hl_concept" href="../../dd/d45/conceptsequoia_1_1maths_1_1static__network.html">static_network</a> = <a class="code hl_concept" href="../../d0/d05/conceptsequoia_1_1maths_1_1network.html">network&lt;G&gt;</a> &amp;&amp; static_nodes&lt;G&gt;;</div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>}</div>
-<div class="ttc" id="aconceptsequoia_1_1maths_1_1dynamic__network_html"><div class="ttname"><a href="../../d9/d73/conceptsequoia_1_1maths_1_1dynamic__network.html">sequoia::maths::dynamic_network</a></div><div class="ttdef"><b>Definition:</b> GraphTraits.hpp:43</div></div>
-<div class="ttc" id="aconceptsequoia_1_1maths_1_1dynamic__tree_html"><div class="ttname"><a href="../../d1/dc8/conceptsequoia_1_1maths_1_1dynamic__tree.html">sequoia::maths::dynamic_tree</a></div><div class="ttdef"><b>Definition:</b> GraphTraits.hpp:49</div></div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>  <span class="keyword">template</span>&lt;<span class="keyword">class</span> G&gt;</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno"><a class="line" href="../../df/dfe/conceptsequoia_1_1maths_1_1heterogeneous__network.html">   54</a></span>  <span class="keyword">concept </span><a class="code hl_concept" href="../../df/dfe/conceptsequoia_1_1maths_1_1heterogeneous__network.html">heterogeneous_network</a> = <a class="code hl_concept" href="../../d0/d05/conceptsequoia_1_1maths_1_1network.html">network&lt;G&gt;</a> &amp;&amp; heterogeneous_nodes&lt;G&gt;;</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>  <span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt;</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno"><a class="line" href="../../d1/dc8/conceptsequoia_1_1maths_1_1dynamic__tree.html">   57</a></span>  <span class="keyword">concept </span><a class="code hl_concept" href="../../d1/dc8/conceptsequoia_1_1maths_1_1dynamic__tree.html">dynamic_tree</a> = <a class="code hl_concept" href="../../d9/d73/conceptsequoia_1_1maths_1_1dynamic__network.html">dynamic_network&lt;T&gt;</a> &amp;&amp; <span class="keyword">requires</span> {</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    T::link_dir;</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>  };</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>}</div>
+<div class="ttc" id="aconceptsequoia_1_1maths_1_1dynamic__network_html"><div class="ttname"><a href="../../d9/d73/conceptsequoia_1_1maths_1_1dynamic__network.html">sequoia::maths::dynamic_network</a></div><div class="ttdef"><b>Definition:</b> GraphTraits.hpp:48</div></div>
+<div class="ttc" id="aconceptsequoia_1_1maths_1_1dynamic__tree_html"><div class="ttname"><a href="../../d1/dc8/conceptsequoia_1_1maths_1_1dynamic__tree.html">sequoia::maths::dynamic_tree</a></div><div class="ttdef"><b>Definition:</b> GraphTraits.hpp:57</div></div>
+<div class="ttc" id="aconceptsequoia_1_1maths_1_1heterogeneous__network_html"><div class="ttname"><a href="../../df/dfe/conceptsequoia_1_1maths_1_1heterogeneous__network.html">sequoia::maths::heterogeneous_network</a></div><div class="ttdef"><b>Definition:</b> GraphTraits.hpp:54</div></div>
 <div class="ttc" id="aconceptsequoia_1_1maths_1_1network_html"><div class="ttname"><a href="../../d0/d05/conceptsequoia_1_1maths_1_1network.html">sequoia::maths::network</a></div><div class="ttdef"><b>Definition:</b> GraphTraits.hpp:18</div></div>
-<div class="ttc" id="aconceptsequoia_1_1maths_1_1static__network_html"><div class="ttname"><a href="../../dd/d45/conceptsequoia_1_1maths_1_1static__network.html">sequoia::maths::static_network</a></div><div class="ttdef"><b>Definition:</b> GraphTraits.hpp:46</div></div>
+<div class="ttc" id="aconceptsequoia_1_1maths_1_1static__network_html"><div class="ttname"><a href="../../dd/d45/conceptsequoia_1_1maths_1_1static__network.html">sequoia::maths::static_network</a></div><div class="ttdef"><b>Definition:</b> GraphTraits.hpp:51</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

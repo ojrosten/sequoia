@@ -129,26 +129,26 @@ template&lt;class T &gt; </td></tr>
 template&lt;class T &gt; </td></tr>
 <tr class="memitem:a6ce6f303a2a290db640c509142100e9d"><td class="memTemplItemLeft" align="right" valign="top">constexpr inner_allocation_predictions&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::shift</b> (const inner_allocation_predictions &amp;predictions)</td></tr>
 <tr class="separator:a6ce6f303a2a290db640c509142100e9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abd57186cb28d1255b334b1a2748a8c44"><td class="memTemplParams" colspan="2"><a id="abd57186cb28d1255b334b1a2748a8c44" name="abd57186cb28d1255b334b1a2748a8c44"></a>
+<tr class="memitem:ad8801784cc252a76b076f29d08dbce31"><td class="memTemplParams" colspan="2"><a id="ad8801784cc252a76b076f29d08dbce31" name="ad8801784cc252a76b076f29d08dbce31"></a>
 template&lt;test_mode Mode, pseudoregular T, std::invocable&lt; T &amp; &gt; Mutator, alloc_getter&lt; T &gt;... Getters&gt; <br />
 requires (!std::totally_ordered&lt;T&gt; &amp;&amp; (sizeof...(Getters) &gt; 0))</td></tr>
-<tr class="memitem:abd57186cb28d1255b334b1a2748a8c44"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_semantics</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;x, const T &amp;y, Mutator yMutator, const allocation_info&lt; T, Getters &gt; &amp;... info)</td></tr>
-<tr class="separator:abd57186cb28d1255b334b1a2748a8c44"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab6834a35a4f9f112b4e53ee905e05ab5"><td class="memTemplParams" colspan="2"><a id="ab6834a35a4f9f112b4e53ee905e05ab5" name="ab6834a35a4f9f112b4e53ee905e05ab5"></a>
+<tr class="memitem:ad8801784cc252a76b076f29d08dbce31"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_semantics</b> (std::string description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;x, const T &amp;y, Mutator yMutator, const allocation_info&lt; T, Getters &gt; &amp;... info)</td></tr>
+<tr class="separator:ad8801784cc252a76b076f29d08dbce31"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a90f23b309ca1b5ae259def25115276a2"><td class="memTemplParams" colspan="2"><a id="a90f23b309ca1b5ae259def25115276a2" name="a90f23b309ca1b5ae259def25115276a2"></a>
 template&lt;test_mode Mode, pseudoregular T, std::invocable&lt; T &amp; &gt; Mutator, alloc_getter&lt; T &gt;... Getters&gt; <br />
 requires (std::totally_ordered&lt;T&gt; &amp;&amp; (sizeof...(Getters) &gt; 0))</td></tr>
-<tr class="memitem:ab6834a35a4f9f112b4e53ee905e05ab5"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_semantics</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;x, const T &amp;y, std::weak_ordering order, Mutator yMutator, const allocation_info&lt; T, Getters &gt; &amp;... info)</td></tr>
-<tr class="separator:ab6834a35a4f9f112b4e53ee905e05ab5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2bdf4485f4395aefa60f8167f0b9d37d"><td class="memTemplParams" colspan="2"><a id="a2bdf4485f4395aefa60f8167f0b9d37d" name="a2bdf4485f4395aefa60f8167f0b9d37d"></a>
+<tr class="memitem:a90f23b309ca1b5ae259def25115276a2"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_semantics</b> (std::string description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;x, const T &amp;y, std::weak_ordering order, Mutator yMutator, const allocation_info&lt; T, Getters &gt; &amp;... info)</td></tr>
+<tr class="separator:a90f23b309ca1b5ae259def25115276a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a88ca3c86a3aa42501d4910ca9095ac4f"><td class="memTemplParams" colspan="2"><a id="a88ca3c86a3aa42501d4910ca9095ac4f" name="a88ca3c86a3aa42501d4910ca9095ac4f"></a>
 template&lt;test_mode Mode, pseudoregular T, invocable_r&lt; T &gt; xMaker, invocable_r&lt; T &gt; yMaker, std::invocable&lt; T &amp; &gt; Mutator, alloc_getter&lt; T &gt;... Getters&gt; <br />
 requires (!std::totally_ordered&lt;T&gt; &amp;&amp; sizeof...(Getters) &gt; 0)</td></tr>
-<tr class="memitem:a2bdf4485f4395aefa60f8167f0b9d37d"><td class="memTemplItemLeft" align="right" valign="top">std::pair&lt; T, T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_semantics</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, xMaker xFn, yMaker yFn, Mutator yMutator, const allocation_info&lt; T, Getters &gt; &amp;... info)</td></tr>
-<tr class="separator:a2bdf4485f4395aefa60f8167f0b9d37d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a417e2b8ff8549af6128e3d3e8d2cc648"><td class="memTemplParams" colspan="2"><a id="a417e2b8ff8549af6128e3d3e8d2cc648" name="a417e2b8ff8549af6128e3d3e8d2cc648"></a>
+<tr class="memitem:a88ca3c86a3aa42501d4910ca9095ac4f"><td class="memTemplItemLeft" align="right" valign="top">std::pair&lt; T, T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_semantics</b> (std::string description, test_logger&lt; Mode &gt; &amp;logger, xMaker xFn, yMaker yFn, Mutator yMutator, const allocation_info&lt; T, Getters &gt; &amp;... info)</td></tr>
+<tr class="separator:a88ca3c86a3aa42501d4910ca9095ac4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa5e2c4c04f7853b0a3a6d6e438fa237e"><td class="memTemplParams" colspan="2"><a id="aa5e2c4c04f7853b0a3a6d6e438fa237e" name="aa5e2c4c04f7853b0a3a6d6e438fa237e"></a>
 template&lt;test_mode Mode, pseudoregular T, invocable_r&lt; T &gt; xMaker, invocable_r&lt; T &gt; yMaker, std::invocable&lt; T &amp; &gt; Mutator, alloc_getter&lt; T &gt;... Getters&gt; <br />
 requires (std::totally_ordered&lt;T&gt; &amp;&amp; sizeof...(Getters) &gt; 0)</td></tr>
-<tr class="memitem:a417e2b8ff8549af6128e3d3e8d2cc648"><td class="memTemplItemLeft" align="right" valign="top">std::pair&lt; T, T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_semantics</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, xMaker xFn, yMaker yFn, std::weak_ordering order, Mutator yMutator, const allocation_info&lt; T, Getters &gt; &amp;... info)</td></tr>
-<tr class="separator:a417e2b8ff8549af6128e3d3e8d2cc648"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa5e2c4c04f7853b0a3a6d6e438fa237e"><td class="memTemplItemLeft" align="right" valign="top">std::pair&lt; T, T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_semantics</b> (std::string description, test_logger&lt; Mode &gt; &amp;logger, xMaker xFn, yMaker yFn, std::weak_ordering order, Mutator yMutator, const allocation_info&lt; T, Getters &gt; &amp;... info)</td></tr>
+<tr class="separator:aa5e2c4c04f7853b0a3a6d6e438fa237e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Utilities for performing allocation checks for regular types, see <a class="el" href="../../d1/db7/RegularCheckers_8hpp.html#regular_semantics_definition">here</a>. </p>

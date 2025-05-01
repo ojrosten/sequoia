@@ -1,0 +1,9 @@
+Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 132
+Another Exception
+
+Expected Exception Type:
+[std::runtime_error]
+Oh Dear
+
+=======================================
+

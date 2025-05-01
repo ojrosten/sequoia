@@ -102,11 +102,11 @@ namespace sequoia::parsing::commandline
     arg_list arguments{};
   };
 
-  using options_tree   = maths::tree<maths::directed_flavour::directed, maths::tree_link_direction::forward, maths::null_weight, option>;
+  using options_tree   = maths::directed_tree<maths::tree_link_direction::forward, maths::null_weight, option>;
   using options_forest = std::vector<options_tree>;
   using option_tree    = maths::const_tree_adaptor<options_tree>;
   
-  using operations_tree     = maths::tree<maths::directed_flavour::directed, maths::tree_link_direction::forward, maths::null_weight, operation>;
+  using operations_tree     = maths::directed_tree<maths::tree_link_direction::forward, maths::null_weight, operation>;
   using operations_sub_tree = maths::tree_adaptor<operations_tree>;
   using operations_forest   = std::vector<operations_tree>;
 

@@ -1,0 +1,216 @@
+Tests/Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphTestingUtilities.hpp, Line 170
+Target index of edge out of range
+
+Expected Exception Type:
+[std::out_of_range]
+connectivity:: [node: 0, edge: 0]: target index 1 out of range - max index is 1
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphTestingUtilities.hpp, Line 171
+Mismatched loop
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::connectivity_base: Odd number of loop edges for node 0
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphTestingUtilities.hpp, Line 174
+Mismatched partial edges
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::connectivity_base [node: 0, edge: 0]: Reciprocated partial edge does not exist
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphTestingUtilities.hpp, Line 175
+Mismatched loop
+
+Expected Exception Type:
+[std::logic_error]
+connectivity::connectivity_base: Odd number of loop edges for node 1
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphTestingUtilities.hpp, Line 192
+cbegin_edges throws for empty graph
+
+Expected Exception Type:
+[std::out_of_range]
+connectivity::cbegin_edges: node index 0 out of range - graph order is 0
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphTestingUtilities.hpp, Line 200
+cend_edges throws for empty graph
+
+Expected Exception Type:
+[std::out_of_range]
+connectivity::cend_edges: node index 0 out of range - graph order is 0
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphTestingUtilities.hpp, Line 208
+crbegin_edges throws for empty graph
+
+Expected Exception Type:
+[std::out_of_range]
+connectivity::crbegin_edges: node index 0 out of range - graph order is 0
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphTestingUtilities.hpp, Line 216
+crend_edges throws for empty graph
+
+Expected Exception Type:
+[std::out_of_range]
+connectivity::crend_edges: node index 0 out of range - graph order is 0
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphTestingUtilities.hpp, Line 224
+cedges throws for empty graph
+
+Expected Exception Type:
+[std::out_of_range]
+connectivity::cedges: node index 0 out of range - graph order is 0
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphTestingUtilities.hpp, Line 232
+swapping nodes throws for empty graph
+
+Expected Exception Type:
+[std::out_of_range]
+connectivity::swap_nodes: at least one node index [0, 0] out of range - graph order is 0
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphTestingUtilities.hpp, Line 240
+swapping edges throws for empty graph
+
+Expected Exception Type:
+[std::out_of_range]
+connectivity::cedges: node index 0 out of range - graph order is 0
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphTestingUtilities.hpp, Line 248
+joining nodes throws for empty graph
+
+Expected Exception Type:
+[std::out_of_range]
+connectivity::join: at least one node index [0, 0] out of range - graph order is 0
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphTestingUtilities.hpp, Line 282
+cbegin_edges throws when index is out of range
+
+Expected Exception Type:
+[std::out_of_range]
+connectivity::cbegin_edges: node index 1 out of range - graph order is 1
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphTestingUtilities.hpp, Line 290
+cend_edges throws when index is out of range
+
+Expected Exception Type:
+[std::out_of_range]
+connectivity::cend_edges: node index 1 out of range - graph order is 1
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphTestingUtilities.hpp, Line 298
+crbegin_edges throws when index is out of range
+
+Expected Exception Type:
+[std::out_of_range]
+connectivity::crbegin_edges: node index 1 out of range - graph order is 1
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphTestingUtilities.hpp, Line 306
+crend_edges throws when index is out of range
+
+Expected Exception Type:
+[std::out_of_range]
+connectivity::crend_edges: node index 1 out of range - graph order is 1
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphTestingUtilities.hpp, Line 314
+cedges throws when index is out of range
+
+Expected Exception Type:
+[std::out_of_range]
+connectivity::cedges: node index 1 out of range - graph order is 1
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphTestingUtilities.hpp, Line 322
+swapping nodes throws if first index out of range
+
+Expected Exception Type:
+[std::out_of_range]
+connectivity::swap_nodes: at least one node index [1, 0] out of range - graph order is 1
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphTestingUtilities.hpp, Line 330
+swapping nodes throws if second index out of range
+
+Expected Exception Type:
+[std::out_of_range]
+connectivity::swap_nodes: at least one node index [0, 1] out of range - graph order is 1
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphTestingUtilities.hpp, Line 338
+joining nodes throws if first index out of range
+
+Expected Exception Type:
+[std::out_of_range]
+connectivity::join: at least one node index [1, 0] out of range - graph order is 1
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphTestingUtilities.hpp, Line 346
+joining nodes throws if second index out of range
+
+Expected Exception Type:
+[std::out_of_range]
+connectivity::join: at least one node index [0, 1] out of range - graph order is 1
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphTestingUtilities.hpp, Line 500
+swapping edges throws for first edge index out of range
+
+Expected Exception Type:
+[std::out_of_range]
+swap_edges: edge index 2 out of range for node 0, which has 2 edge(s)
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphTestingUtilities.hpp, Line 508
+swapping edges throws for second edge index out of range
+
+Expected Exception Type:
+[std::out_of_range]
+swap_edges: edge index 2 out of range for node 0, which has 2 edge(s)
+
+=======================================
+
+Tests/Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphTestingUtilities.hpp, Line 516
+swapping edges throws for node index out of range
+
+Expected Exception Type:
+[std::out_of_range]
+connectivity::cedges: node index 1 out of range - graph order is 1
+
+=======================================
+

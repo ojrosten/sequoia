@@ -22,17 +22,17 @@ namespace sequoia::testing
   {
     const auto auxiliary{auxiliary_materials()}, working{working_materials()}, predictive{predictive_materials()};
 
-    check_exception_thrown<std::runtime_error>(report_line("Empty 'to' path"),   [&]() { soft_update("", working); });
-    check_exception_thrown<std::runtime_error>(report_line("Empty 'from' path"), [&]() { soft_update(auxiliary, ""); });
+    check_exception_thrown<std::runtime_error>("Empty 'to' path",   [&]() { soft_update("", working); });
+    check_exception_thrown<std::runtime_error>("Empty 'from' path", [&]() { soft_update(auxiliary, ""); });
 
     soft_update(auxiliary, working);
-    check(weak_equivalence, report_line("Soft update"), working, predictive);
+    check(weak_equivalence, "Soft update", working, predictive);
 
-    check(equality, report_line("Ensure that a target file equivalent to its replacement is not replaced"),
+    check(equality, "Ensure that a target file equivalent to its replacement is not replaced",
                    read_to_string(working_materials() /= "DirToBeKept/Comments.txt"),
                    read_to_string(predictive_materials() /= "DirToBeKept/Comments.txt"));
 
-    check(report_line("Ensure fidelity of previous check"),
+    check("Ensure fidelity of previous check",
               read_to_string(working_materials() /= "DirToBeKept/Comments.txt")
           !=  read_to_string(auxiliary_materials() /= "DirToBeKept/Comments.txt"));
   }

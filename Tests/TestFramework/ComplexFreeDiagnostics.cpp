@@ -15,21 +15,6 @@
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::filesystem::path complex_false_positive_free_diagnostics::source_file() const
-  {
-    return std::source_location::current().file_name();
-  }
-
-  void complex_false_positive_free_diagnostics::run_tests()
-  {
-    using complex = std::complex<double>;
-
-    check(equality, report_line(""), complex{}, complex{1.0});
-    check(equality, report_line(""), complex{}, complex{1.0, 2.0});
-    check(equality, report_line(""), complex{}, complex{1.0, 2.0}, tutor{[](complex, complex) { return "complex advice, no pun intended"; }});
-  }
-  
-  [[nodiscard]]
   std::filesystem::path complex_false_negative_free_diagnostics::source_file() const
   {
     return std::source_location::current().file_name();
@@ -39,6 +24,21 @@ namespace sequoia::testing
   {
     using complex = std::complex<double>;
 
-    check(equality, report_line(""), complex{1.0}, complex{1.0});
+    check(equality, "", complex{}, complex{1.0});
+    check(equality, "", complex{}, complex{1.0, 2.0});
+    check(equality, "", complex{}, complex{1.0, 2.0}, tutor{[](complex, complex) { return "complex advice, no pun intended"; }});
+  }
+  
+  [[nodiscard]]
+  std::filesystem::path complex_false_positive_free_diagnostics::source_file() const
+  {
+    return std::source_location::current().file_name();
+  }
+
+  void complex_false_positive_free_diagnostics::run_tests()
+  {
+    using complex = std::complex<double>;
+
+    check(equality, "", complex{1.0}, complex{1.0});
   }
 }

@@ -1,0 +1,2 @@
+Undirected Embedded Graph Fundamental Weight Test
+Standard Top Level Checks:               544;  Failures:  0  [Deep checks: 25192]

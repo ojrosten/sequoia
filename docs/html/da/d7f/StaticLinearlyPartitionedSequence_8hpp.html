@@ -74,7 +74,8 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a>  </div>
+<a href="#nested-classes">Classes</a> &#124;
+<a href="#typedef-members">Typedefs</a>  </div>
   <div class="headertitle"><div class="title">StaticLinearlyPartitionedSequence.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
@@ -88,10 +89,15 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/da2/structsequoia_1_1data__structures_1_1static__linearly__partitioned__sequence__traits.html">sequoia::data_structures::static_linearly_partitioned_sequence_traits&lt; T, Npartitions, NelementsPerPartition, IndexType &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d2e/structsequoia_1_1data__structures_1_1static__partitions__maker_3_01maths_1_1static__linear__sequfe8418ea473ea50c30addcff43177c2a.html">sequoia::data_structures::static_partitions_maker&lt; maths::static_linear_sequence&lt; IndexType, NelementsPerPartition, NelementsPerPartition, Npartitions, IndexType &gt; &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d6b/classsequoia_1_1data__structures_1_1static__linearly__partitioned__sequence.html">sequoia::data_structures::static_linearly_partitioned_sequence&lt; T, Npartitions, NelementsPerPartition, IndexType &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:af04124ac36a162c3ed9da652d8230f19"><td class="memTemplParams" colspan="2"><a id="af04124ac36a162c3ed9da652d8230f19" name="af04124ac36a162c3ed9da652d8230f19"></a>
+template&lt;class T , std::size_t Npartitions, std::size_t NelementsPerPartition, std::integral IndexType = std::size_t&gt; </td></tr>
+<tr class="memitem:af04124ac36a162c3ed9da652d8230f19"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::data_structures::static_linearly_partitioned_sequence</b> = static_partitioned_sequence&lt; T, Npartitions, Npartitions *NelementsPerPartition, maths::static_linear_sequence&lt; IndexType, NelementsPerPartition, NelementsPerPartition, Npartitions, IndexType &gt; &gt;</td></tr>
+<tr class="separator:af04124ac36a162c3ed9da652d8230f19"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Classes implementing the concept of a linearly partitioned sequence of data. </p>

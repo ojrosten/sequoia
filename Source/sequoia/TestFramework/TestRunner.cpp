@@ -47,77 +47,55 @@ namespace sequoia::testing
       std::size_t num{8};
     };
 
-    template<class ForwardIt, class UnaryFn>
-    void accelerate(thread_pool_policy p, ForwardIt first, ForwardIt last, UnaryFn f)
+    template<class Weight, class UnaryFn>
+    void accelerate(thread_pool_policy p, std::span<Weight> weights, UnaryFn fn)
     {
-      if(const auto dist{static_cast<std::size_t>(std::ranges::distance(first, last))}; dist > 0)
+      if(const auto num{weights.size()}; num > 1)
       {
-        concurrency::thread_pool<void> pool{std::ranges::min(dist, p.num)};
-        while(first != last)
-        {
-          pool.push([f, &wt{*(first++)}](){ f(wt); });
-        }
+        concurrency::thread_pool<void> pool{std::ranges::min(num, p.num)};
+        auto futures{
+              std::views::transform(weights, [&pool, fn](auto& wt){ return pool.push([&](){ return fn(wt); }); })
+            | std::ranges::to<std::vector>()
+        };
 
-        pool.get();
+        for(auto& f : futures) f.get();
+      }
+      else if(num > 0)
+      {
+        fn(weights.front());
       }
     }
 
-    template<class ExecutionPolicy, class ForwardIt, class UnaryFn>
-    void accelerate(ExecutionPolicy&& policy, ForwardIt first, ForwardIt last, UnaryFn f)
+    template<class ExecutionPolicy, class Weight, class UnaryFn>
+    void accelerate(ExecutionPolicy&& policy, std::span<Weight> weights, UnaryFn f)
     {
       if constexpr(!with_clang_v)
       {
-        std::for_each(std::forward<ExecutionPolicy>(policy), first, last, std::move(f));
+        std::for_each(std::forward<ExecutionPolicy>(policy), weights.begin(), weights.end(), std::move(f));
       }
       else
       {
-        accelerate(thread_pool_policy{.num{8}}, first, last, std::move(f));
+        accelerate(thread_pool_policy{.num{8}}, weights, std::move(f));
       }
-    }
-
-    [[nodiscard]]
-    fs::path test_summary_filename(const fs::path& sourceFile, const project_paths& projPaths)
-    {
-      const auto name{fs::path{sourceFile}.replace_extension(".txt")};
-      if(name.empty())
-        throw std::logic_error("Source files should have a non-trivial name!");
-
-      if(!name.is_absolute())
-      {
-        if(const auto testRepo{projPaths.tests().repo()}; !testRepo.empty())
-        {
-          return projPaths.output().test_summaries() / back(testRepo) / rebase_from(name, testRepo);
-        }
-      }
-      else
-      {
-        auto summaryFile{projPaths.output().test_summaries()};
-        auto iters{std::ranges::mismatch(name, summaryFile)};
-
-        while(iters.in1 != name.end())
-          summaryFile /= *iters.in1++;
-
-        return summaryFile;
-      }
-
-      return name;
     }
 
     struct test_paths
     {
       test_paths(const std::filesystem::path& sourceFile,
+                 const test_summary_path& summaryFile,
                  const std::filesystem::path& workingMaterials,
                  const std::filesystem::path& predictiveMaterials,
                  const project_paths& projPaths)
-        : test_file{rebase_from(sourceFile, projPaths.tests().repo())}
-        , summary{test_summary_filename(sourceFile, projPaths)}
+        : summary{summaryFile}
+        , test_file{rebase_from(sourceFile, projPaths.tests().repo())}
         , workingMaterials{workingMaterials}
         , predictions{predictiveMaterials}
       {}
 
+      test_summary_path summary;
+
       std::filesystem::path
         test_file,
-        summary,
         workingMaterials,
         predictions;
     };
@@ -152,7 +130,7 @@ namespace sequoia::testing
 
     void nascent_test_data::operator()(const parsing::commandline::arg_list& args)
     {
-      nascent_test_factory factory{{"semantic", "allocation", "behavioural"}};
+      nascent_test_factory factory{"semantic", "allocation", "behavioural"};
       auto nascent{factory.make(genus, runner.proj_paths(), runner.copyright(), runner.code_indent(), runner.stream())};
 
       std::visit(
@@ -253,8 +231,9 @@ namespace sequoia::testing
       std::set<test_paths, paths_comparator> m_Updateables{};
       std::set<std::filesystem::path> m_FilesWrittenTo{};
 
-      void to_file(const std::filesystem::path& filename, const log_summary& summary)
+      void to_file(const test_summary_path& summaryFile, const log_summary& summary)
       {
+        const auto& filename{summaryFile.file_path()};
         if(filename.empty()) return;
 
         auto mode{std::ios_base::out};
@@ -374,23 +353,10 @@ namespace sequoia::testing
                            char** argv,
                            std::string copyright,
                            std::string codeIndent,
-                           std::ostream& stream)
-    : test_runner{argc,
-                  argv,
-                  std::move(copyright),
-                    {main_paths::default_main_cpp_from_root(), {}, main_paths::default_main_cpp_from_root()},
-                  std::move(codeIndent),
-                  stream}
-  {}
-
-  test_runner::test_runner(int argc,
-                           char** argv,
-                           std::string copyright,
-                           const project_paths::initializer& pathsFromProjectRoot,
-                           std::string codeIndent,
+                           const project_paths::customizer& projectPathsCustomization,
                            std::ostream& stream)
     : m_Copyright{std::move(copyright)}
-    , m_ProjPaths{project_paths{argc, argv, pathsFromProjectRoot}}
+    , m_ProjPaths{project_paths{argc, argv, projectPathsCustomization}}
     , m_CodeIndent{std::move(codeIndent)}
     , m_Stream{&stream}
   {
@@ -425,22 +391,6 @@ namespace sequoia::testing
           throw std::logic_error{"Unable to find nascent test"};
 
         std::visit(overloaded{[](auto& nascent) { nascent.flavour(nascent_test_flavour::framework_diagnostics); }}, nascentTests.back());
-      }
-    };
-
-    const option equivOption{"--equivalent-type", {"-e"}, {"equivalent_type"},
-      [&nascentTests](const arg_list& args){
-        if(nascentTests.empty())
-          throw std::logic_error{"Unable to find nascent test"};
-
-        auto visitor{
-          overloaded{
-            [&args](nascent_semantics_test& nascent){ nascent.add_equivalent_type(args[0]); },
-            [](auto&){}
-          }
-        };
-
-        std::visit(visitor, nascentTests.back());
       }
     };
 
@@ -504,7 +454,7 @@ namespace sequoia::testing
       }
     };
 
-    const std::initializer_list<maths::tree_initializer<option>> semanticsOptions{{equivOption}, {suiteOption}, {headerOption}, {genSemanticsSourceOption}};
+    const std::initializer_list<maths::tree_initializer<option>> semanticsOptions{{suiteOption}, {headerOption}, {genSemanticsSourceOption}};
     const std::initializer_list<maths::tree_initializer<option>> allocationOptions{{suiteOption}, {headerOption}};
     const std::initializer_list<maths::tree_initializer<option>> performanceOptions{{suiteOption}};
     const std::initializer_list<maths::tree_initializer<option>> freeOptions{{suiteOption}, {forenameOption}, {genFreeSourceOption}, {diagnosticsOption}};
@@ -514,19 +464,15 @@ namespace sequoia::testing
                 { {{{"test", {"t"}, {"test suite name"},
                     [this](const arg_list& args) {
                       m_RunnerMode |= runner_mode::test;
-                      if(!m_Filter)
-                        m_Filter = filter_type{test_to_path{}, path_equivalence{proj_paths().tests().repo()}};
 
-                      m_Filter->add_selected_suite(args.front());
+                      m_Filter.add_selected_suite(args.front());
                     }}
                   }},
                   {{{"select", {"s"}, {"source file name"},
                     [this](const arg_list& args) {
                       m_RunnerMode |= runner_mode::test;
-                      if(!m_Filter)
-                        m_Filter = filter_type{test_to_path{}, path_equivalence{proj_paths().tests().repo()}};
 
-                      m_Filter->add_selected_item(fs::path{args.front()});
+                      m_Filter.add_selected_item(fs::path{args.front()});
                     }}
                   }},
                   {{{"prune", {"p"}, {},
@@ -588,7 +534,9 @@ namespace sequoia::testing
                     {}},
                     { {{"--no-build", {}, {},
                         [&nascentProjects](const arg_list&) { nascentProjects.back().do_build = build_invocation::no; }}},
-                      {{"--to-files",  {}, {"filename (A file of this name will appear in multiple directories)"},
+                      {{"--no-git", {}, {},
+                        [&nascentProjects](const arg_list&) { nascentProjects.back().use_git = git_invocation::no; }}},
+                      {{"--to-files",  {}, {"output filename"},
                         [&nascentProjects](const arg_list& args) { nascentProjects.back().output = args[0]; }}},
                       {{"--no-ide", {}, {},
                         [&nascentProjects](const arg_list&) {
@@ -736,10 +684,11 @@ namespace sequoia::testing
     if(m_PruneInfo.mode == prune_mode::active) return;
 
     auto check{
-      [this](auto first, auto last, std::string_view type, auto fn) {
-        for(; first != last; ++first)
+      [this](auto&& r, std::string_view type, auto fn) {
+        if(!r) return;
+
+        for(const auto& [id, found] : *r)
         {
-          const auto [id, found]{*first};
           if(!found)
           {
             using namespace parsing::commandline;
@@ -753,28 +702,25 @@ namespace sequoia::testing
       }
     };
 
-    if(m_Filter)
-    {
-      check(m_Filter->begin_selected_suites(), m_Filter->end_selected_suites(), "Suite", [](const std::string& name) -> std::string {
-        if(auto pos{name.rfind('.')}; pos < std::string::npos)
-        {
-          return "    If trying to select a source file use 'select' rather than 'test'\n";
-        }
+    check(m_Filter.selected_suites(), "Suite", [](const std::string& name) -> std::string {
+      if(auto pos{name.rfind('.')}; pos < std::string::npos)
+      {
+        return "    If trying to select a source file use 'select' rather than 'test'\n";
+      }
 
-        return "";
-        }
-      );
+      return "";
+      }
+    );
 
-      check(m_Filter->begin_selected_items(), m_Filter->end_selected_items(), "File", [](const std::filesystem::path& p) -> std::string {
-        if(!p.has_extension())
-        {
-          return "    If trying to test a suite use 'test' rather than 'select'\n";
-        }
+    check(m_Filter.selected_items(), "File", [](const std::filesystem::path& p) -> std::string {
+      if(!p.has_extension())
+      {
+        return "    If trying to test a suite use 'test' rather than 'select'\n";
+      }
 
-        return "";
-        }
-      );
-    }
+      return "";
+      }
+    );
   }
 
   void test_runner::execute([[maybe_unused]] timer_resolution r)
@@ -800,16 +746,20 @@ namespace sequoia::testing
       const auto specified{
         [&filter=m_Filter] () -> std::string {
           std::string srcs{};
-          if(filter)
-          {
-            for(auto i{filter->begin_selected_items()}; i != filter->end_selected_items(); ++i)
-            {
-              if(i->second) srcs.append(" select " + i->first.path().generic_string());
-            }
 
-            for(auto i{filter->begin_selected_suites()}; i != filter->end_selected_suites(); ++i)
+          if(auto items{filter.selected_items()})
+          {
+            for(const auto&[file, found] : *items)
             {
-              if(i->second) srcs.append(" test " + i->first);
+              if(found) srcs.append(" select " + file.path().generic_string());
+            }
+          }
+
+          if(auto suites{filter.selected_suites()})
+          {
+            for(const auto&[name, found] : *suites)
+            {
+              if(found) srcs.append(" test " + name);
             }
           }
 
@@ -893,10 +843,10 @@ namespace sequoia::testing
       {
         using enum concurrency_mode;
       case dynamic:
-        accelerate(sequoia::execution::par, next, m_Suites.end_node_weights(), executor);
+        accelerate(sequoia::execution::par, std::span{next, m_Suites.end_node_weights()}, executor);
         break;
       case fixed:
-        accelerate(thread_pool_policy{.num{m_PoolSize}}, next, m_Suites.end_node_weights(), executor);
+        accelerate(thread_pool_policy{.num{m_PoolSize}}, std::span{next, m_Suites.end_node_weights()}, executor);
         break;
       default:
         throw std::logic_error{"Unexpected concurrency_mode"};
@@ -932,6 +882,7 @@ namespace sequoia::testing
               auto pathsMaker{
                   [this](auto& test) -> test_paths {
                     return {test.source_file(),
+                            test.summary_file_path(),
                             test.working_materials(),
                             test.predictive_materials(),
                             proj_paths()};
@@ -1083,10 +1034,16 @@ namespace sequoia::testing
 
     if(auto maybeToRun{tests_to_run(proj_paths(), m_PruneInfo.include_cutoff)})
     {
-      m_Filter = filter_type{test_to_path{}, path_equivalence{proj_paths().tests().repo()}};
       for(const auto& src : maybeToRun.value())
       {
-        m_Filter->add_selected_item(src);
+        m_Filter.add_selected_item(src);
+      }
+
+      if(!m_Filter)
+      {
+        using suite_t = filter_type::optional_suite_selection::value_type;
+        using items_t = filter_type::optional_item_selection::value_type;
+        m_Filter = filter_type{{suite_t{}}, {items_t{}}, path_equivalence{proj_paths().tests().repo()}, test_to_path{}};
       }
 
       return prune_outcome::success;
@@ -1122,6 +1079,4 @@ namespace sequoia::testing
 
     return paths;
   }
-
-
 }

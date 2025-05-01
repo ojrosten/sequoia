@@ -1,0 +1,8 @@
+Tests/Stuff/FooTest.cpp, Line 43
+
+Expected Exception Type:
+[std::runtime_error]
+A happy runtime error!
+
+=======================================
+

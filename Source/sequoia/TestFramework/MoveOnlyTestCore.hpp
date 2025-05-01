@@ -22,7 +22,7 @@
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::string move_only_message(std::string_view description);
+  std::string move_only_message(std::string description);
 
   /*! \brief class template for plugging into the \ref checker_primary "checker"
       class template to provide allocation checks for move-only types,
@@ -36,105 +36,186 @@ namespace sequoia::testing
   public:
     constexpr static test_mode mode{Mode};
 
-    explicit move_only_extender(test_logger<Mode>& logger) : m_pLogger{&logger} {}
-
-    move_only_extender(const move_only_extender&) = delete;
-    move_only_extender(move_only_extender&&)      = delete;
-
-    move_only_extender& operator=(const move_only_extender&) = delete;
-    move_only_extender& operator=(move_only_extender&&)      = delete;
-
-    /// Preconditions: x!=y; x==xClone, y==yClone
-    template<moveonly T>
-    void check_semantics(std::string_view description, T&& x, T&& y, const T& xClone, const T& yClone, const T& movedFrom)
+    move_only_extender() = default;
+    
+    /// Prerequisites: x!=y; x==xEquivalent, y==yEquivalent
+    template<class Self, moveonly T, class U>
+      requires checkable_for_move_semantics<Mode, T, U>
+    bool check_semantics(this Self& self,
+                         const reporter& description,
+                         T&& x,
+                         T&& y,
+                         const U& xEquivalent,
+                         const U& yEquivalent,
+                         const U& movedFromPostConstruction,
+                         const U& movedFromPostAssignment)
     {
-      testing::check_semantics(move_only_message(description), logger(), std::move(x), std::move(y), xClone, yClone, opt_moved_from_ref<T>{movedFrom});
+      return testing::check_semantics(
+               move_only_message(self.report(description)),
+               self.m_Logger,
+               std::move(x),
+               std::move(y),
+               xEquivalent,
+               yEquivalent,
+               optional_ref<const U>{movedFromPostConstruction},
+               optional_ref<const U>{movedFromPostAssignment}
+             );
     }
 
-    template<moveonly T>
-    void check_semantics(std::string_view description, T&& x, T&& y, const T& xClone, const T& yClone)
+    template<class Self, moveonly T, class U>
+      requires checkable_for_move_semantics<Mode, T, U>
+    bool check_semantics(this Self& self, const reporter& description, T&& x, T&& y, const U& xEquivalent, const U& yEquivalent)
     {
-      testing::check_semantics(move_only_message(description), logger(), std::move(x), std::move(y), xClone, yClone, opt_moved_from_ref<T>{});
+      return testing::check_semantics(
+               move_only_message(self.report(description)),
+               self.m_Logger,
+               std::move(x),
+               std::move(y),
+               xEquivalent,
+               yEquivalent,
+               optional_ref<const U>{},
+               optional_ref<const U>{}
+             );
     }
 
     template
     <
-      std::invocable xMaker,
+      class Self,
+      moveonly T,
+      regular_invocable_r<T> xMaker,
+      regular_invocable_r<T> yMaker
+    >
+    bool check_semantics(this Self& self,
+                         const reporter& description,
+                         xMaker xFn,
+                         yMaker yFn,
+                         const T& movedFromPostConstruction,
+                         const T& movedFromPostAssignment)
+    {
+      return self.check_semantics(
+               description,
+               xFn(),
+               yFn(),
+               xFn(),
+               yFn(),
+               movedFromPostConstruction,
+               movedFromPostAssignment);
+    }
+
+    template
+    <
+      class Self,
+      std::regular_invocable xMaker,
       moveonly T=std::invoke_result_t<xMaker>,
-      invocable_r<T> yMaker
+      regular_invocable_r<T> yMaker
     >
-    void check_semantics(std::string_view description, xMaker xFn, yMaker yFn, const T& movedFrom)
+    bool check_semantics(this Self& self, const reporter& description, xMaker xFn, yMaker yFn)
     {
-      check_semantics(description, xFn(), yFn(), xFn(), yFn(), movedFrom);
+      return self.check_semantics(description, xFn(), yFn(), xFn(), yFn());
+    }
+
+    /// Prerequisites: x!=y, with values consistent with order; x==xEquivalent, y==yEquivalent
+    template<class Self, moveonly T, class U>
+      requires std::totally_ordered<T>
+    bool check_semantics(this Self& self,
+                         const reporter& description,
+                         T&& x,
+                         T&& y,
+                         const U& xEquivalent,
+                         const U& yEquivalent,
+                         const U& movedFromPostConstruction,
+                         const U& movedFromPostAssignment,
+                         std::weak_ordering order)
+    {
+      return testing::check_semantics(
+               move_only_message(self.report(description)),
+               self.m_Logger,
+               std::move(x),
+               std::move(y),
+               xEquivalent,
+               yEquivalent,
+               optional_ref<const U>{movedFromPostConstruction},
+               optional_ref<const U>{movedFromPostAssignment},
+               order
+             );
+    }
+
+    template<class Self, moveonly T, class U>
+      requires checkable_for_move_semantics<Mode, T, U> && std::totally_ordered<T>
+    bool check_semantics(this Self& self,
+                         const reporter& description,
+                         T&& x,
+                         T&& y,
+                         const U& xEquivalent,
+                         const U& yEquivalent,
+                         std::weak_ordering order)
+    {
+      return testing::check_semantics(
+               move_only_message(self.report(description)),
+               self.m_Logger,
+               std::move(x),
+               std::move(y),
+               xEquivalent,
+               yEquivalent,
+               optional_ref<const U>{},
+               optional_ref<const U>{},
+               order
+             );
     }
 
     template
     <
-      std::invocable xMaker,
-      moveonly T = std::invoke_result_t<xMaker>,
-      invocable_r<T> yMaker
-    >
-      void check_semantics(std::string_view description, xMaker xFn, yMaker yFn)
-    {
-      check_semantics(description, xFn(), yFn(), xFn(), yFn());
-    }
-
-     /// Preconditions: x!=y, with values consistent with order; x==xClone, y==yClone
-    template<moveonly T>
-      requires std::totally_ordered<T>
-    void check_semantics(std::string_view description, T&& x, T&& y, const T& xClone, const T& yClone, const T& movedFrom, std::weak_ordering order)
-    {
-      testing::check_semantics(move_only_message(description), logger(), std::move(x), std::move(y), xClone, yClone, opt_moved_from_ref<T>{movedFrom}, order);
-    }
-
-    template<moveonly T>
-      requires std::totally_ordered<T>
-    void check_semantics(std::string_view description, T&& x, T&& y, const T& xClone, const T& yClone, std::weak_ordering order)
-    {
-      testing::check_semantics(move_only_message(description), logger(), std::move(x), std::move(y), xClone, yClone, opt_moved_from_ref<T>{}, order);
-    }
-
-    template
-    <
-      std::invocable<> xMaker,
-      moveonly T = std::invoke_result_t<xMaker>,
-      invocable_r<T> yMaker
-    >
-      requires std::totally_ordered<T>
-    void check_semantics(std::string_view description, xMaker xFn, yMaker yFn, const T& movedFrom, std::weak_ordering order)
-    {
-      check_semantics(description, xFn(), yFn(), xFn(), yFn(), movedFrom, order);
-    }
-
-    template
-    <
-      std::invocable<> xMaker,
+      class Self,
+      std::regular_invocable xMaker,
       moveonly T=std::invoke_result_t<xMaker>,
-      invocable_r<T> yMaker
+      regular_invocable_r<T> yMaker
     >
       requires std::totally_ordered<T>
-    void check_semantics(std::string_view description, xMaker xFn, yMaker yFn, std::weak_ordering order)
+    bool check_semantics(this Self& self,
+                         const reporter& description,
+                         xMaker xFn,
+                         yMaker yFn,
+                         const T& movedFromPostConstruction,
+                         const T& movedFromPostAssignment,
+                         std::weak_ordering order)
     {
-      check_semantics(description, xFn(), yFn(), xFn(), yFn(), order);
+      return self.check_semantics(
+               description,
+               xFn(),
+               yFn(),
+               xFn(),
+               yFn(),
+               movedFromPostConstruction,
+               movedFromPostAssignment,
+               order
+             );
+    }
+
+    template
+    <
+      class Self,
+      std::regular_invocable xMaker,
+      moveonly T=std::invoke_result_t<xMaker>,
+      regular_invocable_r<T> yMaker
+    >
+      requires std::totally_ordered<T>
+    bool check_semantics(this Self& self, const reporter& description, xMaker xFn, yMaker yFn, std::weak_ordering order)
+    {
+      return self.check_semantics(description, xFn(), yFn(), xFn(), yFn(), order);
     }
 
   protected:
     ~move_only_extender() = default;
-  private:
-    [[nodiscard]]
-    test_logger<Mode>& logger() noexcept { return *m_pLogger; }
 
-    test_logger<Mode>* m_pLogger;
+    move_only_extender(move_only_extender&&)            noexcept = default;
+    move_only_extender& operator=(move_only_extender&&) noexcept = default;
   };
 
   template<test_mode mode>
-  using move_only_checker = checker<mode, move_only_extender<mode>>;
-
-  template<test_mode mode>
-  using canonical_move_only_test = basic_test<move_only_checker<mode>>;
+  using canonical_move_only_test = basic_test<mode, move_only_extender<mode>>;
 
   /*! \anchor move_only_test_alias */
   using move_only_test                = canonical_move_only_test<test_mode::standard>;
-  using move_only_false_negative_test = canonical_move_only_test<test_mode::false_negative>;
   using move_only_false_positive_test = canonical_move_only_test<test_mode::false_positive>;
+  using move_only_false_negative_test = canonical_move_only_test<test_mode::false_negative>;
 }

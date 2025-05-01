@@ -18,6 +18,8 @@
 
 namespace sequoia::testing
 {
+  enum class check_ordering : bool {no, yes};
+  
   template<class T, invocable_r<T, const T&> TransitionFn>
   struct transition_info_base
   {
@@ -25,12 +27,12 @@ namespace sequoia::testing
     TransitionFn fn;
   };
 
-  template<class T, invocable_r<T, const T&> TransitionFn>
+  template<class T, invocable_r<T, const T&> TransitionFn, check_ordering=check_ordering{std::totally_ordered<T>}>
   struct transition_info : transition_info_base<T, TransitionFn>
   {};
 
   template<std::totally_ordered T, invocable_r<T, const T&> TransitionFn>
-  struct transition_info<T, TransitionFn> : transition_info_base<T, TransitionFn>
+  struct transition_info<T, TransitionFn, check_ordering::yes> : transition_info_base<T, TransitionFn>
   {
     std::weak_ordering ordering;
   };
@@ -70,16 +72,17 @@ namespace sequoia::testing
     std::function<T()> m_Fn;
   };
 
-  template<class T>
+  template<class T, check_ordering CheckOrdering=check_ordering{std::totally_ordered<T>}>
   struct transition_checker
   {
   public:
     using transition_graph
-      = maths::graph<maths::directed_flavour::directed, transition_info<T, std::function<T(const T&)>>, object_generator<T>>;
+      = maths::directed_graph<transition_info<T, std::function<T(const T&)>, CheckOrdering>, object_generator<T>>;
+
+    using size_type = typename transition_graph::size_type;
 
   private:
     using edge_iterator = typename transition_graph::const_edge_iterator;
-    using size_type = typename transition_graph::size_type;
 
     template<class CheckFn, class... Args>
     static void invoke_check_fn(const transition_graph& g, edge_iterator i, CheckFn fn, const std::string& message, object_generator<T> parentGenerator, size_type target, Args... args)
@@ -125,6 +128,19 @@ namespace sequoia::testing
         [description,&g,checkFn](edge_iterator i) {
           const auto [message, parentGenerator, target] {make(description, g, i)};
           invoke_check_fn(g, i, checkFn, message, parentGenerator, target, parentGenerator());
+        }
+      };
+
+      check(g, edgeFn);
+    }
+
+    template<std::invocable<std::string, T, T, T, size_type, size_type> CheckFn>
+    static void check(std::string_view description, const transition_graph& g, CheckFn checkFn)
+    {
+      auto edgeFn{
+        [description,&g,checkFn](edge_iterator i) {
+          const auto [message, parentGenerator, target] {make(description, g, i)};
+          invoke_check_fn(g, i, checkFn, message, parentGenerator, target, parentGenerator(), i.partition_index(), target);
         }
       };
 

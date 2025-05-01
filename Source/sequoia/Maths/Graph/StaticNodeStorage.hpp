@@ -12,47 +12,49 @@
 
  */
 
+#include "sequoia/Core/ContainerUtilities/ArrayUtilities.hpp"
 #include "sequoia/Maths/Graph/NodeStorage.hpp"
 
-namespace sequoia::maths::graph_impl
+namespace sequoia::maths
 {
   template
   <
-    class WeightMaker,
+    class Weight,
     std::size_t N
   >
-  struct static_node_storage_traits
+  class static_node_storage : public node_storage_base<Weight, std::array<Weight, N>>
   {
-    constexpr static bool throw_on_range_error{true};
-    constexpr static bool static_storage_v{true};
-    constexpr static std::size_t num_elements_v{N};
-    template<class S> using container_type = std::array<S, N>;
+    using base_t = node_storage_base<Weight, std::array<Weight, N>>;
+  public:
+    using size_type   = typename base_t::size_type;
+    using weight_type = typename base_t::weight_type;
+
+    constexpr static_node_storage() = default;
+
+    constexpr static_node_storage(const size_type)
+      : base_t{}
+    {}
+
+    constexpr static_node_storage(std::initializer_list<weight_type> weights)
+      : base_t{utilities::to_array<weight_type, N>(weights, std::identity{})}
+    {}
+
+    constexpr static_node_storage(const static_node_storage&)                = default;
+    constexpr static_node_storage& operator=(const static_node_storage&)     = default;
+  protected:
+    constexpr static_node_storage(static_node_storage&&) noexcept            = default;
+    constexpr static_node_storage& operator=(static_node_storage&&) noexcept = default;
+
+    ~static_node_storage() = default;
   };
 
-  template<class WeightMaker, std::size_t N>
-    requires empty_proxy<WeightMaker>
-  struct static_node_storage_traits<WeightMaker, N>
-  {};
-
-  template
-  <
-    class WeightMaker,
-    std::size_t N
-  >
-  class static_node_storage : public node_storage<WeightMaker, static_node_storage_traits<WeightMaker, N>>
+  template<class Weight, std::size_t N>
+    requires std::is_empty_v<Weight>
+  class static_node_storage<Weight, N>
   {
   public:
-    using node_storage<WeightMaker, static_node_storage_traits<WeightMaker, N>>::node_storage;
-  };
-
-  template<class WeightMaker, std::size_t N>
-    requires empty_proxy<WeightMaker>
-  class static_node_storage<WeightMaker, N>
-  {
-  public:
-    using weight_proxy_type = typename WeightMaker::product_type;
-    using weight_type       = typename weight_proxy_type::value_type;
-    using size_type         = std::size_t;
+    using weight_type = Weight;
+    using size_type   = std::size_t;
 
     constexpr static_node_storage() = default;
     constexpr static_node_storage(const std::size_t) {}
@@ -62,10 +64,11 @@ namespace sequoia::maths::graph_impl
 
     [[nodiscard]]
     constexpr static std::size_t size() noexcept { return N; }
-  protected:
+
     constexpr static_node_storage(const static_node_storage&)                = default;
-    constexpr static_node_storage(static_node_storage&&) noexcept            = default;
     constexpr static_node_storage& operator=(const static_node_storage&)     = default;
+  protected:
+    constexpr static_node_storage(static_node_storage&&) noexcept            = default;
     constexpr static_node_storage& operator=(static_node_storage&&) noexcept = default;
 
     ~static_node_storage() = default;

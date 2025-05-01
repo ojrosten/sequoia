@@ -1,4 +1,0 @@
-Allocation False Positive Diagnostics
-False Positive Checks:                   232;  Failures:  0
-Allocation False Negative Diagnostics
-False Negative Checks:                   136;  Failures:  0

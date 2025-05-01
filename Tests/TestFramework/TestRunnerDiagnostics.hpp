@@ -13,10 +13,10 @@
 
 namespace sequoia::testing
 {
-  class test_runner_false_positive_test final : public free_false_positive_test
+  class test_runner_false_negative_test final : public free_false_negative_test
   {
   public:
-    using free_false_positive_test::free_false_positive_test;
+    using free_false_negative_test::free_false_negative_test;
 
     [[nodiscard]]
     std::filesystem::path source_file() const;

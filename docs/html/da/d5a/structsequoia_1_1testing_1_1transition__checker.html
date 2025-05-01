@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.6"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: sequoia::testing::transition_checker&lt; T &gt; Struct Template Reference</title>
+<title>Sequoia: sequoia::testing::transition_checker&lt; T, CheckOrdering &gt; Struct Template Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -78,43 +78,50 @@ $(function() {
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="../../d9/df7/structsequoia_1_1testing_1_1transition__checker-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">sequoia::testing::transition_checker&lt; T &gt; Struct Template Reference</div></div>
+  <div class="headertitle"><div class="title">sequoia::testing::transition_checker&lt; T, CheckOrdering &gt; Struct Template Reference</div></div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:af0ee5fdb0a0d5e0e42f46a9c923f8e5b"><td class="memItemLeft" align="right" valign="top"><a id="af0ee5fdb0a0d5e0e42f46a9c923f8e5b" name="af0ee5fdb0a0d5e0e42f46a9c923f8e5b"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>transition_graph</b> = <a class="el" href="../../d8/d87/classsequoia_1_1maths_1_1graph.html">maths::graph</a>&lt; maths::directed_flavour::directed, <a class="el" href="../../d1/d8e/structsequoia_1_1testing_1_1transition__info.html">transition_info</a>&lt; T, std::function&lt; T(const T &amp;)&gt; &gt;, <a class="el" href="../../d4/dcf/classsequoia_1_1testing_1_1object__generator.html">object_generator</a>&lt; T &gt; &gt;</td></tr>
-<tr class="separator:af0ee5fdb0a0d5e0e42f46a9c923f8e5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a62345c8d93c5210554d568f105fab83e"><td class="memItemLeft" align="right" valign="top"><a id="a62345c8d93c5210554d568f105fab83e" name="a62345c8d93c5210554d568f105fab83e"></a>
+<tr class="memitem:a16154f07cfa7c2cabe7d9acadfd59fbd"><td class="memItemLeft" align="right" valign="top"><a id="a16154f07cfa7c2cabe7d9acadfd59fbd" name="a16154f07cfa7c2cabe7d9acadfd59fbd"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>transition_graph</b> = <a class="el" href="../../d6/dc1/classsequoia_1_1maths_1_1directed__graph.html">maths::directed_graph</a>&lt; <a class="el" href="../../d1/d8e/structsequoia_1_1testing_1_1transition__info.html">transition_info</a>&lt; T, std::function&lt; T(const T &amp;)&gt;, CheckOrdering &gt;, <a class="el" href="../../d4/dcf/classsequoia_1_1testing_1_1object__generator.html">object_generator</a>&lt; T &gt; &gt;</td></tr>
+<tr class="separator:a16154f07cfa7c2cabe7d9acadfd59fbd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a46ef04f7ed061b797bb14f57607e406c"><td class="memItemLeft" align="right" valign="top"><a id="a46ef04f7ed061b797bb14f57607e406c" name="a46ef04f7ed061b797bb14f57607e406c"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>size_type</b> = typename transition_graph::size_type</td></tr>
+<tr class="separator:a46ef04f7ed061b797bb14f57607e406c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a86cce0cbf65daeb0150c6762acbac6e0"><td class="memItemLeft" align="right" valign="top"><a id="a86cce0cbf65daeb0150c6762acbac6e0" name="a86cce0cbf65daeb0150c6762acbac6e0"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>edge</b> = typename transition_graph::edge_type</td></tr>
-<tr class="separator:a62345c8d93c5210554d568f105fab83e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a86cce0cbf65daeb0150c6762acbac6e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a280d38a13a489cc2b0192c1ecbc3c137"><td class="memTemplParams" colspan="2"><a id="a280d38a13a489cc2b0192c1ecbc3c137" name="a280d38a13a489cc2b0192c1ecbc3c137"></a>
+<tr class="memitem:a7e50fd192ee778f6623812b0cd70bcb1"><td class="memTemplParams" colspan="2"><a id="a7e50fd192ee778f6623812b0cd70bcb1" name="a7e50fd192ee778f6623812b0cd70bcb1"></a>
 template&lt;std::invocable&lt; std::string, T, T &gt; CheckFn&gt; </td></tr>
-<tr class="memitem:a280d38a13a489cc2b0192c1ecbc3c137"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check</b> (std::string_view description, const <a class="el" href="../../d8/d87/classsequoia_1_1maths_1_1graph.html">transition_graph</a> &amp;g, CheckFn checkFn)</td></tr>
-<tr class="separator:a280d38a13a489cc2b0192c1ecbc3c137"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a280d38a13a489cc2b0192c1ecbc3c137"><td class="memTemplParams" colspan="2"><a id="a280d38a13a489cc2b0192c1ecbc3c137" name="a280d38a13a489cc2b0192c1ecbc3c137"></a>
+<tr class="memitem:a7e50fd192ee778f6623812b0cd70bcb1"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check</b> (std::string_view description, const <a class="el" href="../../d6/dc1/classsequoia_1_1maths_1_1directed__graph.html">transition_graph</a> &amp;g, CheckFn checkFn)</td></tr>
+<tr class="separator:a7e50fd192ee778f6623812b0cd70bcb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7e50fd192ee778f6623812b0cd70bcb1"><td class="memTemplParams" colspan="2"><a id="a7e50fd192ee778f6623812b0cd70bcb1" name="a7e50fd192ee778f6623812b0cd70bcb1"></a>
 template&lt;std::invocable&lt; std::string, T, T, T &gt; CheckFn&gt; </td></tr>
-<tr class="memitem:a280d38a13a489cc2b0192c1ecbc3c137"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check</b> (std::string_view description, const <a class="el" href="../../d8/d87/classsequoia_1_1maths_1_1graph.html">transition_graph</a> &amp;g, CheckFn checkFn)</td></tr>
-<tr class="separator:a280d38a13a489cc2b0192c1ecbc3c137"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a19fec861e815f257f3020b808cc1ed8a"><td class="memTemplParams" colspan="2"><a id="a19fec861e815f257f3020b808cc1ed8a" name="a19fec861e815f257f3020b808cc1ed8a"></a>
+<tr class="memitem:a7e50fd192ee778f6623812b0cd70bcb1"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check</b> (std::string_view description, const <a class="el" href="../../d6/dc1/classsequoia_1_1maths_1_1directed__graph.html">transition_graph</a> &amp;g, CheckFn checkFn)</td></tr>
+<tr class="separator:a7e50fd192ee778f6623812b0cd70bcb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7e50fd192ee778f6623812b0cd70bcb1"><td class="memTemplParams" colspan="2"><a id="a7e50fd192ee778f6623812b0cd70bcb1" name="a7e50fd192ee778f6623812b0cd70bcb1"></a>
+template&lt;std::invocable&lt; std::string, T, T, T, size_type, size_type &gt; CheckFn&gt; </td></tr>
+<tr class="memitem:a7e50fd192ee778f6623812b0cd70bcb1"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check</b> (std::string_view description, const <a class="el" href="../../d6/dc1/classsequoia_1_1maths_1_1directed__graph.html">transition_graph</a> &amp;g, CheckFn checkFn)</td></tr>
+<tr class="separator:a7e50fd192ee778f6623812b0cd70bcb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc247295ef3afa1755adb0048558cb45"><td class="memTemplParams" colspan="2"><a id="acc247295ef3afa1755adb0048558cb45" name="acc247295ef3afa1755adb0048558cb45"></a>
 template&lt;std::invocable&lt; std::string, T, T, T, std::weak_ordering &gt; CheckFn&gt; <br />
 requires (std::totally_ordered&lt;T&gt;&amp;&amp; pseudoregular&lt;T&gt;)</td></tr>
-<tr class="memitem:a19fec861e815f257f3020b808cc1ed8a"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check</b> (std::string_view description, const <a class="el" href="../../d8/d87/classsequoia_1_1maths_1_1graph.html">transition_graph</a> &amp;g, CheckFn checkFn)</td></tr>
-<tr class="separator:a19fec861e815f257f3020b808cc1ed8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a280d38a13a489cc2b0192c1ecbc3c137"><td class="memTemplParams" colspan="2"><a id="a280d38a13a489cc2b0192c1ecbc3c137" name="a280d38a13a489cc2b0192c1ecbc3c137"></a>
+<tr class="memitem:acc247295ef3afa1755adb0048558cb45"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check</b> (std::string_view description, const <a class="el" href="../../d6/dc1/classsequoia_1_1maths_1_1directed__graph.html">transition_graph</a> &amp;g, CheckFn checkFn)</td></tr>
+<tr class="separator:acc247295ef3afa1755adb0048558cb45"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7e50fd192ee778f6623812b0cd70bcb1"><td class="memTemplParams" colspan="2"><a id="a7e50fd192ee778f6623812b0cd70bcb1" name="a7e50fd192ee778f6623812b0cd70bcb1"></a>
 template&lt;std::invocable&lt; std::string, std::function&lt; T()&gt;, std::function&lt; T()&gt;, std::function&lt; T()&gt; &gt; CheckFn&gt; </td></tr>
-<tr class="memitem:a280d38a13a489cc2b0192c1ecbc3c137"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check</b> (std::string_view description, const <a class="el" href="../../d8/d87/classsequoia_1_1maths_1_1graph.html">transition_graph</a> &amp;g, CheckFn checkFn)</td></tr>
-<tr class="separator:a280d38a13a489cc2b0192c1ecbc3c137"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a41bec9b803f1a0cf62fa334510380427"><td class="memTemplParams" colspan="2"><a id="a41bec9b803f1a0cf62fa334510380427" name="a41bec9b803f1a0cf62fa334510380427"></a>
+<tr class="memitem:a7e50fd192ee778f6623812b0cd70bcb1"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check</b> (std::string_view description, const <a class="el" href="../../d6/dc1/classsequoia_1_1maths_1_1directed__graph.html">transition_graph</a> &amp;g, CheckFn checkFn)</td></tr>
+<tr class="separator:a7e50fd192ee778f6623812b0cd70bcb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0f2efff52cb315871bb7e2e51fdc107d"><td class="memTemplParams" colspan="2"><a id="a0f2efff52cb315871bb7e2e51fdc107d" name="a0f2efff52cb315871bb7e2e51fdc107d"></a>
 template&lt;std::invocable&lt; std::string, std::function&lt; T()&gt;, std::function&lt; T()&gt;, std::function&lt; T()&gt;, std::weak_ordering &gt; CheckFn&gt; <br />
 requires std::totally_ordered&lt;T&gt;</td></tr>
-<tr class="memitem:a41bec9b803f1a0cf62fa334510380427"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check</b> (std::string_view description, const <a class="el" href="../../d8/d87/classsequoia_1_1maths_1_1graph.html">transition_graph</a> &amp;g, CheckFn checkFn)</td></tr>
-<tr class="separator:a41bec9b803f1a0cf62fa334510380427"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0f2efff52cb315871bb7e2e51fdc107d"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check</b> (std::string_view description, const <a class="el" href="../../d6/dc1/classsequoia_1_1maths_1_1directed__graph.html">transition_graph</a> &amp;g, CheckFn checkFn)</td></tr>
+<tr class="separator:a0f2efff52cb315871bb7e2e51fdc107d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li>C:/Users/olive/sequoia/Source/sequoia/TestFramework/<a class="el" href="../../d8/d43/StateTransitionUtilities_8hpp_source.html">StateTransitionUtilities.hpp</a></li>

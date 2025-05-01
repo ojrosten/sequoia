@@ -14,6 +14,7 @@
 #include "sequoia/TestFramework/ProjectPaths.hpp"
 
 #include "sequoia/Core/Object/Factory.hpp"
+#include "sequoia/FileSystem/FileSystem.hpp"
 #include "sequoia/TextProcessing/Indent.hpp"
 
 #include <array>
@@ -57,6 +58,7 @@ namespace sequoia::testing
       , m_Copyright{std::move(copyright)}
       , m_CodeIndent{codeIndent}
       , m_Stream{&stream}
+      , m_ProjectNamespace{back(m_Paths.source().project()).string()}
     {}
 
     [[nodiscard]]
@@ -134,23 +136,23 @@ namespace sequoia::testing
 
     void camel_name(std::string name);
 
-    void set_cpp(const std::filesystem::path& headerPath, std::string_view copyright, std::string_view nameSpace);
+    void set_cpp(const std::filesystem::path& headerPath, std::string_view nameSpace);
 
     [[nodiscard]]
-    const indentation& code_indent() const noexcept
-    {
-      return m_CodeIndent;
-    }
+    const indentation& code_indent() const noexcept { return m_CodeIndent; }
 
-    const std::string& copyright() const noexcept
-    {
-      return m_Copyright;
-    }
+    [[nodiscard]]
+    const std::string& copyright() const noexcept { return m_Copyright; }
+
+    [[nodiscard]]
+    const std::string& project_namespace() const noexcept { return m_ProjectNamespace; }
 
     [[nodiscard]]
     std::ostream& stream() noexcept { return *m_Stream; }
 
     void finalize_suite(std::string_view fallbackIngredient);
+
+    void make_common_replacements(std::string& text) const;
   private:
     constexpr static std::array<std::string_view, 3> st_HeaderExtensions{".hpp", ".h", ".hxx"};
 
@@ -160,7 +162,13 @@ namespace sequoia::testing
     std::ostream* m_Stream;
 
     nascent_test_flavour m_Flavour{nascent_test_flavour::standard};
-    std::string m_Suite{}, m_TestType{}, m_Forename{}, m_Surname{}, m_CamelName{};
+    std::string 
+      m_Suite{},
+      m_TestType{},
+      m_Forename{},
+      m_Surname{},
+      m_CamelName{},
+      m_ProjectNamespace{};
     std::filesystem::path m_Header{}, m_HostDir{}, m_HeaderPath{};
     gen_source_option m_SourceOption{};
 

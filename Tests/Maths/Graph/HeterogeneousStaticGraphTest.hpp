@@ -27,12 +27,10 @@ namespace sequoia::testing
     constexpr static auto make_undirected_graph();
     constexpr static auto make_directed_graph();
     constexpr static auto make_undirected_embedded_graph();
-    constexpr static auto make_directed_embedded_graph();
 
     void test_generic_undirected();
     void test_generic_embedded_undirected();
     void test_generic_directed();
-    void test_generic_embedded_directed();
 
     struct function_object
     {

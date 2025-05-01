@@ -5,5 +5,5 @@ Expected Exception Type:
 [std::runtime_error]
 Executable is out of date; please build it!
 
-	=======================================
+=======================================
 

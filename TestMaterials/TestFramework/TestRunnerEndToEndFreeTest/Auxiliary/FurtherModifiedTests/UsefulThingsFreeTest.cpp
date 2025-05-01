@@ -8,7 +8,7 @@
 #include "UsefulThingsFreeTest.hpp"
 #include "generatedProject/Utilities/UsefulThings.hpp"
 
-namespace sequoia::testing
+namespace generatedProject::testing
 {
   [[nodiscard]]
   std::filesystem::path useful_things_free_test::source_file() const
@@ -18,6 +18,7 @@ namespace sequoia::testing
 
   void useful_things_free_test::run_tests()
   {
-    check(equality, report_line(""), utils::foo(), 43);
+    check(equality, "", utils::foo(), 43);
+   	check_exception_thrown<std::runtime_error>("", [](){ throw std::runtime_error{"Uh-oh"};  });
   }
 }

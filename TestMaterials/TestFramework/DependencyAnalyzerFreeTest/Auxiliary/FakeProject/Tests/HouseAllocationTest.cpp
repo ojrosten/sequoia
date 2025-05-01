@@ -5,6 +5,9 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
+#ifdef sperlunk
+#endif
+
 #include "HouseAllocationTest.hpp"
 
 /* Check that 'namespace' inside a c-style comment is ignored */

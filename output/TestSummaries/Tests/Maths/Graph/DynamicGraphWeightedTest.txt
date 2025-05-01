@@ -1,2 +1,0 @@
-Weighted Graph Tests
-Standard Top Level Checks:              3840;  Failures:  0  [Deep checks: 204272]

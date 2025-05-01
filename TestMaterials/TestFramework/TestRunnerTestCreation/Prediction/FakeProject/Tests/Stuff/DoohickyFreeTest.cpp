@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////
-//               Copyright Oliver Jacob Rosten 2023.              //
+//               Copyright Oliver Jacob Rosten 2025.              //
 // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
 //    (See accompanying file LICENSE.md or copy at                //
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
@@ -10,7 +10,7 @@
 #include "DoohickyFreeTest.hpp"
 #include "fakeProject/Stuff/Doohicky.hpp"
 
-namespace sequoia::testing
+namespace fakeProject::testing
 {
     [[nodiscard]]
     std::filesystem::path doohicky_free_test::source_file() const
@@ -20,6 +20,6 @@ namespace sequoia::testing
 
     void doohicky_free_test::run_tests()
     {
-        // e.g. check(equality, report_line("Useful description"), some_function(), 42);
+        // e.g. check(equality, "Useful description", some_function(), 42);
     }
 }

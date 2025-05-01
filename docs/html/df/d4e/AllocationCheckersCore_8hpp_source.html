@@ -90,7 +90,7 @@ $(function() {
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="keyword">namespace </span>sequoia::testing</div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>{</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>  <span class="keyword">enum class</span> container_tag { x, y };</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>  <span class="keyword">enum class</span> container_tag : <span class="keywordtype">bool</span> { x, y };</div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>  <span class="keyword">template</span>&lt;container_tag tag&gt;</div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno"><a class="line" href="../../d2/d58/structsequoia_1_1testing_1_1container__tag__constant.html">   59</a></span>  <span class="keyword">struct </span><a class="code hl_struct" href="../../d2/d58/structsequoia_1_1testing_1_1container__tag__constant.html">container_tag_constant</a> : std::integral_constant&lt;container_tag, tag&gt;</div>

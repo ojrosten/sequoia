@@ -1,113 +1,85 @@
-	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 31
+False Negative Failure:
+Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 84
 
-	[double]
-	Obtained : 3
-	Predicted: 5 +/- 1
+[double]
 
-	=======================================
+=======================================
 
-	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 32
+False Negative Failure:
+Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 85
 
-	[double]
-	Obtained : 7
-	Predicted: 5 +/- 1
-	Advice: Tweak your tolerance!
+[double]
 
-	=======================================
+=======================================
 
-	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 36
-	<
+False Negative Failure:
+Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 87
 
-	[int]
-	Obtained : 5
-	Predicted: < 4
+[double]
 
-	=======================================
+=======================================
 
-	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 37
-	<=
+False Negative Failure:
+Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 88
 
-	[int]
-	Obtained : 5
-	Predicted: <= 4
+[double]
 
-	=======================================
+=======================================
 
-	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 38
-	>
+False Negative Failure:
+Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 90
+<
 
-	[int]
-	Obtained : 4
-	Predicted: > 5
+[int]
 
-	=======================================
+=======================================
 
-	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 39
-	>=
+False Negative Failure:
+Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 91
+<=
 
-	[int]
-	Obtained : 4
-	Predicted: >= 5
+[int]
 
-	=======================================
+=======================================
 
-	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 46
+False Negative Failure:
+Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 92
+>
 
-	  Element 0 of range incorrect
-	  [double]
-	  Obtained : 0.5
-	  Predicted: -0.1 +/- 0.5
+[int]
 
-	=======================================
+=======================================
 
-	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 47
+False Negative Failure:
+Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 93
+>=
 
-	  Element 0 of range incorrect
-	  [double]
-	  Obtained : 0.5
-	  Predicted: -0.1 +/- 0.5
-	  Advice: Consider increasing tolerance!
+[int]
 
-	=======================================
+=======================================
 
-	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 52
+False Negative Failure:
+Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 100
 
-	  Element 1 of range incorrect
-	  [double]
-	  Obtained : 0.6
-	  Predicted: 1.2 +/- 0.5
+=======================================
 
-	=======================================
+False Negative Failure:
+Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 105
+<
 
-	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 57
-	<
+=======================================
 
-	  Element 1 of range incorrect
-	  [int]
-	  Obtained : 5
-	  Predicted: < 4
+False Negative Failure:
+Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 111
 
-	=======================================
+[std::vector<double, std::allocator<double> >]
 
-	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 63
+=======================================
 
-	[std::vector<double, std::allocator<double> >]
-	  Element 1 of range incorrect
-	  [double]
-	  Obtained : -1
-	  Predicted: -1.8 +/- 0.5
+False Negative Failure:
+Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 114
 
-	=======================================
+[std::vector<std::vector<double, std::allocator<double> >, std::allocator<std::vector<double, std::allocator<double> > > >]
 
-	Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 66
-
-	[std::vector<std::vector<double, std::allocator<double> >, std::allocator<std::vector<double, std::allocator<double> > > >]
-	  Element 1 of range incorrect
-	  [std::vector<double, std::allocator<double> >]
-	    Element 0 of range incorrect
-	    [double]
-	    Obtained : 5.1
-	    Predicted: 3.7 +/- 0.5
-
-	=======================================
+=======================================
 

@@ -3,13 +3,13 @@ cmake_minimum_required(VERSION 3.20)
 project(SequoiaTestAll DESCRIPTION "The Sequoia Library plus all tests"
                        LANGUAGES CXX)
 
-include(../build_system/Utilities.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/../build_system/Utilities.cmake)
 
 sequoia_init()
 
 add_executable(TestAll TestMain.cpp)
 
-set(TestDir ../Tests)
+set(TestDir ${CMAKE_CURRENT_LIST_DIR}/../Tests)
 
 target_sources(TestAll PRIVATE
                ${TestDir}/Algorithms/AlgorithmsTest.cpp
@@ -17,11 +17,15 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Core/Concurrency/ConcurrencyModelsTest.cpp
                ${TestDir}/Core/ContainerUtilities/ArrayUtilitiesTest.cpp
                ${TestDir}/Core/ContainerUtilities/IteratorTest.cpp
-               ${TestDir}/Core/DataStructures/PartitionedDataAllocationTest.cpp
-               ${TestDir}/Core/DataStructures/PartitionedDataTest.cpp
+               ${TestDir}/Core/DataStructures/BucketedSequenceAllocationTest.cpp
+               ${TestDir}/Core/DataStructures/BucketedSequenceRegularTest.cpp
+               ${TestDir}/Core/DataStructures/PartitionIteratorTest.cpp
                ${TestDir}/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp
+               ${TestDir}/Core/DataStructures/PartitionedSequenceAllocationTest.cpp
+               ${TestDir}/Core/DataStructures/PartitionedSequenceRegularTest.cpp
                ${TestDir}/Core/DataStructures/StaticLinearlyPartitionedSequenceTest.cpp
                ${TestDir}/Core/DataStructures/StaticLinearlyPartitionedSequenceTestingDiagnostics.cpp
+               ${TestDir}/Core/DataStructures/StaticPartitionedSequenceTest.cpp
                ${TestDir}/Core/DataStructures/StaticPriorityQueueTest.cpp
                ${TestDir}/Core/DataStructures/StaticPriorityQueueTestingDiagnostics.cpp
                ${TestDir}/Core/DataStructures/StaticQueueTest.cpp
@@ -30,41 +34,69 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Core/DataStructures/StaticStackTestingDiagnostics.cpp
                ${TestDir}/Core/Logic/BitmaskFreeTest.cpp
                ${TestDir}/Core/Meta/ConceptsTest.cpp
+               ${TestDir}/Core/Meta/SequencesFreeTest.cpp
+               ${TestDir}/Core/Meta/TypeAlgorithmsFreeTest.cpp
+               ${TestDir}/Core/Meta/TypeListFreeTest.cpp
                ${TestDir}/Core/Meta/TypeTraitsTest.cpp
                ${TestDir}/Core/Meta/UtilitiesTest.cpp
                ${TestDir}/Core/Object/CreatorFreeTest.cpp
-               ${TestDir}/Core/Object/DataPoolAllocationTest.cpp
-               ${TestDir}/Core/Object/DataPoolTest.cpp
-               ${TestDir}/Core/Object/FaithfulWrapperTest.cpp
-               ${TestDir}/Core/Object/FaithfulWrapperTestingDiagnostics.cpp
                ${TestDir}/Core/Object/SuiteFreeTest.cpp
                ${TestDir}/Experimental/ExperimentalTest.cpp
-               ${TestDir}/Experimental/TypeListFreeTest.cpp
-               ${TestDir}/Maths/Graph/DynamicGraphEmbeddedTest.cpp
-               ${TestDir}/Maths/Graph/DynamicGraphFixedTopologyTest.cpp
-               ${TestDir}/Maths/Graph/DynamicGraphInitializationTest.cpp
-               ${TestDir}/Maths/Graph/DynamicGraphTestingDiagnostics.cpp
-               ${TestDir}/Maths/Graph/DynamicGraphTraversalsTest.cpp
-               ${TestDir}/Maths/Graph/DynamicGraphUnweightedAllocationTest.cpp
-               ${TestDir}/Maths/Graph/DynamicGraphUnweightedBootstrappedTest.cpp
-               ${TestDir}/Maths/Graph/DynamicGraphUnweightedTest.cpp
-               ${TestDir}/Maths/Graph/DynamicGraphUpdateTest.cpp
-               ${TestDir}/Maths/Graph/DynamicGraphWeightedAllocationTest.cpp
-               ${TestDir}/Maths/Graph/DynamicGraphWeightedTest.cpp
-               ${TestDir}/Maths/Graph/DynamicSubgraphTest.cpp
-               ${TestDir}/Maths/Graph/EdgeTest.cpp
-               ${TestDir}/Maths/Graph/EdgeTestingDiagnostics.cpp
-               ${TestDir}/Maths/Graph/GraphMetaTest.cpp
-               ${TestDir}/Maths/Graph/GraphTraversalTestingUtilities.cpp
-               ${TestDir}/Maths/Graph/HeterogeneousNodeStorageTest.cpp
+               ${TestDir}/Experimental/FlattenTypeListFreeTest.cpp                              
+               ${TestDir}/FileSystem/FileSystemFreeTest.cpp
+               ${TestDir}/FileSystem/NormalPathTest.cpp
+               ${TestDir}/FileSystem/NormalPathTestingDiagnostics.cpp
+               ${TestDir}/Maths/Geometry/AffineCoordinatesTest.cpp
+               ${TestDir}/Maths/Geometry/AffineCoordinatesTestingDiagnostics.cpp
+               ${TestDir}/Maths/Geometry/SpacesMetaFreeTest.cpp
+               ${TestDir}/Maths/Geometry/VectorCoordinatesTest.cpp
+               ${TestDir}/Maths/Geometry/VectorCoordinatesTestingDiagnostics.cpp
+               ${TestDir}/Maths/Graph/Algorithms/DynamicGraphTraversalsTest.cpp
+               ${TestDir}/Maths/Graph/Algorithms/DynamicGraphUpdateTest.cpp
+               ${TestDir}/Maths/Graph/Algorithms/DynamicSubgraphTest.cpp
+               ${TestDir}/Maths/Graph/Algorithms/GraphTraversalTestingUtilities.cpp
+               ${TestDir}/Maths/Graph/Algorithms/StaticGraphTraversalsTest.cpp
+               ${TestDir}/Maths/Graph/Components/Edges/EdgeTest.cpp
+               ${TestDir}/Maths/Graph/Components/Edges/EdgeTestingDiagnostics.cpp
+               ${TestDir}/Maths/Graph/Components/Meta/GraphMetaTest.cpp
+               ${TestDir}/Maths/Graph/Components/Nodes/HeterogeneousNodeStorageTest.cpp
+               ${TestDir}/Maths/Graph/Components/Nodes/NodeStorageAllocationTest.cpp
+               ${TestDir}/Maths/Graph/Components/Nodes/NodeStorageTest.cpp
+               ${TestDir}/Maths/Graph/Dynamic/Allocations/DynamicGraphUnweightedAllocationBucketedTest.cpp
+               ${TestDir}/Maths/Graph/Dynamic/Allocations/DynamicGraphUnweightedAllocationContiguousTest.cpp
+               ${TestDir}/Maths/Graph/Dynamic/Allocations/DynamicGraphWeightedAllocationBucketedTest.cpp
+               ${TestDir}/Maths/Graph/Dynamic/Allocations/DynamicGraphWeightedAllocationContiguousTest.cpp
+               ${TestDir}/Maths/Graph/Dynamic/Diagnostics/DynamicGraphTestingDiagnostics.cpp
+               ${TestDir}/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphFundamentalWeightContiguousTest.cpp
+               ${TestDir}/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphFundamentalWeightTest.cpp
+               ${TestDir}/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphUnweightedContiguousTest.cpp
+               ${TestDir}/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphUnweightedTest.cpp
+               ${TestDir}/Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphFundamentalWeightContiguousTest.cpp
+               ${TestDir}/Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphFundamentalWeightTest.cpp
+               ${TestDir}/Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphMetaDataTest.cpp
+               ${TestDir}/Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphSharedFundamentalWeightContiguousTest.cpp
+               ${TestDir}/Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphSharedFundamentalWeightTest.cpp
+               ${TestDir}/Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphSharedUnsortableWeightTest.cpp
+               ${TestDir}/Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphUnsortableWeightTest.cpp
+               ${TestDir}/Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphUnweightedContiguousTest.cpp
+               ${TestDir}/Maths/Graph/Dynamic/Undirected/DynamicUndirectedGraphUnweightedTest.cpp
+               ${TestDir}/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphFundamentalWeightContiguousTest.cpp
+               ${TestDir}/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphFundamentalWeightTest.cpp
+               ${TestDir}/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphMetaDataTest.cpp
+               ${TestDir}/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphSharedFundamentalWeightContiguousTest.cpp
+               ${TestDir}/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphSharedFundamentalWeightTest.cpp
+               ${TestDir}/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphUnweightedContiguousTest.cpp
+               ${TestDir}/Maths/Graph/Dynamic/UndirectedEmbedded/DynamicUndirectedEmbeddedGraphUnweightedTest.cpp
                ${TestDir}/Maths/Graph/HeterogeneousStaticGraphTest.cpp
-               ${TestDir}/Maths/Graph/NodeStorageAllocationTest.cpp
-               ${TestDir}/Maths/Graph/NodeStorageTest.cpp
-               ${TestDir}/Maths/Graph/StaticGraphInitializationTest.cpp
-               ${TestDir}/Maths/Graph/StaticGraphManipulationsTest.cpp
-               ${TestDir}/Maths/Graph/StaticGraphTraversalsTest.cpp
-               ${TestDir}/Maths/Graph/TreeTest.cpp
-               ${TestDir}/Maths/Graph/TreeTestingDiagnostics.cpp
+               ${TestDir}/Maths/Graph/Static/Directed/StaticDirectedGraphFundamentalWeightTest.cpp
+               ${TestDir}/Maths/Graph/Static/Directed/StaticDirectedGraphUnweightedTest.cpp
+               ${TestDir}/Maths/Graph/Static/Undirected/StaticUndirectedGraphFundamentalWeightTest.cpp
+               ${TestDir}/Maths/Graph/Static/Undirected/StaticUndirectedGraphUnsortableWeightTest.cpp
+               ${TestDir}/Maths/Graph/Static/Undirected/StaticUndirectedGraphUnweightedTest.cpp
+               ${TestDir}/Maths/Graph/Static/UndirectedEmbedded/StaticUndirectedEmbeddedGraphFundamentalWeightTest.cpp
+               ${TestDir}/Maths/Graph/Static/UndirectedEmbedded/StaticUndirectedEmbeddedGraphUnweightedTest.cpp
+               ${TestDir}/Maths/Graph/Tree/TreeTest.cpp
+               ${TestDir}/Maths/Graph/Tree/TreeTestingDiagnostics.cpp
                ${TestDir}/Maths/Sequences/LinearSequenceTest.cpp
                ${TestDir}/Maths/Sequences/LinearSequenceTestingDiagnostics.cpp
                ${TestDir}/Maths/Sequences/MonotonicSequenceAllocationTest.cpp
@@ -74,11 +106,33 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Parsing/CommandLineArgumentsDiagnostics.cpp
                ${TestDir}/Parsing/CommandLineArgumentsTest.cpp
                ${TestDir}/Parsing/CommandLineArgumentsTestingUtilities.cpp
+               ${TestDir}/Physics/AbsolutePhysicalValueTest.cpp
+               ${TestDir}/Physics/AffinePhysicalValueTest.cpp
+               ${TestDir}/Physics/ConvexPhysicalValueTest.cpp
+               ${TestDir}/Physics/MixedPhysicalValueTest.cpp
+               ${TestDir}/Physics/PhysicalValueMetaFreeTest.cpp               
+               ${TestDir}/Physics/PhysicalValueTestingDiagnostics.cpp
+               ${TestDir}/Physics/UnsafeAbsolutePhysicalValueTest.cpp
+               ${TestDir}/Physics/VectorPhysicalValueTest.cpp
                ${TestDir}/Runtime/FactoryTest.cpp
                ${TestDir}/Runtime/FactoryTestingDiagnostics.cpp
                ${TestDir}/Runtime/ShellCommandsTest.cpp
                ${TestDir}/Runtime/ShellCommandsTestingDiagnostics.cpp
                ${TestDir}/Streaming/StreamingFreeTest.cpp
+               ${TestDir}/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp
+               ${TestDir}/TestFramework/AllocationTesting/MoveOnlyScopedAllocationTestDiagnostics.cpp
+               ${TestDir}/TestFramework/AllocationTesting/OrderableMoveOnlyAllocationTestDiagnostics.cpp
+               ${TestDir}/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp
+               ${TestDir}/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnostics.cpp
+               ${TestDir}/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnosticsBrokenSemantics.cpp
+               ${TestDir}/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnosticsBrokenValueSemantics.cpp
+               ${TestDir}/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnosticsInefficientOperations.cpp
+               ${TestDir}/TestFramework/AllocationTesting/RegularAllocationTestFalsePositiveDiagnostics.cpp
+               ${TestDir}/TestFramework/AllocationTesting/ScopedAllocationTestFalseNegativeDiagnostics.cpp
+               ${TestDir}/TestFramework/AllocationTesting/ScopedAllocationTestFalsePositiveDiagnostics.cpp
+               ${TestDir}/TestFramework/AllocationTesting/ScopedAllocationTestFalsePositiveDiagnosticsMixed.cpp
+               ${TestDir}/TestFramework/AllocationTesting/ScopedAllocationTestFalsePositiveDiagnosticsThreeLevel.cpp
+               ${TestDir}/TestFramework/BasicTestInterfaceFreeTest.cpp
                ${TestDir}/TestFramework/ChronoFreeDiagnostics.cpp
                ${TestDir}/TestFramework/CommandsFreeTest.cpp
                ${TestDir}/TestFramework/ComplexFreeDiagnostics.cpp
@@ -89,24 +143,20 @@ target_sources(TestAll PRIVATE
                ${TestDir}/TestFramework/FailureInfoTest.cpp
                ${TestDir}/TestFramework/FailureInfoTestingDiagnostics.cpp
                ${TestDir}/TestFramework/FileSystemUtilitiesFreeTest.cpp
+               ${TestDir}/TestFramework/FreeCheckersMetaFreeTest.cpp
                ${TestDir}/TestFramework/FunctionFreeDiagnostics.cpp
+               ${TestDir}/TestFramework/IndividualTestPathsFreeTest.cpp
                ${TestDir}/TestFramework/MaterialsUpdaterFreeTest.cpp
-               ${TestDir}/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp
-               ${TestDir}/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp
                ${TestDir}/TestFramework/MoveOnlyStateTransitionDiagnostics.cpp
                ${TestDir}/TestFramework/MoveOnlyTestDiagnostics.cpp
-               ${TestDir}/TestFramework/OrderableMoveOnlyAllocationTestDiagnostics.cpp
                ${TestDir}/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp
-               ${TestDir}/TestFramework/OrderableRegularAllocationTestDiagnostics.cpp
                ${TestDir}/TestFramework/OrderableRegularTestDiagnostics.cpp
                ${TestDir}/TestFramework/OutputFreeTest.cpp
                ${TestDir}/TestFramework/PathFreeDiagnostics.cpp
                ${TestDir}/TestFramework/PerformanceTestDiagnostics.cpp
-               ${TestDir}/TestFramework/RegularAllocationTestDiagnostics.cpp
                ${TestDir}/TestFramework/RegularStateTransitionDiagnostics.cpp
                ${TestDir}/TestFramework/RegularTestDiagnostics.cpp
                ${TestDir}/TestFramework/RelationalTestDiagnostics.cpp
-               ${TestDir}/TestFramework/ScopedAllocationTestDiagnostics.cpp
                ${TestDir}/TestFramework/SmartPointerFreeDiagnostics.cpp
                ${TestDir}/TestFramework/StringFreeDiagnostics.cpp
                ${TestDir}/TestFramework/SumTypesFreeDiagnostics.cpp
@@ -121,5 +171,5 @@ target_sources(TestAll PRIVATE
                ${TestDir}/TextProcessing/PatternsFreeTest.cpp
                ${TestDir}/TextProcessing/SubstitutionsFreeTest.cpp)
 
-sequoia_finalize_self(TestAll ${TestDir})
+sequoia_finalize_self(TestAll ${TestDir} Tests)
 

@@ -26,11 +26,6 @@ namespace sequoia
   template<class T>
   struct dependent_false : std::false_type {};
 
-  /*! @defgroup type_list The type_list Group
-      This group provides mechanisms for extracting the head and tail from a parameter pack.
-      @{
-   */
-
   /*! \brief class template for determining whether a constructor template should resolve to the copy constructor */
   template<class T, class... Args>
   struct resolve_to_copy
@@ -194,4 +189,22 @@ namespace sequoia
   using is_deep_equality_comparable_t = typename is_deep_equality_comparable<T>::type;
 
   /*! @} */ // end of deep_equality group
+
+   /*! \brief class template for determining if a type is compatible with a floating-point type.
+   
+       The goal is to forbid e.g. multiplication of a float by a double, but to allow multiplication
+       of a float by an integral type, even though the latter operation may also lead to a loss of
+       precision. Thus, for an instance `x` of a type which both wraps a float and defines *=, this
+       utility can be used to allow x *= 2 but forbid x *= 2.2. The idea is to strike a balance 
+       between ergonomics and loss of precision.
+    */
+
+  template<std::floating_point T, class U>
+  struct is_compatible : std::bool_constant<!std::is_same_v<U, bool> && ((std::floating_point<U> && is_initializable_v<T, U>) || std::is_integral_v<U>)> {};
+
+  template<std::floating_point T, class U>
+  using is_compatible_t = typename is_compatible<T, U>::type;
+
+  template<std::floating_point T, class U>
+  inline constexpr bool is_compatible_v{is_compatible<T, U>::value};
 }

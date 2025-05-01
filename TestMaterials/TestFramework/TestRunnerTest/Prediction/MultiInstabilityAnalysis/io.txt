@@ -2,26 +2,28 @@
 Running tests, synchronously...
 
 Suite:
-[Execution Time: 2.78ms]
+[Execution Time: 126us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 
 -----------Grand Totals-----------
-[Total Run Time: 6.86ms]
-[Execution Time: 2.78ms]
+[Total Run Time: 278us]
+[Execution Time: 126us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
-	False Negative Checks:                     0;  Failures:  0
-	False Negative Performance Checks:         0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
 
 Running tests, synchronously...
 
 Suite:
-[Execution Time: 2.58ms]
+[Execution Time: 61us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 215
 	Period 4
+
 	[int]
 	operator== returned false
 	Obtained : 2
@@ -31,22 +33,24 @@ Suite:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 6.9ms]
-[Execution Time: 2.58ms]
+[Total Run Time: 220us]
+[Execution Time: 61us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
-	False Negative Checks:                     0;  Failures:  0
-	False Negative Performance Checks:         0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
 
 Running tests, synchronously...
 
 Suite:
-[Execution Time: 2.26ms]
+[Execution Time: 62.8us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 215
 	Period 4
+
 	[int]
 	operator== returned false
 	Obtained : 3
@@ -56,22 +60,24 @@ Suite:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 6.56ms]
-[Execution Time: 2.26ms]
+[Total Run Time: 235us]
+[Execution Time: 62.8us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
-	False Negative Checks:                     0;  Failures:  0
-	False Negative Performance Checks:         0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
 
 Running tests, synchronously...
 
 Suite:
-[Execution Time: 2.04ms]
+[Execution Time: 62.8us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 215
 	Period 4
+
 	[int]
 	operator== returned false
 	Obtained : 0
@@ -81,16 +87,16 @@ Suite:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 6.01ms]
-[Execution Time: 2.04ms]
+[Total Run Time: 214us]
+[Execution Time: 62.8us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
-	False Negative Checks:                     0;  Failures:  0
-	False Negative Performance Checks:         0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
 
-Instability detected in file "TestRunnerTest.cpp"
+Instability detected in file "Free_Test.cpp"
 Outcome frequencies:
 [25%,25%,25%,25%]
 
@@ -98,7 +104,9 @@ Outcome frequencies:
 
 vs.
 
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 215
 	Period 4
+
 	[int]
 	operator== returned false
 	Obtained : 0
@@ -108,7 +116,9 @@ vs.
 
 vs.
 
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 215
 	Period 4
+
 	[int]
 	operator== returned false
 	Obtained : 2
@@ -118,7 +128,9 @@ vs.
 
 vs.
 
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 215
 	Period 4
+
 	[int]
 	operator== returned false
 	Obtained : 3

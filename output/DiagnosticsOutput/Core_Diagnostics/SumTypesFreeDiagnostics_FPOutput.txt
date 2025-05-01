@@ -1,401 +1,151 @@
-	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 36
-	std::variant holding different types but with the same value
+False Negative Failure:
+Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 137
 
-	[std::variant<int, double>]
-	operator== returned false
+[std::variant<int, double>]
 
-	  Variant Index
-	  [unsigned long long]
-	  operator== returned false
-	  Obtained : 0
-	  Predicted: 1
+=======================================
 
-	=======================================
+False Negative Failure:
+Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 138
 
-	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 37
-	std::variant holding the zeroth type, but with different values
+[std::variant<int, double>]
 
-	[std::variant<int, double>]
-	operator== returned false
+=======================================
 
-	  Variant Contents
-	  [int]
-	  operator== returned false
-	  Obtained : 1
-	  Predicted: 2
+False Negative Failure:
+Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 139
 
-	=======================================
+[std::variant<int, double>]
 
-	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 38
-	std::variant holding the first type, but with different values
+=======================================
 
-	[std::variant<int, double>]
-	operator== returned false
+False Negative Failure:
+Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 140
 
-	  Variant Contents
-	  [double]
-	  operator== returned false
-	  Obtained : -0.1
-	  Predicted: 0
+[std::variant<int, double>]
 
-	=======================================
+=======================================
 
-	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 41
-	std::variant proffering advice for different values of the zeroth type
+False Negative Failure:
+Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 141
 
-	[std::variant<int, double>]
-	operator== returned false
+[std::variant<int, double>]
 
-	  Variant Contents
-	  [int]
-	  operator== returned false
-	  Obtained : -1
-	  Predicted: 0
-	  Advice: int advice
+=======================================
 
-	=======================================
+False Negative Failure:
+Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 147
 
-	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 47
-	std::variant proffering advice for different values of the first type
+[std::variant<int, sequoia::testing::only_equivalence_checkable, sequoia::testing::only_weakly_checkable>]
 
-	[std::variant<int, double>]
-	operator== returned false
+=======================================
 
-	  Variant Contents
-	  [double]
-	  operator== returned false
-	  Obtained : -0.1
-	  Predicted: 0
-	  Advice: double advice
+False Negative Failure:
+Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 148
 
-	=======================================
+[std::variant<int, sequoia::testing::only_equivalence_checkable, sequoia::testing::only_weakly_checkable>]
 
-	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 53
-	std::variant advice ignored due to type mismatch
+=======================================
 
-	[std::variant<int, double>]
-	operator== returned false
+False Negative Failure:
+Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 149
 
-	  Variant Contents
-	  [double]
-	  operator== returned false
-	  Obtained : -1
-	  Predicted: 0
+[std::variant<int, sequoia::testing::only_equivalence_checkable, sequoia::testing::only_weakly_checkable>]
 
-	=======================================
+=======================================
 
-	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 62
+False Negative Failure:
+Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 158
 
-	[std::variant<int, sequoia::testing::only_equivalence_checkable, sequoia::testing::only_weakly_checkable>]
-	  Variant Contents
-	  [int]
-	  operator== returned false
-	  Obtained : 1
-	  Predicted: 2
+[std::optional<int>]
 
-	=======================================
+=======================================
 
-	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 63
+False Negative Failure:
+Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 159
 
-	[std::variant<int, sequoia::testing::only_equivalence_checkable, sequoia::testing::only_weakly_checkable>]
-	  Variant Contents
-	  [sequoia::testing::only_equivalence_checkable]
-	    Wrapped double
-	    [double]
-	    operator== returned false
-	    Obtained : 41
-	    Predicted: 42
+[std::optional<int>]
 
-	=======================================
+=======================================
 
-	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 64
+False Negative Failure:
+Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 160
 
-	[std::variant<int, sequoia::testing::only_equivalence_checkable, sequoia::testing::only_weakly_checkable>]
-	  Variant Contents
-	  [sequoia::testing::only_weakly_checkable]
-	    Wrapped double
-	    [double]
-	    operator== returned false
-	    Obtained : 1.5
-	    Predicted: 2.5
+[std::optional<int>]
 
-	=======================================
+=======================================
 
-	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 66
+False Negative Failure:
+Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 166
 
-	[std::variant<int, sequoia::testing::only_equivalence_checkable, sequoia::testing::only_weakly_checkable>]
-	  Variant Contents
-	  [int]
-	  operator== returned false
-	  Obtained : 1
-	  Predicted: 2
-	  Advice: int advice
+Comparison performed using:
+[sequoia::testing::value_tester<std::optional<sequoia::testing::only_equivalence_checkable> >]
+Checking for equivalence with:
+[std::optional<sequoia::testing::only_equivalence_checkable>]
 
-	=======================================
+=======================================
 
-	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 75
-	Empty vs non-empty std::optional
+False Negative Failure:
+Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 167
 
-	[std::optional<int>]
-	operator== returned false
+Comparison performed using:
+[sequoia::testing::value_tester<std::optional<sequoia::testing::only_equivalence_checkable> >]
+Checking for equivalence with:
+[std::optional<sequoia::testing::only_equivalence_checkable>]
 
-	  Obtained : null
-	  Predicted: not null
-	  [bool]
-	  check failed
+=======================================
 
-	=======================================
+False Negative Failure:
+Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 168
 
-	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 76
-	Non-empty vs empty std::optional
+[std::optional<sequoia::testing::only_equivalence_checkable>]
 
-	[std::optional<int>]
-	operator== returned false
+=======================================
 
-	  Obtained : not null
-	  Predicted: null
-	  [bool]
-	  check failed
+False Negative Failure:
+Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 174
 
-	=======================================
+Comparison performed using:
+[sequoia::testing::value_tester<std::optional<sequoia::testing::only_weakly_checkable> >]
+Checking for weak equivalence with:
+[std::optional<sequoia::testing::only_weakly_checkable>]
 
-	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 77
-	Two std::optionals holdings different values
+=======================================
 
-	[std::optional<int>]
-	operator== returned false
+False Negative Failure:
+Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 175
 
-	  Contents of optional
-	  [int]
-	  operator== returned false
-	  Obtained : 2
-	  Predicted: 0
+[std::optional<sequoia::testing::only_weakly_checkable>]
 
-	=======================================
+=======================================
 
-	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 80
-	Advice for two std::optionals holdings different values
+False Negative Failure:
+Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 181
 
-	[std::optional<int>]
-	operator== returned false
+Comparison performed using:
+[sequoia::testing::value_tester<std::any>]
+Checking for equivalence with:
+[int]
 
-	  Contents of optional
-	  [int]
-	  operator== returned false
-	  Obtained : 2
-	  Predicted: 0
-	  Advice: int advice
+=======================================
 
-	=======================================
+False Negative Failure:
+Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 182
 
-	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 89
-	Empty vs non-empty std::optional
+Comparison performed using:
+[sequoia::testing::value_tester<std::any>]
+Checking for equivalence with:
+[sequoia::testing::only_equivalence_checkable]
 
-	Comparison performed using:
-	[sequoia::testing::value_tester<std::optional<sequoia::testing::only_equivalence_checkable> >]
-	Checking for equivalence with:
-	[std::optional<sequoia::testing::only_equivalence_checkable>]
-
-	  Obtained : null
-	  Predicted: not null
-	  [bool]
-	  check failed
+=======================================
 
-	=======================================
+False Negative Failure:
+Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 183
 
-	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 90
-	Non-empty vs empty std::optional
+Comparison performed using:
+[sequoia::testing::value_tester<std::any>]
+Checking for equivalence with:
+[sequoia::testing::only_weakly_checkable]
 
-	Comparison performed using:
-	[sequoia::testing::value_tester<std::optional<sequoia::testing::only_equivalence_checkable> >]
-	Checking for equivalence with:
-	[std::optional<sequoia::testing::only_equivalence_checkable>]
-
-	  Obtained : not null
-	  Predicted: null
-	  [bool]
-	  check failed
-
-	=======================================
-
-	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 91
-	Two std::optionals holdings different values
-
-	Comparison performed using:
-	[sequoia::testing::value_tester<std::optional<sequoia::testing::only_equivalence_checkable> >]
-	Checking for equivalence with:
-	[std::optional<sequoia::testing::only_equivalence_checkable>]
-
-	  Contents of optional
-	  Comparison performed using:
-	  [sequoia::testing::value_tester<sequoia::testing::only_equivalence_checkable>]
-	  Checking for equivalence with:
-	  [sequoia::testing::only_equivalence_checkable]
-
-	    Wrapped double
-	    [double]
-	    operator== returned false
-	    Obtained : 2
-	    Predicted: 0
-
-	=======================================
-
-	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 97
-	Empty vs non-empty std::optional
-
-	Comparison performed using:
-	[sequoia::testing::value_tester<std::optional<sequoia::testing::only_weakly_checkable> >]
-	Checking for weak equivalence with:
-	[std::optional<sequoia::testing::only_weakly_checkable>]
-
-	  Obtained : null
-	  Predicted: not null
-	  [bool]
-	  check failed
-
-	=======================================
-
-	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 98
-	Non-empty vs empty std::optional
-
-	Comparison performed using:
-	[sequoia::testing::value_tester<std::optional<sequoia::testing::only_weakly_checkable> >]
-	Checking for weak equivalence with:
-	[std::optional<sequoia::testing::only_weakly_checkable>]
-
-	  Obtained : not null
-	  Predicted: null
-	  [bool]
-	  check failed
-
-	=======================================
-
-	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 99
-	Two std::optionals holdings different values
-
-	Comparison performed using:
-	[sequoia::testing::value_tester<std::optional<sequoia::testing::only_weakly_checkable> >]
-	Checking for weak equivalence with:
-	[std::optional<sequoia::testing::only_weakly_checkable>]
-
-	  Contents of optional
-	  Comparison performed using:
-	  [sequoia::testing::value_tester<sequoia::testing::only_weakly_checkable>]
-	  Checking for weak equivalence with:
-	  [sequoia::testing::only_weakly_checkable]
-
-	    Wrapped int
-	    [int]
-	    operator== returned false
-	    Obtained : 2
-	    Predicted: 1
-
-	    Wrapped double
-	    [double]
-	    operator== returned false
-	    Obtained : 1
-	    Predicted: 2
-
-	=======================================
-
-	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 105
-	Empty std::any
-
-	Comparison performed using:
-	[sequoia::testing::value_tester<std::any>]
-	Checking for equivalence with:
-	[int]
-
-	  Has value
-	  [bool]
-	  check failed
-
-	=======================================
-
-	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 106
-	std::any holding the wrong type
-
-	Comparison performed using:
-	[sequoia::testing::value_tester<std::any>]
-	Checking for equivalence with:
-	[double]
-
-	  std::any does not hold the expected type
-	  [bool]
-	  check failed
-
-	=======================================
-
-	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 107
-	std::any holding the wrong value
-
-	Comparison performed using:
-	[sequoia::testing::value_tester<std::any>]
-	Checking for equivalence with:
-	[int]
-
-	  Value held by std::any
-	  [int]
-	  operator== returned false
-	  Obtained : 1
-	  Predicted: 2
-
-	=======================================
-
-	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 109
-
-	Comparison performed using:
-	[sequoia::testing::value_tester<std::any>]
-	Checking for equivalence with:
-	[sequoia::testing::only_equivalence_checkable]
-
-	  Value held by std::any
-	  [sequoia::testing::only_equivalence_checkable]
-	    Wrapped double
-	    [double]
-	    operator== returned false
-	    Obtained : 1
-	    Predicted: 2
-
-	=======================================
-
-	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 110
-
-	Comparison performed using:
-	[sequoia::testing::value_tester<std::any>]
-	Checking for equivalence with:
-	[sequoia::testing::only_weakly_checkable]
-
-	  Value held by std::any
-	  [sequoia::testing::only_weakly_checkable]
-	    Wrapped int
-	    [int]
-	    operator== returned false
-	    Obtained : 1
-	    Predicted: 2
-
-	    Wrapped double
-	    [double]
-	    operator== returned false
-	    Obtained : 1
-	    Predicted: 2
-
-	=======================================
-
-	Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 113
-	Advice for std::any holding the wrong value
-
-	Comparison performed using:
-	[sequoia::testing::value_tester<std::any>]
-	Checking for equivalence with:
-	[int]
-
-	  Value held by std::any
-	  [int]
-	  operator== returned false
-	  Obtained : 1
-	  Predicted: 2
-	  Advice: int advice
-
-	=======================================
+=======================================
 

@@ -8,60 +8,42 @@
 #pragma once
 
 /*! \file
-    \brief Traits and classes for static graphs with homogeneous node weights.
+    \brief Classes for static graphs with homogeneous node weights.
 
  */
 
 #include "sequoia/Core/DataStructures/PartitionedData.hpp"
-#include "sequoia/Core/Object/DataPool.hpp"
-#include "sequoia/Maths/Graph/GraphImpl.hpp"
-#include "sequoia/Maths/Graph/StaticGraphImpl.hpp"
+#include "sequoia/Maths/Graph/GraphPrimitive.hpp"
+#include "sequoia/Maths/Graph/StaticGraphConfig.hpp"
 #include "sequoia/Maths/Graph/StaticNodeStorage.hpp"
 
 namespace sequoia::maths
 {
-  template<std::size_t Size, std::size_t Order, class EdgeWeight, class NodeWeight>
-  struct static_graph_traits
-  {
-    using edge_index_type = typename graph_impl::static_edge_index_type_generator<Size, Order, false>::index_type;
-  };
-
   template
   <
-    directed_flavour Directedness,
     std::size_t Size,
     std::size_t Order,
     class EdgeWeight,
     class NodeWeight,
-    class Traits = static_graph_traits<Size, Order, EdgeWeight, NodeWeight>
+    class EdgeStorageConfig = static_edge_storage_config<graph_flavour::directed, Size, Order>
   >
-  class static_graph final : public
+  class static_directed_graph final : public
     graph_primitive
     <
-      connectivity
-      <
-        Directedness,
-        graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected, Order, Size, EdgeWeight, typename Traits::edge_index_type>,
-        object::faithful_producer<EdgeWeight>
-      >,
-      graph_impl::static_node_storage<object::faithful_producer<NodeWeight>, Order>
+      connectivity<graph_flavour::directed, graph_impl::edge_storage_generator_t<graph_flavour::directed, EdgeWeight, null_meta_data, typename EdgeStorageConfig::index_type, EdgeStorageConfig>>,
+      static_node_storage<NodeWeight, Order>
     >
   {
   private:
     using primitive_type =
       graph_primitive
       <
-        connectivity
-        <
-          Directedness,
-          graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected, Order, Size, EdgeWeight, typename Traits::edge_index_type>,
-          object::faithful_producer<EdgeWeight>
-        >,
-        graph_impl::static_node_storage<object::faithful_producer<NodeWeight>, Order>
+        connectivity<graph_flavour::directed, graph_impl::edge_storage_generator_t<graph_flavour::directed, EdgeWeight, null_meta_data, typename EdgeStorageConfig::index_type, EdgeStorageConfig>>,
+        static_node_storage<NodeWeight, Order>
       >;
 
   public:
-    constexpr static graph_flavour flavour{(Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected};
+    constexpr static graph_flavour flavour{graph_flavour::directed};
 
     [[nodiscard]]
     constexpr static std::size_t order() noexcept { return Order; }
@@ -70,67 +52,94 @@ namespace sequoia::maths
     constexpr static std::size_t size() noexcept { return Size; }
 
     using node_weight_type = NodeWeight;
-    using edge_index_type = typename Traits::edge_index_type;
 
     using
       graph_primitive
       <
-        connectivity
-        <
-          Directedness,
-          graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected, Order, Size, EdgeWeight, typename Traits::edge_index_type>,
-          object::faithful_producer<EdgeWeight>
-        >,
-        graph_impl::static_node_storage<object::faithful_producer<NodeWeight>, Order>
+        connectivity<graph_flavour::directed, graph_impl::edge_storage_generator_t<graph_flavour::directed, EdgeWeight, null_meta_data, typename EdgeStorageConfig::index_type, EdgeStorageConfig>>,
+        static_node_storage<NodeWeight, Order>
       >::graph_primitive;
 
     using primitive_type::swap_nodes;
     using primitive_type::sort_edges;
+    using primitive_type::stable_sort_edges;
     using primitive_type::swap_edges;
-  };
-
-  template<std::size_t Size, std::size_t Order, class EdgeWeight, class NodeWeight>
-  struct static_embedded_graph_traits
-  {
-    using edge_index_type = typename graph_impl::static_edge_index_type_generator<Size, Order, true>::index_type;
   };
 
   template
   <
-    directed_flavour Directedness,
     std::size_t Size,
     std::size_t Order,
     class EdgeWeight,
     class NodeWeight,
-    class Traits = static_embedded_graph_traits<Size, Order, EdgeWeight, NodeWeight>
+    class EdgeMetaData      = null_meta_data,
+    class EdgeStorageConfig = static_edge_storage_config<graph_flavour::undirected, Size, Order>
+  >
+  class static_undirected_graph final : public
+    graph_primitive
+    <
+      connectivity<graph_flavour::undirected, graph_impl::edge_storage_generator_t<graph_flavour::undirected, EdgeWeight, EdgeMetaData, typename EdgeStorageConfig::index_type, EdgeStorageConfig>>,
+      static_node_storage<NodeWeight, Order>
+    >
+  {
+  private:
+    using primitive_type =
+      graph_primitive
+      <
+        connectivity<graph_flavour::undirected, graph_impl::edge_storage_generator_t<graph_flavour::undirected, EdgeWeight, EdgeMetaData, typename EdgeStorageConfig::index_type, EdgeStorageConfig>>,
+        static_node_storage<NodeWeight, Order>
+      >;
+
+  public:
+    constexpr static graph_flavour flavour{graph_flavour::undirected};
+
+    [[nodiscard]]
+    constexpr static std::size_t order() noexcept { return Order; }
+
+    [[nodiscard]]
+    constexpr static std::size_t size() noexcept { return Size; }
+
+    using node_weight_type = NodeWeight;
+
+    using
+      graph_primitive
+      <
+        connectivity<graph_flavour::undirected, graph_impl::edge_storage_generator_t<graph_flavour::undirected, EdgeWeight, EdgeMetaData, typename EdgeStorageConfig::index_type, EdgeStorageConfig>>,
+        static_node_storage<NodeWeight, Order>
+      >::graph_primitive;
+
+    using primitive_type::swap_nodes;
+    using primitive_type::sort_edges;
+    using primitive_type::stable_sort_edges;
+    using primitive_type::swap_edges;
+  };
+
+  template
+  <
+    std::size_t Size,
+    std::size_t Order,
+    class EdgeWeight,
+    class NodeWeight,
+    class EdgeMetaData      = null_meta_data,
+    class EdgeStorageConfig = static_edge_storage_config<graph_flavour::undirected_embedded, Size, Order>
   >
   class static_embedded_graph final : public
     graph_primitive
     <
-      connectivity
-      <
-        Directedness,
-        graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded, Order, Size, EdgeWeight, typename Traits::edge_index_type>,
-        object::faithful_producer<EdgeWeight>
-      >,
-      graph_impl::static_node_storage<object::faithful_producer<NodeWeight>, Order>
+      connectivity<graph_flavour::undirected_embedded, graph_impl::edge_storage_generator_t<graph_flavour::undirected_embedded, EdgeWeight, EdgeMetaData, typename EdgeStorageConfig::index_type, EdgeStorageConfig>>,
+      static_node_storage<NodeWeight, Order>
     >
   {
   private:
     using primitive =
       graph_primitive
       <
-        connectivity
-        <
-          Directedness,
-          graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded, Order, Size, EdgeWeight, typename Traits::edge_index_type>,
-          object::faithful_producer<EdgeWeight>
-        >,
-        graph_impl::static_node_storage<object::faithful_producer<NodeWeight>, Order>
+        connectivity<graph_flavour::undirected_embedded, graph_impl::edge_storage_generator_t<graph_flavour::undirected_embedded, EdgeWeight, EdgeMetaData, typename EdgeStorageConfig::index_type, EdgeStorageConfig>>,
+        static_node_storage<NodeWeight, Order>
       >;
 
   public:
-    constexpr static graph_flavour flavour{(Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded};
+    constexpr static graph_flavour flavour{graph_flavour::undirected_embedded};
 
     [[nodiscard]]
     constexpr static std::size_t order() noexcept { return Order; }
@@ -139,18 +148,12 @@ namespace sequoia::maths
     constexpr static std::size_t size() noexcept { return Size; }
 
     using node_weight_type =  NodeWeight;
-    using edge_index_type = typename Traits::edge_index_type;
 
     using
       graph_primitive
       <
-        connectivity
-        <
-          Directedness,
-          graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded, Order, Size, EdgeWeight, typename Traits::edge_index_type>,
-          object::faithful_producer<EdgeWeight>
-        >,
-        graph_impl::static_node_storage<object::faithful_producer<NodeWeight>, Order>
+        connectivity<graph_flavour::undirected_embedded, graph_impl::edge_storage_generator_t<graph_flavour::undirected_embedded, EdgeWeight, EdgeMetaData, typename EdgeStorageConfig::index_type, EdgeStorageConfig>>,
+        static_node_storage<NodeWeight, Order>
       >::graph_primitive;
 
     using primitive::swap_nodes;

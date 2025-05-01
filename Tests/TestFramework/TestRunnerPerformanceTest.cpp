@@ -78,7 +78,7 @@ namespace sequoia::testing
       {
         using namespace std::chrono_literals;
         std::this_thread::sleep_for(25ms);
-        check(equality, "Integer equality", I, I);
+        check(equality, {"Integer equality"}, I, I);
       }
     };
 
@@ -87,8 +87,8 @@ namespace sequoia::testing
       test_runner runner{args.size(),
                          args.get(),
                          "Oliver J. Rosten",
-                         {"TestSandbox/TestSandbox.cpp", {}, "TestShared/SharedIncludes.hpp"},
                          "  ",
+                         {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
                          outputStream};
 
       runner.add_test_suite(
@@ -117,6 +117,12 @@ namespace sequoia::testing
   fs::path test_runner_performance_test::fake_project() const
   {
     return auxiliary_materials() /= "FakeProject";
+  }
+
+  [[nodiscard]]
+  fs::path test_runner_performance_test::minimal_fake_path() const
+  {
+    return fake_project().append("build/CMade");
   }
 
   fs::path test_runner_performance_test::check_output(std::string_view description, std::string_view dirName, std::stringstream& output)
@@ -153,41 +159,41 @@ namespace sequoia::testing
   void test_runner_performance_test::test_parallel_acceleration()
   {
     std::stringstream outputStream{};
-    auto runner{make_slow_suite({(fake_project() / "build").generic_string()}, outputStream)};
+    auto runner{make_slow_suite({{(minimal_fake_path()).generic_string()}}, outputStream)};
     runner.execute();
 
-    auto outputFile{check_output(report_line("Parallel Acceleration Output"), "ParallelAccelerationOutput", outputStream)};
-    check(within_tolerance{35.0}, report_line(""), get_timing(outputFile), 60.0);
+    auto outputFile{check_output(report({"Parallel Acceleration Output"}), "ParallelAccelerationOutput", outputStream)};
+    check(within_tolerance{35.0}, "", get_timing(outputFile), 60.0);
   }
 
   void test_runner_performance_test::test_thread_pool_acceleration()
   {
     {
       std::stringstream outputStream{};
-      auto runner{make_slow_suite({(fake_project() / "build").generic_string(), "--thread-pool", "8"}, outputStream)};
+      auto runner{make_slow_suite({{(minimal_fake_path()).generic_string(), "--thread-pool", "8"}}, outputStream)};
       runner.execute();
 
-      auto outputFile{check_output(report_line("Thread Pool (8) Acceleration Output"), "ThreadPool8AccelerationOutput", outputStream)};
-      check(within_tolerance{15.0}, report_line(""), get_timing(outputFile), 40.0);
+      auto outputFile{check_output(report({"Thread Pool (8) Acceleration Output"}), "ThreadPool8AccelerationOutput", outputStream)};
+      check(within_tolerance{15.0}, "", get_timing(outputFile), 40.0);
     }
 
     {
       std::stringstream outputStream{};
-      auto runner{make_slow_suite({(fake_project() / "build").generic_string(), "--thread-pool", "2"}, outputStream)};
+      auto runner{make_slow_suite({{(minimal_fake_path()).generic_string(), "--thread-pool", "2"}}, outputStream)};
       runner.execute();
 
-      auto outputFile{check_output(report_line("Thread Pool (2) Acceleration Output"), "ThreadPool2AccelerationOutput", outputStream)};
-      check(within_tolerance{25.0}, report_line(""), get_timing(outputFile), 125.0);
+      auto outputFile{check_output(report({"Thread Pool (2) Acceleration Output"}), "ThreadPool2AccelerationOutput", outputStream)};
+      check(within_tolerance{25.0}, "", get_timing(outputFile), 125.0);
     }
   }
 
   void test_runner_performance_test::test_serial_execution()
   {
     std::stringstream outputStream{};
-    auto runner{make_slow_suite({(fake_project() / "build").generic_string(), "--serial"}, outputStream)};
+    auto runner{make_slow_suite({{(minimal_fake_path()).generic_string(), "--serial"}}, outputStream)};
     runner.execute();
 
-    auto outputFile{check_output(report_line("Serial Output"), "Serial Output", outputStream)};
-    check(within_tolerance{20.0}, report_line(""), get_timing(outputFile), 220.0);
+    auto outputFile{check_output(report({"Serial Output"}), "Serial Output", outputStream)};
+    check(within_tolerance{20.0}, "", get_timing(outputFile), 220.0);
   }
 }

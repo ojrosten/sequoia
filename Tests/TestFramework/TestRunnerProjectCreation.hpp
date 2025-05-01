@@ -34,6 +34,6 @@ namespace sequoia::testing
     std::string zeroth_arg() const;
 
     [[nodiscard]]
-    project_paths::initializer make_project_paths() const;
+    project_paths::customizer make_project_paths() const;
   };
 }

@@ -1,0 +1,3 @@
+Traversals
+Standard Top Level Checks:              1460;  Failures:  0  [Deep checks: 5456]
+Standard Performance Checks:              12;  Failures:  0

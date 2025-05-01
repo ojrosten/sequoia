@@ -26,12 +26,6 @@ namespace sequoia::testing
 
     void test_waiting_task(const std::chrono::milliseconds millisecs);
     void test_waiting_task_return(const std::chrono::milliseconds millisecs);
-
-    template<class ThreadModel, class... Args>
-    void waiting_task(const std::size_t nTasks, const std::chrono::milliseconds millisecs, Args&&... args);
-
-    template<class ThreadModel, class... Args>
-    std::vector<int> waiting_task_return(const std::size_t nTasks, const std::chrono::milliseconds millisecs, Args&&... args);
   };
 
   class wait

@@ -88,28 +88,28 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a2c67b08bff5cf4cf2709f890dff8fe9a"><td class="memTemplParams" colspan="2"><a id="a2c67b08bff5cf4cf2709f890dff8fe9a" name="a2c67b08bff5cf4cf2709f890dff8fe9a"></a>
+<tr class="memitem:af875f3d78c837368b80939122bdad43b"><td class="memTemplParams" colspan="2"><a id="af875f3d78c837368b80939122bdad43b" name="af875f3d78c837368b80939122bdad43b"></a>
 template&lt;test_mode Mode, pseudoregular T&gt; </td></tr>
-<tr class="memitem:a2c67b08bff5cf4cf2709f890dff8fe9a"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_semantics</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;x, const T &amp;y)</td></tr>
-<tr class="memdesc:a2c67b08bff5cf4cf2709f890dff8fe9a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Precondition: x!=y. <br /></td></tr>
-<tr class="separator:a2c67b08bff5cf4cf2709f890dff8fe9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7cf78d08c99f36e041e50d3775b9ddc9"><td class="memTemplParams" colspan="2"><a id="a7cf78d08c99f36e041e50d3775b9ddc9" name="a7cf78d08c99f36e041e50d3775b9ddc9"></a>
+<tr class="memitem:af875f3d78c837368b80939122bdad43b"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_semantics</b> (std::string description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;x, const T &amp;y)</td></tr>
+<tr class="memdesc:af875f3d78c837368b80939122bdad43b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prerequisite: x!=y. <br /></td></tr>
+<tr class="separator:af875f3d78c837368b80939122bdad43b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a94b6805107ec8a8068cc261b94e0e90e"><td class="memTemplParams" colspan="2"><a id="a94b6805107ec8a8068cc261b94e0e90e" name="a94b6805107ec8a8068cc261b94e0e90e"></a>
 template&lt;test_mode Mode, pseudoregular T&gt; <br />
 requires std::totally_ordered&lt;T&gt;</td></tr>
-<tr class="memitem:a7cf78d08c99f36e041e50d3775b9ddc9"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_semantics</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;x, const T &amp;y, std::weak_ordering order)</td></tr>
-<tr class="memdesc:a7cf78d08c99f36e041e50d3775b9ddc9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Precondition: x!=y with values consistent with order. <br /></td></tr>
-<tr class="separator:a7cf78d08c99f36e041e50d3775b9ddc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a38a2b3cef41484963c530ab8cc1a4eb2"><td class="memTemplParams" colspan="2"><a id="a38a2b3cef41484963c530ab8cc1a4eb2" name="a38a2b3cef41484963c530ab8cc1a4eb2"></a>
+<tr class="memitem:a94b6805107ec8a8068cc261b94e0e90e"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_semantics</b> (std::string description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;x, const T &amp;y, std::weak_ordering order)</td></tr>
+<tr class="memdesc:a94b6805107ec8a8068cc261b94e0e90e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prerequisite: x!=y with values consistent with order. <br /></td></tr>
+<tr class="separator:a94b6805107ec8a8068cc261b94e0e90e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa500713c1dedc7358bb4295fef209615"><td class="memTemplParams" colspan="2"><a id="aa500713c1dedc7358bb4295fef209615" name="aa500713c1dedc7358bb4295fef209615"></a>
 template&lt;test_mode Mode, pseudoregular T, std::invocable&lt; T &amp; &gt; Mutator&gt; </td></tr>
-<tr class="memitem:a38a2b3cef41484963c530ab8cc1a4eb2"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_semantics</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;x, const T &amp;y, Mutator yMutator)</td></tr>
-<tr class="memdesc:a38a2b3cef41484963c530ab8cc1a4eb2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Precondition: x!=y. <br /></td></tr>
-<tr class="separator:a38a2b3cef41484963c530ab8cc1a4eb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9ffe927aab61d7ad5721dd82af261194"><td class="memTemplParams" colspan="2"><a id="a9ffe927aab61d7ad5721dd82af261194" name="a9ffe927aab61d7ad5721dd82af261194"></a>
+<tr class="memitem:aa500713c1dedc7358bb4295fef209615"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_semantics</b> (std::string description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;x, const T &amp;y, Mutator yMutator)</td></tr>
+<tr class="memdesc:aa500713c1dedc7358bb4295fef209615"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prerequisite: x!=y. <br /></td></tr>
+<tr class="separator:aa500713c1dedc7358bb4295fef209615"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae735dce3cf9c41afe5ca805bcc7836c6"><td class="memTemplParams" colspan="2"><a id="ae735dce3cf9c41afe5ca805bcc7836c6" name="ae735dce3cf9c41afe5ca805bcc7836c6"></a>
 template&lt;test_mode Mode, pseudoregular T, std::invocable&lt; T &amp; &gt; Mutator&gt; <br />
 requires std::totally_ordered&lt;T&gt;</td></tr>
-<tr class="memitem:a9ffe927aab61d7ad5721dd82af261194"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_semantics</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;x, const T &amp;y, std::weak_ordering order, Mutator yMutator)</td></tr>
-<tr class="memdesc:a9ffe927aab61d7ad5721dd82af261194"><td class="mdescLeft">&#160;</td><td class="mdescRight">Precondition: x!=y, with values consistent with order. <br /></td></tr>
-<tr class="separator:a9ffe927aab61d7ad5721dd82af261194"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae735dce3cf9c41afe5ca805bcc7836c6"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_semantics</b> (std::string description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;x, const T &amp;y, std::weak_ordering order, Mutator yMutator)</td></tr>
+<tr class="memdesc:ae735dce3cf9c41afe5ca805bcc7836c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prerequisite: x!=y, with values consistent with order. <br /></td></tr>
+<tr class="separator:ae735dce3cf9c41afe5ca805bcc7836c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Functions for checking regular semantics. </p>

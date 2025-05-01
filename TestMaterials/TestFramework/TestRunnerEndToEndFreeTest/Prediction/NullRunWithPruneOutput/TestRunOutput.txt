@@ -1,5 +1,5 @@
 
 Analyzing dependencies...
-[24.9ms]
+[27.7ms]
 
 Nothing to do: no changes since the last run, therefore 'prune' has pruned all tests

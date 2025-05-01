@@ -86,17 +86,20 @@ Public Types</h2></td></tr>
 <tr class="memitem:a7a841c30ab3cf9b09d1f3b5a58703003"><td class="memItemLeft" align="right" valign="top"><a id="a7a841c30ab3cf9b09d1f3b5a58703003" name="a7a841c30ab3cf9b09d1f3b5a58703003"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>type</b> = <a class="el" href="../../dc/dc6/structsequoia_1_1testing_1_1failure__info.html">sequoia::testing::failure_info</a></td></tr>
 <tr class="separator:a7a841c30ab3cf9b09d1f3b5a58703003"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad9937279a9b74361bebec43a38a9b8b3"><td class="memItemLeft" align="right" valign="top"><a id="ad9937279a9b74361bebec43a38a9b8b3" name="ad9937279a9b74361bebec43a38a9b8b3"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>equivalent_type</b> = std::pair&lt; std::size_t, std::string &gt;</td></tr>
+<tr class="separator:ad9937279a9b74361bebec43a38a9b8b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a44f1808d9fbf24668817404df479f3cc"><td class="memTemplParams" colspan="2"><a id="a44f1808d9fbf24668817404df479f3cc" name="a44f1808d9fbf24668817404df479f3cc"></a>
-template&lt;<a class="el" href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> Mode&gt; </td></tr>
+template&lt;test_mode Mode&gt; </td></tr>
 <tr class="memitem:a44f1808d9fbf24668817404df479f3cc"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>test</b> (<a class="el" href="../../d2/d95/structsequoia_1_1testing_1_1equality__check__t.html">equality_check_t</a>, <a class="el" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger</a>&lt; Mode &gt; &amp;logger, const <a class="el" href="../../dc/dc6/structsequoia_1_1testing_1_1failure__info.html">type</a> &amp;actual, const <a class="el" href="../../dc/dc6/structsequoia_1_1testing_1_1failure__info.html">type</a> &amp;prediction)</td></tr>
 <tr class="separator:a44f1808d9fbf24668817404df479f3cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a660dfdb1ce8607b872747ea8686bdd93"><td class="memTemplParams" colspan="2"><a id="a660dfdb1ce8607b872747ea8686bdd93" name="a660dfdb1ce8607b872747ea8686bdd93"></a>
-template&lt;<a class="el" href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> Mode&gt; </td></tr>
-<tr class="memitem:a660dfdb1ce8607b872747ea8686bdd93"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>test</b> (<a class="el" href="../../df/d9e/structsequoia_1_1testing_1_1general__equivalence__check__t.html">equivalence_check_t</a>, <a class="el" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger</a>&lt; Mode &gt; &amp;logger, const <a class="el" href="../../dc/dc6/structsequoia_1_1testing_1_1failure__info.html">type</a> &amp;actual, const std::size_t checkIndex, const std::string &amp;message)</td></tr>
-<tr class="separator:a660dfdb1ce8607b872747ea8686bdd93"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a210de45c90a34f9f4120e3590d869ec0"><td class="memTemplParams" colspan="2"><a id="a210de45c90a34f9f4120e3590d869ec0" name="a210de45c90a34f9f4120e3590d869ec0"></a>
+template&lt;test_mode Mode&gt; </td></tr>
+<tr class="memitem:a210de45c90a34f9f4120e3590d869ec0"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>test</b> (<a class="el" href="../../df/d9e/structsequoia_1_1testing_1_1general__equivalence__check__t.html">equivalence_check_t</a>, <a class="el" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger</a>&lt; Mode &gt; &amp;logger, const <a class="el" href="../../dc/dc6/structsequoia_1_1testing_1_1failure__info.html">type</a> &amp;actual, const equivalent_type prediction)</td></tr>
+<tr class="separator:a210de45c90a34f9f4120e3590d869ec0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li>C:/Users/olive/sequoia/Tests/TestFramework/<a class="el" href="../../d0/d63/FailureInfoTestingUtilities_8hpp_source.html">FailureInfoTestingUtilities.hpp</a></li>

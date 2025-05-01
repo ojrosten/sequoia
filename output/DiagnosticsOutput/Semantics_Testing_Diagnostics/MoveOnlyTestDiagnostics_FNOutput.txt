@@ -1,35 +1,470 @@
-	False Positive Failure:
-	Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 56
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 29
+Broken equality
 
-	--Move-only Semantics--
-	[sequoia::testing::move_only_beast<int, std::allocator<int> >]
+--Move-only Semantics--
+[sequoia::testing::move_only_broken_equality<int, std::allocator<int> >]
 
-	=======================================
+  operator== is inconsistent (x)
+  [bool]
+  check failed
 
-	False Positive Failure:
-	Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 57
-	Function object syntax
+  operator== is inconsistent (y)
+  [bool]
+  check failed
 
-	--Move-only Semantics--
-	[sequoia::testing::move_only_beast<int, std::allocator<int> >]
+=======================================
 
-	=======================================
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 30
+Broken inequality
 
-	False Positive Failure:
-	Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 59
-	Check moved-from state
+--Move-only Semantics--
+[sequoia::testing::move_only_broken_inequality<int, std::allocator<int> >]
 
-	--Move-only Semantics--
-	[sequoia::testing::resource_binder]
+  operator== is inconsistent (x)
+  [bool]
+  check failed
 
-	=======================================
+  operator== is inconsistent (y)
+  [bool]
+  check failed
 
-	False Positive Failure:
-	Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 60
-	Check moved-from state
+  operator!= is inconsistent (x)
+  [bool]
+  check failed
 
-	--Move-only Semantics--
-	[sequoia::testing::resource_binder]
+  operator!= is inconsistent (y)
+  [bool]
+  check failed
 
-	=======================================
+=======================================
+
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 31
+Broken move
+
+--Move-only Semantics--
+[sequoia::testing::move_only_broken_move<int, std::allocator<int> >]
+
+  Inconsistent move construction
+  [sequoia::testing::move_only_broken_move<int, std::allocator<int> >]
+  operator== returned false
+  Obtained : 
+  Predicted: 1 
+
+=======================================
+
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 32
+Broken swap
+
+--Move-only Semantics--
+[sequoia::testing::move_only_broken_swap<int, std::allocator<int> >]
+
+  Inconsistent Swap (y)
+  [sequoia::testing::move_only_broken_swap<int, std::allocator<int> >]
+  operator== returned false
+  Obtained : 2 
+  Predicted: 1 
+
+  Inconsistent Swap (x)
+  [sequoia::testing::move_only_broken_swap<int, std::allocator<int> >]
+  operator== returned false
+  Obtained : 1 
+  Predicted: 2 
+
+=======================================
+
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 33
+Broken move assignment
+
+--Move-only Semantics--
+[sequoia::testing::move_only_broken_move_assignment<int, std::allocator<int> >]
+
+  Inconsistent move assignment (from y)
+  [sequoia::testing::move_only_broken_move_assignment<int, std::allocator<int> >]
+  operator== returned false
+  Obtained : 1 
+  Predicted: 2 
+
+=======================================
+
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 34
+Broken check invariant
+
+--Move-only Semantics--
+[sequoia::testing::move_only_beast<int, std::allocator<int> >]
+
+  Prerequisite - for checking semantics, x and y are assumed to be different
+  [bool]
+  check failed
+
+=======================================
+
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 35
+Broken check invariant
+
+--Move-only Semantics--
+[sequoia::testing::move_only_beast<int, std::allocator<int> >]
+
+  Prerequisite - for checking move-only semantics, x and xEquivalent are assumed to be equal
+  [sequoia::testing::move_only_beast<int, std::allocator<int> >]
+  operator== returned false
+  Obtained : 1
+
+  Predicted: 2
+
+=======================================
+
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 36
+Broken check invariant
+
+--Move-only Semantics--
+[sequoia::testing::move_only_beast<int, std::allocator<int> >]
+
+  Prerequisite - for checking move-only semantics, y and yEquivalent are assumed to be equal
+  [sequoia::testing::move_only_beast<int, std::allocator<int> >]
+  operator== returned false
+  Obtained : 1
+
+  Predicted: 3
+
+=======================================
+
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 64
+Incorrect moved-from state post construction
+
+--Move-only Semantics--
+[sequoia::testing::resource_binder<0>]
+
+  Incorrect moved-from value after move construction
+  [bool]
+  check failed
+
+=======================================
+
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 65
+Incorrect moved-from state post construction
+
+--Move-only Semantics--
+[sequoia::testing::resource_binder<0>]
+
+  Incorrect moved-from value after move construction
+  [bool]
+  check failed
+
+=======================================
+
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 67
+Incorrect moved-from state post assignment
+
+--Move-only Semantics--
+[sequoia::testing::resource_binder<0>]
+
+  Incorrect moved-from value after move construction
+  [bool]
+  check failed
+
+=======================================
+
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 68
+Incorrect moved-from state post assignment
+
+--Move-only Semantics--
+[sequoia::testing::resource_binder<0>]
+
+  Incorrect moved-from value after move assignment
+  [bool]
+  check failed
+
+=======================================
+
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 64
+Incorrect moved-from state post construction
+
+--Move-only Semantics--
+[sequoia::testing::resource_binder<1>]
+
+  Incorrect moved-from value after move construction
+  [sequoia::testing::resource_binder<1>]
+  operator== returned false
+  Obtained : 0
+  Predicted: 3
+
+=======================================
+
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 65
+Incorrect moved-from state post construction
+
+--Move-only Semantics--
+[sequoia::testing::resource_binder<1>]
+
+  Incorrect moved-from value after move construction
+  [sequoia::testing::resource_binder<1>]
+  operator== returned false
+  Obtained : 0
+  Predicted: 3
+
+=======================================
+
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 67
+Incorrect moved-from state post assignment
+
+--Move-only Semantics--
+[sequoia::testing::resource_binder<1>]
+
+  Incorrect moved-from value after move construction
+  [sequoia::testing::resource_binder<1>]
+  operator== returned false
+  Obtained : 0
+  Predicted: 3
+
+=======================================
+
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 68
+Incorrect moved-from state post assignment
+
+--Move-only Semantics--
+[sequoia::testing::resource_binder<1>]
+
+  Incorrect moved-from value after move assignment
+  [sequoia::testing::resource_binder<1>]
+  operator== returned false
+  Obtained : 1
+  Predicted: 3
+
+=======================================
+
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 44
+Broken equality
+
+--Move-only Semantics--
+[sequoia::testing::move_only_broken_equality<int, std::allocator<int> >]
+
+  operator== is inconsistent (x)
+  [bool]
+  check failed
+
+  operator== is inconsistent (y)
+  [bool]
+  check failed
+
+=======================================
+
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 45
+Broken inequality
+
+--Move-only Semantics--
+[sequoia::testing::move_only_broken_inequality<int, std::allocator<int> >]
+
+  operator== is inconsistent (x)
+  [bool]
+  check failed
+
+  operator== is inconsistent (y)
+  [bool]
+  check failed
+
+  operator!= is inconsistent (x)
+  [bool]
+  check failed
+
+  operator!= is inconsistent (y)
+  [bool]
+  check failed
+
+=======================================
+
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 46
+Broken move
+
+--Move-only Semantics--
+[sequoia::testing::move_only_broken_move<int, std::allocator<int> >]
+
+  Inconsistent move construction
+  Comparison performed using:
+  [sequoia::testing::value_tester<sequoia::testing::move_only_broken_move<int, std::allocator<int> > >]
+  Checking for equivalence with:
+  [std::vector<int, std::allocator<int> >]
+
+    Wrapped vector
+    [std::vector<int, std::allocator<int> >]
+    operator== returned false
+
+      Container size wrong
+      [unsigned long long]
+      operator== returned false
+      Obtained : 0
+      Predicted: 1
+
+=======================================
+
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 47
+Broken swap
+
+--Move-only Semantics--
+[sequoia::testing::move_only_broken_swap<int, std::allocator<int> >]
+
+  Inconsistent Swap (y)
+  Comparison performed using:
+  [sequoia::testing::value_tester<sequoia::testing::move_only_broken_swap<int, std::allocator<int> > >]
+  Checking for equivalence with:
+  [std::vector<int, std::allocator<int> >]
+
+    Wrapped vector
+    [std::vector<int, std::allocator<int> >]
+    operator== returned false
+
+      Element 0 of range incorrect
+      [int]
+      operator== returned false
+      Obtained : 2
+      Predicted: 1
+
+  Inconsistent Swap (x)
+  Comparison performed using:
+  [sequoia::testing::value_tester<sequoia::testing::move_only_broken_swap<int, std::allocator<int> > >]
+  Checking for equivalence with:
+  [std::vector<int, std::allocator<int> >]
+
+    Wrapped vector
+    [std::vector<int, std::allocator<int> >]
+    operator== returned false
+
+      Element 0 of range incorrect
+      [int]
+      operator== returned false
+      Obtained : 1
+      Predicted: 2
+
+=======================================
+
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 48
+Broken move assignment
+
+--Move-only Semantics--
+[sequoia::testing::move_only_broken_move_assignment<int, std::allocator<int> >]
+
+  Inconsistent move assignment (from y)
+  Comparison performed using:
+  [sequoia::testing::value_tester<sequoia::testing::move_only_broken_move_assignment<int, std::allocator<int> > >]
+  Checking for equivalence with:
+  [std::vector<int, std::allocator<int> >]
+
+    Wrapped vector
+    [std::vector<int, std::allocator<int> >]
+    operator== returned false
+
+      Element 0 of range incorrect
+      [int]
+      operator== returned false
+      Obtained : 1
+      Predicted: 2
+
+=======================================
+
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 49
+Broken check invariant
+
+--Move-only Semantics--
+[sequoia::testing::move_only_beast<int, std::allocator<int> >]
+
+  Prerequisite - for checking semantics, x and y are assumed to be different
+  [bool]
+  check failed
+
+=======================================
+
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 50
+Broken check invariant
+
+--Move-only Semantics--
+[sequoia::testing::move_only_beast<int, std::allocator<int> >]
+
+  Prerequisite - for checking move-only semantics, x and xEquivalent are assumed to be equal
+  Comparison performed using:
+  [sequoia::testing::value_tester<sequoia::testing::move_only_beast<int, std::allocator<int> > >]
+  Checking for equivalence with:
+  [std::vector<int, std::allocator<int> >]
+
+    Wrapped vector
+    [std::vector<int, std::allocator<int> >]
+    operator== returned false
+
+      Element 0 of range incorrect
+      [int]
+      operator== returned false
+      Obtained : 1
+      Predicted: 2
+
+=======================================
+
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 51
+Broken check invariant
+
+--Move-only Semantics--
+[sequoia::testing::move_only_beast<int, std::allocator<int> >]
+
+  Prerequisite - for checking move-only semantics, y and yEquivalent are assumed to be equal
+  Comparison performed using:
+  [sequoia::testing::value_tester<sequoia::testing::move_only_beast<int, std::allocator<int> > >]
+  Checking for equivalence with:
+  [std::vector<int, std::allocator<int> >]
+
+    Wrapped vector
+    [std::vector<int, std::allocator<int> >]
+    operator== returned false
+
+      Element 0 of range incorrect
+      [int]
+      operator== returned false
+      Obtained : 1
+      Predicted: 3
+
+=======================================
+
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 55
+Incorrect moved-from state post construction
+
+--Move-only Semantics--
+[sequoia::testing::specified_moved_from_beast<int, std::allocator<int> >]
+
+  Incorrect moved-from value after move construction
+  Comparison performed using:
+  [sequoia::testing::value_tester<sequoia::testing::specified_moved_from_beast<int, std::allocator<int> > >]
+  Checking for equivalence with:
+  [std::vector<int, std::allocator<int> >]
+
+    Wrapped vector
+    [std::vector<int, std::allocator<int> >]
+    operator== returned false
+
+      Container size wrong
+      [unsigned long long]
+      operator== returned false
+      Obtained : 0
+      Predicted: 1
+
+=======================================
+
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 56
+Incorrect moved-from state post assignment
+
+--Move-only Semantics--
+[sequoia::testing::specified_moved_from_beast<int, std::allocator<int> >]
+
+  Incorrect moved-from value after move assignment
+  Comparison performed using:
+  [sequoia::testing::value_tester<sequoia::testing::specified_moved_from_beast<int, std::allocator<int> > >]
+  Checking for equivalence with:
+  [std::vector<int, std::allocator<int> >]
+
+    Wrapped vector
+    [std::vector<int, std::allocator<int> >]
+    operator== returned false
+
+      Container size wrong
+      [unsigned long long]
+      operator== returned false
+      Obtained : 0
+      Predicted: 1
+
+=======================================
 

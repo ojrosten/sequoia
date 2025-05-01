@@ -23,6 +23,7 @@
 
 #include <iostream>
 #include <chrono>
+#include <set>
 
 namespace sequoia::testing
 {
@@ -41,13 +42,13 @@ namespace sequoia::testing
   };
 }
 
-namespace sequoia
+NAMESPACE_SEQUOIA_AS_BITMASK
 {
   template<>
-  struct as_bitmask<testing::runner_mode> : std::true_type {};
+  struct as_bitmask<sequoia::testing::runner_mode> : std::true_type {};
 
   template<>
-  struct as_bitmask<testing::recovery_mode> : std::true_type {};
+  struct as_bitmask<sequoia::testing::recovery_mode> : std::true_type {};
 }
 
 namespace sequoia::testing
@@ -62,7 +63,7 @@ namespace sequoia::testing
     test_vessel(Test&& t)
       : m_pTest{std::make_unique<essence<Test>>(std::forward<Test>(t))}
     {
-      if constexpr(is_performance_test_v<Test>)
+      if constexpr(!is_parallelizable_v<Test>)
         m_Parallelizable = parallelizable_candidate::no;
     }
 
@@ -76,6 +77,12 @@ namespace sequoia::testing
     const std::string& name() const noexcept
     {
       return m_pTest->name();
+    }
+
+    [[nodiscard]]
+    const test_summary_path& summary_file_path() const noexcept
+    {
+      return m_pTest->summary_file_path();
     }
 
     [[nodiscard]]
@@ -120,10 +127,11 @@ namespace sequoia::testing
     {
       virtual ~soul() = default;
 
-      virtual const std::string& name() const noexcept           = 0;
-      virtual std::filesystem::path source_file() const          = 0;
-      virtual std::filesystem::path working_materials() const    = 0;
-      virtual std::filesystem::path predictive_materials() const = 0;
+      virtual const std::string& name() const noexcept                    = 0;
+      virtual const test_summary_path& summary_file_path() const noexcept = 0;
+      virtual std::filesystem::path source_file() const                   = 0;
+      virtual std::filesystem::path working_materials() const             = 0;
+      virtual std::filesystem::path predictive_materials() const          = 0;
 
       virtual log_summary execute(std::optional<std::size_t> index) = 0;
       virtual void reset(const project_paths& projPaths, std::vector<std::filesystem::path>& materialsPaths) = 0;
@@ -146,6 +154,12 @@ namespace sequoia::testing
       const std::string& name() const noexcept final
       {
         return m_Test.name();
+      }
+
+      [[nodiscard]]
+      const test_summary_path& summary_file_path() const noexcept final
+      {
+        return m_Test.summary_file_path();
       }
 
       [[nodiscard]]
@@ -193,8 +207,11 @@ namespace sequoia::testing
       {
         auto summary{m_Test.summarize(t.time_elapsed())};
 
-        versioned_write(m_Test.diagnostics_output_filename(), summary.diagnostics_output());
-        versioned_write(m_Test.caught_exceptions_output_filename(), summary.caught_exceptions_output());
+        if(!m_Test.has_critical_failures())
+        {
+          versioned_write(m_Test.diagnostics_file_paths().false_positive_or_negative_file_path(), summary.diagnostics_output());
+          versioned_write(m_Test.diagnostics_file_paths().caught_exceptions_file_path(), summary.caught_exceptions_output());
+        }
 
         return summary;
       }
@@ -202,11 +219,29 @@ namespace sequoia::testing
       Test m_Test;
     };
 
-    enum class parallelizable_candidate { no, yes };
+    enum class parallelizable_candidate : bool { no, yes };
 
     std::unique_ptr<soul> m_pTest{};
     parallelizable_candidate m_Parallelizable{parallelizable_candidate::yes};
   };
+
+  template<concrete_test T>
+  [[nodiscard]]
+  std::optional<std::string> get_output_discriminator(const T& test){
+    if constexpr(has_discriminated_output_v<T>)
+      return test.output_discriminator();
+    else
+      return std::nullopt;
+  }
+
+  template<concrete_test T>
+  [[nodiscard]]
+  std::optional<std::string> get_reduction_discriminator(const T& test){
+    if constexpr(has_discriminated_summary_v<T>)
+      return test.summary_discriminator();
+    else
+      return std::nullopt;
+  }
 
   /*! \brief Consumes command-line arguments and holds all test suites.
 
@@ -221,13 +256,7 @@ namespace sequoia::testing
                 char** argv,
                 std::string copyright,
                 std::string codeIndent="  ",
-                std::ostream& stream=std::cout);
-
-    test_runner(int argc,
-                char** argv,
-                std::string copyright,
-                const project_paths::initializer& pathsFromProjectRoot,
-                std::string codeIndent="  ",
+                const project_paths::customizer& projectPathsCustomization = {},
                 std::ostream& stream=std::cout);
 
     test_runner(const test_runner&)     = delete;
@@ -241,14 +270,19 @@ namespace sequoia::testing
     void add_test_suite(std::string_view name, Tests&&... tests)
     {
       using namespace object;
-      using namespace maths;
 
       check_for_duplicates(name, tests...);
 
-      if(m_Filter)
-        extract_suite_tree(name, *m_Filter, std::forward<Tests>(tests)...);
-      else
-        extract_suite_tree(name, [](auto&&...) { return true; }, std::forward<Tests>(tests)...);
+      extract_suite_tree(name, m_Filter, std::forward<Tests>(tests)...);
+    }
+
+    template<class... Suites>
+      requires (object::is_suite_v<Suites> && ...)
+    void add_test_suite(std::string_view name, Suites... s)
+    {
+      using namespace object;
+
+      extract_suite_tree(m_Filter, suite{std::string{name}, std::move(s)...});
     }
 
     void execute([[maybe_unused]] timer_resolution r={});
@@ -298,8 +332,8 @@ namespace sequoia::testing
       std::optional<test_vessel> optTest{};
     };
 
-    using suite_type = maths::tree<maths::directed_flavour::directed, maths::tree_link_direction::forward, maths::null_weight, suite_node>;
-    using filter_type = object::filter_by_names<normal_path, test_to_path, path_equivalence>;
+    using suite_type  = maths::directed_tree<maths::tree_link_direction::forward, maths::null_weight, suite_node>;
+    using filter_type = object::granular_filter<normal_path, path_equivalence, test_to_path>;
 
     std::string      m_Copyright{};
     project_paths    m_ProjPaths;
@@ -307,7 +341,7 @@ namespace sequoia::testing
     std::ostream*    m_Stream;
 
     suite_type m_Suites{};
-    std::optional<filter_type> m_Filter;
+    filter_type m_Filter{path_equivalence{proj_paths().tests().repo()}, test_to_path{}};
     prune_info m_PruneInfo{};
 
     runner_mode      m_RunnerMode{runner_mode::none};
@@ -347,36 +381,48 @@ namespace sequoia::testing
     [[nodiscard]]
     prune_outcome do_prune();
 
-    template<class Filter, concrete_test... Tests>
-      requires (sizeof...(Tests) > 0)
-    void extract_suite_tree(std::string_view name, Filter&& filter, Tests&&... tests)
+    template<class Filter, class Suite>
+      requires object::is_suite_v<Suite>
+    void extract_suite_tree(Filter&& filter, Suite&& s)
     {
       using namespace object;
-      using namespace maths;
 
       if(!m_Suites.order())
       {
-        m_Suites.add_node(suite_type::npos, log_summary{});
+        m_Suites.add_node(suite_type::npos);
       }
 
       std::vector<std::filesystem::path> materialsPaths{};
 
-      extract_tree(suite{std::string{name}, std::forward<Tests>(tests)...},
+      // TO DO: may need generalizing since suites can have arbitrary depth.
+      const std::string suiteName{s.name};
+
+      extract_tree(std::forward<Suite>(s),
                    std::forward<Filter>(filter),
                    overloaded{
                      [] <class... Ts> (const suite<Ts...>&s) -> suite_node { return {.summary{log_summary{s.name}}}; },
-                     [this, name, &materialsPaths]<concrete_test T>(T&& test) -> suite_node {
-                       test.initialize(name,
-                                       test.source_file(),
-                                       proj_paths(),
-                                       set_materials(test.source_file(), proj_paths(), materialsPaths),
-                                       make_active_recovery_paths(m_RecoveryMode, proj_paths()));
-
+                     [this, &suiteName, &materialsPaths]<concrete_test T>(T&& test) -> suite_node {
+                       test = T{test.name(),
+                                suiteName,
+                                test.source_file(),
+                                proj_paths(),
+                                set_materials(test.source_file(), proj_paths(), materialsPaths),
+                                make_active_recovery_paths(m_RecoveryMode, proj_paths()),
+                                get_output_discriminator(test),
+                                get_reduction_discriminator(test)};
+                   
                        return {.summary{log_summary{test.name()}}, .optTest{std::move(test)}};
                      }
                    },
                    m_Suites,
                    0);
+    }
+
+    template<class Filter, concrete_test... Tests>
+      requires (sizeof...(Tests) > 0)
+    void extract_suite_tree(std::string_view name, Filter&& filter, Tests&&... tests)
+    {
+      extract_suite_tree(std::forward<Filter>(filter), object::suite{std::string{name}, std::forward<Tests>(tests)...});
     }
 
     template<concrete_test... Tests>

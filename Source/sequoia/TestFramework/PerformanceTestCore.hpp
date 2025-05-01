@@ -18,6 +18,7 @@
 #include <chrono>
 #include <random>
 #include <future>
+#include <thread>
 
 namespace sequoia::testing
 {
@@ -182,7 +183,7 @@ namespace sequoia::testing
 
       summary = append_lines(stats("Fast", m_f, sig_f), stats("Slow", m_s, sig_s)).append(summarizer());
 
-      if((test_logger<Mode>::mode == test_mode::false_positive) ? !passed : passed)
+      if((test_logger<Mode>::mode == test_mode::false_negative) ? !passed : passed)
       {
         break;
       }
@@ -236,65 +237,49 @@ namespace sequoia::testing
   public:
     constexpr static test_mode mode{Mode};
 
-    performance_extender(test_logger<Mode>& logger) : m_pLogger{&logger} {}
+    performance_extender() = default;
 
-    performance_extender(const performance_extender&) = delete;
-    performance_extender(performance_extender&&)      = delete;
-
-    performance_extender& operator=(const performance_extender&) = delete;
-    performance_extender& operator=(performance_extender&&)      = delete;
-
-    template<std::invocable F, std::invocable S>
-    bool check_relative_performance(std::string_view description, F fast, S slow, const double minSpeedUp, const double maxSpeedUp, const std::size_t trials=5, const double num_sds=4)
+    template<class Self, std::invocable F, std::invocable S>
+    bool check_relative_performance(this Self& self, const reporter& description, F fast, S slow, const double minSpeedUp, const double maxSpeedUp, const std::size_t trials=5, const double num_sds=4)
     {
-      return testing::check_relative_performance(description, logger(), fast, slow, minSpeedUp, maxSpeedUp, trials, num_sds, 3);
+      return testing::check_relative_performance(self.report(description), self.m_Logger, fast, slow, minSpeedUp, maxSpeedUp, trials, num_sds, 3);
     }
   protected:
     ~performance_extender() = default;
-  private:
-    [[nodiscard]]
-    test_logger<Mode>& logger() noexcept { return *m_pLogger; }
 
-    test_logger<Mode>* m_pLogger;
+    performance_extender(performance_extender&&)            noexcept = default;
+    performance_extender& operator=(performance_extender&&) noexcept = default;
   };
-
-  template<test_mode Mode>
-  using performance_checker = checker<Mode, performance_extender<Mode>>;
 
   [[nodiscard]]
   std::string_view postprocess(std::string_view testOutput, std::string_view referenceOutput);
 
+  /*!\brief class template from which all concrete tests should derive */
+
   template<test_mode Mode>
-  class basic_performance_test : public basic_test<performance_checker<Mode>>
+  class basic_performance_test : public basic_test<Mode, performance_extender<Mode>>
   {
   public:
-    using base_t   = basic_test<performance_checker<Mode>>;
-    using duration = typename base_t::duration;
+    using base_type = basic_test<Mode, performance_extender<Mode>>;
+    using duration  = typename base_type::duration;
 
-    using basic_test<performance_checker<Mode>>::basic_test;
+    using base_type::base_type;
 
     [[nodiscard]]
     log_summary summarize(duration delta) const;
   protected:
-  };
+    ~basic_performance_test() = default;
 
-  extern template class basic_performance_test<test_mode::standard>;
-  extern template class basic_performance_test<test_mode::false_positive>;
-  extern template class basic_performance_test<test_mode::false_negative>;
+    basic_performance_test(basic_performance_test&&)            noexcept = default;
+    basic_performance_test& operator=(basic_performance_test&&) noexcept = default;
+  };
 
   /*! \anchor performance_test_alias */
   using performance_test                = basic_performance_test<test_mode::standard>;
-  using performance_false_negative_test = basic_performance_test<test_mode::false_negative>;
   using performance_false_positive_test = basic_performance_test<test_mode::false_positive>;
+  using performance_false_negative_test = basic_performance_test<test_mode::false_negative>;
 
-  template<class T>
-  struct is_performance_test
-    : std::bool_constant<std::is_base_of_v<performance_test, T> || std::is_base_of_v<performance_false_negative_test, T> || std::is_base_of_v<performance_false_positive_test, T>>
-  {};
-
-  template<class T>
-  using is_performance_test_t = typename is_performance_test<T>::type;
-
-  template<class T>
-  inline constexpr bool is_performance_test_v{is_performance_test<T>::value};
+  template<concrete_test T>
+    requires std::is_base_of_v<basic_performance_test<T::mode>, T>
+  struct is_parallelizable<T> : std::false_type {};
 }

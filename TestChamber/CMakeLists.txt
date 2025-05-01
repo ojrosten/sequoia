@@ -3,14 +3,14 @@ cmake_minimum_required(VERSION 3.20)
 project(SequoiaTestChamber DESCRIPTION "The Sequoia Library plus a test chamber"
                            LANGUAGES CXX)
 
-include(../build_system/Utilities.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/../build_system/Utilities.cmake)
 
 sequoia_init()
 
 add_executable(TestChamber TestChamberMain.cpp)
 
-set(TestDir ../Tests)
+set(TestDir ${CMAKE_CURRENT_LIST_DIR}/../Tests)
 
-target_sources(TestChamber PRIVATE ${TestDir}/Experimental/ExperimentalTest.cpp)
+ #target_sources(TestChamber PRIVATE)
 
-sequoia_finalize_self(TestChamber ${TestDir}/Experimental)
+sequoia_finalize_self(TestChamber ${TestDir}/Experimental Experimental)

@@ -10,6 +10,7 @@
  */
 
 #include "sequoia/TextProcessing/Patterns.hpp"
+#include <cstdint>
 
 namespace sequoia
 {

@@ -76,6 +76,7 @@ $(function() {
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-attribs">Static Public Attributes</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="../../d8/d38/classsequoia_1_1testing_1_1regular__extender-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">sequoia::testing::regular_extender&lt; Mode &gt; Class Template Reference</div></div>
 </div><!--header-->
@@ -88,55 +89,49 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a7c3e6928aa8de0d4291917f8b70a5073"><td class="memItemLeft" align="right" valign="top"><a id="a7c3e6928aa8de0d4291917f8b70a5073" name="a7c3e6928aa8de0d4291917f8b70a5073"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>regular_extender</b> (<a class="el" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger</a>&lt; Mode &gt; &amp;logger)</td></tr>
-<tr class="separator:a7c3e6928aa8de0d4291917f8b70a5073"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9cd4906cc422e071fdf8d3efa01bbd6d"><td class="memItemLeft" align="right" valign="top"><a id="a9cd4906cc422e071fdf8d3efa01bbd6d" name="a9cd4906cc422e071fdf8d3efa01bbd6d"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>regular_extender</b> (const <a class="el" href="../../d4/d5d/classsequoia_1_1testing_1_1regular__extender.html">regular_extender</a> &amp;)=delete</td></tr>
-<tr class="separator:a9cd4906cc422e071fdf8d3efa01bbd6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a15b33da8f45497b77cecf9fe0c262f05"><td class="memItemLeft" align="right" valign="top"><a id="a15b33da8f45497b77cecf9fe0c262f05" name="a15b33da8f45497b77cecf9fe0c262f05"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>regular_extender</b> (<a class="el" href="../../d4/d5d/classsequoia_1_1testing_1_1regular__extender.html">regular_extender</a> &amp;&amp;)=delete</td></tr>
-<tr class="separator:a15b33da8f45497b77cecf9fe0c262f05"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a54d27ce3ec14a937b98201f740924aa1"><td class="memItemLeft" align="right" valign="top"><a id="a54d27ce3ec14a937b98201f740924aa1" name="a54d27ce3ec14a937b98201f740924aa1"></a>
-<a class="el" href="../../d4/d5d/classsequoia_1_1testing_1_1regular__extender.html">regular_extender</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="../../d4/d5d/classsequoia_1_1testing_1_1regular__extender.html">regular_extender</a> &amp;)=delete</td></tr>
-<tr class="separator:a54d27ce3ec14a937b98201f740924aa1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a61e42aa2ac4500bb522ac0aaf2c0beef"><td class="memItemLeft" align="right" valign="top"><a id="a61e42aa2ac4500bb522ac0aaf2c0beef" name="a61e42aa2ac4500bb522ac0aaf2c0beef"></a>
-<a class="el" href="../../d4/d5d/classsequoia_1_1testing_1_1regular__extender.html">regular_extender</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="../../d4/d5d/classsequoia_1_1testing_1_1regular__extender.html">regular_extender</a> &amp;&amp;)=delete</td></tr>
-<tr class="separator:a61e42aa2ac4500bb522ac0aaf2c0beef"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a28bdb4d6150274c6ef1370c370350127"><td class="memTemplParams" colspan="2"><a id="a28bdb4d6150274c6ef1370c370350127" name="a28bdb4d6150274c6ef1370c370350127"></a>
-template&lt;pseudoregular T&gt; <br />
+<tr class="memitem:af03022091e06e7e272960af3b0a62df1"><td class="memTemplParams" colspan="2"><a id="af03022091e06e7e272960af3b0a62df1" name="af03022091e06e7e272960af3b0a62df1"></a>
+template&lt;class Self , pseudoregular T&gt; <br />
 requires (!std::totally_ordered&lt;T&gt;)</td></tr>
-<tr class="memitem:a28bdb4d6150274c6ef1370c370350127"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_semantics</b> (std::string_view description, const T &amp;x, const T &amp;y)</td></tr>
-<tr class="memdesc:a28bdb4d6150274c6ef1370c370350127"><td class="mdescLeft">&#160;</td><td class="mdescRight">Precondition: x!=y. <br /></td></tr>
-<tr class="separator:a28bdb4d6150274c6ef1370c370350127"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad7f8da34b8519278b0bc97e005ef695f"><td class="memTemplParams" colspan="2"><a id="ad7f8da34b8519278b0bc97e005ef695f" name="ad7f8da34b8519278b0bc97e005ef695f"></a>
-template&lt;pseudoregular T&gt; <br />
+<tr class="memitem:af03022091e06e7e272960af3b0a62df1"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_semantics</b> (this Self &amp;self, const <a class="el" href="../../da/dce/classsequoia_1_1testing_1_1reporter.html">reporter</a> &amp;description, const T &amp;x, const T &amp;y)</td></tr>
+<tr class="memdesc:af03022091e06e7e272960af3b0a62df1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prerequisite: x!=y. <br /></td></tr>
+<tr class="separator:af03022091e06e7e272960af3b0a62df1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9dfbdc3364ce3f61e8841ea5cf2ed94c"><td class="memTemplParams" colspan="2"><a id="a9dfbdc3364ce3f61e8841ea5cf2ed94c" name="a9dfbdc3364ce3f61e8841ea5cf2ed94c"></a>
+template&lt;class Self , pseudoregular T&gt; <br />
 requires std::totally_ordered&lt;T&gt;</td></tr>
-<tr class="memitem:ad7f8da34b8519278b0bc97e005ef695f"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_semantics</b> (std::string_view description, const T &amp;x, const T &amp;y, std::weak_ordering order)</td></tr>
-<tr class="memdesc:ad7f8da34b8519278b0bc97e005ef695f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Precondition: x!=y, with values consistent with order. <br /></td></tr>
-<tr class="separator:ad7f8da34b8519278b0bc97e005ef695f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1ac78339637ba1fc151107c5d21cd176"><td class="memTemplParams" colspan="2"><a id="a1ac78339637ba1fc151107c5d21cd176" name="a1ac78339637ba1fc151107c5d21cd176"></a>
-template&lt;pseudoregular T, std::invocable&lt; T &amp; &gt; Mutator&gt; </td></tr>
-<tr class="memitem:a1ac78339637ba1fc151107c5d21cd176"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_semantics</b> (std::string_view description, const T &amp;x, const T &amp;y, Mutator m)</td></tr>
-<tr class="memdesc:a1ac78339637ba1fc151107c5d21cd176"><td class="mdescLeft">&#160;</td><td class="mdescRight">Precondition: x!=y. <br /></td></tr>
-<tr class="separator:a1ac78339637ba1fc151107c5d21cd176"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0edc138fea1a250e3d9f06f649d870f9"><td class="memTemplParams" colspan="2"><a id="a0edc138fea1a250e3d9f06f649d870f9" name="a0edc138fea1a250e3d9f06f649d870f9"></a>
-template&lt;pseudoregular T, std::invocable&lt; T &amp; &gt; Mutator&gt; <br />
+<tr class="memitem:a9dfbdc3364ce3f61e8841ea5cf2ed94c"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_semantics</b> (this Self &amp;self, const <a class="el" href="../../da/dce/classsequoia_1_1testing_1_1reporter.html">reporter</a> &amp;description, const T &amp;x, const T &amp;y, std::weak_ordering order)</td></tr>
+<tr class="memdesc:a9dfbdc3364ce3f61e8841ea5cf2ed94c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prerequisite: x!=y, with values consistent with order. <br /></td></tr>
+<tr class="separator:a9dfbdc3364ce3f61e8841ea5cf2ed94c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3cbb9e690349c8baa1f33ebe3660eae5"><td class="memTemplParams" colspan="2"><a id="a3cbb9e690349c8baa1f33ebe3660eae5" name="a3cbb9e690349c8baa1f33ebe3660eae5"></a>
+template&lt;class Self , pseudoregular T, std::invocable&lt; T &amp; &gt; Mutator&gt; </td></tr>
+<tr class="memitem:a3cbb9e690349c8baa1f33ebe3660eae5"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_semantics</b> (this Self &amp;self, const <a class="el" href="../../da/dce/classsequoia_1_1testing_1_1reporter.html">reporter</a> &amp;description, const T &amp;x, const T &amp;y, Mutator m)</td></tr>
+<tr class="memdesc:a3cbb9e690349c8baa1f33ebe3660eae5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prerequisite: x!=y. <br /></td></tr>
+<tr class="separator:a3cbb9e690349c8baa1f33ebe3660eae5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a131b40ca6c2afcfaa1fcb72e79951697"><td class="memTemplParams" colspan="2"><a id="a131b40ca6c2afcfaa1fcb72e79951697" name="a131b40ca6c2afcfaa1fcb72e79951697"></a>
+template&lt;class Self , pseudoregular T, std::invocable&lt; T &amp; &gt; Mutator&gt; <br />
 requires std::totally_ordered&lt;T&gt;</td></tr>
-<tr class="memitem:a0edc138fea1a250e3d9f06f649d870f9"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_semantics</b> (std::string_view description, const T &amp;x, const T &amp;y, std::weak_ordering order, Mutator m)</td></tr>
-<tr class="memdesc:a0edc138fea1a250e3d9f06f649d870f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Precondition: x!=y, with values consistent with order. <br /></td></tr>
-<tr class="separator:a0edc138fea1a250e3d9f06f649d870f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a131b40ca6c2afcfaa1fcb72e79951697"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_semantics</b> (this Self &amp;self, const <a class="el" href="../../da/dce/classsequoia_1_1testing_1_1reporter.html">reporter</a> &amp;description, const T &amp;x, const T &amp;y, std::weak_ordering order, Mutator m)</td></tr>
+<tr class="memdesc:a131b40ca6c2afcfaa1fcb72e79951697"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prerequisites: x!=y, with values consistent with order. <br /></td></tr>
+<tr class="separator:a131b40ca6c2afcfaa1fcb72e79951697"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
 <tr class="memitem:adab29d198a4cfc6cba963c6b017d3e5e"><td class="memItemLeft" align="right" valign="top"><a id="adab29d198a4cfc6cba963c6b017d3e5e" name="adab29d198a4cfc6cba963c6b017d3e5e"></a>
-static constexpr <a class="el" href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a>&#160;</td><td class="memItemRight" valign="bottom"><b>mode</b> {Mode}</td></tr>
+static constexpr test_mode&#160;</td><td class="memItemRight" valign="bottom"><b>mode</b> {Mode}</td></tr>
 <tr class="separator:adab29d198a4cfc6cba963c6b017d3e5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr class="memitem:a0ac4727fb49c5ae288a90ea644871bc8"><td class="memItemLeft" align="right" valign="top"><a id="a0ac4727fb49c5ae288a90ea644871bc8" name="a0ac4727fb49c5ae288a90ea644871bc8"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>regular_extender</b> (<a class="el" href="../../d4/d5d/classsequoia_1_1testing_1_1regular__extender.html">regular_extender</a> &amp;&amp;) noexcept=default</td></tr>
+<tr class="separator:a0ac4727fb49c5ae288a90ea644871bc8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c5122f752b443c820ea343ee049086f"><td class="memItemLeft" align="right" valign="top"><a id="a1c5122f752b443c820ea343ee049086f" name="a1c5122f752b443c820ea343ee049086f"></a>
+<a class="el" href="../../d4/d5d/classsequoia_1_1testing_1_1regular__extender.html">regular_extender</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="../../d4/d5d/classsequoia_1_1testing_1_1regular__extender.html">regular_extender</a> &amp;&amp;) noexcept=default</td></tr>
+<tr class="separator:a1c5122f752b443c820ea343ee049086f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><div class="compoundTemplParams">template&lt;<a class="el" href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> Mode&gt;<br />
+<div class="textblock"><div class="compoundTemplParams">template&lt;test_mode Mode&gt;<br />
 class sequoia::testing::regular_extender&lt; Mode &gt;</div><p>Extender for testing classes exhibiting regular/std::totally_ordered semantics. </p>
-<p>This class is designed to be plugged into the <a class="el" href="../../d8/d58/conceptsequoia_1_1testing_1_1extender.html#checker_primary">checker</a> class template, in order to extend its functionality.</p>
+<p>This class is designed to be plugged into the <a class="el" href="../../d7/de5/classsequoia_1_1testing_1_1checker.html#checker_primary">checker</a> class template, in order to extend its functionality.</p>
 <p><a class="anchor" id="regular_extender_primary"></a></p>
 </div><hr/>The documentation for this class was generated from the following file:<ul>
 <li>C:/Users/olive/sequoia/Source/sequoia/TestFramework/<a class="el" href="../../d9/daf/RegularTestCore_8hpp_source.html">RegularTestCore.hpp</a></li>

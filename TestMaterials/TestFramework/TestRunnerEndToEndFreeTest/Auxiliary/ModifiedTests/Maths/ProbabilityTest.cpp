@@ -7,7 +7,7 @@
 
 #include "ProbabilityTest.hpp"
 
-namespace sequoia::testing
+namespace generatedProject::testing
 {
 	[[nodiscard]]
 	std::filesystem::path probability_test::source_file() const
@@ -18,8 +18,8 @@ namespace sequoia::testing
 	void probability_test::run_tests()
 	{
 		maths::probability x{0.5}, y{1.0};
-		check(equivalence, report_line(""), x, 0.5);
-		check(equivalence, report_line(""), y, 1.0);
-		check_semantics(report_line(""), x, y, std::weak_ordering::less);
+		check(equivalence, "", x, 0.5);
+		check(equivalence, "", y, 1.0);
+		check_semantics("", x, y, std::weak_ordering::less);
 	}
 }

@@ -85,6 +85,12 @@ $(function() {
 <code>#include &quot;<a class="el" href="../../d2/dbb/FileSystem_8hpp_source.html">sequoia/FileSystem/FileSystem.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d5/de0/Patterns_8hpp_source.html">sequoia/TextProcessing/Patterns.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d1/d50/Substitutions_8hpp_source.html">sequoia/TextProcessing/Substitutions.hpp</a>&quot;</code><br />
+<code>#include &lt;bit&gt;</code><br />
+<code>#include &lt;cstdlib&gt;</code><br />
+<code>#include &lt;format&gt;</code><br />
+<code>#include &lt;numeric&gt;</code><br />
+<code>#include &lt;sstream&gt;</code><br />
+<code>#include &lt;iostream&gt;</code><br />
 <code>#include &lt;cxxabi.h&gt;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
@@ -125,9 +131,12 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testi
 <tr class="memitem:afacf3838a05ffa241d640a3f17319f18"><td class="memItemLeft" align="right" valign="top"><a id="afacf3838a05ffa241d640a3f17319f18" name="afacf3838a05ffa241d640a3f17319f18"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::nullable_type_message</b> (const bool obtainedHoldsValue, const bool predictedHoldsValue)</td></tr>
 <tr class="separator:afacf3838a05ffa241d640a3f17319f18"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a35a8e8063fcd5e540239fe18a7febc54"><td class="memItemLeft" align="right" valign="top"><a id="a35a8e8063fcd5e540239fe18a7febc54" name="a35a8e8063fcd5e540239fe18a7febc54"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::report_line</b> (std::string_view message, const std::source_location loc, const fs::path &amp;repository)</td></tr>
-<tr class="separator:a35a8e8063fcd5e540239fe18a7febc54"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c515b0033370b20c587bdb9a08f5469"><td class="memItemLeft" align="right" valign="top"><a id="a1c515b0033370b20c587bdb9a08f5469" name="a1c515b0033370b20c587bdb9a08f5469"></a>
+fs::path&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::path_for_reporting</b> (const fs::path &amp;file, const fs::path &amp;repository)</td></tr>
+<tr class="separator:a1c515b0033370b20c587bdb9a08f5469"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6a7e6f3e27295af45cdcc2b565bc295f"><td class="memItemLeft" align="right" valign="top"><a id="a6a7e6f3e27295af45cdcc2b565bc295f" name="a6a7e6f3e27295af45cdcc2b565bc295f"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::report_line</b> (std::string_view message, const fs::path &amp;repository, const std::source_location loc)</td></tr>
+<tr class="separator:a6a7e6f3e27295af45cdcc2b565bc295f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a175e5cf309f3edbd8f0bc4d676e71f4e"><td class="memItemLeft" align="right" valign="top"><a id="a175e5cf309f3edbd8f0bc4d676e71f4e" name="a175e5cf309f3edbd8f0bc4d676e71f4e"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::tidy_name</b> (std::string name, clang_type)</td></tr>
 <tr class="separator:a175e5cf309f3edbd8f0bc4d676e71f4e"><td class="memSeparator" colspan="2">&#160;</td></tr>

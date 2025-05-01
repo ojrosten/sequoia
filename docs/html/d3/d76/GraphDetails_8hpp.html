@@ -86,67 +86,50 @@ $(function() {
 <p>Meta-programming elements for graph implementation.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="../../dc/d91/Edge_8hpp_source.html">sequoia/Maths/Graph/Edge.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d3/da1/Creator_8hpp_source.html">sequoia/Core/Object/Creator.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d7/d7b/FaithfulWrapper_8hpp_source.html">sequoia/Core/Object/FaithfulWrapper.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../db/da7/Handlers_8hpp_source.html">sequoia/Core/Object/Handlers.hpp</a>&quot;</code><br />
 </div>
 <p><a href="../../d3/d76/GraphDetails_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d61/structsequoia_1_1maths_1_1directed__flavour__constant.html">sequoia::maths::directed_flavour_constant&lt; Directedness &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/df0/structsequoia_1_1maths_1_1edge__init__type__generator_3_01partial__edge_3_01WeightHandler_00_01Me4c3eb8d74736a8b766968f999238412.html">sequoia::maths::edge_init_type_generator&lt; partial_edge&lt; WeightHandler, MetaData, IndexType &gt; &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/deb/structsequoia_1_1maths_1_1graph__impl_1_1sharing__traits.html">sequoia::maths::graph_impl::sharing_traits&lt; GraphFlavour, SharingPreference, EdgeWeightCreator &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/dd0/structsequoia_1_1maths_1_1edge__init__type__generator_3_01embedded__partial__edge_3_01WeightHandf6a89e9450dd82fd4cf803a4ad3d616a.html">sequoia::maths::edge_init_type_generator&lt; embedded_partial_edge&lt; WeightHandler, MetaData, IndexType &gt; &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d9f/structsequoia_1_1maths_1_1graph__impl_1_1flavour__to__edge.html">sequoia::maths::graph_impl::flavour_to_edge&lt; GraphFlavour, Handler, IndexType, SharedEdge &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d9f/structsequoia_1_1maths_1_1graph__impl_1_1flavour__to__edge.html">sequoia::maths::graph_impl::flavour_to_edge&lt; GraphFlavour, Handler, MetaData, IndexType &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d03/structsequoia_1_1maths_1_1graph__impl_1_1flavour__to__edge_3_01graph__flavour_1_1undirected__embb5cb4e8a68b11329b6f8c40fa1a73a95.html">sequoia::maths::graph_impl::flavour_to_edge&lt; graph_flavour::undirected_embedded, Handler, IndexType, SharedEdge &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d2c/structsequoia_1_1maths_1_1graph__impl_1_1flavour__to__edge_3_01graph__flavour_1_1undirected__embf43aa3ca016690e7b9b7e6eba59d4195.html">sequoia::maths::graph_impl::flavour_to_edge&lt; graph_flavour::undirected_embedded, Handler, MetaData, IndexType &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d0a/structsequoia_1_1maths_1_1graph__impl_1_1flavour__to__edge_3_01graph__flavour_1_1directed__embed81c2cecece700198770500b3dbf7d453.html">sequoia::maths::graph_impl::flavour_to_edge&lt; graph_flavour::directed_embedded, Handler, IndexType, SharedEdge &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d98/structsequoia_1_1maths_1_1graph__impl_1_1edge__to__init__type.html">sequoia::maths::graph_impl::edge_to_init_type&lt; Edge, Embedded &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d76/structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator.html">sequoia::maths::graph_impl::edge_type_generator&lt; GraphFlavour, EdgeWeightCreator, IndexType, SharingPreference &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d3d/structsequoia_1_1maths_1_1graph__impl_1_1edge__storage__generator.html">sequoia::maths::graph_impl::edge_storage_generator&lt; GraphFlavour, EdgeWeight, EdgeMetaData, IndexType, EdgeStorageConfig &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:a2cb4ad87d09f61230b9519bcf80ba78d"><td class="memItemLeft" align="right" valign="top"><a id="a2cb4ad87d09f61230b9519bcf80ba78d" name="a2cb4ad87d09f61230b9519bcf80ba78d"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::undirected_type</b> = directed_flavour_constant&lt; directed_flavour::undirected &gt;</td></tr>
-<tr class="separator:a2cb4ad87d09f61230b9519bcf80ba78d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a303b9824624e1220b8aaf41ae13b2374"><td class="memItemLeft" align="right" valign="top"><a id="a303b9824624e1220b8aaf41ae13b2374" name="a303b9824624e1220b8aaf41ae13b2374"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::directed_type</b> = directed_flavour_constant&lt; directed_flavour::directed &gt;</td></tr>
-<tr class="separator:a303b9824624e1220b8aaf41ae13b2374"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a863020f7cbaabba25d4c2bc10cae618a"><td class="memTemplParams" colspan="2"><a id="a863020f7cbaabba25d4c2bc10cae618a" name="a863020f7cbaabba25d4c2bc10cae618a"></a>
-template&lt;bool Shared, class Proxy &gt; </td></tr>
-<tr class="memitem:a863020f7cbaabba25d4c2bc10cae618a"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::graph_impl::shared_to_handler_t</b> = std::conditional_t&lt; Shared, object::shared&lt; Proxy &gt;, object::by_value&lt; Proxy &gt; &gt;</td></tr>
-<tr class="separator:a863020f7cbaabba25d4c2bc10cae618a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9538813ba80430c936dcf061ebdcde92"><td class="memTemplParams" colspan="2"><a id="a9538813ba80430c936dcf061ebdcde92" name="a9538813ba80430c936dcf061ebdcde92"></a>
-template&lt;class EdgeWeightCreator &gt; </td></tr>
-<tr class="memitem:a9538813ba80430c936dcf061ebdcde92"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::graph_impl::edge_weight_proxy_t</b> = typename EdgeWeightCreator::product_type</td></tr>
-<tr class="separator:a9538813ba80430c936dcf061ebdcde92"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2506496299159e25adaedd91e3060d36"><td class="memTemplParams" colspan="2"><a id="a2506496299159e25adaedd91e3060d36" name="a2506496299159e25adaedd91e3060d36"></a>
-template&lt;graph_flavour GraphFlavour, class Handler , std::integral IndexType, bool SharedEdge&gt; </td></tr>
-<tr class="memitem:a2506496299159e25adaedd91e3060d36"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::graph_impl::flavour_to_edge_t</b> = typename flavour_to_edge&lt; GraphFlavour, Handler, IndexType, SharedEdge &gt;::edge_type</td></tr>
-<tr class="separator:a2506496299159e25adaedd91e3060d36"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a28b8bc088555e2525795af9fb8e6ba81"><td class="memTemplParams" colspan="2"><a id="a28b8bc088555e2525795af9fb8e6ba81" name="a28b8bc088555e2525795af9fb8e6ba81"></a>
-template&lt;class Edge , bool Embedded&gt; </td></tr>
-<tr class="memitem:a28b8bc088555e2525795af9fb8e6ba81"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::graph_impl::edge_to_init_type_t</b> = typename edge_to_init_type&lt; Edge, Embedded &gt;::edge_init_type</td></tr>
-<tr class="separator:a28b8bc088555e2525795af9fb8e6ba81"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adf67f724456c1128ccb952bdd2baea58"><td class="memTemplParams" colspan="2"><a id="adf67f724456c1128ccb952bdd2baea58" name="adf67f724456c1128ccb952bdd2baea58"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:adf67f724456c1128ccb952bdd2baea58"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::edge_init_type_generator_t</b> = typename edge_init_type_generator&lt; T &gt;::type</td></tr>
+<tr class="separator:adf67f724456c1128ccb952bdd2baea58"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a41f4211f5f13551617ce01039e1044a2"><td class="memTemplParams" colspan="2"><a id="a41f4211f5f13551617ce01039e1044a2" name="a41f4211f5f13551617ce01039e1044a2"></a>
+template&lt;bool Shared, class Weight &gt; </td></tr>
+<tr class="memitem:a41f4211f5f13551617ce01039e1044a2"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::graph_impl::shared_to_handler_t</b> = std::conditional_t&lt; Shared, object::shared&lt; Weight &gt;, object::by_value&lt; Weight &gt; &gt;</td></tr>
+<tr class="separator:a41f4211f5f13551617ce01039e1044a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae5a63711d9f2f5e024c13fa9c984dfd6"><td class="memTemplParams" colspan="2"><a id="ae5a63711d9f2f5e024c13fa9c984dfd6" name="ae5a63711d9f2f5e024c13fa9c984dfd6"></a>
+template&lt;graph_flavour GraphFlavour, class Handler , class MetaData , std::integral IndexType&gt; </td></tr>
+<tr class="memitem:ae5a63711d9f2f5e024c13fa9c984dfd6"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::graph_impl::flavour_to_edge_t</b> = typename flavour_to_edge&lt; GraphFlavour, Handler, MetaData, IndexType &gt;::edge_type</td></tr>
+<tr class="separator:ae5a63711d9f2f5e024c13fa9c984dfd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ade1268d428f1f2de039bf08d81b82691"><td class="memTemplParams" colspan="2"><a id="ade1268d428f1f2de039bf08d81b82691" name="ade1268d428f1f2de039bf08d81b82691"></a>
+template&lt;graph_flavour GraphFlavour, class EdgeWeight , class EdgeMetaData , std::integral IndexType, class EdgeStorageConfig &gt; </td></tr>
+<tr class="memitem:ade1268d428f1f2de039bf08d81b82691"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::graph_impl::edge_storage_generator_t</b> = typename edge_storage_generator&lt; GraphFlavour, EdgeWeight, EdgeMetaData, IndexType, EdgeStorageConfig &gt;::storage_type</td></tr>
+<tr class="separator:ade1268d428f1f2de039bf08d81b82691"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:a3abf7faf902fc49336ffb954da9f2214"><td class="memItemLeft" align="right" valign="top"><a id="a3abf7faf902fc49336ffb954da9f2214" name="a3abf7faf902fc49336ffb954da9f2214"></a>enum class &#160;</td><td class="memItemRight" valign="bottom"><b>directed_flavour</b> { <b>undirected</b>
-, <b>directed</b>
- }</td></tr>
-<tr class="separator:a3abf7faf902fc49336ffb954da9f2214"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a10cef5283d10d7f4d97552b42ae4d628"><td class="memItemLeft" align="right" valign="top"><a id="a10cef5283d10d7f4d97552b42ae4d628" name="a10cef5283d10d7f4d97552b42ae4d628"></a>enum class &#160;</td><td class="memItemRight" valign="bottom"><b>graph_flavour</b> { <b>undirected</b>
 , <b>undirected_embedded</b>
 , <b>directed</b>
-, <b>directed_embedded</b>
  }</td></tr>
 <tr class="separator:a10cef5283d10d7f4d97552b42ae4d628"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab072c6d29219ff63ea4eead4981559d8"><td class="memItemLeft" align="right" valign="top"><a id="ab072c6d29219ff63ea4eead4981559d8" name="ab072c6d29219ff63ea4eead4981559d8"></a>enum class &#160;</td><td class="memItemRight" valign="bottom"><b>edge_sharing_preference</b> { <b>agnostic</b>
-, <b>shared_edge</b>
 , <b>shared_weight</b>
 , <b>independent</b>
  }</td></tr>
@@ -154,31 +137,25 @@ Enumerations</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a1b5b0ebb66268596a01da76a45f6d97e"><td class="memItemLeft" align="right" valign="top"><a id="a1b5b0ebb66268596a01da76a45f6d97e" name="a1b5b0ebb66268596a01da76a45f6d97e"></a>
-constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::directed</b> (const directed_flavour directedness) noexcept</td></tr>
-<tr class="separator:a1b5b0ebb66268596a01da76a45f6d97e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abdfd00e1ea9d73c25276f116e4bcb9f0"><td class="memItemLeft" align="right" valign="top"><a id="abdfd00e1ea9d73c25276f116e4bcb9f0" name="abdfd00e1ea9d73c25276f116e4bcb9f0"></a>
-constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::undirected</b> (const graph_flavour flavour) noexcept</td></tr>
-<tr class="separator:abdfd00e1ea9d73c25276f116e4bcb9f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8ab4815774e838de6de56ab07d55a03c"><td class="memItemLeft" align="right" valign="top"><a id="a8ab4815774e838de6de56ab07d55a03c" name="a8ab4815774e838de6de56ab07d55a03c"></a>
-constexpr directed_flavour&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::to_directedness</b> (const graph_flavour gf) noexcept</td></tr>
-<tr class="separator:a8ab4815774e838de6de56ab07d55a03c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a150f0e37b9efc5a58ff90e057c44a890"><td class="memItemLeft" align="right" valign="top"><a id="a150f0e37b9efc5a58ff90e057c44a890" name="a150f0e37b9efc5a58ff90e057c44a890"></a>
+constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::is_embedded</b> (const graph_flavour gf) noexcept</td></tr>
+<tr class="separator:a150f0e37b9efc5a58ff90e057c44a890"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a433d5237790011d58fbf624a47d43cb4"><td class="memItemLeft" align="right" valign="top"><a id="a433d5237790011d58fbf624a47d43cb4" name="a433d5237790011d58fbf624a47d43cb4"></a>
+constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::is_directed</b> (const graph_flavour gf) noexcept</td></tr>
+<tr class="separator:a433d5237790011d58fbf624a47d43cb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0912ed76c56b2ae1ff9da923d53227c6"><td class="memItemLeft" align="right" valign="top"><a id="a0912ed76c56b2ae1ff9da923d53227c6" name="a0912ed76c56b2ae1ff9da923d53227c6"></a>
 constexpr std::size_t&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::graph_impl::num_static_edges</b> (const graph_flavour flavour, const std::size_t size) noexcept</td></tr>
 <tr class="separator:a0912ed76c56b2ae1ff9da923d53227c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4e6b9551da8eacd3d122918c929c5d44"><td class="memTemplParams" colspan="2"><a id="a4e6b9551da8eacd3d122918c929c5d44" name="a4e6b9551da8eacd3d122918c929c5d44"></a>
-template&lt;class EdgeWeightCreator &gt; <br />
-requires object::creator&lt;EdgeWeightCreator&gt;</td></tr>
-<tr class="memitem:a4e6b9551da8eacd3d122918c929c5d44"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::graph_impl::big_proxy</b> () noexcept</td></tr>
-<tr class="separator:a4e6b9551da8eacd3d122918c929c5d44"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a816e0643b6b62a451e4377ae84958f86"><td class="memTemplParams" colspan="2"><a id="a816e0643b6b62a451e4377ae84958f86" name="a816e0643b6b62a451e4377ae84958f86"></a>
-template&lt;class EdgeWeightCreator &gt; <br />
-requires object::creator&lt;EdgeWeightCreator&gt;</td></tr>
-<tr class="memitem:a816e0643b6b62a451e4377ae84958f86"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::graph_impl::copy_constructible_proxy</b> () noexcept</td></tr>
-<tr class="separator:a816e0643b6b62a451e4377ae84958f86"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a87cc1a06687e72d33dccccbe27879828"><td class="memTemplParams" colspan="2"><a id="a87cc1a06687e72d33dccccbe27879828" name="a87cc1a06687e72d33dccccbe27879828"></a>
+template&lt;class Weight &gt; </td></tr>
+<tr class="memitem:a87cc1a06687e72d33dccccbe27879828"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::graph_impl::big_weight</b> () noexcept</td></tr>
+<tr class="separator:a87cc1a06687e72d33dccccbe27879828"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
+<tr class="memitem:a63e2392427f46435b78d4aec01bb530b"><td class="memTemplParams" colspan="2">template&lt;class Edge &gt; </td></tr>
+<tr class="memitem:a63e2392427f46435b78d4aec01bb530b"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d3/d76/GraphDetails_8hpp.html#a63e2392427f46435b78d4aec01bb530b">sequoia::maths::graph_impl::has_shared_weight_v</a></td></tr>
+<tr class="separator:a63e2392427f46435b78d4aec01bb530b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa22664e75936ead3113247c3b65402af"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
 <tr class="memitem:aa22664e75936ead3113247c3b65402af"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d3/d76/GraphDetails_8hpp.html#aa22664e75936ead3113247c3b65402af">sequoia::maths::graph_impl::has_reservable_partitions</a></td></tr>
 <tr class="separator:aa22664e75936ead3113247c3b65402af"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -209,6 +186,38 @@ template&lt;class T &gt; </div>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= <span class="keyword">requires</span>(T&amp; t) {</div>
 <div class="line">        t.reserve_partition(0, 0);</div>
+<div class="line">      }</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="a63e2392427f46435b78d4aec01bb530b" name="a63e2392427f46435b78d4aec01bb530b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a63e2392427f46435b78d4aec01bb530b">&#9670;&#160;</a></span>has_shared_weight_v</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Edge &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr bool sequoia::maths::graph_impl::has_shared_weight_v</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">{</div>
+<div class="line">        <span class="keyword">requires</span>{</div>
+<div class="line">          <span class="keyword">typename</span> Edge::weight_handler_type;</div>
+<div class="line">          <span class="keyword">typename</span> Edge::weight_type;</div>
+<div class="line"> </div>
+<div class="line">          <span class="keyword">requires</span> std::is_same_v&lt;object::shared&lt;typename Edge::weight_type&gt;, <span class="keyword">typename</span> Edge::weight_handler_type&gt;;</div>
+<div class="line">        }</div>
 <div class="line">      }</div>
 </div><!-- fragment -->
 </div>

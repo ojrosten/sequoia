@@ -1,0 +1,96 @@
+Tests/Maths/Geometry/VectorCoordinatesTestingDiagnostics.cpp, Line 42
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::maths::coordinates<sequoia::testing::my_vec_space<sequoia::maths::sets::R<1, float>, float, 1>, sequoia::testing::canonical_basis<sequoia::maths::sets::R<1, float>, float, 1>, sequoia::maths::intrinsic_origin, std::identity> >]
+Checking for equivalence with:
+[std::array<float, 1>]
+
+  Wrapped values
+  [std::span<float const, 1>]
+    Element 0 of range incorrect
+    [float]
+    operator== returned false
+    Obtained : 0
+    Predicted: 1
+
+=======================================
+
+Tests/Maths/Geometry/VectorCoordinatesTestingDiagnostics.cpp, Line 43
+
+[sequoia::maths::coordinates<sequoia::testing::my_vec_space<sequoia::maths::sets::R<1, float>, float, 1>, sequoia::testing::canonical_basis<sequoia::maths::sets::R<1, float>, float, 1>, sequoia::maths::intrinsic_origin, std::identity>]
+operator== returned false
+
+  Wrapped values
+  [std::span<float const, 1>]
+    Element 0 of range incorrect
+    [float]
+    operator== returned false
+    Obtained : 0
+    Predicted: 1
+
+  Wrapped value
+  [float]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
+
+  Conversion to bool
+  [bool]
+  check failed
+
+  Value at index 0
+  [float]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
+
+=======================================
+
+Tests/Maths/Geometry/VectorCoordinatesTestingDiagnostics.cpp, Line 42
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::maths::coordinates<sequoia::maths::euclidean_vector_space<1, float>, sequoia::maths::standard_basis<1, float>, sequoia::maths::intrinsic_origin, std::identity> >]
+Checking for equivalence with:
+[std::array<float, 1>]
+
+  Wrapped values
+  [std::span<float const, 1>]
+    Element 0 of range incorrect
+    [float]
+    operator== returned false
+    Obtained : 0
+    Predicted: 1
+
+=======================================
+
+Tests/Maths/Geometry/VectorCoordinatesTestingDiagnostics.cpp, Line 43
+
+[sequoia::maths::coordinates<sequoia::maths::euclidean_vector_space<1, float>, sequoia::maths::standard_basis<1, float>, sequoia::maths::intrinsic_origin, std::identity>]
+operator== returned false
+
+  Wrapped values
+  [std::span<float const, 1>]
+    Element 0 of range incorrect
+    [float]
+    operator== returned false
+    Obtained : 0
+    Predicted: 1
+
+  Wrapped value
+  [float]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
+
+  Conversion to bool
+  [bool]
+  check failed
+
+  Value at index 0
+  [float]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
+
+=======================================
+

@@ -34,23 +34,15 @@ namespace sequoia::testing
     }
   }
 
-  void test_base::initialize(test_mode mode, std::string_view suiteName, const normal_path& srcFile, const project_paths& projPaths, individual_materials_paths materials)
-  {
-    m_TestRepo    = projPaths.tests();
-    m_Diagnostics = {project_root(), suiteName, srcFile, to_tag(mode)};
-    m_Materials   = std::move(materials);
-    std::filesystem::create_directories(m_Diagnostics.diagnostics_file().parent_path());
-  }
-
   void test_base::write_instability_analysis_output(const normal_path& srcFile, std::optional<std::size_t> index, const failure_output& output) const
   {
     if(index.has_value())
     {
-      const auto file{output_paths::instability_analysis_file(project_root(), srcFile, name(), index.value())};
+      const auto file{output_paths::instability_analysis_file(get_project_paths().project_root(), srcFile, name(), index.value())};
       serialize(file, output);
     }
   }
-  
+
   timer::timer()
     : m_Start{std::chrono::steady_clock::now()}
   {}
@@ -59,21 +51,5 @@ namespace sequoia::testing
   std::chrono::nanoseconds timer::time_elapsed() const
   {
     return std::chrono::steady_clock::now() - m_Start;
-  }
-
-  [[nodiscard]]
-  std::string to_tag(test_mode mode)
-  {
-    switch(mode)
-    {
-    case test_mode::false_negative:
-      return "FN";
-    case test_mode::false_positive:
-      return "FP";
-    case test_mode::standard:
-      return "";
-    }
-
-    throw std::logic_error{"Unrecognized case for test_mode"};
   }
 }

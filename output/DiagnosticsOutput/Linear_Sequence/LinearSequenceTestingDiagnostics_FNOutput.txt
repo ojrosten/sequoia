@@ -1,22 +1,21 @@
-	Tests/Maths/Sequences/LinearSequenceTestingDiagnostics.cpp, Line 23
+Tests/Maths/Sequences/LinearSequenceTestingDiagnostics.cpp, Line 25
 
-	Comparison performed using:
-	[sequoia::testing::equivalence_checker<sequoia::maths::linear_sequence<int, unsigned long> >]
-	With equivalent types:
-	[int,
-	int]
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::maths::linear_sequence<int, unsigned long long> >]
+Checking for equivalence with:
+[std::pair<int, int>]
 
-	  Start wrong
-	  [int]
-	  operator== returned false
-	  Obtained : 1
-	  Predicted: 0
+  Start wrong
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
 
-	  Step wrong
-	  [int]
-	  operator== returned false
-	  Obtained : 3
-	  Predicted: 2
+  Step wrong
+  [int]
+  operator== returned false
+  Obtained : 3
+  Predicted: 2
 
-	=======================================
+=======================================
 

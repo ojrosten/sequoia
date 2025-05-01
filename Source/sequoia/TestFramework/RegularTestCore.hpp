@@ -33,61 +33,50 @@ namespace sequoia::testing
   public:
     constexpr static test_mode mode{Mode};
 
-    explicit regular_extender(test_logger<Mode>& logger) : m_pLogger{&logger} {}
+    regular_extender() = default;
 
-    regular_extender(const regular_extender&) = delete;
-    regular_extender(regular_extender&&)      = delete;
-
-    regular_extender& operator=(const regular_extender&) = delete;
-    regular_extender& operator=(regular_extender&&)      = delete;
-
-    /// Precondition: x!=y
-    template<pseudoregular T>
+    /// Prerequisite: x!=y
+    template<class Self, pseudoregular T>
       requires (!std::totally_ordered<T>)
-    void check_semantics(std::string_view description, const T& x, const T& y)
+    void check_semantics(this Self& self, const reporter& description, const T& x, const T& y)
     {
-      testing::check_semantics(regular_message(description), logger(), x, y);
+      testing::check_semantics(regular_message(self.report(description)), self.m_Logger, x, y);
     }
 
-    /// Precondition: x!=y, with values consistent with order
-    template<pseudoregular T>
+    /// Prerequisite: x!=y, with values consistent with order
+    template<class Self, pseudoregular T>
       requires std::totally_ordered<T>
-    void check_semantics(std::string_view description, const T& x, const T& y, std::weak_ordering order)
+    void check_semantics(this Self& self, const reporter& description, const T& x, const T& y, std::weak_ordering order)
     {
-      testing::check_semantics(regular_message(description), logger(), x, y, order);
+      testing::check_semantics(regular_message(self.report(description)), self.m_Logger, x, y, order);
     }
 
-    /// Precondition: x!=y
-    template<pseudoregular T, std::invocable<T&> Mutator>
-    void check_semantics(std::string_view description, const T& x, const T& y, Mutator m)
+    /// Prerequisite: x!=y
+    template<class Self, pseudoregular T, std::invocable<T&> Mutator>
+    void check_semantics(this Self& self, const reporter& description, const T& x, const T& y, Mutator m)
     {
-      testing::check_semantics(regular_message(description), logger(), x, y, std::move(m));
+      testing::check_semantics(regular_message(self.report(description)), self.m_Logger, x, y, std::move(m));
     }
 
-    /// Precondition: x!=y, with values consistent with order
-    template<pseudoregular T, std::invocable<T&> Mutator>
+    /// Prerequisites: x!=y, with values consistent with order
+    template<class Self, pseudoregular T, std::invocable<T&> Mutator>
       requires std::totally_ordered<T>
-    void check_semantics(std::string_view description, const T& x, const T& y, std::weak_ordering order, Mutator m)
+    void check_semantics(this Self& self, const reporter& description, const T& x, const T& y, std::weak_ordering order, Mutator m)
     {
-      testing::check_semantics(regular_message(description), logger(), x, y, order, std::move(m));
+      testing::check_semantics(regular_message(self.report(description)), self.m_Logger, x, y, order, std::move(m));
     }
   protected:
     ~regular_extender() = default;
-  private:
-    [[nodiscard]]
-    test_logger<Mode>& logger() noexcept { return *m_pLogger; }
 
-    test_logger<Mode>* m_pLogger;
+    regular_extender(regular_extender&&)            noexcept = default;
+    regular_extender& operator=(regular_extender&&) noexcept = default;
   };
 
   template<test_mode mode>
-  using regular_checker = checker<mode, regular_extender<mode>>;
-
-  template<test_mode mode>
-  using canonical_regular_test = basic_test<regular_checker<mode>>;
+  using canonical_regular_test = basic_test<mode, regular_extender<mode>>;
 
   /*! \anchor regular_test_alias */
   using regular_test                = canonical_regular_test<test_mode::standard>;
-  using regular_false_negative_test = canonical_regular_test<test_mode::false_negative>;
   using regular_false_positive_test = canonical_regular_test<test_mode::false_positive>;
+  using regular_false_negative_test = canonical_regular_test<test_mode::false_negative>;
 }
