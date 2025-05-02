@@ -13,6 +13,25 @@
 
 namespace experimental
 {
+  // From pstl/utils.h but with constexpr added
+  template <typename _Fp>
+  auto
+  constexpr __except_handler(_Fp __f) -> decltype(__f())
+  {
+    try
+    {
+        return __f();
+    }
+    catch (const std::bad_alloc&)
+    {
+        throw; // re-throw bad_alloc according to the standard [algorithms.parallel.exceptions]
+    }
+    catch (...)
+    {
+        std::__terminate(); // Good bye according to the standard [algorithms.parallel.exceptions]
+    }
+  }
+  
   // From pstl/glue_algorithm_impl.h
   template <class _ExecutionPolicy, class _ForwardIterator, class _Predicate>
   __pstl::__internal::__enable_if_execution_policy<_ExecutionPolicy, bool>
@@ -20,7 +39,7 @@ namespace experimental
   {
     if consteval
     {
-      return std::any_of(__first, __last, __pred);
+      return experimental::__except_handler([=]{return std::any_of(__first, __last, __pred);});
     }
     else
     {
