@@ -58,7 +58,7 @@ namespace experimental
   {
     if consteval
     {
-      return std::reduce(__first, __last);
+      return experimental::__except_handler([=]{return std::reduce(__first, __last);});
     }
     else
     {
