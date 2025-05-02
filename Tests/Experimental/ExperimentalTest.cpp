@@ -24,10 +24,10 @@ namespace experimental
     }
     else
     {
-      return __pstl::__internal::__pattern_any_of(
-        std::forward<_ExecutionPolicy>(__exec), __first, __last, __pred,
-        __pstl::__internal::__is_vectorization_preferred<_ExecutionPolicy, _ForwardIterator>(__exec),
-        __pstl::__internal::__is_parallelization_preferred<_ExecutionPolicy, _ForwardIterator>(__exec));
+      auto __dispatch_tag = __pstl::__internal::__select_backend(__exec, __first);
+
+      return __pstl::__internal::__pattern_any_of(__dispatch_tag, std::forward<_ExecutionPolicy>(__exec), __first, __last,
+                                                __pred);
     }
   }
 
@@ -78,10 +78,10 @@ namespace sequoia::testing
     static_assert(experimental::sum(std::execution::par,       {1,2,3,4})     == 10);
     static_assert(experimental::sum(std::execution::par_unseq, {1,2,3,4,5})   == 15);
     static_assert(experimental::sum(std::execution::unseq,     {1,2,3,4,5,6}) == 21);
-    check(equality, report_line("Check runtime result"), experimental::sum(std::execution::par, {1,2,3,4,5}), 15);
+    check(equality, "Check runtime result", experimental::sum(std::execution::par, {1,2,3,4,5}), 15);
 
     check_relative_performance(
-      report_line("Check acceleration still works with a speed up of at least 2"),
+      "Check acceleration still works with a speed up of at least 2",
       [](){ experimental::sum(std::execution::par, std::vector<int>(1000000,1)); },
       [](){ experimental::sum(std::execution::seq, std::vector<int>(1000000,1)); },
       2.0,
