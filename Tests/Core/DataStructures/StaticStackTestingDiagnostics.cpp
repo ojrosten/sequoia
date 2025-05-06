@@ -30,7 +30,7 @@ namespace sequoia::testing
 
     constexpr static_stack<int, 0> s{};
     check("Empty stack", !s.empty());
-    check(equality, "", s.size(), 1_sz);
+    check(equality, "", s.size(), 1uz);
   }
 
   void test_static_stack_false_negatives::check_depth_1()

@@ -301,16 +301,16 @@ namespace sequoia::testing
     auto stack = graph_impl::traversal_traits<graph_type, traversal_flavour::pseudo_depth_first>::make();
     stack.push(0);
     stack.push(1);
-    check(equality, "", stack.top(), 1_sz);
+    check(equality, "", stack.top(), 1uz);
     stack.pop();
-    check(equality, "", stack.top(), 0_sz);
+    check(equality, "", stack.top(), 0uz);
 
     using compare_t = graph_impl::node_comparer<graph_type, std::ranges::less>;
     auto pqueue = graph_impl::traversal_traits<graph_type, traversal_flavour::priority, compare_t>::make(compare_t{graph});
     pqueue.push(0);
     pqueue.push(1);
 
-    check(equality, "", pqueue.top(), 0_sz);
+    check(equality, "", pqueue.top(), 0uz);
   }
 
   //=============================== Tracker Test ===============================//
@@ -351,7 +351,7 @@ namespace sequoia::testing
       }
     }
 
-    check(equality, make_message("First node added"), g.add_node(), 0_sz);
+    check(equality, make_message("First node added"), g.add_node(), 0uz);
     // 0
 
     {
@@ -366,7 +366,7 @@ namespace sequoia::testing
       }
     }
 
-    check(equality, "Second node added", g.add_node(), 1_sz);
+    check(equality, "Second node added", g.add_node(), 1uz);
     // 0 0
 
     {
@@ -405,7 +405,7 @@ namespace sequoia::testing
       }
     }
 
-    check(equality, make_message("Third node added"), g.add_node(), 2_sz);
+    check(equality, make_message("Third node added"), g.add_node(), 2uz);
     g.join(0, 1);
     g.join(1, 2);
     // 0----0----0
@@ -469,7 +469,7 @@ namespace sequoia::testing
       }
     }
 
-    check(equality, make_message("Fourth node added"), g.add_node(), 3_sz);
+    check(equality, make_message("Fourth node added"), g.add_node(), 3uz);
     g.join(2, 3);
     g.join(3, 0);
     //  0----0

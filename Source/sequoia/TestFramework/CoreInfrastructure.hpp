@@ -89,10 +89,4 @@ namespace sequoia::testing
     int num{};
     std::string top_level_message{};
   };
-
-  [[nodiscard]]
-  consteval std::size_t operator ""_sz(unsigned long long int n) noexcept
-  {
-    return static_cast<std::size_t>(n);
-  }
 }

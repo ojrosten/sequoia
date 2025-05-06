@@ -76,22 +76,22 @@ namespace sequoia::testing
 
     //this->template check_exception_thrown<std::out_of_range>("", [&g](){ g.reserve_edges(0, 4);});
     //this->template check_exception_thrown<std::out_of_range>("", [&g](){ return g.edges_capacity(0);});
-    check(equality, "", g.node_capacity(), 0_sz);
+    check(equality, "", g.node_capacity(), 0uz);
 
     g.add_node();
     check(equality, "", g, Graph{{{}}, edge_allocator{}, node_allocator{}});
 
-    check(equality, "", g.edges_capacity(0), 0_sz);
-    check(equality, "", g.node_capacity(), 1_sz);
+    check(equality, "", g.edges_capacity(0), 0uz);
+    check(equality, "", g.node_capacity(), 1uz);
     g.reserve_edges(0, 4);
-    check(equality, "", g.edges_capacity(0), 4_sz);
+    check(equality, "", g.edges_capacity(0), 4uz);
 
     g.reserve_nodes(4);
-    check(equality, "", g.node_capacity(), 4_sz);
+    check(equality, "", g.node_capacity(), 4uz);
 
     g.shrink_to_fit();
-    check(equality, "May fail if stl implementation doesn't actually shrink to fit!", g.edges_capacity(0), 0_sz);
-    check(equality, "May fail if stl implementation doesn't actually shrink to fit!", g.node_capacity(), 1_sz);
+    check(equality, "May fail if stl implementation doesn't actually shrink to fit!", g.edges_capacity(0), 0uz);
+    check(equality, "May fail if stl implementation doesn't actually shrink to fit!", g.node_capacity(), 1uz);
 
     g.insert_node(0u);
     check(equality, "", g, Graph{{{}, {}}, edge_allocator{}, node_allocator{}});

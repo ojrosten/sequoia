@@ -115,14 +115,14 @@ namespace sequoia::testing
   {
     {
       constexpr auto ordering{arrage()};
-      check(equality, "", ordering[0], 0_sz);
-      check(equality, "", ordering[1], 1_sz);
+      check(equality, "", ordering[0], 0uz);
+      check(equality, "", ordering[1], 1uz);
     }
 
     /*{
       constexpr auto data{bfs()};
-      check(equality, "", data[0], 3_sz);
-      check(equality, "", data[1], 0_sz);
+      check(equality, "", data[0], 3uz);
+      check(equality, "", data[1], 0uz);
     }*/
 
     {
