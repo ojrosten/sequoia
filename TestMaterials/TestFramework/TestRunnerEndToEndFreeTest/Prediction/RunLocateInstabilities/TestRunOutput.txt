@@ -98,7 +98,7 @@ House:
 
 Instability detected in file "FlipperFreeTest.cpp"
 Outcome frequencies:
-[50%,50%]
+[50.0%,50.0%]
 
 --No failures--
 

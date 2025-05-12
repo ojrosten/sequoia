@@ -143,7 +143,7 @@ Double check with small difference between absolute value
 [double]
 operator== returned false
 Obtained : 2.1
-Predicted: -2.1
+Predicted: -2.0999999046325684
 
 =======================================
 
@@ -193,7 +193,7 @@ Double check with tiny difference between absolute values
 [double]
 operator== returned false
 Obtained : -1
-Predicted: 1
+Predicted: 1.0000000000000002
 
 =======================================
 

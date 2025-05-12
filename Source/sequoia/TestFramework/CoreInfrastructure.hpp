@@ -14,9 +14,9 @@
 
 #include "sequoia/Core/Meta/Concepts.hpp"
 
-#include <string>
-#include <sstream>
+#include <format>
 #include <filesystem>
+#include <sstream>
 
 namespace sequoia::testing
 {
@@ -27,7 +27,18 @@ namespace sequoia::testing
   template<class T>
   struct serializer;
 
+  template<std::formattable<char> T>
+  struct serializer<T>
+  {
+    [[nodiscard]]
+    static std::string make(const T& val)
+    {
+      return std::format("{}", val);
+    }
+  };
+
   template<serializable_to<std::stringstream> T>
+    requires (!std::formattable<T, char>)
   struct serializer<T>
   {
     [[nodiscard]]

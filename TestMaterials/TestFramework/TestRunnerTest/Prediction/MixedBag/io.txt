@@ -2,7 +2,7 @@
 Running tests, synchronously...
 
 Suite:
-[Execution Time: 491us]
+[Execution Time: 392us]
 	Standard Top Level Checks:                 5;  Failures:  1  [Deep checks: 5]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 270
@@ -15,8 +15,8 @@ Suite:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 921us]
-[Execution Time: 491us]
+[Total Run Time: 734us]
+[Execution Time: 392us]
 	Standard Top Level Checks:                 5;  Failures:  1  [Deep checks: 5]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -27,7 +27,7 @@ Suite:
 Running tests, synchronously...
 
 Suite:
-[Execution Time: 242us]
+[Execution Time: 158us]
 	Standard Top Level Checks:                 5;  Failures:  3  [Deep checks: 5]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 270
@@ -58,8 +58,8 @@ Suite:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 639us]
-[Execution Time: 242us]
+[Total Run Time: 434us]
+[Execution Time: 158us]
 	Standard Top Level Checks:                 5;  Failures:  3  [Deep checks: 5]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -70,7 +70,7 @@ Suite:
 Running tests, synchronously...
 
 Suite:
-[Execution Time: 201us]
+[Execution Time: 139us]
 	Standard Top Level Checks:                 5;  Failures:  2  [Deep checks: 5]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 270
@@ -91,8 +91,8 @@ Suite:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 572us]
-[Execution Time: 201us]
+[Total Run Time: 408us]
+[Execution Time: 139us]
 	Standard Top Level Checks:                 5;  Failures:  2  [Deep checks: 5]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -103,7 +103,7 @@ Suite:
 Running tests, synchronously...
 
 Suite:
-[Execution Time: 213us]
+[Execution Time: 162us]
 	Standard Top Level Checks:                 5;  Failures:  3  [Deep checks: 5]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 270
@@ -134,8 +134,8 @@ Suite:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 593us]
-[Execution Time: 213us]
+[Total Run Time: 469us]
+[Execution Time: 162us]
 	Standard Top Level Checks:                 5;  Failures:  3  [Deep checks: 5]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -146,7 +146,7 @@ Suite:
 Running tests, synchronously...
 
 Suite:
-[Execution Time: 188us]
+[Execution Time: 135us]
 	Standard Top Level Checks:                 5;  Failures:  1  [Deep checks: 5]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 270
@@ -159,8 +159,8 @@ Suite:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 558us]
-[Execution Time: 188us]
+[Total Run Time: 397us]
+[Execution Time: 135us]
 	Standard Top Level Checks:                 5;  Failures:  1  [Deep checks: 5]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -171,7 +171,7 @@ Suite:
 Running tests, synchronously...
 
 Suite:
-[Execution Time: 220us]
+[Execution Time: 187us]
 	Standard Top Level Checks:                 5;  Failures:  4  [Deep checks: 5]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 270
@@ -210,8 +210,8 @@ Suite:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 598us]
-[Execution Time: 220us]
+[Total Run Time: 492us]
+[Execution Time: 187us]
 	Standard Top Level Checks:                 5;  Failures:  4  [Deep checks: 5]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -221,7 +221,7 @@ Suite:
 
 Instability detected in file "Flipper_Free_Test.cpp"
 Outcome frequencies:
-[50%,50%]
+[50.0%,50.0%]
 
 --No failures--
 

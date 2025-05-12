@@ -17,7 +17,7 @@ Transition from node 1 to 0
 Subtracting 1.1
 [double]
 operator== returned false
-Obtained : 0.1
+Obtained : 0.10000000000000009
 Predicted: 0
 
 =======================================

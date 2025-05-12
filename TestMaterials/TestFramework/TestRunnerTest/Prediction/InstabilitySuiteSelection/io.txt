@@ -5,8 +5,8 @@ Another Suite:
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 
 -----------Grand Totals-----------
-[Total Run Time: 363us]
-[Execution Time: 136us]
+[Total Run Time: 336us]
+[Execution Time: 159us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -29,8 +29,8 @@ Another Suite:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 244us]
-[Execution Time: 60.7us]
+[Total Run Time: 177us]
+[Execution Time: 47.8us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -40,7 +40,7 @@ Another Suite:
 
 Instability detected in file "Flipper_Free_Test.cpp"
 Outcome frequencies:
-[50%,50%]
+[50.0%,50.0%]
 
 --No failures--
 

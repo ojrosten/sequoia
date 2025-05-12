@@ -131,20 +131,20 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string prediction_message(T obtained, T prediction)
   {
-    if(((obtained > T{}) && (prediction > T{})) || ((obtained < T{}) && (prediction < T{})))
+    if((obtained != prediction) && (((obtained > T{}) && (prediction > T{})) || ((obtained < T{}) && (prediction < T{}))))
     {
-      const auto diff{std::abs(obtained - prediction)};
-      const auto logDiff{std::log10(diff)}, logScale{std::log10(std::abs(prediction))};
-      if(const auto precision{1 + static_cast<int>(std::ceil(std::abs(logDiff - logScale)))}; precision > 1)
+      const auto relDiff{std::abs(obtained / prediction - 1)};
+      if(const auto precision{1 + static_cast<int>(std::ceil(std::abs(std::log10(relDiff))))}; precision > 1)
       {
         auto toString{
           [precision](T val){
             std::ostringstream os{};
             os << std::setprecision(precision) << val;
             return os.str();
+            //return std::format("{:.{}f}", val, precision);
           }
         };
-
+        
         return default_prediction_message(toString(obtained), toString(prediction));
       }
     }

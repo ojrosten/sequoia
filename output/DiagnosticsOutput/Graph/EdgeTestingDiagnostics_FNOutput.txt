@@ -21,9 +21,8 @@ operator== returned false
   Target node incorrect
   [unsigned char]
   operator== returned false
-  Obtained : 
-
-  Predicted: ÿ
+  Obtained : 10
+  Predicted: 255
 
 =======================================
 
