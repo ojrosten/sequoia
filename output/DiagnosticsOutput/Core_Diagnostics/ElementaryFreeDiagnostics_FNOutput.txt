@@ -123,7 +123,7 @@ Double check with small difference
 [double]
 operator== returned false
 Obtained : 2.1
-Predicted: 2.0999999
+Predicted: 2.0999999046325684
 
 =======================================
 
@@ -133,7 +133,7 @@ Double check with small difference
 [double]
 operator== returned false
 Obtained : -2.1
-Predicted: -2.0999999
+Predicted: -2.0999999046325684
 
 =======================================
 
@@ -274,7 +274,7 @@ Float check; small difference, big numbers
 
 [float]
 operator== returned false
-Obtained : 1000000
+Obtained : 1e+06
 Predicted: 1000001
 
 =======================================

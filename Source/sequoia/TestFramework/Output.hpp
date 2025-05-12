@@ -120,35 +120,10 @@ namespace sequoia::testing
   }
 
   template<serializable T>
-    requires (!std::is_floating_point_v<T> && !is_character_v<T> && !std::is_pointer_v<T> && !is_const_pointer_v<T>)
+    requires (!is_character_v<T> && !std::is_pointer_v<T> && !is_const_pointer_v<T>)
   [[nodiscard]]
   std::string prediction_message(const T& obtained, const T& prediction)
   {
-    return default_prediction_message(to_string(obtained), to_string(prediction));
-  }
-
-  template<std::floating_point T>
-  [[nodiscard]]
-  std::string prediction_message(T obtained, T prediction)
-  {
-    if((obtained != prediction) && (((obtained > T{}) && (prediction > T{})) || ((obtained < T{}) && (prediction < T{}))))
-    {
-      const auto relDiff{std::abs(obtained / prediction - 1)};
-      if(const auto precision{1 + static_cast<int>(std::ceil(std::abs(std::log10(relDiff))))}; precision > 1)
-      {
-        auto toString{
-          [precision](T val){
-            std::ostringstream os{};
-            os << std::setprecision(precision) << val;
-            return os.str();
-            //return std::format("{:.{}f}", val, precision);
-          }
-        };
-        
-        return default_prediction_message(toString(obtained), toString(prediction));
-      }
-    }
-
     return default_prediction_message(to_string(obtained), to_string(prediction));
   }
 
