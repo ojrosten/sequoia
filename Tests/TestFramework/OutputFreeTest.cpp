@@ -47,6 +47,7 @@ namespace sequoia::testing
   void output_free_test::test_tidy_name()
   {
     check(equality, "", tidy_name("(some enum)0", clang_type{}), "0"s);
+    check(equality, "", tidy_name("<textued_2d>", clang_type{}), "<textued_2d>"s);
     check(equality, "", tidy_name("struct foo", msvc_type{}), "foo"s);
   }
 
