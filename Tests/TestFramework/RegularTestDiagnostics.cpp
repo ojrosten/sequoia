@@ -39,6 +39,9 @@ namespace sequoia::testing
     check_semantics("Broken copy assignment value semantics", broken_copy_assignment_value_semantics{1}, broken_copy_assignment_value_semantics{2}, [](auto& b) { *b.x.front() = 3; });
     check_semantics("Broken serialization", broken_serialization{1}, broken_serialization{2});
     check_semantics("Broken deserialization", broken_deserialization{1}, broken_deserialization{2});
+
+    check_semantics("Incorrect x value", perfectly_normal_beast{1}, perfectly_normal_beast{2}, std::initializer_list<int>{2}, std::initializer_list<int>{2});
+    check_semantics("Incorrect y value", perfectly_normal_beast{1}, perfectly_normal_beast{2}, std::initializer_list<int>{1}, std::initializer_list<int>{3});
   }
 
   [[nodiscard]]
@@ -55,6 +58,7 @@ namespace sequoia::testing
   void regular_false_positive_diagnostics::test_regular_semantics()
   {
     check_semantics("", perfectly_normal_beast{1}, perfectly_normal_beast{2});
+    check_semantics("", perfectly_normal_beast{1}, perfectly_normal_beast{2}, std::initializer_list<int>{1}, std::initializer_list<int>{2});
     check_semantics("", perfectly_stringy_beast{}, perfectly_stringy_beast{"Hello, world"});
   }
 }

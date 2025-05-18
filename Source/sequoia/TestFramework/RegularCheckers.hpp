@@ -52,6 +52,17 @@ namespace sequoia::testing
     impl::check_semantics(logger, impl::auxiliary_data<T>{}, x, y, impl::null_mutator{});
   }
 
+  /// Prerequisite: x!=y
+  template<test_mode Mode, pseudoregular T, class U>
+  void check_semantics(std::string description, test_logger<Mode>& logger, const T& x, const T& y, const U& xEquivalent, const U& yEquivalent)
+  {
+    sentinel<Mode> sentry{logger, add_type_info<T>(std::move(description)).append("\n")};
+
+    check(with_best_available, "x not equivalent to xEquivalent", logger, x, xEquivalent);
+    check(with_best_available, "y not equivalent to yEquivalent", logger, y, yEquivalent);
+    impl::check_semantics(logger, impl::auxiliary_data<T>{}, x, y, impl::null_mutator{});
+  }
+
   /// Prerequisite: x!=y with values consistent with order
   template<test_mode Mode, pseudoregular T>
     requires std::totally_ordered<T>

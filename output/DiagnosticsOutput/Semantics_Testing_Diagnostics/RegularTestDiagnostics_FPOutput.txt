@@ -1,5 +1,5 @@
 False Negative Failure:
-Tests/TestFramework/RegularTestDiagnostics.cpp, Line 57
+Tests/TestFramework/RegularTestDiagnostics.cpp, Line 60
 
 --Regular Semantics--
 [sequoia::testing::perfectly_normal_beast<int, std::allocator<int> >]
@@ -7,7 +7,15 @@ Tests/TestFramework/RegularTestDiagnostics.cpp, Line 57
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/RegularTestDiagnostics.cpp, Line 58
+Tests/TestFramework/RegularTestDiagnostics.cpp, Line 61
+
+--Regular Semantics--
+[sequoia::testing::perfectly_normal_beast<int, std::allocator<int> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularTestDiagnostics.cpp, Line 62
 
 --Regular Semantics--
 [sequoia::testing::perfectly_stringy_beast<char, std::allocator<char> >]

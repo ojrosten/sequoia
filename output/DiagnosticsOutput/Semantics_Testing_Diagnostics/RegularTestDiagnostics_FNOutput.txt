@@ -198,3 +198,43 @@ Broken deserialization
 
 =======================================
 
+Tests/TestFramework/RegularTestDiagnostics.cpp, Line 43
+Incorrect x value
+
+--Regular Semantics--
+[sequoia::testing::perfectly_normal_beast<int, std::allocator<int> >]
+
+  x not equivalent to xEquivalent
+  Comparison performed using:
+  [sequoia::testing::value_tester<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > >]
+  Checking for weak equivalence with:
+  [std::initializer_list<int>]
+
+    Element 0 of range incorrect
+    [int]
+    operator== returned false
+    Obtained : 1
+    Predicted: 2
+
+=======================================
+
+Tests/TestFramework/RegularTestDiagnostics.cpp, Line 44
+Incorrect y value
+
+--Regular Semantics--
+[sequoia::testing::perfectly_normal_beast<int, std::allocator<int> >]
+
+  y not equivalent to yEquivalent
+  Comparison performed using:
+  [sequoia::testing::value_tester<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > >]
+  Checking for weak equivalence with:
+  [std::initializer_list<int>]
+
+    Element 0 of range incorrect
+    [int]
+    operator== returned false
+    Obtained : 2
+    Predicted: 3
+
+=======================================
+

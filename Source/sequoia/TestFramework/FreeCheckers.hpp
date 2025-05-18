@@ -635,7 +635,7 @@ namespace sequoia::testing
 
       return !sentry.failure_detected();
     }
-    else if constexpr(tests_against_with_or_without_tutor<equality_check_t, Mode, T, U, tutor<Advisor>>)
+    else if constexpr(std::is_same_v<T, U> && tests_against_with_or_without_tutor<equality_check_t, Mode, T, U, tutor<Advisor>>)
     {
       return check(equality, description, logger, obtained, prediction, advisor);
     }
