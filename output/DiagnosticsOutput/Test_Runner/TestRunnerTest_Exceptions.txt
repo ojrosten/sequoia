@@ -56,11 +56,11 @@ Project root does not exist
 
 Expected Exception Type:
 [std::runtime_error]
-filesystem error: in canonical: No such file or directory ["output/TestsTemporaryData/TestFramework/TestRunnerTest/Auxiliary/FakeProject/FooRepo"] [""]
+canonical - file not found: /output/TestsTemporaryData/TestFramework/TestRunnerTest/Auxiliary/FakeProject/FooRepo
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 439
+Tests/TestFramework/TestRunnerTest.cpp, Line 450
 Project root not findable
 
 Expected Exception Type:
@@ -71,7 +71,7 @@ Please ensure that the build directory is a subdirectory of <project>/build.
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 448
+Tests/TestFramework/TestRunnerTest.cpp, Line 459
 Neither name nor source unique
 
 Expected Exception Type:
@@ -82,7 +82,7 @@ Please do not include tests in the same suite which both have the same name and 
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 468
+Tests/TestFramework/TestRunnerTest.cpp, Line 479
 Invalid repetitions for instability analysis
 
 Expected Exception Type:
@@ -91,7 +91,7 @@ locate-instabilities: unable to interpret 'foo' as an integer number of repetiti
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 475
+Tests/TestFramework/TestRunnerTest.cpp, Line 486
 Insufficient repetitions for instability analysis
 
 Expected Exception Type:

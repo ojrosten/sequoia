@@ -433,6 +433,17 @@ namespace sequoia::testing
         std::stringstream outputStream{};
         commandline_arguments args{{(fake_project() / "FooRepo").generic_string()}};
         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ",  {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}}, outputStream};
+      },
+      [](const project_paths& projPaths, std::string message){
+        constexpr auto npos{std::string::npos};
+        if(const auto pos{message.find(projPaths.project_root().generic_string())}; pos < npos)
+        {
+          const auto start{pos + projPaths.project_root().generic_string().size()};
+          if(const auto end{message.find("\"", start)}; end < npos)
+            message = "canonical - file not found: " + message.substr(start, end - start);
+        }
+
+        return message;
       });
 
     check_exception_thrown<std::runtime_error>(
