@@ -439,7 +439,7 @@ namespace sequoia::testing
         if(const auto pos{message.find(projPaths.project_root().generic_string())}; pos < npos)
         {
           const auto start{pos + projPaths.project_root().generic_string().size()};
-          if(const auto end{message.find("\"", start)}; end < npos)
+          if(const auto end{message.find_first_of("\"]", start)}; end < npos)
             message = "canonical - file not found: " + message.substr(start, end - start);
         }
 
