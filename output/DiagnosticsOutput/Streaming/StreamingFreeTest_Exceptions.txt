@@ -1,16 +1,16 @@
-Tests/Streaming/StreamingFreeTest.cpp, Line 50
+Tests/Streaming/StreamingFreeTest.cpp, Line 34
 
 Expected Exception Type:
 [std::runtime_error]
-output/TestsTemporaryData/Streaming/StreamingFreeTest/WorkingCopy/Bar.txt  for reading
+Unable to open file output/TestsTemporaryData/Streaming/StreamingFreeTest/WorkingCopy/Bar.txt  for reading
 
 =======================================
 
-Tests/Streaming/StreamingFreeTest.cpp, Line 56
+Tests/Streaming/StreamingFreeTest.cpp, Line 38
 
 Expected Exception Type:
 [std::runtime_error]
-output/TestsTemporaryData/Streaming/StreamingFreeTest/WorkingCopy/Baz.txt  for writing
+Unable to open file output/TestsTemporaryData/Streaming/StreamingFreeTest/WorkingCopy/Baz.txt  for writing
 
 =======================================
 

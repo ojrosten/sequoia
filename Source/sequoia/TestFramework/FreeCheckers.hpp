@@ -288,9 +288,16 @@ namespace sequoia::testing
   struct default_exception_message_postprocessor
   {
     [[nodiscard]]
-    std::string operator()(std::string mess) const
+    std::string operator()(const project_paths& projPaths, std::string message) const
     {
-      return mess;
+      constexpr auto npos{std::string::npos};
+      if(const auto pos{message.find(projPaths.project_root())}; pos < npos)
+      {
+        const auto len{projPaths.project_root().string().size()};        
+        message.erase(pos, len + 1);
+      }
+      
+      return message;
     }
   };
 
@@ -301,9 +308,9 @@ namespace sequoia::testing
     class E,
     test_mode Mode,
     class Fn,
-    invocable_r<std::string, std::string> Postprocessor=default_exception_message_postprocessor
+    invocable_r<std::string, project_paths, std::string> Postprocessor=default_exception_message_postprocessor
   >
-  bool check_exception_thrown(std::string description, test_logger<Mode>& logger, Fn&& function, Postprocessor postprocessor={})
+  bool check_exception_thrown(std::string description, test_logger<Mode>& logger, Fn&& function, const project_paths& projPaths, Postprocessor postprocessor={})
   {
     auto message{
       [&description]() -> std::string&& {
@@ -315,13 +322,13 @@ namespace sequoia::testing
     sentry.log_check();
     try
     {
-      function();
+      std::forward<Fn>(function)();
       sentry.log_failure("No exception thrown");
       return false;
     }
     catch(const E& e)
     {
-      sentry.log_caught_exception_message(postprocessor(exception_message_extractor<E>::get(e)));
+      sentry.log_caught_exception_message(postprocessor(projPaths, exception_message_extractor<E>::get(e)));
       return true;
     }
     catch(const std::exception& e)
@@ -765,12 +772,12 @@ namespace sequoia::testing
     <
       class E,
       class Fn,
-      invocable_r<std::string, std::string> Postprocessor=default_exception_message_postprocessor,
+      invocable_r<std::string, project_paths, std::string> Postprocessor=default_exception_message_postprocessor,
       class Self
     >
     bool check_exception_thrown(this Self& self, const reporter& description, Fn&& function, Postprocessor postprocessor={})
     {
-      return testing::check_exception_thrown<E>(self.report(description), self.m_Logger, std::forward<Fn>(function), std::move(postprocessor));
+      return testing::check_exception_thrown<E>(self.report(description), self.m_Logger, std::forward<Fn>(function), self.get_project_paths(), std::move(postprocessor));
     }
     
 #define STATIC_CHECK(...) (check("", [](){ static_assert(__VA_ARGS__); return true; }()))

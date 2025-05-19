@@ -1,4 +1,4 @@
-Tests/TestFramework/FileSystemUtilitiesFreeTest.cpp, Line 45
+Tests/TestFramework/FileSystemUtilitiesFreeTest.cpp, Line 33
 
 Expected Exception Type:
 [std::runtime_error]
@@ -6,7 +6,7 @@ output/TestsTemporaryData/TestFramework/FileSystemUtilitiesFreeTest/Foo/Bar/baz.
 
 =======================================
 
-Tests/TestFramework/FileSystemUtilitiesFreeTest.cpp, Line 48
+Tests/TestFramework/FileSystemUtilitiesFreeTest.cpp, Line 35
 
 Expected Exception Type:
 [std::runtime_error]
@@ -14,7 +14,7 @@ output/TestsTemporaryData/TestFramework/FileSystemUtilitiesFreeTest/Foo/Stuff is
 
 =======================================
 
-Tests/TestFramework/FileSystemUtilitiesFreeTest.cpp, Line 63
+Tests/TestFramework/FileSystemUtilitiesFreeTest.cpp, Line 49
 Attempt to rebase from file
 
 Expected Exception Type:
@@ -23,7 +23,7 @@ Trying to rebase from something other than a directory
 
 =======================================
 
-Tests/TestFramework/FileSystemUtilitiesFreeTest.cpp, Line 66
+Tests/TestFramework/FileSystemUtilitiesFreeTest.cpp, Line 52
 Attempt to rebase non-empty path from empty path
 
 Expected Exception Type:
@@ -32,7 +32,7 @@ Tring to rebase from an empty path
 
 =======================================
 
-Tests/TestFramework/FileSystemUtilitiesFreeTest.cpp, Line 69
+Tests/TestFramework/FileSystemUtilitiesFreeTest.cpp, Line 55
 Attempt to rebase ../
 
 Expected Exception Type:
@@ -41,7 +41,7 @@ Path comprises nothing but ../
 
 =======================================
 
-Tests/TestFramework/FileSystemUtilitiesFreeTest.cpp, Line 72
+Tests/TestFramework/FileSystemUtilitiesFreeTest.cpp, Line 58
 Attempt to rebase ../../
 
 Expected Exception Type:

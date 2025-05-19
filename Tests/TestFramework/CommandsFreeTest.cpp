@@ -15,27 +15,6 @@ namespace sequoia::testing
 {
   using namespace runtime;
 
-  namespace
-  {
-    struct postprocessor
-    {
-      [[nodiscard]]
-      std::string operator()(std::string mess) const
-      {
-        constexpr auto npos{std::string::npos};
-        const auto [first, last] {find_sandwiched_text(mess, pattern, "output")};
-        if((first != npos) && (last != npos))
-        {
-          mess.erase(first, last - first);
-        }
-
-        return mess;
-      }
-
-      std::string_view pattern;
-    };
-  }
-
   [[nodiscard]]
   std::filesystem::path commands_free_test::source_file() const
   {
@@ -51,15 +30,12 @@ namespace sequoia::testing
   {
     const auto root{working_materials()}, buildSubdir{root / "build/CMade"};
     check_exception_thrown<std::runtime_error>("No cache file",
-      [&]() { return cmake_cmd(std::nullopt, build_paths{root, "", buildSubdir / "NoCacheFile/CMakeCache.txt"}, ""); },
-      postprocessor{" in "});
+      [&]() { return cmake_cmd(std::nullopt, build_paths{root, "", buildSubdir / "NoCacheFile/CMakeCache.txt"}, ""); });
 
     check_exception_thrown<std::runtime_error>("Empty cache file",
-      [&]() { return cmake_cmd(std::nullopt, build_paths{root, "", buildSubdir / "EmptyCacheFile/CMakeCache.txt"}, ""); },
-      postprocessor{" from "});
+      [&]() { return cmake_cmd(std::nullopt, build_paths{root, "", buildSubdir / "EmptyCacheFile/CMakeCache.txt"}, ""); });
 
     check_exception_thrown<std::runtime_error>("No CXX compiler when Unix Makefiles specified",
-      [&]() { return cmake_cmd(std::nullopt, build_paths{root, "", buildSubdir / "NoCXXCompiler/CMakeCache.txt"}, ""); },
-      postprocessor{" from "});
+      [&]() { return cmake_cmd(std::nullopt, build_paths{root, "", buildSubdir / "NoCXXCompiler/CMakeCache.txt"}, ""); });
   }
 }
