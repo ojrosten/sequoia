@@ -291,9 +291,9 @@ namespace sequoia::testing
     std::string operator()(const project_paths& projPaths, std::string message) const
     {
       constexpr auto npos{std::string::npos};
-      if(const auto pos{message.find(projPaths.project_root())}; pos < npos)
+      if(const auto pos{message.find(projPaths.project_root().generic_string())}; pos < npos)
       {
-        const auto len{projPaths.project_root().string().size()};        
+        const auto len{projPaths.project_root().generic_string().size()};
         message.erase(pos, len + 1);
       }
       
