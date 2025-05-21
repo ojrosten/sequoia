@@ -120,7 +120,7 @@ namespace sequoia::testing
   void check_semantics(std::string description, test_logger<Mode>& logger, const T& x, const T& y, std::weak_ordering order, Mutator yMutator)
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(std::move(description)).append("\n")};
-    impl::check_semantics(logger, impl::auxiliary_data<T>{order}, x, y, order, yMutator);
+    impl::check_semantics(logger, impl::auxiliary_data<T>{order}, x, y, yMutator);
   }
 
   /// Prerequisite: x!=y, with values consistent with order
@@ -138,6 +138,6 @@ namespace sequoia::testing
     sentinel<Mode> sentry{logger, add_type_info<T>(std::move(description)).append("\n")};
 
     impl::check_best_equivalence(logger, x, y, xEquivalent, yEquivalent);
-    impl::check_semantics(logger, impl::auxiliary_data<T>{order}, x, y, order, yMutator);
+    impl::check_semantics(logger, impl::auxiliary_data<T>{order}, x, y, yMutator);
   }
 }

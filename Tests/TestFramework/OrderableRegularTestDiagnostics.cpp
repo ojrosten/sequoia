@@ -69,10 +69,13 @@ namespace sequoia::testing
     }
 
     {
-      using beast = orderable_regular_beast<int>;
+      using beast   = orderable_regular_beast<int>;
+      using equiv_t = std::initializer_list<int>;
 
-      check_semantics("Incorrect x value", beast{1}, beast{2}, std::initializer_list<int>{2}, std::initializer_list<int>{2}, std::weak_ordering::less);
-      check_semantics("Incorrect y value", beast{1}, beast{2}, std::initializer_list<int>{1}, std::initializer_list<int>{3}, std::weak_ordering::less);
+      check_semantics("Incorrect x value", beast{1}, beast{2}, equiv_t{2}, equiv_t{2}, std::weak_ordering::less);
+      check_semantics("Incorrect y value", beast{1}, beast{2}, equiv_t{1}, equiv_t{3}, std::weak_ordering::less);
+      check_semantics("Incorrect x value; mutator", beast{1}, beast{2}, equiv_t{2}, equiv_t{2}, std::weak_ordering::less, [](auto& b) { b.x.front() = 3; });
+      check_semantics("Incorrect y value; mutator", beast{1}, beast{2}, equiv_t{1}, equiv_t{3}, std::weak_ordering::less, [](auto& b) { b.x.front() = 3; });
     }
   }
 
@@ -89,10 +92,13 @@ namespace sequoia::testing
 
   void orderable_regular_false_positive_diagnostics::test_regular_semantics()
   {
-    using beast = orderable_regular_beast<int>;
+    using beast   = orderable_regular_beast<int>;
+    using equiv_t = std::initializer_list<int>;
 
     check_semantics("", beast{1}, beast{2}, std::weak_ordering::less);
     check_semantics("", beast{2}, beast{1}, std::weak_ordering::greater);
-    check_semantics("", beast{1}, beast{2}, std::initializer_list<int>{1}, std::initializer_list<int>{2}, std::weak_ordering::less);
+    check_semantics("", beast{1}, beast{2}, std::weak_ordering::less, [](auto& b) { b.x.front() = 3; });
+    check_semantics("", beast{1}, beast{2}, equiv_t{1}, equiv_t{2}, std::weak_ordering::less);
+    check_semantics("", beast{1}, beast{2}, equiv_t{1}, equiv_t{2}, std::weak_ordering::less, [](auto& b) { b.x.front() = 3; });
   }
 }
