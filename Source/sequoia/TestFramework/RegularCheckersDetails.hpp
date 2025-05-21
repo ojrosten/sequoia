@@ -28,6 +28,14 @@ namespace sequoia::testing::impl
         actions.post_copy_assign_action(args...);
       };
 
+  template<test_mode Mode, pseudoregular T, class U>
+    requires (!std::is_same_v<T, U>) && checkable_against<with_best_available_check_t, Mode, T, U, tutor<null_advisor>>
+  void check_best_equivalence(test_logger<Mode>& logger, const T& x, const T& y, const U& xEquivalent, const U& yEquivalent)
+  {
+    check(with_best_available, "x not equivalent to xEquivalent", logger, x, xEquivalent);
+    check(with_best_available, "y not equivalent to yEquivalent", logger, y, yEquivalent);
+  }
+  
   template<test_mode Mode, class Actions, pseudoregular T, class... Args>
   bool do_check_copy_assign(test_logger<Mode>& logger, [[maybe_unused]] const Actions& actions, T& z, const T& y, const Args&... args)
   {

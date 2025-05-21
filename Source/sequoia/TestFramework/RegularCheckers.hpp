@@ -54,12 +54,12 @@ namespace sequoia::testing
 
   /// Prerequisite: x!=y
   template<test_mode Mode, pseudoregular T, class U>
+    requires (!std::is_same_v<T, U>) && checkable_against<with_best_available_check_t, Mode, T, U, tutor<null_advisor>>
   void check_semantics(std::string description, test_logger<Mode>& logger, const T& x, const T& y, const U& xEquivalent, const U& yEquivalent)
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(std::move(description)).append("\n")};
 
-    check(with_best_available, "x not equivalent to xEquivalent", logger, x, xEquivalent);
-    check(with_best_available, "y not equivalent to yEquivalent", logger, y, yEquivalent);
+    impl::check_best_equivalence(logger, x, y, xEquivalent, yEquivalent);
     impl::check_semantics(logger, impl::auxiliary_data<T>{}, x, y, impl::null_mutator{});
   }
 
@@ -72,11 +72,45 @@ namespace sequoia::testing
     impl::check_semantics(logger, impl::auxiliary_data<T>{order}, x, y, impl::null_mutator{});
   }
 
+  /// Prerequisite: x!=y with values consistent with order
+  template<test_mode Mode, pseudoregular T, class U>
+    requires std::totally_ordered<T> && (!std::is_same_v<T, U>) && checkable_against<with_best_available_check_t, Mode, T, U, tutor<null_advisor>>
+  void check_semantics(std::string description,
+                       test_logger<Mode>& logger,
+                       const T& x,
+                       const T& y,
+                       const U& xEquivalent,
+                       const U& yEquivalent,
+                       std::weak_ordering order)
+  {
+    sentinel<Mode> sentry{logger, add_type_info<T>(std::move(description)).append("\n")};
+
+    impl::check_best_equivalence(logger, x, y, xEquivalent, yEquivalent);
+    impl::check_semantics(logger, impl::auxiliary_data<T>{order}, x, y, impl::null_mutator{});
+  }
+  
   /// Prerequisite: x!=y
   template<test_mode Mode, pseudoregular T, std::invocable<T&> Mutator>
   void check_semantics(std::string description, test_logger<Mode>& logger, const T& x, const T& y, Mutator yMutator)
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(std::move(description)).append("\n")};
+    impl::check_semantics(logger, impl::auxiliary_data<T>{}, x, y, yMutator);
+  }
+
+  /// Prerequisite: x!=y
+  template<test_mode Mode, pseudoregular T, class U, std::invocable<T&> Mutator>
+    requires (!std::is_same_v<T, U>) && checkable_against<with_best_available_check_t, Mode, T, U, tutor<null_advisor>>
+  void check_semantics(std::string description,
+                       test_logger<Mode>& logger,
+                       const T& x,
+                       const T& y,
+                       const U& xEquivalent,
+                       const U& yEquivalent,
+                       Mutator yMutator)
+  {
+    sentinel<Mode> sentry{logger, add_type_info<T>(std::move(description)).append("\n")};
+
+    impl::check_best_equivalence(logger, x, y, xEquivalent, yEquivalent);
     impl::check_semantics(logger, impl::auxiliary_data<T>{}, x, y, yMutator);
   }
 
@@ -86,6 +120,24 @@ namespace sequoia::testing
   void check_semantics(std::string description, test_logger<Mode>& logger, const T& x, const T& y, std::weak_ordering order, Mutator yMutator)
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(std::move(description)).append("\n")};
+    impl::check_semantics(logger, impl::auxiliary_data<T>{order}, x, y, order, yMutator);
+  }
+
+  /// Prerequisite: x!=y, with values consistent with order
+  template<test_mode Mode, pseudoregular T, class U, std::invocable<T&> Mutator>
+    requires std::totally_ordered<T> && (!std::is_same_v<T, U>) && checkable_against<with_best_available_check_t, Mode, T, U, tutor<null_advisor>>
+  void check_semantics(std::string description,
+                       test_logger<Mode>& logger,
+                       const T& x,
+                       const T& y,
+                       const U& xEquivalent,
+                       const U& yEquivalent,
+                       std::weak_ordering order,
+                       Mutator yMutator)
+  {
+    sentinel<Mode> sentry{logger, add_type_info<T>(std::move(description)).append("\n")};
+
+    impl::check_best_equivalence(logger, x, y, xEquivalent, yEquivalent);
     impl::check_semantics(logger, impl::auxiliary_data<T>{order}, x, y, order, yMutator);
   }
 }
