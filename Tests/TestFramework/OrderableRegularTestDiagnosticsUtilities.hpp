@@ -96,6 +96,16 @@ namespace sequoia::testing
     }
   };
 
+  template<class T, class Allocator>
+  struct value_tester<orderable_regular_beast<T, Allocator>>
+  {
+    template<class Logger>
+    static void test(weak_equivalence_check_t, Logger& logger, const orderable_regular_beast<T, Allocator>& beast, std::initializer_list<T> prediction)
+    {
+      check(weak_equivalence, "", logger, std::begin(beast.x), std::end(beast.x), std::begin(prediction), std::end(prediction));
+    }
+  };
+
   template<class T=int, class Allocator=std::allocator<int>>
   struct regular_broken_less
   {

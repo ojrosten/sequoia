@@ -67,6 +67,13 @@ namespace sequoia::testing
 
       check_semantics("", beast{1}, beast{2}, std::weak_ordering::less);
     }
+
+    {
+      using beast = orderable_regular_beast<int>;
+
+      check_semantics("Incorrect x value", beast{1}, beast{2}, std::initializer_list<int>{2}, std::initializer_list<int>{2}, std::weak_ordering::less);
+      check_semantics("Incorrect y value", beast{1}, beast{2}, std::initializer_list<int>{1}, std::initializer_list<int>{3}, std::weak_ordering::less);
+    }
   }
 
   [[nodiscard]]
@@ -86,5 +93,6 @@ namespace sequoia::testing
 
     check_semantics("", beast{1}, beast{2}, std::weak_ordering::less);
     check_semantics("", beast{2}, beast{1}, std::weak_ordering::greater);
+    check_semantics("", beast{1}, beast{2}, std::initializer_list<int>{1}, std::initializer_list<int>{2}, std::weak_ordering::less);
   }
 }

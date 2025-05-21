@@ -96,3 +96,43 @@ Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 68
 
 =======================================
 
+Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 74
+Incorrect x value
+
+--Regular Semantics--
+[sequoia::testing::orderable_regular_beast<int, std::allocator<int> >]
+
+  x not equivalent to xEquivalent
+  Comparison performed using:
+  [sequoia::testing::value_tester<sequoia::testing::orderable_regular_beast<int, std::allocator<int> > >]
+  Checking for weak equivalence with:
+  [std::initializer_list<int>]
+
+    Element 0 of range incorrect
+    [int]
+    operator== returned false
+    Obtained : 1
+    Predicted: 2
+
+=======================================
+
+Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 75
+Incorrect y value
+
+--Regular Semantics--
+[sequoia::testing::orderable_regular_beast<int, std::allocator<int> >]
+
+  y not equivalent to yEquivalent
+  Comparison performed using:
+  [sequoia::testing::value_tester<sequoia::testing::orderable_regular_beast<int, std::allocator<int> > >]
+  Checking for weak equivalence with:
+  [std::initializer_list<int>]
+
+    Element 0 of range incorrect
+    [int]
+    operator== returned false
+    Obtained : 2
+    Predicted: 3
+
+=======================================
+

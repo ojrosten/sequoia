@@ -43,7 +43,11 @@ namespace sequoia::testing
       testing::check_semantics(regular_message(self.report(description)), self.m_Logger, x, y);
     }
 
-    /// Prerequisite: x!=y
+    /*! Prerequisites:
+          x!=y
+          x==xEquivalent
+          y==yEquivalent
+     */
     template<class Self, pseudoregular T, class U>
     void check_semantics(this Self& self, const reporter& description, const T& x, const T& y, const U& xEquivalent, const U& yEquivalent)
     {
@@ -56,6 +60,20 @@ namespace sequoia::testing
     void check_semantics(this Self& self, const reporter& description, const T& x, const T& y, std::weak_ordering order)
     {
       testing::check_semantics(regular_message(self.report(description)), self.m_Logger, x, y, order);
+    }
+
+    /// Prerequisite: x!=y, with values consistent with order
+    template<class Self, pseudoregular T, class U>
+      requires std::totally_ordered<T> && (!std::is_same_v<T, U>) && checkable_against<with_best_available_check_t, Mode, T, U, tutor<null_advisor>>
+    void check_semantics(this Self& self,
+                         const reporter& description,
+                         const T& x,
+                         const T& y,
+                         const U& xEquivalent,
+                         const U& yEquivalent,
+                         std::weak_ordering order)
+    {
+      testing::check_semantics(regular_message(self.report(description)), self.m_Logger, x, y, xEquivalent, yEquivalent, order);
     }
 
     /// Prerequisite: x!=y
