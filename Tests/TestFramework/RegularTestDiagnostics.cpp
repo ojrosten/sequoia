@@ -40,8 +40,11 @@ namespace sequoia::testing
     check_semantics("Broken serialization", broken_serialization{1}, broken_serialization{2});
     check_semantics("Broken deserialization", broken_deserialization{1}, broken_deserialization{2});
 
-    check_semantics("Incorrect x value", perfectly_normal_beast{1}, perfectly_normal_beast{2}, std::initializer_list<int>{2}, std::initializer_list<int>{2});
-    check_semantics("Incorrect y value", perfectly_normal_beast{1}, perfectly_normal_beast{2}, std::initializer_list<int>{1}, std::initializer_list<int>{3});
+    using equiv_t = std::initializer_list<int>;
+    check_semantics("Incorrect x value", perfectly_normal_beast{1}, perfectly_normal_beast{2}, equiv_t{2}, equiv_t{2});
+    check_semantics("Incorrect y value", perfectly_normal_beast{1}, perfectly_normal_beast{2}, equiv_t{1}, equiv_t{3});
+    check_semantics("Incorrect x value; mutator", perfectly_normal_beast{1}, perfectly_normal_beast{2}, equiv_t{2}, equiv_t{2}, [](auto& b) { b.x.front() = 3; });
+    check_semantics("Incorrect y value; mutator", perfectly_normal_beast{1}, perfectly_normal_beast{2}, equiv_t{1}, equiv_t{3}, [](auto& b) { b.x.front() = 3; });
   }
 
   [[nodiscard]]
@@ -57,8 +60,10 @@ namespace sequoia::testing
 
   void regular_false_positive_diagnostics::test_regular_semantics()
   {
+    using equiv_t = std::initializer_list<int>;
     check_semantics("", perfectly_normal_beast{1}, perfectly_normal_beast{2});
-    check_semantics("", perfectly_normal_beast{1}, perfectly_normal_beast{2}, std::initializer_list<int>{1}, std::initializer_list<int>{2});
+    check_semantics("", perfectly_normal_beast{1}, perfectly_normal_beast{2}, equiv_t{1}, equiv_t{2});
+    check_semantics("", perfectly_normal_beast{1}, perfectly_normal_beast{2}, equiv_t{1}, equiv_t{2}, [](auto& b) { b.x.front() = 3; } );
     check_semantics("", perfectly_stringy_beast{}, perfectly_stringy_beast{"Hello, world"});
   }
 }

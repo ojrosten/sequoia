@@ -62,7 +62,11 @@ namespace sequoia::testing
       testing::check_semantics(regular_message(self.report(description)), self.m_Logger, x, y, order);
     }
 
-    /// Prerequisite: x!=y, with values consistent with order
+    /*! Prerequisites:
+          x!=y, with values consistent with order
+          x==xEquivalent
+          y==yEquivalent
+     */
     template<class Self, pseudoregular T, class U>
       requires std::totally_ordered<T> && (!std::is_same_v<T, U>) && checkable_against<with_best_available_check_t, Mode, T, U, tutor<null_advisor>>
     void check_semantics(this Self& self,
@@ -83,12 +87,49 @@ namespace sequoia::testing
       testing::check_semantics(regular_message(self.report(description)), self.m_Logger, x, y, std::move(m));
     }
 
+    /*! Prerequisites:
+          x!=y
+          x==xEquivalent
+          y==yEquivalent
+     */
+    template<class Self, pseudoregular T, class U, std::invocable<T&> Mutator>
+      requires (!std::is_same_v<T, U>) && checkable_against<with_best_available_check_t, Mode, T, U, tutor<null_advisor>> 
+    void check_semantics(this Self& self,
+                         const reporter& description,
+                         const T& x,
+                         const T& y,
+                         const U& xEquivalent,
+                         const U& yEquivalent,
+                         Mutator m)
+    {
+      testing::check_semantics(regular_message(self.report(description)), self.m_Logger, x, y, xEquivalent, yEquivalent, std::move(m));
+    }
+
     /// Prerequisites: x!=y, with values consistent with order
     template<class Self, pseudoregular T, std::invocable<T&> Mutator>
       requires std::totally_ordered<T>
     void check_semantics(this Self& self, const reporter& description, const T& x, const T& y, std::weak_ordering order, Mutator m)
     {
       testing::check_semantics(regular_message(self.report(description)), self.m_Logger, x, y, order, std::move(m));
+    }
+
+    /*! Prerequisites:
+          x!=y, with values consistent with order
+          x==xEquivalent
+          y==yEquivalent
+     */
+    template<class Self, pseudoregular T, class U, std::invocable<T&> Mutator>
+      requires std::totally_ordered<T> && (!std::is_same_v<T, U>) && checkable_against<with_best_available_check_t, Mode, T, U, tutor<null_advisor>>
+    void check_semantics(this Self& self,
+                         const reporter& description,
+                         const T& x,
+                         const T& y,
+                         const U& xEquivalent,
+                         const U& yEquivalent,
+                         std::weak_ordering order,
+                         Mutator m)
+    {
+      testing::check_semantics(regular_message(self.report(description)), self.m_Logger, x, y, xEquivalent, yEquivalent, order, std::move(m));
     }
   protected:
     ~regular_extender() = default;
