@@ -144,7 +144,14 @@ namespace sequoia::testing::impl
   {
     auto fn{
       [&logger, &actions, &x, &y, m{std::move(yMutator)}](auto&&... checkers){
-        return check_semantics(logger, actions, x, y, m, std::forward<decltype(checkers)>(checkers)...);
+        return check_semantics(logger,
+                               actions,
+                               x,
+                               y,
+                               optional_ref<const T>{},
+                               optional_ref<const T>{},
+                               m,
+                               std::forward<decltype(checkers)>(checkers)...);
       }
     };
 

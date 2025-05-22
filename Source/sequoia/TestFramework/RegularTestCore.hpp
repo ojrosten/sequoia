@@ -40,7 +40,12 @@ namespace sequoia::testing
       requires (!std::totally_ordered<T>)
     void check_semantics(this Self& self, const reporter& description, const T& x, const T& y)
     {
-      testing::check_semantics(regular_message(self.report(description)), self.m_Logger, x, y);
+      testing::check_semantics(regular_message(self.report(description)),
+                               self.m_Logger,
+                               x,
+                               y,
+                               optional_ref<const T>{},
+                               optional_ref<const T>{});
     }
 
     /*! Prerequisites:
@@ -49,9 +54,21 @@ namespace sequoia::testing
           y==yEquivalent
      */
     template<class Self, pseudoregular T, class U>
-    void check_semantics(this Self& self, const reporter& description, const T& x, const T& y, const U& xEquivalent, const U& yEquivalent)
+    void check_semantics(this Self& self,
+                         const reporter& description,
+                         const T& x,
+                         const T& y,
+                         const U& xEquivalent,
+                         const U& yEquivalent)
     {
-      testing::check_semantics(regular_message(self.report(description)), self.m_Logger, x, y, xEquivalent, yEquivalent);
+      testing::check_semantics(regular_message(self.report(description)),
+                               self.m_Logger,
+                               x,
+                               y,
+                               xEquivalent,
+                               yEquivalent,
+                               optional_ref<const T>{},
+                               optional_ref<const T>{});
     }
 
     /// Prerequisite: x!=y, with values consistent with order
@@ -59,7 +76,13 @@ namespace sequoia::testing
       requires std::totally_ordered<T>
     void check_semantics(this Self& self, const reporter& description, const T& x, const T& y, std::weak_ordering order)
     {
-      testing::check_semantics(regular_message(self.report(description)), self.m_Logger, x, y, order);
+      testing::check_semantics(regular_message(self.report(description)),
+                               self.m_Logger,
+                               x,
+                               y,
+                               optional_ref<const T>{},
+                               optional_ref<const T>{},
+                               order);
     }
 
     /*! Prerequisites:
@@ -77,14 +100,28 @@ namespace sequoia::testing
                          const U& yEquivalent,
                          std::weak_ordering order)
     {
-      testing::check_semantics(regular_message(self.report(description)), self.m_Logger, x, y, xEquivalent, yEquivalent, order);
+      testing::check_semantics(regular_message(self.report(description)),
+                               self.m_Logger,
+                               x,
+                               y,
+                               xEquivalent,
+                               yEquivalent,
+                               optional_ref<const T>{},
+                               optional_ref<const T>{},
+                               order);
     }
 
     /// Prerequisite: x!=y
     template<class Self, pseudoregular T, std::invocable<T&> Mutator>
     void check_semantics(this Self& self, const reporter& description, const T& x, const T& y, Mutator m)
     {
-      testing::check_semantics(regular_message(self.report(description)), self.m_Logger, x, y, std::move(m));
+      testing::check_semantics(regular_message(self.report(description)),
+                               self.m_Logger,
+                               x,
+                               y,
+                               optional_ref<const T>{},
+                               optional_ref<const T>{},
+                               std::move(m));
     }
 
     /*! Prerequisites:
@@ -102,7 +139,15 @@ namespace sequoia::testing
                          const U& yEquivalent,
                          Mutator m)
     {
-      testing::check_semantics(regular_message(self.report(description)), self.m_Logger, x, y, xEquivalent, yEquivalent, std::move(m));
+      testing::check_semantics(regular_message(self.report(description)),
+                               self.m_Logger,
+                               x,
+                               y,
+                               xEquivalent,
+                               yEquivalent,
+                               optional_ref<const T>{},
+                               optional_ref<const T>{},
+                               std::move(m));
     }
 
     /// Prerequisites: x!=y, with values consistent with order
@@ -110,7 +155,14 @@ namespace sequoia::testing
       requires std::totally_ordered<T>
     void check_semantics(this Self& self, const reporter& description, const T& x, const T& y, std::weak_ordering order, Mutator m)
     {
-      testing::check_semantics(regular_message(self.report(description)), self.m_Logger, x, y, order, std::move(m));
+      testing::check_semantics(regular_message(self.report(description)),
+                               self.m_Logger,
+                               x,
+                               y,
+                               optional_ref<const T>{},
+                               optional_ref<const T>{},
+                               order,
+                               std::move(m));
     }
 
     /*! Prerequisites:
@@ -129,7 +181,16 @@ namespace sequoia::testing
                          std::weak_ordering order,
                          Mutator m)
     {
-      testing::check_semantics(regular_message(self.report(description)), self.m_Logger, x, y, xEquivalent, yEquivalent, order, std::move(m));
+      testing::check_semantics(regular_message(self.report(description)),
+                               self.m_Logger,
+                               x,
+                               y,
+                               xEquivalent,
+                               yEquivalent,
+                               optional_ref<const T>{},
+                               optional_ref<const T>{},
+                               order,
+                               std::move(m));
     }
   protected:
     ~regular_extender() = default;

@@ -61,8 +61,15 @@ namespace sequoia::testing::impl
     return do_check_copy_assign(logger, actions, z, y);
   }
 
-  template<test_mode Mode, class Actions, pseudoregular T, std::invocable<T&> Mutator, class... Args>
-  bool check_semantics(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, Mutator yMutator, const Args&... args)
+  template<test_mode Mode, class Actions, pseudoregular T, class U, std::invocable<T&> Mutator, class... Args>
+  bool check_semantics(test_logger<Mode>& logger,
+                       const Actions& actions,
+                       const T& x,
+                       const T& y,
+                       optional_ref<const U> movedFromPostConstruction,
+                       optional_ref<const U> movedFromPostAssignment,                       
+                       Mutator yMutator,
+                       const Args&... args)
   {
     sentinel<Mode> sentry{logger, ""};
 
@@ -87,14 +94,14 @@ namespace sequoia::testing::impl
 
     if(consistentCopyAssign)
     {
-      check_move_construction(logger, actions, std::move(z), y, optional_ref<const T>{}, args...);
+      check_move_construction(logger, actions, std::move(z), y, movedFromPostConstruction, args...);
     }
 
     if(!consistentCopy)
       return false;
 
     T w{x};
-    check_move_assign(logger, actions, w, T{y}, y, optional_ref<const T>{}, yMutator, args...);
+    check_move_assign(logger, actions, w, T{y}, y, movedFromPostAssignment, yMutator, args...);
 
     if constexpr (do_swap<Args...>::value)
     {
