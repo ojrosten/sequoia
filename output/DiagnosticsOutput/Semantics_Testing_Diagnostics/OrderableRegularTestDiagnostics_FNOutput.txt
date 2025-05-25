@@ -176,3 +176,79 @@ Incorrect y value; mutator
 
 =======================================
 
+Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 84
+Incorrect moved-from state post construction
+
+--Regular Semantics--
+[sequoia::testing::orderable_specified_moved_from_beast<int, std::allocator<int> >]
+
+  Incorrect moved-from value after move construction
+  Comparison performed using:
+  [sequoia::testing::value_tester<sequoia::testing::orderable_specified_moved_from_beast<int, std::allocator<int> > >]
+  Checking for equivalence with:
+  [std::vector<int, std::allocator<int> >]
+
+    Wrapped vector
+    [std::vector<int, std::allocator<int> >]
+    operator== returned false
+
+      Container size wrong
+      [unsigned long long]
+      operator== returned false
+      Obtained : 0
+      Predicted: 1
+
+=======================================
+
+Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 85
+Incorrect moved-from state post construction
+
+--Regular Semantics--
+[sequoia::testing::orderable_specified_moved_from_beast<int, std::allocator<int> >]
+
+  Incorrect moved-from value after move construction
+  [sequoia::testing::orderable_specified_moved_from_beast<int, std::allocator<int> >]
+  operator== returned false
+  Obtained : 
+  Predicted: 1
+
+=======================================
+
+Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 87
+Incorrect moved-from state post assignment
+
+--Regular Semantics--
+[sequoia::testing::orderable_specified_moved_from_beast<int, std::allocator<int> >]
+
+  Incorrect moved-from value after move assignment
+  Comparison performed using:
+  [sequoia::testing::value_tester<sequoia::testing::orderable_specified_moved_from_beast<int, std::allocator<int> > >]
+  Checking for equivalence with:
+  [std::vector<int, std::allocator<int> >]
+
+    Wrapped vector
+    [std::vector<int, std::allocator<int> >]
+    operator== returned false
+
+      Container size wrong
+      [unsigned long long]
+      operator== returned false
+      Obtained : 0
+      Predicted: 1
+
+=======================================
+
+Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 88
+Incorrect moved-from state post assignment
+
+--Regular Semantics--
+[sequoia::testing::orderable_specified_moved_from_beast<int, std::allocator<int> >]
+
+  Incorrect moved-from value after move assignment
+  [sequoia::testing::orderable_specified_moved_from_beast<int, std::allocator<int> >]
+  operator== returned false
+  Obtained : 
+  Predicted: 2
+
+=======================================
+
