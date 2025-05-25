@@ -378,6 +378,22 @@ Broken check invariant
 --Move-only Semantics--
 [sequoia::testing::move_only_beast<int, std::allocator<int> >]
 
+  x not equivalent to xEquivalent
+  Comparison performed using:
+  [sequoia::testing::value_tester<sequoia::testing::move_only_beast<int, std::allocator<int> > >]
+  Checking for equivalence with:
+  [std::vector<int, std::allocator<int> >]
+
+    Wrapped vector
+    [std::vector<int, std::allocator<int> >]
+    operator== returned false
+
+      Element 0 of range incorrect
+      [int]
+      operator== returned false
+      Obtained : 1
+      Predicted: 2
+
   Prerequisite: x and xEquivalent should be equivalent
   Comparison performed using:
   [sequoia::testing::value_tester<sequoia::testing::move_only_beast<int, std::allocator<int> > >]
@@ -401,6 +417,22 @@ Broken check invariant
 
 --Move-only Semantics--
 [sequoia::testing::move_only_beast<int, std::allocator<int> >]
+
+  y not equivalent to yEquivalent
+  Comparison performed using:
+  [sequoia::testing::value_tester<sequoia::testing::move_only_beast<int, std::allocator<int> > >]
+  Checking for equivalence with:
+  [std::vector<int, std::allocator<int> >]
+
+    Wrapped vector
+    [std::vector<int, std::allocator<int> >]
+    operator== returned false
+
+      Element 0 of range incorrect
+      [int]
+      operator== returned false
+      Obtained : 1
+      Predicted: 3
 
   Prerequisite: y and yEquivalent should be equivalent
   Comparison performed using:

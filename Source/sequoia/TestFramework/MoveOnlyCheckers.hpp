@@ -59,6 +59,11 @@ namespace sequoia::testing
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(std::move(description)).append("\n")};
 
+    if constexpr(equivalence_checkable_for_semantics<Mode, T, U>)
+    {
+      impl::check_best_equivalence(logger, x, y, xEquivalent, yEquivalent);
+    }
+
     return impl::check_semantics(
              logger,
              impl::auxiliary_data<T>{},
@@ -91,6 +96,11 @@ namespace sequoia::testing
                        std::weak_ordering order)
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(std::move(description)).append("\n")};
+
+    if constexpr(equivalence_checkable_for_semantics<Mode, T, U>)
+    {
+      impl::check_best_equivalence(logger, x, y, xEquivalent, yEquivalent);
+    }
 
     return impl::check_semantics(
              logger,
