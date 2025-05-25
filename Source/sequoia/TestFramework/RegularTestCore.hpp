@@ -91,7 +91,7 @@ namespace sequoia::testing
           y==yEquivalent
      */
     template<class Self, pseudoregular T, class U>
-      requires std::totally_ordered<T> && (!std::is_same_v<T, U>) && checkable_against<with_best_available_check_t, Mode, T, U, tutor<null_advisor>>
+      requires std::totally_ordered<T> && (!std::is_same_v<T, U>) && checkable_against<with_best_available_check_t<minimal_reporting_permitted::yes>, Mode, T, U, tutor<null_advisor>>
     void check_semantics(this Self& self,
                          const reporter& description,
                          const T& x,
@@ -130,7 +130,7 @@ namespace sequoia::testing
           y==yEquivalent
      */
     template<class Self, pseudoregular T, class U, std::invocable<T&> Mutator>
-      requires (!std::is_same_v<T, U>) && checkable_against<with_best_available_check_t, Mode, T, U, tutor<null_advisor>> 
+      requires (!std::is_same_v<T, U>) && checkable_against<with_best_available_check_t<minimal_reporting_permitted::yes>, Mode, T, U, tutor<null_advisor>> 
     void check_semantics(this Self& self,
                          const reporter& description,
                          const T& x,
@@ -171,7 +171,7 @@ namespace sequoia::testing
           y==yEquivalent
      */
     template<class Self, pseudoregular T, class U, std::invocable<T&> Mutator>
-      requires std::totally_ordered<T> && (!std::is_same_v<T, U>) && checkable_against<with_best_available_check_t, Mode, T, U, tutor<null_advisor>>
+      requires std::totally_ordered<T> && (!std::is_same_v<T, U>) && checkable_against<with_best_available_check_t<minimal_reporting_permitted::yes>, Mode, T, U, tutor<null_advisor>>
     void check_semantics(this Self& self,
                          const reporter& description,
                          const T& x,

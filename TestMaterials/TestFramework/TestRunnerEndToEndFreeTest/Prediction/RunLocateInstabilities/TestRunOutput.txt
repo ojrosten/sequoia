@@ -20,20 +20,20 @@ Unstable:
 Maybe:
 Oldschool:
 Probability:
-	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 34]
+	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 39]
 	False Negative Checks:                     2;  Failures:  0
 Foo:
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 38]
 Unique Thing:
-	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 30]
+	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 37]
 	False Negative Checks:                     2;  Failures:  0
 Container:
 House:
 
 -----------Grand Totals-----------
-[Total Run Time: 6.94ms]
-[Execution Time: 5.01ms]
-	Standard Top Level Checks:                12;  Failures:  1  [Deep checks: 106]
+[Total Run Time: 3.8ms]
+[Execution Time: 2.41ms]
+	Standard Top Level Checks:                12;  Failures:  1  [Deep checks: 118]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0
@@ -76,20 +76,20 @@ Unstable:
 Maybe:
 Oldschool:
 Probability:
-	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 34]
+	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 39]
 	False Negative Checks:                     2;  Failures:  0
 Foo:
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 38]
 Unique Thing:
-	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 30]
+	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 37]
 	False Negative Checks:                     2;  Failures:  0
 Container:
 House:
 
 -----------Grand Totals-----------
-[Total Run Time: 6.25ms]
-[Execution Time: 3.71ms]
-	Standard Top Level Checks:                12;  Failures:  3  [Deep checks: 106]
+[Total Run Time: 3.06ms]
+[Execution Time: 1.75ms]
+	Standard Top Level Checks:                12;  Failures:  3  [Deep checks: 118]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0

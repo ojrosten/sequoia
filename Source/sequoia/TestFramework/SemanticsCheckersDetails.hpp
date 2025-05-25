@@ -92,7 +92,9 @@ namespace sequoia::testing
   using optional_ref = std::optional<std::reference_wrapper<T>>;
 
   template<test_mode Mode, std::equality_comparable T, class U>
-  inline constexpr bool checkable_for_move_semantics{std::is_same_v<T, U> || checkable_against<with_best_available_check_t, Mode, T, U, tutor<null_advisor>>};
+  inline constexpr bool checkable_for_move_semantics{
+    checkable_against<with_best_available_check_t<minimal_reporting_permitted::yes>, Mode, T, U, tutor<null_advisor>> 
+  };
 }
 
 namespace sequoia::testing::impl
@@ -106,7 +108,7 @@ namespace sequoia::testing::impl
 
   struct null_mutator
   {
-    template<class T> constexpr void operator()(const T&) noexcept {}
+    template<class T> constexpr void operator()(const T&) const noexcept {}
   };
 
   template<class T>
@@ -314,17 +316,11 @@ namespace sequoia::testing::impl
     requires checkable_for_move_semantics<Mode, T, U>
   bool check_against(std::string message, test_logger<Mode>& logger, const T& x, const U& xEquivalent)
   {
-    if constexpr(std::is_same_v<T, U>)
-    {
-      if constexpr (reportable<T>)
-        return check(simple_equality, std::move(message), logger, x, xEquivalent);
-      else
-        return check(std::move(message), logger, x == xEquivalent);
-    }
-    else
-    {
-      return check(with_best_available, std::move(message), logger, x, xEquivalent);
-    }
+    return check(with_best_available_check_t<minimal_reporting_permitted::yes>{},
+                 std::move(message),
+                 logger,
+                 x,
+                 xEquivalent);
   }
 
   template<test_mode Mode, class Actions, std::equality_comparable T, class U, class... Args>

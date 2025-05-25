@@ -1,2 +1,2 @@
 Allocation Test
-Standard Top Level Checks:                24;  Failures:  0  [Deep checks: 712]
+Standard Top Level Checks:                24;  Failures:  0  [Deep checks: 828]

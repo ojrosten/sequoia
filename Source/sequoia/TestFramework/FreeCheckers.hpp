@@ -122,6 +122,9 @@ namespace sequoia::testing
 
   using weak_equivalence_check_t = general_weak_equivalence_check_t<void>;
 
+  enum class minimal_reporting_permitted : bool { no, yes };
+
+  template<minimal_reporting_permitted MinimalReporting>
   struct with_best_available_check_t {};
 
   template<class ValueBasedCustomizer>
@@ -144,7 +147,7 @@ namespace sequoia::testing
   inline constexpr simple_equality_check_t     simple_equality{};
   inline constexpr equivalence_check_t         equivalence{};
   inline constexpr weak_equivalence_check_t    weak_equivalence{};
-  inline constexpr with_best_available_check_t with_best_available{};
+  inline constexpr with_best_available_check_t<minimal_reporting_permitted::no> with_best_available{};
 
   template<class T>
   inline constexpr bool is_elementary_check{
@@ -154,6 +157,12 @@ namespace sequoia::testing
     || std::is_same_v<T, weak_equivalence_check_t>
   };
 
+  template<class T>
+  inline constexpr bool is_best_available_check{
+       std::is_same_v<T, with_best_available_check_t<minimal_reporting_permitted::yes>>
+    || std::is_same_v<T, with_best_available_check_t<minimal_reporting_permitted::no>>
+  };
+  
   template<class T>
   inline constexpr bool is_customized_check{
     requires {
@@ -168,7 +177,8 @@ namespace sequoia::testing
 
   template<class Compare, class T>
   inline constexpr bool potential_comparator_for{
-    std::is_invocable_r_v<bool, Compare, T, T> || (faithful_range<T> && !(is_elementary_check<Compare> || std::is_same_v<Compare, with_best_available_check_t> || is_customized_check<Compare>))
+       std::is_invocable_r_v<bool, Compare, T, T>
+    || (faithful_range<T> && !(is_elementary_check<Compare> || is_best_available_check<Compare> || is_customized_check<Compare>))
   };
 
   template<class CheckType, test_mode Mode, class T, class U, class... Args>
@@ -199,7 +209,6 @@ namespace sequoia::testing
     || checkable_against<equivalence_check_t,      Mode, T, U, Tutor>
     || checkable_against<weak_equivalence_check_t, Mode, T, U, Tutor>
   };
-
 
   /*! \brief class template, specializations of which extract messages from various exception types.
      \anchor exception_message_extractor_primary
@@ -522,7 +531,7 @@ namespace sequoia::testing
        (deep_equality_comparable<T> && reportable<T>)
     || supports_range_check_v<simple_equality_check_t, Mode, T, T, Advisor>
   };
-  
+
   /*! \brief The workhorse for checking simple equality. */
 
   template<test_mode Mode, class T, class Advisor=null_advisor>
@@ -611,25 +620,27 @@ namespace sequoia::testing
 
   /*! \brief Condition for applying the best available check */
 
-  template<test_mode Mode, class T, class U, class Advisor>
+  template<minimal_reporting_permitted MinimalReporting, test_mode Mode, class T, class U, class Advisor>
   inline constexpr bool supports_best_available_check{
-       tests_against_with_or_without_tutor<with_best_available_check_t, Mode, T, U, tutor<Advisor>>
+       tests_against_with_or_without_tutor<with_best_available_check_t<MinimalReporting>, Mode, T, U, tutor<Advisor>>
     || has_elementary_check_against<Mode, T, U, tutor<Advisor>>
-    || supports_range_check_v<with_best_available_check_t, Mode, T, U, Advisor>
+    || supports_range_check_v<with_best_available_check_t<MinimalReporting>, Mode, T, U, Advisor>
+    || (std::is_same_v<T, U> && deep_equality_comparable<T> && reportable<T>)
+    || ((MinimalReporting == minimal_reporting_permitted::yes) && std::equality_comparable_with<T, U>)
   };
   
   /*! \brief The workhorse for dispatching to the strongest available type of check. */
 
-  template<test_mode Mode, class T, class U, class Advisor=null_advisor>
-    requires supports_best_available_check<Mode, T, U, Advisor>
-  bool check(with_best_available_check_t,
+  template<minimal_reporting_permitted MinimalReporting, test_mode Mode, class T, class U, class Advisor=null_advisor>
+    requires supports_best_available_check<MinimalReporting, Mode, T, U, Advisor>
+  bool check(with_best_available_check_t<MinimalReporting>,
              std::string description,
              test_logger<Mode>& logger,
              const T& obtained,
              const U& prediction,
              tutor<Advisor> advisor={})
   {
-    if constexpr(tests_against_with_or_without_tutor<with_best_available_check_t, Mode, T, U, tutor<Advisor>>)
+    if constexpr(tests_against_with_or_without_tutor<with_best_available_check_t<MinimalReporting>, Mode, T, U, tutor<Advisor>>)
     {
       sentinel<Mode> sentry{logger, add_type_info<T>(std::move(description))};
 
@@ -654,13 +665,21 @@ namespace sequoia::testing
     {
       return check(weak_equivalence, description, logger, obtained, prediction, advisor);
     }
-    else if constexpr(supports_range_check_v<with_best_available_check_t, Mode, T, U, Advisor>)
+    else if constexpr(supports_range_check_v<with_best_available_check_t<MinimalReporting>, Mode, T, U, Advisor>)
     {
       return check(with_best_available, description, logger, std::begin(obtained), std::end(obtained), std::begin(prediction), std::end(prediction), advisor);
     } 
     else if constexpr(std::is_same_v<T, U> && deep_equality_comparable<T> && reportable<T>)
     {
       return check(simple_equality, description, logger, obtained, prediction, advisor);
+    }
+    else if constexpr((MinimalReporting == minimal_reporting_permitted::yes) && std::equality_comparable_with<T, U>)
+    {
+      return check(description, logger, obtained == prediction,advisor);
+    }
+    else
+    {
+      static_assert(false);
     }
   }
 
@@ -711,11 +730,16 @@ namespace sequoia::testing
         return testing::check(simple_equality, self.report(description), self.m_Logger, obtained, prediction, std::move(advisor));
     }
 
-    template<class T, class U, class Advisor = null_advisor, class Self>
-      requires supports_best_available_check<Mode, T, U, Advisor>
-    bool check(this Self& self, with_best_available_check_t, const reporter& description, const T& obtained, const U& prediction, tutor<Advisor> advisor = {})
+    template<class T, class U, minimal_reporting_permitted MinimalReporting, class Advisor = null_advisor, class Self>
+      requires supports_best_available_check<MinimalReporting, Mode, T, U, Advisor>
+    bool check(this Self& self, with_best_available_check_t<MinimalReporting>, const reporter& description, const T& obtained, const U& prediction, tutor<Advisor> advisor = {})
     {
-      return testing::check(with_best_available, self.report(description), self.m_Logger, obtained, prediction, std::move(advisor));
+      return testing::check(with_best_available_check_t<MinimalReporting>{},
+                            self.report(description),
+                            self.m_Logger,
+                            obtained,
+                            prediction,
+                            std::move(advisor));
     }
 
     template<class ValueBasedCustomizer, class T, class U, class Advisor = null_advisor, class Self>

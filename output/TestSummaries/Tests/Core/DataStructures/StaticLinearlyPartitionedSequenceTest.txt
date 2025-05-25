@@ -1,2 +1,2 @@
 Static Linearly Partitioned Sequence Regular Test
-Standard Top Level Checks:                 4;  Failures:  0  [Deep checks: 440]
+Standard Top Level Checks:                 4;  Failures:  0  [Deep checks: 955]
