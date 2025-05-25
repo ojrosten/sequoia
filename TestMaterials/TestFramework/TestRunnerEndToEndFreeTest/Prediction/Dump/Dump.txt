@@ -356,11 +356,11 @@ operator!= is inconsistent (y)
 [bool]
 Prerequisite - for checking semantics, x and y are assumed to be different
 [bool]
-Prerequisite - for checking move-only semantics, x and xEquivalent are assumed to be equal
+Prerequisite: x and xEquivalent should be equivalent
 [stuff::unique_thing]
 Description
 [double]
-Prerequisite - for checking move-only semantics, y and yEquivalent are assumed to be equal
+Prerequisite: y and yEquivalent should be equivalent
 [stuff::unique_thing]
 Description
 [double]

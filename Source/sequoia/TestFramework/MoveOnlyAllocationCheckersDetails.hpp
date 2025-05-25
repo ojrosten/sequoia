@@ -25,14 +25,14 @@ namespace sequoia::testing::impl
   };
 
   template<test_mode Mode, class Actions, moveonly T, class U, alloc_getter<T>... Getters>
-    requires checkable_for_move_semantics<Mode, T, U>
+    requires checkable_against_for_semantics<Mode, T, U>
   bool check_swap(test_logger<Mode>& logger, const Actions& actions, T&& x, T&& y, const U& xEquivalent, const U& yEquivalent, const dual_allocation_checker<T, Getters>&... checkers)
   {
     return do_check_swap(logger, actions, std::move(x), std::move(y), xEquivalent, yEquivalent, dual_allocation_checker{checkers.info(), x, y}...);
   }
 
   template<test_mode Mode, container_tag tag, moveonly T, class U, alloc_getter<T>... Getters>
-    requires checkable_for_move_semantics<Mode, T, U>
+    requires checkable_against_for_semantics<Mode, T, U>
   std::optional<T> check_para_constructor_allocations(test_logger<Mode>& logger,
                                                       container_tag_constant<tag>,
                                                       T&& z,
@@ -69,7 +69,7 @@ namespace sequoia::testing::impl
   }
 
   template<test_mode Mode, moveonly T, class U, alloc_getter<T>... Getters>
-    requires checkable_for_move_semantics<Mode, T, U>
+    requires checkable_against_for_semantics<Mode, T, U>
   std::pair<std::optional<T>, std::optional<T>>
   check_para_constructor_allocations(test_logger<Mode>& logger,
                                      T&& x,
@@ -83,7 +83,7 @@ namespace sequoia::testing::impl
   }
 
   template<test_mode Mode, class Actions, moveonly T, class U, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
-    requires checkable_for_move_semantics<Mode, T, U> &&  (sizeof...(Getters) > 0)
+    requires checkable_against_for_semantics<Mode, T, U> &&  (sizeof...(Getters) > 0)
   void check_semantics(std::string description,
                        test_logger<Mode>& logger,
                        const Actions& actions,
@@ -148,7 +148,7 @@ namespace sequoia::testing::impl
 
   /// Unpacks the tuple and feeds to the overload of check_semantics defined in MoveOnlyCheckersDetails.hpp
   template<test_mode Mode, class Actions, moveonly T, class U, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
-    requires checkable_for_move_semantics<Mode, T, U> &&  (sizeof...(Getters) > 0)
+    requires checkable_against_for_semantics<Mode, T, U> &&  (sizeof...(Getters) > 0)
   void check_semantics(test_logger<Mode>& logger,
                        const Actions& actions,
                        T&& x,

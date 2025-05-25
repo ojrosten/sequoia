@@ -690,14 +690,14 @@ namespace sequoia::testing::impl
 
 
   template<test_mode Mode, class Actions, movable_comparable T, class U, alloc_getter<T>... Getters>
-    requires checkable_for_move_semantics<Mode, T, U> && (sizeof...(Getters) > 0)
+    requires checkable_against_for_semantics<Mode, T, U> && (sizeof...(Getters) > 0)
   std::optional<T> check_move_construction(test_logger<Mode>& logger, const Actions& actions, T&& z, const U& y, optional_ref<const U> movedFrom, const dual_allocation_checker<T, Getters>&... checkers)
   {
     return do_check_move_construction(logger, actions, std::forward<T>(z), y, movedFrom, allocation_checker{checkers.info(), z}...);
   }
 
   template<test_mode Mode, class Actions, movable_comparable T, class U, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
-    requires checkable_for_move_semantics<Mode, T, U> && (sizeof...(Getters) > 0)
+    requires checkable_against_for_semantics<Mode, T, U> && (sizeof...(Getters) > 0)
   void check_move_assign(test_logger<Mode>& logger, const Actions& actions, T& u, T&& v, const U& y, optional_ref<const U> movedFrom, Mutator yMutator, const dual_allocation_checker<T, Getters>&... checkers)
   {
     do_check_move_assign(logger, actions, u, std::forward<T>(v), y, movedFrom, std::move(yMutator), dual_allocation_checker{checkers.info(), u, v}...);

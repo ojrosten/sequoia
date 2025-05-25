@@ -33,7 +33,7 @@ namespace sequoia::testing
     move_only_allocation_extender() = default;
 
     template<class Self, moveonly T, class U, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
-      requires checkable_for_move_semantics<Mode, T, U> && (!std::totally_ordered<T>) && (sizeof...(Getters) > 0)
+      requires checkable_against_for_semantics<Mode, T, U> && (!std::totally_ordered<T>) && (sizeof...(Getters) > 0)
     void check_semantics(this Self& self,
                          const reporter& description,
                          T&& x,
@@ -58,7 +58,7 @@ namespace sequoia::testing
     }
 
     template<class Self, moveonly T, class U, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
-      requires checkable_for_move_semantics<Mode, T, U> && (!std::totally_ordered<T>)  && (sizeof...(Getters) > 0)
+      requires checkable_against_for_semantics<Mode, T, U> && (!std::totally_ordered<T>)  && (sizeof...(Getters) > 0)
     void check_semantics(this Self& self,
                          const reporter& description,
                          T&& x,
@@ -132,7 +132,7 @@ namespace sequoia::testing
     }
 
     template<class Self, moveonly T, class U, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
-      requires checkable_for_move_semantics<Mode, T, U> && std::totally_ordered<T> && (sizeof...(Getters) > 0)
+      requires checkable_against_for_semantics<Mode, T, U> && std::totally_ordered<T> && (sizeof...(Getters) > 0)
     void check_semantics(this Self& self,
                          const reporter& description,
                          T&& x,
@@ -159,7 +159,7 @@ namespace sequoia::testing
     }
 
     template<class Self, moveonly T, class U, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
-      requires checkable_for_move_semantics<Mode, T, U> && std::totally_ordered<T> && (sizeof...(Getters) > 0)
+      requires checkable_against_for_semantics<Mode, T, U> && std::totally_ordered<T> && (sizeof...(Getters) > 0)
     void check_semantics(this Self& self,
                          const reporter& description,
                          T&& x,

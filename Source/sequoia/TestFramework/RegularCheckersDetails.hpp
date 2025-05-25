@@ -77,9 +77,7 @@ namespace sequoia::testing::impl
       return false;
 
     T z{x};
-    const bool consistentCopy{
-      check(equality, "Inconsistent copy constructor (x)", logger, z, x)
-    };
+    const bool consistentCopy{check(equality, "Inconsistent copy constructor (x)", logger, z, x)};
 
     if constexpr(has_post_copy_action<Actions, test_logger<Mode>, T, T, Args...>)
     {
@@ -105,10 +103,7 @@ namespace sequoia::testing::impl
 
     if constexpr (do_swap<Args...>::value)
     {
-      if (consistentCopy)
-      {
-        check_swap(logger, actions, T{x}, T{y}, x, y, yMutator, args...);
-      }
+      check_swap(logger, actions, T{x}, T{y}, x, y, yMutator, args...);
     }
 
     if constexpr(!std::is_same_v<std::remove_cvref_t<Mutator>, null_mutator>)
