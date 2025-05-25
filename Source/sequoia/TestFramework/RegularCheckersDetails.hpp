@@ -29,7 +29,7 @@ namespace sequoia::testing::impl
       };
 
   template<test_mode Mode, pseudoregular T, class U>
-    requires (!std::is_same_v<T, U>) && checkable_against<with_best_available_check_t<minimal_reporting_permitted::yes>, Mode, T, U, tutor<null_advisor>>
+    requires (!std::is_same_v<T, U>) && checkable_against_for_semantics<Mode, T, U>
   void check_best_equivalence(test_logger<Mode>& logger, const T& x, const T& y, const U& xEquivalent, const U& yEquivalent)
   {
     check(with_best_available, "x not equivalent to xEquivalent", logger, x, xEquivalent);

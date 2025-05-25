@@ -95,6 +95,11 @@ namespace sequoia::testing
   inline constexpr bool checkable_against_for_semantics{
     checkable_against<with_best_available_check_t<minimal_reporting_permitted::yes>, Mode, T, U, tutor<null_advisor>> 
   };
+
+  template<test_mode Mode, std::equality_comparable T, class U>
+  inline constexpr bool equivalence_checkable_for_semantics{
+    (!std::is_same_v<T, U>) && checkable_against_for_semantics<Mode, T, U>
+  };
 }
 
 namespace sequoia::testing::impl

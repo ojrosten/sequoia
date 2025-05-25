@@ -65,7 +65,7 @@ namespace sequoia::testing
 
   /// Prerequisite: x!=y
   template<test_mode Mode, pseudoregular T, class U, class V>
-    requires (!std::is_same_v<T, U>) && checkable_against<with_best_available_check_t<minimal_reporting_permitted::yes>, Mode, T, U, tutor<null_advisor>>
+    requires equivalence_checkable_for_semantics<Mode, T, U> && checkable_against_for_semantics<Mode, T, V>
   void check_semantics(std::string description,
                        test_logger<Mode>& logger,
                        const T& x,
@@ -89,7 +89,7 @@ namespace sequoia::testing
 
   /// Prerequisite: x!=y with values consistent with order
   template<test_mode Mode, pseudoregular T, class U>
-    requires std::totally_ordered<T>
+    requires std::totally_ordered<T> && checkable_against_for_semantics<Mode, T, U>
   void check_semantics(std::string description,
                        test_logger<Mode>& logger,
                        const T& x,
@@ -110,7 +110,7 @@ namespace sequoia::testing
 
   /// Prerequisite: x!=y with values consistent with order
   template<test_mode Mode, pseudoregular T, class U, class V>
-    requires std::totally_ordered<T> && (!std::is_same_v<T, U>) && checkable_against<with_best_available_check_t<minimal_reporting_permitted::yes>, Mode, T, U, tutor<null_advisor>>
+    requires std::totally_ordered<T> && equivalence_checkable_for_semantics<Mode, T, U> && checkable_against_for_semantics<Mode, T, V>
   void check_semantics(std::string description,
                        test_logger<Mode>& logger,
                        const T& x,
@@ -135,6 +135,7 @@ namespace sequoia::testing
   
   /// Prerequisite: x!=y
   template<test_mode Mode, pseudoregular T, class U, std::invocable<T&> Mutator>
+    requires checkable_against_for_semantics<Mode, T, U>
   void check_semantics(std::string description,
                        test_logger<Mode>& logger,
                        const T& x,
@@ -155,7 +156,7 @@ namespace sequoia::testing
 
   /// Prerequisite: x!=y
   template<test_mode Mode, pseudoregular T, class U, class V, std::invocable<T&> Mutator>
-    requires (!std::is_same_v<T, U>) && checkable_against<with_best_available_check_t<minimal_reporting_permitted::yes>, Mode, T, U, tutor<null_advisor>>
+    requires equivalence_checkable_for_semantics<Mode, T, U> && checkable_against_for_semantics<Mode, T, V>
   void check_semantics(std::string description,
                        test_logger<Mode>& logger,
                        const T& x,
@@ -180,7 +181,7 @@ namespace sequoia::testing
 
   /// Prerequisite: x!=y, with values consistent with order
   template<test_mode Mode, pseudoregular T, class U, std::invocable<T&> Mutator>
-    requires std::totally_ordered<T>
+    requires std::totally_ordered<T> && checkable_against_for_semantics<Mode, T, U>
   void check_semantics(std::string description,
                        test_logger<Mode>& logger,
                        const T& x,
@@ -202,7 +203,7 @@ namespace sequoia::testing
 
   /// Prerequisite: x!=y, with values consistent with order
   template<test_mode Mode, pseudoregular T, class U, class V, std::invocable<T&> Mutator>
-    requires std::totally_ordered<T> && (!std::is_same_v<T, U>) && checkable_against<with_best_available_check_t<minimal_reporting_permitted::yes>, Mode, T, U, tutor<null_advisor>>
+    requires std::totally_ordered<T> && equivalence_checkable_for_semantics<Mode, T, U> && checkable_against_for_semantics<Mode, T, V>
   void check_semantics(std::string description,
                        test_logger<Mode>& logger,
                        const T& x,
