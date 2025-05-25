@@ -36,8 +36,7 @@ namespace sequoia::testing
     regular_extender() = default;
 
     /// Prerequisite: x!=y
-    template<class Self, pseudoregular T>
-      requires (!std::totally_ordered<T>)
+    template<pseudoregular T, class Self>
     void check_semantics(this Self& self, const reporter& description, const T& x, const T& y)
     {
       testing::check_semantics(regular_message(self.report(description)),
@@ -53,7 +52,7 @@ namespace sequoia::testing
           x==xEquivalent
           y==yEquivalent
      */
-    template<class Self, pseudoregular T, class U>
+    template<pseudoregular T, class U, class Self>
       requires equivalence_checkable_for_semantics<Mode, T, U>
     void check_semantics(this Self& self,
                          const reporter& description,
@@ -73,7 +72,7 @@ namespace sequoia::testing
     }
 
     /// Prerequisite: x!=y, with values consistent with order
-    template<class Self, pseudoregular T>
+    template<pseudoregular T, class Self>
       requires std::totally_ordered<T>
     void check_semantics(this Self& self, const reporter& description, const T& x, const T& y, std::weak_ordering order)
     {
@@ -91,7 +90,7 @@ namespace sequoia::testing
           x==xEquivalent
           y==yEquivalent
      */
-    template<class Self, pseudoregular T, class U>
+    template<pseudoregular T, class U, class Self>
       requires std::totally_ordered<T> && equivalence_checkable_for_semantics<Mode, T, U>
     void check_semantics(this Self& self,
                          const reporter& description,
@@ -113,7 +112,7 @@ namespace sequoia::testing
     }
 
     /// Prerequisite: x!=y
-    template<class Self, pseudoregular T, std::invocable<T&> Mutator>
+    template<pseudoregular T, std::invocable<T&> Mutator, class Self>
     void check_semantics(this Self& self, const reporter& description, const T& x, const T& y, Mutator m)
     {
       testing::check_semantics(regular_message(self.report(description)),
@@ -130,7 +129,7 @@ namespace sequoia::testing
           x==xEquivalent
           y==yEquivalent
      */
-    template<class Self, pseudoregular T, class U, std::invocable<T&> Mutator>
+    template<pseudoregular T, class U, std::invocable<T&> Mutator, class Self>
       requires equivalence_checkable_for_semantics<Mode, T, U>
     void check_semantics(this Self& self,
                          const reporter& description,
@@ -152,7 +151,7 @@ namespace sequoia::testing
     }
 
     /// Prerequisites: x!=y, with values consistent with order
-    template<class Self, pseudoregular T, std::invocable<T&> Mutator>
+    template<pseudoregular T, std::invocable<T&> Mutator, class Self>
       requires std::totally_ordered<T>
     void check_semantics(this Self& self, const reporter& description, const T& x, const T& y, std::weak_ordering order, Mutator m)
     {
@@ -171,7 +170,7 @@ namespace sequoia::testing
           x==xEquivalent
           y==yEquivalent
      */
-    template<class Self, pseudoregular T, class U, std::invocable<T&> Mutator>
+    template<pseudoregular T, class U, std::invocable<T&> Mutator, class Self>
       requires std::totally_ordered<T> && equivalence_checkable_for_semantics<Mode, T, U>
     void check_semantics(this Self& self,
                          const reporter& description,
