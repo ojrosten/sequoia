@@ -46,6 +46,7 @@ namespace sequoia::testing
 {
   /// Prerequisite: x!=y
   template<test_mode Mode, pseudoregular T, class U>
+    requires checkable_against_for_semantics<Mode, T, U>
   void check_semantics(std::string description,
                        test_logger<Mode>& logger,
                        const T& x,
