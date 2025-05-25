@@ -71,6 +71,32 @@ namespace sequoia::testing
                                optional_ref<const T>{});
     }
 
+    /*! Prerequisites:
+          x != y
+          x equivalent to xEquivalent
+          y equivalent to yEquivalent
+     */
+    template<pseudoregular T, class U, class V, class Self>
+      requires equivalence_checkable_for_semantics<Mode, T, U> && checkable_against_for_semantics<Mode, T, V>
+    void check_semantics(this Self& self,
+                         const reporter& description,
+                         const T& x,
+                         const T& y,
+                         const U& xEquivalent,
+                         const U& yEquivalent,
+                         const V& movedFromPostConstruction,
+                         const V& movedFromPostAssignment)
+    {
+      testing::check_semantics(regular_message(self.report(description)),
+                               self.m_Logger,
+                               x,
+                               y,
+                               xEquivalent,
+                               yEquivalent,
+                               optional_ref<const V>{movedFromPostConstruction},
+                               optional_ref<const V>{movedFromPostAssignment});
+    }
+
     /// Prerequisite: x != y, with values consistent with order
     template<pseudoregular T, class Self>
       requires std::totally_ordered<T>
@@ -108,6 +134,34 @@ namespace sequoia::testing
                                yEquivalent,
                                optional_ref<const T>{},
                                optional_ref<const T>{},
+                               order);
+    }
+
+    /*! Prerequisites:
+          x != y, with values consistent with order
+          x equivalent to xEquivalent
+          y equivalent to yEquivalent
+     */
+    template<pseudoregular T, class U, class V, class Self>
+      requires std::totally_ordered<T> && equivalence_checkable_for_semantics<Mode, T, U> && checkable_against_for_semantics<Mode, T, V>
+    void check_semantics(this Self& self,
+                         const reporter& description,
+                         const T& x,
+                         const T& y,
+                         const U& xEquivalent,
+                         const U& yEquivalent,
+                         const V& movedFromPostConstruction,
+                         const V& movedFromPostAssignment,
+                         std::weak_ordering order)
+    {
+      testing::check_semantics(regular_message(self.report(description)),
+                               self.m_Logger,
+                               x,
+                               y,
+                               xEquivalent,
+                               yEquivalent,
+                               optional_ref<const V>{movedFromPostConstruction},
+                               optional_ref<const V>{movedFromPostAssignment},
                                order);
     }
 
@@ -150,6 +204,34 @@ namespace sequoia::testing
                                std::move(m));
     }
 
+    /*! Prerequisites:
+          x != y
+          x equivalent to xEquivalent
+          y equivalent to yEquivalent
+     */
+    template<pseudoregular T, class U, class V, std::invocable<T&> Mutator, class Self>
+      requires equivalence_checkable_for_semantics<Mode, T, U>
+    void check_semantics(this Self& self,
+                         const reporter& description,
+                         const T& x,
+                         const T& y,
+                         const U& xEquivalent,
+                         const U& yEquivalent,
+                         const V& movedFromPostConstruction,
+                         const V& movedFromPostAssignment,
+                         Mutator m)
+    {
+      testing::check_semantics(regular_message(self.report(description)),
+                               self.m_Logger,
+                               x,
+                               y,
+                               xEquivalent,
+                               yEquivalent,
+                               optional_ref<const V>{movedFromPostConstruction},
+                               optional_ref<const V>{movedFromPostAssignment},
+                               std::move(m));
+    }
+
     /// Prerequisites: x != y, with values consistent with order
     template<pseudoregular T, std::invocable<T&> Mutator, class Self>
       requires std::totally_ordered<T>
@@ -189,6 +271,36 @@ namespace sequoia::testing
                                yEquivalent,
                                optional_ref<const T>{},
                                optional_ref<const T>{},
+                               order,
+                               std::move(m));
+    }
+
+    /*! Prerequisites:
+          x != y
+          x equivalent to xEquivalent
+          y equivalent to yEquivalent
+     */
+    template<pseudoregular T, class U, class V, std::invocable<T&> Mutator, class Self>
+      requires equivalence_checkable_for_semantics<Mode, T, U>
+    void check_semantics(this Self& self,
+                         const reporter& description,
+                         const T& x,
+                         const T& y,
+                         const U& xEquivalent,
+                         const U& yEquivalent,
+                         const V& movedFromPostConstruction,
+                         const V& movedFromPostAssignment,
+                         std::weak_ordering order,
+                         Mutator m)
+    {
+      testing::check_semantics(regular_message(self.report(description)),
+                               self.m_Logger,
+                               x,
+                               y,
+                               xEquivalent,
+                               yEquivalent,
+                               optional_ref<const V>{movedFromPostConstruction},
+                               optional_ref<const V>{movedFromPostAssignment},
                                order,
                                std::move(m));
     }

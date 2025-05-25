@@ -317,6 +317,44 @@ Incorrect moved-from state post construction
 =======================================
 
 Tests/TestFramework/RegularTestDiagnostics.cpp, Line 55
+Incorrect moved-from state post construction
+
+--Regular Semantics--
+[sequoia::testing::specified_moved_from_beast<int, std::allocator<int> >]
+
+  Incorrect moved-from value after move construction
+  Comparison performed using:
+  [sequoia::testing::value_tester<sequoia::testing::specified_moved_from_beast<int, std::allocator<int> > >]
+  Checking for equivalence with:
+  [std::vector<int, std::allocator<int> >]
+
+    Wrapped vector
+    [std::vector<int, std::allocator<int> >]
+    operator== returned false
+
+      Container size wrong
+      [unsigned long long]
+      operator== returned false
+      Obtained : 0
+      Predicted: 1
+
+=======================================
+
+Tests/TestFramework/RegularTestDiagnostics.cpp, Line 56
+Incorrect moved-from state post construction
+
+--Regular Semantics--
+[sequoia::testing::specified_moved_from_beast<int, std::allocator<int> >]
+
+  Incorrect moved-from value after move construction
+  [sequoia::testing::specified_moved_from_beast<int, std::allocator<int> >]
+  operator== returned false
+  Obtained : 
+  Predicted: 1
+
+=======================================
+
+Tests/TestFramework/RegularTestDiagnostics.cpp, Line 58
 Incorrect moved-from state post assignment
 
 --Regular Semantics--
@@ -340,7 +378,45 @@ Incorrect moved-from state post assignment
 
 =======================================
 
-Tests/TestFramework/RegularTestDiagnostics.cpp, Line 56
+Tests/TestFramework/RegularTestDiagnostics.cpp, Line 59
+Incorrect moved-from state post assignment
+
+--Regular Semantics--
+[sequoia::testing::specified_moved_from_beast<int, std::allocator<int> >]
+
+  Incorrect moved-from value after move assignment
+  [sequoia::testing::specified_moved_from_beast<int, std::allocator<int> >]
+  operator== returned false
+  Obtained : 
+  Predicted: 2
+
+=======================================
+
+Tests/TestFramework/RegularTestDiagnostics.cpp, Line 61
+Incorrect moved-from state post assignment
+
+--Regular Semantics--
+[sequoia::testing::specified_moved_from_beast<int, std::allocator<int> >]
+
+  Incorrect moved-from value after move assignment
+  Comparison performed using:
+  [sequoia::testing::value_tester<sequoia::testing::specified_moved_from_beast<int, std::allocator<int> > >]
+  Checking for equivalence with:
+  [std::vector<int, std::allocator<int> >]
+
+    Wrapped vector
+    [std::vector<int, std::allocator<int> >]
+    operator== returned false
+
+      Container size wrong
+      [unsigned long long]
+      operator== returned false
+      Obtained : 0
+      Predicted: 1
+
+=======================================
+
+Tests/TestFramework/RegularTestDiagnostics.cpp, Line 62
 Incorrect moved-from state post assignment
 
 --Regular Semantics--
