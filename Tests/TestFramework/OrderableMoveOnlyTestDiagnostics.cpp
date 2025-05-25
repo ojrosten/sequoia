@@ -74,7 +74,16 @@ namespace sequoia::testing
       using beast = orderable_specified_moved_from_beast<int>;
       using equiv_t = std::vector<int>;
       check_semantics("Incorrect moved-from state post construction", beast{1}, beast{2}, equiv_t{1}, equiv_t{2}, equiv_t{1}, equiv_t{}, std::weak_ordering::less);
+      check_semantics("Incorrect moved-from state post construction", beast{1}, beast{2},   beast{1},   beast{2}, equiv_t{1}, equiv_t{}, std::weak_ordering::less);
+      check_semantics("Incorrect moved-from state post construction", beast{1}, beast{2},   beast{1},   beast{2},   beast{1},   beast{}, std::weak_ordering::less);
+      check_semantics("Incorrect moved-from state post construction", [] () { return beast{1}; }, [] () { return beast{2}; }, equiv_t{1}, equiv_t{}, std::weak_ordering::less);
+      check_semantics("Incorrect moved-from state post construction", [] () { return beast{1}; }, [] () { return beast{2}; },   beast{1},   beast{}, std::weak_ordering::less);
+
       check_semantics("Incorrect moved-from state post assignment",   beast{1}, beast{2}, equiv_t{1}, equiv_t{2}, equiv_t{}, equiv_t{2}, std::weak_ordering::less);
+      check_semantics("Incorrect moved-from state post assignment",   beast{1}, beast{2},   beast{1},   beast{2}, equiv_t{}, equiv_t{2}, std::weak_ordering::less);
+      check_semantics("Incorrect moved-from state post assignment",   beast{1}, beast{2},   beast{1},   beast{2},   beast{},   beast{2}, std::weak_ordering::less);
+      check_semantics("Incorrect moved-from state post assignment",   [] () { return beast{1}; }, [] () { return beast{2}; }, equiv_t{}, equiv_t{2}, std::weak_ordering::less);
+      check_semantics("Incorrect moved-from state post assignment",   [] () { return beast{1}; }, [] () { return beast{2}; },   beast{},   beast{2}, std::weak_ordering::less);
     }
 
     {

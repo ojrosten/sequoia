@@ -396,13 +396,13 @@ namespace sequoia::testing::impl
 
   //================================  move construction ================================ //
 
-  template<test_mode Mode, class Actions, movable_comparable T, class U, class... Args>
-    requires checkable_against_for_semantics<Mode, T, U>
+  template<test_mode Mode, class Actions, movable_comparable T, class U, class V, class... Args>
+    requires checkable_against_for_semantics<Mode, T, U> && checkable_against_for_semantics<Mode, T, V>
   std::optional<T> do_check_move_construction(test_logger<Mode>& logger,
                                               [[maybe_unused]] const Actions& actions,
                                               T&& z,
                                               const U& y,
-                                              optional_ref<const U> movedFrom,
+                                              optional_ref<const V> movedFrom,
                                               const Args&... args)
   {
     T w{std::move(z)};
@@ -422,27 +422,27 @@ namespace sequoia::testing::impl
     return w;
   }
 
-  template<test_mode Mode, class Actions, movable_comparable T, class U>
+  template<test_mode Mode, class Actions, movable_comparable T, class U, class V>
     requires checkable_against_for_semantics<Mode, T, U>
   std::optional<T> check_move_construction(test_logger<Mode>& logger,
                                            const Actions& actions,
                                            T&& z,
                                            const U& y,
-                                           optional_ref<const U> movedFrom)
+                                           optional_ref<const V> movedFrom)
   {
     return do_check_move_construction(logger, actions, std::forward<T>(z), y, movedFrom);
   }
 
   //================================ move assign ================================//
 
-  template<test_mode Mode, class Actions, movable_comparable T, class U, std::invocable<T&> Mutator, class... Args>
-    requires checkable_against_for_semantics<Mode, T, U>
+  template<test_mode Mode, class Actions, movable_comparable T, class U, class V, std::invocable<T&> Mutator, class... Args>
+    requires checkable_against_for_semantics<Mode, T, U> && checkable_against_for_semantics<Mode, T, V>
   void do_check_move_assign(test_logger<Mode>& logger,
                             [[maybe_unused]] const Actions& actions,
                             T& z,
                             T&& y,
                             const U& yEquivalent,
-                            optional_ref<const U> movedFrom,
+                            optional_ref<const V> movedFrom,
                             [[maybe_unused]] Mutator&& yMutator,
                             const Args&... args)
   {
@@ -461,14 +461,14 @@ namespace sequoia::testing::impl
     }
   }
 
-  template<test_mode Mode, class Actions, movable_comparable T, class U, std::invocable<T&> Mutator>
-    requires checkable_against_for_semantics<Mode, T, U>
+  template<test_mode Mode, class Actions, movable_comparable T, class U, class V, std::invocable<T&> Mutator>
+    requires checkable_against_for_semantics<Mode, T, U> && checkable_against_for_semantics<Mode, T, V>
   void check_move_assign(test_logger<Mode>& logger,
                          const Actions& actions,
                          T& z,
                          T&& y,
                          const U& yEquivalent,
-                         optional_ref<const U> movedFrom,
+                         optional_ref<const V> movedFrom,
                          Mutator m)
   {
     do_check_move_assign(logger, actions, z, std::forward<T>(y), yEquivalent, movedFrom, std::move(m));
