@@ -98,7 +98,7 @@ namespace sequoia::testing
 
   template<test_mode Mode, std::equality_comparable T, class U>
   inline constexpr bool equivalence_checkable_for_semantics{
-    (!std::is_same_v<T, U>) && checkable_against_for_semantics<Mode, T, U>
+    (!std::is_same_v<T, U>) && checkable_against<with_best_available_check_t<minimal_reporting_permitted::no>, Mode, T, U, tutor<null_advisor>> 
   };
 }
 
@@ -180,6 +180,15 @@ namespace sequoia::testing::impl
         actions.post_serialization_action(args...);
       };
 
+  template<test_mode Mode, pseudoregular T, class U>
+    requires equivalence_checkable_for_semantics<Mode, T, U>
+  void check_best_equivalence(test_logger<Mode>& logger, const T& x, const T& y, const U& xEquivalent, const U& yEquivalent)
+  {
+    using availability_t = with_best_available_check_t<minimal_reporting_permitted::no>;
+    check(availability_t{}, "x not equivalent to xEquivalent", logger, x, xEquivalent);
+    check(availability_t{}, "y not equivalent to yEquivalent", logger, y, yEquivalent);
+  }
+  
   //================================ comparisons ================================//
 
   template<test_mode Mode, class Actions, pseudoregular T, class... Args>
