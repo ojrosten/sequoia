@@ -41,10 +41,9 @@
 namespace sequoia::testing
 {
   /*! Prerequisites:
-
-      x == xEquivalent
-      y == yEquivalent
       x != y
+      x equivalent to xEquivalent
+      y equivalent to yEquivalent
    */
   template<test_mode Mode, moveonly T, class U, class V>
     requires checkable_against_for_semantics<Mode, T, U> && checkable_against_for_semantics<Mode, T, V>
@@ -78,10 +77,9 @@ namespace sequoia::testing
   }
   
   /*! Prerequisites:
-
-      x == xEquivalent
-      y == yEquivalent
       x != y
+      x equivalent to xEquivalent
+      y equivalent to yEquivalent
    */
   template<test_mode Mode, moveonly T, class U, class V>
     requires std::totally_ordered<T> && checkable_against_for_semantics<Mode, T, U> && checkable_against_for_semantics<Mode, T, V>

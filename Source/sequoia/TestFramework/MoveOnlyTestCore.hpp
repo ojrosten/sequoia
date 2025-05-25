@@ -38,7 +38,11 @@ namespace sequoia::testing
 
     move_only_extender() = default;
     
-    /// Prerequisites: x!=y; x==xEquivalent, y==yEquivalent
+    /*! Prerequisites:
+          x != y
+          x equivalent to xEquivalent
+          y equivalent to yEquivalent
+     */
     template<moveonly T, class U, class V, class Self>
       requires checkable_against_for_semantics<Mode, T, U> && checkable_against_for_semantics<Mode, T, V>
     bool check_semantics(this Self& self,
@@ -62,6 +66,11 @@ namespace sequoia::testing
              );
     }
 
+    /*! Prerequisites:
+          x != y
+          x equivalent to xEquivalent
+          y equivalent to yEquivalent
+     */
     template<moveonly T, class U, class Self>
       requires checkable_against_for_semantics<Mode, T, U>
     bool check_semantics(this Self& self, const reporter& description, T&& x, T&& y, const U& xEquivalent, const U& yEquivalent)
@@ -78,6 +87,7 @@ namespace sequoia::testing
              );
     }
 
+    /// Prerequisite: xMaker() != yMaker()
     template
     <
       std::regular_invocable xMaker,      
@@ -104,6 +114,7 @@ namespace sequoia::testing
                movedFromPostAssignment);
     }
 
+    /// Prerequisite: xMaker() != yMaker()
     template
     <
       std::regular_invocable xMaker,
@@ -116,7 +127,11 @@ namespace sequoia::testing
       return self.check_semantics(description, xFn(), yFn(), xFn(), yFn());
     }
 
-    /// Prerequisites: x!=y, with values consistent with order; x==xEquivalent, y==yEquivalent
+    /*! Prerequisites:
+          x != y, with values consistent with order
+          x equivalent to xEquivalent
+          y equivalent to yEquivalent
+     */
     template<moveonly T, class U, class V, class Self>
       requires std::totally_ordered<T> && checkable_against_for_semantics<Mode, T, U> && checkable_against_for_semantics<Mode, T, V>
     bool check_semantics(this Self& self,
@@ -142,6 +157,11 @@ namespace sequoia::testing
              );
     }
 
+    /*! Prerequisites:
+          x != y, with values consistent with order
+          x equivalent to xEquivalent
+          y equivalent to yEquivalent
+     */
     template<moveonly T, class U, class Self>
       requires std::totally_ordered<T> && checkable_against_for_semantics<Mode, T, U>
     bool check_semantics(this Self& self,
@@ -165,6 +185,11 @@ namespace sequoia::testing
              );
     }
 
+    /*! Prerequisites:
+          x != y, with values consistent with order
+          x equivalent to xEquivalent
+          y equivalent to yEquivalent
+     */
     template
     <
       std::regular_invocable xMaker,
@@ -194,6 +219,7 @@ namespace sequoia::testing
              );
     }
 
+    /// Prerequisite: xMaker() != yMaker(), with values consistent with order
     template
     <
       class Self,

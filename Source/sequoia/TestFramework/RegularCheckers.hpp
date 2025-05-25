@@ -44,7 +44,7 @@
 
 namespace sequoia::testing
 {
-  /// Prerequisite: x!=y
+  /// Prerequisite: x != y
   template<test_mode Mode, pseudoregular T, class U>
     requires checkable_against_for_semantics<Mode, T, U>
   void check_semantics(std::string description,
@@ -64,7 +64,11 @@ namespace sequoia::testing
                           impl::null_mutator{});
   }
 
-  /// Prerequisite: x!=y
+  /*! Prerequisites:
+        x != y
+        x equivalent to xEquivalent
+        y equivalent to yEquivalent
+   */
   template<test_mode Mode, pseudoregular T, class U, class V>
     requires equivalence_checkable_for_semantics<Mode, T, U> && checkable_against_for_semantics<Mode, T, V>
   void check_semantics(std::string description,
@@ -88,7 +92,7 @@ namespace sequoia::testing
                           impl::null_mutator{});
   }
 
-  /// Prerequisite: x!=y with values consistent with order
+  /// Prerequisite: x != y with values consistent with order
   template<test_mode Mode, pseudoregular T, class U>
     requires std::totally_ordered<T> && checkable_against_for_semantics<Mode, T, U>
   void check_semantics(std::string description,
@@ -109,7 +113,11 @@ namespace sequoia::testing
                           impl::null_mutator{});
   }
 
-  /// Prerequisite: x!=y with values consistent with order
+  /*! Prerequisites:
+        x != y, with values consistent with order
+        x equivalent to xEquivalent
+        y equivalent to yEquivalent
+   */
   template<test_mode Mode, pseudoregular T, class U, class V>
     requires std::totally_ordered<T> && equivalence_checkable_for_semantics<Mode, T, U> && checkable_against_for_semantics<Mode, T, V>
   void check_semantics(std::string description,
@@ -134,7 +142,7 @@ namespace sequoia::testing
                           impl::null_mutator{});
   }
   
-  /// Prerequisite: x!=y
+  /// Prerequisite: x != y
   template<test_mode Mode, pseudoregular T, class U, std::invocable<T&> Mutator>
     requires checkable_against_for_semantics<Mode, T, U>
   void check_semantics(std::string description,
@@ -155,7 +163,11 @@ namespace sequoia::testing
                           yMutator);
   }
 
-  /// Prerequisite: x!=y
+  /*! Prerequisites:
+        x != y
+        x equivalent to xEquivalent
+        y equivalent to yEquivalent
+   */
   template<test_mode Mode, pseudoregular T, class U, class V, std::invocable<T&> Mutator>
     requires equivalence_checkable_for_semantics<Mode, T, U> && checkable_against_for_semantics<Mode, T, V>
   void check_semantics(std::string description,
@@ -180,7 +192,7 @@ namespace sequoia::testing
                           yMutator);
   }
 
-  /// Prerequisite: x!=y, with values consistent with order
+  /// Prerequisite: x != y, with values consistent with order
   template<test_mode Mode, pseudoregular T, class U, std::invocable<T&> Mutator>
     requires std::totally_ordered<T> && checkable_against_for_semantics<Mode, T, U>
   void check_semantics(std::string description,
@@ -202,7 +214,11 @@ namespace sequoia::testing
                           yMutator);
   }
 
-  /// Prerequisite: x!=y, with values consistent with order
+  /*! Prerequisites:
+        x != y, with values consistent with order
+        x equivalent to xEquivalent
+        y equivalent to yEquivalent
+   */
   template<test_mode Mode, pseudoregular T, class U, class V, std::invocable<T&> Mutator>
     requires std::totally_ordered<T> && equivalence_checkable_for_semantics<Mode, T, U> && checkable_against_for_semantics<Mode, T, V>
   void check_semantics(std::string description,

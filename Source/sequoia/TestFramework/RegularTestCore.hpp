@@ -35,7 +35,7 @@ namespace sequoia::testing
 
     regular_extender() = default;
 
-    /// Prerequisite: x!=y
+    /// Prerequisite: x != y
     template<pseudoregular T, class Self>
     void check_semantics(this Self& self, const reporter& description, const T& x, const T& y)
     {
@@ -48,9 +48,9 @@ namespace sequoia::testing
     }
 
     /*! Prerequisites:
-          x!=y
-          x==xEquivalent
-          y==yEquivalent
+          x != y
+          x equivalent to xEquivalent
+          y equivalent to yEquivalent
      */
     template<pseudoregular T, class U, class Self>
       requires equivalence_checkable_for_semantics<Mode, T, U>
@@ -71,7 +71,7 @@ namespace sequoia::testing
                                optional_ref<const T>{});
     }
 
-    /// Prerequisite: x!=y, with values consistent with order
+    /// Prerequisite: x != y, with values consistent with order
     template<pseudoregular T, class Self>
       requires std::totally_ordered<T>
     void check_semantics(this Self& self, const reporter& description, const T& x, const T& y, std::weak_ordering order)
@@ -86,9 +86,9 @@ namespace sequoia::testing
     }
 
     /*! Prerequisites:
-          x!=y, with values consistent with order
-          x==xEquivalent
-          y==yEquivalent
+          x != y, with values consistent with order
+          x equivalent to xEquivalent
+          y equivalent to yEquivalent
      */
     template<pseudoregular T, class U, class Self>
       requires std::totally_ordered<T> && equivalence_checkable_for_semantics<Mode, T, U>
@@ -111,7 +111,7 @@ namespace sequoia::testing
                                order);
     }
 
-    /// Prerequisite: x!=y
+    /// Prerequisite: x != y
     template<pseudoregular T, std::invocable<T&> Mutator, class Self>
     void check_semantics(this Self& self, const reporter& description, const T& x, const T& y, Mutator m)
     {
@@ -125,9 +125,9 @@ namespace sequoia::testing
     }
 
     /*! Prerequisites:
-          x!=y
-          x==xEquivalent
-          y==yEquivalent
+          x != y
+          x equivalent to xEquivalent
+          y equivalent to yEquivalent
      */
     template<pseudoregular T, class U, std::invocable<T&> Mutator, class Self>
       requires equivalence_checkable_for_semantics<Mode, T, U>
@@ -150,7 +150,7 @@ namespace sequoia::testing
                                std::move(m));
     }
 
-    /// Prerequisites: x!=y, with values consistent with order
+    /// Prerequisites: x != y, with values consistent with order
     template<pseudoregular T, std::invocable<T&> Mutator, class Self>
       requires std::totally_ordered<T>
     void check_semantics(this Self& self, const reporter& description, const T& x, const T& y, std::weak_ordering order, Mutator m)
@@ -166,9 +166,9 @@ namespace sequoia::testing
     }
 
     /*! Prerequisites:
-          x!=y, with values consistent with order
-          x==xEquivalent
-          y==yEquivalent
+          x != y, with values consistent with order
+          x equivalent to xEquivalent
+          y equivalent to yEquivalent
      */
     template<pseudoregular T, class U, std::invocable<T&> Mutator, class Self>
       requires std::totally_ordered<T> && equivalence_checkable_for_semantics<Mode, T, U>
