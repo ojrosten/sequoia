@@ -9,7 +9,7 @@
 
 /*! \file */
 
-#include "CommonMoveOnlyTestDiagnosticsUtilities.hpp"
+#include "SemanticsTestDiagnosticsUtilities.hpp"
 
 namespace sequoia::testing
 {  
@@ -108,33 +108,33 @@ namespace sequoia::testing
   };
 
   template<class T, class Allocator>
-  struct value_tester<move_only_beast<T, Allocator>> : move_only_beast_value_tester<move_only_beast<T, Allocator>> {};
+  struct value_tester<move_only_beast<T, Allocator>> : beast_equivalence_tester<move_only_beast<T, Allocator>> {};
 
   template<class T = int, class Allocator = std::allocator<int>>
-  struct specified_moved_from_beast
+  struct move_only_specified_moved_from_beast
   {
     using     value_type = T;
     using allocator_type = Allocator;
 
-    specified_moved_from_beast(std::initializer_list<T> list) : x{list} {}
+    move_only_specified_moved_from_beast(std::initializer_list<T> list) : x{list} {}
 
-    specified_moved_from_beast(std::initializer_list<T> list, const allocator_type& a) : x(list, a) {}
+    move_only_specified_moved_from_beast(std::initializer_list<T> list, const allocator_type& a) : x(list, a) {}
 
-    specified_moved_from_beast(const allocator_type& a) : x(a) {}
+    move_only_specified_moved_from_beast(const allocator_type& a) : x(a) {}
 
-    specified_moved_from_beast(const specified_moved_from_beast&) = delete;
+    move_only_specified_moved_from_beast(const move_only_specified_moved_from_beast&) = delete;
 
-    specified_moved_from_beast(specified_moved_from_beast&& other) noexcept
+    move_only_specified_moved_from_beast(move_only_specified_moved_from_beast&& other) noexcept
       : x{std::move(other.x)}
     {
       other.x.clear();
     }
 
-    specified_moved_from_beast(specified_moved_from_beast&& other, const allocator_type& a) : x(std::move(other.x), a) {}
+    move_only_specified_moved_from_beast(move_only_specified_moved_from_beast&& other, const allocator_type& a) : x(std::move(other.x), a) {}
 
-    specified_moved_from_beast& operator=(const specified_moved_from_beast&) = delete;
+    move_only_specified_moved_from_beast& operator=(const move_only_specified_moved_from_beast&) = delete;
 
-    specified_moved_from_beast& operator=(specified_moved_from_beast&& other)
+    move_only_specified_moved_from_beast& operator=(move_only_specified_moved_from_beast&& other)
     {
       x = std::move(other.x);
       other.x.clear();
@@ -142,12 +142,12 @@ namespace sequoia::testing
       return *this;
     }
 
-    void swap(specified_moved_from_beast& other) noexcept(noexcept(std::ranges::swap(this->x, other.x)))
+    void swap(move_only_specified_moved_from_beast& other) noexcept(noexcept(std::ranges::swap(this->x, other.x)))
     {
       std::ranges::swap(x, other.x);
     }
 
-    friend void swap(specified_moved_from_beast& lhs, specified_moved_from_beast& rhs)
+    friend void swap(move_only_specified_moved_from_beast& lhs, move_only_specified_moved_from_beast& rhs)
       noexcept(noexcept(lhs.swap(rhs)))
     {
       lhs.swap(rhs);
@@ -156,10 +156,10 @@ namespace sequoia::testing
     std::vector<T, Allocator> x{};
 
     [[nodiscard]]
-    friend bool operator==(const specified_moved_from_beast&, const specified_moved_from_beast&) noexcept = default;
+    friend bool operator==(const move_only_specified_moved_from_beast&, const move_only_specified_moved_from_beast&) noexcept = default;
 
     template<class Stream>
-    friend Stream& operator<<(Stream& s, const specified_moved_from_beast& b)
+    friend Stream& operator<<(Stream& s, const move_only_specified_moved_from_beast& b)
     {
       for(const auto& i : b.x) s << i << '\n';
       return s;
@@ -167,7 +167,7 @@ namespace sequoia::testing
   };
 
   template<class T, class Allocator>
-  struct value_tester<specified_moved_from_beast<T, Allocator>> : move_only_beast_value_tester<specified_moved_from_beast<T, Allocator>> {};
+  struct value_tester<move_only_specified_moved_from_beast<T, Allocator>> : beast_equivalence_tester<move_only_specified_moved_from_beast<T, Allocator>> {};
 
   template<class T=int, class Allocator=std::allocator<int>>
   struct move_only_broken_equality
@@ -217,7 +217,7 @@ namespace sequoia::testing
   };
 
   template<class T, class Allocator>
-  struct value_tester<move_only_broken_equality<T, Allocator>> : move_only_beast_value_tester<move_only_broken_equality<T, Allocator>> {};
+  struct value_tester<move_only_broken_equality<T, Allocator>> : beast_equivalence_tester<move_only_broken_equality<T, Allocator>> {};
 
   template<class T=int, class Allocator=std::allocator<int>>
   struct move_only_broken_inequality
@@ -267,7 +267,7 @@ namespace sequoia::testing
   };
 
   template<class T, class Allocator>
-  struct value_tester<move_only_broken_inequality<T, Allocator>> : move_only_beast_value_tester<move_only_broken_inequality<T, Allocator>> {};
+  struct value_tester<move_only_broken_inequality<T, Allocator>> : beast_equivalence_tester<move_only_broken_inequality<T, Allocator>> {};
 
   template<class T=int, class Allocator=std::allocator<int>>
   struct move_only_broken_move
@@ -321,7 +321,7 @@ namespace sequoia::testing
   };
 
   template<class T, class Allocator>
-  struct value_tester<move_only_broken_move<T, Allocator>> : move_only_beast_value_tester<move_only_broken_move<T, Allocator>> {};
+  struct value_tester<move_only_broken_move<T, Allocator>> : beast_equivalence_tester<move_only_broken_move<T, Allocator>> {};
 
   template<class T=int, class Allocator=std::allocator<int>>
   struct move_only_broken_move_assignment
@@ -375,7 +375,7 @@ namespace sequoia::testing
 
   template<class T, class Allocator>
   struct value_tester<move_only_broken_move_assignment<T, Allocator>>
-    : move_only_beast_value_tester<move_only_broken_move_assignment<T, Allocator>>
+    : beast_equivalence_tester<move_only_broken_move_assignment<T, Allocator>>
   {};
 
   template<class T=int, class Allocator=std::allocator<int>>
@@ -426,7 +426,7 @@ namespace sequoia::testing
   };
 
   template<class T, class Allocator>
-  struct value_tester<move_only_broken_swap<T, Allocator>> : move_only_beast_value_tester<move_only_broken_swap<T, Allocator>> {};
+  struct value_tester<move_only_broken_swap<T, Allocator>> : beast_equivalence_tester<move_only_broken_swap<T, Allocator>> {};
   
   template<class T=int, class Allocator=std::allocator<int>>
   struct move_only_inefficient_move
@@ -487,7 +487,7 @@ namespace sequoia::testing
   };
 
   template<class T, class Allocator>
-  struct value_tester<move_only_inefficient_move<T, Allocator>> : move_only_beast_value_tester<move_only_inefficient_move<T, Allocator>> {};
+  struct value_tester<move_only_inefficient_move<T, Allocator>> : beast_equivalence_tester<move_only_inefficient_move<T, Allocator>> {};
   
   template<class T=int, class Allocator=std::allocator<int>>
   struct move_only_inefficient_move_assignment
@@ -554,6 +554,6 @@ namespace sequoia::testing
 
   template<class T, class Allocator>
   struct value_tester<move_only_inefficient_move_assignment<T, Allocator>>
-    : move_only_beast_value_tester<move_only_inefficient_move_assignment<T, Allocator>>
+    : beast_equivalence_tester<move_only_inefficient_move_assignment<T, Allocator>>
   {};
 }

@@ -122,11 +122,11 @@ Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 76
 Incorrect moved-from state post construction
 
 --Move-only Semantics--
-[sequoia::testing::orderable_specified_moved_from_beast<int, std::allocator<int> >]
+[sequoia::testing::move_only_orderable_specified_moved_from_beast<int, std::allocator<int> >]
 
   Incorrect moved-from value after move construction
   Comparison performed using:
-  [sequoia::testing::value_tester<sequoia::testing::orderable_specified_moved_from_beast<int, std::allocator<int> > >]
+  [sequoia::testing::value_tester<sequoia::testing::move_only_orderable_specified_moved_from_beast<int, std::allocator<int> > >]
   Checking for equivalence with:
   [std::vector<int, std::allocator<int> >]
 
@@ -146,11 +146,11 @@ Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 77
 Incorrect moved-from state post construction
 
 --Move-only Semantics--
-[sequoia::testing::orderable_specified_moved_from_beast<int, std::allocator<int> >]
+[sequoia::testing::move_only_orderable_specified_moved_from_beast<int, std::allocator<int> >]
 
   Incorrect moved-from value after move construction
   Comparison performed using:
-  [sequoia::testing::value_tester<sequoia::testing::orderable_specified_moved_from_beast<int, std::allocator<int> > >]
+  [sequoia::testing::value_tester<sequoia::testing::move_only_orderable_specified_moved_from_beast<int, std::allocator<int> > >]
   Checking for equivalence with:
   [std::vector<int, std::allocator<int> >]
 
@@ -170,10 +170,10 @@ Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 78
 Incorrect moved-from state post construction
 
 --Move-only Semantics--
-[sequoia::testing::orderable_specified_moved_from_beast<int, std::allocator<int> >]
+[sequoia::testing::move_only_orderable_specified_moved_from_beast<int, std::allocator<int> >]
 
   Incorrect moved-from value after move construction
-  [sequoia::testing::orderable_specified_moved_from_beast<int, std::allocator<int> >]
+  [sequoia::testing::move_only_orderable_specified_moved_from_beast<int, std::allocator<int> >]
   operator== returned false
   Obtained : 
   Predicted: 1
@@ -184,11 +184,11 @@ Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 79
 Incorrect moved-from state post construction
 
 --Move-only Semantics--
-[sequoia::testing::orderable_specified_moved_from_beast<int, std::allocator<int> >]
+[sequoia::testing::move_only_orderable_specified_moved_from_beast<int, std::allocator<int> >]
 
   Incorrect moved-from value after move construction
   Comparison performed using:
-  [sequoia::testing::value_tester<sequoia::testing::orderable_specified_moved_from_beast<int, std::allocator<int> > >]
+  [sequoia::testing::value_tester<sequoia::testing::move_only_orderable_specified_moved_from_beast<int, std::allocator<int> > >]
   Checking for equivalence with:
   [std::vector<int, std::allocator<int> >]
 
@@ -208,10 +208,10 @@ Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 80
 Incorrect moved-from state post construction
 
 --Move-only Semantics--
-[sequoia::testing::orderable_specified_moved_from_beast<int, std::allocator<int> >]
+[sequoia::testing::move_only_orderable_specified_moved_from_beast<int, std::allocator<int> >]
 
   Incorrect moved-from value after move construction
-  [sequoia::testing::orderable_specified_moved_from_beast<int, std::allocator<int> >]
+  [sequoia::testing::move_only_orderable_specified_moved_from_beast<int, std::allocator<int> >]
   operator== returned false
   Obtained : 
   Predicted: 1
@@ -222,11 +222,11 @@ Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 82
 Incorrect moved-from state post assignment
 
 --Move-only Semantics--
-[sequoia::testing::orderable_specified_moved_from_beast<int, std::allocator<int> >]
+[sequoia::testing::move_only_orderable_specified_moved_from_beast<int, std::allocator<int> >]
 
   Incorrect moved-from value after move assignment
   Comparison performed using:
-  [sequoia::testing::value_tester<sequoia::testing::orderable_specified_moved_from_beast<int, std::allocator<int> > >]
+  [sequoia::testing::value_tester<sequoia::testing::move_only_orderable_specified_moved_from_beast<int, std::allocator<int> > >]
   Checking for equivalence with:
   [std::vector<int, std::allocator<int> >]
 
@@ -246,11 +246,11 @@ Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 83
 Incorrect moved-from state post assignment
 
 --Move-only Semantics--
-[sequoia::testing::orderable_specified_moved_from_beast<int, std::allocator<int> >]
+[sequoia::testing::move_only_orderable_specified_moved_from_beast<int, std::allocator<int> >]
 
   Incorrect moved-from value after move assignment
   Comparison performed using:
-  [sequoia::testing::value_tester<sequoia::testing::orderable_specified_moved_from_beast<int, std::allocator<int> > >]
+  [sequoia::testing::value_tester<sequoia::testing::move_only_orderable_specified_moved_from_beast<int, std::allocator<int> > >]
   Checking for equivalence with:
   [std::vector<int, std::allocator<int> >]
 
@@ -270,10 +270,10 @@ Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 84
 Incorrect moved-from state post assignment
 
 --Move-only Semantics--
-[sequoia::testing::orderable_specified_moved_from_beast<int, std::allocator<int> >]
+[sequoia::testing::move_only_orderable_specified_moved_from_beast<int, std::allocator<int> >]
 
   Incorrect moved-from value after move assignment
-  [sequoia::testing::orderable_specified_moved_from_beast<int, std::allocator<int> >]
+  [sequoia::testing::move_only_orderable_specified_moved_from_beast<int, std::allocator<int> >]
   operator== returned false
   Obtained : 
   Predicted: 2
@@ -284,11 +284,11 @@ Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 85
 Incorrect moved-from state post assignment
 
 --Move-only Semantics--
-[sequoia::testing::orderable_specified_moved_from_beast<int, std::allocator<int> >]
+[sequoia::testing::move_only_orderable_specified_moved_from_beast<int, std::allocator<int> >]
 
   Incorrect moved-from value after move assignment
   Comparison performed using:
-  [sequoia::testing::value_tester<sequoia::testing::orderable_specified_moved_from_beast<int, std::allocator<int> > >]
+  [sequoia::testing::value_tester<sequoia::testing::move_only_orderable_specified_moved_from_beast<int, std::allocator<int> > >]
   Checking for equivalence with:
   [std::vector<int, std::allocator<int> >]
 
@@ -308,10 +308,10 @@ Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 86
 Incorrect moved-from state post assignment
 
 --Move-only Semantics--
-[sequoia::testing::orderable_specified_moved_from_beast<int, std::allocator<int> >]
+[sequoia::testing::move_only_orderable_specified_moved_from_beast<int, std::allocator<int> >]
 
   Incorrect moved-from value after move assignment
-  [sequoia::testing::orderable_specified_moved_from_beast<int, std::allocator<int> >]
+  [sequoia::testing::move_only_orderable_specified_moved_from_beast<int, std::allocator<int> >]
   operator== returned false
   Obtained : 
   Predicted: 2

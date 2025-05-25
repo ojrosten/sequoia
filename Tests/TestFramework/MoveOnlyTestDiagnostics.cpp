@@ -51,7 +51,7 @@ namespace sequoia::testing
     check_semantics("Broken check invariant", move_only_beast{2}, move_only_beast{1}, std::vector<int>{2}, std::vector<int>{3});
 
     {
-      using beast = specified_moved_from_beast<int>;
+      using beast = move_only_specified_moved_from_beast<int>;
       check_semantics("Incorrect moved-from state post construction", beast{1}, beast{2}, std::vector<int>{1}, std::vector<int>{2}, std::vector<int>{1}, std::vector<int>{});
       check_semantics("Incorrect moved-from state post construction", beast{1}, beast{2}, beast{1}, beast{2}, std::vector<int>{1}, std::vector<int>{});
       check_semantics("Incorrect moved-from state post construction", beast{1}, beast{2}, beast{1}, beast{2}, beast{1}, beast{});
@@ -99,7 +99,7 @@ namespace sequoia::testing
     }
 
     {
-      using beast = specified_moved_from_beast<int>;
+      using beast = move_only_specified_moved_from_beast<int>;
       check_semantics("Check moved-from state", beast{1}, beast{2}, std::vector<int>{1}, std::vector<int>{2}, std::vector<int>{}, std::vector<int>{});
     }
     

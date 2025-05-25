@@ -20,7 +20,7 @@ Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 103
 Check moved-from state
 
 --Move-only Semantics--
-[sequoia::testing::specified_moved_from_beast<int, std::allocator<int> >]
+[sequoia::testing::move_only_specified_moved_from_beast<int, std::allocator<int> >]
 
 =======================================
 

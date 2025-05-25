@@ -456,11 +456,11 @@ Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 55
 Incorrect moved-from state post construction
 
 --Move-only Semantics--
-[sequoia::testing::specified_moved_from_beast<int, std::allocator<int> >]
+[sequoia::testing::move_only_specified_moved_from_beast<int, std::allocator<int> >]
 
   Incorrect moved-from value after move construction
   Comparison performed using:
-  [sequoia::testing::value_tester<sequoia::testing::specified_moved_from_beast<int, std::allocator<int> > >]
+  [sequoia::testing::value_tester<sequoia::testing::move_only_specified_moved_from_beast<int, std::allocator<int> > >]
   Checking for equivalence with:
   [std::vector<int, std::allocator<int> >]
 
@@ -480,11 +480,11 @@ Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 56
 Incorrect moved-from state post construction
 
 --Move-only Semantics--
-[sequoia::testing::specified_moved_from_beast<int, std::allocator<int> >]
+[sequoia::testing::move_only_specified_moved_from_beast<int, std::allocator<int> >]
 
   Incorrect moved-from value after move construction
   Comparison performed using:
-  [sequoia::testing::value_tester<sequoia::testing::specified_moved_from_beast<int, std::allocator<int> > >]
+  [sequoia::testing::value_tester<sequoia::testing::move_only_specified_moved_from_beast<int, std::allocator<int> > >]
   Checking for equivalence with:
   [std::vector<int, std::allocator<int> >]
 
@@ -504,10 +504,10 @@ Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 57
 Incorrect moved-from state post construction
 
 --Move-only Semantics--
-[sequoia::testing::specified_moved_from_beast<int, std::allocator<int> >]
+[sequoia::testing::move_only_specified_moved_from_beast<int, std::allocator<int> >]
 
   Incorrect moved-from value after move construction
-  [sequoia::testing::specified_moved_from_beast<int, std::allocator<int> >]
+  [sequoia::testing::move_only_specified_moved_from_beast<int, std::allocator<int> >]
   operator== returned false
   Obtained : 
   Predicted: 1
@@ -518,11 +518,11 @@ Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 58
 Incorrect moved-from state post construction
 
 --Move-only Semantics--
-[sequoia::testing::specified_moved_from_beast<int, std::allocator<int> >]
+[sequoia::testing::move_only_specified_moved_from_beast<int, std::allocator<int> >]
 
   Incorrect moved-from value after move construction
   Comparison performed using:
-  [sequoia::testing::value_tester<sequoia::testing::specified_moved_from_beast<int, std::allocator<int> > >]
+  [sequoia::testing::value_tester<sequoia::testing::move_only_specified_moved_from_beast<int, std::allocator<int> > >]
   Checking for equivalence with:
   [std::vector<int, std::allocator<int> >]
 
@@ -542,10 +542,10 @@ Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 59
 Incorrect moved-from state post construction
 
 --Move-only Semantics--
-[sequoia::testing::specified_moved_from_beast<int, std::allocator<int> >]
+[sequoia::testing::move_only_specified_moved_from_beast<int, std::allocator<int> >]
 
   Incorrect moved-from value after move construction
-  [sequoia::testing::specified_moved_from_beast<int, std::allocator<int> >]
+  [sequoia::testing::move_only_specified_moved_from_beast<int, std::allocator<int> >]
   operator== returned false
   Obtained : 
   Predicted: 1
@@ -556,11 +556,11 @@ Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 61
 Incorrect moved-from state post assignment
 
 --Move-only Semantics--
-[sequoia::testing::specified_moved_from_beast<int, std::allocator<int> >]
+[sequoia::testing::move_only_specified_moved_from_beast<int, std::allocator<int> >]
 
   Incorrect moved-from value after move assignment
   Comparison performed using:
-  [sequoia::testing::value_tester<sequoia::testing::specified_moved_from_beast<int, std::allocator<int> > >]
+  [sequoia::testing::value_tester<sequoia::testing::move_only_specified_moved_from_beast<int, std::allocator<int> > >]
   Checking for equivalence with:
   [std::vector<int, std::allocator<int> >]
 
@@ -580,11 +580,11 @@ Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 62
 Incorrect moved-from state post assignment
 
 --Move-only Semantics--
-[sequoia::testing::specified_moved_from_beast<int, std::allocator<int> >]
+[sequoia::testing::move_only_specified_moved_from_beast<int, std::allocator<int> >]
 
   Incorrect moved-from value after move assignment
   Comparison performed using:
-  [sequoia::testing::value_tester<sequoia::testing::specified_moved_from_beast<int, std::allocator<int> > >]
+  [sequoia::testing::value_tester<sequoia::testing::move_only_specified_moved_from_beast<int, std::allocator<int> > >]
   Checking for equivalence with:
   [std::vector<int, std::allocator<int> >]
 
@@ -604,10 +604,10 @@ Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 63
 Incorrect moved-from state post assignment
 
 --Move-only Semantics--
-[sequoia::testing::specified_moved_from_beast<int, std::allocator<int> >]
+[sequoia::testing::move_only_specified_moved_from_beast<int, std::allocator<int> >]
 
   Incorrect moved-from value after move assignment
-  [sequoia::testing::specified_moved_from_beast<int, std::allocator<int> >]
+  [sequoia::testing::move_only_specified_moved_from_beast<int, std::allocator<int> >]
   operator== returned false
   Obtained : 
   Predicted: 2
@@ -618,11 +618,11 @@ Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 64
 Incorrect moved-from state post assignment
 
 --Move-only Semantics--
-[sequoia::testing::specified_moved_from_beast<int, std::allocator<int> >]
+[sequoia::testing::move_only_specified_moved_from_beast<int, std::allocator<int> >]
 
   Incorrect moved-from value after move assignment
   Comparison performed using:
-  [sequoia::testing::value_tester<sequoia::testing::specified_moved_from_beast<int, std::allocator<int> > >]
+  [sequoia::testing::value_tester<sequoia::testing::move_only_specified_moved_from_beast<int, std::allocator<int> > >]
   Checking for equivalence with:
   [std::vector<int, std::allocator<int> >]
 
@@ -642,10 +642,10 @@ Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 65
 Incorrect moved-from state post assignment
 
 --Move-only Semantics--
-[sequoia::testing::specified_moved_from_beast<int, std::allocator<int> >]
+[sequoia::testing::move_only_specified_moved_from_beast<int, std::allocator<int> >]
 
   Incorrect moved-from value after move assignment
-  [sequoia::testing::specified_moved_from_beast<int, std::allocator<int> >]
+  [sequoia::testing::move_only_specified_moved_from_beast<int, std::allocator<int> >]
   operator== returned false
   Obtained : 
   Predicted: 2

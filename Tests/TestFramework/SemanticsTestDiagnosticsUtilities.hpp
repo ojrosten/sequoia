@@ -9,17 +9,17 @@
 
 /*! \file */
 
-#include "sequoia/TestFramework/MoveOnlyTestCore.hpp"
+#include "sequoia/TestFramework/FreeCheckers.hpp"
 
 #include <vector>
 
 namespace sequoia::testing
 {
-  template<moveonly M>
-  struct move_only_beast_value_tester
+  template<class T>
+  struct beast_equivalence_tester
   {
-    using type            = M;
-    using equivalent_type = std::vector<typename M::value_type, typename M::allocator_type>;
+    using type            = T;
+    using equivalent_type = std::vector<typename T::value_type, typename T::allocator_type>;
 
     template<test_mode Mode, class Advisor>
     static void test(equivalence_check_t, test_logger<Mode>& logger, const type& obtained, const equivalent_type& prediction, const tutor<Advisor>& advisor)
