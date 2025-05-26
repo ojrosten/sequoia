@@ -57,8 +57,8 @@ namespace sequoia::testing
       return testing::check_semantics(
                move_only_message(self.report(description)),
                self.m_Logger,
-               std::move(x),
-               std::move(y),
+               std::forward<T>(x),
+               std::forward<T>(y),
                xEquivalent,
                yEquivalent,
                optional_ref<const V>{movedFromPostConstruction},
@@ -78,8 +78,8 @@ namespace sequoia::testing
       return testing::check_semantics(
                move_only_message(self.report(description)),
                self.m_Logger,
-               std::move(x),
-               std::move(y),
+               std::forward<T>(x),
+               std::forward<T>(y),
                xEquivalent,
                yEquivalent,
                optional_ref<const U>{},
@@ -147,8 +147,8 @@ namespace sequoia::testing
       return testing::check_semantics(
                move_only_message(self.report(description)),
                self.m_Logger,
-               std::move(x),
-               std::move(y),
+               std::forward<T>(x),
+               std::forward<T>(y),
                xEquivalent,
                yEquivalent,
                optional_ref<const V>{movedFromPostConstruction},
@@ -175,8 +175,8 @@ namespace sequoia::testing
       return testing::check_semantics(
                move_only_message(self.report(description)),
                self.m_Logger,
-               std::move(x),
-               std::move(y),
+               std::forward<T>(x),
+               std::forward<T>(y),
                xEquivalent,
                yEquivalent,
                optional_ref<const U>{},
