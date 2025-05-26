@@ -2,7 +2,7 @@
 Running tests, synchronously...
 
 Suite:
-[Execution Time: 152us]
+[Execution Time: 141us]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 251
@@ -15,8 +15,8 @@ Suite:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 325us]
-[Execution Time: 152us]
+[Total Run Time: 303us]
+[Execution Time: 141us]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -27,7 +27,7 @@ Suite:
 Running tests, synchronously...
 
 Suite:
-[Execution Time: 57.9us]
+[Execution Time: 62.4us]
 	Standard Top Level Checks:                 2;  Failures:  2  [Deep checks: 2]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 251
@@ -48,8 +48,8 @@ Suite:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 226us]
-[Execution Time: 57.9us]
+[Total Run Time: 191us]
+[Execution Time: 62.4us]
 	Standard Top Level Checks:                 2;  Failures:  2  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -59,7 +59,7 @@ Suite:
 
 Instability detected in file "Free_Test.cpp"
 Outcome frequencies:
-[50%,50%]
+[50.0%,50.0%]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 251
 	Always fails

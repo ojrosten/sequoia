@@ -77,11 +77,11 @@ namespace sequoia::testing
 
     check(equivalence, "", s, std::initializer_list<int>{});
 
-    check(equality, "Capacity", t.capacity(), 2_sz);
+    check(equality, "Capacity", t.capacity(), 2uz);
     t.shrink_to_fit();
-    check(equality, "Capacity", t.capacity(), 0_sz);
+    check(equality, "Capacity", t.capacity(), 0uz);
     t.reserve(2);
-    check(equality, "Capacity", t.capacity(), 2_sz);
+    check(equality, "Capacity", t.capacity(), 2uz);
 
     t = monotonic_sequence<int>{8, 4, 3};
     // - ; 8,4,3

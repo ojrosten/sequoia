@@ -92,7 +92,15 @@ namespace sequoia::testing
   using optional_ref = std::optional<std::reference_wrapper<T>>;
 
   template<test_mode Mode, std::equality_comparable T, class U>
-  inline constexpr bool checkable_for_move_semantics{std::is_same_v<T, U> || checkable_against<with_best_available_check_t, Mode, T, U, tutor<null_advisor>>};
+  inline constexpr bool checkable_against_for_semantics{
+    checkable_against<with_best_available_check_t<minimal_reporting_permitted::yes>, Mode, T, U, tutor<null_advisor>> 
+  };
+
+  template<test_mode Mode, std::equality_comparable T, class U>
+  inline constexpr bool equivalence_checkable_for_semantics{
+       (!std::is_same_v<std::remove_cvref_t<T>, std::remove_cvref_t<U>>)
+    && checkable_against<with_best_available_check_t<minimal_reporting_permitted::no>, Mode, T, U, tutor<null_advisor>> 
+  };
 }
 
 namespace sequoia::testing::impl
@@ -106,7 +114,7 @@ namespace sequoia::testing::impl
 
   struct null_mutator
   {
-    template<class T> constexpr void operator()(const T&) noexcept {}
+    template<class T> constexpr void operator()(const T&) const noexcept {}
   };
 
   template<class T>
@@ -173,6 +181,15 @@ namespace sequoia::testing::impl
         actions.post_serialization_action(args...);
       };
 
+  template<test_mode Mode, class T, class U>
+    requires equivalence_checkable_for_semantics<Mode, T, U>
+  void check_best_equivalence(test_logger<Mode>& logger, const T& x, const T& y, const U& xEquivalent, const U& yEquivalent)
+  {
+    using availability_t = with_best_available_check_t<minimal_reporting_permitted::no>;
+    check(availability_t{}, "x not equivalent to xEquivalent", logger, x, xEquivalent);
+    check(availability_t{}, "y not equivalent to yEquivalent", logger, y, yEquivalent);
+  }
+  
   //================================ comparisons ================================//
 
   template<test_mode Mode, class Actions, pseudoregular T, class... Args>
@@ -311,20 +328,14 @@ namespace sequoia::testing::impl
   }
 
   template<test_mode Mode, std::equality_comparable T, class U>
-    requires checkable_for_move_semantics<Mode, T, U>
+    requires checkable_against_for_semantics<Mode, T, U>
   bool check_against(std::string message, test_logger<Mode>& logger, const T& x, const U& xEquivalent)
   {
-    if constexpr(std::is_same_v<T, U>)
-    {
-      if constexpr (reportable<T>)
-        return check(simple_equality, std::move(message), logger, x, xEquivalent);
-      else
-        return check(std::move(message), logger, x == xEquivalent);
-    }
-    else
-    {
-      return check(with_best_available, std::move(message), logger, x, xEquivalent);
-    }
+    return check(with_best_available_check_t<minimal_reporting_permitted::yes>{},
+                 std::move(message),
+                 logger,
+                 x,
+                 xEquivalent);
   }
 
   template<test_mode Mode, class Actions, std::equality_comparable T, class U, class... Args>
@@ -336,13 +347,14 @@ namespace sequoia::testing::impl
 
     auto makeMessage{
       [](std::string_view var) {
-        return std::format("Prerequisite - for checking move-only semantics, {} and {}Equivalent are assumed to be equal", var, var);
+        return std::format("Prerequisite: {0} and {0}Equivalent should be equivalent", var);
       }
     };
     
-    const bool xPassed{check_against(makeMessage("x"), logger, x, xEquivalent)};
+    const bool xPassed{check_against(makeMessage("x"), logger, x, xEquivalent)},
+               yPassed{check_against(makeMessage("y"), logger, y, yEquivalent)};
 
-    return check_against(makeMessage("y"), logger, y, yEquivalent) && xPassed;
+    return xPassed && yPassed;
   }
   
   template<test_mode Mode, class Actions, std::totally_ordered T, class... Args>
@@ -384,13 +396,13 @@ namespace sequoia::testing::impl
 
   //================================  move construction ================================ //
 
-  template<test_mode Mode, class Actions, movable_comparable T, class U, class... Args>
-    requires checkable_for_move_semantics<Mode, T, U>
+  template<test_mode Mode, class Actions, movable_comparable T, class U, class V, class... Args>
+    requires checkable_against_for_semantics<Mode, T, U> && checkable_against_for_semantics<Mode, T, V>
   std::optional<T> do_check_move_construction(test_logger<Mode>& logger,
                                               [[maybe_unused]] const Actions& actions,
                                               T&& z,
                                               const U& y,
-                                              optional_ref<const U> movedFrom,
+                                              optional_ref<const V> movedFrom,
                                               const Args&... args)
   {
     T w{std::move(z)};
@@ -410,27 +422,27 @@ namespace sequoia::testing::impl
     return w;
   }
 
-  template<test_mode Mode, class Actions, movable_comparable T, class U>
-    requires checkable_for_move_semantics<Mode, T, U>
+  template<test_mode Mode, class Actions, movable_comparable T, class U, class V>
+    requires checkable_against_for_semantics<Mode, T, U>
   std::optional<T> check_move_construction(test_logger<Mode>& logger,
                                            const Actions& actions,
                                            T&& z,
                                            const U& y,
-                                           optional_ref<const U> movedFrom)
+                                           optional_ref<const V> movedFrom)
   {
     return do_check_move_construction(logger, actions, std::forward<T>(z), y, movedFrom);
   }
 
   //================================ move assign ================================//
 
-  template<test_mode Mode, class Actions, movable_comparable T, class U, std::invocable<T&> Mutator, class... Args>
-    requires checkable_for_move_semantics<Mode, T, U>
+  template<test_mode Mode, class Actions, movable_comparable T, class U, class V, std::invocable<T&> Mutator, class... Args>
+    requires checkable_against_for_semantics<Mode, T, U> && checkable_against_for_semantics<Mode, T, V>
   void do_check_move_assign(test_logger<Mode>& logger,
                             [[maybe_unused]] const Actions& actions,
                             T& z,
                             T&& y,
                             const U& yEquivalent,
-                            optional_ref<const U> movedFrom,
+                            optional_ref<const V> movedFrom,
                             [[maybe_unused]] Mutator&& yMutator,
                             const Args&... args)
   {
@@ -449,14 +461,14 @@ namespace sequoia::testing::impl
     }
   }
 
-  template<test_mode Mode, class Actions, movable_comparable T, class U, std::invocable<T&> Mutator>
-    requires checkable_for_move_semantics<Mode, T, U>
+  template<test_mode Mode, class Actions, movable_comparable T, class U, class V, std::invocable<T&> Mutator>
+    requires checkable_against_for_semantics<Mode, T, U> && checkable_against_for_semantics<Mode, T, V>
   void check_move_assign(test_logger<Mode>& logger,
                          const Actions& actions,
                          T& z,
                          T&& y,
                          const U& yEquivalent,
-                         optional_ref<const U> movedFrom,
+                         optional_ref<const V> movedFrom,
                          Mutator m)
   {
     do_check_move_assign(logger, actions, z, std::forward<T>(y), yEquivalent, movedFrom, std::move(m));
@@ -465,7 +477,7 @@ namespace sequoia::testing::impl
   //================================ swap ================================//
 
   template<test_mode Mode, class Actions, movable_comparable T, class U, class... Args>
-    requires checkable_for_move_semantics<Mode, T, U>
+    requires checkable_against_for_semantics<Mode, T, U>
   bool do_check_swap(test_logger<Mode>& logger,
                      [[maybe_unused]] const Actions& actions,
                      T&& x,
@@ -499,14 +511,14 @@ namespace sequoia::testing::impl
   }
 
   template<test_mode Mode, class Actions, movable_comparable T, class U>
-    requires checkable_for_move_semantics<Mode, T, U>
+    requires checkable_against_for_semantics<Mode, T, U>
   bool check_swap(test_logger<Mode>& logger, const Actions& actions, T&& x, T&& y, const U& xEquivalent, const U& yEquivalent)
   {
     return do_check_swap(logger, actions, std::move(x), std::move(y), xEquivalent, yEquivalent);
   }
 
   template<test_mode Mode, class Actions, pseudoregular T, class U, std::invocable<T&> Mutator>
-    requires checkable_for_move_semantics<Mode, T, U>
+    requires checkable_against_for_semantics<Mode, T, U>
   bool check_swap(test_logger<Mode>& logger, const Actions& actions, T&& x, T&& y, const U& xEquivalent, const U& yEquivalent, Mutator yMutator)
   {
     return do_check_swap(logger, actions, std::move(x), std::move(y), xEquivalent, yEquivalent, std::move(yMutator));

@@ -10,24 +10,33 @@
 #include "CreatorFreeTest.hpp"
 #include "sequoia/Core/Object/Creator.hpp"
 
-namespace sequoia::testing
+namespace
 {
-  using namespace object;
-
   struct aggregate_type
   {
     int i{};
 
     [[nodiscard]]
     friend auto operator<=>(const aggregate_type&, const aggregate_type&) = default;
+  };
+}
 
-    template<class Stream>
-    friend Stream& operator<<(Stream& s, const aggregate_type& a)
-    {
-      s << a.i;
-      return s;
+
+namespace std {
+  template<>
+  struct formatter<aggregate_type> {
+    constexpr auto parse(auto& ctx) { return ctx.begin(); }
+
+    auto format(const aggregate_type& agg, auto& ctx) const {
+      return std::format_to(ctx.out(), "{}", agg.i);
     }
   };
+}
+
+
+namespace sequoia::testing
+{
+  using namespace object;
 
   [[nodiscard]]
   std::filesystem::path creator_free_test::source_file() const

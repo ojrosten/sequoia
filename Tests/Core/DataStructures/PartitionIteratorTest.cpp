@@ -52,18 +52,18 @@ namespace sequoia::testing
     }
 
     check(equality, "", vec[0], *iter);
-    check(equality, "", iter.partition_index(), 4_sz);
+    check(equality, "", iter.partition_index(), 4uz);
 
     ++iter;
     check(equality, "", *iter, vec[1]);
-    check(equality, "", iter.partition_index(), 4_sz);
+    check(equality, "", iter.partition_index(), 4uz);
 
     iter++;
     check(equality, "", *iter, vec[2]);
 
     --iter;
     check(equality, "", *iter, vec[1]);
-    check(equality, "", iter.partition_index(), 4_sz);
+    check(equality, "", iter.partition_index(), 4uz);
 
     iter--;
     check(equality, "", *iter, vec[0]);

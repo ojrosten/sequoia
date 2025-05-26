@@ -9,7 +9,7 @@
 
 /*! \file */
 
-#include "CommonMoveOnlyTestDiagnosticsUtilities.hpp"
+#include "SemanticsTestDiagnosticsUtilities.hpp"
 
 #include "sequoia/TestFramework/MoveOnlyTestCore.hpp"
 

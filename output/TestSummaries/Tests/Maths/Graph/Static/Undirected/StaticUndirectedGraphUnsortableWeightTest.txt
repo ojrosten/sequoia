@@ -1,2 +1,2 @@
 Static Undirected Graph Unsortable Weight Test
-Standard Top Level Checks:               298;  Failures:  0  [Deep checks: 7215]
+Standard Top Level Checks:               298;  Failures:  0  [Deep checks: 9915]

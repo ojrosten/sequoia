@@ -12,24 +12,29 @@
 #include "sequoia/Core/Logic/Bitmask.hpp"
 #include "sequoia/TestFramework/StateTransitionUtilities.hpp"
 
-namespace sequoia::testing
+namespace
 {
-  namespace
-  {
-    enum class mask { none = 0, a = 1, b = 2, c = 4 };
-
-    template<class Stream>
-    Stream& operator<<(Stream& stream, mask m)
-    {
-      return (stream << static_cast<int>(m));
-    }
-  }
+  enum class mask { none = 0, a = 1, b = 2, c = 4 };
 }
+
+namespace std {
+  template<>
+  struct formatter<mask>
+  {
+    constexpr auto parse(auto& ctx) { return ctx.begin(); }
+
+    auto format(mask m, auto& ctx) const
+    {
+      return std::format_to(ctx.out(), "{}", static_cast<int>(m));
+    }
+  };
+}
+
 
 NAMESPACE_SEQUOIA_AS_BITMASK
 {
   template<>
-  struct as_bitmask<sequoia::testing::mask> : std::true_type {};
+  struct as_bitmask<mask> : std::true_type {};
 }
 
 namespace sequoia::testing

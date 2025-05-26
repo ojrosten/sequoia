@@ -9,7 +9,7 @@
 
 #include "RegularAllocationTestFalseNegativeDiagnosticsInefficientOperations.hpp"
 
-#include "../ContainerDiagnosticsUtilities.hpp"
+#include "../RegularTestDiagnosticsUtilities.hpp"
 #include "AllocationTestDiagnosticsUtilities.hpp"
 
 #include <vector>

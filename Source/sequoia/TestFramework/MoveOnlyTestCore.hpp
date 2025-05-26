@@ -38,39 +38,48 @@ namespace sequoia::testing
 
     move_only_extender() = default;
     
-    /// Prerequisites: x!=y; x==xEquivalent, y==yEquivalent
-    template<class Self, moveonly T, class U>
-      requires checkable_for_move_semantics<Mode, T, U>
+    /*! Prerequisites:
+          x != y
+          x equivalent to xEquivalent
+          y equivalent to yEquivalent
+     */
+    template<moveonly T, class U, class V, class Self>
+      requires checkable_against_for_semantics<Mode, T, U> && checkable_against_for_semantics<Mode, T, V>
     bool check_semantics(this Self& self,
                          const reporter& description,
                          T&& x,
                          T&& y,
                          const U& xEquivalent,
                          const U& yEquivalent,
-                         const U& movedFromPostConstruction,
-                         const U& movedFromPostAssignment)
+                         const V& movedFromPostConstruction,
+                         const V& movedFromPostAssignment)
     {
       return testing::check_semantics(
                move_only_message(self.report(description)),
                self.m_Logger,
-               std::move(x),
-               std::move(y),
+               std::forward<T>(x),
+               std::forward<T>(y),
                xEquivalent,
                yEquivalent,
-               optional_ref<const U>{movedFromPostConstruction},
-               optional_ref<const U>{movedFromPostAssignment}
+               optional_ref<const V>{movedFromPostConstruction},
+               optional_ref<const V>{movedFromPostAssignment}
              );
     }
 
-    template<class Self, moveonly T, class U>
-      requires checkable_for_move_semantics<Mode, T, U>
+    /*! Prerequisites:
+          x != y
+          x equivalent to xEquivalent
+          y equivalent to yEquivalent
+     */
+    template<moveonly T, class U, class Self>
+      requires checkable_against_for_semantics<Mode, T, U>
     bool check_semantics(this Self& self, const reporter& description, T&& x, T&& y, const U& xEquivalent, const U& yEquivalent)
     {
       return testing::check_semantics(
                move_only_message(self.report(description)),
                self.m_Logger,
-               std::move(x),
-               std::move(y),
+               std::forward<T>(x),
+               std::forward<T>(y),
                xEquivalent,
                yEquivalent,
                optional_ref<const U>{},
@@ -78,19 +87,22 @@ namespace sequoia::testing
              );
     }
 
+    /// Prerequisite: xMaker() != yMaker()
     template
     <
-      class Self,
-      moveonly T,
-      regular_invocable_r<T> xMaker,
-      regular_invocable_r<T> yMaker
+      std::regular_invocable xMaker,      
+      moveonly T=std::invoke_result_t<xMaker>,
+      regular_invocable_r<T> yMaker,
+      class U,
+      class Self
     >
+      requires checkable_against_for_semantics<Mode, T, U>
     bool check_semantics(this Self& self,
                          const reporter& description,
                          xMaker xFn,
                          yMaker yFn,
-                         const T& movedFromPostConstruction,
-                         const T& movedFromPostAssignment)
+                         const U& movedFromPostConstruction,
+                         const U& movedFromPostAssignment)
     {
       return self.check_semantics(
                description,
@@ -102,46 +114,56 @@ namespace sequoia::testing
                movedFromPostAssignment);
     }
 
+    /// Prerequisite: xMaker() != yMaker()
     template
     <
-      class Self,
       std::regular_invocable xMaker,
       moveonly T=std::invoke_result_t<xMaker>,
-      regular_invocable_r<T> yMaker
+      regular_invocable_r<T> yMaker,
+      class Self
     >
     bool check_semantics(this Self& self, const reporter& description, xMaker xFn, yMaker yFn)
     {
       return self.check_semantics(description, xFn(), yFn(), xFn(), yFn());
     }
 
-    /// Prerequisites: x!=y, with values consistent with order; x==xEquivalent, y==yEquivalent
-    template<class Self, moveonly T, class U>
-      requires std::totally_ordered<T>
+    /*! Prerequisites:
+          x != y, with values consistent with order
+          x equivalent to xEquivalent
+          y equivalent to yEquivalent
+     */
+    template<moveonly T, class U, class V, class Self>
+      requires std::totally_ordered<T> && checkable_against_for_semantics<Mode, T, U> && checkable_against_for_semantics<Mode, T, V>
     bool check_semantics(this Self& self,
                          const reporter& description,
                          T&& x,
                          T&& y,
                          const U& xEquivalent,
                          const U& yEquivalent,
-                         const U& movedFromPostConstruction,
-                         const U& movedFromPostAssignment,
+                         const V& movedFromPostConstruction,
+                         const V& movedFromPostAssignment,
                          std::weak_ordering order)
     {
       return testing::check_semantics(
                move_only_message(self.report(description)),
                self.m_Logger,
-               std::move(x),
-               std::move(y),
+               std::forward<T>(x),
+               std::forward<T>(y),
                xEquivalent,
                yEquivalent,
-               optional_ref<const U>{movedFromPostConstruction},
-               optional_ref<const U>{movedFromPostAssignment},
+               optional_ref<const V>{movedFromPostConstruction},
+               optional_ref<const V>{movedFromPostAssignment},
                order
              );
     }
 
-    template<class Self, moveonly T, class U>
-      requires checkable_for_move_semantics<Mode, T, U> && std::totally_ordered<T>
+    /*! Prerequisites:
+          x != y, with values consistent with order
+          x equivalent to xEquivalent
+          y equivalent to yEquivalent
+     */
+    template<moveonly T, class U, class Self>
+      requires std::totally_ordered<T> && checkable_against_for_semantics<Mode, T, U>
     bool check_semantics(this Self& self,
                          const reporter& description,
                          T&& x,
@@ -153,8 +175,8 @@ namespace sequoia::testing
       return testing::check_semantics(
                move_only_message(self.report(description)),
                self.m_Logger,
-               std::move(x),
-               std::move(y),
+               std::forward<T>(x),
+               std::forward<T>(y),
                xEquivalent,
                yEquivalent,
                optional_ref<const U>{},
@@ -163,20 +185,26 @@ namespace sequoia::testing
              );
     }
 
+    /*! Prerequisites:
+          x != y, with values consistent with order
+          x equivalent to xEquivalent
+          y equivalent to yEquivalent
+     */
     template
     <
-      class Self,
       std::regular_invocable xMaker,
       moveonly T=std::invoke_result_t<xMaker>,
-      regular_invocable_r<T> yMaker
+      regular_invocable_r<T> yMaker,
+      class U,
+      class Self
     >
-      requires std::totally_ordered<T>
+      requires std::totally_ordered<T> && checkable_against_for_semantics<Mode, T, U>
     bool check_semantics(this Self& self,
                          const reporter& description,
                          xMaker xFn,
                          yMaker yFn,
-                         const T& movedFromPostConstruction,
-                         const T& movedFromPostAssignment,
+                         const U& movedFromPostConstruction,
+                         const U& movedFromPostAssignment,
                          std::weak_ordering order)
     {
       return self.check_semantics(
@@ -191,6 +219,7 @@ namespace sequoia::testing
              );
     }
 
+    /// Prerequisite: xMaker() != yMaker(), with values consistent with order
     template
     <
       class Self,

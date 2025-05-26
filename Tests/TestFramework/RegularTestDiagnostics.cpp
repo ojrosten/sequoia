@@ -8,7 +8,7 @@
 /*! \file */
 
 #include "RegularTestDiagnostics.hpp"
-#include "ContainerDiagnosticsUtilities.hpp"
+#include "RegularTestDiagnosticsUtilities.hpp"
 
 namespace sequoia::testing
 {
@@ -39,6 +39,30 @@ namespace sequoia::testing
     check_semantics("Broken copy assignment value semantics", broken_copy_assignment_value_semantics{1}, broken_copy_assignment_value_semantics{2}, [](auto& b) { *b.x.front() = 3; });
     check_semantics("Broken serialization", broken_serialization{1}, broken_serialization{2});
     check_semantics("Broken deserialization", broken_deserialization{1}, broken_deserialization{2});
+
+    {
+      using equiv_t = std::initializer_list<int>;
+      check_semantics("Incorrect x value", perfectly_normal_beast{1}, perfectly_normal_beast{2}, equiv_t{2}, equiv_t{2});
+      check_semantics("Incorrect y value", perfectly_normal_beast{1}, perfectly_normal_beast{2}, equiv_t{1}, equiv_t{3});
+      check_semantics("Incorrect x value; mutator", perfectly_normal_beast{1}, perfectly_normal_beast{2}, equiv_t{2}, equiv_t{2}, [](auto& b) { b.x.front() = 3; });
+      check_semantics("Incorrect y value; mutator", perfectly_normal_beast{1}, perfectly_normal_beast{2}, equiv_t{1}, equiv_t{3}, [](auto& b) { b.x.front() = 3; });
+    }
+
+    {
+      using beast   = specified_moved_from_beast<int>;
+      using equiv_t = std::vector<int>;
+      check_semantics("Incorrect moved-from state post construction", beast{1}, beast{2}, equiv_t{1}, equiv_t{2}, equiv_t{1}, equiv_t{});
+      check_semantics("Incorrect moved-from state post construction", beast{1}, beast{2}, equiv_t{1}, equiv_t{2},   beast{1},   beast{});
+
+      check_semantics("Incorrect moved-from state post construction", beast{1}, beast{2}, equiv_t{1}, equiv_t{2}, equiv_t{1}, equiv_t{}, [](auto& b) { b.x.front() = 3; });
+      check_semantics("Incorrect moved-from state post construction", beast{1}, beast{2}, equiv_t{1}, equiv_t{2},   beast{1},   beast{}, [](auto& b) { b.x.front() = 3; });
+
+      check_semantics("Incorrect moved-from state post assignment", beast{1}, beast{2}, equiv_t{1}, equiv_t{2}, equiv_t{}, equiv_t{2});
+      check_semantics("Incorrect moved-from state post assignment", beast{1}, beast{2}, equiv_t{1}, equiv_t{2},   beast{},   beast{2});
+
+      check_semantics("Incorrect moved-from state post assignment", beast{1}, beast{2}, equiv_t{1}, equiv_t{2}, equiv_t{}, equiv_t{2}, [](auto& b) { b.x.front() = 3; });
+      check_semantics("Incorrect moved-from state post assignment", beast{1}, beast{2}, equiv_t{1}, equiv_t{2},   beast{},   beast{2}, [](auto& b) { b.x.front() = 3; });
+    }
   }
 
   [[nodiscard]]
@@ -54,7 +78,10 @@ namespace sequoia::testing
 
   void regular_false_positive_diagnostics::test_regular_semantics()
   {
+    using equiv_t = std::initializer_list<int>;
     check_semantics("", perfectly_normal_beast{1}, perfectly_normal_beast{2});
+    check_semantics("", perfectly_normal_beast{1}, perfectly_normal_beast{2}, equiv_t{1}, equiv_t{2});
+    check_semantics("", perfectly_normal_beast{1}, perfectly_normal_beast{2}, equiv_t{1}, equiv_t{2}, [](auto& b) { b.x.front() = 3; } );
     check_semantics("", perfectly_stringy_beast{}, perfectly_stringy_beast{"Hello, world"});
   }
 }

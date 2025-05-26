@@ -39,11 +39,11 @@ Project name clash
 
 Expected Exception Type:
 [std::runtime_error]
-output/TestsTemporaryData/TestFramework/TestRunnerProjectCreation/WorkingCopy' is in use
+Project location 'output/TestsTemporaryData/TestFramework/TestRunnerProjectCreation/WorkingCopy' is in use
 
 =======================================
 
-Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 96
+Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 89
 Illegal indent
 
 Expected Exception Type:
@@ -52,7 +52,7 @@ Code indent must comprise only spaces or tabs
 
 =======================================
 
-Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 107
+Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 100
 Illegal init indent
 
 Expected Exception Type:

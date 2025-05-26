@@ -41,23 +41,27 @@
 namespace sequoia::testing
 {
   /*! Prerequisites:
-
-      x == xEquivalent
-      y == yEquivalent
       x != y
+      x equivalent to xEquivalent
+      y equivalent to yEquivalent
    */
-  template<test_mode Mode, moveonly T, class U>
-    requires checkable_for_move_semantics<Mode, T, U>
+  template<test_mode Mode, moveonly T, class U, class V>
+    requires checkable_against_for_semantics<Mode, T, U> && checkable_against_for_semantics<Mode, T, V>
   bool check_semantics(std::string description,
                        test_logger<Mode>& logger,
                        T&& x,
                        T&& y,
                        const U& xEquivalent,
                        const U& yEquivalent,
-                       optional_ref<const U> movedFromPostConstruction,
-                       optional_ref<const U> movedFromPostAssignment)
+                       optional_ref<const V> movedFromPostConstruction,
+                       optional_ref<const V> movedFromPostAssignment)
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(std::move(description)).append("\n")};
+
+    if constexpr(equivalence_checkable_for_semantics<Mode, T, U>)
+    {
+      impl::check_best_equivalence(logger, x, y, xEquivalent, yEquivalent);
+    }
 
     return impl::check_semantics(
              logger,
@@ -73,24 +77,28 @@ namespace sequoia::testing
   }
   
   /*! Prerequisites:
-
-      x == xEquivalent
-      y == yEquivalent
       x != y
+      x equivalent to xEquivalent
+      y equivalent to yEquivalent
    */
-  template<test_mode Mode, moveonly T, class U>
-    requires checkable_for_move_semantics<Mode, T, U> && std::totally_ordered<T>
+  template<test_mode Mode, moveonly T, class U, class V>
+    requires std::totally_ordered<T> && checkable_against_for_semantics<Mode, T, U> && checkable_against_for_semantics<Mode, T, V>
   bool check_semantics(std::string description,
                        test_logger<Mode>& logger,
                        T&& x,
                        T&& y,
                        const U& xEquivalent,
                        const U& yEquivalent,
-                       optional_ref<const U> movedFromPostConstruction,
-                       optional_ref<const U> movedFromPostAssignment,
+                       optional_ref<const V> movedFromPostConstruction,
+                       optional_ref<const V> movedFromPostAssignment,
                        std::weak_ordering order)
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(std::move(description)).append("\n")};
+
+    if constexpr(equivalence_checkable_for_semantics<Mode, T, U>)
+    {
+      impl::check_best_equivalence(logger, x, y, xEquivalent, yEquivalent);
+    }
 
     return impl::check_semantics(
              logger,

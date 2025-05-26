@@ -122,11 +122,11 @@ Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 76
 Incorrect moved-from state post construction
 
 --Move-only Semantics--
-[sequoia::testing::orderable_specified_moved_from_beast<int, std::allocator<int> >]
+[sequoia::testing::move_only_orderable_specified_moved_from_beast<int, std::allocator<int> >]
 
   Incorrect moved-from value after move construction
   Comparison performed using:
-  [sequoia::testing::value_tester<sequoia::testing::orderable_specified_moved_from_beast<int, std::allocator<int> > >]
+  [sequoia::testing::value_tester<sequoia::testing::move_only_orderable_specified_moved_from_beast<int, std::allocator<int> > >]
   Checking for equivalence with:
   [std::vector<int, std::allocator<int> >]
 
@@ -143,14 +143,90 @@ Incorrect moved-from state post construction
 =======================================
 
 Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 77
+Incorrect moved-from state post construction
+
+--Move-only Semantics--
+[sequoia::testing::move_only_orderable_specified_moved_from_beast<int, std::allocator<int> >]
+
+  Incorrect moved-from value after move construction
+  Comparison performed using:
+  [sequoia::testing::value_tester<sequoia::testing::move_only_orderable_specified_moved_from_beast<int, std::allocator<int> > >]
+  Checking for equivalence with:
+  [std::vector<int, std::allocator<int> >]
+
+    Wrapped vector
+    [std::vector<int, std::allocator<int> >]
+    operator== returned false
+
+      Container size wrong
+      [unsigned long long]
+      operator== returned false
+      Obtained : 0
+      Predicted: 1
+
+=======================================
+
+Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 78
+Incorrect moved-from state post construction
+
+--Move-only Semantics--
+[sequoia::testing::move_only_orderable_specified_moved_from_beast<int, std::allocator<int> >]
+
+  Incorrect moved-from value after move construction
+  [sequoia::testing::move_only_orderable_specified_moved_from_beast<int, std::allocator<int> >]
+  operator== returned false
+  Obtained : 
+  Predicted: 1
+
+=======================================
+
+Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 79
+Incorrect moved-from state post construction
+
+--Move-only Semantics--
+[sequoia::testing::move_only_orderable_specified_moved_from_beast<int, std::allocator<int> >]
+
+  Incorrect moved-from value after move construction
+  Comparison performed using:
+  [sequoia::testing::value_tester<sequoia::testing::move_only_orderable_specified_moved_from_beast<int, std::allocator<int> > >]
+  Checking for equivalence with:
+  [std::vector<int, std::allocator<int> >]
+
+    Wrapped vector
+    [std::vector<int, std::allocator<int> >]
+    operator== returned false
+
+      Container size wrong
+      [unsigned long long]
+      operator== returned false
+      Obtained : 0
+      Predicted: 1
+
+=======================================
+
+Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 80
+Incorrect moved-from state post construction
+
+--Move-only Semantics--
+[sequoia::testing::move_only_orderable_specified_moved_from_beast<int, std::allocator<int> >]
+
+  Incorrect moved-from value after move construction
+  [sequoia::testing::move_only_orderable_specified_moved_from_beast<int, std::allocator<int> >]
+  operator== returned false
+  Obtained : 
+  Predicted: 1
+
+=======================================
+
+Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 82
 Incorrect moved-from state post assignment
 
 --Move-only Semantics--
-[sequoia::testing::orderable_specified_moved_from_beast<int, std::allocator<int> >]
+[sequoia::testing::move_only_orderable_specified_moved_from_beast<int, std::allocator<int> >]
 
   Incorrect moved-from value after move assignment
   Comparison performed using:
-  [sequoia::testing::value_tester<sequoia::testing::orderable_specified_moved_from_beast<int, std::allocator<int> > >]
+  [sequoia::testing::value_tester<sequoia::testing::move_only_orderable_specified_moved_from_beast<int, std::allocator<int> > >]
   Checking for equivalence with:
   [std::vector<int, std::allocator<int> >]
 
@@ -167,42 +243,64 @@ Incorrect moved-from state post assignment
 =======================================
 
 Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 83
-Incorrect moved-from state post construction
+Incorrect moved-from state post assignment
 
 --Move-only Semantics--
-[sequoia::testing::orderable_resource_binder]
-
-  Incorrect moved-from value after move construction
-  [sequoia::testing::orderable_resource_binder]
-  operator== returned false
-  Obtained : 0
-  Predicted: 3
+[sequoia::testing::move_only_orderable_specified_moved_from_beast<int, std::allocator<int> >]
 
   Incorrect moved-from value after move assignment
-  [sequoia::testing::orderable_resource_binder]
-  operator== returned false
-  Obtained : 0
-  Predicted: 1
+  Comparison performed using:
+  [sequoia::testing::value_tester<sequoia::testing::move_only_orderable_specified_moved_from_beast<int, std::allocator<int> > >]
+  Checking for equivalence with:
+  [std::vector<int, std::allocator<int> >]
+
+    Wrapped vector
+    [std::vector<int, std::allocator<int> >]
+    operator== returned false
+
+      Container size wrong
+      [unsigned long long]
+      operator== returned false
+      Obtained : 0
+      Predicted: 1
 
 =======================================
 
 Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 84
-Incorrect moved-from state post construction
+Incorrect moved-from state post assignment
 
 --Move-only Semantics--
-[sequoia::testing::orderable_resource_binder]
-
-  Incorrect moved-from value after move construction
-  [sequoia::testing::orderable_resource_binder]
-  operator== returned false
-  Obtained : 0
-  Predicted: 3
+[sequoia::testing::move_only_orderable_specified_moved_from_beast<int, std::allocator<int> >]
 
   Incorrect moved-from value after move assignment
-  [sequoia::testing::orderable_resource_binder]
+  [sequoia::testing::move_only_orderable_specified_moved_from_beast<int, std::allocator<int> >]
   operator== returned false
-  Obtained : 0
-  Predicted: 1
+  Obtained : 
+  Predicted: 2
+
+=======================================
+
+Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 85
+Incorrect moved-from state post assignment
+
+--Move-only Semantics--
+[sequoia::testing::move_only_orderable_specified_moved_from_beast<int, std::allocator<int> >]
+
+  Incorrect moved-from value after move assignment
+  Comparison performed using:
+  [sequoia::testing::value_tester<sequoia::testing::move_only_orderable_specified_moved_from_beast<int, std::allocator<int> > >]
+  Checking for equivalence with:
+  [std::vector<int, std::allocator<int> >]
+
+    Wrapped vector
+    [std::vector<int, std::allocator<int> >]
+    operator== returned false
+
+      Container size wrong
+      [unsigned long long]
+      operator== returned false
+      Obtained : 0
+      Predicted: 1
 
 =======================================
 
@@ -210,17 +308,57 @@ Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 86
 Incorrect moved-from state post assignment
 
 --Move-only Semantics--
-[sequoia::testing::orderable_resource_binder]
+[sequoia::testing::move_only_orderable_specified_moved_from_beast<int, std::allocator<int> >]
 
   Incorrect moved-from value after move assignment
+  [sequoia::testing::move_only_orderable_specified_moved_from_beast<int, std::allocator<int> >]
+  operator== returned false
+  Obtained : 
+  Predicted: 2
+
+=======================================
+
+Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 92
+Incorrect moved-from state post construction
+
+--Move-only Semantics--
+[sequoia::testing::orderable_resource_binder]
+
+  Incorrect moved-from value after move construction
   [sequoia::testing::orderable_resource_binder]
   operator== returned false
   Obtained : 0
   Predicted: 3
 
+  Incorrect moved-from value after move assignment
+  [sequoia::testing::orderable_resource_binder]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
+
 =======================================
 
-Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 87
+Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 93
+Incorrect moved-from state post construction
+
+--Move-only Semantics--
+[sequoia::testing::orderable_resource_binder]
+
+  Incorrect moved-from value after move construction
+  [sequoia::testing::orderable_resource_binder]
+  operator== returned false
+  Obtained : 0
+  Predicted: 3
+
+  Incorrect moved-from value after move assignment
+  [sequoia::testing::orderable_resource_binder]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
+
+=======================================
+
+Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 95
 Incorrect moved-from state post assignment
 
 --Move-only Semantics--
@@ -235,6 +373,20 @@ Incorrect moved-from state post assignment
 =======================================
 
 Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 96
+Incorrect moved-from state post assignment
+
+--Move-only Semantics--
+[sequoia::testing::orderable_resource_binder]
+
+  Incorrect moved-from value after move assignment
+  [sequoia::testing::orderable_resource_binder]
+  operator== returned false
+  Obtained : 0
+  Predicted: 3
+
+=======================================
+
+Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 105
 Broken check invariant
 
 --Move-only Semantics--
@@ -246,7 +398,7 @@ Broken check invariant
 
 =======================================
 
-Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 97
+Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 106
 Broken check invariant
 
 --Move-only Semantics--
@@ -258,7 +410,7 @@ Broken check invariant
 
 =======================================
 
-Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 98
+Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 107
 Broken check invariant
 
 --Move-only Semantics--
@@ -270,7 +422,7 @@ Broken check invariant
 
 =======================================
 
-Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 104
+Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 113
 Broken less
 
 --Move-only Semantics--
@@ -294,7 +446,7 @@ Broken less
 
 =======================================
 
-Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 110
+Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 119
 Broken lesseq
 
 --Move-only Semantics--
@@ -306,7 +458,7 @@ Broken lesseq
 
 =======================================
 
-Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 116
+Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 125
 Broken greater
 
 --Move-only Semantics--
@@ -318,7 +470,7 @@ Broken greater
 
 =======================================
 
-Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 122
+Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 131
 Broken greatereq
 
 --Move-only Semantics--
@@ -330,7 +482,7 @@ Broken greatereq
 
 =======================================
 
-Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 128
+Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 137
 Inverted comparisons
 
 --Move-only Semantics--
@@ -342,7 +494,7 @@ Inverted comparisons
 
 =======================================
 
-Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 134
+Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 143
 Broken spaceship
 
 --Move-only Semantics--

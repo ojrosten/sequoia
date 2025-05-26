@@ -1,2 +1,2 @@
 Output Free Test
-Standard Top Level Checks:                12;  Failures:  0  [Deep checks: 12]
+Standard Top Level Checks:                17;  Failures:  0  [Deep checks: 17]

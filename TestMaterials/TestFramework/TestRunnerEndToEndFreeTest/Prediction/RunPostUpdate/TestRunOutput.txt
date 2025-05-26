@@ -2,9 +2,9 @@
 Running tests, synchronously...
 
 Utilities:
-[Execution Time: 1.04us]
+[Execution Time: 1.12us]
 Useful Things:
-[Execution Time: 233us]
+[Execution Time: 179us]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
 	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 21
@@ -17,34 +17,34 @@ Useful Things:
 	=======================================
 
 Bar:
-[Execution Time: 1.04us]
+[Execution Time: 917ns]
 Unstable:
-[Execution Time: 108us]
+[Execution Time: 85.2us]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 Maybe:
 [Execution Time: 1.96us]
 Oldschool:
 [Execution Time: 1.75us]
 Probability:
-[Execution Time: 1.25ms]
-	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 34]
+[Execution Time: 1.42ms]
+	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 39]
 	False Negative Checks:                     2;  Failures:  0
 Foo:
-[Execution Time: 2.19ms]
+[Execution Time: 1.93ms]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 38]
 Unique Thing:
-[Execution Time: 1.61ms]
-	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 30]
+[Execution Time: 1.28ms]
+	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 37]
 	False Negative Checks:                     2;  Failures:  0
 Container:
-[Execution Time: 5.5us]
+[Execution Time: 2.29us]
 House:
-[Execution Time: 1.42us]
+[Execution Time: 1.25us]
 
 -----------Grand Totals-----------
-[Total Run Time: 7.57ms]
-[Execution Time: 5.4ms]
-	Standard Top Level Checks:                12;  Failures:  1  [Deep checks: 106]
+[Total Run Time: 6.57ms]
+[Execution Time: 4.9ms]
+	Standard Top Level Checks:                12;  Failures:  1  [Deep checks: 118]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0

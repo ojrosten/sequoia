@@ -23,14 +23,20 @@ namespace sequoia::testing
 
     [[nodiscard]]
     constexpr friend bool operator==(const no_default_constructor&, const no_default_constructor&) noexcept = default;
-
-    template<class Stream>
-    friend Stream& operator<<(Stream& stream, const no_default_constructor& ndc)
-    {
-      stream << ndc.get();
-      return stream;
-    }
   private:
     int m_i{};
+  };
+}
+
+namespace std {
+  template<>
+  struct formatter<sequoia::testing::no_default_constructor>
+  {
+    constexpr auto parse(auto& ctx) { return ctx.begin(); }
+
+    auto format(const sequoia::testing::no_default_constructor& ndc, auto& ctx) const
+    {
+      return std::format_to(ctx.out(), "{}", ndc.get());
+    }
   };
 }

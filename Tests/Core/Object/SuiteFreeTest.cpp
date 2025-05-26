@@ -13,151 +13,159 @@
 
 #include "sequoia/Maths/Graph/DynamicTree.hpp"
 
-namespace sequoia::testing
+namespace fs = std::filesystem;
+
+namespace
 {
-  namespace fs = std::filesystem;
-  using namespace object;
-  using namespace std::string_literals;
+  using namespace sequoia;
+  using namespace sequoia::object;
 
-  namespace
+  template<int I, template<int> class T>
+  [[nodiscard]]
+  std::string make_next_name(const T<I>& t)
   {
-    template<int I, template<int> class T>
+    return std::format("{}->{}", t.name, I + 1);
+  }
+
+  template<int I>
+  struct foo
+  {
+    std::string name;
+
+    fs::path to_path() const { return {name}; }
+
     [[nodiscard]]
-    std::string make_next_name(const T<I>& t)
+    foo<I + 1> next() const { return {make_next_name(*this)}; }
+
+    [[nodiscard]]
+    friend bool operator==(const foo&, const foo&) noexcept = default;
+  };
+
+  template<int I>
+  struct bar
+  {
+    std::string name;
+
+    fs::path to_path() const { return {name}; }
+
+    [[nodiscard]]
+    friend bool operator==(const bar&, const bar&) noexcept = default;
+
+    [[nodiscard]]
+    bar<I + 1> next() const { return {make_next_name(*this)}; }
+  };
+
+  template<int I>
+  struct baz
+  {
+    std::string name;
+
+    fs::path to_path() const { return {name}; }
+
+    baz(std::string s) : name{std::move(s)} {}
+
+    baz(const baz&) = delete;
+    baz(baz&&) noexcept = default;
+
+    baz& operator=(const baz&) = delete;
+    baz& operator=(baz&&) noexcept = default;
+
+    [[nodiscard]]
+    baz<I + 1> next() const { return {make_next_name(*this)}; }
+
+    [[nodiscard]]
+    friend bool operator==(const baz&, const baz&) noexcept = default;
+  };
+
+  struct to_path
+  {
+    template<class T>
+    [[nodiscard]]
+    fs::path operator()(const T& t) const { return t.to_path(); }
+  };
+
+  struct path_equivalence
+  {
+    [[nodiscard]]
+    bool operator()(const fs::path& lhs, const fs::path& rhs) const
     {
-      return std::string{t.name}.append("->").append(std::to_string(I + 1));
-    }
+      if(lhs.empty() && rhs.empty()) return true;
 
-    template<int I>
-    struct foo
-    {
-      std::string name;
-
-      fs::path to_path() const { return {name}; }
-
-      [[nodiscard]]
-      foo<I + 1> next() const { return {make_next_name(*this)}; }
-
-      [[nodiscard]]
-      friend bool operator==(const foo&, const foo&) noexcept = default;
-
-      template<class Stream>
-      friend Stream& operator<<(Stream& s, const foo& f)
-      {
-        return (s << f.name);
-      }
-    };
-
-    template<int I>
-    struct bar
-    {
-      std::string name;
-
-      fs::path to_path() const { return {name}; }
-
-      [[nodiscard]]
-      friend bool operator==(const bar&, const bar&) noexcept = default;
-
-      [[nodiscard]]
-      bar<I + 1> next() const { return {make_next_name(*this)}; }
-
-      template<class Stream>
-      friend Stream& operator<<(Stream& s, const bar& b)
-      {
-        return (s << b.name);
-      }
-    };
-
-    template<int I>
-    struct baz
-    {
-      std::string name;
-
-      fs::path to_path() const { return {name}; }
-
-      baz(std::string s) : name{std::move(s)} {}
-
-      baz(const baz&) = delete;
-      baz(baz&&) noexcept = default;
-
-      baz& operator=(const baz&) = delete;
-      baz& operator=(baz&&) noexcept = default;
-
-      [[nodiscard]]
-      baz<I + 1> next() const { return {make_next_name(*this)}; }
-
-      [[nodiscard]]
-      friend bool operator==(const baz&, const baz&) noexcept = default;
-
-      template<class Stream>
-      friend Stream& operator<<(Stream& s, const baz& b)
-      {
-        return (s << b.name);
-      }
-    };
-
-    struct to_path
-    {
-      template<class T>
-      [[nodiscard]]
-      fs::path operator()(const T& t) const { return t.to_path(); }
-    };
-
-    struct path_equivalence
-    {
-      [[nodiscard]]
-      bool operator()(const fs::path& lhs, const fs::path& rhs) const
-      {
-        if(lhs.empty() && rhs.empty()) return true;
-
-        if(!lhs.empty() && !rhs.empty())
+      if(!lhs.empty() && !rhs.empty())
         {
           return (lhs == rhs) || (back(lhs) == back(rhs));
         }
 
-        return false;
-      }
-    };
+      return false;
+    }
+  };
 
-    auto make_test_suite()
+  auto make_test_suite()
+  {   
+    return suite{"root",
+                 suite{"suite_0", foo<0>{"foo"}},
+                 suite{"suite_1", bar<0>{"bar"}, baz<0>{"baz"}},
+                 suite{"suite_2",
+                       suite{"suite_2_0", foo<1>{"foo1"}},
+                       suite{"suite_2_1",
+                             suite{"suite_2_1_0", bar<1>{"bar1"}}
+                       }
+                 }
+    };
+  }
+
+  template<class T>
+  [[nodiscard]]
+  foo<-1> make_common(const T& t)
+  {
+    return foo<-1>{t.name};
+  }
+
+  struct stringify
+  {
+    template<class... Ts>
+    [[nodiscard]]
+    std::string operator()(const suite<Ts...>& s) const
     {
-      return suite{"root",
-                    suite{"suite_0", foo<0>{"foo"}},
-                    suite{"suite_1", bar<0>{"bar"}, baz<0>{"baz"}},
-                    suite{"suite_2",
-                          suite{"suite_2_0", foo<1>{"foo1"}},
-                          suite{"suite_2_1",
-                                suite{"suite_2_1_0", bar<1>{"bar1"}}
-                          }
-                    }
-      };
+      return s.name;
     }
 
     template<class T>
+      requires std::is_arithmetic_v<T>
     [[nodiscard]]
-    foo<-1> make_common(const T& t)
+    std::string operator()(T t) const { return std::to_string(t);}
+  };
+
+  using filter_by_names = granular_filter<std::string, std::ranges::equal_to, item_to_name>;
+  using filter_by_paths = granular_filter<fs::path, path_equivalence, to_path>;
+
+  template<class T>
+  struct format_helper
+  {
+    constexpr auto parse(auto& ctx) { return ctx.begin(); }
+
+    auto format(const T& t, auto& ctx) const
     {
-      return foo<-1>{t.name};
+      return std::format_to(ctx.out(), "{}", t.name);
     }
+  };
+}
 
-    struct stringify
-    {
-      template<class... Ts>
-      [[nodiscard]]
-      std::string operator()(const suite<Ts...>& s) const
-      {
-        return s.name;
-      }
+namespace std {
+  template<int I>
+  struct formatter<foo<I>> : format_helper<foo<I>> {};
 
-      template<class T>
-        requires std::is_arithmetic_v<T>
-      [[nodiscard]]
-      std::string operator()(T t) const { return std::to_string(t);}
-    };
+  template<int I>
+  struct formatter<bar<I>> : format_helper<bar<I>> {};
 
-    using filter_by_names = granular_filter<std::string, std::ranges::equal_to, item_to_name>;
-    using filter_by_paths = granular_filter<fs::path, path_equivalence, to_path>;
-  }
+  template<int I>
+  struct formatter<baz<I>> : format_helper<baz<I>> {};
+}
+
+namespace sequoia::testing
+{
+  using namespace object;
+  using namespace std::string_literals;
 
   [[nodiscard]]
   std::filesystem::path suite_free_test::source_file() const

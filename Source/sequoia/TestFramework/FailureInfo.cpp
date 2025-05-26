@@ -34,9 +34,7 @@ namespace sequoia::testing
 
       auto to_percent{
         [&failuresFromFiles](auto num){
-          std::stringstream s{};
-          s << std::setprecision(3) << 100 * static_cast<double>(num) / failuresFromFiles.size();
-          return s.str();
+          return std::format("{:3.1f}", 100 * static_cast<double>(num) / failuresFromFiles.size());
         }
       };
 

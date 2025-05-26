@@ -98,7 +98,7 @@ Suite:
 
 Instability detected in file "Free_Test.cpp"
 Outcome frequencies:
-[25%,25%,25%,25%]
+[25.0%,25.0%,25.0%,25.0%]
 
 --No failures--
 

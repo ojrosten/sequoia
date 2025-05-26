@@ -60,13 +60,13 @@ namespace sequoia::testing
     check(equality, "", e, f);
     check(equality, "", g, h);
 
-    check(equality, "Size 0 should not compare equal to 1", d.size(), 1_sz);
-    check(equality, "Size 1 should not compare equal to 0", e.size(), 0_sz);
+    check(equality, "Size 0 should not compare equal to 1", d.size(), 1uz);
+    check(equality, "Size 1 should not compare equal to 0", e.size(), 0uz);
 
-    check(equality, "", d.num_partitions(), 1_sz);
-    check(equality, "", e.num_partitions(), 0_sz);
-    check(equality, "", g.num_partitions(), 2_sz);
-    check(equality, "", h.num_partitions(), 1_sz);
+    check(equality, "", d.num_partitions(), 1uz);
+    check(equality, "", e.num_partitions(), 0uz);
+    check(equality, "", g.num_partitions(), 2uz);
+    check(equality, "", h.num_partitions(), 1uz);
 
     check(equality, "", *e.begin_partition(0), value_type{2});
     check(equality, "", *e.cbegin_partition(0), value_type{2});

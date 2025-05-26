@@ -1,2 +1,2 @@
 Directed Graph Fundamental Weight Test
-Standard Top Level Checks:               501;  Failures:  0  [Deep checks: 19232]
+Standard Top Level Checks:               501;  Failures:  0  [Deep checks: 34456]

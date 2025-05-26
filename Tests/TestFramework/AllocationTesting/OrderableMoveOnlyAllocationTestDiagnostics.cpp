@@ -67,7 +67,7 @@ namespace sequoia::testing
     }
 
     {
-      using beast = orderable_specified_moved_from_beast<int, shared_counting_allocator<int, true, PropagateMove, PropagateSwap>>;
+      using beast = move_only_orderable_specified_moved_from_beast<int, shared_counting_allocator<int, true, PropagateMove, PropagateSwap>>;
       auto allocGetter{
         [](const beast& b) {
           return b.x.get_allocator();

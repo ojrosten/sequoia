@@ -183,8 +183,8 @@ namespace sequoia::testing
           data_description::empty,
           t.report(""),
           [&t](data_t d) -> data_t {
-            t.check(equality, "", d.num_partitions_capacity(), 0_sz);
-            t.check(equality, "", d.partition_capacity(0), 0_sz);
+            t.check(equality, "", d.num_partitions_capacity(), 0uz);
+            t.check(equality, "", d.partition_capacity(0), 0uz);
             return d;
           }
         );
@@ -194,12 +194,12 @@ namespace sequoia::testing
           t.report(""),
           [&t](data_t d) -> data_t {
             d.reserve_partitions(4);
-            t.check(equality, "", d.num_partitions_capacity(), 4_sz);
-            t.check(equality, "", d.partition_capacity(0), 0_sz);
+            t.check(equality, "", d.num_partitions_capacity(), 4uz);
+            t.check(equality, "", d.partition_capacity(0), 0uz);
 
             d.shrink_num_partitions_to_fit();
-            t.check(equality, "May fail if shrink to fit impl does not reduce capacity", d.num_partitions_capacity(), 0_sz);
-            t.check(equality, "", d.partition_capacity(0), 0_sz);
+            t.check(equality, "May fail if shrink to fit impl does not reduce capacity", d.num_partitions_capacity(), 0uz);
+            t.check(equality, "", d.partition_capacity(0), 0uz);
 
             return d;
           }
@@ -232,15 +232,15 @@ namespace sequoia::testing
                  data_description::empty_partition,
                  t.report(""),
                  [&t](data_t d) -> data_t {
-                   t.check(equality, "", d.partition_capacity(0), 0_sz);
-                   t.check(equality, "", d.partition_capacity(1), 0_sz);
+                   t.check(equality, "", d.partition_capacity(0), 0uz);
+                   t.check(equality, "", d.partition_capacity(1), 0uz);
                    
                    d.reserve_partition(0, 4);
-                   t.check(equality, "", d.partition_capacity(0), 4_sz);
-                   t.check(equality, "", d.partition_capacity(1), 0_sz);
+                   t.check(equality, "", d.partition_capacity(0), 4uz);
+                   t.check(equality, "", d.partition_capacity(1), 0uz);
                    
                    d.shrink_to_fit(0);
-                   t.check(equality, "May fail if shrink to fit impl does not reduce capacity", d.partition_capacity(0), 0_sz);
+                   t.check(equality, "May fail if shrink to fit impl does not reduce capacity", d.partition_capacity(0), 0uz);
                  
                    return d;
                  }

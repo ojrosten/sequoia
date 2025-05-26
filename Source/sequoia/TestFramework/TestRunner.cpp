@@ -54,7 +54,7 @@ namespace sequoia::testing
       {
         concurrency::thread_pool<void> pool{std::ranges::min(num, p.num)};
         auto futures{
-              std::views::transform(weights, [&pool, fn](auto& wt){ return pool.push([&](){ return fn(wt); }); })
+              std::views::transform(weights, [&pool, fn](auto& wt){ return pool.push([&wt, fn](){ return fn(wt); }); })
             | std::ranges::to<std::vector>()
         };
 

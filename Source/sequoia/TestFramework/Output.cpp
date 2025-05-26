@@ -75,6 +75,12 @@ namespace sequoia::testing
         while((pos < name.size() - 1) && !std::isdigit(name[++pos])) {}
         if(pos < name.size() - 1)
         {
+          if((name[pos - 1] == '_') || std::isalpha(name[pos - 1]))
+          {
+            pos = name.find_first_of(",>", pos);
+            continue;
+          }
+
           if(name[pos - 1] == '[')
           {
             // GCC seems to represent floating-point NTTPs as

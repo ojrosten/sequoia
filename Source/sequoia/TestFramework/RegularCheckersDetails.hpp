@@ -27,7 +27,7 @@ namespace sequoia::testing::impl
     = requires (std::remove_cvref_t<Actions> actions, std::remove_cvref_t<Args>&... args) {
         actions.post_copy_assign_action(args...);
       };
-
+  
   template<test_mode Mode, class Actions, pseudoregular T, class... Args>
   bool do_check_copy_assign(test_logger<Mode>& logger, [[maybe_unused]] const Actions& actions, T& z, const T& y, const Args&... args)
   {
@@ -53,8 +53,15 @@ namespace sequoia::testing::impl
     return do_check_copy_assign(logger, actions, z, y);
   }
 
-  template<test_mode Mode, class Actions, pseudoregular T, std::invocable<T&> Mutator, class... Args>
-  bool check_semantics(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, Mutator yMutator, const Args&... args)
+  template<test_mode Mode, class Actions, pseudoregular T, class U, std::invocable<T&> Mutator, class... Args>
+  bool check_semantics(test_logger<Mode>& logger,
+                       const Actions& actions,
+                       const T& x,
+                       const T& y,
+                       optional_ref<const U> movedFromPostConstruction,
+                       optional_ref<const U> movedFromPostAssignment,                       
+                       Mutator yMutator,
+                       const Args&... args)
   {
     sentinel<Mode> sentry{logger, ""};
 
@@ -62,9 +69,7 @@ namespace sequoia::testing::impl
       return false;
 
     T z{x};
-    const bool consistentCopy{
-      check(equality, "Inconsistent copy constructor (x)", logger, z, x)
-    };
+    const bool consistentCopy{check(equality, "Inconsistent copy constructor (x)", logger, z, x)};
 
     if constexpr(has_post_copy_action<Actions, test_logger<Mode>, T, T, Args...>)
     {
@@ -79,21 +84,18 @@ namespace sequoia::testing::impl
 
     if(consistentCopyAssign)
     {
-      check_move_construction(logger, actions, std::move(z), y, optional_ref<const T>{}, args...);
+      check_move_construction(logger, actions, std::move(z), y, movedFromPostConstruction, args...);
     }
 
     if(!consistentCopy)
       return false;
 
     T w{x};
-    check_move_assign(logger, actions, w, T{y}, y, optional_ref<const T>{}, yMutator, args...);
+    check_move_assign(logger, actions, w, T{y}, y, movedFromPostAssignment, yMutator, args...);
 
     if constexpr (do_swap<Args...>::value)
     {
-      if (consistentCopy)
-      {
-        check_swap(logger, actions, T{x}, T{y}, x, y, yMutator, args...);
-      }
+      check_swap(logger, actions, T{x}, T{y}, x, y, yMutator, args...);
     }
 
     if constexpr(!std::is_same_v<std::remove_cvref_t<Mutator>, null_mutator>)

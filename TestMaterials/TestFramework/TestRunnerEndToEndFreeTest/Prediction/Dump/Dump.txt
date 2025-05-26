@@ -125,15 +125,20 @@ Inconsistent self copy assignment
 [maths::probability]
 [double]
 Inconsistent move construction
-[bool]
+[maths::probability]
+[double]
 Inconsistent move assignment (from y)
-[bool]
+[maths::probability]
+[double]
 Inconsistent Swap (y)
-[bool]
+[maths::probability]
+[double]
 Inconsistent Swap (x)
-[bool]
+[maths::probability]
+[double]
 Inconsistent Self Swap
-[bool]
+[maths::probability]
+[double]
 
 
 Tests/Stuff/FooTest.cpp, Line 42
@@ -351,10 +356,14 @@ operator!= is inconsistent (y)
 [bool]
 Prerequisite - for checking semantics, x and y are assumed to be different
 [bool]
-Prerequisite - for checking move-only semantics, x and xEquivalent are assumed to be equal
+Prerequisite: x and xEquivalent should be equivalent
 [stuff::unique_thing]
-Prerequisite - for checking move-only semantics, y and yEquivalent are assumed to be equal
+Description
+[double]
+Prerequisite: y and yEquivalent should be equivalent
 [stuff::unique_thing]
+Description
+[double]
 Prerequisite - for checking semantics, order must be weak_ordering::less or weak_ordering::greater
 [bool]
 
@@ -396,13 +405,23 @@ Prerequisite - for ordered semantics, it is assumed that y > x
 [bool]
 Inconsistent move construction
 [stuff::unique_thing]
+Description
+[double]
 Inconsistent Swap (y)
 [stuff::unique_thing]
+Description
+[double]
 Inconsistent Swap (x)
 [stuff::unique_thing]
+Description
+[double]
 Inconsistent Self Swap
 [stuff::unique_thing]
+Description
+[double]
 Inconsistent move assignment (from y)
 [stuff::unique_thing]
+Description
+[double]
 
 

@@ -83,13 +83,6 @@ namespace sequoia::testing
         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ",  make_project_paths(), outputStream};
 
         tr.execute();
-      },
-      [](std::string mess){
-        const auto pos{mess.find("output")};
-        if(pos != std::string::npos)
-          mess.erase(0, pos);
-        
-        return mess;
       });
 
     check_exception_thrown<std::runtime_error>(

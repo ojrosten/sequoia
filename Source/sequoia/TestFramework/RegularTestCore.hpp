@@ -35,35 +35,274 @@ namespace sequoia::testing
 
     regular_extender() = default;
 
-    /// Prerequisite: x!=y
-    template<class Self, pseudoregular T>
-      requires (!std::totally_ordered<T>)
+    /// Prerequisite: x != y
+    template<pseudoregular T, class Self>
     void check_semantics(this Self& self, const reporter& description, const T& x, const T& y)
     {
-      testing::check_semantics(regular_message(self.report(description)), self.m_Logger, x, y);
+      testing::check_semantics(regular_message(self.report(description)),
+                               self.m_Logger,
+                               x,
+                               y,
+                               optional_ref<const T>{},
+                               optional_ref<const T>{});
     }
 
-    /// Prerequisite: x!=y, with values consistent with order
-    template<class Self, pseudoregular T>
+    /*! Prerequisites:
+          x != y
+          x equivalent to xEquivalent
+          y equivalent to yEquivalent
+     */
+    template<pseudoregular T, class U, class Self>
+      requires equivalence_checkable_for_semantics<Mode, T, U>
+    void check_semantics(this Self& self,
+                         const reporter& description,
+                         const T& x,
+                         const T& y,
+                         const U& xEquivalent,
+                         const U& yEquivalent)
+    {
+      testing::check_semantics(regular_message(self.report(description)),
+                               self.m_Logger,
+                               x,
+                               y,
+                               xEquivalent,
+                               yEquivalent,
+                               optional_ref<const T>{},
+                               optional_ref<const T>{});
+    }
+
+    /*! Prerequisites:
+          x != y
+          x equivalent to xEquivalent
+          y equivalent to yEquivalent
+     */
+    template<pseudoregular T, class U, class V, class Self>
+      requires equivalence_checkable_for_semantics<Mode, T, U> && checkable_against_for_semantics<Mode, T, V>
+    void check_semantics(this Self& self,
+                         const reporter& description,
+                         const T& x,
+                         const T& y,
+                         const U& xEquivalent,
+                         const U& yEquivalent,
+                         const V& movedFromPostConstruction,
+                         const V& movedFromPostAssignment)
+    {
+      testing::check_semantics(regular_message(self.report(description)),
+                               self.m_Logger,
+                               x,
+                               y,
+                               xEquivalent,
+                               yEquivalent,
+                               optional_ref<const V>{movedFromPostConstruction},
+                               optional_ref<const V>{movedFromPostAssignment});
+    }
+
+    /// Prerequisite: x != y, with values consistent with order
+    template<pseudoregular T, class Self>
       requires std::totally_ordered<T>
     void check_semantics(this Self& self, const reporter& description, const T& x, const T& y, std::weak_ordering order)
     {
-      testing::check_semantics(regular_message(self.report(description)), self.m_Logger, x, y, order);
+      testing::check_semantics(regular_message(self.report(description)),
+                               self.m_Logger,
+                               x,
+                               y,
+                               optional_ref<const T>{},
+                               optional_ref<const T>{},
+                               order);
     }
 
-    /// Prerequisite: x!=y
-    template<class Self, pseudoregular T, std::invocable<T&> Mutator>
+    /*! Prerequisites:
+          x != y, with values consistent with order
+          x equivalent to xEquivalent
+          y equivalent to yEquivalent
+     */
+    template<pseudoregular T, class U, class Self>
+      requires std::totally_ordered<T> && equivalence_checkable_for_semantics<Mode, T, U>
+    void check_semantics(this Self& self,
+                         const reporter& description,
+                         const T& x,
+                         const T& y,
+                         const U& xEquivalent,
+                         const U& yEquivalent,
+                         std::weak_ordering order)
+    {
+      testing::check_semantics(regular_message(self.report(description)),
+                               self.m_Logger,
+                               x,
+                               y,
+                               xEquivalent,
+                               yEquivalent,
+                               optional_ref<const T>{},
+                               optional_ref<const T>{},
+                               order);
+    }
+
+    /*! Prerequisites:
+          x != y, with values consistent with order
+          x equivalent to xEquivalent
+          y equivalent to yEquivalent
+     */
+    template<pseudoregular T, class U, class V, class Self>
+      requires std::totally_ordered<T> && equivalence_checkable_for_semantics<Mode, T, U> && checkable_against_for_semantics<Mode, T, V>
+    void check_semantics(this Self& self,
+                         const reporter& description,
+                         const T& x,
+                         const T& y,
+                         const U& xEquivalent,
+                         const U& yEquivalent,
+                         const V& movedFromPostConstruction,
+                         const V& movedFromPostAssignment,
+                         std::weak_ordering order)
+    {
+      testing::check_semantics(regular_message(self.report(description)),
+                               self.m_Logger,
+                               x,
+                               y,
+                               xEquivalent,
+                               yEquivalent,
+                               optional_ref<const V>{movedFromPostConstruction},
+                               optional_ref<const V>{movedFromPostAssignment},
+                               order);
+    }
+
+    /// Prerequisite: x != y
+    template<pseudoregular T, std::invocable<T&> Mutator, class Self>
     void check_semantics(this Self& self, const reporter& description, const T& x, const T& y, Mutator m)
     {
-      testing::check_semantics(regular_message(self.report(description)), self.m_Logger, x, y, std::move(m));
+      testing::check_semantics(regular_message(self.report(description)),
+                               self.m_Logger,
+                               x,
+                               y,
+                               optional_ref<const T>{},
+                               optional_ref<const T>{},
+                               std::move(m));
     }
 
-    /// Prerequisites: x!=y, with values consistent with order
-    template<class Self, pseudoregular T, std::invocable<T&> Mutator>
+    /*! Prerequisites:
+          x != y
+          x equivalent to xEquivalent
+          y equivalent to yEquivalent
+     */
+    template<pseudoregular T, class U, std::invocable<T&> Mutator, class Self>
+      requires equivalence_checkable_for_semantics<Mode, T, U>
+    void check_semantics(this Self& self,
+                         const reporter& description,
+                         const T& x,
+                         const T& y,
+                         const U& xEquivalent,
+                         const U& yEquivalent,
+                         Mutator m)
+    {
+      testing::check_semantics(regular_message(self.report(description)),
+                               self.m_Logger,
+                               x,
+                               y,
+                               xEquivalent,
+                               yEquivalent,
+                               optional_ref<const T>{},
+                               optional_ref<const T>{},
+                               std::move(m));
+    }
+
+    /*! Prerequisites:
+          x != y
+          x equivalent to xEquivalent
+          y equivalent to yEquivalent
+     */
+    template<pseudoregular T, class U, class V, std::invocable<T&> Mutator, class Self>
+      requires equivalence_checkable_for_semantics<Mode, T, U>
+    void check_semantics(this Self& self,
+                         const reporter& description,
+                         const T& x,
+                         const T& y,
+                         const U& xEquivalent,
+                         const U& yEquivalent,
+                         const V& movedFromPostConstruction,
+                         const V& movedFromPostAssignment,
+                         Mutator m)
+    {
+      testing::check_semantics(regular_message(self.report(description)),
+                               self.m_Logger,
+                               x,
+                               y,
+                               xEquivalent,
+                               yEquivalent,
+                               optional_ref<const V>{movedFromPostConstruction},
+                               optional_ref<const V>{movedFromPostAssignment},
+                               std::move(m));
+    }
+
+    /// Prerequisites: x != y, with values consistent with order
+    template<pseudoregular T, std::invocable<T&> Mutator, class Self>
       requires std::totally_ordered<T>
     void check_semantics(this Self& self, const reporter& description, const T& x, const T& y, std::weak_ordering order, Mutator m)
     {
-      testing::check_semantics(regular_message(self.report(description)), self.m_Logger, x, y, order, std::move(m));
+      testing::check_semantics(regular_message(self.report(description)),
+                               self.m_Logger,
+                               x,
+                               y,
+                               optional_ref<const T>{},
+                               optional_ref<const T>{},
+                               order,
+                               std::move(m));
+    }
+
+    /*! Prerequisites:
+          x != y, with values consistent with order
+          x equivalent to xEquivalent
+          y equivalent to yEquivalent
+     */
+    template<pseudoregular T, class U, std::invocable<T&> Mutator, class Self>
+      requires std::totally_ordered<T> && equivalence_checkable_for_semantics<Mode, T, U>
+    void check_semantics(this Self& self,
+                         const reporter& description,
+                         const T& x,
+                         const T& y,
+                         const U& xEquivalent,
+                         const U& yEquivalent,
+                         std::weak_ordering order,
+                         Mutator m)
+    {
+      testing::check_semantics(regular_message(self.report(description)),
+                               self.m_Logger,
+                               x,
+                               y,
+                               xEquivalent,
+                               yEquivalent,
+                               optional_ref<const T>{},
+                               optional_ref<const T>{},
+                               order,
+                               std::move(m));
+    }
+
+    /*! Prerequisites:
+          x != y
+          x equivalent to xEquivalent
+          y equivalent to yEquivalent
+     */
+    template<pseudoregular T, class U, class V, std::invocable<T&> Mutator, class Self>
+      requires equivalence_checkable_for_semantics<Mode, T, U>
+    void check_semantics(this Self& self,
+                         const reporter& description,
+                         const T& x,
+                         const T& y,
+                         const U& xEquivalent,
+                         const U& yEquivalent,
+                         const V& movedFromPostConstruction,
+                         const V& movedFromPostAssignment,
+                         std::weak_ordering order,
+                         Mutator m)
+    {
+      testing::check_semantics(regular_message(self.report(description)),
+                               self.m_Logger,
+                               x,
+                               y,
+                               xEquivalent,
+                               yEquivalent,
+                               optional_ref<const V>{movedFromPostConstruction},
+                               optional_ref<const V>{movedFromPostAssignment},
+                               order,
+                               std::move(m));
     }
   protected:
     ~regular_extender() = default;

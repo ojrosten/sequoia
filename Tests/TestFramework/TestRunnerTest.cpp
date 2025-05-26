@@ -387,32 +387,13 @@ namespace sequoia::testing
 
   void test_runner_test::test_exceptions()
   {
-    auto pathTrimmer{
-      [](std::string mess) {
-        if(mess.find("canonical") != std::string::npos)
-        {
-          mess = "canonical: unable to find path";
-        }
-        else if(const auto pos{mess.find("output/")}; pos < mess.size())
-        {
-          const auto startPos{mess.rfind('\n', pos)};
-          const auto eraseFrom{startPos < pos ? startPos + 1 : 0};
-
-          mess.erase(eraseFrom, pos - eraseFrom);
-        }
-
-        return mess;
-      }
-    };
-
     check_exception_thrown<std::runtime_error>(
       reporter{"Test Main has empty path"},
       [this]() {
         std::stringstream outputStream{};
         commandline_arguments args{{zeroth_arg()}};
         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ",  {.main_cpp{""}, .common_includes{"TestShared/SharedIncludes.hpp"}}, outputStream};
-      },
-      pathTrimmer);
+      });
 
     check_exception_thrown<std::runtime_error>(
       reporter{"Test Main does not exist"},
@@ -420,8 +401,7 @@ namespace sequoia::testing
         std::stringstream outputStream{};
         commandline_arguments args{{zeroth_arg()}};
         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ",  {.main_cpp{"FooMain.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}}, outputStream};
-      },
-      pathTrimmer);
+      });
 
     check_exception_thrown<std::runtime_error>(
       reporter{"Include Target has empty path"},
@@ -429,8 +409,7 @@ namespace sequoia::testing
         std::stringstream outputStream{};
         commandline_arguments args{{zeroth_arg()}};
         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ",  {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{""}}, outputStream};
-      },
-      pathTrimmer);
+      });
 
     check_exception_thrown<std::runtime_error>(
       reporter{"Include Target does not exist"},
@@ -438,8 +417,7 @@ namespace sequoia::testing
         std::stringstream outputStream{};
         commandline_arguments args{{zeroth_arg()}};
         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ",  {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"FooPath.hpp"}}, outputStream};
-      },
-      pathTrimmer);
+      });
 
     check_exception_thrown<std::runtime_error>(
       reporter{"Project root is empty"},
@@ -456,7 +434,17 @@ namespace sequoia::testing
         commandline_arguments args{{(fake_project() / "FooRepo").generic_string()}};
         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ",  {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}}, outputStream};
       },
-      pathTrimmer);
+      [](const project_paths& projPaths, std::string message){
+        constexpr auto npos{std::string::npos};
+        if(const auto pos{message.find(projPaths.project_root().generic_string())}; pos < npos)
+        {
+          const auto start{pos + projPaths.project_root().generic_string().size()};
+          if(const auto end{message.find_first_of("\"]", start)}; end < npos)
+            message = "canonical - file not found: " + message.substr(start, end - start);
+        }
+
+        return message;
+      });
 
     check_exception_thrown<std::runtime_error>(
       reporter{"Project root not findable"},
@@ -465,8 +453,7 @@ namespace sequoia::testing
         std::stringstream outputStream{};
         commandline_arguments args{{zerothArg}};
         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ",  {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}}, outputStream};
-      },
-      pathTrimmer);
+      });
 
     check_exception_thrown<std::runtime_error>(
       reporter{"Neither name nor source unique"},
@@ -486,21 +473,7 @@ namespace sequoia::testing
           foo_test{"Free Test"},
           flipper_free_test{"Free Test"}
         );
-      },
-      [](std::string mess) {
-        constexpr std::string_view pattern{"Source file: \""};
-        constexpr auto npos{std::string::npos};
-        if(const auto pos{mess.find(pattern)}; pos != npos)
-        {
-          const auto startPos{pos + pattern.size()};
-          if(auto endPos{mess.find("/Tests", startPos)}; endPos != npos)
-          {
-            mess.replace(startPos, endPos - startPos, "...");
-          }
-        }
-        return mess;
-      }
-    );
+      });
 
     check_exception_thrown<std::runtime_error>(
       reporter{"Invalid repetitions for instability analysis"},

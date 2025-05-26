@@ -30,24 +30,10 @@ namespace sequoia::testing
   {
     const auto root{working_materials()}, fooPath{root / "Foo"};
 
-    auto postprocessor{
-      [](std::string mess) ->std::string {
-        constexpr auto npos{std::string::npos};
-        if (const auto end{mess.find("output")}; end != npos)
-        {
-          mess.erase(0, end);
-        }
-
-        return mess;
-      }
-    };
-
     check_exception_thrown<std::runtime_error>("",
-                                               [&fooPath](){ return find_in_tree(fooPath / "Bar" / "baz.txt", "baz.txt"); },
-                                               postprocessor);
+                                               [&fooPath](){ return find_in_tree(fooPath / "Bar" / "baz.txt", "baz.txt"); });
     check_exception_thrown<std::runtime_error>("",
-                                               [&fooPath](){ return find_in_tree(fooPath / "Stuff", "baz.txt"); },
-                                               postprocessor);
+                                               [&fooPath](){ return find_in_tree(fooPath / "Stuff", "baz.txt"); });
 
     check(equality, "Not found", find_in_tree(root, "thing.txt"), fs::path{});
     check(equality, "Not found - empty", find_in_tree(root, ""), fs::path{});

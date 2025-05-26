@@ -9,7 +9,7 @@
 
 #include "ContainerFreeDiagnostics.hpp"
 #include "ElementaryFreeDiagnosticsUtilities.hpp"
-#include "ContainerDiagnosticsUtilities.hpp"
+#include "RegularTestDiagnosticsUtilities.hpp"
 
 #include "sequoia/TestFramework/ConcreteTypeCheckers.hpp"
 

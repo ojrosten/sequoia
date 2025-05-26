@@ -1,12 +1,12 @@
 
 Analyzing dependencies...
-[3.31ms]
+[3.03ms]
 
 
 Running tests...
 
 Probability:
-	Standard Top Level Checks:                 3;  Failures:  1  [Deep checks: 34]
+	Standard Top Level Checks:                 3;  Failures:  1  [Deep checks: 39]
 
 	Tests/Maths/ProbabilityTest.cpp, Line 22
 
@@ -46,9 +46,9 @@ Foo:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 1.42ms]
-[Execution Time: 792us]
-	Standard Top Level Checks:                 5;  Failures:  1  [Deep checks: 36]
+[Total Run Time: 1.1ms]
+[Execution Time: 614us]
+	Standard Top Level Checks:                 5;  Failures:  1  [Deep checks: 41]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0

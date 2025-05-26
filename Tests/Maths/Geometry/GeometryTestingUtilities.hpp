@@ -117,7 +117,7 @@ namespace sequoia::testing
           check(equality, "Conversion to bool", logger, static_cast<bool>(actual), static_cast<bool>(prediction));
       }
 
-      for(auto i : std::views::iota(0_sz, D))
+      for(auto i : std::views::iota(0uz, D))
       {
         check(equality, std::format("Value at index {}", i), logger, actual[i], prediction[i]);
       }

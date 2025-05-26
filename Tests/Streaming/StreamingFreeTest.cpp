@@ -17,22 +17,6 @@ namespace sequoia::testing
 {
   namespace fs = std::filesystem;
 
-  namespace
-  {
-    struct postprocessor
-    {
-      [[nodiscard]]
-      std::string operator()(std::string message) const
-      {
-        auto i{message.find("output")};
-        if(i != std::string::npos)
-          message.erase(message.begin(), std::ranges::next(message.begin(), i, message.end()));
-
-        return message;
-      }
-    };
-  }
-
   [[nodiscard]]
   std::filesystem::path streaming_free_test::source_file() const
   {
@@ -48,15 +32,11 @@ namespace sequoia::testing
 
     check_exception_thrown<std::runtime_error>(
       reporter{""},
-      [this]() { read_modify_write(working_materials() /= "Bar.txt", [](std::string& s) { capitalize(s);  }); },
-      postprocessor{}
-    );
+      [this]() { read_modify_write(working_materials() /= "Bar.txt", [](std::string& s) { capitalize(s);  }); });
 
     check_exception_thrown<std::runtime_error>(
       reporter{""},
-      [this]() { write_to_file(working_materials() /= "Baz.txt", "Hello!", std::ios_base::noreplace); },
-      postprocessor{}
-    );
+      [this]() { write_to_file(working_materials() /= "Baz.txt", "Hello!", std::ios_base::noreplace); });
 
     read_modify_write(working_materials() /= "Foo.txt", [](std::string& s) { capitalize(s);  });
     check(equivalence, "", working_materials() /= "Foo.txt", predictive_materials() /= "Foo.txt");

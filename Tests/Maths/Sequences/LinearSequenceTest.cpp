@@ -55,6 +55,6 @@ namespace sequoia::testing
 
 
     constexpr auto val{s[2]};
-    check(equality, "", val, 7_sz);
+    check(equality, "", val, 7uz);
   }
 }

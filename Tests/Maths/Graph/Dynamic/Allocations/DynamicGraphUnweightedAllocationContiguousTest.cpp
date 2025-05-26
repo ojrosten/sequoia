@@ -51,18 +51,18 @@ namespace sequoia::testing
     // null
     Graph g{edge_allocator{}, edge_partitions_allocator{}};
 
-    check(equality, "", g.edges_capacity(), 0_sz);
-    check(equality, "", g.node_capacity(), 0_sz);
+    check(equality, "", g.edges_capacity(), 0uz);
+    check(equality, "", g.node_capacity(), 0uz);
 
     g.reserve_edges(4);
-    check(equality, "", g.edges_capacity(), 4_sz);
+    check(equality, "", g.edges_capacity(), 4uz);
 
     g.reserve_nodes(4);
-    check(equality, "", g.node_capacity(), 4_sz);
+    check(equality, "", g.node_capacity(), 4uz);
 
     g.shrink_to_fit();
-    check(equality, "May fail if stl implementation doesn't actually shrink to fit!", g.edges_capacity(), 0_sz);
-    check(equality, "May fail if stl implementation doesn't actually shrink to fit!", g.node_capacity(), 0_sz);
+    check(equality, "May fail if stl implementation doesn't actually shrink to fit!", g.edges_capacity(), 0uz);
+    check(equality, "May fail if stl implementation doesn't actually shrink to fit!", g.node_capacity(), 0uz);
 
     using edge_init_t = typename Graph::edge_init_type;
 
