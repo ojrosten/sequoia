@@ -102,15 +102,16 @@ namespace sequoia::maths
   inline constexpr bool multiplication_weakly_distributive_over_addition_v{multiplication_weakly_distributive_over_addition<T>::value};
 
   template<class T>
-  concept weak_field 
+  concept weak_commutative_ring 
     =    std::regular<T>
       && weakly_abelian_group_under_addition_v<T>
-      && weakly_abelian_group_under_multiplication_v<T>
       && multiplication_weakly_distributive_over_addition_v<T>
       && addable_v<T>
       && subtractable_v<T>
-      && multiplicable_v<T>
-      && divisible_v<T>;
+      && multiplicable_v<T>;
+  
+  template<class T>
+  concept weak_field = weak_commutative_ring<T> && weakly_abelian_group_under_multiplication_v<T> && divisible_v<T>;
 
   template<class T>
   inline constexpr bool has_dimension{
@@ -125,6 +126,15 @@ namespace sequoia::maths
     }
   };
 
+  template<class T>
+  inline constexpr bool has_commutative_ring_type{
+        has_field_type<T>
+    ||  requires { 
+          typename T::commutative_ring_type;
+          requires weak_commutative_ring<typename T::commutative_ring_type>;
+        }
+  };
+  
   template<class T>
   inline constexpr bool has_element_type{
     requires { typename T::element_type; }
@@ -141,24 +151,39 @@ namespace sequoia::maths
   };
 
   template<class T>
-  inline constexpr bool identifies_as_vector_space_v{
-    has_vector_space_type_v<T> &&
-    requires { requires std::same_as<T, typename T::vector_space_type>; }
+  inline constexpr bool has_free_module_type_v{
+    requires { typename T::free_module_type; }
   };
 
   template<class T>
-  concept vector_space = has_set_type<T> && has_field_type<T> && has_dimension<T> && identifies_as_vector_space_v<T>;
+  inline constexpr bool identifies_as_vector_space_v{
+    has_vector_space_type_v<T> && requires { requires std::same_as<T, typename T::vector_space_type>; }
+  };
+
+  template<class T>
+  inline constexpr bool identifies_as_free_module_v{
+       identifies_as_vector_space_v<T>
+    || (has_free_module_type_v<T> && requires { requires std::same_as<T, typename T::free_module_type>; })
+  };
+
+  template<class T>
+  concept vector_space = has_set_type<T> && has_dimension<T> && has_field_type<T>  && identifies_as_vector_space_v<T>;
+
+  template<class T>
+  concept free_module = has_set_type<T> && has_dimension<T> && has_commutative_ring_type<T> && identifies_as_free_module_v<T>;
 
   // Universal template parameters will obviate the need for this
   template<class T>
   struct is_vector_space : std::integral_constant<bool, vector_space<T>> {};
 
   template<class B>
-  concept basis =    has_vector_space_type_v<B>
-                  && requires { requires vector_space<typename B::vector_space_type>; };
+  concept basis =
+      (has_free_module_type_v<B>  && requires { requires  free_module<typename B::free_module_type>; })
+    ||(has_vector_space_type_v<B> && requires { requires vector_space<typename B::vector_space_type>; });
 
-  template<class B, class V>
-  concept basis_for = basis<B> && vector_space<V> && std::is_same_v<typename B::vector_space_type, V>;
+  template<class B, class M>
+  concept basis_for = basis<B> && (    requires { requires std::is_same_v<typename B::free_module_type, M> ; }
+                                    || requires { requires std::is_same_v<typename B::vector_space_type, M>; });
 
   template<class T>
   inline constexpr bool identifies_as_convex_space_v{
@@ -178,27 +203,64 @@ namespace sequoia::maths
 
   template<class T>
   concept convex_space
-    =    (identifies_as_convex_space_v<T> || identifies_as_affine_space_v<T> || identifies_as_vector_space_v<T>)
-      && requires {
-           typename T::set_type;
-           typename T::vector_space_type;
-           requires vector_space<typename T::vector_space_type>;
-         };
+    =    (identifies_as_convex_space_v<T> || identifies_as_affine_space_v<T> || identifies_as_vector_space_v<T> || identifies_as_free_module_v<T>)
+      && requires {  typename T::set_type; }
+      && (    requires {
+                typename T::vector_space_type;
+                requires vector_space<typename T::vector_space_type>;
+              }
+          || requires {
+                typename T::free_module_type;
+                requires free_module<typename T::free_module_type>;
+              }
+         );
 
   template<convex_space ConvexSpace>
   using vector_space_type_of = typename ConvexSpace::vector_space_type;
 
   template<convex_space ConvexSpace>
+  struct free_module_type_of
+  {
+    using type = ConvexSpace::free_module_type;
+  };
+
+  template<convex_space ConvexSpace>
+    requires has_vector_space_type_v<ConvexSpace>
+  struct free_module_type_of<ConvexSpace>
+  {
+    using type = ConvexSpace::vector_space_type;
+  };
+
+  template<convex_space ConvexSpace>
+  using free_module_type_of_t = free_module_type_of<ConvexSpace>::type;
+
+  template<convex_space ConvexSpace>
+  struct commutative_ring_type_of
+  {
+    using type = ConvexSpace::free_module_type::commutative_ring_type;
+  };
+
+  template<convex_space ConvexSpace>
+    requires has_vector_space_type_v<ConvexSpace>
+  struct commutative_ring_type_of<ConvexSpace>
+  {
+    using type = ConvexSpace::vector_space_type::field_type;
+  };
+
+  template<convex_space ConvexSpace>
+  using commutative_ring_type_of_t = commutative_ring_type_of<ConvexSpace>::type;
+
+  template<convex_space ConvexSpace>
   using space_field_type = typename vector_space_type_of<ConvexSpace>::field_type;
 
   template<convex_space ConvexSpace>
-  using space_value_type = space_field_type<ConvexSpace>;
+  using space_value_type = commutative_ring_type_of_t<ConvexSpace>;
 
   template<convex_space ConvexSpace>
-  inline constexpr std::size_t dimension_of{vector_space_type_of<ConvexSpace>::dimension};
+  inline constexpr std::size_t dimension_of{free_module_type_of_t<ConvexSpace>::dimension};
 
   template<class T>
-  concept affine_space = convex_space<T> && (identifies_as_affine_space_v<T> || identifies_as_vector_space_v<T>);
+  concept affine_space = convex_space<T> && (identifies_as_affine_space_v<T> || identifies_as_vector_space_v<T> || identifies_as_free_module_v<T>);
 
   template<class V, class ConvexSpace>
   inline constexpr bool validator_for_single_value{
@@ -248,7 +310,7 @@ namespace sequoia::maths
 
   template<
     convex_space ConvexSpace,
-    basis_for<vector_space_type_of<ConvexSpace>>  Basis,
+    basis_for<free_module_type_of_t<ConvexSpace>>  Basis,
     class Origin,
     validator_for<ConvexSpace> Validator,
     class DisplacementCoordinates
@@ -257,17 +319,20 @@ namespace sequoia::maths
 
   template<
     convex_space ConvexSpace,
-    basis_for<vector_space_type_of<ConvexSpace>> Basis,
+    basis_for<free_module_type_of_t<ConvexSpace>> Basis,
     class Origin,
     validator_for<ConvexSpace> Validator
   >
   class coordinates;
 
-  template<affine_space AffineSpace, basis_for<vector_space_type_of<AffineSpace>> Basis, class Origin>
+  template<affine_space AffineSpace, basis_for<free_module_type_of_t<AffineSpace>> Basis, class Origin>
   using affine_coordinates = coordinates<AffineSpace, Basis, Origin, std::identity>;
 
   template<vector_space VectorSpace, basis_for<vector_space_type_of<VectorSpace>> Basis>
   using vector_coordinates = affine_coordinates<VectorSpace, Basis, intrinsic_origin>;
+
+  template<free_module FreeModule, basis_for<free_module_type_of_t<FreeModule>> Basis>
+  using free_module_coordinates = affine_coordinates<FreeModule, Basis, intrinsic_origin>;
 
   //============================== direct_product ==============================//
 
@@ -411,27 +476,27 @@ namespace sequoia::maths
 
   template<
     convex_space ConvexSpace,
-    basis_for<vector_space_type_of<ConvexSpace>> Basis,
+    basis_for<free_module_type_of_t<ConvexSpace>> Basis,
     class Origin,
     validator_for<ConvexSpace> Validator,
-    class DisplacementCoordinates=vector_coordinates<vector_space_type_of<ConvexSpace>, Basis>
+    class DisplacementCoordinates=free_module_coordinates<free_module_type_of_t<ConvexSpace>, Basis>
   >
   class coordinates_base
   {
   public:
-    using convex_space_type = ConvexSpace;   
-    using basis_type        = Basis;
-    using validator_type    = Validator;
-    using origin_type       = Origin;
-    using set_type          = typename ConvexSpace::set_type;
-    using vector_space_type = vector_space_type_of<ConvexSpace>;
-    using field_type        = space_field_type<ConvexSpace>;
-    using value_type        = field_type;
+    using convex_space_type             = ConvexSpace;   
+    using basis_type                    = Basis;
+    using validator_type                = Validator;
+    using origin_type                   = Origin;
+    using set_type                      = ConvexSpace::set_type;
+    using free_module_type              = free_module_type_of_t<ConvexSpace>;
+    using commutative_ring_type         = commutative_ring_type_of_t<ConvexSpace>;
+    using value_type                    = commutative_ring_type;
     using displacement_coordinates_type = DisplacementCoordinates;
 
     constexpr static bool has_intrinsic_origin{std::is_same_v<Origin, intrinsic_origin>};
     constexpr static bool has_identity_validator{std::is_same_v<Validator, std::identity>};
-    constexpr static std::size_t dimension{vector_space_type::dimension};
+    constexpr static std::size_t dimension{free_module_type::dimension};
     constexpr static std::size_t D{dimension};
 
     constexpr coordinates_base() noexcept = default;
@@ -643,7 +708,7 @@ namespace sequoia::maths
     }
   };
   
-  template<convex_space ConvexSpace, basis_for<vector_space_type_of<ConvexSpace>> Basis, class Origin, validator_for<ConvexSpace> Validator>
+  template<convex_space ConvexSpace, basis_for<free_module_type_of_t<ConvexSpace>> Basis, class Origin, validator_for<ConvexSpace> Validator>
   class coordinates final : public coordinates_base<ConvexSpace, Basis, Origin, Validator>
   {
   public:
@@ -676,6 +741,14 @@ namespace sequoia::maths
 
   namespace sets
   {
+    template<std::size_t N, class T>
+      requires std::is_same_v<T, short> || std::is_same_v<T, int> || std::is_same_v<T, long> || std::is_same_v<T, long long>
+    struct Z
+    {
+      constexpr static std::size_t dimension{N};
+      using element_type = T;
+    };
+    
     template<std::size_t N, std::floating_point T>
     struct R
     {

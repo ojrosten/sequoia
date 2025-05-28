@@ -35,7 +35,7 @@ namespace sequoia::testing
   template<class VecCoords>
   void vector_coordinates_false_negative_test::test_vec_1()
   {
-    using field_t = VecCoords::field_type;
+    using field_t = VecCoords::commutative_ring_type;
     using array_t = std::array<field_t, 1>;
 
     VecCoords x{}, y{field_t(1)};

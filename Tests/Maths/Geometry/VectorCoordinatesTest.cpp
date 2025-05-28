@@ -60,7 +60,7 @@ namespace sequoia::testing
   std::filesystem::path vector_coordinates_test::source_file() const
   {
     return std::source_location::current().file_name();
-  }
+  } 
 
   void vector_coordinates_test::run_tests()
   {
@@ -74,13 +74,23 @@ namespace sequoia::testing
 
     test_real_vec_1_inner_prod<sets::R<1, float>, float>();
     test_complex_vec_1_inner_prod<sets::C<1, double>, std::complex<double>>();
+
+    test_free_module<sets::Z<1, int>, int, 1>();
+  }
+
+  template<class Set, maths::weak_commutative_ring Ring, std::size_t D>
+  void vector_coordinates_test::test_free_module()
+  {
+    using free_module_t = my_free_module<Set, Ring, D>;
+    using module_t      = free_module_coordinates<free_module_t, canonical_free_module_basis<Set, Ring, D>>;
+    coordinates_operations<module_t>{*this}.execute();
   }
 
   template<class Set, maths::weak_field Field, std::size_t D>
   void vector_coordinates_test::test_vec()
   {
     using vec_space_t = my_vec_space<Set, Field, D>;
-    using vec_t = vector_coordinates<vec_space_t, canonical_basis<Set, Field, D>>;
+    using vec_t       = vector_coordinates<vec_space_t, canonical_basis<Set, Field, D>>;
     coordinates_operations<vec_t>{*this}.execute();
 
     static_assert(vector_space<direct_product<vec_space_t, vec_space_t>>);

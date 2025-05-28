@@ -40,7 +40,7 @@ namespace sequoia::testing
   template<class AffineCoords>
   void affine_coordinates_false_negative_test::test_affine_1()
   {
-    using field_t = AffineCoords::field_type;
+    using field_t = AffineCoords::commutative_ring_type;
     using array_t = std::array<field_t, 1>;
 
     AffineCoords x{}, y{field_t(1)};

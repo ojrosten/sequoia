@@ -22,7 +22,10 @@ namespace sequoia::testing
     std::filesystem::path source_file() const;
 
     void run_tests();
-
+  private:
+    template<class Set, maths::weak_commutative_ring Ring, std::size_t D>
+    void test_free_module();
+    
     template<class Set, maths::weak_field Field, std::size_t D>
     void test_vec();
 
