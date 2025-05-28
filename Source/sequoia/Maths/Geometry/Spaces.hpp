@@ -216,9 +216,6 @@ namespace sequoia::maths
          );
 
   template<convex_space ConvexSpace>
-  using vector_space_type_of = typename ConvexSpace::vector_space_type;
-
-  template<convex_space ConvexSpace>
   struct free_module_type_of
   {
     using type = ConvexSpace::free_module_type;
@@ -249,9 +246,6 @@ namespace sequoia::maths
 
   template<convex_space ConvexSpace>
   using commutative_ring_type_of_t = commutative_ring_type_of<ConvexSpace>::type;
-
-  template<convex_space ConvexSpace>
-  using space_field_type = typename vector_space_type_of<ConvexSpace>::field_type;
 
   template<convex_space ConvexSpace>
   using space_value_type = commutative_ring_type_of_t<ConvexSpace>;
@@ -328,7 +322,7 @@ namespace sequoia::maths
   template<affine_space AffineSpace, basis_for<free_module_type_of_t<AffineSpace>> Basis, class Origin>
   using affine_coordinates = coordinates<AffineSpace, Basis, Origin, std::identity>;
 
-  template<vector_space VectorSpace, basis_for<vector_space_type_of<VectorSpace>> Basis>
+  template<vector_space VectorSpace, basis_for<free_module_type_of_t<VectorSpace>> Basis>
   using vector_coordinates = affine_coordinates<VectorSpace, Basis, intrinsic_origin>;
 
   template<free_module FreeModule, basis_for<free_module_type_of_t<FreeModule>> Basis>

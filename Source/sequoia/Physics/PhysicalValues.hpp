@@ -256,7 +256,7 @@ namespace sequoia::physics
 
   template<convex_space ValueSpace, physical_unit Unit, class Convention>
   using to_displacement_basis_t
-    = physical_value_displacement_basis<vector_space_type_of<ValueSpace>, Unit, space_field_type<ValueSpace>, Convention>;
+    = physical_value_displacement_basis<free_module_type_of_t<ValueSpace>, Unit, commutative_ring_type_of_t<ValueSpace>, Convention>;
 
   template<convex_space ValueSpace, physical_unit Unit>
   inline constexpr bool has_intrinsic_origin{
@@ -326,7 +326,7 @@ namespace sequoia::physics
         to_displacement_basis_t<ValueSpace, Unit, Convention>,
         Origin,
         Validator,
-        physical_value<vector_space_type_of<ValueSpace>, Unit, Convention, intrinsic_origin, std::identity>>;
+        physical_value<free_module_type_of_t<ValueSpace>, Unit, Convention, intrinsic_origin, std::identity>>;
 
   template<convex_space T>
   inline constexpr bool has_base_space_v{
@@ -351,7 +351,7 @@ namespace sequoia::physics
 
   template<convex_space T, convex_space U>
   inline constexpr bool have_compatible_base_spaces_v{
-    has_base_space_v<T> && has_base_space_v<U> && (vector_space_type_of<T>::dimension == vector_space_type_of<U>::dimension) && requires {
+    has_base_space_v<T> && has_base_space_v<U> && (free_module_type_of_t<T>::dimension == free_module_type_of_t<U>::dimension) && requires {
       typename std::common_type<typename T::base_space, typename U::base_space>::type;
     }
   };
@@ -365,14 +365,14 @@ namespace sequoia::physics
   template<convex_space T>
   struct to_displacement_space<T, T>
   {
-    using type = vector_space_type_of<T>;
+    using type = free_module_type_of_t<T>;
   };
 
   template<convex_space T, convex_space U>
   requires (!std::is_same_v<T, U>) && have_compatible_base_spaces_v<T, U>
   struct to_displacement_space<T, U>
   {
-    using type = vector_space_type_of<std::common_type_t<typename T::base_space, typename U::base_space>>;
+    using type = free_module_type_of_t<std::common_type_t<typename T::base_space, typename U::base_space>>;
   };
   
   template<class T, class U>
@@ -404,8 +404,8 @@ namespace sequoia::physics
     convex_space RHSValueSpace, physical_unit RHSUnit, class RHSConvention, class RHSValidator
   >
     requires     std::common_with<LHSConvention, RHSConvention>
-             && (   std::is_same_v<euclidean_vector_space<1, space_field_type<LHSValueSpace>>, LHSValueSpace>
-                 || std::is_same_v<euclidean_half_space<1, space_field_type<LHSValueSpace>>, LHSValueSpace>)
+             && (   std::is_same_v<euclidean_vector_space<1, commutative_ring_type_of_t<LHSValueSpace>>, LHSValueSpace>
+                 || std::is_same_v<euclidean_half_space<1, commutative_ring_type_of_t<LHSValueSpace>>, LHSValueSpace>)
   struct physical_value_product<physical_value<LHSValueSpace, LHSUnit, LHSConvention, intrinsic_origin, LHSValidator>,
                                 physical_value<RHSValueSpace, RHSUnit, RHSConvention, intrinsic_origin, RHSValidator>>
   {
@@ -424,8 +424,8 @@ namespace sequoia::physics
     convex_space RHSValueSpace, physical_unit RHSUnit, class RHSConvention, class RHSValidator
   >
     requires     std::common_with<LHSConvention, RHSConvention>
-             && (   std::is_same_v<euclidean_vector_space<1, space_field_type<RHSValueSpace>>, RHSValueSpace>
-                 || std::is_same_v<euclidean_half_space<1, space_field_type<RHSValueSpace>>, RHSValueSpace>)
+             && (   std::is_same_v<euclidean_vector_space<1, commutative_ring_type_of_t<RHSValueSpace>>, RHSValueSpace>
+                 || std::is_same_v<euclidean_half_space<1, commutative_ring_type_of_t<RHSValueSpace>>, RHSValueSpace>)
   struct physical_value_product<physical_value<LHSValueSpace, LHSUnit, LHSConvention, intrinsic_origin, LHSValidator>,
                                 physical_value<RHSValueSpace, RHSUnit, RHSConvention, intrinsic_origin, RHSValidator>>
   {
@@ -457,11 +457,11 @@ namespace sequoia::physics
     using units_type               = Unit;
     using convention_type          = Convention;
     using origin_type              = Origin;
-    using displacement_space_type  = vector_space_type_of<ValueSpace>;
+    using displacement_space_type  = free_module_type_of_t<ValueSpace>;
     using intrinsic_validator_type = Unit::validator_type;
     using validator_type           = Validator;
-    using field_type               = space_field_type<ValueSpace>;
-    using value_type               = field_type;
+    using ring_type                = commutative_ring_type_of_t<ValueSpace>;
+    using value_type               = ring_type;
     using displacement_type        = coordinates_type::displacement_coordinates_type;
 
     constexpr static std::size_t dimension{displacement_space_type::dimension};
