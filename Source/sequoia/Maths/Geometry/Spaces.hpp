@@ -543,7 +543,7 @@ namespace sequoia::maths
 
     template<class Self>
     constexpr Self& operator/=(this Self& self, value_type u)
-      requires has_intrinsic_origin
+      requires vector_space<free_module_type> && has_intrinsic_origin
     {
       self.for_each_element([u](value_type& x) { return x /= u; });
       return self;
@@ -597,7 +597,7 @@ namespace sequoia::maths
     }
 
     template<class Derived>
-      requires std::is_base_of_v<coordinates_base, Derived>
+      requires std::is_base_of_v<coordinates_base, Derived> && vector_space<free_module_type>
     [[nodiscard]]
     friend constexpr Derived operator/(Derived v, value_type u)
       requires has_intrinsic_origin

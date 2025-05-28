@@ -597,21 +597,24 @@ namespace sequoia::testing
 
       // (2) --> (1)
 
-      add_transition<coords_t>(
-        g,
-        dim_1_label::two,
-        dim_1_label::one,
-        test.report("(2) / ring_t{2}"),
-        [](coords_t v) -> coords_t { return v / ring_t{2}; }
-      );
+      if constexpr(maths::vector_space<module_t>)
+      {
+        add_transition<coords_t>(
+          g,
+          dim_1_label::two,
+          dim_1_label::one,
+          test.report("(2) / ring_t{2}"),
+          [](coords_t v) -> coords_t { return v / ring_t{2}; }
+        );
 
-      add_transition<coords_t>(
-        g,
-        dim_1_label::two,
-        dim_1_label::one,
-        test.report("(2) /= ring_t{2}"),
-        [](coords_t v) -> coords_t { return v /= ring_t{2}; }
-      );
+        add_transition<coords_t>(
+          g,
+          dim_1_label::two,
+          dim_1_label::one,
+          test.report("(2) /= ring_t{2}"),
+          [](coords_t v) -> coords_t { return v /= ring_t{2}; }
+        );
+      }
     }
 
     template<class... Units>
@@ -635,21 +638,24 @@ namespace sequoia::testing
         [](coords_t v) -> coords_t { return v * ring_t{-1}; }
       );
 
-      add_transition<coords_t>(
-        g,
-        dim_2_label::neg_one_neg_one,
-        dim_2_label::one_one,
-        test.report("(-1, -1) /= -1"),
-        [](coords_t v) -> coords_t { return v /= ring_t{-1}; }
-      );
+      if constexpr(maths::vector_space<module_t>)
+      {
+        add_transition<coords_t>(
+          g,
+          dim_2_label::neg_one_neg_one,
+          dim_2_label::one_one,
+          test.report("(-1, -1) /= -1"),
+          [](coords_t v) -> coords_t { return v /= ring_t{-1}; }
+        );
 
-      add_transition<coords_t>(
-        g,
-        dim_2_label::neg_one_neg_one,
-        dim_2_label::one_one,
-        test.report("(-1, -1) / -1"),
-        [](coords_t v) -> coords_t { return v / ring_t{-1}; }
-      );
+        add_transition<coords_t>(
+          g,
+          dim_2_label::neg_one_neg_one,
+          dim_2_label::one_one,
+          test.report("(-1, -1) / -1"),
+          [](coords_t v) -> coords_t { return v / ring_t{-1}; }
+        );
+      }
     }
   };
 }
