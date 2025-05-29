@@ -46,7 +46,7 @@ namespace sequoia::maths
 
   template<class T>
   inline constexpr bool subtractable_v{
-    requires(T & t) {
+    requires(T& t) {
       { t -= t } -> std::same_as<T&>;
       { t - t }  -> std::same_as<T>;
     }
@@ -54,7 +54,7 @@ namespace sequoia::maths
 
   template<class T>
   inline constexpr bool multiplicable_v{
-    requires(T & t) {
+    requires(T& t) {
       { t *= t } -> std::same_as<T&>;
       { t * t }  -> std::same_as<T>;
     }
@@ -62,7 +62,7 @@ namespace sequoia::maths
 
   template<class T>
   inline constexpr bool divisible_v{
-    requires(T & t) {
+    requires(T& t) {
       { t /= t } -> std::same_as<T&>;
       { t / t }  -> std::same_as<T>;
     }
@@ -106,7 +106,6 @@ namespace sequoia::maths
     =    std::regular<T>
       && weakly_abelian_group_under_addition_v<T>
       && multiplication_weakly_distributive_over_addition_v<T>
-      && addable_v<T>
       && subtractable_v<T>
       && multiplicable_v<T>;
   
