@@ -13,6 +13,7 @@
  */
 
 #include <array>
+#include <span>
 #include <string>
 #include <stdexcept>
 #include <type_traits>
@@ -70,6 +71,19 @@ namespace sequoia::utilities
   constexpr std::array<T, N> make_array(Fn f) {
     return [&] <std::size_t... Is>(std::index_sequence<Is...>){
       return std::array<T, N>{f(Is)...};
+    }(std::make_index_sequence<N>{});
+  }
+
+  /*! Generates an array of size N, formed by applying the function, f, to
+      the elements of the span.
+   */
+  template<class T, std::size_t N, class Fn = std::identity>
+    requires std::is_invocable_r_v<T, Fn, T>
+  [[nodiscard]]
+  constexpr std::array<T, N> to_array(std::span<const T, N> data, Fn f = {})
+  {
+    return [&] <std::size_t... Is> (std::index_sequence<Is...>){
+      return std::array<T, N>{f(data[Is])...};
     }(std::make_index_sequence<N>{});
   }
 }

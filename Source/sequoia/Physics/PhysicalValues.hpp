@@ -537,7 +537,7 @@ namespace sequoia::physics
     constexpr physical_value operator-() const noexcept(has_identity_validator)
       requires (!is_effectively_absolute)
     {
-      return physical_value{to_array(this->values(), [](value_type t) { return -t; }), units_type{}};
+      return physical_value{utilities::to_array(this->values(), [](value_type t) { return -t; }), units_type{}};
     }
 
     template<class OtherValueSpace>

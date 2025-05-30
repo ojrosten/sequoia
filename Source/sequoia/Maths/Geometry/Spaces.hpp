@@ -12,6 +12,7 @@
  */
 
 
+#include "sequoia/Core/ContainerUtilities/ArrayUtilities.hpp"
 #include "sequoia/Core/Meta/TypeAlgorithms.hpp"
 #include "sequoia/Core/Meta/TypeTraits.hpp"
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
@@ -26,18 +27,8 @@
 
 namespace sequoia::maths
 {
-  template<class T, std::size_t D, class Fn = std::identity>
-    requires std::is_invocable_r_v<T, Fn, T>
-  [[nodiscard]]
-  constexpr std::array<T, D> to_array(std::span<const T, D> a, Fn f = {})
-  {
-    return[&] <std::size_t... Is> (std::index_sequence<Is...>){
-      return std::array<T, D>{f(a[Is])...};
-    }(std::make_index_sequence<D>{});
-  }
-
   template<class T>
-  inline constexpr bool addable_v{
+  inline constexpr bool is_addable_v{
     requires(T& t) {
       { t += t } -> std::same_as<T&>;
       { t + t }  -> std::same_as<T>;
@@ -45,7 +36,7 @@ namespace sequoia::maths
   };
 
   template<class T>
-  inline constexpr bool subtractable_v{
+  inline constexpr bool is_subtractable_v{
     requires(T& t) {
       { t -= t } -> std::same_as<T&>;
       { t - t }  -> std::same_as<T>;
@@ -53,7 +44,7 @@ namespace sequoia::maths
   };
 
   template<class T>
-  inline constexpr bool multiplicable_v{
+  inline constexpr bool is_multiplicable_v{
     requires(T& t) {
       { t *= t } -> std::same_as<T&>;
       { t * t }  -> std::same_as<T>;
@@ -61,7 +52,7 @@ namespace sequoia::maths
   };
 
   template<class T>
-  inline constexpr bool divisible_v{
+  inline constexpr bool is_divisible_v{
     requires(T& t) {
       { t /= t } -> std::same_as<T&>;
       { t / t }  -> std::same_as<T>;
@@ -69,13 +60,20 @@ namespace sequoia::maths
   };
 
   template<class T>
-  struct weakly_abelian_group_under_addition : std::bool_constant<addable_v<T>> {};
+  struct weakly_abelian_group_under_addition : std::false_type {};
 
   template<class T>
   using weakly_abelian_group_under_addition_t = typename weakly_abelian_group_under_addition<T>::type;
-
+  
   template<class T>
   inline constexpr bool weakly_abelian_group_under_addition_v{weakly_abelian_group_under_addition<T>::value};
+
+  template<class T>
+    requires std::is_arithmetic_v<T>
+  struct weakly_abelian_group_under_addition<T> : std::true_type {};
+
+  template<std::floating_point T>
+  struct weakly_abelian_group_under_addition<std::complex<T>> : std::true_type {};
 
   template<class T>
   struct weakly_abelian_group_under_multiplication : std::false_type {};
@@ -106,11 +104,12 @@ namespace sequoia::maths
     =    std::regular<T>
       && weakly_abelian_group_under_addition_v<T>
       && multiplication_weakly_distributive_over_addition_v<T>
-      && subtractable_v<T>
-      && multiplicable_v<T>;
+      && is_addable_v<T>
+      && is_subtractable_v<T>
+      && is_multiplicable_v<T>;
   
   template<class T>
-  concept weak_field = weak_commutative_ring<T> && weakly_abelian_group_under_multiplication_v<T> && divisible_v<T>;
+  concept weak_field = weak_commutative_ring<T> && weakly_abelian_group_under_multiplication_v<T> && is_divisible_v<T>;
 
   template<class T>
   inline constexpr bool has_dimension{
@@ -685,7 +684,7 @@ namespace sequoia::maths
     [[nodiscard]]
     static std::array<value_type, D> validate(std::span<const value_type, D> vals, Validator& validator)
     {
-      return validate(to_array(vals), validator);
+      return validate(utilities::to_array(vals), validator);
     }
 
     [[nodiscard]]
@@ -725,7 +724,7 @@ namespace sequoia::maths
     [[nodiscard]]
     constexpr coordinates operator-() const noexcept(has_identity_validator)
     {
-      return coordinates{to_array(this->values(), [](value_type t) { return -t; })};
+      return coordinates{utilities::to_array(this->values(), [](value_type t) { return -t; })};
     }
   };
 
