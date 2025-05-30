@@ -59,6 +59,16 @@ namespace sequoia::maths
     }
   };
 
+  /*! \brief Trait for specifying whether a type behaves (appoximately) as an abelian group under addition.
+
+      A fundamental problem of attempting this classification on a computer is the difference
+      between a mathematical structure and an approximate representation of that structure.
+      ints model the integers, but not exactly since there is a maximum representable value.
+      Similarly, floating-point numbers model the reals but only in an approximate sense.
+      To signify the fact that  neither integer nor floating-point addition exactly models an
+      abelian group, the term 'weak' is used. Not, however, that addition of unsigned integral
+      types does precisely model an abelian group and so 'weak' is a minimum requirement.
+   */
   template<class T>
   struct weakly_abelian_group_under_addition : std::false_type {};
 
@@ -75,6 +85,12 @@ namespace sequoia::maths
   template<std::floating_point T>
   struct weakly_abelian_group_under_addition<std::complex<T>> : std::true_type {};
 
+  /*! \brief Trait for specifying whether a type behaves (appoximately) as an abelian group under addition.
+
+      The only integral type modelling this (exactly, as it transpires) is bool. It is the only type in C++
+      modelling Z/Zn where n is a prime.
+   */
+
   template<class T>
   struct weakly_abelian_group_under_multiplication : std::false_type {};
 
@@ -89,6 +105,11 @@ namespace sequoia::maths
 
   template<std::floating_point T>
   struct weakly_abelian_group_under_multiplication<std::complex<T>> : std::true_type {};
+
+  template<>
+  struct weakly_abelian_group_under_multiplication<bool> : std::true_type {};
+  
+  /*! \brief Trait for specifying whether a type exhibits multiplication that (approximately) distributes over addition . */
 
   template<class T>
   struct multiplication_weakly_distributive_over_addition : std::true_type {};
