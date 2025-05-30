@@ -578,28 +578,25 @@ namespace sequoia::maths
     }
 
     template<class Derived>
-      requires std::is_base_of_v<coordinates_base, Derived>
+      requires std::is_base_of_v<coordinates_base, Derived> && has_intrinsic_origin
     [[nodiscard]]
     friend constexpr Derived operator*(Derived v, value_type u) noexcept(has_identity_validator)
-      requires has_intrinsic_origin
     {
       return v *= u;
     }
 
     template<class Derived>
-      requires std::is_base_of_v<coordinates_base, Derived>
+      requires std::is_base_of_v<coordinates_base, Derived> && has_intrinsic_origin
     [[nodiscard]]
     friend constexpr Derived operator*(value_type u, Derived v) noexcept(has_identity_validator)
-      requires has_intrinsic_origin
     {
       return v * u;
     }
 
     template<class Derived>
-      requires std::is_base_of_v<coordinates_base, Derived> && vector_space<free_module_type>
+      requires std::is_base_of_v<coordinates_base, Derived> && vector_space<free_module_type> && has_intrinsic_origin
     [[nodiscard]]
     friend constexpr Derived operator/(Derived v, value_type u)
-      requires has_intrinsic_origin
     {
       return v /= u;
     }
