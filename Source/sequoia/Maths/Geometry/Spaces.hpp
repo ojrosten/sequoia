@@ -751,37 +751,29 @@ namespace sequoia::maths
 
   namespace sets
   {
-    template<std::size_t N, class T>
-      requires std::is_same_v<T, short> || std::is_same_v<T, int> || std::is_same_v<T, long> || std::is_same_v<T, long long>
+    template<std::size_t D>
     struct Z
     {
-      constexpr static std::size_t dimension{N};
-      using element_type = T;
+      constexpr static std::size_t dimension{D};
     };
     
-    template<std::size_t N, std::floating_point T>
+    template<std::size_t D>
     struct R
     {
-      constexpr static std::size_t dimension{N};
-      using element_type = T;
+      constexpr static std::size_t dimension{D};
     };
 
-    template<std::size_t N, std::floating_point T>
+    template<std::size_t D>
     struct half_space
     {
-      constexpr static std::size_t dimension{N};
-      using element_type = T;
+      constexpr static std::size_t dimension{D};
     };
 
 
-    template<std::size_t N, class T>
-    struct C;
-
-    template<std::size_t N, std::floating_point T>
-    struct C<N, std::complex<T>>
+    template<std::size_t D>
+    struct C
     {
-      constexpr static std::size_t dimension{N};
-      using element_type = std::complex<T>;
+      constexpr static std::size_t dimension{D};
     };
   }
 
@@ -819,7 +811,7 @@ namespace sequoia::maths
   template<std::size_t D, std::floating_point T>
   struct euclidean_vector_space
   {
-    using set_type          = sets::R<D, T>;
+    using set_type          = sets::R<D>;
     using field_type        = T;
     using vector_space_type = euclidean_vector_space;
     constexpr static std::size_t dimension{D};
@@ -859,7 +851,7 @@ namespace sequoia::maths
   template<std::size_t D, std::floating_point T>
   struct euclidean_affine_space
   {
-    using set_type          = sets::R<D, T>;
+    using set_type          = sets::R<D>;
     using vector_space_type = euclidean_vector_space<D, T>;
     using affine_space_type = euclidean_affine_space;
   };
@@ -867,7 +859,7 @@ namespace sequoia::maths
   template<std::size_t D, std::floating_point T>
   struct euclidean_half_space
   {
-    using set_type          = sets::half_space<D, T>;
+    using set_type          = sets::half_space<D>;
     using vector_space_type = euclidean_vector_space<D, T>;
     using convex_space_type = euclidean_half_space;
   };

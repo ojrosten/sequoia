@@ -22,7 +22,7 @@ namespace sequoia::testing
   void vector_coordinates_false_negative_test::run_tests()
   {
     {
-      using coords = vector_coordinates<my_vec_space<sets::R<1, float>, float, 1>, canonical_basis<sets::R<1, float>, float, 1>>;
+      using coords = vector_coordinates<my_vec_space<sets::R<1>, float, 1>, canonical_basis<sets::R<1>, float, 1>>;
       test_vec_1<coords>();
     }
 

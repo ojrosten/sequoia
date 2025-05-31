@@ -45,7 +45,7 @@ namespace sequoia::testing
     template<std::size_t D, std::floating_point T, class Units>
     struct world_affine_space
     {
-      using set_type = sets::R<D, T>;
+      using set_type = sets::R<D>;
       using vector_space_type = world_vector_space<D, T, Units>;
     };
 
@@ -64,18 +64,18 @@ namespace sequoia::testing
 
   void vector_coordinates_test::run_tests()
   {
-    test_vec<sets::R<1, float>, float, 1>();
-    test_vec<sets::R<1,double>, double, 1>();
-    test_vec<sets::C<1, float>, std::complex<float>, 1>();
+    test_vec<sets::R<1>, float, 1>();
+    test_vec<sets::R<1>, double, 1>();
+    test_vec<sets::C<1>, std::complex<float>, 1>();
 
-    test_vec<sets::R<2, float>, float, 2>();
-    test_vec<sets::C<2, double>, std::complex<double>, 2>();
-    test_vec<sets::C<1, double>, double, 2>(); // Complex numbers over the reals
+    test_vec<sets::R<2>, float, 2>();
+    test_vec<sets::C<2>, std::complex<double>, 2>();
+    test_vec<sets::C<1>, double, 2>(); // Complex numbers over the reals
 
-    test_real_vec_1_inner_prod<sets::R<1, float>, float>();
-    test_complex_vec_1_inner_prod<sets::C<1, double>, std::complex<double>>();
+    test_real_vec_1_inner_prod<sets::R<1>, float>();
+    test_complex_vec_1_inner_prod<sets::C<1>, std::complex<double>>();
 
-    test_free_module<sets::Z<1, int>, int, 1>();
+    test_free_module<sets::Z<1>, int, 1>();
   }
 
   template<class Set, maths::weak_commutative_ring Ring, std::size_t D>

@@ -1,7 +1,7 @@
 Tests/Maths/Geometry/VectorCoordinatesTestingDiagnostics.cpp, Line 42
 
 Comparison performed using:
-[sequoia::testing::value_tester<sequoia::maths::coordinates<sequoia::testing::my_vec_space<sequoia::maths::sets::R<1, float>, float, 1>, sequoia::testing::canonical_basis<sequoia::maths::sets::R<1, float>, float, 1>, sequoia::maths::intrinsic_origin, std::identity> >]
+[sequoia::testing::value_tester<sequoia::maths::coordinates<sequoia::testing::my_vec_space<sequoia::maths::sets::R<1>, float, 1>, sequoia::testing::canonical_basis<sequoia::maths::sets::R<1>, float, 1>, sequoia::maths::intrinsic_origin, std::identity> >]
 Checking for equivalence with:
 [std::array<float, 1>]
 
@@ -17,7 +17,7 @@ Checking for equivalence with:
 
 Tests/Maths/Geometry/VectorCoordinatesTestingDiagnostics.cpp, Line 43
 
-[sequoia::maths::coordinates<sequoia::testing::my_vec_space<sequoia::maths::sets::R<1, float>, float, 1>, sequoia::testing::canonical_basis<sequoia::maths::sets::R<1, float>, float, 1>, sequoia::maths::intrinsic_origin, std::identity>]
+[sequoia::maths::coordinates<sequoia::testing::my_vec_space<sequoia::maths::sets::R<1>, float, 1>, sequoia::testing::canonical_basis<sequoia::maths::sets::R<1>, float, 1>, sequoia::maths::intrinsic_origin, std::identity>]
 operator== returned false
 
   Wrapped values
