@@ -120,11 +120,11 @@ namespace sequoia
 
   /*! \brief Checks for dependent type `value_type` */
   template<class T>
-  inline constexpr bool has_value_type{requires { typename T::value_type; }};
+  inline constexpr bool has_value_type_v{requires { typename T::value_type; }};
 
   /*! \brief Checks for dependent type `element_type` */
   template<class T>
-  inline constexpr bool has_element_type{requires { typename T::element_type; }};
+  inline constexpr bool has_element_type_v{requires { typename T::element_type; }};
 
   // Machinery for deep equality checking, which will hopefully one day
   // be obviated if the stl properly constrains operator==
@@ -173,12 +173,12 @@ namespace sequoia
   {};
 
   template<class T>
-    requires has_value_type<T>
+    requires has_value_type_v<T>
   struct is_deep_equality_comparable<T> : std::bool_constant<std::equality_comparable<T>&& is_deep_equality_comparable<typename T::value_type>::value>
   {};
 
   template<template<class...> class T, class... Ts>
-    requires (!has_value_type<T<Ts...>> && has_gettable_elements<T<Ts...>>)
+    requires (!has_value_type_v<T<Ts...>> && has_gettable_elements<T<Ts...>>)
   struct is_deep_equality_comparable<T<Ts...>> : std::bool_constant<std::equality_comparable<T<Ts...>> && heterogeneous_deep_equality<T<Ts...>>::value>
   {};
 

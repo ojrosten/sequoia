@@ -133,12 +133,12 @@ namespace sequoia::maths
   concept weak_field = weak_commutative_ring<T> && weakly_abelian_group_under_multiplication_v<T> && is_divisible_v<T>;
 
   template<class T>
-  inline constexpr bool has_dimension{
+  inline constexpr bool has_dimension_v{
     requires { { T::dimension } -> std::convertible_to<std::size_t>; }
   };
 
   template<class T>
-  inline constexpr bool has_field_type{
+  inline constexpr bool has_field_type_v{
     requires { 
       typename T::field_type;
       requires weak_field<typename T::field_type>;
@@ -146,8 +146,8 @@ namespace sequoia::maths
   };
 
   template<class T>
-  inline constexpr bool has_commutative_ring_type{
-        has_field_type<T>
+  inline constexpr bool has_commutative_ring_type_v{
+        has_field_type_v<T>
     ||  requires { 
           typename T::commutative_ring_type;
           requires weak_commutative_ring<typename T::commutative_ring_type>;
@@ -155,7 +155,7 @@ namespace sequoia::maths
   };
 
   template<class T>
-  inline constexpr bool has_set_type{
+  inline constexpr bool has_dset_type_v{
     requires { typename T::set_type; }
   };
 
@@ -181,10 +181,10 @@ namespace sequoia::maths
   };
 
   template<class T>
-  concept vector_space = has_set_type<T> && has_dimension<T> && has_field_type<T>  && identifies_as_vector_space_v<T>;
+  concept vector_space = has_dset_type_v<T> && has_dimension_v<T> && has_field_type_v<T>  && identifies_as_vector_space_v<T>;
 
   template<class T>
-  concept free_module = has_set_type<T> && has_dimension<T> && has_commutative_ring_type<T> && identifies_as_free_module_v<T>;
+  concept free_module = has_dset_type_v<T> && has_dimension_v<T> && has_commutative_ring_type_v<T> && identifies_as_free_module_v<T>;
 
   // Universal template parameters will obviate the need for this
   template<class T>

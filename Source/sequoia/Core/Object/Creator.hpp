@@ -17,7 +17,7 @@ namespace sequoia::object
 {
   template<class T>
   concept creator = requires(T& a) {
-    requires has_value_type<T> || has_element_type<T>;
+    requires has_value_type_v<T> || has_element_type_v<T>;
     typename T::product_type;
 
     { a.make(std::declval<typename T::product_type>()) } -> std::same_as<typename T::product_type>;

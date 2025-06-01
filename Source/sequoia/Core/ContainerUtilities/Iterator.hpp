@@ -120,7 +120,7 @@ namespace sequoia::utilities
   };
 
   template<class T>
-    requires (!std::input_or_output_iterator<T> && has_value_type<T>)
+    requires (!std::input_or_output_iterator<T> && has_value_type_v<T>)
   struct value_type<T>
   {
     using type = typename T::value_type;
