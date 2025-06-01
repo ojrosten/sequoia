@@ -153,11 +153,6 @@ namespace sequoia::maths
           requires weak_commutative_ring<typename T::commutative_ring_type>;
         }
   };
-  
-  template<class T>
-  inline constexpr bool has_element_type{
-    requires { typename T::element_type; }
-  };
 
   template<class T>
   inline constexpr bool has_set_type{
