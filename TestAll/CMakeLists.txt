@@ -109,6 +109,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Physics/AbsolutePhysicalValueTest.cpp
                ${TestDir}/Physics/AffinePhysicalValueTest.cpp
                ${TestDir}/Physics/ConvexPhysicalValueTest.cpp
+               ${TestDir}/Physics/IntegralPhysicalValueTest.cpp
                ${TestDir}/Physics/MixedPhysicalValueTest.cpp
                ${TestDir}/Physics/PhysicalValueMetaFreeTest.cpp               
                ${TestDir}/Physics/PhysicalValueTestingDiagnostics.cpp

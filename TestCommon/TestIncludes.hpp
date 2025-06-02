@@ -100,6 +100,7 @@
 #include "Physics/AbsolutePhysicalValueTest.hpp"
 #include "Physics/AffinePhysicalValueTest.hpp"
 #include "Physics/ConvexPhysicalValueTest.hpp"
+#include "Physics/IntegralPhysicalValueTest.hpp"
 #include "Physics/MixedPhysicalValueTest.hpp"
 #include "Physics/PhysicalValueMetaFreeTest.hpp"
 #include "Physics/PhysicalValueTestingDiagnostics.hpp"

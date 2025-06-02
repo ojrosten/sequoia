@@ -406,7 +406,8 @@ int main(int argc, char** argv)
       affine_physical_value_test{"Affine Physical Value Test"},
       convex_physical_value_test{"Convex Physical Value Test"},
       vector_physical_value_test{"Vector Physical Value Test"},
-      mixed_physical_value_test{"Mixed Physical Value Test"}
+      mixed_physical_value_test{"Mixed Physical Value Test"},
+      integral_physical_value_test{"Integral Physical Value Test"}
     );
 
     runner.execute(timer_resolution{1ms});
