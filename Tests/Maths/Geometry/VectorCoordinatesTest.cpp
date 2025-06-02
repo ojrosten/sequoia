@@ -76,6 +76,7 @@ namespace sequoia::testing
     test_complex_vec_1_inner_prod<sets::C<1>, std::complex<double>>();
 
     test_free_module<sets::Z<1>, int, 1>();
+    test_free_module<sets::Z_0<1>, unsigned long, 1>();
   }
 
   template<class Set, maths::weak_commutative_ring Ring, std::size_t D>

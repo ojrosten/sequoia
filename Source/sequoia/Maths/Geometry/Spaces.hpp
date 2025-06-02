@@ -751,6 +751,12 @@ namespace sequoia::maths
     {
       constexpr static std::size_t dimension{D};
     };
+
+    template<std::size_t D>
+    struct Z_0
+    {
+      constexpr static std::size_t dimension{D};
+    };
     
     template<std::size_t D>
     struct R

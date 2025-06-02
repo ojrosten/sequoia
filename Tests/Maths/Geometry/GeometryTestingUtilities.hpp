@@ -147,14 +147,17 @@ namespace sequoia::testing
 
   /*! Helper functions for building state-transition graphs*/
 
+  enum class inverted_ordering : bool {no, yes};
+
   template<class Label>
     requires std::convertible_to<Label, std::size_t>
   [[nodiscard]]
-  std::weak_ordering to_ordering(Label From, Label To)
+  std::weak_ordering to_ordering(Label From, Label To, inverted_ordering invert)
   {
-    return From < To ? std::weak_ordering::less
-         : From > To ? std::weak_ordering::greater
-                     : std::weak_ordering::equivalent;
+    const bool inverted{invert == inverted_ordering::yes};
+    return (((From < To) && !inverted) || ((From > To) && inverted)) ? std::weak_ordering::less
+         : (((From > To) && !inverted) || ((From < To) && inverted)) ? std::weak_ordering::greater
+                                                                     : std::weak_ordering::equivalent;
   }
 
   template<maths::network Graph, class Label, class Fn>
@@ -173,14 +176,14 @@ namespace sequoia::testing
 
   template<class Coords, maths::network Graph, class Label, class Fn>
     requires std::is_invocable_r_v<Coords, Fn, Coords> && std::convertible_to<Label, std::size_t>
-  void add_transition(Graph& g, Label From, Label To, std::string_view message, Fn f)
+  void add_transition(Graph& g, Label From, Label To, std::string_view message, Fn f, inverted_ordering invert={})
   {
     using ring_t = Coords::commutative_ring_type;
     constexpr static auto dimension{Coords::dimension};
 
     if constexpr((dimension == 1) && std::totally_ordered<ring_t>)
     {
-      add_transition(g, From, To, message, f, to_ordering(From, To));
+      add_transition(g, From, To, message, f, to_ordering(From, To, invert));
     }
     else
     {
@@ -204,7 +207,7 @@ namespace sequoia::testing
     using coords_t   = Coordinates;
     using disp_t     = coords_t::displacement_coordinates_type;
     using module_t   = coords_t::free_module_type;
-    using ring_t     = disp_t::commutative_ring_type;
+    using ring_t     = coords_t::commutative_ring_type;
     constexpr static std::size_t dimension{Coordinates::dimension};
     constexpr static bool orderable{(dimension == 1) && std::totally_ordered<ring_t>};
 
@@ -414,14 +417,14 @@ namespace sequoia::testing
     static void add_dim_1_negative_transitions(maths::network auto& g, regular_test& test, Units... units)
     {
       g.add_node(ring_t(-1), units...);
-
       // Joins to neg_one
       add_transition<coords_t>(
         g,
         dim_1_label::one,
         dim_1_label::neg_one,
         test.report("-(1)"),
-        [](coords_t p) -> coords_t { return -p; }
+        [](coords_t p) -> coords_t { return -p; },
+        std::is_unsigned_v<ring_t> ? inverted_ordering::yes : inverted_ordering::no
       );
 
       add_transition<coords_t>(
@@ -429,7 +432,8 @@ namespace sequoia::testing
         dim_1_label::one,
         dim_1_label::neg_one,
         test.report("(1) - (2)"),
-        [&](coords_t p) -> coords_t { return p - disp_t{ring_t(2), units...}; }
+        [&](coords_t p) -> coords_t { return p - disp_t{ring_t(2), units...}; },
+        std::is_unsigned_v<ring_t> ? inverted_ordering::yes : inverted_ordering::no
       );
       
       // Joins from neg_one
@@ -438,7 +442,8 @@ namespace sequoia::testing
         dim_1_label::neg_one,
         dim_1_label::one,
         test.report("- (-1)"),
-        [](coords_t p) -> coords_t { return -p;  }
+        [](coords_t p) -> coords_t { return -p;  },
+        std::is_unsigned_v<ring_t> ? inverted_ordering::yes : inverted_ordering::no
       );
     
       add_transition<coords_t>(
@@ -456,7 +461,8 @@ namespace sequoia::testing
           dim_1_label::neg_one,
           dim_1_label::zero,
           test.report("(-1) += 1"),
-          [](coords_t p) -> coords_t { auto& v{p.value()}; v += 1; return p; }
+          [](coords_t p) -> coords_t { auto& v{p.value()}; v += 1; return p; },
+          std::is_unsigned_v<ring_t> ? inverted_ordering::yes : inverted_ordering::no
         );
 
         add_transition<coords_t>(
@@ -464,7 +470,8 @@ namespace sequoia::testing
           dim_1_label::neg_one,
           dim_1_label::zero,
           test.report("(-1) + 1"),
-          [](coords_t p) -> coords_t { auto& v{p.value()}; v += 1; return p; }
+          [](coords_t p) -> coords_t { auto& v{p.value()}; v += 1; return p; },
+          std::is_unsigned_v<ring_t> ? inverted_ordering::yes : inverted_ordering::no
         );
       }
     }
