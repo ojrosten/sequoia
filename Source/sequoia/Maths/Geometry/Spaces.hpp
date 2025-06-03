@@ -155,7 +155,7 @@ namespace sequoia::maths
   };
 
   template<class T>
-  inline constexpr bool has_dset_type_v{
+  inline constexpr bool has_set_type_v{
     requires { typename T::set_type; }
   };
 
@@ -181,10 +181,10 @@ namespace sequoia::maths
   };
 
   template<class T>
-  concept vector_space = has_dset_type_v<T> && has_dimension_v<T> && has_field_type_v<T>  && identifies_as_vector_space_v<T>;
+  concept vector_space = has_set_type_v<T> && has_dimension_v<T> && has_field_type_v<T>  && identifies_as_vector_space_v<T>;
 
   template<class T>
-  concept free_module = has_dset_type_v<T> && has_dimension_v<T> && has_commutative_ring_type_v<T> && identifies_as_free_module_v<T>;
+  concept free_module = has_set_type_v<T> && has_dimension_v<T> && has_commutative_ring_type_v<T> && identifies_as_free_module_v<T>;
 
   // Universal template parameters will obviate the need for this
   template<class T>
