@@ -283,9 +283,9 @@ namespace sequoia::testing
         add_dim_1_attempted_negative_transitions(g, test, units...);
       }
 
-      if constexpr(std::is_same_v<typename Coordinates::origin_type, maths::intrinsic_origin>)
+      if constexpr(std::is_same_v<typename Coordinates::origin_type, maths::distinguished_origin>)
       {
-        add_dim_1_intrinsic_origin_transitions(g, test, units...);
+        add_dim_1_distinguished_origin_transitions(g, test, units...);
       }
 
       return g;
@@ -332,9 +332,9 @@ namespace sequoia::testing
         }
       };
 
-      if constexpr(std::is_same_v<typename Coordinates::origin_type, maths::intrinsic_origin>)
+      if constexpr(std::is_same_v<typename Coordinates::origin_type, maths::distinguished_origin>)
       {
-        add_dim_2_intrinsic_origin_transitions(g, test, units...);
+        add_dim_2_distinguished_origin_transitions(g, test, units...);
       }
 
       return g;
@@ -501,7 +501,7 @@ namespace sequoia::testing
         }
       );
 
-      if constexpr(std::is_same_v<typename Coordinates::origin_type, maths::intrinsic_origin>)
+      if constexpr(std::is_same_v<typename Coordinates::origin_type, maths::distinguished_origin>)
       {
         add_transition<coords_t>(
           g,
@@ -550,7 +550,7 @@ namespace sequoia::testing
     }
 
     template<class... Units>
-    static void add_dim_1_intrinsic_origin_transitions(maths::network auto& g, regular_test& test, Units...)
+    static void add_dim_1_distinguished_origin_transitions(maths::network auto& g, regular_test& test, Units...)
     {
       // TO DO: add in negative transitions
       add_transition<coords_t>(
@@ -626,7 +626,7 @@ namespace sequoia::testing
     }
 
     template<class... Units>
-    static void add_dim_2_intrinsic_origin_transitions(maths::network auto& g, regular_test& test, Units...)
+    static void add_dim_2_distinguished_origin_transitions(maths::network auto& g, regular_test& test, Units...)
     {
       // (-1, -1) --> (1, 1)
 

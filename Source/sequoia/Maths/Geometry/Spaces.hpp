@@ -13,8 +13,8 @@
 
 
 #include "sequoia/Core/ContainerUtilities/ArrayUtilities.hpp"
+#include "sequoia/Core/Meta/Concepts.hpp"
 #include "sequoia/Core/Meta/TypeAlgorithms.hpp"
-#include "sequoia/Core/Meta/TypeTraits.hpp"
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
 
 #include <algorithm>
@@ -181,7 +181,7 @@ namespace sequoia::maths
   };
 
   template<class T>
-  concept vector_space = has_set_type_v<T> && has_dimension_v<T> && has_field_type_v<T>  && identifies_as_vector_space_v<T>;
+  concept vector_space = has_set_type_v<T> && has_dimension_v<T> && has_field_type_v<T> && identifies_as_vector_space_v<T>;
 
   template<class T>
   concept free_module = has_set_type_v<T> && has_dimension_v<T> && has_commutative_ring_type_v<T> && identifies_as_free_module_v<T>;
@@ -229,6 +229,7 @@ namespace sequoia::maths
               }
          );
 
+  /*! \brief Trait to extract the free module type associated with a convex space, either through a type named as such or a vector space */
   template<convex_space ConvexSpace>
   struct free_module_type_of
   {
@@ -245,6 +246,19 @@ namespace sequoia::maths
   template<convex_space ConvexSpace>
   using free_module_type_of_t = free_module_type_of<ConvexSpace>::type;
 
+  /*! Trait to extract a vector space associated with a convex space */
+  template<convex_space ConvexSpace>
+    requires vector_space<free_module_type_of_t<ConvexSpace>>
+  struct vector_space_of
+  {
+    using type = free_module_type_of_t<ConvexSpace>;
+  };
+
+  template<convex_space ConvexSpace>
+    requires vector_space<free_module_type_of_t<ConvexSpace>>
+  using vector_space_of_t = vector_space_of<ConvexSpace>::type;
+  
+  /*! \brief Trait to extract the commutative ring type of the free module associated with a convex space */
   template<convex_space ConvexSpace>
   struct commutative_ring_type_of
   {
@@ -252,10 +266,10 @@ namespace sequoia::maths
   };
 
   template<convex_space ConvexSpace>
-    requires has_vector_space_type_v<ConvexSpace>
+    requires vector_space<free_module_type_of_t<ConvexSpace>>
   struct commutative_ring_type_of<ConvexSpace>
   {
-    using type = ConvexSpace::vector_space_type::field_type;
+    using type = free_module_type_of_t<ConvexSpace>::field_type;
   };
 
   template<convex_space ConvexSpace>
@@ -292,12 +306,20 @@ namespace sequoia::maths
 
   struct half_line_validator
   {
-    template<std::floating_point T>
+    template<arithmetic T>
     [[nodiscard]]
     constexpr T operator()(const T val) const
     {
       if(val < T{}) throw std::domain_error{std::format("Value {} less than zero", val)};
 
+      return val;
+    }
+
+    template<arithmetic T>
+      requires std::is_unsigned_v<T>
+    [[nodiscard]]
+    constexpr T operator()(const T val) const
+    {
       return val;
     }
   };
@@ -314,7 +336,7 @@ namespace sequoia::maths
   template<>
   struct defines_half_line<half_line_validator> : std::true_type {};
 
-  struct intrinsic_origin {};
+  struct distinguished_origin {};
 
   template<
     convex_space ConvexSpace,
@@ -337,10 +359,10 @@ namespace sequoia::maths
   using affine_coordinates = coordinates<AffineSpace, Basis, Origin, std::identity>;
 
   template<vector_space VectorSpace, basis_for<free_module_type_of_t<VectorSpace>> Basis>
-  using vector_coordinates = affine_coordinates<VectorSpace, Basis, intrinsic_origin>;
+  using vector_coordinates = affine_coordinates<VectorSpace, Basis, distinguished_origin>;
 
   template<free_module FreeModule, basis_for<free_module_type_of_t<FreeModule>> Basis>
-  using free_module_coordinates = affine_coordinates<FreeModule, Basis, intrinsic_origin>;
+  using free_module_coordinates = affine_coordinates<FreeModule, Basis, distinguished_origin>;
 
   //============================== direct_product ==============================//
 
@@ -358,13 +380,13 @@ namespace sequoia::maths
     constexpr static std::size_t dimension{T::dimension + U::dimension};
     using vector_space_type = direct_product<T, U>;
   };
-  
+
   template<affine_space T, affine_space U>
     requires (!vector_space<T> && !vector_space<U>)
   struct direct_product<T, U>
   {
     using set_type          = direct_product<typename T::set_type, typename U::set_type>;
-    using vector_space_type = direct_product<typename T::vector_space_type, typename U::vector_space_type>;
+    using vector_space_type = direct_product<vector_space_of_t<T>, vector_space_of_t<U>>;
     using affine_space_type = direct_product<T, U>;
   };
 
@@ -373,7 +395,7 @@ namespace sequoia::maths
   struct direct_product<T, U>
   {
     using set_type          = direct_product<typename T::set_type, typename U::set_type>;
-    using vector_space_type = direct_product<typename T::vector_space_type, typename U::vector_space_type>;
+    using vector_space_type = direct_product<vector_space_of_t<T>, vector_space_of_t<U>>;
     using convex_space_type = direct_product<T, U>;
   };
 
@@ -394,7 +416,7 @@ namespace sequoia::maths
   struct direct_product<std::tuple<Ts...>>
   {
     using set_type          = std::tuple<typename Ts::set_type...>;
-    using vector_space_type = direct_product<typename Ts::vector_space_type...>;
+    using vector_space_type = direct_product<vector_space_of_t<Ts>...>;
   };
 
   template<class>
@@ -415,7 +437,7 @@ namespace sequoia::maths
   {
     using set_type          = std::tuple<typename Ts::set_type...>;
     using field_type        = extract_common_field_type_t<meta::filter_by_trait_t<std::tuple<Ts...>, is_vector_space>>;
-    using vector_space_type = direct_product<typename Ts::vector_space_type...>;
+    using vector_space_type = direct_product<vector_space_of_t<Ts>...>;
   };
 
   //==============================  dual spaces ============================== //
@@ -427,7 +449,7 @@ namespace sequoia::maths
   struct dual<C>
   {
     using set_type          = C::set_type;
-    using vector_space_type = dual<typename C::vector_space_type>;
+    using vector_space_type = dual<vector_space_of_t<C>>;
     using convex_space_type = dual<C>;
   };
 
@@ -436,7 +458,7 @@ namespace sequoia::maths
   struct dual<C>
   {
     using set_type          = C::set_type;
-    using vector_space_type = dual<typename C::vector_space_type>;
+    using vector_space_type = dual<vector_space_of_t<C>>;
     using affine_space_type = dual<C>;
   };
 
@@ -502,7 +524,7 @@ namespace sequoia::maths
     using value_type                    = commutative_ring_type;
     using displacement_coordinates_type = DisplacementCoordinates;
 
-    constexpr static bool has_intrinsic_origin{std::is_same_v<Origin, intrinsic_origin>};
+    constexpr static bool has_distinguished_origin{std::is_same_v<Origin, distinguished_origin>};
     constexpr static bool has_identity_validator{std::is_same_v<Validator, std::identity>};
     constexpr static std::size_t dimension{free_module_type::dimension};
     constexpr static std::size_t D{dimension};
@@ -533,7 +555,7 @@ namespace sequoia::maths
     }
 
     template<class Self>
-      requires has_intrinsic_origin && (!std::is_same_v<coordinates_base, displacement_coordinates_type>)
+      requires has_distinguished_origin && (!std::is_same_v<coordinates_base, displacement_coordinates_type>)
     constexpr Self& operator+=(this Self& self, const coordinates_base& v) noexcept(has_identity_validator)
     {
       self.apply_to_each_element(v.values(), [](value_type& lhs, value_type rhs){ lhs += rhs; });
@@ -549,7 +571,7 @@ namespace sequoia::maths
 
     template<class Self>
     constexpr Self& operator*=(this Self& self, value_type u) noexcept(has_identity_validator)
-      requires has_intrinsic_origin
+      requires has_distinguished_origin
     {
       self.for_each_element([u](value_type& x) { return x *= u; });
       return self;
@@ -557,7 +579,7 @@ namespace sequoia::maths
 
     template<class Self>
     constexpr Self& operator/=(this Self& self, value_type u)
-      requires vector_space<free_module_type> && has_intrinsic_origin
+      requires vector_space<free_module_type> && has_distinguished_origin
     {
       self.for_each_element([u](value_type& x) { return x /= u; });
       return self;
@@ -577,7 +599,7 @@ namespace sequoia::maths
     }
   
     template<class Derived>
-      requires std::is_base_of_v<coordinates_base, Derived> && (!std::is_same_v<Derived, displacement_coordinates_type>) && has_intrinsic_origin 
+      requires std::is_base_of_v<coordinates_base, Derived> && (!std::is_same_v<Derived, displacement_coordinates_type>) && has_distinguished_origin 
     [[nodiscard]]
     friend constexpr Derived operator+(Derived c, const Derived& v) noexcept(has_identity_validator)
     {
@@ -593,7 +615,7 @@ namespace sequoia::maths
     }
 
     template<class Derived>
-      requires std::is_base_of_v<coordinates_base, Derived> && has_intrinsic_origin
+      requires std::is_base_of_v<coordinates_base, Derived> && has_distinguished_origin
     [[nodiscard]]
     friend constexpr Derived operator*(Derived v, value_type u) noexcept(has_identity_validator)
     {
@@ -601,7 +623,7 @@ namespace sequoia::maths
     }
 
     template<class Derived>
-      requires std::is_base_of_v<coordinates_base, Derived> && has_intrinsic_origin
+      requires std::is_base_of_v<coordinates_base, Derived> && has_distinguished_origin
     [[nodiscard]]
     friend constexpr Derived operator*(value_type u, Derived v) noexcept(has_identity_validator)
     {
@@ -609,7 +631,7 @@ namespace sequoia::maths
     }
 
     template<class Derived>
-      requires std::is_base_of_v<coordinates_base, Derived> && vector_space<free_module_type> && has_intrinsic_origin
+      requires std::is_base_of_v<coordinates_base, Derived> && vector_space<free_module_type> && has_distinguished_origin
     [[nodiscard]]
     friend constexpr Derived operator/(Derived v, value_type u)
     {

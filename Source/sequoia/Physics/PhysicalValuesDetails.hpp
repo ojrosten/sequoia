@@ -301,14 +301,14 @@ namespace sequoia::physics::impl
   template<vector_space T>
   struct reduce<std::tuple<type_counter<T, 0>>>
   {
-    using type = std::tuple<euclidean_vector_space<1, typename T::vector_space_type::field_type>>;
+    using type = std::tuple<euclidean_vector_space<1, typename vector_space_of_t<T>::field_type>>;
   };
 
   template<convex_space T>
     requires (!affine_space<T> && !vector_space<T>)
   struct reduce<std::tuple<type_counter<T, 0>>>
   {
-    using type = std::tuple<euclidean_half_space<1, typename T::vector_space_type::field_type>>;
+    using type = std::tuple<euclidean_half_space<1, typename vector_space_of_t<T>::field_type>>;
   };
 
   template<class T, class... Ts, int... Is>

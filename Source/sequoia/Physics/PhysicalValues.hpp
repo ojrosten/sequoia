@@ -227,12 +227,12 @@ namespace sequoia::physics
   };
   
 
-  template<vector_space VectorSpace, class Unit, std::floating_point T, class Convention>
+  template<free_module FreeModule, class Unit, class Convention>
   struct physical_value_displacement_basis
   {
-    using vector_space_type = VectorSpace;
-    using unit_type         = Unit;
-    using convention_type   = Convention;
+    using free_module_type = FreeModule;
+    using unit_type        = Unit;
+    using convention_type  = Convention;
   };
 
   template<class T>
@@ -256,18 +256,18 @@ namespace sequoia::physics
 
   template<convex_space ValueSpace, physical_unit Unit, class Convention>
   using to_displacement_basis_t
-    = physical_value_displacement_basis<free_module_type_of_t<ValueSpace>, Unit, commutative_ring_type_of_t<ValueSpace>, Convention>;
+    = physical_value_displacement_basis<free_module_type_of_t<ValueSpace>, Unit, Convention>;
 
   template<convex_space ValueSpace, physical_unit Unit>
-  inline constexpr bool has_intrinsic_origin{
-       vector_space<ValueSpace>
+  inline constexpr bool has_distinguished_origin{
+       free_module<ValueSpace>
     || (!affine_space<ValueSpace> && defines_half_line_v<typename Unit::validator_type>)
   };
 
   template<convex_space ValueSpace, physical_unit Unit, class Origin>
   inline constexpr bool has_consistent_origin{
-       ( has_intrinsic_origin<ValueSpace, Unit> &&  std::is_same_v<Origin, intrinsic_origin>)
-    || (!has_intrinsic_origin<ValueSpace, Unit> && !std::is_same_v<Origin, intrinsic_origin>)
+       ( has_distinguished_origin<ValueSpace, Unit> &&  std::is_same_v<Origin, distinguished_origin>)
+    || (!has_distinguished_origin<ValueSpace, Unit> && !std::is_same_v<Origin, distinguished_origin>)
   };
 
   template<convex_space ValueSpace, validator_for<ValueSpace> Validator>
@@ -296,7 +296,7 @@ namespace sequoia::physics
   struct to_origin_type;
 
   template<convex_space ValueSpace, physical_unit Unit>
-    requires (!has_intrinsic_origin<ValueSpace, Unit>) && (!affine_space<ValueSpace>)
+    requires (!has_distinguished_origin<ValueSpace, Unit>) && (!affine_space<ValueSpace>)
   struct to_origin_type<ValueSpace, Unit>
   {
     using type = unit_defined_origin<Unit>;
@@ -306,14 +306,14 @@ namespace sequoia::physics
   using to_origin_type_t = to_origin_type<ValueSpace, Unit>::type;
 
   template<convex_space ValueSpace, physical_unit Unit>
-    requires has_intrinsic_origin<ValueSpace, Unit>
+    requires has_distinguished_origin<ValueSpace, Unit>
   struct to_origin_type<ValueSpace, Unit>
   {
-    using type = intrinsic_origin;
+    using type = distinguished_origin;
   };
 
   template<affine_space ValueSpace, physical_unit Unit>
-    requires (!has_intrinsic_origin<ValueSpace, Unit>)
+    requires (!has_distinguished_origin<ValueSpace, Unit>)
   struct to_origin_type<ValueSpace, Unit>
   {
     using type = implicit_affine_origin<ValueSpace>;
@@ -326,7 +326,7 @@ namespace sequoia::physics
         to_displacement_basis_t<ValueSpace, Unit, Convention>,
         Origin,
         Validator,
-        physical_value<free_module_type_of_t<ValueSpace>, Unit, Convention, intrinsic_origin, std::identity>>;
+        physical_value<free_module_type_of_t<ValueSpace>, Unit, Convention, distinguished_origin, std::identity>>;
 
   template<convex_space T>
   inline constexpr bool has_base_space_v{
@@ -386,15 +386,15 @@ namespace sequoia::physics
     convex_space RHSValueSpace, physical_unit RHSUnit, class RHSConvention, class RHSValidator
   >
     requires std::common_with<LHSConvention, RHSConvention>
-  struct physical_value_product<physical_value<LHSValueSpace, LHSUnit, LHSConvention, intrinsic_origin, LHSValidator>,
-                                physical_value<RHSValueSpace, RHSUnit, RHSConvention, intrinsic_origin, RHSValidator>>
+  struct physical_value_product<physical_value<LHSValueSpace, LHSUnit, LHSConvention, distinguished_origin, LHSValidator>,
+                                physical_value<RHSValueSpace, RHSUnit, RHSConvention, distinguished_origin, RHSValidator>>
   {
     using type
       = physical_value<
           reduction_t<direct_product<to_base_space_t<LHSValueSpace>, to_base_space_t<RHSValueSpace>>>,
           reduction_t<std::tuple<LHSUnit, RHSUnit>>,
           std::common_type_t<LHSConvention, RHSConvention>,
-          intrinsic_origin,
+          distinguished_origin,
           reduced_validator_t<LHSValidator, RHSValidator>
         >;
   };
@@ -406,15 +406,15 @@ namespace sequoia::physics
     requires     std::common_with<LHSConvention, RHSConvention>
              && (   std::is_same_v<euclidean_vector_space<1, commutative_ring_type_of_t<LHSValueSpace>>, LHSValueSpace>
                  || std::is_same_v<euclidean_half_space<1, commutative_ring_type_of_t<LHSValueSpace>>, LHSValueSpace>)
-  struct physical_value_product<physical_value<LHSValueSpace, LHSUnit, LHSConvention, intrinsic_origin, LHSValidator>,
-                                physical_value<RHSValueSpace, RHSUnit, RHSConvention, intrinsic_origin, RHSValidator>>
+  struct physical_value_product<physical_value<LHSValueSpace, LHSUnit, LHSConvention, distinguished_origin, LHSValidator>,
+                                physical_value<RHSValueSpace, RHSUnit, RHSConvention, distinguished_origin, RHSValidator>>
   {
     using type
       = physical_value<
           to_base_space_t<RHSValueSpace>,
           RHSUnit,
           std::common_type_t<LHSConvention, RHSConvention>,
-          intrinsic_origin,
+          distinguished_origin,
           reduced_validator_t<LHSValidator, RHSValidator>
         >;
   };
@@ -426,15 +426,15 @@ namespace sequoia::physics
     requires     std::common_with<LHSConvention, RHSConvention>
              && (   std::is_same_v<euclidean_vector_space<1, commutative_ring_type_of_t<RHSValueSpace>>, RHSValueSpace>
                  || std::is_same_v<euclidean_half_space<1, commutative_ring_type_of_t<RHSValueSpace>>, RHSValueSpace>)
-  struct physical_value_product<physical_value<LHSValueSpace, LHSUnit, LHSConvention, intrinsic_origin, LHSValidator>,
-                                physical_value<RHSValueSpace, RHSUnit, RHSConvention, intrinsic_origin, RHSValidator>>
+  struct physical_value_product<physical_value<LHSValueSpace, LHSUnit, LHSConvention, distinguished_origin, LHSValidator>,
+                                physical_value<RHSValueSpace, RHSUnit, RHSConvention, distinguished_origin, RHSValidator>>
   {
     using type
       = physical_value<
           to_base_space_t<LHSValueSpace>,
           LHSUnit,
           std::common_type_t<LHSConvention, RHSConvention>,
-          intrinsic_origin,
+          distinguished_origin,
           reduced_validator_t<LHSValidator, RHSValidator>
         >;
   };
@@ -442,7 +442,7 @@ namespace sequoia::physics
   template<
     convex_space ValueSpace,
     physical_unit Unit,
-    class Convention                    = canonical_convention<ValueSpace::vector_space_type::dimension>,
+    class Convention                    = canonical_convention<free_module_type_of_t<ValueSpace>::dimension>,
     class Origin                        = to_origin_type_t<ValueSpace, Unit>,
     validator_for<ValueSpace> Validator =typename Unit::validator_type
   >
@@ -664,32 +664,36 @@ namespace sequoia::physics
   struct displacement_space
   {    
     constexpr static std::size_t dimension{Space::dimension};
-    using set_type          = classical_sets::differences<typename Space::set_type>;
+    using set_type              = classical_sets::differences<typename Space::set_type>;
+    //using commutative_ring_type = Space::representation_type;
+    //using free_module_type      = displacement_space;
     using field_type        = Space::representation_type;
     using vector_space_type = displacement_space;
   };
 
-  template<class PhysicalValueSet, std::floating_point Rep, std::size_t D, class Derived>
+  template<class PhysicalValueSet, arithmetic Rep, std::size_t D, class Derived>
   struct physical_value_convex_space
   {
     constexpr static std::size_t dimension{D};
     using set_type            = PhysicalValueSet;
     using representation_type = Rep;
-    using vector_space_type   = displacement_space<Derived>;
+    //using vector_space_type   = displacement_space<Derived>;
+    using free_module_type   = displacement_space<Derived>;
     using convex_space_type   = Derived;
   };
 
-  template<class PhysicalValueSet, std::floating_point Rep, std::size_t D, class Derived>
+  template<class PhysicalValueSet, arithmetic Rep, std::size_t D, class Derived>
   struct physical_value_affine_space
   {
     constexpr static std::size_t dimension{D};
     using set_type            = PhysicalValueSet;
     using representation_type = Rep;
-    using vector_space_type   = displacement_space<Derived>;
+    //using vector_space_type   = displacement_space<Derived>;
+    using free_module_type   = displacement_space<Derived>;
     using affine_space_type   = Derived;
   };
 
-  template<class PhysicalValueSet, std::floating_point Rep, std::size_t D, class Derived>
+  template<class PhysicalValueSet, arithmetic Rep, std::size_t D, class Derived>
   struct physical_value_vector_space
   {
     constexpr static std::size_t dimension{D};

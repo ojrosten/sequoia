@@ -56,7 +56,7 @@ namespace sequoia
     typename A::inner_allocator_type;
   };
 
-  /// \brief A concept which is realized by a `T const&` which be serialized to a `Stream&`.
+  /// \brief A concept which is realized by a `T const&` which may be serialized to a `Stream&`.
   template<class T, class Stream>
   concept serializable_to = requires(std::remove_reference_t<Stream>& stream, const std::remove_reference_t<T>& t) {
     typename Stream::char_type;
@@ -75,6 +75,10 @@ namespace sequoia
   concept initializable_from = requires{
     T{std::declval<Args>()...};
   };
+
+  /// \brieft A concept for arithmetic types
+  template<class T>
+  concept arithmetic = std::is_arithmetic_v<T>;
 
   /*! \brief Similar to std::range but excludes the case where dereferencing yields the same type as the range.
   
