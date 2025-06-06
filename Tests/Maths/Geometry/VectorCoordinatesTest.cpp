@@ -83,6 +83,7 @@ namespace sequoia::testing
   void vector_coordinates_test::test_free_module()
   {
     using free_module_t = my_free_module<Set, Ring, D>;
+    STATIC_CHECK(!vector_space<free_module_t>);
     using module_t      = free_module_coordinates<free_module_t, canonical_free_module_basis<Set, Ring, D>>;
     coordinates_operations<module_t>{*this}.execute();
   }
