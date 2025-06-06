@@ -15,19 +15,19 @@
 namespace sequoia::physics
 {
   template<class Space>
-  struct displacement_space;
+  struct associated_displacement_space;
 
   template<class Space>
-  struct is_displacement_space : std::false_type {};
+  struct is_associated_displacement_space : std::false_type {};
 
   template<class Space>
-  struct is_displacement_space<displacement_space<Space>> : std::true_type {};
+  struct is_associated_displacement_space<associated_displacement_space<Space>> : std::true_type {};
 
   template<class Space>
-  using is_displacement_space_t = is_displacement_space<Space>::type;
+  using is_associated_displacement_space_t = is_associated_displacement_space<Space>::type;
 
   template<class Space>
-  inline constexpr bool is_displacement_space_v{is_displacement_space<Space>::value};
+  inline constexpr bool is_associated_displacement_space_v{is_associated_displacement_space<Space>::value};
 
   struct no_unit_t;
 
@@ -51,7 +51,7 @@ namespace sequoia::meta
   {};
 
   template<class T, class U>
-    requires (!std::is_same_v<T, U>) && (!physics::is_displacement_space_v<T>) && (!physics::is_displacement_space_v<U>)
+    requires (!std::is_same_v<T, U>) && (!physics::is_associated_displacement_space_v<T>) && (!physics::is_associated_displacement_space_v<U>)
   struct type_comparator<T, maths::dual<U>> : std::bool_constant<type_name<T>() < type_name<U>()>
   {};
 
@@ -61,47 +61,47 @@ namespace sequoia::meta
 
   template<class T, class U>    
     requires (!maths::is_dual_v<U>)
-  struct type_comparator<physics::displacement_space<T>, U> : std::bool_constant<type_name<T>() < type_name<U>()>
+  struct type_comparator<physics::associated_displacement_space<T>, U> : std::bool_constant<type_name<T>() < type_name<U>()>
   {};
 
   template<class T, class U>
     requires (!maths::is_dual_v<T>)
-  struct type_comparator<T, physics::displacement_space<U>> : std::bool_constant<type_name<T>() < type_name<U>()>
+  struct type_comparator<T, physics::associated_displacement_space<U>> : std::bool_constant<type_name<T>() < type_name<U>()>
   {};
 
   template<class T, class U>
-    requires (!std::is_same_v<physics::displacement_space<T>, U>) && (!physics::is_displacement_space_v<U>)
-  struct type_comparator<physics::displacement_space<T>, maths::dual<U>> : std::bool_constant<type_name<T>() < type_name<U>()>
+    requires (!std::is_same_v<physics::associated_displacement_space<T>, U>) && (!physics::is_associated_displacement_space_v<U>)
+  struct type_comparator<physics::associated_displacement_space<T>, maths::dual<U>> : std::bool_constant<type_name<T>() < type_name<U>()>
   {};
 
   template<class T, class U>
-    requires (!std::is_same_v<T, physics::displacement_space<U>>)
-  struct type_comparator<maths::dual<T>, physics::displacement_space<U>> : std::bool_constant<type_name<T>() < type_name<U>()>
+    requires (!std::is_same_v<T, physics::associated_displacement_space<U>>)
+  struct type_comparator<maths::dual<T>, physics::associated_displacement_space<U>> : std::bool_constant<type_name<T>() < type_name<U>()>
   {};
 
   template<class T, class U>
-    requires (!std::is_same_v<physics::displacement_space<T>, U>)
-  struct type_comparator<maths::dual<physics::displacement_space<T>>, U>
+    requires (!std::is_same_v<physics::associated_displacement_space<T>, U>)
+  struct type_comparator<maths::dual<physics::associated_displacement_space<T>>, U>
   : std::bool_constant<type_name<T>() < type_name<U>()>
   {};
 
   template<class T, class U>
-    requires (!std::is_same_v<T, physics::displacement_space<U>>) && (!physics::is_displacement_space_v<T>)
-  struct type_comparator<T, maths::dual<physics::displacement_space<U>>>
+    requires (!std::is_same_v<T, physics::associated_displacement_space<U>>) && (!physics::is_associated_displacement_space_v<T>)
+  struct type_comparator<T, maths::dual<physics::associated_displacement_space<U>>>
   : std::bool_constant<type_name<T>() < type_name<U>()>
   {};
 
   template<class T, class U>
-  struct type_comparator<physics::displacement_space<T>, physics::displacement_space<U>>
+  struct type_comparator<physics::associated_displacement_space<T>, physics::associated_displacement_space<U>>
     : std::bool_constant<type_name<T>() < type_name<U>()>
   {};
 
   template<class T, class U>
-  struct type_comparator<maths::dual<physics::displacement_space<T>>, maths::dual<physics::displacement_space<U>>>
+  struct type_comparator<maths::dual<physics::associated_displacement_space<T>>, maths::dual<physics::associated_displacement_space<U>>>
     : std::bool_constant<type_name<T>() < type_name<U>()>
   {};
 
-  // Ordering is T, displacement_space<T>, dual<T>, dual<displacement_space<T>>
+  // Ordering is T, associated_displacement_space<T>, dual<T>, dual<associated_displacement_space<T>>
   template<class T>
   struct type_comparator<T, maths::dual<T>> : std::true_type
   {};
@@ -111,35 +111,35 @@ namespace sequoia::meta
   {};
 
   template<class T>
-  struct type_comparator<T, physics::displacement_space<T>> : std::true_type
+  struct type_comparator<T, physics::associated_displacement_space<T>> : std::true_type
   {};
 
   template<class T>
-  struct type_comparator<physics::displacement_space<T>, T> : std::false_type
+  struct type_comparator<physics::associated_displacement_space<T>, T> : std::false_type
   {};
     
   template<class T>
-  struct type_comparator<T, maths::dual<physics::displacement_space<T>>> : std::true_type
+  struct type_comparator<T, maths::dual<physics::associated_displacement_space<T>>> : std::true_type
   {};
 
   template<class T>
-  struct type_comparator<maths::dual<physics::displacement_space<T>>, T> : std::false_type
+  struct type_comparator<maths::dual<physics::associated_displacement_space<T>>, T> : std::false_type
   {};
     
   template<class T>
-  struct type_comparator<physics::displacement_space<T>, maths::dual<T>> : std::true_type
+  struct type_comparator<physics::associated_displacement_space<T>, maths::dual<T>> : std::true_type
   {};
 
   template<class T>
-  struct type_comparator<maths::dual<T>, physics::displacement_space<T>> : std::false_type
+  struct type_comparator<maths::dual<T>, physics::associated_displacement_space<T>> : std::false_type
   {};
 
   template<class T>
-  struct type_comparator<maths::dual<T>, maths::dual<physics::displacement_space<T>>> : std::true_type
+  struct type_comparator<maths::dual<T>, maths::dual<physics::associated_displacement_space<T>>> : std::true_type
   {};
 
   template<class T>
-  struct type_comparator<maths::dual<physics::displacement_space<T>>, maths::dual<T>> : std::false_type
+  struct type_comparator<maths::dual<physics::associated_displacement_space<T>>, maths::dual<T>> : std::false_type
   {};
 }
 
@@ -195,14 +195,14 @@ namespace sequoia::physics::impl
   };
 
   template<class S, class T, int I, class... Ts, int... Is>
-    requires (!is_tuple_v<S> && !is_dual_v<S> && !std::is_same_v<S, T> && !std::is_same_v<S, displacement_space<T>>)
+    requires (!is_tuple_v<S> && !is_dual_v<S> && !std::is_same_v<S, T> && !std::is_same_v<S, associated_displacement_space<T>>)
   struct count_and_combine<S, std::tuple<type_counter<T, I>, type_counter<Ts, Is>...>>
   {
     using type = std::tuple<type_counter<S, 1>, type_counter<T, I>, type_counter<Ts, Is>...>;
   };
 
   template<class S, class T, int I, class... Ts, int... Is>
-    requires (!std::is_same_v<S, T> && !is_dual_v<T> && !is_displacement_space_v<S> && !is_displacement_space_v<T>)
+    requires (!std::is_same_v<S, T> && !is_dual_v<T> && !is_associated_displacement_space_v<S> && !is_associated_displacement_space_v<T>)
   struct count_and_combine<dual<S>, std::tuple<type_counter<T, I>, type_counter<Ts, Is>...>>
   {
     using type = std::tuple<type_counter<dual<S>, 1>, type_counter<T, I>, type_counter<Ts, Is>...>;
@@ -220,32 +220,32 @@ namespace sequoia::physics::impl
     using type = std::tuple<type_counter<T, I-1>, type_counter<Ts, Is>...>;
   };
 
-  /// Promote all T to displacement_space<T>
+  /// Promote all T to associated_displacement_space<T>
   template<class T, int I, class... Ts, int... Is>
-  struct count_and_combine<displacement_space<T>, std::tuple<type_counter<T, I>, type_counter<Ts, Is>...>>
+  struct count_and_combine<associated_displacement_space<T>, std::tuple<type_counter<T, I>, type_counter<Ts, Is>...>>
   {
-    using type = std::tuple<type_counter<displacement_space<T>, I+1>, type_counter<Ts, Is>...>;
+    using type = std::tuple<type_counter<associated_displacement_space<T>, I+1>, type_counter<Ts, Is>...>;
   };
 
-  /// Promote all T to displacement_space<T>
+  /// Promote all T to associated_displacement_space<T>
   template<class T, int I, class... Ts, int... Is>
-  struct count_and_combine<dual<displacement_space<T>>, std::tuple<type_counter<T, I>, type_counter<Ts, Is>...>>
+  struct count_and_combine<dual<associated_displacement_space<T>>, std::tuple<type_counter<T, I>, type_counter<Ts, Is>...>>
   {
-    using type = std::tuple<type_counter<displacement_space<T>, I-1>, type_counter<Ts, Is>...>;
+    using type = std::tuple<type_counter<associated_displacement_space<T>, I-1>, type_counter<Ts, Is>...>;
   };
 
-  /// Promote dual<T> to displacement_space<T>
+  /// Promote dual<T> to associated_displacement_space<T>
   template<class T, int I, class... Ts, int... Is>
-  struct count_and_combine<dual<T>, std::tuple<type_counter<displacement_space<T>, I>, type_counter<Ts, Is>...>>
+  struct count_and_combine<dual<T>, std::tuple<type_counter<associated_displacement_space<T>, I>, type_counter<Ts, Is>...>>
   {
-    using type = std::tuple<type_counter<displacement_space<T>, I-1>, type_counter<Ts, Is>...>;
+    using type = std::tuple<type_counter<associated_displacement_space<T>, I-1>, type_counter<Ts, Is>...>;
   };
 
-  /// Promote dual<T> to dual<displacement_space<T>>
+  /// Promote dual<T> to dual<associated_displacement_space<T>>
   template<class T, int I, class... Ts, int... Is>
-  struct count_and_combine<dual<displacement_space<T>>, std::tuple<type_counter<dual<T>, I>, type_counter<Ts, Is>...>>
+  struct count_and_combine<dual<associated_displacement_space<T>>, std::tuple<type_counter<dual<T>, I>, type_counter<Ts, Is>...>>
   {
-    using type = std::tuple<type_counter<dual<displacement_space<T>>, I+1>, type_counter<Ts, Is>...>;
+    using type = std::tuple<type_counter<dual<associated_displacement_space<T>>, I+1>, type_counter<Ts, Is>...>;
   };
 
   /// Unpack counted types into tuples
@@ -301,14 +301,14 @@ namespace sequoia::physics::impl
   template<vector_space T>
   struct reduce<std::tuple<type_counter<T, 0>>>
   {
-    using type = std::tuple<euclidean_vector_space<1, typename vector_space_of_t<T>::field_type>>;
+    using type = std::tuple<euclidean_vector_space<1, commutative_ring_type_of_t<vector_space_of_t<T>>>>;
   };
 
   template<convex_space T>
     requires (!affine_space<T> && !vector_space<T>)
   struct reduce<std::tuple<type_counter<T, 0>>>
   {
-    using type = std::tuple<euclidean_half_space<1, typename vector_space_of_t<T>::field_type>>;
+    using type = std::tuple<euclidean_half_space<1, commutative_ring_type_of_t<vector_space_of_t<T>>>>;
   };
 
   template<class T, class... Ts, int... Is>

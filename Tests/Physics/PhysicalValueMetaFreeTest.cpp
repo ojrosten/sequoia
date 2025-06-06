@@ -21,16 +21,17 @@ namespace sequoia::testing
       requires(T t){ { -t } -> std::same_as<T>; }
     };
 
-    using mass_space_t   = mass_space<float, implicit_common_arena>;
-    using length_space_t = length_space<float, implicit_common_arena>;
+    using mass_space_t   =        mass_space<float, implicit_common_arena>;
+    using length_space_t =      length_space<float, implicit_common_arena>;
     using temp_space_t   = temperature_space<float, implicit_common_arena>;
-    using time_space_t   = time_space<float, implicit_common_arena>;
-    using electrical_current_space_t = electrical_current_space<float, implicit_common_arena>;
+    using time_space_t   =        time_space<float, implicit_common_arena>;
+    using electrical_current_space_t
+                  = electrical_current_space<float, implicit_common_arena>;
 
-    using delta_mass_space_t = displacement_space<mass_space_t>;
-    using delta_len_space_t  = displacement_space<length_space_t>;
-    using delta_temp_space_t = displacement_space<temp_space_t>;
-    using delta_time_space_t = displacement_space<time_space_t>;
+    using delta_mass_space_t = associated_displacement_space<mass_space_t>;
+    using delta_len_space_t  = associated_displacement_space<length_space_t>;
+    using delta_temp_space_t = associated_displacement_space<temp_space_t>;
+    using delta_time_space_t = associated_displacement_space<time_space_t>;
   }
 
   [[nodiscard]]

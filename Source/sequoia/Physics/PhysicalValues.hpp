@@ -603,7 +603,7 @@ namespace sequoia::physics
     }    
   };
 
-  namespace classical_sets
+  namespace sets::classical
   {
     template<class Arena>
     struct masses
@@ -659,16 +659,14 @@ namespace sequoia::physics
       using physical_value_set_type = PhysicalValueSet;
     };
   }
-
+  
   template<class Space>
-  struct displacement_space
-  {    
+  struct associated_displacement_space
+  {
     constexpr static std::size_t dimension{Space::dimension};
-    using set_type              = classical_sets::differences<typename Space::set_type>;
-    //using commutative_ring_type = Space::representation_type;
-    //using free_module_type      = displacement_space;
-    using field_type        = Space::representation_type;
-    using vector_space_type = displacement_space;
+    using set_type              = sets::classical::differences<typename Space::set_type>;
+    using commutative_ring_type = Space::representation_type;
+    using free_module_type      = associated_displacement_space;
   };
 
   template<class PhysicalValueSet, arithmetic Rep, std::size_t D, class Derived>
@@ -677,8 +675,7 @@ namespace sequoia::physics
     constexpr static std::size_t dimension{D};
     using set_type            = PhysicalValueSet;
     using representation_type = Rep;
-    //using vector_space_type   = displacement_space<Derived>;
-    using free_module_type   = displacement_space<Derived>;
+    using free_module_type    = associated_displacement_space<Derived>;
     using convex_space_type   = Derived;
   };
 
@@ -688,8 +685,7 @@ namespace sequoia::physics
     constexpr static std::size_t dimension{D};
     using set_type            = PhysicalValueSet;
     using representation_type = Rep;
-    //using vector_space_type   = displacement_space<Derived>;
-    using free_module_type   = displacement_space<Derived>;
+    using free_module_type    = associated_displacement_space<Derived>;
     using affine_space_type   = Derived;
   };
 
@@ -705,34 +701,34 @@ namespace sequoia::physics
 
   template<std::floating_point Rep, class Arena>
   struct mass_space
-    : physical_value_convex_space<classical_sets::masses<Arena>, Rep, 1, mass_space<Rep, Arena>>
+    : physical_value_convex_space<sets::classical::masses<Arena>, Rep, 1, mass_space<Rep, Arena>>
   {
     using base_space = mass_space;
   };
 
   template<std::floating_point Rep, class Arena>
   struct temperature_space
-    : physical_value_convex_space<classical_sets::temperatures<Arena>, Rep, 1, temperature_space<Rep, Arena>>
+    : physical_value_convex_space<sets::classical::temperatures<Arena>, Rep, 1, temperature_space<Rep, Arena>>
   {
     using base_space = temperature_space;
   };
 
   template<std::floating_point Rep, class Arena>
   struct electrical_current_space
-    : physical_value_vector_space<classical_sets::electrical_currents<Arena>, Rep, 1, electrical_current_space<Rep, Arena>>
+    : physical_value_vector_space<sets::classical::electrical_currents<Arena>, Rep, 1, electrical_current_space<Rep, Arena>>
   {
     using base_space = electrical_current_space;
   };
 
   template<std::floating_point Rep, class Arena>
-  struct angular_space : physical_value_vector_space<classical_sets::angles<Arena>, Rep, 1, angular_space<Rep, Arena>>
+  struct angular_space : physical_value_vector_space<sets::classical::angles<Arena>, Rep, 1, angular_space<Rep, Arena>>
   {
     using base_space = angular_space;
   };
 
   template<std::floating_point Rep, class Arena>
   struct length_space
-    : physical_value_convex_space<classical_sets::lengths<Arena>, Rep, 1, length_space<Rep, Arena>>
+    : physical_value_convex_space<sets::classical::lengths<Arena>, Rep, 1, length_space<Rep, Arena>>
   {
     using base_space = length_space;
   };
@@ -751,15 +747,15 @@ namespace sequoia::physics
 
   template<std::floating_point Rep, class Arena>
   struct time_interval_space
-    : physical_value_convex_space<classical_sets::time_intervals<Arena>, Rep, 1, time_interval_space<Rep, Arena>>
+    : physical_value_convex_space<sets::classical::time_intervals<Arena>, Rep, 1, time_interval_space<Rep, Arena>>
   {};
   
   template<std::floating_point Rep, class Arena>
-  struct time_space : physical_value_affine_space<classical_sets::times<Arena>, Rep, 1, time_space<Rep, Arena>>
+  struct time_space : physical_value_affine_space<sets::classical::times<Arena>, Rep, 1, time_space<Rep, Arena>>
   {};
 
   template<std::size_t D, std::floating_point Rep, class Arena>
-  struct position_space : physical_value_affine_space<classical_sets::positions<Arena>, Rep, D, position_space<D, Rep, Arena>>
+  struct position_space : physical_value_affine_space<sets::classical::positions<Arena>, Rep, D, position_space<D, Rep, Arena>>
   {};
   
   struct implicit_common_arena {};
@@ -845,7 +841,7 @@ namespace sequoia::physics
 
       inline constexpr celsius_t celsius{};
     }
-  
+
     template<std::floating_point T, class Arena=implicit_common_arena>
     using mass = physical_value<mass_space<T, Arena>, units::kilogram_t>;
 
@@ -920,21 +916,21 @@ namespace sequoia::physics
   [[nodiscard]]
   constexpr physical_value<angular_space<T, Arena>, si::units::radian_t> asin(T x)
   {
-    return physical_value<angular_space<T, Arena>, si::units::radian_t>{std::asin(x), si::units::radian};
+    return {std::asin(x), si::units::radian};
   }
 
   template<class Arena=implicit_common_arena, std::floating_point T>
   [[nodiscard]]
   constexpr physical_value<angular_space<T, Arena>, si::units::radian_t> acos(T x)
   {
-    return physical_value<angular_space<T, Arena>, si::units::radian_t>{std::acos(x), si::units::radian};
+    return {std::acos(x), si::units::radian};
   }
 
   template<class Arena=implicit_common_arena, std::floating_point T>
   [[nodiscard]]
   constexpr physical_value<angular_space<T, Arena>, si::units::radian_t> atan(T x)
   {
-    return physical_value<angular_space<T, Arena>, si::units::radian_t>{std::atan(x), si::units::radian};
+    return {std::atan(x), si::units::radian};
   }
 
   template<

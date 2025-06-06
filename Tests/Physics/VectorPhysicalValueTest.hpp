@@ -29,15 +29,4 @@ namespace sequoia::testing
     template<std::floating_point T>
     void test_trig();
   };
-
-  // TO DO: sequoia serialization needs to be updated to take account of std::format
-  template<class HostSystem, std::floating_point T>
-  struct serializer<physics::quantity<physics::angular_space<T, HostSystem>, physics::si::units::radian_t>>
-  {
-    [[nodiscard]]
-    static std::string make(physics::quantity<physics::angular_space<T, HostSystem>, physics::si::units::radian_t> theta)
-    {
-      return std::format("{}", theta);
-    }
-  };
 }

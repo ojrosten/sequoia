@@ -181,10 +181,15 @@ namespace sequoia::maths
   };
 
   template<class T>
-  concept vector_space = has_set_type_v<T> && has_dimension_v<T> && has_field_type_v<T> && identifies_as_vector_space_v<T>;
+  concept free_module = has_set_type_v<T> && has_dimension_v<T> && has_commutative_ring_type_v<T> && identifies_as_free_module_v<T>;
 
   template<class T>
-  concept free_module = has_set_type_v<T> && has_dimension_v<T> && has_commutative_ring_type_v<T> && identifies_as_free_module_v<T>;
+  concept vector_space = free_module<T>
+    && (     has_field_type_v<T>
+         ||  requires { 
+               typename T::commutative_ring_type;
+               requires weak_field<typename T::commutative_ring_type>;
+             });
 
   // Universal template parameters will obviate the need for this
   template<class T>
@@ -266,7 +271,7 @@ namespace sequoia::maths
   };
 
   template<convex_space ConvexSpace>
-    requires vector_space<free_module_type_of_t<ConvexSpace>>
+    requires vector_space<free_module_type_of_t<ConvexSpace>> && has_field_type_v<free_module_type_of_t<ConvexSpace>>
   struct commutative_ring_type_of<ConvexSpace>
   {
     using type = free_module_type_of_t<ConvexSpace>::field_type;
@@ -376,7 +381,7 @@ namespace sequoia::maths
   struct direct_product<T, U>
   {
     using set_type   = direct_product<typename T::set_type, typename U::set_type>;
-    using field_type = std::common_type_t<typename T::field_type, typename U::field_type>;
+    using field_type = std::common_type_t<commutative_ring_type_of_t<T>, commutative_ring_type_of_t<U>>;
     constexpr static std::size_t dimension{T::dimension + U::dimension};
     using vector_space_type = direct_product<T, U>;
   };
@@ -406,7 +411,7 @@ namespace sequoia::maths
   struct direct_product<std::tuple<Ts...>>
   {
     using set_type   = std::tuple<typename Ts::set_type...>;
-    using field_type = std::common_type_t<typename Ts::field_type...>;
+    using field_type = std::common_type_t<commutative_ring_type_of_t<Ts>...>;
     constexpr static auto dimension{(Ts::dimension + ...)};
   };
   
@@ -466,7 +471,7 @@ namespace sequoia::maths
   struct dual<V>
   {
     using set_type   = V::set_type; // TO DO: think about this
-    using field_type = V::field_type;
+    using field_type = commutative_ring_type_of_t<V>;
     constexpr static auto dimension{V::dimension};
     using vector_space_type = dual<V>;
   };
