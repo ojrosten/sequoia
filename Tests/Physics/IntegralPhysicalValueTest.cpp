@@ -15,6 +15,19 @@ namespace sequoia::testing
 { 
   using namespace physics;
 
+  namespace graphics
+  { 
+    struct texture_arena {};
+
+    namespace units
+    {
+      struct texel
+      {
+        using validator_type = half_line_validator;
+      };
+    }
+  }
+
   [[nodiscard]]
   std::filesystem::path integral_physical_value_test::source_file() const
   {
@@ -23,10 +36,12 @@ namespace sequoia::testing
 
   void integral_physical_value_test::run_tests()
   {
+    test_integral_quantity<physical_value<length_space<std::size_t, graphics::texture_arena>, graphics::units::texel>>();
   }
 
   template<class Quantity>
   void integral_physical_value_test::test_integral_quantity()
   {
+    coordinates_operations<Quantity>{*this}.execute();
   }
 }

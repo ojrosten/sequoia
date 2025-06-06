@@ -278,7 +278,7 @@ namespace sequoia::testing
       {
         add_dim_1_negative_transitions(g, test, units...);
       }
-      else
+      else if constexpr(std::is_signed_v<ring_t>)
       {
         add_dim_1_attempted_negative_transitions(g, test, units...);
       }

@@ -726,7 +726,8 @@ namespace sequoia::physics
     using base_space = angular_space;
   };
 
-  template<std::floating_point Rep, class Arena>
+  template<class Rep, class Arena>
+    requires std::is_arithmetic_v<Rep>
   struct length_space
     : physical_value_convex_space<sets::classical::lengths<Arena>, Rep, 1, length_space<Rep, Arena>>
   {
