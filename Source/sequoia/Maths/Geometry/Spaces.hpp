@@ -154,7 +154,16 @@ namespace sequoia::maths
   };
 
   template<class T>
-  inline constexpr bool defines_commutative_ring_type_v{has_commutative_ring_type_v<T> || has_field_type_v<T>};
+  inline constexpr bool defines_commutative_ring_v{has_commutative_ring_type_v<T> || has_field_type_v<T>};
+
+  template<class T>
+  inline constexpr bool defines_field_v{
+        has_field_type_v<T>
+    || requires { 
+          typename T::commutative_ring_type;
+          requires weak_field<typename T::commutative_ring_type>;
+        }
+  };
 
   template<class T>
   inline constexpr bool has_set_type_v{
@@ -183,15 +192,10 @@ namespace sequoia::maths
   };
 
   template<class T>
-  concept free_module = has_set_type_v<T> && has_dimension_v<T> && defines_commutative_ring_type_v<T> && identifies_as_free_module_v<T>;
+  concept free_module = has_set_type_v<T> && has_dimension_v<T> && defines_commutative_ring_v<T> && identifies_as_free_module_v<T>;
 
   template<class T>
-  concept vector_space = free_module<T>
-    && (     has_field_type_v<T>
-         ||  requires { 
-               typename T::commutative_ring_type;
-               requires weak_field<typename T::commutative_ring_type>;
-             });
+  concept vector_space = free_module<T> && defines_field_v<T>;
 
   // Universal template parameters will obviate the need for this
   template<class T>
