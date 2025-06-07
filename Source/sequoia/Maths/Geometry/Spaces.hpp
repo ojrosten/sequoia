@@ -78,14 +78,13 @@ namespace sequoia::maths
   template<class T>
   inline constexpr bool weakly_abelian_group_under_addition_v{weakly_abelian_group_under_addition<T>::value};
 
-  template<class T>
-    requires std::is_arithmetic_v<T>
+  template<arithmetic T>
   struct weakly_abelian_group_under_addition<T> : std::true_type {};
 
   template<std::floating_point T>
   struct weakly_abelian_group_under_addition<std::complex<T>> : std::true_type {};
 
-  /*! \brief Trait for specifying whether a type behaves (appoximately) as an abelian group under addition.
+  /*! \brief Trait for specifying whether a type behaves (appoximately) as an abelian group under multiplication.
 
       The only integral type modelling this (exactly, as it transpires) is bool. It is the only type in C++
       modelling Z/Zn where n is a prime.
@@ -120,6 +119,8 @@ namespace sequoia::maths
   template<class T>
   inline constexpr bool multiplication_weakly_distributive_over_addition_v{multiplication_weakly_distributive_over_addition<T>::value};
 
+  /* \brief concept representing reasonable approximations to a commutative ring */
+  
   template<class T>
   concept weak_commutative_ring 
     =    std::regular<T>
@@ -128,15 +129,13 @@ namespace sequoia::maths
       && is_addable_v<T>
       && is_subtractable_v<T>
       && is_multiplicable_v<T>;
-  
+
+  /* \brief concept representing reasonable approximations to a field */
+
   template<class T>
   concept weak_field = weak_commutative_ring<T> && weakly_abelian_group_under_multiplication_v<T> && is_divisible_v<T>;
 
-  template<class T>
-  inline constexpr bool has_dimension_v{
-    requires { { T::dimension } -> std::convertible_to<std::size_t>; }
-  };
-
+  /* \brief Reports whether a type, exposes a nested type named commutative_ring_type which satisifes the weak_commutative_ring concept */ 
   template<class T>
   inline constexpr bool has_commutative_ring_type_v{
     requires { 
@@ -145,6 +144,7 @@ namespace sequoia::maths
     }
   };
 
+  /* \brief Reports whether a type, exposes a nested type named field_type which satisifes the weak_field concept */ 
   template<class T>
   inline constexpr bool has_field_type_v{
     requires { 
@@ -153,9 +153,20 @@ namespace sequoia::maths
     }
   };
 
+  /* \brief Reports whether a type exposes a nested type with the properties of a commutative ring
+
+     The point here is that a field is a special case of a ring. Therefore, anything which defines
+     a field is implicitly defining a ring.
+   */
   template<class T>
   inline constexpr bool defines_commutative_ring_v{has_commutative_ring_type_v<T> || has_field_type_v<T>};
 
+  /* \brief Reports whether a type exposes a nested type with the properties of a field
+
+     The point here is to capture the case where a type exposes a nested type commutative_ring_type
+     but the latter satisfies not just the weak_commutative_ring concept but also the strong
+     weak_field concept.
+   */
   template<class T>
   inline constexpr bool defines_field_v{
         has_field_type_v<T>
@@ -165,6 +176,13 @@ namespace sequoia::maths
         }
   };
 
+  /*! \brief Reports whether a type exposes a nested value, dimension, convertible to a std::size_t */
+  template<class T>
+  inline constexpr bool has_dimension_v{
+    requires { { T::dimension } -> std::convertible_to<std::size_t>; }
+  };
+
+  /*! \brief Reports whether a type exposes a nested type named set_type */
   template<class T>
   inline constexpr bool has_set_type_v{
     requires { typename T::set_type; }
