@@ -490,7 +490,9 @@ namespace sequoia::physics
 
     template<convex_space RHSValueSpace, class RHSUnit, class RHSConvention, class RHSOrigin, class RHSValidator>
     constexpr static bool is_divisible_with{
-         std::common_with<convention_type, RHSConvention>
+         weak_field<ring_type>
+      && weak_field<commutative_ring_type_of_t<RHSValueSpace>>
+      && std::common_with<convention_type, RHSConvention>
       && is_composable_with<RHSValueSpace, RHSUnit, RHSConvention, RHSOrigin, RHSValidator>
       && (physical_value<RHSValueSpace, RHSUnit, RHSConvention, RHSOrigin, RHSValidator>::D == 1)
     };
