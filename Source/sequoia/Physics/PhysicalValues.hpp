@@ -726,36 +726,35 @@ namespace sequoia::physics
     using base_space = angular_space;
   };
 
-  template<class Rep, class Arena>
-    requires std::is_arithmetic_v<Rep>
+  template<arithmetic Rep, class Arena>
   struct length_space
     : physical_value_convex_space<sets::classical::lengths<Arena>, Rep, 1, length_space<Rep, Arena>>
   {
     using base_space = length_space;
   };
 
-  template<std::floating_point Rep, class Arena>
+  template<arithmetic Rep, class Arena>
   struct width_space : length_space<Rep, Arena>
   {
     using convex_space_type = width_space;
   };
 
-  template<std::floating_point Rep, class Arena>
+  template<arithmetic Rep, class Arena>
   struct height_space : length_space<Rep, Arena>
   {
     using convex_space_type = height_space;
   };
 
-  template<std::floating_point Rep, class Arena>
+  template<arithmetic Rep, class Arena>
   struct time_interval_space
     : physical_value_convex_space<sets::classical::time_intervals<Arena>, Rep, 1, time_interval_space<Rep, Arena>>
   {};
   
-  template<std::floating_point Rep, class Arena>
+  template<arithmetic Rep, class Arena>
   struct time_space : physical_value_affine_space<sets::classical::times<Arena>, Rep, 1, time_space<Rep, Arena>>
   {};
 
-  template<std::size_t D, std::floating_point Rep, class Arena>
+  template<std::size_t D, arithmetic Rep, class Arena>
   struct position_space : physical_value_affine_space<sets::classical::positions<Arena>, Rep, D, position_space<D, Rep, Arena>>
   {};
   
