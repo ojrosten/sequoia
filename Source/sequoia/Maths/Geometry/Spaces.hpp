@@ -37,7 +37,7 @@ namespace sequoia::maths
   inline constexpr bool is_addable_v{
     requires(T& t) {
       { t += t } -> std::same_as<T&>;
-      { t + t }  -> std::same_as<T>;
+      { t + t }  -> std::convertible_to<T>;
     }
   };
 
@@ -48,7 +48,7 @@ namespace sequoia::maths
   inline constexpr bool is_subtractable_v{
     requires(T& t) {
       { t -= t } -> std::same_as<T&>;
-      { t - t }  -> std::same_as<T>;
+      { t - t }  -> std::convertible_to<T>;
     }
   };
 
@@ -59,7 +59,7 @@ namespace sequoia::maths
   inline constexpr bool is_multiplicable_v{
     requires(T& t) {
       { t *= t } -> std::same_as<T&>;
-      { t * t }  -> std::same_as<T>;
+      { t * t }  -> std::convertible_to<T>;
     }
   };
 
@@ -70,7 +70,7 @@ namespace sequoia::maths
   inline constexpr bool is_divisible_v{
     requires(T& t) {
       { t /= t } -> std::same_as<T&>;
-      { t / t }  -> std::same_as<T>;
+      { t / t }  -> std::convertible_to<T>;
     }
   };
 
