@@ -433,28 +433,58 @@ namespace sequoia::maths
   concept basis_for = basis<B> && (    requires { requires std::is_same_v<typename B::free_module_type, M> ; }
                                     || requires { requires std::is_same_v<typename B::vector_space_type, M>; });
 
-  /** @ingroup Validators Validators
+  /** @defgroup Validators Validators
       @brief Validators are central to dealing with spaces where the C++ representation could produce values outside the underlying set.
 
       As an example, consider a half-line. Suppose the C++ representation involves
       floating-point values. Since these can be both positive and negative, runtime
       validation is required to ensure that invalid states of the half-line aren't
       constructed.
+
+      One natural approach is for validators to throw if they encounter a value out
+      of range. However, this is by no means necessary. In some situations it may
+      be more appropriate to clamp, particularly if the size of a violation is the
+      order of magnitude of the expected (floating-point) precision.
+
+      For cases such as affine and vector spaces where validation is unnecessary
+      (blithely ignoring the fact that NaN may be a representable floating-point
+      value) std::identity holds a privileged position, indicating a transparent
+      validator that performs no actual checking. However, it's privileged status
+      is determined by a trait, so that careful clients could implement their
+      own to deal with edge cases such as NaN.
    */
-  
+
+  /** @ingroup Validators
+      @brief Validators for spaces of dimension 1 must provide an operator() for validating single values.
+
+      Let the type of the commutative ring associated with a space be space_value_type.
+      The validator must expose an operator() that consumes a single value of
+      space_value_type, and its return type must be convertible to space_value_type.
+   */
   template<class V, class ConvexSpace>
   inline constexpr bool validator_for_single_value{
        (dimension_of<ConvexSpace> == 1)
     && requires(V& v, const space_value_type<ConvexSpace>& val) { { v(val) } -> std::convertible_to<decltype(val)>; }
   };
 
+  /** @ingroup Validators
+      @brief Validators for spaces of dimension d>1 must provide an operator() for an array of d values.
+
+      Let the type of the commutative ring associated with a space be space_value_type.
+      Denote a d-dimensional std::array of such values by A. The validator must expose
+      an operator() that consumes a single value of type A and its return type must be
+      convertible to A.
+   */
   template<class V, class ConvexSpace>
   inline constexpr bool validator_for_array{
-    requires (V& v, std::array<space_value_type<ConvexSpace>, dimension_of<ConvexSpace>> values) {
+    requires (V& v, const std::array<space_value_type<ConvexSpace>, dimension_of<ConvexSpace>>& values) {
       { v(values) } -> std::convertible_to<decltype(values)>;
     }
   };
 
+  /** @ingroup Validators
+      @brief concept to check if a validator is compatible with a convex space.
+   */
   template<class V, class ConvexSpace>
   concept validator_for =
        convex_space<ConvexSpace>
@@ -462,6 +492,11 @@ namespace sequoia::maths
     && std::constructible_from<V, V>
     && (validator_for_single_value<V, ConvexSpace> || validator_for_array<V, ConvexSpace>);
 
+  /** @ingroup Validators
+      @brief A validator the the half line.
+
+      For signed arithmetic types throws for negative values; otherwise behaves like an identity operation.
+   */
   struct half_line_validator
   {
     template<arithmetic T>
@@ -482,6 +517,9 @@ namespace sequoia::maths
     }
   };
 
+  /** @ingroup Validators
+      @brief Helper to determine if a type defines the half line.
+   */
   template<class T>
   struct defines_half_line : std::false_type {};
 
@@ -494,6 +532,15 @@ namespace sequoia::maths
   template<>
   struct defines_half_line<half_line_validator> : std::true_type {};
 
+  /** @brief Type to indicate a distinguished origin, relevant for free modules.
+
+      Unlike vector spaces, affine spaces do not have distinguished origin. Therefore, each
+      coordinate system for an affine space is with respect to a particular origin. This is
+      part of the type system to ensure that different coordinate systems cannot be
+      unwittingly mixed. To allow vector spaces to be treated in a similar way to affine spaces,
+      a type to represent the fact that their origins are distinguished is supplied.
+      
+    */
   struct distinguished_origin {};
 
   template<
