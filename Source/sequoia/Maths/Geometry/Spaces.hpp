@@ -493,6 +493,21 @@ namespace sequoia::maths
     && (validator_for_single_value<V, ConvexSpace> || validator_for_array<V, ConvexSpace>);
 
   /** @ingroup Validators
+      @brief Trait for validators that behave like the identity
+   */
+  template<class T>
+  struct is_identity_validator : std::false_type {};
+
+  template<class T>
+  using is_identity_validator_t = is_identity_validator<T>::type;
+
+  template<class T>
+  inline constexpr bool is_identity_validator_v{is_identity_validator<T>::value};
+
+  template<>
+  struct is_identity_validator<std::identity> : std::true_type {};
+
+  /** @ingroup Validators
       @brief A validator the the half line.
 
       For signed arithmetic types throws for negative values; otherwise behaves like an identity operation.
@@ -532,7 +547,11 @@ namespace sequoia::maths
   template<>
   struct defines_half_line<half_line_validator> : std::true_type {};
 
-  /** @brief Type to indicate a distinguished origin, relevant for free modules.
+  /** @defgroup Coordinates Coordinates
+   */
+
+  /** @ingroup Coordinates
+      @brief Type to indicate a distinguished origin, relevant for free modules.
 
       Unlike vector spaces, affine spaces do not have distinguished origin. Therefore, each
       coordinate system for an affine space is with respect to a particular origin. This is
@@ -738,7 +757,7 @@ namespace sequoia::maths
     using displacement_coordinates_type = DisplacementCoordinates;
 
     constexpr static bool has_distinguished_origin{std::is_same_v<Origin, distinguished_origin>};
-    constexpr static bool has_identity_validator{std::is_same_v<Validator, std::identity>};
+    constexpr static bool has_identity_validator{is_identity_validator_v<Validator>};
     constexpr static std::size_t dimension{free_module_type::dimension};
     constexpr static std::size_t D{dimension};
 
@@ -901,7 +920,7 @@ namespace sequoia::maths
       requires std::invocable<Fn, value_type&, value_type>
     constexpr void apply_to_each_element(this Self& self, std::span<const value_type, D> rhs, Fn f)
     {
-      if constexpr(std::same_as<Validator, std::identity>)
+      if constexpr(has_identity_validator)
       {
         std::ranges::for_each(std::views::zip(self.values(), rhs), [&f](auto&& z){ f(std::get<0>(z), std::get<1>(z)); });
       }
@@ -917,7 +936,7 @@ namespace sequoia::maths
       requires std::invocable<Fn, value_type&>
     constexpr void for_each_element(this Self& self, Fn f)
     {
-      if constexpr(std::same_as<Validator, std::identity>)
+      if constexpr(has_identity_validator)
       {
         std::ranges::for_each(self.values(), f);
       }
