@@ -145,25 +145,25 @@ namespace sequoia::physics
   };
    
   template<convex_space... Ts>
-    requires (vector_space<Ts> ||  ...)
+    requires (free_module<Ts> ||  ...)
   struct reduction<direct_product<std::tuple<Ts...>>>
   {    
     using tuple_type        = std::tuple<Ts...>;
     using direct_product_t  = direct_product<std::tuple<Ts...>>;
     using set_type          = reduction<typename direct_product_t::set_type>;
     using field_type        = typename direct_product_t::field_type;
-    using vector_space_type = reduction<direct_product<std::tuple<Ts...>>>;
     constexpr static std::size_t dimension{std::ranges::max({dimension_of<Ts>...})};
+    using is_free_module = std::true_type;
   };
 
   template<convex_space... Ts>
-    requires (!vector_space<Ts> &&  ...)
+  requires (!free_module<Ts> &&  ...) // TO DO : exclude affine space
   struct reduction<direct_product<std::tuple<Ts...>>>
   {
-    using direct_product_t  = direct_product<std::tuple<Ts...>>;
-    using set_type          = reduction<typename direct_product_t::set_type>;
-    using vector_space_type = reduction_t<typename direct_product_t::vector_space_type>;
-    using convex_space_type = reduction<direct_product<std::tuple<Ts...>>>;
+    using direct_product_t = direct_product<std::tuple<Ts...>>;
+    using set_type         = reduction<typename direct_product_t::set_type>;
+    using free_module_type = reduction_t<free_module_type_of_t<direct_product_t>>;
+    using is_convex_space  = std::true_type;
   };
 
   template<convex_space T, convex_space U>
@@ -312,8 +312,8 @@ namespace sequoia::physics
     using type = distinguished_origin;
   };
 
-  template<affine_space ValueSpace, physical_unit Unit>
-    requires (!has_distinguished_origin<ValueSpace, Unit>)
+  template<convex_space ValueSpace, physical_unit Unit>
+    requires (!has_distinguished_origin<ValueSpace, Unit> && affine_space<ValueSpace>)
   struct to_origin_type<ValueSpace, Unit>
   {
     using type = implicit_affine_origin<ValueSpace>;
@@ -668,7 +668,7 @@ namespace sequoia::physics
     constexpr static std::size_t dimension{Space::dimension};
     using set_type              = sets::classical::differences<typename Space::set_type>;
     using commutative_ring_type = Space::representation_type;
-    using free_module_type      = associated_displacement_space;
+    using is_free_module = std::true_type;
   };
 
   template<class PhysicalValueSet, arithmetic Rep, std::size_t D, class Derived>
@@ -678,7 +678,7 @@ namespace sequoia::physics
     using set_type            = PhysicalValueSet;
     using representation_type = Rep;
     using free_module_type    = associated_displacement_space<Derived>;
-    using convex_space_type   = Derived;
+    using is_convex_space = std::true_type;
   };
 
   template<class PhysicalValueSet, arithmetic Rep, std::size_t D, class Derived>
@@ -688,7 +688,7 @@ namespace sequoia::physics
     using set_type            = PhysicalValueSet;
     using representation_type = Rep;
     using free_module_type    = associated_displacement_space<Derived>;
-    using affine_space_type   = Derived;
+    using is_affine_space = std::true_type;
   };
 
   template<class PhysicalValueSet, arithmetic Rep, std::size_t D, class Derived>
@@ -698,7 +698,7 @@ namespace sequoia::physics
     using set_type            = PhysicalValueSet;
     using representation_type = Rep;
     using field_type          = Rep;
-    using vector_space_type   = Derived;
+    using is_vector_space = std::true_type;
   };
 
   template<std::floating_point Rep, class Arena>

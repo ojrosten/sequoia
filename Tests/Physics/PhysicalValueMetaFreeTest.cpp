@@ -80,7 +80,6 @@ namespace sequoia::testing
 
     STATIC_CHECK(vector_space<electrical_current_space_t>);
     STATIC_CHECK(vector_space<delta_mass_space_t>);
-    STATIC_CHECK(vector_space<delta_len_space_t>);
     STATIC_CHECK(vector_space<direct_product<delta_mass_space_t, delta_len_space_t>>);
     STATIC_CHECK(vector_space<reduction_t<direct_product<delta_mass_space_t, delta_len_space_t>>>);
 

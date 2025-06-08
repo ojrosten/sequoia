@@ -63,7 +63,8 @@ namespace sequoia::testing
   {
     using set_type          = Set;
     using field_type        = Field;
-    using vector_space_type = my_vec_space;
+    using is_vector_space = std::true_type;
+    using vector_space_type = my_vec_space; // TO DO: obviate the need for this with traits
     constexpr static std::size_t dimension{D};
 
     template<maths::basis Basis>
@@ -88,7 +89,7 @@ namespace sequoia::testing
   {
     using set_type          = Set;
     using vector_space_type = my_vec_space<Set, Field, D>;
-    using affine_space_type = my_affine_space;
+    using is_affine_space   = std::true_type;
   };
 
   template<class Set, maths::weak_field Field, std::size_t D>
@@ -103,7 +104,7 @@ namespace sequoia::testing
   {
     using set_type              = Set;
     using commutative_ring_type = Ring;
-    using free_module_type      = my_free_module;
+    using is_free_module        = std::true_type;
     constexpr static std::size_t dimension{D};
   };
 

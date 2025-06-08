@@ -188,85 +188,183 @@ namespace sequoia::maths
     requires { typename T::set_type; }
   };
 
+  /*! @defgroup IdentifiesAsSpace Self-identification of Spaces
+      @brief Compile time constants to capture whether types self-identify as various spaces
+
+      It is straightforward to say that a type, T, exposes nested types, say set_type
+      and field_type. This is suggestive of a vector space but to do able to unequivocally
+      identify T as a vector space requires additional information, since we have no way
+      of knowing, a priori, whether the vector space axioms are satisfied. Indeed, it may
+      not be straightforward to provide the operations for addition and multiplication as
+      they apply to the elements of the underlying set: practically speaking, we are usually
+      dealing with operations on coordinates with respect to some basis.
+
+      Therefore, the approach taken is to demand that various spaces self identify as such.
+      For a free module this would mean exposing a type, is_vector_space, convertible to
+      std::true_type. Note, though, that is not sufficient for T to be a free module, as
+      there are additional requirements that must be met (see the free_module concept).
+      
+   */
+
+  /*! @ingroup IdentifiesAsSpace
+      @brief Compile time constant capturing whether a space self-identifies as convex.
+   */
   template<class T>
-  inline constexpr bool has_vector_space_type_v{
-    requires { typename T::vector_space_type; }
+  inline constexpr bool identifies_as_convex_space_v{
+     requires {
+      typename T::is_convex_space;
+      requires std::convertible_to<typename T::is_convex_space, std::true_type>;
+    }
   };
 
+  /*! @ingroup IdentifiesAsSpace
+      @brief Compile time constant capturing whether a space self-identifies as affine.
+   */
   template<class T>
-  inline constexpr bool has_free_module_type_v{
-    requires { typename T::free_module_type; }
+  inline constexpr bool identifies_as_affine_space_v{
+     requires {
+      typename T::is_affine_space;
+      requires std::convertible_to<typename T::is_affine_space, std::true_type>;
+    }
   };
 
-  template<class T>
-  inline constexpr bool identifies_as_vector_space_v{
-    has_vector_space_type_v<T> && requires { requires std::same_as<T, typename T::vector_space_type>; }
-  };
-
+  /*! @ingroup IdentifiesAsSpace
+      @brief Compile time constant capturing whether a space self-identifies as a free module.
+   */
   template<class T>
   inline constexpr bool identifies_as_free_module_v{
-       identifies_as_vector_space_v<T>
-    || (has_free_module_type_v<T> && requires { requires std::same_as<T, typename T::free_module_type>; })
+    requires {
+      typename T::is_free_module;
+      requires std::convertible_to<typename T::is_free_module, std::true_type>;
+    }
   };
 
+  /*! @ingroup IdentifiesAsSpace
+      @brief Compile time constant capturing whether a space self-identifies as vector space.
+   */
   template<class T>
-  concept free_module = has_set_type_v<T> && has_dimension_v<T> && defines_commutative_ring_v<T> && identifies_as_free_module_v<T>;
+  inline constexpr bool identifies_as_vector_space_v{
+    requires {
+      typename T::is_vector_space;
+      requires std::convertible_to<typename T::is_vector_space, std::true_type>;
+    }
+  };
+  
+  /*! @brief concept for a free module */
+  template<class T>
+  concept free_module = has_set_type_v<T> && has_dimension_v<T> && defines_commutative_ring_v<T> && (identifies_as_free_module_v<T> || identifies_as_vector_space_v<T>);
 
+  /*! @brief concept for a vector space, which is a special case of a free module */
   template<class T>
   concept vector_space = free_module<T> && defines_field_v<T>;
 
-  // Universal template parameters will obviate the need for this
+  /*! @defgroup ConvexSpace Convex Spaces
+      @brief Concepts and helpers pertaininng to convex spaces
+
+      An affine space comprises a set, A, and a vector space, V,
+      such that the additive group of V has a free and transitive
+      action on A. Informally, we may add any element of V to
+      any element of A, to translate to a different element of A.
+
+      There are several important ways to relax the definition of
+      an affine space. First, we can replace the vector space with
+      a free module, giving an affine space over a free module.
+      For what follows, this is the definition we shall take for
+      an affine space; whether it is over a vector space or a more
+      general free module can be determined by reflecting on whether
+      is exposes a vector space type or free module type.
+
+      Given this working definition of an affine space, another
+      condition that we may relax is the free and transitive action
+      of the additive group of V on A. The motivation for this is
+      spaces which are bounded: there exist combinations of elements
+      of V and of A such tha a + v is no longer within the set. From
+      the point of view of a C++ implementation, it is not that this
+      addition isn't defined, but rather that the result is an exception
+      type. In other words, we are taking A to be the union of a
+      set of points and an exception type.
+
+      Rather than considering arbitrary relaxations of this form,
+      we consider only the case where (excluding any exception type)
+      the points of A form a convex space. Therefore for what follows
+      we consider a convex space to comprise:
+      1. A Set, C', considered the union of a set of points, C, and an exception type
+      2. A free module, M
+      3. The action of the additive group of M on C' yields another element of C'.
+         This is not a bijection, since there are many ways to map onto the single
+         exception state.      
+   */
+
+  /*! @ingroup ConvexSpace
+      @brief Compile time constant capturing whether a type exposes a nested
+             vector_space_type which satisfies the vector_space concept.
+   */
   template<class T>
-  struct is_vector_space : std::integral_constant<bool, vector_space<T>> {};
-
-  template<class B>
-  concept basis =
-      (has_free_module_type_v<B>  && requires { requires  free_module<typename B::free_module_type>; })
-    ||(has_vector_space_type_v<B> && requires { requires vector_space<typename B::vector_space_type>; });
-
-  template<class B, class M>
-  concept basis_for = basis<B> && (    requires { requires std::is_same_v<typename B::free_module_type, M> ; }
-                                    || requires { requires std::is_same_v<typename B::vector_space_type, M>; });
-
-  template<class T>
-  inline constexpr bool identifies_as_convex_space_v{
+  inline constexpr bool has_vector_space_type_v{
     requires {
-      typename T::convex_space_type;
-      requires std::same_as<T, typename T::convex_space_type>;
+      typename T::vector_space_type;
+      requires vector_space<typename T::vector_space_type>;
     }
   };
 
+  /*! @ingroup ConvexSpace
+      @brief Compile time constant capturing whether a type exposes a nested
+             free_modul_type which satisfies the vector_space concept.
+   */
   template<class T>
-  inline constexpr bool identifies_as_affine_space_v{
+  inline constexpr bool has_free_module_type_v{
     requires {
-      typename T::affine_space_type;
-      requires std::same_as<T, typename T::affine_space_type>;
+      typename T::free_module_type;
+      requires free_module<typename T::free_module_type>;
     }
   };
 
+  /*! @ingroup ConvexSpace
+      @brief concept for convex spaces
+
+      A convex space comprises a set and a free module (which may be a vector space),
+      and must identify as either a convex or affine space.      
+   */
   template<class T>
   concept convex_space
-    =    (identifies_as_convex_space_v<T> || identifies_as_affine_space_v<T> || identifies_as_vector_space_v<T> || identifies_as_free_module_v<T>)
-      && requires {  typename T::set_type; }
-      && (    requires {
-                typename T::vector_space_type;
-                requires vector_space<typename T::vector_space_type>;
-              }
-          || requires {
-                typename T::free_module_type;
-                requires free_module<typename T::free_module_type>;
-              }
-         );
+    =    vector_space<T> || free_module<T>
+      || (    has_set_type_v<T>
+          && (has_vector_space_type_v<T> || has_free_module_type_v<T>)
+          && (identifies_as_convex_space_v<T> || identifies_as_affine_space_v<T>));
 
+  /*! @ingroup ConvexSpace
+      @brief concept for affine spaces
+
+      A vector space is an affine space over itself; beyond that according to our
+      definitions an affine space is a refinement of a convex space.
+  */
+  template<class T>
+  concept affine_space = vector_space<T> || (convex_space<T> && identifies_as_affine_space_v<T>);
+
+  /*! \brief Helper that nniversal template parameters will obviate the need for */
+  template<class T>
+  struct is_free_module : std::integral_constant<bool, free_module<T>> {};
+  
   /*! \brief Trait to extract the free module type associated with a convex space, either through a type named as such or a vector space */
   template<convex_space ConvexSpace>
-  struct free_module_type_of
+  struct free_module_type_of;
+
+  template<convex_space ConvexSpace>
+    requires identifies_as_free_module_v<ConvexSpace> || identifies_as_vector_space_v<ConvexSpace>
+  struct free_module_type_of<ConvexSpace>
+  {
+    using type = ConvexSpace;
+  };
+
+  template<convex_space ConvexSpace>
+    requires (!identifies_as_free_module_v<ConvexSpace> && !identifies_as_vector_space_v<ConvexSpace>) && has_free_module_type_v<ConvexSpace>
+  struct free_module_type_of<ConvexSpace>
   {
     using type = ConvexSpace::free_module_type;
   };
 
   template<convex_space ConvexSpace>
-    requires has_vector_space_type_v<ConvexSpace>
+    requires (!identifies_as_free_module_v<ConvexSpace> && !identifies_as_vector_space_v<ConvexSpace>) && has_vector_space_type_v<ConvexSpace>
   struct free_module_type_of<ConvexSpace>
   {
     using type = ConvexSpace::vector_space_type;
@@ -274,24 +372,12 @@ namespace sequoia::maths
 
   template<convex_space ConvexSpace>
   using free_module_type_of_t = free_module_type_of<ConvexSpace>::type;
-
-  /*! Trait to extract a vector space associated with a convex space */
-  template<convex_space ConvexSpace>
-    requires vector_space<free_module_type_of_t<ConvexSpace>>
-  struct vector_space_of
-  {
-    using type = free_module_type_of_t<ConvexSpace>;
-  };
-
-  template<convex_space ConvexSpace>
-    requires vector_space<free_module_type_of_t<ConvexSpace>>
-  using vector_space_of_t = vector_space_of<ConvexSpace>::type;
   
   /*! \brief Trait to extract the commutative ring type of the free module associated with a convex space */
   template<convex_space ConvexSpace>
   struct commutative_ring_type_of
   {
-    using type = ConvexSpace::free_module_type::commutative_ring_type;
+    using type = free_module_type_of_t<ConvexSpace>::commutative_ring_type;
   };
 
   template<convex_space ConvexSpace>
@@ -310,9 +396,13 @@ namespace sequoia::maths
   template<convex_space ConvexSpace>
   inline constexpr std::size_t dimension_of{free_module_type_of_t<ConvexSpace>::dimension};
 
-  template<class T>
-  concept affine_space = convex_space<T> && (identifies_as_affine_space_v<T> || identifies_as_vector_space_v<T> || identifies_as_free_module_v<T>);
+  template<class B>
+  concept basis = has_free_module_type_v<B> || has_vector_space_type_v<B>;
 
+  template<class B, class M>
+  concept basis_for = basis<B> && (    requires { requires std::is_same_v<typename B::free_module_type, M> ; }
+                                    || requires { requires std::is_same_v<typename B::vector_space_type, M>; });
+  
   template<class V, class ConvexSpace>
   inline constexpr bool validator_for_single_value{
        (dimension_of<ConvexSpace> == 1)
@@ -391,32 +481,37 @@ namespace sequoia::maths
   using vector_coordinates = affine_coordinates<VectorSpace, Basis, distinguished_origin>;
 
   template<free_module FreeModule, basis_for<free_module_type_of_t<FreeModule>> Basis>
-  using free_module_coordinates = affine_coordinates<FreeModule, Basis, distinguished_origin>;
+  using free_module_coordinates = coordinates<FreeModule, Basis, distinguished_origin, std::identity>;
 
   //============================== direct_product ==============================//
 
   template<class... Ts>
   struct direct_product;
-  
-  template<class... Ts>
-  using direct_product_set_t = direct_product<Ts...>::set_type;  
 
-  template<vector_space T, vector_space U>
+  template<class... Ts>
+  using direct_product_set_t = direct_product<Ts...>::set_type;
+
+  template<class T, class U>
   struct direct_product<T, U>
   {
-    using set_type   = direct_product<typename T::set_type, typename U::set_type>;
-    using field_type = std::common_type_t<commutative_ring_type_of_t<T>, commutative_ring_type_of_t<U>>;
+  };
+  
+  template<free_module T, free_module U>
+  struct direct_product<T, U>
+  {
+    using set_type       = direct_product<typename T::set_type, typename U::set_type>;
+    using field_type     = std::common_type_t<commutative_ring_type_of_t<T>, commutative_ring_type_of_t<U>>;
+    using is_free_module = std::true_type;
     constexpr static std::size_t dimension{T::dimension + U::dimension};
-    using vector_space_type = direct_product<T, U>;
   };
 
   template<affine_space T, affine_space U>
-    requires (!vector_space<T> && !vector_space<U>)
+    requires (!free_module<T> && !free_module<U>)
   struct direct_product<T, U>
   {
     using set_type          = direct_product<typename T::set_type, typename U::set_type>;
-    using vector_space_type = direct_product<vector_space_of_t<T>, vector_space_of_t<U>>;
-    using affine_space_type = direct_product<T, U>;
+    using free_module_type  = direct_product<free_module_type_of_t<T>, free_module_type_of_t<U>>;
+    using is_affine_space   = std::true_type;
   };
 
   template<convex_space T, convex_space U>
@@ -424,28 +519,31 @@ namespace sequoia::maths
   struct direct_product<T, U>
   {
     using set_type          = direct_product<typename T::set_type, typename U::set_type>;
-    using vector_space_type = direct_product<vector_space_of_t<T>, vector_space_of_t<U>>;
-    using convex_space_type = direct_product<T, U>;
+    using free_module_type  = direct_product<free_module_type_of_t<T>, free_module_type_of_t<U>>;
+    using is_convex_space   = std::true_type;
   };
 
   // Types assumed to be ordered
   // Could add this as a constraint, at the cost of changing
   // the algorithmic complexity...
-  template<vector_space... Ts>
+  template<free_module... Ts>
   struct direct_product<std::tuple<Ts...>>
   {
-    using set_type   = std::tuple<typename Ts::set_type...>;
-    using field_type = std::common_type_t<commutative_ring_type_of_t<Ts>...>;
+    using set_type       = std::tuple<typename Ts::set_type...>;
+    using field_type     = std::common_type_t<commutative_ring_type_of_t<Ts>...>;
+    using is_free_module = std::true_type;
     constexpr static auto dimension{(Ts::dimension + ...)};
   };
   
   // Types assumed to be ordered wrt type_comparator, but dependent types may not be against the same comparator
   template<convex_space... Ts>
-    requires (!vector_space<Ts> && ...)
+    requires (!free_module<Ts> && ...)
   struct direct_product<std::tuple<Ts...>>
   {
-    using set_type          = std::tuple<typename Ts::set_type...>;
-    using vector_space_type = direct_product<vector_space_of_t<Ts>...>;
+    using set_type         = std::tuple<typename Ts::set_type...>;
+    using free_module_type = direct_product<free_module_type_of_t<Ts>...>;
+    using is_convex_space  = std::true_type;
+    // TO DO: is_convext_space or is_affine_space?!
   };
 
   template<class>
@@ -461,12 +559,12 @@ namespace sequoia::maths
   };
 
   template<convex_space... Ts>
-    requires (vector_space<Ts> || ...) && (!vector_space<Ts> || ...)
+    requires (free_module<Ts> || ...) && (!free_module<Ts> || ...)
   struct direct_product<std::tuple<Ts...>>
   {
-    using set_type          = std::tuple<typename Ts::set_type...>;
-    using field_type        = extract_common_field_type_t<meta::filter_by_trait_t<std::tuple<Ts...>, is_vector_space>>;
-    using vector_space_type = direct_product<vector_space_of_t<Ts>...>;
+    using set_type         = std::tuple<typename Ts::set_type...>;
+    using field_type       = extract_common_field_type_t<meta::filter_by_trait_t<std::tuple<Ts...>, is_free_module>>;
+    using free_module_type = direct_product<free_module_type_of_t<Ts>...>;
   };
 
   //==============================  dual spaces ============================== //
@@ -478,26 +576,26 @@ namespace sequoia::maths
   struct dual<C>
   {
     using set_type          = C::set_type;
-    using vector_space_type = dual<vector_space_of_t<C>>;
-    using convex_space_type = dual<C>;
+    using vector_space_type = dual<free_module_type_of_t<C>>;
+    using is_convex_space = std::true_type;
   };
 
   template<affine_space C>
-    requires (!vector_space<C>)
+    requires (!vector_space<C>) // TO DO : tighten up to insist on field not ring
   struct dual<C>
   {
     using set_type          = C::set_type;
-    using vector_space_type = dual<vector_space_of_t<C>>;
-    using affine_space_type = dual<C>;
+    using vector_space_type = dual<free_module_type_of_t<C>>;
+    using is_affine_space   = std::true_type;
   };
 
   template<vector_space V>
   struct dual<V>
   {
-    using set_type   = V::set_type; // TO DO: think about this
-    using field_type = commutative_ring_type_of_t<V>;
+    using set_type          = V::set_type; // TO DO: think about this
+    using field_type        = commutative_ring_type_of_t<V>;
     constexpr static auto dimension{V::dimension};
-    using vector_space_type = dual<V>;
+    using is_vector_space = std::true_type;
   };
 
   template<class C>
@@ -865,6 +963,7 @@ namespace sequoia::maths
   {
     using set_type          = sets::R<D>;
     using field_type        = T;
+    using is_vector_space = std::true_type;
     using vector_space_type = euclidean_vector_space;
     constexpr static std::size_t dimension{D};
 
@@ -905,7 +1004,8 @@ namespace sequoia::maths
   {
     using set_type          = sets::R<D>;
     using vector_space_type = euclidean_vector_space<D, T>;
-    using affine_space_type = euclidean_affine_space;
+    using is_affine_space = std::true_type;
+    //using affine_space_type = euclidean_affine_space;
   };
 
   template<std::size_t D, std::floating_point T>
@@ -913,7 +1013,8 @@ namespace sequoia::maths
   {
     using set_type          = sets::half_space<D>;
     using vector_space_type = euclidean_vector_space<D, T>;
-    using convex_space_type = euclidean_half_space;
+    using is_convex_space = std::true_type;
+    //using convex_space_type = euclidean_half_space;
   };
 
   template<std::size_t D, std::floating_point T, basis Basis, class Origin>

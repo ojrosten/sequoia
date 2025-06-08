@@ -43,7 +43,6 @@ namespace sequoia::testing
     using units_type = quantity_t::units_type;
 
     STATIC_CHECK(vector_space<space_type>);
-    STATIC_CHECK(vector_space<typename space_type::vector_space_type>);
     STATIC_CHECK(can_multiply<quantity_t, value_type>);
     STATIC_CHECK(can_divide<quantity_t, value_type>);
     STATIC_CHECK(can_divide<quantity_t, quantity_t>);

@@ -37,7 +37,7 @@ namespace sequoia::testing
       constexpr std::size_t D{quantity_t::D};
 
       STATIC_CHECK(convex_space<space_type>);
-      STATIC_CHECK(vector_space<vector_space_of_t<space_type>>);
+      STATIC_CHECK(vector_space<free_module_type_of_t<space_type>>);
       STATIC_CHECK(!can_multiply<quantity_t, float>);
       STATIC_CHECK(!can_multiply<quantity_t, quantity_t>);
       STATIC_CHECK(!can_divide<quantity_t, float>);
