@@ -27,6 +27,12 @@
 
 namespace sequoia::maths
 {
+  /** @defgroup ArithmeticTraits Arithmetic Traits
+   */
+
+  /** @ingroup ArithmeticTraits
+      @brief Trait for addability
+   */
   template<class T>
   inline constexpr bool is_addable_v{
     requires(T& t) {
@@ -35,6 +41,9 @@ namespace sequoia::maths
     }
   };
 
+  /** @ingroup ArithmeticTraits
+      @brief Trait for subtractability
+   */
   template<class T>
   inline constexpr bool is_subtractable_v{
     requires(T& t) {
@@ -43,6 +52,9 @@ namespace sequoia::maths
     }
   };
 
+  /** @ingroup ArithmeticTraits
+      @brief Trait for multiplicability
+   */
   template<class T>
   inline constexpr bool is_multiplicable_v{
     requires(T& t) {
@@ -51,6 +63,9 @@ namespace sequoia::maths
     }
   };
 
+  /** @ingroup ArithmeticTraits
+      @brief Trait for divisibility
+   */
   template<class T>
   inline constexpr bool is_divisible_v{
     requires(T& t) {
@@ -548,6 +563,21 @@ namespace sequoia::maths
   struct defines_half_line<half_line_validator> : std::true_type {};
 
   /** @defgroup Coordinates Coordinates
+      @brief Coordinates are the bridge between abstract mathematics and practical application.
+
+      When dealing with vectors in practice, almost invariably one is using the coordinates of
+      vectors with respect to a particular basis. These are often implicitly conflated with
+      the vector itself. However, the latter are simply elements of a vector space and there
+      is no sense in which different observers can disagree about properties of this
+      fundamental entity. However, observers using different bases can absolutely disagree
+      on the coordinates, though once they figure out the relationship between their bases
+      then it becomes possible to translate from one to the other.
+
+      It is worth noting that, for a vector space, the implementation of the coordinates depends
+      only the field and the dimension. This reflects the fact that vector spaces of the
+      same dimension and over the same field are isomorphic.
+
+      Similar considerations apply to the various related spaces with which we deal.
    */
 
   /** @ingroup Coordinates
