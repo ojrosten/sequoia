@@ -31,30 +31,13 @@ namespace sequoia::maths
    */
 
   /** @ingroup ArithmeticTraits
-      @brief Trait for whether a value of type T can be incremented by a value of type U
-   */
-  template<class T, class U>
-  inline constexpr bool is_incrementable_by_v{
-    requires(T& t, const U& u) {
-      { t += u } -> std::same_as<T&>;
-      { t + u }  -> std::convertible_to<std::common_type_t<T, U>>;
-    }
-  };
-  
-  /** @ingroup ArithmeticTraits
       @brief Trait for addability
    */
   template<class T>
-  inline constexpr bool is_addable_v{is_incrementable_by_v<T, T>};
-
-  /** @ingroup ArithmeticTraits
-      @brief Trait for whether a value of type T can be decremented by a value of type U
-   */
-  template<class T, class U>
-  inline constexpr bool is_decrementable_by_v{
-    requires(T& t, const U& u) {
-      { t -= u } -> std::same_as<T&>;
-      { t - u }  -> std::convertible_to<std::common_type_t<T, U>>;
+  inline constexpr bool is_addable_v{
+    requires(T& t) {
+      { t += t } -> std::same_as<T&>;
+      { t + t }  -> std::convertible_to<T>;
     }
   };
 
@@ -62,16 +45,10 @@ namespace sequoia::maths
       @brief Trait for subtractability
    */
   template<class T>
-  inline constexpr bool is_subtractable_v{is_decrementable_by_v<T, T>};
-
-  /** @ingroup ArithmeticTraits
-      @brief Trait for whether a value of type T can be multiplied by a value of type U
-   */
-  template<class T, class U>
-  inline constexpr bool is_multiplicable_by_v{
-    requires(T& t, const U& u) {
-      { t *= u } -> std::same_as<T&>;
-      { t * u }  -> std::convertible_to<std::common_type_t<T, U>>;
+  inline constexpr bool is_subtractable_v{
+    requires(T& t) {
+      { t -= t } -> std::same_as<T&>;
+      { t - t }  -> std::convertible_to<T>;
     }
   };
 
@@ -79,16 +56,10 @@ namespace sequoia::maths
       @brief Trait for multiplicability
    */
   template<class T>
-  inline constexpr bool is_multiplicable_v{is_multiplicable_by_v<T, T>};
-
-  /** @ingroup ArithmeticTraits
-      @brief Trait for whether a value of type T can be divideded by a value of type U
-   */
-  template<class T, class U>
-  inline constexpr bool is_divisible_by_v{
-    requires(T& t, const U& u) {
-      { t /= u } -> std::same_as<T&>;
-      { t / u }  -> std::convertible_to<std::common_type_t<T, U>>;
+  inline constexpr bool is_multiplicable_v{
+    requires(T& t) {
+      { t *= t } -> std::same_as<T&>;
+      { t * t }  -> std::convertible_to<T>;
     }
   };
 
@@ -96,7 +67,12 @@ namespace sequoia::maths
       @brief Trait for divisibility
    */
   template<class T>
-  inline constexpr bool is_divisible_v{is_divisible_by_v<T, T>};
+  inline constexpr bool is_divisible_v{
+    requires(T& t) {
+      { t /= t } -> std::same_as<T&>;
+      { t / t }  -> std::convertible_to<T>;
+    }
+  };
 
   /** @brief Trait for specifying whether a type behaves (appoximately) as an abelian group under addition.
 
