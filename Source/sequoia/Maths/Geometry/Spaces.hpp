@@ -8,7 +8,9 @@
 #pragma once
 
 /** @file
-    @brief Utilities relating to vector sets
+    @brief Abstractions pertaining to vector spaces, affine spaces and their generalizations.
+
+    
  */
 
 
@@ -80,8 +82,8 @@ namespace sequoia::maths
       between a mathematical structure and an approximate representation of that structure.
       ints model the integers, but not exactly since there is a maximum representable value.
       Similarly, floating-point numbers model the reals but only in an approximate sense.
-      To signify the fact that  neither integer nor floating-point addition exactly models an
-      abelian group, the term 'weak' is used. Not, however, that addition of unsigned integral
+      To signify the fact that neither integer nor floating-point addition exactly models an
+      abelian group, the term 'weak' is used. Note, however, that addition of unsigned integral
       types does precisely model an abelian group and so 'weak' is a minimum requirement.
    */
   template<class T>
@@ -123,7 +125,7 @@ namespace sequoia::maths
   template<>
   struct weakly_abelian_group_under_multiplication<bool> : std::true_type {};
   
-  /** @brief Trait for specifying whether a type exhibits multiplication that (approximately) distributes over addition . */
+  /** @brief Trait for specifying whether a type exhibits multiplication that (approximately) distributes over addition. */
 
   template<class T>
   struct multiplication_weakly_distributive_over_addition : std::true_type {};
@@ -134,7 +136,7 @@ namespace sequoia::maths
   template<class T>
   inline constexpr bool multiplication_weakly_distributive_over_addition_v{multiplication_weakly_distributive_over_addition<T>::value};
 
-  /* @brief concept representing reasonable approximations to a commutative ring */
+  /* @brief concept representing reasonable approximations to a commutative ring. */
   
   template<class T>
   concept weak_commutative_ring 
@@ -145,12 +147,12 @@ namespace sequoia::maths
       && is_subtractable_v<T>
       && is_multiplicable_v<T>;
 
-  /* @brief concept representing reasonable approximations to a field */
+  /* @brief concept representing reasonable approximations to a field. */
 
   template<class T>
   concept weak_field = weak_commutative_ring<T> && weakly_abelian_group_under_multiplication_v<T> && is_divisible_v<T>;
 
-  /* @brief Reports whether a type, exposes a nested type named commutative_ring_type which satisifes the weak_commutative_ring concept */ 
+  /* @brief Reports whether a type exposes a nested type named commutative_ring_type which satisifes the weak_commutative_ring concept. */ 
   template<class T>
   inline constexpr bool has_commutative_ring_type_v{
     requires { 
@@ -159,7 +161,7 @@ namespace sequoia::maths
     }
   };
 
-  /* @brief Reports whether a type, exposes a nested type named field_type which satisifes the weak_field concept */ 
+  /* @brief Reports whether a type exposes a nested type named field_type which satisifes the weak_field concept. */ 
   template<class T>
   inline constexpr bool has_field_type_v{
     requires { 
@@ -168,7 +170,7 @@ namespace sequoia::maths
     }
   };
 
-  /* @brief Reports whether a type exposes a nested type with the properties of a commutative ring
+  /* @brief Reports whether a type exposes a nested type with the properties of a commutative ring.
 
      The point here is that a field is a special case of a ring. Therefore, anything which defines
      a field is implicitly defining a ring.
@@ -176,7 +178,7 @@ namespace sequoia::maths
   template<class T>
   inline constexpr bool defines_commutative_ring_v{has_commutative_ring_type_v<T> || has_field_type_v<T>};
 
-  /* @brief Reports whether a type exposes a nested type with the properties of a field
+  /* @brief Reports whether a type exposes a nested type with the properties of a field.
 
      The point here is to capture the case where a type exposes a nested type commutative_ring_type
      but the latter satisfies not just the weak_commutative_ring concept but also the strong
@@ -191,20 +193,20 @@ namespace sequoia::maths
         }
   };
 
-  /** @brief Reports whether a type exposes a nested value, dimension, convertible to a std::size_t */
+  /** @brief Reports whether a type exposes a nested value, dimension, convertible to a std::size_t. */
   template<class T>
   inline constexpr bool has_dimension_v{
     requires { { T::dimension } -> std::convertible_to<std::size_t>; }
   };
 
-  /** @brief Reports whether a type exposes a nested type named set_type */
+  /** @brief Reports whether a type exposes a nested type named set_type. */
   template<class T>
   inline constexpr bool has_set_type_v{
     requires { typename T::set_type; }
   };
 
   /** @defgroup IdentifiesAsSpace Self-identification of Spaces
-      @brief Compile time constants to capture whether types self-identify as various spaces
+      @brief Compile time constants to capture whether types self-identify as various spaces.
 
       It is straightforward to say that a type, T, exposes nested types, say set_type
       and field_type. This is suggestive of a vector space but to do able to unequivocally
@@ -215,10 +217,9 @@ namespace sequoia::maths
       dealing with operations on coordinates with respect to some basis.
 
       Therefore, the approach taken is to demand that various spaces self identify as such.
-      For a free module this would mean exposing a type, is_vector_space, convertible to
-      std::true_type. Note, though, that is not sufficient for T to be a free module, as
-      there are additional requirements that must be met (see the free_module concept).
-      
+      For a free module this would mean exposing a type, is_free_module, convertible to
+      std::true_type. Note, though, that this is not sufficient for T to be a free module,
+      as there are additional requirements that must be met (see the free_module concept).      
    */
 
   /** @ingroup IdentifiesAsSpace
@@ -287,7 +288,8 @@ namespace sequoia::maths
       For what follows, this is the definition we shall take for
       an affine space; whether it is over a vector space or a more
       general free module can be determined by reflecting on whether
-      is exposes a vector space type or free module type.
+      the associated commutative ring satsifies the requirements of
+      a field.
 
       Given this working definition of an affine space, another
       condition that we may relax is the free and transitive action
@@ -337,12 +339,13 @@ namespace sequoia::maths
   /** @ingroup ConvexSpace
       @brief concept for convex spaces
 
-      A convex space comprises a set and a free module (which may be a vector space),
-      and must identify as either a convex or affine space.      
+      A convex space may be a free module. Otherwise, it comprises a set and a
+      free module (which may be a vector space), and must identify as either a convex
+      or affine space.      
    */
   template<class T>
   concept convex_space
-    =    vector_space<T> || free_module<T>
+    =    free_module<T>
       || (    has_set_type_v<T>
           && (has_vector_space_type_v<T> || has_free_module_type_v<T>)
           && (identifies_as_convex_space_v<T> || identifies_as_affine_space_v<T>));
