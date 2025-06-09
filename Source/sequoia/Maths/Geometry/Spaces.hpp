@@ -353,8 +353,8 @@ namespace sequoia::maths
   /** @ingroup ConvexSpace
       @brief concept for affine spaces
 
-      A vector space is an affine space over itself; beyond that according to our
-      definitions an affine space is a refinement of a convex space.
+      A vector space is an affine space over itself; beyond that, according to our
+      definitions, an affine space is a refinement of a convex space.
    */
   template<class T>
   concept affine_space = vector_space<T> || (convex_space<T> && identifies_as_affine_space_v<T>);
@@ -467,7 +467,7 @@ namespace sequoia::maths
       For cases such as affine and vector spaces where validation is unnecessary
       (blithely ignoring the fact that NaN may be a representable floating-point
       value) std::identity holds a privileged position, indicating a transparent
-      validator that performs no actual checking. However, it's privileged status
+      validator that performs no actual checking. However, its privileged status
       is determined by a trait, so that careful clients could implement their
       own to deal with edge cases such as NaN.
    */
@@ -511,7 +511,7 @@ namespace sequoia::maths
     && (validator_for_single_value<V, ConvexSpace> || validator_for_array<V, ConvexSpace>);
 
   /** @ingroup Validators
-      @brief Trait for validators that behave like the identity
+      @brief Trait for validators that behave like the identity.
    */
   template<class T>
   struct is_identity_validator : std::false_type {};
@@ -551,7 +551,7 @@ namespace sequoia::maths
   };
 
   /** @ingroup Validators
-      @brief Helper to determine if a type defines the half line.
+      @brief Trait to determine if a type defines the half line.
    */
   template<class T>
   struct defines_half_line : std::false_type {};
@@ -566,7 +566,7 @@ namespace sequoia::maths
   struct defines_half_line<half_line_validator> : std::true_type {};
 
   /** @defgroup Coordinates Coordinates
-      @brief Coordinates are the bridge between abstract mathematics and practical application.
+      @brief Coordinates are the bridge between the abstract mathematics of spaces and practical application.
 
       When dealing with vectors in practice, almost invariably one is using the coordinates of
       vectors with respect to a particular basis. These are often implicitly conflated with
@@ -576,9 +576,9 @@ namespace sequoia::maths
       on the coordinates, though once they figure out the relationship between their bases
       then it becomes possible to translate from one to the other.
 
-      It is worth noting that, for a vector space, the implementation of the coordinates depends
-      only the field and the dimension. This reflects the fact that vector spaces of the
-      same dimension and over the same field are isomorphic.
+      It is worth noting that, for a vector space, the kernel of the implementation of the
+      coordinates depends only the field and the dimension. This reflects the fact that vector
+      spaces of the same dimension and over the same field are isomorphic.
 
       Similar considerations apply to the various related spaces with which we deal.
    */
@@ -595,14 +595,9 @@ namespace sequoia::maths
     */
   struct distinguished_origin {};
 
-  template<
-    convex_space ConvexSpace,
-    basis_for<free_module_type_of_t<ConvexSpace>>  Basis,
-    class Origin,
-    validator_for<ConvexSpace> Validator,
-    class DisplacementCoordinates
-  >
-  class coordinates_base;
+  /** @ingroup Coordinates
+      @brief Forward declaration for the coordinates class template.
+    */
 
   template<
     convex_space ConvexSpace,
@@ -763,10 +758,7 @@ namespace sequoia::maths
   struct dual_of<dual<C>> {
     using type = C;
   };
-}
 
-namespace sequoia::maths
-{  
   //============================== coordinates_base definition  ==============================//
 
   template<
