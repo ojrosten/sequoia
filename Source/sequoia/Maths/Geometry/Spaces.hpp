@@ -33,7 +33,7 @@ namespace sequoia::maths
    */
 
   /** @ingroup ArithmeticTraits
-      @brief Trait for addability
+      @brief Compile time constant for addability
    */
   template<class T>
   inline constexpr bool is_addable_v{
@@ -44,7 +44,7 @@ namespace sequoia::maths
   };
 
   /** @ingroup ArithmeticTraits
-      @brief Trait for subtractability
+      @brief Compile time constant for subtractability
    */
   template<class T>
   inline constexpr bool is_subtractable_v{
@@ -55,7 +55,7 @@ namespace sequoia::maths
   };
 
   /** @ingroup ArithmeticTraits
-      @brief Trait for multiplicability
+      @brief Compile time constant for multiplicability
    */
   template<class T>
   inline constexpr bool is_multiplicable_v{
@@ -66,7 +66,7 @@ namespace sequoia::maths
   };
 
   /** @ingroup ArithmeticTraits
-      @brief Trait for divisibility
+      @brief Compile time constant for divisibility
    */
   template<class T>
   inline constexpr bool is_divisible_v{
@@ -152,7 +152,7 @@ namespace sequoia::maths
   template<class T>
   concept weak_field = weak_commutative_ring<T> && weakly_abelian_group_under_multiplication_v<T> && is_divisible_v<T>;
 
-  /* @brief Reports whether a type exposes a nested type named commutative_ring_type which satisifes the weak_commutative_ring concept. */ 
+  /* @brief Compile time constant reflecting whether a type exposes a nested type named commutative_ring_type which satisifes the weak_commutative_ring concept. */ 
   template<class T>
   inline constexpr bool has_commutative_ring_type_v{
     requires { 
@@ -161,7 +161,7 @@ namespace sequoia::maths
     }
   };
 
-  /* @brief Reports whether a type exposes a nested type named field_type which satisifes the weak_field concept. */ 
+  /* @brief Compile time constant reflecting whether a type exposes a nested type named field_type which satisifes the weak_field concept. */ 
   template<class T>
   inline constexpr bool has_field_type_v{
     requires { 
@@ -170,7 +170,7 @@ namespace sequoia::maths
     }
   };
 
-  /* @brief Reports whether a type exposes a nested type with the properties of a commutative ring.
+  /* @brief Compile time constant reflecting whether a type exposes a nested type with the properties of a commutative ring.
 
      The point here is that a field is a special case of a ring. Therefore, anything which defines
      a field is implicitly defining a ring.
@@ -193,13 +193,13 @@ namespace sequoia::maths
         }
   };
 
-  /** @brief Reports whether a type exposes a nested value, dimension, convertible to a std::size_t. */
+  /** @brief Compile time constant reflecting whether a type exposes a nested value, dimension, convertible to a std::size_t. */
   template<class T>
   inline constexpr bool has_dimension_v{
     requires { { T::dimension } -> std::convertible_to<std::size_t>; }
   };
 
-  /** @brief Reports whether a type exposes a nested type named set_type. */
+  /** @brief Compile time constant reflecting whether a type exposes a nested type named set_type. */
   template<class T>
   inline constexpr bool has_set_type_v{
     requires { typename T::set_type; }
@@ -223,7 +223,7 @@ namespace sequoia::maths
    */
 
   /** @ingroup IdentifiesAsSpace
-      @brief Compile time constant capturing whether a space self-identifies as convex.
+      @brief Compile time constant reflecting whether a space self-identifies as convex.
    */
   template<class T>
   inline constexpr bool identifies_as_convex_space_v{
@@ -234,7 +234,7 @@ namespace sequoia::maths
   };
 
   /** @ingroup IdentifiesAsSpace
-      @brief Compile time constant capturing whether a space self-identifies as affine.
+      @brief Compile time constant reflecting whether a space self-identifies as affine.
    */
   template<class T>
   inline constexpr bool identifies_as_affine_space_v{
@@ -245,7 +245,7 @@ namespace sequoia::maths
   };
 
   /** @ingroup IdentifiesAsSpace
-      @brief Compile time constant capturing whether a space self-identifies as a free module.
+      @brief Compile time constant reflecting whether a space self-identifies as a free module.
    */
   template<class T>
   inline constexpr bool identifies_as_free_module_v{
@@ -256,7 +256,7 @@ namespace sequoia::maths
   };
 
   /** @ingroup IdentifiesAsSpace
-      @brief Compile time constant capturing whether a space self-identifies as vector space.
+      @brief Compile time constant reflecting whether a space self-identifies as vector space.
    */
   template<class T>
   inline constexpr bool identifies_as_vector_space_v{
@@ -313,7 +313,7 @@ namespace sequoia::maths
    */
 
   /** @ingroup ConvexSpace
-      @brief Compile time constant capturing whether a type exposes a nested
+      @brief Compile time constant reflecting whether a type exposes a nested
              vector_space_type which satisfies the vector_space concept.
    */
   template<class T>
@@ -325,7 +325,7 @@ namespace sequoia::maths
   };
 
   /** @ingroup ConvexSpace
-      @brief Compile time constant capturing whether a type exposes a nested
+      @brief Compile time constant reflecting whether a type exposes a nested
              free_modul_type which satisfies the vector_space concept.
    */
   template<class T>
@@ -719,12 +719,12 @@ namespace sequoia::maths
     using is_convex_space = std::true_type;
   };
 
-  template<affine_space C>
-    requires (!vector_space<C>) // TO DO : tighten up to insist on field not ring
-  struct dual<C>
+  template<affine_space A>
+    requires (!vector_space<A>)
+  struct dual<A>
   {
-    using set_type          = convex_functional<typename C::set_type>;
-    using vector_space_type = dual<free_module_type_of_t<C>>;
+    using set_type          = convex_functional<typename A::set_type>;
+    using vector_space_type = dual<free_module_type_of_t<A>>;
     using is_affine_space   = std::true_type;
   };
 
@@ -916,7 +916,7 @@ namespace sequoia::maths
     [[nodiscard]]
     constexpr value_type& value() noexcept requires (D == 1) && has_identity_validator { return m_Values[0]; }
 
-    // Make this explicit since otherwise, given two vectors a,b, a/b is well-formed due to implicit boolean conversion
+    /// This is explicit since otherwise, given two vectors a,b, a/b is well-formed due to implicit boolean conversion
     [[nodiscard]]
     constexpr explicit operator bool() const noexcept requires (D == 1) && std::convertible_to<value_type, bool>
     {
@@ -1099,8 +1099,7 @@ namespace sequoia::maths
   {
     using set_type          = sets::R<D>;
     using field_type        = T;
-    using is_vector_space = std::true_type;
-    using vector_space_type = euclidean_vector_space;
+    using is_vector_space   = std::true_type;
     constexpr static std::size_t dimension{D};
 
     template<basis Basis>
@@ -1140,8 +1139,7 @@ namespace sequoia::maths
   {
     using set_type          = sets::R<D>;
     using vector_space_type = euclidean_vector_space<D, T>;
-    using is_affine_space = std::true_type;
-    //using affine_space_type = euclidean_affine_space;
+    using is_affine_space   = std::true_type;
   };
 
   template<std::size_t D, std::floating_point T>
@@ -1149,8 +1147,7 @@ namespace sequoia::maths
   {
     using set_type          = sets::half_space<D>;
     using vector_space_type = euclidean_vector_space<D, T>;
-    using is_convex_space = std::true_type;
-    //using convex_space_type = euclidean_half_space;
+    using is_convex_space   = std::true_type;
   };
 
   template<std::size_t D, std::floating_point T, basis Basis, class Origin>
@@ -1163,7 +1160,7 @@ namespace sequoia::maths
   struct standard_basis
   {
     using vector_space_type = euclidean_vector_space<D, T>;
-    using orthonormal = std::true_type;
+    using orthonormal       = std::true_type;
   };
 
   template<std::size_t D, std::floating_point T>
