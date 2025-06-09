@@ -703,12 +703,18 @@ namespace sequoia::maths
   //==============================  dual spaces ============================== //
   template<class>
   struct dual;
+
+  // TO DO: think about this!
+  template<class T>
+  struct convex_functional
+  {
+  };
   
   template<convex_space C>
     requires (!affine_space<C>)
   struct dual<C>
   {
-    using set_type          = C::set_type;
+    using set_type          = convex_functional<typename C::set_type>;
     using vector_space_type = dual<free_module_type_of_t<C>>;
     using is_convex_space = std::true_type;
   };
@@ -717,7 +723,7 @@ namespace sequoia::maths
     requires (!vector_space<C>) // TO DO : tighten up to insist on field not ring
   struct dual<C>
   {
-    using set_type          = C::set_type;
+    using set_type          = convex_functional<typename C::set_type>;
     using vector_space_type = dual<free_module_type_of_t<C>>;
     using is_affine_space   = std::true_type;
   };
@@ -725,10 +731,10 @@ namespace sequoia::maths
   template<vector_space V>
   struct dual<V>
   {
-    using set_type          = V::set_type; // TO DO: think about this
-    using field_type        = commutative_ring_type_of_t<V>;
-    constexpr static auto dimension{V::dimension};
+    using set_type        = convex_functional<typename V::set_type>;
+    using field_type      = commutative_ring_type_of_t<V>;
     using is_vector_space = std::true_type;
+    constexpr static auto dimension{V::dimension};
   };
 
   template<class C>
