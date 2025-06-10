@@ -10,7 +10,83 @@
 /** @file
     @brief Abstractions pertaining to vector spaces, affine spaces and their generalizations.
 
-    
+    Representing abstract algebraic structures in C++ presents an interesting
+    challenge. At root, the fundamental abstraction is a set; indeed, a vector
+    space is nothing but a set with some additional structure defined. However,
+    sets of objects are not straightforward to represent, in general, in C++.
+
+    Consider the real numbers. In C++ we can give a name to the is set
+    by using the type system.
+
+    struct R {};
+
+    But what of the elements of R? Here we run into an immediate difficulty. We
+    would like to associate them with the values of a type. But to truly do so
+    we require a type with an infinite number of values (and uncountably so, in this
+    case). Therefore, when seeking representations, particularly of infinite sets,
+    we are generally reduced to approximations.
+
+    However, at least in so far as the set underpinning a particular vector space
+    goes, it turns out that, for our purposes, we need go no further than naming it.
+    As we will explain momentarily, this is because when dealing with vector spaces
+    in practice, we are almost always interested in the _coordinates_ of a vector
+    with respect to a particular basis and not the abstract entities comprising
+    the elements of the underlying set.
+
+    Before discussing coordinate systems, it is helpful to be more precise about
+    the fundamental definition of a vector space. The first four axioms pertain
+    just to the elements of the underlying set and amount to stating that a vector
+    space is an abelian group under addition. Thus, vector addition is associative,
+    commutative, has an identity element and admits an inverse.
+
+    However, the remaining properties of a vector space require not just the underlying
+    set, V, but also a field, F. Canonical examples of a field include the rationals or
+    the reals: sets admitting the standard arithmetic operations and for which every
+    element has both an additive an multiplicative inverse. As such, we speak of
+    a vector space over a field. A vector space admits a binary operation such that
+    any element of V can be multiplied by any element of F, to give another element
+    within V (or the same element for the multiplicative identity).
+
+    Every vector space admits at least one basis. For a vector space of dimension d,
+    a basis is a set of d elements which are linearly independent and so span the
+    space. Let the basis elements be denoted b_0, ..., b_{n-1}. Any vector in the space
+    may be written as a linear combination:
+
+    v = a_0 b_0 + ... + a_{n-1} b_{n-1},
+
+    where the a_i are valued in the field, F. The set of these values [a_0, ..., a_{n-1}]
+    are none other than the coordinates of v with respect to this particular basis.
+    The [a_0, ..., a_{n-1}] are often informally referred to as a vector. However
+    stricty speaking this is an abuse of terminology and conflates two distinct concepts:
+    an actual vector which is an element of the set which forms the vector space,
+    and a representation of this vector via the coordinates with respect to a
+    particular basis. This distinction can be further reinforced by pointing out that
+    two observers who agree they are talking about the same vector (i.e. set element)
+    will nevertheless disagree on the coordinates if they are using different bases -
+    as they are entirely entitled to do! To further add to the confusion, the coordinates
+    may be referred to as a coordinate vector which is perhaps unfortunate.
+
+    Regardless, from the perspective of performing actual calculations, the coordinates
+    are key. An crucial point to make is that, when dealing with the coordinates,
+    the underlying elements of the set, V, make no explicit appearance. This is a
+    manifestation of the fact that two vector spaces of the same dimension and over
+    the same field are isomorphic. This is incredibly helpful since, for many practical
+    purposes, we need not represent the underlying set beyond, at most, perhaps giving
+    it a name. For example, consider the vector space formed by functions
+    which map some set into a field: the question of how to represent the elements
+    of this vector space is completely circumvented.
+
+    However, that is not to say that subtleties of imperfect representations of
+    mathematical abstractions are entirely avoided; indeed, quite the contrary! The
+    coordinates are valued in a field and so at this stage we must deal with the fact that
+    C++ types such as float and double model the real numbers imperfectly. Nevertheless,
+    the burden has been shifted from attempting to represent things in C++ that may
+    be completely infeasible to things which can be done to reasonable approximation.
+
+    Vector spaces are just one of the things treated in the code that follows. There
+    are several important generalizations. First, there are affine spaces, which comprise
+    a set, A, together with a vector space whose additive group acts freely and
+    transitively on A.
  */
 
 
