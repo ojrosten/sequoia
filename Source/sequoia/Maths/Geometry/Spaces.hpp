@@ -42,7 +42,7 @@
     However, the remaining properties of a vector space require not just the underlying
     set, V, but also a field, F. Canonical examples of a field include the rationals or
     the reals: sets admitting the standard arithmetic operations and for which every
-    element has both an additive an multiplicative inverse. As such, we speak of
+    element has both an additive and multiplicative inverse. As such, we speak of
     a vector space over a field. A vector space admits a binary operation such that
     any element of V can be multiplied by any element of F, to give another element
     within V (or the same element for the multiplicative identity).
@@ -74,7 +74,7 @@
     purposes, we need not represent the underlying set beyond, at most, perhaps giving
     it a name. For example, consider the vector space formed by functions
     which map some set into a field: the question of how to represent the elements
-    of this vector space is completely circumvented.
+    of this vector space in C++ is completely circumvented.
 
     However, that is not to say that subtleties of imperfect representations of
     mathematical abstractions are entirely avoided; indeed, quite the contrary! The
@@ -85,8 +85,53 @@
 
     Vector spaces are just one of the things treated in the code that follows. There
     are several important generalizations. First, there are affine spaces, which comprise
-    a set, A, together with a vector space whose additive group acts freely and
-    transitively on A.
+    a set, A, together with a vector space, V, whose additive group acts freely and
+    transitively on A. Intuitvely, we can start at any point in A and translate to
+    any other point by adding the appropriate vector. In fact, the relationship is
+    stronger than this: choosing any point in A and adding any vector in V will give
+    a point in A. A nice example of an affine space is Euclidean space. Two observers
+    in this space, Alice and Bob, are entirely entitled to define their location as the
+    origin. Neither is more right than the other since this space has no distinguished origin.
+    Alice and Bob will, in general, disagree about the coordinates of points in the space.
+    However, they will agree on the vector which translates from one point to another (though
+    if they compare vector coordinates, they may have ton contend with using different bases
+    on the vector space!).
+
+    An affine space is sometimes described as a vector space which has forgotten its origin.
+    Indeed, a vector space is an affine space over itself. This is interesting in terms
+    of representing these concepts in C++. Since a vector space is a special case of
+    an affine space, this suggests that an affine space concept is more fundamental,
+    with the vector space being a refinement. However, a vector space is part of the
+    definition of an affine space (a set and a vector space, satisfying certain conditions)
+    and so it is this that will be reflected by the concepts defined below: the affine
+    space concept depends on the vector_space concent, and not vice-versa.
+
+    It will be useful for our purposes to generalize affine spaces. Consider taking a
+    convex subset, C, of an affine space. We may translate from any point in C to any
+    other by adding the appropriate vector from V. However, there are elements of V
+    which, when added to a point in C will take us outside of C and into the broader
+    affine space into which it is a part. However, we do not want define Convex spaces
+    via an embedding in a bigger space. There seems to be a solution which fits neatly
+    into a C++ implementation. Define a convex space, C, to comprise:
+    1. The union, S', of a set of points, S, and an exception state, E
+    2. A vector space, V
+    such that:
+    A. The difference of any two points in S is in V
+    B. An element of V, when added to S remains either in S or maps to E
+    Note that, since every point in S is mapped by elements of V into E, and there is
+    no mapping from E back into S, the action of the additive group of V is not bijective,
+    violating one of the axioms of affine spaces.
+
+    The other generalization interesting generialization is to generalize the notion of
+    a vector space to a free module over a commutative ring. Whereas a vector space is
+    defined over a field - such as the real numbers - a module is defined over a ring.
+    Our motivation for this is that the integers form a commutative ring and not a field,
+    since integers do not, in general, have multiplicative inverses valued within the integers.
+    Rather than attempting to deal with modules in full generality, we restrict our attention
+    to what may be the most useful, practical cases in the context of C++.
+
+    In line with the above, we also consider affine spaces over free modules and their
+    convex generalization where the action of the free module is not bijective.                                                                                    
  */
 
 
