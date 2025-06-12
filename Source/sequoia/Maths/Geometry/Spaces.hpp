@@ -150,7 +150,7 @@
 
 namespace sequoia::maths
 {
-  /** @defgroup ArithmeticTraits Arithmetic Traits
+  /** @defgroup ArithmeticProperties Arithmetic Properties
       @brief Tools to reflect on whether types expose the standard arithmetic operations.
 
       The main subtlety for the topics that will concern us is division. From the perspective
@@ -178,7 +178,7 @@ namespace sequoia::maths
       subtractable, multiplicable and divisible that it models a field.
    */
 
-  /** @ingroup ArithmeticTraits
+  /** @ingroup ArithmeticProperties
       @brief Compile time constant for addability
    */
   template<class T>
@@ -189,7 +189,7 @@ namespace sequoia::maths
     }
   };
 
-  /** @ingroup ArithmeticTraits
+  /** @ingroup ArithmeticProperties
       @brief Compile time constant for subtractability
    */
   template<class T>
@@ -200,7 +200,7 @@ namespace sequoia::maths
     }
   };
 
-  /** @ingroup ArithmeticTraits
+  /** @ingroup ArithmeticProperties
       @brief Compile time constant for multiplicability
    */
   template<class T>
@@ -211,7 +211,7 @@ namespace sequoia::maths
     }
   };
 
-  /** @ingroup ArithmeticTraits
+  /** @ingroup ArithmeticProperties
       @brief Compile time constant for divisibility
    */
   template<class T>
@@ -318,7 +318,13 @@ namespace sequoia::maths
   template<class T>
   concept weak_field = weak_commutative_ring<T> && weakly_abelian_group_under_multiplication_v<T> && is_divisible_v<T>;
 
-  /** @brief Compile time constant reflecting whether a type exposes a nested type named commutative_ring_type which satisifes the weak_commutative_ring concept. */ 
+  /** @defgroup PropertiesOfSpaces Properties of Spaces
+      @brief Tools to reflect on whether types expose other types typically associated with various spaces.
+   */
+
+  /** @ingroup PropertiesOfSpaces
+      @brief Compile time constant reflecting whether a type exposes a nested type named commutative_ring_type which satisifes the weak_commutative_ring concept.
+   */ 
   template<class T>
   inline constexpr bool has_commutative_ring_type_v{
     requires { 
@@ -327,7 +333,9 @@ namespace sequoia::maths
     }
   };
 
-  /** @brief Compile time constant reflecting whether a type exposes a nested type named field_type which satisifes the weak_field concept. */ 
+  /** @ingroup PropertiesOfSpaces
+      @brief Compile time constant reflecting whether a type exposes a nested type named field_type which satisifes the weak_field concept.
+   */ 
   template<class T>
   inline constexpr bool has_field_type_v{
     requires { 
@@ -336,19 +344,21 @@ namespace sequoia::maths
     }
   };
 
-  /** @brief Compile time constant reflecting whether a type exposes a nested type with the properties of a commutative ring.
+  /** @ingroup PropertiesOfSpaces
+      @brief Compile time constant reflecting whether a type exposes a nested type with the properties of a commutative ring.
 
-     The point here is that a field is a special case of a ring. Therefore, anything which defines
-     a field is implicitly defining a ring.
-   */
+      The point here is that a field is a special case of a ring. Therefore, anything which defines
+      a field is implicitly defining a ring.
+    */
   template<class T>
   inline constexpr bool defines_commutative_ring_v{has_commutative_ring_type_v<T> || has_field_type_v<T>};
 
-  /** @brief Reports whether a type exposes a nested type with the properties of a field.
+  /** @ingroup PropertiesOfSpaces
+      @brief Reports whether a type exposes a nested type with the properties of a field.
 
-     The point here is to capture the case where a type exposes a nested type commutative_ring_type
-     but the latter satisfies not just the weak_commutative_ring concept but also the strong
-     weak_field concept.
+      The point here is to capture the case where a type exposes a nested type commutative_ring_type
+      but the latter satisfies not just the weak_commutative_ring concept but also the strong
+      weak_field concept.
    */
   template<class T>
   inline constexpr bool defines_field_v{
@@ -359,13 +369,17 @@ namespace sequoia::maths
         }
   };
 
-  /** @brief Compile time constant reflecting whether a type exposes a nested value, dimension, convertible to a std::size_t. */
+  /** @ingroup PropertiesOfSpaces
+      @brief Compile time constant reflecting whether a type exposes a nested value, dimension, convertible to a std::size_t
+   */
   template<class T>
   inline constexpr bool has_dimension_v{
     requires { { T::dimension } -> std::convertible_to<std::size_t>; }
   };
 
-  /** @brief Compile time constant reflecting whether a type exposes a nested type named set_type. */
+  /** @ingroup PropertiesOfSpaces
+      @brief Compile time constant reflecting whether a type exposes a nested type named set_type.
+   */
   template<class T>
   inline constexpr bool has_set_type_v{
     requires { typename T::set_type; }
@@ -432,53 +446,27 @@ namespace sequoia::maths
     }
   };
   
-  /** @brief concept for a free module */
+  /** @defgroup Spaces Spaces
+      @brief Concepts and helpers pertaining to vector spaces, affine spaces and certain generalizations.    
+   */
+
+  /** @ingroup Spaces
+      @brief concept for a free module, implicitly understood to be over a commutative ring.
+
+      Free modules admit a basis. Our particular interest is in free modules over a commutative
+      ring. For want of a better term we slightly abuse free module to stand for
+      "free module over a commutative ring".
+   */
   template<class T>
   concept free_module = has_set_type_v<T> && has_dimension_v<T> && defines_commutative_ring_v<T> && (identifies_as_free_module_v<T> || identifies_as_vector_space_v<T>);
 
-  /** @brief concept for a vector space, which is a special case of a free module */
+  /** @ingroup Spaces
+      @brief concept for a vector space, which is a special case of a free module
+   */
   template<class T>
   concept vector_space = free_module<T> && defines_field_v<T>;
 
-  /** @defgroup ConvexSpace Convex Spaces
-      @brief Concepts and helpers pertaininng to convex spaces
-
-      An affine space comprises a set, A, and a vector space, V,
-      such that the additive group of V has a free and transitive
-      action on A. Informally, we may add any element of V to
-      any element of A, to translate to a different element of A.
-
-      There are several important ways to relax the definition of
-      an affine space. First, we can replace the vector space with
-      a free module, giving an affine space over a free module.
-      For what follows, this is the definition we shall take for
-      an affine space; whether it is over a vector space or a more
-      general free module can be determined by reflecting on whether
-      the associated commutative ring satsifies the requirements of
-      a field.
-
-      Given this working definition of an affine space, another
-      condition that we may relax is the free and transitive action
-      of the additive group of V on A. The motivation for this is
-      spaces which are bounded: there exist combinations of elements
-      of V and of A such tha a + v is no longer within the set. From
-      the point of view of a C++ implementation, it is not that this
-      addition isn't defined, but rather that the result is an exception
-      type. In other words, we are taking A to be the union of a
-      set of points and an exception type.
-
-      Rather than considering arbitrary relaxations of this form,
-      we consider only the case where (excluding any exception type)
-      the points of A form a convex space. Therefore for what follows
-      we consider a convex space to comprise:
-      1. A Set, C', considered the union of a set of points, C, and an exception type
-      2. A free module, M
-      3. The action of the additive group of M on C' yields another element of C'.
-         This is not a bijection, since there are many ways to map onto the single
-         exception state.      
-   */
-
-  /** @ingroup ConvexSpace
+  /** @ingroup PropertiesOfSpaces
       @brief Compile time constant reflecting whether a type exposes a nested
              vector_space_type which satisfies the vector_space concept.
    */
@@ -490,7 +478,7 @@ namespace sequoia::maths
     }
   };
 
-  /** @ingroup ConvexSpace
+  /** @ingroup PropertiesOfSpaces
       @brief Compile time constant reflecting whether a type exposes a nested
              free_modul_type which satisfies the vector_space concept.
    */
@@ -502,7 +490,7 @@ namespace sequoia::maths
     }
   };
 
-  /** @ingroup ConvexSpace
+  /** @ingroup Spaces
       @brief concept for convex spaces
 
       A convex space may be a free module. Otherwise, it comprises a set and a
@@ -516,7 +504,7 @@ namespace sequoia::maths
           && (has_vector_space_type_v<T> || has_free_module_type_v<T>)
           && (identifies_as_convex_space_v<T> || identifies_as_affine_space_v<T>));
 
-  /** @ingroup ConvexSpace
+  /** @ingroup Spaces
       @brief concept for affine spaces
 
       A vector space is an affine space over itself; beyond that, according to our
@@ -524,18 +512,18 @@ namespace sequoia::maths
    */
   template<class T>
   concept affine_space = vector_space<T> || (convex_space<T> && identifies_as_affine_space_v<T>);
-
-  /** @defgroup ConvexSpaceUtilities Convex Space Utilities
-      @brief Utilites for extracting properties of convex spaces
-   */
-
-  /** @ingroup ConvexSpaceUtilities
+  
+  /** @ingroup Spaces
       @brief Helper that universal template parameters will obviate the need for
     */
   template<class T>
   struct is_free_module : std::integral_constant<bool, free_module<T>> {};
+
+  /** @defgroup SpacesUtilities Convex Space Utilities
+      @brief Utilites for extracting properties of convex spaces
+   */
   
-  /** @ingroup ConvexSpaceUtilities
+  /** @ingroup PropertiesOfSpace
       @brief Helper to extract the free module type associated with a convex space.
 
       This takes into account that a vector space is a special case of a free module.
@@ -567,7 +555,7 @@ namespace sequoia::maths
   template<convex_space ConvexSpace>
   using free_module_type_of_t = free_module_type_of<ConvexSpace>::type;
   
-  /** @ingroup ConvexSpaceUtilities
+  /** @ingroup PropertiesOfSpaces
       @brief Helper to extract the commutative ring type of the free module associated with a convex space.
 
       This takes into accoutn that if the free module is a vector space, then the commutative ring is actually a field. 
@@ -591,7 +579,7 @@ namespace sequoia::maths
   template<convex_space ConvexSpace>
   using space_value_type = commutative_ring_type_of_t<ConvexSpace>;
 
-  /** @ingroup ConvexSpaceUtilities
+  /** @ingroup PropertiesOfSpaces
       @brief Helper to extract the dimension of the free module associated with a convex space.
    */
   
