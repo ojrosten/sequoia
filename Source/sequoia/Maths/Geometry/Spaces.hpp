@@ -821,16 +821,25 @@ namespace sequoia::maths
     using is_free_module = std::true_type;
     constexpr static auto dimension{(Ts::dimension + ...)};
   };
-  
-  // Types assumed to be ordered wrt type_comparator, but dependent types may not be against the same comparator
-  template<convex_space... Ts>
+
+   // Types assumed to be ordered wrt type_comparator, but dependent types may not be against the same comparator
+  template<affine_space... Ts>
     requires (!free_module<Ts> && ...)
   struct direct_product<std::tuple<Ts...>>
   {
     using set_type         = std::tuple<typename Ts::set_type...>;
     using free_module_type = direct_product<free_module_type_of_t<Ts>...>;
+    using is_affine_space  = std::true_type;
+  };
+  
+  // Types assumed to be ordered wrt type_comparator, but dependent types may not be against the same comparator
+  template<convex_space... Ts>
+    requires (!affine_space<Ts> && ...)
+  struct direct_product<std::tuple<Ts...>>
+  {
+    using set_type         = std::tuple<typename Ts::set_type...>;
+    using free_module_type = direct_product<free_module_type_of_t<Ts>...>;
     using is_convex_space  = std::true_type;
-    // TO DO: is_convext_space or is_affine_space?!
   };
 
   template<class>

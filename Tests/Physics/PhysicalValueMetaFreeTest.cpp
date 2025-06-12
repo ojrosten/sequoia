@@ -191,8 +191,8 @@ namespace sequoia::testing
                                  reduction<direct_product<std::tuple<length_space_t, mass_space_t, temp_space_t>>>>));
 
     STATIC_CHECK((std::is_same_v<reduction_t<direct_product<reduction_t<direct_product<mass_space_t, length_space_t>>,
-                                                            reduction_t<direct_product<time_space_t, temp_space_t>>>>,
-                                 reduction<direct_product<std::tuple<length_space_t, mass_space_t, temp_space_t, time_space_t>>>>));
+                                                            reduction_t<direct_product<electrical_current_space_t, temp_space_t>>>>,
+                                 reduction<direct_product<std::tuple<electrical_current_space_t, length_space_t, mass_space_t, temp_space_t>>>>));
   }
 
   void physical_value_meta_free_test::test_units_reduction()
