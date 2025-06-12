@@ -223,11 +223,7 @@ namespace sequoia::maths
   };
 
   /** @defgroup AlgebraicTraits Algebraic Traits
-      @brief 
-   */
-  
-  /** @ingroup AlgebraicTraits
-      @brief Trait for specifying whether a type behaves (appoximately) as an abelian group under addition.
+      @brief Traits and concepts for basic elements of abstract algebra.
 
       A fundamental problem of attempting this classification on a computer is the difference
       between a mathematical structure and an approximate representation of that structure.
@@ -236,8 +232,15 @@ namespace sequoia::maths
       To signify the fact that neither integer nor floating-point addition exactly models an
       abelian group, the term 'weak' is used. Note, however, that addition of unsigned integral
       types does precisely model an abelian group and so 'weak' is a minimum requirement.
-
+      
       Entertaingly, the only fundamental type in C++ which exacly models a field is bool.
+   */
+  
+  /** @ingroup AlgebraicTraits
+      @brief Trait for specifying whether a type behaves (appoximately) as an abelian group under addition.
+
+      This includes all the arithmetic types, with the unsigned one behaving precisely as an abelian group
+      under addition.
    */
   template<class T>
   struct weakly_abelian_group_under_addition : std::false_type {};
@@ -257,8 +260,11 @@ namespace sequoia::maths
   /** @ingroup AlgebraicTraits
       @brief Trait for specifying whether a type behaves (appoximately) as an abelian group under multiplication.
 
+      The floating-point types are taken to weakly model an abelian group under multiplication,
+      since they attempt to approximate the reals.
+      
       The only integral type modelling this (exactly, as it transpires) is bool. It is the only type in C++
-      modelling Z/Zn where n is a prime.
+      modelling Z/Zn where n is a prime. The other integral types do not model this even in an approximate sense.
    */
 
   template<class T>
@@ -293,7 +299,8 @@ namespace sequoia::maths
   inline constexpr bool multiplication_weakly_distributive_over_addition_v{multiplication_weakly_distributive_over_addition<T>::value};
 
   /** @ingroup AlgebraicTraits
-      @brief concept representing reasonable approximations to a commutative ring. */
+      @brief concept representing reasonable approximations to a commutative ring.
+   */
   
   template<class T>
   concept weak_commutative_ring 
@@ -305,7 +312,8 @@ namespace sequoia::maths
       && is_multiplicable_v<T>;
 
   /** @ingroup AlgebraicTraits
-      @brief concept representing reasonable approximations to a field. */
+      @brief concept representing reasonable approximations to a field.
+   */
 
   template<class T>
   concept weak_field = weak_commutative_ring<T> && weakly_abelian_group_under_multiplication_v<T> && is_divisible_v<T>;
