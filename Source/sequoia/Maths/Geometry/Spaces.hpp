@@ -151,6 +151,31 @@
 namespace sequoia::maths
 {
   /** @defgroup ArithmeticTraits Arithmetic Traits
+      @brief Tools to reflect on whether types expose the standard arithmetic operations.
+
+      The main subtlety for the topics that will concern us is division. From the perspective
+      of abstract algebra,  multiplication is the more primitive operation. If each element of
+      a set has a multiplicative inverse then for each element, a, there exists a single element,
+      a^{-1}, such that
+
+          a * a^{-1} = 1
+
+      From this, a division operation can be defined according to
+
+          a / b = a  * b^{-1}
+
+      However, there are common types that we will deal with - such as ints and size_ts - for
+      which most elements do not have multiplicative inverses valued within the type. A simple
+      example is int x = 2. The multiplicative inverse is 1/2, which is not an int.
+
+      Nevertheless, C++'s arithmetic types define division. For signed types this corresponds to a
+      so-called Euclidean domain. For the unsigned types the operation is algorithmically the
+      same, but I actually don't know the name for the associated mathematical structure.
+
+      Regardless, the purpose of the utilities in the following set is simply naive reflection on
+      whether particular operations exist in the C++ language and not the nuanced semantics.
+      Therefore, it would be _incorrect_ to conclude that, just because a type is addable,
+      subtractable, multiplicable and divisible that it models a field.
    */
 
   /** @ingroup ArithmeticTraits
@@ -197,7 +222,12 @@ namespace sequoia::maths
     }
   };
 
-  /** @brief Trait for specifying whether a type behaves (appoximately) as an abelian group under addition.
+  /** @defgroup AlgebraicTraits Algebraic Traits
+      @brief 
+   */
+  
+  /** @ingroup AlgebraicTraits
+      @brief Trait for specifying whether a type behaves (appoximately) as an abelian group under addition.
 
       A fundamental problem of attempting this classification on a computer is the difference
       between a mathematical structure and an approximate representation of that structure.
@@ -206,6 +236,8 @@ namespace sequoia::maths
       To signify the fact that neither integer nor floating-point addition exactly models an
       abelian group, the term 'weak' is used. Note, however, that addition of unsigned integral
       types does precisely model an abelian group and so 'weak' is a minimum requirement.
+
+      Entertaingly, the only fundamental type in C++ which exacly models a field is bool.
    */
   template<class T>
   struct weakly_abelian_group_under_addition : std::false_type {};
@@ -222,7 +254,8 @@ namespace sequoia::maths
   template<std::floating_point T>
   struct weakly_abelian_group_under_addition<std::complex<T>> : std::true_type {};
 
-  /** @brief Trait for specifying whether a type behaves (appoximately) as an abelian group under multiplication.
+  /** @ingroup AlgebraicTraits
+      @brief Trait for specifying whether a type behaves (appoximately) as an abelian group under multiplication.
 
       The only integral type modelling this (exactly, as it transpires) is bool. It is the only type in C++
       modelling Z/Zn where n is a prime.
@@ -246,7 +279,9 @@ namespace sequoia::maths
   template<>
   struct weakly_abelian_group_under_multiplication<bool> : std::true_type {};
   
-  /** @brief Trait for specifying whether a type exhibits multiplication that (approximately) distributes over addition. */
+  /** @ingroup AlgebraicTraits
+      @brief Trait for specifying whether a type exhibits multiplication that (approximately) distributes over addition.
+   */
 
   template<class T>
   struct multiplication_weakly_distributive_over_addition : std::true_type {};
@@ -257,7 +292,8 @@ namespace sequoia::maths
   template<class T>
   inline constexpr bool multiplication_weakly_distributive_over_addition_v{multiplication_weakly_distributive_over_addition<T>::value};
 
-  /* @brief concept representing reasonable approximations to a commutative ring. */
+  /** @ingroup AlgebraicTraits
+      @brief concept representing reasonable approximations to a commutative ring. */
   
   template<class T>
   concept weak_commutative_ring 
@@ -268,12 +304,13 @@ namespace sequoia::maths
       && is_subtractable_v<T>
       && is_multiplicable_v<T>;
 
-  /* @brief concept representing reasonable approximations to a field. */
+  /** @ingroup AlgebraicTraits
+      @brief concept representing reasonable approximations to a field. */
 
   template<class T>
   concept weak_field = weak_commutative_ring<T> && weakly_abelian_group_under_multiplication_v<T> && is_divisible_v<T>;
 
-  /* @brief Compile time constant reflecting whether a type exposes a nested type named commutative_ring_type which satisifes the weak_commutative_ring concept. */ 
+  /** @brief Compile time constant reflecting whether a type exposes a nested type named commutative_ring_type which satisifes the weak_commutative_ring concept. */ 
   template<class T>
   inline constexpr bool has_commutative_ring_type_v{
     requires { 
@@ -282,7 +319,7 @@ namespace sequoia::maths
     }
   };
 
-  /* @brief Compile time constant reflecting whether a type exposes a nested type named field_type which satisifes the weak_field concept. */ 
+  /** @brief Compile time constant reflecting whether a type exposes a nested type named field_type which satisifes the weak_field concept. */ 
   template<class T>
   inline constexpr bool has_field_type_v{
     requires { 
@@ -291,7 +328,7 @@ namespace sequoia::maths
     }
   };
 
-  /* @brief Compile time constant reflecting whether a type exposes a nested type with the properties of a commutative ring.
+  /** @brief Compile time constant reflecting whether a type exposes a nested type with the properties of a commutative ring.
 
      The point here is that a field is a special case of a ring. Therefore, anything which defines
      a field is implicitly defining a ring.
@@ -299,7 +336,7 @@ namespace sequoia::maths
   template<class T>
   inline constexpr bool defines_commutative_ring_v{has_commutative_ring_type_v<T> || has_field_type_v<T>};
 
-  /* @brief Reports whether a type exposes a nested type with the properties of a field.
+  /** @brief Reports whether a type exposes a nested type with the properties of a field.
 
      The point here is to capture the case where a type exposes a nested type commutative_ring_type
      but the latter satisfies not just the weak_commutative_ring concept but also the strong
