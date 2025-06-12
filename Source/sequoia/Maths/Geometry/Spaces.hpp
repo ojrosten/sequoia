@@ -719,57 +719,6 @@ namespace sequoia::maths
   template<>
   struct defines_half_line<half_line_validator> : std::true_type {};
 
-  /** @defgroup Coordinates Coordinates
-      @brief Coordinates are the bridge between the abstract mathematics of spaces and practical application.
-
-      When dealing with vectors in practice, almost invariably one is using the coordinates of
-      vectors with respect to a particular basis. These are often implicitly conflated with
-      the vector itself. However, the latter are simply elements of a vector space and there
-      is no sense in which different observers can disagree about properties of this
-      fundamental entity. However, observers using different bases can absolutely disagree
-      on the coordinates, though once they figure out the relationship between their bases
-      then it becomes possible to translate from one to the other.
-
-      It is worth noting that, for a vector space, the kernel of the implementation of the
-      coordinates depends only the field and the dimension. This reflects the fact that vector
-      spaces of the same dimension and over the same field are isomorphic.
-
-      Similar considerations apply to the various related spaces with which we deal.
-   */
-
-  /** @ingroup Coordinates
-      @brief Type to indicate a distinguished origin, relevant for free modules.
-
-      Unlike vector spaces, affine spaces do not have distinguished origin. Therefore, each
-      coordinate system for an affine space is with respect to a particular origin. This is
-      part of the type system to ensure that different coordinate systems cannot be
-      unwittingly mixed. To allow vector spaces to be treated in a similar way to affine spaces,
-      a type to represent the fact that their origins are distinguished is supplied.
-      
-    */
-  struct distinguished_origin {};
-
-  /** @ingroup Coordinates
-      @brief Forward declaration for the coordinates class template.
-    */
-
-  template<
-    convex_space ConvexSpace,
-    basis_for<free_module_type_of_t<ConvexSpace>> Basis,
-    class Origin,
-    validator_for<ConvexSpace> Validator
-  >
-  class coordinates;
-
-  template<affine_space AffineSpace, basis_for<free_module_type_of_t<AffineSpace>> Basis, class Origin>
-  using affine_coordinates = coordinates<AffineSpace, Basis, Origin, std::identity>;
-
-  template<vector_space VectorSpace, basis_for<free_module_type_of_t<VectorSpace>> Basis>
-  using vector_coordinates = affine_coordinates<VectorSpace, Basis, distinguished_origin>;
-
-  template<free_module FreeModule, basis_for<free_module_type_of_t<FreeModule>> Basis>
-  using free_module_coordinates = coordinates<FreeModule, Basis, distinguished_origin, std::identity>;
-
   //============================== direct_product ==============================//
 
   template<class... Ts>
@@ -928,7 +877,92 @@ namespace sequoia::maths
     using type = C;
   };
 
-  //============================== coordinates_base definition  ==============================//
+  /** @defgroup Coordinates Coordinates
+      @brief Coordinates are the bridge between the abstract mathematics of spaces and practical application.
+
+      When dealing with vectors in practice, almost invariably one is using the coordinates of
+      vectors with respect to a particular basis. These are often implicitly conflated with
+      the vector itself. However, the latter are simply elements of a vector space and there
+      is no sense in which different observers can disagree about properties of this
+      fundamental entity. However, observers using different bases can absolutely disagree
+      on the coordinates, though once they figure out the relationship between their bases
+      then it becomes possible to translate from one to the other.
+
+      It is worth noting that, for a vector space, the kernel of the implementation of the
+      coordinates depends only the field and the dimension. This reflects the fact that vector
+      spaces of the same dimension and over the same field are isomorphic.
+
+      Similar considerations apply to the various related spaces with which we deal.
+   */
+
+  /** @ingroup Coordinates
+      @brief Type to indicate a distinguished origin, relevant for free modules.
+
+      Unlike vector spaces, affine spaces do not have distinguished origin. Therefore, each
+      coordinate system for an affine space is with respect to a particular origin. This is
+      part of the type system to ensure that different coordinate systems cannot be
+      unwittingly mixed. To allow vector spaces to be treated in a similar way to affine spaces,
+      a type to represent the fact that their origins are distinguished is supplied.
+      
+    */
+
+  struct distinguished_origin {};
+
+  /** @ingroup Coordinates
+      @brief Forward declaration for the coordinates class template.
+   */
+
+  template<
+    convex_space ConvexSpace,
+    basis_for<free_module_type_of_t<ConvexSpace>> Basis,
+    class Origin,
+    validator_for<ConvexSpace> Validator
+  >
+  class coordinates;
+
+  /** @ingroup Coordinates
+      @brief Alias for coordinates of a point in an affine space with respect to a particular origin.
+
+      The basis belongs to the associated vector space, allowing the coordinates type for the affine
+      space to be aware of the type of the coordinate representation for displacements
+   */
+  template<affine_space AffineSpace, basis_for<free_module_type_of_t<AffineSpace>> Basis, class Origin>
+  using affine_coordinates = coordinates<AffineSpace, Basis, Origin, std::identity>;
+
+  /** @ingroup Coordinates
+      @brief Alias for coordinates of an element of a vector space with respect to a particular basis.
+   */
+  template<vector_space VectorSpace, basis_for<free_module_type_of_t<VectorSpace>> Basis>
+  using vector_coordinates = affine_coordinates<VectorSpace, Basis, distinguished_origin>;
+
+  /** @ingroup Coordinates
+      @brief Alias for coordinates of an element of a free module with respect to a particular basis.
+   */
+  template<free_module FreeModule, basis_for<free_module_type_of_t<FreeModule>> Basis>
+  using free_module_coordinates = coordinates<FreeModule, Basis, distinguished_origin, std::identity>;
+  
+  /** @ingroup Coordinates
+      @brief Class designed for inheritance by concerete coordinate types.
+
+      The type has protected special member functions (including the destructor) and uses
+      deducing-this patterns as a type-rich alternative to virtual dispatch.
+
+      From the perspective of the enclosing namespace, maths, there is actually no need
+      for a base class. Indeed, there is a single coordinates class template which derives
+      from coordinates_base, begging the question as to why a base class is necessary at all.
+      The reason is that there are applications in physics which have enough in common
+      with maths::coordinates, but are sufficiently distinct, for a base class to be extremely
+      useful in terms of reducing what would otherwise be very significant code duplication.
+
+      One of the novelties in the context of physics is the notion of units and quantities
+      of different types that can nevertheless by multipled and in some cases (like widths
+      and heights) added.
+
+      Noteable omissions from the base class are unary+ and unary- as well as subtraction of
+      two coordinates. Since these turn out to require a different implementation for
+      physical quantities, insofar as maths is concerned they are defined only in the derived
+      coordinates class template.
+   */
 
   template<
     convex_space ConvexSpace,
