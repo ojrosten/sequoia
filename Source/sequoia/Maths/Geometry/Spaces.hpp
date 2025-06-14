@@ -722,27 +722,15 @@ namespace sequoia::maths
   //============================== direct_product ==============================//
 
   template<class... Ts>
-  struct direct_product;
+  struct direct_product
+  {
+  };
 
   template<class... Ts>
   using direct_product_set_t = direct_product<Ts...>::set_type;
 
-  template<class T, class U>
-  struct direct_product<T, U>
-  {
-  };
-  
-  template<free_module T, free_module U>
-  struct direct_product<T, U>
-  {
-    using set_type              = direct_product<typename T::set_type, typename U::set_type>;
-    using commutative_ring_type = std::common_type_t<commutative_ring_type_of_t<T>, commutative_ring_type_of_t<U>>;
-    using is_free_module        = std::true_type;
-    constexpr static std::size_t dimension{T::dimension + U::dimension};
-  };
-
   template<free_module... Ts>
-    requires (sizeof...(Ts) > 2)
+    requires (sizeof...(Ts) >= 2)
   struct direct_product<Ts...>
   {
     using set_type              = direct_product<typename Ts::set_type...>;
@@ -751,21 +739,21 @@ namespace sequoia::maths
     constexpr static std::size_t dimension{(Ts::dimension + ...)};
   };
 
-  template<affine_space T, affine_space U>
-    requires (!free_module<T> && !free_module<U>)
-  struct direct_product<T, U>
+  template<affine_space... Ts>
+    requires (!free_module<Ts> && ...)
+  struct direct_product<Ts...>
   {
-    using set_type         = direct_product<typename T::set_type, typename U::set_type>;
-    using free_module_type = direct_product<free_module_type_of_t<T>, free_module_type_of_t<U>>;
+    using set_type         = direct_product<typename Ts::set_type...>;
+    using free_module_type = direct_product<free_module_type_of_t<Ts>...>;
     using is_affine_space  = std::true_type;
   };
 
-  template<convex_space T, convex_space U>
-    requires (!affine_space<T> && !affine_space<U>)
-  struct direct_product<T, U>
+  template<convex_space... Ts>
+    requires (!affine_space<Ts> && ...)
+  struct direct_product<Ts...>
   {
-    using set_type          = direct_product<typename T::set_type, typename U::set_type>;
-    using free_module_type  = direct_product<free_module_type_of_t<T>, free_module_type_of_t<U>>;
+    using set_type          = direct_product<typename Ts::set_type...>;
+    using free_module_type  = direct_product<free_module_type_of_t<Ts>...>;
     using is_convex_space   = std::true_type;
   };
 
