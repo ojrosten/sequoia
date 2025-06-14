@@ -157,7 +157,8 @@ namespace sequoia::physics
   };
 
   template<convex_space... Ts>
-  requires (!free_module<Ts> &&  ...) // TO DO : exclude affine space
+  requires (!affine_space<Ts> && ...) //&& ((free_module<Ts> || ...) && (!free_module<Ts> || ...))
+  //requires (!free_module<Ts> &&  ...) // TO DO : exclude affine space
   struct reduction<direct_product<std::tuple<Ts...>>>
   {
     using direct_product_t = direct_product<std::tuple<Ts...>>;

@@ -762,7 +762,7 @@ namespace sequoia::maths
   };
 
   template<affine_space... Ts>
-    requires (!free_module<Ts> && ...)
+    requires (sizeof...(Ts) >= 2) && (!free_module<Ts> && ...)
   struct direct_product<Ts...>
   {
     using set_type         = direct_product<typename Ts::set_type...>;
@@ -771,7 +771,8 @@ namespace sequoia::maths
   };
 
   template<convex_space... Ts>
-    requires (!affine_space<Ts> && ...) || ((free_module<Ts> || ...) && (!free_module<Ts> || ...))
+    requires (sizeof...(Ts) >= 2)
+          && ((!affine_space<Ts> && ...) || ((free_module<Ts> || ...) && (!free_module<Ts> || ...)))
   struct direct_product<Ts...>
   {
     using set_type         = direct_product<typename Ts::set_type...>;
@@ -784,6 +785,7 @@ namespace sequoia::maths
   // This and the following are to faciliate physical values, but are likely either unnecessary or in the wrong
   // place.
   template<free_module... Ts>
+    requires (sizeof...(Ts) >= 2)
   struct direct_product<std::tuple<Ts...>>
   {
     using set_type              = direct_product<typename Ts::set_type...>;
@@ -794,7 +796,7 @@ namespace sequoia::maths
 
   // Types assumed to be ordered wrt type_comparator, but dependent types may not be against the same comparator.
   template<affine_space... Ts>
-    requires (!free_module<Ts> && ...)
+    requires (sizeof...(Ts) >= 2) && (!free_module<Ts> && ...)
   struct direct_product<std::tuple<Ts...>>
   {
     using set_type         = direct_product<typename Ts::set_type...>;
@@ -804,7 +806,8 @@ namespace sequoia::maths
   
   // Types assumed to be ordered wrt type_comparator, but dependent types may not be against the same comparator.
   template<convex_space... Ts>
-    requires (!affine_space<Ts> && ...) || ((free_module<Ts> || ...) && (!free_module<Ts> || ...))
+    requires (sizeof...(Ts) >= 2)
+          && ((!affine_space<Ts> && ...) || ((free_module<Ts> || ...) && (!free_module<Ts> || ...)))
   struct direct_product<std::tuple<Ts...>>
   {
     using set_type         = direct_product<typename Ts::set_type...>;
