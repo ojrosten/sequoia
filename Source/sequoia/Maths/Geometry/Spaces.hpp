@@ -719,6 +719,28 @@ namespace sequoia::maths
   template<>
   struct defines_half_line<half_line_validator> : std::true_type {};
 
+  /** @defgroup DirectProduct Direct Product
+      @brief Direct Products are one way in which spaces can be composed to create new spaces.
+
+      At the root of everything considered in this file are sets. One way to compose
+      sets is by taking the Cartesian Product. However, the objects we are considering,
+      such as free modules, have additional structure. Direct products induce structure
+      on the cartesian product. For example, the direct product of two vector spaces over
+      the same field may also produce a vector space.
+
+      Note, however, that there are various subtleties. The direct product of two vector
+      spaces that are not over the same field does not produce another vector space.
+      More generally, the direct product of two modules, M_1 and M_2, respectively over
+      rings R_1 and R_2, yields a new module over the direct product of R_1 and R_2.
+      If R_1 and R_2 are the same (say R), we may choose to map onto R, meaning that
+      it is possible to construct a module via direct product, in this case, over R.
+      However, in general this is not allowed.
+
+      For now, we do not handle the general case. Thus, we may only consruct the direct
+      product of free modules if they are, loosely speaking, over the same ring.
+      Actually, we will permit this construct where the rings share a common type
+      in the C++ sense; this decision may need reviewing.
+   */
   //============================== direct_product ==============================//
 
   template<class... Ts>
@@ -730,7 +752,7 @@ namespace sequoia::maths
   using direct_product_set_t = direct_product<Ts...>::set_type;
 
   template<free_module... Ts>
-    requires (sizeof...(Ts) >= 2)
+    requires (sizeof...(Ts) >= 2) // TO DO: constrain commutative ring types
   struct direct_product<Ts...>
   {
     using set_type              = direct_product<typename Ts::set_type...>;
@@ -757,9 +779,10 @@ namespace sequoia::maths
     using is_convex_space  = std::true_type;
   };
 
-  // Types assumed to be ordered wrt type_comparator, but dependent types may not be against the same comparator
-  // Could add this as a constraint, at the cost of changing
-  // the algorithmic complexity...
+  // Types assumed to be ordered wrt type_comparator, but dependent types may not be against the same comparator.
+  // Could add this as a constraint, at the cost of changing the algorithmic complexity...
+  // This and the following are to faciliate physical values, but are likely either unnecessary or in the wrong
+  // place.
   template<free_module... Ts>
   struct direct_product<std::tuple<Ts...>>
   {
@@ -769,7 +792,7 @@ namespace sequoia::maths
     constexpr static auto dimension{(Ts::dimension + ...)};
   };
 
-  // Types assumed to be ordered wrt type_comparator, but dependent types may not be against the same comparator
+  // Types assumed to be ordered wrt type_comparator, but dependent types may not be against the same comparator.
   template<affine_space... Ts>
     requires (!free_module<Ts> && ...)
   struct direct_product<std::tuple<Ts...>>
@@ -779,7 +802,7 @@ namespace sequoia::maths
     using is_affine_space  = std::true_type;
   };
   
-  // Types assumed to be ordered wrt type_comparator, but dependent types may not be against the same comparator
+  // Types assumed to be ordered wrt type_comparator, but dependent types may not be against the same comparator.
   template<convex_space... Ts>
     requires (!affine_space<Ts> && ...) || ((free_module<Ts> || ...) && (!free_module<Ts> || ...))
   struct direct_product<std::tuple<Ts...>>
