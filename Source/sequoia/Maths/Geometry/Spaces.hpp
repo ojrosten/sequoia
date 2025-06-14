@@ -757,7 +757,7 @@ namespace sequoia::maths
     using is_convex_space   = std::true_type;
   };
 
-  // Types assumed to be ordered
+  // Types assumed to be ordered wrt type_comparator, but dependent types may not be against the same comparator
   // Could add this as a constraint, at the cost of changing
   // the algorithmic complexity...
   template<free_module... Ts>
@@ -769,7 +769,7 @@ namespace sequoia::maths
     constexpr static auto dimension{(Ts::dimension + ...)};
   };
 
-   // Types assumed to be ordered wrt type_comparator, but dependent types may not be against the same comparator
+  // Types assumed to be ordered wrt type_comparator, but dependent types may not be against the same comparator
   template<affine_space... Ts>
     requires (!free_module<Ts> && ...)
   struct direct_product<std::tuple<Ts...>>
@@ -781,16 +781,7 @@ namespace sequoia::maths
   
   // Types assumed to be ordered wrt type_comparator, but dependent types may not be against the same comparator
   template<convex_space... Ts>
-    requires (!affine_space<Ts> && ...)
-  struct direct_product<std::tuple<Ts...>>
-  {
-    using set_type         = direct_product<typename Ts::set_type...>;
-    using free_module_type = direct_product<free_module_type_of_t<Ts>...>;
-    using is_convex_space  = std::true_type;
-  };
-
-  template<convex_space... Ts>
-    requires (free_module<Ts> || ...) && (!free_module<Ts> || ...)
+    requires (!affine_space<Ts> && ...) || ((free_module<Ts> || ...) && (!free_module<Ts> || ...))
   struct direct_product<std::tuple<Ts...>>
   {
     using set_type         = direct_product<typename Ts::set_type...>;
