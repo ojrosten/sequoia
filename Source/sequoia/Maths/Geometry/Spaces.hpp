@@ -789,24 +789,11 @@ namespace sequoia::maths
     using is_convex_space  = std::true_type;
   };
 
-  template<class>
-  struct extract_common_field_type;
-
-  template<class T>
-  using extract_common_field_type_t = extract_common_field_type<T>::type;
-
-  template<convex_space... Ts>
-  struct extract_common_field_type<std::tuple<Ts...>>
-  {
-    using type = std::common_type_t<typename Ts::field_type...>;
-  };
-
   template<convex_space... Ts>
     requires (free_module<Ts> || ...) && (!free_module<Ts> || ...)
   struct direct_product<std::tuple<Ts...>>
   {
     using set_type         = direct_product<typename Ts::set_type...>;
-    using field_type       = extract_common_field_type_t<meta::filter_by_trait_t<std::tuple<Ts...>, is_free_module>>;
     using free_module_type = direct_product<free_module_type_of_t<Ts>...>;
     using is_convex_space  = std::true_type;
   };
