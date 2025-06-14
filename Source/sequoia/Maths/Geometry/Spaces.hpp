@@ -742,6 +742,7 @@ namespace sequoia::maths
   };
 
   template<free_module... Ts>
+    requires (sizeof...(Ts) > 2)
   struct direct_product<Ts...>
   {
     using set_type              = direct_product<typename Ts::set_type...>;
