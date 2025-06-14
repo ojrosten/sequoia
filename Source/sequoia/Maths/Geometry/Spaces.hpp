@@ -765,7 +765,7 @@ namespace sequoia::maths
   template<free_module... Ts>
   struct direct_product<std::tuple<Ts...>>
   {
-    using set_type       = std::tuple<typename Ts::set_type...>;
+    using set_type       = direct_product<typename Ts::set_type...>;
     using field_type     = std::common_type_t<commutative_ring_type_of_t<Ts>...>;
     using is_free_module = std::true_type;
     constexpr static auto dimension{(Ts::dimension + ...)};
@@ -776,7 +776,7 @@ namespace sequoia::maths
     requires (!free_module<Ts> && ...)
   struct direct_product<std::tuple<Ts...>>
   {
-    using set_type         = std::tuple<typename Ts::set_type...>;
+    using set_type         = direct_product<typename Ts::set_type...>;
     using free_module_type = direct_product<free_module_type_of_t<Ts>...>;
     using is_affine_space  = std::true_type;
   };
@@ -786,7 +786,7 @@ namespace sequoia::maths
     requires (!affine_space<Ts> && ...)
   struct direct_product<std::tuple<Ts...>>
   {
-    using set_type         = std::tuple<typename Ts::set_type...>;
+    using set_type         = direct_product<typename Ts::set_type...>;
     using free_module_type = direct_product<free_module_type_of_t<Ts>...>;
     using is_convex_space  = std::true_type;
   };
