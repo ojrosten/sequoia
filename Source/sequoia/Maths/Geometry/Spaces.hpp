@@ -748,11 +748,8 @@ namespace sequoia::maths
   {
   };
 
-  template<class... Ts>
-  using direct_product_set_t = direct_product<Ts...>::set_type;
-
   template<free_module... Ts>
-    requires (sizeof...(Ts) >= 2) // TO DO: constrain commutative ring types
+    requires (sizeof...(Ts) >= 1) // TO DO: constrain commutative ring types
   struct direct_product<Ts...>
   {
     using set_type              = direct_product<typename Ts::set_type...>;
@@ -762,7 +759,7 @@ namespace sequoia::maths
   };
 
   template<affine_space... Ts>
-    requires (sizeof...(Ts) >= 2) && (!free_module<Ts> && ...)
+    requires (sizeof...(Ts) >= 1) && (!free_module<Ts> && ...)
   struct direct_product<Ts...>
   {
     using set_type         = direct_product<typename Ts::set_type...>;
@@ -771,7 +768,7 @@ namespace sequoia::maths
   };
 
   template<convex_space... Ts>
-    requires (sizeof...(Ts) >= 2)
+    requires (sizeof...(Ts) >= 1)
           && ((!affine_space<Ts> && ...) || ((free_module<Ts> || ...) && (!free_module<Ts> || ...)))
   struct direct_product<Ts...>
   {
@@ -785,7 +782,7 @@ namespace sequoia::maths
   // This and the following are to faciliate physical values, but are likely either unnecessary or in the wrong
   // place.
   template<free_module... Ts>
-    requires (sizeof...(Ts) >= 2)
+    requires (sizeof...(Ts) >= 1)
   struct direct_product<std::tuple<Ts...>>
   {
     using set_type              = direct_product<typename Ts::set_type...>;
@@ -796,7 +793,7 @@ namespace sequoia::maths
 
   // Types assumed to be ordered wrt type_comparator, but dependent types may not be against the same comparator.
   template<affine_space... Ts>
-    requires (sizeof...(Ts) >= 2) && (!free_module<Ts> && ...)
+    requires (sizeof...(Ts) >= 1) && (!free_module<Ts> && ...)
   struct direct_product<std::tuple<Ts...>>
   {
     using set_type         = direct_product<typename Ts::set_type...>;
@@ -806,7 +803,7 @@ namespace sequoia::maths
   
   // Types assumed to be ordered wrt type_comparator, but dependent types may not be against the same comparator.
   template<convex_space... Ts>
-    requires (sizeof...(Ts) >= 2)
+    requires (sizeof...(Ts) >= 1)
           && ((!affine_space<Ts> && ...) || ((free_module<Ts> || ...) && (!free_module<Ts> || ...)))
   struct direct_product<std::tuple<Ts...>>
   {
