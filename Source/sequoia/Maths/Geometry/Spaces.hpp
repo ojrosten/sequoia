@@ -749,7 +749,7 @@ namespace sequoia::maths
   };
 
   template<convex_space... Ts>
-    requires (!affine_space<Ts> && ...)
+    requires (!affine_space<Ts> && ...) || ((free_module<Ts> || ...) && (!free_module<Ts> || ...))
   struct direct_product<Ts...>
   {
     using set_type          = direct_product<typename Ts::set_type...>;
