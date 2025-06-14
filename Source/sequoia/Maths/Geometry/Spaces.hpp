@@ -735,9 +735,9 @@ namespace sequoia::maths
   template<free_module T, free_module U>
   struct direct_product<T, U>
   {
-    using set_type       = direct_product<typename T::set_type, typename U::set_type>;
-    using field_type     = std::common_type_t<commutative_ring_type_of_t<T>, commutative_ring_type_of_t<U>>;
-    using is_free_module = std::true_type;
+    using set_type              = direct_product<typename T::set_type, typename U::set_type>;
+    using commutative_ring_type = std::common_type_t<commutative_ring_type_of_t<T>, commutative_ring_type_of_t<U>>;
+    using is_free_module        = std::true_type;
     constexpr static std::size_t dimension{T::dimension + U::dimension};
   };
 
