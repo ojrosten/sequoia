@@ -148,10 +148,10 @@ namespace sequoia::physics
     requires (free_module<Ts> ||  ...)
   struct reduction<direct_product<std::tuple<Ts...>>>
   {    
-    using tuple_type       = std::tuple<Ts...>;
-    using direct_product_t = direct_product<std::tuple<Ts...>>;
-    using set_type         = reduction<typename direct_product_t::set_type>;
-    using field_type       = commutative_ring_type_of_t<direct_product_t>;
+    using tuple_type            = std::tuple<Ts...>;
+    using direct_product_t      = direct_product<std::tuple<Ts...>>;
+    using set_type              = reduction<typename direct_product_t::set_type>;
+    using commutative_ring_type = commutative_ring_type_of_t<direct_product_t>;
     constexpr static std::size_t dimension{std::ranges::max({dimension_of<Ts>...})};
     using is_free_module = std::true_type;
   };
