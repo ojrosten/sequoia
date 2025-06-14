@@ -23,24 +23,33 @@ namespace sequoia::testing
 
     void run_tests();
 
-    void test_lower_bound();
-
-    void test_filter();
-
-    void test_drop();
-
-    void test_keep();
-
-    void test_merge();
-
-    void test_stable_sort();
-
     void test_type_comparator();
 
+    template<template<class...> class TT>
+    void test_lower_bound();
+
+    template<template<class...> class TT>
+    void test_filter();
+
+    template<template<class...> class TT>
+    void test_drop();
+
+    template<template<class...> class TT>
+    void test_keep();
+
+    template<template<class...> class TT>
+    void test_merge();
+
+    template<template<class...> class TT>
+    void test_stable_sort();
+
+    template<template<class...> class TT>
     void test_find();
 
+    template<template<class...> class TT>
     void test_erase();
 
+    template<template<class...> class TT>
     void test_insert();
   };
 }

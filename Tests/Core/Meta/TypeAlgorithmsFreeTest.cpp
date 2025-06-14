@@ -31,33 +31,59 @@ namespace sequoia::testing
   }
 
   void type_algorithms_free_test::run_tests()
-  {
-    test_lower_bound();
-    test_filter();
-    test_drop();
-    test_keep();
-    test_merge();
-    test_stable_sort();
+  {    
     test_type_comparator();
-    test_find();
-    test_erase();
-    test_insert();
+
+    test_lower_bound<std::tuple>();
+    test_lower_bound<std::variant>();
+
+    test_filter<std::tuple>();
+    test_filter<std::variant>();
+ 
+    test_drop<std::tuple>();
+    test_drop<std::variant>();
+
+    test_keep<std::tuple>();
+    test_keep<std::variant>();
+
+    test_merge<std::tuple>();
+    test_merge<std::variant>();
+ 
+    test_stable_sort<std::tuple>();
+    test_stable_sort<std::variant>();
+
+    test_find<std::tuple>();
+    test_find<std::variant>();
+
+    test_erase<std::tuple>();
+    test_erase<std::variant>();
+
+    test_insert<std::tuple>();
+    test_insert<std::variant>();
   }
 
+  void type_algorithms_free_test::test_type_comparator()
+  {
+    STATIC_CHECK((type_comparator_v<char, void>));
+    STATIC_CHECK((!type_comparator_v<int, char>));
+  }
+  
+  template<template<class...> class TT>
   void type_algorithms_free_test::test_lower_bound()
   {
-    STATIC_CHECK((lower_bound_v<std::tuple<>,     int, comparator> == 0));
-    STATIC_CHECK((lower_bound_v<std::tuple<int>,  int, comparator> == 0));
-    STATIC_CHECK((lower_bound_v<std::tuple<char>, int, comparator> == 1));
-    STATIC_CHECK((lower_bound_v<std::tuple<char, short, int>, char,   comparator> == 0));
-    STATIC_CHECK((lower_bound_v<std::tuple<char, short, int>, short,  comparator> == 1));
-    STATIC_CHECK((lower_bound_v<std::tuple<char, short, int>, int,    comparator> == 2));
-    STATIC_CHECK((lower_bound_v<std::tuple<char, short, int>, double, comparator> == 3));
-    STATIC_CHECK((lower_bound_v<std::tuple<char, char, short, short, int, int>, char,  comparator> == 0));
-    STATIC_CHECK((lower_bound_v<std::tuple<char, char, short, short, int, int>, short, comparator> == 2));
-    STATIC_CHECK((lower_bound_v<std::tuple<char, char, short, short, int, int>, int,   comparator> == 4));
+    STATIC_CHECK((lower_bound_v<TT<>,     int, comparator> == 0));
+    STATIC_CHECK((lower_bound_v<TT<int>,  int, comparator> == 0));
+    STATIC_CHECK((lower_bound_v<TT<char>, int, comparator> == 1));
+    STATIC_CHECK((lower_bound_v<TT<char, short, int>, char,   comparator> == 0));
+    STATIC_CHECK((lower_bound_v<TT<char, short, int>, short,  comparator> == 1));
+    STATIC_CHECK((lower_bound_v<TT<char, short, int>, int,    comparator> == 2));
+    STATIC_CHECK((lower_bound_v<TT<char, short, int>, double, comparator> == 3));
+    STATIC_CHECK((lower_bound_v<TT<char, char, short, short, int, int>, char,  comparator> == 0));
+    STATIC_CHECK((lower_bound_v<TT<char, char, short, short, int, int>, short, comparator> == 2));
+    STATIC_CHECK((lower_bound_v<TT<char, char, short, short, int, int>, int,   comparator> == 4));
   }
 
+  template<template<class...> class TT>
   void type_algorithms_free_test::test_filter()
   {   
     STATIC_CHECK((std::is_same_v<filter_t<std::tuple<>, std::index_sequence<>>, std::tuple<>>));
@@ -75,6 +101,7 @@ namespace sequoia::testing
     STATIC_CHECK((std::is_same_v<filter_by_trait_t<std::tuple<int, int>, is_int>, std::tuple<int, int>>));
   }
 
+  template<template<class...> class TT>
   void type_algorithms_free_test::test_drop()
   {
     STATIC_CHECK((std::is_same_v<drop_t<std::tuple<>, 0>, std::tuple<>>));
@@ -84,6 +111,7 @@ namespace sequoia::testing
     STATIC_CHECK((std::is_same_v<drop_t<std::tuple<char, int>, 2>, std::tuple<>>));
   }
 
+  template<template<class...> class TT>
   void type_algorithms_free_test::test_keep()
   {
     STATIC_CHECK((std::is_same_v<keep_t<std::tuple<>, 0>, std::tuple<>>));
@@ -94,6 +122,7 @@ namespace sequoia::testing
     STATIC_CHECK((std::is_same_v<keep_t<std::tuple<char, int>, 2>, std::tuple<char, int>>));
   }
 
+  template<template<class...> class TT>
   void type_algorithms_free_test::test_merge()
   {
     STATIC_CHECK((std::is_same_v<merge_t<std::tuple<>, std::tuple<>, comparator>, std::tuple<>>));
@@ -110,6 +139,7 @@ namespace sequoia::testing
     STATIC_CHECK((std::is_same_v<merge_t<std::tuple<short, int>, std::tuple<char, short, double>, comparator>, std::tuple<char, short, short, int, double>>));
   }
 
+  template<template<class...> class TT>
   void type_algorithms_free_test::test_stable_sort()
   {
     STATIC_CHECK((std::is_same_v<stable_sort_t<std::tuple<>, comparator>, std::tuple<>>));
@@ -119,12 +149,7 @@ namespace sequoia::testing
     STATIC_CHECK((std::is_same_v<stable_sort_t<std::tuple<int, char, double, short>, comparator>, std::tuple<char, short, int, double>>));
   }
 
-  void type_algorithms_free_test::test_type_comparator()
-  {
-    STATIC_CHECK((type_comparator_v<char, void>));
-    STATIC_CHECK((!type_comparator_v<int, char>));
-  }
-
+  template<template<class...> class TT>
   void type_algorithms_free_test::test_find()
   {
     STATIC_CHECK((find_v<std::tuple<>, int>                      == 0));
@@ -139,6 +164,7 @@ namespace sequoia::testing
     STATIC_CHECK((find_v<std::tuple<int, double, float>, char>   == 3));
   }
 
+  template<template<class...> class TT>
   void type_algorithms_free_test::test_erase()
   {
     STATIC_CHECK((std::is_same_v<erase_t<std::tuple<int>, 0>,                std::tuple<>>));
@@ -149,6 +175,7 @@ namespace sequoia::testing
     STATIC_CHECK((std::is_same_v<erase_t<std::tuple<int, float, double>, 2>, std::tuple<int, float>>));
   }
 
+  template<template<class...> class TT>
   void type_algorithms_free_test::test_insert()
   {
     STATIC_CHECK((std::is_same_v<insert_t<std::tuple<>, int, 0>,            std::tuple<int>>));
