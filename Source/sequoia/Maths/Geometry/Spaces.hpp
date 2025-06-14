@@ -752,9 +752,9 @@ namespace sequoia::maths
     requires (!affine_space<Ts> && ...) || ((free_module<Ts> || ...) && (!free_module<Ts> || ...))
   struct direct_product<Ts...>
   {
-    using set_type          = direct_product<typename Ts::set_type...>;
-    using free_module_type  = direct_product<free_module_type_of_t<Ts>...>;
-    using is_convex_space   = std::true_type;
+    using set_type         = direct_product<typename Ts::set_type...>;
+    using free_module_type = direct_product<free_module_type_of_t<Ts>...>;
+    using is_convex_space  = std::true_type;
   };
 
   // Types assumed to be ordered wrt type_comparator, but dependent types may not be against the same comparator
