@@ -156,61 +156,64 @@ namespace sequoia::testing
 
   void physical_value_meta_free_test::test_space_reduction()
   {
-    STATIC_CHECK(std::is_same_v<reduction_t<direct_product<delta_mass_space_t>>, delta_mass_space_t>);
-    STATIC_CHECK(std::is_same_v<reduction_t<direct_product<mass_space_t>>, mass_space_t>);
-
     STATIC_CHECK(std::is_same_v<reduction_t<direct_product<delta_mass_space_t, delta_len_space_t>>,
-                                 reduction<direct_product<delta_len_space_t, delta_mass_space_t>>>);
+                                  reduction<direct_product<delta_len_space_t, delta_mass_space_t>>>);
 
     STATIC_CHECK(std::is_same_v<reduction_t<direct_product<delta_len_space_t, delta_mass_space_t>>,
-                                 reduction<direct_product<delta_len_space_t, delta_mass_space_t>>>);
+                                  reduction<direct_product<delta_len_space_t, delta_mass_space_t>>>);
 
     STATIC_CHECK(std::is_same_v<reduction_t<direct_product<length_space_t, mass_space_t>>,
-                                 reduction<direct_product<length_space_t, mass_space_t>>>);
+                                  reduction<direct_product<length_space_t, mass_space_t>>>);
 
     STATIC_CHECK(std::is_same_v<reduction_t<direct_product<mass_space_t, length_space_t>>,
-                                 reduction<direct_product<length_space_t, mass_space_t>>>);
+                                  reduction<direct_product<length_space_t, mass_space_t>>>);
+   
+    STATIC_CHECK(std::is_same_v<to_full_reduction_t<reduction_t<direct_product<length_space_t, mass_space_t>>>,
+                                composite_space<length_space_t, mass_space_t>>);
+
+    STATIC_CHECK(std::is_same_v<to_full_reduction_t<reduction_t<direct_product<mass_space_t, length_space_t>>>,
+                                composite_space<length_space_t, mass_space_t>>);
+
+    STATIC_CHECK(std::is_same_v<to_full_reduction_t<reduction_t<direct_product<mass_space_t, dual<delta_mass_space_t>>>>,
+                                euclidean_vector_space<1, float>>);
+    
+    STATIC_CHECK(std::is_same_v<reduction_t<direct_product<delta_temp_space_t, composite_space<delta_len_space_t, delta_mass_space_t>>>,
+                                  reduction<direct_product<delta_len_space_t, delta_mass_space_t, delta_temp_space_t>>>);
+
+    STATIC_CHECK(std::is_same_v<reduction_t<direct_product<composite_space<delta_len_space_t, delta_mass_space_t>, delta_temp_space_t>>,
+                                  reduction<direct_product<delta_len_space_t, delta_mass_space_t, delta_temp_space_t>>>);
+    
+    STATIC_CHECK(std::is_same_v<reduction_t<direct_product<temp_space_t, composite_space<length_space_t, mass_space_t>>>,
+                                  reduction<direct_product<length_space_t, mass_space_t, temp_space_t>>>);
+
+    STATIC_CHECK(std::is_same_v<reduction_t<direct_product<length_space_t, composite_space<mass_space_t, temp_space_t>>>,
+                                  reduction<direct_product<length_space_t, mass_space_t, temp_space_t>>>);
+    
+    STATIC_CHECK(std::is_same_v<to_full_reduction_t<reduction_t<direct_product<composite_space<length_space_t, mass_space_t>, mass_space_t>>>,
+                                composite_space<length_space_t, mass_space_t, mass_space_t>>);
+
+    STATIC_CHECK(std::is_same_v<reduction_t<direct_product<composite_space<delta_len_space_t, delta_mass_space_t>,
+                                                           composite_space<delta_temp_space_t, delta_time_space_t>>>,
+                                  reduction<direct_product<delta_len_space_t, delta_mass_space_t, delta_temp_space_t, delta_time_space_t>>>);
 
     
-    STATIC_CHECK(std::is_same_v<reduction_t<direct_product<delta_temp_space_t, reduction_t<direct_product<delta_mass_space_t, delta_len_space_t>>>>,
-                                 reduction<direct_product<delta_len_space_t, delta_mass_space_t, delta_temp_space_t>>>);
-
-    STATIC_CHECK(std::is_same_v<reduction_t<direct_product<reduction_t<direct_product<delta_mass_space_t, delta_len_space_t>>, delta_temp_space_t>>,
-                                 reduction<direct_product<delta_len_space_t, delta_mass_space_t, delta_temp_space_t>>>);
-
-    STATIC_CHECK(std::is_same_v<reduction_t<direct_product<reduction_t<direct_product<delta_mass_space_t, delta_len_space_t>>,
-                                                            reduction_t<direct_product<delta_time_space_t, delta_temp_space_t>>>>,
-                                 reduction<direct_product<delta_len_space_t, delta_mass_space_t, delta_temp_space_t, delta_time_space_t>>>);
+    STATIC_CHECK(std::is_same_v<reduction_t<direct_product<composite_space<length_space_t, mass_space_t>,
+                                                           composite_space<electrical_current_space_t, temp_space_t>>>,
+                                  reduction<direct_product<electrical_current_space_t, length_space_t, mass_space_t, temp_space_t>>>);
 
     STATIC_CHECK(std::is_same_v<reduction_t<direct_product<delta_len_space_t,
-                                                            reduction_t<direct_product<delta_mass_space_t, reduction_t<direct_product<delta_time_space_t, delta_temp_space_t>>>>>>,
-                                 reduction<direct_product<delta_len_space_t, delta_mass_space_t, delta_temp_space_t, delta_time_space_t>>>);
+                                                           to_full_reduction_t<reduction_t<direct_product<delta_mass_space_t, composite_space<delta_temp_space_t, delta_time_space_t>>>>>>,
+                                  reduction<direct_product<delta_len_space_t, delta_mass_space_t, delta_temp_space_t, delta_time_space_t>>>);
 
-    STATIC_CHECK(std::is_same_v<reduction_t<direct_product<temp_space_t, reduction_t<direct_product<mass_space_t, length_space_t>>>>,
-                                 reduction<direct_product<length_space_t, mass_space_t, temp_space_t>>>);
+    STATIC_CHECK(std::is_same_v<to_full_reduction_t<reduction_t<direct_product<composite_space<mass_space_t, mass_space_t>, composite_space<dual<mass_space_t>, dual<mass_space_t>>>>>,
+                                euclidean_half_space<1, float>>);
 
-    STATIC_CHECK(std::is_same_v<reduction_t<direct_product<reduction_t<direct_product<mass_space_t, length_space_t>>, temp_space_t>>,
-                                 reduction<direct_product<length_space_t, mass_space_t, temp_space_t>>>);
-
-    STATIC_CHECK(std::is_same_v<reduction_t<direct_product<reduction_t<direct_product<mass_space_t, length_space_t>>,
-                                                            reduction_t<direct_product<electrical_current_space_t, temp_space_t>>>>,
-                                 reduction<direct_product<electrical_current_space_t, length_space_t, mass_space_t, temp_space_t>>>);
-
-    STATIC_CHECK(std::is_same_v<to_full_reduction_t<reduction_t<direct_product<length_space_t, mass_space_t>>>, composite_space<length_space_t, mass_space_t>>);
-    STATIC_CHECK(std::is_same_v<to_full_reduction_t<reduction_t<direct_product<mass_space_t, length_space_t>>>, composite_space<length_space_t, mass_space_t>>);
-    STATIC_CHECK(std::is_same_v<to_full_reduction_t<reduction_t<direct_product<mass_space_t, dual<delta_mass_space_t>>>>, euclidean_vector_space<1, float>>);
-
+    STATIC_CHECK(std::is_same_v<to_full_reduction_t<reduction_t<direct_product<composite_space<mass_space_t, mass_space_t>, dual_of_t<composite_space<mass_space_t, mass_space_t>>>>>,
+                                euclidean_half_space<1, float>>);
+    
     STATIC_CHECK(convex_space<to_full_reduction_t<reduction_t<direct_product<mass_space_t, length_space_t>>>>);
     STATIC_CHECK(vector_space<to_full_reduction_t<reduction_t<direct_product<delta_mass_space_t, delta_len_space_t>>>>);
     STATIC_CHECK(vector_space<to_full_reduction_t<reduction_t<direct_product<dual<delta_mass_space_t>, delta_mass_space_t>>>>);
-
-    STATIC_CHECK(std::is_same_v<to_full_reduction_t<reduction_t<direct_product<composite_space<length_space_t, mass_space_t>, mass_space_t>>>, composite_space<length_space_t, mass_space_t, mass_space_t>>);
-    STATIC_CHECK(std::is_same_v<
-                   to_full_reduction_t<reduction_t<direct_product<composite_space<mass_space_t, mass_space_t>, composite_space<dual<mass_space_t>, dual<mass_space_t>>>>>,
-                   euclidean_half_space<1, float>>);
-    STATIC_CHECK(std::is_same_v<
-                   to_full_reduction_t<reduction_t<direct_product<composite_space<mass_space_t, mass_space_t>, dual_of_t<composite_space<mass_space_t, mass_space_t>>>>>,
-                   euclidean_half_space<1, float>>);
   }
 
   void physical_value_meta_free_test::test_units_reduction()

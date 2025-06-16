@@ -97,21 +97,6 @@ namespace sequoia::physics
   using reduction_t = reduction<T>::type;
 
   template<class T>
-  struct is_reduction : std::false_type {};
-
-  template<class T>
-  struct is_reduction<reduction<T>> : std::true_type {};
-
-  template<class T>
-  inline constexpr bool is_reduction_v{is_reduction<T>::value};
-
-  template<class T>
-  struct reduction<direct_product<T>>
-  {
-    using type = T;
-  };
-
-  template<class T>
   struct to_reduction
   {
     using type = T;
@@ -150,35 +135,6 @@ namespace sequoia::physics
     using type = impl::simplify_t<physics::composite_unit<meta::merge_t<direct_product<Ts...>, direct_product<Us...>, meta::type_comparator>>>;
   };
 
-  template<convex_space T, convex_space U>
-    requires (!is_reduction_v<T>) && (!is_reduction_v<U>)
-  struct reduction<direct_product<T, U>>
-  {    
-    using type = to_reduction_t<impl::simplify_t<meta::merge_t<direct_product<T>, direct_product<U>, meta::type_comparator>>>;
-  };
-  
-  template<convex_space T, convex_space... Us>
-    requires (!is_reduction_v<T>)
-  struct reduction<direct_product<T, reduction<direct_product<Us...>>>>
-  {
-    using type = to_reduction_t<impl::simplify_t<meta::merge_t<direct_product<T>, direct_product<Us...>, meta::type_comparator>>>;
-  };
-
-  template<convex_space... Ts, convex_space U>
-    requires (!is_reduction_v<U>)
-  struct reduction<direct_product<reduction<direct_product<Ts...>>, U>>
-  {
-    using type = to_reduction_t<impl::simplify_t<meta::merge_t<direct_product<Ts...>, direct_product<U>, meta::type_comparator>>>;
-  };
-
-  template<convex_space... Ts, convex_space... Us>
-    requires (sizeof...(Ts) > 1) && (sizeof...(Us) > 1)
-  struct reduction<direct_product<reduction<direct_product<Ts...>>, reduction<direct_product<Us...>>>>
-  {
-    using type = to_reduction_t<impl::simplify_t<meta::merge_t<direct_product<Ts...>, direct_product<Us...>, meta::type_comparator>>>;
-  };
-
-
   template<class... Ts>
   struct composite_space;
 
@@ -190,6 +146,13 @@ namespace sequoia::physics
 
   template<class T>
   inline constexpr bool is_composite_space_v{is_composite_space<T>::value};
+
+  template<convex_space T, convex_space U>
+    requires (!is_composite_space_v<T>) && (!is_composite_space_v<U>)
+  struct reduction<direct_product<T, U>>
+  {    
+    using type = to_reduction_t<impl::simplify_t<meta::merge_t<direct_product<T>, direct_product<U>, meta::type_comparator>>>;
+  };
   
   template<convex_space T, convex_space... Us>
     requires (!is_composite_space_v<T>)
