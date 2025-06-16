@@ -182,22 +182,22 @@ namespace sequoia::physics
   };
 
   template<class T>
-  struct to_full_reduction;
+  struct to_composite_space;
 
   template<class... Ts>
-  struct to_full_reduction<reduction<direct_product<Ts...>>>
+  struct to_composite_space<reduction<direct_product<Ts...>>>
   {
     using type = composite_space<Ts...>;
   };
 
   template<class T>
-  struct to_full_reduction<reduction<direct_product<T>>>
+  struct to_composite_space<reduction<direct_product<T>>>
   {
     using type = T;
   };
 
   template<class T>
-  using to_full_reduction_t = to_full_reduction<T>::type;
+  using to_composite_space_t = to_composite_space<T>::type;
 
   
   template<std::size_t D>
@@ -391,7 +391,7 @@ namespace sequoia::physics
   {
     using type
       = physical_value<
-          to_full_reduction_t<reduction_t<direct_product<to_base_space_t<LHSValueSpace>, to_base_space_t<RHSValueSpace>>>>,
+          to_composite_space_t<reduction_t<direct_product<to_base_space_t<LHSValueSpace>, to_base_space_t<RHSValueSpace>>>>,
           reduction_t<direct_product<LHSUnit, RHSUnit>>,
           std::common_type_t<LHSConvention, RHSConvention>,
           distinguished_origin,
