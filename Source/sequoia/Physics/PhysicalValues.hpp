@@ -96,21 +96,6 @@ namespace sequoia::physics
   template<class T>
   using reduction_t = reduction<T>::type;
 
-  template<class T>
-  struct to_reduction
-  {
-    using type = T;
-  };
-
-  template<class T>
-  using to_reduction_t = to_reduction<T>::type;
-
-  template<class... Ts>
-  struct to_reduction<direct_product<Ts...>>
-  {
-    using type = reduction<direct_product<Ts...>>;
-  }; 
-
   template<physics::physical_unit T, physics::physical_unit U>
   struct reduction<direct_product<T, U>>
   {
@@ -151,28 +136,28 @@ namespace sequoia::physics
     requires (!is_composite_space_v<T>) && (!is_composite_space_v<U>)
   struct reduction<direct_product<T, U>>
   {    
-    using type = to_reduction_t<impl::simplify_t<meta::merge_t<direct_product<T>, direct_product<U>, meta::type_comparator>>>;
+    using type = reduction<impl::simplify_t<meta::merge_t<direct_product<T>, direct_product<U>, meta::type_comparator>>>;
   };
   
   template<convex_space T, convex_space... Us>
     requires (!is_composite_space_v<T>)
   struct reduction<direct_product<T, composite_space<Us...>>>
   {
-    using type = to_reduction_t<impl::simplify_t<meta::merge_t<direct_product<T>, direct_product<Us...>, meta::type_comparator>>>;
+    using type = reduction<impl::simplify_t<meta::merge_t<direct_product<T>, direct_product<Us...>, meta::type_comparator>>>;
   };
 
   template<convex_space... Ts, convex_space U>
     requires (!is_composite_space_v<U>)
   struct reduction<direct_product<composite_space<Ts...>, U>>
   {
-    using type = to_reduction_t<impl::simplify_t<meta::merge_t<direct_product<Ts...>, direct_product<U>, meta::type_comparator>>>;
+    using type = reduction<impl::simplify_t<meta::merge_t<direct_product<Ts...>, direct_product<U>, meta::type_comparator>>>;
   };
 
   template<convex_space... Ts, convex_space... Us>
     requires (sizeof...(Ts) > 1) && (sizeof...(Us) > 1)
   struct reduction<direct_product<composite_space<Ts...>, composite_space<Us...>>>
   {
-    using type = to_reduction_t<impl::simplify_t<meta::merge_t<direct_product<Ts...>, direct_product<Us...>, meta::type_comparator>>>;
+    using type = reduction<impl::simplify_t<meta::merge_t<direct_product<Ts...>, direct_product<Us...>, meta::type_comparator>>>;
   };
 
   template<convex_space... Ts>
