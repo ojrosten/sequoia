@@ -95,26 +95,26 @@ namespace sequoia::physics
   template<class T>
   using reduction_t = reduction<T>::type;
 
-  template<physics::physical_unit T, physics::physical_unit U>
+  template<physical_unit T, physical_unit U>
   struct reduction<direct_product<T, U>>
   {
     using type = reduction<impl::simplify_t<meta::merge_t<direct_product<T>, direct_product<U>, meta::type_comparator>>>;
   };
 
-  template<physics::physical_unit... Ts, physics::physical_unit U>
-  struct reduction<direct_product<physics::composite_unit<Ts...>, U>>
+  template<physical_unit... Ts, physical_unit U>
+  struct reduction<direct_product<composite_unit<Ts...>, U>>
   {
     using type = reduction<impl::simplify_t<meta::merge_t<direct_product<Ts...>, direct_product<U>, meta::type_comparator>>>;
   };
 
-  template<physics::physical_unit T, physics::physical_unit... Us>
-  struct reduction<direct_product<T, physics::composite_unit<Us...>>>
+  template<physical_unit T, physical_unit... Us>
+  struct reduction<direct_product<T, composite_unit<Us...>>>
   {
     using type = reduction<impl::simplify_t<meta::merge_t<direct_product<Us...>, direct_product<T>, meta::type_comparator>>>;
   };
 
-  template<physics::physical_unit... Ts, physics::physical_unit... Us>
-  struct reduction<direct_product<physics::composite_unit<Ts...>, physics::composite_unit<Us...>>>
+  template<physical_unit... Ts, physical_unit... Us>
+  struct reduction<direct_product<composite_unit<Ts...>, composite_unit<Us...>>>
   {
     using type = reduction<impl::simplify_t<meta::merge_t<direct_product<Ts...>, direct_product<Us...>, meta::type_comparator>>>;
   };
