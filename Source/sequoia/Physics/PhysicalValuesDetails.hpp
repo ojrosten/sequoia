@@ -360,16 +360,16 @@ namespace sequoia::physics::impl
   };
 
   /// \class Primary class template to aid reduction of direct products and composite units
-  template<class>
+  template<class, class>
   struct simplify;
 
-  template<class T>
-  using simplify_t = simplify<T>::type;
+  template<class T, class U>
+  using simplify_t = simplify<T, U>::type;
 
-  template<class... Ts>
-  struct simplify<direct_product<Ts...>>
+  template<class... Ts, class... Us>
+  struct simplify<direct_product<Ts...>, direct_product<Us...>>
   {
-    using type = reduce_t<count_and_combine_t<direct_product<Ts...>>>;
+    using type = reduction<reduce_t<count_and_combine_t<meta::merge_t<direct_product<Ts...>, direct_product<Us...>, meta::type_comparator>>>>;
   };
 }
 

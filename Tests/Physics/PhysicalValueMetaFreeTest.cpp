@@ -150,8 +150,8 @@ namespace sequoia::testing
   {
     using namespace physics::impl;
 
-    STATIC_CHECK(std::is_same_v<simplify_t<direct_product<length_space_t, mass_space_t, dual<mass_space_t>, temp_space_t>>,
-                                 direct_product<length_space_t, temp_space_t>>);
+    STATIC_CHECK(std::is_same_v<simplify_t<direct_product<length_space_t, mass_space_t>, direct_product<dual<mass_space_t>, temp_space_t>>,
+                                reduction<direct_product<length_space_t, temp_space_t>>>);
   }
 
   void physical_value_meta_free_test::test_space_reduction()

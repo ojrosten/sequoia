@@ -98,25 +98,25 @@ namespace sequoia::physics
   template<physical_unit T, physical_unit U>
   struct reduction<direct_product<T, U>>
   {
-    using type = reduction<impl::simplify_t<meta::merge_t<direct_product<T>, direct_product<U>, meta::type_comparator>>>;
+    using type = impl::simplify_t<direct_product<T>, direct_product<U>>;
   };
 
   template<physical_unit... Ts, physical_unit U>
   struct reduction<direct_product<composite_unit<Ts...>, U>>
   {
-    using type = reduction<impl::simplify_t<meta::merge_t<direct_product<Ts...>, direct_product<U>, meta::type_comparator>>>;
+    using type = impl::simplify_t<direct_product<Ts...>, direct_product<U>>;
   };
 
   template<physical_unit T, physical_unit... Us>
   struct reduction<direct_product<T, composite_unit<Us...>>>
   {
-    using type = reduction<impl::simplify_t<meta::merge_t<direct_product<Us...>, direct_product<T>, meta::type_comparator>>>;
+    using type = impl::simplify_t<direct_product<Us...>, direct_product<T>>;
   };
 
   template<physical_unit... Ts, physical_unit... Us>
   struct reduction<direct_product<composite_unit<Ts...>, composite_unit<Us...>>>
   {
-    using type = reduction<impl::simplify_t<meta::merge_t<direct_product<Ts...>, direct_product<Us...>, meta::type_comparator>>>;
+    using type = impl::simplify_t<direct_product<Ts...>, direct_product<Us...>>;
   };
 
   template<class... Ts>
@@ -125,25 +125,25 @@ namespace sequoia::physics
   template<convex_space T, convex_space U>
   struct reduction<direct_product<T, U>>
   {    
-    using type = reduction<impl::simplify_t<meta::merge_t<direct_product<T>, direct_product<U>, meta::type_comparator>>>;
-  };
-  
-  template<convex_space T, convex_space... Us>
-  struct reduction<direct_product<T, composite_space<Us...>>>
-  {
-    using type = reduction<impl::simplify_t<meta::merge_t<direct_product<T>, direct_product<Us...>, meta::type_comparator>>>;
+    using type = impl::simplify_t<direct_product<T>, direct_product<U>>;
   };
 
   template<convex_space... Ts, convex_space U>
   struct reduction<direct_product<composite_space<Ts...>, U>>
   {
-    using type = reduction<impl::simplify_t<meta::merge_t<direct_product<Ts...>, direct_product<U>, meta::type_comparator>>>;
+    using type = impl::simplify_t<direct_product<Ts...>, direct_product<U>>;
   };
+
+  template<convex_space T, convex_space... Us>
+  struct reduction<direct_product<T, composite_space<Us...>>>
+  {
+    using type = impl::simplify_t<direct_product<Us...>, direct_product<T>>;
+  };  
 
   template<convex_space... Ts, convex_space... Us>
   struct reduction<direct_product<composite_space<Ts...>, composite_space<Us...>>>
   {
-    using type = reduction<impl::simplify_t<meta::merge_t<direct_product<Ts...>, direct_product<Us...>, meta::type_comparator>>>;
+    using type = impl::simplify_t<direct_product<Ts...>, direct_product<Us...>>;
   };
 
   template<convex_space... Ts>
