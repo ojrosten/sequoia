@@ -13,6 +13,8 @@
 namespace sequoia::testing
 {
   using namespace physics;
+  using namespace physics::impl;
+
 
   namespace
   {
@@ -94,8 +96,6 @@ namespace sequoia::testing
 
   void physical_value_meta_free_test::test_count_and_combine()
   {
-    using namespace physics::impl;
-
     STATIC_CHECK(std::is_same_v<count_and_combine_t<direct_product<>>, direct_product<>>);
     STATIC_CHECK(std::is_same_v<count_and_combine_t<mass_space_t>,       direct_product<type_counter<mass_space_t, 1>>>);
     STATIC_CHECK(std::is_same_v<count_and_combine_t<dual<mass_space_t>>, direct_product<type_counter<dual<mass_space_t>, 1>>>);
@@ -135,8 +135,6 @@ namespace sequoia::testing
 
   void physical_value_meta_free_test::test_reduce()
   {
-    using namespace physics::impl;
-
     STATIC_CHECK(std::is_same_v<reduce_t<count_and_combine_t<direct_product<si::units::kilogram_t, dual<si::units::kilogram_t>>>>,
                                 direct_product<no_unit_t>>);
     STATIC_CHECK(std::is_same_v<reduce_t<count_and_combine_t<mass_space_t>>,       direct_product<mass_space_t>>);
@@ -148,8 +146,6 @@ namespace sequoia::testing
 
   void physical_value_meta_free_test::test_simplify()
   {
-    using namespace physics::impl;
-
     STATIC_CHECK(std::is_same_v<simplify_t<direct_product<length_space_t, mass_space_t>, direct_product<dual<mass_space_t>, temp_space_t>>,
                                 reduction<direct_product<length_space_t, temp_space_t>>>);
   }

@@ -371,16 +371,34 @@ namespace sequoia::physics::impl
   {
     using type = reduction<reduce_t<count_and_combine_t<meta::merge_t<direct_product<Ts...>, direct_product<Us...>, meta::type_comparator>>>>;
   };
+
+  template<class T>
+  struct to_composite_space;
+
+  template<convex_space... Ts>
+  struct to_composite_space<reduction<direct_product<Ts...>>>
+  {
+    using type = composite_space<Ts...>;
+  };
+
+  template<physical_unit... Ts>
+  struct to_composite_space<reduction<direct_product<Ts...>>>
+  {
+    using type = composite_unit<Ts...>;
+  };
+
+  template<class T>
+  struct to_composite_space<reduction<direct_product<T>>>
+  {
+    using type = T;
+  };
+
+  template<class T>
+  using to_composite_space_t = to_composite_space<T>::type;
 }
 
 namespace sequoia::maths
 {
-  template<convex_space... Ts>
-  struct dual_of<physics::reduction<direct_product<Ts...>>>
-  {
-    using type = physics::reduction<direct_product<dual_of_t<Ts>...>>;
-  };
-
   template<convex_space... Ts>
   struct dual_of<physics::composite_space<Ts...>>
   {

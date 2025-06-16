@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file */
+/** \file */
 
 #include "sequoia/Physics/PhysicalValuesDetails.hpp"
 
@@ -38,7 +38,7 @@ namespace sequoia::maths
     using validator_type = T::validator_type;
   };
 
-  /*! \brief Specialization for units, such as degrees Celsius, for which
+  /** @brief Specialization for units, such as degrees Celsius, for which
              the corresponding quantity cannot be inverted.
 
              Note, though, that inverse units of this type can appear in
@@ -88,12 +88,36 @@ namespace sequoia::physics
     using validator_type = reduced_validator_t<typename Ts::validator_type...>;
   };
 
-  /// \class Primary class template for the reduction of direct products to a lower dimensional space
+  /// @class Primary class template for the reduction of direct products to a lower dimensional space
   template<class T>
   struct reduction;
 
   template<class T>
   using reduction_t = reduction<T>::type;
+  
+  template<class... Ts>
+  struct composite_space;
+
+  template<convex_space... Ts>
+    requires (free_module<Ts> ||  ...)
+  struct composite_space<Ts...>
+  {    
+    using direct_product_t      = direct_product<Ts...>;
+    using set_type              = reduction<typename direct_product_t::set_type>;
+    using commutative_ring_type = commutative_ring_type_of_t<direct_product_t>;
+    constexpr static std::size_t dimension{std::ranges::max({dimension_of<Ts>...})};
+    using is_free_module = std::true_type;
+  };
+
+  template<convex_space... Ts>
+    requires (!affine_space<Ts> && ...)
+  struct composite_space<Ts...>
+  {
+    using direct_product_t = direct_product<Ts...>;
+    using set_type         = reduction<typename direct_product_t::set_type>;
+    using free_module_type = composite_space<free_module_type_of_t<Ts>...>;
+    using is_convex_space  = std::true_type;
+  };
 
   template<physical_unit T, physical_unit U>
   struct reduction<direct_product<T, U>>
@@ -119,9 +143,6 @@ namespace sequoia::physics
     using type = impl::simplify_t<direct_product<Ts...>, direct_product<Us...>>;
   };
 
-  template<class... Ts>
-  struct composite_space;
-
   template<convex_space T, convex_space U>
   struct reduction<direct_product<T, U>>
   {    
@@ -145,52 +166,6 @@ namespace sequoia::physics
   {
     using type = impl::simplify_t<direct_product<Ts...>, direct_product<Us...>>;
   };
-
-  template<convex_space... Ts>
-    requires (free_module<Ts> ||  ...)
-  struct composite_space<Ts...>
-  {    
-    using direct_product_t      = direct_product<Ts...>;
-    using set_type              = reduction<typename direct_product_t::set_type>;
-    using commutative_ring_type = commutative_ring_type_of_t<direct_product_t>;
-    constexpr static std::size_t dimension{std::ranges::max({dimension_of<Ts>...})};
-    using is_free_module = std::true_type;
-  };
-
-  template<convex_space... Ts>
-    requires (!affine_space<Ts> && ...)
-  struct composite_space<Ts...>
-  {
-    using direct_product_t = direct_product<Ts...>;
-    using set_type         = reduction<typename direct_product_t::set_type>;
-    using free_module_type = composite_space<free_module_type_of_t<Ts>...>;
-    using is_convex_space  = std::true_type;
-  };
-
-  template<class T>
-  struct to_composite_space;
-
-  template<convex_space... Ts>
-  struct to_composite_space<reduction<direct_product<Ts...>>>
-  {
-    using type = composite_space<Ts...>;
-  };
-
-  template<physical_unit... Ts>
-  struct to_composite_space<reduction<direct_product<Ts...>>>
-  {
-    using type = composite_unit<Ts...>;
-  };
-
-  template<class T>
-  struct to_composite_space<reduction<direct_product<T>>>
-  {
-    using type = T;
-  };
-
-  template<class T>
-  using to_composite_space_t = to_composite_space<T>::type;
-
   
   template<std::size_t D>
   struct canonical_convention;
@@ -383,8 +358,8 @@ namespace sequoia::physics
   {
     using type
       = physical_value<
-          to_composite_space_t<reduction_t<direct_product<to_base_space_t<LHSValueSpace>, to_base_space_t<RHSValueSpace>>>>,
-          to_composite_space_t<reduction_t<direct_product<LHSUnit, RHSUnit>>>,
+          impl::to_composite_space_t<reduction_t<direct_product<to_base_space_t<LHSValueSpace>, to_base_space_t<RHSValueSpace>>>>,
+          impl::to_composite_space_t<reduction_t<direct_product<LHSUnit, RHSUnit>>>,
           std::common_type_t<LHSConvention, RHSConvention>,
           distinguished_origin,
           reduced_validator_t<LHSValidator, RHSValidator>
@@ -436,7 +411,7 @@ namespace sequoia::physics
     physical_unit Unit,
     class Convention                    = canonical_convention<free_module_type_of_t<ValueSpace>::dimension>,
     class Origin                        = to_origin_type_t<ValueSpace, Unit>,
-    validator_for<ValueSpace> Validator =typename Unit::validator_type
+    validator_for<ValueSpace> Validator = typename Unit::validator_type
   >
     requires    has_consistent_unit<ValueSpace, Unit>
              && has_consistent_validator<ValueSpace, Validator>
