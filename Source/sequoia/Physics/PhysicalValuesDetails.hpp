@@ -366,48 +366,11 @@ namespace sequoia::physics::impl
   template<class T>
   using simplify_t = simplify<T>::type;
 
-  /*template<class... Ts>
-  requires (!convex_space<Ts> && ...)
-  struct simplify<direct_product<Ts...>>
-  {
-    using type = reduce_t<count_and_combine_t<direct_product<Ts...>>>;
-    };*/
-
   template<class... Ts>
   struct simplify<direct_product<Ts...>>
   {
     using type = reduce_t<count_and_combine_t<direct_product<Ts...>>>;
   };
-
-  
-
-  template<class T>
-  struct canonical_direct_product;
-  
-  template<class... Ts>
-  struct canonical_direct_product<direct_product<Ts...>>
-  {
-    using type = direct_product<Ts...>;
-  };
-
-  template<class T>
-  struct canonical_direct_product<direct_product<T>>
-  {
-    using type = T;
-  };
-
-  template<class... Ts>
-  using canonical_direct_product_t = canonical_direct_product<Ts...>::type;
-
-  /*template<physics::physical_unit... Ts>
-  struct simplify<physics::composite_unit<direct_product<Ts...>>>
-  {    
-    using reduced_product_type = reduce_t<count_and_combine_t<direct_product<Ts...>>>;
-    using canonical_type = canonical_direct_product_t<reduced_product_type>;
-    using type = std::conditional_t<std::same_as<reduced_product_type, canonical_type>,
-                                    physics::composite_unit<reduced_product_type>,
-                                    canonical_type>;
-                                    };*/
 }
 
 namespace sequoia::maths
