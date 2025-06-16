@@ -777,40 +777,17 @@ namespace sequoia::maths
     using is_convex_space  = std::true_type;
   };
 
-  // Types assumed to be ordered wrt type_comparator, but dependent types may not be against the same comparator.
-  // Could add this as a constraint, at the cost of changing the algorithmic complexity...
-  // This and the following are to faciliate physical values, but are likely either unnecessary or in the wrong
-  // place.
-  template<free_module... Ts>
-    requires (sizeof...(Ts) >= 1)
-  struct direct_product<std::tuple<Ts...>>
-  {
-    using set_type              = direct_product<typename Ts::set_type...>;
-    using commutative_ring_type = std::common_type_t<commutative_ring_type_of_t<Ts>...>;
-    using is_free_module        = std::true_type;
-    constexpr static auto dimension{(Ts::dimension + ...)};
-  };
+  template<class T>
+  struct is_direct_product : std::false_type {};
 
-  // Types assumed to be ordered wrt type_comparator, but dependent types may not be against the same comparator.
-  template<affine_space... Ts>
-    requires (sizeof...(Ts) >= 1) && (!free_module<Ts> && ...)
-  struct direct_product<std::tuple<Ts...>>
-  {
-    using set_type         = direct_product<typename Ts::set_type...>;
-    using free_module_type = direct_product<free_module_type_of_t<Ts>...>;
-    using is_affine_space  = std::true_type;
-  };
-  
-  // Types assumed to be ordered wrt type_comparator, but dependent types may not be against the same comparator.
-  template<convex_space... Ts>
-    requires (sizeof...(Ts) >= 1)
-          && ((!affine_space<Ts> && ...) || ((free_module<Ts> || ...) && (!free_module<Ts> || ...)))
-  struct direct_product<std::tuple<Ts...>>
-  {
-    using set_type         = direct_product<typename Ts::set_type...>;
-    using free_module_type = direct_product<free_module_type_of_t<Ts>...>;
-    using is_convex_space  = std::true_type;
-  };
+  template<class... Ts>
+  struct is_direct_product<direct_product<Ts...>> : std::true_type {};
+
+  template<class T>
+  using is_direct_product_t = is_direct_product<T>::type;
+
+  template<class T>
+  inline constexpr bool is_direct_product_v = is_direct_product<T>::value;
 
   //==============================  dual spaces ============================== //
   template<class>

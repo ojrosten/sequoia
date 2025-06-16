@@ -84,7 +84,7 @@ namespace sequoia::physics
 
   // Ts are assumed to be ordered
   template<physics::physical_unit... Ts>
-  struct composite_unit<std::tuple<Ts...>>
+  struct composite_unit<direct_product<Ts...>>
   {
     using validator_type = reduced_validator_t<typename Ts::validator_type...>;
   };
@@ -106,6 +106,12 @@ namespace sequoia::physics
   inline constexpr bool is_reduction_v{is_reduction<T>::value};
 
   template<class T>
+  struct reduction<direct_product<T>>
+  {
+    using type = T;
+  };
+
+  template<class T>
   struct to_reduction
   {
     using type = T;
@@ -115,41 +121,102 @@ namespace sequoia::physics
   using to_reduction_t = to_reduction<T>::type;
 
   template<class... Ts>
-  struct to_reduction<direct_product<std::tuple<Ts...>>>
+  struct to_reduction<direct_product<Ts...>>
   {
-    using type = reduction<direct_product<std::tuple<Ts...>>>;
-  };
+    using type = reduction<direct_product<Ts...>>;
+  }; 
 
   template<physics::physical_unit T, physics::physical_unit U>
-  struct reduction<std::tuple<T, U>>
+  struct reduction<direct_product<T, U>>
   {
-    using type = impl::simplify_t<physics::composite_unit<meta::merge_t<std::tuple<T>, std::tuple<U>, meta::type_comparator>>>;
+    using type = impl::simplify_t<physics::composite_unit<meta::merge_t<direct_product<T>, direct_product<U>, meta::type_comparator>>>;
   };
 
   template<physics::physical_unit... Ts, physics::physical_unit U>
-  struct reduction<std::tuple<physics::composite_unit<std::tuple<Ts...>>, U>>
+  struct reduction<direct_product<physics::composite_unit<direct_product<Ts...>>, U>>
   {
-    using type = impl::simplify_t<physics::composite_unit<meta::merge_t<std::tuple<Ts...>, std::tuple<U>, meta::type_comparator>>>;
+    using type = impl::simplify_t<physics::composite_unit<meta::merge_t<direct_product<Ts...>, direct_product<U>, meta::type_comparator>>>;
   };
 
   template<physics::physical_unit T, physics::physical_unit... Us>
-  struct reduction<std::tuple<T, physics::composite_unit<std::tuple<Us...>>>>
+  struct reduction<direct_product<T, physics::composite_unit<direct_product<Us...>>>>
   {
-    using type = impl::simplify_t<physics::composite_unit<meta::merge_t<std::tuple<Us...>, std::tuple<T>, meta::type_comparator>>>;
+    using type = impl::simplify_t<physics::composite_unit<meta::merge_t<direct_product<Us...>, direct_product<T>, meta::type_comparator>>>;
   };
 
   template<physics::physical_unit... Ts, physics::physical_unit... Us>
-  struct reduction<std::tuple<physics::composite_unit<std::tuple<Ts...>>, physics::composite_unit<std::tuple<Us...>>>>
+  struct reduction<direct_product<physics::composite_unit<direct_product<Ts...>>, physics::composite_unit<direct_product<Us...>>>>
   {
-    using type = impl::simplify_t<physics::composite_unit<meta::merge_t<std::tuple<Ts...>, std::tuple<Us...>, meta::type_comparator>>>;
+    using type = impl::simplify_t<physics::composite_unit<meta::merge_t<direct_product<Ts...>, direct_product<Us...>, meta::type_comparator>>>;
   };
-   
+
+  template<convex_space T, convex_space U>
+    requires (!is_reduction_v<T>) && (!is_reduction_v<U>)
+  struct reduction<direct_product<T, U>>
+  {    
+    using type = to_reduction_t<impl::simplify_t<meta::merge_t<direct_product<T>, direct_product<U>, meta::type_comparator>>>;
+  };
+  
+  template<convex_space T, convex_space... Us>
+    requires (!is_reduction_v<T>)
+  struct reduction<direct_product<T, reduction<direct_product<Us...>>>>
+  {
+    using type = to_reduction_t<impl::simplify_t<meta::merge_t<direct_product<T>, direct_product<Us...>, meta::type_comparator>>>;
+  };
+
+  template<convex_space... Ts, convex_space U>
+    requires (!is_reduction_v<U>)
+  struct reduction<direct_product<reduction<direct_product<Ts...>>, U>>
+  {
+    using type = to_reduction_t<impl::simplify_t<meta::merge_t<direct_product<Ts...>, direct_product<U>, meta::type_comparator>>>;
+  };
+
+  template<convex_space... Ts, convex_space... Us>
+    requires (sizeof...(Ts) > 1) && (sizeof...(Us) > 1)
+  struct reduction<direct_product<reduction<direct_product<Ts...>>, reduction<direct_product<Us...>>>>
+  {
+    using type = to_reduction_t<impl::simplify_t<meta::merge_t<direct_product<Ts...>, direct_product<Us...>, meta::type_comparator>>>;
+  };
+
+
+  template<class... Ts>
+  struct composite_space;
+
+  template<class T>
+  struct is_composite_space : std::false_type {};
+
+  template<class T>
+  struct is_composite_space<composite_space<T>> : std::true_type {};
+
+  template<class T>
+  inline constexpr bool is_composite_space_v{is_composite_space<T>::value};
+  
+  template<convex_space T, convex_space... Us>
+    requires (!is_composite_space_v<T>)
+  struct reduction<direct_product<T, composite_space<Us...>>>
+  {
+    using type = to_reduction_t<impl::simplify_t<meta::merge_t<direct_product<T>, direct_product<Us...>, meta::type_comparator>>>;
+  };
+
+  template<convex_space... Ts, convex_space U>
+    requires (!is_composite_space_v<U>)
+  struct reduction<direct_product<composite_space<Ts...>, U>>
+  {
+    using type = to_reduction_t<impl::simplify_t<meta::merge_t<direct_product<Ts...>, direct_product<U>, meta::type_comparator>>>;
+  };
+
+  template<convex_space... Ts, convex_space... Us>
+    requires (sizeof...(Ts) > 1) && (sizeof...(Us) > 1)
+  struct reduction<direct_product<composite_space<Ts...>, composite_space<Us...>>>
+  {
+    using type = to_reduction_t<impl::simplify_t<meta::merge_t<direct_product<Ts...>, direct_product<Us...>, meta::type_comparator>>>;
+  };
+
   template<convex_space... Ts>
     requires (free_module<Ts> ||  ...)
-  struct reduction<direct_product<std::tuple<Ts...>>>
+  struct composite_space<Ts...>
   {    
-    using tuple_type            = std::tuple<Ts...>;
-    using direct_product_t      = direct_product<std::tuple<Ts...>>;
+    using direct_product_t      = direct_product<Ts...>;
     using set_type              = reduction<typename direct_product_t::set_type>;
     using commutative_ring_type = commutative_ring_type_of_t<direct_product_t>;
     constexpr static std::size_t dimension{std::ranges::max({dimension_of<Ts>...})};
@@ -157,50 +224,34 @@ namespace sequoia::physics
   };
 
   template<convex_space... Ts>
-  requires (!affine_space<Ts> && ...) //&& ((free_module<Ts> || ...) && (!free_module<Ts> || ...))
-  //requires (!free_module<Ts> &&  ...) // TO DO : exclude affine space
-  struct reduction<direct_product<std::tuple<Ts...>>>
+    requires (!affine_space<Ts> && ...)
+  struct composite_space<Ts...>
   {
-    using direct_product_t = direct_product<std::tuple<Ts...>>;
+    using direct_product_t = direct_product<Ts...>;
     using set_type         = reduction<typename direct_product_t::set_type>;
-    using free_module_type = reduction_t<free_module_type_of_t<direct_product_t>>;
+    using free_module_type = composite_space<free_module_type_of_t<Ts>...>;
     using is_convex_space  = std::true_type;
   };
 
-  template<convex_space T, convex_space U>
-    requires (!is_reduction_v<T>) && (!is_reduction_v<U>)
-  struct reduction<direct_product<T, U>>
-  {    
-    using type = to_reduction_t<impl::simplify_t<direct_product<meta::merge_t<std::tuple<T>, std::tuple<U>, meta::type_comparator>>>>;
-  };
+  template<class T>
+  struct to_full_reduction;
 
-  template<convex_space T, convex_space... Us>
-    requires (!is_reduction_v<T>)
-  struct reduction<direct_product<T, reduction<direct_product<std::tuple<Us...>>>>>
+  template<class... Ts>
+  struct to_full_reduction<reduction<direct_product<Ts...>>>
   {
-    using type = to_reduction_t<impl::simplify_t<direct_product<meta::merge_t<std::tuple<T>, std::tuple<Us...>, meta::type_comparator>>>>;
+    using type = composite_space<Ts...>;
   };
 
-  template<convex_space... Ts, convex_space U>
-    requires (!is_reduction_v<U>)
-  struct reduction<direct_product<reduction<direct_product<std::tuple<Ts...>>>, U>>
+  template<class T>
+  struct to_full_reduction<reduction<direct_product<T>>>
   {
-    using type = to_reduction_t<impl::simplify_t<direct_product<meta::merge_t<std::tuple<Ts...>, std::tuple<U>, meta::type_comparator>>>>;
+    using type = T;
   };
 
-  template<convex_space... Ts, convex_space... Us>
-    requires (sizeof...(Ts) > 1) && (sizeof...(Us) > 1)
-  struct reduction<direct_product<reduction<direct_product<std::tuple<Ts...>>>, reduction<direct_product<std::tuple<Us...>>>>>
-  {
-    using type = to_reduction_t<impl::simplify_t<direct_product<meta::merge_t<std::tuple<Ts...>, std::tuple<Us...>, meta::type_comparator>>>>;
-  };
+  template<class T>
+  using to_full_reduction_t = to_full_reduction<T>::type;
 
-  template<vector_space... Ts>
-  struct reduction<direct_product<Ts...>>
-  {
-    using type = reduction<direct_product<std::tuple<Ts...>>>;
-  };
-
+  
   template<std::size_t D>
   struct canonical_convention;
 
@@ -392,8 +443,8 @@ namespace sequoia::physics
   {
     using type
       = physical_value<
-          reduction_t<direct_product<to_base_space_t<LHSValueSpace>, to_base_space_t<RHSValueSpace>>>,
-          reduction_t<std::tuple<LHSUnit, RHSUnit>>,
+          to_full_reduction_t<reduction_t<direct_product<to_base_space_t<LHSValueSpace>, to_base_space_t<RHSValueSpace>>>>,
+          reduction_t<direct_product<LHSUnit, RHSUnit>>,
           std::common_type_t<LHSConvention, RHSConvention>,
           distinguished_origin,
           reduced_validator_t<LHSValidator, RHSValidator>
