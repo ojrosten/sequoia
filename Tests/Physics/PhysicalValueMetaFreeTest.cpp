@@ -217,28 +217,30 @@ namespace sequoia::testing
   }
 
   void physical_value_meta_free_test::test_units_reduction()
-  { 
-    STATIC_CHECK(std::is_same_v<reduction_t<direct_product<si::units::metre_t, si::units::kilogram_t>>,
-                                 reduction_t<direct_product<si::units::kilogram_t, si::units::metre_t>>>);
+  {
+    using namespace si::units;
 
-    STATIC_CHECK(std::is_same_v<reduction_t<direct_product<si::units::kelvin_t, reduction_t<direct_product<si::units::metre_t, si::units::kilogram_t>>>>,
-                                 reduction_t<direct_product<reduction_t<direct_product<si::units::kilogram_t, si::units::metre_t>>, si::units::kelvin_t>>>);
+    STATIC_CHECK(std::is_same_v<reduction_t<direct_product<metre_t, kilogram_t>>,
+                                  reduction<direct_product<kilogram_t, metre_t>>>);
 
-    STATIC_CHECK(std::is_same_v<reduction_t<direct_product<si::units::coulomb_t, si::units::kelvin_t>>, composite_unit<direct_product<si::units::coulomb_t, si::units::kelvin_t>>>);
+    STATIC_CHECK(std::is_same_v<reduction_t<direct_product<kilogram_t, metre_t>>,
+                                  reduction<direct_product<kilogram_t, metre_t>>>);
 
-    STATIC_CHECK(std::is_same_v<reduction_t<direct_product<si::units::kilogram_t, si::units::metre_t>>, composite_unit<direct_product<si::units::kilogram_t, si::units::metre_t>>>);
+    STATIC_CHECK(std::is_same_v<to_composite_space_t<reduction_t<direct_product<metre_t, kilogram_t>>>,
+                                composite_unit<kilogram_t, metre_t>>);
 
-    STATIC_CHECK(std::is_same_v<reduction_t<direct_product<composite_unit<direct_product<si::units::coulomb_t, si::units::kelvin_t>>, composite_unit<direct_product<si::units::kilogram_t, si::units::metre_t>>>>,
-                                 composite_unit<direct_product<si::units::coulomb_t, si::units::kelvin_t, si::units::kilogram_t, si::units::metre_t>>>);
+    STATIC_CHECK(std::is_same_v<reduction_t<direct_product<kelvin_t, composite_unit<kilogram_t, metre_t>>>,
+                                  reduction<direct_product<kelvin_t, kilogram_t, metre_t>>>);
 
-    STATIC_CHECK(std::is_same_v<reduction_t<direct_product<si::units::coulomb_t, dual<si::units::kelvin_t>>>, composite_unit<direct_product<si::units::coulomb_t, dual<si::units::kelvin_t>>>>);
+    STATIC_CHECK(std::is_same_v<to_composite_space_t<reduction_t<direct_product<composite_unit<coulomb_t, kelvin_t>, composite_unit<kilogram_t, metre_t>>>>,
+                                 composite_unit<coulomb_t, kelvin_t, kilogram_t, metre_t>>);
 
-    STATIC_CHECK(std::is_same_v<reduction_t<direct_product<dual<si::units::kelvin_t>, si::units::coulomb_t>>, composite_unit<direct_product<si::units::coulomb_t, dual<si::units::kelvin_t>>>>);
+    STATIC_CHECK(std::is_same_v<reduction_t<direct_product<coulomb_t, dual<kelvin_t>>>,
+                                  reduction<direct_product<coulomb_t, dual<kelvin_t>>>>);
 
-    STATIC_CHECK(std::is_same_v<reduction_t<direct_product<si::units::kelvin_t, dual<si::units::kelvin_t>>>, no_unit_t>);
-    
-    
-    STATIC_CHECK(std::is_same_v<reduction_t<direct_product<reduction_t<direct_product<si::units::coulomb_t, si::units::kelvin_t>>, reduction_t<direct_product<si::units::kilogram_t, si::units::metre_t>>>>,
-                                 reduction_t<direct_product<reduction_t<direct_product<si::units::kelvin_t, si::units::kilogram_t>>, reduction_t<direct_product<si::units::coulomb_t, si::units::metre_t>>>>>);
+    STATIC_CHECK(std::is_same_v<reduction_t<direct_product<dual<kelvin_t>, coulomb_t>>,
+                                  reduction<direct_product<coulomb_t, dual<kelvin_t>>>>);
+
+    STATIC_CHECK(std::is_same_v<to_composite_space_t<reduction_t<direct_product<kelvin_t, dual<kelvin_t>>>>, no_unit_t>);
   }
 }

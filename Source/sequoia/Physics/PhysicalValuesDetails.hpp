@@ -28,19 +28,19 @@ namespace sequoia::physics
 
   template<class Space>
   inline constexpr bool is_associated_displacement_space_v{is_associated_displacement_space<Space>::value};
+    
+  template<class T>
+  concept physical_unit = requires {
+    typename T::validator_type;
+  };
 
   struct no_unit_t;
 
   template<class... Ts>
   struct composite_space;
 
-  template<class T>
+  template<physical_unit... Ts>
   struct composite_unit;
-    
-  template<class T>
-  concept physical_unit = requires {
-    typename T::validator_type;
-  };
 
   template<class T>
   struct reduction;
@@ -399,7 +399,7 @@ namespace sequoia::physics::impl
   template<class... Ts>
   using canonical_direct_product_t = canonical_direct_product<Ts...>::type;
 
-  template<physics::physical_unit... Ts>
+  /*template<physics::physical_unit... Ts>
   struct simplify<physics::composite_unit<direct_product<Ts...>>>
   {    
     using reduced_product_type = reduce_t<count_and_combine_t<direct_product<Ts...>>>;
@@ -407,7 +407,7 @@ namespace sequoia::physics::impl
     using type = std::conditional_t<std::same_as<reduced_product_type, canonical_type>,
                                     physics::composite_unit<reduced_product_type>,
                                     canonical_type>;
-  };
+                                    };*/
 }
 
 namespace sequoia::maths
@@ -425,8 +425,8 @@ namespace sequoia::maths
   };
 
   template<physics::physical_unit... Ts>
-  struct dual_of<physics::composite_unit<direct_product<Ts...>>>
+  struct dual_of<physics::composite_unit<Ts...>>
   {
-    using type = physics::composite_unit<direct_product<dual_of_t<Ts>...>>;
+    using type = physics::composite_unit<dual_of_t<Ts>...>;
   };
 }

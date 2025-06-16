@@ -82,9 +82,8 @@ namespace sequoia::physics
 
   inline constexpr no_unit_t no_unit{};
 
-  // Ts are assumed to be ordered
-  template<physics::physical_unit... Ts>
-  struct composite_unit<direct_product<Ts...>>
+  template<physical_unit... Ts>
+  struct composite_unit
   {
     using validator_type = reduced_validator_t<typename Ts::validator_type...>;
   };
@@ -99,25 +98,25 @@ namespace sequoia::physics
   template<physics::physical_unit T, physics::physical_unit U>
   struct reduction<direct_product<T, U>>
   {
-    using type = impl::simplify_t<physics::composite_unit<meta::merge_t<direct_product<T>, direct_product<U>, meta::type_comparator>>>;
+    using type = reduction<impl::simplify_t<meta::merge_t<direct_product<T>, direct_product<U>, meta::type_comparator>>>;
   };
 
   template<physics::physical_unit... Ts, physics::physical_unit U>
-  struct reduction<direct_product<physics::composite_unit<direct_product<Ts...>>, U>>
+  struct reduction<direct_product<physics::composite_unit<Ts...>, U>>
   {
-    using type = impl::simplify_t<physics::composite_unit<meta::merge_t<direct_product<Ts...>, direct_product<U>, meta::type_comparator>>>;
+    using type = reduction<impl::simplify_t<meta::merge_t<direct_product<Ts...>, direct_product<U>, meta::type_comparator>>>;
   };
 
   template<physics::physical_unit T, physics::physical_unit... Us>
-  struct reduction<direct_product<T, physics::composite_unit<direct_product<Us...>>>>
+  struct reduction<direct_product<T, physics::composite_unit<Us...>>>
   {
-    using type = impl::simplify_t<physics::composite_unit<meta::merge_t<direct_product<Us...>, direct_product<T>, meta::type_comparator>>>;
+    using type = reduction<impl::simplify_t<meta::merge_t<direct_product<Us...>, direct_product<T>, meta::type_comparator>>>;
   };
 
   template<physics::physical_unit... Ts, physics::physical_unit... Us>
-  struct reduction<direct_product<physics::composite_unit<direct_product<Ts...>>, physics::composite_unit<direct_product<Us...>>>>
+  struct reduction<direct_product<physics::composite_unit<Ts...>, physics::composite_unit<Us...>>>
   {
-    using type = impl::simplify_t<physics::composite_unit<meta::merge_t<direct_product<Ts...>, direct_product<Us...>, meta::type_comparator>>>;
+    using type = reduction<impl::simplify_t<meta::merge_t<direct_product<Ts...>, direct_product<Us...>, meta::type_comparator>>>;
   };
 
   template<class... Ts>
@@ -171,10 +170,16 @@ namespace sequoia::physics
   template<class T>
   struct to_composite_space;
 
-  template<class... Ts>
+  template<convex_space... Ts>
   struct to_composite_space<reduction<direct_product<Ts...>>>
   {
     using type = composite_space<Ts...>;
+  };
+
+  template<physical_unit... Ts>
+  struct to_composite_space<reduction<direct_product<Ts...>>>
+  {
+    using type = composite_unit<Ts...>;
   };
 
   template<class T>
@@ -379,7 +384,7 @@ namespace sequoia::physics
     using type
       = physical_value<
           to_composite_space_t<reduction_t<direct_product<to_base_space_t<LHSValueSpace>, to_base_space_t<RHSValueSpace>>>>,
-          reduction_t<direct_product<LHSUnit, RHSUnit>>,
+          to_composite_space_t<reduction_t<direct_product<LHSUnit, RHSUnit>>>,
           std::common_type_t<LHSConvention, RHSConvention>,
           distinguished_origin,
           reduced_validator_t<LHSValidator, RHSValidator>
