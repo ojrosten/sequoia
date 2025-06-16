@@ -123,15 +123,6 @@ namespace sequoia::physics
   template<class... Ts>
   struct composite_space;
 
-  template<class T>
-  struct is_composite_space : std::false_type {};
-
-  template<class T>
-  struct is_composite_space<composite_space<T>> : std::true_type {};
-
-  template<class T>
-  inline constexpr bool is_composite_space_v{is_composite_space<T>::value};
-
   template<convex_space T, convex_space U>
   struct reduction<direct_product<T, U>>
   {    
