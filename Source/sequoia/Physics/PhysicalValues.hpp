@@ -133,28 +133,24 @@ namespace sequoia::physics
   inline constexpr bool is_composite_space_v{is_composite_space<T>::value};
 
   template<convex_space T, convex_space U>
-    requires (!is_composite_space_v<T>) && (!is_composite_space_v<U>)
   struct reduction<direct_product<T, U>>
   {    
     using type = reduction<impl::simplify_t<meta::merge_t<direct_product<T>, direct_product<U>, meta::type_comparator>>>;
   };
   
   template<convex_space T, convex_space... Us>
-    requires (!is_composite_space_v<T>)
   struct reduction<direct_product<T, composite_space<Us...>>>
   {
     using type = reduction<impl::simplify_t<meta::merge_t<direct_product<T>, direct_product<Us...>, meta::type_comparator>>>;
   };
 
   template<convex_space... Ts, convex_space U>
-    requires (!is_composite_space_v<U>)
   struct reduction<direct_product<composite_space<Ts...>, U>>
   {
     using type = reduction<impl::simplify_t<meta::merge_t<direct_product<Ts...>, direct_product<U>, meta::type_comparator>>>;
   };
 
   template<convex_space... Ts, convex_space... Us>
-    requires (sizeof...(Ts) > 1) && (sizeof...(Us) > 1)
   struct reduction<direct_product<composite_space<Ts...>, composite_space<Us...>>>
   {
     using type = reduction<impl::simplify_t<meta::merge_t<direct_product<Ts...>, direct_product<Us...>, meta::type_comparator>>>;
