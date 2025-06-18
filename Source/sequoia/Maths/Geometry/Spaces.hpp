@@ -741,7 +741,6 @@ namespace sequoia::maths
       Actually, we will permit this construct where the rings share a common type
       in the C++ sense; this decision may need reviewing.
    */
-  //============================== direct_product ==============================//
 
   template<class... Ts>
   struct direct_product
@@ -793,17 +792,19 @@ namespace sequoia::maths
   template<class>
   struct dual;
 
-  // TO DO: think about this!
-  template<class T>
-  struct convex_functional
+  namespace sets
   {
-  };
+    template<class From, weak_field To>
+    struct convex_functionals
+    {
+    };
+  }
   
   template<convex_space C>
     requires (!affine_space<C>) && weak_field<commutative_ring_type_of_t<C>>
   struct dual<C>
   {
-    using set_type          = convex_functional<typename C::set_type>;
+    using set_type          = sets::convex_functionals<typename C::set_type, commutative_ring_type_of_t<C>>;
     using vector_space_type = dual<free_module_type_of_t<C>>;
     using is_convex_space = std::true_type;
   };
@@ -812,7 +813,7 @@ namespace sequoia::maths
     requires (!vector_space<A>) && weak_field<commutative_ring_type_of_t<A>>
   struct dual<A>
   {
-    using set_type          = convex_functional<typename A::set_type>;
+    using set_type          = sets::convex_functionals<typename A::set_type, commutative_ring_type_of_t<A>>;
     using vector_space_type = dual<free_module_type_of_t<A>>;
     using is_affine_space   = std::true_type;
   };
@@ -820,7 +821,7 @@ namespace sequoia::maths
   template<vector_space V>
   struct dual<V>
   {
-    using set_type        = convex_functional<typename V::set_type>;
+    using set_type        = sets::convex_functionals<typename V::set_type, commutative_ring_type_of_t<V>>;
     using field_type      = commutative_ring_type_of_t<V>;
     using is_vector_space = std::true_type;
     constexpr static auto dimension{V::dimension};
