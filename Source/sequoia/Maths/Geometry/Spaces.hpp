@@ -800,7 +800,7 @@ namespace sequoia::maths
   };
   
   template<convex_space C>
-    requires (!affine_space<C>)
+    requires (!affine_space<C>) && weak_field<commutative_ring_type_of_t<C>>
   struct dual<C>
   {
     using set_type          = convex_functional<typename C::set_type>;
@@ -809,7 +809,7 @@ namespace sequoia::maths
   };
 
   template<affine_space A>
-    requires (!vector_space<A>)
+    requires (!vector_space<A>) && weak_field<commutative_ring_type_of_t<A>>
   struct dual<A>
   {
     using set_type          = convex_functional<typename A::set_type>;
@@ -1171,6 +1171,10 @@ namespace sequoia::maths
         return {validator(vals.front())};
     }
   };
+
+  /** @ingroup Coordinates
+      @brief Class template for representing coordinates on vector spaces, affine spaces and various generalizations.
+   */
   
   template<convex_space ConvexSpace, basis_for<free_module_type_of_t<ConvexSpace>> Basis, class Origin, validator_for<ConvexSpace> Validator>
   class coordinates final : public coordinates_base<ConvexSpace, Basis, Origin, Validator>
