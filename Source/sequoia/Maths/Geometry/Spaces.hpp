@@ -788,9 +788,9 @@ namespace sequoia::maths
   template<class T>
   inline constexpr bool is_direct_product_v = is_direct_product<T>::value;
 
-  //==============================  dual spaces ============================== //
-  template<class>
-  struct dual;
+  /** @defgroup DualSpaces Dual Spaces
+      @brief Dual vector spaces and various generalizations.
+   */
 
   namespace sets
   {
@@ -800,29 +800,32 @@ namespace sequoia::maths
     };
   }
   
+  template<class>
+  struct dual;
+  
   template<convex_space C>
     requires (!affine_space<C>) && weak_field<commutative_ring_type_of_t<C>>
   struct dual<C>
   {
-    using set_type          = sets::convex_functionals<typename C::set_type, commutative_ring_type_of_t<C>>;
+    using set_type          = sets::convex_functionals<C, commutative_ring_type_of_t<C>>;
     using vector_space_type = dual<free_module_type_of_t<C>>;
-    using is_convex_space = std::true_type;
+    using is_convex_space   = std::true_type;
   };
 
   template<affine_space A>
     requires (!vector_space<A>) && weak_field<commutative_ring_type_of_t<A>>
   struct dual<A>
   {
-    using set_type          = sets::convex_functionals<typename A::set_type, commutative_ring_type_of_t<A>>;
+    using set_type          = sets::convex_functionals<A, commutative_ring_type_of_t<A>>;
     using vector_space_type = dual<free_module_type_of_t<A>>;
     using is_affine_space   = std::true_type;
   };
 
   template<vector_space V>
   struct dual<V>
-  {
-    using set_type        = sets::convex_functionals<typename V::set_type, commutative_ring_type_of_t<V>>;
+  {    
     using field_type      = commutative_ring_type_of_t<V>;
+    using set_type        = sets::convex_functionals<V, field_type>;
     using is_vector_space = std::true_type;
     constexpr static auto dimension{V::dimension};
   };
