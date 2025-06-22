@@ -818,61 +818,85 @@ namespace sequoia::maths
       linear_functionals, the template parameters of which specify the spaces
       between which it maps.
 
-      While this construction has an analogue for modules, with the field
-      associated with a vector space relaxed to a ring, there are additional
-      complexities. Consequently, we shall exclude modules (and their
-      generalizations) from our constructions by constraining all rings
-      to be fields. This could be changed in future.
-      
-      However, with this restriction in mind, we do wish to treat affine and
-      convex spaces. In this case, rather the linear functionals which satisfy
-      the above equation, we consider the more general convex functionals:
+      This construction has an analogue for modules, with the field
+      associated with a vector space relaxed to a ring. However, the
+      situation is not so simple for the other structures we consider:
+      affine and convex spaces. In this case, rather the linear
+      functionals which satisfy the above equation, we consider the more
+      general convex functionals:
 
         f(lambda x + (1 - lambda) y) = lambda f(x) + (1 - lambda) f(y),
 
         with 0 <= lambda <= 1.
 
-      The dual of the dual is isomorphic to the original space. From the
-      perspective of C++, given a type T we shall identify the dual of
-      the dual of T as just t itself. However, clients may override this
+      For vector spaces, the dual of the dual is isomorphic to the original
+      space. From the perspective of C++, given a type T we shall identify
+      the dual of the dual of T as just t itself. However, clients may override this
       behaviour through template specialization if a more precise statement
-      of the relationship is required.
+      of the relationship is required. Indeed, for general modules this does
+      not hold and so care must be taken.
    */
 
   namespace sets
   {
+    /** @ingroup DualSpaces
+        @brief Class template for giving a name to convex functionals.
+
+        It is tempting to constrain the class To to be a convex space. However,
+        without additional work, rings and fields do not satisfy the convex_space
+        concept as introduced, above.
+     */
     template<convex_space From, class To>
     struct convex_functionals
     {
     };
 
+    /** @ingroup DualSpaces
+        @brief Class template for giving a name to linear functionals.
+
+        It is tempting to constrain the class To to be a vector space. However,
+        without additional work, rings and fields do not satisfy the vector_space
+        concept as introduced, above.
+     */
     template<vector_space From, class To>
     struct linear_functionals
     {
     };
   }
-  
+
+  /** @ingroup DualSpaces
+      @brief Primary class template for defining duals.
+   */
   template<class>
   struct dual;
-  
+
+  /** @ingroup DualSpaces
+      @brief Specialization for defining duals of convex spaces via convex functionals
+   */
   template<convex_space C>
-    requires (!affine_space<C>) && weak_field<commutative_ring_type_of_t<C>>
+    requires (!affine_space<C>)
   struct dual<C>
   {
-    using set_type          = sets::convex_functionals<C, commutative_ring_type_of_t<C>>;
-    using vector_space_type = dual<free_module_type_of_t<C>>;
-    using is_convex_space   = std::true_type;
+    using set_type         = sets::convex_functionals<C, commutative_ring_type_of_t<C>>;
+    using free_module_type = dual<free_module_type_of_t<C>>;
+    using is_convex_space  = std::true_type;
   };
 
+   /** @ingroup DualSpaces
+      @brief Specialization for defining duals of affine spaces via convex functionals
+   */
   template<affine_space A>
-    requires (!vector_space<A>) && weak_field<commutative_ring_type_of_t<A>>
+    requires (!vector_space<A>)
   struct dual<A>
   {
-    using set_type          = sets::convex_functionals<A, commutative_ring_type_of_t<A>>;
-    using vector_space_type = dual<free_module_type_of_t<A>>;
-    using is_affine_space   = std::true_type;
+    using set_type         = sets::convex_functionals<A, commutative_ring_type_of_t<A>>;
+    using free_module_type = dual<free_module_type_of_t<A>>;
+    using is_affine_space  = std::true_type;
   };
 
+  /** @ingroup DualSpaces
+      @brief Specialization for defining duals of vector spaces via linear functionals
+   */
   template<vector_space V>
   struct dual<V>
   {    
@@ -882,32 +906,44 @@ namespace sequoia::maths
     constexpr static auto dimension{V::dimension};
   };
 
-  template<class C>
+  /** @ingroup DualSpaces
+      @brief Helper to detect if a type is defined as a dual of something else
+   */
+  template<class T>
   struct is_dual : std::false_type {};
 
-  template<class C>
-  struct is_dual<dual<C>> : std::true_type {};
+  template<class T>
+  struct is_dual<dual<T>> : std::true_type {};
 
-  template<class C>
-  using is_dual_t = is_dual<C>::type;
+  template<class T>
+  using is_dual_t = is_dual<T>::type;
 
-  template<class C>
-  inline constexpr bool is_dual_v{is_dual<C>::value};
+  template<class T>
+  inline constexpr bool is_dual_v{is_dual<T>::value};
 
+  /** @ingroup DualSpaces
+      @brief Helper to generate the dual of a space, taking into account that the dual of the dual may be related to the original space.
+
+      The dual of the dual of a finite dimensional vector space, V, is isomporphic
+      to V. We take this double dual to be just V itself. Similarly for the affine
+      and convex generalizations, though insisting that the ring is a field.
+      Clients can override this behaviour with the appropriate specializations.
+   */
   template<class>
   struct dual_of;
 
   template<class T>
   using dual_of_t = dual_of<T>::type;
 
-  template<class C>
+  template<class T>
   struct dual_of {
-    using type = dual<C>;
+    using type = dual<T>;
   };
 
-  template<class C>
-  struct dual_of<dual<C>> {
-    using type = C;
+  template<class T>
+    requires (!convex_space<T>) || (convex_space<T> && weak_field<commutative_ring_type_of_t<T>>)
+  struct dual_of<dual<T>> {
+    using type = T;
   };
 
   /** @defgroup Coordinates Coordinates
