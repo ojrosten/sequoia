@@ -797,21 +797,36 @@ namespace sequoia::maths
         f(x + y) -> f(x) + f(y)
 
       and are structure-preserving: both vector addition and scalar
-      multiplication survive. Therefore, linear maps can be recognized
+      multiplication survive. Therefore, linear maps may be recognized
       as homomorphisms between vector spaces. Note that the space of linear
       mappings may equivalently be called the space of linear functionals.
 
       Given a vector space, V, over a field F, the space of linear mappings
       from V to F is of particular importance and is known as the dual space
-      V*. In this context as the target of a homomorphism, F is considered
+      V*. In this context - as the target of a homomorphism - F is considered
       to be a vector space.
+      
+      Since dual vector space are just vector spaces, we may handle these
+      within the approach introduced above. In particular, we know both
+      the field and dimension of the dual space: these are simply those
+      of the original vector space. The set underlying the dual vector
+      space seems more problematic: how do we represent the set of linear
+      functionals? But actually, this is not an issue within our approach
+      since all we are required to do is name the strcuture and not attempt
+      the far more difficult task of somehow specifying the elements. It
+      is therefore sufficient for our purposes to create a class template,
+      linear_functionals, the template parameters of which specify the spaces
+      between which it maps.
 
-      This construction has an analogue for modules, with the field
-      associated with a vector space relaxed to a ring. However, the
-      situation is not so simple for the other structures we consider:
-      affine and convex spaces. In this case, rather the linear
-      functionals which satisfy the above equation, we consider the more
-      general convex functionals:
+      While this construction has an analogue for modules, with the field
+      associated with a vector space relaxed to a ring, there are additional
+      complexities. Consequently, we shall exclude modules (and their
+      generalizations) from our constructions by constraining all rings
+      to be fields. This could be changed in future.
+      
+      However, with this restriction in mind, we do wish to treat affine and
+      convex spaces. In this case, rather the linear functionals which satisfy
+      the above equation, we consider the more general convex functionals:
 
         f(lambda x + (1 - lambda) y) = lambda f(x) + (1 - lambda) f(y),
 
@@ -826,8 +841,13 @@ namespace sequoia::maths
 
   namespace sets
   {
-    template<class From, weak_field To>
+    template<convex_space From, class To>
     struct convex_functionals
+    {
+    };
+
+    template<vector_space From, class To>
+    struct linear_functionals
     {
     };
   }
@@ -857,7 +877,7 @@ namespace sequoia::maths
   struct dual<V>
   {    
     using field_type      = commutative_ring_type_of_t<V>;
-    using set_type        = sets::convex_functionals<V, field_type>;
+    using set_type        = sets::linear_functionals<V, field_type>;
     using is_vector_space = std::true_type;
     constexpr static auto dimension{V::dimension};
   };
