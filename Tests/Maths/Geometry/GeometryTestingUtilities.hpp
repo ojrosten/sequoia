@@ -61,10 +61,9 @@ namespace sequoia::testing
   template<class Set, maths::weak_field Field, std::size_t D>
   struct my_vec_space
   {
-    using set_type          = Set;
-    using field_type        = Field;
+    using set_type        = Set;
+    using field_type      = Field;
     using is_vector_space = std::true_type;
-    using vector_space_type = my_vec_space; // TO DO: obviate the need for this with traits
     constexpr static std::size_t dimension{D};
 
     template<maths::basis Basis>
