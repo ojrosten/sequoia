@@ -122,16 +122,31 @@
     no mapping from E back into S, the action of the additive group of V is not bijective,
     violating one of the axioms of affine spaces.
 
-    The other generalization interesting generialization is to generalize the notion of
-    a vector space to a free module over a commutative ring. Whereas a vector space is
-    defined over a field - such as the real numbers - a module is defined over a ring.
-    Our motivation for this is that the integers form a commutative ring and not a field,
-    since integers do not, in general, have multiplicative inverses valued within the integers.
-    Rather than attempting to deal with modules in full generality, we restrict our attention
-    to what may be the most useful, practical cases in the context of C++.
+    The other interesting generialization is to consider relaxing a vector space's field
+    to a ring. The resulting construction is called a module, which is a generalization
+    of a vector space. Our motivation for this is that the integers form a commutative
+    ring and not a field, since integers do not, in general, have multiplicative inverses
+    valued within the integers. Rather than attempting to deal with modules in full generality,
+    we restrict our attention to what may be the most useful, practical cases in the context
+    of C++: free modules over commutative rings. Free modules are those which admit a
+    basis.
 
     In line with the above, we also consider affine spaces over free modules and their
-    convex generalization where the action of the free module is not bijective.                                                                                    
+    convex generalization where the action of the free module is not bijective.
+
+    The final issue to address is that question of why to bother modelling concepts such
+    as vector spaces in the abstract sense if it is their coordinates which are the things
+    of use from the perspective of practical computation. The point is that, for example,
+    vector spaces and affine spaces admit different operations: whereas elements of a vector
+    space can be added, the same is not true of the elements of the set underpinning an
+    affine space. By introducing concepts for the abstract algebraic constructs, we can treat
+    coordinates on all of these spaces in a common way by using constraints to enable
+    or disable specific operations. Thus, the coordinates class template is templated on,
+    amongst other things, a convex_space. To define such a space just requires introducing
+    a struct exposing a small amount of data (types and values) known at compile time.
+    These data determines whether we intend to model a vector space, a free module over a
+    commutative space, an affine space or whatever. This is sufficient for the coordinates
+    implementation to expose the correct set of operations.
  */
 
 
@@ -953,15 +968,22 @@ namespace sequoia::maths
       vectors with respect to a particular basis. These are often implicitly conflated with
       the vector itself. However, the latter are simply elements of a vector space and there
       is no sense in which different observers can disagree about properties of this
-      fundamental entity. However, observers using different bases can absolutely disagree
+      fundamental entity. Nevertheless, observers using different bases can absolutely disagree
       on the coordinates, though once they figure out the relationship between their bases
       then it becomes possible to translate from one to the other.
 
       It is worth noting that, for a vector space, the kernel of the implementation of the
       coordinates depends only the field and the dimension. This reflects the fact that vector
-      spaces of the same dimension and over the same field are isomorphic.
+      spaces of the same dimension and over the same field are isomorphic. Similar considerations
+      apply to the various related spaces with which we deal.
 
-      Similar considerations apply to the various related spaces with which we deal.
+      A key element of our approach to coordinates is to template on (amongst other things) the
+      underlying space. On the one hand this gives a high degree of type safety; on the other
+      it means that the various different spaces of interest to us can be handled in a uniform
+      manner. For example, affine spaces and vector spaces admit different operations. Knowing
+      the characteristics of the underlying space means that we may statically enable or disable
+      appropriate functionality. For example, coordinates on a vector space may be multiplied
+      by a scalar; not so those on an affine space.
    */
 
   /** @ingroup Coordinates
