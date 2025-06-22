@@ -790,6 +790,38 @@ namespace sequoia::maths
 
   /** @defgroup DualSpaces Dual Spaces
       @brief Dual vector spaces and various generalizations.
+
+      When considering relationships between vector spaces, linear
+      maps play a central role. These are such that
+      
+        f(x + y) -> f(x) + f(y)
+
+      and are structure-preserving: both vector addition and scalar
+      multiplication survive. Therefore, linear maps can be recognized
+      as homomorphisms between vector spaces. Note that the space of linear
+      mappings may equivalently be called the space of linear functionals.
+
+      Given a vector space, V, over a field F, the space of linear mappings
+      from V to F is of particular importance and is known as the dual space
+      V*. In this context as the target of a homomorphism, F is considered
+      to be a vector space.
+
+      This construction has an analogue for modules, with the field
+      associated with a vector space relaxed to a ring. However, the
+      situation is not so simple for the other structures we consider:
+      affine and convex spaces. In this case, rather the linear
+      functionals which satisfy the above equation, we consider the more
+      general convex functionals:
+
+        f(lambda x + (1 - lambda) y) = lambda f(x) + (1 - lambda) f(y),
+
+        with 0 <= lambda <= 1.
+
+      The dual of the dual is isomorphic to the original space. From the
+      perspective of C++, given a type T we shall identify the dual of
+      the dual of T as just t itself. However, clients may override this
+      behaviour through template specialization if a more precise statement
+      of the relationship is required.
    */
 
   namespace sets
