@@ -100,7 +100,7 @@ namespace sequoia::testing
     check(equality, "", height_t{0.5, metre} *  width_t{0.5, metre}, length_t{0.5, metre} * length_t{0.5, metre});
     check(equality, "", width_t{0.5, metre}  * height_t{0.5, metre}, length_t{0.5, metre} * length_t{0.5, metre});
 
-    using euc_half_line_qty = quantity<euclidean_half_space<1, float>, no_unit_t, half_line_validator>;
+    using euc_half_line_qty = quantity<euclidean_half_space<float>, no_unit_t, half_line_validator>;
     check(equality, "", height_t{0.5, metre} /  width_t{0.5, metre}, euc_half_line_qty{1.0, no_unit});
     check(equality, "", width_t{0.5, metre}  / height_t{0.5, metre}, euc_half_line_qty{1.0, no_unit});
   }

@@ -311,7 +311,7 @@ namespace sequoia::physics::impl
     requires (!affine_space<T> && !vector_space<T>)
   struct reduce<direct_product<type_counter<T, 0>>>
   {
-    using type = direct_product<euclidean_half_space<1, commutative_ring_type_of_t<free_module_type_of_t<T>>>>;
+    using type = direct_product<euclidean_half_space<commutative_ring_type_of_t<free_module_type_of_t<T>>>>;
   };
 
   template<class T, class... Ts, int... Is>

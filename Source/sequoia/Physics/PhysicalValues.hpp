@@ -372,7 +372,7 @@ namespace sequoia::physics
   >
     requires     std::common_with<LHSConvention, RHSConvention>
              && (   std::is_same_v<euclidean_vector_space<1, commutative_ring_type_of_t<LHSValueSpace>>, LHSValueSpace>
-                 || std::is_same_v<euclidean_half_space<1, commutative_ring_type_of_t<LHSValueSpace>>, LHSValueSpace>)
+                 || std::is_same_v<euclidean_half_space<commutative_ring_type_of_t<LHSValueSpace>>, LHSValueSpace>)
   struct physical_value_product<physical_value<LHSValueSpace, LHSUnit, LHSConvention, distinguished_origin, LHSValidator>,
                                 physical_value<RHSValueSpace, RHSUnit, RHSConvention, distinguished_origin, RHSValidator>>
   {
@@ -392,7 +392,7 @@ namespace sequoia::physics
   >
     requires     std::common_with<LHSConvention, RHSConvention>
              && (   std::is_same_v<euclidean_vector_space<1, commutative_ring_type_of_t<RHSValueSpace>>, RHSValueSpace>
-                 || std::is_same_v<euclidean_half_space<1, commutative_ring_type_of_t<RHSValueSpace>>, RHSValueSpace>)
+                 || std::is_same_v<euclidean_half_space<commutative_ring_type_of_t<RHSValueSpace>>, RHSValueSpace>)
   struct physical_value_product<physical_value<LHSValueSpace, LHSUnit, LHSConvention, distinguished_origin, LHSValidator>,
                                 physical_value<RHSValueSpace, RHSUnit, RHSConvention, distinguished_origin, RHSValidator>>
   {

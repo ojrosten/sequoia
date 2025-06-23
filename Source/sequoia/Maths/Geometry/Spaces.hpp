@@ -852,9 +852,13 @@ namespace sequoia::maths
       not hold and so care must be taken.
    */
 
+  /** @defgroup Sets Sets
+      @brief The sets underpinning the various spaces of interest need, for our purposes, just to be named.
+   */
+  
   namespace sets
   {
-    /** @ingroup DualSpaces
+    /** @ingroup Sets
         @brief Class template for giving a name to convex functionals.
 
         It is tempting to constrain the class To to be a convex space. However,
@@ -866,7 +870,7 @@ namespace sequoia::maths
     {
     };
 
-    /** @ingroup DualSpaces
+    /** @ingroup Sets
         @brief Class template for giving a name to linear functionals.
 
         It is tempting to constrain the class To to be a vector space. However,
@@ -1323,31 +1327,46 @@ namespace sequoia::maths
 
   namespace sets
   {
+    /** @ingroup Sets
+        @brief Class template for giving a name to the set of integers and its generalization to other dimensionalities
+     */
     template<std::size_t D>
     struct Z
     {
       constexpr static std::size_t dimension{D};
     };
 
+    /** @ingroup Sets
+        @brief Class template for giving a name to the set of semi-positive integers and its generalization to other dimensionalities
+     */
     template<std::size_t D>
-    struct Z_0
+    struct N_0
     {
       constexpr static std::size_t dimension{D};
     };
-    
+
+    /** @ingroup Sets
+        @brief Class template for giving a name to the set of real numbers and its generalization to other dimensionalities
+     */
     template<std::size_t D>
     struct R
     {
       constexpr static std::size_t dimension{D};
     };
 
+
+    /** @ingroup Sets
+        @brief Class template for giving a name to the set of non-negative real numbers and its generalization to other dimensionalities
+     */
     template<std::size_t D>
-    struct half_space
+    struct orthant
     {
       constexpr static std::size_t dimension{D};
     };
 
-
+    /** @ingroup Sets
+        @brief Class template for giving a name to the set of complex numbers and its generalization to other dimensionalities
+     */
     template<std::size_t D>
     struct C
     {
@@ -1434,11 +1453,11 @@ namespace sequoia::maths
     using is_affine_space   = std::true_type;
   };
 
-  template<std::size_t D, std::floating_point T>
+  template<std::floating_point T>
   struct euclidean_half_space
   {
-    using set_type          = sets::half_space<D>;
-    using vector_space_type = euclidean_vector_space<D, T>;
+    using set_type          = sets::orthant<1>;
+    using vector_space_type = euclidean_vector_space<1, T>;
     using is_convex_space   = std::true_type;
   };
 
