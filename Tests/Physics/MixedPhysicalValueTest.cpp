@@ -97,11 +97,15 @@ namespace sequoia::testing
     check(equality, "", height_t{0.5, metre} -  width_t{0.5, metre}, d_len_t{0.0, metre});
     check(equality, "", width_t{0.5, metre}  - height_t{0.5, metre}, d_len_t{0.0, metre});
 
-    check(equality, "", height_t{0.5, metre} *  width_t{0.5, metre}, length_t{0.5, metre} * length_t{0.5, metre});
-    check(equality, "", width_t{0.5, metre}  * height_t{0.5, metre}, length_t{0.5, metre} * length_t{0.5, metre});
+    check(equality, "", static_cast<length_t>(height_t{0.5, metre}), length_t{0.5, metre});
+    check(equality, "", static_cast<length_t>(width_t{0.5, metre}),  length_t{0.5, metre});
+
+    using area = decltype(length_t{0.5, metre} * length_t{0.5, metre});
+    check(equality, "", static_cast<area>(height_t{0.5, metre} *  width_t{0.5, metre}), length_t{0.5, metre} * length_t{0.5, metre});
+    check(equality, "", static_cast<area>(width_t{0.5, metre}  * height_t{0.5, metre}), length_t{0.5, metre} * length_t{0.5, metre});
 
     using euc_half_line_qty = quantity<euclidean_half_space<float>, no_unit_t, half_line_validator>;
-    check(equality, "", height_t{0.5, metre} /  width_t{0.5, metre}, euc_half_line_qty{1.0, no_unit});
-    check(equality, "", width_t{0.5, metre}  / height_t{0.5, metre}, euc_half_line_qty{1.0, no_unit});
+    check(equality, "", static_cast<euc_half_line_qty>(height_t{0.5, metre} /  width_t{0.5, metre}), euc_half_line_qty{1.0, no_unit});
+    check(equality, "", static_cast<euc_half_line_qty>( width_t{0.5, metre} / height_t{0.5, metre}), euc_half_line_qty{1.0, no_unit});
   }
 }

@@ -307,6 +307,9 @@ namespace sequoia::physics
   };
 
   template<convex_space T>
+  using to_base_space_t = to_base_space<T>::type;
+
+  template<convex_space T>
     requires has_base_space_v<T>
   struct to_base_space<T>
   {
@@ -314,7 +317,24 @@ namespace sequoia::physics
   };
 
   template<convex_space T>
-  using to_base_space_t = to_base_space<T>::type;
+  struct to_base_space<dual<T>>
+  {
+    using type = dual<T>;
+  };
+
+  template<convex_space T>
+    requires has_base_space_v<T>
+  struct to_base_space<dual<T>>
+  {
+    using type = dual<typename T::base_space>;
+  };
+
+  template<convex_space... Ts>
+  struct to_base_space<composite_space<Ts...>>
+  {
+    using sorted_direct_product_t = meta::stable_sort_t<direct_product<to_base_space_t<Ts>...>,  meta::type_comparator>;
+    using type = impl::to_composite_space_t<reduction<impl::reduce_t<impl::count_and_combine_t<sorted_direct_product_t>>>>;
+  };
 
   template<convex_space T, convex_space U>
   inline constexpr bool have_compatible_base_spaces_v{
@@ -336,7 +356,7 @@ namespace sequoia::physics
   };
 
   template<convex_space T, convex_space U>
-  requires (!std::is_same_v<T, U>) && have_compatible_base_spaces_v<T, U>
+    requires (!std::is_same_v<T, U>) && have_compatible_base_spaces_v<T, U>
   struct to_displacement_space<T, U>
   {
     using type = free_module_type_of_t<std::common_type_t<typename T::base_space, typename U::base_space>>;
@@ -358,7 +378,7 @@ namespace sequoia::physics
   {
     using type
       = physical_value<
-          impl::to_composite_space_t<reduction_t<direct_product<to_base_space_t<LHSValueSpace>, to_base_space_t<RHSValueSpace>>>>,
+          impl::to_composite_space_t<reduction_t<direct_product<LHSValueSpace, RHSValueSpace>>>,
           impl::to_composite_space_t<reduction_t<direct_product<LHSUnit, RHSUnit>>>,
           std::common_type_t<LHSConvention, RHSConvention>,
           distinguished_origin,
@@ -378,7 +398,7 @@ namespace sequoia::physics
   {
     using type
       = physical_value<
-          to_base_space_t<RHSValueSpace>,
+          RHSValueSpace,
           RHSUnit,
           std::common_type_t<LHSConvention, RHSConvention>,
           distinguished_origin,
@@ -398,7 +418,7 @@ namespace sequoia::physics
   {
     using type
       = physical_value<
-          to_base_space_t<LHSValueSpace>,
+          LHSValueSpace,
           LHSUnit,
           std::common_type_t<LHSConvention, RHSConvention>,
           distinguished_origin,
@@ -548,7 +568,7 @@ namespace sequoia::physics
       using physical_value_t
         = physical_value_product_t<
             physical_value,
-            physical_value<dual_of_t<to_base_space_t<RHSValueSpace>>, dual_of_t<RHSUnit>, RHSConvention, RHSOrigin, RHSValidator>
+            physical_value<dual_of_t<RHSValueSpace>, dual_of_t<RHSUnit>, RHSConvention, RHSOrigin, RHSValidator>
           >;
       using derived_units_type = physical_value_t::units_type;
       if constexpr(dimension == 1)
@@ -569,7 +589,26 @@ namespace sequoia::physics
       using physical_value_t = physical_value<dual_of_t<ValueSpace>, dual_of_t<Unit>, convention_type, origin_type, validator_type>;
       using derived_units_type = physical_value_t::units_type;
       return physical_value_t{value / rhs.value(), derived_units_type{}};
-    }    
+    }
+
+    // Reduce *everything* to its base space on both sides of the equation; if these are the same, allow the conversion 
+    template<class LoweredValueSpace, class OtherUnit>
+    [[nodiscard]]
+    constexpr operator physical_value<LoweredValueSpace, OtherUnit, convention_type, origin_type, validator_type>() const noexcept
+      requires std::same_as<to_base_space_t<ValueSpace>, to_base_space_t<LoweredValueSpace>>
+    {
+      using physical_value_t = physical_value<to_base_space_t<LoweredValueSpace>, Unit, convention_type, origin_type, validator_type>;
+      if constexpr(dimension == 1)
+      {
+        return physical_value_t{this->value(), OtherUnit{}};
+      }
+      else
+      {
+        return [this] <std::size_t... Is>(std::index_sequence<Is...>) {
+          return physical_value_t{std::array{this->values()[Is]...}, OtherUnit{}};
+        }(std::make_index_sequence<D>{});
+      }
+    }
   };
 
   namespace sets::classical
@@ -635,7 +674,7 @@ namespace sequoia::physics
     constexpr static std::size_t dimension{Space::dimension};
     using set_type              = sets::classical::differences<typename Space::set_type>;
     using commutative_ring_type = Space::representation_type;
-    using is_free_module = std::true_type;
+    using is_free_module        = std::true_type;
   };
 
   template<class PhysicalValueSet, arithmetic Rep, std::size_t D, class Derived>
@@ -645,7 +684,7 @@ namespace sequoia::physics
     using set_type            = PhysicalValueSet;
     using representation_type = Rep;
     using free_module_type    = associated_displacement_space<Derived>;
-    using is_convex_space = std::true_type;
+    using is_convex_space     = std::true_type;
   };
 
   template<class PhysicalValueSet, arithmetic Rep, std::size_t D, class Derived>
@@ -655,7 +694,7 @@ namespace sequoia::physics
     using set_type            = PhysicalValueSet;
     using representation_type = Rep;
     using free_module_type    = associated_displacement_space<Derived>;
-    using is_affine_space = std::true_type;
+    using is_affine_space     = std::true_type;
   };
 
   template<class PhysicalValueSet, arithmetic Rep, std::size_t D, class Derived>
@@ -665,7 +704,7 @@ namespace sequoia::physics
     using set_type            = PhysicalValueSet;
     using representation_type = Rep;
     using field_type          = Rep;
-    using is_vector_space = std::true_type;
+    using is_vector_space     = std::true_type;
   };
 
   template<std::floating_point Rep, class Arena>
