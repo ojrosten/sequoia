@@ -744,13 +744,11 @@ namespace sequoia::physics
   template<arithmetic Rep, class Arena>
   struct width_space : length_space<Rep, Arena>
   {
-    using convex_space_type = width_space;
   };
 
   template<arithmetic Rep, class Arena>
   struct height_space : length_space<Rep, Arena>
   {
-    using convex_space_type = height_space;
   };
 
   template<arithmetic Rep, class Arena>
