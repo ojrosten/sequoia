@@ -1,5 +1,8 @@
 var searchData=
 [
-  ['has_5felement_5ftype_2255',['has_element_type',['../d0/d81/TypeTraits_8hpp.html#ae1abe0fd3876fda7eee1dce8562381df',1,'sequoia']]],
-  ['has_5fvalue_5ftype_2256',['has_value_type',['../d0/d81/TypeTraits_8hpp.html#a0656ffe59680e41d0acf4c9a4dd39c96',1,'sequoia']]]
+  ['supports_5fbest_5favailable_5fcheck_0',['supports_best_available_check',['../d2/d0d/FreeCheckers_8hpp.html#a2acd1de8930822bc5d1e925a8ef8002e',1,'sequoia::testing']]],
+  ['supports_5fequality_5fcheck_1',['supports_equality_check',['../d2/d0d/FreeCheckers_8hpp.html#a6b9d3e8ba2c446ab35ec269ff47ee385',1,'sequoia::testing']]],
+  ['supports_5fgeneralized_5fequivalence_5fcheck_2',['supports_generalized_equivalence_check',['../d2/d0d/FreeCheckers_8hpp.html#a25080af3e6f9bf3a8f9a047b26613950',1,'sequoia::testing']]],
+  ['supports_5fiterator_5frange_5fcheck_3',['supports_iterator_range_check',['../d2/d0d/FreeCheckers_8hpp.html#a7206866f593f21d045faedc69b27c2c0',1,'sequoia::testing']]],
+  ['supports_5fsimple_5fequality_5fcheck_4',['supports_simple_equality_check',['../d2/d0d/FreeCheckers_8hpp.html#a001411d098363919c41360d75299131a',1,'sequoia::testing']]]
 ];

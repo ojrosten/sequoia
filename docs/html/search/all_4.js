@@ -20,7 +20,7 @@ var searchData=
   ['edgetestingdiagnostics_2ehpp_17',['EdgeTestingDiagnostics.hpp',['../d0/dde/EdgeTestingDiagnostics_8hpp.html',1,'']]],
   ['edgetestingutilities_2ehpp_18',['EdgeTestingUtilities.hpp',['../d0/d08/EdgeTestingUtilities_8hpp.html',1,'']]],
   ['electrical_5fcurrent_5fspace_19',['electrical_current_space',['../d7/dd9/structsequoia_1_1physics_1_1electrical__current__space.html',1,'sequoia::physics']]],
-  ['electrical_5fcurrents_20',['electrical_currents',['../d5/db4/structsequoia_1_1physics_1_1classical__physical__value__sets_1_1electrical__currents.html',1,'sequoia::physics::classical_physical_value_sets']]],
+  ['electrical_5fcurrents_20',['electrical_currents',['../d7/da8/structsequoia_1_1physics_1_1sets_1_1classical_1_1electrical__currents.html',1,'sequoia::physics::sets::classical']]],
   ['elementary_5ffalse_5fnegative_5ffree_5fdiagnostics_21',['elementary_false_negative_free_diagnostics',['../dd/d5e/classsequoia_1_1testing_1_1elementary__false__negative__free__diagnostics.html',1,'sequoia::testing']]],
   ['elementary_5ffalse_5fpositive_5ffree_5fdiagnostics_22',['elementary_false_positive_free_diagnostics',['../d3/d1f/classsequoia_1_1testing_1_1elementary__false__positive__free__diagnostics.html',1,'sequoia::testing']]],
   ['elementaryfreediagnostics_2ecpp_23',['ElementaryFreeDiagnostics.cpp',['../d1/d12/ElementaryFreeDiagnostics_8cpp.html',1,'']]],
@@ -43,7 +43,5 @@ var searchData=
   ['exceptionsfreediagnostics_2ehpp_40',['ExceptionsFreeDiagnostics.hpp',['../d6/da3/ExceptionsFreeDiagnostics_8hpp.html',1,'']]],
   ['experimental_5ftest_41',['experimental_test',['../d9/d26/classsequoia_1_1testing_1_1experimental__test.html',1,'sequoia::testing']]],
   ['experimentaltest_2ecpp_42',['ExperimentalTest.cpp',['../d9/dda/ExperimentalTest_8cpp.html',1,'']]],
-  ['experimentaltest_2ehpp_43',['ExperimentalTest.hpp',['../d6/daa/ExperimentalTest_8hpp.html',1,'']]],
-  ['extract_5fcommon_5ffield_5ftype_44',['extract_common_field_type',['../d4/dfc/structsequoia_1_1maths_1_1extract__common__field__type.html',1,'sequoia::maths']]],
-  ['extract_5fcommon_5ffield_5ftype_3c_20std_3a_3atuple_3c_20ts_2e_2e_2e_20_3e_20_3e_45',['extract_common_field_type&lt; std::tuple&lt; Ts... &gt; &gt;',['../d4/d76/structsequoia_1_1maths_1_1extract__common__field__type_3_01std_1_1tuple_3_01Ts_8_8_8_01_4_01_4.html',1,'sequoia::maths']]]
+  ['experimentaltest_2ehpp_43',['ExperimentalTest.hpp',['../d6/daa/ExperimentalTest_8hpp.html',1,'']]]
 ];

@@ -87,9 +87,9 @@ Public Types</h2></td></tr>
 <tr class="memitem:af451e683c9d596b0be9e1973ef4cf70e"><td class="memItemLeft" align="right" valign="top"><a id="af451e683c9d596b0be9e1973ef4cf70e" name="af451e683c9d596b0be9e1973ef4cf70e"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>coord_type</b> = <a class="el" href="../../d7/d56/classsequoia_1_1maths_1_1coordinates.html">maths::coordinates</a>&lt; ConvexSpace, Basis, Origin, Validator &gt;</td></tr>
 <tr class="separator:af451e683c9d596b0be9e1973ef4cf70e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a25f45dd35b002ac83d774ba4e3c3e1bd"><td class="memItemLeft" align="right" valign="top"><a id="a25f45dd35b002ac83d774ba4e3c3e1bd" name="a25f45dd35b002ac83d774ba4e3c3e1bd"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>field_type</b> = typename coord_type::field_type</td></tr>
-<tr class="separator:a25f45dd35b002ac83d774ba4e3c3e1bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad93b1295ff6c7a48e1ee3e9953acd849"><td class="memItemLeft" align="right" valign="top"><a id="ad93b1295ff6c7a48e1ee3e9953acd849" name="ad93b1295ff6c7a48e1ee3e9953acd849"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>commutative_ring_type</b> = typename coord_type::commutative_ring_type</td></tr>
+<tr class="separator:ad93b1295ff6c7a48e1ee3e9953acd849"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -97,10 +97,10 @@ Static Public Member Functions</h2></td></tr>
 template&lt;test_mode Mode&gt; </td></tr>
 <tr class="memitem:a3784232f6e6f54120127d698292de472"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>test</b> (<a class="el" href="../../d2/d95/structsequoia_1_1testing_1_1equality__check__t.html">equality_check_t</a>, <a class="el" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger</a>&lt; Mode &gt; &amp;logger, const <a class="el" href="../../d7/d56/classsequoia_1_1maths_1_1coordinates.html">coord_type</a> &amp;actual, const <a class="el" href="../../d7/d56/classsequoia_1_1maths_1_1coordinates.html">coord_type</a> &amp;prediction)</td></tr>
 <tr class="separator:a3784232f6e6f54120127d698292de472"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3558a7038dc89750d696ae1687b4a39c"><td class="memTemplParams" colspan="2"><a id="a3558a7038dc89750d696ae1687b4a39c" name="a3558a7038dc89750d696ae1687b4a39c"></a>
+<tr class="memitem:a0f9111762c9847d66b2dec1cea824481"><td class="memTemplParams" colspan="2"><a id="a0f9111762c9847d66b2dec1cea824481" name="a0f9111762c9847d66b2dec1cea824481"></a>
 template&lt;test_mode Mode&gt; </td></tr>
-<tr class="memitem:a3558a7038dc89750d696ae1687b4a39c"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>test</b> (<a class="el" href="../../df/d9e/structsequoia_1_1testing_1_1general__equivalence__check__t.html">equivalence_check_t</a>, <a class="el" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger</a>&lt; Mode &gt; &amp;logger, const <a class="el" href="../../d7/d56/classsequoia_1_1maths_1_1coordinates.html">coord_type</a> &amp;actual, const std::array&lt; field_type, D &gt; &amp;prediction)</td></tr>
-<tr class="separator:a3558a7038dc89750d696ae1687b4a39c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0f9111762c9847d66b2dec1cea824481"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>test</b> (<a class="el" href="../../df/d9e/structsequoia_1_1testing_1_1general__equivalence__check__t.html">equivalence_check_t</a>, <a class="el" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger</a>&lt; Mode &gt; &amp;logger, const <a class="el" href="../../d7/d56/classsequoia_1_1maths_1_1coordinates.html">coord_type</a> &amp;actual, const std::array&lt; commutative_ring_type, D &gt; &amp;prediction)</td></tr>
+<tr class="separator:a0f9111762c9847d66b2dec1cea824481"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>

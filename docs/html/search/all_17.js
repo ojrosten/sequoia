@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['y_937',['y',['../d9/dfe/structsequoia_1_1testing_1_1y.html',1,'sequoia::testing']]]
+  ['y_5fdown_5fconvention_0',['y_down_convention',['../dc/d98/structsequoia_1_1physics_1_1y__down__convention.html',1,'sequoia::physics']]]
 ];

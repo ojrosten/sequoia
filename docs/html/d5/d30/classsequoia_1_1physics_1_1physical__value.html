@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.6"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: sequoia::physics::physical_value&lt; ValueSpace, Unit, Origin, Validator &gt; Class Template Reference</title>
+<title>Sequoia: sequoia::physics::physical_value&lt; ValueSpace, Unit, Convention, Origin, Validator &gt; Class Template Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -79,51 +79,54 @@ $(function() {
 <a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="#friends">Friends</a> &#124;
 <a href="../../d4/de2/classsequoia_1_1physics_1_1physical__value-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">sequoia::physics::physical_value&lt; ValueSpace, Unit, Origin, Validator &gt; Class Template Reference</div></div>
+  <div class="headertitle"><div class="title">sequoia::physics::physical_value&lt; ValueSpace, Unit, Convention, Origin, Validator &gt; Class Template Reference</div></div>
 </div><!--header-->
 <div class="contents">
 <div class="dynheader">
-Inheritance diagram for sequoia::physics::physical_value&lt; ValueSpace, Unit, Origin, Validator &gt;:</div>
+Inheritance diagram for sequoia::physics::physical_value&lt; ValueSpace, Unit, Convention, Origin, Validator &gt;:</div>
 <div class="dyncontent">
  <div class="center">
-  <img src="../../d5/d30/classsequoia_1_1physics_1_1physical__value.png" usemap="#sequoia::physics::physical_5Fvalue_3C_20ValueSpace_2C_20Unit_2C_20Origin_2C_20Validator_20_3E_map" alt=""/>
-  <map id="sequoia::physics::physical_5Fvalue_3C_20ValueSpace_2C_20Unit_2C_20Origin_2C_20Validator_20_3E_map" name="sequoia::physics::physical_5Fvalue_3C_20ValueSpace_2C_20Unit_2C_20Origin_2C_20Validator_20_3E_map">
-<area href="../../dd/d32/classsequoia_1_1maths_1_1coordinates__base.html" alt="sequoia::maths::coordinates_base&lt; ConvexSpace, Basis, Origin, Validator, DisplacementCoordinates &gt;" shape="rect" coords="0,0,719,24"/>
+  <img src="../../d5/d30/classsequoia_1_1physics_1_1physical__value.png" usemap="#sequoia::physics::physical_5Fvalue_3C_20ValueSpace_2C_20Unit_2C_20Convention_2C_20Origin_2C_20Validator_20_3E_map" alt=""/>
+  <map id="sequoia::physics::physical_5Fvalue_3C_20ValueSpace_2C_20Unit_2C_20Convention_2C_20Origin_2C_20Validator_20_3E_map" name="sequoia::physics::physical_5Fvalue_3C_20ValueSpace_2C_20Unit_2C_20Convention_2C_20Origin_2C_20Validator_20_3E_map">
+<area href="../../dd/d32/classsequoia_1_1maths_1_1coordinates__base.html" title="Class designed for inheritance by concerete coordinate types." alt="sequoia::maths::coordinates_base&lt; ConvexSpace, Basis, Origin, Validator, DisplacementCoordinates &gt;" shape="rect" coords="0,0,1160,24"/>
   </map>
 </div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:adaaf30b4c9f903b6d0d400c36e3fb79a"><td class="memItemLeft" align="right" valign="top"><a id="adaaf30b4c9f903b6d0d400c36e3fb79a" name="adaaf30b4c9f903b6d0d400c36e3fb79a"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>coordinates_type</b> = <a class="el" href="../../dd/d32/classsequoia_1_1maths_1_1coordinates__base.html">to_coordinates_base_type</a>&lt; ValueSpace, Unit, Origin, Validator &gt;</td></tr>
-<tr class="separator:adaaf30b4c9f903b6d0d400c36e3fb79a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa3bb636cb40885987fb307c78063799a"><td class="memItemLeft" align="right" valign="top"><a id="aa3bb636cb40885987fb307c78063799a" name="aa3bb636cb40885987fb307c78063799a"></a>
+<tr class="memitem:ac58a3719a0f5003d44b1f7ab6fd68c44"><td class="memItemLeft" align="right" valign="top"><a id="ac58a3719a0f5003d44b1f7ab6fd68c44" name="ac58a3719a0f5003d44b1f7ab6fd68c44"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>coordinates_type</b> = <a class="el" href="../../dd/d32/classsequoia_1_1maths_1_1coordinates__base.html">to_coordinates_base_type</a>&lt; ValueSpace, Unit, Convention, Origin, Validator &gt;</td></tr>
+<tr class="separator:ac58a3719a0f5003d44b1f7ab6fd68c44"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae7cc70d9d94f060f8cde64b22f7ae705"><td class="memItemLeft" align="right" valign="top"><a id="ae7cc70d9d94f060f8cde64b22f7ae705" name="ae7cc70d9d94f060f8cde64b22f7ae705"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>space_type</b> = ValueSpace</td></tr>
-<tr class="separator:aa3bb636cb40885987fb307c78063799a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a25132ee714852d8a7c7bc053d3ba2156"><td class="memItemLeft" align="right" valign="top"><a id="a25132ee714852d8a7c7bc053d3ba2156" name="a25132ee714852d8a7c7bc053d3ba2156"></a>
+<tr class="separator:ae7cc70d9d94f060f8cde64b22f7ae705"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a55703bf94ddd684ed131318c8f15436d"><td class="memItemLeft" align="right" valign="top"><a id="a55703bf94ddd684ed131318c8f15436d" name="a55703bf94ddd684ed131318c8f15436d"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>units_type</b> = Unit</td></tr>
-<tr class="separator:a25132ee714852d8a7c7bc053d3ba2156"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a100d67ead0952acbbe24b5bec58667c4"><td class="memItemLeft" align="right" valign="top"><a id="a100d67ead0952acbbe24b5bec58667c4" name="a100d67ead0952acbbe24b5bec58667c4"></a>
+<tr class="separator:a55703bf94ddd684ed131318c8f15436d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a214b79dd06c96b5051233ec9adf36c48"><td class="memItemLeft" align="right" valign="top"><a id="a214b79dd06c96b5051233ec9adf36c48" name="a214b79dd06c96b5051233ec9adf36c48"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>convention_type</b> = Convention</td></tr>
+<tr class="separator:a214b79dd06c96b5051233ec9adf36c48"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ace3d7f8e44c9361d0937852c7c299b5e"><td class="memItemLeft" align="right" valign="top"><a id="ace3d7f8e44c9361d0937852c7c299b5e" name="ace3d7f8e44c9361d0937852c7c299b5e"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>origin_type</b> = Origin</td></tr>
-<tr class="separator:a100d67ead0952acbbe24b5bec58667c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a21b36c56b5ae16743e24e6cb248ba146"><td class="memItemLeft" align="right" valign="top"><a id="a21b36c56b5ae16743e24e6cb248ba146" name="a21b36c56b5ae16743e24e6cb248ba146"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>displacement_space_type</b> = vector_space_type_of&lt; ValueSpace &gt;</td></tr>
-<tr class="separator:a21b36c56b5ae16743e24e6cb248ba146"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a19bef9d3d2ab8676c637988d909770cb"><td class="memItemLeft" align="right" valign="top"><a id="a19bef9d3d2ab8676c637988d909770cb" name="a19bef9d3d2ab8676c637988d909770cb"></a>
+<tr class="separator:ace3d7f8e44c9361d0937852c7c299b5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3dddff0ad0c974dd217d56eaea0a0505"><td class="memItemLeft" align="right" valign="top"><a id="a3dddff0ad0c974dd217d56eaea0a0505" name="a3dddff0ad0c974dd217d56eaea0a0505"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>displacement_space_type</b> = free_module_type_of_t&lt; ValueSpace &gt;</td></tr>
+<tr class="separator:a3dddff0ad0c974dd217d56eaea0a0505"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5b77790a4b8de78d8c69d8dd0344f75f"><td class="memItemLeft" align="right" valign="top"><a id="a5b77790a4b8de78d8c69d8dd0344f75f" name="a5b77790a4b8de78d8c69d8dd0344f75f"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>intrinsic_validator_type</b> = Unit::validator_type</td></tr>
-<tr class="separator:a19bef9d3d2ab8676c637988d909770cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac991f5fca00904522820da33be4056aa"><td class="memItemLeft" align="right" valign="top"><a id="ac991f5fca00904522820da33be4056aa" name="ac991f5fca00904522820da33be4056aa"></a>
+<tr class="separator:a5b77790a4b8de78d8c69d8dd0344f75f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3889b2e23a82828d9212d02be2dca185"><td class="memItemLeft" align="right" valign="top"><a id="a3889b2e23a82828d9212d02be2dca185" name="a3889b2e23a82828d9212d02be2dca185"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>validator_type</b> = Validator</td></tr>
-<tr class="separator:ac991f5fca00904522820da33be4056aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a27860f6848a2f3889fb9c8d697de46bd"><td class="memItemLeft" align="right" valign="top"><a id="a27860f6848a2f3889fb9c8d697de46bd" name="a27860f6848a2f3889fb9c8d697de46bd"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>field_type</b> = space_field_type&lt; ValueSpace &gt;</td></tr>
-<tr class="separator:a27860f6848a2f3889fb9c8d697de46bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a019380145d48a973e5f8fa0aa083b186"><td class="memItemLeft" align="right" valign="top"><a id="a019380145d48a973e5f8fa0aa083b186" name="a019380145d48a973e5f8fa0aa083b186"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>value_type</b> = field_type</td></tr>
-<tr class="separator:a019380145d48a973e5f8fa0aa083b186"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7fb5df6ea84557327b46af6db4c8afab"><td class="memItemLeft" align="right" valign="top"><a id="a7fb5df6ea84557327b46af6db4c8afab" name="a7fb5df6ea84557327b46af6db4c8afab"></a>
+<tr class="separator:a3889b2e23a82828d9212d02be2dca185"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af4b88589415fc738cab7141aece86a48"><td class="memItemLeft" align="right" valign="top"><a id="af4b88589415fc738cab7141aece86a48" name="af4b88589415fc738cab7141aece86a48"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>ring_type</b> = commutative_ring_type_of_t&lt; ValueSpace &gt;</td></tr>
+<tr class="separator:af4b88589415fc738cab7141aece86a48"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a689c4b4c0ba1040b9b7bb59ffb947279"><td class="memItemLeft" align="right" valign="top"><a id="a689c4b4c0ba1040b9b7bb59ffb947279" name="a689c4b4c0ba1040b9b7bb59ffb947279"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>value_type</b> = ring_type</td></tr>
+<tr class="separator:a689c4b4c0ba1040b9b7bb59ffb947279"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0483d5a1ac78a6907effd31879a852a1"><td class="memItemLeft" align="right" valign="top"><a id="a0483d5a1ac78a6907effd31879a852a1" name="a0483d5a1ac78a6907effd31879a852a1"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>displacement_type</b> = coordinates_type::displacement_coordinates_type</td></tr>
-<tr class="separator:a7fb5df6ea84557327b46af6db4c8afab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a0483d5a1ac78a6907effd31879a852a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_types_classsequoia_1_1maths_1_1coordinates__base"><td colspan="2" onclick="javascript:toggleInherit('pub_types_classsequoia_1_1maths_1_1coordinates__base')"><img src="../../closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="../../dd/d32/classsequoia_1_1maths_1_1coordinates__base.html">sequoia::maths::coordinates_base&lt; ConvexSpace, Basis, Origin, Validator, DisplacementCoordinates &gt;</a></td></tr>
 <tr class="memitem:a50a76a71901d94570cc5dcb685ab973d inherit pub_types_classsequoia_1_1maths_1_1coordinates__base"><td class="memItemLeft" align="right" valign="top"><a id="a50a76a71901d94570cc5dcb685ab973d" name="a50a76a71901d94570cc5dcb685ab973d"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>convex_space_type</b> = ConvexSpace</td></tr>
@@ -137,53 +140,58 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>validator_type</b> =
 <tr class="memitem:ae5efc4d057997d4afef76bb0b24b2b6d inherit pub_types_classsequoia_1_1maths_1_1coordinates__base"><td class="memItemLeft" align="right" valign="top"><a id="ae5efc4d057997d4afef76bb0b24b2b6d" name="ae5efc4d057997d4afef76bb0b24b2b6d"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>origin_type</b> = Origin</td></tr>
 <tr class="separator:ae5efc4d057997d4afef76bb0b24b2b6d inherit pub_types_classsequoia_1_1maths_1_1coordinates__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a46e359f9ad0f9062e3ec9ae4dd9128f4 inherit pub_types_classsequoia_1_1maths_1_1coordinates__base"><td class="memItemLeft" align="right" valign="top"><a id="a46e359f9ad0f9062e3ec9ae4dd9128f4" name="a46e359f9ad0f9062e3ec9ae4dd9128f4"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>set_type</b> = typename ConvexSpace::set_type</td></tr>
-<tr class="separator:a46e359f9ad0f9062e3ec9ae4dd9128f4 inherit pub_types_classsequoia_1_1maths_1_1coordinates__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7f6539e23cfd0b9695436866cc4c0671 inherit pub_types_classsequoia_1_1maths_1_1coordinates__base"><td class="memItemLeft" align="right" valign="top"><a id="a7f6539e23cfd0b9695436866cc4c0671" name="a7f6539e23cfd0b9695436866cc4c0671"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>vector_space_type</b> = vector_space_type_of&lt; ConvexSpace &gt;</td></tr>
-<tr class="separator:a7f6539e23cfd0b9695436866cc4c0671 inherit pub_types_classsequoia_1_1maths_1_1coordinates__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a215caaada4a19bc5feee5c320288fcf9 inherit pub_types_classsequoia_1_1maths_1_1coordinates__base"><td class="memItemLeft" align="right" valign="top"><a id="a215caaada4a19bc5feee5c320288fcf9" name="a215caaada4a19bc5feee5c320288fcf9"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>field_type</b> = space_field_type&lt; ConvexSpace &gt;</td></tr>
-<tr class="separator:a215caaada4a19bc5feee5c320288fcf9 inherit pub_types_classsequoia_1_1maths_1_1coordinates__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4f0d5d40773022ab9f5f5305e2ef8f39 inherit pub_types_classsequoia_1_1maths_1_1coordinates__base"><td class="memItemLeft" align="right" valign="top"><a id="a4f0d5d40773022ab9f5f5305e2ef8f39" name="a4f0d5d40773022ab9f5f5305e2ef8f39"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>value_type</b> = field_type</td></tr>
-<tr class="separator:a4f0d5d40773022ab9f5f5305e2ef8f39 inherit pub_types_classsequoia_1_1maths_1_1coordinates__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f24277c1b3a43620f378477e08c32dc inherit pub_types_classsequoia_1_1maths_1_1coordinates__base"><td class="memItemLeft" align="right" valign="top"><a id="a1f24277c1b3a43620f378477e08c32dc" name="a1f24277c1b3a43620f378477e08c32dc"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>set_type</b> = ConvexSpace::set_type</td></tr>
+<tr class="separator:a1f24277c1b3a43620f378477e08c32dc inherit pub_types_classsequoia_1_1maths_1_1coordinates__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab0f7614d9ac0da4f69baf590d4eb688b inherit pub_types_classsequoia_1_1maths_1_1coordinates__base"><td class="memItemLeft" align="right" valign="top"><a id="ab0f7614d9ac0da4f69baf590d4eb688b" name="ab0f7614d9ac0da4f69baf590d4eb688b"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>free_module_type</b> = free_module_type_of_t&lt; ConvexSpace &gt;</td></tr>
+<tr class="separator:ab0f7614d9ac0da4f69baf590d4eb688b inherit pub_types_classsequoia_1_1maths_1_1coordinates__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad70bb10de8d63ddb2c1f0811581a4e80 inherit pub_types_classsequoia_1_1maths_1_1coordinates__base"><td class="memItemLeft" align="right" valign="top"><a id="ad70bb10de8d63ddb2c1f0811581a4e80" name="ad70bb10de8d63ddb2c1f0811581a4e80"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>commutative_ring_type</b> = commutative_ring_type_of_t&lt; ConvexSpace &gt;</td></tr>
+<tr class="separator:ad70bb10de8d63ddb2c1f0811581a4e80 inherit pub_types_classsequoia_1_1maths_1_1coordinates__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3f6496557002f52669b78289cb481774 inherit pub_types_classsequoia_1_1maths_1_1coordinates__base"><td class="memItemLeft" align="right" valign="top"><a id="a3f6496557002f52669b78289cb481774" name="a3f6496557002f52669b78289cb481774"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>value_type</b> = commutative_ring_type</td></tr>
+<tr class="separator:a3f6496557002f52669b78289cb481774 inherit pub_types_classsequoia_1_1maths_1_1coordinates__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa0b46dc3c1f3311f098e81a605be32cc inherit pub_types_classsequoia_1_1maths_1_1coordinates__base"><td class="memItemLeft" align="right" valign="top"><a id="aa0b46dc3c1f3311f098e81a605be32cc" name="aa0b46dc3c1f3311f098e81a605be32cc"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>displacement_coordinates_type</b> = DisplacementCoordinates</td></tr>
 <tr class="separator:aa0b46dc3c1f3311f098e81a605be32cc inherit pub_types_classsequoia_1_1maths_1_1coordinates__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a20fad8461cd8c645a7756fa87c8bd577"><td class="memItemLeft" align="right" valign="top"><a id="a20fad8461cd8c645a7756fa87c8bd577" name="a20fad8461cd8c645a7756fa87c8bd577"></a>
+<tr class="memitem:a29035de7a12f09ffa6d9cb92e1b688a6"><td class="memItemLeft" align="right" valign="top"><a id="a29035de7a12f09ffa6d9cb92e1b688a6" name="a29035de7a12f09ffa6d9cb92e1b688a6"></a>
 constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>physical_value</b> (value_type val, units_type)</td></tr>
-<tr class="separator:a20fad8461cd8c645a7756fa87c8bd577"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aefa3814bb6705776ded446ad8064dd92"><td class="memItemLeft" align="right" valign="top"><a id="aefa3814bb6705776ded446ad8064dd92" name="aefa3814bb6705776ded446ad8064dd92"></a>
+<tr class="separator:a29035de7a12f09ffa6d9cb92e1b688a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a73d229dfee8ebe9f3b995f3e29d75e42"><td class="memItemLeft" align="right" valign="top"><a id="a73d229dfee8ebe9f3b995f3e29d75e42" name="a73d229dfee8ebe9f3b995f3e29d75e42"></a>
 constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>physical_value</b> (std::span&lt; const value_type, D &gt; val, units_type)</td></tr>
-<tr class="separator:aefa3814bb6705776ded446ad8064dd92"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af53f2efbc8f96d906620ad946ec2ca6f"><td class="memItemLeft" align="right" valign="top"><a id="af53f2efbc8f96d906620ad946ec2ca6f" name="af53f2efbc8f96d906620ad946ec2ca6f"></a>
+<tr class="separator:a73d229dfee8ebe9f3b995f3e29d75e42"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2c47cb2509c4a058a8e5b42e54f434d3"><td class="memItemLeft" align="right" valign="top"><a id="a2c47cb2509c4a058a8e5b42e54f434d3" name="a2c47cb2509c4a058a8e5b42e54f434d3"></a>
 constexpr <a class="el" href="../../d5/d30/classsequoia_1_1physics_1_1physical__value.html">physical_value</a>&#160;</td><td class="memItemRight" valign="bottom"><b>operator-</b> () const =delete</td></tr>
-<tr class="separator:af53f2efbc8f96d906620ad946ec2ca6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a291502bdf93383722772aa034f0d4835"><td class="memItemLeft" align="right" valign="top"><a id="a291502bdf93383722772aa034f0d4835" name="a291502bdf93383722772aa034f0d4835"></a>
+<tr class="separator:a2c47cb2509c4a058a8e5b42e54f434d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a099b720fc30d4e86419e0a9fdda934df"><td class="memItemLeft" align="right" valign="top"><a id="a099b720fc30d4e86419e0a9fdda934df" name="a099b720fc30d4e86419e0a9fdda934df"></a>
 constexpr <a class="el" href="../../d5/d30/classsequoia_1_1physics_1_1physical__value.html">physical_value</a>&#160;</td><td class="memItemRight" valign="bottom"><b>operator+</b> () const</td></tr>
-<tr class="separator:a291502bdf93383722772aa034f0d4835"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af7cda700e8d9188ef26672e59053a119"><td class="memTemplParams" colspan="2"><a id="af7cda700e8d9188ef26672e59053a119" name="af7cda700e8d9188ef26672e59053a119"></a>
+<tr class="separator:a099b720fc30d4e86419e0a9fdda934df"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaa5c88ebe7974293bc63c4eac5c1ee6f"><td class="memTemplParams" colspan="2"><a id="aaa5c88ebe7974293bc63c4eac5c1ee6f" name="aaa5c88ebe7974293bc63c4eac5c1ee6f"></a>
 template&lt;convex_space OtherValueSpace&gt; <br />
 requires is_intrinsically_absolute</td></tr>
-<tr class="memitem:af7cda700e8d9188ef26672e59053a119"><td class="memTemplItemLeft" align="right" valign="top">&amp;&amp;std::is_base_of_v&lt; ValueSpace, OtherValueSpace &gt; constexpr <a class="el" href="../../d5/d30/classsequoia_1_1physics_1_1physical__value.html">physical_value</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator+=</b> (const <a class="el" href="../../d5/d30/classsequoia_1_1physics_1_1physical__value.html">physical_value</a>&lt; OtherValueSpace, Unit, Origin, Validator &gt; &amp;other) noexcept(has_identity_validator)</td></tr>
-<tr class="separator:af7cda700e8d9188ef26672e59053a119"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a75e318a315b52b303800fb1b4483c3a8"><td class="memItemLeft" align="right" valign="top"><a id="a75e318a315b52b303800fb1b4483c3a8" name="a75e318a315b52b303800fb1b4483c3a8"></a>
+<tr class="memitem:aaa5c88ebe7974293bc63c4eac5c1ee6f"><td class="memTemplItemLeft" align="right" valign="top">&amp;&amp;std::is_base_of_v&lt; ValueSpace, OtherValueSpace &gt; constexpr <a class="el" href="../../d5/d30/classsequoia_1_1physics_1_1physical__value.html">physical_value</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator+=</b> (const <a class="el" href="../../d5/d30/classsequoia_1_1physics_1_1physical__value.html">physical_value</a>&lt; OtherValueSpace, Unit, Convention, Origin, Validator &gt; &amp;other) noexcept(has_identity_validator)</td></tr>
+<tr class="separator:aaa5c88ebe7974293bc63c4eac5c1ee6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a46b8949231fc47d63488083a2c97f580"><td class="memItemLeft" align="right" valign="top"><a id="a46b8949231fc47d63488083a2c97f580" name="a46b8949231fc47d63488083a2c97f580"></a>
 constexpr <a class="el" href="../../d5/d30/classsequoia_1_1physics_1_1physical__value.html">physical_value</a>&#160;</td><td class="memItemRight" valign="bottom"><b>operator-</b> () const noexcept(has_identity_validator)</td></tr>
-<tr class="separator:a75e318a315b52b303800fb1b4483c3a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a46b8949231fc47d63488083a2c97f580"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a61458f3b6c7fbe7b06c8e9cf16f25dc9"><td class="memTemplParams" colspan="2"><a id="a61458f3b6c7fbe7b06c8e9cf16f25dc9" name="a61458f3b6c7fbe7b06c8e9cf16f25dc9"></a>
+template&lt;class LoweredValueSpace , class OtherUnit &gt; <br />
+requires std::same_as&lt;to_base_space_t&lt;ValueSpace&gt;, to_base_space_t&lt;LoweredValueSpace&gt;&gt;</td></tr>
+<tr class="memitem:a61458f3b6c7fbe7b06c8e9cf16f25dc9"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator physical_value&lt; LoweredValueSpace, OtherUnit, convention_type, origin_type, validator_type &gt;</b> () const noexcept</td></tr>
+<tr class="separator:a61458f3b6c7fbe7b06c8e9cf16f25dc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5dadd8b0bcfaec6260d16e0d2ed813c1"><td class="memTemplParams" colspan="2"><a id="a5dadd8b0bcfaec6260d16e0d2ed813c1" name="a5dadd8b0bcfaec6260d16e0d2ed813c1"></a>
 template&lt;class Self &gt; </td></tr>
 <tr class="memitem:a5dadd8b0bcfaec6260d16e0d2ed813c1"><td class="memTemplItemLeft" align="right" valign="top">constexpr Self &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator+=</b> (this Self &amp;self, const displacement_coordinates_type &amp;v) noexcept(has_identity_validator)</td></tr>
 <tr class="separator:a5dadd8b0bcfaec6260d16e0d2ed813c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a125a18ada6cf54608ec4c48f1d70e9b5"><td class="memTemplParams" colspan="2"><a id="a125a18ada6cf54608ec4c48f1d70e9b5" name="a125a18ada6cf54608ec4c48f1d70e9b5"></a>
+<tr class="memitem:aabda8ce4f414bf1fe8ad5c56b8495db1"><td class="memTemplParams" colspan="2"><a id="aabda8ce4f414bf1fe8ad5c56b8495db1" name="aabda8ce4f414bf1fe8ad5c56b8495db1"></a>
 template&lt;class Self &gt; <br />
-requires has_intrinsic_origin</td></tr>
-<tr class="memitem:a125a18ada6cf54608ec4c48f1d70e9b5"><td class="memTemplItemLeft" align="right" valign="top">&amp;&amp;!std ::is_same_v&lt; <a class="el" href="../../dd/d32/classsequoia_1_1maths_1_1coordinates__base.html">coordinates_base</a>, displacement_coordinates_type &gt; constexpr Self &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator+=</b> (this Self &amp;self, const <a class="el" href="../../dd/d32/classsequoia_1_1maths_1_1coordinates__base.html">coordinates_base</a> &amp;v) noexcept(has_identity_validator)</td></tr>
-<tr class="separator:a125a18ada6cf54608ec4c48f1d70e9b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+requires has_distinguished_origin</td></tr>
+<tr class="memitem:aabda8ce4f414bf1fe8ad5c56b8495db1"><td class="memTemplItemLeft" align="right" valign="top">&amp;&amp;!std ::is_same_v&lt; <a class="el" href="../../dd/d32/classsequoia_1_1maths_1_1coordinates__base.html">coordinates_base</a>, displacement_coordinates_type &gt; constexpr Self &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator+=</b> (this Self &amp;self, const <a class="el" href="../../dd/d32/classsequoia_1_1maths_1_1coordinates__base.html">coordinates_base</a> &amp;v) noexcept(has_identity_validator)</td></tr>
+<tr class="separator:aabda8ce4f414bf1fe8ad5c56b8495db1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classsequoia_1_1maths_1_1coordinates__base"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classsequoia_1_1maths_1_1coordinates__base')"><img src="../../closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="../../dd/d32/classsequoia_1_1maths_1_1coordinates__base.html">sequoia::maths::coordinates_base&lt; ConvexSpace, Basis, Origin, Validator, DisplacementCoordinates &gt;</a></td></tr>
 <tr class="memitem:ada29dbebf3d1ea288de9f8ee3a1a4514 inherit pub_methods_classsequoia_1_1maths_1_1coordinates__base"><td class="memItemLeft" align="right" valign="top"><a id="ada29dbebf3d1ea288de9f8ee3a1a4514" name="ada29dbebf3d1ea288de9f8ee3a1a4514"></a>
 constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>coordinates_base</b> (std::span&lt; const value_type, D &gt; vals) noexcept(has_identity_validator)</td></tr>
@@ -202,25 +210,25 @@ requires (D == 1) &amp;&amp; (std::convertible_to&lt;T, value_type&gt;)</td></tr
 template&lt;class Self &gt; </td></tr>
 <tr class="memitem:a5dadd8b0bcfaec6260d16e0d2ed813c1 inherit pub_methods_classsequoia_1_1maths_1_1coordinates__base"><td class="memTemplItemLeft" align="right" valign="top">constexpr Self &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator+=</b> (this Self &amp;self, const displacement_coordinates_type &amp;v) noexcept(has_identity_validator)</td></tr>
 <tr class="separator:a5dadd8b0bcfaec6260d16e0d2ed813c1 inherit pub_methods_classsequoia_1_1maths_1_1coordinates__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a125a18ada6cf54608ec4c48f1d70e9b5 inherit pub_methods_classsequoia_1_1maths_1_1coordinates__base"><td class="memTemplParams" colspan="2"><a id="a125a18ada6cf54608ec4c48f1d70e9b5" name="a125a18ada6cf54608ec4c48f1d70e9b5"></a>
+<tr class="memitem:aabda8ce4f414bf1fe8ad5c56b8495db1 inherit pub_methods_classsequoia_1_1maths_1_1coordinates__base"><td class="memTemplParams" colspan="2"><a id="aabda8ce4f414bf1fe8ad5c56b8495db1" name="aabda8ce4f414bf1fe8ad5c56b8495db1"></a>
 template&lt;class Self &gt; <br />
-requires has_intrinsic_origin</td></tr>
-<tr class="memitem:a125a18ada6cf54608ec4c48f1d70e9b5 inherit pub_methods_classsequoia_1_1maths_1_1coordinates__base"><td class="memTemplItemLeft" align="right" valign="top">&amp;&amp;!std ::is_same_v&lt; <a class="el" href="../../dd/d32/classsequoia_1_1maths_1_1coordinates__base.html">coordinates_base</a>, displacement_coordinates_type &gt; constexpr Self &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator+=</b> (this Self &amp;self, const <a class="el" href="../../dd/d32/classsequoia_1_1maths_1_1coordinates__base.html">coordinates_base</a> &amp;v) noexcept(has_identity_validator)</td></tr>
-<tr class="separator:a125a18ada6cf54608ec4c48f1d70e9b5 inherit pub_methods_classsequoia_1_1maths_1_1coordinates__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+requires has_distinguished_origin</td></tr>
+<tr class="memitem:aabda8ce4f414bf1fe8ad5c56b8495db1 inherit pub_methods_classsequoia_1_1maths_1_1coordinates__base"><td class="memTemplItemLeft" align="right" valign="top">&amp;&amp;!std ::is_same_v&lt; <a class="el" href="../../dd/d32/classsequoia_1_1maths_1_1coordinates__base.html">coordinates_base</a>, displacement_coordinates_type &gt; constexpr Self &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator+=</b> (this Self &amp;self, const <a class="el" href="../../dd/d32/classsequoia_1_1maths_1_1coordinates__base.html">coordinates_base</a> &amp;v) noexcept(has_identity_validator)</td></tr>
+<tr class="separator:aabda8ce4f414bf1fe8ad5c56b8495db1 inherit pub_methods_classsequoia_1_1maths_1_1coordinates__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a58c9b8dbb443e30d2a2d058d7961fd35 inherit pub_methods_classsequoia_1_1maths_1_1coordinates__base"><td class="memTemplParams" colspan="2"><a id="a58c9b8dbb443e30d2a2d058d7961fd35" name="a58c9b8dbb443e30d2a2d058d7961fd35"></a>
 template&lt;class Self &gt; </td></tr>
 <tr class="memitem:a58c9b8dbb443e30d2a2d058d7961fd35 inherit pub_methods_classsequoia_1_1maths_1_1coordinates__base"><td class="memTemplItemLeft" align="right" valign="top">constexpr Self &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator-=</b> (this Self &amp;self, const displacement_coordinates_type &amp;v) noexcept(has_identity_validator)</td></tr>
 <tr class="separator:a58c9b8dbb443e30d2a2d058d7961fd35 inherit pub_methods_classsequoia_1_1maths_1_1coordinates__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a65669b1130b6e45eee1bdf0dd818b2c7 inherit pub_methods_classsequoia_1_1maths_1_1coordinates__base"><td class="memTemplParams" colspan="2"><a id="a65669b1130b6e45eee1bdf0dd818b2c7" name="a65669b1130b6e45eee1bdf0dd818b2c7"></a>
+<tr class="memitem:ac7df533d6156ed45fdf60a5c96699813 inherit pub_methods_classsequoia_1_1maths_1_1coordinates__base"><td class="memTemplParams" colspan="2"><a id="ac7df533d6156ed45fdf60a5c96699813" name="ac7df533d6156ed45fdf60a5c96699813"></a>
 template&lt;class Self &gt; <br />
-requires has_intrinsic_origin</td></tr>
-<tr class="memitem:a65669b1130b6e45eee1bdf0dd818b2c7 inherit pub_methods_classsequoia_1_1maths_1_1coordinates__base"><td class="memTemplItemLeft" align="right" valign="top">constexpr Self &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator*=</b> (this Self &amp;self, value_type u) noexcept(has_identity_validator)</td></tr>
-<tr class="separator:a65669b1130b6e45eee1bdf0dd818b2c7 inherit pub_methods_classsequoia_1_1maths_1_1coordinates__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8cca9fba86699b6709344fa085a81148 inherit pub_methods_classsequoia_1_1maths_1_1coordinates__base"><td class="memTemplParams" colspan="2"><a id="a8cca9fba86699b6709344fa085a81148" name="a8cca9fba86699b6709344fa085a81148"></a>
+requires has_distinguished_origin</td></tr>
+<tr class="memitem:ac7df533d6156ed45fdf60a5c96699813 inherit pub_methods_classsequoia_1_1maths_1_1coordinates__base"><td class="memTemplItemLeft" align="right" valign="top">constexpr Self &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator*=</b> (this Self &amp;self, value_type u) noexcept(has_identity_validator)</td></tr>
+<tr class="separator:ac7df533d6156ed45fdf60a5c96699813 inherit pub_methods_classsequoia_1_1maths_1_1coordinates__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a11447137639b47ef2fa3c4a2b40724ff inherit pub_methods_classsequoia_1_1maths_1_1coordinates__base"><td class="memTemplParams" colspan="2"><a id="a11447137639b47ef2fa3c4a2b40724ff" name="a11447137639b47ef2fa3c4a2b40724ff"></a>
 template&lt;class Self &gt; <br />
-requires has_intrinsic_origin</td></tr>
-<tr class="memitem:a8cca9fba86699b6709344fa085a81148 inherit pub_methods_classsequoia_1_1maths_1_1coordinates__base"><td class="memTemplItemLeft" align="right" valign="top">constexpr Self &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator/=</b> (this Self &amp;self, value_type u)</td></tr>
-<tr class="separator:a8cca9fba86699b6709344fa085a81148 inherit pub_methods_classsequoia_1_1maths_1_1coordinates__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+requires has_distinguished_origin</td></tr>
+<tr class="memitem:a11447137639b47ef2fa3c4a2b40724ff inherit pub_methods_classsequoia_1_1maths_1_1coordinates__base"><td class="memTemplItemLeft" align="right" valign="top">constexpr Self &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator/=</b> (this Self &amp;self, value_type u)</td></tr>
+<tr class="separator:a11447137639b47ef2fa3c4a2b40724ff inherit pub_methods_classsequoia_1_1maths_1_1coordinates__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2d84605146e9b1c437b94b8ffecfcf74 inherit pub_methods_classsequoia_1_1maths_1_1coordinates__base"><td class="memItemLeft" align="right" valign="top"><a id="a2d84605146e9b1c437b94b8ffecfcf74" name="a2d84605146e9b1c437b94b8ffecfcf74"></a>
 constexpr const validator_type &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>validator</b> () const noexcept</td></tr>
 <tr class="separator:a2d84605146e9b1c437b94b8ffecfcf74 inherit pub_methods_classsequoia_1_1maths_1_1coordinates__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -238,6 +246,7 @@ constexpr value_type &amp;&#160;</td><td class="memItemRight" valign="bottom"><b
 <tr class="separator:a4d3bbdbad922a4c9e0487a7ff1654cc7 inherit pub_methods_classsequoia_1_1maths_1_1coordinates__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abe61d8edeea9f9d71886156ead14ce06 inherit pub_methods_classsequoia_1_1maths_1_1coordinates__base"><td class="memItemLeft" align="right" valign="top"><a id="abe61d8edeea9f9d71886156ead14ce06" name="abe61d8edeea9f9d71886156ead14ce06"></a>
 constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>operator bool</b> () const noexcept</td></tr>
+<tr class="memdesc:abe61d8edeea9f9d71886156ead14ce06 inherit pub_methods_classsequoia_1_1maths_1_1coordinates__base"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is explicit since otherwise, given two vectors a,b, a/b is well-formed due to implicit boolean conversion. <br /></td></tr>
 <tr class="separator:abe61d8edeea9f9d71886156ead14ce06 inherit pub_methods_classsequoia_1_1maths_1_1coordinates__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a53db30c8df39819872982632ef5b68ca inherit pub_methods_classsequoia_1_1maths_1_1coordinates__base"><td class="memItemLeft" align="right" valign="top"><a id="a53db30c8df39819872982632ef5b68ca" name="a53db30c8df39819872982632ef5b68ca"></a>
 constexpr value_type&#160;</td><td class="memItemRight" valign="bottom"><b>operator[]</b> (std::size_t i) const</td></tr>
@@ -248,38 +257,38 @@ constexpr value_type &amp;&#160;</td><td class="memItemRight" valign="bottom"><b
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
-<tr class="memitem:a369c0775658029ddbd6c3a39fe5fdb01"><td class="memItemLeft" align="right" valign="top"><a id="a369c0775658029ddbd6c3a39fe5fdb01" name="a369c0775658029ddbd6c3a39fe5fdb01"></a>
+<tr class="memitem:af9f8c46527ee39091800f6208a9f9f31"><td class="memItemLeft" align="right" valign="top"><a id="af9f8c46527ee39091800f6208a9f9f31" name="af9f8c46527ee39091800f6208a9f9f31"></a>
 static constexpr std::size_t&#160;</td><td class="memItemRight" valign="bottom"><b>dimension</b> {displacement_space_type::dimension}</td></tr>
-<tr class="separator:a369c0775658029ddbd6c3a39fe5fdb01"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a103466f8a52d8390b859bfc83bc15fd1"><td class="memItemLeft" align="right" valign="top"><a id="a103466f8a52d8390b859bfc83bc15fd1" name="a103466f8a52d8390b859bfc83bc15fd1"></a>
+<tr class="separator:af9f8c46527ee39091800f6208a9f9f31"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6f4eea352f74eced5d06b3236d441d33"><td class="memItemLeft" align="right" valign="top"><a id="a6f4eea352f74eced5d06b3236d441d33" name="a6f4eea352f74eced5d06b3236d441d33"></a>
 static constexpr std::size_t&#160;</td><td class="memItemRight" valign="bottom"><b>D</b> {dimension}</td></tr>
-<tr class="separator:a103466f8a52d8390b859bfc83bc15fd1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adbcd53d726de46d42421fd808e0839b3"><td class="memItemLeft" align="right" valign="top">static constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d30/classsequoia_1_1physics_1_1physical__value.html#adbcd53d726de46d42421fd808e0839b3">is_intrinsically_absolute</a></td></tr>
-<tr class="separator:adbcd53d726de46d42421fd808e0839b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8f2a7d40e0bda9b5e5a98a65d1549998"><td class="memItemLeft" align="right" valign="top"><a id="a8f2a7d40e0bda9b5e5a98a65d1549998" name="a8f2a7d40e0bda9b5e5a98a65d1549998"></a>
+<tr class="separator:a6f4eea352f74eced5d06b3236d441d33"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a96033191486404f459f6ef6424cac607"><td class="memItemLeft" align="right" valign="top">static constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d30/classsequoia_1_1physics_1_1physical__value.html#a96033191486404f459f6ef6424cac607">is_intrinsically_absolute</a></td></tr>
+<tr class="separator:a96033191486404f459f6ef6424cac607"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a57557313fb284ddb0a1fdf7ab5b0e72e"><td class="memItemLeft" align="right" valign="top"><a id="a57557313fb284ddb0a1fdf7ab5b0e72e" name="a57557313fb284ddb0a1fdf7ab5b0e72e"></a>
 static constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>is_effectively_absolute</b> {is_intrinsically_absolute &amp;&amp; std::is_same_v&lt;Validator, intrinsic_validator_type&gt;}</td></tr>
-<tr class="separator:a8f2a7d40e0bda9b5e5a98a65d1549998"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af1769b4977375af1e6ee43326073a27e"><td class="memItemLeft" align="right" valign="top"><a id="af1769b4977375af1e6ee43326073a27e" name="af1769b4977375af1e6ee43326073a27e"></a>
+<tr class="separator:a57557313fb284ddb0a1fdf7ab5b0e72e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa5432c581d858927c42d7ee25e2599f0"><td class="memItemLeft" align="right" valign="top"><a id="aa5432c581d858927c42d7ee25e2599f0" name="aa5432c581d858927c42d7ee25e2599f0"></a>
 static constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>has_identity_validator</b> {coordinates_type::has_identity_validator}</td></tr>
-<tr class="separator:af1769b4977375af1e6ee43326073a27e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a785372ba4579da7314529eb9226355b7"><td class="memTemplParams" colspan="2">template&lt;convex_space RHSValueSpace, class RHSUnit , class RHSOrigin , class RHSValidator &gt; </td></tr>
-<tr class="memitem:a785372ba4579da7314529eb9226355b7"><td class="memTemplItemLeft" align="right" valign="top">static constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d5/d30/classsequoia_1_1physics_1_1physical__value.html#a785372ba4579da7314529eb9226355b7">is_composable_with</a></td></tr>
-<tr class="separator:a785372ba4579da7314529eb9226355b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6029492ed52fec4049bb80aa384b7ecf"><td class="memTemplParams" colspan="2">template&lt;convex_space RHSValueSpace, class RHSUnit , class RHSOrigin , class RHSValidator &gt; </td></tr>
-<tr class="memitem:a6029492ed52fec4049bb80aa384b7ecf"><td class="memTemplItemLeft" align="right" valign="top">static constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d5/d30/classsequoia_1_1physics_1_1physical__value.html#a6029492ed52fec4049bb80aa384b7ecf">is_multipicable_with</a></td></tr>
-<tr class="separator:a6029492ed52fec4049bb80aa384b7ecf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0dd6946003874107836d05d50e9520c4"><td class="memTemplParams" colspan="2">template&lt;convex_space RHSValueSpace, class RHSUnit , class RHSOrigin , class RHSValidator &gt; </td></tr>
-<tr class="memitem:a0dd6946003874107836d05d50e9520c4"><td class="memTemplItemLeft" align="right" valign="top">static constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d5/d30/classsequoia_1_1physics_1_1physical__value.html#a0dd6946003874107836d05d50e9520c4">is_divisible_with</a></td></tr>
-<tr class="separator:a0dd6946003874107836d05d50e9520c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:aa5432c581d858927c42d7ee25e2599f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a44e6c8d9c02b474c6ac003a2395863f2"><td class="memTemplParams" colspan="2">template&lt;convex_space RHSValueSpace, class RHSUnit , class RHSConvention , class RHSOrigin , class RHSValidator &gt; </td></tr>
+<tr class="memitem:a44e6c8d9c02b474c6ac003a2395863f2"><td class="memTemplItemLeft" align="right" valign="top">static constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d5/d30/classsequoia_1_1physics_1_1physical__value.html#a44e6c8d9c02b474c6ac003a2395863f2">is_composable_with</a></td></tr>
+<tr class="separator:a44e6c8d9c02b474c6ac003a2395863f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aafe7cfcde70e539cf163a82713d28c9e"><td class="memTemplParams" colspan="2">template&lt;convex_space RHSValueSpace, class RHSUnit , class RHSConvention , class RHSOrigin , class RHSValidator &gt; </td></tr>
+<tr class="memitem:aafe7cfcde70e539cf163a82713d28c9e"><td class="memTemplItemLeft" align="right" valign="top">static constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d5/d30/classsequoia_1_1physics_1_1physical__value.html#aafe7cfcde70e539cf163a82713d28c9e">is_multipicable_with</a></td></tr>
+<tr class="separator:aafe7cfcde70e539cf163a82713d28c9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad9cd8c7a2bdf8f4633e4f3bfe0355f2f"><td class="memTemplParams" colspan="2">template&lt;convex_space RHSValueSpace, class RHSUnit , class RHSConvention , class RHSOrigin , class RHSValidator &gt; </td></tr>
+<tr class="memitem:ad9cd8c7a2bdf8f4633e4f3bfe0355f2f"><td class="memTemplItemLeft" align="right" valign="top">static constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d5/d30/classsequoia_1_1physics_1_1physical__value.html#ad9cd8c7a2bdf8f4633e4f3bfe0355f2f">is_divisible_with</a></td></tr>
+<tr class="separator:ad9cd8c7a2bdf8f4633e4f3bfe0355f2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_static_attribs_classsequoia_1_1maths_1_1coordinates__base"><td colspan="2" onclick="javascript:toggleInherit('pub_static_attribs_classsequoia_1_1maths_1_1coordinates__base')"><img src="../../closed.png" alt="-"/>&#160;Static Public Attributes inherited from <a class="el" href="../../dd/d32/classsequoia_1_1maths_1_1coordinates__base.html">sequoia::maths::coordinates_base&lt; ConvexSpace, Basis, Origin, Validator, DisplacementCoordinates &gt;</a></td></tr>
-<tr class="memitem:a8ac56b8eeb7f4a895eab8612aa6bfb33 inherit pub_static_attribs_classsequoia_1_1maths_1_1coordinates__base"><td class="memItemLeft" align="right" valign="top"><a id="a8ac56b8eeb7f4a895eab8612aa6bfb33" name="a8ac56b8eeb7f4a895eab8612aa6bfb33"></a>
-static constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>has_intrinsic_origin</b> {std::is_same_v&lt;Origin, <a class="el" href="../../dc/d57/structsequoia_1_1maths_1_1intrinsic__origin.html">intrinsic_origin</a>&gt;}</td></tr>
-<tr class="separator:a8ac56b8eeb7f4a895eab8612aa6bfb33 inherit pub_static_attribs_classsequoia_1_1maths_1_1coordinates__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adbe39c25830ff56b13e3b631f1446d51 inherit pub_static_attribs_classsequoia_1_1maths_1_1coordinates__base"><td class="memItemLeft" align="right" valign="top"><a id="adbe39c25830ff56b13e3b631f1446d51" name="adbe39c25830ff56b13e3b631f1446d51"></a>
+static constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>has_distinguished_origin</b> {std::is_same_v&lt;Origin, <a class="el" href="../../d8/dfa/structsequoia_1_1maths_1_1distinguished__origin.html">distinguished_origin</a>&gt;}</td></tr>
+<tr class="separator:adbe39c25830ff56b13e3b631f1446d51 inherit pub_static_attribs_classsequoia_1_1maths_1_1coordinates__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1eba584fc00049ddac849736299c08f5 inherit pub_static_attribs_classsequoia_1_1maths_1_1coordinates__base"><td class="memItemLeft" align="right" valign="top"><a id="a1eba584fc00049ddac849736299c08f5" name="a1eba584fc00049ddac849736299c08f5"></a>
-static constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>has_identity_validator</b> {std::is_same_v&lt;Validator, std::identity&gt;}</td></tr>
+static constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>has_identity_validator</b> {is_identity_validator_v&lt;Validator&gt;}</td></tr>
 <tr class="separator:a1eba584fc00049ddac849736299c08f5 inherit pub_static_attribs_classsequoia_1_1maths_1_1coordinates__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa891e32ca9eee9f9bb658d21c5ebc7f3 inherit pub_static_attribs_classsequoia_1_1maths_1_1coordinates__base"><td class="memItemLeft" align="right" valign="top"><a id="aa891e32ca9eee9f9bb658d21c5ebc7f3" name="aa891e32ca9eee9f9bb658d21c5ebc7f3"></a>
-static constexpr std::size_t&#160;</td><td class="memItemRight" valign="bottom"><b>dimension</b> {vector_space_type::dimension}</td></tr>
+static constexpr std::size_t&#160;</td><td class="memItemRight" valign="bottom"><b>dimension</b> {free_module_type::dimension}</td></tr>
 <tr class="separator:aa891e32ca9eee9f9bb658d21c5ebc7f3 inherit pub_static_attribs_classsequoia_1_1maths_1_1coordinates__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a287863dc622092bb1765867eb48f370d inherit pub_static_attribs_classsequoia_1_1maths_1_1coordinates__base"><td class="memItemLeft" align="right" valign="top"><a id="a287863dc622092bb1765867eb48f370d" name="a287863dc622092bb1765867eb48f370d"></a>
 static constexpr std::size_t&#160;</td><td class="memItemRight" valign="bottom"><b>D</b> {dimension}</td></tr>
@@ -287,26 +296,26 @@ static constexpr std::size_t&#160;</td><td class="memItemRight" valign="bottom">
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="friends" name="friends"></a>
 Friends</h2></td></tr>
-<tr class="memitem:af729a60b890b3b91f463b789fd0ed149"><td class="memTemplParams" colspan="2"><a id="af729a60b890b3b91f463b789fd0ed149" name="af729a60b890b3b91f463b789fd0ed149"></a>
+<tr class="memitem:a19ba51a72f2c7eafa2f5923a1229a239"><td class="memTemplParams" colspan="2"><a id="a19ba51a72f2c7eafa2f5923a1229a239" name="a19ba51a72f2c7eafa2f5923a1229a239"></a>
 template&lt;convex_space OtherValueSpace&gt; <br />
 requires (!std::is_same_v&lt;ValueSpace, OtherValueSpace&gt;) &amp;&amp; have_compatible_base_spaces_v&lt;ValueSpace, OtherValueSpace&gt;</td></tr>
-<tr class="memitem:af729a60b890b3b91f463b789fd0ed149"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator+</b> (const <a class="el" href="../../d5/d30/classsequoia_1_1physics_1_1physical__value.html">physical_value</a> &amp;lhs, const <a class="el" href="../../d5/d30/classsequoia_1_1physics_1_1physical__value.html">physical_value</a>&lt; OtherValueSpace, Unit, Origin, Validator &gt; &amp;rhs)</td></tr>
-<tr class="separator:af729a60b890b3b91f463b789fd0ed149"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3819e56533b19f6d9050b5b5486d9de3"><td class="memTemplParams" colspan="2"><a id="a3819e56533b19f6d9050b5b5486d9de3" name="a3819e56533b19f6d9050b5b5486d9de3"></a>
+<tr class="memitem:a19ba51a72f2c7eafa2f5923a1229a239"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator+</b> (const <a class="el" href="../../d5/d30/classsequoia_1_1physics_1_1physical__value.html">physical_value</a> &amp;lhs, const <a class="el" href="../../d5/d30/classsequoia_1_1physics_1_1physical__value.html">physical_value</a>&lt; OtherValueSpace, Unit, Convention, Origin, Validator &gt; &amp;rhs)</td></tr>
+<tr class="separator:a19ba51a72f2c7eafa2f5923a1229a239"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a18af7b962b967ed9b7d6eed9d86b178d"><td class="memTemplParams" colspan="2"><a id="a18af7b962b967ed9b7d6eed9d86b178d" name="a18af7b962b967ed9b7d6eed9d86b178d"></a>
 template&lt;class OtherValueSpace &gt; <br />
 requires (!std::is_same_v&lt;OtherValueSpace, displacement_space_type&gt;) &amp;&amp; (std::is_same_v&lt;ValueSpace, OtherValueSpace&gt; || have_compatible_base_spaces_v&lt;ValueSpace, OtherValueSpace&gt;)</td></tr>
-<tr class="memitem:a3819e56533b19f6d9050b5b5486d9de3"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator-</b> (const <a class="el" href="../../d5/d30/classsequoia_1_1physics_1_1physical__value.html">physical_value</a> &amp;lhs, const <a class="el" href="../../d5/d30/classsequoia_1_1physics_1_1physical__value.html">physical_value</a>&lt; OtherValueSpace, Unit, Origin, Validator &gt; &amp;rhs) noexcept(has_identity_validator)</td></tr>
-<tr class="separator:a3819e56533b19f6d9050b5b5486d9de3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9e572860d3a1933de119aecd9cc72798"><td class="memTemplParams" colspan="2"><a id="a9e572860d3a1933de119aecd9cc72798" name="a9e572860d3a1933de119aecd9cc72798"></a>
-template&lt;convex_space RHSValueSpace, physical_unit RHSUnit, class RHSOrigin , class RHSValidator &gt; <br />
-requires is_multipicable_with&lt;RHSValueSpace, RHSUnit, RHSOrigin, RHSValidator&gt;</td></tr>
-<tr class="memitem:a9e572860d3a1933de119aecd9cc72798"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator*</b> (const <a class="el" href="../../d5/d30/classsequoia_1_1physics_1_1physical__value.html">physical_value</a> &amp;lhs, const <a class="el" href="../../d5/d30/classsequoia_1_1physics_1_1physical__value.html">physical_value</a>&lt; RHSValueSpace, RHSUnit, RHSOrigin, RHSValidator &gt; &amp;rhs)</td></tr>
-<tr class="separator:a9e572860d3a1933de119aecd9cc72798"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a09271852b6fcc2a73ae962081a99ae55"><td class="memTemplParams" colspan="2"><a id="a09271852b6fcc2a73ae962081a99ae55" name="a09271852b6fcc2a73ae962081a99ae55"></a>
-template&lt;convex_space RHSValueSpace, class RHSUnit , class RHSOrigin , class RHSValidator &gt; <br />
-requires is_divisible_with&lt;RHSValueSpace, RHSUnit, RHSOrigin, RHSValidator&gt;</td></tr>
-<tr class="memitem:a09271852b6fcc2a73ae962081a99ae55"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator/</b> (const <a class="el" href="../../d5/d30/classsequoia_1_1physics_1_1physical__value.html">physical_value</a> &amp;lhs, const <a class="el" href="../../d5/d30/classsequoia_1_1physics_1_1physical__value.html">physical_value</a>&lt; RHSValueSpace, RHSUnit, RHSOrigin, RHSValidator &gt; &amp;rhs)</td></tr>
-<tr class="separator:a09271852b6fcc2a73ae962081a99ae55"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a18af7b962b967ed9b7d6eed9d86b178d"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator-</b> (const <a class="el" href="../../d5/d30/classsequoia_1_1physics_1_1physical__value.html">physical_value</a> &amp;lhs, const <a class="el" href="../../d5/d30/classsequoia_1_1physics_1_1physical__value.html">physical_value</a>&lt; OtherValueSpace, Unit, Convention, Origin, Validator &gt; &amp;rhs) noexcept(has_identity_validator)</td></tr>
+<tr class="separator:a18af7b962b967ed9b7d6eed9d86b178d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a103bc6f4f0c301fd4b520fc0a6d8819e"><td class="memTemplParams" colspan="2"><a id="a103bc6f4f0c301fd4b520fc0a6d8819e" name="a103bc6f4f0c301fd4b520fc0a6d8819e"></a>
+template&lt;convex_space RHSValueSpace, physical_unit RHSUnit, class RHSConvention , class RHSOrigin , class RHSValidator &gt; <br />
+requires is_multipicable_with&lt;RHSValueSpace, RHSUnit, RHSConvention, RHSOrigin, RHSValidator&gt;</td></tr>
+<tr class="memitem:a103bc6f4f0c301fd4b520fc0a6d8819e"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator*</b> (const <a class="el" href="../../d5/d30/classsequoia_1_1physics_1_1physical__value.html">physical_value</a> &amp;lhs, const <a class="el" href="../../d5/d30/classsequoia_1_1physics_1_1physical__value.html">physical_value</a>&lt; RHSValueSpace, RHSUnit, RHSConvention, RHSOrigin, RHSValidator &gt; &amp;rhs)</td></tr>
+<tr class="separator:a103bc6f4f0c301fd4b520fc0a6d8819e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afdca6b33a0679a6a050929d1f66efc42"><td class="memTemplParams" colspan="2"><a id="afdca6b33a0679a6a050929d1f66efc42" name="afdca6b33a0679a6a050929d1f66efc42"></a>
+template&lt;convex_space RHSValueSpace, class RHSUnit , class RHSConvention , class RHSOrigin , class RHSValidator &gt; <br />
+requires is_divisible_with&lt;RHSValueSpace, RHSUnit, RHSConvention, RHSOrigin, RHSValidator&gt;</td></tr>
+<tr class="memitem:afdca6b33a0679a6a050929d1f66efc42"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator/</b> (const <a class="el" href="../../d5/d30/classsequoia_1_1physics_1_1physical__value.html">physical_value</a> &amp;lhs, const <a class="el" href="../../d5/d30/classsequoia_1_1physics_1_1physical__value.html">physical_value</a>&lt; RHSValueSpace, RHSUnit, RHSConvention, RHSOrigin, RHSValidator &gt; &amp;rhs)</td></tr>
+<tr class="separator:afdca6b33a0679a6a050929d1f66efc42"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a37a8b335478edfd4eb9fa69461ad55a9"><td class="memItemLeft" align="right" valign="top"><a id="a37a8b335478edfd4eb9fa69461ad55a9" name="a37a8b335478edfd4eb9fa69461ad55a9"></a>
 constexpr auto&#160;</td><td class="memItemRight" valign="bottom"><b>operator/</b> (value_type value, const <a class="el" href="../../d5/d30/classsequoia_1_1physics_1_1physical__value.html">physical_value</a> &amp;rhs)</td></tr>
 <tr class="separator:a37a8b335478edfd4eb9fa69461ad55a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -338,21 +347,21 @@ requires std::invocable&lt;Fn, value_type&amp;&gt;</td></tr>
 <tr class="separator:a115410de3e7f6fb0b8fcb8503272ea25 inherit pro_methods_classsequoia_1_1maths_1_1coordinates__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="a785372ba4579da7314529eb9226355b7" name="a785372ba4579da7314529eb9226355b7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a785372ba4579da7314529eb9226355b7">&#9670;&#160;</a></span>is_composable_with</h2>
+<a id="a44e6c8d9c02b474c6ac003a2395863f2" name="a44e6c8d9c02b474c6ac003a2395863f2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a44e6c8d9c02b474c6ac003a2395863f2">&#9670;&#160;</a></span>is_composable_with</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;convex_space ValueSpace, physical_unit Unit, class Origin  = to_origin_type_t&lt;ValueSpace, Unit&gt;, validator_for&lt; ValueSpace &gt; Validator = typename Unit::validator_type&gt; </div>
+template&lt;convex_space ValueSpace, physical_unit Unit, class Convention  = canonical_convention&lt;free_module_type_of_t&lt;ValueSpace&gt;::dimension&gt;, class Origin  = to_origin_type_t&lt;ValueSpace, Unit&gt;, validator_for&lt; ValueSpace &gt; Validator = typename Unit::validator_type&gt; </div>
 <div class="memtemplate">
-template&lt;convex_space RHSValueSpace, class RHSUnit , class RHSOrigin , class RHSValidator &gt; </div>
+template&lt;convex_space RHSValueSpace, class RHSUnit , class RHSConvention , class RHSOrigin , class RHSValidator &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr bool <a class="el" href="../../d5/d30/classsequoia_1_1physics_1_1physical__value.html">sequoia::physics::physical_value</a>&lt; ValueSpace, Unit, Origin, Validator &gt;::is_composable_with</td>
+          <td class="memname">constexpr bool <a class="el" href="../../d5/d30/classsequoia_1_1physics_1_1physical__value.html">sequoia::physics::physical_value</a>&lt; ValueSpace, Unit, Convention, Origin, Validator &gt;::is_composable_with</td>
         </tr>
       </table>
   </td>
@@ -362,27 +371,28 @@ template&lt;convex_space RHSValueSpace, class RHSUnit , class RHSOrigin , class 
 </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">{</div>
-<div class="line">         (is_intrinsically_absolute || vector_space&lt;ValueSpace&gt;)</div>
-<div class="line">      &amp;&amp; (physical_value&lt;RHSValueSpace, RHSUnit, RHSOrigin, RHSValidator&gt;::is_intrinsically_absolute || vector_space&lt;RHSValueSpace&gt;)</div>
+<div class="line">          std::common_with&lt;convention_type, RHSConvention&gt;</div>
+<div class="line">      &amp;&amp; (is_intrinsically_absolute || vector_space&lt;space_type&gt;)</div>
+<div class="line">      &amp;&amp; (physical_value&lt;RHSValueSpace, RHSUnit, RHSConvention, RHSOrigin, RHSValidator&gt;::is_intrinsically_absolute || vector_space&lt;RHSValueSpace&gt;)</div>
 <div class="line">    }</div>
 </div><!-- fragment -->
 </div>
 </div>
-<a id="a0dd6946003874107836d05d50e9520c4" name="a0dd6946003874107836d05d50e9520c4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0dd6946003874107836d05d50e9520c4">&#9670;&#160;</a></span>is_divisible_with</h2>
+<a id="ad9cd8c7a2bdf8f4633e4f3bfe0355f2f" name="ad9cd8c7a2bdf8f4633e4f3bfe0355f2f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad9cd8c7a2bdf8f4633e4f3bfe0355f2f">&#9670;&#160;</a></span>is_divisible_with</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;convex_space ValueSpace, physical_unit Unit, class Origin  = to_origin_type_t&lt;ValueSpace, Unit&gt;, validator_for&lt; ValueSpace &gt; Validator = typename Unit::validator_type&gt; </div>
+template&lt;convex_space ValueSpace, physical_unit Unit, class Convention  = canonical_convention&lt;free_module_type_of_t&lt;ValueSpace&gt;::dimension&gt;, class Origin  = to_origin_type_t&lt;ValueSpace, Unit&gt;, validator_for&lt; ValueSpace &gt; Validator = typename Unit::validator_type&gt; </div>
 <div class="memtemplate">
-template&lt;convex_space RHSValueSpace, class RHSUnit , class RHSOrigin , class RHSValidator &gt; </div>
+template&lt;convex_space RHSValueSpace, class RHSUnit , class RHSConvention , class RHSOrigin , class RHSValidator &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr bool <a class="el" href="../../d5/d30/classsequoia_1_1physics_1_1physical__value.html">sequoia::physics::physical_value</a>&lt; ValueSpace, Unit, Origin, Validator &gt;::is_divisible_with</td>
+          <td class="memname">constexpr bool <a class="el" href="../../d5/d30/classsequoia_1_1physics_1_1physical__value.html">sequoia::physics::physical_value</a>&lt; ValueSpace, Unit, Convention, Origin, Validator &gt;::is_divisible_with</td>
         </tr>
       </table>
   </td>
@@ -392,25 +402,28 @@ template&lt;convex_space RHSValueSpace, class RHSUnit , class RHSOrigin , class 
 </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">{</div>
-<div class="line">         is_composable_with&lt;RHSValueSpace, RHSUnit, RHSOrigin, RHSValidator&gt;</div>
-<div class="line">      &amp;&amp; (physical_value&lt;RHSValueSpace, RHSUnit, RHSOrigin, RHSValidator&gt;::D == 1)</div>
+<div class="line">         weak_field&lt;ring_type&gt;</div>
+<div class="line">      &amp;&amp; weak_field&lt;commutative_ring_type_of_t&lt;RHSValueSpace&gt;&gt;</div>
+<div class="line">      &amp;&amp; std::common_with&lt;convention_type, RHSConvention&gt;</div>
+<div class="line">      &amp;&amp; is_composable_with&lt;RHSValueSpace, RHSUnit, RHSConvention, RHSOrigin, RHSValidator&gt;</div>
+<div class="line">      &amp;&amp; (physical_value&lt;RHSValueSpace, RHSUnit, RHSConvention, RHSOrigin, RHSValidator&gt;::D == 1)</div>
 <div class="line">    }</div>
 </div><!-- fragment -->
 </div>
 </div>
-<a id="adbcd53d726de46d42421fd808e0839b3" name="adbcd53d726de46d42421fd808e0839b3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adbcd53d726de46d42421fd808e0839b3">&#9670;&#160;</a></span>is_intrinsically_absolute</h2>
+<a id="a96033191486404f459f6ef6424cac607" name="a96033191486404f459f6ef6424cac607"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a96033191486404f459f6ef6424cac607">&#9670;&#160;</a></span>is_intrinsically_absolute</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;convex_space ValueSpace, physical_unit Unit, class Origin  = to_origin_type_t&lt;ValueSpace, Unit&gt;, validator_for&lt; ValueSpace &gt; Validator = typename Unit::validator_type&gt; </div>
+template&lt;convex_space ValueSpace, physical_unit Unit, class Convention  = canonical_convention&lt;free_module_type_of_t&lt;ValueSpace&gt;::dimension&gt;, class Origin  = to_origin_type_t&lt;ValueSpace, Unit&gt;, validator_for&lt; ValueSpace &gt; Validator = typename Unit::validator_type&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr bool <a class="el" href="../../d5/d30/classsequoia_1_1physics_1_1physical__value.html">sequoia::physics::physical_value</a>&lt; ValueSpace, Unit, Origin, Validator &gt;::is_intrinsically_absolute</td>
+          <td class="memname">constexpr bool <a class="el" href="../../d5/d30/classsequoia_1_1physics_1_1physical__value.html">sequoia::physics::physical_value</a>&lt; ValueSpace, Unit, Convention, Origin, Validator &gt;::is_intrinsically_absolute</td>
         </tr>
       </table>
   </td>
@@ -425,21 +438,21 @@ template&lt;convex_space ValueSpace, physical_unit Unit, class Origin  = to_orig
 </div><!-- fragment -->
 </div>
 </div>
-<a id="a6029492ed52fec4049bb80aa384b7ecf" name="a6029492ed52fec4049bb80aa384b7ecf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6029492ed52fec4049bb80aa384b7ecf">&#9670;&#160;</a></span>is_multipicable_with</h2>
+<a id="aafe7cfcde70e539cf163a82713d28c9e" name="aafe7cfcde70e539cf163a82713d28c9e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aafe7cfcde70e539cf163a82713d28c9e">&#9670;&#160;</a></span>is_multipicable_with</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;convex_space ValueSpace, physical_unit Unit, class Origin  = to_origin_type_t&lt;ValueSpace, Unit&gt;, validator_for&lt; ValueSpace &gt; Validator = typename Unit::validator_type&gt; </div>
+template&lt;convex_space ValueSpace, physical_unit Unit, class Convention  = canonical_convention&lt;free_module_type_of_t&lt;ValueSpace&gt;::dimension&gt;, class Origin  = to_origin_type_t&lt;ValueSpace, Unit&gt;, validator_for&lt; ValueSpace &gt; Validator = typename Unit::validator_type&gt; </div>
 <div class="memtemplate">
-template&lt;convex_space RHSValueSpace, class RHSUnit , class RHSOrigin , class RHSValidator &gt; </div>
+template&lt;convex_space RHSValueSpace, class RHSUnit , class RHSConvention , class RHSOrigin , class RHSValidator &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr bool <a class="el" href="../../d5/d30/classsequoia_1_1physics_1_1physical__value.html">sequoia::physics::physical_value</a>&lt; ValueSpace, Unit, Origin, Validator &gt;::is_multipicable_with</td>
+          <td class="memname">constexpr bool <a class="el" href="../../d5/d30/classsequoia_1_1physics_1_1physical__value.html">sequoia::physics::physical_value</a>&lt; ValueSpace, Unit, Convention, Origin, Validator &gt;::is_multipicable_with</td>
         </tr>
       </table>
   </td>
@@ -449,8 +462,9 @@ template&lt;convex_space RHSValueSpace, class RHSUnit , class RHSOrigin , class 
 </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">{</div>
-<div class="line">         is_composable_with&lt;RHSValueSpace, RHSUnit, RHSOrigin, RHSValidator&gt;</div>
-<div class="line">      &amp;&amp; ((D == 1) || (physical_value&lt;RHSValueSpace, RHSUnit, RHSOrigin, RHSValidator&gt;::D == 1))</div>
+<div class="line">         std::common_with&lt;convention_type, RHSConvention&gt;</div>
+<div class="line">      &amp;&amp; is_composable_with&lt;RHSValueSpace, RHSUnit, RHSConvention, RHSOrigin, RHSValidator&gt;</div>
+<div class="line">      &amp;&amp; ((D == 1) || (physical_value&lt;RHSValueSpace, RHSUnit, RHSConvention, RHSOrigin, RHSValidator&gt;::D == 1))</div>
 <div class="line">    }</div>
 </div><!-- fragment -->
 </div>

@@ -74,7 +74,8 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a>  </div>
+<a href="#nested-classes">Classes</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle"><div class="title">PhysicalValueTestingUtilities.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
@@ -85,9 +86,45 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d80/structsequoia_1_1testing_1_1value__tester_3_01physics_1_1physical__value_3_01PhysicalValueSpace_6d730f6e3e35315b45b82507119178b1.html">sequoia::testing::value_tester&lt; physics::physical_value&lt; PhysicalValueSpace, Unit, Origin, Validator &gt; &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d5c/structsequoia_1_1testing_1_1value__tester_3_01physics_1_1physical__value_3_01PhysicalValueSpace_de42f6b0e7ab3da683b4fb7404279a0a.html">sequoia::testing::value_tester&lt; physics::physical_value&lt; PhysicalValueSpace, Unit, Convention, Origin, Validator &gt; &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:a62393e4b34c29b612266fa6afa381837"><td class="memTemplParams" colspan="2">template&lt;maths::convex_space ValueSpace, class Unit , class Convention , class Origin , class Validator &gt; </td></tr>
+<tr class="memitem:a62393e4b34c29b612266fa6afa381837"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dc/d36/PhysicalValueTestingUtilities_8hpp.html#a62393e4b34c29b612266fa6afa381837">sequoia::testing::defines_physical_value_v</a></td></tr>
+<tr class="separator:a62393e4b34c29b612266fa6afa381837"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Variable Documentation</h2>
+<a id="a62393e4b34c29b612266fa6afa381837" name="a62393e4b34c29b612266fa6afa381837"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a62393e4b34c29b612266fa6afa381837">&#9670;&#160;</a></span>defines_physical_value_v</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;maths::convex_space ValueSpace, class Unit , class Convention , class Origin , class Validator &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr bool sequoia::testing::defines_physical_value_v</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">{</div>
+<div class="line">    <span class="keyword">requires</span> {</div>
+<div class="line">      <span class="keyword">typename</span> physics::physical_value&lt;ValueSpace, Unit, Convention, Origin, Validator&gt;;</div>
+<div class="line">    }</div>
+<div class="line">  }</div>
+</div><!-- fragment -->
+</div>
+</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
