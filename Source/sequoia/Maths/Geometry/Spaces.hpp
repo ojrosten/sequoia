@@ -752,9 +752,10 @@ namespace sequoia::maths
       However, in general this is not allowed.
 
       For now, we do not handle the general case. Thus, we may only consruct the direct
-      product of free modules if they are, loosely speaking, over the same ring.
-      Actually, we will permit this construct where the rings share a common type
-      in the C++ sense; this decision may need reviewing.
+      product of free modules if they are, roughly speaking, over the same ring. To be
+      precise, the free modules' commutative rings must either all satsify the weak_field
+      concept or none of them do; on top of which they must share a common type in the C++
+      sense.
    */
 
   template<class... Ts>
@@ -762,8 +763,13 @@ namespace sequoia::maths
   {
   };
 
+  template<weak_commutative_ring... Rs>
+  inline constexpr bool has_common_ring_v{
+    ((weak_field<Rs> && ...) || (!weak_field<Rs> && ...)) && requires { typename std::common_type<Rs...>::type; }
+  };
+
   template<free_module... Ts>
-    requires (sizeof...(Ts) >= 1) // TO DO: constrain commutative ring types
+    requires (sizeof...(Ts) >= 1) && has_common_ring_v<commutative_ring_type_of_t<Ts>...>
   struct direct_product<Ts...>
   {
     using set_type              = direct_product<typename Ts::set_type...>;
