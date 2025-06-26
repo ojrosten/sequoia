@@ -1066,7 +1066,7 @@ namespace sequoia
       {
         constexpr auto upper{std::numeric_limits<IndexType>::max()};
         const auto fn{
-          [](const auto& l) {
+          [](std::initializer_list<T> l) -> IndexType {
             if(l.size() > upper)
               throw std::out_of_range{"Partition size out of bounds"};
 
