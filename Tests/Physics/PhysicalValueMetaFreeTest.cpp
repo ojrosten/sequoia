@@ -141,7 +141,7 @@ namespace sequoia::testing
     STATIC_CHECK(std::is_same_v<reduce_t<count_and_combine_t<dual<mass_space_t>>>, direct_product<dual<mass_space_t>>>);
     STATIC_CHECK(std::is_same_v<reduce_t<count_and_combine_t<direct_product<mass_space_t, mass_space_t>>>,  direct_product<mass_space_t, mass_space_t>>);
     STATIC_CHECK(std::is_same_v<reduce_t<count_and_combine_t<direct_product<mass_space_t, dual<mass_space_t>>>>,  direct_product<euclidean_half_space<float>>>);
-    STATIC_CHECK(std::is_same_v<reduce_t<count_and_combine_t<direct_product<mass_space_t, dual<delta_mass_space_t>>>>, direct_product<euclidean_vector_space<1, float>>>);
+    STATIC_CHECK(std::is_same_v<reduce_t<count_and_combine_t<direct_product<mass_space_t, dual<delta_mass_space_t>>>>, direct_product<euclidean_vector_space<float, 1>>>);
   }
 
   void physical_value_meta_free_test::test_simplify()
@@ -171,7 +171,7 @@ namespace sequoia::testing
                                 composite_space<length_space_t, mass_space_t>>);
 
     STATIC_CHECK(std::is_same_v<to_composite_space_t<reduction_t<direct_product<mass_space_t, dual<delta_mass_space_t>>>>,
-                                euclidean_vector_space<1, float>>);
+                                euclidean_vector_space<float, 1>>);
     
     STATIC_CHECK(std::is_same_v<reduction_t<direct_product<delta_temp_space_t, composite_space<delta_len_space_t, delta_mass_space_t>>>,
                                   reduction<direct_product<delta_len_space_t, delta_mass_space_t, delta_temp_space_t>>>);

@@ -66,7 +66,7 @@ namespace sequoia::testing
     check(equality, "", 4.0f / quantity_t{2.0, units_type{}}, inv_quantity_t{2.0f, inv_unit_t{}});
 
     using euc_half_line_qty  = quantity<euclidean_half_space<value_type>, no_unit_t, half_line_validator>;
-    using euc_vec_space_qty  = quantity<euclidean_vector_space<1, value_type>, no_unit_t, std::identity>;
+    using euc_vec_space_qty  = quantity<euclidean_vector_space<value_type, 1>, no_unit_t, std::identity>;
     check(equality, "", quantity_t{2.0, units_type{}} / quantity_t{1.0, units_type{}}, euc_half_line_qty{2.0, no_unit});
     check(equality, "", quantity_t{2.0, units_type{}} / delta_q_t{1.0, units_type{}},  euc_vec_space_qty{2.0, no_unit});
     check(equality, "", delta_q_t{2.0, units_type{}}  / quantity_t{1.0, units_type{}}, euc_vec_space_qty{2.0, no_unit});

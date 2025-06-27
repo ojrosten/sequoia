@@ -49,7 +49,7 @@ operator== returned false
 Tests/Maths/Geometry/VectorCoordinatesTestingDiagnostics.cpp, Line 42
 
 Comparison performed using:
-[sequoia::testing::value_tester<sequoia::maths::coordinates<sequoia::maths::euclidean_vector_space<1, float>, sequoia::maths::standard_basis<1, float>, sequoia::maths::distinguished_origin, std::identity> >]
+[sequoia::testing::value_tester<sequoia::maths::coordinates<sequoia::maths::euclidean_vector_space<float, 1>, sequoia::maths::canonical_right_handed_basis<float, 1>, sequoia::maths::distinguished_origin, std::identity> >]
 Checking for equivalence with:
 [std::array<float, 1>]
 
@@ -65,7 +65,7 @@ Checking for equivalence with:
 
 Tests/Maths/Geometry/VectorCoordinatesTestingDiagnostics.cpp, Line 43
 
-[sequoia::maths::coordinates<sequoia::maths::euclidean_vector_space<1, float>, sequoia::maths::standard_basis<1, float>, sequoia::maths::distinguished_origin, std::identity>]
+[sequoia::maths::coordinates<sequoia::maths::euclidean_vector_space<float, 1>, sequoia::maths::canonical_right_handed_basis<float, 1>, sequoia::maths::distinguished_origin, std::identity>]
 operator== returned false
 
   Wrapped values

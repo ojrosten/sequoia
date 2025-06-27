@@ -304,7 +304,7 @@ namespace sequoia::physics::impl
   template<vector_space T>
   struct reduce<direct_product<type_counter<T, 0>>>
   {
-    using type = direct_product<euclidean_vector_space<1, commutative_ring_type_of_t<T>>>;
+    using type = direct_product<euclidean_vector_space<commutative_ring_type_of_t<T>, 1>>;
   };
 
   template<convex_space T>

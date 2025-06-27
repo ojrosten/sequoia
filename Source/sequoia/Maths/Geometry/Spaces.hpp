@@ -1411,7 +1411,7 @@ namespace sequoia::maths
   template<class V>
   concept inner_product_space = vector_space<V> && has_inner_product_v<V>;
 
-  template<std::size_t D, std::floating_point T>
+  template<std::floating_point T, std::size_t D>
   struct euclidean_vector_space
   {
     using set_type          = sets::R<D>;
@@ -1451,11 +1451,11 @@ namespace sequoia::maths
     }
   };
 
-  template<std::size_t D, std::floating_point T>
+  template<std::floating_point T, std::size_t D>
   struct euclidean_affine_space
   {
     using set_type          = sets::R<D>;
-    using vector_space_type = euclidean_vector_space<D, T>;
+    using vector_space_type = euclidean_vector_space<T, D>;
     using is_affine_space   = std::true_type;
   };
 
@@ -1463,23 +1463,28 @@ namespace sequoia::maths
   struct euclidean_half_space
   {
     using set_type          = sets::orthant<1>;
-    using vector_space_type = euclidean_vector_space<1, T>;
+    using vector_space_type = euclidean_vector_space<T, 1>;
     using is_convex_space   = std::true_type;
   };
 
-  template<std::size_t D, std::floating_point T, basis Basis, class Origin>
-  using euclidean_affine_coordinates = affine_coordinates<euclidean_affine_space<D, T>, Basis, Origin>;
+  template<std::floating_point T, std::size_t D, basis Basis, class Origin>
+  using euclidean_affine_coordinates = affine_coordinates<euclidean_affine_space<T, D>, Basis, Origin>;
 
-  template<std::size_t D, std::floating_point T, basis Basis>
-  using euclidean_vector_coordinates = vector_coordinates<euclidean_vector_space<D, T>, Basis>;
+  template<std::floating_point T, std::size_t D, basis Basis>
+  using euclidean_vector_coordinates = vector_coordinates<euclidean_vector_space<T, D>, Basis>;
 
-  template<std::size_t D, std::floating_point T>
-  struct standard_basis
+  /** @brief Right-handed bases for arbitrary D, build recursively from 1D
+
+      In 1D, x is taken to run from left to right. Therefore, in 2D, y must go up
+      and, building on this, in 3D z comes out from the page.
+   */
+  template<std::floating_point T, std::size_t D>
+  struct canonical_right_handed_basis
   {
-    using vector_space_type = euclidean_vector_space<D, T>;
+    using vector_space_type = euclidean_vector_space<T, D>;
     using orthonormal       = std::true_type;
   };
 
-  template<std::size_t D, std::floating_point T>
-  using vec_coords = euclidean_vector_coordinates<D, T, standard_basis<D, T>>;
+  template<std::floating_point T, std::size_t D>
+  using vec_coords = euclidean_vector_coordinates<T, D, canonical_right_handed_basis<T, D>>;
 }
