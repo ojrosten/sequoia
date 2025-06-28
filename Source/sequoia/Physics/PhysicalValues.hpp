@@ -512,6 +512,8 @@ namespace sequoia::physics
       return *this;
     }
 
+    // TO DO: conversions for -= and -
+
     template<convex_space OtherValueSpace>
       requires (!std::is_same_v<ValueSpace, OtherValueSpace>) && have_compatible_base_spaces_v<ValueSpace, OtherValueSpace>
     [[nodiscard]]
