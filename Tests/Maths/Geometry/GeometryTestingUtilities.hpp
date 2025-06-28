@@ -351,6 +351,11 @@ namespace sequoia::testing
         add_dim_2_distinguished_origin_transitions(g, test, units...);
       }
 
+      if constexpr(Coordinates::has_freely_mutable_components)
+      {
+        add_dim_2_free_mutations(g, test);
+      }
+
       return g;
     }
 
@@ -730,6 +735,60 @@ namespace sequoia::testing
           [](coords_t v) -> coords_t { return v / ring_t{-1}; }
         );
       }
+    }
+
+    static void add_dim_2_free_mutations(maths::network auto& g, regular_test& test)
+    {
+      // (-1, -1) --> (-1, 0)
+
+      add_transition<coords_t>(
+        g,
+        dim_2_label::neg_one_neg_one,
+        dim_2_label::neg_one_zero,
+        test.report("(-1, -1)[1] *= 0"),
+        [](coords_t v) -> coords_t { v[1] *= ring_t{}; return v; }
+      );
+
+      add_transition<coords_t>(
+        g,
+        dim_2_label::neg_one_neg_one,
+        dim_2_label::neg_one_zero,
+        test.report("(-1, -1).begin()[1] *= 0"),
+        [](coords_t v) -> coords_t { v.begin()[1] *= ring_t{}; return v; }
+      );
+
+      add_transition<coords_t>(
+        g,
+        dim_2_label::neg_one_neg_one,
+        dim_2_label::neg_one_zero,
+        test.report("(-1, -1).rbegin()[0] *= 0"),
+        [](coords_t v) -> coords_t { v.rbegin()[0] *= ring_t{}; return v; }
+      );
+
+      // (0, 1) --> (1, 1)
+      add_transition<coords_t>(
+        g,
+        dim_2_label::zero_one,
+        dim_2_label::one_one,
+        test.report("(0, 1)[0] += 1"),
+        [](coords_t v) -> coords_t { v[0] += ring_t{1}; return v; }
+      );
+
+      add_transition<coords_t>(
+        g,
+        dim_2_label::zero_one,
+        dim_2_label::one_one,
+        test.report("(0, 1).begin[0] += 1"),
+        [](coords_t v) -> coords_t { v.begin()[0] += ring_t{1}; return v; }
+      );
+
+      add_transition<coords_t>(
+        g,
+        dim_2_label::zero_one,
+        dim_2_label::one_one,
+        test.report("(0, 1).rbegin[1] += 1"),
+        [](coords_t v) -> coords_t { v.rbegin()[1] += ring_t{1}; return v; }
+      );
     }
   };
 }
