@@ -294,7 +294,12 @@ namespace sequoia::testing
 
       if constexpr(std::is_same_v<typename Coordinates::origin_type, maths::distinguished_origin>)
       {
-        add_dim_1_distinguished_origin_transitions(g, test, units...);
+        add_dim_1_distinguished_origin_transitions(g, test);
+      }
+
+      if constexpr(Coordinates::has_freely_mutable_components)
+      {
+        add_dim_1_free_mutations(g, test);
       }
 
       return g;
@@ -558,10 +563,9 @@ namespace sequoia::testing
       }
     }
 
-    template<class... Units>
-    static void add_dim_1_distinguished_origin_transitions(maths::network auto& g, regular_test& test, Units...)
+    static void add_dim_1_distinguished_origin_transitions(maths::network auto& g, regular_test& test)
     {
-      // TO DO: add in negative transitions
+      // (0) --> (1)
       add_transition<coords_t>(
         g,
         dim_1_label::one,
@@ -634,8 +638,61 @@ namespace sequoia::testing
       }
     }
 
-    template<class... Units>
-    static void add_dim_2_distinguished_origin_transitions(maths::network auto& g, regular_test& test, Units...)
+    static void add_dim_1_free_mutations(maths::network auto& g, regular_test& test)
+    {
+      // (1) --> (0)
+      add_transition<coords_t>(
+        g,
+        dim_1_label::one,
+        dim_1_label::zero,
+        test.report("(1)[0] * ring_t{}"),
+        [](coords_t v) -> coords_t { v[0] *= ring_t{}; return v; }
+      );
+
+      add_transition<coords_t>(
+        g,
+        dim_1_label::one,
+        dim_1_label::zero,
+        test.report("(1).begin[0] * ring_t{}"),
+        [](coords_t v) -> coords_t { v.begin()[0] *= ring_t{}; return v; }
+      );
+
+      add_transition<coords_t>(
+        g,
+        dim_1_label::one,
+        dim_1_label::zero,
+        test.report("(1).rbegin[0] * ring_t{}"),
+        [](coords_t v) -> coords_t { v.rbegin()[0] *= ring_t{}; return v; }
+      );
+
+      // (1) --> (2)
+
+      add_transition<coords_t>(
+        g,
+        dim_1_label::one,
+        dim_1_label::two,
+        test.report("(1)[0] * ring_t{2}"),
+        [](coords_t v) -> coords_t { v[0] *= ring_t{2}; return v; }
+      );
+
+      add_transition<coords_t>(
+        g,
+        dim_1_label::one,
+        dim_1_label::two,
+        test.report("(1).begin[0] * ring_t{2}"),
+        [](coords_t v) -> coords_t { v.begin()[0] *= ring_t{2}; return v; }
+      );
+
+      add_transition<coords_t>(
+        g,
+        dim_1_label::one,
+        dim_1_label::two,
+        test.report("(1).rbegin[0] * ring_t{2}"),
+        [](coords_t v) -> coords_t { v.rbegin()[0] *= ring_t{2}; return v; }
+      );
+    }
+
+    static void add_dim_2_distinguished_origin_transitions(maths::network auto& g, regular_test& test)
     {
       // (-1, -1) --> (1, 1)
 

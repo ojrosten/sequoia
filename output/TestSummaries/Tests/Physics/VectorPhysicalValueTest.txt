@@ -1,2 +1,2 @@
 Vector Physical Value Test
-Standard Top Level Checks:               360;  Failures:  0  [Deep checks: 4868]
+Standard Top Level Checks:               432;  Failures:  0  [Deep checks: 6272]
