@@ -454,7 +454,7 @@ namespace sequoia::testing
         [](coords_t p) -> coords_t { return +p;  }
       );
 
-      if constexpr(std::is_same_v<typename Coordinates::validator_type, std::identity>)
+      if constexpr(Coordinates::has_freely_mutable_components)
       {
         add_transition<coords_t>(
           g,

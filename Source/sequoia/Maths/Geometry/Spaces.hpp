@@ -1087,6 +1087,7 @@ namespace sequoia::maths
 
     constexpr static bool has_distinguished_origin{std::is_same_v<Origin, distinguished_origin>};
     constexpr static bool has_identity_validator{is_identity_validator_v<Validator>};
+    constexpr static bool has_freely_mutable_components{has_identity_validator && has_distinguished_origin};
     constexpr static std::size_t dimension{free_module_type::dimension};
     constexpr static std::size_t D{dimension};
 
@@ -1206,13 +1207,13 @@ namespace sequoia::maths
     constexpr std::span<const value_type, D> values() const noexcept { return m_Values; }
 
     [[nodiscard]]
-    constexpr std::span<value_type, D> values() noexcept requires(has_identity_validator) { return m_Values; }
+    constexpr std::span<value_type, D> values() noexcept requires has_freely_mutable_components { return m_Values; }
 
     [[nodiscard]]
     constexpr const value_type& value() const noexcept requires (D == 1) { return m_Values[0]; }
 
     [[nodiscard]]
-    constexpr value_type& value() noexcept requires (D == 1) && has_identity_validator { return m_Values[0]; }
+    constexpr value_type& value() noexcept requires (D == 1) && has_freely_mutable_components { return m_Values[0]; }
 
     /// This is explicit since otherwise, given two vectors a,b, a/b is well-formed due to implicit boolean conversion
     [[nodiscard]]
@@ -1225,7 +1226,7 @@ namespace sequoia::maths
     constexpr value_type operator[](std::size_t i) const { return m_Values[i]; }
 
     [[nodiscard]]
-    constexpr value_type& operator[](std::size_t i) requires(has_identity_validator) { return m_Values[i]; }
+    constexpr value_type& operator[](std::size_t i) requires has_freely_mutable_components { return m_Values[i]; }
 
     [[nodiscard]]
     friend constexpr bool operator==(const coordinates_base& lhs, const coordinates_base& rhs) noexcept { return lhs.m_Values == rhs.m_Values; }
@@ -1251,7 +1252,7 @@ namespace sequoia::maths
     {
       if constexpr(has_identity_validator)
       {
-        std::ranges::for_each(std::views::zip(self.values(), rhs), [&f](auto&& z){ f(std::get<0>(z), std::get<1>(z)); });
+        std::ranges::for_each(std::views::zip(self.m_Values, rhs), [&f](auto&& z){ f(std::get<0>(z), std::get<1>(z)); });
       }
       else
       {
