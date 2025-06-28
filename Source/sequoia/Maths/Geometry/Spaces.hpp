@@ -1452,9 +1452,9 @@ namespace sequoia::maths
   template<std::floating_point T, std::size_t D>
   struct euclidean_vector_space
   {
-    using set_type          = sets::R<D>;
-    using field_type        = T;
-    using is_vector_space   = std::true_type;
+    using set_type        = sets::R<D>;
+    using field_type      = T;
+    using is_vector_space = std::true_type;
     constexpr static std::size_t dimension{D};
 
     template<basis Basis>
@@ -1516,13 +1516,13 @@ namespace sequoia::maths
       In 1D, x is taken to run from left to right. Therefore, in 2D, y must go up
       and, building on this, in 3D z comes out from the page.
    */
-  template<std::floating_point T, std::size_t D>
+  template<vector_space V>
   struct canonical_right_handed_basis
   {
-    using vector_space_type = euclidean_vector_space<T, D>;
+    using vector_space_type = V;
     using orthonormal       = std::true_type;
   };
 
   template<std::floating_point T, std::size_t D>
-  using vec_coords = euclidean_vector_coordinates<T, D, canonical_right_handed_basis<T, D>>;
+  using vec_coords = euclidean_vector_coordinates<T, D, canonical_right_handed_basis<euclidean_vector_space<T, D>>>;
 }

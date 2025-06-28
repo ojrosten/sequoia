@@ -32,7 +32,7 @@ namespace sequoia::testing
     }
 
     {
-      using coords = euclidean_affine_coordinates<float, 1, canonical_right_handed_basis<float, 1>, alice>;
+      using coords = euclidean_affine_coordinates<float, 1, canonical_right_handed_basis<euclidean_vector_space<float, 1>>, alice>;
       test_affine_1<coords>();
     }
   }
