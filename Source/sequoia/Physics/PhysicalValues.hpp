@@ -295,7 +295,7 @@ namespace sequoia::physics
         Validator,
         physical_value<free_module_type_of_t<ValueSpace>, Unit, Convention, distinguished_origin, std::identity>>;
 
-  template<convex_space T>
+  template<class T>
   inline constexpr bool has_base_space_v{
     requires { typename T::base_space; }
   };
@@ -677,6 +677,17 @@ namespace sequoia::physics
     using is_free_module        = std::true_type;
   };
 
+  template<class Space>
+      requires has_base_space_v<Space>
+  struct associated_displacement_space<Space>
+  {
+    constexpr static std::size_t dimension{Space::dimension};
+    using set_type              = sets::classical::differences<typename Space::set_type>;
+    using commutative_ring_type = Space::representation_type;
+    using is_free_module        = std::true_type;
+    using base_space            = associated_displacement_space<typename Space::base_space>;
+  };
+
   template<class PhysicalValueSet, arithmetic Rep, std::size_t D, class Derived>
   struct physical_value_convex_space
   {
@@ -744,11 +755,13 @@ namespace sequoia::physics
   template<arithmetic Rep, class Arena>
   struct width_space : length_space<Rep, Arena>
   {
+    struct free_module_type : associated_displacement_space<width_space<Rep, Arena>> {};
   };
 
   template<arithmetic Rep, class Arena>
   struct height_space : length_space<Rep, Arena>
   {
+    struct free_module_type : associated_displacement_space<height_space<Rep, Arena>> {};
   };
 
   template<arithmetic Rep, class Arena>

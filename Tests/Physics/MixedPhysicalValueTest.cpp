@@ -83,10 +83,12 @@ namespace sequoia::testing
 
   void mixed_physical_value_test::test_mixed_kinds()
   {
-    using length_t = si::length<float>;
-    using d_len_t  = length_t::displacement_type;
-    using width_t  = si::width<float>;
-    using height_t = si::height<float>;
+    using length_t   = si::length<float>;
+    using d_len_t    = length_t::displacement_type;
+    using width_t    = si::width<float>;
+    using d_width_t  = width_t::displacement_type;
+    using height_t   = si::height<float>;
+    using d_height_t = height_t::displacement_type;
 
     length_t len{1.0, metre};
     check(equality, "", len += width_t{1.0, metre},  length_t{2.0, metre});
@@ -94,6 +96,8 @@ namespace sequoia::testing
     check(equality, "", width_t{0.5, metre}  + height_t{0.5, metre}, length_t{1.0, metre});
     check(equality, "", height_t{0.5, metre} + width_t{0.5, metre}, length_t{1.0, metre});
 
+    //check(equality, "", len -= width_t{1.0, metre},  length_t{1.0, metre});
+    //check(equality, "", len -= height_t{0.5, metre}, length_t{0.5, metre});
     check(equality, "", height_t{0.5, metre} -  width_t{0.5, metre}, d_len_t{0.0, metre});
     check(equality, "", width_t{0.5, metre}  - height_t{0.5, metre}, d_len_t{0.0, metre});
 
@@ -107,5 +111,15 @@ namespace sequoia::testing
     using euc_half_line_qty = quantity<euclidean_half_space<float>, no_unit_t, half_line_validator>;
     check(equality, "", static_cast<euc_half_line_qty>(height_t{0.5, metre} /  width_t{0.5, metre}), euc_half_line_qty{1.0, no_unit});
     check(equality, "", static_cast<euc_half_line_qty>( width_t{0.5, metre} / height_t{0.5, metre}), euc_half_line_qty{1.0, no_unit});
+
+    STATIC_CHECK(!std::is_same_v<d_len_t, d_width_t>);
+    check(equality, "", static_cast<d_len_t>(d_width_t{0.5, metre}), d_len_t{0.5, metre});
+
+    STATIC_CHECK(!std::is_same_v<d_len_t, d_height_t>);
+    check(equality, "", static_cast<d_len_t>(d_height_t{1.5, metre}), d_len_t{1.5, metre});
+
+    using euc_qty = quantity<euclidean_vector_space<float, 1>, no_unit_t, std::identity>;
+    STATIC_CHECK(!std::is_same_v<decltype(d_width_t{} / d_height_t{}), euc_qty>);
+    check(equality, "", static_cast<euc_qty>(d_width_t{1.5, metre}/d_height_t{0.5, metre}), euc_qty{3.0, no_unit});
   }
 }
