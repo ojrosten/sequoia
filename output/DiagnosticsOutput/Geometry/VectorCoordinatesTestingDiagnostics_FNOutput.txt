@@ -13,6 +13,48 @@ Checking for equivalence with:
     Obtained : 0
     Predicted: 1
 
+  Iterators
+  [std::ranges::subrange<float const*, float const*, 1>]
+
+    Element 0 of range incorrect
+    [float]
+    operator== returned false
+    Obtained : 0
+    Predicted: 1
+
+  c-Iterators
+  [std::ranges::subrange<float const*, float const*, 1>]
+
+    Element 0 of range incorrect
+    [float]
+    operator== returned false
+    Obtained : 0
+    Predicted: 1
+
+  r-Iterators
+  [std::ranges::subrange<std::reverse_iterator<float const*>, std::reverse_iterator<float const*>, 1>]
+
+    Element 0 of range incorrect
+    [float]
+    operator== returned false
+    Obtained : 0
+    Predicted: 1
+
+  cr-Iterators
+  [std::ranges::subrange<std::reverse_iterator<float const*>, std::reverse_iterator<float const*>, 1>]
+
+    Element 0 of range incorrect
+    [float]
+    operator== returned false
+    Obtained : 0
+    Predicted: 1
+
+  operator[]
+  [float]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
+
 =======================================
 
 Tests/Maths/Geometry/VectorCoordinatesTestingDiagnostics.cpp, Line 43
@@ -60,6 +102,48 @@ Checking for equivalence with:
     operator== returned false
     Obtained : 0
     Predicted: 1
+
+  Iterators
+  [std::ranges::subrange<float const*, float const*, 1>]
+
+    Element 0 of range incorrect
+    [float]
+    operator== returned false
+    Obtained : 0
+    Predicted: 1
+
+  c-Iterators
+  [std::ranges::subrange<float const*, float const*, 1>]
+
+    Element 0 of range incorrect
+    [float]
+    operator== returned false
+    Obtained : 0
+    Predicted: 1
+
+  r-Iterators
+  [std::ranges::subrange<std::reverse_iterator<float const*>, std::reverse_iterator<float const*>, 1>]
+
+    Element 0 of range incorrect
+    [float]
+    operator== returned false
+    Obtained : 0
+    Predicted: 1
+
+  cr-Iterators
+  [std::ranges::subrange<std::reverse_iterator<float const*>, std::reverse_iterator<float const*>, 1>]
+
+    Element 0 of range incorrect
+    [float]
+    operator== returned false
+    Obtained : 0
+    Predicted: 1
+
+  operator[]
+  [float]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
 
 =======================================
 

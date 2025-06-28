@@ -142,6 +142,15 @@ namespace sequoia::testing
     static void test(equivalence_check_t, test_logger<Mode>& logger, const coord_type& actual, const std::array<commutative_ring_type, D>& prediction)
     {
       check(equality, "Wrapped values", logger, actual.values(), std::span<const commutative_ring_type, D>{prediction});
+      check(equivalence, "Iterators",    logger, std::ranges::subrange{actual.begin(),  actual.end()},    prediction);
+      check(equivalence, "c-Iterators",  logger, std::ranges::subrange{actual.cbegin(),  actual.cend()},  prediction);
+      check(equivalence, "r-Iterators",  logger, std::ranges::subrange{actual.rbegin(),  actual.rend()},  prediction);
+      check(equivalence, "cr-Iterators", logger, std::ranges::subrange{actual.crbegin(), actual.crend()}, prediction);
+
+      for(auto i : std::views::iota(0uz, D))
+      {
+        check(equality, "operator[]", logger, actual[i], prediction[i]);
+      }
     }
   };
 

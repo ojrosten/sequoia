@@ -1229,6 +1229,43 @@ namespace sequoia::maths
     constexpr value_type& operator[](std::size_t i) requires has_freely_mutable_components { return m_Values[i]; }
 
     [[nodiscard]]
+    constexpr auto begin() const noexcept { return m_Values.begin(); }
+
+    [[nodiscard]]
+    constexpr auto end() const noexcept { return m_Values.end(); }
+
+    [[nodiscard]]
+    constexpr auto rbegin() const noexcept { return m_Values.rbegin(); }
+
+    [[nodiscard]]
+    constexpr auto rend() const noexcept { return m_Values.rend(); }
+
+    [[nodiscard]]
+    constexpr auto cbegin() const noexcept { return begin(); }
+
+    [[nodiscard]]
+    constexpr auto cend() const noexcept { return end(); }
+
+    [[nodiscard]]
+    constexpr auto crbegin() const noexcept { return rbegin(); }
+
+    [[nodiscard]]
+    constexpr auto crend() const noexcept { return rend(); }
+
+    [[nodiscard]]
+    constexpr auto begin() noexcept requires has_freely_mutable_components { return m_Values.begin(); }
+
+    [[nodiscard]]
+    constexpr auto end() noexcept requires has_freely_mutable_components { return m_Values.end(); }
+
+    [[nodiscard]]
+    constexpr auto rbegin() noexcept requires has_freely_mutable_components { return m_Values.rbegin(); }
+
+    [[nodiscard]]
+    constexpr auto rend() noexcept requires has_freely_mutable_components { return m_Values.rend(); }
+
+
+    [[nodiscard]]
     friend constexpr bool operator==(const coordinates_base& lhs, const coordinates_base& rhs) noexcept { return lhs.m_Values == rhs.m_Values; }
 
     [[nodiscard]]
