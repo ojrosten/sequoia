@@ -1097,7 +1097,7 @@ namespace sequoia::maths
     {}
 
     template<class... Ts>
-      requires (D > 1) && (sizeof...(Ts) == D) && (std::convertible_to<Ts, value_type> && ...)
+      requires (D > 1) && (std::convertible_to<Ts, value_type> && ...)
     constexpr coordinates_base(Ts... ts) noexcept(has_identity_validator)
       : m_Values{m_Validator(std::array<value_type, D>{ts...})}
     {}
