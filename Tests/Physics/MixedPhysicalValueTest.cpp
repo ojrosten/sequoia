@@ -72,7 +72,7 @@ namespace sequoia::testing
   template<class Convention>
   void mixed_physical_value_test::test_mixed_vector()
   {
-    using pos_t  = si::position<2, float, implicit_common_arena, Convention>;
+    using pos_t  = si::position<float, 2, implicit_common_arena, Convention>;
     using temporal_t = si::time<float>;
 
     check(equivalence,

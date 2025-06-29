@@ -31,9 +31,9 @@ namespace sequoia::testing
   {
     test_affine_quantity<si::time<float>>();
     test_affine_quantity<si::time<double>>();
-    test_affine_quantity<si::position<1, float>>();
-    test_affine_quantity<si::position<2, float>>();
-    test_affine_quantity<si::position<2, float, tina_arena, y_down_convention, alice>>();
+    test_affine_quantity<si::position<float, 1>>();
+    test_affine_quantity<si::position<float, 2>>();
+    test_affine_quantity<si::position<float, 2, tina_arena, y_down_convention, alice>>();
   }
 
   template<class Quantity>

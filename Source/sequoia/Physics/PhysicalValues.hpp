@@ -775,8 +775,8 @@ namespace sequoia::physics
   struct time_space : physical_value_affine_space<sets::classical::times<Arena>, Rep, 1, time_space<Rep, Arena>>
   {};
 
-  template<std::size_t D, arithmetic Rep, class Arena>
-  struct position_space : physical_value_affine_space<sets::classical::positions<Arena>, Rep, D, position_space<D, Rep, Arena>>
+  template<arithmetic Rep, std::size_t D, class Arena>
+  struct position_space : physical_value_affine_space<sets::classical::positions<Arena>, Rep, D, position_space<Rep, D, Arena>>
   {};
   
   struct implicit_common_arena {};
@@ -894,14 +894,14 @@ namespace sequoia::physics
     >
     using time = physical_value<time_space<T, Arena>, units::second_t, canonical_convention<1>, Origin, std::identity>;
 
-    template<
-      std::size_t D,
+    template<      
       std::floating_point T,
+      std::size_t D,
       class Arena      = implicit_common_arena,      
       class Convention = canonical_convention<D>,
-      class Origin     = implicit_affine_origin<position_space<D, T, Arena>>
+      class Origin     = implicit_affine_origin<position_space<T, D, Arena>>
     >
-    using position = physical_value<position_space<D, T, Arena>, units::metre_t, Convention, Origin, std::identity>;
+    using position = physical_value<position_space<T, D, Arena>, units::metre_t, Convention, Origin, std::identity>;
   }
 
   template<vector_space ValueSpace, physical_unit Unit, class Convention, class Origin, validator_for<ValueSpace> Validator>
