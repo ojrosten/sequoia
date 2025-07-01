@@ -34,7 +34,6 @@ namespace sequoia::testing
       using quantity_t = Quantity;
       using delta_q_t  = quantity_t::displacement_type;
       using space_type = quantity_t::space_type;
-      constexpr std::size_t D{quantity_t::D};
 
       STATIC_CHECK(convex_space<space_type>);
       STATIC_CHECK(vector_space<free_module_type_of_t<space_type>>);
@@ -53,7 +52,15 @@ namespace sequoia::testing
       coordinates_operations<quantity_t>{*this}.execute();
 
       using units_type = quantity_t::units_type;
-      STATIC_CHECK(!defines_physical_value_v<dual<space_type>, dual<units_type>, canonical_convention<D>, to_origin_type_t<dual<space_type>, dual<units_type>>, typename dual<units_type>::validator_type>);
+      STATIC_CHECK(
+        !defines_physical_value_v<
+          dual<space_type>,
+          dual<units_type>,
+          canonical_right_handed_basis<free_module_type_of_t<dual<space_type>>>,
+          to_origin_type_t<dual<space_type>,
+          dual<units_type>>,
+          typename dual<units_type>::validator_type>
+      );
     }
   }
 }

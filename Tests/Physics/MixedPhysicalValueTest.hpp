@@ -25,7 +25,6 @@ namespace sequoia::testing
   private:
     void test_mixed();
 
-    template<class Convention>
     void test_mixed_vector();
 
     void test_mixed_kinds();

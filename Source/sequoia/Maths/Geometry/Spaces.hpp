@@ -1516,12 +1516,23 @@ namespace sequoia::maths
       In 1D, x is taken to run from left to right. Therefore, in 2D, y must go up
       and, building on this, in 3D z comes out from the page.
    */
-  template<vector_space V>
+  template<free_module M>
   struct canonical_right_handed_basis
   {
-    using vector_space_type = V;
-    using orthonormal       = std::true_type;
+    using free_module_type = M;
   };
+
+  template<free_module M>
+  struct dual_of<canonical_right_handed_basis<M>>
+  {
+    using type = canonical_right_handed_basis<dual_of_t<M>>;
+  };
+
+  template<free_module M>
+  struct dual_of<canonical_right_handed_basis<dual<M>>>
+  {
+    using type = canonical_right_handed_basis<M>;
+  };   
 
   template<std::floating_point T, std::size_t D>
   using vec_coords = euclidean_vector_coordinates<T, D, canonical_right_handed_basis<euclidean_vector_space<T, D>>>;

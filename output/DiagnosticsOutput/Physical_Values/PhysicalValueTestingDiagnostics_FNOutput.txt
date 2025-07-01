@@ -1,7 +1,7 @@
 Tests/Physics/PhysicalValueTestingDiagnostics.cpp, Line 25
 
 Comparison performed using:
-[sequoia::testing::value_tester<sequoia::physics::physical_value<sequoia::physics::mass_space<float, sequoia::physics::implicit_common_arena>, sequoia::physics::si::units::kilogram_t, sequoia::physics::canonical_convention<1>, sequoia::maths::distinguished_origin, sequoia::maths::half_line_validator> >]
+[sequoia::testing::value_tester<sequoia::physics::physical_value<sequoia::physics::mass_space<float, sequoia::physics::implicit_common_arena>, sequoia::physics::si::units::kilogram_t, sequoia::maths::canonical_right_handed_basis<sequoia::physics::associated_displacement_space<sequoia::physics::mass_space<float, sequoia::physics::implicit_common_arena> > >, sequoia::maths::distinguished_origin, sequoia::maths::half_line_validator> >]
 Checking for equivalence with:
 [float]
 
@@ -15,7 +15,7 @@ Checking for equivalence with:
 
 Tests/Physics/PhysicalValueTestingDiagnostics.cpp, Line 26
 
-[sequoia::physics::physical_value<sequoia::physics::mass_space<float, sequoia::physics::implicit_common_arena>, sequoia::physics::si::units::kilogram_t, sequoia::physics::canonical_convention<1>, sequoia::maths::distinguished_origin, sequoia::maths::half_line_validator>]
+[sequoia::physics::physical_value<sequoia::physics::mass_space<float, sequoia::physics::implicit_common_arena>, sequoia::physics::si::units::kilogram_t, sequoia::maths::canonical_right_handed_basis<sequoia::physics::associated_displacement_space<sequoia::physics::mass_space<float, sequoia::physics::implicit_common_arena> > >, sequoia::maths::distinguished_origin, sequoia::maths::half_line_validator>]
 operator== returned false
 
   Wrapped Value
