@@ -1449,7 +1449,9 @@ namespace sequoia::maths
   template<class V>
   concept inner_product_space = vector_space<V> && has_inner_product_v<V>;
 
-  template<std::floating_point T, std::size_t D>
+  struct mathematical_arena {};
+
+  template<std::floating_point T, std::size_t D, class Arena=mathematical_arena>
   struct euclidean_vector_space
   {
     using set_type        = sets::R<D>;
@@ -1489,15 +1491,15 @@ namespace sequoia::maths
     }
   };
 
-  template<std::floating_point T, std::size_t D>
+  template<std::floating_point T, std::size_t D, class Arena=mathematical_arena>
   struct euclidean_affine_space
   {
     using set_type          = sets::R<D>;
-    using vector_space_type = euclidean_vector_space<T, D>;
+    using vector_space_type = euclidean_vector_space<T, D, Arena>;
     using is_affine_space   = std::true_type;
   };
 
-  template<std::floating_point T>
+  template<std::floating_point T, class Arena=mathematical_arena>
   struct euclidean_half_space
   {
     using set_type          = sets::orthant<1>;
@@ -1505,11 +1507,11 @@ namespace sequoia::maths
     using is_convex_space   = std::true_type;
   };
 
-  template<std::floating_point T, std::size_t D, basis Basis, class Origin>
-  using euclidean_affine_coordinates = affine_coordinates<euclidean_affine_space<T, D>, Basis, Origin>;
+  template<std::floating_point T, std::size_t D, basis Basis, class Origin, class Arena=mathematical_arena>
+  using euclidean_affine_coordinates = affine_coordinates<euclidean_affine_space<T, D, Arena>, Basis, Origin>;
 
-  template<std::floating_point T, std::size_t D, basis Basis>
-  using euclidean_vector_coordinates = vector_coordinates<euclidean_vector_space<T, D>, Basis>;
+  template<std::floating_point T, std::size_t D, basis Basis, class Arena=mathematical_arena>
+  using euclidean_vector_coordinates = vector_coordinates<euclidean_vector_space<T, D, Arena>, Basis>;
 
   /** @brief Right-handed bases for arbitrary D, build recursively from 1D
 
@@ -1534,6 +1536,6 @@ namespace sequoia::maths
     using type = canonical_right_handed_basis<M>;
   };   
 
-  template<std::floating_point T, std::size_t D>
-  using vec_coords = euclidean_vector_coordinates<T, D, canonical_right_handed_basis<euclidean_vector_space<T, D>>>;
+  template<std::floating_point T, std::size_t D, class Arena=mathematical_arena>
+  using vec_coords = euclidean_vector_coordinates<T, D, canonical_right_handed_basis<euclidean_vector_space<T, D>>, Arena>;
 }
