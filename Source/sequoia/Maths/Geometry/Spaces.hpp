@@ -1537,5 +1537,5 @@ namespace sequoia::maths
   };   
 
   template<std::floating_point T, std::size_t D, class Arena=mathematical_arena>
-  using vec_coords = euclidean_vector_coordinates<T, D, canonical_right_handed_basis<euclidean_vector_space<T, D>>, Arena>;
+  using vec_coords = euclidean_vector_coordinates<T, D, canonical_right_handed_basis<euclidean_vector_space<T, D, Arena>>, Arena>;
 }
