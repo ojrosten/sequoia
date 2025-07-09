@@ -107,7 +107,7 @@ namespace sequoia::testing
     check(equality, "", static_cast<area>(height_t{0.5, metre} *  width_t{0.5, metre}), length_t{0.5, metre} * length_t{0.5, metre});
     check(equality, "", static_cast<area>(width_t{0.5, metre}  * height_t{0.5, metre}), length_t{0.5, metre} * length_t{0.5, metre});
 
-    using euc_half_line_qty = quantity<euclidean_half_space<float>, no_unit_t, half_line_validator>;
+    using euc_half_line_qty = euclidean_half_line_quantity<float>;
     check(equality, "", static_cast<euc_half_line_qty>(height_t{0.5, metre} /  width_t{0.5, metre}), euc_half_line_qty{1.0, no_unit});
     check(equality, "", static_cast<euc_half_line_qty>( width_t{0.5, metre} / height_t{0.5, metre}), euc_half_line_qty{1.0, no_unit});
 
@@ -117,7 +117,7 @@ namespace sequoia::testing
     STATIC_CHECK(!std::is_same_v<d_len_t, d_height_t>);
     check(equality, "", static_cast<d_len_t>(d_height_t{1.5, metre}), d_len_t{1.5, metre});
 
-    using euc_qty = quantity<euclidean_vector_space<float, 1>, no_unit_t, std::identity>;
+    using euc_qty = euclidean_1d_vector_quantity<float>;
     STATIC_CHECK(!std::is_same_v<decltype(d_width_t{} / d_height_t{}), euc_qty>);
     check(equality, "", static_cast<euc_qty>(d_width_t{1.5, metre}/d_height_t{0.5, metre}), euc_qty{3.0, no_unit});
   }

@@ -1457,6 +1457,7 @@ namespace sequoia::maths
     using set_type        = sets::R<D>;
     using field_type      = T;
     using is_vector_space = std::true_type;
+    using arena_type      = Arena;
     constexpr static std::size_t dimension{D};
 
     template<basis Basis>
@@ -1497,6 +1498,7 @@ namespace sequoia::maths
     using set_type          = sets::R<D>;
     using vector_space_type = euclidean_vector_space<T, D, Arena>;
     using is_affine_space   = std::true_type;
+    using arena_type        = Arena;
   };
 
   template<std::floating_point T, class Arena=mathematical_arena>
@@ -1505,6 +1507,7 @@ namespace sequoia::maths
     using set_type          = sets::orthant<1>;
     using vector_space_type = euclidean_vector_space<T, 1>;
     using is_convex_space   = std::true_type;
+    using arena_type        = Arena;
   };
 
   template<std::floating_point T, std::size_t D, basis Basis, class Origin, class Arena=mathematical_arena>

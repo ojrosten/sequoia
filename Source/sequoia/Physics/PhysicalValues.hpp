@@ -88,6 +88,38 @@ namespace sequoia::physics
     using validator_type = reduced_validator_t<typename Ts::validator_type...>;
   };
 
+  template<class T>
+  inline constexpr bool has_arena_type_v{
+    requires { typename T::arena_type;}
+  };
+
+  template<class T>
+  struct arena_type_of;
+
+  template<class T>
+  using arena_type_of_t = arena_type_of<T>::type;
+
+  template<class T>
+    requires has_arena_type_v<T>
+  struct arena_type_of<T>
+  {
+    using type = T::arena_type;
+  };
+
+  template<convex_space T>
+    requires (!has_arena_type_v<dual<T>>)
+  struct arena_type_of<dual<T>>
+  {
+    using type = arena_type_of_t<T>;
+  };
+
+  template<convex_space... Ts>
+    requires (!has_arena_type_v<direct_product<Ts...>>)
+  struct arena_type_of<direct_product<Ts...>>
+  {
+    using type = std::common_type_t<arena_type_of_t<Ts>...>;
+  }; 
+
   /// @class Primary class template for the reduction of direct products to a lower dimensional space
   template<class T>
   struct reduction;
@@ -105,8 +137,9 @@ namespace sequoia::physics
     using direct_product_t      = direct_product<Ts...>;
     using set_type              = reduction<typename direct_product_t::set_type>;
     using commutative_ring_type = commutative_ring_type_of_t<direct_product_t>;
+    using is_free_module        = std::true_type;
+    using arena_type            = arena_type_of<direct_product<Ts...>>;
     constexpr static std::size_t dimension{std::ranges::max({dimension_of<Ts>...})};
-    using is_free_module = std::true_type;
   };
 
   template<convex_space... Ts>
@@ -117,6 +150,7 @@ namespace sequoia::physics
     using set_type         = reduction<typename direct_product_t::set_type>;
     using free_module_type = composite_space<free_module_type_of_t<Ts>...>;
     using is_convex_space  = std::true_type;
+    using arena_type       = arena_type_of<direct_product<Ts...>>;
   };
 
   template<physical_unit T, physical_unit U>
@@ -344,8 +378,8 @@ namespace sequoia::physics
 
   template<convex_space C>
   inline constexpr bool is_1d_euclidean_v{
-       std::is_same_v<euclidean_vector_space<commutative_ring_type_of_t<C>, 1>, C>
-    || std::is_same_v<euclidean_half_space<commutative_ring_type_of_t<C>>, C>
+       std::is_same_v<euclidean_vector_space<commutative_ring_type_of_t<C>, 1, arena_type_of_t<C>>, C>
+    || std::is_same_v<euclidean_half_space<commutative_ring_type_of_t<C>, arena_type_of_t<C>>, C>
   };
   
   template<
@@ -658,6 +692,7 @@ namespace sequoia::physics
     using set_type              = sets::classical::differences<typename Space::set_type>;
     using commutative_ring_type = Space::representation_type;
     using is_free_module        = std::true_type;
+    using arena_type            = Space::arena_type;
   };
 
   template<class Space>
@@ -669,6 +704,7 @@ namespace sequoia::physics
     using commutative_ring_type = Space::representation_type;
     using is_free_module        = std::true_type;
     using base_space            = associated_displacement_space<typename Space::base_space>;
+    using arena_type            = Space::arena_type;
   };
 
   template<class PhysicalValueSet, arithmetic Rep, std::size_t D, class Derived>
@@ -679,6 +715,7 @@ namespace sequoia::physics
     using representation_type = Rep;
     using free_module_type    = associated_displacement_space<Derived>;
     using is_convex_space     = std::true_type;
+    using arena_type          = PhysicalValueSet::arena_type;
   };
 
   template<class PhysicalValueSet, arithmetic Rep, std::size_t D, class Derived>
@@ -689,6 +726,7 @@ namespace sequoia::physics
     using representation_type = Rep;
     using free_module_type    = associated_displacement_space<Derived>;
     using is_affine_space     = std::true_type;
+    using arena_type          = PhysicalValueSet::arena_type;
   };
 
   template<class PhysicalValueSet, arithmetic Rep, std::size_t D, class Derived>
@@ -705,6 +743,7 @@ namespace sequoia::physics
   struct mass_space
     : physical_value_convex_space<sets::classical::masses<Arena>, Rep, 1, mass_space<Rep, Arena>>
   {
+    using arena_type = Arena;
     using base_space = mass_space;
   };
 
@@ -712,6 +751,7 @@ namespace sequoia::physics
   struct temperature_space
     : physical_value_convex_space<sets::classical::temperatures<Arena>, Rep, 1, temperature_space<Rep, Arena>>
   {
+    using arena_type = Arena;
     using base_space = temperature_space;
   };
 
@@ -719,12 +759,14 @@ namespace sequoia::physics
   struct electrical_current_space
     : physical_value_vector_space<sets::classical::electrical_currents<Arena>, Rep, 1, electrical_current_space<Rep, Arena>>
   {
+    using arena_type = Arena;
     using base_space = electrical_current_space;
   };
 
   template<std::floating_point Rep, class Arena>
   struct angular_space : physical_value_vector_space<sets::classical::angles<Arena>, Rep, 1, angular_space<Rep, Arena>>
   {
+    using arena_type = Arena;
     using base_space = angular_space;
   };
 
@@ -732,6 +774,7 @@ namespace sequoia::physics
   struct length_space
     : physical_value_convex_space<sets::classical::lengths<Arena>, Rep, 1, length_space<Rep, Arena>>
   {
+    using arena_type = Arena;
     using base_space = length_space;
   };
 
@@ -750,15 +793,21 @@ namespace sequoia::physics
   template<arithmetic Rep, class Arena>
   struct time_interval_space
     : physical_value_convex_space<sets::classical::time_intervals<Arena>, Rep, 1, time_interval_space<Rep, Arena>>
-  {};
+  {
+    using arena_type = Arena;
+  };
   
   template<arithmetic Rep, class Arena>
   struct time_space : physical_value_affine_space<sets::classical::times<Arena>, Rep, 1, time_space<Rep, Arena>>
-  {};
+  {
+    using arena_type = Arena;
+  };
 
   template<arithmetic Rep, std::size_t D, class Arena>
   struct position_space : physical_value_affine_space<sets::classical::positions<Arena>, Rep, D, position_space<Rep, D, Arena>>
-  {};
+  {
+    using arena_type = Arena;
+  };
   
   struct implicit_common_arena {};
 
@@ -767,7 +816,7 @@ namespace sequoia::physics
     requires {
       { U::symbol } -> std::convertible_to<std::string_view>; }
   };
-
+  
   namespace si
   {
     namespace units
@@ -942,6 +991,13 @@ namespace sequoia::physics
   >
     requires has_consistent_validator<ValueSpace, Validator>
   using quantity = physical_value<ValueSpace, Unit, canonical_right_handed_basis<free_module_type_of_t<ValueSpace>>, to_origin_type_t<ValueSpace, Unit>, Validator>;
+
+  
+  template<std::floating_point Rep, class Arena=implicit_common_arena>
+  using euclidean_1d_vector_quantity = quantity<euclidean_vector_space<Rep, 1, Arena>, no_unit_t, std::identity>;
+
+  template<std::floating_point Rep, class Arena=implicit_common_arena>
+  using euclidean_half_line_quantity = quantity<euclidean_half_space<Rep, Arena>, no_unit_t>;
 }
 
 // TO DO: extend this
