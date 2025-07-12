@@ -1,0 +1,26 @@
+Tests/Core/DataStructures/MemOrderedTupleTestingDiagnostics.cpp, Line 23
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::datastructures::mem_ordered_tuple<int> >]
+Checking for equivalence with:
+[std::tuple<int>]
+
+  Element 0
+  [int]
+  operator== returned false
+  Obtained : 42
+  Predicted: 31
+
+=======================================
+
+Tests/Core/DataStructures/MemOrderedTupleTestingDiagnostics.cpp, Line 24
+
+[sequoia::datastructures::mem_ordered_tuple<int>]
+  Element 0
+  [int]
+  operator== returned false
+  Obtained : 42
+  Predicted: 7
+
+=======================================
+

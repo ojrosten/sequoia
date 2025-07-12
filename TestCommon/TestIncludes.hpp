@@ -12,6 +12,8 @@
 #include "Core/ContainerUtilities/IteratorTest.hpp"
 #include "Core/DataStructures/BucketedSequenceAllocationTest.hpp"
 #include "Core/DataStructures/BucketedSequenceRegularTest.hpp"
+#include "Core/DataStructures/MemOrderedTupleTest.hpp"
+#include "Core/DataStructures/MemOrderedTupleTestingDiagnostics.hpp"
 #include "Core/DataStructures/PartitionIteratorTest.hpp"
 #include "Core/DataStructures/PartitionedDataTestingDiagnostics.hpp"
 #include "Core/DataStructures/PartitionedSequenceAllocationTest.hpp"

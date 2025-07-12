@@ -410,6 +410,12 @@ int main(int argc, char** argv)
       integral_physical_value_test{"Integral Physical Value Test"}
     );
 
+    runner.add_test_suite(
+      "Mem Ordered Tuple",
+      mem_ordered_tuple_false_negative_test{"False Negative Test"},
+      mem_ordered_tuple_test{"Unit Test"}
+    );
+
     runner.execute(timer_resolution{1ms});
   }
   catch(const std::exception& e)

@@ -19,6 +19,8 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Core/ContainerUtilities/IteratorTest.cpp
                ${TestDir}/Core/DataStructures/BucketedSequenceAllocationTest.cpp
                ${TestDir}/Core/DataStructures/BucketedSequenceRegularTest.cpp
+               ${TestDir}/Core/DataStructures/MemOrderedTupleTest.cpp
+               ${TestDir}/Core/DataStructures/MemOrderedTupleTestingDiagnostics.cpp
                ${TestDir}/Core/DataStructures/PartitionIteratorTest.cpp
                ${TestDir}/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp
                ${TestDir}/Core/DataStructures/PartitionedSequenceAllocationTest.cpp
