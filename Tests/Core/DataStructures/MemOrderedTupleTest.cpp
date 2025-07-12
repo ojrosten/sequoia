@@ -20,6 +20,6 @@ namespace sequoia::testing
   void mem_ordered_tuple_test::run_tests()
   {
     using namespace datastructures;
-    check_semantics("Useful Description", mem_ordered_tuple<int>{42}, mem_ordered_tuple<int>{7}, std::tuple{42}, std::tuple{7});
+    check_semantics("", mem_ordered_tuple<int>{42}, mem_ordered_tuple<int>{7}, std::tuple{42}, std::tuple{7});
   }
 }
