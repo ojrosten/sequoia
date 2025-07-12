@@ -70,4 +70,14 @@ namespace sequoia::datastructures
   const Ts...[I]& get(const mem_ordered_tuple<Ts...>& t) noexcept {
     return static_cast<const impl::mem_ordered_tuple_element<Ts...[I], I>&>(t).value;
   }
+
+  template<std::size_t I, class... Ts>
+  Ts...[I]&& get(mem_ordered_tuple<Ts...>&& t) noexcept {
+    return static_cast<impl::mem_ordered_tuple_element<Ts...[I], I>&&>(t).value;
+  }
+
+  template<std::size_t I, class... Ts>
+  const Ts...[I]&& get(const mem_ordered_tuple<Ts...>&& t) noexcept {
+    return static_cast<const impl::mem_ordered_tuple_element<Ts...[I], I>&&>(t).value;
+  }
 }
