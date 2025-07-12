@@ -22,7 +22,7 @@ namespace sequoia::datastructures
       T value;
 
       [[nodiscard]]
-      friend bool operator==(const mem_ordered_tuple_element&, const mem_ordered_tuple_element&) noexcept = default;
+      friend auto operator<=>(const mem_ordered_tuple_element&, const mem_ordered_tuple_element&) noexcept = default;
     };
 
     template<class... Ts>
@@ -43,7 +43,7 @@ namespace sequoia::datastructures
       {}
 
       [[nodiscard]]
-      friend bool operator==(const mem_ordered_tuple&, const mem_ordered_tuple&) noexcept = default;
+      friend auto operator<=>(const mem_ordered_tuple&, const mem_ordered_tuple&) noexcept = default;
     };
   }
   
@@ -58,7 +58,7 @@ namespace sequoia::datastructures
     {}
 
     [[nodiscard]]
-    friend bool operator==(const mem_ordered_tuple&, const mem_ordered_tuple&) noexcept = default;
+    friend auto operator<=>(const mem_ordered_tuple&, const mem_ordered_tuple&) noexcept = default;
   };
 
   template<std::size_t I, class... Ts>
