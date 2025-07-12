@@ -20,6 +20,9 @@ namespace sequoia::datastructures
     {      
       constexpr static std::size_t index{I};
       T value;
+
+      [[nodiscard]]
+      friend bool operator==(const mem_ordered_tuple_element&, const mem_ordered_tuple_element&) noexcept = default;
     };
 
     template<class... Ts>
@@ -38,6 +41,9 @@ namespace sequoia::datastructures
         requires (sizeof...(Ts) >= 1) && (std::is_copy_constructible_v<Ts> && ...)
         : mem_ordered_tuple_element<Ts, Is>{ts}...
       {}
+
+      [[nodiscard]]
+      friend bool operator==(const mem_ordered_tuple&, const mem_ordered_tuple&) noexcept = default;
     };
   }
   
@@ -50,6 +56,9 @@ namespace sequoia::datastructures
         requires (sizeof...(Ts) >= 1) && (std::is_copy_constructible_v<Ts> && ...)
       : impl::mem_ordered_tuple<std::make_index_sequence<sizeof...(Ts)>, Ts...>{ts...}
     {}
+
+    [[nodiscard]]
+    friend bool operator==(const mem_ordered_tuple&, const mem_ordered_tuple&) noexcept = default;
   };
 
   template<std::size_t I, class... Ts>
