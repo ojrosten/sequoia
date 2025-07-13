@@ -88,16 +88,16 @@ $(function() {
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="keyword">namespace </span><a class="code hl_namespace" href="../../dd/d52/namespacesequoia_1_1testing_1_1impl.html">sequoia::testing::impl</a></div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>{</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>  <span class="keyword">template</span>&lt;test_mode Mode, <span class="keyword">class</span> Actions, moveonly T, <span class="keyword">class</span> U, std::invocable&lt;T&amp;&gt; Mutator, <span class="keyword">class</span>... Args&gt;</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    <span class="keyword">requires</span> checkable_for_move_semantics&lt;Mode, T, U&gt;</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>  <span class="keyword">template</span>&lt;test_mode Mode, <span class="keyword">class</span> Actions, moveonly T, <span class="keyword">class</span> U, <span class="keyword">class</span> V, std::invocable&lt;T&amp;&gt; Mutator, <span class="keyword">class</span>... Args&gt;</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    <span class="keyword">requires</span> checkable_against_for_semantics&lt;Mode, T, U&gt; &amp;&amp; checkable_against_for_semantics&lt;Mode, T, V&gt;</div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>  <span class="keywordtype">bool</span> check_semantics(test_logger&lt;Mode&gt;&amp; logger,</div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>                       <span class="keyword">const</span> Actions&amp; actions,</div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>                       T&amp;&amp; x,</div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>                       T&amp;&amp; y,</div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>                       <span class="keyword">const</span> U&amp; xEquivalent,</div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>                       <span class="keyword">const</span> U&amp; yEquivalent,</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>                       optional_ref&lt;const U&gt; movedFromPostConstruction,</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>                       optional_ref&lt;const U&gt; movedFromPostAssignment,</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>                       optional_ref&lt;const V&gt; movedFromPostConstruction,</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>                       optional_ref&lt;const V&gt; movedFromPostAssignment,</div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>                       Mutator m,</div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>                       <span class="keyword">const</span> Args&amp;... args)</div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>  {</div>

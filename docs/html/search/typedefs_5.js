@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['regular_5fallocation_5ftest_0',['regular_allocation_test',['../d8/da2/RegularAllocationTestCore_8hpp.html#a4e4815598607407baa4b832a79a08866',1,'sequoia::testing']]],
-  ['regular_5ftest_1',['regular_test',['../d9/daf/RegularTestCore_8hpp.html#aef38d8778074b365d465f7775bb74dab',1,'sequoia::testing']]]
+  ['vector_5fcoordinates_0',['vector_coordinates',['../d8/d5b/group__Coordinates.html#gaaf998170b5890f5056ffc3b041233877',1,'sequoia::maths']]]
 ];

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.6"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: sequoia::maths::dual_of&lt; C &gt; Struct Template Reference</title>
+<title>Sequoia: sequoia::maths::dual_of&lt; T &gt; Struct Template Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -76,17 +76,24 @@ $(function() {
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
 <a href="../../d1/d9b/structsequoia_1_1maths_1_1dual__of-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">sequoia::maths::dual_of&lt; C &gt; Struct Template Reference</div></div>
+  <div class="headertitle"><div class="title">sequoia::maths::dual_of&lt; T &gt; Struct Template Reference<div class="ingroups"><a class="el" href="../../d5/de2/group__DualSpaces.html">Dual Spaces</a></div></div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Helper to generate the dual of a space, taking into account that the dual of the dual may be related to the original space.  
+ <a href="../../d4/d5c/structsequoia_1_1maths_1_1dual__of.html#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:ac12ee4000e4f18cc19799fcac4579a88"><td class="memItemLeft" align="right" valign="top"><a id="ac12ee4000e4f18cc19799fcac4579a88" name="ac12ee4000e4f18cc19799fcac4579a88"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>type</b> = <a class="el" href="../../d7/def/structsequoia_1_1maths_1_1dual.html">dual</a>&lt; C &gt;</td></tr>
-<tr class="separator:ac12ee4000e4f18cc19799fcac4579a88"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3258a7fe788ae06662399f86d7ddb6ba"><td class="memItemLeft" align="right" valign="top"><a id="a3258a7fe788ae06662399f86d7ddb6ba" name="a3258a7fe788ae06662399f86d7ddb6ba"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>type</b> = <a class="el" href="../../d7/def/structsequoia_1_1maths_1_1dual.html">dual</a>&lt; T &gt;</td></tr>
+<tr class="separator:a3258a7fe788ae06662399f86d7ddb6ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<hr/>The documentation for this struct was generated from the following file:<ul>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><div class="compoundTemplParams">template&lt;class T&gt;<br />
+struct sequoia::maths::dual_of&lt; T &gt;</div><p>Helper to generate the dual of a space, taking into account that the dual of the dual may be related to the original space. </p>
+<p>The dual of the dual of a finite dimensional vector space, V, is isomporphic to V. We take this double dual to be just V itself. Similarly for the affine and convex generalizations, though insisting that the ring is a field. Clients can override this behaviour with the appropriate specializations. </p>
+</div><hr/>The documentation for this struct was generated from the following file:<ul>
 <li>C:/Users/olive/sequoia/Source/sequoia/Maths/Geometry/<a class="el" href="../../da/d53/Spaces_8hpp_source.html">Spaces.hpp</a></li>
 </ul>
 </div><!-- contents -->

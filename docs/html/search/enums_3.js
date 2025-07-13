@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['unsortable_5fweight_5fgraph_5fdescription_0',['unsortable_weight_graph_description',['../dd/dee/DynamicUndirectedGraphUnsortableWeightTestingUtilities_8hpp.html#a85c3671ec59c37ded8c0936223e2c76e',1,'sequoia::testing::undirected_graph']]]
+  ['summary_5fdetail_0',['summary_detail',['../dc/d7f/Summary_8hpp.html#a005de6e9a187f3f10cc50eee1886b041',1,'sequoia::testing']]]
 ];

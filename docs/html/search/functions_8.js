@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['to_5fordering_0',['to_ordering',['../d9/dcd/GeometryTestingUtilities_8hpp.html#a034dfb7b9474d36edc623ef33f5fabea',1,'sequoia::testing']]]
+  ['sort_0',['sort',['../d6/d07/Algorithms_8hpp.html#adcf20a5fa256d8bee9b171e918fcb648',1,'sequoia']]]
 ];

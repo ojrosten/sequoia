@@ -89,7 +89,7 @@ $(function() {
 <div class="line"> </div>
 <div class="line">    <span class="keyword">requires</span> (!std::same_as&lt;std::remove_cvref_t&lt;<span class="keyword">decltype</span>(*std::ranges::begin(t))&gt;, std::remove_cvref_t&lt;T&gt;&gt;);</div>
 <div class="line">  }</div>
-<div class="ttc" id="aconceptsequoia_1_1faithful__range_html"><div class="ttname"><a href="../../dd/d51/conceptsequoia_1_1faithful__range.html">sequoia::faithful_range</a></div><div class="ttdoc">Similar to std::range but excludes the case where dereferencing yields the same type as the range.</div><div class="ttdef"><b>Definition:</b> Concepts.hpp:87</div></div>
+<div class="ttc" id="aconceptsequoia_1_1faithful__range_html"><div class="ttname"><a href="../../dd/d51/conceptsequoia_1_1faithful__range.html">sequoia::faithful_range</a></div><div class="ttdoc">Similar to std::range but excludes the case where dereferencing yields the same type as the range.</div><div class="ttdef"><b>Definition:</b> Concepts.hpp:91</div></div>
 </div><!-- fragment --><a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Similar to std::range but excludes the case where dereferencing yields the same type as the range. </p>
 <p>This avoids treating std::filesystem::path as a range in circumstances where, to do so, would be inappropriate. The implementation of <code>faithful_range</code> is not complete; it deals with the simplest circular case but doesn't take into account more complicated possibilites. A full treatment could almost certainly be readily implemented if/when reflection is properly supported in C++. </p>

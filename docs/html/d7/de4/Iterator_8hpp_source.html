@@ -187,7 +187,7 @@ $(function() {
 <div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>  };</div>
 <div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span> </div>
 <div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>  <span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt;</div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    <span class="keyword">requires</span> (!std::input_or_output_iterator&lt;T&gt; &amp;&amp; has_value_type&lt;T&gt;)</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    <span class="keyword">requires</span> (!std::input_or_output_iterator&lt;T&gt; &amp;&amp; has_value_type_v&lt;T&gt;)</div>
 <div class="line"><a id="l00124" name="l00124"></a><span class="lineno"><a class="line" href="../../dd/da1/structsequoia_1_1utilities_1_1value__type_3_01T_01_4.html">  124</a></span>  <span class="keyword">struct</span> <a class="code hl_struct" href="../../d3/d9e/structsequoia_1_1utilities_1_1value__type.html">value_type&lt;T&gt;</a></div>
 <div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>  {</div>
 <div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>    <span class="keyword">using </span>type = <span class="keyword">typename</span> T::value_type;</div>

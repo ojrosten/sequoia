@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['summary_5fdetail_0',['summary_detail',['../dc/d7f/Summary_8hpp.html#a005de6e9a187f3f10cc50eee1886b041',1,'sequoia::testing']]]
+  ['inverted_5fordering_0',['inverted_ordering',['../d9/dcd/GeometryTestingUtilities_8hpp.html#a931555192d7333a33dac1d6f9eab72c4',1,'sequoia::testing']]]
 ];
