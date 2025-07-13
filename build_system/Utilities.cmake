@@ -64,7 +64,11 @@ FUNCTION(sequoia_set_ide_source_groups_with_prefix target directory sourceGroupP
 ENDFUNCTION()
 
 FUNCTION(sequoia_compile_features target)
-    target_compile_features(${target} PUBLIC cxx_std_26)
+    if(WIN32)
+        target_compile_features(${target} PUBLIC cxx_std_23)
+    else()
+        target_compile_features(${target} PUBLIC cxx_std_26)
+    endif()
 ENDFUNCTION()
 
 FUNCTION(sequoia_set_properties target)

@@ -73,8 +73,8 @@ namespace sequoia::datastructures
   {
     #ifdef __cpp_pack_indexing
       using type = Ts...[I];
-    #elif
-      using type = std::tuple_element_t<I, std::tuple<Ts...>>
+    #else
+      using type = std::tuple_element_t<I, std::tuple<Ts...>>;
     #endif
   };
 
