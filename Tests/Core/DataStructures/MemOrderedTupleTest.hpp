@@ -22,5 +22,9 @@ namespace sequoia::testing
     std::filesystem::path source_file() const;
 
     void run_tests();
+  private:
+    void check_regular_semantics();
+
+    void check_transitions();
   };
 }

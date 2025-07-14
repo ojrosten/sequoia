@@ -212,7 +212,7 @@ namespace sequoia::testing
     enum dim_1_label{ two, one, zero, neg_one };
     enum dim_2_label{ neg_one_neg_one, neg_one_zero, zero_neg_one, zero_zero, zero_one, one_zero, one_one };
     
-    using graph_type = transition_checker<Coordinates>::transition_graph;    
+    using graph_type = transition_checker<Coordinates>::transition_graph;
     using coords_t   = Coordinates;
     using disp_t     = coords_t::displacement_coordinates_type;
     using module_t   = coords_t::free_module_type;
