@@ -57,8 +57,28 @@ namespace sequoia::testing
         { edge_t{1, "", [] (tuple_t t) -> tuple_t { get<0>(t) += 1; return t; }, std::weak_ordering::greater},
           edge_t{2, "", [] (tuple_t t) -> tuple_t { get<1>(t) += 2; return t; }, std::weak_ordering::greater}
         },
-        {},
-        {}
+        {
+          edge_t{
+            0,
+            "",
+            [] (tuple_t t) -> tuple_t {
+              auto i{get<0>(std::move(t))};
+              return tuple_t{i - 1, 0};
+            },
+            std::weak_ordering::less
+          }
+        },
+        {
+          edge_t{
+            0,
+            "",
+            [] (tuple_t t) -> tuple_t {
+              auto i{get<1>(static_cast<tuple_t const&&>(t))};
+              return tuple_t{0, i - 2};
+            },
+            std::weak_ordering::less
+          }
+        }
       },
       {tuple_t{0, 0}, tuple_t{1, 0}, tuple_t{0, 2}}
     };
