@@ -26,7 +26,7 @@ namespace sequoia::datastructures
       T value;
 
       [[nodiscard]]
-      friend auto operator<=>(const indexed_element&, const indexed_element&) noexcept = default;
+      friend auto constexpr operator<=>(const indexed_element&, const indexed_element&) noexcept = default;
     };
 
     template<class... Ts>
@@ -47,12 +47,18 @@ namespace sequoia::datastructures
       {}
 
       [[nodiscard]]
-      friend auto operator<=>(const mem_ordered_tuple&, const mem_ordered_tuple&) noexcept = default;
+      friend auto constexpr operator<=>(const mem_ordered_tuple&, const mem_ordered_tuple&) noexcept = default;
     };
   }
+
+  template<std::size_t I, class T>
+  struct mem_ordered_tuple_element;
+
+  template<std::size_t I, class T>
+  using mem_ordered_tuple_element_t = mem_ordered_tuple_element<I, T>::type;
   
   template<class... Ts>
-  struct mem_ordered_tuple : impl::mem_ordered_tuple<std::make_index_sequence<sizeof...(Ts)>, Ts...>
+  struct mem_ordered_tuple : private impl::mem_ordered_tuple<std::make_index_sequence<sizeof...(Ts)>, Ts...>
   {
     constexpr mem_ordered_tuple() requires (std::is_default_constructible_v<Ts> && ...) = default;
 
@@ -62,11 +68,20 @@ namespace sequoia::datastructures
     {}
 
     [[nodiscard]]
-    friend auto operator<=>(const mem_ordered_tuple&, const mem_ordered_tuple&) noexcept = default;
-  };
+    friend auto constexpr operator<=>(const mem_ordered_tuple&, const mem_ordered_tuple&) noexcept = default;
+  private:
+    template<std::size_t I, class... Us>
+    friend constexpr mem_ordered_tuple_element_t<I, mem_ordered_tuple<Us...>>& get(mem_ordered_tuple<Us...>&) noexcept;
 
-  template<std::size_t I, class T>
-  struct mem_ordered_tuple_element;
+    template<std::size_t I, class... Us>
+    friend constexpr mem_ordered_tuple_element_t<I, mem_ordered_tuple<Us...>> const& get(mem_ordered_tuple<Us...> const&) noexcept;
+
+    template<std::size_t I, class... Us>
+    friend constexpr mem_ordered_tuple_element_t<I, mem_ordered_tuple<Us...>>&& get(mem_ordered_tuple<Us...>&&) noexcept;
+
+    template<std::size_t I, class... Us>
+    friend constexpr mem_ordered_tuple_element_t<I, mem_ordered_tuple<Us...>> const&& get(mem_ordered_tuple<Us...> const&&) noexcept;
+  };
 
   template<std::size_t I, class... Ts>
   struct mem_ordered_tuple_element<I, mem_ordered_tuple<Ts...>>
@@ -78,31 +93,28 @@ namespace sequoia::datastructures
     #endif
   };
 
-  template<std::size_t I, class T>
-  using mem_ordered_tuple_element_t = mem_ordered_tuple_element<I, T>::type;
-
   // TO DO: restore direct use of pack-indexing, once MSVC supports it
   template<std::size_t I, class... Ts>
   [[nodiscard]]
-  mem_ordered_tuple_element_t<I, mem_ordered_tuple<Ts...>>& get(mem_ordered_tuple<Ts...>& t) noexcept {
+  constexpr mem_ordered_tuple_element_t<I, mem_ordered_tuple<Ts...>>& get(mem_ordered_tuple<Ts...>& t) noexcept {
     return static_cast<impl::indexed_element<mem_ordered_tuple_element_t<I, mem_ordered_tuple<Ts...>>, I>&>(t).value;
   }
 
   template<std::size_t I, class... Ts>
   [[nodiscard]]
-  const mem_ordered_tuple_element_t<I, mem_ordered_tuple<Ts...>>& get(const mem_ordered_tuple<Ts...>& t) noexcept {
+  constexpr const mem_ordered_tuple_element_t<I, mem_ordered_tuple<Ts...>>& get(const mem_ordered_tuple<Ts...>& t) noexcept {
     return static_cast<const impl::indexed_element<mem_ordered_tuple_element_t<I, mem_ordered_tuple<Ts...>>, I>&>(t).value;
   }
 
   template<std::size_t I, class... Ts>
   [[nodiscard]]
-  mem_ordered_tuple_element_t<I, mem_ordered_tuple<Ts...>>&& get(mem_ordered_tuple<Ts...>&& t) noexcept {
+  constexpr mem_ordered_tuple_element_t<I, mem_ordered_tuple<Ts...>>&& get(mem_ordered_tuple<Ts...>&& t) noexcept {
     return static_cast<impl::indexed_element<mem_ordered_tuple_element_t<I, mem_ordered_tuple<Ts...>>, I>&&>(t).value;
   }
 
   template<std::size_t I, class... Ts>
   [[nodiscard]]
-  const mem_ordered_tuple_element_t<I, mem_ordered_tuple<Ts...>>&& get(const mem_ordered_tuple<Ts...>&& t) noexcept {
+  constexpr const mem_ordered_tuple_element_t<I, mem_ordered_tuple<Ts...>>&& get(const mem_ordered_tuple<Ts...>&& t) noexcept {
     return static_cast<const impl::indexed_element<mem_ordered_tuple_element_t<I, mem_ordered_tuple<Ts...>>, I>&&>(t).value;
   }
 }
