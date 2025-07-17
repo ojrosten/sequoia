@@ -15,7 +15,7 @@
   #include <tuple>
 #endif
 
-namespace sequoia::datastructures
+namespace sequoia
 {
   namespace impl
   {

@@ -1,7 +1,7 @@
 Tests/Core/DataStructures/MemOrderedTupleTestingDiagnostics.cpp, Line 23
 
 Comparison performed using:
-[sequoia::testing::value_tester<sequoia::datastructures::mem_ordered_tuple<int> >]
+[sequoia::testing::value_tester<sequoia::mem_ordered_tuple<int> >]
 Checking for equivalence with:
 [std::tuple<int>]
 
@@ -15,7 +15,7 @@ Checking for equivalence with:
 
 Tests/Core/DataStructures/MemOrderedTupleTestingDiagnostics.cpp, Line 24
 
-[sequoia::datastructures::mem_ordered_tuple<int>]
+[sequoia::mem_ordered_tuple<int>]
 operator== returned false
 
   Element 0

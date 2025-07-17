@@ -19,7 +19,7 @@ namespace sequoia::testing
 
   void mem_ordered_tuple_false_negative_test::run_tests()
   {
-    datastructures::mem_ordered_tuple<int> x{42}, y{7};
+    mem_ordered_tuple<int> x{42}, y{7};
     check(equivalence, "", x, std::tuple{31});
     check(equality, "", x, y);
   }
