@@ -505,12 +505,13 @@ namespace sequoia::physics
       : coordinates_type{val}
     {}
 
-    constexpr physical_value operator-() const requires is_effectively_absolute = delete;
+    constexpr physical_value operator-() const requires is_effectively_absolute = delete; // or affine
 
     [[nodiscard]]
-    constexpr physical_value operator+() const
+    constexpr physical_value operator-() const noexcept(has_identity_validator)
+      requires (!is_effectively_absolute)
     {
-      return physical_value{this->values(), units_type{}};
+      return physical_value{utilities::to_array(this->values(), [](value_type t) { return -t; }), units_type{}};
     }
 
     using coordinates_type::operator+=;
@@ -534,13 +535,6 @@ namespace sequoia::physics
       using physical_value_t
         = physical_value<value_space_t, Unit, canonical_right_handed_basis<free_module_type_of_t<value_space_t>>, Origin, Validator>;
       return physical_value_t{lhs.values(), units_type{}} += rhs;
-    }
-    
-    [[nodiscard]]
-    constexpr physical_value operator-() const noexcept(has_identity_validator)
-      requires (!is_effectively_absolute)
-    {
-      return physical_value{utilities::to_array(this->values(), [](value_type t) { return -t; }), units_type{}};
     }
 
     template<class OtherValueSpace, basis_for<free_module_type_of_t<OtherValueSpace>> OtherBasis>

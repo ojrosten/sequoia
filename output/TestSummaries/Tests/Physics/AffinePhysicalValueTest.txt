@@ -1,2 +1,2 @@
 Affine Physical Value Test
-Standard Top Level Checks:               167;  Failures:  0  [Deep checks: 1991]
+Standard Top Level Checks:               172;  Failures:  0  [Deep checks: 1996]

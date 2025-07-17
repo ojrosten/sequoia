@@ -50,6 +50,9 @@ namespace sequoia::testing
     STATIC_CHECK(!can_divide<quantity_t, quantity_t>);
     STATIC_CHECK(!can_divide<quantity_t, delta_q_t>);
     STATIC_CHECK(!can_divide<delta_q_t, quantity_t>);
+    STATIC_CHECK(has_unary_plus<quantity_t>);
+    //STATIC_CHECK(!has_unary_minus<quantity_t>);
+
     if constexpr(quantity_t::dimension == 1)
     {
       STATIC_CHECK(can_divide<delta_q_t, delta_q_t>);

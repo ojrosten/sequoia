@@ -1147,6 +1147,13 @@ namespace sequoia::maths
       return self;
     }
 
+    template<class Self>
+    [[nodiscard]]
+    constexpr Self operator+(this const Self& self) noexcept
+    {
+      return self;
+    }
+
     template<class Derived>
       requires std::is_base_of_v<coordinates_base, Derived>
     [[nodiscard]]
@@ -1347,6 +1354,7 @@ namespace sequoia::maths
     using displacement_coordinates_type = base_type::displacement_coordinates_type;
     using value_type                    = base_type::value_type;
     constexpr static bool has_identity_validator{base_type::has_identity_validator};
+    constexpr static bool has_distinguished_origin{base_type::has_distinguished_origin};
 
     [[nodiscard]]
     friend constexpr displacement_coordinates_type operator-(const coordinates& lhs, const coordinates& rhs) noexcept(has_identity_validator)
@@ -1357,13 +1365,8 @@ namespace sequoia::maths
     }
 
     [[nodiscard]]
-    constexpr coordinates operator+() const noexcept(has_identity_validator)
-    {
-      return coordinates{this->values()};
-    }
-
-    [[nodiscard]]
     constexpr coordinates operator-() const noexcept(has_identity_validator)
+    //requires has_distinguished_origin //&& (!std::is_unsigned_v<value_type>)
     {
       return coordinates{utilities::to_array(this->values(), [](value_type t) { return -t; })};
     }

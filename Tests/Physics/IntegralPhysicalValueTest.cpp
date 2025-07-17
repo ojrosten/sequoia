@@ -59,6 +59,8 @@ namespace sequoia::testing
     STATIC_CHECK(can_add<quantity_t, delta_q_t>);
     STATIC_CHECK(can_subtract<quantity_t, quantity_t>);
     STATIC_CHECK(can_subtract<quantity_t, delta_q_t>);
+    STATIC_CHECK(has_unary_plus<quantity_t>);
+    STATIC_CHECK(!has_unary_minus<quantity_t>);
     
     coordinates_operations<Quantity>{*this}.execute();
   }

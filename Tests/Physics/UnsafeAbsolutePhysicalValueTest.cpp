@@ -48,6 +48,8 @@ namespace sequoia::testing
     STATIC_CHECK(can_add<unsafe_qty_t, delta_q_t>);
     STATIC_CHECK(can_subtract<unsafe_qty_t, unsafe_qty_t>);
     STATIC_CHECK(can_subtract<unsafe_qty_t, delta_q_t>);
+    STATIC_CHECK(has_unary_plus<unsafe_qty_t>);
+    STATIC_CHECK(has_unary_minus<unsafe_qty_t>);
 
     coordinates_operations<unsafe_qty_t>{*this}.execute();
 

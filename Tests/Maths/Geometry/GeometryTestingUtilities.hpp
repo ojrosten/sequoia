@@ -37,6 +37,16 @@ namespace sequoia::testing
   constexpr bool can_subtract{
     requires(const T& t, const U& u) { t - u; }
   };
+
+  template<class T>
+  constexpr bool has_unary_plus{
+    requires(const T& t) { { +t } -> std::convertible_to<T>; }
+  };
+
+  template<class T>
+  constexpr bool has_unary_minus{
+    requires(const T& t) { { -t } -> std::convertible_to<T>; }
+  };
   
   template<class T>
   struct is_complex : std::false_type {};

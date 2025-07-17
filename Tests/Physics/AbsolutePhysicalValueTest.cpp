@@ -51,6 +51,8 @@ namespace sequoia::testing
     STATIC_CHECK(can_add<quantity_t, delta_q_t>);
     STATIC_CHECK(can_subtract<quantity_t, quantity_t>);
     STATIC_CHECK(can_subtract<quantity_t, delta_q_t>);
+    STATIC_CHECK(has_unary_plus<quantity_t>);
+    STATIC_CHECK(!has_unary_minus<quantity_t>);
 
     check_exception_thrown<std::domain_error>("Negative quantity", [](){ return quantity_t{-1.0, units_type{}}; });
 
