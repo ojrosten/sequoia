@@ -36,6 +36,21 @@ namespace sequoia::testing
   void affine_coordinates_test::test_affine()
   {
     using affine_t = affine_coordinates<my_affine_space<Element, Field, D>, canonical_basis<Element, Field, D>, alice>;
+    using delta_t  = affine_t::displacement_coordinates_type;
+    using value_t  = Field;
+    STATIC_CHECK(!can_multiply<affine_t, value_t>);
+    STATIC_CHECK(!can_divide<affine_t, value_t>);
+    STATIC_CHECK(!can_divide<affine_t, affine_t>);
+    STATIC_CHECK(!can_divide<affine_t, delta_t>);
+    STATIC_CHECK(!can_divide<delta_t, affine_t>);
+    STATIC_CHECK(!can_divide<delta_t, delta_t>);
+    STATIC_CHECK(!can_add<affine_t, affine_t>);
+    STATIC_CHECK(can_add<affine_t, delta_t>);
+    STATIC_CHECK(can_subtract<affine_t, affine_t>);
+    STATIC_CHECK(can_subtract<affine_t, delta_t>);
+    STATIC_CHECK(has_unary_plus<affine_t>);
+    //STATIC_CHECK(!has_unary_minus<affine_t>);
+    
     coordinates_operations<affine_t>{*this}.execute();
   }
 }

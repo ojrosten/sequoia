@@ -97,11 +97,26 @@ namespace sequoia::testing
   {
     using vec_space_t = my_vec_space<Set, Field, D>;
     using vec_t       = vector_coordinates<vec_space_t, canonical_basis<Set, Field, D>>;
-    coordinates_operations<vec_t>{*this}.execute();
+    using value_t     = Field;
+    using delta_t     = vec_t::displacement_coordinates_type;
 
-    static_assert(vector_space<direct_product<vec_space_t, vec_space_t>>);
-    static_assert(!vector_space<direct_product<vec_t, vec_t>>);
-    static_assert(vector_space<direct_product<direct_product<vec_space_t, vec_space_t>, vec_space_t>>);
+    STATIC_CHECK(vector_space<direct_product<vec_space_t, vec_space_t>>);
+    STATIC_CHECK(!vector_space<direct_product<vec_t, vec_t>>);
+    STATIC_CHECK(vector_space<direct_product<direct_product<vec_space_t, vec_space_t>, vec_space_t>>);
+    STATIC_CHECK(can_multiply<vec_t, value_t>);
+    STATIC_CHECK(can_divide<vec_t, value_t>);
+    STATIC_CHECK(!can_divide<vec_t, vec_t>);
+    STATIC_CHECK(!can_divide<vec_t, delta_t>);
+    STATIC_CHECK(!can_divide<delta_t, vec_t>);
+    STATIC_CHECK(!can_divide<delta_t, delta_t>);
+    STATIC_CHECK(can_add<vec_t, vec_t>);
+    STATIC_CHECK(can_add<vec_t, delta_t>);
+    STATIC_CHECK(can_subtract<vec_t, vec_t>);
+    STATIC_CHECK(can_subtract<vec_t, delta_t>);
+    STATIC_CHECK(has_unary_plus<vec_t>);
+    STATIC_CHECK(has_unary_minus<vec_t>);
+  
+    coordinates_operations<vec_t>{*this}.execute();
   }
 
   template<class Set, std::floating_point Field>
@@ -109,7 +124,7 @@ namespace sequoia::testing
   {
     using vec_t = vector_coordinates<my_vec_space<Set, Field, 1>, canonical_basis<Set, Field, 1>>;
 
-    static_assert(basis_for<canonical_basis<Set, Field, 1>, my_vec_space<Set, Field, 1>>);
+    STATIC_CHECK(basis_for<canonical_basis<Set, Field, 1>, my_vec_space<Set, Field, 1>>);
 
     check(equality, "", inner_product(vec_t{}, vec_t{Field(1)}), Field{});
     check(equality, "", inner_product(vec_t{Field(1)}, vec_t{}), Field{});
