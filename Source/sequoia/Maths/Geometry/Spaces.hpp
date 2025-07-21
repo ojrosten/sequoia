@@ -1154,6 +1154,26 @@ namespace sequoia::maths
       return self;
     }
 
+    template<class Self>
+      requires std::constructible_from<Self, std::span<const value_type, D>> //&& has_distinguished_origin && (!std::is_unsigned_v<value_type>)
+    [[nodiscard]]
+    constexpr Self operator-(this const Self& self) noexcept(has_identity_validator)
+    {
+      return Self{utilities::to_array(self.values(), [](value_type t) { return -t; })};
+    }
+
+    template<class Derived>
+      requires std::is_base_of_v<coordinates_base, Derived>
+            && (!std::is_same_v<Derived, displacement_coordinates_type>)
+            && std::constructible_from<typename Derived::displacement_coordinates_type, std::span<const value_type, D>>
+    [[nodiscard]]
+    friend constexpr typename Derived::displacement_coordinates_type operator-(const Derived& lhs, const Derived& rhs) noexcept(has_identity_validator)
+    {
+      return[&] <std::size_t... Is>(std::index_sequence<Is...>) {
+        return typename Derived::displacement_coordinates_type{(lhs.values()[Is] - rhs.values()[Is])...};
+      }(std::make_index_sequence<D>{});
+    }
+
     template<class Derived>
       requires std::is_base_of_v<coordinates_base, Derived>
     [[nodiscard]]
@@ -1349,27 +1369,7 @@ namespace sequoia::maths
   class coordinates final : public coordinates_base<ConvexSpace, Basis, Origin, Validator>
   {
   public:
-    using base_type = coordinates_base<ConvexSpace, Basis, Origin, Validator>;
-    using base_type::base_type;
-    using displacement_coordinates_type = base_type::displacement_coordinates_type;
-    using value_type                    = base_type::value_type;
-    constexpr static bool has_identity_validator{base_type::has_identity_validator};
-    constexpr static bool has_distinguished_origin{base_type::has_distinguished_origin};
-
-    [[nodiscard]]
-    friend constexpr displacement_coordinates_type operator-(const coordinates& lhs, const coordinates& rhs) noexcept(has_identity_validator)
-    {
-      return[&] <std::size_t... Is>(std::index_sequence<Is...>) {
-        return displacement_coordinates_type{(lhs.values()[Is] - rhs.values()[Is])...};
-      }(std::make_index_sequence<base_type::D>{});
-    }
-
-    [[nodiscard]]
-    constexpr coordinates operator-() const noexcept(has_identity_validator)
-    //requires has_distinguished_origin //&& (!std::is_unsigned_v<value_type>)
-    {
-      return coordinates{utilities::to_array(this->values(), [](value_type t) { return -t; })};
-    }
+    using coordinates_base<ConvexSpace, Basis, Origin, Validator>::coordinates_base;
   };
 
   namespace sets
