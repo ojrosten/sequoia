@@ -207,4 +207,19 @@ namespace sequoia
 
   template<std::floating_point T, class U>
   inline constexpr bool is_compatible_v{is_compatible<T, U>::value};
+
+  /** \brief Trait for determining if the elements of a set of types are all the same
+      
+      The set must have at least one element, and in this case the trait is
+      convertible to std::true_type.
+   */
+    
+  template<class T, class... Ts>
+  struct are_same : std::bool_constant<(std::same_as<T, Ts> && ...)> {};
+
+  template<class T, class... Ts>
+  using are_same_t = are_same<T, Ts...>::type;
+
+  template<class T, class... Ts>
+  constexpr inline bool are_same_v{are_same<T, Ts...>::value};
 }
