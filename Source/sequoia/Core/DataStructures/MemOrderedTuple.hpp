@@ -62,7 +62,7 @@ namespace sequoia
   {
     constexpr mem_ordered_tuple() requires (std::is_default_constructible_v<Ts> && ...) = default;
 
-    constexpr explicit(sizeof...(Ts) == 1) mem_ordered_tuple(const Ts&... ts)
+    constexpr explicit(!(std::convertible_to<const Ts&, Ts> && ...)) mem_ordered_tuple(const Ts&... ts)
         requires (sizeof...(Ts) >= 1) && (std::is_copy_constructible_v<Ts> && ...)
       : impl::mem_ordered_tuple<std::make_index_sequence<sizeof...(Ts)>, Ts...>{ts...}
     {}
