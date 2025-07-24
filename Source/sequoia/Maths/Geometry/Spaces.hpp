@@ -1155,7 +1155,9 @@ namespace sequoia::maths
     }
 
     template<class Self>
-      requires std::constructible_from<Self, std::span<const value_type, D>> //&& has_distinguished_origin && (!std::is_unsigned_v<value_type>)
+      requires    std::constructible_from<Self, std::span<const value_type, D>>
+               && has_distinguished_origin
+               && (!std::is_unsigned_v<value_type>)
     [[nodiscard]]
     constexpr Self operator-(this const Self& self) noexcept(has_identity_validator)
     {

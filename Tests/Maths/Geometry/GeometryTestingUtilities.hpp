@@ -322,8 +322,7 @@ namespace sequoia::testing
       graph_type g{
         {
           {
-            edge_t{dim_2_label::one_one,         test.report("- (-1, -1)"),          [](coords_t v) -> coords_t { return -v; }},
-            edge_t{dim_2_label::neg_one_neg_one, test.report("+ (-1, -1)"),          [](coords_t v) -> coords_t { return +v; }},
+             edge_t{dim_2_label::neg_one_neg_one, test.report("+ (-1, -1)"),          [](coords_t v) -> coords_t { return +v; }},
             edge_t{dim_2_label::neg_one_zero,    test.report("(-1, -1) +  (0, 1)"),  [&](coords_t v) -> coords_t { return v +  disp_t{std::array{ring_t{}, ring_t(1)}, units...}; }},
             edge_t{dim_2_label::neg_one_zero,    test.report("(-1, -1) += (0, 1)"),  [&](coords_t v) -> coords_t { return v += disp_t{std::array{ring_t{}, ring_t(1)}, units...}; }},
             edge_t{dim_2_label::zero_neg_one,    test.report("(-1, -1) +  (1, 0)"),  [&](coords_t v) -> coords_t { return v +  disp_t{std::array{ring_t(1), ring_t{}}, units...}; }},
@@ -446,15 +445,19 @@ namespace sequoia::testing
     static void add_dim_1_negative_transitions(maths::network auto& g, regular_test& test, Units... units)
     {
       g.add_node(ring_t(-1), units...);
+
       // Joins to neg_one
-      add_transition<coords_t>(
-        g,
-        dim_1_label::one,
-        dim_1_label::neg_one,
-        test.report("-(1)"),
-        [](coords_t p) -> coords_t { return -p; },
-        std::is_unsigned_v<ring_t> ? inverted_ordering::yes : inverted_ordering::no
-      );
+      if constexpr(coords_t::has_distinguished_origin && !std::is_unsigned_v<ring_t>)
+      {
+        add_transition<coords_t>(
+          g,
+          dim_1_label::one,
+          dim_1_label::neg_one,
+          test.report("-(1)"),
+          [](coords_t p) -> coords_t { return -p; },
+          std::is_unsigned_v<ring_t> ? inverted_ordering::yes : inverted_ordering::no
+        );
+      }
 
       add_transition<coords_t>(
         g,
@@ -464,16 +467,20 @@ namespace sequoia::testing
         [&](coords_t p) -> coords_t { return p - disp_t{ring_t(2), units...}; },
         std::is_unsigned_v<ring_t> ? inverted_ordering::yes : inverted_ordering::no
       );
+
       
       // Joins from neg_one
-      add_transition<coords_t>(
-        g,
-        dim_1_label::neg_one,
-        dim_1_label::one,
-        test.report("- (-1)"),
-        [](coords_t p) -> coords_t { return -p;  },
-        std::is_unsigned_v<ring_t> ? inverted_ordering::yes : inverted_ordering::no
-      );
+      if constexpr(coords_t::has_distinguished_origin && !std::is_unsigned_v<ring_t>)
+      {
+        add_transition<coords_t>(
+          g,
+          dim_1_label::neg_one,
+          dim_1_label::one,
+          test.report("- (-1)"),
+          [](coords_t p) -> coords_t { return -p;  },
+          std::is_unsigned_v<ring_t> ? inverted_ordering::yes : inverted_ordering::no
+        );
+      }
     
       add_transition<coords_t>(
         g,
@@ -708,8 +715,16 @@ namespace sequoia::testing
     }
 
     static void add_dim_2_distinguished_origin_transitions(maths::network auto& g, regular_test& test)
-    {
+    {      
       // (-1, -1) --> (1, 1)
+   
+      add_transition<coords_t>(
+        g,
+        dim_2_label::neg_one_neg_one,
+        dim_2_label::one_one,
+        test.report("- (-1, -1)"),
+        [](coords_t v) -> coords_t { return -v; }
+      );
 
       add_transition<coords_t>(
         g,

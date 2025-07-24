@@ -505,11 +505,9 @@ namespace sequoia::physics
       : coordinates_type{val}
     {}
 
-    constexpr physical_value operator-() const requires is_effectively_absolute = delete; // or affine
-
     [[nodiscard]]
     constexpr physical_value operator-() const noexcept(has_identity_validator)
-      requires (!is_effectively_absolute)
+      requires (coordinates_type::has_distinguished_origin) && (!std::is_unsigned_v<ring_type>) && (!is_effectively_absolute)
     {
       return physical_value{utilities::to_array(this->values(), [](value_type t) { return -t; }), units_type{}};
     }

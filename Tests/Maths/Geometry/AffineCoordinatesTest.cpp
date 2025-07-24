@@ -49,7 +49,7 @@ namespace sequoia::testing
     STATIC_CHECK(can_subtract<affine_t, affine_t>);
     STATIC_CHECK(can_subtract<affine_t, delta_t>);
     STATIC_CHECK(has_unary_plus<affine_t>);
-    //STATIC_CHECK(!has_unary_minus<affine_t>);
+    STATIC_CHECK(!has_unary_minus<affine_t>);
     
     coordinates_operations<affine_t>{*this}.execute();
   }
