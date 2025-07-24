@@ -522,7 +522,15 @@ namespace sequoia::physics
       return *this;
     }
 
-    // TO DO: conversions for -= and -
+    using coordinates_type::operator-=;
+    
+    template<convex_space OtherValueSpace, basis_for<free_module_type_of_t<OtherValueSpace>> OtherBasis>
+      requires is_intrinsically_absolute && (std::is_base_of_v<ValueSpace, OtherValueSpace>) && consistent_bases_v<basis_type, OtherBasis>
+    constexpr physical_value& operator-=(const physical_value<OtherValueSpace, Unit, OtherBasis, Origin, Validator>& other) noexcept(has_identity_validator)
+    {
+      this->apply_to_each_element(other.values(), [](value_type& lhs, value_type rhs){ lhs -= rhs; });
+      return *this;
+    }
 
     template<convex_space OtherValueSpace, basis_for<free_module_type_of_t<OtherValueSpace>> OtherBasis>
       requires (!std::is_same_v<ValueSpace, OtherValueSpace>) && have_compatible_base_spaces_v<ValueSpace, OtherValueSpace> && consistent_bases_v<basis_type, OtherBasis>

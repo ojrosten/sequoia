@@ -89,14 +89,13 @@ namespace sequoia::testing
     using height_t   = si::height<float>;
     using d_height_t = height_t::displacement_type;
 
-    length_t len{1.0, metre};
-    check(equality, "", len += width_t{1.0, metre},  length_t{2.0, metre});
-    check(equality, "", len += height_t{0.5, metre}, length_t{2.5, metre});
+    check(equality, "", length_t{1.0, metre} += width_t{1.0, metre},  length_t{2.0, metre});
+    check(equality, "", length_t{1.0, metre} += height_t{0.5, metre}, length_t{1.5, metre});
     check(equality, "", width_t{0.5, metre}  + height_t{0.5, metre}, length_t{1.0, metre});
     check(equality, "", height_t{0.5, metre} + width_t{0.5, metre}, length_t{1.0, metre});
 
-    //check(equality, "", len -= width_t{1.0, metre},  length_t{1.0, metre});
-    //check(equality, "", len -= height_t{0.5, metre}, length_t{0.5, metre});
+    check(equality, "", length_t{1.0, metre} -= width_t{0.5, metre},   length_t{0.5, metre});
+    check(equality, "", length_t{1.0, metre} -= height_t{0.75, metre}, length_t{0.25, metre});
     check(equality, "", height_t{0.5, metre} -  width_t{0.5, metre}, d_len_t{0.0, metre});
     check(equality, "", width_t{0.5, metre}  - height_t{0.5, metre}, d_len_t{0.0, metre});
 
